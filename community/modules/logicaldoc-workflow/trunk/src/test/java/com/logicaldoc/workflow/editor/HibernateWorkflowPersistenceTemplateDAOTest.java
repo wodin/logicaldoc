@@ -4,20 +4,19 @@ import java.io.File;
 import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.Assert;
+import org.junit.Test;
 
-import com.logicaldoc.workflow.AbstractWorkflowTestCase;
+import com.logicaldoc.workflow.AbstractWorkflowTCase;
 import com.logicaldoc.workflow.editor.WorkflowPersistenceTemplateDAO.WORKFLOW_STAGE;
 
-public class HibernateWorkflowPersistenceTemplateDAOTest extends AbstractWorkflowTestCase {
+public class HibernateWorkflowPersistenceTemplateDAOTest extends AbstractWorkflowTCase {
 
 	// Instance under test
 	private WorkflowPersistenceTemplateDAO dao;
 
-	public HibernateWorkflowPersistenceTemplateDAOTest(String name) {
-		super(name);
-	}
-
-	protected void setUp() throws Exception {
+	@Override
+	public void setUp() throws Exception {
 		super.setUp();
 
 		// Retrieve the instance under test from spring context.
@@ -27,7 +26,7 @@ public class HibernateWorkflowPersistenceTemplateDAOTest extends AbstractWorkflo
 	}
 
 	@Override
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		super.tearDown();
 
 		File fileWorkflow = null;
@@ -66,6 +65,7 @@ public class HibernateWorkflowPersistenceTemplateDAOTest extends AbstractWorkflo
 		}
 	}
 
+	@Test
 	public void testSave() {
 		WorkflowPersistenceTemplate workflow1 = dao.findById(1);
 		workflow1.setDescription("pippo");
@@ -74,7 +74,7 @@ public class HibernateWorkflowPersistenceTemplateDAOTest extends AbstractWorkflo
 			dao.save(workflow1, WORKFLOW_STAGE.SAVED);
 		} catch (Exception e) {
 		}
-		assertNotNull(workflow1);
+		Assert.assertNotNull(workflow1);
 
 		WorkflowPersistenceTemplate workflow2 = dao.findById(2);
 		workflow2.setDescription("paperino");
@@ -83,36 +83,40 @@ public class HibernateWorkflowPersistenceTemplateDAOTest extends AbstractWorkflo
 			dao.save(workflow2, WORKFLOW_STAGE.SAVED);
 		} catch (Exception e) {
 		}
-		assertNotNull(workflow2);
+		Assert.assertNotNull(workflow2);
 	}
 
+	@Test
 	public void testDelete() {
-		assertTrue(dao.delete(1));
+		Assert.assertTrue(dao.delete(1));
 		WorkflowPersistenceTemplate workflow = dao.findById(1);
-		assertNull(workflow);
+		Assert.assertNull(workflow);
 	}
 
+	@Test
 	public void testLoad() {
 		WorkflowPersistenceTemplate workflow = dao.load(1L, WORKFLOW_STAGE.SAVED);
-		assertNotNull(workflow);
-		assertEquals("workflow1", workflow.getName());
+		Assert.assertNotNull(workflow);
+		Assert.assertEquals("workflow1", workflow.getName());
 	}
 
+	@Test
 	public void testDeploy() {
 		WorkflowPersistenceTemplate workflow = dao.findById(1);
-		assertNotNull(workflow);
+		Assert.assertNotNull(workflow);
 		try {
 			dao.deploy(workflow);
 		} catch (Exception e) {
 		}
-		assertEquals(WorkflowPersistenceTemplate.DEPLOYED, workflow.getDeployed());
+		Assert.assertEquals(WorkflowPersistenceTemplate.DEPLOYED, workflow.getDeployed());
 	}
 
+	@Test
 	public void testFindAllDeployed() {
 		Collection<WorkflowPersistenceTemplate> workflows = dao.findAllDeployed();
-		assertNotNull(workflows);
-		assertEquals(1, workflows.size());
-		assertTrue(workflows.contains(dao.findById(3)));
+		Assert.assertNotNull(workflows);
+		Assert.assertEquals(1, workflows.size());
+		Assert.assertTrue(workflows.contains(dao.findById(3)));
 
 		WorkflowPersistenceTemplate workflow3 = dao.findById(3);
 		workflow3.setDeployed(WorkflowPersistenceTemplate.NOT_DEPLOYED);
@@ -122,19 +126,20 @@ public class HibernateWorkflowPersistenceTemplateDAOTest extends AbstractWorkflo
 		}
 
 		workflows = dao.findAllDeployed();
-		assertNotNull(workflows);
-		assertEquals(0, workflows.size());
-		assertTrue(!workflows.contains(dao.findById(3)));
+		Assert.assertNotNull(workflows);
+		Assert.assertEquals(0, workflows.size());
+		Assert.assertTrue(!workflows.contains(dao.findById(3)));
 	}
 
+	@Test
 	public void testFindByName() {
 		WorkflowPersistenceTemplate template = dao.findByName("workflow1");
-		assertNotNull(template);
-		assertEquals(1, template.getId());
-		assertEquals("workflow1", template.getName());
-		assertEquals("pippo", template.getStartState());
+		Assert.assertNotNull(template);
+		Assert.assertEquals(1, template.getId());
+		Assert.assertEquals("workflow1", template.getName());
+		Assert.assertEquals("pippo", template.getStartState());
 
 		template = dao.findByName("xxx");
-		assertNull(template);
+		Assert.assertNull(template);
 	}
 }

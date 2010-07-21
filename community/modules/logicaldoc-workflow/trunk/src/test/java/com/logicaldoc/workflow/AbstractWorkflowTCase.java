@@ -12,12 +12,11 @@ import java.sql.ResultSet;
 
 import javax.sql.DataSource;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.io.FileUtils;
 import org.hsqldb.util.SqlFile;
-
+import org.hsqldb.util.SqlTool.SqlToolException;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
@@ -30,7 +29,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author Matteo Caruso - Logical Objects
  * @since 5.0
  */
-public class AbstractWorkflowTestCase extends TestCase {
+public class AbstractWorkflowTCase {
 
 	protected ApplicationContext context;
 
@@ -49,16 +48,14 @@ public class AbstractWorkflowTestCase extends TestCase {
 	static {
 		System.setProperty("LOGICALDOC_HOME", "target");
 	}
-
+	
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
-
+	public void setUp() throws Exception {
 		userHome = System.getProperty("user.home");
 		System.setProperty("user.home", tempDir.getPath());
 
 		try {
-			context = new ClassPathXmlApplicationContext(new String[] { "/context.xml" });
+			context = new ClassPathXmlApplicationContext("context.xml");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -76,7 +73,7 @@ public class AbstractWorkflowTestCase extends TestCase {
 		}
 		tempDir.mkdirs();
 
-		assertTrue(tempDir.exists() && tempDir.isDirectory());
+		Assert.assertTrue(tempDir.exists() && tempDir.isDirectory());
 
 		coreSchemaFile = new File(tempDir, "logicaldoc-core.sql");
 		workflowSchemaFile = new File(tempDir, "logicaldoc-workflow.sql");
@@ -116,9 +113,7 @@ public class AbstractWorkflowTestCase extends TestCase {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
-		super.tearDown();
-
+	public void tearDown() throws Exception {
 		destroyDatabase();
 		((AbstractApplicationContext) context).close();
 
@@ -142,15 +137,6 @@ public class AbstractWorkflowTestCase extends TestCase {
 			}
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Constructor for AbstractWorkflowTestCase.
-	 * 
-	 * @param name
-	 */
-	public AbstractWorkflowTestCase(String name) {
-		super(name);
 	}
 
 	/**
@@ -180,23 +166,7 @@ public class AbstractWorkflowTestCase extends TestCase {
 			ResultSet rs = con.createStatement().executeQuery("select * from ld_menu where ld_id=1");
 			rs.next();
 
-			assertEquals(1, rs.getInt(1));
-		} finally {
-			if (con != null)
-				con.close();
-		}
-	}
-
-	// To avoid error on maven test
-	public void testDummy() throws Exception {
-		Connection con = null;
-		try {
-			con = ds.getConnection();
-			// Test the connection
-			ResultSet rs = con.createStatement().executeQuery("select * from ld_menu where ld_id=1");
-			rs.next();
-
-			assertEquals(1, rs.getInt(1));
+			Assert.assertEquals(1, rs.getInt(1));
 		} finally {
 			if (con != null)
 				con.close();

@@ -75,6 +75,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 
 	public WorkflowInstance startWorkflow(WorkflowDefinition workflowDefinition, Map<String, Serializable> properties,
 			UserSession session) {
+		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 
 		WorkflowPersistenceTemplateDAO workflowTemplateDao = (WorkflowPersistenceTemplateDAO) Context.getInstance()
 				.getBean(WorkflowPersistenceTemplateDAO.class);
@@ -99,11 +100,12 @@ public class WorkflowServiceImpl implements WorkflowService {
 			transaction.setTemplateId(template.getId());
 			transaction.setInstanceId(workflowInstance.getId());
 			transaction.setDate(new Date());
-			transaction.setSessionId(session.getId());
 			transaction.setEvent(WorkflowHistory.EVENT_WORKFLOW_START);
 			transaction.setComment("");
-			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-			transaction.setUser(userDao.findById(session.getUserId()));
+			if (session != null) {
+				transaction.setUser(userDao.findById(session.getUserId()));
+				transaction.setSessionId(session.getId());
+			}
 
 			workflowHistoryDao.store(transaction);
 
@@ -118,12 +120,13 @@ public class WorkflowServiceImpl implements WorkflowService {
 				docAppended.setTemplateId(template.getId());
 				docAppended.setInstanceId(workflowInstance.getId());
 				docAppended.setDate(new Date());
-				docAppended.setSessionId(session.getId());
 				docAppended.setEvent(WorkflowHistory.EVENT_WORKFLOW_DOCAPPENDED);
 				docAppended.setDocId(docId);
 				docAppended.setComment("");
-				docAppended.setUser(userDao.findById(session.getUserId()));
-
+				if (session != null) {
+					docAppended.setUser(userDao.findById(session.getUserId()));
+					docAppended.setSessionId(session.getId());
+				}
 				workflowHistoryDao.store(docAppended);
 			}
 

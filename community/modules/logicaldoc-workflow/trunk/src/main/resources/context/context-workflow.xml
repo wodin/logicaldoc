@@ -47,10 +47,6 @@
     </property>
   </bean>
 
- 
-  <bean id="workflowTaskController" class="com.logicaldoc.workflow.editor.controll.TaskController">
-  </bean>
-
   <bean id="ModelConfiguration" class="com.logicaldoc.workflow.model.ModelConfiguration" />
 
   <bean id="workflowTransformService" class="com.logicaldoc.workflow.transform.JBPMWorkflowTransformServiceImpl">
