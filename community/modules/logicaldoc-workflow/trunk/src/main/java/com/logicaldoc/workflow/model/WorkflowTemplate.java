@@ -3,10 +3,7 @@ package com.logicaldoc.workflow.model;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.logicaldoc.workflow.editor.controll.EditController;
-import com.logicaldoc.workflow.editor.message.DeployMessage;
 import com.logicaldoc.workflow.editor.model.BaseWorkflowModel;
-import com.logicaldoc.workflow.editor.model.EndState;
 import com.logicaldoc.workflow.editor.model.Transition;
 
 public class WorkflowTemplate extends BaseWorkflowModel {
@@ -21,7 +18,7 @@ public class WorkflowTemplate extends BaseWorkflowModel {
 	private WorkflowMessage assignmentMessage;
 
 	private WorkflowMessage reminderMessage;
-	
+
 	private String supervisor;
 
 	private List<BaseWorkflowModel> workflowComponents = new LinkedList<BaseWorkflowModel>();
@@ -98,27 +95,6 @@ public class WorkflowTemplate extends BaseWorkflowModel {
 		return null;
 	}
 
-	public void checkForDeploy(List<DeployMessage> failures) {
-
-		boolean endState = false;
-
-		for (BaseWorkflowModel model : getWorkflowComponents()) {
-			if (model instanceof EndState) {
-				endState = true;
-				break;
-			}
-		}
-
-		if (endState == false) {
-			failures.add(new DeployMessage(this, "No endstate have been added"));
-		}
-	}
-
-	@Override
-	public EditController getController() {
-		throw new UnsupportedOperationException("Controller does not exists for this type of WorkflowComponent");
-	}
-
 	@Override
 	public String getImage() {
 		throw new UnsupportedOperationException("Image does not exists for this type of WorkflowComponent");
@@ -138,7 +114,7 @@ public class WorkflowTemplate extends BaseWorkflowModel {
 	public boolean isPossibleStartState() {
 		throw new UnsupportedOperationException("not enddstate can be entered by this component");
 	}
-	
+
 	public String getSupervisor() {
 		return supervisor;
 	}

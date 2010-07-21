@@ -58,10 +58,10 @@ public class WorkflowHistory extends AbstractHistory {
 			return "";
 	}
 
-	public String getEventMessage() {
+	public String getEventMessage(String lang) {
 		String event = getEvent();
 		if (event != null && !event.trim().isEmpty())
-			return I18N.message(event);
+			return I18N.message(event, lang);
 		else
 			return "";
 	}

@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.logicaldoc.web.document.DocumentRecord;
+import com.logicaldoc.workflow.DocumentRecord;
 import com.logicaldoc.workflow.WorkflowConstants;
 
 public class WorkflowInstance implements FetchModel {

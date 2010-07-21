@@ -1,11 +1,5 @@
 package com.logicaldoc.workflow.editor.model;
 
-import java.util.List;
-
-import com.logicaldoc.workflow.editor.controll.EditController;
-import com.logicaldoc.workflow.editor.controll.TransitionController;
-import com.logicaldoc.workflow.editor.message.DeployMessage;
-
 public class Transition extends BaseWorkflowModel {
 
 	private static final long serialVersionUID = 1L;
@@ -51,11 +45,6 @@ public class Transition extends BaseWorkflowModel {
 	}
 
 	@Override
-	public EditController getController() {
-		return new TransitionController();
-	}
-
-	@Override
 	public BaseWorkflowModel copy(BaseWorkflowModel baseWorkflowModel) {
 		super.copy(baseWorkflowModel);
 
@@ -86,17 +75,4 @@ public class Transition extends BaseWorkflowModel {
 	public boolean getTerminatesParallelProcess() {
 		return this.terminatesParallelProcess;
 	}
-
-	@Override
-	public void checkForDeploy(List<DeployMessage> failures) {
-
-		if (getName().equals(""))
-			failures.add(new DeployMessage(this,
-					"Specifiy a name for this transition"));
-
-		if (getDestination() == null)
-			failures.add(new DeployMessage(this, "The destination is not set"));
-
-	}
-
 }

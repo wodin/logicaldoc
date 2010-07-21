@@ -4,11 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.logicaldoc.util.Context;
-import com.logicaldoc.workflow.editor.controll.EditController;
-import com.logicaldoc.workflow.editor.message.DeployMessage;
-import com.logicaldoc.workflow.model.ModelConfiguration;
-
 public class WorkflowTask extends BaseWorkflowModel {
 
 	private static final long serialVersionUID = 1L;
@@ -94,8 +89,7 @@ public class WorkflowTask extends BaseWorkflowModel {
 		return dueDateValue;
 	}
 
-	public void setParallelProcessingSupported(
-			boolean parallelProcessingSupported) {
+	public void setParallelProcessingSupported(boolean parallelProcessingSupported) {
 		this.parallelProcessingSupported = parallelProcessingSupported;
 	}
 
@@ -121,25 +115,15 @@ public class WorkflowTask extends BaseWorkflowModel {
 
 		for (Transition transition : this.transitions) {
 			if (transition.getId().equals(_transition.getId()))
-				throw new WorkflowEditorException(
-						"You can not add the same transition twice");
+				throw new WorkflowEditorException("You can not add the same transition twice");
 
 			if (transition.getName().equals(_transition.getName()))
-				throw new WorkflowEditorException(
-						"You can not add the a transition with equal names");
+				throw new WorkflowEditorException("You can not add the a transition with equal names");
 
 		}
 
 		this.transitions.add(_transition);
 
-	}
-
-	@Override
-	public EditController getController() {
-		EditController controller = ((ModelConfiguration) Context.getInstance()
-				.getBean(ModelConfiguration.class)).getControllers().get("WorkflowTask");
-		controller.initialize(this);
-		return controller;
 	}
 
 	@Override
@@ -165,35 +149,6 @@ public class WorkflowTask extends BaseWorkflowModel {
 	@Override
 	public String getType() {
 		return "task";
-	}
-
-	@Override
-	public void checkForDeploy(List<DeployMessage> failures) {
-
-		if (dueDateValue < 0) {
-			failures.add(new DeployMessage(this,
-					"You have entered a negative due date."));
-		}
-
-		if (remindTimeValue < 0) {
-			failures.add(new DeployMessage(this,
-					"You have entered a negative remind time."));
-		}
-
-		if (this.remindTimeValue > 0 && (this.dueDateValue == 0)) {
-			failures
-					.add(new DeployMessage(this,
-							"You have entered a remindTime but without specifiying a duedate. "));
-		}
-
-		if (getTransitions().size() == 0) {
-			failures.add(new DeployMessage(this,
-					"A Task without any transition is not possible "));
-		}
-
-		for (Transition transition : getTransitions()) {
-			transition.checkForDeploy(failures);
-		}
 	}
 
 }
