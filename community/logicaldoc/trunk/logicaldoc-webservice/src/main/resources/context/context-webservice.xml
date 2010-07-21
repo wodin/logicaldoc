@@ -12,7 +12,7 @@
 	<jaxws:endpoint id="auth"
 		implementor="com.logicaldoc.webservice.auth.AuthServiceImpl" address="/Auth">
 		<jaxws:properties>
-			<entry key="mtom-enabled" value="false" />
+			<entry key="mtom-enabled" value="${webservice.mtom}" />
 		</jaxws:properties>
 	</jaxws:endpoint>
 
@@ -20,7 +20,7 @@
 		implementor="com.logicaldoc.webservice.document.DocumentServiceImpl"
 		address="/Document">
 		<jaxws:properties>
-			<entry key="mtom-enabled" value="false" />
+			<entry key="mtom-enabled" value="${webservice.mtom}" />
 		</jaxws:properties>
 	</jaxws:endpoint>
 
