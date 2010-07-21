@@ -1,0 +1,13 @@
+NOTEs & questions: 
+
+1) Document UPDATE: 
+   If an update transaction (document) ends successfully don't get a message back?
+     (Now don't get anything) 
+    
+2) Folder UPDATE: If an update transaction (folder) ends successfully don't get a message back?
+     (Now don't get anything) 
+    
+3) Folder DELETE: if I try to delete a folder that does not exist, the Web-Service should return an error message? 
+       (Now always returns "ok", even if the folder to be deleted does not exist)
+       (i'm thinking that it should return something like this: "warning: the folder does not exist")
+       

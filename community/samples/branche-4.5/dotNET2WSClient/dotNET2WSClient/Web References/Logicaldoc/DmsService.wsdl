@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:tns="http://webservice.logicaldoc.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="DmsService" targetNamespace="http://webservice.logicaldoc.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://webservice.logicaldoc.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:complexType name="documentInfo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="author" type="xs:string" />
+          <xs:element minOccurs="0" name="coverage" type="xs:string" />
+          <xs:element minOccurs="0" name="customId" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="extendedAttribute" nillable="true" type="tns:extendedAttribute" />
+          <xs:element minOccurs="0" name="filename" type="xs:string" />
+          <xs:element name="folderId" type="xs:long" />
+          <xs:element minOccurs="0" name="folderName" type="xs:string" />
+          <xs:element name="id" type="xs:long" />
+          <xs:element minOccurs="0" name="language" type="xs:string" />
+          <xs:element minOccurs="0" name="object" type="xs:string" />
+          <xs:element minOccurs="0" name="publisher" type="xs:string" />
+          <xs:element minOccurs="0" name="recipient" type="xs:string" />
+          <xs:element minOccurs="0" name="source" type="xs:string" />
+          <xs:element minOccurs="0" name="sourceDate" type="xs:string" />
+          <xs:element minOccurs="0" name="sourceId" type="xs:string" />
+          <xs:element minOccurs="0" name="templateId" type="xs:long" />
+          <xs:element minOccurs="0" name="templateName" type="xs:string" />
+          <xs:element minOccurs="0" name="title" type="xs:string" />
+          <xs:element minOccurs="0" name="type" type="xs:string" />
+          <xs:element minOccurs="0" name="uploadDate" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="version" nillable="true" type="tns:versionInfo" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="extendedAttribute">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="name" type="xs:string" />
+          <xs:element minOccurs="0" name="value" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="versionInfo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="comment" type="xs:string" />
+          <xs:element minOccurs="0" name="date" type="xs:string" />
+          <xs:element minOccurs="0" name="user" type="xs:string" />
+          <xs:element minOccurs="0" name="version" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="searchResult">
+        <xs:sequence>
+          <xs:element name="estimatedHitsNumber" type="xs:long" />
+          <xs:element name="moreHits" type="xs:int" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="result" nillable="true" type="tns:result" />
+          <xs:element name="time" type="xs:long" />
+          <xs:element name="totalHits" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="result">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="customId" type="xs:string" />
+          <xs:element minOccurs="0" name="date" type="xs:string" />
+          <xs:element name="id" type="xs:long" />
+          <xs:element name="length" type="xs:int" />
+          <xs:element name="score" type="xs:int" />
+          <xs:element minOccurs="0" name="summary" type="xs:string" />
+          <xs:element minOccurs="0" name="title" type="xs:string" />
+          <xs:element minOccurs="0" name="type" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="folderContent">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="document" nillable="true" type="tns:content" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="folder" nillable="true" type="tns:content" />
+          <xs:element name="id" type="xs:long" />
+          <xs:element minOccurs="0" name="name" type="xs:string" />
+          <xs:element name="parentId" type="xs:long" />
+          <xs:element minOccurs="0" name="parentName" type="xs:string" />
+          <xs:element name="writeable" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="content">
+        <xs:sequence>
+          <xs:element name="id" type="xs:long" />
+          <xs:element minOccurs="0" name="title" type="xs:string" />
+          <xs:element name="writeable" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="extendedAttributeArray" final="#all">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="item" nillable="true" type="tns:extendedAttribute" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="versionInfoArray" final="#all">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="item" nillable="true" type="tns:versionInfo" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="resultArray" final="#all">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="item" nillable="true" type="tns:result" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="contentArray" final="#all">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="item" nillable="true" type="tns:content" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="downloadDocumentInfo" type="tns:downloadDocumentInfo" />
+      <xs:complexType name="downloadDocumentInfo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="username" type="xs:string" />
+          <xs:element minOccurs="0" name="password" type="xs:string" />
+          <xs:element name="id" type="xs:long" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="downloadDocumentInfoResponse" type="tns:downloadDocumentInfoResponse" />
+      <xs:complexType name="downloadDocumentInfoResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:documentInfo" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="checkin" type="tns:checkin" />
+      <xs:complexType name="checkin">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="username" type="xs:string" />
+          <xs:element minOccurs="0" name="password" type="xs:string" />
+          <xs:element name="id" type="xs:long" />
+          <xs:element minOccurs="0" name="filename" type="xs:string" />
+          <xs:element minOccurs="0" name="description" type="xs:string" />
+          <xs:element minOccurs="0" name="type" type="xs:string" />
+          <xs:element minOccurs="0" name="content" type="xs:base64Binary" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="checkinResponse" type="tns:checkinResponse" />
+      <xs:complexType name="checkinResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="createDocument" type="tns:createDocument" />
+      <xs:complexType name="createDocument">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="username" type="xs:string" />
+          <xs:element minOccurs="0" name="password" type="xs:string" />
+          <xs:element name="folder" type="xs:long" />
+          <xs:element minOccurs="0" name="docTitle" type="xs:string" />
+          <xs:element minOccurs="0" name="source" type="xs:string" />
+          <xs:element minOccurs="0" name="sourceDate" type="xs:string" />
+          <xs:element minOccurs="0" name="author" type="xs:string" />
+          <xs:element minOccurs="0" name="sourceType" type="xs:string" />
+          <xs:element minOccurs="0" name="coverage" type="xs:string" />
+          <xs:element minOccurs="0" name="language" type="xs:string" />
+          <xs:element minOccurs="0" name="keywords" type="xs:string" />
+          <xs:element minOccurs="0" name="versionDesc" type="xs:string" />
+          <xs:element minOccurs="0" name="filename" type="xs:string" />
+          <xs:element minOccurs="0" name="content" type="xs:base64Binary" />
+          <xs:element minOccurs="0" name="templateName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="templateFields" type="tns:extendedAttribute" />
+          <xs:element minOccurs="0" name="sourceId" type="xs:string" />
+          <xs:element minOccurs="0" name="object" type="xs:string" />
+          <xs:element minOccurs="0" name="recipient" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="createDocumentResponse" type="tns:createDocumentResponse" />
+      <xs:complexType name="createDocumentResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="deleteFolder" type="tns:deleteFolder" />
+      <xs:complexType name="deleteFolder">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="username" type="xs:string" />
+          <xs:element minOccurs="0" name="password" type="xs:string" />
+          <xs:element name="folder" type="xs:long" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="deleteFolderResponse" type="tns:deleteFolderResponse" />
+      <xs:complexType name="deleteFolderResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="checkout" type="tns:checkout" />
+      <xs:complexType name="checkout">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="username" type="xs:string" />
+          <xs:element minOccurs="0" name="password" type="xs:string" />
+          <xs:element name="id" type="xs:long" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="checkoutResponse" type="tns:checkoutResponse" />
+      <xs:complexType name="checkoutResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="search" type="tns:search" />
+      <xs:complexType name="search">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="username" type="xs:string" />
+          <xs:element minOccurs="0" name="password" type="xs:string" />
+          <xs:element minOccurs="0" name="query" type="xs:string" />
+          <xs:element minOccurs="0" name="indexLanguage" type="xs:string" />
+          <xs:element minOccurs="0" name="queryLanguage" type="xs:string" />
+          <xs:element name="maxHits" type="xs:int" />
+          <xs:element minOccurs="0" name="templateName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="templateFields" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="searchResponse" type="tns:searchResponse" />
+      <xs:complexType name="searchResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:searchResult" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="downloadFolderContent" type="tns:downloadFolderContent" />
+      <xs:complexType name="downloadFolderContent">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="username" type="xs:string" />
+          <xs:element minOccurs="0" name="password" type="xs:string" />
+          <xs:element name="folder" type="xs:long" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="downloadFolderContentResponse" type="tns:downloadFolderContentResponse" />
+      <xs:complexType name="downloadFolderContentResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:folderContent" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="downloadDocument" type="tns:downloadDocument" />
+      <xs:complexType name="downloadDocument">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="username" type="xs:string" />
+          <xs:element minOccurs="0" name="password" type="xs:string" />
+          <xs:element name="id" type="xs:long" />
+          <xs:element minOccurs="0" name="version" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="downloadDocumentResponse" type="tns:downloadDocumentResponse" />
+      <xs:complexType name="downloadDocumentResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="xs:base64Binary" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="deleteDocument" type="tns:deleteDocument" />
+      <xs:complexType name="deleteDocument">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="username" type="xs:string" />
+          <xs:element minOccurs="0" name="password" type="xs:string" />
+          <xs:element name="id" type="xs:long" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="deleteDocumentResponse" type="tns:deleteDocumentResponse" />
+      <xs:complexType name="deleteDocumentResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="createFolder" type="tns:createFolder" />
+      <xs:complexType name="createFolder">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="username" type="xs:string" />
+          <xs:element minOccurs="0" name="password" type="xs:string" />
+          <xs:element minOccurs="0" name="name" type="xs:string" />
+          <xs:element name="parent" type="xs:long" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="createFolderResponse" type="tns:createFolderResponse" />
+      <xs:complexType name="createFolderResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="downloadFolderContentResponse">
+    <wsdl:part name="parameters" element="tns:downloadFolderContentResponse" />
+  </wsdl:message>
+  <wsdl:message name="search">
+    <wsdl:part name="parameters" element="tns:search" />
+  </wsdl:message>
+  <wsdl:message name="deleteFolder">
+    <wsdl:part name="parameters" element="tns:deleteFolder" />
+  </wsdl:message>
+  <wsdl:message name="checkin">
+    <wsdl:part name="parameters" element="tns:checkin" />
+  </wsdl:message>
+  <wsdl:message name="createDocument">
+    <wsdl:part name="parameters" element="tns:createDocument" />
+  </wsdl:message>
+  <wsdl:message name="checkout">
+    <wsdl:part name="parameters" element="tns:checkout" />
+  </wsdl:message>
+  <wsdl:message name="checkoutResponse">
+    <wsdl:part name="parameters" element="tns:checkoutResponse" />
+  </wsdl:message>
+  <wsdl:message name="downloadFolderContent">
+    <wsdl:part name="parameters" element="tns:downloadFolderContent" />
+  </wsdl:message>
+  <wsdl:message name="deleteDocumentResponse">
+    <wsdl:part name="parameters" element="tns:deleteDocumentResponse" />
+  </wsdl:message>
+  <wsdl:message name="searchResponse">
+    <wsdl:part name="parameters" element="tns:searchResponse" />
+  </wsdl:message>
+  <wsdl:message name="downloadDocumentInfo">
+    <wsdl:part name="parameters" element="tns:downloadDocumentInfo" />
+  </wsdl:message>
+  <wsdl:message name="checkinResponse">
+    <wsdl:part name="parameters" element="tns:checkinResponse" />
+  </wsdl:message>
+  <wsdl:message name="createFolderResponse">
+    <wsdl:part name="parameters" element="tns:createFolderResponse" />
+  </wsdl:message>
+  <wsdl:message name="downloadDocumentResponse">
+    <wsdl:part name="parameters" element="tns:downloadDocumentResponse" />
+  </wsdl:message>
+  <wsdl:message name="createDocumentResponse">
+    <wsdl:part name="parameters" element="tns:createDocumentResponse" />
+  </wsdl:message>
+  <wsdl:message name="downloadDocument">
+    <wsdl:part name="parameters" element="tns:downloadDocument" />
+  </wsdl:message>
+  <wsdl:message name="deleteFolderResponse">
+    <wsdl:part name="parameters" element="tns:deleteFolderResponse" />
+  </wsdl:message>
+  <wsdl:message name="downloadDocumentInfoResponse">
+    <wsdl:part name="parameters" element="tns:downloadDocumentInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="createFolder">
+    <wsdl:part name="parameters" element="tns:createFolder" />
+  </wsdl:message>
+  <wsdl:message name="deleteDocument">
+    <wsdl:part name="parameters" element="tns:deleteDocument" />
+  </wsdl:message>
+  <wsdl:portType name="DmsService">
+    <wsdl:operation name="downloadDocumentInfo">
+      <wsdl:input name="downloadDocumentInfo" message="tns:downloadDocumentInfo" />
+      <wsdl:output name="downloadDocumentInfoResponse" message="tns:downloadDocumentInfoResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="checkin">
+      <wsdl:input name="checkin" message="tns:checkin" />
+      <wsdl:output name="checkinResponse" message="tns:checkinResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="createDocument">
+      <wsdl:input name="createDocument" message="tns:createDocument" />
+      <wsdl:output name="createDocumentResponse" message="tns:createDocumentResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="deleteFolder">
+      <wsdl:input name="deleteFolder" message="tns:deleteFolder" />
+      <wsdl:output name="deleteFolderResponse" message="tns:deleteFolderResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="checkout">
+      <wsdl:input name="checkout" message="tns:checkout" />
+      <wsdl:output name="checkoutResponse" message="tns:checkoutResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="search">
+      <wsdl:input name="search" message="tns:search" />
+      <wsdl:output name="searchResponse" message="tns:searchResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="downloadFolderContent">
+      <wsdl:input name="downloadFolderContent" message="tns:downloadFolderContent" />
+      <wsdl:output name="downloadFolderContentResponse" message="tns:downloadFolderContentResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="downloadDocument">
+      <wsdl:input name="downloadDocument" message="tns:downloadDocument" />
+      <wsdl:output name="downloadDocumentResponse" message="tns:downloadDocumentResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="deleteDocument">
+      <wsdl:input name="deleteDocument" message="tns:deleteDocument" />
+      <wsdl:output name="deleteDocumentResponse" message="tns:deleteDocumentResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="createFolder">
+      <wsdl:input name="createFolder" message="tns:createFolder" />
+      <wsdl:output name="createFolderResponse" message="tns:createFolderResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DmsServiceSoapBinding" type="tns:DmsService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="downloadDocumentInfo">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="downloadDocumentInfo">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="downloadDocumentInfoResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="checkin">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="checkin">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="checkinResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createDocument">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="createDocument">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="createDocumentResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteFolder">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="deleteFolder">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="deleteFolderResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="checkout">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="checkout">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="checkoutResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="downloadFolderContent">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="downloadFolderContent">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="downloadFolderContentResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="search">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="search">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="searchResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="downloadDocument">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="downloadDocument">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="downloadDocumentResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createFolder">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="createFolder">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="createFolderResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteDocument">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="deleteDocument">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="deleteDocumentResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DmsService">
+    <wsdl:port name="DmsServiceImplPort" binding="tns:DmsServiceSoapBinding">
+      <soap:address location="http://localhost:8080/logicaldoc/services/Dms" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
