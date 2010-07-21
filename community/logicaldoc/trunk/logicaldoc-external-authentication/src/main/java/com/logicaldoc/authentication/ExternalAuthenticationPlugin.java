@@ -2,12 +2,12 @@ package com.logicaldoc.authentication;
 
 import java.io.File;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.util.config.LoggingConfigurator;
 import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.WebConfigurator;
 import com.logicaldoc.util.plugin.LogicalDOCPlugin;
 
 /**
@@ -20,15 +20,21 @@ public class ExternalAuthenticationPlugin extends LogicalDOCPlugin {
 
 	protected static Log log = LogFactory.getLog(ExternalAuthenticationPlugin.class);
 
+	private static final String SERVICE_NAME = "LdapService";
+
 	@Override
 	protected void install() throws Exception {
 		super.install();
 
-//		String webappDir = resolvePath("webapp");
-//		File src = new File(webappDir);
-//		File dest = new File(webappDir + "/../../../../");
-//		log.info("Copy web resources from " + src.getPath() + " to " + dest.getPath());
-//		FileUtils.copyDirectory(src, dest);
+		File dest = new File(getPluginPath());
+		dest = dest.getParentFile().getParentFile();
+
+		WebConfigurator config = new WebConfigurator(dest.getPath() + "/web.xml");
+
+		config.addServlet(SERVICE_NAME, "com.logicaldoc.authentication.service.LdapServiceImpl", 4);
+		config.writeXMLDoc();
+		config.addInitParam(SERVICE_NAME, "resource-path-prefix", "/frontend/ldap", null);
+		config.writeXMLDoc();
 
 		// Add some scheduling defaults
 		PropertiesBean pbean = new PropertiesBean();

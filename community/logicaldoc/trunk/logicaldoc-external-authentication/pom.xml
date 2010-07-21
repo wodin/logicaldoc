@@ -66,6 +66,18 @@
 			<artifactId>commons-io</artifactId>
 			<scope>provided</scope>
 		</dependency>
+        <dependency>
+            <groupId>com.logicaldoc</groupId>
+            <artifactId>logicaldoc-gui</artifactId>
+            <version>${project.version}</version>
+            <classifier>api</classifier>
+        </dependency>
+         <dependency>
+            <groupId>com.logicaldoc</groupId>
+            <artifactId>logicaldoc-webapp</artifactId>
+            <version>${project.version}</version>
+            <classifier>api</classifier>
+        </dependency>
 	</dependencies>
 	<build>
 		<plugins>
