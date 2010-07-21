@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans SYSTEM "spring-beans-2.0.dtd">
 <beans default-lazy-init="false" default-autowire="no" default-dependency-check="none">
-  <import resource="classpath*:context-core.xml" />
-  <import resource="classpath*:context-webservice.xml" />
+  <import resource="classpath*:context/context-core.xml" />
+  <import resource="classpath*:context/context-webservice.xml" />
 
   <!-- This post processor ensures placeholders substitutions -->
   <bean id="PropertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
