@@ -15,12 +15,11 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
-import com.logicaldoc.web.document.DocumentRecord;
 import com.logicaldoc.workflow.editor.model.WorkflowTask;
+import com.logicaldoc.workflow.model.FetchModel.FETCH_TYPE;
 import com.logicaldoc.workflow.model.WorkflowInstance;
 import com.logicaldoc.workflow.model.WorkflowTaskInstance;
 import com.logicaldoc.workflow.model.WorkflowTemplate;
-import com.logicaldoc.workflow.model.FetchModel.FETCH_TYPE;
 import com.logicaldoc.workflow.model.script.UserScriptObject;
 
 import freemarker.template.Configuration;
@@ -48,8 +47,8 @@ public class FreemarkerTemplateService implements TemplateService {
 		Template template = null;
 
 		try {
-			template = new Template(UUID.randomUUID().toString() + ".ftl", text != null ? new StringReader(text) : new StringReader(""),
-					new Configuration());
+			template = new Template(UUID.randomUUID().toString() + ".ftl", text != null ? new StringReader(text)
+					: new StringReader(""), new Configuration());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -138,10 +137,10 @@ public class FreemarkerTemplateService implements TemplateService {
 	}
 
 	public String transformWorkflowTask(WorkflowTask workflowTask, WorkflowTaskInstance workflowTaskInstance) {
-		WorkflowInstance workflowInstance = this.workflowService.getWorkflowInstanceByTaskInstance(workflowTaskInstance
-				.getId(), FETCH_TYPE.INFO);
-		return this.transformWorkflowTask(workflowTask, workflowInstance, workflowTaskInstance, workflowTask
-				.getDescription());
+		WorkflowInstance workflowInstance = this.workflowService.getWorkflowInstanceByTaskInstance(
+				workflowTaskInstance.getId(), FETCH_TYPE.INFO);
+		return this.transformWorkflowTask(workflowTask, workflowInstance, workflowTaskInstance,
+				workflowTask.getDescription());
 	}
 
 	public static void main(String[] args) {
