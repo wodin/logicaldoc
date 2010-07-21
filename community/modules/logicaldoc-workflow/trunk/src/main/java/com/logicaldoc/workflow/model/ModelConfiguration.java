@@ -10,7 +10,6 @@ import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
 
 import com.logicaldoc.util.PluginRegistry;
-import com.logicaldoc.workflow.editor.controll.EditController;
 import com.logicaldoc.workflow.transform.TransformModel;
 
 /**
@@ -27,18 +26,10 @@ public class ModelConfiguration {
 
 	private Map<String, TransformModel> transformers = new HashMap<String, TransformModel>();
 
-	private Map<String, EditController> controllers = new HashMap<String, EditController>();
-
 	public Map<String, TransformModel> getTransformers() {
 		if (transformers.isEmpty())
 			init();
 		return transformers;
-	}
-
-	public Map<String, EditController> getControllers() {
-		if (controllers.isEmpty())
-			init();
-		return controllers;
 	}
 
 	private void init() {
@@ -56,16 +47,6 @@ public class ModelConfiguration {
 				}
 			} catch (Throwable t) {
 				log.error("Class " + transformerClass + " not found or not a transformer");
-			}
-
-			String controllerClass = ext.getParameter("controller").valueAsString();
-			try {
-				if (StringUtils.isNotEmpty(controllerClass)) {
-					EditController controller = (EditController) Class.forName(controllerClass).newInstance();
-					controllers.put(name, controller);
-				}
-			} catch (Throwable t) {
-				log.error("Class " + transformerClass + " not found or not a controller");
 			}
 		}
 	}

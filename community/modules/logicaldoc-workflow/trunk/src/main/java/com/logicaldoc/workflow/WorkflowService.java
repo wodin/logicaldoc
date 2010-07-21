@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.workflow.model.FetchModel;
 import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowInstance;
@@ -62,11 +63,12 @@ public interface WorkflowService {
 	 */
 	public List<WorkflowTaskInstance> getAllTaskInstances();
 
-	public WorkflowInstance startWorkflow(WorkflowDefinition workflowDefinition, Map<String, Serializable> properties);
+	public WorkflowInstance startWorkflow(WorkflowDefinition workflowDefinition, Map<String, Serializable> properties,
+			UserSession session);
 
 	public void signal(String workflowInstance);
 
-	public void stopWorkflow(String processInstanceId);
+	public void stopWorkflow(String processInstanceId, UserSession session);
 
 	public void updateWorkflow(WorkflowInstance taskInstance);
 

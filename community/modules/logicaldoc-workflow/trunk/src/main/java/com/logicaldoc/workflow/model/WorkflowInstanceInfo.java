@@ -5,8 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.document.DocumentRecord;
-import com.logicaldoc.web.document.DocumentsRecordsManager;
+import com.logicaldoc.workflow.DocumentRecord;
 import com.logicaldoc.workflow.TemplateService;
 import com.logicaldoc.workflow.WorkflowConstants;
 import com.logicaldoc.workflow.editor.WorkflowPersistenceTemplateDAO;
@@ -17,9 +16,9 @@ public class WorkflowInstanceInfo extends WorkflowInstance {
 	@SuppressWarnings("unchecked")
 	public WorkflowInstanceInfo(WorkflowInstance workflowInstance) {
 		super(workflowInstance);
-		
-		WorkflowPersistenceTemplateDAO workflowTemplateDao = (WorkflowPersistenceTemplateDAO) Context
-		.getInstance().getBean(WorkflowPersistenceTemplateDAO.class);
+
+		WorkflowPersistenceTemplateDAO workflowTemplateDao = (WorkflowPersistenceTemplateDAO) Context.getInstance()
+				.getBean(WorkflowPersistenceTemplateDAO.class);
 		workflowTemplateDao.fixConversionField();
 
 		WorkflowTransformService workflowTransformService = (WorkflowTransformService) Context.getInstance().getBean(
@@ -41,8 +40,8 @@ public class WorkflowInstanceInfo extends WorkflowInstance {
 		getProperties().put(WorkflowConstants.VAR_DOCUMENTS, documents);
 		getProperties().put(WorkflowConstants.VAR_TEMPLATE, workflowTemplate);
 
-		String description = templateService.transformWorkflowInstance(this, workflowTemplate, workflowTemplate
-				.getDescription());
+		String description = templateService.transformWorkflowInstance(this, workflowTemplate,
+				workflowTemplate.getDescription());
 		getProperties().put(WorkflowConstants.VAR_DESCRIPTION, description);
 
 		this.setName(workflowTemplate.getName());
