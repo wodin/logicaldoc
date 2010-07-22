@@ -6,8 +6,6 @@ import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
-import com.smartgwt.client.widgets.form.fields.SelectItem;
-import com.smartgwt.client.widgets.form.fields.SpinnerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -21,29 +19,12 @@ public class Accordion extends SectionStack {
 		return wfSettingsSection;
 	}
 
-	public SectionStackSection getTaskSettingsSection() {
-		return taskSettingsSection;
-	}
-
-	private SectionStackSection taskSettingsSection = null;
-
-	private static Accordion instance;
-
-//	public Accordion() {
-//		setVisibilityMode(VisibilityMode.MUTEX);
-//		setWidth(250);
-//		setHeight(557);
-//		setMargin(5);
-//
-//		refresh(false);
-//	}
-
 	public Accordion(boolean showTask) {
 		setVisibilityMode(VisibilityMode.MUTEX);
 		setWidth(250);
 		setHeight(557);
 		setMargin(5);
-	refresh(showTask);
+		refresh(showTask);
 	}
 
 	private void refresh(boolean showTask) {
@@ -95,86 +76,5 @@ public class Accordion extends SectionStack {
 
 		wfSettingsSection.setItems(wfForm, taskAssignmentForm, taskReminderForm, separatorForm, supervisorForm);
 		addSection(wfSettingsSection);
-
-		taskSettingsSection = new SectionStackSection(I18N.message("task"));
-		taskSettingsSection.setExpanded(showTask);
-		taskSettingsSection.setCanCollapse(true);
-
-		DynamicForm taskForm = new DynamicForm();
-		taskForm.setTitleOrientation(TitleOrientation.TOP);
-		taskForm.setNumCols(1);
-		TextItem taskName = ItemFactory.newTextItem("taskName", "name", null);
-		taskName.setRequired(true);
-		TextAreaItem taskDescr = ItemFactory.newTextAreaItem("taskDescr", "description", null);
-		taskDescr.setWrapTitle(false);
-		taskForm.setFields(taskName, taskDescr);
-
-		DynamicForm escalationFormItem = new DynamicForm();
-		escalationFormItem.setTitleOrientation(TitleOrientation.TOP);
-		StaticTextItem escalation = ItemFactory.newStaticTextItem("escalationManagement", "",
-				"<b>" + I18N.message("escalationmanagement") + "</b>");
-		escalation.setShouldSaveValue(false);
-		escalation.setWrapTitle(false);
-		escalation.setWrap(false);
-		escalationFormItem.setItems(escalation);
-
-		DynamicForm escalationForm = new DynamicForm();
-		escalationForm.setTitleOrientation(TitleOrientation.LEFT);
-		escalationForm.setNumCols(4);
-		escalationForm.setColWidths("35", "35", "50", "130");
-		SpinnerItem duedateTimeItem = new SpinnerItem();
-		duedateTimeItem.setTitle(I18N.message("duedate"));
-		duedateTimeItem.setDefaultValue(0);
-		duedateTimeItem.setMin(0);
-		duedateTimeItem.setStep(1);
-		duedateTimeItem.setWidth(50);
-		SelectItem duedateTime = ItemFactory.newTimeSelector("duedateTime", "");
-
-		SpinnerItem remindTimeItem = new SpinnerItem();
-		remindTimeItem.setTitle(I18N.message("remindtime"));
-		remindTimeItem.setDefaultValue(0);
-		remindTimeItem.setMin(0);
-		remindTimeItem.setStep(1);
-		remindTimeItem.setWidth(50);
-		SelectItem remindTime = ItemFactory.newTimeSelector("remindTime", "");
-		escalationForm.setFields(duedateTimeItem, duedateTime, remindTimeItem, remindTime);
-
-		DynamicForm separator1Form = new DynamicForm();
-		separator1Form.setHeight(15);
-
-		DynamicForm participantsForm = new DynamicForm();
-		participantsForm.setTitleOrientation(TitleOrientation.TOP);
-		participantsForm.setNumCols(1);
-		ComboBoxItem participants = ItemFactory.newUserSelector("participants", "");
-		participants.setTitle("<b>" + I18N.message("participants") + "</b>");
-		participants.setTitleOrientation(TitleOrientation.TOP);
-		participantsForm.setItems(participants);
-
-		DynamicForm separator2Form = new DynamicForm();
-		separator2Form.setHeight(15);
-
-		DynamicForm transitionsForm = new DynamicForm();
-		transitionsForm.setTitleOrientation(TitleOrientation.TOP);
-		transitionsForm.setNumCols(1);
-		ComboBoxItem transitions = ItemFactory.newUserSelector("transitions", "");
-		transitions.setTitle("<b>" + I18N.message("transitions") + "</b>");
-		transitions.setTitleOrientation(TitleOrientation.TOP);
-		transitionsForm.setItems(transitions);
-
-		taskSettingsSection.setItems(taskForm, escalationFormItem, escalationForm, separator1Form, participantsForm,
-				separator2Form, transitionsForm);
-//		addSection(taskSettingsSection);
-	}
-
-//	public static Accordion get() {
-//		if (instance == null)
-//			instance = new Accordion();
-//		return instance;
-//	}
-
-	public void showTaskSection() {
-		collapseSection(0);
-		
-		// refresh(true);
 	}
 }

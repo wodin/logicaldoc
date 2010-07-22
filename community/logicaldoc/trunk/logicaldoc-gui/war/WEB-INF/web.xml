@@ -83,6 +83,11 @@
     <servlet-name>MessageService</servlet-name>
     <servlet-class>com.logicaldoc.gui.frontend.server.MockMessageServiceImpl</servlet-class>
   </servlet>
+  
+  <servlet>
+    <servlet-name>WorkflowService</servlet-name>
+    <servlet-class>com.logicaldoc.gui.frontend.server.MockWorkflowServiceImpl</servlet-class>
+  </servlet>
 
   <servlet>
     <servlet-name>TagsData</servlet-name>
@@ -203,6 +208,11 @@
     <servlet-name>MessagesData</servlet-name>
     <servlet-class>com.logicaldoc.gui.common.server.MockMessagesDataServlet</servlet-class>
   </servlet>
+  
+  <servlet>
+    <servlet-name>WorkflowsData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.MockWorkflowsDataServlet</servlet-class>
+  </servlet>
 
   <servlet>
     <servlet-name>log</servlet-name>
@@ -282,6 +292,11 @@
   <servlet-mapping>
     <servlet-name>MessageService</servlet-name>
     <url-pattern>/frontend/message</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>WorkflowService</servlet-name>
+    <url-pattern>/frontend/workflow</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
@@ -392,6 +407,11 @@
   <servlet-mapping>
     <servlet-name>MessagesData</servlet-name>
     <url-pattern>/data/messages.xml</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>WorkflowsData</servlet-name>
+    <url-pattern>/data/workflows.xml</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

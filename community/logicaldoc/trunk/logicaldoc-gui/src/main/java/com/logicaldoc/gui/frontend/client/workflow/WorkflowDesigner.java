@@ -59,25 +59,6 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 		if (type == TYPE_TASK) {
 			TaskDialog window = new TaskDialog();
 			window.show();
-
-			// accordion.showTaskSection();
-
-			// if(!layout.contains(accordion))
-			// SC.say("xxxxxxxxxxxxxx");
-			// layout.removeMember(accordion);
-			// accordion=new Accordion(true);
-			// layout.addMember(accordion, 0);
-			// layout.destroy();
-			// if (contains(layout))
-			// removeMember(layout);
-			// if (contains(layout))
-			// removeChild(layout);
-			// layout = new HLayout();
-			// accordion = new Accordion(true);
-			// layout.addMember(accordion);
-			// layout.addMember(new DrawingPanel());
-			// addMember(layout);
-			// redraw();
 		} else {
 			final Window window = new Window();
 			String typeString = "";
