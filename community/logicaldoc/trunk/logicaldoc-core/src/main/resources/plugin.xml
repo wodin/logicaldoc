@@ -30,21 +30,27 @@
     <parameter-def id="class" />
     <parameter-def id="position" />
   </extension-point>
-
   <extension-point id="Authentication">
     <parameter-def id="providerId" />
     <parameter-def id="position" />
   </extension-point>
-
   <extension-point id="ThumbnailBuilder">
     <parameter-def id="extension" />
     <parameter-def id="class" />
   </extension-point>
-  
   <extension-point id="Search">
     <parameter-def id="type" />
     <parameter-def id="class" />
   </extension-point>
+  <extension-point id="DbInit">
+    <parameter-def id="name" />
+    <parameter-def id="sqlFile" />
+    <parameter-def id="position" />
+  </extension-point>
+  <extension-point id="Feature">
+    <parameter-def id="name" />
+  </extension-point>
+  
 
   <extension plugin-id="logicaldoc-core" point-id="Authentication" id="BasicAuthentication">
     <parameter id="providerId" value="BasicAuthentication" />
@@ -124,5 +130,18 @@
 	<parameter id="position" value="1" />
 	<parameter id="name" value="logicaldoc-core" />
 	<parameter id="sqlFile" value="sql/logicaldoc-core.sql" />
+  </extension>
+  
+  <extension plugin-id="logicaldoc-core" point-id="Feature" id="f53">
+	<parameter id="name" value="Feature_53" />
+  </extension>
+  <extension plugin-id="logicaldoc-core" point-id="Feature" id="f56">
+	<parameter id="name" value="Feature_56" />
+  </extension>
+  <extension plugin-id="logicaldoc-core" point-id="Feature" id="f51">
+	<parameter id="name" value="Feature_51" />
+  </extension>
+  <extension plugin-id="logicaldoc-core" point-id="Feature" id="f13">
+	<parameter id="name" value="Feature_13" />
   </extension>
 </plugin>

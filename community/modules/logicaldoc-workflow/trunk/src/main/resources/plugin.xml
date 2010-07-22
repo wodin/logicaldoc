@@ -43,4 +43,8 @@
         <parameter id="mapping" value="classpath*:org/jbpm/**/*.hbm.xml"/>
         <parameter id="position" value="2"/>
     </extension>
+    
+    <extension plugin-id="logicaldoc-core" point-id="Feature" id="f52">
+	    <parameter id="name" value="Feature_52" />
+    </extension>
 </plugin>
