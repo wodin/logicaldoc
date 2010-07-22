@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.lang.LocaleUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -69,8 +70,12 @@ public class FulltextSearch extends Search {
 		}
 
 		MultiSearcher multiSearcher = new MultiSearcher(searcher);
-		Analyzer analyzer = LanguageManager.getInstance().getLanguage(new Locale(opt.getExpressionLanguage()))
-				.getAnalyzer();
+		
+		// Creo il locale partendo dalla rappresentazione in formato stringa dello stesso
+		// importante per i casi delle varianti di linguaggio ex: pt_BR
+		Locale expressionLocale = LocaleUtils.toLocale(opt.getExpressionLanguage());
+		
+        Analyzer analyzer = LanguageManager.getInstance().getLanguage(expressionLocale).getAnalyzer();
 
 		if (opt.getFields() == null) {
 			String[] fields = new String[] { LuceneDocument.FIELD_CONTENT, LuceneDocument.FIELD_TAGS };
