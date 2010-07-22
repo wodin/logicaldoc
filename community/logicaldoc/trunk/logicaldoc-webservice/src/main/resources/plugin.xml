@@ -10,4 +10,11 @@
 		<parameter id="name" value="logicaldoc-webservice" />
 		<parameter id="sqlFile" value="sql/logicaldoc-webservice.sql" />
 	</extension>
+	
+	<extension plugin-id="logicaldoc-core" point-id="Feature" id="fws57">
+	    <parameter id="name" value="Feature_57" />
+    </extension>
+	<extension plugin-id="logicaldoc-core" point-id="Feature" id="fws58">
+	    <parameter id="name" value="Feature_58" />
+    </extension>
 </plugin>
