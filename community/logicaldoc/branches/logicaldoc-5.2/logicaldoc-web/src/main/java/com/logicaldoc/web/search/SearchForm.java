@@ -564,7 +564,9 @@ public class SearchForm extends SortableList {
 
 			Locale searchLocale = "all".equals(language) ? SessionManagement.getLocale() : LocaleUtil
 					.toLocale(language);
-			opt.setExpressionLanguage(searchLocale.getLanguage());
+			
+			// Utilizzo toString su searchLocale per i casi delle varianti di linguaggio ex: pt_BR
+			opt.setExpressionLanguage(searchLocale.toString());
 
 			search(opt);
 		} catch (Throwable e) {
