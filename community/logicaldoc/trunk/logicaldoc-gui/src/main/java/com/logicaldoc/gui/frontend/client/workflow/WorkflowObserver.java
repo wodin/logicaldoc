@@ -12,7 +12,6 @@ public interface WorkflowObserver {
 	 * 
 	 * @param workflowState The selected workflowState
 	 */
-	// public void onFolderSelect(GUIFolder workflowState);
 	public void onStateSelect(int type);
 
 	/**
@@ -20,6 +19,5 @@ public interface WorkflowObserver {
 	 * 
 	 * @param workflow The selected workflow
 	 */
-	// public void onFolderSelect(GUIWorkflow workflow);
 	public void onWorkflowSelect();
 }
