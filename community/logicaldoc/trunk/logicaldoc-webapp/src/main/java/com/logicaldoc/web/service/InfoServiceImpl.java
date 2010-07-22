@@ -2,6 +2,7 @@ package com.logicaldoc.web.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.java.plugin.registry.Extension;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
@@ -21,6 +23,7 @@ import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.common.client.services.InfoService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
+import com.logicaldoc.util.PluginRegistry;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.web.ApplicationInitializer;
 
@@ -85,16 +88,28 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 					messages.add(setupReminder);
 				}
 			}
-			
-			//Check if the application needs to be restarted
-			if(ApplicationInitializer.needRestart){
+
+			// Check if the application needs to be restarted
+			if (ApplicationInitializer.needRestart) {
 				GUIMessage restartReminder = new GUIMessage();
 				restartReminder.setMessage(getValue(info, "needrestart"));
 				messages.add(restartReminder);
 			}
-			
+
 			info.setMessages(messages.toArray(new GUIMessage[0]));
-			
+
+			// Collect installed features
+			List<String> features = new ArrayList<String>();
+			PluginRegistry registry = PluginRegistry.getInstance();
+			Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "Feature");
+			for (Extension extension : exts) {
+				// Retrieve the task name
+				String name = extension.getParameter("name").valueAsString();
+				if (!features.contains(name))
+					features.add(name);
+			}
+
+			info.setFeatures(features.toArray(new String[0]));
 			info.setFeatures(new String[] { "Feature_52", "Feature_53", "Feature_56", "Feature_13" });
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
