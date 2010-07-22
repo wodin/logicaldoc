@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
-<plugin id="logicaldoc-lang-pt_br" version="4.5.0" class="com.logicaldoc.plugin.language.pt_br.BrazilianPlugin">
+<plugin id="logicaldoc-lang-pt_br" version="5.1.0" class="com.logicaldoc.plugin.language.pt_br.BrazilianPlugin">
 	<requires>
 		<import plugin-id="logicaldoc-core" />
 	</requires>	

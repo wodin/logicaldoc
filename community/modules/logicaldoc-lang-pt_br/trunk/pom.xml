@@ -4,10 +4,10 @@
   <parent>
     <groupId>com.logicaldoc</groupId>
     <artifactId>logicaldoc</artifactId>
-    <version>4.0.0</version>
+    <version>5.1.0</version>
   </parent>
   <artifactId>logicaldoc-lang-pt_br</artifactId>
-  <version>4.5.0</version>
+  <version>5.1.0</version>
   <name>logicaldoc-lang-pt_br</name>
   <description>Portuguese Brazilian language plugin for LogicalDOC</description>
   <packaging>jar</packaging>
@@ -16,6 +16,20 @@
     <developerConnection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/modules/logicaldoc-lang-pt_br/trunk</developerConnection>
     <url>http://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/modules/logicaldoc-lang-pt_br/trunk</url>
   </scm>
+  <contributors>
+		<contributor>
+			<name>Sam Samuels</name>
+			<roles>
+			  <role>Translator (I18N/L10N)</role>
+			</roles>
+		</contributor>
+		<contributor>
+			<name>Dejair Ferreira Junior</name>
+			<roles>
+			  <role>Translator (I18N/L10N)</role>
+			</roles>
+		</contributor>		
+	</contributors>  
 	<dependencies>
 		<dependency>
 			<groupId>net.sf.jpf</groupId>
@@ -40,14 +54,7 @@
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-util</artifactId>
-			<version>4.5.0</version>
-			<type>jar</type>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.logicaldoc</groupId>
-			<artifactId>logicaldoc-core</artifactId>
-			<version>4.5.0</version>
+			<version>5.1.0</version>
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>

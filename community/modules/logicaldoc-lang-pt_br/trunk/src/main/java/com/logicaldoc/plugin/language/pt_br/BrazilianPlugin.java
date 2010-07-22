@@ -41,4 +41,5 @@ public class BrazilianPlugin extends LogicalDOCPlugin {
 		FacesConfigurator facesConfig = new FacesConfigurator();
 		facesConfig.addLanguageToFacesConfig("pt_BR");
 	}
+
 }
