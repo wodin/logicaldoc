@@ -2,18 +2,13 @@ package com.logicaldoc.gui.frontend.client.workflow;
 
 import com.google.gwt.user.client.ui.HTML;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.Window;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.SubmitItem;
-import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VStack;
 
@@ -86,50 +81,7 @@ public class WorkflowState extends VStack {
 		edit.addClickHandler(new com.google.gwt.event.dom.client.ClickHandler() {
 			@Override
 			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
-				if (getType() == TYPE_TASK) {
-//					Accordion.get().getWfSettingsSection().setExpanded(false);
-//					Accordion.get().getTaskSettingsSection().setExpanded(true);
-					Accordion.get().showTaskSection();
-				} else {
-					final Window window = new Window();
-					String type = "";
-					if (getType() == TYPE_JOIN) {
-						type = I18N.message("join");
-					} else if (getType() == TYPE_FORK) {
-						type = I18N.message("fork");
-					} else if (getType() == TYPE_END) {
-						type = I18N.message("endstate");
-					}
-					
-					window.setTitle(I18N.message("editworkflowstate", type));
-					window.setWidth(250);
-					window.setHeight(200);
-					window.setCanDragResize(true);
-					window.setIsModal(true);
-					window.setShowModalMask(true);
-					window.centerInPage();
-
-					DynamicForm form = new DynamicForm();
-					form.setTitleOrientation(TitleOrientation.TOP);
-					form.setNumCols(1);
-					TextItem name = ItemFactory.newTextItem("name", "name", null);
-					name.setRequired(true);
-
-					SubmitItem saveButton = new SubmitItem("save", I18N.message("save"));
-					saveButton.setAlign(Alignment.LEFT);
-					saveButton.addClickHandler(new ClickHandler() {
-						@Override
-						public void onClick(ClickEvent event) {
-							// onSave();
-							window.destroy();
-						}
-					});
-
-					form.setFields(name, saveButton);
-
-					window.addItem(form);
-					window.show();
-				}
+				WorkflowDesigner.get().onStateSelect(getType());
 			}
 		});
 		commands.addMember(edit);

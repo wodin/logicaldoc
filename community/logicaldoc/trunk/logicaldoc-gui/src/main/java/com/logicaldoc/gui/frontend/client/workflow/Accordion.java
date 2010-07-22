@@ -4,7 +4,6 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VisibilityMode;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -30,21 +29,27 @@ public class Accordion extends SectionStack {
 
 	private static Accordion instance;
 
-	public Accordion() {
+//	public Accordion() {
+//		setVisibilityMode(VisibilityMode.MUTEX);
+//		setWidth(250);
+//		setHeight(557);
+//		setMargin(5);
+//
+//		refresh(false);
+//	}
+
+	public Accordion(boolean showTask) {
 		setVisibilityMode(VisibilityMode.MUTEX);
 		setWidth(250);
 		setHeight(557);
 		setMargin(5);
-
-		refresh(false);
+	refresh(showTask);
 	}
 
 	private void refresh(boolean showTask) {
 		wfSettingsSection = new SectionStackSection(I18N.message("workflowsettings"));
-		if (showTask)
-			wfSettingsSection.setExpanded(false);
-		else
-			wfSettingsSection.setExpanded(true);
+		wfSettingsSection.setExpanded(!showTask);
+		wfSettingsSection.setCanCollapse(true);
 
 		DynamicForm wfForm = new DynamicForm();
 		wfForm.setTitleOrientation(TitleOrientation.TOP);
@@ -92,10 +97,8 @@ public class Accordion extends SectionStack {
 		addSection(wfSettingsSection);
 
 		taskSettingsSection = new SectionStackSection(I18N.message("task"));
-		if (showTask)
-			taskSettingsSection.setExpanded(true);
-		else
-			taskSettingsSection.setExpanded(false);
+		taskSettingsSection.setExpanded(showTask);
+		taskSettingsSection.setCanCollapse(true);
 
 		DynamicForm taskForm = new DynamicForm();
 		taskForm.setTitleOrientation(TitleOrientation.TOP);
@@ -160,17 +163,18 @@ public class Accordion extends SectionStack {
 
 		taskSettingsSection.setItems(taskForm, escalationFormItem, escalationForm, separator1Form, participantsForm,
 				separator2Form, transitionsForm);
-		addSection(taskSettingsSection);
+//		addSection(taskSettingsSection);
 	}
 
-	public static Accordion get() {
-		if (instance == null)
-			instance = new Accordion();
-		return instance;
-	}
+//	public static Accordion get() {
+//		if (instance == null)
+//			instance = new Accordion();
+//		return instance;
+//	}
 
 	public void showTaskSection() {
-		SC.warn("show task!!!");
-		refresh(true);
+		collapseSection(0);
+		
+		// refresh(true);
 	}
 }
