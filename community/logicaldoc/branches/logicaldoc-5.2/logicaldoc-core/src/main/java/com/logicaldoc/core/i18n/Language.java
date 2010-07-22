@@ -68,6 +68,7 @@ public class Language {
 		try {
 			Set<String> swSet = new HashSet<String>();
 			String stopwordsResource = "/stopwords/stopwords_" + getLocale().toString() + ".txt";
+			log.debug("Loading stopwords from: " + stopwordsResource);
 			InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(stopwordsResource);
 			if (is == null)
 				is = getClass().getResourceAsStream(stopwordsResource);
@@ -125,46 +126,53 @@ public class Language {
 
 	@SuppressWarnings("unchecked")
 	public Analyzer getAnalyzer() {
-		
+
 		if (analyzer == null && !StringUtils.isEmpty(getAnalyzerClass())) {
 
-			// Try to instantiate the specified analyzer (Using default constructor)
+			// Try to instantiate the specified analyzer (Using default
+			// constructor)
 			Class aClass = null;
 			try {
 				aClass = Class.forName(analyzerClass);
 			} catch (Throwable t) {
 				log.error(analyzerClass + " not found");
 			}
-			
-			// Try to use constructor (Version matchVersion)
-			try {
-				Constructor constructor = aClass
-						.getConstructor(new Class[] { org.apache.lucene.util.Version.class });
-				if (constructor != null)
-					analyzer = (Analyzer) constructor.newInstance(Version.LUCENE_30);
-			} catch (Throwable t) {
-				log.debug("constructor (Version matchVersion) not found");
-			}
 
-			// Try to use constructor (Version matchVersion, Set<?> stopwords) 
-			if (analyzer == null) {
+			// Try to use constructor (Version matchVersion, Set<?> stopwords)
+			if (stopWords != null && (!stopWords.isEmpty())) {
 				try {
 					Constructor constructor = aClass
-							.getConstructor(new Class[] { org.apache.lucene.util.Version.class, java.util.Set.class });
+							.getConstructor(new Class[] {
+									org.apache.lucene.util.Version.class,
+									java.util.Set.class });
 					if (constructor != null)
-						analyzer = (Analyzer) constructor.newInstance(Version.LUCENE_30, stopWords);
+						analyzer = (Analyzer) constructor.newInstance(
+								Version.LUCENE_30, stopWords);
 				} catch (Throwable e) {
 					log.debug("constructor (Version matchVersion, Set<?> stopwords)  not found");
 				}
 			}
 
+			// Try to use constructor (Version matchVersion)
+			if (analyzer == null) {
+				try {
+					Constructor constructor = aClass
+							.getConstructor(new Class[] { org.apache.lucene.util.Version.class });
+					if (constructor != null)
+						analyzer = (Analyzer) constructor
+								.newInstance(Version.LUCENE_30);
+				} catch (Throwable t) {
+					log.debug("constructor (Version matchVersion) not found");
+				}
+			}
+
 			// Try with default constructor
 			if (analyzer == null) {
-			try {
-				analyzer = (Analyzer) aClass.newInstance();
-			} catch (Throwable e) {
-				log.debug("constructor without arguments not found");
-			}
+				try {
+					analyzer = (Analyzer) aClass.newInstance();
+				} catch (Throwable e) {
+					log.debug("constructor without arguments not found");
+				}
 			}
 		}
 
