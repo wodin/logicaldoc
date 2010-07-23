@@ -21,10 +21,10 @@ public class JoinRow extends WorkflowRow {
 
 	private Label dropArea;
 
-	public JoinRow() {
+	public JoinRow(WorkflowDesigner designer) {
 		super();
 
-		state = new WorkflowState(WorkflowState.TYPE_JOIN);
+		state = new WorkflowState(designer, WorkflowState.TYPE_JOIN);
 		addMember(state);
 
 		dropArea = new Label(I18N.message("dropastate"));
@@ -51,7 +51,7 @@ public class JoinRow extends WorkflowRow {
 			public void onDrop(DropEvent event) {
 				WorkflowState target = (WorkflowState) EventHandler.getDragTarget();
 				removeMember(dropArea);
-				addMember(new WorkflowDraggedState(target.getType()), 1);
+				addMember(new WorkflowDraggedState(target.getDesigner(), target.getType()), 1);
 			}
 		});
 

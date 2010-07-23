@@ -53,7 +53,7 @@ public class MetadataAndWorkflowMenu extends VLayout {
 		workflow.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				AdminPanel.get().setContent(new WorkflowDesigner());
+				AdminPanel.get().setContent(new WorkflowDesigner(null));
 			}
 		});
 	}

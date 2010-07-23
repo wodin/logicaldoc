@@ -14,8 +14,8 @@ import com.smartgwt.client.widgets.layout.HLayout;
  */
 public class WorkflowDraggedState extends WorkflowState {
 
-	public WorkflowDraggedState(int type) {
-		super(type);
+	public WorkflowDraggedState(WorkflowDesigner designer, int type) {
+		super(designer, type);
 
 		setCanDrag(false);
 		setCanDrop(false);

@@ -7,6 +7,7 @@ import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.data.WorkflowsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
@@ -35,15 +36,21 @@ public class WorkflowToolstrip extends ToolStrip {
 
 	private GUIWorkflow currentWorkflow = null;
 
-	public WorkflowToolstrip() {
+	private WorkflowDesigner designer = null;
+
+	public WorkflowToolstrip(WorkflowDesigner designer) {
 		super();
+
+		this.designer = designer;
+		if (designer.getWorkflow() != null)
+			currentWorkflow = designer.getWorkflow();
+
 		setWidth100();
 
 		ToolStripButton newTemplate = new ToolStripButton(I18N.message("newwftemplate"));
 		newTemplate.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				SC.say("New workflow template");
 				workflowService.save(Session.get().getSid(), new GUIWorkflow(), new AsyncCallback<GUIWorkflow>() {
 					@Override
 					public void onFailure(Throwable caught) {
@@ -53,6 +60,7 @@ public class WorkflowToolstrip extends ToolStrip {
 					@Override
 					public void onSuccess(GUIWorkflow result) {
 						currentWorkflow = result;
+						AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
 					}
 				});
 			}
@@ -68,6 +76,8 @@ public class WorkflowToolstrip extends ToolStrip {
 		workflow.setPickListWidth(300);
 		workflow.setPickListFields(name);
 		workflow.setOptionDataSource(WorkflowsDS.get());
+		if (currentWorkflow != null)
+			workflow.setValue(currentWorkflow.getName());
 		workflow.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
@@ -84,7 +94,7 @@ public class WorkflowToolstrip extends ToolStrip {
 							@Override
 							public void onSuccess(GUIWorkflow result) {
 								currentWorkflow = result;
-								// TODO Update the workflow setting page
+								AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
 							}
 						});
 			}
@@ -95,7 +105,6 @@ public class WorkflowToolstrip extends ToolStrip {
 		load.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				SC.say("load the selected template");
 				workflowService.get(Session.get().getSid(), currentWorkflow.getId(), new AsyncCallback<GUIWorkflow>() {
 					@Override
 					public void onFailure(Throwable caught) {
@@ -105,7 +114,7 @@ public class WorkflowToolstrip extends ToolStrip {
 					@Override
 					public void onSuccess(GUIWorkflow result) {
 						currentWorkflow = result;
-						// TODO Update the workflow setting page
+						AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
 					}
 				});
 			}
@@ -117,7 +126,6 @@ public class WorkflowToolstrip extends ToolStrip {
 		save.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				SC.say("save the selected template");
 				workflowService.save(Session.get().getSid(), currentWorkflow, new AsyncCallback<GUIWorkflow>() {
 					@Override
 					public void onFailure(Throwable caught) {
@@ -139,7 +147,6 @@ public class WorkflowToolstrip extends ToolStrip {
 		deploy.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				SC.say("deploy the loaded template");
 				workflowService.deploy(Session.get().getSid(), currentWorkflow.getId(), new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
@@ -148,7 +155,7 @@ public class WorkflowToolstrip extends ToolStrip {
 
 					@Override
 					public void onSuccess(Void result) {
-						// TODO Update the workflow setting page
+						SC.say("Workflow " + currentWorkflow.getId() + " correctly deployed!!!");
 					}
 				});
 			}
@@ -160,7 +167,6 @@ public class WorkflowToolstrip extends ToolStrip {
 		delete.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				SC.say("delete the loaded template");
 				SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
@@ -174,8 +180,7 @@ public class WorkflowToolstrip extends ToolStrip {
 
 										@Override
 										public void onSuccess(Void result) {
-											// TODO Update the workflow setting
-											// page
+											SC.say("Workflow correctly deleted!!!");
 										}
 									});
 						}
@@ -196,5 +201,9 @@ public class WorkflowToolstrip extends ToolStrip {
 		addButton(close);
 
 		addFill();
+	}
+
+	public WorkflowDesigner getDesigner() {
+		return designer;
 	}
 }

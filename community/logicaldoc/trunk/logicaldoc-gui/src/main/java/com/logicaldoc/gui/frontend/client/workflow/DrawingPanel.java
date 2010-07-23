@@ -11,7 +11,7 @@ import com.smartgwt.client.widgets.layout.VStack;
  */
 public class DrawingPanel extends VStack {
 
-	public DrawingPanel() {
+	public DrawingPanel(WorkflowDesigner designer) {
 		super();
 		setHeight(557);
 		setMembersMargin(5);
@@ -22,9 +22,9 @@ public class DrawingPanel extends VStack {
 		setShowCustomScrollbars(true);
 		setOverflow(Overflow.SCROLL);
 
-		addMember(new TaskRow());
-		addMember(new ForkRow());
-		addMember(new JoinRow());
-		addMember(new EndRow());
+		addMember(new TaskRow(designer));
+		addMember(new ForkRow(designer));
+		addMember(new JoinRow(designer));
+		addMember(new EndRow(designer));
 	}
 }

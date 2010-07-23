@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
+import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.Alignment;
@@ -23,8 +24,6 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 
 	private Accordion accordion = null;
 
-	private static WorkflowDesigner instance;
-
 	public final static int TYPE_TASK = 0;
 
 	public final static int TYPE_END = 1;
@@ -36,22 +35,20 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 	// HStack or HLayout with Accordion e Drawing Panel
 	private HLayout layout = new HLayout();
 
-	public WorkflowDesigner() {
+	private GUIWorkflow workflow = null;
+
+	public WorkflowDesigner(GUIWorkflow workflow) {
+		this.workflow = workflow;
+
 		setMembersMargin(5);
 
-		addMember(new WorkflowToolstrip());
-		addMember(new StateToolstrip());
+		addMember(new WorkflowToolstrip(this));
+		addMember(new StateToolstrip(this));
 
-		accordion = new Accordion(false);
+		accordion = new Accordion(workflow);
 		layout.addMember(accordion);
-		layout.addMember(new DrawingPanel());
+		layout.addMember(new DrawingPanel(this));
 		addMember(layout);
-	}
-
-	public static WorkflowDesigner get() {
-		if (instance == null)
-			instance = new WorkflowDesigner();
-		return instance;
 	}
 
 	@Override
@@ -102,7 +99,17 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 	}
 
 	@Override
-	public void onWorkflowSelect() {
-		// TODO Auto-generated method stub
+	public void onWorkflowSelect(GUIWorkflow workflow) {
+		removeMember(layout);
+
+		// layout.removeMember(accordion);
+		// accordion.destroy();
+		// accordion = new Accordion(workflow);
+		// layout.addMember(accordion);
+		// accordion.refresh(workflow);
+	}
+
+	public GUIWorkflow getWorkflow() {
+		return workflow;
 	}
 }

@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.UUID;
 
-import oracle.jdbc.util.Login;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -79,8 +77,8 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			pbean.setProperty("smtp.password", data.getSmtpPassword() != null ? data.getSmtpPassword() : "");
 			pbean.setProperty("smtp.sender", data.getSmtpSender() != null ? data.getSmtpSender() : "");
 			pbean.setProperty("smtp.authEncripted", Boolean.toString(data.isSmtpSecureAuth()));
-			pbean.setProperty("smtp.connectionSecurity", data.getSmtpConnectionSecurity() != null ? data
-					.getSmtpConnectionSecurity() : "0");
+			pbean.setProperty("smtp.connectionSecurity",
+					data.getSmtpConnectionSecurity() != null ? data.getSmtpConnectionSecurity() : "0");
 			pbean.write();
 
 			EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);

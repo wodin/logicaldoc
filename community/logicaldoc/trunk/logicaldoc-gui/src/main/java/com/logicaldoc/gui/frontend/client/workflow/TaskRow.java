@@ -9,10 +9,10 @@ import com.smartgwt.client.widgets.layout.VStack;
  * @since 6.0
  */
 public class TaskRow extends WorkflowRow {
-	public TaskRow() {
+	public TaskRow(WorkflowDesigner designer) {
 		super();
 
-		state = new WorkflowState(WorkflowState.TYPE_TASK);
+		state = new WorkflowState(designer, WorkflowState.TYPE_TASK);
 		addMember(state);
 
 		VStack transitionsPanel = new VStack();

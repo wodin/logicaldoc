@@ -3,10 +3,7 @@
   xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
   <description>LogicalDOC - Document Management System</description>
   <display-name>LogicalDOC</display-name>
-  <!--
-		Location of the XML file that defines the root application context
-		Applied by ContextLoaderListener.
-	-->
+  <!-- Location of the XML file that defines the root application context Applied by ContextLoaderListener. -->
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>/WEB-INF/classes/context.xml</param-value>
@@ -19,10 +16,8 @@
     <param-value>3145728</param-value>
   </context-param>
   <context-param>
-    <!--
-      Useful in development mode to slow down the uploads in fast networks. Put the number of milliseconds to sleep in
-      each block received in the server. false or 0, means don't use slow uploads
-    -->
+    <!-- Useful in development mode to slow down the uploads in fast networks. Put the number of milliseconds to sleep in 
+      each block received in the server. false or 0, means don't use slow uploads -->
     <param-name>slowUploads</param-name>
     <param-value>10</param-value>
   </context-param>
@@ -71,12 +66,10 @@
   <listener>
     <listener-class>com.logicaldoc.web.ApplicationInitializer</listener-class>
   </listener>
-  <!--
-    Loads the root application context of this web app at startup. Use
-    WebApplicationContextUtils.getWebApplicationContext(servletContext) to access it anywhere in the web application,
-    outside of the framework. The root context is the parent of all servlet-specific contexts. This means that its beans
-    are automatically available in these child contexts, both for getBean(name) calls and (external) bean references.
-  -->
+  <!-- Loads the root application context of this web app at startup. Use WebApplicationContextUtils.getWebApplicationContext(servletContext) 
+    to access it anywhere in the web application, outside of the framework. The root context is the parent of all servlet-specific 
+    contexts. This means that its beans are automatically available in these child contexts, both for getBean(name) calls and 
+    (external) bean references. -->
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
@@ -145,11 +138,6 @@
   <servlet>
     <servlet-name>MessageService</servlet-name>
     <servlet-class>com.logicaldoc.web.service.MessageServiceImpl</servlet-class>
-  </servlet>
-  
-  <servlet>
-    <servlet-name>WorkflowService</servlet-name>
-    <servlet-class>com.logicaldoc.gui.frontend.server.MockWorkflowServiceImpl</servlet-class>
   </servlet>
 
   <servlet>
@@ -349,11 +337,6 @@
   <servlet-mapping>
     <servlet-name>MessageService</servlet-name>
     <url-pattern>/frontend/message</url-pattern>
-  </servlet-mapping>
-  
-  <servlet-mapping>
-    <servlet-name>WorkflowService</servlet-name>
-    <url-pattern>/frontend/workflow</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
