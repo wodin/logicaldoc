@@ -127,7 +127,7 @@ public class LoginPanel extends VLayout {
 			}
 		});
 
-		language = ItemFactory.newGUILanguageSelector("language", true);
+		language = ItemFactory.newLanguageSelector("language", true, true);
 		language.setDefaultValue("");
 
 		form.setFields(username, password, language);

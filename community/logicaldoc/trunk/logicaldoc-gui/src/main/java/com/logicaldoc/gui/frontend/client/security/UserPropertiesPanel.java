@@ -133,7 +133,7 @@ public class UserPropertiesPanel extends HLayout {
 		if (!readonly)
 			country.addChangedHandler(changedHandler);
 
-		SelectItem language = ItemFactory.newLanguageSelector("language", false);
+		SelectItem language = ItemFactory.newLanguageSelector("language", false, true);
 		language.addChangedHandler(changedHandler);
 		language.setDisabled(readonly);
 		language.setValue(user.getLanguage());

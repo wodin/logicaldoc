@@ -281,7 +281,7 @@ public class Setup implements EntryPoint {
 		Tab languageTab = new Tab();
 		languageTab.setTitle(I18N.message(LANGUAGE));
 
-		SelectItem languageItem = ItemFactory.newLanguageSelector(LANGUAGE, false);
+		SelectItem languageItem = ItemFactory.newLanguageSelector(LANGUAGE, false, true);
 		languageItem.setTitle(I18N.message("defaultlang"));
 		languageItem.setRequired(true);
 
@@ -459,8 +459,8 @@ public class Setup implements EntryPoint {
 
 					@Override
 					public void onSuccess(Void arg) {
-						SC.say(I18N.message("installationperformed"), I18N.message("installationend", context
-								.get("product_name")));
+						SC.say(I18N.message("installationperformed"),
+								I18N.message("installationend", context.get("product_name")));
 						Util.redirect("../frontend.jsp");
 					}
 				});
