@@ -3,6 +3,8 @@ package com.logicaldoc.authentication.ldap;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import com.logicaldoc.util.config.PropertiesBean;
+
 /**
  * All directory-based informations responsible for data will be stored here.
  * 
@@ -10,6 +12,8 @@ import java.util.StringTokenizer;
  * @since 4.5
  */
 public class LDAPUserGroupContext {
+
+	private PropertiesBean config;
 
 	/**
 	 * Attribute that identifies a user explicitly regarding the user class
@@ -143,5 +147,13 @@ public class LDAPUserGroupContext {
 		groupBase.clear();
 		while (st.hasMoreTokens())
 			groupBase.add(st.nextToken());
+	}
+
+	public PropertiesBean getConfig() {
+		return config;
+	}
+
+	public void setConfig(PropertiesBean config) {
+		this.config = config;
 	}
 }
