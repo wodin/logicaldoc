@@ -17,6 +17,8 @@ public class I18N {
 
 	private static GUIValuePair[] languages;
 
+	private static GUIValuePair[] guiLanguages;
+
 	private static HashMap<String, String> bundle = new HashMap<String, String>();
 
 	public static String message(String key) {
@@ -65,6 +67,17 @@ public class I18N {
 		return map;
 	}
 
+	public static LinkedHashMap<String, String> getSupportedGuiLanguages(boolean addEmpty) {
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		if (addEmpty)
+			map.put("", " ");
+		if (guiLanguages != null)
+			for (GUIValuePair l : guiLanguages) {
+				map.put(l.getCode(), l.getValue());
+			}
+		return map;
+	}
+
 	public GUIValuePair[] getLanguages() {
 		return languages;
 	}
@@ -82,6 +95,15 @@ public class I18N {
 
 	public static void init(GUIInfo info) {
 		setLanguages(info.getSupportedLanguages());
+		setGuiLanguages(info.getSupportedGUILanguages());
 		initBundle(info.getBundle());
+	}
+
+	public static GUIValuePair[] getGuiLanguages() {
+		return guiLanguages;
+	}
+
+	public static void setGuiLanguages(GUIValuePair[] guiLanguages) {
+		I18N.guiLanguages = guiLanguages;
 	}
 }

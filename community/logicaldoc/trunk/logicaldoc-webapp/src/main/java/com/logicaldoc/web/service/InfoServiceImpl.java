@@ -17,6 +17,8 @@ import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.core.i18n.Language;
+import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.logicaldoc.gui.common.client.beans.GUIValuePair;
@@ -70,8 +72,20 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 				supportedLanguages.add(l);
 			}
 
-			info.setSupportedLanguages(supportedLanguages.toArray(new GUIValuePair[0]));
+			info.setSupportedGUILanguages(supportedLanguages.toArray(new GUIValuePair[0]));
 			info.setBundle(getBundle(locale));
+
+			LanguageManager manager = (LanguageManager) Context.getInstance().getBean(LanguageManager.class);
+			Collection<Language> languages = manager.getLanguages();
+			supportedLanguages.clear();
+			for (Language language : languages) {
+				Locale lc = language.getLocale();
+				l = new GUIValuePair();
+				l.setCode(lc.toString());
+				l.setValue(lc.getDisplayName(withLocale));
+				supportedLanguages.add(l);
+			}
+			info.setSupportedLanguages(supportedLanguages.toArray(new GUIValuePair[0]));
 
 			// Checks if LogicalDOC has been initialised
 			PropertiesBean pbean = (PropertiesBean) Context.getInstance().getBean("ContextProperties");

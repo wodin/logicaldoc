@@ -82,23 +82,16 @@ public class ItemFactory {
 		return sizeOperator;
 	}
 
-	public static SelectItem newLanguageSelector(String name, boolean withEmpty) {
+	public static SelectItem newLanguageSelector(String name, boolean withEmpty, boolean gui) {
 		SelectItem item = new SelectItem();
-		item.setValueMap(I18N.getSupportedLanguages(withEmpty));
+		if (gui)
+			item.setValueMap(I18N.getSupportedGuiLanguages(withEmpty));
+		else
+			item.setValueMap(I18N.getSupportedLanguages(withEmpty));
 		item.setName(name);
 		item.setTitle(I18N.message("language"));
 		item.setWrapTitle(false);
 		item.setDefaultValue("en");
-		return item;
-	}
-
-	public static SelectItem newGUILanguageSelector(String name, boolean withEmpty) {
-		SelectItem item = new SelectItem();
-		item.setValueMap(I18N.getSupportedLanguages(withEmpty));
-		item.setName(name);
-		item.setTitle(I18N.message("language"));
-		item.setWrapTitle(false);
-		item.setDefaultValue(I18N.getLocale());
 		return item;
 	}
 
@@ -398,7 +391,7 @@ public class ItemFactory {
 		linkItem.setLinkTitle(I18N.message(title));
 		return linkItem;
 	}
-	
+
 	/**
 	 * Creates a new TextAreaItem.
 	 * 
@@ -418,11 +411,11 @@ public class ItemFactory {
 			item.setValue("");
 		return item;
 	}
-	
+
 	public static SelectItem newTimeSelector(String name, String title) {
 		SelectItem select = new SelectItem(name, title);
 		select.setWidth(110);
-		
+
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("minute", I18N.message("minute"));
 		map.put("hour", I18N.message("hour"));

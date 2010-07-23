@@ -1,7 +1,11 @@
 package com.logicaldoc.gui.common.server;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.StringTokenizer;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
@@ -25,15 +29,31 @@ public class MockInfoServiceImpl extends RemoteServiceServlet implements InfoSer
 		 */
 		GUIInfo info = new GUIInfo();
 
-		Locale[] locales = Locale.getAvailableLocales();
-		GUIValuePair[] languages = new GUIValuePair[locales.length];
-		for (int i = 0; i < languages.length; i++) {
+		StringTokenizer st = new StringTokenizer("it,en,de,fr", ",", false);
+		List<GUIValuePair> locs = new ArrayList<GUIValuePair>();
+		while (st.hasMoreElements()) {
+			String token = (String) st.nextElement();
+			Locale a = new Locale(token);
 			GUIValuePair l = new GUIValuePair();
-			l.setCode(locales[i].toString());
-			l.setValue(locales[i].getDisplayName());
-			languages[i] = l;
+			l.setCode(a.toString());
+			l.setValue(a.getDisplayName());
+			locs.add(l);
 		}
+		info.setSupportedGUILanguages(locs.toArray(new GUIValuePair[0]));
+
+		GUIValuePair[] languages = new GUIValuePair[2];
+		GUIValuePair l = new GUIValuePair();
+		Locale loc = new Locale("en");
+		l.setCode(loc.toString());
+		l.setValue(loc.getDisplayName());
+		languages[0] = l;
+		l = new GUIValuePair();
+		loc = new Locale("it");
+		l.setCode(loc.toString());
+		l.setValue(loc.getDisplayName());
+		languages[1] = l;
 		info.setSupportedLanguages(languages);
+
 		info.setBundle(getBundle(locale));
 		info.setInstallationId("13245-u9ixcbviwhg934-13423-124t");
 

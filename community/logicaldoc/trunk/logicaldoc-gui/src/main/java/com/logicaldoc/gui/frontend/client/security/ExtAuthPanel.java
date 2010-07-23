@@ -130,7 +130,7 @@ public class ExtAuthPanel extends VLayout {
 				this.ldapSettings.getGrpsBaseNode());
 
 		// Language
-		SelectItem language = ItemFactory.newLanguageSelector("language", false);
+		SelectItem language = ItemFactory.newLanguageSelector("language", false, true);
 		language.setName("language");
 		language.setValue(this.ldapSettings.getLanguage());
 
@@ -190,7 +190,7 @@ public class ExtAuthPanel extends VLayout {
 				this.adSettings.getGrpsBaseNode());
 
 		// Language
-		SelectItem adLanguage = ItemFactory.newLanguageSelector("language", false);
+		SelectItem adLanguage = ItemFactory.newLanguageSelector("language", false, true);
 		adLanguage.setName("adLanguage");
 		adLanguage.setValue(this.adSettings.getLanguage());
 

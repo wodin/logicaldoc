@@ -43,6 +43,8 @@ public class GUIInfo implements Serializable {
 
 	private GUIValuePair[] supportedLanguages = new GUIValuePair[0];
 
+	private GUIValuePair[] supportedGUILanguages = new GUIValuePair[0];
+
 	private GUIValuePair[] bundle = new GUIValuePair[0];
 
 	private String[] features = new String[0];
@@ -183,4 +185,11 @@ public class GUIInfo implements Serializable {
 		this.installationId = installationId;
 	}
 
+	public GUIValuePair[] getSupportedGUILanguages() {
+		return supportedGUILanguages;
+	}
+
+	public void setSupportedGUILanguages(GUIValuePair[] supportedGUILanguages) {
+		this.supportedGUILanguages = supportedGUILanguages;
+	}
 }

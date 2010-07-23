@@ -21,7 +21,6 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.ValuesManager;
@@ -114,7 +113,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			}
 		});
 
-		SelectItem language = ItemFactory.newLanguageSelector("language", true);
+		SelectItem language = ItemFactory.newLanguageSelector("language", true, false);
 		language.setDefaultValue(NO_LANGUAGE);
 		language.setColSpan(4);
 		language.setEndRow(true);
@@ -202,9 +201,9 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		Long size = vm.getValueAsString("size") != null ? new Long(vm.getValueAsString("size")) : null;
 		if (size != null && !NOLIMIT.equals(vm.getValueAsString("sizeOperator"))) {
 			if (LESSTHAN.equals(vm.getValueAsString("sizeOperator")))
-				options.setSizeMax(size*1024);
+				options.setSizeMax(size * 1024);
 			else
-				options.setSizeMin(size*1024);
+				options.setSizeMin(size * 1024);
 		}
 
 		String operator = vm.getValueAsString("dateOperator");
@@ -257,7 +256,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 		options.setFolder(folder.getFolderId());
 		options.setFolderName(folder.getFolderName());
-		
+
 		options.setSearchInSubPath(new Boolean(vm.getValueAsString("subfolders")).booleanValue());
 
 		Search.get().setOptions(options);

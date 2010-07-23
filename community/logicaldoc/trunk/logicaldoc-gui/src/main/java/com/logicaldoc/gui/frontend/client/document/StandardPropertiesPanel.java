@@ -141,7 +141,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		List<FormItem> items = new ArrayList<FormItem>();
 
-		SelectItem language = ItemFactory.newLanguageSelector("language", false);
+		SelectItem language = ItemFactory.newLanguageSelector("language", false, false);
 		language.addChangedHandler(changedHandler);
 		language.setDisabled(!update);
 		language.setValue(document.getLanguage());

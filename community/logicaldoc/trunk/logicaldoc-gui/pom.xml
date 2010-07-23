@@ -67,6 +67,11 @@
       <artifactId>commons-digester</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.logicaldoc</groupId>
+      <artifactId>logicaldoc-i18n</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <scope>provided</scope>
