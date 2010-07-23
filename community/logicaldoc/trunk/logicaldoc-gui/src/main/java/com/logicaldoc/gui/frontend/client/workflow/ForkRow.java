@@ -20,10 +20,10 @@ public class ForkRow extends WorkflowRow {
 
 	private Label dropArea;
 
-	public ForkRow() {
+	public ForkRow(WorkflowDesigner designer) {
 		super();
 
-		state = new WorkflowState(WorkflowState.TYPE_FORK);
+		state = new WorkflowState(designer, WorkflowState.TYPE_FORK);
 		addMember(state);
 
 		dropArea = new Label("Drop a Task");
@@ -48,8 +48,8 @@ public class ForkRow extends WorkflowRow {
 
 		dropArea.addDropHandler(new DropHandler() {
 			public void onDrop(DropEvent event) {
-				WorkflowState target = (WorkflowState)EventHandler.getDragTarget();
-				WorkflowState drag = new WorkflowDraggedState(target.getType());
+				WorkflowState target = (WorkflowState) EventHandler.getDragTarget();
+				WorkflowState drag = new WorkflowDraggedState(target.getDesigner(), target.getType());
 				addMember(drag, 1);
 			}
 		});

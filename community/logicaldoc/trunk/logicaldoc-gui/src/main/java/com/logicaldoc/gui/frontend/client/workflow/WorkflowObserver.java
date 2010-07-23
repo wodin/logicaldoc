@@ -1,5 +1,7 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
+import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
+
 /**
  * Listener on folders events
  * 
@@ -12,6 +14,7 @@ public interface WorkflowObserver {
 	 * 
 	 * @param workflowState The selected workflowState
 	 */
+	// TODO Not type, but the GUIWFState
 	public void onStateSelect(int type);
 
 	/**
@@ -19,5 +22,5 @@ public interface WorkflowObserver {
 	 * 
 	 * @param workflow The selected workflow
 	 */
-	public void onWorkflowSelect();
+	public void onWorkflowSelect(GUIWorkflow workflow);
 }

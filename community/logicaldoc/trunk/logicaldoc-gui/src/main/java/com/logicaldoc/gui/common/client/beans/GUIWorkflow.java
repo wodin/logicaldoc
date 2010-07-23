@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class GUIWorkflow implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private long id;
 
 	private String name;
@@ -26,7 +26,11 @@ public class GUIWorkflow implements Serializable {
 
 	private String reminderBody;
 
+	private String startState;
+
 	private GUIUser supervisor;
+
+	private GUIWFState[] states;
 
 	public long getId() {
 		return id;
@@ -90,5 +94,21 @@ public class GUIWorkflow implements Serializable {
 
 	public void setSupervisor(GUIUser supervisor) {
 		this.supervisor = supervisor;
+	}
+
+	public String getStartState() {
+		return startState;
+	}
+
+	public void setStartState(String startState) {
+		this.startState = startState;
+	}
+
+	public GUIWFState[] getStates() {
+		return states;
+	}
+
+	public void setStates(GUIWFState[] states) {
+		this.states = states;
 	}
 }

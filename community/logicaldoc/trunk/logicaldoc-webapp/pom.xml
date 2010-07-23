@@ -292,6 +292,12 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+        <dependency>
+            <groupId>com.logicaldoc</groupId>
+            <artifactId>logicaldoc-workflow</artifactId>
+            <type>jar</type>
+            <version>${project.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>bouncycastle</groupId>
 			<artifactId>bcmail-jdk14</artifactId>

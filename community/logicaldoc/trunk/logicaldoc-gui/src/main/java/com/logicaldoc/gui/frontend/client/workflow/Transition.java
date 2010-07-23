@@ -58,7 +58,7 @@ public class Transition extends HStack {
 			public void onDrop(DropEvent event) {
 				WorkflowState target = (WorkflowState) EventHandler.getDragTarget();
 				removeMember(dropArea);
-				addMember(new WorkflowDraggedState(target.getType()));
+				addMember(new WorkflowDraggedState(target.getDesigner(), target.getType()));
 			}
 		});
 		addMember(dropArea);

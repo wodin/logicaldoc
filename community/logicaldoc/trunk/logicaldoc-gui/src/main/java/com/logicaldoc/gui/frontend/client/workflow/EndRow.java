@@ -8,10 +8,10 @@ package com.logicaldoc.gui.frontend.client.workflow;
  */
 public class EndRow extends WorkflowRow {
 
-	public EndRow() {
+	public EndRow(WorkflowDesigner designer) {
 		super();
 
-		state = new WorkflowState(WorkflowState.TYPE_END);
+		state = new WorkflowState(designer, WorkflowState.TYPE_END);
 		addMember(state);
 	}
 }

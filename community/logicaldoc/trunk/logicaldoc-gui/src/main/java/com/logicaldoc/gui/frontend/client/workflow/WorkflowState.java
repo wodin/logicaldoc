@@ -5,10 +5,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VStack;
 
@@ -34,7 +31,10 @@ public class WorkflowState extends VStack {
 
 	protected int type = TYPE_TASK;
 
-	public WorkflowState(int type) {
+	private WorkflowDesigner designer = null;
+
+	public WorkflowState(WorkflowDesigner designer, int type) {
+		this.designer = designer;
 		this.type = type;
 		setHeight(40);
 		setWidth(150);
@@ -81,7 +81,7 @@ public class WorkflowState extends VStack {
 		edit.addClickHandler(new com.google.gwt.event.dom.client.ClickHandler() {
 			@Override
 			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
-				WorkflowDesigner.get().onStateSelect(getType());
+				getDesigner().onStateSelect(getType());
 			}
 		});
 		commands.addMember(edit);
@@ -93,5 +93,9 @@ public class WorkflowState extends VStack {
 
 	public void onSave() {
 		// TODO
+	}
+
+	public WorkflowDesigner getDesigner() {
+		return designer;
 	}
 }

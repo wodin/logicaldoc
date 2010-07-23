@@ -1,8 +1,13 @@
 package com.logicaldoc.gui.frontend.server;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
+import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 
@@ -26,6 +31,8 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		workflow.setTaskAssignmentBody("This is the assignment body");
 		workflow.setReminderSubject("reminder subject");
 		workflow.setReminderBody("This is the reminder body");
+		workflow.setStartState("TaskName");
+
 		GUIUser user = new GUIUser();
 		user.setId(9999);
 		user.setUserName("john scott");
@@ -33,6 +40,59 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		user.setFirstName("Scott");
 		user.setEmail("john.scott@acme.com");
 		workflow.setSupervisor(user);
+
+		GUIUser user1 = new GUIUser();
+		user1.setId(8888);
+		user1.setUserName("alan murphy");
+		user1.setName("Alan");
+		user1.setFirstName("Murphy");
+		user1.setEmail("alan.murphy@acme.com");
+
+		GUIUser user2 = new GUIUser();
+		user2.setId(7777);
+		user2.setUserName("sam mitchell");
+		user2.setName("Sam");
+		user2.setFirstName("Mitchell");
+		user2.setEmail("sam.mitchell@acme.com");
+
+		GUIWFState task = new GUIWFState();
+		task.setType(GUIWFState.TYPE_TASK);
+		task.setName("Task logical");
+		task.setDescription("Task logical description");
+		task.setDuedate(new Date());
+		task.setRemindTime(new Date());
+		GUIUser[] participants = new GUIUser[2];
+		participants[0] = user1;
+		participants[1] = user2;
+		task.setParticipants(participants);
+
+		GUIWFState fork = new GUIWFState();
+		fork.setType(GUIWFState.TYPE_FORK);
+		fork.setName("Fork logical");
+		fork.setDescription("Fork logical description");
+
+		GUIWFState join = new GUIWFState();
+		join.setType(GUIWFState.TYPE_JOIN);
+		join.setName("Join logical");
+		join.setDescription("Join logical description");
+
+		GUIWFState endState = new GUIWFState();
+		endState.setType(GUIWFState.TYPE_END);
+		endState.setName("End State logical");
+		endState.setDescription("End State logical description");
+
+//		Map<String, GUIWFState> transitions = new HashMap<String, GUIWFState>();
+//		transitions.put("to the end", endState);
+//
+//		task.setTransitions(transitions);
+
+		GUIWFState[] states = new GUIWFState[4];
+		states[0] = task;
+		states[1] = fork;
+		states[2] = join;
+		states[3] = endState;
+
+		workflow.setStates(states);
 
 		return workflow;
 	}
