@@ -33,7 +33,7 @@ public class ExternalAuthenticationPlugin extends LogicalDOCPlugin {
 
 		config.addServlet(SERVICE_NAME, "com.logicaldoc.authentication.service.LdapServiceImpl", 4);
 		config.writeXMLDoc();
-		config.addInitParam(SERVICE_NAME, "resource-path-prefix", "/frontend/ldap", null);
+		config.addServletMapping("SERVICE_NAME", "/frontend/ldap");
 		config.writeXMLDoc();
 
 		// Add some scheduling defaults

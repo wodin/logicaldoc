@@ -120,6 +120,20 @@
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
+        
+        <dependency>
+            <groupId>com.logicaldoc</groupId>
+            <artifactId>logicaldoc-gui</artifactId>
+            <version>${project.version}</version>
+            <classifier>api</classifier>
+        </dependency>
+         <dependency>
+            <groupId>com.logicaldoc</groupId>
+            <artifactId>logicaldoc-webapp</artifactId>
+            <version>${project.version}</version>
+            <classifier>api</classifier>
+        </dependency>
+        
 		<dependency>
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
