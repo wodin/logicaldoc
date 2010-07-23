@@ -1,11 +1,14 @@
 package com.logicaldoc.workflow;
 
+import java.io.File;
+
 import org.java.plugin.PluginManager;
 import org.jbpm.JbpmConfiguration;
 import org.jbpm.job.executor.JobExecutor;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.WebConfigurator;
 import com.logicaldoc.util.event.SystemEvent;
 import com.logicaldoc.util.event.SystemEventStatus;
 import com.logicaldoc.util.plugin.LogicalDOCPlugin;
@@ -18,6 +21,10 @@ import com.logicaldoc.util.plugin.LogicalDOCPlugin;
  */
 @SuppressWarnings("unused")
 public class WorkflowPlugin extends LogicalDOCPlugin {
+
+	private static final String SERVICE_NAME = "WorkflowService";
+
+	private static final String SERVLET_DATA = "WorkflowsData";
 
 	private class VariableEvent extends SystemEvent {
 
@@ -49,6 +56,20 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 
 	protected void install() throws Exception {
 		super.install();
+
+		File dest = new File(getPluginPath());
+		dest = dest.getParentFile().getParentFile();
+
+		WebConfigurator config = new WebConfigurator(dest.getPath() + "/web.xml");
+		config.addServlet(SERVICE_NAME, "com.logicaldoc.workflow.service.WorkflowServiceImpl", 4);
+		config.writeXMLDoc();
+		config.addServletMapping("SERVICE_NAME", "/frontend/workflow");
+		config.writeXMLDoc();
+
+		config.addServlet(SERVLET_DATA, "com.logicaldoc.workflow.data.WorkflowsDataServlet", 4);
+		config.writeXMLDoc();
+		config.addServletMapping("SERVLET_DATA", "/data/workflows.xml");
+		config.writeXMLDoc();
 
 		// Add some workflow CE defaults
 		PropertiesBean pbean = new PropertiesBean();
