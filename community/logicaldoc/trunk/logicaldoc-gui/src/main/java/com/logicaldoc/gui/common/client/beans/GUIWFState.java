@@ -1,8 +1,9 @@
 package com.logicaldoc.gui.common.client.beans;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Map;
+
+import com.logicaldoc.gui.common.client.util.Util;
 
 /**
  * Workflow State bean as used in the GUI
@@ -13,6 +14,8 @@ import java.util.Map;
 public class GUIWFState implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	public final static int TYPE_DRAG = -1;
 	
 	public final static int TYPE_TASK = 0;
 
@@ -22,15 +25,35 @@ public class GUIWFState implements Serializable {
 
 	public final static int TYPE_FORK = 3;
 
-	private int type;
+	public final static String TIME_MINUTE = "minute";
+
+	public final static String TIME_HOUR = "hour";
+
+	public final static String TIME_BUSINESS_HOUR = "businesshour";
+
+	public final static String TIME_DAY = "day";
+
+	public final static String TIME_BUSINESS_DAY = "businessday";
+
+	public final static String TIME_WEEK = "week";
+
+	public final static String TIME_BUSINESS_WEEK = "businessweek";
+
+	private int type = TYPE_TASK;
+
+	private String id;
 
 	private String name;
 
 	private String description;
 
-	private Date duedate;
+	private int dueDateNumber = 0;
 
-	private Date remindTime;
+	private String dueDateUnit = TIME_MINUTE;
+
+	private int reminderNumber = 0;
+
+	private String reminderUnit = TIME_MINUTE;
 
 	private GUIUser[] participants;
 
@@ -60,22 +83,6 @@ public class GUIWFState implements Serializable {
 		this.description = description;
 	}
 
-	public Date getDuedate() {
-		return duedate;
-	}
-
-	public void setDuedate(Date duedate) {
-		this.duedate = duedate;
-	}
-
-	public Date getRemindTime() {
-		return remindTime;
-	}
-
-	public void setRemindTime(Date remindTime) {
-		this.remindTime = remindTime;
-	}
-
 	public GUIUser[] getParticipants() {
 		return participants;
 	}
@@ -90,5 +97,59 @@ public class GUIWFState implements Serializable {
 
 	public void setTransitions(Map<String, GUIWFState> transitions) {
 		this.transitions = transitions;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getIcon() {
+		if (type == TYPE_TASK) {
+			return Util.imageUrl("task.png");
+		} else if (type == TYPE_JOIN) {
+			return Util.imageUrl("join.png");
+		} else if (type == TYPE_FORK) {
+			return Util.imageUrl("fork.png");
+		} else if (type == TYPE_END) {
+			return Util.imageUrl("endState.png");
+		} else {
+			return "";
+		}
+	}
+
+	public int getDueDateNumber() {
+		return dueDateNumber;
+	}
+
+	public void setDueDateNumber(int dueDateNumber) {
+		this.dueDateNumber = dueDateNumber;
+	}
+
+	public String getDueDateUnit() {
+		return dueDateUnit;
+	}
+
+	public void setDueDateUnit(String dueDateUnit) {
+		this.dueDateUnit = dueDateUnit;
+	}
+
+	public int getReminderNumber() {
+		return reminderNumber;
+	}
+
+	public void setReminderNumber(int reminderNumber) {
+		this.reminderNumber = reminderNumber;
+	}
+
+	public String getReminderUnit() {
+		return reminderUnit;
+	}
+
+	public void setReminderUnit(String reminderUnit) {
+		this.reminderUnit = reminderUnit;
 	}
 }

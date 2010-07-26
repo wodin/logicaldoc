@@ -1,11 +1,23 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
+import java.util.Map;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIWFState;
+import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
+import com.logicaldoc.gui.frontend.client.services.WorkflowService;
+import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -24,7 +36,18 @@ import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
  */
 public class TaskDialog extends Window {
 
-	public TaskDialog() {
+	protected WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
+
+	private GUIWorkflow workflow = null;
+
+	private ValuesManager vm = new ValuesManager();
+
+	private GUIWFState task;
+
+	public TaskDialog(GUIWorkflow wfl, GUIWFState wfState) {
+		this.workflow = wfl;
+		this.task = wfState;
+
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("editworkflowstate", I18N.message("task")));
 		setWidth(290);
@@ -39,9 +62,10 @@ public class TaskDialog extends Window {
 		DynamicForm taskForm = new DynamicForm();
 		taskForm.setTitleOrientation(TitleOrientation.TOP);
 		taskForm.setNumCols(1);
-		TextItem taskName = ItemFactory.newTextItem("taskName", "name", null);
+		taskForm.setValuesManager(vm);
+		TextItem taskName = ItemFactory.newTextItem("taskName", "name", this.task.getName());
 		taskName.setRequired(true);
-		TextAreaItem taskDescr = ItemFactory.newTextAreaItem("taskDescr", "description", null);
+		TextAreaItem taskDescr = ItemFactory.newTextAreaItem("taskDescr", "description", this.task.getDescription());
 		taskDescr.setWrapTitle(false);
 		taskForm.setFields(taskName, taskDescr);
 		addItem(taskForm);
@@ -60,6 +84,7 @@ public class TaskDialog extends Window {
 		escalationForm.setTitleOrientation(TitleOrientation.LEFT);
 		escalationForm.setNumCols(4);
 		escalationForm.setColWidths("35", "35", "50", "130");
+		escalationForm.setValuesManager(vm);
 		SpinnerItem duedateTimeItem = new SpinnerItem();
 		duedateTimeItem.setTitle(I18N.message("duedate"));
 		duedateTimeItem.setDefaultValue(0);
@@ -78,24 +103,20 @@ public class TaskDialog extends Window {
 		escalationForm.setFields(duedateTimeItem, duedateTime, remindTimeItem, remindTime);
 		addItem(escalationForm);
 
-		DynamicForm separator1Form = new DynamicForm();
-		separator1Form.setHeight(15);
-
 		DynamicForm participantsForm = new DynamicForm();
 		participantsForm.setTitleOrientation(TitleOrientation.TOP);
 		participantsForm.setNumCols(1);
+		participantsForm.setValuesManager(vm);
 		ComboBoxItem participants = ItemFactory.newUserSelector("participants", "");
 		participants.setTitle("<b>" + I18N.message("participants") + "</b>");
 		participants.setTitleOrientation(TitleOrientation.TOP);
 		participantsForm.setItems(participants);
 		addItem(participantsForm);
 
-		DynamicForm separator2Form = new DynamicForm();
-		separator2Form.setHeight(15);
-
 		DynamicForm transitionsForm = new DynamicForm();
 		transitionsForm.setTitleOrientation(TitleOrientation.TOP);
 		transitionsForm.setNumCols(1);
+		transitionsForm.setValuesManager(vm);
 		ComboBoxItem transitions = ItemFactory.newUserSelector("transitions", "");
 		transitions.setTitle("<b>" + I18N.message("transitions") + "</b>");
 		transitions.setTitleOrientation(TitleOrientation.TOP);
@@ -107,9 +128,42 @@ public class TaskDialog extends Window {
 		saveItem.setTitle(I18N.message("save"));
 		saveItem.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				destroy();
+				final Map<String, Object> values = vm.getValues();
+
+				if (vm.validate()) {
+					TaskDialog.this.task.setName((String) values.get("taskName"));
+					TaskDialog.this.task.setDescription((String) values.get("taskDescr"));
+					
+
+					GUIWFState[] states = new GUIWFState[workflow.getStates().length];
+					int i = 0;
+					for (GUIWFState state : workflow.getStates()) {
+						if (!state.getId().equals(task.getId())) {
+							states[i] = state;
+							i++;
+						} else {
+							states[i] = task;
+							i++;
+						}
+					}
+					workflow.setStates(states);
+
+					workflowService.save(Session.get().getSid(), workflow, new AsyncCallback<GUIWorkflow>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
+
+						@Override
+						public void onSuccess(GUIWorkflow result) {
+							AdminPanel.get().setContent(new WorkflowDesigner(workflow));
+							destroy();
+						}
+					});
+				}
 			}
 		});
+
 		buttonForm.setItems(saveItem);
 		addItem(buttonForm);
 	}

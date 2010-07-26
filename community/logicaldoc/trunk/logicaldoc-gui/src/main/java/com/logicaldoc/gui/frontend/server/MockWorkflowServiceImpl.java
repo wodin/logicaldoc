@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.frontend.server;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +30,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		workflow.setTaskAssignmentBody("This is the assignment body");
 		workflow.setReminderSubject("reminder subject");
 		workflow.setReminderBody("This is the reminder body");
-		workflow.setStartState("TaskName");
+		workflow.setStartState("Task logical");
 
 		GUIUser user = new GUIUser();
 		user.setId(9999);
@@ -56,42 +55,74 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		user2.setEmail("sam.mitchell@acme.com");
 
 		GUIWFState task = new GUIWFState();
+		task.setId("1");
 		task.setType(GUIWFState.TYPE_TASK);
 		task.setName("Task logical");
 		task.setDescription("Task logical description");
-		task.setDuedate(new Date());
-		task.setRemindTime(new Date());
+		task.setDueDateNumber(11);
+		task.setDueDateUnit(GUIWFState.TIME_BUSINESS_DAY);
+		task.setReminderNumber(13);
+		task.setReminderUnit(GUIWFState.TIME_BUSINESS_WEEK);
 		GUIUser[] participants = new GUIUser[2];
 		participants[0] = user1;
 		participants[1] = user2;
 		task.setParticipants(participants);
 
+		GUIWFState task1 = new GUIWFState();
+		task1.setId("2");
+		task1.setType(GUIWFState.TYPE_TASK);
+		task1.setName("Task test");
+		task1.setDescription("Task test description");
+		task1.setDueDateNumber(3);
+		task1.setDueDateUnit(GUIWFState.TIME_HOUR);
+		task1.setReminderNumber(43);
+		task1.setReminderUnit(GUIWFState.TIME_MINUTE);
+
+		GUIWFState task2 = new GUIWFState();
+		task2.setId("3");
+		task2.setType(GUIWFState.TYPE_TASK);
+		task2.setName("Task doc");
+		task2.setDescription("Task doc description");
+		task2.setDueDateNumber(2);
+		task2.setDueDateUnit(GUIWFState.TIME_WEEK);
+		task2.setReminderNumber(5);
+		task2.setReminderUnit(GUIWFState.TIME_BUSINESS_HOUR);
+
 		GUIWFState fork = new GUIWFState();
+		fork.setId("4");
 		fork.setType(GUIWFState.TYPE_FORK);
 		fork.setName("Fork logical");
 		fork.setDescription("Fork logical description");
 
 		GUIWFState join = new GUIWFState();
+		join.setId("5");
 		join.setType(GUIWFState.TYPE_JOIN);
 		join.setName("Join logical");
 		join.setDescription("Join logical description");
 
 		GUIWFState endState = new GUIWFState();
+		endState.setId("6");
 		endState.setType(GUIWFState.TYPE_END);
 		endState.setName("End State logical");
 		endState.setDescription("End State logical description");
 
-//		Map<String, GUIWFState> transitions = new HashMap<String, GUIWFState>();
-//		transitions.put("to the end", endState);
-//
-//		task.setTransitions(transitions);
+		Map<String, GUIWFState> transitions = new HashMap<String, GUIWFState>();
+		transitions.put("to the end", endState);
+		transitions.put("to task 1", task1);
+		transitions.put("to task 2", task2);
+		task.setTransitions(transitions);
 
-		GUIWFState[] states = new GUIWFState[4];
+		transitions = new HashMap<String, GUIWFState>();
+		transitions.put("ending", endState);
+		task2.setTransitions(transitions);
+
+		GUIWFState[] states = new GUIWFState[6];
 		states[0] = task;
 		states[1] = fork;
 		states[2] = join;
 		states[3] = endState;
-
+		states[4] = task1;
+		states[5] = task2;
 		workflow.setStates(states);
 
 		return workflow;
@@ -104,8 +135,8 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 
 	@Override
 	public GUIWorkflow save(String sid, GUIWorkflow workflow) throws InvalidSessionException {
-		if (workflow.getId() == 0)
-			workflow.setId(9999);
+		// if (workflow.getId() == 0)
+		// workflow.setId(9999);
 		return workflow;
 	}
 

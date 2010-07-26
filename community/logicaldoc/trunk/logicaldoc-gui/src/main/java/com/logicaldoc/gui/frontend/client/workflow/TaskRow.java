@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
+import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.smartgwt.client.widgets.layout.VStack;
 
 /**
@@ -9,16 +10,19 @@ import com.smartgwt.client.widgets.layout.VStack;
  * @since 6.0
  */
 public class TaskRow extends WorkflowRow {
-	public TaskRow(WorkflowDesigner designer) {
+	public TaskRow(WorkflowDesigner designer, GUIWFState wfState) {
 		super();
 
-		state = new WorkflowState(designer, WorkflowState.TYPE_TASK);
+		state = new WorkflowState(designer, wfState);
 		addMember(state);
 
-		VStack transitionsPanel = new VStack();
-		for (int i = 0; i < 3; i++) {
-			transitionsPanel.addMember(new Transition());
+		if (wfState.getTransitions() != null && wfState.getTransitions().size() > 0) {
+			VStack transitionsPanel = new VStack();
+			for (String transitionLabel : wfState.getTransitions().keySet()) {
+				transitionsPanel.addMember(new Transition(designer, transitionLabel, wfState, wfState.getTransitions()
+						.get(transitionLabel)));
+			}
+			addMember(transitionsPanel);
 		}
-		addMember(transitionsPanel);
 	}
 }
