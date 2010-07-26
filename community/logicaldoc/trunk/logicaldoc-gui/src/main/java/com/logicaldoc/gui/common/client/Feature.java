@@ -25,6 +25,8 @@ public class Feature {
 	public static final int CLIENT_TOOLS = 57;
 	public static final int WEBSERVICE = 58;
 	public static final int WEBDAV = 59;
+	public static final int RSS = 9;
+	public static final int PDF = 8;
 	
 
 	private static Set<String> features = new HashSet<String>();

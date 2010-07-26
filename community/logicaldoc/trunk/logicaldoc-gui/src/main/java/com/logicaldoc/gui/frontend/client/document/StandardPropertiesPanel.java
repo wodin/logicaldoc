@@ -199,12 +199,13 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		rightPanel.setMembersMargin(5);
 		rightPanel.setPadding(4);
 		rightPanel.setAlign(VerticalAlignment.TOP);
-
-		if (Feature.enabled(Feature.PREVIEW)) {
-			Image preview = new Image("thumbnail?docId=" + document.getId() + "&versionId=" + document.getVersion());
-			rightPanel.addMember(preview);
-		} else if (Feature.showDisabled()) {
-			rightPanel.addMember(new FeatureDisabled());
+		
+		if (Feature.visible(Feature.PREVIEW)) {
+			if (Feature.enabled(Feature.PREVIEW)) {
+				Image preview = new Image("thumbnail?docId=" + document.getId() + "&versionId=" + document.getVersion());
+				rightPanel.addMember(preview);
+			} else
+				rightPanel.addMember(new FeatureDisabled());
 		}
 
 		formsContainer.addMember(rightPanel);
