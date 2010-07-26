@@ -1,6 +1,9 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
+import java.util.LinkedHashMap;
+
 import com.google.gwt.core.client.GWT;
+import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
@@ -23,6 +26,8 @@ public class StateToolstrip extends ToolStrip {
 	protected SystemServiceAsync systemService = (SystemServiceAsync) GWT.create(SystemService.class);
 
 	private WorkflowDesigner designer = null;
+
+	private ComboBoxItem startState = new ComboBoxItem("startState", I18N.message("startstate"));
 
 	public StateToolstrip(WorkflowDesigner designer) {
 		super();
@@ -74,14 +79,27 @@ public class StateToolstrip extends ToolStrip {
 		addButton(newJoin);
 		addSeparator();
 
-		ComboBoxItem startState = new ComboBoxItem("startState", I18N.message("startstate"));
+		startState = new ComboBoxItem("startState", I18N.message("startstate"));
 		ListGridField name = new ListGridField("name");
 		startState.setPickListWidth(300);
 		startState.setPickListFields(name);
 		if (this.designer.getWorkflow() != null) {
-			startState.setDefaultValue(this.designer.getWorkflow().getStartState());
-			startState.setValueMap(this.designer.getWorkflow().getStates().toString());
-			// startState.setValueMap("pippo", "paperino");
+			String states = "";
+			LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+			int i = 0;
+			for (GUIWFState state : this.designer.getWorkflow().getStates()) {
+				if (state.getType() == GUIWFState.TYPE_TASK) {
+					// states = states + "\"" + state.getName() + "\"" + ",";
+					map.put("" + i, "" + state.getName() + "");
+					i++;
+				}
+			}
+			if (states.trim().endsWith(","))
+				states = states.substring(0, states.length() - 1);
+			// startState.setValueMap(states);
+			// startState.setValueMap("Task logical", "Task test", "Task doc");
+			startState.setValueMap(map);
+			startState.setValue(this.designer.getWorkflow().getStartState());
 		}
 
 		addFormItem(startState);

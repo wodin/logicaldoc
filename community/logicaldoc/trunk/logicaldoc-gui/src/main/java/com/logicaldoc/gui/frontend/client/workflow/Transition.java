@@ -1,5 +1,7 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
+import com.logicaldoc.gui.common.client.beans.GUIWFState;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.EventHandler;
 import com.smartgwt.client.widgets.Label;
@@ -14,15 +16,24 @@ import com.smartgwt.client.widgets.layout.HStack;
 public class Transition extends HStack {
 	private Label dropArea;
 
-	public Transition() {
+	private GUIWFState fromState = null;
+
+	private GUIWFState targetState = null;
+
+	private WorkflowDesigner workflowDesigner = null;
+
+	public Transition(WorkflowDesigner designer, String transitionLabel, GUIWFState state) {
 		super();
+
+		this.fromState = state;
+		this.workflowDesigner = designer;
 
 		setMembersMargin(3);
 		setHeight(50);
 		setAnimateMembers(true);
 
 		// transition line
-		Label line = new Label("transition");
+		Label line = new Label(transitionLabel);
 		line.setHeight(12);
 		line.setStyleName("s");
 		line.setAlign(Alignment.RIGHT);
@@ -33,8 +44,31 @@ public class Transition extends HStack {
 		initDropArea();
 	}
 
+	public Transition(WorkflowDesigner designer, String transitionLabel, GUIWFState from, GUIWFState target) {
+		super();
+
+		this.fromState = from;
+		this.targetState = target;
+		this.workflowDesigner = designer;
+
+		setMembersMargin(3);
+		setHeight(50);
+		setAnimateMembers(true);
+
+		// transition line
+		Label line = new Label(transitionLabel);
+		line.setHeight(12);
+		line.setStyleName("s");
+		line.setAlign(Alignment.RIGHT);
+		line.setWidth(100);
+
+		addMember(line);
+
+		addMember(new WorkflowDraggedState(designer, fromState, targetState));
+	}
+
 	private void initDropArea() {
-		dropArea = new Label("Drop an Element");
+		dropArea = new Label(I18N.message("dropastate"));
 		dropArea.setHeight(40);
 		dropArea.setWidth(100);
 		dropArea.setBackgroundColor("#cccccc");
@@ -57,8 +91,12 @@ public class Transition extends HStack {
 		dropArea.addDropHandler(new DropHandler() {
 			public void onDrop(DropEvent event) {
 				WorkflowState target = (WorkflowState) EventHandler.getDragTarget();
-				removeMember(dropArea);
-				addMember(new WorkflowDraggedState(target.getDesigner(), target.getType()));
+				if (fromState.getType() != GUIWFState.TYPE_FORK)
+					removeMember(dropArea);
+				addMember(new WorkflowDraggedState(target.getDesigner(), fromState, target.getWfState()));
+
+				// Add a new transition on the parent state
+				workflowDesigner.onAddTransition(fromState, target.getWfState());
 			}
 		});
 		addMember(dropArea);

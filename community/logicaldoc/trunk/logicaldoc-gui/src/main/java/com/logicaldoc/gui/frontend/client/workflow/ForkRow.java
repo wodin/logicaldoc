@@ -1,5 +1,7 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
+import com.logicaldoc.gui.common.client.beans.GUIWFState;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.EventHandler;
 import com.smartgwt.client.widgets.Label;
@@ -9,6 +11,7 @@ import com.smartgwt.client.widgets.events.DropOutEvent;
 import com.smartgwt.client.widgets.events.DropOutHandler;
 import com.smartgwt.client.widgets.events.DropOverEvent;
 import com.smartgwt.client.widgets.events.DropOverHandler;
+import com.smartgwt.client.widgets.layout.VStack;
 
 /**
  * A single workflow element.
@@ -20,13 +23,20 @@ public class ForkRow extends WorkflowRow {
 
 	private Label dropArea;
 
-	public ForkRow(WorkflowDesigner designer) {
+	private GUIWFState fromState = null;
+
+	private WorkflowDesigner workflowDesigner = null;
+
+	public ForkRow(WorkflowDesigner designer, GUIWFState wfState) {
 		super();
 
-		state = new WorkflowState(designer, WorkflowState.TYPE_FORK);
+		state = new WorkflowState(designer, wfState);
 		addMember(state);
 
-		dropArea = new Label("Drop a Task");
+		this.fromState = wfState;
+		this.workflowDesigner = designer;
+
+		dropArea = new Label(I18N.message("dropastate"));
 		dropArea.setHeight(40);
 		dropArea.setWidth(100);
 		dropArea.setBackgroundColor("#cccccc");
@@ -49,11 +59,21 @@ public class ForkRow extends WorkflowRow {
 		dropArea.addDropHandler(new DropHandler() {
 			public void onDrop(DropEvent event) {
 				WorkflowState target = (WorkflowState) EventHandler.getDragTarget();
-				WorkflowState drag = new WorkflowDraggedState(target.getDesigner(), target.getType());
+				WorkflowState drag = new WorkflowDraggedState(target.getDesigner(), fromState, target.getWfState());
 				addMember(drag, 1);
+
+				// Add a new transition on the parent state
+				workflowDesigner.onAddTransition(fromState, target.getWfState());
 			}
 		});
 
-		addMember(dropArea);
+		if (wfState.getTransitions() != null && wfState.getTransitions().size() > 0) {
+			VStack transitionsPanel = new VStack();
+			for (String transitionLabel : wfState.getTransitions().keySet()) {
+				transitionsPanel.addMember(new Transition(workflowDesigner, transitionLabel, wfState));
+			}
+			addMember(transitionsPanel);
+		} else
+			addMember(dropArea);
 	}
 }

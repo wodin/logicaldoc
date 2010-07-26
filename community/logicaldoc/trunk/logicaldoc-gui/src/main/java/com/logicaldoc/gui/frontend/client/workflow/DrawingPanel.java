@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
+import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.layout.VStack;
 
@@ -22,9 +23,16 @@ public class DrawingPanel extends VStack {
 		setShowCustomScrollbars(true);
 		setOverflow(Overflow.SCROLL);
 
-		addMember(new TaskRow(designer));
-		addMember(new ForkRow(designer));
-		addMember(new JoinRow(designer));
-		addMember(new EndRow(designer));
+		if (designer.getWorkflow() != null)
+			for (GUIWFState state : designer.getWorkflow().getStates()) {
+				if (state.getType() == GUIWFState.TYPE_TASK)
+					addMember(new TaskRow(designer, state));
+				else if (state.getType() == GUIWFState.TYPE_FORK)
+					addMember(new ForkRow(designer, state));
+				else if (state.getType() == GUIWFState.TYPE_JOIN)
+					addMember(new JoinRow(designer, state));
+				else if (state.getType() == GUIWFState.TYPE_END)
+					addMember(new EndRow(designer, state));
+			}
 	}
 }
