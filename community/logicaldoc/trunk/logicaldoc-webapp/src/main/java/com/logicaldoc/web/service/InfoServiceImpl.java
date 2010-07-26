@@ -124,7 +124,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			}
 
 			info.setFeatures(features.toArray(new String[0]));
-			info.setFeatures(new String[] { "Feature_52", "Feature_53", "Feature_56", "Feature_13" });
+			//info.setFeatures(new String[] { "Feature_52", "Feature_53", "Feature_56", "Feature_13" });
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
@@ -132,7 +132,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 		return info;
 	}
 
-	static GUIValuePair[] getBundle(String locale) {
+	static protected GUIValuePair[] getBundle(String locale) {
 		Locale l = LocaleUtil.toLocale(locale);
 		ResourceBundle rb = ResourceBundle.getBundle("i18n.messages", l);
 		GUIValuePair[] buf = new GUIValuePair[rb.keySet().size()];
@@ -146,7 +146,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 		return buf;
 	}
 
-	private String getValue(GUIInfo info, String message) {
+	protected String getValue(GUIInfo info, String message) {
 		for (GUIValuePair valuePair : info.getBundle()) {
 			if (valuePair.getCode().equals(message)) {
 				return valuePair.getValue();

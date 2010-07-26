@@ -42,8 +42,9 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			public void onClick(ClickEvent event) {
 				if (document == null)
 					return;
-				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-						+ document.getId(), "_self", "");
+				Window.open(
+						GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+								+ document.getId(), "_self", "");
 			}
 		});
 
@@ -52,16 +53,15 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		rss.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				Window.open(GWT.getHostPageBaseURL() + "doc_rss?sid=" + Session.get().getSid() + "&docId="
-						+ document.getId(), "_blank", "");
+				Window.open(
+						GWT.getHostPageBaseURL() + "doc_rss?sid=" + Session.get().getSid() + "&docId="
+								+ document.getId(), "_blank", "");
 			}
 		});
 
-		pdf.setTooltip(I18N.message("exportpdf"));
+		
 		pdf.setIcon(ItemFactory.newImgIcon("pdf.png").getSrc());
-	
-		if (!Feature.enabled(8))
-			pdf.setTooltip(I18N.message("featuredisabled"));
+		pdf.setTooltip(I18N.message("exportpdf"));
 		pdf.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -70,8 +70,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		add.setTooltip(I18N.message("adddocuments"));
 		add.setIcon(ItemFactory.newImgIcon("document_add.png").getSrc());
+		add.setTooltip(I18N.message("adddocuments"));
 		add.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -83,20 +83,21 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		setHeight(27);
 		addButton(download);
-		if (Feature.enabled(9)) {
+		
+		if (Feature.visible(Feature.RSS)) {
 			addButton(rss);
-		}else if(Feature.showDisabled()){
-			addButton(rss);
-			rss.setDisabled(true);
-			rss.setTooltip(I18N.message("featuredisabled"));
+			if (!Feature.enabled(Feature.RSS)) {
+				rss.setDisabled(true);
+				rss.setTooltip(I18N.message("featuredisabled"));
+			}
 		}
 
-		if (Feature.enabled(8)) {
+		if (Feature.visible(Feature.PDF)) {
 			addButton(pdf);
-		}else{
-			addButton(pdf);
-			pdf.setDisabled(true);
-			pdf.setTooltip(I18N.message("featuredisabled"));
+			if (!Feature.enabled(Feature.PDF)) {
+				pdf.setDisabled(true);
+				pdf.setTooltip(I18N.message("featuredisabled"));
+			}
 		}
 
 		addSeparator();

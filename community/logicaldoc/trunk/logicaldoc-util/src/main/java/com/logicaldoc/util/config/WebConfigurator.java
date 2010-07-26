@@ -13,22 +13,31 @@ import org.jdom.Element;
  * @since 3.0
  */
 public class WebConfigurator extends XMLBean {
-	
-	public static enum INIT_PARAM{ PARAM_OVERWRITE, PARAM_APPEND, PARAM_STOP }
-	
+
+	public static enum INIT_PARAM {
+		PARAM_OVERWRITE, PARAM_APPEND, PARAM_STOP
+	}
+
 	public WebConfigurator(String path) {
 		super(path);
 	}
 
 	/**
 	 * Check for existing element within a XML-document
-	 * @param elements List of Elements which have as child a <pre>name</pre> tag 
+	 * 
+	 * @param elements List of Elements which have as child a
+	 * 
+	 *        <pre>
+	 * name
+	 * </pre>
+	 * 
+	 *        tag
 	 * @param match_text The text for looking up whether exists
 	 * @param name The tag that should be right there for checking this value
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private Element elementLookUp(List elements, String match_text, String name){
+	private Element elementLookUp(List elements, String match_text, String name) {
 		for (Iterator iterator = elements.iterator(); iterator.hasNext();) {
 			Element elem = (Element) iterator.next();
 			Element elementName = elem.getChild(match_text, elem.getNamespace());
@@ -37,26 +46,28 @@ public class WebConfigurator extends XMLBean {
 				return elem;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Adding a contextparam to the web.xml
+	 * 
 	 * @param param_name the param
 	 * @param param_value the value
 	 * @param param_description
-	 * @param append * @param append if the param exist, should the new value appended? possible values are represented in {@link WebConfigurator.INIT_PARAM}
+	 * @param append * @param append if the param exist, should the new value
+	 *        appended? possible values are represented in
+	 *        {@link WebConfigurator.INIT_PARAM}
 	 */
-	public void addContextParam(String param_name, String param_value, String param_description, INIT_PARAM append){
+	public void addContextParam(String param_name, String param_value, String param_description, INIT_PARAM append) {
 		List contextParams = getRootElement().getChildren("context-param", getRootElement().getNamespace());
 		Element contextParam = this.elementLookUp(contextParams, "param-name", param_name);
-		
-		
-		if(contextParam != null && append.equals(INIT_PARAM.PARAM_STOP))
+
+		if (contextParam != null && append.equals(INIT_PARAM.PARAM_STOP))
 			return;
-		
-		if(contextParam == null) {
+
+		if (contextParam == null) {
 			// Retrieve the last <servlet> element
 			Element lastContextParam = (Element) contextParams.get(contextParams.size() - 1);
 
@@ -76,118 +87,115 @@ public class WebConfigurator extends XMLBean {
 			contextParam.addContent("\n ");
 			contextParam.addContent(paramValue);
 			contextParam.addContent("\n ");
-			
+
 			// Add the new element to the next index along.
 			// This does cover the case where indexOf returned -1.
 			children.add(index + 1, contextParam);
 			writeXMLDoc();
-			
+
 			return;
 		}
-	
-		
 
-		if(contextParam != null && append.equals(INIT_PARAM.PARAM_APPEND)){
+		if (contextParam != null && append.equals(INIT_PARAM.PARAM_APPEND)) {
 
-			Element paramValue = (Element)contextParam.getChildren().get(1);
+			Element paramValue = (Element) contextParam.getChildren().get(1);
 			paramValue.setText(paramValue.getText() + "," + param_value);
 			writeXMLDoc();
 			return;
 		}
-		
-		if(contextParam != null && append.equals(INIT_PARAM.PARAM_OVERWRITE)){
-			Element paramValue = (Element)contextParam.getChildren().get(1);
+
+		if (contextParam != null && append.equals(INIT_PARAM.PARAM_OVERWRITE)) {
+			Element paramValue = (Element) contextParam.getChildren().get(1);
 			paramValue.setText(param_value);
 			writeXMLDoc();
 			return;
 		}
 	}
-	
+
 	/**
 	 * Adds a init parameter to the servlet
+	 * 
 	 * @param clazz The classname
 	 * @param name Name of the Parameter
 	 * @param value Value of the Parameter
 	 * @param description Description
-	 * @param append if the param exist, should the new value appended? possible values are represented in {@link WebConfigurator.INIT_PARAM}
+	 * @param append if the param exist, should the new value appended? possible
+	 *        values are represented in {@link WebConfigurator.INIT_PARAM}
 	 */
-	public void addInitParam(String servletName, String param_name, String param_value, String param_description, INIT_PARAM append){
+	public void addInitParam(String servletName, String param_name, String param_value, String param_description,
+			INIT_PARAM append) {
 		List servlets = getRootElement().getChildren("servlet", getRootElement().getNamespace());
 		Element servlet = this.elementLookUp(servlets, "servlet-name", servletName);
-		
-		if(servlet == null)
-			throw new IllegalStateException(
-					"The servlet "
-							+ servletName
-							+ " has not been found. Have you already written the servlet?");
-		
+
+		if (servlet == null)
+			throw new IllegalStateException("The servlet " + servletName
+					+ " has not been found. Have you already written the servlet?");
+
 		Element initParam = this.elementLookUp(servlet.getChildren(), "param-name", param_name);
-		
-		if(initParam != null && append.equals(INIT_PARAM.PARAM_STOP))
+
+		if (initParam != null && append.equals(INIT_PARAM.PARAM_STOP))
 			return;
 
-		if(initParam != null && append.equals(INIT_PARAM.PARAM_APPEND)){
-			Element paramValue = ((Element)initParam.getParent()).getChild("param-value");
+		if (initParam != null && append.equals(INIT_PARAM.PARAM_APPEND)) {
+			Element paramValue = ((Element) initParam.getParent()).getChild("param-value");
 			paramValue.setText(paramValue.getText() + "," + param_value);
 			writeXMLDoc();
 			return;
 		}
-		
-		if(initParam != null && append.equals(INIT_PARAM.PARAM_OVERWRITE)){
-			Element paramValue = ((Element)initParam.getParent()).getChild("param-value");
+
+		if (initParam != null && append.equals(INIT_PARAM.PARAM_OVERWRITE)) {
+			Element paramValue = ((Element) initParam.getParent()).getChild("param-value");
 			paramValue.setText(param_value);
 			writeXMLDoc();
 			return;
 		}
-		
-		
-		
+
 		Element paramElement = new Element("init-param", getRootElement().getNamespace());
-		
-		//the name
+
+		// the name
 		Element param = new Element("param-name", getRootElement().getNamespace());
 		param.setText(param_name);
-		//paramElement.addContent("\n ");
+		// paramElement.addContent("\n ");
 		paramElement.getChildren().add(param);
-		
+
 		param = new Element("param-value", getRootElement().getNamespace());
 		param.setText(param_value);
-		//paramElement.addContent("\n ");
+		// paramElement.addContent("\n ");
 		paramElement.getChildren().add(param);
-		
-		if(param_description != null && param_description.equals("") != true){ 
-			param = new Element("description", getRootElement().getNamespace());			
+
+		if (param_description != null && param_description.equals("") != true) {
+			param = new Element("description", getRootElement().getNamespace());
 			param.setText(param_description);
-			//paramElement.addContent("\n ");
+			// paramElement.addContent("\n ");
 			paramElement.getChildren().add(param);
 		}
-		
-		Element loadOnStartUpElem = (Element) servlet.getChildren().get(
-				servlet.getChildren().size() - 1);
+
+		Element loadOnStartUpElem = (Element) servlet.getChildren().get(servlet.getChildren().size() - 1);
 
 		// sorting the elements in that way, that element "load-on-startup"
 		// always stays at the tail
-		if(loadOnStartUpElem.getName().equals("load-on-startup")){
+		if (loadOnStartUpElem.getName().equals("load-on-startup")) {
 			servlet.getChildren().remove(loadOnStartUpElem);
 			servlet.addContent(paramElement);
 			servlet.addContent(loadOnStartUpElem);
-		}
-		else 
+		} else
 			servlet.getChildren().add(paramElement);
-		
+
 	}
-	
+
 	/**
 	 * Adds a init parameter to the servlet
+	 * 
 	 * @param clazz The classname
 	 * @param name Name of the Parameter
 	 * @param value Value of the Parameter
 	 * @param description Description
 	 */
 	@SuppressWarnings("unchecked")
-	public void addInitParam(String servletName, String param_name, String param_value, String param_description){
+	public void addInitParam(String servletName, String param_name, String param_value, String param_description) {
 		this.addInitParam(servletName, param_name, param_value, param_description, INIT_PARAM.PARAM_STOP);
 	}
+
 	/**
 	 * Adds a new servlet mapping to the deployment descriptor. If the mapping
 	 * already exists no modifications are committed.
@@ -195,49 +203,57 @@ public class WebConfigurator extends XMLBean {
 	 * @param name The servlet name
 	 * @param clazz The servlet class fully qualified name
 	 */
-	public void addServlet(String name, String clazz){
+	public void addServlet(String name, String clazz) {
 		this.addServlet(name, clazz, -1);
 	}
-	
+
 	/**
 	 * Adds a new servlet mapping to the deployment descriptor. If the mapping
 	 * already exists no modifications are committed.
 	 * 
 	 * @param name The servlet name
 	 * @param clazz The servlet class fully qualified name
-	 * @param load_on startup 
+	 * @param load_on startup
 	 */
 	@SuppressWarnings("unchecked")
 	public void addServlet(String name, String clazz, int load_on_startup) {
+		Element servlet = null;
+		Element servletClass = null;
+
 		// Search for the specified servlet
 		List servlets = getRootElement().getChildren("servlet", getRootElement().getNamespace());
-		
-		if(this.elementLookUp(servlets, "servlet-name", name) != null)
-			return;
+		servlet = this.elementLookUp(servlets, "servlet-name", name);
+		if (servlet != null) {
+			// The servlet already exists, so update it
+			servletClass = servlet.getChild("servlet-class");
+			servletClass.setText(clazz);
+		} else {
 
-		// Retrieve the last <servlet> element
-		Element lastServlet = (Element) servlets.get(servlets.size() - 1);
+			// Retrieve the last <servlet> element
+			Element lastServlet = (Element) servlets.get(servlets.size() - 1);
 
-		List children = getRootElement().getChildren();
+			List children = getRootElement().getChildren();
 
-		// Find the index of the element to add the new element after.
-		int index = children.indexOf(lastServlet);
+			// Find the index of the element to add the new element after.
+			int index = children.indexOf(lastServlet);
 
-		// Prepare the new mapping
-		Element servlet = new Element("servlet", getRootElement().getNamespace());
-		Element servletNameElement = new Element("servlet-name", getRootElement().getNamespace());
-		servletNameElement.setText(name);
-		Element servletClass = new Element("servlet-class", getRootElement().getNamespace());
-		servletClass.setText(clazz);
-		servlet.addContent("\n ");
-		servlet.addContent(servletNameElement);
-		servlet.addContent("\n ");
-		servlet.addContent(servletClass);
-		servlet.addContent("\n ");
-		
-		// Add the new element to the next index along.
-		// This does cover the case where indexOf returned -1.
-		children.add(index + 1, servlet);
+			// Prepare the new mapping
+			servlet = new Element("servlet", getRootElement().getNamespace());
+			Element servletNameElement = new Element("servlet-name", getRootElement().getNamespace());
+			servletNameElement.setText(name);
+			servletClass = new Element("servlet-class", getRootElement().getNamespace());
+			servletClass.setText(clazz);
+			servlet.addContent("\n ");
+			servlet.addContent(servletNameElement);
+			servlet.addContent("\n ");
+			servlet.addContent(servletClass);
+			servlet.addContent("\n ");
+
+			// Add the new element to the next index along.
+			// This does cover the case where indexOf returned -1.
+			children.add(index + 1, servlet);
+		}
+
 		writeXMLDoc();
 	}
 
@@ -256,8 +272,8 @@ public class WebConfigurator extends XMLBean {
 			Element elem = (Element) iterator.next();
 			Element servletName = elem.getChild("servlet-name", elem.getNamespace());
 			Element urlPattern = elem.getChild("url-pattern", elem.getNamespace());
-			
-			if (servletName.getText().trim().equals(servlet)&&urlPattern.getText().trim().equals(pattern)) {
+
+			if (servletName.getText().trim().equals(servlet) && urlPattern.getText().trim().equals(pattern)) {
 				// The mapping already exists
 				return;
 			}

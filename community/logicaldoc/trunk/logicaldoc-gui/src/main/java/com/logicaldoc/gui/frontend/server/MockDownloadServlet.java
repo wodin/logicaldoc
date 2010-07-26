@@ -36,7 +36,7 @@ public class MockDownloadServlet extends HttpServlet {
 				response.getWriter().write("Document text");
 			else {
 				RequestDispatcher rd = request
-						.getRequestDispatcher("skins/images/preview_na.gif");
+						.getRequestDispatcher("skin/images/preview_na.gif");
 				rd.forward(request, response);
 			}
 		} catch (Exception e) {
