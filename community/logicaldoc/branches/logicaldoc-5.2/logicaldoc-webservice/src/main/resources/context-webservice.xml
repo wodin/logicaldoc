@@ -11,32 +11,32 @@
 
   <jaxws:endpoint id="dms" implementor="com.logicaldoc.webservice.DmsServiceImpl" address="/Dms">
     <jaxws:properties>
-      <entry key="mtom-enabled" value="true" />
+      <entry key="mtom-enabled" value="false" />
     </jaxws:properties>
   </jaxws:endpoint>
 
   <jaxws:endpoint id="auth" implementor="com.logicaldoc.webservice.auth.AuthServiceImpl" address="/Auth">
     <jaxws:properties>
-      <entry key="mtom-enabled" value="true" />
+      <entry key="mtom-enabled" value="false" />
     </jaxws:properties>
   </jaxws:endpoint>
 
   <jaxws:endpoint id="document" implementor="com.logicaldoc.webservice.document.DocumentServiceImpl"
     address="/Document">
     <jaxws:properties>
-      <entry key="mtom-enabled" value="true" />
+      <entry key="mtom-enabled" value="false" />
     </jaxws:properties>
   </jaxws:endpoint>
 
   <jaxws:endpoint id="folder" implementor="com.logicaldoc.webservice.folder.FolderServiceImpl" address="/Folder">
     <jaxws:properties>
-      <entry key="mtom-enabled" value="true" />
+      <entry key="mtom-enabled" value="false" />
     </jaxws:properties>
   </jaxws:endpoint>
 
   <jaxws:endpoint id="search" implementor="com.logicaldoc.webservice.search.SearchServiceImpl" address="/Search">
     <jaxws:properties>
-      <entry key="mtom-enabled" value="true" />
+      <entry key="mtom-enabled" value="false" />
     </jaxws:properties>
   </jaxws:endpoint>
 
