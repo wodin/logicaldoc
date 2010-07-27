@@ -225,7 +225,7 @@ public class WebConfigurator extends XMLBean {
 		servlet = this.elementLookUp(servlets, "servlet-name", name);
 		if (servlet != null) {
 			// The servlet already exists, so update it
-			servletClass = servlet.getParentElement().getChild("servlet-class");
+			servletClass = servlet.getParentElement().getChild("servlet-class", getRootElement().getNamespace());
 			servletClass.setText(clazz);
 		} else {
 
