@@ -17,7 +17,7 @@
 		<copy todir="${logicaldoc.webroot}" verbose="false">
 			<fileset dir="war">
 				<include name="**" />
-				<exclude name="WEB-INF/lib/**" />
+				<exclude name="WEB-INF/**" />
 			</fileset>
 			<!-- This one is for maven -->
 			<!--fileset dir="target/war">

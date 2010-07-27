@@ -44,7 +44,6 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 	@Override
 	public GUIInfo getInfo(String locale) {
 		GUIInfo info = new GUIInfo();
-
 		try {
 			Properties i18n = new Properties();
 			try {
@@ -75,7 +74,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			info.setSupportedGUILanguages(supportedLanguages.toArray(new GUIValuePair[0]));
 			info.setBundle(getBundle(locale));
 
-			LanguageManager manager = (LanguageManager) Context.getInstance().getBean(LanguageManager.class);
+			LanguageManager manager = LanguageManager.getInstance();
 			Collection<Language> languages = manager.getLanguages();
 			supportedLanguages.clear();
 			for (Language language : languages) {
@@ -92,7 +91,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			List<GUIMessage> messages = new ArrayList<GUIMessage>();
 			String jdbcUrl = pbean.getProperty("jdbc.url");
 			if (StringUtils.isNotEmpty(jdbcUrl)) {
-				if (jdbcUrl.equals("jdbc:hsqldb:mem:logicaldoc")) {
+				if (jdbcUrl.startsWith("jdbc:hsqldb:mem:")) {
 					GUIMessage setupReminder = new GUIMessage();
 					setupReminder.setMessage(getValue(info, "setup.reminder"));
 					HttpServletRequest request = this.getThreadLocalRequest();
@@ -124,7 +123,8 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			}
 
 			info.setFeatures(features.toArray(new String[0]));
-			//info.setFeatures(new String[] { "Feature_52", "Feature_53", "Feature_56", "Feature_13" });
+			// info.setFeatures(new String[] { "Feature_52", "Feature_53",
+			// "Feature_56", "Feature_13" });
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}

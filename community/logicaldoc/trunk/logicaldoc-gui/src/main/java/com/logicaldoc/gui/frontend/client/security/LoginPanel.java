@@ -100,7 +100,7 @@ public class LoginPanel extends VLayout {
 		}
 		HTML footer = new HTML(htmlString, false);
 		footer.setStyleName("loginFooter");
-
+		
 		// Prepare the Form and all its fields
 		final DynamicForm form = new DynamicForm();
 		form.setAlign(Alignment.CENTER);
