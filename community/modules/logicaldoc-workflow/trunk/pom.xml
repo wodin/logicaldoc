@@ -125,7 +125,6 @@
             <groupId>com.logicaldoc</groupId>
             <artifactId>logicaldoc-gui</artifactId>
             <version>${project.version}</version>
-            <classifier>api</classifier>
         </dependency>
          <dependency>
             <groupId>com.logicaldoc</groupId>
@@ -284,7 +283,7 @@
 									src="target/${project.artifactId}-${project.version}-plugin.zip"
 									dest="target/plugin" />
 								<delete
-									dir="target/${project.artifactId}-${project.version}-plugin.zip" />
+									file="target/${project.artifactId}-${project.version}-plugin.zip" />
 								<!-- delete> <fileset dir="target/plugin/WEB-INF/lib" includes="*logicaldoc*,*spring*,*commons*,*velocity*,*geronimo*,*aopalliance*,*saaj*,ant*" 
 									/> </delete -->
 
