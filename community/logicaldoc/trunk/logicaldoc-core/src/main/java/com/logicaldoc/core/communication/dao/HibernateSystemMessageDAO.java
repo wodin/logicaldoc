@@ -35,7 +35,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_id IN (select ld_messageid from ld_recipient where ld_name = '"
 				+ SqlUtil.doubleQuotes(recipient) + "' and ld_type = " + type + ")";
 		if (read != null)
-			query = query + " and ld_read=" + read;
+			query = query + " and ld_red=" + read;
 		query = query + " order by ld_sentdate desc";
 
 		List<Object> result = (List<Object>) findByJdbcQuery(query, 15, new Object[] {});

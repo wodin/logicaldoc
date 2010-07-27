@@ -211,11 +211,6 @@
   </servlet>
 
   <servlet>
-    <servlet-name>LanguagesData</servlet-name>
-    <servlet-class>com.logicaldoc.gui.frontend.server.MockLanguagesDataServlet</servlet-class>
-  </servlet>
-
-  <servlet>
     <servlet-name>TemplatesData</servlet-name>
     <servlet-class>com.logicaldoc.web.data.TemplatesDataServlet</servlet-class>
   </servlet>
@@ -407,11 +402,6 @@
   <servlet-mapping>
     <servlet-name>UserHistoryData</servlet-name>
     <url-pattern>/data/userhistory.xml</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>LanguagesData</servlet-name>
-    <url-pattern>/data/languages.xml</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

@@ -19,6 +19,10 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>gwtupload</groupId>
+			<artifactId>gwtupload</artifactId>
+		</dependency>		
+		<dependency>
 			<groupId>javax.activation</groupId>
 			<artifactId>activation</artifactId>
 		</dependency>

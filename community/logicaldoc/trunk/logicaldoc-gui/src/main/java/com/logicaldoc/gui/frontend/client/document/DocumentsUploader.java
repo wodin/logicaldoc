@@ -1,13 +1,12 @@
 package com.logicaldoc.gui.frontend.client.document;
 
+import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
 import gwtupload.client.MultiUploader;
-import gwtupload.client.IUploadStatus.Status;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.data.LanguagesDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -91,12 +90,7 @@ public class DocumentsUploader extends Window {
 		form.setValuesManager(vm);
 		form.setHeight(90);
 
-		SelectItem languageItem = new SelectItem();
-		languageItem.setName("language");
-		languageItem.setTitle(I18N.message("language"));
-		languageItem.setOptionDataSource(LanguagesDS.get());
-		languageItem.setDisplayField("name");
-		languageItem.setValueField("locale");
+		SelectItem languageItem = ItemFactory.newLanguageSelector("language", true, true);
 		languageItem.setRequired(true);
 		languageItem.setDefaultValue(I18N.getLocale());
 
