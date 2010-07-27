@@ -23,4 +23,9 @@ public interface AuditService extends RemoteService {
 	 * Subscribes a selection of documents
 	 */
 	public void subscribeDocuments(String sid, long[] docIds) throws InvalidSessionException;
+
+	/**
+	 * Deletes a list of Subscriptions
+	 */
+	public void deleteSubscriptions(String sid, long[] ids) throws InvalidSessionException;
 }

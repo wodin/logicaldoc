@@ -220,6 +220,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>SubscriptionsData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.MockSubscriptionsDataServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>log</servlet-name>
     <servlet-class>com.logicaldoc.gui.common.server.MockLogDownload</servlet-class>
   </servlet>
@@ -422,6 +427,11 @@
   <servlet-mapping>
     <servlet-name>WorkflowsData</servlet-name>
     <url-pattern>/data/workflows.xml</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>SubscriptionsData</servlet-name>
+    <url-pattern>/data/subscriptions.xml</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
