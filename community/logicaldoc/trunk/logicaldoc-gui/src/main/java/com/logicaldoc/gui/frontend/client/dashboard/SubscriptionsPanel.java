@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.SubscriptionsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -11,9 +12,12 @@ import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.services.AuditService;
 import com.logicaldoc.gui.frontend.client.services.AuditServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.DocumentService;
+import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.types.SortDirection;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -41,6 +45,8 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  */
 public class SubscriptionsPanel extends VLayout {
 	private AuditServiceAsync service = (AuditServiceAsync) GWT.create(AuditService.class);
+
+	private DocumentServiceAsync docService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private ListGrid list;
 
@@ -85,10 +91,10 @@ public class SubscriptionsPanel extends VLayout {
 			public void onDoubleClick(DoubleClickEvent event) {
 				String type = list.getSelectedRecord().getAttribute("type");
 				String id = list.getSelectedRecord().getAttribute("objectid");
-				if ("document".equals(type))
+				if ("document".equals(type)) {
 					Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id
 							+ "&open=true", "_blank", "");
-				else
+				} else
 					DocumentsPanel.get().openInFolder(Long.parseLong(id), null);
 			}
 		});
@@ -129,6 +135,7 @@ public class SubscriptionsPanel extends VLayout {
 		list.setDataSource(new SubscriptionsDS());
 		list.setFields(id, created, icon, name);
 
+		list.sort(1, SortDirection.DESCENDING);
 		listing.addMember(list);
 	}
 
@@ -178,10 +185,20 @@ public class SubscriptionsPanel extends VLayout {
 				String id = record.getAttribute("objectid");
 				if ("folder".equals(type))
 					DocumentsPanel.get().openInFolder(Long.parseLong(id), null);
-				else
-					DocumentsPanel.get().openInFolder(Long.parseLong(record.getAttribute("folderid")),
-							Long.parseLong(id));
+				else {
+					docService.getById(Session.get().getSid(), Long.parseLong(id), new AsyncCallback<GUIDocument>() {
 
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
+
+						@Override
+						public void onSuccess(GUIDocument result) {
+							DocumentsPanel.get().openInFolder(result.getFolder().getId(), result.getId());
+						}
+					});
+				}
 			}
 		});
 
