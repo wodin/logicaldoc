@@ -11,10 +11,6 @@
   <artifactId>logicaldoc-gui</artifactId>
   <name>logicaldoc-gui</name>
   <packaging>war</packaging>
-  <properties>
-    <gwt.version>2.0.3</gwt.version>
-    <gwt.output.directory>./war</gwt.output.directory>
-  </properties>
   <dependencies>
     <dependency>
       <groupId>com.google.gwt</groupId>
