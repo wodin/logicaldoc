@@ -5,6 +5,7 @@ import java.io.File;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.config.WebConfigurator;
 import com.logicaldoc.util.plugin.LogicalDOCPlugin;
 
@@ -20,10 +21,14 @@ public class WebservicePlugin extends LogicalDOCPlugin {
 
 	@Override
 	protected void install() throws Exception {
-		File dest = new File(getPluginPath());
-		dest=dest.getParentFile().getParentFile();
+		PropertiesBean pbean = new PropertiesBean(getClass().getClassLoader().getResource("context.properties"));
+		pbean.setProperty("webservice.mtom", "false");
+		pbean.setProperty("webservice.enabled", "true");
+		pbean.write();
 
-		WebConfigurator config = new WebConfigurator(dest.getPath() + "/web.xml");
+		File dest = new File(getPluginPath());
+		dest = dest.getParentFile().getParentFile();
+		WebConfigurator config = new WebConfigurator(dest.getPath() + "/web.xm");
 		config.addServlet("CXFServlet", "com.logicaldoc.webservice.WebserviceServlet");
 		config.writeXMLDoc();
 		config.addServletMapping("CXFServlet", "/services/*");
