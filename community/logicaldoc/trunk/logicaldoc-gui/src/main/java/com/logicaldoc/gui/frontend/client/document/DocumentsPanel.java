@@ -215,4 +215,8 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 			((DocumentsListPanel) listingPanel).toggleFilters();
 		}
 	}
+	
+	public DocumentsListPanel getDocumentsListPanel() {
+		return (DocumentsListPanel) listing;
+	}
 }

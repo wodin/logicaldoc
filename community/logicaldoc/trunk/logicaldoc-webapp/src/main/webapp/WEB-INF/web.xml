@@ -469,7 +469,6 @@
     <url-pattern>/doc_rss</url-pattern>
   </servlet-mapping>
 
-
   <!-- Welcome files -->
   <welcome-file-list>
     <welcome-file>frontend.jsp</welcome-file>

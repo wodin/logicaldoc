@@ -90,6 +90,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>AuditService</servlet-name>
+    <servlet-class>com.logicaldoc.gui.frontend.server.MockAuditServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>TagsData</servlet-name>
     <servlet-class>com.logicaldoc.gui.common.server.MockTagsDataServlet</servlet-class>
   </servlet>
@@ -297,6 +302,11 @@
   <servlet-mapping>
     <servlet-name>WorkflowService</servlet-name>
     <url-pattern>/frontend/workflow</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>AuditService</servlet-name>
+    <url-pattern>/frontend/audit</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

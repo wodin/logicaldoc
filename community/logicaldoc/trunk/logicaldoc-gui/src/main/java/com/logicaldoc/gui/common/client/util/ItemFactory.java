@@ -182,7 +182,7 @@ public class ItemFactory {
 		user.setOptionDataSource(UsersDS.get());
 		return user;
 	}
-
+	
 	public static RadioGroupItem newBooleanSelector(String name, String title) {
 		RadioGroupItem radioGroupItem = new RadioGroupItem();
 		radioGroupItem.setName(name);

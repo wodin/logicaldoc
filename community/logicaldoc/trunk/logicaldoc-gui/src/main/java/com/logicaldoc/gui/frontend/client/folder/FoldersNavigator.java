@@ -218,6 +218,15 @@ public class FoldersNavigator extends TreeGrid {
 			}
 		});
 
+		MenuItem audit = new MenuItem();
+		audit.setTitle(I18N.message("subscribe"));
+		audit.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				SubscriptionDialog dialog=new SubscriptionDialog(id);
+				dialog.show();
+			}
+		});
+
 		if (id != Constants.DOCUMENTS_FOLDERID)
 			reload.setEnabled(false);
 		if (!folder.hasPermission(Constants.PERMISSION_ADD))
@@ -238,8 +247,17 @@ public class FoldersNavigator extends TreeGrid {
 			pasteAsAliasItem.setEnabled(false);
 
 		contextMenu.setItems(reload, search, addItem, delete, pasteItem, pasteAsAliasItem, move, exportZip);
-		if (Feature.visible(9))
+
+		if (Feature.visible(Feature.AUDIT)) {
+			contextMenu.addItem(audit);
+			audit.setEnabled(Feature.enabled(Feature.AUDIT));
+		}
+
+		if (Feature.visible(Feature.RSS)) {
 			contextMenu.addItem(rss);
+			rss.setEnabled(Feature.enabled(Feature.RSS));
+		}
+
 		return contextMenu;
 	}
 
@@ -275,12 +293,12 @@ public class FoldersNavigator extends TreeGrid {
 				}
 				TreeNode node = new TreeNode(folder.getName());
 				node.setAttribute("id", Long.toString(folder.getId()));
-				node.setAttribute(Constants.PERMISSION_ADD, Boolean.toString(folder
-						.hasPermission(Constants.PERMISSION_ADD)));
-				node.setAttribute(Constants.PERMISSION_DELETE, Boolean.toString(folder
-						.hasPermission(Constants.PERMISSION_DELETE)));
-				node.setAttribute(Constants.PERMISSION_RENAME, Boolean.toString(folder
-						.hasPermission(Constants.PERMISSION_RENAME)));
+				node.setAttribute(Constants.PERMISSION_ADD,
+						Boolean.toString(folder.hasPermission(Constants.PERMISSION_ADD)));
+				node.setAttribute(Constants.PERMISSION_DELETE,
+						Boolean.toString(folder.hasPermission(Constants.PERMISSION_DELETE)));
+				node.setAttribute(Constants.PERMISSION_RENAME,
+						Boolean.toString(folder.hasPermission(Constants.PERMISSION_RENAME)));
 				getTree().add(node, parent);
 				parent = node;
 
