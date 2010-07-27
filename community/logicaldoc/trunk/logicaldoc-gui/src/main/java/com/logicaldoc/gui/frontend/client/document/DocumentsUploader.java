@@ -90,7 +90,7 @@ public class DocumentsUploader extends Window {
 		form.setValuesManager(vm);
 		form.setHeight(90);
 
-		SelectItem languageItem = ItemFactory.newLanguageSelector("language", true, true);
+		SelectItem languageItem = ItemFactory.newLanguageSelector("language", false, false);
 		languageItem.setRequired(true);
 		languageItem.setDefaultValue(I18N.getLocale());
 
