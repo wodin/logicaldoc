@@ -28,7 +28,7 @@ public class WebservicePlugin extends LogicalDOCPlugin {
 
 		File dest = new File(getPluginPath());
 		dest = dest.getParentFile().getParentFile();
-		WebConfigurator config = new WebConfigurator(dest.getPath() + "/web.xm");
+		WebConfigurator config = new WebConfigurator(dest.getPath() + "/web.xml");
 		config.addServlet("CXFServlet", "com.logicaldoc.webservice.WebserviceServlet");
 		config.writeXMLDoc();
 		config.addServletMapping("CXFServlet", "/services/*");
