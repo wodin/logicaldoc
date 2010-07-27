@@ -7,7 +7,7 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.layout.HLayout;
 
 /**
- * 
+ * Represents a dragged workflow state.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
@@ -39,10 +39,27 @@ public class WorkflowDraggedState extends WorkflowState {
 		delete.addClickHandler(new com.google.gwt.event.dom.client.ClickHandler() {
 			@Override
 			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
-				getDesigner().onDraggedStateDelete(fromState, targetState);
+				if (fromState.getType() == GUIWFState.TYPE_TASK)
+					getDesigner().onDraggedStateDelete(fromState, targetState);
+				else
+					getDesigner().onTransitionDelete(fromState, targetState);
 			}
 		});
 		commands.addMember(delete);
+
+		if (fromState.getType() == GUIWFState.TYPE_TASK) {
+			HTML deleteTransition = new HTML("&nbsp;&nbsp;<a href='#'>"
+					+ I18N.message("deletetransition").toLowerCase() + "</a>");
+			deleteTransition.setWidth("1px");
+			deleteTransition.setWordWrap(false);
+			deleteTransition.addClickHandler(new com.google.gwt.event.dom.client.ClickHandler() {
+				@Override
+				public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
+					getDesigner().onTransitionDelete(fromState, targetState);
+				}
+			});
+			commands.addMember(deleteTransition);
+		}
 	}
 
 }

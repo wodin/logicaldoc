@@ -1,11 +1,9 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUITransition;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -161,24 +159,27 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 	}
 
 	@Override
-	public void onDraggedStateDelete(GUIWFState fromState, GUIWFState targetState) {
-		Map<String, GUIWFState> newTransitions = new HashMap<String, GUIWFState>();
-		for (String key : fromState.getTransitions().keySet()) {
-			if (!fromState.getTransitions().get(key).getId().equals(targetState.getId())) {
-				newTransitions.put(key, fromState.getTransitions().get(key));
+	public void onTransitionDelete(GUIWFState fromState, GUIWFState targetState) {
+		GUITransition[] newTransitions = new GUITransition[fromState.getTransitions().length - 1];
+		int i = 0;
+		for (GUITransition transition : fromState.getTransitions()) {
+			if (transition.getTargetState().getType() == GUIWFState.TYPE_UNDEFINED
+					|| !transition.getTargetState().getId().equals(targetState.getId())) {
+				newTransitions[i] = transition;
+				i++;
 			}
 		}
 		fromState.setTransitions(newTransitions);
 
 		GUIWFState[] states = new GUIWFState[workflow.getStates().length];
-		int i = 0;
+		int j = 0;
 		for (GUIWFState state : workflow.getStates()) {
 			if (!state.getName().equals(fromState.getName())) {
-				states[i] = state;
-				i++;
+				states[j] = state;
+				j++;
 			} else {
-				states[i] = fromState;
-				i++;
+				states[j] = fromState;
+				j++;
 			}
 		}
 		workflow.setStates(states);
@@ -204,20 +205,114 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 	}
 
 	@Override
-	public void onAddTransition(GUIWFState fromState, GUIWFState targetState) {
-		Map<String, GUIWFState> transitions = new HashMap<String, GUIWFState>();
-		transitions.put(targetState.getName(), targetState);
-		fromState.setTransitions(transitions);
-
-		GUIWFState[] states = new GUIWFState[workflow.getStates().length];
+	public void onDraggedStateDelete(GUIWFState fromState, GUIWFState targetState) {
+		GUITransition[] newTransitions = new GUITransition[fromState.getTransitions().length];
 		int i = 0;
-		for (GUIWFState state : workflow.getStates()) {
-			if (!state.getName().equals(fromState.getName())) {
-				states[i] = state;
+		for (GUITransition transition : fromState.getTransitions()) {
+			if (transition.getTargetState().getType() == GUIWFState.TYPE_UNDEFINED
+					|| !transition.getTargetState().getId().equals(targetState.getId())) {
+				newTransitions[i] = transition;
 				i++;
 			} else {
-				states[i] = fromState;
+				GUIWFState target = new GUIWFState();
+				target.setType(GUIWFState.TYPE_UNDEFINED);
+				newTransitions[i] = new GUITransition(transition.getText(), target);
 				i++;
+			}
+		}
+		fromState.setTransitions(newTransitions);
+
+		GUIWFState[] states = new GUIWFState[workflow.getStates().length];
+		int j = 0;
+		for (GUIWFState state : workflow.getStates()) {
+			if (!state.getName().equals(fromState.getName())) {
+				states[j] = state;
+				j++;
+			} else {
+				states[j] = fromState;
+				j++;
+			}
+		}
+		workflow.setStates(states);
+
+		SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+			@Override
+			public void execute(Boolean value) {
+				if (value) {
+					workflowService.save(Session.get().getSid(), workflow, new AsyncCallback<GUIWorkflow>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
+
+						@Override
+						public void onSuccess(GUIWorkflow result) {
+							AdminPanel.get().setContent(new WorkflowDesigner(workflow));
+						}
+					});
+				}
+			}
+		});
+	}
+
+	@Override
+	public void onAddTransition(GUIWFState fromState, GUIWFState targetState, String transitionText) {
+		GUITransition[] newTransitions = null;
+		if (targetState == null)
+			// Adding a new transition without a dragged state
+			if (fromState.getTransitions() != null)
+				newTransitions = new GUITransition[fromState.getTransitions().length + 1];
+			else
+				newTransitions = new GUITransition[1];
+		else {
+			// Dragging a workflow state into an existing transition
+			if (fromState.getTransitions() != null)
+				newTransitions = new GUITransition[fromState.getTransitions().length + 1];
+			else
+				newTransitions = new GUITransition[1];
+		}
+
+		if (fromState.getTransitions() != null) {
+			int i = 0;
+			for (GUITransition transition : fromState.getTransitions()) {
+				if (transitionText != null && transitionText.equals(transition.getText())) {
+					// Associate the targetState to an existing transition
+					GUITransition t = new GUITransition(transition.getText(), targetState);
+					newTransitions[i] = t;
+					i++;
+				} else {
+					newTransitions[i] = transition;
+					i++;
+				}
+			}
+		} else {
+			// Associate the targetState to an existing transition
+			GUITransition t = new GUITransition(transitionText, targetState);
+			newTransitions[0] = t;
+		}
+
+		if (targetState == null) {
+			// The user has clicked the 'add transition' link into the workflow
+			// state element.
+			GUIWFState target = new GUIWFState();
+			target.setType(GUIWFState.TYPE_UNDEFINED);
+			newTransitions[newTransitions.length - 1] = new GUITransition(transitionText, target);
+		}
+		// else
+		// // The user has dragged a new workflow state element.
+		// newTransitions[newTransitions.length - 1] = new
+		// GUITransition(targetState.getName(), targetState);
+		fromState.setTransitions(newTransitions);
+
+		GUIWFState[] states = new GUIWFState[workflow.getStates().length];
+		int j = 0;
+		for (GUIWFState state : workflow.getStates()) {
+			if (!state.getName().equals(fromState.getName())) {
+				states[j] = state;
+				j++;
+			} else {
+				states[j] = fromState;
+				j++;
 			}
 		}
 		workflow.setStates(states);

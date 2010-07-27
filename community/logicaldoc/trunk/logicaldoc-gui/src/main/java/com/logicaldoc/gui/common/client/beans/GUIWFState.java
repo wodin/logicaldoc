@@ -1,7 +1,6 @@
 package com.logicaldoc.gui.common.client.beans;
 
 import java.io.Serializable;
-import java.util.Map;
 
 import com.logicaldoc.gui.common.client.util.Util;
 
@@ -15,8 +14,8 @@ public class GUIWFState implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public final static int TYPE_DRAG = -1;
-	
+	public final static int TYPE_UNDEFINED = -1;
+
 	public final static int TYPE_TASK = 0;
 
 	public final static int TYPE_END = 1;
@@ -57,7 +56,7 @@ public class GUIWFState implements Serializable {
 
 	private GUIUser[] participants;
 
-	private Map<String, GUIWFState> transitions;
+	private GUITransition[] transitions;
 
 	public int getType() {
 		return type;
@@ -91,11 +90,11 @@ public class GUIWFState implements Serializable {
 		this.participants = participants;
 	}
 
-	public Map<String, GUIWFState> getTransitions() {
+	public GUITransition[] getTransitions() {
 		return transitions;
 	}
 
-	public void setTransitions(Map<String, GUIWFState> transitions) {
+	public void setTransitions(GUITransition[] transitions) {
 		this.transitions = transitions;
 	}
 

@@ -7,6 +7,7 @@ import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -109,7 +110,17 @@ public class Accordion extends SectionStack {
 		separatorForm.setTitleOrientation(TitleOrientation.TOP);
 		separatorForm.setHeight(15);
 
-		refreshSupervisor();
+		supervisorForm = new DynamicForm();
+		supervisorForm.setAlign(Alignment.LEFT);
+		// supervisorForm.setColWidths(1, "*");
+		SupervisorSelector supervisor = new SupervisorSelector();
+		supervisor.setRequired(true);
+		// supervisor.setColSpan(3);
+		if (this.workflow != null && this.workflow.getSupervisor() != null)
+			supervisor.setValue(this.workflow.getSupervisor().getUserName());
+		supervisorForm.setItems(supervisor);
+
+		// refreshSupervisor();
 
 		wfForm.setItems(workflowName, workflowDescr, taskAssignment, assignmentSubject, assignmentBody, taskReminder,
 				reminderSubject, reminderBody);
