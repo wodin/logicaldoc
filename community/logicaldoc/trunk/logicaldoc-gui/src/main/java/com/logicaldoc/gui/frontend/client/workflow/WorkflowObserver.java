@@ -26,21 +26,34 @@ public interface WorkflowObserver {
 	public void onStateDelete(GUIWFState wfState);
 
 	/**
+	 * Invoked when the user wants to delete a workflow transition clicking on
+	 * 'delete Transition' link.
+	 * 
+	 * @param fromState The original state of the transition associated to the
+	 *        dragged state
+	 * @param targetState The selected workflowState
+	 */
+	public void onTransitionDelete(GUIWFState fromState, GUIWFState targetState);
+
+	/**
 	 * Invoked when the user wants to delete a workflow dragged state clicking
 	 * on 'delete' link.
 	 * 
-	 * @param fromState The original state of the transition associated to the dragged state
+	 * @param fromState The original state of the transition associated to the
+	 *        dragged state
 	 * @param targetState The selected workflowState
 	 */
 	public void onDraggedStateDelete(GUIWFState fromState, GUIWFState targetState);
-	
+
 	/**
 	 * Invoked when the user drop a new dragged state.
 	 * 
-	 * @param fromState The original state of the transition associated to the dragged state
+	 * @param fromState The original state of the transition associated to the
+	 *        dragged state
 	 * @param targetState The new workflowState, target of the new transition
+	 * @param transitionText The text of transition on which is dragged the targetState
 	 */
-	public void onAddTransition(GUIWFState fromState, GUIWFState targetState);
+	public void onAddTransition(GUIWFState fromState, GUIWFState targetState, String transitionText);
 
 	/**
 	 * Invoked when the user selects a workflow template.

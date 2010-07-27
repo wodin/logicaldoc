@@ -2,6 +2,9 @@ package com.logicaldoc.gui.frontend.client.workflow;
 
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.smartgwt.client.types.Overflow;
+import com.smartgwt.client.util.EventHandler;
+import com.smartgwt.client.widgets.events.DropEvent;
+import com.smartgwt.client.widgets.events.DropHandler;
 import com.smartgwt.client.widgets.layout.VStack;
 
 /**
@@ -23,8 +26,10 @@ public class DrawingPanel extends VStack {
 		setShowCustomScrollbars(true);
 		setOverflow(Overflow.SCROLL);
 
-		if (designer.getWorkflow() != null)
+		if (designer.getWorkflow() != null) {
 			for (GUIWFState state : designer.getWorkflow().getStates()) {
+				if (state == null)
+					continue;
 				if (state.getType() == GUIWFState.TYPE_TASK)
 					addMember(new TaskRow(designer, state));
 				else if (state.getType() == GUIWFState.TYPE_FORK)
@@ -34,5 +39,14 @@ public class DrawingPanel extends VStack {
 				else if (state.getType() == GUIWFState.TYPE_END)
 					addMember(new EndRow(designer, state));
 			}
+		}
+
+		addDropHandler(new DropHandler() {
+			public void onDrop(DropEvent event) {
+				WorkflowRow row = (WorkflowRow) EventHandler.getDragTarget();
+				// TODO Alert avvisando l'utente dell'errore se viene messo al primo posto non un TaskRow
+				event.cancel();
+			}
+		});
 	}
 }

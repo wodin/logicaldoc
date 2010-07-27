@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
+import com.logicaldoc.gui.common.client.beans.GUITransition;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.types.Alignment;
@@ -11,7 +12,6 @@ import com.smartgwt.client.widgets.events.DropOutEvent;
 import com.smartgwt.client.widgets.events.DropOutHandler;
 import com.smartgwt.client.widgets.events.DropOverEvent;
 import com.smartgwt.client.widgets.events.DropOverHandler;
-import com.smartgwt.client.widgets.layout.VStack;
 
 /**
  * A row containing a join primitive
@@ -59,22 +59,18 @@ public class JoinRow extends WorkflowRow {
 		dropArea.addDropHandler(new DropHandler() {
 			public void onDrop(DropEvent event) {
 				WorkflowState target = (WorkflowState) EventHandler.getDragTarget();
-				// Remove the drop area, because the 'Join' state can have only
-				// one transition.
-				removeMember(dropArea);
-				addMember(new WorkflowDraggedState(target.getDesigner(), fromState, target.getWfState()), 1);
 
-				// Add a new transition on the parent state
-				workflowDesigner.onAddTransition(fromState, target.getWfState());
+				addMember(new WorkflowDraggedState(workflowDesigner, fromState, target.getWfState()), 1);
+
+				// Associate the target wfState to the fromState transition
+				workflowDesigner.onAddTransition(fromState, target.getWfState(), "xxx");
 			}
 		});
 
-		if (wfState.getTransitions() != null && wfState.getTransitions().size() > 0) {
-			VStack transitionsPanel = new VStack();
-			for (String transitionLabel : wfState.getTransitions().keySet()) {
-				transitionsPanel.addMember(new Transition(designer, transitionLabel, wfState));
+		if (wfState.getTransitions() != null && wfState.getTransitions().length > 0) {
+			for (GUITransition transition : wfState.getTransitions()) {
+				addMember(new Transition(designer, transition, wfState));
 			}
-			addMember(transitionsPanel);
 		} else
 			addMember(dropArea);
 	}

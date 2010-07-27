@@ -1,10 +1,8 @@
 package com.logicaldoc.gui.frontend.server;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.beans.GUITransition;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
@@ -106,15 +104,20 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		endState.setName("End State logical");
 		endState.setDescription("End State logical description");
 
-		Map<String, GUIWFState> transitions = new HashMap<String, GUIWFState>();
-		transitions.put("to the end", endState);
-		transitions.put("to task 1", task1);
-		transitions.put("to task 2", task2);
+		GUITransition[] transitions = new GUITransition[3];
+		transitions[0] = new GUITransition("to the end", endState);
+		transitions[1] = new GUITransition("to task 1", task1);
+		transitions[2] = new GUITransition("to task 2", task2);
 		task.setTransitions(transitions);
 
-		transitions = new HashMap<String, GUIWFState>();
-		transitions.put("ending", endState);
+		transitions = new GUITransition[1];
+		transitions[0] = new GUITransition("ending", endState);
 		task2.setTransitions(transitions);
+
+		transitions = new GUITransition[2];
+		transitions[0] = new GUITransition("to t1", task1);
+		transitions[1] = new GUITransition("to t2", task2);
+		fork.setTransitions(transitions);
 
 		GUIWFState[] states = new GUIWFState[6];
 		states[0] = task;
