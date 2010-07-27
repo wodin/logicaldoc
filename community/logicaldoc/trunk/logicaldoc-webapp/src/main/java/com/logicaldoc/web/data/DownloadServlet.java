@@ -96,6 +96,8 @@ public class DownloadServlet extends HttpServlet {
 			else
 				filename = doc.getFileName();
 
+			response.setHeader("Content-Lenght", Long.toString(doc.getFileSize()));
+			
 			if (request.getParameter("open") == null) {
 				response.setHeader("Pragma", "public");
 				response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
