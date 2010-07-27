@@ -16,6 +16,11 @@
 			<outputDirectory>/</outputDirectory>
 			<excludes>
 				<exclude>context.properties</exclude>
+				<exclude>context.xml</exclude>
+				<exclude>ehcache.xml</exclude>
+				<exclude>ldoc-log4j.xml</exclude>
+			    <exclude>log4j.dtd</exclude>
+			    <exclude>spring-beans-2.0.dtd</exclude>
 			</excludes>
 		</fileSet>
 	</fileSets>

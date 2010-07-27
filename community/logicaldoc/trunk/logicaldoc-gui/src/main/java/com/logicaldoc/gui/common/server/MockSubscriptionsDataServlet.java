@@ -42,7 +42,6 @@ public class MockSubscriptionsDataServlet extends HttpServlet {
 			writer.print("<name>Subscription " + i + "</name>");
 			writer.print("<created>2010-10-26T11:32:23</created>");
 			writer.print("<objectid>"+i+"</objectid>");
-			writer.print("<folderid>"+i+"</folderid>");
 			writer.print("</subscription>");
 		}
 		writer.write("</list>");

@@ -26,9 +26,8 @@ public class SubscriptionsDS extends DataSource {
 		DataSourceDateTimeField created = new DataSourceDateTimeField("created");
 		DataSourceTextField type = new DataSourceTextField("type");
 		DataSourceTextField objectId = new DataSourceTextField("objectid");
-		DataSourceTextField folderId = new DataSourceTextField("folderid");
 
-		setFields(id, icon, name, created, type, objectId, folderId);
+		setFields(id, icon, name, created, type, objectId);
 		setClientOnly(true);
 		setDataURL("data/subscriptions.xml?sid=" + Session.get().getSid());
 	}
