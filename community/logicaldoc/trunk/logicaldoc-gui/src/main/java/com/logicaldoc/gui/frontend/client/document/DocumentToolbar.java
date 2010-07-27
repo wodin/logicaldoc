@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.FolderObserver;
@@ -9,11 +10,18 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.frontend.client.services.AuditService;
+import com.logicaldoc.gui.frontend.client.services.AuditServiceAsync;
 import com.smartgwt.client.types.SelectionType;
+import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
+import com.smartgwt.client.widgets.grid.ListGrid;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
@@ -32,7 +40,13 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 	private ToolStripButton add = new ToolStripButton();
 
+	private ToolStripButton subscribe = new ToolStripButton();
+
 	private GUIDocument document;
+
+	private DocumentsListPanel listPanel;
+
+	private AuditServiceAsync audit = (AuditServiceAsync) GWT.create(AuditService.class);
 
 	public DocumentToolbar() {
 		download.setTooltip(I18N.message("download"));
@@ -59,7 +73,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		
 		pdf.setIcon(ItemFactory.newImgIcon("pdf.png").getSrc());
 		pdf.setTooltip(I18N.message("exportpdf"));
 		pdf.addClickHandler(new ClickHandler() {
@@ -81,9 +94,44 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
+		subscribe.setIcon(ItemFactory.newImgIcon("accept.png").getSrc());
+		subscribe.setTooltip(I18N.message("subscribe"));
+		subscribe.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				ListGrid list = listPanel.getList();
+				ListGridRecord[] selection = list.getSelection();
+				if (selection == null || selection.length == 0)
+					return;
+				final long[] ids = new long[selection.length];
+				for (int i = 0; i < selection.length; i++) {
+					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
+				}
+
+				SC.ask(I18N.message("question"), I18N.message("confirmsubscribe"), new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							audit.subscribeDocuments(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(Void result) {
+
+								}
+							});
+						}
+					}
+				});
+			}
+		});
+
 		setHeight(27);
 		addButton(download);
-		
+
 		if (Feature.visible(Feature.RSS)) {
 			addButton(rss);
 			if (!Feature.enabled(Feature.RSS)) {
@@ -109,6 +157,14 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		max.setShowTitle(false);
 		max.setDefaultValue(100);
 		max.setWidth(40);
+
+		if (Feature.visible(Feature.AUDIT)) {
+			addButton(pdf);
+			if (!Feature.enabled(Feature.AUDIT)) {
+				pdf.setDisabled(true);
+				pdf.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
 
 		ToolStripButton display = new ToolStripButton();
 		display.setTitle(I18N.message("display"));
@@ -163,6 +219,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			add.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));
 		else
 			add.setDisabled(true);
+
+		this.listPanel = DocumentsPanel.get().getDocumentsListPanel();
 	}
 
 	@Override

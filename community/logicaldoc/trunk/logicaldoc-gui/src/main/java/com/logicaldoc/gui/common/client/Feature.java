@@ -13,9 +13,12 @@ import com.logicaldoc.gui.common.client.beans.GUIInfo;
  */
 public class Feature {
 
+	public static final int PDF = 8;
+	public static final int RSS = 9;
 	public static final int ACTIVEDIR = 11;
 	public static final int SAVED_SEARCHES = 12;
 	public static final int MESSAGES = 13;
+	public static final int AUDIT = 17;
 	public static final int PREVIEW = 51;
 	public static final int WORKFLOW_BASIC = 52;
 	public static final int BOOKMARKS = 53;
@@ -25,8 +28,7 @@ public class Feature {
 	public static final int CLIENT_TOOLS = 57;
 	public static final int WEBSERVICE = 58;
 	public static final int WEBDAV = 59;
-	public static final int RSS = 9;
-	public static final int PDF = 8;
+
 	
 
 	private static Set<String> features = new HashSet<String>();
