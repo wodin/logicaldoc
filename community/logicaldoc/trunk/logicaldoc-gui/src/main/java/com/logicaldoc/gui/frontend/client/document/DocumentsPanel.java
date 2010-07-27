@@ -104,10 +104,11 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 			((DocumentsListPanel) listingPanel).updateSelectedRecord(document);
 	}
 
-	public void openInFolder(long folderId, long docId) {
+	public void openInFolder(long folderId, Long docId) {
 		// Save the information about the document that will be hilighted by
 		// habler onFolderSelect
-		hiliteDocId = docId;
+		if (docId != null)
+			hiliteDocId = docId;
 		documentsMenu.openFolder(folderId);
 		documentsMenu.expandSection(0);
 		MainPanel.get().selectDocumentsTab();
@@ -152,8 +153,9 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	 * Shows the documents list under the folder with the given folderId and
 	 * highlights the document with the given docId
 	 */
-	public void onFolderSelect(long folderId, long docId) {
-		hiliteDocId = docId;
+	public void onFolderSelect(long folderId, Long docId) {
+		if (docId != null)
+			hiliteDocId = docId;
 		folderService.getFolder(Session.get().getSid(), folderId, false, new AsyncCallback<GUIFolder>() {
 
 			@Override

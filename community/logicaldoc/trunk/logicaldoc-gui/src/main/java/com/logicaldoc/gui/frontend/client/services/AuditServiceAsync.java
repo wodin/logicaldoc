@@ -8,4 +8,6 @@ public interface AuditServiceAsync {
 
 	void subscribeDocuments(String sid, long[] docIds, AsyncCallback<Void> callback);
 
+	void deleteSubscriptions(String sid, long[] ids, AsyncCallback<Void> callback);
+
 }

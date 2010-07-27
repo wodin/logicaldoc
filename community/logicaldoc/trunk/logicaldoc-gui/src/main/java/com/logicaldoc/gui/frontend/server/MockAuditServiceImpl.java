@@ -23,4 +23,9 @@ public class MockAuditServiceImpl extends RemoteServiceServlet implements AuditS
 	public void subscribeDocuments(String sid, long[] docIds) throws InvalidSessionException {
 
 	}
+
+	@Override
+	public void deleteSubscriptions(String sid, long[] ids) throws InvalidSessionException {
+
+	}
 }
