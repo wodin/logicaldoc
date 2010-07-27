@@ -44,8 +44,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 	private GUIDocument document;
 
-	private DocumentsListPanel listPanel;
-
 	private AuditServiceAsync audit = (AuditServiceAsync) GWT.create(AuditService.class);
 
 	public DocumentToolbar() {
@@ -96,10 +94,11 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		subscribe.setIcon(ItemFactory.newImgIcon("accept.png").getSrc());
 		subscribe.setTooltip(I18N.message("subscribe"));
+		subscribe.setDisabled(true);
 		subscribe.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGrid list = listPanel.getList();
+				ListGrid list = DocumentsPanel.get().getList();
 				ListGridRecord[] selection = list.getSelection();
 				if (selection == null || selection.length == 0)
 					return;
@@ -120,7 +119,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 								@Override
 								public void onSuccess(Void result) {
-
+									Log.info(I18N.message("documentssubscribed"), "");
 								}
 							});
 						}
@@ -151,7 +150,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		addSeparator();
 		addButton(add);
 
-		addSeparator();
 		final IntegerItem max = ItemFactory.newValidateIntegerItem("max", "", null, 1, null);
 		max.setHint(I18N.message("elements"));
 		max.setShowTitle(false);
@@ -159,13 +157,15 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		max.setWidth(40);
 
 		if (Feature.visible(Feature.AUDIT)) {
-			addButton(pdf);
+			addSeparator();
+			addButton(subscribe);
 			if (!Feature.enabled(Feature.AUDIT)) {
-				pdf.setDisabled(true);
-				pdf.setTooltip(I18N.message("featuredisabled"));
+				subscribe.setDisabled(true);
+				subscribe.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
 
+		addSeparator();
 		ToolStripButton display = new ToolStripButton();
 		display.setTitle(I18N.message("display"));
 		addButton(display);
@@ -199,28 +199,30 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	 * Updates the toolbar state on the basis of the passed document
 	 */
 	public void update(final GUIDocument document) {
-		this.document = document;
+		try {
+			this.document = document;
 
-		if (document == null) {
-			download.setDisabled(true);
-		} else {
-			download.setDisabled(false);
+			if (document == null) {
+				download.setDisabled(true);
+			} else {
+				download.setDisabled(false);
+			}
+
+			if (document != null) {
+				rss.setDisabled(!Feature.enabled(Feature.RSS));
+				pdf.setDisabled(!Feature.enabled(Feature.PDF));
+				subscribe.setDisabled(!Feature.enabled(Feature.AUDIT));
+			}
+
+			GUIFolder folder = Session.get().getCurrentFolder();
+
+			if (folder != null)
+				add.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));
+			else
+				add.setDisabled(true);
+		} catch (Throwable t) {
+
 		}
-
-		if (document != null)
-			rss.setDisabled(!Feature.enabled(9));
-
-		if (document != null)
-			pdf.setDisabled(!Feature.enabled(8));
-
-		GUIFolder folder = Session.get().getCurrentFolder();
-
-		if (folder != null)
-			add.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));
-		else
-			add.setDisabled(true);
-
-		this.listPanel = DocumentsPanel.get().getDocumentsListPanel();
 	}
 
 	@Override

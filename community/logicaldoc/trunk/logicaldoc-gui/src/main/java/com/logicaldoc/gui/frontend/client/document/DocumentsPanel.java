@@ -17,6 +17,7 @@ import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -215,8 +216,8 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 			((DocumentsListPanel) listingPanel).toggleFilters();
 		}
 	}
-	
-	public DocumentsListPanel getDocumentsListPanel() {
-		return (DocumentsListPanel) listing;
+
+	public ListGrid getList() {
+		return ((DocumentsListPanel) listingPanel).getList();
 	}
 }
