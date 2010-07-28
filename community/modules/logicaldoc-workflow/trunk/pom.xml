@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-i18n</artifactId>
-			<version>6.0.0</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
