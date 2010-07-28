@@ -9,7 +9,7 @@ public interface WorkflowServiceAsync {
 
 	void get(String sid, long workflowId, AsyncCallback<GUIWorkflow> callback);
 
-	void deploy(String sid, long workflowId, AsyncCallback<Void> callback);
+	void deploy(String sid, GUIWorkflow workflow, AsyncCallback<Void> callback);
 
 	void list(String sid, AsyncCallback<GUIWorkflow[]> callback);
 

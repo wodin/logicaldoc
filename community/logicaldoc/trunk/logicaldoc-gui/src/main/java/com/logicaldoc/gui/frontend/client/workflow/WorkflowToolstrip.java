@@ -1,5 +1,7 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
+import java.util.Map;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
@@ -38,6 +40,14 @@ public class WorkflowToolstrip extends ToolStrip {
 
 	private WorkflowDesigner designer = null;
 
+	// private WorkflowTransformService workflowTransformService;
+
+	private WorkflowService oldWorkflowService;
+
+	// private WorkflowPersistenceTemplate persistenceTemplate;
+
+	// private XStream xstream = new XStream();
+
 	public WorkflowToolstrip(WorkflowDesigner designer) {
 		super();
 
@@ -51,7 +61,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		newTemplate.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				workflowService.save(Session.get().getSid(), new GUIWorkflow(), new AsyncCallback<GUIWorkflow>() {
+				workflowService.save(Session.get().getSid(), currentWorkflow, new AsyncCallback<GUIWorkflow>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -126,6 +136,17 @@ public class WorkflowToolstrip extends ToolStrip {
 		save.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				if (currentWorkflow == null)
+					currentWorkflow = new GUIWorkflow();
+				final Map<String, Object> values = WorkflowToolstrip.this.designer.getAccordion().getValues();
+				currentWorkflow.setName((String) values.get("workflowName"));
+				currentWorkflow.setDescription((String) values.get("workflowDescr"));
+				currentWorkflow.setTaskAssignmentSubject((String) values.get("assignmentSubject"));
+				currentWorkflow.setTaskAssignmentBody((String) values.get("assignmentBody"));
+				currentWorkflow.setReminderSubject((String) values.get("reminderSubject"));
+				currentWorkflow.setReminderBody((String) values.get("reminderBody"));
+				currentWorkflow.setSupervisor((String) values.get("supervisor"));
+
 				workflowService.save(Session.get().getSid(), currentWorkflow, new AsyncCallback<GUIWorkflow>() {
 					@Override
 					public void onFailure(Throwable caught) {
@@ -135,7 +156,6 @@ public class WorkflowToolstrip extends ToolStrip {
 					@Override
 					public void onSuccess(GUIWorkflow result) {
 						currentWorkflow = result;
-						// TODO Update the workflow setting page
 					}
 				});
 			}
@@ -147,7 +167,18 @@ public class WorkflowToolstrip extends ToolStrip {
 		deploy.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				workflowService.deploy(Session.get().getSid(), currentWorkflow.getId(), new AsyncCallback<Void>() {
+				if (currentWorkflow == null)
+					currentWorkflow = new GUIWorkflow();
+				final Map<String, Object> values = WorkflowToolstrip.this.designer.getAccordion().getValues();
+				currentWorkflow.setName((String) values.get("workflowName"));
+				currentWorkflow.setDescription((String) values.get("workflowDescr"));
+				currentWorkflow.setTaskAssignmentSubject((String) values.get("assignmentSubject"));
+				currentWorkflow.setTaskAssignmentBody((String) values.get("assignmentBody"));
+				currentWorkflow.setReminderSubject((String) values.get("reminderSubject"));
+				currentWorkflow.setReminderBody((String) values.get("reminderBody"));
+				currentWorkflow.setSupervisor((String) values.get("supervisor"));
+
+				workflowService.deploy(Session.get().getSid(), currentWorkflow, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -155,7 +186,7 @@ public class WorkflowToolstrip extends ToolStrip {
 
 					@Override
 					public void onSuccess(Void result) {
-						SC.say("Workflow " + currentWorkflow.getId() + " correctly deployed!!!");
+						SC.say("Workflow " + currentWorkflow.getName() + " correctly deployed!!!");
 					}
 				});
 			}
@@ -180,7 +211,8 @@ public class WorkflowToolstrip extends ToolStrip {
 
 										@Override
 										public void onSuccess(Void result) {
-											SC.say("Workflow correctly deleted!!!");
+											currentWorkflow = null;
+											AdminPanel.get().setContent(new WorkflowDesigner(null));
 										}
 									});
 						}

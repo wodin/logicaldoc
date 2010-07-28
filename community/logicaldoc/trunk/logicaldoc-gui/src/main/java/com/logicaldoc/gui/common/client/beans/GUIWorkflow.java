@@ -14,21 +14,21 @@ public class GUIWorkflow implements Serializable {
 
 	private long id;
 
-	private String name;
+	private String name = "";
 
-	private String description;
+	private String description = "";
 
-	private String taskAssignmentSubject;
+	private String taskAssignmentSubject = "";
 
-	private String taskAssignmentBody;
+	private String taskAssignmentBody = "";
 
-	private String reminderSubject;
+	private String reminderSubject = "";
 
-	private String reminderBody;
+	private String reminderBody = "";
 
-	private String startState;
+	private String startState = "";
 
-	private GUIUser supervisor;
+	private String supervisor = "";
 
 	private GUIWFState[] states;
 
@@ -97,11 +97,11 @@ public class GUIWorkflow implements Serializable {
 		this.reminderBody = reminderBody;
 	}
 
-	public GUIUser getSupervisor() {
+	public String getSupervisor() {
 		return supervisor;
 	}
 
-	public void setSupervisor(GUIUser supervisor) {
+	public void setSupervisor(String supervisor) {
 		this.supervisor = supervisor;
 	}
 
