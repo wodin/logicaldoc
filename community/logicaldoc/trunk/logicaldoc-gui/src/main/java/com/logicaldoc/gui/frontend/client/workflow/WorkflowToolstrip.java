@@ -195,7 +195,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		close.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				SC.say("Close the current workflow");
+				AdminPanel.get().setContent(new WorkflowDesigner(null));
 			}
 		});
 		addButton(close);

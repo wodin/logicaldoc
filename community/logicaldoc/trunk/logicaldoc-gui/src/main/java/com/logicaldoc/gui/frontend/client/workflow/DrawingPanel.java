@@ -1,8 +1,10 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
+import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.util.EventHandler;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.DropEvent;
 import com.smartgwt.client.widgets.events.DropHandler;
 import com.smartgwt.client.widgets.layout.VStack;
@@ -15,6 +17,8 @@ import com.smartgwt.client.widgets.layout.VStack;
  */
 public class DrawingPanel extends VStack {
 
+	private WorkflowDesigner workflowDesigner;
+
 	public DrawingPanel(WorkflowDesigner designer) {
 		super();
 		setHeight(557);
@@ -26,10 +30,20 @@ public class DrawingPanel extends VStack {
 		setShowCustomScrollbars(true);
 		setOverflow(Overflow.SCROLL);
 
-		if (designer.getWorkflow() != null) {
-			for (GUIWFState state : designer.getWorkflow().getStates()) {
-				if (state == null)
+		this.workflowDesigner = designer;
+
+		if (workflowDesigner.getWorkflow() != null) {
+			// The first element must be the workflow task startState
+			GUIWorkflow workflow = workflowDesigner.getWorkflow();
+			GUIWFState startState = null;
+			if (workflow.getStartState() != null && !workflow.getStartState().trim().isEmpty()) {
+				startState = workflow.getStateByName(workflow.getStartState());
+				addMember(new TaskRow(designer, startState));
+			}
+			for (GUIWFState state : workflow.getStates()) {
+				if (state == null || (startState != null && state.getName() == startState.getName()))
 					continue;
+
 				if (state.getType() == GUIWFState.TYPE_TASK)
 					addMember(new TaskRow(designer, state));
 				else if (state.getType() == GUIWFState.TYPE_FORK)
@@ -43,9 +57,23 @@ public class DrawingPanel extends VStack {
 
 		addDropHandler(new DropHandler() {
 			public void onDrop(DropEvent event) {
-				WorkflowRow row = (WorkflowRow) EventHandler.getDragTarget();
-				// TODO Alert avvisando l'utente dell'errore se viene messo al primo posto non un TaskRow
-				event.cancel();
+				WorkflowRow row = null;
+				if (EventHandler.getDragTarget() instanceof WorkflowRow) {
+					row = (WorkflowRow) EventHandler.getDragTarget();
+					if (getDropPosition() == 0 && row.getState().getWfState().getType() != GUIWFState.TYPE_TASK) {
+						SC.say("The element at first position must be a Task!");
+						event.cancel();
+					}
+					if (getDropPosition() == 0 && row.getState().getWfState().getType() == GUIWFState.TYPE_TASK) {
+						// The task must be the workflow start state
+						if (workflowDesigner.getWorkflow() != null) {
+							workflowDesigner.getWorkflow().setStartState(row.getState().getWfState().getName());
+							workflowDesigner.reloadDrawingPanel();
+							// AdminPanel.get().setContent(new
+							// WorkflowDesigner(workflowDesigner.getWorkflow()));
+						}
+					}
+				}
 			}
 		});
 	}

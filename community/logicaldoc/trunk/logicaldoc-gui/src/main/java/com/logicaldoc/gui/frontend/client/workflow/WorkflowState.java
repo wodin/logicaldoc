@@ -27,14 +27,6 @@ import com.smartgwt.client.widgets.layout.VStack;
  */
 public class WorkflowState extends VStack {
 
-	public final static int TYPE_TASK = 0;
-
-	public final static int TYPE_END = 1;
-
-	public final static int TYPE_JOIN = 2;
-
-	public final static int TYPE_FORK = 3;
-
 	protected Label title;
 
 	protected HLayout commands = new HLayout();
@@ -54,6 +46,10 @@ public class WorkflowState extends VStack {
 		setCanDrag(true);
 		setCanDrop(true);
 		setDragType("state");
+
+		if (designer.getWorkflow() != null && designer.getWorkflow().getStartState().equals(wfState.getName())) {
+			setBorder("1px dotted #00ff00");
+		}
 
 		title = new Label(this.wfState.getName());
 		addMember(title);

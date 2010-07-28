@@ -50,6 +50,8 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 
 	private GUIWorkflow workflow = null;
 
+	private DrawingPanel drawingPanel = null;
+
 	public WorkflowDesigner(GUIWorkflow workflow) {
 		this.workflow = workflow;
 
@@ -60,7 +62,8 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 
 		accordion = new Accordion(workflow);
 		layout.addMember(accordion);
-		layout.addMember(new DrawingPanel(this));
+		drawingPanel = new DrawingPanel(this);
+		layout.addMember(drawingPanel);
 		addMember(layout);
 	}
 
@@ -160,16 +163,20 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 
 	@Override
 	public void onTransitionDelete(GUIWFState fromState, GUIWFState targetState) {
-		GUITransition[] newTransitions = new GUITransition[fromState.getTransitions().length - 1];
-		int i = 0;
-		for (GUITransition transition : fromState.getTransitions()) {
-			if (transition.getTargetState().getType() == GUIWFState.TYPE_UNDEFINED
-					|| !transition.getTargetState().getId().equals(targetState.getId())) {
-				newTransitions[i] = transition;
-				i++;
+		if (fromState.getTransitions().length == 1)
+			fromState.setTransitions(null);
+		else {
+			GUITransition[] newTransitions = new GUITransition[fromState.getTransitions().length - 1];
+			int i = 0;
+			for (GUITransition transition : fromState.getTransitions()) {
+				if (transition.getTargetState().getType() == GUIWFState.TYPE_UNDEFINED
+						|| !transition.getTargetState().getId().equals(targetState.getId())) {
+					newTransitions[i] = transition;
+					i++;
+				}
 			}
+			fromState.setTransitions(newTransitions);
 		}
-		fromState.setTransitions(newTransitions);
 
 		GUIWFState[] states = new GUIWFState[workflow.getStates().length];
 		int j = 0;
@@ -258,31 +265,31 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 	@Override
 	public void onAddTransition(GUIWFState fromState, GUIWFState targetState, String transitionText) {
 		GUITransition[] newTransitions = null;
-		if (targetState == null)
-			// Adding a new transition without a dragged state
+		if (targetState == null || fromState.getType() == GUIWFState.TYPE_FORK) {
+			// Adding a new transition without a dragged state, so put an empty
+			// drop area
 			if (fromState.getTransitions() != null)
 				newTransitions = new GUITransition[fromState.getTransitions().length + 1];
 			else
 				newTransitions = new GUITransition[1];
-		else {
-			// Dragging a workflow state into an existing transition
+		} else {
+			// Dragging a workflow state into an existing transition, so into an
+			// empty drop area
 			if (fromState.getTransitions() != null)
-				newTransitions = new GUITransition[fromState.getTransitions().length + 1];
+				newTransitions = new GUITransition[fromState.getTransitions().length];
 			else
 				newTransitions = new GUITransition[1];
 		}
 
 		if (fromState.getTransitions() != null) {
-			int i = 0;
-			for (GUITransition transition : fromState.getTransitions()) {
-				if (transitionText != null && transitionText.equals(transition.getText())) {
+			GUITransition[] transitions = fromState.getTransitions();
+			for (int i = 0; i < transitions.length; i++) {
+				if (transitionText != null && transitionText.equals(transitions[i].getText())) {
 					// Associate the targetState to an existing transition
-					GUITransition t = new GUITransition(transition.getText(), targetState);
+					GUITransition t = new GUITransition(transitionText, targetState);
 					newTransitions[i] = t;
-					i++;
 				} else {
-					newTransitions[i] = transition;
-					i++;
+					newTransitions[i] = transitions[i];
 				}
 			}
 		} else {
@@ -297,6 +304,8 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 			GUIWFState target = new GUIWFState();
 			target.setType(GUIWFState.TYPE_UNDEFINED);
 			newTransitions[newTransitions.length - 1] = new GUITransition(transitionText, target);
+		} else if (fromState.getType() == GUIWFState.TYPE_FORK) {
+			newTransitions[newTransitions.length - 1] = new GUITransition(transitionText, targetState);
 		}
 		// else
 		// // The user has dragged a new workflow state element.
@@ -328,5 +337,17 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 				AdminPanel.get().setContent(new WorkflowDesigner(workflow));
 			}
 		});
+	}
+
+	public void reloadDrawingPanel() {
+		removeMember(layout);
+		accordion.destroy();
+		drawingPanel.destroy();
+
+		accordion = new Accordion(workflow);
+		drawingPanel = new DrawingPanel(this);
+		layout.addMember(accordion);
+		layout.addMember(drawingPanel);
+		addMember(layout);
 	}
 }

@@ -5,6 +5,7 @@ import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.EventHandler;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.DropEvent;
 import com.smartgwt.client.widgets.events.DropHandler;
@@ -59,11 +60,38 @@ public class JoinRow extends WorkflowRow {
 		dropArea.addDropHandler(new DropHandler() {
 			public void onDrop(DropEvent event) {
 				WorkflowState target = (WorkflowState) EventHandler.getDragTarget();
+				boolean sameElementFound = false;
+				boolean sameObjectFound = false;
+				if (fromState.getTransitions() != null) {
+					for (GUITransition trans : fromState.getTransitions()) {
+						if (trans.getTargetState().getName().equals(target.getWfState().getName())) {
+							// The fork element cannot include two equal target
+							// state
+							sameElementFound = true;
+							break;
+						}
+					}
+				}
+				if (fromState.getName().equals(target.getWfState().getName())) {
+					sameObjectFound = true;
+				}
 
-				addMember(new WorkflowDraggedState(workflowDesigner, fromState, target.getWfState()), 1);
+				if (sameElementFound) {
+					SC.warn("The form element already contains the element '" + target.getWfState().getName() + "'");
+					event.cancel();
+				}
+				if (sameObjectFound) {
+					SC.warn("You cannot add the same object in its row!!!");
+					event.cancel();
+				}
 
-				// Associate the target wfState to the fromState transition
-				workflowDesigner.onAddTransition(fromState, target.getWfState(), "xxx");
+				if (!sameElementFound && !sameObjectFound) {
+					addMember(new WorkflowDraggedState(workflowDesigner, fromState, target.getWfState()), 1);
+
+					// Associate the target wfState to the fromState
+					// transition
+					workflowDesigner.onAddTransition(fromState, target.getWfState(), "join");
+				}
 			}
 		});
 
