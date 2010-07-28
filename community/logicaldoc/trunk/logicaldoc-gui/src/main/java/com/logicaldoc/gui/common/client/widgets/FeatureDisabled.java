@@ -18,18 +18,19 @@ public class FeatureDisabled extends VLayout {
 	}
 
 	public FeatureDisabled(Integer feature) {
-		Label label = new Label();
+		Label label = null;
+		if (feature == null)
+			label = new WarningLabel("<b>" + I18N.message("featuredisabled") + "</b>", null);
+		else
+			label = new WarningLabel("<b>" + I18N.message("feature_" + feature) + " " + I18N.message("disabled")
+					+ "</b>", null);
+		new Label();
 		label.setHeight(30);
 		label.setPadding(10);
 		label.setAlign(Alignment.CENTER);
 		label.setValign(VerticalAlignment.CENTER);
-		label.setWrap(false);
-		label.setIcon("[SKIN]/Dialog/warn.png");
 		label.setShowEdges(false);
-		if (feature == null)
-			label.setContents("<b>" + I18N.message("featuredisabled") + "</b>");
-		else
-			label.setContents("<b>" + I18N.message("feature_" + feature) + " " + I18N.message("disabled") + "</b>");
+
 		addMember(label);
 	}
 }

@@ -119,7 +119,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 								@Override
 								public void onSuccess(Void result) {
-									Log.info(I18N.message("documentssubscribed"), "");
+									Log.info(I18N.message("documentssubscribed"), null);
 								}
 							});
 						}

@@ -69,8 +69,7 @@ body {
 		</div>
 
 		<script type="text/javascript">
-	document.getElementById('loadingTitle').innerHTML = context.product_name
-			+ ' ' + context.product_release;
+	document.getElementById('loadingTitle').innerHTML = 'Loading';
 </script>
 		<script type="text/javascript">
 	document.getElementById('loadingMsg').innerHTML = 'Loading Core API...';

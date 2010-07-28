@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
+import com.logicaldoc.gui.common.client.widgets.WarningLabel;
 import com.logicaldoc.gui.frontend.client.Frontend;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
@@ -19,6 +20,7 @@ import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -32,6 +34,7 @@ import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.layout.VStack;
 
 /**
  * The Login entry point
@@ -88,18 +91,17 @@ public class LoginPanel extends VLayout {
 		// Prepare the form footer that contains copyright and website link
 		String htmlString = "\u00A9 " + info.getYear() + " " + info.getVendor() + "  &#160; &#8226; &#160; <a href='"
 				+ info.getUrl() + "'>" + info.getUrl() + "</a>";
+		HTMLFlow footer = new HTMLFlow(htmlString);
+		footer.setStyleName("loginFooter");
+		
+		VStack messages=new VStack();		
 		if (info.getMessages().length > 0) {
 			for (GUIMessage message : info.getMessages()) {
-				if (message.getUrl() != null && !"".equals(message.getUrl()))
-					htmlString += " <br /> <br /> " + "<a href='" + message.getUrl() + "'>" + message.getMessage()
-							+ "</a>";
-				else
-					htmlString += " <br /> <br /> " + message.getMessage();
-
+				WarningLabel label=new WarningLabel(message.getMessage(), message.getUrl());
+				messages.addMember(label);
 			}
 		}
-		HTML footer = new HTML(htmlString, false);
-		footer.setStyleName("loginFooter");
+
 		
 		// Prepare the Form and all its fields
 		final DynamicForm form = new DynamicForm();
@@ -150,10 +152,11 @@ public class LoginPanel extends VLayout {
 		inner.addMember(loginButton);
 		inner.setPadding(5);
 
-		Layout outer = new VLayout();
+		Layout outer = new VStack();
 		outer.addMember(header);
 		outer.addMember(inner);
 		outer.addMember(footer);
+		outer.addMember(messages);
 		outer.setPadding(2);
 
 		content.addMember(outer);
