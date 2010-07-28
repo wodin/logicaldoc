@@ -12,7 +12,7 @@ import org.java.plugin.registry.Extension;
 
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.PluginRegistry;
+import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
  * This authentication component implements a chain of possible authentication

@@ -13,7 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
 
 import com.logicaldoc.util.LocaleUtil;
-import com.logicaldoc.util.PluginRegistry;
+import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
  * A manager for all supported languages. It's internals are initialized from

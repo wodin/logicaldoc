@@ -17,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
 
 import com.logicaldoc.core.text.parser.wordperfect.WordPerfectParser;
-import com.logicaldoc.util.PluginRegistry;
+import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
  * This is a factory, returning a parser instance for the given file. Created on

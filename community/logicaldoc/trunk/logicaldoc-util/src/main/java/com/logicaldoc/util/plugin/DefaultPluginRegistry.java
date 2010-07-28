@@ -1,4 +1,4 @@
-package com.logicaldoc.util;
+package com.logicaldoc.util.plugin;
 
 import java.util.Iterator;
 import java.util.Map;

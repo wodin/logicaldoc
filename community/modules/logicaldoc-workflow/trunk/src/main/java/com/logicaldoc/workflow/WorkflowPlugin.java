@@ -78,6 +78,8 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 		pbean.setProperty("history.workflow.ttl", "90");
 		pbean.setProperty("workflow.mtom", "false");
 		pbean.write();
+		
+		setRestartRequired();
 	}
 
 	@Override

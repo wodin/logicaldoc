@@ -1,4 +1,4 @@
-package com.logicaldoc.util;
+package com.logicaldoc.util.plugin;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -41,6 +41,8 @@ public abstract class PluginRegistry {
 	protected PluginManager manager = null;
 
 	private static PluginRegistry instance;
+
+	private boolean restartRequired = false;
 
 	public static PluginRegistry getInstance() {
 		if (instance == null) {
@@ -266,5 +268,13 @@ public abstract class PluginRegistry {
 		}
 
 		return mappings.toArray(new String[] {});
+	}
+
+	public boolean isRestartRequired() {
+		return restartRequired;
+	}
+
+	void setRestartRequired() {
+		this.restartRequired = true;
 	}
 }

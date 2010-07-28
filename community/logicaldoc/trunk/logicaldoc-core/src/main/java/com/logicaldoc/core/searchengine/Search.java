@@ -9,7 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
 
-import com.logicaldoc.util.PluginRegistry;
+import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
  * This class executes a search against the full-text indexes
