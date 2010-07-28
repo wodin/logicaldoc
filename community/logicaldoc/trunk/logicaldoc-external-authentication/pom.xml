@@ -70,7 +70,6 @@
             <groupId>com.logicaldoc</groupId>
             <artifactId>logicaldoc-gui</artifactId>
             <version>${project.version}</version>
-            <classifier>api</classifier>
         </dependency>
          <dependency>
             <groupId>com.logicaldoc</groupId>
