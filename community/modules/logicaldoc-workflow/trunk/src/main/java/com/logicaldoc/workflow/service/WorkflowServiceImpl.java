@@ -14,9 +14,12 @@ import com.logicaldoc.web.service.SecurityServiceImpl;
 import com.logicaldoc.web.util.SessionUtil;
 import com.logicaldoc.workflow.editor.WorkflowPersistenceTemplate;
 import com.logicaldoc.workflow.editor.WorkflowPersistenceTemplateDAO;
-import com.logicaldoc.workflow.editor.WorkflowPersistenceTemplateDAO.WORKFLOW_STAGE;
+import com.logicaldoc.workflow.editor.model.BaseWorkflowModel;
+import com.logicaldoc.workflow.editor.model.WorkflowTask;
+import com.logicaldoc.workflow.model.WorkflowMessage;
 import com.logicaldoc.workflow.model.WorkflowTemplate;
 import com.logicaldoc.workflow.transform.WorkflowTransformService;
+import com.thoughtworks.xstream.XStream;
 
 /**
  * Implementation of the WorkflowService
@@ -33,37 +36,46 @@ public class WorkflowServiceImpl extends RemoteServiceServlet implements Workflo
 	@Override
 	public GUIWorkflow get(String sid, long workflowId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
-		WorkflowPersistenceTemplateDAO dao = (WorkflowPersistenceTemplateDAO) Context.getInstance().getBean(
-				WorkflowPersistenceTemplateDAO.class);
-		WorkflowPersistenceTemplate workflow = dao.findById(workflowId);
-		if (workflow != null) {
-			dao.initialize(workflow);
 
-			WorkflowTemplate workflowTemplate = null;
+		try {
+			WorkflowPersistenceTemplateDAO dao = (WorkflowPersistenceTemplateDAO) Context.getInstance().getBean(
+					WorkflowPersistenceTemplateDAO.class);
+			WorkflowTemplate workflowTemplate = new WorkflowTemplate();
+			WorkflowPersistenceTemplate persistenceTemplate = new WorkflowPersistenceTemplate();
 			WorkflowTransformService workflowTransformService = (WorkflowTransformService) Context.getInstance()
 					.getBean("workflowTransformService");
 
-			GUIWorkflow wfl = new GUIWorkflow();
-			wfl.setId(workflowId);
-			wfl.setName(workflow.getName());
-			wfl.setDescription(workflow.getDescription());
-			if (workflow.getXmldata() != null && ((String) workflow.getXmldata()).getBytes().length > 0) {
-				workflowTemplate = workflowTransformService.fromWorkflowDefinitionToObject(workflow);
-
-				wfl.setTaskAssignmentSubject(workflowTemplate.getAssignmentMessage().getSubject());
-				wfl.setTaskAssignmentBody(workflowTemplate.getAssignmentMessage().getBody());
-				wfl.setReminderSubject(workflowTemplate.getReminderMessage().getSubject());
-				wfl.setReminderBody(workflowTemplate.getReminderMessage().getBody());
-				UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-				User supervisorUser = userDao.findByUserName(workflowTemplate.getSupervisor());
-				SecurityServiceImpl securityService = new SecurityServiceImpl();
-				wfl.setSupervisor(securityService.getUser(sid, supervisorUser.getId()));
-				wfl.setStartState(workflowTemplate.getStartState());
+			persistenceTemplate = dao.load(workflowId, WorkflowPersistenceTemplateDAO.WORKFLOW_STAGE.SAVED);
+			if (persistenceTemplate.getXmldata() != null
+					&& ((String) persistenceTemplate.getXmldata()).getBytes().length > 0) {
+				workflowTemplate = workflowTransformService.fromWorkflowDefinitionToObject(persistenceTemplate);
 			}
+
+			GUIWorkflow wfl = new GUIWorkflow();
+			wfl.setId(persistenceTemplate.getId());
+			wfl.setName(workflowTemplate.getName());
+			wfl.setDescription(workflowTemplate.getDescription());
+			wfl.setTaskAssignmentSubject(workflowTemplate.getAssignmentMessage().getSubject());
+			wfl.setTaskAssignmentBody(workflowTemplate.getAssignmentMessage().getBody());
+			wfl.setReminderSubject(workflowTemplate.getReminderMessage().getSubject());
+			wfl.setReminderBody(workflowTemplate.getReminderMessage().getBody());
+			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			User supervisorUser = userDao.findByUserName(workflowTemplate.getSupervisor());
+			if(supervisorUser != null){
+				wfl.setSupervisor(Long.toString(supervisorUser.getId()));
+			} else {
+				System.out.println("Supervisor error!!!!");
+				System.out.println("workflowTemplate.getSupervisor(): "+workflowTemplate.getSupervisor());
+			}
+			
+			wfl.setStartState(workflowTemplate.getStartState());
 
 			// TODO Manage the GUIWFStates of the GUIWorkflow
 
 			return wfl;
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 		return null;
 	}
@@ -74,7 +86,14 @@ public class WorkflowServiceImpl extends RemoteServiceServlet implements Workflo
 
 		WorkflowPersistenceTemplateDAO dao = (WorkflowPersistenceTemplateDAO) Context.getInstance().getBean(
 				WorkflowPersistenceTemplateDAO.class);
-		dao.delete(workflowId);
+		try {
+			WorkflowPersistenceTemplate workflowTemplate = dao.load(workflowId,
+					WorkflowPersistenceTemplateDAO.WORKFLOW_STAGE.SAVED);
+			dao.delete(workflowTemplate);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getMessage(), e);
+		}
 	}
 
 	@Override
@@ -83,35 +102,135 @@ public class WorkflowServiceImpl extends RemoteServiceServlet implements Workflo
 
 		WorkflowPersistenceTemplateDAO dao = (WorkflowPersistenceTemplateDAO) Context.getInstance().getBean(
 				WorkflowPersistenceTemplateDAO.class);
-		WorkflowPersistenceTemplate wfl = dao.findById(workflow.getId());
-		dao.save(wfl, WORKFLOW_STAGE.SAVED);
+		WorkflowTemplate workflowTemplate = new WorkflowTemplate();
+		WorkflowPersistenceTemplate persistenceTemplate = new WorkflowPersistenceTemplate();
+
+		try {
+			workflowTemplate.setName(workflow.getName());
+			workflowTemplate.setDescription(workflow.getDescription());
+			workflowTemplate.setAssignmentMessage(new WorkflowMessage(workflow.getTaskAssignmentSubject(), workflow
+					.getTaskAssignmentBody()));
+			workflowTemplate.setReminderMessage(new WorkflowMessage(workflow.getReminderSubject(), workflow
+					.getReminderBody()));
+			SecurityServiceImpl securityService = new SecurityServiceImpl();
+			workflowTemplate.setSupervisor(securityService.getUser(sid, Long.parseLong(workflow.getSupervisor()))
+					.getUserName());
+
+			persistenceTemplate.setName(workflow.getName());
+
+			XStream xstream = new XStream();
+			String xmlData = xstream.toXML(workflowTemplate);
+			persistenceTemplate.setXmldata(xmlData);
+			dao.save(persistenceTemplate, WorkflowPersistenceTemplateDAO.WORKFLOW_STAGE.SAVED);
+			persistenceTemplate.setDescription(workflowTemplate.getDescription());
+			// TODO Set the workflow start state
+			// persistenceTemplate.setStartState(workflowTemplate.getStartState());
+
+			workflow.setId(persistenceTemplate.getId());
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getMessage(), e);
+		}
 
 		return workflow;
 	}
 
 	@Override
-	public void deploy(String sid, long workflowId) throws InvalidSessionException {
+	public void deploy(String sid, GUIWorkflow workflow) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		WorkflowPersistenceTemplateDAO dao = (WorkflowPersistenceTemplateDAO) Context.getInstance().getBean(
 				WorkflowPersistenceTemplateDAO.class);
-		WorkflowPersistenceTemplate wfl = dao.findById(workflowId);
-		dao.deploy(wfl);
+		WorkflowTemplate workflowTemplate = new WorkflowTemplate();
+		WorkflowPersistenceTemplate persistenceTemplate = new WorkflowPersistenceTemplate();
+
+		com.logicaldoc.workflow.WorkflowService workflowService = (com.logicaldoc.workflow.WorkflowService) Context
+				.getInstance().getBean("workflowService");
+
+		try {
+			workflowTemplate.setName(workflow.getName());
+			workflowTemplate.setDescription(workflow.getDescription());
+			workflowTemplate.setAssignmentMessage(new WorkflowMessage(workflow.getTaskAssignmentSubject(), workflow
+					.getTaskAssignmentBody()));
+			workflowTemplate.setReminderMessage(new WorkflowMessage(workflow.getReminderSubject(), workflow
+					.getReminderBody()));
+			SecurityServiceImpl securityService = new SecurityServiceImpl();
+			workflowTemplate.setSupervisor(Long.toString(securityService.getUser(sid,
+					Long.parseLong(workflow.getSupervisor())).getId()));
+
+			persistenceTemplate.setName(workflow.getName());
+
+			XStream xstream = new XStream();
+			String xmlData = xstream.toXML(workflowTemplate);
+			persistenceTemplate.setXmldata(xmlData);
+			dao.save(persistenceTemplate, WorkflowPersistenceTemplateDAO.WORKFLOW_STAGE.SAVED);
+			persistenceTemplate.setDescription(workflowTemplate.getDescription());
+			// TODO Set the workflow start state
+			// persistenceTemplate.setStartState(workflowTemplate.getStartState());
+
+			// TODO Missing class 'DeployMessage'
+			// LinkedList<DeployMessage> errorMessages = new
+			// LinkedList<DeployMessage>();
+			//
+			// if (workflowTemplate.getWorkflowComponents().size() == 0)
+			// errorMessages.add(new DeployMessage(workflowTemplate,
+			// "No workflow-component have been added"));
+
+			boolean workflowTaskExist = false;
+			for (BaseWorkflowModel model : workflowTemplate.getWorkflowComponents()) {
+
+				if (model instanceof WorkflowTask)
+					workflowTaskExist = true;
+
+				// model.checkForDeploy(errorMessages);
+			}
+
+			// if (workflowTaskExist == false)
+			// errorMessages.add(new DeployMessage(workflowTemplate,
+			// "There must at least exist one Workflow-Task"));
+			//
+			// if (errorMessages.size() > 0)
+			// return;
+
+			// at first we have to delete the current workflow instance
+			// TODO:we should add API-improvements to handle more clearer this
+			// List<WorkflowDefinition> definitions =
+			// this.workflowService.getAllDefinitions();
+			//
+			// for (WorkflowDefinition definition : definitions) {
+			// if (definition.getName().equals(workflowTemplate.getName()))
+			// this.workflowService.undeployWorkflow(definition.getDefinitionId());
+			// }
+
+			persistenceTemplate.setXmldata(xstream.toXML(workflowTemplate));
+			dao.deploy(persistenceTemplate);
+			workflowService.deployWorkflow(workflowTemplate);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getMessage(), e);
+		}
 	}
 
 	@Override
 	public GUIWorkflow[] list(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		WorkflowPersistenceTemplateDAO dao = (WorkflowPersistenceTemplateDAO) Context.getInstance().getBean(
-				WorkflowPersistenceTemplateDAO.class);
-		GUIWorkflow[] workflows = new GUIWorkflow[dao.findAll().size()];
-		int i = 0;
-		for (WorkflowPersistenceTemplate workflow : dao.findAll()) {
-			workflows[i] = get(sid, workflow.getId());
-			i++;
+		try {
+			WorkflowPersistenceTemplateDAO dao = (WorkflowPersistenceTemplateDAO) Context.getInstance().getBean(
+					WorkflowPersistenceTemplateDAO.class);
+			GUIWorkflow[] workflows = new GUIWorkflow[dao.findAll().size()];
+			int i = 0;
+			for (WorkflowPersistenceTemplate workflow : dao.findAll()) {
+				workflows[i] = get(sid, workflow.getId());
+				i++;
+			}
+
+			return workflows;
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 
-		return workflows;
+		return null;
 	}
 }
