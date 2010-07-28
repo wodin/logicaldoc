@@ -1,10 +1,10 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
-import com.logicaldoc.gui.common.client.beans.GUIUser;
+import java.util.Map;
+
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -111,18 +111,20 @@ public class Accordion extends SectionStack {
 		supervisorForm = new DynamicForm();
 		supervisorForm.setTitleOrientation(TitleOrientation.TOP);
 		supervisorForm.setNumCols(1);
-		StaticTextItem supervisorItem = ItemFactory.newStaticTextItem("supervisor", "",
+		supervisorForm.setValuesManager(vm);
+		StaticTextItem supervisorItem = ItemFactory.newStaticTextItem("supervisorItem", "",
 				"<b>" + I18N.message("supervisor") + "</b>");
 		supervisorItem.setShouldSaveValue(false);
 		supervisorItem.setWrapTitle(false);
-		supervisor = ItemFactory.newUserSelector("user", " ");
+		supervisor = ItemFactory.newUserSelector("supervisor", " ");
 		supervisor.setRequired(true);
 		supervisor.setShowTitle(false);
+		supervisor.setDisplayField("username");
 		supervisor.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
 				try {
-					setSupervisor(supervisor.getSelectedRecord().getAttribute("username"));
+					setSupervisor(supervisor.getSelectedRecord().getAttribute("id"));
 				} catch (Throwable t) {
 				}
 			}
@@ -138,7 +140,7 @@ public class Accordion extends SectionStack {
 		});
 		supervisor.setIcons(icon);
 		if (this.workflow != null && this.workflow.getSupervisor() != null)
-			supervisor.setValue(this.workflow.getSupervisor().getUserName());
+			supervisor.setValue(this.workflow.getSupervisor());
 		supervisorForm.setItems(supervisorItem, supervisor);
 
 		wfForm.setItems(workflowName, workflowDescr, supervisorItem, assignmentSubject, assignmentBody, taskReminder,
@@ -153,18 +155,16 @@ public class Accordion extends SectionStack {
 		return wfSettingsSection;
 	}
 
-	public void addSupervisor(GUIUser user) {
-		this.workflow.setSupervisor(user);
-	}
-
-	public void removeSupervisor() {
-		this.workflow.setSupervisor(null);
-	}
-
-	public void setSupervisor(String name) {
-		supervisor.setValue(name);
-		supervisor.redraw();
+	public void setSupervisor(String id) {
+		supervisor.setValue(id);
 		// TODO set supervisor
-//		this.workflow.setSupervisor(new GUIUser());
+		// this.workflow.setSupervisor(new GUIUser());
+	}
+
+	public Map<String, Object> getValues() {
+		if (vm.validate()) {
+			return vm.getValues();
+		} else
+			return null;
 	}
 }

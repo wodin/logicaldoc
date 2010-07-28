@@ -36,7 +36,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		user.setName("John");
 		user.setFirstName("Scott");
 		user.setEmail("john.scott@acme.com");
-		workflow.setSupervisor(user);
+		workflow.setSupervisor("john scott");
 
 		GUIUser user1 = new GUIUser();
 		user1.setId(8888);
@@ -144,7 +144,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	}
 
 	@Override
-	public void deploy(String sid, long workflowId) throws InvalidSessionException {
+	public void deploy(String sid, GUIWorkflow workflow) throws InvalidSessionException {
 
 	}
 
@@ -166,7 +166,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		user.setName("John");
 		user.setFirstName("Scott");
 		user.setEmail("john.scott@acme.com");
-		workflow.setSupervisor(user);
+		workflow.setSupervisor("john scott");
 
 		workflows[0] = workflow;
 
@@ -184,7 +184,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		user.setName("Alan");
 		user.setFirstName("Murphy");
 		user.setEmail("alan.murphy@acme.com");
-		workflow.setSupervisor(user);
+		workflow.setSupervisor("alan murphy");
 
 		workflows[1] = workflow;
 
@@ -202,7 +202,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		user.setName("Sam");
 		user.setFirstName("Mitchell");
 		user.setEmail("sam.mitchell@acme.com");
-		workflow.setSupervisor(user);
+		workflow.setSupervisor("sam mitchell");
 
 		workflows[2] = workflow;
 

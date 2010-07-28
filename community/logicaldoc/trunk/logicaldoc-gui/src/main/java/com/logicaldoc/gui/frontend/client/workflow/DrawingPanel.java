@@ -40,18 +40,20 @@ public class DrawingPanel extends VStack {
 				startState = workflow.getStateByName(workflow.getStartState());
 				addMember(new TaskRow(designer, startState));
 			}
-			for (GUIWFState state : workflow.getStates()) {
-				if (state == null || (startState != null && state.getName() == startState.getName()))
-					continue;
+			if (workflow.getStates() != null) {
+				for (GUIWFState state : workflow.getStates()) {
+					if (state == null || (startState != null && state.getName() == startState.getName()))
+						continue;
 
-				if (state.getType() == GUIWFState.TYPE_TASK)
-					addMember(new TaskRow(designer, state));
-				else if (state.getType() == GUIWFState.TYPE_FORK)
-					addMember(new ForkRow(designer, state));
-				else if (state.getType() == GUIWFState.TYPE_JOIN)
-					addMember(new JoinRow(designer, state));
-				else if (state.getType() == GUIWFState.TYPE_END)
-					addMember(new EndRow(designer, state));
+					if (state.getType() == GUIWFState.TYPE_TASK)
+						addMember(new TaskRow(designer, state));
+					else if (state.getType() == GUIWFState.TYPE_FORK)
+						addMember(new ForkRow(designer, state));
+					else if (state.getType() == GUIWFState.TYPE_JOIN)
+						addMember(new JoinRow(designer, state));
+					else if (state.getType() == GUIWFState.TYPE_END)
+						addMember(new EndRow(designer, state));
+				}
 			}
 		}
 

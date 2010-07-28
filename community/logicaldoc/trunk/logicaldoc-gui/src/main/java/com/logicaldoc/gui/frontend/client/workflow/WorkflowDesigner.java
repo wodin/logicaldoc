@@ -350,4 +350,8 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 		layout.addMember(drawingPanel);
 		addMember(layout);
 	}
+
+	public Accordion getAccordion() {
+		return accordion;
+	}
 }

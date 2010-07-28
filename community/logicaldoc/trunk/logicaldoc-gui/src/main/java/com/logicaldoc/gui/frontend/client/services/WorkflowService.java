@@ -29,7 +29,7 @@ public interface WorkflowService extends RemoteService {
 	/**
 	 * Deploys a given workflow
 	 */
-	public void deploy(String sid, long workflowId) throws InvalidSessionException;
+	public void deploy(String sid, GUIWorkflow workflow) throws InvalidSessionException;
 
 	/**
 	 * Lists all the workflows on the database
