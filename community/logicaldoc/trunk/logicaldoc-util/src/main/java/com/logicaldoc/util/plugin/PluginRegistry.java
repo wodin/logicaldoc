@@ -54,7 +54,7 @@ public abstract class PluginRegistry {
 			}
 
 			if (StringUtils.isEmpty(pluginregistry)) {
-				pluginregistry = "com.logicaldoc.util.DefaultPluginRegistry";
+				pluginregistry = DefaultPluginRegistry.class.getName();
 			}
 			try {
 				System.out.println("Instantiate concrete PluginRegistry: " + pluginregistry);
