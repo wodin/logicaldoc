@@ -11,7 +11,6 @@ import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
@@ -86,11 +85,19 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			}
 			info.setSupportedLanguages(supportedLanguages.toArray(new GUIValuePair[0]));
 
-			// Checks if LogicalDOC has been initialised
-			PropertiesBean pbean = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 			List<GUIMessage> messages = new ArrayList<GUIMessage>();
-			String jdbcUrl = pbean.getProperty("jdbc.url");
-			if (StringUtils.isNotEmpty(jdbcUrl)) {
+
+			// Check if the application needs to be restarted
+			if (ApplicationInitializer.needRestart) {
+				GUIMessage restartReminder = new GUIMessage();
+				restartReminder.setMessage(getValue(info, "needrestart"));
+				messages.add(restartReminder);
+			}
+
+			if (!ApplicationInitializer.needRestart) {
+				// Checks if LogicalDOC has been initialised
+				PropertiesBean pbean = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+				String jdbcUrl = pbean.getProperty("jdbc.url");
 				if (jdbcUrl.startsWith("jdbc:hsqldb:mem:")) {
 					GUIMessage setupReminder = new GUIMessage();
 					setupReminder.setMessage(getValue(info, "setup.reminder"));
@@ -100,13 +107,6 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 					setupReminder.setUrl(urlPrefix + "/setup");
 					messages.add(setupReminder);
 				}
-			}
-
-			// Check if the application needs to be restarted
-			if (ApplicationInitializer.needRestart) {
-				GUIMessage restartReminder = new GUIMessage();
-				restartReminder.setMessage(getValue(info, "needrestart"));
-				messages.add(restartReminder);
 			}
 
 			info.setMessages(messages.toArray(new GUIMessage[0]));

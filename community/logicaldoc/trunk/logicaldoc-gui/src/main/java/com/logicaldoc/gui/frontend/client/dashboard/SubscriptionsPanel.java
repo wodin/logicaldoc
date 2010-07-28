@@ -77,27 +77,6 @@ public class SubscriptionsPanel extends VLayout {
 		toolStrip.addFill();
 
 		setMembers(toolStrip, listing);
-
-		list.addCellContextClickHandler(new CellContextClickHandler() {
-			@Override
-			public void onCellContextClick(CellContextClickEvent event) {
-				showContextMenu();
-				event.cancel();
-			}
-		});
-
-		list.addDoubleClickHandler(new DoubleClickHandler() {
-			@Override
-			public void onDoubleClick(DoubleClickEvent event) {
-				String type = list.getSelectedRecord().getAttribute("type");
-				String id = list.getSelectedRecord().getAttribute("objectid");
-				if ("document".equals(type)) {
-					Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id
-							+ "&open=true", "_blank", "");
-				} else
-					DocumentsPanel.get().openInFolder(Long.parseLong(id), null);
-			}
-		});
 	}
 
 	private void initListGrid() {
@@ -137,6 +116,27 @@ public class SubscriptionsPanel extends VLayout {
 
 		list.sort(1, SortDirection.DESCENDING);
 		listing.addMember(list);
+
+		list.addCellContextClickHandler(new CellContextClickHandler() {
+			@Override
+			public void onCellContextClick(CellContextClickEvent event) {
+				showContextMenu();
+				event.cancel();
+			}
+		});
+
+		list.addDoubleClickHandler(new DoubleClickHandler() {
+			@Override
+			public void onDoubleClick(DoubleClickEvent event) {
+				String type = list.getSelectedRecord().getAttribute("type");
+				String id = list.getSelectedRecord().getAttribute("objectid");
+				if ("document".equals(type)) {
+					Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id
+							+ "&open=true", "_blank", "");
+				} else
+					DocumentsPanel.get().openInFolder(Long.parseLong(id), null);
+			}
+		});
 	}
 
 	private void showContextMenu() {

@@ -8,6 +8,7 @@ import java.util.StringTokenizer;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
+import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.common.client.services.InfoService;
 
@@ -58,6 +59,17 @@ public class MockInfoServiceImpl extends RemoteServiceServlet implements InfoSer
 
 		info.setFeatures(new String[] { "Feature_58", "Feature_59", "Feature_50", "Feature_52", "Feature_53",
 				"Feature_56", "Feature_13", "Feature_17" });
+
+		List<GUIMessage> messages = new ArrayList<GUIMessage>();
+
+		GUIMessage message = new GUIMessage();
+		message.setMessage("Test message 1");
+		messages.add(message);
+		message = new GUIMessage();
+		message.setMessage("Test message 2");
+		message.setUrl("http://www.google.com");
+		messages.add(message);
+		info.setMessages(messages.toArray(new GUIMessage[0]));
 
 		return info;
 	}

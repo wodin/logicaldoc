@@ -5,6 +5,6 @@ import com.logicaldoc.gui.common.client.beans.GUIInfo;
 
 public interface InfoServiceAsync {
 
-	void getInfo(String locale, AsyncCallback<GUIInfo> callback);
+	public void getInfo(String locale, AsyncCallback<GUIInfo> callback);
 
 }

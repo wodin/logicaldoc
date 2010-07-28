@@ -69,7 +69,7 @@ public class SubscriptionDialog extends Window {
 
 							@Override
 							public void onSuccess(Void ret) {
-
+								Log.info(I18N.message("foldersubscribed"), null);
 							}
 						});
 				destroy();

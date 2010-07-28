@@ -52,6 +52,9 @@ public class UsersDataServlet extends HttpServlet {
 			 * Iterate over records composing the response XML document
 			 */
 			for (User user : group.getUsers()) {
+				if(user.getType()!=User.TYPE_DEFAULT)
+					continue;
+				
 				writer.print("<user>");
 				writer.print("<id>" + user.getId() + "</id>");
 				writer.print("<username><![CDATA[" + user.getUserName() + "]]></username>");
