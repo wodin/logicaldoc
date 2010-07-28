@@ -1,8 +1,5 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -13,7 +10,6 @@ import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
-import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
@@ -45,6 +41,8 @@ public class Accordion extends SectionStack {
 	private DynamicForm wfForm = null;
 
 	private DynamicForm supervisorForm = null;
+
+	private ComboBoxItem supervisor = null;
 
 	public Accordion(GUIWorkflow workflow) {
 		setVisibilityMode(VisibilityMode.MUTEX);
@@ -111,18 +109,39 @@ public class Accordion extends SectionStack {
 		separatorForm.setHeight(15);
 
 		supervisorForm = new DynamicForm();
-		supervisorForm.setAlign(Alignment.LEFT);
-		// supervisorForm.setColWidths(1, "*");
-		SupervisorSelector supervisor = new SupervisorSelector();
+		supervisorForm.setTitleOrientation(TitleOrientation.TOP);
+		supervisorForm.setNumCols(1);
+		StaticTextItem supervisorItem = ItemFactory.newStaticTextItem("supervisor", "",
+				"<b>" + I18N.message("supervisor") + "</b>");
+		supervisorItem.setShouldSaveValue(false);
+		supervisorItem.setWrapTitle(false);
+		supervisor = ItemFactory.newUserSelector("user", " ");
 		supervisor.setRequired(true);
-		// supervisor.setColSpan(3);
+		supervisor.setShowTitle(false);
+		supervisor.addChangedHandler(new ChangedHandler() {
+			@Override
+			public void onChanged(ChangedEvent event) {
+				try {
+					setSupervisor(supervisor.getSelectedRecord().getAttribute("username"));
+				} catch (Throwable t) {
+				}
+			}
+		});
+
+		FormItemIcon icon = new FormItemIcon();
+		icon.setSrc("[SKIN]/actions/remove.png");
+		supervisor.addIconClickHandler(new IconClickHandler() {
+			public void onIconClick(IconClickEvent event) {
+				supervisor.setValue("");
+				// TODO Remove supervisor
+			}
+		});
+		supervisor.setIcons(icon);
 		if (this.workflow != null && this.workflow.getSupervisor() != null)
 			supervisor.setValue(this.workflow.getSupervisor().getUserName());
-		supervisorForm.setItems(supervisor);
+		supervisorForm.setItems(supervisorItem, supervisor);
 
-		// refreshSupervisor();
-
-		wfForm.setItems(workflowName, workflowDescr, taskAssignment, assignmentSubject, assignmentBody, taskReminder,
+		wfForm.setItems(workflowName, workflowDescr, supervisorItem, assignmentSubject, assignmentBody, taskReminder,
 				reminderSubject, reminderBody);
 		wfLayout.setMembers(wfForm, separatorForm, supervisorForm);
 		wfLayout.redraw();
@@ -142,52 +161,10 @@ public class Accordion extends SectionStack {
 		this.workflow.setSupervisor(null);
 	}
 
-	private void refreshSupervisor() {
-		if (supervisorForm != null && wfLayout.contains(supervisorForm)) {
-			wfLayout.removeMember(supervisorForm);
-			supervisorForm.destroy();
-		}
-
-		supervisorForm = new DynamicForm();
-		supervisorForm.setColWidths(1, "*");
-
-		final ComboBoxItem supervisor = ItemFactory.newUserSelector("supervisor", "");
-		supervisor.setTitle("<b>" + I18N.message("supervisor") + "</b>");
-		List<FormItem> items = new ArrayList<FormItem>();
-		if (this.workflow.getSupervisor() == null) {
-			supervisor.addChangedHandler(new ChangedHandler() {
-				@Override
-				public void onChanged(ChangedEvent event) {
-					if (supervisor.getSelectedRecord() == null)
-						return;
-					GUIUser u = new GUIUser();
-					u.setId(Long.parseLong(supervisor.getSelectedRecord().getAttribute("id")));
-					u.setUserName(supervisor.getSelectedRecord().getAttribute("username"));
-					addSupervisor(u);
-					supervisor.clearValue();
-					refreshSupervisor();
-				}
-			});
-		}
-		items.add(supervisor);
-
-		if (this.workflow.getSupervisor() != null) {
-			FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
-
-			final StaticTextItem usrItem = ItemFactory.newStaticTextItem("usr", "", this.workflow.getSupervisor()
-					.getUserName());
-			// usrItem.setDefaultValue(this.workflow.getSupervisor().getUserName());
-			usrItem.setIcons(icon);
-			usrItem.addIconClickHandler(new IconClickHandler() {
-				public void onIconClick(IconClickEvent event) {
-					removeSupervisor();
-					refreshSupervisor();
-				}
-			});
-			items.add(usrItem);
-		}
-		supervisorForm.setItems(items.toArray(new FormItem[0]));
-
-		wfLayout.addMember(supervisorForm);
+	public void setSupervisor(String name) {
+		supervisor.setValue(name);
+		supervisor.redraw();
+		// TODO set supervisor
+//		this.workflow.setSupervisor(new GUIUser());
 	}
 }

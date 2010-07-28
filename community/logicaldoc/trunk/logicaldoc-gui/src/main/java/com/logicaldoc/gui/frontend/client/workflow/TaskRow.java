@@ -19,6 +19,7 @@ public class TaskRow extends WorkflowRow {
 
 		if (wfState.getTransitions() != null && wfState.getTransitions().length > 0) {
 			VStack transitionsPanel = new VStack();
+
 			for (GUITransition transition : wfState.getTransitions()) {
 				if (transition.getTargetState().getType() != GUIWFState.TYPE_UNDEFINED)
 					transitionsPanel.addMember(new Transition(designer, transition, wfState));

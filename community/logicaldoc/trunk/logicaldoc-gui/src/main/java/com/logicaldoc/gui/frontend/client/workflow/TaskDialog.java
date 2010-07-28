@@ -55,7 +55,7 @@ public class TaskDialog extends Window {
 	private LinkedHashMap<String, String> participants;
 
 	private DynamicForm participantsForm;
-	
+
 	private DynamicForm buttonForm;
 
 	public TaskDialog(GUIWorkflow wfl, GUIWFState wfState) {
@@ -120,7 +120,7 @@ public class TaskDialog extends Window {
 		remindTime.setValue(this.task.getReminderUnit());
 		escalationForm.setFields(duedateTimeItem, duedateTime, remindTimeItem, remindTime);
 		addItem(escalationForm);
-		
+
 		DynamicForm participantsItemForm = new DynamicForm();
 		participantsItemForm.setTitleOrientation(TitleOrientation.TOP);
 		participantsItemForm.setNumCols(1);
@@ -131,18 +131,18 @@ public class TaskDialog extends Window {
 		participantsItemForm.setItems(participantsItem);
 		addItem(participantsItemForm);
 
-		HLayout buttons = new HLayout();
-		buttons.setHeight(25);
-		buttons.setMargin(3);
+		HLayout userSelection = new HLayout();
+		userSelection.setHeight(25);
+		userSelection.setMargin(3);
 
 		// Prepare the combo and button for adding a new user
 		final DynamicForm userForm = new DynamicForm();
 		final ComboBoxItem user = ItemFactory.newUserSelector("user", "user");
 		userForm.setItems(user);
 
-		buttons.addMember(userForm);
+		userSelection.addMember(userForm);
 		Button addUser = new Button(I18N.message("adduser"));
-		buttons.addMember(addUser);
+		userSelection.addMember(addUser);
 		addUser.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
@@ -162,8 +162,8 @@ public class TaskDialog extends Window {
 				user.clearValue();
 			}
 		});
-		addItem(buttons);
-		
+		addItem(userSelection);
+
 		refreshParticipants(null);
 	}
 
@@ -197,7 +197,7 @@ public class TaskDialog extends Window {
 		participantsList.setValueMap(participants);
 		participantsForm.setItems(participantsList);
 		addItem(participantsForm);
-		
+
 		buttonForm = new DynamicForm();
 		ButtonItem saveItem = new ButtonItem();
 		saveItem.setTitle(I18N.message("save"));
