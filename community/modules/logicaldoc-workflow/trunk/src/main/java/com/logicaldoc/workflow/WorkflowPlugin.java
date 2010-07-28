@@ -63,12 +63,12 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 		WebConfigurator config = new WebConfigurator(dest.getPath() + "/web.xml");
 		config.addServlet(SERVICE_NAME, "com.logicaldoc.workflow.service.WorkflowServiceImpl", 4);
 		config.writeXMLDoc();
-		config.addServletMapping("SERVICE_NAME", "/frontend/workflow");
+		config.addServletMapping(SERVICE_NAME, "/frontend/workflow");
 		config.writeXMLDoc();
 
 		config.addServlet(SERVLET_DATA, "com.logicaldoc.workflow.data.WorkflowsDataServlet", 4);
 		config.writeXMLDoc();
-		config.addServletMapping("SERVLET_DATA", "/data/workflows.xml");
+		config.addServletMapping(SERVLET_DATA, "/data/workflows.xml");
 		config.writeXMLDoc();
 
 		// Add some workflow CE defaults
@@ -78,7 +78,7 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 		pbean.setProperty("history.workflow.ttl", "90");
 		pbean.setProperty("workflow.mtom", "false");
 		pbean.write();
-		
+
 		setRestartRequired();
 	}
 
