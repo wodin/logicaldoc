@@ -14,6 +14,7 @@ import org.springframework.util.Log4jConfigurer;
 import com.logicaldoc.util.config.LoggingConfigurator;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.io.ZipUtil;
+import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
  * Listener that initialises relevant system stuffs during application startup
@@ -57,7 +58,7 @@ public class ApplicationInitializer implements ServletContextListener {
 		String pluginsDir = context.getRealPath("/WEB-INF/lib");
 
 		// Initialize plugins
-		com.logicaldoc.util.PluginRegistry.getInstance().init(pluginsDir);
+		PluginRegistry.getInstance().init(pluginsDir);
 
 		// Reinitialize logging because some plugins may have added new
 		// categories
@@ -77,12 +78,17 @@ public class ApplicationInitializer implements ServletContextListener {
 			e.printStackTrace();
 		}
 
+		needRestart = PluginRegistry.getInstance().isRestartRequired();
+
 		// Try to unpack new plugins
 		try {
 			unpackPlugins(context);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		if (needRestart)
+			System.out.println("The application needs to be restarted");
 	}
 
 	/**
@@ -111,7 +117,5 @@ public class ApplicationInitializer implements ServletContextListener {
 				FileUtils.forceDelete(archive);
 				needRestart = true;
 			}
-		if (needRestart)
-			System.out.println("The application needs to be restarted");
 	}
 }

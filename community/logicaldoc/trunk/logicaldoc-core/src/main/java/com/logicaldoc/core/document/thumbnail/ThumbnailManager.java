@@ -16,8 +16,8 @@ import org.java.plugin.registry.Extension;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
-import com.logicaldoc.util.PluginRegistry;
 import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
  * Manager class used to handle document thumbnails

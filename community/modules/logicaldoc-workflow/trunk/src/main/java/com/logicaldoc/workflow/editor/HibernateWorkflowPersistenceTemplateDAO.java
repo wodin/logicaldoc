@@ -13,8 +13,8 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.PluginRegistry;
 import com.logicaldoc.util.plugin.LogicalDOCPlugin;
+import com.logicaldoc.util.plugin.PluginRegistry;
 import com.logicaldoc.util.sql.SqlUtil;
 
 /**

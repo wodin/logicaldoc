@@ -33,5 +33,7 @@ public class WebservicePlugin extends LogicalDOCPlugin {
 		config.writeXMLDoc();
 		config.addServletMapping("CXFServlet", "/services/*");
 		config.writeXMLDoc();
+		
+		setRestartRequired();
 	}
 }

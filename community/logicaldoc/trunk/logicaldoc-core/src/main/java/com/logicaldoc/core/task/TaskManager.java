@@ -12,8 +12,8 @@ import com.logicaldoc.core.document.TagCloudGenerator;
 import com.logicaldoc.core.searchengine.IndexOptimizer;
 import com.logicaldoc.core.searchengine.IndexerTask;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.PluginRegistry;
 import com.logicaldoc.util.config.ContextConfigurator;
+import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
  * A manager that collects all operations about tasks.

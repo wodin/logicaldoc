@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.core.io.Resource;
 
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.PluginRegistry;
+import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
  * Looking for extensions that wants to add mappings to the current session

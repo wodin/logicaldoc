@@ -23,6 +23,7 @@ import com.logicaldoc.gui.setup.client.services.SetupService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.LoggingConfigurator;
 import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
  * Implements the
@@ -146,7 +147,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		indexer.createIndexes();
 
 		// Initialize plugins filesystem
-		Collection<PluginDescriptor> descriptors = com.logicaldoc.util.PluginRegistry.getInstance().getPlugins();
+		Collection<PluginDescriptor> descriptors = PluginRegistry.getInstance().getPlugins();
 		for (PluginDescriptor descriptor : descriptors) {
 			try {
 				File file = new File(conf.getPropertyWithSubstitutions("conf.plugindir"), descriptor.getId());

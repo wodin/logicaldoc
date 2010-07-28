@@ -25,8 +25,8 @@ import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.common.client.services.InfoService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
-import com.logicaldoc.util.PluginRegistry;
 import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.plugin.PluginRegistry;
 import com.logicaldoc.web.ApplicationInitializer;
 
 /**

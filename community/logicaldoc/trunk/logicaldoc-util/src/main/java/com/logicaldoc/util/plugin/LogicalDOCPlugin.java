@@ -70,8 +70,8 @@ public abstract class LogicalDOCPlugin extends Plugin {
 
 	/**
 	 * Tells is the plug-in need to be installed. This default implementation
-	 * check if the file 'install' exists o the plug-in's data folder.
-	 * Concrete implementations are free to re-implement this logic.
+	 * check if the file 'install' exists o the plug-in's data folder. Concrete
+	 * implementations are free to re-implement this logic.
 	 * 
 	 * @return true if the plug-in need to be reinstalled
 	 */
@@ -153,6 +153,10 @@ public abstract class LogicalDOCPlugin extends Plugin {
 	protected void start() throws Exception {
 	}
 
+	protected void setRestartRequired() {
+		PluginRegistry.getInstance().setRestartRequired();
+	}
+	
 	/**
 	 * This method will be called once during plug-in deactivation. After this
 	 * method call, no other code from this plug-in can be accessed, unless

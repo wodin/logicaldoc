@@ -39,5 +39,7 @@ public class WebDAVPlugin extends LogicalDOCPlugin {
 		PropertiesBean pbean = new PropertiesBean(getClass().getClassLoader().getResource("context.properties"));
 		pbean.setProperty("webdav.enabled", "true");
 		pbean.write();
+
+		setRestartRequired();
 	}
 }

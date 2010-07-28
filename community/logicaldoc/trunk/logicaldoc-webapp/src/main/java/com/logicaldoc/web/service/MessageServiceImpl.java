@@ -4,9 +4,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
@@ -27,8 +24,6 @@ import com.logicaldoc.web.util.SessionUtil;
 public class MessageServiceImpl extends RemoteServiceServlet implements MessageService {
 
 	private static final long serialVersionUID = 1L;
-
-	private static Log log = LogFactory.getLog(MessageServiceImpl.class);
 
 	@Override
 	public void delete(String sid, long[] ids) throws InvalidSessionException {
@@ -93,7 +88,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 		SystemMessageDAO dao = (SystemMessageDAO) context.getBean(SystemMessageDAO.class);
 
 		SystemMessage m = new SystemMessage();
-    	m.setAuthor(session.getUserName());
+		m.setAuthor(session.getUserName());
 		m.setSentDate(new Date());
 		m.setStatus(SystemMessage.STATUS_NEW);
 		m.setType(SystemMessage.TYPE_SYSTEM);
@@ -110,7 +105,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 		m.setRecipients(recipients);
 		m.setDateScope(message.getValidity());
 		m.setPrio(message.getPriority());
-		if(message.isConfirmation())
+		if (message.isConfirmation())
 			m.setConfirmation(1);
 		else
 			m.setConfirmation(0);
