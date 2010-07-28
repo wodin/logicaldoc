@@ -96,7 +96,8 @@ public class DownloadServlet extends HttpServlet {
 			else
 				filename = doc.getFileName();
 
-			response.setHeader("Content-Lenght", Long.toString(doc.getFileSize()));
+			response.setHeader("Content-Length", Long.toString(doc.getFileSize()));
+//			System.out.println("Content-Length header: " + Long.toString(doc.getFileSize()));
 			
 			if (request.getParameter("open") == null) {
 				response.setHeader("Pragma", "public");
@@ -202,7 +203,8 @@ public class DownloadServlet extends HttpServlet {
 			throws UnsupportedEncodingException {
 		// Encode the filename
 		String userAgent = request.getHeader("User-Agent");
-		String encodedFileName = null;
+//		System.out.println("userAgent: " +userAgent);
+		String encodedFileName = null; 
 		if (userAgent.contains("MSIE") || userAgent.contains("Opera") || userAgent.contains("Safari")) {
 			encodedFileName = URLEncoder.encode(filename, "UTF-8");
 			encodedFileName = encodedFileName.replace("+", "%20");
