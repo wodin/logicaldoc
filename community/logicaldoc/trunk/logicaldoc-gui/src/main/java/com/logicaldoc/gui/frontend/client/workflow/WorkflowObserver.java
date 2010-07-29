@@ -46,7 +46,7 @@ public interface WorkflowObserver {
 	public void onDraggedStateDelete(GUIWFState fromState, GUIWFState targetState);
 
 	/**
-	 * Invoked when the user drop a new dragged state.
+	 * Invoked when the user wants to add a new task transition.
 	 * 
 	 * @param fromState The original state of the transition associated to the
 	 *        dragged state
@@ -54,11 +54,12 @@ public interface WorkflowObserver {
 	 * @param transitionText The text of transition on which is dragged the targetState
 	 */
 	public void onAddTransition(GUIWFState fromState, GUIWFState targetState, String transitionText);
-
+	
 	/**
-	 * Invoked when the user selects a workflow template.
+	 * Invoked when the user wants to add a new workflow state.
 	 * 
-	 * @param workflow The selected workflow
+	 * @param workflow The workflow.
+	 * @param type The workflow state type.
 	 */
-	public void onWorkflowSelect(GUIWorkflow workflow);
+	public void onAddState(GUIWorkflow workflow, int type);
 }

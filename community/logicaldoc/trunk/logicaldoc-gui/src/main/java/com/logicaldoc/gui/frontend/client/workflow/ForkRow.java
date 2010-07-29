@@ -84,6 +84,10 @@ public class ForkRow extends WorkflowRow {
 					SC.warn("You cannot add the same object in its row!!!");
 					event.cancel();
 				}
+				if (target.getWfState().getType() != GUIWFState.TYPE_TASK) {
+					SC.warn("A fork must contain only task elements!");
+					event.cancel();
+				}
 
 				if (!sameElementFound && !sameObjectFound) {
 					WorkflowState drag = new WorkflowDraggedState(workflowDesigner, fromState, target.getWfState());
@@ -103,6 +107,7 @@ public class ForkRow extends WorkflowRow {
 				addMember(new Transition(designer, transition, wfState));
 			}
 			GUIWFState targetState = new GUIWFState();
+			targetState.setId("" + (designer.getWorkflow().getStates().length + 1));
 			targetState.setType(GUIWFState.TYPE_UNDEFINED);
 			GUITransition trans = new GUITransition("" + wfState.getTransitions().length + 1, targetState);
 			addMember(new Transition(designer, trans, wfState));

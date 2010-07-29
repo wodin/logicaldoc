@@ -95,8 +95,8 @@ public class Accordion extends SectionStack {
 
 		StaticTextItem taskReminder = ItemFactory.newStaticTextItem("taskReminder", "",
 				"<b>" + I18N.message("reminder") + "</b>");
-		taskAssignment.setShouldSaveValue(false);
-		taskAssignment.setWrapTitle(false);
+		taskReminder.setShouldSaveValue(false);
+		taskReminder.setWrapTitle(false);
 		TextItem reminderSubject = ItemFactory.newTextItem("reminderSubject", "subject", null);
 		if (this.workflow != null)
 			reminderSubject.setValue(this.workflow.getReminderSubject());
@@ -117,7 +117,6 @@ public class Accordion extends SectionStack {
 		supervisorItem.setShouldSaveValue(false);
 		supervisorItem.setWrapTitle(false);
 		supervisor = ItemFactory.newUserSelector("supervisor", " ");
-		supervisor.setRequired(true);
 		supervisor.setShowTitle(false);
 		supervisor.setDisplayField("username");
 		supervisor.addChangedHandler(new ChangedHandler() {
@@ -143,7 +142,7 @@ public class Accordion extends SectionStack {
 			supervisor.setValue(this.workflow.getSupervisor());
 		supervisorForm.setItems(supervisorItem, supervisor);
 
-		wfForm.setItems(workflowName, workflowDescr, supervisorItem, assignmentSubject, assignmentBody, taskReminder,
+		wfForm.setItems(workflowName, workflowDescr, taskAssignment, assignmentSubject, assignmentBody, taskReminder,
 				reminderSubject, reminderBody);
 		wfLayout.setMembers(wfForm, separatorForm, supervisorForm);
 		wfLayout.redraw();

@@ -38,7 +38,8 @@ public class DrawingPanel extends VStack {
 			GUIWFState startState = null;
 			if (workflow.getStartState() != null && !workflow.getStartState().trim().isEmpty()) {
 				startState = workflow.getStateByName(workflow.getStartState());
-				addMember(new TaskRow(designer, startState));
+				if (startState != null)
+					addMember(new TaskRow(designer, startState));
 			}
 			if (workflow.getStates() != null) {
 				for (GUIWFState state : workflow.getStates()) {
@@ -71,8 +72,6 @@ public class DrawingPanel extends VStack {
 						if (workflowDesigner.getWorkflow() != null) {
 							workflowDesigner.getWorkflow().setStartState(row.getState().getWfState().getName());
 							workflowDesigner.reloadDrawingPanel();
-							// AdminPanel.get().setContent(new
-							// WorkflowDesigner(workflowDesigner.getWorkflow()));
 						}
 					}
 				}

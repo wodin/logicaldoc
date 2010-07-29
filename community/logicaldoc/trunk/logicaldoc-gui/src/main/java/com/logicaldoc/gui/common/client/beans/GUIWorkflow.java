@@ -12,7 +12,7 @@ public class GUIWorkflow implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private long id;
+	private long id = 0;
 
 	private String name = "";
 

@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.template;
 
 import com.logicaldoc.gui.common.client.Feature;
+import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.workflow.WorkflowDesigner;
@@ -53,7 +54,7 @@ public class MetadataAndWorkflowMenu extends VLayout {
 		workflow.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				AdminPanel.get().setContent(new WorkflowDesigner(null));
+				AdminPanel.get().setContent(new WorkflowDesigner(new GUIWorkflow()));
 			}
 		});
 	}

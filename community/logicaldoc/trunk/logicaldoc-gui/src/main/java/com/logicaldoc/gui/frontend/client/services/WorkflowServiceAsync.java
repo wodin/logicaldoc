@@ -5,9 +5,9 @@ import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 
 public interface WorkflowServiceAsync {
 
-	void delete(String sid, long workflowId, AsyncCallback<Void> callback);
+	void delete(String sid, String workflowName, AsyncCallback<Void> callback);
 
-	void get(String sid, long workflowId, AsyncCallback<GUIWorkflow> callback);
+	void get(String sid, String workflowName, AsyncCallback<GUIWorkflow> callback);
 
 	void deploy(String sid, GUIWorkflow workflow, AsyncCallback<Void> callback);
 

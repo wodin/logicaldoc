@@ -14,12 +14,12 @@ public interface WorkflowService extends RemoteService {
 	/**
 	 * Loads a given workflow from the database
 	 */
-	public GUIWorkflow get(String sid, long workflowId) throws InvalidSessionException;
+	public GUIWorkflow get(String sid, String workflowName) throws InvalidSessionException;
 
 	/**
 	 * Deletes a given workflow
 	 */
-	public void delete(String sid, long workflowId) throws InvalidSessionException;
+	public void delete(String sid, String workflowName) throws InvalidSessionException;
 
 	/**
 	 * Creates or updates a workflow

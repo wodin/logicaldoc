@@ -1,13 +1,13 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
 import com.google.gwt.core.client.GWT;
+import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
@@ -24,23 +24,21 @@ public class StateToolstrip extends ToolStrip {
 
 	protected WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
 
-	private WorkflowDesigner designer = null;
-
-	// private ComboBoxItem startState = new ComboBoxItem("startState",
-	// I18N.message("startstate"));
+	private WorkflowDesigner workflowDesigner = null;
 
 	public StateToolstrip(WorkflowDesigner designer) {
 		super();
 
-		this.designer = designer;
+		this.workflowDesigner = designer;
 		setWidth100();
 
 		ToolStripButton newTask = new ToolStripButton(I18N.message("addtask"));
 		newTask.setIcon(Util.imageUrl("task.png"));
+		newTask.setDisabled(workflowDesigner.getWorkflow() == null);
 		newTask.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				SC.say("New Task");
+				workflowDesigner.onAddState(workflowDesigner.getWorkflow(), GUIWFState.TYPE_TASK);
 			}
 		});
 		addButton(newTask);
@@ -48,10 +46,11 @@ public class StateToolstrip extends ToolStrip {
 
 		ToolStripButton newEndState = new ToolStripButton(I18N.message("addendstate"));
 		newEndState.setIcon(Util.imageUrl("endState.png"));
+		newEndState.setDisabled(workflowDesigner.getWorkflow() == null);
 		newEndState.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				SC.say("New End State");
+				workflowDesigner.onAddState(workflowDesigner.getWorkflow(), GUIWFState.TYPE_END);
 			}
 		});
 		addButton(newEndState);
@@ -59,10 +58,11 @@ public class StateToolstrip extends ToolStrip {
 
 		ToolStripButton newFork = new ToolStripButton(I18N.message("addfork"));
 		newFork.setIcon(Util.imageUrl("fork.png"));
+		newFork.setDisabled(workflowDesigner.getWorkflow() == null);
 		newFork.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				SC.say("New Fork");
+				workflowDesigner.onAddState(workflowDesigner.getWorkflow(), GUIWFState.TYPE_FORK);
 			}
 		});
 		addButton(newFork);
@@ -70,59 +70,19 @@ public class StateToolstrip extends ToolStrip {
 
 		ToolStripButton newJoin = new ToolStripButton(I18N.message("addjoin"));
 		newJoin.setIcon(Util.imageUrl("join.png"));
+		newJoin.setDisabled(workflowDesigner.getWorkflow() == null);
 		newJoin.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				SC.say("New Join");
+				workflowDesigner.onAddState(workflowDesigner.getWorkflow(), GUIWFState.TYPE_JOIN);
 			}
 		});
 		addButton(newJoin);
-		// addSeparator();
-		//
-		// startState = new ComboBoxItem("startState",
-		// I18N.message("startstate"));
-		// ListGridField name = new ListGridField("name");
-		// startState.setPickListWidth(300);
-		// startState.setPickListFields(name);
-		// startState.addChangedHandler(new ChangedHandler() {
-		// @Override
-		// public void onChanged(ChangedEvent event) {
-		// if (startState.getSelectedRecord() == null)
-		// return;
-		// workflowService.get(Session.get().getSid(),
-		// Long.parseLong(startState.getSelectedRecord().getAttribute("id")),
-		// new AsyncCallback<GUIWorkflow>() {
-		// @Override
-		// public void onFailure(Throwable caught) {
-		// Log.serverError(caught);
-		// }
-		//
-		// @Override
-		// public void onSuccess(GUIWorkflow workflow) {
-		// LinkedHashMap<String, String> map = new LinkedHashMap<String,
-		// String>();
-		// int i = 0;
-		// for (GUIWFState state : workflow.getStates()) {
-		// if (state.getType() == GUIWFState.TYPE_TASK) {
-		// map.put("" + i, "" + state.getName() + "");
-		// i++;
-		// }
-		// }
-		// startState.setValueMap(map);
-		// }
-		// });
-		// }
-		// });
-		// if (this.designer.getWorkflow() != null) {
-		// startState.setValue(this.designer.getWorkflow().getStartState());
-		// }
-		//
-		// addFormItem(startState);
 
 		addFill();
 	}
 
 	public WorkflowDesigner getDesigner() {
-		return designer;
+		return workflowDesigner;
 	}
 }
