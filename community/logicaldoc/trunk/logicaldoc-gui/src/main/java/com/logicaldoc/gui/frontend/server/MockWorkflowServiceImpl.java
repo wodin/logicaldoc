@@ -19,10 +19,10 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public GUIWorkflow get(String sid, long workflowId) throws InvalidSessionException {
+	public GUIWorkflow get(String sid, String workflowName) throws InvalidSessionException {
 		GUIWorkflow workflow = new GUIWorkflow();
-		workflow.setId(workflowId);
-		workflow.setName("Workflow_test");
+		workflow.setId(1);
+		workflow.setName(workflowName);
 		workflow.setDescription("Workflow di test");
 		workflow.setTaskAssignmentSubject("task assign subject");
 		workflow.setTaskAssignmentBody("This is the assignment body");
@@ -132,7 +132,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	}
 
 	@Override
-	public void delete(String sid, long workflowId) throws InvalidSessionException {
+	public void delete(String sid, String workflowName) throws InvalidSessionException {
 
 	}
 

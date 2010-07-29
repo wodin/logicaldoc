@@ -5,6 +5,7 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.data.WorkflowsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -40,14 +41,6 @@ public class WorkflowToolstrip extends ToolStrip {
 
 	private WorkflowDesigner designer = null;
 
-	// private WorkflowTransformService workflowTransformService;
-
-	private WorkflowService oldWorkflowService;
-
-	// private WorkflowPersistenceTemplate persistenceTemplate;
-
-	// private XStream xstream = new XStream();
-
 	public WorkflowToolstrip(WorkflowDesigner designer) {
 		super();
 
@@ -61,18 +54,22 @@ public class WorkflowToolstrip extends ToolStrip {
 		newTemplate.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				workflowService.save(Session.get().getSid(), currentWorkflow, new AsyncCallback<GUIWorkflow>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+				currentWorkflow = new GUIWorkflow();
+				AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
 
-					@Override
-					public void onSuccess(GUIWorkflow result) {
-						currentWorkflow = result;
-						AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
-					}
-				});
+				// workflowService.save(Session.get().getSid(), currentWorkflow,
+				// new AsyncCallback<GUIWorkflow>() {
+				// @Override
+				// public void onFailure(Throwable caught) {
+				// Log.serverError(caught);
+				// }
+				//
+				// @Override
+				// public void onSuccess(GUIWorkflow result) {
+				// AdminPanel.get().setContent(new WorkflowDesigner(new
+				// GUIWorkflow()));
+				// }
+				// });
 			}
 		});
 		addButton(newTemplate);
@@ -93,8 +90,7 @@ public class WorkflowToolstrip extends ToolStrip {
 			public void onChanged(ChangedEvent event) {
 				if (workflow.getSelectedRecord() == null)
 					return;
-				workflowService.get(Session.get().getSid(),
-						Long.parseLong(workflow.getSelectedRecord().getAttribute("id")),
+				workflowService.get(Session.get().getSid(), workflow.getSelectedRecord().getAttribute("name"),
 						new AsyncCallback<GUIWorkflow>() {
 							@Override
 							public void onFailure(Throwable caught) {
@@ -115,29 +111,29 @@ public class WorkflowToolstrip extends ToolStrip {
 		load.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				workflowService.get(Session.get().getSid(), currentWorkflow.getId(), new AsyncCallback<GUIWorkflow>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+				workflowService.get(Session.get().getSid(), currentWorkflow.getName(),
+						new AsyncCallback<GUIWorkflow>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
 
-					@Override
-					public void onSuccess(GUIWorkflow result) {
-						currentWorkflow = result;
-						AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
-					}
-				});
+							@Override
+							public void onSuccess(GUIWorkflow result) {
+								currentWorkflow = result;
+								AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
+							}
+						});
 			}
 		});
 		addButton(load);
 		addSeparator();
 
 		ToolStripButton save = new ToolStripButton(I18N.message("save"));
+		save.setDisabled(currentWorkflow == null);
 		save.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (currentWorkflow == null)
-					currentWorkflow = new GUIWorkflow();
 				final Map<String, Object> values = WorkflowToolstrip.this.designer.getAccordion().getValues();
 				currentWorkflow.setName((String) values.get("workflowName"));
 				currentWorkflow.setDescription((String) values.get("workflowDescr"));
@@ -164,37 +160,49 @@ public class WorkflowToolstrip extends ToolStrip {
 		addSeparator();
 
 		ToolStripButton deploy = new ToolStripButton(I18N.message("deploy"));
+		deploy.setDisabled(currentWorkflow == null);
 		deploy.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (currentWorkflow == null)
-					currentWorkflow = new GUIWorkflow();
-				final Map<String, Object> values = WorkflowToolstrip.this.designer.getAccordion().getValues();
-				currentWorkflow.setName((String) values.get("workflowName"));
-				currentWorkflow.setDescription((String) values.get("workflowDescr"));
-				currentWorkflow.setTaskAssignmentSubject((String) values.get("assignmentSubject"));
-				currentWorkflow.setTaskAssignmentBody((String) values.get("assignmentBody"));
-				currentWorkflow.setReminderSubject((String) values.get("reminderSubject"));
-				currentWorkflow.setReminderBody((String) values.get("reminderBody"));
-				currentWorkflow.setSupervisor((String) values.get("supervisor"));
-
-				workflowService.deploy(Session.get().getSid(), currentWorkflow, new AsyncCallback<Void>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
+				boolean taskFound = false;
+				for (GUIWFState state : currentWorkflow.getStates()) {
+					if (state.getType() == GUIWFState.TYPE_TASK) {
+						taskFound = true;
+						break;
 					}
+				}
 
-					@Override
-					public void onSuccess(Void result) {
-						SC.say("Workflow " + currentWorkflow.getName() + " correctly deployed!!!");
-					}
-				});
+				if (!taskFound)
+					SC.warn("A workflow must have at least one task!");
+				else {
+					final Map<String, Object> values = WorkflowToolstrip.this.designer.getAccordion().getValues();
+					currentWorkflow.setName((String) values.get("workflowName"));
+					currentWorkflow.setDescription((String) values.get("workflowDescr"));
+					currentWorkflow.setTaskAssignmentSubject((String) values.get("assignmentSubject"));
+					currentWorkflow.setTaskAssignmentBody((String) values.get("assignmentBody"));
+					currentWorkflow.setReminderSubject((String) values.get("reminderSubject"));
+					currentWorkflow.setReminderBody((String) values.get("reminderBody"));
+					currentWorkflow.setSupervisor((String) values.get("supervisor"));
+
+					workflowService.deploy(Session.get().getSid(), currentWorkflow, new AsyncCallback<Void>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
+
+						@Override
+						public void onSuccess(Void result) {
+							SC.say("Workflow " + currentWorkflow.getName() + " correctly deployed!!!");
+						}
+					});
+				}
 			}
 		});
 		addButton(deploy);
 		addSeparator();
 
 		ToolStripButton delete = new ToolStripButton(I18N.message("ddelete"));
+		delete.setDisabled(currentWorkflow == null);
 		delete.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -202,7 +210,7 @@ public class WorkflowToolstrip extends ToolStrip {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							workflowService.delete(Session.get().getSid(), currentWorkflow.getId(),
+							workflowService.delete(Session.get().getSid(), currentWorkflow.getName(),
 									new AsyncCallback<Void>() {
 										@Override
 										public void onFailure(Throwable caught) {
@@ -212,7 +220,7 @@ public class WorkflowToolstrip extends ToolStrip {
 										@Override
 										public void onSuccess(Void result) {
 											currentWorkflow = null;
-											AdminPanel.get().setContent(new WorkflowDesigner(null));
+											AdminPanel.get().setContent(new WorkflowDesigner(new GUIWorkflow()));
 										}
 									});
 						}
@@ -224,6 +232,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		addSeparator();
 
 		ToolStripButton close = new ToolStripButton(I18N.message("close"));
+		close.setDisabled(currentWorkflow == null);
 		close.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

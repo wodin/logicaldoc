@@ -58,6 +58,15 @@ public class GUIWFState implements Serializable {
 
 	private GUITransition[] transitions;
 
+	public GUIWFState() {
+	}
+
+	public GUIWFState(String id, String name, int type) {
+		this.id = id;
+		this.name = name;
+		this.type = type;
+	}
+
 	public int getType() {
 		return type;
 	}

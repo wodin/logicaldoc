@@ -4,13 +4,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
@@ -99,7 +96,7 @@ public class TaskDialog extends Window {
 		escalationForm.setNumCols(4);
 		escalationForm.setColWidths("35", "35", "50", "130");
 		escalationForm.setValuesManager(vm);
-		SpinnerItem duedateTimeItem = new SpinnerItem();
+		SpinnerItem duedateTimeItem = new SpinnerItem("duedateNumber");
 		duedateTimeItem.setTitle(I18N.message("duedate"));
 		duedateTimeItem.setDefaultValue(0);
 		duedateTimeItem.setMin(0);
@@ -109,7 +106,7 @@ public class TaskDialog extends Window {
 		SelectItem duedateTime = ItemFactory.newTimeSelector("duedateTime", "");
 		duedateTime.setValue(this.task.getDueDateUnit());
 
-		SpinnerItem remindTimeItem = new SpinnerItem();
+		SpinnerItem remindTimeItem = new SpinnerItem("remindtimeNumber");
 		remindTimeItem.setTitle(I18N.message("remindtime"));
 		remindTimeItem.setDefaultValue(0);
 		remindTimeItem.setMin(0);
@@ -188,9 +185,10 @@ public class TaskDialog extends Window {
 		participantsList.setHeight(50);
 		participantsList.setEndRow(true);
 		participants = new LinkedHashMap<String, String>();
-		for (GUIUser user : this.task.getParticipants()) {
-			participants.put(user.getUserName(), user.getUserName());
-		}
+		if (this.task.getParticipants() != null)
+			for (GUIUser user : this.task.getParticipants()) {
+				participants.put(user.getUserName(), user.getUserName());
+			}
 		if (username != null) {
 			participants.put(username, username);
 		}
@@ -208,6 +206,15 @@ public class TaskDialog extends Window {
 				if (vm.validate()) {
 					TaskDialog.this.task.setName((String) values.get("taskName"));
 					TaskDialog.this.task.setDescription((String) values.get("taskDescr"));
+					TaskDialog.this.task.setDueDateNumber((Integer) values.get("duedateNumber"));
+					TaskDialog.this.task.setDueDateUnit((String) values.get("duedateTime"));
+					TaskDialog.this.task.setReminderNumber((Integer) values.get("remindtimeNumber"));
+					TaskDialog.this.task.setReminderUnit((String) values.get("remindTime"));
+
+//					String[] participantValues = new String[0];
+//					if (values.get("participants") != null)
+//						participantValues = values.get("participants").toString();
+//					TaskDialog.this.task.setParticipants((String) values.get("participants"));
 
 					GUIWFState[] states = new GUIWFState[workflow.getStates().length];
 					int i = 0;
@@ -222,18 +229,23 @@ public class TaskDialog extends Window {
 					}
 					workflow.setStates(states);
 
-					workflowService.save(Session.get().getSid(), workflow, new AsyncCallback<GUIWorkflow>() {
-						@Override
-						public void onFailure(Throwable caught) {
-							Log.serverError(caught);
-						}
+					AdminPanel.get().setContent(new WorkflowDesigner(workflow));
+					destroy();
 
-						@Override
-						public void onSuccess(GUIWorkflow result) {
-							AdminPanel.get().setContent(new WorkflowDesigner(workflow));
-							destroy();
-						}
-					});
+					// workflowService.save(Session.get().getSid(), workflow,
+					// new AsyncCallback<GUIWorkflow>() {
+					// @Override
+					// public void onFailure(Throwable caught) {
+					// Log.serverError(caught);
+					// }
+					//
+					// @Override
+					// public void onSuccess(GUIWorkflow result) {
+					// AdminPanel.get().setContent(new
+					// WorkflowDesigner(result));
+					// destroy();
+					// }
+					// });
 				}
 			}
 		});

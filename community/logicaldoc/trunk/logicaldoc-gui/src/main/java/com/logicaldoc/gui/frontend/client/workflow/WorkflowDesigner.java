@@ -1,13 +1,12 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
+import java.util.Map;
+
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUITransition;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
@@ -18,6 +17,7 @@ import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.SubmitItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
@@ -33,8 +33,6 @@ import com.smartgwt.client.widgets.layout.VStack;
  */
 public class WorkflowDesigner extends VStack implements WorkflowObserver {
 
-	private Accordion accordion = null;
-
 	public final static int TYPE_TASK = 0;
 
 	public final static int TYPE_END = 1;
@@ -48,9 +46,13 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 	// HStack or HLayout with Accordion e Drawing Panel
 	private HLayout layout = new HLayout();
 
+	private Accordion accordion = null;
+
 	private GUIWorkflow workflow = null;
 
 	private DrawingPanel drawingPanel = null;
+
+	private ValuesManager vm = new ValuesManager();
 
 	public WorkflowDesigner(GUIWorkflow workflow) {
 		this.workflow = workflow;
@@ -60,15 +62,19 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 		addMember(new WorkflowToolstrip(this));
 		addMember(new StateToolstrip(this));
 
-		accordion = new Accordion(workflow);
-		layout.addMember(accordion);
-		drawingPanel = new DrawingPanel(this);
-		layout.addMember(drawingPanel);
-		addMember(layout);
+		if (this.workflow != null) {
+			accordion = new Accordion(workflow);
+			layout.addMember(accordion);
+			drawingPanel = new DrawingPanel(this);
+			layout.addMember(drawingPanel);
+			addMember(layout);
+		}
 	}
 
 	@Override
-	public void onStateSelect(GUIWFState wfState) {
+	public void onStateSelect(GUIWFState state) {
+		final GUIWFState wfState = state;
+
 		if (wfState.getType() == TYPE_TASK) {
 			TaskDialog window = new TaskDialog(workflow, wfState);
 			window.show();
@@ -94,6 +100,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 			DynamicForm form = new DynamicForm();
 			form.setTitleOrientation(TitleOrientation.TOP);
 			form.setNumCols(1);
+			form.setValuesManager(vm);
 			TextItem name = ItemFactory.newTextItem("name", "name", null);
 			name.setRequired(true);
 
@@ -102,8 +109,28 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 			saveButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					// onSave();
-					window.destroy();
+					final Map<String, Object> values = vm.getValues();
+
+					if (vm.validate()) {
+						wfState.setName((String) values.get("name"));
+
+						GUIWFState[] states = new GUIWFState[workflow.getStates().length];
+						int i = 0;
+						for (GUIWFState state : workflow.getStates()) {
+							if (!state.getId().equals(wfState.getId())) {
+								states[i] = state;
+								i++;
+							} else {
+								states[i] = wfState;
+								i++;
+							}
+						}
+
+						workflow.setStates(states);
+
+						AdminPanel.get().setContent(new WorkflowDesigner(workflow));
+						window.destroy();
+					}
 				}
 			});
 
@@ -114,149 +141,159 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 		}
 	}
 
-	@Override
-	public void onWorkflowSelect(GUIWorkflow workflow) {
-		removeMember(layout);
-
-		// layout.removeMember(accordion);
-		// accordion.destroy();
-		// accordion = new Accordion(workflow);
-		// layout.addMember(accordion);
-		// accordion.refresh(workflow);
-	}
-
 	public GUIWorkflow getWorkflow() {
 		return workflow;
 	}
 
 	@Override
-	public void onStateDelete(GUIWFState wfState) {
-		GUIWFState[] states = new GUIWFState[workflow.getStates().length - 1];
-		int i = 0;
-		for (GUIWFState state : workflow.getStates()) {
-			if (!state.getName().equals(wfState.getName())) {
-				states[i] = state;
-				i++;
-			}
-		}
-		workflow.setStates(states);
+	public void onStateDelete(GUIWFState workflowState) {
+		final GUIWFState wfState = workflowState;
 
 		SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 			@Override
 			public void execute(Boolean value) {
 				if (value) {
-					workflowService.save(Session.get().getSid(), workflow, new AsyncCallback<GUIWorkflow>() {
-						@Override
-						public void onFailure(Throwable caught) {
-							Log.serverError(caught);
+					GUIWFState[] states = new GUIWFState[workflow.getStates().length - 1];
+					int i = 0;
+					for (GUIWFState state : workflow.getStates()) {
+						if (!state.getName().equals(wfState.getName())) {
+							states[i] = state;
+							i++;
 						}
+					}
+					workflow.setStates(states);
 
-						@Override
-						public void onSuccess(GUIWorkflow result) {
-							AdminPanel.get().setContent(new WorkflowDesigner(workflow));
-						}
-					});
+					AdminPanel.get().setContent(new WorkflowDesigner(workflow));
+
+					// workflowService.save(Session.get().getSid(), workflow,
+					// new AsyncCallback<GUIWorkflow>() {
+					// @Override
+					// public void onFailure(Throwable caught) {
+					// Log.serverError(caught);
+					// }
+					//
+					// @Override
+					// public void onSuccess(GUIWorkflow result) {
+					// AdminPanel.get().setContent(new
+					// WorkflowDesigner(workflow));
+					// }
+					// });
 				}
 			}
 		});
 	}
 
 	@Override
-	public void onTransitionDelete(GUIWFState fromState, GUIWFState targetState) {
-		if (fromState.getTransitions().length == 1)
-			fromState.setTransitions(null);
-		else {
-			GUITransition[] newTransitions = new GUITransition[fromState.getTransitions().length - 1];
-			int i = 0;
-			for (GUITransition transition : fromState.getTransitions()) {
-				if (transition.getTargetState().getType() == GUIWFState.TYPE_UNDEFINED
-						|| !transition.getTargetState().getId().equals(targetState.getId())) {
-					newTransitions[i] = transition;
-					i++;
-				}
-			}
-			fromState.setTransitions(newTransitions);
-		}
-
-		GUIWFState[] states = new GUIWFState[workflow.getStates().length];
-		int j = 0;
-		for (GUIWFState state : workflow.getStates()) {
-			if (!state.getName().equals(fromState.getName())) {
-				states[j] = state;
-				j++;
-			} else {
-				states[j] = fromState;
-				j++;
-			}
-		}
-		workflow.setStates(states);
+	public void onTransitionDelete(GUIWFState from, GUIWFState target) {
+		final GUIWFState fromState = from;
+		final GUIWFState targetState = target;
 
 		SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 			@Override
 			public void execute(Boolean value) {
 				if (value) {
-					workflowService.save(Session.get().getSid(), workflow, new AsyncCallback<GUIWorkflow>() {
-						@Override
-						public void onFailure(Throwable caught) {
-							Log.serverError(caught);
+					if (fromState.getTransitions().length == 1)
+						fromState.setTransitions(null);
+					else {
+						GUITransition[] newTransitions = new GUITransition[fromState.getTransitions().length - 1];
+						int i = 0;
+						for (GUITransition transition : fromState.getTransitions()) {
+							if (transition.getTargetState().getType() == GUIWFState.TYPE_UNDEFINED
+									|| !transition.getTargetState().getId().equals(targetState.getId())) {
+								newTransitions[i] = transition;
+								i++;
+							}
 						}
+						fromState.setTransitions(newTransitions);
+					}
 
-						@Override
-						public void onSuccess(GUIWorkflow result) {
-							AdminPanel.get().setContent(new WorkflowDesigner(workflow));
+					GUIWFState[] states = new GUIWFState[workflow.getStates().length];
+					int j = 0;
+					for (GUIWFState state : workflow.getStates()) {
+						if (!state.getName().equals(fromState.getName())) {
+							states[j] = state;
+							j++;
+						} else {
+							states[j] = fromState;
+							j++;
 						}
-					});
+					}
+					workflow.setStates(states);
+
+					AdminPanel.get().setContent(new WorkflowDesigner(workflow));
+
+					// workflowService.save(Session.get().getSid(), workflow,
+					// new AsyncCallback<GUIWorkflow>() {
+					// @Override
+					// public void onFailure(Throwable caught) {
+					// Log.serverError(caught);
+					// }
+					//
+					// @Override
+					// public void onSuccess(GUIWorkflow result) {
+					// AdminPanel.get().setContent(new
+					// WorkflowDesigner(workflow));
+					// }
+					// });
 				}
 			}
 		});
 	}
 
 	@Override
-	public void onDraggedStateDelete(GUIWFState fromState, GUIWFState targetState) {
-		GUITransition[] newTransitions = new GUITransition[fromState.getTransitions().length];
-		int i = 0;
-		for (GUITransition transition : fromState.getTransitions()) {
-			if (transition.getTargetState().getType() == GUIWFState.TYPE_UNDEFINED
-					|| !transition.getTargetState().getId().equals(targetState.getId())) {
-				newTransitions[i] = transition;
-				i++;
-			} else {
-				GUIWFState target = new GUIWFState();
-				target.setType(GUIWFState.TYPE_UNDEFINED);
-				newTransitions[i] = new GUITransition(transition.getText(), target);
-				i++;
-			}
-		}
-		fromState.setTransitions(newTransitions);
-
-		GUIWFState[] states = new GUIWFState[workflow.getStates().length];
-		int j = 0;
-		for (GUIWFState state : workflow.getStates()) {
-			if (!state.getName().equals(fromState.getName())) {
-				states[j] = state;
-				j++;
-			} else {
-				states[j] = fromState;
-				j++;
-			}
-		}
-		workflow.setStates(states);
-
+	public void onDraggedStateDelete(GUIWFState from, GUIWFState target) {
+		final GUIWFState fromState = from;
+		final GUIWFState targetState = target;
+		final GUIWorkflow workflow = this.getWorkflow();
 		SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 			@Override
 			public void execute(Boolean value) {
 				if (value) {
-					workflowService.save(Session.get().getSid(), workflow, new AsyncCallback<GUIWorkflow>() {
-						@Override
-						public void onFailure(Throwable caught) {
-							Log.serverError(caught);
+					GUITransition[] newTransitions = new GUITransition[fromState.getTransitions().length];
+					int i = 0;
+					for (GUITransition transition : fromState.getTransitions()) {
+						if (transition.getTargetState().getType() == GUIWFState.TYPE_UNDEFINED
+								|| !transition.getTargetState().getId().equals(targetState.getId())) {
+							newTransitions[i] = transition;
+							i++;
+						} else {
+							GUIWFState target = new GUIWFState();
+							target.setId("" + (workflow.getStates().length + 1));
+							target.setType(GUIWFState.TYPE_UNDEFINED);
+							newTransitions[i] = new GUITransition(transition.getText(), target);
+							i++;
 						}
+					}
+					fromState.setTransitions(newTransitions);
 
-						@Override
-						public void onSuccess(GUIWorkflow result) {
-							AdminPanel.get().setContent(new WorkflowDesigner(workflow));
+					GUIWFState[] states = new GUIWFState[workflow.getStates().length];
+					int j = 0;
+					for (GUIWFState state : workflow.getStates()) {
+						if (!state.getName().equals(fromState.getName())) {
+							states[j] = state;
+							j++;
+						} else {
+							states[j] = fromState;
+							j++;
 						}
-					});
+					}
+					workflow.setStates(states);
+
+					AdminPanel.get().setContent(new WorkflowDesigner(workflow));
+
+					// workflowService.save(Session.get().getSid(), workflow,
+					// new AsyncCallback<GUIWorkflow>() {
+					// @Override
+					// public void onFailure(Throwable caught) {
+					// Log.serverError(caught);
+					// }
+					//
+					// @Override
+					// public void onSuccess(GUIWorkflow result) {
+					// AdminPanel.get().setContent(new
+					// WorkflowDesigner(workflow));
+					// }
+					// });
 				}
 			}
 		});
@@ -302,6 +339,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 			// The user has clicked the 'add transition' link into the workflow
 			// state element.
 			GUIWFState target = new GUIWFState();
+			target.setId("" + (this.getWorkflow().getStates().length + 1));
 			target.setType(GUIWFState.TYPE_UNDEFINED);
 			newTransitions[newTransitions.length - 1] = new GUITransition(transitionText, target);
 		} else if (fromState.getType() == GUIWFState.TYPE_FORK) {
@@ -326,17 +364,20 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 		}
 		workflow.setStates(states);
 
-		workflowService.save(Session.get().getSid(), workflow, new AsyncCallback<GUIWorkflow>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				Log.serverError(caught);
-			}
+		AdminPanel.get().setContent(new WorkflowDesigner(workflow));
 
-			@Override
-			public void onSuccess(GUIWorkflow result) {
-				AdminPanel.get().setContent(new WorkflowDesigner(workflow));
-			}
-		});
+		// workflowService.save(Session.get().getSid(), workflow, new
+		// AsyncCallback<GUIWorkflow>() {
+		// @Override
+		// public void onFailure(Throwable caught) {
+		// Log.serverError(caught);
+		// }
+		//
+		// @Override
+		// public void onSuccess(GUIWorkflow result) {
+		// AdminPanel.get().setContent(new WorkflowDesigner(workflow));
+		// }
+		// });
 	}
 
 	public void reloadDrawingPanel() {
@@ -353,5 +394,48 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 
 	public Accordion getAccordion() {
 		return accordion;
+	}
+
+	@Override
+	public void onAddState(GUIWorkflow wfl, int type) {
+		this.workflow = wfl;
+
+		GUIWFState[] newStates = null;
+		if (workflow.getStates() != null) {
+			newStates = new GUIWFState[workflow.getStates().length + 1];
+			int j = 0;
+			for (GUIWFState state : workflow.getStates()) {
+				newStates[j] = state;
+				j++;
+			}
+		} else {
+			newStates = new GUIWFState[1];
+		}
+
+		GUIWFState newState = new GUIWFState("" + (newStates.length), I18N.message("taskwithnoname"), type);
+		newStates[newStates.length - 1] = newState;
+		if (workflow.getStartState() == null || workflow.getStartState().trim().isEmpty())
+			if (newState.getType() == GUIWFState.TYPE_TASK)
+				workflow.setStartState(newState.getName());
+
+		workflow.setStates(newStates);
+
+		reloadDrawingPanel();
+		// AdminPanel.get().setContent(new WorkflowDesigner(workflow));
+
+		// workflowService.save(Session.get().getSid(), workflow, new
+		// AsyncCallback<GUIWorkflow>() {
+		// @Override
+		// public void onFailure(Throwable caught) {
+		// Log.serverError(caught);
+		// }
+		//
+		// @Override
+		// public void onSuccess(GUIWorkflow result) {
+		// reloadDrawingPanel();
+		// // AdminPanel.get().setContent(new WorkflowDesigner(workflow));
+		// }
+		// });
+
 	}
 }
