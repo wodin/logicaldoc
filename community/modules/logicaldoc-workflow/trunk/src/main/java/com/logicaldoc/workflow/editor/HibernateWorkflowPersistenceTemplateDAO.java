@@ -177,9 +177,13 @@ public class HibernateWorkflowPersistenceTemplateDAO extends HibernatePersistent
 	 *      com.logicaldoc.workflow.editor.WorkflowPersistenceTemplateDAO.WORKFLOW_STAGE)
 	 */
 	public WorkflowPersistenceTemplate load(String name, WORKFLOW_STAGE workflow_stage) {
-		WorkflowPersistenceTemplate pt = findByWhere("_entity.name ='" + SqlUtil.doubleQuotes(name) + "'", null, null)
-				.get(0);
-		return this.load(pt.getId(), workflow_stage);
+		List<WorkflowPersistenceTemplate> templates = findByWhere("_entity.name ='" + SqlUtil.doubleQuotes(name) + "'",
+				null, null);
+		if (templates.size() > 0) {
+			WorkflowPersistenceTemplate pt = templates.get(0);
+			return this.load(pt.getId(), workflow_stage);
+		} else
+			return null;
 	}
 
 	/**
@@ -189,8 +193,8 @@ public class HibernateWorkflowPersistenceTemplateDAO extends HibernatePersistent
 	private File getTemplatesDirectory() {
 		File file = new File("");
 		try {
-			LogicalDOCPlugin workflowPlugin = (LogicalDOCPlugin) PluginRegistry.getInstance().getManager().getPlugin(
-					"logicaldoc-workflow");
+			LogicalDOCPlugin workflowPlugin = (LogicalDOCPlugin) PluginRegistry.getInstance().getManager()
+					.getPlugin("logicaldoc-workflow");
 			file = workflowPlugin.resolveDataPath("templates");
 			if (!file.exists())
 				file.mkdir();
@@ -217,7 +221,6 @@ public class HibernateWorkflowPersistenceTemplateDAO extends HibernatePersistent
 	public void fixConversionField() {
 		WorkflowPersistenceTemplateDAO dao = (WorkflowPersistenceTemplateDAO) Context.getInstance().getBean(
 				WorkflowPersistenceTemplateDAO.class);
-		dao
-				.jdbcUpdate("update JBPM_VARIABLEINSTANCE set CONVERTER_='R' where NAME_='ld_documents' and CONVERTER_ is null");
+		dao.jdbcUpdate("update JBPM_VARIABLEINSTANCE set CONVERTER_='R' where NAME_='ld_documents' and CONVERTER_ is null");
 	}
 }
