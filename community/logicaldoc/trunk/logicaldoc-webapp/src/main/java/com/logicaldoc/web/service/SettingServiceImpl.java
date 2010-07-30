@@ -174,4 +174,21 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 			log.error("Exception writing Web Service and WebDAV settings data: " + e.getMessage(), e);
 		}
 	}
+
+	@Override
+	public String[] loadValues(String sid, String[] names) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		String[] values = new String[names.length];
+		try {
+			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+
+			for (int i = 0; i < names.length; i++) {
+				values[i] = conf.getProperty(names[i]);
+			}
+		} catch (Exception e) {
+			log.error("Exception reading settings: " + e.getMessage(), e);
+		}
+		return values;
+	}
 }

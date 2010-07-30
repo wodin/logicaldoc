@@ -93,16 +93,15 @@ public class LoginPanel extends VLayout {
 				+ info.getUrl() + "'>" + info.getUrl() + "</a>";
 		HTMLFlow footer = new HTMLFlow(htmlString);
 		footer.setStyleName("loginFooter");
-		
-		VStack messages=new VStack();		
+
+		VStack messages = new VStack();
 		if (info.getMessages().length > 0) {
 			for (GUIMessage message : info.getMessages()) {
-				WarningLabel label=new WarningLabel(message.getMessage(), message.getUrl());
+				WarningLabel label = new WarningLabel(message.getMessage(), message.getUrl());
 				messages.addMember(label);
 			}
 		}
 
-		
 		// Prepare the Form and all its fields
 		final DynamicForm form = new DynamicForm();
 		form.setAlign(Alignment.CENTER);
@@ -118,7 +117,7 @@ public class LoginPanel extends VLayout {
 			}
 		});
 
-		password.setTitle(I18N.message("password"));
+		password = ItemFactory.newPasswordItem("password", "password", null);
 		password.setRequired(true);
 		password.setWrapTitle(false);
 		password.addKeyPressHandler(new KeyPressHandler() {

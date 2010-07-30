@@ -1,5 +1,8 @@
 package com.logicaldoc.gui.common.client.widgets;
 
+import java.util.Date;
+
+import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.FoldersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
@@ -23,8 +26,11 @@ public class FolderSelector extends StaticTextItem {
 
 	private Menu menu = new Menu();
 
-	public FolderSelector() {
-		setName("folder");
+	public FolderSelector(String name, boolean cleanPick) {
+		if (name != null)
+			setName(name);
+		else
+			setName("folder");
 		setTitle(I18N.message("folder"));
 		setValue("");
 		setRedrawOnChange(true);
@@ -42,7 +48,8 @@ public class FolderSelector extends StaticTextItem {
 		});
 
 		menu.setCanSelectParentItems(true);
-		menu.setDataSource(new FoldersDS("folderselector"));
+		Date date = new Date();
+		menu.setDataSource(new FoldersDS("folderselector" + date.getTime()));
 		menu.setWidth(130);
 		menu.addItemClickHandler(new ItemClickHandler() {
 			public void onItemClick(ItemClickEvent event) {
@@ -58,13 +65,29 @@ public class FolderSelector extends StaticTextItem {
 			}
 		});
 
-		setIcons(picker, icon);
+		if (cleanPick)
+			setIcons(picker, icon);
 	}
 
 	public void setFolder(Long folderId, String name) {
 		this.folderId = folderId;
 		setValue(name);
 		redraw();
+	}
+
+	public void setFolder(GUIFolder folder) {
+		if (folder != null) {
+			this.folderId = folder.getId();
+			setValue(folder.getName());
+		}
+		redraw();
+	}
+
+	public GUIFolder getFolder() {
+		GUIFolder folder = new GUIFolder();
+		folder.setId(getFolderId());
+		folder.setName(getFolderName());
+		return folder;
 	}
 
 	public Long getFolderId() {

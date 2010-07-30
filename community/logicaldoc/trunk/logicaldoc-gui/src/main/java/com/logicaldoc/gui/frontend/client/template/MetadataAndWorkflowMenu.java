@@ -44,9 +44,9 @@ public class MetadataAndWorkflowMenu extends VLayout {
 		workflow.setWidth100();
 		workflow.setHeight(25);
 
-		if (Feature.visible(Feature.WORKFLOW_BASIC)) {
+		if (Feature.visible(Feature.WORKFLOW)) {
 			addMember(workflow);
-			if (!Feature.enabled(Feature.WORKFLOW_BASIC)) {
+			if (!Feature.enabled(Feature.WORKFLOW)) {
 				workflow.setDisabled(true);
 				workflow.setTooltip(I18N.message("featuredisabled"));
 			}

@@ -46,9 +46,9 @@ public class DashboardPanel extends VLayout {
 				subscriptionsTab.setPane(new FeatureDisabled());
 		}
 
-		if (Feature.visible(Feature.WORKFLOW_BASIC)) {
+		if (Feature.visible(Feature.WORKFLOW)) {
 			tabSet.addTab(workflowTab);
-			if (!Feature.enabled(Feature.WORKFLOW_BASIC))
+			if (!Feature.enabled(Feature.WORKFLOW))
 				workflowTab.setPane(new FeatureDisabled());
 		}
 
