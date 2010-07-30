@@ -184,9 +184,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					doc.setFolder(parent);
 
 					doc = documentManager.create(file, doc, transaction, false);
-					if (StringUtils.isNotEmpty(doc.getCustomId())) {
-						// TODO Message??
-					}
 				}
 			}
 		} catch (Exception e) {

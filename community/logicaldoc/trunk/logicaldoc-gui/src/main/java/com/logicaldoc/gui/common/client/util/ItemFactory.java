@@ -3,6 +3,7 @@ package com.logicaldoc.gui.common.client.util;
 import java.util.LinkedHashMap;
 
 import com.logicaldoc.gui.common.client.data.GroupsDS;
+import com.logicaldoc.gui.common.client.data.TemplatesDS;
 import com.logicaldoc.gui.common.client.data.UsersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.validators.EmailValidator;
@@ -17,6 +18,7 @@ import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.LinkItem;
+import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
@@ -266,6 +268,12 @@ public class ItemFactory {
 		return select;
 	}
 
+	public static SelectItem newSelectItem(String name, String title) {
+		SelectItem select = newMultipleSelector(name, title != null ? I18N.message(title) : I18N.message(name));
+		select.setMultiple(false);
+		return select;
+	}
+
 	public static Img newImgIcon(String name) {
 		Img img = newImg(name);
 		img.setWidth("16px");
@@ -310,6 +318,15 @@ public class ItemFactory {
 			item.setValue("");
 		item.setRequiredMessage(I18N.message("fieldrequired"));
 		return item;
+	}
+
+	public static PasswordItem newPasswordItem(String name, String title, String value) {
+		PasswordItem password = new PasswordItem();
+		password.setTitle(I18N.message(title));
+		password.setName(name);
+		if (value != null)
+			password.setValue(value);
+		return password;
 	}
 
 	/**
@@ -427,5 +444,14 @@ public class ItemFactory {
 		select.setValueMap(map);
 		select.setValue("minute");
 		return select;
+	}
+
+	public static SelectItem newTemplateSelector() {
+		SelectItem templateItem = new SelectItem("template", I18N.message("template"));
+		templateItem.setDisplayField("name");
+		templateItem.setValueField("id");
+		templateItem.setPickListWidth(250);
+		templateItem.setOptionDataSource(TemplatesDS.getInstanceWithEmpty());
+		return templateItem;
 	}
 }

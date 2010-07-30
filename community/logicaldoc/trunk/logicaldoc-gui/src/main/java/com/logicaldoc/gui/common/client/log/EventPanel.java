@@ -33,7 +33,7 @@ public class EventPanel extends HLayout {
 	private EventPanel() {
 		setHeight(20);
 		setWidth100();
-		setAlign(Alignment.RIGHT);
+		setAlign(Alignment.LEFT);
 		setMargin(2);
 		setMembersMargin(2);
 

@@ -1,6 +1,8 @@
 package com.logicaldoc.gui.frontend.client.administration;
 
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.frontend.client.impex.ImpexMenu;
 import com.logicaldoc.gui.frontend.client.security.SecurityMenu;
 import com.logicaldoc.gui.frontend.client.settings.SettingsMenu;
 import com.logicaldoc.gui.frontend.client.system.SystemMenu;
@@ -38,11 +40,21 @@ public class AdminMenu extends SectionStack {
 		securitySection.setExpanded(false);
 		securitySection.addItem(new SecurityMenu());
 		addSection(securitySection);
-		
-		SectionStackSection metadataAndWorkflowSection = new SectionStackSection(I18N.message("metadataandworkflow"));
-		metadataAndWorkflowSection.setExpanded(false);
-		metadataAndWorkflowSection.addItem(new MetadataAndWorkflowMenu());
-		addSection(metadataAndWorkflowSection);
+
+		if (Feature.visible(Feature.TEMPLATE) || Feature.visible(Feature.WORKFLOW)) {
+			SectionStackSection metadataAndWorkflowSection = new SectionStackSection(
+					I18N.message("metadataandworkflow"));
+			metadataAndWorkflowSection.setExpanded(false);
+			metadataAndWorkflowSection.addItem(new MetadataAndWorkflowMenu());
+			addSection(metadataAndWorkflowSection);
+		}
+
+		if (Feature.visible(Feature.ARCHIVES)) {
+			SectionStackSection impexSection = new SectionStackSection(I18N.message("impex"));
+			impexSection.setExpanded(false);
+			impexSection.addItem(new ImpexMenu());
+			addSection(impexSection);
+		}
 
 		SectionStackSection sysConfSection = new SectionStackSection(I18N.message("settings"));
 		sysConfSection.setExpanded(false);

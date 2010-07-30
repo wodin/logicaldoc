@@ -95,11 +95,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		coverageItem.addChangedHandler(changedHandler);
 		coverageItem.setDisabled(!update);
 
-		SelectItem templateItem = new SelectItem("template", I18N.message("template"));
-		templateItem.setDisplayField("name");
-		templateItem.setValueField("id");
-		templateItem.setPickListWidth(250);
-		templateItem.setOptionDataSource(TemplatesDS.getInstanceWithEmpty());
+		SelectItem templateItem = ItemFactory.newTemplateSelector();
 		templateItem.addChangedHandler(changedHandler);
 		templateItem.setDisabled(!update);
 

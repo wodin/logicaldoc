@@ -82,6 +82,8 @@ public class DocumentsDataServlet extends HttpServlet {
 				query.append(" and (A.indexed=2) ");
 		if (filename != null)
 			query.append(" and lower(A.fileName) like '%" + filename.toLowerCase() + "%' ");
+		query.append("order by A.lastModified desc");
+
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, max);
 
