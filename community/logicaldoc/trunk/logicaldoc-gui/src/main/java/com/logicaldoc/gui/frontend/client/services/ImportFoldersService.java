@@ -9,8 +9,8 @@ import com.logicaldoc.gui.common.client.beans.GUIShare;
  * The client side stub for the ImportFolder Service. This service gives all
  * needed methods to handle templates.
  */
-@RemoteServiceRelativePath("importfolder")
-public interface ImportFolderService extends RemoteService {
+@RemoteServiceRelativePath("importfolders")
+public interface ImportFoldersService extends RemoteService {
 	/**
 	 * Deletes a given folder
 	 */
@@ -34,5 +34,10 @@ public interface ImportFolderService extends RemoteService {
 	/**
 	 * Changes a share enabled/disabled status
 	 */
-	public void changeStatus(String sid, long id, boolean enabled);
+	public void changeStatus(String sid, long id, boolean enabled) throws InvalidSessionException;
+
+	/**
+	 * Cleans the cache
+	 */
+	public void resetCache(String sid, long id) throws InvalidSessionException;
 }

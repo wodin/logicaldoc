@@ -13,6 +13,21 @@
 		<property environment="env" />
 		<property id="properties" file="build.properties" />
 
+		<echo message="Deploying ${pom.artifactId}" />
+
+		<exec executable="mvn.bat" resolveexecutable="true" searchpath="true">
+		  <arg line="-o -Dmaven.test.skip=true install"/>
+		</exec>
+		
+		<unzip src="target/${pom.artifactId}-${pom.version}-plugin.zip" dest="${logicaldoc.webroot}" />
+
+		<echo message="${pom.artifactId} is deployed" />
+	</target>
+	
+	<target name="deploy-files" depends="init-all" description="Updates a deployed webapp">
+		<property environment="env" />
+		<property id="properties" file="build.properties" />
+
 		<echo message="Deploying webapp files" />
 		<copy todir="${logicaldoc.webroot}" verbose="false">
 			<fileset dir="war">

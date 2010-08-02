@@ -11,8 +11,8 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
-import com.logicaldoc.gui.frontend.client.services.ImportFolderService;
-import com.logicaldoc.gui.frontend.client.services.ImportFolderServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.ImportFoldersService;
+import com.logicaldoc.gui.frontend.client.services.ImportFoldersServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.smartgwt.client.data.Record;
@@ -48,7 +48,7 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  * @since 6.0
  */
 public class ImportFoldersPanel extends VLayout {
-	private ImportFolderServiceAsync service = (ImportFolderServiceAsync) GWT.create(ImportFolderService.class);
+	private ImportFoldersServiceAsync service = (ImportFoldersServiceAsync) GWT.create(ImportFoldersService.class);
 
 	private SettingServiceAsync settingService = (SettingServiceAsync) GWT.create(SettingService.class);
 
@@ -75,10 +75,14 @@ public class ImportFoldersPanel extends VLayout {
 		listing.clear();
 		if (list != null)
 			listing.removeMember(list);
+		if (details != null && details instanceof ImportFolderDetailsPanel) {
+			detailsContainer.removeMember(details);
+			details = SELECT_FOLDER;
+		}
 
 		// Initialize the listing panel
 		listing.setAlign(Alignment.CENTER);
-		listing.setHeight("75%");
+		listing.setHeight("70%");
 		listing.setShowResizeBar(true);
 
 		ListGridField id = new ListGridField("id", 50);
@@ -111,7 +115,6 @@ public class ImportFoldersPanel extends VLayout {
 		list.setCanFreezeFields(true);
 		list.setFilterOnKeypress(true);
 		list.setDataSource(ImportFoldersDS.get());
-		list.setShowFilterEditor(true);
 
 		listing.addMember(infoPanel);
 		listing.addMember(list);
@@ -133,13 +136,12 @@ public class ImportFoldersPanel extends VLayout {
 
 		ToolStripButton addLocal = new ToolStripButton();
 		addLocal.setTitle(I18N.message("addlocalfolder"));
-		toolStrip.addButton(addLocal);
 		addLocal.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				list.deselectAllRecords();
 				GUIShare share = new GUIShare();
-				share.setProvider("remote");
+				share.setProvider("file");
 				showShareDetails(share);
 			}
 		});
@@ -153,7 +155,6 @@ public class ImportFoldersPanel extends VLayout {
 
 		ToolStripButton addRemote = new ToolStripButton();
 		addRemote.setTitle(I18N.message("addremotefolder"));
-		toolStrip.addButton(addRemote);
 		addRemote.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -198,8 +199,6 @@ public class ImportFoldersPanel extends VLayout {
 				discovery.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
-
-		toolStrip.addFill();
 
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
@@ -284,12 +283,15 @@ public class ImportFoldersPanel extends VLayout {
 						new AsyncCallback<Boolean>() {
 							@Override
 							public void onFailure(Throwable caught) {
-								SC.say(I18N.message("connectionestablished"));
+								Log.serverError(caught);
 							}
 
 							@Override
 							public void onSuccess(Boolean result) {
-								SC.warn(I18N.message("connectionfailed"));
+								if (result.booleanValue())
+									SC.say(I18N.message("connectionestablished"));
+								else
+									SC.warn(I18N.message("connectionfailed"));
 							}
 						});
 
@@ -338,10 +340,35 @@ public class ImportFoldersPanel extends VLayout {
 			}
 		});
 
+		MenuItem resetCache = new MenuItem();
+		resetCache.setTitle(I18N.message("resetcache"));
+		resetCache.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				SC.ask(I18N.message("question"), I18N.message("confirmresetcache"), new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							service.resetCache(Session.get().getSid(), id, new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(Void result) {
+									Log.info(I18N.message("confirmresetcache"), null);
+								}
+							});
+						}
+					}
+				});
+			}
+		});
+
 		if ("0".equals(record.getAttributeAsString("eenabled")))
-			contextMenu.setItems(test, disable, delete);
+			contextMenu.setItems(test, disable, delete, resetCache);
 		else
-			contextMenu.setItems(test, enable, delete);
+			contextMenu.setItems(test, enable, delete, resetCache);
 		contextMenu.showContextMenu();
 	}
 
@@ -367,6 +394,9 @@ public class ImportFoldersPanel extends VLayout {
 			record = new ListGridRecord();
 
 		record.setAttribute("src", share.getPath());
+		record.setAttribute("eenabled", share.getEnabled() == 1 ? "0" : "2");
+		record.setAttribute("type", "smb".equals(share.getProvider()) ? I18N.message("remote") : I18N.message("local"));
+
 		if (record.getAttributeAsString("id") != null
 				&& (share.getId() == Long.parseLong(record.getAttributeAsString("id")))) {
 			list.updateData(record);

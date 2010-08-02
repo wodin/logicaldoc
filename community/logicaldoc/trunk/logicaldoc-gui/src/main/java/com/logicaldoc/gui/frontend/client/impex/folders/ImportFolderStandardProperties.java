@@ -33,7 +33,9 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 		setMembers(formsContainer);
 		targetSelector = new FolderSelector("target", false);
 		targetSelector.setRequired(true);
-		targetSelector.setTitle(I18N.message("targetfolder"));
+		targetSelector.setTitle(I18N.message("target"));
+		targetSelector.setWidth(50);
+		targetSelector.addChangedHandler(changedHandler);
 		refresh();
 	}
 
@@ -48,7 +50,7 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 			formsContainer.removeChild(form);
 
 		form = new DynamicForm();
-		form.setNumCols(3);
+		form.setNumCols(2);
 		form.setTitleOrientation(TitleOrientation.TOP);
 
 		TextItem path = ItemFactory.newTextItem("path", "path", share.getPath());
@@ -65,8 +67,9 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 
 		SelectItem language = ItemFactory.newLanguageSelector("language", false, false);
 		language.addChangedHandler(changedHandler);
+		language.setRequired(true);
 		language.setValue(share.getLanguage());
-		
+
 		if ("smb".equals(share.getProvider()))
 			form.setItems(path, targetSelector, language, username, password);
 		else
@@ -85,7 +88,7 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 			share.setUsername((String) values.get("username"));
 			share.setPassword((String) values.get("password"));
 			share.setTarget(targetSelector.getFolder());
-			share.setLanguage((String) values.get("username"));
+			share.setLanguage((String) values.get("language"));
 		}
 		return !form.hasErrors();
 	}

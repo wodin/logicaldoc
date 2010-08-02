@@ -18,7 +18,7 @@ public class MockImportFoldersDataServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-
+		
 		response.setContentType("text/xml");
 
 		// Headers required by Internet Explorer
@@ -34,13 +34,12 @@ public class MockImportFoldersDataServlet extends HttpServlet {
 			writer.print("<folder>");
 			writer.print("<id>" + i + "</id>");
 			writer.print("<src>\\\\server\\share" + i + "</src>");
-			writer.print("<target>/import/folder" + i + "</target>");
-			
+
 			if (i % 2 == 0) {
 				writer.print("<provider>smb</provider>");
 				writer.print("<type>" + I18N.message("remote", Locale.ENGLISH) + "</type>");
 				writer.print("<eenabled>0</eenabled>");
-			}else{
+			} else {
 				writer.print("<provider>file</provider>");
 				writer.print("<type>" + I18N.message("local", Locale.ENGLISH) + "</type>");
 				writer.print("<eenabled>2</eenabled>");

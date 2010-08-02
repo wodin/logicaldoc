@@ -22,7 +22,7 @@ import com.smartgwt.client.widgets.layout.HLayout;
 public class EventPanel extends HLayout {
 	private static EventPanel instance;
 
-	List<GUIEvent> events = new ArrayList<GUIEvent>();
+	private List<GUIEvent> events = new ArrayList<GUIEvent>();
 
 	private Label statusLabel;
 
@@ -56,8 +56,8 @@ public class EventPanel extends HLayout {
 		});
 		close.setVisible(false);
 
-		addMember(log);
 		addMember(close);
+		addMember(log);
 	}
 
 	public static EventPanel get() {
@@ -70,7 +70,7 @@ public class EventPanel extends HLayout {
 		if (statusLabel != null && contains(statusLabel))
 			removeMember(statusLabel);
 		statusLabel = new Label(text);
-		addMember(statusLabel, 0);
+		addMember(statusLabel, 2);
 
 		statusLabel.setStyleName(style);
 		statusLabel.setWrap(false);

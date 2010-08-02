@@ -4,12 +4,17 @@
 	<import file="${logicaldoc.devroot}/build/ant/build.xml" />
 
 	<target name="deploy" depends="init-all" description="Updates a deployed webapp">
-		<echo message="Deploying ${pom.artifactId} to webapp" />
-		<copy todir="${logicaldoc.webroot}/WEB-INF/classes/i18n" verbose="true">
-			<fileset dir="src/main/resources/i18n">
-				<include name="*.properties" />
-			</fileset>
-		</copy>
+		<property environment="env" />
+		<property id="properties" file="build.properties" />
+
+		<echo message="Deploying ${pom.artifactId}" />
+
+		<exec executable="mvn.bat" resolveexecutable="true" searchpath="true">
+		  <arg line="-o -Dmaven.test.skip=true install"/>
+		</exec>
+		
+		<copy file="target/${pom.artifactId}-${pom.version}.jar" todir="${logicaldoc.webroot}/WEB-INF/lib" />
+
 		<echo message="${pom.artifactId} is deployed" />
 	</target>
 

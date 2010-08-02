@@ -1,5 +1,7 @@
 package com.logicaldoc.gui.common.client.data;
 
+import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceImageField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -26,7 +28,7 @@ public class ImportFoldersDS extends DataSource {
 		DataSourceImageField enabled = new DataSourceImageField("eenabled");
 
 		setFields(id, src, type, provider, enabled);
-		setDataURL("data/importfolders.xml");
+		setDataURL("data/importfolders.xml?sid=" + Session.get().getSid() + "&locale=" + I18N.getLocale());
 		setClientOnly(true);
 	}
 
