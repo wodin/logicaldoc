@@ -6,8 +6,8 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIShare;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
-import com.logicaldoc.gui.frontend.client.services.ImportFolderService;
-import com.logicaldoc.gui.frontend.client.services.ImportFolderServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.ImportFoldersService;
+import com.logicaldoc.gui.frontend.client.services.ImportFoldersServiceAsync;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -39,7 +39,7 @@ public class ImportFolderDetailsPanel extends VLayout {
 
 	private HLayout savePanel;
 
-	private ImportFolderServiceAsync service = (ImportFolderServiceAsync) GWT.create(ImportFolderService.class);
+	private ImportFoldersServiceAsync service = (ImportFoldersServiceAsync) GWT.create(ImportFoldersService.class);
 
 	private TabSet tabSet = new TabSet();
 

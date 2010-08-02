@@ -22,7 +22,7 @@ public class GUIShare implements Serializable {
 
 	private String provider = "smb";
 
-	private GUIFolder target;
+	private GUIFolder target=new GUIFolder();
 
 	private int enabled = 1;
 
@@ -43,6 +43,12 @@ public class GUIShare implements Serializable {
 	private int depth = 5;
 
 	private boolean delImport = false;
+
+	public GUIShare() {
+		super();
+		target.setId(5);
+		target.setName("/");
+	}
 
 	public long getId() {
 		return id;

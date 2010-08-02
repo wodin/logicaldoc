@@ -95,8 +95,8 @@
 	</servlet>
 	
 	<servlet>
-		<servlet-name>ImportFolderService</servlet-name>
-		<servlet-class>com.logicaldoc.gui.frontend.server.MockImportFolderServiceImpl</servlet-class>
+		<servlet-name>ImportFoldersService</servlet-name>
+		<servlet-class>com.logicaldoc.gui.frontend.server.MockImportFoldersServiceImpl</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -320,8 +320,8 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>ImportFolderService</servlet-name>
-		<url-pattern>/frontend/importfolder</url-pattern>
+		<servlet-name>ImportFoldersService</servlet-name>
+		<url-pattern>/frontend/importfolders</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

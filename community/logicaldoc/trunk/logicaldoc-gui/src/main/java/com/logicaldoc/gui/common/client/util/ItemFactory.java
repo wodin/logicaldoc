@@ -93,7 +93,6 @@ public class ItemFactory {
 		item.setName(name);
 		item.setTitle(I18N.message("language"));
 		item.setWrapTitle(false);
-		item.setDefaultValue("en");
 		return item;
 	}
 

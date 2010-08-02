@@ -4,15 +4,15 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIShare;
-import com.logicaldoc.gui.frontend.client.services.ImportFolderService;
+import com.logicaldoc.gui.frontend.client.services.ImportFoldersService;
 
 /**
- * Implementation of the TemplateService
+ * Mock implementation of the ImportFoldersService
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class MockImportFolderServiceImpl extends RemoteServiceServlet implements ImportFolderService {
+public class MockImportFoldersServiceImpl extends RemoteServiceServlet implements ImportFoldersService {
 
 	private static final long serialVersionUID = 1L;
 
@@ -38,6 +38,7 @@ public class MockImportFolderServiceImpl extends RemoteServiceServlet implements
 		folder.setId(id);
 		folder.setName("test" + id);
 		share.setTarget(folder);
+		share.setLanguage("en");
 		return share;
 	}
 
@@ -48,5 +49,9 @@ public class MockImportFolderServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public void changeStatus(String sid, long id, boolean enabled) {
+	}
+
+	@Override
+	public void resetCache(String sid, long id) throws InvalidSessionException {
 	}
 }

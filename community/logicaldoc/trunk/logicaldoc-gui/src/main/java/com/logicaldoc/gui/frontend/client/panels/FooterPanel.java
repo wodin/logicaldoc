@@ -16,11 +16,11 @@ public class FooterPanel extends HLayout {
 		setWidth100();
 		setMembersMargin(2);
 		setStyleName("footer");
-
-		addMember(FooterIcons.get());
 		
 		HLayout events = EventPanel.get();
 		events.setWidth100();
+		
 		addMember(events);
+		addMember(FooterIcons.get());
 	}
 }

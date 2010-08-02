@@ -32,6 +32,8 @@ public class FolderSelector extends StaticTextItem {
 		else
 			setName("folder");
 		setTitle(I18N.message("folder"));
+		setWrapTitle(false);
+		setWrap(false);
 		setValue("");
 		setRedrawOnChange(true);
 		setValueField("id");
@@ -67,6 +69,8 @@ public class FolderSelector extends StaticTextItem {
 
 		if (cleanPick)
 			setIcons(picker, icon);
+		else
+			setIcons(picker);
 	}
 
 	public void setFolder(Long folderId, String name) {
@@ -78,7 +82,10 @@ public class FolderSelector extends StaticTextItem {
 	public void setFolder(GUIFolder folder) {
 		if (folder != null) {
 			this.folderId = folder.getId();
-			setValue(folder.getName());
+			if (folderId == 5)
+				setValue("/");
+			else
+				setValue(folder.getName());
 		}
 		redraw();
 	}
