@@ -87,7 +87,11 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 		Map<String, Object> values = (Map<String, Object>) form.getValues();
 		form.validate();
 		if (!form.hasErrors()) {
-			share.setMaxSize((Integer) form.getValue("sizemax"));
+			if (values.get("sizemax") instanceof Integer)
+				share.setMaxSize((Integer) form.getValue("sizemax"));
+			else
+				share.setMaxSize(Integer.parseInt((String) values.get("sizemax")));
+
 			share.setDepth(Integer.parseInt(values.get("depth").toString()));
 			share.setIncludes((String) values.get("include"));
 			share.setExcludes((String) values.get("exclude"));

@@ -15,8 +15,6 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 public class ImportFoldersDS extends DataSource {
 	private static ImportFoldersDS instance;
 
-	private static ImportFoldersDS instanceWithEmpty;
-
 	private ImportFoldersDS(boolean withEmpty) {
 		setTitleField("template");
 		setRecordXPath("/list/folder");
@@ -36,11 +34,5 @@ public class ImportFoldersDS extends DataSource {
 		if (instance == null)
 			instance = new ImportFoldersDS(false);
 		return instance;
-	}
-
-	public static ImportFoldersDS getInstanceWithEmpty() {
-		if (instanceWithEmpty == null)
-			instanceWithEmpty = new ImportFoldersDS(true);
-		return instanceWithEmpty;
 	}
 }

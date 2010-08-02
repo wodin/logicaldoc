@@ -1,10 +1,13 @@
 package com.logicaldoc.gui.common.client.widgets;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.FoldersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
@@ -25,6 +28,8 @@ public class FolderSelector extends StaticTextItem {
 	private Long folderId;
 
 	private Menu menu = new Menu();
+
+	private Collection<FolderChangeListener> listeners = new ArrayList<FolderChangeListener>();
 
 	public FolderSelector(String name, boolean cleanPick) {
 		if (name != null)
@@ -57,6 +62,9 @@ public class FolderSelector extends StaticTextItem {
 			public void onItemClick(ItemClickEvent event) {
 				MenuItem item = event.getItem();
 				setFolder(new Long(item.getAttributeAsString("id")), item.getAttributeAsString("name"));
+				for (FolderChangeListener listener : listeners) {
+					listener.onChanged(getFolder());
+				}
 			}
 		});
 
@@ -87,6 +95,9 @@ public class FolderSelector extends StaticTextItem {
 			else
 				setValue(folder.getName());
 		}
+		for (FolderChangeListener listener : listeners) {
+			listener.onChanged(folder);
+		}
 		redraw();
 	}
 
@@ -103,5 +114,9 @@ public class FolderSelector extends StaticTextItem {
 
 	public String getFolderName() {
 		return (String) getValue();
+	}
+
+	public void addFolderChangeListener(FolderChangeListener listener) {
+		listeners.add(listener);
 	}
 }

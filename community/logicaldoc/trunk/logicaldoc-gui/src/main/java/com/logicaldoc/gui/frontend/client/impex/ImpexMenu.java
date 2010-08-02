@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.impex;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
+import com.logicaldoc.gui.frontend.client.impex.accounts.AccountsPanel;
 import com.logicaldoc.gui.frontend.client.impex.folders.ImportFoldersPanel;
 import com.logicaldoc.gui.frontend.client.template.TemplatesPanel;
 import com.smartgwt.client.widgets.Button;
@@ -25,7 +26,6 @@ public class ImpexMenu extends VLayout {
 		Button importFolders = new Button(I18N.message("importfolders"));
 		importFolders.setWidth100();
 		importFolders.setHeight(25);
-
 		if (Feature.visible(Feature.IMPORT_REMOTE_FOLDERS) || Feature.visible(Feature.IMPORT_LOCAL_FOLDERS)) {
 			addMember(importFolders);
 			if (!Feature.enabled(Feature.IMPORT_REMOTE_FOLDERS) && !Feature.enabled(Feature.IMPORT_LOCAL_FOLDERS)) {
@@ -40,10 +40,26 @@ public class ImpexMenu extends VLayout {
 			}
 		});
 
+		Button emails = new Button(I18N.message("emailaccounts"));
+		emails.setWidth100();
+		emails.setHeight(25);
+		if (Feature.visible(Feature.EMAIL_IMPORT)) {
+			addMember(emails);
+			if (!Feature.enabled(Feature.EMAIL_IMPORT)) {
+				emails.setDisabled(true);
+				emails.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+		emails.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new AccountsPanel());
+			}
+		});
+
 		Button importArchives = new Button(I18N.message("importarchives"));
 		importArchives.setWidth100();
 		importArchives.setHeight(25);
-
 		if (Feature.visible(Feature.ARCHIVES)) {
 			addMember(importArchives);
 			if (!Feature.enabled(Feature.ARCHIVES)) {
