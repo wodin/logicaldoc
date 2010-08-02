@@ -100,6 +100,11 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>EmailAccountService</servlet-name>
+		<servlet-class>com.logicaldoc.gui.frontend.server.MockEmailAccountServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>TagsData</servlet-name>
 		<servlet-class>com.logicaldoc.gui.common.server.MockTagsDataServlet</servlet-class>
 	</servlet>
@@ -161,7 +166,7 @@
 
 	<servlet>
 		<servlet-name>DocumentHistoryData</servlet-name>
-		<servlet-class>com.logicaldoc.gui.frontend.server.MockDocumentHistoryDataServlet</servlet-class>
+		<servlet-class>com.logicaldoc.gui.common.server.MockDocumentHistoryDataServlet</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -171,7 +176,7 @@
 
 	<servlet>
 		<servlet-name>UserHistoryData</servlet-name>
-		<servlet-class>com.logicaldoc.gui.frontend.server.MockUserHistoryDataServlet</servlet-class>
+		<servlet-class>com.logicaldoc.gui.common.server.MockUserHistoryDataServlet</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -187,6 +192,11 @@
 	<servlet>
 		<servlet-name>ImportFoldersData</servlet-name>
 		<servlet-class>com.logicaldoc.gui.common.server.MockImportFoldersDataServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>EmailAccountsData</servlet-name>
+		<servlet-class>com.logicaldoc.gui.common.server.MockEmailAccountsDataServlet</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -325,6 +335,11 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
+		<servlet-name>EmailAccountService</servlet-name>
+		<url-pattern>/frontend/emailaccount</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
 		<servlet-name>TagsData</servlet-name>
 		<url-pattern>/data/tags.xml</url-pattern>
 	</servlet-mapping>
@@ -352,6 +367,11 @@
 	<servlet-mapping>
 		<servlet-name>FoldersData</servlet-name>
 		<url-pattern>/data/folders.xml</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>EmailAccountsData</servlet-name>
+		<url-pattern>/data/emailaccounts.xml</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

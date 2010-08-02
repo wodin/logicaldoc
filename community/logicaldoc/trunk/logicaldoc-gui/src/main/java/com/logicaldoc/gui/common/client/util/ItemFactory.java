@@ -336,7 +336,7 @@ public class ItemFactory {
 	 * @param value The item value (optional)
 	 */
 	public static TextItem newSimpleTextItem(String name, String title, String value) {
-		TextItem item = newTextItem(name, title, value);
+		TextItem item = newTextItem(name, I18N.message(title), value);
 		item.setValidators(new SimpleTextValidator());
 		return item;
 	}
@@ -388,7 +388,7 @@ public class ItemFactory {
 	 * @param min The item maximum value (optional)
 	 */
 	public static IntegerItem newValidateIntegerItem(String name, String title, Integer value, Integer min, Integer max) {
-		IntegerItem item = newIntegerItem(name, title, value);
+		IntegerItem item = newIntegerItem(name, I18N.message(title), value);
 		if (min != null || max != null) {
 			IntegerRangeValidator iv = new IntegerRangeValidator();
 			if (min != null)
@@ -429,7 +429,7 @@ public class ItemFactory {
 	}
 
 	public static SelectItem newTimeSelector(String name, String title) {
-		SelectItem select = new SelectItem(name, title);
+		SelectItem select = new SelectItem(name, I18N.message(title));
 		select.setWidth(110);
 
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
@@ -452,5 +452,22 @@ public class ItemFactory {
 		templateItem.setPickListWidth(250);
 		templateItem.setOptionDataSource(TemplatesDS.getInstanceWithEmpty());
 		return templateItem;
+	}
+
+	public static SelectItem newEmailProtocolSelector(String name, String title) {
+		SelectItem select = new SelectItem(name, I18N.message(title));
+		select.setWidth(110);
+		select.setValueMap("pop3", "imap");
+		return select;
+	}
+
+	public static SelectItem newEmailFields(String name, String title) {
+		SelectItem select = new SelectItem(name, I18N.message(title));
+		select.setWidth(110);
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		map.put("0", I18N.message("subject"));
+		map.put("1", I18N.message("sender"));
+		select.setValueMap(map);
+		return select;
 	}
 }

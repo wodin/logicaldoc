@@ -14,12 +14,14 @@ import com.logicaldoc.gui.common.client.beans.GUIInfo;
 public class Feature {
 
 	public static final int IMPORT_REMOTE_FOLDERS = 1;
-	
+
 	public static final int ARCHIVES = 4;
 
 	public static final int PDF = 8;
 
 	public static final int RSS = 9;
+
+	public static final int EMAIL_IMPORT = 10;
 
 	public static final int ACTIVEDIR = 11;
 
@@ -46,9 +48,9 @@ public class Feature {
 	public static final int WEBSERVICE = 58;
 
 	public static final int WEBDAV = 59;
-	
+
 	public static final int SHARE_DISCOVERY = 60;
-	
+
 	public static final int IMPORT_LOCAL_FOLDERS = 61;
 
 	private static Set<String> features = new HashSet<String>();

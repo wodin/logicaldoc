@@ -2,9 +2,11 @@ package com.logicaldoc.gui.frontend.client.impex.folders;
 
 import java.util.Map;
 
+import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIShare;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.widgets.FolderChangeListener;
 import com.logicaldoc.gui.common.client.widgets.FolderSelector;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -26,7 +28,7 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 
 	private FolderSelector targetSelector;
 
-	public ImportFolderStandardProperties(GUIShare share, ChangedHandler changedHandler) {
+	public ImportFolderStandardProperties(GUIShare share, final ChangedHandler changedHandler) {
 		super(share, changedHandler);
 		setWidth100();
 		setHeight100();
@@ -35,7 +37,13 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 		targetSelector.setRequired(true);
 		targetSelector.setTitle(I18N.message("target"));
 		targetSelector.setWidth(50);
-		targetSelector.addChangedHandler(changedHandler);
+		targetSelector.setFolder(share.getTarget());
+		targetSelector.addFolderChangeListener(new FolderChangeListener() {
+			@Override
+			public void onChanged(GUIFolder folder) {
+				changedHandler.onChanged(null);
+			}
+		});
 		refresh();
 	}
 
@@ -62,9 +70,7 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 
 		TextItem password = ItemFactory.newPasswordItem("password", "password", share.getPassword());
 		password.addChangedHandler(changedHandler);
-
-		targetSelector.setFolder(share.getTarget());
-
+		
 		SelectItem language = ItemFactory.newLanguageSelector("language", false, false);
 		language.addChangedHandler(changedHandler);
 		language.setRequired(true);
