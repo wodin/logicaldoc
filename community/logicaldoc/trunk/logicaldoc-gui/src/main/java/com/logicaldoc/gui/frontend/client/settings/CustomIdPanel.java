@@ -7,6 +7,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUICustomId;
+import com.logicaldoc.gui.common.client.beans.GUISequence;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -16,6 +17,7 @@ import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -40,25 +42,44 @@ import com.smartgwt.client.widgets.tab.TabSet;
 public class CustomIdPanel extends VLayout {
 	private CustomIdServiceAsync service = (CustomIdServiceAsync) GWT.create(CustomIdService.class);
 
-	private ListGrid list;
+	private ListGrid schemes;
 
-	public CustomIdPanel(GUICustomId[] data) {
+	private ListGrid sequences;
+
+	public CustomIdPanel(GUICustomId[] schemesData, GUISequence[] sequencesData) {
 		setWidth100();
 		setHeight100();
 		setMembersMargin(5);
 
 		TabSet tabs = new TabSet();
-		Tab tab = new Tab();
-		tab.setTitle(I18N.message("customid"));
-		tabs.setTabs(tab);
 		addMember(tabs);
 
+		Tab schemesTab = new Tab();
+		schemesTab.setTitle(I18N.message("customid"));
+		Tab sequencesTab = new Tab();
+		sequencesTab.setTitle(I18N.message("sequences"));
+		tabs.setTabs(schemesTab, sequencesTab);
+
+		setupSchemesPanel(schemesData);
+		setupSequencesPanel(sequencesData);
+
+		VLayout sc=new VLayout();
+		HTMLFlow hint=new HTMLFlow(I18N.message("customidhint"));
+		sc.addMember(hint);
+		sc.addMember(schemes);
+		
+		schemesTab.setPane(sc);
+		sequencesTab.setPane(sequences);
+	}
+
+	private void setupSchemesPanel(GUICustomId[] data) {
 		ListGridField template = new ListGridField("templateName", I18N.message("template"));
 		template.setWidth(120);
 		template.setCanEdit(false);
 
 		ListGridField scheme = new ListGridField("scheme", I18N.message("scheme"));
 		scheme.setWidth(200);
+		scheme.setRequired(true);
 		scheme.setCellFormatter(new CellFormatter() {
 			@Override
 			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
@@ -70,14 +91,14 @@ public class CustomIdPanel extends VLayout {
 		regenerate.setWidth(150);
 		regenerate.setType(ListGridFieldType.BOOLEAN);
 
-		list = new ListGrid();
-		list.setShowAllRecords(true);
-		list.setCanEdit(true);
-		list.setWidth100();
-		list.setHeight100();
-		list.setFields(template);
-		list.setSelectionType(SelectionStyle.SINGLE);
-		list.setModalEditing(true);
+		schemes = new ListGrid();
+		schemes.setShowAllRecords(true);
+		schemes.setCanEdit(true);
+		schemes.setWidth100();
+		schemes.setHeight100();
+		schemes.setFields(template);
+		schemes.setSelectionType(SelectionStyle.SINGLE);
+		schemes.setModalEditing(true);
 
 		List<ListGridRecord> records = new ArrayList<ListGridRecord>();
 		if (data != null)
@@ -90,23 +111,23 @@ public class CustomIdPanel extends VLayout {
 				record.setAttribute("regenerate", cid.isRegenerate());
 				records.add(record);
 			}
-		list.setData(records.toArray(new ListGridRecord[0]));
+		schemes.setData(records.toArray(new ListGridRecord[0]));
 
-		list.setFields(template, scheme, regenerate);
+		schemes.setFields(template, scheme, regenerate);
 
-		list.addCellContextClickHandler(new CellContextClickHandler() {
+		schemes.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				showContextMenu();
+				showCustomIdContextMenu();
 				event.cancel();
 			}
 		});
 
-		list.addEditCompleteHandler(new EditCompleteHandler() {
+		schemes.addEditCompleteHandler(new EditCompleteHandler() {
 			@Override
 			public void onEditComplete(EditCompleteEvent event) {
 				GUICustomId cid = new GUICustomId();
-				ListGridRecord record = list.getRecord(event.getRowNum());
+				ListGridRecord record = schemes.getRecord(event.getRowNum());
 				cid.setTemplateId(Long.parseLong(record.getAttribute("templateId")));
 				cid.setRegenerate(record.getAttributeAsBoolean("regenerate"));
 				cid.setScheme(record.getAttributeAsString("regenerate"));
@@ -123,40 +144,68 @@ public class CustomIdPanel extends VLayout {
 				});
 			}
 		});
-
-		tab.setPane(list);
 	}
 
-	private void showContextMenu() {
-		Menu contextMenu = new Menu();
+	private void setupSequencesPanel(GUISequence[] data) {
+		ListGridField frequency = new ListGridField("frequency", I18N.message("frequency"));
+		frequency.setWidth(80);
+		frequency.setCanEdit(false);
 
-		MenuItem reset = new MenuItem();
-		reset.setTitle(I18N.message("resetnumeration"));
-		reset.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			public void onClick(MenuItemClickEvent event) {
-				SC.ask(I18N.message("question"), I18N.message("confirmreset"), new BooleanCallback() {
-					@Override
-					public void execute(Boolean value) {
-						if (value) {
-							ListGridRecord record = list.getSelectedRecord();
-							service.reset(Session.get().getSid(),
-									Long.parseLong(record.getAttributeAsString("templateId")),
-									new AsyncCallback<Void>() {
+		ListGridField template = new ListGridField("template", I18N.message("template"));
+		template.setWidth(200);
+		template.setCanEdit(false);
 
-										@Override
-										public void onFailure(Throwable caught) {
-											Log.serverError(caught);
-										}
+		final ListGridField value = new ListGridField("value", I18N.message("value"));
+		value.setWidth(80);
+		value.setType(ListGridFieldType.INTEGER);
+		value.setRequired(true);
 
-										@Override
-										public void onSuccess(Void ret) {
-										}
-									});
-						}
-					}
-				});
+		sequences = new ListGrid();
+		sequences.setShowAllRecords(true);
+		sequences.setCanEdit(true);
+		sequences.setWidth100();
+		sequences.setHeight100();
+		sequences.setFields(template);
+		sequences.setSelectionType(SelectionStyle.SINGLE);
+		sequences.setModalEditing(true);
+
+		List<ListGridRecord> records = new ArrayList<ListGridRecord>();
+		if (data != null)
+			for (GUISequence cid : data) {
+				ListGridRecord record = new ListGridRecord();
+				record.setAttribute("template", Util.strip(cid.getTemplate()));
+				record.setAttribute("frequency", cid.getFrequency());
+				record.setAttribute("year", cid.getYear());
+				record.setAttribute("month", cid.getMonth());
+				record.setAttribute("id", cid.getId());
+				record.setAttribute("value", cid.getValue());
+				records.add(record);
+			}
+		sequences.setData(records.toArray(new ListGridRecord[0]));
+
+		sequences.setFields(frequency, template, value);
+
+		sequences.addEditCompleteHandler(new EditCompleteHandler() {
+			@Override
+			public void onEditComplete(EditCompleteEvent event) {
+				ListGridRecord record = sequences.getRecord(event.getRowNum());
+				service.resetSequence(Session.get().getSid(), Long.parseLong(record.getAttribute("id")),
+						(Integer) record.getAttributeAsInt("value"), new AsyncCallback<Void>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(Void ret) {
+							}
+						});
 			}
 		});
+	}
+
+	private void showCustomIdContextMenu() {
+		Menu contextMenu = new Menu();
 
 		MenuItem clean = new MenuItem();
 		clean.setTitle(I18N.message("clean"));
@@ -166,7 +215,7 @@ public class CustomIdPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							final ListGridRecord record = list.getSelectedRecord();
+							final ListGridRecord record = schemes.getSelectedRecord();
 							service.delete(Session.get().getSid(),
 									Long.parseLong(record.getAttributeAsString("templateId")),
 									new AsyncCallback<Void>() {
@@ -178,10 +227,10 @@ public class CustomIdPanel extends VLayout {
 
 										@Override
 										public void onSuccess(Void ret) {
-											list.getSelectedRecord().setAttribute("scheme", (String) null);
-											list.getSelectedRecord().setAttribute("regenerate", false);
-											list.updateData(record);
-											list.refreshRow(list.getRecordIndex(record));
+											schemes.getSelectedRecord().setAttribute("scheme", (String) null);
+											schemes.getSelectedRecord().setAttribute("regenerate", false);
+											schemes.updateData(record);
+											schemes.refreshRow(schemes.getRecordIndex(record));
 										}
 									});
 						}
@@ -190,7 +239,7 @@ public class CustomIdPanel extends VLayout {
 			}
 		});
 
-		contextMenu.setItems(clean, reset);
+		contextMenu.setItems(clean);
 		contextMenu.showContextMenu();
 	}
 }

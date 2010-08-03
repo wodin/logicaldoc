@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUICustomId;
+import com.logicaldoc.gui.common.client.beans.GUISequence;
 
 public interface CustomIdServiceAsync {
 
@@ -13,6 +14,8 @@ public interface CustomIdServiceAsync {
 
 	void save(String sid, GUICustomId customid, AsyncCallback<Void> callback);
 
-	void reset(String sid, long templateId, AsyncCallback<Void> callback);
+	void resetSequence(String sid, long sequenceId, int value, AsyncCallback<Void> callback);
+
+	void loadSequences(String sid, AsyncCallback<GUISequence[]> callback);
 
 }

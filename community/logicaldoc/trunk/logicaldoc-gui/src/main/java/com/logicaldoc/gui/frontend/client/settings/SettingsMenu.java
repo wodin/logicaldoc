@@ -7,6 +7,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUICustomId;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
+import com.logicaldoc.gui.common.client.beans.GUISequence;
 import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -81,8 +82,18 @@ public class SettingsMenu extends VLayout {
 					}
 
 					@Override
-					public void onSuccess(GUICustomId[] data) {
-						AdminPanel.get().setContent(new CustomIdPanel(data));
+					public void onSuccess(final GUICustomId[] schemas) {
+						customIdService.loadSequences(Session.get().getSid(), new AsyncCallback<GUISequence[]>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUISequence[] sequences) {
+								AdminPanel.get().setContent(new CustomIdPanel(schemas, sequences));
+							}
+						});
 					}
 				});
 			}

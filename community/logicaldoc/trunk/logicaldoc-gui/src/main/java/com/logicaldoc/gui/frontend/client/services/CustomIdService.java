@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUICustomId;
+import com.logicaldoc.gui.common.client.beans.GUISequence;
 
 /**
  * The client side stub for the CustomIdService Service. This service gives all
@@ -32,7 +33,12 @@ public interface CustomIdService extends RemoteService {
 	public GUICustomId[] load(String sid) throws InvalidSessionException;
 
 	/**
-	 * Reset the numbering for a given configuration
+	 * Reset the numbering of a given sequence
 	 */
-	public void reset(String sid, long templateId) throws InvalidSessionException;
+	public void resetSequence(String sid, long sequenceId, int value) throws InvalidSessionException;
+
+	/**
+	 * Loads the list of sequences
+	 */
+	public GUISequence[] loadSequences(String sid) throws InvalidSessionException;
 }

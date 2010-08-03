@@ -2,7 +2,7 @@ package com.logicaldoc.gui.common.client.beans;
 
 import java.io.Serializable;
 
-public class GUICustomId implements Serializable {
+public class GUICustomId implements Serializable, Comparable<GUICustomId> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -44,5 +44,10 @@ public class GUICustomId implements Serializable {
 
 	public void setTemplateName(String templateName) {
 		this.templateName = templateName;
+	}
+
+	@Override
+	public int compareTo(GUICustomId o) {
+		return this.templateName.compareTo(o.templateName);
 	}
 }
