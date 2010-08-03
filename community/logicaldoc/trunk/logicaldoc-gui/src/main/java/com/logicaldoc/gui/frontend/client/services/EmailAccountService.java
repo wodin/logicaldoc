@@ -19,7 +19,7 @@ public interface EmailAccountService extends RemoteService {
 	/**
 	 * Creates or updates an account
 	 */
-	public GUIEmailAccount save(String sid, GUIEmailAccount share) throws InvalidSessionException;
+	public GUIEmailAccount save(String sid, GUIEmailAccount account) throws InvalidSessionException;
 
 	/**
 	 * Loads a given account from the database
@@ -32,7 +32,7 @@ public interface EmailAccountService extends RemoteService {
 	public boolean test(String sid, long id) throws InvalidSessionException;
 
 	/**
-	 * Changes a share enabled/disabled status
+	 * Changes an account enabled/disabled status
 	 */
 	public void changeStatus(String sid, long id, boolean enabled) throws InvalidSessionException;
 

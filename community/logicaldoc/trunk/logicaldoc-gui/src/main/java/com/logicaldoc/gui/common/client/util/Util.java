@@ -26,16 +26,22 @@ public class Util {
 	public static String brandUrl(String imageName) {
 		return brandPrefix() + imageName;
 	}
-	
+
+	public static String strip(String src) {
+		if (src == null)
+			return null;
+		else
+			return src.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+	}
+
 	public static String contextPath() {
 		return GWT.getModuleBaseURL().replace(GWT.getModuleName() + "/", "");
 	}
-	
+
 	public static void changeLocale(String locale) {
-		redirect(contextPath()+GWT.getModuleName()+".jsp?locale="+locale);
+		redirect(contextPath() + GWT.getModuleName() + ".jsp?locale=" + locale);
 	}
-	
-	
+
 	public static Dictionary getContext() {
 		if (context == null)
 			context = Dictionary.getDictionary("context");
@@ -45,7 +51,7 @@ public class Util {
 	public static String imagePrefix() {
 		return contextPath() + "skin/images/";
 	}
-	
+
 	public static String brandPrefix() {
 		return contextPath() + "skin/brand/";
 	}
@@ -130,9 +136,9 @@ public class Util {
 		var reg2 = /^.+\@(\[?)[a-zA-Z0-9\-\.]+\.([a-zA-Z]{2,3}|[0-9]{1,3})(\]?)$/; // valid
 		return !reg1.test(email) && reg2.test(email);
 	}-*/;
-	
+
 	public static native void redirect(String url)
 	/*-{
 		$wnd.location.replace(url);
-	}-*/; 
+	}-*/;
 }

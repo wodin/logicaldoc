@@ -93,7 +93,7 @@
 		<servlet-name>AuditService</servlet-name>
 		<servlet-class>com.logicaldoc.gui.frontend.server.MockAuditServiceImpl</servlet-class>
 	</servlet>
-	
+
 	<servlet>
 		<servlet-name>ImportFoldersService</servlet-name>
 		<servlet-class>com.logicaldoc.gui.frontend.server.MockImportFoldersServiceImpl</servlet-class>
@@ -102,6 +102,11 @@
 	<servlet>
 		<servlet-name>EmailAccountService</servlet-name>
 		<servlet-class>com.logicaldoc.gui.frontend.server.MockEmailAccountServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>CustomIdService</servlet-name>
+		<servlet-class>com.logicaldoc.gui.frontend.server.MockCustomIdServiceImpl</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -337,6 +342,11 @@
 	<servlet-mapping>
 		<servlet-name>EmailAccountService</servlet-name>
 		<url-pattern>/frontend/emailaccount</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>CustomIdService</servlet-name>
+		<url-pattern>/frontend/customid</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

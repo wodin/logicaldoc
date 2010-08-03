@@ -4,12 +4,15 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUICustomId;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
+import com.logicaldoc.gui.frontend.client.services.CustomIdService;
+import com.logicaldoc.gui.frontend.client.services.CustomIdServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.smartgwt.client.widgets.Button;
@@ -26,9 +29,15 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class SettingsMenu extends VLayout {
 	private SettingServiceAsync service = (SettingServiceAsync) GWT.create(SettingService.class);
 
+	private CustomIdServiceAsync customIdService = (CustomIdServiceAsync) GWT.create(CustomIdService.class);
+
 	public SettingsMenu() {
 		setMargin(10);
 		setMembersMargin(5);
+
+		Button customid = new Button(I18N.message("customid"));
+		customid.setWidth100();
+		customid.setHeight(25);
 
 		Button clientTools = new Button(I18N.message("clienttools"));
 		clientTools.setWidth100();
@@ -42,6 +51,14 @@ public class SettingsMenu extends VLayout {
 		email.setWidth100();
 		email.setHeight(25);
 
+		if (Feature.visible(Feature.CUSTOMID)) {
+			addMember(customid);
+			if (!Feature.enabled(Feature.CUSTOMID)) {
+				customid.setDisabled(true);
+				customid.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+
 		if (Feature.visible(Feature.CLIENT_TOOLS)) {
 			addMember(clientTools);
 			if (!Feature.enabled(Feature.CLIENT_TOOLS)) {
@@ -49,8 +66,27 @@ public class SettingsMenu extends VLayout {
 				clientTools.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
+
 		addMember(email);
 		addMember(parameters);
+
+		customid.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				customIdService.load(Session.get().getSid(), new AsyncCallback<GUICustomId[]>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUICustomId[] data) {
+						AdminPanel.get().setContent(new CustomIdPanel(data));
+					}
+				});
+			}
+		});
 
 		clientTools.addClickHandler(new ClickHandler() {
 			@Override

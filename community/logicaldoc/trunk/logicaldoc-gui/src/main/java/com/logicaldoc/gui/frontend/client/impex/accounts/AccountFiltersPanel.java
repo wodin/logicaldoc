@@ -49,8 +49,6 @@ public class AccountFiltersPanel extends AccountDetailsTab {
 
 	private ListGrid list;
 
-	private FolderSelector targetSelect = new FolderSelector("target", false);
-
 	public AccountFiltersPanel(GUIEmailAccount account, ChangedHandler changedHandler) {
 		super(account, changedHandler);
 		setWidth100();
@@ -208,7 +206,6 @@ public class AccountFiltersPanel extends AccountDetailsTab {
 			@Override
 			public void onEditComplete(EditCompleteEvent event) {
 				changedHandler.onChanged(null);
-				SC.say(targetSelect.getFolderName());
 			}
 		});
 
