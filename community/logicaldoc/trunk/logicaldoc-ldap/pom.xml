@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>logicaldoc-ldap</artifactId>
-	<name>logicaldoc-external-ldap</name>
+	<name>logicaldoc-ldap</name>
 	<packaging>jar</packaging>
 	<dependencies>
 		<dependency>

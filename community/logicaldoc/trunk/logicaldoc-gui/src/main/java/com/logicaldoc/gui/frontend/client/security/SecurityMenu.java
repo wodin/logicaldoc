@@ -49,9 +49,9 @@ public class SecurityMenu extends VLayout {
 		extAuth.setWidth100();
 		extAuth.setHeight(25);
 
-		if (Feature.visible(Feature.EXTERNAL_AUTH)) {
+		if (Feature.visible(Feature.LDAP)) {
 			setMembers(users, groups, security, extAuth);
-			if (!Feature.enabled(Feature.EXTERNAL_AUTH)) {
+			if (!Feature.enabled(Feature.LDAP)) {
 				extAuth.setDisabled(true);
 				extAuth.setTooltip(I18N.message("featuredisabled"));
 			}
@@ -94,7 +94,7 @@ public class SecurityMenu extends VLayout {
 		extAuth.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ldapService.loadExtAuthSettings(Session.get().getSid(), new AsyncCallback<GUILdapSettings[]>() {
+				ldapService.loadSettings(Session.get().getSid(), new AsyncCallback<GUILdapSettings>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -102,8 +102,8 @@ public class SecurityMenu extends VLayout {
 					}
 
 					@Override
-					public void onSuccess(GUILdapSettings[] settings) {
-						AdminPanel.get().setContent(new ExtAuthPanel(settings));
+					public void onSuccess(GUILdapSettings settings) {
+						AdminPanel.get().setContent(new LdapPanel(settings));
 					}
 
 				});

@@ -1,22 +1,13 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
-<plugin id="logicaldoc-external-authentication" version="6.0.0" class="com.logicaldoc.authentication.ExternalAuthenticationPlugin">
+<plugin id="logicaldoc-ldap" version="6.0.0" class="com.logicaldoc.authentication.ExternalAuthenticationPlugin">
 	<requires>
 		<import plugin-id="logicaldoc-core" />
 	</requires>
 
-	<runtime>
-		<library id="logicaldoc-external-authentication" path="classes/" type="code">
-			<export prefix="*" />
-		</library>
-		<library id="ldapbp" path="lib/ldapbp-1.0.jar" type="code">
-			<export prefix="*" />
-		</library>
-		<library id="spring-ldap" path="lib/spring-ldap-1.1.2.jar" type="code">
-			<export prefix="*" />
-		</library>
-	</runtime>
-    
+	<extension plugin-id="logicaldoc-core" point-id="Feature" id="f55">
+	    <parameter id="name" value="Feature_55" />
+    </extension>
 	<extension plugin-id="logicaldoc-core" point-id="Authentication" id="LDAPAuthentication">
 		<parameter id="providerId" value="LDAPAuthentication"/>
 		<parameter id="position" value="10"/>
@@ -24,9 +15,9 @@
 	<extension plugin-id="logicaldoc-core" point-id="Task" id="ldapTask">
 		<parameter id="name" value="LDAPSynchroniser" />
 	</extension>
-	<extension plugin-id="logicaldoc-core" point-id="DbInit" id="extauthDbInit">
+	<extension plugin-id="logicaldoc-core" point-id="DbInit" id="ldapDbInit">
 		<parameter id="position" value="20" />
-		<parameter id="name" value="logicaldoc-external-authentication" />
-		<parameter id="sqlFile" value="sql/logicaldoc-external-authentication.sql" />
+		<parameter id="name" value="logicaldoc-ldap" />
+		<parameter id="sqlFile" value="sql/logicaldoc-ldap.sql" />
 	</extension>
 </plugin>
