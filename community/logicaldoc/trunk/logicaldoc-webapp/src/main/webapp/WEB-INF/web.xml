@@ -77,7 +77,7 @@
   <servlet>
     <servlet-name>UploadServlet</servlet-name>
     <!-- This is the default servlet, it puts files in session -->
-    <servlet-class>com.logicaldoc.web.data.UploadServlet</servlet-class>
+    <servlet-class>com.logicaldoc.web.UploadServlet</servlet-class>
   </servlet>
 
   <servlet>
@@ -227,12 +227,12 @@
 
   <servlet>
     <servlet-name>Download</servlet-name>
-    <servlet-class>com.logicaldoc.web.data.DownloadServlet</servlet-class>
+    <servlet-class>com.logicaldoc.web.DownloadServlet</servlet-class>
   </servlet>
 
   <servlet>
     <servlet-name>TicketDownload</servlet-name>
-    <servlet-class>com.logicaldoc.web.data.TicketDownload</servlet-class>
+    <servlet-class>com.logicaldoc.web.TicketDownload</servlet-class>
   </servlet>
 
   <servlet>
@@ -257,7 +257,7 @@
 
   <servlet>
     <servlet-name>Log</servlet-name>
-    <servlet-class>com.logicaldoc.web.data.LogDownload</servlet-class>
+    <servlet-class>com.logicaldoc.web.LogDownload</servlet-class>
   </servlet>
 
   <servlet>

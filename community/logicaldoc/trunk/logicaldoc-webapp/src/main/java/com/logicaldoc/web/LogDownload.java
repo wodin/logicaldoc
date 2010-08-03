@@ -1,4 +1,4 @@
-package com.logicaldoc.web.data;
+package com.logicaldoc.web;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
