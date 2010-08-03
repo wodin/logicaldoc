@@ -69,9 +69,8 @@ public class AccountAdvancedProperties extends AccountDetailsTab {
 		deleteFomMailbox.setTitle(I18N.message("deletefrommailbox"));
 		deleteFomMailbox.setRedrawOnChange(true);
 		deleteFomMailbox.setWidth(50);
-		deleteFomMailbox.setValue(account.isDeleteFromMailbox());
 		deleteFomMailbox.addChangedHandler(changedHandler);
-		deleteFomMailbox.setValue(account.isDeleteFromMailbox() ? "yes" : "no");
+		deleteFomMailbox.setValue(account.isDeleteFromMailbox());
 
 		form.setItems(folder, format, include, exclude, deleteFomMailbox);
 
@@ -85,7 +84,7 @@ public class AccountAdvancedProperties extends AccountDetailsTab {
 		if (!form.hasErrors()) {
 			account.setIncludes((String) values.get("include"));
 			account.setExcludes((String) values.get("exclude"));
-			account.setDeleteFromMailbox("yes".equals((String) values.get("delete")));
+			account.setDeleteFromMailbox((Boolean) values.get("delete"));
 			account.setMailFolder((String) values.get("mailfolder"));
 			account.setFormat(Integer.parseInt((String) values.get("format")));
 		}
