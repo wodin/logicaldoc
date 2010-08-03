@@ -12,23 +12,11 @@
 	<includeBaseDirectory>false</includeBaseDirectory>
 	<dependencySets>
 		<dependencySet>
-			<outputDirectory>lib</outputDirectory>
+			<outputDirectory>WEB-INF/lib</outputDirectory>
 			<includes>
 				<include>ldapbp:jar:*</include>
 				<include>spring-ldap:jar:*</include>
 			</includes>
 		</dependencySet>
 	</dependencySets>
-	<fileSets>
-		<fileSet>
-			<directory>target/classes</directory>
-			<outputDirectory>classes</outputDirectory>
-		</fileSet>
-		<fileSet>
-			<includes>
-				<include>plugin.xml</include>
-			</includes>
-			<useDefaultExcludes>true</useDefaultExcludes>
-		</fileSet>
-	</fileSets>
 </assembly>
