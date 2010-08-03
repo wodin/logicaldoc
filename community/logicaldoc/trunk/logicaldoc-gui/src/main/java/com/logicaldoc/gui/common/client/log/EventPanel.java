@@ -1,8 +1,5 @@
 package com.logicaldoc.gui.common.client.log;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.logicaldoc.gui.common.client.beans.GUIEvent;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.Alignment;
@@ -21,8 +18,6 @@ import com.smartgwt.client.widgets.layout.HLayout;
  */
 public class EventPanel extends HLayout {
 	private static EventPanel instance;
-
-	private List<GUIEvent> events = new ArrayList<GUIEvent>();
 
 	private Label statusLabel;
 
