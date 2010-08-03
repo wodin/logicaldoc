@@ -8,3 +8,4 @@ svn checkout https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/community
 svn checkout https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/community/modules/logicaldoc-lang-hu/trunk logicaldoc-lang-hu
 svn checkout https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/community/modules/logicaldoc-lang-ru/trunk logicaldoc-lang-ru
 svn checkout https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/community/modules/logicaldoc-workflow/trunk logicaldoc-workflow
+svn checkout https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/community/modules/logicaldoc-ldap/trunk logicaldoc-ldap
