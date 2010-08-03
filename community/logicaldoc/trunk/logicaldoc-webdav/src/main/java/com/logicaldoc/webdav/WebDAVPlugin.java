@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.config.WebConfigurator;
 import com.logicaldoc.util.plugin.LogicalDOCPlugin;
+import com.logicaldoc.webdav.web.WebdavServlet;
 
 /**
  * This class provides initialisations needed by WebDAV-Plugin
@@ -29,7 +30,7 @@ public class WebDAVPlugin extends LogicalDOCPlugin {
 
 		WebConfigurator config = new WebConfigurator(dest.getPath() + "/web.xml");
 
-		config.addServlet(SERVLET_NAME, "com.logicaldoc.webdav.web.WebdavServlet", 4);
+		config.addServlet(SERVLET_NAME, WebdavServlet.class.getName(), 4);
 		config.writeXMLDoc();
 		config.addInitParam(SERVLET_NAME, "resource-path-prefix", "/webdav", null);
 		config.addInitParam(SERVLET_NAME, "resource-config", "/WEB-INF/config.xml", null);
