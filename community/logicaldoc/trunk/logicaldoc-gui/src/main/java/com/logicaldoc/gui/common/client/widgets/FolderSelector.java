@@ -7,7 +7,6 @@ import java.util.Date;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.FoldersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
@@ -62,9 +61,6 @@ public class FolderSelector extends StaticTextItem {
 			public void onItemClick(ItemClickEvent event) {
 				MenuItem item = event.getItem();
 				setFolder(new Long(item.getAttributeAsString("id")), item.getAttributeAsString("name"));
-				for (FolderChangeListener listener : listeners) {
-					listener.onChanged(getFolder());
-				}
 			}
 		});
 
@@ -84,21 +80,25 @@ public class FolderSelector extends StaticTextItem {
 	public void setFolder(Long folderId, String name) {
 		this.folderId = folderId;
 		setValue(name);
+		for (FolderChangeListener listener : listeners) {
+			listener.onChanged(getFolder());
+		}
 		redraw();
 	}
 
 	public void setFolder(GUIFolder folder) {
+		Long id = null;
+		String name = null;
+
 		if (folder != null) {
-			this.folderId = folder.getId();
-			if (folderId == 5)
-				setValue("/");
+			id = folder.getId();
+			if (id == 5)
+				name = "/";
 			else
-				setValue(folder.getName());
+				name = folder.getName();
 		}
-		for (FolderChangeListener listener : listeners) {
-			listener.onChanged(folder);
-		}
-		redraw();
+
+		setFolder(id, name);
 	}
 
 	public GUIFolder getFolder() {

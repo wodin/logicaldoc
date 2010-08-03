@@ -87,6 +87,7 @@ public class AccountStandardProperties extends AccountDetailsTab {
 		server.addChangedHandler(changedHandler);
 
 		RadioGroupItem ssl = ItemFactory.newBooleanSelector("ssl", "ssl");
+		ssl.setValue(account.isSsl() ? "yes" : "no");
 		ssl.addChangedHandler(changedHandler);
 
 		SelectItem protocol = ItemFactory.newEmailProtocolSelector("protocol", "protocol");

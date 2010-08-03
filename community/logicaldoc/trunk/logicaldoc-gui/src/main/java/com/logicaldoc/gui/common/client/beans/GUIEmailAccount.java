@@ -24,7 +24,7 @@ public class GUIEmailAccount implements Serializable {
 
 	private String mailAddress;
 
-	private String provider;
+	private String provider = PROVIDER_POP3;
 
 	private String host;
 
