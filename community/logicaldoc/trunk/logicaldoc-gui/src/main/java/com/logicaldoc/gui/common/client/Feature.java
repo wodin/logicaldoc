@@ -37,8 +37,6 @@ public class Feature {
 
 	public static final int BOOKMARKS = 53;
 
-	public static final int EXTERNAL_AUTH = 54;
-
 	public static final int LDAP = 55;
 
 	public static final int TEMPLATE = 56;
