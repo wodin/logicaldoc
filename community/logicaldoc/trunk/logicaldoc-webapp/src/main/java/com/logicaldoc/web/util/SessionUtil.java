@@ -45,9 +45,13 @@ public class SessionUtil {
 		return session;
 	}
 
+	public static Locale currentLocale(UserSession session) throws InvalidSessionException {
+		return (Locale) session.getDictionary().get(LOCALE);
+	}
+
 	public static Locale currentLocale(String sid) throws InvalidSessionException {
 		UserSession session = validateSession(sid);
-		return (Locale) session.getDictionary().get(LOCALE);
+		return currentLocale(session);
 	}
 
 	public static User getSessionUser(String sid) throws InvalidSessionException {

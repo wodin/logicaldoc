@@ -1,4 +1,4 @@
-package com.logicaldoc.web.data;
+package com.logicaldoc.web;
 
 import gwtupload.server.UploadAction;
 import gwtupload.server.exceptions.UploadActionException;

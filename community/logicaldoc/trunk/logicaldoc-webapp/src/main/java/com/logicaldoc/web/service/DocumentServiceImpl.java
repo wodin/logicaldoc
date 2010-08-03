@@ -59,7 +59,7 @@ import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.MimeType;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.io.CryptUtil;
-import com.logicaldoc.web.data.UploadServlet;
+import com.logicaldoc.web.UploadServlet;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
