@@ -125,7 +125,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 		GUIWebServiceSettings wsSettings = new GUIWebServiceSettings();
 		wsSettings.setEnabled("true".equals(conf.get("webservice.enabled")));
-		wsSettings.setUrl(urlPrefix + "/services/Dms");
+		wsSettings.setUrl(urlPrefix + "/services/AuthService");
 		wsSettings.setDescriptor(urlPrefix + "/services/Dms?wsdl");
 
 		GUIWebServiceSettings wdSettings = new GUIWebServiceSettings();

@@ -212,6 +212,10 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				rss.setDisabled(!Feature.enabled(Feature.RSS));
 				pdf.setDisabled(!Feature.enabled(Feature.PDF));
 				subscribe.setDisabled(!Feature.enabled(Feature.AUDIT));
+			} else {
+				rss.setDisabled(true);
+				pdf.setDisabled(true);
+				subscribe.setDisabled(true);
 			}
 
 			GUIFolder folder = Session.get().getCurrentFolder();
