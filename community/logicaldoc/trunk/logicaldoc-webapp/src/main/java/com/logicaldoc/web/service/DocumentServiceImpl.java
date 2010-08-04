@@ -114,8 +114,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip)
-			throws InvalidSessionException {
+	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip,
+			final Long templateId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest());
@@ -124,6 +124,12 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		Map<String, String> uploadedFileNames = UploadServlet.getReceivedFileNames(getThreadLocalRequest());
 
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+
+		DocumentTemplateDAO tDao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
+		DocumentTemplate template = null;
+		if (templateId != null)
+			template = tDao.findById(templateId);
+
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		final Menu parent = menuDao.findById(folderId);
 		try {
@@ -155,7 +161,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					Thread zipImporter = new Thread(new Runnable() {
 						public void run() {
 							InMemoryZipImport importer = new InMemoryZipImport();
-							importer.process(destFile, LocaleUtil.toLocale(zipLanguage), parent, userId, null,
+							importer.process(destFile, LocaleUtil.toLocale(zipLanguage), parent, userId, templateId,
 									zipEncoding, sessionId);
 							try {
 								FileUtils.forceDelete(destFile);
@@ -182,13 +188,13 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					doc.setLocale(LocaleUtil.toLocale(language));
 					doc.setTitle(title);
 					doc.setFolder(parent);
+					doc.setTemplate(template);
 
 					doc = documentManager.create(file, doc, transaction, false);
 				}
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			// TODO Message??
 		}
 
 	}

@@ -212,7 +212,8 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 	}
 
 	@Override
-	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip) {
+	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip,
+			Long templateId) {
 		System.out.println("** addDocuments");
 		System.out.println("** servlet session:" + getThreadLocalRequest().getSession().getId());
 	}

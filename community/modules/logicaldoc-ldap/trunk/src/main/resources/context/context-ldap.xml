@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 <beans>
-	<bean id="LDAPUserGroupContext" class="com.logicaldoc.ldap.ldap.LDAPUserGroupContext">
+	<bean id="LDAPUserGroupContext" class="com.logicaldoc.ldap.model.LDAPUserGroupContext">
 		<property name="userIdentiferAttribute" value="${ldap.userIdentiferAttribute}" />
 		<property name="logonAttribute" value="${ldap.logonAttribute}" />
 		<property name="userClass" value="${ldap.userClass}" />
@@ -12,7 +12,7 @@
 	</bean>
 
 	<bean id="LDAPContextSourceConfig"
-		class="com.logicaldoc.ldap.ldap.LDAPContextSourceConfig">
+		class="com.logicaldoc.ldap.model.LDAPContextSourceConfig">
 		<property name="url" value="${ldap.url}" />
 		<property name="realm" value="${ldap.realm}" />
 		<property name="currentDN" value="${ldap.currentDN}" />
@@ -26,7 +26,7 @@
 
 	<!-- Simple Authentication -->
 	<bean id="LDAPContextSource"
-		class="com.logicaldoc.ldap.ldap.BasicLDAPContextSource"
+		class="com.logicaldoc.ldap.model.BasicLDAPContextSource"
 		scope="prototype">
 		<property name="configuration" ref="LDAPContextSourceConfig" />
 		<property name="userGroupContext" ref="LDAPUserGroupContext" />
@@ -34,7 +34,7 @@
 
 	<!-- DIGEST-MD5 Authentication -->
 	<bean id="LDAPContextSource-MD5"
-		class="com.logicaldoc.ldap.ldap.DigestMD5LdapContextSource"
+		class="com.logicaldoc.ldap.model.DigestMD5LdapContextSource"
 		scope="prototype">
 		<property name="configuration" ref="ADContextSourceConfig" />
 		<property name="userGroupContext" ref="ADUserGroupContext" />
@@ -45,22 +45,22 @@
 		<constructor-arg ref="LDAPContextSource" />
 	</bean>
 
-	<bean id="LDAPBasicUserMapper" class="com.logicaldoc.ldap.ldap.UserAttributeMapper">
+	<bean id="LDAPBasicUserMapper" class="com.logicaldoc.ldap.model.UserAttributeMapper">
 		<property name="defaultLanguage" value="${ldap.defaultLanguage}" />
 		<property name="ldapUserGroupContext" ref="LDAPUserGroupContext" />
 	</bean>
 
-	<bean id="basicGroupMapper" class="com.logicaldoc.ldap.ldap.GroupAttributeMapper">
+	<bean id="basicGroupMapper" class="com.logicaldoc.ldap.model.GroupAttributeMapper">
 	</bean>
 
-	<bean id="LDAPUserGroupDAO" class="com.logicaldoc.ldap.ldap.UserGroupDAO">
+	<bean id="LDAPUserGroupDAO" class="com.logicaldoc.ldap.model.UserGroupDAO">
 		<property name="ldapUserGroupContext" ref="LDAPUserGroupContext" />
 		<property name="ldapTemplate" ref="LdapTemplate" />
 		<property name="userMapper" ref="LDAPBasicUserMapper" />
 		<property name="groupMapper" ref="basicGroupMapper" />
 	</bean>
 
-	<bean id="LDAPAuthentication" class="com.logicaldoc.ldap.ldap.LDAPAuthentication">
+	<bean id="LDAPAuthentication" class="com.logicaldoc.ldap.model.LDAPAuthentication">
 		<lookup-method name="obtainNewLdapContextSource" bean="LDAPContextSource" />
 		<lookup-method name="obtainNewMD5LdapContextSource"
 			bean="LDAPContextSource-MD5" />
@@ -76,7 +76,7 @@
 		</property>
 	</bean>
 
-	<bean id="LDAPSynchroniser" class="com.logicaldoc.ldap.ldap.LDAPSynchroniser">
+	<bean id="LDAPSynchroniser" class="com.logicaldoc.ldap.model.LDAPSynchroniser">
 		<property name="userDao" ref="UserDAO" />
 		<property name="groupDao" ref="GroupDAO" />
 		<property name="userGroupDao" ref="LDAPUserGroupDAO" />
@@ -93,13 +93,5 @@
 		<property name="task" ref="LDAPSynchroniser" />
 		<property name="jobDetail" ref="LDAPSynchroniserJob" />
 		<property name="config" ref="ContextProperties" />
-	</bean>
-
-	<bean id="LdapBean" class="com.logicaldoc.ldap.web.LdapBean"
-		scope="session">
-		<property name="userGroupContext" ref="LDAPUserGroupContext" />
-		<property name="contextSourceConfig" ref="LDAPContextSourceConfig" />
-		<property name="userAttributeMapper" ref="LDAPBasicUserMapper" />
-		<property name="contextSource" ref="LDAPContextSource" />
 	</bean>
 </beans>
