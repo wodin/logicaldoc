@@ -249,6 +249,8 @@ public class TaskTrigger extends SimpleTriggerBean {
 				simpleTrigger.setStartDelay(Long.parseLong(config.getProperty("schedule.delay." + getName())));
 				simpleTrigger.setJobDetail(getJobDetail());
 				simpleTrigger.setJobName(getName() + "Job");
+				setStartDelay(Long.parseLong(config.getProperty("schedule.delay." + getName())));
+				setRepeatInterval(Long.parseLong(config.getProperty("schedule.interval." + getName())));
 			}
 			cronTrigger = null;
 			return simpleTrigger;
@@ -284,5 +286,12 @@ public class TaskTrigger extends SimpleTriggerBean {
 
 	public void setTask(Task task) {
 		this.task = task;
+	}
+
+	public long getRepeatInterval() {
+		if (simpleTrigger != null)
+			return simpleTrigger.getRepeatInterval();
+		else
+			return -1;
 	}
 }
