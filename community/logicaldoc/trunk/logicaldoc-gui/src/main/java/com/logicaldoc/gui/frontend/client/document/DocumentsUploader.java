@@ -102,6 +102,8 @@ public class DocumentsUploader extends Window {
 		SelectItem encodingItem = ItemFactory.newEncodingSelector("encoding");
 		encodingItem.setDisabled(zipImport);
 
+		SelectItem template = ItemFactory.newTemplateSelector();
+
 		zipItem.addChangeHandler(new ChangeHandler() {
 			public void onChange(ChangeEvent event) {
 				zipImport = !zipImport;
@@ -120,7 +122,7 @@ public class DocumentsUploader extends Window {
 			}
 		});
 
-		form.setItems(languageItem, zipItem, encodingItem, sendButton);
+		form.setItems(languageItem, zipItem, encodingItem, template, sendButton);
 
 		layout.addMember(form, 0);
 	}
@@ -144,7 +146,7 @@ public class DocumentsUploader extends Window {
 			return;
 
 		documentService.addDocuments(Session.get().getSid(), getLanguage(), Session.get().getCurrentFolder().getId(),
-				getEncoding(), getImportZip(), new AsyncCallback<Void>() {
+				getEncoding(), getImportZip(), getTemplate(), new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -157,6 +159,13 @@ public class DocumentsUploader extends Window {
 						destroy();
 					}
 				});
+	}
+
+	public Long getTemplate() {
+		if (vm.getValueAsString("template") != null)
+			return new Long(vm.getValueAsString("template"));
+		else
+			return null;
 	}
 
 	public String getLanguage() {

@@ -122,8 +122,9 @@ public interface DocumentService extends RemoteService {
 	 * @param encoding The encoding
 	 * @param importZip If .zip files have to be unpacked and the contained
 	 *        documents imported
+	 * @param templateId The documents template
 	 */
-	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip)
+	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip, Long templateId)
 			throws InvalidSessionException;
 
 	/**

@@ -38,8 +38,8 @@ public interface DocumentServiceAsync {
 	void lock(String sid, long[] ids, String comment, AsyncCallback<Void> callback);
 
 	void unlock(String sid, long[] ids, AsyncCallback<Void> callback);
-	
-	void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip,
+
+	void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip, Long templateId,
 			AsyncCallback<Void> callback);
 
 	void checkout(String sid, long id, AsyncCallback<Void> callback);

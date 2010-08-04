@@ -65,8 +65,10 @@ public class CustomIdPanel extends VLayout {
 
 		VLayout sc=new VLayout();
 		HTMLFlow hint=new HTMLFlow(I18N.message("customidhint"));
+		hint.setMargin(3);
 		sc.addMember(hint);
 		sc.addMember(schemes);
+		
 		
 		schemesTab.setPane(sc);
 		sequencesTab.setPane(sequences);
@@ -130,7 +132,8 @@ public class CustomIdPanel extends VLayout {
 				ListGridRecord record = schemes.getRecord(event.getRowNum());
 				cid.setTemplateId(Long.parseLong(record.getAttribute("templateId")));
 				cid.setRegenerate(record.getAttributeAsBoolean("regenerate"));
-				cid.setScheme(record.getAttributeAsString("regenerate"));
+				cid.setScheme(record.getAttributeAsString("scheme"));
+
 				service.save(Session.get().getSid(), cid, new AsyncCallback<Void>() {
 
 					@Override
@@ -174,7 +177,7 @@ public class CustomIdPanel extends VLayout {
 			for (GUISequence cid : data) {
 				ListGridRecord record = new ListGridRecord();
 				record.setAttribute("template", Util.strip(cid.getTemplate()));
-				record.setAttribute("frequency", cid.getFrequency());
+				record.setAttribute("frequency", I18N.message(cid.getFrequency()));
 				record.setAttribute("year", cid.getYear());
 				record.setAttribute("month", cid.getMonth());
 				record.setAttribute("id", cid.getId());
