@@ -286,7 +286,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				scheduling.setMode(tsk.getScheduling().getMode());
 				if (tsk.getScheduling().getMode().equals(TaskTrigger.MODE_SIMPLE)) {
 					scheduling.setSimple(true);
-					scheduling.setDelay(tsk.getScheduling().getDelay());
+					scheduling.setDelay(tsk.getScheduling().getDelaySeconds());
 					scheduling.setInterval(tsk.getScheduling().getIntervalSeconds());
 					task.setSchedulingLabel(I18N.message("each") + " " + tsk.getScheduling().getIntervalSeconds() + " "
 							+ I18N.message("seconds").toLowerCase());
@@ -359,7 +359,9 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 				scheduling.setMaxLength(t.getScheduling().getMaxLength());
 				scheduling.setMinCpuIdle((t.getScheduling().getMinCpuIdle()));
-
+				scheduling.setPreviousFireTime(t.getScheduling().getPreviousFireTime());
+				scheduling.setNextFireTime(t.getScheduling().getNextFireTime());
+				
 				task.setScheduling(scheduling);
 
 				tasks[i] = task;
@@ -414,7 +416,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				tsk.getScheduling().setEnabled(task.getScheduling().isEnabled());
 				if (task.getScheduling().isSimple()) {
 					tsk.getScheduling().setMode(TaskTrigger.MODE_SIMPLE);
-					tsk.getScheduling().setDelay(task.getScheduling().getDelay());
+					tsk.getScheduling().setDelay(task.getScheduling().getDelay() * 1000);
 					tsk.getScheduling().setInterval(task.getScheduling().getInterval() * 1000);
 					tsk.getScheduling().setIntervalSeconds(task.getScheduling().getInterval());
 					task.setSchedulingLabel(I18N.message("each") + " " + tsk.getScheduling().getIntervalSeconds() + " "
