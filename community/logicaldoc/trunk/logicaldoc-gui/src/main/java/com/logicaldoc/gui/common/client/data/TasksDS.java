@@ -17,15 +17,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  */
 public class TasksDS extends DataSource {
 
-	private static TasksDS instance;
-
-	public static TasksDS get() {
-		if (instance == null)
-			instance = new TasksDS();
-		return instance;
-	}
-
-	private TasksDS() {
+	public TasksDS() {
 		setTitleField("name");
 		setRecordXPath("/list/task");
 		DataSourceTextField name = new DataSourceTextField("name");

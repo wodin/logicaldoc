@@ -1,7 +1,5 @@
 package com.logicaldoc.gui.frontend.client.system;
 
-import java.util.Date;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -168,7 +166,38 @@ public class TasksPanel extends VLayout {
 	}
 
 	public void init() {
+		results.addMember(setupToolbar());
+		results.setShowResizeBar(true);
+		addMember(results);
+
+		detailPanel = new Label("&nbsp;" + I18N.message("selecttask"));
+		details = new VLayout();
+		details.setAlign(Alignment.CENTER);
+		details.addMember(detailPanel);
+		addMember(details);
+
+		reload();
+
+		/*
+		 * Create the timer that synchronize the view
+		 */
+		timer = new Timer() {
+			public void run() {
+				reload();
+			}
+		};
+	}
+
+	private void reload() {
+		if (list != null){
+			results.removeMember(list);
+		    list.clear();
+		    list.invalidateCache();
+		    list.destroy();
+		}
+		
 		list = new ListGrid();
+
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
 		list.setShowAllRecords(true);
@@ -231,8 +260,10 @@ public class TasksPanel extends VLayout {
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
 		list.setFilterOnKeypress(true);
-		list.setDataSource(TasksDS.get());
+		list.setDataSource(new TasksDS());
 
+		results.addMember(list, 1);
+		
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
@@ -260,67 +291,12 @@ public class TasksPanel extends VLayout {
 							});
 			}
 		});
-
-		results.addMember(setupToolbar());
-		results.addMember(list);
-		results.setShowResizeBar(true);
-
-		addMember(results);
-
-		detailPanel = new Label("&nbsp;" + I18N.message("selecttask"));
-		details = new VLayout();
-		details.setAlign(Alignment.CENTER);
-		details.addMember(detailPanel);
-		addMember(details);
-
-		/*
-		 * Create the timer that synchronize the view
-		 */
-		timer = new Timer() {
-			public void run() {
-				reload();
-			}
-		};
 	}
 
 	@Override
 	public void destroy() {
 		super.destroy();
 		this.timer.cancel();
-	}
-
-	/**
-	 * Updates grid data
-	 */
-	private void reload() {
-		service.loadTasks(Session.get().getSid(), new AsyncCallback<GUITask[]>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				Log.serverError(caught);
-			}
-
-			@Override
-			public void onSuccess(GUITask[] tasks) {
-				for (int i = 0; i < tasks.length; i++) {
-					list.getRecord(i).setAttribute("status", tasks[i].getStatus());
-					list.getRecord(i).setAttribute("enabledIcon",
-							tasks[i].getScheduling().isEnabled() ? "bullet_green" : "bullet_red");
-					list.getRecord(i).setAttribute("eenabled", tasks[i].getScheduling().isEnabled());
-					list.getRecord(i).setAttribute("progress", tasks[i].getProgress());
-
-					Date previousFireTime = tasks[i].getScheduling().getPreviousFireTime();
-					if (previousFireTime != null)
-						list.getRecord(i).setAttribute("lastStart", previousFireTime);
-
-					Date nextFireTime = tasks[i].getScheduling().getNextFireTime();
-					if (nextFireTime != null)
-						list.getRecord(i).setAttribute("nextStart", nextFireTime);
-
-					list.getRecord(i).setAttribute("scheduling", tasks[i].getSchedulingLabel());
-					list.updateData(list.getRecord(i));
-				}
-			}
-		});
 	}
 
 	/**
