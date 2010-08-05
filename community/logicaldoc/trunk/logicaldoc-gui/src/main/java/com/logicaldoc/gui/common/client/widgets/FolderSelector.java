@@ -43,8 +43,8 @@ public class FolderSelector extends StaticTextItem {
 		setValueField("id");
 		setDisplayField("name");
 
-		FormItemIcon icon = new FormItemIcon();
-		icon.setSrc("[SKIN]/actions/remove.png");
+		FormItemIcon remove = new FormItemIcon();
+		remove.setSrc("[SKIN]/actions/remove.png");
 		addIconClickHandler(new IconClickHandler() {
 			public void onIconClick(IconClickEvent event) {
 				setValue("");
@@ -72,7 +72,7 @@ public class FolderSelector extends StaticTextItem {
 		});
 
 		if (cleanPick)
-			setIcons(picker, icon);
+			setIcons(picker, remove);
 		else
 			setIcons(picker);
 	}

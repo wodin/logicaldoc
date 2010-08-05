@@ -19,6 +19,8 @@ public class SearchMenu extends SectionStack {
 
 	private static final int TAGS_SECTION = 1;
 
+	private static final int PARAMETRIC_SECTION = 2;
+
 	private static SearchMenu instance;
 
 	public static SearchMenu get() {
@@ -40,14 +42,23 @@ public class SearchMenu extends SectionStack {
 		tagsSection.addItem(TagsForm.get());
 		addSection(tagsSection);
 
+		if (Feature.visible(Feature.PARAMETRIC_SEARCHES)) {
+			SectionStackSection parametricSection = new SectionStackSection(I18N.message("parametricsearches"));
+			if (Feature.enabled(Feature.PARAMETRIC_SEARCHES))
+				parametricSection.addItem(new ParametricForm());
+			else
+				parametricSection.addItem(new FeatureDisabled());
+			addSection(parametricSection);
+		}
+
 		SectionStackSection savedSection = new SectionStackSection(I18N.message("savedsearches"));
 		savedSection.setExpanded(false);
 		if (Feature.enabled(12)) {
 			savedSection.addItem(SavedSearchesPanel.get());
 			addSection(savedSection);
-		} else if (Feature.showDisabled()){
+		} else if (Feature.showDisabled()) {
 			savedSection.addItem(new FeatureDisabled());
-		    addSection(savedSection);
+			addSection(savedSection);
 		}
 	}
 
@@ -57,5 +68,10 @@ public class SearchMenu extends SectionStack {
 
 	public void openTagsSection() {
 		expandSection(TAGS_SECTION);
+	}
+
+	public void openParametricSection() {
+		if (Feature.visible(Feature.PARAMETRIC_SEARCHES))
+			expandSection(PARAMETRIC_SECTION);
 	}
 }

@@ -6,6 +6,7 @@ import gwtupload.client.MultiUploader;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -122,7 +123,14 @@ public class DocumentsUploader extends Window {
 			}
 		});
 
-		form.setItems(languageItem, zipItem, encodingItem, template, sendButton);
+		if (Feature.visible(Feature.TEMPLATE)) {
+			form.setItems(languageItem, zipItem, encodingItem, template, sendButton);
+			if (!Feature.enabled(Feature.LDAP)) {
+				template.setDisabled(true);
+				template.setTooltip(I18N.message("featuredisabled"));
+			}
+		} else
+			form.setItems(languageItem, zipItem, encodingItem, sendButton);
 
 		layout.addMember(form, 0);
 	}

@@ -67,6 +67,10 @@ public class GUISearchOptions implements Serializable {
 
 	private String folderName;
 
+	private GUICriterion[] criteria;
+
+	private String topOperator;
+
 	/** Creates a new instance of SearchOptions */
 	public GUISearchOptions() {
 	}
@@ -263,5 +267,21 @@ public class GUISearchOptions implements Serializable {
 
 	public void setFolderName(String folderName) {
 		this.folderName = folderName;
+	}
+
+	public GUICriterion[] getCriteria() {
+		return criteria;
+	}
+
+	public void setCriteria(GUICriterion[] criteria) {
+		this.criteria = criteria;
+	}
+
+	public String getTopOperator() {
+		return topOperator;
+	}
+
+	public void setTopOperator(String topOperator) {
+		this.topOperator = topOperator;
 	}
 }
