@@ -43,7 +43,7 @@ import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
- * Shows document's standard properties and read-only data
+ * Shows a full-text search form
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0

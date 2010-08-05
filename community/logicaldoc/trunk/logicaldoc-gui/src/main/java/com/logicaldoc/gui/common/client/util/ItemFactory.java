@@ -2,6 +2,7 @@ package com.logicaldoc.gui.common.client.util;
 
 import java.util.LinkedHashMap;
 
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
 import com.logicaldoc.gui.common.client.data.UsersDS;
@@ -451,6 +452,8 @@ public class ItemFactory {
 		templateItem.setValueField("id");
 		templateItem.setPickListWidth(250);
 		templateItem.setOptionDataSource(TemplatesDS.getInstanceWithEmpty());
+		if(!Feature.enabled(Feature.TEMPLATE))
+			templateItem.setDisabled(true);
 		return templateItem;
 	}
 
