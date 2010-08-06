@@ -8,6 +8,7 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUICriterion;
@@ -78,7 +79,7 @@ public class ParametricForm extends VLayout {
 
 		folder = new FolderSelector(null, true);
 
-		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders"));
+		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders2"));
 		subfolders.setColSpan(3);
 		subfolders.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
@@ -173,6 +174,7 @@ public class ParametricForm extends VLayout {
 				// extract the fields as a map from the object
 				Map criteriaFieldsMap = JSOHelper.convertToMap((JavaScriptObject) criteriaObjects[i]);
 				String fieldName = (String) criteriaFieldsMap.get("fieldName");
+				fieldName = fieldName.replaceAll(Constants.BLANK_PLACEHOLDER, " ");
 				String fieldOperator = (String) criteriaFieldsMap.get("operator");
 				Object fieldValue = (Object) criteriaFieldsMap.get("value");
 
@@ -191,9 +193,9 @@ public class ParametricForm extends VLayout {
 					criterion.setDoubleValue((Double) fieldValue);
 				else if (fieldValue instanceof String)
 					criterion.setStringValue((String) fieldValue);
-				else if (fieldValue instanceof JavaScriptObject){
+				else if (fieldValue instanceof JavaScriptObject) {
 					Map m = JSOHelper.convertToMap((JavaScriptObject) fieldValue);
-					SC.say(""+m.get("value"));
+					SC.say("" + m.get("value"));
 				}
 
 				criterion.setOperator(fieldOperator.toLowerCase());
@@ -219,8 +221,10 @@ public class ParametricForm extends VLayout {
 		if (options.getFolder() != null) {
 			GUICriterion criterion = new GUICriterion();
 			criterion.setField("folder");
-			criterion.setOperator("equals");
+			criterion.setOperator("in");
 			criterion.setLongValue(options.getFolder());
+			if (options.isSearchInSubPath())
+				criterion.setOperator("inorsubfolders");
 			list.add(criterion);
 		}
 

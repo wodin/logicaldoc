@@ -83,4 +83,6 @@ public final class Constants {
 	public final static int INDEX_SKIP = 2;
 
 	public static final String LOCALE = "locale";
+
+	public static final String BLANK_PLACEHOLDER = "___";
 }

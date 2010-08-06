@@ -44,14 +44,9 @@ public class FolderSelector extends StaticTextItem {
 		setDisplayField("name");
 
 		FormItemIcon remove = new FormItemIcon();
+		remove.setName("remove");
 		remove.setSrc("[SKIN]/actions/remove.png");
-		addIconClickHandler(new IconClickHandler() {
-			public void onIconClick(IconClickEvent event) {
-				setValue("");
-				folderId = null;
-				redraw();
-			}
-		});
+		
 
 		menu.setCanSelectParentItems(true);
 		Date date = new Date();
@@ -65,9 +60,16 @@ public class FolderSelector extends StaticTextItem {
 		});
 
 		FormItemIcon picker = new FormItemIcon();
+		picker.setName("picker");
 		addIconClickHandler(new IconClickHandler() {
 			public void onIconClick(IconClickEvent event) {
-				menu.showContextMenu();
+				if("remove".equals(event.getIcon().getName())){
+					setValue("");
+					folderId = null;
+					redraw();
+				}else{
+					menu.showContextMenu();
+				}
 			}
 		});
 
