@@ -118,10 +118,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			final Long templateId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest());
+		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
 		log.debug("Uploading " + uploadedFilesMap.size() + " files");
 
-		Map<String, String> uploadedFileNames = UploadServlet.getReceivedFileNames(getThreadLocalRequest());
+		Map<String, String> uploadedFileNames = UploadServlet.getReceivedFileNames(getThreadLocalRequest(), sid);
 
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 
@@ -193,20 +193,22 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					doc = documentManager.create(file, doc, transaction, false);
 				}
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
-
 	}
 
 	@Override
 	public void checkin(String sid, long docId, String comment, boolean major) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest());
+		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
 		File file = uploadedFilesMap.values().iterator().next();
 		if (file != null) {
 			log.debug("Checking in file " + file.getName());
+			
+			System.out.println("*** Checking in file " + file.getName());
+			
 			// check that we have a valid file for storing as new
 			// version
 			String fileName = file.getName();

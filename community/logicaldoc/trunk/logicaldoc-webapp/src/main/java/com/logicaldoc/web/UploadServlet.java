@@ -14,8 +14,11 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * This servlet is responsible for document uploads operations.
@@ -33,6 +36,8 @@ public class UploadServlet extends UploadAction {
 
 	public static String RECEIVEDFILENAMES = "receivedFileNames";
 
+	protected static Log log = LogFactory.getLog(UploadServlet.class);
+
 	/**
 	 * Override executeAction to save the received files in a custom place and
 	 * delete this items from session.
@@ -40,64 +45,74 @@ public class UploadServlet extends UploadAction {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String executeAction(HttpServletRequest request, List<FileItem> sessionFiles) throws UploadActionException {
+		try {
+			HttpSession session = SessionFilter.getServletSession(request.getParameter("sid"));
+			if(session==null)
+				session=request.getSession();
+			
+			/**
+			 * Maintain a list with received files and their content types
+			 */
+			Map<String, File> receivedFiles = (Map<String, File>) session.getAttribute(RECEIVEDFILES);
+			if (receivedFiles == null) {
+				receivedFiles = new Hashtable<String, File>();
+				session.setAttribute(RECEIVEDFILES, receivedFiles);
+			}
 
-		/**
-		 * Maintain a list with received files and their content types
-		 */
-		Map<String, File> receivedFiles = (Map<String, File>) request.getSession().getAttribute(RECEIVEDFILES);
-		if (receivedFiles == null) {
-			receivedFiles = new Hashtable<String, File>();
-			request.getSession().setAttribute(RECEIVEDFILES, receivedFiles);
-		}
+			Map<String, String> receivedContentTypes = (Map<String, String>) session.getAttribute(
+					RECEIVEDCONTENTTYPES);
+			if (receivedContentTypes == null) {
+				receivedContentTypes = new Hashtable<String, String>();
+				session.setAttribute(RECEIVEDCONTENTTYPES, receivedContentTypes);
+			}
 
-		Map<String, String> receivedContentTypes = (Map<String, String>) request.getSession().getAttribute(
-				RECEIVEDCONTENTTYPES);
-		if (receivedContentTypes == null) {
-			receivedContentTypes = new Hashtable<String, String>();
-			request.getSession().setAttribute(RECEIVEDCONTENTTYPES, receivedContentTypes);
-		}
+			Map<String, String> receivedFileNames = (Map<String, String>) session.getAttribute(
+					RECEIVEDFILENAMES);
+			if (receivedFileNames == null) {
+				receivedFileNames = new Hashtable<String, String>();
+				session.setAttribute(RECEIVEDFILENAMES, receivedFileNames);
+			}
 
-		Map<String, String> receivedFileNames = (Map<String, String>) request.getSession().getAttribute(
-				RECEIVEDFILENAMES);
-		if (receivedFileNames == null) {
-			receivedFileNames = new Hashtable<String, String>();
-			request.getSession().setAttribute(RECEIVEDFILENAMES, receivedFileNames);
-		}
+			String path = getServletContext().getRealPath("/upload/" + session.getId());
+			File uploadFolder = new File(path);
 
-		String path = getServletContext().getRealPath("/upload/" + request.getSession().getId());
-		File uploadFolder = new File(path);
+			// Google App Engine doesn't support disk writing
+			uploadFolder.mkdirs();
+			uploadFolder.mkdir();
 
-		// Google App Engine doesn't support disk writing
-		uploadFolder.mkdirs();
-		uploadFolder.mkdir();
+			for (FileItem item : sessionFiles) {
+				if (false == item.isFormField()) {
+					OutputStream os = null;
+					try {
+						File file = new File(uploadFolder, item.getFieldName());
+						log.debug("Received file " + item.getName());
+						System.out.println("Received file " + item.getName());
+						os = new FileOutputStream(file);
+						copyFromInputStreamToOutputStream(item.getInputStream(), os);
 
-		for (FileItem item : sessionFiles) {
-			if (false == item.isFormField()) {
-				OutputStream os = null;
-				try {
-					File file = new File(uploadFolder, item.getFieldName());
-					os = new FileOutputStream(file);
-					copyFromInputStreamToOutputStream(item.getInputStream(), os);
+						receivedFiles.put(item.getFieldName(), file);
+						receivedContentTypes.put(item.getFieldName(), item.getContentType());
+						receivedFileNames.put(item.getFieldName(), item.getName());
+					} catch (Throwable e) {
+						e.printStackTrace();
+						throw new UploadActionException(e.getMessage());
+					} finally {
+						if (os != null) {
+							try {
+								os.flush();
+								os.close();
+							} catch (IOException e) {
+								log(e.getMessage());
+							}
 
-					receivedFiles.put(item.getFieldName(), file);
-					receivedContentTypes.put(item.getFieldName(), item.getContentType());
-					receivedFileNames.put(item.getFieldName(), item.getName());
-				} catch (Throwable e) {
-					e.printStackTrace();
-					throw new UploadActionException(e.getMessage());
-				} finally {
-					if (os != null) {
-						try {
-							os.flush();
-							os.close();
-						} catch (IOException e) {
-							log(e.getMessage());
 						}
-
 					}
 				}
+				removeSessionFileItems(request);
 			}
-			removeSessionFileItems(request);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+
 		}
 		return null;
 	}
@@ -108,7 +123,12 @@ public class UploadServlet extends UploadAction {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void removeItem(HttpServletRequest request, String fieldName) throws UploadActionException {
-		Map<String, File> receivedFiles = (Map<String, File>) request.getSession().getAttribute(RECEIVEDFILES);
+		HttpSession session = SessionFilter.getServletSession(request.getParameter("sid"));
+		if(session==null)
+			session=request.getSession();
+		
+		
+		Map<String, File> receivedFiles = (Map<String, File>) session.getAttribute(RECEIVEDFILES);
 		if (receivedFiles == null || !receivedFiles.containsKey(fieldName))
 			return;
 
@@ -117,13 +137,13 @@ public class UploadServlet extends UploadAction {
 		if (file != null && file.exists())
 			file.delete();
 
-		Map<String, String> receivedContentTypes = (Map<String, String>) request.getSession().getAttribute(
+		Map<String, String> receivedContentTypes = (Map<String, String>) session.getAttribute(
 				RECEIVEDCONTENTTYPES);
 		if (receivedContentTypes == null || !receivedContentTypes.containsKey(fieldName))
 			return;
 		receivedContentTypes.remove(fieldName);
 
-		Map<String, String> receivedFileNames = (Map<String, String>) request.getSession().getAttribute(
+		Map<String, String> receivedFileNames = (Map<String, String>) session.getAttribute(
 				RECEIVEDFILENAMES);
 		if (receivedFileNames == null || !receivedFileNames.containsKey(fieldName))
 			return;
@@ -138,14 +158,21 @@ public class UploadServlet extends UploadAction {
 	public void getUploadedFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String fieldName = request.getParameter(PARAM_SHOW);
 
-		Map<String, File> receivedFiles = (Map<String, File>) request.getSession().getAttribute(RECEIVEDFILES);
+		HttpSession session = SessionFilter.getServletSession(request.getParameter("sid"));
+		if(session==null)
+			session=request.getSession();
+		
+		
+		Map<String, File> receivedFiles = (Map<String, File>) session.getAttribute(RECEIVEDFILES);
+
 		if (receivedFiles == null || !receivedFiles.containsKey(fieldName))
 			return;
 
 		File f = receivedFiles.get(fieldName);
 		if (f != null) {
-			Map<String, String> receivedContentTypes = (Map<String, String>) request.getSession().getAttribute(
+			Map<String, String> receivedContentTypes = (Map<String, String>) session.getAttribute(
 					RECEIVEDCONTENTTYPES);
+
 			if (receivedContentTypes != null && receivedContentTypes.containsKey(fieldName))
 				response.setContentType(receivedContentTypes.get(fieldName));
 			FileInputStream is = new FileInputStream(f);
@@ -156,18 +183,28 @@ public class UploadServlet extends UploadAction {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Map<String, File> getReceivedFiles(HttpServletRequest request) {
-		Map<String, File> receivedFiles = (Map<String, File>) request.getSession().getAttribute(RECEIVEDFILES);
-		request.getSession().setAttribute(RECEIVEDFILES, new Hashtable<String, File>());
-		request.getSession().setAttribute(RECEIVEDCONTENTTYPES, new Hashtable<String, String>());
+	public static Map<String, File> getReceivedFiles(HttpServletRequest request, String sid) {
+		HttpSession session = SessionFilter.getServletSession(sid);
+		if(session==null)
+			session=request.getSession();
+
+		Map<String, File> receivedFiles = (Map<String, File>) session.getAttribute(RECEIVEDFILES);
+
+		session.setAttribute(RECEIVEDFILES, new Hashtable<String, File>());
+		session.setAttribute(RECEIVEDCONTENTTYPES, new Hashtable<String, String>());
 		return receivedFiles;
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Map<String, String> getReceivedFileNames(HttpServletRequest request) {
-		Map<String, String> receivedFileNames = (Map<String, String>) request.getSession().getAttribute(
+	public static Map<String, String> getReceivedFileNames(HttpServletRequest request, String sid) {
+		HttpSession session = SessionFilter.getServletSession(sid);
+		if(session==null)
+			session=request.getSession();
+		
+		Map<String, String> receivedFileNames = (Map<String, String>) session.getAttribute(
 				RECEIVEDFILENAMES);
-		request.getSession().setAttribute(RECEIVEDFILENAMES, new Hashtable<String, String>());
+
+		session.setAttribute(RECEIVEDFILENAMES, new Hashtable<String, String>());
 		return receivedFileNames;
 	}
 }

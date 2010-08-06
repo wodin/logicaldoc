@@ -456,6 +456,7 @@ public class Setup implements EntryPoint {
 					@Override
 					public void onFailure(Throwable caught) {
 						SC.warn(caught.getMessage());
+						submit.setDisabled(false);
 					}
 
 					@Override
@@ -463,8 +464,10 @@ public class Setup implements EntryPoint {
 						SC.say(I18N.message("installationperformed"),
 								I18N.message("installationend", context.get("product_name")));
 						Util.redirect("../frontend.jsp");
+						submit.setDisabled(false);
 					}
 				});
+				submit.setDisabled(true);
 			} else {
 				// Go to the next tab and enable the contained panel
 				tabs.selectTab(tabIndex + 1);
