@@ -28,6 +28,8 @@ public class Feature {
 	public static final int SAVED_SEARCHES = 12;
 
 	public static final int MESSAGES = 13;
+	
+	public static final int SCAN = 16;
 
 	public static final int AUDIT = 17;
 

@@ -42,6 +42,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 	private ToolStripButton subscribe = new ToolStripButton();
 
+	private ToolStripButton scan = new ToolStripButton();
+
 	private GUIDocument document;
 
 	private AuditServiceAsync audit = (AuditServiceAsync) GWT.create(AuditService.class);
@@ -128,6 +130,16 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
+		scan.setIcon(ItemFactory.newImgIcon("scanner.png").getSrc());
+		scan.setTooltip(I18N.message("scandocument"));
+		scan.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				ScanDialog scanner = new ScanDialog();
+				scanner.show();
+			}
+		});
+
 		setHeight(27);
 		addButton(download);
 
@@ -149,6 +161,14 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		addSeparator();
 		addButton(add);
+
+		if (Feature.visible(Feature.SCAN)) {
+			addButton(scan);
+			if (!Feature.enabled(Feature.SCAN)) {
+				scan.setDisabled(true);
+				scan.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
 
 		final IntegerItem max = ItemFactory.newValidateIntegerItem("max", "", null, 1, null);
 		max.setHint(I18N.message("elements"));
@@ -220,10 +240,13 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 			GUIFolder folder = Session.get().getCurrentFolder();
 
-			if (folder != null)
+			if (folder != null) {
 				add.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));
-			else
+				scan.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));
+			} else {
 				add.setDisabled(true);
+				scan.setDisabled(true);
+			}
 		} catch (Throwable t) {
 
 		}
