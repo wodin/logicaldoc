@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.common.client.beans;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class GUICriterion implements Serializable {
 
@@ -10,7 +11,16 @@ public class GUICriterion implements Serializable {
 
 	private String operator;
 
-	private Serializable value;
+	private String stringValue;
+
+	private Date dateValue;
+
+	private Long longValue;
+
+	private Double doubleValue;
+
+	public GUICriterion() {
+	}
 
 	public String getField() {
 		return field;
@@ -28,11 +38,35 @@ public class GUICriterion implements Serializable {
 		this.operator = operator;
 	}
 
-	public Serializable getValue() {
-		return value;
+	public String getStringValue() {
+		return stringValue;
 	}
 
-	public void setValue(Serializable value) {
-		this.value = value;
+	public void setStringValue(String value) {
+		this.stringValue = value;
+	}
+
+	public Date getDateValue() {
+		return dateValue;
+	}
+
+	public void setDateValue(Date dateValue) {
+		this.dateValue = dateValue;
+	}
+
+	public Long getLongValue() {
+		return longValue;
+	}
+
+	public void setLongValue(Long longValue) {
+		this.longValue = longValue;
+	}
+
+	public Double getDoubleValue() {
+		return doubleValue;
+	}
+
+	public void setDoubleValue(Double doubleValue) {
+		this.doubleValue = doubleValue;
 	}
 }

@@ -31,7 +31,7 @@ import com.logicaldoc.webservice.folder.WSFolder;
  */
 public class SearchServiceImpl extends AbstractService implements SearchService {
 
-	public static Log log = LogFactory.getLog(SearchServiceImpl.class);
+	protected static Log log = LogFactory.getLog(SearchServiceImpl.class);
 
 	@Override
 	public WSSearchResult find(String sid, FulltextSearchOptions options) throws Exception {

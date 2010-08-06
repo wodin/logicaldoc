@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.frontend.client.services.TemplateService;
 
@@ -34,6 +35,36 @@ public class MockTemplateServiceImpl extends RemoteServiceServlet implements Tem
 		template.setId(templateId);
 		template.setName("Template" + templateId);
 		template.setDescription("Description" + templateId);
+		
+		GUIExtendedAttribute[] attributes = new GUIExtendedAttribute[4];
+
+		GUIExtendedAttribute att = new GUIExtendedAttribute();
+		att.setName("Attribute A");
+		att.setPosition(0);
+		att.setMandatory(true);
+		att.setType(GUIExtendedAttribute.TYPE_INT);
+		attributes[0] = att;
+
+		att = new GUIExtendedAttribute();
+		att.setName("Attribute B");
+		att.setPosition(1);
+		att.setType(GUIExtendedAttribute.TYPE_DOUBLE);
+		attributes[1] = att;
+
+		att = new GUIExtendedAttribute();
+		att.setName("Attribute C");
+		att.setPosition(2);
+		att.setType(GUIExtendedAttribute.TYPE_STRING);
+		attributes[2] = att;
+
+		att = new GUIExtendedAttribute();
+		att.setName("Attribute D");
+		att.setPosition(3);
+		att.setType(GUIExtendedAttribute.TYPE_DATE);
+		attributes[3] = att;
+		
+		template.setAttributes(attributes);
+		
 		return template;
 	}
 }

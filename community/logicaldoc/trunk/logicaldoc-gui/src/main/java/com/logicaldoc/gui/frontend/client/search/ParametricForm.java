@@ -1,25 +1,30 @@
 package com.logicaldoc.gui.frontend.client.search;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
+import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUICriterion;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
+import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.FolderSelector;
-import com.logicaldoc.gui.frontend.client.services.DocumentService;
-import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.TemplateService;
+import com.logicaldoc.gui.frontend.client.services.TemplateServiceAsync;
 import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.TopOperatorAppearance;
 import com.smartgwt.client.util.JSOHelper;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -45,7 +50,7 @@ public class ParametricForm extends VLayout {
 
 	private ValuesManager vm = new ValuesManager();
 
-	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+	private TemplateServiceAsync service = (TemplateServiceAsync) GWT.create(TemplateService.class);
 
 	private FolderSelector folder;
 
@@ -58,7 +63,7 @@ public class ParametricForm extends VLayout {
 		setAlign(Alignment.LEFT);
 
 		filterBuilder = new FilterBuilder();
-		filterBuilder.setDataSource(new DocumentFieldsDS());
+		filterBuilder.setDataSource(new DocumentFieldsDS(null));
 		filterBuilder.setTopOperatorAppearance(TopOperatorAppearance.RADIO);
 
 		addMember(filterBuilder);
@@ -83,12 +88,30 @@ public class ParametricForm extends VLayout {
 
 		if (Feature.visible(Feature.TEMPLATE)) {
 			SelectItem template = ItemFactory.newTemplateSelector();
+
 			template.addChangedHandler(new ChangedHandler() {
 				@Override
 				public void onChanged(ChangedEvent event) {
+					if (event.getValue() != null && !"".equals(event.getValue()))
+						service.getTemplate(Session.get().getSid(), new Long(event.getValue().toString()),
+								new AsyncCallback<GUITemplate>() {
+									@Override
+									public void onFailure(Throwable caught) {
+										Log.serverError(caught);
+									}
 
+									@Override
+									public void onSuccess(GUITemplate result) {
+										removeMember(filterBuilder);
+										filterBuilder = new FilterBuilder();
+										filterBuilder.setDataSource(new DocumentFieldsDS(result));
+										filterBuilder.setTopOperatorAppearance(TopOperatorAppearance.RADIO);
+										addMember(filterBuilder, 0);
+									}
+								});
 				}
 			});
+
 			form.setItems(language, template, folder, subfolders);
 		} else
 			form.setItems(language, folder, subfolders);
@@ -149,19 +172,58 @@ public class ParametricForm extends VLayout {
 
 				// extract the fields as a map from the object
 				Map criteriaFieldsMap = JSOHelper.convertToMap((JavaScriptObject) criteriaObjects[i]);
-				String fieldName = (String) criteriaFieldsMap.get("fieldName"); // surname,
-																				// etc
-				String fieldOperator = (String) criteriaFieldsMap.get("operator"); // equals,
-																					// etc
-				Serializable fieldValue = (Serializable) criteriaFieldsMap.get("value"); // Smith,
-				// etc
+				String fieldName = (String) criteriaFieldsMap.get("fieldName");
+				String fieldOperator = (String) criteriaFieldsMap.get("operator");
+				Object fieldValue = (Object) criteriaFieldsMap.get("value");
 
 				GUICriterion criterion = new GUICriterion();
 				criterion.setField(fieldName);
+
+				if (fieldValue instanceof Date)
+					criterion.setDateValue((Date) fieldValue);
+				else if (fieldValue instanceof Integer)
+					criterion.setLongValue(new Long((Integer) fieldValue));
+				else if (fieldValue instanceof Long)
+					criterion.setLongValue((Long) fieldValue);
+				else if (fieldValue instanceof Float)
+					criterion.setDoubleValue(new Double((Float) fieldValue));
+				else if (fieldValue instanceof Double)
+					criterion.setDoubleValue((Double) fieldValue);
+				else if (fieldValue instanceof String)
+					criterion.setStringValue((String) fieldValue);
+				else if (fieldValue instanceof JavaScriptObject){
+					Map m = JSOHelper.convertToMap((JavaScriptObject) fieldValue);
+					SC.say(""+m.get("value"));
+				}
+
 				criterion.setOperator(fieldOperator.toLowerCase());
-				criterion.setValue(fieldValue);
 			}
 		}
+
+		if (!NO_LANGUAGE.equals(vm.getValueAsString("language"))) {
+			GUICriterion criterion = new GUICriterion();
+			criterion.setField("language");
+			criterion.setOperator("equals");
+			criterion.setStringValue(vm.getValueAsString("language"));
+			list.add(criterion);
+		}
+
+		if (values.containsKey("template") && !((String) values.get("template")).isEmpty()) {
+			GUICriterion criterion = new GUICriterion();
+			criterion.setField("template");
+			criterion.setOperator("equals");
+			criterion.setLongValue(new Long((String) values.get("template")));
+			list.add(criterion);
+		}
+
+		if (options.getFolder() != null) {
+			GUICriterion criterion = new GUICriterion();
+			criterion.setField("folder");
+			criterion.setOperator("equals");
+			criterion.setLongValue(options.getFolder());
+			list.add(criterion);
+		}
+
 		options.setCriteria(list.toArray(new GUICriterion[0]));
 
 		Search.get().setOptions(options);

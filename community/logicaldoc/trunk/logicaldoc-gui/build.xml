@@ -4,7 +4,7 @@
 	<property name="gwt.args" value="" />
 
 	<!-- Configure path to GWT SDK -->
-	<property name="gwt.sdk" location="C:/JavaSuite/frameworks/gwt-2.0.3" />
+	<property name="gwt.sdk" location="C:/JavaSuite/frameworks/gwt-2.0.4" />
 
 	<property file="${user.home}/logicaldoc-dev.properties" />
 	<import file="${logicaldoc.devroot}/build/ant/build.xml" />
@@ -31,8 +31,7 @@
 		<echo message="Deploying webapp files" />
 		<copy todir="${logicaldoc.webroot}" verbose="false">
 			<fileset dir="war">
-				<include name="**" />
-				<exclude name="WEB-INF/**" />
+				<exclude name="**/WEB-INF/**" />
 			</fileset>
 			<!-- This one is for maven -->
 			<!--fileset dir="target/war">

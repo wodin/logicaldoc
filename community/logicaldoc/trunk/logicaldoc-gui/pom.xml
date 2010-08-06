@@ -191,7 +191,12 @@
 									dest="target/plugin" />
 								<delete
 									file="target/${project.artifactId}-${project.version}-plugin.zip" />
-								<delete dir="target/plugin/WEB-INF" />
+								<delete file="target/plugin/pom.zml" />
+								<copy todir="target/plugin">
+									<fileset dir="war">
+										<exclude name="**/WEB-INF/**" />
+									</fileset>
+								</copy>
 								<copy
 									file="target/${project.artifactId}-${project.version}.${project.packaging}"
 									tofile="target/plugin/WEB-INF/lib/${project.artifactId}-${project.version}-plugin.${project.packaging}" />

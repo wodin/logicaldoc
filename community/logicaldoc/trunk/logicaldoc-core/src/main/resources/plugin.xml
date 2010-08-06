@@ -41,6 +41,7 @@
   <extension-point id="Search">
     <parameter-def id="type" />
     <parameter-def id="class" />
+    <parameter-def id="options" />
   </extension-point>
   <extension-point id="Feature">
     <parameter-def id="name" />
@@ -114,11 +115,13 @@
   <extension plugin-id="logicaldoc-core" point-id="Search" id="fulltextSearch">
     <parameter id="type" value="0" />
     <parameter id="class" value="com.logicaldoc.core.searchengine.FulltextSearch" />
+    <parameter id="options" value="com.logicaldoc.core.searchengine.FulltextSearchOptions" />
   </extension>
 
   <extension plugin-id="logicaldoc-core" point-id="Search" id="tagSearch">
     <parameter id="type" value="1" />
     <parameter id="class" value="com.logicaldoc.core.searchengine.TagSearch" />
+    <parameter id="options" value="com.logicaldoc.core.searchengine.SearchOptions" />
   </extension>
   
   <extension plugin-id="logicaldoc-core" point-id="DbInit" id="coreDbInit">
