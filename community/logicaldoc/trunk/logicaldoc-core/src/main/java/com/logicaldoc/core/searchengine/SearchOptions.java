@@ -23,6 +23,8 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 
 	public static final int TYPE_TAG = 1;
 
+	public static final int TYPE_PARAMETRIC = 2;
+
 	protected int maxHits = 40;
 
 	private int type = TYPE_FULLTEXT;
@@ -36,6 +38,8 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 	private Object[] parameters = null;
 
 	private long userId = -1;
+
+	private String topOperator;
 
 	public Object[] getParameters() {
 		return parameters;
@@ -133,5 +137,13 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 
 	public void setUserId(long userId) {
 		this.userId = userId;
+	}
+
+	public String getTopOperator() {
+		return topOperator;
+	}
+
+	public void setTopOperator(String topOperator) {
+		this.topOperator = topOperator;
 	}
 }

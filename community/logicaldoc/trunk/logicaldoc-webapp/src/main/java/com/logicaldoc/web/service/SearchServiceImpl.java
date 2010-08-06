@@ -45,91 +45,107 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(SearchServiceImpl.class);
+	protected static Log log = LogFactory.getLog(SearchServiceImpl.class);
 
 	@Override
 	public GUIResult search(String sid, GUISearchOptions options) throws InvalidSessionException {
 		UserSession session = SessionUtil.validateSession(sid);
 		options.setUserId(session.getUserId());
 
-		SearchOptions searchOptions = toSearchOptions(options);
-
-		// Retrieve the search machinery
-		Search search = Search.get(searchOptions);
+		GUIResult result = new GUIResult();
 
 		try {
-			search.search();
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			SearchOptions searchOptions = toSearchOptions(options);
+
+			// Retrieve the search machinery
+			Search search = Search.get(searchOptions);
+
+			try {
+				search.search();
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+
+			List<Hit> hits = search.getHits();
+
+			result.setTime(search.getExecTime());
+			result.setHasMore(search.isMoreHitsPresent());
+
+			List<GUIHit> guiResults = new ArrayList<GUIHit>();
+			for (Hit hit : hits) {
+				GUIHit h = new GUIHit();
+				h.setId(hit.getDocId());
+				h.setFolderId(hit.getFolderId());
+				h.setDate(hit.getDate());
+				h.setCreation(hit.getCreation());
+				h.setTitle(hit.getTitle());
+				h.setCustomId(hit.getCustomId());
+				h.setType(hit.getType());
+				h.setSummary(hit.getSummary());
+				h.setSize(hit.getSize());
+				h.setScore(hit.getScore());
+				h.setIcon(FilenameUtils.getBaseName(hit.getIcon()));
+				guiResults.add(h);
+			}
+			result.setHits(guiResults.toArray(new GUIHit[guiResults.size()]));
+
+			return result;
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
-
-		List<Hit> hits = search.getHits();
-
-		GUIResult result = new GUIResult();
-		result.setTime(search.getExecTime());
-		result.setHasMore(search.isMoreHitsPresent());
-
-		List<GUIHit> guiResults = new ArrayList<GUIHit>();
-		for (Hit hit : hits) {
-			GUIHit h = new GUIHit();
-			h.setId(hit.getDocId());
-			h.setFolderId(hit.getFolderId());
-			h.setDate(hit.getDate());
-			h.setCreation(hit.getCreation());
-			h.setTitle(hit.getTitle());
-			h.setCustomId(hit.getCustomId());
-			h.setType(hit.getType());
-			h.setSummary(hit.getSummary());
-			h.setSize(hit.getSize());
-			h.setScore(hit.getScore());
-			h.setIcon(FilenameUtils.getBaseName(hit.getIcon()));
-			guiResults.add(h);
-		}
-		result.setHits(guiResults.toArray(new GUIHit[guiResults.size()]));
-
-		return result;
 	}
 
 	@Override
 	public boolean save(String sid, GUISearchOptions options) throws InvalidSessionException {
 		UserSession session = SessionUtil.validateSession(sid);
 
-		SearchOptions opt = toSearchOptions(options);
-
-		File file = getQueriesDir(session.getUserName());
-		if (!file.exists()) {
-			file.mkdirs();
-			file.mkdir();
-		}
-
-		file = new File(file, opt.getName() + ".ser");
-		if (file.exists()) {
-			return false;
-		}
-
 		try {
-			opt.write(file);
-		} catch (Exception e) {
-			log.error(e.getMessage());
-		}
+			SearchOptions opt = toSearchOptions(options);
 
-		log.debug("Saved query " + opt.getName());
-		return true;
+			File file = getQueriesDir(session.getUserName());
+			if (!file.exists()) {
+				file.mkdirs();
+				file.mkdir();
+			}
+
+			file = new File(file, opt.getName() + ".ser");
+			if (file.exists()) {
+				return false;
+			}
+
+			try {
+				opt.write(file);
+			} catch (Exception e) {
+				log.error(e.getMessage());
+			}
+
+			log.debug("Saved query " + opt.getName());
+			return true;
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
 	}
 
 	@Override
 	public void delete(String sid, String[] names) throws InvalidSessionException {
 		UserSession session = SessionUtil.validateSession(sid);
 
-		File dir = getQueriesDir(session.getUserName());
+		try {
+			File dir = getQueriesDir(session.getUserName());
 
-		for (String name : names) {
-			File file = new File(dir, name + ".ser");
-			try {
-				FileUtils.forceDelete(file);
-			} catch (IOException e) {
-				log.error(e.getMessage());
+			for (String name : names) {
+				File file = new File(dir, name + ".ser");
+				try {
+					FileUtils.forceDelete(file);
+				} catch (IOException e) {
+					log.error(e.getMessage());
+				}
 			}
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
 	}
 
@@ -137,71 +153,86 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 	public GUISearchOptions load(String sid, String name) throws InvalidSessionException {
 		UserSession session = SessionUtil.validateSession(sid);
 
-		File dir = getQueriesDir(session.getUserName());
-		File file = new File(dir, name + ".ser");
-		SearchOptions opt = null;
 		try {
-			opt = SearchOptions.read(file);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			File dir = getQueriesDir(session.getUserName());
+			File file = new File(dir, name + ".ser");
+			SearchOptions opt = null;
+			try {
+				opt = SearchOptions.read(file);
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+			return toGUIOptions(opt);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
-		return toGUIOptions(opt);
 	}
 
 	@Override
 	public GUITag[] getTagCloud() {
-		ArrayList<GUITag> ret = new ArrayList<GUITag>();
-		List<TagCloud> list = new ArrayList<TagCloud>();
-		GenericDAO gendao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
-		Generic generic = gendao.findByAlternateKey("tagcloud", "-");
-		if (generic == null)
-			return new GUITag[0];
-		else
-			gendao.initialize(generic);
+		try {
+			ArrayList<GUITag> ret = new ArrayList<GUITag>();
+			List<TagCloud> list = new ArrayList<TagCloud>();
+			GenericDAO gendao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
+			Generic generic = gendao.findByAlternateKey("tagcloud", "-");
+			if (generic == null)
+				return new GUITag[0];
+			else
+				gendao.initialize(generic);
 
-		for (String tag : generic.getAttributeNames()) {
-			TagCloud tc = new TagCloud(tag);
-			StringTokenizer st = new StringTokenizer(generic.getValue(tag).toString(), "|", false);
-			tc.setCount(Integer.parseInt(st.nextToken()));
-			tc.setScale(Integer.parseInt(st.nextToken()));
-			list.add(tc);
+			for (String tag : generic.getAttributeNames()) {
+				TagCloud tc = new TagCloud(tag);
+				StringTokenizer st = new StringTokenizer(generic.getValue(tag).toString(), "|", false);
+				tc.setCount(Integer.parseInt(st.nextToken()));
+				tc.setScale(Integer.parseInt(st.nextToken()));
+				list.add(tc);
+			}
+
+			// Sort the tags collection by name
+			Comparator<TagCloud> compName = new TagCloudComparatorName();
+			Collections.sort(list, compName);
+
+			for (TagCloud tagCloud : list) {
+				GUITag c = new GUITag();
+				c.setScale(tagCloud.getScale());
+				c.setTag(tagCloud.getTag());
+				c.setCount(tagCloud.getCount());
+				ret.add(c);
+			}
+
+			return ret.toArray(new GUITag[0]);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
-
-		// Sort the tags collection by name
-		Comparator<TagCloud> compName = new TagCloudComparatorName();
-		Collections.sort(list, compName);
-
-		for (TagCloud tagCloud : list) {
-			GUITag c = new GUITag();
-			c.setScale(tagCloud.getScale());
-			c.setTag(tagCloud.getTag());
-			c.setCount(tagCloud.getCount());
-			ret.add(c);
-		}
-
-		return ret.toArray(new GUITag[0]);
 	}
 
 	@Override
 	public GUISearchOptions getSimilarityOptions(String sid, long docId, String locale) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		String text = manager.getDocumentContent(docId);
-		// Extracts the most used 10 words
-		AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
-
-		String terms = "";
 		try {
-			terms = analyzer.getTermsAsString(10, text, LocaleUtil.toLocale(locale));
-			terms = terms.replaceAll(",", " ");
-		} catch (Exception e) {
-			log.error(e);
-		}
+			DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+			String text = manager.getDocumentContent(docId);
+			// Extracts the most used 10 words
+			AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
 
-		GUISearchOptions opt = new GUISearchOptions();
-		opt.setExpression(terms);
-		return opt;
+			String terms = "";
+			try {
+				terms = analyzer.getTermsAsString(10, text, LocaleUtil.toLocale(locale));
+				terms = terms.replaceAll(",", " ");
+			} catch (Exception e) {
+				log.error(e);
+			}
+
+			GUISearchOptions opt = new GUISearchOptions();
+			opt.setExpression(terms);
+			return opt;
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
 	}
 
 	/**
@@ -277,10 +308,16 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		return op;
 	}
 
-	private SearchOptions toSearchOptions(GUISearchOptions options) {
-		SearchOptions searchOptions = new SearchOptions(options.getType());
+	protected SearchOptions toSearchOptions(GUISearchOptions options) {
+		SearchOptions searchOptions = Search.newOptions(options.getType());
+		searchOptions.setTopOperator(options.getTopOperator());
+		searchOptions.setDescription(options.getDescription());
+		searchOptions.setExpression(options.getExpression());
+		searchOptions.setMaxHits(options.getMaxHits());
+		searchOptions.setName(options.getName());
+		searchOptions.setUserId(options.getUserId());
+
 		if (options.getType() == SearchOptions.TYPE_FULLTEXT) {
-			searchOptions = new FulltextSearchOptions();
 			((FulltextSearchOptions) searchOptions).setTemplate(options.getTemplate());
 			((FulltextSearchOptions) searchOptions).setDateFrom(options.getDateFrom());
 			((FulltextSearchOptions) searchOptions).setDateTo(options.getDateTo());
@@ -298,11 +335,6 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			((FulltextSearchOptions) searchOptions).setSizeMin(options.getSizeMin());
 		}
 
-		searchOptions.setDescription(options.getDescription());
-		searchOptions.setExpression(options.getExpression());
-		searchOptions.setMaxHits(options.getMaxHits());
-		searchOptions.setName(options.getName());
-		searchOptions.setUserId(options.getUserId());
 		return searchOptions;
 	}
 

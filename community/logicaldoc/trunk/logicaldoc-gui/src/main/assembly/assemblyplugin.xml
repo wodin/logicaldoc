@@ -11,13 +11,11 @@
 	</formats>
 	<includeBaseDirectory>false</includeBaseDirectory>
 	<fileSets>
-		<fileSet>
-		    <directory>war</directory>
-			<excludes>
-				<exclude>WEB-INF</exclude>
-			</excludes>
+        <fileSet>
+			<includes>
+                <include>pom.xml</include>
+            </includes>
 			<outputDirectory>/</outputDirectory>
-			<useDefaultExcludes>true</useDefaultExcludes>
 		</fileSet>
 	</fileSets>
 </assembly>

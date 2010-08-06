@@ -45,7 +45,7 @@ public abstract class Search {
 			int type = Integer.parseInt(ext.getParameter("type").valueAsString());
 			if (type != opt.getType())
 				continue;
-			
+
 			String className = ext.getParameter("class").valueAsString();
 			try {
 				search = (Search) Class.forName(className).newInstance();
@@ -59,6 +59,36 @@ public abstract class Search {
 		return search;
 	}
 
+	public static SearchOptions newOptions(int type) {
+		// Acquire the 'Search' extensions of the core plugin
+		PluginRegistry registry = PluginRegistry.getInstance();
+		Collection<Extension> extensions = new ArrayList<Extension>();
+		try {
+			extensions = registry.getExtensions("logicaldoc-core", "Search");
+		} catch (Throwable e) {
+			log.error(e.getMessage());
+		}
+
+		SearchOptions options = null;
+
+		for (Extension ext : extensions) {
+			int t = Integer.parseInt(ext.getParameter("type").valueAsString());
+			if (t != type)
+				continue;
+
+			String className = ext.getParameter("options").valueAsString();
+			try {
+				options = (SearchOptions) Class.forName(className).newInstance();
+				options.setType(type);
+			} catch (Throwable e) {
+				log.error(e.getMessage());
+			}
+			break;
+		}
+
+		return options;
+	}
+
 	protected Search() {
 	}
 
@@ -69,8 +99,8 @@ public abstract class Search {
 	 */
 	public final List<Hit> search() {
 		log.info("Launch search");
-		log.info("Expression: "+options.getExpression());
-		
+		log.info("Expression: " + options.getExpression());
+
 		Date start = new Date();
 		hits.clear();
 		moreHitsPresent = false;
