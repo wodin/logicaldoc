@@ -49,8 +49,6 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.0
  */
 public class FulltextForm extends VLayout implements SearchObserver {
-	private static final String BLANK_PLACEHOLDER = "___";
-
 	private static final String BEFORE = "before";
 
 	private static final String DATE = "date";
@@ -245,7 +243,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			if (enabled) {
 				String tmp = name;
 				if (!name.endsWith("Flag"))
-					tmp = "ext_" + name.replaceAll(BLANK_PLACEHOLDER, " ");
+					tmp = "ext_" + name.replaceAll(Constants.BLANK_PLACEHOLDER, " ");
 				else
 					tmp = tmp.replaceAll("Flag", "");
 				fields.add(tmp);
@@ -314,7 +312,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 				for (GUIExtendedAttribute att : result) {
 					// We cannot use spaces in items name
-					String itemName = "_" + att.getName().replaceAll(" ", BLANK_PLACEHOLDER);
+					String itemName = "_" + att.getName().replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 					if (att.getType() == GUIExtendedAttribute.TYPE_STRING) {
 						CheckboxItem item = new CheckboxItem(itemName, att.getName());
 						items.add(item);

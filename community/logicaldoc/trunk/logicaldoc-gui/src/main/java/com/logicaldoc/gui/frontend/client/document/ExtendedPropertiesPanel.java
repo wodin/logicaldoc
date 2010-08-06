@@ -7,11 +7,11 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
-import com.logicaldoc.gui.common.client.data.TemplatesDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -160,7 +160,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 				List<FormItem> items = new ArrayList<FormItem>();
 				for (GUIExtendedAttribute att : result) {
 					// We cannot use spaces in items name
-					String itemName = "_" + att.getName().replaceAll(" ", "___");
+					String itemName = "_" + att.getName().replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 					if (att.getType() == GUIExtendedAttribute.TYPE_STRING) {
 						TextItem item = ItemFactory.newTextItem(itemName, att.getName(), null);
 						if (document.getValue(att.getName()) != null)
@@ -223,7 +223,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 				for (String name : values.keySet()) {
 					if (name.startsWith("_")) {
 						Object val = values.get(name);
-						String nm = name.substring(1).replaceAll("___", " ");
+						String nm = name.substring(1).replaceAll(Constants.BLANK_PLACEHOLDER, " ");
 						document.setValue(nm, val);
 					}
 				}

@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.search;
 
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -123,24 +124,28 @@ public class DocumentFieldsDS extends DataSource {
 		if (template != null && template.getAttributes() != null)
 			for (GUIExtendedAttribute att : template.getAttributes()) {
 				DataSourceField field = null;
-				String name = att.getName();
+				String name = "_" + att.getName().replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 				String titl = att.getName() + " (" + template.getName() + ")";
 				if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
 					field = new DataSourceDateTimeField();
 					field.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN);
 					field.setEditorType(ItemFactory.newDateItem(name, titl));
+					name=name+Constants.BLANK_PLACEHOLDER+"type:"+GUIExtendedAttribute.TYPE_DATE;
 				} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
 					field = new DataSourceFloatField();
 					field.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN, OperatorId.EQUALS,
 							OperatorId.NOT_EQUAL);
+					name=name+Constants.BLANK_PLACEHOLDER+"type:"+GUIExtendedAttribute.TYPE_DOUBLE;
 				} else if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
 					field = new DataSourceIntegerField();
 					field.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN, OperatorId.EQUALS,
 							OperatorId.NOT_EQUAL);
+					name=name+Constants.BLANK_PLACEHOLDER+"type:"+GUIExtendedAttribute.TYPE_INT;
 				} else {
 					field = new DataSourceTextField();
 					field.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
 							OperatorId.NOT_EQUAL);
+					name=name+Constants.BLANK_PLACEHOLDER+"type:"+GUIExtendedAttribute.TYPE_STRING;
 				}
 
 				field.setName(name);
