@@ -6,6 +6,8 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.widgets.Window;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
+import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
@@ -22,6 +24,13 @@ public class SignDialog extends Window {
 		layout.setMargin(25);
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
+		addCloseClickHandler(new CloseClickHandler() {
+			@Override
+			public void onCloseClick(CloseClientEvent event) {
+				DocumentsPanel.get().refresh();
+			}
+		});
+		
 		setTitle(I18N.message("signdocuments"));
 		setWidth(460);
 		setHeight(340);

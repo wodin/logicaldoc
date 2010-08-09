@@ -30,7 +30,7 @@ import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 /**
- * This panel shows a list of versions in a tabular way.
+ * This panel shows a list of versions of a document in a tabular way.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
@@ -63,7 +63,7 @@ public class VersionsPanel extends DocumentDetailTab {
 		listGrid = new ListGrid();
 		listGrid.setCanFreezeFields(true);
 		listGrid.setAutoFetchData(true);
-		dataSource = new VersionsDS(document.getId());
+		dataSource = new VersionsDS(document.getId(), null);
 		listGrid.setDataSource(dataSource);
 		listGrid.setFields(user, event, version, fileVersion, date, comment);
 		addMember(listGrid);
@@ -74,8 +74,10 @@ public class VersionsPanel extends DocumentDetailTab {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				ListGridRecord record = event.getRecord();
-				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-						+ document.getId() + "&versionId=" + record.getAttribute("id") + "&open=true", "_blank", "");
+				Window.open(
+						GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+								+ document.getId() + "&versionId=" + record.getAttribute("id") + "&open=true",
+						"_blank", "");
 			}
 		});
 
@@ -104,10 +106,10 @@ public class VersionsPanel extends DocumentDetailTab {
 					SC.warn(I18N.message("select2versions"));
 					return;
 				}
-				
+
 				documentService.getVersionsById(Session.get().getSid(),
-						Long.parseLong(selection[0].getAttribute("id")), Long
-								.parseLong(selection[1].getAttribute("id")), new AsyncCallback<GUIVersion[]>() {
+						Long.parseLong(selection[0].getAttribute("id")),
+						Long.parseLong(selection[1].getAttribute("id")), new AsyncCallback<GUIVersion[]>() {
 							@Override
 							public void onFailure(Throwable caught) {
 								Log.serverError(caught);
