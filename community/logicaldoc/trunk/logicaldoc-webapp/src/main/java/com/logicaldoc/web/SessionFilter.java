@@ -15,7 +15,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
@@ -42,7 +41,6 @@ public class SessionFilter implements Filter {
 				HttpSession servletSession = ((HttpServletRequest) request).getSession(false);
 				if (servletSession != null) {
 					servletSessionMapping.put(sid, servletSession);
-					System.out.println("** " + servletSession.getId());
 				}
 			} catch (Throwable e) {
 				servletSessionMapping.remove(sid);

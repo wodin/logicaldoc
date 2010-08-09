@@ -61,6 +61,7 @@ public class ScanDialog extends Window {
 		SelectItem template = ItemFactory.newTemplateSelector();
 
 		send = new ButtonItem();
+		send.setStartRow(false);
 		send.setTitle(I18N.message("send"));
 		send.addClickHandler(new ClickHandler() {
 			@Override

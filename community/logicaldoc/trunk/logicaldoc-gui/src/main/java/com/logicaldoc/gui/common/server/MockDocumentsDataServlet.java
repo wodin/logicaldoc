@@ -61,6 +61,7 @@ public class MockDocumentsDataServlet extends HttpServlet {
 				writer.print("<indexed>blank</indexed>");
 			else
 				writer.print("<indexed>indexed</indexed>");
+			writer.print("<signed>" + (i % 2 == 0 ? "blank" : "sign") + "</signed>");
 			writer.print("<locked>blank</locked>");
 			if (StringUtils.isEmpty(filename))
 				writer.print("<filename>Title " + Long.toString(folderId + 1000 + i) + ".doc</filename>");
