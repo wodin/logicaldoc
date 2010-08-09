@@ -4,6 +4,8 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
+import com.smartgwt.client.data.fields.DataSourceFloatField;
+import com.smartgwt.client.data.fields.DataSourceImageField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
 /**
@@ -13,7 +15,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class VersionsDS extends DataSource {
-	public VersionsDS(long docId) {
+	public VersionsDS(Long docId, Long archiveId) {
 		setRecordXPath("/list/version");
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
@@ -25,10 +27,15 @@ public class VersionsDS extends DataSource {
 		DataSourceTextField fileVersion = new DataSourceTextField("fileVersion");
 		DataSourceDateTimeField date = new DataSourceDateTimeField("date");
 		DataSourceTextField comment = new DataSourceTextField("comment");
+		DataSourceTextField docid = new DataSourceTextField("docid");
+		DataSourceTextField customid = new DataSourceTextField("customid");
+		DataSourceTextField title = new DataSourceTextField("title");
+		DataSourceFloatField size = new DataSourceFloatField("size");
+		DataSourceImageField icon = new DataSourceImageField("icon");
 
-		setFields(id, user, event, version, fileVersion, date, comment);
+		setFields(id, user, event, version, fileVersion, date, comment, docid, customid, title, size, icon);
 		setClientOnly(true);
-		setDataURL("data/versions.xml?sid=" + Session.get().getSid() + "&docId=" + docId + "&locale="
-				+ I18N.getLocale());
+		setDataURL("data/versions.xml?sid=" + Session.get().getSid()
+				+ (docId != null ? "&docId=" + docId : "&archiveId=" + archiveId) + "&locale=" + I18N.getLocale());
 	}
 }

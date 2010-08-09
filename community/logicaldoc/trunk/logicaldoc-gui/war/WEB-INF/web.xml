@@ -110,6 +110,11 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>ArchiveService</servlet-name>
+		<servlet-class>com.logicaldoc.gui.frontend.server.MockArchiveServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>TagsData</servlet-name>
 		<servlet-class>com.logicaldoc.gui.common.server.MockTagsDataServlet</servlet-class>
 	</servlet>
@@ -245,6 +250,11 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>ArchivesData</servlet-name>
+		<servlet-class>com.logicaldoc.gui.common.server.MockArchivesDataServlet</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>log</servlet-name>
 		<servlet-class>com.logicaldoc.gui.common.server.MockLogDownload</servlet-class>
 	</servlet>
@@ -347,6 +357,11 @@
 	<servlet-mapping>
 		<servlet-name>CustomIdService</servlet-name>
 		<url-pattern>/frontend/customid</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ArchiveService</servlet-name>
+		<url-pattern>/frontend/archive</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -472,6 +487,11 @@
 	<servlet-mapping>
 		<servlet-name>SubscriptionsData</servlet-name>
 		<url-pattern>/data/subscriptions.xml</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ArchivesData</servlet-name>
+		<url-pattern>/data/archives.xml</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
