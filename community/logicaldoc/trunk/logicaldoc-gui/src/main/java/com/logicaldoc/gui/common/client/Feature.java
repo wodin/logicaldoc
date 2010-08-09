@@ -17,6 +17,8 @@ public class Feature {
 
 	public static final int ARCHIVES = 4;
 
+	public static final int DIGITAL_SIGN = 7;
+	
 	public static final int PDF = 8;
 
 	public static final int RSS = 9;

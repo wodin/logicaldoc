@@ -86,7 +86,6 @@ public class UploadServlet extends UploadAction {
 					try {
 						File file = new File(uploadFolder, item.getFieldName());
 						log.debug("Received file " + item.getName());
-						System.out.println("Received file " + item.getName());
 						os = new FileOutputStream(file);
 						copyFromInputStreamToOutputStream(item.getInputStream(), os);
 

@@ -71,7 +71,7 @@ public class DocumentsDataServlet extends HttpServlet {
 		DocumentDAO dao = (DocumentDAO) context.getBean(DocumentDAO.class);
 		StringBuffer query = new StringBuffer(
 				"select A.id, A.customId, A.docRef, A.type, A.title, A.version, A.lastModified, A.date, A.publisher,"
-						+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status  "
+						+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status, A.signed "
 						+ "from Document A where A.deleted = 0 ");
 		if (folderId != null)
 			query.append(" and A.folder.id=" + folderId);
@@ -134,6 +134,12 @@ public class DocumentsDataServlet extends HttpServlet {
 				writer.print("<locked>blank</locked>");
 			writer.print("<filename><![CDATA[" + cols[15] + "]]></filename>");
 			writer.print("<status>" + cols[16] + "</status>");
+
+			if (Integer.parseInt(cols[17].toString()) == 0)
+				writer.print("<signed>blank</signed>");
+			else if (Integer.parseInt(cols[17].toString()) == 1)
+				writer.print("<signed>sign</signed>");
+
 			writer.print("</document>");
 		}
 

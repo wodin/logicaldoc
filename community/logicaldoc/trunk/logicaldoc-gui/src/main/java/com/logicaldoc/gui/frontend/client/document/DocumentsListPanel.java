@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
@@ -126,6 +127,15 @@ public class DocumentsListPanel extends VLayout {
 		locked.setImageURLSuffix(".png");
 		locked.setCanFilter(false);
 
+		ListGridField signed = new ListGridField("signed", " ", 24);
+		signed.setType(ListGridFieldType.IMAGE);
+		signed.setCanSort(false);
+		signed.setAlign(Alignment.CENTER);
+		signed.setShowDefaultContextMenu(false);
+		signed.setImageURLPrefix(Util.imagePrefix());
+		signed.setImageURLSuffix(".png");
+		signed.setCanFilter(false);
+
 		ListGridField filename = new ListGridField("filename", I18N.message("filename"), 200);
 		filename.setHidden(true);
 		filename.setCanFilter(true);
@@ -156,8 +166,8 @@ public class DocumentsListPanel extends VLayout {
 		list.setFilterOnKeypress(true);
 		dataSource = new DocumentsDS(folder.getId(), null, max, null);
 		list.setDataSource(dataSource);
-		list.setFields(indexed, locked, immutable, icon, title, size, lastModified, version, publisher, published,
-				creator, created, customId, filename);
+		list.setFields(indexed, locked, immutable, signed, icon, title, size, lastModified, version, publisher,
+				published, creator, created, customId, filename);
 
 		// Prepare a panel containing a title and the documents list
 		infoPanel = new InfoPanel("");
@@ -174,6 +184,17 @@ public class DocumentsListPanel extends VLayout {
 						String id = list.getSelectedRecord().getAttribute("id");
 						Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
 								+ id + "&downloadText=true", "_self", "");
+					}
+				} else if ("signed".equals(list.getFieldName(event.getColNum()))) {
+					if (Feature.enabled(Feature.DIGITAL_SIGN)) {
+						ListGridRecord record = event.getRecord();
+						if ("sign".equals(record.getAttribute("signed"))) {
+							String id = list.getSelectedRecord().getAttribute("id");
+							String fileName = list.getSelectedRecord().getAttribute("filename")+".p7m";
+							SignVerifyDialog verify = new SignVerifyDialog(id, fileName);
+							verify.show();
+							event.cancel();
+						}
 					}
 				}
 			}
@@ -201,7 +222,8 @@ public class DocumentsListPanel extends VLayout {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
-				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id + "&open=true", "_blank", "");
+				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id
+						+ "&open=true", "_blank", "");
 			}
 		});
 

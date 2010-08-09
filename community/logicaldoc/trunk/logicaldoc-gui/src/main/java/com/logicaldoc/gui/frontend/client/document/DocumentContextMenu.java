@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
@@ -46,8 +47,8 @@ public class DocumentContextMenu extends Menu {
 		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
-				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&sid=" + Session.get().getSid() + "&docId="
-						+ id, "_self", "");
+				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&sid="
+						+ Session.get().getSid() + "&docId=" + id, "_self", "");
 			}
 		});
 
@@ -269,8 +270,8 @@ public class DocumentContextMenu extends Menu {
 										record.setAttribute("lockUserId", Session.get().getUser().getId());
 										list.refreshRow(list.getRecordIndex(record));
 									}
-									Session.get().getUser().setLockedDocs(
-											Session.get().getUser().getLockedDocs() + ids.length);
+									Session.get().getUser()
+											.setLockedDocs(Session.get().getUser().getLockedDocs() + ids.length);
 								}
 							});
 					}
@@ -331,7 +332,8 @@ public class DocumentContextMenu extends Menu {
 						record.setAttribute("status", Constants.DOC_CHECKED_OUT);
 						list.refreshRow(list.getRecordIndex(record));
 						Session.get().getUser().setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() + 1);
-						Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id, "_blank", "");
+						Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+								+ id, "_blank", "");
 					}
 				});
 			}
@@ -434,10 +436,31 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
+		MenuItem sign = new MenuItem();
+		sign.setTitle(I18N.message("sign"));
+		sign.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				String ids = "";
+				String names = "";
+				for (ListGridRecord rec : selection) {
+					ids += "," + rec.getAttributeAsString("id");
+					names += "," + rec.getAttributeAsString("title");
+				}
+				if (ids.startsWith(","))
+					ids = ids.substring(1);
+				if (names.startsWith(","))
+					names = names.substring(1);
+
+				SignDialog dialog = new SignDialog(selection[0].getAttributeAsString("id"), ids, names);
+				dialog.show();
+			}
+		});
+
 		boolean enableLock = true;
 		boolean enableUnlock = true;
 		boolean enableImmutable = false;
 		boolean enableDelete = true;
+		boolean enableSign = selection != null && selection.length > 0;
 
 		if (selection != null)
 			for (ListGridRecord record : selection) {
@@ -502,5 +525,13 @@ public class DocumentContextMenu extends Menu {
 
 		setItems(download, cut, copy, delete, bookmark, sendMail, similar, links, checkout, checkin, lock, unlockItem,
 				immutable, markIndexable, markUnindexable);
+
+		if (Feature.visible(Feature.DIGITAL_SIGN)) {
+			addItem(sign);
+			if (!folder.hasPermission(Constants.PERMISSION_SIGN) || !Feature.enabled(Feature.DIGITAL_SIGN))
+				sign.setEnabled(false);
+			else
+				sign.setEnabled(enableSign);
+		}
 	}
 }
