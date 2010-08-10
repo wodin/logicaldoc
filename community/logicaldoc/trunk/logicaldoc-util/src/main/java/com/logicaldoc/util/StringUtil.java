@@ -100,4 +100,15 @@ public class StringUtil {
 			}
 		}
 	}
+	
+	public static String arrayToString(Object[] a, String separator) {
+	    String result = "";
+	    if (a.length > 0) {
+	        result = a[0].toString();    // start with the first element
+	        for (int i=1; i<a.length; i++) {
+	            result = result + separator + a[i];
+	        }
+	    }
+	    return result;
+	}
 }
