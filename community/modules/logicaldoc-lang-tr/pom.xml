@@ -4,10 +4,10 @@
   <parent>
     <groupId>com.logicaldoc</groupId>
     <artifactId>logicaldoc</artifactId>
-    <version>5.1.0</version>
+    <version>5.2.0</version>
   </parent>
   <artifactId>logicaldoc-lang-tr</artifactId>
-  <version>5.1.0</version>
+  <version>5.2.0</version>
   <name>logicaldoc-lang-tr</name>
   <description>Turkish language plugin for LogicalDOC</description>
   <packaging>jar</packaging>
@@ -44,7 +44,7 @@
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-util</artifactId>
-			<version>5.1.0</version>
+			<version>5.2.0</version>
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
