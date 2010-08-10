@@ -6,7 +6,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.util.config.FacesConfigurator;
 import com.logicaldoc.util.plugin.LogicalDOCPlugin;
 
 /**
@@ -35,10 +34,5 @@ public class TurkishPlugin extends LogicalDOCPlugin {
 
 		log.debug("Copy resources from " + src.getPath() + " to " + destClasses.getPath());
 		FileUtils.copyDirectory(src, destClasses);
-
-		// Now add the message bundle
-		log.info("Add Turkish (tr) language to faces-config.xml");
-		FacesConfigurator facesConfig = new FacesConfigurator();
-		facesConfig.addLanguageToFacesConfig("tr");
 	}
 }
