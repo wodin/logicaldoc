@@ -131,6 +131,7 @@ public class TemplateDetailsPanel extends VLayout {
 
 	public void onSave() {
 		if (validate()) {
+			final boolean newTemplate = template.getId() == 0;
 			service.save(Session.get().getSid(), template, new AsyncCallback<GUITemplate>() {
 				@Override
 				public void onFailure(Throwable caught) {
@@ -140,7 +141,10 @@ public class TemplateDetailsPanel extends VLayout {
 				@Override
 				public void onSuccess(GUITemplate result) {
 					savePanel.setVisible(false);
-					templatesPanel.updateRecord(result);
+					if (newTemplate)
+						templatesPanel.refresh();
+					else
+						templatesPanel.updateRecord(result);
 				}
 			});
 		}
