@@ -45,15 +45,17 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 public class TemplatesPanel extends VLayout {
 	private TemplateServiceAsync service = (TemplateServiceAsync) GWT.create(TemplateService.class);
 
-	private Layout listing = new VLayout();
+	private Layout listing;
 
-	private Layout detailsContainer = new VLayout();
+	private Layout detailsContainer;
 
 	private ListGrid list;
 
 	private Canvas details = SELECT_TEMPLATE;
 
 	private InfoPanel infoPanel;
+
+	private ToolStrip toolStrip;
 
 	final static Canvas SELECT_TEMPLATE = new HTMLPanel("&nbsp;" + I18N.message("selecttemplate"));
 
@@ -62,14 +64,25 @@ public class TemplatesPanel extends VLayout {
 
 		infoPanel = new InfoPanel("");
 
-		init();
+		refresh();
 	}
 
-	public void init() {
+	public void refresh() {
+		Canvas[] members = getMembers();
+		for (Canvas canvas : members) {
+			removeMember(canvas);
+		}
+		
+		listing=new VLayout();
+		detailsContainer=new VLayout();
+		details=SELECT_TEMPLATE;
+		
+		
 		// Initialize the listing panel
 		listing.setAlign(Alignment.CENTER);
 		listing.setHeight("60%");
 		listing.setShowResizeBar(true);
+		
 
 		ListGridField id = new ListGridField("id", 50);
 		id.setHidden(true);
@@ -93,13 +106,13 @@ public class TemplatesPanel extends VLayout {
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
 		list.setFilterOnKeypress(true);
-		list.setDataSource(TemplatesDS.get());
+		list.setDataSource(new TemplatesDS(false));
 		list.setShowFilterEditor(true);
 
 		listing.addMember(infoPanel);
 		listing.addMember(list);
 
-		ToolStrip toolStrip = new ToolStrip();
+		toolStrip = new ToolStrip();
 		toolStrip.setHeight(20);
 		toolStrip.setWidth100();
 		toolStrip.addSpacer(2);
@@ -212,19 +225,11 @@ public class TemplatesPanel extends VLayout {
 	 */
 	public void updateRecord(GUITemplate template) {
 		ListGridRecord record = list.getSelectedRecord();
-		if (record == null)
-			record = new ListGridRecord();
-
-		record.setAttribute("name", template.getName());
-		record.setAttribute("description", template.getDescription());
-		if (record.getAttributeAsString("id") != null
-				&& (template.getId() == Long.parseLong(record.getAttributeAsString("id")))) {
-			list.updateData(record);
-		} else {
-			// Append a new record
+		if (record != null) {
 			record.setAttribute("id", template.getId());
-			list.addData(record);
-			list.selectRecord(record);
+			record.setAttribute("name", template.getName());
+			record.setAttribute("description", template.getDescription());
+			list.updateData(record);
 		}
 	}
 }
