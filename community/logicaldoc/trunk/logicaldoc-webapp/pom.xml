@@ -243,11 +243,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.firebirdsql</groupId>
-			<artifactId>jaybird</artifactId>
-			<version>2.1.5</version>
-		</dependency>
-		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-util</artifactId>
 			<version>${project.version}</version>
