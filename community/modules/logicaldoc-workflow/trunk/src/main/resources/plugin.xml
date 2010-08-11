@@ -44,7 +44,7 @@
         <parameter id="position" value="2"/>
     </extension>
     
-    <extension plugin-id="logicaldoc-core" point-id="Feature" id="f52">
-	    <parameter id="name" value="Feature_52" />
+    <extension plugin-id="logicaldoc-core" point-id="Feature" id="f19">
+	    <parameter id="name" value="Feature_19" />
     </extension>
 </plugin>
