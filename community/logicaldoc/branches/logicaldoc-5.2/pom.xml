@@ -9,7 +9,7 @@
   </parent>
 	<groupId>com.logicaldoc</groupId>
 	<artifactId>logicaldoc</artifactId>
-	<version>5.2.0</version>
+	<version>5.2.1</version>
 	<packaging>pom</packaging>
 	<name>logicaldoc</name>
 	<description>
@@ -140,6 +140,6 @@
     <!--module>logicaldoc-gui</module-->
 		<module>logicaldoc-web</module>
     <!--module>logicaldoc-webapp</module-->
-		<module>logicaldoc-testbench</module>
+		<!--module>logicaldoc-testbench</module-->
 	</modules>
 </project>
