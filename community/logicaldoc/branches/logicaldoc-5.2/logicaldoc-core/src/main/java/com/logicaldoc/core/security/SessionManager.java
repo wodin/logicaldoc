@@ -64,7 +64,7 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	@Override
 	public UserSession remove(Object key) {
 		kill((String) key);
-		return remove(key);
+		return super.remove(key);
 	}
 
 	/**
