@@ -135,7 +135,7 @@ public class TaskScheduling {
 			return trigger.getFireTimeAfter(previousFireTime);
 		} else {
 			if (previousFireTime != null) {
-				long next = previousFireTime.getTime() + ((TaskTrigger) trigger).getRepeatInterval();
+				long next = previousFireTime.getTime() + this.getInterval();
 				return new Date(next);
 			} else
 				return null;
