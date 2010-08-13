@@ -82,6 +82,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 
 			template.setId(templ.getId());
 		} catch (Throwable e) {
+			e.printStackTrace();
 			log.error(e.getMessage(), e);
 		}
 

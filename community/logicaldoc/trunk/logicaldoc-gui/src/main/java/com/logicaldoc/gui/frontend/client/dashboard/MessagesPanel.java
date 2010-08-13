@@ -12,11 +12,11 @@ import com.logicaldoc.gui.frontend.client.services.MessageService;
 import com.logicaldoc.gui.frontend.client.services.MessageServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.ExpansionMode;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -28,7 +28,6 @@ import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
 import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
-import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
@@ -47,19 +46,8 @@ public class MessagesPanel extends VLayout {
 
 	private ListGrid list;
 
-	private Layout listing = new VLayout();
-
-	private Layout detailsContainer = new VLayout();
-
-	private HTMLFlow messageText = new HTMLFlow();
-
 	public MessagesPanel() {
 		setWidth100();
-
-		// Initialize the listing panel as placeholder
-		listing.setAlign(Alignment.CENTER);
-		listing.setHeight("75%");
-		listing.setShowResizeBar(true);
 
 		initListGrid();
 
@@ -88,11 +76,6 @@ public class MessagesPanel extends VLayout {
 		});
 		toolStrip.addFill();
 
-		setMembers(toolStrip, listing, detailsContainer);
-
-		detailsContainer.setAlign(Alignment.CENTER);
-		detailsContainer.addMember(messageText);
-
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
@@ -100,34 +83,11 @@ public class MessagesPanel extends VLayout {
 				event.cancel();
 			}
 		});
-
-		list.addSelectionChangedHandler(new SelectionChangedHandler() {
-			@Override
-			public void onSelectionChanged(SelectionEvent event) {
-				final Record record = list.getSelectedRecord();
-				if (record != null)
-					service.getMessage(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")), true,
-							new AsyncCallback<GUIMessage>() {
-
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
-
-								@Override
-								public void onSuccess(GUIMessage message) {
-									messageText.setContents(message.getMessage());
-									record.setAttribute("read", "true");
-									list.updateData(record);
-								}
-							});
-			}
-		});
 	}
 
 	private void initListGrid() {
 		if (list != null) {
-			listing.removeMember(list);
+			removeMember(list);
 			list.destroy();
 		}
 
@@ -166,6 +126,10 @@ public class MessagesPanel extends VLayout {
 				}
 			}
 		};
+
+		list.setCanExpandRecords(true);
+		list.setExpansionMode(ExpansionMode.DETAIL_FIELD);
+		list.setDetailField("text");
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
@@ -176,8 +140,7 @@ public class MessagesPanel extends VLayout {
 		list.setDataSource(new MessagesDS());
 		list.setFields(id, priority, username, from, sent);
 
-		listing.addMember(list);
-		messageText.setContents(I18N.message("selectmessage"));
+		addMember(list);
 
 		// Count the total unread messages
 		list.addDataArrivedHandler(new DataArrivedHandler() {
@@ -194,6 +157,27 @@ public class MessagesPanel extends VLayout {
 			}
 		});
 
+		list.addSelectionChangedHandler(new SelectionChangedHandler() {
+			@Override
+			public void onSelectionChanged(SelectionEvent event) {
+				final Record record = list.getSelectedRecord();
+				if (record != null)
+					service.getMessage(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")), true,
+							new AsyncCallback<GUIMessage>() {
+
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(GUIMessage message) {
+									record.setAttribute("read", "true");
+									list.updateData(record);
+								}
+							});
+			}
+		});
 	}
 
 	private void showContextMenu() {

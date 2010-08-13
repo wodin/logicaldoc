@@ -3,6 +3,8 @@ package com.logicaldoc.gui.common.client.util;
 import java.util.LinkedHashMap;
 
 import com.logicaldoc.gui.common.client.Feature;
+import com.logicaldoc.gui.common.client.beans.GUIArchive;
+import com.logicaldoc.gui.common.client.data.ArchivesDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
 import com.logicaldoc.gui.common.client.data.UsersDS;
@@ -271,6 +273,7 @@ public class ItemFactory {
 	public static SelectItem newSelectItem(String name, String title) {
 		SelectItem select = newMultipleSelector(name, title != null ? I18N.message(title) : I18N.message(name));
 		select.setMultiple(false);
+		select.setWrapTitle(false);
 		return select;
 	}
 
@@ -446,13 +449,18 @@ public class ItemFactory {
 		return select;
 	}
 
-	public static SelectItem newTemplateSelector() {
+	public static SelectItem newTemplateSelector(boolean multipleSelection) {
 		SelectItem templateItem = new SelectItem("template", I18N.message("template"));
 		templateItem.setDisplayField("name");
 		templateItem.setValueField("id");
 		templateItem.setPickListWidth(250);
-		templateItem.setOptionDataSource(TemplatesDS.getInstanceWithEmpty());
-		if(!Feature.enabled(Feature.TEMPLATE))
+		templateItem.setMultiple(true);
+		templateItem.setMultipleAppearance(MultipleAppearance.PICKLIST);
+		if (!multipleSelection)
+			templateItem.setOptionDataSource(new TemplatesDS(true));
+		else
+			templateItem.setOptionDataSource(new TemplatesDS(false));
+		if (!Feature.enabled(Feature.TEMPLATE))
 			templateItem.setDisabled(true);
 		return templateItem;
 	}
@@ -472,5 +480,47 @@ public class ItemFactory {
 		map.put("1", I18N.message("sender"));
 		select.setValueMap(map);
 		return select;
+	}
+
+	public static SelectItem newArchiveTypeSelector() {
+		SelectItem item = new SelectItem();
+		item.setName("archivetype");
+		item.setTitle(I18N.message("type"));
+		item.setWrapTitle(false);
+		item.setDefaultValue(Integer.toString(GUIArchive.TYPE_DEFAULT));
+
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		map.put(Integer.toString(GUIArchive.TYPE_DEFAULT), I18N.message("default"));
+		map.put(Integer.toString(GUIArchive.TYPE_STORAGE), I18N.message("paperdematerialization"));
+
+		item.setValueMap(map);
+
+		if (!Feature.enabled(Feature.ARCHIVES))
+			item.setDisabled(true);
+
+		return item;
+	}
+
+	public static SelectItem newArchiveSelector(int mode, int type, Integer status) {
+		SelectItem item = newSelectItem("archive", null);
+		
+		item.setOptionDataSource(new ArchivesDS(mode, type, status));
+		item.setValueField("id");
+		if (!Feature.enabled(Feature.ARCHIVES))
+			item.setDisabled(true);
+		return item;
+	}
+
+	public static SelectItem newImportCustomIds() {
+		SelectItem item = newSelectItem("importcids", null);
+		
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		map.put(Integer.toString(GUIArchive.CUSTOMID_NOT_IMPORT), I18N.message("ignore"));
+		map.put(Integer.toString(GUIArchive.CUSTOMID_IMPORT_AND_NEW_RELEASE), I18N.message("importasnewversion"));
+		map.put(Integer.toString(GUIArchive.CUSTOMID_IMPORT_AND_NEW_SUBVERSION), I18N.message("importasnewsubversion"));
+		map.put(Integer.toString(GUIArchive.CUSTOMID_IMPORT_AND_NEW_DOCUMENT), I18N.message("importasnewdoc"));
+		item.setValueMap(map);
+
+		return item;
 	}
 }

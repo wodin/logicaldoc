@@ -7,6 +7,7 @@ import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.FolderObserver;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -43,6 +44,10 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	private ToolStripButton subscribe = new ToolStripButton();
 
 	private ToolStripButton scan = new ToolStripButton();
+
+	private ToolStripButton archive = new ToolStripButton();
+
+	private ToolStripButton archiveDematerialization = new ToolStripButton();
 
 	private GUIDocument document;
 
@@ -140,6 +145,44 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
+		archive.setIcon(ItemFactory.newImgIcon("data_into.png").getSrc());
+		archive.setTooltip(I18N.message("sendtoarchive"));
+		archive.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				ListGrid list = DocumentsPanel.get().getList();
+				ListGridRecord[] selection = list.getSelection();
+				if (selection == null || selection.length == 0)
+					return;
+				final long[] ids = new long[selection.length];
+				for (int i = 0; i < selection.length; i++) {
+					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
+				}
+
+				ArchiveDialog archiveDialod = new ArchiveDialog(ids, GUIArchive.TYPE_DEFAULT);
+				archiveDialod.show();
+			}
+		});
+
+		archiveDematerialization.setIcon(ItemFactory.newImgIcon("data_time.png").getSrc());
+		archiveDematerialization.setTooltip(I18N.message("sendtostoragearchive"));
+		archiveDematerialization.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				ListGrid list = DocumentsPanel.get().getList();
+				ListGridRecord[] selection = list.getSelection();
+				if (selection == null || selection.length == 0)
+					return;
+				final long[] ids = new long[selection.length];
+				for (int i = 0; i < selection.length; i++) {
+					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
+				}
+
+				ArchiveDialog archiveDialod = new ArchiveDialog(ids, GUIArchive.TYPE_STORAGE);
+				archiveDialod.show();
+			}
+		});
+
 		setHeight(27);
 		addButton(download);
 
@@ -182,6 +225,20 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			if (!Feature.enabled(Feature.AUDIT)) {
 				subscribe.setDisabled(true);
 				subscribe.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+
+		if (Feature.visible(Feature.ARCHIVES)) {
+			addSeparator();
+			addButton(archive);
+			addButton(archiveDematerialization);
+			if (!Feature.enabled(Feature.ARCHIVES)) {
+				archive.setDisabled(true);
+				archive.setTooltip(I18N.message("featuredisabled"));
+			}
+			if (!Feature.enabled(Feature.PAPER_DEMATERIALIZATION)) {
+				archiveDematerialization.setDisabled(true);
+				archiveDematerialization.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
 
@@ -236,16 +293,25 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				rss.setDisabled(true);
 				pdf.setDisabled(true);
 				subscribe.setDisabled(true);
+				archive.setDisabled(true);
+				archiveDematerialization.setDisabled(true);
 			}
 
 			GUIFolder folder = Session.get().getCurrentFolder();
 
 			if (folder != null) {
 				add.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));
-				scan.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));
+				scan.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE) || !Feature.enabled(Feature.SCAN));
+				archive.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_ARCHIVE)
+						|| !Feature.enabled(Feature.ARCHIVES));
+				archiveDematerialization.setDisabled(document == null
+						|| !folder.hasPermission(Constants.PERMISSION_ARCHIVE)
+						|| !Feature.enabled(Feature.PAPER_DEMATERIALIZATION));
 			} else {
 				add.setDisabled(true);
 				scan.setDisabled(true);
+				archive.setDisabled(true);
+				archiveDematerialization.setDisabled(true);
 			}
 		} catch (Throwable t) {
 

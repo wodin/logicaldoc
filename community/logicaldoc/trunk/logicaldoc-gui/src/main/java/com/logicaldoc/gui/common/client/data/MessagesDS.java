@@ -22,12 +22,13 @@ public class MessagesDS extends DataSource {
 		id.setRequired(true);
 
 		DataSourceTextField subject = new DataSourceTextField("subject");
+		DataSourceTextField text = new DataSourceTextField("text");
 		DataSourceImageField priority = new DataSourceImageField("priority");
 		DataSourceTextField from = new DataSourceTextField("from");
 		DataSourceDateTimeField sent = new DataSourceDateTimeField("sent");
 		DataSourceTextField read = new DataSourceTextField("read");
 
-		setFields(id, subject, priority, from, sent, read);
+		setFields(id, subject, text, priority, from, sent, read);
 		setClientOnly(true);
 		setDataURL("data/messages.xml?sid=" + Session.get().getSid());
 	}

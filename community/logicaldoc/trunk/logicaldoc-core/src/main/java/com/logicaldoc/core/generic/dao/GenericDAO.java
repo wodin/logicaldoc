@@ -26,7 +26,7 @@ public interface GenericDAO extends PersistentObjectDAO<Generic>{
 	 * and each parameter can be null.
 	 * 
 	 * @param type The type(you can use like jollies and can be null)
-	 * @param subtype The subtype((you can use like jollies and can be null)
+	 * @param subtype The subtype(you can use like jollies and can be null)
 	 * @return The collection of fount Generics
 	 */
 	public List<Generic> findByTypeAndSubtype(String type, String subtype);

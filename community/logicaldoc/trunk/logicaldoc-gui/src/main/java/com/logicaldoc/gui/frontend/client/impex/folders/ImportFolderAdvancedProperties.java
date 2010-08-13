@@ -62,7 +62,7 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 		TextItem exclude = ItemFactory.newTextItem("exclude", "exclude", share.getExcludes());
 		include.addChangedHandler(changedHandler);
 
-		SelectItem template = ItemFactory.newTemplateSelector();
+		SelectItem template = ItemFactory.newTemplateSelector(false);
 		template.addChangedHandler(changedHandler);
 
 		CheckboxItem delImport = new CheckboxItem();

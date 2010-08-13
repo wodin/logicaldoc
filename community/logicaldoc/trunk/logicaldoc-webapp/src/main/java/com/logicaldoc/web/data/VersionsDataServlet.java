@@ -35,6 +35,11 @@ public class VersionsDataServlet extends HttpServlet {
 			IOException {
 		SessionUtil.validateSession(request);
 
+		/*
+		 * Load some filters from the current request
+		 */
+		int max = Integer.parseInt(request.getParameter("max"));
+
 		String locale = request.getParameter("locale");
 
 		response.setContentType("text/xml");
@@ -48,13 +53,19 @@ public class VersionsDataServlet extends HttpServlet {
 		writer.write("<list>");
 
 		VersionDAO dao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
+
 		StringBuffer query = new StringBuffer(
-				"select A.id, A.username, A.event, A.version, A.fileVersion, A.versionDate, A.comment, A.docId, A.title, A.customId, A.fileSize, A.type  from Version A where A.deleted = 0 ");
-		query.append(" and A.docId=" + request.getParameter("docId"));
+				"select A.id, A.username, A.event, A.version, A.fileVersion, A.versionDate, A.comment, A.docId, A.title, A.customId, A.fileSize, A.type ");
+		if (request.getParameter("docId") != null) {
+			query.append(" from Version A where A.deleted = 0 and A.docId=" + request.getParameter("docId"));
+		} else {
+			query.append(" from Version A, Archive B where A.deleted = 0 and A in elements(B.entries) ");
+			query.append(" and B.id =" + request.getParameter("archiveId"));
+		}
 		query.append(" order by A.versionDate asc ");
 
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, null);
+		List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, max);
 
 		/*
 		 * Iterate over records composing the response XML document

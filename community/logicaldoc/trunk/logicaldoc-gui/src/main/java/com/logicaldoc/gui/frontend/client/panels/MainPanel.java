@@ -57,7 +57,7 @@ public class MainPanel extends VLayout implements SessionObserver {
 		Layout topPanel = new TopPanel();
 
 		tabSet.setTabBarPosition(Side.TOP);
-		tabSet.setTabBarAlign(Side.RIGHT);
+		tabSet.setTabBarAlign(Side.LEFT);
 		tabSet.setWidth100();
 		tabSet.setHeight("*");
 		documentsTab = new Tab(I18N.message("documents"));
@@ -77,7 +77,7 @@ public class MainPanel extends VLayout implements SessionObserver {
 			public void onResize(ResizeEvent event) {
 				int width = Window.getClientWidth();
 				int height = Window.getClientHeight();
-				tabSet.setSize(width + "px", height - 65 + "px");
+				tabSet.setSize(width + "px", height - 95 + "px");
 				redraw();
 			}
 		});
