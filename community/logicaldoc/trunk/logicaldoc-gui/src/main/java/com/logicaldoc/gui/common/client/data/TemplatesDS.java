@@ -10,11 +10,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class TemplatesDS extends DataSource {
-	private static TemplatesDS instance;
-
-	private static TemplatesDS instanceWithEmpty;
-
-	private TemplatesDS(boolean withEmpty) {
+	public TemplatesDS(boolean withEmpty) {
 		setTitleField("template");
 		setRecordXPath("/list/template");
 		DataSourceTextField id = new DataSourceTextField("id");
@@ -23,17 +19,5 @@ public class TemplatesDS extends DataSource {
 		setFields(id, name);
 		setDataURL("data/templates.xml" + (withEmpty ? "?withempty=true" : ""));
 		setClientOnly(true);
-	}
-
-	public static TemplatesDS get() {
-		if (instance == null)
-			instance = new TemplatesDS(false);
-		return instance;
-	}
-
-	public static TemplatesDS getInstanceWithEmpty() {
-		if (instanceWithEmpty == null)
-			instanceWithEmpty = new TemplatesDS(true);
-		return instanceWithEmpty;
 	}
 }

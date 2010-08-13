@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.ArchiveService;
 import com.logicaldoc.gui.frontend.client.services.ArchiveServiceAsync;
@@ -16,6 +17,9 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -27,6 +31,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
+import com.smartgwt.client.widgets.toolbar.ToolStrip;
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
  * This panel shows a list of versions of an archive in a tabular way.
@@ -42,7 +48,45 @@ public class VersionsPanel extends VLayout {
 
 	private ListGrid listGrid;
 
+	private int max = 100;
+
+	private ToolStrip toolbar = new ToolStrip();
+
 	public VersionsPanel(final Long archiveId, final boolean readonly) {
+		final IntegerItem maxItem = ItemFactory.newValidateIntegerItem("max", "", null, 1, null);
+		maxItem.setHint(I18N.message("elements"));
+		maxItem.setShowTitle(false);
+		maxItem.setDefaultValue(100);
+		maxItem.setWidth(40);
+
+		toolbar.setWidth100();
+		
+		ToolStripButton display = new ToolStripButton();
+		display.setTitle(I18N.message("display"));
+		toolbar.addButton(display);
+		toolbar.addFormItem(maxItem);
+		display.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (maxItem.validate() && maxItem.getValue() != null) {
+					if (maxItem.getValue() instanceof Integer)
+						max = (Integer) maxItem.getValue();
+					else
+						max = Integer.parseInt(maxItem.getValue().toString());
+					initListGrid(archiveId, readonly);
+				}
+			}
+		});
+		toolbar.addFill();
+
+		addMember(toolbar);
+		initListGrid(archiveId, readonly);
+	}
+
+	private void initListGrid(final Long archiveId, final boolean readonly) {
+		if (listGrid != null)
+			removeMember(listGrid);
+
 		ListGridField id = new ListGridField("id", 80);
 		id.setHidden(true);
 
@@ -75,10 +119,10 @@ public class VersionsPanel extends VLayout {
 		listGrid = new ListGrid();
 		listGrid.setCanFreezeFields(true);
 		listGrid.setAutoFetchData(true);
-		dataSource = new VersionsDS(null, archiveId);
+		dataSource = new VersionsDS(null, archiveId, max);
 		listGrid.setDataSource(dataSource);
 		listGrid.setFields(id, docid, customid, icon, title, version, date, size);
-		addMember(listGrid);
+		addMember(listGrid, 1);
 
 		listGrid.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override
@@ -115,7 +159,7 @@ public class VersionsPanel extends VLayout {
 			public void onClick(MenuItemClickEvent event) {
 				if (selection == null || selection.length == 0)
 					return;
-				final long[] ids = new long[selection.length];
+				final Long[] ids = new Long[selection.length];
 				for (int i = 0; i < selection.length; i++) {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}

@@ -17,6 +17,8 @@ public class MockVersionsDataServlet extends HttpServlet {
 			IOException {
 		System.out.println("*** versions");
 
+		int max = Integer.parseInt(request.getParameter("max"));
+		
 		Long docId = null;
 		if (request.getParameter("docId") != null)
 			docId = Long.parseLong(request.getParameter("docId"));

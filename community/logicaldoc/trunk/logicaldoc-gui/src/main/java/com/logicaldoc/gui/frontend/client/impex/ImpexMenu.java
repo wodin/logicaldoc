@@ -5,8 +5,8 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.impex.accounts.AccountsPanel;
 import com.logicaldoc.gui.frontend.client.impex.archives.ExportArchivesPanel;
+import com.logicaldoc.gui.frontend.client.impex.archives.ImportArchivesPanel;
 import com.logicaldoc.gui.frontend.client.impex.folders.ImportFoldersPanel;
-import com.logicaldoc.gui.frontend.client.template.TemplatesPanel;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -71,7 +71,7 @@ public class ImpexMenu extends VLayout {
 		importArchives.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				AdminPanel.get().setContent(new TemplatesPanel());
+				AdminPanel.get().setContent(new ImportArchivesPanel());
 			}
 		});
 

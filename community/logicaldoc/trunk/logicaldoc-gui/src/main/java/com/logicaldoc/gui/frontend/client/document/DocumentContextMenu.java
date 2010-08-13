@@ -456,6 +456,8 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
+		MenuItem more = new MenuItem(I18N.message("more"));
+
 		boolean enableLock = true;
 		boolean enableUnlock = true;
 		boolean enableImmutable = false;
@@ -523,15 +525,19 @@ public class DocumentContextMenu extends Menu {
 		immutable.setEnabled(enableImmutable);
 		delete.setEnabled(enableDelete);
 
-		setItems(download, cut, copy, delete, bookmark, sendMail, similar, links, checkout, checkin, lock, unlockItem,
-				immutable, markIndexable, markUnindexable);
+		setItems(download, cut, copy, delete, bookmark, sendMail, similar, links, checkout, checkin, lock, unlockItem, more);
 
+		Menu moreMenu=new Menu();
+		moreMenu.setItems(immutable, markIndexable, markUnindexable);
+		
 		if (Feature.visible(Feature.DIGITAL_SIGN)) {
-			addItem(sign);
+			moreMenu.addItem(sign);
 			if (!folder.hasPermission(Constants.PERMISSION_SIGN) || !Feature.enabled(Feature.DIGITAL_SIGN))
 				sign.setEnabled(false);
 			else
 				sign.setEnabled(enableSign);
 		}
+		
+		more.setSubmenu(moreMenu);
 	}
 }

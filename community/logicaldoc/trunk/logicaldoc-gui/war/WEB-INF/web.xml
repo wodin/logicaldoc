@@ -205,6 +205,11 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>ImpexFoldersData</servlet-name>
+		<servlet-class>com.logicaldoc.gui.common.server.MockImpexFoldersDataServlet</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>EmailAccountsData</servlet-name>
 		<servlet-class>com.logicaldoc.gui.common.server.MockEmailAccountsDataServlet</servlet-class>
 	</servlet>
@@ -252,6 +257,11 @@
 	<servlet>
 		<servlet-name>ArchivesData</servlet-name>
 		<servlet-class>com.logicaldoc.gui.common.server.MockArchivesDataServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>IncrementalArchivesData</servlet-name>
+		<servlet-class>com.logicaldoc.gui.common.server.MockIncrementalArchivesDataServlet</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -485,6 +495,11 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
+		<servlet-name>ImpexFoldersData</servlet-name>
+		<url-pattern>/data/impexfolders.xml</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
 		<servlet-name>SubscriptionsData</servlet-name>
 		<url-pattern>/data/subscriptions.xml</url-pattern>
 	</servlet-mapping>
@@ -492,6 +507,11 @@
 	<servlet-mapping>
 		<servlet-name>ArchivesData</servlet-name>
 		<url-pattern>/data/archives.xml</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>IncrementalArchivesData</servlet-name>
+		<url-pattern>/data/incrementalarchives.xml</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

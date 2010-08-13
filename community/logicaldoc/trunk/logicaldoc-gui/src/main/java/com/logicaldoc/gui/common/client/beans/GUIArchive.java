@@ -12,6 +12,8 @@ import java.util.Date;
 public class GUIArchive implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	public long id=0;
+	
 	public static int STATUS_OPENED = 0;
 
 	public static int STATUS_READY_TO_IMPORT = 0;
@@ -226,5 +228,13 @@ public class GUIArchive implements Serializable {
 
 	public void setImportCustomId(int importCustomId) {
 		this.importCustomId = importCustomId;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 }

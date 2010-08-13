@@ -147,7 +147,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		template.setDisplayField("name");
 		template.setValueField("id");
 		template.setPickListWidth(250);
-		template.setOptionDataSource(TemplatesDS.getInstanceWithEmpty());
+		template.setOptionDataSource(new TemplatesDS(false));
 		template.setColSpan(3);
 		template.addChangedHandler(new ChangedHandler() {
 			@Override

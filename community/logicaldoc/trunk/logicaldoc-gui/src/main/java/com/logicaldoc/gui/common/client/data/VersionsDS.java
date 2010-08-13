@@ -15,7 +15,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class VersionsDS extends DataSource {
-	public VersionsDS(Long docId, Long archiveId) {
+	public VersionsDS(Long docId, Long archiveId, int max) {
 		setRecordXPath("/list/version");
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
@@ -36,6 +36,7 @@ public class VersionsDS extends DataSource {
 		setFields(id, user, event, version, fileVersion, date, comment, docid, customid, title, size, icon);
 		setClientOnly(true);
 		setDataURL("data/versions.xml?sid=" + Session.get().getSid()
-				+ (docId != null ? "&docId=" + docId : "&archiveId=" + archiveId) + "&locale=" + I18N.getLocale());
+				+ (docId != null ? "&docId=" + docId : "&archiveId=" + archiveId) + "&locale=" + I18N.getLocale()
+				+ "&max=" + max);
 	}
 }
