@@ -157,12 +157,6 @@
 			<type>jar</type>
 		</dependency>
 		<dependency>
-			<groupId>net.sourceforge.jtds</groupId>
-			<artifactId>jtds</artifactId>
-			<version>1.2.2</version>
-			<type>jar</type>
-		</dependency>
-		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.10</version>
@@ -252,11 +246,6 @@
 			<groupId>javax.el</groupId>
 			<artifactId>el-api</artifactId>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.firebirdsql</groupId>
-			<artifactId>jaybird</artifactId>
-			<version>2.1.5</version>
 		</dependency>
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
