@@ -37,15 +37,23 @@ public class I18N {
 
 	public static String message(String key, String val) {
 		String tmp = message(key);
-		return tmp.replaceAll("\\{0\\}", val);
+		try {
+			tmp= tmp.replaceAll("\\{0\\}", val);
+		} catch (Throwable t) {
+		}
+		return tmp;
 	}
 
 	public static String message(String key, String[] vals) {
 		String tmp = message(key);
-		for (int i = 0; i < vals.length; i++) {
-			tmp = tmp.replaceAll("\\{" + i + "\\}", vals[i]);
+		try {
+			for (int i = 0; i < vals.length; i++) {
+				tmp = tmp.replaceAll("\\{" + i + "\\}", vals[i]);
+			}
+		} catch (Throwable t) {
 		}
 		return tmp;
+
 	}
 
 	public static String getLocale() {

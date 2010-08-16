@@ -2,6 +2,8 @@ package com.logicaldoc.gui.common.client.util;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Dictionary;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.RootPanel;
 
 public class Util {
 
@@ -64,6 +66,14 @@ public class Util {
 	 */
 	public static String imageHTML(String imageName) {
 		return imageHTML(imageName, "");
+	}
+	
+	public static void showWaitCursor() {
+	    DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "wait");
+	}
+
+	public static void showDefaultCursor() {
+	    DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "default");
 	}
 
 	/**
