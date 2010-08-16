@@ -11,8 +11,9 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
-import com.logicaldoc.gui.common.client.widgets.WarningLabel;
+import com.logicaldoc.gui.common.client.widgets.MessageLabel;
 import com.logicaldoc.gui.frontend.client.Frontend;
+import com.logicaldoc.gui.frontend.client.personal.ChangePassword;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
@@ -97,7 +98,7 @@ public class LoginPanel extends VLayout {
 		VStack messages = new VStack();
 		if (info.getMessages().length > 0) {
 			for (GUIMessage message : info.getMessages()) {
-				WarningLabel label = new WarningLabel(message.getMessage(), message.getUrl());
+				MessageLabel label = new MessageLabel(message);
 				messages.addMember(label);
 			}
 		}
@@ -181,7 +182,7 @@ public class LoginPanel extends VLayout {
 								SC.warn(e.getMessage());
 							}
 						} else if (session.getUser() != null && session.getUser().isExpired()) {
-							new ChangePassword(session.getUser()).show();
+							new ChangePassword(session.getUser(), "needtochangepassword").show();
 						} else {
 							SC.warn(I18N.message("accesdenied"));
 						}

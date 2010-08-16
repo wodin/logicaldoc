@@ -53,6 +53,12 @@ public interface SecurityService extends RemoteService {
 	public GUIUser saveUser(String sid, GUIUser user) throws InvalidSessionException;
 
 	/**
+	 * Saves the profile data only
+	 */
+	public GUIUser saveProfile(String sid, GUIUser user) throws InvalidSessionException;
+
+	
+	/**
 	 * Loads a given user from the database
 	 */
 	public GUIUser getUser(String sid, long userId) throws InvalidSessionException;

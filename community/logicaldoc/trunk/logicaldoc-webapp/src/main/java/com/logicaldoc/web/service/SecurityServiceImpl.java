@@ -359,6 +359,42 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			userDao.store(usr);
 
 		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e.getMessage(), e);
+		}
+
+		return user;
+	}
+
+	@Override
+	public GUIUser saveProfile(String sid, GUIUser user) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+
+		try {
+			User usr = userDao.findById(user.getId());
+			userDao.initialize(usr);
+
+			usr.setCity(user.getCity());
+			usr.setCountry(user.getCountry());
+			usr.setEmail(user.getEmail());
+			usr.setFirstName(user.getFirstName());
+			usr.setName(user.getName());
+			usr.setLanguage(user.getLanguage());
+			usr.setPostalcode(user.getPostalCode());
+			usr.setState(user.getState());
+			usr.setStreet(user.getAddress());
+			usr.setTelephone(user.getPhone());
+			usr.setTelephone2(user.getCell());
+			usr.setUserName(user.getUserName());
+			usr.setEnabled(user.isEnabled() ? 1 : 0);
+			usr.setPasswordExpires(user.isPasswordExpires() ? 1 : 0);
+
+			userDao.store(usr);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e.getMessage(), e);
 		}
 
 		return user;

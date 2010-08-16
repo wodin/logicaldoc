@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.security;
+package com.logicaldoc.gui.frontend.client.personal;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,6 +7,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -40,7 +41,7 @@ public class ChangePassword extends Window {
 
 	private SecurityServiceAsync securityService = (SecurityServiceAsync) GWT.create(SecurityService.class);
 
-	public ChangePassword(final GUIUser user) {
+	public ChangePassword(final GUIUser user, String alertKey) {
 		super();
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
@@ -69,8 +70,8 @@ public class ChangePassword extends Window {
 		equalsValidator.setErrorMessage(I18N.message("passwordnotmatch"));
 
 		LengthRangeValidator sizeValidator = new LengthRangeValidator();
-		sizeValidator.setErrorMessage(I18N.message("errorfieldminlenght", Integer.toString(user
-				.getPasswordMinLenght())));
+		sizeValidator
+				.setErrorMessage(I18N.message("errorfieldminlenght", Integer.toString(user.getPasswordMinLenght())));
 		sizeValidator.setMin(user.getPasswordMinLenght());
 
 		PasswordItem newPass = new PasswordItem();
@@ -98,47 +99,51 @@ public class ChangePassword extends Window {
 						return;
 					}
 
-					securityService.changePassword(user.getId(), vm.getValueAsString(PASSWORD), vm
-							.getValueAsString(NEWPASSWORD), new AsyncCallback<Integer>() {
+					securityService.changePassword(user.getId(), vm.getValueAsString(PASSWORD),
+							vm.getValueAsString(NEWPASSWORD), new AsyncCallback<Integer>() {
 
-						@Override
-						public void onFailure(Throwable caught) {
-							SC.warn(caught.getMessage());
-						}
+								@Override
+								public void onFailure(Throwable caught) {
+									SC.warn(caught.getMessage());
+								}
 
-						@Override
-						public void onSuccess(Integer ret) {
-							if (ret.intValue() > 0) {
-								// Alert the user and maintain the popup opened
-								if (ret == 1)
-									SC.warn(I18N.message("wrongpassword"));
-								else if (ret == 2)
-									SC.warn(I18N.message("passwdnotnotified"));
-								else
-									SC.warn(I18N.message("genericerror"));
-							} else {
-								// Close the popup
-								ChangePassword.this.destroy();
-							}
-						}
-					});
+								@Override
+								public void onSuccess(Integer ret) {
+									if (ret.intValue() > 0) {
+										// Alert the user and maintain the popup
+										// opened
+										if (ret == 1)
+											SC.warn(I18N.message("wrongpassword"));
+										else if (ret == 2)
+											SC.warn(I18N.message("passwdnotnotified"));
+										else
+											SC.warn(I18N.message("genericerror"));
+									} else {
+										// Close the popup
+										ChangePassword.this.destroy();
+										Log.info(I18N.message("event.user.passwordchanged"), null);
+									}
+								}
+							});
 				}
 			}
 		});
 
 		form.setFields(password, newPass, newPassAgain, apply);
 
-		Label label = new Label();
-		label.setHeight(30);
-		label.setPadding(10);
-		label.setMargin(5);
-		label.setAlign(Alignment.CENTER);
-		label.setValign(VerticalAlignment.CENTER);
-		label.setWrap(false);
-		label.setIcon("[SKIN]/Dialog/warn.png");
-		label.setContents(I18N.message("needtochangepassword"));
-
-		addItem(label);
+		if (alertKey != null) {
+			Label label = new Label();
+			label.setHeight(30);
+			label.setPadding(10);
+			label.setMargin(5);
+			label.setAlign(Alignment.CENTER);
+			label.setValign(VerticalAlignment.CENTER);
+			label.setWrap(false);
+			label.setIcon("[SKIN]/Dialog/warn.png");
+			label.setContents(I18N.message(alertKey));
+			addItem(label);
+		}
+		
 		addItem(form);
 	}
 }
