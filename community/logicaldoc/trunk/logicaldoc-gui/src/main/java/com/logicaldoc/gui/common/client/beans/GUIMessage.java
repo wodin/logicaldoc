@@ -28,6 +28,14 @@ public class GUIMessage implements Serializable {
 
 	private Integer validity;
 
+	
+	public GUIMessage(){
+	}
+	
+	public GUIMessage(String message){
+		this.message=message;
+	}
+	
 	public String getMessage() {
 		return message;
 	}

@@ -123,8 +123,9 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			}
 
 			info.setFeatures(features.toArray(new String[0]));
-			// info.setFeatures(new String[] { "Feature_52", "Feature_53",
-			// "Feature_56", "Feature_13" });
+
+			PropertiesBean config = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+			info.setInstallationId(config.getProperty("id"));
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}

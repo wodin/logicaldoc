@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.common.client.widgets;
 
+import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
@@ -20,10 +21,10 @@ public class FeatureDisabled extends VLayout {
 	public FeatureDisabled(Integer feature) {
 		Label label = null;
 		if (feature == null)
-			label = new WarningLabel("<b>" + I18N.message("featuredisabled") + "</b>", null);
+			label = new MessageLabel(new GUIMessage("<b>" + I18N.message("featuredisabled") + "</b>"));
 		else
-			label = new WarningLabel("<b>" + I18N.message("feature_" + feature) + " " + I18N.message("disabled")
-					+ "</b>", null);
+			label = new MessageLabel(new GUIMessage("<b>" + I18N.message("feature_" + feature) + " "
+					+ I18N.message("disabled") + "</b>"));
 		new Label();
 		label.setHeight(30);
 		label.setPadding(10);

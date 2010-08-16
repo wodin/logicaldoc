@@ -6,6 +6,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
@@ -456,6 +457,43 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
+		MenuItem archive = new MenuItem(I18N.message("sendtoarchive"));
+		archive.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				ListGrid list = DocumentsPanel.get().getList();
+				ListGridRecord[] selection = list.getSelection();
+				if (selection == null || selection.length == 0)
+					return;
+				final long[] ids = new long[selection.length];
+				for (int i = 0; i < selection.length; i++) {
+					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
+				}
+
+				ArchiveDialog archiveDialod = new ArchiveDialog(ids, GUIArchive.TYPE_DEFAULT);
+				archiveDialod.show();
+			}
+		});
+
+		MenuItem archiveDematerialization = new MenuItem(I18N.message("sendtostoragearchive"));
+		archiveDematerialization.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				ListGrid list = DocumentsPanel.get().getList();
+				ListGridRecord[] selection = list.getSelection();
+				if (selection == null || selection.length == 0)
+					return;
+				final long[] ids = new long[selection.length];
+				for (int i = 0; i < selection.length; i++) {
+					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
+				}
+
+				ArchiveDialog archiveDialod = new ArchiveDialog(ids, GUIArchive.TYPE_STORAGE);
+				archiveDialod.show();
+
+			}
+		});
+
 		MenuItem more = new MenuItem(I18N.message("more"));
 
 		boolean enableLock = true;
@@ -525,11 +563,11 @@ public class DocumentContextMenu extends Menu {
 		immutable.setEnabled(enableImmutable);
 		delete.setEnabled(enableDelete);
 
-		setItems(download, cut, copy, delete, bookmark, sendMail, similar, links, checkout, checkin, lock, unlockItem, more);
+		setItems(download, cut, copy, delete, bookmark, sendMail, links, checkout, checkin, lock, unlockItem, more);
 
-		Menu moreMenu=new Menu();
-		moreMenu.setItems(immutable, markIndexable, markUnindexable);
-		
+		Menu moreMenu = new Menu();
+		moreMenu.setItems(similar, immutable, markIndexable, markUnindexable);
+
 		if (Feature.visible(Feature.DIGITAL_SIGN)) {
 			moreMenu.addItem(sign);
 			if (!folder.hasPermission(Constants.PERMISSION_SIGN) || !Feature.enabled(Feature.DIGITAL_SIGN))
@@ -538,6 +576,22 @@ public class DocumentContextMenu extends Menu {
 				sign.setEnabled(enableSign);
 		}
 		
+		if (Feature.visible(Feature.ARCHIVES)) {
+			moreMenu.addItem(archive);
+			if (!folder.hasPermission(Constants.PERMISSION_ARCHIVE) || !Feature.enabled(Feature.ARCHIVES))
+				archive.setEnabled(false);
+			else
+				archive.setEnabled(enableSign);
+		}
+		
+		if (Feature.visible(Feature.PAPER_DEMATERIALIZATION)) {
+			moreMenu.addItem(archiveDematerialization);
+			if (!folder.hasPermission(Constants.PERMISSION_ARCHIVE) || !Feature.enabled(Feature.PAPER_DEMATERIALIZATION))
+				archiveDematerialization.setEnabled(false);
+			else
+				archiveDematerialization.setEnabled(enableSign);
+		}
+
 		more.setSubmenu(moreMenu);
 	}
 }

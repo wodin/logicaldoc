@@ -4,6 +4,8 @@ import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.frontend.client.personal.ChangePassword;
+import com.logicaldoc.gui.frontend.client.personal.Profile;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.smartgwt.client.util.SC;
@@ -31,8 +33,12 @@ public class MainMenu extends ToolStrip {
 		ToolStripMenuButton menu = getFileMenu();
 		addMenuButton(menu);
 
-		menu = getToolsMenu();
-		addMenuButton(menu);
+		addMenuButton(getPersonalMenu());
+
+		if (Session.get().getUser().isMemberOf("admin")) {
+			menu = getToolsMenu();
+			addMenuButton(menu);
+		}
 
 		addFill();
 		addSeparator();
@@ -85,13 +91,39 @@ public class MainMenu extends ToolStrip {
 			}
 		});
 
-		if (!Session.get().getUser().isMemberOf("admin")) {
-			develConsole.setEnabled(false);
-		}
-
 		menu.setItems(develConsole);
 
 		ToolStripMenuButton menuButton = new ToolStripMenuButton(I18N.message("tools"), menu);
+		menuButton.setWidth(100);
+		return menuButton;
+	}
+
+	private ToolStripMenuButton getPersonalMenu() {
+		Menu menu = new Menu();
+		menu.setShowShadow(true);
+		menu.setShadowDepth(3);
+
+		MenuItem profile = new MenuItem(I18N.message("profile"));
+		profile.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				Profile profile = new Profile(Session.get().getUser());
+				profile.show();
+			}
+		});
+
+		MenuItem changePswd = new MenuItem(I18N.message("changepassword"));
+		changePswd.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				ChangePassword cp = new ChangePassword(Session.get().getUser(), null);
+				cp.show();
+			}
+		});
+
+		menu.setItems(profile, changePswd);
+
+		ToolStripMenuButton menuButton = new ToolStripMenuButton(I18N.message("personal"), menu);
 		menuButton.setWidth(100);
 		return menuButton;
 	}

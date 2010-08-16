@@ -34,4 +34,6 @@ public interface SecurityServiceAsync {
 	void saveSettings(String sid, GUISecuritySettings settings, AsyncCallback<Void> callback);
 
 	void kill(String sid, AsyncCallback<Void> callback);
+
+	void saveProfile(String sid, GUIUser user, AsyncCallback<GUIUser> callback);
 }

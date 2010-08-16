@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.common.client.widgets;
 
 import com.google.gwt.user.client.Window;
+import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -12,20 +13,23 @@ import com.smartgwt.client.widgets.events.ClickHandler;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class WarningLabel extends Label {
+public class MessageLabel extends Label {
 
-	public WarningLabel(String message, final String url) {
-		super(message);
+	public MessageLabel(final GUIMessage message) {
+		super(message.getMessage());
 		setHeight(25);
 		setWrap(false);
-		setIcon("[SKIN]/Dialog/warn.png");
-		if (url != null) {
+		if (message.getPriority() == 1)
+			setIcon("[SKIN]/Dialog/notify.png");
+		else
+			setIcon("[SKIN]/Dialog/warn.png");
+		if (message.getUrl() != null) {
 			setCursor(Cursor.HAND);
 			addClickHandler(new ClickHandler() {
 
 				@Override
 				public void onClick(ClickEvent event) {
-					Window.open(url, "_self", "");
+					Window.open(message.getUrl(), "_self", "");
 				}
 			});
 		}

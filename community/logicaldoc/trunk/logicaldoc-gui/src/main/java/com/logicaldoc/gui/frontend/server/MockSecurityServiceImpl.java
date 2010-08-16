@@ -48,6 +48,7 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 			user.setGroups(new GUIGroup[] { group });
 			user.setFirstName("Marco");
 			user.setName("Meschieri");
+			user.setEmail("m.mesdchieri@logicalobjects.it");
 			user.setExpired(false);
 			user.setPasswordMinLenght(8);
 			user.setLockedDocs(5);
@@ -103,11 +104,18 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 
 	@Override
 	public GUIUser saveUser(String sid, GUIUser user) {
-		if (user.getId() == 0)
+		System.out.println("* save user:" + user);
+
+		if (user != null && user.getId() == 0)
 			user.setId(9999);
 		return user;
 	}
 
+	@Override
+	public GUIUser saveProfile(String sid, GUIUser user) {
+		return user;
+	}
+	
 	@Override
 	public GUIUser getUser(String sid, long userId) {
 		GUIUser user = new GUIUser();

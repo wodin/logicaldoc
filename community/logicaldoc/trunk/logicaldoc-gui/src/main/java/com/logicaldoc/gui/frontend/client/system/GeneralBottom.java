@@ -73,8 +73,8 @@ public class GeneralBottom extends HLayout {
 
 		LinkItem support = new LinkItem();
 		support.setName(I18N.message("support"));
-		support.setLinkTitle(Session.get().getInfo().getVendorSupport());
-		support.setValue("mailto:" + Session.get().getInfo().getVendorSupport() + "?subject="
+		support.setLinkTitle(Session.get().getInfo().getSupport());
+		support.setValue("mailto:" + Session.get().getInfo().getSupport() + "?subject="
 				+ Session.get().getInfo().getProductName() + " Support - ID(" + Util.getContext().get("id") + ")");
 		support.setRequired(true);
 		support.setShouldSaveValue(false);

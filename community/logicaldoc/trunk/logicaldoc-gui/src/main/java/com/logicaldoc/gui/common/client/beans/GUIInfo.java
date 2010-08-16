@@ -34,7 +34,7 @@ public class GUIInfo implements Serializable {
 
 	private String vendorCity = "Carpi";
 
-	private String vendorSupport = "support@logicaldoc.com";
+	private String support = "support@logicaldoc.com";
 
 	private String installationId;
 
@@ -145,14 +145,6 @@ public class GUIInfo implements Serializable {
 		this.vendorCity = vendorCity;
 	}
 
-	public String getVendorSupport() {
-		return vendorSupport;
-	}
-
-	public void setVendorSupport(String vendorSupport) {
-		this.vendorSupport = vendorSupport;
-	}
-
 	public GUIValuePair[] getSupportedLanguages() {
 		return supportedLanguages;
 	}
@@ -191,5 +183,13 @@ public class GUIInfo implements Serializable {
 
 	public void setSupportedGUILanguages(GUIValuePair[] supportedGUILanguages) {
 		this.supportedGUILanguages = supportedGUILanguages;
+	}
+
+	public String getSupport() {
+		return support;
+	}
+
+	public void setSupport(String support) {
+		this.support = support;
 	}
 }
