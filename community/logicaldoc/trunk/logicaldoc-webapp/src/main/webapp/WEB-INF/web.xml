@@ -512,7 +512,7 @@
 		<display-name>Setup only allowed after authentication</display-name>
 		<web-resource-collection>
 			<web-resource-name>Setup</web-resource-name>
-			<url-pattern>/setup.jsp</url-pattern>
+			<url-pattern>/setup*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>admin</role-name>
@@ -523,7 +523,7 @@
 			authentication</display-name>
 		<web-resource-collection>
 			<web-resource-name>Sessions</web-resource-name>
-			<url-pattern>/sessions.jsp</url-pattern>
+			<url-pattern>/sessions*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>admin</role-name>

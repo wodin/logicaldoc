@@ -20,7 +20,7 @@ public class Session {
 	private static Session instance;
 
 	private GUIInfo info;
-	
+
 	private GUISession session;
 
 	private GUIFolder currentFolder;
@@ -36,7 +36,10 @@ public class Session {
 	}
 
 	public String getSid() {
-		return session.getSid();
+		if (session != null)
+			return session.getSid();
+		else
+			return null;
 	}
 
 	public void close() {
