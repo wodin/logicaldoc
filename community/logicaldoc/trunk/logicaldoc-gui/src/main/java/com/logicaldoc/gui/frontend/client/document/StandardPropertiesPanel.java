@@ -1,9 +1,11 @@
 package com.logicaldoc.gui.frontend.client.document;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Image;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
@@ -19,7 +21,6 @@ import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
-import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -87,18 +88,18 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		form1.setNumCols(2);
 		form1.setValuesManager(vm);
 		form1.setTitleOrientation(TitleOrientation.LEFT);
+		form1.setWidth(300);
 
 		StaticTextItem id = ItemFactory.newStaticTextItem("id", "id", Long.toString(document.getId()));
 
-		DateItem creation = ItemFactory.newDateItem("creation", "createdon");
-		creation.setValue(document.getCreation());
-		creation.setShowPickerIcon(false);
+		DateTimeFormat formatter = DateTimeFormat.getFormat(I18N.message("format_date"));
+		StaticTextItem creation = ItemFactory.newStaticTextItem("creation", "createdon",
+				formatter.format((Date) document.getCreation()));
 
 		StaticTextItem creator = ItemFactory.newStaticTextItem("creator", "creator", document.getCreator());
 
-		DateItem date = ItemFactory.newDateItem("date", "publishedon");
-		date.setValue(document.getDate());
-		date.setShowPickerIcon(false);
+		StaticTextItem date = ItemFactory.newStaticTextItem("date", "publishedon",
+				formatter.format((Date) document.getDate()));
 
 		StaticTextItem publisher = ItemFactory.newStaticTextItem("publisher", "publisher", document.getPublisher());
 
@@ -109,7 +110,8 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		StaticTextItem version = ItemFactory.newStaticTextItem("version", "version", document.getVersion());
 
-		StaticTextItem fileVersion = ItemFactory.newStaticTextItem("fileVersion", "fileversion", document.getFileVersion());
+		StaticTextItem fileVersion = ItemFactory.newStaticTextItem("fileVersion", "fileversion",
+				document.getFileVersion());
 
 		StaticTextItem filename = ItemFactory.newStaticTextItem("fileName", "filename", document.getFileName());
 
@@ -133,7 +135,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		customId.setRequired(true);
 		customId.setDisabled(!update);
 		items.add(customId);
-		
+
 		SelectItem language = ItemFactory.newLanguageSelector("language", false, false);
 		language.addChangedHandler(changedHandler);
 		language.setDisabled(!update);
@@ -192,7 +194,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		rightPanel.setMembersMargin(5);
 		rightPanel.setPadding(4);
 		rightPanel.setAlign(VerticalAlignment.TOP);
-		
+
 		if (Feature.visible(Feature.PREVIEW)) {
 			if (Feature.enabled(Feature.PREVIEW)) {
 				Image preview = new Image("thumbnail?docId=" + document.getId() + "&versionId=" + document.getVersion());
