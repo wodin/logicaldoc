@@ -98,6 +98,8 @@ public class ServletDocUtil {
 		response.setHeader("Pragma", "public");
 		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 		response.setHeader("Expires", "0");
+		// Aggiungo lo header di lunghezza, necessario per i browser .NET, C#
+		response.setHeader("Content-Length", Long.toString(doc.getFileSize()));
 
 		OutputStream os;
 		os = response.getOutputStream();
