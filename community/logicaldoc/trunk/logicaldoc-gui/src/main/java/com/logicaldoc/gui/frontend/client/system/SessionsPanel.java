@@ -40,25 +40,27 @@ public class SessionsPanel extends VLayout {
 
 	private ListGrid list;
 
-	public SessionsPanel() {
+	public SessionsPanel(boolean showRefresh) {
 		refresh();
 
-		HLayout buttons = new HLayout();
-		Button refresh = new Button(I18N.message("refresh"));
-		buttons.addMember(refresh);
-		buttons.setMembersMargin(4);
-		buttons.setWidth100();
-		buttons.setHeight(15);
-		refresh.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				removeMember(list);
-				refresh();
-			}
-		});
+		if (showRefresh) {
+			HLayout buttons = new HLayout();
+			Button refresh = new Button(I18N.message("refresh"));
+			buttons.addMember(refresh);
+			buttons.setMembersMargin(4);
+			buttons.setWidth100();
+			buttons.setHeight(15);
+			refresh.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					removeMember(list);
+					refresh();
+				}
+			});
 
-		setMembersMargin(5);
-		addMember(buttons);
+			setMembersMargin(5);
+			addMember(buttons);
+		}
 	}
 
 	private void refresh() {
@@ -86,7 +88,7 @@ public class SessionsPanel extends VLayout {
 			@Override
 			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
 				if (getFieldName(colNum).equals("sid")) {
-					if (Session.get().getSid().equals(record.getAttribute("sid"))) {
+					if (Session.get().getSid()!=null && Session.get().getSid().equals(record.getAttribute("sid"))) {
 						return "font-weight: bold;";
 					} else {
 						return super.getCellCSSText(record, rowNum, colNum);
@@ -155,7 +157,7 @@ public class SessionsPanel extends VLayout {
 		});
 
 		if (!"0".equals(list.getSelectedRecord().getAttributeAsString("status"))
-				|| Session.get().getSid().equals(list.getSelectedRecord().getAttributeAsString("sid")))
+				|| (Session.get().getSid()!=null && Session.get().getSid().equals(list.getSelectedRecord().getAttributeAsString("sid"))))
 			killSession.setEnabled(false);
 
 		contextMenu.setItems(killSession);

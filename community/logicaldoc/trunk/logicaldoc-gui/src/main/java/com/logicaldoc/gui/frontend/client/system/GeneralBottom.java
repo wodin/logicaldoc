@@ -97,7 +97,7 @@ public class GeneralBottom extends HLayout {
 
 		Tab sessions = new Tab();
 		sessions.setTitle(I18N.message("sessions"));
-		sessions.setPane(new SessionsPanel());
+		sessions.setPane(new SessionsPanel(true));
 
 		tabs.setTabs(system, sessions);
 
