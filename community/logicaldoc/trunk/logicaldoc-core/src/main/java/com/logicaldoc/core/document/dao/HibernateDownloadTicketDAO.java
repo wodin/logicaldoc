@@ -8,7 +8,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.DownloadTicket;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * Hibernate implementation of <code>DownloadTicketDAO</code>
@@ -19,7 +19,7 @@ import com.logicaldoc.util.config.PropertiesBean;
 public class HibernateDownloadTicketDAO extends HibernatePersistentObjectDAO<DownloadTicket> implements
 		DownloadTicketDAO {
 
-	private PropertiesBean contextProperties;
+	private ContextProperties contextProperties;
 
 	public HibernateDownloadTicketDAO() {
 		super(DownloadTicket.class);
@@ -125,7 +125,7 @@ public class HibernateDownloadTicketDAO extends HibernatePersistentObjectDAO<Dow
 		return result;
 	}
 
-	public void setContextProperties(PropertiesBean contextProperties) {
+	public void setContextProperties(ContextProperties contextProperties) {
 		this.contextProperties = contextProperties;
 	}
 }

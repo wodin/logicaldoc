@@ -27,7 +27,7 @@ import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * Basic Implementation of <code>DocumentManager</code>
@@ -51,7 +51,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	private Storer storer;
 
-	private PropertiesBean config;
+	private ContextProperties config;
 
 	public void setListenerManager(DocumentListenerManager listenerManager) {
 		this.listenerManager = listenerManager;
@@ -819,7 +819,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		this.storer = storer;
 	}
 
-	public void setConfig(PropertiesBean config) {
+	public void setConfig(ContextProperties config) {
 		this.config = config;
 	}
 

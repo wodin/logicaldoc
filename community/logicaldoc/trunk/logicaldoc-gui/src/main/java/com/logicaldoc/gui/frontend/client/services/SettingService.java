@@ -43,6 +43,17 @@ public interface SettingService extends RemoteService {
 	public GUIEmailSettings loadEmailSettings(String sid) throws InvalidSessionException;
 
 	/**
+	 * Load the folders paths
+	 */
+	public GUIParameter[] loadFolders(String sid) throws InvalidSessionException;
+
+	
+	/**
+	 * Saves folders path
+	 */
+	public void saveFolders(String sid, GUIParameter[] folders) throws InvalidSessionException;
+	
+	/**
 	 * Saves email settings (SMTP connection)
 	 */
 	public void saveEmailSettings(String sid, GUIEmailSettings settings) throws InvalidSessionException;

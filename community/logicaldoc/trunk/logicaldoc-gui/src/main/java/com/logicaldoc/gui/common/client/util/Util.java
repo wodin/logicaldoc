@@ -7,8 +7,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 public class Util {
 
-	private static Dictionary context;
-
 	/**
 	 * Generates HTML image code with style.
 	 * 
@@ -42,12 +40,6 @@ public class Util {
 
 	public static void changeLocale(String locale) {
 		redirect(contextPath() + GWT.getModuleName() + ".jsp?locale=" + locale);
-	}
-
-	public static Dictionary getContext() {
-		if (context == null)
-			context = Dictionary.getDictionary("context");
-		return context;
 	}
 
 	public static String imagePrefix() {

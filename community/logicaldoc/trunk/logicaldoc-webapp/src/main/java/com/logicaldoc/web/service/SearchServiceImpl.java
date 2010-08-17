@@ -32,7 +32,7 @@ import com.logicaldoc.gui.common.client.beans.GUITag;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
@@ -268,7 +268,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 	}
 
 	private File getQueriesDir(String username) {
-		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		String userpath = conf.getPropertyWithSubstitutions("conf.userdir");
 		if (!userpath.endsWith("_")) {
 			userpath += "_";

@@ -323,12 +323,12 @@ public class SearchIndexingPanel extends VLayout {
 		searchEngineForm.setValuesManager(vm);
 
 		// Installed Languages
-		StaticTextItem languages = ItemFactory.newStaticTextItem("languages", "installedlanguages", this.searchEngine
-				.getLanguages());
+		StaticTextItem languages = ItemFactory.newStaticTextItem("languages", "installedlanguages",
+				this.searchEngine.getLanguages());
 
 		// Entries count
-		StaticTextItem entries = ItemFactory.newStaticTextItem("entries", "entriescount", ""
-				+ this.searchEngine.getEntries());
+		StaticTextItem entries = ItemFactory.newStaticTextItem("entries", "entriescount",
+				"" + this.searchEngine.getEntries());
 
 		// Locked
 		CheckboxItem locked = new CheckboxItem();

@@ -24,7 +24,7 @@ import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.common.client.services.InfoService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.plugin.PluginRegistry;
 import com.logicaldoc.web.ApplicationInitializer;
 
@@ -96,7 +96,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 
 			if (!ApplicationInitializer.needRestart) {
 				// Checks if LogicalDOC has been initialised
-				PropertiesBean pbean = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+				ContextProperties pbean = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 				String jdbcUrl = pbean.getProperty("jdbc.url");
 				if (jdbcUrl.startsWith("jdbc:hsqldb:mem:")) {
 					GUIMessage setupReminder = new GUIMessage();
@@ -124,7 +124,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 
 			info.setFeatures(features.toArray(new String[0]));
 
-			PropertiesBean config = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			info.setInstallationId(config.getProperty("id"));
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);

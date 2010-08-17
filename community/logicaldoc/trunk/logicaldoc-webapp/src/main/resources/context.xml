@@ -17,7 +17,7 @@
 	</bean>
 
 	<bean id="ContextProperties"
-		class="com.logicaldoc.util.config.PropertiesBean" />
+		class="com.logicaldoc.util.config.ContextProperties" />
 
 	<bean id="Context" class="com.logicaldoc.util.Context"
 		abstract="false" lazy-init="default" autowire="default"

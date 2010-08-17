@@ -83,4 +83,24 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 		}
 		return values;
 	}
+
+	@Override
+	public GUIParameter[] loadFolders(String sid) throws InvalidSessionException {
+		GUIParameter[] params = new GUIParameter[8];
+	    params[0] = new GUIParameter("dbdir", "db");
+	    params[1] = new GUIParameter("docdir", "docs");
+	    params[2] = new GUIParameter("exportdir", "export");
+	    params[3] = new GUIParameter("importdir", "import");
+	    params[4] = new GUIParameter("indexdir", "index");
+	    params[5] = new GUIParameter("logdir", "log");
+	    params[6] = new GUIParameter("plugindir", "plugin");
+	    params[7] = new GUIParameter("userdir", "user");
+		
+	    return params;
+	}
+	
+	@Override
+	public void saveFolders(String sid, GUIParameter[] folders) throws InvalidSessionException {
+
+	}
 }

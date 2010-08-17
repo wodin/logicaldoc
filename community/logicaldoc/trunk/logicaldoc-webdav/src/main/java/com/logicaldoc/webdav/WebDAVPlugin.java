@@ -5,7 +5,7 @@ import java.io.File;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.config.WebConfigurator;
 import com.logicaldoc.util.plugin.LogicalDOCPlugin;
 import com.logicaldoc.webdav.web.WebdavServlet;
@@ -37,7 +37,7 @@ public class WebDAVPlugin extends LogicalDOCPlugin {
 		config.addServletMapping(SERVLET_NAME, "/webdav/*");
 		config.writeXMLDoc();
 
-		PropertiesBean pbean = new PropertiesBean(getClass().getClassLoader().getResource("context.properties"));
+		ContextProperties pbean = new ContextProperties(getClass().getClassLoader().getResource("context.properties"));
 		pbean.setProperty("webdav.enabled", "true");
 		pbean.write();
 

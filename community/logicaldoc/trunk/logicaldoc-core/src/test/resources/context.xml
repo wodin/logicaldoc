@@ -16,7 +16,7 @@
 	</bean>
 
 	<bean id="ContextProperties"
-		class="com.logicaldoc.util.config.PropertiesBean">
+		class="com.logicaldoc.util.config.ContextProperties">
 	</bean>
 
 	<bean id="Context" class="com.logicaldoc.util.Context"

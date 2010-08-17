@@ -5,7 +5,7 @@ import java.text.BreakIterator;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * Utility class for tags handling
@@ -29,7 +29,7 @@ public class TagUtil {
 	public static Set<String> extractTags(String words) {
 		Set<String> coll = new HashSet<String>();
 		try {
-			PropertiesBean conf = new PropertiesBean();
+			ContextProperties conf = new ContextProperties();
 
 			BreakIterator boundary = BreakIterator.getWordInstance();
 			boundary.setText(words);

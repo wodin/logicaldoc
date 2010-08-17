@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.cxf.transport.servlet.CXFServlet;
 
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * Extension of the standard CXF servlet that checks the enabled flag
@@ -20,10 +20,10 @@ import com.logicaldoc.util.config.PropertiesBean;
 public class WebserviceServlet extends CXFServlet {
 	private static final long serialVersionUID = 1L;
 
-	private PropertiesBean settings;
+	private ContextProperties settings;
 
 	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		PropertiesBean settings = getSettings();
+		ContextProperties settings = getSettings();
 
 		// Check if the service is enabled
 		if ("true".equals(settings.get("webservice.enabled")))
@@ -31,14 +31,14 @@ public class WebserviceServlet extends CXFServlet {
 		else
 			response.sendError(HttpServletResponse.SC_MOVED_TEMPORARILY);
 
-		PropertiesBean pbean = new PropertiesBean(getClass().getClassLoader().getResource("context.properties"));
+		ContextProperties pbean = new ContextProperties(getClass().getClassLoader().getResource("context.properties"));
 		pbean.setProperty("webservice.enabled", "true");
 		pbean.write();
 	}
 
-	public PropertiesBean getSettings() {
+	public ContextProperties getSettings() {
 		if (settings == null)
-			settings = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+			settings = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		return settings;
 	}
 }

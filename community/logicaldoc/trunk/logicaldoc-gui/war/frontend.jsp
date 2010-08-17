@@ -44,8 +44,6 @@ body {
 }
 </style>
         <link REL="STYLESHEET" HREF="./skin/style.css" TYPE="text/css" />
-		<!--load context-->
-		<script src="./context.jsp"></script>
 		<link rel='image/x-icon' href='./skin/images/favicon.ico' />
 		<script type="text/javascript">
 		   // Determine what skin file to load

@@ -30,7 +30,7 @@ import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.io.CryptUtil;
 import com.logicaldoc.web.util.SessionUtil;
 
@@ -126,7 +126,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				return;
 			SessionManager.getInstance().kill(sid);
 
-			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			FileUtils.deleteDirectory(new File(conf.getPropertyWithSubstitutions("conf.userdir") + "/"
 					+ session.getUserName() + "/temp"));
 
@@ -412,7 +412,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		GUISecuritySettings securitySettings = new GUISecuritySettings();
 		try {
 			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-			PropertiesBean pbean = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+			ContextProperties pbean = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 			securitySettings.setPwdExpiration(Integer.parseInt(pbean.getProperty("password.ttl")));
 			securitySettings.setPwdSize(Integer.parseInt(pbean.getProperty("password.size")));
@@ -437,7 +437,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		SessionUtil.validateSession(sid);
 
 		try {
-			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 			conf.setProperty("password.ttl", Integer.toString(settings.getPwdExpiration()));
 			conf.setProperty("password.size", Integer.toString(settings.getPwdSize()));

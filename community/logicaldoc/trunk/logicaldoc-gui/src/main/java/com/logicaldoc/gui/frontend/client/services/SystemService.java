@@ -101,9 +101,4 @@ public interface SystemService extends RemoteService {
 	 * @return True, if the task is correctly saved.
 	 */
 	public GUITask saveTask(String sid, GUITask task) throws InvalidSessionException;
-
-	/**
-	 * Saves folders path
-	 */
-	public void saveFolders(String sid, GUIParameter[] folders) throws InvalidSessionException;
 }

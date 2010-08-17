@@ -319,6 +319,7 @@ public class ItemFactory {
 			item.setValue(value);
 		else
 			item.setValue("");
+		item.setWrapTitle(false);
 		item.setRequiredMessage(I18N.message("fieldrequired"));
 		return item;
 	}
@@ -362,6 +363,7 @@ public class ItemFactory {
 			item.setValue(value);
 		else
 			item.setValue("");
+		item.setWrapTitle(false);
 		return item;
 	}
 

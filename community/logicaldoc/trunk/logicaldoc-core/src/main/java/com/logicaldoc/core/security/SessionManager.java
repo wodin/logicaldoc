@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * Repository of all current user sessions.
@@ -103,7 +103,7 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 		Date lastRenew = session.getLastRenew();
 		int timeout = 30;
 		try {
-			PropertiesBean config = new PropertiesBean();
+			ContextProperties config = new ContextProperties();
 			if (config.getInt("session.timeout") > 0)
 				timeout = config.getInt("session.timeout");
 		} catch (IOException e) {

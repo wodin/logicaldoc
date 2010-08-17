@@ -18,20 +18,20 @@ import org.apache.commons.logging.LogFactory;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
-public class PropertiesBean extends OrderedProperties {
+public class ContextProperties extends OrderedProperties {
 
 	private static final long serialVersionUID = 1L;
 
 	/** this points to an ordinary file */
 	private String docPath;
 
-	protected static Log log = LogFactory.getLog(PropertiesBean.class);
+	protected static Log log = LogFactory.getLog(ContextProperties.class);
 
-	public PropertiesBean() throws IOException {
-		this(PropertiesBean.class.getClassLoader().getResource("context.properties"));
+	public ContextProperties() throws IOException {
+		this(ContextProperties.class.getClassLoader().getResource("context.properties"));
 	}
 
-	public PropertiesBean(String docname) throws IOException {
+	public ContextProperties(String docname) throws IOException {
 		docPath = docname;
 		try {
 			load(new FileInputStream(docPath));
@@ -41,7 +41,7 @@ public class PropertiesBean extends OrderedProperties {
 		}
 	}
 
-	public PropertiesBean(URL docname) throws IOException {
+	public ContextProperties(URL docname) throws IOException {
 		try {
 			docPath = URLDecoder.decode(docname.getPath(), "UTF-8");
 		} catch (IOException e) {
@@ -56,7 +56,7 @@ public class PropertiesBean extends OrderedProperties {
 		}
 	}
 
-	public PropertiesBean(File doc) throws IOException {
+	public ContextProperties(File doc) throws IOException {
 		try {
 			docPath = doc.getPath();
 			load(new FileInputStream(docPath));
@@ -69,7 +69,7 @@ public class PropertiesBean extends OrderedProperties {
 	/**
 	 * Creates new XMLBean from an input stream; XMLBean is read-only!!!
 	 */
-	public PropertiesBean(InputStream is) throws IOException {
+	public ContextProperties(InputStream is) throws IOException {
 		docPath = null;
 		try {
 			load(is);
@@ -80,8 +80,8 @@ public class PropertiesBean extends OrderedProperties {
 	}
 
 	/**
-	 * This method saves the properties-file connected by PropertiesBean.<br>
-	 * <b>NOTE:</b> only call this on an PropertiesBean _NOT_ created from an
+	 * This method saves the properties-file connected by ContextProperties.<br>
+	 * <b>NOTE:</b> only call this on an ContextProperties _NOT_ created from an
 	 * InputStream!
 	 * 
 	 * @throws IOException

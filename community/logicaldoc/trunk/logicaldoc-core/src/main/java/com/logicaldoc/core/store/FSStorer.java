@@ -15,7 +15,7 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.StringUtil;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.io.FileUtil;
 
 /**
@@ -32,16 +32,16 @@ import com.logicaldoc.util.io.FileUtil;
 public class FSStorer implements Storer {
 	protected static Log log = LogFactory.getLog(FSStorer.class);
 
-	private PropertiesBean config;
+	private ContextProperties config;
 
 	public FSStorer() {
 	}
 
-	public PropertiesBean getConfig() {
+	public ContextProperties getConfig() {
 		return config;
 	}
 
-	public void setConfig(PropertiesBean config) {
+	public void setConfig(ContextProperties config) {
 		this.config = config;
 	}
 

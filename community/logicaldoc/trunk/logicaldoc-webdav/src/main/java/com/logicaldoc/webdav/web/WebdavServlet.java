@@ -21,7 +21,7 @@ import org.apache.jackrabbit.webdav.lock.SimpleLockManager;
 import org.apache.jackrabbit.webdav.simple.LocatorFactoryImplEx;
 
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.webdav.resource.DavResourceFactory;
 import com.logicaldoc.webdav.resource.DavResourceFactoryImpl;
 import com.logicaldoc.webdav.resource.ResourceConfig;
@@ -62,7 +62,7 @@ public class WebdavServlet extends AbstractWebdavServlet {
 
 	private ResourceConfig config;
 
-	private PropertiesBean settings;
+	private ContextProperties settings;
 
 	public void init() {
 		resourcePathPrefix = getInitParameter(INIT_PARAM_RESOURCE_PATH_PREFIX);
@@ -172,7 +172,7 @@ public class WebdavServlet extends AbstractWebdavServlet {
 	}
 
 	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		PropertiesBean settings = getSettings();
+		ContextProperties settings = getSettings();
 
 		// Check if the service is enabled
 		if ("true".equals(settings.get("webdav.enabled")))
@@ -181,9 +181,9 @@ public class WebdavServlet extends AbstractWebdavServlet {
 			response.sendError(HttpServletResponse.SC_MOVED_TEMPORARILY);
 	}
 
-	public PropertiesBean getSettings() {
+	public ContextProperties getSettings() {
 		if (settings == null)
-			settings = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+			settings = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		return settings;
 	}
 }

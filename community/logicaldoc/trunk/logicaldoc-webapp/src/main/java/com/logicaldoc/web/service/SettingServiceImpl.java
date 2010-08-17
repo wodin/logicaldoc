@@ -1,5 +1,6 @@
 package com.logicaldoc.web.service;
 
+import java.io.IOException;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +15,7 @@ import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
@@ -35,7 +36,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 		GUIEmailSettings emailSettings = new GUIEmailSettings();
 		try {
-			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 			emailSettings.setSmtpServer(conf.getProperty("smtp.host"));
 			emailSettings.setPort(Integer.parseInt(conf.getProperty("smtp.port")));
@@ -60,7 +61,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		SessionUtil.validateSession(sid);
 
 		try {
-			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 			conf.setProperty("smtp.host", settings.getSmtpServer());
 			conf.setProperty("smtp.port", Integer.toString(settings.getPort()));
@@ -83,7 +84,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		SessionUtil.validateSession(sid);
 
 		TreeSet<String> sortedSet = new TreeSet<String>();
-		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		for (Object key : conf.keySet()) {
 			String name = key.toString();
 			if (name.endsWith(".hidden") || name.endsWith("readonly"))
@@ -120,7 +121,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 				+ request.getContextPath();
 
-		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		GUIWebServiceSettings[] settings = new GUIWebServiceSettings[2];
 
 		GUIWebServiceSettings wsSettings = new GUIWebServiceSettings();
@@ -143,7 +144,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		SessionUtil.validateSession(sid);
 
 		try {
-			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			for (int i = 0; i < settings.length; i++) {
 				conf.setProperty(settings[i].getName(), settings[i].getValue());
 			}
@@ -162,7 +163,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		SessionUtil.validateSession(sid);
 
 		try {
-			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 			conf.setProperty("webservice.enabled", wsSettings.isEnabled() ? "true" : "false");
 			conf.setProperty("webdav.enabled", webDavSettings.isEnabled() ? "true" : "false");
@@ -181,7 +182,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 		String[] values = new String[names.length];
 		try {
-			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 			for (int i = 0; i < names.length; i++) {
 				values[i] = conf.getProperty(names[i]);
@@ -190,5 +191,37 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 			log.error("Exception reading settings: " + e.getMessage(), e);
 		}
 		return values;
+	}
+
+	@Override
+	public GUIParameter[] loadFolders(String sid) throws InvalidSessionException {
+		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+
+		GUIParameter[] params = new GUIParameter[8];
+	    params[0] = new GUIParameter("dbdir", conf.getProperty("conf.dbdir"));
+	    params[1] = new GUIParameter("docdir", conf.getProperty("conf.docdir"));
+	    params[2] = new GUIParameter("exportdir", conf.getProperty("conf.exportdir"));
+	    params[3] = new GUIParameter("importdir", conf.getProperty("conf.importdir"));
+	    params[4] = new GUIParameter("indexdir", conf.getProperty("conf.indexdir"));
+	    params[5] = new GUIParameter("logdir", conf.getProperty("conf.logdir"));
+	    params[6] = new GUIParameter("plugindir", conf.getProperty("conf.plugindir"));
+	    params[7] = new GUIParameter("userdir", conf.getProperty("conf.userdir"));
+		
+	    return params;
+	}
+	
+	@Override
+	public void saveFolders(String sid, GUIParameter[] folders) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		try {
+			for (GUIParameter f : folders) {
+				conf.setProperty("conf."+f.getName(), f.getValue());
+			}
+			conf.write();
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
+		}
 	}
 }

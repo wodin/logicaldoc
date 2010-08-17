@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.client.system;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -75,7 +74,8 @@ public class GeneralBottom extends HLayout {
 		support.setName(I18N.message("support"));
 		support.setLinkTitle(Session.get().getInfo().getSupport());
 		support.setValue("mailto:" + Session.get().getInfo().getSupport() + "?subject="
-				+ Session.get().getInfo().getProductName() + " Support - ID(" + Util.getContext().get("id") + ")");
+				+ Session.get().getInfo().getProductName() + " Support - ID("
+				+ Session.get().getInfo().getInstallationId() + ")");
 		support.setRequired(true);
 		support.setShouldSaveValue(false);
 

@@ -1,7 +1,6 @@
 package com.logicaldoc.web.service;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,7 +28,7 @@ import com.logicaldoc.gui.common.client.beans.GUITask;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.sql.SqlUtil;
 import com.logicaldoc.web.util.SessionUtil;
 
@@ -99,7 +98,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	public GUIParameter[][] getStatistics(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 		GUIParameter[][] parameters = new GUIParameter[3][8];
 
@@ -361,7 +360,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				scheduling.setMinCpuIdle((t.getScheduling().getMinCpuIdle()));
 				scheduling.setPreviousFireTime(t.getScheduling().getPreviousFireTime());
 				scheduling.setNextFireTime(t.getScheduling().getNextFireTime());
-				
+
 				task.setScheduling(scheduling);
 
 				tasks[i] = task;
@@ -374,27 +373,6 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 		}
 
 		return null;
-	}
-
-	@Override
-	public void saveFolders(String sid, GUIParameter[] folders) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
-
-		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
-		try {
-			conf.setProperty("conf.docdir", folders[0].getValue());
-			conf.setProperty("conf.indexdir", folders[1].getValue());
-			conf.setProperty("conf.userdir", folders[2].getValue());
-			conf.setProperty("conf.importdir", folders[4].getValue());
-			conf.setProperty("conf.exportdir", folders[5].getValue());
-			conf.setProperty("conf.plugindir", folders[3].getValue());
-			conf.setProperty("conf.dbdir", folders[6].getValue());
-			conf.setProperty("conf.logdir", folders[7].getValue());
-
-			conf.write();
-		} catch (IOException e) {
-			log.error(e.getMessage(), e);
-		}
 	}
 
 	@Override

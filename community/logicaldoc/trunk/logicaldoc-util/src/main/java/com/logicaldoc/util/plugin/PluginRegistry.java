@@ -26,7 +26,7 @@ import org.java.plugin.registry.Identity;
 import org.java.plugin.registry.PluginDescriptor;
 import org.java.plugin.util.ExtendedProperties;
 
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * Central point where plugins are loaded and handled. The class is abstract and
@@ -48,7 +48,7 @@ public abstract class PluginRegistry {
 		if (instance == null) {
 			String pluginregistry = null;
 			try {
-				PropertiesBean config = new PropertiesBean();
+				ContextProperties config = new ContextProperties();
 				pluginregistry = config.getProperty("plugin.registry");
 			} catch (IOException e1) {
 			}
