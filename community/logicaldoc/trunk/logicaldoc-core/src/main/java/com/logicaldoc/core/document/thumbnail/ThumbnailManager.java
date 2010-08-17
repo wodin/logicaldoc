@@ -16,7 +16,7 @@ import org.java.plugin.registry.Extension;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
@@ -60,7 +60,7 @@ public class ThumbnailManager {
 
 		int size = 150;
 		try {
-			PropertiesBean conf = new PropertiesBean();
+			ContextProperties conf = new ContextProperties();
 			size = Integer.parseInt(conf.getProperty("gui.thumbnail.size"));
 		} catch (Throwable t) {
 			log.error(t.getMessage());
@@ -68,7 +68,7 @@ public class ThumbnailManager {
 
 		float quality = 1;
 		try {
-			PropertiesBean conf = new PropertiesBean();
+			ContextProperties conf = new ContextProperties();
 			int buf = Integer.parseInt(conf.getProperty("gui.thumbnail.quality"));
 			if (buf < 1)
 				buf = 1;
@@ -81,7 +81,7 @@ public class ThumbnailManager {
 
 		int scaleAlgorithm = Image.SCALE_SMOOTH;
 		try {
-			PropertiesBean conf = new PropertiesBean();
+			ContextProperties conf = new ContextProperties();
 			scaleAlgorithm = Integer.parseInt(conf.getProperty("gui.thumbnail.scale"));
 		} catch (Throwable t) {
 			log.error(t.getMessage());

@@ -9,7 +9,7 @@ import org.quartz.Scheduler;
 import org.quartz.Trigger;
 
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.system.CpuInfo;
 
 /**
@@ -169,7 +169,7 @@ public class TaskScheduling {
 	 * Loads scheduling configurations from persistent storage
 	 */
 	public void load() throws IOException, ParseException {
-		PropertiesBean config = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		String enbl = config.getProperty("schedule.enabled." + taskName);
 		this.enabled = "true".equals(enbl);
 		setCronExpression(config.getProperty("schedule.cron." + taskName));
@@ -191,7 +191,7 @@ public class TaskScheduling {
 		TaskTrigger trigger = (TaskTrigger) Context.getInstance().getBean(taskName + "Trigger");
 		String expression = getCronExpression();
 
-		PropertiesBean config = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		config.setProperty("schedule.cron." + taskName, expression);
 		config.setProperty("schedule.enabled." + taskName, enabled ? "true" : "false");
 		config.setProperty("schedule.length." + taskName, Long.toString(maxLength));

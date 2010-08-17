@@ -12,7 +12,7 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.util.Log4jConfigurer;
 
 import com.logicaldoc.util.config.LoggingConfigurator;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.io.ZipUtil;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
@@ -44,7 +44,7 @@ public class ApplicationInitializer implements ServletContextListener {
 
 		try {
 			// Setup the correct logs folder
-			PropertiesBean config = new PropertiesBean();
+			ContextProperties config = new ContextProperties();
 			LoggingConfigurator lconf = new LoggingConfigurator();
 			lconf.setLogsRoot(config.getProperty("conf.logdir"));
 			lconf.write();
@@ -98,7 +98,7 @@ public class ApplicationInitializer implements ServletContextListener {
 	 * @throws IOException
 	 */
 	private void unpackPlugins(ServletContext context) throws IOException {
-		PropertiesBean config = new PropertiesBean();
+		ContextProperties config = new ContextProperties();
 		File pluginsDir = new File(config.getProperty("conf.plugindir"));
 		File[] archives = pluginsDir.listFiles(new FilenameFilter() {
 			@Override

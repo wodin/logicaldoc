@@ -22,7 +22,7 @@ import com.logicaldoc.gui.setup.client.SetupInfo;
 import com.logicaldoc.gui.setup.client.services.SetupService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.LoggingConfigurator;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
@@ -47,7 +47,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			writeSmtpConfig(data);
 
 			// Create a unique installation id
-			PropertiesBean pbean = new PropertiesBean();
+			ContextProperties pbean = new ContextProperties();
 			pbean.setProperty("id", UUID.randomUUID().toString());
 			pbean.write();
 
@@ -71,7 +71,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 
 	public void writeSmtpConfig(SetupInfo data) throws Exception {
 		try {
-			PropertiesBean pbean = new PropertiesBean();
+			ContextProperties pbean = new ContextProperties();
 			pbean.setProperty("smtp.host", data.getSmtpHost() != null ? data.getSmtpHost() : "");
 			pbean.getProperty("smtp.port", data.getSmtpPort() != null ? Integer.toString(data.getSmtpPort()) : "");
 			pbean.setProperty("smtp.username", data.getSmtpUsername() != null ? data.getSmtpUsername() : "");
@@ -106,7 +106,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 
 	private void writeDBConfig(SetupInfo data) throws Exception {
 		try {
-			PropertiesBean pbean = new PropertiesBean();
+			ContextProperties pbean = new ContextProperties();
 			pbean.setProperty("jdbc.driver", data.getDbDriver() != null ? data.getDbDriver() : "");
 			pbean.setProperty("jdbc.url", data.getDbUrl() != null ? data.getDbUrl() : "");
 			pbean.setProperty("jdbc.username", data.getDbUsername() != null ? data.getDbUsername() : "");
@@ -136,7 +136,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		// Reload the application context in order to obtain the new value
 		Context.refresh();
 
-		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		String path = conf.getPropertyWithSubstitutions("conf.indexdir");
 
 		if (!path.endsWith(File.pathSeparator)) {
@@ -186,7 +186,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		FileUtils.forceMkdir(new File(logDir));
 		String dbDirectory = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/db/");
 
-		PropertiesBean pbean = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		ContextProperties pbean = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		pbean.setProperty("conf.docdir", docDir);
 		pbean.setProperty("conf.indexdir", indexDir);
 		pbean.setProperty("conf.userdir", userDir);

@@ -10,7 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.java.plugin.Plugin;
 
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * This is the base class for LogicalDOC plugins.
@@ -121,9 +121,9 @@ public abstract class LogicalDOCPlugin extends Plugin {
 	 * {conf.plugindir}/{pluginId}. It will be created in not existing.
 	 */
 	public File getDataDirectory() {
-		PropertiesBean conf;
+		ContextProperties conf;
 		try {
-			conf = new PropertiesBean();
+			conf = new ContextProperties();
 			File dir = new File(conf.getPropertyWithSubstitutions("conf.plugindir"));
 			String pluginName = getDescriptor().getUniqueId().substring(0,
 					getDescriptor().getUniqueId().lastIndexOf('@'));

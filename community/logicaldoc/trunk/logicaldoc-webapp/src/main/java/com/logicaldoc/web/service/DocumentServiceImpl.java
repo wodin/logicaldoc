@@ -57,7 +57,7 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.MimeType;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.io.CryptUtil;
 import com.logicaldoc.web.UploadServlet;
 import com.logicaldoc.web.util.SessionUtil;
@@ -139,7 +139,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				if (file.getName().endsWith(".zip") && importZip) {
 					log.debug("file = " + file);
 
-					PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+					ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 					String path = conf.getPropertyWithSubstitutions("conf.userdir");
 
 					if (!path.endsWith("_")) {

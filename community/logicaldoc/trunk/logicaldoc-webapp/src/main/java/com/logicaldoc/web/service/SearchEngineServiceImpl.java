@@ -16,7 +16,7 @@ import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineService;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
@@ -41,7 +41,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 		Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
 		searchEngine.setLocked(indexer.isLocked());
 
-		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		searchEngine.setExcludePatters(conf.getPropertyWithSubstitutions("index.excludes"));
 		searchEngine.setIncludePatters(conf.getPropertyWithSubstitutions("index.includes"));
 
@@ -98,7 +98,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	public void save(String sid, GUISearchEngine searchEngine) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		try {
 			conf.setProperty("index.excludes", searchEngine.getExcludePatters());
 			conf.setProperty("index.includes", searchEngine.getIncludePatters());

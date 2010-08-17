@@ -86,47 +86,34 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		form1 = new DynamicForm();
 		form1.setNumCols(2);
 		form1.setValuesManager(vm);
-		form1.setTitleOrientation(TitleOrientation.TOP);
+		form1.setTitleOrientation(TitleOrientation.LEFT);
 
 		StaticTextItem id = ItemFactory.newStaticTextItem("id", "id", Long.toString(document.getId()));
-		id.setDisabled(true);
-
-		TextItem customId = ItemFactory.newTextItem("customId", "customid", document.getCustomId());
-		customId.addChangedHandler(changedHandler);
-		customId.setRequired(true);
-		customId.setDisabled(!update);
 
 		DateItem creation = ItemFactory.newDateItem("creation", "createdon");
 		creation.setValue(document.getCreation());
 		creation.setShowPickerIcon(false);
-		creation.setDisabled(true);
 
-		TextItem creator = ItemFactory.newTextItem("creator", "creator", document.getCreator());
-		creator.setDisabled(true);
+		StaticTextItem creator = ItemFactory.newStaticTextItem("creator", "creator", document.getCreator());
 
 		DateItem date = ItemFactory.newDateItem("date", "publishedon");
 		date.setValue(document.getDate());
 		date.setShowPickerIcon(false);
-		date.setDisabled(true);
 
-		TextItem publisher = ItemFactory.newTextItem("publisher", "publisher", document.getPublisher());
-		publisher.setDisabled(true);
+		StaticTextItem publisher = ItemFactory.newStaticTextItem("publisher", "publisher", document.getPublisher());
 
-		TextItem title = ItemFactory.newTextItem("title", "title", document.getTitle());
+		StaticTextItem title = ItemFactory.newStaticTextItem("title", "title", document.getTitle());
 		title.addChangedHandler(changedHandler);
 		title.setRequired(true);
 		title.setDisabled(!update);
 
-		TextItem version = ItemFactory.newTextItem("version", "version", document.getVersion());
-		version.setDisabled(true);
+		StaticTextItem version = ItemFactory.newStaticTextItem("version", "version", document.getVersion());
 
-		TextItem fileVersion = ItemFactory.newTextItem("fileVersion", "fileversion", document.getFileVersion());
-		fileVersion.setDisabled(true);
+		StaticTextItem fileVersion = ItemFactory.newStaticTextItem("fileVersion", "fileversion", document.getFileVersion());
 
-		TextItem filename = ItemFactory.newTextItem("fileName", "filename", document.getFileName());
-		filename.setDisabled(true);
+		StaticTextItem filename = ItemFactory.newStaticTextItem("fileName", "filename", document.getFileName());
 
-		form1.setItems(id, customId, version, title, fileVersion, filename, creation, date, creator, publisher);
+		form1.setItems(id, title, version, fileVersion, filename, creation, date, creator, publisher);
 		formsContainer.addMember(form1);
 
 		/*
@@ -141,6 +128,12 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		List<FormItem> items = new ArrayList<FormItem>();
 
+		TextItem customId = ItemFactory.newTextItem("customId", "customid", document.getCustomId());
+		customId.addChangedHandler(changedHandler);
+		customId.setRequired(true);
+		customId.setDisabled(!update);
+		items.add(customId);
+		
 		SelectItem language = ItemFactory.newLanguageSelector("language", false, false);
 		language.addChangedHandler(changedHandler);
 		language.setDisabled(!update);

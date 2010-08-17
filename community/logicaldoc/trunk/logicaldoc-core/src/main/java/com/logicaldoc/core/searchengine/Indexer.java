@@ -32,7 +32,7 @@ import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * Class for indexing files and maintaining indexes.
@@ -47,14 +47,14 @@ public class Indexer {
 
 	protected static Log log = LogFactory.getLog(Indexer.class);
 
-	private static PropertiesBean config;
+	private static ContextProperties config;
 
 	private DocumentDAO documentDao;
 
 	private Indexer() {
 	}
 
-	public void setConfig(PropertiesBean config) {
+	public void setConfig(ContextProperties config) {
 		Indexer.config = config;
 	}
 

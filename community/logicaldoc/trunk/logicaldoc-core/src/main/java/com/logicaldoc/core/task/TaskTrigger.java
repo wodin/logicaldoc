@@ -13,7 +13,7 @@ import org.quartz.utils.Key;
 import org.springframework.scheduling.quartz.CronTriggerBean;
 import org.springframework.scheduling.quartz.SimpleTriggerBean;
 
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * This trigger wraps both a SimpleTrigger and a CronTrigger
@@ -32,7 +32,7 @@ public class TaskTrigger extends SimpleTriggerBean {
 
 	public static String MODE_SIMPLE = "simple";
 
-	private PropertiesBean config;
+	private ContextProperties config;
 
 	private Task task;
 
@@ -276,7 +276,7 @@ public class TaskTrigger extends SimpleTriggerBean {
 		getWrappedTrigger();
 	}
 
-	public void setConfig(PropertiesBean config) {
+	public void setConfig(ContextProperties config) {
 		this.config = config;
 	}
 

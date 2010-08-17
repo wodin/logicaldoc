@@ -9,7 +9,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * This class represents versions.
@@ -100,9 +100,9 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 	 */
 	private String getNewVersionName(String oldVersionName, boolean release) {
 		if (StringUtils.isEmpty(oldVersionName)) {
-			PropertiesBean config;
+			ContextProperties config;
 			try {
-				config = new PropertiesBean();
+				config = new ContextProperties();
 				return config.getProperty("document.startversion");
 			} catch (IOException e) {
 				return "1.0";

@@ -32,7 +32,7 @@ import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.core.store.Storer;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.util.sql.SqlUtil;
 
@@ -61,7 +61,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	private Storer storer;
 
-	private PropertiesBean config;
+	private ContextProperties config;
 
 	private HibernateDocumentDAO() {
 		super(Document.class);
@@ -852,7 +852,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return results;
 	}
 
-	public void setConfig(PropertiesBean config) {
+	public void setConfig(ContextProperties config) {
 		this.config = config;
 	}
 }

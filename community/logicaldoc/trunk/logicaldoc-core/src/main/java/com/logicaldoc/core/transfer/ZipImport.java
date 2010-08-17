@@ -29,7 +29,7 @@ import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.TagUtil;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.io.ZipUtil;
 
 /**
@@ -87,7 +87,7 @@ public class ZipImport {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		this.user = userDao.findById(userId);
 
-		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		String userpath = conf.getPropertyWithSubstitutions("conf.userdir");
 
 		if (!userpath.endsWith("_")) {

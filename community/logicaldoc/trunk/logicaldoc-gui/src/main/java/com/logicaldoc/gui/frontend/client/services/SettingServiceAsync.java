@@ -21,4 +21,8 @@ public interface SettingServiceAsync {
 	void saveEmailSettings(String sid, GUIEmailSettings settings, AsyncCallback<Void> callback);
 
 	void loadValues(String sid, String[] names, AsyncCallback<String[]> callback);
+
+	void loadFolders(String sid, AsyncCallback<GUIParameter[]> callback);
+
+	void saveFolders(String sid, GUIParameter[] folders, AsyncCallback<Void> callback);
 }

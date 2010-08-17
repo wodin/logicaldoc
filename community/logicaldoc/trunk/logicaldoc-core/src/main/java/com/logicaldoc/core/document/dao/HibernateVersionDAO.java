@@ -11,7 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.store.Storer;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
@@ -60,7 +60,7 @@ public class HibernateVersionDAO extends HibernatePersistentObjectDAO<Version> i
 		try {
 			super.store(version);
 			// Checks the context property 'document.maxversions'
-			PropertiesBean bean = new PropertiesBean();
+			ContextProperties bean = new ContextProperties();
 			int maxVersions = bean.getInt("document.maxversions");
 			if (maxVersions > 0) {
 				List<Version> versions = findByDocId(version.getDocId());

@@ -331,9 +331,4 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 		}
 		return task;
 	}
-
-	@Override
-	public void saveFolders(String sid, GUIParameter[] folders) {
-
-	}
 }

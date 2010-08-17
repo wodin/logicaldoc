@@ -5,7 +5,7 @@ import java.io.File;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.config.WebConfigurator;
 import com.logicaldoc.util.plugin.LogicalDOCPlugin;
 
@@ -21,7 +21,7 @@ public class WebservicePlugin extends LogicalDOCPlugin {
 
 	@Override
 	protected void install() throws Exception {
-		PropertiesBean pbean = new PropertiesBean(getClass().getClassLoader().getResource("context.properties"));
+		ContextProperties pbean = new ContextProperties(getClass().getClassLoader().getResource("context.properties"));
 		pbean.setProperty("webservice.mtom", "false");
 		pbean.setProperty("webservice.enabled", "true");
 		pbean.write();

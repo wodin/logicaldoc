@@ -13,7 +13,7 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
 import com.logicaldoc.core.task.Task;
-import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * This task generate all data needed by the tag cloud panel.
@@ -101,9 +101,9 @@ public class TagCloudGenerator extends Task {
 
 		// keep only the first N elements
 		int n = 30;
-		PropertiesBean config;
+		ContextProperties config;
 		try {
-			config = new PropertiesBean();
+			config = new ContextProperties();
 			n = config.getInt("tagcloud.maxtags");
 		} catch (IOException e) {
 			log.error(e.getMessage());
