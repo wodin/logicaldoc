@@ -91,6 +91,8 @@ public class Frontend implements EntryPoint {
 
 			@Override
 			public void onSuccess(GUIInfo info) {
+				WindowUtils.setTitle(info.getProductName() + " " + info.getRelease());
+				
 				I18N.init(info);
 				Feature.init(info);
 				Session.get().setInfo(info);

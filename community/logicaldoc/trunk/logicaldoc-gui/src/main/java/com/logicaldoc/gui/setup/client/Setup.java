@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -94,8 +93,6 @@ public class Setup implements EntryPoint {
 
 	private IButton submit;
 
-	private Dictionary context = Dictionary.getDictionary("context");
-
 	private ValuesManager vm = new ValuesManager();
 
 	private TabSet tabs;
@@ -133,13 +130,13 @@ public class Setup implements EntryPoint {
 			@Override
 			public void onSuccess(GUIInfo info) {
 				I18N.init(info);
-				initGUI();
+				initGUI(info);
 			}
 		});
 
 	}
 
-	private void initGUI() {
+	private void initGUI(final GUIInfo info) {
 		// Prepare a value manager that will include all forms spanned in each
 		// tab
 		vm = new ValuesManager();
@@ -159,7 +156,7 @@ public class Setup implements EntryPoint {
 		submit.setTitle(I18N.message("next"));
 		submit.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				onSubmit();
+				onSubmit(info);
 			}
 		});
 
@@ -411,7 +408,7 @@ public class Setup implements EntryPoint {
 		return databaseTab;
 	}
 
-	private void onSubmit() {
+	private void onSubmit(final GUIInfo info) {
 		vm.validate();
 		Tab tab = tabs.getSelectedTab();
 		int tabIndex = tabs.getSelectedTabNumber();
@@ -462,7 +459,7 @@ public class Setup implements EntryPoint {
 					@Override
 					public void onSuccess(Void arg) {
 						SC.say(I18N.message("installationperformed"),
-								I18N.message("installationend", context.get("product_name")));
+								I18N.message("installationend", info.getProductName()));
 						Util.redirect("../frontend.jsp");
 						submit.setDisabled(false);
 					}
