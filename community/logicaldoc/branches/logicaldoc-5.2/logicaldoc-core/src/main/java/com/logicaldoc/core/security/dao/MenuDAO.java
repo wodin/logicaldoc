@@ -43,6 +43,15 @@ public interface MenuDAO extends PersistentObjectDAO<Menu> {
 	 * @return List of found menus.
 	 */
 	public List<Menu> findByUserId(long userId);
+	
+	/**
+	 * Finds authorized menus for a user.
+	 * 
+	 * @param userId ID of the user.
+	 * @param type The menu type
+	 * @return List of found menus.
+	 */
+	public List<Menu> findByUserId(long userId, Integer type);
 
 	/**
 	 * Finds all menues ids with a specific permission enabled on the specifies user
