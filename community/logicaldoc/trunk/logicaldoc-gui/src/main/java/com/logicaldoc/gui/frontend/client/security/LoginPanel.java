@@ -76,9 +76,6 @@ public class LoginPanel extends VLayout {
 
 		addMember(hPanel);
 
-		// Collect some context infos to define window's and form's title
-		WindowUtils.setTitle(info.getProductName() + " " + info.getRelease());
-
 		// Prepare the form header that contains the product name and version
 		HTML header = new HTML(info.getProductName() + " " + info.getRelease());
 		header.setStyleName("loginHeader");

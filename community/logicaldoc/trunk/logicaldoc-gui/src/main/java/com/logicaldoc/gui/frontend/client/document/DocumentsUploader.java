@@ -125,7 +125,7 @@ public class DocumentsUploader extends Window {
 
 		if (Feature.visible(Feature.TEMPLATE)) {
 			form.setItems(languageItem, zipItem, encodingItem, template, sendButton);
-			if (!Feature.enabled(Feature.LDAP)) {
+			if (!Feature.enabled(Feature.TEMPLATE)) {
 				template.setDisabled(true);
 				template.setTooltip(I18N.message("featuredisabled"));
 			}
