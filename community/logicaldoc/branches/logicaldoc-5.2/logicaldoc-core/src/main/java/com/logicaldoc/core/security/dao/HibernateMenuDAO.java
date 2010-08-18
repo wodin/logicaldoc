@@ -73,21 +73,30 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return result;
 	}
 
+	@Override
+	public List<Menu> findByUserId(long userId) {
+		return findByUserId(userId, null);
+	}
+
 	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByUserId(long)
+	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByUserId(long, Integer)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Menu> findByUserId(long userId) {
+	public List<Menu> findByUserId(long userId, Integer type) {
 		List<Menu> coll = new ArrayList<Menu>();
 
 		try {
 			User user = userDAO.findById(userId);
+			userDAO.initialize(user);
 			if (user == null)
 				return coll;
 
 			// The admnistrators can see all menues
 			if (user.isInGroup("admin"))
-				return findAll();
+				if (type == null)
+					return findAll();
+				else
+					return findByWhere("_entity.type=" + type, null, null);
 
 			Set<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
@@ -106,6 +115,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 					first = false;
 				}
 				query.append(")");
+				if (type != null)
+					query.append(" and _menu.type=" + type);
 				coll = (List<Menu>) getHibernateTemplate().find(query.toString());
 
 				// Now collect all menues that references the policies of the
@@ -120,6 +131,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 					first = false;
 				}
 				query.append(")");
+				if (type != null)
+					query.append(" and _menu.type=" + type);
 				tmp = (List<Menu>) getHibernateTemplate().find(query.toString());
 
 				for (Menu menu : tmp) {
@@ -488,7 +501,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	 *      JDBC query, this is required in order to obtain acceptable
 	 *      performances during searches.
 	 */
-	@SuppressWarnings( { "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	public List<Long> findIdByUserId(long userId, long parentId, Integer type) {
 		List<Long> ids = new ArrayList<Long>();
 		try {
@@ -1016,4 +1029,5 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 		return result;
 	}
+
 }

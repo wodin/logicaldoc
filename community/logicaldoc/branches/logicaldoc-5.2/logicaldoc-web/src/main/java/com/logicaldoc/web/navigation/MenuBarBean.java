@@ -1,8 +1,8 @@
 package com.logicaldoc.web.navigation;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +51,8 @@ public class MenuBarBean {
 
 	// For fast items retrieval
 	protected Map<String, MenuItem> itemCache = new HashMap<String, MenuItem>();
+
+	protected List<Menu> accessibleMenues = new ArrayList<Menu>();
 
 	private NavigationBean navigation;
 
@@ -222,10 +224,10 @@ public class MenuBarBean {
 		try {
 			if (userId > 0) {
 				MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-				Collection<Menu> menus = menuDao.findByUserId(userId, Menu.MENUID_HOME, Menu.MENUTYPE_MENU);
+				accessibleMenues = menuDao.findByUserId(userId, (Integer) Menu.MENUTYPE_MENU);
 
-				for (Menu menu : menus) {
-					if (menu.getId() != Menu.MENUID_HOME)
+				for (Menu menu : accessibleMenues) {
+					if (menu.getId() != Menu.MENUID_HOME && menu.getParentId() == Menu.MENUID_HOME)
 						createMenuStructure(menu, null);
 				}
 			}
@@ -237,14 +239,14 @@ public class MenuBarBean {
 				null, style.getImagePath("help.png"), false, null, null);
 
 		String helpUrl = style.getProductHelp();
-		item = createMenuItem(Messages.getMessage("help.online"), "m-helpcontents", null, null, helpUrl, style
-				.getImagePath("help.png"), false, "_blank", null);
+		item = createMenuItem(Messages.getMessage("help.online"), "m-helpcontents", null, null, helpUrl,
+				style.getImagePath("help.png"), false, "_blank", null);
 		helpMenu.getChildren().add(item);
 		itemCache.put(item.getId(), item);
 
 		String bugsUrl = style.getProductBugs();
-		item = createMenuItem(Messages.getMessage("bug.report"), "m-bugreport", null, null, bugsUrl, style
-				.getImagePath("bug.png"), false, "_blank", null);
+		item = createMenuItem(Messages.getMessage("bug.report"), "m-bugreport", null, null, bugsUrl,
+				style.getImagePath("bug.png"), false, "_blank", null);
 		helpMenu.getChildren().add(item);
 		itemCache.put(item.getId(), item);
 
@@ -291,13 +293,36 @@ public class MenuBarBean {
 
 		// For 'Documents' menu, skip children
 		if (menu.getId() != Menu.MENUID_DOCUMENTS) {
-			MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-			Collection<Menu> children = menuDao.findByUserId(SessionManagement.getUserId(), menu.getId());
 
-			for (Menu child : children) {
-				if (child.getId() != menu.getId())
-					createMenuStructure(child, item);
+			List<Menu> children = new ArrayList<Menu>();
+			for (Menu m : accessibleMenues) {
+				if (m.getParentId() == menu.getId() && m.getId() != menu.getId())
+					children.add(m);
 			}
+
+			// Sort the childs
+			Collections.sort(children, new Comparator<Menu>() {
+				@Override
+				public int compare(Menu a, Menu b) {
+					return new Integer(a.getSort()).compareTo(new Integer(b.getSort()));
+				}
+
+			});
+
+			for (Menu m : children)
+				createMenuStructure(m, item);
+
+			// Too onerous to query the DB every times
+			// MenuDAO menuDao = (MenuDAO)
+			// Context.getInstance().getBean(MenuDAO.class);
+			// Collection<Menu> children =
+			// menuDao.findByUserId(SessionManagement.getUserId(),
+			// menu.getId());
+			//
+			// for (Menu child : children) {
+			// if (child.getId() != menu.getId())
+			// createMenuStructure(child, item);
+			// }
 		}
 	}
 
