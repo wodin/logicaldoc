@@ -6,10 +6,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.History;
-import com.logicaldoc.core.document.dao.FolderDAO;
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webservice.AbstractService;
 
@@ -27,44 +27,40 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	public WSFolder create(String sid, WSFolder folder) throws Exception {
 		User user = validateSession(sid);
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Menu parentMenu = folderDao.findById(folder.getParentId());
+		Folder parentFolder = folderDao.findById(folder.getParentId());
 		checkPermission(Permission.ADD_CHILD, user, folder.getParentId());
 
-		Menu menu = new Menu();
-		menu.setText(folder.getText());
-		menu.setDescription(folder.getDescription());
-		menu.setParentId(folder.getParentId());
-		menu.setSort(1);
-		menu.setIcon("folder.png");
-		menu.setType(Menu.MENUTYPE_DIRECTORY);
-		menu.setRef("");
-		menu.setMenuGroup(parentMenu.getMenuGroupIds());
+		Folder f = new Folder();
+		f.setName(folder.getName());
+		f.setDescription(folder.getDescription());
+		f.setParentId(folder.getParentId());
+		f.setFolderGroup(parentFolder.getFolderGroupIds());
 
-		boolean stored = folderDao.store(menu);
+		boolean stored = folderDao.store(f);
 		// Add a folder history entry
 		History transaction = new History();
 		transaction.setUser(user);
 		transaction.setEvent(History.EVENT_FOLDER_CREATED);
 		transaction.setSessionId(sid);
-		stored = folderDao.store(menu, transaction);
+		stored = folderDao.store(f, transaction);
 
 		if (!stored) {
-			log.error("Folder " + menu.getText() + " not created");
+			log.error("Folder " + f.getName() + " not created");
 			throw new Exception("error");
 		} else {
-			log.info("Created folder " + menu.getText());
+			log.info("Created folder " + f.getName());
 		}
 
-		return WSFolder.fromFolder(menu);
+		return WSFolder.fromFolder(f);
 	}
 
 	@Override
 	public void delete(String sid, long folderId) throws Exception {
 		User user = validateSession(sid);
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Menu folder = folderDao.findById(folderId);
-		Menu parentMenu = folderDao.findById(folder.getParentId());
-		checkPermission(Permission.DELETE, user, parentMenu.getParentId());
+		Folder folder = folderDao.findById(folderId);
+		Folder parentFolder = folderDao.findById(folder.getParentId());
+		checkPermission(Permission.DELETE, user, parentFolder.getParentId());
 		try {
 			// Add a folder history entry
 			History transaction = new History();
@@ -83,7 +79,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		User user = validateSession(sid);
 		checkReadEnable(user, folderId);
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Menu folder = folderDao.findById(folderId);
+		Folder folder = folderDao.findById(folderId);
 		folderDao.initialize(folder);
 
 		return WSFolder.fromFolder(folder);
@@ -107,7 +103,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		checkReadEnable(user, folderId);
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		List<Menu> folders = folderDao.findByParentId(folderId);
+		List<Folder> folders = folderDao.findByParentId(folderId);
 		WSFolder[] wsFolders = new WSFolder[folders.size()];
 		for (int i = 0; i < folders.size(); i++) {
 			folderDao.initialize(folders.get(i));
@@ -121,8 +117,8 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	public void move(String sid, long folderId, long parentId) throws Exception {
 		User user = validateSession(sid);
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Menu destParentFolder = folderDao.findById(parentId);
-		Menu folderToMove = folderDao.findById(folderId);
+		Folder destParentFolder = folderDao.findById(parentId);
+		Folder folderToMove = folderDao.findById(folderId);
 
 		// Check destParentId: Must be different from the current folder
 		// parentId
@@ -135,15 +131,15 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			throw new SecurityException("Not Allowed");
 
 		// Check delete permission on the folder parent of folderToMove
-		Menu sourceParent = folderDao.findById(folderToMove.getParentId());
-		boolean sourceParentDeleteEnabled = folderDao.isPermissionEnabled(Permission.DELETE, sourceParent.getId(), user
-				.getId());
+		Folder sourceParent = folderDao.findById(folderToMove.getParentId());
+		boolean sourceParentDeleteEnabled = folderDao.isPermissionEnabled(Permission.DELETE, sourceParent.getId(),
+				user.getId());
 		if (!sourceParentDeleteEnabled)
 			throw new SecurityException("No rights to delete folder");
 
 		// Check addChild permission on destParentFolder
-		boolean addchildEnabled = folderDao.isPermissionEnabled(Permission.ADD_CHILD, destParentFolder.getId(), user
-				.getId());
+		boolean addchildEnabled = folderDao.isPermissionEnabled(Permission.ADD_CHILD, destParentFolder.getId(),
+				user.getId());
 		if (!addchildEnabled)
 			throw new SecurityException("AddChild Rights not granted to this user");
 
@@ -164,24 +160,24 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			throw new Exception("user does't have rename permission");
 		}
 
-		if (folderId == Menu.MENUID_DOCUMENTS)
+		if (folderId == Folder.ROOTID)
 			throw new Exception("cannot rename the root folder");
 
-		Menu menu = folderDao.findById(folderId);
-		if (menu == null)
+		Folder folder = folderDao.findById(folderId);
+		if (folder == null)
 			throw new Exception("cannot find folder " + folderId);
 
-		List<Menu> folders = folderDao.findByTextAndParentId(name, menu.getParentId());
-		if (folders.size() > 0 && folders.get(0).getId() != menu.getId()) {
+		List<Folder> folders = folderDao.findByNameAndParentId(name, folder.getParentId());
+		if (folders.size() > 0 && folders.get(0).getId() != folder.getId()) {
 			throw new Exception("duplicate folder name " + name);
 		} else {
-			menu.setText(name);
+			folder.setName(name);
 			// Add a folder history entry
 			History transaction = new History();
 			transaction.setUser(user);
 			transaction.setEvent(History.EVENT_FOLDER_RENAMED);
 			transaction.setSessionId(sid);
-			folderDao.store(menu, transaction);
+			folderDao.store(folder, transaction);
 		}
 	}
 }

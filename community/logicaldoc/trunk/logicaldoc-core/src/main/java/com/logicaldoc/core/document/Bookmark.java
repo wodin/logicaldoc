@@ -2,7 +2,7 @@ package com.logicaldoc.core.document;
 
 import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.Context;
 
@@ -95,8 +95,8 @@ public class Bookmark extends PersistentObject {
 	 * The path of the document associated to the bookmark.
 	 */
 	public String getPath() {
-		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		return menuDao.computePathExtended(docDao.findById(docId).getFolder().getId());
+		return folderDao.computePathExtended(docDao.findById(docId).getFolder().getId());
 	}
 }

@@ -16,11 +16,11 @@ import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webservice.AbstractService;
 
@@ -40,9 +40,9 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		checkWriteEnable(user, document.getFolderId());
 
 		FolderDAO mdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Menu folder = mdao.findById(document.getFolderId());
+		Folder folder = mdao.findById(document.getFolderId());
 		if (folder == null) {
-			log.error("Menu " + folder + " not found");
+			log.error("Folder " + folder + " not found");
 			throw new Exception("error - folder not found");
 		}
 
@@ -71,7 +71,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		User user = validateSession(sid);
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document document = ddao.findById(docId);
-		Menu folder = document.getFolder();
+		Folder folder = document.getFolder();
 
 		checkWriteEnable(user, folder.getId());
 
@@ -220,7 +220,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Menu folder = dao.findById(folderId);
+		Folder folder = dao.findById(folderId);
 		checkLocked(user, doc);
 		checkWriteEnable(user, folder.getId());
 

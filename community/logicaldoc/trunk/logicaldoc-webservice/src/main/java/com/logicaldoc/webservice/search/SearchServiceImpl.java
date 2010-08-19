@@ -9,15 +9,15 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.TagCloud;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.Hit;
 import com.logicaldoc.core.searchengine.HitImpl;
 import com.logicaldoc.core.searchengine.Search;
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webservice.AbstractService;
 import com.logicaldoc.webservice.document.WSDocument;
@@ -96,7 +96,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 		User user = validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		List<Menu> folders = folderDao.find(name);
+		List<Folder> folders = folderDao.find(name);
 		WSFolder[] wsFolders = new WSFolder[folders.size()];
 		for (int i = 0; i < folders.size(); i++) {
 			try {

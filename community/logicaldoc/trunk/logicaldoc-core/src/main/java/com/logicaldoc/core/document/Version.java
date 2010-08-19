@@ -220,7 +220,7 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 		}
 
 		version.setFolderId(document.getFolder().getId());
-		version.setFolderName(document.getFolder().getText());
+		version.setFolderName(document.getFolder().getName());
 		version.setTgs(document.getTagsString());
 		version.setDocId(document.getId());
 

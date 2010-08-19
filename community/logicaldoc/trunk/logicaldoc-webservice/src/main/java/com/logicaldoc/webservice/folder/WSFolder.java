@@ -3,7 +3,7 @@ package com.logicaldoc.webservice.folder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
 
 /**
  * Web Service Folder. Useful class to create reporitory Folders.
@@ -17,16 +17,16 @@ public class WSFolder {
 
 	private long id = 0;
 
-	private String text = "";
+	private String name = "";
 
 	private long parentId = 0;
 
 	private String description = "";
 
-	public static WSFolder fromFolder(Menu folder) {
+	public static WSFolder fromFolder(Folder folder) {
 		WSFolder wsFolder = new WSFolder();
 		wsFolder.setId(folder.getId());
-		wsFolder.setText(folder.getText());
+		wsFolder.setName(folder.getName());
 		wsFolder.setDescription(folder.getDescription());
 		wsFolder.setParentId(folder.getParentId());
 
@@ -41,12 +41,12 @@ public class WSFolder {
 		this.id = id;
 	}
 
-	public String getText() {
-		return text;
+	public String getName() {
+		return name;
 	}
 
-	public void setText(String text) {
-		this.text = text;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public long getParentId() {

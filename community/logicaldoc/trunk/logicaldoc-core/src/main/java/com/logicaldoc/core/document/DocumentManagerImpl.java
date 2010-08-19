@@ -22,7 +22,7 @@ import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.core.searchengine.LuceneDocument;
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
@@ -87,7 +87,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		assert (transaction.getUser() != null);
 		assert (transaction.getComment() != null);
 
-		// identify the document and menu
+		// identify the document and folder
 		Document document = documentDAO.findById(docId);
 
 		if (document.getImmutable() == 0) {
@@ -104,7 +104,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setSigned(0);
 			documentDAO.store(document);
 
-			Menu folder = document.getFolder();
+			Folder folder = document.getFolder();
 
 			// create some strings containing paths
 			document.setFileName(filename);
@@ -437,7 +437,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			doc = documentDAO.findById(docId);
 		}
 		org.apache.lucene.document.Document luceneDoc = indexer.getDocument(Long.toString(docId), doc.getLocale());
-		// If not found, search the document using it's menu id
+		// If not found, search the document using it's folder id
 		if (luceneDoc != null)
 			return luceneDoc.get(LuceneDocument.FIELD_CONTENT);
 		else
@@ -445,7 +445,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void moveToFolder(Document doc, Menu folder, History transaction) throws Exception {
+	public void moveToFolder(Document doc, Folder folder, History transaction) throws Exception {
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 
@@ -632,7 +632,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		}
 	}
 
-	public Document copyToFolder(Document doc, Menu folder, History transaction) throws Exception {
+	public Document copyToFolder(Document doc, Folder folder, History transaction) throws Exception {
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 
@@ -739,7 +739,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public Document createShortcut(Document doc, Menu folder, History transaction) throws Exception {
+	public Document createShortcut(Document doc, Folder folder, History transaction) throws Exception {
 		assert (doc != null);
 		assert (folder != null);
 		assert (transaction != null);
@@ -798,7 +798,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				// The doc is a shortcut, so we still copy a shortcut
 				shortcut.setDocRef(doc.getDocRef());
 			}
-
+			
 			// Modify document history entry
 			transaction.setEvent(History.EVENT_SHORTCUT_STORED);
 

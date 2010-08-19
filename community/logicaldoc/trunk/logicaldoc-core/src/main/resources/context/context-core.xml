@@ -58,9 +58,6 @@
 				<property name="userDAO">
 					<ref bean="UserDAO" />
 				</property>
-				<property name="historyDAO">
-					<ref bean="HistoryDAO" />
-				</property>
 			</bean>
 		</property>
 	</bean>
@@ -69,13 +66,12 @@
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
 		<property name="target">
-			<bean class="com.logicaldoc.core.document.dao.HibernateFolderDAO"
+			<bean class="com.logicaldoc.core.security.dao.HibernateFolderDAO"
 				abstract="false" lazy-init="default" autowire="default"
 				dependency-check="default">
 				<property name="sessionFactory" ref="SessionFactory" />
 				<property name="userDAO" ref="UserDAO" />
 				<property name="historyDAO" ref="HistoryDAO" />
-				<property name="documentDAO" ref="DocumentDAO" />
 			</bean>
 		</property>
 	</bean>
@@ -188,8 +184,8 @@
 				<property name="versionDAO">
 					<ref bean="VersionDAO" />
 				</property>
-				<property name="menuDAO">
-					<ref bean="MenuDAO" />
+				<property name="folderDAO">
+					<ref bean="FolderDAO" />
 				</property>
 				<property name="userDAO">
 					<ref bean="UserDAO" />

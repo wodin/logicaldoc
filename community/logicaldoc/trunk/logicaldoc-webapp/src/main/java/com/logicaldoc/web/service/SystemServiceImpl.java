@@ -13,9 +13,9 @@ import org.apache.commons.logging.LogFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserHistoryDAO;
 import com.logicaldoc.core.task.Task;
 import com.logicaldoc.core.task.TaskManager;
@@ -219,8 +219,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			// Folders statistics
 			GUIParameter notEmptyFolders = new GUIParameter();
 			notEmptyFolders.setName("withdocs");
-			query = new StringBuilder("SELECT COUNT(A.id) FROM Menu A where (A.type = " + Menu.MENUTYPE_DIRECTORY
-					+ " or A.id= " + Menu.MENUID_DOCUMENTS
+			query = new StringBuilder("SELECT COUNT(A.id) FROM Folder A where (A.id= " + Folder.ROOTID
 					+ " ) and A.deleted = 0 and A.id in (select B.folder.id FROM Document B where B.deleted = 0) ");
 			records = (List<Object>) folderDao.findByQuery(query.toString(), null, null);
 			count = (Long) records.get(0);
@@ -230,8 +229,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 			GUIParameter emptyFolders = new GUIParameter();
 			emptyFolders.setName("empty");
-			query = new StringBuilder("SELECT COUNT(A.id) FROM Menu A where (A.type = " + Menu.MENUTYPE_DIRECTORY
-					+ " or A.id= " + Menu.MENUID_DOCUMENTS
+			query = new StringBuilder("SELECT COUNT(A.id) FROM Folder A where (A.id= " + Folder.ROOTID
 					+ " ) and A.deleted = 0 and A.id not in (select B.folder.id FROM Document B where B.deleted = 0) ");
 			records = (List<Object>) folderDao.findByQuery(query.toString(), null, null);
 			count = (Long) records.get(0);
@@ -242,8 +240,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			GUIParameter deletedFolders = new GUIParameter();
 			deletedFolders.setName("folderstrash");
 			deletedFolders.setLabel("trash");
-			query = new StringBuilder("SELECT COUNT(A.id) FROM Menu A where (A.type = " + Menu.MENUTYPE_DIRECTORY
-					+ " or A.id= " + Menu.MENUID_DOCUMENTS + " ) and A.deleted = 1 ");
+			query = new StringBuilder("SELECT COUNT(A.id) FROM Folder A where (A.id= " + Folder.ROOTID
+					+ " ) and A.deleted = 1 ");
 			records = (List<Object>) folderDao.findByQuery(query.toString(), null, null);
 			count = (Long) records.get(0);
 			deletedFolders.setValue(Long.toString(count));
@@ -474,10 +472,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				history.setUserName((String) cols[0]);
 				history.setEvent((String) cols[1]);
 				history.setDate((Date) cols[2]);
-				if (((String) cols[3]).trim().equals("menu.documents"))
-					history.setTitle("/");
-				else
-					history.setTitle((String) cols[3]);
+				history.setTitle((String) cols[3]);
 				history.setFolderId((Long) cols[4]);
 				history.setPath((String) cols[5]);
 				history.setSessionId((String) cols[6]);

@@ -40,10 +40,10 @@ import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
-import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.transfer.InMemoryZipImport;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
@@ -130,8 +130,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		if (templateId != null)
 			template = tDao.findById(templateId);
 
-		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		final Menu parent = menuDao.findById(folderId);
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		final Folder parent = folderDao.findById(folderId);
 		try {
 			for (String fileId : uploadedFilesMap.keySet()) {
 				File file = uploadedFilesMap.get(fileId);
@@ -206,9 +206,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		File file = uploadedFilesMap.values().iterator().next();
 		if (file != null) {
 			log.debug("Checking in file " + file.getName());
-			
+
 			System.out.println("*** Checking in file " + file.getName());
-			
+
 			// check that we have a valid file for storing as new
 			// version
 			String fileName = file.getName();
@@ -451,8 +451,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				if (doc.getTemplate() != null)
 					document.setTemplate(doc.getTemplate().getName());
 				document.setStatus(doc.getStatus());
-				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-				document.setPathExtended(mdao.computePathExtended(doc.getFolder().getId()));
+				FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+				document.setPathExtended(fdao.computePathExtended(doc.getFolder().getId()));
 				document.setFileSize(new Long(doc.getFileSize()).floatValue());
 
 				if (doc.getCustomId() != null)
@@ -794,8 +794,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					// docVO.setTemplate(template);
 				}
 				docVO.setStatus(document.getStatus());
-				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-				docVO.setFolder(mdao.findById(document.getFolder().getId()));
+				FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+				docVO.setFolder(fdao.findById(document.getFolder().getId()));
 
 				// Create the document history event
 				History transaction = new History();

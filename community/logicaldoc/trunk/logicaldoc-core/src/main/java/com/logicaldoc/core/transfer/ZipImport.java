@@ -20,9 +20,9 @@ import com.logicaldoc.core.communication.dao.SystemMessageDAO;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
-import com.logicaldoc.core.document.dao.FolderDAO;
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.text.analyzer.AnalyzerManager;
 import com.logicaldoc.core.text.parser.Parser;
@@ -78,7 +78,7 @@ public class ZipImport {
 		this.immediateIndexing = immediateIndexing;
 	}
 
-	public void process(File zipsource, Locale locale, Menu parent, long userId, Long templateId, String sessionId) {
+	public void process(File zipsource, Locale locale, Folder parent, long userId, Long templateId, String sessionId) {
 		this.zipFile = zipsource;
 		this.locale = locale;
 		this.templateId = templateId;
@@ -123,22 +123,22 @@ public class ZipImport {
 			sendNotificationMessage();
 	}
 
-	public void process(String zipsource, Locale locale, Menu parent, long userId, Long templateId, String sessionId) {
+	public void process(String zipsource, Locale locale, Folder parent, long userId, Long templateId, String sessionId) {
 		File srcfile = new File(zipsource);
 		process(srcfile, locale, parent, userId, templateId, sessionId);
 	}
 
 	/**
 	 * Stores a file in the repository of logicaldoc and inserts some
-	 * information in the database of logicaldoc (menu, document, version,
+	 * information in the database of logicaldoc (folder, document, version,
 	 * history, searchdocument).
 	 * 
 	 * @param file
 	 * @param parent
 	 */
-	protected void addEntry(File file, Menu parent) {
+	protected void addEntry(File file, Folder parent) {
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		String menuName = file.getName();
+		String folderName = file.getName();
 		History transaction = new History();
 		transaction.setUser(user);
 		transaction.setSessionId(sessionId);
@@ -146,12 +146,12 @@ public class ZipImport {
 		if (file.isDirectory()) {
 			// creates a logicaldoc folder
 
-			Menu menu = dao.create(parent, menuName, transaction);
+			Folder folder = dao.create(parent, folderName, transaction);
 
 			File[] files = file.listFiles();
 
 			for (int i = 0; i < files.length; i++) {
-				addEntry(files[i], menu);
+				addEntry(files[i], folder);
 			}
 		} else {
 			Set<String> tagSet = null;

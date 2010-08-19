@@ -3,7 +3,7 @@ package com.logicaldoc.core.document;
 import java.io.File;
 import java.io.InputStream;
 
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.store.Storer;
 
 /**
@@ -249,7 +249,7 @@ public interface DocumentManager {
 	 * @param transaction entry to log the event (set the user)
 	 * @throws Exception
 	 */
-	public void moveToFolder(Document doc, Menu folder, History transaction) throws Exception;
+	public void moveToFolder(Document doc, Folder folder, History transaction) throws Exception;
 
 	/**
 	 * Copy a document to the specified folder.
@@ -260,7 +260,7 @@ public interface DocumentManager {
 	 * @return The created document
 	 * @throws Exception
 	 */
-	public Document copyToFolder(Document doc, Menu folder, History transaction) throws Exception;
+	public Document copyToFolder(Document doc, Folder folder, History transaction) throws Exception;
 
 	/**
 	 * Create a shortcut associated to the given doc to the specified folder.
@@ -271,7 +271,7 @@ public interface DocumentManager {
 	 * @return The created document
 	 * @throws Exception
 	 */
-	public Document createShortcut(Document doc, Menu folder, History transaction) throws Exception;
+	public Document createShortcut(Document doc, Folder folder, History transaction) throws Exception;
 
 	public void setStorer(Storer storer);
 }

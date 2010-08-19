@@ -10,12 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.FolderGroup;
 import com.logicaldoc.core.security.Group;
-import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
-import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
 
@@ -45,15 +45,15 @@ public class RightsDataServlet extends HttpServlet {
 		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 		response.setHeader("Expires", "0");
 
-		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
-		Menu menu = menuDao.findById(folderId);
-		menuDao.initialize(menu);
-		
-		Menu ref=menu;
-		if(menu.getSecurityRef()!=null){
-			ref=menuDao.findById(menu.getSecurityRef());
-		    menuDao.initialize(ref);
+		Folder folder = folderDao.findById(folderId);
+		folderDao.initialize(folder);
+
+		Folder ref = folder;
+		if (folder.getSecurityRef() != null) {
+			ref = folderDao.findById(folder.getSecurityRef());
+			folderDao.initialize(ref);
 		}
 
 		PrintWriter writer = response.getWriter();
@@ -66,24 +66,24 @@ public class RightsDataServlet extends HttpServlet {
 			if (group.getType() == Group.TYPE_DEFAULT
 					|| ((group.getType() != Group.TYPE_DEFAULT) && (group.getUsers().isEmpty() || group.getUsers()
 							.iterator().next().getType() == User.TYPE_DEFAULT))) {
-				MenuGroup menuGroup = ref.getMenuGroup(group.getId());
-				if (menuGroup != null) {
+				FolderGroup folderGroup = ref.getFolderGroup(group.getId());
+				if (folderGroup != null) {
 					writer.print("<right>");
 					writer.print("<entityId>" + group.getId() + "</entityId>");
 					writer.print("<entity><![CDATA[" + group.getName() + "]]></entity>");
 					writer.print("<read>" + true + "</read>");
-					writer.print("<write>" + (menuGroup.getWrite() == 1 ? true : false) + "</write>");
-					writer.print("<add>" + (menuGroup.getAddChild() == 1 ? true : false) + "</add>");
-					writer.print("<security>" + (menuGroup.getManageSecurity() == 1 ? true : false) + "</security>");
-					writer.print("<immutable>" + (menuGroup.getManageImmutability() == 1 ? true : false)
+					writer.print("<write>" + (folderGroup.getWrite() == 1 ? true : false) + "</write>");
+					writer.print("<add>" + (folderGroup.getAddChild() == 1 ? true : false) + "</add>");
+					writer.print("<security>" + (folderGroup.getManageSecurity() == 1 ? true : false) + "</security>");
+					writer.print("<immutable>" + (folderGroup.getManageImmutability() == 1 ? true : false)
 							+ "</immutable>");
-					writer.print("<delete>" + (menuGroup.getDelete() == 1 ? true : false) + "</delete>");
-					writer.print("<rename>" + (menuGroup.getRename() == 1 ? true : false) + "</rename>");
-					writer.print("<import>" + (menuGroup.getBulkImport() == 1 ? true : false) + "</import>");
-					writer.print("<export>" + (menuGroup.getBulkExport() == 1 ? true : false) + "</export>");
-					writer.print("<sign>" + (menuGroup.getSign() == 1 ? true : false) + "</sign>");
-					writer.print("<archive>" + (menuGroup.getArchive() == 1 ? true : false) + "</archive>");
-					writer.print("<workflow>" + (menuGroup.getWorkflow() == 1 ? true : false) + "</workflow>");
+					writer.print("<delete>" + (folderGroup.getDelete() == 1 ? true : false) + "</delete>");
+					writer.print("<rename>" + (folderGroup.getRename() == 1 ? true : false) + "</rename>");
+					writer.print("<import>" + (folderGroup.getBulkImport() == 1 ? true : false) + "</import>");
+					writer.print("<export>" + (folderGroup.getBulkExport() == 1 ? true : false) + "</export>");
+					writer.print("<sign>" + (folderGroup.getSign() == 1 ? true : false) + "</sign>");
+					writer.print("<archive>" + (folderGroup.getArchive() == 1 ? true : false) + "</archive>");
+					writer.print("<workflow>" + (folderGroup.getWorkflow() == 1 ? true : false) + "</workflow>");
 					writer.print("</right>");
 				}
 			}

@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Set;
 
 import com.logicaldoc.core.security.Permission;
-import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webdav.session.DavSession;
 
@@ -242,8 +242,8 @@ public class ResourceImpl implements Resource {
 			personRequest = (Long) session.getObject("id");
 		}
 
-		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Set<Permission> permissions = mdao.getEnabledPermissions(Long.parseLong(id), personRequest);
+		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		Set<Permission> permissions = fdao.getEnabledPermissions(Long.parseLong(id), personRequest);
 		writeEnabled = permissions.contains(Permission.WRITE);
 
 		deleteEnabled = permissions.contains(Permission.DELETE);

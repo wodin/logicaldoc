@@ -12,13 +12,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.transport.http.AbstractHTTPDestination;
 
-import com.logicaldoc.core.document.dao.FolderDAO;
+import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.FolderGroup;
 import com.logicaldoc.core.security.Group;
-import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
@@ -113,21 +113,21 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		try {
-			Menu folder = folderDao.findById(folderId);
+			Folder folder = folderDao.findById(folderId);
 			folderDao.initialize(folder);
-			MenuGroup mg = new MenuGroup();
+			FolderGroup mg = new FolderGroup();
 			mg.setGroupId(groupId);
 			mg.setPermissions(permissions);
-			folder.addMenuGroup(mg);
+			folder.addFolderGroup(mg);
 			folderDao.store(folder);
 
 			if (recursive) {
-				// recursively apply permissions to all submenus
-				Collection<Menu> submenus = folderDao.findByParentId(folderId);
-				for (Menu submenu : submenus) {
-					folderDao.initialize(submenu);
-					submenu.addMenuGroup(mg);
-					folderDao.store(submenu);
+				// recursively apply permissions to all subfolders
+				Collection<Folder> subfolders = folderDao.findByParentId(folderId);
+				for (Folder subfolder : subfolders) {
+					folderDao.initialize(subfolder);
+					subfolder.addFolderGroup(mg);
+					folderDao.store(subfolder);
 				}
 			}
 		} catch (Exception e) {
@@ -148,11 +148,11 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 		try {
-			Menu folder = folderDao.findById(folderId);
+			Folder folder = folderDao.findById(folderId);
 			if (folder.getSecurityRef() != null)
 				folder = folderDao.findById(folder.getSecurityRef());
 			folderDao.initialize(folder);
-			for (MenuGroup mg : folder.getMenuGroups()) {
+			for (FolderGroup mg : folder.getFolderGroups()) {
 				Group group = groupDao.findById(mg.getGroupId());
 				if (group.getName().startsWith("_user_") && users) {
 					rightsList.add(new Right(Long.parseLong(group.getName().substring(

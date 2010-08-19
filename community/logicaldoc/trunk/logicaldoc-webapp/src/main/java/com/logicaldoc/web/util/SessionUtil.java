@@ -42,6 +42,7 @@ public class SessionUtil {
 			throw new InvalidSessionException("Invalid Session");
 		if (session.getStatus() != UserSession.STATUS_OPEN)
 			throw new InvalidSessionException("Invalid or Expired Session");
+		session.renew();
 		return session;
 	}
 

@@ -16,7 +16,7 @@ import com.logicaldoc.core.PersistentObject;
  * @author Marco Meschieri - Logical Objects
  * @version 1.0
  */
-public class Menu extends PersistentObject implements Comparable<Menu>{
+public class Menu extends PersistentObject implements Comparable<Menu> {
 
 	public static final long MENUID_HOME = 1;
 
@@ -28,27 +28,17 @@ public class Menu extends PersistentObject implements Comparable<Menu>{
 
 	public static final long MENUID_EDITME = 19;
 
-	public static final int MENUTYPE_DIRECTORY = 3;
-
-	public static final int MENUTYPE_MENU = 1;
-
 	private long id = 0;
 
 	private String text = "";
 
 	private long parentId = 0;
-	
-	private Long securityRef;
 
-	private int sort = 0;
+	private Long securityRef;
 
 	private String icon = "";
 
-	private int type = 2;
-
-	private long size = 0;
-
-	private String ref = "";
+	private int type = 1;
 
 	private String description = "";
 
@@ -69,24 +59,12 @@ public class Menu extends PersistentObject implements Comparable<Menu>{
 		return parentId;
 	}
 
-	public int getSort() {
-		return sort;
-	}
-
 	public String getIcon() {
 		return icon;
 	}
 
 	public int getType() {
 		return type;
-	}
-
-	public String getRef() {
-		return ref;
-	}
-
-	public void setRef(String ref) {
-		this.ref = ref;
 	}
 
 	public Set<MenuGroup> getMenuGroups() {
@@ -108,10 +86,6 @@ public class Menu extends PersistentObject implements Comparable<Menu>{
 
 	public void setParentId(long parentId) {
 		this.parentId = parentId;
-	}
-
-	public void setSort(int sort) {
-		this.sort = sort;
 	}
 
 	public void setIcon(String icon) {
@@ -170,14 +144,6 @@ public class Menu extends PersistentObject implements Comparable<Menu>{
 				return mg;
 		}
 		return null;
-	}
-
-	public long getSize() {
-		return size;
-	}
-
-	public void setSize(long size) {
-		this.size = size;
 	}
 
 	public String getDescription() {

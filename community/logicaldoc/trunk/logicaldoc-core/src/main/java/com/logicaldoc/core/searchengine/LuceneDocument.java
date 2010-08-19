@@ -65,8 +65,7 @@ public class LuceneDocument {
 	/**
 	 * Builds a lucene compatible document of a file. The document contains 7
 	 * Fields: name - name of the document size - size of the document in bytes
-	 * path - path of the document for calling it on the web browser (e.g
-	 * DocFrame.do?menuId=1) type - file format (e.g pdf, sxw) date - date of
+	 * type - file format (e.g pdf, sxw) date - date of
 	 * creation content - full text of the document summary - first 500 letters
 	 * of the content
 	 * 

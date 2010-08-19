@@ -49,7 +49,7 @@ public interface SearchService {
 	 * Finds authorized documents for the current user having a specified tag.
 	 * 
 	 * @param tag Tag of the document
-	 * @return Collection of found menus.
+	 * @return Collection of found folders.
 	 */
 	@WebResult(name = "document")
 	public WSDocument[] findByTag(@WebParam(name = "sid") String sid, @WebParam(name = "tag") String tag)
@@ -71,7 +71,7 @@ public interface SearchService {
 	 * (like operator is used).
 	 * 
 	 * @param name Name of the folder
-	 * @return Collection of found menus.
+	 * @return Collection of found folders.
 	 */
 	@WebResult(name = "folder")
 	public WSFolder[] findFolders(@WebParam(name = "sid") String sid, @WebParam(name = "name") String name)

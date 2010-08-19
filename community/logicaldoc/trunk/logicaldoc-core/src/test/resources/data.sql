@@ -31,68 +31,62 @@ insert into ld_usergroup
 values (-5,5);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (99,'2008-10-22',0,'menu.admin',1,1,'administration.gif',5,null,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
+values     (99,'2008-10-22',0,'menu.admin',1,'administration.gif',5);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (100,'2008-10-22',0,'menu.adminxxx',1,1,'administration.gif',3,null,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
+values     (100,'2008-10-22',0,'menu.adminxxx',1,'administration.gif',3);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (101,'2008-10-22',0,'text',100,1,'administration.gif',3,null,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
+values     (101,'2008-10-22',0,'text',100,'administration.gif',3);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (102,'2008-10-22',0,'menu.admin',101,1,'administration.gif',5,null,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
+values     (102,'2008-10-22',0,'menu.admin',101,'administration.gif',3);
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (103,'2008-10-22',0,'menu.admin',101,1,'administration.gif',3,null,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
+values     (103,'2008-10-22',0,'menu.admin',101,'administration.gif',3);
 insert into ld_menu
-           (ld_id,ld_securityref,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (104,103,'2008-10-22',0,'menu.admin',101,1,'administration.gif',3,null,0);
+           (ld_id,ld_securityref,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
+values     (104,103,'2008-10-22',0,'menu.admin',101,'administration.gif',3);
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (1041,'2008-10-22',0,'menu.admin',104,1,'administration.gif',3,null,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
+values     (1041,'2008-10-22',0,'menu.admin',104,'administration.gif',3);
 
 
-
-insert into ld_menu
-           (ld_id,ld_securityref,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (1000,103,'2008-10-22',1,'menu.admin.1000',1,1,'administration.gif',5,null,0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (1100,'2008-10-22',1,'menu.admin.1100',1000,1,'administration.gif',5,null,0);
+           (ld_id,ld_securityref,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
+values     (1000,103,'2008-10-22',1,'menu.admin.1000',1,'administration.gif',5);
 
 insert into ld_menu
-           (ld_id,ld_securityref,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (1200,103,'2009-10-19',0,'test',5,1,'administration.gif',3,null,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
+values     (1100,'2008-10-22',1,'menu.admin.1100',1000,'administration.gif',5);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (1201,'2009-10-19',0,'ABC',1200,1,'administration.gif',3,null,0);
+           (ld_id,ld_securityref,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
+values     (1200,103,'2009-10-19',0,'test',5,'administration.gif',3);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (1202,'2009-10-19',0,'xyz',1201,1,'administration.gif',3,null,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
+values     (1201,'2009-10-19',0,'ABC',1200,'administration.gif',3);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (1203,'2009-10-19',0,'qqqq',1201,1,'administration.gif',3,null,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
+values     (1202,'2009-10-19',0,'xyz',1201,'administration.gif',3);
+
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
+values     (1203,'2009-10-19',0,'qqqq',1201,'administration.gif',3);
 
 
-insert into ld_menugroup
-			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
-values     (100,3,1,0,0,0,0,0,0,0,0,0,0);
+insert into ld_menugroup (ld_menuid, ld_groupid, ld_write) values (100,3,1);
 
-insert into ld_menugroup
-			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
-values     (103,2,1,0,0,0,0,0,0,0,0,0,0);
+insert into ld_menugroup (ld_menuid, ld_groupid, ld_write) values (103,2,1);
 
-insert into ld_menugroup
-			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
-values     (6,2,1,0,0,0,0,0,0,0,0,0,0);
+insert into ld_menugroup (ld_menuid, ld_groupid, ld_write) values (6,2,1);
 
 insert into ld_usergroup
            (ld_userid,ld_groupid)
@@ -113,29 +107,56 @@ values     (5,3);
 insert into ld_group
 values     (10,'2008-10-22',0,'testGroup','Group for tests',0);
 
-insert into ld_document
-           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus)
-values     (1,'2008-10-22',0,0,'a','testDocname','1.0','2006-12-19','2006-12-19','myself',1,0,'PDF',3,'source','sourceauthor1','2008-12-19','sourcetype1','coverage1','en','pippo',1356,1,103,0,'',1,0);
+
+insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
+values (6,CURRENT_TIMESTAMP,0,'folder6',5,1);
+insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
+values (7,CURRENT_TIMESTAMP,0,'folder7',5,1);
+insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
+values (8,CURRENT_TIMESTAMP,1,'folder8',7,1);
+insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
+values (1200,CURRENT_TIMESTAMP,0,'test',5,1);
+insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
+values (1201,CURRENT_TIMESTAMP,0,'ABC',1200,1);
+insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
+values (1202,CURRENT_TIMESTAMP,0,'xyz',1201,1);
+insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
+values (1204,CURRENT_TIMESTAMP,1,'deleted',1201,1);
+
+insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+values (6,2,1,1,0,0,1,1,0,0,0,0,0);
+insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+values (6,3,1,1,0,0,1,1,0,0,0,0,0);
+insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+values (6,-3,1,1,0,0,1,1,0,0,0,0,0);
+
+
+
+
 
 insert into ld_document
-           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_docref)
-values     (2,'2008-10-22',0,0,'b','testDocname2','2.0','2006-12-19','2006-12-19','myself',1,1,'PDF',3,'source1','sourceauthor2','2008-12-19','sourcetype2','coverage2','en','pluto',122345,0,103,0,'',1,0,1);
+           (ld_id,ld_folderid,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_signed,ld_creator,ld_creatorid,ld_exportstatus)
+values     (1,6,'2008-10-22',0,0,'a','testDocname','1.0','2006-12-19','2006-12-19','myself',1,0,'PDF',3,'source','sourceauthor1','2008-12-19','sourcetype1','coverage1','en','pippo',1356,1,0,'',1,0);
 
 insert into ld_document
-           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_deleteuserid)
-values     (3,'2010-04-02',0,0,'c','DELETED 1','testDocVer1','2006-12-19','2006-12-19','myself',1,1,'PDF',3,'source2','sourceauthor','2008-12-19','sourcetype','coverage','en','pluto',122345,1,103,0,'',1,0,1);
+           (ld_id,ld_folderid,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_docref)
+values     (2,6,'2008-10-22',0,0,'b','testDocname2','2.0','2006-12-19','2006-12-19','myself',1,1,'PDF',3,'source1','sourceauthor2','2008-12-19','sourcetype2','coverage2','en','pluto',122345,0,0,'',1,0,1);
 
 insert into ld_document
-           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_deleteuserid)
-values     (4,'2010-04-04',1,0,'d','DELETED 2','testDocVer2','2006-12-19','2006-12-19','myself',1,1,'TXT',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','pippo',122345,1,1100,0,'',1,0,1);
+           (ld_id,ld_folderid,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_deleteuserid)
+values     (3,6,'2010-04-02',0,0,'c','DELETED 1','testDocVer1','2006-12-19','2006-12-19','myself',1,1,'PDF',3,'source2','sourceauthor','2008-12-19','sourcetype','coverage','en','pluto',122345,1,0,'',1,0,1);
 
 insert into ld_document
-           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_deleteuserid)
-values     (5,'2010-04-01',1,0,'f','DELETED 3','testDocVer3','2006-12-19','2006-12-19','myself',1,1,'DOC',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','paperino',122345,1,99,0,'',1,0,1);
+           (ld_id,ld_folderid,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_deleteuserid)
+values     (4,6,'2010-04-04',1,0,'d','DELETED 2','testDocVer2','2006-12-19','2006-12-19','myself',1,1,'TXT',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','pippo',122345,1,0,'',1,0,1);
 
 insert into ld_document
-           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_deleteuserid)
-values     (6,'2010-04-01',1,0,'g','DELETED 4','testDocVer4','2006-12-19','2006-12-19','myself',1,1,'TIFF',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','topolino',122345,1,1100,0,'',1,0,2);
+           (ld_id,ld_folderid,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_deleteuserid)
+values     (5,8,'2010-04-01',1,0,'f','DELETED 3','testDocVer3','2006-12-19','2006-12-19','myself',1,1,'DOC',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','paperino',122345,1,0,'',1,0,2);
+
+insert into ld_document
+           (ld_id,ld_folderid,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_deleteuserid)
+values     (6,8,'2010-04-01',1,0,'g','DELETED 4','testDocVer4','2006-12-19','2006-12-19','myself',1,1,'TIFF',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','topolino',122345,1,0,'',1,0,2);
 
 insert into ld_ticket
            (ld_id,ld_lastmodified,ld_deleted,ld_ticketid,ld_docid,ld_userid)

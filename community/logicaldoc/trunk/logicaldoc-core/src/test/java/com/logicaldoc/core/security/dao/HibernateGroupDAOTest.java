@@ -44,7 +44,7 @@ public class HibernateGroupDAOTest extends AbstractCoreTCase {
 		Assert.assertTrue(dao.delete(10));
 		Assert.assertNull(dao.findById(10));
 
-		// Delete a BIG group with associated MenuGroups and UserGroups
+		// Delete a BIG group with associated FolderGroups and UserGroups
 		Assert.assertTrue(dao.delete(1));
 		Assert.assertNull(dao.findById(1));
 	}

@@ -27,8 +27,7 @@ import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 
 import com.logicaldoc.core.i18n.DateBean;
 import com.logicaldoc.core.i18n.LanguageManager;
-import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 
@@ -110,7 +109,7 @@ public class FulltextSearch extends Search {
 		}
 
 		log.info("Fulltext query: " + query.toString());
-		
+
 		if (filters.isEmpty()) {
 			topDocs = multiSearcher.search(query, 1000);
 		} else {
@@ -134,11 +133,11 @@ public class FulltextSearch extends Search {
 			accessibleIds.add(opt.getFolderId());
 		} else {
 			log.info("DB search");
-			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			if (opt.getFolderId() == null)
-				accessibleIds = mdao.findMenuIdByUserId(opt.getUserId());
+				accessibleIds = fdao.findFolderIdByUserId(opt.getUserId());
 			else {
-				accessibleIds = mdao.findIdByUserId(opt.getUserId(), opt.getFolderId(), Menu.MENUTYPE_DIRECTORY);
+				accessibleIds = fdao.findIdByUserId(opt.getUserId(), opt.getFolderId());
 			}
 			log.info("End of DB search");
 		}
@@ -163,7 +162,7 @@ public class FulltextSearch extends Search {
 				String path = doc.get(LuceneDocument.FIELD_FOLDER_ID);
 				long folderId = Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
 
-				// When user can see document with menuId then put it into
+				// When user can see document with folderId then put it into
 				// result-collection.
 				if (accessibleIds.contains(folderId)) {
 					String size = doc.get(LuceneDocument.FIELD_SIZE);

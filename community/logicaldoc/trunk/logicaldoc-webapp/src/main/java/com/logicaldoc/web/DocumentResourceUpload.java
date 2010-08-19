@@ -16,11 +16,11 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
-import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.ServletDocUtil;
@@ -93,14 +93,14 @@ public class DocumentResourceUpload extends HttpServlet {
 
 		log.debug("Start Upload resource for document " + docId);
 
-		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(Long.parseLong(docId));
 
 		try {
-			Menu folder = doc.getFolder();
-			if (mdao.isPermissionEnabled(Permission.SIGN, folder.getId(), user.getId())) {
+			Folder folder = doc.getFolder();
+			if (fdao.isPermissionEnabled(Permission.SIGN, folder.getId(), user.getId())) {
 				ServletDocUtil.uploadDocumentResource(request, docId, suffix, fileVersion, docVersion);
 				if (suffix.startsWith("sign")) {
 					docDao.initialize(doc);
