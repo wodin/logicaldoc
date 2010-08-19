@@ -1,11 +1,14 @@
 package com.logicaldoc.core.document.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.LogFactory;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.DiscussionComment;
@@ -54,25 +57,34 @@ public class HibernateDiscussionThreadDAO extends HibernatePersistentObjectDAO<D
 	public List<DiscussionComment> findCommentsByUserId(long userId, Integer maxEntries) {
 		String query = "select ld_threadid, ld_replyto, ld_replypath, ld_userid, ld_username, ld_date, ld_subject, ld_body, ld_deleted, ld_id"
 				+ " from ld_dcomment where ld_deleted = 0 and  ld_userid=" + userId + " order by ld_date desc";
-		List<Object> result = (List<Object>) findByJdbcQuery(query, 10, new Object[] {});
+		
+		RowMapper discussionMapper = new BeanPropertyRowMapper() {
+			
+			public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+				
+				DiscussionComment comment = new DiscussionComment();
+				comment.setThreadId(rs.getLong(1));
+				comment.setReplyTo(rs.getInt(2));
+				comment.setReplyPath(rs.getString(3));
+				comment.setUserId(rs.getLong(4));
+				comment.setUserName(rs.getString(5));
+				comment.setDate(rs.getDate(6));
+				comment.setSubject(rs.getString(7));
+				comment.setBody(rs.getString(8));
+				comment.setDeleted(rs.getInt(9));
 
+				return comment;
+			}
+		};
+		
 		List<DiscussionComment> comments = new ArrayList<DiscussionComment>();
-		int i = 0;
-		for (Iterator iterator = result.iterator(); iterator.hasNext()
-				&& (maxEntries == null || i < maxEntries.intValue()); i++) {
-			Object[] record = (Object[]) iterator.next();
-			DiscussionComment comment = new DiscussionComment();
-			comment.setThreadId((Long) record[0]);
-			comment.setReplyTo((Integer) record[1]);
-			comment.setReplyPath((String) record[2]);
-			comment.setUserId((Long) record[3]);
-			comment.setUserName((String) record[4]);
-			comment.setDate((Date) record[5]);
-			comment.setSubject((String) record[6]);
-			comment.setBody((String) record[7]);
-			comment.setDeleted((Integer) record[8]);
+		
+		List elements = query(query, new Object[]{}, maxEntries, discussionMapper);
+		for (Iterator iterator = elements.iterator(); iterator.hasNext();) {
+			DiscussionComment comment = (DiscussionComment) iterator.next();	
 			comments.add(comment);
 		}
+		
 		return comments;
 	}
 }

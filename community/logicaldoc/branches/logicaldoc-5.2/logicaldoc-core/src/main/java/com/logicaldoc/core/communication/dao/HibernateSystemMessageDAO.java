@@ -1,5 +1,7 @@
 package com.logicaldoc.core.communication.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -7,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.LogFactory;
+import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.communication.Recipient;
@@ -20,6 +23,32 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @since 3.0
  */
 public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<SystemMessage> implements SystemMessageDAO {
+	
+	public class SystemMessageMapper implements RowMapper {
+	
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+			
+			SystemMessage message = new SystemMessage();
+			message.setLastModified(rs.getDate(1));
+			message.setDeleted(rs.getInt(2));
+			message.setAuthor(rs.getString(3));
+			message.setMessageText(rs.getString(4));
+			message.setSubject(rs.getString(5));
+			message.setSentDate(rs.getDate(6));
+			message.setDateScope(rs.getInt(7));
+			message.setPrio(rs.getInt(8));
+			message.setConfirmation(rs.getInt(9));
+			message.setRead(rs.getInt(10));
+			message.setLastNotified(rs.getDate(11));
+			message.setStatus(rs.getInt(12));
+			message.setTrials(rs.getInt(13));
+			message.setType(rs.getInt(14));
+			message.setId(rs.getLong(15));
+
+			return message;
+		}
+	};
+
 	public HibernateSystemMessageDAO() {
 		super(SystemMessage.class);
 		super.log = LogFactory.getLog(HibernateSystemMessageDAO.class);
@@ -29,40 +58,23 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#findByRecipient(java.lang.String,
 	 *      int)
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public List<SystemMessage> findByRecipient(String recipient, int type, Integer read) {
 		String query = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_red, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_id IN (select ld_messageid from ld_recipient where ld_name = '"
 				+ SqlUtil.doubleQuotes(recipient) + "' and ld_type = " + type + ")";
 		if (read != null)
 			query = query + " and ld_read=" + read;
-		query = query + " order by ld_sentdate desc";
-
-		List<Object> result = (List<Object>) findByJdbcQuery(query, 15, new Object[] {});
-
+		query = query + " order by ld_sentdate desc";		
+		
 		List<SystemMessage> messages = new ArrayList<SystemMessage>();
-		int i = 0;
-		for (Iterator iterator = result.iterator(); iterator.hasNext(); i++) {
-			Object[] record = (Object[]) iterator.next();
-			SystemMessage message = new SystemMessage();
-			message.setLastModified((Date) record[0]);
-			message.setDeleted((Integer) record[1]);
-			message.setAuthor((String) record[2]);
-			message.setMessageText((String) record[3]);
-			message.setSubject((String) record[4]);
-			message.setSentDate((Date) record[5]);
-			message.setDateScope((Integer) record[6]);
-			message.setPrio((Integer) record[7]);
-			message.setConfirmation((Integer) record[8]);
-			message.setRead((Integer) record[9]);
-			message.setLastNotified((Date) record[10]);
-			message.setStatus((Integer) record[11]);
-			message.setTrials((Integer) record[12]);
-			message.setType((Integer) record[13]);
-			message.setId((Long) record[14]);
+		
+		List elements = query(query, new Object[]{}, null, new SystemMessageMapper());
+		for (Iterator iterator = elements.iterator(); iterator.hasNext();) {
+			SystemMessage message = (SystemMessage) iterator.next();	
 			messages.add(message);
 		}
-
+		
 		return messages;
 	}
 
@@ -127,34 +139,16 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	/**
 	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#findByMode(java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<SystemMessage> findByMode(String mode) {
 		String query = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_red, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_id IN (select ld_messageid from ld_recipient where ld_mode = '"
 				+ SqlUtil.doubleQuotes(mode) + "') order by ld_sentdate desc";
 
-		List<Object> result = (List<Object>) findByJdbcQuery(query, 15, new Object[] {});
-
 		List<SystemMessage> messages = new ArrayList<SystemMessage>();
-		int i = 0;
-		for (Iterator iterator = result.iterator(); iterator.hasNext(); i++) {
-			Object[] record = (Object[]) iterator.next();
-			SystemMessage message = new SystemMessage();
-			message.setLastModified((Date) record[0]);
-			message.setDeleted((Integer) record[1]);
-			message.setAuthor((String) record[2]);
-			message.setMessageText((String) record[3]);
-			message.setSubject((String) record[4]);
-			message.setSentDate((Date) record[5]);
-			message.setDateScope((Integer) record[6]);
-			message.setPrio((Integer) record[7]);
-			message.setConfirmation((Integer) record[8]);
-			message.setRead((Integer) record[9]);
-			message.setLastNotified((Date) record[10]);
-			message.setStatus((Integer) record[11]);
-			message.setTrials((Integer) record[12]);
-			message.setType((Integer) record[13]);
-			message.setId((Long) record[14]);
+		
+		List elements = query(query, new Object[]{}, null, new SystemMessageMapper());
+		for (Iterator iterator = elements.iterator(); iterator.hasNext();) {
+			SystemMessage message = (SystemMessage) iterator.next();	
 			messages.add(message);
 		}
 
@@ -164,34 +158,16 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	/**
 	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#findByType(int)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<SystemMessage> findByType(int type) {
 		String query = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_red, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_id IN (select ld_messageid from ld_recipient where ld_type = "
 				+ type + ") order by ld_sentdate desc";
 
-		List<Object> result = (List<Object>) findByJdbcQuery(query, 15, new Object[] {});
-
 		List<SystemMessage> messages = new ArrayList<SystemMessage>();
-		int i = 0;
-		for (Iterator iterator = result.iterator(); iterator.hasNext(); i++) {
-			Object[] record = (Object[]) iterator.next();
-			SystemMessage message = new SystemMessage();
-			message.setLastModified((Date) record[0]);
-			message.setDeleted((Integer) record[1]);
-			message.setAuthor((String) record[2]);
-			message.setMessageText((String) record[3]);
-			message.setSubject((String) record[4]);
-			message.setSentDate((Date) record[5]);
-			message.setDateScope((Integer) record[6]);
-			message.setPrio((Integer) record[7]);
-			message.setConfirmation((Integer) record[8]);
-			message.setRead((Integer) record[9]);
-			message.setLastNotified((Date) record[10]);
-			message.setStatus((Integer) record[11]);
-			message.setTrials((Integer) record[12]);
-			message.setType((Integer) record[13]);
-			message.setId((Long) record[14]);
+		
+		List elements = query(query, new Object[]{}, null, new SystemMessageMapper());
+		for (Iterator iterator = elements.iterator(); iterator.hasNext();) {
+			SystemMessage message = (SystemMessage) iterator.next();	
 			messages.add(message);
 		}
 
@@ -210,35 +186,17 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	/**
 	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#findMessagesToBeSent(int)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<SystemMessage> findMessagesToBeSent(int type, int maxTrial) {
 		String query = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_red, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_status <> "
 				+ SystemMessage.STATUS_DELIVERED
 				+ " and ld_type = " + type + " and ld_trials < " + maxTrial + " order by ld_sentdate desc";
 
-		List<Object> result = (List<Object>) findByJdbcQuery(query, 15, new Object[] {});
-
 		List<SystemMessage> messages = new ArrayList<SystemMessage>();
-		int i = 0;
-		for (Iterator iterator = result.iterator(); iterator.hasNext(); i++) {
-			Object[] record = (Object[]) iterator.next();
-			SystemMessage message = new SystemMessage();
-			message.setLastModified((Date) record[0]);
-			message.setDeleted((Integer) record[1]);
-			message.setAuthor((String) record[2]);
-			message.setMessageText((String) record[3]);
-			message.setSubject((String) record[4]);
-			message.setSentDate((Date) record[5]);
-			message.setDateScope((Integer) record[6]);
-			message.setPrio((Integer) record[7]);
-			message.setConfirmation((Integer) record[8]);
-			message.setRead((Integer) record[9]);
-			message.setLastNotified((Date) record[10]);
-			message.setStatus((Integer) record[11]);
-			message.setTrials((Integer) record[12]);
-			message.setType((Integer) record[13]);
-			message.setId((Long) record[14]);
+		
+		List elements = query(query, new Object[]{}, null, new SystemMessageMapper());
+		for (Iterator iterator = elements.iterator(); iterator.hasNext();) {
+			SystemMessage message = (SystemMessage) iterator.next();	
 			messages.add(message);
 		}
 
