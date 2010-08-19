@@ -45,7 +45,7 @@
         subprotocol="oracle"
         port="1521"
         sample="jdbc:oracle:thin:@&lt;server&gt;[:&lt;1521&gt;]:&lt;database_name&gt;"
-        dialect="org.hibernate.dialect.OracleDialect"
+        dialect="org.hibernate.dialect.Oracle10gDialect"
         validationQuery="SELECT 1 FROM DUAL"
     >
     </db>    
