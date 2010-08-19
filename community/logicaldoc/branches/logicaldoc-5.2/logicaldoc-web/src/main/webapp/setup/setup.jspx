@@ -165,15 +165,10 @@
 												value="#{setupWizard.selectedDBMS}" partialSubmit="true"
 												tabindex="1"
 												valueChangeListener="#{setupWizard.dbmsChanged}">
-												<f:selectItem itemValue="Firebird" itemLabel="Firebird 2.1" />
 												<f:selectItem itemValue="Hsqldb" itemLabel="HSQLDB 1.8" />
-												<f:selectItem itemValue="MsSQLServer"
-													itemLabel="Microsoft SQL Server 2000" />
-												<f:selectItem itemValue="MySQL" itemLabel="MySQL 4.1/5.0" />
-												<f:selectItem itemValue="Oracle"
-													itemLabel="Oracle 8i/9i/10i" />
-												<f:selectItem itemValue="PostgreSQL"
-													itemLabel="PostgreSQL 8.x" />
+												<f:selectItem itemValue="MySQL" itemLabel="MySQL 5.0/5.1" />
+												<f:selectItem itemValue="Oracle" itemLabel="Oracle 10g" />
+												<f:selectItem itemValue="PostgreSQL" itemLabel="PostgreSQL 8.x" />
 											</ice:selectOneListbox>
 										</ice:panelGroup>
 										<ice:panelGroup>
