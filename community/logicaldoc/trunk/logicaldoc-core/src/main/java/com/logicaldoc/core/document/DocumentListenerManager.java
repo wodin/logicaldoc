@@ -13,8 +13,8 @@ import org.java.plugin.registry.Extension;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
- * A manager for document listeners. It's internals are initialized from the extension
- * point 'DocumentListener' of the core plugin.
+ * A manager for document listeners. It's internals are initialized from the
+ * extension point 'DocumentListener' of the core plugin.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 4.0
@@ -24,6 +24,7 @@ public class DocumentListenerManager {
 
 	private List<DocumentListener> listeners = null;
 
+	@SuppressWarnings("rawtypes")
 	public void init() {
 		listeners = new ArrayList<DocumentListener>();
 

@@ -8,9 +8,9 @@ import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.document.dao.FolderDAO;
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 
 /**
@@ -81,8 +81,8 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		User user = userDao.findByUserName("admin");
 		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
-		Menu folder = doc.getFolder();
-		Assert.assertEquals(103, folder.getId());
+		Folder folder = doc.getFolder();
+		Assert.assertEquals(6, folder.getId());
 
 		History transaction = new History();
 		transaction.setFolderId(103);
@@ -93,7 +93,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		transaction.setComment("pippo_reason");
 		transaction.setFilename(doc.getFileName());
 
-		Menu newFolder = folderDao.findById(Menu.MENUID_HOME);
+		Folder newFolder = folderDao.findById(6);
 		docDao.initialize(doc);
 		Document newDoc = documentManager.copyToFolder(doc, newFolder, transaction);
 		Assert.assertNotSame(doc.getId(), newDoc.getId());
@@ -105,18 +105,18 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		User user = userDao.findByUserName("admin");
 		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
-		Menu folder = doc.getFolder();
-		Assert.assertEquals(103, folder.getId());
+		Folder folder = doc.getFolder();
+		Assert.assertEquals(6, folder.getId());
 
 		History transaction = new History();
-		transaction.setFolderId(103);
+		transaction.setFolderId(6);
 		transaction.setUser(user);
 		transaction.setDocId(doc.getId());
 		transaction.setUserId(1);
 		transaction.setNotified(0);
 		transaction.setComment("pippo_reason");
 
-		Menu newFolder = folderDao.findById(Menu.MENUID_HOME);
+		Folder newFolder = folderDao.findById(6);
 		docDao.initialize(doc);
 		documentManager.moveToFolder(doc, newFolder, transaction);
 		Assert.assertSame(1L, doc.getId());
@@ -197,19 +197,19 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		Assert.assertNotNull(doc);
 		docDao.initialize(doc);
 		History transaction = new History();
-		transaction.setFolderId(103);
+		transaction.setFolderId(6);
 		transaction.setUser(user);
 		transaction.setDocId(doc.getId());
 		transaction.setUserId(1);
 		transaction.setNotified(0);
 		transaction.setComment("pippo_reason");
-		Menu newFolder = folderDao.findById(Menu.MENUID_HOME);
+		Folder newFolder = folderDao.findById(6);
 
 		Document newDoc = documentManager.createShortcut(doc, newFolder, transaction);
 
 		Assert.assertNotSame(doc.getId(), newDoc.getId());
 		Assert.assertEquals(newFolder, newDoc.getFolder());
-		Assert.assertEquals(newDoc.getTitle(), doc.getTitle());
+		Assert.assertEquals(newDoc.getTitle(), "testDocname(1)");
 		Assert.assertEquals(newDoc.getSourceAuthor(), doc.getSourceAuthor());
 		Assert.assertEquals(newDoc.getSourceType(), doc.getSourceType());
 		Assert.assertEquals(newDoc.getCoverage(), doc.getCoverage());

@@ -239,7 +239,7 @@ public class Indexer {
 			IndexReader reader = IndexReader.open(getIndexDirectory(language), true);
 			Searcher searcher = new IndexSearcher(reader);
 
-			// Compose a query for menuId
+			// Compose a query for docId
 			QueryParser parser = new QueryParser(LUCENE_VERSION, LuceneDocument.FIELD_DOC_ID, new KeywordAnalyzer());
 			Query query = parser.parse(docId);
 			TopDocs hits = searcher.search(query, 1);

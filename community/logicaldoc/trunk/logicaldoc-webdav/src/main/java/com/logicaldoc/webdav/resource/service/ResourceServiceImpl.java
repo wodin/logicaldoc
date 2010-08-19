@@ -22,11 +22,11 @@ import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webdav.context.ImportContext;
@@ -71,13 +71,13 @@ public class ResourceServiceImpl implements ResourceService {
 	public ResourceServiceImpl() {
 	}
 
-	private Resource marshallFolder(Menu menu, long userId, DavSession session) {
+	private Resource marshallFolder(Folder folder, long userId, DavSession session) {
 		Resource resource = new ResourceImpl();
-		resource.setID(new Long(menu.getId()).toString());
+		resource.setID(new Long(folder.getId()).toString());
 		resource.setContentLength(new Long(0));
-		resource.setName(menu.getText());
-		resource.setPath(folderDAO.computePathExtended(menu.getId()));
-		resource.setLastModified(menu.getLastModified());
+		resource.setName(folder.getName());
+		resource.setPath(folderDAO.computePathExtended(folder.getId()));
+		resource.setLastModified(folder.getLastModified());
 		resource.setSession(session);
 		resource.isFolder(true);
 
@@ -120,13 +120,13 @@ public class ResourceServiceImpl implements ResourceService {
 			return resourceList;
 
 		// Find children visible by the current user
-		MenuDAO menuDAO = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Collection<Menu> folders = menuDAO.findChildren(folderID, parentResource.getRequestedPerson(), null);
+		FolderDAO folderDAO = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		Collection<Folder> folders = folderDAO.findChildren(folderID, parentResource.getRequestedPerson(), null);
 		if (folders != null) {
-			for (Iterator<Menu> iterator = folders.iterator(); iterator.hasNext();) {
-				Menu currentMenu = iterator.next();
-				resourceList.add(marshallFolder(currentMenu, parentResource.getRequestedPerson(), parentResource
-						.getSession()));
+			for (Iterator<Folder> iterator = folders.iterator(); iterator.hasNext();) {
+				Folder currentFolder = iterator.next();
+				resourceList.add(marshallFolder(currentFolder, parentResource.getRequestedPerson(),
+						parentResource.getSession()));
 			}
 		}
 
@@ -164,16 +164,16 @@ public class ResourceServiceImpl implements ResourceService {
 				path = path.substring(0, lastidx + 1);
 			}
 
-			Menu menu = null;
+			Folder folder = null;
 
 			if (path.equals("/") && name.equals("")) {
-				menu = folderDAO.findById(Menu.MENUID_DOCUMENTS);
+				folder = folderDAO.findById(Folder.ROOTID);
 			} else
-				menu = folderDAO.find(name, path);
+				folder = folderDAO.find(name, path);
 
 			// if this resource request is a folder
-			if (menu != null)
-				return marshallFolder(menu, userId, session);
+			if (folder != null)
+				return marshallFolder(folder, userId, session);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -220,13 +220,13 @@ public class ResourceServiceImpl implements ResourceService {
 
 		log.debug("Find DMS resource " + name + " in path " + resourcePath);
 
-		Menu menu = null;
+		Folder folder = null;
 		if ("/".equals(resourcePath.trim()) && "".equals(name))
-			menu = folderDAO.findById(Menu.MENUID_DOCUMENTS);
+			folder = folderDAO.findById(Folder.ROOTID);
 		else
-			menu = folderDAO.find(name, resourcePath);
+			folder = folderDAO.find(name, resourcePath);
 
-		return marshallFolder(menu, userId, session);
+		return marshallFolder(folder, userId, session);
 	}
 
 	@Override
@@ -237,7 +237,7 @@ public class ResourceServiceImpl implements ResourceService {
 	public Resource createResource(Resource parentResource, String name, boolean isCollection, ImportContext context,
 			DavSession session) throws DavException {
 
-		Menu parentMenu = folderDAO.findById(Long.parseLong(parentResource.getID()));
+		Folder parentFolder = folderDAO.findById(Long.parseLong(parentResource.getID()));
 		String sid = null;
 		if (session != null)
 			sid = (String) session.getObject("sid");
@@ -254,8 +254,8 @@ public class ResourceServiceImpl implements ResourceService {
 			History transaction = new History();
 			transaction.setUser(user);
 			transaction.setSessionId(sid);
-			Menu createdMenu = folderDAO.create(parentMenu, name, transaction);
-			return this.marshallFolder(createdMenu, parentResource.getRequestedPerson(), session);
+			Folder createdFolder = folderDAO.create(parentFolder, name, transaction);
+			return this.marshallFolder(createdFolder, parentResource.getRequestedPerson(), session);
 		}
 
 		// check permission to add document
@@ -278,7 +278,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 				Document doc = new Document();
 				doc.setFileName(name);
-				doc.setFolder(parentMenu);
+				doc.setFolder(parentFolder);
 				doc.setLocale(user.getLocale());
 
 				documentManager.create(is, doc, transaction, false);
@@ -331,8 +331,8 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	public Resource getChildByName(Resource parentResource, String name) {
-		Menu parentMenu = folderDAO.findById(Long.parseLong(parentResource.getID()));
-		Collection<Document> docs = documentDAO.findByFileNameAndParentFolderId(parentMenu.getId(), name, null, null);
+		Folder parentFolder = folderDAO.findById(Long.parseLong(parentResource.getID()));
+		Collection<Document> docs = documentDAO.findByFileNameAndParentFolderId(parentFolder.getId(), name, null, null);
 		if (!docs.isEmpty()) {
 			Document document = docs.iterator().next();
 			return marshallDocument(document, parentResource.getSession());
@@ -400,12 +400,12 @@ public class ResourceServiceImpl implements ResourceService {
 			if (!destWriteEnabled)
 				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Write Rights not granted to this user");
 
-			Menu menu = folderDAO.findById(Long.parseLong(destination.getID()));
+			Folder f = folderDAO.findById(Long.parseLong(destination.getID()));
 
 			try {
 				if (document.getDocRef() != null)
 					transaction.setEvent(History.EVENT_SHORTCUT_MOVED);
-				documentManager.moveToFolder(document, menu, transaction);
+				documentManager.moveToFolder(document, f, transaction);
 			} catch (Exception e) {
 				log.warn(e.getMessage(), e);
 			}
@@ -420,16 +420,16 @@ public class ResourceServiceImpl implements ResourceService {
 		if (!source.isRenameEnabled())
 			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Rename Rights not granted to this user");
 
-		Menu currentMenu = folderDAO.findById(Long.parseLong(source.getID()));
+		Folder currentFolder = folderDAO.findById(Long.parseLong(source.getID()));
 
-		long currentParentFolder = currentMenu.getParentId();
+		long currentParentFolder = currentFolder.getParentId();
 		long destinationParentFolder = Long.parseLong(destination.getID());
 
 		// distinction between folder move and folder rename
 		if (currentParentFolder != destinationParentFolder) {
 			// Folder Move
 
-			Menu destParentMenu = folderDAO.findById(Long.parseLong(destination.getID()));
+			Folder destParentFolder = folderDAO.findById(Long.parseLong(destination.getID()));
 
 			// check the delete on the parent of the source to move
 			Resource sourceParent = getParentResource(source);
@@ -449,16 +449,16 @@ public class ResourceServiceImpl implements ResourceService {
 
 			// we are doing a file rename
 			try {
-				folderDAO.move(currentMenu, destParentMenu, transaction);
+				folderDAO.move(currentFolder, destParentFolder, transaction);
 			} catch (Exception e) {
 				log.warn(e.getMessage(), e);
 				throw new DavException(DavServletResponse.SC_INTERNAL_SERVER_ERROR, "Error during Folder Move");
 			}
 
-			return this.marshallFolder(currentMenu, source.getRequestedPerson(), session);
+			return this.marshallFolder(currentFolder, source.getRequestedPerson(), session);
 		} else {
 			// Folder Rename
-			currentMenu.setText(source.getName());
+			currentFolder.setName(source.getName());
 
 			User user = (User) session.getObject("user");
 			// Add a folder history entry
@@ -466,19 +466,19 @@ public class ResourceServiceImpl implements ResourceService {
 			transaction.setUser(user);
 			transaction.setEvent(History.EVENT_FOLDER_RENAMED);
 			transaction.setSessionId(sid);
-			folderDAO.store(currentMenu, transaction);
+			folderDAO.store(currentFolder, transaction);
 
 			if (destination != null)
-				currentMenu.setParentId(Long.parseLong(destination.getID()));
+				currentFolder.setParentId(Long.parseLong(destination.getID()));
 
-			folderDAO.store(currentMenu);
-			return this.marshallFolder(currentMenu, source.getRequestedPerson(), session);
+			folderDAO.store(currentFolder);
+			return this.marshallFolder(currentFolder, source.getRequestedPerson(), session);
 		}
 	}
 
 	public void deleteResource(Resource resource, DavSession session) throws DavException {
 		String sid = (String) session.getObject("sid");
-		Menu menu = folderDAO.findById(Long.parseLong(resource.getID()));
+		Folder folder = folderDAO.findById(Long.parseLong(resource.getID()));
 		User user = userDAO.findById(resource.getRequestedPerson());
 
 		// Add a folder history entry
@@ -493,7 +493,7 @@ public class ResourceServiceImpl implements ResourceService {
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
 
 				transaction.setEvent(History.EVENT_FOLDER_DELETED);
-				List<Menu> notDeletableFolders = folderDAO.deleteTree(menu, transaction);
+				List<Folder> notDeletableFolders = folderDAO.deleteTree(folder, transaction);
 				if (notDeletableFolders.size() > 0) {
 					throw new RuntimeException("Unable to delete some subfolders.");
 				}
@@ -535,7 +535,7 @@ public class ResourceServiceImpl implements ResourceService {
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to write resource.");
 
 				Document document = documentDAO.findById(Long.parseLong(resource.getID()));
-				Menu menu = folderDAO.findById(Long.parseLong(destinationResource.getID()));
+				Folder folder = folderDAO.findById(Long.parseLong(destinationResource.getID()));
 
 				User user = userDAO.findById(resource.getRequestedPerson());
 
@@ -551,9 +551,9 @@ public class ResourceServiceImpl implements ResourceService {
 
 				if (document.getDocRef() != null) {
 					document = documentDAO.findById(document.getDocRef());
-					documentManager.createShortcut(document, menu, transaction);
+					documentManager.createShortcut(document, folder, transaction);
 				} else {
-					documentManager.copyToFolder(document, menu, transaction);
+					documentManager.copyToFolder(document, folder, transaction);
 				}
 			} catch (DavException de) {
 				log.info(de.getMessage(), de);

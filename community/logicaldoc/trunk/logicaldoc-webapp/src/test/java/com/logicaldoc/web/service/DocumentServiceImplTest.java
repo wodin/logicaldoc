@@ -105,8 +105,8 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		Assert.assertEquals(1, doc.getId());
 		Assert.assertEquals("testDocname", doc.getTitle());
 		Assert.assertNotNull(doc.getFolder());
-		Assert.assertEquals(103, doc.getFolder().getId());
-		Assert.assertEquals("menu103", doc.getFolder().getName());
+		Assert.assertEquals(5, doc.getFolder().getId());
+		Assert.assertEquals("/", doc.getFolder().getName());
 
 		doc = service.getById(session.getSid(), 3);
 		Assert.assertEquals(3, doc.getId());
@@ -132,7 +132,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		doc = service.save(session.getSid(), doc);
 		Assert.assertNotNull(doc);
 		Assert.assertEquals("testDocname3", doc.getTitle());
-		Assert.assertEquals("pluto", doc.getFileName());
+		Assert.assertEquals("pippo", doc.getFileName());
 	}
 
 	@Test

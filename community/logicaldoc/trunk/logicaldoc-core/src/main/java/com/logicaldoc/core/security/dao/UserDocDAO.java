@@ -39,7 +39,7 @@ public interface UserDocDAO extends PersistentObjectDAO<UserDoc> {
 	public List<UserDoc> findByUserId(long userId);
 
 	/**
-	 * Selects all userdocs for a given menu.
+	 * Selects all userdocs for a given doc.
 	 */
 	public List<UserDoc> findByDocId(long docId);
 

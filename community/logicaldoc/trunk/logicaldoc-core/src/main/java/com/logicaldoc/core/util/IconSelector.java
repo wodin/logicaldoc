@@ -7,7 +7,7 @@ package com.logicaldoc.core.util;
  */
 public class IconSelector {
 
-	/** returns path to menu icon by parsing the provided file extension */
+	/** returns the icon by parsing the provided file extension */
 	public static String selectIcon(String ext) {
 		String icon = "";
 		if (ext != null)

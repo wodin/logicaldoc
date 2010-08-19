@@ -12,27 +12,14 @@
     <property name="text" type="string" column="ld_text" length="255" />
     <property name="parentId" type="long" column="ld_parentid" not-null="true" />
     <property name="securityRef" type="long" column="ld_securityref" />
-    <property name="sort" type="int" column="ld_sort" />
     <property name="icon" type="string" column="ld_icon" length="255" />
     <property name="type" type="int" column="ld_type" not-null="true" />
-    <property name="ref" type="string" column="ld_ref" length="255" />
-    <property name="size" type="long" column="ld_size" />
     <property name="description" type="string" column="ld_description" length="4000" />
     <set name="menuGroups" table="ld_menugroup" cascade="all">
       <key column="ld_menuid" />
       <composite-element class="com.logicaldoc.core.security.MenuGroup">
         <property name="groupId" type="long" column="ld_groupid" not-null="true" />
         <property name="write" type="int" column="ld_write" not-null="true" />
-        <property name="addChild" type="int" column="ld_addchild" not-null="true" />
-        <property name="manageSecurity" type="int" column="ld_managesecurity" not-null="true" />
-        <property name="manageImmutability" type="int" column="ld_manageimmutability" not-null="true" />
-        <property name="delete" type="int" column="ld_delete" not-null="true" />
-        <property name="rename" type="int" column="ld_rename" not-null="true" />
-        <property name="bulkImport" type="int" column="ld_bulkimport" not-null="true" />
-        <property name="bulkExport" type="int" column="ld_bulkexport" not-null="true" />
-        <property name="sign" type="int" column="ld_sign" not-null="true" />
-        <property name="archive" type="int" column="ld_archive" not-null="true" />
-        <property name="workflow" type="int" column="ld_workflow" not-null="true" />
       </composite-element>
     </set>
   </class>

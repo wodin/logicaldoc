@@ -17,9 +17,9 @@ import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.webservice.AbstractService;
@@ -223,8 +223,8 @@ public class WSDocument {
 	}
 
 	public Document toDocument(User user) throws Exception {
-		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu folder = mdao.findById(folderId);
+		FolderDAO mdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		Folder folder = mdao.findById(folderId);
 		if (folder == null) {
 			log.error("Folder " + folder + " not found");
 			throw new Exception("error - folder not found");

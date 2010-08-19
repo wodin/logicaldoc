@@ -8,10 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.document.dao.FolderDAO;
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUISession;
@@ -40,72 +40,67 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testSave() throws InvalidSessionException {
-		GUIFolder folder = service.getFolder(session.getSid(), 100, false);
+		GUIFolder folder = service.getFolder(session.getSid(), 6, false);
 
 		folder = service.save(session.getSid(), folder);
 		Assert.assertNotNull(folder);
-		Assert.assertEquals("menu", folder.getName());
+		Assert.assertEquals("folder6", folder.getName());
 		Assert.assertEquals(5, folder.getParentId());
 
-		folder = service.getFolder(session.getSid(), 103, false);
+		folder = service.getFolder(session.getSid(), 1200, false);
 
 		folder = service.save(session.getSid(), folder);
 		Assert.assertNotNull(folder);
-		Assert.assertEquals("menu103", folder.getName());
-		Assert.assertEquals(101, folder.getParentId());
+		Assert.assertEquals("test", folder.getName());
+		Assert.assertEquals(5, folder.getParentId());
 	}
 
 	@Test
 	public void testRename() throws InvalidSessionException {
-		Menu menu = folderDao.findById(100);
-		Assert.assertEquals("menu", menu.getText());
+		Folder folder = folderDao.findById(6);
+		Assert.assertEquals("folder6", folder.getName());
 
-		service.rename(session.getSid(), 100, "pluto");
+		service.rename(session.getSid(), 6, "pluto");
 
-		menu = folderDao.findById(100);
-		Assert.assertEquals("pluto", menu.getText());
+		folder = folderDao.findById(6);
+		Assert.assertEquals("pluto", folder.getName());
 	}
 
 	@Test
 	public void testApplyRights() throws InvalidSessionException {
-		Menu parentMenu = folderDao.findById(101);
-		Assert.assertNotNull(parentMenu);
-		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.DELETE, 101, 4));
-		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.RENAME, 101, 4));
-		Menu childFolder1 = folderDao.findById(102);
+		Folder parentFolder = folderDao.findById(6);
+		Assert.assertNotNull(parentFolder);
+		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.DELETE, 1201, 3));
+		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.RENAME, 1201, 3));
+		Folder childFolder1 = folderDao.findById(1202);
 		Assert.assertNotNull(childFolder1);
-		Assert.assertEquals(101, childFolder1.getParentId());
-		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.DELETE, 102, 4));
-		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.RENAME, 102, 4));
-		Menu childFolder2 = folderDao.findById(103);
-		Assert.assertNotNull(childFolder2);
-		Assert.assertEquals(101, childFolder2.getParentId());
-		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.DELETE, 103, 4));
-		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.RENAME, 103, 4));
+		Assert.assertEquals(1201, childFolder1.getParentId());
+		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.DELETE, 1202, 3));
+		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.RENAME, 1202, 3));
 
-		GUIFolder folder = service.getFolder(session.getSid(), 101, false);
+
+		GUIFolder folder = service.getFolder(session.getSid(), 6, false);
 
 		service.applyRights(session.getSid(), folder, true);
 
-		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.DELETE, 102, 1));
-		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.RENAME, 102, 1));
-		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.DELETE, 103, 1));
-		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.RENAME, 103, 1));
+		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.DELETE, 1202, 1));
+		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.RENAME, 1202, 1));
+		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.DELETE, 1201, 1));
+		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.RENAME, 1201, 1));
 	}
 
 	@Test
 	public void testGetFolder() throws InvalidSessionException {
-		GUIFolder folder = service.getFolder(session.getSid(), 99, false);
+		GUIFolder folder = service.getFolder(session.getSid(), 6, false);
 		Assert.assertNotNull(folder);
-		Assert.assertEquals("menu.admin1", folder.getName());
-		Assert.assertEquals(1, folder.getParentId());
+		Assert.assertEquals("folder6", folder.getName());
+		Assert.assertEquals(5, folder.getParentId());
 
-		folder = service.getFolder(session.getSid(), 102, true);
+		folder = service.getFolder(session.getSid(), 1202, true);
 		Assert.assertNotNull(folder);
-		Assert.assertEquals("menu102", folder.getName());
-		Assert.assertEquals(101, folder.getParentId());
-		Assert.assertEquals("/menu/text/menu102", folder.getPathExtended());
-		Assert.assertEquals(service.getFolder(session.getSid(), 100, false).getName(), folder.getPath()[1].getName());
+		Assert.assertEquals("xyz", folder.getName());
+		Assert.assertEquals(1201, folder.getParentId());
+		Assert.assertEquals("/test/ABC/xyz", folder.getPathExtended());
 
 		// Try with unexisting id
 		folder = service.getFolder(session.getSid(), 9999, false);
@@ -114,73 +109,72 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testDelete() throws InvalidSessionException {
-		service.delete(session.getSid(), 99);
-		Menu menu = folderDao.findById(99);
-		Assert.assertNull(menu);
+		service.delete(session.getSid(), 1202);
+		Folder folder = folderDao.findById(1202);
+		Assert.assertNull(folder);
 
 		DocumentDAO docDao = (DocumentDAO) context.getBean("DocumentDAO");
-		docDao.delete(1);
+		docDao.delete(6);
 
-		// Delete a folder with documents
-		service.delete(session.getSid(), 103);
-		menu = folderDao.findById(103);
-		Assert.assertNull(menu);
+		service.delete(session.getSid(), 1201);
+		folder = folderDao.findById(1201);
+		Assert.assertNull(folder);
 	}
 
 	@Test
 	public void testMoveFolder_Simple() throws Exception {
-		Menu docsMenu = folderDao.findById(Menu.MENUID_DOCUMENTS);
-		Menu menuA = folderDao.create(docsMenu, "folderA", null);
-		Menu menuB = folderDao.create(docsMenu, "folderB", null);
-		Menu menuC = folderDao.create(menuB, "folderC", null);
+		Folder docsFolder = folderDao.findById(Folder.ROOTID);
+		Folder folderA = folderDao.create(docsFolder, "folderA", null);
+		Folder folderB = folderDao.create(docsFolder, "folderB", null);
+		Folder folderC = folderDao.create(folderB, "folderC", null);
 
-		service.move(session.getSid(), menuC.getId(), menuA.getId());
+		service.move(session.getSid(), folderC.getId(), folderA.getId());
 
-		List<Menu> menuList = folderDao.findChildren(menuA.getId(), null);
-		Assert.assertTrue(menuList.size() == 1);
+		List<Folder> folderList = folderDao.findChildren(folderA.getId(), null);
+		Assert.assertTrue(folderList.size() == 1);
 
-		for (Menu menu : menuList) {
-			System.out.println(menu.getId());
+		for (Folder folder : folderList) {
+			System.out.println(folder.getId());
 		}
 
-		Assert.assertTrue(menuList.contains(menuC));
+		Assert.assertTrue(folderList.contains(folderC));
 	}
 
 	@Test
 	public void testMoveFolder_Up() throws Exception {
-		Menu docsMenu = folderDao.findById(Menu.MENUID_DOCUMENTS);
-		Menu menuA = folderDao.create(docsMenu, "folderA", null);
-		Menu menuB = folderDao.create(docsMenu, "folderB", null);
-		Menu menuC = folderDao.create(menuB, "folderC", null);
-		folderDao.create(menuC, "folderD", null);
-		folderDao.create(menuC, "folderE", null);
+		Folder docsFolder = folderDao.findById(Folder.ROOTID);
+		Folder folderA = folderDao.create(docsFolder, "folderA", null);
+		Folder folderB = folderDao.create(docsFolder, "folderB", null);
+		Folder folderC = folderDao.create(folderB, "folderC", null);
+		folderDao.create(folderC, "folderD", null);
+		folderDao.create(folderC, "folderE", null);
 
-		service.move(session.getSid(), menuC.getId(), menuA.getId());
+		service.move(session.getSid(), folderC.getId(), folderA.getId());
 
-		List<Menu> menuList = folderDao.findChildren(menuA.getId(), null);
-		Assert.assertTrue(menuList.size() == 1);
-		Assert.assertTrue(menuList.contains(menuC));
+		List<Folder> folderList = folderDao.findChildren(folderA.getId(), null);
+		Assert.assertTrue(folderList.size() == 1);
+		Assert.assertTrue(folderList.contains(folderC));
 
-		menuList = folderDao.findChildren(menuB.getId(), null);
-		Assert.assertTrue(menuList.size() == 0);
+		folderList = folderDao.findChildren(folderB.getId(), null);
+		Assert.assertTrue(folderList.size() == 0);
 	}
 
 	@Test
 	public void testMoveFolder_Down() throws Exception {
-		Menu docsMenu = folderDao.findById(Menu.MENUID_DOCUMENTS);
-		Menu menuB = folderDao.create(docsMenu, "folderB", null);
-		Menu menuC = folderDao.create(menuB, "folderC", null);
-		Menu menuD = folderDao.create(menuC, "folderD", null);
-		Menu menuE = folderDao.create(menuC, "folderE", null);
-		folderDao.create(menuE, "folderF", null);
+		Folder docsFolder = folderDao.findById(Folder.ROOTID);
+		Folder folderB = folderDao.create(docsFolder, "folderB", null);
+		Folder folderC = folderDao.create(folderB, "folderC", null);
+		Folder folderD = folderDao.create(folderC, "folderD", null);
+		Folder folderE = folderDao.create(folderC, "folderE", null);
+		folderDao.create(folderE, "folderF", null);
 
-		service.move(session.getSid(), menuE.getId(), menuD.getId());
+		service.move(session.getSid(), folderE.getId(), folderD.getId());
 
-		List<Menu> menuList = folderDao.findChildren(menuD.getId(), null);
-		Assert.assertTrue(menuList.size() == 1);
-		Assert.assertTrue(menuList.contains(menuE));
+		List<Folder> folderList = folderDao.findChildren(folderD.getId(), null);
+		Assert.assertTrue(folderList.size() == 1);
+		Assert.assertTrue(folderList.contains(folderE));
 
-		menuList = folderDao.findChildren(menuC.getId(), null);
-		Assert.assertTrue(menuList.size() == 1);
+		folderList = folderDao.findChildren(folderC.getId(), null);
+		Assert.assertTrue(folderList.size() == 1);
 	}
 }

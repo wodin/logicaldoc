@@ -30,7 +30,7 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
 
@@ -165,8 +165,8 @@ public class TicketDownload extends HttpServlet {
 			history.setTitle(doc.getTitle());
 			history.setVersion(doc.getVersion());
 
-			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-			history.setPath(mdao.computePathExtended(doc.getFolder().getId()));
+			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			history.setPath(fdao.computePathExtended(doc.getFolder().getId()));
 			history.setEvent(History.EVENT_DOWNLOADED);
 			history.setUser(user);
 

@@ -9,7 +9,7 @@ import java.util.Set;
 import org.apache.commons.io.FilenameUtils;
 
 import com.logicaldoc.core.ExtensibleObject;
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.LocaleUtil;
 
@@ -113,7 +113,7 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	private Set<String> tags = new HashSet<String>();
 
-	private Menu folder;
+	private Folder folder;
 
 	private DocumentTemplate template;
 
@@ -395,11 +395,11 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	/**
 	 * Retrieve the folder owning this document
 	 */
-	public Menu getFolder() {
+	public Folder getFolder() {
 		return folder;
 	}
 
-	public void setFolder(Menu folder) {
+	public void setFolder(Folder folder) {
 		this.folder = folder;
 	}
 

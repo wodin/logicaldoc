@@ -21,7 +21,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.io.CryptUtil;
 
 /**
- * Hibernate implementation of <code>MenuDAO</code>
+ * Hibernate implementation of <code>UserDAO</code>
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 3.0

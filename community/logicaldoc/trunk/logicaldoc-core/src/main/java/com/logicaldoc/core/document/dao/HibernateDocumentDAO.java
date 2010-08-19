@@ -26,9 +26,9 @@ import com.logicaldoc.core.document.DocumentListener;
 import com.logicaldoc.core.document.DocumentListenerManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.core.store.Storer;
@@ -49,7 +49,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	private DiscussionThreadDAO discussionDAO;
 
-	private MenuDAO menuDAO;
+	private FolderDAO folderDAO;
 
 	private UserDAO userDAO;
 
@@ -82,14 +82,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	public void setLinkDAO(DocumentLinkDAO linkDAO) {
 		this.linkDAO = linkDAO;
-	}
-
-	public MenuDAO getMenuDAO() {
-		return menuDAO;
-	}
-
-	public void setMenuDAO(MenuDAO menuDAO) {
-		this.menuDAO = menuDAO;
 	}
 
 	public void setUserDAO(UserDAO userDAO) {
@@ -143,21 +135,19 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return result;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findByUserId(long)
-	 */
+	@Override
 	public List<Long> findByUserId(long userId) {
-		Collection<Menu> menus = menuDAO.findByUserId(userId);
-		if (menus.isEmpty())
+		Collection<Folder> folders = folderDAO.findByUserId(userId);
+		if (folders.isEmpty())
 			return new ArrayList<Long>();
 
 		StringBuffer query = new StringBuffer();
 		query.append("_entity.folder.id in (");
 		boolean first = true;
-		for (Menu menu : menus) {
+		for (Folder folder : folders) {
 			if (!first)
 				query.append(",");
-			query.append("'" + menu.getId() + "'");
+			query.append("'" + folder.getId() + "'");
 			first = false;
 		}
 		query.append(")");
@@ -225,9 +215,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 			if (doc.getId() == 0) {
 				// This is the first creation so check if it is indexable
-				if (!FileUtil.matches(doc.getFileName(), config.getProperty("index.includes") == null ? "" : config
-						.getProperty("index.includes"), config.getProperty("index.excludes") == null ? "" : config
-						.getProperty("index.excludes")))
+				if (!FileUtil.matches(doc.getFileName(),
+						config.getProperty("index.includes") == null ? "" : config.getProperty("index.includes"),
+						config.getProperty("index.excludes") == null ? "" : config.getProperty("index.excludes")))
 					doc.setIndexed(Document.INDEX_SKIP);
 			}
 
@@ -278,7 +268,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				if (coll.size() >= maxElements)
 					break;
 				Document document = findById(docid);
-				if (menuDAO.isReadEnable(document.getFolder().getId(), userId))
+				if (folderDAO.isReadEnable(document.getFolder().getId(), userId))
 					coll.add(document);
 			}
 		} catch (Exception e) {
@@ -289,7 +279,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return coll;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Map<String, Integer> findTags(String firstLetter) {
 		Map<String, Integer> map = new HashMap<String, Integer>();
@@ -372,7 +362,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				/*
 				 * Search for all accessible folders
 				 */
-				List<Long> precoll = menuDAO.findMenuIdByUserId(userId);
+				List<Long> precoll = folderDAO.findFolderIdByUserId(userId);
 				StringBuffer buf = new StringBuffer();
 				boolean first = true;
 				for (Long id : precoll) {
@@ -382,9 +372,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					first = false;
 				}
 
-				query
-						.append("select distinct(C.ld_id) from ld_document C, ld_tag D "
-								+ " where (C.ld_id=D.ld_docid OR C.ld_docref=D.ld_docid) AND C.ld_deleted=0 AND C.ld_folderid in (");
+				query.append("select distinct(C.ld_id) from ld_document C, ld_tag D "
+						+ " where (C.ld_id=D.ld_docid OR C.ld_docref=D.ld_docid) AND C.ld_deleted=0 AND C.ld_folderid in (");
 				query.append(buf.toString());
 				query.append(") ");
 				query.append(" AND lower(D.ld_tag)='" + SqlUtil.doubleQuotes(tag.toLowerCase()) + "' ");
@@ -456,7 +445,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				hm.put(doc.getId(), doc);
 			}
 
-			// Access the map using the menuIds
+			// Access the map using the folderIds
 			// if a match is found, put it in the original list
 			for (Long docId : docIds) {
 				Document myDoc = hm.get(docId);
@@ -517,10 +506,11 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public List<Document> findByFileNameAndParentFolderId(Long folderId, String fileName, Long excludeId, Integer max) {
 		String query = "lower(_entity.fileName) like '" + SqlUtil.doubleQuotes(fileName.toLowerCase()) + "'";
 		if (folderId != null) {
-			query += "and _entity.folder.id = " + folderId;
+			query += " and _entity.folder.id = " + folderId;
 		}
 		if (excludeId != null)
 			query += " and not(_entity.id = " + excludeId + ")";
+		
 		return findByWhere(query, null, max);
 	}
 
@@ -530,6 +520,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				+ SqlUtil.doubleQuotes(title.toLowerCase()) + "'";
 		if (excludeId != null)
 			query += " and not(_entity.id = " + excludeId + ")";
+		
 		return findByWhere(query, null, null);
 	}
 
@@ -700,7 +691,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		List<Object> folders = super.findByJdbcQuery("select ld_folderid from ld_document where ld_id=" + docId, 1,
 				null);
 		for (Object id : folders) {
-			menuDAO.restore((Long) id, true);
+			folderDAO.restore((Long) id, true);
 		}
 	}
 
@@ -769,12 +760,13 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		transaction.setTitle(doc.getTitle());
 		transaction.setVersion(doc.getVersion());
 		transaction.setFilename(doc.getFileName());
-		transaction.setPath(menuDAO.computePathExtended(doc.getFolder().getId()));
+		transaction.setPath(folderDAO.computePathExtended(doc.getFolder().getId()));
 		transaction.setNotified(0);
 
 		historyDAO.store(transaction);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public long countByIndexed(int indexed) {
 		long count = 0;
@@ -818,9 +810,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		List<Document> results = new ArrayList<Document>();
 		try {
 			List<Object> result = findByJdbcQuery(
-					"select A.ld_id,A.ld_title,A.ld_lastmodified,A.ld_filename,A.ld_folderid from ld_document as A, ld_menu as B where A.ld_folderid=B.ld_id and B.ld_deleted=0 and A.ld_deleted=1 and A.ld_deleteuserid = "
+					"select A.ld_id,A.ld_title,A.ld_lastmodified,A.ld_filename,A.ld_folderid from ld_document as A, ld_folder as B where A.ld_folderid=B.ld_id and B.ld_deleted=0 and A.ld_deleted=1 and A.ld_deleteuserid = "
 							+ userId + " order by A.ld_lastmodified desc", 5, null);
-
 			int i = 0;
 			for (Object object : result) {
 				if (i >= maxHits.intValue())
@@ -837,7 +828,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				// File name
 				docDeleted.setFileName((String) record[3]);
 
-				Menu folder = new Menu();
+				Folder folder = new Folder();
 				folder.setId((Long) record[4]);
 				docDeleted.setFolder(folder);
 
@@ -854,5 +845,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	public void setConfig(ContextProperties config) {
 		this.config = config;
+	}
+
+	public void setFolderDAO(FolderDAO folderDAO) {
+		this.folderDAO = folderDAO;
 	}
 }

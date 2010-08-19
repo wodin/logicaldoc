@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.logicaldoc.core.document.dao.FolderDAO;
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
@@ -49,7 +49,7 @@ public class FoldersDataServlet extends HttpServlet {
 		if (parent == Constants.ROOT_FOLDERID) {
 			// Add the 'Documents' root
 			writer.print("<folder>");
-			writer.print("<id>" + Menu.MENUID_DOCUMENTS + "</id>");
+			writer.print("<id>" + Folder.ROOTID + "</id>");
 			writer.print("<parent>" + parent + "</parent>");
 			writer.print("<name>/</name>");
 			writer.print("</folder>");
@@ -60,16 +60,16 @@ public class FoldersDataServlet extends HttpServlet {
 		/*
 		 * Get the visible children
 		 */
-		List<Menu> folders = dao.findChildren(parent, session.getUserId(), null);
+		List<Folder> folders = dao.findChildren(parent, session.getUserId(), null);
 
 		/*
 		 * Iterste over records composing the response XML document
 		 */
-		for (Menu folder : folders) {
+		for (Folder folder : folders) {
 			writer.print("<folder>");
 			writer.print("<id>" + folder.getId() + "</id>");
 			writer.print("<parent>" + folder.getParentId() + "</parent>");
-			writer.print("<name><![CDATA[" + folder.getText() + "]]></name>");
+			writer.print("<name><![CDATA[" + folder.getName() + "]]></name>");
 			writer.print("</folder>");
 		}
 

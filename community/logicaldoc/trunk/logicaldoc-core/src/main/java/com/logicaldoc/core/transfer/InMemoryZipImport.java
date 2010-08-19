@@ -18,8 +18,8 @@ import org.apache.tools.zip.ZipFile;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
-import com.logicaldoc.core.document.dao.FolderDAO;
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.text.analyzer.AnalyzerManager;
 import com.logicaldoc.core.text.parser.Parser;
@@ -44,13 +44,13 @@ public class InMemoryZipImport extends ZipImport {
 	public InMemoryZipImport() {
 	}
 
-	public void process(File zipsource, Locale locale, Menu parent, long userId, Long templateId, String sessionId) {
+	public void process(File zipsource, Locale locale, Folder parent, long userId, Long templateId, String sessionId) {
 		// process the files in the zip using UTF-8 encoding for file names
 		process(zipsource, locale, parent, userId, templateId, "UTF-8", sessionId);
 	}
 
-	@SuppressWarnings("unchecked")
-	public void process(File zipsource, Locale locale, Menu parent, long userId, Long templateId, String encoding,
+	@SuppressWarnings({ "rawtypes" })
+	public void process(File zipsource, Locale locale, Folder parent, long userId, Long templateId, String encoding,
 			String sessionId) {
 		this.zipFile = zipsource;
 		this.locale = locale;
@@ -90,7 +90,7 @@ public class InMemoryZipImport extends ZipImport {
 
 	/**
 	 * Stores a file in the repository of LogicalDOC and inserts some
-	 * information in the database of LogicalDOC (menu, document, filename,
+	 * information in the database of LogicalDOC (folder, document, filename,
 	 * title, tags, templateid, created user, locale)
 	 * 
 	 * @param zis
@@ -99,7 +99,7 @@ public class InMemoryZipImport extends ZipImport {
 	 * @throws IOException
 	 * @throws ZipException
 	 */
-	protected void addEntry(ZipFile zip, ZipEntry ze, Menu parent) throws ZipException, IOException {
+	protected void addEntry(ZipFile zip, ZipEntry ze, Folder parent) throws ZipException, IOException {
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 
 		History transaction = new History();
@@ -118,7 +118,7 @@ public class InMemoryZipImport extends ZipImport {
 
 			// ensure to have the proper folder to upload the file into
 			String folderPath = FilenameUtils.getFullPathNoEndSeparator(ze.getName());
-			Menu documentPath = dao.createPath(parent, folderPath, transaction);
+			Folder documentPath = dao.createPath(parent, folderPath, transaction);
 
 			Set<String> tagSet = null;
 			if (extractTags) {

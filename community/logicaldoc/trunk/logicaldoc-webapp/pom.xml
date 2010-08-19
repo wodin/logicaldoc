@@ -19,7 +19,7 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>gwtupload</groupId>
+			<groupId>com.googlecode.gwtupload</groupId>
 			<artifactId>gwtupload</artifactId>
 		</dependency>		
 		<dependency>

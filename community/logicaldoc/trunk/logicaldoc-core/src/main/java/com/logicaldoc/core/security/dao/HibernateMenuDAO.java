@@ -6,17 +6,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
-import com.logicaldoc.core.document.History;
-import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
@@ -34,8 +30,6 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 	private UserDAO userDAO;
 
-	private HistoryDAO historyDAO;
-
 	protected HibernateMenuDAO() {
 		super(Menu.class);
 		super.log = LogFactory.getLog(HibernateMenuDAO.class);
@@ -51,11 +45,6 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 	@Override
 	public boolean store(Menu menu) {
-		return store(menu, null);
-	}
-
-	@Override
-	public boolean store(Menu menu, History transaction) {
 		boolean result = true;
 
 		try {
@@ -63,7 +52,6 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				menu.getMenuGroups().clear();
 
 			getHibernateTemplate().saveOrUpdate(menu);
-			saveFolderHistory(menu, transaction);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(e.getMessage(), e);
@@ -73,10 +61,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return result;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByUserId(long)
-	 */
-	@SuppressWarnings("unchecked")
+	@Override
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<Menu> findByUserId(long userId) {
 		List<Menu> coll = new ArrayList<Menu>();
 
@@ -85,14 +71,14 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			if (user == null)
 				return coll;
 
-			// The admnistrators can see all menues
+			// The administrators can see all menus
 			if (user.isInGroup("admin"))
 				return findAll();
 
 			Set<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 			if (!precoll.isEmpty()) {
-				// First of all collect all menues that define it's own policies
+				// First of all collect all menus that define it's own policies
 				StringBuffer query = new StringBuffer("select distinct(_menu) from Menu _menu  ");
 				query.append(" left join _menu.menuGroups as _group ");
 				query.append(" where _group.groupId in (");
@@ -145,7 +131,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByUserId(userId, long,
 	 *      type)
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<Menu> findByUserId(long userId, long parentId, Integer type) {
 		List<Menu> coll = new ArrayList<Menu>();
 
@@ -155,8 +141,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				return coll;
 			if (user.isInGroup("admin"))
 				return findByWhere("_entity.id!=_entity.parentId and _entity.parentId=" + parentId
-						+ (type == null ? "" : (" and _entity.type=" + type)), " order by _entity.sort, _entity.text ",
-						null);
+						+ (type == null ? "" : (" and _entity.type=" + type)), " order by  _entity.text ", null);
 			/*
 			 * Search for all those menues that defines its own security
 			 * policies
@@ -218,13 +203,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		Collections.sort(coll, new Comparator<Menu>() {
 			@Override
 			public int compare(Menu o1, Menu o2) {
-				Integer sort1 = new Integer(o1.getSort());
-				Integer sort2 = new Integer(o2.getSort());
-				if (sort1.compareTo(sort2) == 0)
-					return -1 * o1.getText().compareTo(o2.getText());
-				else
-					sort1.compareTo(sort2);
-				return 0;
+				return -1 * o1.getText().compareTo(o2.getText());
 			}
 		});
 		return coll;
@@ -236,6 +215,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				max);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<Menu> findChildren(long parentId, long userId, Integer max) {
 		List<Menu> coll = new ArrayList<Menu>();
@@ -250,7 +230,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			Iterator iter = groups.iterator();
 
 			/*
-			 * Search for the menues that define its own policies
+			 * Search for the menus that define its own policies
 			 */
 			StringBuffer query1 = new StringBuffer("select distinct(_entity) from Menu _entity  ");
 			query1.append(" left join _entity.menuGroups as _group ");
@@ -324,17 +304,56 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return coll;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#isWriteEnable(long, long)
-	 */
+	@Override
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public boolean isWriteEnable(long menuId, long userId) {
-		return isPermissionEnabled(Permission.WRITE, menuId, userId);
+		boolean result = true;
+		try {
+			User user = userDAO.findById(userId);
+			if (user == null)
+				return false;
+			if (user.isInGroup("admin"))
+				return true;
+
+			long id = menuId;
+			Menu menu = findById(menuId);
+			if (menu.getSecurityRef() != null)
+				id = menu.getSecurityRef().longValue();
+
+			Set<Group> groups = user.getGroups();
+			if (groups.isEmpty())
+				return false;
+
+			Iterator iter = groups.iterator();
+
+			StringBuffer query = new StringBuffer("select distinct(_entity) from Menu _entity  ");
+			query.append(" left join _entity.menuGroups as _group ");
+			query.append(" where _group.write=1 and _group.groupId in (");
+
+			boolean first = true;
+			while (iter.hasNext()) {
+				if (!first)
+					query.append(",");
+				Group ug = (Group) iter.next();
+				query.append(Long.toString(ug.getId()));
+				first = false;
+			}
+			query.append(") and _entity.id=?");
+
+			List<MenuGroup> coll = (List<MenuGroup>) getHibernateTemplate().find(query.toString(),
+					new Object[] { new Long(id) });
+			result = coll.size() > 0;
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+			result = false;
+		}
+
+		return result;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#isReadEnable(long, long)
-	 */
-	@SuppressWarnings("unchecked")
+	@Override
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public boolean isReadEnable(long menuId, long userId) {
 		boolean result = true;
 		try {
@@ -381,21 +400,15 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return result;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findTextById(long)
-	 */
+	@Override
 	public String findTextById(long menuId) {
 		Menu menu = this.findById(menuId);
 		return menu.getText();
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findMenuIdByUserId(long)
-	 *      <b>NOTE:</b> This implementation performs direct JDBC query, this is
-	 *      required in order to obtain acceptable performances during searches.
-	 */
+	@Override
 	public List<Long> findMenuIdByUserId(long userId) {
-		return findMenuIdByUserIdAndPermission(userId, Permission.READ, null);
+		return findMenuIdByUserIdAndPermission(userId, Permission.READ);
 	}
 
 	/**
@@ -412,22 +425,17 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return writePrivilegeInt;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#hasWriteAccess(com.logicaldoc.core.security.Menu,
-	 *      long)
-	 */
+	@Override
 	public boolean hasWriteAccess(Menu menu, long userId) {
 		if (isWriteEnable(menu.getId(), userId) == false) {
 			return false;
 		}
 
-		if (menu.getType() == Menu.MENUTYPE_DIRECTORY) {
-			List<Menu> children = findByParentId(menu.getId());
+		List<Menu> children = findByParentId(menu.getId());
 
-			for (Menu subMenu : children) {
-				if (!hasWriteAccess(subMenu, userId)) {
-					return false;
-				}
+		for (Menu subMenu : children) {
+			if (!hasWriteAccess(subMenu, userId)) {
+				return false;
 			}
 		}
 
@@ -488,7 +496,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	 *      JDBC query, this is required in order to obtain acceptable
 	 *      performances during searches.
 	 */
-	@SuppressWarnings( { "unchecked", "deprecation" })
+	@SuppressWarnings({ "deprecation", "rawtypes" })
 	public List<Long> findIdByUserId(long userId, long parentId, Integer type) {
 		List<Long> ids = new ArrayList<Long>();
 		try {
@@ -582,19 +590,13 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return ids;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByText(java.lang.String)
-	 */
+	@Override
 	public List<Menu> findByText(String text) {
-		return findByText(null, text, null, true);
+		return findByText(null, text, true);
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByText(com.logicaldoc.core.security.Menu,
-	 *      java.lang.String, java.lang.Integer)
-	 */
 	@Override
-	public List<Menu> findByText(Menu parent, String text, Integer type, boolean caseSensitive) {
+	public List<Menu> findByText(Menu parent, String text, boolean caseSensitive) {
 		StringBuffer query = null;
 		if (caseSensitive)
 			query = new StringBuffer("_entity.text like '" + SqlUtil.doubleQuotes(text) + "' ");
@@ -603,8 +605,6 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 		if (parent != null)
 			query.append(" AND _entity.parentId = " + parent.getId());
-		if (type != null)
-			query.append(" AND _entity.type = " + type.intValue());
 		return findByWhere(query.toString(), null, null);
 	}
 
@@ -622,65 +622,6 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		if (!path.startsWith("/"))
 			path = "/" + path;
 		return path;
-	}
-
-	/**
-	 * Utility method that logs into the DB the transaction that involved the
-	 * passed folder. The transaction must be provided with userId and userName.
-	 * 
-	 * @param folder
-	 * @param transaction
-	 */
-	private void saveFolderHistory(Menu folder, History transaction) {
-		if (transaction == null)
-			return;
-
-		transaction.setNotified(0);
-		transaction.setFolderId(folder.getId());
-		transaction.setTitle(folder.getId() != Menu.MENUID_DOCUMENTS ? folder.getText() : "/");
-		String deletedFolderPathExtended = null;
-		if (StringUtils.isEmpty(transaction.getPath()))
-			transaction.setPath(computePathExtended(folder.getId()));
-		else
-			deletedFolderPathExtended = transaction.getPath();
-		transaction.setComment("");
-
-		historyDAO.store(transaction);
-
-		// Check if is necessary to add a new history entry for the parent
-		// folder. This operation is not recursive, because we want to notify
-		// only the parent folder.
-		if (folder.getId() != folder.getParentId() && folder.getId() != Menu.MENUID_DOCUMENTS) {
-			Menu parent = findById(folder.getParentId());
-			// The parent menu can be 'null' when the user wants to delete a
-			// folder with sub-folders under it (method 'deleteAll()').
-			if (parent != null) {
-				History parentHistory = new History();
-				parentHistory.setFolderId(parent.getId());
-				parentHistory.setTitle(parent.getId() != Menu.MENUID_DOCUMENTS ? parent.getText() : "/");
-				if (deletedFolderPathExtended != null)
-					parentHistory.setPath(deletedFolderPathExtended);
-				else
-					parentHistory.setPath(computePathExtended(folder.getId()));
-
-				parentHistory.setUser(transaction.getUser());
-				if (transaction.getEvent().equals(History.EVENT_FOLDER_CREATED)
-						|| transaction.getEvent().equals(History.EVENT_FOLDER_MOVED)) {
-					parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_CREATED);
-				} else if (transaction.getEvent().equals(History.EVENT_FOLDER_RENAMED)) {
-					parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_RENAMED);
-				} else if (transaction.getEvent().equals(History.EVENT_FOLDER_PERMISSION)) {
-					parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_PERMISSION);
-				} else if (transaction.getEvent().equals(History.EVENT_FOLDER_DELETED)) {
-					parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_DELETED);
-				}
-				parentHistory.setComment("");
-				parentHistory.setSessionId(transaction.getSessionId());
-				parentHistory.setComment(transaction.getComment());
-
-				historyDAO.store(parentHistory);
-			}
-		}
 	}
 
 	@Override
@@ -705,15 +646,6 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return coll;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#isPermissionEnabled(java.lang.String,
-	 *      long, long)
-	 */
-	public boolean isPermissionEnabled(Permission permission, long menuId, long userId) {
-		Set<Permission> permissions = getEnabledPermissions(menuId, userId);
-		return permissions.contains(permission);
-	}
-
 	@Override
 	public void restore(long menuId, boolean parents) {
 		super.bulkUpdate("set ld_deleted=0 where ld_id=" + menuId, null);
@@ -729,129 +661,18 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public Set<Permission> getEnabledPermissions(long menuId, long userId) {
-		Set<Permission> permissions = new HashSet<Permission>();
-
-		try {
-			User user = userDAO.findById(userId);
-			if (user == null)
-				return permissions;
-
-			// If the user is an administrator bypass all controls
-			if (user.isInGroup("admin")) {
-				return Permission.all();
-			}
-
-			Set<Group> groups = user.getGroups();
-			if (groups.isEmpty())
-				return permissions;
-			Iterator<Group> iter = groups.iterator();
-
-			// If the menu defines a security ref, use another menu to find the
-			// policies
-			long id = menuId;
-			Menu menu = findById(menuId);
-			if (menu.getSecurityRef() != null) {
-				id = menu.getSecurityRef().longValue();
-				log.debug("Use the security reference " + id);
-			}
-
-			StringBuffer query = new StringBuffer(
-					"select A.LD_WRITE as LDWRITE, A.LD_ADDCHILD as LDADDCHILD, A.LD_MANAGESECURITY as LDMANAGESECURITY, A.LD_MANAGEIMMUTABILITY as LDMANAGEIMMUTABILITY, A.LD_DELETE as LDDELETE, A.LD_RENAME as LDRENAME, A.LD_BULKIMPORT as LDBULKIMPORT, A.LD_BULKEXPORT as LDBULKEXPORT, A.LD_SIGN as LDSIGN, A.LD_ARCHIVE as LDARCHIVE, A.LD_WORKFLOW as LDWORKFLOW");
-			query.append(" from ld_menugroup A");
-			query.append(" where ");
-			query.append(" A.LD_MENUID=" + id);
-			query.append(" and A.LD_GROUPID in (");
-
-			boolean first = true;
-			while (iter.hasNext()) {
-				if (!first)
-					query.append(",");
-				Group ug = (Group) iter.next();
-				query.append(Long.toString(ug.getId()));
-				first = false;
-			}
-			query.append(")");
-
-			Connection con = null;
-			Statement stmt = null;
-			ResultSet rs = null;
-
-			try {
-				con = getSession().connection();
-				stmt = con.createStatement();
-				rs = stmt.executeQuery(query.toString());
-				while (rs.next()) {
-					if (!permissions.contains(Permission.READ))
-						permissions.add(Permission.READ);
-					if (rs.getInt("LDADDCHILD") == 1)
-						if (!permissions.contains(Permission.ADD_CHILD))
-							permissions.add(Permission.ADD_CHILD);
-					if (rs.getInt("LDBULKEXPORT") == 1)
-						if (!permissions.contains(Permission.BULK_EXPORT))
-							permissions.add(Permission.BULK_EXPORT);
-					if (rs.getInt("LDBULKIMPORT") == 1)
-						if (!permissions.contains(Permission.BULK_IMPORT))
-							permissions.add(Permission.BULK_IMPORT);
-					if (rs.getInt("LDDELETE") == 1)
-						if (!permissions.contains(Permission.DELETE))
-							permissions.add(Permission.DELETE);
-					if (rs.getInt("LDMANAGEIMMUTABILITY") == 1)
-						if (!permissions.contains(Permission.MANAGE_IMMUTABILITY))
-							permissions.add(Permission.MANAGE_IMMUTABILITY);
-					if (rs.getInt("LDMANAGESECURITY") == 1)
-						if (!permissions.contains(Permission.MANAGE_SECURITY))
-							permissions.add(Permission.MANAGE_SECURITY);
-					if (rs.getInt("LDRENAME") == 1)
-						if (!permissions.contains(Permission.RENAME))
-							permissions.add(Permission.RENAME);
-					if (rs.getInt("LDWRITE") == 1)
-						if (!permissions.contains(Permission.WRITE))
-							permissions.add(Permission.WRITE);
-					if (rs.getInt("LDDELETE") == 1)
-						if (!permissions.contains(Permission.DELETE))
-							permissions.add(Permission.DELETE);
-					if (rs.getInt("LDSIGN") == 1)
-						if (!permissions.contains(Permission.SIGN))
-							permissions.add(Permission.SIGN);
-					if (rs.getInt("LDARCHIVE") == 1)
-						if (!permissions.contains(Permission.ARCHIVE))
-							permissions.add(Permission.ARCHIVE);
-					if (rs.getInt("LDWORKFLOW") == 1)
-						if (!permissions.contains(Permission.WORKFLOW))
-							permissions.add(Permission.WORKFLOW);
-				}
-			} finally {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			}
-
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-
-		return permissions;
-	}
-
-	@Override
-	public List<Long> findMenuIdByUserIdAndPermission(long userId, Permission permission, Integer type) {
+	public List<Long> findMenuIdByUserIdAndPermission(long userId, Permission permission) {
 		List<Long> ids = new ArrayList<Long>();
 		try {
 			User user = userDAO.findById(userId);
 			if (user == null)
 				return ids;
 
-			// The administrators have all permissions on all menues
+			// The administrators have all permissions on all menus
 			if (user.isInGroup("admin")) {
-				if (type != null)
-					return findIdsByWhere("_entity.type=" + type, null, null);
-				else
-					return findAllIds();
+				return findAllIds();
 			}
 
 			Set<Group> precoll = user.getGroups();
@@ -859,12 +680,10 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 			if (!precoll.isEmpty()) {
 				/*
-				 * Check menues that specify its own permissions
+				 * Check menus that specify its own permissions
 				 */
 				StringBuffer query1 = new StringBuffer("select distinct(A.ld_menuid) from ld_menugroup A, ld_menu B "
 						+ " where A.ld_menuid=B.ld_id and B.ld_deleted=0 ");
-				if (type != null)
-					query1.append("and (B.ld_type=" + type + " or B.ld_id=" + Menu.MENUID_DOCUMENTS + ")");
 				if (permission != Permission.READ)
 					query1.append(" and A.ld_" + permission.getName() + "=1 ");
 				query1.append(" and A.ld_groupid in (");
@@ -907,8 +726,6 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				 * found ones
 				 */
 				StringBuffer query2 = new StringBuffer("select B.ld_id from ld_menu B where B.ld_deleted=0 ");
-				if (type != null)
-					query2.append(" and B.ld_type=" + type);
 				query2.append(" and B.ld_securityref in (" + query1.toString() + ")");
 
 				con = null;
@@ -944,39 +761,24 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return ids;
 	}
 
-	public HistoryDAO getHistoryDAO() {
-		return historyDAO;
-	}
-
-	public void setHistoryDAO(HistoryDAO historyDAO) {
-		this.historyDAO = historyDAO;
-	}
-
 	@Override
-	public void deleteAll(List<Menu> menus, History transaction) {
+	public void deleteAll(List<Menu> menus) {
 		for (Menu menu : menus) {
 			try {
-				History deleteHistory = (History) transaction.clone();
-				deleteHistory.setEvent(History.EVENT_FOLDER_DELETED);
-				deleteHistory.setFolderId(menu.getId());
-				deleteHistory.setPath(computePathExtended(menu.getId()));
-				delete(menu.getId(), deleteHistory);
-			} catch (CloneNotSupportedException e) {
+				delete(menu.getId());
+			} catch (Throwable e) {
 				log.error(e.getMessage(), e);
 			}
 		}
-
 	}
 
 	@Override
-	public boolean delete(long menuId, History transaction) {
+	public boolean delete(long menuId) {
 		boolean result = true;
 		try {
 			Menu menu = (Menu) getHibernateTemplate().get(Menu.class, menuId);
 			menu.setDeleted(1);
-			transaction.setEvent(History.EVENT_FOLDER_DELETED);
-			transaction.setFolderId(menuId);
-			store(menu, transaction);
+			store(menu);
 		} catch (Throwable e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -987,10 +789,9 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	}
 
 	@Override
-	public boolean applyRithtToTree(long id, History transaction) {
+	public boolean applyRithtToTree(long id) {
 		boolean result = true;
 		try {
-			transaction.setEvent(History.EVENT_FOLDER_PERMISSION);
 			Menu parent = findById(id);
 			Long securityRef = id;
 			if (parent.getSecurityRef() != null)
@@ -1000,13 +801,11 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			List<Menu> children = findChildren(id, null);
 			for (Menu menu : children) {
 				if (!securityRef.equals(menu.getSecurityRef())) {
-					History tr = (History) transaction.clone();
-					tr.setFolderId(menu.getId());
 					menu.setSecurityRef(securityRef);
 					menu.getMenuGroups().clear();
-					store(menu, tr);
+					store(menu);
 				}
-				applyRithtToTree(menu.getId(), transaction);
+				applyRithtToTree(menu.getId());
 			}
 		} catch (Throwable e) {
 			if (log.isErrorEnabled())
@@ -1015,5 +814,97 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		}
 
 		return result;
+	}
+
+	@SuppressWarnings({ "rawtypes", "deprecation" })
+	@Override
+	public List<Long> findIdByUserId(long userId, long parentId) {
+		List<Long> ids = new ArrayList<Long>();
+		try {
+			User user = userDAO.findById(userId);
+			if (user == null)
+				return ids;
+			if (user.isInGroup("admin"))
+				return findIdsByWhere("_entity.parentId=" + parentId, null, null);
+
+			StringBuffer query1 = new StringBuffer();
+			Set<Group> precoll = user.getGroups();
+			Iterator iter = precoll.iterator();
+			if (!precoll.isEmpty()) {
+				query1 = new StringBuffer("select distinct(A.ld_menuid) from ld_menugroup A, ld_menu B "
+						+ " where B.ld_deleted=0 and A.ld_menuid=B.ld_id AND B.ld_parentid=" + parentId
+						+ " AND A.ld_groupid in (");
+				boolean first = true;
+				while (iter.hasNext()) {
+					if (!first)
+						query1.append(",");
+					Group ug = (Group) iter.next();
+					query1.append(Long.toString(ug.getId()));
+					first = false;
+				}
+				query1.append(")");
+
+				Connection con = null;
+				Statement stmt = null;
+				ResultSet rs = null;
+				try {
+					con = getSession().connection();
+					stmt = con.createStatement();
+					rs = stmt.executeQuery(query1.toString());
+					while (rs.next()) {
+						Long id = null;
+						if (rs.getObject(1) instanceof Long)
+							id = (Long) rs.getObject(1);
+						else
+							id = new Long(rs.getInt(1));
+						ids.add(id);
+					}
+				} finally {
+					if (rs != null)
+						rs.close();
+					if (stmt != null)
+						stmt.close();
+					if (con != null)
+						con.close();
+				}
+
+				/*
+				 * Now find all menues referencing the previously found ones
+				 */
+				StringBuffer query2 = new StringBuffer("select B.ld_id from ld_menu B where B.ld_deleted=0 ");
+				query2.append(" and B.ld_parentid=" + parentId);
+				query2.append("	and B.ld_securityref in (");
+				query2.append(query1.toString());
+				query2.append(")");
+
+				con = null;
+				stmt = null;
+				rs = null;
+				try {
+					con = getSession().connection();
+					stmt = con.createStatement();
+					rs = stmt.executeQuery(query2.toString());
+					while (rs.next()) {
+						Long id = null;
+						if (rs.getObject(1) instanceof Long)
+							id = (Long) rs.getObject(1);
+						else
+							id = new Long(rs.getInt(1));
+						if (!ids.contains(id))
+							ids.add(id);
+					}
+				} finally {
+					if (rs != null)
+						rs.close();
+					if (stmt != null)
+						stmt.close();
+					if (con != null)
+						con.close();
+				}
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		return ids;
 	}
 }

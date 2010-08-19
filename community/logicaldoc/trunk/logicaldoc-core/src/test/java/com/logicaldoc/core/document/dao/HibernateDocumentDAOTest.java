@@ -17,9 +17,9 @@ import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.io.FileUtil;
 
@@ -34,7 +34,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 	// Instance under test
 	private DocumentDAO dao;
 
-	private MenuDAO menuDao;
+	private FolderDAO folderDao;
 
 	private Storer storer;
 
@@ -45,7 +45,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		// Retrieve the instance under test from spring context. Make sure that
 		// it is an HibernateDocumentDAO
 		dao = (DocumentDAO) context.getBean("DocumentDAO");
-		menuDao = (MenuDAO) context.getBean("MenuDAO");
+		folderDao = (FolderDAO) context.getBean("FolderDAO");
 		storer = (Storer) context.getBean("Storer");
 	}
 
@@ -74,7 +74,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(1, doc.getId());
 		Assert.assertEquals("testDocname", doc.getTitle());
 		Assert.assertNotNull(doc.getFolder());
-		Assert.assertEquals(103, doc.getFolder().getId());
+		Assert.assertEquals(6, doc.getFolder().getId());
 
 		// Try with unexisting document
 		doc = dao.findById(99);
@@ -89,7 +89,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(1, doc.getId());
 		Assert.assertEquals("testDocname", doc.getTitle());
 		Assert.assertNotNull(doc.getFolder());
-		Assert.assertEquals(103, doc.getFolder().getId());
+		Assert.assertEquals(6, doc.getFolder().getId());
 
 		// Try with unexisting document
 		doc = dao.findByCustomId("xx");
@@ -104,14 +104,14 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		Assert.assertTrue(ids.contains(new Long(2)));
 
 		// Try with a user without documents
-		ids = dao.findByUserId(5);
+		ids = dao.findByUserId(2);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(0, ids.size());
 	}
 
 	@Test
 	public void testFindDocIdByFolder() {
-		Collection<Long> ids = dao.findDocIdByFolder(103, null);
+		Collection<Long> ids = dao.findDocIdByFolder(6, null);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(3, ids.size());
 		Assert.assertTrue(ids.contains(new Long(2)));
@@ -123,7 +123,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindByFolder() {
-		Collection<Document> docs = dao.findByFolder(103, null);
+		Collection<Document> docs = dao.findByFolder(6, null);
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(3, docs.size());
 		Assert.assertTrue(docs.contains(dao.findById(2)));
@@ -172,8 +172,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testStore() throws IOException {
 		Document doc = new Document();
-		Menu menu = menuDao.findById(Menu.MENUID_HOME);
-		doc.setFolder(menu);
+		Folder folder = folderDao.findById(Folder.ROOTID);
+		doc.setFolder(folder);
 		doc.setPublisher("admin");
 		doc.setPublisherId(1);
 		doc.setTitle("test");
@@ -204,7 +204,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		Version version = Version.create(doc, user, "comment", Version.EVENT_CHECKIN, true);
 
 		History transaction = new History();
-		transaction.setFolderId(menu.getId());
+		transaction.setFolderId(folder.getId());
 		transaction.setDocId(doc.getId());
 		transaction.setEvent(History.EVENT_STORED);
 		transaction.setUserId(1);
@@ -221,7 +221,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		dao.initialize(doc);
 
 		transaction = new History();
-		transaction.setFolderId(menu.getId());
+		transaction.setFolderId(folder.getId());
 		transaction.setDocId(doc.getId());
 		transaction.setEvent(History.EVENT_CHANGED);
 		transaction.setUserId(1);
@@ -342,22 +342,22 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindByTitleAndParentFolderId() {
-		Collection<Document> documents = dao.findByTitleAndParentFolderId(103, "testDocname", null);
+		Collection<Document> documents = dao.findByTitleAndParentFolderId(6, "testDocname", null);
 		Assert.assertNotNull(documents);
 		Assert.assertEquals(1, documents.size());
 	}
 
 	@Test
 	public void testFindByFileNameAndParentFolderId() {
-		Collection<Document> documents = dao.findByFileNameAndParentFolderId(103L, "pluto", null, null);
+		Collection<Document> documents = dao.findByFileNameAndParentFolderId(6L, "pluto", null, null);
 		Assert.assertNotNull(documents);
 		Assert.assertEquals(2, documents.size());
 
-		documents = dao.findByFileNameAndParentFolderId(103L, "PLUTO", null, null);
+		documents = dao.findByFileNameAndParentFolderId(6L, "PLUTO", null, null);
 		Assert.assertNotNull(documents);
 		Assert.assertEquals(2, documents.size());
 
-		documents = dao.findByFileNameAndParentFolderId(103L, "paperino", null, null);
+		documents = dao.findByFileNameAndParentFolderId(6L, "paperino", null, null);
 		Assert.assertNotNull(documents);
 		Assert.assertEquals(0, documents.size());
 
@@ -365,12 +365,12 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		Assert.assertNotNull(doc);
 		dao.initialize(doc);
 		doc.setFileName("pluto");
-		doc.setFolder(menuDao.findById(99));
+		doc.setFolder(folderDao.findById(7));
 		dao.store(doc);
 		Assert.assertEquals("pluto", doc.getFileName());
-		Assert.assertEquals(99, doc.getFolder().getId());
+		Assert.assertEquals(7, doc.getFolder().getId());
 
-		documents = dao.findByFileNameAndParentFolderId(103L, "pluto", null, null);
+		documents = dao.findByFileNameAndParentFolderId(6L, "pluto", null, null);
 		Assert.assertNotNull(documents);
 		Assert.assertEquals(2, documents.size());
 
@@ -433,8 +433,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		Assert.assertNull(dao.findById(4));
 		dao.restore(4);
 		Assert.assertNotNull(dao.findById(4));
-		Assert.assertNotNull(menuDao.findById(1100));
-		Assert.assertNotNull(menuDao.findById(1000));
+		Assert.assertNotNull(folderDao.findById(6));
+		Assert.assertNotNull(folderDao.findById(6));
 	}
 
 	@Test
@@ -482,8 +482,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		List<Document> deletedDocs = dao.findDeleted(1, 5);
 		Assert.assertNotNull(deletedDocs);
 		Assert.assertEquals(1, deletedDocs.size());
-		Assert.assertEquals("paperino", deletedDocs.get(0).getFileName());
-		Assert.assertEquals("DELETED 3", deletedDocs.get(0).getTitle());
+		Assert.assertEquals("pippo", deletedDocs.get(0).getFileName());
+		Assert.assertEquals("DELETED 2", deletedDocs.get(0).getTitle());
 
 		deletedDocs = dao.findDeleted(2, 4);
 		Assert.assertNotNull(deletedDocs);
@@ -493,7 +493,6 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		deletedDocs = dao.findDeleted(1, 1);
 		Assert.assertNotNull(deletedDocs);
 		Assert.assertEquals(1, deletedDocs.size());
-		Assert.assertEquals("paperino", deletedDocs.get(0).getFileName());
-		Assert.assertEquals("DELETED 3", deletedDocs.get(0).getTitle());
+		Assert.assertEquals("pippo", deletedDocs.get(0).getFileName());
 	}
 }

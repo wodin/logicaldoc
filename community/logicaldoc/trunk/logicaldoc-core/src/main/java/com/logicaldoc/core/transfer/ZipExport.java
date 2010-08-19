@@ -20,8 +20,8 @@ import org.apache.tools.zip.ZipOutputStream;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
 
 /**
@@ -46,7 +46,7 @@ public class ZipExport {
 		zos = null;
 		userId = -1;
 		allLevel = false;
-		startFolderId = Menu.MENUID_DOCUMENTS;
+		startFolderId = Folder.ROOTID;
 	}
 
 	/**
@@ -57,8 +57,8 @@ public class ZipExport {
 	 * @return The Stream of the zip archive
 	 */
 	public ByteArrayOutputStream process(long folderId, long userId) {
-		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu folder = menuDao.findById(folderId);
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		Folder folder = folderDao.findById(folderId);
 		this.userId = userId;
 		this.startFolderId = folder.getId();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -79,7 +79,7 @@ public class ZipExport {
 	}
 
 	/**
-	 * If allLevel set true all children of a specified menu will be export.
+	 * If allLevel set true all children of a specified folder will be export.
 	 * Otherwise only the first level will be export.
 	 * 
 	 * @param b
@@ -94,14 +94,14 @@ public class ZipExport {
 	 * @param folder
 	 * @param level
 	 */
-	protected void appendChildren(Menu folder, int level) {
+	protected void appendChildren(Folder folder, int level) {
 		if (!allLevel && (level > 1)) {
 			return;
 		} else {
 			addFolderDocuments(folder);
-			MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-			Collection<Menu> children = menuDao.findByUserId(userId, folder.getId(), Menu.MENUTYPE_DIRECTORY);
-			Iterator<Menu> iter = children.iterator();
+			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			Collection<Folder> children = folderDao.findByUserId(userId, folder.getId());
+			Iterator<Folder> iter = children.iterator();
 
 			while (iter.hasNext()) {
 				appendChildren(iter.next(), level + 1);
@@ -114,7 +114,7 @@ public class ZipExport {
 	 * 
 	 * @param folder
 	 */
-	protected void addFolderDocuments(Menu folder) {
+	protected void addFolderDocuments(Folder folder) {
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		Collection<Document> docs = ddao.findByFolder(folder.getId(), null);
@@ -155,20 +155,20 @@ public class ZipExport {
 	 * @param folder The folder of the document to be inserted
 	 * @return The full path
 	 */
-	private String getZipEntryPath(Menu folder) {
-		if (folder.getId() == Menu.MENUID_DOCUMENTS)
+	private String getZipEntryPath(Folder folder) {
+		if (folder.getId() == Folder.ROOTID)
 			return "";
-		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		List<Menu> menus = menuDao.findParents(folder.getId());
-		menus.add(folder);
-		Collections.reverse(menus);
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		List<Folder> folders = folderDao.findParents(folder.getId());
+		folders.add(folder);
+		Collections.reverse(folders);
 
 		List<String> folderNames = new ArrayList<String>();
-		for (int i = 0; i < menus.size(); i++) {
-			Menu menu = menus.get(i);
-			if (menu.getId() == startFolderId)
+		for (int i = 0; i < folders.size(); i++) {
+			Folder f = folders.get(i);
+			if (f.getId() == startFolderId)
 				break;
-			folderNames.add(menu.getText());
+			folderNames.add(f.getName());
 		}
 		Collections.reverse(folderNames);
 
