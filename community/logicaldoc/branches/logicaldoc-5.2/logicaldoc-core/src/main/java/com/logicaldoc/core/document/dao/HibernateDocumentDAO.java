@@ -3,6 +3,7 @@ package com.logicaldoc.core.document.dao;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -17,8 +18,11 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
+import com.logicaldoc.core.document.DiscussionComment;
 import com.logicaldoc.core.document.DiscussionThread;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentLink;
@@ -322,7 +326,14 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			StringBuilder query = new StringBuilder("select distinct(A.ld_tag) from ld_tag A ");
 			if (StringUtils.isNotEmpty(firstLetter))
 				query.append("  where lower(ld_tag) like '" + firstLetter.toLowerCase() + "%'");
-			return super.findByJdbcQuery(query.toString(), 1, null);
+			
+			RowMapper simpleMapper = new BeanPropertyRowMapper() {
+				public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+					return rs.getObject(1);
+				}
+			};
+			
+			return super.query(query.toString(), new Object[]{}, null, simpleMapper);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -697,8 +708,17 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@Override
 	public void restore(long docId) {
 		super.bulkUpdate("set ld_deleted=0 where ld_id=" + docId, null);
-		List<Object> folders = super.findByJdbcQuery("select ld_folderid from ld_document where ld_id=" + docId, 1,
-				null);
+		
+		String query = "select ld_folderid from ld_document where ld_id = " + docId;
+		
+		RowMapper simpleMapper = new BeanPropertyRowMapper() {
+			public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return new Long(rs.getLong(1));
+			}
+		};
+		
+		List<Object> folders = super.query(query, new Object[]{}, null, simpleMapper);
+		
 		for (Object id : folders) {
 			menuDAO.restore((Long) id, true);
 		}
@@ -817,34 +837,33 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public List<Document> findDeleted(long userId, Integer maxHits) {
 		List<Document> results = new ArrayList<Document>();
 		try {
-			List<Object> result = findByJdbcQuery(
-					"select A.ld_id,A.ld_title,A.ld_lastmodified,A.ld_filename,A.ld_folderid from ld_document as A, ld_menu as B where A.ld_folderid=B.ld_id and B.ld_deleted=0 and A.ld_deleted=1 and A.ld_deleteuserid = "
-							+ userId + " order by A.ld_lastmodified desc", 5, null);
-
-			int i = 0;
-			for (Object object : result) {
-				if (i >= maxHits.intValue())
-					break;
-				Object[] record = (Object[]) object;
-
-				Document docDeleted = new Document();
-				// Id
-				docDeleted.setId((Long) record[0]);
-				// Title
-				docDeleted.setTitle((String) record[1]);
-				// Last modified
-				docDeleted.setLastModified(new Date(((Timestamp) record[2]).getTime()));
-				// File name
-				docDeleted.setFileName((String) record[3]);
-
-				Menu folder = new Menu();
-				folder.setId((Long) record[4]);
-				docDeleted.setFolder(folder);
-
-				// Add the document to the List
+			String query = "select A.ld_id, A.ld_title, A.ld_lastmodified, A.ld_filename, A.ld_folderid from ld_document as A, ld_menu as B where A.ld_folderid=B.ld_id and B.ld_deleted=0 and A.ld_deleted=1 and A.ld_deleteuserid = "
+				+ userId + " order by A.ld_lastmodified desc";
+			
+			RowMapper docMapper = new BeanPropertyRowMapper() {
+				public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+					
+					Document doc = new Document();
+					doc.setId(rs.getLong(1));
+					doc.setTitle(rs.getString(2));
+					doc.setLastModified(rs.getDate(3));
+					doc.setFileName(rs.getString(4));
+					
+					Menu folder = new Menu();
+					folder.setId(rs.getLong(5));
+					doc.setFolder(folder);
+					
+					return doc;
+				}
+			}; 
+			
+			List elements = query(query, new Object[]{}, maxHits, docMapper);
+			
+			for (Iterator iterator = elements.iterator(); iterator.hasNext();) {
+				Document docDeleted = (Document) iterator.next();	
 				results.add(docDeleted);
-				i++;
 			}
+			
 		} catch (Exception e) {
 			log.error(e.getMessage());
 		}

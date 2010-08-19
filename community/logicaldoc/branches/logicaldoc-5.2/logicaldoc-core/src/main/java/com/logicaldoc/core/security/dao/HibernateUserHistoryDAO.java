@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.LogFactory;
@@ -55,11 +56,12 @@ public class HibernateUserHistoryDAO extends HibernatePersistentObjectDAO<UserHi
 			cal.add(Calendar.DAY_OF_MONTH, -ttl);
 			date = cal.getTime();
 			// Retrieve all old user histories
-			List<Object> histories = super.findByJdbcQuery(
-					"select ld_id from ld_user_history where ld_deleted = 0 and ld_date < '"
-							+ new Timestamp(date.getTime()) + "'", 1, null);
-			for (Object id : histories) {
-				Long historyId = (Long) id;
+			String query = "select ld_id from ld_user_history where ld_deleted = 0 and ld_date < '" + new Timestamp(date.getTime()) + "'";
+			
+			List histories = queryForList(query, Long.class);
+			
+			for (Iterator iterator = histories.iterator(); iterator.hasNext();) {
+				Long historyId = (Long) iterator.next();
 				super.bulkUpdate("set ld_deleted = 1 where ld_id = " + historyId, null);
 			}
 		}
