@@ -692,7 +692,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			}
 
 			StringBuffer query = new StringBuffer(
-					"select A.LD_WRITE as LDWRITE, A.LD_ADD as LDADD, A.ld_security as LDMANAGESECURITY, A.ld_immutable as LDMANAGEIMMUTABILITY, A.LD_DELETE as LDDELETE, A.LD_RENAME as LDRENAME, A.ld_import as LDld_import, A.ld_export as LDBULKEXPORT, A.LD_SIGN as LDSIGN, A.LD_ARCHIVE as LDARCHIVE, A.LD_WORKFLOW as LDWORKFLOW");
+					"select A.LD_WRITE as LDWRITE, A.LD_ADD as LDADD, A.ld_security as LDSECURITY, A.ld_immutable as LDIMMUTABLE, A.LD_DELETE as LDDELETE, A.LD_RENAME as LDRENAME, A.ld_import as LDIMPORT, A.ld_export as LDEXPORT, A.LD_SIGN as LDSIGN, A.LD_ARCHIVE as LDARCHIVE, A.LD_WORKFLOW as LDWORKFLOW");
 			query.append(" from ld_foldergroup A");
 			query.append(" where ");
 			query.append(" A.LD_FOLDERID=" + id);
@@ -722,19 +722,19 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 					if (rs.getInt("LDADD") == 1)
 						if (!permissions.contains(Permission.ADD))
 							permissions.add(Permission.ADD);
-					if (rs.getInt("LDBULKEXPORT") == 1)
+					if (rs.getInt("LDEXPORT") == 1)
 						if (!permissions.contains(Permission.EXPORT))
 							permissions.add(Permission.EXPORT);
-					if (rs.getInt("LDld_import") == 1)
+					if (rs.getInt("LDIMPORT") == 1)
 						if (!permissions.contains(Permission.IMPORT))
 							permissions.add(Permission.IMPORT);
 					if (rs.getInt("LDDELETE") == 1)
 						if (!permissions.contains(Permission.DELETE))
 							permissions.add(Permission.DELETE);
-					if (rs.getInt("LDMANAGEIMMUTABILITY") == 1)
+					if (rs.getInt("LDIMMUTABLE") == 1)
 						if (!permissions.contains(Permission.IMMUTABLE))
 							permissions.add(Permission.IMMUTABLE);
-					if (rs.getInt("LDMANAGESECURITY") == 1)
+					if (rs.getInt("LDSECURITY") == 1)
 						if (!permissions.contains(Permission.SECURITY))
 							permissions.add(Permission.SECURITY);
 					if (rs.getInt("LDRENAME") == 1)

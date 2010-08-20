@@ -40,6 +40,8 @@ public class Feature {
 	public static final int AUDIT = 17;
 
 	public static final int WORKFLOW = 19;
+	
+	public static final int OFFICE = 20;
 
 	public static final int PREVIEW = 51;
 

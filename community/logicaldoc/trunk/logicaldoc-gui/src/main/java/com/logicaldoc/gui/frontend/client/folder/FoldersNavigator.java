@@ -358,14 +358,6 @@ public class FoldersNavigator extends TreeGrid {
 				TreeNode newNode = new TreeNode(newFolder.getName());
 				newNode.setAttribute("name", newFolder.getName());
 				newNode.setAttribute("id", Long.toString(newFolder.getId()));
-				// newNode.setAttribute(Constants.PERMISSION_ADD, selectedNode
-				// .getAttributeAsBoolean(Constants.PERMISSION_ADD));
-				// newNode.setAttribute(Constants.PERMISSION_DELETE,
-				// selectedNode
-				// .getAttributeAsBoolean(Constants.PERMISSION_DELETE));
-				// newNode.setAttribute(Constants.PERMISSION_RENAME,
-				// selectedNode
-				// .getAttributeAsBoolean(Constants.PERMISSION_RENAME));
 
 				if (!getTree().isOpen(selectedNode)) {
 					getTree().openFolder(selectedNode);
