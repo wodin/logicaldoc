@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.apache.commons.logging.LogFactory;
 
@@ -153,7 +152,6 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 		if (groupId == parentGroupId)
 			return;
 
-		List<Object> coll = new ArrayList<Object>();
 		try {
 			Connection con = null;
 			PreparedStatement stmt = null;

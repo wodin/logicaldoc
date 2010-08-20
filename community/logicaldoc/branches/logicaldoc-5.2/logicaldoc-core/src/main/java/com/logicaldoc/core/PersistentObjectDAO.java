@@ -122,7 +122,7 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * @param rowMapper object that will map one object per row 
 	 * @return the result List, containing mapped objects 
 	 */
-	public List<Object> query(String sql, Object[] args, Integer maxRows, RowMapper rowMapper);
+	public List query(String sql, Object[] args, Integer maxRows, RowMapper rowMapper);
 
 	/**
 	 * Execute a query for a result list, given static SQL.

@@ -58,7 +58,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#findByRecipient(java.lang.String,
 	 *      int)
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("unchecked")
 	public List<SystemMessage> findByRecipient(String recipient, int type, Integer read) {
 		String query = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_red, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_id IN (select ld_messageid from ld_recipient where ld_name = '"
@@ -67,14 +67,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 			query = query + " and ld_read=" + read;
 		query = query + " order by ld_sentdate desc";		
 		
-		List<SystemMessage> messages = new ArrayList<SystemMessage>();
-		
-		List elements = query(query, new Object[]{}, null, new SystemMessageMapper());
-		for (Iterator iterator = elements.iterator(); iterator.hasNext();) {
-			SystemMessage message = (SystemMessage) iterator.next();	
-			messages.add(message);
-		}
-		
+		List<SystemMessage> messages = (List<SystemMessage>) query(query, new Object[]{}, null, new SystemMessageMapper());
 		return messages;
 	}
 
@@ -144,14 +137,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_id IN (select ld_messageid from ld_recipient where ld_mode = '"
 				+ SqlUtil.doubleQuotes(mode) + "') order by ld_sentdate desc";
 
-		List<SystemMessage> messages = new ArrayList<SystemMessage>();
-		
-		List<Object> elements = query(query, new Object[]{}, null, new SystemMessageMapper());
-		for (Iterator<Object> iterator = elements.iterator(); iterator.hasNext();) {
-			SystemMessage message = (SystemMessage) iterator.next();	
-			messages.add(message);
-		}
-
+		List<SystemMessage> messages = (List<SystemMessage>) query(query, new Object[]{}, null, new SystemMessageMapper());
 		return messages;
 	}
 
@@ -163,14 +149,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_id IN (select ld_messageid from ld_recipient where ld_type = "
 				+ type + ") order by ld_sentdate desc";
 
-		List<SystemMessage> messages = new ArrayList<SystemMessage>();
-		
-		List<Object> elements = query(query, new Object[]{}, null, new SystemMessageMapper());
-		for (Iterator<Object> iterator = elements.iterator(); iterator.hasNext();) {
-			SystemMessage message = (SystemMessage) iterator.next();	
-			messages.add(message);
-		}
-
+		List<SystemMessage> messages = (List<SystemMessage>) query(query, new Object[]{}, null, new SystemMessageMapper());
 		return messages;
 	}
 
@@ -192,14 +171,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 				+ SystemMessage.STATUS_DELIVERED
 				+ " and ld_type = " + type + " and ld_trials < " + maxTrial + " order by ld_sentdate desc";
 
-		List<SystemMessage> messages = new ArrayList<SystemMessage>();
-		
-		List<Object> elements = query(query, new Object[]{}, null, new SystemMessageMapper());
-		for (Iterator<Object> iterator = elements.iterator(); iterator.hasNext();) {
-			SystemMessage message = (SystemMessage) iterator.next();	
-			messages.add(message);
-		}
-
+		List<SystemMessage> messages = (List<SystemMessage>) query(query, new Object[]{}, null, new SystemMessageMapper());
 		return messages;
 	}
 }
