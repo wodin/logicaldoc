@@ -1,8 +1,5 @@
 package com.logicaldoc.core;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -15,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate3.SessionFactoryUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import com.logicaldoc.util.Context;
@@ -162,12 +160,13 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject>
 	}
 
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List query(String sql, Object[] args, Integer maxRows, RowMapper rowMapper) {
+	public List<Object> query(String sql, Object[] args, Integer maxRows, RowMapper rowMapper) {
 
-		List list = new ArrayList<Object>();
+		List<Object> list = new ArrayList<Object>();
 		try {
-			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+			DataSource dataSource = SessionFactoryUtils.getDataSource(getSessionFactory());
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			if (maxRows != null)
 				jdbcTemplate.setMaxRows(maxRows);
@@ -179,14 +178,15 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject>
 		return list;
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public List queryForList(String sql, Class elementType) {
+	public List<Object> queryForList(String sql, Class elementType) {
 
-		List list = new ArrayList();
+		List<Object> list = new ArrayList<Object>();
 		try {
-			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+			DataSource dataSource = SessionFactoryUtils.getDataSource(getSessionFactory());
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-			list = jdbcTemplate.queryForList(sql, elementType);
+			list = (List<Object>) jdbcTemplate.queryForList(sql, elementType);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -194,10 +194,27 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject>
 		return list;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public List<Object> queryForList(String sql, Object[] args, Class elementType) {
+		
+		List<Object> list = new ArrayList<Object>();
+		try {
+			DataSource dataSource = SessionFactoryUtils.getDataSource(getSessionFactory());
+			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+			list = (List<Object>) jdbcTemplate.queryForList(sql, args, elementType);
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+		return list;
+	}
+	
+	
 	@Override
 	public int queryForInt(String sql) {
 		try {
-			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+			DataSource dataSource = SessionFactoryUtils.getDataSource(getSessionFactory());
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			return jdbcTemplate.queryForInt(sql);
 		} catch (Exception e) {
@@ -207,32 +224,17 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject>
 		return 0;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public int jdbcUpdate(String statement) {
 		int ret = 0;
 		try {
-			Connection con = null;
-			ResultSet rs = null;
-			Statement st = null;
-			try {
-				con = getSession().connection();
-				st = con.createStatement();
-				log.debug("Execute statement: " + statement);
-				ret = st.executeUpdate(statement);
-			} finally {
-				if (rs != null)
-					rs.close();
-				if (st != null)
-					st.close();
-				if (con != null)
-					con.close();
-			}
+			DataSource dataSource = SessionFactoryUtils.getDataSource(getSessionFactory());
+			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+			ret = jdbcTemplate.update(statement);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
-
 		return ret;
 	}
 
@@ -272,4 +274,5 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject>
 		template.setMaxResults(maxResults);
 		return template;
 	}
+
 }

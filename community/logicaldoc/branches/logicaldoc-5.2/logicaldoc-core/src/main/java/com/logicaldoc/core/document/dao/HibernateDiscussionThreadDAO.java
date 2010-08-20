@@ -79,8 +79,8 @@ public class HibernateDiscussionThreadDAO extends HibernatePersistentObjectDAO<D
 		
 		List<DiscussionComment> comments = new ArrayList<DiscussionComment>();
 		
-		List elements = query(query, new Object[]{}, maxEntries, discussionMapper);
-		for (Iterator iterator = elements.iterator(); iterator.hasNext();) {
+		List<Object> elements = query(query, new Object[]{}, maxEntries, discussionMapper);
+		for (Iterator<Object> iterator = elements.iterator(); iterator.hasNext();) {
 			DiscussionComment comment = (DiscussionComment) iterator.next();	
 			comments.add(comment);
 		}

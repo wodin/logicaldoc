@@ -5,10 +5,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,7 +20,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
-import com.logicaldoc.core.document.DiscussionComment;
 import com.logicaldoc.core.document.DiscussionThread;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentLink;
@@ -669,9 +666,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			// For performance issues on InnoDB tables, we always use the where
 			// clause
 			if (!computeDeleted) {
-				query += " A.ld_deleted=0";
+				query += " A.ld_deleted = 0";
 			} else {
-				query += " A.ld_deleted>=0";
+				query += " A.ld_deleted >= 0";
 			}
 
 			Connection con = null;
@@ -711,14 +708,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		
 		String query = "select ld_folderid from ld_document where ld_id = " + docId;
 		
-		RowMapper simpleMapper = new BeanPropertyRowMapper() {
-			public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
-				return new Long(rs.getLong(1));
-			}
-		};
-		
-		List<Object> folders = super.query(query, new Object[]{}, null, simpleMapper);
-		
+        List<Object> folders = queryForList(query, Long.class);
 		for (Object id : folders) {
 			menuDAO.restore((Long) id, true);
 		}
@@ -797,35 +787,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public long countByIndexed(int indexed) {
-		long count = 0;
-		try {
-			String query = "select count(*) from ld_document A where A.ld_deleted=0 ";
-			query += " and A.ld_indexed=" + indexed;
-
-			Connection con = null;
-			Statement stmt = null;
-			ResultSet rs = null;
-
-			try {
-				con = getSession().connection();
-				stmt = con.createStatement();
-				rs = stmt.executeQuery(query.toString());
-				while (rs.next()) {
-					count = rs.getLong(1);
-				}
-			} finally {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-		}
-		return count;
+		String query = "select count(*) from ld_document A where A.ld_deleted=0 and A.ld_indexed = " + indexed;
+		return queryForInt(query);
 	}
 
 	@Override
@@ -857,9 +820,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				}
 			}; 
 			
-			List elements = query(query, new Object[]{}, maxHits, docMapper);
+			List<Object> elements = query(query, new Object[]{}, maxHits, docMapper);
 			
-			for (Iterator iterator = elements.iterator(); iterator.hasNext();) {
+			for (Iterator<Object> iterator = elements.iterator(); iterator.hasNext();) {
 				Document docDeleted = (Document) iterator.next();	
 				results.add(docDeleted);
 			}

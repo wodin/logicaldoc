@@ -122,7 +122,7 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * @param rowMapper object that will map one object per row 
 	 * @return the result List, containing mapped objects 
 	 */
-	public List query(String sql, Object[] args, Integer maxRows, RowMapper rowMapper);
+	public List<Object> query(String sql, Object[] args, Integer maxRows, RowMapper rowMapper);
 
 	/**
 	 * Execute a query for a result list, given static SQL.
@@ -133,10 +133,29 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * @param elementType the required type of element in the result list (for example, Integer.class) 
 	 * @return a List of objects that match the specified element type
 	 */
-	@SuppressWarnings("rawtypes")
-	public List queryForList(String sql, Class elementType);
+	public List<Object> queryForList(String sql, Class elementType);
 	
+	/**
+	 * Query given SQL to create a prepared statement from SQL and a list of arguments to bind to the query, expecting a result list. 
+	 * The results will be mapped to a List (one entry for each row) of result objects, each of them matching the specified element type.  
+	 * 
+	 * @param sql SQL query to execute
+	 * @param elementType the required type of element in the result list (for example, Integer.class) 
+	 * @param args arguments to bind to the query (leaving it to the PreparedStatement to guess the corresponding SQL type); may also contain SqlParameterValue objects which indicate not only the argument value but also the SQL type and optionally the scale
+	 * @return a List of objects that match the specified element type
+	 */	
+	public List<Object> queryForList(String sql, Object[] args, Class elementType);
+	
+	/**
+	 * Execute a query that results in an int value, given static SQL.
+	 * Uses a JDBC Statement, not a PreparedStatement. If you want to execute a static query with a PreparedStatement, use the overloaded queryForInt method with null as argument array.
+	 * This method is useful for running static SQL with a known outcome. The query is expected to be a single row/single column query that results in an int value.
+	 * 
+	 * @param sql SQL query to execute 
+	 * @return the int value, or 0 in case of SQL NULL 
+	 */
 	public int queryForInt(String sql);
+	
 		
 	/**
 	 * Deletes all entries form the database
@@ -156,4 +175,5 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * Executes the given SQL update statement
 	 */
 	public int jdbcUpdate(String statement);
+
 }
