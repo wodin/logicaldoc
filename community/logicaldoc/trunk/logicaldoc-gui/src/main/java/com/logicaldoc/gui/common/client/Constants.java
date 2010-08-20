@@ -37,7 +37,7 @@ public final class Constants {
 
 	public static final String PERMISSION_RENAME = "rename";
 
-	public static final String PERMISSION_IMPORT = "bulkImport";
+	public static final String PERMISSION_IMPORT = "ld_import";
 
 	public static final String PERMISSION_EXPORT = "bulkExport";
 

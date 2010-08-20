@@ -28,7 +28,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		User user = validateSession(sid);
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Folder parentFolder = folderDao.findById(folder.getParentId());
-		checkPermission(Permission.ADD_CHILD, user, folder.getParentId());
+		checkPermission(Permission.ADD, user, folder.getParentId());
 
 		Folder f = new Folder();
 		f.setName(folder.getName());
@@ -138,7 +138,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			throw new SecurityException("No rights to delete folder");
 
 		// Check addChild permission on destParentFolder
-		boolean addchildEnabled = folderDao.isPermissionEnabled(Permission.ADD_CHILD, destParentFolder.getId(),
+		boolean addchildEnabled = folderDao.isPermissionEnabled(Permission.ADD, destParentFolder.getId(),
 				user.getId());
 		if (!addchildEnabled)
 			throw new SecurityException("AddChild Rights not granted to this user");

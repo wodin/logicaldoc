@@ -692,7 +692,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			}
 
 			StringBuffer query = new StringBuffer(
-					"select A.LD_WRITE as LDWRITE, A.LD_ADDCHILD as LDADDCHILD, A.LD_MANAGESECURITY as LDMANAGESECURITY, A.LD_MANAGEIMMUTABILITY as LDMANAGEIMMUTABILITY, A.LD_DELETE as LDDELETE, A.LD_RENAME as LDRENAME, A.LD_BULKIMPORT as LDBULKIMPORT, A.LD_BULKEXPORT as LDBULKEXPORT, A.LD_SIGN as LDSIGN, A.LD_ARCHIVE as LDARCHIVE, A.LD_WORKFLOW as LDWORKFLOW");
+					"select A.LD_WRITE as LDWRITE, A.LD_ADD as LDADD, A.ld_security as LDMANAGESECURITY, A.ld_immutable as LDMANAGEIMMUTABILITY, A.LD_DELETE as LDDELETE, A.LD_RENAME as LDRENAME, A.ld_import as LDld_import, A.ld_export as LDBULKEXPORT, A.LD_SIGN as LDSIGN, A.LD_ARCHIVE as LDARCHIVE, A.LD_WORKFLOW as LDWORKFLOW");
 			query.append(" from ld_foldergroup A");
 			query.append(" where ");
 			query.append(" A.LD_FOLDERID=" + id);
@@ -719,24 +719,24 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				while (rs.next()) {
 					if (!permissions.contains(Permission.READ))
 						permissions.add(Permission.READ);
-					if (rs.getInt("LDADDCHILD") == 1)
-						if (!permissions.contains(Permission.ADD_CHILD))
-							permissions.add(Permission.ADD_CHILD);
+					if (rs.getInt("LDADD") == 1)
+						if (!permissions.contains(Permission.ADD))
+							permissions.add(Permission.ADD);
 					if (rs.getInt("LDBULKEXPORT") == 1)
-						if (!permissions.contains(Permission.BULK_EXPORT))
-							permissions.add(Permission.BULK_EXPORT);
-					if (rs.getInt("LDBULKIMPORT") == 1)
-						if (!permissions.contains(Permission.BULK_IMPORT))
-							permissions.add(Permission.BULK_IMPORT);
+						if (!permissions.contains(Permission.EXPORT))
+							permissions.add(Permission.EXPORT);
+					if (rs.getInt("LDld_import") == 1)
+						if (!permissions.contains(Permission.IMPORT))
+							permissions.add(Permission.IMPORT);
 					if (rs.getInt("LDDELETE") == 1)
 						if (!permissions.contains(Permission.DELETE))
 							permissions.add(Permission.DELETE);
 					if (rs.getInt("LDMANAGEIMMUTABILITY") == 1)
-						if (!permissions.contains(Permission.MANAGE_IMMUTABILITY))
-							permissions.add(Permission.MANAGE_IMMUTABILITY);
+						if (!permissions.contains(Permission.IMMUTABLE))
+							permissions.add(Permission.IMMUTABLE);
 					if (rs.getInt("LDMANAGESECURITY") == 1)
-						if (!permissions.contains(Permission.MANAGE_SECURITY))
-							permissions.add(Permission.MANAGE_SECURITY);
+						if (!permissions.contains(Permission.SECURITY))
+							permissions.add(Permission.SECURITY);
 					if (rs.getInt("LDRENAME") == 1)
 						if (!permissions.contains(Permission.RENAME))
 							permissions.add(Permission.RENAME);

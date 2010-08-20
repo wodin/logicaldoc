@@ -20,7 +20,7 @@ public class MenuGroup {
 
 	private int manageImmutability = 0;
 
-	private int bulkImport = 0;
+	private int ld_import = 0;
 
 	private int bulkExport = 0;
 
@@ -95,12 +95,12 @@ public class MenuGroup {
 		this.manageImmutability = manageImmutability;
 	}
 
-	public int getBulkImport() {
-		return bulkImport;
+	public int getld_import() {
+		return ld_import;
 	}
 
-	public void setBulkImport(int bulkImport) {
-		this.bulkImport = bulkImport;
+	public void setld_import(int ld_import) {
+		this.ld_import = ld_import;
 	}
 
 	public int getBulkExport() {
@@ -120,7 +120,7 @@ public class MenuGroup {
 		mg.setManageImmutability(manageImmutability);
 		mg.setRename(rename);
 		mg.setWrite(write);
-		mg.setBulkImport(bulkImport);
+		mg.setld_import(ld_import);
 		mg.setBulkExport(bulkExport);
 		mg.setSign(sign);
 		mg.setArchive(archive);
@@ -178,7 +178,7 @@ public class MenuGroup {
 		sb.append(getManageImmutability() == 1 ? "1" : "0");
 		sb.append(getDelete() == 1 ? "1" : "0");
 		sb.append(getRename() == 1 ? "1" : "0");
-		sb.append(getBulkImport() == 1 ? "1" : "0");
+		sb.append(getld_import() == 1 ? "1" : "0");
 		sb.append(getBulkExport() == 1 ? "1" : "0");
 		sb.append(getSign() == 1 ? "1" : "0");
 		sb.append(getArchive() == 1 ? "1" : "0");
@@ -195,13 +195,13 @@ public class MenuGroup {
 	 */
 	public void setPermissions(int permissions) {
 		setWrite(Permission.WRITE.match(permissions) ? 1 : 0);
-		setAddChild(Permission.ADD_CHILD.match(permissions) ? 1 : 0);
-		setManageSecurity(Permission.MANAGE_SECURITY.match(permissions) ? 1 : 0);
-		setManageImmutability(Permission.MANAGE_IMMUTABILITY.match(permissions) ? 1 : 0);
+		setAddChild(Permission.ADD.match(permissions) ? 1 : 0);
+		setManageSecurity(Permission.SECURITY.match(permissions) ? 1 : 0);
+		setManageImmutability(Permission.IMMUTABLE.match(permissions) ? 1 : 0);
 		setDelete(Permission.DELETE.match(permissions) ? 1 : 0);
 		setRename(Permission.RENAME.match(permissions) ? 1 : 0);
-		setBulkImport(Permission.BULK_IMPORT.match(permissions) ? 1 : 0);
-		setBulkExport(Permission.BULK_EXPORT.match(permissions) ? 1 : 0);
+		setld_import(Permission.IMPORT.match(permissions) ? 1 : 0);
+		setBulkExport(Permission.EXPORT.match(permissions) ? 1 : 0);
 		setSign(Permission.SIGN.match(permissions) ? 1 : 0);
 		setArchive(Permission.ARCHIVE.match(permissions) ? 1 : 0);
 		setWorkflow(Permission.WORKFLOW.match(permissions) ? 1 : 0);

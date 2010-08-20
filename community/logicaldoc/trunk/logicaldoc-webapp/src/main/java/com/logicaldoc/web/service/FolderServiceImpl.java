@@ -104,20 +104,20 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 			int i = 0;
 			GUIRight[] rights = new GUIRight[ref.getFolderGroups().size()];
-			for (FolderGroup mg : folder.getFolderGroups()) {
+			for (FolderGroup fg : folder.getFolderGroups()) {
 				GUIRight right = new GUIRight();
-				right.setEntityId(mg.getGroupId());
-				right.setAdd(mg.getAddChild() == 1 ? true : false);
-				right.setWrite(mg.getWrite() == 1 ? true : false);
-				right.setSecurity(mg.getManageSecurity() == 1 ? true : false);
-				right.setImmutable(mg.getManageImmutability() == 1 ? true : false);
-				right.setDelete(mg.getDelete() == 1 ? true : false);
-				right.setRename(mg.getRename() == 1 ? true : false);
-				right.setImport(mg.getBulkImport() == 1 ? true : false);
-				right.setExport(mg.getBulkExport() == 1 ? true : false);
-				right.setSign(mg.getSign() == 1 ? true : false);
-				right.setArchive(mg.getArchive() == 1 ? true : false);
-				right.setWorkflow(mg.getWorkflow() == 1 ? true : false);
+				right.setEntityId(fg.getGroupId());
+				right.setAdd(fg.getAdd() == 1 ? true : false);
+				right.setWrite(fg.getWrite() == 1 ? true : false);
+				right.setSecurity(fg.getSecurity() == 1 ? true : false);
+				right.setImmutable(fg.getImmutable() == 1 ? true : false);
+				right.setDelete(fg.getDelete() == 1 ? true : false);
+				right.setRename(fg.getRename() == 1 ? true : false);
+				right.setImport(fg.getImport() == 1 ? true : false);
+				right.setExport(fg.getExport() == 1 ? true : false);
+				right.setSign(fg.getSign() == 1 ? true : false);
+				right.setArchive(fg.getArchive() == 1 ? true : false);
+				right.setWorkflow(fg.getWorkflow() == 1 ? true : false);
 
 				rights[i] = right;
 				i++;
@@ -196,7 +196,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				throw new SecurityException("No rights to delete folder");
 
 			// Check addChild permission on destParentFolder
-			boolean addchildEnabled = folderDao.isPermissionEnabled(Permission.ADD_CHILD, destParentFolder.getId(),
+			boolean addchildEnabled = folderDao.isPermissionEnabled(Permission.ADD, destParentFolder.getId(),
 					user.getId());
 			if (!addchildEnabled)
 				throw new SecurityException("AddChild Rights not granted to this user");
@@ -289,62 +289,62 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			Set<FolderGroup> grps = new HashSet<FolderGroup>();
 			for (GUIRight right : rights) {
 				boolean isAdmin = right.getEntityId() == 1;
-				FolderGroup mg = null;
+				FolderGroup fg = null;
 				if (right.isRead()) {
-					mg = new FolderGroup();
-					mg.setGroupId(right.getEntityId());
+					fg = new FolderGroup();
+					fg.setGroupId(right.getEntityId());
 				}
-				grps.add(mg);
+				grps.add(fg);
 
 				if (isAdmin || right.isWrite())
-					mg.setWrite(1);
+					fg.setWrite(1);
 				else
-					mg.setWrite(0);
+					fg.setWrite(0);
 
 				if (isAdmin || right.isAdd())
-					mg.setAddChild(1);
+					fg.setAdd(1);
 				else
-					mg.setAddChild(0);
+					fg.setAdd(0);
 
 				if (isAdmin || right.isSecurity())
-					mg.setManageSecurity(1);
+					fg.setSecurity(1);
 				else
-					mg.setManageSecurity(0);
+					fg.setSecurity(0);
 
 				if (isAdmin || right.isImmutable())
-					mg.setManageImmutability(1);
+					fg.setImmutable(1);
 				else
-					mg.setManageImmutability(0);
+					fg.setImmutable(0);
 
 				if (isAdmin || right.isDelete())
-					mg.setDelete(1);
+					fg.setDelete(1);
 				else
-					mg.setDelete(0);
+					fg.setDelete(0);
 
 				if (isAdmin || right.isRename())
-					mg.setRename(1);
+					fg.setRename(1);
 				else
-					mg.setRename(0);
+					fg.setRename(0);
 
 				if (isAdmin || right.isImport())
-					mg.setBulkImport(1);
+					fg.setImport(1);
 				else
-					mg.setBulkImport(0);
+					fg.setImport(0);
 
 				if (isAdmin || right.isExport())
-					mg.setBulkExport(1);
+					fg.setExport(1);
 				else
-					mg.setBulkExport(0);
+					fg.setExport(0);
 
 				if (isAdmin || right.isArchive())
-					mg.setArchive(1);
+					fg.setArchive(1);
 				else
-					mg.setArchive(0);
+					fg.setArchive(0);
 
 				if (isAdmin || right.isWorkflow())
-					mg.setWorkflow(1);
+					fg.setWorkflow(1);
 				else
-					mg.setWorkflow(0);
+					fg.setWorkflow(0);
 			}
 
 			folder.setFolderGroups(grps);

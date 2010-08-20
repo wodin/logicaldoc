@@ -248,6 +248,6 @@ public class ResourceImpl implements Resource {
 
 		deleteEnabled = permissions.contains(Permission.DELETE);
 		renameEnabled = permissions.contains(Permission.RENAME);
-		addChildEnabled = permissions.contains(Permission.ADD_CHILD);
+		addChildEnabled = permissions.contains(Permission.ADD);
 	}
 }

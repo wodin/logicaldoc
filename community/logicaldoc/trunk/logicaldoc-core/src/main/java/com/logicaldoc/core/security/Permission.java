@@ -26,9 +26,9 @@ import java.util.Set;
  * @since 4.0
  */
 public enum Permission {
-	READ("read"), WRITE("write"), ADD_CHILD("addChild"), MANAGE_SECURITY("manageSecurity"), MANAGE_IMMUTABILITY(
-			"manageImmutability"), DELETE("delete"), RENAME("rename"), BULK_IMPORT("bulkImport"), BULK_EXPORT(
-			"bulkExport"), SIGN("sign"), ARCHIVE("archive"), WORKFLOW("workflow");
+	READ("read"), WRITE("write"), ADD("add"), SECURITY("security"), IMMUTABLE(
+			"immutable"), DELETE("delete"), RENAME("rename"), IMPORT("import"), EXPORT(
+			"export"), SIGN("sign"), ARCHIVE("archive"), WORKFLOW("workflow");
 
 	private final String name;
 
@@ -38,19 +38,19 @@ public enum Permission {
 		this.name = name;
 		if ("write".equals(name))
 			mask = Integer.parseInt("000000000010", 2);
-		if ("addChild".equals(name))
+		if ("add".equals(name))
 			mask = Integer.parseInt("000000000100", 2);
-		if ("manageSecurity".equals(name))
+		if ("security".equals(name))
 			mask = Integer.parseInt("000000001000", 2);
-		if ("manageImmutability".equals(name))
+		if ("immutable".equals(name))
 			mask = Integer.parseInt("000000010000", 2);
 		if ("delete".equals(name))
 			mask = Integer.parseInt("000000100000", 2);
 		if ("rename".equals(name))
 			mask = Integer.parseInt("000001000000", 2);
-		if ("bulkImport".equals(name))
+		if ("import".equals(name))
 			mask = Integer.parseInt("000010000000", 2);
-		if ("bulkExport".equals(name))
+		if ("export".equals(name))
 			mask = Integer.parseInt("000100000000", 2);
 		if ("sign".equals(name))
 			mask = Integer.parseInt("001000000000", 2);
@@ -76,13 +76,13 @@ public enum Permission {
 		Set<Permission> permissions = new HashSet<Permission>();
 		permissions.add(READ);
 		permissions.add(WRITE);
-		permissions.add(ADD_CHILD);
-		permissions.add(MANAGE_SECURITY);
-		permissions.add(MANAGE_IMMUTABILITY);
+		permissions.add(ADD);
+		permissions.add(SECURITY);
+		permissions.add(IMMUTABLE);
 		permissions.add(DELETE);
 		permissions.add(RENAME);
-		permissions.add(BULK_EXPORT);
-		permissions.add(BULK_IMPORT);
+		permissions.add(EXPORT);
+		permissions.add(IMPORT);
 		permissions.add(SIGN);
 		permissions.add(ARCHIVE);
 		permissions.add(WORKFLOW);

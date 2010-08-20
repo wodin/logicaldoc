@@ -421,7 +421,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Set<Permission> permissions = dao.getEnabledPermissions(Folder.ROOTID, 1);
 		Assert.assertEquals(12, permissions.size());
 		Assert.assertTrue(permissions.contains(Permission.READ));
-		Assert.assertTrue(permissions.contains(Permission.MANAGE_SECURITY));
+		Assert.assertTrue(permissions.contains(Permission.SECURITY));
 		Assert.assertTrue(permissions.contains(Permission.SIGN));
 		permissions = dao.getEnabledPermissions(6, 4);
 		Assert.assertEquals(5, permissions.size());
