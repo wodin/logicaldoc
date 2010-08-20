@@ -159,18 +159,18 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject>
 		// By default do nothing
 	}
 
-
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Override
-	public List<Object> query(String sql, Object[] args, Integer maxRows, RowMapper rowMapper) {
+	public List query(String sql, Object[] args, Integer maxRows, RowMapper rowMapper) {
 
-		List<Object> list = new ArrayList<Object>();
+		List list = new ArrayList();
 		try {
-			DataSource dataSource = SessionFactoryUtils.getDataSource(getSessionFactory());
+			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource"); // This is for sure the more affordable method
+			//DataSource dataSource = SessionFactoryUtils.getDataSource(getSessionFactory());
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			if (maxRows != null)
 				jdbcTemplate.setMaxRows(maxRows);
-			list = (List<Object>) jdbcTemplate.query(sql, args, rowMapper);
+			list = jdbcTemplate.query(sql, args, rowMapper);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -184,7 +184,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject>
 
 		List list = new ArrayList();
 		try {
-			DataSource dataSource = SessionFactoryUtils.getDataSource(getSessionFactory());
+			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			list = jdbcTemplate.queryForList(sql, elementType);
 		} catch (Exception e) {
@@ -200,7 +200,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject>
 		
 		List list = new ArrayList();
 		try {
-			DataSource dataSource = SessionFactoryUtils.getDataSource(getSessionFactory());
+			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			list = jdbcTemplate.queryForList(sql, args, elementType);
 		} catch (Exception e) {
@@ -214,7 +214,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject>
 	@Override
 	public int queryForInt(String sql) {
 		try {
-			DataSource dataSource = SessionFactoryUtils.getDataSource(getSessionFactory());
+			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			return jdbcTemplate.queryForInt(sql);
 		} catch (Exception e) {
@@ -226,16 +226,15 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject>
 
 	@Override
 	public int jdbcUpdate(String statement) {
-		int ret = 0;
 		try {
-			DataSource dataSource = SessionFactoryUtils.getDataSource(getSessionFactory());
+			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-			ret = jdbcTemplate.update(statement);
+			return jdbcTemplate.update(statement);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
-		return ret;
+		return 0;
 	}
 
 	@Override

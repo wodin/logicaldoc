@@ -2,8 +2,6 @@ package com.logicaldoc.core.document.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.LogFactory;
@@ -77,14 +75,7 @@ public class HibernateDiscussionThreadDAO extends HibernatePersistentObjectDAO<D
 			}
 		};
 		
-		List<DiscussionComment> comments = new ArrayList<DiscussionComment>();
-		
-		List<Object> elements = query(query, new Object[]{}, maxEntries, discussionMapper);
-		for (Iterator<Object> iterator = elements.iterator(); iterator.hasNext();) {
-			DiscussionComment comment = (DiscussionComment) iterator.next();	
-			comments.add(comment);
-		}
-		
+		List<DiscussionComment> comments = (List<DiscussionComment>) query(query, new Object[]{}, maxEntries, discussionMapper);
 		return comments;
 	}
 }
