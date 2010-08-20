@@ -55,12 +55,13 @@ public class HibernateUserHistoryDAO extends HibernatePersistentObjectDAO<UserHi
 			cal.setTime(date);
 			cal.add(Calendar.DAY_OF_MONTH, -ttl);
 			date = cal.getTime();
+			
 			// Retrieve all old user histories
-			String query = "select ld_id from ld_user_history where ld_deleted = 0 and ld_date < '" + new Timestamp(date.getTime()) + "'";
+			String query = "select ld_id from ld_user_history where ld_deleted = 0 and ld_date < ?";
 			
-			List histories = queryForList(query, Long.class);
+			List<Object> histories = queryForList(query, new Object[]{new Timestamp(date.getTime())}, Long.class);
 			
-			for (Iterator iterator = histories.iterator(); iterator.hasNext();) {
+			for (Iterator<Object> iterator = histories.iterator(); iterator.hasNext();) {
 				Long historyId = (Long) iterator.next();
 				super.bulkUpdate("set ld_deleted = 1 where ld_id = " + historyId, null);
 			}

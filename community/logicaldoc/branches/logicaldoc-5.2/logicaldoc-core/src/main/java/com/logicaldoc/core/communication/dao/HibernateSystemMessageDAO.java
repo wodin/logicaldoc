@@ -146,8 +146,8 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 
 		List<SystemMessage> messages = new ArrayList<SystemMessage>();
 		
-		List elements = query(query, new Object[]{}, null, new SystemMessageMapper());
-		for (Iterator iterator = elements.iterator(); iterator.hasNext();) {
+		List<Object> elements = query(query, new Object[]{}, null, new SystemMessageMapper());
+		for (Iterator<Object> iterator = elements.iterator(); iterator.hasNext();) {
 			SystemMessage message = (SystemMessage) iterator.next();	
 			messages.add(message);
 		}
@@ -165,8 +165,8 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 
 		List<SystemMessage> messages = new ArrayList<SystemMessage>();
 		
-		List elements = query(query, new Object[]{}, null, new SystemMessageMapper());
-		for (Iterator iterator = elements.iterator(); iterator.hasNext();) {
+		List<Object> elements = query(query, new Object[]{}, null, new SystemMessageMapper());
+		for (Iterator<Object> iterator = elements.iterator(); iterator.hasNext();) {
 			SystemMessage message = (SystemMessage) iterator.next();	
 			messages.add(message);
 		}
@@ -194,8 +194,8 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 
 		List<SystemMessage> messages = new ArrayList<SystemMessage>();
 		
-		List elements = query(query, new Object[]{}, null, new SystemMessageMapper());
-		for (Iterator iterator = elements.iterator(); iterator.hasNext();) {
+		List<Object> elements = query(query, new Object[]{}, null, new SystemMessageMapper());
+		for (Iterator<Object> iterator = elements.iterator(); iterator.hasNext();) {
 			SystemMessage message = (SystemMessage) iterator.next();	
 			messages.add(message);
 		}

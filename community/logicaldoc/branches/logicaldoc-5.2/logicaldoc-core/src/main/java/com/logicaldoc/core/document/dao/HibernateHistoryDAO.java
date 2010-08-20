@@ -1,7 +1,5 @@
 package com.logicaldoc.core.document.dao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,8 +8,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.History;
@@ -66,10 +62,9 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 			date = cal.getTime();
 			
 			// Retrieve all old user histories
-			String query = "select ld_id from ld_history where ld_deleted = 0 and ld_docid > 0 and ld_date < '"
-				+ new Timestamp(date.getTime()) + "'";
+			String query = "select ld_id from ld_history where ld_deleted = 0 and ld_docid > 0 and ld_date < ?";
 			
-			List histories = queryForList(query, Long.class);
+			List<Object> histories = queryForList(query, new Object[]{new Timestamp(date.getTime())}, Long.class);
 			
 			for (Object id : histories) {
 				Long historyId = (Long) id;
@@ -88,10 +83,10 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 			date = cal.getTime();
 			
 			// Retrieve all old user histories
-			String query = "select ld_id from ld_history where ld_deleted = 0 and ld_docid is null and ld_date < '"
-					+ new Timestamp(date.getTime()) + "'";
+			String query = "select ld_id from ld_history where ld_deleted = 0 and ld_docid is null and ld_date < ?";
 			
-			List<Object> histories = super.queryForList(query, Long.class);
+			List<Object> histories = queryForList(query, new Object[]{new Timestamp(date.getTime())}, Long.class);
+			
 			for (Object id : histories) {
 				Long historyId = (Long) id;
 				super.bulkUpdate("set ld_deleted = 1 where ld_id = " + historyId, null);
