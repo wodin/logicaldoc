@@ -338,6 +338,7 @@
 									<exclude name="*jmime*" />
 									<exclude name="*nekohtml*" />
 									<exclude name="*icepdf*" />
+									<exclude name="*jai*" />
 								</delete>
 
 								<copy
