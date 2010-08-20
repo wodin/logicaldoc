@@ -336,6 +336,7 @@
 									<exclude name="*jmime*" />
 									<exclude name="*nekohtml*" />
                                     <exclude name="*icepdf*" />
+                                    <exclude name="*jai*" />
 								</delete>
 								<zip
 									destfile="target/${project.artifactId}-${project.version}-plugin2.zip"

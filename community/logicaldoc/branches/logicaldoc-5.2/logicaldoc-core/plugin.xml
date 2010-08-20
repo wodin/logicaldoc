@@ -56,6 +56,12 @@
     <library id="icepdf" path="lib/icepdf-core-4.0.0.jar" type="code">
       <export prefix="*" />
     </library>
+    <library id="jai-core" path="lib/jai-core-1.1.3.jar" type="code">
+      <export prefix="*" />
+    </library>
+    <library id="jai-codec" path="lib/jai-codec-1.1.3.jar" type="code">
+      <export prefix="*" />
+    </library>
   </runtime>
   <extension-point id="DbInit">
     <parameter-def id="name" />
