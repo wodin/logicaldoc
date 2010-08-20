@@ -25,21 +25,19 @@ public final class Constants {
 
 	public static final String PERMISSION_DELETE = "delete";
 
-	public static final String PERMISSION_IMMUTABLE = "manageImmutability";
+	public static final String PERMISSION_IMMUTABLE = "immutable";
 
-	public static final String PERMISSION_SECURITY = "manageSecurity";
+	public static final String PERMISSION_SECURITY = "security";
 
 	public static final String PERMISSION_WRITE = "write";
 
-	public static final String PERMISSION_ADD = "addChild";
-
-	public static final String PERMISSION_IMMUTABILITY = "manageImmutability";
+	public static final String PERMISSION_ADD = "add";
 
 	public static final String PERMISSION_RENAME = "rename";
 
-	public static final String PERMISSION_IMPORT = "ld_import";
+	public static final String PERMISSION_IMPORT = "import";
 
-	public static final String PERMISSION_EXPORT = "bulkExport";
+	public static final String PERMISSION_EXPORT = "export";
 
 	public static final String PERMISSION_SIGN = "sign";
 
@@ -70,11 +68,11 @@ public final class Constants {
 	public final static String EVENT_CHECKEDOUT = "event.checkedout";
 
 	public static final String EVENT_DOWNLOADED = "event.downloaded";
-	
+
 	public final static String EVENT_CHANGED = "event.changed";
 
 	public final static String EVENT_CHECKEDIN = "event.checkedin";
-	
+
 	public final static int INDEX_TO_INDEX = 0;
 
 	public final static int INDEX_INDEXED = 1;

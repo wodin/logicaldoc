@@ -134,32 +134,37 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public GUIFolder getFolder(String sid, long folderId, boolean computePath) throws InvalidSessionException {
-		GUIFolder folder = getFolder(sid, folderId);
+		try {
+			GUIFolder folder = getFolder(sid, folderId);
 
-		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		if (computePath) {
-			String pathExtended = dao.computePathExtended(folderId);
-			StringTokenizer st = new StringTokenizer(pathExtended, "/", false);
-			int elements = st.countTokens();
-			GUIFolder[] path = new GUIFolder[elements];
-			Folder parent = dao.findById(Folder.ROOTID);
-			List<Folder> list = new ArrayList<Folder>();
-			int j = 0;
-			while (st.hasMoreTokens()) {
-				String text = st.nextToken();
-				list = dao.findByName(parent, text, true);
-				if (list.isEmpty())
-					return null;
+			FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			if (computePath) {
+				String pathExtended = dao.computePathExtended(folderId);
+				StringTokenizer st = new StringTokenizer(pathExtended, "/", false);
+				int elements = st.countTokens();
+				GUIFolder[] path = new GUIFolder[elements];
+				Folder parent = dao.findById(Folder.ROOTID);
+				List<Folder> list = new ArrayList<Folder>();
+				int j = 0;
+				while (st.hasMoreTokens()) {
+					String text = st.nextToken();
+					list = dao.findByName(parent, text, true);
+					if (list.isEmpty())
+						return null;
 
-				path[j] = getFolder(sid, parent.getId(), false);
-				parent = list.get(0);
-				j++;
+					path[j] = getFolder(sid, parent.getId(), false);
+					parent = list.get(0);
+					j++;
+				}
+
+				folder.setPath(path);
 			}
 
-			folder.setPath(path);
+			return folder;
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t);
 		}
-
-		return folder;
 	}
 
 	@Override
@@ -269,7 +274,8 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				folderDao.store(f);
 			}
 
-			f.setId(folder.getId());
+			folder.setId(f.getId());
+			folder.setName(f.getName());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
