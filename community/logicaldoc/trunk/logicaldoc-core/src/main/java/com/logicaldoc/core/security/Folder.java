@@ -86,8 +86,8 @@ public class Folder extends PersistentObject implements Comparable<Folder> {
 			FolderGroup mg = new FolderGroup();
 			mg.setGroupId(groups[i]);
 			mg.setWrite(1);
-			mg.setAddChild(1);
-			mg.setManageSecurity(1);
+			mg.setAdd(1);
+			mg.setSecurity(1);
 			mg.setDelete(1);
 			mg.setRename(1);
 			folderGroups.add(mg);

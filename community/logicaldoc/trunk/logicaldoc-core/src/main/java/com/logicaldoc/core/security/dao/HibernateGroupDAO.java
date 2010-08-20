@@ -175,10 +175,10 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 				stmt.executeUpdate();
 
 				stmt = con
-						.prepareStatement("insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow) "
+						.prepareStatement("insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow) "
 								+ "select B.ld_folderid,"
 								+ groupId
-								+ ", B.ld_write, B.ld_addchild, B.ld_managesecurity, B.ld_manageimmutability, B.ld_delete, B.ld_rename, B.ld_bulkimport, B.ld_bulkexport, B.ld_sign, B.ld_archive, B.ld_workflow from ld_foldergroup as B "
+								+ ", B.ld_write, B.ld_add, B.ld_security, B.ld_immutable, B.ld_delete, B.ld_rename, B.ld_import, B.ld_export, B.ld_sign, B.ld_archive, B.ld_workflow from ld_foldergroup as B "
 								+ "where B.ld_groupid= " + parentGroupId);
 				log.debug("Replicate all ACLs from group " + parentGroupId);
 				stmt.executeUpdate();

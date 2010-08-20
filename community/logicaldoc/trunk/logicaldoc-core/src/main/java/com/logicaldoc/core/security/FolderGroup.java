@@ -1,7 +1,8 @@
 package com.logicaldoc.core.security;
 
 /**
- * This class represents security permissions for a group in relation to a folder
+ * This class represents security permissions for a group in relation to a
+ * folder
  * 
  * @author Marco Meschieri - Logical Objects
  * @version 6.0
@@ -10,19 +11,19 @@ public class FolderGroup {
 
 	private int write = 0;
 
-	private int addChild = 0;
+	private int add = 0;
 
-	private int manageSecurity = 0;
+	private int security = 0;
 
 	private int delete = 0;
 
 	private int rename = 0;
 
-	private int manageImmutability = 0;
+	private int immutable = 0;
 
-	private int bulkImport = 0;
+	private int _import = 0;
 
-	private int bulkExport = 0;
+	private int export = 0;
 
 	private int sign = 0;
 
@@ -32,23 +33,107 @@ public class FolderGroup {
 
 	private long groupId;
 
+	public FolderGroup(long groupId) {
+		this.groupId = groupId;
+	}
+
 	public FolderGroup() {
 	}
 
-	public int getAddChild() {
-		return addChild;
+	@Override
+	public FolderGroup clone() {
+		FolderGroup mg = new FolderGroup(groupId);
+		mg.setAdd(add);
+		mg.setDelete(delete);
+		mg.setSecurity(security);
+		mg.setImmutable(immutable);
+		mg.setRename(rename);
+		mg.setWrite(write);
+		mg.setImport(_import);
+		mg.setExport(export);
+		mg.setSign(sign);
+		mg.setArchive(archive);
+		mg.setWorkflow(workflow);
+		return mg;
 	}
 
-	public void setAddChild(int addChild) {
-		this.addChild = addChild;
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof FolderGroup))
+			return false;
+		FolderGroup other = (FolderGroup) obj;
+		return this.getGroupId() == other.getGroupId();
 	}
 
-	public int getManageSecurity() {
-		return manageSecurity;
+	@Override
+	public int hashCode() {
+		return new Long(groupId).hashCode();
 	}
 
-	public void setManageSecurity(int manageSecurity) {
-		this.manageSecurity = manageSecurity;
+	/**
+	 * Parsing each permission and creates the integer representation
+	 * 
+	 * @return Permissions settings as integer representation.
+	 */
+	public int getPermissions() {
+		StringBuffer sb = new StringBuffer("1");
+		sb.append(getWrite() == 1 ? "1" : "0");
+		sb.append(getAdd() == 1 ? "1" : "0");
+		sb.append(getSecurity() == 1 ? "1" : "0");
+		sb.append(getImmutable() == 1 ? "1" : "0");
+		sb.append(getDelete() == 1 ? "1" : "0");
+		sb.append(getRename() == 1 ? "1" : "0");
+		sb.append(getImport() == 1 ? "1" : "0");
+		sb.append(getExport() == 1 ? "1" : "0");
+		sb.append(getSign() == 1 ? "1" : "0");
+		sb.append(getArchive() == 1 ? "1" : "0");
+		sb.append(getWorkflow() == 1 ? "1" : "0");
+
+		return Integer.parseInt(sb.toString(), 2);
+	}
+
+	/**
+	 * Set each permission evaluating the given integer representation.
+	 * 
+	 * @param permissions permissions mask(the last slot is for the 'read'
+	 *        permission and it is not evaluated)
+	 */
+	public void setPermissions(int permissions) {
+		setWrite(Permission.WRITE.match(permissions) ? 1 : 0);
+		setAdd(Permission.ADD.match(permissions) ? 1 : 0);
+		setSecurity(Permission.SECURITY.match(permissions) ? 1 : 0);
+		setImmutable(Permission.IMMUTABLE.match(permissions) ? 1 : 0);
+		setDelete(Permission.DELETE.match(permissions) ? 1 : 0);
+		setRename(Permission.RENAME.match(permissions) ? 1 : 0);
+		setImport(Permission.IMPORT.match(permissions) ? 1 : 0);
+		setExport(Permission.EXPORT.match(permissions) ? 1 : 0);
+		setSign(Permission.SIGN.match(permissions) ? 1 : 0);
+		setArchive(Permission.ARCHIVE.match(permissions) ? 1 : 0);
+		setWorkflow(Permission.WORKFLOW.match(permissions) ? 1 : 0);
+	}
+
+	public int getWrite() {
+		return write;
+	}
+
+	public void setWrite(int write) {
+		this.write = write;
+	}
+
+	public int getAdd() {
+		return add;
+	}
+
+	public void setAdd(int add) {
+		this.add = add;
+	}
+
+	public int getSecurity() {
+		return security;
+	}
+
+	public void setSecurity(int security) {
+		this.security = security;
 	}
 
 	public int getDelete() {
@@ -67,78 +152,20 @@ public class FolderGroup {
 		this.rename = rename;
 	}
 
-	public FolderGroup(long groupId) {
-		this.groupId = groupId;
+	public int getImport() {
+		return _import;
 	}
 
-	public long getGroupId() {
-		return groupId;
+	public void setImport(int _import) {
+		this._import = _import;
 	}
 
-	public int getWrite() {
-		return write;
+	public int getExport() {
+		return export;
 	}
 
-	public void setGroupId(long groupId) {
-		this.groupId = groupId;
-	}
-
-	public void setWrite(int write) {
-		this.write = write;
-	}
-
-	public int getManageImmutability() {
-		return manageImmutability;
-	}
-
-	public void setManageImmutability(int manageImmutability) {
-		this.manageImmutability = manageImmutability;
-	}
-
-	public int getBulkImport() {
-		return bulkImport;
-	}
-
-	public void setBulkImport(int bulkImport) {
-		this.bulkImport = bulkImport;
-	}
-
-	public int getBulkExport() {
-		return bulkExport;
-	}
-
-	public void setBulkExport(int bulkExport) {
-		this.bulkExport = bulkExport;
-	}
-
-	@Override
-	public FolderGroup clone() {
-		FolderGroup mg = new FolderGroup(groupId);
-		mg.setAddChild(addChild);
-		mg.setDelete(delete);
-		mg.setManageSecurity(manageSecurity);
-		mg.setManageImmutability(manageImmutability);
-		mg.setRename(rename);
-		mg.setWrite(write);
-		mg.setBulkImport(bulkImport);
-		mg.setBulkExport(bulkExport);
-		mg.setSign(sign);
-		mg.setArchive(archive);
-		mg.setWorkflow(workflow);
-		return mg;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof FolderGroup))
-			return false;
-		FolderGroup other = (FolderGroup) obj;
-		return this.getGroupId() == other.getGroupId();
-	}
-
-	@Override
-	public int hashCode() {
-		return new Long(groupId).hashCode();
+	public void setExport(int export) {
+		this.export = export;
 	}
 
 	public int getSign() {
@@ -165,45 +192,20 @@ public class FolderGroup {
 		this.workflow = workflow;
 	}
 
-	/**
-	 * Parsing each permission and creates the integer representation
-	 * 
-	 * @return Permissions settings as integer representation.
-	 */
-	public int getPermissions() {
-		StringBuffer sb = new StringBuffer("1");
-		sb.append(getWrite() == 1 ? "1" : "0");
-		sb.append(getAddChild() == 1 ? "1" : "0");
-		sb.append(getManageSecurity() == 1 ? "1" : "0");
-		sb.append(getManageImmutability() == 1 ? "1" : "0");
-		sb.append(getDelete() == 1 ? "1" : "0");
-		sb.append(getRename() == 1 ? "1" : "0");
-		sb.append(getBulkImport() == 1 ? "1" : "0");
-		sb.append(getBulkExport() == 1 ? "1" : "0");
-		sb.append(getSign() == 1 ? "1" : "0");
-		sb.append(getArchive() == 1 ? "1" : "0");
-		sb.append(getWorkflow() == 1 ? "1" : "0");
-
-		return Integer.parseInt(sb.toString(), 2);
+	public long getGroupId() {
+		return groupId;
 	}
 
-	/**
-	 * Set each permission evaluating the given integer representation.
-	 * 
-	 * @param permissions permissions mask(the last slot is for the 'read'
-	 *        permission and it is not evaluated)
-	 */
-	public void setPermissions(int permissions) {
-		setWrite(Permission.WRITE.match(permissions) ? 1 : 0);
-		setAddChild(Permission.ADD_CHILD.match(permissions) ? 1 : 0);
-		setManageSecurity(Permission.MANAGE_SECURITY.match(permissions) ? 1 : 0);
-		setManageImmutability(Permission.MANAGE_IMMUTABILITY.match(permissions) ? 1 : 0);
-		setDelete(Permission.DELETE.match(permissions) ? 1 : 0);
-		setRename(Permission.RENAME.match(permissions) ? 1 : 0);
-		setBulkImport(Permission.BULK_IMPORT.match(permissions) ? 1 : 0);
-		setBulkExport(Permission.BULK_EXPORT.match(permissions) ? 1 : 0);
-		setSign(Permission.SIGN.match(permissions) ? 1 : 0);
-		setArchive(Permission.ARCHIVE.match(permissions) ? 1 : 0);
-		setWorkflow(Permission.WORKFLOW.match(permissions) ? 1 : 0);
+	public void setGroupId(long groupId) {
+		this.groupId = groupId;
 	}
+
+	public int getImmutable() {
+		return immutable;
+	}
+
+	public void setImmutable(int immutable) {
+		this.immutable = immutable;
+	}
+
 }

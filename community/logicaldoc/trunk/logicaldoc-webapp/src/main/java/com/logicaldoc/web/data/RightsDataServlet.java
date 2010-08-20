@@ -73,14 +73,13 @@ public class RightsDataServlet extends HttpServlet {
 					writer.print("<entity><![CDATA[" + group.getName() + "]]></entity>");
 					writer.print("<read>" + true + "</read>");
 					writer.print("<write>" + (folderGroup.getWrite() == 1 ? true : false) + "</write>");
-					writer.print("<add>" + (folderGroup.getAddChild() == 1 ? true : false) + "</add>");
-					writer.print("<security>" + (folderGroup.getManageSecurity() == 1 ? true : false) + "</security>");
-					writer.print("<immutable>" + (folderGroup.getManageImmutability() == 1 ? true : false)
-							+ "</immutable>");
+					writer.print("<add>" + (folderGroup.getAdd() == 1 ? true : false) + "</add>");
+					writer.print("<security>" + (folderGroup.getSecurity() == 1 ? true : false) + "</security>");
+					writer.print("<immutable>" + (folderGroup.getImmutable() == 1 ? true : false) + "</immutable>");
 					writer.print("<delete>" + (folderGroup.getDelete() == 1 ? true : false) + "</delete>");
 					writer.print("<rename>" + (folderGroup.getRename() == 1 ? true : false) + "</rename>");
-					writer.print("<import>" + (folderGroup.getBulkImport() == 1 ? true : false) + "</import>");
-					writer.print("<export>" + (folderGroup.getBulkExport() == 1 ? true : false) + "</export>");
+					writer.print("<import>" + (folderGroup.getImport() == 1 ? true : false) + "</import>");
+					writer.print("<export>" + (folderGroup.getExport() == 1 ? true : false) + "</export>");
 					writer.print("<sign>" + (folderGroup.getSign() == 1 ? true : false) + "</sign>");
 					writer.print("<archive>" + (folderGroup.getArchive() == 1 ? true : false) + "</archive>");
 					writer.print("<workflow>" + (folderGroup.getWorkflow() == 1 ? true : false) + "</workflow>");

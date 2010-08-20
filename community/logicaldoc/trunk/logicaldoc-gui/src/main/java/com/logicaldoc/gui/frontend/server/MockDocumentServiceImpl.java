@@ -46,7 +46,7 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 		folder.setId(docId);
 		if (docId % 2 == 0)
 			folder.setPermissions(new String[] { "read", "write", "addChild", "manageSecurity", "delete", "rename",
-					"bulkImport", "bulkExport", "sign", "archive", "workflow", "manageImmutability" });
+					"ld_import", "bulkExport", "sign", "archive", "workflow", "manageImmutability" });
 		else
 			folder.setPermissions(new String[] { "read" });
 
