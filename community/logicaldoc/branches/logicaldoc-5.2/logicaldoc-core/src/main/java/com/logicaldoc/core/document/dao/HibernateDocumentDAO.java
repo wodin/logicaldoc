@@ -708,9 +708,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		
 		String query = "select ld_folderid from ld_document where ld_id = " + docId;
 		
-        List<Object> folders = queryForList(query, Long.class);
-		for (Object id : folders) {
-			menuDAO.restore((Long) id, true);
+        List<Long> folders = (List<Long>) queryForList(query, Long.class);
+        for (Long long1 : folders) {
+        	menuDAO.restore(long1, true);
 		}
 	}
 

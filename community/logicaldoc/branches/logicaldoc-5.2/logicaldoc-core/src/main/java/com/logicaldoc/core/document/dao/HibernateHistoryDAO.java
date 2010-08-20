@@ -64,10 +64,8 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 			// Retrieve all old user histories
 			String query = "select ld_id from ld_history where ld_deleted = 0 and ld_docid > 0 and ld_date < ?";
 			
-			List<Object> histories = queryForList(query, new Object[]{new Timestamp(date.getTime())}, Long.class);
-			
-			for (Object id : histories) {
-				Long historyId = (Long) id;
+			List<Long> histories = (List<Long>) queryForList(query, new Object[]{new Timestamp(date.getTime())}, Long.class);
+			for (Long historyId : histories) {
 				super.bulkUpdate("set ld_deleted = 1 where ld_id = " + historyId, null);
 			}
 		}
@@ -85,10 +83,8 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 			// Retrieve all old user histories
 			String query = "select ld_id from ld_history where ld_deleted = 0 and ld_docid is null and ld_date < ?";
 			
-			List<Object> histories = queryForList(query, new Object[]{new Timestamp(date.getTime())}, Long.class);
-			
-			for (Object id : histories) {
-				Long historyId = (Long) id;
+			List<Long> histories = (List<Long>) queryForList(query, new Object[]{new Timestamp(date.getTime())}, Long.class);
+			for (Long historyId : histories) {
 				super.bulkUpdate("set ld_deleted = 1 where ld_id = " + historyId, null);
 			}
 		}
