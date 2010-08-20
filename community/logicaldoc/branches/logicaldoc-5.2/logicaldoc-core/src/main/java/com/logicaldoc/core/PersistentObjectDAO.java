@@ -133,7 +133,7 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * @param elementType the required type of element in the result list (for example, Integer.class) 
 	 * @return a List of objects that match the specified element type
 	 */
-	public List<Object> queryForList(String sql, Class elementType);
+	public List queryForList(String sql, Class elementType);
 	
 	/**
 	 * Query given SQL to create a prepared statement from SQL and a list of arguments to bind to the query, expecting a result list. 
@@ -144,7 +144,7 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * @param args arguments to bind to the query (leaving it to the PreparedStatement to guess the corresponding SQL type); may also contain SqlParameterValue objects which indicate not only the argument value but also the SQL type and optionally the scale
 	 * @return a List of objects that match the specified element type
 	 */	
-	public List<Object> queryForList(String sql, Object[] args, Class elementType);
+	public List queryForList(String sql, Object[] args, Class elementType);
 	
 	/**
 	 * Execute a query that results in an int value, given static SQL.

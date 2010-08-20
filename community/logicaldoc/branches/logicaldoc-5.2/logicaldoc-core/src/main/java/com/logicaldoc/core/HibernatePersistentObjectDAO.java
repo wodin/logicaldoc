@@ -178,15 +178,15 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject>
 		return list;
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings("rawtypes")
 	@Override
-	public List<Object> queryForList(String sql, Class elementType) {
+	public List queryForList(String sql, Class elementType) {
 
-		List<Object> list = new ArrayList<Object>();
+		List list = new ArrayList();
 		try {
 			DataSource dataSource = SessionFactoryUtils.getDataSource(getSessionFactory());
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-			list = (List<Object>) jdbcTemplate.queryForList(sql, elementType);
+			list = jdbcTemplate.queryForList(sql, elementType);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -194,15 +194,15 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject>
 		return list;
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings("rawtypes")
 	@Override
-	public List<Object> queryForList(String sql, Object[] args, Class elementType) {
+	public List queryForList(String sql, Object[] args, Class elementType) {
 		
-		List<Object> list = new ArrayList<Object>();
+		List list = new ArrayList();
 		try {
 			DataSource dataSource = SessionFactoryUtils.getDataSource(getSessionFactory());
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-			list = (List<Object>) jdbcTemplate.queryForList(sql, args, elementType);
+			list = jdbcTemplate.queryForList(sql, args, elementType);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
