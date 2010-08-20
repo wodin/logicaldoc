@@ -1,7 +1,5 @@
 package com.logicaldoc.web.settings;
 
-import javax.faces.context.FacesContext;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -9,9 +7,7 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
-import com.logicaldoc.web.admin.UsersRecordsManager;
 import com.logicaldoc.web.i18n.Messages;
-import com.logicaldoc.web.util.FacesUtil;
 
 /**
  * Personal data editing
