@@ -1,10 +1,6 @@
 package com.logicaldoc.workflow.editor;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -56,65 +52,19 @@ public class HibernateWorkflowHistoryDAO extends HibernatePersistentObjectDAO<Wo
 
 	@Override
 	public List<String> findInstanceIds() {
-		List<String> coll = new ArrayList<String>();
-		try {
-			String query = "select distinct(A.ld_instanceid) from ld_workflowhistory A where A.ld_deleted=0";
-
-			Connection con = null;
-			Statement stmt = null;
-			ResultSet rs = null;
-
-			try {
-				con = getSession().connection();
-				stmt = con.createStatement();
-				rs = stmt.executeQuery(query.toString());
-				while (rs.next()) {
-					coll.add(rs.getString(1));
-				}
-			} finally {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-		}
+		
+		String query = "select distinct(ld_instanceid) from ld_workflowhistory where ld_deleted=0";
+		List<String> coll = (List<String>) queryForList(query, String.class);
+		
 		return coll;
 	}
 
 	@Override
 	public List<Long> findTemplateIds() {
-		List<Long> coll = new ArrayList<Long>();
-		try {
-			String query = "select distinct(A.ld_templateid) from ld_workflowhistory A where A.ld_deleted=0";
-
-			Connection con = null;
-			Statement stmt = null;
-			ResultSet rs = null;
-
-			try {
-				con = getSession().connection();
-				stmt = con.createStatement();
-				rs = stmt.executeQuery(query.toString());
-				while (rs.next()) {
-					coll.add(rs.getLong(1));
-				}
-			} finally {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-		}
+		
+		String query = "select distinct(ld_templateid) from ld_workflowhistory where ld_deleted=0";
+		List<Long> coll = (List<Long>) queryForList(query, Long.class);
+		
 		return coll;
 	}
 
@@ -126,12 +76,12 @@ public class HibernateWorkflowHistoryDAO extends HibernatePersistentObjectDAO<Wo
 			cal.setTime(date);
 			cal.add(Calendar.DAY_OF_MONTH, -ttl);
 			date = cal.getTime();
+			
 			// Retrieve all old user histories
-			List<Object> histories = super.findByJdbcQuery(
-					"select ld_id from ld_workflowhistory where ld_deleted = 0 and ld_date < '"
-							+ new Timestamp(date.getTime()) + "'", 1, null);
-			for (Object id : histories) {
-				Long historyId = (Long) id;
+			String query = "select ld_id from ld_workflowhistory where ld_deleted = 0 and ld_date < ?";
+			
+			List<Long> histories = (List<Long>) queryForList(query, new Object[]{new Timestamp(date.getTime())}, Long.class);
+			for (Long historyId : histories) {
 				super.bulkUpdate("set ld_deleted = 1 where ld_id = " + historyId, null);
 			}
 		}
