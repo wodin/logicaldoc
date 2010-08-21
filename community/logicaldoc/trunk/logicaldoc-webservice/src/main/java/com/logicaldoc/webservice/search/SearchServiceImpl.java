@@ -136,10 +136,10 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 	@Override
 	public String[] getTags(String sid) throws Exception {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		List<Object> tags = docDao.findAllTags(null);
+		List<String> tags = docDao.findAllTags(null);
 		String[] wsTags = new String[tags.size()];
 		for (int i = 0; i < tags.size(); i++) {
-			wsTags[i] = (String) tags.get(i);
+			wsTags[i] = tags.get(i);
 		}
 		return wsTags;
 	}

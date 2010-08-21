@@ -3,6 +3,8 @@ package com.logicaldoc.core;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.jdbc.core.RowMapper;
+
 /**
  * Interface for DAOs that operate on persistent objects
  * 
@@ -112,14 +114,52 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	public void initialize(T entity);
 
 	/**
-	 * Executes a free-form SQL query against the database, using direct JDBC
-	 * access
+	 * Query given SQL to create a prepared statement from SQL and a list of
+	 * arguments to bind to the query, mapping each row to a Java object via a
+	 * RowMapper.
 	 * 
-	 * @param query The query to be executed
-	 * @param returnedColumns Number of returned columns (must be >=)
-	 * @return The result set content as list
+	 * @param sql SQL query to execute
+	 * @param args arguments to bind to the query (leaving it to the
+	 *        PreparedStatement to guess the corresponding SQL type); may also
+	 *        contain SqlParameterValue objects which indicate not only the
+	 *        argument value but also the SQL type and optionally the scale
+	 * @param maxRows the new max rows limit; null means there is no limit
+	 * @param rowMapper object that will map one object per row
+	 * @return the result List, containing mapped objects
 	 */
-	public List<Object> findByJdbcQuery(String query, int returnedColumns, Object[] values);
+	@SuppressWarnings("rawtypes")
+	public List query(String sql, Object[] args, RowMapper rowMapper, Integer maxRows );
+
+	/**
+	 * Query given SQL to create a prepared statement from SQL and a list of
+	 * arguments to bind to the query, expecting a result list. The results will
+	 * be mapped to a List (one entry for each row) of result objects, each of
+	 * them matching the specified element type.
+	 * 
+	 * @param sql SQL query to execute
+	 * @param elementType the required type of element in the result list (for
+	 *        example, Integer.class)
+	 * @param args arguments to bind to the query (leaving it to the
+	 *        PreparedStatement to guess the corresponding SQL type); may also
+	 *        contain SqlParameterValue objects which indicate not only the
+	 *        argument value but also the SQL type and optionally the scale
+	 * @return a List of objects that match the specified element type
+	 */
+	@SuppressWarnings("rawtypes")
+	public List queryForList(String sql, Object[] args, Class elementType, Integer maxRows);
+
+	/**
+	 * Execute a query that results in an int value, given static SQL. Uses a
+	 * JDBC Statement, not a PreparedStatement. If you want to execute a static
+	 * query with a PreparedStatement, use the overloaded queryForInt method
+	 * with null as argument array. This method is useful for running static SQL
+	 * with a known outcome. The query is expected to be a single row/single
+	 * column query that results in an int value.
+	 * 
+	 * @param sql SQL query to execute
+	 * @return the int value, or 0 in case of SQL NULL
+	 */
+	public int queryForInt(String sql);
 
 	/**
 	 * Deletes all entries form the database

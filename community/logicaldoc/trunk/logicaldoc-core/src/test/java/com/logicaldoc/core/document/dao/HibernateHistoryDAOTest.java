@@ -49,7 +49,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(0, histories.size());
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void testFindByDocId() {
 		Collection histories = dao.findByDocId(1);
@@ -62,7 +62,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(0, histories.size());
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void testFindByUserId() {
 		Collection histories = dao.findByUserId(1);
@@ -75,7 +75,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(0, histories.size());
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void testFindByFolderId() {
 		Collection histories = dao.findByFolderId(5);
@@ -88,7 +88,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(0, histories.size());
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void testCreateDocumentHistory() {
 		History history = new History();
@@ -147,7 +147,8 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(hStored.getEvent(), "test History store");
 	}
 
-	@SuppressWarnings("unchecked")
+
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void testFindNotNotified() {
 		Collection histories = dao.findNotNotified();
@@ -164,7 +165,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(1, histories.size());
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void testCleanOldFolderHistories() {
 		History history = dao.findById(3);
@@ -182,7 +183,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(2, histories.size());
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void testCleanOldDocumentHistories() {
 		History history = dao.findById(1);
@@ -200,7 +201,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(1, histories.size());
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void testFindByUserIdAndEvent() {
 		Collection histories = dao.findByUserIdAndEvent(1, "data test 01");

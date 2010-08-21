@@ -104,7 +104,7 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * @param firstLetter Optional first letter hint
 	 * @return The list of all tags in the system
 	 */
-	public List<Object> findAllTags(String firstLetter);
+	public List<String> findAllTags(String firstLetter);
 
 	/**
 	 * Finds authorized documents for a user having a specified tag.

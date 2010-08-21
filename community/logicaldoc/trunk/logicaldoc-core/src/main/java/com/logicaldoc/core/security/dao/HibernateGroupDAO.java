@@ -148,6 +148,7 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 		return result;
 	}
 
+	@SuppressWarnings({ "unused", "deprecation" })
 	@Override
 	public void inheritACLs(long groupId, long parentGroupId) {
 		if (groupId == parentGroupId)
@@ -166,7 +167,8 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 				stmt.executeUpdate();
 
 				stmt = con.prepareStatement("insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) "
-						+ "select B.ld_menuid," + groupId + ", B.ld_write from ld_menugroup as B where B.ld_groupid= " + parentGroupId);
+						+ "select B.ld_menuid," + groupId + ", B.ld_write from ld_menugroup as B where B.ld_groupid= "
+						+ parentGroupId);
 				log.debug("Replicate all ACLs from group " + parentGroupId);
 				stmt.executeUpdate();
 

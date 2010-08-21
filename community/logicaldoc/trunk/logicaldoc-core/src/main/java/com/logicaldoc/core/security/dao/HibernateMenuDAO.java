@@ -646,17 +646,18 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return coll;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void restore(long menuId, boolean parents) {
-		super.bulkUpdate("set ld_deleted=0 where ld_id=" + menuId, null);
+		bulkUpdate("set ld_deleted=0 where ld_id=" + menuId, null);
+
 		// Restore parents
 		if (parents) {
-			List<Object> menus = super.findByJdbcQuery("select ld_parentid from ld_menu where ld_id =" + menuId, 1,
-					null);
-			for (Object id : menus) {
-				Long xx = (Long) id;
-				if (xx.longValue() != menuId)
-					restore(xx, parents);
+			String query = "select ld_parentid from ld_menu where ld_id =" + menuId;
+			List<Long> menus = (List<Long>) super.queryForList(query, null, Long.class, null);
+			for (Long id : menus) {
+				if (id.longValue() != menuId)
+					restore(id, parents);
 			}
 		}
 	}
