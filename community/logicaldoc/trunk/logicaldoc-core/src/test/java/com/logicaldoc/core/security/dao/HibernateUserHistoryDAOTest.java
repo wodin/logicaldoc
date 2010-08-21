@@ -109,6 +109,6 @@ public class HibernateUserHistoryDAOTest extends AbstractCoreTCase {
 		history = dao.findById(1);
 		Assert.assertNull(history);
 		histories = dao.findAll();
-		Assert.assertEquals(0, histories.size());
+		Assert.assertEquals(1, histories.size());
 	}
 }
