@@ -3,11 +3,10 @@ package com.logicaldoc.core.document.dao;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -17,6 +16,8 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.DiscussionThread;
@@ -304,19 +305,22 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			log.error(e.getMessage(), e);
 		}
 		return map;
+
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object> findAllTags(String firstLetter) {
+	public List<String> findAllTags(String firstLetter) {
 		try {
-			StringBuilder query = new StringBuilder("select distinct(A.ld_tag) from ld_tag A ");
+			StringBuilder sb = new StringBuilder("select distinct(ld_tag) from ld_tag ");
 			if (StringUtils.isNotEmpty(firstLetter))
-				query.append("  where lower(ld_tag) like '" + firstLetter.toLowerCase() + "%'");
-			return super.findByJdbcQuery(query.toString(), 1, null);
+				sb.append(" where lower(ld_tag) like '" + firstLetter.toLowerCase() + "%'");
+
+			return (List<String>) queryForList(sb.toString(), null, String.class, null);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
-		return new ArrayList<Object>();
+		return new ArrayList<String>();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -510,7 +514,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		}
 		if (excludeId != null)
 			query += " and not(_entity.id = " + excludeId + ")";
-		
+
 		return findByWhere(query, null, max);
 	}
 
@@ -520,7 +524,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				+ SqlUtil.doubleQuotes(title.toLowerCase()) + "'";
 		if (excludeId != null)
 			query += " and not(_entity.id = " + excludeId + ")";
-		
+
 		return findByWhere(query, null, null);
 	}
 
@@ -685,13 +689,15 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return findByWhere("_entity.indexed=" + indexed, "order by _entity.lastModified asc", null);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void restore(long docId) {
-		super.bulkUpdate("set ld_deleted=0 where ld_id=" + docId, null);
-		List<Object> folders = super.findByJdbcQuery("select ld_folderid from ld_document where ld_id=" + docId, 1,
-				null);
-		for (Object id : folders) {
-			folderDAO.restore((Long) id, true);
+		bulkUpdate("set ld_deleted=0 where ld_id=" + docId, null);
+		String query = "select ld_folderid from ld_document where ld_id = " + docId;
+
+		List<Long> folders = (List<Long>) queryForList(query, null, Long.class, null);
+		for (Long folderId : folders) {
+			folderDAO.restore(folderId, true);
 		}
 	}
 
@@ -805,36 +811,33 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return findIdsByWhere("_entity.docRef = " + Long.toString(docId), null, null);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findDeleted(long userId, Integer maxHits) {
 		List<Document> results = new ArrayList<Document>();
 		try {
-			List<Object> result = findByJdbcQuery(
-					"select A.ld_id,A.ld_title,A.ld_lastmodified,A.ld_filename,A.ld_folderid from ld_document as A, ld_folder as B where A.ld_folderid=B.ld_id and B.ld_deleted=0 and A.ld_deleted=1 and A.ld_deleteuserid = "
-							+ userId + " order by A.ld_lastmodified desc", 5, null);
-			int i = 0;
-			for (Object object : result) {
-				if (i >= maxHits.intValue())
-					break;
-				Object[] record = (Object[]) object;
+			String query = "select A.ld_id, A.ld_title, A.ld_lastmodified, A.ld_filename, A.ld_folderid from ld_document as A, ld_menu as B where A.ld_folderid=B.ld_id and B.ld_deleted=0 and A.ld_deleted=1 and A.ld_deleteuserid = "
+					+ userId + " order by A.ld_lastmodified desc";
 
-				Document docDeleted = new Document();
-				// Id
-				docDeleted.setId((Long) record[0]);
-				// Title
-				docDeleted.setTitle((String) record[1]);
-				// Last modified
-				docDeleted.setLastModified(new Date(((Timestamp) record[2]).getTime()));
-				// File name
-				docDeleted.setFileName((String) record[3]);
+			RowMapper docMapper = new BeanPropertyRowMapper() {
+				public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+					Document doc = new Document();
+					doc.setId(rs.getLong(1));
+					doc.setTitle(rs.getString(2));
+					doc.setLastModified(rs.getDate(3));
+					doc.setFileName(rs.getString(4));
 
-				Folder folder = new Folder();
-				folder.setId((Long) record[4]);
-				docDeleted.setFolder(folder);
+					Folder folder = new Folder();
+					folder.setId(rs.getLong(5));
+					doc.setFolder(folder);
 
-				// Add the document to the List
+					return doc;
+				}
+			};
+
+			List<Document> elements = (List<Document>) query(query, null, docMapper, maxHits);
+			for (Document docDeleted : elements) {
 				results.add(docDeleted);
-				i++;
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage());

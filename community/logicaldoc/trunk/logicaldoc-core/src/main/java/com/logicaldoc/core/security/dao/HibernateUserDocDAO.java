@@ -79,25 +79,17 @@ public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> i
 		return userdoc;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.UserDocDAO#findByUserId(long)
-	 */
-	@SuppressWarnings("unchecked")
+	@Override
 	public List<UserDoc> findByUserId(long userId) {
 		return findByWhere("_entity.userId = ?", new Object[] { userId }, "order by _entity.date desc", null);
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.UserDocDAO#getCount(longo)
-	 */
-	@SuppressWarnings("unchecked")
+	@Override
 	public int getCount(long userId) {
 		return findByUserId(userId).size();
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.UserDocDAO#store(com.logicaldoc.core.security.UserDoc)
-	 */
+	@Override
 	public boolean store(UserDoc userdoc) {
 		boolean result = true;
 		int count = 0;

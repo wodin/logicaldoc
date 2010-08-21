@@ -434,7 +434,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	@SuppressWarnings({"deprecation", "rawtypes" })
+	@SuppressWarnings({ "deprecation", "rawtypes" })
 	public List<Long> findIdByUserId(long userId, long parentId) {
 		List<Long> ids = new ArrayList<Long>();
 		try {
@@ -647,16 +647,17 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void restore(long folderId, boolean parents) {
-		super.bulkUpdate("set ld_deleted=0 where ld_id=" + folderId, null);
+		bulkUpdate("set ld_deleted=0 where ld_id=" + folderId, null);
+
 		// Restore parents
 		if (parents) {
-			List<Object> folders = super.findByJdbcQuery("select ld_parentid from ld_folder where ld_id =" + folderId,
-					1, null);
-			for (Object id : folders) {
-				Long xx = (Long) id;
-				if (xx.longValue() != folderId)
-					restore(xx, parents);
+			String query = "select ld_parentid from ld_folder where ld_id =" + folderId;
+			List<Long> folders = (List<Long>) super.queryForList(query, null, Long.class, null);
+			for (Long id : folders) {
+				if (id.longValue() != folderId)
+					restore(id, parents);
 			}
 		}
 	}
@@ -994,7 +995,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			parent = list.get(0);
 
 		}
-		
+
 		List<Folder> specified_folder = findByName(parent, name, true);
 		if (specified_folder != null && specified_folder.size() > 0)
 			return specified_folder.iterator().next();

@@ -1,18 +1,20 @@
 package com.logicaldoc.core;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+import com.logicaldoc.util.Context;
 
 /**
  * Hibernate implementation of <code>PersistentObjectDAO</code>
@@ -148,82 +150,74 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		// By default do nothing
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("rawtypes")
 	@Override
-	public List<Object> findByJdbcQuery(String query, int returnedColumns, Object[] values) {
-		assert (returnedColumns > 0);
-
-		List<Object> coll = new ArrayList<Object>();
+	public List query(String sql, Object[] args, RowMapper rowMapper, Integer maxRows) {
+		List list = new ArrayList();
 		try {
-			Connection con = null;
-			PreparedStatement stmt = null;
-			ResultSet rs = null;
+			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
 
-			try {
-				con = getSession().connection();
-				stmt = con.prepareStatement(query);
-				if (values != null && values.length != 0) {
-					for (int i = 0; i < values.length; i++) {
-						stmt.setObject(i + 1, values[i]);
-					}
-				}
-
-				log.debug("Execute query: " + query);
-				rs = stmt.executeQuery();
-				while (rs.next()) {
-					if (returnedColumns == 1) {
-						coll.add(rs.getObject(1));
-					} else {
-						Object[] entry = new Object[returnedColumns];
-						for (int i = 1; i <= returnedColumns; i++) {
-							entry[i - 1] = rs.getObject(i);
-						}
-						coll.add(entry);
-					}
-				}
-			} finally {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			}
+			// DataSource dataSource =
+			// SessionFactoryUtils.getDataSource(getSessionFactory());
+			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+			if (maxRows != null)
+				jdbcTemplate.setMaxRows(maxRows);
+			if (args != null)
+				list = jdbcTemplate.query(sql, args, rowMapper);
+			else
+				list = jdbcTemplate.query(sql, rowMapper);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
-
-		return coll;
+		return list;
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("rawtypes")
 	@Override
-	public int jdbcUpdate(String statement) {
-		int ret = 0;
+	public List queryForList(String sql, Object[] args, Class elementType, Integer maxRows) {
+
+		List list = new ArrayList();
 		try {
-			Connection con = null;
-			ResultSet rs = null;
-			Statement st = null;
-			try {
-				con = getSession().connection();
-				st = con.createStatement();
-				log.debug("Execute statement: " + statement);
-				ret = st.executeUpdate(statement);
-			} finally {
-				if (rs != null)
-					rs.close();
-				if (st != null)
-					st.close();
-				if (con != null)
-					con.close();
-			}
+			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+			if (maxRows != null)
+				jdbcTemplate.setMaxRows(maxRows);
+			if (args != null)
+				list = jdbcTemplate.queryForList(sql, args, elementType);
+			else
+				list = jdbcTemplate.queryForList(sql, args, elementType);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
+		return list;
+	}
 
-		return ret;
+	@Override
+	public int queryForInt(String sql) {
+		try {
+			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+			return jdbcTemplate.queryForInt(sql);
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+		return 0;
+	}
+
+	@Override
+	public int jdbcUpdate(String statement) {
+		try {
+			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+			return jdbcTemplate.update(statement);
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+		return 0;
 	}
 
 	@Override

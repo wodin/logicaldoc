@@ -46,7 +46,7 @@ public class HibernateBookmarkDAOTest extends AbstractCoreTCase {
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public void testFindByUserId() {
 		Collection bookmarks = dao.findByUserId(1);
 		Assert.assertNotNull(bookmarks);

@@ -46,6 +46,7 @@ public class HibernateUserHistoryDAO extends HibernatePersistentObjectDAO<UserHi
 	/**
 	 * @see com.logicaldoc.core.security.dao.UserHistoryDAO#cleanOldHistories(int)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void cleanOldHistories(int ttl) {
 		if (ttl > 0) {
@@ -54,12 +55,13 @@ public class HibernateUserHistoryDAO extends HibernatePersistentObjectDAO<UserHi
 			cal.setTime(date);
 			cal.add(Calendar.DAY_OF_MONTH, -ttl);
 			date = cal.getTime();
+
 			// Retrieve all old user histories
-			List<Object> histories = super.findByJdbcQuery(
-					"select ld_id from ld_user_history where ld_deleted = 0 and ld_date < '"
-							+ new Timestamp(date.getTime()) + "'", 1, null);
-			for (Object id : histories) {
-				Long historyId = (Long) id;
+			String query = "select ld_id from ld_history where ld_deleted = 0 and ld_docid > 0 and ld_date < ?";
+
+			List<Long> histories = (List<Long>) queryForList(query, new Object[] { new Timestamp(date.getTime()) },
+					Long.class, null);
+			for (Long historyId : histories) {
 				super.bulkUpdate("set ld_deleted = 1 where ld_id = " + historyId, null);
 			}
 		}
