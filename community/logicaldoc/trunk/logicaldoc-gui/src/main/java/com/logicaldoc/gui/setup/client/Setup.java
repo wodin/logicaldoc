@@ -171,7 +171,6 @@ public class Setup implements EntryPoint {
 
 		// Prepare a panel to layout setup components
 		VLayout layout = new VLayout();
-		layout.setDefaultLayoutAlign(Alignment.RIGHT);
 		layout.setHeight(300);
 		layout.setWidth(400);
 		layout.setMembersMargin(5);
@@ -302,7 +301,7 @@ public class Setup implements EntryPoint {
 				"org.hibernate.dialect.PostgreSQLDialect", "SELECT 1" });
 		engines.put("PostgreSQL", new String[] { "PostgreSQL 8.x", "org.postgresql.Driver",
 				"jdbc:postgresql:[<//server>[<:5432>/]]<database>", "org.hibernate.dialect.MySQLDialect", "SELECT 1" });
-		engines.put(ORACLE, new String[] { "Oracle 9i/10g", "oracle.jdbc.driver.OracleDriver",
+		engines.put(ORACLE, new String[] { "Oracle 10g/11g", "oracle.jdbc.driver.OracleDriver",
 				"jdbc:oracle:thin:@<server>[<:1521>]:<database>", "org.hibernate.dialect.OracleDialect",
 				"SELECT 1 FROM DUAL" });
 
