@@ -12,6 +12,7 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.search.Search;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -494,6 +495,19 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
+		MenuItem edit = new MenuItem();
+		edit.setTitle(I18N.message("editonline"));
+		edit.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				ListGridRecord selection = list.getSelectedRecord();
+				if (selection == null)
+					return;
+				long id = Long.parseLong(selection.getAttribute("id"));
+				Window.open("ldedit:" + GWT.getHostPageBaseURL() + "download?action=edit&sid=" + Session.get().getSid()
+						+ "&docId=" + id, "_self", "");
+			}
+		});
+
 		MenuItem more = new MenuItem(I18N.message("more"));
 
 		boolean enableLock = true;
@@ -501,6 +515,7 @@ public class DocumentContextMenu extends Menu {
 		boolean enableImmutable = false;
 		boolean enableDelete = true;
 		boolean enableSign = selection != null && selection.length > 0;
+		boolean enableEdit = selection != null && selection.length == 1 && Util.isOfficeFile(selection[0].getAttribute("filename"));
 
 		if (selection != null)
 			for (ListGridRecord record : selection) {
@@ -568,6 +583,14 @@ public class DocumentContextMenu extends Menu {
 		Menu moreMenu = new Menu();
 		moreMenu.setItems(similar, immutable, markIndexable, markUnindexable);
 
+		if (Feature.visible(Feature.OFFICE)) {
+			moreMenu.addItem(edit);
+			if (!Feature.enabled(Feature.OFFICE))
+				edit.setEnabled(false);
+			else
+				edit.setEnabled(enableEdit);
+		}
+
 		if (Feature.visible(Feature.DIGITAL_SIGN)) {
 			moreMenu.addItem(sign);
 			if (!folder.hasPermission(Constants.PERMISSION_SIGN) || !Feature.enabled(Feature.DIGITAL_SIGN))
@@ -575,7 +598,7 @@ public class DocumentContextMenu extends Menu {
 			else
 				sign.setEnabled(enableSign);
 		}
-		
+
 		if (Feature.visible(Feature.ARCHIVES)) {
 			moreMenu.addItem(archive);
 			if (!folder.hasPermission(Constants.PERMISSION_ARCHIVE) || !Feature.enabled(Feature.ARCHIVES))
@@ -583,10 +606,11 @@ public class DocumentContextMenu extends Menu {
 			else
 				archive.setEnabled(enableSign);
 		}
-		
+
 		if (Feature.visible(Feature.PAPER_DEMATERIALIZATION)) {
 			moreMenu.addItem(archiveDematerialization);
-			if (!folder.hasPermission(Constants.PERMISSION_ARCHIVE) || !Feature.enabled(Feature.PAPER_DEMATERIALIZATION))
+			if (!folder.hasPermission(Constants.PERMISSION_ARCHIVE)
+					|| !Feature.enabled(Feature.PAPER_DEMATERIALIZATION))
 				archiveDematerialization.setEnabled(false);
 			else
 				archiveDematerialization.setEnabled(enableSign);

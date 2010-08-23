@@ -13,6 +13,7 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.AuditService;
 import com.logicaldoc.gui.frontend.client.services.AuditServiceAsync;
 import com.smartgwt.client.types.SelectionType;
@@ -48,6 +49,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	private ToolStripButton archive = new ToolStripButton();
 
 	private ToolStripButton archiveDematerialization = new ToolStripButton();
+
+	private ToolStripButton edit = new ToolStripButton();
 
 	private GUIDocument document;
 
@@ -183,16 +186,20 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
+		edit.setTooltip(I18N.message("editonline"));
+		edit.setIcon(ItemFactory.newImgIcon("edit.png").getSrc());
+		edit.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (document == null)
+					return;
+				Window.open("ldedit:" + GWT.getHostPageBaseURL() + "download?action=edit&sid=" + Session.get().getSid()
+						+ "&docId=" + document.getId(), "_self", "");
+			}
+		});
+
 		setHeight(27);
 		addButton(download);
-
-		if (Feature.visible(Feature.RSS)) {
-			addButton(rss);
-			if (!Feature.enabled(Feature.RSS)) {
-				rss.setDisabled(true);
-				rss.setTooltip(I18N.message("featuredisabled"));
-			}
-		}
 
 		if (Feature.visible(Feature.PDF)) {
 			addButton(pdf);
@@ -213,6 +220,16 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		}
 
+		if (Feature.visible(Feature.OFFICE)) {
+			addButton(edit);
+			if (document != null)
+				edit.setDisabled(!Util.isOfficeFile(document.getFileName()));
+			if (!Feature.enabled(Feature.OFFICE)) {
+				edit.setDisabled(true);
+				edit.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+
 		final IntegerItem max = ItemFactory.newValidateIntegerItem("max", "", null, 1, null);
 		max.setHint(I18N.message("elements"));
 		max.setShowTitle(false);
@@ -225,6 +242,14 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			if (!Feature.enabled(Feature.AUDIT)) {
 				subscribe.setDisabled(true);
 				subscribe.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+
+		if (Feature.visible(Feature.RSS)) {
+			addButton(rss);
+			if (!Feature.enabled(Feature.RSS)) {
+				rss.setDisabled(true);
+				rss.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
 
@@ -289,12 +314,14 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				rss.setDisabled(!Feature.enabled(Feature.RSS));
 				pdf.setDisabled(!Feature.enabled(Feature.PDF));
 				subscribe.setDisabled(!Feature.enabled(Feature.AUDIT));
+				edit.setDisabled(!Feature.enabled(Feature.OFFICE));
 			} else {
 				rss.setDisabled(true);
 				pdf.setDisabled(true);
 				subscribe.setDisabled(true);
 				archive.setDisabled(true);
 				archiveDematerialization.setDisabled(true);
+				edit.setDisabled(true);
 			}
 
 			GUIFolder folder = Session.get().getCurrentFolder();
