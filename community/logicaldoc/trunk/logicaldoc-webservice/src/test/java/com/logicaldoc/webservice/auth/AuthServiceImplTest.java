@@ -4,12 +4,12 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.logicaldoc.core.document.dao.FolderDAO;
+import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.FolderGroup;
 import com.logicaldoc.core.security.Group;
-import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.webservice.AbstractWebServiceTestCase;
@@ -78,32 +78,32 @@ public class AuthServiceImplTest extends AbstractWebServiceTestCase {
 	public void testGrantUser() throws Exception {
 		User user = userDao.findById(4);
 
-		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.ADD_CHILD, 100, user.getId()));
-		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.MANAGE_IMMUTABILITY, 100, user.getId()));
+		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.ADD, 100, user.getId()));
+		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.IMMUTABLE, 100, user.getId()));
 
 		authServiceImpl.grantUser("", 100, user.getId(), 4091, false);
 
-		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.MANAGE_IMMUTABILITY, 100, user.getId()));
-		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.ADD_CHILD, 100, user.getId()));
+		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.IMMUTABLE, 100, user.getId()));
+		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.ADD, 100, user.getId()));
 	}
 
 	@Test
 	public void testGrantGroup() throws Exception {
 		Group group = groupDao.findById(3);
 		Assert.assertNotNull(group);
-		Menu menu = folderDao.findById(99);
-		Assert.assertNotNull(menu);
-		Menu menu2 = folderDao.findById(100);
-		Assert.assertNotNull(menu2);
-		MenuGroup mg = menu.getMenuGroup(3);
+		Folder folder = folderDao.findById(99);
+		Assert.assertNotNull(folder);
+		Folder folder2 = folderDao.findById(100);
+		Assert.assertNotNull(folder2);
+		FolderGroup mg = folder.getFolderGroup(3);
 		Assert.assertNull(mg);
-		MenuGroup mg2 = menu2.getMenuGroup(3);
+		FolderGroup mg2 = folder2.getFolderGroup(3);
 		Assert.assertNotNull(mg2);
 
 		authServiceImpl.grantGroup("", 99, 3, 4095, false);
 
-		menu = folderDao.findById(99);
-		mg = menu.getMenuGroup(3);
+		folder = folderDao.findById(99);
+		mg = folder.getFolderGroup(3);
 		Assert.assertNotNull(mg);
 	}
 

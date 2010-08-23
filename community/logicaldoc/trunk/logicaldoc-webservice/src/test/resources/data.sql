@@ -30,91 +30,91 @@ values     (-5,'2008-10-22',0,'_user_5','',1);
 insert into ld_usergroup
 values (-5,5);
 
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (99,'2008-10-22',0,'menu.admin',1,1,'administration.gif',5,null,0);
+insert into ld_folder
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
+values     (99,'2008-10-22',0,'menu.admin',5,5);
 
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (100,'2008-10-22',0,'menu.adminxxx',1,1,'administration.gif',3,null,0);
+insert into ld_folder
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
+values     (100,'2008-10-22',0,'menu.adminxxx',5,3);
 
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (101,'2008-10-22',0,'text',100,1,'administration.gif',3,null,0);
+insert into ld_folder
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
+values     (101,'2008-10-22',0,'text',100,3);
 
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (102,'2008-10-22',0,'menu.admin',101,1,'administration.gif',5,null,0);
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size,ld_description)
-values     (103,'2008-10-22',0,'menu.admin',101,1,'administration.gif',3,null,0,'description');
+insert into ld_folder
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
+values     (102,'2008-10-22',0,'menu.admin',101,5);
+insert into ld_folder
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_description)
+values     (103,'2008-10-22',0,'menu.admin',101,3,'description');
 
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (1000,'2008-10-22',1,'menu.admin.1000',1,1,'administration.gif',5,null,0);
+insert into ld_folder
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
+values     (1000,'2008-10-22',1,'menu.admin.1000',5,5);
 
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (1100,'2008-10-22',1,'menu.admin.1100',1000,1,'administration.gif',5,null,0);
+insert into ld_folder
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
+values     (1100,'2008-10-22',1,'menu.admin.1100',1000,5);
 
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (1200,'2009-10-19',0,'test',5,1,'administration.gif',3,null,0);
+insert into ld_folder
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
+values     (1200,'2009-10-19',0,'test',5,3);
 
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (1201,'2009-10-19',0,'abc',1200,1,'administration.gif',3,null,0);
+insert into ld_folder
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
+values     (1201,'2009-10-19',0,'abc',1200,3);
 
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (1202,'2009-10-19',0,'xyz',1201,1,'administration.gif',3,null,0);
+insert into ld_folder
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
+values     (1202,'2009-10-19',0,'xyz',1201,3);
 
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (1203,'2009-10-19',0,'qqqq',1201,1,'administration.gif',3,null,0);
+insert into ld_folder
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
+values     (1203,'2009-10-19',0,'qqqq',1201,3);
 
-insert into ld_menugroup
-			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+insert into ld_foldergroup
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow)
 values     (100,1,1,0,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup
-			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+insert into ld_foldergroup
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow)
 values     (100,3,1,1,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup
-			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+insert into ld_foldergroup
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow)
 values     (100,-3,1,1,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup
-			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+insert into ld_foldergroup
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow)
 values     (100,-4,1,1,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup
-			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+insert into ld_foldergroup
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow)
 values     (103,1,1,1,0,0,1,1,0,0,0,0,0);
 
-insert into ld_menugroup
-			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+insert into ld_foldergroup
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow)
 values     (103,2,1,0,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup
-			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+insert into ld_foldergroup
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow)
 values     (99,1,0,0,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup
-			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+insert into ld_foldergroup
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow)
 values     (1200,1,1,1,1,1,1,1,1,1,1,1,1);
 
-insert into ld_menugroup
-			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+insert into ld_foldergroup
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow)
 values     (1201,1,1,1,1,1,1,1,1,1,1,1,1);
 
-insert into ld_menugroup
-			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+insert into ld_foldergroup
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow)
 values     (1202,1,1,1,1,1,1,1,1,1,1,1,1);
 
-insert into ld_menugroup
-			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+insert into ld_foldergroup
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow)
 values     (1203,1,1,1,1,1,1,1,1,1,1,1,1);
 
 insert into ld_usergroup
