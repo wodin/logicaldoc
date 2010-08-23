@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,6 +29,7 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserDoc;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.util.Context;
@@ -64,9 +66,13 @@ public class ServletDocUtil {
 	 * @param docId Id of the document
 	 * @param fileVersion name of the file version; if null the latest version
 	 *        will be returned
+	 * @throws ServletException
 	 */
 	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, long docId,
-			String fileVersion, String suffix, User user) throws FileNotFoundException, IOException {
+			String fileVersion, String suffix, User user) throws FileNotFoundException, IOException, ServletException {
+
+		UserSession session = SessionUtil.validateSession(request);
+
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = dao.findById(docId);
 
@@ -121,6 +127,7 @@ public class ServletDocUtil {
 			history.setPath(fdao.computePathExtended(doc.getFolder().getId()));
 			history.setEvent(History.EVENT_DOWNLOADED);
 			history.setUser(user);
+			history.setSessionId(session.getId());
 
 			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 			hdao.store(history);
@@ -201,7 +208,7 @@ public class ServletDocUtil {
 	}
 
 	/**
-	 * sends the specified document to the response object; the client will
+	 * Sends the specified document to the response object; the client will
 	 * receive it as a download
 	 * 
 	 * @param request the current request
@@ -209,9 +216,12 @@ public class ServletDocUtil {
 	 * @param docId Id of the document
 	 * @param fileVersion name of the file version; if null the latest version
 	 *        will be returned
+	 * @throws ServletException
+	 * @throws NumberFormatException
 	 */
 	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, String docId,
-			String fileVersion, User user) throws FileNotFoundException, IOException {
+			String fileVersion, User user) throws FileNotFoundException, IOException, NumberFormatException,
+			ServletException {
 		downloadDocument(request, response, Integer.parseInt(docId), fileVersion, null, user);
 	}
 

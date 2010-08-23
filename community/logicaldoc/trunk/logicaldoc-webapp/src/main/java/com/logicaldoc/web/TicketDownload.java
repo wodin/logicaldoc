@@ -30,9 +30,11 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
+import com.logicaldoc.web.util.SessionUtil;
 
 public class TicketDownload extends HttpServlet {
 	/**
@@ -116,8 +118,10 @@ public class TicketDownload extends HttpServlet {
 	}
 
 	private void downloadDocument(HttpServletRequest request, HttpServletResponse response, Document doc,
-			String fileVersion, String suffix, User user) throws FileNotFoundException, IOException {
+			String fileVersion, String suffix, User user) throws FileNotFoundException, IOException, ServletException {
 
+		UserSession session = SessionUtil.validateSession(request);
+		
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		File file = documentManager.getDocumentFile(doc, fileVersion);
 		String filename = doc.getFileName();
@@ -169,6 +173,7 @@ public class TicketDownload extends HttpServlet {
 			history.setPath(fdao.computePathExtended(doc.getFolder().getId()));
 			history.setEvent(History.EVENT_DOWNLOADED);
 			history.setUser(user);
+			history.setSessionId(session.getId());
 
 			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 			hdao.store(history);
