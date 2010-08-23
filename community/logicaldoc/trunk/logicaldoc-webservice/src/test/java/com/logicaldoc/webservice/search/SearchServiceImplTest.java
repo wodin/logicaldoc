@@ -71,10 +71,10 @@ public class SearchServiceImplTest extends AbstractWebServiceTestCase {
 	public void testFindFolders() throws Exception {
 		WSFolder[] folders = searchServiceImpl.findFolders("", "menu.admin");
 		Assert.assertNotNull(folders);
-		Assert.assertEquals(2, folders.length);
+		Assert.assertEquals(4, folders.length);
 		List<WSFolder> foldersList = Arrays.asList(folders);
-		Assert.assertEquals(100, foldersList.get(0).getId());
-		Assert.assertEquals(103, foldersList.get(1).getId());
+		Assert.assertEquals(99, foldersList.get(0).getId());
+		Assert.assertEquals(100, foldersList.get(1).getId());
 
 		folders = searchServiceImpl.findFolders("", "menu.adminxx");
 		Assert.assertEquals(1, folders.length);

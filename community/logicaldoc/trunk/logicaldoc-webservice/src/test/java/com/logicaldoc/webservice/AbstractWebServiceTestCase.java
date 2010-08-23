@@ -41,8 +41,6 @@ public class AbstractWebServiceTestCase extends TestCase {
 
 	protected File coreSchemaFile;
 
-	protected File wsSchemaFile;
-
 	protected File dataFile;
 
 	private String userHome;
@@ -80,12 +78,10 @@ public class AbstractWebServiceTestCase extends TestCase {
 		assertTrue(tempDir.exists() && tempDir.isDirectory());
 
 		coreSchemaFile = new File(tempDir, "logicaldoc-core.sql");
-		wsSchemaFile = new File(tempDir, "logicaldoc-webservice.sql");
 		dataFile = new File(tempDir, "data.sql");
 
 		// Copy sql files
 		copyResource("/sql/logicaldoc-core.sql", coreSchemaFile.getCanonicalPath());
-		copyResource("/sql/logicaldoc-webservice.sql", wsSchemaFile.getCanonicalPath());
 		copyResource("/data.sql", dataFile.getCanonicalPath());
 	}
 
@@ -159,8 +155,6 @@ public class AbstractWebServiceTestCase extends TestCase {
 
 			// Load schema
 			SqlFile sqlFile = new SqlFile(coreSchemaFile, false, null);
-			sqlFile.execute(con, false);
-			sqlFile = new SqlFile(wsSchemaFile, false, null);
 			sqlFile.execute(con, false);
 
 			// Load data

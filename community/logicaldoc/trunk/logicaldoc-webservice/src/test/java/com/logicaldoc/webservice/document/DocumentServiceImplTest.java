@@ -14,8 +14,8 @@ import org.junit.Test;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.document.dao.FolderDAO;
-import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.webservice.AbstractWebServiceTestCase;
 
 /**
@@ -77,10 +77,10 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 	public void testMove() throws Exception {
 		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
-		Menu folder = doc.getFolder();
+		Folder folder = doc.getFolder();
 		Assert.assertEquals(103, folder.getId());
 
-		Menu newFolder = folderDao.findById(100);
+		Folder newFolder = folderDao.findById(100);
 		docDao.initialize(doc);
 		doc.setIndexed(0);
 		docDao.store(doc);

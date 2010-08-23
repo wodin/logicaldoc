@@ -14,7 +14,7 @@
     </property>
   </bean>
 
-  <bean id="ContextProperties" class="com.logicaldoc.util.config.PropertiesBean">
+  <bean id="ContextProperties" class="com.logicaldoc.util.config.ContextProperties">
   </bean>
 
   <bean id="Context" class="com.logicaldoc.util.Context" abstract="false" lazy-init="default" autowire="default"
@@ -57,6 +57,7 @@
         <value>/mappings/DownloadTicket.hbm.xml</value>
         <value>/mappings/History.hbm.xml</value>
         <value>/mappings/Document.hbm.xml</value>
+        <value>/mappings/Folder.hbm.xml</value>
         <value>/mappings/DocumentTemplate.hbm.xml</value>
         <value>/mappings/SystemMessage.hbm.xml</value>
         <value>/mappings/Version.hbm.xml</value>
