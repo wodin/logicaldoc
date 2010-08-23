@@ -28,6 +28,7 @@ public class SignDialog extends Window {
 			@Override
 			public void onCloseClick(CloseClientEvent event) {
 				DocumentsPanel.get().refresh();
+				destroy();
 			}
 		});
 		
