@@ -26,16 +26,18 @@ public class GUIWorkflow implements Serializable {
 
 	private String reminderBody = "";
 
-	private String startState = "";
+	private String startStateId = "0";
 
 	private String supervisor = "";
 
 	private GUIWFState[] states;
 
-	public GUIWFState getStateByName(String name) {
-		for (GUIWFState state : states) {
-			if (state.getName().equals(name)) {
-				return state;
+	public GUIWFState getStateById(String id) {
+		if (states != null && states.length > 0) {
+			for (GUIWFState state : states) {
+				if (state.getId().equals(id)) {
+					return state;
+				}
 			}
 		}
 		return null;
@@ -105,12 +107,12 @@ public class GUIWorkflow implements Serializable {
 		this.supervisor = supervisor;
 	}
 
-	public String getStartState() {
-		return startState;
+	public String getStartStateId() {
+		return startStateId;
 	}
 
-	public void setStartState(String startState) {
-		this.startState = startState;
+	public void setStartStateId(String startStateId) {
+		this.startStateId = startStateId;
 	}
 
 	public GUIWFState[] getStates() {

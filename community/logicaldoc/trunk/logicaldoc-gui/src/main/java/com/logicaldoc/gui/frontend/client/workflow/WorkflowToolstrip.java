@@ -20,9 +20,8 @@ import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
@@ -56,20 +55,6 @@ public class WorkflowToolstrip extends ToolStrip {
 			public void onClick(ClickEvent event) {
 				currentWorkflow = new GUIWorkflow();
 				AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
-
-				// workflowService.save(Session.get().getSid(), currentWorkflow,
-				// new AsyncCallback<GUIWorkflow>() {
-				// @Override
-				// public void onFailure(Throwable caught) {
-				// Log.serverError(caught);
-				// }
-				//
-				// @Override
-				// public void onSuccess(GUIWorkflow result) {
-				// AdminPanel.get().setContent(new WorkflowDesigner(new
-				// GUIWorkflow()));
-				// }
-				// });
 			}
 		});
 		addButton(newTemplate);
@@ -82,36 +67,20 @@ public class WorkflowToolstrip extends ToolStrip {
 		workflow.setDisplayField("name");
 		workflow.setPickListWidth(300);
 		workflow.setPickListFields(name);
-		workflow.setOptionDataSource(WorkflowsDS.get());
+		workflow.setOptionDataSource(new WorkflowsDS());
 		if (currentWorkflow != null)
 			workflow.setValue(currentWorkflow.getName());
-		workflow.addChangedHandler(new ChangedHandler() {
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if (workflow.getSelectedRecord() == null)
-					return;
-				workflowService.get(Session.get().getSid(), workflow.getSelectedRecord().getAttribute("name"),
-						new AsyncCallback<GUIWorkflow>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(GUIWorkflow result) {
-								currentWorkflow = result;
-								AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
-							}
-						});
-			}
-		});
 		addFormItem(workflow);
 
 		ToolStripButton load = new ToolStripButton(I18N.message("load"));
 		load.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				workflowService.get(Session.get().getSid(), currentWorkflow.getName(),
+				ListGridRecord selectedRecord = workflow.getSelectedRecord();
+				if (selectedRecord == null)
+					return;
+
+				workflowService.get(Session.get().getSid(), selectedRecord.getAttributeAsString("name"),
 						new AsyncCallback<GUIWorkflow>() {
 							@Override
 							public void onFailure(Throwable caught) {
@@ -151,7 +120,15 @@ public class WorkflowToolstrip extends ToolStrip {
 
 					@Override
 					public void onSuccess(GUIWorkflow result) {
-						currentWorkflow = result;
+						if (result == null) {
+							SC.warn("A workflow with the same name already exists!");
+						} else {
+							currentWorkflow = result;
+							// Necessary reload to visualize a new saved
+							// workflow of
+							// the workflows drop down menu.
+							AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
+						}
 					}
 				});
 			}
@@ -165,12 +142,13 @@ public class WorkflowToolstrip extends ToolStrip {
 			@Override
 			public void onClick(ClickEvent event) {
 				boolean taskFound = false;
-				for (GUIWFState state : currentWorkflow.getStates()) {
-					if (state.getType() == GUIWFState.TYPE_TASK) {
-						taskFound = true;
-						break;
+				if (currentWorkflow.getStates() != null && currentWorkflow.getStates().length > 0)
+					for (GUIWFState state : currentWorkflow.getStates()) {
+						if (state.getType() == GUIWFState.TYPE_TASK) {
+							taskFound = true;
+							break;
+						}
 					}
-				}
 
 				if (!taskFound)
 					SC.warn("A workflow must have at least one task!");

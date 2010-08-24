@@ -52,9 +52,9 @@ public class UsersDataServlet extends HttpServlet {
 			 * Iterate over records composing the response XML document
 			 */
 			for (User user : group.getUsers()) {
-				if(user.getType()!=User.TYPE_DEFAULT)
+				if (user.getType() != User.TYPE_DEFAULT)
 					continue;
-				
+
 				writer.print("<user>");
 				writer.print("<id>" + user.getId() + "</id>");
 				writer.print("<username><![CDATA[" + user.getUserName() + "]]></username>");
@@ -74,7 +74,7 @@ public class UsersDataServlet extends HttpServlet {
 			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 			StringBuffer query = new StringBuffer(
 					"select A.id, A.userName, A.enabled, A.name, A.firstName, A.email, A.telephone, A.telephone2 "
-							+ "from com.logicaldoc.core.security.User A where A.deleted = 0 ");
+							+ "from com.logicaldoc.core.security.User A where A.deleted = 0 and A.type = 0 ");
 
 			List<Object> records = (List<Object>) userDao.findByQuery(query.toString(), null, null);
 

@@ -36,15 +36,21 @@ public class DrawingPanel extends VStack {
 			// The first element must be the workflow task startState
 			GUIWorkflow workflow = workflowDesigner.getWorkflow();
 			GUIWFState startState = null;
-			if (workflow.getStartState() != null && !workflow.getStartState().trim().isEmpty()) {
-				startState = workflow.getStateByName(workflow.getStartState());
-				if (startState != null)
-					addMember(new TaskRow(designer, startState));
+			if (!workflow.getStartStateId().equals("0")) {
+				startState = workflow.getStateById(workflow.getStartStateId());
+				if (startState != null) {
+					if (startState.getType() == GUIWFState.TYPE_TASK)
+						addMember(new TaskRow(designer, startState));
+					else if (startState.getType() == GUIWFState.TYPE_FORK)
+						addMember(new ForkRow(designer, startState));
+				}
 			}
+
 			if (workflow.getStates() != null) {
 				for (GUIWFState state : workflow.getStates()) {
-					if (state == null || (startState != null && state.getName() == startState.getName()))
+					if (state == null || (startState != null && state.getId() == startState.getId())) {
 						continue;
+					}
 
 					if (state.getType() == GUIWFState.TYPE_TASK)
 						addMember(new TaskRow(designer, state));
@@ -63,14 +69,18 @@ public class DrawingPanel extends VStack {
 				WorkflowRow row = null;
 				if (EventHandler.getDragTarget() instanceof WorkflowRow) {
 					row = (WorkflowRow) EventHandler.getDragTarget();
-					if (getDropPosition() == 0 && row.getState().getWfState().getType() != GUIWFState.TYPE_TASK) {
-						SC.say("The element at first position must be a Task!");
+					if (getDropPosition() == 0
+							&& (row.getState().getWfState().getType() == GUIWFState.TYPE_END || row.getState()
+									.getWfState().getType() == GUIWFState.TYPE_JOIN)) {
+						SC.say("The element at first position must be a Task or a Fork!");
 						event.cancel();
 					}
-					if (getDropPosition() == 0 && row.getState().getWfState().getType() == GUIWFState.TYPE_TASK) {
+					if (getDropPosition() == 0
+							&& (row.getState().getWfState().getType() == GUIWFState.TYPE_TASK || row.getState()
+									.getWfState().getType() == GUIWFState.TYPE_FORK)) {
 						// The task must be the workflow start state
 						if (workflowDesigner.getWorkflow() != null) {
-							workflowDesigner.getWorkflow().setStartState(row.getState().getWfState().getName());
+							workflowDesigner.getWorkflow().setStartStateId(row.getState().getWfState().getId());
 							workflowDesigner.reloadDrawingPanel();
 						}
 					}

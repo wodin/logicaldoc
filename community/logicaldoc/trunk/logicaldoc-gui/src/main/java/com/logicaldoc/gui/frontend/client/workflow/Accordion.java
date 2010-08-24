@@ -134,7 +134,6 @@ public class Accordion extends SectionStack {
 		supervisor.addIconClickHandler(new IconClickHandler() {
 			public void onIconClick(IconClickEvent event) {
 				supervisor.setValue("");
-				// TODO Remove supervisor
 			}
 		});
 		supervisor.setIcons(icon);

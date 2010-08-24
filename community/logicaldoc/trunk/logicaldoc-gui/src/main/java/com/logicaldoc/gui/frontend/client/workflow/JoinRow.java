@@ -64,7 +64,7 @@ public class JoinRow extends WorkflowRow {
 				boolean sameObjectFound = false;
 				if (fromState.getTransitions() != null) {
 					for (GUITransition trans : fromState.getTransitions()) {
-						if (trans.getTargetState().getName().equals(target.getWfState().getName())) {
+						if (trans.getTargetState().getId().equals(target.getWfState().getId())) {
 							// The fork element cannot include two equal target
 							// state
 							sameElementFound = true;
@@ -72,7 +72,7 @@ public class JoinRow extends WorkflowRow {
 						}
 					}
 				}
-				if (fromState.getName().equals(target.getWfState().getName())) {
+				if (fromState.getId().equals(target.getWfState().getId())) {
 					sameObjectFound = true;
 				}
 

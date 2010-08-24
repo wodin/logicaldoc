@@ -4,7 +4,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
-import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -15,6 +14,7 @@ import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.MultipleAppearance;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -49,7 +49,7 @@ public class TaskDialog extends Window {
 
 	private SelectItem participantsList;
 
-	private LinkedHashMap<String, String> participants;
+	private LinkedHashMap<String, String> participants = new LinkedHashMap<String, String>();
 
 	private DynamicForm participantsForm;
 
@@ -184,15 +184,16 @@ public class TaskDialog extends Window {
 		participantsList.setWidth(200);
 		participantsList.setHeight(50);
 		participantsList.setEndRow(true);
-		participants = new LinkedHashMap<String, String>();
+
 		if (this.task.getParticipants() != null)
-			for (GUIUser user : this.task.getParticipants()) {
-				participants.put(user.getUserName(), user.getUserName());
+			for (String user : this.task.getParticipants()) {
+				participants.put(user, user);
 			}
 		if (username != null) {
 			participants.put(username, username);
 		}
 		participantsList.setValueMap(participants);
+		participantsList.setValues(participants.keySet().toArray(new String[0]));
 		participantsForm.setItems(participantsList);
 		addItem(participantsForm);
 
@@ -211,10 +212,16 @@ public class TaskDialog extends Window {
 					TaskDialog.this.task.setReminderNumber((Integer) values.get("remindtimeNumber"));
 					TaskDialog.this.task.setReminderUnit((String) values.get("remindTime"));
 
-//					String[] participantValues = new String[0];
-//					if (values.get("participants") != null)
-//						participantValues = values.get("participants").toString();
-//					TaskDialog.this.task.setParticipants((String) values.get("participants"));
+					// String[] participantValues = new String[0];
+					// if (values.get("participants") != null)
+					// participantValues =
+					// values.get("participants").toString();
+//					if (participantsList.getValues().length > 0)
+//						SC.warn("participants: " + participantsList.getValues());
+//					else
+//						SC.warn("participantsList is empty!!!");
+					
+					TaskDialog.this.task.setParticipants(participantsList.getValues());
 
 					GUIWFState[] states = new GUIWFState[workflow.getStates().length];
 					int i = 0;

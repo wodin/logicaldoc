@@ -156,7 +156,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 					GUIWFState[] states = new GUIWFState[workflow.getStates().length - 1];
 					int i = 0;
 					for (GUIWFState state : workflow.getStates()) {
-						if (!state.getName().equals(wfState.getName())) {
+						if (!state.getId().equals(wfState.getId())) {
 							states[i] = state;
 							i++;
 						}
@@ -210,7 +210,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 					GUIWFState[] states = new GUIWFState[workflow.getStates().length];
 					int j = 0;
 					for (GUIWFState state : workflow.getStates()) {
-						if (!state.getName().equals(fromState.getName())) {
+						if (!state.getId().equals(fromState.getId())) {
 							states[j] = state;
 							j++;
 						} else {
@@ -269,7 +269,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 					GUIWFState[] states = new GUIWFState[workflow.getStates().length];
 					int j = 0;
 					for (GUIWFState state : workflow.getStates()) {
-						if (!state.getName().equals(fromState.getName())) {
+						if (!state.getId().equals(fromState.getId())) {
 							states[j] = state;
 							j++;
 						} else {
@@ -354,7 +354,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 		GUIWFState[] states = new GUIWFState[workflow.getStates().length];
 		int j = 0;
 		for (GUIWFState state : workflow.getStates()) {
-			if (!state.getName().equals(fromState.getName())) {
+			if (!state.getId().equals(fromState.getId())) {
 				states[j] = state;
 				j++;
 			} else {
@@ -398,10 +398,15 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 
 	@Override
 	public void onAddState(GUIWorkflow wfl, int type) {
-		this.workflow = wfl;
+		workflow = wfl;
+
+//		if (workflow.getStates() != null && workflow.getStates().length > 0)
+//			SC.warn("ADD state to workflow: " + workflow.getName() + " with states: " + workflow.getStates().length);
+//		else
+//			SC.warn("ADD state to workflow: " + workflow.getName());
 
 		GUIWFState[] newStates = null;
-		if (workflow.getStates() != null) {
+		if (workflow.getStates() != null && workflow.getStates().length > 0) {
 			newStates = new GUIWFState[workflow.getStates().length + 1];
 			int j = 0;
 			for (GUIWFState state : workflow.getStates()) {
@@ -414,14 +419,15 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 
 		GUIWFState newState = new GUIWFState("" + (newStates.length), I18N.message("taskwithnoname"), type);
 		newStates[newStates.length - 1] = newState;
-		if (workflow.getStartState() == null || workflow.getStartState().trim().isEmpty())
-			if (newState.getType() == GUIWFState.TYPE_TASK)
-				workflow.setStartState(newState.getName());
+		if (workflow.getStartStateId().equals("0"))
+			if (newState.getType() == GUIWFState.TYPE_TASK) {
+				workflow.setStartStateId(newState.getId());
+			}
 
 		workflow.setStates(newStates);
 
-		reloadDrawingPanel();
-		// AdminPanel.get().setContent(new WorkflowDesigner(workflow));
+//		reloadDrawingPanel();
+		AdminPanel.get().setContent(new WorkflowDesigner(workflow));
 
 		// workflowService.save(Session.get().getSid(), workflow, new
 		// AsyncCallback<GUIWorkflow>() {
