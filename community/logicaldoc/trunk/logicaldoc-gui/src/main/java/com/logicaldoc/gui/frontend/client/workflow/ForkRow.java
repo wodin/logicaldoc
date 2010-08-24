@@ -64,7 +64,7 @@ public class ForkRow extends WorkflowRow {
 				boolean sameObjectFound = false;
 				if (fromState.getTransitions() != null) {
 					for (GUITransition trans : fromState.getTransitions()) {
-						if (trans.getTargetState().getName().equals(target.getWfState().getName())) {
+						if (trans.getTargetState().getId().equals(target.getWfState().getId())) {
 							// The fork element cannot include two equal target
 							// state
 							sameElementFound = true;
@@ -72,7 +72,7 @@ public class ForkRow extends WorkflowRow {
 						}
 					}
 				}
-				if (fromState.getName().equals(target.getWfState().getName())) {
+				if (fromState.getId().equals(target.getWfState().getId())) {
 					sameObjectFound = true;
 				}
 
@@ -87,9 +87,7 @@ public class ForkRow extends WorkflowRow {
 				if (target.getWfState().getType() != GUIWFState.TYPE_TASK) {
 					SC.warn("A fork must contain only task elements!");
 					event.cancel();
-				}
-
-				if (!sameElementFound && !sameObjectFound) {
+				} else if (!sameElementFound && !sameObjectFound) {
 					WorkflowState drag = new WorkflowDraggedState(workflowDesigner, fromState, target.getWfState());
 					if (fromState.getTransitions() != null)
 						addMember(drag, fromState.getTransitions().length + 1);

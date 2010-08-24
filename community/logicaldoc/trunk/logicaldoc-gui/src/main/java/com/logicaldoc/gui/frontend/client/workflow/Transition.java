@@ -80,27 +80,32 @@ public class Transition extends HStack {
 				boolean sameObjectFound = false;
 				if (fromState.getTransitions() != null) {
 					for (GUITransition trans : fromState.getTransitions()) {
-						if (trans.getTargetState().getName().equals(target.getWfState().getName())
+						if (trans.getTargetState().getId().equals(target.getWfState().getId())
 								&& fromState.getType() != GUIWFState.TYPE_TASK) {
 							// The fork element cannot include two equal target
 							// state
 							sameElementFound = true;
 							break;
 						}
-					}}
-					if (fromState.getName().equals(target.getWfState().getName())) {
-						sameObjectFound = true;
 					}
-					if (sameElementFound) {
-						SC.warn("The form element already contains the element '" + target.getWfState().getName() + "'");
-						event.cancel();
-					}
-					if (sameObjectFound) {
-						SC.warn("You cannot add the same object in its row!!!");
-						event.cancel();
-					}
+				}
+				if (fromState.getId().equals(target.getWfState().getId())) {
+					sameObjectFound = true;
+				}
+				if (sameElementFound) {
+					SC.warn("The form element already contains the element '" + target.getWfState().getName() + "'");
+					event.cancel();
+				}
+				if (sameObjectFound) {
+					SC.warn("You cannot add the same object in its row!!!");
+					event.cancel();
+				}
 
-				if (!sameElementFound && !sameObjectFound) {
+				if (fromState.getType() == GUIWFState.TYPE_FORK
+						&& target.getWfState().getType() != GUIWFState.TYPE_TASK) {
+					SC.warn("A fork must contain only task elements!");
+					event.cancel();
+				} else if (!sameElementFound && !sameObjectFound) {
 					removeMember(dropArea);
 					addMember(new WorkflowDraggedState(target.getDesigner(), fromState, target.getWfState()));
 

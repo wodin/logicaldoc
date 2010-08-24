@@ -28,7 +28,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		workflow.setTaskAssignmentBody("This is the assignment body");
 		workflow.setReminderSubject("reminder subject");
 		workflow.setReminderBody("This is the reminder body");
-		workflow.setStartState("Task logical");
+		workflow.setStartStateId("1");
 
 		GUIUser user = new GUIUser();
 		user.setId(9999);
@@ -61,9 +61,9 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		task.setDueDateUnit(GUIWFState.TIME_BUSINESS_DAY);
 		task.setReminderNumber(13);
 		task.setReminderUnit(GUIWFState.TIME_BUSINESS_WEEK);
-		GUIUser[] participants = new GUIUser[2];
-		participants[0] = user1;
-		participants[1] = user2;
+		String[] participants = new String[2];
+		participants[0] = user1.getUserName();
+		participants[1] = user2.getUserName();
 		task.setParticipants(participants);
 
 		GUIWFState task1 = new GUIWFState();

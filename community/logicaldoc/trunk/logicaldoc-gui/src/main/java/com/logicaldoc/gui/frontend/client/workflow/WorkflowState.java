@@ -47,7 +47,7 @@ public class WorkflowState extends VStack {
 		setCanDrop(true);
 		setDragType("state");
 
-		if (designer.getWorkflow() != null && designer.getWorkflow().getStartState().equals(wfState.getName())) {
+		if (designer.getWorkflow() != null && designer.getWorkflow().getStartStateId().equals(wfState.getId())) {
 			setBorder("1px dotted #00ff00");
 		}
 
