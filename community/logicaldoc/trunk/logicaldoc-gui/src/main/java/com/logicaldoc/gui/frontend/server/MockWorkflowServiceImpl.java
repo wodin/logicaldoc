@@ -208,4 +208,13 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 
 		return workflows;
 	}
+
+	@Override
+	public void deleteTrigger(String sid, String subtype) throws InvalidSessionException {
+	}
+
+	@Override
+	public void saveTrigger(String sid, String folderId, String workflowId, String templateId)
+			throws InvalidSessionException {
+	}
 }

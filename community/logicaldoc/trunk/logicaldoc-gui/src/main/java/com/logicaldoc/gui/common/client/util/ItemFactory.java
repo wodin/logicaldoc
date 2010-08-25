@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.data.ArchivesDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
 import com.logicaldoc.gui.common.client.data.UsersDS;
+import com.logicaldoc.gui.common.client.data.WorkflowsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.validators.EmailValidator;
 import com.logicaldoc.gui.common.client.validators.EmailsValidator;
@@ -524,5 +525,19 @@ public class ItemFactory {
 		item.setValueMap(map);
 
 		return item;
+	}
+	
+	public static SelectItem newWorkflowSelector() {
+		SelectItem workflowItem = new SelectItem("workflow", I18N.message("workflow"));
+		workflowItem.setWidth(250);
+		workflowItem.setHeight(200);
+		workflowItem.setDisplayField("name");
+		workflowItem.setValueField("id");
+		workflowItem.setMultiple(true);
+		workflowItem.setMultipleAppearance(MultipleAppearance.GRID);
+		workflowItem.setOptionDataSource(new WorkflowsDS());
+		if (!Feature.enabled(Feature.WORKFLOW))
+			workflowItem.setDisabled(true);
+		return workflowItem;
 	}
 }

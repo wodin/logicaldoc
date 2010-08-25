@@ -213,6 +213,11 @@
 		<servlet-name>EmailAccountsData</servlet-name>
 		<servlet-class>com.logicaldoc.gui.common.server.MockEmailAccountsDataServlet</servlet-class>
 	</servlet>
+  
+    <servlet>
+        <servlet-name>WorkflowTriggersData</servlet-name>
+        <servlet-class>com.logicaldoc.gui.common.server.MockWorkflowTriggersDataServlet</servlet-class>
+    </servlet>
 
 	<servlet>
 		<servlet-name>Thumbnail</servlet-name>
@@ -513,6 +518,11 @@
 		<servlet-name>IncrementalArchivesData</servlet-name>
 		<url-pattern>/data/incrementalarchives.xml</url-pattern>
 	</servlet-mapping>
+  
+    <servlet-mapping>
+        <servlet-name>WorkflowTriggersData</servlet-name>
+        <url-pattern>/data/workflowtriggers.xml</url-pattern>
+    </servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>Thumbnail</servlet-name>
