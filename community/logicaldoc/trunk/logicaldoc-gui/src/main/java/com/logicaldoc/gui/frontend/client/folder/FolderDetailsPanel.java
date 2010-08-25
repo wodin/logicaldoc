@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
+import com.logicaldoc.gui.frontend.client.workflow.WorkflowsFolderPanel;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -33,12 +34,16 @@ public class FolderDetailsPanel extends VLayout {
 	private Layout securityTabPanel;
 
 	private Layout historyTabPanel;
+	
+	private Layout workflowsTabPanel;
 
 	private PropertiesPanel propertiesPanel;
 
 	private SecurityPanel securityPanel;
 
 	private HistoryPanel historyPanel;
+	
+	private WorkflowsFolderPanel workflowsPanel;
 
 	private HLayout savePanel;
 
@@ -96,6 +101,13 @@ public class FolderDetailsPanel extends VLayout {
 		historyTabPanel.setHeight100();
 		historyTab.setPane(historyTabPanel);
 		tabSet.addTab(historyTab);
+		
+		Tab workflowTab = new Tab(I18N.message("workflow"));
+		workflowsTabPanel = new HLayout();
+		workflowsTabPanel.setWidth100();
+		workflowsTabPanel.setHeight100();
+		workflowTab.setPane(workflowsTabPanel);
+		tabSet.addTab(workflowTab);
 
 		addMember(tabSet);
 
@@ -142,6 +154,16 @@ public class FolderDetailsPanel extends VLayout {
 		}
 		historyPanel = new HistoryPanel(folder);
 		historyTabPanel.addMember(historyPanel);
+		
+		/*
+		 * Prepare the workflow tab
+		 */
+		if (workflowsPanel != null) {
+			workflowsPanel.destroy();
+			workflowsTabPanel.removeMember(workflowsPanel);
+		}
+		workflowsPanel = new WorkflowsFolderPanel(folder);
+		workflowsTabPanel.addMember(workflowsPanel);
 	}
 
 	public GUIFolder getFolder() {

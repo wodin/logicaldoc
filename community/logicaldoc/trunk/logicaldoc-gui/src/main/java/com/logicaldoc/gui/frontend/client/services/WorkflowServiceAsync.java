@@ -14,4 +14,8 @@ public interface WorkflowServiceAsync {
 	void list(String sid, AsyncCallback<GUIWorkflow[]> callback);
 
 	void save(String sid, GUIWorkflow workflow, AsyncCallback<GUIWorkflow> callback);
+
+	void deleteTrigger(String sid, String subtype, AsyncCallback<Void> callback);
+
+	void saveTrigger(String sid, String folderId, String workflowId, String templateId, AsyncCallback<Void> callback);
 }

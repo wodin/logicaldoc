@@ -14,7 +14,6 @@ import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.MultipleAppearance;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -209,7 +208,7 @@ public class TaskDialog extends Window {
 					TaskDialog.this.task.setDueDateNumber((Integer) values.get("duedateNumber"));
 					TaskDialog.this.task.setDueDateUnit((String) values.get("duedateTime"));
 					TaskDialog.this.task.setReminderNumber((Integer) values.get("remindtimeNumber"));
-					TaskDialog.this.task.setReminderUnit((String) values.get("remindTime"));	
+					TaskDialog.this.task.setReminderUnit((String) values.get("remindTime"));
 					TaskDialog.this.task.setParticipants(participants.keySet().toArray(new String[0]));
 
 					GUIWFState[] states = new GUIWFState[workflow.getStates().length];

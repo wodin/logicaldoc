@@ -224,6 +224,11 @@
 		<servlet-name>TemplatesData</servlet-name>
 		<servlet-class>com.logicaldoc.web.data.TemplatesDataServlet</servlet-class>
 	</servlet>
+  
+    <servlet>
+        <servlet-name>WorkflowTriggersData</servlet-name>
+        <servlet-class>com.logicaldoc.web.data.WorkflowTriggersDataServlet</servlet-class>
+    </servlet>
 
 	<servlet>
 		<servlet-name>SavedSearchesData</servlet-name>
@@ -443,6 +448,11 @@
 		<servlet-name>ParsersData</servlet-name>
 		<url-pattern>/data/parsers.xml</url-pattern>
 	</servlet-mapping>
+  
+    <servlet-mapping>
+        <servlet-name>WorkflowTriggersData</servlet-name>
+        <url-pattern>/data/workflowtriggers.xml</url-pattern>
+    </servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>Thumbnail</servlet-name>
