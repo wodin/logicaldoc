@@ -193,7 +193,6 @@ public class TaskDialog extends Window {
 			participants.put(username, username);
 		}
 		participantsList.setValueMap(participants);
-		participantsList.setValues(participants.keySet().toArray(new String[0]));
 		participantsForm.setItems(participantsList);
 		addItem(participantsForm);
 
@@ -210,18 +209,8 @@ public class TaskDialog extends Window {
 					TaskDialog.this.task.setDueDateNumber((Integer) values.get("duedateNumber"));
 					TaskDialog.this.task.setDueDateUnit((String) values.get("duedateTime"));
 					TaskDialog.this.task.setReminderNumber((Integer) values.get("remindtimeNumber"));
-					TaskDialog.this.task.setReminderUnit((String) values.get("remindTime"));
-
-					// String[] participantValues = new String[0];
-					// if (values.get("participants") != null)
-					// participantValues =
-					// values.get("participants").toString();
-//					if (participantsList.getValues().length > 0)
-//						SC.warn("participants: " + participantsList.getValues());
-//					else
-//						SC.warn("participantsList is empty!!!");
-					
-					TaskDialog.this.task.setParticipants(participantsList.getValues());
+					TaskDialog.this.task.setReminderUnit((String) values.get("remindTime"));	
+					TaskDialog.this.task.setParticipants(participants.keySet().toArray(new String[0]));
 
 					GUIWFState[] states = new GUIWFState[workflow.getStates().length];
 					int i = 0;
@@ -238,21 +227,6 @@ public class TaskDialog extends Window {
 
 					AdminPanel.get().setContent(new WorkflowDesigner(workflow));
 					destroy();
-
-					// workflowService.save(Session.get().getSid(), workflow,
-					// new AsyncCallback<GUIWorkflow>() {
-					// @Override
-					// public void onFailure(Throwable caught) {
-					// Log.serverError(caught);
-					// }
-					//
-					// @Override
-					// public void onSuccess(GUIWorkflow result) {
-					// AdminPanel.get().setContent(new
-					// WorkflowDesigner(result));
-					// destroy();
-					// }
-					// });
 				}
 			}
 		});
