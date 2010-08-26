@@ -88,7 +88,7 @@ public class ParametricForm extends VLayout {
 		});
 
 		if (Feature.visible(Feature.TEMPLATE)) {
-			SelectItem template = ItemFactory.newTemplateSelector(false);
+			SelectItem template = ItemFactory.newTemplateSelector(false, null);
 
 			template.addChangedHandler(new ChangedHandler() {
 				@Override

@@ -2,10 +2,13 @@ package com.logicaldoc.gui.frontend.client.folder;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.logicaldoc.gui.frontend.client.workflow.WorkflowsFolderPanel;
@@ -34,7 +37,7 @@ public class FolderDetailsPanel extends VLayout {
 	private Layout securityTabPanel;
 
 	private Layout historyTabPanel;
-	
+
 	private Layout workflowsTabPanel;
 
 	private PropertiesPanel propertiesPanel;
@@ -42,7 +45,7 @@ public class FolderDetailsPanel extends VLayout {
 	private SecurityPanel securityPanel;
 
 	private HistoryPanel historyPanel;
-	
+
 	private WorkflowsFolderPanel workflowsPanel;
 
 	private HLayout savePanel;
@@ -50,6 +53,8 @@ public class FolderDetailsPanel extends VLayout {
 	private FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
 
 	private TabSet tabSet = new TabSet();
+
+	private Tab workflowTab = null;
 
 	public FolderDetailsPanel(GUIFolder folder) {
 		super();
@@ -101,13 +106,20 @@ public class FolderDetailsPanel extends VLayout {
 		historyTabPanel.setHeight100();
 		historyTab.setPane(historyTabPanel);
 		tabSet.addTab(historyTab);
-		
-		Tab workflowTab = new Tab(I18N.message("workflow"));
-		workflowsTabPanel = new HLayout();
-		workflowsTabPanel.setWidth100();
-		workflowsTabPanel.setHeight100();
-		workflowTab.setPane(workflowsTabPanel);
-		tabSet.addTab(workflowTab);
+
+		workflowTab = new Tab(I18N.message("workflow"));
+		if (!Feature.visible(Feature.WORKFLOW) || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)) {
+			if (!Feature.enabled(Feature.WORKFLOW)) {
+				workflowTab.setPane(new FeatureDisabled());
+				tabSet.addTab(workflowTab);
+			}
+		} else {
+			workflowsTabPanel = new HLayout();
+			workflowsTabPanel.setWidth100();
+			workflowsTabPanel.setHeight100();
+			workflowTab.setPane(workflowsTabPanel);
+			tabSet.addTab(workflowTab);
+		}
 
 		addMember(tabSet);
 
@@ -154,16 +166,18 @@ public class FolderDetailsPanel extends VLayout {
 		}
 		historyPanel = new HistoryPanel(folder);
 		historyTabPanel.addMember(historyPanel);
-		
-		/*
-		 * Prepare the workflow tab
-		 */
-		if (workflowsPanel != null) {
-			workflowsPanel.destroy();
-			workflowsTabPanel.removeMember(workflowsPanel);
+
+		if (Feature.visible(Feature.WORKFLOW) && folder.hasPermission(Constants.PERMISSION_WORKFLOW)) {
+			/*
+			 * Prepare the workflow tab
+			 */
+			if (workflowsPanel != null) {
+				workflowsPanel.destroy();
+				workflowsTabPanel.removeMember(workflowsPanel);
+			}
+			workflowsPanel = new WorkflowsFolderPanel(folder);
+			workflowsTabPanel.addMember(workflowsPanel);
 		}
-		workflowsPanel = new WorkflowsFolderPanel(folder);
-		workflowsTabPanel.addMember(workflowsPanel);
 	}
 
 	public GUIFolder getFolder() {

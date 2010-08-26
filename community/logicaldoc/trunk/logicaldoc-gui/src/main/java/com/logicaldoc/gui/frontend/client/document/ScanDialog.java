@@ -58,7 +58,7 @@ public class ScanDialog extends Window {
 		languageItem.setRequired(true);
 		languageItem.setValue(I18N.getLocale());
 
-		SelectItem template = ItemFactory.newTemplateSelector(false);
+		SelectItem template = ItemFactory.newTemplateSelector(false, null);
 
 		send = new ButtonItem();
 		send.setStartRow(false);

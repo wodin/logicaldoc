@@ -452,7 +452,7 @@ public class ItemFactory {
 		return select;
 	}
 
-	public static SelectItem newTemplateSelector(boolean multipleSelection) {
+	public static SelectItem newTemplateSelector(boolean multipleSelection, Long folderId) {
 		SelectItem templateItem = new SelectItem("template", I18N.message("template"));
 		templateItem.setDisplayField("name");
 		templateItem.setValueField("id");
@@ -460,9 +460,9 @@ public class ItemFactory {
 		templateItem.setMultiple(true);
 		templateItem.setMultipleAppearance(MultipleAppearance.PICKLIST);
 		if (!multipleSelection)
-			templateItem.setOptionDataSource(new TemplatesDS(true));
+			templateItem.setOptionDataSource(new TemplatesDS(true, folderId));
 		else
-			templateItem.setOptionDataSource(new TemplatesDS(false));
+			templateItem.setOptionDataSource(new TemplatesDS(false, folderId));
 		if (!Feature.enabled(Feature.TEMPLATE))
 			templateItem.setDisabled(true);
 		return templateItem;
@@ -506,7 +506,7 @@ public class ItemFactory {
 
 	public static SelectItem newArchiveSelector(int mode, int type, Integer status) {
 		SelectItem item = newSelectItem("archive", null);
-		
+
 		item.setOptionDataSource(new ArchivesDS(mode, type, status));
 		item.setValueField("id");
 		if (!Feature.enabled(Feature.ARCHIVES))
@@ -516,7 +516,7 @@ public class ItemFactory {
 
 	public static SelectItem newImportCustomIds() {
 		SelectItem item = newSelectItem("importcids", null);
-		
+
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put(Integer.toString(GUIArchive.CUSTOMID_NOT_IMPORT), I18N.message("ignore"));
 		map.put(Integer.toString(GUIArchive.CUSTOMID_IMPORT_AND_NEW_RELEASE), I18N.message("importasnewversion"));
@@ -526,8 +526,8 @@ public class ItemFactory {
 
 		return item;
 	}
-	
-	public static SelectItem newWorkflowSelector() {
+
+	public static SelectItem newWorkflowSelector(Long folderId) {
 		SelectItem workflowItem = new SelectItem("workflow", I18N.message("workflow"));
 		workflowItem.setWidth(250);
 		workflowItem.setHeight(200);
@@ -535,7 +535,7 @@ public class ItemFactory {
 		workflowItem.setValueField("id");
 		workflowItem.setMultiple(true);
 		workflowItem.setMultipleAppearance(MultipleAppearance.GRID);
-		workflowItem.setOptionDataSource(new WorkflowsDS());
+		workflowItem.setOptionDataSource(new WorkflowsDS(folderId));
 		if (!Feature.enabled(Feature.WORKFLOW))
 			workflowItem.setDisabled(true);
 		return workflowItem;

@@ -95,7 +95,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		coverageItem.addChangedHandler(changedHandler);
 		coverageItem.setDisabled(!update);
 
-		SelectItem templateItem = ItemFactory.newTemplateSelector(false);
+		SelectItem templateItem = ItemFactory.newTemplateSelector(false, null);
 		templateItem.addChangedHandler(changedHandler);
 		templateItem.setDisabled(!update);
 

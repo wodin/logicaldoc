@@ -48,9 +48,9 @@ public class WorkflowsFolderPanel extends VLayout {
 	private ListGrid list;
 
 	private GUIFolder folder;
-	
+
 	private SelectItem workflows = null;
-	
+
 	private SelectItem templates = null;
 
 	public WorkflowsFolderPanel(GUIFolder folder) {
@@ -84,11 +84,12 @@ public class WorkflowsFolderPanel extends VLayout {
 				workflowForm.setAlign(Alignment.LEFT);
 				workflowForm.setTitleOrientation(TitleOrientation.LEFT);
 				workflowForm.setNumCols(2);
-				workflowForm.setColWidths(100, "*");
+				workflowForm.setColWidths(110, "*");
 
-				workflows = ItemFactory.newWorkflowSelector();
+				workflows = ItemFactory.newWorkflowSelector(getFolder().getId());
 				workflows.setColSpan(2);
 				workflows.setEndRow(true);
+				workflows.setRequired(true);
 				workflowForm.setItems(workflows);
 
 				// Templates list
@@ -96,9 +97,9 @@ public class WorkflowsFolderPanel extends VLayout {
 				templateForm.setAlign(Alignment.LEFT);
 				templateForm.setTitleOrientation(TitleOrientation.LEFT);
 				templateForm.setNumCols(2);
-				templateForm.setColWidths(100, "*");
+				templateForm.setColWidths(110, "*");
 
-				templates = ItemFactory.newTemplateSelector(false);
+				templates = ItemFactory.newTemplateSelector(false, getFolder().getId());
 				templates.setWrapTitle(false);
 				templates.setColSpan(2);
 				templates.setEndRow(true);
@@ -116,24 +117,32 @@ public class WorkflowsFolderPanel extends VLayout {
 				saveButton.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 					@Override
 					public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-						String workflowSelectedId = workflows.getValue().toString();
-						String templateSelectedId = templates.getValue().toString();
+						String workflowSelectedId = "";
+						if (workflows.getValue() != null) {
+							workflowSelectedId = workflows.getValue().toString();
 
-						service.saveTrigger(Session.get().getSid(), Long.toString(getFolder().getId()),
-								workflowSelectedId, templateSelectedId, new AsyncCallback<Void>() {
-									@Override
-									public void onFailure(Throwable caught) {
-										Log.serverError(caught);
-									}
+							String templateSelectedId = "";
+							if (templates.getValue() != null) {
+								templateSelectedId = templates.getValue().toString();
+							}
 
-									@Override
-									public void onSuccess(Void result) {
-										// list.updateData(list.getSelectedRecord());
-										removeMember(list);
-										refresh();
-										window.destroy();
-									}
-								});
+							service.saveTrigger(Session.get().getSid(), Long.toString(getFolder().getId()),
+									workflowSelectedId, templateSelectedId, new AsyncCallback<Void>() {
+										@Override
+										public void onFailure(Throwable caught) {
+											Log.serverError(caught);
+										}
+
+										@Override
+										public void onSuccess(Void result) {
+											removeMember(list);
+											refresh();
+											window.destroy();
+										}
+									});
+						} else {
+							SC.warn("A workflow must be selected!");
+						}
 					}
 				});
 
@@ -201,7 +210,6 @@ public class WorkflowsFolderPanel extends VLayout {
 						if (value) {
 							ListGridRecord record = list.getSelectedRecord();
 							String subtype = folder.getId() + "-" + record.getAttributeAsString("templateId");
-							SC.warn("----- subtype: " + subtype);
 							service.deleteTrigger(Session.get().getSid(), subtype, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
@@ -210,7 +218,8 @@ public class WorkflowsFolderPanel extends VLayout {
 
 								@Override
 								public void onSuccess(Void result) {
-									list.updateData(list.getSelectedRecord());
+									removeMember(list);
+									refresh();
 								}
 							});
 						}
