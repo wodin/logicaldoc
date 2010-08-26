@@ -67,7 +67,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		workflow.setDisplayField("name");
 		workflow.setPickListWidth(300);
 		workflow.setPickListFields(name);
-		workflow.setOptionDataSource(new WorkflowsDS());
+		workflow.setOptionDataSource(new WorkflowsDS(null));
 		if (currentWorkflow != null)
 			workflow.setValue(currentWorkflow.getName());
 		addFormItem(workflow);

@@ -29,6 +29,7 @@ import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
  * This is the form used for the workflow task setting.
@@ -60,7 +61,7 @@ public class TaskDialog extends Window {
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("editworkflowstate", I18N.message("task")));
-		setWidth(290);
+		setWidth(340);
 		setHeight(400);
 		setCanDragResize(true);
 		setIsModal(true);
@@ -137,8 +138,11 @@ public class TaskDialog extends Window {
 		userForm.setItems(user);
 
 		userSelection.addMember(userForm);
+
+		VLayout buttons = new VLayout(10);
+
 		Button addUser = new Button(I18N.message("adduser"));
-		userSelection.addMember(addUser);
+		buttons.addMember(addUser);
 		addUser.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
@@ -154,16 +158,39 @@ public class TaskDialog extends Window {
 					}
 				}
 
-				refreshParticipants(selectedRecord.getAttribute("username"));
+				refreshParticipants(selectedRecord.getAttribute("username"), 1);
 				user.clearValue();
 			}
 		});
-		addItem(userSelection);
 
-		refreshParticipants(null);
+		Button removeUser = new Button(I18N.message("removeuser"));
+		buttons.addMember(removeUser);
+		removeUser.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+			@Override
+			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+				refreshParticipants(participantsList.getValue().toString(), 2);
+			}
+		});
+		userSelection.addMember(buttons);
+
+		addItem(userSelection);
+		
+		// Initialize the participants list
+		if (this.task.getParticipants() != null)
+			for (String usr : this.task.getParticipants()) {
+				participants.put(usr, usr);
+			}
+
+		refreshParticipants(null, 0);
 	}
 
-	private void refreshParticipants(String username) {
+	/**
+	 * Refresh the task's users participants list. If <code>operation</code> is
+	 * 0, no operation is made to the list. If <code>operation</code> is 1, the
+	 * username will be added to the list. If <code>operation</code> is 2, the
+	 * username will be removed from the list.
+	 */
+	private void refreshParticipants(String username, int operation) {
 		if (participantsForm != null) {
 			removeMember(participantsForm);
 			participantsForm.destroy();
@@ -184,12 +211,10 @@ public class TaskDialog extends Window {
 		participantsList.setHeight(50);
 		participantsList.setEndRow(true);
 
-		if (this.task.getParticipants() != null)
-			for (String user : this.task.getParticipants()) {
-				participants.put(user, user);
-			}
-		if (username != null) {
+		if (username != null && (operation == 1)) {
 			participants.put(username, username);
+		} else if (username != null && (operation == 2)) {
+			participants.remove(username);
 		}
 		participantsList.setValueMap(participants);
 		participantsForm.setItems(participantsList);

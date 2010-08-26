@@ -2,14 +2,20 @@ package com.logicaldoc.web.data;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
+import com.logicaldoc.core.generic.Generic;
+import com.logicaldoc.core.generic.dao.GenericDAO;
 import com.logicaldoc.util.Context;
 
 /**
@@ -25,6 +31,21 @@ public class TemplatesDataServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
+
+		String folderId = request.getParameter("folderId");
+		List<Long> templateIds = new ArrayList<Long>();
+		if (StringUtils.isNotEmpty(folderId)) {
+			GenericDAO genericDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
+			// Get all the 'wf-trigger' generics on this folder
+			List<Generic> triggerGenerics = genericDao.findByTypeAndSubtype("wf-trigger", folderId + "-%");
+			// Retrieve all the ids of the templates associated to a workflow
+			// already associated on the given folder
+			for (Generic generic : triggerGenerics) {
+				String templateId = generic.getSubtype().substring(generic.getSubtype().indexOf("-") + 1);
+				if (StringUtils.isNotEmpty(templateId))
+					templateIds.add(Long.parseLong(templateId));
+			}
+		}
 
 		response.setContentType("text/xml");
 
@@ -49,6 +70,9 @@ public class TemplatesDataServlet extends HttpServlet {
 		 * Iterate over the collection of templates
 		 */
 		for (DocumentTemplate template : dao.findAll()) {
+			if (templateIds.contains(template.getId()))
+				continue;
+
 			writer.print("<template>");
 			writer.print("<id>" + template.getId() + "</id>");
 			writer.print("<name><![CDATA[" + template.getName() + "]]></name>");

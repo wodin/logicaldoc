@@ -106,7 +106,7 @@ public class TemplatesPanel extends VLayout {
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
 		list.setFilterOnKeypress(true);
-		list.setDataSource(new TemplatesDS(false));
+		list.setDataSource(new TemplatesDS(false, null));
 		list.setShowFilterEditor(true);
 
 		listing.addMember(infoPanel);
