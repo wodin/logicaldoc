@@ -35,14 +35,22 @@ public interface WorkflowService extends RemoteService {
 	 * Lists all the workflows on the database
 	 */
 	public GUIWorkflow[] list(String sid) throws InvalidSessionException;
-	
+
 	/**
 	 * Deletes a workflow trigger with the given subtype.
 	 */
 	public void deleteTrigger(String sid, String subtype) throws InvalidSessionException;
-	
+
 	/**
-	 * Save a new workflow trigger on the given folder with the given workflowId and templateId.
+	 * Save a new workflow trigger on the given folder with the given workflowId
+	 * and templateId.
 	 */
-	public void saveTrigger(String sid, String folderId, String workflowId, String templateId) throws InvalidSessionException;
+	public void saveTrigger(String sid, String folderId, String workflowId, String templateId)
+			throws InvalidSessionException;
+
+	/**
+	 * Start a workflow with the given name and associated to the documents with
+	 * the given doc ids.
+	 */
+	public void startWorkflow(String sid, String workflowName, String workflowDescription, String docIds) throws InvalidSessionException;
 }

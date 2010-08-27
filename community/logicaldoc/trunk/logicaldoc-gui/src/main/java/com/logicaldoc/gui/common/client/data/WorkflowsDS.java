@@ -5,16 +5,18 @@ import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
 public class WorkflowsDS extends DataSource {
-	public WorkflowsDS(Long folderId) {
+	public WorkflowsDS(Long folderId, boolean retrieveDefinitions) {
 		setTitleField("name");
 		setRecordXPath("/list/workflow");
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
 		id.setRequired(true);
 		DataSourceTextField name = new DataSourceTextField("name");
-		setFields(id, name);
+		DataSourceTextField description = new DataSourceTextField("description");
+		setFields(id, name, description);
 		setDataURL("data/workflows.xml?sid=" + Session.get().getSid()
-				+ (folderId != null ? "&folderId=" + folderId : ""));
+				+ (folderId != null ? "&folderId=" + folderId : "")
+				+ (retrieveDefinitions ? "&retrievedefinitions=true" : ""));
 		setClientOnly(true);
 	}
 }
