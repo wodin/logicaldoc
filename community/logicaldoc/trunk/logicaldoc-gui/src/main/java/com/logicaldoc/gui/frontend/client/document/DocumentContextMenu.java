@@ -508,6 +508,24 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
+		MenuItem workflow = new MenuItem(I18N.message("startworkflow"));
+		workflow.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				ListGrid list = DocumentsPanel.get().getList();
+				ListGridRecord[] selection = list.getSelection();
+				if (selection == null || selection.length == 0)
+					return;
+				final long[] ids = new long[selection.length];
+				for (int i = 0; i < selection.length; i++) {
+					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
+				}
+
+				WorkflowDialog workflowDialog = new WorkflowDialog(ids);
+				workflowDialog.show();
+			}
+		});
+
 		MenuItem more = new MenuItem(I18N.message("more"));
 
 		boolean enableLock = true;
@@ -515,7 +533,8 @@ public class DocumentContextMenu extends Menu {
 		boolean enableImmutable = false;
 		boolean enableDelete = true;
 		boolean enableSign = selection != null && selection.length > 0;
-		boolean enableEdit = selection != null && selection.length == 1 && Util.isOfficeFile(selection[0].getAttribute("filename"));
+		boolean enableEdit = selection != null && selection.length == 1
+				&& Util.isOfficeFile(selection[0].getAttribute("filename"));
 
 		if (selection != null)
 			for (ListGridRecord record : selection) {
@@ -614,6 +633,14 @@ public class DocumentContextMenu extends Menu {
 				archiveDematerialization.setEnabled(false);
 			else
 				archiveDematerialization.setEnabled(enableSign);
+		}
+
+		if (Feature.visible(Feature.WORKFLOW)) {
+			moreMenu.addItem(workflow);
+			if (!folder.hasPermission(Constants.PERMISSION_WORKFLOW) || !Feature.enabled(Feature.WORKFLOW))
+				workflow.setEnabled(false);
+			else
+				workflow.setEnabled(enableSign);
 		}
 
 		more.setSubmenu(moreMenu);
