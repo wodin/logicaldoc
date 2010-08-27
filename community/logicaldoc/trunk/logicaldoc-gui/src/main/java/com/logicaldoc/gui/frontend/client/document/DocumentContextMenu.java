@@ -471,8 +471,8 @@ public class DocumentContextMenu extends Menu {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				ArchiveDialog archiveDialod = new ArchiveDialog(ids, GUIArchive.TYPE_DEFAULT);
-				archiveDialod.show();
+				ArchiveDialog archiveDialog = new ArchiveDialog(ids, GUIArchive.TYPE_DEFAULT);
+				archiveDialog.show();
 			}
 		});
 
@@ -489,8 +489,8 @@ public class DocumentContextMenu extends Menu {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				ArchiveDialog archiveDialod = new ArchiveDialog(ids, GUIArchive.TYPE_STORAGE);
-				archiveDialod.show();
+				ArchiveDialog archiveDialog = new ArchiveDialog(ids, GUIArchive.TYPE_STORAGE);
+				archiveDialog.show();
 
 			}
 		});
