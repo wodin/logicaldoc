@@ -54,7 +54,7 @@ public class WorkflowToolstrip extends ToolStrip {
 			@Override
 			public void onClick(ClickEvent event) {
 				currentWorkflow = new GUIWorkflow();
-				AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
+				AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
 			}
 		});
 		addButton(newTemplate);
@@ -67,7 +67,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		workflow.setDisplayField("name");
 		workflow.setPickListWidth(300);
 		workflow.setPickListFields(name);
-		workflow.setOptionDataSource(new WorkflowsDS(null));
+		workflow.setOptionDataSource(new WorkflowsDS(null, false));
 		if (currentWorkflow != null)
 			workflow.setValue(currentWorkflow.getName());
 		addFormItem(workflow);
@@ -90,7 +90,7 @@ public class WorkflowToolstrip extends ToolStrip {
 							@Override
 							public void onSuccess(GUIWorkflow result) {
 								currentWorkflow = result;
-								AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
+								AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
 							}
 						});
 			}
@@ -127,7 +127,7 @@ public class WorkflowToolstrip extends ToolStrip {
 							// Necessary reload to visualize a new saved
 							// workflow of
 							// the workflows drop down menu.
-							AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
+							AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
 						}
 					}
 				});
@@ -198,7 +198,7 @@ public class WorkflowToolstrip extends ToolStrip {
 										@Override
 										public void onSuccess(Void result) {
 											currentWorkflow = null;
-											AdminPanel.get().setContent(new WorkflowDesigner(new GUIWorkflow()));
+											AdminPanel.get().setContent(new WorkflowDesigner(new GUIWorkflow(), false));
 										}
 									});
 						}
@@ -214,7 +214,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		close.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				AdminPanel.get().setContent(new WorkflowDesigner(null));
+				AdminPanel.get().setContent(new WorkflowDesigner(null, false));
 			}
 		});
 		addButton(close);

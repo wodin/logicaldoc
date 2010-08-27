@@ -249,7 +249,7 @@ public class TaskDialog extends Window {
 					}
 					workflow.setStates(states);
 
-					AdminPanel.get().setContent(new WorkflowDesigner(workflow));
+					AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
 					destroy();
 				}
 			}

@@ -54,17 +54,22 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 
 	private ValuesManager vm = new ValuesManager();
 
-	public WorkflowDesigner(GUIWorkflow workflow) {
+	public WorkflowDesigner(GUIWorkflow workflow, boolean onlyDrawingPanel) {
 		this.workflow = workflow;
 
 		setMembersMargin(5);
 
-		addMember(new WorkflowToolstrip(this));
-		addMember(new StateToolstrip(this));
+		if (!onlyDrawingPanel) {
+			addMember(new WorkflowToolstrip(this));
+			addMember(new StateToolstrip(this));
+		}
 
-		if (this.workflow != null) {
+		if (this.workflow != null && !onlyDrawingPanel) {
 			accordion = new Accordion(workflow);
 			layout.addMember(accordion);
+		}
+
+		if (this.workflow != null) {
 			drawingPanel = new DrawingPanel(this);
 			layout.addMember(drawingPanel);
 			addMember(layout);
@@ -128,7 +133,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 
 						workflow.setStates(states);
 
-						AdminPanel.get().setContent(new WorkflowDesigner(workflow));
+						AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
 						window.destroy();
 					}
 				}
@@ -163,7 +168,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 					}
 					workflow.setStates(states);
 
-					AdminPanel.get().setContent(new WorkflowDesigner(workflow));
+					AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
 
 					// workflowService.save(Session.get().getSid(), workflow,
 					// new AsyncCallback<GUIWorkflow>() {
@@ -220,7 +225,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 					}
 					workflow.setStates(states);
 
-					AdminPanel.get().setContent(new WorkflowDesigner(workflow));
+					AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
 
 					// workflowService.save(Session.get().getSid(), workflow,
 					// new AsyncCallback<GUIWorkflow>() {
@@ -279,7 +284,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 					}
 					workflow.setStates(states);
 
-					AdminPanel.get().setContent(new WorkflowDesigner(workflow));
+					AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
 
 					// workflowService.save(Session.get().getSid(), workflow,
 					// new AsyncCallback<GUIWorkflow>() {
@@ -364,20 +369,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 		}
 		workflow.setStates(states);
 
-		AdminPanel.get().setContent(new WorkflowDesigner(workflow));
-
-		// workflowService.save(Session.get().getSid(), workflow, new
-		// AsyncCallback<GUIWorkflow>() {
-		// @Override
-		// public void onFailure(Throwable caught) {
-		// Log.serverError(caught);
-		// }
-		//
-		// @Override
-		// public void onSuccess(GUIWorkflow result) {
-		// AdminPanel.get().setContent(new WorkflowDesigner(workflow));
-		// }
-		// });
+		AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
 	}
 
 	public void reloadDrawingPanel() {
@@ -400,10 +392,11 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 	public void onAddState(GUIWorkflow wfl, int type) {
 		workflow = wfl;
 
-//		if (workflow.getStates() != null && workflow.getStates().length > 0)
-//			SC.warn("ADD state to workflow: " + workflow.getName() + " with states: " + workflow.getStates().length);
-//		else
-//			SC.warn("ADD state to workflow: " + workflow.getName());
+		// if (workflow.getStates() != null && workflow.getStates().length > 0)
+		// SC.warn("ADD state to workflow: " + workflow.getName() +
+		// " with states: " + workflow.getStates().length);
+		// else
+		// SC.warn("ADD state to workflow: " + workflow.getName());
 
 		GUIWFState[] newStates = null;
 		if (workflow.getStates() != null && workflow.getStates().length > 0) {
@@ -426,22 +419,6 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 
 		workflow.setStates(newStates);
 
-//		reloadDrawingPanel();
-		AdminPanel.get().setContent(new WorkflowDesigner(workflow));
-
-		// workflowService.save(Session.get().getSid(), workflow, new
-		// AsyncCallback<GUIWorkflow>() {
-		// @Override
-		// public void onFailure(Throwable caught) {
-		// Log.serverError(caught);
-		// }
-		//
-		// @Override
-		// public void onSuccess(GUIWorkflow result) {
-		// reloadDrawingPanel();
-		// // AdminPanel.get().setContent(new WorkflowDesigner(workflow));
-		// }
-		// });
-
+		AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
 	}
 }

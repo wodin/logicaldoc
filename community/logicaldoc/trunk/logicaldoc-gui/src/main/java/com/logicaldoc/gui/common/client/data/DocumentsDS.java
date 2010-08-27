@@ -62,4 +62,19 @@ public class DocumentsDS extends DataSource {
 				+ (folderId != null ? folderId : "") + "&filename=" + (fileFilter != null ? fileFilter : "") + "&max="
 				+ (max != null ? max : MAX) + "&indexable=" + (indexable != null ? Boolean.toString(indexable) : ""));
 	}
+
+	public DocumentsDS(String docIds) {
+		setTitleField("title");
+		setRecordXPath("/list/document");
+		DataSourceTextField title = new DataSourceTextField("title");
+		DataSourceTextField id = new DataSourceTextField("id");
+		id.setPrimaryKey(true);
+		id.setHidden(true);
+		id.setRequired(true);
+		DataSourceDateTimeField lastModified = new DataSourceDateTimeField("lastModified");
+
+		setFields(id, title, lastModified);
+		setClientOnly(true);
+		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&docIds=" + docIds);
+	}
 }

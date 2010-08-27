@@ -516,10 +516,13 @@ public class DocumentContextMenu extends Menu {
 				ListGridRecord[] selection = list.getSelection();
 				if (selection == null || selection.length == 0)
 					return;
-				final long[] ids = new long[selection.length];
-				for (int i = 0; i < selection.length; i++) {
-					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
+				
+				String ids = "";
+				for (ListGridRecord rec : selection) {
+					ids += "," + rec.getAttributeAsString("id");
 				}
+				if (ids.startsWith(","))
+					ids = ids.substring(1);
 
 				WorkflowDialog workflowDialog = new WorkflowDialog(ids);
 				workflowDialog.show();

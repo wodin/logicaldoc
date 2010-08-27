@@ -51,7 +51,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	private ToolStripButton archiveDematerialization = new ToolStripButton();
 
 	private ToolStripButton edit = new ToolStripButton();
-	
+
 	private ToolStripButton workflow = new ToolStripButton();
 
 	private GUIDocument document;
@@ -199,7 +199,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 						+ "&docId=" + document.getId(), "_self", "");
 			}
 		});
-		
+
 		workflow.setIcon(ItemFactory.newImgIcon("data_into.png").getSrc());
 		workflow.setTooltip(I18N.message("startworkflow"));
 		workflow.addClickHandler(new ClickHandler() {
@@ -209,10 +209,13 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				ListGridRecord[] selection = list.getSelection();
 				if (selection == null || selection.length == 0)
 					return;
-				final long[] ids = new long[selection.length];
-				for (int i = 0; i < selection.length; i++) {
-					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
+
+				String ids = "";
+				for (ListGridRecord rec : selection) {
+					ids += "," + rec.getAttributeAsString("id");
 				}
+				if (ids.startsWith(","))
+					ids = ids.substring(1);
 
 				WorkflowDialog workflowDialog = new WorkflowDialog(ids);
 				workflowDialog.show();
@@ -289,7 +292,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		}
 
 		addSeparator();
-		
+
 		if (Feature.visible(Feature.WORKFLOW)) {
 			addSeparator();
 			addButton(workflow);
@@ -298,7 +301,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				workflow.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
-		
+
 		ToolStripButton display = new ToolStripButton();
 		display.setTitle(I18N.message("display"));
 		addButton(display);
