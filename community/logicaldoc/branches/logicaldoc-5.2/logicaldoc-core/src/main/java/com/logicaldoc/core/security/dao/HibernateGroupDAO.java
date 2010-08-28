@@ -1,8 +1,5 @@
 package com.logicaldoc.core.security.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -153,32 +150,20 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 			return;
 
 		try {
-			Connection con = null;
-			PreparedStatement stmt = null;
-			ResultSet rs = null;
-
-			try {
-				con = getSession().connection();
-				stmt = con.prepareStatement("delete from ld_menugroup where ld_groupid=" + groupId);
-				log.debug("Delete all menugroup for group " + groupId);
-				stmt.executeUpdate();
-
-				stmt = con
-						.prepareStatement("insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow) "
-								+ "select B.ld_menuid,"
-								+ groupId
-								+ ", B.ld_write , B.ld_addchild, B.ld_managesecurity, B.ld_manageimmutability, B.ld_delete, B.ld_rename, B.ld_bulkimport, B.ld_bulkexport, B.ld_sign, B.ld_archive, B.ld_workflow from ld_menugroup as B "
-								+ "where B.ld_groupid= " + parentGroupId);
-				log.debug("Replicate all ACLs from group " + parentGroupId);
-				stmt.executeUpdate();
-			} finally {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			}
+			String deleteStmt = "delete from ld_menugroup where ld_groupid=" + groupId;
+			log.error("Delete all menugroup for group " + groupId);
+			int delres = jdbcUpdate(deleteStmt);
+			log.error("Delete result = " + delres);
+			
+			String replicateStmt = "insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow) "
+				+ "select B.ld_menuid,"
+				+ groupId
+				+ ", B.ld_write , B.ld_addchild, B.ld_managesecurity, B.ld_manageimmutability, B.ld_delete, B.ld_rename, B.ld_bulkimport, B.ld_bulkexport, B.ld_sign, B.ld_archive, B.ld_workflow from ld_menugroup as B "
+				+ "where B.ld_groupid= " + parentGroupId;
+			log.error("Replicate all ACLs from group " + parentGroupId);
+			
+			int insres = jdbcUpdate(replicateStmt);
+			log.error("Insert result = " + insres);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);

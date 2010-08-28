@@ -12,7 +12,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.orm.hibernate3.SessionFactoryUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import com.logicaldoc.util.Context;
@@ -164,8 +163,8 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject>
 	public List query(String sql, Object[] args, Integer maxRows, RowMapper rowMapper) {
 
 		List list = new ArrayList();
-		try {
-			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource"); // This is for sure the more affordable method
+		try {			
+			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
 			//DataSource dataSource = SessionFactoryUtils.getDataSource(getSessionFactory());
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			if (maxRows != null)
@@ -210,13 +209,25 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject>
 		return list;
 	}
 	
-	
 	@Override
 	public int queryForInt(String sql) {
 		try {
 			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			return jdbcTemplate.queryForInt(sql);
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+		return 0;
+	}
+	
+	@Override
+	public long queryForLong(String sql) {
+		try {
+			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+			return jdbcTemplate.queryForLong(sql);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);

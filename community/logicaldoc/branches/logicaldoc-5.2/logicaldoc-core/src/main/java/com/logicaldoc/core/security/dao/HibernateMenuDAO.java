@@ -2,6 +2,7 @@ package com.logicaldoc.core.security.dao;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,8 +14,11 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
+import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Group;
@@ -501,7 +505,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	 *      JDBC query, this is required in order to obtain acceptable
 	 *      performances during searches.
 	 */
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked" })
 	public List<Long> findIdByUserId(long userId, long parentId, Integer type) {
 		List<Long> ids = new ArrayList<Long>();
 		try {
@@ -530,30 +534,9 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				query1.append(")");
 				if (type != null)
 					query1.append(" AND B.ld_type=" + type.toString());
-
-				Connection con = null;
-				Statement stmt = null;
-				ResultSet rs = null;
-				try {
-					con = getSession().connection();
-					stmt = con.createStatement();
-					rs = stmt.executeQuery(query1.toString());
-					while (rs.next()) {
-						Long id = null;
-						if (rs.getObject(1) instanceof Long)
-							id = (Long) rs.getObject(1);
-						else
-							id = new Long(rs.getInt(1));
-						ids.add(id);
-					}
-				} finally {
-					if (rs != null)
-						rs.close();
-					if (stmt != null)
-						stmt.close();
-					if (con != null)
-						con.close();
-				}
+				
+				
+				ids = (List<Long>) queryForList(query1.toString(), Long.class);
 
 				/*
 				 * Now find all menues referencing the previously found ones
@@ -563,30 +546,11 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				query2.append("	and B.ld_securityref in (");
 				query2.append(query1.toString());
 				query2.append(")");
-
-				con = null;
-				stmt = null;
-				rs = null;
-				try {
-					con = getSession().connection();
-					stmt = con.createStatement();
-					rs = stmt.executeQuery(query2.toString());
-					while (rs.next()) {
-						Long id = null;
-						if (rs.getObject(1) instanceof Long)
-							id = (Long) rs.getObject(1);
-						else
-							id = new Long(rs.getInt(1));
-						if (!ids.contains(id))
-							ids.add(id);
-					}
-				} finally {
-					if (rs != null)
-						rs.close();
-					if (stmt != null)
-						stmt.close();
-					if (con != null)
-						con.close();
+				
+				List<Long> menuids2 = (List<Long>) queryForList(query2.toString(), Long.class);
+				for (Long menuid : menuids2) {
+					if (!ids.contains(menuid)) 
+						ids.add(menuid);
 				}
 			}
 		} catch (Exception e) {
@@ -743,6 +707,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		}
 	}
 
+
 	@Override
 	public Set<Permission> getEnabledPermissions(long menuId, long userId) {
 		Set<Permission> permissions = new HashSet<Permission>();
@@ -788,6 +753,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			}
 			query.append(")");
 
+
 			Connection con = null;
 			Statement stmt = null;
 			ResultSet rs = null;
@@ -797,44 +763,31 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				stmt = con.createStatement();
 				rs = stmt.executeQuery(query.toString());
 				while (rs.next()) {
-					if (!permissions.contains(Permission.READ))
-						permissions.add(Permission.READ);
+					permissions.add(Permission.READ);
 					if (rs.getInt("LDADDCHILD") == 1)
-						if (!permissions.contains(Permission.ADD_CHILD))
-							permissions.add(Permission.ADD_CHILD);
+						permissions.add(Permission.ADD_CHILD);
 					if (rs.getInt("LDBULKEXPORT") == 1)
-						if (!permissions.contains(Permission.BULK_EXPORT))
-							permissions.add(Permission.BULK_EXPORT);
+						permissions.add(Permission.BULK_EXPORT);
 					if (rs.getInt("LDBULKIMPORT") == 1)
-						if (!permissions.contains(Permission.BULK_IMPORT))
-							permissions.add(Permission.BULK_IMPORT);
+						permissions.add(Permission.BULK_IMPORT);
 					if (rs.getInt("LDDELETE") == 1)
-						if (!permissions.contains(Permission.DELETE))
-							permissions.add(Permission.DELETE);
+						permissions.add(Permission.DELETE);
 					if (rs.getInt("LDMANAGEIMMUTABILITY") == 1)
-						if (!permissions.contains(Permission.MANAGE_IMMUTABILITY))
-							permissions.add(Permission.MANAGE_IMMUTABILITY);
+						permissions.add(Permission.MANAGE_IMMUTABILITY);
 					if (rs.getInt("LDMANAGESECURITY") == 1)
-						if (!permissions.contains(Permission.MANAGE_SECURITY))
-							permissions.add(Permission.MANAGE_SECURITY);
+						permissions.add(Permission.MANAGE_SECURITY);
 					if (rs.getInt("LDRENAME") == 1)
-						if (!permissions.contains(Permission.RENAME))
-							permissions.add(Permission.RENAME);
+						permissions.add(Permission.RENAME);
 					if (rs.getInt("LDWRITE") == 1)
-						if (!permissions.contains(Permission.WRITE))
-							permissions.add(Permission.WRITE);
+						permissions.add(Permission.WRITE);
 					if (rs.getInt("LDDELETE") == 1)
-						if (!permissions.contains(Permission.DELETE))
-							permissions.add(Permission.DELETE);
+						permissions.add(Permission.DELETE);
 					if (rs.getInt("LDSIGN") == 1)
-						if (!permissions.contains(Permission.SIGN))
-							permissions.add(Permission.SIGN);
+						permissions.add(Permission.SIGN);
 					if (rs.getInt("LDARCHIVE") == 1)
-						if (!permissions.contains(Permission.ARCHIVE))
-							permissions.add(Permission.ARCHIVE);
+						permissions.add(Permission.ARCHIVE);
 					if (rs.getInt("LDWORKFLOW") == 1)
-						if (!permissions.contains(Permission.WORKFLOW))
-							permissions.add(Permission.WORKFLOW);
+						permissions.add(Permission.WORKFLOW);
 				}
 			} finally {
 				if (rs != null)
@@ -851,6 +804,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 		return permissions;
 	}
+	
+	
 
 	@Override
 	public List<Long> findMenuIdByUserIdAndPermission(long userId, Permission permission, Integer type) {
@@ -891,63 +846,22 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 					first = false;
 				}
 				query1.append(")");
-
-				Connection con = null;
-				Statement stmt = null;
-				ResultSet rs = null;
-				try {
-					con = getSession().connection();
-					stmt = con.createStatement();
-					rs = stmt.executeQuery(query1.toString());
-					while (rs.next()) {
-						Long id = null;
-						if (rs.getObject(1) instanceof Long)
-							id = (Long) rs.getObject(1);
-						else
-							id = new Long(rs.getInt(1));
-						ids.add(id);
-					}
-				} finally {
-					if (rs != null)
-						rs.close();
-					if (stmt != null)
-						stmt.close();
-					if (con != null)
-						con.close();
-				}
+				
+				
+				ids = (List<Long>) queryForList(query1.toString(), Long.class);
 
 				/*
-				 * Now search for those menues that references the previously
-				 * found ones
+				 * Now search for those menues that references the previously found ones
 				 */
 				StringBuffer query2 = new StringBuffer("select B.ld_id from ld_menu B where B.ld_deleted=0 ");
 				if (type != null)
 					query2.append(" and B.ld_type=" + type);
 				query2.append(" and B.ld_securityref in (" + query1.toString() + ")");
-
-				con = null;
-				stmt = null;
-				rs = null;
-				try {
-					con = getSession().connection();
-					stmt = con.createStatement();
-					rs = stmt.executeQuery(query2.toString());
-					while (rs.next()) {
-						Long id = null;
-						if (rs.getObject(1) instanceof Long)
-							id = (Long) rs.getObject(1);
-						else
-							id = new Long(rs.getInt(1));
-						if (!ids.contains(id))
-							ids.add(id);
-					}
-				} finally {
-					if (rs != null)
-						rs.close();
-					if (stmt != null)
-						stmt.close();
-					if (con != null)
-						con.close();
+				
+				List<Long> mrefs = (List<Long>) queryForList(query2.toString(), Long.class);
+				for (Long menuId : mrefs) {
+					if (!ids.contains(menuId))
+						ids.add(menuId);
 				}
 
 			}
