@@ -110,10 +110,10 @@ public class GUIArchive implements Serializable {
 	/**
 	 * The archive status
 	 * 
-	 * @see Archive#STATUS_OPENED
+	 * @see Archive#ASSIGNED_TASK
 	 * @see Archive#STATUS_CLOSED
-	 * @see Archive#STATUS_FINALIZED
-	 * @see Archive#STATUS_READYTOSIGN
+	 * @see Archive#TASKS_ADMIN
+	 * @see Archive#TASKS_SUPERVISOR
 	 * @see Archive#STATUS_ERROR
 	 */
 	public int getStatus() {
