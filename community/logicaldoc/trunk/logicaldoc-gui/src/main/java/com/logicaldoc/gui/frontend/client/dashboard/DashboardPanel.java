@@ -24,7 +24,7 @@ public class DashboardPanel extends VLayout {
 		userTab.setPane(new UserDashboard());
 
 		Tab workflowTab = new Tab(I18N.message("workflow"));
-		workflowTab.setPane(new FeatureDisabled());
+		workflowTab.setPane(new WorkflowDashboard());
 
 		Tab messagesTab = new Tab(I18N.message("messages"));
 		messagesTab.setPane(new MessagesPanel());
