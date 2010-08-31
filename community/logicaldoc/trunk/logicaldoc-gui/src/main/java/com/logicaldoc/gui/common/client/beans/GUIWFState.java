@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.common.client.beans;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.logicaldoc.gui.common.client.util.Util;
 
@@ -57,6 +58,20 @@ public class GUIWFState implements Serializable {
 	private String[] participants;
 
 	private GUITransition[] transitions;
+
+	private String owner = "";
+	
+	private String pooledActors = "";
+
+	private Date startDate;
+
+	private Date endDate;
+
+	private Date dueDate;
+
+	private String taskState;
+
+	private String comment;
 
 	public GUIWFState() {
 	}
@@ -159,5 +174,61 @@ public class GUIWFState implements Serializable {
 
 	public void setReminderUnit(String reminderUnit) {
 		this.reminderUnit = reminderUnit;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public Date getDueDate() {
+		return dueDate;
+	}
+
+	public void setDueDate(Date dueDate) {
+		this.dueDate = dueDate;
+	}
+
+	public String getTaskState() {
+		return taskState;
+	}
+
+	public void setTaskState(String taskState) {
+		this.taskState = taskState;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getPooledActors() {
+		return pooledActors;
+	}
+
+	public void setPooledActors(String pooledActors) {
+		this.pooledActors = pooledActors;
 	}
 }

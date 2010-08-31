@@ -53,4 +53,14 @@ public interface WorkflowService extends RemoteService {
 	 * the given doc ids.
 	 */
 	public void startWorkflow(String sid, String workflowName, String workflowDescription, String docIds) throws InvalidSessionException;
+	
+	/**
+	 * Retrieves all the info of the workflow of the given task. 
+	 */
+	public GUIWorkflow getWorkflowDetailsByTask(String sid, String taskId) throws InvalidSessionException;
+	
+	/**
+	 * Save the new assignment on the selected task.
+	 */
+	public void saveTaskAssigment(String sid, String taskId, String userId) throws InvalidSessionException;
 }
