@@ -64,7 +64,7 @@ public class WorkflowPortlet extends Portlet {
 		list.setSelectionType(SelectionStyle.NONE);
 		list.setHeight100();
 		list.setBorder("0px");
-		dataSource = new WorkflowTasksDS(type);
+		dataSource = new WorkflowTasksDS(type, null);
 		list.setDataSource(dataSource);
 		if (type == WorkflowDashboard.TASKS_I_CAN_OWN || type == WorkflowDashboard.TASKS_ADMIN
 				|| type == WorkflowDashboard.TASKS_SUPERVISOR)
@@ -78,7 +78,7 @@ public class WorkflowPortlet extends Portlet {
 				Record record = event.getRecord();
 				// DocumentsPanel.get().openInFolder(Long.parseLong(record.getAttributeAsString("folderId")),
 				// Long.parseLong(record.getAttributeAsString("docId")));
-				service.get(Session.get().getSid(), record.getAttributeAsString("workflow"),
+				service.getWorkflowDetailsByTask(Session.get().getSid(), record.getAttributeAsString("id"),
 						new AsyncCallback<GUIWorkflow>() {
 
 							@Override

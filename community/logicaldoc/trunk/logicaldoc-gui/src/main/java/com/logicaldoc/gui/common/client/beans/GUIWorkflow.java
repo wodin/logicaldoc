@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.common.client.beans;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Workflow bean as used in the GUI
@@ -31,6 +32,18 @@ public class GUIWorkflow implements Serializable {
 	private String supervisor = "";
 
 	private GUIWFState[] states;
+	
+	private GUIWFState selectedTask = null;
+	
+	private Date startDate;
+	
+	private Date endDate;
+	
+	private GUIDocument[] appendedDocs;
+	
+	private String appendedDocIds;
+	
+	private GUIWFState[] wflHistory;
 
 	public GUIWFState getStateById(String id) {
 		if (states != null && states.length > 0) {
@@ -121,5 +134,53 @@ public class GUIWorkflow implements Serializable {
 
 	public void setStates(GUIWFState[] states) {
 		this.states = states;
+	}
+
+	public GUIWFState getSelectedTask() {
+		return selectedTask;
+	}
+
+	public void setSelectedTask(GUIWFState selectedTask) {
+		this.selectedTask = selectedTask;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public GUIDocument[] getAppendedDocs() {
+		return appendedDocs;
+	}
+
+	public void setAppendedDocs(GUIDocument[] appendedDocs) {
+		this.appendedDocs = appendedDocs;
+	}
+
+	public GUIWFState[] getWflHistory() {
+		return wflHistory;
+	}
+
+	public void setWflHistory(GUIWFState[] wflHistory) {
+		this.wflHistory = wflHistory;
+	}
+
+	public String getAppendedDocIds() {
+		return appendedDocIds;
+	}
+
+	public void setAppendedDocIds(String appendedDocIds) {
+		this.appendedDocIds = appendedDocIds;
 	}
 }

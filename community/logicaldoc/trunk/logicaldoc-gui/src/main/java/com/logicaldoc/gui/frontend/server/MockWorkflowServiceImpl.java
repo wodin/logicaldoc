@@ -222,4 +222,13 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	public void startWorkflow(String sid, String workflowName, String workflowDescription, String docIds)
 			throws InvalidSessionException {
 	}
+
+	@Override
+	public GUIWorkflow getWorkflowDetailsByTask(String sid, String taskId) throws InvalidSessionException {
+		return null;
+	}
+
+	@Override
+	public void saveTaskAssigment(String sid, String taskId, String userId) throws InvalidSessionException {
+	}
 }
