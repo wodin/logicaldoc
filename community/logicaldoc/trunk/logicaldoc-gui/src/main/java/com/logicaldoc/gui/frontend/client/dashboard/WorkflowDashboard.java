@@ -2,6 +2,9 @@ package com.logicaldoc.gui.frontend.client.dashboard;
 
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.frontend.client.document.WorkflowHistoryDialog;
+import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.layout.PortalLayout;
 
 /**
@@ -36,5 +39,16 @@ public class WorkflowDashboard extends PortalLayout {
 			addPortlet(new WorkflowPortlet(TASKS_ADMIN), 1, 1);
 		else
 			addPortlet(new WorkflowPortlet(TASKS_SUPERVISOR), 1, 1);
+
+		Button historyButton = new Button(I18N.message("history"));
+		historyButton.setMargin(2);
+		historyButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+			@Override
+			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+				WorkflowHistoryDialog dialog = new WorkflowHistoryDialog();
+				dialog.show();
+			}
+		});
+		addMember(historyButton);
 	}
 }

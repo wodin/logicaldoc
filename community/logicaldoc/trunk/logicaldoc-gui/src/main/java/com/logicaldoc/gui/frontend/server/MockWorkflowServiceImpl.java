@@ -229,6 +229,34 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	}
 
 	@Override
-	public void saveTaskAssigment(String sid, String taskId, String userId) throws InvalidSessionException {
+	public void saveTaskAssignment(String sid, String taskId, String userId) throws InvalidSessionException {
+	}
+
+	@Override
+	public void startTask(String sid, String taskId) throws InvalidSessionException {
+	}
+
+	@Override
+	public void suspendTask(String sid, String taskId) throws InvalidSessionException {
+	}
+
+	@Override
+	public void resumeTask(String sid, String taskId) throws InvalidSessionException {
+	}
+
+	@Override
+	public void saveTaskState(String sid, String taskId) throws InvalidSessionException {
+	}
+
+	@Override
+	public void takeTaskOwnerShip(String sid, String taskId, String userId) throws InvalidSessionException {
+	}
+
+	@Override
+	public void turnBackTaskToPool(String sid, String taskId) throws InvalidSessionException {
+	}
+
+	@Override
+	public void endTask(String sid, String taskId, String transitionName) throws InvalidSessionException {
 	}
 }

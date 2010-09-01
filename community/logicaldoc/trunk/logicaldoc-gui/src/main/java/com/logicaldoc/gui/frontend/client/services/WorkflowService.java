@@ -62,5 +62,40 @@ public interface WorkflowService extends RemoteService {
 	/**
 	 * Save the new assignment on the selected task.
 	 */
-	public void saveTaskAssigment(String sid, String taskId, String userId) throws InvalidSessionException;
+	public void saveTaskAssignment(String sid, String taskId, String userId) throws InvalidSessionException;
+	
+	/**
+	 * Starts a workflow task.
+	 */
+	public void startTask(String sid, String taskId) throws InvalidSessionException;
+	
+	/**
+	 * Suspends a workflow task.
+	 */
+	public void suspendTask(String sid, String taskId) throws InvalidSessionException;
+	
+	/**
+	 * Resumes a workflow task.
+	 */
+	public void resumeTask(String sid, String taskId) throws InvalidSessionException;
+	
+	/**
+	 * Saves a workflow task state.
+	 */
+	public void saveTaskState(String sid, String taskId) throws InvalidSessionException;
+	
+	/**
+	 * The given user take the ownership of the task.
+	 */
+	public void takeTaskOwnerShip(String sid, String taskId, String userId) throws InvalidSessionException;
+	
+	/**
+	 * The task is reassigned to the pooled users.
+	 */
+	public void turnBackTaskToPool(String sid, String taskId) throws InvalidSessionException;
+	
+	/**
+	 * Ends a task invoking the transition.
+	 */
+	public void endTask(String sid, String taskId, String transitionName) throws InvalidSessionException;
 }
