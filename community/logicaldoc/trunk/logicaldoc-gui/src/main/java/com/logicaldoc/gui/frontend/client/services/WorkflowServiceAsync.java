@@ -24,5 +24,19 @@ public interface WorkflowServiceAsync {
 
 	void getWorkflowDetailsByTask(String sid, String taskId, AsyncCallback<GUIWorkflow> callback);
 
-	void saveTaskAssigment(String sid, String taskId, String userId, AsyncCallback<Void> callback);
+	void saveTaskAssignment(String sid, String taskId, String userId, AsyncCallback<Void> callback);
+
+	void startTask(String sid, String taskId, AsyncCallback<Void> callback);
+
+	void resumeTask(String sid, String taskId, AsyncCallback<Void> callback);
+
+	void suspendTask(String sid, String taskId, AsyncCallback<Void> callback);
+
+	void saveTaskState(String sid, String taskId, AsyncCallback<Void> callback);
+
+	void endTask(String sid, String taskId, String transitionName, AsyncCallback<Void> callback);
+
+	void takeTaskOwnerShip(String sid, String taskId, String userId, AsyncCallback<Void> callback);
+
+	void turnBackTaskToPool(String sid, String taskId, AsyncCallback<Void> callback);
 }
