@@ -86,7 +86,9 @@ public class ExportArchivesList extends VLayout {
 
 		ListGridField name = new ListGridField("name", I18N.message("name"), 250);
 
-		ListGridField type = new ListGridField("typelabel", I18N.message("type"), 130);
+		ListGridField type = new ListGridField("type", I18N.message("type"), 130);
+		type.setHidden(true);
+		ListGridField typeLabel = new ListGridField("typelabel", I18N.message("type"), 130);
 		type.setCanFilter(false);
 
 		ListGridField status = new ListGridField("statusicon", I18N.message("status"), 50);
@@ -117,7 +119,7 @@ public class ExportArchivesList extends VLayout {
 		list.setAutoFetchData(true);
 		list.setWidth100();
 		list.setHeight100();
-		list.setFields(id, created, name, type, size, status, creator, closer);
+		list.setFields(id, created, name, typeLabel, size, status, creator, closer);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
@@ -211,6 +213,7 @@ public class ExportArchivesList extends VLayout {
 
 								@Override
 								public void onSuccess(Void result) {
+
 									list.removeSelectedData();
 									list.deselectAllRecords();
 									showDetails(null, true);
@@ -240,6 +243,14 @@ public class ExportArchivesList extends VLayout {
 
 										@Override
 										public void onSuccess(Void result) {
+											if (record.getAttributeAsString("type")
+													.equals("" + GUIArchive.TYPE_STORAGE)) {
+												// Show Archive validation tabs
+												// TODO Il metodo setStatus
+												// dell'ArchiveService deve
+												// ritornare l'archivio da
+												// modificare!!!!
+											}
 											record.setAttribute("status", "1");
 											record.setAttribute("statusicon", "lock");
 											list.updateData(record);

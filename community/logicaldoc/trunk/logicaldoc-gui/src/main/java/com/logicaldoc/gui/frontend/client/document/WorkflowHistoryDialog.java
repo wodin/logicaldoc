@@ -17,12 +17,10 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -50,9 +48,9 @@ public class WorkflowHistoryDialog extends Window {
 
 	private ListGrid historiesList;
 
-	private WorkflowHistoriesDS dataSource1;
+	private WorkflowHistoriesDS instancesDataSource;
 
-	private WorkflowHistoriesDS dataSource2;
+	private WorkflowHistoriesDS historiesDataSource;
 
 	private VLayout form = null;
 
@@ -62,7 +60,7 @@ public class WorkflowHistoryDialog extends Window {
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
-		setTitle(I18N.message("history"));
+		setTitle(I18N.message("workflowhistory"));
 		setWidth(1000);
 		setHeight(650);
 		setCanDragResize(true);
@@ -78,32 +76,29 @@ public class WorkflowHistoryDialog extends Window {
 			removeMember(form);
 		}
 
-		form = new VLayout(10);
-		form.setMargin(25);
-		form.setWidth100();
-		form.setHeight100();
+		form = new VLayout();
+		form.setMargin(20);
+		form.setWidth(990);
+		form.setHeight(640);
 
-		HLayout selectionWorkflowLayout = new HLayout(10);
-		selectionWorkflowLayout.setMargin(5);
+		HLayout selectionWorkflowLayout = new HLayout(15);
+		selectionWorkflowLayout.setWidth(150);
+		selectionWorkflowLayout.setHeight(100);
 
 		// Workflow section
 		DynamicForm workflowForm = new DynamicForm();
-		workflowForm.setWidth(200);
-		workflowForm.setHeight(150);
-		workflowForm.setColWidths(100, 100);
+//		workflowForm.setWidth(150);
+		workflowForm.setColWidths(1, "*");
 
-		final ComboBoxItem workflow = new ComboBoxItem("workflow", " ");
-		workflow.setShowTitle(false);
+		final ComboBoxItem workflow = new ComboBoxItem("workflowSelection", I18N.message("workflowselect"));
+		workflow.setWrapTitle(false);
 		ListGridField name = new ListGridField("name");
 		workflow.setValueField("id");
 		workflow.setDisplayField("name");
-//		workflow.setPickListWidth(300);
 		workflow.setPickListFields(name);
 		workflow.setOptionDataSource(new WorkflowsDS(null, false));
 		if (selectedWorkflow != null)
 			workflow.setValue(selectedWorkflow.getName());
-
-		SC.warn("1111111111111111111111111111111");
 
 		workflowForm.setItems(workflow);
 		selectionWorkflowLayout.addMember(workflowForm);
@@ -137,30 +132,27 @@ public class WorkflowHistoryDialog extends Window {
 		form.addMember(selectionWorkflowLayout);
 
 		VLayout workflowInstancesLayout = new VLayout(10);
-		SC.warn("22222222222222222222222222222222");
 
 		// Workflow instances section
 		DynamicForm workflowInstancesForm = new DynamicForm();
-		// workflowInstancesForm.setWidth(300);
-		// workflowInstancesForm.setColWidths(1, "*");
+		workflowInstancesForm.setColWidths(1, "*");
+		workflowInstancesForm.setWidth(150);
 
-		StaticTextItem workflowTitle = ItemFactory.newStaticTextItem("workflow", "", "<b>" + I18N.message("workflow")
-				+ "</b>");
+		StaticTextItem workflowTitle = ItemFactory.newStaticTextItem("workflowInstances", "",
+				"<b>" + I18N.message("workflowinstances") + "</b>");
 		workflowTitle.setShouldSaveValue(false);
 		workflowTitle.setWrapTitle(false);
 
 		workflowInstancesForm.setItems(workflowTitle);
 		workflowInstancesLayout.addMember(workflowInstancesForm);
 
-		ListGridField id = new ListGridField("id", I18N.message("id"), 70);
+		ListGridField id = new ListGridField("id", I18N.message("id"), 60);
 		ListGridField startDate = new ListGridField("startdate", I18N.message("startdate"), 150);
 		startDate.setAlign(Alignment.CENTER);
 		startDate.setType(ListGridFieldType.DATE);
-		startDate.setCellFormatter(new DateCellFormatter());
 		ListGridField endDate = new ListGridField("enddate", I18N.message("enddate"), 150);
 		endDate.setAlign(Alignment.CENTER);
 		endDate.setType(ListGridFieldType.DATE);
-		endDate.setCellFormatter(new DateCellFormatter());
 		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 150);
 
 		instancesList = new ListGrid();
@@ -169,14 +161,12 @@ public class WorkflowHistoryDialog extends Window {
 		instancesList.setShowHeader(true);
 		instancesList.setCanSelectAll(false);
 		instancesList.setSelectionType(SelectionStyle.SINGLE);
-		instancesList.setHeight100();
+		instancesList.setHeight(200);
 		instancesList.setBorder("0px");
 		if (selectedWorkflow != null) {
-			dataSource1 = new WorkflowHistoriesDS(selectedWorkflow.getId(), null);
-			instancesList.setDataSource(dataSource1);
+			instancesDataSource = new WorkflowHistoriesDS(selectedWorkflow.getId(), null);
+			instancesList.setDataSource(instancesDataSource);
 		}
-
-		SC.warn("3333333333333333333333333333333333");
 
 		instancesList.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override
@@ -191,31 +181,16 @@ public class WorkflowHistoryDialog extends Window {
 
 		form.addMember(workflowInstancesLayout);
 
-		// Workflow hisotries section
-		DynamicForm workflowHistoriesForm = new DynamicForm();
-		workflowHistoriesForm.setWidth(300);
-		workflowHistoriesForm.setColWidths(1, "*");
-
+		// Workflow histories section
 		VLayout workflowHistoriesLayout = new VLayout(10);
-
-		StaticTextItem workflowHistoriesTitle = ItemFactory.newStaticTextItem("workflowHistoriesTitle", "", "<b>"
-				+ I18N.message("history") + "</b>");
-		workflowHistoriesTitle.setShouldSaveValue(false);
-		workflowHistoriesTitle.setWrapTitle(false);
-
-		workflowHistoriesForm.setItems(workflowHistoriesTitle);
-		workflowHistoriesLayout.addMember(workflowHistoriesForm);
 
 		ListGridField historyEvent = new ListGridField("event", I18N.message("event"), 200);
 		ListGridField historyDate = new ListGridField("date", I18N.message("date"), 150);
 		historyDate.setAlign(Alignment.CENTER);
 		historyDate.setType(ListGridFieldType.DATE);
-		historyDate.setCellFormatter(new DateCellFormatter());
-		ListGridField historyUser = new ListGridField("user", I18N.message("user"), 150);
-		ListGridField historyDoc = new ListGridField("document", I18N.message("document"), 150);
+		ListGridField historyUser = new ListGridField("user", I18N.message("user"), 120);
+		ListGridField historyDoc = new ListGridField("document", I18N.message("document"), 120);
 		ListGridField historySid = new ListGridField("sessionid", I18N.message("sid"), 250);
-
-		SC.warn("4444444444444444444444444444444444");
 
 		historiesList = new ListGrid();
 		historiesList.setCanFreezeFields(true);
@@ -223,14 +198,12 @@ public class WorkflowHistoryDialog extends Window {
 		historiesList.setShowHeader(true);
 		historiesList.setCanSelectAll(false);
 		historiesList.setSelectionType(SelectionStyle.NONE);
-		historiesList.setHeight100();
+		historiesList.setHeight(250);
 		historiesList.setBorder("0px");
 		if (selectedWorkflowInstance != null) {
-			dataSource2 = new WorkflowHistoriesDS(selectedWorkflow.getId(), selectedWorkflowInstance);
-			historiesList.setDataSource(dataSource2);
+			historiesDataSource = new WorkflowHistoriesDS(selectedWorkflow.getId(), selectedWorkflowInstance);
+			historiesList.setDataSource(historiesDataSource);
 		}
-
-		SC.warn("555555555555555555555555555555555555555555555555555555");
 
 		historiesList.setFields(historyEvent, historyDate, historyUser, historyDoc, historySid);
 		workflowHistoriesLayout.addMember(historiesList);

@@ -42,6 +42,7 @@ public class WorkflowDashboard extends PortalLayout {
 
 		Button historyButton = new Button(I18N.message("history"));
 		historyButton.setMargin(2);
+		historyButton.setBackgroundColor("#FF8723");
 		historyButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {

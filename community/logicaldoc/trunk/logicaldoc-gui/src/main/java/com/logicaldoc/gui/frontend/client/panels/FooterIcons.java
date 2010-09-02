@@ -33,6 +33,8 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 
 	private HTML messagesCount = new HTML("0");
 
+	private HTML workflowsCount = new HTML("0");
+
 	private FooterIcons() {
 		Img clipboardImage = ItemFactory.newImgIcon("paste.gif");
 		clipboardImage.setHeight("16px");
@@ -73,12 +75,24 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 				MainPanel.get().selectDashboardTab();
 			}
 		});
-		checkoutImage.setCursor(Cursor.HAND);
+		messageImage.setCursor(Cursor.HAND);
+
+		Img workflowImage = ItemFactory.newImgIcon("data_into.png");
+		workflowImage.setHeight("16px");
+		workflowImage.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				MainPanel.get().selectWorkflowTab();
+//				MainPanel.get().selectDashboardTab();
+			}
+		});
+		workflowImage.setCursor(Cursor.HAND);
 
 		clipboardSize.setWidth("20px");
 		lockedCount.setWidth("20px");
 		checkoutCount.setWidth("20px");
 		messagesCount.setWidth("20px");
+		workflowsCount.setWidth("20px");
 
 		addMember(clipboardImage);
 		addMember(clipboardSize);
@@ -90,6 +104,11 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 		if (Feature.enabled(Feature.MESSAGES)) {
 			addMember(messageImage);
 			addMember(messagesCount);
+		}
+
+		if (Feature.enabled(Feature.WORKFLOW)) {
+			addMember(workflowImage);
+			addMember(workflowsCount);
 		}
 
 		Clipboard.getInstance().addObserver(this);
@@ -118,5 +137,6 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 		checkoutCount.setText(Integer.toString(user.getCheckedOutDocs()));
 		lockedCount.setText(Integer.toString(user.getLockedDocs()));
 		messagesCount.setText(Integer.toString(user.getUnreadMessages()));
+		// workflowsCount.setText(Integer.toString(user.getUnreadMessages()));
 	}
 }

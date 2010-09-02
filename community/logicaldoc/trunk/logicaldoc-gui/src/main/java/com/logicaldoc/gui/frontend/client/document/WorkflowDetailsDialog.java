@@ -10,7 +10,6 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUITransition;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.data.DocumentsDS;
-import com.logicaldoc.gui.common.client.data.WorkflowTasksDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -23,6 +22,7 @@ import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
@@ -60,15 +60,21 @@ public class WorkflowDetailsDialog extends Window {
 
 	private ValuesManager vm = new ValuesManager();
 
-	private ListGrid historyTasksList;
-
-	private WorkflowTasksDS dataSource;
+	// private ListGrid historyTasksList;
+	//
+	// private WorkflowHistoriesDS dataSource;
 
 	private HLayout form = null;
 
 	private VLayout sxLayout = null;
 
 	private VLayout dxLayout = null;
+
+	private VLayout infoLayout = null;
+
+	private DynamicForm workflowForm = null;
+
+	private DynamicForm taskForm = null;
 
 	public WorkflowDetailsDialog(GUIWorkflow wfl) {
 		this.workflow = wfl;
@@ -83,38 +89,60 @@ public class WorkflowDetailsDialog extends Window {
 		setShowModalMask(true);
 		centerInPage();
 
+		form = new HLayout(25);
+		form.setMargin(40);
+		form.setWidth(790);
+		form.setHeight100();
+
+		addMember(form);
+
 		reload();
 	}
 
 	private void reload() {
-		if (sxLayout != null)
-			form.removeMember(sxLayout);
-
-		if (dxLayout != null)
-			form.removeMember(dxLayout);
-
-		if (form != null) {
-			removeMember(form);
+//		if (infoLayout != null) {
+//			infoLayout.removeMember(workflowForm);
+//			infoLayout.removeMember(taskForm);
+//			sxLayout.removeMember(infoLayout);
+//		}
+//
+//		if (sxLayout != null) {
+//			sxLayout.destroy();
+//			form.removeMember(sxLayout);
+//		}
+//
+//		if (dxLayout != null) {
+//			dxLayout.destroy();
+//			form.removeMember(dxLayout);
+//		}
+		
+		Canvas[] members = form.getMembers();
+		for (Canvas canvas : members) {
+			removeMember(canvas);
 		}
 
-		form = new HLayout();
-		form.setMargin(25);
-		form.setWidth100();
-		form.setHeight100();
+		// if (form != null) {
+		// form.destroy();
+		// removeMember(form);
+		// }
+		//
+		// form = new HLayout(25);
+		// form.setMargin(40);
+		// form.setWidth(780);
+		// form.setHeight(680);
 
-		sxLayout = new VLayout(10);
-		sxLayout.setMargin(25);
+		sxLayout = new VLayout(25);
+		// sxLayout.setMargin(25);
 
-		VLayout infoLayout = new VLayout(10);
-		infoLayout.setMargin(25);
+		infoLayout = new VLayout(10);
+		// infoLayout.setMargin(25);
 
 		// Workflow section
-		DynamicForm workflowForm = new DynamicForm();
-		workflowForm.setWidth(300);
-		workflowForm.setColWidths(1, "*");
+		workflowForm = new DynamicForm();
+		// workflowForm.setColWidths(1, "*");
 
-		StaticTextItem workflowTitle = ItemFactory.newStaticTextItem("workflow", "", "<b>" + I18N.message("workflow")
-				+ "</b>");
+		StaticTextItem workflowTitle = ItemFactory.newStaticTextItem("workflowTitle", "",
+				"<b>" + I18N.message("workflow") + "</b>");
 		workflowTitle.setShouldSaveValue(false);
 		workflowTitle.setWrapTitle(false);
 
@@ -140,9 +168,9 @@ public class WorkflowDetailsDialog extends Window {
 		infoLayout.addMember(workflowForm);
 
 		// Task section
-		DynamicForm taskForm = new DynamicForm();
+		taskForm = new DynamicForm();
 		taskForm.setWidth(300);
-		taskForm.setColWidths(1, "*");
+		// taskForm.setColWidths(1, "*");
 
 		StaticTextItem taskTitle = ItemFactory
 				.newStaticTextItem("taskTitle", "", "<b>" + I18N.message("task") + "</b>");
@@ -181,44 +209,50 @@ public class WorkflowDetailsDialog extends Window {
 
 		infoLayout.addMember(taskForm);
 
-		// SC.warn("task form added!!!");
+		// DynamicForm historyTasksForm = new DynamicForm();
+		// historyTasksForm.setWidth(300);
+		// // historyTasksForm.setHeight(50);
+		// // historyTasksForm.setColWidths(1, "*");
+		//
+		// StaticTextItem historyTasksTitle =
+		// ItemFactory.newStaticTextItem("historyTasks", "",
+		// "<b>" + I18N.message("history") + "</b>");
+		// historyTasksTitle.setShouldSaveValue(false);
+		// historyTasksTitle.setWrapTitle(false);
+		// historyTasksForm.setItems(historyTasksTitle);
+		// infoLayout.addMember(historyTasksForm);
+		//
+		// // sxLayout.addMember(infoLayout);
+		//
+		// ListGridField id = new ListGridField("id", I18N.message("id"), 70);
+		// ListGridField name = new ListGridField("name", I18N.message("name"),
+		// 100);
+		// ListGridField pooledAssignees = new ListGridField("pooledassignees",
+		// I18N.message("pooledassignees"), 150);
+		//
+		// historyTasksList = new ListGrid();
+		// historyTasksList.setWidth(400);
+		// // historyTasksList.setHeight(200);
+		// historyTasksList.setCanFreezeFields(true);
+		// historyTasksList.setAutoFetchData(true);
+		// historyTasksList.setShowHeader(true);
+		// historyTasksList.setCanSelectAll(false);
+		// historyTasksList.setSelectionType(SelectionStyle.NONE);
+		// historyTasksList.setBorder("0px");
+		// dataSource = new WorkflowHistoriesDS(workflow.getId(), null);
+		// historyTasksList.setDataSource(dataSource);
+		// historyTasksList.setFields(id, name, pooledAssignees);
+		//
+		// infoLayout.addMember(historyTasksList);
+		// // sxLayout.addMember(historyTasksList);
+		// // sxLayout.addMember(infoLayout);
 
-		DynamicForm historyTasksForm = new DynamicForm();
-		historyTasksForm.setWidth(300);
-		historyTasksForm.setColWidths(1, "*");
-		StaticTextItem historyTasksTitle = ItemFactory.newStaticTextItem("historyTasks", "",
-				"<b>" + I18N.message("history") + "</b>");
-		historyTasksTitle.setShouldSaveValue(false);
-		historyTasksTitle.setWrapTitle(false);
-		historyTasksForm.setItems(historyTasksTitle);
-		infoLayout.addMember(historyTasksForm);
-		
-		sxLayout.addMember(infoLayout);
-
-		ListGridField id = new ListGridField("id", I18N.message("id"), 70);
-		ListGridField name = new ListGridField("name", I18N.message("name"), 100);
-		ListGridField pooledAssignees = new ListGridField("pooledassignees", I18N.message("pooledassignees"), 150);
-
-		historyTasksList = new ListGrid();
-		historyTasksList.setWidth(300);
-		historyTasksList.setHeight(200);
-		historyTasksList.setCanFreezeFields(true);
-		historyTasksList.setAutoFetchData(true);
-		historyTasksList.setShowHeader(true);
-		historyTasksList.setCanSelectAll(false);
-		historyTasksList.setSelectionType(SelectionStyle.NONE);
-		historyTasksList.setBorder("0px");
-		dataSource = new WorkflowTasksDS(null, workflow.getSelectedTask().getId());
-		historyTasksList.setDataSource(dataSource);
-		historyTasksList.setFields(id, name, pooledAssignees);
-		
-		sxLayout.addMember(historyTasksList);
-		
-		VLayout appendedDocsLayout = new VLayout();
+		// VLayout appendedDocsLayout = new VLayout();
 
 		DynamicForm appendedDocsForm = new DynamicForm();
-		appendedDocsForm.setWidth(300);
-		appendedDocsForm.setColWidths(1, "*");
+		appendedDocsForm.setWidth(250);
+		// appendedDocsForm.setHeight(50);
+		// appendedDocsForm.setColWidths(1, "*");
 
 		StaticTextItem appendedDocsTitle = ItemFactory.newStaticTextItem("appendedDocs", "",
 				"<b>" + I18N.message("appendeddocuments") + "</b>");
@@ -226,15 +260,11 @@ public class WorkflowDetailsDialog extends Window {
 		appendedDocsTitle.setWrapTitle(false);
 
 		appendedDocsForm.setItems(appendedDocsTitle);
-		appendedDocsLayout.addMember(appendedDocsForm);
-		sxLayout.addMember(appendedDocsLayout);
-
-		// SC.warn("appendedDocsForm added!!!");
-
+		// appendedDocsLayout.addMember(appendedDocsForm);
+		infoLayout.addMember(appendedDocsForm);
+		// sxLayout.addMember(appendedDocsLayout);
 
 		// Appended documents section
-
-
 		ListGridField docTitle = new ListGridField("title", I18N.message("name"), 100);
 		ListGridField docLastModified = new ListGridField("lastModified", I18N.message("lastmodified"), 150);
 		docLastModified.setAlign(Alignment.CENTER);
@@ -253,24 +283,22 @@ public class WorkflowDetailsDialog extends Window {
 		docsAppendedList.setDataSource(new DocumentsDS(workflow.getAppendedDocIds()));
 		docsAppendedList.setFields(docTitle, docLastModified);
 
-//		appendedDocsLayout.addMember(docsAppendedList);
+		infoLayout.addMember(docsAppendedList);
+		sxLayout.addMember(infoLayout);
 
-		sxLayout.addMember(docsAppendedList);
-
-		// SC.warn("appendedDocsLayout added!!!");
+		// sxLayout.addMember(docsAppendedList);
 
 		dxLayout = new VLayout(10);
-		dxLayout.setMargin(50);
+		dxLayout.setMargin(40);
 
 		Button reassignButton = new Button(I18N.message("workflowtaskreassign"));
-		reassignButton.setMargin(2);
 		reassignButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
 			@Override
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
 				final Window window = new Window();
 				window.setTitle(I18N.message("workflowtaskreassign"));
-				window.setWidth(250);
+				window.setWidth(350);
 				window.setHeight(200);
 				window.setCanDragResize(true);
 				window.setIsModal(true);
@@ -281,12 +309,12 @@ public class WorkflowDetailsDialog extends Window {
 				reassignUserForm.setTitleOrientation(TitleOrientation.TOP);
 				reassignUserForm.setNumCols(1);
 				reassignUserForm.setValuesManager(vm);
-				StaticTextItem userItem = ItemFactory.newStaticTextItem("userItem", "", "<b>" + I18N.message("user")
-						+ "</b>");
-				userItem.setShouldSaveValue(false);
-				userItem.setWrapTitle(false);
-				user = ItemFactory.newUserSelector("user", " ");
-				user.setShowTitle(false);
+//				StaticTextItem userItem = ItemFactory.newStaticTextItem("userItem", "", "<b>" + I18N.message("user")
+//						+ "</b>");
+//				userItem.setShouldSaveValue(false);
+//				userItem.setWrapTitle(false);
+				user = ItemFactory.newUserSelector("user", I18N.message("user"));
+				user.setShowTitle(true);
 				user.setDisplayField("username");
 				user.addChangedHandler(new ChangedHandler() {
 					@Override
@@ -337,7 +365,7 @@ public class WorkflowDetailsDialog extends Window {
 					}
 				});
 
-				reassignUserForm.setItems(userItem, user, saveButton);
+				reassignUserForm.setItems(user, saveButton);
 
 				window.addItem(reassignUserForm);
 				window.show();
@@ -359,11 +387,10 @@ public class WorkflowDetailsDialog extends Window {
 
 							@Override
 							public void onSuccess(Void result) {
-								// reload();
-
+								reload();
+								destroy();
 								WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(workflow);
 								workflowDetailsDialog.show();
-								destroy();
 							}
 						});
 			}
@@ -386,11 +413,10 @@ public class WorkflowDetailsDialog extends Window {
 
 							@Override
 							public void onSuccess(Void result) {
-								// reload();
-
+								reload();
+								destroy();
 								WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(workflow);
 								workflowDetailsDialog.show();
-								destroy();
 							}
 						});
 			}
@@ -411,11 +437,11 @@ public class WorkflowDetailsDialog extends Window {
 
 							@Override
 							public void onSuccess(Void result) {
-								// reload();
-								// destroy();
+								reload();
+								destroy();
 								WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(workflow);
 								workflowDetailsDialog.show();
-								destroy();
+								// destroy();
 							}
 						});
 			}
@@ -437,9 +463,10 @@ public class WorkflowDetailsDialog extends Window {
 							public void onSuccess(Void result) {
 								reload();
 								// destroy();
-								WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(workflow);
-								workflowDetailsDialog.show();
-								destroy();
+								// WorkflowDetailsDialog workflowDetailsDialog =
+								// new WorkflowDetailsDialog(workflow);
+								// workflowDetailsDialog.show();
+								// destroy();
 							}
 						});
 			}
@@ -463,9 +490,10 @@ public class WorkflowDetailsDialog extends Window {
 							public void onSuccess(Void result) {
 								reload();
 								// destroy();
-								WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(workflow);
-								workflowDetailsDialog.show();
-								destroy();
+								// WorkflowDetailsDialog workflowDetailsDialog =
+								// new WorkflowDetailsDialog(workflow);
+								// workflowDetailsDialog.show();
+								// destroy();
 							}
 						});
 			}
@@ -489,9 +517,10 @@ public class WorkflowDetailsDialog extends Window {
 							public void onSuccess(Void result) {
 								reload();
 								// destroy();
-								WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(workflow);
-								workflowDetailsDialog.show();
-								destroy();
+								// WorkflowDetailsDialog workflowDetailsDialog =
+								// new WorkflowDetailsDialog(workflow);
+								// workflowDetailsDialog.show();
+								// destroy();
 							}
 						});
 			}
@@ -528,10 +557,12 @@ public class WorkflowDetailsDialog extends Window {
 										public void onSuccess(Void result) {
 											reload();
 											// destroy();
-											WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(
-													workflow);
-											workflowDetailsDialog.show();
-											destroy();
+											// WorkflowDetailsDialog
+											// workflowDetailsDialog = new
+											// WorkflowDetailsDialog(
+											// workflow);
+											// workflowDetailsDialog.show();
+											// destroy();
 										}
 									});
 						}
@@ -556,7 +587,7 @@ public class WorkflowDetailsDialog extends Window {
 		form.addMember(sxLayout);
 		form.addMember(dxLayout);
 
-		addMember(form);
+		// addMember(form);
 	}
 
 	public GUIWorkflow getWorkflow() {

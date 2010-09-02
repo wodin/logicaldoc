@@ -8,7 +8,7 @@ package com.logicaldoc.gui.common.client.beans;
  */
 public interface UserObserver {
 	/**
-	 * Invoked when some changes on the user appens
+	 * Invoked when some changes on the user happens
 	 */
 	public void onUserChanged(GUIUser user);
 }
