@@ -12,6 +12,7 @@ public class WorkflowHistoriesDS extends DataSource {
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
 		id.setRequired(true);
+		DataSourceTextField name = new DataSourceTextField("name");
 		DataSourceDateTimeField startDate = new DataSourceDateTimeField("startdate");
 		DataSourceDateTimeField endDate = new DataSourceDateTimeField("enddate");
 		DataSourceTextField documents = new DataSourceTextField("documents");
@@ -21,7 +22,7 @@ public class WorkflowHistoriesDS extends DataSource {
 		DataSourceTextField user = new DataSourceTextField("user");
 		DataSourceTextField document = new DataSourceTextField("document");
 		DataSourceTextField sessionId = new DataSourceTextField("sessionid");
-		setFields(id, startDate, endDate, documents, event, date, user, document, sessionId);
+		setFields(id, name, startDate, endDate, documents, event, date, user, document, sessionId);
 		setDataURL("data/workflowhistories.xml?sid=" + Session.get().getSid()
 				+ (workflowId != null ? "&workflowId=" + workflowId : "")
 				+ (workflowTemplateId != null ? "&workflowTemplateId=" + workflowTemplateId : ""));

@@ -17,13 +17,16 @@ public class DashboardPanel extends VLayout {
 
 	private static DashboardPanel instance;
 
+	private TabSet tabSet = new TabSet();
+
+	private Tab workflowTab = null;
+
 	private DashboardPanel() {
-		TabSet tabSet = new TabSet();
 
 		Tab userTab = new Tab(I18N.message("user"));
 		userTab.setPane(new UserDashboard());
 
-		Tab workflowTab = new Tab(I18N.message("workflow"));
+		workflowTab = new Tab(I18N.message("workflow"));
 		workflowTab.setPane(new WorkflowDashboard());
 
 		Tab messagesTab = new Tab(I18N.message("messages"));
@@ -59,5 +62,13 @@ public class DashboardPanel extends VLayout {
 		if (instance == null)
 			instance = new DashboardPanel();
 		return instance;
+	}
+
+	public TabSet getTabSet() {
+		return tabSet;
+	}
+
+	public Tab getWorkflowTab() {
+		return workflowTab;
 	}
 }

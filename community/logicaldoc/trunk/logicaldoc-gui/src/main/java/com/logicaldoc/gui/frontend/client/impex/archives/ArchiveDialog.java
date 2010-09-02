@@ -12,6 +12,7 @@ import com.logicaldoc.gui.frontend.client.services.ArchiveService;
 import com.logicaldoc.gui.frontend.client.services.ArchiveServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
@@ -31,7 +32,7 @@ import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
  * @since 6.0
  */
 public class ArchiveDialog extends Window {
-	private ArchiveServiceAsync documentService = (ArchiveServiceAsync) GWT.create(ArchiveService.class);
+	private ArchiveServiceAsync archiveService = (ArchiveServiceAsync) GWT.create(ArchiveService.class);
 
 	private ValuesManager vm = new ValuesManager();
 
@@ -82,14 +83,15 @@ public class ArchiveDialog extends Window {
 				vm.validate();
 				if (!vm.hasErrors()) {
 					GUIArchive archive = new GUIArchive();
-					archive.setType(Integer.parseInt(vm.getValueAsString("archivetype")));
+					if (vm.getValueAsString("archivetype") != null)
+						archive.setType(Integer.parseInt(vm.getValueAsString("archivetype")));
 					archive.setName(vm.getValueAsString("name"));
 					archive.setDescription(vm.getValueAsString("description"));
 					archive.setCreatorId(Session.get().getUser().getId());
 					archive.setCreatorName(Session.get().getUser().getFullName());
 					archive.setMode(GUIArchive.MODE_EXPORT);
 
-					documentService.save(Session.get().getSid(), archive, new AsyncCallback<GUIArchive>() {
+					archiveService.save(Session.get().getSid(), archive, new AsyncCallback<GUIArchive>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);
