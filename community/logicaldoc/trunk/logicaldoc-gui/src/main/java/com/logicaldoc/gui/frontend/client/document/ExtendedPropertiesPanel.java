@@ -97,10 +97,11 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 
 		SelectItem templateItem = ItemFactory.newTemplateSelector(false, null);
 		templateItem.addChangedHandler(changedHandler);
+		templateItem.setMultiple(false);
 		templateItem.setDisabled(!update);
-
 		if (document.getTemplateId() != null)
 			templateItem.setValue(document.getTemplateId().toString());
+		
 		templateItem.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
@@ -216,10 +217,11 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 			document.setCoverage((String) values.get("coverage"));
 
 			if (Feature.enabled(Feature.TEMPLATE)) {
-				if (values.get("template") == null || "".equals((String) values.get("template")))
+				if (values.get("template") == null || "".equals(values.get("template").toString()))
 					document.setTemplateId(null);
-				else
-					document.setTemplateId(Long.parseLong((String) values.get("template")));
+				else {
+					document.setTemplateId(Long.parseLong(values.get("template").toString()));
+				}
 				for (String name : values.keySet()) {
 					if (name.startsWith("_")) {
 						Object val = values.get(name);

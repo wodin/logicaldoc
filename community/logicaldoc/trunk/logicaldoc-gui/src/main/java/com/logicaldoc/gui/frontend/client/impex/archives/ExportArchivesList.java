@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
+import com.logicaldoc.gui.common.client.beans.GUISostConfig;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
@@ -235,22 +236,31 @@ public class ExportArchivesList extends VLayout {
 						if (value) {
 							service.setStatus(Session.get().getSid(),
 									Long.parseLong(record.getAttributeAsString("id")), GUIArchive.STATUS_CLOSED,
-									new AsyncCallback<Void>() {
+									new AsyncCallback<GUIArchive>() {
 										@Override
 										public void onFailure(Throwable caught) {
 											Log.serverError(caught);
 										}
 
 										@Override
-										public void onSuccess(Void result) {
+										public void onSuccess(GUIArchive result) {
 											if (record.getAttributeAsString("type")
 													.equals("" + GUIArchive.TYPE_STORAGE)) {
-												// Show Archive validation tabs
-												// TODO Il metodo setStatus
-												// dell'ArchiveService deve
-												// ritornare l'archivio da
-												// modificare!!!!
+												service.getSostConfigurations(Session.get().getSid(), id, new AsyncCallback<GUISostConfig[]>() {
+													@Override
+													public void onFailure(Throwable caught) {
+														Log.serverError(caught);
+													}
+
+													@Override
+													public void onSuccess(GUISostConfig[] result) {
+														// Show Archive validation panel
+														ArchiveValidation validation = new ArchiveValidation(result);
+														validation.show();
+													}
+												});
 											}
+											
 											record.setAttribute("status", "1");
 											record.setAttribute("statusicon", "lock");
 											list.updateData(record);

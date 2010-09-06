@@ -3,6 +3,8 @@ package com.logicaldoc.gui.common.client.beans;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.smartgwt.client.util.SC;
+
 /**
  * Representation of a single document handled by the GUI
  * 
@@ -311,7 +313,7 @@ public class GUIDocument implements Serializable {
 
 	public Object getValue(String attributeName) {
 		for (GUIExtendedAttribute att : attributes) {
-			if (att.getName().equals(attributeName))
+			if (att.getName().equals(attributeName) && att.getValue() != null)
 				return att.getValue();
 		}
 		return null;
