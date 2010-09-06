@@ -207,8 +207,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		if (file != null) {
 			log.debug("Checking in file " + file.getName());
 
-			System.out.println("*** Checking in file " + file.getName());
-
 			// check that we have a valid file for storing as new
 			// version
 			String fileName = file.getName();
@@ -382,6 +380,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		DocumentTemplateDAO templateDao = (DocumentTemplateDAO) Context.getInstance()
 				.getBean(DocumentTemplateDAO.class);
 		DocumentTemplate template = templateDao.findById(templateId);
+
 		GUIExtendedAttribute[] attributes = new GUIExtendedAttribute[template.getAttributeNames().size()];
 		int i = 0;
 		for (String attrName : template.getAttributeNames()) {
@@ -391,14 +390,15 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			att.setPosition(extAttr.getPosition());
 			att.setMandatory(extAttr.getMandatory() == 1 ? true : false);
 			att.setType(extAttr.getType());
-			if (extAttr.getValue() instanceof String)
-				att.setStringValue(extAttr.getStringValue());
-			else if (extAttr.getValue() instanceof Long)
-				att.setIntValue(extAttr.getIntValue());
-			else if (extAttr.getValue() instanceof Double)
-				att.setDoubleValue(extAttr.getDoubleValue());
-			else if (extAttr.getValue() instanceof Date)
-				att.setDateValue(extAttr.getDateValue());
+
+			// if (extAttr.getValue() instanceof String)
+			// att.setStringValue(extAttr.getStringValue());
+			// else if (extAttr.getValue() instanceof Long)
+			// att.setIntValue(extAttr.getIntValue());
+			// else if (extAttr.getValue() instanceof Double)
+			// att.setDoubleValue(extAttr.getDoubleValue());
+			// else if (extAttr.getValue() instanceof Date)
+			// att.setDateValue(extAttr.getDateValue());
 
 			attributes[i] = att;
 			i++;
@@ -448,8 +448,28 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				document.setSourceAuthor(doc.getSourceAuthor());
 				document.setSourceDate(doc.getSourceDate());
 				document.setSourceId(doc.getSourceId());
-				if (doc.getTemplate() != null)
+
+				if (doc.getTemplate() != null) {
 					document.setTemplate(doc.getTemplate().getName());
+					document.setTemplateId(doc.getTemplate().getId());
+
+					GUIExtendedAttribute[] attributes = new GUIExtendedAttribute[doc.getAttributes().size()];
+					int i = 0;
+					for (String name : doc.getAttributeNames()) {
+						ExtendedAttribute extAttr = doc.getAttributes().get(name);
+						GUIExtendedAttribute attr = new GUIExtendedAttribute();
+						attr.setName(name);
+						attr.setValue(extAttr.getValue());
+						attr.setType(extAttr.getType());
+						attr.setPosition(extAttr.getPosition());
+						attr.setMandatory(extAttr.getMandatory() == 1);
+
+						attributes[i] = attr;
+						i++;
+					}
+					document.setAttributes(attributes);
+				}
+
 				document.setStatus(doc.getStatus());
 				FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 				document.setPathExtended(fdao.computePathExtended(doc.getFolder().getId()));
@@ -463,6 +483,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				GUIFolder folder = FolderServiceImpl.getFolder(sid, doc.getFolder().getId());
 				document.setFolder(folder);
 			} catch (Throwable t) {
+				t.printStackTrace();
 			}
 
 			return document;
@@ -757,68 +778,97 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = null;
-		if (document.getId() != 0) {
-			doc = docDao.findById(document.getId());
-			docDao.initialize(doc);
-			doc.setCustomId(document.getCustomId());
-			try {
-				Document docVO = new Document();
-				docVO.setTitle(document.getTitle());
-				if (document.getTags().length > 0)
-					docVO.setTags(new HashSet<String>(Arrays.asList(document.getTags())));
+		try {
+			if (document.getId() != 0) {
+				doc = docDao.findById(document.getId());
+				docDao.initialize(doc);
+				doc.setCustomId(document.getCustomId());
+				try {
+					Document docVO = new Document();
+					docVO.setTitle(document.getTitle());
+					if (document.getTags().length > 0)
+						docVO.setTags(new HashSet<String>(Arrays.asList(document.getTags())));
 
-				docVO.setSourceType(document.getSourceType());
-				docVO.setFileName(document.getFileName());
-				docVO.setVersion(document.getVersion());
-				docVO.setCreation(document.getCreation());
-				docVO.setCreator(document.getCreator());
-				docVO.setDate(document.getDate());
-				docVO.setPublisher(document.getPublisher());
-				docVO.setFileVersion(document.getFileVersion());
-				docVO.setLanguage(document.getLanguage());
-				docVO.setFileSize(document.getFileSize().longValue());
-				docVO.setSource(document.getSource());
-				docVO.setRecipient(document.getRecipient());
-				docVO.setObject(document.getObject());
-				docVO.setCoverage(document.getCoverage());
-				docVO.setSourceAuthor(document.getSourceAuthor());
-				docVO.setSourceDate(document.getSourceDate());
-				docVO.setSourceId(document.getSourceId());
-				if (document.getTemplateId() != null) {
-					// DocumentTemplateDAO templateDao = (DocumentTemplateDAO)
-					// Context.getInstance().getBean(
-					// DocumentTemplateDAO.class);
-					// DocumentTemplate template =
-					// templateDao.findById(document.getTemplateId());
-					docVO.setTemplateId(document.getTemplateId());
-					// docVO.setTemplate(template);
+					docVO.setSourceType(document.getSourceType());
+					docVO.setFileName(document.getFileName());
+					docVO.setVersion(document.getVersion());
+					docVO.setCreation(document.getCreation());
+					docVO.setCreator(document.getCreator());
+					docVO.setDate(document.getDate());
+					docVO.setPublisher(document.getPublisher());
+					docVO.setFileVersion(document.getFileVersion());
+					docVO.setLanguage(document.getLanguage());
+					if (document.getFileSize() != null)
+						docVO.setFileSize(document.getFileSize().longValue());
+					docVO.setSource(document.getSource());
+					docVO.setRecipient(document.getRecipient());
+					docVO.setObject(document.getObject());
+					docVO.setCoverage(document.getCoverage());
+					docVO.setSourceAuthor(document.getSourceAuthor());
+					docVO.setSourceDate(document.getSourceDate());
+					docVO.setSourceId(document.getSourceId());
+
+					if (document.getTemplateId() != null) {
+						docVO.setTemplateId(document.getTemplateId());
+						DocumentTemplateDAO templateDao = (DocumentTemplateDAO) Context.getInstance().getBean(
+								DocumentTemplateDAO.class);
+						DocumentTemplate template = templateDao.findById(document.getTemplateId());
+						docVO.setTemplate(template);
+						if (document.getAttributes().length > 0) {
+							for (GUIExtendedAttribute attr : document.getAttributes()) {
+								ExtendedAttribute extAttr = new ExtendedAttribute();
+								int templateType = template.getAttributes().get(attr.getName()).getType();
+								int extAttrType = attr.getType();
+
+								if (templateType != extAttrType) {
+									if (templateType == GUIExtendedAttribute.TYPE_DOUBLE) {
+										extAttr.setValue(Double.parseDouble(attr.getValue().toString()));
+									} else if (templateType == GUIExtendedAttribute.TYPE_INT) {
+										extAttr.setValue(Long.parseLong(attr.getValue().toString()));
+									}
+								} else
+									extAttr.setValue(attr.getValue());
+
+								extAttr.setPosition(attr.getPosition());
+								extAttr.setMandatory(attr.isMandatory() ? 1 : 0);
+
+								docVO.getAttributes().put(attr.getName(), extAttr);
+							}
+						}
+					}
+
+					docVO.setStatus(document.getStatus());
+					FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+					if (document.getFolder() != null)
+						docVO.setFolder(fdao.findById(document.getFolder().getId()));
+
+					// Create the document history event
+					History transaction = new History();
+					transaction.setSessionId(sid);
+					transaction.setEvent(History.EVENT_CHANGED);
+					transaction.setComment("");
+					transaction.setUser(SessionUtil.getSessionUser(sid));
+
+					DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
+							DocumentManager.class);
+					documentManager.update(doc, docVO, transaction);
+
+					document.setId(doc.getId());
+					document.setLastModified(new Date());
+					document.setVersion(doc.getVersion());
+				} catch (Throwable t) {
+					t.printStackTrace();
+					log.error(t.getMessage(), t);
 				}
-				docVO.setStatus(document.getStatus());
-				FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-				docVO.setFolder(fdao.findById(document.getFolder().getId()));
+			} else
+				return null;
 
-				// Create the document history event
-				History transaction = new History();
-				transaction.setSessionId(sid);
-				transaction.setEvent(History.EVENT_CHANGED);
-				transaction.setComment("");
-				transaction.setUser(SessionUtil.getSessionUser(sid));
-
-				DocumentManager documentManager = (DocumentManager) Context.getInstance()
-						.getBean(DocumentManager.class);
-				documentManager.update(doc, docVO, transaction);
-
-				document.setId(doc.getId());
-				document.setLastModified(new Date());
-				document.setVersion(doc.getVersion());
-			} catch (Throwable t) {
-				log.error(t.getMessage(), t);
-			}
-		} else
-			return null;
-
-		return document;
-
+			return document;
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.warn(e.getMessage(), e);
+		}
+		return null;
 	}
 
 	@Override

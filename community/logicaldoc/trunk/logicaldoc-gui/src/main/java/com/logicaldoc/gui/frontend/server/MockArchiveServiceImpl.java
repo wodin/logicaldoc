@@ -5,6 +5,7 @@ import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIIncrementalArchive;
+import com.logicaldoc.gui.common.client.beans.GUISostConfig;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.frontend.client.services.ArchiveService;
 
@@ -34,8 +35,8 @@ public class MockArchiveServiceImpl extends RemoteServiceServlet implements Arch
 	}
 
 	@Override
-	public void setStatus(String sid, long archiveId, int status) throws InvalidSessionException {
-
+	public GUIArchive setStatus(String sid, long archiveId, int status) throws InvalidSessionException {
+		return null;
 	}
 
 	@Override
@@ -90,5 +91,10 @@ public class MockArchiveServiceImpl extends RemoteServiceServlet implements Arch
 		GUIArchive archive = new GUIArchive();
 		archive.setId(archiveId);
 		return archive;
+	}
+
+	@Override
+	public GUISostConfig[] getSostConfigurations(String sid, long archiveId) throws InvalidSessionException {
+		return null;
 	}
 }

@@ -110,9 +110,9 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 		} else if (value instanceof Long) {
 			this.type = TYPE_INT;
 			setIntValue((Long) value);
-		}else if (value instanceof Integer) {
-				this.type = TYPE_INT;
-				setIntValue(new Long(((Integer) value).intValue()));
+		} else if (value instanceof Integer) {
+			this.type = TYPE_INT;
+			setIntValue(new Long(((Integer) value).intValue()));
 		} else if (value instanceof Double) {
 			this.type = TYPE_DOUBLE;
 			setDoubleValue((Double) value);
