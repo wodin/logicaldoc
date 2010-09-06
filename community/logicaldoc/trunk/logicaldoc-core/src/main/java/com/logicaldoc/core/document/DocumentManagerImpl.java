@@ -359,6 +359,8 @@ public class DocumentManagerImpl implements DocumentManager {
 
 				// Change the template and attributes
 				if (template != null) {
+					doc.setTemplate(template);
+					doc.setTemplateId(template.getId());
 					if (docVO.getAttributes() != null) {
 						doc.getAttributes().clear();
 						for (String attrName : docVO.getAttributes().keySet()) {
@@ -369,7 +371,8 @@ public class DocumentManagerImpl implements DocumentManager {
 								if (templateExtAttribute.getType() == docExtendedAttribute.getType()) {
 									doc.getAttributes().put(attrName, docExtendedAttribute);
 								} else {
-									throw new Exception("The given type value is not correct.");
+									throw new Exception("The given type value is not correct for attribute: "
+											+ attrName);
 								}
 							} else {
 								throw new Exception("The attribute name '" + attrName
@@ -798,7 +801,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				// The doc is a shortcut, so we still copy a shortcut
 				shortcut.setDocRef(doc.getDocRef());
 			}
-			
+
 			// Modify document history entry
 			transaction.setEvent(History.EVENT_SHORTCUT_STORED);
 
