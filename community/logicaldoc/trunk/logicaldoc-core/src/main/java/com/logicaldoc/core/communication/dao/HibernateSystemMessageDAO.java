@@ -59,14 +59,14 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	 */
 	@SuppressWarnings("unchecked")
 	public List<SystemMessage> findByRecipient(String recipient, int type, Integer read) {
-		String query = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_red, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
+		String sql = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_red, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_id IN (select ld_messageid from ld_recipient where ld_name = '"
 				+ SqlUtil.doubleQuotes(recipient) + "' and ld_type = " + type + ")";
 		if (read != null)
-			query = query + " and ld_read=" + read;
-		query = query + " order by ld_sentdate desc";
+			sql = sql + " and ld_red=" + read;
+		sql = sql + " order by ld_sentdate desc";
 
-		List<SystemMessage> messages = (List<SystemMessage>) query(query, null, new SystemMessageMapper(), null);
+		List<SystemMessage> messages = (List<SystemMessage>) query(sql, null, new SystemMessageMapper(), null);
 		return messages;
 	}
 
@@ -131,22 +131,22 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<SystemMessage> findByMode(String mode) {
-		String query = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_red, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
+		String sql = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_red, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_id IN (select ld_messageid from ld_recipient where ld_mode = '"
 				+ SqlUtil.doubleQuotes(mode) + "') order by ld_sentdate desc";
 
-		List<SystemMessage> messages = (List<SystemMessage>) query(query, null, new SystemMessageMapper(), null);
+		List<SystemMessage> messages = (List<SystemMessage>) query(sql, null, new SystemMessageMapper(), null);
 		return messages;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<SystemMessage> findByType(int type) {
-		String query = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_red, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
+		String sql = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_red, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_id IN (select ld_messageid from ld_recipient where ld_type = "
 				+ type + ") order by ld_sentdate desc";
 
-		List<SystemMessage> messages = (List<SystemMessage>) query(query, null, new SystemMessageMapper(), null);
+		List<SystemMessage> messages = (List<SystemMessage>) query(sql, null, new SystemMessageMapper(), null);
 		return messages;
 	}
 
@@ -162,12 +162,12 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<SystemMessage> findMessagesToBeSent(int type, int maxTrial) {
-		String query = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_red, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
+		String sql = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_red, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_status <> "
 				+ SystemMessage.STATUS_DELIVERED
 				+ " and ld_type = " + type + " and ld_trials < " + maxTrial + " order by ld_sentdate desc";
 
-		List<SystemMessage> messages = (List<SystemMessage>) query(query, null, new SystemMessageMapper(), null);
+		List<SystemMessage> messages = (List<SystemMessage>) query(sql, null, new SystemMessageMapper(), null);
 		return messages;
 	}
 }
