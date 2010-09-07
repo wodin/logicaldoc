@@ -298,11 +298,11 @@ public class Setup implements EntryPoint {
 		// Prepare the map with all database engines
 		engines.put(DB_MYSQL, new String[] { "MySQL 5.x", "com.mysql.jdbc.Driver",
 				"jdbc:mysql://<server>[,<failoverhost>][<:3306>]/<database>",
-				"org.hibernate.dialect.PostgreSQLDialect", "SELECT 1" });
+				"org.hibernate.dialect.MySQLDialect", "SELECT 1" });
 		engines.put("PostgreSQL", new String[] { "PostgreSQL 8.x", "org.postgresql.Driver",
-				"jdbc:postgresql:[<//server>[<:5432>/]]<database>", "org.hibernate.dialect.MySQLDialect", "SELECT 1" });
+				"jdbc:postgresql:[<//server>[<:5432>/]]<database>", "org.hibernate.dialect.PostgreSQLDialect", "SELECT 1" });
 		engines.put(ORACLE, new String[] { "Oracle 10g/11g", "oracle.jdbc.driver.OracleDriver",
-				"jdbc:oracle:thin:@<server>[<:1521>]:<database>", "org.hibernate.dialect.OracleDialect",
+				"jdbc:oracle:thin:@<server>[<:1521>]:<database>", "org.hibernate.dialect.Oracle10gDialect",
 				"SELECT 1 FROM DUAL" });
 
 		Tab databaseTab = new Tab();
