@@ -19,19 +19,23 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class SignDialog extends Window {
 	private HTML applet = new HTML();
 
-	public SignDialog(String docId, String ids, String names) {
+	public SignDialog(String docId, String ids, String names, boolean validation) {
 		VLayout layout = new VLayout();
 		layout.setMargin(25);
 
+		final boolean archiveValidation = validation;
+
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		addCloseClickHandler(new CloseClickHandler() {
-			@Override
-			public void onCloseClick(CloseClientEvent event) {
-				DocumentsPanel.get().refresh();
-				destroy();
-			}
-		});
-		
+		if (!archiveValidation)
+			addCloseClickHandler(new CloseClickHandler() {
+
+				@Override
+				public void onCloseClick(CloseClientEvent event) {
+					DocumentsPanel.get().refresh();
+					destroy();
+				}
+			});
+
 		setTitle(I18N.message("signdocuments"));
 		setWidth(460);
 		setHeight(340);

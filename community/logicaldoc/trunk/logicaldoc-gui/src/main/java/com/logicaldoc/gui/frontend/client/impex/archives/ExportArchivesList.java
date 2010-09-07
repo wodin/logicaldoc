@@ -255,14 +255,14 @@ public class ExportArchivesList extends VLayout {
 													@Override
 													public void onSuccess(GUISostConfig[] result) {
 														// Show Archive validation panel
-														ArchiveValidation validation = new ArchiveValidation(result);
+														ArchiveValidation validation = new ArchiveValidation(result, id);
 														validation.show();
 													}
 												});
 											}
-											
-											record.setAttribute("status", "1");
-											record.setAttribute("statusicon", "lock");
+											//TODO Da scommentare!!!
+//											record.setAttribute("status", "1");
+//											record.setAttribute("statusicon", "lock");
 											list.updateData(record);
 											showDetails(Long.parseLong(record.getAttributeAsString("id")), false);
 										}

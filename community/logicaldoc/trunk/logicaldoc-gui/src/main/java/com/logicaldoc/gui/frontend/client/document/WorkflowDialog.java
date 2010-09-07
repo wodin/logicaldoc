@@ -21,7 +21,6 @@ import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
@@ -122,12 +121,8 @@ public class WorkflowDialog extends Window {
 			layout.removeMember(startWorkflow);
 		}
 
-		// SC.warn("refresh tabs!!!");
-
 		wflName = workflowName;
 		wflDescription = workflowDescription;
-
-		SC.warn("wflName: " + wflName + " --- " + "wflDescription: " + wflDescription);
 
 		tabs = new TabSet();
 		tabs.setWidth(550);
@@ -175,8 +170,6 @@ public class WorkflowDialog extends Window {
 				refreshTabs(record.getAttributeAsString("name"), record.getAttributeAsString("description"), 1);
 			}
 		});
-
-		// SC.warn("chooseWorkflow!!!");
 
 		chooseWorkflowForm.addChild(deployedWorkflowsList);
 		chooseWorkflow.setPane(chooseWorkflowForm);

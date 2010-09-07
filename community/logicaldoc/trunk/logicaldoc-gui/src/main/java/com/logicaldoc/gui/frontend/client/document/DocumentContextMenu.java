@@ -453,7 +453,7 @@ public class DocumentContextMenu extends Menu {
 				if (names.startsWith(","))
 					names = names.substring(1);
 
-				SignDialog dialog = new SignDialog(selection[0].getAttributeAsString("id"), ids, names);
+				SignDialog dialog = new SignDialog(selection[0].getAttributeAsString("id"), ids, names, false);
 				dialog.show();
 			}
 		});
@@ -516,7 +516,7 @@ public class DocumentContextMenu extends Menu {
 				ListGridRecord[] selection = list.getSelection();
 				if (selection == null || selection.length == 0)
 					return;
-				
+
 				String ids = "";
 				for (ListGridRecord rec : selection) {
 					ids += "," + rec.getAttributeAsString("id");
