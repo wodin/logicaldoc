@@ -268,7 +268,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		History transaction = new History();
 		transaction.setFolderId(folder.getId());
 		transaction.setEvent(History.EVENT_FOLDER_RENAMED);
-		transaction.setUserId(1);
+		transaction.setUser(userDao.findById(1));
 		transaction.setNotified(0);
 		dao.store(folder, transaction);
 
@@ -280,10 +280,10 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		transaction = new History();
 		transaction.setFolderId(folder.getId());
 		transaction.setEvent(History.EVENT_FOLDER_RENAMED);
-		transaction.setUserId(1);
+		transaction.setUser(userDao.findById(1));
 		transaction.setNotified(0);
 		dao.store(folder, transaction);
-		
+
 		folder = dao.findById(6);
 		folder.getFolderGroups().remove(folder.getFolderGroup(2));
 		Assert.assertEquals(2, folder.getFolderGroups().size());
@@ -340,7 +340,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		List<Folder> folders = dao.findByName("%folder%");
 		Assert.assertNotNull(folders);
 		Assert.assertEquals(2, folders.size());
-		
+
 		folders = (List<Folder>) dao.findByName(null, "test", true);
 		Assert.assertNotNull(folders);
 		Assert.assertEquals(1, folders.size());
@@ -355,7 +355,6 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertNotNull(folders);
 		Assert.assertTrue(folders.isEmpty());
 	}
-
 
 	@Test
 	public void testFindByUserId() {
@@ -437,7 +436,6 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(6, ids.size());
 
-
 		// Try with unexisting user
 		ids = dao.findFolderIdByUserId(99);
 		Assert.assertNotNull(ids);
@@ -454,7 +452,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		ids = dao.findIdByUserId(3, 1200);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(1, ids.size());
-	
+
 		ids = dao.findIdByUserId(1, 1201);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(1, ids.size());
@@ -517,7 +515,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		List<Long> ids = dao.findFolderIdByUserIdAndPermission(5, Permission.WRITE);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(1, ids.size());
-		
+
 		ids = dao.findFolderIdByUserIdAndPermission(3, Permission.WRITE);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(6, ids.size());

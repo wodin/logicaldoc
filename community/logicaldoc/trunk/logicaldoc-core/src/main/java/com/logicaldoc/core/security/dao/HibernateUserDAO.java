@@ -152,7 +152,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 			}
 
 			// Check if the user is enabled
-			if (user.getEnabled() == 0)
+			if (user != null && user.getEnabled() == 0)
 				return false;
 
 			if (isPasswordExpired(username))
