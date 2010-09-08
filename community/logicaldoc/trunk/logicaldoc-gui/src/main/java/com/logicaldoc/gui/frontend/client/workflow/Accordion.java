@@ -155,8 +155,6 @@ public class Accordion extends SectionStack {
 
 	public void setSupervisor(String id) {
 		supervisor.setValue(id);
-		// TODO set supervisor
-		// this.workflow.setSupervisor(new GUIUser());
 	}
 
 	public Map<String, Object> getValues() {

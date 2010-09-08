@@ -14,6 +14,7 @@ import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.frontend.client.dashboard.WorkflowDashboard;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -24,6 +25,8 @@ import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Window;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
+import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
@@ -60,24 +63,21 @@ public class WorkflowDetailsDialog extends Window {
 
 	private ValuesManager vm = new ValuesManager();
 
-	// private ListGrid historyTasksList;
-	//
-	// private WorkflowHistoriesDS dataSource;
-
 	private HLayout form = null;
 
 	private VLayout sxLayout = null;
 
 	private VLayout dxLayout = null;
 
-	private VLayout infoLayout = null;
-
 	private DynamicForm workflowForm = null;
 
 	private DynamicForm taskForm = null;
 
-	public WorkflowDetailsDialog(GUIWorkflow wfl) {
+	private WorkflowDashboard workflowDashboard;
+
+	public WorkflowDetailsDialog(WorkflowDashboard dashboard, GUIWorkflow wfl) {
 		this.workflow = wfl;
+		this.workflowDashboard = dashboard;
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
@@ -89,57 +89,50 @@ public class WorkflowDetailsDialog extends Window {
 		setShowModalMask(true);
 		centerInPage();
 
-		form = new HLayout(25);
-		form.setMargin(40);
-		form.setWidth(790);
-		form.setHeight100();
+		addCloseClickHandler(new CloseClickHandler() {
+			@Override
+			public void onCloseClick(CloseClientEvent event) {
+				workflowDashboard.refresh();
+				destroy();
+			}
+		});
 
-		addMember(form);
+		form = new HLayout(20);
+		form.setMargin(20);
+		// form.setWidth(780);
+		// form.setHeight(650);
 
-		reload();
+		sxLayout = new VLayout(20);
+		sxLayout.setMargin(20);
+		sxLayout.setHeight(600);
+
+		dxLayout = new VLayout(10);
+		dxLayout.setMargin(30);
+		dxLayout.setHeight(600);
+
+		reload(wfl);
 	}
 
-	private void reload() {
-//		if (infoLayout != null) {
-//			infoLayout.removeMember(workflowForm);
-//			infoLayout.removeMember(taskForm);
-//			sxLayout.removeMember(infoLayout);
-//		}
-//
-//		if (sxLayout != null) {
-//			sxLayout.destroy();
-//			form.removeMember(sxLayout);
-//		}
-//
-//		if (dxLayout != null) {
-//			dxLayout.destroy();
-//			form.removeMember(dxLayout);
-//		}
-		
-		Canvas[] members = form.getMembers();
+	private void reload(GUIWorkflow wfl) {
+		this.workflow = wfl;
+
+		Canvas[] members = sxLayout.getMembers();
 		for (Canvas canvas : members) {
-			removeMember(canvas);
+			sxLayout.removeMember(canvas);
 		}
 
-		// if (form != null) {
-		// form.destroy();
-		// removeMember(form);
-		// }
-		//
-		// form = new HLayout(25);
-		// form.setMargin(40);
-		// form.setWidth(780);
-		// form.setHeight(680);
+		members = dxLayout.getMembers();
+		for (Canvas canvas : members) {
+			dxLayout.removeMember(canvas);
+		}
 
-		sxLayout = new VLayout(25);
-		// sxLayout.setMargin(25);
-
-		infoLayout = new VLayout(10);
-		// infoLayout.setMargin(25);
+		members = form.getMembers();
+		for (Canvas canvas : members) {
+			form.removeMember(canvas);
+		}
 
 		// Workflow section
 		workflowForm = new DynamicForm();
-		// workflowForm.setColWidths(1, "*");
 
 		StaticTextItem workflowTitle = ItemFactory.newStaticTextItem("workflowTitle", "",
 				"<b>" + I18N.message("workflow") + "</b>");
@@ -165,12 +158,11 @@ public class WorkflowDetailsDialog extends Window {
 			endDate.setValue(formatter.format((Date) workflow.getEndDate()));
 
 		workflowForm.setItems(workflowTitle, workflowName, workflowDescription, startDate, endDate);
-		infoLayout.addMember(workflowForm);
+		sxLayout.addMember(workflowForm);
 
 		// Task section
 		taskForm = new DynamicForm();
 		taskForm.setWidth(300);
-		// taskForm.setColWidths(1, "*");
 
 		StaticTextItem taskTitle = ItemFactory
 				.newStaticTextItem("taskTitle", "", "<b>" + I18N.message("task") + "</b>");
@@ -207,7 +199,7 @@ public class WorkflowDetailsDialog extends Window {
 		taskForm.setItems(taskTitle, taskId, taskName, taskDescription, taskAssignee, taskStartDate, taskEndDate,
 				taskComment);
 
-		infoLayout.addMember(taskForm);
+		sxLayout.addMember(taskForm);
 
 		// DynamicForm historyTasksForm = new DynamicForm();
 		// historyTasksForm.setWidth(300);
@@ -247,12 +239,8 @@ public class WorkflowDetailsDialog extends Window {
 		// // sxLayout.addMember(historyTasksList);
 		// // sxLayout.addMember(infoLayout);
 
-		// VLayout appendedDocsLayout = new VLayout();
-
 		DynamicForm appendedDocsForm = new DynamicForm();
 		appendedDocsForm.setWidth(250);
-		// appendedDocsForm.setHeight(50);
-		// appendedDocsForm.setColWidths(1, "*");
 
 		StaticTextItem appendedDocsTitle = ItemFactory.newStaticTextItem("appendedDocs", "",
 				"<b>" + I18N.message("appendeddocuments") + "</b>");
@@ -260,12 +248,10 @@ public class WorkflowDetailsDialog extends Window {
 		appendedDocsTitle.setWrapTitle(false);
 
 		appendedDocsForm.setItems(appendedDocsTitle);
-		// appendedDocsLayout.addMember(appendedDocsForm);
-		infoLayout.addMember(appendedDocsForm);
-		// sxLayout.addMember(appendedDocsLayout);
+		sxLayout.addMember(appendedDocsForm);
 
 		// Appended documents section
-		ListGridField docTitle = new ListGridField("title", I18N.message("name"), 100);
+		ListGridField docTitle = new ListGridField("title", I18N.message("name"), 150);
 		ListGridField docLastModified = new ListGridField("lastModified", I18N.message("lastmodified"), 150);
 		docLastModified.setAlign(Alignment.CENTER);
 		docLastModified.setType(ListGridFieldType.DATE);
@@ -283,13 +269,7 @@ public class WorkflowDetailsDialog extends Window {
 		docsAppendedList.setDataSource(new DocumentsDS(workflow.getAppendedDocIds()));
 		docsAppendedList.setFields(docTitle, docLastModified);
 
-		infoLayout.addMember(docsAppendedList);
-		sxLayout.addMember(infoLayout);
-
-		// sxLayout.addMember(docsAppendedList);
-
-		dxLayout = new VLayout(10);
-		dxLayout.setMargin(40);
+		sxLayout.addMember(docsAppendedList);
 
 		Button reassignButton = new Button(I18N.message("workflowtaskreassign"));
 		reassignButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
@@ -309,10 +289,6 @@ public class WorkflowDetailsDialog extends Window {
 				reassignUserForm.setTitleOrientation(TitleOrientation.TOP);
 				reassignUserForm.setNumCols(1);
 				reassignUserForm.setValuesManager(vm);
-//				StaticTextItem userItem = ItemFactory.newStaticTextItem("userItem", "", "<b>" + I18N.message("user")
-//						+ "</b>");
-//				userItem.setShouldSaveValue(false);
-//				userItem.setWrapTitle(false);
 				user = ItemFactory.newUserSelector("user", I18N.message("user"));
 				user.setShowTitle(true);
 				user.setDisplayField("username");
@@ -347,7 +323,7 @@ public class WorkflowDetailsDialog extends Window {
 						}
 
 						if (vm.validate()) {
-							service.saveTaskAssignment(Session.get().getSid(), getWorkflow().getSelectedTask().getId(),
+							service.saveTaskAssignment(Session.get().getSid(), workflow.getSelectedTask().getId(),
 									values.get("user").toString(), new AsyncCallback<Void>() {
 
 										@Override
@@ -357,8 +333,24 @@ public class WorkflowDetailsDialog extends Window {
 
 										@Override
 										public void onSuccess(Void ret) {
-											reload();
-											window.destroy();
+											service.getWorkflowDetailsByTask(Session.get().getSid(), workflow
+													.getSelectedTask().getId(), new AsyncCallback<GUIWorkflow>() {
+
+												@Override
+												public void onFailure(Throwable caught) {
+													Log.serverError(caught);
+												}
+
+												@Override
+												public void onSuccess(GUIWorkflow result) {
+													if (result != null) {
+														window.destroy();
+														workflow = result;
+														reload(workflow);
+
+													}
+												}
+											});
 										}
 									});
 						}
@@ -387,16 +379,27 @@ public class WorkflowDetailsDialog extends Window {
 
 							@Override
 							public void onSuccess(Void result) {
-								reload();
-								destroy();
-								WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(workflow);
-								workflowDetailsDialog.show();
+								service.getWorkflowDetailsByTask(Session.get().getSid(), workflow.getSelectedTask()
+										.getId(), new AsyncCallback<GUIWorkflow>() {
+
+									@Override
+									public void onFailure(Throwable caught) {
+										Log.serverError(caught);
+									}
+
+									@Override
+									public void onSuccess(GUIWorkflow result) {
+										if (result != null) {
+											workflow = result;
+											reload(workflow);
+
+										}
+									}
+								});
 							}
 						});
 			}
 		});
-
-		// SC.warn("startButton added!!!");
 
 		Button suspendButton = new Button(I18N.message("workflowtasksuspend"));
 		suspendButton.setMargin(2);
@@ -413,10 +416,23 @@ public class WorkflowDetailsDialog extends Window {
 
 							@Override
 							public void onSuccess(Void result) {
-								reload();
-								destroy();
-								WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(workflow);
-								workflowDetailsDialog.show();
+								service.getWorkflowDetailsByTask(Session.get().getSid(), workflow.getSelectedTask()
+										.getId(), new AsyncCallback<GUIWorkflow>() {
+
+									@Override
+									public void onFailure(Throwable caught) {
+										Log.serverError(caught);
+									}
+
+									@Override
+									public void onSuccess(GUIWorkflow result) {
+										if (result != null) {
+											workflow = result;
+											reload(workflow);
+
+										}
+									}
+								});
 							}
 						});
 			}
@@ -437,11 +453,23 @@ public class WorkflowDetailsDialog extends Window {
 
 							@Override
 							public void onSuccess(Void result) {
-								reload();
-								destroy();
-								WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(workflow);
-								workflowDetailsDialog.show();
-								// destroy();
+								service.getWorkflowDetailsByTask(Session.get().getSid(), workflow.getSelectedTask()
+										.getId(), new AsyncCallback<GUIWorkflow>() {
+
+									@Override
+									public void onFailure(Throwable caught) {
+										Log.serverError(caught);
+									}
+
+									@Override
+									public void onSuccess(GUIWorkflow result) {
+										if (result != null) {
+											workflow = result;
+											reload(workflow);
+
+										}
+									}
+								});
 							}
 						});
 			}
@@ -461,12 +489,23 @@ public class WorkflowDetailsDialog extends Window {
 
 							@Override
 							public void onSuccess(Void result) {
-								reload();
-								// destroy();
-								// WorkflowDetailsDialog workflowDetailsDialog =
-								// new WorkflowDetailsDialog(workflow);
-								// workflowDetailsDialog.show();
-								// destroy();
+								service.getWorkflowDetailsByTask(Session.get().getSid(), workflow.getSelectedTask()
+										.getId(), new AsyncCallback<GUIWorkflow>() {
+
+									@Override
+									public void onFailure(Throwable caught) {
+										Log.serverError(caught);
+									}
+
+									@Override
+									public void onSuccess(GUIWorkflow result) {
+										if (result != null) {
+											workflow = result;
+											reload(workflow);
+
+										}
+									}
+								});
 							}
 						});
 			}
@@ -488,12 +527,23 @@ public class WorkflowDetailsDialog extends Window {
 
 							@Override
 							public void onSuccess(Void result) {
-								reload();
-								// destroy();
-								// WorkflowDetailsDialog workflowDetailsDialog =
-								// new WorkflowDetailsDialog(workflow);
-								// workflowDetailsDialog.show();
-								// destroy();
+								service.getWorkflowDetailsByTask(Session.get().getSid(), workflow.getSelectedTask()
+										.getId(), new AsyncCallback<GUIWorkflow>() {
+
+									@Override
+									public void onFailure(Throwable caught) {
+										Log.serverError(caught);
+									}
+
+									@Override
+									public void onSuccess(GUIWorkflow result) {
+										if (result != null) {
+											workflow = result;
+											reload(workflow);
+
+										}
+									}
+								});
 							}
 						});
 			}
@@ -515,12 +565,23 @@ public class WorkflowDetailsDialog extends Window {
 
 							@Override
 							public void onSuccess(Void result) {
-								reload();
-								// destroy();
-								// WorkflowDetailsDialog workflowDetailsDialog =
-								// new WorkflowDetailsDialog(workflow);
-								// workflowDetailsDialog.show();
-								// destroy();
+								service.getWorkflowDetailsByTask(Session.get().getSid(), workflow.getSelectedTask()
+										.getId(), new AsyncCallback<GUIWorkflow>() {
+
+									@Override
+									public void onFailure(Throwable caught) {
+										Log.serverError(caught);
+									}
+
+									@Override
+									public void onSuccess(GUIWorkflow result) {
+										if (result != null) {
+											workflow = result;
+											reload(workflow);
+
+										}
+									}
+								});
 							}
 						});
 			}
@@ -555,14 +616,23 @@ public class WorkflowDetailsDialog extends Window {
 
 										@Override
 										public void onSuccess(Void result) {
-											reload();
-											// destroy();
-											// WorkflowDetailsDialog
-											// workflowDetailsDialog = new
-											// WorkflowDetailsDialog(
-											// workflow);
-											// workflowDetailsDialog.show();
-											// destroy();
+											service.getWorkflowDetailsByTask(Session.get().getSid(), workflow
+													.getSelectedTask().getId(), new AsyncCallback<GUIWorkflow>() {
+
+												@Override
+												public void onFailure(Throwable caught) {
+													Log.serverError(caught);
+												}
+
+												@Override
+												public void onSuccess(GUIWorkflow result) {
+													if (result != null) {
+														workflow = result;
+														reload(workflow);
+
+													}
+												}
+											});
 										}
 									});
 						}
@@ -587,7 +657,7 @@ public class WorkflowDetailsDialog extends Window {
 		form.addMember(sxLayout);
 		form.addMember(dxLayout);
 
-		// addMember(form);
+		addMember(form);
 	}
 
 	public GUIWorkflow getWorkflow() {

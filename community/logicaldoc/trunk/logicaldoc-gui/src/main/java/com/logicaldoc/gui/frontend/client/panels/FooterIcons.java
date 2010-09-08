@@ -72,7 +72,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 		messageImage.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				MainPanel.get().selectDashboardTab();
+				MainPanel.get().selectMessagesTab();
 			}
 		});
 		messageImage.setCursor(Cursor.HAND);
@@ -83,7 +83,6 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 			@Override
 			public void onClick(ClickEvent event) {
 				MainPanel.get().selectWorkflowTab();
-//				MainPanel.get().selectDashboardTab();
 			}
 		});
 		workflowImage.setCursor(Cursor.HAND);

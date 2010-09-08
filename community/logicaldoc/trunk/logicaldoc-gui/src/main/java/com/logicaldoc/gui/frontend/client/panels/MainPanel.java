@@ -119,4 +119,11 @@ public class MainPanel extends VLayout implements SessionObserver {
 		dashboardTab.setPane(dp);
 		tabSet.selectTab(dashboardTab);
 	}
+	
+	public void selectMessagesTab() {
+		DashboardPanel dp = DashboardPanel.get();
+		dp.getTabSet().selectTab(DashboardPanel.get().getMessagesTab());
+		dashboardTab.setPane(dp);
+		tabSet.selectTab(dashboardTab);
+	}
 }

@@ -23,7 +23,6 @@ public class ArchiveValidation extends Window {
 	private int currentTabIndex = 0;
 
 	public ArchiveValidation(GUISostConfig[] configs, long archiveId) {
-		// this.sostConfigurations = configs;
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 

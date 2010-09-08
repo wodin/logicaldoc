@@ -33,7 +33,11 @@ public class WorkflowPortlet extends Portlet {
 
 	private ListGrid list;
 
-	public WorkflowPortlet(int type) {
+	private WorkflowDashboard workflowDashboard;
+
+	public WorkflowPortlet(WorkflowDashboard dashboard, int type) {
+		this.workflowDashboard = dashboard;
+
 		setShowShadow(true);
 		setAnimateMinimize(true);
 		setDragAppearance(DragAppearance.OUTLINE);
@@ -89,7 +93,8 @@ public class WorkflowPortlet extends Portlet {
 							@Override
 							public void onSuccess(GUIWorkflow result) {
 								if (result != null) {
-									WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(result);
+									WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(
+											workflowDashboard, result);
 									workflowDetailsDialog.show();
 								}
 							}

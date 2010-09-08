@@ -6,7 +6,6 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.data.WorkflowHistoriesDS;
 import com.logicaldoc.gui.common.client.data.WorkflowsDS;
-import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -76,18 +75,19 @@ public class WorkflowHistoryDialog extends Window {
 			removeMember(form);
 		}
 
-		form = new VLayout();
+		form = new VLayout(10);
 		form.setMargin(20);
-		form.setWidth(990);
-		form.setHeight(640);
+//		form.setWidth(990);
+//		form.setHeight(640);
 
 		HLayout selectionWorkflowLayout = new HLayout(15);
+		selectionWorkflowLayout.setMargin(20);
 		selectionWorkflowLayout.setWidth(150);
 		selectionWorkflowLayout.setHeight(100);
 
 		// Workflow section
 		DynamicForm workflowForm = new DynamicForm();
-//		workflowForm.setWidth(150);
+		// workflowForm.setWidth(150);
 		workflowForm.setColWidths(1, "*");
 
 		final ComboBoxItem workflow = new ComboBoxItem("workflowSelection", I18N.message("workflowselect"));
@@ -153,7 +153,7 @@ public class WorkflowHistoryDialog extends Window {
 		ListGridField endDate = new ListGridField("enddate", I18N.message("enddate"), 150);
 		endDate.setAlign(Alignment.CENTER);
 		endDate.setType(ListGridFieldType.DATE);
-		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 150);
+		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 180);
 
 		instancesList = new ListGrid();
 		instancesList.setCanFreezeFields(true);

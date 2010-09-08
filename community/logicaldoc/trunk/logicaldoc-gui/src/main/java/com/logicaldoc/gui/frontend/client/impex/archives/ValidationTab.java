@@ -16,9 +16,12 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
+import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 
@@ -40,8 +43,6 @@ public class ValidationTab extends Tab {
 
 	private DynamicForm validationForm = null;
 
-	private ValidationDS datasource = null;
-
 	private VLayout layout = null;
 
 	private GUISostConfig config = null;
@@ -51,6 +52,8 @@ public class ValidationTab extends Tab {
 	private ArchiveValidation window = null;
 
 	private int tabPosition;
+
+	private int num = 0;
 
 	public ValidationTab(ArchiveValidation validation, int position, GUISostConfig sostConfig, long archiveId) {
 		this.config = sostConfig;
@@ -134,27 +137,30 @@ public class ValidationTab extends Tab {
 		docsList.setBorder("0px");
 		docsList.setWidth100();
 		docsList.setHeight(300);
-		datasource = new ValidationDS(config.getId(), archive);
-		if (datasource != null)
-			docsList.setDataSource(datasource);
+		docsList.setShowAllRecords(true);
+		docsList.setShowRecordComponents(true);
+		docsList.setShowRecordComponentsByCell(true);
 		docsList.setFields(title, number, date, error);
+		docsList.setDataSource(new ValidationDS(config.getId(), archive));
 
+		docsList.addDataArrivedHandler(new DataArrivedHandler() {
+			@Override
+			public void onDataArrived(DataArrivedEvent event) {
+				num = docsList.getTotalRows();
+			}
+		});
+
+		// if (num > 0)
 		validationForm.addChild(docsList);
-
-		// StaticTextItem verifyMessage =
-		// ItemFactory.newStaticTextItem("verifyMessage", "",
-		// "<b>" + I18N.message("sostaction.success") + "</b>");
-		// verifyMessage.setShouldSaveValue(false);
-		// verifyMessage.setWrapTitle(false);
-		// validationForm.setItems(verifyMessage);
-
-		// docsList.addDataArrivedHandler(new DataArrivedHandler() {
-		// @Override
-		// public void onDataArrived(DataArrivedEvent event) {
-		// infoPanel.setMessage(I18N.message("showarchives",
-		// Integer.toString(docsList.getTotalRows())));
+		// else {
+		StaticTextItem verifyMessage = ItemFactory.newStaticTextItem("verifyMessage", "",
+				"<b>" + I18N.message("sostaction.success") + "</b>");
+		verifyMessage.setShouldSaveValue(false);
+		verifyMessage.setWrapTitle(false);
+		validationForm.setItems(verifyMessage);
 		// }
-		// });
+
+		// SC.warn("---- num: " + num);
 
 		layout.addMember(signButton);
 		layout.addMember(validationForm);
@@ -162,7 +168,7 @@ public class ValidationTab extends Tab {
 		if (tabPosition < 2) {
 			continueButton = new IButton();
 			continueButton.setTitle(I18N.message("continue"));
-			continueButton.setDisabled(docsList.getRecord(0) != null);
+			continueButton.setDisabled(false);
 			continueButton.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
 					window.setCurrentTabIndex(tabPosition + 1);
@@ -175,7 +181,7 @@ public class ValidationTab extends Tab {
 		} else {
 			endButton = new IButton();
 			endButton.setTitle(I18N.message("end"));
-			endButton.setDisabled(docsList.getRecord(0) != null);
+			endButton.setDisabled(false);
 			endButton.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
 					window.destroy();
