@@ -391,14 +391,14 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			att.setMandatory(extAttr.getMandatory() == 1 ? true : false);
 			att.setType(extAttr.getType());
 
-			// if (extAttr.getValue() instanceof String)
-			// att.setStringValue(extAttr.getStringValue());
-			// else if (extAttr.getValue() instanceof Long)
-			// att.setIntValue(extAttr.getIntValue());
-			// else if (extAttr.getValue() instanceof Double)
-			// att.setDoubleValue(extAttr.getDoubleValue());
-			// else if (extAttr.getValue() instanceof Date)
-			// att.setDateValue(extAttr.getDateValue());
+			if (extAttr.getValue() instanceof String)
+				att.setStringValue(extAttr.getStringValue());
+			else if (extAttr.getValue() instanceof Long)
+				att.setIntValue(extAttr.getIntValue());
+			else if (extAttr.getValue() instanceof Double)
+				att.setDoubleValue(extAttr.getDoubleValue());
+			else if (extAttr.getValue() instanceof Date)
+				att.setDateValue(extAttr.getDateValue());
 
 			attributes[i] = att;
 			i++;
