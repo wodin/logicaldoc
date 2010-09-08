@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.document;
+package com.logicaldoc.gui.frontend.client.workflow;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -153,7 +153,7 @@ public class WorkflowHistoryDialog extends Window {
 		ListGridField endDate = new ListGridField("enddate", I18N.message("enddate"), 150);
 		endDate.setAlign(Alignment.CENTER);
 		endDate.setType(ListGridFieldType.DATE);
-		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 180);
+		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 220);
 
 		instancesList = new ListGrid();
 		instancesList.setCanFreezeFields(true);
