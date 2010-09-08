@@ -268,9 +268,11 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			for (Long docid : results) {
 				if (coll.size() >= maxElements)
 					break;
-				Document document = findById(docid);
-				if (folderDAO.isReadEnable(document.getFolder().getId(), userId))
-					coll.add(document);
+				if (docid != null) {
+					Document document = findById(docid);
+					if (folderDAO.isReadEnable(document.getFolder().getId(), userId))
+						coll.add(document);
+				}
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())

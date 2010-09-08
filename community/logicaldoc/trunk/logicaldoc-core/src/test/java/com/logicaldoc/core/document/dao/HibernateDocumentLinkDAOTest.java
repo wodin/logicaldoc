@@ -59,6 +59,7 @@ public class HibernateDocumentLinkDAOTest extends AbstractCoreTCase {
 
 		// Try with unexisting link
 		dao.delete(99);
+		
 		link = dao.findById(1);
 		Assert.assertNull(link);
 		link = dao.findById(2);

@@ -112,23 +112,29 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				query.append(")");
 				coll = (List<Folder>) getHibernateTemplate().find(query.toString());
 
-				// Now collect all folders that references the policies of the
-				// previously found folders
-				List<Folder> tmp = new ArrayList<Folder>();
-				query = new StringBuffer("select _folder from Folder _folder  where _folder.securityRef in (");
-				first = true;
-				for (Folder folder : coll) {
-					if (!first)
-						query.append(",");
-					query.append(Long.toString(folder.getId()));
-					first = false;
-				}
-				query.append(")");
-				tmp = (List<Folder>) getHibernateTemplate().find(query.toString());
+				if (coll.isEmpty()) {
+					return coll;
+				} else {
 
-				for (Folder folder : tmp) {
-					if (!coll.contains(folder))
-						coll.add(folder);
+					// Now collect all folders that references the policies of
+					// the
+					// previously found folders
+					List<Folder> tmp = new ArrayList<Folder>();
+					query = new StringBuffer("select _folder from Folder _folder  where _folder.securityRef in (");
+					first = true;
+					for (Folder folder : coll) {
+						if (!first)
+							query.append(",");
+						query.append(Long.toString(folder.getId()));
+						first = false;
+					}
+					query.append(")");
+					tmp = (List<Folder>) getHibernateTemplate().find(query.toString());
+
+					for (Folder folder : tmp) {
+						if (!coll.contains(folder))
+							coll.add(folder);
+					}
 				}
 			}
 		} catch (Exception e) {
