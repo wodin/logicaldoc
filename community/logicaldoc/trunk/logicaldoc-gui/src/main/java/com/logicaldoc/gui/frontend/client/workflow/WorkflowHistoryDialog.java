@@ -189,7 +189,7 @@ public class WorkflowHistoryDialog extends Window {
 		historyDate.setAlign(Alignment.CENTER);
 		historyDate.setType(ListGridFieldType.DATE);
 		ListGridField historyUser = new ListGridField("user", I18N.message("user"), 120);
-		ListGridField historyDoc = new ListGridField("document", I18N.message("document"), 120);
+		ListGridField historyDoc = new ListGridField("document", I18N.message("document"), 180);
 		ListGridField historySid = new ListGridField("sessionid", I18N.message("sid"), 250);
 
 		historiesList = new ListGrid();

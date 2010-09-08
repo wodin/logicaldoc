@@ -246,23 +246,26 @@ public class ExportArchivesList extends VLayout {
 										public void onSuccess(GUIArchive result) {
 											if (record.getAttributeAsString("type")
 													.equals("" + GUIArchive.TYPE_STORAGE)) {
-												service.getSostConfigurations(Session.get().getSid(), id, new AsyncCallback<GUISostConfig[]>() {
-													@Override
-													public void onFailure(Throwable caught) {
-														Log.serverError(caught);
-													}
+												service.getSostConfigurations(Session.get().getSid(), id,
+														new AsyncCallback<GUISostConfig[]>() {
+															@Override
+															public void onFailure(Throwable caught) {
+																Log.serverError(caught);
+															}
 
-													@Override
-													public void onSuccess(GUISostConfig[] result) {
-														// Show Archive validation panel
-														ArchiveValidation validation = new ArchiveValidation(result, id);
-														validation.show();
-													}
-												});
+															@Override
+															public void onSuccess(GUISostConfig[] result) {
+																// Show Archive
+																// validation
+																// panel
+																ArchiveValidation validation = new ArchiveValidation(
+																		result, id);
+																validation.show();
+															}
+														});
 											}
-											//TODO Da scommentare!!!
-//											record.setAttribute("status", "1");
-//											record.setAttribute("statusicon", "lock");
+											record.setAttribute("status", "1");
+											record.setAttribute("statusicon", "lock");
 											list.updateData(record);
 											showDetails(Long.parseLong(record.getAttributeAsString("id")), false);
 										}
