@@ -105,12 +105,18 @@ public class WorkflowToolstrip extends ToolStrip {
 			public void onClick(ClickEvent event) {
 				final Map<String, Object> values = WorkflowToolstrip.this.designer.getAccordion().getValues();
 				currentWorkflow.setName((String) values.get("workflowName"));
-				currentWorkflow.setDescription((String) values.get("workflowDescr"));
-				currentWorkflow.setTaskAssignmentSubject((String) values.get("assignmentSubject"));
-				currentWorkflow.setTaskAssignmentBody((String) values.get("assignmentBody"));
-				currentWorkflow.setReminderSubject((String) values.get("reminderSubject"));
-				currentWorkflow.setReminderBody((String) values.get("reminderBody"));
-				currentWorkflow.setSupervisor((String) values.get("supervisor"));
+				if (values.get("workflowDescr") != null)
+					currentWorkflow.setDescription((String) values.get("workflowDescr"));
+				if (values.get("assignmentSubject") != null)
+					currentWorkflow.setTaskAssignmentSubject((String) values.get("assignmentSubject"));
+				if (values.get("assignmentBody") != null)
+					currentWorkflow.setTaskAssignmentBody((String) values.get("assignmentBody"));
+				if (values.get("reminderSubject") != null)
+					currentWorkflow.setReminderSubject((String) values.get("reminderSubject"));
+				if (values.get("reminderBody") != null)
+					currentWorkflow.setReminderBody((String) values.get("reminderBody"));
+				if (values.get("supervisor") != null)
+					currentWorkflow.setSupervisor((String) values.get("supervisor"));
 
 				workflowService.save(Session.get().getSid(), currentWorkflow, new AsyncCallback<GUIWorkflow>() {
 					@Override
@@ -125,8 +131,7 @@ public class WorkflowToolstrip extends ToolStrip {
 						} else {
 							currentWorkflow = result;
 							// Necessary reload to visualize a new saved
-							// workflow of
-							// the workflows drop down menu.
+							// workflow of the workflows drop down menu.
 							AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
 						}
 					}

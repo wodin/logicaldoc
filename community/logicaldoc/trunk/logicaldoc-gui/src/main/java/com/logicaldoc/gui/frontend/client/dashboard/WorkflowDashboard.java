@@ -7,6 +7,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.document.WorkflowHistoryDialog;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.layout.PortalLayout;
+import com.smartgwt.client.widgets.layout.Portlet;
 
 /**
  * Workflow dashboard that displays several portlets like a portal page.
@@ -26,25 +27,67 @@ public class WorkflowDashboard extends PortalLayout {
 
 	public static int TASKS_SUPERVISOR = 4;
 
+	private static WorkflowDashboard instance;
+
+	private Portlet assignedTasks = null;
+
+	private Portlet canOwnTasks = null;
+
+	private Portlet suspendedTasks = null;
+
+	private Portlet adminTasks = null;
+
+	private Portlet supervisorTasks = null;
+
+	private Button historyButton = null;
+
 	public WorkflowDashboard() {
 		setShowColumnMenus(false);
 		setShowEdges(false);
 		setShowShadow(false);
 		setColumnBorder("0px");
 
-		// Place the portlets
-		addPortlet(new WorkflowPortlet(TASKS_ASSIGNED), 0, 0);
-		addPortlet(new WorkflowPortlet(TASKS_I_CAN_OWN), 0, 1);
-		addPortlet(new WorkflowPortlet(TASKS_SUSPENDED), 1, 0);
-		if (Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN))
-			addPortlet(new WorkflowPortlet(TASKS_ADMIN), 1, 1);
-		else
-			addPortlet(new WorkflowPortlet(TASKS_SUPERVISOR), 1, 1);
+		refresh();
+	}
 
-		Button historyButton = new Button(I18N.message("history"));
+	public void refresh() {
+		if (assignedTasks != null)
+			removePortlet(assignedTasks);
+
+		if (canOwnTasks != null)
+			removePortlet(canOwnTasks);
+
+		if (suspendedTasks != null)
+			removePortlet(suspendedTasks);
+
+		if (adminTasks != null)
+			removePortlet(adminTasks);
+
+		if (supervisorTasks != null)
+			removePortlet(supervisorTasks);
+
+		if (historyButton != null)
+			removeMember(historyButton);
+
+		// Place the portlets
+		assignedTasks = new WorkflowPortlet(this, TASKS_ASSIGNED);
+		addPortlet(assignedTasks, 0, 0);
+		canOwnTasks = new WorkflowPortlet(this, TASKS_I_CAN_OWN);
+		addPortlet(canOwnTasks, 0, 1);
+		suspendedTasks = new WorkflowPortlet(this, TASKS_SUSPENDED);
+		addPortlet(suspendedTasks, 1, 0);
+		if (Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN)) {
+			adminTasks = new WorkflowPortlet(this, TASKS_ADMIN);
+			addPortlet(adminTasks, 1, 1);
+		} else {
+			supervisorTasks = new WorkflowPortlet(this, TASKS_SUPERVISOR);
+			addPortlet(supervisorTasks, 1, 1);
+		}
+
+		historyButton = new Button(I18N.message("history"));
 		historyButton.setMargin(2);
 		historyButton.setIcon(ItemFactory.newImgIcon("task.png").getSrc());
-//		historyButton.setBackgroundColor("#FF8723");
+		// historyButton.setBackgroundColor("#FF8723");
 		historyButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
@@ -53,5 +96,11 @@ public class WorkflowDashboard extends PortalLayout {
 			}
 		});
 		addMember(historyButton);
+	}
+
+	public static WorkflowDashboard get() {
+		if (instance == null)
+			instance = new WorkflowDashboard();
+		return instance;
 	}
 }

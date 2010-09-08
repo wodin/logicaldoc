@@ -64,10 +64,6 @@ public class WorkflowDialog extends Window {
 
 	private ListGrid docsAppendedList;
 
-	private String wflName = "";
-
-	private String wflDescription = "";
-
 	private String docIds = "";
 
 	private IButton startWorkflow = null;
@@ -86,6 +82,8 @@ public class WorkflowDialog extends Window {
 
 	private Layout wflLayout = null;
 
+	private SelectItem priority = null;
+
 	public WorkflowDialog(String ids) {
 		this.docIds = ids;
 
@@ -99,30 +97,34 @@ public class WorkflowDialog extends Window {
 		setShowModalMask(true);
 		centerInPage();
 
-		layout = new VLayout(20);
-		layout.setMargin(25);
+		layout = new VLayout(10);
+		layout.setMargin(30);
 
-		refreshTabs("", "", 0);
+		workflowSettingsLayout = new VLayout(5);
+		workflowSettingsLayout.setMargin(5);
+
+		wflLayout = new Layout();
+
+		refreshTabs(0);
 	}
 
-	public void refreshTabs(String workflowName, String workflowDescription, int selectedTab) {
-		if (workflowSettingsLayout != null) {
-			workflowSettingsLayout.removeMember(workflowSettingsForm);
+	public void refreshTabs(int selectedTab) {
+		Canvas[] members = workflowSettingsLayout.getMembers();
+		for (Canvas canvas : members) {
+			workflowSettingsLayout.removeMember(canvas);
 		}
 
-		if (wflLayout != null)
-			wflLayout.clear();
+		members = wflLayout.getMembers();
+		for (Canvas canvas : members) {
+			wflLayout.removeMember(canvas);
+		}
 
 		if (tabs != null) {
 			layout.removeMember(tabs);
 		}
 
-		if (startWorkflow != null) {
+		if (startWorkflow != null)
 			layout.removeMember(startWorkflow);
-		}
-
-		wflName = workflowName;
-		wflDescription = workflowDescription;
 
 		tabs = new TabSet();
 		tabs.setWidth(550);
@@ -138,14 +140,11 @@ public class WorkflowDialog extends Window {
 		workflowAssignment.setPane(new Canvas());
 		tabs.addTab(workflowAssignment, 2);
 
-		// tabs.setTabs(chooseWorkflow, workflowSettings, workflowAssignment);
-
-		// SC.warn("create tabs!!!");
-
 		DynamicForm chooseWorkflowForm = new DynamicForm();
 		chooseWorkflowForm.setTitleOrientation(TitleOrientation.TOP);
-		chooseWorkflowForm.setWidth100();
-		chooseWorkflowForm.setHeight100();
+		chooseWorkflowForm.setWidth(500);
+		chooseWorkflowForm.setHeight(280);
+		chooseWorkflowForm.setMargin(15);
 
 		ListGridField name = new ListGridField("name", I18N.message("name"), 100);
 		ListGridField descr = new ListGridField("description", I18N.message("description"), 150);
@@ -155,9 +154,10 @@ public class WorkflowDialog extends Window {
 		deployedWorkflowsList.setAutoFetchData(true);
 		deployedWorkflowsList.setShowHeader(true);
 		deployedWorkflowsList.setCanSelectAll(false);
-		deployedWorkflowsList.setSelectionType(SelectionStyle.NONE);
-		deployedWorkflowsList.setHeight100();
-		deployedWorkflowsList.setBorder("2px");
+		deployedWorkflowsList.setSelectionType(SelectionStyle.SINGLE);
+		deployedWorkflowsList.setWidth(480);
+		deployedWorkflowsList.setHeight(200);
+		deployedWorkflowsList.setBorder("0px");
 		datasource = new WorkflowsDS(null, true);
 		if (datasource != null)
 			deployedWorkflowsList.setDataSource(datasource);
@@ -167,30 +167,46 @@ public class WorkflowDialog extends Window {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				ListGridRecord record = event.getRecord();
-				refreshTabs(record.getAttributeAsString("name"), record.getAttributeAsString("description"), 1);
+				service.get(Session.get().getSid(), record.getAttributeAsString("name"),
+						new AsyncCallback<GUIWorkflow>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUIWorkflow result) {
+								if (result != null)
+									selectedWorkflow = result;
+							}
+						});
+
+				if (selectedWorkflow != null)
+					refreshTabs(1);
 			}
 		});
 
 		chooseWorkflowForm.addChild(deployedWorkflowsList);
 		chooseWorkflow.setPane(chooseWorkflowForm);
 
-		workflowSettingsLayout = new VLayout(10);
-		workflowSettingsLayout.setMargin(15);
-
 		workflowSettingsForm = new DynamicForm();
 		workflowSettingsForm.setTitleOrientation(TitleOrientation.TOP);
-		workflowSettingsForm.setWidth100();
-		workflowSettingsForm.setHeight100();
+		workflowSettingsForm.setWidth(500);
+		workflowSettingsForm.setHeight(110);
 		workflowSettingsForm.setNumCols(1);
-		workflowSettingsForm.setMargin(10);
 		workflowSettingsForm.setValuesManager(vm);
 
 		// Workflow Definition Description
 		wflDescriptionItem = new TextAreaItem("wfldescr", I18N.message("description"));
-		wflDescriptionItem.setValue(wflDescription);
+		if (selectedWorkflow != null)
+			wflDescriptionItem.setValue(selectedWorkflow.getDescription());
+		// wflDescriptionItem.setValue(wflDescription);
+		wflDescriptionItem.setWidth(250);
+		wflDescriptionItem.setHeight(40);
 
 		// Workflow Priority
-		SelectItem priority = ItemFactory.newPrioritySelector("priority", I18N.message("workflowpriority"));
+		priority = ItemFactory.newPrioritySelector("priority", I18N.message("workflowpriority"));
 
 		workflowSettingsForm.setItems(wflDescriptionItem, priority);
 		workflowSettingsLayout.addMember(workflowSettingsForm);
@@ -208,32 +224,14 @@ public class WorkflowDialog extends Window {
 		docsAppendedList.setShowHeader(true);
 		docsAppendedList.setCanSelectAll(false);
 		docsAppendedList.setSelectionType(SelectionStyle.NONE);
-		docsAppendedList.setHeight100();
+		docsAppendedList.setWidth(400);
+		docsAppendedList.setHeight(130);
 		docsAppendedList.setBorder("0px");
 		docsAppendedList.setDataSource(new DocumentsDS(docIds));
 		docsAppendedList.setFields(docName, docLastModified);
 
-		// SC.warn("docsAppendedList !!!");
-
 		workflowSettingsLayout.addMember(docsAppendedList);
 		workflowSettings.setPane(workflowSettingsLayout);
-
-		// SC.warn("before assign !!!");
-
-		wflLayout = new Layout();
-		service.get(Session.get().getSid(), wflName, new AsyncCallback<GUIWorkflow>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				Log.serverError(caught);
-			}
-
-			@Override
-			public void onSuccess(GUIWorkflow result) {
-				if (result != null)
-					selectedWorkflow = result;
-			}
-		});
 
 		if (selectedWorkflow != null)
 			wflLayout.addMember(new WorkflowDesigner(selectedWorkflow, true));
@@ -242,39 +240,35 @@ public class WorkflowDialog extends Window {
 
 		workflowAssignment.setPane(wflLayout);
 
-		// SC.warn("after assign !!!");
-
 		tabs.setSelectedTab(selectedTab);
 
 		layout.addMember(tabs);
-		layout.redraw();
-
-		// SC.warn("before button !!!");
 
 		startWorkflow = new IButton();
 		startWorkflow.setTitle(I18N.message("startworkflow"));
-		startWorkflow.setDisabled(wflName.trim().isEmpty());
+		startWorkflow.setDisabled(selectedWorkflow == null);
 		startWorkflow.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				if (wflName == null)
+				if (selectedWorkflow == null)
 					return;
 
 				final Map<String, Object> values = vm.getValues();
 
 				if (vm.validate()) {
-					service.startWorkflow(Session.get().getSid(), wflName, values.get("wfldescr").toString(), docIds,
-							new AsyncCallback<Void>() {
+					selectedWorkflow.setDescription((String) values.get("wfldescr"));
+					service.startWorkflow(Session.get().getSid(), selectedWorkflow.getName(), values.get("wfldescr")
+							.toString(), docIds, new AsyncCallback<Void>() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
 
-								@Override
-								public void onSuccess(Void ret) {
-									destroy();
-								}
-							});
+						@Override
+						public void onSuccess(Void ret) {
+							destroy();
+						}
+					});
 				}
 			}
 		});
