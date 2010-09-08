@@ -4,7 +4,7 @@ import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.frontend.client.document.WorkflowHistoryDialog;
+import com.logicaldoc.gui.frontend.client.workflow.WorkflowHistoryDialog;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.layout.PortalLayout;
 import com.smartgwt.client.widgets.layout.Portlet;

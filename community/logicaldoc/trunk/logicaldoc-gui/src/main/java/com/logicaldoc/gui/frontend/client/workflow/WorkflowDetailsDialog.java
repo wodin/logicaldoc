@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.document;
+package com.logicaldoc.gui.frontend.client.workflow;
 
 import java.util.Date;
 import java.util.Map;
