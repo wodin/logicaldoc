@@ -1,11 +1,18 @@
 package com.logicaldoc.gui.frontend.client.impex.archives;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUISostConfig;
 import com.logicaldoc.gui.common.client.data.ValidationDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.document.SignDialog;
+import com.logicaldoc.gui.frontend.client.services.ArchiveService;
+import com.logicaldoc.gui.frontend.client.services.ArchiveServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
@@ -32,6 +39,8 @@ import com.smartgwt.client.widgets.tab.Tab;
  * @since 6.0
  */
 public class ValidationTab extends Tab {
+
+	private ArchiveServiceAsync service = (ArchiveServiceAsync) GWT.create(ArchiveService.class);
 
 	private ListGrid docsList;
 
@@ -82,7 +91,7 @@ public class ValidationTab extends Tab {
 		setDisabled(window.getCurrentTabIndex() != tabPosition);
 
 		signButton = new IButton();
-		signButton.setTitle(I18N.message("sign") + " - " + window.getCurrentTabIndex() + " - " + tabPosition);
+		signButton.setTitle(I18N.message("sign"));
 		signButton.setIcon(ItemFactory.newImgIcon("sign.png").getSrc());
 		signButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -185,6 +194,21 @@ public class ValidationTab extends Tab {
 			endButton.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
 					window.destroy();
+//					service.setStatus(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
+//							GUIArchive.STATUS_CLOSED, new AsyncCallback<GUIArchive>() {
+//								@Override
+//								public void onFailure(Throwable caught) {
+//									Log.serverError(caught);
+//								}
+//
+//								@Override
+//								public void onSuccess(GUIArchive result) {
+//									record.setAttribute("status", "1");
+//									record.setAttribute("statusicon", "lock");
+//									list.updateData(record);
+//									showDetails(Long.parseLong(record.getAttributeAsString("id")), false);
+//								}
+//							});
 				}
 			});
 			layout.addMember(endButton);

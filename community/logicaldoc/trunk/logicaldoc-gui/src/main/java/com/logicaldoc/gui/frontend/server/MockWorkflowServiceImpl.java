@@ -259,4 +259,9 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	@Override
 	public void endTask(String sid, String taskId, String transitionName) throws InvalidSessionException {
 	}
+
+	@Override
+	public int countActiveUserTasks(String sid, String username) throws InvalidSessionException {
+		return 0;
+	}
 }

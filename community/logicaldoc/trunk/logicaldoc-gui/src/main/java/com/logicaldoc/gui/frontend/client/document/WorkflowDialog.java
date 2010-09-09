@@ -212,7 +212,7 @@ public class WorkflowDialog extends Window {
 		workflowSettingsLayout.addMember(workflowSettingsForm);
 
 		// Workflow appended Documents list
-		ListGridField docName = new ListGridField("title", I18N.message("name"), 100);
+		ListGridField docName = new ListGridField("title", I18N.message("name"), 180);
 		ListGridField docLastModified = new ListGridField("lastModified", I18N.message("lastmodified"), 150);
 		docLastModified.setAlign(Alignment.CENTER);
 		docLastModified.setType(ListGridFieldType.DATE);

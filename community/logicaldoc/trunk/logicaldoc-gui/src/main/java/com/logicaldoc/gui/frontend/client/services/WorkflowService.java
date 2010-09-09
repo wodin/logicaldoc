@@ -98,4 +98,9 @@ public interface WorkflowService extends RemoteService {
 	 * Ends a task invoking the transition.
 	 */
 	public void endTask(String sid, String taskId, String transitionName) throws InvalidSessionException;
+	
+	/**
+	 * Counts all the tasks assigned to the given user.
+	 */
+	public int countActiveUserTasks(String sid, String username) throws InvalidSessionException;
 }

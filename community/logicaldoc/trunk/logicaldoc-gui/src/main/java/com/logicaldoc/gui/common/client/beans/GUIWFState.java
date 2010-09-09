@@ -60,14 +60,14 @@ public class GUIWFState implements Serializable {
 	private GUITransition[] transitions;
 
 	private String owner = "";
-	
+
 	private String pooledActors = "";
 
 	private Date startDate;
 
 	private Date endDate;
 
-	private Date dueDate;
+	private String dueDate;
 
 	private String taskState;
 
@@ -200,11 +200,11 @@ public class GUIWFState implements Serializable {
 		this.endDate = endDate;
 	}
 
-	public Date getDueDate() {
+	public String getDueDate() {
 		return dueDate;
 	}
 
-	public void setDueDate(Date dueDate) {
+	public void setDueDate(String dueDate) {
 		this.dueDate = dueDate;
 	}
 

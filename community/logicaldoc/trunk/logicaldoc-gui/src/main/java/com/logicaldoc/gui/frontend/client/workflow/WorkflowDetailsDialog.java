@@ -181,23 +181,32 @@ public class WorkflowDetailsDialog extends Window {
 				workflow.getSelectedTask().getDescription());
 		taskDescription.setShouldSaveValue(false);
 
-		StaticTextItem taskAssignee = ItemFactory.newStaticTextItem("taskAssignee", I18N.message("assignee"), workflow
-				.getSelectedTask().getOwner());
+		StaticTextItem taskAssignee = ItemFactory.newStaticTextItem("taskAssignee", I18N.message("assignee"), "");
+		if (workflow.getSelectedTask().getOwner() != null && !workflow.getSelectedTask().getOwner().trim().isEmpty())
+			taskAssignee.setValue(workflow.getSelectedTask().getOwner());
+		else if (workflow.getSelectedTask().getPooledActors() != null
+				&& !workflow.getSelectedTask().getPooledActors().trim().isEmpty())
+			taskAssignee.setValue(workflow.getSelectedTask().getPooledActors());
 		taskAssignee.setShouldSaveValue(false);
 
 		StaticTextItem taskStartDate = ItemFactory.newStaticTextItem("taskStartDate", "startdate", null);
 		if (workflow.getSelectedTask().getStartDate() != null)
 			taskStartDate.setValue(formatter.format((Date) workflow.getSelectedTask().getStartDate()));
 
+		StaticTextItem taskDueDate = ItemFactory.newStaticTextItem("taskDueDate", "duedate", null);
+		if (workflow.getSelectedTask().getDueDate() != null
+				&& !workflow.getSelectedTask().getDueDate().trim().isEmpty())
+			taskDueDate.setValue(workflow.getSelectedTask().getDueDate());
+
 		StaticTextItem taskEndDate = ItemFactory.newStaticTextItem("taskEndDate", "enddate", null);
 		if (workflow.getSelectedTask().getEndDate() != null)
-			endDate.setValue(formatter.format((Date) workflow.getSelectedTask().getEndDate()));
+			taskEndDate.setValue(formatter.format((Date) workflow.getSelectedTask().getEndDate()));
 
 		TextAreaItem taskComment = ItemFactory.newTextAreaItem("taskComment", I18N.message("comment"), workflow
 				.getSelectedTask().getComment());
 
-		taskForm.setItems(taskTitle, taskId, taskName, taskDescription, taskAssignee, taskStartDate, taskEndDate,
-				taskComment);
+		taskForm.setItems(taskTitle, taskId, taskName, taskDescription, taskAssignee, taskStartDate, taskDueDate,
+				taskEndDate, taskComment);
 
 		sxLayout.addMember(taskForm);
 

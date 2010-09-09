@@ -270,15 +270,6 @@ public class GUIUser implements Serializable {
 		notifyObservers();
 	}
 
-	public int getTasks() {
-		return tasks;
-	}
-
-	public void setTasks(int tasks) {
-		this.tasks = tasks;
-		notifyObservers();
-	}
-
 	public int getMessages() {
 		return messages;
 	}
@@ -304,6 +295,15 @@ public class GUIUser implements Serializable {
 
 	public void setUnreadMessages(int unreadMessages) {
 		this.unreadMessages = unreadMessages;
+		notifyObservers();
+	}
+
+	public int getActiveTasks() {
+		return tasks;
+	}
+
+	public void setActiveTasks(int tasks) {
+		this.tasks = tasks;
 		notifyObservers();
 	}
 }

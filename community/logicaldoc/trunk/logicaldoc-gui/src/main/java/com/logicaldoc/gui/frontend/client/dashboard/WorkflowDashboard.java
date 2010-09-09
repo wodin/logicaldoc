@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.client.dashboard;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.workflow.WorkflowHistoryDialog;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.layout.PortalLayout;
@@ -86,8 +85,6 @@ public class WorkflowDashboard extends PortalLayout {
 
 		historyButton = new Button(I18N.message("history"));
 		historyButton.setMargin(2);
-		historyButton.setIcon(ItemFactory.newImgIcon("task.png").getSrc());
-		// historyButton.setBackgroundColor("#FF8723");
 		historyButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
