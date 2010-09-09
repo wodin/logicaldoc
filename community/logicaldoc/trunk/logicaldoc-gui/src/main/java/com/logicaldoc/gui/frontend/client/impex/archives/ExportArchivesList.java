@@ -234,42 +234,71 @@ public class ExportArchivesList extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.setStatus(Session.get().getSid(),
-									Long.parseLong(record.getAttributeAsString("id")), GUIArchive.STATUS_CLOSED,
-									new AsyncCallback<GUIArchive>() {
-										@Override
-										public void onFailure(Throwable caught) {
-											Log.serverError(caught);
-										}
-
-										@Override
-										public void onSuccess(GUIArchive result) {
-											if (record.getAttributeAsString("type")
-													.equals("" + GUIArchive.TYPE_STORAGE)) {
-												service.getSostConfigurations(Session.get().getSid(), id,
-														new AsyncCallback<GUISostConfig[]>() {
-															@Override
-															public void onFailure(Throwable caught) {
-																Log.serverError(caught);
-															}
-
-															@Override
-															public void onSuccess(GUISostConfig[] result) {
-																// Show Archive
-																// validation
-																// panel
-																ArchiveValidation validation = new ArchiveValidation(
-																		result, id);
-																validation.show();
-															}
-														});
+							if (record.getAttributeAsString("type").equals("" + GUIArchive.TYPE_STORAGE)) {
+								service.getSostConfigurations(Session.get().getSid(), id,
+										new AsyncCallback<GUISostConfig[]>() {
+											@Override
+											public void onFailure(Throwable caught) {
+												Log.serverError(caught);
 											}
-											record.setAttribute("status", "1");
-											record.setAttribute("statusicon", "lock");
-											list.updateData(record);
-											showDetails(Long.parseLong(record.getAttributeAsString("id")), false);
-										}
-									});
+
+											@Override
+											public void onSuccess(GUISostConfig[] result) {
+												// Show Archive validation panel
+												ArchiveValidation validation = new ArchiveValidation(result, id);
+												validation.show();
+											}
+										});
+							} else {
+								service.setStatus(Session.get().getSid(),
+										Long.parseLong(record.getAttributeAsString("id")), GUIArchive.STATUS_CLOSED,
+										new AsyncCallback<GUIArchive>() {
+											@Override
+											public void onFailure(Throwable caught) {
+												Log.serverError(caught);
+											}
+
+											@Override
+											public void onSuccess(GUIArchive result) {
+												// if
+												// (record.getAttributeAsString("type")
+												// .equals("" +
+												// GUIArchive.TYPE_STORAGE)) {
+												// service.getSostConfigurations(Session.get().getSid(),
+												// id,
+												// new
+												// AsyncCallback<GUISostConfig[]>()
+												// {
+												// @Override
+												// public void
+												// onFailure(Throwable
+												// caught) {
+												// Log.serverError(caught);
+												// }
+												//
+												// @Override
+												// public void
+												// onSuccess(GUISostConfig[]
+												// result)
+												// {
+												// // Show Archive
+												// // validation
+												// // panel
+												// ArchiveValidation validation
+												// =
+												// new ArchiveValidation(
+												// result, id);
+												// validation.show();
+												// }
+												// });
+												// }
+												record.setAttribute("status", "1");
+												record.setAttribute("statusicon", "lock");
+												list.updateData(record);
+												showDetails(Long.parseLong(record.getAttributeAsString("id")), false);
+											}
+										});
+							}
 						}
 					}
 				});

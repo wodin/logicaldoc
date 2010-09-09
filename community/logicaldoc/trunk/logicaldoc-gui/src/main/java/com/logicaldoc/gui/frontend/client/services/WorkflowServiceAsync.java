@@ -39,4 +39,6 @@ public interface WorkflowServiceAsync {
 	void takeTaskOwnerShip(String sid, String taskId, String userId, AsyncCallback<Void> callback);
 
 	void turnBackTaskToPool(String sid, String taskId, AsyncCallback<Void> callback);
+
+	void countActiveUserTasks(String sid, String username, AsyncCallback<Integer> callback);
 }

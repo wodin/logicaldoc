@@ -2,8 +2,11 @@ package com.logicaldoc.gui.frontend.client.impex.archives;
 
 import com.logicaldoc.gui.common.client.beans.GUISostConfig;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.widgets.Window;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
+import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;

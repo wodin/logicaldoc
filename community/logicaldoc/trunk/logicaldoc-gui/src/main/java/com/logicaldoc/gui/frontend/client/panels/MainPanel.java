@@ -1,12 +1,15 @@
 package com.logicaldoc.gui.frontend.client.panels;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.SessionObserver;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.dashboard.DashboardPanel;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
@@ -14,6 +17,8 @@ import com.logicaldoc.gui.frontend.client.menu.MainMenu;
 import com.logicaldoc.gui.frontend.client.search.Search;
 import com.logicaldoc.gui.frontend.client.search.SearchMenu;
 import com.logicaldoc.gui.frontend.client.search.SearchPanel;
+import com.logicaldoc.gui.frontend.client.services.WorkflowService;
+import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -85,18 +90,34 @@ public class MainPanel extends VLayout implements SessionObserver {
 
 	@Override
 	public void onUserLoggedIn(GUIUser user) {
-		initGUI();
+		final GUIUser u = user;
+		WorkflowServiceAsync service = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
+		service.countActiveUserTasks(Session.get().getSid(), user.getUserName(), new AsyncCallback<Integer>() {
 
-		documentsTab.setPane(DocumentsPanel.get());
-		searchTab.setPane(SearchPanel.get());
-		dashboardTab.setPane(DashboardPanel.get());
-		administrationTab.setPane(AdminPanel.get());
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
 
-		if (user.isMemberOf("admin")) {
-			tabSet.addTab(administrationTab);
-		}
+			@Override
+			public void onSuccess(Integer result) {
+				int tasks = result;
+				u.setActiveTasks(tasks);
 
-		tabSet.selectTab(documentsTab);
+				initGUI();
+
+				documentsTab.setPane(DocumentsPanel.get());
+				searchTab.setPane(SearchPanel.get());
+				dashboardTab.setPane(DashboardPanel.get());
+				administrationTab.setPane(AdminPanel.get());
+
+				if (u.isMemberOf("admin")) {
+					tabSet.addTab(administrationTab);
+				}
+
+				tabSet.selectTab(documentsTab);
+			}
+		});
 	}
 
 	public void selectSearchTab() {
@@ -119,7 +140,7 @@ public class MainPanel extends VLayout implements SessionObserver {
 		dashboardTab.setPane(dp);
 		tabSet.selectTab(dashboardTab);
 	}
-	
+
 	public void selectMessagesTab() {
 		DashboardPanel dp = DashboardPanel.get();
 		dp.getTabSet().selectTab(DashboardPanel.get().getMessagesTab());

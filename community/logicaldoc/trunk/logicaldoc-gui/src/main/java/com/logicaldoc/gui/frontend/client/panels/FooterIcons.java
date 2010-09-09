@@ -136,6 +136,6 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 		checkoutCount.setText(Integer.toString(user.getCheckedOutDocs()));
 		lockedCount.setText(Integer.toString(user.getLockedDocs()));
 		messagesCount.setText(Integer.toString(user.getUnreadMessages()));
-		// workflowsCount.setText(Integer.toString(user.getUnreadMessages()));
+		workflowsCount.setText(Integer.toString(user.getActiveTasks()));
 	}
 }

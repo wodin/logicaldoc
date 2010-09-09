@@ -48,7 +48,10 @@ public class SignDialog extends Window {
 				+ Util.contextPath()
 				+ "applet/logicaldoc-sign.jar\"  code=\"com.logicaldoc.sign.applet.Signer\" width=\"400\" height=\"300\">";
 		tmp += "<param name=\"lang\" value=\"" + I18N.getLocale() + "\" />";
-		tmp += "<param name=\"uploadUrl\" value=\"" + Util.contextPath() + "uploadresource?docId=" + docId + "&sid="
+		// tmp += "<param name=\"uploadUrl\" value=\"" + Util.contextPath() +
+		// "uploadresource?docId=" + docId + "&sid="
+		// + Session.get().getSid() + "&suffix=sign.p7m\" />";
+		tmp += "<param name=\"uploadUrl\" value=\"" + Util.contextPath() + "uploadresource?docId={id}&sid="
 				+ Session.get().getSid() + "&suffix=sign.p7m\" />";
 		tmp += "<param name=\"downloadUrl\" value=\"" + Util.contextPath() + "download?docId=" + docId + "&sid="
 				+ Session.get().getSid() + "\" />";
