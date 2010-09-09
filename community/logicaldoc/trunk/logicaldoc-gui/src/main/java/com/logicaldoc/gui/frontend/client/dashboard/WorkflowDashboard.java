@@ -40,6 +40,8 @@ public class WorkflowDashboard extends PortalLayout {
 
 	private Button historyButton = null;
 
+	private Button refreshButton = null;
+
 	public WorkflowDashboard() {
 		setShowColumnMenus(false);
 		setShowEdges(false);
@@ -68,6 +70,9 @@ public class WorkflowDashboard extends PortalLayout {
 		if (historyButton != null)
 			removeMember(historyButton);
 
+		if (refreshButton != null)
+			removeMember(refreshButton);
+
 		// Place the portlets
 		assignedTasks = new WorkflowPortlet(this, TASKS_ASSIGNED);
 		addPortlet(assignedTasks, 0, 0);
@@ -93,6 +98,16 @@ public class WorkflowDashboard extends PortalLayout {
 			}
 		});
 		addMember(historyButton);
+
+		refreshButton = new Button(I18N.message("refresh"));
+		refreshButton.setMargin(2);
+		refreshButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+			@Override
+			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+				refresh();
+			}
+		});
+		addMember(refreshButton);
 	}
 
 	public static WorkflowDashboard get() {
