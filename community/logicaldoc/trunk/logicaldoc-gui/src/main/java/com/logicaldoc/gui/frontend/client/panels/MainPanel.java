@@ -89,8 +89,20 @@ public class MainPanel extends VLayout implements SessionObserver {
 	}
 
 	@Override
-	public void onUserLoggedIn(GUIUser user) {
-		final GUIUser u = user;
+	public void onUserLoggedIn(final GUIUser user) {
+		initGUI();
+
+		documentsTab.setPane(DocumentsPanel.get());
+		searchTab.setPane(SearchPanel.get());
+		dashboardTab.setPane(DashboardPanel.get());
+		administrationTab.setPane(AdminPanel.get());
+
+		if (user.isMemberOf("admin")) {
+			tabSet.addTab(administrationTab);
+		}
+
+		tabSet.selectTab(documentsTab);
+
 		WorkflowServiceAsync service = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
 		service.countActiveUserTasks(Session.get().getSid(), user.getUserName(), new AsyncCallback<Integer>() {
 
@@ -102,20 +114,7 @@ public class MainPanel extends VLayout implements SessionObserver {
 			@Override
 			public void onSuccess(Integer result) {
 				int tasks = result;
-				u.setActiveTasks(tasks);
-
-				initGUI();
-
-				documentsTab.setPane(DocumentsPanel.get());
-				searchTab.setPane(SearchPanel.get());
-				dashboardTab.setPane(DashboardPanel.get());
-				administrationTab.setPane(AdminPanel.get());
-
-				if (u.isMemberOf("admin")) {
-					tabSet.addTab(administrationTab);
-				}
-
-				tabSet.selectTab(documentsTab);
+				user.setActiveTasks(tasks);
 			}
 		});
 	}
@@ -133,7 +132,7 @@ public class MainPanel extends VLayout implements SessionObserver {
 	public void selectDashboardTab() {
 		tabSet.selectTab(dashboardTab);
 	}
-	
+
 	public void selectUserTab() {
 		DashboardPanel dp = DashboardPanel.get();
 		dp.getTabSet().selectTab(DashboardPanel.get().getUserTab());
