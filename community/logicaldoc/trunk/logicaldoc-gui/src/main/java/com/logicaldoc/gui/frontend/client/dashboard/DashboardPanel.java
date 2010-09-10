@@ -20,12 +20,14 @@ public class DashboardPanel extends VLayout {
 	private TabSet tabSet = new TabSet();
 
 	private Tab workflowTab = null;
-	
+
 	private Tab messagesTab = null;
+
+	private Tab userTab = null;
 
 	private DashboardPanel() {
 
-		Tab userTab = new Tab(I18N.message("user"));
+		userTab = new Tab(I18N.message("user"));
 		userTab.setPane(new UserDashboard());
 
 		messagesTab = new Tab(I18N.message("messages"));
@@ -33,7 +35,7 @@ public class DashboardPanel extends VLayout {
 
 		Tab subscriptionsTab = new Tab(I18N.message("subscriptions"));
 		subscriptionsTab.setPane(new SubscriptionsPanel());
-		
+
 		workflowTab = new Tab(I18N.message("workflow"));
 		workflowTab.setPane(new WorkflowDashboard());
 
@@ -76,5 +78,9 @@ public class DashboardPanel extends VLayout {
 
 	public Tab getMessagesTab() {
 		return messagesTab;
+	}
+
+	public Tab getUserTab() {
+		return userTab;
 	}
 }

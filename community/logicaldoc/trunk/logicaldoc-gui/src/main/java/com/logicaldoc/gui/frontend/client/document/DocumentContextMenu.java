@@ -453,7 +453,7 @@ public class DocumentContextMenu extends Menu {
 				if (names.startsWith(","))
 					names = names.substring(1);
 
-				SignDialog dialog = new SignDialog(selection[0].getAttributeAsString("id"), ids, names, false);
+				SignDialog dialog = new SignDialog(ids, names, false);
 				dialog.show();
 			}
 		});

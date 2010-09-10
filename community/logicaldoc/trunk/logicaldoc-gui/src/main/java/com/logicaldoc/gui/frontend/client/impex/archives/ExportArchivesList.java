@@ -13,6 +13,7 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
+import com.logicaldoc.gui.frontend.client.document.SignDialog;
 import com.logicaldoc.gui.frontend.client.services.ArchiveService;
 import com.logicaldoc.gui.frontend.client.services.ArchiveServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -214,7 +215,6 @@ public class ExportArchivesList extends VLayout {
 
 								@Override
 								public void onSuccess(Void result) {
-
 									list.removeSelectedData();
 									list.deselectAllRecords();
 									showDetails(null, true);
@@ -245,53 +245,22 @@ public class ExportArchivesList extends VLayout {
 											@Override
 											public void onSuccess(GUISostConfig[] result) {
 												// Show Archive validation panel
-												ArchiveValidation validation = new ArchiveValidation(result, id);
+												ArchiveValidation validation = new ArchiveValidation(
+														ExportArchivesList.this, result, id);
 												validation.show();
 											}
 										});
 							} else {
 								service.setStatus(Session.get().getSid(),
 										Long.parseLong(record.getAttributeAsString("id")), GUIArchive.STATUS_CLOSED,
-										new AsyncCallback<GUIArchive>() {
+										new AsyncCallback<Void>() {
 											@Override
 											public void onFailure(Throwable caught) {
 												Log.serverError(caught);
 											}
 
 											@Override
-											public void onSuccess(GUIArchive result) {
-												// if
-												// (record.getAttributeAsString("type")
-												// .equals("" +
-												// GUIArchive.TYPE_STORAGE)) {
-												// service.getSostConfigurations(Session.get().getSid(),
-												// id,
-												// new
-												// AsyncCallback<GUISostConfig[]>()
-												// {
-												// @Override
-												// public void
-												// onFailure(Throwable
-												// caught) {
-												// Log.serverError(caught);
-												// }
-												//
-												// @Override
-												// public void
-												// onSuccess(GUISostConfig[]
-												// result)
-												// {
-												// // Show Archive
-												// // validation
-												// // panel
-												// ArchiveValidation validation
-												// =
-												// new ArchiveValidation(
-												// result, id);
-												// validation.show();
-												// }
-												// });
-												// }
+											public void onSuccess(Void result) {
 												record.setAttribute("status", "1");
 												record.setAttribute("statusicon", "lock");
 												list.updateData(record);
@@ -304,6 +273,27 @@ public class ExportArchivesList extends VLayout {
 				});
 			}
 		});
+		
+		MenuItem sign = new MenuItem();
+		sign.setTitle(I18N.message("sign"));
+		sign.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				final ListGridRecord[] selection = list.getSelection();
+				String ids = "";
+				String names = "";
+				for (ListGridRecord rec : selection) {
+					ids += "," + rec.getAttributeAsString("id");
+					names += "," + rec.getAttributeAsString("name");
+				}
+				if (ids.startsWith(","))
+					ids = ids.substring(1);
+				if (names.startsWith(","))
+					names = names.substring(1);
+
+				SignDialog dialog = new SignDialog(ids, names, false);
+				dialog.show();
+			}
+		});
 
 		if (GUIArchive.STATUS_OPENED != Integer.parseInt(record.getAttributeAsString("status")))
 			close.setEnabled(false);
@@ -312,7 +302,7 @@ public class ExportArchivesList extends VLayout {
 		contextMenu.showContextMenu();
 	}
 
-	private void showDetails(Long archiveId, boolean readonly) {
+	public void showDetails(Long archiveId, boolean readonly) {
 		if (details != null)
 			detailsContainer.removeMember(details);
 		if (archiveId != null)

@@ -17,6 +17,8 @@ import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
+import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
+import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.layout.Portlet;
 
 /**
@@ -101,6 +103,16 @@ public class WorkflowPortlet extends Portlet {
 						});
 			}
 		});
+
+		if (type == WorkflowDashboard.TASKS_ASSIGNED)
+			// Count the total of user tasks
+			list.addDataArrivedHandler(new DataArrivedHandler() {
+				@Override
+				public void onDataArrived(DataArrivedEvent event) {
+					int total = list.getTotalRows();
+					Session.get().getUser().setActiveTasks(total);
+				}
+			});
 
 		addItem(list);
 	}

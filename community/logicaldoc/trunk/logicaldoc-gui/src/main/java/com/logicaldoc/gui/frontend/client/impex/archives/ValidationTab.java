@@ -110,7 +110,7 @@ public class ValidationTab extends Tab {
 					names = names.substring(1);
 
 				if (!ids.trim().isEmpty()) {
-					final SignDialog dialog = new SignDialog(records[0].getAttributeAsString("id"), ids, names, true);
+					final SignDialog dialog = new SignDialog(ids, names, true);
 					dialog.show();
 					dialog.addCloseClickHandler(new CloseClickHandler() {
 						@Override
@@ -194,21 +194,19 @@ public class ValidationTab extends Tab {
 			endButton.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
 					window.destroy();
-//					service.setStatus(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
-//							GUIArchive.STATUS_CLOSED, new AsyncCallback<GUIArchive>() {
-//								@Override
-//								public void onFailure(Throwable caught) {
-//									Log.serverError(caught);
-//								}
-//
-//								@Override
-//								public void onSuccess(GUIArchive result) {
-//									record.setAttribute("status", "1");
-//									record.setAttribute("statusicon", "lock");
-//									list.updateData(record);
-//									showDetails(Long.parseLong(record.getAttributeAsString("id")), false);
-//								}
-//							});
+					service.setStatus(Session.get().getSid(), archive, GUIArchive.STATUS_CLOSED,
+							new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(Void result) {
+									window.getArchivesList().refresh();
+									window.getArchivesList().showDetails(archive, false);
+								}
+							});
 				}
 			});
 			layout.addMember(endButton);
