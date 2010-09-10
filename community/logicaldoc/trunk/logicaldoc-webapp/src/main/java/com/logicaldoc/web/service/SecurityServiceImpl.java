@@ -144,7 +144,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			if (user == null)
 				throw new Exception("User " + userId + " not found");
 
-			if (!CryptUtil.cryptString(oldPassword).equals(user.getPassword())) {
+			if (oldPassword != null && !CryptUtil.cryptString(oldPassword).equals(user.getPassword())) {
 				return 1;
 			}
 
