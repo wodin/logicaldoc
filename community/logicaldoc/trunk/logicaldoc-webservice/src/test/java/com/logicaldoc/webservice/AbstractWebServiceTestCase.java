@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 
 import javax.sql.DataSource;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.apache.commons.io.FileUtils;
 import org.hsqldb.util.SqlFile;
@@ -31,7 +31,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-public class AbstractWebServiceTestCase extends TestCase {
+public class AbstractWebServiceTestCase {
 
 	protected ApplicationContext context;
 
@@ -50,9 +50,7 @@ public class AbstractWebServiceTestCase extends TestCase {
 	}
 
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
-
+	public void setUp() throws Exception {
 		userHome = System.getProperty("user.home");
 		System.setProperty("user.home", tempDir.getPath());
 
@@ -75,7 +73,7 @@ public class AbstractWebServiceTestCase extends TestCase {
 		}
 		tempDir.mkdirs();
 
-		assertTrue(tempDir.exists() && tempDir.isDirectory());
+		Assert.assertTrue(tempDir.exists() && tempDir.isDirectory());
 
 		coreSchemaFile = new File(tempDir, "logicaldoc-core.sql");
 		dataFile = new File(tempDir, "data.sql");
@@ -113,9 +111,7 @@ public class AbstractWebServiceTestCase extends TestCase {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
-		super.tearDown();
-
+	public void tearDown() throws Exception {
 		destroyDatabase();
 		((AbstractApplicationContext) context).close();
 
@@ -165,7 +161,7 @@ public class AbstractWebServiceTestCase extends TestCase {
 			ResultSet rs = con.createStatement().executeQuery("select * from ld_menu where ld_id=1");
 			rs.next();
 
-			assertEquals(1, rs.getInt(1));
+			Assert.assertEquals(1, rs.getInt(1));
 		} finally {
 			if (con != null)
 				con.close();
@@ -181,7 +177,7 @@ public class AbstractWebServiceTestCase extends TestCase {
 			ResultSet rs = con.createStatement().executeQuery("select * from ld_menu where ld_id=1");
 			rs.next();
 
-			assertEquals(1, rs.getInt(1));
+			Assert.assertEquals(1, rs.getInt(1));
 		} finally {
 			if (con != null)
 				con.close();

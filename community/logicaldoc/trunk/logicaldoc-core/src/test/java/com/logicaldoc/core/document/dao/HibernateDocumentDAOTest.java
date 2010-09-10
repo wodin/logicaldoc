@@ -51,7 +51,14 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testDelete() {
-		Assert.assertTrue(dao.delete(1));
+		// Create the document history event
+		History transaction = new History();
+		transaction.setSessionId("123");
+		transaction.setEvent(History.EVENT_DELETED);
+		transaction.setComment("");
+		transaction.setUser(new User());
+		
+		Assert.assertTrue(dao.delete(1, transaction));
 		Document doc = dao.findById(1);
 		Assert.assertNull(doc);
 	}
