@@ -150,8 +150,10 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 
 	@Test
 	public void testDelete() throws Exception {
-		docServiceImpl.delete("", 1);
 		Document doc = docDao.findById(1);
+		Assert.assertNotNull(doc);
+		docServiceImpl.delete("", doc.getId());
+		doc = docDao.findById(1);
 		Assert.assertNull(doc);
 	}
 
