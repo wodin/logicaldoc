@@ -24,17 +24,17 @@ public interface ArchiveService extends RemoteService {
 	/**
 	 * Deletes a set of versions from the given archive
 	 */
-	public void deleteVersions(String sid, long archiveId, Long versionIds[]) throws InvalidSessionException;;
+	public void deleteVersions(String sid, long archiveId, Long versionIds[]) throws InvalidSessionException;
 
 	/**
 	 * Change the status of the given Archive
 	 */
-	public GUIArchive setStatus(String sid, long archiveId, int status) throws InvalidSessionException;;
+	public GUIArchive setStatus(String sid, long archiveId, int status) throws InvalidSessionException;
 
 	/**
 	 * Saves/Updates a given archive
 	 */
-	public GUIArchive save(String sid, GUIArchive archive) throws InvalidSessionException;;
+	public GUIArchive save(String sid, GUIArchive archive) throws InvalidSessionException;
 
 	/**
 	 * Loads a given archive
@@ -44,23 +44,23 @@ public interface ArchiveService extends RemoteService {
 	/**
 	 * Adds a set of documents(their current versions) to the given archive
 	 */
-	public void addDocuments(String sid, long archiveId, long[] documentIds) throws InvalidSessionException;;
+	public void addDocuments(String sid, long archiveId, long[] documentIds) throws InvalidSessionException;
 
 	/**
 	 * Deletes a given incremental configuration
 	 */
-	public void deleteIncremental(String sid, long id) throws InvalidSessionException;;
+	public void deleteIncremental(String sid, long id) throws InvalidSessionException;
 
 	/**
 	 * Loads an incremental configuration
 	 */
-	public GUIIncrementalArchive loadIncremental(String sid, long id) throws InvalidSessionException;;
+	public GUIIncrementalArchive loadIncremental(String sid, long id) throws InvalidSessionException;
 
 	/**
 	 * Saves the passed incremental configuration
 	 */
 	public GUIIncrementalArchive saveIncremental(String sid, GUIIncrementalArchive incremental)
-			throws InvalidSessionException;;
+			throws InvalidSessionException;
 
 	/**
 	 * Deletes a folder in impex/in folder.
