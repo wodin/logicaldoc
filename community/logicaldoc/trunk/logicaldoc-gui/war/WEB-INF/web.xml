@@ -80,6 +80,12 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>WorkflowService</servlet-name>
+		<servlet-class>com.logicaldoc.gui.frontend.server.MockServiceImpl</servlet-class>
+	</servlet>
+
+
+	<servlet>
 		<servlet-name>MessageService</servlet-name>
 		<servlet-class>com.logicaldoc.gui.frontend.server.MockMessageServiceImpl</servlet-class>
 	</servlet>
@@ -342,6 +348,11 @@
 	<servlet-mapping>
 		<servlet-name>TemplateService</servlet-name>
 		<url-pattern>/frontend/template</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>WorkflowService</servlet-name>
+		<url-pattern>/frontend/workflow</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
