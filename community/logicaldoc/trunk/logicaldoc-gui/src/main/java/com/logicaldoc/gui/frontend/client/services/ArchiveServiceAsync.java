@@ -13,7 +13,7 @@ public interface ArchiveServiceAsync {
 
 	void save(String sid, GUIArchive archive, AsyncCallback<GUIArchive> callback);
 
-	void setStatus(String sid, long archiveId, int status, AsyncCallback<GUIArchive> callback);
+	void setStatus(String sid, long archiveId, int status, AsyncCallback<Void> callback);
 
 	void deleteIncremental(String sid, long id, AsyncCallback<Void> callback);
 

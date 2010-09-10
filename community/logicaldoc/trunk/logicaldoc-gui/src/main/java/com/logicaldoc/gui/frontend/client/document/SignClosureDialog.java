@@ -16,10 +16,10 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class SignDialog extends Window {
+public class SignClosureDialog extends Window {
 	private HTML applet = new HTML();
 
-	public SignDialog(String ids, String names, boolean validation) {
+	public SignClosureDialog(String ids, String names, boolean validation) {
 		VLayout layout = new VLayout();
 		layout.setMargin(25);
 

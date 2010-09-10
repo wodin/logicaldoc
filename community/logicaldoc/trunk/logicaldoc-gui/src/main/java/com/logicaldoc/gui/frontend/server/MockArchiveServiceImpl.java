@@ -35,8 +35,7 @@ public class MockArchiveServiceImpl extends RemoteServiceServlet implements Arch
 	}
 
 	@Override
-	public GUIArchive setStatus(String sid, long archiveId, int status) throws InvalidSessionException {
-		return null;
+	public void setStatus(String sid, long archiveId, int status) throws InvalidSessionException {
 	}
 
 	@Override

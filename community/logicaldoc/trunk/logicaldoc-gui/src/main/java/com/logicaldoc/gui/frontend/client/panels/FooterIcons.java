@@ -52,7 +52,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 		lockedImage.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				MainPanel.get().selectDashboardTab();
+				MainPanel.get().selectUserTab();
 			}
 		});
 		lockedImage.setCursor(Cursor.HAND);
@@ -62,7 +62,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 		checkoutImage.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				MainPanel.get().selectDashboardTab();
+				MainPanel.get().selectUserTab();
 			}
 		});
 		checkoutImage.setCursor(Cursor.HAND);

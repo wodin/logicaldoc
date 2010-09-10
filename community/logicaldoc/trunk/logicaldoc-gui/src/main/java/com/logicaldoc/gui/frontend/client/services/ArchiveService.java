@@ -29,7 +29,7 @@ public interface ArchiveService extends RemoteService {
 	/**
 	 * Change the status of the given Archive
 	 */
-	public GUIArchive setStatus(String sid, long archiveId, int status) throws InvalidSessionException;
+	public void setStatus(String sid, long archiveId, int status) throws InvalidSessionException;
 
 	/**
 	 * Saves/Updates a given archive

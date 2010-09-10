@@ -75,20 +75,20 @@ public class WorkflowHistoryDialog extends Window {
 			removeMember(form);
 		}
 
-		form = new VLayout(10);
+		form = new VLayout(25);
 		form.setMargin(20);
-//		form.setWidth(990);
-//		form.setHeight(640);
+		// form.setWidth(990);
+		// form.setHeight(640);
 
 		HLayout selectionWorkflowLayout = new HLayout(15);
 		selectionWorkflowLayout.setMargin(20);
-		selectionWorkflowLayout.setWidth(150);
-		selectionWorkflowLayout.setHeight(100);
+		selectionWorkflowLayout.setWidth(300);
+		// selectionWorkflowLayout.setHeight(100);
 
 		// Workflow section
 		DynamicForm workflowForm = new DynamicForm();
 		// workflowForm.setWidth(150);
-		workflowForm.setColWidths(1, "*");
+		// workflowForm.setColWidths(1, "*");
 
 		final ComboBoxItem workflow = new ComboBoxItem("workflowSelection", I18N.message("workflowselect"));
 		workflow.setWrapTitle(false);
@@ -132,11 +132,12 @@ public class WorkflowHistoryDialog extends Window {
 		form.addMember(selectionWorkflowLayout);
 
 		VLayout workflowInstancesLayout = new VLayout(10);
+		workflowInstancesLayout.setWidth(900);
 
 		// Workflow instances section
 		DynamicForm workflowInstancesForm = new DynamicForm();
 		workflowInstancesForm.setColWidths(1, "*");
-		workflowInstancesForm.setWidth(150);
+		// workflowInstancesForm.setWidth(900);
 
 		StaticTextItem workflowTitle = ItemFactory.newStaticTextItem("workflowInstances", "",
 				"<b>" + I18N.message("workflowinstances") + "</b>");
@@ -183,6 +184,7 @@ public class WorkflowHistoryDialog extends Window {
 
 		// Workflow histories section
 		VLayout workflowHistoriesLayout = new VLayout(10);
+		workflowHistoriesLayout.setWidth(900);
 
 		ListGridField historyEvent = new ListGridField("event", I18N.message("event"), 200);
 		ListGridField historyDate = new ListGridField("date", I18N.message("date"), 150);
@@ -210,7 +212,7 @@ public class WorkflowHistoryDialog extends Window {
 
 		form.addMember(workflowHistoriesLayout);
 
-		addMember(form);
+		addChild(form);
 	}
 
 	public GUIWorkflow getSelectedWorkflow() {

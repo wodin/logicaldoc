@@ -24,8 +24,11 @@ public class ArchiveValidation extends Window {
 	private TabSet tabs = new TabSet();
 
 	private int currentTabIndex = 0;
+	
+	private ExportArchivesList archivesList = null;
 
-	public ArchiveValidation(GUISostConfig[] configs, long archiveId) {
+	public ArchiveValidation(ExportArchivesList list, GUISostConfig[] configs, long archiveId) {
+		this.archivesList = list;
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
@@ -69,5 +72,9 @@ public class ArchiveValidation extends Window {
 
 	public void setCurrentTabIndex(int currentTabIndex) {
 		this.currentTabIndex = currentTabIndex;
+	}
+
+	public ExportArchivesList getArchivesList() {
+		return archivesList;
 	}
 }

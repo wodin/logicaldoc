@@ -7,6 +7,7 @@ import com.logicaldoc.gui.frontend.client.workflow.WorkflowHistoryDialog;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.layout.PortalLayout;
 import com.smartgwt.client.widgets.layout.Portlet;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
  * Workflow dashboard that displays several portlets like a portal page.
@@ -42,6 +43,8 @@ public class WorkflowDashboard extends PortalLayout {
 
 	private Button refreshButton = null;
 
+	private VLayout buttonsLayout = null;
+
 	public WorkflowDashboard() {
 		setShowColumnMenus(false);
 		setShowEdges(false);
@@ -67,6 +70,9 @@ public class WorkflowDashboard extends PortalLayout {
 		if (supervisorTasks != null)
 			removePortlet(supervisorTasks);
 
+		if (buttonsLayout != null)
+			removeMember(buttonsLayout);
+
 		if (historyButton != null)
 			removeMember(historyButton);
 
@@ -88,16 +94,8 @@ public class WorkflowDashboard extends PortalLayout {
 			addPortlet(supervisorTasks, 1, 1);
 		}
 
-		historyButton = new Button(I18N.message("history"));
-		historyButton.setMargin(2);
-		historyButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-			@Override
-			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				WorkflowHistoryDialog dialog = new WorkflowHistoryDialog();
-				dialog.show();
-			}
-		});
-		addMember(historyButton);
+		buttonsLayout = new VLayout(10);
+		buttonsLayout.setWidth(80);
 
 		refreshButton = new Button(I18N.message("refresh"));
 		refreshButton.setMargin(2);
@@ -107,7 +105,21 @@ public class WorkflowDashboard extends PortalLayout {
 				refresh();
 			}
 		});
-		addMember(refreshButton);
+
+		historyButton = new Button(I18N.message("history"));
+		historyButton.setMargin(2);
+		historyButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+			@Override
+			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+				WorkflowHistoryDialog dialog = new WorkflowHistoryDialog();
+				dialog.show();
+			}
+		});
+
+		buttonsLayout.addMember(refreshButton);
+		buttonsLayout.addMember(historyButton);
+
+		addMember(buttonsLayout);
 	}
 
 	public static WorkflowDashboard get() {
