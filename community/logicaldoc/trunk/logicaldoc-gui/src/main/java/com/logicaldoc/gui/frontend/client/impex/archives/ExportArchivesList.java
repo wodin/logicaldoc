@@ -13,7 +13,7 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
-import com.logicaldoc.gui.frontend.client.document.SignDialog;
+import com.logicaldoc.gui.frontend.client.document.SignClosureDialog;
 import com.logicaldoc.gui.frontend.client.services.ArchiveService;
 import com.logicaldoc.gui.frontend.client.services.ArchiveServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -273,24 +273,15 @@ public class ExportArchivesList extends VLayout {
 				});
 			}
 		});
-		
+
 		MenuItem sign = new MenuItem();
 		sign.setTitle(I18N.message("sign"));
 		sign.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				final ListGridRecord[] selection = list.getSelection();
-				String ids = "";
-				String names = "";
-				for (ListGridRecord rec : selection) {
-					ids += "," + rec.getAttributeAsString("id");
-					names += "," + rec.getAttributeAsString("name");
-				}
-				if (ids.startsWith(","))
-					ids = ids.substring(1);
-				if (names.startsWith(","))
-					names = names.substring(1);
+				String id = record.getAttributeAsString("id");
+				String name = record.getAttributeAsString("name");
 
-				SignDialog dialog = new SignDialog(ids, names, false);
+				SignClosureDialog dialog = new SignClosureDialog(ExportArchivesList.this, id, name);
 				dialog.show();
 			}
 		});
@@ -298,7 +289,10 @@ public class ExportArchivesList extends VLayout {
 		if (GUIArchive.STATUS_OPENED != Integer.parseInt(record.getAttributeAsString("status")))
 			close.setEnabled(false);
 
-		contextMenu.setItems(close, delete);
+		if (GUIArchive.STATUS_READYTOSIGN != Integer.parseInt(record.getAttributeAsString("status")))
+			sign.setEnabled(false);
+
+		contextMenu.setItems(close, delete, sign);
 		contextMenu.showContextMenu();
 	}
 

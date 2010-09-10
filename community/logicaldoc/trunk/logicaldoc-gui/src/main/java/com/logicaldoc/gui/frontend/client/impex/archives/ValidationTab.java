@@ -205,6 +205,7 @@ public class ValidationTab extends Tab {
 								public void onSuccess(Void result) {
 									window.getArchivesList().refresh();
 									window.getArchivesList().showDetails(archive, false);
+									window.destroy();
 								}
 							});
 				}
