@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -60,6 +61,8 @@ public class DocumentHistoryDataServlet extends HttpServlet {
 		query.append(" order by A.date asc ");
 
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		df.setTimeZone(TimeZone.getTimeZone("UTC"));
+		
 		List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, max);
 
 		/*

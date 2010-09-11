@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -46,6 +47,7 @@ public class UserHistoryDataServlet extends HttpServlet {
 
 		UserHistoryDAO dao = (UserHistoryDAO) Context.getInstance().getBean(UserHistoryDAO.class);
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
 		/*
 		 * Iterate over the collection of user histories
