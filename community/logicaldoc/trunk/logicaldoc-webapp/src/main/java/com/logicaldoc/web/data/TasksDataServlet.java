@@ -71,7 +71,7 @@ public class TasksDataServlet extends HttpServlet {
 					writer.print("<scheduling>" + I18N.message("each", locale) + " "
 							+ task.getScheduling().getIntervalSeconds() + " "
 							+ I18N.message("seconds", locale).toLowerCase() + "</scheduling>");
-				writer.print("<progress>" + task.getProgress() + "</progress>");
+				writer.print("<progress>" + task.getCompletionPercentage() + "</progress>");
 
 				if (task.getScheduling().getPreviousFireTime() != null) {
 					writer.print("<lastStart>" + df.format(task.getScheduling().getPreviousFireTime()) + "</lastStart>");
