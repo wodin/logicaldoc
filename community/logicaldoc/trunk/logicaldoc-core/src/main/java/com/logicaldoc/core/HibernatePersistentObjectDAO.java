@@ -206,6 +206,19 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		}
 		return 0;
 	}
+	
+	@Override
+	public long queryForLong(String sql) {
+		try {
+			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+			return jdbcTemplate.queryForLong(sql);
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+		return 0;
+	}	
 
 	@Override
 	public int jdbcUpdate(String statement) {

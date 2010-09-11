@@ -160,6 +160,16 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * @return the int value, or 0 in case of SQL NULL
 	 */
 	public int queryForInt(String sql);
+	
+	/**
+	 * Execute a query that results in an long value, given static SQL.
+	 * Uses a JDBC Statement, not a PreparedStatement. If you want to execute a static query with a PreparedStatement, use the overloaded queryForInt method with null as argument array.
+	 * This method is useful for running static SQL with a known outcome. The query is expected to be a single row/single column query that results in a long value.
+	 * 
+	 * @param sql SQL query to execute 
+	 * @return the long value, or 0 in case of SQL NULL 
+	 */
+	public long queryForLong(String sql);	
 
 	/**
 	 * Deletes all entries form the database

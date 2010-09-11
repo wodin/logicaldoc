@@ -1,10 +1,8 @@
 package com.logicaldoc.core.document.dao;
 
 import java.io.File;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -348,7 +346,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return coll;
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("unchecked")
 	@Override
 	public Set<Long> findDocIdByUserIdAndTag(long userId, String tag) {
 		Set<Long> ids = new HashSet<Long>();
@@ -384,26 +382,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				query.append(") ");
 				query.append(" AND lower(D.ld_tag)='" + SqlUtil.doubleQuotes(tag.toLowerCase()) + "' ");
 			}
-
-			Connection con = null;
-			Statement stmt = null;
-			ResultSet rs = null;
-
-			try {
-				con = getSession().connection();
-				stmt = con.createStatement();
-				rs = stmt.executeQuery(query.toString());
-				while (rs.next()) {
-					ids.add(new Long(rs.getLong(1)));
-				}
-			} finally {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			}
+			
+			List<Long> docIds = (List<Long>) queryForList(query.toString(), new Object[]{}, Long.class, null);
+			ids.addAll(docIds);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -542,67 +523,36 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Long> findDeletedDocIds() {
-		List<Long> coll = new ArrayList<Long>();
-		try {
-			String query = "select A.ld_id from ld_document A where A.ld_deleted=1 order by A.ld_lastmodified desc";
-			Connection con = null;
-			Statement stmt = null;
-			ResultSet rs = null;
-
-			try {
-				con = getSession().connection();
-				stmt = con.createStatement();
-				rs = stmt.executeQuery(query.toString());
-				while (rs.next()) {
-					coll.add(rs.getLong(1));
-				}
-			} finally {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-		}
-		return coll;
+		String query = "select ld_id from ld_document where ld_deleted=1 order by ld_lastmodified desc";
+		return (List<Long>) queryForList(query, new Object[]{}, Long.class, null);
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findDeletedDocs() {
 		List<Document> coll = new ArrayList<Document>();
 		try {
-			String query = "select A.ld_id, A.ld_customid, A.ld_lastModified, A.ld_title from ld_document A where A.ld_deleted=1 order by A.ld_lastmodified desc";
-			Connection con = null;
-			Statement stmt = null;
-			ResultSet rs = null;
-			try {
-				con = getSession().connection();
-				stmt = con.createStatement();
-				rs = stmt.executeQuery(query.toString());
-				while (rs.next()) {
+			String query = "select ld_id, ld_customid, ld_lastModified, ld_title from ld_document where ld_deleted=1 order by ld_lastmodified desc";
+			
+			RowMapper docMapper = new BeanPropertyRowMapper() {
+				public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+					
 					Document doc = new Document();
 					doc.setId(rs.getLong(1));
 					doc.setCustomId(rs.getString(2));
 					doc.setLastModified(rs.getDate(3));
 					doc.setTitle(rs.getString(4));
-					coll.add(doc);
+					
+					return doc;
 				}
-			} finally {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			}
+			}; 
+			
+			coll = (List<Document>) query(query, new Object[]{}, docMapper, null);
+			
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -610,80 +560,24 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return coll;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public long getTotalSize(boolean computeDeleted) {
-		long size = 0;
-		try {
-			String query = "select sum(A.ld_filesize) from ld_document A ";
-			if (!computeDeleted) {
-				query += " where A.ld_deleted=0";
-			}
-
-			Connection con = null;
-			Statement stmt = null;
-			ResultSet rs = null;
-
-			try {
-				con = getSession().connection();
-				stmt = con.createStatement();
-				rs = stmt.executeQuery(query.toString());
-				while (rs.next()) {
-					size = rs.getLong(1);
-				}
-			} finally {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
+		String query = "select sum(ld_filesize) from ld_document ";
+		if (!computeDeleted) {
+			query += " where ld_deleted=0";
 		}
-		return size;
+		return queryForLong(query);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public long count(boolean computeDeleted) {
-		long count = 0;
-		try {
-			String query = "select count(*) from ld_document A  where ";
-			// For performance issues on InnoDB tables, we always use the where
-			// clause
-			if (!computeDeleted) {
-				query += " A.ld_deleted=0";
-			} else {
-				query += " A.ld_deleted>=0";
-			}
-
-			Connection con = null;
-			Statement stmt = null;
-			ResultSet rs = null;
-
-			try {
-				con = getSession().connection();
-				stmt = con.createStatement();
-				rs = stmt.executeQuery(query.toString());
-				while (rs.next()) {
-					count = rs.getLong(1);
-				}
-			} finally {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
+		String query = "select count(*) from ld_document where ";
+		if (!computeDeleted) {
+			query += " ld_deleted = 0";
+		} else {
+			query += " ld_deleted >= 0";
 		}
-		return count;
+		return queryForInt(query);
 	}
 
 	@Override
@@ -773,40 +667,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 		historyDAO.store(transaction);
 	}
-
-	@SuppressWarnings("deprecation")
+	
 	@Override
 	public long countByIndexed(int indexed) {
-		long count = 0;
-		try {
-			String query = "select count(*) from ld_document A where A.ld_deleted=0 ";
-			query += " and A.ld_indexed=" + indexed;
-
-			Connection con = null;
-			Statement stmt = null;
-			ResultSet rs = null;
-
-			try {
-				con = getSession().connection();
-				stmt = con.createStatement();
-				rs = stmt.executeQuery(query.toString());
-				while (rs.next()) {
-					count = rs.getLong(1);
-				}
-			} finally {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-		}
-		return count;
-	}
+		String query = "select count(*) from ld_document where ld_deleted=0 and ld_indexed = " + indexed;
+		return queryForInt(query);
+	}	
 
 	@Override
 	public List<Long> findShortcutIds(long docId) {
@@ -836,11 +702,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					return doc;
 				}
 			};
+			
+			results = (List<Document>) query(query, null, docMapper, maxHits);
 
-			List<Document> elements = (List<Document>) query(query, null, docMapper, maxHits);
-			for (Document docDeleted : elements) {
-				results.add(docDeleted);
-			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
 		}
