@@ -19,6 +19,7 @@ public class DateCellFormatter implements CellFormatter {
 		if (value == null)
 			return null;
 		DateTimeFormat formatter = DateTimeFormat.getFormat(I18N.message("format_date"));
+		
 		return formatter.format((Date) value);
 	}
 }

@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -47,6 +48,7 @@ public class DocumentsDataServlet extends HttpServlet {
 		Context context = Context.getInstance();
 		DocumentDAO dao = (DocumentDAO) context.getBean(DocumentDAO.class);
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");

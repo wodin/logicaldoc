@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -36,6 +37,7 @@ public class SessionsDataServlet extends HttpServlet {
 
 		List<UserSession> sessions = SessionManager.getInstance().getSessions();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
 		PrintWriter writer = response.getWriter();
 		writer.print("<list>");

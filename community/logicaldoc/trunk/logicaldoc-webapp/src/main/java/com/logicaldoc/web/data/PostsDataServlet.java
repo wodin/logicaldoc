@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -44,6 +45,7 @@ public class PostsDataServlet extends HttpServlet {
 		DiscussionThread thread = dao.findById(discussionId);
 		dao.initialize(thread);
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");

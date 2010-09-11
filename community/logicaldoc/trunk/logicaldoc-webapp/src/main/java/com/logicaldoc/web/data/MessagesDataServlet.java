@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -49,6 +50,7 @@ public class MessagesDataServlet extends HttpServlet {
 		List<SystemMessage> records = dao.findByRecipient(session.getUserName(), SystemMessage.TYPE_SYSTEM, null);
 
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
