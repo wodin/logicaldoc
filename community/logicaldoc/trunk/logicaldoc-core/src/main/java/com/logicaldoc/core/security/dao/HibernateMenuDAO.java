@@ -654,7 +654,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		// Restore parents
 		if (parents) {
 			String query = "select ld_parentid from ld_menu where ld_id =" + menuId;
-			List<Long> menus = (List<Long>) super.queryForList(query, null, Long.class, null);
+			List<Long> menus = (List<Long>) super.queryForList(query, Long.class);
 			for (Long id : menus) {
 				if (id.longValue() != menuId)
 					restore(id, parents);

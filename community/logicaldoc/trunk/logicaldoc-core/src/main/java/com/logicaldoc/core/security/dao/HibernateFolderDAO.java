@@ -660,7 +660,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		// Restore parents
 		if (parents) {
 			String query = "select ld_parentid from ld_folder where ld_id =" + folderId;
-			List<Long> folders = (List<Long>) super.queryForList(query, null, Long.class, null);
+			List<Long> folders = (List<Long>) super.queryForList(query, Long.class);
 			for (Long id : folders) {
 				if (id.longValue() != folderId)
 					restore(id, parents);
@@ -779,7 +779,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		return permissions;
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Long> findFolderIdByUserIdAndPermission(long userId, Permission permission) {
 		List<Long> ids = new ArrayList<Long>();
@@ -814,30 +814,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 					first = false;
 				}
 				query1.append(")");
-
-				Connection con = null;
-				Statement stmt = null;
-				ResultSet rs = null;
-				try {
-					con = getSession().connection();
-					stmt = con.createStatement();
-					rs = stmt.executeQuery(query1.toString());
-					while (rs.next()) {
-						Long id = null;
-						if (rs.getObject(1) instanceof Long)
-							id = (Long) rs.getObject(1);
-						else
-							id = new Long(rs.getInt(1));
-						ids.add(id);
-					}
-				} finally {
-					if (rs != null)
-						rs.close();
-					if (stmt != null)
-						stmt.close();
-					if (con != null)
-						con.close();
-				}
+				
+				ids = (List<Long>) queryForList(query1.toString(), Long.class);
 
 				/*
 				 * Now search for those folderes that references the previously
@@ -845,30 +823,12 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				 */
 				StringBuffer query2 = new StringBuffer("select B.ld_id from ld_folder B where B.ld_deleted=0 ");
 				query2.append(" and B.ld_securityref in (" + query1.toString() + ")");
-
-				con = null;
-				stmt = null;
-				rs = null;
-				try {
-					con = getSession().connection();
-					stmt = con.createStatement();
-					rs = stmt.executeQuery(query2.toString());
-					while (rs.next()) {
-						Long id = null;
-						if (rs.getObject(1) instanceof Long)
-							id = (Long) rs.getObject(1);
-						else
-							id = new Long(rs.getInt(1));
-						if (!ids.contains(id))
-							ids.add(id);
-					}
-				} finally {
-					if (rs != null)
-						rs.close();
-					if (stmt != null)
-						stmt.close();
-					if (con != null)
-						con.close();
+				
+				
+				List<Long> frefs = (List<Long>) queryForList(query2.toString(), Long.class);
+				for (Long folderId : frefs) {
+					if (!ids.contains(folderId))
+						ids.add(folderId);
 				}
 
 			}

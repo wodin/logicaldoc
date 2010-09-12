@@ -147,6 +147,18 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 */
 	@SuppressWarnings("rawtypes")
 	public List queryForList(String sql, Object[] args, Class elementType, Integer maxRows);
+	
+	/**
+	 * Execute a query for a result list, given static SQL.
+	 * Uses a JDBC Statement, not a PreparedStatement. If you want to execute a static query with a PreparedStatement, use the overloaded queryForList method with null as argument array.
+	 * The results will be mapped to a List (one entry for each row) of result objects, each of them matching the specified element type. 
+	 * 
+	 * @param sql SQL query to execute
+	 * @param elementType the required type of element in the result list (for example, Integer.class) 
+	 * @return a List of objects that match the specified element type
+	 */
+	@SuppressWarnings("rawtypes")
+	public List queryForList(String sql, Class elementType);	
 
 	/**
 	 * Execute a query that results in an int value, given static SQL. Uses a
