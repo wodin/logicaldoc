@@ -1,8 +1,5 @@
 package com.logicaldoc.core.security.dao;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -496,7 +493,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	 *      JDBC query, this is required in order to obtain acceptable
 	 *      performances during searches.
 	 */
-	@SuppressWarnings({ "deprecation", "rawtypes" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<Long> findIdByUserId(long userId, long parentId, Integer type) {
 		List<Long> ids = new ArrayList<Long>();
 		try {
@@ -525,30 +522,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				query1.append(")");
 				if (type != null)
 					query1.append(" AND B.ld_type=" + type.toString());
-
-				Connection con = null;
-				Statement stmt = null;
-				ResultSet rs = null;
-				try {
-					con = getSession().connection();
-					stmt = con.createStatement();
-					rs = stmt.executeQuery(query1.toString());
-					while (rs.next()) {
-						Long id = null;
-						if (rs.getObject(1) instanceof Long)
-							id = (Long) rs.getObject(1);
-						else
-							id = new Long(rs.getInt(1));
-						ids.add(id);
-					}
-				} finally {
-					if (rs != null)
-						rs.close();
-					if (stmt != null)
-						stmt.close();
-					if (con != null)
-						con.close();
-				}
+				
+				ids = (List<Long>) queryForList(query1.toString(), Long.class);
 
 				/*
 				 * Now find all menues referencing the previously found ones
@@ -558,31 +533,13 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				query2.append("	and B.ld_securityref in (");
 				query2.append(query1.toString());
 				query2.append(")");
-
-				con = null;
-				stmt = null;
-				rs = null;
-				try {
-					con = getSession().connection();
-					stmt = con.createStatement();
-					rs = stmt.executeQuery(query2.toString());
-					while (rs.next()) {
-						Long id = null;
-						if (rs.getObject(1) instanceof Long)
-							id = (Long) rs.getObject(1);
-						else
-							id = new Long(rs.getInt(1));
-						if (!ids.contains(id))
-							ids.add(id);
-					}
-				} finally {
-					if (rs != null)
-						rs.close();
-					if (stmt != null)
-						stmt.close();
-					if (con != null)
-						con.close();
+				
+				List<Long> menuids2 = (List<Long>) queryForList(query2.toString(), Long.class);
+				for (Long menuid : menuids2) {
+					if (!ids.contains(menuid)) 
+						ids.add(menuid);
 				}
+
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -662,7 +619,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Long> findMenuIdByUserIdAndPermission(long userId, Permission permission) {
 		List<Long> ids = new ArrayList<Long>();
@@ -697,30 +654,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 					first = false;
 				}
 				query1.append(")");
-
-				Connection con = null;
-				Statement stmt = null;
-				ResultSet rs = null;
-				try {
-					con = getSession().connection();
-					stmt = con.createStatement();
-					rs = stmt.executeQuery(query1.toString());
-					while (rs.next()) {
-						Long id = null;
-						if (rs.getObject(1) instanceof Long)
-							id = (Long) rs.getObject(1);
-						else
-							id = new Long(rs.getInt(1));
-						ids.add(id);
-					}
-				} finally {
-					if (rs != null)
-						rs.close();
-					if (stmt != null)
-						stmt.close();
-					if (con != null)
-						con.close();
-				}
+				
+				ids = (List<Long>) queryForList(query1.toString(), Long.class);
 
 				/*
 				 * Now search for those menues that references the previously
@@ -728,30 +663,11 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				 */
 				StringBuffer query2 = new StringBuffer("select B.ld_id from ld_menu B where B.ld_deleted=0 ");
 				query2.append(" and B.ld_securityref in (" + query1.toString() + ")");
-
-				con = null;
-				stmt = null;
-				rs = null;
-				try {
-					con = getSession().connection();
-					stmt = con.createStatement();
-					rs = stmt.executeQuery(query2.toString());
-					while (rs.next()) {
-						Long id = null;
-						if (rs.getObject(1) instanceof Long)
-							id = (Long) rs.getObject(1);
-						else
-							id = new Long(rs.getInt(1));
-						if (!ids.contains(id))
-							ids.add(id);
-					}
-				} finally {
-					if (rs != null)
-						rs.close();
-					if (stmt != null)
-						stmt.close();
-					if (con != null)
-						con.close();
+				
+				List<Long> mrefs = (List<Long>) queryForList(query2.toString(), Long.class);
+				for (Long menuId : mrefs) {
+					if (!ids.contains(menuId))
+						ids.add(menuId);
 				}
 
 			}
@@ -817,7 +733,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return result;
 	}
 
-	@SuppressWarnings({ "rawtypes", "deprecation" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<Long> findIdByUserId(long userId, long parentId) {
 		List<Long> ids = new ArrayList<Long>();
@@ -844,30 +760,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 					first = false;
 				}
 				query1.append(")");
-
-				Connection con = null;
-				Statement stmt = null;
-				ResultSet rs = null;
-				try {
-					con = getSession().connection();
-					stmt = con.createStatement();
-					rs = stmt.executeQuery(query1.toString());
-					while (rs.next()) {
-						Long id = null;
-						if (rs.getObject(1) instanceof Long)
-							id = (Long) rs.getObject(1);
-						else
-							id = new Long(rs.getInt(1));
-						ids.add(id);
-					}
-				} finally {
-					if (rs != null)
-						rs.close();
-					if (stmt != null)
-						stmt.close();
-					if (con != null)
-						con.close();
-				}
+				
+				ids = (List<Long>) queryForList(query1.toString(), Long.class);
 
 				/*
 				 * Now find all menues referencing the previously found ones
@@ -877,31 +771,13 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				query2.append("	and B.ld_securityref in (");
 				query2.append(query1.toString());
 				query2.append(")");
-
-				con = null;
-				stmt = null;
-				rs = null;
-				try {
-					con = getSession().connection();
-					stmt = con.createStatement();
-					rs = stmt.executeQuery(query2.toString());
-					while (rs.next()) {
-						Long id = null;
-						if (rs.getObject(1) instanceof Long)
-							id = (Long) rs.getObject(1);
-						else
-							id = new Long(rs.getInt(1));
-						if (!ids.contains(id))
-							ids.add(id);
-					}
-				} finally {
-					if (rs != null)
-						rs.close();
-					if (stmt != null)
-						stmt.close();
-					if (con != null)
-						con.close();
+				
+				List<Long> menuids2 = (List<Long>) queryForList(query2.toString(), Long.class);
+				for (Long menuid : menuids2) {
+					if (!ids.contains(menuid)) 
+						ids.add(menuid);
 				}
+
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
