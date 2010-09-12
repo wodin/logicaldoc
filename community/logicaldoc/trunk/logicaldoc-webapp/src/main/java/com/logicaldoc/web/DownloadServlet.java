@@ -81,12 +81,14 @@ public class DownloadServlet extends HttpServlet {
 				filename = doc.getFileName();
 
 			response.setHeader("Content-Length", Long.toString(doc.getFileSize()));
-
+			response.setHeader("Pragma", "public");
+			response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
+			response.setHeader("Expires", "0");
+			
 			if (request.getParameter("open") == null) {
-				response.setHeader("Pragma", "public");
-				response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
-				response.setHeader("Expires", "0");
 				response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+			}else{
+				response.setHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
 			}
 
 			if (StringUtils.isEmpty(fileVersion)) {
