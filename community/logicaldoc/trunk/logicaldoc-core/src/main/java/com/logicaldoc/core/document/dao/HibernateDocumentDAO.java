@@ -316,7 +316,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			if (StringUtils.isNotEmpty(firstLetter))
 				sb.append(" where lower(ld_tag) like '" + firstLetter.toLowerCase() + "%'");
 
-			return (List<String>) queryForList(sb.toString(), null, String.class, null);
+			return (List<String>) queryForList(sb.toString(), String.class);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -326,7 +326,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findByUserIdAndTag(long userId, String tag, Integer max) {
+		
 		List<Document> coll = new ArrayList<Document>();
+		
 		Set<Long> ids = findDocIdByUserIdAndTag(userId, tag);
 		StringBuffer buf = new StringBuffer();
 		if (!ids.isEmpty()) {
@@ -367,6 +369,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				 * Search for all accessible folders
 				 */
 				List<Long> precoll = folderDAO.findFolderIdByUserId(userId);
+				
 				StringBuffer buf = new StringBuffer();
 				boolean first = true;
 				for (Long id : precoll) {
@@ -383,11 +386,14 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				query.append(" AND lower(D.ld_tag)='" + SqlUtil.doubleQuotes(tag.toLowerCase()) + "' ");
 			}
 			
-			List<Long> docIds = (List<Long>) queryForList(query.toString(), new Object[]{}, Long.class, null);
+			List<Long> docIds = (List<Long>) queryForList(query.toString(), Long.class);
 			ids.addAll(docIds);
+			
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
+			System.err.println(e);
 		}
+		
 		return ids;
 	}
 
@@ -528,7 +534,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@Override
 	public List<Long> findDeletedDocIds() {
 		String query = "select ld_id from ld_document where ld_deleted=1 order by ld_lastmodified desc";
-		return (List<Long>) queryForList(query, new Object[]{}, Long.class, null);
+		return (List<Long>) queryForList(query, Long.class);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -577,7 +583,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		} else {
 			query += " ld_deleted >= 0";
 		}
-		return queryForInt(query);
+		return queryForLong(query);
 	}
 
 	@Override
@@ -591,7 +597,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		bulkUpdate("set ld_deleted=0 where ld_id=" + docId, null);
 		String query = "select ld_folderid from ld_document where ld_id = " + docId;
 
-		List<Long> folders = (List<Long>) queryForList(query, null, Long.class, null);
+		List<Long> folders = (List<Long>) queryForList(query, Long.class);
 		for (Long folderId : folders) {
 			folderDAO.restore(folderId, true);
 		}
@@ -671,7 +677,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@Override
 	public long countByIndexed(int indexed) {
 		String query = "select count(*) from ld_document where ld_deleted=0 and ld_indexed = " + indexed;
-		return queryForInt(query);
+		return queryForLong(query);
 	}	
 
 	@Override

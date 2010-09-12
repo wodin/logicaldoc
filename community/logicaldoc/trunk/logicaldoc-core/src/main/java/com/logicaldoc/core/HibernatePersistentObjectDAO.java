@@ -167,6 +167,8 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 			else
 				list = jdbcTemplate.query(sql, rowMapper);
 		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println(e);
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
@@ -186,25 +188,26 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 			if (args != null)
 				list = jdbcTemplate.queryForList(sql, args, elementType);
 			else
-				list = jdbcTemplate.queryForList(sql, args, elementType);
+				list = jdbcTemplate.queryForList(sql, elementType);
 		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println(e);
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
 		return list;
 	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List queryForList(String sql, Class elementType) {
+		return queryForList(sql, null, elementType, null);
+	}	
 
 	@Override
 	public int queryForInt(String sql) {
-		try {
-			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
-			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-			return jdbcTemplate.queryForInt(sql);
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-		}
-		return 0;
+		long mytmplong = queryForLong(sql);
+		return new Long(mytmplong).intValue();
 	}
 	
 	@Override
@@ -214,6 +217,8 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			return jdbcTemplate.queryForLong(sql);
 		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println(e);
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
@@ -227,6 +232,8 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			return jdbcTemplate.update(statement);
 		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println(e);
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
