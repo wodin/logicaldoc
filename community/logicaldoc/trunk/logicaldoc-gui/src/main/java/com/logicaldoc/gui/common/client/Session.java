@@ -57,6 +57,7 @@ public class Session {
 			this.session = session;
 			I18N.setLocale(session.getUser().getLanguage());
 			I18N.initBundle(session.getBundle());
+			Menu.init(session.getUser());
 			if (session.isLoggedIn()) {
 				for (SessionObserver listener : sessionObservers) {
 					listener.onUserLoggedIn(session.getUser());
