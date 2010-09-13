@@ -14,7 +14,6 @@ import org.apache.commons.logging.LogFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
-import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserHistoryDAO;
 import com.logicaldoc.core.task.Task;
@@ -190,61 +189,49 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			GUIParameter notIndexed = new GUIParameter();
 			notIndexed.setName("notindexed");
 			StringBuilder query = new StringBuilder(
-					"SELECT COUNT(A.id) FROM Document A where A.indexed = 0 and A.deleted = 0 ");
-			List<Object> records = (List<Object>) docDao.findByQuery(query.toString(), null, null);
-			Long count = (Long) records.get(0);
-			notIndexed.setValue(Long.toString(count));
+					"SELECT COUNT(A.ld_id) FROM ld_document A where A.ld_indexed = 0 and A.ld_deleted = 0 ");
+			notIndexed.setValue(Long.toString(docDao.queryForLong(query.toString())));
 
 			parameters[1][0] = notIndexed;
 
 			GUIParameter indexed = new GUIParameter();
 			indexed.setName("indexed");
-			query = new StringBuilder("SELECT COUNT(A.id) FROM Document A where A.indexed = 1 and A.deleted = 0 ");
-			records = (List<Object>) docDao.findByQuery(query.toString(), null, null);
-			count = (Long) records.get(0);
-			indexed.setValue(Long.toString(count));
+			query = new StringBuilder(
+					"SELECT COUNT(A.ld_id) FROM ld_document A where A.ld_indexed = 1 and A.ld_deleted = 0 ");
+			indexed.setValue(Long.toString(docDao.queryForLong(query.toString())));
 
 			parameters[1][1] = indexed;
 
 			GUIParameter deletedDocs = new GUIParameter();
 			deletedDocs.setName("docstrash");
 			deletedDocs.setLabel("trash");
-			query = new StringBuilder("SELECT COUNT(A.id) FROM Document A where A.deleted = 1 ");
-			records = (List<Object>) docDao.findByQuery(query.toString(), null, null);
-			count = (Long) records.get(0);
-			deletedDocs.setValue(Long.toString(count));
+			query = new StringBuilder("SELECT COUNT(A.ld_id) FROM ld_document A where A.ld_deleted = 1 ");
+			deletedDocs.setValue(Long.toString(docDao.queryForLong(query.toString())));
 
 			parameters[1][2] = deletedDocs;
 
 			// Folders statistics
 			GUIParameter notEmptyFolders = new GUIParameter();
 			notEmptyFolders.setName("withdocs");
-			query = new StringBuilder("SELECT COUNT(A.id) FROM Folder A where (A.id= " + Folder.ROOTID
-					+ " ) and A.deleted = 0 and A.id in (select B.folder.id FROM Document B where B.deleted = 0) ");
-			records = (List<Object>) folderDao.findByQuery(query.toString(), null, null);
-			count = (Long) records.get(0);
-			notEmptyFolders.setValue(Long.toString(count));
+			query = new StringBuilder(
+					"SELECT COUNT(A.ld_id) FROM ld_folder A where A.ld_deleted = 0 and A.ld_id in (select B.ld_folderid FROM ld_document B where B.ld_deleted = 0) ");
+			notEmptyFolders.setValue(Long.toString(folderDao.queryForLong(query.toString())));
 
 			parameters[2][0] = notEmptyFolders;
 
 			GUIParameter emptyFolders = new GUIParameter();
 			emptyFolders.setName("empty");
-			query = new StringBuilder("SELECT COUNT(A.id) FROM Folder A where (A.id= " + Folder.ROOTID
-					+ " ) and A.deleted = 0 and A.id not in (select B.folder.id FROM Document B where B.deleted = 0) ");
-			records = (List<Object>) folderDao.findByQuery(query.toString(), null, null);
-			count = (Long) records.get(0);
-			emptyFolders.setValue(Long.toString(count));
+			query = new StringBuilder(
+					"SELECT COUNT(A.ld_id) FROM ld_folder A where A.ld_deleted = 0 and A.ld_id not in (select B.ld_folderid FROM ld_document B where B.ld_deleted = 0) ");
+			emptyFolders.setValue(Long.toString(folderDao.queryForLong(query.toString())));
 
 			parameters[2][1] = emptyFolders;
 
 			GUIParameter deletedFolders = new GUIParameter();
 			deletedFolders.setName("folderstrash");
 			deletedFolders.setLabel("trash");
-			query = new StringBuilder("SELECT COUNT(A.id) FROM Folder A where (A.id= " + Folder.ROOTID
-					+ " ) and A.deleted = 1 ");
-			records = (List<Object>) folderDao.findByQuery(query.toString(), null, null);
-			count = (Long) records.get(0);
-			deletedFolders.setValue(Long.toString(count));
+			query = new StringBuilder("SELECT COUNT(A.ld_id) FROM ld_folder A where A.ld_deleted = 1 ");
+			deletedFolders.setValue(Long.toString(folderDao.queryForLong(query.toString())));
 
 			parameters[2][2] = deletedFolders;
 

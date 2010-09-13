@@ -80,12 +80,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>WorkflowService</servlet-name>
-		<servlet-class>com.logicaldoc.gui.frontend.server.MockServiceImpl</servlet-class>
-	</servlet>
-
-
-	<servlet>
 		<servlet-name>MessageService</servlet-name>
 		<servlet-class>com.logicaldoc.gui.frontend.server.MockMessageServiceImpl</servlet-class>
 	</servlet>
