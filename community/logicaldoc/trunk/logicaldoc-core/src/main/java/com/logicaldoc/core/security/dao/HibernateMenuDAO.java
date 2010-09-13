@@ -522,7 +522,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				query1.append(")");
 				if (type != null)
 					query1.append(" AND B.ld_type=" + type.toString());
-				
+
 				ids = (List<Long>) queryForList(query1.toString(), Long.class);
 
 				/*
@@ -533,10 +533,10 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				query2.append("	and B.ld_securityref in (");
 				query2.append(query1.toString());
 				query2.append(")");
-				
+
 				List<Long> menuids2 = (List<Long>) queryForList(query2.toString(), Long.class);
 				for (Long menuid : menuids2) {
-					if (!ids.contains(menuid)) 
+					if (!ids.contains(menuid))
 						ids.add(menuid);
 				}
 
@@ -570,11 +570,11 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		Menu menu = findById(menuId);
 		if (menu == null)
 			return null;
-		String path = menuId != Menu.MENUID_DOCUMENTS ? menu.getText() : "";
-		while (menu != null && menu.getId() != menu.getParentId() && menu.getId() != Menu.MENUID_DOCUMENTS) {
+		String path = menuId != 1 ? menu.getText() : "";
+		while (menu != null && menu.getId() != menu.getParentId() && menu.getId() != 1) {
 			menu = findById(menu.getParentId());
 			if (menu != null)
-				path = (menu.getId() != Menu.MENUID_DOCUMENTS ? menu.getText() : "") + "/" + path;
+				path = (menu.getId() != 1 ? menu.getText() : "") + "/" + path;
 		}
 		if (!path.startsWith("/"))
 			path = "/" + path;
@@ -592,7 +592,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		Menu menu = findById(menuId);
 		List<Menu> coll = new ArrayList<Menu>();
 		try {
-			while (menu.getId() != Menu.MENUID_DOCUMENTS && menu.getId() != menu.getParentId()) {
+			while (menu.getId() != 1 && menu.getId() != menu.getParentId()) {
 				menu = findById(menu.getParentId());
 				if (menu != null)
 					coll.add(0, menu);
@@ -654,7 +654,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 					first = false;
 				}
 				query1.append(")");
-				
+
 				ids = (List<Long>) queryForList(query1.toString(), Long.class);
 
 				/*
@@ -663,7 +663,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				 */
 				StringBuffer query2 = new StringBuffer("select B.ld_id from ld_menu B where B.ld_deleted=0 ");
 				query2.append(" and B.ld_securityref in (" + query1.toString() + ")");
-				
+
 				List<Long> mrefs = (List<Long>) queryForList(query2.toString(), Long.class);
 				for (Long menuId : mrefs) {
 					if (!ids.contains(menuId))
@@ -760,7 +760,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 					first = false;
 				}
 				query1.append(")");
-				
+
 				ids = (List<Long>) queryForList(query1.toString(), Long.class);
 
 				/*
@@ -771,10 +771,10 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				query2.append("	and B.ld_securityref in (");
 				query2.append(query1.toString());
 				query2.append(")");
-				
+
 				List<Long> menuids2 = (List<Long>) queryForList(query2.toString(), Long.class);
 				for (Long menuid : menuids2) {
-					if (!ids.contains(menuid)) 
+					if (!ids.contains(menuid))
 						ids.add(menuid);
 				}
 

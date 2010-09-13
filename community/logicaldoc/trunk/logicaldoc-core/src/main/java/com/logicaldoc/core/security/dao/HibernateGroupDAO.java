@@ -7,8 +7,6 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.security.Group;
-import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.util.sql.SqlUtil;
 
 /**
@@ -124,16 +122,6 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 			if (parentGroupId > 0) {
 				// Inherit ACLs from the parent group
 				inheritACLs(group.getId(), parentGroupId);
-			} else {
-				// if no parent group was given, the new group will have default
-				// access rights
-				addMenuGroup(group, Menu.MENUID_HOME, 0); // home
-				addMenuGroup(group, Menu.MENUID_PERSONAL, 0); // personal
-				addMenuGroup(group, Menu.MENUID_DOCUMENTS, 1); // root folder
-				// for documents
-				addMenuGroup(group, Menu.MENUID_MESSAGES, 0); // messages
-				addMenuGroup(group, Menu.MENUID_EDITME, 0); // edit me
-				addMenuGroup(group, 26, 1); // tags
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -143,11 +131,9 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 
 		return result;
 	}
-	
 
 	@Override
 	public void inheritACLs(long groupId, long parentGroupId) {
-
 		if (groupId == parentGroupId)
 			return;
 
@@ -156,52 +142,44 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 			log.debug("Delete all menugroup for group " + groupId);
 			jdbcUpdate(sql);
 
-			sql = "insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) "
-					+ "select B.ld_menuid,"
-					+ groupId
-					+ ", B.ld_write from ld_menugroup as B where B.ld_groupid= "
-					+ parentGroupId;
-			log.debug("Replicate all ACLs from group " + parentGroupId);
-			jdbcUpdate(sql);
-
-
 			sql = "delete from ld_foldergroup where ld_groupid=" + groupId;
 			log.debug("Delete all foldergroup for group " + groupId);
 			jdbcUpdate(sql);
 
-			sql = "insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow) "
-					+ "select B.ld_folderid,"
-					+ groupId
-					+ ", B.ld_write, B.ld_add, B.ld_security, B.ld_immutable, B.ld_delete, B.ld_rename, B.ld_import, B.ld_export, B.ld_sign, B.ld_archive, B.ld_workflow from ld_foldergroup as B "
-					+ "where B.ld_groupid= " + parentGroupId;
-			log.debug("Replicate all ACLs from group " + parentGroupId);
-			jdbcUpdate(sql);
+			if (parentGroupId != Group.GROUPID_ADMIN) {
+				log.debug("Replicate all ACLs from group " + parentGroupId + " to group " + groupId);
 
-		} catch (Exception e) {
+				sql = "insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) " + "select B.ld_menuid," + groupId
+						+ ", B.ld_write from ld_menugroup as B where B.ld_groupid= " + parentGroupId;
+				log.debug("Replicate all ACLs from group " + parentGroupId);
+				jdbcUpdate(sql);
+
+				sql = "insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow) "
+						+ "select B.ld_folderid,"
+						+ groupId
+						+ ", B.ld_write, B.ld_add, B.ld_security, B.ld_immutable, B.ld_delete, B.ld_rename, B.ld_import, B.ld_export, B.ld_sign, B.ld_archive, B.ld_workflow from ld_foldergroup as B "
+						+ "where B.ld_groupid= " + parentGroupId;
+				jdbcUpdate(sql);
+			} else {
+				// The admin group can access everithing
+				log.debug("Replicate all admin ACLs to group " + groupId);
+
+				sql = "insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) select B.ld_id," + groupId
+						+ ",1 from ld_menu as B where B.ld_deleted=0";
+				jdbcUpdate(sql);
+
+				sql = "insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow) "
+						+ "select B.ld_id,"
+						+ groupId
+						+ ",1,1,1,1,1,1,1,1,1,1,1 from ld_folder as B "
+						+ "where B.ld_deleted=0";
+				jdbcUpdate(sql);
+			}
+		} catch (Throwable e) {
+			e.printStackTrace();
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
-	}	
-	
-
-	/**
-	 * Assigns the given rights for a certain group to a menu
-	 * 
-	 * @param group the group
-	 * @param menuId the menu
-	 * @param writeable the rights to assign (0=read; 1=read/write)
-	 */
-	private void addMenuGroup(Group group, long menuId, int writeable) {
-		MenuDAO menuDAO = getMenuDAO();
-		Menu menu = menuDAO.findById(menuId);
-
-		MenuGroup mgroup = new MenuGroup();
-		mgroup.setGroupId(group.getId());
-		mgroup.setWrite(writeable);
-
-		if (!menu.getMenuGroups().contains(mgroup))
-			menu.getMenuGroups().add(mgroup);
-		menuDAO.store(menu);
 	}
 
 	/**

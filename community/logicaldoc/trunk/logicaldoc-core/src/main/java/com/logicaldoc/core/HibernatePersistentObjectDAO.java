@@ -168,7 +168,6 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 				list = jdbcTemplate.query(sql, rowMapper);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println(e);
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
@@ -191,7 +190,6 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 				list = jdbcTemplate.queryForList(sql, elementType);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println(e);
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
@@ -218,7 +216,6 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 			return jdbcTemplate.queryForLong(sql);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println(e);
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
@@ -233,7 +230,6 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 			return jdbcTemplate.update(statement);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println(e);
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
