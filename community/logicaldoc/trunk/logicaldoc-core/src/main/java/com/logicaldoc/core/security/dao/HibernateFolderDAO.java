@@ -643,9 +643,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			if (groups.isEmpty())
 				return permissions;
 
-			// If the folder defines a security ref, use another folder to find
-			// the
-			// policies
+			// If the folder defines a security ref, use another folder to find the policies
 			long id = folderId;
 			Folder folder = findById(folderId);
 			if (folder.getSecurityRef() != null) {
@@ -680,44 +678,31 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				stmt = con.createStatement();
 				rs = stmt.executeQuery(query.toString());
 				while (rs.next()) {
-					if (!permissions.contains(Permission.READ))
-						permissions.add(Permission.READ);
+					permissions.add(Permission.READ);
 					if (rs.getInt("LDADD") == 1)
-						if (!permissions.contains(Permission.ADD))
-							permissions.add(Permission.ADD);
+						permissions.add(Permission.ADD);
 					if (rs.getInt("LDEXPORT") == 1)
-						if (!permissions.contains(Permission.EXPORT))
-							permissions.add(Permission.EXPORT);
+						permissions.add(Permission.EXPORT);
 					if (rs.getInt("LDIMPORT") == 1)
-						if (!permissions.contains(Permission.IMPORT))
-							permissions.add(Permission.IMPORT);
+						permissions.add(Permission.IMPORT);
 					if (rs.getInt("LDDELETE") == 1)
-						if (!permissions.contains(Permission.DELETE))
-							permissions.add(Permission.DELETE);
+						permissions.add(Permission.DELETE);
 					if (rs.getInt("LDIMMUTABLE") == 1)
-						if (!permissions.contains(Permission.IMMUTABLE))
-							permissions.add(Permission.IMMUTABLE);
+						permissions.add(Permission.IMMUTABLE);
 					if (rs.getInt("LDSECURITY") == 1)
-						if (!permissions.contains(Permission.SECURITY))
-							permissions.add(Permission.SECURITY);
+						permissions.add(Permission.SECURITY);
 					if (rs.getInt("LDRENAME") == 1)
-						if (!permissions.contains(Permission.RENAME))
-							permissions.add(Permission.RENAME);
+						permissions.add(Permission.RENAME);
 					if (rs.getInt("LDWRITE") == 1)
-						if (!permissions.contains(Permission.WRITE))
-							permissions.add(Permission.WRITE);
+						permissions.add(Permission.WRITE);
 					if (rs.getInt("LDDELETE") == 1)
-						if (!permissions.contains(Permission.DELETE))
-							permissions.add(Permission.DELETE);
+						permissions.add(Permission.DELETE);
 					if (rs.getInt("LDSIGN") == 1)
-						if (!permissions.contains(Permission.SIGN))
-							permissions.add(Permission.SIGN);
+						permissions.add(Permission.SIGN);
 					if (rs.getInt("LDARCHIVE") == 1)
-						if (!permissions.contains(Permission.ARCHIVE))
-							permissions.add(Permission.ARCHIVE);
+						permissions.add(Permission.ARCHIVE);
 					if (rs.getInt("LDWORKFLOW") == 1)
-						if (!permissions.contains(Permission.WORKFLOW))
-							permissions.add(Permission.WORKFLOW);
+						permissions.add(Permission.WORKFLOW);
 				}
 			} finally {
 				if (rs != null)
