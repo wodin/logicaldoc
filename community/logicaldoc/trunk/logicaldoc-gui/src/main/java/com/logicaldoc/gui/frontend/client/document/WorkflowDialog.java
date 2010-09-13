@@ -84,6 +84,8 @@ public class WorkflowDialog extends Window {
 
 	private SelectItem priority = null;
 
+	private WorkflowDesigner workflowDesigner = null;
+
 	public WorkflowDialog(String ids) {
 		this.docIds = ids;
 
@@ -201,7 +203,6 @@ public class WorkflowDialog extends Window {
 		wflDescriptionItem = new TextAreaItem("wfldescr", I18N.message("description"));
 		if (selectedWorkflow != null)
 			wflDescriptionItem.setValue(selectedWorkflow.getDescription());
-		// wflDescriptionItem.setValue(wflDescription);
 		wflDescriptionItem.setWidth(250);
 		wflDescriptionItem.setHeight(40);
 
@@ -233,9 +234,10 @@ public class WorkflowDialog extends Window {
 		workflowSettingsLayout.addMember(docsAppendedList);
 		workflowSettings.setPane(workflowSettingsLayout);
 
-		if (selectedWorkflow != null)
-			wflLayout.addMember(new WorkflowDesigner(selectedWorkflow, true));
-		else
+		if (selectedWorkflow != null) {
+			workflowDesigner = new WorkflowDesigner(selectedWorkflow, true);
+			wflLayout.addMember(workflowDesigner);
+		} else
 			wflLayout.addMember(new WorkflowDesigner(new GUIWorkflow(), true));
 
 		workflowAssignment.setPane(wflLayout);

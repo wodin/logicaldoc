@@ -31,14 +31,14 @@ public class WorkflowState extends VStack {
 
 	protected HLayout commands = new HLayout();
 
-	private WorkflowDesigner designer = null;
+	private WorkflowDesigner workflowDesigner = null;
 
 	private GUIWFState wfState = null;
 
 	private ValuesManager vm = new ValuesManager();
 
 	public WorkflowState(WorkflowDesigner designer, GUIWFState wfState) {
-		this.designer = designer;
+		this.workflowDesigner = designer;
 		this.wfState = wfState;
 		setHeight(40);
 		setWidth(150);
@@ -71,7 +71,8 @@ public class WorkflowState extends VStack {
 				getDesigner().onStateDelete(getWfState());
 			}
 		});
-		commands.addMember(delete);
+		if (!designer.isOnlyVisualization())
+			commands.addMember(delete);
 
 		HTML edit = new HTML("&nbsp;&nbsp;<a href='#'>" + I18N.message("edit").toLowerCase() + "</a>");
 		edit.setWidth("1px");
@@ -81,7 +82,9 @@ public class WorkflowState extends VStack {
 				getDesigner().onStateSelect(getWfState());
 			}
 		});
-		commands.addMember(edit);
+
+		if (!designer.isOnlyVisualization())
+			commands.addMember(edit);
 
 		if (getWfState().getType() == GUIWFState.TYPE_TASK) {
 			HTML addTransition = new HTML("&nbsp;&nbsp;<a href='#'>" + I18N.message("addtransition").toLowerCase()
@@ -126,12 +129,13 @@ public class WorkflowState extends VStack {
 					window.show();
 				}
 			});
-			commands.addMember(addTransition);
+			if (!designer.isOnlyVisualization())
+				commands.addMember(addTransition);
 		}
 	}
 
 	public WorkflowDesigner getDesigner() {
-		return designer;
+		return workflowDesigner;
 	}
 
 	public GUIWFState getWfState() {
