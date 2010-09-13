@@ -130,11 +130,9 @@ public class SecurityManagerImplTest extends AbstractCoreTCase {
 
 	@Test
 	public void testGetAllowedGroups() {
-		Set<Group> groups = manager.getAllowedGroups(5);
+		Set<Group> groups = manager.getAllowedGroups(9);
 		Assert.assertNotNull(groups);
 		Assert.assertTrue(groups.contains(groupDAO.findByName("admin")));
-		Assert.assertTrue(groups.contains(groupDAO.findByName("author")));
-		Assert.assertTrue(groups.contains(groupDAO.findByName("guest")));
 	}
 
 	@Test
