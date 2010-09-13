@@ -1,11 +1,7 @@
 package com.logicaldoc.core.security.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.apache.commons.logging.LogFactory;
 
@@ -147,57 +143,46 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 
 		return result;
 	}
+	
 
-	@SuppressWarnings({ "unused", "deprecation" })
 	@Override
 	public void inheritACLs(long groupId, long parentGroupId) {
+
 		if (groupId == parentGroupId)
 			return;
 
-		List<Object> coll = new ArrayList<Object>();
 		try {
-			Connection con = null;
-			PreparedStatement stmt = null;
-			ResultSet rs = null;
+			String sql = "delete from ld_menugroup where ld_groupid=" + groupId;
+			log.debug("Delete all menugroup for group " + groupId);
+			jdbcUpdate(sql);
 
-			try {
-				con = getSession().connection();
-				stmt = con.prepareStatement("delete from ld_menugroup where ld_groupid=" + groupId);
-				log.debug("Delete all menugroup for group " + groupId);
-				stmt.executeUpdate();
+			sql = "insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) "
+					+ "select B.ld_menuid,"
+					+ groupId
+					+ ", B.ld_write from ld_menugroup as B where B.ld_groupid= "
+					+ parentGroupId;
+			log.debug("Replicate all ACLs from group " + parentGroupId);
+			jdbcUpdate(sql);
 
-				stmt = con.prepareStatement("insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) "
-						+ "select B.ld_menuid," + groupId + ", B.ld_write from ld_menugroup as B where B.ld_groupid= "
-						+ parentGroupId);
-				log.debug("Replicate all ACLs from group " + parentGroupId);
-				stmt.executeUpdate();
 
-				stmt = con.prepareStatement("delete from ld_foldergroup where ld_groupid=" + groupId);
-				log.debug("Delete all foldergroup for group " + groupId);
-				stmt.executeUpdate();
+			sql = "delete from ld_foldergroup where ld_groupid=" + groupId;
+			log.debug("Delete all foldergroup for group " + groupId);
+			jdbcUpdate(sql);
 
-				stmt = con
-						.prepareStatement("insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow) "
-								+ "select B.ld_folderid,"
-								+ groupId
-								+ ", B.ld_write, B.ld_add, B.ld_security, B.ld_immutable, B.ld_delete, B.ld_rename, B.ld_import, B.ld_export, B.ld_sign, B.ld_archive, B.ld_workflow from ld_foldergroup as B "
-								+ "where B.ld_groupid= " + parentGroupId);
-				log.debug("Replicate all ACLs from group " + parentGroupId);
-				stmt.executeUpdate();
-			} finally {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			}
+			sql = "insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow) "
+					+ "select B.ld_folderid,"
+					+ groupId
+					+ ", B.ld_write, B.ld_add, B.ld_security, B.ld_immutable, B.ld_delete, B.ld_rename, B.ld_import, B.ld_export, B.ld_sign, B.ld_archive, B.ld_workflow from ld_foldergroup as B "
+					+ "where B.ld_groupid= " + parentGroupId;
+			log.debug("Replicate all ACLs from group " + parentGroupId);
+			jdbcUpdate(sql);
+
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
-
-	}
+	}	
+	
 
 	/**
 	 * Assigns the given rights for a certain group to a menu
