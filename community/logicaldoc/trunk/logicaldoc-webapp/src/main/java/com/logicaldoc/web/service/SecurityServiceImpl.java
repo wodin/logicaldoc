@@ -58,64 +58,73 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		GUISession session = new GUISession();
 
 		GUIUser guiUser = new GUIUser();
-		if (authenticationChain.authenticate(username, password,
-				getThreadLocalRequest() != null ? getThreadLocalRequest().getRemoteAddr() : "")) {
 
-			User user = userDao.findByUserName(username);
-			userDao.initialize(user);
+		try {
 
-			guiUser.setFirstName(user.getFirstName());
-			guiUser.setId(user.getId());
-			if (StringUtils.isEmpty(locale)) {
+			if (authenticationChain.authenticate(username, password,
+					getThreadLocalRequest() != null ? getThreadLocalRequest().getRemoteAddr() : "")) {
+
+				User user = userDao.findByUserName(username);
+				userDao.initialize(user);
+
+				guiUser.setFirstName(user.getFirstName());
+				guiUser.setId(user.getId());
+				if (StringUtils.isEmpty(locale)) {
+					guiUser.setLanguage(user.getLanguage());
+				} else {
+					guiUser.setLanguage(locale);
+				}
+				session.setBundle(InfoServiceImpl.getBundle(guiUser.getLanguage()));
+
+				guiUser.setName(user.getName());
+
+				GUIGroup[] groups = new GUIGroup[user.getGroups().size()];
+				int i = 0;
+				for (Group g : user.getGroups()) {
+					groups[i] = new GUIGroup();
+					groups[i].setId(g.getId());
+					groups[i].setName(g.getName());
+					groups[i].setDescription(g.getDescription());
+					i++;
+				}
+				guiUser.setGroups(groups);
+
+				guiUser.setUserName(username);
+				guiUser.setExpired(false);
+
+				guiUser.setLockedDocs(documentDao.findByLockUserAndStatus(user.getId(), AbstractDocument.DOC_LOCKED)
+						.size());
+				guiUser.setCheckedOutDocs(documentDao.findByLockUserAndStatus(user.getId(),
+						AbstractDocument.DOC_CHECKED_OUT).size());
+				guiUser.setUnreadMessages(messageDao.getCount(username, SystemMessage.TYPE_SYSTEM, 0));
+
+				session.setSid(AuthenticationChain.getSessionId());
+				session.setUser(guiUser);
+				session.setLoggedIn(true);
+
+				// Define the current locale
+				UserSession userSession = SessionManager.getInstance().get(session.getSid());
+				userSession.getDictionary().put(SessionUtil.LOCALE, user.getLocale());
+				userSession.getDictionary().put(SessionUtil.USER, user);
+			} else if (userDao.isPasswordExpired(username)) {
+				User user = userDao.findByUserName(username);
+				guiUser.setId(user.getId());
+				guiUser.setExpired(true);
 				guiUser.setLanguage(user.getLanguage());
+				session.setUser(guiUser);
+				session.setLoggedIn(false);
+				log.info("User " + username + " password expired");
 			} else {
-				guiUser.setLanguage(locale);
+				guiUser = null;
+				session.setLoggedIn(false);
+				log.warn("User " + username + " is not valid");
 			}
-			session.setBundle(InfoServiceImpl.getBundle(guiUser.getLanguage()));
 
-			guiUser.setName(user.getName());
-
-			GUIGroup[] groups = new GUIGroup[user.getGroups().size()];
-			int i = 0;
-			for (Group g : user.getGroups()) {
-				groups[i] = new GUIGroup();
-				groups[i].setId(g.getId());
-				groups[i].setName(g.getName());
-				groups[i].setDescription(g.getDescription());
-				i++;
-			}
-			guiUser.setGroups(groups);
-
-			guiUser.setUserName(username);
-			guiUser.setExpired(false);
-
-			guiUser.setLockedDocs(documentDao.findByLockUserAndStatus(user.getId(), AbstractDocument.DOC_LOCKED).size());
-			guiUser.setCheckedOutDocs(documentDao.findByLockUserAndStatus(user.getId(),
-					AbstractDocument.DOC_CHECKED_OUT).size());
-			guiUser.setUnreadMessages(messageDao.getCount(username, SystemMessage.TYPE_SYSTEM, 0));
-
-			session.setSid(AuthenticationChain.getSessionId());
-			session.setUser(guiUser);
-			session.setLoggedIn(true);
-
-			// Define the current locale
-			UserSession userSession = SessionManager.getInstance().get(session.getSid());
-			userSession.getDictionary().put(SessionUtil.LOCALE, user.getLocale());
-			userSession.getDictionary().put(SessionUtil.USER, user);
-		} else if (userDao.isPasswordExpired(username)) {
-			User user = userDao.findByUserName(username);
-			guiUser.setId(user.getId());
-			guiUser.setExpired(true);
-			guiUser.setLanguage(user.getLanguage());
-			session.setUser(guiUser);
-			session.setLoggedIn(false);
-			log.info("User " + username + " password expired");
-		} else {
-			guiUser = null;
-			session.setLoggedIn(false);
-			log.warn("User " + username + " is not valid");
+			return session;
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e.getMessage(), e);
 		}
-		return session;
 	}
 
 	@Override
