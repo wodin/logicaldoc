@@ -31,7 +31,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-public class AbstractWebServiceTestCase {
+public abstract class AbstractWebServiceTestCase {
 
 	protected ApplicationContext context;
 
