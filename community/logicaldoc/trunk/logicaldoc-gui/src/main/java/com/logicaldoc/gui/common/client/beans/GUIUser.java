@@ -60,8 +60,8 @@ public class GUIUser implements Serializable {
 
 	private int messages = 0;
 
-	private long[] menues = new long[0];
-	
+	private Long[] menues = new Long[0];
+
 	private Set<UserObserver> observers = new HashSet<UserObserver>();
 
 	public void setUserName(String userName) {
@@ -309,11 +309,11 @@ public class GUIUser implements Serializable {
 		notifyObservers();
 	}
 
-	public long[] getMenues() {
+	public Long[] getMenues() {
 		return menues;
 	}
 
-	public void setMenues(long[] menues) {
+	public void setMenues(Long[] menues) {
 		this.menues = menues;
 	}
 }

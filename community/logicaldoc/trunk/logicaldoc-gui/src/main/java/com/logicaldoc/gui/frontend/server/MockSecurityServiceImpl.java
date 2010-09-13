@@ -55,9 +55,9 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 			user.setCheckedOutDocs(1);
 			session.setLoggedIn(true);
 
-			long[] menues = new long[1000];
+			Long[] menues = new Long[1000];
 			for (int i = 0; i < 1000; i++) {
-				menues[i] = i - 100;
+				menues[i] = (long)i - 100;
 			}
 			
 			user.setMenues(menues);

@@ -2,6 +2,7 @@ package com.logicaldoc.web.service;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.FileUtils;
@@ -22,6 +23,7 @@ import com.logicaldoc.core.security.UserHistory;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.GroupDAO;
+import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
@@ -101,7 +103,11 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				session.setSid(AuthenticationChain.getSessionId());
 				session.setUser(guiUser);
 				session.setLoggedIn(true);
-
+				
+				MenuDAO mdao=(MenuDAO)Context.getInstance().getBean(MenuDAO.class);
+				List<Long> menues=mdao.findMenuIdByUserId(user.getId());
+				guiUser.setMenues((Long[])menues.toArray(new Long[0]));
+				
 				// Define the current locale
 				UserSession userSession = SessionManager.getInstance().get(session.getSid());
 				userSession.getDictionary().put(SessionUtil.LOCALE, user.getLocale());
