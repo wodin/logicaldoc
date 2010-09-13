@@ -32,11 +32,11 @@ values (-5,5);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
-values     (99,'2008-10-22',0,'menu.admin1',1,'administration.gif',5);
+values     (99,'2008-10-22',0,'menu.admin1',2,'administration.gif',5);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
-values     (100,'2008-10-22',0,'menu',5,'administration.gif',3);
+values     (100,'2008-10-22',0,'menu',2,'administration.gif',3);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
@@ -51,7 +51,7 @@ values     (103,'2008-10-22',0,'menu103',101,'administration.gif',3);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
-values     (1000,'2008-10-22',1,'menu.admin.1000',1,'administration.gif',5);
+values     (1000,'2008-10-22',1,'menu.admin.1000',2,'administration.gif',5);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
@@ -59,7 +59,7 @@ values     (1100,'2008-10-22',1,'menu.admin.1100',1000,'administration.gif',5);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
-values     (1200,'2009-10-19',0,'test',5,'administration.gif',3);
+values     (1200,'2009-10-19',0,'test',2,'administration.gif',3);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
