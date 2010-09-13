@@ -12,6 +12,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
 import com.logicaldoc.gui.frontend.client.services.SearchServiceAsync;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.DragAppearance;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.widgets.HeaderControl;
 import com.smartgwt.client.widgets.HeaderControl.HeaderIcon;
@@ -34,6 +35,11 @@ public class TagCloudPortlet extends Portlet {
 		HeaderIcon portletIcon = ItemFactory.newHeaderIcon("tag_blue.png");
 		setHeaderControls(new HeaderControl(portletIcon), HeaderControls.HEADER_LABEL, HeaderControls.MINIMIZE_BUTTON);
 
+		setShowShadow(true);
+		setAnimateMinimize(true);
+		setDragAppearance(DragAppearance.OUTLINE);
+		setDragOpacity(30);
+		
 		container.setWidth100();
 		container.setHeight100();
 		container.setAlign(Alignment.CENTER);

@@ -5,7 +5,9 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
 
 import javax.servlet.ServletException;
@@ -45,9 +47,13 @@ public class DocumentHistoryDataServlet extends HttpServlet {
 
 		String locale = request.getParameter("locale");
 		int max = Integer.parseInt(request.getParameter("max"));
-		
+
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
+
+		// Used only to cache the already encountered documents when the history
+		// is related to a single user (for dashboard visualization)
+		Set<Long> docIds = new HashSet<Long>();
 
 		HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 		StringBuffer query = new StringBuffer(
@@ -57,12 +63,12 @@ public class DocumentHistoryDataServlet extends HttpServlet {
 		if (request.getParameter("userId") != null)
 			query.append(" and A.userId=" + request.getParameter("userId"));
 		if (request.getParameter("event") != null)
-			query.append(" and A.event='" + request.getParameter("event")+"' ");
-		query.append(" order by A.date asc ");
+			query.append(" and A.event='" + request.getParameter("event") + "' ");
+		query.append(" order by A.date desc ");
 
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		df.setTimeZone(TimeZone.getTimeZone("UTC"));
-		
+
 		List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, max);
 
 		/*
@@ -70,6 +76,14 @@ public class DocumentHistoryDataServlet extends HttpServlet {
 		 */
 		for (Object record : records) {
 			Object[] cols = (Object[]) record;
+			if (request.getParameter("userId") != null) {
+				// Discard a record if already visited
+				if (docIds.contains(cols[9]))
+					continue;
+				else
+					docIds.add((Long) cols[9]);
+			}
+
 			writer.print("<history>");
 			writer.print("<user><![CDATA[" + cols[0] + "]]></user>");
 			writer.print("<event><![CDATA[" + I18N.message((String) cols[1], locale) + "]]></event>");
