@@ -135,10 +135,10 @@ public abstract class AbstractCoreTCase {
 			sqlFile.execute(con, false);
 
 			// Test the connection
-			ResultSet rs = con.createStatement().executeQuery("select * from ld_menu where ld_id=1");
+			ResultSet rs = con.createStatement().executeQuery("select * from ld_menu where ld_id=2");
 			rs.next();
 
-			Assert.assertEquals(1, rs.getInt(1));
+			Assert.assertEquals(2, rs.getInt(1));
 		} finally {
 			if (con != null)
 				con.close();

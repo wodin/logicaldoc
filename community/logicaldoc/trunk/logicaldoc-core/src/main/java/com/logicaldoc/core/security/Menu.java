@@ -18,16 +18,6 @@ import com.logicaldoc.core.PersistentObject;
  */
 public class Menu extends PersistentObject implements Comparable<Menu> {
 
-	public static final long MENUID_HOME = 1;
-
-	public static final long MENUID_PERSONAL = 4;
-
-	public static final long MENUID_DOCUMENTS = 5;
-
-	public static final long MENUID_MESSAGES = 13;
-
-	public static final long MENUID_EDITME = 19;
-
 	private long id = 0;
 
 	private String text = "";

@@ -13,8 +13,10 @@ import com.logicaldoc.gui.common.client.beans.GUIUser;
  */
 public class Menu {
 
-	public static final int ADMINISTRATION = 1;
+	public static final int ADMINISTRATION = 2;
 
+	public static final int SECURITY = 9;
+	
 	private static Set<Long> menues = new HashSet<Long>();
 
 	static public void init(GUIUser user) {

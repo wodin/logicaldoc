@@ -54,6 +54,13 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 			user.setLockedDocs(5);
 			user.setCheckedOutDocs(1);
 			session.setLoggedIn(true);
+
+			long[] menues = new long[1000];
+			for (int i = 0; i < 1000; i++) {
+				menues[i] = i - 100;
+			}
+			
+			user.setMenues(menues);
 			return session;
 		} else if ("author".equals(username)) {
 			GUIUser user = new GUIUser();
@@ -115,7 +122,7 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 	public GUIUser saveProfile(String sid, GUIUser user) {
 		return user;
 	}
-	
+
 	@Override
 	public GUIUser getUser(String sid, long userId) {
 		GUIUser user = new GUIUser();
