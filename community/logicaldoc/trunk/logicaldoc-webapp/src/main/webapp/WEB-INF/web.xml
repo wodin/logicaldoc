@@ -348,6 +348,11 @@
     <servlet-name>MessageService</servlet-name>
     <url-pattern>/frontend/message</url-pattern>
   </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>WorkflowService</servlet-name>
+    <url-pattern>/frontend/workflow</url-pattern>
+  </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>TagsData</servlet-name>
