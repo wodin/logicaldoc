@@ -45,7 +45,8 @@ public class WorkflowDraggedState extends WorkflowState {
 					getDesigner().onTransitionDelete(fromState, targetState);
 			}
 		});
-		commands.addMember(delete);
+		if (!designer.isOnlyVisualization())
+			commands.addMember(delete);
 
 		if (fromState.getType() == GUIWFState.TYPE_TASK) {
 			HTML deleteTransition = new HTML("&nbsp;&nbsp;<a href='#'>"
@@ -58,7 +59,8 @@ public class WorkflowDraggedState extends WorkflowState {
 					getDesigner().onTransitionDelete(fromState, targetState);
 				}
 			});
-			commands.addMember(deleteTransition);
+			if (!designer.isOnlyVisualization())
+				commands.addMember(deleteTransition);
 		}
 	}
 

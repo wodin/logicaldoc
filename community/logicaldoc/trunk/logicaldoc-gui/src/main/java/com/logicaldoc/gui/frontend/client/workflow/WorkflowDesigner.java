@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
+import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -16,6 +17,8 @@ import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Window;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
+import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.SubmitItem;
@@ -54,17 +57,20 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 
 	private ValuesManager vm = new ValuesManager();
 
+	private boolean onlyVisualization = false;
+
 	public WorkflowDesigner(GUIWorkflow workflow, boolean onlyDrawingPanel) {
 		this.workflow = workflow;
+		this.onlyVisualization = onlyDrawingPanel;
 
 		setMembersMargin(5);
 
-		if (!onlyDrawingPanel) {
+		if (!onlyVisualization) {
 			addMember(new WorkflowToolstrip(this));
 			addMember(new StateToolstrip(this));
 		}
 
-		if (this.workflow != null && !onlyDrawingPanel) {
+		if (this.workflow != null && !onlyVisualization) {
 			accordion = new Accordion(workflow);
 			layout.addMember(accordion);
 		}
@@ -81,8 +87,8 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 		final GUIWFState wfState = state;
 
 		if (wfState.getType() == TYPE_TASK) {
-			TaskDialog window = new TaskDialog(workflow, wfState);
-			window.show();
+			TaskDialog taskDialog = new TaskDialog(workflow, wfState);
+			taskDialog.show();
 		} else {
 			final Window window = new Window();
 			String typeString = "";
@@ -169,20 +175,6 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 					workflow.setStates(states);
 
 					AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
-
-					// workflowService.save(Session.get().getSid(), workflow,
-					// new AsyncCallback<GUIWorkflow>() {
-					// @Override
-					// public void onFailure(Throwable caught) {
-					// Log.serverError(caught);
-					// }
-					//
-					// @Override
-					// public void onSuccess(GUIWorkflow result) {
-					// AdminPanel.get().setContent(new
-					// WorkflowDesigner(workflow));
-					// }
-					// });
 				}
 			}
 		});
@@ -226,20 +218,6 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 					workflow.setStates(states);
 
 					AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
-
-					// workflowService.save(Session.get().getSid(), workflow,
-					// new AsyncCallback<GUIWorkflow>() {
-					// @Override
-					// public void onFailure(Throwable caught) {
-					// Log.serverError(caught);
-					// }
-					//
-					// @Override
-					// public void onSuccess(GUIWorkflow result) {
-					// AdminPanel.get().setContent(new
-					// WorkflowDesigner(workflow));
-					// }
-					// });
 				}
 			}
 		});
@@ -285,20 +263,6 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 					workflow.setStates(states);
 
 					AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
-
-					// workflowService.save(Session.get().getSid(), workflow,
-					// new AsyncCallback<GUIWorkflow>() {
-					// @Override
-					// public void onFailure(Throwable caught) {
-					// Log.serverError(caught);
-					// }
-					//
-					// @Override
-					// public void onSuccess(GUIWorkflow result) {
-					// AdminPanel.get().setContent(new
-					// WorkflowDesigner(workflow));
-					// }
-					// });
 				}
 			}
 		});
@@ -392,12 +356,6 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 	public void onAddState(GUIWorkflow wfl, int type) {
 		workflow = wfl;
 
-		// if (workflow.getStates() != null && workflow.getStates().length > 0)
-		// SC.warn("ADD state to workflow: " + workflow.getName() +
-		// " with states: " + workflow.getStates().length);
-		// else
-		// SC.warn("ADD state to workflow: " + workflow.getName());
-
 		GUIWFState[] newStates = null;
 		if (workflow.getStates() != null && workflow.getStates().length > 0) {
 			newStates = new GUIWFState[workflow.getStates().length + 1];
@@ -420,5 +378,9 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 		workflow.setStates(newStates);
 
 		AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
+	}
+
+	public boolean isOnlyVisualization() {
+		return onlyVisualization;
 	}
 }

@@ -23,10 +23,12 @@ public class DrawingPanel extends VStack {
 		super();
 		setHeight(557);
 		setMembersMargin(5);
-		setCanAcceptDrop(true);
-		setAnimateMembers(true);
-		setShowDragPlaceHolder(true);
-		setDropTypes("row");
+		if (!designer.isOnlyVisualization()) {
+			setCanAcceptDrop(true);
+			setAnimateMembers(true);
+			setShowDragPlaceHolder(true);
+			setDropTypes("row");
+		}
 		setShowCustomScrollbars(true);
 		setOverflow(Overflow.SCROLL);
 
@@ -64,28 +66,29 @@ public class DrawingPanel extends VStack {
 			}
 		}
 
-		addDropHandler(new DropHandler() {
-			public void onDrop(DropEvent event) {
-				WorkflowRow row = null;
-				if (EventHandler.getDragTarget() instanceof WorkflowRow) {
-					row = (WorkflowRow) EventHandler.getDragTarget();
-					if (getDropPosition() == 0
-							&& (row.getState().getWfState().getType() == GUIWFState.TYPE_END || row.getState()
-									.getWfState().getType() == GUIWFState.TYPE_JOIN)) {
-						SC.say("The element at first position must be a Task or a Fork!");
-						event.cancel();
-					}
-					if (getDropPosition() == 0
-							&& (row.getState().getWfState().getType() == GUIWFState.TYPE_TASK || row.getState()
-									.getWfState().getType() == GUIWFState.TYPE_FORK)) {
-						// The task must be the workflow start state
-						if (workflowDesigner.getWorkflow() != null) {
-							workflowDesigner.getWorkflow().setStartStateId(row.getState().getWfState().getId());
-							workflowDesigner.reloadDrawingPanel();
+		if (!designer.isOnlyVisualization())
+			addDropHandler(new DropHandler() {
+				public void onDrop(DropEvent event) {
+					WorkflowRow row = null;
+					if (EventHandler.getDragTarget() instanceof WorkflowRow) {
+						row = (WorkflowRow) EventHandler.getDragTarget();
+						if (getDropPosition() == 0
+								&& (row.getState().getWfState().getType() == GUIWFState.TYPE_END || row.getState()
+										.getWfState().getType() == GUIWFState.TYPE_JOIN)) {
+							SC.say("The element at first position must be a Task or a Fork!");
+							event.cancel();
+						}
+						if (getDropPosition() == 0
+								&& (row.getState().getWfState().getType() == GUIWFState.TYPE_TASK || row.getState()
+										.getWfState().getType() == GUIWFState.TYPE_FORK)) {
+							// The task must be the workflow start state
+							if (workflowDesigner.getWorkflow() != null) {
+								workflowDesigner.getWorkflow().setStartStateId(row.getState().getWfState().getId());
+								workflowDesigner.reloadDrawingPanel();
+							}
 						}
 					}
 				}
-			}
-		});
+			});
 	}
 }
