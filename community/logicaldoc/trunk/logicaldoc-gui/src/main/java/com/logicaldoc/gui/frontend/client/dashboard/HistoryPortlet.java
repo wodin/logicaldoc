@@ -157,7 +157,7 @@ public class HistoryPortlet extends Portlet {
 				int total = list.getTotalRows();
 				String title = I18N.message(eventCode + "docs", Integer.toString(total));
 				if (unread > 0)
-					title = "<b>" + title + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + I18N.message("news") + ": "
+					title = "<b>" + title + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + I18N.message("newitems") + ": "
 							+ unread + "</b>";
 				setTitle(title);
 

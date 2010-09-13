@@ -166,6 +166,7 @@ public class LoginPanel extends VLayout {
 				new AsyncCallback<GUISession>() {
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
+						SC.warn(caught.getMessage());
 					}
 
 					@Override
