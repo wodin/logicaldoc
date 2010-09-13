@@ -6,7 +6,7 @@ import java.util.Set;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 
 /**
- * Retrieves i18n resources
+ * Stores the enabled features
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
