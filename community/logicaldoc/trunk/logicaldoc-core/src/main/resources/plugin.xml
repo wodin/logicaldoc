@@ -53,11 +53,6 @@
     <parameter id="position" value="1" />
   </extension>
 
-  <extension-point id="DatabaseMapping">
-    <parameter-def id="mapping" />
-    <parameter-def id="position" />
-  </extension-point>
-
   <extension plugin-id="logicaldoc-core" point-id="Language" id="enLanguage">
     <parameter id="locale" value="en" />
     <parameter id="analyzer" value="-" />
