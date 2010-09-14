@@ -20,7 +20,6 @@ import org.java.plugin.JpfException;
 import org.java.plugin.ObjectFactory;
 import org.java.plugin.PluginManager;
 import org.java.plugin.registry.Extension;
-import org.java.plugin.registry.Extension.Parameter;
 import org.java.plugin.registry.ExtensionPoint;
 import org.java.plugin.registry.Identity;
 import org.java.plugin.registry.PluginDescriptor;
@@ -247,27 +246,6 @@ public abstract class PluginRegistry {
 	public PluginDescriptor getPlugin(String pluginId) {
 		PluginRegistry registry = PluginRegistry.getInstance();
 		return registry.getManager().getRegistry().getPluginDescriptor(pluginId);
-	}
-
-	/**
-	 * Iterates over all Plugins and checks for database mappings that must be
-	 * included into the Configuration
-	 * 
-	 * @return
-	 */
-	public String[] getMappings() {
-		PluginRegistry registry = PluginRegistry.getInstance();
-		Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "DatabaseMapping");
-		List<String> mappings = new ArrayList<String>();
-
-		for (Extension extension : exts) {
-			Collection<Parameter> parameters = extension.getParameters("mapping");
-			for (Parameter parameter : parameters) {
-				mappings.add(parameter.valueAsString());
-			}
-		}
-
-		return mappings.toArray(new String[] {});
 	}
 
 	public boolean isRestartRequired() {
