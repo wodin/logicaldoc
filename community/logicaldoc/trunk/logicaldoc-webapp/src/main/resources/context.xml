@@ -46,7 +46,7 @@
 
 	<!-- Hibernate SessionFactory -->
 	<bean id="SessionFactory"
-		class="com.logicaldoc.util.spring.LogicalDOCSessionFactoryBean"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
 		<property name="dataSource">
@@ -56,6 +56,7 @@
 		<property name="mappingLocations">
 			<list>
 				<value>classpath*:mappings/*.hbm.xml</value>
+				<value>classpath*:org/jbpm/**/*.hbm.xml</value>
 			</list>
 		</property>
 
