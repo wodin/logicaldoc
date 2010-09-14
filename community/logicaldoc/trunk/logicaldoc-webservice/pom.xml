@@ -77,11 +77,35 @@
 			<artifactId>commons-dbcp</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
+		<!--
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		-->
+				<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<scope>provided</scope>
+		</dependency>
+     <dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-jdbc</artifactId>
+   <scope>provided</scope>
+ </dependency>
+  <dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-orm</artifactId>
+   <scope>provided</scope>
+ </dependency>
+   <dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-context-support</artifactId>
+   <scope>provided</scope>
+ </dependency>
+ 
 		<dependency>
 			<groupId>org.apache.ant</groupId>
 			<artifactId>ant</artifactId>
