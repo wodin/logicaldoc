@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>30</version>
+  <version>31</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -24,6 +24,9 @@
       </plugin>
     </plugins>
   </build>
+  <properties>
+    <spring.version>3.0.4.RELEASE</spring.version>
+  </properties>
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -223,11 +226,58 @@
           </exclusion>
         </exclusions>
       </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring</artifactId>
-        <version>2.5.6</version>
-      </dependency>
+
+ <dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-core</artifactId>
+   <version>${spring.version}</version>
+ </dependency>
+ <dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-web</artifactId>
+   <version>${spring.version}</version>
+ </dependency>
+ <dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-beans</artifactId>
+   <version>${spring.version}</version>
+ </dependency>
+ <dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-context</artifactId>
+   <version>${spring.version}</version>
+ </dependency>
+ <dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-aop</artifactId>
+   <version>${spring.version}</version>
+ </dependency>
+ <dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-context-support</artifactId>
+   <version>${spring.version}</version>
+ </dependency>
+ <dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-tx</artifactId>
+   <version>${spring.version}</version>
+ </dependency>
+ <dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-orm</artifactId>
+   <version>${spring.version}</version>
+ </dependency>
+ <dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-jdbc</artifactId>
+   <version>${spring.version}</version>
+ </dependency>
+ <dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-test</artifactId>
+   <version>${spring.version}</version>
+ </dependency>   
+      
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate</artifactId>
@@ -440,6 +490,12 @@
         <name>LogicalDOC Repository</name>
         <url>http://logicaldoc.sourceforge.net/maven</url>
       </repository>
+      
+      <repository>
+<id>org.springsource.maven</id>
+<name>SpringSource Maven Central-compatible Repository</name>
+<url>http://maven.springframework.org/snapshot</url>
+</repository> 
       <repository>
         <id>jboss</id>
         <name>Jboss Repository</name>
