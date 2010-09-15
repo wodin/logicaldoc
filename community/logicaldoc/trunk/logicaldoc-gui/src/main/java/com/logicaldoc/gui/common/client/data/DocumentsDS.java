@@ -69,11 +69,12 @@ public class DocumentsDS extends DataSource {
 		DataSourceTextField title = new DataSourceTextField("title");
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
-		id.setHidden(true);
 		id.setRequired(true);
 		DataSourceDateTimeField lastModified = new DataSourceDateTimeField("lastModified");
+		DataSourceImageField icon = new DataSourceImageField("icon");
+		DataSourceTextField folderId = new DataSourceTextField("folderId");
 
-		setFields(id, title, lastModified);
+		setFields(id, icon, title, lastModified, folderId);
 		setClientOnly(true);
 		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&docIds=" + docIds);
 	}
