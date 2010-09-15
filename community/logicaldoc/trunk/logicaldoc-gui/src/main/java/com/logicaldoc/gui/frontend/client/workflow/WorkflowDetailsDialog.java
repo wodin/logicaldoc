@@ -14,11 +14,13 @@ import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.dashboard.WorkflowDashboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -46,6 +48,8 @@ import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
+import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -243,9 +247,17 @@ public class WorkflowDetailsDialog extends Window {
 		docLastModified.setAlign(Alignment.CENTER);
 		docLastModified.setType(ListGridFieldType.DATE);
 		docLastModified.setCellFormatter(new DateCellFormatter());
+		ListGridField icon = new ListGridField("icon", " ", 24);
+		icon.setType(ListGridFieldType.IMAGE);
+		icon.setCanSort(false);
+		icon.setAlign(Alignment.CENTER);
+		icon.setShowDefaultContextMenu(false);
+		icon.setImageURLPrefix(Util.imagePrefix());
+		icon.setImageURLSuffix(".png");
+		icon.setCanFilter(false);
 
 		docsAppendedList = new ListGrid();
-		docsAppendedList.setWidth(320);
+		docsAppendedList.setWidth(350);
 		docsAppendedList.setHeight(200);
 		docsAppendedList.setCanFreezeFields(true);
 		docsAppendedList.setAutoFetchData(true);
@@ -254,7 +266,17 @@ public class WorkflowDetailsDialog extends Window {
 		docsAppendedList.setSelectionType(SelectionStyle.NONE);
 		docsAppendedList.setBorder("1px solid #E1E1E1");
 		docsAppendedList.setDataSource(new DocumentsDS(workflow.getAppendedDocIds()));
-		docsAppendedList.setFields(docTitle, docLastModified);
+		docsAppendedList.setFields(icon, docTitle, docLastModified);
+		
+		docsAppendedList.addCellDoubleClickHandler(new CellDoubleClickHandler() {
+			@Override
+			public void onCellDoubleClick(CellDoubleClickEvent event) {
+				destroy();
+				Record record = event.getRecord();
+				DocumentsPanel.get().openInFolder(Long.parseLong(record.getAttributeAsString("folderId")),
+						Long.parseLong(record.getAttributeAsString("id")));
+			}
+		});
 
 		Button appendDocsButton = new Button(I18N.message("appenddocuments"));
 		appendDocsButton.setWidth(100);

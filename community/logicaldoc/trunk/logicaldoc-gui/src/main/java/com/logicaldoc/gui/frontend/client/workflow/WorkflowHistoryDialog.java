@@ -149,7 +149,7 @@ public class WorkflowHistoryDialog extends Window {
 		ListGridField endDate = new ListGridField("enddate", I18N.message("enddate"), 150);
 		endDate.setAlign(Alignment.CENTER);
 		endDate.setType(ListGridFieldType.DATE);
-		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 220);
+		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 250);
 
 		instancesList = new ListGrid();
 		instancesList.setCanFreezeFields(true);
@@ -157,7 +157,7 @@ public class WorkflowHistoryDialog extends Window {
 		instancesList.setShowHeader(true);
 		instancesList.setCanSelectAll(false);
 		instancesList.setSelectionType(SelectionStyle.SINGLE);
-		instancesList.setHeight(160);
+		instancesList.setHeight(140);
 		instancesList.setBorder("1px solid #E1E1E1");
 		if (selectedWorkflow != null) {
 			instancesDataSource = new WorkflowHistoriesDS(selectedWorkflow.getId(), null);
@@ -187,7 +187,7 @@ public class WorkflowHistoryDialog extends Window {
 		historyDate.setType(ListGridFieldType.DATE);
 		ListGridField historyUser = new ListGridField("user", I18N.message("user"), 120);
 		ListGridField historyDoc = new ListGridField("document", I18N.message("document"), 180);
-		ListGridField historySid = new ListGridField("sessionid", I18N.message("sid"), 250);
+		ListGridField historySid = new ListGridField("sessionid", I18N.message("sid"), 240);
 
 		historiesList = new ListGrid();
 		historiesList.setCanFreezeFields(true);
@@ -195,7 +195,7 @@ public class WorkflowHistoryDialog extends Window {
 		historiesList.setShowHeader(true);
 		historiesList.setCanSelectAll(false);
 		historiesList.setSelectionType(SelectionStyle.NONE);
-		historiesList.setHeight(230);
+		historiesList.setHeight(200);
 		historiesList.setBorder("1px solid #E1E1E1");
 		if (selectedWorkflowInstance != null) {
 			historiesDataSource = new WorkflowHistoriesDS(selectedWorkflow.getId(), selectedWorkflowInstance);

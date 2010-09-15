@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.data.WorkflowsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.logicaldoc.gui.frontend.client.workflow.WorkflowDesigner;
@@ -25,14 +26,14 @@ import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.events.DoubleClickEvent;
+import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
-import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
@@ -153,7 +154,7 @@ public class WorkflowDialog extends Window {
 		deployedWorkflowsList.setShowHeader(true);
 		deployedWorkflowsList.setCanSelectAll(false);
 		deployedWorkflowsList.setSelectionType(SelectionStyle.SINGLE);
-		deployedWorkflowsList.setWidth(480);
+		deployedWorkflowsList.setWidth(300);
 		deployedWorkflowsList.setHeight(200);
 		deployedWorkflowsList.setBorder("1px solid #E1E1E1");
 		datasource = new WorkflowsDS(null, true);
@@ -161,10 +162,10 @@ public class WorkflowDialog extends Window {
 			deployedWorkflowsList.setDataSource(datasource);
 		deployedWorkflowsList.setFields(name, descr);
 
-		deployedWorkflowsList.addCellDoubleClickHandler(new CellDoubleClickHandler() {
+		deployedWorkflowsList.addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
-			public void onCellDoubleClick(CellDoubleClickEvent event) {
-				ListGridRecord record = event.getRecord();
+			public void onDoubleClick(DoubleClickEvent event) {
+				ListGridRecord record = deployedWorkflowsList.getSelectedRecord();
 				service.get(Session.get().getSid(), record.getAttributeAsString("name"),
 						new AsyncCallback<GUIWorkflow>() {
 
@@ -211,6 +212,14 @@ public class WorkflowDialog extends Window {
 		docLastModified.setAlign(Alignment.CENTER);
 		docLastModified.setType(ListGridFieldType.DATE);
 		docLastModified.setCellFormatter(new DateCellFormatter());
+		ListGridField icon = new ListGridField("icon", " ", 24);
+		icon.setType(ListGridFieldType.IMAGE);
+		icon.setCanSort(false);
+		icon.setAlign(Alignment.CENTER);
+		icon.setShowDefaultContextMenu(false);
+		icon.setImageURLPrefix(Util.imagePrefix());
+		icon.setImageURLSuffix(".png");
+		icon.setCanFilter(false);
 
 		docsAppendedList = new ListGrid();
 		docsAppendedList.setCanFreezeFields(true);
@@ -218,11 +227,11 @@ public class WorkflowDialog extends Window {
 		docsAppendedList.setShowHeader(true);
 		docsAppendedList.setCanSelectAll(false);
 		docsAppendedList.setSelectionType(SelectionStyle.NONE);
-		docsAppendedList.setWidth(400);
+		docsAppendedList.setWidth(380);
 		docsAppendedList.setHeight(130);
 		docsAppendedList.setBorder("1px solid #E1E1E1");
 		docsAppendedList.setDataSource(new DocumentsDS(docIds));
-		docsAppendedList.setFields(docName, docLastModified);
+		docsAppendedList.setFields(icon, docName, docLastModified);
 
 		workflowSettingsLayout.addMember(docsAppendedList);
 		workflowSettings.setPane(workflowSettingsLayout);

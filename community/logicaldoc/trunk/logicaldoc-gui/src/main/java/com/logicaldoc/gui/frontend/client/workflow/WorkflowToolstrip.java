@@ -20,6 +20,8 @@ import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
@@ -63,13 +65,34 @@ public class WorkflowToolstrip extends ToolStrip {
 		final ComboBoxItem workflow = new ComboBoxItem("workflow", " ");
 		workflow.setShowTitle(false);
 		ListGridField name = new ListGridField("name");
-		workflow.setValueField("id");
+		workflow.setValueField("name");
 		workflow.setDisplayField("name");
 		workflow.setPickListWidth(300);
 		workflow.setPickListFields(name);
 		workflow.setOptionDataSource(new WorkflowsDS(null, false));
 		if (currentWorkflow != null)
 			workflow.setValue(currentWorkflow.getName());
+		workflow.addChangedHandler(new ChangedHandler() {
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if (event.getValue() != null && !"".equals((String) event.getValue())) {
+					workflowService.get(Session.get().getSid(), (String) event.getValue(),
+							new AsyncCallback<GUIWorkflow>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(GUIWorkflow result) {
+									currentWorkflow = result;
+									AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
+								}
+							});
+				}
+
+			}
+		});
 		addFormItem(workflow);
 
 		ToolStripButton load = new ToolStripButton(I18N.message("load"));

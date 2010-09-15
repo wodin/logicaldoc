@@ -59,8 +59,11 @@ public class DocumentsDataServlet extends HttpServlet {
 				Document doc = dao.findById(Long.parseLong(id));
 				writer.print("<document>");
 				writer.print("<id>" + doc.getId() + "</id>");
+				writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getFileExtension()))
+						+ "</icon>");
 				writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
 				writer.print("<lastModified>" + df.format(doc.getLastModified()) + "</lastModified>");
+				writer.print("<folderId>" + doc.getFolder().getId() + "</folderId>");
 				writer.print("</document>");
 			}
 		} else {

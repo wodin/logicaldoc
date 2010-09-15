@@ -15,6 +15,7 @@ import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -109,6 +110,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		// habler onFolderSelect
 		if (docId != null)
 			hiliteDocId = docId;
+		
 		documentsMenu.openFolder(folderId);
 		documentsMenu.expandSection(0);
 		MainPanel.get().selectDocumentsTab();

@@ -126,6 +126,8 @@ public class ServletDocUtil {
 			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			history.setPath(fdao.computePathExtended(doc.getFolder().getId()));
 			history.setEvent(History.EVENT_DOWNLOADED);
+			history.setFilename(doc.getFileName());
+			history.setFolderId(doc.getFolder().getId());
 			history.setUser(user);
 			history.setSessionId(session.getId());
 
