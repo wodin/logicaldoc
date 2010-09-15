@@ -3,8 +3,6 @@ package com.logicaldoc.gui.common.client.beans;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.smartgwt.client.util.SC;
-
 /**
  * Representation of a single document handled by the GUI
  * 

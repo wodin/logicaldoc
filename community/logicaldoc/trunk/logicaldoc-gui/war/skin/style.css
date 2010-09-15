@@ -92,8 +92,8 @@
 }
 
 .upload {
-  margin-left: 5px;
-  margin-top: 10px;
+	margin-left: 5px;
+	margin-top: 10px;
 }
 
 .infoPanel {
@@ -104,74 +104,79 @@
 	color: #536CDF;
 }
 
-.tag a{
-        margin: 0;
-        padding: 1px 2px 0 0;
-        text-decoration: none;
-        color: #777777;
-        font-family: Verdana, Arial, serif, sans-serif;
-        position: relative;
-        float: left;
+.tag a {
+	margin: 0;
+	padding: 1px 2px 0 0;
+	text-decoration: none;
+	color: #777777;
+	font-family: Verdana, Arial, serif, sans-serif;
+	position: relative;
+	float: left;
 }
 
-.tag a:hover{
-        text-decoration: underline;
+.tag a:hover {
+	text-decoration: underline;
 }
 
-.tag a img{
-        border: none;
+.tag a img {
+	border: none;
 }
 
 .tag1 a {
-        font-size: 0.7em;
-        font-weight: 100;
+	font-size: 0.7em;
+	font-weight: 100;
 }
 
-.tag2 a{
-        font-size: 0.8em;
-        font-weight: 200;
+.tag2 a {
+	font-size: 0.8em;
+	font-weight: 200;
 }
 
-.tag3 a{
-        font-size: 0.9em;
-        font-weight: 300;
+.tag3 a {
+	font-size: 0.9em;
+	font-weight: 300;
 }
 
-.tag4 a{
-        font-size: 1.0em;
-        font-weight: 400;
+.tag4 a {
+	font-size: 1.0em;
+	font-weight: 400;
 }
 
-.tag5 a{
-        font-size: 1.2em;
-        font-weight: 500;
+.tag5 a {
+	font-size: 1.2em;
+	font-weight: 500;
 }
 
-.tag6 a{
-        font-size: 1.3em;
-        font-weight: 600;
+.tag6 a {
+	font-size: 1.3em;
+	font-weight: 600;
 }
 
-.tag7 a{
-        font-size: 1.4em;
-        font-weight: 700;
+.tag7 a {
+	font-size: 1.4em;
+	font-weight: 700;
 }
 
-.tag8 a{
-        font-size: 1.5em;
-        font-weight: 800;
+.tag8 a {
+	font-size: 1.5em;
+	font-weight: 800;
 }
 
-.tag9 a{
-        font-size: 1.6em;
-        font-weight: 900;
+.tag9 a {
+	font-size: 1.6em;
+	font-weight: 900;
 }
 
-.tag10 a{
-        font-size: 1.7em;
-        font-weight: 900;
+.tag10 a {
+	font-size: 1.7em;
+	font-weight: 900;
 }
 
 .s {
-    border-bottom: 1px solid #dddddd;
+	border-bottom: 1px solid #dddddd;
+}
+
+.deletedItem {
+	color: grey;
+	text-decoration: line-through;
 }
