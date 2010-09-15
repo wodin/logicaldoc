@@ -15,6 +15,8 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.dashboard.WorkflowDashboard;
+import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -22,6 +24,8 @@ import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Window;
@@ -43,7 +47,10 @@ import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.tab.Tab;
+import com.smartgwt.client.widgets.tab.TabSet;
 
 /**
  * This popup window is used to visualize the details of a selected workflow.
@@ -75,6 +82,14 @@ public class WorkflowDetailsDialog extends Window {
 
 	private WorkflowDashboard workflowDashboard;
 
+	private TabSet tabs = new TabSet();
+
+	private Tab docsTab = null;
+
+	private Tab workflowTab = null;
+
+	private HLayout appendedDocsLayout = null;
+
 	public WorkflowDetailsDialog(WorkflowDashboard dashboard, GUIWorkflow wfl) {
 		this.workflow = wfl;
 		this.workflowDashboard = dashboard;
@@ -82,8 +97,8 @@ public class WorkflowDetailsDialog extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
 		setTitle(I18N.message("workflow"));
-		setWidth(700);
-		setHeight(700);
+		setWidth(570);
+		setHeight(460);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -97,16 +112,28 @@ public class WorkflowDetailsDialog extends Window {
 			}
 		});
 
-		form = new HLayout(40);
+		tabs = new TabSet();
+		tabs.setTop(30);
+		tabs.setLeft(5);
+		tabs.setWidth(540);
+		tabs.setHeight(400);
+
+		workflowTab = new Tab(I18N.message("workflow"));
+		tabs.addTab(workflowTab, 0);
+		docsTab = new Tab(I18N.message("appendeddocuments"));
+		tabs.addTab(docsTab, 1);
+		tabs.setSelectedTab(0);
+		addChild(tabs);
+
+		form = new HLayout(35);
 		form.setMargin(20);
+		form.setWidth(500);
+		form.setHeight(360);
 
-		sxLayout = new VLayout(20);
-		sxLayout.setMargin(20);
-		sxLayout.setHeight(600);
-
+		sxLayout = new VLayout(10);
 		dxLayout = new VLayout(10);
-		dxLayout.setMargin(30);
-		dxLayout.setHeight(600);
+		appendedDocsLayout = new HLayout(15);
+		appendedDocsLayout.setMargin(20);
 
 		reload(wfl);
 	}
@@ -131,7 +158,7 @@ public class WorkflowDetailsDialog extends Window {
 
 		// Workflow section
 		workflowForm = new DynamicForm();
-		workflowForm.setColWidths(80, "*");
+		workflowForm.setColWidths(60, "*");
 
 		StaticTextItem workflowTitle = ItemFactory.newStaticTextItem("workflowTitle", "",
 				"<b>" + I18N.message("workflow") + "</b>");
@@ -161,8 +188,7 @@ public class WorkflowDetailsDialog extends Window {
 
 		// Task section
 		taskForm = new DynamicForm();
-		// taskForm.setWidth(300);
-		taskForm.setColWidths(80, "*");
+		taskForm.setColWidths(60, "*");
 		taskForm.setValuesManager(vm);
 
 		StaticTextItem taskTitle = ItemFactory
@@ -211,19 +237,6 @@ public class WorkflowDetailsDialog extends Window {
 
 		sxLayout.addMember(taskForm);
 
-		DynamicForm appendedDocsForm = new DynamicForm();
-//		appendedDocsForm.setWidth(250);
-//		appendedDocsForm.setColWidths(150, "*");
-
-		StaticTextItem appendedDocsTitle = ItemFactory.newStaticTextItem("appendedDocs", "",
-				"<b>" + I18N.message("appendeddocuments") + "</b>");
-		appendedDocsTitle.setShouldSaveValue(false);
-		appendedDocsTitle.setWrapTitle(false);
-		appendedDocsTitle.setWrap(false);
-
-		appendedDocsForm.setItems(appendedDocsTitle);
-		sxLayout.addMember(appendedDocsForm);
-
 		// Appended documents section
 		ListGridField docTitle = new ListGridField("title", I18N.message("name"), 150);
 		ListGridField docLastModified = new ListGridField("lastModified", I18N.message("lastmodified"), 150);
@@ -232,18 +245,40 @@ public class WorkflowDetailsDialog extends Window {
 		docLastModified.setCellFormatter(new DateCellFormatter());
 
 		docsAppendedList = new ListGrid();
-		docsAppendedList.setWidth(300);
+		docsAppendedList.setWidth(320);
 		docsAppendedList.setHeight(200);
 		docsAppendedList.setCanFreezeFields(true);
 		docsAppendedList.setAutoFetchData(true);
 		docsAppendedList.setShowHeader(true);
 		docsAppendedList.setCanSelectAll(false);
 		docsAppendedList.setSelectionType(SelectionStyle.NONE);
-		docsAppendedList.setBorder("0px");
+		docsAppendedList.setBorder("1px solid #E1E1E1");
 		docsAppendedList.setDataSource(new DocumentsDS(workflow.getAppendedDocIds()));
 		docsAppendedList.setFields(docTitle, docLastModified);
 
-		sxLayout.addMember(docsAppendedList);
+		Button appendDocsButton = new Button(I18N.message("appenddocuments"));
+		appendDocsButton.setWidth(100);
+		appendDocsButton.setVisible(workflow.getSelectedTask().getTaskState().equals("started"));
+		appendDocsButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+			@Override
+			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+				destroy();
+				SC.confirm(I18N.message("confirmation"), I18N.message("addtoworkflowinfo"), new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							Session.get().setCurrentWorkflow(workflow);
+							MainPanel.get().selectDocumentsTab();
+							DocumentsPanel.get().refresh();
+							Log.info(I18N.message("addtoworkflowinfo"), null);
+						}
+					}
+				});
+			}
+		});
+
+		appendedDocsLayout.setMembers(docsAppendedList, appendDocsButton);
+		// sxLayout.addMember(appendedDocsLayout);
 
 		Button reassignButton = new Button(I18N.message("workflowtaskreassign"));
 		reassignButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
@@ -628,8 +663,8 @@ public class WorkflowDetailsDialog extends Window {
 								comment = (String) values.get("taskComment");
 							}
 
-							service.endTask(Session.get().getSid(), getWorkflow().getSelectedTask().getId(), comment,
-									transitionName, new AsyncCallback<Void>() {
+							service.endTask(Session.get().getSid(), getWorkflow().getSelectedTask().getId(),
+									transitionName, comment, new AsyncCallback<Void>() {
 										@Override
 										public void onFailure(Throwable caught) {
 											Log.serverError(caught);
@@ -678,7 +713,14 @@ public class WorkflowDetailsDialog extends Window {
 		form.addMember(sxLayout);
 		form.addMember(dxLayout);
 
-		addChild(form);
+		workflowTab.setPane(form);
+		docsTab.setPane(appendedDocsLayout);
+
+		// tabs.setSelectedTab(0);
+
+		// form.addMember(tabs);
+
+		// addChild(tabs);
 	}
 
 	public GUIWorkflow getWorkflow() {
@@ -687,5 +729,9 @@ public class WorkflowDetailsDialog extends Window {
 
 	public void setUser(String id) {
 		user.setValue(id);
+	}
+
+	public TabSet getTabs() {
+		return tabs;
 	}
 }

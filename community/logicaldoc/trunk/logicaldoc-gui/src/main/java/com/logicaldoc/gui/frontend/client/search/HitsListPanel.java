@@ -222,32 +222,34 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				folderService.getFolder(Session.get().getSid(), Long.parseLong(event.getRecord().getAttributeAsString(
-						"folderId")), false, new AsyncCallback<GUIFolder>() {
+				folderService.getFolder(Session.get().getSid(),
+						Long.parseLong(event.getRecord().getAttributeAsString("folderId")), false,
+						new AsyncCallback<GUIFolder>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(GUIFolder folder) {
-						Menu contextMenu = new DocumentContextMenu(folder, list);
-						MenuItem openInFolder = new MenuItem();
-						openInFolder.setTitle(I18N.message("openinfolder"));
-						openInFolder.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-							public void onClick(MenuItemClickEvent event) {
-								ListGridRecord record = list.getSelectedRecord();
-								DocumentsPanel.get().openInFolder(
-										Long.parseLong(record.getAttributeAsString("folderId")),
-										Long.parseLong(record.getAttributeAsString("id")));
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
 							}
-						});
-						contextMenu.addItem(openInFolder);
-						contextMenu.showContextMenu();
-					}
 
-				});
+							@Override
+							public void onSuccess(GUIFolder folder) {
+								Menu contextMenu = new DocumentContextMenu(folder, list);
+								MenuItem openInFolder = new MenuItem();
+								openInFolder.setTitle(I18N.message("openinfolder"));
+								openInFolder
+										.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+											public void onClick(MenuItemClickEvent event) {
+												ListGridRecord record = list.getSelectedRecord();
+												DocumentsPanel.get().openInFolder(
+														Long.parseLong(record.getAttributeAsString("folderId")),
+														Long.parseLong(record.getAttributeAsString("id")));
+											}
+										});
+								contextMenu.addItem(openInFolder);
+								contextMenu.showContextMenu();
+							}
+
+						});
 				event.cancel();
 			}
 		});
@@ -278,8 +280,11 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		// list of hits
 		GUISearchOptions options = Search.get().getOptions();
 		NumberFormat format = NumberFormat.getFormat("#.###");
-		String stats = I18N.message("resultstat", new String[] { options.getExpression(),
-				format.format((double) Search.get().getTime() / (double) 1000) });
+		String stats = I18N
+				.message(
+						"resultstat",
+						new String[] { options.getExpression(),
+								format.format((double) Search.get().getTime() / (double) 1000) });
 		infoPanel.setMessage(stats);
 
 		ListGridRecord[] result = Search.get().getLastResult();

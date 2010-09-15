@@ -143,7 +143,7 @@ public class ValidationTab extends Tab {
 		docsList.setShowHeader(true);
 		docsList.setCanSelectAll(false);
 		docsList.setSelectionType(SelectionStyle.NONE);
-		docsList.setBorder("0px");
+		docsList.setBorder("1px solid #E1E1E1");
 		docsList.setWidth100();
 		docsList.setHeight(300);
 		docsList.setShowAllRecords(true);

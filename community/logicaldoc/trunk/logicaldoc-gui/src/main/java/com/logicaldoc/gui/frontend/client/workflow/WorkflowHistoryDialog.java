@@ -60,8 +60,8 @@ public class WorkflowHistoryDialog extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
 		setTitle(I18N.message("workflowhistory"));
-		setWidth(1000);
-		setHeight(650);
+		setWidth(950);
+		setHeight(530);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -75,20 +75,15 @@ public class WorkflowHistoryDialog extends Window {
 			removeMember(form);
 		}
 
-		form = new VLayout(25);
+		form = new VLayout(20);
 		form.setMargin(20);
-		// form.setWidth(990);
-		// form.setHeight(640);
 
 		HLayout selectionWorkflowLayout = new HLayout(15);
 		selectionWorkflowLayout.setMargin(20);
 		selectionWorkflowLayout.setWidth(300);
-		// selectionWorkflowLayout.setHeight(100);
 
 		// Workflow section
 		DynamicForm workflowForm = new DynamicForm();
-		// workflowForm.setWidth(150);
-		// workflowForm.setColWidths(1, "*");
 
 		final ComboBoxItem workflow = new ComboBoxItem("workflowSelection", I18N.message("workflowselect"));
 		workflow.setWrapTitle(false);
@@ -162,8 +157,8 @@ public class WorkflowHistoryDialog extends Window {
 		instancesList.setShowHeader(true);
 		instancesList.setCanSelectAll(false);
 		instancesList.setSelectionType(SelectionStyle.SINGLE);
-		instancesList.setHeight(200);
-		instancesList.setBorder("0px");
+		instancesList.setHeight(160);
+		instancesList.setBorder("1px solid #E1E1E1");
 		if (selectedWorkflow != null) {
 			instancesDataSource = new WorkflowHistoriesDS(selectedWorkflow.getId(), null);
 			instancesList.setDataSource(instancesDataSource);
@@ -200,8 +195,8 @@ public class WorkflowHistoryDialog extends Window {
 		historiesList.setShowHeader(true);
 		historiesList.setCanSelectAll(false);
 		historiesList.setSelectionType(SelectionStyle.NONE);
-		historiesList.setHeight(250);
-		historiesList.setBorder("0px");
+		historiesList.setHeight(230);
+		historiesList.setBorder("1px solid #E1E1E1");
 		if (selectedWorkflowInstance != null) {
 			historiesDataSource = new WorkflowHistoriesDS(selectedWorkflow.getId(), selectedWorkflowInstance);
 			historiesList.setDataSource(historiesDataSource);
