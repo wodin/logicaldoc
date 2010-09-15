@@ -123,8 +123,8 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		 */
 		if (form2 != null)
 			form2.destroy();
-		if (contains(form2))
-			removeChild(form2);
+		if (formsContainer.contains(form2))
+			formsContainer.removeChild(form2);
 		form2 = new DynamicForm();
 		form2.setValuesManager(vm);
 
@@ -162,14 +162,17 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
 		int i = 0;
 		for (String str : document.getTags()) {
-			final StaticTextItem tgItem = ItemFactory.newStaticTextItem("tag" + i++, "tag", null);
-			tgItem.setDefaultValue(str);
+			final StaticTextItem tgItem = ItemFactory.newStaticTextItem("tag" + i++, "tag", str);
 			tgItem.setIcons(icon);
 			tgItem.addIconClickHandler(new IconClickHandler() {
 				public void onIconClick(IconClickEvent event) {
 					document.removeTag((String) tgItem.getValue());
 					changedHandler.onChanged(null);
-					refresh();
+
+					// Mark the item as deleted
+					tgItem.setTextBoxStyle("deletedItem");
+					tgItem.setTitleStyle("deletedItem");
+					tgItem.setIcons(ItemFactory.newItemIcon("blank.gif"));
 				}
 			});
 			items.add(tgItem);
@@ -213,13 +216,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		if (!vm.hasErrors()) {
 			document.setCustomId((String) values.get("customId"));
 			document.setTitle((String) values.get("title"));
-			document.setLanguage((String) values.get(""));
-			document.clearTags();
-
-			for (String name : values.keySet()) {
-				if (name.startsWith("tag"))
-					document.addTag((String) values.get(name));
-			}
+			document.setLanguage((String) values.get("language"));
 		}
 		return !vm.hasErrors();
 	}

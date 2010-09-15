@@ -200,7 +200,11 @@ public class UserPropertiesPanel extends HLayout {
 				public void onIconClick(IconClickEvent event) {
 					user.removeGroup((String) gp.getValue());
 					changedHandler.onChanged(null);
-					refresh();
+					
+					// Mark the item as deleted
+					gp.setTextBoxStyle("deletedItem");
+					gp.setTitleStyle("deletedItem");
+					gp.setIcons(ItemFactory.newItemIcon("blank.gif"));
 				}
 			});
 			items.add(gp);
