@@ -10,12 +10,18 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.frontend.client.dashboard.WorkflowDashboard;
+import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.AuditService;
 import com.logicaldoc.gui.frontend.client.services.AuditServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.WorkflowService;
+import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
+import com.logicaldoc.gui.frontend.client.workflow.WorkflowDetailsDialog;
 import com.smartgwt.client.types.SelectionType;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
@@ -52,11 +58,15 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 	private ToolStripButton edit = new ToolStripButton();
 
-	private ToolStripButton workflow = new ToolStripButton();
+	private ToolStripButton startWorkflow = new ToolStripButton();
+
+	private ToolStripButton addToWorkflow = new ToolStripButton();
 
 	private GUIDocument document;
 
 	private AuditServiceAsync audit = (AuditServiceAsync) GWT.create(AuditService.class);
+
+	private WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
 
 	public DocumentToolbar() {
 		download.setTooltip(I18N.message("download"));
@@ -200,9 +210,9 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		workflow.setIcon(ItemFactory.newImgIcon("data_into.png").getSrc());
-		workflow.setTooltip(I18N.message("startworkflow"));
-		workflow.addClickHandler(new ClickHandler() {
+		startWorkflow.setIcon(ItemFactory.newImgIcon("data_into.png").getSrc());
+		startWorkflow.setTooltip(I18N.message("startworkflow"));
+		startWorkflow.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				ListGrid list = DocumentsPanel.get().getList();
@@ -219,6 +229,58 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 				WorkflowDialog workflowDialog = new WorkflowDialog(ids);
 				workflowDialog.show();
+			}
+		});
+
+		addToWorkflow.setIcon(ItemFactory.newImgIcon("data_into.png").getSrc());
+		addToWorkflow.setTooltip(I18N.message("addtoworkflow"));
+		addToWorkflow.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				ListGrid list = DocumentsPanel.get().getList();
+				ListGridRecord[] selection = list.getSelection();
+				if (selection == null || selection.length == 0)
+					return;
+
+				String ids = "";
+				for (ListGridRecord rec : selection) {
+					ids += "," + rec.getAttributeAsString("id");
+				}
+				if (ids.startsWith(","))
+					ids = ids.substring(1);
+
+				workflowService.appendDocuments(Session.get().getSid(), Session.get().getCurrentWorkflow()
+						.getSelectedTask().getId(), ids, new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void ret) {
+						MainPanel.get().selectWorkflowTab();
+						workflowService.getWorkflowDetailsByTask(Session.get().getSid(), Session.get()
+								.getCurrentWorkflow().getSelectedTask().getId(), new AsyncCallback<GUIWorkflow>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUIWorkflow result) {
+								if (result != null) {
+									WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(
+											WorkflowDashboard.get(), result);
+									workflowDetailsDialog.getTabs().setSelectedTab(1);
+									workflowDetailsDialog.show();
+									Session.get().setCurrentWorkflow(null);
+								}
+							}
+						});
+					}
+				});
 			}
 		});
 
@@ -295,12 +357,17 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		if (Feature.visible(Feature.WORKFLOW)) {
 			addSeparator();
-			addButton(workflow);
+			addButton(startWorkflow);
+			addButton(addToWorkflow);
 			if (!Feature.enabled(Feature.WORKFLOW)) {
-				workflow.setDisabled(true);
-				workflow.setTooltip(I18N.message("featuredisabled"));
+				startWorkflow.setDisabled(true);
+				startWorkflow.setTooltip(I18N.message("featuredisabled"));
+				addToWorkflow.setDisabled(true);
+				addToWorkflow.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
+
+		addSeparator();
 
 		ToolStripButton display = new ToolStripButton();
 		display.setTitle(I18N.message("display"));
@@ -356,7 +423,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				archive.setDisabled(true);
 				archiveDematerialization.setDisabled(true);
 				edit.setDisabled(true);
-				workflow.setDisabled(true);
+				startWorkflow.setDisabled(true);
+				addToWorkflow.setDisabled(true);
 			}
 
 			GUIFolder folder = Session.get().getCurrentFolder();
@@ -369,14 +437,17 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				archiveDematerialization.setDisabled(document == null
 						|| !folder.hasPermission(Constants.PERMISSION_ARCHIVE)
 						|| !Feature.enabled(Feature.PAPER_DEMATERIALIZATION));
-				workflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)
+				startWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)
 						|| !Feature.enabled(Feature.WORKFLOW));
+				addToWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)
+						|| !Feature.enabled(Feature.WORKFLOW) || Session.get().getCurrentWorkflow() == null);
 			} else {
 				add.setDisabled(true);
 				scan.setDisabled(true);
 				archive.setDisabled(true);
 				archiveDematerialization.setDisabled(true);
-				workflow.setDisabled(true);
+				startWorkflow.setDisabled(true);
+				addToWorkflow.setDisabled(true);
 			}
 		} catch (Throwable t) {
 

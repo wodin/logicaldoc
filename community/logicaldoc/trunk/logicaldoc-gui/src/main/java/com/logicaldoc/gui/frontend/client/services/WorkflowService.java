@@ -52,55 +52,64 @@ public interface WorkflowService extends RemoteService {
 	 * Start a workflow with the given name and associated to the documents with
 	 * the given doc ids.
 	 */
-	public void startWorkflow(String sid, String workflowName, String workflowDescription, String docIds) throws InvalidSessionException;
-	
+	public void startWorkflow(String sid, String workflowName, String workflowDescription, String docIds)
+			throws InvalidSessionException;
+
 	/**
-	 * Retrieves all the info of the workflow of the given task. 
+	 * Retrieves all the info of the workflow of the given task.
 	 */
 	public GUIWorkflow getWorkflowDetailsByTask(String sid, String taskId) throws InvalidSessionException;
-	
+
 	/**
 	 * Save the new assignment on the selected task.
 	 */
 	public void saveTaskAssignment(String sid, String taskId, String userId) throws InvalidSessionException;
-	
+
 	/**
 	 * Starts a workflow task.
 	 */
 	public void startTask(String sid, String taskId, String comment) throws InvalidSessionException;
-	
+
 	/**
 	 * Suspends a workflow task.
 	 */
 	public void suspendTask(String sid, String taskId, String comment) throws InvalidSessionException;
-	
+
 	/**
 	 * Resumes a workflow task.
 	 */
 	public void resumeTask(String sid, String taskId, String comment) throws InvalidSessionException;
-	
+
 	/**
 	 * Saves a workflow task state.
 	 */
 	public void saveTaskState(String sid, String taskId, String comment) throws InvalidSessionException;
-	
+
 	/**
 	 * The given user take the ownership of the task.
 	 */
-	public void takeTaskOwnerShip(String sid, String taskId, String userId, String comment) throws InvalidSessionException;
-	
+	public void takeTaskOwnerShip(String sid, String taskId, String userId, String comment)
+			throws InvalidSessionException;
+
 	/**
 	 * The task is reassigned to the pooled users.
 	 */
 	public void turnBackTaskToPool(String sid, String taskId, String comment) throws InvalidSessionException;
-	
+
 	/**
 	 * Ends a task invoking the transition.
 	 */
-	public void endTask(String sid, String taskId, String transitionName, String comment) throws InvalidSessionException;
-	
+	public void endTask(String sid, String taskId, String transitionName, String comment)
+			throws InvalidSessionException;
+
 	/**
 	 * Counts all the tasks assigned to the given user.
 	 */
 	public int countActiveUserTasks(String sid, String username) throws InvalidSessionException;
+
+	/**
+	 * Appends to the workflow of the given taskId the documents with the given doc ids.
+	 */
+	public void appendDocuments(String sid, String taskId, String docIds)
+			throws InvalidSessionException;
 }

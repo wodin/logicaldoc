@@ -11,7 +11,6 @@ import com.logicaldoc.gui.common.client.data.WorkflowsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
-import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.logicaldoc.gui.frontend.client.workflow.WorkflowDesigner;
@@ -28,7 +27,6 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -81,8 +79,6 @@ public class WorkflowDialog extends Window {
 	private TextAreaItem wflDescriptionItem = null;
 
 	private Layout wflLayout = null;
-
-	private SelectItem priority = null;
 
 	private WorkflowDesigner workflowDesigner = null;
 
@@ -159,7 +155,7 @@ public class WorkflowDialog extends Window {
 		deployedWorkflowsList.setSelectionType(SelectionStyle.SINGLE);
 		deployedWorkflowsList.setWidth(480);
 		deployedWorkflowsList.setHeight(200);
-		deployedWorkflowsList.setBorder("0px");
+		deployedWorkflowsList.setBorder("1px solid #E1E1E1");
 		datasource = new WorkflowsDS(null, true);
 		if (datasource != null)
 			deployedWorkflowsList.setDataSource(datasource);
@@ -206,10 +202,7 @@ public class WorkflowDialog extends Window {
 		wflDescriptionItem.setWidth(250);
 		wflDescriptionItem.setHeight(40);
 
-		// Workflow Priority
-		priority = ItemFactory.newPrioritySelector("priority", I18N.message("workflowpriority"));
-
-		workflowSettingsForm.setItems(wflDescriptionItem, priority);
+		workflowSettingsForm.setItems(wflDescriptionItem);
 		workflowSettingsLayout.addMember(workflowSettingsForm);
 
 		// Workflow appended Documents list
@@ -227,7 +220,7 @@ public class WorkflowDialog extends Window {
 		docsAppendedList.setSelectionType(SelectionStyle.NONE);
 		docsAppendedList.setWidth(400);
 		docsAppendedList.setHeight(130);
-		docsAppendedList.setBorder("0px");
+		docsAppendedList.setBorder("1px solid #E1E1E1");
 		docsAppendedList.setDataSource(new DocumentsDS(docIds));
 		docsAppendedList.setFields(docName, docLastModified);
 

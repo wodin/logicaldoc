@@ -82,8 +82,6 @@ public class WorkflowPortlet extends Portlet {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				Record record = event.getRecord();
-				// DocumentsPanel.get().openInFolder(Long.parseLong(record.getAttributeAsString("folderId")),
-				// Long.parseLong(record.getAttributeAsString("docId")));
 				service.getWorkflowDetailsByTask(Session.get().getSid(), record.getAttributeAsString("id"),
 						new AsyncCallback<GUIWorkflow>() {
 

@@ -266,4 +266,8 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	public int countActiveUserTasks(String sid, String username) throws InvalidSessionException {
 		return 0;
 	}
+
+	@Override
+	public void appendDocuments(String sid, String taskId, String docIds) throws InvalidSessionException {
+	}
 }

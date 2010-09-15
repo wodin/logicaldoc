@@ -10,15 +10,21 @@ import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
+import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
+import com.logicaldoc.gui.frontend.client.dashboard.WorkflowDashboard;
+import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.search.Search;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
 import com.logicaldoc.gui.frontend.client.services.SearchServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.WorkflowService;
+import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
+import com.logicaldoc.gui.frontend.client.workflow.WorkflowDetailsDialog;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
@@ -40,6 +46,8 @@ public class DocumentContextMenu extends Menu {
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private SearchServiceAsync searchService = (SearchServiceAsync) GWT.create(SearchService.class);
+
+	private WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
 
 	public DocumentContextMenu(final GUIFolder folder, final ListGrid list) {
 		final ListGridRecord[] selection = list.getSelection();
@@ -508,8 +516,8 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
-		MenuItem workflow = new MenuItem(I18N.message("startworkflow"));
-		workflow.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem startWorkflow = new MenuItem(I18N.message("startworkflow"));
+		startWorkflow.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				ListGrid list = DocumentsPanel.get().getList();
@@ -529,6 +537,57 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
+		MenuItem addToWorkflow = new MenuItem(I18N.message("addtoworkflow"));
+		addToWorkflow.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				ListGrid list = DocumentsPanel.get().getList();
+				ListGridRecord[] selection = list.getSelection();
+				if (selection == null || selection.length == 0)
+					return;
+
+				String ids = "";
+				for (ListGridRecord rec : selection) {
+					ids += "," + rec.getAttributeAsString("id");
+				}
+				if (ids.startsWith(","))
+					ids = ids.substring(1);
+
+				workflowService.appendDocuments(Session.get().getSid(), Session.get().getCurrentWorkflow()
+						.getSelectedTask().getId(), ids, new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void ret) {
+						MainPanel.get().selectWorkflowTab();
+						workflowService.getWorkflowDetailsByTask(Session.get().getSid(), Session.get()
+								.getCurrentWorkflow().getSelectedTask().getId(), new AsyncCallback<GUIWorkflow>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUIWorkflow result) {
+								if (result != null) {
+									WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(
+											WorkflowDashboard.get(), result);
+									workflowDetailsDialog.getTabs().setSelectedTab(1);
+									workflowDetailsDialog.show();
+									Session.get().setCurrentWorkflow(null);
+								}
+							}
+						});
+					}
+				});
+			}
+		});
+
 		MenuItem more = new MenuItem(I18N.message("more"));
 
 		boolean enableLock = true;
@@ -536,8 +595,13 @@ public class DocumentContextMenu extends Menu {
 		boolean enableImmutable = false;
 		boolean enableDelete = true;
 		boolean enableSign = selection != null && selection.length > 0;
-		boolean enableEdit = selection != null && selection.length == 1
-				&& Util.isOfficeFile(selection[0].getAttribute("filename"));
+
+		boolean isOfficeFile = false;
+		if (selection[0].getAttribute("filename") != null)
+			isOfficeFile = Util.isOfficeFile(selection[0].getAttribute("filename"));
+		else if (selection[0].getAttribute("type") != null)
+			isOfficeFile = Util.isOfficeFileType(selection[0].getAttribute("type"));
+		boolean enableEdit = selection != null && selection.length == 1 && isOfficeFile;
 
 		if (selection != null)
 			for (ListGridRecord record : selection) {
@@ -639,11 +703,15 @@ public class DocumentContextMenu extends Menu {
 		}
 
 		if (Feature.visible(Feature.WORKFLOW)) {
-			moreMenu.addItem(workflow);
-			if (!folder.hasPermission(Constants.PERMISSION_WORKFLOW) || !Feature.enabled(Feature.WORKFLOW))
-				workflow.setEnabled(false);
-			else
-				workflow.setEnabled(enableSign);
+			moreMenu.addItem(startWorkflow);
+			moreMenu.addItem(addToWorkflow);
+			if (!folder.hasPermission(Constants.PERMISSION_WORKFLOW) || !Feature.enabled(Feature.WORKFLOW)) {
+				startWorkflow.setEnabled(false);
+				addToWorkflow.setEnabled(false);
+			} else {
+				startWorkflow.setEnabled(enableSign);
+				addToWorkflow.setEnabled(enableSign && Session.get().getCurrentWorkflow() != null);
+			}
 		}
 
 		more.setSubmenu(moreMenu);

@@ -69,6 +69,15 @@ public class Util {
 		return false;
 	}
 
+	public static boolean isOfficeFileType(String type) {
+		String[] exts = new String[] { "doc", "xls", "ppt", "docx", "xlsx", "pptx" };
+		for (String ext : exts) {
+			if (type.equals(ext))
+				return true;
+		}
+		return false;
+	}
+
 	public static void showWaitCursor() {
 		DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "wait");
 	}

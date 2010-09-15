@@ -7,6 +7,7 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
+import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 
@@ -24,6 +25,8 @@ public class Session {
 	private GUISession session;
 
 	private GUIFolder currentFolder;
+
+	private GUIWorkflow currentWorkflow = null;
 
 	private Set<SessionObserver> sessionObservers = new HashSet<SessionObserver>();
 
@@ -93,5 +96,13 @@ public class Session {
 
 	public void setInfo(GUIInfo info) {
 		this.info = info;
+	}
+
+	public GUIWorkflow getCurrentWorkflow() {
+		return currentWorkflow;
+	}
+
+	public void setCurrentWorkflow(GUIWorkflow currentWorkflow) {
+		this.currentWorkflow = currentWorkflow;
 	}
 }

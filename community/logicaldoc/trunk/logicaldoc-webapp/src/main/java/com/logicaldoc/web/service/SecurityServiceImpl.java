@@ -103,11 +103,11 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				session.setSid(AuthenticationChain.getSessionId());
 				session.setUser(guiUser);
 				session.setLoggedIn(true);
-				
-				MenuDAO mdao=(MenuDAO)Context.getInstance().getBean(MenuDAO.class);
-				List<Long> menues=mdao.findMenuIdByUserId(user.getId());
-				guiUser.setMenues((Long[])menues.toArray(new Long[0]));
-				
+
+				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+				List<Long> menues = mdao.findMenuIdByUserId(user.getId());
+				guiUser.setMenues((Long[]) menues.toArray(new Long[0]));
+
 				// Define the current locale
 				UserSession userSession = SessionManager.getInstance().get(session.getSid());
 				userSession.getDictionary().put(SessionUtil.LOCALE, user.getLocale());
