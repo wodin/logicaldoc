@@ -158,6 +158,7 @@ public class UserDetailsPanel extends VLayout {
 				@Override
 				public void onSuccess(GUIUser result) {
 					savePanel.setVisible(false);
+					propertiesPanel.refresh();
 					usersPanel.updateRecord(result);
 				}
 			});
