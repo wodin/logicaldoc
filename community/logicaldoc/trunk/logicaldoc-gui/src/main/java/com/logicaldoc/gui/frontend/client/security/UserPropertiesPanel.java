@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -60,7 +61,7 @@ public class UserPropertiesPanel extends HLayout {
 		refresh();
 	}
 
-	private void refresh() {
+	public void refresh() {
 		boolean readonly = (changedHandler == null);
 		vm.clearValues();
 		vm.clearErrors(false);
@@ -169,10 +170,13 @@ public class UserPropertiesPanel extends HLayout {
 		/*
 		 * Prepare the second form for the groups
 		 */
-		if (addingGroup != null)
-			addingGroup.destroy();
+		if (addingGroup != null) {
+			for (Canvas member : addingGroup.getMembers()) {
+				addingGroup.removeMember(member);
+			}
+		}
 		if (contains(addingGroup))
-			removeChild(addingGroup);
+			removeMember(addingGroup);
 		DynamicForm form2 = new DynamicForm();
 
 		List<FormItem> items = new ArrayList<FormItem>();
@@ -200,7 +204,7 @@ public class UserPropertiesPanel extends HLayout {
 				public void onIconClick(IconClickEvent event) {
 					user.removeGroup((String) gp.getValue());
 					changedHandler.onChanged(null);
-					
+
 					// Mark the item as deleted
 					gp.setTextBoxStyle("deletedItem");
 					gp.setTitleStyle("deletedItem");
