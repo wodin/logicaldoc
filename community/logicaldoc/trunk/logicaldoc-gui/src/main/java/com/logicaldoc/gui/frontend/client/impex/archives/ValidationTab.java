@@ -4,12 +4,14 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
+import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.logicaldoc.gui.common.client.beans.GUISostConfig;
 import com.logicaldoc.gui.common.client.data.ValidationDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.widgets.MessageLabel;
 import com.logicaldoc.gui.frontend.client.document.SignDialog;
 import com.logicaldoc.gui.frontend.client.services.ArchiveService;
 import com.logicaldoc.gui.frontend.client.services.ArchiveServiceAsync;
@@ -18,12 +20,11 @@ import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -50,8 +51,6 @@ public class ValidationTab extends Tab {
 
 	private IButton endButton = null;
 
-	private DynamicForm validationForm = null;
-
 	private VLayout layout = null;
 
 	private GUISostConfig config = null;
@@ -64,6 +63,10 @@ public class ValidationTab extends Tab {
 
 	private int num = 0;
 
+	private boolean showList = true;
+
+	private Label validationResult = null;
+
 	public ValidationTab(ArchiveValidation validation, int position, GUISostConfig sostConfig, long archiveId) {
 		this.config = sostConfig;
 		this.archive = archiveId;
@@ -73,16 +76,18 @@ public class ValidationTab extends Tab {
 		setTitle(I18N.message("sostdoctype." + sostConfig.getDocumentType()));
 
 		layout = new VLayout(15);
-		layout.setMargin(20);
+		layout.setMargin(10);
 
 		refresh();
 	}
 
 	public void refresh() {
+		if (validationResult != null)
+			layout.removeMember(validationResult);
 		if (signButton != null)
 			layout.removeMember(signButton);
-		if (validationForm != null)
-			layout.removeMember(validationForm);
+		if (docsList != null)
+			layout.removeMember(docsList);
 		if (continueButton != null)
 			layout.removeMember(continueButton);
 		if (endButton != null)
@@ -90,8 +95,21 @@ public class ValidationTab extends Tab {
 
 		setDisabled(window.getCurrentTabIndex() != tabPosition);
 
+		GUIMessage message = null;
+		if (showList) {
+			message = new GUIMessage("<b>" + I18N.message("sostaction.failed") + "</b>");
+			message.setPriority(2);
+		} else {
+			message = new GUIMessage("<b>" + I18N.message("sostaction.success") + "</b>");
+			message.setPriority(1);
+		}
+		validationResult = new MessageLabel(message);
+		validationResult.setShowEdges(false);
+		layout.addMember(validationResult, 0);
+
 		signButton = new IButton();
 		signButton.setTitle(I18N.message("sign"));
+		signButton.setDisabled(!showList);
 		signButton.setIcon(ItemFactory.newImgIcon("sign.png").getSrc());
 		signButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -124,18 +142,15 @@ public class ValidationTab extends Tab {
 				}
 			}
 		});
+		layout.addMember(signButton, 1);
 
-		validationForm = new DynamicForm();
-		validationForm.setWidth100();
-		validationForm.setHeight(300);
-
-		ListGridField title = new ListGridField("title", I18N.message("title"), 150);
-		ListGridField number = new ListGridField("number", I18N.message("number"), 100);
-		ListGridField date = new ListGridField("date", I18N.message("date"), 150);
+		ListGridField title = new ListGridField("title", I18N.message("title"), 140);
+		ListGridField number = new ListGridField("number", I18N.message("number"), 80);
+		ListGridField date = new ListGridField("date", I18N.message("date"), 120);
 		date.setAlign(Alignment.CENTER);
 		date.setType(ListGridFieldType.DATE);
 		date.setCellFormatter(new DateCellFormatter());
-		ListGridField error = new ListGridField("error", I18N.message("error"), 200);
+		ListGridField error = new ListGridField("error", I18N.message("error"), 190);
 
 		docsList = new ListGrid();
 		docsList.setCanFreezeFields(true);
@@ -145,7 +160,7 @@ public class ValidationTab extends Tab {
 		docsList.setSelectionType(SelectionStyle.NONE);
 		docsList.setBorder("1px solid #E1E1E1");
 		docsList.setWidth100();
-		docsList.setHeight(300);
+		docsList.setHeight(180);
 		docsList.setShowAllRecords(true);
 		docsList.setShowRecordComponents(true);
 		docsList.setShowRecordComponentsByCell(true);
@@ -156,28 +171,20 @@ public class ValidationTab extends Tab {
 			@Override
 			public void onDataArrived(DataArrivedEvent event) {
 				num = docsList.getTotalRows();
+				if (num == 0) {
+					showList = false;
+					refresh();
+				}
 			}
 		});
 
-		// if (num > 0)
-		validationForm.addChild(docsList);
-		// else {
-		StaticTextItem verifyMessage = ItemFactory.newStaticTextItem("verifyMessage", "",
-				"<b>" + I18N.message("sostaction.success") + "</b>");
-		verifyMessage.setShouldSaveValue(false);
-		verifyMessage.setWrapTitle(false);
-		validationForm.setItems(verifyMessage);
-		// }
+		if (showList)
+			layout.addMember(docsList, 2);
 
-		// SC.warn("---- num: " + num);
-
-		layout.addMember(signButton);
-		layout.addMember(validationForm);
-
-		if (tabPosition < 2) {
+		if (tabPosition < (window.getConfigsNum() - 1)) {
 			continueButton = new IButton();
 			continueButton.setTitle(I18N.message("continue"));
-			continueButton.setDisabled(false);
+			continueButton.setDisabled(showList);
 			continueButton.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
 					window.setCurrentTabIndex(tabPosition + 1);
@@ -190,7 +197,7 @@ public class ValidationTab extends Tab {
 		} else {
 			endButton = new IButton();
 			endButton.setTitle(I18N.message("end"));
-			endButton.setDisabled(false);
+			endButton.setDisabled(showList);
 			endButton.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
 					window.destroy();
@@ -212,7 +219,6 @@ public class ValidationTab extends Tab {
 			});
 			layout.addMember(endButton);
 		}
-
 		setPane(layout);
 	}
 }

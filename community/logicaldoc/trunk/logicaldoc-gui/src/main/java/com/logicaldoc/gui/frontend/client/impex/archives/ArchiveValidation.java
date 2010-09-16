@@ -26,15 +26,18 @@ public class ArchiveValidation extends Window {
 	private int currentTabIndex = 0;
 	
 	private ExportArchivesList archivesList = null;
+	
+	private int configsNum = 0;
 
 	public ArchiveValidation(ExportArchivesList list, GUISostConfig[] configs, long archiveId) {
 		this.archivesList = list;
+		this.configsNum = configs.length;
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
 		setTitle(I18N.message("archivevalidation"));
-		setWidth(800);
-		setHeight(500);
+		setWidth(650);
+		setHeight(400);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -44,8 +47,8 @@ public class ArchiveValidation extends Window {
 		layout.setMargin(30);
 
 		tabs = new TabSet();
-		tabs.setWidth(750);
-		tabs.setHeight(450);
+		tabs.setWidth(600);
+		tabs.setHeight(350);
 
 		Tab tab = null;
 		int i = 0;
@@ -76,5 +79,9 @@ public class ArchiveValidation extends Window {
 
 	public ExportArchivesList getArchivesList() {
 		return archivesList;
+	}
+
+	public int getConfigsNum() {
+		return configsNum;
 	}
 }
