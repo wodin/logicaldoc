@@ -81,9 +81,9 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 			dao.store(templ);
 
 			template.setId(templ.getId());
-		} catch (Throwable e) {
-			e.printStackTrace();
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
 
 		// TODO Rinumerare gli attributi in base all'ordine nell'array
@@ -130,8 +130,8 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 				templ.setAttributes(attributes);
 
 			return templ;
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
 		}
 
 		return null;

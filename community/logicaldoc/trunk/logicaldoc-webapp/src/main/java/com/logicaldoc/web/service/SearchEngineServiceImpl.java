@@ -57,6 +57,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			indexer.recreateIndexes();
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
+			throw new RuntimeException(e.getMessage(), e);
 		}
 
 		Runnable task = new Runnable() {
@@ -71,8 +72,9 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 						document.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 						documentDao.store(document);
 					}
-				} catch (Exception e) {
-					log.error(e.getMessage(), e);
+				} catch (Exception t) {
+					log.error(t.getMessage(), t);
+					throw new RuntimeException(t.getMessage(), t);
 				}
 			}
 		};
@@ -89,8 +91,9 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 		try {
 			Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
 			indexer.unlock();
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+		} catch (Exception t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
 	}
 
@@ -104,8 +107,9 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			conf.setProperty("index.includes", searchEngine.getIncludePatters());
 
 			conf.write();
-		} catch (IOException e) {
-			log.error(e.getMessage(), e);
+		} catch (IOException t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
 	}
 }

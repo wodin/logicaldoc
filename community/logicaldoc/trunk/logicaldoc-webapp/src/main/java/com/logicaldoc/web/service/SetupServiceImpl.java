@@ -56,8 +56,9 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 				LoggingConfigurator lconf = new LoggingConfigurator();
 				lconf.setLogsRoot(pbean.getProperty("conf.logdir"));
 				lconf.write();
-			} catch (Throwable e) {
-				e.printStackTrace();
+			} catch (Throwable t) {
+				log.error(t.getMessage(), t);
+				throw new RuntimeException(t.getMessage(), t);
 			}
 
 			// Reload the application context in order to reconnect DAOs to the
