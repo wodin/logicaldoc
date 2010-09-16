@@ -255,10 +255,10 @@ public class Setup implements EntryPoint {
 		smtpConnectionSecurity.setDefaultValue(Constants.SMTP_SECURITY_NONE);
 		smtpConnectionSecurity.setWrapTitle(false);
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-		valueMap.put(Constants.SMTP_SECURITY_NONE, "None");
-		valueMap.put(Constants.SMTP_SECURITY_SSL, "SSL");
-		valueMap.put(Constants.SMTP_SECURITY_TLS, "TLS");
-		valueMap.put(Constants.SMTP_SECURITY_TLS_IF_AVAILABLE, "TLS if available");
+		valueMap.put(Constants.SMTP_SECURITY_NONE, I18N.message("none"));
+		valueMap.put(Constants.SMTP_SECURITY_SSL, I18N.message("ssl"));
+		valueMap.put(Constants.SMTP_SECURITY_TLS, I18N.message("tls"));
+		valueMap.put(Constants.SMTP_SECURITY_TLS_IF_AVAILABLE, I18N.message("tlsavailable"));
 		smtpConnectionSecurity.setValueMap(valueMap);
 
 		TextItem smtpSender = ItemFactory.newEmailItem(SMTP_SENDER, "sender", false);
@@ -297,10 +297,11 @@ public class Setup implements EntryPoint {
 	private Tab setupDatabase(final ValuesManager vm) {
 		// Prepare the map with all database engines
 		engines.put(DB_MYSQL, new String[] { "MySQL 5.x", "com.mysql.jdbc.Driver",
-				"jdbc:mysql://<server>[,<failoverhost>][<:3306>]/<database>",
-				"org.hibernate.dialect.MySQLDialect", "SELECT 1" });
+				"jdbc:mysql://<server>[,<failoverhost>][<:3306>]/<database>", "org.hibernate.dialect.MySQLDialect",
+				"SELECT 1" });
 		engines.put("PostgreSQL", new String[] { "PostgreSQL 8.x", "org.postgresql.Driver",
-				"jdbc:postgresql:[<//server>[<:5432>/]]<database>", "org.hibernate.dialect.PostgreSQLDialect", "SELECT 1" });
+				"jdbc:postgresql:[<//server>[<:5432>/]]<database>", "org.hibernate.dialect.PostgreSQLDialect",
+				"SELECT 1" });
 		engines.put(ORACLE, new String[] { "Oracle 10g/11g", "oracle.jdbc.driver.OracleDriver",
 				"jdbc:oracle:thin:@<server>[<:1521>]:<database>", "org.hibernate.dialect.Oracle10gDialect",
 				"SELECT 1 FROM DUAL" });
