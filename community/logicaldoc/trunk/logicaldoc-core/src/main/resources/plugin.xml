@@ -107,6 +107,7 @@
     <parameter id="class" value="com.logicaldoc.core.document.thumbnail.PdfThumbnailBuilder" />
   </extension>
 
+
   <extension plugin-id="logicaldoc-core" point-id="Search" id="fulltextSearch">
     <parameter id="type" value="0" />
     <parameter id="class" value="com.logicaldoc.core.searchengine.FulltextSearch" />
@@ -142,5 +143,9 @@
   </extension>
   <extension plugin-id="logicaldoc-core" point-id="Feature" id="f7">
 	<parameter id="name" value="Feature_7" />
+  </extension>
+  
+  <extension plugin-id="logicaldoc-core" point-id="Task" id="taskStatsCollector">
+	<parameter id="name" value="StatsCollector" />
   </extension>
 </plugin>

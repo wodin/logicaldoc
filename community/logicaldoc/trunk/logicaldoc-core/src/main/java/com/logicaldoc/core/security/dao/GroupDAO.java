@@ -45,4 +45,9 @@ public interface GroupDAO extends PersistentObjectDAO<Group> {
 	 * @return Collection of selected groups.
 	 */
 	public Collection<Group> findByLikeName(String name);
+	
+	/**
+	 * Counts the total number of groups
+	 */
+	public int count();
 }

@@ -91,9 +91,10 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			if (user.isInGroup("admin"))
 				return findAll();
 
-			Set<Group> precoll = user.getGroups();					
+			Set<Group> precoll = user.getGroups();
 			if (!precoll.isEmpty()) {
-				// First of all collect all folders that define it's own policies
+				// First of all collect all folders that define it's own
+				// policies
 				StringBuffer query = new StringBuffer("select distinct(_folder) from Folder _folder  ");
 				query.append(" left join _folder.folderGroups as _group ");
 				query.append(" where _group.groupId in (");
@@ -237,7 +238,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 			Set<Group> groups = user.getGroups();
 			if (groups.isEmpty())
-				return coll;			
+				return coll;
 
 			/*
 			 * Search for the folders that define its own policies
@@ -338,7 +339,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 			Set<Group> Groups = user.getGroups();
 			if (Groups.isEmpty())
-				return false;			
+				return false;
 
 			StringBuffer query = new StringBuffer("select distinct(_entity) from Folder _entity  ");
 			query.append(" left join _entity.folderGroups as _group ");
@@ -463,7 +464,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 					first = false;
 				}
 				query1.append(")");
-				
+
 				ids = (List<Long>) queryForList(query1.toString(), Long.class);
 
 				/*
@@ -474,10 +475,10 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				query2.append("	and B.ld_securityref in (");
 				query2.append(query1.toString());
 				query2.append(")");
-				
+
 				List<Long> folderids2 = (List<Long>) queryForList(query2.toString(), Long.class);
 				for (Long folderid : folderids2) {
-					if (!ids.contains(folderid)) 
+					if (!ids.contains(folderid))
 						ids.add(folderid);
 				}
 			}
@@ -643,7 +644,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			if (groups.isEmpty())
 				return permissions;
 
-			// If the folder defines a security ref, use another folder to find the policies
+			// If the folder defines a security ref, use another folder to find
+			// the policies
 			long id = folderId;
 			Folder folder = findById(folderId);
 			if (folder.getSecurityRef() != null) {
@@ -734,7 +736,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				return findAllIds();
 
 			Set<Group> precoll = user.getGroups();
-			
+
 			if (!precoll.isEmpty()) {
 				/*
 				 * Check folders that specify its own permissions
@@ -745,7 +747,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				if (permission != Permission.READ)
 					query1.append(" and A.ld_" + permission.getName() + "=1 ");
 				query1.append(" and A.ld_groupid in (");
-												
+
 				Iterator<Group> iter = precoll.iterator();
 				boolean first = true;
 				while (iter.hasNext()) {
@@ -756,7 +758,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 					first = false;
 				}
 				query1.append(")");
-				
+
 				ids = (List<Long>) queryForList(query1.toString(), Long.class);
 
 				/*
@@ -765,7 +767,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				 */
 				StringBuffer query2 = new StringBuffer("select B.ld_id from ld_folder B where B.ld_deleted=0 ");
 				query2.append(" and B.ld_securityref in (" + query1.toString() + ")");
-								
+
 				List<Long> frefs = (List<Long>) queryForList(query2.toString(), Long.class);
 				for (Long folderId : frefs) {
 					if (!ids.contains(folderId))
@@ -1028,5 +1030,11 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				return true;
 		}
 		return false;
+	}
+
+	@Override
+	public int count(boolean computeDeleted) {
+		return queryForInt("SELECT COUNT(A.ld_id) FROM ld_document A "
+				+ (computeDeleted ? "" : "where A.ld_deleted = 0 "));
 	}
 }
