@@ -305,4 +305,9 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * Propagates the security policies of a node to the whole subree 
 	 */
 	public boolean applyRithtToTree(long id, History transaction);
+	
+	/**
+	 * Counts the number of folders
+	 */
+	public int count(boolean computeDeleted);
 }

@@ -129,6 +129,7 @@
 				<ref bean="IndexOptimizerTrigger" />
 				<ref bean="TagCloudGeneratorTrigger" />
 				<ref bean="IndexerTaskTrigger" />
+				<ref bean="StatsCollectorTrigger" />
 			</list>
 		</property>
 	</bean>

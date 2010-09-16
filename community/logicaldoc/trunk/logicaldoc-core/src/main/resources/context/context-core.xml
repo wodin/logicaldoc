@@ -439,6 +439,38 @@
 		<property name="config" ref="ContextProperties" />
 	</bean>
 
+	<bean id="StatsCollector" class="com.logicaldoc.core.stats.StatsCollector">
+        <property name="config" ref="ContextProperties" />
+		<property name="documentDAO">
+			<ref bean="DocumentDAO" />
+		</property>
+		<property name="folderDAO">
+			<ref bean="FolderDAO" />
+		</property>
+		<property name="genericDAO">
+			<ref bean="GenericDAO" />
+		</property>
+		<property name="userDAO">
+			<ref bean="UserDAO" />
+		</property>
+		<property name="groupDAO">
+			<ref bean="GroupDAO" />
+		</property>
+	</bean>
+
+	<bean id="StatsCollectorJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="StatsCollector" />
+		<property name="targetMethod" value="run" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<bean id="StatsCollectorTrigger" class="com.logicaldoc.core.task.TaskTrigger">
+		<property name="task" ref="StatsCollector" />
+		<property name="jobDetail" ref="StatsCollectorJob" />
+		<property name="config" ref="ContextProperties" />
+	</bean>
+
 	<!-- Authentication -->
 	<bean id="BasicAuthentication"
 		class="com.logicaldoc.core.security.authentication.BasicAuthentication">

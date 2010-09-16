@@ -26,6 +26,7 @@ public interface SystemService extends RemoteService {
 	 * <li>The first array is the Repository statistics.</li>
 	 * <li>The second array is the Documents statistics.</li>
 	 * <li>The third array is the Folders statistics.</li>
+	 * <li>The fourth array contains the last run date.</li>
 	 * </ol>
 	 * 
 	 * @param sid The current user session

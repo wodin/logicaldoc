@@ -188,4 +188,10 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 	public Collection<Group> findByLikeName(String name) {
 		return findByWhere("lower(_entity.name) like ?", new Object[] { name.toLowerCase() }, null, null);
 	}
+
+	@Override
+	public int count() {
+		String query = "select count(*) from ld_group where ld_deleted=0";
+		return queryForInt(query);
+	}
 }

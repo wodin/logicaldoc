@@ -1,21 +1,20 @@
 package com.logicaldoc.web.service;
 
-import java.io.File;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
-import com.logicaldoc.core.security.dao.FolderDAO;
+import com.logicaldoc.core.generic.Generic;
+import com.logicaldoc.core.generic.dao.GenericDAO;
 import com.logicaldoc.core.security.dao.UserHistoryDAO;
+import com.logicaldoc.core.stats.StatsCollector;
 import com.logicaldoc.core.task.Task;
 import com.logicaldoc.core.task.TaskManager;
 import com.logicaldoc.core.task.TaskTrigger;
@@ -27,7 +26,6 @@ import com.logicaldoc.gui.common.client.beans.GUITask;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.sql.SqlUtil;
 import com.logicaldoc.web.util.SessionUtil;
 
@@ -96,145 +94,140 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	@Override
 	public GUIParameter[][] getStatistics(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
+		GenericDAO genDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
 
-		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-
-		GUIParameter[][] parameters = new GUIParameter[3][8];
-
+		GUIParameter[][] parameters = new GUIParameter[4][8];
 		try {
-			// Repository statistics
+			/*
+			 * Repository statistics
+			 */
+			Generic gen = genDao.findByAlternateKey(StatsCollector.STAT, "docdir");
 			GUIParameter docDirSize = new GUIParameter();
 			docDirSize.setName("documents");
-			File docDir = new File(conf.getPropertyWithSubstitutions("conf.docdir"));
-			if (docDir.exists())
-				docDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(docDir)));
+			if (gen != null)
+				docDirSize.setValue(gen.getString1());
 			else
 				docDirSize.setValue("0");
-
 			parameters[0][0] = docDirSize;
 
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "userdir");
 			GUIParameter userDirSize = new GUIParameter();
 			userDirSize.setName("users");
-			File userDir = new File(conf.getPropertyWithSubstitutions("conf.userdir"));
-			if (userDir.exists())
-				userDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(userDir)));
+			if (gen != null)
+				userDirSize.setValue(gen.getString1());
 			else
 				userDirSize.setValue("0");
-
 			parameters[0][1] = userDirSize;
 
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "indexdir");
 			GUIParameter indexDirSize = new GUIParameter();
 			indexDirSize.setName("fulltextindex");
-			File indexDir = new File(conf.getPropertyWithSubstitutions("conf.indexdir"));
-			if (indexDir.exists())
-				indexDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(indexDir)));
+			if (gen != null)
+				indexDirSize.setValue(gen.getString1());
 			else
 				indexDirSize.setValue("0");
 
 			parameters[0][2] = indexDirSize;
 
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "importdir");
 			GUIParameter importDirSize = new GUIParameter();
 			importDirSize.setName("iimport");
-			File importDir = new File(conf.getPropertyWithSubstitutions("conf.importdir"));
-			if (importDir.exists())
-				importDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(importDir)));
+			if (gen != null)
+				importDirSize.setValue(gen.getString1());
 			else
 				importDirSize.setValue("0");
-
 			parameters[0][3] = importDirSize;
 
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "exportdir");
 			GUIParameter exportDirSize = new GUIParameter();
 			exportDirSize.setName("eexport");
-			File exportDir = new File(conf.getPropertyWithSubstitutions("conf.exportdir"));
-			if (exportDir.exists())
-				exportDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(exportDir)));
+			if (gen != null)
+				exportDirSize.setValue(gen.getString1());
 			else
 				exportDirSize.setValue("0");
-
 			parameters[0][4] = exportDirSize;
 
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "plugindir");
 			GUIParameter pluginsDirSize = new GUIParameter();
 			pluginsDirSize.setName("plugins");
-			File pluginsDir = new File(conf.getPropertyWithSubstitutions("conf.plugindir"));
-			if (pluginsDir.exists())
-				pluginsDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(pluginsDir)));
+			if (gen != null)
+				pluginsDirSize.setValue(gen.getString1());
 			else
 				pluginsDirSize.setValue("0");
-
 			parameters[0][5] = pluginsDirSize;
 
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "dbdir");
 			GUIParameter dbDirSize = new GUIParameter();
 			dbDirSize.setName("database");
-			File dbDir = new File(conf.getPropertyWithSubstitutions("conf.dbdir"));
-			if (dbDir.exists())
-				dbDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(dbDir)));
+			if (gen != null)
+				dbDirSize.setValue(gen.getString1());
 			else
 				dbDirSize.setValue("0");
 
 			parameters[0][6] = dbDirSize;
 
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "logdir");
 			GUIParameter logsDirSize = new GUIParameter();
 			logsDirSize.setName("logs");
-			File logsDir = new File(conf.getPropertyWithSubstitutions("conf.logdir"));
-			if (logsDir.exists())
-				logsDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(logsDir)));
+			if (gen != null)
+				logsDirSize.setValue(gen.getString1());
 			else
 				logsDirSize.setValue("0");
 
 			parameters[0][7] = logsDirSize;
 
-			// Documents statistics
-			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			/*
+			 * Document statistics
+			 */
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "notindexeddocs");
 			GUIParameter notIndexed = new GUIParameter();
 			notIndexed.setName("notindexed");
-			StringBuilder query = new StringBuilder(
-					"SELECT COUNT(A.ld_id) FROM ld_document A where A.ld_indexed = 0 and A.ld_deleted = 0 ");
-			notIndexed.setValue(Long.toString(docDao.queryForLong(query.toString())));
-
+			notIndexed.setValue(gen != null ? Integer.toString(gen.getInteger1()) : "0");
 			parameters[1][0] = notIndexed;
 
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "indexeddocs");
 			GUIParameter indexed = new GUIParameter();
 			indexed.setName("indexed");
-			query = new StringBuilder(
-					"SELECT COUNT(A.ld_id) FROM ld_document A where A.ld_indexed = 1 and A.ld_deleted = 0 ");
-			indexed.setValue(Long.toString(docDao.queryForLong(query.toString())));
-
+			indexed.setValue(gen != null ? Integer.toString(gen.getInteger1()) : "0");
 			parameters[1][1] = indexed;
 
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "deleteddocs");
 			GUIParameter deletedDocs = new GUIParameter();
 			deletedDocs.setName("docstrash");
 			deletedDocs.setLabel("trash");
-			query = new StringBuilder("SELECT COUNT(A.ld_id) FROM ld_document A where A.ld_deleted = 1 ");
-			deletedDocs.setValue(Long.toString(docDao.queryForLong(query.toString())));
-
+			deletedDocs.setValue(gen != null ? Integer.toString(gen.getInteger1()) : "0");
 			parameters[1][2] = deletedDocs;
 
-			// Folders statistics
+			/*
+			 * Folders statistics
+			 */
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "withdocs");
 			GUIParameter notEmptyFolders = new GUIParameter();
 			notEmptyFolders.setName("withdocs");
-			query = new StringBuilder(
-					"SELECT COUNT(A.ld_id) FROM ld_folder A where A.ld_deleted = 0 and A.ld_id in (select B.ld_folderid FROM ld_document B where B.ld_deleted = 0) ");
-			notEmptyFolders.setValue(Long.toString(folderDao.queryForLong(query.toString())));
-
+			notEmptyFolders.setValue(gen != null ? Integer.toString(gen.getInteger1()) : "0");
 			parameters[2][0] = notEmptyFolders;
 
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "empty");
 			GUIParameter emptyFolders = new GUIParameter();
 			emptyFolders.setName("empty");
-			query = new StringBuilder(
-					"SELECT COUNT(A.ld_id) FROM ld_folder A where A.ld_deleted = 0 and A.ld_id not in (select B.ld_folderid FROM ld_document B where B.ld_deleted = 0) ");
-			emptyFolders.setValue(Long.toString(folderDao.queryForLong(query.toString())));
-
+			emptyFolders.setValue(gen != null ? Integer.toString(gen.getInteger1()) : "0");
 			parameters[2][1] = emptyFolders;
 
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "deletedfolders");
 			GUIParameter deletedFolders = new GUIParameter();
 			deletedFolders.setName("folderstrash");
 			deletedFolders.setLabel("trash");
-			query = new StringBuilder("SELECT COUNT(A.ld_id) FROM ld_folder A where A.ld_deleted = 1 ");
-			deletedFolders.setValue(Long.toString(folderDao.queryForLong(query.toString())));
-
+			deletedFolders.setValue(gen != null ? Integer.toString(gen.getInteger1()) : "0");
 			parameters[2][2] = deletedFolders;
 
+			/*
+			 * Last run
+			 */
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "lastrun");
+			GUIParameter lastrun = new GUIParameter();
+			lastrun.setName("lastrun");
+			lastrun.setValue(gen != null ? gen.getString1() : "");
+			parameters[3][0] = lastrun;
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
