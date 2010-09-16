@@ -63,8 +63,9 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				saveRules(sid, mdao.findById(folder.getId()), session.getUserId(), folder.getRights());
 			}
 
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
 	}
 
@@ -125,8 +126,8 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			f.setRights(rights);
 
 			return f;
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
 		}
 
 		return null;
@@ -212,8 +213,9 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			transaction.setUser(user);
 
 			folderDao.move(folderToMove, destParentFolder, transaction);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 			// TODO Message?
 		}
 	}
@@ -245,8 +247,9 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			} else {
 				// TODO Message?
 			}
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 			// TODO Message?
 		}
 	}
@@ -276,8 +279,9 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 			folder.setId(f.getId());
 			folder.setName(f.getName());
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
 
 		return folder;
@@ -365,8 +369,9 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			history.setEvent(History.EVENT_FOLDER_PERMISSION);
 			history.setSessionId(sid);
 			mdao.store(folder, history);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
 		return !sqlerrors;
 	}
@@ -425,11 +430,13 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			if (skippedSome || lockedSome) {
 				// TODO Message?
 			}
-		} catch (AccessControlException e) {
+		} catch (AccessControlException t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		} catch (Exception t) {
 			// TODO Message?
-		} catch (Exception e) {
-			// TODO Message?
-			log.error("Exception moving documents: " + e.getMessage(), e);
+			log.error("Exception moving documents: " + t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
 	}
 
@@ -463,11 +470,13 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					}
 				}
 			}
-		} catch (AccessControlException e) {
-			// TODO Message?
+		} catch (AccessControlException t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		} catch (Exception e) {
 			// TODO Message?
 			log.error("Exception copying documents: " + e.getMessage(), e);
+			throw new RuntimeException(e.getMessage(), e);
 		}
 	}
 
@@ -493,11 +502,13 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					docManager.createShortcut(doc, selectedFolderFolder, transaction);
 				}
 			}
-		} catch (AccessControlException e) {
+		} catch (AccessControlException t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		} catch (Exception t) {
 			// TODO Message?
-		} catch (Exception e) {
-			// TODO Message?
-			log.error("Exception copying documents alias: " + e.getMessage(), e);
+			log.error("Exception copying documents alias: " + t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
 	}
 }

@@ -49,6 +49,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 				i18n.load(this.getClass().getResourceAsStream("/i18n/i18n.properties"));
 			} catch (IOException e) {
 				log.error(e.getMessage());
+				throw new RuntimeException(e.getMessage(), e);
 			}
 
 			Locale withLocale = LocaleUtil.toLocale(locale);
@@ -125,8 +126,9 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			
 			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			info.setInstallationId(config.getProperty("id"));
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
 
 		return info;

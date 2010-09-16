@@ -99,7 +99,11 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					added++;
 				}
 			} catch (AccessControlException e) {
+				log.error(e.getMessage(), e);
+				throw new RuntimeException(e.getMessage(), e);
 			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+				throw new RuntimeException(e.getMessage(), e);
 			}
 		}
 
@@ -193,8 +197,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					doc = documentManager.create(file, doc, transaction, false);
 				}
 			}
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
 	}
 
@@ -226,8 +231,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 				/* create positive log message */
 				// TODO Message?
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
+			} catch (Throwable t) {
+				log.error(t.getMessage(), t);
+				throw new RuntimeException(t.getMessage(), t);
 				// TODO Message?
 			}
 		} else {
@@ -249,8 +255,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		try {
 			documentManager.checkout(docId, transaction);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
 			throw new RuntimeException("Unable to checkout the document");
 		}
 	}
@@ -303,10 +309,12 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						}
 					dao.delete(doc.getId(), transaction);
 					deletedSome = true;
-				} catch (AccessControlException e) {
-					// TODO Message?
-				} catch (Exception e) {
-					e.printStackTrace();
+				} catch (AccessControlException t) {
+					log.error(t.getMessage(), t);
+					throw new RuntimeException(t.getMessage(), t);
+				} catch (Exception t) {
+					log.error(t.getMessage(), t);
+					throw new RuntimeException(t.getMessage(), t);
 					// TODO Message?
 				}
 			}
@@ -367,8 +375,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			}
 			dao.store(thread);
 			// TODO Message?
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 			// TODO Message?
 		}
 	}
@@ -483,7 +492,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				GUIFolder folder = FolderServiceImpl.getFolder(sid, doc.getFolder().getId());
 				document.setFolder(folder);
 			} catch (Throwable t) {
-				t.printStackTrace();
+				log.error(t.getMessage(), t);
+				throw new RuntimeException(t.getMessage(), t);
 			}
 
 			return document;
@@ -604,9 +614,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						}
 					}
 				}
-			} catch (Exception e) {
+			} catch (Throwable t) {
 				// TODO Message?
-				log.error("Exception linking documents: " + e.getMessage(), e);
+				log.error("Exception linking documents: " + t.getMessage(), t);
+				throw new RuntimeException(t.getMessage(), t);
 			}
 		} else {
 			// TODO Message?
@@ -632,8 +643,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 			/* create positive log message */
 			// TODO Message?
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 			// TODO Message?
 		}
 	}
@@ -674,8 +686,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			if (lockedSome) {
 				// TODO Message?
 			}
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 			// TODO Message?
 		}
 	}
@@ -709,8 +722,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				// TODO Message???
 			}
 
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 			// TODO Message???
 		}
 	}
@@ -732,8 +746,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				// TODO Message???
 			}
 
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 			// TODO Message???
 		}
 	}
@@ -857,8 +872,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					document.setLastModified(new Date());
 					document.setVersion(doc.getVersion());
 				} catch (Throwable t) {
-					t.printStackTrace();
 					log.error(t.getMessage(), t);
+					throw new RuntimeException(t.getMessage(), t);
 				}
 			} else
 				return null;
@@ -931,7 +946,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				return "error";
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			log.warn(e.getMessage(), e);
 			return "error";
 		}
@@ -1006,8 +1020,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 			/* create positive log message */
 			// TODO Message?
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 			// TODO Message?
 		}
 	}
@@ -1030,8 +1045,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 			bookmarkDao.store(bk);
 			bookmark.setId(bk.getId());
-		} catch (Throwable e) {
-			e.printStackTrace();
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
 	}
 
