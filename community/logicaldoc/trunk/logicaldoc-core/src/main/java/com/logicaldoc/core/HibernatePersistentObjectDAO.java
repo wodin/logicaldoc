@@ -87,7 +87,6 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 
 			coll = (List<T>) getHibernateTemplate(max).find(query, values);
 		} catch (Exception e) {
-			e.printStackTrace();
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
@@ -167,7 +166,6 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 			else
 				list = jdbcTemplate.query(sql, rowMapper);
 		} catch (Exception e) {
-			e.printStackTrace();
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
@@ -195,19 +193,19 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		}
 		return list;
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	@Override
 	public List queryForList(String sql, Class elementType) {
 		return queryForList(sql, null, elementType, null);
-	}	
+	}
 
 	@Override
 	public int queryForInt(String sql) {
 		long mytmplong = queryForLong(sql);
 		return new Long(mytmplong).intValue();
 	}
-	
+
 	@Override
 	public long queryForLong(String sql) {
 		try {
@@ -220,7 +218,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 				log.error(e.getMessage(), e);
 		}
 		return 0;
-	}	
+	}
 
 	@Override
 	public int jdbcUpdate(String statement) {
