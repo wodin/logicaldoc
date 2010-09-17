@@ -186,6 +186,7 @@ public class TasksPanel extends VLayout {
 				reload();
 			}
 		};
+		timer.scheduleRepeating(2 * 1000);
 	}
 
 	private void reload() {
@@ -322,7 +323,7 @@ public class TasksPanel extends VLayout {
 		final IntegerItem delay = ItemFactory.newValidateIntegerItem("delay", "", null, 1, null);
 		delay.setHint(I18N.message("seconds").toLowerCase());
 		delay.setShowTitle(false);
-		delay.setDefaultValue(10);
+		delay.setDefaultValue(5);
 		delay.setWidth(40);
 
 		ToolStripButton refresh = new ToolStripButton();
