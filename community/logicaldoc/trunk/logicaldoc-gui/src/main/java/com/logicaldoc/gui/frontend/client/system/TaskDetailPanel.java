@@ -134,7 +134,7 @@ public class TaskDetailPanel extends VLayout {
 
 	public void onSave() {
 		if (schedulingPanel.validate()) {
-			service.saveTask(Session.get().getSid(), task, new AsyncCallback<GUITask>() {
+			service.saveTask(Session.get().getSid(), task, I18N.getLocale(), new AsyncCallback<GUITask>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					Log.serverError(caught);

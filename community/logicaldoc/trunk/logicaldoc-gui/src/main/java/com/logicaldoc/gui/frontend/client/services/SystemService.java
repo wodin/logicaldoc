@@ -30,8 +30,9 @@ public interface SystemService extends RemoteService {
 	 * </ol>
 	 * 
 	 * @param sid The current user session
+	 * @param locale The current user locale
 	 */
-	public GUIParameter[][] getStatistics(String sid) throws InvalidSessionException;
+	public GUIParameter[][] getStatistics(String sid, String locale) throws InvalidSessionException;
 
 	/**
 	 * Performs a search over the last changes.
@@ -52,8 +53,9 @@ public interface SystemService extends RemoteService {
 	 * Retrieves all tasks.
 	 * 
 	 * @param sid The current user session
+	 * @param locale The current user locale
 	 */
-	public GUITask[] loadTasks(String sid) throws InvalidSessionException;
+	public GUITask[] loadTasks(String sid, String locale) throws InvalidSessionException;
 
 	/**
 	 * Starts the task execution.
@@ -73,8 +75,12 @@ public interface SystemService extends RemoteService {
 
 	/**
 	 * Retrieves a specific task by its name
+	 * 
+	 * @param sid The current user session
+	 * @param taskName The task name
+	 * @param locale The current user locale
 	 */
-	public GUITask getTaskByName(String sid, String taskName) throws InvalidSessionException;
+	public GUITask getTaskByName(String sid, String taskName, String locale) throws InvalidSessionException;
 
 	/**
 	 * Enables the task.
@@ -99,7 +105,8 @@ public interface SystemService extends RemoteService {
 	 * 
 	 * @param sid The current user session
 	 * @param task The task to be saved
+	 * @param locale The current user locale
 	 * @return True, if the task is correctly saved.
 	 */
-	public GUITask saveTask(String sid, GUITask task) throws InvalidSessionException;
+	public GUITask saveTask(String sid, GUITask task, String locale) throws InvalidSessionException;
 }

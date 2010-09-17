@@ -189,13 +189,13 @@ public class TasksPanel extends VLayout {
 	}
 
 	private void reload() {
-		if (list != null){
+		if (list != null) {
 			results.removeMember(list);
-		    list.clear();
-		    list.invalidateCache();
-		    list.destroy();
+			list.clear();
+			list.invalidateCache();
+			list.destroy();
 		}
-		
+
 		list = new ListGrid();
 
 		list.setShowRecordComponents(true);
@@ -263,7 +263,7 @@ public class TasksPanel extends VLayout {
 		list.setDataSource(new TasksDS());
 
 		results.addMember(list, 1);
-		
+
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
@@ -277,7 +277,7 @@ public class TasksPanel extends VLayout {
 			public void onSelectionChanged(SelectionEvent event) {
 				ListGridRecord record = list.getSelectedRecord();
 				if (record != null)
-					service.getTaskByName(Session.get().getSid(), record.getAttribute("name"),
+					service.getTaskByName(Session.get().getSid(), record.getAttribute("name"), I18N.getLocale(),
 							new AsyncCallback<GUITask>() {
 								@Override
 								public void onFailure(Throwable caught) {
