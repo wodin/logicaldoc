@@ -39,7 +39,7 @@ public class GeneralPanel extends VLayout {
 				Label lastUpdateLabel = new Label("<b>"
 						+ I18N.message("statisticslastupdate", parameters[3][0].getValue()) + "</b>");
 				lastUpdateLabel.setShowEdges(false);
-				lastUpdateLabel.setHeight(50);
+				lastUpdateLabel.setHeight(30);
 				lastUpdateLabel.setAlign(Alignment.RIGHT);
 
 				PieStats charts = new PieStats(parameters);

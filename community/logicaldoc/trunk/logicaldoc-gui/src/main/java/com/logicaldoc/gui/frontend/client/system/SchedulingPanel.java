@@ -184,6 +184,7 @@ public class SchedulingPanel extends VLayout {
 
 		IButton restoreDefaults = new IButton();
 		restoreDefaults.setTitle(I18N.message("restoredefaults"));
+		restoreDefaults.setWidth(150);
 		restoreDefaults.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				final Map<String, Object> values = vm.getValues();
