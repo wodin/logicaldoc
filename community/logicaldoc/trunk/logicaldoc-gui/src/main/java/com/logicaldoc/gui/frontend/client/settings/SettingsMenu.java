@@ -48,6 +48,10 @@ public class SettingsMenu extends VLayout {
 		parameters.setWidth100();
 		parameters.setHeight(25);
 
+		Button proxy = new Button(I18N.message("proxy"));
+		proxy.setWidth100();
+		proxy.setHeight(25);
+
 		Button email = new Button(I18N.message("email"));
 		email.setWidth100();
 		email.setHeight(25);
@@ -69,6 +73,7 @@ public class SettingsMenu extends VLayout {
 		}
 
 		addMember(email);
+		addMember(proxy);
 		addMember(parameters);
 
 		customid.addClickHandler(new ClickHandler() {
@@ -152,6 +157,24 @@ public class SettingsMenu extends VLayout {
 						AdminPanel.get().setContent(new EmailPanel(settings));
 					}
 
+				});
+			}
+		});
+
+		proxy.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				service.loadProxySettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUIParameter[] settings) {
+						AdminPanel.get().setContent(new ProxyPanel(settings));
+					}
 				});
 			}
 		});

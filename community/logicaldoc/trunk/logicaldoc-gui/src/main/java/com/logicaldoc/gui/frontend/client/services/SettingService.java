@@ -47,12 +47,11 @@ public interface SettingService extends RemoteService {
 	 */
 	public GUIParameter[] loadFolders(String sid) throws InvalidSessionException;
 
-	
 	/**
 	 * Saves folders path
 	 */
 	public void saveFolders(String sid, GUIParameter[] folders) throws InvalidSessionException;
-	
+
 	/**
 	 * Saves email settings (SMTP connection)
 	 */
@@ -67,4 +66,14 @@ public interface SettingService extends RemoteService {
 	 * @throws InvalidSessionException
 	 */
 	public String[] loadValues(String sid, String[] names) throws InvalidSessionException;
+
+	/**
+	 * Load the proxy setting
+	 */
+	public GUIParameter[] loadProxySettings(String sid) throws InvalidSessionException;
+
+	/**
+	 * Saves proxy setting
+	 */
+	public void saveProxySettings(String sid, GUIParameter[] proxySettings) throws InvalidSessionException;
 }

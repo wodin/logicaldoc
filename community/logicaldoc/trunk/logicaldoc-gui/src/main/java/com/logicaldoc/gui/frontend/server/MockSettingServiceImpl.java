@@ -79,7 +79,7 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 	public String[] loadValues(String sid, String[] names) throws InvalidSessionException {
 		String values[] = new String[names.length];
 		for (int i = 0; i < names.length; i++) {
-			values[i]=names[i]+1;
+			values[i] = names[i] + 1;
 		}
 		return values;
 	}
@@ -87,20 +87,35 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 	@Override
 	public GUIParameter[] loadFolders(String sid) throws InvalidSessionException {
 		GUIParameter[] params = new GUIParameter[8];
-	    params[0] = new GUIParameter("dbdir", "db");
-	    params[1] = new GUIParameter("docdir", "docs");
-	    params[2] = new GUIParameter("exportdir", "export");
-	    params[3] = new GUIParameter("importdir", "import");
-	    params[4] = new GUIParameter("indexdir", "index");
-	    params[5] = new GUIParameter("logdir", "log");
-	    params[6] = new GUIParameter("plugindir", "plugin");
-	    params[7] = new GUIParameter("userdir", "user");
-		
-	    return params;
+		params[0] = new GUIParameter("dbdir", "db");
+		params[1] = new GUIParameter("docdir", "docs");
+		params[2] = new GUIParameter("exportdir", "export");
+		params[3] = new GUIParameter("importdir", "import");
+		params[4] = new GUIParameter("indexdir", "index");
+		params[5] = new GUIParameter("logdir", "log");
+		params[6] = new GUIParameter("plugindir", "plugin");
+		params[7] = new GUIParameter("userdir", "user");
+
+		return params;
 	}
-	
+
 	@Override
 	public void saveFolders(String sid, GUIParameter[] folders) throws InvalidSessionException {
 
+	}
+
+	@Override
+	public GUIParameter[] loadProxySettings(String sid) throws InvalidSessionException {
+		GUIParameter[] params = new GUIParameter[8];
+		params[0] = new GUIParameter("host", "host");
+		params[1] = new GUIParameter("port", "8080");
+		params[2] = new GUIParameter("username", "john");
+		params[3] = new GUIParameter("password", "scott");
+
+		return params;
+	}
+
+	@Override
+	public void saveProxySettings(String sid, GUIParameter[] proxySettings) throws InvalidSessionException {
 	}
 }
