@@ -1,6 +1,8 @@
 package com.logicaldoc.web.service;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,8 +25,8 @@ import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIScheduling;
 import com.logicaldoc.gui.common.client.beans.GUITask;
-import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
+import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.sql.SqlUtil;
 import com.logicaldoc.web.util.SessionUtil;
@@ -92,7 +94,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public GUIParameter[][] getStatistics(String sid) throws InvalidSessionException {
+	public GUIParameter[][] getStatistics(String sid, String locale) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 		GenericDAO genDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
 
@@ -224,9 +226,17 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			 * Last run
 			 */
 			gen = genDao.findByAlternateKey(StatsCollector.STAT, "lastrun");
+
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = gen != null ? df.parse(gen.getString1()) : null;
 			GUIParameter lastrun = new GUIParameter();
 			lastrun.setName("lastrun");
-			lastrun.setValue(gen != null ? gen.getString1() : "");
+			if (date != null) {
+				DateFormat df2 = new SimpleDateFormat(I18N.message("format_date", locale));
+				lastrun.setValue(df2.format(date));
+			} else {
+				lastrun.setValue("");
+			}
 			parameters[3][0] = lastrun;
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
@@ -236,7 +246,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public GUITask getTaskByName(String sid, String taskName) throws InvalidSessionException {
+	public GUITask getTaskByName(String sid, String taskName, String locale) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		TaskManager manager = (TaskManager) Context.getInstance().getBean(TaskManager.class);
@@ -265,8 +275,9 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 					scheduling.setSimple(true);
 					scheduling.setDelay(tsk.getScheduling().getDelaySeconds());
 					scheduling.setInterval(tsk.getScheduling().getIntervalSeconds());
-					task.setSchedulingLabel(I18N.message("each") + " " + tsk.getScheduling().getIntervalSeconds() + " "
-							+ I18N.message("seconds").toLowerCase());
+					task.setSchedulingLabel(I18N.message("each", locale) + " "
+							+ tsk.getScheduling().getIntervalSeconds() + " "
+							+ I18N.message("seconds", locale).toLowerCase());
 				} else {
 					scheduling.setSimple(false);
 					scheduling.setSeconds(tsk.getScheduling().getSeconds());
@@ -293,7 +304,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public GUITask[] loadTasks(String sid) throws InvalidSessionException {
+	public GUITask[] loadTasks(String sid, String locale) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		if (progress >= 100)
@@ -321,8 +332,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 					scheduling.setSimple(true);
 					scheduling.setDelay(t.getScheduling().getDelay());
 					scheduling.setInterval(t.getScheduling().getIntervalSeconds());
-					task.setSchedulingLabel(I18N.message("each") + " " + t.getScheduling().getIntervalSeconds() + " "
-							+ I18N.message("seconds").toLowerCase());
+					task.setSchedulingLabel(I18N.message("each", locale) + " " + t.getScheduling().getIntervalSeconds()
+							+ " " + I18N.message("seconds", locale).toLowerCase());
 				} else if (t.getScheduling().getMode().equals(TaskTrigger.MODE_CRON)) {
 					scheduling.setSimple(false);
 					scheduling.setSeconds(t.getScheduling().getSeconds());
@@ -354,7 +365,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public GUITask saveTask(String sid, GUITask task) throws InvalidSessionException {
+	public GUITask saveTask(String sid, GUITask task, String locale) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		TaskManager manager = (TaskManager) Context.getInstance().getBean(TaskManager.class);
@@ -375,8 +386,9 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 					tsk.getScheduling().setDelay(task.getScheduling().getDelay() * 1000);
 					tsk.getScheduling().setInterval(task.getScheduling().getInterval() * 1000);
 					tsk.getScheduling().setIntervalSeconds(task.getScheduling().getInterval());
-					task.setSchedulingLabel(I18N.message("each") + " " + tsk.getScheduling().getIntervalSeconds() + " "
-							+ I18N.message("seconds").toLowerCase());
+					task.setSchedulingLabel(I18N.message("each", locale) + " "
+							+ tsk.getScheduling().getIntervalSeconds() + " "
+							+ I18N.message("seconds", locale).toLowerCase());
 				} else {
 					tsk.getScheduling().setMode(TaskTrigger.MODE_CRON);
 					tsk.getScheduling().setSeconds(task.getScheduling().getSeconds());

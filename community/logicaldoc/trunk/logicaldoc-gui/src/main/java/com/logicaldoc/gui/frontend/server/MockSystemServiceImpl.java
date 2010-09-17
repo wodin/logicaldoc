@@ -24,7 +24,7 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 	private static int progress = 0;
 
 	@Override
-	public GUIParameter[][] getStatistics(String sid) {
+	public GUIParameter[][] getStatistics(String sid, String locale) {
 		GUIParameter[][] parameters = new GUIParameter[3][8];
 
 		// This is the correct mode to retrieve the doc dir path, but, for
@@ -240,7 +240,7 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 	}
 
 	@Override
-	public GUITask[] loadTasks(String sid) {
+	public GUITask[] loadTasks(String sid, String locale) {
 		if (progress >= 100)
 			progress = -1;
 		progress++;
@@ -286,7 +286,7 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 	}
 
 	@Override
-	public GUITask getTaskByName(String sid, String taskName) {
+	public GUITask getTaskByName(String sid, String taskName, String locale) {
 		GUITask task = new GUITask();
 
 		task.setName("Task 0");
@@ -307,20 +307,20 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 
 	@Override
 	public boolean disableTask(String sid, String taskName) {
-		GUITask task = getTaskByName(sid, taskName);
+		GUITask task = getTaskByName(sid, taskName, "en");
 		task.getScheduling().setEnabled(false);
 		return true;
 	}
 
 	@Override
 	public boolean enableTask(String sid, String taskName) {
-		GUITask task = getTaskByName(sid, taskName);
+		GUITask task = getTaskByName(sid, taskName, "en");
 		task.getScheduling().setEnabled(true);
 		return true;
 	}
 
 	@Override
-	public GUITask saveTask(String sid, GUITask task) {
+	public GUITask saveTask(String sid, GUITask task, String locale) {
 		if (task.getScheduling().isSimple()) {
 			task.setSchedulingLabel(I18N.message("each") + " " + task.getScheduling().getInterval() + " "
 					+ I18N.message("seconds").toLowerCase());
