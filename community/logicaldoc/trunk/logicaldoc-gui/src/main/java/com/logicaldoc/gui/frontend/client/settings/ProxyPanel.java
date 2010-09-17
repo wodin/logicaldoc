@@ -20,6 +20,8 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.FormItem;
+import com.smartgwt.client.widgets.form.fields.IntegerItem;
+import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
@@ -59,10 +61,24 @@ public class ProxyPanel extends VLayout {
 		List<FormItem> items = new ArrayList<FormItem>();
 
 		for (GUIParameter f : parameters) {
-			TextItem item = ItemFactory.newTextItem(f.getName(), f.getName(), f.getValue());
-			item.setRequired(true);
-			item.setWidth(250);
-			items.add(item);
+			if (f.getName().equals("password")) {
+				PasswordItem item = ItemFactory.newPasswordItem(f.getName(), f.getName(), f.getValue());
+				item.setRequired(true);
+				item.setWidth(250);
+				items.add(item);
+			} else if (f.getName().equals("port")) {
+				IntegerItem item = ItemFactory.newValidateIntegerItem(f.getName(), f.getName(),
+						Integer.parseInt(f.getValue()), 1, null);
+				item.setRequired(true);
+				item.setWidth(250);
+				items.add(item);
+			} else {
+				TextItem item = ItemFactory.newTextItem(f.getName(), f.getName(), f.getValue());
+				item.setRequired(true);
+				item.setWidth(250);
+				items.add(item);
+			}
+
 		}
 
 		proxySettingsForm.setItems(items.toArray(new FormItem[0]));
@@ -76,7 +92,7 @@ public class ProxyPanel extends VLayout {
 				if (vm.validate()) {
 					List<GUIParameter> proxySettings = new ArrayList<GUIParameter>();
 					for (String name : values.keySet()) {
-						GUIParameter proxyParam = new GUIParameter(name, (String) values.get(name));
+						GUIParameter proxyParam = new GUIParameter(name, values.get(name).toString());
 						proxySettings.add(proxyParam);
 					}
 
