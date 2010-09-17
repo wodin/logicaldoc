@@ -226,7 +226,6 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			 * Last run
 			 */
 			gen = genDao.findByAlternateKey(StatsCollector.STAT, "lastrun");
-
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = gen != null ? df.parse(gen.getString1()) : null;
 			GUIParameter lastrun = new GUIParameter();
