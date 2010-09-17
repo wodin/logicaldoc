@@ -25,4 +25,8 @@ public interface SettingServiceAsync {
 	void loadFolders(String sid, AsyncCallback<GUIParameter[]> callback);
 
 	void saveFolders(String sid, GUIParameter[] folders, AsyncCallback<Void> callback);
+
+	void loadProxySettings(String sid, AsyncCallback<GUIParameter[]> callback);
+
+	void saveProxySettings(String sid, GUIParameter[] proxySettings, AsyncCallback<Void> callback);
 }

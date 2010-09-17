@@ -96,7 +96,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.startsWith("ldap") || name.startsWith("schedule") || name.startsWith("smtp")
 					|| name.startsWith("gui") || name.startsWith("password") || name.startsWith("ad")
 					|| name.startsWith("webservice") || name.startsWith("webdav") || name.startsWith("runlevel")
-					|| name.startsWith("stat") || name.startsWith("index"))
+					|| name.startsWith("stat") || name.startsWith("index") || name.startsWith("proxy"))
 				continue;
 
 			sortedSet.add(key.toString());
@@ -195,21 +195,23 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public GUIParameter[] loadFolders(String sid) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+		
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 		GUIParameter[] params = new GUIParameter[8];
-	    params[0] = new GUIParameter("dbdir", conf.getProperty("conf.dbdir"));
-	    params[1] = new GUIParameter("docdir", conf.getProperty("conf.docdir"));
-	    params[2] = new GUIParameter("exportdir", conf.getProperty("conf.exportdir"));
-	    params[3] = new GUIParameter("importdir", conf.getProperty("conf.importdir"));
-	    params[4] = new GUIParameter("indexdir", conf.getProperty("conf.indexdir"));
-	    params[5] = new GUIParameter("logdir", conf.getProperty("conf.logdir"));
-	    params[6] = new GUIParameter("plugindir", conf.getProperty("conf.plugindir"));
-	    params[7] = new GUIParameter("userdir", conf.getProperty("conf.userdir"));
-		
-	    return params;
+		params[0] = new GUIParameter("dbdir", conf.getProperty("conf.dbdir"));
+		params[1] = new GUIParameter("docdir", conf.getProperty("conf.docdir"));
+		params[2] = new GUIParameter("exportdir", conf.getProperty("conf.exportdir"));
+		params[3] = new GUIParameter("importdir", conf.getProperty("conf.importdir"));
+		params[4] = new GUIParameter("indexdir", conf.getProperty("conf.indexdir"));
+		params[5] = new GUIParameter("logdir", conf.getProperty("conf.logdir"));
+		params[6] = new GUIParameter("plugindir", conf.getProperty("conf.plugindir"));
+		params[7] = new GUIParameter("userdir", conf.getProperty("conf.userdir"));
+
+		return params;
 	}
-	
+
 	@Override
 	public void saveFolders(String sid, GUIParameter[] folders) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
@@ -217,7 +219,36 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		try {
 			for (GUIParameter f : folders) {
-				conf.setProperty("conf."+f.getName(), f.getValue());
+				conf.setProperty("conf." + f.getName(), f.getValue());
+			}
+			conf.write();
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+
+	public GUIParameter[] loadProxySettings(String sid) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+		
+		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+
+		GUIParameter[] params = new GUIParameter[4];
+		params[0] = new GUIParameter("host", conf.getProperty("proxy.host"));
+		params[1] = new GUIParameter("port", conf.getProperty("proxy.port"));
+		params[2] = new GUIParameter("username", conf.getProperty("proxy.username"));
+		params[3] = new GUIParameter("password", conf.getProperty("proxy.password"));
+
+		return params;
+	}
+
+	@Override
+	public void saveProxySettings(String sid, GUIParameter[] proxySettings) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		try {
+			for (GUIParameter f : proxySettings) {
+				conf.setProperty("proxy." + f.getName(), f.getValue());
 			}
 			conf.write();
 		} catch (IOException e) {
