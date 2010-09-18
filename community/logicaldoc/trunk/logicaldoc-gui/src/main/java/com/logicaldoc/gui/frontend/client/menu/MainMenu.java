@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.menu;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -39,6 +40,8 @@ public class MainMenu extends ToolStrip {
 			menu = getToolsMenu();
 			addMenuButton(menu);
 		}
+
+		addMenuButton(getHelpMenu());
 
 		addFill();
 		addSeparator();
@@ -124,6 +127,35 @@ public class MainMenu extends ToolStrip {
 		menu.setItems(profile, changePswd);
 
 		ToolStripMenuButton menuButton = new ToolStripMenuButton(I18N.message("personal"), menu);
+		menuButton.setWidth(100);
+		return menuButton;
+	}
+
+	private ToolStripMenuButton getHelpMenu() {
+		Menu menu = new Menu();
+		menu.setShowShadow(true);
+		menu.setShadowDepth(3);
+
+		MenuItem onlineHelp = new MenuItem(I18N.message("documentation"));
+		onlineHelp.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				Window.open(Session.get().getInfo().getHelp(), "_blank",
+						"location=0,status=0,toolbar=0,menubar=0,width=600,height=400");
+			}
+		});
+
+		MenuItem about = new MenuItem(I18N.message("about") + " " + Session.get().getInfo().getProductName());
+		about.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				AboutDialog dialog=new AboutDialog();
+				dialog.show();
+			}
+		});
+		menu.setItems(onlineHelp, about);
+
+		ToolStripMenuButton menuButton = new ToolStripMenuButton(I18N.message("help"), menu);
 		menuButton.setWidth(100);
 		return menuButton;
 	}

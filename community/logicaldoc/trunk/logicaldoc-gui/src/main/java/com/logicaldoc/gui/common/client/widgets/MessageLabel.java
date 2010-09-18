@@ -19,9 +19,9 @@ public class MessageLabel extends Label {
 		super(message.getMessage());
 		setHeight(25);
 		setWrap(false);
-		if (message.getPriority() == 1)
+		if (message.getPriority() == GUIMessage.PRIO_INFO)
 			setIcon("[SKIN]/Dialog/notify.png");
-		else
+		else if (message.getPriority() == GUIMessage.PRIO_WARN)
 			setIcon("[SKIN]/Dialog/warn.png");
 		if (message.getUrl() != null) {
 			setCursor(Cursor.HAND);

@@ -9,16 +9,19 @@ import java.io.Serializable;
  * @since 6.0
  */
 public class GUIMessage implements Serializable {
+	public final static int PRIO_WARN = 2;
+
+	public final static int PRIO_INFO = 1;
 
 	private static final long serialVersionUID = 1L;
 
 	long id;
-	
+
 	private String message;
 
-	private String url=null;
+	private String url = null;
 
-	private int priority;
+	private int priority = PRIO_WARN;
 
 	private String recipient;
 
@@ -28,14 +31,14 @@ public class GUIMessage implements Serializable {
 
 	private Integer validity;
 
-	
-	public GUIMessage(){
+	public GUIMessage() {
 	}
-	
-	public GUIMessage(String message){
-		this.message=message;
+
+	public GUIMessage(String message, int priority) {
+		this.message = message;
+		this.priority = priority;
 	}
-	
+
 	public String getMessage() {
 		return message;
 	}
