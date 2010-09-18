@@ -352,9 +352,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				archiveDematerialization.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
-
-		addSeparator();
-
+		
 		if (Feature.visible(Feature.WORKFLOW)) {
 			addSeparator();
 			addButton(startWorkflow);

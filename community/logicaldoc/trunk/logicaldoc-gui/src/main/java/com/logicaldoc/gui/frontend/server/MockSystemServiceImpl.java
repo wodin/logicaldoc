@@ -25,7 +25,7 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 
 	@Override
 	public GUIParameter[][] getStatistics(String sid, String locale) {
-		GUIParameter[][] parameters = new GUIParameter[3][8];
+		GUIParameter[][] parameters = new GUIParameter[4][8];
 
 		// This is the correct mode to retrieve the doc dir path, but, for
 		// now,
@@ -209,6 +209,11 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 		deletedFolders.setValue(Long.toString(15));
 		parameters[2][2] = deletedFolders;
 
+		GUIParameter lastupdate = new GUIParameter();
+		lastupdate.setName("lastupdate");
+		lastupdate.setValue("01/01/2011");
+		parameters[3][0]=lastupdate;
+		
 		return parameters;
 	}
 

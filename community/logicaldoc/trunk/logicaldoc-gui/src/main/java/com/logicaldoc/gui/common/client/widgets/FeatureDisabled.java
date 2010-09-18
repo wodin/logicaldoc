@@ -21,10 +21,11 @@ public class FeatureDisabled extends VLayout {
 	public FeatureDisabled(Integer feature) {
 		Label label = null;
 		if (feature == null)
-			label = new MessageLabel(new GUIMessage("<b>" + I18N.message("featuredisabled") + "</b>"));
+			label = new MessageLabel(new GUIMessage("<b>" + I18N.message("featuredisabled") + "</b>",
+					GUIMessage.PRIO_WARN));
 		else
 			label = new MessageLabel(new GUIMessage("<b>" + I18N.message("feature_" + feature) + " "
-					+ I18N.message("disabled") + "</b>"));
+					+ I18N.message("disabled") + "</b>", GUIMessage.PRIO_WARN));
 		new Label();
 		label.setHeight(30);
 		label.setPadding(10);

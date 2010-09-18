@@ -97,10 +97,10 @@ public class ValidationTab extends Tab {
 
 		GUIMessage message = null;
 		if (showList) {
-			message = new GUIMessage("<b>" + I18N.message("sostaction.failed") + "</b>");
+			message = new GUIMessage("<b>" + I18N.message("sostaction.failed") + "</b>", GUIMessage.PRIO_WARN);
 			message.setPriority(2);
 		} else {
-			message = new GUIMessage("<b>" + I18N.message("sostaction.success") + "</b>");
+			message = new GUIMessage("<b>" + I18N.message("sostaction.success") + "</b>", GUIMessage.PRIO_WARN);
 			message.setPriority(1);
 		}
 		validationResult = new MessageLabel(message);
