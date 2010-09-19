@@ -469,16 +469,6 @@
     <url-pattern>/log</url-pattern>
   </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>MockServlet</servlet-name>
-    <url-pattern>/convertpdf</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>MockServlet</servlet-name>
-    <url-pattern>/doc_rss</url-pattern>
-  </servlet-mapping>
-
   <!-- Welcome files -->
   <welcome-file-list>
     <welcome-file>frontend.jsp</welcome-file>
