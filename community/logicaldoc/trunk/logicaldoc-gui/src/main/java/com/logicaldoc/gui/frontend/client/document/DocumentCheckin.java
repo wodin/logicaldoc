@@ -1,8 +1,8 @@
 package com.logicaldoc.gui.frontend.client.document;
 
+import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
 import gwtupload.client.MultiUploader;
-import gwtupload.client.IUploadStatus.Status;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
