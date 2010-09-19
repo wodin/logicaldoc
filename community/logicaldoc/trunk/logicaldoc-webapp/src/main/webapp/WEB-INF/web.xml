@@ -232,7 +232,7 @@
 
   <servlet>
     <servlet-name>Thumbnail</servlet-name>
-    <servlet-class>com.logicaldoc.gui.common.server.MockThumbnailServlet</servlet-class>
+    <servlet-class>com.logicaldoc.web.DocumentPreview</servlet-class>
   </servlet>
 
   <servlet>
