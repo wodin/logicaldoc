@@ -19,6 +19,8 @@ import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.util.ValueCallback;
+import com.smartgwt.client.widgets.Dialog;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.events.CellClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellClickHandler;
@@ -222,7 +224,7 @@ public class FoldersNavigator extends TreeGrid {
 		audit.setTitle(I18N.message("subscribe"));
 		audit.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				SubscriptionDialog dialog=new SubscriptionDialog(id);
+				SubscriptionDialog dialog = new SubscriptionDialog(id);
 				dialog.show();
 			}
 		});
@@ -339,35 +341,47 @@ public class FoldersNavigator extends TreeGrid {
 	}
 
 	private void onCreate() {
-		TreeNode selectedNode = (TreeNode) getSelectedRecord();
-		GUIFolder data = new GUIFolder();
-		data.setName(I18N.message("newfolder"));
-		data.setParentId(Long.parseLong(selectedNode.getAttributeAsString("id")));
-		data.setDescription("");
+		Dialog dialog = new Dialog();
+		dialog.setWidth(200);
 
-		service.save(Session.get().getSid(), data, new AsyncCallback<GUIFolder>() {
+		SC.askforValue(I18N.message("newfolder"), I18N.message("newfoldername"), I18N.message("newfolder"),
+				new ValueCallback() {
+					@Override
+					public void execute(String value) {
+						if (value == null || "".equals(value.trim()))
+							return;
 
-			@Override
-			public void onFailure(Throwable caught) {
-				Log.serverError(caught);
-			}
+						TreeNode selectedNode = (TreeNode) getSelectedRecord();
+						final GUIFolder data = new GUIFolder();
+						data.setName(value);
+						data.setParentId(Long.parseLong(selectedNode.getAttributeAsString("id")));
+						data.setDescription("");
 
-			@Override
-			public void onSuccess(GUIFolder newFolder) {
-				TreeNode selectedNode = (TreeNode) getSelectedRecord();
-				TreeNode newNode = new TreeNode(newFolder.getName());
-				newNode.setAttribute("name", newFolder.getName());
-				newNode.setAttribute("id", Long.toString(newFolder.getId()));
+						service.save(Session.get().getSid(), data, new AsyncCallback<GUIFolder>() {
 
-				if (!getTree().isOpen(selectedNode)) {
-					getTree().openFolder(selectedNode);
-				}
-				getTree().add(newNode, selectedNode);
-				selectRecord(newNode);
-				newFolder.setPathExtended(getPath(newFolder.getId()));
-				Session.get().setCurrentFolder(newFolder);
-			}
-		});
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUIFolder newFolder) {
+								TreeNode selectedNode = (TreeNode) getSelectedRecord();
+								TreeNode newNode = new TreeNode(newFolder.getName());
+								newNode.setAttribute("name", newFolder.getName());
+								newNode.setAttribute("id", Long.toString(newFolder.getId()));
+
+								if (!getTree().isOpen(selectedNode)) {
+									getTree().openFolder(selectedNode);
+								}
+								getTree().add(newNode, selectedNode);
+								//selectRecord(newNode);
+							    //newFolder.setPathExtended(getPath(newFolder.getId()));
+								//Session.get().setCurrentFolder(newFolder);
+							}
+						});
+					}
+				}, dialog);
 	}
 
 	private void onPaste() {
