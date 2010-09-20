@@ -47,9 +47,9 @@ public class UploadServlet extends UploadAction {
 	public String executeAction(HttpServletRequest request, List<FileItem> sessionFiles) throws UploadActionException {
 		try {
 			HttpSession session = SessionFilter.getServletSession(request.getParameter("sid"));
-			if(session==null)
-				session=request.getSession();
-			
+			if (session == null)
+				session = request.getSession();
+
 			/**
 			 * Maintain a list with received files and their content types
 			 */
@@ -59,15 +59,13 @@ public class UploadServlet extends UploadAction {
 				session.setAttribute(RECEIVEDFILES, receivedFiles);
 			}
 
-			Map<String, String> receivedContentTypes = (Map<String, String>) session.getAttribute(
-					RECEIVEDCONTENTTYPES);
+			Map<String, String> receivedContentTypes = (Map<String, String>) session.getAttribute(RECEIVEDCONTENTTYPES);
 			if (receivedContentTypes == null) {
 				receivedContentTypes = new Hashtable<String, String>();
 				session.setAttribute(RECEIVEDCONTENTTYPES, receivedContentTypes);
 			}
 
-			Map<String, String> receivedFileNames = (Map<String, String>) session.getAttribute(
-					RECEIVEDFILENAMES);
+			Map<String, String> receivedFileNames = (Map<String, String>) session.getAttribute(RECEIVEDFILENAMES);
 			if (receivedFileNames == null) {
 				receivedFileNames = new Hashtable<String, String>();
 				session.setAttribute(RECEIVEDFILENAMES, receivedFileNames);
@@ -123,10 +121,9 @@ public class UploadServlet extends UploadAction {
 	@Override
 	public void removeItem(HttpServletRequest request, String fieldName) throws UploadActionException {
 		HttpSession session = SessionFilter.getServletSession(request.getParameter("sid"));
-		if(session==null)
-			session=request.getSession();
-		
-		
+		if (session == null)
+			session = request.getSession();
+
 		Map<String, File> receivedFiles = (Map<String, File>) session.getAttribute(RECEIVEDFILES);
 		if (receivedFiles == null || !receivedFiles.containsKey(fieldName))
 			return;
@@ -136,14 +133,12 @@ public class UploadServlet extends UploadAction {
 		if (file != null && file.exists())
 			file.delete();
 
-		Map<String, String> receivedContentTypes = (Map<String, String>) session.getAttribute(
-				RECEIVEDCONTENTTYPES);
+		Map<String, String> receivedContentTypes = (Map<String, String>) session.getAttribute(RECEIVEDCONTENTTYPES);
 		if (receivedContentTypes == null || !receivedContentTypes.containsKey(fieldName))
 			return;
 		receivedContentTypes.remove(fieldName);
 
-		Map<String, String> receivedFileNames = (Map<String, String>) session.getAttribute(
-				RECEIVEDFILENAMES);
+		Map<String, String> receivedFileNames = (Map<String, String>) session.getAttribute(RECEIVEDFILENAMES);
 		if (receivedFileNames == null || !receivedFileNames.containsKey(fieldName))
 			return;
 		receivedFileNames.remove(fieldName);
@@ -158,10 +153,9 @@ public class UploadServlet extends UploadAction {
 		String fieldName = request.getParameter(PARAM_SHOW);
 
 		HttpSession session = SessionFilter.getServletSession(request.getParameter("sid"));
-		if(session==null)
-			session=request.getSession();
-		
-		
+		if (session == null)
+			session = request.getSession();
+
 		Map<String, File> receivedFiles = (Map<String, File>) session.getAttribute(RECEIVEDFILES);
 
 		if (receivedFiles == null || !receivedFiles.containsKey(fieldName))
@@ -169,8 +163,7 @@ public class UploadServlet extends UploadAction {
 
 		File f = receivedFiles.get(fieldName);
 		if (f != null) {
-			Map<String, String> receivedContentTypes = (Map<String, String>) session.getAttribute(
-					RECEIVEDCONTENTTYPES);
+			Map<String, String> receivedContentTypes = (Map<String, String>) session.getAttribute(RECEIVEDCONTENTTYPES);
 
 			if (receivedContentTypes != null && receivedContentTypes.containsKey(fieldName))
 				response.setContentType(receivedContentTypes.get(fieldName));
@@ -184,8 +177,8 @@ public class UploadServlet extends UploadAction {
 	@SuppressWarnings("unchecked")
 	public static Map<String, File> getReceivedFiles(HttpServletRequest request, String sid) {
 		HttpSession session = SessionFilter.getServletSession(sid);
-		if(session==null)
-			session=request.getSession();
+		if (session == null)
+			session = request.getSession();
 
 		Map<String, File> receivedFiles = (Map<String, File>) session.getAttribute(RECEIVEDFILES);
 
@@ -197,11 +190,10 @@ public class UploadServlet extends UploadAction {
 	@SuppressWarnings("unchecked")
 	public static Map<String, String> getReceivedFileNames(HttpServletRequest request, String sid) {
 		HttpSession session = SessionFilter.getServletSession(sid);
-		if(session==null)
-			session=request.getSession();
-		
-		Map<String, String> receivedFileNames = (Map<String, String>) session.getAttribute(
-				RECEIVEDFILENAMES);
+		if (session == null)
+			session = request.getSession();
+
+		Map<String, String> receivedFileNames = (Map<String, String>) session.getAttribute(RECEIVEDFILENAMES);
 
 		session.setAttribute(RECEIVEDFILENAMES, new Hashtable<String, String>());
 		return receivedFileNames;
