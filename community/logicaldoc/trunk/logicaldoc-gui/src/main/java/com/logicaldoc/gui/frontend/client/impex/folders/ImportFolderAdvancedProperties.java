@@ -87,7 +87,7 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 		Map<String, Object> values = (Map<String, Object>) form.getValues();
 		form.validate();
 		if (!form.hasErrors()) {
-			if(values.get("sizemax")==null)
+			if (values.get("sizemax") == null)
 				share.setMaxSize(null);
 			else if (values.get("sizemax") instanceof Integer)
 				share.setMaxSize((Integer) form.getValue("sizemax"));
@@ -102,7 +102,8 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 			else
 				share.setTemplateId(Long.parseLong((String) values.get("template")));
 			share.setDelImport((Boolean) values.get("delImport"));
-			share.setTags((String) values.get("tags"));
+			if (values.get("tags") == null || "".equals((String) values.get("tags")))
+				share.setTags((String) values.get("tags"));
 		}
 		return !form.hasErrors();
 	}
