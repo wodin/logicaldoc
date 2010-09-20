@@ -121,7 +121,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			// create new version
 			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
 					Version.EVENT_CHECKIN, release);
-			if (documentDAO.store(document) == false)
+			if (documentDAO.store(document, transaction) == false)
 				throw new Exception();
 
 			// Store the version
