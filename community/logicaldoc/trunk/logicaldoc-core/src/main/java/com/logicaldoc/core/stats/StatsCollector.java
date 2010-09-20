@@ -252,7 +252,6 @@ public class StatsCollector extends Task {
 
 			log.info("Statistics sent");
 		} catch (Throwable t) {
-			t.printStackTrace();
 			log.error("Unable to send statistics", t);
 		}
 	}
