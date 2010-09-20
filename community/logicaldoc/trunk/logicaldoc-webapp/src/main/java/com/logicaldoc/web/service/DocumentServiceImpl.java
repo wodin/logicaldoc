@@ -639,6 +639,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			transaction.setSessionId(sid);
 			transaction.setEvent(History.EVENT_LOCKED);
 			transaction.setUser(SessionUtil.getSessionUser(sid));
+			transaction.setComment(comment);
 			for (long id : docIds) {
 				documentManager.lock(id, Document.DOC_LOCKED, transaction);
 			}
@@ -935,8 +936,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				HttpServletRequest request = this.getThreadLocalRequest();
 				String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":"
 						+ request.getServerPort() + request.getContextPath();
-				String address = urlPrefix + "/download-ticket?ticketId=" + ticketid;
-				mail.setMessageText(email.getMessage() + "URL: " + address);
+				String address = urlPrefix + "/download-ticket?sid=" + sid + "&ticketId=" + ticketid;
+				mail.setMessageText(email.getMessage() + "\nURL: " + address);
 			}
 
 			try {
