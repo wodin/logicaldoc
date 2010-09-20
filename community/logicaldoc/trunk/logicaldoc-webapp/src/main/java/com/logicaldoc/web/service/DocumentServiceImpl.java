@@ -210,16 +210,18 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
 		File file = uploadedFilesMap.values().iterator().next();
 		if (file != null) {
-			log.debug("Checking in file " + file.getName());
-
 			// check that we have a valid file for storing as new
 			// version
-			String fileName = file.getName();
+			Map<String, String> uploadedFileNames = UploadServlet.getReceivedFileNames(getThreadLocalRequest(), sid);
+			String fileName = uploadedFileNames.values().iterator().next();
+			
+			log.debug("Checking in file " + fileName);
 
 			try {
 				// Create the document history event
 				History transaction = new History();
 				transaction.setSessionId(sid);
+				transaction.setEvent(History.EVENT_CHECKEDIN);
 				transaction.setUser(SessionUtil.getSessionUser(sid));
 				transaction.setComment(comment);
 
@@ -861,7 +863,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					History transaction = new History();
 					transaction.setSessionId(sid);
 					transaction.setEvent(History.EVENT_CHANGED);
-					transaction.setComment("");
+					transaction.setComment(document.getVersionComment());
 					transaction.setUser(SessionUtil.getSessionUser(sid));
 
 					DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
