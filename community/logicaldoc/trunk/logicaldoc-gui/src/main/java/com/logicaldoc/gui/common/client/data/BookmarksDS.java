@@ -22,7 +22,7 @@ public class BookmarksDS extends DataSource {
 		return instance;
 	}
 
-	private BookmarksDS() {
+	public BookmarksDS() {
 		setTitleField("name");
 		setRecordXPath("/list/bookmark");
 		DataSourceTextField name = new DataSourceTextField("name");
