@@ -11,7 +11,6 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
-import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -25,8 +24,6 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
-import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
-import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
@@ -54,13 +51,20 @@ public class BookmarksPanel extends VLayout {
 	private BookmarksPanel() {
 		setMembersMargin(3);
 
+		reloadList();
+	}
+
+	public void reloadList() {
+		if (list != null)
+			removeMember(list);
+
 		ListGridField id = new ListGridField("id");
 		id.setHidden(true);
 
 		LengthRangeValidator validator = new LengthRangeValidator();
 		validator.setMin(1);
 
-		ListGridField name = new ListGridField("name", I18N.message("name"), 80);
+		ListGridField name = new ListGridField("name", I18N.message("name"), 90);
 		name.setCanEdit(true);
 		name.setValidators(validator);
 
@@ -86,7 +90,7 @@ public class BookmarksPanel extends VLayout {
 		list.setHeight100();
 		list.setAutoFetchData(true);
 		list.setFields(icon, name, description);
-		list.setDataSource(BookmarksDS.get());
+		list.setDataSource(new BookmarksDS());
 		list.setShowFilterEditor(true);
 		list.setFilterOnKeypress(true);
 		addMember(list);
@@ -100,7 +104,6 @@ public class BookmarksPanel extends VLayout {
 		});
 
 		list.addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				ListGridRecord record = list.getSelectedRecord();
@@ -109,42 +112,24 @@ public class BookmarksPanel extends VLayout {
 				DocumentsPanel.get().onSelectedDocument(Long.parseLong(record.getAttributeAsString("docId")), false);
 			}
 		});
-
-		list.addEditCompleteHandler(new EditCompleteHandler() {
-			@Override
-			public void onEditComplete(EditCompleteEvent event) {
-				Record record = event.getOldRecord();
-				GUIBookmark bookmark = new GUIBookmark();
-				bookmark.setId(Long.parseLong(record.getAttributeAsString("id")));
-				if (((String) event.getNewValues().get("name")) == null
-						|| ((String) event.getNewValues().get("name")).trim().isEmpty())
-					bookmark.setName(record.getAttributeAsString("name"));
-				else
-					bookmark.setName((String) event.getNewValues().get("name"));
-
-				if (((String) event.getNewValues().get("description")) == null)
-					bookmark.setDescription(record.getAttributeAsString("description"));
-				else
-					bookmark.setDescription((String) event.getNewValues().get("description"));
-
-				docService.updateBookmark(Session.get().getSid(), bookmark, new AsyncCallback<Void>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(Void ret) {
-
-					}
-				});
-			}
-		});
-
 	}
 
 	private void showContextMenu() {
 		Menu contextMenu = new Menu();
+
+		MenuItem edit = new MenuItem();
+		edit.setTitle(I18N.message("edit"));
+		edit.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				ListGridRecord record = list.getSelectedRecord();
+				GUIBookmark bookmark = new GUIBookmark();
+				bookmark.setId(Long.parseLong(record.getAttributeAsString("id")));
+				bookmark.setName(record.getAttributeAsString("name"));
+				bookmark.setDescription(record.getAttributeAsString("description"));
+				BookmarkDialog dialog = new BookmarkDialog(bookmark);
+				dialog.show();
+			}
+		});
 
 		MenuItem download = new MenuItem();
 		download.setTitle(I18N.message("download"));
@@ -202,7 +187,7 @@ public class BookmarksPanel extends VLayout {
 			}
 		});
 
-		contextMenu.setItems(download, delete, openInFolder);
+		contextMenu.setItems(edit, download, delete, openInFolder);
 		contextMenu.showContextMenu();
 	}
 
@@ -212,6 +197,8 @@ public class BookmarksPanel extends VLayout {
 
 	private void download() {
 		String id = list.getSelectedRecord().getAttribute("docId");
-		Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id + "&open=true", "_blank", "");
+		Window.open(
+				GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id + "&open=true",
+				"_blank", "");
 	}
 }
