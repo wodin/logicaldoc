@@ -200,7 +200,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		if (Feature.visible(Feature.PREVIEW)) {
 			if (Feature.enabled(Feature.PREVIEW)) {
-				Image preview = new Image("thumbnail?docId=" + document.getId() + "&versionId=" + document.getVersion());
+				Image preview = new Image("thumbnail?docId=" + document.getId() + "&fileVersion=" + document.getVersion());
 				rightPanel.addMember(preview);
 			} else
 				rightPanel.addMember(new FeatureDisabled());
