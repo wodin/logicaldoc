@@ -214,7 +214,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			// version
 			Map<String, String> uploadedFileNames = UploadServlet.getReceivedFileNames(getThreadLocalRequest(), sid);
 			String fileName = uploadedFileNames.values().iterator().next();
-			
+
 			log.debug("Checking in file " + fileName);
 
 			try {
@@ -936,7 +936,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				HttpServletRequest request = this.getThreadLocalRequest();
 				String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":"
 						+ request.getServerPort() + request.getContextPath();
-				String address = urlPrefix + "/download-ticket?sid=" + sid + "&ticketId=" + ticketid;
+				String address = urlPrefix + "/download-ticket?ticketId=" + ticketid;
 				mail.setMessageText(email.getMessage() + "\nURL: " + address);
 			}
 
