@@ -70,7 +70,7 @@ public class LinksPanel extends DocumentDetailTab {
 		icon.setImageURLSuffix(".png");
 		icon.setCanEdit(false);
 
-		ListGridField title = new ListGridField("title", I18N.message("title"), 200);
+		ListGridField title = new ListGridField("title", I18N.message("title"), 250);
 		title.setCanEdit(false);
 
 		GUIFolder folder = Session.get().getCurrentFolder();

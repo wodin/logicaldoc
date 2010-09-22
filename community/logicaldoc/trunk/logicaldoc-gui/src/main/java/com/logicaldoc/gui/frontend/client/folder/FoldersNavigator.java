@@ -206,8 +206,8 @@ public class FoldersNavigator extends TreeGrid {
 		}
 		rss.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				Window.open(GWT.getHostPageBaseURL() + "folder_rss?sid=" + Session.get().getSid() + "&folderId=" + id,
-						"_blank", "");
+				Window.open(GWT.getHostPageBaseURL() + "folder_rss?sid=" + Session.get().getSid() + "&folderId=" + id
+						+ "&locale=" + I18N.getLocale(), "_blank", "");
 			}
 		});
 
