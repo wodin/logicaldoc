@@ -4,6 +4,7 @@ import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
+import com.logicaldoc.gui.frontend.client.search.TagsForm;
 import com.logicaldoc.gui.frontend.client.workflow.WorkflowDesigner;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -16,11 +17,28 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
  */
-public class MetadataAndWorkflowMenu extends VLayout {
+public class MetadataMenu extends VLayout {
 
-	public MetadataAndWorkflowMenu() {
+	public MetadataMenu() {
 		setMargin(10);
 		setMembersMargin(5);
+
+		Button tags = new Button(I18N.message("tags"));
+		tags.setWidth100();
+		tags.setHeight(25);
+		if (Feature.visible(Feature.TAGS)) {
+			addMember(tags);
+			if (!Feature.enabled(Feature.TAGS)) {
+				tags.setDisabled(true);
+				tags.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+		tags.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new TagsForm(true));
+			}
+		});
 
 		Button templates = new Button(I18N.message("templates"));
 		templates.setWidth100();

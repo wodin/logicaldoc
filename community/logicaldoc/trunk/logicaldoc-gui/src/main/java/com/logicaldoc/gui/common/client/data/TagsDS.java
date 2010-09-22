@@ -16,10 +16,11 @@ public class TagsDS extends DataSource {
 	public TagsDS(String firstLetter) {
 		setTitleField("word");
 		setRecordXPath("/list/tag");
+		DataSourceTextField index = new DataSourceTextField("index");
+		index.setPrimaryKey(true);
 		DataSourceTextField word = new DataSourceTextField("word");
-		word.setPrimaryKey(true);
 		DataSourceTextField count = new DataSourceTextField("count");
-		setFields(word, count);
+		setFields(index, word, count);
 		setDataURL("data/tags.xml?sid=" + Session.get().getSid()
 				+ (firstLetter != null ? "&firstLetter=" + firstLetter.charAt(0) : ""));
 		setClientOnly(true);

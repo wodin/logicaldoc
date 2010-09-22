@@ -33,6 +33,7 @@ public class MockTagsDataServlet extends HttpServlet {
 		writer.write("<list>");
 		for (int i = 0; i < 1000; i++) {
 			writer.print("<tag>");
+			writer.print("<index>" + i + "</index>");
 			if (firstLetter != null) {
 				writer.print("<word>" + firstLetter.charAt(0) + "tag" + i + "</word>");
 				writer.print("<count>" + i + "</count>");

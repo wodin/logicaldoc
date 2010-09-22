@@ -9,8 +9,8 @@ import com.logicaldoc.gui.common.client.beans.GUITag;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.frontend.client.services.SearchService;
-import com.logicaldoc.gui.frontend.client.services.SearchServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.TagService;
+import com.logicaldoc.gui.frontend.client.services.TagServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.DragAppearance;
 import com.smartgwt.client.types.HeaderControls;
@@ -26,7 +26,7 @@ import com.smartgwt.client.widgets.layout.Portlet;
  * @since 6.0
  */
 public class TagCloudPortlet extends Portlet {
-	private SearchServiceAsync service = (SearchServiceAsync) GWT.create(SearchService.class);
+	private TagServiceAsync service = (TagServiceAsync) GWT.create(TagService.class);
 
 	private HLayout container = new HLayout();
 
@@ -39,7 +39,7 @@ public class TagCloudPortlet extends Portlet {
 		setAnimateMinimize(true);
 		setDragAppearance(DragAppearance.OUTLINE);
 		setDragOpacity(30);
-		
+
 		container.setWidth100();
 		container.setHeight100();
 		container.setAlign(Alignment.CENTER);

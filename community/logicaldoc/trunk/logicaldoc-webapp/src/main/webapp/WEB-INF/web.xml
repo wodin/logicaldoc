@@ -126,6 +126,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>TagService</servlet-name>
+    <servlet-class>com.logicaldoc.web.service.TagServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>SettingService</servlet-name>
     <servlet-class>com.logicaldoc.web.service.SettingServiceImpl</servlet-class>
   </servlet>
@@ -337,6 +342,11 @@
   <servlet-mapping>
     <servlet-name>SearchService</servlet-name>
     <url-pattern>/frontend/search</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>TagService</servlet-name>
+    <url-pattern>/frontend/tag</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

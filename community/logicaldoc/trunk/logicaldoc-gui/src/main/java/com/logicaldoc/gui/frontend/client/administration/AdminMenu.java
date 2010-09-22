@@ -6,7 +6,7 @@ import com.logicaldoc.gui.frontend.client.impex.ImpexMenu;
 import com.logicaldoc.gui.frontend.client.security.SecurityMenu;
 import com.logicaldoc.gui.frontend.client.settings.SettingsMenu;
 import com.logicaldoc.gui.frontend.client.system.SystemMenu;
-import com.logicaldoc.gui.frontend.client.template.MetadataAndWorkflowMenu;
+import com.logicaldoc.gui.frontend.client.template.MetadataMenu;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
@@ -41,12 +41,12 @@ public class AdminMenu extends SectionStack {
 		securitySection.addItem(new SecurityMenu());
 		addSection(securitySection);
 
-		if (Feature.visible(Feature.TEMPLATE) || Feature.visible(Feature.WORKFLOW)) {
-			SectionStackSection metadataAndWorkflowSection = new SectionStackSection(
-					I18N.message("metadataandworkflow"));
-			metadataAndWorkflowSection.setExpanded(false);
-			metadataAndWorkflowSection.addItem(new MetadataAndWorkflowMenu());
-			addSection(metadataAndWorkflowSection);
+		if (Feature.visible(Feature.TEMPLATE) || Feature.visible(Feature.WORKFLOW) || Feature.visible(Feature.TAGS)) {
+			SectionStackSection metadataSection = new SectionStackSection(
+					I18N.message("documentmetadata"));
+			metadataSection.setExpanded(false);
+			metadataSection.addItem(new MetadataMenu());
+			addSection(metadataSection);
 		}
 
 		if (Feature.visible(Feature.ARCHIVES)) {
