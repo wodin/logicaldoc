@@ -173,8 +173,8 @@ public class TagsForm extends VLayout {
 							if (value == null || "".equals(value.trim()))
 								return;
 
-						    ListGridRecord selection = tags.getSelectedRecord();
-							tagService.rename(Session.get().getSid(), selection.getAttribute("word"), null,
+							ListGridRecord selection = tags.getSelectedRecord();
+							tagService.rename(Session.get().getSid(), selection.getAttribute("word"), value,
 									new AsyncCallback<Void>() {
 										@Override
 										public void onFailure(Throwable caught) {
@@ -204,7 +204,7 @@ public class TagsForm extends VLayout {
 						public void execute(Boolean value) {
 							if (value) {
 								ListGridRecord selection = tags.getSelectedRecord();
-								tagService.rename(Session.get().getSid(), selection.getAttribute("word"), null,
+								tagService.delete(Session.get().getSid(), selection.getAttribute("word"),
 										new AsyncCallback<Void>() {
 											@Override
 											public void onFailure(Throwable caught) {
