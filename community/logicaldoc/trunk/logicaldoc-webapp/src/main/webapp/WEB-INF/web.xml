@@ -112,7 +112,7 @@
 
   <servlet>
     <servlet-name>GarbageData</servlet-name>
-    <servlet-class>com.logicaldoc.web.service.GarbageDataServlet</servlet-class>
+    <servlet-class>com.logicaldoc.web.data.GarbageDataServlet</servlet-class>
   </servlet>
 
   <servlet>

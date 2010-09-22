@@ -128,6 +128,7 @@ public class DocumentContextMenu extends Menu {
 									}
 									list.removeSelectedData();
 									DocumentsPanel.get().showFolderDetails();
+									DocumentsPanel.get().getDocumentsMenu().refresh("trash");
 								}
 							});
 						}
@@ -382,7 +383,7 @@ public class DocumentContextMenu extends Menu {
 
 					@Override
 					public void onSuccess(Void result) {
-						// DO NOTHING
+						DocumentsPanel.get().getDocumentsMenu().refresh("bookmarks");
 					}
 				});
 			}

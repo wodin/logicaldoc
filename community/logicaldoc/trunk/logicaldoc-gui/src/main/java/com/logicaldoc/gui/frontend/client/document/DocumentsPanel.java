@@ -52,6 +52,10 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 
 	private DocumentsMenu documentsMenu;
 
+	public DocumentsMenu getDocumentsMenu() {
+		return documentsMenu;
+	}
+
 	// The document that must be hilighted
 	private Long hiliteDocId = null;
 

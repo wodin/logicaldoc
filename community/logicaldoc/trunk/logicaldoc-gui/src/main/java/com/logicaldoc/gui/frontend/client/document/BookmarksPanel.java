@@ -48,9 +48,8 @@ public class BookmarksPanel extends VLayout {
 		return instance;
 	}
 
-	private BookmarksPanel() {
+	public BookmarksPanel() {
 		setMembersMargin(3);
-
 		reloadList();
 	}
 
