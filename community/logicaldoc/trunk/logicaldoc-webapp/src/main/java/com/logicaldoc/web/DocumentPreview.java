@@ -33,7 +33,7 @@ public class DocumentPreview extends HttpServlet {
 
 	public static final String DOC_ID = "docId";
 
-	private static final String VERSION_ID = "versionId";
+	private static final String FILE_VERSION = "fileVersion";
 
 	private static final long serialVersionUID = -6956612970433309888L;
 
@@ -58,7 +58,7 @@ public class DocumentPreview extends HttpServlet {
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String id = request.getParameter(DOC_ID);
-		String fileVersion = request.getParameter(VERSION_ID);
+		String fileVersion = request.getParameter(FILE_VERSION);
 
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 
