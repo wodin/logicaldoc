@@ -154,6 +154,7 @@ public abstract class LogicalDOCPlugin extends Plugin {
 	}
 
 	protected void setRestartRequired() {
+		System.out.println("Plugin " + getDescriptor().getId() + " requires a restart");
 		PluginRegistry.getInstance().setRestartRequired();
 	}
 	
