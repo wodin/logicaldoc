@@ -89,7 +89,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			public void onClick(ClickEvent event) {
 				Window.open(
 						GWT.getHostPageBaseURL() + "doc_rss?sid=" + Session.get().getSid() + "&docId="
-								+ document.getId(), "_blank", "");
+								+ document.getId() + "&locale=" + I18N.getLocale(), "_blank", "");
 			}
 		});
 
@@ -205,8 +205,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			public void onClick(ClickEvent event) {
 				if (document == null)
 					return;
-				Window.open("ldedit:" + GWT.getHostPageBaseURL() + "ldeditnow?action=edit&sid=" + Session.get().getSid()
-						+ "&docId=" + document.getId(), "_self", "");
+				Window.open("ldedit:" + GWT.getHostPageBaseURL() + "ldeditnow?action=edit&sid="
+						+ Session.get().getSid() + "&docId=" + document.getId(), "_self", "");
 			}
 		});
 

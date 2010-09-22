@@ -633,6 +633,10 @@ public class DocumentContextMenu extends Menu {
 			similar.setEnabled(false);
 		}
 
+		if (Clipboard.getInstance().isEmpty()) {
+			links.setEnabled(false);
+		}
+
 		if (!folder.hasPermission(Constants.PERMISSION_DELETE)) {
 			enableDelete = false;
 			cut.setEnabled(false);

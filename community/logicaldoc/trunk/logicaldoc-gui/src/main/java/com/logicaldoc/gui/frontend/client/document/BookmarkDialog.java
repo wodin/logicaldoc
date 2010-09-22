@@ -41,7 +41,7 @@ public class BookmarkDialog extends Window {
 		});
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		setTitle(I18N.message("addarchive"));
+		setTitle(I18N.message("bookmark"));
 		setWidth(280);
 		setHeight(250);
 		setCanDragResize(true);
@@ -58,7 +58,7 @@ public class BookmarkDialog extends Window {
 		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setNumCols(1);
 
-		TextItem name = ItemFactory.newSimpleTextItem("name", "name", bookmark.getName());
+		TextItem name = ItemFactory.newTextItem("name", "name", bookmark.getName());
 		name.setRequired(true);
 
 		TextItem description = ItemFactory.newTextItem("description", "description", bookmark.getDescription());
