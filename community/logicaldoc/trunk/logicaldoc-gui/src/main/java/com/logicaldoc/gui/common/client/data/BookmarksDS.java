@@ -13,15 +13,6 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class BookmarksDS extends DataSource {
-
-	private static BookmarksDS instance;
-
-	public static BookmarksDS get() {
-		if (instance == null)
-			instance = new BookmarksDS();
-		return instance;
-	}
-
 	public BookmarksDS() {
 		setTitleField("name");
 		setRecordXPath("/list/bookmark");

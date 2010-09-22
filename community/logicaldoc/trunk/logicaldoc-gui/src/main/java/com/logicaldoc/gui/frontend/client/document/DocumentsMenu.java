@@ -7,6 +7,8 @@ import com.logicaldoc.gui.frontend.client.folder.FoldersNavigator;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
+import com.smartgwt.client.widgets.layout.events.SectionHeaderClickEvent;
+import com.smartgwt.client.widgets.layout.events.SectionHeaderClickHandler;
 
 /**
  * The left menu
@@ -18,32 +20,57 @@ public class DocumentsMenu extends SectionStack {
 
 	private FoldersNavigator foldersTree;
 
+	private SectionStackSection foldersSection = null;
+
+	private SectionStackSection bookmarksSection = null;
+
+	private SectionStackSection trashSection = null;
+
 	public DocumentsMenu() {
 		setVisibilityMode(VisibilityMode.MUTEX);
-		setWidth100();
+		setWidth(250);
 
-		SectionStackSection foldersSection = new SectionStackSection(I18N.message("folders"));
-		foldersSection.setExpanded(true);
+		foldersSection = new SectionStackSection(I18N.message("folders"));
+		foldersSection.setName("folders");
+		foldersSection.setCanCollapse(true);
 		foldersTree = FoldersNavigator.get();
-		foldersSection.addItem(foldersTree);
+		foldersSection.setItems(foldersTree);
 		addSection(foldersSection);
 
-		if (Feature.enabled(Feature.BOOKMARKS) || Feature.showDisabled()) {
-			SectionStackSection bookmarksSection = new SectionStackSection(I18N.message("bookmarks"));
-			bookmarksSection.setExpanded(false);
+		if (Feature.visible(Feature.BOOKMARKS)) {
+			bookmarksSection = new SectionStackSection(I18N.message("bookmarks"));
+			bookmarksSection.setName("bookmarks");
 			bookmarksSection.setCanCollapse(true);
+
 			if (Feature.enabled(Feature.BOOKMARKS))
-				bookmarksSection.addItem(BookmarksPanel.get());
+				bookmarksSection.setItems(BookmarksPanel.get());
 			else
 				bookmarksSection.addItem(new FeatureDisabled());
 			addSection(bookmarksSection);
 		}
 
-		SectionStackSection trashSection = new SectionStackSection(I18N.message("trash"));
-		trashSection.setExpanded(false);
+		trashSection = new SectionStackSection(I18N.message("trash"));
+		trashSection.setName("trash");
 		trashSection.setCanCollapse(true);
-		trashSection.addItem(TrashPanel.get());
+		trashSection.setItems(TrashPanel.get());
 		addSection(trashSection);
+
+		addSectionHeaderClickHandler(new SectionHeaderClickHandler() {
+			@Override
+			public void onSectionHeaderClick(SectionHeaderClickEvent event) {
+				if (event.getSection() != null) {
+					refresh(event.getSection().getAttributeAsString("name"));
+				}
+			}
+		});
+	}
+
+	public void refresh(String sectionNameToExpand) {
+		if ("bookmarks".equals(sectionNameToExpand)) {
+			BookmarksPanel.get().reloadList();
+		} else if ("trash".equals(sectionNameToExpand)) {
+			TrashPanel.get().refresh();
+		}
 	}
 
 	public void openFolder(long folderId) {

@@ -13,16 +13,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class GarbageDS extends DataSource {
-
-	private static GarbageDS instance;
-
-	public static GarbageDS get() {
-		if (instance == null)
-			instance = new GarbageDS();
-		return instance;
-	}
-
-	private GarbageDS() {
+	public GarbageDS() {
 		setTitleField("title");
 		setRecordXPath("/list/document");
 		DataSourceTextField title = new DataSourceTextField("title");

@@ -44,8 +44,16 @@ public class TrashPanel extends VLayout {
 		return instance;
 	}
 
-	private TrashPanel() {
+	public TrashPanel() {
 		setMembersMargin(3);
+
+		refresh();
+	}
+
+	public void refresh() {
+		if (list != null) {
+			removeMember(list);
+		}
 
 		ListGridField id = new ListGridField("id");
 		id.setHidden(true);
@@ -78,17 +86,17 @@ public class TrashPanel extends VLayout {
 		list.setAutoFetchData(true);
 		list.setFields(icon, title, customId, lastModified);
 		list.setSelectionType(SelectionStyle.SINGLE);
-		list.setDataSource(GarbageDS.get());
+		list.setDataSource(new GarbageDS());
 		list.setShowFilterEditor(true);
-		list.setFilterOnKeypress(true); 
+		list.setFilterOnKeypress(true);
 		addMember(list);
 
 		list.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				ListGridRecord record = event.getRecord();
-				restore(Long.parseLong(record.getAttributeAsString("id")), Long.parseLong(record
-						.getAttributeAsString("folderId")));
+				restore(Long.parseLong(record.getAttributeAsString("id")),
+						Long.parseLong(record.getAttributeAsString("folderId")));
 			}
 		});
 
@@ -112,8 +120,7 @@ public class TrashPanel extends VLayout {
 			@Override
 			public void onSuccess(Void ret) {
 				list.removeSelectedData();
-				Log.info(I18N.message("documentrestored"), I18N.message("documentrestoreddetail", Long
-						.toString(docId)));
+				Log.info(I18N.message("documentrestored"), I18N.message("documentrestoreddetail", Long.toString(docId)));
 
 				// If the case force a refresh
 				if (Session.get().getCurrentFolder() != null && Session.get().getCurrentFolder().getId() == folderId)
@@ -130,8 +137,8 @@ public class TrashPanel extends VLayout {
 		execute.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord record = list.getSelectedRecord();
-				restore(Long.parseLong(record.getAttribute("id")), Long.parseLong(record
-						.getAttributeAsString("folderId")));
+				restore(Long.parseLong(record.getAttribute("id")),
+						Long.parseLong(record.getAttributeAsString("folderId")));
 			}
 		});
 
