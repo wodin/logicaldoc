@@ -1,17 +1,15 @@
 package com.logicaldoc.gui.frontend.server;
 
 import java.util.Date;
-import java.util.Random;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.beans.GUIHit;
 import com.logicaldoc.gui.common.client.beans.GUIResult;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
-import com.logicaldoc.gui.common.client.beans.GUITag;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
 
 /**
- * Implementation of the SecurityService
+ * Implementation of the SearchService
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
@@ -67,20 +65,6 @@ public class MockSearchServiceImpl extends RemoteServiceServlet implements Searc
 		options.setName(name);
 		options.setExpression("saved search");
 		return options;
-	}
-
-	@Override
-	public GUITag[] getTagCloud() {
-		GUITag[] cloud = new GUITag[30];
-		Random r = new Random();
-		for (int i = 0; i < cloud.length; i++) {
-			GUITag c = new GUITag();
-			c.setScale(r.nextInt(9) + 1);
-			c.setTag("Tag_" + i);
-			c.setCount(r.nextInt(9) * i + 5);
-			cloud[i] = c;
-		}
-		return cloud;
 	}
 
 	@Override

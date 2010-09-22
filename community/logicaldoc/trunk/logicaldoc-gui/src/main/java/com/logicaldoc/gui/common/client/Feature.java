@@ -16,6 +16,8 @@ public class Feature {
 	public static final int IMPORT_REMOTE_FOLDERS = 1;
 
 	public static final int ARCHIVES = 4;
+	
+	public static final int TAGS = 5;
 
 	public static final int DIGITAL_SIGN = 7;
 	

@@ -40,8 +40,10 @@ public class TagsDataServlet extends HttpServlet {
 
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
+		int i=0;
 		for (String tag : tgs.keySet()) {
 			writer.print("<tag>");
+			writer.print("<index>" + i++ + "</index>");
 			writer.print("<word>" + tag + "</word>");
 			writer.print("<count>" + tgs.get(tag) + "</count>");
 			writer.print("</tag>");

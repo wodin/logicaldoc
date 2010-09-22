@@ -67,37 +67,13 @@ create unique index  AK_VERSION on ld_version (ld_documentid, ld_version);
 alter table ld_version add constraint FK_VERSION_USER foreign key (ld_userid) references ld_user(ld_id);
 
 
---insert into ld_menu
---           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
---values     (1,CURRENT_TIMESTAMP,0,'menu.home',1,'home.png',1);
-
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
 values     (2,CURRENT_TIMESTAMP,0,'menu.admin',2,'administration.png',1);
 
---insert into ld_menu
---           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
---values     (4,CURRENT_TIMESTAMP,0,'menu.personal',1,'personal.png',1);
-
---insert into ld_menu
---           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
---values     (5,CURRENT_TIMESTAMP,0,'menu.documents',1,'documents.png',1);
-
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
 values     (9,CURRENT_TIMESTAMP,0,'admin.security',2,'password.png',1);
-
---insert into ld_menu
---           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
---values     (6,CURRENT_TIMESTAMP,0,'menu.user',9,'user.png',1);
-
---insert into ld_menu
---           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
---values     (7,CURRENT_TIMESTAMP,0,'menu.group',9,'group.png',1);
-
---insert into ld_menu
---           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
---values     (-1,CURRENT_TIMESTAMP,0,'admin.security',9,'password.png',1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
@@ -128,49 +104,13 @@ insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
 values     (23,CURRENT_TIMESTAMP,0,'smtp',-2,'mail_preferences.png',1);
 
---insert into ld_menu
---           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
---values     (11,CURRENT_TIMESTAMP,0,'menu.gui',-2,'gui.png',1);
-
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
 values     (10,CURRENT_TIMESTAMP,0,'parameters',-2,'parameters.png',1);
 
---insert into ld_menu
---           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
---values     (13,CURRENT_TIMESTAMP,0,'menu.messages',4,'message.png',1);
-
---insert into ld_menu
---           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
---values     (16,CURRENT_TIMESTAMP,0,'menu.changepassword',4,'password.png',1);
-
---insert into ld_menu
---           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
---values     (19,CURRENT_TIMESTAMP,0,'menu.editme',4,'user.png',1);
-
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
 values     (21,CURRENT_TIMESTAMP,0,'templates',2,'template.png',1);
-
---insert into ld_menu
---           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
---values     (18,CURRENT_TIMESTAMP,0,'searches',1,'search.png',1);
-
---insert into ld_menu
---           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
---values     (26,CURRENT_TIMESTAMP,0,'tags',18,'tags.png',1);
-
---insert into ld_menu
---           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
---values     (15,CURRENT_TIMESTAMP,0,'search.advanced',18,'search.png',1);
-
---insert into ld_menu
---           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
---values     (-80,CURRENT_TIMESTAMP,0,'menu.bookmarks',4,'bookmarks.png',1);
-
---insert into ld_menu
---           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
---values     (22,CURRENT_TIMESTAMP,0,'menu.trash',4,'trash.png',1);
 
 
 insert into ld_group

@@ -375,9 +375,6 @@ public class FoldersNavigator extends TreeGrid {
 									getTree().openFolder(selectedNode);
 								}
 								getTree().add(newNode, selectedNode);
-								//selectRecord(newNode);
-							    //newFolder.setPathExtended(getPath(newFolder.getId()));
-								//Session.get().setCurrentFolder(newFolder);
 							}
 						});
 					}

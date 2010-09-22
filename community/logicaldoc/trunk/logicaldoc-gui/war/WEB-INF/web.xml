@@ -50,6 +50,11 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>TagService</servlet-name>
+		<servlet-class>com.logicaldoc.gui.frontend.server.MockTagServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>SetupService</servlet-name>
 		<servlet-class>com.logicaldoc.gui.setup.server.MockSetupServiceImpl</servlet-class>
 	</servlet>
@@ -312,6 +317,11 @@
 	<servlet-mapping>
 		<servlet-name>SearchService</servlet-name>
 		<url-pattern>/frontend/search</url-pattern>
+	</servlet-mapping>
+
+    <servlet-mapping>
+		<servlet-name>TagService</servlet-name>
+		<url-pattern>/frontend/tag</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
