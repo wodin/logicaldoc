@@ -8,6 +8,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -131,25 +132,38 @@ public class DocumentCheckin extends Window {
 		if (!vm.validate())
 			return;
 
-		documentService.checkin(Session.get().getSid(), docId, vm.getValueAsString("comment"), "true".equals(vm
-				.getValueAsString("majorversion")), new AsyncCallback<Void>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				Log.serverError(caught);
-			}
+		documentService.checkin(Session.get().getSid(), docId, vm.getValueAsString("comment"),
+				"true".equals(vm.getValueAsString("majorversion")), new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-			@Override
-			public void onSuccess(Void result) {
-				ListGridRecord selection = documentsGrid.getSelectedRecord();
-				if (selection == null)
-					return;
-				selection.setAttribute("locked", "blank");
-				selection.setAttribute("status", Constants.DOC_UNLOCKED);
-				documentsGrid.refreshRow(documentsGrid.getRecordIndex(selection));
-				Session.get().getUser().setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() - 1);
-				destroy();
-			}
-		});
+					@Override
+					public void onSuccess(Void result) {
+						documentService.getById(Session.get().getSid(), docId, new AsyncCallback<GUIDocument>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUIDocument document) {
+								DocumentsPanel.get().onDocumentSaved(document);
+								ListGridRecord selection = documentsGrid.getSelectedRecord();
+								if (selection == null)
+									return;
+								selection.setAttribute("locked", "blank");
+								selection.setAttribute("status", Constants.DOC_UNLOCKED);
+								selection.setAttribute("indexed", Constants.INDEX_TO_INDEX);
+								documentsGrid.refreshRow(documentsGrid.getRecordIndex(selection));
+								Session.get().getUser()
+										.setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() - 1);
+								destroy();
+							}
+						});
+					}
+				});
 	}
 
 	public String getLanguage() {
