@@ -692,7 +692,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public List<Document> findDeleted(long userId, Integer maxHits) {
 		List<Document> results = new ArrayList<Document>();
 		try {
-			String query = "select A.ld_id, A.ld_title, A.ld_lastmodified, A.ld_filename, A.ld_folderid from ld_document as A, ld_folder as B where A.ld_folderid=B.ld_id and B.ld_deleted=0 and A.ld_deleted=1 and A.ld_deleteuserid = "
+			String query = "select A.ld_id, A.ld_title, A.ld_lastmodified, A.ld_filename, A.ld_customid, A.ld_folderid from ld_document as A, ld_folder as B where A.ld_folderid=B.ld_id and B.ld_deleted=0 and A.ld_deleted=1 and A.ld_deleteuserid = "
 					+ userId + " order by A.ld_lastmodified desc";
 
 			RowMapper docMapper = new BeanPropertyRowMapper() {
@@ -702,9 +702,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					doc.setTitle(rs.getString(2));
 					doc.setLastModified(rs.getDate(3));
 					doc.setFileName(rs.getString(4));
+					doc.setCustomId(rs.getString(5));
 
 					Folder folder = new Folder();
-					folder.setId(rs.getLong(5));
+					folder.setId(rs.getLong(6));
 					doc.setFolder(folder);
 
 					return doc;
