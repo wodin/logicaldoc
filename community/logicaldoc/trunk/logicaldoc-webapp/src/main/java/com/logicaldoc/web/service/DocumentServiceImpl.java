@@ -139,8 +139,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		try {
 			for (String fileId : uploadedFilesMap.keySet()) {
 				File file = uploadedFilesMap.get(fileId);
+				String filename = uploadedFileNames.get(fileId);
 
-				if (file.getName().endsWith(".zip") && importZip) {
+				if (filename.endsWith(".zip") && importZip) {
 					log.debug("file = " + file);
 
 					ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
@@ -154,7 +155,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					FileUtils.forceMkdir(new File(path));
 
 					// copy the file into the user folder
-					final File destFile = new File(path, file.getName());
+					final File destFile = new File(path, filename);
 					FileUtils.copyFile(file, destFile);
 
 					final long userId = SessionUtil.getSessionUser(sid).getId();
@@ -178,7 +179,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					// And launch it
 					zipImporter.start();
 				} else {
-					String filename = uploadedFileNames.get(fileId);
 					String title = filename.substring(0, filename.lastIndexOf("."));
 
 					// Create the document history event
