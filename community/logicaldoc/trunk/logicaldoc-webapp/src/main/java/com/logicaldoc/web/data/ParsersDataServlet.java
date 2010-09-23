@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.core.util.IconSelector;
@@ -24,29 +26,42 @@ public class ParsersDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
+	private static Log log = LogFactory.getLog(ParsersDataServlet.class);
+
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		SessionUtil.validateSession(request);
+		try {
+			SessionUtil.validateSession(request);
 
-		response.setContentType("text/xml");
+			response.setContentType("text/xml");
 
-		// Headers required by Internet Explorer
-		response.setHeader("Pragma", "public");
-		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
-		response.setHeader("Expires", "0");
+			// Headers required by Internet Explorer
+			response.setHeader("Pragma", "public");
+			response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
+			response.setHeader("Expires", "0");
 
-		PrintWriter writer = response.getWriter();
-		writer.write("<list>");
-		int i = 0;
-		for (String ext : ParserFactory.getParsers().keySet()) {
-			writer.print("<parser>");
-			writer.print("<id>" + i + "</id>");
-			writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(ext.toLowerCase())) + "</icon>");
-			writer.print("<extension>" + ext.toLowerCase() + "</extension>");
-			writer.print("<name>" + ParserFactory.getParsers().get(ext).getName() + "</name>");
-			writer.print("</parser>");
+			PrintWriter writer = response.getWriter();
+			writer.write("<list>");
+			int i = 0;
+			for (String ext : ParserFactory.getParsers().keySet()) {
+				writer.print("<parser>");
+				writer.print("<id>" + i + "</id>");
+				writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(ext.toLowerCase()))
+						+ "</icon>");
+				writer.print("<extension>" + ext.toLowerCase() + "</extension>");
+				writer.print("<name>" + ParserFactory.getParsers().get(ext).getName() + "</name>");
+				writer.print("</parser>");
+			}
+			writer.write("</list>");
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+			if (e instanceof ServletException)
+				throw (ServletException) e;
+			else if (e instanceof IOException)
+				throw (IOException) e;
+			else
+				throw new ServletException(e.getMessage(), e);
 		}
-		writer.write("</list>");
 	}
 }

@@ -20,7 +20,6 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.service.DocumentServiceImpl;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
@@ -33,7 +32,7 @@ public class GarbageDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(DocumentServiceImpl.class);
+	private static Log log = LogFactory.getLog(GarbageDataServlet.class);
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,

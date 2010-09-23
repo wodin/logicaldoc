@@ -29,16 +29,15 @@ import com.logicaldoc.web.util.SessionUtil;
  */
 public class TasksDataServlet extends HttpServlet {
 
-	private static Log log = LogFactory.getLog(TasksDataServlet.class);
-
 	private static final long serialVersionUID = 1L;
+	
+	private static Log log = LogFactory.getLog(TasksDataServlet.class);
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		SessionUtil.validateSession(request);
-
 		try {
+			SessionUtil.validateSession(request);
 			String locale = request.getParameter("locale");
 
 			response.setContentType("text/xml");
@@ -87,8 +86,14 @@ public class TasksDataServlet extends HttpServlet {
 				writer.print("</task>");
 			}
 			writer.write("</list>");
-		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+			if (e instanceof ServletException)
+				throw (ServletException) e;
+			else if (e instanceof IOException)
+				throw (IOException) e;
+			else
+				throw new ServletException(e.getMessage(), e);
 		}
 	}
 }
