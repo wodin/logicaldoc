@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.util.IconSelector;
@@ -31,67 +33,80 @@ public class VersionsDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
+	private static Log log = LogFactory.getLog(VersionsDataServlet.class);
+
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		SessionUtil.validateSession(request);
+		try {
+			SessionUtil.validateSession(request);
 
-		/*
-		 * Load some filters from the current request
-		 */
-		int max = Integer.parseInt(request.getParameter("max"));
+			/*
+			 * Load some filters from the current request
+			 */
+			int max = Integer.parseInt(request.getParameter("max"));
 
-		String locale = request.getParameter("locale");
+			String locale = request.getParameter("locale");
 
-		response.setContentType("text/xml");
+			response.setContentType("text/xml");
 
-		// Headers required by Internet Explorer
-		response.setHeader("Pragma", "public");
-		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
-		response.setHeader("Expires", "0");
+			// Headers required by Internet Explorer
+			response.setHeader("Pragma", "public");
+			response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
+			response.setHeader("Expires", "0");
 
-		PrintWriter writer = response.getWriter();
-		writer.write("<list>");
+			PrintWriter writer = response.getWriter();
+			writer.write("<list>");
 
-		VersionDAO dao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
+			VersionDAO dao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
 
-		StringBuffer query = new StringBuffer(
-				"select A.id, A.username, A.event, A.version, A.fileVersion, A.versionDate, A.comment, A.docId, A.title, A.customId, A.fileSize, A.type ");
-		if (request.getParameter("docId") != null) {
-			query.append(" from Version A where A.deleted = 0 and A.docId=" + request.getParameter("docId"));
-		} else {
-			query.append(" from Version A, Archive B where A.deleted = 0 and A in elements(B.entries) ");
-			query.append(" and B.id =" + request.getParameter("archiveId"));
+			StringBuffer query = new StringBuffer(
+					"select A.id, A.username, A.event, A.version, A.fileVersion, A.versionDate, A.comment, A.docId, A.title, A.customId, A.fileSize, A.type ");
+			if (request.getParameter("docId") != null) {
+				query.append(" from Version A where A.deleted = 0 and A.docId=" + request.getParameter("docId"));
+			} else {
+				query.append(" from Version A, Archive B where A.deleted = 0 and A in elements(B.entries) ");
+				query.append(" and B.id =" + request.getParameter("archiveId"));
+			}
+			query.append(" order by A.versionDate asc ");
+
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+			df.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+			List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, max);
+
+			/*
+			 * Iterate over records composing the response XML document
+			 */
+			for (Object record : records) {
+				Object[] cols = (Object[]) record;
+
+				writer.print("<version>");
+				writer.print("<id>" + cols[0] + "</id>");
+				writer.print("<user><![CDATA[" + cols[1] + "]]></user>");
+				writer.print("<event><![CDATA[" + I18N.message((String) cols[2], locale) + "]]></event>");
+				writer.print("<version>" + cols[3] + "</version>");
+				writer.print("<fileVersion>" + cols[4] + "</fileVersion>");
+				writer.print("<date>" + df.format((Date) cols[5]) + "</date>");
+				writer.print("<comment><![CDATA[" + cols[6] + "]]></comment>");
+				writer.print("<docid>" + cols[7] + "</docid>");
+				writer.print("<title><![CDATA[" + cols[8] + "]]></title>");
+				writer.print("<customid><![CDATA[" + cols[9] + "]]></customid>");
+				writer.print("<size>" + cols[10] + "</size>");
+				writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon((String) cols[11]))
+						+ "</icon>");
+				writer.print("</version>");
+			}
+
+			writer.write("</list>");
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+			if (e instanceof ServletException)
+				throw (ServletException) e;
+			else if (e instanceof IOException)
+				throw (IOException) e;
+			else
+				throw new ServletException(e.getMessage(), e);
 		}
-		query.append(" order by A.versionDate asc ");
-
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		df.setTimeZone(TimeZone.getTimeZone("UTC"));
-		
-		List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, max);
-
-		/*
-		 * Iterate over records composing the response XML document
-		 */
-		for (Object record : records) {
-			Object[] cols = (Object[]) record;
-
-			writer.print("<version>");
-			writer.print("<id>" + cols[0] + "</id>");
-			writer.print("<user><![CDATA[" + cols[1] + "]]></user>");
-			writer.print("<event><![CDATA[" + I18N.message((String) cols[2], locale) + "]]></event>");
-			writer.print("<version>" + cols[3] + "</version>");
-			writer.print("<fileVersion>" + cols[4] + "</fileVersion>");
-			writer.print("<date>" + df.format((Date) cols[5]) + "</date>");
-			writer.print("<comment><![CDATA[" + cols[6] + "]]></comment>");
-			writer.print("<docid>" + cols[7] + "</docid>");
-			writer.print("<title><![CDATA[" + cols[8] + "]]></title>");
-			writer.print("<customid><![CDATA[" + cols[9] + "]]></customid>");
-			writer.print("<size>" + cols[10] + "</size>");
-			writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon((String) cols[11])) + "</icon>");
-			writer.print("</version>");
-		}
-
-		writer.write("</list>");
 	}
 }
