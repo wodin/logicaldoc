@@ -212,7 +212,7 @@ public class ZipImport {
 		SystemMessage sysmess = new SystemMessage();
 		sysmess.setAuthor("SYSTEM");
 		sysmess.setRecipients(recipients);
-		ResourceBundle bundle = ResourceBundle.getBundle("i18n/application", user.getLocale());
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.messages", user.getLocale());
 		sysmess.setSubject(bundle.getString("zip.import.subject"));
 		String message = bundle.getString("zip.import.body");
 		String body = MessageFormat.format(message, new String[] { zipFile.getName() });
