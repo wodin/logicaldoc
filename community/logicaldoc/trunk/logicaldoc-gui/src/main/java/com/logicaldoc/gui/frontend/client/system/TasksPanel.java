@@ -1,5 +1,9 @@
 package com.logicaldoc.gui.frontend.client.system;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.code.p.gwtchismes.client.GWTCProgress;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -29,6 +33,7 @@ import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
+import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
@@ -55,6 +60,8 @@ public class TasksPanel extends VLayout {
 	private Timer timer;
 
 	private Canvas detailPanel;
+
+	private Map<String, GWTCProgress> progresses = new HashMap<String, GWTCProgress>();
 
 	public TasksPanel() {
 		setWidth100();
@@ -183,9 +190,28 @@ public class TasksPanel extends VLayout {
 		 */
 		timer = new Timer() {
 			public void run() {
-				reload();
+				service.loadTasks(Session.get().getSid(), I18N.getLocale(), new AsyncCallback<GUITask[]>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUITask[] tasks) {
+						for (GUITask guiTask : tasks) {
+							GWTCProgress p = progresses.get(guiTask.getName());
+							if (p != null && guiTask.getProgress() > 0)
+								p.setProgress(guiTask.getProgress(), (int) guiTask.getSize(), (int) guiTask.getSize());
+
+							if (p.getProgress() >= 100)
+								p.setProgress(0, (int) guiTask.getSize(), (int) guiTask.getSize());
+						}
+					}
+				});
 			}
 		};
+
+		timer.scheduleRepeating(5 * 1000);
 	}
 
 	private void reload() {
@@ -196,12 +222,38 @@ public class TasksPanel extends VLayout {
 			list.destroy();
 		}
 
-		list = new ListGrid();
+		list = new ListGrid() {
+			@Override
+			protected Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
+
+				String fieldName = this.getFieldName(colNum);
+
+				if (fieldName.equals("progress")) {
+					HLayout recordCanvas = new HLayout(3);
+					recordCanvas.setHeight(45);
+					GWTCProgress prgBar = null;
+
+					if (record.getAttributeAsBoolean("indeterminate"))
+						prgBar = new GWTCProgress(10);
+					else
+						prgBar = new GWTCProgress(10, GWTCProgress.SHOW_NUMBERS);
+
+					progresses.put(record.getAttribute("name"), prgBar);
+					prgBar.setPixelSize(200, 40);
+					recordCanvas.addChild(prgBar);
+					return recordCanvas;
+				} else {
+					return null;
+				}
+
+			}
+		};
 
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
 		list.setShowAllRecords(true);
 		list.setAutoFetchData(true);
+		list.setCellHeight(50);
 
 		ListGridField enabled = new ListGridField("enabledIcon", " ", 30);
 		enabled.setType(ListGridFieldType.IMAGE);
@@ -211,7 +263,7 @@ public class TasksPanel extends VLayout {
 		enabled.setImageURLSuffix(".png");
 		enabled.setCanFilter(false);
 
-		ListGridField label = new ListGridField("label", I18N.message("task"), 200);
+		ListGridField label = new ListGridField("label", I18N.message("task"), 180);
 		label.setCanFilter(true);
 		label.setCanSort(false);
 
@@ -229,26 +281,18 @@ public class TasksPanel extends VLayout {
 		nextStart.setAlign(Alignment.CENTER);
 		nextStart.setCanSort(false);
 
-		ListGridField scheduling = new ListGridField("scheduling", I18N.message("scheduling"), 150);
+		ListGridField scheduling = new ListGridField("scheduling", I18N.message("scheduling"), 130);
 		scheduling.setCanFilter(false);
 		scheduling.setAlign(Alignment.CENTER);
 		scheduling.setCanSort(false);
 
-		ListGridField progress = new ListGridField("progress", I18N.message("progress"), 100);
+		ListGridField progress = new ListGridField("progress", I18N.message("progress"), 200);
 		progress.setCanFilter(false);
-		progress.setAlign(Alignment.CENTER);
 		progress.setCanSort(false);
 		progress.setCellFormatter(new CellFormatter() {
 			@Override
 			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
-				if (GUITask.STATUS_RUNNING == record.getAttributeAsInt("status")
-						&& record.getAttributeAsBoolean("eenabled") && !record.getAttributeAsBoolean("indeterminate"))
-					return value + "%";
-				else if (GUITask.STATUS_RUNNING == record.getAttributeAsInt("status")
-						&& record.getAttributeAsBoolean("eenabled") && record.getAttributeAsBoolean("indeterminate"))
-					return I18N.message("running");
-				else
-					return "";
+				return "";
 			}
 		});
 

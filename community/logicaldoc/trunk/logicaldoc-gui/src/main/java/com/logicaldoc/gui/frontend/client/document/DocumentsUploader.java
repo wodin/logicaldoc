@@ -1,8 +1,10 @@
 package com.logicaldoc.gui.frontend.client.document;
 
+import gwtupload.client.IFileInput.FileInputType;
 import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
 import gwtupload.client.MultiUploader;
+import jsupload.client.IncubatorUploadProgress;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -52,7 +54,7 @@ public class DocumentsUploader extends Window {
 	public DocumentsUploader() {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("adddocuments"));
-		setWidth(390);
+		setWidth(430);
 		setHeight(280);
 		setCanDragResize(true);
 		setIsModal(true);
@@ -62,21 +64,21 @@ public class DocumentsUploader extends Window {
 		reloadForm();
 
 		// Create a new uploader panel and attach it to the window
-		multiUploader = new MultiUploader();
-		multiUploader.setStyleName("upload");
-		multiUploader.setHeight("100%");
-		multiUploader.setWidth("90%");
-		multiUploader.setFileInputPrefix("LDOC");
-		multiUploader.reset();
-
+		multiUploader = new MultiUploader(FileInputType.BUTTON, new IncubatorUploadProgress());
 		// Add a finish handler which will load the image once the upload
 		// finishes
 		multiUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
+		multiUploader.setStyleName("upload");
+		multiUploader.setHeight("100%");
+		multiUploader.setWidth("100%");
+		multiUploader.setFileInputPrefix("LDOC");
+		multiUploader.reset();
 
 		layout.addMember(multiUploader, 1);
 		layout.setMembersMargin(10);
 		layout.setMargin(25);
 		layout.setHeight(250);
+		layout.setWidth100();
 
 		addChild(layout);
 	}
