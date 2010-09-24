@@ -126,6 +126,8 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			
 			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			info.setInstallationId(config.getProperty("id"));
+			info.setRelease(config.getProperty("product.release"));
+			info.setYear(config.getProperty("product.year"));
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
