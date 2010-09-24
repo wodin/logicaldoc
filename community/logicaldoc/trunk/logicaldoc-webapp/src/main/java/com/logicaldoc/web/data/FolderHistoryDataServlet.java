@@ -50,7 +50,7 @@ public class FolderHistoryDataServlet extends HttpServlet {
 					"select A.userName, A.event, A.date, A.comment, A.title, A.path, A.sessionId from History A where A.deleted = 0 ");
 			if (request.getParameter("id") != null)
 				query.append(" and A.folderId=" + request.getParameter("id"));
-			query.append(" order by A.date asc ");
+			query.append(" order by A.date desc ");
 
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
