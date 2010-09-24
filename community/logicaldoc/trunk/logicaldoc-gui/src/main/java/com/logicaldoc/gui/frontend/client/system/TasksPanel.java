@@ -186,7 +186,6 @@ public class TasksPanel extends VLayout {
 				reload();
 			}
 		};
-		timer.scheduleRepeating(2 * 1000);
 	}
 
 	private void reload() {
