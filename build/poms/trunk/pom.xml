@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>32</version>
+  <version>33</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -415,6 +415,31 @@
         <version>0.6.1</version>
       </dependency>
       <dependency>
+        <groupId>com.googlecode.gwtupload</groupId>
+        <artifactId>jsupload</artifactId>
+        <version>0.6.1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.googlecode.gwtupload</groupId>
+        <artifactId>gwtupload-gae</artifactId>
+        <version>0.6.1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.gwt</groupId>
+        <artifactId>gwt-incubator</artifactId>
+        <version>2.0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.timepedia.exporter</groupId>
+        <artifactId>gwtexporter</artifactId>
+        <version>2.0.10</version>
+      </dependency>
+      <dependency>
+        <groupId>gwtchismes</groupId>
+        <artifactId>gwtchismes</artifactId>
+        <version>0.9.8</version>
+      </dependency>
+      <dependency>
         <groupId>com.smartgwt</groupId>
         <artifactId>smartgwt</artifactId>
         <version>2.2</version>
@@ -509,6 +534,10 @@
         <id>gwtupload</id>
         <name>GWT Upload repository at googlecode</name>
         <url>http://gwtupload.googlecode.com/svn/mavenrepo</url>
+      </repository>
+      <repository>
+        <id>gwtchismes</id>
+        <url>http://gwtchismes.googlecode.com/svn/mavenrepo/</url>
       </repository>
     </repositories>
     <distributionManagement>
