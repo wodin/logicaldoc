@@ -51,7 +51,7 @@
       </fileset>
     </schemaexport>
   </target>
-  <target name="prepare-sql-package">
+  <target name="prepare-sql">
     <copy todir="${logicaldoc.devroot}/logicaldoc-sql" flatten="true">
       <fileset dir="${logicaldoc.devroot}">
         <include name="**/src/main/resources/**/*.sql*" />
@@ -59,5 +59,19 @@
     </copy>
     <zip destfile="${logicaldoc.devroot}/logicaldoc-sql.zip" basedir="${logicaldoc.devroot}/logicaldoc-sql"   />
     <delete dir="${logicaldoc.devroot}/logicaldoc-sql"/>
+  </target>
+  <target name="prepare-src">
+    <copy todir="${logicaldoc.devroot}/logicaldoc-src">
+      <fileset dir="${logicaldoc.devroot}">
+        <include name="build/**" />
+        <include name="community/**" />
+        <exclude name="**/target/**" />
+        <exclude name="**/.*/**" />
+        <!--include name="enterprise/**" /-->
+      </fileset>
+    </copy>
+    <copy todir="${logicaldoc.devroot}/logicaldoc-src" file="${logicaldoc.devroot}/build/ant/README.txt" />
+    <zip destfile="${logicaldoc.devroot}/logicaldoc-src.zip" basedir="${logicaldoc.devroot}/logicaldoc-src"   />
+    <delete dir="${logicaldoc.devroot}/logicaldoc-src"/>
   </target>
 </project>
