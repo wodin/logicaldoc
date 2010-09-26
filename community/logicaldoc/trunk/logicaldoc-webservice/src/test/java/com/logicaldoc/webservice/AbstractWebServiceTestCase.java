@@ -44,11 +44,7 @@ public abstract class AbstractWebServiceTestCase {
 	protected File dataFile;
 
 	private String userHome;
-
-	static {
-		System.setProperty("LOGICALDOC_HOME", "target");
-	}
-
+	
 	@Before
 	public void setUp() throws Exception {
 		userHome = System.getProperty("user.home");
