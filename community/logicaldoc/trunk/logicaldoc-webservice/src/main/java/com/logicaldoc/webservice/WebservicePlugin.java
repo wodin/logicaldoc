@@ -21,7 +21,7 @@ public class WebservicePlugin extends LogicalDOCPlugin {
 
 	@Override
 	protected void install() throws Exception {
-		ContextProperties pbean = new ContextProperties(getClass().getClassLoader().getResource("context.properties"));
+		ContextProperties pbean = new ContextProperties();
 		pbean.setProperty("webservice.mtom", "false");
 		pbean.setProperty("webservice.enabled", "true");
 		pbean.write();

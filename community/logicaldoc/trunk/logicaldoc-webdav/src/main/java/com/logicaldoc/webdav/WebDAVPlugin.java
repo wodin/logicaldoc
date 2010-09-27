@@ -37,7 +37,7 @@ public class WebDAVPlugin extends LogicalDOCPlugin {
 		config.addServletMapping(SERVLET_NAME, "/webdav/*");
 		config.writeXMLDoc();
 
-		ContextProperties pbean = new ContextProperties(getClass().getClassLoader().getResource("context.properties"));
+		ContextProperties pbean = new ContextProperties();
 		pbean.setProperty("webdav.enabled", "true");
 		pbean.write();
 
