@@ -264,6 +264,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				task.setStatus(tsk.getStatus());
 				task.setProgress((int) tsk.getProgress());
 				task.setSize(tsk.getSize());
+				task.setCompletionPercentage(tsk.getCompletionPercentage());
 
 				task.setIndeterminate(tsk.isIndeterminate());
 
@@ -323,6 +324,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				task.setProgress((int) t.getProgress());
 				task.setSize(t.getSize());
 				task.setIndeterminate(t.isIndeterminate());
+				task.setCompletionPercentage(t.getCompletionPercentage());
 
 				GUIScheduling scheduling = new GUIScheduling(t.getName());
 				scheduling.setEnabled(t.getScheduling().isEnabled());

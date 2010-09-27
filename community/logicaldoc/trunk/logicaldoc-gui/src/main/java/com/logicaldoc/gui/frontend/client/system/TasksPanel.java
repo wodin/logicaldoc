@@ -13,7 +13,6 @@ import com.logicaldoc.gui.common.client.data.TasksDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
-import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
@@ -22,9 +21,6 @@ import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -39,8 +35,6 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
-import com.smartgwt.client.widgets.toolbar.ToolStrip;
-import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
  * Panel showing the list of scheduled tasks
@@ -84,6 +78,7 @@ public class TasksPanel extends VLayout {
 					@Override
 					public void onSuccess(Boolean result) {
 						list.getSelectedRecord().setAttribute("status", GUITask.STATUS_RUNNING);
+						list.getSelectedRecord().setAttribute("runningIcon", "running_task");
 						list.updateData(list.getSelectedRecord());
 					}
 				});
@@ -107,6 +102,7 @@ public class TasksPanel extends VLayout {
 					@Override
 					public void onSuccess(Boolean result) {
 						list.getSelectedRecord().setAttribute("status", GUITask.STATUS_IDLE);
+						list.getSelectedRecord().setAttribute("runningIcon", "idle_task");
 						list.updateData(list.getSelectedRecord());
 					}
 				});
@@ -133,6 +129,7 @@ public class TasksPanel extends VLayout {
 							public void onSuccess(Boolean result) {
 								list.getSelectedRecord().setAttribute("enabledIcon", "bullet_green");
 								list.getSelectedRecord().setAttribute("eenabled", true);
+								list.getSelectedRecord().setAttribute("runningIcon", "idle_task");
 								list.updateData(list.getSelectedRecord());
 							}
 						});
@@ -158,6 +155,7 @@ public class TasksPanel extends VLayout {
 							public void onSuccess(Boolean result) {
 								list.getSelectedRecord().setAttribute("enabledIcon", "bullet_red");
 								list.getSelectedRecord().setAttribute("eenabled", false);
+								list.getSelectedRecord().setAttribute("runningIcon", "idle_task");
 								list.updateData(list.getSelectedRecord());
 							}
 						});
@@ -165,7 +163,8 @@ public class TasksPanel extends VLayout {
 			}
 		});
 
-		if (!list.getSelectedRecord().getAttributeAsBoolean("eenabled"))
+		if (!list.getSelectedRecord().getAttributeAsBoolean("eenabled")
+				|| list.getSelectedRecord().getAttributeAsInt("status") == GUITask.STATUS_RUNNING)
 			disableTask.setEnabled(false);
 
 		contextMenu.setItems(taskExecution, taskStop, enableTask, disableTask);
@@ -173,7 +172,6 @@ public class TasksPanel extends VLayout {
 	}
 
 	public void init() {
-		results.addMember(setupToolbar());
 		results.setShowResizeBar(true);
 		addMember(results);
 
@@ -200,12 +198,36 @@ public class TasksPanel extends VLayout {
 					public void onSuccess(GUITask[] tasks) {
 						for (GUITask guiTask : tasks) {
 							GWTCProgress p = progresses.get(guiTask.getName());
-							if (p != null && guiTask.getProgress() > 0)
-								p.setProgress(guiTask.getProgress(), (int) guiTask.getSize(), (int) guiTask.getSize());
+							if (p == null)
+								continue;
 
-							if (p.getProgress() >= 100)
-								p.setProgress(0, (int) guiTask.getSize(), (int) guiTask.getSize());
+							for (ListGridRecord record : list.getRecords()) {
+								if (record.getAttribute("name").equals(guiTask.getName())
+										&& guiTask.getStatus() == GUITask.STATUS_RUNNING) {
+									record.setAttribute("runningIcon", "running_task");
+									list.updateData(record);
+									break;
+								} else if (record.getAttribute("name").equals(guiTask.getName())
+										&& guiTask.getStatus() == GUITask.STATUS_IDLE) {
+									record.setAttribute("runningIcon", "idle_task");
+									list.updateData(record);
+									break;
+								}
+							}
+
+							if (guiTask.isIndeterminate()) {
+								if (guiTask.getStatus() == GUITask.STATUS_RUNNING) {
+									if (p.getProgress() == 0)
+										p.setProgress(100, 100, 100);
+									else
+										p.setProgress(0, 100, 100);
+								} else
+									p.setProgress(0, 100, 100);
+							} else
+								p.setProgress(guiTask.getCompletionPercentage(), guiTask.getProgress(),
+										(int) guiTask.getSize());
 						}
+						list.redraw();
 					}
 				});
 			}
@@ -225,33 +247,31 @@ public class TasksPanel extends VLayout {
 		list = new ListGrid() {
 			@Override
 			protected Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
-
 				String fieldName = this.getFieldName(colNum);
 
 				if (fieldName.equals("progress")) {
 					HLayout recordCanvas = new HLayout(3);
 					recordCanvas.setHeight(45);
-					GWTCProgress prgBar = null;
 
-					if (record.getAttributeAsBoolean("indeterminate"))
-						prgBar = new GWTCProgress(10);
-					else
-						prgBar = new GWTCProgress(10, GWTCProgress.SHOW_NUMBERS);
-
+					GWTCProgress prgBar = new GWTCProgress(15);
+					if (!record.getAttribute("indeterminate").equals("true")) {
+						prgBar = new GWTCProgress(15, GWTCProgress.SHOW_NUMBERS);
+						prgBar.setProgress(record.getAttributeAsInt("completion"),
+								record.getAttributeAsInt("progress"), record.getAttributeAsInt("size"));
+					}
 					progresses.put(record.getAttribute("name"), prgBar);
 					prgBar.setPixelSize(200, 40);
+
 					recordCanvas.addChild(prgBar);
 					return recordCanvas;
 				} else {
 					return null;
 				}
-
 			}
 		};
 
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
-		list.setShowAllRecords(true);
 		list.setAutoFetchData(true);
 		list.setCellHeight(50);
 
@@ -262,6 +282,14 @@ public class TasksPanel extends VLayout {
 		enabled.setImageURLPrefix(Util.imagePrefix());
 		enabled.setImageURLSuffix(".png");
 		enabled.setCanFilter(false);
+
+		ListGridField running = new ListGridField("runningIcon", " ", 30);
+		running.setType(ListGridFieldType.IMAGE);
+		running.setCanSort(false);
+		running.setAlign(Alignment.CENTER);
+		running.setImageURLPrefix(Util.imagePrefix());
+		running.setImageURLSuffix(".gif");
+		running.setCanFilter(false);
 
 		ListGridField label = new ListGridField("label", I18N.message("task"), 180);
 		label.setCanFilter(true);
@@ -286,9 +314,10 @@ public class TasksPanel extends VLayout {
 		scheduling.setAlign(Alignment.CENTER);
 		scheduling.setCanSort(false);
 
-		ListGridField progress = new ListGridField("progress", I18N.message("progress"), 200);
+		ListGridField progress = new ListGridField("progress", I18N.message("progress"), 250);
 		progress.setCanFilter(false);
 		progress.setCanSort(false);
+		progress.setAlign(Alignment.LEFT);
 		progress.setCellFormatter(new CellFormatter() {
 			@Override
 			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
@@ -298,7 +327,7 @@ public class TasksPanel extends VLayout {
 
 		list.setWidth100();
 		list.setHeight100();
-		list.setFields(enabled, label, lastStart, nextStart, scheduling, progress);
+		list.setFields(enabled, running, label, lastStart, nextStart, scheduling, progress);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
@@ -311,8 +340,29 @@ public class TasksPanel extends VLayout {
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				showContextMenu();
 				event.cancel();
+				final ListGridRecord record = list.getSelectedRecord();
+				if (record != null)
+					service.getTaskByName(Session.get().getSid(), record.getAttribute("name"), I18N.getLocale(),
+							new AsyncCallback<GUITask>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(GUITask task) {
+									record.setAttribute("status", task.getStatus());
+									record.setAttribute("eenabled", task.getScheduling().isEnabled());
+									if (task.getStatus() == GUITask.STATUS_RUNNING) {
+										record.setAttribute("runningIcon", "running_task");
+									} else if (task.getStatus() == GUITask.STATUS_IDLE) {
+										record.setAttribute("runningIcon", "idle_task");
+									}
+									list.updateData(record);
+									showContextMenu();
+								}
+							});
 			}
 		});
 
@@ -341,50 +391,6 @@ public class TasksPanel extends VLayout {
 	public void destroy() {
 		super.destroy();
 		this.timer.cancel();
-	}
-
-	/**
-	 * Prepares the toolbar containing the search report and a set of buttons
-	 */
-	private ToolStrip setupToolbar() {
-		ToolStrip toolStrip = new ToolStrip();
-		toolStrip.setHeight(20);
-		toolStrip.setWidth100();
-
-		ToolStripButton refreshnow = new ToolStripButton();
-		refreshnow.setTitle(I18N.message("refresh"));
-		toolStrip.addButton(refreshnow);
-		refreshnow.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				reload();
-			}
-		});
-		toolStrip.addButton(refreshnow);
-
-		toolStrip.addSeparator();
-		final IntegerItem delay = ItemFactory.newValidateIntegerItem("delay", "", null, 1, null);
-		delay.setHint(I18N.message("seconds").toLowerCase());
-		delay.setShowTitle(false);
-		delay.setDefaultValue(5);
-		delay.setWidth(40);
-
-		ToolStripButton refresh = new ToolStripButton();
-		refresh.setTitle(I18N.message("refresheach"));
-		toolStrip.addButton(refresh);
-		toolStrip.addFormItem(delay);
-		refresh.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if (!delay.validate())
-					return;
-				timer.cancel();
-				timer.scheduleRepeating(((Integer) delay.getValue()) * 1000);
-			}
-		});
-
-		toolStrip.addFill();
-		return toolStrip;
 	}
 
 	/**
