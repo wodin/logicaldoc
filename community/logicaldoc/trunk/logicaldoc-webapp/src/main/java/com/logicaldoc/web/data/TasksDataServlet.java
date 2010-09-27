@@ -30,7 +30,7 @@ import com.logicaldoc.web.util.SessionUtil;
 public class TasksDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private static Log log = LogFactory.getLog(TasksDataServlet.class);
 
 	@Override
@@ -72,7 +72,13 @@ public class TasksDataServlet extends HttpServlet {
 					writer.print("<scheduling>" + I18N.message("each", locale) + " "
 							+ task.getScheduling().getIntervalSeconds() + " "
 							+ I18N.message("seconds", locale).toLowerCase() + "</scheduling>");
-				writer.print("<progress>" + task.getCompletionPercentage() + "</progress>");
+				writer.print("<completion>" + task.getCompletionPercentage() + "</completion>");
+				writer.print("<progress>" + task.getProgress() + "</progress>");
+				writer.print("<size>" + task.getSize() + "</size>");
+				if (task.getStatus() == Task.STATUS_IDLE)
+					writer.print("<runningIcon>idle_task</runningIcon>");
+				else
+					writer.print("<runningIcon>running_task</runningIcon>");
 
 				if (task.getScheduling().getPreviousFireTime() != null) {
 					writer.print("<lastStart>" + df.format(task.getScheduling().getPreviousFireTime()) + "</lastStart>");

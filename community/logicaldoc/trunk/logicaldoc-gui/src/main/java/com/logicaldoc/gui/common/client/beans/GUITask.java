@@ -30,6 +30,8 @@ public class GUITask implements Serializable {
 
 	private boolean indeterminate = false;
 
+	private int completionPercentage = 0;
+
 	public int getStatus() {
 		return status;
 	}
@@ -84,5 +86,13 @@ public class GUITask implements Serializable {
 
 	public void setIndeterminate(boolean indeterminate) {
 		this.indeterminate = indeterminate;
+	}
+
+	public int getCompletionPercentage() {
+		return completionPercentage;
+	}
+
+	public void setCompletionPercentage(int completionPercentage) {
+		this.completionPercentage = completionPercentage;
 	}
 }
