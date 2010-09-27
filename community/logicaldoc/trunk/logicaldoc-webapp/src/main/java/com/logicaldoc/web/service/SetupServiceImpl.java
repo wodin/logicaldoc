@@ -21,8 +21,8 @@ import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.gui.setup.client.SetupInfo;
 import com.logicaldoc.gui.setup.client.services.SetupService;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.LoggingConfigurator;
 import com.logicaldoc.util.config.ContextProperties;
+import com.logicaldoc.util.config.LoggingConfigurator;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
@@ -177,7 +177,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		FileUtils.forceMkdir(new File(indexDir));
 		String userDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/data/users/");
 		FileUtils.forceMkdir(new File(userDir));
-		String pluginDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/data/plugins/");
+		String pluginDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/plugins/");
 		FileUtils.forceMkdir(new File(pluginDir));
 		String importDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/impex/in/");
 		FileUtils.forceMkdir(new File(importDir));
