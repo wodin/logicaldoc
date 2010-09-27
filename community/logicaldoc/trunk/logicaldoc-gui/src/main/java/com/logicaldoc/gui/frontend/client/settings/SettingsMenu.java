@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.settings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
+import com.logicaldoc.gui.common.client.Menu;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUICustomId;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
@@ -56,7 +57,7 @@ public class SettingsMenu extends VLayout {
 		email.setWidth100();
 		email.setHeight(25);
 
-		if (Feature.visible(Feature.CUSTOMID)) {
+		if (Feature.visible(Feature.CUSTOMID) && Menu.enabled(Menu.CUSTOM_ID)) {
 			addMember(customid);
 			if (!Feature.enabled(Feature.CUSTOMID)) {
 				customid.setDisabled(true);
@@ -64,7 +65,7 @@ public class SettingsMenu extends VLayout {
 			}
 		}
 
-		if (Feature.visible(Feature.CLIENT_TOOLS)) {
+		if (Feature.visible(Feature.CLIENT_TOOLS) && Menu.enabled(Menu.CLIENTS)) {
 			addMember(clientTools);
 			if (!Feature.enabled(Feature.CLIENT_TOOLS)) {
 				clientTools.setDisabled(true);

@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.administration;
 
 import com.logicaldoc.gui.common.client.Feature;
+import com.logicaldoc.gui.common.client.Menu;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.impex.ImpexMenu;
 import com.logicaldoc.gui.frontend.client.security.SecurityMenu;
@@ -39,17 +40,20 @@ public class AdminMenu extends SectionStack {
 		SectionStackSection securitySection = new SectionStackSection(I18N.message("security"));
 		securitySection.setExpanded(false);
 		securitySection.addItem(new SecurityMenu());
-		addSection(securitySection);
+		if (Menu.enabled(Menu.SECURITY))
+			addSection(securitySection);
 
-		if (Feature.visible(Feature.TEMPLATE) || Feature.visible(Feature.WORKFLOW) || Feature.visible(Feature.TAGS)) {
-			SectionStackSection metadataSection = new SectionStackSection(
-					I18N.message("documentmetadata"));
+		if ((Feature.visible(Feature.TEMPLATE) || Feature.visible(Feature.WORKFLOW) || Feature.visible(Feature.TAGS))
+				&& Menu.enabled(Menu.METADATA)) {
+			SectionStackSection metadataSection = new SectionStackSection(I18N.message("documentmetadata"));
 			metadataSection.setExpanded(false);
 			metadataSection.addItem(new MetadataMenu());
 			addSection(metadataSection);
 		}
 
-		if (Feature.visible(Feature.ARCHIVES)) {
+		if ((Feature.visible(Feature.ARCHIVES) || Feature.visible(Feature.EMAIL_IMPORT)
+				|| Feature.visible(Feature.IMPORT_LOCAL_FOLDERS) || Feature.visible(Feature.IMPORT_REMOTE_FOLDERS))
+				&& Menu.enabled(Menu.IMPEX)) {
 			SectionStackSection impexSection = new SectionStackSection(I18N.message("impex"));
 			impexSection.setExpanded(false);
 			impexSection.addItem(new ImpexMenu());
