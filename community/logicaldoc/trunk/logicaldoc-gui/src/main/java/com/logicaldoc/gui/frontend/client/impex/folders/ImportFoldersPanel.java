@@ -356,7 +356,7 @@ public class ImportFoldersPanel extends VLayout {
 
 								@Override
 								public void onSuccess(Void result) {
-									Log.info(I18N.message("confirmresetcache"), null);
+									Log.info(I18N.message("cachedeleted"), null);
 								}
 							});
 						}
