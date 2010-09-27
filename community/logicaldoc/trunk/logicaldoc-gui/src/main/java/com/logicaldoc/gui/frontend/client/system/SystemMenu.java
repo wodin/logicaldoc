@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.system;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Menu;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
@@ -35,28 +36,33 @@ public class SystemMenu extends VLayout {
 		Button general = new Button(I18N.message("general"));
 		general.setWidth100();
 		general.setHeight(25);
+		addMember(general);
 
 		Button lastChanges = new Button(I18N.message("lastchanges"));
 		lastChanges.setWidth100();
 		lastChanges.setHeight(25);
+		if (Menu.enabled(Menu.LAST_CHANGES))
+			addMember(lastChanges);
 
 		Button log = new Button(I18N.message("log"));
 		log.setWidth100();
 		log.setHeight(25);
+		addMember(log);
 
 		Button tasks = new Button(I18N.message("scheduledtasks"));
 		tasks.setWidth100();
 		tasks.setHeight(25);
+		addMember(tasks);
 
 		Button searchAndIndexing = new Button(I18N.message("searchandindexing"));
 		searchAndIndexing.setWidth100();
 		searchAndIndexing.setHeight(25);
+		addMember(searchAndIndexing);
 
 		Button folders = new Button(I18N.message("folders"));
 		folders.setWidth100();
 		folders.setHeight(25);
-
-		setMembers(general, lastChanges, log, tasks, searchAndIndexing, folders);
+		addMember(folders);
 
 		general.addClickHandler(new ClickHandler() {
 			@Override

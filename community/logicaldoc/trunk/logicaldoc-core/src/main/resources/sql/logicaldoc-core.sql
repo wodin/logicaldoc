@@ -69,49 +69,39 @@ alter table ld_version add constraint FK_VERSION_USER foreign key (ld_userid) re
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
-values     (2,CURRENT_TIMESTAMP,0,'menu.admin',2,'administration.png',1);
+values     (2,CURRENT_TIMESTAMP,0,'menu.admin',2,'menu.png',1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
-values     (9,CURRENT_TIMESTAMP,0,'admin.security',2,'password.png',1);
+values     (9,CURRENT_TIMESTAMP,0,'admin.security',2,'menu.png',1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
-values     (14,CURRENT_TIMESTAMP,0,'task.tasks',2,'task_scheduler.png',1);
+values     (14,CURRENT_TIMESTAMP,0,'task.tasks',2,'menu.png',1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
-values     (-2,CURRENT_TIMESTAMP,0,'system',2,'system.png',1);
+values     (-2,CURRENT_TIMESTAMP,0,'lastchanges',2,'menu.png',1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
-values     (3,CURRENT_TIMESTAMP,0,'clients',2,'connect.png',1);
-
-
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
-values     (17,CURRENT_TIMESTAMP,0,'directory',-2,'folders.png',1);
+values     (3,CURRENT_TIMESTAMP,0,'clients',2,'menu.png',1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
-values     (8,CURRENT_TIMESTAMP,0,'menu.logging',-2,'logging.png',1);
+values     (17,CURRENT_TIMESTAMP,0,'customid',2,'menu.png',1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
-values     (25,CURRENT_TIMESTAMP,0,'menu.searchengine',-2,'search.png',1);
+values     (8,CURRENT_TIMESTAMP,0,'impex',2,'menu.png',1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
-values     (23,CURRENT_TIMESTAMP,0,'smtp',-2,'mail_preferences.png',1);
+values     (25,CURRENT_TIMESTAMP,0,'metadata',2,'menu.png',1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
-values     (10,CURRENT_TIMESTAMP,0,'parameters',-2,'parameters.png',1);
-
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
-values     (21,CURRENT_TIMESTAMP,0,'templates',2,'template.png',1);
-
+values     (23,CURRENT_TIMESTAMP,0,'workflow',2,'menu.png',1);
 
 insert into ld_group
 values     (1,CURRENT_TIMESTAMP,0,'admin','Group of admins',0);

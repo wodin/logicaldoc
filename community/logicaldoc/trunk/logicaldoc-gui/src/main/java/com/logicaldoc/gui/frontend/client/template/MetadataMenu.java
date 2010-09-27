@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.template;
 
 import com.logicaldoc.gui.common.client.Feature;
+import com.logicaldoc.gui.common.client.Menu;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
@@ -62,7 +63,7 @@ public class MetadataMenu extends VLayout {
 		workflow.setWidth100();
 		workflow.setHeight(25);
 
-		if (Feature.visible(Feature.WORKFLOW)) {
+		if (Feature.visible(Feature.WORKFLOW) && Menu.enabled(Menu.WORKFLOW)) {
 			addMember(workflow);
 			if (!Feature.enabled(Feature.WORKFLOW)) {
 				workflow.setDisabled(true);
