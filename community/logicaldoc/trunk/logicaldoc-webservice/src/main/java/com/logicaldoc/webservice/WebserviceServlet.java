@@ -31,7 +31,7 @@ public class WebserviceServlet extends CXFServlet {
 		else
 			response.sendError(HttpServletResponse.SC_MOVED_TEMPORARILY);
 
-		ContextProperties pbean = new ContextProperties(getClass().getClassLoader().getResource("context.properties"));
+		ContextProperties pbean = new ContextProperties();
 		pbean.setProperty("webservice.enabled", "true");
 		pbean.write();
 	}
