@@ -2,11 +2,16 @@ package com.logicaldoc.gui.frontend.client.menu;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.personal.ChangePassword;
 import com.logicaldoc.gui.frontend.client.personal.Profile;
+import com.logicaldoc.gui.frontend.client.services.SecurityService;
+import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.smartgwt.client.util.SC;
@@ -26,6 +31,8 @@ import com.smartgwt.client.widgets.toolbar.ToolStripMenuButton;
  */
 public class MainMenu extends ToolStrip {
 	protected SystemServiceAsync systemService = (SystemServiceAsync) GWT.create(SystemService.class);
+
+	protected SecurityServiceAsync securityService = (SecurityServiceAsync) GWT.create(SecurityService.class);
 
 	public MainMenu() {
 		super();
@@ -110,8 +117,20 @@ public class MainMenu extends ToolStrip {
 		profile.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				Profile profile = new Profile(Session.get().getUser());
-				profile.show();
+				securityService.getUser(Session.get().getSid(), Session.get().getUser().getId(),
+						new AsyncCallback<GUIUser>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUIUser user) {
+								Profile profile = new Profile(user);
+								profile.show();
+							}
+						});
 			}
 		});
 
@@ -149,7 +168,7 @@ public class MainMenu extends ToolStrip {
 		about.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				AboutDialog dialog=new AboutDialog();
+				AboutDialog dialog = new AboutDialog();
 				dialog.show();
 			}
 		});

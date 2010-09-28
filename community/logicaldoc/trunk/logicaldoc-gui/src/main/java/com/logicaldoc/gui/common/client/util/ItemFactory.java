@@ -184,7 +184,7 @@ public class ItemFactory {
 		user.setDisplayField("username");
 		user.setPickListWidth(300);
 		user.setPickListFields(username, label);
-		user.setOptionDataSource(UsersDS.get());
+		user.setOptionDataSource(new UsersDS(null));
 		return user;
 	}
 

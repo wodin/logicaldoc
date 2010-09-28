@@ -35,8 +35,8 @@ public class Profile extends Window {
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("profile"));
-		setWidth(300);
-		setHeight(280);
+		setWidth(450);
+		setHeight(250);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
@@ -47,24 +47,25 @@ public class Profile extends Window {
 		final DynamicForm form = new DynamicForm();
 		form.setValuesManager(vm);
 		form.setMargin(5);
-		form.setNumCols(2);
+		form.setNumCols(3);
 		form.setTitleOrientation(TitleOrientation.TOP);
 
 		TextItem firstName = ItemFactory.newTextItem("firstname", "firstname", user.getFirstName());
 		firstName.setRequired(true);
 		TextItem lastName = ItemFactory.newTextItem("lastname", "lastname", user.getName());
 		lastName.setRequired(true);
-		TextItem address = ItemFactory.newTextItem("address", "address", user.getAddress());
-		TextItem postalCode = ItemFactory.newTextItem("postalcode", "postalcode", user.getPostalCode());
-		TextItem city = ItemFactory.newTextItem("city", "city", user.getCity());
-		TextItem country = ItemFactory.newTextItem("country", "country", user.getCity());
-		SelectItem language = ItemFactory.newLanguageSelector("language", false, true);
-		language.setValue(user.getLanguage());
 		TextItem email = ItemFactory.newEmailItem("email", "email", false);
 		email.setRequired(true);
 		email.setValue(user.getEmail());
+		SelectItem language = ItemFactory.newLanguageSelector("language", false, true);
+		language.setValue(user.getLanguage());
+		TextItem address = ItemFactory.newTextItem("address", "address", user.getAddress());
+		TextItem postalCode = ItemFactory.newTextItem("postalcode", "postalcode", user.getPostalCode());
+		TextItem city = ItemFactory.newTextItem("city", "city", user.getCity());
+		TextItem country = ItemFactory.newTextItem("country", "country", user.getCountry());
+		TextItem state = ItemFactory.newTextItem("state", "state", user.getState());
 		TextItem phone = ItemFactory.newTextItem("phone", "phone", user.getPhone());
-		TextItem cell = ItemFactory.newTextItem("cell", "cell", user.getPhone());
+		TextItem cell = ItemFactory.newTextItem("cell", "cell", user.getCell());
 
 		ButtonItem apply = new ButtonItem();
 		apply.setTitle(I18N.message("apply"));
@@ -77,12 +78,13 @@ public class Profile extends Window {
 					u.setId(user.getId());
 					u.setFirstName(vm.getValueAsString("firstname"));
 					u.setName(vm.getValueAsString("lastname"));
+					u.setEmail(vm.getValueAsString("email"));
+					u.setLanguage(vm.getValueAsString("language"));
 					u.setAddress(vm.getValueAsString("address"));
 					u.setPostalCode(vm.getValueAsString("postalcode"));
 					u.setCity(vm.getValueAsString("city"));
 					u.setCountry(vm.getValueAsString("country"));
-					u.setLanguage(vm.getValueAsString("language"));
-					u.setEmail(vm.getValueAsString("email"));
+					u.setState(vm.getValueAsString("state"));
 					u.setPhone(vm.getValueAsString("phone"));
 					u.setCell(vm.getValueAsString("cell"));
 
@@ -97,12 +99,13 @@ public class Profile extends Window {
 							// Update the currently logged user bean
 							user.setFirstName(ret.getFirstName());
 							user.setName(ret.getName());
+							user.setEmail(ret.getEmail());
+							user.setLanguage(ret.getLanguage());
 							user.setAddress(ret.getAddress());
 							user.setPostalCode(ret.getPostalCode());
 							user.setCity(ret.getCity());
 							user.setCountry(ret.getCountry());
-							user.setLanguage(ret.getLanguage());
-							user.setEmail(ret.getEmail());
+							user.setState(ret.getState());
 							user.setPhone(ret.getPhone());
 							user.setCell(ret.getCell());
 
@@ -113,7 +116,8 @@ public class Profile extends Window {
 			}
 		});
 
-		form.setFields(firstName, lastName, address, postalCode, city, country, language, email, phone, cell, apply);
+		form.setFields(firstName, lastName, email, language, address, postalCode, city, country, state, phone, cell,
+				apply);
 
 		addItem(form);
 	}
