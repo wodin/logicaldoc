@@ -3,6 +3,7 @@ package com.logicaldoc.web;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.URLDecoder;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -11,8 +12,8 @@ import javax.servlet.ServletContextListener;
 import org.apache.commons.io.FileUtils;
 import org.springframework.util.Log4jConfigurer;
 
-import com.logicaldoc.util.config.LoggingConfigurator;
 import com.logicaldoc.util.config.ContextProperties;
+import com.logicaldoc.util.config.LoggingConfigurator;
 import com.logicaldoc.util.io.ZipUtil;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
@@ -40,9 +41,10 @@ public class ApplicationInitializer implements ServletContextListener {
 		ServletContext context = sce.getServletContext();
 
 		// Initialize logging
-		String log4jPath = context.getRealPath("/WEB-INF/classes/ldoc-log4j.xml");
-
+		String log4jPath = null;
 		try {
+			log4jPath = URLDecoder.decode(this.getClass().getResource("/log.xml").getPath(), "UTF-8");
+			
 			// Setup the correct logs folder
 			ContextProperties config = new ContextProperties();
 			LoggingConfigurator lconf = new LoggingConfigurator();

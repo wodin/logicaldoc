@@ -1,5 +1,6 @@
 package com.logicaldoc.util.config;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -19,8 +20,16 @@ public class LoggingConfigurator {
 	private XMLBean xml;
 
 	public LoggingConfigurator() {
-		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		xml = new XMLBean(loader.getResource("ldoc-log4j.xml"));
+		URL configFile = null;
+		try {
+			configFile = LoggingConfigurator.class.getClassLoader().getResource("/log.xml");
+		} catch (Throwable t) {
+		}
+
+		if (configFile == null)
+			configFile = LoggingConfigurator.class.getClassLoader().getResource("log.xml");
+
+		xml = new XMLBean(configFile);
 	}
 
 	/**

@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLDecoder;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,7 +29,11 @@ public class ContextProperties extends OrderedProperties {
 	protected static Log log = LogFactory.getLog(ContextProperties.class);
 
 	public ContextProperties() throws IOException {
-		this(ContextProperties.class.getClassLoader().getResource("context.properties"));
+		try {
+			load(ContextProperties.class.getClassLoader().getResource("/context.properties"));
+		} catch (Throwable t) {
+			load(ContextProperties.class.getClassLoader().getResource("context.properties"));
+		}
 	}
 
 	public ContextProperties(String docname) throws IOException {
@@ -42,6 +47,13 @@ public class ContextProperties extends OrderedProperties {
 	}
 
 	public ContextProperties(URL docname) throws IOException {
+		load(docname);
+	}
+
+	/**
+	 * Loads the file from the given URL
+	 */
+	private void load(URL docname) throws IOException {
 		try {
 			docPath = URLDecoder.decode(docname.getPath(), "UTF-8");
 		} catch (IOException e) {
@@ -92,9 +104,16 @@ public class ContextProperties extends OrderedProperties {
 		if (docPath == null)
 			throw new IOException("Path not given");
 
+		// Backup the file first
+		File src = new File(docPath);
+		File backup = new File(src.getParentFile(), src.getName() + ".back");
+		FileUtils.copyFile(src, backup);
+		log.debug("Backup saved in " + backup.getPath());
+
 		store(new FileOutputStream(docPath), "");
 		try {
 			store(new FileOutputStream(docPath), "");
+			log.info("Saved file " + docPath);
 		} catch (IOException ex) {
 			if (log.isWarnEnabled()) {
 				log.warn(ex.getMessage());

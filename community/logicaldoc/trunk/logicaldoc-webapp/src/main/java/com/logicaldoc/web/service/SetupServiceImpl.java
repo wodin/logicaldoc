@@ -3,6 +3,7 @@ package com.logicaldoc.web.service;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -200,7 +201,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 
 		// Refresh the current logging location
 		try {
-			String log4jPath = getServletContext().getRealPath("/WEB-INF/classes/ldoc-log4j.xml");
+			String log4jPath = URLDecoder.decode(this.getClass().getResource("/log.xml").getPath(), "UTF-8");
 			System.err.println("log4jPath = " + log4jPath);
 			Log4jConfigurer.initLogging(log4jPath);
 		} catch (FileNotFoundException e) {
