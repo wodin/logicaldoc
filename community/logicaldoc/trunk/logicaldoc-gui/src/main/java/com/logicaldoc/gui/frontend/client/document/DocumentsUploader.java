@@ -64,7 +64,8 @@ public class DocumentsUploader extends Window {
 		reloadForm();
 
 		// Create a new uploader panel and attach it to the window
-		multiUploader = new MultiUploader(FileInputType.BUTTON, new IncubatorUploadProgress());
+		multiUploader = new MultiUploader();
+
 		// Add a finish handler which will load the image once the upload
 		// finishes
 		multiUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
