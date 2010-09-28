@@ -172,11 +172,11 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 
 		// build phisically the working directory
 		// and change settings config
-		String docDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/data/docs/");
+		String docDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/docs/");
 		FileUtils.forceMkdir(new File(docDir));
-		String indexDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/data/index/");
+		String indexDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/index/");
 		FileUtils.forceMkdir(new File(indexDir));
-		String userDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/data/users/");
+		String userDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/users/");
 		FileUtils.forceMkdir(new File(userDir));
 		String pluginDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/plugins/");
 		FileUtils.forceMkdir(new File(pluginDir));
