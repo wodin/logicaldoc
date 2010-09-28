@@ -58,6 +58,7 @@ public class HistoryPortlet extends Portlet {
 		date.setAlign(Alignment.CENTER);
 		date.setType(ListGridFieldType.DATE);
 		date.setCellFormatter(new DateCellFormatter());
+		date.setCanFilter(false);
 		ListGridField title = new ListGridField("title", I18N.message("title"));
 		ListGridField icon = new ListGridField("icon", " ", 24);
 		icon.setType(ListGridFieldType.IMAGE);

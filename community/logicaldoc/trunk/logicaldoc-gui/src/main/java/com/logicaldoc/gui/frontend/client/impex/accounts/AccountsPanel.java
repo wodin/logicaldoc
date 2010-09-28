@@ -77,13 +77,13 @@ public class AccountsPanel extends VLayout {
 
 		// Initialize the listing panel
 		listing.setAlign(Alignment.CENTER);
-		listing.setHeight("70%");
+		listing.setHeight("60%");
 		listing.setShowResizeBar(true);
 
 		ListGridField id = new ListGridField("id", 50);
 		id.setHidden(true);
 
-		ListGridField email = new ListGridField("email", " ", 300);
+		ListGridField email = new ListGridField("email", I18N.message("email"), 300);
 		email.setCanFilter(true);
 
 		ListGridField enabled = new ListGridField("eenabled", " ", 24);
@@ -310,7 +310,7 @@ public class AccountsPanel extends VLayout {
 		contextMenu.showContextMenu();
 	}
 
-	private void showDetails(GUIEmailAccount account) {
+	public void showDetails(GUIEmailAccount account) {
 		if (!(details instanceof AccountDetailsPanel)) {
 			detailsContainer.removeMember(details);
 			details = new AccountDetailsPanel(this);

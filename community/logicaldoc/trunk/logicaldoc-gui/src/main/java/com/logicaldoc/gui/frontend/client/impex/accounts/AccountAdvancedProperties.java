@@ -51,10 +51,10 @@ public class AccountAdvancedProperties extends AccountDetailsTab {
 		include.addChangedHandler(changedHandler);
 
 		TextItem exclude = ItemFactory.newTextItem("exclude", "exclude", account.getExcludes());
-		include.addChangedHandler(changedHandler);
+		exclude.addChangedHandler(changedHandler);
 
 		TextItem folder = ItemFactory.newTextItem("mailfolder", "mailfolder", account.getMailFolder());
-		include.addChangedHandler(changedHandler);
+		folder.addChangedHandler(changedHandler);
 
 		SelectItem format = ItemFactory.newSelectItem("format", "format");
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();

@@ -170,7 +170,7 @@ public class SearchIndexingPanel extends VLayout {
 		published.setType(ListGridFieldType.DATE);
 		published.setCellFormatter(new DateCellFormatter());
 		published.setCanFilter(false);
-
+		
 		ListGridField creator = new ListGridField("creator", I18N.message("creator"), 90);
 		creator.setAlign(Alignment.CENTER);
 		creator.setCanFilter(true);

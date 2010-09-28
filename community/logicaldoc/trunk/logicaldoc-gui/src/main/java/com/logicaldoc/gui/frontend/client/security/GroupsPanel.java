@@ -169,7 +169,7 @@ public class GroupsPanel extends VLayout {
 		}
 	}
 
-	private void showGroupDetails(GUIGroup group) {
+	public void showGroupDetails(GUIGroup group) {
 		if (!(details instanceof GroupDetailsPanel)) {
 			detailsContainer.removeMember(details);
 			details = new GroupDetailsPanel(GroupsPanel.this);

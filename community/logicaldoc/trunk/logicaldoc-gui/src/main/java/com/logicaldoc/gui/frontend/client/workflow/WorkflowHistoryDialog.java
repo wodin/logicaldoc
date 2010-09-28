@@ -146,9 +146,11 @@ public class WorkflowHistoryDialog extends Window {
 		ListGridField startDate = new ListGridField("startdate", I18N.message("startdate"), 150);
 		startDate.setAlign(Alignment.CENTER);
 		startDate.setType(ListGridFieldType.DATE);
+		startDate.setCanFilter(false);
 		ListGridField endDate = new ListGridField("enddate", I18N.message("enddate"), 150);
 		endDate.setAlign(Alignment.CENTER);
 		endDate.setType(ListGridFieldType.DATE);
+		endDate.setCanFilter(false);
 		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 250);
 
 		instancesList = new ListGrid();
@@ -185,6 +187,7 @@ public class WorkflowHistoryDialog extends Window {
 		ListGridField historyDate = new ListGridField("date", I18N.message("date"), 150);
 		historyDate.setAlign(Alignment.CENTER);
 		historyDate.setType(ListGridFieldType.DATE);
+		historyDate.setCanFilter(false);
 		ListGridField historyUser = new ListGridField("user", I18N.message("user"), 120);
 		ListGridField historyDoc = new ListGridField("document", I18N.message("document"), 180);
 		ListGridField historySid = new ListGridField("sessionid", I18N.message("sid"), 240);

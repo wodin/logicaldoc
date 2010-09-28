@@ -246,6 +246,7 @@ public class WorkflowDetailsDialog extends Window {
 		docLastModified.setAlign(Alignment.CENTER);
 		docLastModified.setType(ListGridFieldType.DATE);
 		docLastModified.setCellFormatter(new DateCellFormatter());
+		docLastModified.setCanFilter(false);
 		ListGridField icon = new ListGridField("icon", " ", 24);
 		icon.setType(ListGridFieldType.IMAGE);
 		icon.setCanSort(false);

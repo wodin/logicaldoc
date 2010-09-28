@@ -38,7 +38,8 @@ public class AccountStandardProperties extends AccountDetailsTab {
 		targetSelector = new FolderSelector("target", false);
 		targetSelector.setRequired(true);
 		targetSelector.setTitle(I18N.message("target"));
-		targetSelector.setWidth(50);
+		targetSelector.setColSpan(2);
+		targetSelector.setEndRow(true);
 		targetSelector.setFolder(account.getTarget());
 		targetSelector.addFolderChangeListener(new FolderChangeListener() {
 			@Override
@@ -84,7 +85,7 @@ public class AccountStandardProperties extends AccountDetailsTab {
 		server.addChangedHandler(changedHandler);
 
 		IntegerItem port = ItemFactory.newIntegerItem("port", "port", account.getPort());
-		server.addChangedHandler(changedHandler);
+		port.addChangedHandler(changedHandler);
 
 		RadioGroupItem ssl = ItemFactory.newBooleanSelector("ssl", "ssl");
 		ssl.setValue(account.isSsl() ? "yes" : "no");
@@ -106,16 +107,17 @@ public class AccountStandardProperties extends AccountDetailsTab {
 		form.validate();
 		if (!form.hasErrors()) {
 			account.setMailAddress((String) values.get("mailaddress"));
+			account.setHost((String) values.get("server"));
 			account.setUserName((String) values.get("username"));
 			account.setPassword((String) values.get("password"));
 			account.setTarget(targetSelector.getFolder());
 			account.setLanguage((String) values.get("language"));
 			account.setProvider((String) values.get("protocol"));
-			account.setSsl("yes".equals((String) values.get("ssl")));
 			if (values.get("port") instanceof Integer)
 				account.setPort((Integer) values.get("port"));
 			else
 				account.setPort(Integer.parseInt((String) values.get("port")));
+			account.setSsl("yes".equals((String) values.get("ssl")));
 
 		}
 		return !form.hasErrors();

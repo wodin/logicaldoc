@@ -57,9 +57,15 @@ public class GUIEmailAccount implements Serializable {
 	 */
 	private int format = FORMAT_EML;
 
-	private GUIFolder target;
+	private GUIFolder target = new GUIFolder();
 
 	private GUIEmailRule[] rules;
+
+	public GUIEmailAccount() {
+		super();
+		target.setId(5);
+		target.setName("/");
+	}
 
 	public long getId() {
 		return id;

@@ -101,6 +101,7 @@ public class ImportArchivesList extends VLayout {
 		created.setAlign(Alignment.CENTER);
 		created.setType(ListGridFieldType.DATE);
 		created.setCellFormatter(new DateCellFormatter());
+		created.setCanFilter(false);
 
 		ListGridField creator = new ListGridField("creator", I18N.message("creator"), 110);
 

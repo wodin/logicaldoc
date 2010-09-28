@@ -150,6 +150,7 @@ public class ValidationTab extends Tab {
 		date.setAlign(Alignment.CENTER);
 		date.setType(ListGridFieldType.DATE);
 		date.setCellFormatter(new DateCellFormatter());
+		date.setCanFilter(false);
 		ListGridField error = new ListGridField("error", I18N.message("error"), 190);
 
 		docsList = new ListGrid();

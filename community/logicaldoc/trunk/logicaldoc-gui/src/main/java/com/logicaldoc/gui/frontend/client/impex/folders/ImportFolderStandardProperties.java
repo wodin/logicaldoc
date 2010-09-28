@@ -36,7 +36,8 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 		targetSelector = new FolderSelector("target", false);
 		targetSelector.setRequired(true);
 		targetSelector.setTitle(I18N.message("target"));
-		targetSelector.setWidth(50);
+		targetSelector.setColSpan(2);
+		targetSelector.setEndRow(true);
 		targetSelector.setFolder(share.getTarget());
 		targetSelector.addFolderChangeListener(new FolderChangeListener() {
 			@Override
@@ -58,7 +59,7 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 			formsContainer.removeChild(form);
 
 		form = new DynamicForm();
-		form.setNumCols(2);
+		form.setNumCols(1);
 		form.setTitleOrientation(TitleOrientation.TOP);
 
 		TextItem path = ItemFactory.newTextItem("path", "path", share.getPath());

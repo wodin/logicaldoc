@@ -80,18 +80,19 @@ public class ExportArchivesList extends VLayout {
 
 		// Initialize the listing panel
 		listing.setAlign(Alignment.CENTER);
-		listing.setHeight("70%");
+		listing.setHeight("60%");
 		listing.setShowResizeBar(true);
 
 		ListGridField id = new ListGridField("id", 50);
 		id.setHidden(true);
 
 		ListGridField name = new ListGridField("name", I18N.message("name"), 250);
+		name.setCanFilter(true);
 
 		ListGridField type = new ListGridField("type", I18N.message("type"), 130);
 		type.setHidden(true);
 		ListGridField typeLabel = new ListGridField("typelabel", I18N.message("type"), 130);
-		type.setCanFilter(false);
+		typeLabel.setCanFilter(false);
 
 		ListGridField status = new ListGridField("statusicon", I18N.message("status"), 50);
 		status.setType(ListGridFieldType.IMAGE);
@@ -106,9 +107,12 @@ public class ExportArchivesList extends VLayout {
 		created.setAlign(Alignment.CENTER);
 		created.setType(ListGridFieldType.DATE);
 		created.setCellFormatter(new DateCellFormatter());
+		created.setCanFilter(false);
 
 		ListGridField creator = new ListGridField("creator", I18N.message("creator"), 110);
+		creator.setCanFilter(true);
 		ListGridField closer = new ListGridField("closer", I18N.message("closedby"), 110);
+		closer.setCanFilter(true);
 
 		ListGridField size = new ListGridField("size", I18N.message("size"), 70);
 		size.setAlign(Alignment.CENTER);

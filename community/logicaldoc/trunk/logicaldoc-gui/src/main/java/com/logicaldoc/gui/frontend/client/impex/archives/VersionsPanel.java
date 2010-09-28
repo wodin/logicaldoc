@@ -100,6 +100,7 @@ public class VersionsPanel extends VLayout {
 		date.setAlign(Alignment.CENTER);
 		date.setType(ListGridFieldType.DATE);
 		date.setCellFormatter(new DateCellFormatter());
+		date.setCanFilter(false);
 
 		ListGridField size = new ListGridField("size", I18N.message("size"), 70);
 		size.setAlign(Alignment.CENTER);
