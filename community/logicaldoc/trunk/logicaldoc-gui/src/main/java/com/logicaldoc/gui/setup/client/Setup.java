@@ -460,7 +460,7 @@ public class Setup implements EntryPoint {
 					public void onSuccess(Void arg) {
 						SC.say(I18N.message("installationperformed"),
 								I18N.message("installationend", info.getProductName()));
-						Util.redirect(Util.contextPath() + "/frontend.jsp");
+						Util.redirect(Util.contextPath() + "frontend.jsp");
 						submit.setDisabled(false);
 					}
 				});

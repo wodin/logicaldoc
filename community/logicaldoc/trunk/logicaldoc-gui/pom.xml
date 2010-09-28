@@ -203,7 +203,7 @@
                 <delete dir="target/plugin" quiet="true" />
                 <unzip src="target/${project.artifactId}-${project.version}-plugin.zip" dest="target/plugin" />
                 <delete file="target/${project.artifactId}-${project.version}-plugin.zip" />
-                <delete file="target/plugin/pom.zml" />
+                <delete file="target/plugin/pom.xml" />
                 <copy todir="target/plugin">
                   <fileset dir="war">
                     <exclude name="**/WEB-INF/**" />

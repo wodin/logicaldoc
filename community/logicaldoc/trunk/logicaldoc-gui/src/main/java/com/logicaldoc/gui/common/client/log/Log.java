@@ -51,7 +51,7 @@ public class Log {
 
 	public static void error(String message, String detail, Throwable caught) {
 		EventPanel.get().error(message, detail);
-		GWT.log("info: " + message, caught);
+		GWT.log("error: " + message, caught);
 	}
 
 	public static void info(String message, String detail) {

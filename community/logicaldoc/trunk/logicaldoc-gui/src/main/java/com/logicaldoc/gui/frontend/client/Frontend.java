@@ -56,7 +56,7 @@ public class Frontend implements EntryPoint {
 		GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 			@Override
 			public void onUncaughtException(Throwable caught) {
-				Log.serverError(caught.getMessage(), caught);
+				Log.error(caught.getMessage(),null, caught);
 			}
 
 		});

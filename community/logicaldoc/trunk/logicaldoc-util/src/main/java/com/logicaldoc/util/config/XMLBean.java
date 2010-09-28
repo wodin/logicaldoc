@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom.Attribute;
@@ -27,7 +28,7 @@ import org.jdom.output.XMLOutputter;
  */
 public class XMLBean {
 
-	protected static Log logger = LogFactory.getLog(XMLBean.class);
+	protected static Log log = LogFactory.getLog(XMLBean.class);
 
 	private Document doc;
 
@@ -58,10 +59,10 @@ public class XMLBean {
 	public XMLBean(URL docname) {
 
 		try {
-			docPath =  URLDecoder.decode(docname.getPath(),"UTF-8");
+			docPath = URLDecoder.decode(docname.getPath(), "UTF-8");
 			docInputStream = null;
 		} catch (Exception ex) {
-			logger.error(ex.getMessage());
+			log.error(ex.getMessage());
 		}
 
 		initDocument();
@@ -90,25 +91,25 @@ public class XMLBean {
 					// In some environments, during maven test phase a well
 					// formed
 					// URL must be used insead of ordinary path
-					logger.error(t.getMessage());
+					log.error(t.getMessage());
 
 					try {
 						doc = builder.build("file://" + docPath);
 					} catch (Throwable t2) {
-						logger.error(t2.getMessage());
+						log.error(t2.getMessage());
 					}
 				}
 			} else
 				try {
 					doc = builder.build(docInputStream);
 				} catch (Throwable t) {
-					logger.error(t.getMessage());
+					log.error(t.getMessage());
 				}
 
 			root = doc.getRootElement();
 		} catch (Exception jdome) {
 			jdome.printStackTrace();
-			logger.error(jdome.getMessage());
+			log.error(jdome.getMessage());
 		}
 	}
 
@@ -206,7 +207,8 @@ public class XMLBean {
 	}
 
 	/**
-	 * This method returns the text of all children in the format childname<separator1>childtext<separator2>.
+	 * This method returns the text of all children in the format
+	 * childname<separator1>childtext<separator2>.
 	 * 
 	 * @param elemname Name of the root element.
 	 * @param attribute Name of the attribute which must root element have.
@@ -228,7 +230,7 @@ public class XMLBean {
 				result += separator2;
 			}
 		} catch (Exception ex) {
-			logger.error(ex.getMessage(), ex);
+			log.error(ex.getMessage(), ex);
 			ex.printStackTrace();
 		}
 
@@ -292,19 +294,29 @@ public class XMLBean {
 		if (docPath == null)
 			return false;
 
-		boolean result = true;
+		// Backup the file first
+		File src = new File(docPath);
+		File backup = new File(src.getParentFile(), src.getName() + ".back");
+		try {
+			FileUtils.copyFile(src, backup);
+		} catch (Exception ex) {
+	       log.error(ex.getMessage());
+		}
+		log.debug("Backup saved in " + backup.getPath());
 
+		boolean result = true;
 		try {
 			XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat().setIndent("  ").setLineSeparator("\n"));
 			File file = new File(docPath);
 			OutputStream out = new FileOutputStream(file);
 			outputter.output(doc, out);
 			out.close();
+			log.info("Saved file " + docPath);
 		} catch (Exception ex) {
 			result = false;
 
-			if (logger.isWarnEnabled()) {
-				logger.warn(ex.getMessage());
+			if (log.isWarnEnabled()) {
+				log.warn(ex.getMessage());
 			}
 		}
 
