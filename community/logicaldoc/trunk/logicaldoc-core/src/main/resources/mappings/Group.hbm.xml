@@ -14,7 +14,7 @@
     <property name="type" type="int" column="ld_type" not-null="true" />
     <set name="users" table="ld_usergroup" lazy="false">
       <key column="ld_groupid" />
-      <many-to-many column="ld_userid" class="com.logicaldoc.core.security.User" />
+      <many-to-many column="ld_userid" class="com.logicaldoc.core.security.User" where="ld_deleted=0"/>
     </set>
     <map name="attributes" table="ld_group_ext" lazy="false" cascade="all" order-by="ld_position asc">
       <key column="ld_groupid" />

@@ -27,9 +27,9 @@
 		<property name="telephone2" type="string" column="ld_telephone2" length="255" />
 		<property name="type" type="int" column="ld_type" not-null="true"/>
         <property name="source" type="int" column="ld_source" not-null="true"/>
-		<set name="groups" table="ld_usergroup" inverse="true" lazy="false">
+		<set name="groups" table="ld_usergroup" inverse="true" lazy="false" >
 			<key column="ld_userid" />
-			<many-to-many column="ld_groupid" class="com.logicaldoc.core.security.Group" />
+			<many-to-many column="ld_groupid" class="com.logicaldoc.core.security.Group" where="ld_deleted=0" />
 		</set>
 	</class>
 </hibernate-mapping>
