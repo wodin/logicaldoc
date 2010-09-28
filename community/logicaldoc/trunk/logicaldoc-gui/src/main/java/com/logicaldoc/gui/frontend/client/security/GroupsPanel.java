@@ -192,7 +192,7 @@ public class GroupsPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.deleteUser(Session.get().getSid(), id, new AsyncCallback<Void>() {
+							service.deleteGroup(Session.get().getSid(), id, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -202,7 +202,8 @@ public class GroupsPanel extends VLayout {
 								public void onSuccess(Void result) {
 									list.removeSelectedData();
 									list.deselectAllRecords();
-									showGroupDetails(null);
+									detailsContainer.setMembers(SELECT_GROUP);
+									// showGroupDetails(null);
 								}
 							});
 						}

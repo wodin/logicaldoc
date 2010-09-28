@@ -234,7 +234,8 @@ public class UsersPanel extends VLayout {
 								public void onSuccess(Void result) {
 									list.removeSelectedData();
 									list.deselectAllRecords();
-									showUserDetails(null);
+									detailsContainer.setMembers(SELECT_USER);
+									// showUserDetails(null);
 								}
 							});
 						}

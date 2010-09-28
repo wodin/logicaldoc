@@ -201,6 +201,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	public void deleteGroup(String sid, long groupId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+		SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
+		manager.removeAllUsersFromGroup(groupDao.findById(groupId));
 		groupDao.delete(groupId);
 	}
 
