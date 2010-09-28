@@ -372,7 +372,7 @@ public class ImportFoldersPanel extends VLayout {
 		contextMenu.showContextMenu();
 	}
 
-	private void showShareDetails(GUIShare share) {
+	public void showShareDetails(GUIShare share) {
 		if (!(details instanceof ImportFolderDetailsPanel)) {
 			detailsContainer.removeMember(details);
 			details = new ImportFolderDetailsPanel(this);

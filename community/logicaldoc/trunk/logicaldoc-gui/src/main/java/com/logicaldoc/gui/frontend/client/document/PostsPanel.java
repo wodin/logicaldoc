@@ -76,6 +76,7 @@ public class PostsPanel extends DocumentDetailTab {
 		date.setAlign(Alignment.CENTER);
 		date.setType(ListGridFieldType.DATE);
 		date.setCellFormatter(new DateCellFormatter());
+		date.setCanFilter(false);
 		ListGridField message = new ListGridField("message", I18N.message("message"), 400);
 		ListGridField indent = new ListGridField("indent");
 		indent.setHidden(true);

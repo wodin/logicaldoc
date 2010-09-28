@@ -71,6 +71,7 @@ public class ImportFoldersList extends VLayout {
 		date.setAlign(Alignment.CENTER);
 		date.setType(ListGridFieldType.DATE);
 		date.setCellFormatter(new DateCellFormatter());
+		date.setCanFilter(false);
 
 		list = new ListGrid();
 		list.setShowAllRecords(true);

@@ -78,6 +78,7 @@ public class DocumentsListPanel extends VLayout {
 		lastModified.setAlign(Alignment.CENTER);
 		lastModified.setType(ListGridFieldType.DATE);
 		lastModified.setCellFormatter(new DateCellFormatter());
+		lastModified.setCanFilter(false);
 
 		ListGridField publisher = new ListGridField("publisher", I18N.message("publisher"), 90);
 		publisher.setAlign(Alignment.CENTER);
@@ -87,6 +88,7 @@ public class DocumentsListPanel extends VLayout {
 		published.setAlign(Alignment.CENTER);
 		published.setType(ListGridFieldType.DATE);
 		published.setCellFormatter(new DateCellFormatter());
+		published.setCanFilter(false);
 
 		ListGridField creator = new ListGridField("creator", I18N.message("creator"), 90);
 		creator.setAlign(Alignment.CENTER);
@@ -96,6 +98,7 @@ public class DocumentsListPanel extends VLayout {
 		created.setAlign(Alignment.CENTER);
 		created.setType(ListGridFieldType.DATE);
 		created.setCellFormatter(new DateCellFormatter());
+		created.setCanFilter(false);
 
 		ListGridField customId = new ListGridField("customId", I18N.message("customid"), 110);
 		customId.setType(ListGridFieldType.TEXT);

@@ -67,6 +67,7 @@ public class DiscussionsPanel extends DocumentDetailTab {
 		lastPost.setAlign(Alignment.CENTER);
 		lastPost.setType(ListGridFieldType.DATE);
 		lastPost.setCellFormatter(new DateCellFormatter());
+		lastPost.setCanFilter(false);
 
 		listGrid = new ListGrid();
 		listGrid.setCanFreezeFields(true);

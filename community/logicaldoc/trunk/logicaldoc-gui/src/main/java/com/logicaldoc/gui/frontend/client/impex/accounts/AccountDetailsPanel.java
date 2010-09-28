@@ -47,12 +47,12 @@ public class AccountDetailsPanel extends VLayout {
 
 	private TabSet tabSet = new TabSet();
 
-	private AccountsPanel foldersPanel;
+	private AccountsPanel accountsPanel;
 
-	public AccountDetailsPanel(AccountsPanel foldersPanel) {
+	public AccountDetailsPanel(AccountsPanel accountsPanel) {
 		super();
 
-		this.foldersPanel = foldersPanel;
+		this.accountsPanel = accountsPanel;
 		setHeight100();
 		setWidth100();
 		setMembersMargin(10);
@@ -180,9 +180,12 @@ public class AccountDetailsPanel extends VLayout {
 				}
 
 				@Override
-				public void onSuccess(GUIEmailAccount result) {
+				public void onSuccess(GUIEmailAccount account) {
 					savePanel.setVisible(false);
-					foldersPanel.updateRecord(result);
+					if (account != null) {
+						accountsPanel.updateRecord(account);
+						accountsPanel.showDetails(account);
+					}
 				}
 			});
 		}

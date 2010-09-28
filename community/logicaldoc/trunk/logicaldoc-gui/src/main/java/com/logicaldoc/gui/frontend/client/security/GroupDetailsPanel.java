@@ -52,7 +52,7 @@ public class GroupDetailsPanel extends VLayout {
 
 		setHeight100();
 		setWidth100();
-		
+
 		savePanel = new HLayout();
 		savePanel.setHeight(20);
 		savePanel.setVisible(false);
@@ -154,9 +154,12 @@ public class GroupDetailsPanel extends VLayout {
 				}
 
 				@Override
-				public void onSuccess(GUIGroup result) {
+				public void onSuccess(GUIGroup group) {
 					savePanel.setVisible(false);
-					groupsPanel.updateRecord(result);
+					if (group != null) {
+						groupsPanel.updateRecord(group);
+						groupsPanel.showGroupDetails(group);
+					}
 				}
 			});
 		}

@@ -60,7 +60,7 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 		include.addChangedHandler(changedHandler);
 
 		TextItem exclude = ItemFactory.newTextItem("exclude", "exclude", share.getExcludes());
-		include.addChangedHandler(changedHandler);
+		exclude.addChangedHandler(changedHandler);
 
 		SelectItem template = ItemFactory.newTemplateSelector(false, null);
 		template.addChangedHandler(changedHandler);
@@ -74,7 +74,7 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 		delImport.addChangedHandler(changedHandler);
 
 		TextItem tags = ItemFactory.newTextItem("tags", "tags", share.getTags());
-		include.addChangedHandler(changedHandler);
+		tags.addChangedHandler(changedHandler);
 
 		form.setItems(depth, size, template, include, exclude, tags, delImport);
 

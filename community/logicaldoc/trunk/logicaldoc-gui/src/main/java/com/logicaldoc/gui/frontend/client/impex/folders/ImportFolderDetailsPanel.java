@@ -158,9 +158,12 @@ public class ImportFolderDetailsPanel extends VLayout {
 				}
 
 				@Override
-				public void onSuccess(GUIShare result) {
+				public void onSuccess(GUIShare share) {
 					savePanel.setVisible(false);
-					foldersPanel.updateRecord(result);
+					if (share != null) {
+						foldersPanel.updateRecord(share);
+						foldersPanel.showShareDetails(share);
+					}
 				}
 			});
 		}

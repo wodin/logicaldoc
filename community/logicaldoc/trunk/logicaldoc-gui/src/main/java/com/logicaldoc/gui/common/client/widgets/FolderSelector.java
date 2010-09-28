@@ -38,7 +38,7 @@ public class FolderSelector extends StaticTextItem {
 		setTitle(I18N.message("folder"));
 		setWrapTitle(false);
 		setWrap(false);
-		setValue("");
+		setValue("  ");
 		setRedrawOnChange(true);
 		setValueField("id");
 		setDisplayField("name");
@@ -46,7 +46,6 @@ public class FolderSelector extends StaticTextItem {
 		FormItemIcon remove = new FormItemIcon();
 		remove.setName("remove");
 		remove.setSrc("[SKIN]/actions/remove.png");
-		
 
 		menu.setCanSelectParentItems(true);
 		Date date = new Date();
@@ -63,11 +62,11 @@ public class FolderSelector extends StaticTextItem {
 		picker.setName("picker");
 		addIconClickHandler(new IconClickHandler() {
 			public void onIconClick(IconClickEvent event) {
-				if("remove".equals(event.getIcon().getName())){
+				if ("remove".equals(event.getIcon().getName())) {
 					setValue("");
 					folderId = null;
 					redraw();
-				}else{
+				} else {
 					menu.showContextMenu();
 				}
 			}
@@ -81,7 +80,8 @@ public class FolderSelector extends StaticTextItem {
 
 	public void setFolder(Long folderId, String name) {
 		this.folderId = folderId;
-		setValue(name);
+		// Use &nbsp; to have a better look&feel with Explorer
+		setValue(name + "&nbsp;&nbsp;");
 		for (FolderChangeListener listener : listeners) {
 			listener.onChanged(getFolder());
 		}

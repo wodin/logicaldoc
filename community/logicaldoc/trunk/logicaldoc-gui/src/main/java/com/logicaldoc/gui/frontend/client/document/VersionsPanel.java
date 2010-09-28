@@ -58,6 +58,7 @@ public class VersionsPanel extends DocumentDetailTab {
 		date.setAlign(Alignment.CENTER);
 		date.setType(ListGridFieldType.DATE);
 		date.setCellFormatter(new DateCellFormatter());
+		date.setCanFilter(false);
 		ListGridField comment = new ListGridField("comment", I18N.message("comment"));
 
 		listGrid = new ListGrid();

@@ -68,6 +68,7 @@ public class EventsWindow extends Window {
 		date.setAlign(Alignment.CENTER);
 		date.setType(ListGridFieldType.DATE);
 		date.setCellFormatter(new DateCellFormatter());
+		date.setCanFilter(false);
 
 		ListGridField detail = new ListGridField("detail", I18N.message("detail"), 300);
 		detail.setCanSort(false);
