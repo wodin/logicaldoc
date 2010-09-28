@@ -61,7 +61,8 @@ public class GroupsDataServlet extends HttpServlet {
 				 * Iterate over records composing the response XML document
 				 */
 				for (Group group : dao.findAll()) {
-					if (user.getGroups().contains(group) || group.getType() != Group.TYPE_DEFAULT)
+					if (group.getDeleted() == 1 || user.getGroups().contains(group)
+							|| group.getType() != Group.TYPE_DEFAULT)
 						continue;
 
 					writer.print("<group>");

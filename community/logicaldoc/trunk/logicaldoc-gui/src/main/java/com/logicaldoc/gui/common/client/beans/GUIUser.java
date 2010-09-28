@@ -14,15 +14,15 @@ public class GUIUser implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String userName;
+	private String userName = "";
 
 	private long id = 0;
 
 	private GUIGroup[] groups = new GUIGroup[0];
 
-	private String firstName;
+	private String firstName = "";
 
-	private String name;
+	private String name = "";
 
 	private String language = "en";
 
@@ -32,21 +32,21 @@ public class GUIUser implements Serializable {
 
 	private boolean passwordExpires = false;
 
-	private String address;
+	private String address = "";
 
-	private String postalCode;
+	private String postalCode = "";
 
-	private String city;
+	private String city = "";
 
-	private String country;
+	private String country = "";
 
-	private String state;
+	private String state = "";
 
-	private String phone;
+	private String phone = "";
 
-	private String email;
+	private String email = "";
 
-	private String cell;
+	private String cell = "";
 
 	private boolean enabled = true;
 

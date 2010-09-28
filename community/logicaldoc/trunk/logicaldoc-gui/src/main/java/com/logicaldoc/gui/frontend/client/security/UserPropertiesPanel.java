@@ -50,15 +50,14 @@ public class UserPropertiesPanel extends HLayout {
 	public UserPropertiesPanel(GUIUser user, ChangedHandler changedHandler) {
 		if (user == null) {
 			setMembers(UsersPanel.SELECT_USER);
-			return;
+		} else {
+			this.user = user;
+			this.changedHandler = changedHandler;
+			setWidth100();
+			setHeight100();
+			setMembersMargin(20);
+			refresh();
 		}
-
-		this.user = user;
-		this.changedHandler = changedHandler;
-		setWidth100();
-		setHeight100();
-		setMembersMargin(20);
-		refresh();
 	}
 
 	public void refresh() {

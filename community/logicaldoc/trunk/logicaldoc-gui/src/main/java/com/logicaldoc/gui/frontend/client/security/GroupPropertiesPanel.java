@@ -31,15 +31,14 @@ public class GroupPropertiesPanel extends HLayout {
 	public GroupPropertiesPanel(GUIGroup group, ChangedHandler changedHandler) {
 		if (group == null) {
 			setMembers(GroupsPanel.SELECT_GROUP);
-			return;
+		} else {
+			this.group = group;
+			this.changedHandler = changedHandler;
+			setWidth100();
+			setHeight100();
+			setMembersMargin(20);
+			refresh();
 		}
-
-		this.group = group;
-		this.changedHandler = changedHandler;
-		setWidth100();
-		setHeight100();
-		setMembersMargin(20);
-		refresh();
 	}
 
 	private void refresh() {
