@@ -66,7 +66,7 @@ public class UsersPanel extends VLayout {
 
 		// Initialize the listing panel as placeholder
 		listing.setAlign(Alignment.CENTER);
-		listing.setHeight("60%");
+		listing.setHeight("55%");
 		listing.setShowResizeBar(true);
 
 		ListGridField id = new ListGridField("id", 50);
@@ -107,8 +107,8 @@ public class UsersPanel extends VLayout {
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setFilterOnKeypress(true);
 		list.setShowFilterEditor(true);
-		list.setDataSource(UsersDS.get());
-		list.setFields(id, enabled, username, firstName, name, email, cell, phone);
+		list.setDataSource(new UsersDS(null));
+		list.setFields(id, enabled, username, firstName, name, email, phone, cell);
 
 		listing.addMember(infoPanel);
 		listing.addMember(list);
@@ -201,7 +201,7 @@ public class UsersPanel extends VLayout {
 		}
 	}
 
-	private void showUserDetails(GUIUser user) {
+	public void showUserDetails(GUIUser user) {
 		if (!(details instanceof UserDetailsPanel)) {
 			detailsContainer.removeMember(details);
 			details = new UserDetailsPanel(UsersPanel.this);

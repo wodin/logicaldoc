@@ -12,9 +12,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class UsersDS extends DataSource {
-	private static UsersDS instance;
-
-	private UsersDS(Long grpId) {
+	public UsersDS(Long grpId) {
 		setTitleField("label");
 		setRecordXPath("/list/user");
 
@@ -33,12 +31,6 @@ public class UsersDS extends DataSource {
 		setFields(id, username, label, enabled, name, firstName, email, phone, cell);
 		setDataURL("data/users.xml?sid=" + Session.get().getSid() + (grpId != null ? "&groupId=" + grpId : ""));
 		setClientOnly(true);
-	}
-
-	public static UsersDS get() {
-		if (instance == null)
-			instance = new UsersDS(null);
-		return instance;
 	}
 
 	public static UsersDS get(long groupId) {

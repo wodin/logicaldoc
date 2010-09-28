@@ -261,7 +261,6 @@ public class UserPropertiesPanel extends HLayout {
 			user.setPhone((String) values.get("phone"));
 			user.setCell((String) values.get("cell"));
 			user.setEmail((String) values.get("email"));
-
 		}
 		return !vm.hasErrors();
 	}

@@ -391,20 +391,17 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			User usr = userDao.findById(user.getId());
 			userDao.initialize(usr);
 
-			usr.setCity(user.getCity());
-			usr.setCountry(user.getCountry());
-			usr.setEmail(user.getEmail());
 			usr.setFirstName(user.getFirstName());
 			usr.setName(user.getName());
+			usr.setEmail(user.getEmail());
 			usr.setLanguage(user.getLanguage());
-			usr.setPostalcode(user.getPostalCode());
-			usr.setState(user.getState());
 			usr.setStreet(user.getAddress());
+			usr.setPostalcode(user.getPostalCode());
+			usr.setCity(user.getCity());
+			usr.setCountry(user.getCountry());
+			usr.setState(user.getState());
 			usr.setTelephone(user.getPhone());
 			usr.setTelephone2(user.getCell());
-			usr.setUserName(user.getUserName());
-			usr.setEnabled(user.isEnabled() ? 1 : 0);
-			usr.setPasswordExpires(user.isPasswordExpires() ? 1 : 0);
 
 			userDao.store(usr);
 		} catch (Throwable e) {
