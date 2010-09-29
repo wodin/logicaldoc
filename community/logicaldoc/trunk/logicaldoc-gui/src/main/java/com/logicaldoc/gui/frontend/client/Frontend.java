@@ -56,7 +56,7 @@ public class Frontend implements EntryPoint {
 		GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 			@Override
 			public void onUncaughtException(Throwable caught) {
-				Log.error(caught.getMessage(),null, caught);
+				Log.error(caught.getMessage(), null, caught);
 			}
 
 		});
@@ -91,9 +91,11 @@ public class Frontend implements EntryPoint {
 
 			@Override
 			public void onSuccess(GUIInfo info) {
-				WindowUtils.setTitle(info.getProductName() + " " + info.getRelease());
-				
 				I18N.init(info);
+				
+				WindowUtils.setTitle(info.getProductName() + " " + info.getRelease()
+						+ (info.getLicensee() != null ? " - " +I18N.message("licensedto") + ": " + info.getLicensee() : ""));
+				
 				Feature.init(info);
 				Session.get().setInfo(info);
 
