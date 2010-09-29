@@ -193,7 +193,7 @@ public class DocumentsListPanel extends VLayout {
 						ListGridRecord record = event.getRecord();
 						if ("sign".equals(record.getAttribute("signed"))) {
 							String id = list.getSelectedRecord().getAttribute("id");
-							String fileName = list.getSelectedRecord().getAttribute("filename")+".p7m";
+							String fileName = list.getSelectedRecord().getAttribute("filename") + ".p7m";
 							SignVerifyDialog verify = new SignVerifyDialog(id, fileName);
 							verify.show();
 							event.cancel();
@@ -253,6 +253,7 @@ public class DocumentsListPanel extends VLayout {
 	public void updateSelectedRecord(GUIDocument document) {
 		ListGridRecord selectedRecord = list.getSelectedRecord();
 		if (selectedRecord != null) {
+			selectedRecord.setAttribute("indexed", "blank");
 			selectedRecord.setAttribute("title", document.getTitle());
 			selectedRecord.setAttribute("customId", document.getCustomId());
 			selectedRecord.setAttribute("version", document.getVersion());
