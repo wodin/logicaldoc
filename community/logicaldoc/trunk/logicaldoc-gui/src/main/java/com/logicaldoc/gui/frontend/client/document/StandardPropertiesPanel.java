@@ -82,7 +82,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 			form1.destroy();
 
 		if (formsContainer.contains(form1))
-			formsContainer.removeChild(form1);
+			formsContainer.removeMember(form1);
 
 		form1 = new DynamicForm();
 		form1.setNumCols(2);
@@ -116,15 +116,14 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		StaticTextItem filename = ItemFactory.newStaticTextItem("fileName", "filename", document.getFileName());
 
 		form1.setItems(id, title, version, fileVersion, filename, creation, date, creator, publisher);
-		formsContainer.addMember(form1);
+		formsContainer.addMember(form1, 0);
 
 		/*
 		 * Prepare the second form for the tags
 		 */
-		if (form2 != null)
-			form2.destroy();
 		if (formsContainer.contains(form2))
-			formsContainer.removeChild(form2);
+			formsContainer.removeMember(form2);
+
 		form2 = new DynamicForm();
 		form2.setValuesManager(vm);
 
@@ -179,7 +178,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		}
 
 		form2.setItems(items.toArray(new FormItem[0]));
-		formsContainer.addMember(form2);
+		formsContainer.addMember(form2, 1);
 
 		prepareRightPanel();
 	}
@@ -207,7 +206,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 				rightPanel.addMember(new FeatureDisabled());
 		}
 
-		formsContainer.addMember(rightPanel);
+		formsContainer.addMember(rightPanel, 2);
 	}
 
 	@SuppressWarnings("unchecked")
