@@ -112,7 +112,6 @@ public class IncrementalDetailsPanel extends VLayout implements FolderChangeList
 
 	public void onSave() {
 		if (settingsPanel.validate()) {
-			final boolean newIncremental = incremental.getId() == 0;
 			service.saveIncremental(Session.get().getSid(), incremental, new AsyncCallback<GUIIncrementalArchive>() {
 				@Override
 				public void onFailure(Throwable caught) {
@@ -122,10 +121,7 @@ public class IncrementalDetailsPanel extends VLayout implements FolderChangeList
 				@Override
 				public void onSuccess(GUIIncrementalArchive result) {
 					savePanel.setVisible(false);
-					if (newIncremental)
-						listPanel.refresh();
-					else
-						listPanel.updateRecord(result);
+					listPanel.updateRecord(result);
 				}
 			});
 		}

@@ -72,17 +72,15 @@ public class TemplatesPanel extends VLayout {
 		for (Canvas canvas : members) {
 			removeMember(canvas);
 		}
-		
-		listing=new VLayout();
-		detailsContainer=new VLayout();
-		details=SELECT_TEMPLATE;
-		
-		
+
+		listing = new VLayout();
+		detailsContainer = new VLayout();
+		details = SELECT_TEMPLATE;
+
 		// Initialize the listing panel
 		listing.setAlign(Alignment.CENTER);
 		listing.setHeight("60%");
 		listing.setShowResizeBar(true);
-		
 
 		ListGridField id = new ListGridField("id", 50);
 		id.setHidden(true);
@@ -225,11 +223,20 @@ public class TemplatesPanel extends VLayout {
 	 */
 	public void updateRecord(GUITemplate template) {
 		ListGridRecord record = list.getSelectedRecord();
-		if (record != null) {
-			record.setAttribute("id", template.getId());
-			record.setAttribute("name", template.getName());
-			record.setAttribute("description", template.getDescription());
+		if (record == null)
+			record = new ListGridRecord();
+
+		record.setAttribute("name", template.getName());
+		record.setAttribute("description", template.getDescription());
+
+		if (record.getAttributeAsString("id") != null
+				&& (template.getId() == Long.parseLong(record.getAttributeAsString("id")))) {
 			list.updateData(record);
+		} else {
+			// Append a new record
+			record.setAttribute("id", template.getId());
+			list.addData(record);
+			list.selectRecord(record);
 		}
 	}
 }

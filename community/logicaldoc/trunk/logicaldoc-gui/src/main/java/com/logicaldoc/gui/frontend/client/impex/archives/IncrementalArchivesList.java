@@ -133,8 +133,8 @@ public class IncrementalArchivesList extends VLayout {
 		addIncremental.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				GUIIncrementalArchive incremental = new GUIIncrementalArchive();
-				showDetails(incremental);
+				list.deselectAllRecords();
+				showDetails(new GUIIncrementalArchive());
 				event.cancel();
 			}
 		});
@@ -152,6 +152,8 @@ public class IncrementalArchivesList extends VLayout {
 			@Override
 			public void onSelectionChanged(SelectionEvent event) {
 				ListGridRecord record = list.getSelectedRecord();
+				if (record == null)
+					return;
 				service.loadIncremental(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
 						new AsyncCallback<GUIIncrementalArchive>() {
 							@Override
@@ -235,14 +237,23 @@ public class IncrementalArchivesList extends VLayout {
 	 */
 	public void updateRecord(GUIIncrementalArchive incremental) {
 		ListGridRecord record = list.getSelectedRecord();
-		if (record != null) {
-			record.setAttribute("prefix", incremental.getPrefix());
-			record.setAttribute("frequency", incremental.getFrequency());
-			record.setAttribute("type", incremental.getType());
-			record.setAttribute("typelabel", incremental.getType() == GUIArchive.TYPE_DEFAULT ? I18N.message("default")
-					: I18N.message("paperdematerialization"));
-			record.setAttribute("id", incremental.getId());
+		if (record == null)
+			record = new ListGridRecord();
+
+		record.setAttribute("prefix", incremental.getPrefix());
+		record.setAttribute("frequency", incremental.getFrequency());
+		record.setAttribute("type", incremental.getType());
+		record.setAttribute("typelabel", incremental.getType() == GUIArchive.TYPE_DEFAULT ? I18N.message("default")
+				: I18N.message("paperdematerialization"));
+
+		if (record.getAttributeAsString("id") != null
+				&& (incremental.getId() == Long.parseLong(record.getAttributeAsString("id")))) {
 			list.updateData(record);
+		} else {
+			// Append a new record
+			record.setAttribute("id", incremental.getId());
+			list.addData(record);
+			list.selectRecord(record);
 		}
 	}
 }
