@@ -214,7 +214,8 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			list.addSelectionChangedHandler(new SelectionChangedHandler() {
 				@Override
 				public void onSelectionChanged(SelectionEvent event) {
-					SearchPanel.get().onSelectedHit(Long.parseLong(event.getRecord().getAttribute("id")));
+					if (list.getSelectedRecord() != null)
+						SearchPanel.get().onSelectedHit(Long.parseLong(list.getSelectedRecord().getAttribute("id")));
 				}
 			});
 		}
