@@ -22,6 +22,7 @@ import com.logicaldoc.gui.setup.client.services.SetupService;
 import com.logicaldoc.gui.setup.client.services.SetupServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
@@ -459,8 +460,12 @@ public class Setup implements EntryPoint {
 					@Override
 					public void onSuccess(Void arg) {
 						SC.say(I18N.message("installationperformed"),
-								I18N.message("installationend", info.getProductName()));
-						Util.redirect(Util.contextPath() + "frontend.jsp");
+								I18N.message("installationend", info.getProductName()), new BooleanCallback() {
+									@Override
+									public void execute(Boolean value) {
+										Util.redirect(Util.contextPath() + "frontend.jsp");
+									}
+								});
 						submit.setDisabled(false);
 					}
 				});
