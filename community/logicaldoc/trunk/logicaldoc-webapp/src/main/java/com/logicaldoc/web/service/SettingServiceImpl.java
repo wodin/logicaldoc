@@ -96,7 +96,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.startsWith("ldap") || name.startsWith("schedule") || name.startsWith("smtp")
 					|| name.startsWith("gui") || name.startsWith("password") || name.startsWith("ad")
 					|| name.startsWith("webservice") || name.startsWith("webdav") || name.startsWith("runlevel")
-					|| name.startsWith("stat") || name.startsWith("index") || name.startsWith("proxy"))
+					|| name.startsWith("stat") || name.startsWith("index") || name.startsWith("proxy")
+					|| name.equals("id"))
 				continue;
 
 			sortedSet.add(key.toString());
@@ -196,7 +197,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	@Override
 	public GUIParameter[] loadFolders(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
-		
+
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 		GUIParameter[] params = new GUIParameter[8];
@@ -229,7 +230,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	public GUIParameter[] loadProxySettings(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
-		
+
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 		GUIParameter[] params = new GUIParameter[4];
