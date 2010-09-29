@@ -103,7 +103,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		StaticTextItem publisher = ItemFactory.newStaticTextItem("publisher", "publisher", document.getPublisher());
 
-		StaticTextItem title = ItemFactory.newStaticTextItem("title", "title", document.getTitle());
+		TextItem title = ItemFactory.newTextItem("title", "title", document.getTitle());
 		title.addChangedHandler(changedHandler);
 		title.setRequired(true);
 		title.setDisabled(!update);
