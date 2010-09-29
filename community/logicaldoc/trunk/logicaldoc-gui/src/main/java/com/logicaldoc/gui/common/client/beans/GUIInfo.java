@@ -38,6 +38,8 @@ public class GUIInfo implements Serializable {
 
 	private String installationId;
 
+	private String licensee;
+
 	// Optional list of messages to be shown to the user
 	private GUIMessage[] messages = new GUIMessage[0];
 
@@ -191,5 +193,13 @@ public class GUIInfo implements Serializable {
 
 	public void setSupport(String support) {
 		this.support = support;
+	}
+
+	public String getLicensee() {
+		return licensee;
+	}
+
+	public void setLicensee(String licensee) {
+		this.licensee = licensee;
 	}
 }

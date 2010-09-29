@@ -45,6 +45,10 @@ public class Feature {
 	
 	public static final int OFFICE = 20;
 
+	public static final int SHOW_LICENSEE = 40;
+	
+	public static final int SHOW_DISABLED = 50;
+	
 	public static final int PREVIEW = 51;
 
 	public static final int BOOKMARKS = 53;
@@ -93,6 +97,13 @@ public class Feature {
 	 * Check if a disabled feature must be visible(ad disabled) or hidden
 	 */
 	public static boolean showDisabled() {
-		return enabled(50);
+		return enabled(SHOW_DISABLED);
 	}
+	
+	/**
+	 * Check if the licensee must be shown
+	 */
+	public static boolean showLicensee() {
+		return enabled(SHOW_DISABLED);
+	}	
 }
