@@ -202,8 +202,8 @@ public class GroupsPanel extends VLayout {
 								public void onSuccess(Void result) {
 									list.removeSelectedData();
 									list.deselectAllRecords();
-									detailsContainer.setMembers(SELECT_GROUP);
-									// showGroupDetails(null);
+									details = SELECT_GROUP;
+									detailsContainer.setMembers(details);
 								}
 							});
 						}
