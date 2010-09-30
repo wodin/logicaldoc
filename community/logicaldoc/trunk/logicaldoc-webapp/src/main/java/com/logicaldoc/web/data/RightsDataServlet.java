@@ -18,6 +18,7 @@ import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
 
@@ -75,7 +76,13 @@ public class RightsDataServlet extends HttpServlet {
 					if (folderGroup != null) {
 						writer.print("<right>");
 						writer.print("<entityId>" + group.getId() + "</entityId>");
-						writer.print("<entity><![CDATA[" + group.getName() + "]]></entity>");
+						if (group.getType() == Group.TYPE_DEFAULT)
+							writer.print("<entity><![CDATA[" + group.getName() + "]]></entity>");
+						else {
+							User user = group.getUsers().iterator().next();
+							writer.print("<entity><![CDATA[" + I18N.message("User: ") + user.getFullName() + " ("
+									+ user.getUserName() + ")]]></entity>");
+						}
 						writer.print("<read>" + true + "</read>");
 						writer.print("<write>" + (folderGroup.getWrite() == 1 ? true : false) + "</write>");
 						writer.print("<add>" + (folderGroup.getAdd() == 1 ? true : false) + "</add>");
