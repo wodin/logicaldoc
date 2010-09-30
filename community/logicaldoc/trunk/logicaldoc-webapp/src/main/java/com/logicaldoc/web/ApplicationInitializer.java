@@ -3,6 +3,7 @@ package com.logicaldoc.web;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.URL;
 import java.net.URLDecoder;
 
 import javax.servlet.ServletContext;
@@ -43,8 +44,17 @@ public class ApplicationInitializer implements ServletContextListener {
 		// Initialize logging
 		String log4jPath = null;
 		try {
-			log4jPath = URLDecoder.decode(this.getClass().getResource("/log.xml").getPath(), "UTF-8");
-			
+			URL configFile = null;
+			try {
+				configFile = LoggingConfigurator.class.getClassLoader().getResource("/log.xml");
+			} catch (Throwable t) {
+			}
+
+			if (configFile == null)
+				configFile = LoggingConfigurator.class.getClassLoader().getResource("log.xml");
+
+			log4jPath = URLDecoder.decode(configFile.getPath(), "UTF-8");
+
 			// Setup the correct logs folder
 			ContextProperties config = new ContextProperties();
 			LoggingConfigurator lconf = new LoggingConfigurator();
