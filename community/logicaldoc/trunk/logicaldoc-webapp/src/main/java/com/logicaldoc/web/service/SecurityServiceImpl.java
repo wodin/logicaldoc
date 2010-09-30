@@ -357,7 +357,9 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setEnabled(user.isEnabled() ? 1 : 0);
 			usr.setPasswordExpires(user.isPasswordExpires() ? 1 : 0);
 
-			userDao.store(usr);
+			boolean stored = userDao.store(usr);
+			if (!stored)
+				throw new Exception("User not stored");
 			user.setId(usr.getId());
 
 			SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
@@ -375,13 +377,14 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				manager.assignUserToGroup(usr, adminGroup);
 			}
 			userDao.store(usr);
-
+			stored = userDao.store(usr);
+			if (!stored)
+				throw new Exception("User not stored");
+			return user;
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 			throw new RuntimeException(e.getMessage(), e);
 		}
-
-		return user;
 	}
 
 	@Override
