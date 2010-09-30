@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIHit;
 import com.logicaldoc.gui.common.client.beans.GUIResult;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
 import com.logicaldoc.gui.frontend.client.services.SearchServiceAsync;
@@ -61,6 +62,7 @@ public class Search {
 	}
 
 	public void search() {
+		options.setExpressionLanguage(I18N.getLocale());
 		service.search(Session.get().getSid(), options, new AsyncCallback<GUIResult>() {
 
 			@Override

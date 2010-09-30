@@ -58,6 +58,7 @@ public class SearchBox extends TextItem {
 		options.setExpression((String)getValue());
 		options.setFolder(null);
 		options.setTemplate(null);
+		options.setLanguage("");
 		options.setMaxHits(40);
 		Search.get().setOptions(options);
 		Search.get().search();
