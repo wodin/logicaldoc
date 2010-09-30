@@ -170,7 +170,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			sb.append(" 1=1 ");
 		if (status != null)
 			sb.append(" and _entity.status=" + status);
-		return findByWhere(sb.toString(), null, null);
+		return findByWhere(sb.toString(), "order by _entity.lastModified desc", null);
 	}
 
 	/**
@@ -326,9 +326,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findByUserIdAndTag(long userId, String tag, Integer max) {
-		
+
 		List<Document> coll = new ArrayList<Document>();
-		
+
 		Set<Long> ids = findDocIdByUserIdAndTag(userId, tag);
 		StringBuffer buf = new StringBuffer();
 		if (!ids.isEmpty()) {
@@ -369,7 +369,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				 * Search for all accessible folders
 				 */
 				List<Long> precoll = folderDAO.findFolderIdByUserId(userId);
-				
+
 				StringBuffer buf = new StringBuffer();
 				boolean first = true;
 				for (Long id : precoll) {
@@ -385,15 +385,15 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				query.append(") ");
 				query.append(" AND lower(D.ld_tag)='" + SqlUtil.doubleQuotes(tag.toLowerCase()) + "' ");
 			}
-			
+
 			List<Long> docIds = (List<Long>) queryForList(query.toString(), Long.class);
 			ids.addAll(docIds);
-			
+
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			System.err.println(e);
 		}
-		
+
 		return ids;
 	}
 
@@ -531,7 +531,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		}
 	}
 
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Long> findDeletedDocIds() {
@@ -545,22 +544,22 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		List<Document> coll = new ArrayList<Document>();
 		try {
 			String query = "select ld_id, ld_customid, ld_lastModified, ld_title from ld_document where ld_deleted=1 order by ld_lastmodified desc";
-			
+
 			RowMapper docMapper = new BeanPropertyRowMapper() {
 				public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-					
+
 					Document doc = new Document();
 					doc.setId(rs.getLong(1));
 					doc.setCustomId(rs.getString(2));
 					doc.setLastModified(rs.getDate(3));
 					doc.setTitle(rs.getString(4));
-					
+
 					return doc;
 				}
-			}; 
-			
-			coll = (List<Document>) query(query, new Object[]{}, docMapper, null);
-			
+			};
+
+			coll = (List<Document>) query(query, new Object[] {}, docMapper, null);
+
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -675,12 +674,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 		historyDAO.store(transaction);
 	}
-	
+
 	@Override
 	public long countByIndexed(int indexed) {
 		String query = "select count(*) from ld_document where ld_deleted=0 and ld_indexed = " + indexed;
 		return queryForLong(query);
-	}	
+	}
 
 	@Override
 	public List<Long> findShortcutIds(long docId) {
@@ -711,7 +710,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					return doc;
 				}
 			};
-			
+
 			results = (List<Document>) query(query, null, docMapper, maxHits);
 
 		} catch (Exception e) {
