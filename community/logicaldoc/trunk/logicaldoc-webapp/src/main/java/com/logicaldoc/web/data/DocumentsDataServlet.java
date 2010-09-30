@@ -20,6 +20,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.util.Context;
@@ -41,7 +42,7 @@ public class DocumentsDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			SessionUtil.validateSession(request);
+			UserSession session = SessionUtil.validateSession(request);
 
 			response.setContentType("text/xml");
 
@@ -55,10 +56,30 @@ public class DocumentsDataServlet extends HttpServlet {
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
+			int max = Integer.parseInt(request.getParameter("max"));
+
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
-			if (StringUtils.isNotEmpty(request.getParameter("docIds"))) {
+			if (StringUtils.isNotEmpty(request.getParameter("status"))) {
+				int status = Integer.parseInt(request.getParameter("status"));
+				List<Document> docs = dao.findByLockUserAndStatus(session.getUserId(), status);
+				int i = 0;
+				for (Document doc : docs) {
+					if (i == max)
+						break;
+					writer.print("<document>");
+					writer.print("<id>" + doc.getId() + "</id>");
+					writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getFileExtension()))
+							+ "</icon>");
+					writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
+					writer.print("<lastModified>" + df.format(doc.getLastModified()) + "</lastModified>");
+					writer.print("<folderId>" + doc.getFolder().getId() + "</folderId>");
+					writer.print("<version>" + doc.getVersion() + "</version>");
+					writer.print("</document>");
+					i++;
+				}
+			} else if (StringUtils.isNotEmpty(request.getParameter("docIds"))) {
 				String[] idsArray = request.getParameter("docIds").split(",");
 				for (String id : idsArray) {
 					Document doc = dao.findById(Long.parseLong(id));
@@ -75,8 +96,6 @@ public class DocumentsDataServlet extends HttpServlet {
 				/*
 				 * Load some filters from the current request
 				 */
-				int max = Integer.parseInt(request.getParameter("max"));
-
 				Long folderId = null;
 				if (StringUtils.isNotEmpty(request.getParameter("folderId")))
 					folderId = new Long(request.getParameter("folderId"));
@@ -150,10 +169,14 @@ public class DocumentsDataServlet extends HttpServlet {
 						writer.print("<indexed>indexed</indexed>");
 					else if (Integer.parseInt(cols[13].toString()) == Constants.INDEX_SKIP)
 						writer.print("<indexed>unindexable</indexed>");
-					if (cols[14] != null)
+					if (Integer.parseInt(cols[16].toString()) == Constants.DOC_LOCKED)
 						writer.print("<locked>document_lock</locked>");
+					else if (Integer.parseInt(cols[16].toString()) == Constants.DOC_CHECKED_OUT)
+						writer.print("<locked>page_edit</locked>");
 					else
 						writer.print("<locked>blank</locked>");
+					if (cols[14] != null)
+						writer.print("<lockUserId>" + cols[14] + "</lockUserId>");
 					writer.print("<filename><![CDATA[" + cols[15] + "]]></filename>");
 					writer.print("<status>" + cols[16] + "</status>");
 
@@ -196,10 +219,14 @@ public class DocumentsDataServlet extends HttpServlet {
 						writer.print("<indexed>indexed</indexed>");
 					else if (doc.getIndexed() == Constants.INDEX_SKIP)
 						writer.print("<indexed>unindexable</indexed>");
-					if (doc.getLockUserId() != null)
+					if (doc.getStatus() == Constants.DOC_LOCKED)
 						writer.print("<locked>document_lock</locked>");
+					else if (doc.getStatus() == Constants.DOC_CHECKED_OUT)
+						writer.print("<locked>page_edit</locked>");
 					else
 						writer.print("<locked>blank</locked>");
+					if (doc.getLockUserId() != null)
+						writer.print("<lockUserId>" + doc.getLockUserId() + "</lockUserId>");
 					writer.print("<filename><![CDATA[" + doc.getFileName() + "]]></filename>");
 					writer.print("<status>" + doc.getStatus() + "</status>");
 					writer.print("</document>");

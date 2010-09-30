@@ -112,7 +112,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 
 		Clipboard.getInstance().addObserver(this);
 		Session.get().getUser().addObserver(this);
-		onUserChanged(Session.get().getUser());
+		onUserChanged(Session.get().getUser(), null);
 	}
 
 	public static FooterIcons get() {
@@ -132,7 +132,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 	}
 
 	@Override
-	public void onUserChanged(GUIUser user) {
+	public void onUserChanged(GUIUser user, String attribute) {
 		checkoutCount.setText(Integer.toString(user.getCheckedOutDocs()));
 		lockedCount.setText(Integer.toString(user.getLockedDocs()));
 		messagesCount.setText(Integer.toString(user.getUnreadMessages()));

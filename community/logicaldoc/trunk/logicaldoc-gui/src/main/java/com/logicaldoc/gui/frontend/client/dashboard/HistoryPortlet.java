@@ -46,11 +46,22 @@ public class HistoryPortlet extends Portlet {
 
 	private DocumentServiceAsync service = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
+	private String event = "";
+
 	public HistoryPortlet(final String eventCode) {
+		this.event = eventCode;
+		refresh();
+	}
+
+	private void refresh() {
+		if (list != null) {
+			removeItem(list);
+		}
+
 		long userId = Session.get().getUser().getId();
 		int max = 1000;
-		if (Constants.EVENT_DOWNLOADED.equals(eventCode) || Constants.EVENT_CHECKEDIN.equals(eventCode)
-				|| Constants.EVENT_CHANGED.equals(eventCode))
+		if (Constants.EVENT_DOWNLOADED.equals(event) || Constants.EVENT_CHECKEDIN.equals(event)
+				|| Constants.EVENT_CHANGED.equals(event))
 			max = 10;
 
 		ListGridField version = new ListGridField("version", I18N.message("version"), 70);
@@ -86,7 +97,7 @@ public class HistoryPortlet extends Portlet {
 		list.setSelectionType(SelectionStyle.NONE);
 		list.setHeight100();
 		list.setBorder("0px");
-		dataSource = new DocumentHistoryDS(userId, eventCode, max);
+		dataSource = new DocumentHistoryDS(userId, event, max);
 		list.setDataSource(dataSource);
 		list.setFields(icon, title, version, date);
 
@@ -106,8 +117,8 @@ public class HistoryPortlet extends Portlet {
 
 		HeaderControl markAsRead = new HeaderControl(HeaderControl.TRASH, new ClickHandler() {
 			@Override
-			public void onClick(ClickEvent event) {
-				service.markHistoryAsRead(Session.get().getSid(), eventCode, new AsyncCallback<Void>() {
+			public void onClick(ClickEvent e) {
+				service.markHistoryAsRead(Session.get().getSid(), event, new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -121,33 +132,40 @@ public class HistoryPortlet extends Portlet {
 							l.get(i).setAttribute("new", false);
 						}
 						list.redraw();
-						setTitle(I18N.message(eventCode + "docs", Integer.toString(list.getTotalRows())));
+						setTitle(I18N.message(event + "docs", Integer.toString(list.getTotalRows())));
 					}
 				});
 			}
 		});
 
+		HeaderControl refresh = new HeaderControl(HeaderControl.REFRESH, new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				refresh();
+			}
+		});
+
 		String icn = "blank.gif";
-		if (eventCode.equals(Constants.EVENT_CHECKEDOUT))
+		if (event.equals(Constants.EVENT_CHECKEDOUT))
 			icn = "page_edit.png";
-		else if (eventCode.equals(Constants.EVENT_LOCKED))
+		else if (event.equals(Constants.EVENT_LOCKED))
 			icn = "document_lock.png";
-		else if (eventCode.equals(Constants.EVENT_DOWNLOADED))
+		else if (event.equals(Constants.EVENT_DOWNLOADED))
 			icn = "download.png";
-		else if (eventCode.equals(Constants.EVENT_CHECKEDIN))
+		else if (event.equals(Constants.EVENT_CHECKEDIN))
 			icn = "document_add.png";
-		else if (eventCode.equals(Constants.EVENT_CHANGED))
+		else if (event.equals(Constants.EVENT_CHANGED))
 			icn = "edit.png";
 
 		HeaderIcon portletIcon = ItemFactory.newHeaderIcon(icn);
 
 		setHeaderControls(new HeaderControl(portletIcon), HeaderControls.HEADER_LABEL, HeaderControls.MINIMIZE_BUTTON,
-				markAsRead);
+				markAsRead, refresh);
 
 		// Count the total of events and the total of unchecked events
 		list.addDataArrivedHandler(new DataArrivedHandler() {
 			@Override
-			public void onDataArrived(DataArrivedEvent event) {
+			public void onDataArrived(DataArrivedEvent e) {
 				Record[] records = list.getRecordList().toArray();
 				int unread = 0;
 				for (Record record : records) {
@@ -156,15 +174,15 @@ public class HistoryPortlet extends Portlet {
 				}
 
 				int total = list.getTotalRows();
-				String title = I18N.message(eventCode + "docs", Integer.toString(total));
+				String title = I18N.message(event + "docs", Integer.toString(total));
 				if (unread > 0)
-					title = "<b>" + title + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + I18N.message("newitems") + ": "
-							+ unread + "</b>";
+					title = "<b>" + title + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + I18N.message("newitems")
+							+ ": " + unread + "</b>";
 				setTitle(title);
 
-				if (Constants.EVENT_LOCKED.equals(eventCode))
+				if (Constants.EVENT_LOCKED.equals(event))
 					Session.get().getUser().setLockedDocs(total);
-				else if (Constants.EVENT_CHECKEDOUT.equals(eventCode))
+				else if (Constants.EVENT_CHECKEDOUT.equals(event))
 					Session.get().getUser().setCheckedOutDocs(total);
 			}
 		});
