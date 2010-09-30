@@ -83,6 +83,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 				// Create the document history event
 				History transaction = new History();
 				transaction.setSessionId(sid);
+				transaction.setEvent(History.EVENT_CHECKEDIN);
 				transaction.setUser(user);
 				transaction.setComment(comment);
 
