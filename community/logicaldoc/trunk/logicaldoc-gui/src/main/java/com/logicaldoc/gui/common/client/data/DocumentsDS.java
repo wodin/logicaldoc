@@ -78,4 +78,21 @@ public class DocumentsDS extends DataSource {
 		setClientOnly(true);
 		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&docIds=" + docIds);
 	}
+
+	public DocumentsDS(int status, int max) {
+		setTitleField("title");
+		setRecordXPath("/list/document");
+		DataSourceTextField title = new DataSourceTextField("title");
+		DataSourceTextField id = new DataSourceTextField("id");
+		id.setPrimaryKey(true);
+		id.setRequired(true);
+		DataSourceDateTimeField lastModified = new DataSourceDateTimeField("lastModified");
+		DataSourceImageField icon = new DataSourceImageField("icon");
+		DataSourceTextField folderId = new DataSourceTextField("folderId");
+		DataSourceTextField version = new DataSourceTextField("version");
+
+		setFields(id, icon, title, lastModified, folderId, version);
+		setClientOnly(true);
+		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&status=" + status + "&max=" + max);
+	}
 }

@@ -57,8 +57,8 @@ public class DocumentContextMenu extends Menu {
 		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
-				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&sid="
-						+ Session.get().getSid() + "&docId=" + id, "_self", "");
+				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id,
+						"_self", "");
 			}
 		});
 
@@ -344,7 +344,8 @@ public class DocumentContextMenu extends Menu {
 						list.refreshRow(list.getRecordIndex(record));
 						Session.get().getUser().setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() + 1);
 						Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-								+ id, "_blank", "");
+								+ id, "_self", "");
+						Log.info(I18N.message("documentcheckedout"), null);
 					}
 				});
 			}
@@ -656,12 +657,8 @@ public class DocumentContextMenu extends Menu {
 			markUnindexable.setEnabled(false);
 		}
 
-		if (!enableUnlock) {
-			if (selection[0].getAttribute("status") == null
-					|| !(selection.length == 1 && Constants.DOC_CHECKED_OUT == Integer.parseInt(selection[0]
-							.getAttribute("status"))))
-				checkin.setEnabled(false);
-		}
+		if (selection.length != 1 || Constants.DOC_CHECKED_OUT != Integer.parseInt(selection[0].getAttribute("status")))
+			checkin.setEnabled(false);
 
 		unlockItem.setEnabled(enableUnlock);
 		lock.setEnabled(enableLock);

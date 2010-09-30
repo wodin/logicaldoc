@@ -11,18 +11,60 @@ import com.smartgwt.client.widgets.layout.PortalLayout;
  */
 public class UserDashboard extends PortalLayout {
 
+	private StatusPortlet locked = null;
+
+	private StatusPortlet checkedOut = null;
+
+	private HistoryPortlet checkedIn = null;
+
+	private HistoryPortlet downloaded = null;
+
+	private HistoryPortlet changed = null;
+
+	private static UserDashboard instance;
+
 	public UserDashboard() {
 		setShowColumnMenus(false);
 		setShowEdges(false);
 		setShowShadow(false);
 		setColumnBorder("0px");
 
-		// Place the portlets
-		addPortlet(new HistoryPortlet(Constants.EVENT_LOCKED), 0, 0);
-		addPortlet(new HistoryPortlet(Constants.EVENT_CHECKEDOUT), 0, 1);
-		addPortlet(new HistoryPortlet(Constants.EVENT_DOWNLOADED), 0, 2);
-		addPortlet(new HistoryPortlet(Constants.EVENT_CHANGED), 1, 0);
-		addPortlet(new HistoryPortlet(Constants.EVENT_CHECKEDIN), 1, 1);
+		refresh();
 		addPortlet(new TagCloudPortlet(), 1, 2);
+	}
+
+	public void refresh() {
+		if (locked != null)
+			removePortlet(locked);
+
+		if (checkedOut != null)
+			removePortlet(checkedOut);
+
+		if (checkedIn != null)
+			removePortlet(checkedIn);
+
+		if (downloaded != null)
+			removePortlet(downloaded);
+
+		if (changed != null)
+			removePortlet(changed);
+
+		// Place the portlets
+		locked = new StatusPortlet(Constants.EVENT_LOCKED);
+		addPortlet(locked, 0, 0);
+		checkedOut = new StatusPortlet(Constants.EVENT_CHECKEDOUT);
+		addPortlet(checkedOut, 0, 1);
+		downloaded = new HistoryPortlet(Constants.EVENT_DOWNLOADED);
+		addPortlet(downloaded, 0, 2);
+		changed = new HistoryPortlet(Constants.EVENT_CHANGED);
+		addPortlet(changed, 1, 0);
+		checkedIn = new HistoryPortlet(Constants.EVENT_CHECKEDIN);
+		addPortlet(checkedIn, 1, 1);
+	}
+
+	public static UserDashboard get() {
+		if (instance == null)
+			instance = new UserDashboard();
+		return instance;
 	}
 }

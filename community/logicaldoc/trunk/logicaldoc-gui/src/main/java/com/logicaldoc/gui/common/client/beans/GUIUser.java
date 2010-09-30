@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.logicaldoc.gui.common.client.log.Log;
+
 /**
  * User bean as used in the GUI
  * 
@@ -11,6 +13,18 @@ import java.util.Set;
  * @since 6.0
  */
 public class GUIUser implements Serializable {
+
+	public static final String ALL_TASKS = "tasks";
+
+	public static final String UNREAD_MESSAGES = "unreadMessages";
+
+	public static final String ALL_MESSAGES = "messages";
+
+	public static final String LOCKED_DOCS = "lockedDocs";
+
+	public static final String CHECKED_OUT_DOCS = "checkedOutDocs";
+
+	public static final String ALL_SUBSCRIPTIONS = "subscriptions";
 
 	private static final long serialVersionUID = 1L;
 
@@ -66,7 +80,7 @@ public class GUIUser implements Serializable {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
-		notifyObservers();
+		notifyObservers("userName");
 	}
 
 	public String getUserName() {
@@ -243,7 +257,7 @@ public class GUIUser implements Serializable {
 		if (groups.length == 0)
 			return;
 
-		if (isMemberOf(groupName)) {			
+		if (isMemberOf(groupName)) {
 			GUIGroup[] tmp = new GUIGroup[groups.length - 1];
 			int i = 0;
 			for (GUIGroup g : groups) {
@@ -259,8 +273,10 @@ public class GUIUser implements Serializable {
 	}
 
 	public void setCheckedOutDocs(int checkedOutDocs) {
-		notifyObservers();
-		this.checkedOutDocs = checkedOutDocs;
+		if (this.checkedOutDocs != checkedOutDocs) {
+			this.checkedOutDocs = checkedOutDocs;
+			notifyObservers(CHECKED_OUT_DOCS);
+		}
 	}
 
 	public int getLockedDocs() {
@@ -268,8 +284,10 @@ public class GUIUser implements Serializable {
 	}
 
 	public void setLockedDocs(int lockedDocs) {
-		this.lockedDocs = lockedDocs;
-		notifyObservers();
+		if (this.lockedDocs != lockedDocs) {
+			this.lockedDocs = lockedDocs;
+			notifyObservers(LOCKED_DOCS);
+		}
 	}
 
 	public int getMessages() {
@@ -277,13 +295,15 @@ public class GUIUser implements Serializable {
 	}
 
 	public void setMessages(int messages) {
-		this.messages = messages;
-		notifyObservers();
+		if (this.messages != messages) {
+			this.messages = messages;
+			notifyObservers(ALL_MESSAGES);
+		}
 	}
 
-	public void notifyObservers() {
+	public void notifyObservers(String attribute) {
 		for (UserObserver listener : observers) {
-			listener.onUserChanged(this);
+			listener.onUserChanged(this, attribute);
 		}
 	}
 
@@ -296,8 +316,10 @@ public class GUIUser implements Serializable {
 	}
 
 	public void setUnreadMessages(int unreadMessages) {
-		this.unreadMessages = unreadMessages;
-		notifyObservers();
+		if (this.unreadMessages != unreadMessages) {
+			this.unreadMessages = unreadMessages;
+			notifyObservers(UNREAD_MESSAGES);
+		}
 	}
 
 	public int getActiveTasks() {
@@ -305,8 +327,10 @@ public class GUIUser implements Serializable {
 	}
 
 	public void setActiveTasks(int tasks) {
-		this.tasks = tasks;
-		notifyObservers();
+		if (this.tasks != tasks) {
+			this.tasks = tasks;
+			notifyObservers(ALL_TASKS);
+		}
 	}
 
 	public Long[] getMenues() {
