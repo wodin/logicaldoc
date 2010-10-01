@@ -82,7 +82,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		rss.setIcon(ItemFactory.newImgIcon("rss.png").getSrc());
+		rss.setIcon(ItemFactory.newImgIcon("feed_add.png").getSrc());
 		rss.setTooltip(I18N.message("rssfeed"));
 		rss.addClickHandler(new ClickHandler() {
 			@Override
@@ -114,7 +114,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		subscribe.setIcon(ItemFactory.newImgIcon("accept.png").getSrc());
+		subscribe.setIcon(ItemFactory.newImgIcon("eye.png").getSrc());
 		subscribe.setTooltip(I18N.message("subscribe"));
 		subscribe.setDisabled(true);
 		subscribe.addClickHandler(new ClickHandler() {
@@ -199,7 +199,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		});
 
 		edit.setTooltip(I18N.message("editonline"));
-		edit.setIcon(ItemFactory.newImgIcon("edit.png").getSrc());
+		edit.setIcon(ItemFactory.newImgIcon("application_form_edit.png").getSrc());
 		edit.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -210,7 +210,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		startWorkflow.setIcon(ItemFactory.newImgIcon("data_into.png").getSrc());
+		startWorkflow.setIcon(ItemFactory.newImgIcon("cog_go.png").getSrc());
 		startWorkflow.setTooltip(I18N.message("startworkflow"));
 		startWorkflow.addClickHandler(new ClickHandler() {
 			@Override
@@ -232,7 +232,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		addToWorkflow.setIcon(ItemFactory.newImgIcon("data_into.png").getSrc());
+		addToWorkflow.setIcon(ItemFactory.newImgIcon("cog_add.png").getSrc());
 		addToWorkflow.setTooltip(I18N.message("addtoworkflow"));
 		addToWorkflow.addClickHandler(new ClickHandler() {
 			@Override
