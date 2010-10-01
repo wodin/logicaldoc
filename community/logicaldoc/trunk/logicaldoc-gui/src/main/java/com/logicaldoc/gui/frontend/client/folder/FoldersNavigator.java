@@ -51,7 +51,7 @@ public class FoldersNavigator extends TreeGrid {
 		setLeaveScrollbarGap(false);
 		setManyItemsImage("cubes_all.png");
 		setAppImgDir("pieces/16/");
-		setCanReorderRecords(true);
+		setCanReorderRecords(false);
 		setCanAcceptDroppedRecords(false);
 		setCanDragRecordsOut(false);
 		setAutoFetchData(true);
@@ -149,7 +149,16 @@ public class FoldersNavigator extends TreeGrid {
 
 								@Override
 								public void onSuccess(Void result) {
-									removeSelectedData();
+									/*
+									 * This is needed because of strange
+									 * behaviours if we directly delete the
+									 * selected node.
+									 */
+									TreeNode node = getTree().find("id", Long.toString(id));
+									TreeNode parent = getTree().find("id", node.getAttribute("parent"));
+									getTree().closeFolder(parent);
+									getTree().remove(node);
+									getTree().openFolder(parent);
 								}
 							});
 						}
