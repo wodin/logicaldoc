@@ -14,6 +14,7 @@ import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.ListGridFieldType;
+import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
@@ -111,6 +112,7 @@ public class SecurityPanel extends FolderDetailTab {
 
 		list = new ListGrid();
 		list.setCanFreezeFields(true);
+		list.setSelectionType(SelectionStyle.MULTIPLE);
 		list.setAutoFetchData(true);
 		dataSource = new RightsDS(folder.getId());
 		list.setDataSource(dataSource);
@@ -125,29 +127,28 @@ public class SecurityPanel extends FolderDetailTab {
 			list.addCellContextClickHandler(new CellContextClickHandler() {
 				@Override
 				public void onCellContextClick(CellContextClickEvent event) {
-					Menu contextMenu = setupContextMenu();
-					contextMenu.showContextMenu();
+					if (event.getColNum() == 0) {
+						Menu contextMenu = setupContextMenu();
+						contextMenu.showContextMenu();
+					}
 					event.cancel();
 				}
 			});
 		}
 
 		HLayout buttons = new HLayout();
+		buttons.setMembersMargin(4);
+		buttons.setWidth100();
+		buttons.setHeight(20);
 		container.addMember(buttons);
 
 		Button applyRights = new Button(I18N.message("applyrights"));
+		applyRights.setWidth(120);
 		buttons.addMember(applyRights);
-		buttons.setMembersMargin(4);
-		buttons.setWidth100();
-		buttons.setHeight(20);
-		applyRights.setWidth(140);
 
 		Button applyRightsSubfolders = new Button(I18N.message("applytosubfolders"));
+		applyRightsSubfolders.setWidth(150);
 		buttons.addMember(applyRightsSubfolders);
-		buttons.setMembersMargin(4);
-		buttons.setWidth100();
-		buttons.setHeight(20);
-		applyRights.setWidth(140);
 
 		applyRights.addClickHandler(new ClickHandler() {
 			@Override
@@ -172,7 +173,6 @@ public class SecurityPanel extends FolderDetailTab {
 		Button addGroup = new Button(I18N.message("addgroup"));
 		buttons.addMember(addGroup);
 		addGroup.addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				ListGridRecord selectedRecord = group.getSelectedRecord();
@@ -184,6 +184,7 @@ public class SecurityPanel extends FolderDetailTab {
 				ListGridRecord[] records = list.getRecords();
 				for (ListGridRecord test : records) {
 					if (test.getAttribute("entityId").equals(selectedRecord.getAttribute("id"))) {
+						group.clearValue();
 						return;
 					}
 				}
@@ -191,9 +192,10 @@ public class SecurityPanel extends FolderDetailTab {
 				// Update the rights table
 				ListGridRecord record = new ListGridRecord();
 				record.setAttribute("entityId", selectedRecord.getAttribute("id"));
-				record.setAttribute("entity", "Group: " + selectedRecord.getAttribute("name"));
+				record.setAttribute("entity", I18N.message("group") + ": " + selectedRecord.getAttribute("name"));
 				record.setAttribute("read", true);
 				list.addData(record);
+				group.clearValue();
 			}
 		});
 
@@ -215,18 +217,20 @@ public class SecurityPanel extends FolderDetailTab {
 				// table
 				ListGridRecord[] records = list.getRecords();
 				for (ListGridRecord test : records) {
-					if (test.getAttribute("entityId").equals(selectedRecord.getAttribute("groupId"))) {
+					if (test.getAttribute("entityId").equals(selectedRecord.getAttribute("usergroup"))) {
+						user.clearValue();
 						return;
 					}
 				}
 
 				// Update the rights table
 				ListGridRecord record = new ListGridRecord();
-				record.setAttribute("entityId", selectedRecord.getAttribute("groupId"));
-				record.setAttribute("entity", "User: " + selectedRecord.getAttribute("label") + " ("
+				record.setAttribute("entityId", selectedRecord.getAttribute("usergroup"));
+				record.setAttribute("entity", I18N.message("user") + ": " + selectedRecord.getAttribute("label") + " ("
 						+ selectedRecord.getAttribute("username") + ")");
 				record.setAttribute("read", true);
 				list.addData(record);
+				user.clearValue();
 			}
 		});
 	}

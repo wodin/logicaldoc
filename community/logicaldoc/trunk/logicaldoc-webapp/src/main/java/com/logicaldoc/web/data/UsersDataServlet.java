@@ -2,6 +2,8 @@ package com.logicaldoc.web.data;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.User;
@@ -72,37 +75,55 @@ public class UsersDataServlet extends HttpServlet {
 					writer.print("<firstName><![CDATA[" + user.getFirstName() + "]]></firstName>");
 					writer.print("<label><![CDATA[" + user.getFullName() + "]]></label>");
 					writer.print("<email><![CDATA[" + user.getEmail() + "]]></email>");
-					writer.print("<phone>" + user.getTelephone() + "</phone>");
-					writer.print("<cell>" + user.getTelephone2() + "</cell>");
+					writer.print("<phone><![CDATA[" + user.getTelephone() + "]]></phone>");
+					writer.print("<cell><![CDATA[" + user.getTelephone2() + "]]></cell>");
+					writer.print("<usergroup>" + user.getUserGroup().getId() + "</usergroup>");
 					writer.print("</user>");
 				}
 			} else {
 				UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-				StringBuffer query = new StringBuffer(
-						"select A.id, A.userName, A.enabled, A.name, A.firstName, A.email, A.telephone, A.telephone2 "
-								+ "from com.logicaldoc.core.security.User A where A.deleted = 0 and A.type = 0 ");
+				String query = "select A.ld_id, A.ld_username, A.ld_enabled, A.ld_name, A.ld_firstname, A.ld_email, A.ld_telephone, A.ld_telephone2, B.ld_id "
+						+ "from ld_user A, ld_group B where A.ld_deleted = 0 and A.ld_type = 0 and B.ld_type=1 "
+						+ "and B.ld_id in(select ld_groupid from ld_usergroup where ld_userid=A.ld_id)";
 
-				List<Object> records = (List<Object>) userDao.findByQuery(query.toString(), null, null);
+				@SuppressWarnings("unchecked")
+				List<User> records = (List<User>) userDao.query(query, null, new RowMapper<User>() {
+					public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+						User user = new User();
+						user.setId(rs.getLong(1));
+						user.setUserName(rs.getString(2));
+						user.setEnabled(rs.getInt(3));
+						user.setName(rs.getString(4));
+						user.setFirstName(rs.getString(5));
+						user.setEmail(rs.getString(6));
+						user.setTelephone(rs.getString(7));
+						user.setTelephone2(rs.getString(8));
+						Group group = new Group();
+						group.setId(rs.getLong(9));
+						group.setName("_user_" + user.getId());
+						user.getGroups().add(group);
+						return user;
+					}
+				}, null);
 
 				/*
 				 * Iterate over records composing the response XML document
 				 */
-				for (Object record : records) {
-					Object[] cols = (Object[]) record;
-
+				for (User user : records) {
 					writer.print("<user>");
-					writer.print("<id>" + cols[0] + "</id>");
-					writer.print("<username><![CDATA[" + cols[1] + "]]></username>");
-					if ((Integer) cols[2] == 1)
+					writer.print("<id>" + user.getId() + "</id>");
+					writer.print("<username><![CDATA[" + user.getUserName() + "]]></username>");
+					if (user.getEnabled() == 1)
 						writer.print("<eenabled>0</eenabled>");
-					else if ((Integer) cols[2] == 0)
+					else if (user.getEnabled() == 0)
 						writer.print("<eenabled>2</eenabled>");
-					writer.print("<name><![CDATA[" + cols[3] + "]]></name>");
-					writer.print("<firstName><![CDATA[" + cols[4] + "]]></firstName>");
-					writer.print("<label><![CDATA[" + cols[4] + " " + cols[3] + "]]></label>");
-					writer.print("<email><![CDATA[" + cols[5] + "]]></email>");
-					writer.print("<phone>" + cols[6] + "</phone>");
-					writer.print("<cell>" + cols[7] + "</cell>");
+					writer.print("<name><![CDATA[" + user.getName() + "]]></name>");
+					writer.print("<firstName><![CDATA[" + user.getFirstName() + "]]></firstName>");
+					writer.print("<label><![CDATA[" + user.getFirstName() + " " + user.getName() + "]]></label>");
+					writer.print("<email><![CDATA[" + user.getEmail() + "]]></email>");
+					writer.print("<phone><![CDATA[" + user.getTelephone() + "]]></phone>");
+					writer.print("<cell><![CDATA[" + user.getTelephone2() + "]]></cell>");
+					writer.print("<usergroup>" + user.getGroups().iterator().next().getId() + "</usergroup>");
 					writer.print("</user>");
 				}
 			}

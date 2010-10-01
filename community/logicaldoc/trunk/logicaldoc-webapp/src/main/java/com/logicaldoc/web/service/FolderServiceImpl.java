@@ -46,12 +46,14 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	public void applyRights(String sid, GUIFolder folder, boolean subtree) throws InvalidSessionException {
 		UserSession session = SessionUtil.validateSession(sid);
 
+		System.out.println("subtree: " + subtree);
+
 		try {
 			FolderDAO mdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-
+			saveRules(sid, mdao.findById(folder.getId()), session.getUserId(), folder.getRights());
 			if (subtree) {
 				/*
-				 * Just apply the current security setings to the whole subtree
+				 * Just apply the current security settings to the whole subtree
 				 */
 				History history = new History();
 				history.setUser(SessionUtil.getSessionUser(sid));
@@ -59,10 +61,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				history.setSessionId(sid);
 
 				mdao.applyRithtToTree(folder.getId(), history);
-			} else {
-				saveRules(sid, mdao.findById(folder.getId()), session.getUserId(), folder.getRights());
 			}
-
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
@@ -105,7 +104,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 			int i = 0;
 			GUIRight[] rights = new GUIRight[ref.getFolderGroups().size()];
-			for (FolderGroup fg : folder.getFolderGroups()) {
+			for (FolderGroup fg : ref.getFolderGroups()) {
 				GUIRight right = new GUIRight();
 				right.setEntityId(fg.getGroupId());
 				right.setAdd(fg.getAdd() == 1 ? true : false);
