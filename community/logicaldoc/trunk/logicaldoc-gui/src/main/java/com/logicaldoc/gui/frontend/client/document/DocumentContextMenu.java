@@ -513,7 +513,7 @@ public class DocumentContextMenu extends Menu {
 				if (selection == null)
 					return;
 				long id = Long.parseLong(selection.getAttribute("id"));
-				Window.open("ldedit:" + GWT.getHostPageBaseURL() + "download?action=edit&sid=" + Session.get().getSid()
+				Window.open("ldedit:" + GWT.getHostPageBaseURL() + "ldeditnow?action=edit&sid=" + Session.get().getSid()
 						+ "&docId=" + id, "_self", "");
 			}
 		});

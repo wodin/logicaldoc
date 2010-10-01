@@ -160,7 +160,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		archive.setIcon(ItemFactory.newImgIcon("data_into.png").getSrc());
+		archive.setIcon(ItemFactory.newImgIcon("server_add.png").getSrc());
 		archive.setTooltip(I18N.message("sendtoarchive"));
 		archive.addClickHandler(new ClickHandler() {
 			@Override
@@ -179,7 +179,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		archiveDematerialization.setIcon(ItemFactory.newImgIcon("data_time.png").getSrc());
+		archiveDematerialization.setIcon(ItemFactory.newImgIcon("server_cd.png").getSrc());
 		archiveDematerialization.setTooltip(I18N.message("sendtostoragearchive"));
 		archiveDematerialization.addClickHandler(new ClickHandler() {
 			@Override
