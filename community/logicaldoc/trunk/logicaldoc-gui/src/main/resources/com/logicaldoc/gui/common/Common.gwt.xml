@@ -20,7 +20,6 @@
     <!-- set-property name="user.agent" value="ie8" /-->
     <set-property name="user.agent" value="gecko1_8,gecko,ie6,ie8,safari" />
 
-
 	<!--
 		<extend-property name="locale" values="en" /> <extend-property
 		name="locale" values="it" /> <set-property-fallback name="locale"
