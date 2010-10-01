@@ -18,7 +18,7 @@ import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
-import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
 
@@ -43,6 +43,8 @@ public class RightsDataServlet extends HttpServlet {
 			Long folderId = null;
 			if (StringUtils.isNotEmpty(request.getParameter("folderId")))
 				folderId = new Long(request.getParameter("folderId"));
+
+			String locale = request.getParameter("locale");
 
 			response.setContentType("text/xml");
 
@@ -77,11 +79,12 @@ public class RightsDataServlet extends HttpServlet {
 						writer.print("<right>");
 						writer.print("<entityId>" + group.getId() + "</entityId>");
 						if (group.getType() == Group.TYPE_DEFAULT)
-							writer.print("<entity><![CDATA[" + group.getName() + "]]></entity>");
+							writer.print("<entity><![CDATA[" + I18N.message("group", locale) + ": " + group.getName()
+									+ "]]></entity>");
 						else {
 							User user = group.getUsers().iterator().next();
-							writer.print("<entity><![CDATA[" + I18N.message("User: ") + user.getFullName() + " ("
-									+ user.getUserName() + ")]]></entity>");
+							writer.print("<entity><![CDATA[" + I18N.message("user", locale) + ": " + user.getFullName()
+									+ " (" + user.getUserName() + ")]]></entity>");
 						}
 						writer.print("<read>" + true + "</read>");
 						writer.print("<write>" + (folderGroup.getWrite() == 1 ? true : false) + "</write>");
@@ -95,6 +98,7 @@ public class RightsDataServlet extends HttpServlet {
 						writer.print("<sign>" + (folderGroup.getSign() == 1 ? true : false) + "</sign>");
 						writer.print("<archive>" + (folderGroup.getArchive() == 1 ? true : false) + "</archive>");
 						writer.print("<workflow>" + (folderGroup.getWorkflow() == 1 ? true : false) + "</workflow>");
+						writer.print("<type>" + group.getType() + "</type>");
 						writer.print("</right>");
 					}
 				}

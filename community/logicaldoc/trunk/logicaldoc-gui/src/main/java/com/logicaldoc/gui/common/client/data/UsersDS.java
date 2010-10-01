@@ -27,8 +27,9 @@ public class UsersDS extends DataSource {
 		DataSourceTextField email = new DataSourceTextField("email");
 		DataSourceTextField phone = new DataSourceTextField("phone");
 		DataSourceTextField cell = new DataSourceTextField("cell");
+		DataSourceTextField usergroup = new DataSourceTextField("usergroup");
 
-		setFields(id, username, label, enabled, name, firstName, email, phone, cell);
+		setFields(id, username, label, enabled, name, firstName, email, phone, cell, usergroup);
 		setDataURL("data/users.xml?sid=" + Session.get().getSid() + (grpId != null ? "&groupId=" + grpId : ""));
 		setClientOnly(true);
 	}

@@ -17,6 +17,10 @@ public class GUIGroup implements Serializable {
 	private String name = "";
 
 	private String description = "";
+	
+	public static int TYPE_DEFAULT = 0;
+
+	public static int TYPE_USER = 1;
 
 	// Optional group from which to import policies
 	private Long inheritGroupId;

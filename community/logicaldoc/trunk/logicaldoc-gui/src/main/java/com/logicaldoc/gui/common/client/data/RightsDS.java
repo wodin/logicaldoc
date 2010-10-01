@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.common.client.data;
 
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -30,10 +31,12 @@ public class RightsDS extends DataSource {
 		DataSourceBooleanField rename = new DataSourceBooleanField("rename");
 		DataSourceBooleanField security = new DataSourceBooleanField("security");
 		DataSourceBooleanField archive = new DataSourceBooleanField("archive");
+		DataSourceTextField type = new DataSourceTextField("type");
 
 		setFields(entityId, entity, read, write, delete, add, workflow, sign, _import, export, immutable, rename,
-				security, archive);
+				security, archive, type);
 		setClientOnly(true);
-		setDataURL("data/rights.xml?sid=" + Session.get().getSid() + "&folderId=" + folderId);
+		setDataURL("data/rights.xml?sid=" + Session.get().getSid() + "&folderId=" + folderId + "&locale="
+				+ I18N.getLocale());
 	}
 }

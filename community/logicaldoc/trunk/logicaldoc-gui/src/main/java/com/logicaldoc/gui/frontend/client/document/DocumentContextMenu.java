@@ -616,7 +616,7 @@ public class DocumentContextMenu extends Menu {
 							.getAttribute("lockUserId")) : Long.MIN_VALUE;
 					if (Session.get().getUser().getId() == lockUser.longValue()
 							|| Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN))
-						enableUnlock = false;
+						enableUnlock = true;
 				}
 			}
 
@@ -659,6 +659,14 @@ public class DocumentContextMenu extends Menu {
 
 		if (selection.length != 1 || Constants.DOC_CHECKED_OUT != Integer.parseInt(selection[0].getAttribute("status")))
 			checkin.setEnabled(false);
+
+		if (selection.length == 1) {
+			Long lockUser = selection[0].getAttribute("lockUserId") != null ? Long.parseLong(selection[0]
+					.getAttribute("lockUserId")) : Long.MIN_VALUE;
+			if (Session.get().getUser().getId() != lockUser.longValue()
+					&& !Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN))
+				checkin.setEnabled(false);
+		}
 
 		unlockItem.setEnabled(enableUnlock);
 		lock.setEnabled(enableLock);
