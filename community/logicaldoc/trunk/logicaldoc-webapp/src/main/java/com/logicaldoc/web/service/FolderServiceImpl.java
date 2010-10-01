@@ -46,8 +46,6 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	public void applyRights(String sid, GUIFolder folder, boolean subtree) throws InvalidSessionException {
 		UserSession session = SessionUtil.validateSession(sid);
 
-		System.out.println("subtree: " + subtree);
-
 		try {
 			FolderDAO mdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			saveRules(sid, mdao.findById(folder.getId()), session.getUserId(), folder.getRights());
