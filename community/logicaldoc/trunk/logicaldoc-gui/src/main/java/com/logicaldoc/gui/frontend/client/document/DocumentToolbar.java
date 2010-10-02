@@ -103,7 +103,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		add.setIcon(ItemFactory.newImgIcon("document_add.png").getSrc());
+		add.setIcon(ItemFactory.newImgIcon("page_white_add.png").getSrc());
 		add.setTooltip(I18N.message("adddocuments"));
 		add.addClickHandler(new ClickHandler() {
 			@Override
@@ -150,7 +150,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		scan.setIcon(ItemFactory.newImgIcon("scanner.png").getSrc());
+		scan.setIcon(ItemFactory.newImgIcon("image_add.png").getSrc());
 		scan.setTooltip(I18N.message("scandocument"));
 		scan.addClickHandler(new ClickHandler() {
 			@Override
