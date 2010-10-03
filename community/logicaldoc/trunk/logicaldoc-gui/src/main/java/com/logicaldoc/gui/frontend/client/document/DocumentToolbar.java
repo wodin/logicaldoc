@@ -114,7 +114,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		subscribe.setIcon(ItemFactory.newImgIcon("eye.png").getSrc());
+		subscribe.setIcon(ItemFactory.newImgIcon("email_edit.png").getSrc());
 		subscribe.setTooltip(I18N.message("subscribe"));
 		subscribe.setDisabled(true);
 		subscribe.addClickHandler(new ClickHandler() {
