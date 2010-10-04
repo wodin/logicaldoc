@@ -23,7 +23,7 @@ public interface FolderService {
 	 */
 	@WebResult(name = "folder")
 	public WSFolder create(@WebParam(name = "sid") String sid, @WebParam(name = "folder") WSFolder folder)
-			throws Exception;;
+			throws Exception;
 
 	/**
 	 * Deletes an existing folder with the given identifier.
