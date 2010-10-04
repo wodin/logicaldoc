@@ -52,7 +52,7 @@ public class GroupsDataServlet extends HttpServlet {
 			writer.write("<list>");
 
 			GroupDAO dao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
-			if (excludeUserId != null && !excludeUserId.trim().isEmpty()) {
+			if (excludeUserId != null && !excludeUserId.trim().isEmpty() && !excludeUserId.equals("0")) {
 				UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 				User user = userDao.findById(Long.parseLong(excludeUserId));
 				userDao.initialize(user);
