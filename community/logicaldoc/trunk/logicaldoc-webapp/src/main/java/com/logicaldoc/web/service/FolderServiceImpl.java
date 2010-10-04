@@ -260,9 +260,18 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			Folder f;
 			if (folder.getId() != 0) {
 				f = folderDao.findById(folder.getId());
-				f.setName(folder.getName());
 				f.setDescription(folder.getDescription());
-				folderDao.store(f);
+				if (f.getName().trim().equals(folder.getName())) {
+					f.setName(folder.getName());
+					folderDao.store(f);
+				} else {
+					f.setName(folder.getName());
+					History history = new History();
+					history.setUser(SessionUtil.getSessionUser(sid));
+					history.setEvent(History.EVENT_FOLDER_RENAMED);
+					history.setSessionId(sid);
+					folderDao.store(f, history);
+				}
 			} else {
 				// Add a folder history entry
 				History transaction = new History();
