@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.client.system;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.code.p.gwtchismes.client.GWTCProgress;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -21,6 +20,7 @@ import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.widgets.Progressbar;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -29,7 +29,6 @@ import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
-import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
@@ -55,7 +54,7 @@ public class TasksPanel extends VLayout {
 
 	private Canvas detailPanel;
 
-	private Map<String, GWTCProgress> progresses = new HashMap<String, GWTCProgress>();
+	private Map<String, Progressbar> progresses = new HashMap<String, Progressbar>();
 
 	public TasksPanel() {
 		setWidth100();
@@ -173,6 +172,7 @@ public class TasksPanel extends VLayout {
 
 	public void init() {
 		results.setShowResizeBar(true);
+		results.setHeight("60%");
 		addMember(results);
 
 		detailPanel = new Label("&nbsp;" + I18N.message("selecttask"));
@@ -197,7 +197,7 @@ public class TasksPanel extends VLayout {
 					@Override
 					public void onSuccess(GUITask[] tasks) {
 						for (GUITask guiTask : tasks) {
-							GWTCProgress p = progresses.get(guiTask.getName());
+							Progressbar p = progresses.get(guiTask.getName());
 							if (p == null)
 								continue;
 
@@ -216,16 +216,10 @@ public class TasksPanel extends VLayout {
 							}
 
 							if (guiTask.isIndeterminate()) {
-								if (guiTask.getStatus() == GUITask.STATUS_RUNNING) {
-									if (p.getProgress() == 0)
-										p.setProgress(100, 100, 100);
-									else
-										p.setProgress(0, 100, 100);
-								} else
-									p.setProgress(0, 100, 100);
-							} else
-								p.setProgress(guiTask.getCompletionPercentage(), guiTask.getProgress(),
-										(int) guiTask.getSize());
+								p.setPercentDone(0);
+							} else {
+								p.setPercentDone(guiTask.getCompletionPercentage());
+							}
 						}
 						list.redraw();
 					}
@@ -248,22 +242,13 @@ public class TasksPanel extends VLayout {
 			@Override
 			protected Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
 				String fieldName = this.getFieldName(colNum);
-
-				if (fieldName.equals("progress")) {
-					HLayout recordCanvas = new HLayout(3);
-					recordCanvas.setHeight(45);
-
-					GWTCProgress prgBar = new GWTCProgress(15);
-					if (!record.getAttribute("indeterminate").equals("true")) {
-						prgBar = new GWTCProgress(15, GWTCProgress.SHOW_NUMBERS);
-						prgBar.setProgress(record.getAttributeAsInt("completion"),
-								record.getAttributeAsInt("progress"), record.getAttributeAsInt("size"));
-					}
+				if (fieldName.equals("progressbar")) {
+					Progressbar prgBar = new Progressbar();
+					prgBar.setLength(100);
+					prgBar.setBreadth(15);
 					progresses.put(record.getAttribute("name"), prgBar);
-					prgBar.setPixelSize(200, 40);
 
-					recordCanvas.addChild(prgBar);
-					return recordCanvas;
+					return prgBar;
 				} else {
 					return null;
 				}
@@ -273,7 +258,6 @@ public class TasksPanel extends VLayout {
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
 		list.setAutoFetchData(true);
-		list.setCellHeight(50);
 
 		ListGridField enabled = new ListGridField("enabledIcon", " ", 30);
 		enabled.setType(ListGridFieldType.IMAGE);
@@ -312,20 +296,34 @@ public class TasksPanel extends VLayout {
 		scheduling.setAlign(Alignment.CENTER);
 		scheduling.setCanSort(false);
 
-		ListGridField progress = new ListGridField("progress", I18N.message("progress"), 250);
-		progress.setCanFilter(false);
-		progress.setCanSort(false);
-		progress.setAlign(Alignment.LEFT);
-		progress.setCellFormatter(new CellFormatter() {
+		ListGridField progressbar = new ListGridField("progressbar", I18N.message("progress"), 110);
+		progressbar.setCanFilter(false);
+		progressbar.setCanSort(false);
+		progressbar.setAlign(Alignment.LEFT);
+		progressbar.setCellFormatter(new CellFormatter() {
 			@Override
 			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
 				return "";
 			}
 		});
 
+		ListGridField completion = new ListGridField("completion", " ", 35);
+		completion.setCanFilter(false);
+		completion.setCanSort(false);
+		completion.setAlign(Alignment.LEFT);
+		completion.setCellFormatter(new CellFormatter() {
+			@Override
+			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
+				if (value != null)
+					return value + "%";
+				else
+					return "";
+			}
+		});
+
 		list.setWidth100();
 		list.setHeight100();
-		list.setFields(enabled, running, label, lastStart, nextStart, scheduling, progress);
+		list.setFields(enabled, running, label, lastStart, nextStart, scheduling, progressbar, completion);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);

@@ -72,7 +72,8 @@ public class TasksDataServlet extends HttpServlet {
 					writer.print("<scheduling>" + I18N.message("each", locale) + " "
 							+ task.getScheduling().getIntervalSeconds() + " "
 							+ I18N.message("seconds", locale).toLowerCase() + "</scheduling>");
-				writer.print("<completion>" + task.getCompletionPercentage() + "</completion>");
+				if (!task.isIndeterminate())
+					writer.print("<completion>" + task.getCompletionPercentage() + "</completion>");
 				writer.print("<progress>" + task.getProgress() + "</progress>");
 				writer.print("<size>" + task.getSize() + "</size>");
 				if (task.getStatus() == Task.STATUS_IDLE)
