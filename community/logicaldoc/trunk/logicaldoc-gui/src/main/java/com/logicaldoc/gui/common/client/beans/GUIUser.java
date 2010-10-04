@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.logicaldoc.gui.common.client.log.Log;
-
 /**
  * User bean as used in the GUI
  * 
@@ -73,6 +71,8 @@ public class GUIUser implements Serializable {
 	private int tasks = 0;
 
 	private int messages = 0;
+
+	private int subscriptions = 0;
 
 	private Long[] menues = new Long[0];
 
@@ -339,5 +339,16 @@ public class GUIUser implements Serializable {
 
 	public void setMenues(Long[] menues) {
 		this.menues = menues;
+	}
+
+	public int getSubscriptions() {
+		return subscriptions;
+	}
+
+	public void setSubscriptions(int subscriptions) {
+		if (this.subscriptions != subscriptions) {
+			this.subscriptions = subscriptions;
+			notifyObservers(ALL_SUBSCRIPTIONS);
+		}
 	}
 }

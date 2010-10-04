@@ -95,31 +95,35 @@ public class DashboardPanel extends VLayout implements UserObserver {
 	}
 
 	public void updateUserTab() {
-		tabSet.removeTab(userTab);
+		tabSet.removeTab(0);
 		userTab = new Tab(I18N.message("user"));
 		userTab.setPane(new UserDashboard());
 		tabSet.addTab(userTab, 0);
+		tabSet.selectTab(0);
 	}
 
 	public void updateMessageTab() {
-		tabSet.removeTab(messagesTab);
+		tabSet.removeTab(1);
 		messagesTab = new Tab(I18N.message("messages"));
 		messagesTab.setPane(new MessagesPanel());
 		tabSet.addTab(messagesTab, 1);
+		tabSet.selectTab(1);
 	}
 
 	public void updateSubscriptionsTab() {
-		tabSet.removeTab(subscriptionsTab);
+		tabSet.removeTab(2);
 		subscriptionsTab = new Tab(I18N.message("subscriptions"));
 		subscriptionsTab.setPane(new SubscriptionsPanel());
 		tabSet.addTab(subscriptionsTab, 2);
+		tabSet.selectTab(2);
 	}
 
 	public void updateWorkflowTab() {
-		tabSet.removeTab(workflowTab);
+		tabSet.removeTab(3);
 		workflowTab = new Tab(I18N.message("workflow"));
 		workflowTab.setPane(new WorkflowDashboard());
 		tabSet.addTab(workflowTab, 3);
+		tabSet.selectTab(3);
 	}
 
 	@Override

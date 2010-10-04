@@ -29,6 +29,8 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
+import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
+import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
@@ -135,6 +137,15 @@ public class SubscriptionsPanel extends VLayout {
 							+ "&open=true", "_blank", "");
 				} else
 					DocumentsPanel.get().openInFolder(Long.parseLong(id), null);
+			}
+		});
+
+		// Count the total of events and the total of unchecked events
+		list.addDataArrivedHandler(new DataArrivedHandler() {
+			@Override
+			public void onDataArrived(DataArrivedEvent e) {
+				int total = list.getTotalRows();
+				Session.get().getUser().setSubscriptions(total);
 			}
 		});
 	}

@@ -28,6 +28,7 @@ import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
 import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
+import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
@@ -46,9 +47,14 @@ public class MessagesPanel extends VLayout {
 
 	private ListGrid list;
 
+	private Layout listing = new VLayout();
+
 	public MessagesPanel() {
 		setWidth100();
 
+		// Initialize the listing panel as placeholder
+		listing.setAlign(Alignment.CENTER);
+		listing.setHeight100();
 		initListGrid();
 
 		ToolStrip toolStrip = new ToolStrip();
@@ -76,18 +82,12 @@ public class MessagesPanel extends VLayout {
 		});
 		toolStrip.addFill();
 
-		list.addCellContextClickHandler(new CellContextClickHandler() {
-			@Override
-			public void onCellContextClick(CellContextClickEvent event) {
-				showContextMenu();
-				event.cancel();
-			}
-		});
+		setMembers(toolStrip, listing);
 	}
 
 	private void initListGrid() {
 		if (list != null) {
-			removeMember(list);
+			listing.removeMember(list);
 			list.destroy();
 		}
 
@@ -140,7 +140,7 @@ public class MessagesPanel extends VLayout {
 		list.setDataSource(new MessagesDS());
 		list.setFields(id, priority, username, from, sent);
 
-		addMember(list);
+		listing.addMember(list);
 
 		// Count the total unread messages
 		list.addDataArrivedHandler(new DataArrivedHandler() {
@@ -176,6 +176,14 @@ public class MessagesPanel extends VLayout {
 									list.updateData(record);
 								}
 							});
+			}
+		});
+
+		list.addCellContextClickHandler(new CellContextClickHandler() {
+			@Override
+			public void onCellContextClick(CellContextClickEvent event) {
+				showContextMenu();
+				event.cancel();
 			}
 		});
 	}
