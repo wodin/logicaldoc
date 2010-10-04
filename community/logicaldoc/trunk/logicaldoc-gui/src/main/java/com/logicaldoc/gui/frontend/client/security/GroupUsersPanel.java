@@ -125,29 +125,30 @@ public class GroupUsersPanel extends VLayout {
 					}
 				}
 
-				service.addUserToGroup(Session.get().getSid(), groupId, Long.parseLong(selectedRecord
-						.getAttribute("id")), new AsyncCallback<Void>() {
+				service.addUserToGroup(Session.get().getSid(), groupId,
+						Long.parseLong(selectedRecord.getAttribute("id")), new AsyncCallback<Void>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
 
-					@Override
-					public void onSuccess(Void ret) {
-						// Update the users table
-						ListGridRecord record = new ListGridRecord();
-						record.setAttribute("id", selectedRecord.getAttribute("id"));
-						record.setAttribute("username", selectedRecord.getAttribute("username"));
-						record.setAttribute("name", selectedRecord.getAttribute("name"));
-						record.setAttribute("firstName", selectedRecord.getAttribute("firstName"));
-						record.setAttribute("email", selectedRecord.getAttribute("email"));
-						record.setAttribute("phone", selectedRecord.getAttribute("phone"));
-						record.setAttribute("cell", selectedRecord.getAttribute("cell"));
-						record.setAttribute("eenabled", selectedRecord.getAttribute("eenabled"));
-						list.addData(record);
-					}
-				});
+							@Override
+							public void onSuccess(Void ret) {
+								// Update the users table
+								ListGridRecord record = new ListGridRecord();
+								record.setAttribute("id", selectedRecord.getAttribute("id"));
+								record.setAttribute("username", selectedRecord.getAttribute("username"));
+								record.setAttribute("name", selectedRecord.getAttribute("name"));
+								record.setAttribute("firstName", selectedRecord.getAttribute("firstName"));
+								record.setAttribute("email", selectedRecord.getAttribute("email"));
+								record.setAttribute("phone", selectedRecord.getAttribute("phone"));
+								record.setAttribute("cell", selectedRecord.getAttribute("cell"));
+								record.setAttribute("eenabled", selectedRecord.getAttribute("eenabled"));
+								list.addData(record);
+								user.clearValue();
+							}
+						});
 			}
 		});
 
