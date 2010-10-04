@@ -1,8 +1,5 @@
 package com.logicaldoc.gui.frontend.client.dashboard;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
@@ -157,7 +154,7 @@ public class HistoryPortlet extends Portlet {
 		else if (event.equals(Constants.EVENT_DOWNLOADED))
 			icn = "download.png";
 		else if (event.equals(Constants.EVENT_CHECKEDIN))
-			icn = "page_white_add.png";
+			icn = "page_white_get.png";
 		else if (event.equals(Constants.EVENT_CHANGED))
 			icn = "edit.png";
 
