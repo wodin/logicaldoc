@@ -25,6 +25,7 @@ import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.layout.Portlet;
 
 public class StatusPortlet extends Portlet {
+	
 	private DocumentsDS dataSource;
 
 	private ListGrid list;
@@ -37,7 +38,7 @@ public class StatusPortlet extends Portlet {
 			icn = "page_edit.png";
 			status = Constants.DOC_CHECKED_OUT;
 		} else if (eventCode.equals(Constants.EVENT_LOCKED)) {
-			icn = "document_lock.png";
+			icn = "page_white_lock.png";
 			status = Constants.DOC_LOCKED;
 		}
 
@@ -84,6 +85,8 @@ public class StatusPortlet extends Portlet {
 		setDragOpacity(30);
 
 		HeaderIcon portletIcon = ItemFactory.newHeaderIcon(icn);
+		HeaderControl hcicon = new HeaderControl(portletIcon);
+		hcicon.setSize(16);
 
 		setHeaderControls(new HeaderControl(portletIcon), HeaderControls.HEADER_LABEL, HeaderControls.MINIMIZE_BUTTON);
 

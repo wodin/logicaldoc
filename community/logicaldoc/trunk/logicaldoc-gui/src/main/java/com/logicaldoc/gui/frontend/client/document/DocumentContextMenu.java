@@ -277,7 +277,7 @@ public class DocumentContextMenu extends Menu {
 								@Override
 								public void onSuccess(Void result) {
 									for (ListGridRecord record : selection) {
-										record.setAttribute("locked", "document_lock");
+										record.setAttribute("locked", "page_white_lock");
 										record.setAttribute("lockUserId", Session.get().getUser().getId());
 										list.refreshRow(list.getRecordIndex(record));
 									}

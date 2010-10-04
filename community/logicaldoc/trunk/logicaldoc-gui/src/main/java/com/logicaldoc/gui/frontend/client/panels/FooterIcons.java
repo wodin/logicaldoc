@@ -36,7 +36,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 	private HTML workflowsCount = new HTML("0");
 
 	private FooterIcons() {
-		Img clipboardImage = ItemFactory.newImgIcon("paste.gif");
+		Img clipboardImage = ItemFactory.newImgIcon("page_white_paste.png");
 		clipboardImage.setHeight("16px");
 		clipboardImage.addClickHandler(new ClickHandler() {
 			@Override
@@ -47,7 +47,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 		});
 		clipboardImage.setCursor(Cursor.HAND);
 
-		Img lockedImage = ItemFactory.newImgIcon("document_lock.png");
+		Img lockedImage = ItemFactory.newImgIcon("page_white_lock.png");
 		lockedImage.setHeight("16px");
 		lockedImage.addClickHandler(new ClickHandler() {
 			@Override
@@ -77,7 +77,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 		});
 		messageImage.setCursor(Cursor.HAND);
 
-		Img workflowImage = ItemFactory.newImgIcon("data_into.png");
+		Img workflowImage = ItemFactory.newImgIcon("cog.png");
 		workflowImage.setHeight("16px");
 		workflowImage.addClickHandler(new ClickHandler() {
 			@Override
