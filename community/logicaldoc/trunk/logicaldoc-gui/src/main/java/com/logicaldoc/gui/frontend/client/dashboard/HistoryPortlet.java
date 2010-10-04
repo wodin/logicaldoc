@@ -1,5 +1,8 @@
 package com.logicaldoc.gui.frontend.client.dashboard;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
@@ -40,6 +43,7 @@ import com.smartgwt.client.widgets.layout.Portlet;
  * @since 6.0
  */
 public class HistoryPortlet extends Portlet {
+
 	private DocumentHistoryDS dataSource;
 
 	private ListGrid list;
@@ -149,18 +153,19 @@ public class HistoryPortlet extends Portlet {
 		if (event.equals(Constants.EVENT_CHECKEDOUT))
 			icn = "page_edit.png";
 		else if (event.equals(Constants.EVENT_LOCKED))
-			icn = "document_lock.png";
+			icn = "page_white_lock.png";
 		else if (event.equals(Constants.EVENT_DOWNLOADED))
 			icn = "download.png";
 		else if (event.equals(Constants.EVENT_CHECKEDIN))
-			icn = "document_add.png";
+			icn = "page_white_add.png";
 		else if (event.equals(Constants.EVENT_CHANGED))
 			icn = "edit.png";
 
 		HeaderIcon portletIcon = ItemFactory.newHeaderIcon(icn);
-
-		setHeaderControls(new HeaderControl(portletIcon), HeaderControls.HEADER_LABEL, HeaderControls.MINIMIZE_BUTTON,
-				markAsRead, refresh);
+		HeaderControl hcicon = new HeaderControl(portletIcon);
+		hcicon.setSize(16);
+		
+		setHeaderControls(hcicon, HeaderControls.HEADER_LABEL, HeaderControls.MINIMIZE_BUTTON, markAsRead, refresh);
 
 		// Count the total of events and the total of unchecked events
 		list.addDataArrivedHandler(new DataArrivedHandler() {
