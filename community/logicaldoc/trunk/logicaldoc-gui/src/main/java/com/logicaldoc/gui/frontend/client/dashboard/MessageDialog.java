@@ -18,12 +18,19 @@ import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
+import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
+import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 
 /**
@@ -36,6 +43,8 @@ public class MessageDialog extends Window {
 	private MessageServiceAsync service = (MessageServiceAsync) GWT.create(MessageService.class);
 
 	private DynamicForm form = new DynamicForm();
+
+	private ComboBoxItem recipient = null;
 
 	public MessageDialog() {
 		super();
@@ -63,9 +72,31 @@ public class MessageDialog extends Window {
 		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setNumCols(1);
 
-		TextItem recipient = ItemFactory.newTextItem("recipient", "recipient", "");
-		recipient.setWidth(250);
-		recipient.setRequired(true);
+		StaticTextItem recipientItem = ItemFactory.newStaticTextItem("recipientItem", "",
+				"<b>" + I18N.message("recipient") + "</b>");
+		recipientItem.setShouldSaveValue(false);
+		recipientItem.setWrapTitle(false);
+		recipient = ItemFactory.newUserSelector("recipient", " ");
+		recipient.setShowTitle(false);
+		recipient.setDisplayField("username");
+		recipient.addChangedHandler(new ChangedHandler() {
+			@Override
+			public void onChanged(ChangedEvent event) {
+				try {
+					setRecipient(recipient.getSelectedRecord().getAttribute("username"));
+				} catch (Throwable t) {
+				}
+			}
+		});
+
+		FormItemIcon icon = new FormItemIcon();
+		icon.setSrc("[SKIN]/actions/remove.png");
+		recipient.addIconClickHandler(new IconClickHandler() {
+			public void onIconClick(IconClickEvent event) {
+				recipient.setValue("");
+			}
+		});
+		recipient.setIcons(icon);
 
 		TextItem subject = ItemFactory.newTextItem("subject", "subject", "");
 		subject.setRequired(true);
@@ -122,7 +153,11 @@ public class MessageDialog extends Window {
 			}
 		});
 
-		form.setFields(recipient, subject, confirmation, validity, priority, message, sendItem);
+		form.setFields(recipientItem, recipient, subject, confirmation, validity, priority, message, sendItem);
 		addItem(form);
+	}
+
+	public void setRecipient(String id) {
+		recipient.setValue(id);
 	}
 }

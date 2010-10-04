@@ -142,6 +142,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 								@Override
 								public void onSuccess(Void result) {
 									Log.info(I18N.message("documentssubscribed"), null);
+									Session.get().getUser()
+											.setSubscriptions(Session.get().getUser().getSubscriptions() + 1);
 								}
 							});
 						}
@@ -352,7 +354,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				archiveDematerialization.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
-		
+
 		if (Feature.visible(Feature.WORKFLOW)) {
 			addSeparator();
 			addButton(startWorkflow);

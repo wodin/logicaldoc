@@ -70,6 +70,8 @@ public class SubscriptionDialog extends Window {
 							@Override
 							public void onSuccess(Void ret) {
 								Log.info(I18N.message("foldersubscribed"), null);
+								Session.get().getUser()
+										.setSubscriptions(Session.get().getUser().getSubscriptions() + 1);
 							}
 						});
 				destroy();
