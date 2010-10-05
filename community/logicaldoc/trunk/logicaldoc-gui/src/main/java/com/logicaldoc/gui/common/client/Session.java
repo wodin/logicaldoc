@@ -3,13 +3,19 @@ package com.logicaldoc.gui.common.client;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
+import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.services.InfoService;
+import com.logicaldoc.gui.common.client.services.InfoServiceAsync;
 
 /**
  * Represents a client work session
@@ -19,6 +25,8 @@ import com.logicaldoc.gui.common.client.log.Log;
  */
 public class Session {
 	private static Session instance;
+
+	private InfoServiceAsync service = (InfoServiceAsync) GWT.create(InfoService.class);
 
 	private GUIInfo info;
 
@@ -31,6 +39,8 @@ public class Session {
 	private Set<SessionObserver> sessionObservers = new HashSet<SessionObserver>();
 
 	private Set<FolderObserver> folderObservers = new HashSet<FolderObserver>();
+
+	private Timer timer;
 
 	public static Session get() {
 		if (instance == null)
@@ -49,6 +59,8 @@ public class Session {
 		session = null;
 		sessionObservers.clear();
 		instance = null;
+		if (timer != null)
+			timer.cancel();
 	}
 
 	public GUIUser getUser() {
@@ -65,6 +77,37 @@ public class Session {
 				for (SessionObserver listener : sessionObservers) {
 					listener.onUserLoggedIn(session.getUser());
 				}
+			}
+
+			if (info.getSessionHeartbeat() > 0) {
+				/*
+				 * Create the timer that synchronize the session info
+				 */
+				timer = new Timer() {
+					public void run() {
+						service.getSessionInfo(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUIParameter[] parameters) {
+								if (parameters.length > 0) {
+									GUIUser user = getUser();
+									for (GUIParameter parameter : parameters) {
+										if (parameter.getName().equals("messages"))
+											user.setMessages(Integer.parseInt(parameter.getValue()));
+										else if (parameter.getName().equals("workflows"))
+											user.setActiveTasks(Integer.parseInt(parameter.getValue()));
+									}
+								}
+							}
+						});
+					}
+				};
+
+				timer.scheduleRepeating(info.getSessionHeartbeat() * 1000);
 			}
 		} catch (Throwable caught) {
 			Log.serverError(caught);

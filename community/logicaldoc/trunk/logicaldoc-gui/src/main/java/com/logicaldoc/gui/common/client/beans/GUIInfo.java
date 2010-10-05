@@ -40,6 +40,8 @@ public class GUIInfo implements Serializable {
 
 	private String licensee;
 
+	private int sessionHeartbeat = -1;
+
 	// Optional list of messages to be shown to the user
 	private GUIMessage[] messages = new GUIMessage[0];
 
@@ -201,5 +203,13 @@ public class GUIInfo implements Serializable {
 
 	public void setLicensee(String licensee) {
 		this.licensee = licensee;
+	}
+
+	public int getSessionHeartbeat() {
+		return sessionHeartbeat;
+	}
+
+	public void setSessionHeartbeat(int sessionHeartbeat) {
+		this.sessionHeartbeat = sessionHeartbeat;
 	}
 }
