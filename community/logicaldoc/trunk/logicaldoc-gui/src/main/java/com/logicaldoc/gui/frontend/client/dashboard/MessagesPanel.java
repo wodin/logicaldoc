@@ -5,6 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.logicaldoc.gui.common.client.data.MessagesDS;
+import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -109,7 +110,10 @@ public class MessagesPanel extends VLayout {
 		ListGridField from = new ListGridField("from", I18N.message("from"), 150);
 		from.setCanFilter(true);
 
-		ListGridField sent = new ListGridField("sent", I18N.message("sent"), 90);
+		ListGridField sent = new ListGridField("sent", I18N.message("sent"), 110);
+		sent.setAlign(Alignment.CENTER);
+		sent.setType(ListGridFieldType.DATE);
+		sent.setCellFormatter(new DateCellFormatter());
 		sent.setCanFilter(false);
 
 		list = new ListGrid() {
