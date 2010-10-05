@@ -28,17 +28,17 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 			SystemMessage message = new SystemMessage();
-			message.setLastModified(rs.getDate(1));
+			message.setLastModified(rs.getTimestamp(1));
 			message.setDeleted(rs.getInt(2));
 			message.setAuthor(rs.getString(3));
 			message.setMessageText(rs.getString(4));
 			message.setSubject(rs.getString(5));
-			message.setSentDate(rs.getDate(6));
+			message.setSentDate(rs.getTimestamp(6));
 			message.setDateScope(rs.getInt(7));
 			message.setPrio(rs.getInt(8));
 			message.setConfirmation(rs.getInt(9));
 			message.setRead(rs.getInt(10));
-			message.setLastNotified(rs.getDate(11));
+			message.setLastNotified(rs.getTimestamp(11));
 			message.setStatus(rs.getInt(12));
 			message.setTrials(rs.getInt(13));
 			message.setType(rs.getInt(14));
