@@ -16,10 +16,15 @@ import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.core.communication.SystemMessage;
+import com.logicaldoc.core.communication.dao.SystemMessageDAO;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
+import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
+import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.common.client.services.InfoService;
 import com.logicaldoc.util.Context;
@@ -123,11 +128,12 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 					features.add(name);
 			}
 			info.setFeatures(features.toArray(new String[0]));
-			
+
 			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			info.setInstallationId(config.getProperty("id"));
 			info.setRelease(config.getProperty("product.release"));
 			info.setYear(config.getProperty("product.year"));
+			info.setSessionHeartbeat(Integer.parseInt(config.getProperty("session.heartbeat")));
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
@@ -157,5 +163,20 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			}
 		}
 		return "";
+	}
+
+	@Override
+	public GUIParameter[] getSessionInfo(String sid) {
+		log.debug("Requested info for session " + sid);
+		
+		SystemMessageDAO messageDao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
+		GUIParameter[] parameters = new GUIParameter[1];
+
+		UserSession session = SessionManager.getInstance().get(sid);
+		GUIParameter messages = new GUIParameter("messages", ""
+				+ messageDao.getCount(session.getUserName(), SystemMessage.TYPE_SYSTEM, 0));
+		parameters[0] = messages;
+
+		return parameters;
 	}
 }

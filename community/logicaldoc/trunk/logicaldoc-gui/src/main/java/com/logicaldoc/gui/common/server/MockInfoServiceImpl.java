@@ -9,6 +9,7 @@ import java.util.StringTokenizer;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
+import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.common.client.services.InfoService;
 
@@ -97,5 +98,10 @@ public class MockInfoServiceImpl extends RemoteServiceServlet implements InfoSer
 			buf[i++] = entry;
 		}
 		return buf;
+	}
+
+	@Override
+	public GUIParameter[] getSessionInfo(String sid) {
+		return null;
 	}
 }

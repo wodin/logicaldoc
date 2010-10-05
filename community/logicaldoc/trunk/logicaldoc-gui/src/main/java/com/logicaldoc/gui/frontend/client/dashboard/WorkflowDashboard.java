@@ -4,10 +4,13 @@ import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.workflow.WorkflowHistoryDialog;
-import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.PortalLayout;
 import com.smartgwt.client.widgets.layout.Portlet;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.toolbar.ToolStrip;
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
  * Workflow dashboard that displays several portlets like a portal page.
@@ -15,7 +18,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
  */
-public class WorkflowDashboard extends PortalLayout {
+public class WorkflowDashboard extends VLayout {
 
 	public static int TASKS_ASSIGNED = 0;
 
@@ -39,87 +42,77 @@ public class WorkflowDashboard extends PortalLayout {
 
 	private Portlet supervisorTasks = null;
 
-	private Button historyButton = null;
-
-	private Button refreshButton = null;
-
-	private VLayout buttonsLayout = null;
+	private PortalLayout portalLayout = null;
 
 	public WorkflowDashboard() {
-		setShowColumnMenus(false);
-		setShowEdges(false);
-		setShowShadow(false);
-		setColumnBorder("0px");
+		setWidth100();
 
-		refresh();
-	}
+		portalLayout = new PortalLayout();
+		portalLayout.setShowColumnMenus(false);
+		portalLayout.setShowEdges(false);
+		portalLayout.setShowShadow(false);
+		portalLayout.setColumnBorder("0px");
 
-	public void refresh() {
-		if (assignedTasks != null)
-			removePortlet(assignedTasks);
-
-		if (canOwnTasks != null)
-			removePortlet(canOwnTasks);
-
-		if (suspendedTasks != null)
-			removePortlet(suspendedTasks);
-
-		if (adminTasks != null)
-			removePortlet(adminTasks);
-
-		if (supervisorTasks != null)
-			removePortlet(supervisorTasks);
-
-		if (buttonsLayout != null)
-			removeMember(buttonsLayout);
-
-		if (historyButton != null)
-			removeMember(historyButton);
-
-		if (refreshButton != null)
-			removeMember(refreshButton);
-
-		// Place the portlets
-		assignedTasks = new WorkflowPortlet(this, TASKS_ASSIGNED);
-		addPortlet(assignedTasks, 0, 0);
-		canOwnTasks = new WorkflowPortlet(this, TASKS_I_CAN_OWN);
-		addPortlet(canOwnTasks, 0, 1);
-		suspendedTasks = new WorkflowPortlet(this, TASKS_SUSPENDED);
-		addPortlet(suspendedTasks, 1, 0);
-		if (Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN)) {
-			adminTasks = new WorkflowPortlet(this, TASKS_ADMIN);
-			addPortlet(adminTasks, 1, 1);
-		} else {
-			supervisorTasks = new WorkflowPortlet(this, TASKS_SUPERVISOR);
-			addPortlet(supervisorTasks, 1, 1);
-		}
-
-		buttonsLayout = new VLayout(10);
-		buttonsLayout.setWidth(80);
-
-		refreshButton = new Button(I18N.message("refresh"));
-		refreshButton.setMargin(2);
-		refreshButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+		ToolStrip toolStrip = new ToolStrip();
+		toolStrip.setHeight(20);
+		toolStrip.setWidth100();
+		toolStrip.addSpacer(2);
+		ToolStripButton refresh = new ToolStripButton();
+		refresh.setTitle(I18N.message("refresh"));
+		toolStrip.addButton(refresh);
+		refresh.addClickHandler(new ClickHandler() {
 			@Override
-			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+			public void onClick(ClickEvent event) {
 				refresh();
 			}
 		});
-
-		historyButton = new Button(I18N.message("history"));
-		historyButton.setMargin(2);
-		historyButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+		ToolStripButton history = new ToolStripButton();
+		history.setTitle(I18N.message("history"));
+		toolStrip.addButton(history);
+		history.addClickHandler(new ClickHandler() {
 			@Override
-			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+			public void onClick(ClickEvent event) {
 				WorkflowHistoryDialog dialog = new WorkflowHistoryDialog();
 				dialog.show();
 			}
 		});
+		toolStrip.addFill();
 
-		buttonsLayout.addMember(refreshButton);
-		buttonsLayout.addMember(historyButton);
+		refresh();
 
-		addMember(buttonsLayout);
+		setMembers(toolStrip, portalLayout);
+	}
+
+	public void refresh() {
+		if (assignedTasks != null)
+			portalLayout.removePortlet(assignedTasks);
+
+		if (canOwnTasks != null)
+			portalLayout.removePortlet(canOwnTasks);
+
+		if (suspendedTasks != null)
+			portalLayout.removePortlet(suspendedTasks);
+
+		if (adminTasks != null)
+			portalLayout.removePortlet(adminTasks);
+
+		if (supervisorTasks != null)
+			portalLayout.removePortlet(supervisorTasks);
+
+		// Place the portlets
+		assignedTasks = new WorkflowPortlet(this, TASKS_ASSIGNED);
+		portalLayout.addPortlet(assignedTasks, 0, 0);
+		canOwnTasks = new WorkflowPortlet(this, TASKS_I_CAN_OWN);
+		portalLayout.addPortlet(canOwnTasks, 0, 1);
+		suspendedTasks = new WorkflowPortlet(this, TASKS_SUSPENDED);
+		portalLayout.addPortlet(suspendedTasks, 1, 0);
+		if (Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN)) {
+			adminTasks = new WorkflowPortlet(this, TASKS_ADMIN);
+			portalLayout.addPortlet(adminTasks, 1, 1);
+		} else {
+			supervisorTasks = new WorkflowPortlet(this, TASKS_SUPERVISOR);
+			portalLayout.addPortlet(supervisorTasks, 1, 1);
+		}
 	}
 
 	public static WorkflowDashboard get() {
