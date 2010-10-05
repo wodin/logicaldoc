@@ -201,7 +201,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		});
 
 		edit.setTooltip(I18N.message("editonline"));
-		edit.setIcon(ItemFactory.newImgIcon("application_form_edit.png").getSrc());
+		edit.setIcon(ItemFactory.newImgIcon("page_white_office.png").getSrc());
 		edit.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
