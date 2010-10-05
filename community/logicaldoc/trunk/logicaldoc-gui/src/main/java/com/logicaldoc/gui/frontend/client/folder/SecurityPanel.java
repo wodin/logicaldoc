@@ -305,6 +305,7 @@ public class SecurityPanel extends FolderDetailTab {
 	public void onSave(boolean recursive) {
 		// Apply all rights
 		folder.setRights(this.getRights());
+		final boolean onSubFolders = recursive;
 
 		folderService.applyRights(Session.get().getSid(), folder, recursive, new AsyncCallback<Void>() {
 
@@ -315,7 +316,10 @@ public class SecurityPanel extends FolderDetailTab {
 
 			@Override
 			public void onSuccess(Void result) {
-
+				if (!onSubFolders)
+					Log.info(I18N.message("appliedrights"), null);
+				else
+					Log.info(I18N.message("appliedrightsonsubfolders"), null);
 			}
 		});
 
