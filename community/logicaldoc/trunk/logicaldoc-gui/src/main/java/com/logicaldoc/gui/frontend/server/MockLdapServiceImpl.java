@@ -23,12 +23,9 @@ public class MockLdapServiceImpl extends RemoteServiceServlet implements LdapSer
 		ldapSettings.setUsername("pluto");
 		ldapSettings.setPwd("paperino");
 		ldapSettings.setRealm("realm");
-		ldapSettings.setDN("dn1");
-		ldapSettings.setBase("base");
 		ldapSettings.setUserIdentifierAttr("attr1");
 		ldapSettings.setGrpIdentifierAttr("attr2");
 		ldapSettings.setLogonAttr("logon");
-		ldapSettings.setAuthPattern("pattern");
 		ldapSettings.setUserClass("userclass");
 		ldapSettings.setGrpClass("grpClass");
 		ldapSettings.setUsersBaseNode("usersBaseNode");

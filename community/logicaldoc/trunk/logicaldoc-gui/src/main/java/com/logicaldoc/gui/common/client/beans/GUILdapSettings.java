@@ -24,17 +24,11 @@ public class GUILdapSettings implements Serializable{
 
 	private String realm;
 
-	private String DN;
-
-	private String base;
-
 	private String userIdentifierAttr;
 
 	private String grpIdentifierAttr;
 
 	private String logonAttr;
-
-	private String authPattern;
 
 	private String userClass;
 
@@ -94,22 +88,6 @@ public class GUILdapSettings implements Serializable{
 		this.realm = realm;
 	}
 
-	public String getDN() {
-		return DN;
-	}
-
-	public void setDN(String dn) {
-		DN = dn;
-	}
-
-	public String getBase() {
-		return base;
-	}
-
-	public void setBase(String base) {
-		this.base = base;
-	}
-
 	public String getUserIdentifierAttr() {
 		return userIdentifierAttr;
 	}
@@ -132,14 +110,6 @@ public class GUILdapSettings implements Serializable{
 
 	public void setLogonAttr(String logonAttr) {
 		this.logonAttr = logonAttr;
-	}
-
-	public String getAuthPattern() {
-		return authPattern;
-	}
-
-	public void setAuthPattern(String authPattern) {
-		this.authPattern = authPattern;
 	}
 
 	public String getUserClass() {
