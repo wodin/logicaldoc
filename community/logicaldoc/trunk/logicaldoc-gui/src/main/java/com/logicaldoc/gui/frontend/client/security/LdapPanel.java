@@ -85,12 +85,6 @@ public class LdapPanel extends VLayout {
 		// Realm
 		TextItem realm = ItemFactory.newTextItem("realm", "realm", this.ldapSettings.getRealm());
 
-		// DN
-		TextItem dn = ItemFactory.newTextItem("dn", "dn", this.ldapSettings.getDN());
-
-		// Base
-		TextItem base = ItemFactory.newTextItem("base", "base", this.ldapSettings.getBase());
-
 		// User identifier attr.
 		TextItem userIdentifierAttr = ItemFactory.newTextItem("useridentifierattr", "useridentifierattr",
 				this.ldapSettings.getUserIdentifierAttr());
@@ -101,10 +95,6 @@ public class LdapPanel extends VLayout {
 
 		// Logon attr.
 		TextItem logonAttr = ItemFactory.newTextItem("logonattr", "logonattr", this.ldapSettings.getLogonAttr());
-
-		// Auth. pattern
-		TextItem authPattern = ItemFactory
-				.newTextItem("authpattern", "authpattern", this.ldapSettings.getAuthPattern());
 
 		// User class
 		TextItem userClass = ItemFactory.newTextItem("userclass", "userclass", this.ldapSettings.getUserClass());
@@ -125,8 +115,8 @@ public class LdapPanel extends VLayout {
 		language.setName("language");
 		language.setValue(this.ldapSettings.getLanguage());
 
-		ldapForm.setItems(implementation, enabled, url, username, password, realm, dn, base, userIdentifierAttr,
-				grpIdentifierAttr, logonAttr, authPattern, userClass, groupClass, usersBaseNode, groupsBaseNode,
+		ldapForm.setItems(implementation, enabled, url, username, password, realm, userIdentifierAttr,
+				grpIdentifierAttr, logonAttr, userClass, groupClass, usersBaseNode, groupsBaseNode,
 				language);
 
 		ldap.setPane(ldapForm);
@@ -152,12 +142,9 @@ public class LdapPanel extends VLayout {
 					LdapPanel.this.ldapSettings.setUsername((String) values.get("username"));
 					LdapPanel.this.ldapSettings.setPwd((String) values.get("password"));
 					LdapPanel.this.ldapSettings.setRealm((String) values.get("realm"));
-					LdapPanel.this.ldapSettings.setDN((String) values.get("dn"));
-					LdapPanel.this.ldapSettings.setBase((String) values.get("base"));
 					LdapPanel.this.ldapSettings.setUserIdentifierAttr((String) values.get("useridentifierattr"));
 					LdapPanel.this.ldapSettings.setGrpIdentifierAttr((String) values.get("grpidentifierattr"));
 					LdapPanel.this.ldapSettings.setLogonAttr((String) values.get("logonattr"));
-					LdapPanel.this.ldapSettings.setAuthPattern((String) values.get("authpattern"));
 					LdapPanel.this.ldapSettings.setUserClass((String) values.get("userclass"));
 					LdapPanel.this.ldapSettings.setGrpClass((String) values.get("grpclass"));
 					LdapPanel.this.ldapSettings.setUsersBaseNode((String) values.get("usersbasenode"));
