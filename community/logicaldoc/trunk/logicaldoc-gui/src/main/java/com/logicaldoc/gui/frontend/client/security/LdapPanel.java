@@ -50,7 +50,7 @@ public class LdapPanel extends VLayout {
 		setMargin(30);
 
 		tabs.setWidth(400);
-		tabs.setHeight(400);
+		tabs.setHeight(320);
 
 		Tab ldap = new Tab();
 		ldap.setTitle(I18N.message("ldap"));
@@ -115,9 +115,8 @@ public class LdapPanel extends VLayout {
 		language.setName("language");
 		language.setValue(this.ldapSettings.getLanguage());
 
-		ldapForm.setItems(implementation, enabled, url, username, password, realm, userIdentifierAttr,
-				grpIdentifierAttr, logonAttr, userClass, groupClass, usersBaseNode, groupsBaseNode,
-				language);
+		ldapForm.setItems(implementation, enabled, url, realm, username, password, userIdentifierAttr,
+				grpIdentifierAttr, userClass, groupClass, logonAttr, language, usersBaseNode, groupsBaseNode);
 
 		ldap.setPane(ldapForm);
 
