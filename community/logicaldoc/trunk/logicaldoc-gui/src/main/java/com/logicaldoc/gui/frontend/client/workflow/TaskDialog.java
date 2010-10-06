@@ -14,7 +14,11 @@ import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.MultipleAppearance;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.SC;
+import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.widgets.Dialog;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
@@ -55,14 +59,17 @@ public class TaskDialog extends Window {
 
 	private DynamicForm buttonForm;
 
-	public TaskDialog(GUIWorkflow wfl, GUIWFState wfState) {
+	private WorkflowDesigner workflowDesigner = null;
+
+	public TaskDialog(WorkflowDesigner designer, GUIWorkflow wfl, GUIWFState wfState) {
 		this.workflow = wfl;
 		this.task = wfState;
+		this.workflowDesigner = designer;
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("editworkflowstate", I18N.message("task")));
 		setWidth(340);
-		setHeight(400);
+		setHeight(410);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -117,6 +124,31 @@ public class TaskDialog extends Window {
 		remindTime.setValue(this.task.getReminderUnit());
 		escalationForm.setFields(duedateTimeItem, duedateTime, remindTimeItem, remindTime);
 		addItem(escalationForm);
+
+		Label addtransition = ItemFactory.newLinkLabel("addtransition");
+		addtransition.setContents("<b>" + I18N.message("addtransition") + "</b>");
+		addtransition.setHeight(20);
+		addtransition.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
+			@Override
+			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+				Dialog dialog = new Dialog();
+				dialog.setWidth(200);
+
+				SC.askforValue(I18N.message("addtransition"), "<b>" + I18N.message("name") + ":</b>", "",
+						new ValueCallback() {
+							@Override
+							public void execute(String value) {
+								if (value == null || "".equals(value.trim()))
+									return;
+
+								workflowDesigner.onAddTransition(task, null, value);
+
+							}
+						}, dialog);
+			}
+		});
+		addItem(addtransition);
 
 		DynamicForm participantsItemForm = new DynamicForm();
 		participantsItemForm.setTitleOrientation(TitleOrientation.TOP);
@@ -174,7 +206,7 @@ public class TaskDialog extends Window {
 		userSelection.addMember(buttons);
 
 		addItem(userSelection);
-		
+
 		// Initialize the participants list
 		if (this.task.getParticipants() != null)
 			for (String usr : this.task.getParticipants()) {

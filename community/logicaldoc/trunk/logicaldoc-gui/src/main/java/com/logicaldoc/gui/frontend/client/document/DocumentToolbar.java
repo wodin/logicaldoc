@@ -223,8 +223,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					return;
 
 				String ids = "";
-				for (ListGridRecord rec : selection) {
-					ids += "," + rec.getAttributeAsString("id");
+				for (int i = 0; i < selection.length; i++) {
+					ids += "," + selection[i].getAttribute("id");
 				}
 				if (ids.startsWith(","))
 					ids = ids.substring(1);
@@ -245,8 +245,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					return;
 
 				String ids = "";
-				for (ListGridRecord rec : selection) {
-					ids += "," + rec.getAttributeAsString("id");
+				for (int i = 0; i < selection.length; i++) {
+					ids += "," + selection[i].getAttribute("id");
 				}
 				if (ids.startsWith(","))
 					ids = ids.substring(1);

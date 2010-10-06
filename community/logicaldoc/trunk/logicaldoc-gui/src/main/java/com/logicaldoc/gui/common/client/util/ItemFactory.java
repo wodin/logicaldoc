@@ -13,10 +13,12 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.validators.EmailValidator;
 import com.logicaldoc.gui.common.client.validators.EmailsValidator;
 import com.logicaldoc.gui.common.client.validators.SimpleTextValidator;
+import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.MultipleAppearance;
 import com.smartgwt.client.widgets.HeaderControl.HeaderIcon;
 import com.smartgwt.client.widgets.Img;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
@@ -539,5 +541,12 @@ public class ItemFactory {
 		if (!Feature.enabled(Feature.WORKFLOW))
 			workflowItem.setDisabled(true);
 		return workflowItem;
+	}
+
+	public static Label newLinkLabel(String title) {
+		Label label = new Label(I18N.message(title));
+		label.setWrap(false);
+		label.setCursor(Cursor.HAND);
+		return label;
 	}
 }

@@ -1,9 +1,9 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
-import com.google.gwt.user.client.ui.HTML;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
-import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.HLayout;
 
 /**
@@ -28,17 +28,16 @@ public class WorkflowDraggedState extends WorkflowState {
 		setCanDrop(false);
 
 		removeMember(commands);
-		commands = new HLayout();
-		commands.setHeight(12);
-		commands.setWidth(1);
-		commands.setAlign(Alignment.RIGHT);
+		commands = new HLayout(5);
+		commands.setAlign(Alignment.LEFT);
 		addMember(commands);
 
-		HTML delete = new HTML("<a href='#'>" + I18N.message("ddelete").toLowerCase() + "</a>");
-		delete.setWidth("1px");
-		delete.addClickHandler(new com.google.gwt.event.dom.client.ClickHandler() {
+		Label unlink = ItemFactory.newLinkLabel("unlink");
+		unlink.setWidth(38);
+		unlink.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
 			@Override
-			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
+			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
 				if (fromState.getType() == GUIWFState.TYPE_TASK)
 					getDesigner().onDraggedStateDelete(fromState, targetState);
 				else
@@ -46,21 +45,20 @@ public class WorkflowDraggedState extends WorkflowState {
 			}
 		});
 		if (!designer.isOnlyVisualization())
-			commands.addMember(delete);
+			commands.addMember(unlink);
 
 		if (fromState.getType() == GUIWFState.TYPE_TASK) {
-			HTML deleteTransition = new HTML("&nbsp;&nbsp;<a href='#'>"
-					+ I18N.message("deletetransition").toLowerCase() + "</a>");
-			deleteTransition.setWidth("1px");
-			deleteTransition.setWordWrap(false);
-			deleteTransition.addClickHandler(new com.google.gwt.event.dom.client.ClickHandler() {
+			Label delete = ItemFactory.newLinkLabel("ddelete");
+			delete.setWidth(38);
+			delete.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
 				@Override
-				public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
+				public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
 					getDesigner().onTransitionDelete(fromState, targetState);
 				}
 			});
 			if (!designer.isOnlyVisualization())
-				commands.addMember(deleteTransition);
+				commands.addMember(delete);
 		}
 	}
 
