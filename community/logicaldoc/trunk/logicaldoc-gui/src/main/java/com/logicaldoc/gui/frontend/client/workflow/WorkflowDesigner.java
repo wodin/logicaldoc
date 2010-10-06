@@ -1,27 +1,18 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
-import java.util.Map;
-
 import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.beans.GUITransition;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.Window;
-import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.util.ValueCallback;
+import com.smartgwt.client.widgets.Dialog;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.SubmitItem;
-import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VStack;
 
@@ -84,10 +75,12 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 		final GUIWFState wfState = state;
 
 		if (wfState.getType() == TYPE_TASK) {
-			TaskDialog taskDialog = new TaskDialog(workflow, wfState);
+			TaskDialog taskDialog = new TaskDialog(this, workflow, wfState);
 			taskDialog.show();
 		} else {
-			final Window window = new Window();
+			Dialog dialog = new Dialog();
+			dialog.setWidth(200);
+
 			String typeString = "";
 			if (wfState.getType() == TYPE_JOIN) {
 				typeString = I18N.message("join");
@@ -97,55 +90,33 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 				typeString = I18N.message("endstate");
 			}
 
-			window.setTitle(I18N.message("editworkflowstate", typeString));
-			window.setWidth(250);
-			window.setHeight(200);
-			window.setCanDragResize(true);
-			window.setIsModal(true);
-			window.setShowModalMask(true);
-			window.centerInPage();
+			SC.askforValue(I18N.message("editworkflowstate", typeString), "<b>" + I18N.message("name") + ":</b>",
+					wfState.getName(), new ValueCallback() {
+						@Override
+						public void execute(String value) {
+							if (value == null || "".equals(value.trim()))
+								return;
 
-			DynamicForm form = new DynamicForm();
-			form.setTitleOrientation(TitleOrientation.TOP);
-			form.setNumCols(1);
-			form.setValuesManager(vm);
-			TextItem name = ItemFactory.newTextItem("name", "name", null);
-			name.setRequired(true);
+							wfState.setName(value);
 
-			SubmitItem saveButton = new SubmitItem("save", I18N.message("save"));
-			saveButton.setAlign(Alignment.LEFT);
-			saveButton.addClickHandler(new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					final Map<String, Object> values = vm.getValues();
-
-					if (vm.validate()) {
-						wfState.setName((String) values.get("name"));
-
-						GUIWFState[] states = new GUIWFState[workflow.getStates().length];
-						int i = 0;
-						for (GUIWFState state : workflow.getStates()) {
-							if (!state.getId().equals(wfState.getId())) {
-								states[i] = state;
-								i++;
-							} else {
-								states[i] = wfState;
-								i++;
+							GUIWFState[] states = new GUIWFState[workflow.getStates().length];
+							int i = 0;
+							for (GUIWFState state : workflow.getStates()) {
+								if (!state.getId().equals(wfState.getId())) {
+									states[i] = state;
+									i++;
+								} else {
+									states[i] = wfState;
+									i++;
+								}
 							}
+
+							workflow.setStates(states);
+
+							AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
+
 						}
-
-						workflow.setStates(states);
-
-						AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
-						window.destroy();
-					}
-				}
-			});
-
-			form.setFields(name, saveButton);
-
-			window.addItem(form);
-			window.show();
+					}, dialog);
 		}
 	}
 

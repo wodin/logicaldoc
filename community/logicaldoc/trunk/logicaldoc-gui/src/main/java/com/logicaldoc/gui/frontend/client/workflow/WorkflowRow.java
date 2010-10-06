@@ -1,9 +1,5 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
-import com.smartgwt.client.widgets.events.DropOutEvent;
-import com.smartgwt.client.widgets.events.DropOutHandler;
-import com.smartgwt.client.widgets.events.DropOverEvent;
-import com.smartgwt.client.widgets.events.DropOverHandler;
 import com.smartgwt.client.widgets.layout.HStack;
 
 /**
@@ -29,18 +25,6 @@ public class WorkflowRow extends HStack {
 		setAnimateMembers(true);
 
 		setBorder("1px dotted #4040ff");
-
-		addDropOverHandler(new DropOverHandler() {
-			public void onDropOver(DropOverEvent event) {
-				setBackgroundColor("FFFF88");
-			}
-		});
-
-		addDropOutHandler(new DropOutHandler() {
-			public void onDropOut(DropOutEvent event) {
-				setBackgroundColor("");
-			}
-		});
 	}
 
 	public WorkflowState getState() {

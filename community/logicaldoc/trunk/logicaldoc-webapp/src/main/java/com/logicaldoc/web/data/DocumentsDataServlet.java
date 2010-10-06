@@ -56,7 +56,9 @@ public class DocumentsDataServlet extends HttpServlet {
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-			int max = Integer.parseInt(request.getParameter("max"));
+			int max = 0;
+			if (StringUtils.isNotEmpty(request.getParameter("max")))
+				max = Integer.parseInt(request.getParameter("max"));
 
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
