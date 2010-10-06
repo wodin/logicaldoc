@@ -110,4 +110,9 @@ public class DocumentClient implements DocumentService {
 	public void rename(String sid, long docId, String name) throws Exception {
 		client.rename(sid, docId, name);
 	}
+
+	@Override
+	public WSDocument[] getDocuments(String sid, long[] docIds) throws Exception {
+		return client.getDocuments(sid, docIds);
+	}
 }

@@ -3,6 +3,7 @@ package com.logicaldoc.webservice.document;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.activation.DataHandler;
@@ -311,6 +312,24 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		}
 
 		return wsDocs;
+	}
+
+	@Override
+	public WSDocument[] getDocuments(String sid, long[] docIds) throws Exception {
+		User user = validateSession(sid);
+		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		List<Long> folderIds = fdao.findFolderIdByUserId(user.getId());
+
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		List<Document> docs = docDao.findByIds(docIds, null);
+		List<WSDocument> wsDocs = new ArrayList<WSDocument>();
+		for (int i = 0; i < docs.size(); i++) {
+			docDao.initialize(docs.get(i));
+			if (folderIds.contains(docs.get(i).getFolder().getId()))
+				wsDocs.add(WSDocument.fromDocument(docs.get(i)));
+		}
+
+		return wsDocs.toArray(new WSDocument[0]);
 	}
 
 	@Override
