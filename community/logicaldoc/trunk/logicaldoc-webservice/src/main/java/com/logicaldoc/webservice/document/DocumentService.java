@@ -91,6 +91,19 @@ public interface DocumentService {
 			throws Exception;
 
 	/**
+	 * Gets document metadata of a collection of existing documents with the
+	 * given identifiers.
+	 * 
+	 * @param sid Session identifier
+	 * @param docIds The documents ids
+	 * @return A value object containing the document's metadata.
+	 * @throws Exception
+	 */
+	@WebResult(name = "documents")
+	public WSDocument[] getDocuments(@WebParam(name = "sid") String sid, @WebParam(name = "docIds") long[] docIds)
+			throws Exception;
+
+	/**
 	 * Updates an existing document with the value object containing the
 	 * document's metadata.
 	 * 
