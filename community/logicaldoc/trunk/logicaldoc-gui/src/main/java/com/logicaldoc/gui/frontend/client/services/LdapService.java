@@ -16,6 +16,11 @@ public interface LdapService extends RemoteService {
 	public void saveSettings(String sid, GUILdapSettings ldapSettings) throws InvalidSessionException;
 
 	/**
+	 * Tests the connection
+	 */
+	public boolean testConnection(String sid, GUILdapSettings ldapSettings) throws InvalidSessionException;
+
+	/**
 	 * Loads external authentication settings
 	 */
 	public GUILdapSettings loadSettings(String sid) throws InvalidSessionException;

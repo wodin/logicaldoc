@@ -205,11 +205,13 @@ public class TasksPanel extends VLayout {
 								if (record.getAttribute("name").equals(guiTask.getName())
 										&& guiTask.getStatus() == GUITask.STATUS_RUNNING) {
 									record.setAttribute("runningIcon", "running_task");
+									record.setAttribute("completion", guiTask.getCompletionPercentage());
 									list.updateData(record);
 									break;
 								} else if (record.getAttribute("name").equals(guiTask.getName())
 										&& guiTask.getStatus() == GUITask.STATUS_IDLE) {
 									record.setAttribute("runningIcon", "idle_task");
+									record.setAttribute("completion", guiTask.getCompletionPercentage());
 									list.updateData(record);
 									break;
 								}

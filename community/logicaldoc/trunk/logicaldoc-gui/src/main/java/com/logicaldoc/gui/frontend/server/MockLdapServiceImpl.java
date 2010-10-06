@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
 import com.logicaldoc.gui.frontend.client.services.LdapService;
 
@@ -37,5 +38,10 @@ public class MockLdapServiceImpl extends RemoteServiceServlet implements LdapSer
 	@Override
 	public void saveSettings(String sid, GUILdapSettings ldapSettings) {
 
+	}
+
+	@Override
+	public boolean testConnection(String sid, GUILdapSettings ldapSettings) throws InvalidSessionException {
+		return true;
 	}
 }

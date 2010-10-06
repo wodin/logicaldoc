@@ -200,7 +200,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		edit.setTooltip(I18N.message("editonline"));
+		edit.setTooltip(I18N.message("editwithoffice"));
 		edit.setIcon(ItemFactory.newImgIcon("page_white_office.png").getSrc());
 		edit.addClickHandler(new ClickHandler() {
 			@Override
@@ -310,9 +310,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		if (Feature.visible(Feature.OFFICE)) {
 			addButton(edit);
-			if (document != null)
-				edit.setDisabled(!Util.isOfficeFile(document.getFileName()));
-			if (!Feature.enabled(Feature.OFFICE)) {
+			if (!Feature.enabled(Feature.OFFICE) || (document != null && !Util.isOfficeFile(document.getFileName()))) {
 				edit.setDisabled(true);
 				edit.setTooltip(I18N.message("featuredisabled"));
 			}

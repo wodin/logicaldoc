@@ -9,4 +9,6 @@ public interface LdapServiceAsync {
 
 	void saveSettings(String sid, GUILdapSettings ldapSettings, AsyncCallback<Void> callback);
 
+	void testConnection(String sid, GUILdapSettings ldapSettings, AsyncCallback<Boolean> callback);
+
 }

@@ -27,8 +27,6 @@ public class Feature {
 
 	public static final int EMAIL_IMPORT = 10;
 
-	public static final int ACTIVEDIR = 11;
-
 	public static final int SAVED_SEARCHES = 12;
 
 	public static final int MESSAGES = 13;
