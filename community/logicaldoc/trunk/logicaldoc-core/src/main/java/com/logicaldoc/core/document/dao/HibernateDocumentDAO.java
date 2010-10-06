@@ -727,4 +727,20 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public void setFolderDAO(FolderDAO folderDAO) {
 		this.folderDAO = folderDAO;
 	}
+
+	@Override
+	public List<Document> findByIds(long[] ids, Integer max) {
+		List<Document> docs = new ArrayList<Document>();
+		if (ids.length < 1)
+			return docs;
+		
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < ids.length; i++) {
+			if (i > 0)
+				sb.append(",");
+			sb.append(ids[i]);
+		}
+		docs = findByWhere("_entity.id in(" + sb.toString() + ")", null, null, max);
+		return docs;
+	}
 }

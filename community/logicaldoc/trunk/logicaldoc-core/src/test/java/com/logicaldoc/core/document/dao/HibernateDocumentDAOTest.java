@@ -57,7 +57,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		transaction.setEvent(History.EVENT_DELETED);
 		transaction.setComment("");
 		transaction.setUser(new User());
-		
+
 		Assert.assertTrue(dao.delete(1, transaction));
 		Document doc = dao.findById(1);
 		Assert.assertNull(doc);
@@ -501,5 +501,16 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		Assert.assertNotNull(deletedDocs);
 		Assert.assertEquals(1, deletedDocs.size());
 		Assert.assertEquals("pippo", deletedDocs.get(0).getFileName());
+	}
+
+	@Test
+	public void testFindByIds() {
+		List<Document> docs = dao.findByIds(new long[0], 5);
+		Assert.assertNotNull(docs);
+		Assert.assertTrue(docs.isEmpty());
+
+		docs = dao.findByIds(new long[] { 1, 2, 3, 4, 5, 6, 7, 8 }, null);
+		Assert.assertNotNull(docs);
+		Assert.assertEquals(3, docs.size());
 	}
 }
