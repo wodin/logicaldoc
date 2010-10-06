@@ -14,6 +14,8 @@ import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.services.LdapService;
 import com.logicaldoc.gui.frontend.client.services.LdapServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.SC;
+import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -23,6 +25,7 @@ import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
@@ -75,7 +78,7 @@ public class LdapPanel extends VLayout {
 		url.setRequired(true);
 
 		// Username
-		TextItem username = ItemFactory.newTextItem("username", "username", this.ldapSettings.getUsername());
+		TextItem username = ItemFactory.newTextItem("username", "user", this.ldapSettings.getUsername());
 
 		// Password
 		PasswordItem password = new PasswordItem("password", I18N.message("password"));
@@ -129,6 +132,7 @@ public class LdapPanel extends VLayout {
 		}
 
 		IButton save = new IButton();
+		save.setAutoFit(true);
 		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -167,9 +171,77 @@ public class LdapPanel extends VLayout {
 			}
 		});
 
-		if (Feature.enabled(Feature.LDAP) || Feature.enabled(Feature.ACTIVEDIR))
-			setMembers(tabs, save);
-		else
-			setMembers(tabs);
+		IButton test = new IButton();
+		test.setAutoFit(true);
+		test.setTitle(I18N.message("testconnection"));
+		test.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				final Map<String, Object> values = vm.getValues();
+
+				if (vm.validate()) {
+					LdapPanel.this.ldapSettings.setImplementation((String) values.get("implementation"));
+					LdapPanel.this.ldapSettings.setEnabled(values.get("eenabled").equals("yes") ? true : false);
+					LdapPanel.this.ldapSettings.setUrl((String) values.get("url"));
+					LdapPanel.this.ldapSettings.setUsername((String) values.get("username"));
+					LdapPanel.this.ldapSettings.setPwd((String) values.get("password"));
+					LdapPanel.this.ldapSettings.setRealm((String) values.get("realm"));
+					LdapPanel.this.ldapSettings.setUserIdentifierAttr((String) values.get("useridentifierattr"));
+					LdapPanel.this.ldapSettings.setGrpIdentifierAttr((String) values.get("grpidentifierattr"));
+					LdapPanel.this.ldapSettings.setLogonAttr((String) values.get("logonattr"));
+					LdapPanel.this.ldapSettings.setUserClass((String) values.get("userclass"));
+					LdapPanel.this.ldapSettings.setGrpClass((String) values.get("grpclass"));
+					LdapPanel.this.ldapSettings.setUsersBaseNode((String) values.get("usersbasenode"));
+					LdapPanel.this.ldapSettings.setGrpsBaseNode((String) values.get("grpsbasenode"));
+					LdapPanel.this.ldapSettings.setLanguage((String) values.get("language"));
+
+					service.testConnection(Session.get().getSid(), LdapPanel.this.ldapSettings,
+							new AsyncCallback<Boolean>() {
+
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(Boolean ret) {
+									if (ret)
+										SC.say(I18N.message("connectionestablished"));
+									else
+										SC.warn(I18N.message("connectionfailed"));
+								}
+							});
+				}
+			}
+		});
+
+		IButton activedir = new IButton();
+		activedir.setAutoFit(true);
+		activedir.setTitle(I18N.message("activedirectory"));
+		activedir.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				SC.askforValue(I18N.message("activedirectory"), I18N.message("addomain"), new ValueCallback() {
+					@Override
+					public void execute(String value) {
+						String node = value.replaceAll("\\.", ",DC=");
+						node = "DC=" + node;
+						vm.setValue("url", "ldap://AD_SERVER:389");
+						vm.setValue("username", "CN=Administrator,CN=Users," + node);
+						vm.setValue("useridentifierattr", "CN");
+						vm.setValue("grpidentifierattr", "CN");
+						vm.setValue("logonattr", "sAMAccountName");
+						vm.setValue("userclass", "person");
+						vm.setValue("grpclass", "group");
+						vm.setValue("userclass", "person");
+						vm.setValue("usersbasenode", "CN=Users," + node);
+						vm.setValue("grpsbasenode", "CN=Builtin," + node);
+					}
+				});
+			}
+		});
+
+		HLayout buttons = new HLayout();
+		buttons.setMembersMargin(3);
+		buttons.setMembers(save, activedir, test);
+		setMembers(tabs, buttons);
 	}
 }

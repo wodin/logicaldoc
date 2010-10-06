@@ -506,7 +506,7 @@ public class DocumentContextMenu extends Menu {
 		});
 
 		MenuItem edit = new MenuItem();
-		edit.setTitle(I18N.message("editonline"));
+		edit.setTitle(I18N.message("editwithoffice"));
 		edit.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord selection = list.getSelectedRecord();
