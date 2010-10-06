@@ -47,12 +47,6 @@ public class WorkflowDashboard extends VLayout {
 	public WorkflowDashboard() {
 		setWidth100();
 
-		portalLayout = new PortalLayout();
-		portalLayout.setShowColumnMenus(false);
-		portalLayout.setShowEdges(false);
-		portalLayout.setShowShadow(false);
-		portalLayout.setColumnBorder("0px");
-
 		ToolStrip toolStrip = new ToolStrip();
 		toolStrip.setHeight(20);
 		toolStrip.setWidth100();
@@ -78,26 +72,20 @@ public class WorkflowDashboard extends VLayout {
 		});
 		toolStrip.addFill();
 
-		refresh();
+		addMember(toolStrip, 0);
 
-		setMembers(toolStrip, portalLayout);
+		refresh();
 	}
 
 	public void refresh() {
-		if (assignedTasks != null)
-			portalLayout.removePortlet(assignedTasks);
+		if (portalLayout != null)
+			removeMember(portalLayout);
 
-		if (canOwnTasks != null)
-			portalLayout.removePortlet(canOwnTasks);
-
-		if (suspendedTasks != null)
-			portalLayout.removePortlet(suspendedTasks);
-
-		if (adminTasks != null)
-			portalLayout.removePortlet(adminTasks);
-
-		if (supervisorTasks != null)
-			portalLayout.removePortlet(supervisorTasks);
+		portalLayout = new PortalLayout();
+		portalLayout.setShowColumnMenus(false);
+		portalLayout.setShowEdges(false);
+		portalLayout.setShowShadow(false);
+		portalLayout.setColumnBorder("0px");
 
 		// Place the portlets
 		assignedTasks = new WorkflowPortlet(this, TASKS_ASSIGNED);
@@ -113,6 +101,8 @@ public class WorkflowDashboard extends VLayout {
 			supervisorTasks = new WorkflowPortlet(this, TASKS_SUPERVISOR);
 			portalLayout.addPortlet(supervisorTasks, 1, 1);
 		}
+
+		addMember(portalLayout, 1);
 	}
 
 	public static WorkflowDashboard get() {
