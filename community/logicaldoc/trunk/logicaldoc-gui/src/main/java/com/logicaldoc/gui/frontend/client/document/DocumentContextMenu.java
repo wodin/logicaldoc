@@ -513,8 +513,8 @@ public class DocumentContextMenu extends Menu {
 				if (selection == null)
 					return;
 				long id = Long.parseLong(selection.getAttribute("id"));
-				Window.open("ldedit:" + GWT.getHostPageBaseURL() + "ldeditnow?action=edit&sid=" + Session.get().getSid()
-						+ "&docId=" + id, "_self", "");
+				Window.open("ldedit:" + GWT.getHostPageBaseURL() + "ldeditnow?action=edit&sid="
+						+ Session.get().getSid() + "&docId=" + id, "_self", "");
 			}
 		});
 
@@ -657,10 +657,12 @@ public class DocumentContextMenu extends Menu {
 			markUnindexable.setEnabled(false);
 		}
 
-		if (selection.length != 1 || Constants.DOC_CHECKED_OUT != Integer.parseInt(selection[0].getAttribute("status")))
+		if (selection.length != 1
+				|| (selection[0].getAttribute("status") != null && Constants.DOC_CHECKED_OUT != Integer
+						.parseInt(selection[0].getAttribute("status"))))
 			checkin.setEnabled(false);
 
-		if (selection.length == 1) {
+		if (selection != null && selection.length == 1) {
 			Long lockUser = selection[0].getAttribute("lockUserId") != null ? Long.parseLong(selection[0]
 					.getAttribute("lockUserId")) : Long.MIN_VALUE;
 			if (Session.get().getUser().getId() != lockUser.longValue()
@@ -673,6 +675,13 @@ public class DocumentContextMenu extends Menu {
 		checkout.setEnabled(enableLock);
 		immutable.setEnabled(enableImmutable);
 		delete.setEnabled(enableDelete);
+		
+		if ((selection.length == 1 && selection[0].getAttribute("status") == null)) {
+			checkin.setEnabled(false);
+			checkout.setEnabled(false);
+			lock.setEnabled(false);
+			unlockItem.setEnabled(false);
+		}
 
 		setItems(download, cut, copy, delete, bookmark, sendMail, links, checkout, checkin, lock, unlockItem, more);
 

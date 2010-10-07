@@ -90,9 +90,6 @@ public class Search {
 					record.setAttribute("folderId", hit.getFolderId());
 					record.setAttribute("size", hit.getSize());
 					record.setAttribute("icon", hit.getIcon());
-					
-//					list.setFields(indexed, locked, immutable, signed, lastModified, version, publisher,
-//							published, creator, created, filename);
 				}
 
 				for (SearchObserver observer : observers) {

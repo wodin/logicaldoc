@@ -145,6 +145,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		tagItem.setTitle(I18N.message("tag"));
 		tagItem.setPickListWidth(250);
 		tagItem.setOptionDataSource(TagsDS.getInstance());
+		tagItem.setDisabled(!update);
 		tagItem.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
