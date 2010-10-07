@@ -224,7 +224,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
 				folderService.getFolder(Session.get().getSid(),
-						Long.parseLong(event.getRecord().getAttributeAsString("folderId")), false,
+						Long.parseLong(list.getSelectedRecord().getAttributeAsString("folderId")), false,
 						new AsyncCallback<GUIFolder>() {
 
 							@Override
