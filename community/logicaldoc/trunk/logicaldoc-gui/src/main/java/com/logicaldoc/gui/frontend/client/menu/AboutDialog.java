@@ -44,6 +44,8 @@ public class AboutDialog extends Window {
 		Label version = new Label(I18N.message("version") + " " + Session.get().getInfo().getRelease());
 		version.setShowEdges(false);
 		version.setHeight(20);
+		version.setWidth100();
+		version.setWrap(false);
 
 		GUIMessage message = new GUIMessage(Session.get().getInfo().getUrl(), 0);
 		message.setUrl(Session.get().getInfo().getUrl());
@@ -60,6 +62,7 @@ public class AboutDialog extends Window {
 		content.setTop(20);
 		content.setMargin(4);
 		content.setBackgroundColor("#eeeeee");
+		content.setWidth100();
 		content.setMembers(logoImage, version, url, copyryght);
 
 		setBackgroundColor("#eeeeee");
