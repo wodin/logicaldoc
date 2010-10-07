@@ -26,7 +26,7 @@ public class WorkflowState extends VLayout {
 	public WorkflowState(WorkflowDesigner designer, GUIWFState wfState) {
 		this.workflowDesigner = designer;
 		this.wfState = wfState;
-		setWidth(120);
+		setWidth(150);
 		setHeight(40);
 		setBorder("1px solid #dddddd");
 		setCanDrag(true);
