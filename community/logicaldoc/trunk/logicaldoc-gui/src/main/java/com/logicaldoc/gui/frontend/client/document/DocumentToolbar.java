@@ -56,7 +56,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 	private ToolStripButton archiveDematerialization = new ToolStripButton();
 
-	private ToolStripButton edit = new ToolStripButton();
+	private ToolStripButton office = new ToolStripButton();
 
 	private ToolStripButton startWorkflow = new ToolStripButton();
 
@@ -200,9 +200,9 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		edit.setTooltip(I18N.message("editwithoffice"));
-		edit.setIcon(ItemFactory.newImgIcon("page_white_office.png").getSrc());
-		edit.addClickHandler(new ClickHandler() {
+		office.setTooltip(I18N.message("editwithoffice"));
+		office.setIcon(ItemFactory.newImgIcon("page_white_office.png").getSrc());
+		office.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (document == null)
@@ -309,10 +309,10 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		}
 
 		if (Feature.visible(Feature.OFFICE)) {
-			addButton(edit);
+			addButton(office);
 			if (!Feature.enabled(Feature.OFFICE) || (document != null && !Util.isOfficeFile(document.getFileName()))) {
-				edit.setDisabled(true);
-				edit.setTooltip(I18N.message("featuredisabled"));
+				office.setDisabled(true);
+				office.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
 
@@ -413,14 +413,21 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				rss.setDisabled(!Feature.enabled(Feature.RSS));
 				pdf.setDisabled(!Feature.enabled(Feature.PDF));
 				subscribe.setDisabled(!Feature.enabled(Feature.AUDIT));
-				edit.setDisabled(!Feature.enabled(Feature.OFFICE));
+
+				boolean isOfficeFile = false;
+				if (document.getFileName() != null)
+					isOfficeFile = Util.isOfficeFile(document.getFileName());
+				else if (document.getType() != null)
+					isOfficeFile = Util.isOfficeFileType(document.getType());
+
+				office.setDisabled(!Feature.enabled(Feature.OFFICE) || !isOfficeFile);
 			} else {
 				rss.setDisabled(true);
 				pdf.setDisabled(true);
 				subscribe.setDisabled(true);
 				archive.setDisabled(true);
 				archiveDematerialization.setDisabled(true);
-				edit.setDisabled(true);
+				office.setDisabled(true);
 				startWorkflow.setDisabled(true);
 				addToWorkflow.setDisabled(true);
 			}

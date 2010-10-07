@@ -172,7 +172,7 @@ public class DocumentsDataServlet extends HttpServlet {
 					else if (Integer.parseInt(cols[13].toString()) == Constants.INDEX_SKIP)
 						writer.print("<indexed>unindexable</indexed>");
 					if (Integer.parseInt(cols[16].toString()) == Constants.DOC_LOCKED)
-						writer.print("<locked>document_lock</locked>");
+						writer.print("<locked>lock</locked>");
 					else if (Integer.parseInt(cols[16].toString()) == Constants.DOC_CHECKED_OUT)
 						writer.print("<locked>page_edit</locked>");
 					else
@@ -222,7 +222,7 @@ public class DocumentsDataServlet extends HttpServlet {
 					else if (doc.getIndexed() == Constants.INDEX_SKIP)
 						writer.print("<indexed>unindexable</indexed>");
 					if (doc.getStatus() == Constants.DOC_LOCKED)
-						writer.print("<locked>document_lock</locked>");
+						writer.print("<locked>lock</locked>");
 					else if (doc.getStatus() == Constants.DOC_CHECKED_OUT)
 						writer.print("<locked>page_edit</locked>");
 					else
