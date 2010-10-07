@@ -128,7 +128,6 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 			return session;
 		} catch (Throwable e) {
-			e.printStackTrace();
 			log.error(e.getMessage(), e);
 			throw new RuntimeException(e.getMessage(), e);
 		}
