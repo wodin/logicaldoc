@@ -6,16 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.ui.Image;
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -48,8 +44,6 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 	private VLayout container = new VLayout();
 
 	private HLayout formsContainer = new HLayout();
-
-	private VLayout rightPanel = new VLayout();
 
 	private ValuesManager vm = new ValuesManager();
 
@@ -180,34 +174,6 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		form2.setItems(items.toArray(new FormItem[0]));
 		formsContainer.addMember(form2, 1);
-
-		prepareRightPanel();
-	}
-
-	/**
-	 * Prepare the right panel with the document's preview
-	 */
-	private void prepareRightPanel() {
-		if (rightPanel != null) {
-			rightPanel.destroy();
-			if (contains(rightPanel))
-				removeMember(rightPanel);
-		}
-		rightPanel = new VLayout();
-		rightPanel.setMembersMargin(5);
-		rightPanel.setPadding(4);
-		rightPanel.setAlign(VerticalAlignment.TOP);
-
-		if (Feature.visible(Feature.PREVIEW)) {
-			if (Feature.enabled(Feature.PREVIEW)) {
-				Image preview = new Image("thumbnail?docId=" + document.getId() + "&fileVersion="
-						+ document.getFileVersion());
-				rightPanel.addMember(preview);
-			} else
-				rightPanel.addMember(new FeatureDisabled());
-		}
-
-		formsContainer.addMember(rightPanel, 2);
 	}
 
 	@SuppressWarnings("unchecked")
