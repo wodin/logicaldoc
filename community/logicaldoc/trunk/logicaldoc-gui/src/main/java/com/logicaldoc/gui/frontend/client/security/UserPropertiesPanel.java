@@ -163,8 +163,12 @@ public class UserPropertiesPanel extends HLayout {
 
 		form1.setItems(id, enabled, expires, username, firstname, name, email, language, address, postalcode, city,
 				country, state, phone, cell);
-		addMember(form1);
+		addMember(form1, 0);
 
+		refreshAddingGroup();
+	}
+
+	private void refreshAddingGroup() {
 		/*
 		 * Prepare the second form for the groups
 		 */
@@ -230,12 +234,12 @@ public class UserPropertiesPanel extends HLayout {
 					group.setName(selectedRecord.getAttributeAsString("name"));
 					group.setDescription(selectedRecord.getAttributeAsString("description"));
 					user.addGroup(group);
-					refresh();
+					refreshAddingGroup();
 					changedHandler.onChanged(null);
 				}
 			}
 		});
-		addingGroup.addMember(addGroup);
+		addingGroup.addMember(addGroup, 2);
 
 		addMember(addingGroup);
 	}
