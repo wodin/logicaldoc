@@ -24,7 +24,6 @@ import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.Folder;
-import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
@@ -121,7 +120,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 		// Find children visible by the current user
 		FolderDAO folderDAO = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Collection<Folder> folders = folderDAO.findChildren(folderID, parentResource.getRequestedPerson(), null);
+		Collection<Folder> folders = folderDAO.findChildren(folderID, parentResource.getRequestedPerson());
 		if (folders != null) {
 			for (Iterator<Folder> iterator = folders.iterator(); iterator.hasNext();) {
 				Folder currentFolder = iterator.next();

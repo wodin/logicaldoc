@@ -529,11 +529,11 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindChildren() {
-		List<Folder> dirs = dao.findChildren(1200L, 1L, null);
+		List<Folder> dirs = dao.findChildren(1200L, 1L);
 		Assert.assertNotNull(dirs);
 		Assert.assertEquals(1, dirs.size());
 
-		dirs = dao.findChildren(1201L, 3L, null);
+		dirs = dao.findChildren(1201L, 3L);
 		Assert.assertNotNull(dirs);
 		Assert.assertEquals(1, dirs.size());
 	}

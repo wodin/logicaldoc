@@ -83,11 +83,10 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * 
 	 * @param parentId Folder ID of the folder which children are wanted
 	 * @param userId Identifier of the user that must have read access
-	 * @param max Optional, maximum number of children
 	 * 
 	 * @return List of found folders
 	 */
-	public List<Folder> findChildren(long parentId, long userId, Integer max);
+	public List<Folder> findChildren(long parentId, long userId);
 
 	/**
 	 * This method is looking up for writing rights for a folder and an user.

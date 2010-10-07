@@ -214,12 +214,12 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public List<Menu> findChildren(long parentId, long userId, Integer max) {
+	public List<Menu> findChildren(long parentId, long userId) {
 		List<Menu> coll = new ArrayList<Menu>();
 		try {
 			User user = userDAO.findById(userId);
 			if (user.isInGroup("admin"))
-				return findChildren(parentId, max);
+				return findChildren(parentId, null);
 
 			Set<Group> groups = user.getGroups();
 			if (groups.isEmpty())
@@ -242,6 +242,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				first = false;
 			}
 			query1.append(") and _entity.parentId=" + parentId);
+			query1.append(" and not(_entity.id=" + parentId+")");
 
 			coll = (List<Menu>) getHibernateTemplate().find(query1.toString(), null);
 
@@ -265,8 +266,9 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				first = false;
 			}
 			query2.append("))");
+			query2.append(" and not(_entity.id=" + parentId+")");
 
-			List<Menu> coll2 = (List<Menu>) getHibernateTemplate(max).find(query2.toString(), new Long[] { parentId });
+			List<Menu> coll2 = (List<Menu>) getHibernateTemplate().find(query2.toString(), new Long[] { parentId });
 			for (Menu menu : coll2) {
 				if (!coll.contains(menu))
 					coll.add(menu);
