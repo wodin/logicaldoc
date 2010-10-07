@@ -60,7 +60,7 @@ public class DocumentDetailsPanel extends VLayout {
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	TabSet tabSet = new TabSet();
+	private TabSet tabSet = new TabSet();
 
 	private DynamicForm saveForm;
 
