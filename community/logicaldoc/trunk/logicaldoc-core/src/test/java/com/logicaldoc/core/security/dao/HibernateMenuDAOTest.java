@@ -310,15 +310,15 @@ public class HibernateMenuDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindChildren() {
-		List<Menu> dirs = dao.findChildren(101L, 1L, null);
+		List<Menu> dirs = dao.findChildren(101L, 1L);
 		Assert.assertNotNull(dirs);
 		Assert.assertEquals(3, dirs.size());
 
-		dirs = dao.findChildren(101L, 4L, null);
+		dirs = dao.findChildren(101L, 4L);
 		Assert.assertNotNull(dirs);
 		Assert.assertEquals(2, dirs.size());
 
-		dirs = dao.findChildren(2L, 4L, null);
+		dirs = dao.findChildren(2L, 4L);
 		Assert.assertNotNull(dirs);
 		Assert.assertEquals(1, dirs.size());
 		Assert.assertTrue(dirs.contains(dao.findById(1200L)));

@@ -229,12 +229,12 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public List<Folder> findChildren(long parentId, long userId, Integer max) {
+	public List<Folder> findChildren(long parentId, long userId) {
 		List<Folder> coll = new ArrayList<Folder>();
 		try {
 			User user = userDAO.findById(userId);
 			if (user.isInGroup("admin"))
-				return findChildren(parentId, max);
+				return findChildren(parentId, null);
 
 			Set<Group> groups = user.getGroups();
 			if (groups.isEmpty())
@@ -257,6 +257,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				first = false;
 			}
 			query1.append(") and _entity.parentId=" + parentId);
+			query1.append(" and not(_entity.id=" + parentId+")");
 
 			coll = (List<Folder>) getHibernateTemplate().find(query1.toString(), null);
 
@@ -281,8 +282,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				first = false;
 			}
 			query2.append("))");
+			query2.append(" and not(_entity.id=" + parentId+")");
 
-			List<Folder> coll2 = (List<Folder>) getHibernateTemplate(max).find(query2.toString(),
+			List<Folder> coll2 = (List<Folder>) getHibernateTemplate().find(query2.toString(),
 					new Long[] { parentId });
 			for (Folder folder : coll2) {
 				if (!coll.contains(folder))
