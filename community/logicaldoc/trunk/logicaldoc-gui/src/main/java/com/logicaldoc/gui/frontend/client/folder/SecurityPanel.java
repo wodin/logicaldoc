@@ -246,6 +246,7 @@ public class SecurityPanel extends FolderDetailTab {
 		for (ListGridRecord record : records) {
 			GUIRight right = new GUIRight();
 
+			right.setName(record.getAttributeAsString("entity"));
 			right.setEntityId(Long.parseLong(record.getAttribute("entityId")));
 			right.setWrite(record.getAttributeAsBoolean("write"));
 			right.setDelete(record.getAttributeAsBoolean("delete"));
