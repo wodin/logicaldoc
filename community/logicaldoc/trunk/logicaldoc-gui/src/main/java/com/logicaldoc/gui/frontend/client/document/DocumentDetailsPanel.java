@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -44,6 +45,8 @@ public class DocumentDetailsPanel extends VLayout {
 
 	private Layout discussionTabPanel;
 
+	private Layout previewTabPanel;
+
 	private StandardPropertiesPanel propertiesPanel;
 
 	private ExtendedPropertiesPanel extendedPropertiesPanel;
@@ -55,6 +58,8 @@ public class DocumentDetailsPanel extends VLayout {
 	private LinksPanel linksPanel;
 
 	private Discussion discussionPanel;
+
+	private PreviewPanel previewPanel;
 
 	private HLayout savePanel;
 
@@ -143,7 +148,16 @@ public class DocumentDetailsPanel extends VLayout {
 		historyTabPanel.setHeight100();
 		historyTab.setPane(historyTabPanel);
 		tabSet.addTab(historyTab);
-		addMember(tabSet);
+
+		Tab previewTab = new Tab(I18N.message("preview"));
+		previewTabPanel = new HLayout();
+		previewTabPanel.setWidth100();
+		previewTabPanel.setHeight100();
+		previewTab.setPane(previewTabPanel);
+		tabSet.addTab(previewTab);
+
+		if (Feature.visible(Feature.PREVIEW))
+			addMember(tabSet);
 	}
 
 	private void refresh() {
@@ -222,6 +236,17 @@ public class DocumentDetailsPanel extends VLayout {
 		}
 		discussionPanel = new Discussion(document);
 		discussionTabPanel.addMember(discussionPanel);
+
+		/*
+		 * Prepare the preview tab
+		 */
+		if (previewPanel != null) {
+			previewPanel.destroy();
+			if (previewTabPanel.contains(previewPanel))
+				previewTabPanel.removeMember(previewPanel);
+		}
+		previewPanel = new PreviewPanel(document);
+		previewTabPanel.addMember(previewPanel);
 	}
 
 	public GUIDocument getDocument() {
