@@ -110,7 +110,7 @@ public class ValidationTab extends Tab {
 		signButton = new IButton();
 		signButton.setTitle(I18N.message("sign"));
 		signButton.setDisabled(!showList);
-		signButton.setIcon(ItemFactory.newImgIcon("sign.png").getSrc());
+		signButton.setIcon(ItemFactory.newImgIcon("rosette.png").getSrc());
 		signButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				final ListGridRecord[] records = docsList.getRecords();
