@@ -185,7 +185,7 @@ public class DocumentsDataServlet extends HttpServlet {
 					if (Integer.parseInt(cols[17].toString()) == 0)
 						writer.print("<signed>blank</signed>");
 					else if (Integer.parseInt(cols[17].toString()) == 1)
-						writer.print("<signed>sign</signed>");
+						writer.print("<signed>rosette</signed>");
 
 					writer.print("</document>");
 				}
