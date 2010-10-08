@@ -4,7 +4,6 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
-import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 
 /**
@@ -18,17 +17,16 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public GUIWebServiceSettings[] loadWSSettings(String sid) {
-		GUIWebServiceSettings[] settings = new GUIWebServiceSettings[2];
+	public GUIParameter[] loadClientSettings(String sid) {
+		GUIParameter[] settings = new GUIParameter[2];
 
-		GUIWebServiceSettings wsSettings = new GUIWebServiceSettings();
-		wsSettings.setEnabled(true);
-		wsSettings.setUrl("http://demo.logicaldoc.com:80/logicaldoc/services/Dms");
-		wsSettings.setDescriptor("http://demo.logicaldoc.com:80/logicaldoc/services/Dms?wsdl");
+		GUIParameter wsSettings = new GUIParameter();
+		wsSettings.setName("webservice.enabled");
+		wsSettings.setValue("true");
 
-		GUIWebServiceSettings wdSettings = new GUIWebServiceSettings();
-		wdSettings.setEnabled(false);
-		wdSettings.setUrl("http://demo.logicaldoc.com:80/logicaldoc/webdav/store");
+		GUIParameter wdSettings = new GUIParameter();
+		wsSettings.setName("webdav.enabled");
+		wsSettings.setValue("true");
 
 		settings[0] = wsSettings;
 		settings[1] = wdSettings;
@@ -37,7 +35,7 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 	}
 
 	@Override
-	public void saveWSSettings(String sid, GUIWebServiceSettings wsSettings, GUIWebServiceSettings webDavSettings) {
+	public void saveClientSettings(String sid, GUIParameter[] settings) {
 
 	}
 

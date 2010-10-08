@@ -1,9 +1,9 @@
 package com.logicaldoc.web.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,7 +12,6 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
-import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
@@ -115,29 +114,19 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public GUIWebServiceSettings[] loadWSSettings(String sid) throws InvalidSessionException {
+	public GUIParameter[] loadClientSettings(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		HttpServletRequest request = this.getThreadLocalRequest();
-		String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-				+ request.getContextPath();
-
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		GUIWebServiceSettings[] settings = new GUIWebServiceSettings[2];
+		List<GUIParameter> params = new ArrayList<GUIParameter>();
+		for (Object key : conf.keySet()) {
+			if (key.toString().equals("webservice.enabled") || key.toString().startsWith("webdav")) {
+				GUIParameter p = new GUIParameter(key.toString(), conf.getProperty(key.toString()));
+				params.add(p);
+			}
+		}
 
-		GUIWebServiceSettings wsSettings = new GUIWebServiceSettings();
-		wsSettings.setEnabled("true".equals(conf.get("webservice.enabled")));
-		wsSettings.setUrl(urlPrefix + "/services/AuthService");
-		wsSettings.setDescriptor(urlPrefix + "/services/AuthService?wsdl");
-
-		GUIWebServiceSettings wdSettings = new GUIWebServiceSettings();
-		wdSettings.setEnabled("true".equals(conf.get("webdav.enabled")));
-		wdSettings.setUrl(urlPrefix + "/webdav/store");
-
-		settings[0] = wsSettings;
-		settings[1] = wdSettings;
-
-		return settings;
+		return params.toArray(new GUIParameter[0]);
 	}
 
 	@Override
@@ -159,21 +148,19 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public void saveWSSettings(String sid, GUIWebServiceSettings wsSettings, GUIWebServiceSettings webDavSettings)
-			throws InvalidSessionException {
+	public void saveClientSettings(String sid, GUIParameter[] settings) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-
-			conf.setProperty("webservice.enabled", wsSettings.isEnabled() ? "true" : "false");
-			conf.setProperty("webdav.enabled", webDavSettings.isEnabled() ? "true" : "false");
-
+			for (GUIParameter setting : settings) {
+				conf.setProperty(setting.getName(), setting.getValue());
+			}
 			conf.write();
 
-			log.info("Web Service and WebDAV settings data written successfully.");
+			log.info("Client Tools settings data written successfully.");
 		} catch (Exception e) {
-			log.error("Exception writing Web Service and WebDAV settings data: " + e.getMessage(), e);
+			log.error("Exception writing Client Tools settings data: " + e.getMessage(), e);
 		}
 	}
 

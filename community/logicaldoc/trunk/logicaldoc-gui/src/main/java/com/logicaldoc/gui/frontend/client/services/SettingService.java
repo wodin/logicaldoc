@@ -5,7 +5,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
-import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
 
 /**
  * The client side stub for the Settings Service. This service allows the
@@ -17,15 +16,14 @@ import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
 @RemoteServiceRelativePath("setting")
 public interface SettingService extends RemoteService {
 	/**
-	 * Saves web services and web service settings
+	 * Saves web services and webDav settings
 	 */
-	public void saveWSSettings(String sid, GUIWebServiceSettings wsSettings, GUIWebServiceSettings webDavSettings)
-			throws InvalidSessionException;
+	public void saveClientSettings(String sid, GUIParameter[] settings) throws InvalidSessionException;
 
 	/**
-	 * Loads web services and web service settings
+	 * Loads web services and webDav settings
 	 */
-	public GUIWebServiceSettings[] loadWSSettings(String sid) throws InvalidSessionException;
+	public GUIParameter[] loadClientSettings(String sid) throws InvalidSessionException;
 
 	/**
 	 * Loads settings

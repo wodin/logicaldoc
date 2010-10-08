@@ -9,7 +9,6 @@ import com.logicaldoc.gui.common.client.beans.GUICustomId;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUISequence;
-import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
@@ -108,7 +107,7 @@ public class SettingsMenu extends VLayout {
 		clientTools.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				service.loadWSSettings(Session.get().getSid(), new AsyncCallback<GUIWebServiceSettings[]>() {
+				service.loadClientSettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -116,7 +115,7 @@ public class SettingsMenu extends VLayout {
 					}
 
 					@Override
-					public void onSuccess(GUIWebServiceSettings[] settings) {
+					public void onSuccess(GUIParameter[] settings) {
 						AdminPanel.get().setContent(new ClientToolsSettingsPanel(settings));
 					}
 
