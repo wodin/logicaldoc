@@ -10,7 +10,6 @@ import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUISession;
-import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
 import com.logicaldoc.web.AbstractWebappTCase;
 
 public class SettingServiceImplTest extends AbstractWebappTCase {
@@ -57,20 +56,19 @@ public class SettingServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testSaveWSSettings() throws InvalidSessionException {
-		GUIWebServiceSettings[] settings = new GUIWebServiceSettings[2];
+		GUIParameter[] settings = new GUIParameter[2];
 
-		GUIWebServiceSettings wsSettings = new GUIWebServiceSettings();
-		wsSettings.setEnabled(true);
-		wsSettings.setUrl("http://demo.logicaldoc.com:80/logicaldoc/services/Dms");
-		wsSettings.setDescriptor("http://demo.logicaldoc.com:80/logicaldoc/services/Dms?wsdl");
+		GUIParameter wsSettings = new GUIParameter();
+		wsSettings.setName("webservice.enabled");
+		wsSettings.setValue("true");
 
-		GUIWebServiceSettings wdSettings = new GUIWebServiceSettings();
-		wdSettings.setEnabled(false);
-		wdSettings.setUrl("http://demo.logicaldoc.com:80/logicaldoc/webdav/store");
+		GUIParameter wdSettings = new GUIParameter();
+		wsSettings.setName("webdav.enabled");
+		wsSettings.setValue("true");
 
 		settings[0] = wsSettings;
 		settings[1] = wdSettings;
 
-		service.saveWSSettings(session.getSid(), wsSettings, wdSettings);
+		service.saveClientSettings(session.getSid(), settings);
 	}
 }
