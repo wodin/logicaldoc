@@ -80,10 +80,10 @@ public class FolderSelector extends StaticTextItem {
 
 	public void setFolder(Long folderId, String name) {
 		this.folderId = folderId;
-		
-		if(!(name.endsWith(" ") || name.endsWith("&nbsp;"))){
-		   // Use &nbsp; to have a better look&feel with Explorer
-		   setValue(name + "&nbsp;&nbsp;");
+
+		if (name != null && !(name.endsWith(" ") || name.endsWith("&nbsp;"))) {
+			// Use &nbsp; to have a better look&feel with Explorer
+			setValue(name + "&nbsp;&nbsp;");
 		}
 		for (FolderChangeListener listener : listeners) {
 			listener.onChanged(getFolder());
