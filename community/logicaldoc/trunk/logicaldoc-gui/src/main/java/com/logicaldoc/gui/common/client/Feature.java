@@ -33,7 +33,7 @@ public class Feature {
 	
 	public static final int INCREMENTAL_ARCHIVES = 14;
 	
-	public static final int PAPER_DEMATERIALIZATION = 14;
+	public static final int PAPER_DEMATERIALIZATION = 15;
 
 	public static final int SCAN = 16;
 
@@ -68,6 +68,8 @@ public class Feature {
 	public static final int IMPORT_LOCAL_FOLDERS = 61;
 	
 	public static final int PARAMETRIC_SEARCHES = 62;
+	
+	public static final int ENTERPRISE_SEARCH = 21;
 
 	private static Set<String> features = new HashSet<String>();
 
