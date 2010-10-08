@@ -10,7 +10,6 @@ import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.DragAppearance;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
@@ -25,7 +24,7 @@ import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.layout.Portlet;
 
 public class StatusPortlet extends Portlet {
-	
+
 	private DocumentsDS dataSource;
 
 	private ListGrid list;
@@ -81,14 +80,14 @@ public class StatusPortlet extends Portlet {
 
 		setShowShadow(true);
 		setAnimateMinimize(true);
-		setDragAppearance(DragAppearance.OUTLINE);
-		setDragOpacity(30);
+		setCanDrag(false);
+		setCanDrop(false);
 
 		HeaderIcon portletIcon = ItemFactory.newHeaderIcon(icn);
 		HeaderControl hcicon = new HeaderControl(portletIcon);
 		hcicon.setSize(16);
 
-		setHeaderControls(new HeaderControl(portletIcon), HeaderControls.HEADER_LABEL, HeaderControls.MINIMIZE_BUTTON);
+		setHeaderControls(new HeaderControl(portletIcon), HeaderControls.HEADER_LABEL);
 
 		// Count the total of events and the total of unchecked events
 		list.addDataArrivedHandler(new DataArrivedHandler() {
