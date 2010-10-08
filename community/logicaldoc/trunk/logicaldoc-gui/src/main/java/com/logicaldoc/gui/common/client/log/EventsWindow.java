@@ -38,7 +38,7 @@ public class EventsWindow extends Window {
 		});
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, trash, HeaderControls.CLOSE_BUTTON);
-		setWidth(400);
+		setWidth("50%");
 		setHeight(200);
 		setTitle(I18N.message("lastevents"));
 		setCanDragResize(true);
@@ -73,7 +73,7 @@ public class EventsWindow extends Window {
 		ListGridField detail = new ListGridField("detail", I18N.message("detail"), 300);
 		detail.setCanSort(false);
 
-		ListGridField severityLabel = new ListGridField("severityLabel", I18N.message("severity"), 60);
+		ListGridField severityLabel = new ListGridField("severityLabel", I18N.message("severity"), 70);
 
 		grid.setFields(date, severityLabel, detail);
 		grid.setCanResizeFields(true);

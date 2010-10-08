@@ -27,6 +27,8 @@ public class UserDashboard extends PortalLayout {
 		setShowColumnMenus(false);
 		setShowEdges(false);
 		setShowShadow(false);
+		setCanDrag(false);
+		setCanDrop(false);
 		setColumnBorder("0px");
 
 		refresh();
