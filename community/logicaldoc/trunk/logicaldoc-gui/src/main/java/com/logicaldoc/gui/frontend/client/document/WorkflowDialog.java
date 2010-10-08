@@ -176,13 +176,12 @@ public class WorkflowDialog extends Window {
 
 							@Override
 							public void onSuccess(GUIWorkflow result) {
-								if (result != null)
+								if (result != null) {
 									selectedWorkflow = result;
+									refreshTabs(1);
+								}
 							}
 						});
-
-				if (selectedWorkflow != null)
-					refreshTabs(1);
 			}
 		});
 

@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.workflow;
 
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.util.EventHandler;
 import com.smartgwt.client.util.SC;
@@ -75,7 +76,7 @@ public class DrawingPanel extends VStack {
 						if (getDropPosition() == 0
 								&& (row.getState().getWfState().getType() == GUIWFState.TYPE_END || row.getState()
 										.getWfState().getType() == GUIWFState.TYPE_JOIN)) {
-							SC.say("The element at first position must be a Task or a Fork!");
+							SC.say(I18N.message("workflow.error.firstpositionelement"));
 							event.cancel();
 						}
 						if (getDropPosition() == 0

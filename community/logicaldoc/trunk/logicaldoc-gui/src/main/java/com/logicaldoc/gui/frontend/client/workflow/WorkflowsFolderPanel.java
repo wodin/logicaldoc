@@ -141,7 +141,7 @@ public class WorkflowsFolderPanel extends VLayout {
 										}
 									});
 						} else {
-							SC.warn("A workflow must be selected!");
+							SC.warn(I18N.message("workflow.error.selection"));
 						}
 					}
 				});
