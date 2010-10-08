@@ -77,16 +77,16 @@ public class JoinRow extends WorkflowRow {
 				}
 
 				if (sameElementFound) {
-					SC.warn("The form element already contains the element '" + target.getWfState().getName() + "'");
+					SC.warn(I18N.message("workflow.error.sametarget"));
 					event.cancel();
 				}
 				if (sameObjectFound) {
-					SC.warn("You cannot add the same object in its row!!!");
+					SC.warn(I18N.message("workflow.error.sameobject"));
 					event.cancel();
 				}
 
 				if (!sameElementFound && !sameObjectFound) {
-					addMember(new WorkflowDraggedState(workflowDesigner, fromState, target.getWfState()), 1);
+					addMember(new WorkflowDraggedState(workflowDesigner, fromState, target.getWfState(), null), 1);
 
 					// Associate the target wfState to the fromState
 					// transition

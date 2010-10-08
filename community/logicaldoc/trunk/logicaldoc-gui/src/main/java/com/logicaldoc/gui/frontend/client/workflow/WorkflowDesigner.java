@@ -1,5 +1,8 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.beans.GUITransition;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
@@ -149,9 +152,10 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 	}
 
 	@Override
-	public void onTransitionDelete(GUIWFState from, GUIWFState target) {
+	public void onTransitionDelete(GUIWFState from, GUIWFState target, String transition) {
 		final GUIWFState fromState = from;
 		final GUIWFState targetState = target;
+		final String transitionText = transition;
 
 		SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 			@Override
@@ -164,7 +168,9 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 						int i = 0;
 						for (GUITransition transition : fromState.getTransitions()) {
 							if (transition.getTargetState().getType() == GUIWFState.TYPE_UNDEFINED
-									|| !transition.getTargetState().getId().equals(targetState.getId())) {
+									|| !transition.getTargetState().getId().equals(targetState.getId())
+									|| (transition.getTargetState().getId().equals(targetState.getId()) && !transition
+											.getText().equals(transitionText))) {
 								newTransitions[i] = transition;
 								i++;
 							}
@@ -192,10 +198,12 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 	}
 
 	@Override
-	public void onDraggedStateDelete(GUIWFState from, GUIWFState target) {
+	public void onDraggedStateDelete(GUIWFState from, GUIWFState target, String transition) {
 		final GUIWFState fromState = from;
 		final GUIWFState targetState = target;
 		final GUIWorkflow workflow = this.getWorkflow();
+		final String transitionText = transition;
+
 		SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 			@Override
 			public void execute(Boolean value) {
@@ -204,7 +212,9 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 					int i = 0;
 					for (GUITransition transition : fromState.getTransitions()) {
 						if (transition.getTargetState().getType() == GUIWFState.TYPE_UNDEFINED
-								|| !transition.getTargetState().getId().equals(targetState.getId())) {
+								|| !transition.getTargetState().getId().equals(targetState.getId())
+								|| (transition.getTargetState().getId().equals(targetState.getId()) && !transition
+										.getText().equals(transitionText))) {
 							newTransitions[i] = transition;
 							i++;
 						} else {
@@ -238,6 +248,16 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 
 	@Override
 	public void onAddTransition(GUIWFState fromState, GUIWFState targetState, String transitionText) {
+		if (fromState.getTransitions() != null && fromState.getTransitions().length > 0) {
+			List<GUITransition> transitionsList = Arrays.asList(fromState.getTransitions());
+			for (GUITransition transition : transitionsList) {
+				if (transition.getText().equals(transitionText) && targetState == null) {
+					SC.warn(I18N.message("workflow.error.transitionalreadyexist"));
+					return;
+				}
+			}
+		}
+
 		GUITransition[] newTransitions = null;
 		if (targetState == null || fromState.getType() == GUIWFState.TYPE_FORK) {
 			// Adding a new transition without a dragged state, so put an empty
@@ -255,7 +275,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 				newTransitions = new GUITransition[1];
 		}
 
-		if (fromState.getTransitions() != null) {
+		if (fromState.getTransitions() != null && fromState.getTransitions().length > 0) {
 			GUITransition[] transitions = fromState.getTransitions();
 			for (int i = 0; i < transitions.length; i++) {
 				if (transitionText != null && transitionText.equals(transitions[i].getText())) {
@@ -273,8 +293,8 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 		}
 
 		if (targetState == null) {
-			// The user has clicked the 'add transition' link into the workflow
-			// state element.
+			// The user has clicked the 'add transition' link into the task
+			// dialog element.
 			GUIWFState target = new GUIWFState();
 			target.setId("" + (this.getWorkflow().getStates().length + 1));
 			target.setType(GUIWFState.TYPE_UNDEFINED);
@@ -282,10 +302,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 		} else if (fromState.getType() == GUIWFState.TYPE_FORK) {
 			newTransitions[newTransitions.length - 1] = new GUITransition(transitionText, targetState);
 		}
-		// else
-		// // The user has dragged a new workflow state element.
-		// newTransitions[newTransitions.length - 1] = new
-		// GUITransition(targetState.getName(), targetState);
+
 		fromState.setTransitions(newTransitions);
 
 		GUIWFState[] states = new GUIWFState[workflow.getStates().length];
@@ -299,6 +316,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 				j++;
 			}
 		}
+
 		workflow.setStates(states);
 
 		AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));

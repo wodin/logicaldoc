@@ -5,6 +5,7 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUITransition;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.data.WorkflowsDS;
@@ -64,14 +65,17 @@ public class WorkflowToolstrip extends ToolStrip {
 
 		final ComboBoxItem workflow = new ComboBoxItem("workflow", " ");
 		workflow.setShowTitle(false);
+		workflow.setWidth(200);
 		ListGridField name = new ListGridField("name");
 		workflow.setValueField("name");
 		workflow.setDisplayField("name");
 		workflow.setPickListWidth(300);
 		workflow.setPickListFields(name);
 		workflow.setOptionDataSource(new WorkflowsDS(null, false));
-		if (currentWorkflow != null)
+		if (currentWorkflow != null && !currentWorkflow.getName().trim().isEmpty())
 			workflow.setValue(currentWorkflow.getName());
+		else
+			workflow.setValue(I18N.message("workflowselect") + "...");
 		workflow.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
@@ -141,24 +145,50 @@ public class WorkflowToolstrip extends ToolStrip {
 				if (values.get("supervisor") != null)
 					currentWorkflow.setSupervisor((String) values.get("supervisor"));
 
-				workflowService.save(Session.get().getSid(), currentWorkflow, new AsyncCallback<GUIWorkflow>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(GUIWorkflow result) {
-						if (result == null) {
-							SC.warn("A workflow with the same name already exists!");
-						} else {
-							currentWorkflow = result;
-							// Necessary reload to visualize a new saved
-							// workflow of the workflows drop down menu.
-							AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
+				boolean transitionErrorFound = false;
+				if (currentWorkflow.getStates() != null && currentWorkflow.getStates().length > 0) {
+					for (GUIWFState state : currentWorkflow.getStates()) {
+						if (transitionErrorFound) {
+							break;
+						}
+						if (state.getType() != GUIWFState.TYPE_END) {
+							if (state.getTransitions() == null) {
+								transitionErrorFound = true;
+								break;
+							}
+							for (GUITransition transition : state.getTransitions()) {
+								if (transition.getTargetState() == null
+										|| (transition.getTargetState() != null && transition.getTargetState()
+												.getType() == GUIWFState.TYPE_UNDEFINED)) {
+									transitionErrorFound = true;
+									break;
+								}
+							}
 						}
 					}
-				});
+				}
+				if (transitionErrorFound)
+					SC.warn(I18N.message("workflow.error.transtiontarget"));
+				else {
+					workflowService.save(Session.get().getSid(), currentWorkflow, new AsyncCallback<GUIWorkflow>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
+
+						@Override
+						public void onSuccess(GUIWorkflow result) {
+							if (result == null) {
+								SC.warn(I18N.message("workflow.error.workflowalreadyexist"));
+							} else {
+								currentWorkflow = result;
+								// Necessary reload to visualize a new saved
+								// workflow of the workflows drop down menu.
+								AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
+							}
+						}
+					});
+				}
 			}
 		});
 		addButton(save);
@@ -178,8 +208,33 @@ public class WorkflowToolstrip extends ToolStrip {
 						}
 					}
 
+				boolean transitionErrorFound = false;
+				if (currentWorkflow.getStates() != null && currentWorkflow.getStates().length > 0) {
+					for (GUIWFState state : currentWorkflow.getStates()) {
+						if (transitionErrorFound) {
+							break;
+						}
+						if (state.getType() != GUIWFState.TYPE_END) {
+							if (state.getTransitions() == null) {
+								transitionErrorFound = true;
+								break;
+							}
+							for (GUITransition transition : state.getTransitions()) {
+								if (transition.getTargetState() == null
+										|| (transition.getTargetState() != null && transition.getTargetState()
+												.getType() == GUIWFState.TYPE_UNDEFINED)) {
+									transitionErrorFound = true;
+									break;
+								}
+							}
+						}
+					}
+				}
+
 				if (!taskFound)
-					SC.warn("A workflow must have at least one task!");
+					SC.warn(I18N.message("workflow.error.taskatleast"));
+				else if (transitionErrorFound)
+					SC.warn(I18N.message("workflow.error.transtiontarget"));
 				else {
 					final Map<String, Object> values = WorkflowToolstrip.this.designer.getAccordion().getValues();
 					currentWorkflow.setName((String) values.get("workflowName"));
@@ -198,7 +253,7 @@ public class WorkflowToolstrip extends ToolStrip {
 
 						@Override
 						public void onSuccess(Void result) {
-							SC.say("Workflow " + currentWorkflow.getName() + " correctly deployed!!!");
+							SC.say(I18N.message("workflowdeployed", currentWorkflow.getName()));
 						}
 					});
 				}

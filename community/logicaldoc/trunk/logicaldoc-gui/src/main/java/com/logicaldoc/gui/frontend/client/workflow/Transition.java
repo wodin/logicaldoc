@@ -49,7 +49,7 @@ public class Transition extends HStack {
 		if (transition.getTargetState() != null && transition.getTargetState().getType() == GUIWFState.TYPE_UNDEFINED)
 			initDropArea();
 		else
-			addMember(new WorkflowDraggedState(designer, fromState, transition.getTargetState()));
+			addMember(new WorkflowDraggedState(designer, fromState, transition.getTargetState(), transition));
 	}
 
 	private void initDropArea() {
@@ -93,21 +93,21 @@ public class Transition extends HStack {
 					sameObjectFound = true;
 				}
 				if (sameElementFound) {
-					SC.warn("The form element already contains the element '" + target.getWfState().getName() + "'");
+					SC.warn(I18N.message("workflow.error.sametarget", target.getWfState().getName()));
 					event.cancel();
 				}
 				if (sameObjectFound) {
-					SC.warn("You cannot add the same object in its row!!!");
+					SC.warn(I18N.message("workflow.error.sameobject"));
 					event.cancel();
 				}
 
 				if (fromState.getType() == GUIWFState.TYPE_FORK
 						&& target.getWfState().getType() != GUIWFState.TYPE_TASK) {
-					SC.warn("A fork must contain only task elements!");
+					SC.warn(I18N.message("workflow.error.onlytasksallowed"));
 					event.cancel();
 				} else if (!sameElementFound && !sameObjectFound) {
 					removeMember(dropArea);
-					addMember(new WorkflowDraggedState(target.getDesigner(), fromState, target.getWfState()));
+					addMember(new WorkflowDraggedState(target.getDesigner(), fromState, target.getWfState(), transition));
 
 					// Associate the target wfState to the fromState transition
 					workflowDesigner.onAddTransition(fromState, target.getWfState(), transition.getText());
