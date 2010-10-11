@@ -168,7 +168,7 @@ public class WorkflowToolstrip extends ToolStrip {
 					}
 				}
 				if (transitionErrorFound)
-					SC.warn(I18N.message("workflow.error.transtiontarget"));
+					SC.warn(I18N.message("workflowtransitiontarget"));
 				else {
 					workflowService.save(Session.get().getSid(), currentWorkflow, new AsyncCallback<GUIWorkflow>() {
 						@Override
@@ -179,7 +179,7 @@ public class WorkflowToolstrip extends ToolStrip {
 						@Override
 						public void onSuccess(GUIWorkflow result) {
 							if (result == null) {
-								SC.warn(I18N.message("workflow.error.workflowalreadyexist"));
+								SC.warn(I18N.message("workflowalreadyexist"));
 							} else {
 								currentWorkflow = result;
 								// Necessary reload to visualize a new saved
@@ -232,9 +232,9 @@ public class WorkflowToolstrip extends ToolStrip {
 				}
 
 				if (!taskFound)
-					SC.warn(I18N.message("workflow.error.taskatleast"));
+					SC.warn(I18N.message("workflowtaskatleast"));
 				else if (transitionErrorFound)
-					SC.warn(I18N.message("workflow.error.transtiontarget"));
+					SC.warn(I18N.message("workflowtransitiontarget"));
 				else {
 					final Map<String, Object> values = WorkflowToolstrip.this.designer.getAccordion().getValues();
 					currentWorkflow.setName((String) values.get("workflowName"));

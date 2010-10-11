@@ -15,7 +15,6 @@ import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.Dialog;
-import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VStack;
 
@@ -45,8 +44,6 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 	private GUIWorkflow workflow = null;
 
 	private DrawingPanel drawingPanel = null;
-
-	private ValuesManager vm = new ValuesManager();
 
 	private boolean onlyVisualization = false;
 
@@ -252,7 +249,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 			List<GUITransition> transitionsList = Arrays.asList(fromState.getTransitions());
 			for (GUITransition transition : transitionsList) {
 				if (transition.getText().equals(transitionText) && targetState == null) {
-					SC.warn(I18N.message("workflow.error.transitionalreadyexist"));
+					SC.warn(I18N.message("workflowtransitionalreadyexist"));
 					return;
 				}
 			}

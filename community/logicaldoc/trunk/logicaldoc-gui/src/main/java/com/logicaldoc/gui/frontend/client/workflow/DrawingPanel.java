@@ -76,7 +76,7 @@ public class DrawingPanel extends VStack {
 						if (getDropPosition() == 0
 								&& (row.getState().getWfState().getType() == GUIWFState.TYPE_END || row.getState()
 										.getWfState().getType() == GUIWFState.TYPE_JOIN)) {
-							SC.say(I18N.message("workflow.error.firstpositionelement"));
+							SC.say(I18N.message("workflowfirstpositionelement"));
 							event.cancel();
 						}
 						if (getDropPosition() == 0
