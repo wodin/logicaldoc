@@ -87,6 +87,7 @@ public class ServletDocUtil {
 			file = new File(file.getParent(), file.getName() + "-" + suffix);
 			filename = filename + "." + FilenameUtils.getExtension(suffix);
 		}
+		long size=file.length();
 		InputStream is = new FileInputStream(file);
 
 		// get the mimetype
@@ -100,6 +101,9 @@ public class ServletDocUtil {
 		response.setHeader("Pragma", "public");
 		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 		response.setHeader("Expires", "0");
+		
+		// Add this header for compatibility with internal .NET browsers
+		response.setHeader("Content-Length", Long.toString(size));
 
 		OutputStream os;
 		os = response.getOutputStream();
