@@ -16,7 +16,6 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.services.InfoService;
 import com.logicaldoc.gui.common.client.services.InfoServiceAsync;
-import com.smartgwt.client.util.SC;
 
 /**
  * Represents a client work session
@@ -71,9 +70,7 @@ public class Session {
 	public void init(GUISession session) {
 		try {
 			this.session = session;
-			SC.say("**1");
 			I18N.init(session.getInfo());
-			SC.say("**2");
 			Menu.init(session.getUser());
 			if (session.isLoggedIn()) {
 				for (SessionObserver listener : sessionObservers) {
