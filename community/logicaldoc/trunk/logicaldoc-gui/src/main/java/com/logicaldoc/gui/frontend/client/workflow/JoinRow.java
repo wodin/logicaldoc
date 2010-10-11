@@ -77,11 +77,11 @@ public class JoinRow extends WorkflowRow {
 				}
 
 				if (sameElementFound) {
-					SC.warn(I18N.message("workflow.error.sametarget"));
+					SC.warn(I18N.message("workflowsametarget"));
 					event.cancel();
 				}
 				if (sameObjectFound) {
-					SC.warn(I18N.message("workflow.error.sameobject"));
+					SC.warn(I18N.message("workflowsameobject"));
 					event.cancel();
 				}
 

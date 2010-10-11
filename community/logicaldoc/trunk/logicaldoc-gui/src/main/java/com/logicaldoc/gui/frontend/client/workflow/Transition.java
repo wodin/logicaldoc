@@ -93,17 +93,17 @@ public class Transition extends HStack {
 					sameObjectFound = true;
 				}
 				if (sameElementFound) {
-					SC.warn(I18N.message("workflow.error.sametarget", target.getWfState().getName()));
+					SC.warn(I18N.message("workflowsametarget", target.getWfState().getName()));
 					event.cancel();
 				}
 				if (sameObjectFound) {
-					SC.warn(I18N.message("workflow.error.sameobject"));
+					SC.warn(I18N.message("workflowsameobject"));
 					event.cancel();
 				}
 
 				if (fromState.getType() == GUIWFState.TYPE_FORK
 						&& target.getWfState().getType() != GUIWFState.TYPE_TASK) {
-					SC.warn(I18N.message("workflow.error.onlytasksallowed"));
+					SC.warn(I18N.message("workflowonlytasksallowed"));
 					event.cancel();
 				} else if (!sameElementFound && !sameObjectFound) {
 					removeMember(dropArea);
