@@ -27,6 +27,7 @@ import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
+import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -62,6 +63,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		GUIUser guiUser = new GUIUser();
 
 		try {
+			GUIInfo info = new InfoServiceImpl().getInfo(locale);
+			session.setInfo(info);
 
 			if (authenticationChain.authenticate(username, password,
 					getThreadLocalRequest() != null ? getThreadLocalRequest().getRemoteAddr() : "")) {
@@ -76,7 +79,6 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				} else {
 					guiUser.setLanguage(locale);
 				}
-				session.setBundle(InfoServiceImpl.getBundle(guiUser.getLanguage()));
 
 				guiUser.setName(user.getName());
 

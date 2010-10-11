@@ -8,10 +8,12 @@ import org.apache.commons.lang.StringUtils;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
+import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.beans.GUIValuePair;
+import com.logicaldoc.gui.common.server.MockInfoServiceImpl;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 
 /**
@@ -31,7 +33,8 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 			loc = "en";
 
 		GUISession session = new GUISession();
-		session.setBundle(getBundle(loc));
+		GUIInfo info = new MockInfoServiceImpl().getInfo(locale);
+		session.setInfo(info);
 
 		session.setLoggedIn(false);
 		if ("admin".equals(username)) {
@@ -57,9 +60,9 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 
 			Long[] menues = new Long[1000];
 			for (int i = 0; i < 1000; i++) {
-				menues[i] = (long)i - 100;
+				menues[i] = (long) i - 100;
 			}
-			
+
 			user.setMenues(menues);
 			return session;
 		} else if ("author".equals(username)) {
