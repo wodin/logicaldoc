@@ -50,7 +50,7 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 		SelectItem depth = ItemFactory.newSelectItem("depth", null);
 		depth.addChangedHandler(changedHandler);
 		depth.setValueMap("5", "10", "15");
-		depth.setValue("5");
+		depth.setValue(Integer.toString(share.getDepth()));
 
 		IntegerItem size = ItemFactory.newIntegerItem("sizemax", "sizemax", share.getMaxSize());
 		size.addChangedHandler(changedHandler);
@@ -64,6 +64,7 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 
 		SelectItem template = ItemFactory.newTemplateSelector(false, null);
 		template.addChangedHandler(changedHandler);
+		template.setMultiple(false);
 
 		CheckboxItem delImport = new CheckboxItem();
 		delImport.setName("delImport");
@@ -102,8 +103,10 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 			else
 				share.setTemplateId(Long.parseLong((String) values.get("template")));
 			share.setDelImport((Boolean) values.get("delImport"));
-			if (values.get("tags") == null || "".equals((String) values.get("tags")))
+			if (values.get("tags") != null || !"".equals((String) values.get("tags")))
 				share.setTags((String) values.get("tags"));
+			else
+				share.setTags(null);
 		}
 		return !form.hasErrors();
 	}

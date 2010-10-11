@@ -8,9 +8,10 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.FoldersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
+import com.smartgwt.client.widgets.form.fields.PickerIcon;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
-import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.ItemClickEvent;
@@ -37,15 +38,19 @@ public class FolderSelector extends StaticTextItem {
 			setName("folder");
 		setTitle(I18N.message("folder"));
 		setWrapTitle(false);
-		setWrap(false);
+		setWrap(true);
 		setValue("  ");
 		setRedrawOnChange(true);
 		setValueField("id");
 		setDisplayField("name");
 
-		FormItemIcon remove = new FormItemIcon();
-		remove.setName("remove");
-		remove.setSrc("[SKIN]/actions/remove.png");
+		PickerIcon remove = new PickerIcon(PickerIcon.CLEAR, new FormItemClickHandler() {
+			@Override
+			public void onFormItemClick(FormItemIconClickEvent event) {
+				setValue("");
+				folderId = null;
+			}
+		});
 
 		menu.setCanSelectParentItems(true);
 		Date date = new Date();
@@ -58,24 +63,17 @@ public class FolderSelector extends StaticTextItem {
 			}
 		});
 
-		FormItemIcon picker = new FormItemIcon();
-		picker.setName("picker");
-		addIconClickHandler(new IconClickHandler() {
-			public void onIconClick(IconClickEvent event) {
-				if ("remove".equals(event.getIcon().getName())) {
-					setValue("");
-					folderId = null;
-					redraw();
-				} else {
-					menu.showContextMenu();
-				}
+		FormItemIcon search = new PickerIcon(PickerIcon.SEARCH, new FormItemClickHandler() {
+			@Override
+			public void onFormItemClick(FormItemIconClickEvent event) {
+				menu.showContextMenu();
 			}
 		});
 
 		if (cleanPick)
-			setIcons(picker, remove);
+			setIcons(search, remove);
 		else
-			setIcons(picker);
+			setIcons(search);
 	}
 
 	public void setFolder(Long folderId, String name) {

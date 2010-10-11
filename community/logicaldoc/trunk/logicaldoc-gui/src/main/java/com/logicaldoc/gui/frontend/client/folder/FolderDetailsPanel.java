@@ -108,21 +108,19 @@ public class FolderDetailsPanel extends VLayout {
 		tabSet.addTab(historyTab);
 
 		workflowTab = new Tab(I18N.message("workflow"));
-		if (!Feature.visible(Feature.WORKFLOW) || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)) {
-			if (!Feature.enabled(Feature.WORKFLOW)) {
+		if (Feature.visible(Feature.WORKFLOW)) {
+			if (Feature.enabled(Feature.WORKFLOW)) {
+				workflowsTabPanel = new HLayout();
+				workflowsTabPanel.setWidth100();
+				workflowsTabPanel.setHeight100();
+				workflowTab.setPane(workflowsTabPanel);
+			} else {
 				workflowTab.setPane(new FeatureDisabled());
-				tabSet.addTab(workflowTab);
 			}
-		} else {
-			workflowsTabPanel = new HLayout();
-			workflowsTabPanel.setWidth100();
-			workflowsTabPanel.setHeight100();
-			workflowTab.setPane(workflowsTabPanel);
 			tabSet.addTab(workflowTab);
 		}
 
 		addMember(tabSet);
-
 		refresh();
 	}
 

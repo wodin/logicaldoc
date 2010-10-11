@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.document;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Config;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
@@ -603,7 +604,8 @@ public class DocumentContextMenu extends Menu {
 			isOfficeFile = Util.isOfficeFile(selection[0].getAttribute("filename"));
 		else if (selection[0].getAttribute("type") != null)
 			isOfficeFile = Util.isOfficeFileType(selection[0].getAttribute("type"));
-		boolean enableEdit = selection != null && selection.length == 1 && isOfficeFile;
+		boolean enableOffice = selection != null && selection.length == 1 && isOfficeFile
+				&& "true".equals(Config.getProperty(Constants.OFFICE_ENABLED));
 
 		if (selection != null)
 			for (ListGridRecord record : selection) {
@@ -675,7 +677,7 @@ public class DocumentContextMenu extends Menu {
 		checkout.setEnabled(enableLock);
 		immutable.setEnabled(enableImmutable);
 		delete.setEnabled(enableDelete);
-		
+
 		if ((selection.length == 1 && selection[0].getAttribute("status") == null)) {
 			checkin.setEnabled(false);
 			checkout.setEnabled(false);
@@ -693,7 +695,7 @@ public class DocumentContextMenu extends Menu {
 			if (!Feature.enabled(Feature.OFFICE))
 				edit.setEnabled(false);
 			else
-				edit.setEnabled(enableEdit);
+				edit.setEnabled(enableOffice);
 		}
 
 		if (Feature.visible(Feature.DIGITAL_SIGN)) {
