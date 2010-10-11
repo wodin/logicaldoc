@@ -22,7 +22,8 @@
 	    	<fileset dir="war">
 	    		<exclude name="*.jsp"/>
 	    		<exclude name="applet/"/>
-	    		<exclude name="WEB-INF/"/>
+	    		<exclude name="common/"/>
+	    		<exclude name="WEB-INF/**"/>
 	    	</fileset>
 	    </copy>
 	</target>

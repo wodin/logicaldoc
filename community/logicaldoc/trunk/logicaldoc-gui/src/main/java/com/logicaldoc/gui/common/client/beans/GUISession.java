@@ -18,7 +18,7 @@ public class GUISession implements Serializable {
 
 	private String sid;
 
-	private GUIValuePair[] bundle;
+	private GUIInfo info;
 
 	public GUIUser getUser() {
 		return user;
@@ -44,11 +44,11 @@ public class GUISession implements Serializable {
 		this.sid = sid;
 	}
 
-	public GUIValuePair[] getBundle() {
-		return bundle;
+	public GUIInfo getInfo() {
+		return info;
 	}
 
-	public void setBundle(GUIValuePair[] bundle) {
-		this.bundle = bundle;
+	public void setInfo(GUIInfo info) {
+		this.info = info;
 	}
 }
