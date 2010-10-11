@@ -49,6 +49,16 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 	public GUIInfo getInfo(String locale) {
 		GUIInfo info = new GUIInfo();
 		try {
+			ArrayList<GUIValuePair> values = new ArrayList<GUIValuePair>();
+			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			for (Object key : config.keySet()) {
+				GUIValuePair pair = new GUIValuePair();
+				pair.setCode((String) key);
+				pair.setValue(config.getProperty((String) key));
+				values.add(pair);
+			}
+			info.setConfig(values.toArray(new GUIValuePair[0]));
+
 			Properties i18n = new Properties();
 			try {
 				i18n.load(this.getClass().getResourceAsStream("/i18n/i18n.properties"));
@@ -129,7 +139,6 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			}
 			info.setFeatures(features.toArray(new String[0]));
 
-			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			info.setInstallationId(config.getProperty("id"));
 			info.setRelease(config.getProperty("product.release"));
 			info.setYear(config.getProperty("product.year"));
@@ -168,7 +177,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 	@Override
 	public GUIParameter[] getSessionInfo(String sid) {
 		log.debug("Requested info for session " + sid);
-		
+
 		SystemMessageDAO messageDao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
 		GUIParameter[] parameters = new GUIParameter[1];
 

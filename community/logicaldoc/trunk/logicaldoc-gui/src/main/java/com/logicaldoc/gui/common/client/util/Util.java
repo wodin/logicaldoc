@@ -60,7 +60,7 @@ public class Util {
 	}
 
 	public static boolean isOfficeFile(String fileName) {
-		String[] exts = new String[] { "doc", "xls", "ppt", "docx", "xlsx", "pptx" };
+		String[] exts = new String[] { ".doc", ".xls", ".ppt", ".docx", ".xlsx", ".pptx" };
 		String tmp = fileName.toLowerCase();
 		for (String ext : exts) {
 			if (tmp.endsWith(ext))

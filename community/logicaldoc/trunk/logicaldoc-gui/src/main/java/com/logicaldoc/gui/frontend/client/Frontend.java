@@ -6,6 +6,7 @@ import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.logicaldoc.gui.common.client.Config;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
@@ -91,6 +92,7 @@ public class Frontend implements EntryPoint {
 
 			@Override
 			public void onSuccess(GUIInfo info) {
+				Config.init(info);
 				I18N.init(info);
 				
 				WindowUtils.setTitle(info.getProductName() + " " + info.getRelease()

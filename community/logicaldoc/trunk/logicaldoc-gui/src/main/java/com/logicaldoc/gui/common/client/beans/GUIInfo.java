@@ -51,6 +51,8 @@ public class GUIInfo implements Serializable {
 
 	private GUIValuePair[] bundle = new GUIValuePair[0];
 
+	private GUIValuePair[] config = new GUIValuePair[0];
+	
 	private String[] features = new String[0];
 
 	public String getProductName() {
@@ -211,5 +213,13 @@ public class GUIInfo implements Serializable {
 
 	public void setSessionHeartbeat(int sessionHeartbeat) {
 		this.sessionHeartbeat = sessionHeartbeat;
+	}
+
+	public GUIValuePair[] getConfig() {
+		return config;
+	}
+
+	public void setConfig(GUIValuePair[] config) {
+		this.config = config;
 	}
 }

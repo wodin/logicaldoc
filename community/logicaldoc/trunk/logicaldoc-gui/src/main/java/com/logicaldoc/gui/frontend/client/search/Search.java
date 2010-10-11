@@ -90,6 +90,7 @@ public class Search {
 					record.setAttribute("folderId", hit.getFolderId());
 					record.setAttribute("size", hit.getSize());
 					record.setAttribute("icon", hit.getIcon());
+					record.setAttribute("type", hit.getType());
 				}
 
 				for (SearchObserver observer : observers) {

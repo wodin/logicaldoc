@@ -322,7 +322,6 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			}
 		});
 
-		toolStrip.addSeparator();
 		ToolStripButton save = new ToolStripButton();
 		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
@@ -333,12 +332,13 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			}
 		});
 
-		if (Feature.enabled(Feature.SAVED_SEARCHES)) {
+		if (Feature.visible(Feature.SAVED_SEARCHES)) {
+			toolStrip.addSeparator();
 			toolStrip.addButton(save);
-		} else if (Feature.showDisabled()) {
-			save.setDisabled(true);
-			save.setTooltip(I18N.message("featuredisabled"));
-			toolStrip.addButton(save);
+			if (!Feature.enabled(Feature.SAVED_SEARCHES)) {
+				save.setDisabled(true);
+				save.setTooltip(I18N.message("featuredisabled"));
+			}
 		}
 
 		if (Search.get().isHasMore()) {
@@ -359,7 +359,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 					if (!max.validate())
 						return;
 					GUISearchOptions opt = Search.get().getOptions();
-					opt.setMaxHits(opt.getMaxHits() + (Integer) max.getValue());
+					opt.setMaxHits((Integer) max.getValue());
 					Search.get().search();
 				}
 			});
