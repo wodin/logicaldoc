@@ -118,9 +118,11 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 					GUIMessage setupReminder = new GUIMessage();
 					setupReminder.setMessage(getValue(info, "setup.reminder"));
 					HttpServletRequest request = this.getThreadLocalRequest();
-					String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":"
-							+ request.getServerPort() + request.getContextPath();
-					setupReminder.setUrl(urlPrefix + "/setup");
+					if (request != null) {
+						String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":"
+								+ request.getServerPort() + request.getContextPath();
+						setupReminder.setUrl(urlPrefix + "/setup");
+					}
 					messages.add(setupReminder);
 				}
 			}
