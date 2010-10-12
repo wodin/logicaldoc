@@ -48,7 +48,7 @@
     <dependency>
       <groupId>gwtchismes</groupId>
       <artifactId>gwtchismes</artifactId>
-    </dependency>
+    </dependency-->
     <dependency>
       <groupId>com.smartgwt</groupId>
       <artifactId>smartgwt</artifactId>
@@ -207,13 +207,14 @@
                 <copy todir="target/plugin">
                   <fileset dir="war">
                     <exclude name="**/WEB-INF/**" />
+                    <exclude name="**/applet/**" />
+                    <exclude name="**/common/**" />
                   </fileset>
                 </copy>
                 <copy file="target/${project.artifactId}-${project.version}.${project.packaging}"
                   tofile="target/plugin/WEB-INF/lib/${project.artifactId}-${project.version}-plugin.${project.packaging}" />
                 <copy todir="target/plugin/frontend/sc/skins/standard/images/" file="./war/skin/images/blank.gif" />
                 <copy todir="target/plugin/setup/sc/skins/standard/images/" file="./war/skin/images/blank.gif" />
-                <copy todir="target/plugin/common/sc/skins/standard/images/" file="./war/skin/images/blank.gif" />
                 <zip destfile="target/${project.artifactId}-${project.version}-plugin2.zip" basedir="target/plugin" />
                 <move file="target/${project.artifactId}-${project.version}-plugin2.zip" tofile="target/${project.artifactId}-${project.version}-plugin.zip" />
               </tasks>
