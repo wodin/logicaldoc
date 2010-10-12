@@ -66,7 +66,6 @@ public class ParametricForm extends VLayout {
 		filterBuilder = new FilterBuilder();
 		filterBuilder.setDataSource(new DocumentFieldsDS(null));
 		filterBuilder.setTopOperatorAppearance(TopOperatorAppearance.RADIO);
-
 		addMember(filterBuilder);
 
 		final DynamicForm form = new DynamicForm();
@@ -89,12 +88,13 @@ public class ParametricForm extends VLayout {
 
 		if (Feature.visible(Feature.TEMPLATE)) {
 			SelectItem template = ItemFactory.newTemplateSelector(false, null);
-
+			template.setMultiple(false);
+			template.setValue(I18N.message("selecttemplate"));
 			template.addChangedHandler(new ChangedHandler() {
 				@Override
 				public void onChanged(ChangedEvent event) {
-					if (event.getValue() != null && !"".equals(event.getValue()))
-						service.getTemplate(Session.get().getSid(), new Long(event.getValue().toString()),
+					if (event.getValue() != null && !"".equals((String) event.getValue())) {
+						service.getTemplate(Session.get().getSid(), new Long((String) event.getValue()),
 								new AsyncCallback<GUITemplate>() {
 									@Override
 									public void onFailure(Throwable caught) {
@@ -110,6 +110,13 @@ public class ParametricForm extends VLayout {
 										addMember(filterBuilder, 0);
 									}
 								});
+					} else {
+						removeMember(filterBuilder);
+						filterBuilder = new FilterBuilder();
+						filterBuilder.setDataSource(new DocumentFieldsDS(null));
+						filterBuilder.setTopOperatorAppearance(TopOperatorAppearance.RADIO);
+						addMember(filterBuilder, 0);
+					}
 				}
 			});
 
