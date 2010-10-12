@@ -12,7 +12,6 @@ import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
-import com.logicaldoc.gui.common.client.data.TemplatesDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -143,12 +142,8 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		searchin.setColSpan(3);
 		searchin.setEndRow(true);
 
-		SelectItem template = new SelectItem("template", I18N.message("template"));
-		template.setDisplayField("name");
-		template.setValueField("id");
-		template.setPickListWidth(250);
-		template.setOptionDataSource(new TemplatesDS(false, null));
-		template.setColSpan(3);
+		SelectItem template = ItemFactory.newTemplateSelector(false, null);
+		template.setMultiple(false);
 		template.setValue(I18N.message("selecttemplate"));
 		template.addChangedHandler(new ChangedHandler() {
 			@Override
