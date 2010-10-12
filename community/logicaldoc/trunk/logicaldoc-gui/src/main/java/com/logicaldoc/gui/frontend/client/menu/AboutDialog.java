@@ -70,7 +70,7 @@ public class AboutDialog extends Window {
 
 		// Prepare the website link
 		String wsurl = Session.get().getInfo().getUrl();
-		String htmlUrl = "<div style='text-align: center;'><a href='"+ wsurl + "'>" + wsurl + "</a></div>";
+		String htmlUrl = "<div style='text-align: center;'><a href='"+ wsurl + "' target='_blank'>" + wsurl + "</a></div>";
 		HTMLPane sitelink = new HTMLPane();		
 		sitelink.setContents(htmlUrl);
 		sitelink.setPixelSize(200, 16);
