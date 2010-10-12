@@ -305,6 +305,7 @@ public class TemplatePropertiesPanel extends HLayout {
 
 		IButton addUpdate = new IButton();
 		addUpdate.setTitle(I18N.message("addupdate"));
+		addUpdate.setWidth(150);
 		addUpdate.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (attributeName.getValue() != null && !((String) attributeName.getValue()).trim().isEmpty()) {

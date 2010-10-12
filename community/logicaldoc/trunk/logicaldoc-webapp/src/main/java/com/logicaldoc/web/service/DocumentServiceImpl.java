@@ -471,8 +471,17 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						ExtendedAttribute extAttr = doc.getAttributes().get(name);
 						GUIExtendedAttribute attr = new GUIExtendedAttribute();
 						attr.setName(name);
-						attr.setValue(extAttr.getValue());
 						attr.setType(extAttr.getType());
+						if (extAttr.getValue() == null) {
+							if (extAttr.getType() == ExtendedAttribute.TYPE_INT) {
+								attr.setIntValue(null);
+							} else if (extAttr.getType() == ExtendedAttribute.TYPE_DOUBLE) {
+								attr.setDoubleValue(null);
+							} else if (extAttr.getType() == ExtendedAttribute.TYPE_DATE) {
+								attr.setDateValue(null);
+							}
+						} else
+							attr.setValue(extAttr.getValue());
 						attr.setPosition(extAttr.getPosition());
 						attr.setMandatory(extAttr.getMandatory() == 1);
 
@@ -835,19 +844,64 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						docVO.setTemplate(template);
 						if (document.getAttributes().length > 0) {
 							for (GUIExtendedAttribute attr : document.getAttributes()) {
+								ExtendedAttribute templateAttribute = template.getAttributes().get(attr.getName());
+								// This control is necessary because, changing
+								// the template, the values of the old template
+								// attributes keys remains on the form value
+								// manager,
+								// so the GUIDocument contains also the old
+								// template attributes keys that must be
+								// skipped.
+								if (templateAttribute == null)
+									continue;
+
 								ExtendedAttribute extAttr = new ExtendedAttribute();
-								int templateType = template.getAttributes().get(attr.getName()).getType();
+								int templateType = templateAttribute.getType();
 								int extAttrType = attr.getType();
 
 								if (templateType != extAttrType) {
-									if (templateType == GUIExtendedAttribute.TYPE_DOUBLE) {
+									// This check is useful to avoid errors
+									// related to the old template
+									// attributes keys that remains on the form
+									// value manager
+									if (attr.getValue().toString().trim().isEmpty() && templateType != 0) {
+										if (templateType == ExtendedAttribute.TYPE_INT) {
+											extAttr.setIntValue(null);
+										} else if (templateType == ExtendedAttribute.TYPE_DOUBLE) {
+											extAttr.setDoubleValue(null);
+										} else if (templateType == ExtendedAttribute.TYPE_DATE) {
+											extAttr.setDateValue(null);
+										}
+									} else if (templateType == GUIExtendedAttribute.TYPE_DOUBLE) {
 										extAttr.setValue(Double.parseDouble(attr.getValue().toString()));
 									} else if (templateType == GUIExtendedAttribute.TYPE_INT) {
 										extAttr.setValue(Long.parseLong(attr.getValue().toString()));
 									}
-								} else
-									extAttr.setValue(attr.getValue());
+								} else {
+									if (templateType == ExtendedAttribute.TYPE_INT) {
+										if (attr.getValue() != null)
+											extAttr.setIntValue((Long) attr.getValue());
+										else
+											extAttr.setIntValue(null);
+									} else if (templateType == ExtendedAttribute.TYPE_DOUBLE) {
+										if (attr.getValue() != null)
+											extAttr.setDoubleValue((Double) attr.getValue());
+										else
+											extAttr.setDoubleValue(null);
+									} else if (templateType == ExtendedAttribute.TYPE_DATE) {
+										if (attr.getValue() != null)
+											extAttr.setDateValue((Date) attr.getValue());
+										else
+											extAttr.setDateValue(null);
+									} else if (templateType == ExtendedAttribute.TYPE_STRING) {
+										if (attr.getValue() != null)
+											extAttr.setStringValue((String) attr.getValue());
+										else
+											extAttr.setStringValue(null);
+									}
+								}
 
+								extAttr.setType(templateType);
 								extAttr.setPosition(attr.getPosition());
 								extAttr.setMandatory(attr.isMandatory() ? 1 : 0);
 
@@ -876,6 +930,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					document.setLastModified(new Date());
 					document.setVersion(doc.getVersion());
 				} catch (Throwable t) {
+					t.printStackTrace();
 					log.error(t.getMessage(), t);
 					throw new RuntimeException(t.getMessage(), t);
 				}

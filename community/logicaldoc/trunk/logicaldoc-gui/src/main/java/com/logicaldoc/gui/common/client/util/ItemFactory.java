@@ -1,7 +1,9 @@
 package com.logicaldoc.gui.common.client.util;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
@@ -10,6 +12,7 @@ import com.logicaldoc.gui.common.client.data.TemplatesDS;
 import com.logicaldoc.gui.common.client.data.UsersDS;
 import com.logicaldoc.gui.common.client.data.WorkflowsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.validators.EmailValidator;
 import com.logicaldoc.gui.common.client.validators.EmailsValidator;
 import com.logicaldoc.gui.common.client.validators.SimpleTextValidator;
@@ -21,6 +24,7 @@ import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
+import com.smartgwt.client.widgets.form.fields.FloatItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.LinkItem;
@@ -30,6 +34,8 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.grid.ListGridField;
 
@@ -41,6 +47,12 @@ import com.smartgwt.client.widgets.grid.ListGridField;
  */
 public class ItemFactory {
 
+	/**
+	 * Creates a new DateItem.
+	 * 
+	 * @param name The item name (mandatory)
+	 * @param title The item title (optional)
+	 */
 	public static DateItem newDateItem(String name, String title) {
 		DateItem date = new DateItem(name);
 		if (title != null)
@@ -52,6 +64,25 @@ public class ItemFactory {
 		date.setShowPickerIcon(true);
 		date.setWidth(90);
 		date.setName(name);
+		date.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
+		return date;
+	}
+
+	/**
+	 * Creates a new DateItem for the Extended Attributes.
+	 * 
+	 * @param name The item name (mandatory)
+	 */
+	public static DateItem newDateItemForExtendedAttribute(String name) {
+		// We cannot use spaces in items name
+		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
+		final DateItem date = new DateItem(itemName);
+		date.setTitle(name);
+		date.setUseTextField(true);
+		date.setUseMask(false);
+		date.setShowPickerIcon(true);
+		date.setWidth(90);
+		date.setName(itemName);
 		date.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
 		return date;
 	}
@@ -327,6 +358,27 @@ public class ItemFactory {
 		return item;
 	}
 
+	/**
+	 * Creates a new TextItem for the Extended Attributes.
+	 * 
+	 * @param name The item name (mandatory)
+	 * @param value The item value (optional)
+	 */
+	public static TextItem newTextItemForExtendedAttribute(String name, String value) {
+		// We cannot use spaces in items name
+		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
+		TextItem item = new TextItem();
+		item.setName(itemName);
+		item.setTitle(name);
+		if (value != null)
+			item.setValue(value);
+		else
+			item.setValue("");
+		item.setWrapTitle(false);
+		item.setRequiredMessage(I18N.message("fieldrequired"));
+		return item;
+	}
+
 	public static PasswordItem newPasswordItem(String name, String title, String value) {
 		PasswordItem password = new PasswordItem();
 		password.setTitle(I18N.message(title));
@@ -381,6 +433,24 @@ public class ItemFactory {
 		IntegerItem item = new IntegerItem();
 		item.setName(name);
 		item.setTitle(I18N.message(title));
+		if (value != null)
+			item.setValue(value);
+		item.setRequiredMessage(I18N.message("fieldrequired"));
+		return item;
+	}
+
+	/**
+	 * Creates a new IntegerItem for the Extended Attributes.
+	 * 
+	 * @param name The item name (mandatory)
+	 * @param value The item value (optional)
+	 */
+	public static IntegerItem newIntegerItemForExtendedAttribute(String name, Integer value) {
+		// We cannot use spaces in items name
+		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
+		IntegerItem item = new IntegerItem();
+		item.setName(itemName);
+		item.setTitle(name);
 		if (value != null)
 			item.setValue(value);
 		item.setRequiredMessage(I18N.message("fieldrequired"));
@@ -548,5 +618,40 @@ public class ItemFactory {
 		label.setWrap(false);
 		label.setCursor(Cursor.HAND);
 		return label;
+	}
+
+	/**
+	 * Creates a new FloatItem.
+	 * 
+	 * @param name The item name (mandatory)
+	 * @param title The item title (mandatory)
+	 * @param value The item value (optional)
+	 */
+	public static FloatItem newFloatItem(String name, String title, Float value) {
+		FloatItem item = new FloatItem();
+		item.setName(name);
+		item.setTitle(I18N.message(title));
+		if (value != null)
+			item.setValue(value);
+		item.setRequiredMessage(I18N.message("fieldrequired"));
+		return item;
+	}
+
+	/**
+	 * Creates a new FloatItem for the Extended Attributes.
+	 * 
+	 * @param name The item name (mandatory)
+	 * @param value The item value (optional)
+	 */
+	public static FloatItem newFloatItemForExtendedAttribute(String name, Float value) {
+		// We cannot use spaces in items name
+		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
+		FloatItem item = new FloatItem();
+		item.setName(itemName);
+		item.setTitle(name);
+		if (value != null)
+			item.setValue(value);
+		item.setRequiredMessage(I18N.message("fieldrequired"));
+		return item;
 	}
 }
