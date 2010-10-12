@@ -147,13 +147,14 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		template.setDisplayField("name");
 		template.setValueField("id");
 		template.setPickListWidth(250);
-		template.setOptionDataSource(new TemplatesDS(false,null));
+		template.setOptionDataSource(new TemplatesDS(false, null));
 		template.setColSpan(3);
+		template.setValue(I18N.message("selecttemplate"));
 		template.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
-				if (event.getValue() != null && !"".equals(event.getValue()))
-					prepareExtendedAttributes(new Long(event.getValue().toString()));
+				if (event.getValue() != null && !"".equals((String) event.getValue()))
+					prepareExtendedAttributes(new Long((String) event.getValue()));
 				else
 					prepareExtendedAttributes(null);
 			}
@@ -242,6 +243,8 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 			if (enabled) {
 				String tmp = name;
+				if (name.startsWith("_"))
+					name = name.substring(1);
 				if (!name.endsWith("Flag"))
 					tmp = "ext_" + name.replaceAll(Constants.BLANK_PLACEHOLDER, " ");
 				else
@@ -296,7 +299,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		CheckboxItem typeFlag = new CheckboxItem("typeFlag", I18N.message("type"));
 		items.add(typeFlag);
 
-		if (templateId == null || templateId.longValue() <= 0) {
+		if (templateId == null) {
 			extForm.setItems(items.toArray(new FormItem[0]));
 			return;
 		}
@@ -309,7 +312,6 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 			@Override
 			public void onSuccess(GUIExtendedAttribute[] result) {
-
 				for (GUIExtendedAttribute att : result) {
 					// We cannot use spaces in items name
 					String itemName = "_" + att.getName().replaceAll(" ", Constants.BLANK_PLACEHOLDER);
