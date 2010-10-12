@@ -48,7 +48,7 @@
     <dependency>
       <groupId>gwtchismes</groupId>
       <artifactId>gwtchismes</artifactId>
-    </dependency-->
+    </dependency>
     <dependency>
       <groupId>com.smartgwt</groupId>
       <artifactId>smartgwt</artifactId>
