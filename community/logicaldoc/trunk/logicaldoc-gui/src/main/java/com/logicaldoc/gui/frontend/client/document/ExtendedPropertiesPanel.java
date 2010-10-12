@@ -46,8 +46,6 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 
 	private ValuesManager vm = new ValuesManager();
 
-	private DateItem sourceDate;
-
 	private GUIExtendedAttribute[] currentExtAttributes = null;
 
 	public ExtendedPropertiesPanel(GUIDocument document, ChangedHandler changedHandler) {
@@ -76,7 +74,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		sourceItem.addChangedHandler(changedHandler);
 		sourceItem.setDisabled(!update);
 
-		sourceDate = ItemFactory.newDateItem("date", "date");
+		DateItem sourceDate = ItemFactory.newDateItem("date", "date");
 		sourceDate.setValue(document.getSourceDate());
 		sourceDate.addChangedHandler(changedHandler);
 		sourceDate.setDisabled(!update);
