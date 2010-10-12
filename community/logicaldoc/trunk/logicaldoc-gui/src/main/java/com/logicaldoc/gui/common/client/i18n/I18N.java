@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
+import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 
 /**
@@ -38,7 +39,7 @@ public class I18N {
 	public static String message(String key, String val) {
 		String tmp = message(key);
 		try {
-			tmp= tmp.replaceAll("\\{0\\}", val);
+			tmp = tmp.replaceAll("\\{0\\}", val);
 		} catch (Throwable t) {
 		}
 		return tmp;
@@ -105,6 +106,11 @@ public class I18N {
 		setLanguages(info.getSupportedLanguages());
 		setGuiLanguages(info.getSupportedGUILanguages());
 		initBundle(info.getBundle());
+	}
+
+	public static void init(GUISession session) {
+		init(session.getInfo());
+		I18N.locale = session.getUser().getLanguage();
 	}
 
 	public static GUIValuePair[] getGuiLanguages() {

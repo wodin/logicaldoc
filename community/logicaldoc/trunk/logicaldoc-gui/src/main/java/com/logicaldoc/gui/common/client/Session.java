@@ -70,7 +70,7 @@ public class Session {
 	public void init(GUISession session) {
 		try {
 			this.session = session;
-			I18N.init(session.getInfo());
+			I18N.init(session);
 			Menu.init(session.getUser());
 			if (session.isLoggedIn()) {
 				for (SessionObserver listener : sessionObservers) {
