@@ -28,6 +28,8 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 
 /**
  * Shows document's standard properties and read-only data
@@ -43,6 +45,10 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private ValuesManager vm = new ValuesManager();
+
+	private DateItem sourceDate;
+
+	private GUIExtendedAttribute[] currentExtAttributes = null;
 
 	public ExtendedPropertiesPanel(GUIDocument document, ChangedHandler changedHandler) {
 		super(document, changedHandler);
@@ -70,7 +76,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		sourceItem.addChangedHandler(changedHandler);
 		sourceItem.setDisabled(!update);
 
-		DateItem sourceDate = ItemFactory.newDateItem("date", "date");
+		sourceDate = ItemFactory.newDateItem("date", "date");
 		sourceDate.setValue(document.getSourceDate());
 		sourceDate.addChangedHandler(changedHandler);
 		sourceDate.setDisabled(!update);
@@ -101,7 +107,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		templateItem.setDisabled(!update);
 		if (document.getTemplateId() != null)
 			templateItem.setValue(document.getTemplateId().toString());
-		
+
 		templateItem.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
@@ -145,6 +151,8 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		form2 = new DynamicForm();
 		form2.setValuesManager(vm);
 		form2.setTitleOrientation(TitleOrientation.TOP);
+		form2.clearValues();
+		form2.clear();
 		addMember(form2);
 
 		if (templateId == null)
@@ -158,12 +166,11 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 
 			@Override
 			public void onSuccess(GUIExtendedAttribute[] result) {
+				currentExtAttributes = result;
 				List<FormItem> items = new ArrayList<FormItem>();
 				for (GUIExtendedAttribute att : result) {
-					// We cannot use spaces in items name
-					String itemName = "_" + att.getName().replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 					if (att.getType() == GUIExtendedAttribute.TYPE_STRING) {
-						TextItem item = ItemFactory.newTextItem(itemName, att.getName(), null);
+						TextItem item = ItemFactory.newTextItemForExtendedAttribute(att.getName(), null);
 						if (document.getValue(att.getName()) != null)
 							item.setValue((String) document.getValue(att.getName()));
 						item.setRequired(att.isMandatory());
@@ -171,7 +178,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.setDisabled(!update);
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
-						IntegerItem item = ItemFactory.newIntegerItem(itemName, att.getName(), null);
+						IntegerItem item = ItemFactory.newIntegerItemForExtendedAttribute(att.getName(), null);
 						if (document.getValue(att.getName()) != null)
 							item.setValue((Long) document.getValue(att.getName()));
 						item.setRequired(att.isMandatory());
@@ -179,9 +186,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.setDisabled(!update);
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
-						FloatItem item = new FloatItem();
-						item.setName(itemName);
-						item.setTitle(att.getName());
+						FloatItem item = ItemFactory.newFloatItemForExtendedAttribute(att.getName(), null);
 						if (document.getValue(att.getName()) != null)
 							item.setValue((Double) document.getValue(att.getName()));
 						item.setRequired(att.isMandatory());
@@ -189,11 +194,22 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.setDisabled(!update);
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
-						DateItem item = ItemFactory.newDateItem(itemName, att.getName());
+						final DateItem item = ItemFactory.newDateItemForExtendedAttribute(att.getName());
 						if (document.getValue(att.getName()) != null)
 							item.setValue((Date) document.getValue(att.getName()));
 						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
+						item.addKeyPressHandler(new KeyPressHandler() {
+							@Override
+							public void onKeyPress(KeyPressEvent event) {
+								if ("backspace".equals(event.getKeyName().toLowerCase())
+										|| "delete".equals(event.getKeyName().toLowerCase())) {
+									item.clearValue();
+									item.setValue((Date) null);
+									changedHandler.onChanged(null);
+								}
+							}
+						});
 						item.setDisabled(!update);
 						items.add(item);
 					}
@@ -226,7 +242,27 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 					if (name.startsWith("_")) {
 						Object val = values.get(name);
 						String nm = name.substring(1).replaceAll(Constants.BLANK_PLACEHOLDER, " ");
-						document.setValue(nm, val);
+						if (val != null) {
+							document.setValue(nm, val);
+						} else {
+							for (GUIExtendedAttribute extAttr : currentExtAttributes) {
+								if (extAttr.getName().equals(nm)) {
+									if (extAttr.getType() == GUIExtendedAttribute.TYPE_INT) {
+										document.getExtendedAttribute(nm).setIntValue(null);
+										break;
+									} else if (extAttr.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
+										document.getExtendedAttribute(nm).setDoubleValue(null);
+										break;
+									} else if (extAttr.getType() == GUIExtendedAttribute.TYPE_DATE) {
+										document.getExtendedAttribute(nm).setDateValue(null);
+										break;
+									} else {
+										document.setValue(nm, "");
+										break;
+									}
+								}
+							}
+						}
 					}
 				}
 			}
