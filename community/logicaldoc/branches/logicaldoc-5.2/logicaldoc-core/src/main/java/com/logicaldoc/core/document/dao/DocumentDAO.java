@@ -84,6 +84,8 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * @return
 	 */
 	public List<Document> findLastDownloadsByUserId(long userId, int maxResults);
+	
+	public List<Document> findDocumentsByFolder(Long directoryId, List<Long> firstPageDocIds);
 
 	/**
 	 * This method finds all Doc Ids by a tag.
