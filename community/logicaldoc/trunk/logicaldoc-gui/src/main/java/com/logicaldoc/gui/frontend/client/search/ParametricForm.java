@@ -89,7 +89,6 @@ public class ParametricForm extends VLayout {
 		if (Feature.visible(Feature.TEMPLATE)) {
 			SelectItem template = ItemFactory.newTemplateSelector(false, null);
 			template.setMultiple(false);
-			template.setValue(I18N.message("selecttemplate"));
 			template.addChangedHandler(new ChangedHandler() {
 				@Override
 				public void onChanged(ChangedEvent event) {
@@ -206,6 +205,8 @@ public class ParametricForm extends VLayout {
 				}
 
 				criterion.setOperator(fieldOperator.toLowerCase());
+
+				list.add(criterion);
 			}
 		}
 

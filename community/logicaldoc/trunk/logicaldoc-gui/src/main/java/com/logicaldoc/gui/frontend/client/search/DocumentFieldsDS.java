@@ -35,10 +35,10 @@ public class DocumentFieldsDS extends DataSource {
 		id.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN, OperatorId.EQUALS, OperatorId.NOT_EQUAL);
 		id.setEditorType(ItemFactory.newIntegerItem("id", I18N.message("id"), null));
 
-		DataSourceTextField author = new DataSourceTextField("author", I18N.message("author"));
+		DataSourceTextField author = new DataSourceTextField("sourceAuthor", I18N.message("author"));
 		author.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
 				OperatorId.NOT_EQUAL);
-		author.setEditorType(ItemFactory.newTextItem("author", I18N.message("author"), null));
+		author.setEditorType(ItemFactory.newTextItem("sourceAuthor", I18N.message("author"), null));
 
 		DataSourceTextField object = new DataSourceTextField("object", I18N.message("object"));
 		object.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
@@ -102,13 +102,13 @@ public class DocumentFieldsDS extends DataSource {
 		lastModified.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN);
 		lastModified.setEditorType(ItemFactory.newDateItem("lastModified", I18N.message("lastmodified")));
 
-		DataSourceDateTimeField published = new DataSourceDateTimeField("published", I18N.message("publishedon"));
+		DataSourceDateTimeField published = new DataSourceDateTimeField("date", I18N.message("publishedon"));
 		published.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN);
-		published.setEditorType(ItemFactory.newDateItem("published", I18N.message("publishedon")));
+		published.setEditorType(ItemFactory.newDateItem("date", I18N.message("publishedon")));
 
-		DataSourceDateTimeField created = new DataSourceDateTimeField("created", I18N.message("createdon"));
+		DataSourceDateTimeField created = new DataSourceDateTimeField("creation", I18N.message("createdon"));
 		created.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN);
-		created.setEditorType(ItemFactory.newDateItem("created", I18N.message("createdon")));
+		created.setEditorType(ItemFactory.newDateItem("creation", I18N.message("createdon")));
 
 		DataSourceTextField filename = new DataSourceTextField("filename", I18N.message("filename"));
 		filename.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
