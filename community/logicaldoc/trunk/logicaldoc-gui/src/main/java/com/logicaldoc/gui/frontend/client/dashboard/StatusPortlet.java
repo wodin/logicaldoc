@@ -45,7 +45,7 @@ public class StatusPortlet extends Portlet {
 		ListGridField lastModified = new ListGridField("lastModified", I18N.message("date"), 110);
 		lastModified.setAlign(Alignment.CENTER);
 		lastModified.setType(ListGridFieldType.DATE);
-		lastModified.setCellFormatter(new DateCellFormatter());
+		lastModified.setCellFormatter(new DateCellFormatter(false));
 		lastModified.setCanFilter(false);
 		ListGridField title = new ListGridField("title", I18N.message("title"));
 		ListGridField icon = new ListGridField("icon", " ", 24);

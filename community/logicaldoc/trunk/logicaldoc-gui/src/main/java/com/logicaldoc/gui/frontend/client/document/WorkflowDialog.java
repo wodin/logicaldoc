@@ -210,7 +210,7 @@ public class WorkflowDialog extends Window {
 		ListGridField docLastModified = new ListGridField("lastModified", I18N.message("lastmodified"), 150);
 		docLastModified.setAlign(Alignment.CENTER);
 		docLastModified.setType(ListGridFieldType.DATE);
-		docLastModified.setCellFormatter(new DateCellFormatter());
+		docLastModified.setCellFormatter(new DateCellFormatter(false));
 		docLastModified.setCanFilter(false);
 		ListGridField icon = new ListGridField("icon", " ", 24);
 		icon.setType(ListGridFieldType.IMAGE);

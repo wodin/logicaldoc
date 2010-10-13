@@ -283,13 +283,13 @@ public class TasksPanel extends VLayout {
 
 		ListGridField lastStart = new ListGridField("lastStart", I18N.message("laststart"), 110);
 		lastStart.setType(ListGridFieldType.DATE);
-		lastStart.setCellFormatter(new DateCellFormatter());
+		lastStart.setCellFormatter(new DateCellFormatter(false));
 		lastStart.setCanFilter(false);
 		lastStart.setAlign(Alignment.CENTER);
 
 		ListGridField nextStart = new ListGridField("nextStart", I18N.message("nextstart"), 110);
 		nextStart.setType(ListGridFieldType.DATE);
-		nextStart.setCellFormatter(new DateCellFormatter());
+		nextStart.setCellFormatter(new DateCellFormatter(false));
 		nextStart.setCanFilter(false);
 		nextStart.setAlign(Alignment.CENTER);
 

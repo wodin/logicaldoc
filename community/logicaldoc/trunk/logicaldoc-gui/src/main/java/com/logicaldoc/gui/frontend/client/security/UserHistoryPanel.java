@@ -26,7 +26,7 @@ public class UserHistoryPanel extends VLayout {
 		ListGridField date = new ListGridField("date", I18N.message("date"), 110);
 		date.setAlign(Alignment.CENTER);
 		date.setType(ListGridFieldType.DATE);
-		date.setCellFormatter(new DateCellFormatter());
+		date.setCellFormatter(new DateCellFormatter(false));
 		date.setCanFilter(false);
 		ListGridField comment = new ListGridField("comment", I18N.message("comment"));
 		ListGridField sid = new ListGridField("sid", I18N.message("sid"));

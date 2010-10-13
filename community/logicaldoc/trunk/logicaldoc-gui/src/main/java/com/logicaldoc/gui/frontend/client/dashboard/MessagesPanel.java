@@ -113,7 +113,7 @@ public class MessagesPanel extends VLayout {
 		ListGridField sent = new ListGridField("sent", I18N.message("sent"), 110);
 		sent.setAlign(Alignment.CENTER);
 		sent.setType(ListGridFieldType.DATE);
-		sent.setCellFormatter(new DateCellFormatter());
+		sent.setCellFormatter(new DateCellFormatter(false));
 		sent.setCanFilter(false);
 
 		list = new ListGrid() {

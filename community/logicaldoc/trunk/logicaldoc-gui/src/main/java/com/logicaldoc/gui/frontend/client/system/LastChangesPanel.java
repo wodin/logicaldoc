@@ -139,7 +139,7 @@ public class LastChangesPanel extends VLayout {
 
 		ListGridField date = new ListGridField("date", I18N.message("date"), 110);
 		date.setType(ListGridFieldType.DATE);
-		date.setCellFormatter(new DateCellFormatter());
+		date.setCellFormatter(new DateCellFormatter(false));
 		date.setAlign(Alignment.CENTER);
 		date.setCanFilter(false);
 

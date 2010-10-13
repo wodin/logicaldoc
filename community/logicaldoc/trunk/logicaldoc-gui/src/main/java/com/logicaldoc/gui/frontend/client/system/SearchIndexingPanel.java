@@ -158,7 +158,7 @@ public class SearchIndexingPanel extends VLayout {
 		ListGridField lastModified = new ListGridField("lastModified", I18N.message("lastmodified"), 110);
 		lastModified.setAlign(Alignment.CENTER);
 		lastModified.setType(ListGridFieldType.DATE);
-		lastModified.setCellFormatter(new DateCellFormatter());
+		lastModified.setCellFormatter(new DateCellFormatter(false));
 		lastModified.setCanFilter(false);
 
 		ListGridField publisher = new ListGridField("publisher", I18N.message("publisher"), 90);
@@ -168,7 +168,7 @@ public class SearchIndexingPanel extends VLayout {
 		ListGridField published = new ListGridField("published", I18N.message("publishedon"), 110);
 		published.setAlign(Alignment.CENTER);
 		published.setType(ListGridFieldType.DATE);
-		published.setCellFormatter(new DateCellFormatter());
+		published.setCellFormatter(new DateCellFormatter(false));
 		published.setCanFilter(false);
 		
 		ListGridField creator = new ListGridField("creator", I18N.message("creator"), 90);
@@ -178,7 +178,7 @@ public class SearchIndexingPanel extends VLayout {
 		ListGridField created = new ListGridField("created", I18N.message("createdon"), 110);
 		created.setAlign(Alignment.CENTER);
 		created.setType(ListGridFieldType.DATE);
-		created.setCellFormatter(new DateCellFormatter());
+		created.setCellFormatter(new DateCellFormatter(false));
 		created.setCanFilter(false);
 
 		ListGridField customId = new ListGridField("customId", I18N.message("customid"), 110);
