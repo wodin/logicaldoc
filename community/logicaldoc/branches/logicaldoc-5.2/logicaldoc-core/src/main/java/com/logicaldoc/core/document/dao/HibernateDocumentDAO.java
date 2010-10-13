@@ -1,10 +1,8 @@
 package com.logicaldoc.core.document.dao;
 
 import java.io.File;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -44,6 +42,7 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @since 3.0
  */
 public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document> implements DocumentDAO {
+	
 	private HistoryDAO historyDAO;
 
 	private VersionDAO versionDAO;
@@ -290,7 +289,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return coll;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, Integer> findTags(String firstLetter) {
 		Map<String, Integer> map = new HashMap<String, Integer>();
@@ -456,7 +454,14 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public List<Long> findDocIdByFolder(long folderId, Integer max) {
-		return findIdsByWhere("_entity.folder.id = " + Long.toString(folderId), null, max);
+
+		String sql = "select ld_id from ld_document where ld_deleted=0 and ld_folderid = " + folderId;
+		List<Long> docIds  = (List<Long>) queryForList(sql, Long.class);
+
+        if ((max != null) && (docIds.size() > max.intValue()))
+        	return docIds.subList(0, max.intValue());
+			
+		return docIds;
 	}
 
 	@Override
@@ -715,5 +720,23 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	public void setConfig(PropertiesBean config) {
 		this.config = config;
+	}
+
+	
+	@Override
+	public List<Document> findDocumentsByFolder(Long folderId, List<Long> firstPageDocIds) {
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("_entity.folder.id = " + folderId + " and _entity.id in (");
+		boolean first = true;
+		for (Long docid : firstPageDocIds) {
+			if (!first)
+				sb.append(",");
+			sb.append(docid);
+			first = false;
+		}
+		sb.append(")");
+		
+		return findByWhere(sb.toString(), null, null);
 	}
 }
