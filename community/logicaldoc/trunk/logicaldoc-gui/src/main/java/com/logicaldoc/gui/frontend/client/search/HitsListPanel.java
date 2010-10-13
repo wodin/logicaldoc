@@ -69,12 +69,14 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 	private void initialize() {
 		if (list != null) {
-			list.clear();
+			removeMember(list);
 		}
 
 		if (toolStrip != null) {
 			toolStrip.clear();
 		}
+
+		GUISearchOptions options = Search.get().getOptions();
 
 		ListGridField id = new ListGridField("id", 60);
 		id.setHidden(true);
@@ -102,7 +104,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		ListGridField lastModified = new ListGridField("lastModified", I18N.message("lastmodified"), 110);
 		lastModified.setAlign(Alignment.CENTER);
 		lastModified.setType(ListGridFieldType.DATE);
-		lastModified.setCellFormatter(new DateCellFormatter());
+		lastModified.setCellFormatter(new DateCellFormatter(false));
 		lastModified.setCanFilter(false);
 
 		ListGridField publisher = new ListGridField("publisher", I18N.message("publisher"), 90);
@@ -111,18 +113,18 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		ListGridField published = new ListGridField("published", I18N.message("publishedon"), 110);
 		published.setAlign(Alignment.CENTER);
 		published.setType(ListGridFieldType.DATE);
-		published.setCellFormatter(new DateCellFormatter());
+		published.setCellFormatter(new DateCellFormatter(false));
 		published.setCanFilter(false);
 
 		ListGridField creator = new ListGridField("creator", I18N.message("creator"), 90);
 		creator.setAlign(Alignment.CENTER);
 		creator.setCanFilter(false);
 
-		ListGridField created = new ListGridField("created", I18N.message("createdon"), 110);
-		created.setAlign(Alignment.CENTER);
-		created.setType(ListGridFieldType.DATE);
-		created.setCellFormatter(new DateCellFormatter());
-		created.setCanFilter(false);
+		ListGridField creation = new ListGridField("creation", I18N.message("createdon"), 110);
+		creation.setAlign(Alignment.CENTER);
+		creation.setType(ListGridFieldType.DATE);
+		creation.setCellFormatter(new DateCellFormatter(true));
+		creation.setCanFilter(false);
 
 		ListGridField customId = new ListGridField("customId", I18N.message("customid"), 110);
 
@@ -184,41 +186,43 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		ListGridField summary = new ListGridField("summary", I18N.message("summary"));
 		summary.setWidth(300);
 
-		if (list == null) {
-			list = new ListGrid() {
-				@Override
-				protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
-					if (getFieldName(colNum).equals("title")) {
-						if ("stop".equals(record.getAttribute("immutable"))) {
-							return "color: #888888; font-style: italic;";
-						} else {
-							return super.getCellCSSText(record, rowNum, colNum);
-						}
+		list = new ListGrid() {
+			@Override
+			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
+				if (getFieldName(colNum).equals("title")) {
+					if ("stop".equals(record.getAttribute("immutable"))) {
+						return "color: #888888; font-style: italic;";
 					} else {
 						return super.getCellCSSText(record, rowNum, colNum);
 					}
+				} else {
+					return super.getCellCSSText(record, rowNum, colNum);
 				}
-			};
+			}
+		};
 
-			list.setCanExpandRecords(true);
-			list.setExpansionMode(ExpansionMode.DETAIL_FIELD);
-			list.setDetailField("summary");
-			list.setShowRecordComponents(true);
-			list.setShowRecordComponentsByCell(true);
-			list.setCanFreezeFields(true);
-			list.setSelectionType(SelectionStyle.SINGLE);
-			list.setShowRowNumbers(true);
-			list.setWrapCells(true);
-			list.setFields(id, folderId, icon, title, customId, size, score);
-
-			list.addSelectionChangedHandler(new SelectionChangedHandler() {
-				@Override
-				public void onSelectionChanged(SelectionEvent event) {
-					if (list.getSelectedRecord() != null)
-						SearchPanel.get().onSelectedHit(Long.parseLong(list.getSelectedRecord().getAttribute("id")));
-				}
-			});
+		list.setCanExpandRecords(true);
+		list.setExpansionMode(ExpansionMode.DETAIL_FIELD);
+		list.setDetailField("summary");
+		list.setShowRecordComponents(true);
+		list.setShowRecordComponentsByCell(true);
+		list.setCanFreezeFields(true);
+		list.setSelectionType(SelectionStyle.SINGLE);
+		list.setShowRowNumbers(true);
+		list.setWrapCells(true);
+		if (options.getType() != GUISearchOptions.TYPE_PARAMETRIC) {
+			list.setFields(id, folderId, icon, title, customId, size, score, creation);
+		} else {
+			list.setFields(id, folderId, icon, title, customId, size, creation);
 		}
+
+		list.addSelectionChangedHandler(new SelectionChangedHandler() {
+			@Override
+			public void onSelectionChanged(SelectionEvent event) {
+				if (list.getSelectedRecord() != null)
+					SearchPanel.get().onSelectedHit(Long.parseLong(list.getSelectedRecord().getAttribute("id")));
+			}
+		});
 
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
@@ -279,20 +283,23 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 		// Prepare a stack for 2 sections the Title with search time and the
 		// list of hits
-		GUISearchOptions options = Search.get().getOptions();
 		NumberFormat format = NumberFormat.getFormat("#.###");
-		String stats = I18N
-				.message(
-						"resultstat",
-						new String[] { options.getExpression(),
-								format.format((double) Search.get().getTime() / (double) 1000) });
+		String stats = null;
+		if (options.getType() != GUISearchOptions.TYPE_PARAMETRIC) {
+			stats = I18N.message(
+					"resultstat",
+					new String[] { options.getExpression(),
+							format.format((double) Search.get().getTime() / (double) 1000) });
+		} else {
+			stats = "(<b>" + format.format((double) Search.get().getTime() / (double) 1000) + "</b> "
+					+ I18N.message("seconds").toLowerCase() + ")";
+		}
 		infoPanel.setMessage(stats);
 
 		ListGridRecord[] result = Search.get().getLastResult();
 		list.setRecords(result);
 
-		if (!contains(list))
-			addMember(list);
+		addMember(list);
 	}
 
 	/**
