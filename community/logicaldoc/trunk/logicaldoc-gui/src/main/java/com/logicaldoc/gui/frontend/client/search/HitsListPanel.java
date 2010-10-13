@@ -128,33 +128,6 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 		ListGridField customId = new ListGridField("customId", I18N.message("customid"), 110);
 
-		ListGridField immutable = new ListGridField("immutable", " ", 24);
-		immutable.setType(ListGridFieldType.IMAGE);
-		immutable.setCanSort(false);
-		immutable.setAlign(Alignment.CENTER);
-		immutable.setShowDefaultContextMenu(false);
-		immutable.setImageURLPrefix(Util.imagePrefix());
-		immutable.setImageURLSuffix(".png");
-		immutable.setCanFilter(false);
-
-		ListGridField indexed = new ListGridField("indexed", " ", 24);
-		indexed.setType(ListGridFieldType.IMAGE);
-		indexed.setCanSort(false);
-		indexed.setAlign(Alignment.CENTER);
-		indexed.setShowDefaultContextMenu(false);
-		indexed.setImageURLPrefix(Util.imagePrefix());
-		indexed.setImageURLSuffix(".png");
-		indexed.setCanFilter(false);
-
-		ListGridField locked = new ListGridField("locked", " ", 24);
-		locked.setType(ListGridFieldType.IMAGE);
-		locked.setCanSort(false);
-		locked.setAlign(Alignment.CENTER);
-		locked.setShowDefaultContextMenu(false);
-		locked.setImageURLPrefix(Util.imagePrefix());
-		locked.setImageURLSuffix(".png");
-		locked.setCanFilter(false);
-
 		ListGridField filename = new ListGridField("filename", I18N.message("filename"), 200);
 		filename.setHidden(true);
 
