@@ -144,7 +144,6 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 		SelectItem template = ItemFactory.newTemplateSelector(false, null);
 		template.setMultiple(false);
-		template.setValue(I18N.message("selecttemplate"));
 		template.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
