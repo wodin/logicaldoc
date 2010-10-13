@@ -14,12 +14,21 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
  * @since 6.0
  */
 public class DateCellFormatter implements CellFormatter {
+	private String format = "";
+
 	@Override
 	public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
 		if (value == null)
 			return null;
-		DateTimeFormat formatter = DateTimeFormat.getFormat(I18N.message("format_date"));
-		
+		DateTimeFormat formatter = DateTimeFormat.getFormat(format);
+
 		return formatter.format((Date) value);
+	}
+
+	public DateCellFormatter(boolean shortFormat) {
+		if (shortFormat)
+			format = I18N.message("format_dateshort");
+		else
+			format = I18N.message("format_date");
 	}
 }

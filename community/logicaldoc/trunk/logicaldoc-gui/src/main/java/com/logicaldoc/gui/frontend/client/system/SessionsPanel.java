@@ -72,13 +72,13 @@ public class SessionsPanel extends VLayout {
 		ListGridField created = new ListGridField("created", I18N.message("createdon"), 110);
 		created.setAlign(Alignment.CENTER);
 		created.setType(ListGridFieldType.DATE);
-		created.setCellFormatter(new DateCellFormatter());
+		created.setCellFormatter(new DateCellFormatter(false));
 		created.setCanFilter(false);
 
 		ListGridField renew = new ListGridField("renew", I18N.message("lastrenew"), 110);
 		renew.setAlign(Alignment.CENTER);
 		renew.setType(ListGridFieldType.DATE);
-		renew.setCellFormatter(new DateCellFormatter());
+		renew.setCellFormatter(new DateCellFormatter(false));
 		renew.setCanFilter(false);
 
 		ListGridField statusLabel = new ListGridField("statusLabel", I18N.message("status"), 80);
@@ -88,7 +88,7 @@ public class SessionsPanel extends VLayout {
 			@Override
 			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
 				if (getFieldName(colNum).equals("sid")) {
-					if (Session.get().getSid()!=null && Session.get().getSid().equals(record.getAttribute("sid"))) {
+					if (Session.get().getSid() != null && Session.get().getSid().equals(record.getAttribute("sid"))) {
 						return "font-weight: bold;";
 					} else {
 						return super.getCellCSSText(record, rowNum, colNum);
@@ -157,7 +157,8 @@ public class SessionsPanel extends VLayout {
 		});
 
 		if (!"0".equals(list.getSelectedRecord().getAttributeAsString("status"))
-				|| (Session.get().getSid()!=null && Session.get().getSid().equals(list.getSelectedRecord().getAttributeAsString("sid"))))
+				|| (Session.get().getSid() != null && Session.get().getSid()
+						.equals(list.getSelectedRecord().getAttributeAsString("sid"))))
 			killSession.setEnabled(false);
 
 		contextMenu.setItems(killSession);

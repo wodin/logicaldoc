@@ -66,7 +66,7 @@ public class DiscussionsPanel extends DocumentDetailTab {
 		ListGridField lastPost = new ListGridField("lastPost", I18N.message("lastpost"), 110);
 		lastPost.setAlign(Alignment.CENTER);
 		lastPost.setType(ListGridFieldType.DATE);
-		lastPost.setCellFormatter(new DateCellFormatter());
+		lastPost.setCellFormatter(new DateCellFormatter(false));
 		lastPost.setCanFilter(false);
 
 		listGrid = new ListGrid();

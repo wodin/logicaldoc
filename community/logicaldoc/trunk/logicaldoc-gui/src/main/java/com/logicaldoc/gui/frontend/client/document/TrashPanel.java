@@ -73,7 +73,7 @@ public class TrashPanel extends VLayout {
 		ListGridField lastModified = new ListGridField("lastModified", I18N.message("lastmodified"), 110);
 		lastModified.setAlign(Alignment.CENTER);
 		lastModified.setType(ListGridFieldType.DATE);
-		lastModified.setCellFormatter(new DateCellFormatter());
+		lastModified.setCellFormatter(new DateCellFormatter(false));
 		lastModified.setCanFilter(false);
 
 		ListGridField customId = new ListGridField("customId", I18N.message("customid"), 110);
