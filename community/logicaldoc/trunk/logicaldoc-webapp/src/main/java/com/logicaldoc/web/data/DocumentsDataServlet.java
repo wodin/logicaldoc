@@ -106,10 +106,6 @@ public class DocumentsDataServlet extends HttpServlet {
 				if (StringUtils.isNotEmpty(request.getParameter("filename")))
 					filename = request.getParameter("filename");
 
-				Boolean indexable = null;
-				if (StringUtils.isNotEmpty(request.getParameter("indexable")))
-					indexable = new Boolean(request.getParameter("indexable"));
-
 				/*
 				 * Execute the Query
 				 */
@@ -119,14 +115,12 @@ public class DocumentsDataServlet extends HttpServlet {
 								+ "from Document A where A.deleted = 0 ");
 				if (folderId != null)
 					query.append(" and A.folder.id=" + folderId);
-				if (indexable != null)
-					if (indexable == false)
-						query.append(" and not(A.indexed=2) ");
-					else
-						query.append(" and (A.indexed=2) ");
+				if (StringUtils.isNotEmpty(request.getParameter("indexed")))
+					query.append(" and A.indexed=" + request.getParameter("indexed"));
+
 				if (filename != null)
 					query.append(" and lower(A.fileName) like '%" + filename.toLowerCase() + "%' ");
-				query.append("order by A.lastModified desc");
+				query.append(" order by A.lastModified desc");
 
 				List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, max);
 

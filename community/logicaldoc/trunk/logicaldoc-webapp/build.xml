@@ -25,7 +25,7 @@
 		<copy todir="${logicaldoc.webroot}/WEB-INF/classes" verbose="true">
 			<fileset dir="target/classes">
 				<include name="**" />
-				<!--exclude name="**/context.xml"/-->
+				<exclude name="**/gui/**"/>
 			</fileset>
 		</copy>
 	</target>

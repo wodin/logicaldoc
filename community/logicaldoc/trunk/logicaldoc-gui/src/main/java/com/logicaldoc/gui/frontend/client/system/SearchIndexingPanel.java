@@ -170,7 +170,7 @@ public class SearchIndexingPanel extends VLayout {
 		published.setType(ListGridFieldType.DATE);
 		published.setCellFormatter(new DateCellFormatter(false));
 		published.setCanFilter(false);
-		
+
 		ListGridField creator = new ListGridField("creator", I18N.message("creator"), 90);
 		creator.setAlign(Alignment.CENTER);
 		creator.setCanFilter(true);
@@ -250,7 +250,7 @@ public class SearchIndexingPanel extends VLayout {
 		docsList.setSelectionType(SelectionStyle.MULTIPLE);
 		docsList.setShowFilterEditor(true);
 		docsList.setFilterOnKeypress(true);
-		dataSource = new DocumentsDS(null, null, maxValue, false);
+		dataSource = new DocumentsDS(null, null, maxValue, 0);
 		docsList.setDataSource(dataSource);
 		docsList.setFields(locked, immutable, icon, title, size, lastModified, version, publisher, published, creator,
 				created, customId, filename);
