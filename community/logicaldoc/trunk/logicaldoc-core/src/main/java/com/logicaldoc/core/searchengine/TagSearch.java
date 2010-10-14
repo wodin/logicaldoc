@@ -20,8 +20,8 @@ public class TagSearch extends Search {
 	@Override
 	public void internalSearch() throws Exception {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		List<Document> docs = docDao.findByUserIdAndTag(options.getUserId(), options.getExpression(), options
-				.getMaxHits());
+		List<Document> docs = docDao.findByUserIdAndTag(options.getUserId(), options.getExpression(),
+				options.getMaxHits());
 		for (Document doc : docs) {
 			Hit result = new HitImpl();
 			result.setDocId(doc.getId());
@@ -37,5 +37,7 @@ public class TagSearch extends Search {
 			result.setType(doc.getType());
 			hits.add(result);
 		}
+
+		moreHitsPresent = (hits.size() >= options.getMaxHits());
 	}
 }

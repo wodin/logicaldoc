@@ -87,6 +87,9 @@ public abstract class LogicalDOCPlugin extends Plugin {
 		data.store(new FileOutputStream(resolveDataFile()), "");
 	}
 
+	/**
+	 * Retrieves the path of the plugin jar archive
+	 */
 	public String getPluginPath() {
 		String path = getManager().getPathResolver().resolvePath(getDescriptor(), "/").toString();
 		if (path.startsWith("jar:file:"))
@@ -157,7 +160,7 @@ public abstract class LogicalDOCPlugin extends Plugin {
 		System.out.println("Plugin " + getDescriptor().getId() + " requires a restart");
 		PluginRegistry.getInstance().setRestartRequired();
 	}
-	
+
 	/**
 	 * This method will be called once during plug-in deactivation. After this
 	 * method call, no other code from this plug-in can be accessed, unless
