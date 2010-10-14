@@ -66,6 +66,42 @@ public class ParametricForm extends VLayout {
 		filterBuilder = new FilterBuilder();
 		filterBuilder.setDataSource(new DocumentFieldsDS(null));
 		filterBuilder.setTopOperatorAppearance(TopOperatorAppearance.RADIO);
+
+		if (Feature.visible(Feature.TEMPLATE)) {
+			DynamicForm templateForm = new DynamicForm();
+			templateForm.setTitleOrientation(TitleOrientation.TOP);
+			templateForm.setNumCols(1);
+			templateForm.setValuesManager(vm);
+			templateForm.setWidth(300);
+
+			SelectItem template = ItemFactory.newTemplateSelector(false, null);
+			template.setMultiple(false);
+			template.addChangedHandler(new ChangedHandler() {
+				@Override
+				public void onChanged(ChangedEvent event) {
+					if (event.getValue() != null && !"".equals((String) event.getValue())) {
+						service.getTemplate(Session.get().getSid(), new Long((String) event.getValue()),
+								new AsyncCallback<GUITemplate>() {
+									@Override
+									public void onFailure(Throwable caught) {
+										Log.serverError(caught);
+									}
+
+									@Override
+									public void onSuccess(GUITemplate result) {
+										filterBuilder.setDataSource(new DocumentFieldsDS(result));
+									}
+								});
+					} else {
+						filterBuilder.setDataSource(new DocumentFieldsDS(null));
+					}
+				}
+			});
+
+			templateForm.setItems(template);
+			addMember(templateForm);
+		}
+
 		addMember(filterBuilder);
 
 		final DynamicForm form = new DynamicForm();
@@ -86,43 +122,7 @@ public class ParametricForm extends VLayout {
 			}
 		});
 
-		if (Feature.visible(Feature.TEMPLATE)) {
-			SelectItem template = ItemFactory.newTemplateSelector(false, null);
-			template.setMultiple(false);
-			template.addChangedHandler(new ChangedHandler() {
-				@Override
-				public void onChanged(ChangedEvent event) {
-					if (event.getValue() != null && !"".equals((String) event.getValue())) {
-						service.getTemplate(Session.get().getSid(), new Long((String) event.getValue()),
-								new AsyncCallback<GUITemplate>() {
-									@Override
-									public void onFailure(Throwable caught) {
-										Log.serverError(caught);
-									}
-
-									@Override
-									public void onSuccess(GUITemplate result) {
-										removeMember(filterBuilder);
-										filterBuilder = new FilterBuilder();
-										filterBuilder.setDataSource(new DocumentFieldsDS(result));
-										filterBuilder.setTopOperatorAppearance(TopOperatorAppearance.RADIO);
-										addMember(filterBuilder, 0);
-									}
-								});
-					} else {
-						removeMember(filterBuilder);
-						filterBuilder = new FilterBuilder();
-						filterBuilder.setDataSource(new DocumentFieldsDS(null));
-						filterBuilder.setTopOperatorAppearance(TopOperatorAppearance.RADIO);
-						addMember(filterBuilder, 0);
-					}
-				}
-			});
-
-			form.setItems(language, template, folder, subfolders);
-		} else
-			form.setItems(language, folder, subfolders);
-
+		form.setItems(language, folder, subfolders);
 		addMember(form);
 
 		IButton search = new IButton(I18N.message("search"));

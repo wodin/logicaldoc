@@ -18,6 +18,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.DateItem;
@@ -205,6 +206,8 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 									item.clearValue();
 									item.setValue((Date) null);
 									changedHandler.onChanged(null);
+								} else {
+									SC.warn(I18N.message("pressdel"));
 								}
 							}
 						});
