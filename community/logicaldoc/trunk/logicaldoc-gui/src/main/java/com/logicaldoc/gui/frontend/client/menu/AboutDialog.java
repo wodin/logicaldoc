@@ -24,7 +24,7 @@ import com.smartgwt.client.widgets.layout.VStack;
  * @since 6.0
  */
 public class AboutDialog extends Window {
-	
+
 	public AboutDialog() {
 		super();
 
@@ -36,9 +36,9 @@ public class AboutDialog extends Window {
 		});
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		setTitle(I18N.message("about") + " " + Session.get().getInfo().getProductName());
+		setTitle(I18N.message("about") + " " + Session.get().getInfo().getProduct());
 		setWidth(300);
-		setHeight(280);		
+		setHeight(280);
 		setPadding(5);
 		setAutoSize(true);
 		centerInPage();
@@ -47,58 +47,60 @@ public class AboutDialog extends Window {
 		vspacer1.setContents("<div>&nbsp;</div>");
 		vspacer1.setPixelSize(100, 5);
 		vspacer1.setOverflow(Overflow.HIDDEN);
-		
+
 		Img logoImage = ItemFactory.newBrandImg("logo.png");
 		logoImage.setWidth(205);
 		logoImage.setHeight(40);
-		
+
 		Label version = new Label(I18N.message("version") + " " + Session.get().getInfo().getRelease());
 		version.setWrap(false);
 		version.setHeight(20);
 		version.setAlign(Alignment.CENTER);
-		
+
 		Label copyright = new Label("&copy; " + Session.get().getInfo().getYear() + " "
-				+ Session.get().getInfo().getVendor());		
+				+ Session.get().getInfo().getVendor());
 		copyright.setWrap(false);
 		copyright.setHeight(20);
 		copyright.setAlign(Alignment.CENTER);
-		
-		Label trademark = new Label("LogicalDOC e i loghi di LogicalDOC sono marchi registrati di Logical Objects Srl.");				
+
+		Label trademark = new Label(I18N.message("copyrights", new String[] { Session.get().getInfo().getProduct(),
+				Session.get().getInfo().getProduct(), Session.get().getInfo().getVendor() }));
 		trademark.setWidth("90%");
 		trademark.setHeight(40);
 		trademark.setAlign(Alignment.CENTER);
 
 		// Prepare the website link
 		String wsurl = Session.get().getInfo().getUrl();
-		String htmlUrl = "<div style='text-align: center;'><a href='"+ wsurl + "' target='_blank'>" + wsurl + "</a></div>";
-		HTMLPane sitelink = new HTMLPane();		
+		String htmlUrl = "<div style='text-align: center;'><a href='" + wsurl + "' target='_blank'>" + wsurl
+				+ "</a></div>";
+		HTMLPane sitelink = new HTMLPane();
 		sitelink.setContents(htmlUrl);
 		sitelink.setPixelSize(200, 16);
 		sitelink.setAlign(Alignment.CENTER);
 		sitelink.setLayoutAlign(Alignment.CENTER);
-		
+
 		// Prepare the support link
 		String support = Session.get().getInfo().getSupport();
-		String htmlSupp = "<div style='text-align: center;'><a href='mailto:"+ support + "'>" + support + "</a></div>";
+		String htmlSupp = "<div style='text-align: center;'><a href='mailto:" + support + "'>" + support + "</a></div>";
 		HTMLPane maillink = new HTMLPane();
 		maillink.setContents(htmlSupp);
 		maillink.setPixelSize(200, 16);
 		maillink.setAlign(Alignment.CENTER);
 		maillink.setLayoutAlign(Alignment.CENTER);
-		
+
 		HTMLPane vspacer2 = new HTMLPane();
 		vspacer2.setContents("<div>&nbsp;</div>");
 		vspacer2.setPixelSize(100, 10);
 		vspacer2.setOverflow(Overflow.HIDDEN);
-		
+
 		Button button = new Button("OK");
-		button.addClickHandler(new ClickHandler() {			
+		button.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				destroy();
 			}
 		});
-		
+
 		VStack content = new VStack();
 		content.setWidth("100%");
 		content.setMembersMargin(5);

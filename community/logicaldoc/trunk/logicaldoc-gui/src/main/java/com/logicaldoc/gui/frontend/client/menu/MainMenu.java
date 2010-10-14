@@ -151,7 +151,7 @@ public class MainMenu extends ToolStrip {
 	}
 
 	private ToolStripMenuButton getHelpMenu() {
-		
+
 		Menu menu = new Menu();
 		menu.setShowShadow(true);
 		menu.setShadowDepth(3);
@@ -164,7 +164,7 @@ public class MainMenu extends ToolStrip {
 						"location=0,status=0,toolbar=0,menubar=0,width=600,height=400");
 			}
 		});
-		
+
 		MenuItem bugReport = new MenuItem(I18N.message("bug.report"));
 		bugReport.addClickHandler(new ClickHandler() {
 			@Override
@@ -172,7 +172,16 @@ public class MainMenu extends ToolStrip {
 				Window.open(Session.get().getInfo().getBugs(), "_blank",
 						"location=0,status=0,toolbar=0,menubar=0,width=600,height=400");
 			}
-		});		
+		});
+
+		MenuItem forum = new MenuItem(I18N.message("forum"));
+		forum.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				Window.open(Session.get().getInfo().getBugs(), "_blank",
+						"location=0,status=0,toolbar=0,menubar=0,width=600,height=400");
+			}
+		});
 
 		MenuItem about = new MenuItem(I18N.message("about") + " " + Session.get().getInfo().getProductName());
 		about.addClickHandler(new ClickHandler() {
@@ -182,7 +191,7 @@ public class MainMenu extends ToolStrip {
 				dialog.show();
 			}
 		});
-		menu.setItems(documentation, bugReport, about);
+		menu.setItems(documentation, forum, bugReport, about);
 
 		ToolStripMenuButton menuButton = new ToolStripMenuButton(I18N.message("help"), menu);
 		menuButton.setWidth(100);

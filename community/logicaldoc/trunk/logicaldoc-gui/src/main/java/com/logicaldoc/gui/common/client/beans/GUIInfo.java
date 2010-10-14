@@ -14,6 +14,8 @@ public class GUIInfo implements Serializable {
 
 	private String productName = "LogicalDOC Community";
 
+	private String product = "LogicalDOC";
+
 	private String release = "6.0";
 
 	private String year = "2010";
@@ -23,6 +25,8 @@ public class GUIInfo implements Serializable {
 	private String bugs = "http://bugs.logicaldoc.com";
 
 	private String url = "http://www.logicaldoc.com";
+	
+	private String forum = "http://forums.logicaldoc.com";
 
 	private String vendor = "Logical Objects Srl";
 
@@ -52,7 +56,7 @@ public class GUIInfo implements Serializable {
 	private GUIValuePair[] bundle = new GUIValuePair[0];
 
 	private GUIValuePair[] config = new GUIValuePair[0];
-	
+
 	private String[] features = new String[0];
 
 	public String getProductName() {
@@ -221,5 +225,21 @@ public class GUIInfo implements Serializable {
 
 	public void setConfig(GUIValuePair[] config) {
 		this.config = config;
+	}
+
+	public String getProduct() {
+		return product;
+	}
+
+	public void setProduct(String product) {
+		this.product = product;
+	}
+
+	public String getForum() {
+		return forum;
+	}
+
+	public void setForum(String forum) {
+		this.forum = forum;
 	}
 }
