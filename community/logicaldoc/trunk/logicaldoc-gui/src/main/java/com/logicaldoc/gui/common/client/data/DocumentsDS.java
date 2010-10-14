@@ -27,7 +27,7 @@ public class DocumentsDS extends DataSource {
 	 *        used)
 	 * @param indexable The indexable flag
 	 */
-	public DocumentsDS(Long folderId, String fileFilter, Integer max, Boolean indexable) {
+	public DocumentsDS(Long folderId, String fileFilter, Integer max, Integer indexed) {
 		setTitleField("title");
 		setRecordXPath("/list/document");
 		DataSourceTextField title = new DataSourceTextField("title");
@@ -47,7 +47,7 @@ public class DocumentsDS extends DataSource {
 		DataSourceDateTimeField published = new DataSourceDateTimeField("published");
 		DataSourceDateTimeField created = new DataSourceDateTimeField("created");
 		DataSourceImageField immutable = new DataSourceImageField("immutable");
-		DataSourceImageField indexed = new DataSourceImageField("indexed");
+		DataSourceImageField iindexed = new DataSourceImageField("indexed");
 		DataSourceImageField signed = new DataSourceImageField("signed");
 		DataSourceImageField locked = new DataSourceImageField("locked");
 		DataSourceTextField lockUserId = new DataSourceTextField("lockUserId");
@@ -56,11 +56,11 @@ public class DocumentsDS extends DataSource {
 		lockUserId.setHidden(true);
 
 		setFields(id, title, size, publisher, version, docref, lastModified, published, created, creator, customId,
-				icon, immutable, indexed, signed, locked, lockUserId, filename, status);
+				icon, immutable, iindexed, signed, locked, lockUserId, filename, status);
 		setClientOnly(true);
 		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&folderId="
 				+ (folderId != null ? folderId : "") + "&filename=" + (fileFilter != null ? fileFilter : "") + "&max="
-				+ (max != null ? max : MAX) + "&indexable=" + (indexable != null ? Boolean.toString(indexable) : ""));
+				+ (max != null ? max : MAX) + "&indexed=" + (indexed != null ? indexed.toString() : ""));
 	}
 
 	public DocumentsDS(String docIds) {
