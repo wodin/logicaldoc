@@ -183,7 +183,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setShowRowNumbers(true);
 		list.setWrapCells(true);
-		if (options.getType() != GUISearchOptions.TYPE_PARAMETRIC) {
+		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT) {
 			list.setFields(id, folderId, icon, title, customId, size, score, creation);
 		} else {
 			list.setFields(id, folderId, icon, title, customId, size, creation);

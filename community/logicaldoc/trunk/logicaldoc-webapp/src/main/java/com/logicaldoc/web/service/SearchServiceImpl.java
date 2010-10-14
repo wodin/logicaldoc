@@ -232,7 +232,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		return file;
 	}
 
-	private GUISearchOptions toGUIOptions(SearchOptions searchOptions) {
+	protected GUISearchOptions toGUIOptions(SearchOptions searchOptions) {
 		GUISearchOptions op = new GUISearchOptions();
 		op.setType(searchOptions.getType());
 		op.setDescription(searchOptions.getDescription());
@@ -240,6 +240,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		op.setMaxHits(searchOptions.getMaxHits());
 		op.setName(searchOptions.getName());
 		op.setUserId(searchOptions.getUserId());
+		op.setTopOperator(searchOptions.getTopOperator());
 
 		if (searchOptions.getType() == SearchOptions.TYPE_FULLTEXT) {
 			op.setTemplate(((FulltextSearchOptions) searchOptions).getTemplate());

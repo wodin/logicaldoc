@@ -41,6 +41,8 @@ public class AboutDialog extends Window {
 		setHeight(280);
 		setPadding(5);
 		setAutoSize(true);
+		setIsModal(true);
+		setShowModalMask(true);
 		centerInPage();
 
 		HTMLPane vspacer1 = new HTMLPane();

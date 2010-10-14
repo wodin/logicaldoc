@@ -161,7 +161,7 @@ public class MainMenu extends ToolStrip {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				Window.open(Session.get().getInfo().getHelp(), "_blank",
-						"location=0,status=0,toolbar=0,menubar=0,width=600,height=400");
+						"location=no,status=no,toolbar=no,menubar=no,resizable=yes");
 			}
 		});
 
@@ -170,7 +170,7 @@ public class MainMenu extends ToolStrip {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				Window.open(Session.get().getInfo().getBugs(), "_blank",
-						"location=0,status=0,toolbar=0,menubar=0,width=600,height=400");
+						"location=no,status=no,toolbar=no,menubar=no,resizable=yes");
 			}
 		});
 
@@ -179,7 +179,7 @@ public class MainMenu extends ToolStrip {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				Window.open(Session.get().getInfo().getBugs(), "_blank",
-						"location=0,status=0,toolbar=0,menubar=0,width=600,height=400");
+						"location=no,status=no,toolbar=no,menubar=no,resizable=yes");
 			}
 		});
 
