@@ -63,9 +63,6 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		GUIUser guiUser = new GUIUser();
 
 		try {
-			GUIInfo info = new InfoServiceImpl().getInfo(locale);
-			session.setInfo(info);
-
 			if (authenticationChain.authenticate(username, password,
 					getThreadLocalRequest() != null ? getThreadLocalRequest().getRemoteAddr() : "")) {
 
@@ -79,6 +76,9 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				} else {
 					guiUser.setLanguage(locale);
 				}
+				
+				GUIInfo info = new InfoServiceImpl().getInfo(guiUser.getLanguage());
+				session.setInfo(info);
 
 				guiUser.setName(user.getName());
 
