@@ -17,8 +17,8 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.DateItem;
@@ -75,10 +75,26 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		sourceItem.addChangedHandler(changedHandler);
 		sourceItem.setDisabled(!update);
 
-		DateItem sourceDate = ItemFactory.newDateItem("date", "date");
+		final DateItem sourceDate = ItemFactory.newDateItem("date", "date");
 		sourceDate.setValue(document.getSourceDate());
 		sourceDate.addChangedHandler(changedHandler);
 		sourceDate.setDisabled(!update);
+		sourceDate.setUseMask(false);
+		sourceDate.setShowPickerIcon(true);
+		sourceDate.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
+		sourceDate.addKeyPressHandler(new KeyPressHandler() {
+			@Override
+			public void onKeyPress(KeyPressEvent event) {
+				if ("backspace".equals(event.getKeyName().toLowerCase())
+						|| "delete".equals(event.getKeyName().toLowerCase())) {
+					sourceDate.clearValue();
+					sourceDate.setValue((Date) null);
+					changedHandler.onChanged(null);
+				} else {
+					changedHandler.onChanged(null);
+				}
+			}
+		});
 
 		TextItem authorItem = ItemFactory.newTextItem("author", "author", document.getSourceAuthor());
 		authorItem.addChangedHandler(changedHandler);
@@ -207,7 +223,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 									item.setValue((Date) null);
 									changedHandler.onChanged(null);
 								} else {
-									SC.warn(I18N.message("pressdel"));
+									changedHandler.onChanged(null);
 								}
 							}
 						});

@@ -10,8 +10,14 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Cursor;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Side;
+import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.widgets.HTMLPane;
+import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -89,13 +95,36 @@ public class DocumentDetailsPanel extends VLayout {
 				onSave();
 			}
 		});
+		saveButton.setLayoutAlign(VerticalAlignment.CENTER);
+
+		Img closeImage = ItemFactory.newImgIcon("delete.png");
+		closeImage.setHeight("16px");
+		closeImage.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				DocumentsPanel.get().onSelectedDocument(document.getId(), false);
+				savePanel.setVisible(false);
+			}
+		});
+		closeImage.setCursor(Cursor.HAND);
+		closeImage.setTooltip(I18N.message("close"));
+		closeImage.setLayoutAlign(Alignment.RIGHT);
+		closeImage.setLayoutAlign(VerticalAlignment.CENTER);
+
+		HTMLPane spacer = new HTMLPane();
+		spacer.setContents("<div>&nbsp;</div>");
+		spacer.setWidth("60%");
+		spacer.setOverflow(Overflow.HIDDEN);
 
 		TextItem versionComment = ItemFactory.newTextItem("versionComment", "versioncomment", null);
 		versionComment.setWidth(300);
 		saveForm.setItems(versionComment);
 		savePanel.addMember(saveButton);
 		savePanel.addMember(saveForm);
+		savePanel.addMember(spacer);
+		savePanel.addMember(closeImage);
 		savePanel.setHeight(20);
+		savePanel.setMembersMargin(10);
 		savePanel.setVisible(false);
 		savePanel.setStyleName("warn");
 		savePanel.setWidth100();

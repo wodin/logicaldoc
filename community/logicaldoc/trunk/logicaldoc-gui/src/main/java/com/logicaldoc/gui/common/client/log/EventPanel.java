@@ -123,4 +123,8 @@ public class EventPanel extends HLayout {
 	public void setShowClose(boolean showClose) {
 		this.close.setVisible(showClose);
 	}
+
+	public void cleanLabel() {
+		statusLabel.setContents("");
+	}
 }
