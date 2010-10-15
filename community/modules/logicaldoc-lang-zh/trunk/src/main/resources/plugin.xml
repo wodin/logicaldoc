@@ -1,14 +1,9 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
-<plugin id="logicaldoc-lang-zh" version="4.5.1" class="com.logicaldoc.plugin.language.zh.ChinesePlugin">
+<plugin id="logicaldoc-lang-zh" version="6.0.0" class="com.logicaldoc.plugin.language.zh.ChinesePlugin">
 	<requires>
 		<import plugin-id="logicaldoc-core" />
 	</requires>	
-	<runtime>
-		<library id="core" path="classes/" type="code">
-			<export prefix="*" />
-		</library>
-	</runtime>
 	<extension plugin-id="logicaldoc-core" point-id="Language" id="zhLanguage">
 		<parameter id="locale" value="zh" />
 		<parameter id="analyzer" value="org.apache.lucene.analysis.cn.ChineseAnalyzer" />
