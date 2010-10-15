@@ -25,8 +25,8 @@ import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
-import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
+import com.smartgwt.client.widgets.form.fields.events.KeyDownEvent;
+import com.smartgwt.client.widgets.form.fields.events.KeyDownHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -140,9 +140,9 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		tagItem.setPickListWidth(250);
 		tagItem.setOptionDataSource(TagsDS.getInstance());
 		tagItem.setDisabled(!update);
-		tagItem.addKeyPressHandler(new KeyPressHandler() {
+		tagItem.addKeyDownHandler(new KeyDownHandler() {
 			@Override
-			public void onKeyPress(KeyPressEvent event) {
+			public void onKeyDown(KeyDownEvent event) {
 				if (Constants.KEY_ENTER.equals(event.getKeyName().toLowerCase())) {
 					document.addTag(tagItem.getValue().toString().trim());
 					tagItem.clearValue();
