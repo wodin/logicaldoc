@@ -1,14 +1,9 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
-<plugin id="logicaldoc-lang-nl" version="4.5.0" class="com.logicaldoc.plugin.language.nl.DutchPlugin">
+<plugin id="logicaldoc-lang-nl" version="6.0.0" class="com.logicaldoc.plugin.language.nl.DutchPlugin">
 	<requires>
 		<import plugin-id="logicaldoc-core" />
 	</requires>	
-	<runtime>
-		<library id="core" path="classes/" type="code">
-			<export prefix="*" />
-		</library>
-	</runtime>
 	<extension plugin-id="logicaldoc-core" point-id="Language" id="nlLanguage">
 		<parameter id="locale" value="nl" />
 		<parameter id="analyzer" value="-" />
