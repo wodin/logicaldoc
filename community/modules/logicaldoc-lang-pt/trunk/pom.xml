@@ -4,10 +4,10 @@
   <parent>
     <groupId>com.logicaldoc</groupId>
     <artifactId>logicaldoc</artifactId>
-    <version>4.5.0</version>
+    <version>6.0.0</version>
   </parent>
   <artifactId>logicaldoc-lang-pt</artifactId>
-  <version>4.5.0</version>
+  <version>6.0.0</version>
   <name>logicaldoc-lang-pt</name>
   <description>Portuguese language plugin for LogicalDOC</description>
   <packaging>jar</packaging>
@@ -56,28 +56,6 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>package</id>
-            <phase>package</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <tasks>
-                <copy todir="${project.build.directory}/webapp/">
-                  <fileset dir="${basedir}/src/main/webapp">
-                    <exclude name="**/*.java"/>
-                  </fileset>
-                </copy>
-              </tasks>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>2.2-beta-1</version>
         <configuration>
@@ -95,6 +73,41 @@
           </execution>
         </executions>
       </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>package</id>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<delete dir="target/plugin" quiet="true" />
+								<unzip
+									src="target/${project.artifactId}-${project.version}-plugin.zip"
+									dest="target/plugin" />
+								<delete
+									dir="target/${project.artifactId}-${project.version}-plugin.zip" />
+
+								<copy
+									file="target/${project.artifactId}-${project.version}.${project.packaging}"
+									tofile="target/plugin/WEB-INF/lib/${project.artifactId}-${project.version}-plugin.${project.packaging}" />
+								<delete file="target/plugin/pom.xml" />
+
+								<zip
+									destfile="target/${project.artifactId}-${project.version}-plugin2.zip"
+									basedir="target/plugin" />
+								<move
+									file="target/${project.artifactId}-${project.version}-plugin2.zip"
+									tofile="target/${project.artifactId}-${project.version}-plugin.zip" />
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
     </plugins>
   </build>
   
