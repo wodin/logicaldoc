@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin id="logicaldoc-lang-fa" version="5.0.0" class="com.logicaldoc.plugin.language.fa.PersianPlugin">
+	<requires>
+		<import plugin-id="logicaldoc-core" />
+	</requires>	
+	<runtime>
+		<library id="core" path="classes/" type="code">
+			<export prefix="*" />
+		</library>
+	</runtime>
+	<extension plugin-id="logicaldoc-core" point-id="Language" id="faLanguage">
+		<parameter id="locale" value="fa" />
+		<parameter id="analyzer" value="org.apache.lucene.analysis.fa.PersianAnalyzer" />
+	</extension>
+</plugin>
