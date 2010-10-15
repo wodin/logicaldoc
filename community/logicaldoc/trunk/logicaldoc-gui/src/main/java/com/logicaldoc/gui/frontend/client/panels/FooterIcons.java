@@ -6,6 +6,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.beans.UserObserver;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.clipboard.ClipboardObserver;
@@ -46,6 +47,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 			}
 		});
 		clipboardImage.setCursor(Cursor.HAND);
+		clipboardImage.setTooltip(I18N.message("clipboard"));
 
 		Img lockedImage = ItemFactory.newImgIcon("page_white_lock.png");
 		lockedImage.setHeight("16px");
@@ -56,6 +58,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 			}
 		});
 		lockedImage.setCursor(Cursor.HAND);
+		lockedImage.setTooltip(I18N.message("event.lockeddocs"));
 
 		Img checkoutImage = ItemFactory.newImgIcon("page_edit.png");
 		checkoutImage.setHeight("16px");
@@ -66,6 +69,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 			}
 		});
 		checkoutImage.setCursor(Cursor.HAND);
+		checkoutImage.setTooltip(I18N.message("event.checkedoutdocs"));
 
 		Img messageImage = ItemFactory.newImgIcon("mail.png");
 		messageImage.setHeight("16px");
@@ -76,6 +80,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 			}
 		});
 		messageImage.setCursor(Cursor.HAND);
+		messageImage.setTooltip(I18N.message("messages"));
 
 		Img workflowImage = ItemFactory.newImgIcon("cog.png");
 		workflowImage.setHeight("16px");
@@ -86,6 +91,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 			}
 		});
 		workflowImage.setCursor(Cursor.HAND);
+		workflowImage.setTooltip(I18N.message("workflowtasksassigned"));
 
 		clipboardSize.setWidth("20px");
 		lockedCount.setWidth("20px");
