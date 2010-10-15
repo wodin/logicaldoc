@@ -3,6 +3,7 @@ package com.logicaldoc.web.service;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,6 +12,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
@@ -45,6 +47,17 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			searchEngine.setExcludePatters(conf.getPropertyWithSubstitutions("index.excludes"));
 			searchEngine.setIncludePatters(conf.getPropertyWithSubstitutions("index.includes"));
 
+			//Populate the list of supported languages
+			searchEngine.setLanguages("");
+			LanguageManager lm=LanguageManager.getInstance();
+			List<String> langs = lm.getLanguagesAsString();
+			for (String lang : langs) {
+				searchEngine.setLanguages(searchEngine.getLanguages()+","+lang);
+			}
+			if(searchEngine.getLanguages().startsWith(","))
+				searchEngine.setLanguages(searchEngine.getLanguages().substring(1));
+			
+			
 			return searchEngine;
 		} catch (Exception t) {
 			log.error(t.getMessage(), t);
