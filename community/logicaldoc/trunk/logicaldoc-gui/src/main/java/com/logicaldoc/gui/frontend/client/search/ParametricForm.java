@@ -181,6 +181,8 @@ public class ParametricForm extends VLayout {
 				Map criteriaFieldsMap = JSOHelper.convertToMap((JavaScriptObject) criteriaObjects[i]);
 				String fieldName = (String) criteriaFieldsMap.get("fieldName");
 				fieldName = fieldName.replaceAll(Constants.BLANK_PLACEHOLDER, " ");
+				if (fieldName.startsWith("_"))
+					fieldName = fieldName.substring(1);
 				String fieldOperator = (String) criteriaFieldsMap.get("operator");
 				Object fieldValue = (Object) criteriaFieldsMap.get("value");
 
