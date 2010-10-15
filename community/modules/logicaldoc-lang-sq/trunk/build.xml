@@ -1,25 +1,19 @@
-<?xml version="1.0"?>
-<project name="project" default="cleanenv" basedir="." xmlns:artifact="urn:maven-artifact-ant">
-  <target name="initTaskDefs">
-    <property environment="env" />
-    <path id="maven.classpath">
-      <pathelement location="${env.ANT_HOME}/lib/maven-ant-tasks.jar" />
-    </path>
-    <typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant">
-      <classpath refid="maven.classpath" />
-    </typedef>
-  </target>
-  
-  <target name="cleanenv" description="Clean all Eclipse/Subversion environment files and directories">
-    <delete includeemptydirs="true" failonerror="false">
-      <fileset dir="${basedir}" defaultexcludes="no">
-        <include name="**/.svn/**" />
-        <include name="**/.settings/**" />
-        <include name="**/.classpath" />
-        <include name="**/.project" />
-        <include name="**/.tomcatplugin" />
-      </fileset>
-    </delete>
-  </target>
+<project name="logicaldoc-lang-sq" default="deploy" basedir="." xmlns:artifact="urn:maven-artifact-ant">
+	<property file="${user.home}/logicaldoc-dev.properties" />
+	<import file="${logicaldoc.devroot}/build/ant/build.xml" />
 
+	<target name="deploy" depends="init-all" description="Updates a deployed webapp">
+		<property environment="env" />
+		<property id="properties" file="build.properties" />
+
+		<echo message="Deploying ${pom.artifactId}" />
+
+		<exec executable="mvn.bat" resolveexecutable="true" searchpath="true">
+			<arg line="-o -Dmaven.test.skip=true install" />
+		</exec>
+
+		<unzip src="target/${pom.artifactId}-${pom.version}-plugin.zip" dest="${logicaldoc.webroot}" />
+
+		<echo message="${pom.artifactId} is deployed" />
+	</target>
 </project>
