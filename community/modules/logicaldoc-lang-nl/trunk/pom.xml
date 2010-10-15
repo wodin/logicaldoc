@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.logicaldoc</groupId>
 		<artifactId>logicaldoc</artifactId>
-		<version>4.5.0</version>
+		<version>6.0.0</version>
 	</parent>
 	<artifactId>logicaldoc-lang-nl</artifactId>
-	<version>4.5.0</version>
+	<version>6.0.0</version>
 	<name>logicaldoc-lang-nl</name>
 	<description>Dutch language plugin for LogicalDOC</description>
 	<packaging>jar</packaging>
@@ -28,7 +27,7 @@
 		<contributor>
 			<name>Leon Jamieson</name>
 			<roles>
-			  <role>Translator (I18N/L10N)</role>
+				<role>Translator (I18N/L10N)</role>
 			</roles>
 		</contributor>
 	</contributors>
@@ -56,44 +55,20 @@
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-util</artifactId>
-			<version>4.5.0</version>
+			<version>6.0.0</version>
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-core</artifactId>
-			<version>4.5.0</version>
+			<version>6.0.0</version>
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>package</id>
-						<phase>package</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<tasks>
-								<copy
-									todir="${project.build.directory}/webapp/">
-									<fileset
-										dir="${basedir}/src/main/webapp">
-										<exclude name="**/*.java" />
-									</fileset>
-								</copy>
-							</tasks>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.2-beta-1</version>
@@ -111,6 +86,41 @@
 						<goals>
 							<goal>attached</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>package</id>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<delete dir="target/plugin" quiet="true" />
+								<unzip
+									src="target/${project.artifactId}-${project.version}-plugin.zip"
+									dest="target/plugin" />
+								<delete
+									dir="target/${project.artifactId}-${project.version}-plugin.zip" />
+
+								<copy
+									file="target/${project.artifactId}-${project.version}.${project.packaging}"
+									tofile="target/plugin/WEB-INF/lib/${project.artifactId}-${project.version}-plugin.${project.packaging}" />
+								<delete file="target/plugin/pom.xml" />
+
+								<zip
+									destfile="target/${project.artifactId}-${project.version}-plugin2.zip"
+									basedir="target/plugin" />
+								<move
+									file="target/${project.artifactId}-${project.version}-plugin2.zip"
+									tofile="target/${project.artifactId}-${project.version}-plugin.zip" />
+							</tasks>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
