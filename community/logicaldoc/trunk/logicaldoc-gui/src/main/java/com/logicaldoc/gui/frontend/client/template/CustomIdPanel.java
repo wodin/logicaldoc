@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.settings;
+package com.logicaldoc.gui.frontend.client.template;
 
 import java.util.ArrayList;
 import java.util.List;
