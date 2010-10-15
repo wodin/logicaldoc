@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.logicaldoc</groupId>
-    <artifactId>logicaldoc</artifactId>
-    <version>4.5.0</version>
-  </parent>
-  <artifactId>logicaldoc-lang-el</artifactId>
-  <version>4.5.1</version>
-  <name>logicaldoc-lang-el</name>
-  <description>Greek language plugin for LogicalDOC</description>
-  <packaging>jar</packaging>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.logicaldoc</groupId>
+		<artifactId>logicaldoc</artifactId>
+		<version>6.0.0</version>
+	</parent>
+	<artifactId>logicaldoc-lang-el</artifactId>
+	<version>6.0.0</version>
+	<name>logicaldoc-lang-el</name>
+	<description>Greek language plugin for LogicalDOC</description>
+	<packaging>jar</packaging>
 	<scm>
-    <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/modules/logicaldoc-lang-el/trunk</connection>
-    <developerConnection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/modules/logicaldoc-lang-el/trunk</developerConnection>
-    <url>http://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/modules/logicaldoc-lang-el/trunk</url>
-  </scm>
+		<connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/modules/logicaldoc-lang-el/trunk</connection>
+		<developerConnection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/modules/logicaldoc-lang-el/trunk</developerConnection>
+		<url>http://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/modules/logicaldoc-lang-el/trunk</url>
+	</scm>
 	<dependencies>
 		<dependency>
 			<groupId>net.sf.jpf</groupId>
@@ -47,7 +49,7 @@
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-core</artifactId>
-			<version>4.5.0</version>
+			<version>6.0.0</version>
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
@@ -59,9 +61,7 @@
 				<version>2.2-beta-1</version>
 				<configuration>
 					<descriptors>
-						<descriptor>
-							src/main/assembly/assemblyplugin.xml
-						</descriptor>
+						<descriptor>src/main/assembly/assemblyplugin.xml</descriptor>
 					</descriptors>
 				</configuration>
 				<executions>
@@ -74,15 +74,50 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>package</id>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<delete dir="target/plugin" quiet="true" />
+								<unzip
+									src="target/${project.artifactId}-${project.version}-plugin.zip"
+									dest="target/plugin" />
+								<delete
+									dir="target/${project.artifactId}-${project.version}-plugin.zip" />
+
+								<copy
+									file="target/${project.artifactId}-${project.version}.${project.packaging}"
+									tofile="target/plugin/WEB-INF/lib/${project.artifactId}-${project.version}-plugin.${project.packaging}" />
+								<delete file="target/plugin/pom.xml" />
+
+								<zip
+									destfile="target/${project.artifactId}-${project.version}-plugin2.zip"
+									basedir="target/plugin" />
+								<move
+									file="target/${project.artifactId}-${project.version}-plugin2.zip"
+									tofile="target/${project.artifactId}-${project.version}-plugin.zip" />
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
-  
-  <repositories>
-    <repository>
-      <id>logicaldoc</id>
-      <name>LogicalDOC Repository</name>
-      <url>http://logicaldoc.sourceforge.net/maven</url>
-    </repository>
-  </repositories>
-  
+
+	<repositories>
+		<repository>
+			<id>logicaldoc</id>
+			<name>LogicalDOC Repository</name>
+			<url>http://logicaldoc.sourceforge.net/maven</url>
+		</repository>
+	</repositories>
+
 </project>
