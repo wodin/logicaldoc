@@ -38,8 +38,6 @@ public class IconSelector {
 		else if (ext.equals("zip") || ext.equals("rar") || ext.equals("gz") || ext.equals("tar") || ext.equals("jar")
 				|| ext.equals("7z"))
 			icon = "zip.png";
-		else if (ext.equals("dwg"))
-			icon = "dwg.gif";
 		else if (ext.equals("p7m") || ext.equals("m7m"))
 			icon = "p7m.png";
 		else

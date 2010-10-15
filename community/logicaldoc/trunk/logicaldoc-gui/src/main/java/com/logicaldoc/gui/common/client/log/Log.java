@@ -18,7 +18,7 @@ public class Log {
 	}
 
 	public static void serverError(Throwable caught) {
-		serverError(null, caught);
+		serverError(caught.getMessage(), caught);
 	}
 
 	/**
@@ -28,19 +28,15 @@ public class Log {
 	 * @param caught The caught exception (if any)
 	 */
 	public static void serverError(String message, Throwable caught) {
-		String m = message;
-		if (message == null || "".equals(message))
-			m = caught.getMessage() != null ? caught.getMessage() : "";
-		EventPanel.get().error(I18N.message("servererror"), m);
-		GWT.log("Server error: " + m, caught);
+		EventPanel.get().error(I18N.message("servererror"), message);
+		GWT.log("Server error: " + message, caught);
 
 		if (caught instanceof InvalidSessionException) {
 			// Redirect to the module's login page
 			Session.get().close();
 			String base = GWT.getHostPageBaseURL();
 			Util.redirect(base
-					+ (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/" + GWT.getModuleName()
-							+ ".jsp"));
+					+ (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/" + GWT.getModuleName() + ".jsp"));
 		}
 	}
 

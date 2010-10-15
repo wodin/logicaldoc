@@ -50,7 +50,7 @@ public class ParsersDataServlet extends HttpServlet {
 				writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(ext.toLowerCase()))
 						+ "</icon>");
 				writer.print("<extension>" + ext.toLowerCase() + "</extension>");
-				writer.print("<name>" + ParserFactory.getParsers().get(ext).getName() + "</name>");
+				writer.print("<name>" + ParserFactory.getParsers().get(ext).getSimpleName() + "</name>");
 				writer.print("</parser>");
 			}
 			writer.write("</list>");
