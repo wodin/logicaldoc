@@ -34,18 +34,22 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	@Override
 	public GUISearchEngine getInfo(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
+		try {
+			DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			GUISearchEngine searchEngine = new GUISearchEngine();
+			searchEngine.setEntries((int) dao.count(true));
+			Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
+			searchEngine.setLocked(indexer.isLocked());
 
-		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		GUISearchEngine searchEngine = new GUISearchEngine();
-		searchEngine.setEntries((int) dao.count(true));
-		Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
-		searchEngine.setLocked(indexer.isLocked());
+			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			searchEngine.setExcludePatters(conf.getPropertyWithSubstitutions("index.excludes"));
+			searchEngine.setIncludePatters(conf.getPropertyWithSubstitutions("index.includes"));
 
-		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		searchEngine.setExcludePatters(conf.getPropertyWithSubstitutions("index.excludes"));
-		searchEngine.setIncludePatters(conf.getPropertyWithSubstitutions("index.includes"));
-
-		return searchEngine;
+			return searchEngine;
+		} catch (Exception t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
 	}
 
 	@Override
@@ -100,12 +104,10 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	@Override
 	public void save(String sid, GUISearchEngine searchEngine) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
-
-		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		try {
+			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			conf.setProperty("index.excludes", searchEngine.getExcludePatters());
 			conf.setProperty("index.includes", searchEngine.getIncludePatters());
-
 			conf.write();
 		} catch (IOException t) {
 			log.error(t.getMessage(), t);
