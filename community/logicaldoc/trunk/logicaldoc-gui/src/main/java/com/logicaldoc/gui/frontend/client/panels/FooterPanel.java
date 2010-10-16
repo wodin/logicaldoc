@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.panels;
 
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.EventPanel;
 import com.smartgwt.client.widgets.layout.HLayout;
 

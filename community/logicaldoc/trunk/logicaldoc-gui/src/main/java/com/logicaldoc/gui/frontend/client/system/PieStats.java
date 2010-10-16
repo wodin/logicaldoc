@@ -29,9 +29,10 @@ public class PieStats extends HLayout {
 	public PieStats(GUIParameter[][] parameters) {
 		super();
 		setWidth100();
+		setHeight(350);
 
-		setShowResizeBar(true);
-
+		setAlign(VerticalAlignment.TOP);
+		
 		VLayout repository = new VLayout();
 		repository.addMember(new StatisticWidget(I18N.message("repository"), parameters[0]));
 		repository.addMember(prepareLegend(parameters[0], STATS_REPOSITORY));
@@ -112,7 +113,6 @@ public class PieStats extends HLayout {
 		}
 
 		systemForm.setItems(items);
-
 		return systemForm;
 	}
 }

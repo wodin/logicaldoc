@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.common.client.log;
 
 import com.logicaldoc.gui.common.client.beans.GUIEvent;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Img;
@@ -33,6 +34,7 @@ public class EventPanel extends HLayout {
 		setMembersMargin(2);
 
 		log = ItemFactory.newImgIcon("logging.png");
+		log.setTooltip(I18N.message("lastevents"));
 		log.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
