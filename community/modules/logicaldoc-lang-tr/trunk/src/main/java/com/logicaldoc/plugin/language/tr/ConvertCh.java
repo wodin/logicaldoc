@@ -1,12 +1,10 @@
 package com.logicaldoc.plugin.language.tr;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.io.IOUtils;
 
@@ -14,11 +12,9 @@ public class ConvertCh {
 
 	/**
 	 * @param args
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub
-
 		FileInputStream fis = new FileInputStream("c:/tmp/Russian/stop.txt");
 		InputStreamReader isr = new InputStreamReader(fis, "KOI8-R");
 
@@ -31,7 +27,7 @@ public class ConvertCh {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		osw.flush();
 		osw.close();
 		fos.close();
