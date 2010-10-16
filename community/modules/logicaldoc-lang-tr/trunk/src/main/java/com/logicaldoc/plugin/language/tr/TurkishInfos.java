@@ -11,23 +11,6 @@ public class TurkishInfos {
 	 */
 	public static void main(String[] args) {
 		
-//        String[] ddd = Locale.getISOCountries();
-//        for (int i = 0; i < ddd.length; i++) {
-//			System.out.println(ddd[i]);
-//		}
-//        
-//        String[] eee = Locale.getISOLanguages();
-//        for (int i = 0; i < eee.length; i++) {
-//			System.out.println(eee[i]);
-//		}
-        
-//        System.out.println("Installed locales:");
-//        Locale[] locs = Locale.getAvailableLocales();
-//        for (int i = 0; i < locs.length; i++) {
-//        	System.out.println(locs[i]);
-//		}
-//        System.out.println("######");
-		
 		// Print ifnromation about language
         Locale tr = new Locale("tr", "TR");
         System.out.println(tr);
