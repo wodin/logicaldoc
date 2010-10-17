@@ -4,16 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
@@ -26,6 +24,8 @@ import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.KeyDownEvent;
+import com.smartgwt.client.widgets.form.fields.events.KeyDownHandler;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -191,6 +191,27 @@ public class UserPropertiesPanel extends HLayout {
 		ListGridField description = new ListGridField("description");
 		group.setPickListFields(n, description);
 		group.setOptionDataSource(GroupsDS.get(user.getId()));
+		group.addKeyDownHandler(new KeyDownHandler() {
+			@Override
+			public void onKeyDown(KeyDownEvent event) {
+				if (Constants.KEY_ENTER.equals(event.getKeyName().toLowerCase())) {
+					ListGridRecord selectedRecord = group.getSelectedRecord();
+					if (selectedRecord == null)
+						return;
+
+					if (!user.isMemberOf(selectedRecord.getAttributeAsString("name"))) {
+						GUIGroup group = new GUIGroup();
+						group.setId(Long.parseLong(selectedRecord.getAttributeAsString("id")));
+						group.setName(selectedRecord.getAttributeAsString("name"));
+						group.setDescription(selectedRecord.getAttributeAsString("description"));
+						user.addGroup(group);
+						refreshAddingGroup();
+						changedHandler.onChanged(null);
+					}
+				}
+			}
+		});
+
 		items.add(group);
 
 		FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
@@ -218,29 +239,6 @@ public class UserPropertiesPanel extends HLayout {
 
 		form2.setItems(items.toArray(new FormItem[0]));
 		addingGroup.addMember(form2);
-
-		Button addGroup = new Button(I18N.message("addgroup"));
-		addGroup.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				ListGridRecord selectedRecord = group.getSelectedRecord();
-				if (selectedRecord == null)
-					return;
-
-				if (!user.isMemberOf(selectedRecord.getAttributeAsString("name"))) {
-					GUIGroup group = new GUIGroup();
-					group.setId(Long.parseLong(selectedRecord.getAttributeAsString("id")));
-					group.setName(selectedRecord.getAttributeAsString("name"));
-					group.setDescription(selectedRecord.getAttributeAsString("description"));
-					user.addGroup(group);
-					refreshAddingGroup();
-					changedHandler.onChanged(null);
-				}
-			}
-		});
-		addingGroup.addMember(addGroup, 2);
-
 		addMember(addingGroup);
 	}
 
@@ -250,8 +248,8 @@ public class UserPropertiesPanel extends HLayout {
 		vm.validate();
 		if (!vm.hasErrors()) {
 			user.setUserName((String) values.get("username"));
-			user.setExpired((Boolean) values.get("expires"));
-			user.setEnabled((Boolean) values.get("eenabled"));
+			user.setPasswordExpires(new Boolean(values.get("expires").toString()));
+			user.setEnabled(new Boolean(values.get("eenabled").toString()));
 			user.setName((String) values.get("name"));
 			user.setFirstName((String) values.get("firstname"));
 			user.setAddress((String) values.get("address"));

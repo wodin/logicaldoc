@@ -76,7 +76,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				} else {
 					guiUser.setLanguage(locale);
 				}
-				
+
 				GUIInfo info = new InfoServiceImpl().getInfo(guiUser.getLanguage());
 				session.setInfo(info);
 
@@ -128,6 +128,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				log.warn("User " + username + " is not valid");
 			}
 
+			if (guiUser != null) {
+				ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+				guiUser.setPasswordMinLenght(Integer.parseInt(config.getProperty("password.size")));
+			}
 			return session;
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
@@ -276,6 +280,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			}
 			usr.setGroups(grps);
 
+			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			usr.setPasswordMinLenght(Integer.parseInt(config.getProperty("password.size")));
 			return usr;
 		}
 

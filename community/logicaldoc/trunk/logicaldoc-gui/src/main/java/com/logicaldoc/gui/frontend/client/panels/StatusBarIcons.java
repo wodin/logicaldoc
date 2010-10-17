@@ -23,8 +23,8 @@ import com.smartgwt.client.widgets.layout.HLayout;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class FooterIcons extends HLayout implements ClipboardObserver, UserObserver {
-	private static FooterIcons instance;
+public class StatusBarIcons extends HLayout implements ClipboardObserver, UserObserver {
+	private static StatusBarIcons instance;
 
 	private HTML clipboardSize = new HTML("0");
 
@@ -36,7 +36,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 
 	private HTML workflowsCount = new HTML("0");
 
-	private FooterIcons() {
+	private StatusBarIcons() {
 		Img clipboardImage = ItemFactory.newImgIcon("page_white_paste.png");
 		clipboardImage.setHeight("16px");
 		clipboardImage.addClickHandler(new ClickHandler() {
@@ -121,9 +121,9 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 		onUserChanged(Session.get().getUser(), null);
 	}
 
-	public static FooterIcons get() {
+	public static StatusBarIcons get() {
 		if (instance == null)
-			instance = new FooterIcons();
+			instance = new StatusBarIcons();
 		return instance;
 	}
 
