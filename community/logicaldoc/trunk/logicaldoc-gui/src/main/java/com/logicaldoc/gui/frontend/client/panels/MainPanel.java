@@ -77,7 +77,7 @@ public class MainPanel extends VLayout implements SessionObserver {
 		addMember(topPanel);
 		addMember(new MainMenu());
 		addMember(tabSet);
-		addMember(new FooterPanel());
+		addMember(new StatusBar());
 
 		Window.addResizeHandler(new ResizeHandler() {
 			public void onResize(ResizeEvent event) {

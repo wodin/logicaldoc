@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.frontend.client.panels;
 
-import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.EventPanel;
 import com.smartgwt.client.widgets.layout.HLayout;
 
@@ -10,9 +9,9 @@ import com.smartgwt.client.widgets.layout.HLayout;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class FooterPanel extends HLayout {
+public class StatusBar extends HLayout {
 
-	public FooterPanel() {
+	public StatusBar() {
 		setHeight(20);
 		setWidth100();
 		setMembersMargin(2);
@@ -22,6 +21,6 @@ public class FooterPanel extends HLayout {
 		events.setWidth100();
 
 		addMember(events);
-		addMember(FooterIcons.get());
+		addMember(StatusBarIcons.get());
 	}
 }
