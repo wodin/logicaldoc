@@ -10,14 +10,19 @@
 		<echo message="Deploying ${pom.artifactId}" />
 
 		<exec executable="mvn.bat" resolveexecutable="true" searchpath="true">
-		  <arg line="-o -Dmaven.test.skip=true install"/>
+			<arg line="-o -Dmaven.test.skip=true install" />
 		</exec>
-		
+
 		<copy file="target/${pom.artifactId}-${pom.version}.jar" todir="${logicaldoc.webroot}/WEB-INF/lib" />
 
 		<echo message="${pom.artifactId} is deployed" />
 	</target>
 
+	<!--
+	 In order to execute this build please make sure to have installed Translate Toolkit
+     (http://sourceforge.net/projects/translate/files/Translate%20Toolkit/)
+    -->
+	
 	<target name="purify" depends="init-all">
 		<echo>Purify all bundles</echo>
 		<java classname="com.logicaldoc.i18n.PurifyRB">
@@ -28,21 +33,13 @@
 	</target>
 
 	<target name="prop2po" depends="init-all">
-		<!--copy todir="src/main/resources/i18n" flatten="true">
-			<fileset dir="${logicaldoc.devroot}">
-				<exclude name="**/logicaldoc-i18n/**" />
-				<include name="**/src/main/**/application*.properties" />
-				<include name="**/src/main/**/*Message*.properties" />
-			</fileset>
-		</copy-->
 		<delete file="target/po" failonerror="no" />
 
 		<echo>Produce the master pots</echo>
 		<for list="${bundles}" param="bundle">
 			<sequential>
 				<mkdir dir="target/po/@{bundle}" />
-				<exec executable="python" dir="./translate-toolkit/translate/convert/" description="Generate the PO template">
-					<arg value="prop2po.py" />
+				<exec executable="prop2po" searchpath="true" resolveexecutable="true" description="Generate the PO template">
 					<arg value="--duplicates=merge" />
 					<arg value="-P" />
 					<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}i18n${file.separator}@{bundle}.properties" />
@@ -56,8 +53,7 @@
 			<sequential>
 				<for list="${locales}" param="locale">
 					<sequential>
-						<exec executable="python" dir="./translate-toolkit/translate/convert/" description="Generate translated POs">
-							<arg value="prop2po.py" />
+						<exec executable="prop2po" searchpath="true" resolveexecutable="true" description="Generate translated POs">
 							<arg value="--duplicates=merge" />
 							<arg value="-t" />
 							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}i18n${file.separator}@{bundle}.properties" />
@@ -86,8 +82,7 @@
 				<for list="${locales}" param="locale">
 					<sequential>
 						<mkdir dir="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}properties" />
-						<exec executable="python" dir="./translate-toolkit/translate/convert/">
-							<arg value="po2prop.py" />
+						<exec executable="po2prop" searchpath="true" resolveexecutable="true">
 							<arg value="-t" />
 							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}i18n${file.separator}@{bundle}.properties" />
 							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}po${file.separator}@{bundle}${file.separator}@{bundle}-@{locale}.po" />
