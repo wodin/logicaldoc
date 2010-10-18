@@ -13,6 +13,7 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
@@ -20,6 +21,7 @@ import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.task.Task;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 
 /**
@@ -44,7 +46,14 @@ public class StatsCollector extends Task {
 	private GenericDAO genericDAO;
 
 	private ContextProperties config;
+	
+	private static String userno = "community";
 
+	private static String product = "LogicalDOC";
+
+	private static String productName = "LogicalDOC Community";
+
+	
 	public StatsCollector() {
 		super(NAME);
 		log = LogFactory.getLog(StatsCollector.class);
@@ -58,9 +67,12 @@ public class StatsCollector extends Task {
 		 * Collect identification data
 		 */
 		String id = config.getProperty("id");
-		String userno = config.getProperty("userno");
 		String release = config.getProperty("product.release");
 		log.debug("Collected identification data");
+
+		EMailSender sender = (EMailSender) Context.getInstance().getInstance().getBean(EMailSender.class);
+		String email = sender.getSender();
+		log.debug("Collected contact data");
 
 		/*
 		 * Collect environment data
@@ -186,7 +198,10 @@ public class StatsCollector extends Task {
 			post.setParameter("id", id != null ? id : "");
 			post.setParameter("userno", userno != null ? userno : "");
 			post.setParameter("release", release != null ? release : "");
-
+			post.setParameter("email", email != null ? email : "");
+			post.setParameter("product", product != null ? product : "");
+			post.setParameter("productName", productName != null ? productName : "");
+			
 			post.setParameter("osname", osname != null ? osname : "");
 			post.setParameter("osversion", osversion != null ? osversion : "");
 			post.setParameter("osarch", osarch != null ? osarch : "");
@@ -200,7 +215,7 @@ public class StatsCollector extends Task {
 
 			post.setParameter("users", Integer.toString(users));
 			post.setParameter("groups", Integer.toString(groups));
-			
+
 			post.setParameter("docdir", Long.toString(docdir));
 			post.setParameter("userdir", Long.toString(userdir));
 			post.setParameter("indexdir", Long.toString(indexdir));
@@ -326,5 +341,17 @@ public class StatsCollector extends Task {
 
 	public void setGroupDAO(GroupDAO groupDAO) {
 		this.groupDAO = groupDAO;
+	}
+
+	public static void setUserno(String userno) {
+		StatsCollector.userno = userno;
+	}
+
+	public static void setProduct(String product) {
+		StatsCollector.product = product;
+	}
+
+	public static void setProductName(String productName) {
+		StatsCollector.productName = productName;
 	}
 }
