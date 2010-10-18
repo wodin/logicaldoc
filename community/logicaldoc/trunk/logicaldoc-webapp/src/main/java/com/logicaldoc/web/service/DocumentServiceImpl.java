@@ -969,10 +969,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			mail.setSubject(email.getSubject());
 			mail.setUserName(user.getUserName());
 
-			if (!email.isSendAdTicket() && email.getDocId() > 0)
+			if (!email.isSendAsTicket() && email.getDocId() > 0)
 				createAttachment(mail, email.getDocId());
 
-			if (email.isSendAdTicket()) {
+			if (email.isSendAsTicket()) {
 				// Prepare a new download ticket
 				String temp = new Date().toString() + user.getId();
 				String ticketid = CryptUtil.cryptString(temp);

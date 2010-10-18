@@ -74,10 +74,20 @@ public class MainMenu extends ToolStrip {
 		exitItem.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				Session.get().close();
-				String base = GWT.getHostPageBaseURL();
-				Util.redirect(base
-						+ (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/" + GWT.getModuleName() + ".jsp"));
+				securityService.logout(Session.get().getSid(), new AsyncCallback<Void>() {
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+						SC.warn(caught.getMessage());
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						String base = GWT.getHostPageBaseURL();
+						Util.redirect(base
+								+ (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/" + GWT.getModuleName()
+										+ ".jsp"));
+					}
+				});
 			}
 		});
 

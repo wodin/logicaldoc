@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
@@ -72,6 +73,15 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 			conf.write();
 
+			EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
+			sender.setHost(conf.getProperty("smtp.host"));
+			sender.setPort(Integer.parseInt(conf.getProperty("smtp.port")));
+			sender.setUsername(conf.getProperty("smtp.username"));
+			sender.setPassword(conf.getProperty("smtp.password"));
+			sender.setSender(conf.getProperty("smtp.sender"));
+			sender.setAuthEncripted("true".equals(conf.getProperty("smtp.authEncripted")) ? true : false);
+			sender.setConnectionSecurity(Integer.parseInt(conf.getProperty("smtp.connectionSecurity")));
+
 			log.info("Email settings data written successfully.");
 		} catch (Exception e) {
 			log.error("Exception writing Email settings data: " + e.getMessage(), e);
@@ -120,7 +130,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		List<GUIParameter> params = new ArrayList<GUIParameter>();
 		for (Object key : conf.keySet()) {
-			if (key.toString().equals("webservice.enabled") || key.toString().startsWith("webdav") || key.toString().startsWith("office")) {
+			if (key.toString().equals("webservice.enabled") || key.toString().startsWith("webdav")
+					|| key.toString().startsWith("office")) {
 				GUIParameter p = new GUIParameter(key.toString(), conf.getProperty(key.toString()));
 				params.add(p);
 			}

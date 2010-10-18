@@ -18,6 +18,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.i18n.I18N;
 
 /**
  * This servlet is responsible for sessions data.
@@ -44,6 +45,8 @@ public class SessionsDataServlet extends HttpServlet {
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
+			String locale = request.getParameter("locale");
+
 			PrintWriter writer = response.getWriter();
 			writer.print("<list>");
 
@@ -52,11 +55,11 @@ public class SessionsDataServlet extends HttpServlet {
 				writer.print("<sid>" + session.getId() + "</sid>");
 				writer.print("<status>" + session.getStatus() + "</status>");
 				if (session.getStatus() == UserSession.STATUS_OPEN)
-					writer.print("<statusLabel>Open</statusLabel>");
+					writer.print("<statusLabel>" + I18N.message("opened", locale) + "</statusLabel>");
 				else if (session.getStatus() == UserSession.STATUS_CLOSED)
-					writer.print("<statusLabel>Closed</statusLabel>");
+					writer.print("<statusLabel>" + I18N.message("closed", locale) + "</statusLabel>");
 				else if (session.getStatus() == UserSession.STATUS_EXPIRED)
-					writer.print("<statusLabel>Expired</statusLabel>");
+					writer.print("<statusLabel>" + I18N.message("expired", locale) + "</statusLabel>");
 				writer.print("<username><![CDATA[" + session.getUserName() + "]]></username>");
 				writer.print("<created>" + df.format((Date) session.getCreation()) + "</created>");
 				writer.print("<renew>" + df.format((Date) session.getLastRenew()) + "</renew>");
