@@ -16,11 +16,10 @@ import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.Button;
-import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -101,23 +100,17 @@ public class GroupUsersPanel extends VLayout {
 		buttons.setHeight(25);
 		buttons.setMargin(3);
 
-		// Prepare the combo and button for adding a new user
+		// Prepare the list for adding a new user
 		final DynamicForm userForm = new DynamicForm();
-		final ComboBoxItem user = ItemFactory.newUserSelector("user", "user");
-		userForm.setItems(user);
-
-		buttons.addMember(userForm);
-		Button addUser = new Button(I18N.message("adduser"));
-		buttons.addMember(addUser);
-		addUser.addClickHandler(new ClickHandler() {
+		final SelectItem user = ItemFactory.newUserSelector("user", "adduser");
+		user.addChangedHandler(new ChangedHandler() {
 			@Override
-			public void onClick(ClickEvent event) {
+			public void onChanged(ChangedEvent event) {
 				final ListGridRecord selectedRecord = user.getSelectedRecord();
 				if (selectedRecord == null)
 					return;
 
-				// Check if the selected user is already present in the rights
-				// table
+				// Check if the selected user is already present in the members
 				ListGridRecord[] records = list.getRecords();
 				for (ListGridRecord test : records) {
 					if (test.getAttribute("id").equals(selectedRecord.getAttribute("id"))) {
@@ -150,7 +143,11 @@ public class GroupUsersPanel extends VLayout {
 							}
 						});
 			}
+
 		});
+
+		userForm.setItems(user);
+		buttons.addMember(userForm);
 
 		setMembers(infoPanel, list, buttons);
 

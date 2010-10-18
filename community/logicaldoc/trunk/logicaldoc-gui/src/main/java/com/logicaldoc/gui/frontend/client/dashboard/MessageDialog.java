@@ -18,7 +18,6 @@ import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
-import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -44,7 +43,7 @@ public class MessageDialog extends Window {
 
 	private DynamicForm form = new DynamicForm();
 
-	private ComboBoxItem recipient = null;
+	private SelectItem recipient = null;
 
 	public MessageDialog() {
 		super();

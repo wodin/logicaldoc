@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.util;
 
-import java.util.Date;
 import java.util.LinkedHashMap;
 
 import com.logicaldoc.gui.common.client.Constants;
@@ -12,7 +11,6 @@ import com.logicaldoc.gui.common.client.data.TemplatesDS;
 import com.logicaldoc.gui.common.client.data.UsersDS;
 import com.logicaldoc.gui.common.client.data.WorkflowsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.validators.EmailValidator;
 import com.logicaldoc.gui.common.client.validators.EmailsValidator;
 import com.logicaldoc.gui.common.client.validators.SimpleTextValidator;
@@ -22,7 +20,6 @@ import com.smartgwt.client.types.MultipleAppearance;
 import com.smartgwt.client.widgets.HeaderControl.HeaderIcon;
 import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.FloatItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
@@ -34,8 +31,6 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
-import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.grid.ListGridField;
 
@@ -195,9 +190,10 @@ public class ItemFactory {
 		return item;
 	}
 
-	public static ComboBoxItem newGroupSelector(String name, String title) {
-		ComboBoxItem group = new ComboBoxItem(name);
+	public static SelectItem newGroupSelector(String name, String title) {
+		SelectItem group = new SelectItem(name);
 		group.setTitle(I18N.message(title));
+		group.setWrapTitle(false);
 		group.setValueField("id");
 		group.setDisplayField("name");
 		group.setPickListWidth(300);
@@ -208,9 +204,10 @@ public class ItemFactory {
 		return group;
 	}
 
-	public static ComboBoxItem newUserSelector(String name, String title) {
-		ComboBoxItem user = new ComboBoxItem(name);
+	public static SelectItem newUserSelector(String name, String title) {
+		SelectItem user = new SelectItem(name);
 		user.setTitle(I18N.message(title));
+		user.setWrapTitle(false);
 		ListGridField username = new ListGridField("username");
 		ListGridField label = new ListGridField("label");
 		user.setValueField("id");

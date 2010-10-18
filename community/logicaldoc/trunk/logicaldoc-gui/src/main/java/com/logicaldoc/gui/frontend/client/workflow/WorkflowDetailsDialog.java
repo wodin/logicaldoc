@@ -35,8 +35,8 @@ import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.SubmitItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
@@ -69,7 +69,7 @@ public class WorkflowDetailsDialog extends Window {
 
 	private ListGrid docsAppendedList;
 
-	private ComboBoxItem user = null;
+	private SelectItem user = null;
 
 	private ValuesManager vm = new ValuesManager();
 
@@ -267,7 +267,7 @@ public class WorkflowDetailsDialog extends Window {
 		docsAppendedList.setBorder("1px solid #E1E1E1");
 		docsAppendedList.setDataSource(new DocumentsDS(workflow.getAppendedDocIds()));
 		docsAppendedList.setFields(icon, docTitle, docLastModified);
-		
+
 		docsAppendedList.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {

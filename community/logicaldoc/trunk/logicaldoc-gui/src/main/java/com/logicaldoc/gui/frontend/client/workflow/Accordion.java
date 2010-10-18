@@ -9,8 +9,8 @@ import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -42,7 +42,7 @@ public class Accordion extends SectionStack {
 
 	private DynamicForm supervisorForm = null;
 
-	private ComboBoxItem supervisor = null;
+	private SelectItem supervisor = null;
 
 	public Accordion(GUIWorkflow workflow) {
 		setVisibilityMode(VisibilityMode.MUTEX);

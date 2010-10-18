@@ -20,10 +20,10 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -138,7 +138,7 @@ public class SecuritySettingsPanel extends VLayout {
 		notificationsForm.setColWidths(1, "*");
 		notificationsForm.setMargin(3);
 
-		final ComboBoxItem user = ItemFactory.newUserSelector("notificationUsers", "user");
+		final SelectItem user = ItemFactory.newUserSelector("notificationUsers", "user");
 		List<FormItem> items = new ArrayList<FormItem>();
 		user.addChangedHandler(new ChangedHandler() {
 			@Override
