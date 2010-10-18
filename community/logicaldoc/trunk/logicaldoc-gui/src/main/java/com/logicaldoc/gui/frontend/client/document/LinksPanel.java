@@ -51,7 +51,7 @@ public class LinksPanel extends DocumentDetailTab {
 		ListGridField type = new ListGridField("type", I18N.message("type"), 100);
 		type.setCanEdit(true);
 
-		ListGridField direction = new ListGridField("direction", I18N.message("direction"), 50);
+		ListGridField direction = new ListGridField("direction", I18N.message("direction"), 60);
 		direction.setCanSort(false);
 		direction.setType(ListGridFieldType.IMAGE);
 		direction.setCanSort(false);
