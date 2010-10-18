@@ -595,8 +595,8 @@ public class DocumentContextMenu extends Menu {
 
 		MenuItem more = new MenuItem(I18N.message("more"));
 
-		boolean enableLock = true;
-		boolean enableUnlock = true;
+		boolean enableLock = false;
+		boolean enableUnlock = false;
 		boolean enableImmutable = false;
 		boolean enableDelete = true;
 		boolean enableSign = selection != null && selection.length > 0;
@@ -609,19 +609,24 @@ public class DocumentContextMenu extends Menu {
 		boolean enableOffice = selection != null && selection.length == 1 && isOfficeFile
 				&& "true".equals(Config.getProperty(Constants.OFFICE_ENABLED));
 
-		if (selection != null)
-			for (ListGridRecord record : selection) {
-				if (!"blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable"))) {
-					enableLock = false;
-					cut.setEnabled(false);
-				}
-				if ("blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable"))) {
-					Long lockUser = record.getAttribute("lockUserId") != null ? Long.parseLong(record
-							.getAttribute("lockUserId")) : Long.MIN_VALUE;
-					if (Session.get().getUser().getId() == lockUser.longValue()
-							|| Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN))
-						enableUnlock = true;
-				}
+		if (selection != null && selection.length == 1) {
+			ListGridRecord record = selection[0];
+			if ("blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable"))) {
+				enableLock = true;
+			}
+			if (!"blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable"))) {
+				Long lockUser = record.getAttribute("lockUserId") != null ? Long.parseLong(record
+						.getAttribute("lockUserId")) : Long.MIN_VALUE;
+				if (Session.get().getUser().getId() == lockUser.longValue()
+						|| Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN))
+					enableUnlock = true;
+			}
+		}
+
+		for (ListGridRecord record : selection)
+			if (!"blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable"))) {
+				cut.setEnabled(false);
+				break;
 			}
 
 		if (folder.hasPermission(Constants.PERMISSION_IMMUTABLE)) {
@@ -674,7 +679,7 @@ public class DocumentContextMenu extends Menu {
 				checkin.setEnabled(false);
 		}
 
-		unlockItem.setEnabled(enableUnlock);
+		unlockItem.setEnabled(enableUnlock && !enableLock);
 		lock.setEnabled(enableLock);
 		checkout.setEnabled(enableLock);
 		immutable.setEnabled(enableImmutable);
