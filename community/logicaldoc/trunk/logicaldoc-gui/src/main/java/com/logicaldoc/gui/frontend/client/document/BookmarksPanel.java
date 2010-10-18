@@ -108,7 +108,6 @@ public class BookmarksPanel extends VLayout {
 				ListGridRecord record = list.getSelectedRecord();
 				DocumentsPanel.get().onFolderSelect(Long.parseLong(record.getAttributeAsString("folderId")),
 						Long.parseLong(record.getAttributeAsString("docId")));
-				DocumentsPanel.get().onSelectedDocument(Long.parseLong(record.getAttributeAsString("docId")), false);
 			}
 		});
 	}

@@ -12,7 +12,6 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
@@ -22,8 +21,6 @@ import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 
@@ -90,17 +87,6 @@ public class EmailDialog extends Window {
 		final CheckboxItem ticket = new CheckboxItem();
 		ticket.setName("sendticket");
 		ticket.setTitle(I18N.message("sendticket"));
-		ticket.addChangedHandler(new ChangedHandler() {
-			@Override
-			public void onChanged(ChangedEvent event) {
-				try {
-					if ("true".equals(event.getValue().toString()))
-						message.setValue(message.getValue() + "\n\n");
-				} catch (Throwable t) {
-					SC.warn(t.getMessage());
-				}
-			}
-		});
 
 		ButtonItem sendItem = new ButtonItem();
 		sendItem.setTitle(I18N.message("send"));
@@ -113,7 +99,7 @@ public class EmailDialog extends Window {
 					mail.setCc(vm.getValueAsString("cc"));
 					mail.setSubject(vm.getValueAsString("subject"));
 					mail.setMessage(vm.getValueAsString("message"));
-					mail.setSendAdTicket("true".equals(vm.getValueAsString("sendticket")));
+					mail.setSendAsTicket("true".equals(vm.getValueAsString("sendticket")));
 					mail.setDocId(EmailDialog.this.docId);
 
 					documentService.sendAsEmail(Session.get().getSid(), mail, new AsyncCallback<String>() {

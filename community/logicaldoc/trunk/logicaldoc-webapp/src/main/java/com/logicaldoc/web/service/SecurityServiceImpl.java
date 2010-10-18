@@ -145,14 +145,15 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			UserSession session = SessionManager.getInstance().get(sid);
 			if (session == null)
 				return;
-			SessionManager.getInstance().kill(sid);
 
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			FileUtils.deleteDirectory(new File(conf.getPropertyWithSubstitutions("conf.userdir") + "/"
 					+ session.getUserName() + "/temp"));
 
 			log.info("User " + session.getUserName() + " logged out.");
-		} catch (Exception e) {
+
+			SessionManager.getInstance().kill(sid);
+		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
 	}
