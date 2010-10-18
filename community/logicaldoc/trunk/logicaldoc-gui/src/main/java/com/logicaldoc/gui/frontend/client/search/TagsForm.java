@@ -42,7 +42,7 @@ import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 /**
- * This panel shows the saved searches of the user
+ * This panel shows the tags list with each tag count.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
@@ -55,6 +55,8 @@ public class TagsForm extends VLayout {
 
 	private TagServiceAsync tagService = (TagServiceAsync) GWT.create(TagService.class);
 
+	private boolean admin = false;
+
 	public static TagsForm get() {
 		if (instance == null)
 			instance = new TagsForm(false);
@@ -63,6 +65,7 @@ public class TagsForm extends VLayout {
 
 	public TagsForm(final boolean admin) {
 		setMembersMargin(3);
+		this.admin = admin;
 
 		HLayout vocabulary = new HLayout();
 		vocabulary.setMargin(5);
@@ -109,15 +112,24 @@ public class TagsForm extends VLayout {
 
 		addMember(vocabulary);
 
+		reloadTags(admin, null);
+	}
+
+	private void reloadTags(final boolean admin, String letter) {
+		if (tags != null) {
+			removeMember(tags);
+		}
+
 		ListGridField index = new ListGridField("index", " ", 10);
 		index.setHidden(true);
 		ListGridField word = new ListGridField("word", I18N.message("tag"), 200);
-		ListGridField count = new ListGridField("count", I18N.message("count"), 50);
+		ListGridField count = new ListGridField("count", I18N.message("count"), 60);
 		tags = new ListGrid();
 		tags.setWidth100();
 		tags.setHeight100();
 		tags.setFields(index, word, count);
 		tags.setSelectionType(SelectionStyle.SINGLE);
+		tags.setDataSource(new TagsDS(letter));
 		addMember(tags);
 
 		tags.addCellDoubleClickHandler(new CellDoubleClickHandler() {
@@ -186,7 +198,7 @@ public class TagsForm extends VLayout {
 											Log.info(I18N.message("procinexecution"), I18N.message("taginexecution"));
 											ListGridRecord selection = tags.getSelectedRecord();
 											selection.setAttribute("word", value);
-											tags.updateData(selection);
+											onLetterSelect(value.substring(0, 1));
 										}
 									});
 						}
@@ -230,7 +242,7 @@ public class TagsForm extends VLayout {
 	}
 
 	private void onLetterSelect(String letter) {
-		tags.setDataSource(new TagsDS(letter));
+		reloadTags(admin, letter);
 		tags.fetchData();
 		tags.hideField("index");
 	}

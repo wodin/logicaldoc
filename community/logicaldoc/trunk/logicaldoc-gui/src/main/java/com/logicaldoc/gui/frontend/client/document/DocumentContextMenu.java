@@ -221,6 +221,7 @@ public class DocumentContextMenu extends Menu {
 				}
 
 				Dialog dialogProperties = new Dialog();
+				dialogProperties.setWidth("50%");
 				SC.askforValue(I18N.message("warning"), I18N.message("immutableadvice"), "", new ValueCallback() {
 
 					@Override
@@ -264,7 +265,8 @@ public class DocumentContextMenu extends Menu {
 				}
 
 				Dialog dialogProperties = new Dialog();
-				SC.askforValue(I18N.message("warning"), I18N.message("lockadvice"), "", new ValueCallback() {
+				dialogProperties.setWidth("50%");
+				SC.askforValue(I18N.message("info"), I18N.message("lockadvice"), "", new ValueCallback() {
 
 					@Override
 					public void execute(String value) {
