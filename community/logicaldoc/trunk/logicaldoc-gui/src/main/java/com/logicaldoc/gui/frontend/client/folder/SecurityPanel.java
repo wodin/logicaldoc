@@ -21,7 +21,9 @@ import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -166,15 +168,13 @@ public class SecurityPanel extends FolderDetailTab {
 
 		// Prepare the combo and button for adding a new Group
 		final DynamicForm groupForm = new DynamicForm();
-		final ComboBoxItem group = ItemFactory.newGroupSelector("group", "group");
+		final SelectItem group = ItemFactory.newGroupSelector("group", "addgroup");
 		groupForm.setItems(group);
-
 		buttons.addMember(groupForm);
-		Button addGroup = new Button(I18N.message("addgroup"));
-		buttons.addMember(addGroup);
-		addGroup.addClickHandler(new ClickHandler() {
+		
+		group.addChangedHandler(new ChangedHandler() {
 			@Override
-			public void onClick(ClickEvent event) {
+			public void onChanged(ChangedEvent event) {
 				ListGridRecord selectedRecord = group.getSelectedRecord();
 				if (selectedRecord == null)
 					return;
@@ -200,15 +200,12 @@ public class SecurityPanel extends FolderDetailTab {
 		});
 
 		final DynamicForm userForm = new DynamicForm();
-		final ComboBoxItem user = ItemFactory.newUserSelector("user", "user");
+		final SelectItem user = ItemFactory.newUserSelector("user", "adduser");
 		userForm.setItems(user);
-
-		buttons.addMember(userForm);
-		Button addUser = new Button(I18N.message("adduser"));
-		buttons.addMember(addUser);
-		addUser.addClickHandler(new ClickHandler() {
+		
+		user.addChangedHandler(new ChangedHandler() {
 			@Override
-			public void onClick(ClickEvent event) {
+			public void onChanged(ChangedEvent event) {
 				ListGridRecord selectedRecord = user.getSelectedRecord();
 				if (selectedRecord == null)
 					return;
@@ -233,6 +230,8 @@ public class SecurityPanel extends FolderDetailTab {
 				user.clearValue();
 			}
 		});
+
+		buttons.addMember(userForm);
 	}
 
 	/**

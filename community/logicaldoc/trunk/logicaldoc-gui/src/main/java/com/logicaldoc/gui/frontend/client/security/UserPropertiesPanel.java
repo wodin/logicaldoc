@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
@@ -15,17 +14,15 @@ import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
-import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.KeyDownEvent;
-import com.smartgwt.client.widgets.form.fields.events.KeyDownHandler;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -182,8 +179,9 @@ public class UserPropertiesPanel extends HLayout {
 		DynamicForm form2 = new DynamicForm();
 
 		List<FormItem> items = new ArrayList<FormItem>();
-		final ComboBoxItem group = new ComboBoxItem("group");
-		group.setTitle(I18N.message("group"));
+		final SelectItem group = new SelectItem("group");
+		group.setTitle(I18N.message("addgroup"));
+		group.setWrapTitle(false);
 		group.setValueField("id");
 		group.setDisplayField("name");
 		group.setPickListWidth(300);
@@ -191,23 +189,21 @@ public class UserPropertiesPanel extends HLayout {
 		ListGridField description = new ListGridField("description");
 		group.setPickListFields(n, description);
 		group.setOptionDataSource(GroupsDS.get(user.getId()));
-		group.addKeyDownHandler(new KeyDownHandler() {
+		group.addChangedHandler(new ChangedHandler() {
 			@Override
-			public void onKeyDown(KeyDownEvent event) {
-				if (Constants.KEY_ENTER.equals(event.getKeyName().toLowerCase())) {
-					ListGridRecord selectedRecord = group.getSelectedRecord();
-					if (selectedRecord == null)
-						return;
+			public void onChanged(ChangedEvent event) {
+				ListGridRecord selectedRecord = group.getSelectedRecord();
+				if (selectedRecord == null)
+					return;
 
-					if (!user.isMemberOf(selectedRecord.getAttributeAsString("name"))) {
-						GUIGroup group = new GUIGroup();
-						group.setId(Long.parseLong(selectedRecord.getAttributeAsString("id")));
-						group.setName(selectedRecord.getAttributeAsString("name"));
-						group.setDescription(selectedRecord.getAttributeAsString("description"));
-						user.addGroup(group);
-						refreshAddingGroup();
-						changedHandler.onChanged(null);
-					}
+				if (!user.isMemberOf(selectedRecord.getAttributeAsString("name"))) {
+					GUIGroup group = new GUIGroup();
+					group.setId(Long.parseLong(selectedRecord.getAttributeAsString("id")));
+					group.setName(selectedRecord.getAttributeAsString("name"));
+					group.setDescription(selectedRecord.getAttributeAsString("description"));
+					user.addGroup(group);
+					refreshAddingGroup();
+					changedHandler.onChanged(null);
 				}
 			}
 		});

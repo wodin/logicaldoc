@@ -23,7 +23,6 @@ import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
-import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.SpinnerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
@@ -166,7 +165,7 @@ public class TaskDialog extends Window {
 
 		// Prepare the combo and button for adding a new user
 		final DynamicForm userForm = new DynamicForm();
-		final ComboBoxItem user = ItemFactory.newUserSelector("user", "user");
+		final SelectItem user = ItemFactory.newUserSelector("user", "user");
 		userForm.setItems(user);
 
 		userSelection.addMember(userForm);

@@ -7,7 +7,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -69,7 +69,7 @@ public class GroupPropertiesPanel extends HLayout {
 		if (!readonly)
 			description.addChangedHandler(changedHandler);
 
-		ComboBoxItem inherit = ItemFactory.newGroupSelector("inherit", "inheritgroup");
+		SelectItem inherit = ItemFactory.newGroupSelector("inherit", "inheritgroup");
 		inherit.setVisible(!readonly);
 		if (!readonly)
 			inherit.addChangedHandler(changedHandler);
