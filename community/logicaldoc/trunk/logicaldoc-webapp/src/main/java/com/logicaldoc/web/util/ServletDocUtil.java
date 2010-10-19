@@ -69,7 +69,8 @@ public class ServletDocUtil {
 	 * @throws ServletException
 	 */
 	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, long docId,
-			String fileVersion, String suffix, User user) throws FileNotFoundException, IOException, ServletException {
+			String fileVersion, String fileName, String suffix, User user) throws FileNotFoundException, IOException,
+			ServletException {
 
 		UserSession session = SessionUtil.validateSession(request);
 
@@ -78,7 +79,9 @@ public class ServletDocUtil {
 
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		File file = documentManager.getDocumentFile(doc, fileVersion);
-		String filename = doc.getFileName();
+		String filename = fileName;
+		if (filename == null)
+			filename = doc.getFileName();
 		if (!file.exists()) {
 			throw new FileNotFoundException(file.getPath());
 		}
@@ -87,7 +90,7 @@ public class ServletDocUtil {
 			file = new File(file.getParent(), file.getName() + "-" + suffix);
 			filename = filename + "." + FilenameUtils.getExtension(suffix);
 		}
-		long size=file.length();
+		long size = file.length();
 		InputStream is = new FileInputStream(file);
 
 		// get the mimetype
@@ -101,7 +104,7 @@ public class ServletDocUtil {
 		response.setHeader("Pragma", "public");
 		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 		response.setHeader("Expires", "0");
-		
+
 		// Add this header for compatibility with internal .NET browsers
 		response.setHeader("Content-Length", Long.toString(size));
 
@@ -226,9 +229,9 @@ public class ServletDocUtil {
 	 * @throws NumberFormatException
 	 */
 	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, String docId,
-			String fileVersion, User user) throws FileNotFoundException, IOException, NumberFormatException,
-			ServletException {
-		downloadDocument(request, response, Integer.parseInt(docId), fileVersion, null, user);
+			String fileVersion, String fileName, User user) throws FileNotFoundException, IOException,
+			NumberFormatException, ServletException {
+		downloadDocument(request, response, Integer.parseInt(docId), fileVersion, fileName, null, user);
 	}
 
 	/**

@@ -87,7 +87,7 @@ public class DownloadServlet extends HttpServlet {
 			
 			if (request.getParameter("open") == null) {
 				response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
-			}else{
+			} else {
 				response.setHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
 			}
 
@@ -111,7 +111,7 @@ public class DownloadServlet extends HttpServlet {
 			if ("true".equals(downloadText)) {
 				ServletDocUtil.downloadDocumentText(request, response, doc.getId());
 			} else {
-				ServletDocUtil.downloadDocument(request, response, doc.getId(), fileVersion, suffix, user);
+				ServletDocUtil.downloadDocument(request, response, doc.getId(), fileVersion, filename, suffix, user);
 			}
 		} catch (Throwable ex) {
 			log.error(ex.getMessage(), ex);

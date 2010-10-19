@@ -118,7 +118,15 @@ public class DocumentCheckin extends Window {
 			if (uploader.getStatus() == Status.SUCCESS) {
 				sendButton.setDisabled(false);
 			}
-			if ("true".equals(vm.getValueAsString("checkfilename")) && !fileName.equals(uploader.getFileName())) {
+
+			// This check is done because IE8 works differently from Firefox
+ 			String uploadedFilename = uploader.getFileName();
+			if (uploadedFilename.lastIndexOf('/') != -1)
+				uploadedFilename = uploadedFilename.substring(uploadedFilename.lastIndexOf('/') + 1);
+			if (uploadedFilename.lastIndexOf('\\') != -1)
+				uploadedFilename = uploadedFilename.substring(uploadedFilename.lastIndexOf('\\') + 1);
+
+			if ("true".equals(vm.getValueAsString("checkfilename")) && !fileName.equals(uploadedFilename)) {
 				sendButton.setDisabled(true);
 				SC.warn(I18N.message("nosamefilename"));
 			}
