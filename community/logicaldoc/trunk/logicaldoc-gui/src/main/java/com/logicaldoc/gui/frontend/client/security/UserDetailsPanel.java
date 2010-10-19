@@ -6,10 +6,17 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
+import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Cursor;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Side;
+import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.widgets.HTMLPane;
+import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
@@ -67,7 +74,44 @@ public class UserDetailsPanel extends VLayout {
 				onSave();
 			}
 		});
+		saveButton.setLayoutAlign(VerticalAlignment.CENTER);
+
+		HTMLPane spacer = new HTMLPane();
+		spacer.setContents("<div>&nbsp;</div>");
+		spacer.setWidth("70%");
+		spacer.setOverflow(Overflow.HIDDEN);
+
+		Img closeImage = ItemFactory.newImgIcon("delete.png");
+		closeImage.setHeight("16px");
+		closeImage.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (user.getId() != 0) {
+					service.getUser(Session.get().getSid(), user.getId(), new AsyncCallback<GUIUser>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
+
+						@Override
+						public void onSuccess(GUIUser user) {
+							setUser(user);
+						}
+					});
+				} else {
+					setUser(new GUIUser());
+				}
+				savePanel.setVisible(false);
+			}
+		});
+		closeImage.setCursor(Cursor.HAND);
+		closeImage.setTooltip(I18N.message("close"));
+		closeImage.setLayoutAlign(Alignment.RIGHT);
+		closeImage.setLayoutAlign(VerticalAlignment.CENTER);
+
 		savePanel.addMember(saveButton);
+		savePanel.addMember(spacer);
+		savePanel.addMember(closeImage);
 		addMember(savePanel);
 
 		tabSet = new TabSet();
@@ -90,6 +134,10 @@ public class UserDetailsPanel extends VLayout {
 		historyTab.setPane(historyTabPanel);
 		tabSet.addTab(historyTab);
 		addMember(tabSet);
+	}
+
+	public UsersPanel getUsersPanel() {
+		return usersPanel;
 	}
 
 	private void refresh() {

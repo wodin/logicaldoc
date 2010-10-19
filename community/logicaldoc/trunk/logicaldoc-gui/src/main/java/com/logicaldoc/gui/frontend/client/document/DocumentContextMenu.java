@@ -155,7 +155,7 @@ public class DocumentContextMenu extends Menu {
 		similar.setTitle(I18N.message("similardocuments"));
 		similar.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord record = list.getSelectedRecord();
+				final ListGridRecord record = list.getSelectedRecord();
 				if (record == null)
 					return;
 				Long id = Long.parseLong(record.getAttribute("id"));
@@ -168,6 +168,9 @@ public class DocumentContextMenu extends Menu {
 
 							@Override
 							public void onSuccess(GUISearchOptions options) {
+								if (options.getExpression().trim().isEmpty()) {
+									options.setExpression(record.getAttribute("title"));
+								}
 								Search.get().setOptions(options);
 								Search.get().search();
 							}
@@ -680,10 +683,20 @@ public class DocumentContextMenu extends Menu {
 		}
 
 		unlockItem.setEnabled(enableUnlock && !enableLock);
-		lock.setEnabled(enableLock);
-		checkout.setEnabled(enableLock);
+		lock.setEnabled(enableLock && enableImmutable);
+		checkout.setEnabled(enableLock && enableImmutable);
 		immutable.setEnabled(enableImmutable);
 		delete.setEnabled(enableDelete);
+
+		for (ListGridRecord record : selection)
+			if ("indexed".equals(record.getAttribute("indexed")) && !"blank".equals(record.getAttribute("immutable"))) {
+				markIndexable.setEnabled(false);
+				break;
+			}
+
+		if ((selection.length == 1 && selection[0].getAttribute("indexed").equals("blank"))) {
+			markIndexable.setEnabled(false);
+		}
 
 		if ((selection.length == 1 && selection[0].getAttribute("status") == null)) {
 			checkin.setEnabled(false);

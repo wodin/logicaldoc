@@ -68,7 +68,7 @@ public class VersionsDataServlet extends HttpServlet {
 				query.append(" from Version A, Archive B where A.deleted = 0 and A in elements(B.entries) ");
 				query.append(" and B.id =" + request.getParameter("archiveId"));
 			}
-			query.append(" order by A.versionDate asc ");
+			query.append(" order by A.versionDate desc ");
 
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
