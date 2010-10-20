@@ -9,7 +9,7 @@ import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
 /**
- * This panel collects all documents details
+ * This panel collects all archives details
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0

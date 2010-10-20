@@ -254,8 +254,10 @@ public class FolderDetailsPanel extends VLayout {
 				}
 
 				@Override
-				public void onSuccess(GUIFolder result) {
-					FoldersNavigator.get().onSavedFolder(result);
+				public void onSuccess(GUIFolder folder) {
+					FoldersNavigator.get().onSavedFolder(folder);
+					folder.setPathExtended(FoldersNavigator.get().getPath(folder.getId()));
+					setFolder(folder);
 					savePanel.setVisible(false);
 				}
 			});

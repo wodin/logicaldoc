@@ -218,7 +218,7 @@ public class IncrementalArchivesList extends VLayout {
 		contextMenu.showContextMenu();
 	}
 
-	private void showDetails(GUIIncrementalArchive incremental) {
+	public void showDetails(GUIIncrementalArchive incremental) {
 		if (details != null)
 			detailsContainer.removeMember(details);
 		if (incremental != null)

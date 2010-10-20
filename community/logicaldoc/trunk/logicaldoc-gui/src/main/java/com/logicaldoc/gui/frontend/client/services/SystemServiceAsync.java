@@ -20,7 +20,7 @@ public interface SystemServiceAsync {
 
 	void stopTask(String taskName, AsyncCallback<Boolean> callback);
 
-	void getTaskByName(String sid, String locale, String taskName, AsyncCallback<GUITask> callback);
+	void getTaskByName(String sid, String taskName, String locale, AsyncCallback<GUITask> callback);
 
 	void disableTask(String sid, String taskName, AsyncCallback<Boolean> callback);
 

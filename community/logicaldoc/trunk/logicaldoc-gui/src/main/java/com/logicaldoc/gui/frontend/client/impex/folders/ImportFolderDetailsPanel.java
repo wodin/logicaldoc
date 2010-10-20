@@ -6,10 +6,17 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIShare;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.ImportFoldersService;
 import com.logicaldoc.gui.frontend.client.services.ImportFoldersServiceAsync;
+import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Cursor;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Side;
+import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.widgets.HTMLPane;
+import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
@@ -54,6 +61,10 @@ public class ImportFolderDetailsPanel extends VLayout {
 		setMembersMargin(10);
 
 		savePanel = new HLayout();
+		savePanel.setHeight(20);
+		savePanel.setVisible(false);
+		savePanel.setStyleName("warn");
+		savePanel.setWidth100();
 		Button saveButton = new Button(I18N.message("save"));
 		saveButton.setMargin(2);
 		saveButton.addClickHandler(new ClickHandler() {
@@ -62,11 +73,44 @@ public class ImportFolderDetailsPanel extends VLayout {
 				onSave();
 			}
 		});
+		saveButton.setLayoutAlign(VerticalAlignment.CENTER);
+
+		HTMLPane spacer = new HTMLPane();
+		spacer.setContents("<div>&nbsp;</div>");
+		spacer.setWidth("70%");
+		spacer.setOverflow(Overflow.HIDDEN);
+
+		Img closeImage = ItemFactory.newImgIcon("delete.png");
+		closeImage.setHeight("16px");
+		closeImage.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (share.getId() != 0) {
+					service.getShare(Session.get().getSid(), share.getId(), new AsyncCallback<GUIShare>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
+
+						@Override
+						public void onSuccess(GUIShare share) {
+							setShare(share);
+						}
+					});
+				} else {
+					setShare(new GUIShare());
+				}
+				savePanel.setVisible(false);
+			}
+		});
+		closeImage.setCursor(Cursor.HAND);
+		closeImage.setTooltip(I18N.message("close"));
+		closeImage.setLayoutAlign(Alignment.RIGHT);
+		closeImage.setLayoutAlign(VerticalAlignment.CENTER);
+
 		savePanel.addMember(saveButton);
-		savePanel.setHeight(20);
-		savePanel.setVisible(false);
-		savePanel.setStyleName("warn");
-		savePanel.setWidth100();
+		savePanel.addMember(spacer);
+		savePanel.addMember(closeImage);
 		addMember(savePanel);
 
 		tabSet = new TabSet();

@@ -321,7 +321,7 @@ public class FoldersNavigator extends TreeGrid {
 		});
 	}
 
-	private String getPath(long folderId) {
+	public String getPath(long folderId) {
 		TreeNode selectedNode = getTree().find("id", Long.toString(folderId));
 		String path = "";
 		TreeNode[] parents = getTree().getParents(selectedNode);
