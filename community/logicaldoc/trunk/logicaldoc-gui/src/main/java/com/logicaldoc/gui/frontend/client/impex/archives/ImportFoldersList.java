@@ -159,7 +159,7 @@ public class ImportFoldersList extends VLayout {
 		importBundle.setTitle(I18N.message("importbundle"));
 		importBundle.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+				SC.ask(I18N.message("question"), I18N.message("confirmimportbundle"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
@@ -171,6 +171,7 @@ public class ImportFoldersList extends VLayout {
 
 								@Override
 								public void onSuccess(Void result) {
+									ImportArchivesPanel.get().updateArchivesListTab();
 									list.removeSelectedData();
 									list.deselectAllRecords();
 								}
@@ -180,7 +181,7 @@ public class ImportFoldersList extends VLayout {
 				});
 			}
 		});
-	
+
 		contextMenu.setItems(importBundle, delete);
 		contextMenu.showContextMenu();
 	}
