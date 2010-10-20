@@ -72,6 +72,7 @@ public class MessagesDataServlet extends HttpServlet {
 				writer.print("<from><![CDATA[" + record.getAuthor() + "]]></from>");
 				writer.print("<sent>" + df.format(record.getSentDate()) + "</sent>");
 				writer.print("<read>" + (record.getRead() == 1) + "</read>");
+				writer.print("<text>" + record.getMessageText() + "</text>");
 				writer.print("</message>");
 			}
 
