@@ -93,7 +93,7 @@ public class GroupDetailsPanel extends VLayout {
 						}
 
 						@Override
-						public void onSuccess(GUIGroup user) {
+						public void onSuccess(GUIGroup group) {
 							setGroup(group);
 						}
 					});

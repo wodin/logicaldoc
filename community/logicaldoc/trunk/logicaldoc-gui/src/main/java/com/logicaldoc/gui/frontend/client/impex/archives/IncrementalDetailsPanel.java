@@ -7,11 +7,18 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIIncrementalArchive;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.FolderChangeListener;
 import com.logicaldoc.gui.frontend.client.services.ArchiveService;
 import com.logicaldoc.gui.frontend.client.services.ArchiveServiceAsync;
+import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Cursor;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Side;
+import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.widgets.HTMLPane;
+import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
@@ -65,7 +72,45 @@ public class IncrementalDetailsPanel extends VLayout implements FolderChangeList
 				onSave();
 			}
 		});
+		saveButton.setLayoutAlign(VerticalAlignment.CENTER);
+
+		HTMLPane spacer = new HTMLPane();
+		spacer.setContents("<div>&nbsp;</div>");
+		spacer.setWidth("70%");
+		spacer.setOverflow(Overflow.HIDDEN);
+
+		Img closeImage = ItemFactory.newImgIcon("delete.png");
+		closeImage.setHeight("16px");
+		closeImage.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getIncremental().getId() != 0) {
+					service.loadIncremental(Session.get().getSid(), getIncremental().getId(),
+							new AsyncCallback<GUIIncrementalArchive>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(GUIIncrementalArchive incremental) {
+									setIncremental(incremental);
+								}
+							});
+				} else {
+					setIncremental(new GUIIncrementalArchive());
+				}
+				savePanel.setVisible(false);
+			}
+		});
+		closeImage.setCursor(Cursor.HAND);
+		closeImage.setTooltip(I18N.message("close"));
+		closeImage.setLayoutAlign(Alignment.RIGHT);
+		closeImage.setLayoutAlign(VerticalAlignment.CENTER);
+
 		savePanel.addMember(saveButton);
+		savePanel.addMember(spacer);
+		savePanel.addMember(closeImage);
 		addMember(savePanel);
 
 		tabSet = new TabSet();
@@ -86,7 +131,19 @@ public class IncrementalDetailsPanel extends VLayout implements FolderChangeList
 		refresh();
 	}
 
+	public GUIIncrementalArchive getIncremental() {
+		return incremental;
+	}
+
+	public void setIncremental(GUIIncrementalArchive incremental) {
+		this.incremental = incremental;
+		refresh();
+	}
+
 	private void refresh() {
+		if (savePanel != null)
+			savePanel.setVisible(false);
+
 		ChangedHandler changeHandler = new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
@@ -119,9 +176,12 @@ public class IncrementalDetailsPanel extends VLayout implements FolderChangeList
 				}
 
 				@Override
-				public void onSuccess(GUIIncrementalArchive result) {
+				public void onSuccess(GUIIncrementalArchive incremental) {
 					savePanel.setVisible(false);
-					listPanel.updateRecord(result);
+					if (incremental != null) {
+						listPanel.updateRecord(incremental);
+						listPanel.showDetails(incremental);
+					}
 				}
 			});
 		}

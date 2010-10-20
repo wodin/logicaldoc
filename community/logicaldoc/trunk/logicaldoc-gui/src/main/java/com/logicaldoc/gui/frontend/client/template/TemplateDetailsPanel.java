@@ -89,7 +89,7 @@ public class TemplateDetailsPanel extends VLayout {
 						}
 
 						@Override
-						public void onSuccess(GUITemplate user) {
+						public void onSuccess(GUITemplate template) {
 							setTemplate(template);
 						}
 					});

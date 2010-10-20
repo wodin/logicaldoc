@@ -102,7 +102,7 @@ public class DocumentDetailsPanel extends VLayout {
 		closeImage.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				DocumentsPanel.get().onSelectedDocument(document.getId(), false);
+				setDocument(document);
 				savePanel.setVisible(false);
 			}
 		});
