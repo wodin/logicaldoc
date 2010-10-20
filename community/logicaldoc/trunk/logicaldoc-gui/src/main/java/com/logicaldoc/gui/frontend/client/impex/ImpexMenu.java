@@ -71,7 +71,7 @@ public class ImpexMenu extends VLayout {
 		importArchives.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				AdminPanel.get().setContent(new ImportArchivesPanel());
+				AdminPanel.get().setContent(ImportArchivesPanel.get());
 			}
 		});
 

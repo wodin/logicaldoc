@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.system;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,19 +69,36 @@ public class TasksPanel extends VLayout {
 		taskExecution.setTitle(I18N.message("execute"));
 		taskExecution.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.startTask(list.getSelectedRecord().getAttributeAsString("name"), new AsyncCallback<Boolean>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+				service.getTaskByName(Session.get().getSid(), list.getSelectedRecord().getAttributeAsString("name"),
+						I18N.getLocale(), new AsyncCallback<GUITask>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
 
-					@Override
-					public void onSuccess(Boolean result) {
-						list.getSelectedRecord().setAttribute("status", GUITask.STATUS_RUNNING);
-						list.getSelectedRecord().setAttribute("runningIcon", "running_task");
-						list.updateData(list.getSelectedRecord());
-					}
-				});
+							@Override
+							public void onSuccess(GUITask task) {
+								final GUITask currentTask = task;
+								service.startTask(currentTask.getName(), new AsyncCallback<Boolean>() {
+									@Override
+									public void onFailure(Throwable caught) {
+										Log.serverError(caught);
+									}
+
+									@Override
+									public void onSuccess(Boolean result) {
+										final ListGridRecord record = list.getSelectedRecord();
+										record.setAttribute("status", GUITask.STATUS_RUNNING);
+										record.setAttribute("runningIcon", "running_task");
+										Date now = new Date();
+										record.setAttribute("lastStart", now);
+										record.setAttribute("nextStart", new Date(now.getTime()
+												+ (currentTask.getScheduling().getInterval() * 1000)));
+										list.updateData(record);
+									}
+								});
+							}
+						});
 			}
 		});
 
