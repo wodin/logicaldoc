@@ -18,7 +18,6 @@ import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
-import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
@@ -28,8 +27,6 @@ import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 
 /**
@@ -87,15 +84,6 @@ public class MessageDialog extends Window {
 				}
 			}
 		});
-
-		FormItemIcon icon = new FormItemIcon();
-		icon.setSrc("[SKIN]/actions/remove.png");
-		recipient.addIconClickHandler(new IconClickHandler() {
-			public void onIconClick(IconClickEvent event) {
-				recipient.setValue("");
-			}
-		});
-		recipient.setIcons(icon);
 
 		TextItem subject = ItemFactory.newTextItem("subject", "subject", "");
 		subject.setRequired(true);
