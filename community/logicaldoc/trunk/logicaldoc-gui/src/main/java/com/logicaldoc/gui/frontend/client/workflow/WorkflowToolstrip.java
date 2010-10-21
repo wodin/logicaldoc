@@ -131,6 +131,8 @@ public class WorkflowToolstrip extends ToolStrip {
 			@Override
 			public void onClick(ClickEvent event) {
 				final Map<String, Object> values = WorkflowToolstrip.this.designer.getAccordion().getValues();
+				if (values == null || ((String) values.get("workflowName")).trim().isEmpty())
+					return;
 				currentWorkflow.setName((String) values.get("workflowName"));
 				if (values.get("workflowDescr") != null)
 					currentWorkflow.setDescription((String) values.get("workflowDescr"));
@@ -199,6 +201,10 @@ public class WorkflowToolstrip extends ToolStrip {
 		deploy.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				final Map<String, Object> values = WorkflowToolstrip.this.designer.getAccordion().getValues();
+				if (values == null || ((String) values.get("workflowName")).trim().isEmpty())
+					return;
+
 				boolean taskFound = false;
 				if (currentWorkflow.getStates() != null && currentWorkflow.getStates().length > 0)
 					for (GUIWFState state : currentWorkflow.getStates()) {
@@ -236,14 +242,19 @@ public class WorkflowToolstrip extends ToolStrip {
 				else if (transitionErrorFound)
 					SC.warn(I18N.message("workflowtransitiontarget"));
 				else {
-					final Map<String, Object> values = WorkflowToolstrip.this.designer.getAccordion().getValues();
 					currentWorkflow.setName((String) values.get("workflowName"));
-					currentWorkflow.setDescription((String) values.get("workflowDescr"));
-					currentWorkflow.setTaskAssignmentSubject((String) values.get("assignmentSubject"));
-					currentWorkflow.setTaskAssignmentBody((String) values.get("assignmentBody"));
-					currentWorkflow.setReminderSubject((String) values.get("reminderSubject"));
-					currentWorkflow.setReminderBody((String) values.get("reminderBody"));
-					currentWorkflow.setSupervisor((String) values.get("supervisor"));
+					if (values.get("workflowDescr") != null)
+						currentWorkflow.setDescription((String) values.get("workflowDescr"));
+					if (values.get("assignmentSubject") != null)
+						currentWorkflow.setTaskAssignmentSubject((String) values.get("assignmentSubject"));
+					if (values.get("assignmentBody") != null)
+						currentWorkflow.setTaskAssignmentBody((String) values.get("assignmentBody"));
+					if (values.get("reminderSubject") != null)
+						currentWorkflow.setReminderSubject((String) values.get("reminderSubject"));
+					if (values.get("reminderBody") != null)
+						currentWorkflow.setReminderBody((String) values.get("reminderBody"));
+					if (values.get("supervisor") != null)
+						currentWorkflow.setSupervisor((String) values.get("supervisor"));
 
 					workflowService.deploy(Session.get().getSid(), currentWorkflow, new AsyncCallback<Void>() {
 						@Override

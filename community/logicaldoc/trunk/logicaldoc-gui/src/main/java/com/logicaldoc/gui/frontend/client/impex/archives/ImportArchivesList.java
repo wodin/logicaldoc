@@ -155,8 +155,7 @@ public class ImportArchivesList extends VLayout {
 			public void onSelectionChanged(SelectionEvent event) {
 				ListGridRecord record = list.getSelectedRecord();
 				try {
-					showDetails(Long.parseLong(record.getAttribute("id")), Integer.toString(GUIArchive.STATUS_OPENED)
-							.equals(record.getAttribute("status")));
+					showDetails(Long.parseLong(record.getAttribute("id")));
 				} catch (Throwable t) {
 				}
 			}
@@ -199,7 +198,7 @@ public class ImportArchivesList extends VLayout {
 								public void onSuccess(Void result) {
 									list.removeSelectedData();
 									list.deselectAllRecords();
-									showDetails(null, true);
+									showDetails(null);
 								}
 							});
 						}
@@ -212,7 +211,7 @@ public class ImportArchivesList extends VLayout {
 		contextMenu.showContextMenu();
 	}
 
-	private void showDetails(Long archiveId, boolean readonly) {
+	private void showDetails(Long archiveId) {
 		if (details != null)
 			detailsContainer.removeMember(details);
 		if (archiveId == null) {

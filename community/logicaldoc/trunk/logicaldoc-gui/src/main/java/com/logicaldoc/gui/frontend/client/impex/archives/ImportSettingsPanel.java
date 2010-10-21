@@ -32,13 +32,18 @@ public class ImportSettingsPanel extends VLayout {
 
 		TextItem description = ItemFactory.newTextItem("description", "description", archive.getDescription());
 		description.addChangedHandler(changedHandler);
+		description.setDisabled(archive.getStatus() != GUIArchive.STATUS_OPENED);
 
 		RadioGroupItem importTemplates = ItemFactory.newBooleanSelector("importtemplates", "importtemplates");
 		importTemplates.setValue(archive.getImportTemplate() == 1 ? "yes" : "no");
 		importTemplates.addChangedHandler(changedHandler);
+		importTemplates.setDisabled(archive.getStatus() != GUIArchive.STATUS_OPENED);
 
 		SelectItem options = ItemFactory.newImportCustomIds();
+		options.setWidth(200);
 		options.setValue(Integer.toString(archive.getImportCustomId()));
+		options.addChangedHandler(changedHandler);
+		options.setDisabled(archive.getStatus() != GUIArchive.STATUS_OPENED);
 
 		form.setFields(description, importTemplates, options);
 
@@ -50,7 +55,7 @@ public class ImportSettingsPanel extends VLayout {
 		vm.validate();
 		if (!vm.hasErrors()) {
 			archive.setDescription(vm.getValueAsString("description").toString());
-			archive.setImportCustomId("yes".equals(vm.getValueAsString("importcids")) ? 1 : 0);
+			archive.setImportCustomId(Integer.parseInt(vm.getValueAsString("importcids")));
 			archive.setImportTemplate("yes".equals(vm.getValueAsString("importtemplates")) ? 1 : 0);
 			return true;
 		} else

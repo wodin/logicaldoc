@@ -48,8 +48,11 @@ public class ImportFoldersList extends VLayout {
 
 	private InfoPanel infoPanel;
 
-	public ImportFoldersList() {
+	private ImportArchivesPanel archivesPanel = null;
+
+	public ImportFoldersList(ImportArchivesPanel panel) {
 		setWidth100();
+		this.archivesPanel = panel;
 		infoPanel = new InfoPanel("");
 		refresh();
 	}
@@ -171,9 +174,10 @@ public class ImportFoldersList extends VLayout {
 
 								@Override
 								public void onSuccess(Void result) {
-									ImportArchivesPanel.get().updateArchivesListTab();
 									list.removeSelectedData();
 									list.deselectAllRecords();
+									archivesPanel.getTabSet().setTabPane(0, new ImportArchivesList());
+									archivesPanel.getTabSet().selectTab(0);
 								}
 							});
 						}
