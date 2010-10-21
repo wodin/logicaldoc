@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
@@ -26,6 +27,7 @@ import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
  * Shows document's standard properties and read-only data
@@ -44,6 +46,10 @@ public class UserPropertiesPanel extends HLayout {
 
 	private ChangedHandler changedHandler;
 
+	private Canvas idLabel;
+
+	private VLayout layout = new VLayout();
+
 	public UserPropertiesPanel(GUIUser user, ChangedHandler changedHandler) {
 		if (user == null) {
 			setMembers(UsersPanel.SELECT_USER);
@@ -53,6 +59,13 @@ public class UserPropertiesPanel extends HLayout {
 			setWidth100();
 			setHeight100();
 			setMembersMargin(20);
+
+			layout.setWidth(300);
+
+			idLabel = new Label(I18N.message("id") + ": " + Long.toString(user.getId()));
+			idLabel.setHeight(15);
+			layout.addMember(idLabel, 0);
+
 			refresh();
 		}
 	}
@@ -69,20 +82,11 @@ public class UserPropertiesPanel extends HLayout {
 			removeChild(form1);
 
 		form1 = new DynamicForm();
-		form1.setNumCols(3);
 		form1.setValuesManager(vm);
 		form1.setWrapItemTitles(false);
 		form1.setTitleOrientation(TitleOrientation.TOP);
 
-		StaticTextItem id = ItemFactory.newStaticTextItem("id", "id", Long.toString(user.getId()));
-		id.setDisabled(true);
-		id.setWrap(false);
-
-		TextItem username = ItemFactory.newSimpleTextItem("username", "username", user.getUserName());
-		username.setRequired(true);
-		username.setDisabled(readonly || user.getId() != 0);
-		if (!readonly)
-			username.addChangedHandler(changedHandler);
+		layout.addMember(form1, 1);
 
 		CheckboxItem expires = new CheckboxItem("expires", I18N.message("passwordexpires"));
 		expires.setValue(user.isPasswordExpires());
@@ -97,6 +101,13 @@ public class UserPropertiesPanel extends HLayout {
 		} else {
 			enabled.addChangedHandler(changedHandler);
 		}
+
+		TextItem username = ItemFactory.newSimpleTextItem("username", "username", user.getUserName());
+		username.setRequired(true);
+		username.setSelectOnFocus(true);
+		username.setDisabled(readonly || user.getId() != 0);
+		if (!readonly)
+			username.addChangedHandler(changedHandler);
 
 		TextItem firstname = ItemFactory.newTextItem("firstname", "firstname", user.getFirstName());
 		firstname.setRequired(true);
@@ -158,9 +169,9 @@ public class UserPropertiesPanel extends HLayout {
 		if (!readonly)
 			email.addChangedHandler(changedHandler);
 
-		form1.setItems(id, enabled, expires, username, firstname, name, email, language, address, postalcode, city,
+		form1.setItems(enabled, expires, username, email, firstname, name, language, address, postalcode, city,
 				country, state, phone, cell);
-		addMember(form1, 0);
+		addMember(layout);
 
 		refreshAddingGroup();
 	}
@@ -235,7 +246,7 @@ public class UserPropertiesPanel extends HLayout {
 
 		form2.setItems(items.toArray(new FormItem[0]));
 		addingGroup.addMember(form2);
-		addMember(addingGroup);
+		addMember(addingGroup, 2);
 	}
 
 	@SuppressWarnings("unchecked")
