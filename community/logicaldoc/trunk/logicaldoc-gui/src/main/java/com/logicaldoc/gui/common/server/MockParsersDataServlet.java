@@ -21,6 +21,7 @@ public class MockParsersDataServlet extends HttpServlet {
 			throw new IOException("Invalid session");
 
 		response.setContentType("text/xml");
+		response.setCharacterEncoding("UTF-8");
 
 		// Headers required by Internet Explorer
 		response.setHeader("Pragma", "public");

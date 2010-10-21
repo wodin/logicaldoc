@@ -41,6 +41,7 @@ public class PostsDataServlet extends HttpServlet {
 			long discussionId = Long.parseLong(request.getParameter("discussionId"));
 
 			response.setContentType("text/xml");
+			response.setCharacterEncoding("UTF-8");
 
 			// Headers required by Internet Explorer
 			response.setHeader("Pragma", "public");

@@ -38,7 +38,8 @@ public class BookmarksDataServlet extends HttpServlet {
 			UserSession session = SessionUtil.validateSession(request);
 
 			response.setContentType("text/xml");
-
+			response.setCharacterEncoding("UTF-8");
+			
 			// Headers required by Internet Explorer
 			response.setHeader("Pragma", "public");
 			response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");

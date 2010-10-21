@@ -43,6 +43,7 @@ public class UsersDataServlet extends HttpServlet {
 			String groupId = request.getParameter("groupId");
 
 			response.setContentType("text/xml");
+			response.setCharacterEncoding("UTF-8");
 
 			// Headers required by Internet Explorer
 			response.setHeader("Pragma", "public");

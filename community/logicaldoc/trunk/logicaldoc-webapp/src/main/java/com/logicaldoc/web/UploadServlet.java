@@ -20,6 +20,9 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
+
 /**
  * This servlet is responsible for document uploads operations.
  * 
@@ -197,5 +200,15 @@ public class UploadServlet extends UploadAction {
 
 		session.setAttribute(RECEIVEDFILENAMES, new Hashtable<String, String>());
 		return receivedFileNames;
+	}
+
+	@Override
+	public void checkRequest(HttpServletRequest request) {
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		int max = Integer.parseInt(config.getProperty("upload.maxsize")) * 1024 * 1024;
+		if (max > 0) {
+			maxSize = Integer.parseInt(config.getProperty("upload.maxsize")) * 1024 * 1024;
+			super.checkRequest(request);
+		}
 	}
 }

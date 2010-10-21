@@ -20,6 +20,7 @@ public class MockImportFoldersDataServlet extends HttpServlet {
 			IOException {
 		
 		response.setContentType("text/xml");
+		response.setCharacterEncoding("UTF-8");
 
 		// Headers required by Internet Explorer
 		response.setHeader("Pragma", "public");

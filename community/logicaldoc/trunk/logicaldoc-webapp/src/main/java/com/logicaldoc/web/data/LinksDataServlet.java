@@ -36,6 +36,7 @@ public class LinksDataServlet extends HttpServlet {
 				docId = new Long(request.getParameter("docId"));
 
 			response.setContentType("text/xml");
+			response.setCharacterEncoding("UTF-8");
 
 			// Headers required by Internet Explorer
 			response.setHeader("Pragma", "public");

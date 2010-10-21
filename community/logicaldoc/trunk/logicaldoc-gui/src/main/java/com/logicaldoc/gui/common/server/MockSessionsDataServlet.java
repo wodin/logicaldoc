@@ -19,6 +19,7 @@ public class MockSessionsDataServlet extends HttpServlet {
 		System.out.println("*** Data sessions");
 
 		response.setContentType("text/xml");
+		response.setCharacterEncoding("UTF-8");
 
 		// Headers required by Internet Explorer
 		response.setHeader("Pragma", "public");
