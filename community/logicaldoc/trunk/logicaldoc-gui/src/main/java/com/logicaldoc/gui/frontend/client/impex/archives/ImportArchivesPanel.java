@@ -14,15 +14,13 @@ import com.smartgwt.client.widgets.tab.TabSet;
  */
 public class ImportArchivesPanel extends VLayout {
 
-	private static ImportArchivesPanel instance;
-
 	private Tab importTab = null;
 
 	private Tab bundlesTab = null;
 
 	private TabSet tabSet = new TabSet();
 
-	private ImportArchivesPanel() {
+	public ImportArchivesPanel() {
 		setWidth100();
 
 		tabSet.setTabBarPosition(Side.TOP);
@@ -35,21 +33,10 @@ public class ImportArchivesPanel extends VLayout {
 		tabSet.addTab(importTab, 0);
 
 		bundlesTab = new Tab(I18N.message("incomingbundles"));
-		bundlesTab.setPane(new ImportFoldersList());
+		bundlesTab.setPane(new ImportFoldersList(this));
 		tabSet.addTab(bundlesTab, 1);
 
 		addMember(tabSet);
-	}
-
-	public static ImportArchivesPanel get() {
-		if (instance == null)
-			instance = new ImportArchivesPanel();
-		return instance;
-	}
-
-	public void updateArchivesListTab() {
-		tabSet.setTabPane(0, new ImportArchivesList());
-		tabSet.selectTab(0);
 	}
 
 	public TabSet getTabSet() {
