@@ -40,6 +40,8 @@ public class FoldersDataServlet extends HttpServlet {
 			long parent = Long.parseLong(request.getParameter("parent"));
 
 			response.setContentType("text/xml");
+			response.setCharacterEncoding("UTF-8");
+			
 
 			// Headers required by Internet Explorer
 			response.setHeader("Pragma", "public");

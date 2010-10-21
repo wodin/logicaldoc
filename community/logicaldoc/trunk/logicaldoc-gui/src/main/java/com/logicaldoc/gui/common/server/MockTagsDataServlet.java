@@ -16,6 +16,7 @@ public class MockTagsDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		response.setContentType("text/xml");
+		response.setCharacterEncoding("UTF-8");
 
 		System.out.println("*** Data tags");
 		String sid = (String) request.getParameter("sid");

@@ -39,6 +39,7 @@ public class DiscussionsDataServlet extends HttpServlet {
 			SessionUtil.validateSession(request);
 
 			response.setContentType("text/xml");
+			response.setCharacterEncoding("UTF-8");
 
 			// Headers required by Internet Explorer
 			response.setHeader("Pragma", "public");
