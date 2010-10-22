@@ -118,7 +118,7 @@ public class SecuritySettingsPanel extends VLayout {
 
 								@Override
 								public void onSuccess(Void ret) {
-									Log.info(I18N.message("settingssaved"), null);
+									Log.info(I18N.message("settingssaved")+"  "+I18N.message("settingsaffectnewsessions"), null);
 								}
 							});
 				}
