@@ -91,7 +91,7 @@ public class WorkflowHistoryDialog extends Window {
 		workflow.setValueField("id");
 		workflow.setDisplayField("name");
 		workflow.setPickListFields(name);
-		workflow.setOptionDataSource(new WorkflowsDS(null, false));
+		workflow.setOptionDataSource(new WorkflowsDS(null, false, true));
 		if (selectedWorkflow != null)
 			workflow.setValue(selectedWorkflow.getName());
 
@@ -132,7 +132,6 @@ public class WorkflowHistoryDialog extends Window {
 		// Workflow instances section
 		DynamicForm workflowInstancesForm = new DynamicForm();
 		workflowInstancesForm.setColWidths(1, "*");
-		// workflowInstancesForm.setWidth(900);
 
 		StaticTextItem workflowTitle = ItemFactory.newStaticTextItem("workflowInstances", "",
 				"<b>" + I18N.message("workflowinstances") + "</b>");

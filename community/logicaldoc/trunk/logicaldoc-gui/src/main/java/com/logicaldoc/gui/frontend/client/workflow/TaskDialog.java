@@ -13,11 +13,13 @@ import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.MultipleAppearance;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Dialog;
+import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -28,11 +30,12 @@ import com.smartgwt.client.widgets.form.fields.SpinnerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
  * This is the form used for the workflow task setting.
@@ -54,7 +57,11 @@ public class TaskDialog extends Window {
 
 	private LinkedHashMap<String, String> participants = new LinkedHashMap<String, String>();
 
+	private HLayout participantsLayout;
+
 	private DynamicForm participantsForm;
+
+	private Button removeUser = null;
 
 	private DynamicForm buttonForm;
 
@@ -124,6 +131,13 @@ public class TaskDialog extends Window {
 		escalationForm.setFields(duedateTimeItem, duedateTime, remindTimeItem, remindTime);
 		addItem(escalationForm);
 
+		HTMLPane spacer = new HTMLPane();
+		spacer.setContents("<div>&nbsp;</div>");
+		spacer.setHeight(10);
+		spacer.setMargin(10);
+		spacer.setOverflow(Overflow.HIDDEN);
+		addItem(spacer);
+
 		Label addtransition = ItemFactory.newLinkLabel("addtransition");
 		addtransition.setContents("<b>" + I18N.message("addtransition") + "</b>");
 		addtransition.setHeight(20);
@@ -156,6 +170,7 @@ public class TaskDialog extends Window {
 				"<b>" + I18N.message("participants") + "</b>");
 		participantsItem.setShouldSaveValue(false);
 		participantsItem.setWrapTitle(false);
+		participantsItem.setRequired(true);
 		participantsItemForm.setItems(participantsItem);
 		addItem(participantsItemForm);
 
@@ -167,44 +182,36 @@ public class TaskDialog extends Window {
 		final DynamicForm userForm = new DynamicForm();
 		final SelectItem user = ItemFactory.newUserSelector("user", "user");
 		userForm.setItems(user);
-
-		userSelection.addMember(userForm);
-
-		VLayout buttons = new VLayout(10);
-
-		Button addUser = new Button(I18N.message("adduser"));
-		buttons.addMember(addUser);
-		addUser.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+		user.setRequired(true);
+		user.addChangedHandler(new ChangedHandler() {
 			@Override
-			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				final ListGridRecord selectedRecord = user.getSelectedRecord();
-				if (selectedRecord == null)
-					return;
-
-				// Check if the selected user is already present in the rights
-				// table
-				for (String participant : participantsList.getValues()) {
-					if (participant.equals(selectedRecord.getAttribute("username"))) {
+			public void onChanged(ChangedEvent event) {
+				if (event.getValue() != null && !"".equals((String) event.getValue())) {
+					final ListGridRecord selectedRecord = user.getSelectedRecord();
+					if (selectedRecord == null)
 						return;
+
+					// Check if the selected user is already present in the
+					// rights table
+					for (String participant : participantsList.getValues()) {
+						if (participant.equals(selectedRecord.getAttribute("username"))) {
+							return;
+						}
 					}
+
+					refreshParticipants(selectedRecord.getAttribute("username"), 1);
+					user.clearValue();
 				}
 
-				refreshParticipants(selectedRecord.getAttribute("username"), 1);
-				user.clearValue();
 			}
 		});
-
-		Button removeUser = new Button(I18N.message("removeuser"));
-		buttons.addMember(removeUser);
-		removeUser.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-			@Override
-			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				refreshParticipants(participantsList.getValue().toString(), 2);
-			}
-		});
-		userSelection.addMember(buttons);
-
+		userSelection.addMember(userForm);
 		addItem(userSelection);
+
+		participantsLayout = new HLayout();
+		participantsLayout.setHeight(70);
+		participantsLayout.setMembersMargin(5);
+		addItem(participantsLayout);
 
 		// Initialize the participants list
 		if (this.task.getParticipants() != null)
@@ -222,9 +229,11 @@ public class TaskDialog extends Window {
 	 * username will be removed from the list.
 	 */
 	private void refreshParticipants(String username, int operation) {
-		if (participantsForm != null) {
-			removeMember(participantsForm);
-			participantsForm.destroy();
+		if (participantsForm != null)
+			participantsLayout.removeMember(participantsForm);
+		if (removeUser != null)
+			participantsLayout.removeMember(removeUser);
+		if (buttonForm != null) {
 			removeMember(buttonForm);
 			buttonForm.destroy();
 		}
@@ -239,7 +248,7 @@ public class TaskDialog extends Window {
 		participantsList.setMultiple(true);
 		participantsList.setMultipleAppearance(MultipleAppearance.GRID);
 		participantsList.setWidth(200);
-		participantsList.setHeight(50);
+		participantsList.setHeight(70);
 		participantsList.setEndRow(true);
 
 		if (username != null && (operation == 1)) {
@@ -249,7 +258,17 @@ public class TaskDialog extends Window {
 		}
 		participantsList.setValueMap(participants);
 		participantsForm.setItems(participantsList);
-		addItem(participantsForm);
+
+		removeUser = new Button(I18N.message("removeuser"));
+		removeUser.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+			@Override
+			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+				if (participantsList.getValue() != null)
+					refreshParticipants(participantsList.getValue().toString(), 2);
+			}
+		});
+
+		participantsLayout.setMembers(participantsForm, removeUser);
 
 		buttonForm = new DynamicForm();
 		ButtonItem saveItem = new ButtonItem();
@@ -282,10 +301,16 @@ public class TaskDialog extends Window {
 
 					AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
 					destroy();
+
+					if (TaskDialog.this.task.getParticipants() == null
+							|| TaskDialog.this.task.getParticipants().length == 0) {
+						SC.warn(I18N.message("workflowtaskparticipantatleast"));
+					}
 				}
 			}
 		});
 
+		buttonForm.setMargin(3);
 		buttonForm.setItems(saveItem);
 		addItem(buttonForm);
 	}

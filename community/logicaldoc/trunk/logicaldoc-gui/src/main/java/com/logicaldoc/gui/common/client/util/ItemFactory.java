@@ -604,7 +604,7 @@ public class ItemFactory {
 		workflowItem.setValueField("id");
 		workflowItem.setMultiple(true);
 		workflowItem.setMultipleAppearance(MultipleAppearance.GRID);
-		workflowItem.setOptionDataSource(new WorkflowsDS(folderId, false));
+		workflowItem.setOptionDataSource(new WorkflowsDS(folderId, false, false));
 		if (!Feature.enabled(Feature.WORKFLOW))
 			workflowItem.setDisabled(true);
 		return workflowItem;
