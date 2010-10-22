@@ -157,7 +157,7 @@ public class WorkflowDialog extends Window {
 		deployedWorkflowsList.setWidth(300);
 		deployedWorkflowsList.setHeight(200);
 		deployedWorkflowsList.setBorder("1px solid #E1E1E1");
-		datasource = new WorkflowsDS(null, true);
+		datasource = new WorkflowsDS(null, true, false);
 		if (datasource != null)
 			deployedWorkflowsList.setDataSource(datasource);
 		deployedWorkflowsList.setFields(name, descr);

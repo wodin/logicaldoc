@@ -71,7 +71,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		workflow.setDisplayField("name");
 		workflow.setPickListWidth(300);
 		workflow.setPickListFields(name);
-		workflow.setOptionDataSource(new WorkflowsDS(null, false));
+		workflow.setOptionDataSource(new WorkflowsDS(null, false, false));
 		if (currentWorkflow != null && !currentWorkflow.getName().trim().isEmpty())
 			workflow.setValue(currentWorkflow.getName());
 		else
@@ -147,50 +147,24 @@ public class WorkflowToolstrip extends ToolStrip {
 				if (values.get("supervisor") != null)
 					currentWorkflow.setSupervisor((String) values.get("supervisor"));
 
-				boolean transitionErrorFound = false;
-				if (currentWorkflow.getStates() != null && currentWorkflow.getStates().length > 0) {
-					for (GUIWFState state : currentWorkflow.getStates()) {
-						if (transitionErrorFound) {
-							break;
-						}
-						if (state.getType() != GUIWFState.TYPE_END) {
-							if (state.getTransitions() == null) {
-								transitionErrorFound = true;
-								break;
-							}
-							for (GUITransition transition : state.getTransitions()) {
-								if (transition.getTargetState() == null
-										|| (transition.getTargetState() != null && transition.getTargetState()
-												.getType() == GUIWFState.TYPE_UNDEFINED)) {
-									transitionErrorFound = true;
-									break;
-								}
-							}
+				workflowService.save(Session.get().getSid(), currentWorkflow, new AsyncCallback<GUIWorkflow>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUIWorkflow result) {
+						if (result == null) {
+							SC.warn(I18N.message("workflowalreadyexist"));
+						} else {
+							currentWorkflow = result;
+							// Necessary reload to visualize a new saved
+							// workflow of the workflows drop down menu.
+							AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
 						}
 					}
-				}
-				if (transitionErrorFound)
-					SC.warn(I18N.message("workflowtransitiontarget"));
-				else {
-					workflowService.save(Session.get().getSid(), currentWorkflow, new AsyncCallback<GUIWorkflow>() {
-						@Override
-						public void onFailure(Throwable caught) {
-							Log.serverError(caught);
-						}
-
-						@Override
-						public void onSuccess(GUIWorkflow result) {
-							if (result == null) {
-								SC.warn(I18N.message("workflowalreadyexist"));
-							} else {
-								currentWorkflow = result;
-								// Necessary reload to visualize a new saved
-								// workflow of the workflows drop down menu.
-								AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
-							}
-						}
-					});
-				}
+				});
 			}
 		});
 		addButton(save);
@@ -215,8 +189,13 @@ public class WorkflowToolstrip extends ToolStrip {
 					}
 
 				boolean transitionErrorFound = false;
+				boolean stateWithoutAssigneeFound = false;
 				if (currentWorkflow.getStates() != null && currentWorkflow.getStates().length > 0) {
 					for (GUIWFState state : currentWorkflow.getStates()) {
+						if (state.getParticipants() == null || state.getParticipants().length == 0) {
+							stateWithoutAssigneeFound = true;
+							break;
+						}
 						if (transitionErrorFound) {
 							break;
 						}
@@ -239,6 +218,8 @@ public class WorkflowToolstrip extends ToolStrip {
 
 				if (!taskFound)
 					SC.warn(I18N.message("workflowtaskatleast"));
+				else if (stateWithoutAssigneeFound)
+					SC.warn(I18N.message("workflowtaskparticipantatleast"));
 				else if (transitionErrorFound)
 					SC.warn(I18N.message("workflowtransitiontarget"));
 				else {
