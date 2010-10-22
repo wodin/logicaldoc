@@ -102,7 +102,9 @@ public class DocumentDetailsPanel extends VLayout {
 		closeImage.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				setDocument(document);
+				// We have to reload the document because the tags may be
+				// reverted to the original tags list.
+				DocumentsPanel.get().onSelectedDocument(document.getId(), false);
 				savePanel.setVisible(false);
 			}
 		});
