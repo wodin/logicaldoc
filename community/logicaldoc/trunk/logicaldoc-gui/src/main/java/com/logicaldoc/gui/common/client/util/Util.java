@@ -5,6 +5,9 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class Util {
+	public static String[] OFFICE_EXTS = new String[] { ".doc", ".xls", ".ppt", ".docx", ".xlsx", ".pptx" };
+
+	public static String[] IMAGE_EXTS = new String[] { ".gif", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".png" };
 
 	/**
 	 * Generates HTML image code with style.
@@ -59,10 +62,27 @@ public class Util {
 		return imageHTML(imageName, "");
 	}
 
-	public static boolean isOfficeFile(String fileName) {
-		String[] exts = new String[] { ".doc", ".xls", ".ppt", ".docx", ".xlsx", ".pptx" };
+	public static boolean isPreviewable(String fileName) {
 		String tmp = fileName.toLowerCase();
-		for (String ext : exts) {
+		for (String ext : OFFICE_EXTS) {
+			if (tmp.endsWith(ext))
+				return true;
+		}
+		return false;
+	}
+
+	public static boolean isOfficeFile(String fileName) {
+		String tmp = fileName.toLowerCase();
+		for (String ext : OFFICE_EXTS) {
+			if (tmp.endsWith(ext))
+				return true;
+		}
+		return false;
+	}
+
+	public static boolean isImageFile(String fileName) {
+		String tmp = fileName.toLowerCase();
+		for (String ext : IMAGE_EXTS) {
 			if (tmp.endsWith(ext))
 				return true;
 		}
@@ -70,9 +90,8 @@ public class Util {
 	}
 
 	public static boolean isOfficeFileType(String type) {
-		String[] exts = new String[] { "doc", "xls", "ppt", "docx", "xlsx", "pptx" };
-		for (String ext : exts) {
-			if (type.equals(ext))
+		for (String ext : OFFICE_EXTS) {
+			if (type.equalsIgnoreCase(ext))
 				return true;
 		}
 		return false;
