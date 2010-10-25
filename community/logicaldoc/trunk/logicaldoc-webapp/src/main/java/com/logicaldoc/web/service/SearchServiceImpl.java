@@ -11,7 +11,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
+import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.Hit;
 import com.logicaldoc.core.searchengine.Search;
@@ -67,8 +69,18 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			List<GUIHit> guiResults = new ArrayList<GUIHit>();
 			for (Hit hit : hits) {
 				GUIHit h = new GUIHit();
-				h.setId(hit.getDocId());
-				h.setFolderId(hit.getFolderId());
+				if (hit.getCustomId() == null) {
+					// This document is a shortcut
+					DocumentDAO docDAO = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+					// This settings are necessary for the 'open in folder'
+					// feature.
+					Document shortcutDoc = docDAO.findById(hit.getDocId());
+					h.setId(shortcutDoc.getDocRef());
+					h.setFolderId(shortcutDoc.getFolder().getId());
+				} else {
+					h.setId(hit.getDocId());
+					h.setFolderId(hit.getFolderId());
+				}
 				h.setDate(hit.getDate());
 				h.setCreation(hit.getCreation());
 				h.setTitle(hit.getTitle());
@@ -77,7 +89,14 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 				h.setSummary(hit.getSummary());
 				h.setSize(hit.getSize());
 				h.setScore(hit.getScore());
-				h.setIcon(FilenameUtils.getBaseName(hit.getIcon()));
+				// Check if the document is not an alias to visualize the
+				// correct icon: if the document is an alias the FULL-TEXT
+				// search returns a custom id null, the PARAMETRIC and TAG
+				// searches return a doc ref equals to 0 or null
+				if ((hit.getDocRef() == null || hit.getDocRef() == 0) && hit.getCustomId() != null)
+					h.setIcon(FilenameUtils.getBaseName(hit.getIcon()));
+				else
+					h.setIcon("alias");
 				guiResults.add(h);
 			}
 			result.setHits(guiResults.toArray(new GUIHit[guiResults.size()]));
