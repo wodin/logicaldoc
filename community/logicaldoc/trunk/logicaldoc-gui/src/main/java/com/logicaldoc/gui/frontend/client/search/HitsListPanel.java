@@ -174,9 +174,11 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			}
 		};
 
-		list.setCanExpandRecords(true);
-		list.setExpansionMode(ExpansionMode.DETAIL_FIELD);
-		list.setDetailField("summary");
+		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT) {
+			list.setCanExpandRecords(true);
+			list.setExpansionMode(ExpansionMode.DETAIL_FIELD);
+			list.setDetailField("summary");
+		}
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
@@ -242,7 +244,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		});
 
 		// Prepare the toolbar with some buttons
-		setupToolbar();
+		setupToolbar(options.getType());
 
 		if (infoPanel == null) {
 			infoPanel = new InfoPanel(" ");
@@ -278,7 +280,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	/**
 	 * Prepares the toolbar containing the search report and a set of buttons
 	 */
-	private void setupToolbar() {
+	private void setupToolbar(int optionsType) {
 		if (toolStrip == null)
 			toolStrip = new ToolStrip();
 		else {
@@ -294,6 +296,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		toolStrip.addSpacer(2);
 		ToolStripButton showSnippets = new ToolStripButton();
 		showSnippets.setTitle(I18N.message("showsnippets"));
+		showSnippets.setDisabled(optionsType != GUISearchOptions.TYPE_FULLTEXT);
 		toolStrip.addButton(showSnippets);
 		showSnippets.addClickHandler(new ClickHandler() {
 			@Override
