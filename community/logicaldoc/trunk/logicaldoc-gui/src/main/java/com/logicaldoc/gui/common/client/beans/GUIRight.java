@@ -38,6 +38,8 @@ public class GUIRight implements Serializable {
 
 	private boolean archive = false;
 
+	private boolean download = true;
+	
 	private String name;
 
 	private String label;
@@ -160,5 +162,13 @@ public class GUIRight implements Serializable {
 
 	public void setLabel(String label) {
 		this.label = label;
+	}
+
+	public boolean isDownload() {
+		return download;
+	}
+
+	public void setDownload(boolean download) {
+		this.download = download;
 	}
 }

@@ -97,6 +97,15 @@ public class AbstractService {
 		}
 	}
 
+	protected void checkDownloadEnable(User user, long folderId) throws Exception {
+		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		if (!dao.isPermissionEnabled(Permission.DOWNLOAD, folderId, user.getId())) {
+			String message = "User " + user.getUserName() + " doesn't have download permission on folder " + folderId;
+			log.error(message);
+			throw new Exception(message);
+		}
+	}
+
 	public static String convertDateToString(Date date) {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {

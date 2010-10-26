@@ -185,8 +185,9 @@ public class DocumentsListPanel extends VLayout {
 					ListGridRecord record = event.getRecord();
 					if ("indexed".equals(record.getAttribute("indexed"))) {
 						String id = list.getSelectedRecord().getAttribute("id");
-						Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-								+ id + "&downloadText=true", "_self", "");
+						if (Session.get().getCurrentFolder().isDownload())
+							Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+									+ id + "&downloadText=true", "_self", "");
 					}
 				} else if ("signed".equals(list.getFieldName(event.getColNum()))) {
 					if (Feature.enabled(Feature.DIGITAL_SIGN)) {
@@ -225,8 +226,9 @@ public class DocumentsListPanel extends VLayout {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
-				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id
-						+ "&open=true", "_blank", "");
+				if (Session.get().getCurrentFolder().isDownload())
+					Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id
+							+ "&open=true", "_blank", "");
 			}
 		});
 

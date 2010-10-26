@@ -50,7 +50,13 @@ public class GUIFolder implements Serializable {
 		return hasPermission(Constants.PERMISSION_WRITE);
 	}
 
+	public boolean isDownload() {
+		return hasPermission(Constants.PERMISSION_DOWNLOAD);
+	}
+
 	public boolean hasPermission(String permission) {
+		if (permissions == null)
+			return false;
 		for (String p : permissions) {
 			if (p.equals(permission))
 				return true;

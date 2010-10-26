@@ -70,6 +70,9 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	private WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
 
 	public DocumentToolbar() {
+		GUIFolder folder = Session.get().getCurrentFolder();
+		boolean downloadEnabled = folder != null && folder.isDownload();
+
 		download.setTooltip(I18N.message("download"));
 		download.setIcon(ItemFactory.newImgIcon("download.png").getSrc());
 		download.addClickHandler(new ClickHandler() {
@@ -292,7 +295,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		if (Feature.visible(Feature.PDF)) {
 			addButton(pdf);
-			if (!Feature.enabled(Feature.PDF)) {
+			if (!Feature.enabled(Feature.PDF) || !downloadEnabled) {
 				pdf.setDisabled(true);
 				pdf.setTooltip(I18N.message("featuredisabled"));
 			}
@@ -311,7 +314,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		if (Feature.visible(Feature.OFFICE) && "true".equals(Config.getProperty(Constants.OFFICE_ENABLED))) {
 			addButton(office);
-			if (!Feature.enabled(Feature.OFFICE) || (document != null && !Util.isOfficeFile(document.getFileName()))) {
+			if (!Feature.enabled(Feature.OFFICE) || (document != null && !Util.isOfficeFile(document.getFileName()))
+					|| !downloadEnabled) {
 				office.setDisabled(true);
 				office.setTooltip(I18N.message("featuredisabled"));
 			}
@@ -402,6 +406,9 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	 */
 	public void update(final GUIDocument document) {
 		try {
+			GUIFolder folder = Session.get().getCurrentFolder();
+			boolean downloadEnabled=folder!=null && folder.isDownload();
+			
 			this.document = document;
 
 			if (document == null) {
@@ -411,8 +418,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 
 			if (document != null) {
-				rss.setDisabled(!Feature.enabled(Feature.RSS));
-				pdf.setDisabled(!Feature.enabled(Feature.PDF));
+				rss.setDisabled(!Feature.enabled(Feature.RSS) || !downloadEnabled);
+				pdf.setDisabled(!Feature.enabled(Feature.PDF) || !downloadEnabled);
 				subscribe.setDisabled(!Feature.enabled(Feature.AUDIT));
 
 				boolean isOfficeFile = false;
@@ -421,7 +428,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				else if (document.getType() != null)
 					isOfficeFile = Util.isOfficeFileType(document.getType());
 
-				office.setDisabled(!Feature.enabled(Feature.OFFICE) || !isOfficeFile);
+				office.setDisabled(!Feature.enabled(Feature.OFFICE) || !isOfficeFile || !downloadEnabled);
 			} else {
 				rss.setDisabled(true);
 				pdf.setDisabled(true);
@@ -432,8 +439,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				startWorkflow.setDisabled(true);
 				addToWorkflow.setDisabled(true);
 			}
-
-			GUIFolder folder = Session.get().getCurrentFolder();
 
 			if (folder != null) {
 				add.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));

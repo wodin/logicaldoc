@@ -610,7 +610,7 @@ public class DocumentContextMenu extends Menu {
 		else if (selection[0].getAttribute("type") != null)
 			isOfficeFile = Util.isOfficeFileType(selection[0].getAttribute("type"));
 		boolean enableOffice = selection != null && selection.length == 1 && isOfficeFile
-				&& "true".equals(Config.getProperty(Constants.OFFICE_ENABLED));
+				&& "true".equals(Config.getProperty(Constants.OFFICE_ENABLED)) && folder.isDownload();
 
 		if (selection != null && selection.length == 1) {
 			ListGridRecord record = selection[0];
@@ -703,6 +703,15 @@ public class DocumentContextMenu extends Menu {
 			checkout.setEnabled(false);
 			lock.setEnabled(false);
 			unlockItem.setEnabled(false);
+		}
+
+		if (!folder.isDownload()) {
+			download.setEnabled(false);
+			sendMail.setEnabled(false);
+			checkout.setEnabled(false);
+			enableOffice = false;
+			enableSign = false;
+
 		}
 
 		setItems(download, cut, copy, delete, bookmark, sendMail, links, checkout, checkin, lock, unlockItem, more);

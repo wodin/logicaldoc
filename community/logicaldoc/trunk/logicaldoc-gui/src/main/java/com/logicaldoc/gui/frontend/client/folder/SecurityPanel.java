@@ -68,6 +68,10 @@ public class SecurityPanel extends FolderDetailTab {
 		read.setType(ListGridFieldType.BOOLEAN);
 		read.setCanEdit(false);
 
+		ListGridField download = new ListGridField("download", I18N.message("download"), 60);
+		download.setType(ListGridFieldType.BOOLEAN);
+		download.setCanEdit(true);
+		
 		ListGridField write = new ListGridField("write", I18N.message("write"), 60);
 		write.setType(ListGridFieldType.BOOLEAN);
 		write.setCanEdit(true);
@@ -118,7 +122,7 @@ public class SecurityPanel extends FolderDetailTab {
 		list.setAutoFetchData(true);
 		dataSource = new RightsDS(folder.getId());
 		list.setDataSource(dataSource);
-		list.setFields(entityId, entity, read, write, add, security, immutable, delete, rename, _import, export, sign,
+		list.setFields(entityId, entity, read, download, write, add, security, immutable, delete, rename, _import, export, sign,
 				archive, workflow);
 		container.addMember(list);
 
@@ -171,7 +175,7 @@ public class SecurityPanel extends FolderDetailTab {
 		final SelectItem group = ItemFactory.newGroupSelector("group", "addgroup");
 		groupForm.setItems(group);
 		buttons.addMember(groupForm);
-		
+
 		group.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
@@ -202,7 +206,7 @@ public class SecurityPanel extends FolderDetailTab {
 		final DynamicForm userForm = new DynamicForm();
 		final SelectItem user = ItemFactory.newUserSelector("user", "adduser");
 		userForm.setItems(user);
-		
+
 		user.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
@@ -258,6 +262,7 @@ public class SecurityPanel extends FolderDetailTab {
 			right.setRename(record.getAttributeAsBoolean("rename"));
 			right.setSecurity(record.getAttributeAsBoolean("security"));
 			right.setArchive(record.getAttributeAsBoolean("archive"));
+			right.setDownload(record.getAttributeAsBoolean("download"));
 
 			tmp[i] = right;
 			i++;

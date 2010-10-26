@@ -155,6 +155,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
 		checkReadEnable(user, doc.getFolder().getId());
+		checkDownloadEnable(user, doc.getFolder().getId());
 
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		File file = documentManager.getDocumentFile(doc);

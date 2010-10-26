@@ -237,9 +237,24 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		list.addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
-				String id = list.getSelectedRecord().getAttribute("id");
-				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id
-						+ "&open=true", "_blank", "");
+				final String id = list.getSelectedRecord().getAttribute("id");
+				folderService.getFolder(Session.get().getSid(),
+						Long.parseLong(list.getSelectedRecord().getAttributeAsString("folderId")), false,
+						new AsyncCallback<GUIFolder>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUIFolder folder) {
+								if (folder.isDownload())
+									Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
+											+ "&docId=" + id + "&open=true", "_blank", "");
+							}
+						});
+				event.cancel();
 			}
 		});
 

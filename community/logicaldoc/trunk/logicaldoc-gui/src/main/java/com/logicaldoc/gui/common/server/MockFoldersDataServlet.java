@@ -44,6 +44,7 @@ public class MockFoldersDataServlet extends HttpServlet {
 			writer.print("<" + Constants.PERMISSION_DELETE + ">true</" + Constants.PERMISSION_DELETE + ">");
 			writer.print("<" + Constants.PERMISSION_RENAME + ">true</" + Constants.PERMISSION_RENAME + ">");
 			writer.print("<" + Constants.PERMISSION_WRITE + ">true</" + Constants.PERMISSION_WRITE + ">");
+			writer.print("<" + Constants.PERMISSION_DOWNLOAD + ">true</" + Constants.PERMISSION_DOWNLOAD + ">");
 			writer.print("</folder>");
 		} else {
 			for (int i = 0; i < 10; i++) {
@@ -55,6 +56,7 @@ public class MockFoldersDataServlet extends HttpServlet {
 				writer.print("<" + Constants.PERMISSION_DELETE + ">true</" + Constants.PERMISSION_DELETE + ">");
 				writer.print("<" + Constants.PERMISSION_RENAME + ">true</" + Constants.PERMISSION_RENAME + ">");
 				writer.print("<" + Constants.PERMISSION_WRITE + ">true</" + Constants.PERMISSION_WRITE + ">");
+				writer.print("<" + Constants.PERMISSION_DOWNLOAD + ">true</" + Constants.PERMISSION_DOWNLOAD + ">");
 				writer.print("</folder>");
 			}
 		}

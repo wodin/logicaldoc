@@ -90,21 +90,29 @@ public class FoldersNavigator extends TreeGrid {
 		addCellClickHandler(new CellClickHandler() {
 			@Override
 			public void onCellClick(final CellClickEvent event) {
+				selectFolder(Long.parseLong(event.getRecord().getAttributeAsString("id")));
+			}
+		});
+	}
 
-				service.getFolder(Session.get().getSid(), Long.parseLong(event.getRecord().getAttributeAsString("id")),
-						false, new AsyncCallback<GUIFolder>() {
+	/**
+	 * Select the specified folder.
+	 * 
+	 * @param folderId The folder's identifier
+	 */
+	public void selectFolder(long folderId) {
+		service.getFolder(Session.get().getSid(), folderId, false, new AsyncCallback<GUIFolder>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+			@Override
+			public void onFailure(Throwable caught) {
+				SC.say(caught.toString());
+				Log.serverError(caught);
+			}
 
-							@Override
-							public void onSuccess(GUIFolder result) {
-								result.setPathExtended(getPath(result.getId()));
-								Session.get().setCurrentFolder(result);
-							}
-						});
+			@Override
+			public void onSuccess(GUIFolder result) {
+				result.setPathExtended(getPath(result.getId()));
+				Session.get().setCurrentFolder(result);
 			}
 		});
 	}
