@@ -109,7 +109,7 @@ public class FolderDetailsPanel extends VLayout {
 
 							@Override
 							public void onSuccess(GUIFolder folder) {
-								folder.setPathExtended(pathExtended);
+								folder.setPathExtended(FoldersNavigator.get().getPath(folder.getId()));
 								setFolder(folder);
 								savePanel.setVisible(false);
 							}
