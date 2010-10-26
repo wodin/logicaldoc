@@ -164,7 +164,9 @@ public class DocumentDetailsPanel extends VLayout {
 		discussionTabPanel.setWidth100();
 		discussionTabPanel.setHeight100();
 		discussionTab.setPane(discussionTabPanel);
-		tabSet.addTab(discussionTab);
+		
+		if (Feature.visible(Feature.FORUMS))
+			tabSet.addTab(discussionTab);
 
 		Tab versionsTab = new Tab(I18N.message("versions"));
 		versionsTabPanel = new HLayout();

@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.dashboard;
 
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.Feature;
 import com.smartgwt.client.widgets.layout.PortalLayout;
 
 /**
@@ -32,7 +33,8 @@ public class UserDashboard extends PortalLayout {
 		setColumnBorder("0px");
 
 		refresh();
-		addPortlet(new TagCloudPortlet(), 1, 2);
+		if (Feature.visible(Feature.TAGS))
+			addPortlet(new TagCloudPortlet(), 1, 2);
 	}
 
 	public void refresh() {

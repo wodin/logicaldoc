@@ -38,9 +38,14 @@ public class SearchMenu extends SectionStack {
 		fulltextSection.addItem(new FulltextForm());
 		addSection(fulltextSection);
 
-		SectionStackSection tagsSection = new SectionStackSection(I18N.message("tags"));
-		tagsSection.addItem(TagsForm.get());
-		addSection(tagsSection);
+		if (Feature.visible(Feature.TAGS)) {
+			SectionStackSection tagsSection = new SectionStackSection(I18N.message("tags"));
+			if (Feature.enabled(Feature.PARAMETRIC_SEARCHES))
+				tagsSection.addItem(TagsForm.get());
+			else
+				tagsSection.addItem(new FeatureDisabled());
+			addSection(tagsSection);
+		}
 
 		if (Feature.visible(Feature.PARAMETRIC_SEARCHES)) {
 			SectionStackSection parametricSection = new SectionStackSection(I18N.message("parametricsearches"));
@@ -51,13 +56,14 @@ public class SearchMenu extends SectionStack {
 			addSection(parametricSection);
 		}
 
-		SectionStackSection savedSection = new SectionStackSection(I18N.message("savedsearches"));
-		savedSection.setExpanded(false);
-		if (Feature.enabled(12)) {
-			savedSection.addItem(SavedSearchesPanel.get());
-			addSection(savedSection);
-		} else if (Feature.showDisabled()) {
-			savedSection.addItem(new FeatureDisabled());
+		if (Feature.visible(Feature.SAVED_SEARCHES)) {
+			SectionStackSection savedSection = new SectionStackSection(I18N.message("savedsearches"));
+			savedSection.setExpanded(false);
+			if (Feature.enabled(Feature.SAVED_SEARCHES))
+				savedSection.addItem(SavedSearchesPanel.get());
+			else
+				savedSection.addItem(new FeatureDisabled());
+
 			addSection(savedSection);
 		}
 	}

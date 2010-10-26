@@ -36,9 +36,9 @@ public class MetadataMenu extends VLayout {
 		Button tags = new Button(I18N.message("tags"));
 		tags.setWidth100();
 		tags.setHeight(25);
-		if (Feature.visible(Feature.TAGS)) {
+		if (Feature.visible(Feature.TAGS_ADMIN)) {
 			addMember(tags);
-			if (!Feature.enabled(Feature.TAGS)) {
+			if (!Feature.enabled(Feature.TAGS_ADMIN)) {
 				tags.setDisabled(true);
 				tags.setTooltip(I18N.message("featuredisabled"));
 			}

@@ -1,6 +1,8 @@
 package com.logicaldoc.gui.frontend.client.document;
 
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 
 /**
  * This panel contains forums or posts
@@ -14,10 +16,13 @@ public class Discussion extends DocumentDetailTab {
 
 	public Discussion(GUIDocument document) {
 		super(document, null);
-		setWidth100();
-		setHeight100();
-		panel = new DiscussionsPanel(document, this);
-		initGUI();
+		if (Feature.enabled(Feature.FORUMS)) {
+			setWidth100();
+			setHeight100();
+			panel = new DiscussionsPanel(document, this);
+			initGUI();
+		} else
+			addMember(new FeatureDisabled());
 	}
 
 	private void initGUI() {
