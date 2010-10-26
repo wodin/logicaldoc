@@ -54,7 +54,7 @@ public class MainMenu extends ToolStrip {
 		addSeparator();
 
 		StaticTextItem userInfo = new StaticTextItem();
-		userInfo.setTitle(I18N.message("loggedas"));
+		userInfo.setTitle(I18N.message("loggedin"));
 		userInfo.setValue(Session.get().getUser().getFullName());
 		userInfo.setWrap(false);
 		userInfo.setWrapTitle(false);
