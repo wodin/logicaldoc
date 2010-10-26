@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -115,6 +116,13 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		/*
 		 * Prepare the second form for the tags
 		 */
+		if (Feature.enabled(Feature.TAGS)){
+			prepareTagsForm();
+			formsContainer.addMember(form2, 1);
+		}
+	}
+
+	private void prepareTagsForm() {
 		if (formsContainer.contains(form2))
 			formsContainer.removeMember(form2);
 
@@ -173,7 +181,6 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		}
 
 		form2.setItems(items.toArray(new FormItem[0]));
-		formsContainer.addMember(form2, 1);
 	}
 
 	@SuppressWarnings("unchecked")

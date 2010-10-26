@@ -49,11 +49,16 @@ public class DocumentsMenu extends SectionStack {
 			addSection(bookmarksSection);
 		}
 
-		trashSection = new SectionStackSection(I18N.message("trash"));
-		trashSection.setName("trash");
-		trashSection.setCanCollapse(true);
-		trashSection.setItems(TrashPanel.get());
-		addSection(trashSection);
+		if (Feature.visible(Feature.TRASH)) {
+			trashSection = new SectionStackSection(I18N.message("trash"));
+			trashSection.setName("trash");
+			trashSection.setCanCollapse(true);
+			if (Feature.enabled(Feature.TRASH))
+				trashSection.setItems(TrashPanel.get());
+			else
+				trashSection.addItem(new FeatureDisabled());
+			addSection(trashSection);
+		}
 
 		addSectionHeaderClickHandler(new SectionHeaderClickHandler() {
 			@Override

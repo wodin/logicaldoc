@@ -5,10 +5,12 @@ import gdurelle.tagcloud.client.tags.WordTag;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.beans.GUITag;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.services.TagService;
 import com.logicaldoc.gui.frontend.client.services.TagServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -31,43 +33,46 @@ public class TagCloudPortlet extends Portlet {
 	private HLayout container = new HLayout();
 
 	public TagCloudPortlet() {
-		setTitle(I18N.message("tagcloud"));
-		HeaderIcon portletIcon = ItemFactory.newHeaderIcon("tag_blue.png");
-		setHeaderControls(new HeaderControl(portletIcon), HeaderControls.HEADER_LABEL);
+		if (Feature.enabled(Feature.TAGS)) {
+			setTitle(I18N.message("tagcloud"));
+			HeaderIcon portletIcon = ItemFactory.newHeaderIcon("tag_blue.png");
+			setHeaderControls(new HeaderControl(portletIcon), HeaderControls.HEADER_LABEL);
 
-		setCanDrag(false);
-		setCanDrop(false);
-		setShowShadow(true);
-		setAnimateMinimize(true);
-		setDragAppearance(DragAppearance.OUTLINE);
-		setDragOpacity(30);
+			setCanDrag(false);
+			setCanDrop(false);
+			setShowShadow(true);
+			setAnimateMinimize(true);
+			setDragAppearance(DragAppearance.OUTLINE);
+			setDragOpacity(30);
 
-		container.setWidth100();
-		container.setHeight100();
-		container.setAlign(Alignment.CENTER);
-		container.setMargin(25);
+			container.setWidth100();
+			container.setHeight100();
+			container.setAlign(Alignment.CENTER);
+			container.setMargin(25);
 
-		addChild(container);
+			addChild(container);
 
-		service.getTagCloud(new AsyncCallback<GUITag[]>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				Log.serverError(caught);
-			}
-
-			@Override
-			public void onSuccess(GUITag[] cloud) {
-				TagCloud tc = new TagCloud();
-				tc.setWidth("95%");
-				tc.setMaxNumberOfWords(cloud.length);
-				for (GUITag tag : cloud) {
-					WordTag wordTag = new WordTag(tag.getTag());
-					wordTag.setNumberOfOccurences(tag.getScale());
-					wordTag.setLink("javascript:window.searchTag(\"" + tag.getTag() + "\");");
-					tc.addWord(wordTag);
+			service.getTagCloud(new AsyncCallback<GUITag[]>() {
+				@Override
+				public void onFailure(Throwable caught) {
+					Log.serverError(caught);
 				}
-				container.addMember(tc);
-			}
-		});
+
+				@Override
+				public void onSuccess(GUITag[] cloud) {
+					TagCloud tc = new TagCloud();
+					tc.setWidth("95%");
+					tc.setMaxNumberOfWords(cloud.length);
+					for (GUITag tag : cloud) {
+						WordTag wordTag = new WordTag(tag.getTag());
+						wordTag.setNumberOfOccurences(tag.getScale());
+						wordTag.setLink("javascript:window.searchTag(\"" + tag.getTag() + "\");");
+						tc.addWord(wordTag);
+					}
+					container.addMember(tc);
+				}
+			});
+		} else
+			addItem(new FeatureDisabled());
 	}
 }
