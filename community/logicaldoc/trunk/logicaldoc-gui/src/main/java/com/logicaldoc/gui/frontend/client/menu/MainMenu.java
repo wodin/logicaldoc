@@ -193,7 +193,7 @@ public class MainMenu extends ToolStrip {
 			}
 		});
 
-		MenuItem about = new MenuItem(I18N.message("about") + " " + Session.get().getInfo().getProductName());
+		MenuItem about = new MenuItem(I18N.message("about") + " " + Session.get().getInfo().getProduct());
 		about.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
