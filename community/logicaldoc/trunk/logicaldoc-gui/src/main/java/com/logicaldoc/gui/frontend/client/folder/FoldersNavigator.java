@@ -111,7 +111,10 @@ public class FoldersNavigator extends TreeGrid {
 
 			@Override
 			public void onSuccess(GUIFolder result) {
-				result.setPathExtended(getPath(result.getId()));
+				if (result.getId() == Constants.DOCUMENTS_FOLDERID)
+					result.setPathExtended("/");
+				else
+					result.setPathExtended(getPath(result.getId()));
 				Session.get().setCurrentFolder(result);
 			}
 		});
