@@ -22,7 +22,7 @@ public class MoveDialog extends Dialog {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("move"));
 		setWidth(250);
-		setHeight(200);
+		setHeight(205);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -41,6 +41,7 @@ public class MoveDialog extends Dialog {
 
 		Button move = new Button();
 		move.setTitle(I18N.message("move"));
+		move.setMargin(1);
 		move.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				FoldersNavigator.get().moveTo(

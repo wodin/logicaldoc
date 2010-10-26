@@ -466,19 +466,15 @@ public class FoldersNavigator extends TreeGrid {
 	public void moveTo(long targetFolderId) {
 		final TreeNode selected = (TreeNode) getSelectedRecord();
 		final TreeNode target = getTree().findById(Long.toString(targetFolderId));
-		if (target != null && !target.getAttributeAsBoolean(Constants.PERMISSION_ADD)) {
-			SC.warn("addforbidden");
-			return;
-		}
 
-		Log.debug("move folder " + selected.getAttribute("id"));
-
+		Log.debug("try to move folder " + selected.getAttribute("id"));
 		service.move(Session.get().getSid(), Long.parseLong(selected.getAttribute("id")), targetFolderId,
 				new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
+						Log.warn(I18N.message("operationnotallowed"), null);
 					}
 
 					@Override
