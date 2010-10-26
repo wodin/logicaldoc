@@ -39,11 +39,15 @@ public interface Resource {
 
 	public boolean isRenameEnabled();
 	
+	public boolean isDownloadEnabled();
+	
 	public boolean isWriteEnabled();
 	
 	public boolean isAddChildEnabled();
 	
 	public void setDeleteEnabled(boolean deleteEnabled);
+	
+	public void setDownloadEnabled(boolean downloadEnabled);
 
 	public void setRenameEnabled(boolean renameEnabled);
 	

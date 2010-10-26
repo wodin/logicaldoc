@@ -577,6 +577,9 @@ public class ResourceServiceImpl implements ResourceService {
 
 	@Override
 	public InputStream streamOut(Resource resource) {
+		if (!resource.isDownloadEnabled())
+			throw new DavResourceIOException("The user dowsn't have the download permission");
+
 		String version = resource.getVersionLabel();
 		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
 

@@ -116,6 +116,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				right.setSign(fg.getSign() == 1 ? true : false);
 				right.setArchive(fg.getArchive() == 1 ? true : false);
 				right.setWorkflow(fg.getWorkflow() == 1 ? true : false);
+				right.setDownload(fg.getDownload() == 1 ? true : false);
 
 				rights[i] = right;
 				i++;
@@ -361,6 +362,11 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					fg.setWorkflow(1);
 				else
 					fg.setWorkflow(0);
+				
+				if (isAdmin || right.isDownload())
+					fg.setDownload(1);
+				else
+					fg.setDownload(0);
 			}
 
 			folder.setFolderGroups(grps);

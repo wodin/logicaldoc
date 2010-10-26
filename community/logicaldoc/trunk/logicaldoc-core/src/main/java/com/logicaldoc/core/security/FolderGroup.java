@@ -11,6 +11,8 @@ public class FolderGroup {
 
 	private int write = 0;
 
+	private int download = 1;
+
 	private int add = 0;
 
 	private int security = 0;
@@ -54,6 +56,7 @@ public class FolderGroup {
 		mg.setSign(sign);
 		mg.setArchive(archive);
 		mg.setWorkflow(workflow);
+		mg.setDownload(download);
 		return mg;
 	}
 
@@ -88,6 +91,7 @@ public class FolderGroup {
 		sb.append(getSign() == 1 ? "1" : "0");
 		sb.append(getArchive() == 1 ? "1" : "0");
 		sb.append(getWorkflow() == 1 ? "1" : "0");
+		sb.append(getDownload() == 1 ? "1" : "0");
 
 		return Integer.parseInt(sb.toString(), 2);
 	}
@@ -110,6 +114,7 @@ public class FolderGroup {
 		setSign(Permission.SIGN.match(permissions) ? 1 : 0);
 		setArchive(Permission.ARCHIVE.match(permissions) ? 1 : 0);
 		setWorkflow(Permission.WORKFLOW.match(permissions) ? 1 : 0);
+		setDownload(Permission.DOWNLOAD.match(permissions) ? 1 : 0);
 	}
 
 	public int getWrite() {
@@ -208,4 +213,11 @@ public class FolderGroup {
 		this.immutable = immutable;
 	}
 
+	public int getDownload() {
+		return download;
+	}
+
+	public void setDownload(int download) {
+		this.download = download;
+	}
 }

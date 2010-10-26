@@ -54,6 +54,8 @@ public class ResourceImpl implements Resource {
 
 	private Boolean addChildEnabled;
 
+	private Boolean downloadEnabled;
+
 	DavSession session;
 
 	public Long getContentLength() {
@@ -249,5 +251,15 @@ public class ResourceImpl implements Resource {
 		deleteEnabled = permissions.contains(Permission.DELETE);
 		renameEnabled = permissions.contains(Permission.RENAME);
 		addChildEnabled = permissions.contains(Permission.ADD);
+		downloadEnabled = permissions.contains(Permission.DOWNLOAD);
+	}
+
+	public boolean isDownloadEnabled() {
+		initPermissions();
+		return this.downloadEnabled;
+	}
+
+	public void setDownloadEnabled(boolean downloadEnabled) {
+		this.downloadEnabled = downloadEnabled;
 	}
 }

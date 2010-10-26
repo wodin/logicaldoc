@@ -31,10 +31,11 @@ public class RightsDS extends DataSource {
 		DataSourceBooleanField rename = new DataSourceBooleanField("rename");
 		DataSourceBooleanField security = new DataSourceBooleanField("security");
 		DataSourceBooleanField archive = new DataSourceBooleanField("archive");
+		DataSourceBooleanField download = new DataSourceBooleanField("download");
 		DataSourceTextField type = new DataSourceTextField("type");
 
 		setFields(entityId, entity, read, write, delete, add, workflow, sign, _import, export, immutable, rename,
-				security, archive, type);
+				security, archive, type, download);
 		setClientOnly(true);
 		setDataURL("data/rights.xml?sid=" + Session.get().getSid() + "&folderId=" + folderId + "&locale="
 				+ I18N.getLocale());

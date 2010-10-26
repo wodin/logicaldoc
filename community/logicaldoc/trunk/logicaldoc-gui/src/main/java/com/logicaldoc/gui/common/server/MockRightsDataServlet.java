@@ -50,6 +50,7 @@ public class MockRightsDataServlet extends HttpServlet {
 			writer.print("<sign>true</sign>");
 			writer.print("<archive>true</archive>");
 			writer.print("<workflow>true</workflow>");
+			writer.print("<download>true</download>");
 			writer.print("</right>");
 		}
 		writer.write("</list>");

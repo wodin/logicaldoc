@@ -45,6 +45,8 @@ public final class Constants {
 
 	public static final String PERMISSION_WORKFLOW = "workflow";
 
+	public static final String PERMISSION_DOWNLOAD = "download";
+	
 	public static final int DOC_UNLOCKED = 0;
 
 	public static final int DOC_CHECKED_OUT = 1;
