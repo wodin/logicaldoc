@@ -7,6 +7,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
 import com.logicaldoc.gui.common.client.data.DocumentsDS;
+import com.logicaldoc.gui.common.client.data.LanguagesDS;
 import com.logicaldoc.gui.common.client.data.ParsersDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
@@ -20,7 +21,6 @@ import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineService;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineServiceAsync;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TitleOrientation;
@@ -79,6 +79,8 @@ public class SearchIndexingPanel extends VLayout {
 
 	private ListGrid docsList;
 
+	private ListGrid langsList;
+
 	private DocumentsDS dataSource;
 
 	private InfoPanel infoPanel;
@@ -96,7 +98,7 @@ public class SearchIndexingPanel extends VLayout {
 
 		indexingQueueTab = fillIndexingQueueTab(100);
 
-		tabSet.setTabs(searchEngineTab, parsersInfoTab, indexingQueueTab);
+		tabSet.setTabs(searchEngineTab, fillLanguagesTab(), parsersInfoTab, indexingQueueTab);
 
 		setMembers(tabSet);
 	}
@@ -231,7 +233,7 @@ public class SearchIndexingPanel extends VLayout {
 		docsList.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				showContextMenu();
+				showIndexQueueMenu();
 				event.cancel();
 			}
 		});
@@ -293,9 +295,8 @@ public class SearchIndexingPanel extends VLayout {
 		name.setValidators(validator);
 
 		parsersList = new ListGrid();
-		parsersList.setCanEdit(true);
-		parsersList.setEditEvent(ListGridEditEvent.DOUBLECLICK);
-		parsersList.setModalEditing(true);
+		parsersList.setCanEdit(false);
+		parsersList.setSelectionType(SelectionStyle.SINGLE);
 		parsersList.setWidth100();
 		parsersList.setHeight100();
 		parsersList.setAutoFetchData(true);
@@ -307,6 +308,54 @@ public class SearchIndexingPanel extends VLayout {
 		parsersInfoTabPanel.addMember(parsersList);
 		parsersInfoTab.setPane(parsersInfoTabPanel);
 		return parsersInfoTab;
+	}
+
+	private Tab fillLanguagesTab() {
+		Tab languagesTab = new Tab(I18N.message("installedlanguages"));
+		Layout languagesTabPanel = new HLayout();
+		languagesTabPanel.setWidth100();
+		languagesTabPanel.setHeight100();
+
+		setMembersMargin(3);
+
+		ListGridField enabled = new ListGridField("eenabled", " ", 24);
+		enabled.setType(ListGridFieldType.IMAGE);
+		enabled.setCanSort(false);
+		enabled.setAlign(Alignment.CENTER);
+		enabled.setShowDefaultContextMenu(false);
+		enabled.setImageURLPrefix(Util.imagePrefix());
+		enabled.setImageURLSuffix(".gif");
+		enabled.setCanFilter(false);
+
+		ListGridField code = new ListGridField("code", I18N.message("code"), 80);
+		code.setCanEdit(false);
+
+		ListGridField name = new ListGridField("name", I18N.message("name"));
+		name.setCanEdit(false);
+
+		langsList = new ListGrid();
+		langsList.setCanEdit(false);
+		langsList.setWidth100();
+		langsList.setHeight100();
+		langsList.setAutoFetchData(true);
+		langsList.setDataSource(new LanguagesDS());
+		langsList.setShowFilterEditor(true);
+		langsList.setFilterOnKeypress(true);
+		langsList.setSelectionType(SelectionStyle.SINGLE);
+		langsList.setFields(enabled, code, name);
+
+		languagesTabPanel.addMember(langsList);
+		languagesTab.setPane(languagesTabPanel);
+
+		langsList.addCellContextClickHandler(new CellContextClickHandler() {
+			@Override
+			public void onCellContextClick(CellContextClickEvent event) {
+				showLanguagesMenu();
+				event.cancel();
+			}
+		});
+
+		return languagesTab;
 	}
 
 	private Tab fillSearchEngineTab() {
@@ -321,10 +370,6 @@ public class SearchIndexingPanel extends VLayout {
 		searchEngineForm.setWrapItemTitles(false);
 		searchEngineForm.setColWidths(1, "*");
 		searchEngineForm.setValuesManager(vm);
-
-		// Installed Languages
-		StaticTextItem languages = ItemFactory.newStaticTextItem("languages", "installedlanguages",
-				this.searchEngine.getLanguages());
 
 		// Entries count
 		StaticTextItem entries = ItemFactory.newStaticTextItem("entries", "entriescount",
@@ -355,6 +400,7 @@ public class SearchIndexingPanel extends VLayout {
 		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				@SuppressWarnings("unchecked")
 				final Map<String, Object> values = vm.getValues();
 
 				if (vm.validate()) {
@@ -417,7 +463,7 @@ public class SearchIndexingPanel extends VLayout {
 			}
 		});
 
-		searchEngineForm.setItems(languages, entries, locked, includePatters, excludePatters);
+		searchEngineForm.setItems(entries, locked, includePatters, excludePatters);
 		buttons.setMembers(save, unlock, rescheduleAll);
 		buttons.setMembersMargin(5);
 		searchEngineTabPanel.setMembers(searchEngineForm, buttons);
@@ -432,7 +478,7 @@ public class SearchIndexingPanel extends VLayout {
 		tabSet.setTabPane(2, indexingQueueTabPanel);
 	}
 
-	private void showContextMenu() {
+	private void showIndexQueueMenu() {
 		final ListGridRecord[] selection = docsList.getSelection();
 
 		Menu contextMenu = new Menu();
@@ -464,6 +510,59 @@ public class SearchIndexingPanel extends VLayout {
 		});
 
 		contextMenu.setItems(markUnindexable);
+		contextMenu.showContextMenu();
+	}
+
+	private void showLanguagesMenu() {
+		final ListGridRecord record = langsList.getSelectedRecord();
+
+		Menu contextMenu = new Menu();
+		MenuItem enable = new MenuItem();
+		enable.setTitle(I18N.message("enable"));
+		enable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				service.setLanguageStatus(Session.get().getSid(), record.getAttributeAsString("code"), true,
+						new AsyncCallback<Void>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(Void result) {
+								record.setAttribute("eenabled", "0");
+								langsList.updateData(record);
+							}
+						});
+			}
+		});
+
+		MenuItem disable = new MenuItem();
+		disable.setTitle(I18N.message("disable"));
+		disable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				service.setLanguageStatus(Session.get().getSid(), record.getAttributeAsString("code"), false,
+						new AsyncCallback<Void>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(Void result) {
+								record.setAttribute("eenabled", "2");
+								langsList.updateData(record);
+							}
+						});
+			}
+		});
+
+		if ("0".equals(record.getAttributeAsString("eenabled")))
+			contextMenu.setItems(disable);
+		else
+			contextMenu.setItems(enable);
 		contextMenu.showContextMenu();
 	}
 }

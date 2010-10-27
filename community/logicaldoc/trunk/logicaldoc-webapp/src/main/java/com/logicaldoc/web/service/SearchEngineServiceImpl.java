@@ -47,17 +47,16 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			searchEngine.setExcludePatters(conf.getPropertyWithSubstitutions("index.excludes"));
 			searchEngine.setIncludePatters(conf.getPropertyWithSubstitutions("index.includes"));
 
-			//Populate the list of supported languages
+			// Populate the list of supported languages
 			searchEngine.setLanguages("");
-			LanguageManager lm=LanguageManager.getInstance();
+			LanguageManager lm = LanguageManager.getInstance();
 			List<String> langs = lm.getLanguagesAsString();
 			for (String lang : langs) {
-				searchEngine.setLanguages(searchEngine.getLanguages()+","+lang);
+				searchEngine.setLanguages(searchEngine.getLanguages() + "," + lang);
 			}
-			if(searchEngine.getLanguages().startsWith(","))
+			if (searchEngine.getLanguages().startsWith(","))
 				searchEngine.setLanguages(searchEngine.getLanguages().substring(1));
-			
-			
+
 			return searchEngine;
 		} catch (Exception t) {
 			log.error(t.getMessage(), t);
@@ -121,6 +120,19 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			conf.setProperty("index.excludes", searchEngine.getExcludePatters());
 			conf.setProperty("index.includes", searchEngine.getIncludePatters());
+			conf.write();
+		} catch (IOException t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
+	}
+
+	@Override
+	public void setLanguageStatus(String sid, String language, boolean active) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+		try {
+			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			conf.setProperty("lang." + language, active ? "enabled" : "disabled");
 			conf.write();
 		} catch (IOException t) {
 			log.error(t.getMessage(), t);

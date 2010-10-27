@@ -37,4 +37,9 @@ public class MockSearchEngineServiceImpl extends RemoteServiceServlet implements
 	public void save(String sid, GUISearchEngine searchEngine) {
 
 	}
+
+	@Override
+	public void setLanguageStatus(String sid, String language, boolean active) {
+		
+	}
 }

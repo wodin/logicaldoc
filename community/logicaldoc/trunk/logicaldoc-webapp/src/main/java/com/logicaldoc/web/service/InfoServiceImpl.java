@@ -90,7 +90,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			info.setBundle(getBundle(locale));
 
 			LanguageManager manager = LanguageManager.getInstance();
-			Collection<Language> languages = manager.getLanguages();
+			Collection<Language> languages = manager.getActiveLanguages();
 			supportedLanguages.clear();
 			for (Language language : languages) {
 				Locale lc = language.getLocale();
