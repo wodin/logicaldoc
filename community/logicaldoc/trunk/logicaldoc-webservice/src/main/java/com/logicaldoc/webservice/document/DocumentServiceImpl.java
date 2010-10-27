@@ -349,6 +349,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		for (int i = 0; i < versions.size(); i++) {
 			versDao.initialize(versions.get(i));
 			wsVersions[i] = WSDocument.fromDocument(versions.get(i));
+			wsVersions[i].setComment(versions.get(i).getComment());
 		}
 
 		return wsVersions;

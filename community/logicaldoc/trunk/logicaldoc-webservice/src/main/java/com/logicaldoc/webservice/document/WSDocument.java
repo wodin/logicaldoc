@@ -153,6 +153,8 @@ public class WSDocument {
 
 	private long size;
 
+	private String comment;
+	
 	public static WSDocument fromDocument(AbstractDocument document) {
 		WSDocument wsDoc = new WSDocument();
 
@@ -673,5 +675,13 @@ public class WSDocument {
 
 	public void setSize(long size) {
 		this.size = size;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 }
