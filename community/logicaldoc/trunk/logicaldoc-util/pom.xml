@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>logicaldoc-util</artifactId>
-	<name>logicaldoc</name>
+	<name>logicaldoc-util</name>
 	<packaging>jar</packaging>
 	
 	<dependencies>
