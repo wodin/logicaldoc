@@ -56,4 +56,13 @@ public class WindowUtils {
 	public static native void  setTitle(String title)/*-{
 		$doc.title=title;
 	}-*/;
+	
+
+	public static native void setAskForExit()/*-{
+	     window.onbeforeunload = function(){ return false; }
+    }-*/;
+
+	public static native void setNotAskForExit()/*-{
+         window.onbeforeunload = function(){  }
+    }-*/;
 }

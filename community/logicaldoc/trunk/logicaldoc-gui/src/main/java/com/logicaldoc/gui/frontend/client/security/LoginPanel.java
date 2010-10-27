@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.MessageLabel;
 import com.logicaldoc.gui.frontend.client.Frontend;
 import com.logicaldoc.gui.frontend.client.folder.FoldersNavigator;
@@ -181,6 +182,7 @@ public class LoginPanel extends VLayout {
 								SC.warn(e.getMessage());
 							}
 							FoldersNavigator.get().selectFolder(Constants.DOCUMENTS_FOLDERID);
+							WindowUtils.setAskForExit();
 						} else if (session.getUser() != null && session.getUser().isExpired()) {
 							new ChangePassword(session.getUser(), "needtochangepassword").show();
 						} else {
