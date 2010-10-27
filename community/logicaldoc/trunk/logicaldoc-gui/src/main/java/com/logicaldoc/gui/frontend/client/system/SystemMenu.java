@@ -55,13 +55,8 @@ public class SystemMenu extends VLayout {
 		searchAndIndexing.setHeight(25);
 		addMember(searchAndIndexing);
 
-		Button log = new Button(I18N.message("log"));
-		log.setWidth100();
-		log.setHeight(25);
-		addMember(log);
-		
 		addInformations();
-		
+
 		general.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -73,13 +68,6 @@ public class SystemMenu extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				AdminPanel.get().setContent(new LastChangesPanel());
-			}
-		});
-
-		log.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				AdminPanel.get().setContent(new LogPanel("DMS_WEB"));
 			}
 		});
 
@@ -109,8 +97,8 @@ public class SystemMenu extends VLayout {
 			}
 		});
 	}
-	
-	private void addInformations(){
+
+	private void addInformations() {
 		DynamicForm systemForm = new DynamicForm();
 		systemForm.setWidth(300);
 		systemForm.setColWidths(1, "*");
@@ -168,7 +156,7 @@ public class SystemMenu extends VLayout {
 		systemForm.setItems(productName, version, vendor, address, capAndCity, country);
 
 		supportForm.setItems(support, installationID);
-		
+
 		addMember(systemForm);
 		addMember(supportForm);
 	}

@@ -29,7 +29,11 @@ public class GeneralPanel extends HLayout {
 		sessions.setTitle(I18N.message("sessions"));
 		sessions.setPane(new SessionsPanel(true));
 
-		tabs.setTabs(stats, sessions);
+		Tab log = new Tab();
+		log.setTitle(I18N.message("log"));
+		log.setPane(new LogPanel("DMS_WEB"));
+
+		tabs.setTabs(stats, sessions, log);
 
 		setMembers(tabs);
 	}

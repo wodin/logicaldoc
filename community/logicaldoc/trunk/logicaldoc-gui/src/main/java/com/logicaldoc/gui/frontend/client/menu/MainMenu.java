@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.personal.ChangePassword;
 import com.logicaldoc.gui.frontend.client.personal.Profile;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
@@ -82,6 +83,7 @@ public class MainMenu extends ToolStrip {
 
 					@Override
 					public void onSuccess(Void result) {
+						WindowUtils.setNotAskForExit();
 						String base = GWT.getHostPageBaseURL();
 						Util.redirect(base
 								+ (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/" + GWT.getModuleName()
