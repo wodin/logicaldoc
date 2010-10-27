@@ -179,7 +179,7 @@ public class DocumentContextMenu extends Menu {
 		});
 
 		MenuItem links = new MenuItem();
-		links.setTitle(I18N.message("connectaslinks"));
+		links.setTitle(I18N.message("pasteaslinks"));
 		links.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				if (selection == null || selection.length == 0 || Clipboard.getInstance().isEmpty())
@@ -372,7 +372,7 @@ public class DocumentContextMenu extends Menu {
 		});
 
 		MenuItem bookmark = new MenuItem();
-		bookmark.setTitle(I18N.message("bookmark"));
+		bookmark.setTitle(I18N.message("addbookmark"));
 		bookmark.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord[] selection = list.getSelection();
