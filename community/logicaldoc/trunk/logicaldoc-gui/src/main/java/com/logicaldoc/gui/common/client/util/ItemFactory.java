@@ -509,13 +509,10 @@ public class ItemFactory {
 		select.setWidth(110);
 
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		map.put("minute", I18N.message("minute"));
-		map.put("hour", I18N.message("hour"));
-		map.put("businessHour", I18N.message("businesshour"));
-		map.put("day", I18N.message("day"));
-		map.put("businessDay", I18N.message("businessday"));
-		map.put("week", I18N.message("week"));
-		map.put("businessWeek", I18N.message("businessweek"));
+		map.put("minute", I18N.message("minutes"));
+		map.put("hour", I18N.message("hours"));
+		map.put("day", I18N.message("ddays"));
+		map.put("week", I18N.message("weeks"));
 		select.setValueMap(map);
 		select.setValue("minute");
 		return select;

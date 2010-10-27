@@ -93,6 +93,14 @@ public class WorkflowDetailsDialog extends Window {
 
 	private HLayout appendedDocsLayout = null;
 
+	private StaticTextItem taskStartDate = null;
+
+	private StaticTextItem taskEndDate = null;
+
+	private StaticTextItem endDate = null;
+
+	private DateTimeFormat formatter = DateTimeFormat.getFormat(I18N.message("format_date"));
+
 	public WorkflowDetailsDialog(WorkflowDashboard dashboard, GUIWorkflow wfl) {
 		this.workflow = wfl;
 		this.workflowDashboard = dashboard;
@@ -100,7 +108,7 @@ public class WorkflowDetailsDialog extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
 		setTitle(I18N.message("workflow"));
-		setWidth(570);
+		setWidth(580);
 		setHeight(460);
 		setCanDragResize(true);
 		setIsModal(true);
@@ -176,13 +184,11 @@ public class WorkflowDetailsDialog extends Window {
 				I18N.message("description"), workflow.getDescription());
 		workflowDescription.setShouldSaveValue(false);
 
-		DateTimeFormat formatter = DateTimeFormat.getFormat(I18N.message("format_date"));
-
 		StaticTextItem startDate = ItemFactory.newStaticTextItem("startdate", "startdate", null);
 		if (workflow.getStartDate() != null)
 			startDate.setValue(formatter.format((Date) workflow.getStartDate()));
 
-		StaticTextItem endDate = ItemFactory.newStaticTextItem("enddate", "enddate", null);
+		endDate = ItemFactory.newStaticTextItem("enddate", "enddate", null);
 		if (workflow.getEndDate() != null)
 			endDate.setValue(formatter.format((Date) workflow.getEndDate()));
 
@@ -219,16 +225,23 @@ public class WorkflowDetailsDialog extends Window {
 			taskAssignee.setValue(workflow.getSelectedTask().getPooledActors());
 		taskAssignee.setShouldSaveValue(false);
 
-		StaticTextItem taskStartDate = ItemFactory.newStaticTextItem("taskStartDate", "startdate", null);
+		taskStartDate = ItemFactory.newStaticTextItem("taskStartDate", "startdate", null);
 		if (workflow.getSelectedTask().getStartDate() != null)
 			taskStartDate.setValue(formatter.format((Date) workflow.getSelectedTask().getStartDate()));
 
 		StaticTextItem taskDueDate = ItemFactory.newStaticTextItem("taskDueDate", "duedate", null);
 		if (workflow.getSelectedTask().getDueDate() != null
-				&& !workflow.getSelectedTask().getDueDate().trim().isEmpty())
-			taskDueDate.setValue(workflow.getSelectedTask().getDueDate());
+				&& !workflow.getSelectedTask().getDueDate().trim().isEmpty()) {
+			String dueDate = workflow.getSelectedTask().getDueDate();
+			String[] elements = dueDate.split(" ");
+			// This code is mandatory to use the correct key label
+			elements[1] = elements[1] + "s";
+			if (elements[1].startsWith("d"))
+				elements[1] = "d" + elements[1];
+			taskDueDate.setValue(elements[0] + " " + I18N.message(elements[1]));
+		}
 
-		StaticTextItem taskEndDate = ItemFactory.newStaticTextItem("taskEndDate", "enddate", null);
+		taskEndDate = ItemFactory.newStaticTextItem("taskEndDate", "enddate", null);
 		if (workflow.getSelectedTask().getEndDate() != null)
 			taskEndDate.setValue(formatter.format((Date) workflow.getSelectedTask().getEndDate()));
 
@@ -430,7 +443,8 @@ public class WorkflowDetailsDialog extends Window {
 										if (result != null) {
 											workflow = result;
 											reload(workflow);
-
+											taskStartDate.setValue(formatter.format((Date) workflow.getSelectedTask()
+													.getStartDate()));
 										}
 									}
 								});
@@ -707,7 +721,11 @@ public class WorkflowDetailsDialog extends Window {
 													if (result != null) {
 														workflow = result;
 														reload(workflow);
-
+														taskEndDate.setValue(formatter.format((Date) workflow
+																.getSelectedTask().getEndDate()));
+														if (workflow.getEndDate() != null)
+															endDate.setValue(formatter.format((Date) workflow
+																	.getEndDate()));
 													}
 												}
 											});
@@ -720,7 +738,7 @@ public class WorkflowDetailsDialog extends Window {
 			}
 		} else {
 			DynamicForm taskEndedForm = new DynamicForm();
-			taskEndedForm.setWidth(300);
+			taskEndedForm.setWidth(180);
 			taskEndedForm.setColWidths(1, "*");
 
 			StaticTextItem taskEndedTitle = ItemFactory.newStaticTextItem("taskEndedTitle", "",
@@ -737,12 +755,6 @@ public class WorkflowDetailsDialog extends Window {
 
 		workflowTab.setPane(form);
 		docsTab.setPane(appendedDocsLayout);
-
-		// tabs.setSelectedTab(0);
-
-		// form.addMember(tabs);
-
-		// addChild(tabs);
 	}
 
 	public GUIWorkflow getWorkflow() {

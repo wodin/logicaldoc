@@ -192,7 +192,8 @@ public class WorkflowToolstrip extends ToolStrip {
 				boolean stateWithoutAssigneeFound = false;
 				if (currentWorkflow.getStates() != null && currentWorkflow.getStates().length > 0) {
 					for (GUIWFState state : currentWorkflow.getStates()) {
-						if (state.getParticipants() == null || state.getParticipants().length == 0) {
+						if (state.getType() == GUIWFState.TYPE_TASK
+								&& (state.getParticipants() == null || state.getParticipants().length == 0)) {
 							stateWithoutAssigneeFound = true;
 							break;
 						}
