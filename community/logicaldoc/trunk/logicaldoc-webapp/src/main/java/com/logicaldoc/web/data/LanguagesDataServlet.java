@@ -3,6 +3,8 @@ package com.logicaldoc.web.data;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,7 +16,10 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
+import com.logicaldoc.i18n.I18N;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
@@ -36,7 +41,9 @@ public class LanguagesDataServlet extends HttpServlet {
 			SessionUtil.validateSession(request);
 
 			String locale = request.getParameter("locale");
+			boolean gui = Boolean.parseBoolean(request.getParameter("gui"));
 
+			
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
 
@@ -48,21 +55,37 @@ public class LanguagesDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.print("<list>");
 
-			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
-			Collection<Language> activeLanguages = LanguageManager.getInstance().getActiveLanguages();
+			if (gui) {
+				ContextProperties pbean = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+				List<String> installedLocales = I18N.getLocales();
+				for (String loc : installedLocales) {
+					Locale lc = LocaleUtil.toLocale(loc);
 
-			for (Language language : languages) {
-				writer.print("<lang>");
-				writer.print("<code>" + language.toString() + "</code>");
-				writer.print("<name><![CDATA[" + language.getLocale().getDisplayName(LocaleUtil.toLocale(locale))
-						+ "]]></name>");
-				if (activeLanguages.contains(language))
-					writer.print("<eenabled>0</eenabled>");
-				else
-					writer.print("<eenabled>2</eenabled>");
-				writer.print("</lang>");
+					writer.print("<lang>");
+					writer.print("<code>" + loc + "</code>");
+					writer.print("<name><![CDATA[" + lc.getDisplayName(LocaleUtil.toLocale(locale)) + "]]></name>");
+					if ("enabled".equals(pbean.getProperty("lang." + loc + ".gui")))
+						writer.print("<eenabled>0</eenabled>");
+					else
+						writer.print("<eenabled>2</eenabled>");
+					writer.print("</lang>");
+				}
+			} else {
+				Collection<Language> languages = LanguageManager.getInstance().getLanguages();
+				Collection<Language> activeLanguages = LanguageManager.getInstance().getActiveLanguages();
+
+				for (Language language : languages) {
+					writer.print("<lang>");
+					writer.print("<code>" + language.toString() + "</code>");
+					writer.print("<name><![CDATA[" + language.getLocale().getDisplayName(LocaleUtil.toLocale(locale))
+							+ "]]></name>");
+					if (activeLanguages.contains(language))
+						writer.print("<eenabled>0</eenabled>");
+					else
+						writer.print("<eenabled>2</eenabled>");
+					writer.print("</lang>");
+				}
 			}
-
 			writer.print("</list>");
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);

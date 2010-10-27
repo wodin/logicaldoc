@@ -1,8 +1,13 @@
 package com.logicaldoc.i18n;
 
+import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.StringTokenizer;
 
 /**
  * A class for retrieval of localized messages. All bundles declared in
@@ -36,5 +41,19 @@ public class I18N {
 	public static String message(String key, Locale locale, Object[] values) {
 		String msg = message(key, locale);
 		return MessageFormat.format(msg, values);
+	}
+
+	public static List<String> getLocales() {
+		List<String> locales = new ArrayList<String>();
+		Properties p = new Properties();
+		try {
+			p.load(I18N.class.getResourceAsStream("/i18n/i18n.properties"));
+			StringTokenizer st = new StringTokenizer(p.getProperty("locales"), ",", false);
+			while (st.hasMoreTokens())
+				locales.add(st.nextToken());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return locales;
 	}
 }

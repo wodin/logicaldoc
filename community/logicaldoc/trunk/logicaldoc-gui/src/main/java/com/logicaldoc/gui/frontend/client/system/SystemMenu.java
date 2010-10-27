@@ -55,6 +55,11 @@ public class SystemMenu extends VLayout {
 		searchAndIndexing.setHeight(25);
 		addMember(searchAndIndexing);
 
+		Button guiLangs = new Button(I18N.message("guilanguages"));
+		guiLangs.setWidth100();
+		guiLangs.setHeight(25);
+		addMember(guiLangs);
+
 		addInformations();
 
 		general.addClickHandler(new ClickHandler() {
@@ -94,6 +99,13 @@ public class SystemMenu extends VLayout {
 					}
 
 				});
+			}
+		});
+		
+		guiLangs.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new GUILanguagesPanel());
 			}
 		});
 	}
