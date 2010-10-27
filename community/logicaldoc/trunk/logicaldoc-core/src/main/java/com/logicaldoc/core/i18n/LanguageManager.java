@@ -12,7 +12,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
 
+import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
@@ -79,6 +81,16 @@ public class LanguageManager {
 		return languages.values();
 	}
 
+	public Collection<Language> getActiveLanguages() {
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		Collection<Language> actives = new ArrayList<Language>();
+		for (Language l : getLanguages()) {
+			if ("enabled".equals(config.getProperty("lang." + l.getLanguage())))
+				actives.add(l);
+		}
+		return actives;
+	}
+
 	public Language getDefaultLanguage() {
 		return defaultLanguage;
 	}
@@ -104,7 +116,7 @@ public class LanguageManager {
 
 	public List<String> getLanguagesAsString() {
 		List<String> languages2 = new ArrayList<String>();
-		for (Language lang : getLanguages()) {
+		for (Language lang : getActiveLanguages()) {
 			languages2.add(lang.getLocale().toString());
 		}
 		return languages2;

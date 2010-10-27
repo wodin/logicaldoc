@@ -175,7 +175,7 @@ public class Indexer {
 
 		try {
 			// Get languages from LanguageManager
-			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
+			Collection<Language> languages = LanguageManager.getInstance().getActiveLanguages();
 			for (Language language : languages) {
 				Analyzer analyzer = language.getAnalyzer();
 				IndexWriter writer = new IndexWriter(getIndexDirectory(language), analyzer,
@@ -389,13 +389,13 @@ public class Indexer {
 	}
 
 	/**
-	 * Get all indexes directoried
+	 * Get all indexes directories
 	 */
 	public List<Directory> getIndexDirectories() {
 		List<Directory> dirs = new ArrayList<Directory>();
 		try {
 			// Get languages from LanguageManager
-			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
+			Collection<Language> languages = LanguageManager.getInstance().getActiveLanguages();
 			for (Language language : languages) {
 				dirs.add(getIndexDirectory(language));
 			}

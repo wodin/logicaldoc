@@ -32,4 +32,9 @@ public interface SearchEngineService extends RemoteService {
 	 * Saves search engine settings
 	 */
 	public void save(String sid, GUISearchEngine searchEngine) throws InvalidSessionException;
+
+	/**
+	 * Changes the activation status of a language
+	 */
+	public void setLanguageStatus(String sid, String language, boolean active) throws InvalidSessionException;
 }

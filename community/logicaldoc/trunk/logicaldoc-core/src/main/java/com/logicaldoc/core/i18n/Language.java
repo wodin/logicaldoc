@@ -187,4 +187,9 @@ public class Language {
 	public String toString() {
 		return locale.toString();
 	}
+
+	@Override
+	public int hashCode() {
+		return toString().hashCode();
+	}
 }

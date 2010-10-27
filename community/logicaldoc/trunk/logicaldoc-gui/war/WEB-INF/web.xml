@@ -225,6 +225,11 @@
     </servlet>
 
 	<servlet>
+		<servlet-name>LanguagesData</servlet-name>
+		<servlet-class>com.logicaldoc.gui.common.server.MockLanguagesDataServlet</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>Thumbnail</servlet-name>
 		<servlet-class>com.logicaldoc.gui.common.server.MockThumbnailServlet</servlet-class>
 	</servlet>
@@ -538,6 +543,11 @@
         <servlet-name>WorkflowTriggersData</servlet-name>
         <url-pattern>/data/workflowtriggers.xml</url-pattern>
     </servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>LanguagesData</servlet-name>
+		<url-pattern>/data/languages.xml</url-pattern>
+	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>Thumbnail</servlet-name>
