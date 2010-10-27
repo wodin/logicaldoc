@@ -25,7 +25,7 @@ public class GUIWFState implements Serializable {
 
 	public final static int TYPE_FORK = 3;
 
-	public final static String TIME_MINUTE = "minute";
+	public final static String TIME_MINUTE = "minutes";
 
 	public final static String TIME_HOUR = "hour";
 

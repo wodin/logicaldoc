@@ -6,6 +6,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.data.WorkflowHistoriesDS;
 import com.logicaldoc.gui.common.client.data.WorkflowsDS;
+import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -145,10 +146,12 @@ public class WorkflowHistoryDialog extends Window {
 		ListGridField startDate = new ListGridField("startdate", I18N.message("startdate"), 150);
 		startDate.setAlign(Alignment.CENTER);
 		startDate.setType(ListGridFieldType.DATE);
+		startDate.setCellFormatter(new DateCellFormatter(false));
 		startDate.setCanFilter(false);
 		ListGridField endDate = new ListGridField("enddate", I18N.message("enddate"), 150);
 		endDate.setAlign(Alignment.CENTER);
 		endDate.setType(ListGridFieldType.DATE);
+		endDate.setCellFormatter(new DateCellFormatter(false));
 		endDate.setCanFilter(false);
 		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 250);
 
@@ -186,6 +189,7 @@ public class WorkflowHistoryDialog extends Window {
 		ListGridField historyDate = new ListGridField("date", I18N.message("date"), 150);
 		historyDate.setAlign(Alignment.CENTER);
 		historyDate.setType(ListGridFieldType.DATE);
+		historyDate.setCellFormatter(new DateCellFormatter(false));
 		historyDate.setCanFilter(false);
 		ListGridField historyUser = new ListGridField("user", I18N.message("user"), 120);
 		ListGridField historyDoc = new ListGridField("document", I18N.message("document"), 180);

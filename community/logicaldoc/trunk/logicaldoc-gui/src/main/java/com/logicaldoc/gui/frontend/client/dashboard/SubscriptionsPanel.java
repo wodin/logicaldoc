@@ -6,6 +6,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.SubscriptionsDS;
+import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -102,7 +103,10 @@ public class SubscriptionsPanel extends VLayout {
 		ListGridField name = new ListGridField("name", I18N.message("name"), 250);
 		name.setCanFilter(true);
 
-		ListGridField created = new ListGridField("created", I18N.message("date"), 90);
+		ListGridField created = new ListGridField("created", I18N.message("date"), 120);
+		created.setAlign(Alignment.CENTER);
+		created.setType(ListGridFieldType.DATE);
+		created.setCellFormatter(new DateCellFormatter(false));
 		created.setCanFilter(false);
 
 		list = new ListGrid();
