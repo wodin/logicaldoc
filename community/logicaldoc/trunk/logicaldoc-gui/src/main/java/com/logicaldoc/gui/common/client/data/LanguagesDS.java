@@ -12,7 +12,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class LanguagesDS extends DataSource {
-	public LanguagesDS() {
+	public LanguagesDS(boolean gui) {
 		setTitleField("label");
 		setRecordXPath("/list/lang");
 
@@ -24,7 +24,7 @@ public class LanguagesDS extends DataSource {
 
 		setFields(code, name, enabled);
 		setDataURL("data/languages.xml?sid=" + Session.get().getSid() + "&locale="
-				+ Session.get().getUser().getLanguage());
+				+ Session.get().getUser().getLanguage()+"&gui="+Boolean.toString(gui));
 		setClientOnly(true);
 	}
 }

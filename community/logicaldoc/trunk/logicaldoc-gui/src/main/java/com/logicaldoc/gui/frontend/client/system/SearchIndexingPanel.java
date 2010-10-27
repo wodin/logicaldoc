@@ -338,7 +338,7 @@ public class SearchIndexingPanel extends VLayout {
 		langsList.setWidth100();
 		langsList.setHeight100();
 		langsList.setAutoFetchData(true);
-		langsList.setDataSource(new LanguagesDS());
+		langsList.setDataSource(new LanguagesDS(false));
 		langsList.setShowFilterEditor(true);
 		langsList.setFilterOnKeypress(true);
 		langsList.setSelectionType(SelectionStyle.SINGLE);

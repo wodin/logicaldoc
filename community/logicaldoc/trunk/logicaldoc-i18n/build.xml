@@ -65,7 +65,14 @@
 			</sequential>
 		</for>
 
-		<delete dir="target/po/i18n" failonerror="no" />
+		<!-- Delete not needed POs -->
+		<delete file="target/po" failonerror="no" />
+		
+		<delete failonerror="no">
+			<fileset dir="target/po/" casesensitive="yes">
+			  <include name="**/en.po"/>
+			</fileset>
+		</delete>
 
 		<tar destfile="target/${pom.artifactId}-${pom.version}.tar">
 			<tarfileset dir="target/po" preserveLeadingSlashes="true">
