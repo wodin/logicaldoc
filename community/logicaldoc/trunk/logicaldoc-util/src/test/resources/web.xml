@@ -232,12 +232,17 @@
 
   <servlet>
     <servlet-name>Download</servlet-name>
-    <servlet-class>com.logicaldoc.web.data.DownloadServlet</servlet-class>
+    <servlet-class>com.logicaldoc.web.DownloadServlet</servlet-class>
   </servlet>
 
   <servlet>
     <servlet-name>TicketDownload</servlet-name>
-    <servlet-class>com.logicaldoc.web.data.TicketDownload</servlet-class>
+    <servlet-class>com.logicaldoc.web.TicketDownload</servlet-class>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>ExportZip</servlet-name>
+    <servlet-class>com.logicaldoc.web.ExportZip</servlet-class>
   </servlet>
 
   <servlet>
@@ -452,6 +457,11 @@
   <servlet-mapping>
     <servlet-name>TicketDownload</servlet-name>
     <url-pattern>/download-ticket</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>ExportZip</servlet-name>
+    <url-pattern>/zip-exportt</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
