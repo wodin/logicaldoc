@@ -1,5 +1,6 @@
 package com.logicaldoc.web.service;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -28,6 +29,7 @@ import com.logicaldoc.gui.common.client.beans.GUITask;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.sql.SqlUtil;
 import com.logicaldoc.web.util.SessionUtil;
 
@@ -572,6 +574,19 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return false;
+		}
+	}
+
+	@Override
+	public void setGUILanguageStatus(String sid, String language, boolean active) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+		try {
+			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			conf.setProperty("lang." + language+".gui", active ? "enabled" : "disabled");
+			conf.write();
+		} catch (IOException t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
 	}
 }

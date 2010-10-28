@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIScheduling;
@@ -212,8 +213,8 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 		GUIParameter lastupdate = new GUIParameter();
 		lastupdate.setName("lastupdate");
 		lastupdate.setValue("01/01/2011");
-		parameters[3][0]=lastupdate;
-		
+		parameters[3][0] = lastupdate;
+
 		return parameters;
 	}
 
@@ -335,5 +336,10 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 					+ s.getDayOfMonth() + " " + s.getMonth() + " " + s.getDayOfWeek());
 		}
 		return task;
+	}
+
+	@Override
+	public void setGUILanguageStatus(String sid, String language, boolean active) throws InvalidSessionException {
+
 	}
 }

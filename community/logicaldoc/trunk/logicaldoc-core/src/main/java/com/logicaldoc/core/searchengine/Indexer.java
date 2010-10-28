@@ -395,7 +395,7 @@ public class Indexer {
 		List<Directory> dirs = new ArrayList<Directory>();
 		try {
 			// Get languages from LanguageManager
-			Collection<Language> languages = LanguageManager.getInstance().getActiveLanguages();
+			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
 			for (Language language : languages) {
 				dirs.add(getIndexDirectory(language));
 			}

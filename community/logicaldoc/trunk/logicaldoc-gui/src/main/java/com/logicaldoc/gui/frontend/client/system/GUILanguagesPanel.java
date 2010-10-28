@@ -7,8 +7,8 @@ import com.logicaldoc.gui.common.client.data.LanguagesDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
-import com.logicaldoc.gui.frontend.client.services.SecurityService;
-import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.SystemService;
+import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
@@ -31,7 +31,7 @@ import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
  */
 public class GUILanguagesPanel extends VLayout {
 
-	private SecurityServiceAsync service = (SecurityServiceAsync) GWT.create(SecurityService.class);
+	private SystemServiceAsync service = (SystemServiceAsync) GWT.create(SystemService.class);
 
 	private ListGrid list;
 
@@ -81,50 +81,50 @@ public class GUILanguagesPanel extends VLayout {
 		Menu contextMenu = new Menu();
 		MenuItem enable = new MenuItem();
 		enable.setTitle(I18N.message("enable"));
-//		enable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-//			public void onClick(MenuItemClickEvent event) {
-//				service.setGUILanguageStatus(Session.get().getSid(), record.getAttributeAsString("code"), true,
-//						new AsyncCallback<Void>() {
-//
-//							@Override
-//							public void onFailure(Throwable caught) {
-//								Log.serverError(caught);
-//							}
-//
-//							@Override
-//							public void onSuccess(Void result) {
-//								record.setAttribute("eenabled", "0");
-//								langsList.updateData(record);
-//							}
-//						});
-//			}
-//		});
-//
-//		MenuItem disable = new MenuItem();
-//		disable.setTitle(I18N.message("disable"));
-//		disable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-//			public void onClick(MenuItemClickEvent event) {
-//				service.setGUILanguageStatus(Session.get().getSid(), record.getAttributeAsString("code"), false,
-//						new AsyncCallback<Void>() {
-//
-//							@Override
-//							public void onFailure(Throwable caught) {
-//								Log.serverError(caught);
-//							}
-//
-//							@Override
-//							public void onSuccess(Void result) {
-//								record.setAttribute("eenabled", "2");
-//								langsList.updateData(record);
-//							}
-//						});
-//			}
-//		});
+		enable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				service.setGUILanguageStatus(Session.get().getSid(), record.getAttributeAsString("code"), true,
+						new AsyncCallback<Void>() {
 
-//		if ("0".equals(record.getAttributeAsString("eenabled")))
-//			contextMenu.setItems(disable);
-//		else
-//			contextMenu.setItems(enable);
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(Void result) {
+								record.setAttribute("eenabled", "0");
+								list.updateData(record);
+							}
+						});
+			}
+		});
+
+		MenuItem disable = new MenuItem();
+		disable.setTitle(I18N.message("disable"));
+		disable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				service.setGUILanguageStatus(Session.get().getSid(), record.getAttributeAsString("code"), false,
+						new AsyncCallback<Void>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(Void result) {
+								record.setAttribute("eenabled", "2");
+								list.updateData(record);
+							}
+						});
+			}
+		});
+
+		if ("0".equals(record.getAttributeAsString("eenabled")))
+			contextMenu.setItems(disable);
+		else
+			contextMenu.setItems(enable);
 		contextMenu.showContextMenu();
 	}
 }
