@@ -2,12 +2,14 @@ package com.logicaldoc.util.io;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -337,5 +339,22 @@ public class FileUtil {
 			return true;
 
 		return false;
+	}
+
+	public static void writeUTF8(String content, File file, boolean append) {
+		BufferedWriter out = null;
+		try {
+			out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, append), "UTF8"));
+			out.write(content);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			if(out!=null)
+				try {
+					out.close();
+				} catch (IOException e) {
+					
+				}
+		}
 	}
 }
