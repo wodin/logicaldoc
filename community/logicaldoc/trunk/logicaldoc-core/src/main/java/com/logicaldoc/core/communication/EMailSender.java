@@ -13,6 +13,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimeUtility;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -130,7 +131,7 @@ public class EMailSender {
 		}
 
 		Session sess = Session.getDefaultInstance(props);
-		javax.mail.Message message = new MimeMessage(sess);
+		MimeMessage message = new MimeMessage(sess);
 		String frm = email.getAuthorAddress();
 		if (StringUtils.isEmpty(frm))
 			frm = sender;
@@ -144,10 +145,11 @@ public class EMailSender {
 			message.setRecipients(javax.mail.Message.RecipientType.CC, cc);
 		if (bcc.length > 0)
 			message.setRecipients(javax.mail.Message.RecipientType.BCC, bcc);
-		message.setSubject(email.getSubject());
+		message.setSubject(email.getSubject(), "UTF-8");
 
 		MimeBodyPart body = new MimeBodyPart();
 		body.setContent(email.getMessageText(), "text/plain");
+		body.setText(email.getMessageText(), "UTF-8");
 
 		Multipart mpMessage = new MimeMultipart();
 		mpMessage.addBodyPart(body);
@@ -158,7 +160,8 @@ public class EMailSender {
 			DataHandler fdHandler = new DataHandler(fdSource);
 			MimeBodyPart part = new MimeBodyPart();
 			part.setDataHandler(fdHandler);
-			part.setFileName(att.getFileName());
+			String fileName = MimeUtility.encodeText(att.getFileName(), "UTF-8", null);
+			part.setFileName(fileName);
 			mpMessage.addBodyPart(part);
 		}
 		message.setContent(mpMessage);
