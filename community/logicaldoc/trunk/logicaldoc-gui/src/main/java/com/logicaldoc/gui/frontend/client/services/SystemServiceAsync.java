@@ -27,4 +27,6 @@ public interface SystemServiceAsync {
 	void enableTask(String sid, String taskName, AsyncCallback<Boolean> callback);
 
 	void saveTask(String sid, GUITask task, String locale, AsyncCallback<GUITask> callback);
+
+	void setGUILanguageStatus(String sid, String language, boolean active, AsyncCallback<Void> callback);
 }

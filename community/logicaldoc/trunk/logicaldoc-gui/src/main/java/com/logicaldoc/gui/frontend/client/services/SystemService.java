@@ -109,4 +109,9 @@ public interface SystemService extends RemoteService {
 	 * @return True, if the task is correctly saved.
 	 */
 	public GUITask saveTask(String sid, GUITask task, String locale) throws InvalidSessionException;
+
+	/**
+	 * Changes the activation status of a language
+	 */
+	public void setGUILanguageStatus(String sid, String language, boolean active) throws InvalidSessionException;
 }
