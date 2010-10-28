@@ -5,6 +5,13 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 
+/**
+ * This is the window that must be showed to the user during a long LogicalDOC
+ * computation.
+ * 
+ * @author Matteo Caruso - Logical Objects
+ * @since 6.0
+ */
 public class ContactingServer extends Window {
 
 	public static ContactingServer instance;
