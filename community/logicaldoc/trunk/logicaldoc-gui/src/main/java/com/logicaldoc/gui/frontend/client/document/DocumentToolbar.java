@@ -427,6 +427,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			if (document != null) {
 				rss.setDisabled(!Feature.enabled(Feature.RSS) || !downloadEnabled);
 				pdf.setDisabled(!Feature.enabled(Feature.PDF) || !downloadEnabled);
+				if (!pdf.isDisabled())
+					pdf.setTooltip(I18N.message("exportpdf"));
 				subscribe.setDisabled(!Feature.enabled(Feature.AUDIT));
 
 				boolean isOfficeFile = false;
@@ -436,6 +438,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					isOfficeFile = Util.isOfficeFileType(document.getType());
 
 				office.setDisabled(!Feature.enabled(Feature.OFFICE) || !isOfficeFile || !downloadEnabled);
+				if (!office.isDisabled())
+					office.setTooltip(I18N.message("editwithoffice"));
 			} else {
 				rss.setDisabled(true);
 				pdf.setDisabled(true);

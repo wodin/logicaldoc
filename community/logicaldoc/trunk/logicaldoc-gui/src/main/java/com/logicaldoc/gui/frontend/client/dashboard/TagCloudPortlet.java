@@ -18,6 +18,8 @@ import com.smartgwt.client.types.DragAppearance;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.widgets.HeaderControl;
 import com.smartgwt.client.widgets.HeaderControl.HeaderIcon;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Portlet;
 
@@ -30,49 +32,64 @@ import com.smartgwt.client.widgets.layout.Portlet;
 public class TagCloudPortlet extends Portlet {
 	private TagServiceAsync service = (TagServiceAsync) GWT.create(TagService.class);
 
-	private HLayout container = new HLayout();
+	private HLayout container = null;
 
 	public TagCloudPortlet() {
 		if (Feature.enabled(Feature.TAGS)) {
-			setTitle(I18N.message("tagcloud"));
-			HeaderIcon portletIcon = ItemFactory.newHeaderIcon("tag_blue.png");
-			setHeaderControls(new HeaderControl(portletIcon), HeaderControls.HEADER_LABEL);
-
-			setCanDrag(false);
-			setCanDrop(false);
-			setShowShadow(true);
-			setAnimateMinimize(true);
-			setDragAppearance(DragAppearance.OUTLINE);
-			setDragOpacity(30);
-
-			container.setWidth100();
-			container.setHeight100();
-			container.setAlign(Alignment.CENTER);
-			container.setMargin(25);
-
-			addChild(container);
-
-			service.getTagCloud(new AsyncCallback<GUITag[]>() {
-				@Override
-				public void onFailure(Throwable caught) {
-					Log.serverError(caught);
-				}
-
-				@Override
-				public void onSuccess(GUITag[] cloud) {
-					TagCloud tc = new TagCloud();
-					tc.setWidth("95%");
-					tc.setMaxNumberOfWords(cloud.length);
-					for (GUITag tag : cloud) {
-						WordTag wordTag = new WordTag(tag.getTag());
-						wordTag.setNumberOfOccurences(tag.getScale());
-						wordTag.setLink("javascript:window.searchTag(\"" + tag.getTag() + "\");");
-						tc.addWord(wordTag);
-					}
-					container.addMember(tc);
-				}
-			});
+			refresh();
 		} else
 			addItem(new FeatureDisabled());
+	}
+
+	private void refresh() {
+		if (container != null)
+			removeChild(container);
+
+		HeaderControl refresh = new HeaderControl(HeaderControl.REFRESH, new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				refresh();
+			}
+		});
+
+		setTitle(I18N.message("tagcloud"));
+		HeaderIcon portletIcon = ItemFactory.newHeaderIcon("tag_blue.png");
+		setHeaderControls(new HeaderControl(portletIcon), HeaderControls.HEADER_LABEL, refresh);
+
+		setCanDrag(false);
+		setCanDrop(false);
+		setShowShadow(true);
+		setAnimateMinimize(true);
+		setDragAppearance(DragAppearance.OUTLINE);
+		setDragOpacity(30);
+
+		container = new HLayout();
+		container.setWidth100();
+		container.setHeight100();
+		container.setAlign(Alignment.CENTER);
+		container.setMargin(25);
+
+		addChild(container);
+
+		service.getTagCloud(new AsyncCallback<GUITag[]>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
+
+			@Override
+			public void onSuccess(GUITag[] cloud) {
+				TagCloud tc = new TagCloud();
+				tc.setWidth("95%");
+				tc.setMaxNumberOfWords(cloud.length);
+				for (GUITag tag : cloud) {
+					WordTag wordTag = new WordTag(tag.getTag());
+					wordTag.setNumberOfOccurences(tag.getScale());
+					wordTag.setLink("javascript:window.searchTag(\"" + tag.getTag() + "\");");
+					tc.addWord(wordTag);
+				}
+				container.addMember(tc);
+			}
+		});
 	}
 }
