@@ -16,6 +16,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.dashboard.WorkflowDashboard;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.AuditService;
@@ -211,8 +212,13 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			public void onClick(ClickEvent event) {
 				if (document == null)
 					return;
-				Window.open("ldedit:" + GWT.getHostPageBaseURL() + "ldeditnow?action=edit&sid="
-						+ Session.get().getSid() + "&docId=" + document.getId(), "_self", "");
+				try {
+					WindowUtils.setNotAskForExit();
+					Window.open("ldedit:" + GWT.getHostPageBaseURL() + "ldeditnow?action=edit&sid="
+							+ Session.get().getSid() + "&docId=" + document.getId(), "_self", "");
+				} finally {
+					WindowUtils.setAskForExit(I18N.message("leavingpage"));
+				}
 			}
 		});
 
@@ -317,8 +323,9 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			if (!Feature.enabled(Feature.OFFICE) || (document != null && !Util.isOfficeFile(document.getFileName()))
 					|| !downloadEnabled) {
 				office.setDisabled(true);
-				office.setTooltip(I18N.message("featuredisabled"));
 			}
+			if (!Feature.enabled(Feature.OFFICE))
+				office.setTooltip(I18N.message("featuredisabled"));
 		}
 
 		final IntegerItem max = ItemFactory.newValidateIntegerItem("max", "", null, 1, null);
@@ -407,8 +414,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	public void update(final GUIDocument document) {
 		try {
 			GUIFolder folder = Session.get().getCurrentFolder();
-			boolean downloadEnabled=folder!=null && folder.isDownload();
-			
+			boolean downloadEnabled = folder != null && folder.isDownload();
+
 			this.document = document;
 
 			if (document == null) {
