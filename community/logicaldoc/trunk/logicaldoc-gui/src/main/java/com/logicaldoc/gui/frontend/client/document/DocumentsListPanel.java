@@ -56,7 +56,7 @@ public class DocumentsListPanel extends VLayout {
 		title.setCanFilter(true);
 
 		ListGridField size = new ListGridField("size", I18N.message("size"), 70);
-		size.setAlign(Alignment.CENTER);
+		size.setAlign(Alignment.RIGHT);
 		size.setType(ListGridFieldType.FLOAT);
 		size.setCellFormatter(new FileSizeCellFormatter());
 		size.setCanFilter(false);

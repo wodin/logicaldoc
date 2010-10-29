@@ -400,6 +400,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 	@Override
 	public void onDocumentSaved(GUIDocument document) {
+		SearchPanel.get().onSelectedHit(document.getId());
 		updateSelectedRecord(document);
 	}
 

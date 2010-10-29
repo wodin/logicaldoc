@@ -8,6 +8,8 @@ import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.frontend.client.search.HitsListPanel;
+import com.logicaldoc.gui.frontend.client.search.SearchPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -104,7 +106,13 @@ public class DocumentDetailsPanel extends VLayout {
 			public void onClick(ClickEvent event) {
 				// We have to reload the document because the tags may be
 				// reverted to the original tags list.
-				DocumentsPanel.get().onSelectedDocument(document.getId(), false);
+				// This 'if condition' is necessary to know if the close image
+				// has been selected into the Documents list panel or into the
+				// Search list panel.
+				if (getObserver() instanceof DocumentsPanel)
+					DocumentsPanel.get().onSelectedDocument(document.getId(), false);
+				else if (getObserver() instanceof HitsListPanel)
+					SearchPanel.get().onSelectedHit(document.getId());
 				savePanel.setVisible(false);
 			}
 		});
@@ -191,6 +199,10 @@ public class DocumentDetailsPanel extends VLayout {
 
 		if (Feature.visible(Feature.PREVIEW))
 			addMember(tabSet);
+	}
+
+	public DocumentObserver getObserver() {
+		return observer;
 	}
 
 	private void refresh() {
