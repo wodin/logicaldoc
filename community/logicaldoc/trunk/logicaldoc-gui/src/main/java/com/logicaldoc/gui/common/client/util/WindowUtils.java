@@ -53,16 +53,15 @@ public class WindowUtils {
 		return $wnd.location.hash;
 	}-*/;
 
-	public static native void  setTitle(String title)/*-{
+	public static native void setTitle(String title)/*-{
 		$doc.title=title;
 	}-*/;
-	
 
-	public static native void setAskForExit()/*-{
-	     window.onbeforeunload = function(){ return false; }
-    }-*/;
+	public static native void setAskForExit(String message)/*-{
+		$wnd.onbeforeunload = function(){ return message; }
+	}-*/;
 
 	public static native void setNotAskForExit()/*-{
-         window.onbeforeunload = function(){  }
-    }-*/;
+		$wnd.onbeforeunload = function(){  }
+	}-*/;
 }

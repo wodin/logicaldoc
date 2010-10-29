@@ -122,6 +122,17 @@ public class Util {
 
 		return str;
 	}-*/;
+	
+	/**
+	 * Format file size in KB.
+	 * 
+	 * @param size The file size in bytes.
+	 * @return The formated file size.
+	 */
+	public static native String formatSizeKB(double size) /*-{
+		str = (size / 1024).toFixed(1) + " KB";
+		return str;
+	}-*/;
 
 	/**
 	 * Format number percentage.
