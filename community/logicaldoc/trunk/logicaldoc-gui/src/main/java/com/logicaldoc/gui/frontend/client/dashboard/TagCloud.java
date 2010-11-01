@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.common.client.widgets;
+package com.logicaldoc.gui.frontend.client.dashboard;
 
 import gdurelle.tagcloud.client.tags.ImageTag;
 import gdurelle.tagcloud.client.tags.Tag;

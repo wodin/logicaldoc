@@ -193,8 +193,11 @@ public class LoginPanel extends VLayout {
 							Window.addWindowClosingHandler(new Window.ClosingHandler() {
 								@Override
 								public void onWindowClosing(ClosingEvent event) {
-									if (Session.get().getSid() != null)
-										event.setMessage(I18N.message("leavingpage"));
+									if (Session.get().getSid() != null){
+										if(Session.get().isConfirmExit())
+										  event.setMessage(I18N.message("leavingpage"));
+										Session.get().setConfirmExit(true);
+									}
 								}
 							});
 						} else if (session.getUser() != null && session.getUser().isExpired()) {
