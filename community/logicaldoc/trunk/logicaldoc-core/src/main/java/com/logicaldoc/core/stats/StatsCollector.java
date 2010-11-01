@@ -231,9 +231,7 @@ public class StatsCollector extends Task {
 			post.setParameter("withdocs", Integer.toString(withdocs));
 			post.setParameter("empty", Integer.toString(empty));
 			post.setParameter("deletedfolders", Integer.toString(deletedfolders));
-
-			post.setParameter("email", config.getProperty("smtp.sender"));
-			
+		
 			// Get HTTP client
 			HttpClient httpclient = new HttpClient();
 
