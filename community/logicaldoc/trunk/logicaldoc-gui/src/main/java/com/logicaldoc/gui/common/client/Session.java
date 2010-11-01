@@ -58,7 +58,6 @@ public class Session {
 	public void close() {
 		session = null;
 		sessionObservers.clear();
-		instance = null;
 		if (timer != null)
 			timer.cancel();
 	}

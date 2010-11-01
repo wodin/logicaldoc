@@ -15,6 +15,7 @@ import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.dashboard.WorkflowDashboard;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
@@ -519,8 +520,8 @@ public class DocumentContextMenu extends Menu {
 				if (selection == null)
 					return;
 				long id = Long.parseLong(selection.getAttribute("id"));
-				Window.open("ldedit:" + GWT.getHostPageBaseURL() + "ldeditnow?action=edit&sid="
-						+ Session.get().getSid() + "&docId=" + id, "_self", "");
+				WindowUtils.triggerUrl("ldedit:" + GWT.getHostPageBaseURL() + "ldeditnow?action=edit&sid="
+						+ Session.get().getSid() + "&docId=" + id);
 			}
 		});
 
