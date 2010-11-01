@@ -42,6 +42,9 @@ public class Session {
 
 	private Timer timer;
 
+	//true if the user must confirm to exit
+	private boolean confirmExit=true;
+	
 	public static Session get() {
 		if (instance == null)
 			instance = new Session();
@@ -145,5 +148,13 @@ public class Session {
 
 	public void setCurrentWorkflow(GUIWorkflow currentWorkflow) {
 		this.currentWorkflow = currentWorkflow;
+	}
+
+	public boolean isConfirmExit() {
+		return confirmExit;
+	}
+
+	public void setConfirmExit(boolean confirmExit) {
+		this.confirmExit = confirmExit;
 	}
 }

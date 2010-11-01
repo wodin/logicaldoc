@@ -81,9 +81,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			public void onClick(ClickEvent event) {
 				if (document == null)
 					return;
-				Window.open(
-						GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-								+ document.getId(), "_self", "");
+				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+						+ document.getId());
 			}
 		});
 
@@ -103,8 +102,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		pdf.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				Window.open(GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid() + "&docId="
-						+ document.getId() + "&version=" + document.getVersion(), "_blank", "");
+				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid() + "&docId="
+						+ document.getId() + "&version=" + document.getVersion());
 			}
 		});
 
