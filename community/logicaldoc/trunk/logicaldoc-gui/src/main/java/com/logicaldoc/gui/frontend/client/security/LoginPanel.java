@@ -1,6 +1,8 @@
 package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.logicaldoc.gui.common.client.Constants;
@@ -11,7 +13,6 @@ import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.MessageLabel;
 import com.logicaldoc.gui.frontend.client.Frontend;
 import com.logicaldoc.gui.frontend.client.folder.FoldersNavigator;
@@ -188,7 +189,14 @@ public class LoginPanel extends VLayout {
 								SC.warn(e.getMessage());
 							}
 							FoldersNavigator.get().selectFolder(Constants.DOCUMENTS_FOLDERID);
-							WindowUtils.setAskForExit(I18N.message("leavingpage"));
+
+							Window.addWindowClosingHandler(new Window.ClosingHandler() {
+								@Override
+								public void onWindowClosing(ClosingEvent event) {
+									if (Session.get().getSid() != null)
+										event.setMessage(I18N.message("leavingpage"));
+								}
+							});
 						} else if (session.getUser() != null && session.getUser().isExpired()) {
 							new ChangePassword(session.getUser(), "needtochangepassword").show();
 						} else {

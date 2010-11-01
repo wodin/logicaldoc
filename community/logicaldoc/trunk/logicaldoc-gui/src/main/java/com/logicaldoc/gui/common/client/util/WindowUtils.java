@@ -21,6 +21,10 @@ public class WindowUtils {
 		return result;
 	}
 
+	public static native String getAppName() /*-{
+		return $wnd.navigator.appName;
+	}-*/;
+
 	private static native String getQueryString() /*-{
 		return $wnd.location.search;
 	}-*/;
@@ -57,11 +61,8 @@ public class WindowUtils {
 		$doc.title=title;
 	}-*/;
 
-	public static native void setAskForExit(String message)/*-{
-		$wnd.onbeforeunload = function(){ return message; }
-	}-*/;
-
-	public static native void setNotAskForExit()/*-{
-		$wnd.onbeforeunload = function(){  }
+	public static native void triggerUrl(String url) /*-{
+		var popup=$wnd.open(url,"tmp","width=1, height=1");
+		popup.close();
 	}-*/;
 }

@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.frontend.client.dashboard;
 
-import gdurelle.tagcloud.client.tags.TagCloud;
 import gdurelle.tagcloud.client.tags.WordTag;
 
 import com.google.gwt.core.client.GWT;
@@ -11,6 +10,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
+import com.logicaldoc.gui.common.client.widgets.TagCloud;
 import com.logicaldoc.gui.frontend.client.services.TagService;
 import com.logicaldoc.gui.frontend.client.services.TagServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -85,7 +85,7 @@ public class TagCloudPortlet extends Portlet {
 				for (GUITag tag : cloud) {
 					WordTag wordTag = new WordTag(tag.getTag());
 					wordTag.setNumberOfOccurences(tag.getScale());
-					wordTag.setLink("javascript:window.searchTag(\"" + tag.getTag() + "\");");
+					wordTag.setLink("javascript:function(){window.searchTag(\"" + tag.getTag() + "\");}");
 					tc.addWord(wordTag);
 				}
 				container.addMember(tc);

@@ -266,8 +266,6 @@ public class TagsForm extends VLayout {
 	 * Invoke this method on module load. This is used for the TagCloud module.
 	 */
 	public static native void exportStearchTag() /*-{
-		$wnd.onbeforeunload=function(){  };
 		$wnd.searchTag = @com.logicaldoc.gui.frontend.client.search.TagsForm::searchTag(Ljava/lang/String;);
-		$wnd.onbeforeunload=function(){ return ' ';  };
 	}-*/;
 }
