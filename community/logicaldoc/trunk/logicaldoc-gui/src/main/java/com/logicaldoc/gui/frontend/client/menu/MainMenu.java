@@ -189,7 +189,7 @@ public class MainMenu extends ToolStrip {
 		forum.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				Window.open(Session.get().getInfo().getBugs(), "_blank",
+				Window.open(Session.get().getInfo().getForum(), "_blank",
 						"location=no,status=no,toolbar=no,menubar=no,resizable=yes");
 			}
 		});

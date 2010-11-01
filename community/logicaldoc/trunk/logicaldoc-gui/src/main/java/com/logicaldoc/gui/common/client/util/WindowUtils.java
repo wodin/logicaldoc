@@ -66,7 +66,7 @@ public class WindowUtils {
 
 	public static void openUrl(String url) {
 		Session.get().setConfirmExit(false);
-		Window.open(url, "_self", "");
+		Window.open(url, "_self", "width=1, height=1");
 		if (!Session.get().isConfirmExit() && !WindowUtils.getAppName().toLowerCase().contains("explorer"))
 			Session.get().setConfirmExit(true);
 	}
