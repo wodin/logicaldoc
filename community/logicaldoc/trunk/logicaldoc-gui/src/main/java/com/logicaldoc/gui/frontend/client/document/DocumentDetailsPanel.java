@@ -194,11 +194,11 @@ public class DocumentDetailsPanel extends VLayout {
 		previewTabPanel = new HLayout();
 		previewTabPanel.setWidth100();
 		previewTabPanel.setHeight100();
-		previewTab.setPane(previewTabPanel);
-		tabSet.addTab(previewTab);
+		previewTab.setPane(previewTabPanel);	
+		if (Feature.visible(Feature.PREVIEW))			
+		  tabSet.addTab(previewTab);
 
-		if (Feature.visible(Feature.PREVIEW))
-			addMember(tabSet);
+		addMember(tabSet);
 	}
 
 	public DocumentObserver getObserver() {
