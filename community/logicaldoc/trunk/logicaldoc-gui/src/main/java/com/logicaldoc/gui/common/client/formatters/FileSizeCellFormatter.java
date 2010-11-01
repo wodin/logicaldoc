@@ -16,10 +16,10 @@ public class FileSizeCellFormatter implements CellFormatter {
 		if (value == null)
 			return null;
 		if (value instanceof Long)
-			return Util.formatSize(((Long) value).doubleValue());
+			return Util.formatSizeKB(((Long) value).doubleValue());
 		else if (value instanceof Integer)
-			return Util.formatSize(((Integer) value).doubleValue());
+			return Util.formatSizeKB(((Integer) value).doubleValue());
 		else
-			return Util.formatSize(0L);
+			return Util.formatSizeKB(0L);
 	}
 }

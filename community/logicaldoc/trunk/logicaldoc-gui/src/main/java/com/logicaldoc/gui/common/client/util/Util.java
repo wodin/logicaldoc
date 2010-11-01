@@ -125,12 +125,19 @@ public class Util {
 	
 	/**
 	 * Format file size in KB.
+	 * NOTE: Actually the number are retourned without thousends separator
 	 * 
 	 * @param size The file size in bytes.
 	 * @return The formated file size.
 	 */
 	public static native String formatSizeKB(double size) /*-{
-		str = (size / 1024).toFixed(1) + " KB";
+		if (size < 1) {
+			str = "0 KB";
+		} else if (size / 1024 < 1) {
+			str = "1 KB";
+		} else {
+			str = (size / 1024).toFixed() + " KB";
+		}
 		return str;
 	}-*/;
 
