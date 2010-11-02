@@ -601,7 +601,8 @@ public class DavResourceImpl implements DavResource, Serializable {
 	 * @see DavResource#lock(LockInfo)
 	 */
 	public ActiveLock lock(LockInfo lockInfo) throws DavException {
-		throw new UnsupportedOperationException();
+		//throw new UnsupportedOperationException();
+		return null;
 	}
 
 	/**
@@ -615,14 +616,14 @@ public class DavResourceImpl implements DavResource, Serializable {
 	 * @see DavResource#unlock(String)
 	 */
 	public void unlock(String lockToken) throws DavException {
-		throw new UnsupportedOperationException();
+		//throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @see DavResource#addLockManager(org.apache.jackrabbit.webdav.lock.LockManager)
 	 */
 	public void addLockManager(LockManager lockMgr) {
-		throw new UnsupportedOperationException();
+		//throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -630,14 +631,16 @@ public class DavResourceImpl implements DavResource, Serializable {
 	 * @deprecated JackRabbit usage
 	 */
 	public org.apache.jackrabbit.webdav.DavResourceFactory getFactory() {
-		throw new UnsupportedOperationException();
+		//throw new UnsupportedOperationException();
+		return null;
 	}
 
 	/**
 	 * @see org.apache.jackrabbit.webdav.DavResource#getSession()
 	 */
 	public org.apache.jackrabbit.webdav.DavSession getSession() {
-		throw new UnsupportedOperationException();
+		//throw new UnsupportedOperationException();
+		return null;
 	}
 
 	/**
