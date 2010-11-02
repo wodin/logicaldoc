@@ -15,7 +15,7 @@ import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.ClickHandler;
@@ -52,14 +52,11 @@ public class MainMenu extends ToolStrip {
 
 		addFill();
 		addSeparator();
-
-		StaticTextItem userInfo = new StaticTextItem();
-		userInfo.setTitle(I18N.message("loggedin"));
-		userInfo.setValue(Session.get().getUser().getFullName());
+		
+		Label userInfo = new Label(I18N.message("loggedin") + " " + Session.get().getUser().getUserName());
 		userInfo.setWrap(false);
-		userInfo.setWrapTitle(false);
 
-		addFormItem(userInfo);
+		addMember(userInfo);
 		addSeparator();
 
 		addFormItem(new SearchBox());
