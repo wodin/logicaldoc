@@ -26,6 +26,8 @@ import com.smartgwt.client.widgets.grid.events.CellClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellClickHandler;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
+import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
+import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
@@ -91,6 +93,14 @@ public class FoldersNavigator extends TreeGrid {
 			@Override
 			public void onCellClick(final CellClickEvent event) {
 				selectFolder(Long.parseLong(event.getRecord().getAttributeAsString("id")));
+			}
+		});
+
+		addCellDoubleClickHandler(new CellDoubleClickHandler() {
+			@Override
+			public void onCellDoubleClick(CellDoubleClickEvent event) {
+				TreeNode selectedNode = getTree().getRoot();
+				getTree().openFolder(selectedNode);
 			}
 		});
 	}
