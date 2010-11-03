@@ -73,7 +73,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	public DocumentToolbar() {
 		GUIFolder folder = Session.get().getCurrentFolder();
 		boolean downloadEnabled = folder != null && folder.isDownload();
-
+		
 		download.setTooltip(I18N.message("download"));
 		download.setIcon(ItemFactory.newImgIcon("download.png").getSrc());
 		download.addClickHandler(new ClickHandler() {
@@ -212,7 +212,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				if (document == null)
 					return;
 				WindowUtils.openUrl("ldedit:" + GWT.getHostPageBaseURL() + "ldeditnow?action=edit&sid="
-							+ Session.get().getSid() + "&docId=" + document.getId());
+						+ Session.get().getSid() + "&docId=" + document.getId());
 			}
 		});
 
@@ -419,6 +419,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 
 			if (document != null) {
+				download.setDisabled(!downloadEnabled);
 				rss.setDisabled(!Feature.enabled(Feature.RSS) || !downloadEnabled);
 				pdf.setDisabled(!Feature.enabled(Feature.PDF) || !downloadEnabled);
 				if (!pdf.isDisabled())
@@ -435,6 +436,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				if (!office.isDisabled())
 					office.setTooltip(I18N.message("editwithoffice"));
 			} else {
+				download.setDisabled(true);
 				rss.setDisabled(true);
 				pdf.setDisabled(true);
 				subscribe.setDisabled(true);
