@@ -1,7 +1,6 @@
 package com.logicaldoc.gui.common.client.util;
 
 import com.google.gwt.user.client.Window;
-import com.logicaldoc.gui.common.client.Session;
 
 /**
  * Utilities for accessing the javascript Window object
@@ -65,10 +64,7 @@ public class WindowUtils {
 	}-*/;
 
 	public static void openUrl(String url) {
-		Session.get().setConfirmExit(false);
 		Window.open(url, "_self", "width=1, height=1");
-		if (!Session.get().isConfirmExit() && !WindowUtils.getAppName().toLowerCase().contains("explorer"))
-			Session.get().setConfirmExit(true);
 	}
 
 	public static native void triggerUrl(String url) /*-{

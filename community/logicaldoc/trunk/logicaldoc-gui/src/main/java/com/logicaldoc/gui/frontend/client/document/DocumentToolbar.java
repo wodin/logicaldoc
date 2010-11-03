@@ -73,7 +73,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	public DocumentToolbar() {
 		GUIFolder folder = Session.get().getCurrentFolder();
 		boolean downloadEnabled = folder != null && folder.isDownload();
-		
+
 		download.setTooltip(I18N.message("download"));
 		download.setIcon(ItemFactory.newImgIcon("download.png").getSrc());
 		download.addClickHandler(new ClickHandler() {
@@ -211,6 +211,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			public void onClick(ClickEvent event) {
 				if (document == null)
 					return;
+				
 				WindowUtils.openUrl("ldedit:" + GWT.getHostPageBaseURL() + "ldeditnow?action=edit&sid="
 						+ Session.get().getSid() + "&docId=" + document.getId());
 			}
