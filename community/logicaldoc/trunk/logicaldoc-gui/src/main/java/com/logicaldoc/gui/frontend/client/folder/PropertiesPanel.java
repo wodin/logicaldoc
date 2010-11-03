@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.folder;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -51,6 +52,12 @@ public class PropertiesPanel extends FolderDetailTab {
 		TextItem description = ItemFactory.newTextItem("description", "description", folder.getDescription());
 		description.addChangedHandler(changedHandler);
 
+		DateTimeFormat formatter = DateTimeFormat.getFormat(I18N.message("format_date"));
+		StaticTextItem creation = ItemFactory.newStaticTextItem("creation", "createdon",
+				formatter.format(folder.getCreation()));
+
+		StaticTextItem creator = ItemFactory.newStaticTextItem("creator", "creator", folder.getCreator());
+		
 		StaticTextItem pathItem = ItemFactory.newStaticTextItem("path", "path", folder.getPathExtended());
 		pathItem.setTitle(I18N.message("path"));
 		pathItem.setValue(folder.getPathExtended());
@@ -63,9 +70,9 @@ public class PropertiesPanel extends FolderDetailTab {
 		}
 
 		if (folder.getId() == Constants.DOCUMENTS_FOLDERID)
-			form.setItems(idItem, pathItem);
+			form.setItems(idItem, pathItem, creation, creator);
 		else
-			form.setItems(idItem, pathItem, name, description);
+			form.setItems(idItem, pathItem, name, description, creation, creator);
 		addMember(form);
 	}
 

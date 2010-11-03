@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.common.client.beans;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.logicaldoc.gui.common.client.Constants;
 
@@ -29,6 +30,12 @@ public class GUIFolder implements Serializable {
 	private GUIFolder[] path = null;
 
 	private String pathExtended;
+
+	private String creator;
+
+	private Long creatorId;
+
+	private Date creation;
 
 	public long getId() {
 		return id;
@@ -123,5 +130,29 @@ public class GUIFolder implements Serializable {
 			return getPath()[getPath().length - 1];
 		else
 			return null;
+	}
+
+	public String getCreator() {
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
+
+	public Long getCreatorId() {
+		return creatorId;
+	}
+
+	public void setCreatorId(Long creatorId) {
+		this.creatorId = creatorId;
+	}
+
+	public Date getCreation() {
+		return creation;
+	}
+
+	public void setCreation(Date creation) {
+		this.creation = creation;
 	}
 }
