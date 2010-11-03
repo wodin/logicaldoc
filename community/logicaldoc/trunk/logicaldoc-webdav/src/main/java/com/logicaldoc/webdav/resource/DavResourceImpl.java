@@ -326,16 +326,12 @@ public class DavResourceImpl implements DavResource, Serializable {
 	 */
 	public MultiStatusResponse alterProperties(DavPropertySet setProperties, DavPropertyNameSet removePropertyNames)
 			throws DavException {
-		//Throwing an exception will lead to problems in downloading or moving a file
-		//throw new UnsupportedOperationException();
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@SuppressWarnings("unchecked")
 	public MultiStatusResponse alterProperties(List changeList) throws DavException {
-		//Throwing an exception will lead to problems in downloading or moving a file
-		//throw new UnsupportedOperationException();
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -538,8 +534,8 @@ public class DavResourceImpl implements DavResource, Serializable {
 				name = name.substring(name.lastIndexOf("/") + 1, name.length()).replace("/default", "");
 				log.debug("name = " + name);
 
-				Resource destResource = resourceService.getParentResource(destination.getResourcePath(), this.resource
-						.getRequestedPerson(), session);
+				Resource destResource = resourceService.getParentResource(destination.getResourcePath(),
+						this.resource.getRequestedPerson(), session);
 				this.resource.setName(name);
 
 				if (destResource.getRequestedPerson() == 0) {

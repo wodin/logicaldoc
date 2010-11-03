@@ -62,8 +62,6 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 
 	private static final long serialVersionUID = -8726695805361483901L;
 
-	private DavResource getResource = null;
-
 	/**
 	 * Default value for the 'WWW-Authenticate' header, that is set, if request
 	 * results in a {@link DavServletResponse#SC_UNAUTHORIZED 401
@@ -163,8 +161,8 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 					}
 					// No active session found, new login required
 					if (sid == null) {
-						boolean isLoggedOn = authenticationChain.authenticate(credentials.getUserName(), credentials
-								.getPassword(), combinedUserId);
+						boolean isLoggedOn = authenticationChain.authenticate(credentials.getUserName(),
+								credentials.getPassword(), combinedUserId);
 						if (isLoggedOn == false) {
 							AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
 							return;
@@ -322,7 +320,6 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 		log.debug("get");
 
 		try {
-			getResource = resource;
 			spoolResource(request, response, resource, true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -467,17 +464,11 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 				status = DavServletResponse.SC_CREATED;
 			}
 
-			if (getResource != null) {
-				// We must do a copy
-				getResource.copy(resource, true);
-			} else {
-				parentResource.addMember(resource, getInputContext(request, request.getInputStream()));
-			}
+			parentResource.addMember(resource, getInputContext(request, request.getInputStream()));
 
 			getResourceFactory().putInCache((com.logicaldoc.webdav.session.DavSession) parentResource.getSession(),
 					parentResource);
 
-			getResource = null;
 			response.setStatus(status);
 		} catch (Exception e) {
 		}

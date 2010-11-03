@@ -8,8 +8,9 @@ import com.logicaldoc.webdav.session.DavSession;
 /**
  * Main-Class that contains all information about one particular resource within
  * logicalDOC. Important attributes are ID, Name, RequestedPerson <b>ID</b>
- * identifies a resource against logicalDOC.<br/> <b>Name</b> Is the Title of a
- * given resource that appears on the client site as "file name"<br/>
+ * identifies a resource against logicalDOC.<br/>
+ * <b>Name</b> Is the Title of a given resource that appears on the client site
+ * as "file name"<br/>
  * <b>RequestedPerson</b> shows the user that wants todo something with this
  * resource. Therefore the passed ID corresponds with the userid within
  * logicalDOC. Secure handlings will be managed through this.
@@ -38,23 +39,23 @@ public interface Resource {
 	public boolean isDeleteEnabled();
 
 	public boolean isRenameEnabled();
-	
+
 	public boolean isDownloadEnabled();
-	
+
 	public boolean isWriteEnabled();
-	
+
 	public boolean isAddChildEnabled();
-	
+
 	public void setDeleteEnabled(boolean deleteEnabled);
-	
+
 	public void setDownloadEnabled(boolean downloadEnabled);
 
 	public void setRenameEnabled(boolean renameEnabled);
-	
+
 	public void setWriteEnabled(boolean writeEnabled);
-	
+
 	public void setAddChildEnabled(boolean renameEnabled);
-	
+
 	public void isLocked(boolean isLocked);
 
 	public void isFolder(boolean isFolder);
@@ -103,4 +104,7 @@ public interface Resource {
 
 	public void setSession(DavSession session);
 
+	public Long getDocRef();
+
+	public void setDocRef(Long docRef);
 }

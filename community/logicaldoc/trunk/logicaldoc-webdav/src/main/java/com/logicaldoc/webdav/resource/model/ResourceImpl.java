@@ -46,6 +46,8 @@ public class ResourceImpl implements Resource {
 
 	private Date creationDate;
 
+	private Long docRef;
+
 	private Boolean writeEnabled;
 
 	private Boolean deleteEnabled;
@@ -261,5 +263,15 @@ public class ResourceImpl implements Resource {
 
 	public void setDownloadEnabled(boolean downloadEnabled) {
 		this.downloadEnabled = downloadEnabled;
+	}
+
+	@Override
+	public Long getDocRef() {
+		return this.docRef;
+	}
+
+	@Override
+	public void setDocRef(Long docRef) {
+		this.docRef = docRef;
 	}
 }
