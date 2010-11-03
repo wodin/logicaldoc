@@ -101,6 +101,7 @@ public class ResourceServiceImpl implements ResourceService {
 				|| document.getStatus() == Document.DOC_LOCKED);
 		resource.setVersionLabel(document.getVersion());
 		resource.setAuthor(document.getPublisher());
+		resource.setDocRef(document.getDocRef());
 		resource.setSession(session);
 
 		if (session != null && (Long) session.getObject("id") != null) {
