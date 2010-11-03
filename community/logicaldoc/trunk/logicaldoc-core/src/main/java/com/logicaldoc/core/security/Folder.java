@@ -1,5 +1,6 @@
 package com.logicaldoc.core.security;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,6 +32,12 @@ public class Folder extends PersistentObject implements Comparable<Folder> {
 
 	private int type = 0;
 
+	private Date creation = new Date();
+	
+	private String creator;
+
+	private Long creatorId;
+	
 	protected Set<FolderGroup> folderGroups = new HashSet<FolderGroup>();
 
 	public Folder() {
@@ -146,5 +153,29 @@ public class Folder extends PersistentObject implements Comparable<Folder> {
 
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	public Date getCreation() {
+		return creation;
+	}
+
+	public void setCreation(Date creation) {
+		this.creation = creation;
+	}
+
+	public String getCreator() {
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
+
+	public Long getCreatorId() {
+		return creatorId;
+	}
+
+	public void setCreatorId(Long creatorId) {
+		this.creatorId = creatorId;
 	}
 }

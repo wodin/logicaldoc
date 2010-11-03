@@ -66,6 +66,10 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			if (folder.getSecurityRef() != null)
 				folder.getFolderGroups().clear();
 
+			if (transaction != null) {
+				folder.setCreator(transaction.getUser().getFullName());
+				folder.setCreatorId(transaction.getUserId());
+			}
 			getHibernateTemplate().saveOrUpdate(folder);
 			saveFolderHistory(folder, transaction);
 		} catch (Exception e) {

@@ -87,6 +87,9 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			f.setName(folderId != Constants.DOCUMENTS_FOLDERID ? folder.getName() : "/");
 			f.setParentId(folder.getParentId());
 			f.setDescription(folder.getDescription());
+			f.setCreation(folder.getCreation());
+			f.setCreator(folder.getCreator());
+			f.setCreatorId(folder.getCreatorId());
 
 			Set<Permission> permissions = dao.getEnabledPermissions(folderId, session.getUserId());
 			List<String> permissionsList = new ArrayList<String>();
@@ -362,7 +365,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					fg.setWorkflow(1);
 				else
 					fg.setWorkflow(0);
-				
+
 				if (isAdmin || right.isDownload())
 					fg.setDownload(1);
 				else
