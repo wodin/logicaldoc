@@ -169,8 +169,8 @@ public class DocumentsListPanel extends VLayout {
 		list.setFilterOnKeypress(true);
 		dataSource = new DocumentsDS(folder.getId(), null, max, null);
 		list.setDataSource(dataSource);
-		list.setFields(indexed, locked, immutable, signed, icon, title, size, lastModified, version, publisher,
-				published, creator, created, customId, filename);
+		list.setFields(indexed, locked, immutable, signed, icon, filename, title, size, lastModified, version,
+				publisher, published, creator, created, customId);
 
 		// Prepare a panel containing a title and the documents list
 		infoPanel = new InfoPanel("");

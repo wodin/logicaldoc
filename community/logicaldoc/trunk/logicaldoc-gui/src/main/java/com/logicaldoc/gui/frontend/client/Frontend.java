@@ -19,7 +19,6 @@ import com.logicaldoc.gui.common.client.util.RequestInfo;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
-import com.logicaldoc.gui.frontend.client.search.TagsForm;
 import com.logicaldoc.gui.frontend.client.security.LoginPanel;
 import com.smartgwt.client.util.SC;
 
@@ -48,9 +47,6 @@ public class Frontend implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
-		// Export some javascripts
-		TagsForm.exportStearchTag();
-
 		if (RootPanel.get("loadingWrapper") == null)
 			return;
 
@@ -94,10 +90,13 @@ public class Frontend implements EntryPoint {
 			public void onSuccess(GUIInfo info) {
 				Config.init(info);
 				I18N.init(info);
-				
-				WindowUtils.setTitle(info.getProductName() + " " + info.getRelease()
-						+ (info.getLicensee() != null ? " - " +I18N.message("licensedto") + ": " + info.getLicensee() : ""));
-				
+
+				WindowUtils.setTitle(info.getProductName()
+						+ " "
+						+ info.getRelease()
+						+ (info.getLicensee() != null ? " - " + I18N.message("licensedto") + ": " + info.getLicensee()
+								: ""));
+
 				Feature.init(info);
 				Session.get().setInfo(info);
 

@@ -615,14 +615,14 @@ public class DavResourceImpl implements DavResource, Serializable {
 	 * @see DavResource#unlock(String)
 	 */
 	public void unlock(String lockToken) throws DavException {
-		//throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @see DavResource#addLockManager(org.apache.jackrabbit.webdav.lock.LockManager)
 	 */
 	public void addLockManager(LockManager lockMgr) {
-		//throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException();
 	}
 
 	/**

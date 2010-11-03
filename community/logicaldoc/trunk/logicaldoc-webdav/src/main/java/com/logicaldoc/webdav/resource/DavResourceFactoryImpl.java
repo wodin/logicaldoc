@@ -18,6 +18,7 @@ import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.lock.LockManager;
 
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.webdav.resource.model.Resource;
 import com.logicaldoc.webdav.resource.service.ResourceService;
 import com.logicaldoc.webdav.session.DavSession;
@@ -113,10 +114,14 @@ public class DavResourceFactoryImpl implements DavResourceFactory {
 	 */
 	public void putInCache(DavSession session, DavResource resource) {
 		try {
-			// Initialize the collection of children
-			Cache cache = ((CacheManager) Context.getInstance().getBean("DavCacheManager")).getCache("dav-resources");
-			Element element = new Element(session.getObject("id") + ";" + resource.getResourcePath(), resource);
-			cache.put(element);
+			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			if ("true".equals(config.getProperty("webdav.usecache"))) {
+				// Initialize the collection of children
+				Cache cache = ((CacheManager) Context.getInstance().getBean("DavCacheManager"))
+						.getCache("dav-resources");
+				Element element = new Element(session.getObject("id") + ";" + resource.getResourcePath(), resource);
+				cache.put(element);
+			}
 		} catch (Throwable t) {
 
 		}
@@ -129,13 +134,17 @@ public class DavResourceFactoryImpl implements DavResourceFactory {
 	 * @return The cached entry
 	 */
 	private DavResource getFromCache(DavSession session, String path) {
-		String key = session.getObject("id") + ";" + path;
-		Cache cache = ((CacheManager) Context.getInstance().getBean("DavCacheManager")).getCache("dav-resources");
-		Element element = cache.get(key);
-		DavResource resource = null;
-		if (element != null) {
-			resource = (DavResource) element.getValue();
-			return resource;
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		if ("true".equals(config.getProperty("webdav.usecache"))) {
+			String key = session.getObject("id") + ";" + path;
+			Cache cache = ((CacheManager) Context.getInstance().getBean("DavCacheManager")).getCache("dav-resources");
+			Element element = cache.get(key);
+			DavResource resource = null;
+			if (element != null) {
+				resource = (DavResource) element.getValue();
+				return resource;
+			} else
+				return null;
 		} else
 			return null;
 	}
