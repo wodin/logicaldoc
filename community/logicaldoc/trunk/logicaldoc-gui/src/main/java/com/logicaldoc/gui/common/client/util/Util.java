@@ -1,8 +1,10 @@
 package com.logicaldoc.gui.common.client.util;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 
 public class Util {
 	public static String[] OFFICE_EXTS = new String[] { ".doc", ".xls", ".ppt", ".docx", ".xlsx", ".pptx" };
@@ -113,33 +115,34 @@ public class Util {
 	 */
 	public static native String formatSize(double size) /*-{
 		if (size / 1024 < 1) {
-			str = size + " Bytes";
+		str = size + " Bytes";
 		} else if (size / 1048576 < 1) {
-			str = (size / 1024).toFixed(1) + " KBytes";
+		str = (size / 1024).toFixed(1) + " KBytes";
 		} else {
-			str = (size / 1048576).toFixed(1) + " MBytes";
+		str = (size / 1048576).toFixed(1) + " MBytes";
 		} 
 
 		return str;
 	}-*/;
-	
+
 	/**
 	 * Format file size in KB.
-	 * NOTE: Actually the number are retourned without thousends separator
 	 * 
 	 * @param size The file size in bytes.
 	 * @return The formated file size.
 	 */
-	public static native String formatSizeKB(double size) /*-{
+	public static String formatSizeKB(double size) {
+		String str;
 		if (size < 1) {
 			str = "0 KB";
 		} else if (size / 1024 < 1) {
 			str = "1 KB";
 		} else {
-			str = (size / 1024).toFixed() + " KB";
+			NumberFormat fmt = NumberFormat.getFormat("#"+I18N.message("grouping_separator")+"###");
+			str = fmt.format(size/1024) + " KB";
 		}
 		return str;
-	}-*/;
+	}
 
 	/**
 	 * Format number percentage.
@@ -163,9 +166,9 @@ public class Util {
 		var lang = navigator.language? navigator.language : navigator.userLanguage;
 
 		if (lang) {
-			return lang;
+		return lang;
 		} else {
-		  	return "en";
+		return "en";
 		}
 	}-*/;
 
@@ -174,13 +177,13 @@ public class Util {
 	 */
 	public static native String getUserAgent() /*-{
 		try {
-		    if ( window.opera ) return 'opera';
-		    var ua = navigator.userAgent.toLowerCase();
-		    if ( ua.indexOf('webkit' ) != -1 ) return 'safari';
-		    if ( ua.indexOf('msie 6.0') != -1 ) return 'ie6';
-		    if ( ua.indexOf('msie 7.0') != -1 ) return 'ie7';
-		    if ( ua.indexOf('gecko') != -1 ) return 'gecko';
-		    return 'unknown';
+		if ( window.opera ) return 'opera';
+		var ua = navigator.userAgent.toLowerCase();
+		if ( ua.indexOf('webkit' ) != -1 ) return 'safari';
+		if ( ua.indexOf('msie 6.0') != -1 ) return 'ie6';
+		if ( ua.indexOf('msie 7.0') != -1 ) return 'ie7';
+		if ( ua.indexOf('gecko') != -1 ) return 'gecko';
+		return 'unknown';
 		} catch ( e ) { return 'unknown' }
 	}-*/;
 
@@ -189,10 +192,10 @@ public class Util {
 	}-*/;
 
 	public static native boolean isValidEmail(String email) /*-{
-		var reg1 = /(@.*@)|(\.\.)|(@\.)|(\.@)|(^\.)/; // not valid
-		var reg2 = /^.+\@(\[?)[a-zA-Z0-9\-\.]+\.([a-zA-Z]{2,3}|[0-9]{1,3})(\]?)$/; // valid
-		return !reg1.test(email) && reg2.test(email);
-	}-*/;
+															var reg1 = /(@.*@)|(\.\.)|(@\.)|(\.@)|(^\.)/; // not valid
+															var reg2 = /^.+\@(\[?)[a-zA-Z0-9\-\.]+\.([a-zA-Z]{2,3}|[0-9]{1,3})(\]?)$/; // valid
+															return !reg1.test(email) && reg2.test(email);
+															}-*/;
 
 	public static native void redirect(String url)
 	/*-{
