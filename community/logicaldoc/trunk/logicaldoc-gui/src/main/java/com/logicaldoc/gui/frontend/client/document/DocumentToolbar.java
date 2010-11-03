@@ -212,7 +212,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				if (document == null)
 					return;
 				WindowUtils.openUrl("ldedit:" + GWT.getHostPageBaseURL() + "ldeditnow?action=edit&sid="
-						+ Session.get().getSid() + "&docId=" + document.getId());
+							+ Session.get().getSid() + "&docId=" + document.getId());
 			}
 		});
 

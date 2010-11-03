@@ -480,7 +480,6 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			getResource = null;
 			response.setStatus(status);
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 

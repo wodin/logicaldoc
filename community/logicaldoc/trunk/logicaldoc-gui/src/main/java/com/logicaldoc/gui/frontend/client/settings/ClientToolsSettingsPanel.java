@@ -43,14 +43,18 @@ public class ClientToolsSettingsPanel extends VLayout {
 
 	private GUIParameter wdSettings = null;
 
+	private GUIParameter wdCache = null;
+
 	private GUIParameter officeSettings = null;
 
 	public ClientToolsSettingsPanel(GUIParameter[] settings) {
 		for (GUIParameter parameter : settings) {
 			if (parameter.getName().startsWith("webservice"))
 				wsSettings = parameter;
-			else if (parameter.getName().startsWith("webdav"))
+			else if (parameter.getName().equals("webdav.enabled"))
 				wdSettings = parameter;
+			else if (parameter.getName().equals("webdav.usecache"))
+				wdCache = parameter;
 			else if (parameter.getName().startsWith("office"))
 				officeSettings = parameter;
 		}
@@ -144,7 +148,13 @@ public class ClientToolsSettingsPanel extends VLayout {
 		wdEnabled.setRequired(true);
 		wdEnabled.setValue(wdSettings.getValue().equals("true") ? "yes" : "no");
 
-		webDavForm.setItems(url, wdUrl, wdEnabled);
+		// Webdav Cache
+		RadioGroupItem cache = ItemFactory.newBooleanSelector("wdCache", "usecache");
+		cache.setName("wdCache");
+		cache.setRequired(true);
+		cache.setValue(wdCache.getValue().equals("true") ? "yes" : "no");
+
+		webDavForm.setItems(url, wdUrl, wdEnabled, cache);
 		webDav.setPane(webDavForm);
 
 		Tab office = new Tab();
@@ -156,17 +166,13 @@ public class ClientToolsSettingsPanel extends VLayout {
 		officeForm.setColWidths(1, "*");
 		officeForm.setPadding(5);
 
-		// Url
-		StaticTextItem officeUrl = ItemFactory.newStaticTextItem("officeUrl", "Office", GWT.getHostPageBaseURL()
-				+ "/ldeditnow");
-
 		// Status
 		RadioGroupItem officeEnabled = ItemFactory.newBooleanSelector("officeEnabled", "enabled");
 		officeEnabled.setName("officeEnabled");
 		officeEnabled.setRequired(true);
 		officeEnabled.setValue(officeSettings.getValue().equals("true") ? "yes" : "no");
 
-		officeForm.setItems(url, officeUrl, officeEnabled);
+		officeForm.setItems(officeEnabled);
 		office.setPane(officeForm);
 
 		if (Feature.visible(Feature.WEBSERVICE)) {
@@ -200,13 +206,17 @@ public class ClientToolsSettingsPanel extends VLayout {
 					ClientToolsSettingsPanel.this.wdSettings.setValue(values.get("wdEnabled").equals("yes") ? "true"
 							: "false");
 
+					ClientToolsSettingsPanel.this.wdCache.setValue(values.get("wdCache").equals("yes") ? "true"
+							: "false");
+
 					ClientToolsSettingsPanel.this.officeSettings
 							.setValue(values.get("officeEnabled").equals("yes") ? "true" : "false");
 
 					GUIParameter[] params = new GUIParameter[3];
 					params[0] = ClientToolsSettingsPanel.this.wsSettings;
 					params[1] = ClientToolsSettingsPanel.this.wdSettings;
-					params[2] = ClientToolsSettingsPanel.this.officeSettings;
+					params[2] = ClientToolsSettingsPanel.this.wdCache;
+					params[3] = ClientToolsSettingsPanel.this.officeSettings;
 
 					service.saveClientSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
 

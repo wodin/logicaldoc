@@ -260,12 +260,4 @@ public class TagsForm extends VLayout {
 		Search.get().setOptions(options);
 		Search.get().search();
 	}
-
-	/**
-	 * Define the JavaScript function that will call the method searchTag.
-	 * Invoke this method on module load. This is used for the TagCloud module.
-	 */
-	public static native void exportStearchTag() /*-{
-		$wnd.searchTag = @com.logicaldoc.gui.frontend.client.search.TagsForm::searchTag(Ljava/lang/String;);
-	}-*/;
 }
