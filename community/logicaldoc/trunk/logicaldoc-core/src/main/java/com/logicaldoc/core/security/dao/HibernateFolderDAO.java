@@ -655,7 +655,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			}
 
 			StringBuffer query = new StringBuffer(
-					"select A.LD_WRITE as LDWRITE, A.LD_ADD as LDADD, A.ld_security as LDSECURITY, A.ld_immutable as LDIMMUTABLE, A.LD_DELETE as LDDELETE, A.LD_RENAME as LDRENAME, A.ld_import as LDIMPORT, A.ld_export as LDEXPORT, A.LD_SIGN as LDSIGN, A.LD_ARCHIVE as LDARCHIVE, A.LD_WORKFLOW as LDWORKFLOW");
+					"select A.LD_WRITE as LDWRITE, A.LD_ADD as LDADD, A.ld_security as LDSECURITY, A.ld_immutable as LDIMMUTABLE, A.LD_DELETE as LDDELETE, A.LD_RENAME as LDRENAME, A.ld_import as LDIMPORT, A.ld_export as LDEXPORT, A.LD_SIGN as LDSIGN, A.LD_ARCHIVE as LDARCHIVE, A.LD_WORKFLOW as LDWORKFLOW, A.LD_DOWNLOAD as LDDOWNLOAD");
 			query.append(" from ld_foldergroup A");
 			query.append(" where ");
 			query.append(" A.LD_FOLDERID=" + id);
@@ -706,6 +706,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 						permissions.add(Permission.ARCHIVE);
 					if (rs.getInt("LDWORKFLOW") == 1)
 						permissions.add(Permission.WORKFLOW);
+					if (rs.getInt("LDDOWNLOAD") == 1)
+						permissions.add(Permission.DOWNLOAD);
 				}
 			} finally {
 				if (rs != null)
@@ -811,7 +813,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	public boolean delete(long folderId, History transaction) {
 		if (folderId == Folder.ROOTID)
 			throw new RuntimeException("Not allowed to delete the Root folder");
-		
+
 		boolean result = true;
 		try {
 			Folder folder = (Folder) getHibernateTemplate().get(Folder.class, folderId);
