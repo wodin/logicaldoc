@@ -257,7 +257,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				first = false;
 			}
 			query1.append(") and _entity.parentId=" + parentId);
-			query1.append(" and not(_entity.id=" + parentId+")");
+			query1.append(" and not(_entity.id=" + parentId + ")");
 
 			coll = (List<Folder>) getHibernateTemplate().find(query1.toString(), null);
 
@@ -282,10 +282,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				first = false;
 			}
 			query2.append("))");
-			query2.append(" and not(_entity.id=" + parentId+")");
+			query2.append(" and not(_entity.id=" + parentId + ")");
 
-			List<Folder> coll2 = (List<Folder>) getHibernateTemplate().find(query2.toString(),
-					new Long[] { parentId });
+			List<Folder> coll2 = (List<Folder>) getHibernateTemplate().find(query2.toString(), new Long[] { parentId });
 			for (Folder folder : coll2) {
 				if (!coll.contains(folder))
 					coll.add(folder);
@@ -810,6 +809,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public boolean delete(long folderId, History transaction) {
+		if (folderId == Folder.ROOTID)
+			throw new RuntimeException("Not allowed to delete the Root folder");
+		
 		boolean result = true;
 		try {
 			Folder folder = (Folder) getHibernateTemplate().get(Folder.class, folderId);
