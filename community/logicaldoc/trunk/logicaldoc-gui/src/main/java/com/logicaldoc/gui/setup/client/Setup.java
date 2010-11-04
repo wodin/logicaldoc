@@ -54,6 +54,14 @@ import com.smartgwt.client.widgets.tab.TabSet;
  */
 public class Setup implements EntryPoint {
 
+	private static final String REG_EMAIL = "regEmail";
+
+	private static final String REG_WEBSITE = "regWebsite";
+
+	private static final String REG_ORGANIZATION = "regOrganization";
+
+	private static final String REG_NAME = "regName";
+
 	private static final String ORACLE = "Oracle";
 
 	private static final String DB_MYSQL = "MySQL";
@@ -131,9 +139,12 @@ public class Setup implements EntryPoint {
 			@Override
 			public void onSuccess(GUIInfo info) {
 				I18N.init(info);
-				
-				WindowUtils.setTitle(info.getProductName() + " " + info.getRelease()
-						+ (info.getLicensee() != null ? " - " +I18N.message("licensedto") + ": " + info.getLicensee() : ""));
+
+				WindowUtils.setTitle(info.getProductName()
+						+ " "
+						+ info.getRelease()
+						+ (info.getLicensee() != null ? " - " + I18N.message("licensedto") + ": " + info.getLicensee()
+								: ""));
 				initGUI(info);
 			}
 		});
@@ -149,11 +160,13 @@ public class Setup implements EntryPoint {
 		tabs = new TabSet();
 		tabs.setWidth(400);
 		tabs.setHeight(210);
+
+		Tab registrationTab = setupRegistration(vm);
 		Tab repositoryTab = setupRepository(vm);
 		Tab databaseTab = setupDatabase(vm);
 		Tab languageTab = setupLanguage(vm);
 		Tab smtpTab = setupSmtp(vm);
-		tabs.setTabs(repositoryTab, databaseTab, languageTab, smtpTab);
+		tabs.setTabs(registrationTab, repositoryTab, databaseTab, languageTab, smtpTab);
 
 		// This is the button used to confirm each step
 		submit = new IButton();
@@ -412,6 +425,34 @@ public class Setup implements EntryPoint {
 		return databaseTab;
 	}
 
+	/**
+	 * Prepares the registration form
+	 */
+	private Tab setupRegistration(final ValuesManager vm) {
+		Tab registrationTab = new Tab();
+		registrationTab.setTitle(I18N.message("registration"));
+
+		TextItem regName = ItemFactory.newTextItem(REG_NAME, "name", null);
+		regName.setWrapTitle(false);
+
+		TextItem regOrganization = ItemFactory.newTextItem(REG_ORGANIZATION, "organization", null);
+		regOrganization.setWrapTitle(false);
+
+		TextItem regWebsite = ItemFactory.newTextItem(REG_WEBSITE, "website", null);
+		regWebsite.setWrapTitle(false);
+
+		TextItem regEmail = ItemFactory.newEmailItem(REG_EMAIL, "email", false);
+		regEmail.setWrapTitle(false);
+
+		final DynamicForm regForm = new DynamicForm();
+		regForm.setID("regForm");
+		regForm.setValuesManager(vm);
+		regForm.setFields(regName, regEmail, regOrganization, regWebsite);
+		regForm.setDisabled(true);
+		registrationTab.setPane(regForm);
+		return registrationTab;
+	}
+
 	private void onSubmit(final GUIInfo info) {
 		vm.validate();
 		Tab tab = tabs.getSelectedTab();
@@ -442,6 +483,10 @@ public class Setup implements EntryPoint {
 				data.setRepositoryFolder(vm.getValueAsString(REPOSITORY_FOLDER));
 				data.setDbDialect(engines.get(data.getDbEngine())[3]);
 				data.setDbValidationQuery(engines.get(data.getDbEngine())[4]);
+				data.setRegEmail(vm.getValueAsString(REG_EMAIL));
+				data.setRegName(vm.getValueAsString(REG_NAME));
+				data.setRegOrganization(vm.getValueAsString(REG_ORGANIZATION));
+				data.setRegWebsite(vm.getValueAsString(REG_WEBSITE));
 				if (data.getDbType().equals(INTERNAL)) {
 					data.setDbEngine("Hsqldb");
 					data.setDbDriver("org.hsqldb.jdbcDriver");
@@ -479,7 +524,7 @@ public class Setup implements EntryPoint {
 				tabs.getSelectedTab().getPane().setDisabled(false);
 				if (step < tabs.getSelectedTabNumber())
 					step++;
-				if (step == 3)
+				if (step == 4)
 					submit.setTitle(I18N.message("setup"));
 			}
 		}
