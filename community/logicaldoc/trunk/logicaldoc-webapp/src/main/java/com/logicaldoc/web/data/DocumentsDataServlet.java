@@ -132,7 +132,7 @@ public class DocumentsDataServlet extends HttpServlet {
 				for (Object record : records) {
 					Object[] cols = (Object[]) record;
 					if (cols[2] != null) {
-						docRefIds.add((Long) cols[2]);
+						docRefIds.add((Long) cols[0]);
 						continue;
 					}
 					writer.print("<document>");
@@ -186,17 +186,17 @@ public class DocumentsDataServlet extends HttpServlet {
 				}
 
 				// For all alias document, we must retrieve the original
-				// documents
-				// infos
-				for (Long docRef : docRefIds) {
-					Document doc = dao.findById(docRef);
+				// documents infos
+				for (Long id : docRefIds) {
+					Document aliasDoc = dao.findById(id);
+					Document doc = dao.findById(aliasDoc.getDocRef());
 					writer.print("<document>");
 					writer.print("<id>" + doc.getId() + "</id>");
 					if (doc.getCustomId() != null)
 						writer.print("<customId><![CDATA[" + doc.getCustomId() + "]]></customId>");
 					else
 						writer.print("<customId> </customId>");
-					writer.print("<docref>" + docRef + "</docref>");
+					writer.print("<docref>" + id + "</docref>");
 					writer.print("<icon>alias</icon>");
 					writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
 					writer.print("<version>" + doc.getVersion() + "</version>");
@@ -226,6 +226,7 @@ public class DocumentsDataServlet extends HttpServlet {
 						writer.print("<lockUserId>" + doc.getLockUserId() + "</lockUserId>");
 					writer.print("<filename><![CDATA[" + doc.getFileName() + "]]></filename>");
 					writer.print("<status>" + doc.getStatus() + "</status>");
+					writer.print("<aliasId>" + id + "</aliasId>");
 					writer.print("</document>");
 				}
 			}

@@ -58,7 +58,8 @@ public class DocumentContextMenu extends Menu {
 		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
-				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id);
+				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+						+ id);
 			}
 		});
 
@@ -108,7 +109,10 @@ public class DocumentContextMenu extends Menu {
 					return;
 				final long[] ids = new long[selection.length];
 				for (int i = 0; i < selection.length; i++) {
-					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
+					if (selection[i].getAttribute("aliasId") != null)
+						ids[i] = Long.parseLong(selection[i].getAttribute("aliasId"));
+					else
+						ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
 				SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
@@ -348,8 +352,8 @@ public class DocumentContextMenu extends Menu {
 						record.setAttribute("status", Constants.DOC_CHECKED_OUT);
 						list.refreshRow(list.getRecordIndex(record));
 						Session.get().getUser().setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() + 1);
-						WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-								+ id);
+						WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
+								+ "&docId=" + id);
 						Log.info(I18N.message("documentcheckedout"), null);
 					}
 				});
@@ -710,7 +714,6 @@ public class DocumentContextMenu extends Menu {
 			checkout.setEnabled(false);
 			enableOffice = false;
 			enableSign = false;
-
 		}
 
 		setItems(download, cut, copy, delete, bookmark, sendMail, links, checkout, checkin, lock, unlockItem, more);
