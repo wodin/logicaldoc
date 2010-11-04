@@ -213,16 +213,15 @@ public class StatsCollector extends Task {
 			log.info("Send collected statistics");
 			// Prepare HTTP post
 			PostMethod post = new PostMethod("http://stat.logicaldoc.com/stats/collect");
-			post.setRequestHeader("Content-Type", "application/txt");
 			post.setRequestHeader("Content-Transfer-Encoding", "utf8");
 
 			// Add all statistics as parameters
 			post.setParameter("id", id != null ? id : "");
 			post.setParameter("userno", userno != null ? userno : "");
-			post.setParameter("release", release != null ? release : "");
+			post.setParameter("product_release", release != null ? release : "");
 			post.setParameter("email", email != null ? email : "");
-			post.setParameter("product", product != null ? product : "");
-			post.setParameter("product_name", productName != null ? productName : "");
+			post.setParameter("product", StatsCollector.product != null ? StatsCollector.product : "");
+			post.setParameter("product_name", StatsCollector.productName != null ? StatsCollector.productName : "");
 			
 			post.setParameter("java_version", javaversion != null ? javaversion : "");
 			post.setParameter("java_vendor", javavendor != null ? javavendor : "");
