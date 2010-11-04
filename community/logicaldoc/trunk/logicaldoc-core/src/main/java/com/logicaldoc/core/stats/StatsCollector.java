@@ -70,7 +70,7 @@ public class StatsCollector extends Task {
 		String release = config.getProperty("product.release");
 		log.debug("Collected identification data");
 
-		EMailSender sender = (EMailSender) Context.getInstance().getInstance().getBean(EMailSender.class);
+		EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
 		String email = sender.getSender();
 		log.debug("Collected contact data");
 
@@ -79,13 +79,11 @@ public class StatsCollector extends Task {
 		 */
 		String osname = System.getProperty("os.name");
 		String osversion = System.getProperty("os.version");
-		String osarch = System.getProperty("os.arch");
 		String javaversion = System.getProperty("java.version");
 		String javavendor = System.getProperty("java.vendor");
 		String fileencoding = System.getProperty("file.encoding");
 		String userlanguage = System.getProperty("user.language");
 		String userregion = System.getProperty("user.region");
-		String usertimezone = System.getProperty("user.timezone");
 		String javaarch = System.getProperty("sun.arch.data.model");
 
 		log.debug("Collected environment data");
@@ -177,6 +175,30 @@ public class StatsCollector extends Task {
 		saveStatistic("deletedfolders", deletedfolders);
 
 		log.debug("Saved folder statistics");
+		
+		
+		/*
+		 * Collect sizing statistics
+		 */
+		int tags = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_tag");
+		int versions = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_version");
+		int histories = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_history");
+		int user_histories = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_user_history");
+		
+		/*
+		 * Collect features statistics
+		 */
+		int bookmarks = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_bookmark");		
+		int forum_posts = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_dcomment");
+		int links = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_link");
+		int aliases = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_document WHERE ld_docref IS NOT NULL");
+		
+		int workflow_histories = -1;
+		try {
+			workflow_histories = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_workflowhistory");
+		} catch (Exception e) {
+		}
+		
 
 		/*
 		 * Save the last update time
@@ -190,7 +212,7 @@ public class StatsCollector extends Task {
 		try {
 			log.info("Send collected statistics");
 			// Prepare HTTP post
-			PostMethod post = new PostMethod("http://stat.logicaldoc.com");
+			PostMethod post = new PostMethod("http://stat.logicaldoc.com/stats/collect");
 			post.setRequestHeader("Content-Type", "application/txt");
 			post.setRequestHeader("Content-Transfer-Encoding", "utf8");
 
@@ -200,37 +222,41 @@ public class StatsCollector extends Task {
 			post.setParameter("release", release != null ? release : "");
 			post.setParameter("email", email != null ? email : "");
 			post.setParameter("product", product != null ? product : "");
-			post.setParameter("productName", productName != null ? productName : "");
+			post.setParameter("product_name", productName != null ? productName : "");
 			
-			post.setParameter("osname", osname != null ? osname : "");
-			post.setParameter("osversion", osversion != null ? osversion : "");
-			post.setParameter("osarch", osarch != null ? osarch : "");
-			post.setParameter("javaversion", javaversion != null ? javaversion : "");
-			post.setParameter("javavendor", javavendor != null ? javavendor : "");
-			post.setParameter("fileencoding", fileencoding != null ? fileencoding : "");
-			post.setParameter("userlanguage", userlanguage != null ? userlanguage : "");
-			post.setParameter("userregion", userregion != null ? userregion : "");
-			post.setParameter("usertimezone", usertimezone != null ? usertimezone : "");
-			post.setParameter("javaarch", javaarch != null ? javaarch : "");
+			post.setParameter("java_version", javaversion != null ? javaversion : "");
+			post.setParameter("java_vendor", javavendor != null ? javavendor : "");
+			post.setParameter("java_arch", javaarch != null ? javaarch : "");
+			
+			post.setParameter("os_name", osname != null ? osname : "");
+			post.setParameter("os_version", osversion != null ? osversion : "");			
+			post.setParameter("file_encoding", fileencoding != null ? fileencoding : "");
+			
+			post.setParameter("user_language", userlanguage != null ? userlanguage : "");
+			post.setParameter("user_region", userregion != null ? userregion : "");
 
+			// Sizing
 			post.setParameter("users", Integer.toString(users));
 			post.setParameter("groups", Integer.toString(groups));
-
+			post.setParameter("docs", Integer.toString(notindexeddocs +notindexeddocs +deleteddocs));
+			post.setParameter("folders", Integer.toString(withdocs +empty +deletedfolders));
+			post.setParameter("tags", Integer.toString(tags));
+			post.setParameter("versions", Integer.toString(versions));
+			post.setParameter("histories", Integer.toString(histories));
+			post.setParameter("user_histories", Integer.toString(user_histories));
+			
+			// Features usage
+			post.setParameter("bookmarks", Integer.toString(bookmarks));
+			post.setParameter("forum_posts", Integer.toString(forum_posts));
+			post.setParameter("links", Integer.toString(links));
+			post.setParameter("aliases", Integer.toString(aliases));
+			post.setParameter("workflow_histories", Integer.toString(workflow_histories));
+			
+			// Quotas
 			post.setParameter("docdir", Long.toString(docdir));
-			post.setParameter("userdir", Long.toString(userdir));
 			post.setParameter("indexdir", Long.toString(indexdir));
-			post.setParameter("importdir", Long.toString(importdir));
-			post.setParameter("exportdir", Long.toString(exportdir));
-			post.setParameter("plugindir", Long.toString(plugindir));
-			post.setParameter("dbdir", Long.toString(dbdir));
-			post.setParameter("logdir", Long.toString(logdir));
-
-			post.setParameter("notindexeddocs", Integer.toString(notindexeddocs));
-			post.setParameter("indexeddocs", Integer.toString(indexeddocs));
-			post.setParameter("deleteddocs", Integer.toString(deleteddocs));
-			post.setParameter("withdocs", Integer.toString(withdocs));
-			post.setParameter("empty", Integer.toString(empty));
-			post.setParameter("deletedfolders", Integer.toString(deletedfolders));
+			post.setParameter("quota", Long.toString(docdir +indexdir +userdir +importdir +exportdir +plugindir +dbdir +logdir));			
+			
 		
 			// Get HTTP client
 			HttpClient httpclient = new HttpClient();
@@ -259,15 +285,13 @@ public class StatsCollector extends Task {
 					throw new IOException(post.getResponseBodyAsString());
 				}
 			} finally {
-				// Release current connection to the connection pool once you
-				// have
-				// done
+				// Release current connection to the connection pool once you have done
 				post.releaseConnection();
 			}
 
 			log.info("Statistics sent");
 		} catch (Throwable t) {
-			log.error("Unable to send statistics", t);
+			log.warn("Unable to send statistics", t);
 		}
 	}
 
