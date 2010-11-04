@@ -46,6 +46,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			makeWorkingDir(repoFolder);
 			createDB(data);
 			writeSmtpConfig(data);
+			writeRegConfig(data);
 
 			// Create a unique installation id
 			ContextProperties pbean = new ContextProperties();
@@ -127,6 +128,21 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			log.info("configuration data written successfully.");
 		} catch (Exception e) {
 			log.error("Exception writing db config on context file: " + e.getMessage(), e);
+			throw e;
+		}
+	}
+
+	private void writeRegConfig(SetupInfo data) throws Exception {
+		try {
+			ContextProperties pbean = new ContextProperties();
+			pbean.setProperty("reg.name", data.getRegName() != null ? data.getRegName() : "");
+			pbean.setProperty("reg.website", data.getRegWebsite() != null ? data.getRegWebsite() : "");
+			pbean.setProperty("reg.organization", data.getRegOrganization() != null ? data.getRegOrganization() : "");
+			pbean.setProperty("reg.email", data.getRegEmail() != null ? data.getRegEmail() : "");
+			pbean.write();
+			log.info("configuration data written successfully.");
+		} catch (Exception e) {
+			log.error("Exception writing registration config on context file: " + e.getMessage(), e);
 			throw e;
 		}
 	}

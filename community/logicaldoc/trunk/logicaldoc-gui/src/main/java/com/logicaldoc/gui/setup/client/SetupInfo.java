@@ -24,7 +24,7 @@ public class SetupInfo implements Serializable {
 
 	private String smtpPassword;
 
-	private String smtpSender="logicaldoc@acme.com";
+	private String smtpSender = "logicaldoc@acme.com";
 
 	private boolean smtpSecureAuth = false;
 
@@ -45,6 +45,14 @@ public class SetupInfo implements Serializable {
 	private String dbValidationQuery;
 
 	private String dbDialect;
+
+	private String regName;
+
+	private String regOrganization;
+
+	private String regEmail;
+
+	private String regWebsite;
 
 	public String getRepositoryFolder() {
 		return repositoryFolder;
@@ -184,5 +192,37 @@ public class SetupInfo implements Serializable {
 
 	public String getSmtpSecuryConntection() {
 		return smtpSecuryConntection;
+	}
+
+	public String getRegName() {
+		return regName;
+	}
+
+	public void setRegName(String regName) {
+		this.regName = regName;
+	}
+
+	public String getRegOrganization() {
+		return regOrganization;
+	}
+
+	public void setRegOrganization(String regOrganization) {
+		this.regOrganization = regOrganization;
+	}
+
+	public String getRegEmail() {
+		return regEmail;
+	}
+
+	public void setRegEmail(String regEmail) {
+		this.regEmail = regEmail;
+	}
+
+	public String getRegWebsite() {
+		return regWebsite;
+	}
+
+	public void setRegWebsite(String regWebsite) {
+		this.regWebsite = regWebsite;
 	}
 }
