@@ -27,7 +27,7 @@ create table ld_userdoc (ld_id number(19,0) not null, ld_lastmodified TIMESTAMP 
 create table ld_usergroup (ld_groupid number(19,0) not null, ld_userid number(19,0) not null, primary key (ld_groupid, ld_userid));
 create table ld_version (ld_id number(19,0) not null, ld_lastmodified TIMESTAMP not null, ld_deleted int not null, ld_immutable int not null, ld_customid varchar(700), ld_title varchar(255), ld_version varchar(10), ld_fileversion varchar(10), ld_date TIMESTAMP, ld_creation TIMESTAMP, ld_publisher varchar(255), ld_publisherid number(19,0) not null,  ld_creator varchar(255), ld_creatorid number(19,0) not null, ld_status int, ld_type varchar(255), ld_lockuserid number(19,0), ld_source varchar(4000), ld_sourceauthor varchar(255), ld_sourcedate TIMESTAMP null, ld_sourceid varchar(1000), ld_sourcetype varchar(255), ld_object varchar(1000), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), ld_filesize number(19,0), ld_indexed int not null, ld_signed int not null, ld_digest varchar(255), ld_recipient varchar(1000), ld_folderid number(19,0), ld_foldername varchar(1000), ld_templateid number(19,0), ld_templatename varchar(1000), ld_tgs varchar(1000), ld_username varchar(255), ld_userid number(19,0), ld_versiondate TIMESTAMP, ld_comment varchar(1000),ld_event varchar(255), ld_documentid number(19,0) not null, ld_exportstatus int not null, ld_exportid number(19,0), ld_exportname varchar(255), ld_exportversion varchar(10), ld_deleteuserid number(19,0), primary key (ld_id));
 create table ld_version_ext (ld_versionid number(19,0) not null, ld_mandatory int not null, ld_type int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue number(19,0), ld_doublevalue float, ld_datevalue TIMESTAMP null, ld_name varchar(255) not null, primary key (ld_versionid, ld_name));
-create table ld_folder(ld_id number(19,0) not null, ld_lastmodified TIMESTAMP not null, ld_deleted int not null, ld_name varchar(255), ld_parentid number(19,0) not null, ld_securityref number(19,0), ld_description varchar(4000), ld_type int not null, ld_creation TIMESTAMP null default CURRENT_TIMESTAMP, ld_creator varchar(255), ld_creatorid number(19,0), primary key (ld_id));
+create table ld_folder(ld_id number(19,0) not null, ld_lastmodified TIMESTAMP not null, ld_deleted int not null, ld_name varchar(255), ld_parentid number(19,0) not null, ld_securityref number(19,0), ld_description varchar(4000), ld_type int not null, ld_creation TIMESTAMP null, ld_creator varchar(255), ld_creatorid number(19,0), primary key (ld_id));
 create table ld_foldergroup (ld_folderid number(19,0) not null, ld_groupid number(19,0) not null, ld_write int not null, ld_add int not null, ld_security int not null, ld_immutable int not null, ld_delete int not null, ld_rename int not null, ld_import int not null, ld_export int not null, ld_sign int not null, ld_archive int not null, ld_workflow int not null, ld_download int not null, primary key (ld_folderid, ld_groupid, ld_write, ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download));
 
 
@@ -127,8 +127,8 @@ insert into ld_usergroup
 values (-1,1);
 
 
-insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values (5,CURRENT_TIMESTAMP,0,'/',5,0);
+insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_creation)
+values (5,CURRENT_TIMESTAMP,0,'/',5,0,CURRENT_TIMESTAMP);
 insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
 values (5,2,1,1,0,0,1,1,0,0,0,0,0,1);
 insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
