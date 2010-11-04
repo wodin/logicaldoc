@@ -102,6 +102,7 @@ public class ResourceServiceImpl implements ResourceService {
 		resource.setVersionLabel(document.getVersion());
 		resource.setAuthor(document.getPublisher());
 		resource.setDocRef(document.getDocRef());
+		resource.setFolderID(new Long(document.getFolder().getId()).toString());
 		resource.setSession(session);
 
 		if (session != null && (Long) session.getObject("id") != null) {
@@ -583,14 +584,13 @@ public class ResourceServiceImpl implements ResourceService {
 
 		String version = resource.getVersionLabel();
 		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
-
-		if (document.getVersion() != null && document.getVersion().equals(resource.getVersionLabel()))
-			version = null;
-
 		if (document == null) {
 			// Document not found
 			return new ByteArrayInputStream(new String("not found").getBytes());
 		}
+
+		if (document.getVersion() != null && document.getVersion().equals(resource.getVersionLabel()))
+			version = null;
 
 		File file = null;
 

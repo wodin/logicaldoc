@@ -107,4 +107,8 @@ public interface Resource {
 	public Long getDocRef();
 
 	public void setDocRef(Long docRef);
+
+	public void setFolderID(String folderID);
+
+	public String getFolderID();
 }
