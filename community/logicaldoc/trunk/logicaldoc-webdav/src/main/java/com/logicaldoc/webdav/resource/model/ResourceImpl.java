@@ -48,6 +48,8 @@ public class ResourceImpl implements Resource {
 
 	private Long docRef;
 
+	private String folderId;
+
 	private Boolean writeEnabled;
 
 	private Boolean deleteEnabled;
@@ -247,9 +249,13 @@ public class ResourceImpl implements Resource {
 		}
 
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Set<Permission> permissions = fdao.getEnabledPermissions(Long.parseLong(id), personRequest);
-		writeEnabled = permissions.contains(Permission.WRITE);
+		Set<Permission> permissions = null;
+		if (isFolder)
+			permissions = fdao.getEnabledPermissions(Long.parseLong(id), personRequest);
+		else
+			permissions = fdao.getEnabledPermissions(Long.parseLong(folderId), personRequest);
 
+		writeEnabled = permissions.contains(Permission.WRITE);
 		deleteEnabled = permissions.contains(Permission.DELETE);
 		renameEnabled = permissions.contains(Permission.RENAME);
 		addChildEnabled = permissions.contains(Permission.ADD);
@@ -273,5 +279,15 @@ public class ResourceImpl implements Resource {
 	@Override
 	public void setDocRef(Long docRef) {
 		this.docRef = docRef;
+	}
+
+	@Override
+	public String getFolderID() {
+		return this.folderId;
+	}
+
+	@Override
+	public void setFolderID(String folderId) {
+		this.folderId = folderId;
 	}
 }
