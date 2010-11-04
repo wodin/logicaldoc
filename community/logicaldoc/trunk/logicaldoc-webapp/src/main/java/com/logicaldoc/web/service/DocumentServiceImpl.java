@@ -15,6 +15,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.tools.ant.types.CommandlineJava.SysProperties;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.ExtendedAttribute;
@@ -274,8 +275,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			boolean lockedSome = false;
 			for (long id : ids) {
 				try {
+					System.out.println("doc id: " + id);
 					Document doc = dao.findById(id);
-
+					System.out.println("doc docref: " + doc.getDocRef());
 					// Create the document history event
 					History transaction = new History();
 					transaction.setSessionId(sid);
@@ -285,6 +287,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 					// If it is a shortcut, we delete only the shortcut
 					if (doc.getDocRef() != null) {
+						System.out.println("deleting alias!!!");
 						transaction.setEvent(History.EVENT_SHORTCUT_DELETED);
 						dao.delete(doc.getId(), transaction);
 						deletedSome = true;

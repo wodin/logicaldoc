@@ -54,6 +54,8 @@ public class DocumentsDS extends DataSource {
 		DataSourceTextField filename = new DataSourceTextField("filename");
 		DataSourceIntegerField status = new DataSourceIntegerField("status");
 		lockUserId.setHidden(true);
+		DataSourceTextField aliasId = new DataSourceTextField("aliasId");
+		aliasId.setHidden(true);
 
 		setFields(id, title, size, publisher, version, docref, lastModified, published, created, creator, customId,
 				icon, immutable, iindexed, signed, locked, lockUserId, filename, status);
