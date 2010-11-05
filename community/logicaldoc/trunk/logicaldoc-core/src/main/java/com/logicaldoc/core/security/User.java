@@ -32,6 +32,8 @@ public class User extends PersistentObject implements Serializable {
 
 	public static int SOURCE_ACTIVE_DIRECTORY = 2;
 
+	public static final long USERD_ADMIN = 1;
+
 	private static final long serialVersionUID = 8093874904302301982L;
 
 	private String userName = "";
