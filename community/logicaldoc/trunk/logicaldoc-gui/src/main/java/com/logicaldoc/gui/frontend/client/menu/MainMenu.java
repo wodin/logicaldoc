@@ -52,7 +52,7 @@ public class MainMenu extends ToolStrip {
 
 		addFill();
 		addSeparator();
-		
+
 		Label userInfo = new Label(I18N.message("loggedin") + " " + Session.get().getUser().getUserName());
 		userInfo.setWrap(false);
 
@@ -150,6 +150,8 @@ public class MainMenu extends ToolStrip {
 				cp.show();
 			}
 		});
+		changePswd
+				.setEnabled(!(Session.get().getInfo().getRunLevel().equals("demo") && Session.get().getUser().getId() == 1));
 
 		menu.setItems(profile, changePswd);
 

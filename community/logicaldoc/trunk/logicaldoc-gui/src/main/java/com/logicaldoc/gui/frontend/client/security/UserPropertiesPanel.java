@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
@@ -142,7 +143,8 @@ public class UserPropertiesPanel extends HLayout {
 			country.addChangedHandler(changedHandler);
 
 		SelectItem language = ItemFactory.newLanguageSelector("language", false, true);
-		language.setDisabled(readonly);
+		language.setDisabled(readonly
+				|| (Session.get().getInfo().getRunLevel().equals("demo") && Session.get().getUser().getId() == 1));
 		language.setValue(user.getLanguage());
 		if (!readonly)
 			language.addChangedHandler(changedHandler);

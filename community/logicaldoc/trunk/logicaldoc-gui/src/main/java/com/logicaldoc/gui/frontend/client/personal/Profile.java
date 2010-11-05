@@ -59,6 +59,8 @@ public class Profile extends Window {
 		email.setValue(user.getEmail());
 		SelectItem language = ItemFactory.newLanguageSelector("language", false, true);
 		language.setValue(user.getLanguage());
+		language.setDisabled(Session.get().getInfo().getRunLevel().equals("demo")
+				&& Session.get().getUser().getId() == 1);
 		TextItem address = ItemFactory.newTextItem("address", "address", user.getAddress());
 		TextItem postalCode = ItemFactory.newTextItem("postalcode", "postalcode", user.getPostalCode());
 		TextItem city = ItemFactory.newTextItem("city", "city", user.getCity());

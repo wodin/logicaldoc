@@ -25,7 +25,7 @@ public class GUIInfo implements Serializable {
 	private String bugs = "http://bugs.logicaldoc.com";
 
 	private String url = "http://www.logicaldoc.com";
-	
+
 	private String forum = "http://forums.logicaldoc.com";
 
 	private String vendor = "Logical Objects Srl";
@@ -45,6 +45,8 @@ public class GUIInfo implements Serializable {
 	private String licensee;
 
 	private int sessionHeartbeat = -1;
+
+	private String runLevel;
 
 	// Optional list of messages to be shown to the user
 	private GUIMessage[] messages = new GUIMessage[0];
@@ -241,5 +243,13 @@ public class GUIInfo implements Serializable {
 
 	public void setForum(String forum) {
 		this.forum = forum;
+	}
+
+	public String getRunLevel() {
+		return runLevel;
+	}
+
+	public void setRunLevel(String runLevel) {
+		this.runLevel = runLevel;
 	}
 }
