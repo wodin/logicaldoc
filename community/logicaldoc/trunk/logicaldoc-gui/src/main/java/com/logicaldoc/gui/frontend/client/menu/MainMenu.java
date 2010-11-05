@@ -12,6 +12,8 @@ import com.logicaldoc.gui.frontend.client.personal.ChangePassword;
 import com.logicaldoc.gui.frontend.client.personal.Profile;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.SettingService;
+import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.smartgwt.client.util.SC;
@@ -33,6 +35,8 @@ public class MainMenu extends ToolStrip {
 	protected SystemServiceAsync systemService = (SystemServiceAsync) GWT.create(SystemService.class);
 
 	protected SecurityServiceAsync securityService = (SecurityServiceAsync) GWT.create(SecurityService.class);
+
+	private SettingServiceAsync settingService = (SettingServiceAsync) GWT.create(SettingService.class);
 
 	public MainMenu() {
 		super();
@@ -109,7 +113,28 @@ public class MainMenu extends ToolStrip {
 			}
 		});
 
-		menu.setItems(develConsole);
+		MenuItem registration = new MenuItem(I18N.message("registration"));
+		registration.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				settingService.loadValues(Session.get().getSid(), new String[] { "reg.name", "reg.email",
+						"reg.organization", "reg.website" }, new AsyncCallback<String[]>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(String[] reg) {
+						Registration r = new Registration(reg);
+						r.show();
+					}
+				});
+			}
+		});
+
+		menu.setItems(develConsole, registration);
 
 		ToolStripMenuButton menuButton = new ToolStripMenuButton(I18N.message("tools"), menu);
 		menuButton.setWidth(100);

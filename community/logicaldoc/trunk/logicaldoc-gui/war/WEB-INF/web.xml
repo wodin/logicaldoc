@@ -61,7 +61,7 @@
 
 	<servlet>
 		<servlet-name>SettingService</servlet-name>
-		<servlet-class>com.logicaldoc.gui.frontend.server.MockSettingServiceImpl</servlet-class>
+		<servlet-class>com.logicaldoc.gui.setup.server.MockSettingServiceImpl</servlet-class>
 	</servlet>
 
 	<servlet>
