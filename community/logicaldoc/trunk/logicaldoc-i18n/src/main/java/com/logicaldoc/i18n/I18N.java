@@ -20,6 +20,10 @@ public class I18N {
 	private I18N() {
 	}
 
+	public static String message(String key) {
+		return message(key, Locale.getDefault());
+	}
+
 	public static String message(String key, String lang) {
 		return message(key, new Locale(lang));
 	}
