@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.server;
 import java.util.Date;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
@@ -269,5 +270,9 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 	public void markUnindexable(String sid, long[] docIds) {
 		// TODO if the document is indexed, it must be removed from the index.
 		return;
+	}
+
+	@Override
+	public void cleanUploadedFileFolder(String sid) throws InvalidSessionException {
 	}
 }

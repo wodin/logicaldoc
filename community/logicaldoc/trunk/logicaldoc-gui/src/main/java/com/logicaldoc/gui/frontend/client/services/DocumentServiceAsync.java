@@ -61,4 +61,6 @@ public interface DocumentServiceAsync {
 	void markIndexable(String sid, long[] docIds, AsyncCallback<Void> callback);
 
 	void markUnindexable(String sid, long[] docIds, AsyncCallback<Void> callback);
+
+	void cleanUploadedFileFolder(String sid, AsyncCallback<Void> callback);
 }
