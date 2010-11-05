@@ -138,7 +138,7 @@ public class Util {
 		} else if (size / 1024 < 1) {
 			str = "1 KB";
 		} else {
-			NumberFormat fmt = NumberFormat.getFormat("#"+I18N.message("grouping_separator")+"###");
+			NumberFormat fmt = NumberFormat.getFormat(I18N.message("filesize_format"));
 			str = fmt.format(size/1024) + " KB";
 		}
 		return str;
