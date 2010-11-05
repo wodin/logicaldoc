@@ -13,7 +13,10 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Window;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
+import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -49,6 +52,24 @@ public class ScanDialog extends Window {
 		setShowModalMask(true);
 		centerInPage();
 
+		addCloseClickHandler(new CloseClickHandler() {
+			@Override
+			public void onCloseClick(CloseClientEvent event) {
+				documentService.cleanUploadedFileFolder(Session.get().getSid(), new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						destroy();
+					}
+				});
+			}
+		});
+
 		form = new DynamicForm();
 		form.setNumCols(3);
 
@@ -59,6 +80,7 @@ public class ScanDialog extends Window {
 		languageItem.setValue(I18N.getLocale());
 
 		SelectItem template = ItemFactory.newTemplateSelector(false, null);
+		template.setMultiple(false);
 
 		send = new ButtonItem();
 		send.setStartRow(false);
@@ -106,6 +128,7 @@ public class ScanDialog extends Window {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
+						SC.warn(I18N.message("scannoupload"));
 					}
 
 					@Override
@@ -117,7 +140,7 @@ public class ScanDialog extends Window {
 	}
 
 	public Long getTemplate() {
-		if (form.getValueAsString("template") != null)
+		if (form.getValueAsString("template") != null && !form.getValueAsString("template").trim().isEmpty())
 			return new Long(form.getValueAsString("template"));
 		else
 			return null;
