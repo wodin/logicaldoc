@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -92,7 +94,7 @@ public class UploadServlet extends UploadAction {
 
 						receivedFiles.put(item.getFieldName(), file);
 						receivedContentTypes.put(item.getFieldName(), item.getContentType());
-						receivedFileNames.put(item.getFieldName(), item.getName());
+						receivedFileNames.put(item.getFieldName(), FilenameUtils.getName(item.getName()));
 					} catch (Throwable e) {
 						e.printStackTrace();
 						throw new UploadActionException(e.getMessage());
@@ -209,6 +211,17 @@ public class UploadServlet extends UploadAction {
 		if (max > 0) {
 			maxSize = Integer.parseInt(config.getProperty("upload.maxsize")) * 1024 * 1024;
 			super.checkRequest(request);
+		}
+	}
+
+	public static void cleanReceivedFiles(String sid) {
+		HttpSession session = SessionFilter.getServletSession(sid);
+		session.setAttribute(RECEIVEDFILES, new Hashtable<String, File>());
+		session.setAttribute(RECEIVEDCONTENTTYPES, new Hashtable<String, String>());
+		String path = session.getServletContext().getRealPath("/upload/" + session.getId());
+		try {
+			FileUtils.forceDelete(new File(path));
+		} catch (IOException e) {
 		}
 	}
 }
