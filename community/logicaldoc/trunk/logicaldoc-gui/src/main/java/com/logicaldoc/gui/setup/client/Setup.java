@@ -54,6 +54,8 @@ import com.smartgwt.client.widgets.tab.TabSet;
  */
 public class Setup implements EntryPoint {
 
+	private static final String INTERNAL = "internal";
+
 	private static final String REG_EMAIL = "regEmail";
 
 	private static final String REG_WEBSITE = "regWebsite";
@@ -95,8 +97,6 @@ public class Setup implements EntryPoint {
 	private static final String DB_URL = "dbUrl";
 
 	private static final String DB_DRIVER = "dbDriver";
-
-	private static final String INTERNAL = "Internal";
 
 	int step = 0;
 
@@ -158,8 +158,8 @@ public class Setup implements EntryPoint {
 
 		// Create all the tabs each one for a specific setup step
 		tabs = new TabSet();
-		tabs.setWidth(400);
-		tabs.setHeight(210);
+		tabs.setWidth(500);
+		tabs.setHeight(250);
 
 		Tab registrationTab = setupRegistration(vm);
 		Tab repositoryTab = setupRepository(vm);
@@ -188,7 +188,7 @@ public class Setup implements EntryPoint {
 
 		// Prepare a panel to layout setup components
 		VLayout layout = new VLayout();
-		layout.setHeight(300);
+		layout.setHeight(500);
 		layout.setWidth(400);
 		layout.setMembersMargin(5);
 		layout.addMember(header);
@@ -226,6 +226,8 @@ public class Setup implements EntryPoint {
 		repositoryItem.setWrapTitle(false);
 		repositoryItem.setDefaultValue(getDefaultFolder());
 		repositoryForm.setFields(repositoryItem);
+		repositoryForm.setDisabled(true);
+		
 		repositoryTab.setPane(repositoryForm);
 		return repositoryTab;
 	}
@@ -327,6 +329,7 @@ public class Setup implements EntryPoint {
 		databaseTab.setTitle(I18N.message("database"));
 
 		final DynamicForm databaseForm = new DynamicForm();
+		databaseForm.setWidth(450);
 		databaseForm.setID("database");
 		databaseForm.setValuesManager(vm);
 		databaseForm.setDisabled(true);
@@ -336,7 +339,7 @@ public class Setup implements EntryPoint {
 		dbType.setWrapTitle(false);
 		dbType.setRequired(true);
 		dbType.setVertical(false);
-		dbType.setValueMap(INTERNAL, I18N.message("external"));
+		dbType.setValueMap(I18N.message(INTERNAL), I18N.message("external"));
 		dbType.setValue(INTERNAL);
 		dbType.setRedrawOnChange(true);
 		dbType.setTitle(I18N.message("dbtype"));
@@ -355,13 +358,13 @@ public class Setup implements EntryPoint {
 		dbEngine.setValueMap(valueMap);
 		dbEngine.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
-				return !INTERNAL.equals(databaseForm.getValue(DB_TYPE));
+				return !I18N.message(INTERNAL).equals(databaseForm.getValue(DB_TYPE));
 			}
 		});
 		RequiredIfValidator ifValidator = new RequiredIfValidator();
 		ifValidator.setExpression(new RequiredIfFunction() {
 			public boolean execute(FormItem formItem, Object value) {
-				return !INTERNAL.equals(databaseForm.getValue(DB_TYPE));
+				return !I18N.message(INTERNAL).equals(databaseForm.getValue(DB_TYPE));
 			}
 		});
 		dbEngine.setValidators(ifValidator);
@@ -380,7 +383,7 @@ public class Setup implements EntryPoint {
 		dbDriver.setWrapTitle(false);
 		dbDriver.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
-				return !INTERNAL.equals(databaseForm.getValue(DB_TYPE));
+				return !I18N.message(INTERNAL).equals(databaseForm.getValue(DB_TYPE));
 			}
 		});
 		dbDriver.setValidators(ifValidator);
@@ -393,7 +396,7 @@ public class Setup implements EntryPoint {
 		dbUrl.setWrapTitle(false);
 		dbUrl.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
-				return !INTERNAL.equals(databaseForm.getValue(DB_TYPE));
+				return !I18N.message(INTERNAL).equals(databaseForm.getValue(DB_TYPE));
 			}
 		});
 		dbUrl.setValidators(ifValidator);
@@ -404,7 +407,7 @@ public class Setup implements EntryPoint {
 		dbUsername.setWrapTitle(false);
 		dbUsername.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
-				return !INTERNAL.equals(databaseForm.getValue(DB_TYPE));
+				return !I18N.message(INTERNAL).equals(databaseForm.getValue(DB_TYPE));
 			}
 		});
 
@@ -416,7 +419,7 @@ public class Setup implements EntryPoint {
 		dbPassword.setWrapTitle(false);
 		dbPassword.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
-				return !INTERNAL.equals(databaseForm.getValue(DB_TYPE));
+				return !I18N.message(INTERNAL).equals(databaseForm.getValue(DB_TYPE));
 			}
 		});
 
@@ -448,7 +451,7 @@ public class Setup implements EntryPoint {
 		regForm.setID("regForm");
 		regForm.setValuesManager(vm);
 		regForm.setFields(regName, regEmail, regOrganization, regWebsite);
-		regForm.setDisabled(true);
+		
 		registrationTab.setPane(regForm);
 		return registrationTab;
 	}
@@ -461,7 +464,7 @@ public class Setup implements EntryPoint {
 		if (form.hasErrors()) {
 
 		} else {
-			if (step == 3) {
+			if (step == 4) {
 				if (!vm.validate())
 					SC.warn("invalidfields");
 
@@ -487,7 +490,7 @@ public class Setup implements EntryPoint {
 				data.setRegName(vm.getValueAsString(REG_NAME));
 				data.setRegOrganization(vm.getValueAsString(REG_ORGANIZATION));
 				data.setRegWebsite(vm.getValueAsString(REG_WEBSITE));
-				if (data.getDbType().equals(INTERNAL)) {
+				if (data.getDbType().equals(I18N.message(INTERNAL))) {
 					data.setDbEngine("Hsqldb");
 					data.setDbDriver("org.hsqldb.jdbcDriver");
 					data.setDbUrl(("jdbc:hsqldb:" + data.getRepositoryFolder() + "/db/").replaceAll("//", "/"));

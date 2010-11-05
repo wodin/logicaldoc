@@ -4,7 +4,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.logicaldoc.gui.common.client.i18n.I18N;
 
 public class Util {
 	public static String[] OFFICE_EXTS = new String[] { ".doc", ".xls", ".ppt", ".docx", ".xlsx", ".pptx" };
@@ -135,11 +134,12 @@ public class Util {
 		String str;
 		if (size < 1) {
 			str = "0 KB";
-		} else if (size / 1024 < 1) {
+		} else if (size / (double) 1024 < 1) {
 			str = "1 KB";
 		} else {
-			NumberFormat fmt = NumberFormat.getFormat(I18N.message("filesize_format"));
-			str = fmt.format(size/1024) + " KB";
+			NumberFormat fmt = NumberFormat.getFormat("#,###");
+
+			str = fmt.format(size / (double) 1024) + " KB";
 		}
 		return str;
 	}
@@ -192,10 +192,10 @@ public class Util {
 	}-*/;
 
 	public static native boolean isValidEmail(String email) /*-{
-															var reg1 = /(@.*@)|(\.\.)|(@\.)|(\.@)|(^\.)/; // not valid
-															var reg2 = /^.+\@(\[?)[a-zA-Z0-9\-\.]+\.([a-zA-Z]{2,3}|[0-9]{1,3})(\]?)$/; // valid
-															return !reg1.test(email) && reg2.test(email);
-															}-*/;
+		var reg1 = /(@.*@)|(\.\.)|(@\.)|(\.@)|(^\.)/; // not valid
+		var reg2 = /^.+\@(\[?)[a-zA-Z0-9\-\.]+\.([a-zA-Z]{2,3}|[0-9]{1,3})(\]?)$/; // valid
+		return !reg1.test(email) && reg2.test(email);
+	}-*/;
 
 	public static native void redirect(String url)
 	/*-{

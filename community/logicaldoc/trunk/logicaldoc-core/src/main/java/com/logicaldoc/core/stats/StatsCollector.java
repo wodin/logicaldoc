@@ -215,7 +215,7 @@ public class StatsCollector extends Task {
 		log.info("Statistics collected");
 
 		try {
-			log.info("Send collected statistics");
+			log.debug("Package collected statistics");
 			// Prepare HTTP post
 			PostMethod post = new PostMethod("http://stat.logicaldoc.com/stats/collect");
 
@@ -277,7 +277,7 @@ public class StatsCollector extends Task {
 			String proxyPassword = config.getProperty("proxy.password");
 
 			if (proxyHost != null && !"".equals(proxyHost.trim())) {
-				log.info("Use proxy " + proxyHost);
+				log.debug("Use proxy " + proxyHost);
 				httpclient.getHostConfiguration().setProxy(proxyHost, Integer.parseInt(proxyPort));
 				if (proxyUsername != null && !"".equals(proxyUsername)) {
 					httpclient.getState().setCredentials(AuthScope.ANY,
@@ -299,9 +299,10 @@ public class StatsCollector extends Task {
 				post.releaseConnection();
 			}
 
-			log.info("Statistics sent");
+			log.info("Statistics packaged");
 		} catch (Throwable t) {
-			log.warn("Unable to send statistics", t);
+			log.warn("Troubles packaging the statistics");
+			log.debug("Unable to send statistics", t);
 		}
 	}
 

@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.server;
+package com.logicaldoc.gui.setup.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
