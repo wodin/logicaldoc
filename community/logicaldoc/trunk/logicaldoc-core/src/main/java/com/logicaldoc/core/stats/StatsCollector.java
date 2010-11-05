@@ -218,7 +218,6 @@ public class StatsCollector extends Task {
 			log.info("Send collected statistics");
 			// Prepare HTTP post
 			PostMethod post = new PostMethod("http://stat.logicaldoc.com/stats/collect");
-			post.setRequestHeader("Content-Transfer-Encoding", "utf8");
 
 			// Add all statistics as parameters
 			post.setParameter("id", id != null ? id : "");
