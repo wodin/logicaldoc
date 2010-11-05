@@ -124,6 +124,7 @@ public class Util {
 		return str;
 	}-*/;
 
+
 	/**
 	 * Format file size in KB.
 	 * 
@@ -134,15 +135,52 @@ public class Util {
 		String str;
 		if (size < 1) {
 			str = "0 KB";
-		} else if (size / (double) 1024 < 1) {
+		} else if (size / 1024 < 1) {
 			str = "1 KB";
 		} else {
 			NumberFormat fmt = NumberFormat.getFormat("#,###");
-
-			str = fmt.format(size / (double) 1024) + " KB";
+			str = fmt.format(size/1024) + " KB";
+			str = str.replace(',', I18N.groupingSepator());
 		}
 		return str;
 	}
+	
+	/**
+	 * Format file size in KB.
+	 * 
+	 * @param size The file size in bytes.
+	 * @return The formated file size.
+	 */
+	public static String formatSizeW7(double size) {
+		String str;
+		if (size < 1) {
+			str = "0 bytes";
+		} else if (size / 1024 < 1) {
+			str = size + " bytes";
+		} else if (size / 1048576 < 1) {
+			double tmp = size / 1024;
+			if (tmp < 10) {
+				NumberFormat fmt = NumberFormat.getFormat("###.##");
+				str = fmt.format(tmp) + " KB";
+			} else {
+				NumberFormat fmt = NumberFormat.getFormat("###.#");
+				str = fmt.format(tmp) + " KB";
+			}
+			str = str.replace('.', I18N.decimalSepator());
+		} else {
+			double tmp = size / 1048576;
+			if (tmp < 10) {
+				NumberFormat fmt = NumberFormat.getFormat("###.##");
+				str = fmt.format(tmp) + " MB";
+			} else {
+				NumberFormat fmt = NumberFormat.getFormat("###.#");
+				str = fmt.format(tmp) + " MB";
+			}
+			str = str.replace('.', I18N.decimalSepator());
+		}
+		return str;
+	}
+	
 
 	/**
 	 * Format number percentage.
