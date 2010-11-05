@@ -60,6 +60,11 @@ public class I18N {
 	public static String getLocale() {
 		return locale;
 	}
+	
+	public static char groupingSepator() {
+		String gs = message("grouping_separator");
+		return gs.charAt(gs.length()-1);
+	}
 
 	public static void setLocale(String locale) {
 		I18N.locale = locale;
@@ -119,5 +124,11 @@ public class I18N {
 
 	public static void setGuiLanguages(GUIValuePair[] guiLanguages) {
 		I18N.guiLanguages = guiLanguages;
+	}
+
+	public static char decimalSepator() {
+//		String gs = message("decimal_separator");
+//		return gs.charAt(gs.length()-1);
+		return ',';
 	}
 }

@@ -12,6 +12,7 @@ import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
@@ -88,13 +89,13 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		StaticTextItem id = ItemFactory.newStaticTextItem("id", "id", Long.toString(document.getId()));
 
 		DateTimeFormat formatter = DateTimeFormat.getFormat(I18N.message("format_date"));
-		StaticTextItem creation = ItemFactory.newStaticTextItem("creation", "createdon",
-				formatter.format((Date) document.getCreation()));
+		StaticTextItem creation = ItemFactory.newStaticTextItem("creation", "createdon", formatter.format((Date) document.getCreation()));
 
 		StaticTextItem creator = ItemFactory.newStaticTextItem("creator", "creator", document.getCreator());
 
-		StaticTextItem date = ItemFactory.newStaticTextItem("date", "publishedon",
-				formatter.format((Date) document.getDate()));
+		StaticTextItem date = ItemFactory.newStaticTextItem("date", "publishedon", formatter.format((Date) document.getDate()));
+	
+		StaticTextItem size = ItemFactory.newStaticTextItem("size", "size", Util.formatSizeW7(document.getFileSize()));
 
 		StaticTextItem publisher = ItemFactory.newStaticTextItem("publisher", "publisher", document.getPublisher());
 
@@ -104,13 +105,12 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		title.setDisabled(!update);
 
 		StaticTextItem version = ItemFactory.newStaticTextItem("version", "version", document.getVersion());
-
-		StaticTextItem fileVersion = ItemFactory.newStaticTextItem("fileVersion", "fileversion",
-				document.getFileVersion());
+		
+		StaticTextItem fileVersion = ItemFactory.newStaticTextItem("fileVersion", "fileversion", document.getFileVersion());
 
 		StaticTextItem filename = ItemFactory.newStaticTextItem("fileName", "filename", document.getFileName());
 
-		form1.setItems(id, title, version, fileVersion, filename, creation, date, creator, publisher);
+		form1.setItems(id, title, version, fileVersion, filename, size, date, creation, creator, publisher);
 		formsContainer.addMember(form1, 0);
 
 		/*
