@@ -15,7 +15,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.tools.ant.types.CommandlineJava.SysProperties;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.ExtendedAttribute;
@@ -137,6 +136,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		final Folder parent = folderDao.findById(folderId);
+		if (uploadedFilesMap.isEmpty())
+			throw new RuntimeException("No file uploaded");
 		try {
 			for (String fileId : uploadedFilesMap.keySet()) {
 				File file = uploadedFilesMap.get(fileId);
@@ -275,9 +276,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			boolean lockedSome = false;
 			for (long id : ids) {
 				try {
-					System.out.println("doc id: " + id);
 					Document doc = dao.findById(id);
-					System.out.println("doc docref: " + doc.getDocRef());
 					// Create the document history event
 					History transaction = new History();
 					transaction.setSessionId(sid);
@@ -287,7 +286,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 					// If it is a shortcut, we delete only the shortcut
 					if (doc.getDocRef() != null) {
-						System.out.println("deleting alias!!!");
 						transaction.setEvent(History.EVENT_SHORTCUT_DELETED);
 						dao.delete(doc.getId(), transaction);
 						deletedSome = true;
@@ -1121,5 +1119,12 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		DocumentLink link = dao.findById(id);
 		link.setType(type);
 		dao.store(link);
+	}
+
+	@Override
+	public void cleanUploadedFileFolder(String sid) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		UploadServlet.cleanReceivedFiles(sid);
 	}
 }

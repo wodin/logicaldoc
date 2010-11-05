@@ -124,8 +124,8 @@ public interface DocumentService extends RemoteService {
 	 *        documents imported
 	 * @param templateId The documents template
 	 */
-	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip, Long templateId)
-			throws InvalidSessionException;
+	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip,
+			Long templateId) throws InvalidSessionException;
 
 	/**
 	 * Checks-in a new document version
@@ -175,4 +175,9 @@ public interface DocumentService extends RemoteService {
 	 * Marks a set of documents as indexable
 	 */
 	public void markIndexable(String sid, long[] docIds) throws InvalidSessionException;
+
+	/**
+	 * Cleans the uploaded files folder.
+	 */
+	public void cleanUploadedFileFolder(String sid) throws InvalidSessionException;
 }
