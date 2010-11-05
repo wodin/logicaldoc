@@ -252,6 +252,7 @@ public class UsersPanel extends VLayout {
 				dialog.show();
 			}
 		});
+		password.setEnabled(!(Session.get().getInfo().getRunLevel().equals("demo") && Session.get().getUser().getId() == 1));
 
 		if ("admin".equals(record.getAttributeAsString("username"))) {
 			delete.setEnabled(false);

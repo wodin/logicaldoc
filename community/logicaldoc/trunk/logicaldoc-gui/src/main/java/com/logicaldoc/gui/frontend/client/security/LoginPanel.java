@@ -103,6 +103,14 @@ public class LoginPanel extends VLayout {
 			}
 		}
 
+		if (info.getRunLevel().equals("demo")) {
+			GUIMessage demoRunLevelMessage = new GUIMessage();
+			demoRunLevelMessage.setMessage(I18N.message("demomode"));
+			demoRunLevelMessage.setPriority(GUIMessage.PRIO_WARN);
+			MessageLabel demoRunLevel = new MessageLabel(demoRunLevelMessage);
+			messages.addMember(demoRunLevel);
+		}
+
 		// Prepare the Form and all its fields
 		final DynamicForm form = new DynamicForm();
 		form.setAlign(Alignment.CENTER);

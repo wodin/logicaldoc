@@ -90,6 +90,8 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 
 			List<GUIMessage> messages = new ArrayList<GUIMessage>();
 
+			info.setRunLevel(pbean.getProperty("runlevel"));
+
 			// Check if the application needs to be restarted
 			if (ApplicationInitializer.needRestart) {
 				GUIMessage restartReminder = new GUIMessage();
