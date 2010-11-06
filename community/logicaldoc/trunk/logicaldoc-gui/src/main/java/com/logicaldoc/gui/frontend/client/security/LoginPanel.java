@@ -1,8 +1,6 @@
 package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.logicaldoc.gui.common.client.Constants;
@@ -198,12 +196,13 @@ public class LoginPanel extends VLayout {
 							}
 							FoldersNavigator.get().selectFolder(Constants.DOCUMENTS_FOLDERID);
 
-							Window.addWindowClosingHandler(new Window.ClosingHandler() {
-								@Override
-								public void onWindowClosing(ClosingEvent event) {
-									event.setMessage(I18N.message("leavingpage"));
-								}
-							});
+							// Window.addWindowClosingHandler(new
+							// Window.ClosingHandler() {
+							// @Override
+							// public void onWindowClosing(ClosingEvent event) {
+							// event.setMessage(I18N.message("leavingpage"));
+							// }
+							// });
 						} else if (session.getUser() != null && session.getUser().isExpired()) {
 							new ChangePassword(session.getUser(), "needtochangepassword").show();
 						} else {
