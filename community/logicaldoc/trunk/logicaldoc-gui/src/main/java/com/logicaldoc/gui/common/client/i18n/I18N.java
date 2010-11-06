@@ -23,13 +23,6 @@ public class I18N {
 	private static HashMap<String, String> bundle = new HashMap<String, String>();
 
 	public static String message(String key) {
-		// try {
-		// return
-		// Dictionary.getDictionary("messages_i18n").get(key.replaceAll("\\.",
-		// "_"));
-		// } catch (Throwable t) {
-		// return key;
-		// }
 		if (bundle.containsKey(key))
 			return bundle.get(key);
 		else

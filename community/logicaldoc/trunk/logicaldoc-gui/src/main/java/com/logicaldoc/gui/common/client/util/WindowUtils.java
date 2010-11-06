@@ -63,9 +63,10 @@ public class WindowUtils {
 		$doc.title=title;
 	}-*/;
 
-	public static void openUrl(String url) {
-		Window.open(url, "_self", "width=1, height=1");
-	}
+	public static native void openUrl(String url)/*-{
+		$wnd.location=url;
+		//Window.open(url, "", "width=1, height=1");
+	}-*/;
 
 	public static native void triggerUrl(String url) /*-{
 		var popup=$wnd.open(url,"tmp","width=1, height=1");

@@ -340,7 +340,7 @@ public class Setup implements EntryPoint {
 		dbType.setRequired(true);
 		dbType.setVertical(false);
 		dbType.setValueMap(I18N.message(INTERNAL), I18N.message("external"));
-		dbType.setValue(INTERNAL);
+		dbType.setValue(I18N.message(INTERNAL));
 		dbType.setRedrawOnChange(true);
 		dbType.setTitle(I18N.message("dbtype"));
 
