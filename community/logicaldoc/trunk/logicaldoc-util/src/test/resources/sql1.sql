@@ -181,7 +181,6 @@ INSERT INTO co_menugroup VALUES(23,'admin',0);
 INSERT INTO co_menugroup VALUES(24,'admin',0);
 INSERT INTO co_menugroup VALUES(25,'admin',0);
 INSERT INTO co_menugroup VALUES(26,'admin',1);
-INSERT INTO co_menugroup VALUES(27,'admin',0);
 INSERT INTO co_menugroup VALUES(1,'author',0);
 INSERT INTO co_menugroup VALUES(4,'author',0);
 INSERT INTO co_menugroup VALUES(5,'author',1);
