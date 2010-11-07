@@ -95,7 +95,7 @@ public class FoldersPanel extends VLayout {
 				}
 			}
 		});
-		save.setDisabled(Session.get().getInfo().getRunLevel().equals("demo") && Session.get().getUser().getId() == 1);
+		save.setDisabled(Session.get().isDemo() && Session.get().getUser().getId() == 1);
 
 		tab.setPane(foldersForm);
 		setMembers(tabs, save);

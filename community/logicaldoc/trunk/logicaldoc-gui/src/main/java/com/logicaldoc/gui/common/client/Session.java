@@ -48,6 +48,10 @@ public class Session {
 		return instance;
 	}
 
+	public boolean isDemo(){
+		return "demo".equals(info.getRunLevel());
+	}
+	
 	public String getSid() {
 		if (session != null)
 			return session.getSid();
