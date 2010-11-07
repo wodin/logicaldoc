@@ -95,7 +95,7 @@ public class ParametersSettingsPanel extends VLayout {
 				}
 			}
 		});
-		save.setDisabled(Session.get().getInfo().getRunLevel().equals("demo") && Session.get().getUser().getId() == 1);
+		save.setDisabled(Session.get().isDemo() && Session.get().getUser().getId() == 1);
 
 		tab.setPane(form);
 		setMembers(tabs, save);

@@ -144,7 +144,7 @@ public class UserPropertiesPanel extends HLayout {
 
 		SelectItem language = ItemFactory.newLanguageSelector("language", false, true);
 		language.setDisabled(readonly
-				|| (Session.get().getInfo().getRunLevel().equals("demo") && Session.get().getUser().getId() == 1));
+				|| (Session.get().isDemo() && Session.get().getUser().getId() == 1));
 		language.setValue(user.getLanguage());
 		if (!readonly)
 			language.addChangedHandler(changedHandler);

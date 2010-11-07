@@ -176,7 +176,7 @@ public class MainMenu extends ToolStrip {
 			}
 		});
 		changePswd
-				.setEnabled(!(Session.get().getInfo().getRunLevel().equals("demo") && Session.get().getUser().getId() == 1));
+				.setEnabled(!(Session.get().isDemo() && Session.get().getUser().getId() == 1));
 
 		menu.setItems(profile, changePswd);
 
