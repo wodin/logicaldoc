@@ -136,7 +136,7 @@ public class Util {
 		String str;
 		if (size < 1) {
 			str = "0 KB";
-		} else if (size / 1024 < 1) {
+		} else if (size < 1024) {
 			str = "1 KB";
 		} else {
 			NumberFormat fmt = NumberFormat.getFormat("#,###");
@@ -156,9 +156,9 @@ public class Util {
 		String str;
 		if (size < 1) {
 			str = "0 bytes";
-		} else if (size / 1024 < 1) {
+		} else if (size < 1024) {
 			str = size + " bytes";
-		} else if (size / 1048576 < 1) {
+		} else if (size < 1048576) {
 			double tmp = size / 1024;
 			if (tmp < 10) {
 				NumberFormat fmt = NumberFormat.getFormat("###.##");
