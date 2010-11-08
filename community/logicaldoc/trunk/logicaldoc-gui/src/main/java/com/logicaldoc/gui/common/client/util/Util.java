@@ -140,8 +140,8 @@ public class Util {
 			str = "1 KB";
 		} else {
 			NumberFormat fmt = NumberFormat.getFormat("#,###");
-			str = fmt.format(size/1024) + " KB";
-			str = str.replace(',', I18N.groupingSepator());
+			str = fmt.format(Math.ceil(size/1024)) + " KB";
+			str = str.replace(',', I18N.groupingSepator());	
 		}
 		return str;
 	}
