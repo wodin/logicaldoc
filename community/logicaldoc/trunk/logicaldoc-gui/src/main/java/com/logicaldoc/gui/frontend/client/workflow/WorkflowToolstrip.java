@@ -20,7 +20,7 @@ import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -63,7 +63,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		addButton(newTemplate);
 		addSeparator();
 
-		final ComboBoxItem workflow = new ComboBoxItem("workflow", " ");
+		final SelectItem workflow = new SelectItem("workflow", " ");
 		workflow.setShowTitle(false);
 		workflow.setWidth(200);
 		ListGridField name = new ListGridField("name");
