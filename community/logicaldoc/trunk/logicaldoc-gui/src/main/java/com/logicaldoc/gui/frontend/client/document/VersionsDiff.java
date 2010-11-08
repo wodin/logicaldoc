@@ -60,8 +60,8 @@ public class VersionsDiff extends Window {
 		records.add(new DiffRecord(I18N.message("object"), version1.getObject(), version2.getObject()));
 		records.add(new DiffRecord(I18N.message("coverage"), version1.getCoverage(), version2.getCoverage()));
 		records.add(new DiffRecord(I18N.message("filename"), version1.getFileName(), version2.getFileName()));
-		records.add(new DiffRecord(I18N.message("size"), Util.formatSize(version1.getFileSize()), Util
-				.formatSize(version2.getFileSize())));
+		records.add(new DiffRecord(I18N.message("size"), Util.formatSizeKB(version1.getFileSize()), Util
+				.formatSizeKB(version2.getFileSize())));
 		records.add(new DiffRecord(I18N.message("recipient"), version1.getRecipient(), version2.getRecipient()));
 		records.add(new DiffRecord(I18N.message("folder"),
 				version1.getFolder().getId() == Constants.DOCUMENTS_FOLDERID ? "/" : version1.getFolder().getName(),
