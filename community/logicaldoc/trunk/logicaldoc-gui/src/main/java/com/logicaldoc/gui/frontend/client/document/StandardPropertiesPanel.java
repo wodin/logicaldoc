@@ -89,12 +89,14 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		StaticTextItem id = ItemFactory.newStaticTextItem("id", "id", Long.toString(document.getId()));
 
 		DateTimeFormat formatter = DateTimeFormat.getFormat(I18N.message("format_date"));
-		StaticTextItem creation = ItemFactory.newStaticTextItem("creation", "createdon", formatter.format((Date) document.getCreation()));
+		StaticTextItem creation = ItemFactory.newStaticTextItem("creation", "createdon",
+				formatter.format((Date) document.getCreation()));
 
 		StaticTextItem creator = ItemFactory.newStaticTextItem("creator", "creator", document.getCreator());
 
-		StaticTextItem date = ItemFactory.newStaticTextItem("date", "publishedon", formatter.format((Date) document.getDate()));
-	
+		StaticTextItem date = ItemFactory.newStaticTextItem("date", "publishedon",
+				formatter.format((Date) document.getDate()));
+
 		StaticTextItem size = ItemFactory.newStaticTextItem("size", "size", Util.formatSizeW7(document.getFileSize()));
 
 		StaticTextItem publisher = ItemFactory.newStaticTextItem("publisher", "publisher", document.getPublisher());
@@ -105,8 +107,9 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		title.setDisabled(!update);
 
 		StaticTextItem version = ItemFactory.newStaticTextItem("version", "version", document.getVersion());
-		
-		StaticTextItem fileVersion = ItemFactory.newStaticTextItem("fileVersion", "fileversion", document.getFileVersion());
+
+		StaticTextItem fileVersion = ItemFactory.newStaticTextItem("fileVersion", "fileversion",
+				document.getFileVersion());
 
 		StaticTextItem filename = ItemFactory.newStaticTextItem("fileName", "filename", document.getFileName());
 
@@ -116,13 +119,11 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		/*
 		 * Prepare the second form for the tags
 		 */
-		if (Feature.enabled(Feature.TAGS)){
-			prepareTagsForm();
-			formsContainer.addMember(form2, 1);
-		}
+		prepareRightForm();
+		formsContainer.addMember(form2, 1);
 	}
 
-	private void prepareTagsForm() {
+	private void prepareRightForm() {
 		if (formsContainer.contains(form2))
 			formsContainer.removeMember(form2);
 
@@ -143,41 +144,42 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		language.setValue(document.getLanguage());
 		items.add(language);
 
-		final ComboBoxItem tagItem = new ComboBoxItem("tag");
-		tagItem.setTitle(I18N.message("tag"));
-		tagItem.setPickListWidth(250);
-		tagItem.setOptionDataSource(TagsDS.getInstance());
-		tagItem.setDisabled(!update);
-		tagItem.addKeyDownHandler(new KeyDownHandler() {
-			@Override
-			public void onKeyDown(KeyDownEvent event) {
-				if (Constants.KEY_ENTER.equals(event.getKeyName().toLowerCase())) {
-					document.addTag(tagItem.getValue().toString().trim());
-					tagItem.clearValue();
-					changedHandler.onChanged(null);
-					refresh();
-				}
-			}
-		});
-		items.add(tagItem);
-
-		FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
-		int i = 0;
-		for (String str : document.getTags()) {
-			final StaticTextItem tgItem = ItemFactory.newStaticTextItem("tag" + i++, "tag", str);
-			tgItem.setIcons(icon);
-			tgItem.addIconClickHandler(new IconClickHandler() {
-				public void onIconClick(IconClickEvent event) {
-					document.removeTag((String) tgItem.getValue());
-					changedHandler.onChanged(null);
-
-					// Mark the item as deleted
-					tgItem.setTextBoxStyle("deletedItem");
-					tgItem.setTitleStyle("deletedItem");
-					tgItem.setIcons(ItemFactory.newItemIcon("blank.gif"));
+		if (Feature.enabled(Feature.TAGS)) {
+			final ComboBoxItem tagItem = new ComboBoxItem("tag");
+			tagItem.setTitle(I18N.message("tag"));
+			tagItem.setPickListWidth(250);
+			tagItem.setOptionDataSource(TagsDS.getInstance());
+			tagItem.setDisabled(!update);
+			tagItem.addKeyDownHandler(new KeyDownHandler() {
+				@Override
+				public void onKeyDown(KeyDownEvent event) {
+					if (Constants.KEY_ENTER.equals(event.getKeyName().toLowerCase())) {
+						document.addTag(tagItem.getValue().toString().trim());
+						tagItem.clearValue();
+						changedHandler.onChanged(null);
+						refresh();
+					}
 				}
 			});
-			items.add(tgItem);
+			items.add(tagItem);
+			FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
+			int i = 0;
+			for (String str : document.getTags()) {
+				final StaticTextItem tgItem = ItemFactory.newStaticTextItem("tag" + i++, "tag", str);
+				tgItem.setIcons(icon);
+				tgItem.addIconClickHandler(new IconClickHandler() {
+					public void onIconClick(IconClickEvent event) {
+						document.removeTag((String) tgItem.getValue());
+						changedHandler.onChanged(null);
+
+						// Mark the item as deleted
+						tgItem.setTextBoxStyle("deletedItem");
+						tgItem.setTitleStyle("deletedItem");
+						tgItem.setIcons(ItemFactory.newItemIcon("blank.gif"));
+					}
+				});
+				items.add(tgItem);
+			}
 		}
 
 		form2.setItems(items.toArray(new FormItem[0]));
