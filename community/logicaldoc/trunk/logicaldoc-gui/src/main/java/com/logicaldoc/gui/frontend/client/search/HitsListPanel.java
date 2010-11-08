@@ -84,7 +84,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		ListGridField title = new ListGridField("title", I18N.message("title"), 300);
 
 		ListGridField size = new ListGridField("size", I18N.message("size"), 90);
-		size.setAlign(Alignment.CENTER);
+		size.setAlign(Alignment.RIGHT);
 		size.setType(ListGridFieldType.FLOAT);
 		size.setCellFormatter(new FileSizeCellFormatter());
 		size.setCanFilter(false);
@@ -186,9 +186,9 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		list.setShowRowNumbers(true);
 		list.setWrapCells(true);
 		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT) {
-			list.setFields(id, folderId, icon, title, customId, size, score, creation);
+			list.setFields(id, folderId, icon, title, size, creation, score, customId);
 		} else {
-			list.setFields(id, folderId, icon, title, customId, size, creation);
+			list.setFields(id, folderId, icon, title, size, creation, customId);
 		}
 
 		list.addSelectionChangedHandler(new SelectionChangedHandler() {
