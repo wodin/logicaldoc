@@ -40,7 +40,7 @@ public class SearchMenu extends SectionStack {
 
 		if (Feature.visible(Feature.TAGS)) {
 			SectionStackSection tagsSection = new SectionStackSection(I18N.message("tags"));
-			if (Feature.enabled(Feature.PARAMETRIC_SEARCHES))
+			if (Feature.enabled(Feature.TAGS))
 				tagsSection.addItem(TagsForm.get());
 			else
 				tagsSection.addItem(new FeatureDisabled());
