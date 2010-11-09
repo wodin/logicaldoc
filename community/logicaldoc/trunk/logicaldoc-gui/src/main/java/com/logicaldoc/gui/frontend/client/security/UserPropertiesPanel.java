@@ -9,8 +9,10 @@ import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -143,8 +145,7 @@ public class UserPropertiesPanel extends HLayout {
 			country.addChangedHandler(changedHandler);
 
 		SelectItem language = ItemFactory.newLanguageSelector("language", false, true);
-		language.setDisabled(readonly
-				|| (Session.get().isDemo() && Session.get().getUser().getId() == 1));
+		language.setDisabled(readonly || (Session.get().isDemo() && Session.get().getUser().getId() == 1));
 		language.setValue(user.getLanguage());
 		if (!readonly)
 			language.addChangedHandler(changedHandler);
@@ -271,6 +272,21 @@ public class UserPropertiesPanel extends HLayout {
 			user.setCell((String) values.get("cell"));
 			user.setEmail((String) values.get("email"));
 		}
+
+		// The user must have at least one group (of standard type)
+		int count = 0;
+		for (GUIGroup g : user.getGroups())
+			if (g.getType() == GUIGroup.TYPE_DEFAULT){
+				Log.debug(g.getName());
+				count++;
+			}
+
+		if (count == 0) {
+			SC.warn(I18N.message("usermustbelongtogroup"));
+			Log.error(I18N.message("error"), I18N.message("usermustbelongtogroup"), null);
+			return false;
+		}
+		
 		return !vm.hasErrors();
 	}
 }
