@@ -312,8 +312,10 @@ public class WorkflowDetailsDialog extends Window {
 			}
 		});
 
-		appendedDocsLayout.setMembers(docsAppendedList, appendDocsButton);
-		// sxLayout.addMember(appendedDocsLayout);
+		appendedDocsLayout.addMember(docsAppendedList);
+		if (workflow.getSelectedTask().getEndDate() == null) {
+			appendedDocsLayout.addMember(appendDocsButton);
+		}
 
 		Button reassignButton = new Button(I18N.message("workflowtaskreassign"));
 		reassignButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
