@@ -94,8 +94,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		StaticTextItem creator = ItemFactory.newStaticTextItem("creator", "creator", document.getCreator());
 
-		StaticTextItem date = ItemFactory.newStaticTextItem("date", "publishedon",
-				formatter.format((Date) document.getDate()));
+		StaticTextItem published = ItemFactory.newStaticTextItem("date", "publishedon", formatter.format((Date) document.getDate()));
 
 		StaticTextItem size = ItemFactory.newStaticTextItem("size", "size", Util.formatSizeW7(document.getFileSize()));
 
@@ -113,7 +112,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		StaticTextItem filename = ItemFactory.newStaticTextItem("fileName", "filename", document.getFileName());
 
-		form1.setItems(id, title, version, fileVersion, filename, size, date, creation, creator, publisher);
+		form1.setItems(id, title, version, fileVersion, filename, size, creation, published, creator, publisher);
 		formsContainer.addMember(form1, 0);
 
 		/*
