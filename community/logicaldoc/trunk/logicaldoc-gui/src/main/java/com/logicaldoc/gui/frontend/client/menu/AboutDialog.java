@@ -36,7 +36,7 @@ public class AboutDialog extends Window {
 		});
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		setTitle(I18N.message("about") + " " + Session.get().getInfo().getProduct());
+		setTitle(I18N.message("about") + " " + Session.get().getInfo().getProductName());
 		setWidth(300);
 		setHeight(280);
 		setPadding(5);
@@ -54,9 +54,14 @@ public class AboutDialog extends Window {
 		logoImage.setWidth(205);
 		logoImage.setHeight(40);
 
+		Label productName = new Label(Session.get().getInfo().getProductName());
+		productName.setWrap(false);
+		productName.setHeight(10);
+		productName.setAlign(Alignment.CENTER);
+		
 		Label version = new Label(I18N.message("version") + " " + Session.get().getInfo().getRelease());
 		version.setWrap(false);
-		version.setHeight(20);
+		version.setHeight(10);
 		version.setAlign(Alignment.CENTER);
 
 		Label copyright = new Label("&copy; " + Session.get().getInfo().getYear() + " "
@@ -111,7 +116,7 @@ public class AboutDialog extends Window {
 		content.setAlign(Alignment.CENTER);
 		content.setDefaultLayoutAlign(Alignment.CENTER);
 		content.setBackgroundColor("#ffffff");
-		content.setMembers(vspacer1, logoImage, version, copyright, trademark, sitelink, maillink, vspacer2, button);
+		content.setMembers(vspacer1, logoImage, productName, version, copyright, trademark, sitelink, maillink, vspacer2, button);
 
 		addChild(content);
 	}
