@@ -17,10 +17,12 @@ public class GUIGroup implements Serializable {
 	private String name = "";
 
 	private String description = "";
-	
+
 	public static int TYPE_DEFAULT = 0;
 
 	public static int TYPE_USER = 1;
+
+	private int type = TYPE_DEFAULT;
 
 	// Optional group from which to import policies
 	private Long inheritGroupId;
@@ -55,5 +57,13 @@ public class GUIGroup implements Serializable {
 
 	public void setInheritGroupId(Long inheritGroupId) {
 		this.inheritGroupId = inheritGroupId;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 }
