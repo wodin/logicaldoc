@@ -44,6 +44,8 @@ public class Accordion extends SectionStack {
 
 	private SelectItem supervisor = null;
 
+	private TextItem workflowName = null;
+
 	public Accordion(GUIWorkflow workflow) {
 		setVisibilityMode(VisibilityMode.MUTEX);
 		setWidth(250);
@@ -72,10 +74,13 @@ public class Accordion extends SectionStack {
 		wfForm.setTitleOrientation(TitleOrientation.TOP);
 		wfForm.setNumCols(1);
 		wfForm.setValuesManager(vm);
-		TextItem workflowName = ItemFactory.newTextItem("workflowName", "workflowname", null);
+		workflowName = ItemFactory.newTextItem("workflowName", "workflowname", null);
 		workflowName.setRequired(true);
-		if (this.workflow != null)
+		if (this.workflow != null) {
 			workflowName.setValue(this.workflow.getName());
+			workflowName.setDisabled(!(this.workflow.getName() == null || this.workflow.getName().trim().isEmpty()));
+		}
+
 		TextAreaItem workflowDescr = ItemFactory.newTextAreaItem("workflowDescr", "workflowdescr", null);
 		workflowDescr.setWrapTitle(false);
 		if (this.workflow != null)
@@ -162,5 +167,10 @@ public class Accordion extends SectionStack {
 			return vm.getValues();
 		} else
 			return null;
+	}
+
+	public void setWorkflowName(String name) {
+		workflowName.setValue(name);
+		workflow.setName(name);
 	}
 }
