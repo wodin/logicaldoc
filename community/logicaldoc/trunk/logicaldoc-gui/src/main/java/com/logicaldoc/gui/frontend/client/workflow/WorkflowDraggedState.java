@@ -46,10 +46,10 @@ public class WorkflowDraggedState extends WorkflowState {
 
 				@Override
 				public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-					getDesigner().onDraggedStateDelete(fromState, targetState, transition.getText());
+					getDesigner().onDraggedStateDelete(fromState, transition.getText());
 				}
 			});
-			if (!designer.isOnlyVisualization())
+			if (!designer.isReadOnly())
 				commands.addMember(unlink);
 		}
 
@@ -59,10 +59,10 @@ public class WorkflowDraggedState extends WorkflowState {
 
 			@Override
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				getDesigner().onTransitionDelete(fromState, targetState, transition.getText());
+				getDesigner().onTransitionDelete(fromState, transition.getText());
 			}
 		});
-		if (!designer.isOnlyVisualization())
+		if (!designer.isReadOnly())
 			commands.addMember(delete);
 	}
 

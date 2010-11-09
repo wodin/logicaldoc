@@ -46,20 +46,20 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 
 	private DrawingPanel drawingPanel = null;
 
-	private boolean onlyVisualization = false;
+	private boolean readOnly = false;
 
 	public WorkflowDesigner(GUIWorkflow workflow, boolean onlyDrawingPanel) {
 		this.workflow = workflow;
-		this.onlyVisualization = onlyDrawingPanel;
+		this.readOnly = onlyDrawingPanel;
 
 		setMembersMargin(5);
 
-		if (!onlyVisualization) {
+		if (!readOnly) {
 			addMember(new WorkflowToolstrip(this));
 			addMember(new StateToolstrip(this));
 		}
 
-		if (this.workflow != null && !onlyVisualization) {
+		if (this.workflow != null && !readOnly) {
 			accordion = new Accordion(workflow);
 			layout.addMember(accordion);
 		}
@@ -150,9 +150,8 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 	}
 
 	@Override
-	public void onTransitionDelete(GUIWFState from, GUIWFState target, String transition) {
+	public void onTransitionDelete(GUIWFState from, String transition) {
 		final GUIWFState fromState = from;
-		final GUIWFState targetState = target;
 		final String transitionText = transition;
 
 		SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
@@ -165,10 +164,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 						GUITransition[] newTransitions = new GUITransition[fromState.getTransitions().length - 1];
 						int i = 0;
 						for (GUITransition transition : fromState.getTransitions()) {
-							if (transition.getTargetState().getType() == GUIWFState.TYPE_UNDEFINED
-									|| !transition.getTargetState().getId().equals(targetState.getId())
-									|| (transition.getTargetState().getId().equals(targetState.getId()) && !transition
-											.getText().equals(transitionText))) {
+							if (!transition.getText().equals(transitionText)) {
 								newTransitions[i] = transition;
 								i++;
 							}
@@ -196,9 +192,8 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 	}
 
 	@Override
-	public void onDraggedStateDelete(GUIWFState from, GUIWFState target, String transition) {
+	public void onDraggedStateDelete(GUIWFState from, String transition) {
 		final GUIWFState fromState = from;
-		final GUIWFState targetState = target;
 		final GUIWorkflow workflow = this.getWorkflow();
 		final String transitionText = transition;
 
@@ -209,10 +204,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 					GUITransition[] newTransitions = new GUITransition[fromState.getTransitions().length];
 					int i = 0;
 					for (GUITransition transition : fromState.getTransitions()) {
-						if (transition.getTargetState().getType() == GUIWFState.TYPE_UNDEFINED
-								|| !transition.getTargetState().getId().equals(targetState.getId())
-								|| (transition.getTargetState().getId().equals(targetState.getId()) && !transition
-										.getText().equals(transitionText))) {
+						if (!transition.getText().equals(transitionText)) {
 							newTransitions[i] = transition;
 							i++;
 						} else {
@@ -382,7 +374,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 		AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
 	}
 
-	public boolean isOnlyVisualization() {
-		return onlyVisualization;
+	public boolean isReadOnly() {
+		return readOnly;
 	}
 }

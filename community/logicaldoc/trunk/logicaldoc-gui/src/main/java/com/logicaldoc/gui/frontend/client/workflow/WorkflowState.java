@@ -51,10 +51,10 @@ public class WorkflowState extends VLayout {
 
 		commands = new HLayout(5);
 		commands.setAlign(Alignment.LEFT);
+		commands.setMembersMargin(7);
 		addMember(commands);
 
 		Label delete = ItemFactory.newLinkLabel("ddelete");
-		delete.setWidth(38);
 		delete.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
 			@Override
@@ -62,11 +62,10 @@ public class WorkflowState extends VLayout {
 				getDesigner().onStateDelete(getWfState());
 			}
 		});
-		if (!designer.isOnlyVisualization())
+		if (!designer.isReadOnly())
 			commands.addMember(delete);
 
 		Label edit = ItemFactory.newLinkLabel("edit");
-		edit.setWidth(38);
 		edit.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
 			@Override
@@ -96,7 +95,7 @@ public class WorkflowState extends VLayout {
 			}
 		});
 		
-		if (!designer.isOnlyVisualization()){
+		if (!designer.isReadOnly()){
 			commands.addMember(edit);
 			commands.addMember(addtransition);
 		}
