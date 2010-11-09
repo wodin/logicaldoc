@@ -110,10 +110,10 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		ListGridField publisher = new ListGridField("publisher", I18N.message("publisher"), 90);
 		publisher.setAlign(Alignment.CENTER);
 
-		ListGridField published = new ListGridField("published", I18N.message("publishedon"), 110);
+		ListGridField published = new ListGridField("date", I18N.message("publishedon"), 110);
 		published.setAlign(Alignment.CENTER);
 		published.setType(ListGridFieldType.DATE);
-		published.setCellFormatter(new DateCellFormatter(false));
+		published.setCellFormatter(new DateCellFormatter(true));
 		published.setCanFilter(false);
 
 		ListGridField creator = new ListGridField("creator", I18N.message("creator"), 90);
@@ -186,9 +186,11 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		list.setShowRowNumbers(true);
 		list.setWrapCells(true);
 		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT) {
-			list.setFields(id, folderId, icon, title, size, creation, score, customId);
+			//list.setFields(id, folderId, icon, title, size, creation, score, customId);
+			list.setFields(id, folderId, icon, title, size, published, creation, score, customId);
 		} else {
-			list.setFields(id, folderId, icon, title, size, creation, customId);
+			//list.setFields(id, folderId, icon, title, size, creation, customId);
+			list.setFields(id, folderId, icon, title, size, published, creation, customId);
 		}
 
 		list.addSelectionChangedHandler(new SelectionChangedHandler() {
