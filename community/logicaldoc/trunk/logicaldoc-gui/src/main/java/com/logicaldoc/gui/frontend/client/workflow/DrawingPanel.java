@@ -24,7 +24,7 @@ public class DrawingPanel extends VStack {
 		super();
 		setHeight(557);
 		setMembersMargin(5);
-		if (!designer.isOnlyVisualization()) {
+		if (!designer.isReadOnly()) {
 			setCanAcceptDrop(true);
 			setAnimateMembers(true);
 			setShowDragPlaceHolder(true);
@@ -67,7 +67,7 @@ public class DrawingPanel extends VStack {
 			}
 		}
 
-		if (!designer.isOnlyVisualization())
+		if (!designer.isReadOnly())
 			addDropHandler(new DropHandler() {
 				public void onDrop(DropEvent event) {
 					WorkflowRow row = null;

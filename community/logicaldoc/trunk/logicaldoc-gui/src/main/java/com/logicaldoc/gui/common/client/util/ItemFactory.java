@@ -611,6 +611,7 @@ public class ItemFactory {
 		Label label = new Label(I18N.message(title));
 		label.setWrap(false);
 		label.setCursor(Cursor.HAND);
+		label.setAutoWidth();
 		return label;
 	}
 
