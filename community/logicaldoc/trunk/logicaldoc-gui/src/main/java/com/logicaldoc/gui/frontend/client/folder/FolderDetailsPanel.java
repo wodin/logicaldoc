@@ -145,7 +145,8 @@ public class FolderDetailsPanel extends VLayout {
 		securityTabPanel.setWidth100();
 		securityTabPanel.setHeight100();
 		securityTab.setPane(securityTabPanel);
-		tabSet.addTab(securityTab);
+		if (folder.hasPermission(Constants.PERMISSION_SECURITY))
+			tabSet.addTab(securityTab);
 
 		Tab historyTab = new Tab(I18N.message("history"));
 		historyTabPanel = new HLayout();
@@ -155,17 +156,18 @@ public class FolderDetailsPanel extends VLayout {
 		tabSet.addTab(historyTab);
 
 		workflowTab = new Tab(I18N.message("workflow"));
-		if (Feature.visible(Feature.WORKFLOW)) {
-			if (Feature.enabled(Feature.WORKFLOW)) {
-				workflowsTabPanel = new HLayout();
-				workflowsTabPanel.setWidth100();
-				workflowsTabPanel.setHeight100();
-				workflowTab.setPane(workflowsTabPanel);
-			} else {
-				workflowTab.setPane(new FeatureDisabled());
+		if (folder.hasPermission(Constants.PERMISSION_WORKFLOW))
+			if (Feature.visible(Feature.WORKFLOW)) {
+				if (Feature.enabled(Feature.WORKFLOW)) {
+					workflowsTabPanel = new HLayout();
+					workflowsTabPanel.setWidth100();
+					workflowsTabPanel.setHeight100();
+					workflowTab.setPane(workflowsTabPanel);
+				} else {
+					workflowTab.setPane(new FeatureDisabled());
+				}
+				tabSet.addTab(workflowTab);
 			}
-			tabSet.addTab(workflowTab);
-		}
 
 		addMember(tabSet);
 		refresh();
