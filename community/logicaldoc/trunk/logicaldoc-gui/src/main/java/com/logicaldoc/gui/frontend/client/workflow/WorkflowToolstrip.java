@@ -18,6 +18,8 @@ import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.util.ValueCallback;
+import com.smartgwt.client.widgets.Dialog;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -125,49 +127,41 @@ public class WorkflowToolstrip extends ToolStrip {
 		addButton(load);
 		addSeparator();
 
-		ToolStripButton save = new ToolStripButton(I18N.message("save"));
+		final ToolStripButton save = new ToolStripButton(I18N.message("save"));
 		save.setDisabled(currentWorkflow == null);
 		save.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				final Map<String, Object> values = WorkflowToolstrip.this.designer.getAccordion().getValues();
-				if (values == null || ((String) values.get("workflowName")).trim().isEmpty())
-					return;
-				currentWorkflow.setName((String) values.get("workflowName"));
-				if (values.get("workflowDescr") != null)
-					currentWorkflow.setDescription((String) values.get("workflowDescr"));
-				if (values.get("assignmentSubject") != null)
-					currentWorkflow.setTaskAssignmentSubject((String) values.get("assignmentSubject"));
-				if (values.get("assignmentBody") != null)
-					currentWorkflow.setTaskAssignmentBody((String) values.get("assignmentBody"));
-				if (values.get("reminderSubject") != null)
-					currentWorkflow.setReminderSubject((String) values.get("reminderSubject"));
-				if (values.get("reminderBody") != null)
-					currentWorkflow.setReminderBody((String) values.get("reminderBody"));
-				if (values.get("supervisor") != null)
-					currentWorkflow.setSupervisor((String) values.get("supervisor"));
-
-				workflowService.save(Session.get().getSid(), currentWorkflow, new AsyncCallback<GUIWorkflow>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(GUIWorkflow result) {
-						if (result == null) {
-							SC.warn(I18N.message("workflowalreadyexist"));
-						} else {
-							currentWorkflow = result;
-							// Necessary reload to visualize a new saved
-							// workflow of the workflows drop down menu.
-							AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
-						}
-					}
-				});
+				onSave();
 			}
 		});
 		addButton(save);
+		addSeparator();
+
+		ToolStripButton clone = new ToolStripButton(I18N.message("clone"));
+		clone.setDisabled(currentWorkflow == null);
+		clone.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Dialog dialog = new Dialog();
+				dialog.setWidth(200);
+
+				// Ask for new name
+				SC.askforValue(I18N.message("clone"), I18N.message("newname"), "", new ValueCallback() {
+					@Override
+					public void execute(String value) {
+						if (value == null || "".equals(value.trim()))
+							return;
+						// Set the new name in the designer, then
+						// request a save
+						currentWorkflow.setId(0);
+						WorkflowToolstrip.this.designer.getAccordion().setWorkflowName(value);
+						onSave();
+					}
+				}, dialog);
+			}
+		});
+		addButton(clone);
 		addSeparator();
 
 		ToolStripButton deploy = new ToolStripButton(I18N.message("deploy"));
@@ -300,5 +294,43 @@ public class WorkflowToolstrip extends ToolStrip {
 
 	public WorkflowDesigner getDesigner() {
 		return designer;
+	}
+
+	private void onSave() {
+		final Map<String, Object> values = WorkflowToolstrip.this.designer.getAccordion().getValues();
+		if (values == null || ((String) values.get("workflowName")).trim().isEmpty())
+			return;
+		currentWorkflow.setName((String) values.get("workflowName"));
+		if (values.get("workflowDescr") != null)
+			currentWorkflow.setDescription((String) values.get("workflowDescr"));
+		if (values.get("assignmentSubject") != null)
+			currentWorkflow.setTaskAssignmentSubject((String) values.get("assignmentSubject"));
+		if (values.get("assignmentBody") != null)
+			currentWorkflow.setTaskAssignmentBody((String) values.get("assignmentBody"));
+		if (values.get("reminderSubject") != null)
+			currentWorkflow.setReminderSubject((String) values.get("reminderSubject"));
+		if (values.get("reminderBody") != null)
+			currentWorkflow.setReminderBody((String) values.get("reminderBody"));
+		if (values.get("supervisor") != null)
+			currentWorkflow.setSupervisor((String) values.get("supervisor"));
+
+		workflowService.save(Session.get().getSid(), currentWorkflow, new AsyncCallback<GUIWorkflow>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
+
+			@Override
+			public void onSuccess(GUIWorkflow result) {
+				if (result == null) {
+					SC.warn(I18N.message("workflowalreadyexist"));
+				} else {
+					currentWorkflow = result;
+					// Necessary reload to visualize a new saved
+					// workflow of the workflows drop down menu.
+					AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
+				}
+			}
+		});
 	}
 }
