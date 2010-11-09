@@ -147,7 +147,7 @@ public class Util {
 	}
 	
 	/**
-	 * Format file size in KB.
+	 * Format file size in Windows 7 Style.
 	 * 
 	 * @param size The file size in bytes.
 	 * @return The formated file size.
@@ -163,8 +163,11 @@ public class Util {
 			if (tmp < 10) {
 				NumberFormat fmt = NumberFormat.getFormat("###.##");
 				str = fmt.format(tmp) + " KB";
-			} else {
+			} else if (tmp < 100) {
 				NumberFormat fmt = NumberFormat.getFormat("###.#");
+				str = fmt.format(tmp) + " KB";
+			} else {
+				NumberFormat fmt = NumberFormat.getFormat("###");
 				str = fmt.format(tmp) + " KB";
 			}
 			str = str.replace('.', I18N.decimalSepator());
@@ -173,8 +176,11 @@ public class Util {
 			if (tmp < 10) {
 				NumberFormat fmt = NumberFormat.getFormat("###.##");
 				str = fmt.format(tmp) + " MB";
-			} else {
+			} else if (tmp < 100) {
 				NumberFormat fmt = NumberFormat.getFormat("###.#");
+				str = fmt.format(tmp) + " MB";
+			} else {
+				NumberFormat fmt = NumberFormat.getFormat("###");
 				str = fmt.format(tmp) + " MB";
 			}
 			str = str.replace('.', I18N.decimalSepator());
