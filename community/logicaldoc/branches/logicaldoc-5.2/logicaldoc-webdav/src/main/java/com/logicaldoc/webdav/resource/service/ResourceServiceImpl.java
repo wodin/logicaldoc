@@ -102,6 +102,7 @@ public class ResourceServiceImpl implements ResourceService {
 				|| document.getStatus() == Document.DOC_LOCKED);
 		resource.setVersionLabel(document.getVersion());
 		resource.setAuthor(document.getPublisher());
+		resource.setFolderID(new Long(document.getFolder().getId()).toString());
 		resource.setSession(session);
 
 		if (session != null && (Long) session.getObject("id") != null) {
@@ -125,8 +126,8 @@ public class ResourceServiceImpl implements ResourceService {
 		if (folders != null) {
 			for (Iterator<Menu> iterator = folders.iterator(); iterator.hasNext();) {
 				Menu currentMenu = iterator.next();
-				resourceList.add(marshallFolder(currentMenu, parentResource.getRequestedPerson(), parentResource
-						.getSession()));
+				resourceList.add(marshallFolder(currentMenu, parentResource.getRequestedPerson(),
+						parentResource.getSession()));
 			}
 		}
 
@@ -370,10 +371,6 @@ public class ResourceServiceImpl implements ResourceService {
 		// verify the write permission on source folders
 		Resource folder = getParentResource(source);
 
-		boolean writeEnabled = folder.isWriteEnabled();
-		if (!writeEnabled)
-			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Rename Rights not granted to this user");
-
 		Document document = documentDAO.findById(Long.parseLong(source.getID()));
 		User user = userDAO.findById(source.getRequestedPerson());
 		if (document.getImmutable() == 1 && !user.isInGroup("admin"))
@@ -387,6 +384,10 @@ public class ResourceServiceImpl implements ResourceService {
 		transaction.setUser(user);
 
 		if (!source.getName().equals(document.getFileName())) {
+			boolean renameEnabled = folder.isRenameEnabled();
+			if (!renameEnabled)
+				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Rename Rights not granted to this user");
+			
 			// we are doing a file rename
 			try {
 				documentManager.rename(document, source.getName(), false, transaction);
@@ -396,9 +397,15 @@ public class ResourceServiceImpl implements ResourceService {
 			}
 		} else {
 			// moving the document to another folder
-			boolean destWriteEnabled = destination.isWriteEnabled();
-			if (!destWriteEnabled)
-				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Write Rights not granted to this user");
+			// verify the addchild permission on destination folder
+			boolean addchildEnabled = destination.isAddChildEnabled();
+			if (!addchildEnabled)
+				throw new DavException(DavServletResponse.SC_FORBIDDEN, "AddChild Rights not granted to this user");
+			
+			// verify the delete permission on parent folder
+			boolean deleteEnabled = folder.isDeleteEnabled();
+			if (!deleteEnabled)
+				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Delete Rights not granted to this user");								
 
 			Menu menu = folderDAO.findById(Long.parseLong(destination.getID()));
 
@@ -417,9 +424,6 @@ public class ResourceServiceImpl implements ResourceService {
 	private Resource folderRenameOrMove(Resource source, Resource destination, DavSession session, String sid)
 			throws DavException {
 
-		if (!source.isRenameEnabled())
-			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Rename Rights not granted to this user");
-
 		Menu currentMenu = folderDAO.findById(Long.parseLong(source.getID()));
 
 		long currentParentFolder = currentMenu.getParentId();
@@ -429,17 +433,14 @@ public class ResourceServiceImpl implements ResourceService {
 		if (currentParentFolder != destinationParentFolder) {
 			// Folder Move
 
-			Menu destParentMenu = folderDAO.findById(Long.parseLong(destination.getID()));
-
-			// check the delete on the parent of the source to move
-			Resource sourceParent = getParentResource(source);
-			if (!sourceParent.isDeleteEnabled())
-				throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
-
 			// verify the addchild permission on destination folders
 			boolean addchildEnabled = destination.isAddChildEnabled();
 			if (!addchildEnabled)
 				throw new DavException(DavServletResponse.SC_FORBIDDEN, "AddChild Rights not granted to this user");
+			
+			// check the delete on the source to move
+			if (!source.isDeleteEnabled())
+				throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
 
 			User user = (User) session.getObject("user");
 			// Add a folder history entry
@@ -447,8 +448,9 @@ public class ResourceServiceImpl implements ResourceService {
 			transaction.setSessionId(sid);
 			transaction.setUser(user);
 
-			// we are doing a file rename
+			// we are doing a folder move
 			try {
+				Menu destParentMenu = folderDAO.findById(Long.parseLong(destination.getID()));
 				folderDAO.move(currentMenu, destParentMenu, transaction);
 			} catch (Exception e) {
 				log.warn(e.getMessage(), e);
@@ -457,6 +459,9 @@ public class ResourceServiceImpl implements ResourceService {
 
 			return this.marshallFolder(currentMenu, source.getRequestedPerson(), session);
 		} else {
+			if (!source.isRenameEnabled())
+				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Rename Rights not granted to this user");
+			
 			// Folder Rename
 			currentMenu.setText(source.getName());
 
@@ -500,8 +505,8 @@ public class ResourceServiceImpl implements ResourceService {
 			} else if (!resource.isFolder()) {
 				// verify the write permission on the parent folder
 				Resource parent = getParentResource(resource);
-				if (!parent.isWriteEnabled())
-					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to write on parent resource.");
+				if (!parent.isDeleteEnabled())
+					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete on parent resource.");
 				transaction.setEvent(History.EVENT_DELETED);
 
 				if (documentDAO.findById(Long.parseLong(resource.getID())).getImmutable() == 1
