@@ -48,9 +48,9 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 
 	private boolean readOnly = false;
 
-	public WorkflowDesigner(GUIWorkflow workflow, boolean onlyDrawingPanel) {
+	public WorkflowDesigner(GUIWorkflow workflow, boolean readOnly) {
 		this.workflow = workflow;
-		this.readOnly = onlyDrawingPanel;
+		this.readOnly = readOnly;
 
 		setMembersMargin(5);
 

@@ -99,7 +99,7 @@ public class JoinRow extends WorkflowRow {
 			for (GUITransition transition : wfState.getTransitions()) {
 				addMember(new Transition(designer, transition, wfState));
 			}
-		} else
+		} else if (!designer.isReadOnly())
 			addMember(dropArea);
 	}
 }
