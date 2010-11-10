@@ -46,6 +46,8 @@ public class ResourceImpl implements Resource {
 
 	private Date creationDate;
 
+	private String folderId;
+
 	private Boolean writeEnabled;
 
 	private Boolean deleteEnabled;
@@ -243,11 +245,25 @@ public class ResourceImpl implements Resource {
 		}
 
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Set<Permission> permissions = mdao.getEnabledPermissions(Long.parseLong(id), personRequest);
-		writeEnabled = permissions.contains(Permission.WRITE);
+		Set<Permission> permissions = null;
+		if (isFolder)
+			permissions = mdao.getEnabledPermissions(Long.parseLong(id), personRequest);
+		else
+			permissions = mdao.getEnabledPermissions(Long.parseLong(folderId), personRequest);
 
+		writeEnabled = permissions.contains(Permission.WRITE);
 		deleteEnabled = permissions.contains(Permission.DELETE);
 		renameEnabled = permissions.contains(Permission.RENAME);
 		addChildEnabled = permissions.contains(Permission.ADD_CHILD);
+	}
+
+	@Override
+	public String getFolderID() {
+		return this.folderId;
+	}
+
+	@Override
+	public void setFolderID(String folderId) {
+		this.folderId = folderId;
 	}
 }

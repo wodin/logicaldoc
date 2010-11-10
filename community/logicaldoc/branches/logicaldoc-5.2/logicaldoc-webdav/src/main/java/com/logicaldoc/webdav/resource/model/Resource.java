@@ -98,5 +98,9 @@ public interface Resource {
 	public DavSession getSession();
 
 	public void setSession(DavSession session);
+	
+	public void setFolderID(String folderID);
+
+	public String getFolderID();
 
 }
