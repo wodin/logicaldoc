@@ -187,7 +187,7 @@ public class PDFParser extends AbstractParser {
 					throw new IOException("Encripted document");
 
 				stripper.writeText(pdfDocument, writer);
-			} catch (IOException e) {
+			} catch (Throwable e) {
 				log.error("Unable to decrypt pdf document");
 				e.printStackTrace();
 				writer.write("encrypted document");
