@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.beans.GUIEmailAccount;
 import com.logicaldoc.gui.common.client.beans.GUIEmailRule;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.FolderChangeListener;
 import com.logicaldoc.gui.common.client.widgets.FolderSelector;
@@ -216,7 +217,7 @@ public class AccountFiltersPanel extends AccountDetailsTab {
 		ListGridRecord[] records = list.getRecords();
 		List<GUIEmailRule> rules = new ArrayList<GUIEmailRule>();
 		for (ListGridRecord record : records) {
-			if (record.getAttribute("targetid") == null || record.getAttribute("expression") == null)
+			if (record.getAttribute("targetId") == null || record.getAttribute("expression") == null)
 				continue;
 			GUIEmailRule rule = new GUIEmailRule();
 			GUIFolder target = new GUIFolder();

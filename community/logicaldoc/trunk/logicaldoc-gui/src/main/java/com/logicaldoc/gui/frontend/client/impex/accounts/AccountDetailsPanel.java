@@ -14,6 +14,7 @@ import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.types.VerticalAlignment;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.Img;
@@ -208,11 +209,15 @@ public class AccountDetailsPanel extends VLayout {
 	private boolean validate() {
 		boolean stdValid = standardPanel.validate();
 		boolean extValid = advancedPanel.validate();
+		boolean filtValid = filtersPanel.validate();
+		
 		if (!stdValid)
 			tabSet.selectTab(0);
 		else if (!extValid)
 			tabSet.selectTab(1);
-		return stdValid && extValid;
+		else if (!filtValid)
+			tabSet.selectTab(2);
+		return stdValid && extValid && filtValid;
 	}
 
 	public void onSave() {
