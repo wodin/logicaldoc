@@ -125,17 +125,21 @@ public class NewDocWizard {
 
 				if (inputFile.isExtractTags()) {
 					// Parses the file where it is already stored
-					Locale locale = new Locale(inputFile.getLanguage());
-					Parser parser = ParserFactory.getParser(file, inputFile.getFileName(), locale, null);
-					String content = parser.getContent();
-					tags = parser.getTags();
-					if (StringUtils.isNotEmpty(tags)) {
-						docForm.setTags(tags);
-					} else {
-						AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(
-								AnalyzerManager.class);
-						docForm.setTags(analyzer.getTermsAsString(3, content.toString(), LocaleUtil
-								.toLocale(documentLanguage)));
+					try {
+						Locale locale = new Locale(inputFile.getLanguage());
+						Parser parser = ParserFactory.getParser(file, inputFile.getFileName(), locale, null);
+						String content = parser.getContent();
+						tags = parser.getTags();
+						
+						// Store the tags (if any)
+						if (StringUtils.isNotEmpty(tags)) {
+							docForm.setTags(tags);
+						} else if (StringUtils.isNotEmpty(content)) {
+							AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
+							docForm.setTags(analyzer.getTermsAsString(3, content, LocaleUtil.toLocale(documentLanguage)));
+						}
+					} catch (Exception e) {
+						log.warn("Exception during Immediate Tag Extraction" + e.getMessage(), e);
 					}
 				}
 				docForm.setImmediateIndexing(inputFile.isImmediateIndexing());
@@ -145,9 +149,8 @@ public class NewDocWizard {
 				log.error(message, e);
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, message, message);
 				showUpload = true;
-			} finally {
-
-			}
+			} 
+			
 			return null;
 		} else {
 			return "login";
