@@ -25,6 +25,9 @@ import com.smartgwt.client.widgets.layout.VLayout;
  */
 public class DropArea extends VLayout {
 	public DropArea(final Transition transition) {
+		if(transition.getWorkflowDesigner().isReadOnly())
+			return;
+		
 		final GUIWFState fromState = transition.getFromState();
 
 		setHeight(40);
