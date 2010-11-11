@@ -78,7 +78,8 @@ public class TemplatePropertiesPanel extends HLayout {
 		}
 
 		this.template = template;
-		this.changedHandler = changedHandler;
+		if (!template.isReadonly())
+			this.changedHandler = changedHandler;
 		this.detailsPanel = detailsPanel;
 		setWidth100();
 		setHeight100();
@@ -163,21 +164,22 @@ public class TemplatePropertiesPanel extends HLayout {
 		addMember(form1);
 		form1.setWidth(200);
 
-		attributesList.addSelectionChangedHandler(new SelectionChangedHandler() {
-			@Override
-			public void onSelectionChanged(SelectionEvent event) {
-				Record record = attributesList.getSelectedRecord();
-				if (record != null) {
-					String selectedAttributeName = record.getAttributeAsString("name");
-					GUIExtendedAttribute extAttr = guiAttributes.get(selectedAttributeName);
-					form2.setValue("attributeName", extAttr.getName());
-					form2.setValue("mandatory", extAttr.isMandatory());
-					form2.setValue("type", extAttr.getType());
-					updatingAttributeName = extAttr.getName();
-					form2.getField("attributeName").setDisabled(true);
+		if (!template.isReadonly())
+			attributesList.addSelectionChangedHandler(new SelectionChangedHandler() {
+				@Override
+				public void onSelectionChanged(SelectionEvent event) {
+					Record record = attributesList.getSelectedRecord();
+					if (record != null) {
+						String selectedAttributeName = record.getAttributeAsString("name");
+						GUIExtendedAttribute extAttr = guiAttributes.get(selectedAttributeName);
+						form2.setValue("attributeName", extAttr.getName());
+						form2.setValue("mandatory", extAttr.isMandatory());
+						form2.setValue("type", extAttr.getType());
+						updatingAttributeName = extAttr.getName();
+						form2.getField("attributeName").setDisabled(true);
+					}
 				}
-			}
-		});
+			});
 
 		VStack modifyStack = new VStack(3);
 		modifyStack.setWidth(20);
@@ -245,10 +247,12 @@ public class TemplatePropertiesPanel extends HLayout {
 			}
 		});
 
-		modifyStack.addMember(upFirst);
-		modifyStack.addMember(up);
-		modifyStack.addMember(down);
-		modifyStack.addMember(downLast);
+		if (!template.isReadonly()) {
+			modifyStack.addMember(upFirst);
+			modifyStack.addMember(up);
+			modifyStack.addMember(down);
+			modifyStack.addMember(downLast);
+		}
 
 		templateInfo.setMembers(attributesList, modifyStack);
 		templateInfo.setMembersMargin(3);
@@ -279,8 +283,11 @@ public class TemplatePropertiesPanel extends HLayout {
 				clean();
 			}
 		});
-		cleanPicker.setNeverDisable(true);
-		attributeName.setIcons(cleanPicker);
+		if (!template.isReadonly()) {
+			cleanPicker.setNeverDisable(true);
+			attributeName.setIcons(cleanPicker);
+		} else
+			attributeName.setDisabled(true);
 
 		// Mandatory
 		final CheckboxItem mandatory = new CheckboxItem();
@@ -289,6 +296,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		mandatory.setRedrawOnChange(true);
 		mandatory.setWidth(50);
 		mandatory.setDefaultValue(false);
+		mandatory.setDisabled(template.isReadonly());
 
 		// Type
 		final SelectItem type = new SelectItem("type", I18N.message("type"));
@@ -300,6 +308,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		type.setValueMap(map);
 		type.setWrapTitle(false);
 		type.setDefaultValue("" + GUIExtendedAttribute.TYPE_STRING);
+		type.setDisabled(!template.isReadonly());
 
 		HLayout buttons = new HLayout();
 

@@ -67,6 +67,7 @@ public class TemplatesDataServlet extends HttpServlet {
 				writer.print("<template>");
 				writer.print("<id></id>");
 				writer.print("<name> </name>");
+				writer.print("<readonly>false</readonly>");
 				writer.print("</template>");
 			}
 
@@ -83,6 +84,7 @@ public class TemplatesDataServlet extends HttpServlet {
 				writer.print("<id>" + template.getId() + "</id>");
 				writer.print("<name><![CDATA[" + template.getName() + "]]></name>");
 				writer.print("<description><![CDATA[" + template.getDescription() + "]]></description>");
+				writer.print("<readonly>" + Boolean.toString(template.getReadonly() == 1) + "</readonly>");
 				writer.print("</template>");
 			}
 

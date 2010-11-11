@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
 import com.logicaldoc.gui.common.client.data.DocumentsDS;
@@ -347,13 +348,14 @@ public class SearchIndexingPanel extends VLayout {
 		languagesTabPanel.addMember(langsList);
 		languagesTab.setPane(languagesTabPanel);
 
-		langsList.addCellContextClickHandler(new CellContextClickHandler() {
-			@Override
-			public void onCellContextClick(CellContextClickEvent event) {
-				showLanguagesMenu();
-				event.cancel();
-			}
-		});
+		if (Feature.enabled(Feature.INDEX_LANGUAGES))
+			langsList.addCellContextClickHandler(new CellContextClickHandler() {
+				@Override
+				public void onCellContextClick(CellContextClickEvent event) {
+					showLanguagesMenu();
+					event.cancel();
+				}
+			});
 
 		return languagesTab;
 	}

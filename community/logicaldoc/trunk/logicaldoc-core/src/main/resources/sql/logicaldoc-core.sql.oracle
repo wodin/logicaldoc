@@ -18,7 +18,7 @@ create table ld_menu (ld_id number(19,0) not null, ld_lastmodified TIMESTAMP not
 create table ld_menugroup (ld_menuid number(19,0) not null, ld_groupid number(19,0) not null, ld_write int not null, primary key (ld_menuid, ld_groupid, ld_write));
 create table ld_recipient (ld_messageid number(19,0) not null, ld_name varchar(255) not null, ld_address varchar(255) not null, ld_mode varchar(255) not null, ld_type int not null);
 create table ld_systemmessage (ld_id number(19,0) not null, ld_lastmodified TIMESTAMP not null, ld_deleted int not null, ld_author varchar(255), ld_messagetext varchar(2000), ld_subject varchar(255), ld_sentdate TIMESTAMP not null, ld_datescope int, ld_prio int, ld_confirmation int, ld_red int not null, ld_lastnotified TIMESTAMP, ld_status int not null, ld_trials int, ld_type int not null, primary key (ld_id));
-create table ld_template (ld_id number(19,0) not null, ld_lastmodified TIMESTAMP not null, ld_deleted int not null, ld_name varchar(255) not null, ld_description varchar(2000), primary key (ld_id));
+create table ld_template (ld_id number(19,0) not null, ld_lastmodified TIMESTAMP not null, ld_deleted int not null, ld_name varchar(255) not null, ld_description varchar(2000), ld_readonly int not null, primary key (ld_id));
 create table ld_template_ext (ld_templateid number(19,0) not null, ld_mandatory int not null, ld_type int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue number(19,0), ld_doublevalue float, ld_datevalue TIMESTAMP null, ld_name varchar(255) not null, primary key (ld_templateid, ld_name));
 create table ld_ticket (ld_id number(19,0) not null, ld_lastmodified TIMESTAMP not null, ld_deleted int not null, ld_ticketid varchar(255) not null, ld_docid number(19,0) not null, ld_userid number(19,0) not null, primary key (ld_id));
 create table ld_user (ld_id number(19,0) not null, ld_lastmodified TIMESTAMP not null, ld_deleted int not null, ld_enabled int not null, ld_username varchar(255) not null, ld_password varchar(255), ld_name varchar(255), ld_firstname varchar(255), ld_street varchar(255), ld_postalcode varchar(255), ld_city varchar(255), ld_country varchar(255), ld_state varchar(255), ld_language varchar(10), ld_email varchar(255), ld_telephone varchar(255), ld_telephone2 varchar(255), ld_type int not null, ld_passwordchanged TIMESTAMP, ld_passwordexpires int not null, ld_source int not null, primary key (ld_id));
@@ -108,6 +108,10 @@ insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
 values     (23,CURRENT_TIMESTAMP,0,'workflow',2,'menu.png',1);
 
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
+values     (24,CURRENT_TIMESTAMP,0,'settings',2,'menu.png',1);
+
 insert into ld_group
 values     (1,CURRENT_TIMESTAMP,0,'admin','Group of admins',0);
 
@@ -115,7 +119,10 @@ insert into ld_group
 values     (2,CURRENT_TIMESTAMP,0,'author','Group of authors',0);
 
 insert into ld_group
-values     (3,CURRENT_TIMESTAMP,0,'guest','Group of guest',0);
+values     (3,CURRENT_TIMESTAMP,0,'guest','Group of guests',0);
+
+insert into ld_group
+values     (4,CURRENT_TIMESTAMP,0,'poweruser','Group of power users',0);
 
 insert into ld_user
            (ld_id,ld_lastmodified,ld_deleted,ld_enabled,ld_username,ld_password,ld_name,ld_firstname,ld_street,ld_postalcode,ld_city,ld_country,ld_language,ld_email,ld_telephone,ld_telephone2,ld_type,ld_passwordchanged,ld_passwordexpires,ld_source)
@@ -127,6 +134,10 @@ values (1,1);
 insert into ld_usergroup
 values (-1,1);
 
+insert into ld_menugroup values (2,4,0);
+insert into ld_menugroup values (9,4,0);
+insert into ld_menugroup values (14,4,0);
+insert into ld_menugroup values (25,4,0);
 
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_creation)
 values (5,CURRENT_TIMESTAMP,0,'/',5,0,CURRENT_TIMESTAMP);
@@ -134,3 +145,5 @@ insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_securi
 values (5,2,1,1,0,0,1,1,0,0,0,0,0,1);
 insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
 values (5,3,0,0,0,0,0,0,0,0,0,0,0,1);
+insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
+values (5,4,1,1,0,0,1,1,0,0,0,0,0,1);
