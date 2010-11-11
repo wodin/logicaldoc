@@ -54,6 +54,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 
 			templ.setName(template.getName());
 			templ.setDescription(template.getDescription());
+			templ.setReadonly(template.isReadonly() ? 1 : 0);
 			Map<String, ExtendedAttribute> attrs = new HashMap<String, ExtendedAttribute>();
 			if (template.getAttributes() != null && template.getAttributes().length > 0) {
 				templ.getAttributes().clear();

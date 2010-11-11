@@ -12,6 +12,7 @@ import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
@@ -63,6 +64,10 @@ public class SecuritySettingsPanel extends VLayout {
 		tabs.setWidth(400);
 		tabs.setHeight(250);
 
+		Tab menues = new Tab();
+		menues.setTitle(I18N.message("menues"));
+		menues.setPane(new FeatureDisabled());
+
 		Tab password = new Tab();
 		password.setTitle(I18N.message("password"));
 
@@ -89,7 +94,7 @@ public class SecuritySettingsPanel extends VLayout {
 
 		refreshNotifications();
 
-		tabs.setTabs(password, notifications);
+		tabs.setTabs(password, notifications, menues);
 
 		IButton save = new IButton();
 		save.setTitle(I18N.message("save"));
@@ -118,7 +123,9 @@ public class SecuritySettingsPanel extends VLayout {
 
 								@Override
 								public void onSuccess(Void ret) {
-									Log.info(I18N.message("settingssaved")+"  "+I18N.message("settingsaffectnewsessions"), null);
+									Log.info(
+											I18N.message("settingssaved") + "  "
+													+ I18N.message("settingsaffectnewsessions"), null);
 								}
 							});
 				}
