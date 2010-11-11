@@ -3,10 +3,6 @@ package com.logicaldoc.webdav.resource;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavException;
@@ -113,10 +109,20 @@ public class DavResourceFactoryImpl implements DavResourceFactory {
 	 */
 	public void putInCache(DavSession session, DavResource resource) {
 		try {
-			// Initialize the collection of children
-			Cache cache = ((CacheManager) Context.getInstance().getBean("DavCacheManager")).getCache("dav-resources");
-			Element element = new Element(session.getObject("id") + ";" + resource.getResourcePath(), resource);
-			cache.put(element);
+			// CACHE MANAGEMENT HAS BEEN COMMENTED BECAUSE GENERATE PROBLEMS
+			// EDITING FILE OR FOLDERS NAME
+
+			// PropertiesBean config = (PropertiesBean)
+			// Context.getInstance().getBean("ContextProperties");
+			// if ("true".equals(config.getProperty("webdav.usecache"))) {
+			// // Initialize the collection of children
+			// Cache cache = ((CacheManager)
+			// Context.getInstance().getBean("DavCacheManager"))
+			// .getCache("dav-resources");
+			// Element element = new Element(session.getObject("id") + ";" +
+			// resource.getResourcePath(), resource);
+			// cache.put(element);
+			// }
 		} catch (Throwable t) {
 
 		}
@@ -129,15 +135,24 @@ public class DavResourceFactoryImpl implements DavResourceFactory {
 	 * @return The cached entry
 	 */
 	private DavResource getFromCache(DavSession session, String path) {
-		String key = session.getObject("id") + ";" + path;
-		Cache cache = ((CacheManager) Context.getInstance().getBean("DavCacheManager")).getCache("dav-resources");
-		Element element = cache.get(key);
-		DavResource resource = null;
-		if (element != null) {
-			resource = (DavResource) element.getValue();
-			return resource;
-		} else
-			return null;
+		// CACHE MANAGEMENT HAS BEEN COMMENTED BECAUSE GENERATE PROBLEMS
+		// EDITING FILE OR FOLDERS NAME
+
+		// PropertiesBean config = (PropertiesBean)
+		// Context.getInstance().getBean("ContextProperties");
+		// if ("true".equals(config.getProperty("webdav.usecache"))) {
+		// String key = session.getObject("id") + ";" + path;
+		// Cache cache = ((CacheManager)
+		// Context.getInstance().getBean("DavCacheManager")).getCache("dav-resources");
+		// Element element = cache.get(key);
+		// DavResource resource = null;
+		// if (element != null) {
+		// resource = (DavResource) element.getValue();
+		// return resource;
+		// } else
+		// return null;
+		// } else
+		return null;
 	}
 
 	private DavResource createNullResource(DavResourceLocator locator, DavSession session, boolean isCollection)

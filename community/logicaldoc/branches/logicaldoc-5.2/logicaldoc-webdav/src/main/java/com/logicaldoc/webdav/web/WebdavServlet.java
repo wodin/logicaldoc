@@ -96,6 +96,9 @@ public class WebdavServlet extends AbstractWebdavServlet {
 	 * {@inheritDoc}
 	 */
 	protected boolean isPreconditionValid(WebdavRequest request, DavResource resource) {
+		if (resource.getDisplayName().toLowerCase().equals("thumbs.db"))
+			return false;
+
 		return !resource.exists() || request.matchesIfHeader(resource);
 	}
 
