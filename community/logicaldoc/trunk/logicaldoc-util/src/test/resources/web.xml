@@ -461,7 +461,7 @@
   
   <servlet-mapping>
     <servlet-name>ExportZip</servlet-name>
-    <url-pattern>/zip-exportt</url-pattern>
+    <url-pattern>/zip-export</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
