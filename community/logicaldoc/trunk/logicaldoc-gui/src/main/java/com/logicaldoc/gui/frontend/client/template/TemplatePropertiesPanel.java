@@ -308,7 +308,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		type.setValueMap(map);
 		type.setWrapTitle(false);
 		type.setDefaultValue("" + GUIExtendedAttribute.TYPE_STRING);
-		type.setDisabled(!template.isReadonly());
+		type.setDisabled(template.isReadonly());
 
 		HLayout buttons = new HLayout();
 
@@ -348,7 +348,8 @@ public class TemplatePropertiesPanel extends HLayout {
 		});
 
 		form2.setItems(attributeName, mandatory, type);
-		buttons.setMembers(addUpdate, restore);
+		if (!template.isReadonly())
+			buttons.setMembers(addUpdate, restore);
 		buttons.setMembersMargin(10);
 		attributesLayout.setMembers(form2, buttons);
 		attributesLayout.setMembersMargin(15);
