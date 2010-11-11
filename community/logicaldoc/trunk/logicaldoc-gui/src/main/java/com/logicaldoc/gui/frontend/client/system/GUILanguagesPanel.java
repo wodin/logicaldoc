@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.system;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.LanguagesDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -66,13 +67,14 @@ public class GUILanguagesPanel extends VLayout {
 
 		addMember(list);
 
-		list.addCellContextClickHandler(new CellContextClickHandler() {
-			@Override
-			public void onCellContextClick(CellContextClickEvent event) {
-				showContextMenu();
-				event.cancel();
-			}
-		});
+		if (Feature.enabled(Feature.GUI_LANGUAGES))
+			list.addCellContextClickHandler(new CellContextClickHandler() {
+				@Override
+				public void onCellContextClick(CellContextClickEvent event) {
+					showContextMenu();
+					event.cancel();
+				}
+			});
 	}
 
 	private void showContextMenu() {

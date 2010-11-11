@@ -43,8 +43,8 @@ public class AdminMenu extends SectionStack {
 		if (Menu.enabled(Menu.SECURITY))
 			addSection(securitySection);
 
-		if ((Feature.visible(Feature.TEMPLATE) || Feature.visible(Feature.WORKFLOW) || Feature.visible(Feature.TAGS_ADMIN))
-				&& Menu.enabled(Menu.METADATA)) {
+		if ((Feature.visible(Feature.TEMPLATE) || Feature.visible(Feature.WORKFLOW) || Feature
+				.visible(Feature.TAGS_ADMIN)) && Menu.enabled(Menu.METADATA)) {
 			SectionStackSection metadataSection = new SectionStackSection(I18N.message("documentmetadata"));
 			metadataSection.setExpanded(false);
 			metadataSection.addItem(new MetadataMenu());
@@ -60,9 +60,11 @@ public class AdminMenu extends SectionStack {
 			addSection(impexSection);
 		}
 
-		SectionStackSection sysConfSection = new SectionStackSection(I18N.message("settings"));
-		sysConfSection.setExpanded(false);
-		sysConfSection.addItem(new SettingsMenu());
-		addSection(sysConfSection);
+		if (Menu.enabled(Menu.SETTINGS)) {
+			SectionStackSection sysConfSection = new SectionStackSection(I18N.message("settings"));
+			sysConfSection.setExpanded(false);
+			sysConfSection.addItem(new SettingsMenu());
+			addSection(sysConfSection);
+		}
 	}
 }

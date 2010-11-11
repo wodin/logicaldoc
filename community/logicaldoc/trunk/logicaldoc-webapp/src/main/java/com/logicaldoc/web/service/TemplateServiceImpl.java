@@ -104,6 +104,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 			templ.setId(templateId);
 			templ.setName(template.getName());
 			templ.setDescription(template.getDescription());
+			templ.setReadonly(template.getReadonly() == 1);
 
 			GUIExtendedAttribute[] attributes = new GUIExtendedAttribute[template.getAttributeNames().size()];
 			int i = 0;

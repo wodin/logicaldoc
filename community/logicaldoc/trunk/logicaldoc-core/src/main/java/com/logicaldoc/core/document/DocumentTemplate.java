@@ -14,6 +14,8 @@ public class DocumentTemplate extends ExtensibleObject {
 
 	private String description;
 
+	private int readonly = 0;
+
 	public String getName() {
 		return name;
 	}
@@ -28,5 +30,13 @@ public class DocumentTemplate extends ExtensibleObject {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public int getReadonly() {
+		return readonly;
+	}
+
+	public void setReadonly(int readonly) {
+		this.readonly = readonly;
 	}
 }

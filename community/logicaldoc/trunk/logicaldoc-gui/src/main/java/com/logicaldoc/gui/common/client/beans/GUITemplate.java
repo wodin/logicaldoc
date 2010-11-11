@@ -12,6 +12,8 @@ public class GUITemplate implements Serializable {
 
 	private String description;
 
+	private boolean readonly=false;
+	
 	private GUIExtendedAttribute[] attributes;
 
 	public long getId() {
@@ -44,5 +46,13 @@ public class GUITemplate implements Serializable {
 
 	public void setAttributes(GUIExtendedAttribute[] attributes) {
 		this.attributes = attributes;
+	}
+
+	public boolean isReadonly() {
+		return readonly;
+	}
+
+	public void setReadonly(boolean readonly) {
+		this.readonly = readonly;
 	}
 }

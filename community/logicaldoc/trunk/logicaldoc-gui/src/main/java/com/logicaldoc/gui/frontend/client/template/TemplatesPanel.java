@@ -92,13 +92,17 @@ public class TemplatesPanel extends VLayout {
 		ListGridField description = new ListGridField("description", I18N.message("description"), 300);
 		description.setCanFilter(true);
 		description.setCanSort(false);
-
+		
+		ListGridField readonly = new ListGridField("readonly", I18N.message("readonly"), 20);
+		readonly.setCanFilter(true);
+		readonly.setCanSort(false);
+		
 		list = new ListGrid();
 		list.setShowAllRecords(true);
 		list.setAutoFetchData(true);
 		list.setWidth100();
 		list.setHeight100();
-		list.setFields(name, description);
+		list.setFields(name, description, readonly);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
@@ -129,7 +133,10 @@ public class TemplatesPanel extends VLayout {
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				showContextMenu();
+				ListGridRecord record = list.getSelectedRecord();
+				if (!record.getAttributeAsBoolean("readonly")) {
+					showContextMenu();
+				}
 				event.cancel();
 			}
 		});

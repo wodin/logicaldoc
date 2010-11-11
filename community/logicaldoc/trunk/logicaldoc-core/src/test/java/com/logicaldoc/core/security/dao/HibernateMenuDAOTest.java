@@ -96,7 +96,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(2, menu.getId());
 		Assert.assertEquals("menu.admin", menu.getText());
 		Assert.assertEquals("menu.png", menu.getIcon());
-		Assert.assertEquals(0, menu.getMenuGroups().size());
+		Assert.assertEquals(1, menu.getMenuGroups().size());
 
 		// Try with unexisting id
 		menu = dao.findById(99999);
@@ -123,11 +123,11 @@ public class HibernateMenuDAOTest extends AbstractCoreTCase {
 	public void testFindByUserNameString() {
 		List<Menu> menus = dao.findByUserId(1);
 		Assert.assertNotNull(menus);
-		Assert.assertEquals(20, menus.size());
+		Assert.assertEquals(21, menus.size());
 
 		menus = dao.findByUserId(3);
 		Assert.assertNotNull(menus);
-		Assert.assertEquals(20, menus.size());
+		Assert.assertEquals(21, menus.size());
 
 		// Try with unexisting user
 		menus = dao.findByUserId(99);
@@ -139,7 +139,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTCase {
 	public void testFindByUserId() {
 		List<Menu> menus = dao.findByUserId(1, 2);
 		Assert.assertNotNull(menus);
-		Assert.assertEquals(11, menus.size());
+		Assert.assertEquals(12, menus.size());
 
 		// Try with unexisting user and menus
 		menus = dao.findByUserId(1, 70);
@@ -152,7 +152,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTCase {
 
 		menus = dao.findByUserId(1, 2);
 		Assert.assertNotNull(menus);
-		Assert.assertEquals(11, menus.size());
+		Assert.assertEquals(12, menus.size());
 
 		menus = dao.findByUserId(4, 2);
 		Assert.assertNotNull(menus);
@@ -163,7 +163,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTCase {
 	public void testFindByParentId() {
 		List<Menu> menus = dao.findByParentId(2);
 		Assert.assertNotNull(menus);
-		Assert.assertEquals(19, menus.size());
+		Assert.assertEquals(20, menus.size());
 
 		// Try with unexisting parent
 		menus = dao.findByParentId(999);
@@ -243,7 +243,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testFindByGroupId() {
 		Collection<Menu> menus = dao.findByGroupId(1);
-		Assert.assertEquals(20, menus.size());
+		Assert.assertEquals(21, menus.size());
 		menus = dao.findByGroupId(10);
 		Assert.assertEquals(0, menus.size());
 		menus = dao.findByGroupId(2);
@@ -294,7 +294,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTCase {
 		Assert.assertTrue(ids.contains(1200L));
 		ids = dao.findMenuIdByUserIdAndPermission(1, Permission.WRITE);
 		Assert.assertNotNull(ids);
-		Assert.assertEquals(20, ids.size());
+		Assert.assertEquals(21, ids.size());
 		ids = dao.findMenuIdByUserIdAndPermission(4, Permission.WRITE);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(3, ids.size());

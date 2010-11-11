@@ -16,7 +16,8 @@ public class TemplatesDS extends DataSource {
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
 		DataSourceTextField name = new DataSourceTextField("name");
-		setFields(id, name);
+		DataSourceTextField readonly = new DataSourceTextField("readonly");	
+		setFields(id, name, readonly);
 		setDataURL("data/templates.xml" + (withEmpty ? "?withempty=true" : "")
 				+ (folderId != null ? "&folderId=" + folderId : ""));
 		setClientOnly(true);

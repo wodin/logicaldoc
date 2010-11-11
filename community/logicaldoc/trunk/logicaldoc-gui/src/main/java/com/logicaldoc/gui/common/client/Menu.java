@@ -16,19 +16,21 @@ public class Menu {
 	public static final int ADMINISTRATION = 2;
 
 	public static final int SECURITY = 9;
-	
+
 	public static final int LAST_CHANGES = -2;
-	
+
 	public static final int CLIENTS = 3;
-	
+
 	public static final int IMPEX = 8;
-	
+
 	public static final int CUSTOM_ID = 17;
-	
+
 	public static final int METADATA = 25;
-	
+
+	public static final int SETTINGS = 24;
+
 	public static final int WORKFLOW = 23;
-	
+
 	private static Set<Long> menues = new HashSet<Long>();
 
 	static public void init(GUIUser user) {

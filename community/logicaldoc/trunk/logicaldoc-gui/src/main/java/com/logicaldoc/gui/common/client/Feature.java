@@ -55,6 +55,10 @@ public class Feature {
 
 	public static final int TAGS_ADMIN = 23;
 	
+	public static final int GUI_LANGUAGES = 24;
+	
+	public static final int INDEX_LANGUAGES = 25;
+	
 	public static final int SHOW_LICENSEE = 40;
 	
 	public static final int SHOW_DISABLED = 50;
