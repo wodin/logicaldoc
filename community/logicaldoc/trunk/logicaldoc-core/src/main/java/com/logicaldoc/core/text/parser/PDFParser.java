@@ -15,9 +15,9 @@ import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.pdfbox.pdmodel.PDDocument;
-import org.pdfbox.pdmodel.PDDocumentInformation;
-import org.pdfbox.util.PDFTextStripper;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentInformation;
+import org.apache.pdfbox.util.PDFTextStripper;
 
 import com.logicaldoc.util.StringUtil;
 
@@ -76,7 +76,7 @@ public class PDFParser extends AbstractParser {
 	@Override
 	public void parse(InputStream input) {
 		try {
-			org.pdfbox.pdfparser.PDFParser parser = new org.pdfbox.pdfparser.PDFParser(new BufferedInputStream(input));
+			org.apache.pdfbox.pdfparser.PDFParser parser = new org.apache.pdfbox.pdfparser.PDFParser(new BufferedInputStream(input));
 			try {
 				parser.parse();
 				PDDocument document = parser.getPDDocument();
@@ -116,7 +116,7 @@ public class PDFParser extends AbstractParser {
 
 		try {
 			InputStream is = new FileInputStream(file);
-			org.pdfbox.pdfparser.PDFParser parser = new org.pdfbox.pdfparser.PDFParser(is);
+			org.apache.pdfbox.pdfparser.PDFParser parser = new org.apache.pdfbox.pdfparser.PDFParser(is);
 
 			if (parser != null) {
 				parser.parse();
@@ -183,17 +183,18 @@ public class PDFParser extends AbstractParser {
 			PDFTextStripper stripper = new PDFTextStripper();
 
 			try {
-				if (pdfDocument.isEncrypted())
-					throw new IOException("Encripted document");
+				if (pdfDocument.isEncrypted()) {
+					writer.write("encrypted document");
+					log.warn("Unable to decrypt pdf document");
+					throw new IOException("Encrypted document");
+				}
 
-				stripper.writeText(pdfDocument, writer);
-			} catch (IOException e) {
-				log.error("Unable to decrypt pdf document");
-				e.printStackTrace();
-				writer.write("encrypted document");
+				stripper.writeText(pdfDocument, writer);				
+			} catch(Throwable tw) {
+				log.error("Exception reading pdf document: " + tw.getMessage());
 				title = file.getName().substring(0, file.getName().lastIndexOf('.'));
 				author = "";
-			}
+		    }
 			writer.flush();
 			writer.close();
 			content = new String(out.toByteArray(), "UTF-8");
