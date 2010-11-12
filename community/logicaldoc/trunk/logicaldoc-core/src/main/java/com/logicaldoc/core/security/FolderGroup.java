@@ -9,6 +9,8 @@ package com.logicaldoc.core.security;
  */
 public class FolderGroup {
 
+	private int read = 1;
+
 	private int write = 0;
 
 	private int download = 1;
@@ -51,6 +53,7 @@ public class FolderGroup {
 		mg.setImmutable(immutable);
 		mg.setRename(rename);
 		mg.setWrite(write);
+		mg.setRead(read);
 		mg.setImport(_import);
 		mg.setExport(export);
 		mg.setSign(sign);
@@ -79,19 +82,24 @@ public class FolderGroup {
 	 * @return Permissions settings as integer representation.
 	 */
 	public int getPermissions() {
-		StringBuffer sb = new StringBuffer("1");
-		sb.append(getWrite() == 1 ? "1" : "0");
-		sb.append(getAdd() == 1 ? "1" : "0");
-		sb.append(getSecurity() == 1 ? "1" : "0");
-		sb.append(getImmutable() == 1 ? "1" : "0");
-		sb.append(getDelete() == 1 ? "1" : "0");
-		sb.append(getRename() == 1 ? "1" : "0");
-		sb.append(getImport() == 1 ? "1" : "0");
-		sb.append(getExport() == 1 ? "1" : "0");
-		sb.append(getSign() == 1 ? "1" : "0");
-		sb.append(getArchive() == 1 ? "1" : "0");
-		sb.append(getWorkflow() == 1 ? "1" : "0");
+		/**
+		 * Very important, see the Permission enumeration in order u replicate
+		 * the same mask order.
+		 */
+		StringBuffer sb = new StringBuffer();
 		sb.append(getDownload() == 1 ? "1" : "0");
+		sb.append(getWorkflow() == 1 ? "1" : "0");
+		sb.append(getArchive() == 1 ? "1" : "0");
+		sb.append(getSign() == 1 ? "1" : "0");
+		sb.append(getExport() == 1 ? "1" : "0");
+		sb.append(getImport() == 1 ? "1" : "0");
+		sb.append(getRename() == 1 ? "1" : "0");
+		sb.append(getDelete() == 1 ? "1" : "0");
+		sb.append(getImmutable() == 1 ? "1" : "0");
+		sb.append(getSecurity() == 1 ? "1" : "0");
+		sb.append(getAdd() == 1 ? "1" : "0");
+		sb.append(getWrite() == 1 ? "1" : "0");
+		sb.append(getRead() == 1 ? "1" : "0");
 
 		return Integer.parseInt(sb.toString(), 2);
 	}
@@ -103,6 +111,7 @@ public class FolderGroup {
 	 *        permission and it is not evaluated)
 	 */
 	public void setPermissions(int permissions) {
+		setRead(Permission.READ.match(permissions) ? 1 : 0);
 		setWrite(Permission.WRITE.match(permissions) ? 1 : 0);
 		setAdd(Permission.ADD.match(permissions) ? 1 : 0);
 		setSecurity(Permission.SECURITY.match(permissions) ? 1 : 0);
@@ -115,6 +124,14 @@ public class FolderGroup {
 		setArchive(Permission.ARCHIVE.match(permissions) ? 1 : 0);
 		setWorkflow(Permission.WORKFLOW.match(permissions) ? 1 : 0);
 		setDownload(Permission.DOWNLOAD.match(permissions) ? 1 : 0);
+	}
+
+	public int getRead() {
+		return read;
+	}
+
+	public void setRead(int read) {
+		this.read = read;
 	}
 
 	public int getWrite() {
