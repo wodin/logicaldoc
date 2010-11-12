@@ -1,8 +1,9 @@
 package com.logicaldoc.webservice.auth;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.jws.WebService;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import org.apache.cxf.transport.http.AbstractHTTPDestination;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderGroup;
 import com.logicaldoc.core.security.Group;
+import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
@@ -82,10 +84,11 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
 		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 		long[] groupIdsArray = new long[0];
 		try {
-			List<Long> groupIdsList = groupDao.findAllIds();
-			groupIdsArray = new long[groupIdsList.size()];
-			for (int i = 0; i < groupIdsList.size(); i++) {
-				groupIdsArray[i] = groupIdsList.get(i).longValue();
+			List<Group> groupsList = groupDao.findByWhere("_entity.type = " + Integer.toString(Group.TYPE_DEFAULT),
+					null, null);
+			groupIdsArray = new long[groupsList.size()];
+			for (int i = 0; i < groupsList.size(); i++) {
+				groupIdsArray[i] = groupsList.get(i).getId();
 			}
 		} catch (Exception e) {
 			log.error("Some errors occurred", e);
@@ -109,31 +112,46 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
 	@Override
 	public void grantGroup(String sid, long folderId, long groupId, int permissions, boolean recursive)
 			throws Exception {
-		validateSession(sid);
+		User sessionUser = validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		// Check if the session user has the Security Permission of this folder
+		if (!folderDao.isPermissionEnabled(Permission.SECURITY, folderId, sessionUser.getId()))
+			throw new Exception("Security Rights not granted to the user on folder id " + folderId);
 		try {
 			Folder folder = folderDao.findById(folderId);
 			folderDao.initialize(folder);
-			FolderGroup mg = new FolderGroup();
-			mg.setGroupId(groupId);
-			mg.setPermissions(permissions);
-			folder.addFolderGroup(mg);
-			folderDao.store(folder);
+			addFolderGroup(folder, groupId, permissions);
 
 			if (recursive) {
-				// recursively apply permissions to all subfolders
-				Collection<Folder> subfolders = folderDao.findByParentId(folderId);
-				for (Folder subfolder : subfolders) {
-					folderDao.initialize(subfolder);
-					subfolder.addFolderGroup(mg);
-					folderDao.store(subfolder);
-				}
+				folderDao.applyRithtToTree(folder.getId(), null);
 			}
 		} catch (Exception e) {
 			log.error("Some errors occurred", e);
 			throw new Exception("error", e);
 		}
+	}
+
+	private FolderGroup addFolderGroup(Folder folder, long groupId, int permissions) {
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+
+		Set<FolderGroup> groups = new HashSet<FolderGroup>();
+		for (FolderGroup folderGroup : folder.getFolderGroups()) {
+			if (folderGroup.getGroupId() != groupId)
+				groups.add(folderGroup);
+		}
+		folder.setSecurityRef(null);
+		folder.getFolderGroups().clear();
+		folderDao.store(folder);
+
+		FolderGroup mg = new FolderGroup();
+		mg.setGroupId(groupId);
+		mg.setPermissions(permissions);
+		if (mg.getRead() != 0)
+			groups.add(mg);
+		folder.setFolderGroups(groups);
+		folderDao.store(folder);
+		return mg;
 	}
 
 	@Override

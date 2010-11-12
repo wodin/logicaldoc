@@ -52,7 +52,8 @@ public interface AuthService {
 	 * @param sid Session identifier
 	 * @param folderId Folder id
 	 * @param userId User Id
-	 * @param permissions the permission integer representation
+	 * @param permissions the permission integer representation. If '0', the
+	 *        user will be not granted to access the folder.
 	 * @param recursive recursion option. If true, the grant operation is
 	 *        applied also to the subfolders.
 	 * @throws Exception
@@ -65,7 +66,8 @@ public interface AuthService {
 	 * @param sid Session identifier
 	 * @param folderId Folder id
 	 * @param groupId Group Id
-	 * @param permissions the permission integer representation
+	 * @param permissions the permission integer representation. If '0', the
+	 *        group will be not granted to access the folder.
 	 * @param recursive recursion option. If true, the grant operation is
 	 *        applied also to the subfolders.
 	 * @throws Exception

@@ -26,23 +26,21 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	@Override
 	public WSFolder create(String sid, WSFolder folder) throws Exception {
 		User user = validateSession(sid);
+
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Folder parentFolder = folderDao.findById(folder.getParentId());
+		if (parentFolder == null)
+			throw new Exception("A parent folder with id " + folder.getParentId() + " was not found.");
 		checkPermission(Permission.ADD, user, folder.getParentId());
 
-		Folder f = new Folder();
-		f.setName(folder.getName());
-		f.setDescription(folder.getDescription());
-		f.setParentId(folder.getParentId());
-		f.setFolderGroup(parentFolder.getFolderGroupIds());
-
-		boolean stored = folderDao.store(f);
 		// Add a folder history entry
 		History transaction = new History();
 		transaction.setUser(user);
-		transaction.setEvent(History.EVENT_FOLDER_CREATED);
 		transaction.setSessionId(sid);
-		stored = folderDao.store(f, transaction);
+
+		Folder f = folderDao.create(parentFolder, folder.getName(), transaction);
+		f.setDescription(folder.getDescription());
+		boolean stored = folderDao.store(f);
 
 		if (!stored) {
 			log.error("Folder " + f.getName() + " not created");
@@ -138,8 +136,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			throw new SecurityException("No rights to delete folder");
 
 		// Check addChild permission on destParentFolder
-		boolean addchildEnabled = folderDao.isPermissionEnabled(Permission.ADD, destParentFolder.getId(),
-				user.getId());
+		boolean addchildEnabled = folderDao.isPermissionEnabled(Permission.ADD, destParentFolder.getId(), user.getId());
 		if (!addchildEnabled)
 			throw new SecurityException("AddChild Rights not granted to this user");
 

@@ -36,6 +36,8 @@ public enum Permission {
 
 	private Permission(String name) {
 		this.name = name;
+		if ("read".equals(name))
+			mask = Integer.parseInt("0000000000001", 2);
 		if ("write".equals(name))
 			mask = Integer.parseInt("0000000000010", 2);
 		if ("add".equals(name))
