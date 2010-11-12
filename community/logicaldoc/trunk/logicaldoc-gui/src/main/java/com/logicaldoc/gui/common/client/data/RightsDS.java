@@ -13,7 +13,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class RightsDS extends DataSource {
-	public RightsDS(long folderId) {
+	public RightsDS(long id, boolean folder) {
 		setTitleField("entity");
 		setRecordXPath("/list/right");
 		DataSourceTextField entity = new DataSourceTextField("entity");
@@ -37,7 +37,7 @@ public class RightsDS extends DataSource {
 		setFields(entityId, entity, read, write, delete, add, workflow, sign, _import, export, immutable, rename,
 				security, archive, type, download);
 		setClientOnly(true);
-		setDataURL("data/rights.xml?sid=" + Session.get().getSid() + "&folderId=" + folderId + "&locale="
-				+ I18N.getLocale());
+		setDataURL("data/rights.xml?sid=" + Session.get().getSid() + "&" + (folder ? "folderId" : "menuId") + "=" + id
+				+ "&locale=" + I18N.getLocale());
 	}
 }

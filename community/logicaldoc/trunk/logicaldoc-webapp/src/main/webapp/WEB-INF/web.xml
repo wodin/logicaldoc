@@ -186,6 +186,11 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>MenuesData</servlet-name>
+		<servlet-class>com.logicaldoc.web.data.MenuesDataServlet</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>DocumentsData</servlet-name>
 		<servlet-class>com.logicaldoc.web.data.DocumentsDataServlet</servlet-class>
 	</servlet>
@@ -402,6 +407,11 @@
 	<servlet-mapping>
 		<servlet-name>FoldersData</servlet-name>
 		<url-pattern>/data/folders.xml</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>MenuesData</servlet-name>
+		<url-pattern>/data/menues.xml</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

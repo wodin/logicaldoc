@@ -2,7 +2,9 @@ package com.logicaldoc.web.service;
 
 import java.io.File;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.FileUtils;
@@ -16,6 +18,8 @@ import com.logicaldoc.core.communication.dao.SystemMessageDAO;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Group;
+import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.core.security.SecurityManager;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
@@ -28,6 +32,8 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
+import com.logicaldoc.gui.common.client.beans.GUIMenu;
+import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -482,4 +488,81 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			log.error("Exception writing Security settings data: " + e.getMessage(), e);
 		}
 	}
+
+	private boolean saveRules(String sid, Menu menu, long userId, GUIRight[] rights) throws Exception {
+		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+
+		boolean sqlerrors = false;
+		try {
+			menu.setSecurityRef(null);
+			menu.getMenuGroups().clear();
+			mdao.store(menu);
+			sqlerrors = false;
+			Set<MenuGroup> grps = new HashSet<MenuGroup>();
+			for (GUIRight right : rights) {
+				MenuGroup fg = null;
+				if (right.isRead()) {
+					fg = new MenuGroup();
+					fg.setGroupId(right.getEntityId());
+				}
+				grps.add(fg);
+			}
+
+			menu.setMenuGroups(grps);
+			boolean stored = mdao.store(menu);
+			if (!stored) {
+				sqlerrors = true;
+			}
+
+			mdao.store(menu);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
+		return !sqlerrors;
+	}
+
+	@Override
+	public void applyRights(String sid, GUIMenu menu) throws InvalidSessionException {
+		UserSession session = SessionUtil.validateSession(sid);
+
+		try {
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			saveRules(sid, mdao.findById(menu.getId()), session.getUserId(), menu.getRights());
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
+	}
+
+	@Override
+	public GUIMenu getMenu(String sid, long menuId) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+		try {
+			MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			Menu menu = dao.findById(menuId);
+			if (menu == null)
+				return null;
+
+			GUIMenu f = new GUIMenu();
+			f.setId(menuId);
+
+			int i = 0;
+			GUIRight[] rights = new GUIRight[menu.getMenuGroups().size()];
+			for (MenuGroup fg : menu.getMenuGroups()) {
+				GUIRight right = new GUIRight();
+				right.setEntityId(fg.getGroupId());
+				rights[i] = right;
+				i++;
+			}
+			f.setRights(rights);
+
+			return f;
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+		}
+
+		return null;
+	}
+
 }

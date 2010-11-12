@@ -7,8 +7,10 @@ import java.util.ResourceBundle;
 import org.apache.commons.lang.StringUtils;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
+import com.logicaldoc.gui.common.client.beans.GUIMenu;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -195,5 +197,17 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 	@Override
 	public void kill(String sid) {
 
+	}
+
+	@Override
+	public void applyRights(String sid, GUIMenu menu) throws InvalidSessionException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public GUIMenu getMenu(String sid, long id) throws InvalidSessionException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
+import com.logicaldoc.gui.common.client.beans.GUIMenu;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -57,7 +58,6 @@ public interface SecurityService extends RemoteService {
 	 */
 	public GUIUser saveProfile(String sid, GUIUser user) throws InvalidSessionException;
 
-	
 	/**
 	 * Loads a given user from the database
 	 */
@@ -102,4 +102,14 @@ public interface SecurityService extends RemoteService {
 	 * Kill the session with the given sid.
 	 */
 	public void kill(String sid) throws InvalidSessionException;
+
+	/**
+	 * Applies all security settings to menu
+	 */
+	public void applyRights(String sid, GUIMenu menu) throws InvalidSessionException;
+
+	/**
+	 * Retrieves the specified menu
+	 */
+	public GUIMenu getMenu(String sid, long id) throws InvalidSessionException;
 }
