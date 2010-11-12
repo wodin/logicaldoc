@@ -16,6 +16,7 @@ import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
+import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.menu.Menu;
@@ -70,24 +71,30 @@ public class MainMenu extends ToolStrip {
 		Menu menu = new Menu();
 		menu.setShowShadow(true);
 		menu.setShadowDepth(3);
-
 		MenuItem exitItem = new MenuItem(I18N.message("exit"));
 		exitItem.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				securityService.logout(Session.get().getSid(), new AsyncCallback<Void>() {
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-						SC.warn(caught.getMessage());
-					}
-
+				SC.ask(I18N.message("question"), I18N.message("confirmexit"), new BooleanCallback() {
 					@Override
-					public void onSuccess(Void result) {
-						Session.get().close();
-						String base = GWT.getHostPageBaseURL();
-						Util.redirect(base
-								+ (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/" + GWT.getModuleName()
-										+ ".jsp"));
+					public void execute(Boolean value) {
+						if (value) {
+							securityService.logout(Session.get().getSid(), new AsyncCallback<Void>() {
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+									SC.warn(caught.getMessage());
+								}
+
+								@Override
+								public void onSuccess(Void result) {
+									Session.get().close();
+									String base = GWT.getHostPageBaseURL();
+									Util.redirect(base
+											+ (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/"
+													+ GWT.getModuleName() + ".jsp"));
+								}
+							});
+						}
 					}
 				});
 			}
@@ -175,8 +182,7 @@ public class MainMenu extends ToolStrip {
 				cp.show();
 			}
 		});
-		changePswd
-				.setEnabled(!(Session.get().isDemo() && Session.get().getUser().getId() == 1));
+		changePswd.setEnabled(!(Session.get().isDemo() && Session.get().getUser().getId() == 1));
 
 		menu.setItems(profile, changePswd);
 
@@ -195,7 +201,7 @@ public class MainMenu extends ToolStrip {
 		documentation.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				Window.open(Session.get().getInfo().getHelp(), "_blank",
+				Window.open(Session.get().getInfo().getHelp()+"?lang="+I18N.getLocale(), "_blank",
 						"location=no,status=no,toolbar=no,menubar=no,resizable=yes");
 			}
 		});
