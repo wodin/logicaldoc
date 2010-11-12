@@ -14,4 +14,10 @@
 	<extension plugin-id="logicaldoc-core" point-id="Feature" id="f22">
 	    <parameter id="name" value="Feature_22" />
     </extension>
+	<extension plugin-id="logicaldoc-core" point-id="Feature" id="f24">
+	    <parameter id="name" value="Feature_24" />
+    </extension>
+	<extension plugin-id="logicaldoc-core" point-id="Feature" id="f25">
+	    <parameter id="name" value="Feature_25" />
+    </extension>
 </plugin>

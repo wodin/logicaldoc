@@ -62,7 +62,7 @@ public class AuthServiceImplTest extends AbstractWebServiceTestCase {
 	public void testGetGroups() throws Exception {
 		long[] groupIds = new long[0];
 		groupIds = authServiceImpl.getGroups("");
-		Assert.assertEquals(9, groupIds.length);
+		Assert.assertEquals(10, groupIds.length);
 
 		Group group = groupDao.findById(10);
 		Assert.assertNotNull(group);
@@ -71,7 +71,7 @@ public class AuthServiceImplTest extends AbstractWebServiceTestCase {
 		groupDao.store(group);
 
 		groupIds = authServiceImpl.getGroups("");
-		Assert.assertEquals(8, groupIds.length);
+		Assert.assertEquals(9, groupIds.length);
 	}
 
 	@Test

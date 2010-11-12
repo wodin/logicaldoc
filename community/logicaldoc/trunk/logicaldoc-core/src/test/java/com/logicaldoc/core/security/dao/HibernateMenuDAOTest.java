@@ -49,7 +49,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTCase {
 
 		// Load an existing menu and modify it
 		menu = dao.findById(9);
-		Assert.assertEquals("admin.security", menu.getText());
+		Assert.assertEquals("security", menu.getText());
 
 		menu = dao.findById(23);
 		dao.store(menu);
@@ -94,7 +94,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTCase {
 		Menu menu = dao.findById(2);
 		Assert.assertNotNull(menu);
 		Assert.assertEquals(2, menu.getId());
-		Assert.assertEquals("menu.admin", menu.getText());
+		Assert.assertEquals("administration", menu.getText());
 		Assert.assertEquals("menu.png", menu.getIcon());
 		Assert.assertEquals(1, menu.getMenuGroups().size());
 
@@ -276,7 +276,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindByTextAndParentId() {
-		List<Menu> menus = dao.findByTextAndParentId("%menu.admin%", 2);
+		List<Menu> menus = dao.findByTextAndParentId("%admin%", 2);
 		Assert.assertEquals(3, menus.size());
 		Assert.assertTrue(menus.contains(dao.findById(99)));
 		Assert.assertTrue(menus.contains(dao.findById(100)));
@@ -304,8 +304,8 @@ public class HibernateMenuDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testComputePathExtended() {
-		Assert.assertEquals("/menu.admin/test", dao.computePathExtended(1200));
-		Assert.assertEquals("/menu.admin/menu.adminxxx/text/menu.admin", dao.computePathExtended(103));
+		Assert.assertEquals("/administration/test", dao.computePathExtended(1200));
+		Assert.assertEquals("/administration/menu.adminxxx/text/menu.admin", dao.computePathExtended(103));
 	}
 
 	@Test
