@@ -15,11 +15,13 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
  * Check if the user session was expired or active. In addition a binding
- * between UserSession and ServletSession is maintained as internal state.
+ * between UserSession and ServletSession is maintained as internal state. If
+ * the kill parameter is fount in the request, the given session is killed.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
@@ -30,7 +32,17 @@ public class SessionFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain next) throws IOException,
 			ServletException {
 		String sid = request.getParameter("sid");
-		if (StringUtils.isNotEmpty(sid)) {
+		String kill = request.getParameter("kill");
+		HttpSession servletSession = ((HttpServletRequest) request).getSession(false);
+
+		if (StringUtils.isNotEmpty(kill)) {
+			try {
+				SessionManager.getInstance().kill(kill);
+				servletSessionMapping.remove(sid);
+			} catch (Throwable e) {
+				
+			}
+		} else if (StringUtils.isNotEmpty(sid)) {
 			try {
 				SessionUtil.validateSession(sid);
 
@@ -38,7 +50,6 @@ public class SessionFilter implements Filter {
 				 * If a servlet session exists, bind it to the LogicalDOC user
 				 * session
 				 */
-				HttpSession servletSession = ((HttpServletRequest) request).getSession(false);
 				if (servletSession != null) {
 					servletSessionMapping.put(sid, servletSession);
 				}

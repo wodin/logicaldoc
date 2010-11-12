@@ -125,7 +125,6 @@ public class Util {
 		return str;
 	}-*/;
 
-
 	/**
 	 * Format file size in KB.
 	 * 
@@ -140,12 +139,12 @@ public class Util {
 			str = "1 KB";
 		} else {
 			NumberFormat fmt = NumberFormat.getFormat("#,###");
-			str = fmt.format(Math.ceil(size/1024)) + " KB";
-			str = str.replace(',', I18N.groupingSepator());	
+			str = fmt.format(Math.ceil(size / 1024)) + " KB";
+			str = str.replace(',', I18N.groupingSepator());
 		}
 		return str;
 	}
-	
+
 	/**
 	 * Format file size in Windows 7 Style.
 	 * 
@@ -187,7 +186,19 @@ public class Util {
 		}
 		return str;
 	}
-	
+
+	/**
+	 * Format file size in bytes
+	 * 
+	 * @param size The file size in bytes.
+	 */
+	public static String formatSizeBytes(double size) {
+		String str;
+		NumberFormat fmt = NumberFormat.getFormat("#,###");
+		str = fmt.format(size) + " bytes";
+		str = str.replace(',', I18N.groupingSepator());
+		return str;
+	}
 
 	/**
 	 * Format number percentage.

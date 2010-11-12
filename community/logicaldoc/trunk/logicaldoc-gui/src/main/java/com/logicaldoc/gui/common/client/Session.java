@@ -16,6 +16,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.services.InfoService;
 import com.logicaldoc.gui.common.client.services.InfoServiceAsync;
+import com.logicaldoc.gui.common.client.util.WindowUtils;
 
 /**
  * Represents a client work session
@@ -41,17 +42,17 @@ public class Session {
 	private Set<FolderObserver> folderObservers = new HashSet<FolderObserver>();
 
 	private Timer timer;
-	
+
 	public static Session get() {
 		if (instance == null)
 			instance = new Session();
 		return instance;
 	}
 
-	public boolean isDemo(){
+	public boolean isDemo() {
 		return "demo".equals(info.getRunLevel());
 	}
-	
+
 	public String getSid() {
 		if (session != null)
 			return session.getSid();
@@ -74,6 +75,7 @@ public class Session {
 		try {
 			this.session = session;
 			I18N.init(session);
+			WindowUtils.setSid(session.getSid(), I18N.message("leavingpage"));
 			Menu.init(session.getUser());
 			if (session.isLoggedIn()) {
 				for (SessionObserver listener : sessionObservers) {

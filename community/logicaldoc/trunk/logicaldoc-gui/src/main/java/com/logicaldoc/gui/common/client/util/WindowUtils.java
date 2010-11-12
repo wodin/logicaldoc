@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.util;
 
-import com.google.gwt.user.client.Window;
 
 /**
  * Utilities for accessing the javascript Window object
@@ -61,8 +60,20 @@ public class WindowUtils {
 
 	public static native void setTitle(String title)/*-{
 		$doc.title=title;
+		//Change also the main frame window if any
+		if($wnd.parent)
+		    $wnd.parent.document.title=title;
 	}-*/;
 
+	public static native void setSid(String sid, String exitMessage)/*-{
+	  $wnd.sessionId=sid;
+	  $wnd.exitMessage=exitMessage;
+	  if($wnd.parent){
+	    $wnd.parent.sessionId=sid;
+	    $wnd.parent.exitMessage=exitMessage;
+	  }
+    }-*/;
+	
 	public static native void openUrl(String url)/*-{
 		$wnd.location=url;
 		//Window.open(url, "", "width=1, height=1");

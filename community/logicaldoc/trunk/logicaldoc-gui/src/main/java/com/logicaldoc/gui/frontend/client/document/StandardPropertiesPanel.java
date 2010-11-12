@@ -94,9 +94,11 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		StaticTextItem creator = ItemFactory.newStaticTextItem("creator", "creator", document.getCreator());
 
-		StaticTextItem published = ItemFactory.newStaticTextItem("date", "publishedon", formatter.format((Date) document.getDate()));
+		StaticTextItem published = ItemFactory.newStaticTextItem("date", "publishedon",
+				formatter.format((Date) document.getDate()));
 
-		StaticTextItem size = ItemFactory.newStaticTextItem("size", "size", Util.formatSizeW7(document.getFileSize()));
+		StaticTextItem size = ItemFactory.newStaticTextItem("size", "size", Util.formatSizeW7(document.getFileSize())
+				+ " (" + Util.formatSizeBytes(document.getFileSize()) + ")");
 
 		StaticTextItem publisher = ItemFactory.newStaticTextItem("publisher", "publisher", document.getPublisher());
 
