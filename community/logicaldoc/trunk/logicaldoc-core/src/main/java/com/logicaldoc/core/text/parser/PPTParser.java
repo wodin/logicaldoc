@@ -2,7 +2,6 @@ package com.logicaldoc.core.text.parser;
 
 import java.io.InputStream;
 import java.io.StringReader;
-import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

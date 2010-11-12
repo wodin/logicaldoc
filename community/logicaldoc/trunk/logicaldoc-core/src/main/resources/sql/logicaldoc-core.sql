@@ -70,7 +70,7 @@ alter table ld_version add constraint FK_VERSION_USER foreign key (ld_userid) re
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
-values     (2,CURRENT_TIMESTAMP,0,'menu.admin',2,'menu.png',1);
+values     (2,CURRENT_TIMESTAMP,0,'administration',2,'menu.png',1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
