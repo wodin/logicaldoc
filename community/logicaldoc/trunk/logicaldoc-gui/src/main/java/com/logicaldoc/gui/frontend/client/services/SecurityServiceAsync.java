@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
+import com.logicaldoc.gui.common.client.beans.GUIMenu;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -36,4 +37,8 @@ public interface SecurityServiceAsync {
 	void kill(String sid, AsyncCallback<Void> callback);
 
 	void saveProfile(String sid, GUIUser user, AsyncCallback<GUIUser> callback);
+
+	void applyRights(String sid, GUIMenu menu, AsyncCallback<Void> callback);
+
+	void getMenu(String sid, long id, AsyncCallback<GUIMenu> callback);
 }

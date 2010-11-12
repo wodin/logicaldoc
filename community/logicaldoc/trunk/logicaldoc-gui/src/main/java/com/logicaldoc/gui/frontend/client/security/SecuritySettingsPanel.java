@@ -12,7 +12,6 @@ import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
@@ -61,12 +60,12 @@ public class SecuritySettingsPanel extends VLayout {
 		setMembersMargin(10);
 		setMargin(30);
 
-		tabs.setWidth(400);
-		tabs.setHeight(250);
+		tabs.setWidth(510);
+		tabs.setHeight(350);
 
 		Tab menues = new Tab();
 		menues.setTitle(I18N.message("menues"));
-		menues.setPane(new FeatureDisabled());
+		menues.setPane(new MenuesPanel());
 
 		Tab password = new Tab();
 		password.setTitle(I18N.message("password"));

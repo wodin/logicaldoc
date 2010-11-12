@@ -333,7 +333,6 @@
 									<exclude name="*lucene*" />
 									<exclude name="*pdfbox*" />
 									<exclude name="*jempbox*" />
-									<exclude name="*itext*" />
 									<exclude name="*fontbox*" />
 									<exclude name="*bcprov*" />
 									<exclude name="*bcmail*" />

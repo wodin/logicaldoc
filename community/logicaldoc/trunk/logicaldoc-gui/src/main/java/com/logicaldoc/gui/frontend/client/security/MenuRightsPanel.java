@@ -1,19 +1,17 @@
-package com.logicaldoc.gui.frontend.client.folder;
+package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.logicaldoc.gui.common.client.beans.GUIMenu;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.data.RightsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.frontend.client.services.FolderService;
-import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.SecurityService;
+import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.smartgwt.client.types.ListGridEditEvent;
-import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
@@ -36,23 +34,25 @@ import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 /**
- * This panel shows the security policies.
+ * This panel shows the security policies of a menu.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class SecurityPanel extends FolderDetailTab {
+public class MenuRightsPanel extends VLayout {
 
 	private RightsDS dataSource;
 
 	private ListGrid list;
 
-	private FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
+	private SecurityServiceAsync service = (SecurityServiceAsync) GWT.create(SecurityService.class);
 
 	private VLayout container = new VLayout();
 
-	public SecurityPanel(final GUIFolder folder) {
-		super(folder, null);
+	protected GUIMenu menu;
+
+	public MenuRightsPanel(final GUIMenu menu) {
+		this.menu = menu;
 
 		container.setMembersMargin(3);
 		addMember(container);
@@ -64,83 +64,27 @@ public class SecurityPanel extends FolderDetailTab {
 		ListGridField entity = new ListGridField("entity", I18N.message("entity"), 200);
 		entity.setCanEdit(false);
 
-		ListGridField read = new ListGridField("read", I18N.message("read"), 60);
-		read.setType(ListGridFieldType.BOOLEAN);
-		read.setCanEdit(false);
-
-		ListGridField download = new ListGridField("download", I18N.message("download"), 60);
-		download.setType(ListGridFieldType.BOOLEAN);
-		download.setCanEdit(true);
-
-		ListGridField write = new ListGridField("write", I18N.message("write"), 60);
-		write.setType(ListGridFieldType.BOOLEAN);
-		write.setCanEdit(true);
-
-		ListGridField add = new ListGridField("add", I18N.message("addfolder"), 60);
-		add.setType(ListGridFieldType.BOOLEAN);
-		add.setCanEdit(true);
-
-		ListGridField security = new ListGridField("security", I18N.message("security"), 60);
-		security.setType(ListGridFieldType.BOOLEAN);
-		security.setCanEdit(true);
-
-		ListGridField immutable = new ListGridField("immutable", I18N.message("immutable"), 60);
-		immutable.setType(ListGridFieldType.BOOLEAN);
-		immutable.setCanEdit(true);
-
-		ListGridField delete = new ListGridField("delete", I18N.message("ddelete"), 60);
-		delete.setType(ListGridFieldType.BOOLEAN);
-		delete.setCanEdit(true);
-
-		ListGridField rename = new ListGridField("rename", I18N.message("rename"), 60);
-		rename.setType(ListGridFieldType.BOOLEAN);
-		rename.setCanEdit(true);
-
-		ListGridField _import = new ListGridField("import", I18N.message("iimport"), 60);
-		_import.setType(ListGridFieldType.BOOLEAN);
-		_import.setCanEdit(true);
-
-		ListGridField export = new ListGridField("export", I18N.message("eexport"), 60);
-		export.setType(ListGridFieldType.BOOLEAN);
-		export.setCanEdit(true);
-
-		ListGridField sign = new ListGridField("sign", I18N.message("sign"), 60);
-		sign.setType(ListGridFieldType.BOOLEAN);
-		sign.setCanEdit(true);
-
-		ListGridField archive = new ListGridField("archive", I18N.message("archive"), 60);
-		archive.setType(ListGridFieldType.BOOLEAN);
-		archive.setCanEdit(true);
-
-		ListGridField workflow = new ListGridField("workflow", I18N.message("workflow"), 60);
-		workflow.setType(ListGridFieldType.BOOLEAN);
-		workflow.setCanEdit(true);
-
 		list = new ListGrid();
 		list.setCanFreezeFields(true);
 		list.setSelectionType(SelectionStyle.MULTIPLE);
 		list.setAutoFetchData(true);
-		dataSource = new RightsDS(folder.getId(), true);
+		dataSource = new RightsDS(menu.getId(), false);
 		list.setDataSource(dataSource);
-		list.setFields(entityId, entity, read, download, write, add, security, immutable, delete, rename, _import,
-				export, sign, archive, workflow);
+		list.setFields(entityId, entity);
 		container.addMember(list);
-
-		if (folder != null && folder.hasPermission(Constants.PERMISSION_SECURITY)) {
-			list.setCanEdit(true);
-			list.setEditEvent(ListGridEditEvent.CLICK);
-			list.setModalEditing(true);
-			list.addCellContextClickHandler(new CellContextClickHandler() {
-				@Override
-				public void onCellContextClick(CellContextClickEvent event) {
-					if (event.getColNum() == 0) {
-						Menu contextMenu = setupContextMenu();
-						contextMenu.showContextMenu();
-					}
-					event.cancel();
+		list.setCanEdit(true);
+		list.setEditEvent(ListGridEditEvent.CLICK);
+		list.setModalEditing(true);
+		list.addCellContextClickHandler(new CellContextClickHandler() {
+			@Override
+			public void onCellContextClick(CellContextClickEvent event) {
+				if (event.getColNum() == 0) {
+					Menu contextMenu = setupContextMenu();
+					contextMenu.showContextMenu();
 				}
-			});
-		}
+				event.cancel();
+			}
+		});
 
 		HLayout buttons = new HLayout();
 		buttons.setMembersMargin(4);
@@ -149,26 +93,15 @@ public class SecurityPanel extends FolderDetailTab {
 		container.addMember(buttons);
 
 		Button applyRights = new Button(I18N.message("applyrights"));
-		applyRights.setWidth(120);
-		buttons.addMember(applyRights);
-
-		Button applyRightsSubfolders = new Button(I18N.message("applytosubfolders"));
-		applyRightsSubfolders.setWidth(150);
-		buttons.addMember(applyRightsSubfolders);
-
+		applyRights.setAutoFit(true);
 		applyRights.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				onSave(false);
-			}
-		});
 
-		applyRightsSubfolders.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				onSave(true);
+				onApply();
 			}
 		});
+		buttons.addMember(applyRights);
 
 		// Prepare the combo and button for adding a new Group
 		final DynamicForm groupForm = new DynamicForm();
@@ -239,7 +172,7 @@ public class SecurityPanel extends FolderDetailTab {
 	}
 
 	/**
-	 * Create an array of all right defined
+	 * Create an array of all rights defined
 	 */
 	public GUIRight[] getRights() {
 		ListGridRecord[] records = list.getRecords();
@@ -251,18 +184,6 @@ public class SecurityPanel extends FolderDetailTab {
 
 			right.setName(record.getAttributeAsString("entity"));
 			right.setEntityId(Long.parseLong(record.getAttribute("entityId")));
-			right.setWrite(record.getAttributeAsBoolean("write"));
-			right.setDelete(record.getAttributeAsBoolean("delete"));
-			right.setAdd(record.getAttributeAsBoolean("add"));
-			right.setWorkflow(record.getAttributeAsBoolean("workflow"));
-			right.setSign(record.getAttributeAsBoolean("sign"));
-			right.setImport(record.getAttributeAsBoolean("import"));
-			right.setExport(record.getAttributeAsBoolean("export"));
-			right.setImmutable(record.getAttributeAsBoolean("immutable"));
-			right.setRename(record.getAttributeAsBoolean("rename"));
-			right.setSecurity(record.getAttributeAsBoolean("security"));
-			right.setArchive(record.getAttributeAsBoolean("archive"));
-			right.setDownload(record.getAttributeAsBoolean("download"));
 
 			tmp[i] = right;
 			i++;
@@ -307,12 +228,11 @@ public class SecurityPanel extends FolderDetailTab {
 		return contextMenu;
 	}
 
-	public void onSave(boolean recursive) {
+	public void onApply() {
 		// Apply all rights
-		folder.setRights(this.getRights());
-		final boolean onSubFolders = recursive;
+		menu.setRights(this.getRights());
 
-		folderService.applyRights(Session.get().getSid(), folder, recursive, new AsyncCallback<Void>() {
+		service.applyRights(Session.get().getSid(), menu, new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -321,10 +241,7 @@ public class SecurityPanel extends FolderDetailTab {
 
 			@Override
 			public void onSuccess(Void result) {
-				if (!onSubFolders)
-					Log.info(I18N.message("appliedrights"), null);
-				else
-					Log.info(I18N.message("appliedrightsonsubfolders"), null);
+				Log.info(I18N.message("appliedrightsmenu"), null);
 			}
 		});
 
