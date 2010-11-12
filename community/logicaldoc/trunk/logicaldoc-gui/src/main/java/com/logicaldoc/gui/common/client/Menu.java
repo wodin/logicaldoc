@@ -27,10 +27,10 @@ public class Menu {
 
 	public static final int METADATA = 25;
 
-	public static final int SETTINGS = 24;
+	public static final int SETTINGS = 7;
 
 	public static final int WORKFLOW = 23;
-
+	
 	private static Set<Long> menues = new HashSet<Long>();
 
 	static public void init(GUIUser user) {

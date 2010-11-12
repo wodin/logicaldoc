@@ -106,7 +106,7 @@ values     (23,CURRENT_TIMESTAMP,0,'workflow',2,'menu.png',1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
-values     (24,CURRENT_TIMESTAMP,0,'settings',2,'menu.png',1);
+values     (7,CURRENT_TIMESTAMP,0,'settings',2,'menu.png',1);
 
 insert into ld_group
 values     (1,CURRENT_TIMESTAMP,0,'admin','Group of admins',0);
