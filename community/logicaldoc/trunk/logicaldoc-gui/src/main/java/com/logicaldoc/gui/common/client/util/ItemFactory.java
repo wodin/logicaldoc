@@ -112,7 +112,7 @@ public class ItemFactory {
 		else
 			sizeOperator.setShowTitle(false);
 		sizeOperator.setDefaultValue("nolimits");
-		sizeOperator.setWidth(80);
+		sizeOperator.setWidth(85);
 		return sizeOperator;
 	}
 
