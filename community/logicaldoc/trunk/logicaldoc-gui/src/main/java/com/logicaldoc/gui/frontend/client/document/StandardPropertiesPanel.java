@@ -148,6 +148,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		if (Feature.enabled(Feature.TAGS)) {
 			final ComboBoxItem tagItem = new ComboBoxItem("tag");
 			tagItem.setTitle(I18N.message("tag"));
+			tagItem.setHint(I18N.message("pressentertoaddtag"));
 			tagItem.setPickListWidth(250);
 			tagItem.setOptionDataSource(TagsDS.getInstance());
 			tagItem.setDisabled(!update);
