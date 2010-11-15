@@ -180,6 +180,8 @@ public class FoldersNavigator extends TreeGrid {
 									getTree().closeFolder(parent);
 									getTree().remove(node);
 									getTree().openFolder(parent);
+
+									selectFolder(Long.parseLong(node.getAttributeAsString("parent")));
 								}
 							});
 						}
