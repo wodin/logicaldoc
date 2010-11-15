@@ -61,6 +61,8 @@ public class Feature {
 	
 	public static final int SHOW_LICENSEE = 40;
 	
+	public static final int SHOW_USERS_WORNING = 41;
+	
 	public static final int SHOW_DISABLED = 50;
 	
 	public static final int PREVIEW = 51;
