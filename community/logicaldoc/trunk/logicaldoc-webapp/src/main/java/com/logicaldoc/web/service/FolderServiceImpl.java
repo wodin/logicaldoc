@@ -71,7 +71,16 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		SessionUtil.validateSession(sid);
 
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		dao.delete(folderId);
+		try {
+			// Add a folder history entry
+			History transaction = new History();
+			transaction.setUser(SessionUtil.getSessionUser(sid));
+			transaction.setEvent(History.EVENT_FOLDER_DELETED);
+			transaction.setSessionId(sid);
+			dao.deleteTree(folderId, transaction);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+		}
 	}
 
 	static GUIFolder getFolder(String sid, long folderId) throws InvalidSessionException {
