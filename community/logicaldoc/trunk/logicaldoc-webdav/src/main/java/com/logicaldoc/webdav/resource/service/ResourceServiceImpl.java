@@ -437,8 +437,9 @@ public class ResourceServiceImpl implements ResourceService {
 			if (!addchildEnabled)
 				throw new DavException(DavServletResponse.SC_FORBIDDEN, "AddChild Rights not granted to this user");
 
-			// check the delete on the source to move
-			if (!source.isDeleteEnabled())
+			// check the delete on the parent of the source to move
+			Resource sourceParent = getParentResource(source);
+			if (!sourceParent.isDeleteEnabled())
 				throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
 
 			User user = (User) session.getObject("user");

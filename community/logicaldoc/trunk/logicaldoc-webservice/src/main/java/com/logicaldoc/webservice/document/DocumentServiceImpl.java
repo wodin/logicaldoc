@@ -72,11 +72,14 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		User user = validateSession(sid);
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document document = ddao.findById(docId);
+		if (document.getImmutable() == 1)
+			throw new Exception("The document is immutable");
 		Folder folder = document.getFolder();
 
 		checkWriteEnable(user, folder.getId());
 
-		if (document.getStatus() == Document.DOC_CHECKED_OUT) {
+		if (document.getStatus() == Document.DOC_CHECKED_OUT
+				&& (user.getId() == document.getLockUserId() || user.isInGroup("admin"))) {
 			try {
 				// Get file to upload inputStream
 				InputStream stream = content.getInputStream();
@@ -110,6 +113,8 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
+		if (doc.getImmutable() == 1)
+			throw new Exception("The document is immutable");
 
 		checkWriteEnable(user, doc.getFolder().getId());
 
@@ -142,10 +147,13 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 	}
 
 	private void checkLocked(User user, Document doc) throws Exception {
-		if (doc.getImmutable() == 1 && !user.isInGroup("admin"))
+		if (user.isInGroup("admin"))
+			return;
+
+		if (doc.getImmutable() == 1)
 			throw new Exception("the document is immutable");
-		if (doc.getStatus() != Document.DOC_UNLOCKED
-				&& (user.getId() != doc.getLockUserId() || !user.isInGroup("admin")))
+
+		if (doc.getStatus() != Document.DOC_UNLOCKED && user.getId() != doc.getLockUserId())
 			throw new Exception("the document is locked");
 	}
 
@@ -222,6 +230,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
+		// TODO check delete permission in old folder???
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Folder folder = dao.findById(folderId);
 		checkLocked(user, doc);
@@ -240,6 +249,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void rename(String sid, long docId, String name) throws Exception {
+		// TODO check rename permission in folder???
 		WSDocument wsDoc = getDocument(sid, docId);
 		wsDoc.setTitle(name);
 		updateDocument(sid, wsDoc);
@@ -248,6 +258,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 	@Override
 	public void restore(String sid, long docId) throws Exception {
 		validateSession(sid);
+		// TODO Check any permission???
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		docDao.restore(docId);
 	}

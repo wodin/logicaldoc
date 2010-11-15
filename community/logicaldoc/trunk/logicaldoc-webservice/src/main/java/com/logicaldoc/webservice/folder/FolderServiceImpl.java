@@ -135,10 +135,10 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		if (!sourceParentDeleteEnabled)
 			throw new SecurityException("No rights to delete folder");
 
-		// Check addChild permission on destParentFolder
-		boolean addchildEnabled = folderDao.isPermissionEnabled(Permission.ADD, destParentFolder.getId(), user.getId());
-		if (!addchildEnabled)
-			throw new SecurityException("AddChild Rights not granted to this user");
+		// Check add permission on destParentFolder
+		boolean addEnabled = folderDao.isPermissionEnabled(Permission.ADD, destParentFolder.getId(), user.getId());
+		if (!addEnabled)
+			throw new SecurityException("Add Rights not granted to this user");
 
 		// Add a folder history entry
 		History transaction = new History();

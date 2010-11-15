@@ -101,12 +101,9 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
 	@Override
 	public void grantUser(String sid, long folderId, long userId, int permissions, boolean recursive) throws Exception {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		try {
-			User user = userDao.findById(userId);
-			grantGroup(sid, folderId, user.getUserGroup().getId(), permissions, recursive);
-		} catch (Exception e) {
-			throw new Exception("error", e);
-		}
+
+		User user = userDao.findById(userId);
+		grantGroup(sid, folderId, user.getUserGroup().getId(), permissions, recursive);
 	}
 
 	@Override

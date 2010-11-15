@@ -23,7 +23,7 @@ import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.webservice.AbstractService;
-import com.logicaldoc.webservice.Attribute;
+import com.logicaldoc.webservice.WSAttribute;
 
 /**
  * Web Service Document. Useful class to create reporitory Documents.
@@ -132,7 +132,7 @@ public class WSDocument {
 
 	private Long deleteUserId;
 
-	private Attribute[] extendedAttributes;
+	private WSAttribute[] extendedAttributes = new WSAttribute[0];
 
 	private String language;
 
@@ -154,72 +154,96 @@ public class WSDocument {
 	private long size;
 
 	private String comment;
-	
+
 	public static WSDocument fromDocument(AbstractDocument document) {
 		WSDocument wsDoc = new WSDocument();
 
-		// Populate extended attributes
-		Attribute[] extendedAttributes = new Attribute[0];
-		if (document.getAttributes() != null && document.getAttributes().size() > 0) {
-			extendedAttributes = new Attribute[document.getAttributeNames().size()];
-			int i = 0;
-			for (String name : document.getAttributeNames()) {
-				extendedAttributes[i++] = new Attribute(name, document.getExtendedAttribute(name));
-			}
-		}
+		try {
+			// Populate extended attributes
+			WSAttribute[] attributes = new WSAttribute[0];
+			if (document.getAttributes() != null && document.getAttributes().size() > 0) {
+				attributes = new WSAttribute[document.getAttributeNames().size()];
+				int i = 0;
+				for (String name : document.getAttributeNames()) {
+					ExtendedAttribute attr = document.getExtendedAttribute(name);
+					WSAttribute attribute = new WSAttribute();
+					attribute.setName(name);
+					attribute.setMandatory(attr.getMandatory());
+					attribute.setPosition(attr.getPosition());
+					attribute.setType(attr.getType());
+					attribute.setValue(attr.getValue());
+					// if (attr.getType() == WSAttribute.TYPE_STRING) {
+					// attribute.setStringValue(attr.getStringValue());
+					// } else if (attr.getType() == WSAttribute.TYPE_INT) {
+					// attribute.setIntValue(attr.getIntValue());
+					// } else if (attr.getType() == WSAttribute.TYPE_DOUBLE) {
+					// attribute.setDoubleValue(attr.getDoubleValue());
+					// } else if (attr.getType() == WSAttribute.TYPE_DATE) {
+					// System.out.println("attr name: " + name);
+					// String dateString =
+					// AbstractService.convertDateToString(attr.getDateValue());
+					// attribute.setDateValue(dateString);
+					// }
 
-		String[] tags = new String[0];
-		if (document.getTags() != null && document.getTags().size() > 0) {
-			tags = new String[document.getTags().size()];
-			List<String> docTags = new ArrayList<String>(document.getTags());
-			if (docTags != null && docTags.size() > 0) {
-				for (int j = 0; j < docTags.size(); j++) {
-					tags[j] = docTags.get(j);
+					attributes[i++] = attribute;
 				}
 			}
-		}
 
-		wsDoc.setId(document.getId());
-		wsDoc.setTitle(document.getTitle());
-		wsDoc.setSource(document.getSource());
-		wsDoc.setSourceAuthor(document.getSourceAuthor());
-		wsDoc.setSourceType(document.getSourceType());
-		wsDoc.setCoverage(document.getCoverage());
-		wsDoc.setLanguage(document.getLanguage());
-		wsDoc.setTags(tags);
-		wsDoc.setSourceId(document.getSourceId());
-		wsDoc.setObject(document.getObject());
-		wsDoc.setRecipient(document.getRecipient());
-		if (document.getTemplate() != null)
-			wsDoc.setTemplateId(document.getTemplate().getId());
-		wsDoc.setExtendedAttributes(extendedAttributes);
-		String sourceDate = null;
-		if (document.getSourceDate() != null)
-			sourceDate = AbstractService.convertDateToString(document.getSourceDate());
-		wsDoc.setSourceDate(sourceDate);
-		wsDoc.setImmutable(document.getImmutable());
-		if (document.getFolder() != null)
-			wsDoc.setFolderId(document.getFolder().getId());
-		if (document.getIndexed() != INDEX_INDEXED)
-			wsDoc.setIndexed(document.getIndexed());
-		wsDoc.setVersion(document.getVersion());
-		wsDoc.setFileVersion(document.getFileVersion());
-		String date = null;
-		if (document.getDate() != null)
-			date = AbstractService.convertDateToString(document.getDate());
-		wsDoc.setDate(date);
-		wsDoc.setPublisher(document.getPublisher());
-		wsDoc.setPublisherId(document.getPublisherId());
-		wsDoc.setCreator(document.getCreator());
-		wsDoc.setCreatorId(document.getCreatorId());
-		wsDoc.setStatus(document.getStatus());
-		wsDoc.setType(document.getType());
-		wsDoc.setLockUserId(document.getLockUserId());
-		wsDoc.setFileName(document.getFileName());
-		wsDoc.setFileSize(document.getFileSize());
-		wsDoc.setDigest(document.getDigest());
-		wsDoc.setRecipient(document.getRecipient());
-		wsDoc.setDocRef(document.getDocRef());
+			String[] tags = new String[0];
+			if (document.getTags() != null && document.getTags().size() > 0) {
+				tags = new String[document.getTags().size()];
+				List<String> docTags = new ArrayList<String>(document.getTags());
+				if (docTags != null && docTags.size() > 0) {
+					for (int j = 0; j < docTags.size(); j++) {
+						tags[j] = docTags.get(j);
+					}
+				}
+			}
+
+			wsDoc.setId(document.getId());
+			wsDoc.setTitle(document.getTitle());
+			wsDoc.setSource(document.getSource());
+			wsDoc.setSourceAuthor(document.getSourceAuthor());
+			wsDoc.setSourceType(document.getSourceType());
+			wsDoc.setCoverage(document.getCoverage());
+			wsDoc.setLanguage(document.getLanguage());
+			wsDoc.setTags(tags);
+			wsDoc.setSourceId(document.getSourceId());
+			wsDoc.setObject(document.getObject());
+			wsDoc.setRecipient(document.getRecipient());
+			if (document.getTemplate() != null)
+				wsDoc.setTemplateId(document.getTemplate().getId());
+			wsDoc.setExtendedAttributes(attributes);
+			String sourceDate = null;
+			if (document.getSourceDate() != null)
+				sourceDate = AbstractService.convertDateToString(document.getSourceDate());
+			wsDoc.setSourceDate(sourceDate);
+			wsDoc.setImmutable(document.getImmutable());
+			if (document.getFolder() != null)
+				wsDoc.setFolderId(document.getFolder().getId());
+			if (document.getIndexed() != INDEX_INDEXED)
+				wsDoc.setIndexed(document.getIndexed());
+			wsDoc.setVersion(document.getVersion());
+			wsDoc.setFileVersion(document.getFileVersion());
+			String date = null;
+			if (document.getDate() != null)
+				date = AbstractService.convertDateToString(document.getDate());
+			wsDoc.setDate(date);
+			wsDoc.setPublisher(document.getPublisher());
+			wsDoc.setPublisherId(document.getPublisherId());
+			wsDoc.setCreator(document.getCreator());
+			wsDoc.setCreatorId(document.getCreatorId());
+			wsDoc.setStatus(document.getStatus());
+			wsDoc.setType(document.getType());
+			wsDoc.setLockUserId(document.getLockUserId());
+			wsDoc.setFileName(document.getFileName());
+			wsDoc.setFileSize(document.getFileSize());
+			wsDoc.setDigest(document.getDigest());
+			wsDoc.setRecipient(document.getRecipient());
+			wsDoc.setDocRef(document.getDocRef());
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 
 		return wsDoc;
 	}
@@ -249,7 +273,12 @@ public class WSDocument {
 				if (extendedAttributes != null && extendedAttributes.length > 0) {
 					attributes = new HashMap<String, ExtendedAttribute>();
 					for (int i = 0; i < extendedAttributes.length; i++) {
-						attributes.put(extendedAttributes[i].getName(), extendedAttributes[i].getAttribute());
+						ExtendedAttribute extAttribute = new ExtendedAttribute();
+						extAttribute.setMandatory(extendedAttributes[i].getMandatory());
+						extAttribute.setPosition(extendedAttributes[i].getPosition());
+						extAttribute.setType(extendedAttributes[i].getType());
+						extAttribute.setValue(extendedAttributes[i].getValue());
+						attributes.put(extendedAttributes[i].getName(), extAttribute);
 					}
 				}
 			}
@@ -597,11 +626,11 @@ public class WSDocument {
 		this.creation = creation;
 	}
 
-	public Attribute[] getExtendedAttributes() {
+	public WSAttribute[] getExtendedAttributes() {
 		return extendedAttributes;
 	}
 
-	public void setExtendedAttributes(Attribute[] extendedAttributes) {
+	public void setExtendedAttributes(WSAttribute[] extendedAttributes) {
 		this.extendedAttributes = extendedAttributes;
 	}
 

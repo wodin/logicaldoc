@@ -71,6 +71,8 @@ public class AbstractService {
 		User user = userDao.findByUserName(username);
 		if (user == null)
 			throw new Exception("User " + username + "not found");
+		else
+			userDao.initialize(user);
 		return user;
 	}
 
