@@ -14,17 +14,17 @@ import com.logicaldoc.gui.common.client.beans.GUIInfo;
 public class Feature {
 
 	public static final int IMPORT_REMOTE_FOLDERS = 1;
-	
+
 	public static final int ADDITIONAL_FORMATS = 2;
-	
+
 	public static final int OCR = 3;
-	
+
 	public static final int ARCHIVES = 4;
-	
+
 	public static final int TAGS = 5;
 
 	public static final int DIGITAL_SIGN = 7;
-	
+
 	public static final int PDF = 8;
 
 	public static final int RSS = 9;
@@ -32,13 +32,13 @@ public class Feature {
 	public static final int EMAIL_IMPORT = 10;
 
 	public static final int TRASH = 11;
-	
+
 	public static final int SAVED_SEARCHES = 12;
 
 	public static final int MESSAGES = 13;
-	
+
 	public static final int INCREMENTAL_ARCHIVES = 14;
-	
+
 	public static final int PAPER_DEMATERIALIZATION = 15;
 
 	public static final int SCAN = 16;
@@ -46,7 +46,7 @@ public class Feature {
 	public static final int AUDIT = 17;
 
 	public static final int WORKFLOW = 19;
-	
+
 	public static final int OFFICE = 20;
 
 	public static final int ENTERPRISE_SEARCH = 21;
@@ -54,17 +54,17 @@ public class Feature {
 	public static final int FORUMS = 22;
 
 	public static final int TAGS_ADMIN = 23;
-	
+
 	public static final int GUI_LANGUAGES = 24;
-	
+
 	public static final int INDEX_LANGUAGES = 25;
-	
+
 	public static final int SHOW_LICENSEE = 40;
-	
+
 	public static final int SHOW_USERS_WORNING = 41;
-	
+
 	public static final int SHOW_DISABLED = 50;
-	
+
 	public static final int PREVIEW = 51;
 
 	public static final int BOOKMARKS = 53;
@@ -84,9 +84,11 @@ public class Feature {
 	public static final int SHARE_DISCOVERY = 60;
 
 	public static final int IMPORT_LOCAL_FOLDERS = 61;
-	
+
 	public static final int PARAMETRIC_SEARCHES = 62;
-	
+
+	public static final int FILE_DROP = 63;
+
 	private static Set<String> features = new HashSet<String>();
 
 	static public void init(GUIInfo info) {
@@ -115,11 +117,11 @@ public class Feature {
 	public static boolean showDisabled() {
 		return enabled(SHOW_DISABLED);
 	}
-	
+
 	/**
 	 * Check if the licensee must be shown
 	 */
 	public static boolean showLicensee() {
 		return enabled(SHOW_DISABLED);
-	}	
+	}
 }

@@ -18,8 +18,11 @@ import com.logicaldoc.gui.common.client.services.InfoServiceAsync;
 import com.logicaldoc.gui.common.client.util.RequestInfo;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
+import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.security.LoginPanel;
+import com.logicaldoc.gui.frontend.client.services.DocumentService;
+import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.util.SC;
 
 /**
@@ -80,6 +83,8 @@ public class Frontend implements EntryPoint {
 
 		mainPanel = MainPanel.get();
 
+		setUploadTrigger(this);
+
 		infoService.getInfo(I18N.getLocale(), new AsyncCallback<GUIInfo>() {
 			@Override
 			public void onFailure(Throwable error) {
@@ -105,6 +110,8 @@ public class Frontend implements EntryPoint {
 
 				// Remove the loading frame
 				RootPanel.getBodyElement().removeChild(RootPanel.get("loadingWrapper").getElement());
+
+				setUploadTrigger(Frontend.this);
 			}
 		});
 	}
@@ -118,4 +125,33 @@ public class Frontend implements EntryPoint {
 		mainPanel.show();
 		loginPanel.hide();
 	}
+
+	/**
+	 * Triggers the load of the last uploaded files
+	 */
+	public void triggerUpload() {
+		DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+		documentService.addDocuments(Session.get().getSid(), I18N.getLocale(),
+				Session.get().getCurrentFolder().getId(), "UTF-8", false, null, new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						DocumentsPanel.get().refresh();
+					}
+				});
+	}
+
+	/**
+	 * Declares the javascript function used to trigger the upload.
+	 */
+	public static native void setUploadTrigger(Frontend frontend) /*-{
+		$wnd.triggerUpload = function () {
+		   frontend.@com.logicaldoc.gui.frontend.client.Frontend::triggerUpload()();
+		};
+	}-*/;
 }

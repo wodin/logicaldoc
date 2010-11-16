@@ -27,6 +27,7 @@ import com.logicaldoc.gui.frontend.client.workflow.WorkflowDetailsDialog;
 import com.smartgwt.client.types.SelectionType;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
@@ -42,6 +43,8 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  * @since 6.0
  */
 public class DocumentToolbar extends ToolStrip implements FolderObserver {
+	private static final String EMPTY_DIV = "<div style=\"margin-top:3px; width=\"80\"; height=\"20\"\" />";
+
 	private ToolStripButton download = new ToolStripButton();
 
 	private ToolStripButton rss = new ToolStripButton();
@@ -63,6 +66,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	private ToolStripButton startWorkflow = new ToolStripButton();
 
 	private ToolStripButton addToWorkflow = new ToolStripButton();
+
+	private HTMLFlow dropArea = new HTMLFlow();
 
 	private GUIDocument document;
 
@@ -211,7 +216,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			public void onClick(ClickEvent event) {
 				if (document == null)
 					return;
-				
+
 				WindowUtils.openUrl("ldedit:" + GWT.getHostPageBaseURL() + "ldeditnow?action=edit&sid="
 						+ Session.get().getSid() + "&docId=" + document.getId());
 			}
@@ -372,8 +377,18 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		}
 
-		addSeparator();
+		if (Feature.visible(Feature.FILE_DROP)) {
+			addSeparator();
+			dropArea.setContents(EMPTY_DIV);
+			dropArea.setWidth(81);
+			if (Feature.enabled(Feature.FILE_DROP))
+				dropArea.setTooltip(I18N.message("dropfiles"));
+			else
+				dropArea.setTooltip(I18N.message("featuredisabled"));
+			addMember(dropArea);
+		}
 
+		addSeparator();
 		ToolStripButton display = new ToolStripButton();
 		display.setTitle(I18N.message("display"));
 		addButton(display);
@@ -446,6 +461,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				office.setDisabled(true);
 				startWorkflow.setDisabled(true);
 				addToWorkflow.setDisabled(true);
+				dropArea.setContents(EMPTY_DIV);
 			}
 
 			if (folder != null) {
@@ -460,6 +476,17 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 						|| !Feature.enabled(Feature.WORKFLOW));
 				addToWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)
 						|| !Feature.enabled(Feature.WORKFLOW) || Session.get().getCurrentWorkflow() == null);
+				if (folder.hasPermission(Constants.PERMISSION_WRITE)) {
+					String tmp = "<div style=\"margin-top:3px; width=\"80\"; height=\"20\"\"><applet name=\"DropApplet\" archive=\""
+							+ Util.contextPath()
+							+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.upload.DropApplet\" width=\"80\" height=\"20\">";
+					tmp += "<param name=\"uploadUrl\" value=\"" + Util.contextPath()
+							+ "servlet.gupld?new_session=true&sid=" + Session.get().getSid() + "\" />";
+					tmp += "</applet></div>";
+					dropArea.setContents(tmp);
+				} else {
+					dropArea.setContents(EMPTY_DIV);
+				}
 			} else {
 				add.setDisabled(true);
 				scan.setDisabled(true);
@@ -467,6 +494,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				archiveDematerialization.setDisabled(true);
 				startWorkflow.setDisabled(true);
 				addToWorkflow.setDisabled(true);
+				dropArea.setContents(EMPTY_DIV);
 			}
 		} catch (Throwable t) {
 
