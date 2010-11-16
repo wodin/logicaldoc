@@ -126,9 +126,13 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		templateItem.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
-				if (event.getValue() != null && !"".equals(event.getValue())) {
+				if (event.getValue() != null && !"".equals(event.getValue().toString())) {
 					document.setAttributes(new GUIExtendedAttribute[0]);
 					prepareExtendedAttributes(new Long(event.getValue().toString()));
+				} else {
+					document.setAttributes(new GUIExtendedAttribute[0]);
+					prepareExtendedAttributes(null);
+
 				}
 			}
 		});
