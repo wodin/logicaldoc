@@ -180,3 +180,9 @@
 	color: grey;
 	text-decoration: line-through;
 }
+
+.hint {
+	white-space: nowrap;
+	padding-left: 3px;
+	color: #7694B5;
+}
