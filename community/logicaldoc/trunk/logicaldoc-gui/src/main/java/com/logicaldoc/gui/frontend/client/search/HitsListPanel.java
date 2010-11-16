@@ -348,7 +348,9 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			max.setShowTitle(false);
 			max.setDefaultValue(40);
 			max.setWidth(40);
-
+			
+			max.setValue(Search.get().getOptions().getMaxHits());
+				
 			ToolStripButton repeat = new ToolStripButton();
 			repeat.setTitle(I18N.message("display"));
 			toolStrip.addButton(repeat);
