@@ -230,7 +230,8 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
-		// TODO check delete permission in old folder???
+		checkPermission(Permission.DELETE, user, doc.getFolder().getId());
+		
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Folder folder = dao.findById(folderId);
 		checkLocked(user, doc);
@@ -249,7 +250,6 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void rename(String sid, long docId, String name) throws Exception {
-		// TODO check rename permission in folder???
 		WSDocument wsDoc = getDocument(sid, docId);
 		wsDoc.setTitle(name);
 		updateDocument(sid, wsDoc);
@@ -258,7 +258,6 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 	@Override
 	public void restore(String sid, long docId) throws Exception {
 		validateSession(sid);
-		// TODO Check any permission???
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		docDao.restore(docId);
 	}

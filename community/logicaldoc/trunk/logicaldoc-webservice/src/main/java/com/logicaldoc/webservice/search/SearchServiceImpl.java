@@ -118,8 +118,8 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 		if (generic == null)
 			return null;
 
-		TagCloud[] tagClouds = new TagCloud[0];
 		genericDao.initialize(generic);
+		TagCloud[] tagClouds = new TagCloud[generic.getAttributeNames().size()];
 		int i = 0;
 		for (String tag : generic.getAttributeNames()) {
 			TagCloud tc = new TagCloud(tag);
