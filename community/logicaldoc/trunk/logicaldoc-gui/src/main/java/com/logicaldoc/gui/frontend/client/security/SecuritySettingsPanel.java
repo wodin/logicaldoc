@@ -100,11 +100,6 @@ public class SecuritySettingsPanel extends VLayout {
 		save.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				vm.validate();
-				if (notificationsForm.hasErrors()) {
-					tabs.selectTab(1);
-				} else {
-					tabs.selectTab(0);
-				}
 
 				final Map<String, Object> values = vm.getValues();
 
@@ -146,6 +141,8 @@ public class SecuritySettingsPanel extends VLayout {
 
 		final SelectItem user = ItemFactory.newUserSelector("notificationUsers", "user");
 		List<FormItem> items = new ArrayList<FormItem>();
+		user.setHint(I18N.message("usernotification"));
+		user.setHintStyle("hint");
 		user.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
