@@ -477,13 +477,15 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				addToWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)
 						|| !Feature.enabled(Feature.WORKFLOW) || Session.get().getCurrentWorkflow() == null);
 				if (folder.hasPermission(Constants.PERMISSION_WRITE)) {
-					String tmp = "<div style=\"margin-top:3px; width=\"80\"; height=\"20\"\"><applet name=\"DropApplet\" archive=\""
-							+ Util.contextPath()
-							+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.upload.DropApplet\" width=\"80\" height=\"20\">";
-					tmp += "<param name=\"uploadUrl\" value=\"" + Util.contextPath()
-							+ "servlet.gupld?new_session=true&sid=" + Session.get().getSid() + "\" />";
-					tmp += "</applet></div>";
-					dropArea.setContents(tmp);
+					if (dropArea.getContents().equals(EMPTY_DIV)) {
+						String tmp = "<div style=\"margin-top:3px; width=\"80\"; height=\"20\"\"><applet name=\"DropApplet\" archive=\""
+								+ Util.contextPath()
+								+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.upload.DropApplet\" width=\"80\" height=\"20\">";
+						tmp += "<param name=\"uploadUrl\" value=\"" + Util.contextPath()
+								+ "servlet.gupld?new_session=true&sid=" + Session.get().getSid() + "\" />";
+						tmp += "</applet></div>";
+						dropArea.setContents(tmp);
+					}
 				} else {
 					dropArea.setContents(EMPTY_DIV);
 				}
