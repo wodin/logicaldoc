@@ -121,6 +121,7 @@ public class SchedulingPanel extends VLayout {
 		initialDelay.setVisible(simplePolicy);
 		initialDelay.addChangedHandler(changedHandler);
 		initialDelay.setHint(I18N.message("seconds").toLowerCase());
+		initialDelay.setHintStyle("hint");
 		initialDelay.setRequired(true);
 
 		// Repeat interval
@@ -129,6 +130,7 @@ public class SchedulingPanel extends VLayout {
 		repeatInterval.setVisible(simplePolicy);
 		repeatInterval.addChangedHandler(changedHandler);
 		repeatInterval.setHint(I18N.message("seconds").toLowerCase());
+		repeatInterval.setHintStyle("hint");
 		repeatInterval.setRequired(true);
 
 		// Seconds
@@ -138,6 +140,7 @@ public class SchedulingPanel extends VLayout {
 		seconds.addChangedHandler(changedHandler);
 		seconds.setRequired(true);
 		seconds.setHint(I18N.message("schedulingsechint"));
+		seconds.setHintStyle("hint");
 
 		// Minutes
 		minutes = ItemFactory.newTextItem("minutes", "minutes", null);
@@ -146,6 +149,7 @@ public class SchedulingPanel extends VLayout {
 		minutes.addChangedHandler(changedHandler);
 		minutes.setRequired(true);
 		minutes.setHint(I18N.message("schedulingsechint"));
+		minutes.setHintStyle("hint");
 
 		// Hours
 		hours = ItemFactory.newTextItem("hours", "hours", null);
@@ -154,6 +158,7 @@ public class SchedulingPanel extends VLayout {
 		hours.addChangedHandler(changedHandler);
 		hours.setRequired(true);
 		hours.setHint(I18N.message("schedulinghourshint"));
+		hours.setHintStyle("hint");
 
 		// Day of month
 		dayMonth = ItemFactory.newTextItem("dayMonth", "daymonth", null);
@@ -162,6 +167,7 @@ public class SchedulingPanel extends VLayout {
 		dayMonth.addChangedHandler(changedHandler);
 		dayMonth.setRequired(true);
 		dayMonth.setHint(I18N.message("schedulingdaymonthhint"));
+		dayMonth.setHintStyle("hint");
 
 		// Month
 		month = ItemFactory.newTextItem("month", "month", null);
@@ -170,6 +176,7 @@ public class SchedulingPanel extends VLayout {
 		month.addChangedHandler(changedHandler);
 		month.setRequired(true);
 		month.setHint(I18N.message("schedulingmonthhint"));
+		month.setHintStyle("hint");
 
 		// Day of week
 		dayWeek = ItemFactory.newTextItem("dayWeek", "dayweek", null);
@@ -178,6 +185,7 @@ public class SchedulingPanel extends VLayout {
 		dayWeek.addChangedHandler(changedHandler);
 		dayWeek.setRequired(true);
 		dayWeek.setHint(I18N.message("schedulingdayweekhint"));
+		dayWeek.setHintStyle("hint");
 
 		form.setItems(simple, initialDelay, repeatInterval, seconds, minutes, hours, dayMonth, month, dayWeek,
 				maxDuration, cpuIdle);
