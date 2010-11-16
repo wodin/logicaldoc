@@ -131,7 +131,6 @@ insert into ld_usergroup
 values (-1,1);
 
 insert into ld_menugroup values (2,4,0);
-insert into ld_menugroup values (9,4,0);
 insert into ld_menugroup values (14,4,0);
 insert into ld_menugroup values (25,4,0);
 
