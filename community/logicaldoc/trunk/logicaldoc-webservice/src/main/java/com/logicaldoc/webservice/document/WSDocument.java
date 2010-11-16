@@ -172,19 +172,6 @@ public class WSDocument {
 					attribute.setPosition(attr.getPosition());
 					attribute.setType(attr.getType());
 					attribute.setValue(attr.getValue());
-					// if (attr.getType() == WSAttribute.TYPE_STRING) {
-					// attribute.setStringValue(attr.getStringValue());
-					// } else if (attr.getType() == WSAttribute.TYPE_INT) {
-					// attribute.setIntValue(attr.getIntValue());
-					// } else if (attr.getType() == WSAttribute.TYPE_DOUBLE) {
-					// attribute.setDoubleValue(attr.getDoubleValue());
-					// } else if (attr.getType() == WSAttribute.TYPE_DATE) {
-					// System.out.println("attr name: " + name);
-					// String dateString =
-					// AbstractService.convertDateToString(attr.getDateValue());
-					// attribute.setDateValue(dateString);
-					// }
-
 					attributes[i++] = attribute;
 				}
 			}
