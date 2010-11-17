@@ -97,6 +97,7 @@ public class GUILanguagesPanel extends VLayout {
 							public void onSuccess(Void result) {
 								record.setAttribute("eenabled", "0");
 								list.updateData(record);
+								Log.info(I18N.message("settingsaffectnewsessions"), null);
 							}
 						});
 			}
@@ -118,6 +119,7 @@ public class GUILanguagesPanel extends VLayout {
 							public void onSuccess(Void result) {
 								record.setAttribute("eenabled", "2");
 								list.updateData(record);
+								Log.info(I18N.message("settingsaffectnewsessions"), null);
 							}
 						});
 			}
