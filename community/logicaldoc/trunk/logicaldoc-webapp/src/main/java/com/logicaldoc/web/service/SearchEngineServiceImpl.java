@@ -1,16 +1,12 @@
 package com.logicaldoc.web.service;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.logicaldoc.core.document.AbstractDocument;
-import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.Indexer;
@@ -67,7 +63,6 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	@Override
 	public void rescheduleAll(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
-
 		try {
 			Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
 			indexer.recreateIndexes();
@@ -80,14 +75,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			public void run() {
 				try {
 					DocumentDAO documentDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-					Collection<Document> documents = documentDao.findAll();
-					Iterator<Document> iter = documents.iterator();
-					while (iter.hasNext()) {
-						Document document = iter.next();
-						documentDao.initialize(document);
-						document.setIndexed(AbstractDocument.INDEX_TO_INDEX);
-						documentDao.store(document);
-					}
+					documentDao.bulkUpdate("set ld_indexed=0 where ld_indexed=1", null);
 				} catch (Exception t) {
 					log.error(t.getMessage(), t);
 					throw new RuntimeException(t.getMessage(), t);

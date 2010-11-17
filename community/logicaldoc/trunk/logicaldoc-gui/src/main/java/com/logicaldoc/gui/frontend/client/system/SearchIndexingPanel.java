@@ -390,11 +390,13 @@ public class SearchIndexingPanel extends VLayout {
 		TextItem includePatters = ItemFactory.newTextItem("includePatters", "includepatters", null);
 		includePatters.setDefaultValue(this.searchEngine.getIncludePatters());
 		includePatters.setHint(I18N.message("separatedcomma"));
+		includePatters.setHintStyle("hint");
 
 		// Exclude Patters
 		TextItem excludePatters = ItemFactory.newTextItem("excludePatters", "excludepatters", null);
 		excludePatters.setDefaultValue(this.searchEngine.getExcludePatters());
 		excludePatters.setHint(I18N.message("separatedcomma"));
+		excludePatters.setHintStyle("hint");
 
 		HLayout buttons = new HLayout();
 
@@ -439,7 +441,7 @@ public class SearchIndexingPanel extends VLayout {
 
 					@Override
 					public void onSuccess(Void ret) {
-						Log.info(I18N.message("settingssaved"), null);
+						Log.info(I18N.message("indexunlocked"), null);
 					}
 				});
 			}
@@ -459,7 +461,7 @@ public class SearchIndexingPanel extends VLayout {
 
 					@Override
 					public void onSuccess(Void ret) {
-						Log.info(I18N.message("settingssaved"), null);
+						Log.info(I18N.message("docsreindex"), null);
 					}
 				});
 			}
