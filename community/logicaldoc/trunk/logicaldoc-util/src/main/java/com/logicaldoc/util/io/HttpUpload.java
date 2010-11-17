@@ -1,6 +1,7 @@
 package com.logicaldoc.util.io;
 
 import java.io.File;
+import java.util.Date;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -40,14 +41,17 @@ public class HttpUpload {
 
 		PostMethod filePost = new PostMethod(url);
 
+		String f = fileName;
+		if (f == null)
+			f = file.getName();
+
+		String name = "LDOC-" + new Date().getTime();
+
 		filePost.getParams().setBooleanParameter(HttpMethodParams.USE_EXPECT_CONTINUE, false);
 
 		try {
-			String f = fileName;
-			if (f == null)
-				f = file.getName();
 
-			Part[] parts = { new FilePart(f, f, file) };
+			Part[] parts = { new FilePart(name, f, file) };
 
 			filePost.setRequestEntity(new MultipartRequestEntity(parts, filePost.getParams()));
 
