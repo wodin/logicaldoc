@@ -26,9 +26,11 @@ import com.logicaldoc.webdav.resource.model.Resource;
 import com.logicaldoc.webdav.session.DavSession;
 import com.logicaldoc.webdav.version.VersionHistoryResourceImpl;
 
-public class VersionControlledResourceImpl extends DeltaVResourceImpl implements VersionControlledResource, Serializable {
+public class VersionControlledResourceImpl extends DeltaVResourceImpl implements VersionControlledResource,
+		Serializable {
 
 	private static final long serialVersionUID = 1L;
+
 	protected static Log log = LogFactory.getLog(VersionControlledResourceImpl.class);
 
 	public VersionControlledResourceImpl(DavResourceLocator locator, DavResourceFactory factory, DavSession session,
@@ -245,23 +247,26 @@ public class VersionControlledResourceImpl extends DeltaVResourceImpl implements
 		if (!propsInitialized) {
 			super.initProperties();
 
-			if (resource.isFolder())
-				return;
-
-			String baseVHref = getLocatorFromResource(resource).getHref(false);
-
 			properties.add(new HrefProperty(VERSION_HISTORY, locator.getResourcePath(), true));
 
 			// DAV:auto-version property: there is no auto version, explicit
 			// EVENT_CHECKEDOUT is required.
 			properties.add(new DefaultDavProperty(AUTO_VERSION, null, false));
 
-			if (resource.getIsCheckedOut()) {
-				properties.add(new HrefProperty(CHECKED_OUT, baseVHref, true));
-				properties.add(new HrefProperty(VersionResource.PREDECESSOR_SET, locator.getResourcePath(), false));
-			} else {
-				properties.add(new HrefProperty(CHECKED_IN, locator.getResourcePath(), true));
-			}
+			// if (resource.isFolder())
+			// return;
+
+			// String baseVHref =
+			// getLocatorFromResource(resource).getHref(false);
+
+			// if (resource.getIsCheckedOut()) {
+			// properties.add(new HrefProperty(CHECKED_OUT, baseVHref, true));
+			// properties.add(new HrefProperty(VersionResource.PREDECESSOR_SET,
+			// locator.getResourcePath(), false));
+			// } else {
+			// properties.add(new HrefProperty(CHECKED_IN,
+			// locator.getResourcePath(), true));
+			// }
 		}
 	}
 
