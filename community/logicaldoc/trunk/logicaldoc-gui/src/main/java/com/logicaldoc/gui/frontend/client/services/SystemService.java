@@ -41,7 +41,7 @@ public interface SystemService extends RemoteService {
 	 * @param username The user name that must be associated to the history
 	 * @param from The starting date to search the histories
 	 * @param till The ending date to search the histories
-	 * @param maxResult The maximum number of histoty results
+	 * @param maxResult The maximum number of history results
 	 * @param historySid The history session identifier
 	 * @param event The history events
 	 * @return Result hits and statistics

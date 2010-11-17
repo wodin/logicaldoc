@@ -455,7 +455,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				}
 				query.append(" ) ");
 			}
-			query.append(" order by A.date asc ");
+			query.append(" order by A.date desc ");
 
 			List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, maxResult);
 
@@ -474,7 +474,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				histories.add(history);
 			}
 
-			if (searchOnUserHistory) {
+			if (searchOnUserHistory && histories.size() < maxResult) {
 				UserHistoryDAO userHistoryDao = (UserHistoryDAO) Context.getInstance().getBean(UserHistoryDAO.class);
 				try {
 					query = new StringBuffer(
@@ -503,11 +503,9 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 						}
 						query.append(" ) ");
 					}
-					query.append(" order by A.date asc ");
+					query.append(" order by A.date desc ");
 
 					records = (List<Object>) userHistoryDao.findByQuery(query.toString(), null, maxResult);
-
-					List<GUIHistory> userHistories = new ArrayList<GUIHistory>();
 
 					for (Object record : records) {
 						Object[] cols = (Object[]) record;
@@ -521,10 +519,10 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 						history.setPath("");
 						history.setSessionId((String) cols[3]);
 
-						userHistories.add(history);
+						histories.add(history);
+						if (histories.size() == maxResult)
+							break;
 					}
-
-					histories.addAll(userHistories);
 				} catch (Throwable e) {
 					log.error(e.getMessage(), e);
 				}
@@ -582,7 +580,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 		SessionUtil.validateSession(sid);
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-			conf.setProperty("lang." + language+".gui", active ? "enabled" : "disabled");
+			conf.setProperty("lang." + language + ".gui", active ? "enabled" : "disabled");
 			conf.write();
 		} catch (IOException t) {
 			log.error(t.getMessage(), t);

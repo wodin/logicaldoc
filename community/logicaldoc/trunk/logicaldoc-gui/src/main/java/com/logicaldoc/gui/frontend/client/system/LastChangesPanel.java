@@ -13,6 +13,7 @@ import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -55,6 +56,8 @@ public class LastChangesPanel extends VLayout {
 	private ValuesManager vm = new ValuesManager();
 
 	private ListGrid histories;
+
+	private InfoPanel infoPanel;
 
 	public LastChangesPanel() {
 		setWidth100();
@@ -166,11 +169,17 @@ public class LastChangesPanel extends VLayout {
 		histories.setShowRecordComponentsByCell(true);
 		histories.setCanFreezeFields(true);
 		histories.setFilterOnKeypress(true);
+		histories.setAutoFetchData(true);
 
 		results.addMember(histories);
 
-		lastchanges.addMember(search);
-		lastchanges.addMember(results);
+		lastchanges.addMember(search, 0);
+
+		// Prepare a panel containing a title and the documents list
+		infoPanel = new InfoPanel("");
+		lastchanges.addMember(infoPanel, 1);
+
+		lastchanges.addMember(results, 2);
 
 		addMember(lastchanges);
 
@@ -244,6 +253,11 @@ public class LastChangesPanel extends VLayout {
 								}
 								histories.setData(records);
 							}
+							lastchanges.removeMember(infoPanel);
+							infoPanel = new InfoPanel("");
+							infoPanel.setMessage(I18N.message("showelements",
+									Integer.toString(histories.getTotalRows())));
+							lastchanges.addMember(infoPanel, 1);
 						}
 					});
 		}
