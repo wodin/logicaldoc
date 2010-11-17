@@ -1,6 +1,7 @@
 package com.logicaldoc.util.io;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.Date;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -48,10 +49,13 @@ public class HttpUpload {
 		String name = "LDOC-" + new Date().getTime();
 
 		filePost.getParams().setBooleanParameter(HttpMethodParams.USE_EXPECT_CONTINUE, false);
+		filePost.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "utf8");
+		filePost.getParams().setParameter(HttpMethodParams.HTTP_ELEMENT_CHARSET, "utf8");
 
 		try {
-
-			Part[] parts = { new FilePart(name, f, file) };
+			FilePart filePart = new FilePart(name, URLEncoder.encode(f, "UTF-8"), file);
+			filePart.setCharSet("utf8");
+			Part[] parts = { filePart };
 
 			filePost.setRequestEntity(new MultipartRequestEntity(parts, filePost.getParams()));
 

@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URLDecoder;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -94,7 +95,8 @@ public class UploadServlet extends UploadAction {
 
 						receivedFiles.put(item.getFieldName(), file);
 						receivedContentTypes.put(item.getFieldName(), item.getContentType());
-						receivedFileNames.put(item.getFieldName(), FilenameUtils.getName(item.getName()));
+						receivedFileNames.put(item.getFieldName(),
+								URLDecoder.decode(FilenameUtils.getName(item.getName()), "UTF-8"));
 					} catch (Throwable e) {
 						e.printStackTrace();
 						throw new UploadActionException(e.getMessage());
