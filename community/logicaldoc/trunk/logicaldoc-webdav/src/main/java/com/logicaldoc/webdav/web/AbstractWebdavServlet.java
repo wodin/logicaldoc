@@ -10,6 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavConstants;
@@ -47,9 +51,11 @@ import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.webdav.AuthenticationUtil;
 import com.logicaldoc.webdav.AuthenticationUtil.Credentials;
 import com.logicaldoc.webdav.resource.DavResourceFactory;
+import com.logicaldoc.webdav.session.DavSession;
 import com.logicaldoc.webdav.session.DavSessionImpl;
 
 /**
@@ -588,10 +594,12 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			DavException {
 
 		log.debug("doMove");
+		WebdavRequest webdavRequest = new WebdavRequestImpl(request, getLocatorFactory());
+		DavSession session = (com.logicaldoc.webdav.session.DavSession) webdavRequest.getDavSession();
 		try {
 			DavResource destResource = null;
 			try {
-				destResource = getResourceFactory().createResource(request.getDestinationLocator(), request);
+				destResource = getResourceFactory().createResource(request.getDestinationLocator(), request, session);
 			} catch (Throwable e) {
 				destResource = resource.getCollection();
 			}
@@ -607,8 +615,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 
 			resource.move(destResource);
 
-			getResourceFactory().putInCache((com.logicaldoc.webdav.session.DavSession) destResource.getSession(),
-					destResource);
+			getResourceFactory().putInCache(session, destResource);
 
 			response.setStatus(status);
 		} catch (Exception e) {
