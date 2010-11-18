@@ -124,12 +124,13 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 
 	@Override
 	public GUIParameter[] loadOcrSettings(String sid) throws InvalidSessionException {
-		GUIParameter[] params = new GUIParameter[8];
+		GUIParameter[] params = new GUIParameter[6];
 		params[0] = new GUIParameter("ocr.enabled", "true");
 		params[1] = new GUIParameter("ocr.resolution.threshold", "600");
 		params[2] = new GUIParameter("ocr.text.threshold", "1");
 		params[3] = new GUIParameter("ocr.includes", "");
 		params[4] = new GUIParameter("ocr.excludes", "");
+		params[5] = new GUIParameter("ocr.timeout", "60");
 		return params;
 	}
 }
