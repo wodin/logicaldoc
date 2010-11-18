@@ -31,7 +31,7 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 		GUIParameter officeSettings = new GUIParameter();
 		officeSettings.setName("office.enabled");
 		officeSettings.setValue("true");
-		
+
 		settings[0] = wsSettings;
 		settings[1] = wdSettings;
 		settings[2] = wdSettings;
@@ -120,5 +120,16 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 
 	@Override
 	public void saveProxySettings(String sid, GUIParameter[] proxySettings) throws InvalidSessionException {
+	}
+
+	@Override
+	public GUIParameter[] loadOcrSettings(String sid) throws InvalidSessionException {
+		GUIParameter[] params = new GUIParameter[8];
+		params[0] = new GUIParameter("ocr.enabled", "true");
+		params[1] = new GUIParameter("ocr.resolution.threshold", "600");
+		params[2] = new GUIParameter("ocr.text.threshold", "1");
+		params[3] = new GUIParameter("ocr.includes", "");
+		params[4] = new GUIParameter("ocr.excludes", "");
+		return params;
 	}
 }

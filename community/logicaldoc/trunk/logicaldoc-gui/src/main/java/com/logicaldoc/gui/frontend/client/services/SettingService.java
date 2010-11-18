@@ -74,4 +74,9 @@ public interface SettingService extends RemoteService {
 	 * Saves proxy setting
 	 */
 	public void saveProxySettings(String sid, GUIParameter[] proxySettings) throws InvalidSessionException;
+
+	/**
+	 * Loads the OCR settings
+	 */
+	public GUIParameter[] loadOcrSettings(String sid) throws InvalidSessionException;
 }

@@ -106,7 +106,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.startsWith("gui") || name.startsWith("password") || name.startsWith("ad")
 					|| name.startsWith("webservice") || name.startsWith("webdav") || name.startsWith("runlevel")
 					|| name.startsWith("stat") || name.startsWith("index") || name.startsWith("proxy")
-					|| name.equals("id") || name.startsWith("lang") || name.startsWith("reg."))
+					|| name.equals("id") || name.startsWith("lang") || name.startsWith("reg.")
+					|| name.startsWith("ocr."))
 				continue;
 
 			sortedSet.add(key.toString());
@@ -253,5 +254,21 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
 		}
+	}
+
+	@Override
+	public GUIParameter[] loadOcrSettings(String sid) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+
+		GUIParameter[] params = new GUIParameter[5];
+		params[0] = new GUIParameter("ocr.enabled", conf.getProperty("ocr.enabled"));
+		params[1] = new GUIParameter("ocr.resolution.threshold", conf.getProperty("ocr.resolution.threshold"));
+		params[2] = new GUIParameter("ocr.text.threshold", conf.getProperty("ocr.text.threshold"));
+		params[3] = new GUIParameter("ocr.includes", conf.getProperty("ocr.includes"));
+		params[4] = new GUIParameter("ocr.excludes", conf.getProperty("ocr.excludes"));
+
+		return params;
 	}
 }
