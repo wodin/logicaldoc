@@ -61,6 +61,12 @@ public class OCRSettingsPanel extends VLayout {
 		TextItem includes = ItemFactory.newTextItem("ocr.includes", I18N.message("include"), settings[3].getValue());
 		TextItem excludes = ItemFactory.newTextItem("ocr.excludes", I18N.message("exclude"), settings[4].getValue());
 
+		IntegerItem timeout = ItemFactory.newIntegerItem("ocr.timeout", I18N.message("timeout"),
+				Integer.parseInt(settings[5].getValue()));
+		timeout.setRequired(true);
+		timeout.setWrapTitle(false);
+		timeout.setHint(I18N.message("seconds"));
+
 		IntegerItem textThreshold = ItemFactory.newIntegerItem("ocr.text.threshold", I18N.message("textthreshold"),
 				Integer.parseInt(settings[2].getValue()));
 		textThreshold.setRequired(true);
@@ -99,6 +105,11 @@ public class OCRSettingsPanel extends VLayout {
 					else
 						params[4] = new GUIParameter("ocr.resolution.threshold", (String) values
 								.get("ocr.resolution.threshold"));
+
+					if (values.get("ocr.timeout") instanceof Integer)
+						params[5] = new GUIParameter("ocr.timeout", ((Integer) values.get("ocr.timeout")).toString());
+					else
+						params[5] = new GUIParameter("ocr.timeout", (String) values.get("ocr.timeout"));
 
 					service.saveSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
 
