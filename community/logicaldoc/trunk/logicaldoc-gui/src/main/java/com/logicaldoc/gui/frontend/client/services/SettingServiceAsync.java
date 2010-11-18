@@ -27,4 +27,6 @@ public interface SettingServiceAsync {
 	void loadProxySettings(String sid, AsyncCallback<GUIParameter[]> callback);
 
 	void saveProxySettings(String sid, GUIParameter[] proxySettings, AsyncCallback<Void> callback);
+	
+	void loadOcrSettings(String sid, AsyncCallback<GUIParameter[]> callback);
 }

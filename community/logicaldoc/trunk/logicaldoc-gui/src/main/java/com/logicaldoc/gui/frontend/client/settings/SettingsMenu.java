@@ -52,6 +52,10 @@ public class SettingsMenu extends VLayout {
 		email.setWidth100();
 		email.setHeight(25);
 
+		Button ocr = new Button(I18N.message("ocr"));
+		ocr.setWidth100();
+		ocr.setHeight(25);
+
 		if (Feature.visible(Feature.CLIENT_TOOLS) && Menu.enabled(Menu.CLIENTS)) {
 			addMember(clientTools);
 			if (!Feature.enabled(Feature.CLIENT_TOOLS)) {
@@ -63,6 +67,15 @@ public class SettingsMenu extends VLayout {
 		addMember(email);
 		addMember(proxy);
 		addMember(folders);
+
+		if (Feature.visible(Feature.OCR)) {
+			addMember(ocr);
+			if (!Feature.enabled(Feature.OCR)) {
+				ocr.setDisabled(true);
+				ocr.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+
 		addMember(parameters);
 
 		clientTools.addClickHandler(new ClickHandler() {
@@ -84,6 +97,24 @@ public class SettingsMenu extends VLayout {
 			}
 		});
 
+		ocr.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				service.loadOcrSettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUIParameter[] settings) {
+						AdminPanel.get().setContent(new OCRSettingsPanel(settings));
+					}
+				});
+			}
+		});
+		
 		parameters.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
