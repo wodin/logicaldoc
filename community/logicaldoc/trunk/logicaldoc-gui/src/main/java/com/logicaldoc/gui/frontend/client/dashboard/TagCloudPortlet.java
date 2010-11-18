@@ -52,8 +52,12 @@ public class TagCloudPortlet extends Portlet {
 		});
 
 		setTitle(I18N.message("tagcloud"));
+		
 		HeaderIcon portletIcon = ItemFactory.newHeaderIcon("tag_blue.png");
-		setHeaderControls(new HeaderControl(portletIcon), HeaderControls.HEADER_LABEL, refresh);
+		HeaderControl hcicon = new HeaderControl(portletIcon);
+		hcicon.setSize(16);
+
+		setHeaderControls(hcicon, HeaderControls.HEADER_LABEL, refresh);
 
 		setCanDrag(false);
 		setCanDrop(false);

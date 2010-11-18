@@ -87,7 +87,7 @@ public class StatusPortlet extends Portlet {
 		HeaderControl hcicon = new HeaderControl(portletIcon);
 		hcicon.setSize(16);
 
-		setHeaderControls(new HeaderControl(portletIcon), HeaderControls.HEADER_LABEL);
+		setHeaderControls(hcicon, HeaderControls.HEADER_LABEL);
 
 		// Count the total of events and the total of unchecked events
 		list.addDataArrivedHandler(new DataArrivedHandler() {

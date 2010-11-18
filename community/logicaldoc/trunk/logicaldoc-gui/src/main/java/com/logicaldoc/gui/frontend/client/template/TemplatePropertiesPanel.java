@@ -87,7 +87,7 @@ public class TemplatePropertiesPanel extends HLayout {
 
 		attributesList = new ListGrid();
 		attributesList.setWidth(150);
-		attributesList.setHeight(150);
+		attributesList.setHeight(160);
 		attributesList.setEmptyMessage(I18N.message("norecords"));
 		attributesList.setCanReorderRecords(false);
 		attributesList.setCanSort(false);
@@ -195,6 +195,7 @@ public class TemplatePropertiesPanel extends HLayout {
 						RecordList rs = attributesList.getRecordList();
 						rs.removeAt(idx);
 						rs.addAt(selectedRecord, idx - 1);
+						changedHandler.onChanged(null);
 					}
 				}
 			}
@@ -210,6 +211,7 @@ public class TemplatePropertiesPanel extends HLayout {
 						RecordList rs = attributesList.getRecordList();
 						rs.removeAt(idx);
 						rs.addAt(selectedRecord, 0);
+						changedHandler.onChanged(null);
 					}
 				}
 			}
@@ -226,6 +228,7 @@ public class TemplatePropertiesPanel extends HLayout {
 					if (idx < numRecords - 1) {
 						rs.removeAt(idx);
 						rs.addAt(selectedRecord, idx + 1);
+						changedHandler.onChanged(null);
 					}
 				}
 			}
@@ -242,6 +245,7 @@ public class TemplatePropertiesPanel extends HLayout {
 					if (idx < numRecords - 1) {
 						rs.removeAt(idx);
 						rs.addAt(selectedRecord, rs.getLength());
+						changedHandler.onChanged(null);
 					}
 				}
 			}
@@ -321,7 +325,7 @@ public class TemplatePropertiesPanel extends HLayout {
 					if (updatingAttributeName.trim().isEmpty()) {
 						GUIExtendedAttribute att = new GUIExtendedAttribute();
 						att.setName((String) attributeName.getValue());
-						att.setPosition(0);
+						att.setPosition(guiAttributes.size());
 						att.setMandatory((Boolean) mandatory.getValue());
 						att.setType(Integer.parseInt((String) type.getValue()));
 						if (form2.validate())
@@ -364,8 +368,20 @@ public class TemplatePropertiesPanel extends HLayout {
 		if (!vm.hasErrors()) {
 			template.setName((String) values.get("name"));
 			template.setDescription((String) values.get("description"));
-			if (guiAttributes.size() > 0)
+			if (guiAttributes.size() > 0) {
+				for (String attrName : guiAttributes.keySet()) {
+					for (ListGridRecord record : attributesList.getRecords()) {
+						int idx = attributesList.getRecordIndex(record);
+						if (record.getAttributeAsString("name").equals(attrName)) {
+							GUIExtendedAttribute extAttr = guiAttributes.get(attrName);
+							extAttr.setPosition(idx);
+							guiAttributes.remove(attrName);
+							guiAttributes.put(attrName, extAttr);
+						}
+					}
+				}
 				template.setAttributes(guiAttributes.values().toArray(new GUIExtendedAttribute[0]));
+			}
 		}
 		return !vm.hasErrors();
 	}
