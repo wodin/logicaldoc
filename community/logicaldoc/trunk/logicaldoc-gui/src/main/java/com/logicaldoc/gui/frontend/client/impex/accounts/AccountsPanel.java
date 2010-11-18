@@ -294,7 +294,7 @@ public class AccountsPanel extends VLayout {
 
 								@Override
 								public void onSuccess(Void result) {
-									Log.info(I18N.message("confirmresetcache"), null);
+									Log.info(I18N.message("cachedeleted"), null);
 								}
 							});
 						}

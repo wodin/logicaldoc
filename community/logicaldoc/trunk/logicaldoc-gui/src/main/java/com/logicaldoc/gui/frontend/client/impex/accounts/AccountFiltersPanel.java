@@ -56,7 +56,7 @@ public class AccountFiltersPanel extends AccountDetailsTab {
 		setHeight100();
 
 		IButton addRule = new IButton(I18N.message("addrule"));
-		addRule.setHeight(20);
+		addRule.setHeight(25);
 		addRule.addClickHandler(new ClickHandler() {
 
 			@Override

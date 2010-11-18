@@ -152,6 +152,8 @@ public class ClientToolsSettingsPanel extends VLayout {
 		RadioGroupItem cache = ItemFactory.newBooleanSelector("wdCache", "usecache");
 		cache.setName("wdCache");
 		cache.setRequired(true);
+		cache.setWrap(false);
+		cache.setWrapTitle(false);
 		cache.setValue(wdCache.getValue().equals("true") ? "yes" : "no");
 
 		webDavForm.setItems(url, wdUrl, wdEnabled, cache);
