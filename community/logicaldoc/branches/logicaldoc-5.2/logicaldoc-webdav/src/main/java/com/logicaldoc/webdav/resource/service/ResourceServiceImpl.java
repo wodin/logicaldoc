@@ -176,8 +176,6 @@ public class ResourceServiceImpl implements ResourceService {
 			if (menu != null)
 				return marshallFolder(menu, userId, session);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
 		Resource parentFolder = this.getParentResource(currentStablePath, userId, session);

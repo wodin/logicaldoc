@@ -50,6 +50,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.webdav.AuthenticationUtil;
 import com.logicaldoc.webdav.AuthenticationUtil.Credentials;
 import com.logicaldoc.webdav.resource.DavResourceFactory;
+import com.logicaldoc.webdav.session.DavSession;
 import com.logicaldoc.webdav.session.DavSessionImpl;
 
 /**
@@ -588,10 +589,12 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			DavException {
 
 		log.debug("doMove");
+		WebdavRequest webdavRequest = new WebdavRequestImpl(request, getLocatorFactory());
+		DavSession session = (com.logicaldoc.webdav.session.DavSession) webdavRequest.getDavSession();
 		try {
 			DavResource destResource = null;
 			try {
-				destResource = getResourceFactory().createResource(request.getDestinationLocator(), request);
+				destResource = getResourceFactory().createResource(request.getDestinationLocator(), request, session);
 			} catch (Throwable e) {
 				destResource = resource.getCollection();
 			}
@@ -607,8 +610,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 
 			resource.move(destResource);
 
-			getResourceFactory().putInCache((com.logicaldoc.webdav.session.DavSession) destResource.getSession(),
-					destResource);
+			getResourceFactory().putInCache(session, destResource);
 
 			response.setStatus(status);
 		} catch (Exception e) {
