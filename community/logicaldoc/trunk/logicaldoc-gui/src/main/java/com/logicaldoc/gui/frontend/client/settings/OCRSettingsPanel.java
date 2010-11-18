@@ -79,7 +79,7 @@ public class OCRSettingsPanel extends VLayout {
 		resolutionThreshold.setWrapTitle(false);
 		resolutionThreshold.setHint("pixels");
 
-		form.setItems(enabled, includes, excludes, textThreshold, resolutionThreshold);
+		form.setItems(enabled, timeout, includes, excludes, textThreshold, resolutionThreshold);
 
 		IButton save = new IButton();
 		save.setTitle(I18N.message("save"));

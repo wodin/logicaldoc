@@ -186,9 +186,13 @@ public class DocumentsListPanel extends VLayout {
 					if ("indexed".equals(record.getAttribute("indexed"))) {
 						String id = list.getSelectedRecord().getAttribute("id");
 						if (Session.get().getCurrentFolder().isDownload())
+							try{
 							WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
 									+ "&docId=" + id + "&downloadText=true");
-					}
+							}catch(Throwable t){
+								
+							}
+						}
 				} else if ("signed".equals(list.getFieldName(event.getColNum()))) {
 					if (Feature.enabled(Feature.DIGITAL_SIGN)) {
 						ListGridRecord record = event.getRecord();

@@ -60,6 +60,7 @@ public class ItemFactory {
 		date.setWidth(90);
 		date.setName(name);
 		date.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
+		date.setHintStyle("hint");
 		return date;
 	}
 
@@ -79,6 +80,7 @@ public class ItemFactory {
 		date.setWidth(90);
 		date.setName(itemName);
 		date.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
+		date.setHintStyle("hint");
 		return date;
 	}
 
@@ -96,6 +98,7 @@ public class ItemFactory {
 			dateOperator.setShowTitle(false);
 		dateOperator.setDefaultValue("nolimits");
 		dateOperator.setWidth(80);
+		dateOperator.setHintStyle("hint");
 		return dateOperator;
 	}
 
@@ -113,6 +116,7 @@ public class ItemFactory {
 			sizeOperator.setShowTitle(false);
 		sizeOperator.setDefaultValue("nolimits");
 		sizeOperator.setWidth(85);
+		sizeOperator.setHintStyle("hint");
 		return sizeOperator;
 	}
 
@@ -125,6 +129,7 @@ public class ItemFactory {
 		item.setName(name);
 		item.setTitle(I18N.message("language"));
 		item.setWrapTitle(false);
+		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -173,6 +178,7 @@ public class ItemFactory {
 		map.put("Cp1256", "windows-1256 Arabic");
 
 		item.setValueMap(map);
+		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -187,6 +193,7 @@ public class ItemFactory {
 			item.setValidators(new EmailsValidator());
 		else
 			item.setValidators(new EmailValidator());
+		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -201,6 +208,7 @@ public class ItemFactory {
 		ListGridField description = new ListGridField("description");
 		group.setPickListFields(n, description);
 		group.setOptionDataSource(GroupsDS.get());
+		group.setHintStyle("hint");
 		return group;
 	}
 
@@ -215,6 +223,7 @@ public class ItemFactory {
 		user.setPickListWidth(300);
 		user.setPickListFields(username, label);
 		user.setOptionDataSource(new UsersDS(null));
+		user.setHintStyle("hint");
 		return user;
 	}
 
@@ -229,6 +238,7 @@ public class ItemFactory {
 		radioGroupItem.setRedrawOnChange(true);
 		radioGroupItem.setTitle(I18N.message(title));
 		radioGroupItem.setWidth(80);
+		radioGroupItem.setHintStyle("hint");
 		return radioGroupItem;
 	}
 
@@ -238,18 +248,19 @@ public class ItemFactory {
 		selectItemMultipleGrid.setTitle(I18N.message(title));
 		selectItemMultipleGrid.setMultiple(true);
 		selectItemMultipleGrid.setValueMap("");
+		selectItemMultipleGrid.setHintStyle("hint");
 		return selectItemMultipleGrid;
 	}
 
 	public static SelectItem newPrioritySelector(String name, String title) {
 		SelectItem select = new SelectItem(name, title);
-
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("0", I18N.message("low"));
 		map.put("1", I18N.message("medium"));
 		map.put("2", I18N.message("high"));
 		select.setValueMap(map);
 		select.setValue("0");
+		select.setHintStyle("hint");
 		return select;
 	}
 
@@ -297,7 +308,7 @@ public class ItemFactory {
 		map.put("event.workflow.docappended", I18N.message("event.workflow.docappended"));
 
 		select.setValueMap(map);
-
+		select.setHintStyle("hint");
 		return select;
 	}
 
@@ -305,6 +316,7 @@ public class ItemFactory {
 		SelectItem select = newMultipleSelector(name, title != null ? I18N.message(title) : I18N.message(name));
 		select.setMultiple(false);
 		select.setWrapTitle(false);
+		select.setHintStyle("hint");
 		return select;
 	}
 
@@ -352,6 +364,7 @@ public class ItemFactory {
 			item.setValue("");
 		item.setWrapTitle(false);
 		item.setRequiredMessage(I18N.message("fieldrequired"));
+		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -373,6 +386,7 @@ public class ItemFactory {
 			item.setValue("");
 		item.setWrapTitle(false);
 		item.setRequiredMessage(I18N.message("fieldrequired"));
+		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -382,6 +396,7 @@ public class ItemFactory {
 		password.setName(name);
 		if (value != null)
 			password.setValue(value);
+		password.setHintStyle("hint");
 		return password;
 	}
 
@@ -395,6 +410,7 @@ public class ItemFactory {
 	public static TextItem newSimpleTextItem(String name, String title, String value) {
 		TextItem item = newTextItem(name, I18N.message(title), value);
 		item.setValidators(new SimpleTextValidator());
+		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -416,6 +432,7 @@ public class ItemFactory {
 		else
 			item.setValue("");
 		item.setWrapTitle(false);
+		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -433,6 +450,7 @@ public class ItemFactory {
 		if (value != null)
 			item.setValue(value);
 		item.setRequiredMessage(I18N.message("fieldrequired"));
+		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -451,6 +469,7 @@ public class ItemFactory {
 		if (value != null)
 			item.setValue(value);
 		item.setRequiredMessage(I18N.message("fieldrequired"));
+		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -473,7 +492,7 @@ public class ItemFactory {
 				iv.setMax(max);
 			item.setValidators(iv);
 		}
-
+		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -481,6 +500,7 @@ public class ItemFactory {
 		LinkItem linkItem = new LinkItem(name);
 		linkItem.setTitle(I18N.message(title));
 		linkItem.setLinkTitle(I18N.message(title));
+		linkItem.setHintStyle("hint");
 		return linkItem;
 	}
 
@@ -501,6 +521,7 @@ public class ItemFactory {
 			item.setValue(value);
 		else
 			item.setValue("");
+		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -515,6 +536,7 @@ public class ItemFactory {
 		map.put("week", I18N.message("weeks"));
 		select.setValueMap(map);
 		select.setValue("minute");
+		select.setHintStyle("hint");
 		return select;
 	}
 
@@ -531,6 +553,7 @@ public class ItemFactory {
 			templateItem.setOptionDataSource(new TemplatesDS(false, folderId));
 		if (!Feature.enabled(Feature.TEMPLATE))
 			templateItem.setDisabled(true);
+		templateItem.setHintStyle("hint");
 		return templateItem;
 	}
 
@@ -548,6 +571,7 @@ public class ItemFactory {
 		map.put("0", I18N.message("subject"));
 		map.put("1", I18N.message("sender"));
 		select.setValueMap(map);
+		select.setHintStyle("hint");
 		return select;
 	}
 
@@ -566,7 +590,7 @@ public class ItemFactory {
 
 		if (!Feature.enabled(Feature.ARCHIVES))
 			item.setDisabled(true);
-
+		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -577,6 +601,7 @@ public class ItemFactory {
 		item.setValueField("id");
 		if (!Feature.enabled(Feature.ARCHIVES))
 			item.setDisabled(true);
+		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -589,7 +614,7 @@ public class ItemFactory {
 		map.put(Integer.toString(GUIArchive.CUSTOMID_IMPORT_AND_NEW_SUBVERSION), I18N.message("importasnewsubversion"));
 		map.put(Integer.toString(GUIArchive.CUSTOMID_IMPORT_AND_NEW_DOCUMENT), I18N.message("importasnewdoc"));
 		item.setValueMap(map);
-
+		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -604,6 +629,7 @@ public class ItemFactory {
 		workflowItem.setOptionDataSource(new WorkflowsDS(folderId, false, false));
 		if (!Feature.enabled(Feature.WORKFLOW))
 			workflowItem.setDisabled(true);
+		workflowItem.setHintStyle("hint");
 		return workflowItem;
 	}
 
@@ -629,6 +655,7 @@ public class ItemFactory {
 		if (value != null)
 			item.setValue(value);
 		item.setRequiredMessage(I18N.message("fieldrequired"));
+		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -647,6 +674,7 @@ public class ItemFactory {
 		if (value != null)
 			item.setValue(value);
 		item.setRequiredMessage(I18N.message("fieldrequired"));
+		item.setHintStyle("hint");
 		return item;
 	}
 }
