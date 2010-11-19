@@ -1,5 +1,7 @@
 package com.logicaldoc.gui.frontend.client.document;
 
+import java.util.Date;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
@@ -167,6 +169,9 @@ public class DiscussionsPanel extends DocumentDetailTab {
 		record.setAttribute("id", Long.toString(id));
 		record.setAttribute("title", title);
 		record.setAttribute("user", Session.get().getUser().getFullName());
+		record.setAttribute("posts", 0);
+		record.setAttribute("visits", 0);
+		record.setAttribute("lastPost", new Date());
 		listGrid.addData(record);
 	}
 
