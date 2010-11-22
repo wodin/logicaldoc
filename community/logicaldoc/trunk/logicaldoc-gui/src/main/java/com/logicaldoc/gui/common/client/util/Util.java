@@ -11,6 +11,9 @@ public class Util {
 
 	public static String[] IMAGE_EXTS = new String[] { ".gif", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".png" };
 
+	public static String[] MEDIA_EXTS = new String[] { ".mp3", ".mp4", ".wav", ".avi", ".mpg", ".wmv", ".wma", ".asf",
+			".mov", ".rm", ".flv", ".aac", ".vlc", ".ogg", ".webm", ".swf" };
+
 	/**
 	 * Generates HTML image code with style.
 	 * 
@@ -85,6 +88,15 @@ public class Util {
 	public static boolean isImageFile(String fileName) {
 		String tmp = fileName.toLowerCase();
 		for (String ext : IMAGE_EXTS) {
+			if (tmp.endsWith(ext))
+				return true;
+		}
+		return false;
+	}
+
+	public static boolean isMediaFile(String fileName) {
+		String tmp = fileName.toLowerCase();
+		for (String ext : MEDIA_EXTS) {
 			if (tmp.endsWith(ext))
 				return true;
 		}

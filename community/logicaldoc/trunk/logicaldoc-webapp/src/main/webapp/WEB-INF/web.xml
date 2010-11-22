@@ -498,6 +498,11 @@
 		<servlet-name>Download</servlet-name>
 		<url-pattern>/download</url-pattern>
 	</servlet-mapping>
+	
+	<servlet-mapping>
+      <servlet-name>Download</servlet-name>
+      <url-pattern>/download/*</url-pattern>
+    </servlet-mapping>	
 
 	<servlet-mapping>
 		<servlet-name>TicketDownload</servlet-name>

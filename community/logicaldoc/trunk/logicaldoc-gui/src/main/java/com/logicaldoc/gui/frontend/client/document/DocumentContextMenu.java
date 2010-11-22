@@ -599,6 +599,19 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
+		MenuItem preview = new MenuItem();
+		preview.setTitle(I18N.message("preview"));
+		preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				long id = Long.parseLong(list.getSelectedRecord().getAttribute("id"));
+				String filename = list.getSelectedRecord().getAttribute("filename");
+				String version = list.getSelectedRecord().getAttribute("version");
+				PreviewPopup iv = new PreviewPopup(id, version, filename);
+				iv.show();
+			}
+		});
+		preview.setEnabled(selection.length == 1);
+
 		MenuItem more = new MenuItem(I18N.message("more"));
 
 		boolean enableLock = false;
@@ -716,7 +729,8 @@ public class DocumentContextMenu extends Menu {
 			enableSign = false;
 		}
 
-		setItems(download, cut, copy, delete, bookmark, sendMail, links, checkout, checkin, lock, unlockItem, more);
+		setItems(download, preview, cut, copy, delete, bookmark, sendMail, links, checkout, checkin, lock, unlockItem,
+				more);
 
 		Menu moreMenu = new Menu();
 		moreMenu.setItems(similar, immutable, markIndexable, markUnindexable);
