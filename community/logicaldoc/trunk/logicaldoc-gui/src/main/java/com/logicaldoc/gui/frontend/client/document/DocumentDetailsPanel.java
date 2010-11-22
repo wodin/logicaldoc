@@ -53,8 +53,6 @@ public class DocumentDetailsPanel extends VLayout {
 
 	private Layout discussionTabPanel;
 
-	private Layout previewTabPanel;
-
 	private StandardPropertiesPanel propertiesPanel;
 
 	private ExtendedPropertiesPanel extendedPropertiesPanel;
@@ -66,8 +64,6 @@ public class DocumentDetailsPanel extends VLayout {
 	private LinksPanel linksPanel;
 
 	private Discussion discussionPanel;
-
-	private PreviewPanel previewPanel;
 
 	private HLayout savePanel;
 
@@ -172,7 +168,7 @@ public class DocumentDetailsPanel extends VLayout {
 		discussionTabPanel.setWidth100();
 		discussionTabPanel.setHeight100();
 		discussionTab.setPane(discussionTabPanel);
-		
+
 		if (Feature.visible(Feature.FORUMS))
 			tabSet.addTab(discussionTab);
 
@@ -189,14 +185,6 @@ public class DocumentDetailsPanel extends VLayout {
 		historyTabPanel.setHeight100();
 		historyTab.setPane(historyTabPanel);
 		tabSet.addTab(historyTab);
-
-		Tab previewTab = new Tab(I18N.message("preview"));
-		previewTabPanel = new HLayout();
-		previewTabPanel.setWidth100();
-		previewTabPanel.setHeight100();
-		previewTab.setPane(previewTabPanel);	
-		if (Feature.visible(Feature.PREVIEW))			
-		  tabSet.addTab(previewTab);
 
 		addMember(tabSet);
 	}
@@ -281,17 +269,6 @@ public class DocumentDetailsPanel extends VLayout {
 		}
 		discussionPanel = new Discussion(document);
 		discussionTabPanel.addMember(discussionPanel);
-
-		/*
-		 * Prepare the preview tab
-		 */
-		if (previewPanel != null) {
-			previewPanel.destroy();
-			if (previewTabPanel.contains(previewPanel))
-				previewTabPanel.removeMember(previewPanel);
-		}
-		previewPanel = new PreviewPanel(document);
-		previewTabPanel.addMember(previewPanel);
 	}
 
 	public GUIDocument getDocument() {
