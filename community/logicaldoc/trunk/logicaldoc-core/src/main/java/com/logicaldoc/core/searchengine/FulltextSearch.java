@@ -159,8 +159,13 @@ public class FulltextSearch extends Search {
 				}
 
 				Document doc = multiSearcher.doc(topDocs.scoreDocs[i].doc);
-				String path = doc.get(LuceneDocument.FIELD_FOLDER_ID);
-				long folderId = Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
+
+				String fid = doc.get(LuceneDocument.FIELD_FOLDER_ID);
+				// Support the old 'path' attribute
+				if (fid == null)
+					fid = doc.get("path").substring(doc.get("path").lastIndexOf("/") + 1);
+
+				long folderId = Long.parseLong(fid);
 
 				// When user can see document with folderId then put it into
 				// result-collection.
@@ -195,8 +200,13 @@ public class FulltextSearch extends Search {
 					result.setType(doc.get(LuceneDocument.FIELD_TYPE));
 					result.setCustomId(doc.get(LuceneDocument.FIELD_CUSTOM_ID));
 					result.setSource(doc.get(LuceneDocument.FIELD_SOURCE));
-					result.setPath(doc.get(LuceneDocument.FIELD_FOLDER_ID));
-					result.setFolderId(Long.parseLong(doc.get(LuceneDocument.FIELD_FOLDER_ID)));
+
+					fid = doc.get(LuceneDocument.FIELD_FOLDER_ID);
+					// Support the old 'path' attribute
+					if (fid == null)
+						fid = doc.get("path").substring(doc.get("path").lastIndexOf("/") + 1);
+					result.setPath(fid);
+					result.setFolderId(Long.parseLong(fid));
 					result.setSummary(summary);
 					result.setScore(createScore(maxScore, score));
 
