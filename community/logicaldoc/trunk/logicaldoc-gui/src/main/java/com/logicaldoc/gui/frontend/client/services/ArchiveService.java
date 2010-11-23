@@ -24,7 +24,7 @@ public interface ArchiveService extends RemoteService {
 	/**
 	 * Deletes a set of versions from the given archive
 	 */
-	public void deleteVersions(String sid, long archiveId, Long versionIds[]) throws InvalidSessionException;
+	public GUIArchive deleteVersions(String sid, long archiveId, Long versionIds[]) throws InvalidSessionException;
 
 	/**
 	 * Change the status of the given Archive
