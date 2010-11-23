@@ -1,8 +1,12 @@
 package com.logicaldoc.gui.frontend.client.folder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
@@ -122,8 +126,29 @@ public class SecurityPanel extends FolderDetailTab {
 		list.setAutoFetchData(true);
 		dataSource = new RightsDS(folder.getId(), true);
 		list.setDataSource(dataSource);
-		list.setFields(entityId, entity, read, download, write, add, security, immutable, delete, rename, _import,
-				export, sign, archive, workflow);
+
+		List<ListGridField> fields = new ArrayList<ListGridField>();
+		fields.add(entityId);
+		fields.add(entity);
+		fields.add(read);
+		fields.add(download);
+		fields.add(write);
+		fields.add(add);
+		fields.add(security);
+		fields.add(immutable);
+		fields.add(delete);
+		fields.add(rename);
+		fields.add(_import);
+		fields.add(export);
+		if (Feature.enabled(Feature.DIGITAL_SIGN))
+			fields.add(sign);
+		if (Feature.enabled(Feature.ARCHIVES))
+			fields.add(archive);
+		if (Feature.enabled(Feature.WORKFLOW))
+			fields.add(workflow);
+
+		list.setFields(fields.toArray(new ListGridField[0]));
+
 		container.addMember(list);
 
 		if (folder != null && folder.hasPermission(Constants.PERMISSION_SECURITY)) {
