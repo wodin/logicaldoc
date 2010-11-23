@@ -247,30 +247,20 @@ public class ExportArchivesList extends VLayout {
 											}
 
 											@Override
-											public void onSuccess(GUISostConfig[] result) {
-												// Show Archive validation panel
-												ArchiveValidation validation = new ArchiveValidation(
-														ExportArchivesList.this, result, id);
-												validation.show();
+											public void onSuccess(GUISostConfig[] configs) {
+												if (configs.length > 0) {
+													// Show Archive validation
+													// panel
+													ArchiveValidation validation = new ArchiveValidation(
+															ExportArchivesList.this, configs, id);
+													validation.show();
+												} else {
+													closeArchive(record);
+												}
 											}
 										});
 							} else {
-								service.setStatus(Session.get().getSid(),
-										Long.parseLong(record.getAttributeAsString("id")), GUIArchive.STATUS_CLOSED,
-										new AsyncCallback<Void>() {
-											@Override
-											public void onFailure(Throwable caught) {
-												Log.serverError(caught);
-											}
-
-											@Override
-											public void onSuccess(Void result) {
-												record.setAttribute("status", "1");
-												record.setAttribute("statusicon", "lock");
-												list.updateData(record);
-												showDetails(Long.parseLong(record.getAttributeAsString("id")), false);
-											}
-										});
+								closeArchive(record);
 							}
 						}
 					}
@@ -304,7 +294,7 @@ public class ExportArchivesList extends VLayout {
 		if (details != null)
 			detailsContainer.removeMember(details);
 		if (archiveId != null)
-			details = new ArchiveDetailsPanel(archiveId, readonly);
+			details = new ArchiveDetailsPanel(this, archiveId, readonly);
 		else
 			details = SELECT_ELEMENT;
 		detailsContainer.addMember(details);
@@ -312,5 +302,23 @@ public class ExportArchivesList extends VLayout {
 
 	public ListGrid getList() {
 		return list;
+	}
+
+	private void closeArchive(final ListGridRecord record) {
+		service.setStatus(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
+				GUIArchive.STATUS_CLOSED, new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						record.setAttribute("status", "1");
+						record.setAttribute("statusicon", "lock");
+						list.updateData(record);
+						showDetails(Long.parseLong(record.getAttributeAsString("id")), false);
+					}
+				});
 	}
 }

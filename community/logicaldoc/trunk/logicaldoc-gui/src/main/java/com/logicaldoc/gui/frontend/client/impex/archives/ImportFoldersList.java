@@ -169,7 +169,7 @@ public class ImportFoldersList extends VLayout {
 							service.startImport(Session.get().getSid(), name, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
+									Log.warn(I18N.message("archiveimportingerror"), null);
 								}
 
 								@Override

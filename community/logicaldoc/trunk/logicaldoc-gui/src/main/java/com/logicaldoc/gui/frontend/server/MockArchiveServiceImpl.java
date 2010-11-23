@@ -30,8 +30,10 @@ public class MockArchiveServiceImpl extends RemoteServiceServlet implements Arch
 	}
 
 	@Override
-	public void deleteVersions(String sid, long archiveId, Long[] versionIds) throws InvalidSessionException {
-
+	public GUIArchive deleteVersions(String sid, long archiveId, Long[] versionIds) throws InvalidSessionException {
+		GUIArchive archive = new GUIArchive();
+		archive.setId(archiveId);
+		return archive;
 	}
 
 	@Override

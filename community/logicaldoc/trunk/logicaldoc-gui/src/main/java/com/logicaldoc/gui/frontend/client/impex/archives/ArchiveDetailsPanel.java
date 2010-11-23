@@ -24,12 +24,15 @@ public class ArchiveDetailsPanel extends VLayout {
 	private Long archiveId;
 
 	private boolean readonly = false;
+	
+	private ExportArchivesList archivesList = null;
 
-	public ArchiveDetailsPanel(long archiveId, boolean readonly) {
+	public ArchiveDetailsPanel(ExportArchivesList list, long archiveId, boolean readonly) {
 		super();
 
 		this.archiveId = archiveId;
 		this.readonly = readonly;
+		this.archivesList = list;
 
 		setHeight100();
 		setWidth100();
@@ -62,7 +65,7 @@ public class ArchiveDetailsPanel extends VLayout {
 			if (versionsTabPanel.contains(versionsPanel))
 				versionsTabPanel.removeMember(versionsPanel);
 		}
-		versionsPanel = new VersionsPanel(archiveId, readonly);
+		versionsPanel = new VersionsPanel(archivesList, archiveId, readonly);
 		versionsTabPanel.addMember(versionsPanel);
 
 	}

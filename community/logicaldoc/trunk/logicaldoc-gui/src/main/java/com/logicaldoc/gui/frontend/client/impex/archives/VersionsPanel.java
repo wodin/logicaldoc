@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.data.VersionsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
@@ -52,7 +53,11 @@ public class VersionsPanel extends VLayout {
 
 	private ToolStrip toolbar = new ToolStrip();
 
-	public VersionsPanel(final Long archiveId, final boolean readonly) {
+	private ExportArchivesList archivesList = null;
+
+	public VersionsPanel(ExportArchivesList list, final Long archiveId, final boolean readonly) {
+		this.archivesList = list;
+
 		final IntegerItem maxItem = ItemFactory.newValidateIntegerItem("max", "", null, 1, null);
 		maxItem.setHint(I18N.message("elements"));
 		maxItem.setShowTitle(false);
@@ -60,7 +65,7 @@ public class VersionsPanel extends VLayout {
 		maxItem.setWidth(40);
 
 		toolbar.setWidth100();
-		
+
 		ToolStripButton display = new ToolStripButton();
 		display.setTitle(I18N.message("display"));
 		toolbar.addButton(display);
@@ -172,18 +177,23 @@ public class VersionsPanel extends VLayout {
 							listGrid.removeSelectedData();
 							listGrid.deselectAllRecords();
 
-							service.deleteVersions(Session.get().getSid(), archiveId, ids, new AsyncCallback<Void>() {
+							service.deleteVersions(Session.get().getSid(), archiveId, ids,
+									new AsyncCallback<GUIArchive>() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+										@Override
+										public void onFailure(Throwable caught) {
+											Log.serverError(caught);
+										}
 
-								@Override
-								public void onSuccess(Void ret) {
-
-								}
-							});
+										@Override
+										public void onSuccess(GUIArchive archive) {
+											ListGridRecord selectedRecord = archivesList.getList().getSelectedRecord();
+											if (selectedRecord != null) {
+												selectedRecord.setAttribute("size", archive.getSize());
+												archivesList.getList().updateData(selectedRecord);
+											}
+										}
+									});
 						}
 					}
 				});

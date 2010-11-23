@@ -9,7 +9,7 @@ public interface ArchiveServiceAsync {
 
 	void delete(String sid, long archiveId, AsyncCallback<Void> callback);
 
-	void deleteVersions(String sid, long archiveId, Long[] versionIds, AsyncCallback<Void> callback);
+	void deleteVersions(String sid, long archiveId, Long[] versionIds, AsyncCallback<GUIArchive> callback);
 
 	void save(String sid, GUIArchive archive, AsyncCallback<GUIArchive> callback);
 

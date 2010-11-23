@@ -7,10 +7,8 @@ import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.logicaldoc.gui.common.client.beans.GUISostConfig;
 import com.logicaldoc.gui.common.client.data.ValidationDS;
-import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
-import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.MessageLabel;
 import com.logicaldoc.gui.frontend.client.document.SignDialog;
 import com.logicaldoc.gui.frontend.client.services.ArchiveService;
@@ -110,7 +108,6 @@ public class ValidationTab extends Tab {
 		signButton = new IButton();
 		signButton.setTitle(I18N.message("sign"));
 		signButton.setDisabled(!showList);
-		signButton.setIcon(ItemFactory.newImgIcon("rosette.png").getSrc());
 		signButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				final ListGridRecord[] records = docsList.getRecords();
@@ -149,7 +146,6 @@ public class ValidationTab extends Tab {
 		ListGridField date = new ListGridField("date", I18N.message("date"), 120);
 		date.setAlign(Alignment.CENTER);
 		date.setType(ListGridFieldType.DATE);
-		date.setCellFormatter(new DateCellFormatter(false));
 		date.setCanFilter(false);
 		ListGridField error = new ListGridField("error", I18N.message("error"), 190);
 
