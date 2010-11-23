@@ -18,6 +18,7 @@ import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.types.VerticalAlignment;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.Img;
@@ -162,10 +163,10 @@ public class FolderDetailsPanel extends VLayout {
 					workflowsTabPanel = new HLayout();
 					workflowsTabPanel.setWidth100();
 					workflowsTabPanel.setHeight100();
-					workflowTab.setPane(workflowsTabPanel);
 				} else {
-					workflowTab.setPane(new FeatureDisabled());
+					workflowsTabPanel = new FeatureDisabled();
 				}
+				workflowTab.setPane(workflowsTabPanel);
 				tabSet.addTab(workflowTab);
 			}
 
@@ -174,56 +175,61 @@ public class FolderDetailsPanel extends VLayout {
 	}
 
 	private void refresh() {
-		if (savePanel != null)
-			savePanel.setVisible(false);
+		try {
+			if (savePanel != null)
+				savePanel.setVisible(false);
 
-		/*
-		 * Prepare the standard properties tab
-		 */
-		if (propertiesPanel != null) {
-			propertiesPanel.destroy();
-			propertiesTabPanel.removeMember(propertiesPanel);
-		}
-
-		ChangedHandler changeHandler = new ChangedHandler() {
-			@Override
-			public void onChanged(ChangedEvent event) {
-				onModified();
-			}
-		};
-		propertiesPanel = new PropertiesPanel(folder, changeHandler);
-		propertiesTabPanel.addMember(propertiesPanel);
-
-		/*
-		 * Prepare the security properties tab
-		 */
-		if (securityPanel != null) {
-			securityPanel.destroy();
-			securityTabPanel.removeMember(securityPanel);
-		}
-		securityPanel = new SecurityPanel(folder);
-		securityTabPanel.addMember(securityPanel);
-
-		/*
-		 * Prepare the history tab
-		 */
-		if (historyPanel != null) {
-			historyPanel.destroy();
-			historyTabPanel.removeMember(historyPanel);
-		}
-		historyPanel = new HistoryPanel(folder);
-		historyTabPanel.addMember(historyPanel);
-
-		if (Feature.visible(Feature.WORKFLOW) && folder.hasPermission(Constants.PERMISSION_WORKFLOW)) {
 			/*
-			 * Prepare the workflow tab
+			 * Prepare the standard properties tab
 			 */
-			if (workflowsPanel != null) {
-				workflowsPanel.destroy();
-				workflowsTabPanel.removeMember(workflowsPanel);
+			if (propertiesPanel != null) {
+				propertiesPanel.destroy();
+				propertiesTabPanel.removeMember(propertiesPanel);
 			}
-			workflowsPanel = new WorkflowsFolderPanel(folder);
-			workflowsTabPanel.addMember(workflowsPanel);
+
+			ChangedHandler changeHandler = new ChangedHandler() {
+				@Override
+				public void onChanged(ChangedEvent event) {
+					onModified();
+				}
+			};
+			propertiesPanel = new PropertiesPanel(folder, changeHandler);
+			propertiesTabPanel.addMember(propertiesPanel);
+
+			/*
+			 * Prepare the security properties tab
+			 */
+			if (securityPanel != null) {
+				securityPanel.destroy();
+				securityTabPanel.removeMember(securityPanel);
+			}
+			securityPanel = new SecurityPanel(folder);
+			securityTabPanel.addMember(securityPanel);
+
+			/*
+			 * Prepare the history tab
+			 */
+			if (historyPanel != null) {
+				historyPanel.destroy();
+				historyTabPanel.removeMember(historyPanel);
+			}
+			historyPanel = new HistoryPanel(folder);
+			historyTabPanel.addMember(historyPanel);
+
+			if (Feature.enabled(Feature.WORKFLOW) && folder.hasPermission(Constants.PERMISSION_WORKFLOW)) {
+				/*
+				 * Prepare the workflow tab
+				 */
+				if (workflowsPanel != null) {
+					workflowsPanel.destroy();
+					workflowsTabPanel.removeMember(workflowsPanel);
+				}
+
+				workflowsPanel = new WorkflowsFolderPanel(folder);
+				workflowsTabPanel.addMember(workflowsPanel);
+			}
+		} catch (Throwable r) {
+			SC.warn(r.getMessage());
 		}
 	}
 
