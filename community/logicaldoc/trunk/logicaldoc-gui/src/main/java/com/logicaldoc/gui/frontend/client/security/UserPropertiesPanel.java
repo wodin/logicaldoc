@@ -93,7 +93,7 @@ public class UserPropertiesPanel extends HLayout {
 
 		CheckboxItem expires = new CheckboxItem("expires", I18N.message("passwordexpires"));
 		expires.setValue(user.isPasswordExpires());
-		expires.setDisabled(readonly);
+		expires.setDisabled(readonly || (Session.get().isDemo() && Session.get().getUser().getId() == 1));
 		if (!readonly)
 			expires.addChangedHandler(changedHandler);
 

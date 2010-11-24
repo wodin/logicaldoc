@@ -14,4 +14,6 @@ public interface SearchEngineServiceAsync {
 	void save(String sid, GUISearchEngine searchEngine, AsyncCallback<Void> callback);
 
 	void setLanguageStatus(String sid, String language, boolean active, AsyncCallback<Void> callback);
+
+	void check(String sid, AsyncCallback<String> callback);
 }
