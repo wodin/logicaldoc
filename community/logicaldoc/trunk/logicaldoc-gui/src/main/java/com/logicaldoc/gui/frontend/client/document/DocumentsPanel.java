@@ -127,24 +127,25 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	 *        list
 	 */
 	public void onSelectedDocument(long docId, final boolean clearSelection) {
-		if (!(detailPanel instanceof DocumentDetailsPanel)) {
-			details.removeMember(detailPanel);
-			detailPanel.destroy();
-			detailPanel = new DocumentDetailsPanel(this);
-			details.addMember(detailPanel);
-		}
-
 		documentService.getById(Session.get().getSid(), docId, new AsyncCallback<GUIDocument>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				/*
 				 * Sometimes we can have spurious errors using Firefox.
 				 */
-				// Log.serverError(caught);
+				if (Session.get().isDevel())
+					Log.serverError(caught);
 			}
 
 			@Override
 			public void onSuccess(GUIDocument result) {
+				if (!(detailPanel instanceof DocumentDetailsPanel)) {
+					details.removeMember(detailPanel);
+					detailPanel.destroy();
+					detailPanel = new DocumentDetailsPanel(DocumentsPanel.this);
+					details.addMember(detailPanel);
+				}
+
 				toolbar.update(result);
 				if (detailPanel instanceof DocumentDetailsPanel) {
 					((DocumentDetailsPanel) detailPanel).setDocument(result);
