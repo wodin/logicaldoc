@@ -102,6 +102,18 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	}
 
 	@Override
+	public String check(String sid) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+		try {
+			Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
+			return indexer.check();
+		} catch (Exception t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
+	}
+
+	@Override
 	public void save(String sid, GUISearchEngine searchEngine) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 		try {
