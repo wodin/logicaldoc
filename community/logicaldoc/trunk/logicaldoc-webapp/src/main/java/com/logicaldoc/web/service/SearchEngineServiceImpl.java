@@ -33,11 +33,11 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	public GUISearchEngine getInfo(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 		try {
-			DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 			GUISearchEngine searchEngine = new GUISearchEngine();
-			searchEngine.setEntries((int) dao.count(true));
+
 			Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
 			searchEngine.setLocked(indexer.isLocked());
+			searchEngine.setEntries(indexer.getCount());
 
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			searchEngine.setExcludePatters(conf.getPropertyWithSubstitutions("index.excludes"));

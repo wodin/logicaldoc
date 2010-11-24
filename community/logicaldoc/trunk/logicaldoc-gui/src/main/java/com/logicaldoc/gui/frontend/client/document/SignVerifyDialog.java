@@ -38,6 +38,7 @@ public class SignVerifyDialog extends Window {
 				+ Session.get().getSid() + "&suffix=sign.p7m\" />";
 		tmp += "<param name=\"forceCRLDownload\" value=\"true\" />";
 		tmp += "<param name=\"fileName\" value=\"" + fileName + "\" />";
+		tmp += "<param name=\"checkcrl\" value=\"" + Session.get().getInfo().getConfig("checkcrl") + "\" />";
 		tmp += "</applet>";
 
 		applet.setHTML(tmp);
