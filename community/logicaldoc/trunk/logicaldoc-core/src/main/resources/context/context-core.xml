@@ -374,12 +374,8 @@
 
 	<!-- Tasks -->
 	<bean id="IndexOptimizer" class="com.logicaldoc.core.searchengine.IndexOptimizer">
-		<property name="indexer">
-			<ref bean="Indexer" />
-		</property>
-		<property name="documentDao">
-			<ref bean="DocumentDAO" />
-		</property>
+		<property name="indexer" ref="Indexer" />
+		<property name="documentDao" ref="DocumentDAO" />
 	</bean>
 
 	<bean id="IndexOptimizerJob"
@@ -418,12 +414,9 @@
 	</bean>
 
 	<bean id="IndexerTask" class="com.logicaldoc.core.searchengine.IndexerTask">
-		<property name="documentDao">
-			<ref bean="DocumentDAO" />
-		</property>
-		<property name="documentManager">
-			<ref bean="DocumentManager" />
-		</property>
+		<property name="indexer" ref="Indexer" />
+		<property name="documentDao" ref="DocumentDAO" />
+		<property name="documentManager" ref="DocumentManager" />
 	</bean>
 
 	<bean id="IndexerTaskJob"
