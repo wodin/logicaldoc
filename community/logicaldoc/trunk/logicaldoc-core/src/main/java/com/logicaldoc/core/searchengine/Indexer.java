@@ -1,7 +1,10 @@
 package com.logicaldoc.core.searchengine;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -13,6 +16,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.CheckIndex;
+import org.apache.lucene.index.CheckIndex.Status;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
@@ -187,6 +192,94 @@ public class Indexer {
 			log.error("optimize " + e.getMessage(), e);
 		}
 		log.warn("Finished optimization for all indexes");
+	}
+
+	/**
+	 * Checks the consistency of all activated indexes
+	 */
+	public String check() {
+		log.warn("Start Checking indexes");
+		StringBuffer buf = new StringBuffer();
+		for (Language lang : LanguageManager.getInstance().getActiveLanguages()) {
+			buf.append("--------------------------------------------------\nChecking index " + lang + "\n");
+			buf.append(check(lang));
+			buf.append("--------------------------------------------------\n");
+			buf.append(check(lang));
+		}
+		log.warn("Finished indexes check");
+		return buf.toString();
+	}
+
+	/**
+	 * Launch the check on a single Lucene Index identified by the language
+	 */
+	protected String check(Language language) {
+		log.warn("Checking index " + language);
+
+		ByteArrayOutputStream baos = null;
+		String statMsg = "";
+		try {
+			CheckIndex ci = new CheckIndex(getIndexDirectory(language));
+
+			// Prepare the output buffer
+			baos = new ByteArrayOutputStream();
+			PrintStream ps = new PrintStream(baos);
+
+			// Retrieve the status collecting all informations in a string
+			Status status = null;
+			ci.setInfoStream(ps);
+			try {
+				status = ci.checkIndex();
+			} catch (Exception e) {
+				ps.println("ERROR: caught exception, giving up.\n\n");
+				log.error(e.getMessage());
+			}
+
+			// Elaborate the status showing needed informations
+			if (status != null) {
+				if (status.clean) {
+					statMsg = "OK";
+				} else if (status.toolOutOfDate) {
+					statMsg = "ERROR: Can't check - tool out-of-date";
+				} else {
+					statMsg = "BAD: ";
+					if (status.cantOpenSegments) {
+						statMsg += "cantOpenSegments ";
+					}
+					if (status.missingSegments) {
+						statMsg += "missingSegments ";
+					}
+					if (status.missingSegmentVersion) {
+						statMsg += "missingSegVersion ";
+					}
+					if (status.numBadSegments > 0) {
+						statMsg += "numBadSegments=" + status.numBadSegments + " ";
+					}
+					if (status.totLoseDocCount > 0) {
+						statMsg += "lostDocCount=" + status.totLoseDocCount + " ";
+					}
+				}
+
+				String content = "";
+				try {
+					content = baos.toString("UTF-8");
+				} catch (UnsupportedEncodingException e) {
+				}
+
+				statMsg += content;
+			}
+		} catch (Throwable t) {
+			log.error(t.getMessage());
+		} finally {
+			if (baos != null)
+				try {
+					baos.close();
+				} catch (IOException e) {
+
+				}
+		}
+		log.warn("Finished checking index " + language);
+		return statMsg;
 	}
 
 	/**

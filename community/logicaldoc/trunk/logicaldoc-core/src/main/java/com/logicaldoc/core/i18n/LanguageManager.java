@@ -89,7 +89,7 @@ public class LanguageManager {
 		
 		Collection<Language> actives = new ArrayList<Language>();
 		for (Language l : getLanguages()) {
-			if ("enabled".equals(config.getProperty("lang." + l.getLanguage())))
+			if ("enabled".equals(config.getProperty("lang." + l)))
 				actives.add(l);
 		}
 		return actives;
