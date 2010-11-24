@@ -16,6 +16,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
@@ -467,8 +468,30 @@ public class SearchIndexingPanel extends VLayout {
 			}
 		});
 
+		IButton check = new IButton();
+		check.setTitle(I18N.message("check"));
+		check.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				ContactingServer.get().show();
+				service.check(Session.get().getSid(), new AsyncCallback<String>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+						ContactingServer.get().hide();
+					}
+
+					@Override
+					public void onSuccess(String ret) {
+						ContactingServer.get().hide();
+						SearchIndexCheckStatus sc = new SearchIndexCheckStatus(ret);
+						sc.show();
+					}
+				});
+			}
+		});
+
 		searchEngineForm.setItems(entries, locked, includePatters, excludePatters);
-		buttons.setMembers(save, unlock, rescheduleAll);
+		buttons.setMembers(save, unlock, rescheduleAll, check);
 		buttons.setMembersMargin(5);
 		searchEngineTabPanel.setMembers(searchEngineForm, buttons);
 		searchEngineTabPanel.setMembersMargin(15);

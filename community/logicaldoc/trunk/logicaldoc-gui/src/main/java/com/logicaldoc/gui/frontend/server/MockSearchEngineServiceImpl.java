@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineService;
 
@@ -41,5 +42,10 @@ public class MockSearchEngineServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void setLanguageStatus(String sid, String language, boolean active) {
 		
+	}
+
+	@Override
+	public String check(String sid) throws InvalidSessionException {
+		return "All OK";
 	}
 }
