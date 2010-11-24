@@ -181,30 +181,25 @@ public class DocumentsListPanel extends VLayout {
 		list.addCellClickHandler(new CellClickHandler() {
 			@Override
 			public void onCellClick(CellClickEvent event) {
-				try {
-					if ("indexed".equals(list.getFieldName(event.getColNum()))) {
+				if ("indexed".equals(list.getFieldName(event.getColNum()))) {
+					ListGridRecord record = event.getRecord();
+					if ("indexed".equals(record.getAttribute("indexed"))) {
+						String id = list.getSelectedRecord().getAttribute("id");
+						if (Session.get().getCurrentFolder().isDownload())
+							WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
+									+ "&docId=" + id + "&downloadText=true");
+					}
+				} else if ("signed".equals(list.getFieldName(event.getColNum()))) {
+					if (Feature.enabled(Feature.DIGITAL_SIGN)) {
 						ListGridRecord record = event.getRecord();
-						if ("indexed".equals(record.getAttribute("indexed"))) {
+						if ("sign".equals(record.getAttribute("signed"))) {
 							String id = list.getSelectedRecord().getAttribute("id");
-							if (Session.get().getCurrentFolder().isDownload())
-								WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
-										+ "&docId=" + id + "&downloadText=true");
+							String fileName = list.getSelectedRecord().getAttribute("filename") + ".p7m";
+							SignVerifyDialog verify = new SignVerifyDialog(id, fileName);
+							verify.show();
 							event.cancel();
 						}
-					} else if ("signed".equals(list.getFieldName(event.getColNum()))) {
-						if (Feature.enabled(Feature.DIGITAL_SIGN)) {
-							ListGridRecord record = event.getRecord();
-							if ("sign".equals(record.getAttribute("signed"))) {
-								String id = list.getSelectedRecord().getAttribute("id");
-								String fileName = list.getSelectedRecord().getAttribute("filename") + ".p7m";
-								SignVerifyDialog verify = new SignVerifyDialog(id, fileName);
-								verify.show();
-								event.cancel();
-							}
-						}
 					}
-				} catch (Throwable t) {
-
 				}
 			}
 		});
