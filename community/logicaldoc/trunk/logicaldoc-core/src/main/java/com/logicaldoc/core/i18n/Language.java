@@ -13,6 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
+import org.apache.lucene.util.Version;
 
 import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.util.io.ResourceUtil;
@@ -67,6 +68,7 @@ public class Language {
 		try {
 			Set<String> swSet = new HashSet<String>();
 			String stopwordsResource = "/stopwords/stopwords_" + getLocale().toString() + ".txt";
+			log.debug("Loading stopwords from: " + stopwordsResource);
 			InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(stopwordsResource);
 			if (is == null)
 				is = getClass().getResourceAsStream(stopwordsResource);
@@ -124,8 +126,10 @@ public class Language {
 
 	@SuppressWarnings("unchecked")
 	public Analyzer getAnalyzer() {
+
 		if (analyzer == null && !StringUtils.isEmpty(getAnalyzerClass())) {
-			// Try to instantiate the specified analyzer
+
+			// Try to instantiate the specified analyzer (Using default constructor)
 			Class aClass = null;
 			try {
 				aClass = Class.forName(analyzerClass);
@@ -133,39 +137,41 @@ public class Language {
 				log.error(analyzerClass + " not found");
 			}
 
-			// Try to use constructor init(char[] charset, String[]
-			// stopWords)
-			try {
-				Constructor constructor = aClass.getConstructor(new Class[] { Class.forName("[C"),
-						Class.forName("[Ljava.lang.String;") });
-				if (constructor != null)
-					analyzer = (Analyzer) constructor.newInstance(charset, stopWords);
-			} catch (Throwable e) {
-				log.debug("constructor (char[] charset, String[] stopWords) not found");
+			// Try to use constructor (Version matchVersion, Set<?> stopwords)
+			if (stopWords != null && (!stopWords.isEmpty())) {
+				try {
+					Constructor constructor = aClass.getConstructor(new Class[] { org.apache.lucene.util.Version.class, java.util.Set.class });
+					if (constructor != null)
+						analyzer = (Analyzer) constructor.newInstance(Version.LUCENE_30, stopWords);
+				} catch (Throwable e) {
+					log.debug("constructor (Version matchVersion, Set<?> stopwords)  not found");
+				}
 			}
 
-			// Try to use constructor init(String[] stopWords)
-			if (analyzer == null)
+			// Try to use constructor (Version matchVersion)
+			if (analyzer == null) {
 				try {
-					Constructor constructor = aClass.getConstructor(new Class[] { Class.forName("[C") });
+					Constructor constructor = aClass.getConstructor(new Class[] { org.apache.lucene.util.Version.class });
 					if (constructor != null)
-						analyzer = (Analyzer) constructor.newInstance(stopWords);
-				} catch (Throwable e) {
-					log.debug("constructor (String[] stopWords) not found");
+						analyzer = (Analyzer) constructor.newInstance(Version.LUCENE_30);
+				} catch (Throwable t) {
+					log.debug("constructor (Version matchVersion) not found");
 				}
+			}
 
 			// Try with default constructor
-			try {
-				analyzer = (Analyzer) aClass.newInstance();
-			} catch (Throwable e) {
-				log.debug("constructor without arguments not found");
+			if (analyzer == null) {
+				try {
+					analyzer = (Analyzer) aClass.newInstance();
+				} catch (Throwable e) {
+					log.debug("constructor without arguments not found");
+				}
 			}
 		}
 
 		if (analyzer == null) {
-			analyzer = new SnowballAnalyzer(Indexer.LUCENE_VERSION, getLocale().getDisplayName(Locale.ENGLISH),
-					getStopWords());
-			log.debug("Using default snawball analyzer");
+			analyzer = new SnowballAnalyzer(Indexer.LUCENE_VERSION, getLocale().getDisplayName(Locale.ENGLISH), getStopWords());
+			log.debug("Using default snowball analyzer");
 		}
 
 		return analyzer;
