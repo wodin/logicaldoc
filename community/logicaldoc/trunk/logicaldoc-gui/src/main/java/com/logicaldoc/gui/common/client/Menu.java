@@ -20,7 +20,7 @@ public class Menu {
 
 	public static final int CLIENTS = 3;
 
-	public static final int SETTINGS = 24;
+	public static final int SETTINGS = 7;
 
 	public static final int IMPEX = 8;
 
