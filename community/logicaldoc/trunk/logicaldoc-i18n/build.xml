@@ -93,10 +93,10 @@
 		<echo>Produce the properties bak</echo>
 		<mkdir dir="target/po" />
 
-		<!-- Rename the norwegian PO (no to nb) -->
+		<!-- Rename the norwegian PO (nb to no) -->
 		<for list="${bundles}" param="bundle">
 			<sequential>
-               <move file="target/po/@{bundle}/no.po" tofile="target/po/@{bundle}/nb.po" />		
+               <move file="target/po/@{bundle}/@{bundle}-nb.po" tofile="target/po/@{bundle}/@{bundle}-no.po" />		
 			</sequential>
 		</for>
 		
