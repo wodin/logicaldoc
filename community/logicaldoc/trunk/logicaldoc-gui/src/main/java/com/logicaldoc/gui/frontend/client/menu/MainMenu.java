@@ -143,7 +143,10 @@ public class MainMenu extends ToolStrip {
 			}
 		});
 
-		menu.setItems(develConsole, registration);
+		if (Session.get().isDevel())
+			menu.setItems(develConsole, registration);
+		else
+			menu.setItems(registration);
 
 		ToolStripMenuButton menuButton = new ToolStripMenuButton(I18N.message("tools"), menu);
 		menuButton.setWidth(100);
@@ -203,7 +206,7 @@ public class MainMenu extends ToolStrip {
 		documentation.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				Window.open(Session.get().getInfo().getHelp()+"?lang="+I18N.getLocale(), "_blank",
+				Window.open(Session.get().getInfo().getHelp() + "?lang=" + I18N.getLocale(), "_blank",
 						"location=no,status=no,toolbar=no,menubar=no,resizable=yes");
 			}
 		});
