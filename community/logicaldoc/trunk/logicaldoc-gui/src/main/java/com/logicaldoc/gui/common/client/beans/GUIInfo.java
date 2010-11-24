@@ -225,6 +225,14 @@ public class GUIInfo implements Serializable {
 		return config;
 	}
 
+	public String getConfig(String name) {
+		for (GUIValuePair val : getConfig()) {
+			if (name.equals(val.getCode()))
+				return val.getValue();
+		}
+		return null;
+	}
+
 	public void setConfig(GUIValuePair[] config) {
 		this.config = config;
 	}

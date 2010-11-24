@@ -79,6 +79,7 @@ public class SignClosureDialog extends Window {
 		tmp += "<param name=\"names\" value=\"" + name + "\" />";
 		tmp += "<param name=\"forceCRLDownload\" value=\"false\" />";
 		tmp += "<param name=\"timestampRequested\" value=\"true\" />";
+		tmp += "<param name=\"checkcrl\" value=\"" + Session.get().getInfo().getConfig("checkcrl") + "\" />";
 		tmp += "</applet>";
 
 		applet.setHTML(tmp);

@@ -55,6 +55,7 @@ public class SignDialog extends Window {
 		tmp += "<param name=\"ids\" value=\"" + ids + "\" />";
 		tmp += "<param name=\"names\" value=\"" + names + "\" />";
 		tmp += "<param name=\"forceCRLDownload\" value=\"true\" />";
+		tmp += "<param name=\"checkcrl\" value=\"" + Session.get().getInfo().getConfig("checkcrl") + "\" />";
 		tmp += "</applet>";
 
 		applet.setHTML(tmp);
