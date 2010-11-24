@@ -65,15 +65,23 @@
 			</sequential>
 		</for>
 
-		<!-- Delete not needed POs -->
+		
 		<delete file="target/po" failonerror="no" />
 		
+		<!-- Delete not needed POs -->
 		<delete failonerror="no">
 			<fileset dir="target/po/" casesensitive="yes">
 			  <include name="**/en.po"/>
 			</fileset>
 		</delete>
-
+		
+		<!-- Rename the norwegian PO (no to nb) -->
+		<for list="${bundles}" param="bundle">
+			<sequential>
+               <move file="target/po/@{bundle}/no.po" tofile="target/po/@{bundle}/nb.po" />		
+			</sequential>
+		</for>
+		
 		<tar destfile="target/${pom.artifactId}-${pom.version}.tar">
 			<tarfileset dir="target/po" preserveLeadingSlashes="true">
 			</tarfileset>
@@ -84,6 +92,14 @@
 	<target name="po2prop" depends="init-all">
 		<echo>Produce the properties bak</echo>
 		<mkdir dir="target/po" />
+
+		<!-- Rename the norwegian PO (no to nb) -->
+		<for list="${bundles}" param="bundle">
+			<sequential>
+               <move file="target/po/@{bundle}/no.po" tofile="target/po/@{bundle}/nb.po" />		
+			</sequential>
+		</for>
+		
 		<for list="${bundles}" param="bundle">
 			<sequential>
 				<for list="${locales}" param="locale">

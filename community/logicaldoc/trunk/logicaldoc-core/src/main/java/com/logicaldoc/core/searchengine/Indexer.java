@@ -201,10 +201,9 @@ public class Indexer {
 		log.warn("Start Checking indexes");
 		StringBuffer buf = new StringBuffer();
 		for (Language lang : LanguageManager.getInstance().getActiveLanguages()) {
-			buf.append("--------------------------------------------------\nChecking index " + lang + "\n");
+			buf.append("----------- Check index " + lang + " --------------\n");
 			buf.append(check(lang));
-			buf.append("--------------------------------------------------\n");
-			buf.append(check(lang));
+			buf.append("----------- End Check index " + lang + " ----------\n");
 		}
 		log.warn("Finished indexes check");
 		return buf.toString();
@@ -238,9 +237,9 @@ public class Indexer {
 			// Elaborate the status showing needed informations
 			if (status != null) {
 				if (status.clean) {
-					statMsg = "OK";
+					statMsg = "OK\n";
 				} else if (status.toolOutOfDate) {
-					statMsg = "ERROR: Can't check - tool out-of-date";
+					statMsg = "ERROR: Can't check - tool out-of-date\n";
 				} else {
 					statMsg = "BAD: ";
 					if (status.cantOpenSegments) {
@@ -266,7 +265,7 @@ public class Indexer {
 				} catch (UnsupportedEncodingException e) {
 				}
 
-				statMsg += content;
+				statMsg += "\n" + content;
 			}
 		} catch (Throwable t) {
 			log.error(t.getMessage());
