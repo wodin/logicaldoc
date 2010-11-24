@@ -19,7 +19,7 @@ public class IndexOptimizer extends Task {
 	private Indexer indexer;
 
 	private DocumentDAO documentDao;
-	
+
 	public IndexOptimizer() {
 		super(NAME);
 		log = LogFactory.getLog(IndexOptimizer.class);
@@ -36,21 +36,24 @@ public class IndexOptimizer extends Task {
 	@Override
 	protected void runTask() throws Exception {
 		log.info("Start index optimization");
-		indexer.unlock();
-		deleteOrphaned();
-		indexer.optimize();
+		try {
+			indexer.unlock();
+			deleteOrphaned();
+			indexer.optimize();
+		} finally {
+			indexer.unlock();
+		}
 		log.info("End of index optimization");
 	}
 
-	
 	/**
 	 * Removes from index all documents deleted in the database
 	 */
-	private void deleteOrphaned(){
-		List<Long> ids=documentDao.findDeletedDocIds();
+	private void deleteOrphaned() {
+		List<Long> ids = documentDao.findDeletedDocIds();
 		indexer.deleteDocuments(ids);
 	}
-	
+
 	@Override
 	public boolean isIndeterminate() {
 		return true;
