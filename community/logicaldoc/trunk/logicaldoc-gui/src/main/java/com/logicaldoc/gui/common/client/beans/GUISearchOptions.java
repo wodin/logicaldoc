@@ -44,9 +44,6 @@ public class GUISearchOptions implements Serializable {
 
 	private String language = null;
 
-	// // Useful for parametric searches
-	// private Serializable[] parameters = null;
-
 	private Date dateFrom = null;
 
 	private Date dateTo = null;
@@ -224,14 +221,6 @@ public class GUISearchOptions implements Serializable {
 	public void setExpressionLanguage(String queryLanguage) {
 		this.expressionLanguage = queryLanguage;
 	}
-
-	// public Serializable[] getParameters() {
-	// return parameters;
-	// }
-	//
-	// public void setParameters(Serializable[] parameters) {
-	// this.parameters = parameters;
-	// }
 
 	public String getName() {
 		return name;

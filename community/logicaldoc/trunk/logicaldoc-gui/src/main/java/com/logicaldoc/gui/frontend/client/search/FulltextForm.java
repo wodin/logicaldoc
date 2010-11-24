@@ -185,12 +185,14 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		options.setMaxHits(40);
 		options.setType(GUISearchOptions.TYPE_FULLTEXT);
 		options.setExpression(vm.getValueAsString("expression"));
-		if (NO_LANGUAGE.equals(vm.getValueAsString("language")))
+		if (NO_LANGUAGE.equals(vm.getValueAsString("language"))){
 			options.setLanguage(null);
-		else
+			options.setExpressionLanguage(I18N.getLocale());
+		} else {
 			options.setLanguage(vm.getValueAsString("language"));
-		options.setExpressionLanguage(I18N.getLocale());
-
+			options.setExpressionLanguage(options.getLanguage());
+		}
+		
 		Long size = vm.getValueAsString("size") != null ? new Long(vm.getValueAsString("size")) : null;
 		if (size != null && !NOLIMIT.equals(vm.getValueAsString("sizeOperator"))) {
 			if (LESSTHAN.equals(vm.getValueAsString("sizeOperator")))
@@ -253,7 +255,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		options.setFolderName(folder.getFolderName());
 
 		options.setSearchInSubPath(new Boolean(vm.getValueAsString("subfolders")).booleanValue());
-
+		
 		Search.get().setOptions(options);
 		Search.get().search();
 	}

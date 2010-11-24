@@ -56,6 +56,7 @@ public class SearchBox extends TextItem {
 		GUISearchOptions options = Search.get().getOptions();
 		options.setType(GUISearchOptions.TYPE_FULLTEXT);
 		options.setExpression((String) getValue());
+		options.setExpressionLanguage(I18N.getLocale());
 		options.setFolder(null);
 		options.setTemplate(null);
 		options.setLanguage("");
