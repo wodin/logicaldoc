@@ -113,7 +113,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		// habler onFolderSelect
 		if (docId != null)
 			hiliteDocId = docId;
-		
+
 		documentsMenu.openFolder(folderId);
 		documentsMenu.expandSection(0);
 		MainPanel.get().selectDocumentsTab();
@@ -137,7 +137,10 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		documentService.getById(Session.get().getSid(), docId, new AsyncCallback<GUIDocument>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				Log.serverError(caught);
+				/*
+				 * Sometimes we can have spurious errors using Firefox.
+				 */
+				// Log.serverError(caught);
 			}
 
 			@Override
