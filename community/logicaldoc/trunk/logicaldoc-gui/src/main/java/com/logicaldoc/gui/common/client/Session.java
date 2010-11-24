@@ -52,6 +52,10 @@ public class Session {
 	public boolean isDemo() {
 		return "demo".equals(info.getRunLevel());
 	}
+	
+	public boolean isDevel() {
+		return "devel".equals(info.getRunLevel());
+	}
 
 	public String getSid() {
 		if (session != null)

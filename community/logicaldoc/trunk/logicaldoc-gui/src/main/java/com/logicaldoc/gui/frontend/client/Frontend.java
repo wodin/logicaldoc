@@ -56,7 +56,9 @@ public class Frontend implements EntryPoint {
 		GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 			@Override
 			public void onUncaughtException(Throwable caught) {
-				Log.error(caught.getMessage(), null, caught);
+				//Log unhandled errors only when in devel mode
+				if(Session.get().isDevel())
+				  Log.error(caught.getMessage(), null, caught);
 			}
 
 		});
