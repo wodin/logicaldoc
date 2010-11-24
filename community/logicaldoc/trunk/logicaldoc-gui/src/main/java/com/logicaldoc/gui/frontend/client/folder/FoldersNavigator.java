@@ -21,13 +21,13 @@ import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.Dialog;
+import com.smartgwt.client.widgets.events.DoubleClickEvent;
+import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.events.CellClickEvent;
-import com.smartgwt.client.widgets.grid.events.CellClickHandler;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
-import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
-import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
+import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
+import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
@@ -89,16 +89,16 @@ public class FoldersNavigator extends TreeGrid {
 		});
 
 		// Handles the click on a folder to show the contained documents
-		addCellClickHandler(new CellClickHandler() {
+		addSelectionChangedHandler(new SelectionChangedHandler() {
 			@Override
-			public void onCellClick(final CellClickEvent event) {
+			public void onSelectionChanged(SelectionEvent event) {
 				selectFolder(Long.parseLong(event.getRecord().getAttributeAsString("id")));
 			}
 		});
 
-		addCellDoubleClickHandler(new CellDoubleClickHandler() {
+		addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
-			public void onCellDoubleClick(CellDoubleClickEvent event) {
+			public void onDoubleClick(DoubleClickEvent event) {
 				TreeNode selectedNode = getTree().getRoot();
 				getTree().openFolder(selectedNode);
 			}
