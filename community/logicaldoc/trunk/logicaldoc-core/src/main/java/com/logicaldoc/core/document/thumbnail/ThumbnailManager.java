@@ -88,7 +88,10 @@ public class ThumbnailManager {
 		}
 
 		try {
-			File src = documentManager.getDocumentFile(document, fileVersion);
+			String fver = fileVersion;
+			if (fver == null)
+				fver = document.getFileVersion();
+			File src = documentManager.getDocumentFile(document, fver);
 			File dest = new File(src.getParentFile(), src.getName() + "-thumb.jpg");
 			builder.build(src, document.getFileName(), size, dest, scaleAlgorithm, quality);
 		} catch (Exception e) {
