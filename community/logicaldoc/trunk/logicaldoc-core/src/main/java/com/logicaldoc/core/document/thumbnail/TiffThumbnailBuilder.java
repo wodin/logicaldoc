@@ -20,6 +20,7 @@ import com.sun.media.jai.codec.SeekableStream;
  * @since 5.1
  */
 public class TiffThumbnailBuilder extends ImageThumbnailBuilder {
+	
 	@Override
 	public synchronized void build(File src, String srcFileName, int size, File dest, int scaleAlgorithm,
 			float compressionQuality) throws IOException {
@@ -36,8 +37,9 @@ public class TiffThumbnailBuilder extends ImageThumbnailBuilder {
 		RenderedImage image = decoder.decodeAsRenderedImage(0);
 		BufferedImage bsrc = convertRenderedImage(image);
 
-		resizeAndSave(size, dest, scaleAlgorithm, compressionQuality, bsrc);
+		resizeAndSaveUnSquared(size, dest, scaleAlgorithm, compressionQuality, bsrc);
 	}
+
 
 	/**
 	 * Converts the given RenderedImage into a BufferedImage
