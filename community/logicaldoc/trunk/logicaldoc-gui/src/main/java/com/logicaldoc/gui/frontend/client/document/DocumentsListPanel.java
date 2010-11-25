@@ -93,16 +93,23 @@ public class DocumentsListPanel extends VLayout {
 		ListGridField creator = new ListGridField("creator", I18N.message("creator"), 90);
 		creator.setAlign(Alignment.CENTER);
 		creator.setCanFilter(true);
+		creator.setHidden(true);
 
 		ListGridField created = new ListGridField("created", I18N.message("createdon"), 110);
 		created.setAlign(Alignment.CENTER);
 		created.setType(ListGridFieldType.DATE);
 		created.setCellFormatter(new DateCellFormatter(false));
 		created.setCanFilter(false);
-
+		created.setHidden(true);
+		
 		ListGridField customId = new ListGridField("customId", I18N.message("customid"), 110);
 		customId.setType(ListGridFieldType.TEXT);
 
+		ListGridField type = new ListGridField("type", I18N.message("type"), 55);
+		type.setType(ListGridFieldType.TEXT);
+		type.setAlign(Alignment.CENTER);
+
+		
 		ListGridField immutable = new ListGridField("immutable", " ", 24);
 		immutable.setType(ListGridFieldType.IMAGE);
 		immutable.setCanSort(false);
@@ -169,7 +176,7 @@ public class DocumentsListPanel extends VLayout {
 		list.setFilterOnKeypress(true);
 		dataSource = new DocumentsDS(folder.getId(), null, max, null);
 		list.setDataSource(dataSource);
-		list.setFields(indexed, locked, immutable, signed, icon, filename, title, size, lastModified, version,
+		list.setFields(indexed, locked, immutable, signed, icon, filename, title, lastModified, type, size, version,
 				publisher, published, creator, created, customId);
 
 		// Prepare a panel containing a title and the documents list
