@@ -607,7 +607,7 @@ public class DocumentContextMenu extends Menu {
 				String filename = list.getSelectedRecord().getAttribute("filename");
 				String version = list.getSelectedRecord().getAttribute("version");
 				PreviewPopup iv = new PreviewPopup(id, version, filename);
-				iv.show();
+				iv.show();				
 			}
 		});
 		preview.setEnabled(selection.length == 1);
