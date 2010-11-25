@@ -36,10 +36,12 @@ public class PreviewPopup extends Window {
 		setShowModalMask(true);
 		centerInPage();
 
-		if (Util.isImageFile(filename) && !filename.toLowerCase().endsWith(".tif")
-				&& !filename.toLowerCase().endsWith(".tiff")) {
+		if (Util.isImageFile(filename)) {
 			ImageViewer iv = new ImageViewer(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
 					+ "&docId=" + docId + "&open=true", 600);
+			if (filename.endsWith(".tif") || filename.endsWith(".tiff") || filename.endsWith(".bmp"))
+				iv = new ImageViewer(GWT.getHostPageBaseURL() + "thumbnail?sid=" + Session.get().getSid() + "&docId="
+						+ docId, 600);
 			iv.setTop(23);
 			iv.setWidth(602);
 			iv.setHeight(460);
