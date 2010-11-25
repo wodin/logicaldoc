@@ -22,7 +22,7 @@ public class SignVerifyDialog extends Window {
 		layout.setMargin(25);
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		setTitle(I18N.message("sign"));
+		setTitle(I18N.message("verification"));
 		setWidth(460);
 		setHeight(340);
 		setCanDragResize(true);
