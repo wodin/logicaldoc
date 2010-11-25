@@ -1,28 +1,29 @@
-The LogicalDoc team is pleased to announce the availability of the new release 
-of LogicalDOC Enterprise, that brings you new and exciting features.
+The LogicalDOC development team is happy to announce the immediate availability of LogicalDOC CE 6.0-RC2
 
-Among other things, these are the major new features:
+You can get this distribution in tomcat-bundle archive from SourceForge: 
+http://sourceforge.net/projects/logicaldoc/files/distribution/LogicalDOC%20CE%206.0/logicaldoc-6.0RC2-tomcat-bundle.zip/download
 
-Workflow: Visual Business Process editor directly accessible from the web browser
-Workflow: Multiple task assignments
-Workflow: Support for activities start and stop
-History on document folders
-New graphical layout
-Document navigation through a folders tree
-Configurable first version number
-3D (Cumulus) Tag Cloud
-New graphical layout more lighter and sleek
-Improvements in the ergonomics of the GUI
+LogicalDOC is a Web-based Document Management System (DMS) based on open 
+source technology (GWT +Spring +Hibernate). Thanks to its intuitive interface, 
+LogicalDOC transforms complex operations into easy tasks. It allows the 
+storage, organization, versioning and use of all kind of files and documents 
+within an user friendly interface.
 
-For details of changes see the ChangeLog.
+Changes:
+Improved support to preview documents
+Fixed support for Locales with language variants (Portuguese-brazilian)
+Completed the GUI translation in German language
+Introduced support for the Norwegian language (Big thanks to Magnus Ottosen - Datawaves.no)
+Improvements in the advanced search
+Fixed problems on web-services
+WebDAV Permission fixes on renaming, moving and deleting folder and file.
+Improved parser for PDF documents
+New Webservice method to collect the metadata of a list of documents
 
-Report any bugs you find using the bug tracker
-http://bugs.logicaldoc.com
 
-You can discuss issues in the user forum
-https://sourceforge.net/forum/forum.php?forum_id=865524
+You can use our dedicated Bug tracker http://bugs.logicaldoc.com to report errors or feature requests.
 
+Please contribute to the internationalization of LogicalDOC by using the translation platform described in the Wiki
+http://wiki.logicaldoc.com/wiki/Translate_LogicalDOC
 
 The LogicalDOC development Team 
-
-
