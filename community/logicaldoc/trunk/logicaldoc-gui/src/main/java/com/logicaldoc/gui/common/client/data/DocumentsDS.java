@@ -37,6 +37,7 @@ public class DocumentsDS extends DataSource {
 		id.setRequired(true);
 		DataSourceImageField icon = new DataSourceImageField("icon");
 		DataSourceTextField customId = new DataSourceTextField("customId");
+		DataSourceTextField type = new DataSourceTextField("type");
 		DataSourceTextField version = new DataSourceTextField("version");
 		DataSourceTextField docref = new DataSourceTextField("docref");
 		docref.setHidden(true);
@@ -57,8 +58,8 @@ public class DocumentsDS extends DataSource {
 		DataSourceTextField aliasId = new DataSourceTextField("aliasId");
 		aliasId.setHidden(true);
 
-		setFields(id, title, size, publisher, version, docref, lastModified, published, created, creator, customId,
-				icon, immutable, iindexed, signed, locked, lockUserId, filename, status);
+		setFields(id, title, type, size, publisher, version, docref, lastModified, published, created, creator,
+				customId, icon, immutable, iindexed, signed, locked, lockUserId, filename, status);
 		setClientOnly(true);
 		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&folderId="
 				+ (folderId != null ? folderId : "") + "&filename=" + (fileFilter != null ? fileFilter : "") + "&max="
