@@ -26,8 +26,8 @@ import com.smartgwt.client.widgets.grid.events.CellClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellClickHandler;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
-import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
-import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
+import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
+import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
@@ -44,6 +44,8 @@ public class FoldersNavigator extends TreeGrid {
 	private FolderServiceAsync service = (FolderServiceAsync) GWT.create(FolderService.class);
 
 	private static FoldersNavigator instance = new FoldersNavigator();
+
+	private boolean firstTime = true;
 
 	private FoldersNavigator() {
 		setWidth100();
@@ -93,14 +95,21 @@ public class FoldersNavigator extends TreeGrid {
 			@Override
 			public void onCellClick(CellClickEvent event) {
 				selectFolder(Long.parseLong(event.getRecord().getAttributeAsString("id")));
+
+				// Expand the selected node if it is not already expanded
+				TreeNode selectedNode = (TreeNode) getSelectedRecord();
+				getTree().openFolder(selectedNode);
 			}
 		});
 
-		addCellDoubleClickHandler(new CellDoubleClickHandler() {
+		// Used to expand root folder after login
+		addDataArrivedHandler(new DataArrivedHandler() {
 			@Override
-			public void onCellDoubleClick(CellDoubleClickEvent event) {
-				TreeNode selectedNode = (TreeNode) getSelectedRecord();
-				getTree().openFolder(selectedNode);
+			public void onDataArrived(DataArrivedEvent event) {
+				if (isFirstTime()) {
+					getTree().openFolder(getTree().findById("" + Constants.DOCUMENTS_FOLDERID));
+					FoldersNavigator.this.firstTime = false;
+				}
 			}
 		});
 	}
@@ -497,5 +506,9 @@ public class FoldersNavigator extends TreeGrid {
 						}
 					}
 				});
+	}
+
+	public boolean isFirstTime() {
+		return firstTime;
 	}
 }

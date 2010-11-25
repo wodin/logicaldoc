@@ -181,8 +181,8 @@ public class DocumentsListPanel extends VLayout {
 		list.addCellClickHandler(new CellClickHandler() {
 			@Override
 			public void onCellClick(CellClickEvent event) {
+				ListGridRecord record = event.getRecord();
 				if ("indexed".equals(list.getFieldName(event.getColNum()))) {
-					ListGridRecord record = event.getRecord();
 					if ("indexed".equals(record.getAttribute("indexed"))) {
 						String id = list.getSelectedRecord().getAttribute("id");
 						if (Session.get().getCurrentFolder().isDownload())
@@ -191,8 +191,7 @@ public class DocumentsListPanel extends VLayout {
 					}
 				} else if ("signed".equals(list.getFieldName(event.getColNum()))) {
 					if (Feature.enabled(Feature.DIGITAL_SIGN)) {
-						ListGridRecord record = event.getRecord();
-						if ("sign".equals(record.getAttribute("signed"))) {
+						if ("rosette".equals(record.getAttribute("signed"))) {
 							String id = list.getSelectedRecord().getAttribute("id");
 							String fileName = list.getSelectedRecord().getAttribute("filename") + ".p7m";
 							SignVerifyDialog verify = new SignVerifyDialog(id, fileName);
