@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.Collection;
-import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -48,13 +47,9 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			writeSmtpConfig(data);
 			writeRegConfig(data);
 
-			// Create a unique installation id
-			ContextProperties pbean = new ContextProperties();
-			pbean.setProperty("id", UUID.randomUUID().toString());
-			pbean.write();
-
 			// Setup the correct logs folder
 			try {
+				ContextProperties pbean = new ContextProperties();
 				LoggingConfigurator lconf = new LoggingConfigurator();
 				lconf.setLogsRoot(pbean.getProperty("conf.logdir"));
 				lconf.write();
