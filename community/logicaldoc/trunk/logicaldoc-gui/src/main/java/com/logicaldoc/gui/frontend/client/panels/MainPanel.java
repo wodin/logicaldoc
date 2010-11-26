@@ -109,7 +109,8 @@ public class MainPanel extends VLayout implements SessionObserver {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Log.serverError(caught);
+				if (Session.get().isDevel())
+					Log.serverError(caught);
 			}
 
 			@Override
