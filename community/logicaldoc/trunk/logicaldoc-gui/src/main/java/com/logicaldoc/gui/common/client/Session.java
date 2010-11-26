@@ -52,7 +52,7 @@ public class Session {
 	public boolean isDemo() {
 		return "demo".equals(info.getRunLevel());
 	}
-	
+
 	public boolean isDevel() {
 		return "devel".equals(info.getRunLevel());
 	}
@@ -96,7 +96,8 @@ public class Session {
 						service.getSessionInfo(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
 							@Override
 							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
+								if (isDevel())
+									Log.serverError(caught);
 							}
 
 							@Override

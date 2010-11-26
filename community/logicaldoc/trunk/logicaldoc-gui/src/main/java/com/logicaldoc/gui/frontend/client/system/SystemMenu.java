@@ -101,7 +101,7 @@ public class SystemMenu extends VLayout {
 				});
 			}
 		});
-		
+
 		guiLangs.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -128,18 +128,22 @@ public class SystemMenu extends VLayout {
 				+ Session.get().getInfo().getVendor());
 		vendor.setShouldSaveValue(false);
 
-		StaticTextItem address = ItemFactory.newStaticTextItem("address", "", Session.get().getInfo()
-				.getVendorAddress());
-		address.setShouldSaveValue(false);
-
-		StaticTextItem capAndCity = ItemFactory.newStaticTextItem("capAndCity", "", Session.get().getInfo()
-				.getVendorCap()
-				+ "  " + Session.get().getInfo().getVendorCity());
-		capAndCity.setShouldSaveValue(false);
-
-		StaticTextItem country = ItemFactory.newStaticTextItem("country", "", Session.get().getInfo()
-				.getVendorCountry());
-		country.setShouldSaveValue(false);
+		// StaticTextItem address = ItemFactory.newStaticTextItem("address", "",
+		// Session.get().getInfo()
+		// .getVendorAddress());
+		// address.setShouldSaveValue(false);
+		//
+		// StaticTextItem capAndCity =
+		// ItemFactory.newStaticTextItem("capAndCity", "",
+		// Session.get().getInfo()
+		// .getVendorCap()
+		// + "  " + Session.get().getInfo().getVendorCity());
+		// capAndCity.setShouldSaveValue(false);
+		//
+		// StaticTextItem country = ItemFactory.newStaticTextItem("country", "",
+		// Session.get().getInfo()
+		// .getVendorCountry());
+		// country.setShouldSaveValue(false);
 
 		DynamicForm supportForm = new DynamicForm();
 		supportForm.setAlign(Alignment.LEFT);
@@ -165,7 +169,7 @@ public class SystemMenu extends VLayout {
 		installationID.setWrap(false);
 		installationID.setWrapTitle(false);
 
-		systemForm.setItems(productName, version, vendor, address, capAndCity, country);
+		systemForm.setItems(productName, version, vendor);
 
 		supportForm.setItems(support, installationID);
 
