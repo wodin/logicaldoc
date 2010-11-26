@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.system;
 
+import com.google.gwt.i18n.client.NumberFormat;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -32,7 +33,7 @@ public class PieStats extends HLayout {
 		setHeight(350);
 
 		setAlign(VerticalAlignment.TOP);
-		
+
 		VLayout repository = new VLayout();
 		repository.addMember(new StatisticWidget(I18N.message("repository"), parameters[0]));
 		repository.addMember(prepareLegend(parameters[0], STATS_REPOSITORY));
@@ -48,6 +49,7 @@ public class PieStats extends HLayout {
 	}
 
 	private DynamicForm prepareLegend(GUIParameter[] parameters, int type) {
+		NumberFormat fmt = NumberFormat.getFormat("###");
 
 		// Calculate the total value
 		double count = 0;
@@ -55,7 +57,7 @@ public class PieStats extends HLayout {
 			if (parameter == null)
 				break;
 
-			count += Double.parseDouble(parameter.getValue());
+			count += fmt.parse(parameter.getValue());
 		}
 
 		DynamicForm systemForm = new DynamicForm();
@@ -79,14 +81,14 @@ public class PieStats extends HLayout {
 
 			StaticTextItem item = ItemFactory.newStaticTextItem(parameter.getName(), parameter.toString(), null);
 			if (type == STATS_REPOSITORY)
-				item.setValue(Util.formatSize(Long.parseLong(parameter.getValue())) + " ( "
-						+ Util.formatPercentage((Double.parseDouble(parameter.getValue()) * 100 / count), 2) + " )");
+				item.setValue(Util.formatSize(fmt.parse(parameter.getValue())) + " ( "
+						+ Util.formatPercentage((fmt.parse(parameter.getValue()) * 100 / count), 2) + " )");
 			else if (type == STATS_DOCUMENTS)
 				item.setValue(parameter.getValue() + " " + I18N.message("documents").toLowerCase() + " " + "( "
-						+ Util.formatPercentage((Double.parseDouble(parameter.getValue()) * 100 / count), 2) + " )");
+						+ Util.formatPercentage((fmt.parse(parameter.getValue()) * 100 / count), 2) + " )");
 			else if (type == STATS_FOLDERS)
 				item.setValue(parameter.getValue() + " " + I18N.message("folders").toLowerCase() + " " + " ( "
-						+ Util.formatPercentage((Double.parseDouble(parameter.getValue()) * 100 / count), 2) + " )");
+						+ Util.formatPercentage((fmt.parse(parameter.getValue()) * 100 / count), 2) + " )");
 
 			item.setRequired(true);
 			item.setShouldSaveValue(false);

@@ -28,9 +28,9 @@ public class StatisticWidget extends ChartWidget {
 		for (GUIParameter parameter : parameters) {
 			if (parameter == null)
 				break;
-			if (Integer.parseInt(parameter.getValue()) > 0)
+			if (Long.parseLong(parameter.getValue()) > 0)
 				showEmptyChart = false;
-			pie.addSlices(new PieChart.Slice(Integer.parseInt(parameter.getValue()), parameter.toString()));
+			pie.addSlices(new PieChart.Slice(Long.parseLong(parameter.getValue()), parameter.toString()));
 		}
 
 		// Maybe all parameters have value = 0, so is visualised a full chart
