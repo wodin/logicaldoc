@@ -168,14 +168,18 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 	public GUIParameter[] getSessionInfo(String sid) {
 		log.debug("Requested info for session " + sid);
 
-		SystemMessageDAO messageDao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
-		GUIParameter[] parameters = new GUIParameter[1];
+		try {
+			SystemMessageDAO messageDao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
+			GUIParameter[] parameters = new GUIParameter[1];
 
-		UserSession session = SessionManager.getInstance().get(sid);
-		GUIParameter messages = new GUIParameter("messages", ""
-				+ messageDao.getCount(session.getUserName(), SystemMessage.TYPE_SYSTEM, 0));
-		parameters[0] = messages;
-
-		return parameters;
+			UserSession session = SessionManager.getInstance().get(sid);
+			GUIParameter messages = new GUIParameter("messages", ""
+					+ messageDao.getCount(session.getUserName(), SystemMessage.TYPE_SYSTEM, 0));
+			parameters[0] = messages;
+			return parameters;
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
 	}
 }

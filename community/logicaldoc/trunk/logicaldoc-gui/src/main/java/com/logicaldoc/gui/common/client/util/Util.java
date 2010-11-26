@@ -127,13 +127,14 @@ public class Util {
 	 */
 	public static native String formatSize(double size) /*-{
 		if (size / 1024 < 1) {
-		str = size + " Bytes";
+		  str = size + " Bytes";
 		} else if (size / 1048576 < 1) {
-		str = (size / 1024).toFixed(1) + " KBytes";
+		  str = (size / 1024).toFixed(1) + " KBytes";
+		} else if(size / 1073741824 <1){
+		  str = (size / 1048576).toFixed(1) + " MBytes";
 		} else {
-		str = (size / 1048576).toFixed(1) + " MBytes";
-		} 
-
+		  str = (size / 1073741824).toFixed(1) + " GBytes";
+		}
 		return str;
 	}-*/;
 
