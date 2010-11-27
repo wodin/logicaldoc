@@ -26,7 +26,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.0
  */
 public class PreviewPopup extends Window {
-	
+
 	public PreviewPopup(long docId, String version, String filename) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("preview"));
@@ -37,24 +37,25 @@ public class PreviewPopup extends Window {
 		setShowModalMask(true);
 		centerInPage();
 
-		//Log.info("before filename(0): " + filename, null);
+		// Log.info("before filename(0): " + filename, null);
 		if (Util.isImageFile(filename)) {
-			//Log.info("Util.isImageFile(filename) returns true: ", null);
+			// Log.info("Util.isImageFile(filename) returns true: ", null);
 			ImageViewer iv = null;
-		if (filename.endsWith(".tif") || filename.endsWith(".tiff") || filename.endsWith(".bmp")) {
-			//Log.info("filename is tif or bmp: " + filename, null);
-			iv = new ImageViewer(GWT.getHostPageBaseURL() + "thumbnail?sid=" + Session.get().getSid() + "&docId=" + docId, 600);
-		} else {
-			//Log.info("filename is NOT tif NOR bmp: " + filename, null);
-			iv = new ImageViewer(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + docId + "&open=true", 600);			
-		}			
-				
+			if (filename.endsWith(".tif") || filename.endsWith(".tiff") || filename.endsWith(".bmp")) {
+				// Log.info("filename is tif or bmp: " + filename, null);
+				iv = new ImageViewer(GWT.getHostPageBaseURL() + "thumbnail?sid=" + Session.get().getSid() + "&docId="
+						+ docId, 600);
+			} else {
+				// Log.info("filename is NOT tif NOR bmp: " + filename, null);
+				iv = new ImageViewer(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+						+ docId + "&open=true", 600);
+			}
+
 			iv.setTop(23);
 			iv.setWidth(602);
 			iv.setHeight(460);
 			addChild(iv);
 		} else if (Util.isMediaFile(filename)) {
-			Log.info("Util.isMediaFile(filename) returns true: ", null);
 			VLayout panel = new VLayout();
 			panel.setTop(23);
 			panel.setWidth(602);
@@ -78,7 +79,6 @@ public class PreviewPopup extends Window {
 			}
 			addChild(panel);
 		} else {
-			Log.info("else: maybe pdf?? ", null);
 			VLayout panel = new VLayout();
 			panel.setTop(23);
 			panel.setWidth(602);
