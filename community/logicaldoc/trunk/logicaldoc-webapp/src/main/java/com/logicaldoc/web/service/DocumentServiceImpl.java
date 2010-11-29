@@ -998,8 +998,28 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			}
 
 			try {
+				// Send the message
 				EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
 				sender.send(mail);
+
+				DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+				FolderDAO fDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+
+				Document doc = docDao.findById(email.getDocId());
+
+				// Create the document history event
+				HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+				History history = new History();
+				history.setSessionId(sid);
+				history.setDocId(email.getDocId());
+				history.setEvent(History.EVENT_SENT);
+				history.setUser(SessionUtil.getSessionUser(sid));
+				history.setComment(StringUtils.abbreviate(email.getRecipients(), 4000));
+				history.setTitle(doc.getTitle());
+				history.setVersion(doc.getVersion());
+				history.setPath(fDao.computePathExtended(doc.getFolder().getId()));
+				dao.store(history);
+
 				return "ok";
 			} catch (Exception ex) {
 				log.warn(ex.getMessage(), ex);
