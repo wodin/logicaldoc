@@ -606,8 +606,14 @@ public class DocumentContextMenu extends Menu {
 				long id = Long.parseLong(list.getSelectedRecord().getAttribute("id"));
 				String filename = list.getSelectedRecord().getAttribute("filename");
 				String version = list.getSelectedRecord().getAttribute("version");
+
+				// In the search hitlist we don't have the filename
+				if (filename == null)
+					filename = list.getSelectedRecord().getAttribute("title") + "."
+							+ list.getSelectedRecord().getAttribute("type");
+				
 				PreviewPopup iv = new PreviewPopup(id, version, filename);
-				iv.show();				
+				iv.show();
 			}
 		});
 		preview.setEnabled(selection.length == 1);

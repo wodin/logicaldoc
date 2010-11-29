@@ -139,6 +139,9 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		lockUserId.setHidden(true);
 		lockUserId.setCanFilter(false);
 
+		ListGridField type = new ListGridField("type", I18N.message("type"), 85);
+		type.setHidden(true);
+		
 		ListGridField score = new ListGridField("score", I18N.message("score"), 120);
 		score.setCanFilter(false);
 		score.setCellFormatter(new CellFormatter() {
@@ -187,10 +190,10 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		list.setWrapCells(true);
 		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT) {
 			//list.setFields(id, folderId, icon, title, size, creation, score, customId);
-			list.setFields(id, folderId, icon, title, size, published, creation, score, customId);
+			list.setFields(id, folderId, icon, title, type, size, published, creation, score, customId);
 		} else {
 			//list.setFields(id, folderId, icon, title, size, creation, customId);
-			list.setFields(id, folderId, icon, title, size, published, creation, customId);
+			list.setFields(id, folderId, icon, title, type, size, published, creation, customId);
 		}
 
 		list.addSelectionChangedHandler(new SelectionChangedHandler() {

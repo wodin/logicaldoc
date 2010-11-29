@@ -113,7 +113,7 @@ public class EmailDialog extends Window {
 						@Override
 						public void onSuccess(String result) {
 							if ("ok".equals(result)) {
-								EventPanel.get().info(I18N.message("messagesent"), null);
+								EventPanel.get().info(I18N.message("messagesent")+". "+I18N.message("documentcopysent"), null);
 							} else {
 								EventPanel.get().error(I18N.message("messagenotsent"), null);
 							}
