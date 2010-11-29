@@ -70,8 +70,12 @@ public class FolderSelector extends TextItem {
 						|| "delete".equals(event.getKeyName().toLowerCase())) {
 					clearValue();
 					setValue("");
+					folderId=null;
 				} else {
 					SC.warn(I18N.message("pressdel"));
+				}
+				for (FolderChangeListener listener : listeners) {
+					listener.onChanged(null);
 				}
 			}
 		});
@@ -107,10 +111,13 @@ public class FolderSelector extends TextItem {
 	}
 
 	public GUIFolder getFolder() {
-		GUIFolder folder = new GUIFolder();
-		folder.setId(getFolderId());
-		folder.setName(getFolderName());
-		return folder;
+		if (getFolderId() != null) {
+			GUIFolder folder = new GUIFolder();
+			folder.setId(getFolderId());
+			folder.setName(getFolderName());
+			return folder;
+		} else
+			return null;
 	}
 
 	public Long getFolderId() {

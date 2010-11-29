@@ -25,7 +25,7 @@ public class MockEmailAccountServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public GUIEmailAccount save(String sid, GUIEmailAccount account) throws InvalidSessionException {
 		if (account.getId() == 0)
-			account.setId(9999);
+			account.setId(9999L);
 
 		return account;
 	}

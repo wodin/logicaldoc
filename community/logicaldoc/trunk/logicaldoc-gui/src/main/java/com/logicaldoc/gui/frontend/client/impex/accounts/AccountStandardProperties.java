@@ -35,8 +35,8 @@ public class AccountStandardProperties extends AccountDetailsTab {
 		setWidth100();
 		setHeight100();
 		setMembers(formsContainer);
-		targetSelector = new FolderSelector("target", false);
-		targetSelector.setRequired(true);
+
+		targetSelector = new FolderSelector("target", true);
 		targetSelector.setTitle(I18N.message("target"));
 		targetSelector.setColSpan(2);
 		targetSelector.setEndRow(true);
@@ -47,6 +47,7 @@ public class AccountStandardProperties extends AccountDetailsTab {
 				changedHandler.onChanged(null);
 			}
 		});
+
 		refresh();
 	}
 
