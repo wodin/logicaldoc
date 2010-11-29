@@ -37,11 +37,13 @@ public class PreviewPopup extends Window {
 		setShowModalMask(true);
 		centerInPage();
 
+		String f=filename.toLowerCase();
+		
 		// Log.info("before filename(0): " + filename, null);
 		if (Util.isImageFile(filename)) {
 			// Log.info("Util.isImageFile(filename) returns true: ", null);
 			ImageViewer iv = null;
-			if (filename.endsWith(".tif") || filename.endsWith(".tiff") || filename.endsWith(".bmp")) {
+			if (f.endsWith(".tif") || f.endsWith(".tiff") || f.endsWith(".bmp")) {
 				// Log.info("filename is tif or bmp: " + filename, null);
 				iv = new ImageViewer(GWT.getHostPageBaseURL() + "thumbnail?sid=" + Session.get().getSid() + "&docId="
 						+ docId, 600);
@@ -90,7 +92,7 @@ public class PreviewPopup extends Window {
 						+ Util.contextPath()
 						+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.preview.PreviewApplet\" width=\"600\" height=\"460\">";
 				tmp += "<param name=\"url\" value=\"" + GWT.getHostPageBaseURL() + "convertpdf?sid="
-						+ Session.get().getSid() + "&docId=" + docId + "&version=" + version + "\" />";
+						+ Session.get().getSid() + "&docId=" + docId + "\" />";
 				tmp += "</applet>";
 				applet.setHTML(tmp);
 				applet.setWidth("600px");

@@ -292,6 +292,8 @@ public class ItemFactory {
 		map.put("event.renamed", I18N.message("event.renamed"));
 		map.put("event.stored", I18N.message("event.stored"));
 		map.put("event.unlocked", I18N.message("event.unlocked"));
+		map.put("event.sent", I18N.message("event.sent"));
+
 		// User events
 		map.put("event.user.deleted", I18N.message("event.user.deleted"));
 		map.put("event.user.login", I18N.message("event.user.login"));
