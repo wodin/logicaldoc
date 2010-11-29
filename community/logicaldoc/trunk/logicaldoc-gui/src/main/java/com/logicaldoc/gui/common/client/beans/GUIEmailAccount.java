@@ -12,7 +12,7 @@ public class GUIEmailAccount implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private long id;
+	private Long id;
 
 	public static String PROVIDER_POP3 = "pop3";
 
@@ -57,21 +57,20 @@ public class GUIEmailAccount implements Serializable {
 	 */
 	private int format = FORMAT_EML;
 
-	private GUIFolder target = new GUIFolder();
+	private GUIFolder target = null;
 
 	private GUIEmailRule[] rules;
 
 	public GUIEmailAccount() {
 		super();
-		target.setId(5);
-		target.setName("/");
+		target=null;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
