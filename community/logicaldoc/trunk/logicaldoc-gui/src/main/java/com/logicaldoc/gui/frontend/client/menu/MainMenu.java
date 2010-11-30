@@ -3,7 +3,11 @@ package com.logicaldoc.gui.frontend.client.menu;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.Feature;
+import com.logicaldoc.gui.common.client.FolderObserver;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -17,8 +21,10 @@ import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
@@ -33,12 +39,16 @@ import com.smartgwt.client.widgets.toolbar.ToolStripMenuButton;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class MainMenu extends ToolStrip {
+public class MainMenu extends ToolStrip implements FolderObserver {
 	protected SystemServiceAsync systemService = (SystemServiceAsync) GWT.create(SystemService.class);
 
 	protected SecurityServiceAsync securityService = (SecurityServiceAsync) GWT.create(SecurityService.class);
 
 	private SettingServiceAsync settingService = (SettingServiceAsync) GWT.create(SettingService.class);
+
+	private HTMLFlow dropArea = new HTMLFlow();
+
+	private static final String EMPTY_DIV = "<div style=\"margin-top:3px; width=\"80\"; height=\"20\"\" />";
 
 	public MainMenu() {
 		super();
@@ -57,7 +67,17 @@ public class MainMenu extends ToolStrip {
 		addMenuButton(getHelpMenu());
 
 		addFill();
-		addSeparator();
+
+		dropArea.setContents(EMPTY_DIV);
+		dropArea.setWidth(81);
+		if (Feature.enabled(Feature.DROP_SPOT))
+			dropArea.setTooltip(I18N.message("dropfiles"));
+		else
+			dropArea.setTooltip(I18N.message("featuredisabled"));
+		dropArea.setAlign(Alignment.CENTER);
+		addMember(dropArea);
+
+		addFill();
 
 		Label userInfo = new Label(I18N.message("loggedin") + " " + Session.get().getUser().getUserName());
 		userInfo.setWrap(false);
@@ -66,6 +86,9 @@ public class MainMenu extends ToolStrip {
 		addSeparator();
 
 		addFormItem(new SearchBox());
+
+		Session.get().addFolderObserver(this);
+		onFolderSelect(Session.get().getCurrentFolder());
 	}
 
 	private ToolStripMenuButton getFileMenu() {
@@ -242,5 +265,35 @@ public class MainMenu extends ToolStrip {
 		ToolStripMenuButton menuButton = new ToolStripMenuButton(I18N.message("help"), menu);
 		menuButton.setWidth(100);
 		return menuButton;
+	}
+
+	@Override
+	public void onFolderSelect(GUIFolder folder) {
+		Log.info("folder " + folder, null);
+		if (Feature.visible(Feature.DROP_SPOT)) {
+			Log.info("+1", null);
+			if (folder != null && folder.hasPermission(Constants.PERMISSION_WRITE)
+					&& Feature.enabled(Feature.DROP_SPOT)) {
+				if (dropArea.getContents().equals(EMPTY_DIV)) {
+					Log.info("+3", null);
+
+					String tmp = "<div style=\"z-index:-100;margin-top:3px; width=\"80\"; height=\"20\"\"><applet name=\"DropApplet\" archive=\""
+							+ Util.contextPath()
+							+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.upload.DropApplet\" width=\"80\" height=\"20\">";
+					tmp += "<param name=\"uploadUrl\" value=\"" + Util.contextPath()
+							+ "servlet.gupld?new_session=true&sid=" + Session.get().getSid() + "\" />";
+					tmp += "</applet></div>";
+					dropArea.setContents(tmp);
+				}
+			} else {
+				Log.info("+5", null);
+
+				dropArea.setContents(EMPTY_DIV);
+			}
+		} else {
+			Log.info("+6", null);
+
+			dropArea.setContents(EMPTY_DIV);
+		}
 	}
 }

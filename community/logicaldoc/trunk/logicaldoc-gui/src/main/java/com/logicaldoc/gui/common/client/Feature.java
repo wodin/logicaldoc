@@ -87,7 +87,7 @@ public class Feature {
 
 	public static final int PARAMETRIC_SEARCHES = 62;
 
-	public static final int FILE_DROP = 63;
+	public static final int DROP_SPOT = 63;
 
 	private static Set<String> features = new HashSet<String>();
 
