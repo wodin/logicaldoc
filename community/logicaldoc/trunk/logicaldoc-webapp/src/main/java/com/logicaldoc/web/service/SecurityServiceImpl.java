@@ -418,7 +418,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			else {
 				// Notify the user by email
 				if (createNew)
-					notifyAccount(usr, decodedPassword);
+					try {
+						notifyAccount(usr, decodedPassword);
+					} catch (Throwable e) {
+					}
 			}
 
 			return user;
@@ -460,7 +463,6 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			sender.send(email);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
-			throw new RuntimeException(e.getMessage(), e);
 		}
 	}
 
