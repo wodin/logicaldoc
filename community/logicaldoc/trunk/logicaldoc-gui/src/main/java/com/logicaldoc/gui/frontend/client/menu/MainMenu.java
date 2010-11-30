@@ -271,12 +271,9 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 	public void onFolderSelect(GUIFolder folder) {
 		Log.info("folder " + folder, null);
 		if (Feature.visible(Feature.DROP_SPOT)) {
-			Log.info("+1", null);
 			if (folder != null && folder.hasPermission(Constants.PERMISSION_WRITE)
 					&& Feature.enabled(Feature.DROP_SPOT)) {
 				if (dropArea.getContents().equals(EMPTY_DIV)) {
-					Log.info("+3", null);
-
 					String tmp = "<div style=\"z-index:-100;margin-top:3px; width=\"80\"; height=\"20\"\"><applet name=\"DropApplet\" archive=\""
 							+ Util.contextPath()
 							+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.upload.DropApplet\" width=\"80\" height=\"20\">";
@@ -286,13 +283,9 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 					dropArea.setContents(tmp);
 				}
 			} else {
-				Log.info("+5", null);
-
 				dropArea.setContents(EMPTY_DIV);
 			}
 		} else {
-			Log.info("+6", null);
-
 			dropArea.setContents(EMPTY_DIV);
 		}
 	}
