@@ -4,8 +4,11 @@ import java.io.File;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.StringTokenizer;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -13,6 +16,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.core.communication.EMail;
+import com.logicaldoc.core.communication.EMailSender;
+import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.core.communication.dao.SystemMessageDAO;
 import com.logicaldoc.core.document.AbstractDocument;
@@ -38,9 +44,11 @@ import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
+import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.io.CryptUtil;
+import com.logicaldoc.util.security.PasswordGenerator;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
@@ -348,14 +356,18 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		SessionUtil.validateSession(sid);
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		boolean createNew = false;
+		String decodedPassword = "";
 
 		try {
 			User usr;
 			if (user.getId() != 0) {
 				usr = userDao.findById(user.getId());
 				userDao.initialize(usr);
-			} else
+			} else {
 				usr = new User();
+				createNew = true;
+			}
 
 			usr.setCity(user.getCity());
 			usr.setCountry(user.getCountry());
@@ -371,6 +383,14 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setUserName(user.getUserName());
 			usr.setEnabled(user.isEnabled() ? 1 : 0);
 			usr.setPasswordExpires(user.isPasswordExpires() ? 1 : 0);
+
+			if (createNew) {
+				// Generate an initial password
+				ContextProperties pbean = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+				decodedPassword = new PasswordGenerator().generate(pbean.getInt("password.size"));
+				usr.setDecodedPassword(decodedPassword);
+				usr.setPasswordChanged(new Date());
+			}
 
 			boolean stored = userDao.store(usr);
 			if (!stored)
@@ -395,7 +415,49 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			stored = userDao.store(usr);
 			if (!stored)
 				throw new Exception("User not stored");
+			else {
+				// Notify the user by email
+				if (createNew)
+					notifyAccount(usr, decodedPassword);
+			}
+
 			return user;
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Notify the user with it's new account
+	 * 
+	 * @param user The created user
+	 * @param password The decoded password
+	 */
+	private void notifyAccount(User user, String password) {
+		EMail email;
+		try {
+			email = new EMail();
+			Recipient recipient = new Recipient();
+			recipient.setAddress(user.getEmail());
+			email.addRecipient(recipient);
+			email.setFolder("outbox");
+
+			Locale locale = new Locale(user.getLanguage());
+
+			HttpServletRequest request = this.getThreadLocalRequest();
+			String address = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+					+ request.getContextPath();
+			String text = I18N.message("emailnotifyaccount", locale,
+					new Object[] { user.getFirstName() + " " + user.getName(), user.getUserName(), password, address });
+			email.setMessageText(text);
+			email.setRead(1);
+			email.setSentDate(new Date());
+			email.setSubject(I18N.message("emailnotifyaccountobject", locale));
+			email.setUserName(user.getUserName());
+
+			EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
+			sender.send(email);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 			throw new RuntimeException(e.getMessage(), e);

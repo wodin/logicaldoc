@@ -197,6 +197,7 @@ public class UserDetailsPanel extends VLayout {
 
 	public void onSave() {
 		if (validate()) {
+			final boolean createNew = user.getId() == 0;
 			service.saveUser(Session.get().getSid(), user, new AsyncCallback<GUIUser>() {
 				@Override
 				public void onFailure(Throwable caught) {
@@ -206,6 +207,8 @@ public class UserDetailsPanel extends VLayout {
 				@Override
 				public void onSuccess(GUIUser user) {
 					savePanel.setVisible(false);
+					if (createNew)
+						Log.info(I18N.message("emailnotifyaccountsent"), I18N.message("emailnotifyaccountsent"));
 					if (user != null) {
 						usersPanel.updateRecord(user);
 						usersPanel.showUserDetails(user);
