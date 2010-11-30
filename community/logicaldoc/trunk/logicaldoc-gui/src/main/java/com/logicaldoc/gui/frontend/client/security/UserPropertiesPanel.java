@@ -276,17 +276,17 @@ public class UserPropertiesPanel extends HLayout {
 		// The user must have at least one group (of standard type)
 		int count = 0;
 		for (GUIGroup g : user.getGroups())
-			if (g.getType() == GUIGroup.TYPE_DEFAULT){
+			if (g.getType() == GUIGroup.TYPE_DEFAULT) {
 				Log.debug(g.getName());
 				count++;
 			}
 
 		if (count == 0) {
 			SC.warn(I18N.message("usermustbelongtogroup"));
-			Log.error(I18N.message("error"), I18N.message("usermustbelongtogroup"), null);
+			Log.warn(I18N.message("usermustbelongtogroup"), I18N.message("usermustbelongtogroup"));
 			return false;
 		}
-		
+
 		return !vm.hasErrors();
 	}
 }
