@@ -241,7 +241,7 @@ public class StatsCollector extends Task {
 			// Sizing
 			post.setParameter("users", Integer.toString(users));
 			post.setParameter("groups", Integer.toString(groups));
-			post.setParameter("docs", Integer.toString(notindexeddocs + notindexeddocs + deleteddocs));
+			post.setParameter("docs", Integer.toString(notindexeddocs + indexeddocs + deleteddocs));
 			post.setParameter("folders", Integer.toString(withdocs + empty + deletedfolders));
 			post.setParameter("tags", Integer.toString(tags));
 			post.setParameter("versions", Integer.toString(versions));
