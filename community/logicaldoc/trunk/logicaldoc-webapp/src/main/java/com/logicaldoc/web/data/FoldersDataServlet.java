@@ -2,6 +2,7 @@ package com.logicaldoc.web.data;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -18,6 +19,8 @@ import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * This servlet is responsible for folders data.
@@ -41,7 +44,6 @@ public class FoldersDataServlet extends HttpServlet {
 
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
-			
 
 			// Headers required by Internet Explorer
 			response.setHeader("Pragma", "public");
@@ -69,6 +71,15 @@ public class FoldersDataServlet extends HttpServlet {
 			 * Get the visible children
 			 */
 			List<Folder> folders = dao.findChildren(parent, session.getUserId());
+
+			// Sort for name asc
+			Collections.sort(folders, new Comparator<Folder>() {
+				@Override
+				public int compare(Folder o1, Folder o2) {
+					return o1.getName().compareTo(o2.getName());
+				}
+
+			});
 
 			/*
 			 * Iterate over records composing the response XML document
