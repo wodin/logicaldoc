@@ -269,7 +269,6 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 
 	@Override
 	public void onFolderSelect(GUIFolder folder) {
-		Log.info("folder " + folder, null);
 		if (Feature.visible(Feature.DROP_SPOT)) {
 			if (folder != null && folder.hasPermission(Constants.PERMISSION_WRITE)
 					&& Feature.enabled(Feature.DROP_SPOT)) {
