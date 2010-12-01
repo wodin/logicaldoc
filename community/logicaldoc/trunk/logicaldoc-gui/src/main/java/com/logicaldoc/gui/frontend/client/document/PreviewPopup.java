@@ -17,6 +17,8 @@ import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.common.client.widgets.ImageViewer;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.widgets.Window;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
+import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
@@ -27,6 +29,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
  */
 public class PreviewPopup extends Window {
 
+	private HTML applet = new HTML();
+	
 	public PreviewPopup(long docId, String version, String filename) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("preview"));
@@ -36,19 +40,24 @@ public class PreviewPopup extends Window {
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
+		
+		addCloseClickHandler(new CloseClickHandler() {
+			@Override
+			public void onCloseClick(CloseClientEvent event) {
+				if (applet != null)
+					applet.setHTML("");
+				destroy();
+			}
+		});
 
 		String f=filename.toLowerCase();
-		
-		// Log.info("before filename(0): " + filename, null);
-		if (Util.isImageFile(filename)) {
-			// Log.info("Util.isImageFile(filename) returns true: ", null);
+
+        if (Util.isImageFile(filename)) {
 			ImageViewer iv = null;
 			if (f.endsWith(".tif") || f.endsWith(".tiff") || f.endsWith(".bmp")) {
-				// Log.info("filename is tif or bmp: " + filename, null);
 				iv = new ImageViewer(GWT.getHostPageBaseURL() + "thumbnail?sid=" + Session.get().getSid() + "&docId="
 						+ docId, 600);
 			} else {
-				// Log.info("filename is NOT tif NOR bmp: " + filename, null);
 				iv = new ImageViewer(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
 						+ docId + "&open=true", 600);
 			}
@@ -87,7 +96,7 @@ public class PreviewPopup extends Window {
 			panel.setHeight(460);
 			addChild(panel);
 			if (Feature.enabled(Feature.PREVIEW)) {
-				HTML applet = new HTML();
+				applet = new HTML();
 				String tmp = "<applet name=\"PreviewApplet\" archive=\""
 						+ Util.contextPath()
 						+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.preview.PreviewApplet\" width=\"600\" height=\"460\">";
