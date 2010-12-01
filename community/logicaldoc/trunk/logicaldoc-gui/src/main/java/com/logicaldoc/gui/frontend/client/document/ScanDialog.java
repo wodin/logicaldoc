@@ -64,7 +64,14 @@ public class ScanDialog extends Window {
 
 					@Override
 					public void onSuccess(Void result) {
-						destroy();
+						addCloseClickHandler(new CloseClickHandler() {
+							@Override
+							public void onCloseClick(CloseClientEvent event) {
+								if (applet != null)
+									applet.setHTML("");
+								destroy();
+							}
+						});
 					}
 				});
 			}
@@ -134,6 +141,8 @@ public class ScanDialog extends Window {
 					@Override
 					public void onSuccess(Void result) {
 						DocumentsPanel.get().refresh();
+						if (applet != null)
+							applet.setHTML("");
 						destroy();
 					}
 				});
