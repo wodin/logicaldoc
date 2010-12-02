@@ -629,12 +629,10 @@ public class DocumentContextMenu extends Menu {
 			isOfficeFile = Util.isOfficeFile(selection[0].getAttribute("filename"));
 		else if (selection[0].getAttribute("type") != null)
 			isOfficeFile = Util.isOfficeFileType(selection[0].getAttribute("type"));
-		boolean enableOffice = selection != null && selection.length == 1 && isOfficeFile
-				&& "true".equals(Config.getProperty(Constants.OFFICE_ENABLED)) && folder.isDownload();
-
+		
 		if (selection != null && selection.length == 1) {
 			ListGridRecord record = selection[0];
-			if ("blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable"))) {
+			if ("blank".equals(record.getAttribute("locked")) && "blank".equals(record.getAttribute("immutable"))) {
 				enableLock = true;
 			}
 			if (!"blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable"))) {
@@ -645,6 +643,9 @@ public class DocumentContextMenu extends Menu {
 					enableUnlock = true;
 			}
 		}
+		
+		boolean enableOffice = (enableUnlock||enableLock) && (selection != null && selection.length == 1 && isOfficeFile
+		&& "true".equals(Config.getProperty(Constants.OFFICE_ENABLED)) && folder.isDownload());
 
 		for (ListGridRecord record : selection)
 			if (!"blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable"))) {
@@ -702,9 +703,9 @@ public class DocumentContextMenu extends Menu {
 				checkin.setEnabled(false);
 		}
 
-		unlockItem.setEnabled(enableUnlock && !enableLock);
-		lock.setEnabled(enableLock && enableImmutable);
-		checkout.setEnabled(enableLock && enableImmutable);
+		unlockItem.setEnabled(enableUnlock);
+		lock.setEnabled(enableLock);
+		checkout.setEnabled(enableLock);
 		immutable.setEnabled(enableImmutable);
 		delete.setEnabled(enableDelete);
 
@@ -746,7 +747,7 @@ public class DocumentContextMenu extends Menu {
 			else
 				edit.setEnabled(enableOffice);
 		}
-
+		
 		if (Feature.visible(Feature.DIGITAL_SIGN)) {
 			moreMenu.addItem(sign);
 			if (!folder.hasPermission(Constants.PERMISSION_SIGN) || !Feature.enabled(Feature.DIGITAL_SIGN))
