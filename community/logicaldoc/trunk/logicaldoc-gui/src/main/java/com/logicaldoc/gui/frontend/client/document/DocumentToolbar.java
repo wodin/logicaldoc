@@ -433,8 +433,16 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					isOfficeFile = Util.isOfficeFileType(document.getType());
 
 				office.setDisabled(!Feature.enabled(Feature.OFFICE) || !isOfficeFile || !downloadEnabled);
+				if (document.getStatus() != Constants.DOC_UNLOCKED
+						&& !Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN)) {
+					if (document.getLockUserId() != null
+							&& Session.get().getUser().getId() != document.getLockUserId().longValue())
+						office.setDisabled(true);
+				}
+
 				if (!office.isDisabled())
 					office.setTooltip(I18N.message("editwithoffice"));
+
 			} else {
 				download.setDisabled(true);
 				rss.setDisabled(true);
