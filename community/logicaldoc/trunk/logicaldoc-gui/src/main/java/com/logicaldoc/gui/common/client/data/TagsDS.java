@@ -11,7 +11,6 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class TagsDS extends DataSource {
-	private static TagsDS instance;
 
 	public TagsDS(String firstLetter) {
 		setTitleField("word");
@@ -24,11 +23,5 @@ public class TagsDS extends DataSource {
 		setDataURL("data/tags.xml?sid=" + Session.get().getSid()
 				+ (firstLetter != null ? "&firstLetter=" + firstLetter.charAt(0) : ""));
 		setClientOnly(true);
-	}
-
-	public static TagsDS getInstance() {
-		if (instance == null)
-			instance = new TagsDS(null);
-		return instance;
 	}
 }
