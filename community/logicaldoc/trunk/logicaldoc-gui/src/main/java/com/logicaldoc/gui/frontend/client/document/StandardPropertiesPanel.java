@@ -151,7 +151,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 			tagItem.setHint(I18N.message("pressentertoaddtag"));
 			tagItem.setHintStyle("hint");
 			tagItem.setPickListWidth(250);
-			tagItem.setOptionDataSource(TagsDS.getInstance());
+			tagItem.setOptionDataSource(new TagsDS(null));
 			tagItem.setDisabled(!update);
 			tagItem.addKeyDownHandler(new KeyDownHandler() {
 				@Override
