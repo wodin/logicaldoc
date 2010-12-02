@@ -166,6 +166,11 @@ public class WorkflowDetailsDialog extends Window {
 		for (Canvas canvas : members) {
 			form.removeMember(canvas);
 		}
+		
+		members = appendedDocsLayout.getMembers();
+		for (Canvas canvas : members) {
+			appendedDocsLayout.removeMember(canvas);
+		}
 
 		// Workflow section
 		workflowForm = new DynamicForm();
