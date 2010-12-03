@@ -16,6 +16,7 @@ import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
 import org.apache.lucene.util.Version;
 
 import com.logicaldoc.core.searchengine.Indexer;
+import com.logicaldoc.core.searchengine.WordDelimiterAnalyzer;
 import com.logicaldoc.util.io.ResourceUtil;
 
 /**
@@ -129,7 +130,8 @@ public class Language {
 
 		if (analyzer == null && !StringUtils.isEmpty(getAnalyzerClass())) {
 
-			// Try to instantiate the specified analyzer (Using default constructor)
+			// Try to instantiate the specified analyzer (Using default
+			// constructor)
 			Class aClass = null;
 			try {
 				aClass = Class.forName(analyzerClass);
@@ -140,7 +142,8 @@ public class Language {
 			// Try to use constructor (Version matchVersion, Set<?> stopwords)
 			if (stopWords != null && (!stopWords.isEmpty())) {
 				try {
-					Constructor constructor = aClass.getConstructor(new Class[] { org.apache.lucene.util.Version.class, java.util.Set.class });
+					Constructor constructor = aClass.getConstructor(new Class[] { org.apache.lucene.util.Version.class,
+							java.util.Set.class });
 					if (constructor != null)
 						analyzer = (Analyzer) constructor.newInstance(Version.LUCENE_30, stopWords);
 				} catch (Throwable e) {
@@ -151,7 +154,8 @@ public class Language {
 			// Try to use constructor (Version matchVersion)
 			if (analyzer == null) {
 				try {
-					Constructor constructor = aClass.getConstructor(new Class[] { org.apache.lucene.util.Version.class });
+					Constructor constructor = aClass
+							.getConstructor(new Class[] { org.apache.lucene.util.Version.class });
 					if (constructor != null)
 						analyzer = (Analyzer) constructor.newInstance(Version.LUCENE_30);
 				} catch (Throwable t) {
@@ -170,10 +174,12 @@ public class Language {
 		}
 
 		if (analyzer == null) {
-			analyzer = new SnowballAnalyzer(Indexer.LUCENE_VERSION, getLocale().getDisplayName(Locale.ENGLISH), getStopWords());
+			analyzer = new SnowballAnalyzer(Indexer.LUCENE_VERSION, getLocale().getDisplayName(Locale.ENGLISH),
+					getStopWords());
 			log.debug("Using default snowball analyzer");
 		}
 
+		analyzer = new WordDelimiterAnalyzer(analyzer);
 		return analyzer;
 	}
 
