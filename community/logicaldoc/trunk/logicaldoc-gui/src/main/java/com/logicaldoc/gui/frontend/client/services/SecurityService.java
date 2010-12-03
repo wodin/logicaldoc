@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
+import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMenu;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
@@ -51,7 +52,7 @@ public interface SecurityService extends RemoteService {
 	/**
 	 * Creates or updates a user
 	 */
-	public GUIUser saveUser(String sid, GUIUser user) throws InvalidSessionException;
+	public GUIUser saveUser(String sid, GUIUser user, GUIInfo info) throws InvalidSessionException;
 
 	/**
 	 * Saves the profile data only

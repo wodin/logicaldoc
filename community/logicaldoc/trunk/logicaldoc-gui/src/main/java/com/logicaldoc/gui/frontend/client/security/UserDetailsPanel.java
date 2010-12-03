@@ -198,7 +198,7 @@ public class UserDetailsPanel extends VLayout {
 	public void onSave() {
 		if (validate()) {
 			final boolean createNew = user.getId() == 0;
-			service.saveUser(Session.get().getSid(), user, new AsyncCallback<GUIUser>() {
+			service.saveUser(Session.get().getSid(), user, Session.get().getInfo(), new AsyncCallback<GUIUser>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					Log.serverError(caught);

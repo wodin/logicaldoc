@@ -174,14 +174,14 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 	public void testSaveUser() throws InvalidSessionException {
 		GUIUser user = service.getUser(session.getSid(), 1);
 
-		user = service.saveUser(session.getSid(), user);
+		user = service.saveUser(session.getSid(), user, session.getInfo());
 		Assert.assertNotNull(user);
 		Assert.assertEquals("admin", user.getUserName());
 		Assert.assertEquals("admin@admin.net", user.getEmail());
 
 		user = service.getUser(session.getSid(), 3);
 
-		user = service.saveUser(session.getSid(), user);
+		user = service.saveUser(session.getSid(), user, session.getInfo());
 		Assert.assertNotNull(user);
 		Assert.assertEquals("sebastian", user.getUserName());
 		Assert.assertEquals("seb_stein@gmx.de", user.getEmail());
