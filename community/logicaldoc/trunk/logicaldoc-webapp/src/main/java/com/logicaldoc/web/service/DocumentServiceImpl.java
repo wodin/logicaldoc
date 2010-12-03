@@ -461,7 +461,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				document.setSourceDate(doc.getSourceDate());
 				document.setSourceId(doc.getSourceId());
 				document.setLastModified(doc.getLastModified());
-
+				document.setLockUserId(doc.getLockUserId());
+				document.setStatus(doc.getStatus());
+				
 				if (doc.getTemplate() != null) {
 					document.setTemplate(doc.getTemplate().getName());
 					document.setTemplateId(doc.getTemplate().getId());
@@ -492,7 +494,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					document.setAttributes(attributes);
 				}
 
-				document.setStatus(doc.getStatus());
 				FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 				document.setPathExtended(fdao.computePathExtended(doc.getFolder().getId()));
 				document.setFileSize(new Long(doc.getFileSize()).floatValue());
