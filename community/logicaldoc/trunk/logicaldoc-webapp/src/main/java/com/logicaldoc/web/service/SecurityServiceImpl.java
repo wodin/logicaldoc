@@ -352,7 +352,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUIUser saveUser(String sid, GUIUser user) throws InvalidSessionException {
+	public GUIUser saveUser(String sid, GUIUser user, GUIInfo info) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -419,7 +419,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				// Notify the user by email
 				if (createNew)
 					try {
-						notifyAccount(usr, decodedPassword);
+						notifyAccount(usr, decodedPassword, info);
 					} catch (Throwable e) {
 					}
 			}
@@ -437,7 +437,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	 * @param user The created user
 	 * @param password The decoded password
 	 */
-	private void notifyAccount(User user, String password) {
+	private void notifyAccount(User user, String password, GUIInfo info) {
 		EMail email;
 		try {
 			email = new EMail();
@@ -451,12 +451,15 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			HttpServletRequest request = this.getThreadLocalRequest();
 			String address = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 					+ request.getContextPath();
-			String text = I18N.message("emailnotifyaccount", locale,
-					new Object[] { user.getFirstName() + " " + user.getName(), user.getUserName(), password, address });
+			String text = I18N.message(
+					"emailnotifyaccount",
+					locale,
+					new Object[] { user.getFirstName() + " " + user.getName(), info.getProductName(),
+							user.getUserName(), password, address });
 			email.setMessageText(text);
 			email.setRead(1);
 			email.setSentDate(new Date());
-			email.setSubject(I18N.message("emailnotifyaccountobject", locale));
+			email.setSubject(info.getProductName() + " " + I18N.message("emailnotifyaccountobject", locale));
 			email.setUserName(user.getUserName());
 
 			EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
@@ -628,5 +631,4 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 		return null;
 	}
-
 }

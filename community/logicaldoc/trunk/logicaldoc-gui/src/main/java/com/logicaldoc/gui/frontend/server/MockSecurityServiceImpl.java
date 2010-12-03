@@ -115,7 +115,7 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 	}
 
 	@Override
-	public GUIUser saveUser(String sid, GUIUser user) {
+	public GUIUser saveUser(String sid, GUIUser user, GUIInfo info) {
 		System.out.println("* save user:" + user);
 
 		if (user != null && user.getId() == 0)
@@ -202,7 +202,7 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 	@Override
 	public void applyRights(String sid, GUIMenu menu) throws InvalidSessionException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
