@@ -3,15 +3,26 @@
 <script language="javascript">
 var sessionId=null;
 var exitMessage="You are trying to leave the application without closing the current session. Please use the 'exit' menu.";
- 
-function unloadTrigger(e){
+var isIE = navigator.userAgent.indexOf("MSIE")!=-1;
+var isFF = navigator.userAgent.indexOf("Firefox")!=-1;
+
+function unloadTriggerIE(e){
   if(sessionId!=null){
     e = e || window.event;
     e.returnValue = exitMessage;
   }
 }
 
-window.onbeforeunload  = unloadTrigger;
+function unloadTriggerChrome(){
+  if(sessionId!=null){
+	return exitMessage;
+  }
+}
+
+if(isIE || isFF)
+   window.onbeforeunload  = unloadTriggerIE;
+else
+   window.onbeforeunload = unloadTriggerChrome;
 </script>
 
 <style type="text/css">
