@@ -141,7 +141,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 		ListGridField type = new ListGridField("type", I18N.message("type"), 85);
 		type.setHidden(true);
-		
+
 		ListGridField score = new ListGridField("score", I18N.message("score"), 120);
 		score.setCanFilter(false);
 		score.setCellFormatter(new CellFormatter() {
@@ -189,10 +189,12 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		list.setShowRowNumbers(true);
 		list.setWrapCells(true);
 		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT) {
-			//list.setFields(id, folderId, icon, title, size, creation, score, customId);
+			// list.setFields(id, folderId, icon, title, size, creation, score,
+			// customId);
 			list.setFields(id, folderId, icon, title, type, size, published, creation, score, customId);
 		} else {
-			//list.setFields(id, folderId, icon, title, size, creation, customId);
+			// list.setFields(id, folderId, icon, title, size, creation,
+			// customId);
 			list.setFields(id, folderId, icon, title, type, size, published, creation, customId);
 		}
 
@@ -351,9 +353,9 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			max.setShowTitle(false);
 			max.setDefaultValue(40);
 			max.setWidth(40);
-			
+
 			max.setValue(Search.get().getOptions().getMaxHits());
-				
+
 			ToolStripButton repeat = new ToolStripButton();
 			repeat.setTitle(I18N.message("display"));
 			toolStrip.addButton(repeat);
@@ -369,6 +371,24 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 				}
 			});
 		}
+
+		final ToolStripButton toggle = new ToolStripButton();
+		if (SearchMenu.get().getWidth() > 0)
+			toggle.setTitle(I18N.message("closeseleftpanel"));
+		else
+			toggle.setTitle(I18N.message("openleftpanel"));
+		toggle.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				SearchPanel.get().toggleMenu();
+				if (SearchPanel.get().isMenuOpened())
+					toggle.setTitle(I18N.message("closeseleftpanel"));
+				else
+					toggle.setTitle(I18N.message("openleftpanel"));
+			}
+		});
+		toolStrip.addSeparator();
+		toolStrip.addButton(toggle);
 
 		toolStrip.addFill();
 		addMember(toolStrip);

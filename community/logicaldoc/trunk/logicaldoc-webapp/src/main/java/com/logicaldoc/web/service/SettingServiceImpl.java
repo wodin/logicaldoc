@@ -103,7 +103,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					continue;
 			} else if (name.startsWith("product") || name.startsWith("skin") || name.startsWith("conf")
 					|| name.startsWith("ldap") || name.startsWith("schedule") || name.startsWith("smtp")
-					|| name.startsWith("gui") || name.startsWith("password") || name.startsWith("ad")
+					|| name.startsWith("password") || name.startsWith("ad")
 					|| name.startsWith("webservice") || name.startsWith("webdav") || name.startsWith("runlevel")
 					|| name.startsWith("stat") || name.startsWith("index") || name.startsWith("proxy")
 					|| name.equals("id") || name.startsWith("lang") || name.startsWith("reg.")

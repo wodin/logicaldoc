@@ -44,7 +44,10 @@ public class SearchPanel extends HLayout implements SearchObserver {
 
 		// Prepare the collapsible menu
 		SearchMenu leftMenu = SearchMenu.get();
-		leftMenu.setWidth(350);
+		if ("true".equals(Session.get().getInfo().getConfig("gui.search.openform")))
+			leftMenu.setWidth(350);
+		else
+			leftMenu.setWidth(0);
 		leftMenu.setShowResizeBar(true);
 
 		// Initialize the listing panel as placeholder
@@ -112,5 +115,16 @@ public class SearchPanel extends HLayout implements SearchObserver {
 	@Override
 	public void onOptionsChanged(GUISearchOptions newOptions) {
 
+	}
+
+	public boolean isMenuOpened() {
+		return SearchMenu.get().getWidth() > 0;
+	}
+
+	public void toggleMenu() {
+		if (SearchMenu.get().getWidth() > 0)
+			SearchMenu.get().setWidth(0);
+		else
+			SearchMenu.get().setWidth(350);
 	}
 }
