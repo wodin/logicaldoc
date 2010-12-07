@@ -194,8 +194,8 @@ public class LoginPanel extends VLayout {
 							} catch (Throwable e) {
 								SC.warn(e.getMessage());
 							}
+
 							FoldersNavigator.get().selectFolder(Constants.DOCUMENTS_FOLDERID);
-							
 						} else if (session.getUser() != null && session.getUser().isExpired()) {
 							new ChangePassword(session.getUser(), "needtochangepassword").show();
 						} else {
