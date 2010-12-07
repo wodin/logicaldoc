@@ -87,6 +87,10 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		UserSession session = SessionUtil.validateSession(sid);
 		try {
 			FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+
+			if (!dao.isReadEnable(folderId, session.getUserId()))
+				return null;
+
 			Folder folder = dao.findById(folderId);
 			if (folder == null)
 				return null;
@@ -146,9 +150,12 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	@Override
 	public GUIFolder getFolder(String sid, long folderId, boolean computePath) throws InvalidSessionException {
 		try {
-			GUIFolder folder = getFolder(sid, folderId);
-
 			FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+
+			GUIFolder folder = getFolder(sid, folderId);
+			if (folder == null)
+				return null;
+
 			if (computePath) {
 				String pathExtended = dao.computePathExtended(folderId);
 				StringTokenizer st = new StringTokenizer(pathExtended, "/", false);
