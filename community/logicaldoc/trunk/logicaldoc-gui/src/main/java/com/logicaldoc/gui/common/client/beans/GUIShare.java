@@ -16,6 +16,8 @@ public class GUIShare implements Serializable {
 
 	private String path;
 
+	private String domain;
+	
 	private String username;
 
 	private String password;
@@ -176,5 +178,13 @@ public class GUIShare implements Serializable {
 
 	public void setTarget(GUIFolder target) {
 		this.target = target;
+	}
+
+	public String getDomain() {
+		return domain;
+	}
+
+	public void setDomain(String domain) {
+		this.domain = domain;
 	}
 }

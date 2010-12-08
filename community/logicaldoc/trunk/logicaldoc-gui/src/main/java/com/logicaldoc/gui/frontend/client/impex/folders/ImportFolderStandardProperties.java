@@ -66,19 +66,22 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 		path.addChangedHandler(changedHandler);
 		path.setRequired(true);
 
+		TextItem domain = ItemFactory.newTextItem("domain", "domain", share.getDomain());
+		domain.addChangedHandler(changedHandler);
+
 		TextItem username = ItemFactory.newTextItem("username", "username", share.getUsername());
 		username.addChangedHandler(changedHandler);
 
 		TextItem password = ItemFactory.newPasswordItem("password", "password", share.getPassword());
 		password.addChangedHandler(changedHandler);
-		
+
 		SelectItem language = ItemFactory.newLanguageSelector("language", false, false);
 		language.addChangedHandler(changedHandler);
 		language.setRequired(true);
 		language.setValue(share.getLanguage());
 
 		if ("smb".equals(share.getProvider()))
-			form.setItems(path, targetSelector, language, username, password);
+			form.setItems(path, targetSelector, language, username, password, domain);
 		else
 			form.setItems(path, targetSelector, language);
 
@@ -94,6 +97,7 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 			share.setPath((String) values.get("path"));
 			share.setUsername((String) values.get("username"));
 			share.setPassword((String) values.get("password"));
+			share.setDomain((String) values.get("domain"));
 			share.setTarget(targetSelector.getFolder());
 			share.setLanguage((String) values.get("language"));
 		}
