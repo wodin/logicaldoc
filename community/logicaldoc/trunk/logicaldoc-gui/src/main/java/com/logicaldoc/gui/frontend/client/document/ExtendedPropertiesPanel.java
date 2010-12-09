@@ -74,7 +74,11 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		TextItem sourceItem = ItemFactory.newTextItem("source", "source", document.getSource());
 		sourceItem.addChangedHandler(changedHandler);
 		sourceItem.setDisabled(!update);
-
+		
+		TextItem sourceId = ItemFactory.newTextItem("sourceid", "sourceid", document.getSourceId());
+		sourceId.addChangedHandler(changedHandler);
+		sourceId.setDisabled(!update);
+		
 		final DateItem sourceDate = ItemFactory.newDateItem("date", "date");
 		sourceDate.setValue(document.getSourceDate());
 		sourceDate.addChangedHandler(changedHandler);
@@ -138,12 +142,12 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		});
 
 		items.add(sourceItem);
+		items.add(sourceId);
 		items.add(recipientItem);
 		items.add(objectItem);
 		items.add(typeItem);
 		items.add(coverageItem);
 		items.add(sourceDate);
-		items.add(authorItem);
 		if (Feature.visible(Feature.TEMPLATE)) {
 			items.add(templateItem);
 			if (!Feature.enabled(Feature.TEMPLATE)) {
@@ -152,6 +156,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 			}
 		}
 
+		items.add(authorItem);
 		form1.setItems(items.toArray(new FormItem[0]));
 		addMember(form1);
 
@@ -246,6 +251,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		vm.validate();
 		if (!vm.hasErrors()) {
 			document.setSource((String) values.get("source"));
+			document.setSourceId((String) values.get("sourceid"));
 			document.setSourceDate((Date) values.get("date"));
 			document.setSourceAuthor((String) values.get("author"));
 			document.setSourceType((String) values.get("type"));
