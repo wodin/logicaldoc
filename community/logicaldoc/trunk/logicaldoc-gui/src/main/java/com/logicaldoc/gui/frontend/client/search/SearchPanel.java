@@ -47,7 +47,7 @@ public class SearchPanel extends HLayout implements SearchObserver {
 		if ("true".equals(Session.get().getInfo().getConfig("gui.search.openform")))
 			leftMenu.setWidth(350);
 		else
-			leftMenu.setWidth(0);
+			leftMenu.setWidth(2);
 		leftMenu.setShowResizeBar(true);
 
 		// Initialize the listing panel as placeholder
@@ -118,11 +118,11 @@ public class SearchPanel extends HLayout implements SearchObserver {
 	}
 
 	public boolean isMenuOpened() {
-		return SearchMenu.get().getWidth() > 0;
+		return SearchMenu.get().getWidth() > 2;
 	}
 
 	public void toggleMenu() {
-		if (SearchMenu.get().getWidth() > 0)
+		if (SearchMenu.get().getWidth() > 2)
 			SearchMenu.get().setWidth(0);
 		else
 			SearchMenu.get().setWidth(350);

@@ -47,7 +47,7 @@
 		<many-to-one name="folder" class="com.logicaldoc.core.security.Folder" column="ld_folderid" />
 		<many-to-one name="template" class="com.logicaldoc.core.document.DocumentTemplate" column="ld_templateid" />
 		
-		<set name="tags" table="ld_tag" lazy="true" cascade="all">
+		<set name="tags" table="ld_tag" lazy="true" cascade="all" order-by="ld_tag">
 			<key column="ld_docid" />
 			<element type="string" column="ld_tag" length="255" />
 		</set>

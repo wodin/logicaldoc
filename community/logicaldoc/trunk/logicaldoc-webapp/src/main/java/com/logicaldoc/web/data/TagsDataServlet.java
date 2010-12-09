@@ -2,7 +2,10 @@ package com.logicaldoc.web.data;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -49,7 +52,11 @@ public class TagsDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 			int i = 0;
-			for (String tag : tgs.keySet()) {
+
+			List<String> words = new ArrayList<String>(tgs.keySet());
+			Collections.sort(words);
+
+			for (String tag : words) {
 				writer.print("<tag>");
 				writer.print("<index>" + i++ + "</index>");
 				writer.print("<word>" + tag + "</word>");
