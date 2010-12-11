@@ -56,7 +56,7 @@ public class FoldersDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
-			if (parent == Constants.ROOT_FOLDERID && dao.isReadEnable(Constants.ROOT_FOLDERID, session.getUserId())) {
+			if (parent == Constants.ROOT_FOLDERID && dao.isReadEnable(Folder.ROOTID, session.getUserId())) {
 				// Add the 'Documents' root
 				writer.print("<folder>");
 				writer.print("<id>" + Folder.ROOTID + "</id>");
