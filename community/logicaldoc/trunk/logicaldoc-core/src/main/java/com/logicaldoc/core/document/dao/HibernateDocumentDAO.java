@@ -733,7 +733,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		List<Document> docs = new ArrayList<Document>();
 		if (ids.length < 1)
 			return docs;
-		
+
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < ids.length; i++) {
 			if (i > 0)
@@ -742,5 +742,19 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		}
 		docs = findByWhere("_entity.id in(" + sb.toString() + ")", null, null, max);
 		return docs;
+	}
+
+	@Override
+	public boolean deleteOrfaned(long deleteUserId) {
+		try {
+			bulkUpdate("set ld_deleted=1,ld_deleteuserid=" + deleteUserId
+					+ " where ld_deleted=0 and ld_folderid in (select ld_id from ld_folder where ld_deleted = 1)", null);
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+			return false;
+		}
+
+		return true;
 	}
 }

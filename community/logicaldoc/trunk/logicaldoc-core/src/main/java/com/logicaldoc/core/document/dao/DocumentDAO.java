@@ -285,4 +285,12 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * @return The documents list ordered by descending lastModified
 	 */
 	public List<Document> findDeleted(long userId, Integer maxHits);
+
+	/**
+	 * This method deletes the documents into deleted folders.
+	 * 
+	 * @param deleteUserId The id of the user that performs the deleting.
+	 * @return True if successfully deleted from the database.
+	 */
+	public boolean deleteOrfaned(long deleteUserId);
 }
