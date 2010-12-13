@@ -255,6 +255,9 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * recovering of all sub-folders inside the folder, will be canceled all
 	 * folders for which the user has the delete permission or there isn't an
 	 * immutable document inside it.
+	 * <p>
+	 * 
+	 * <b>Important:</b> Remember to delete orphaned documents.
 	 * 
 	 * @param folder Folder to delete
 	 * @param transaction entry to log the event (set the user)
@@ -269,6 +272,9 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * recovering of all sub-folders inside the folder, will be canceled all
 	 * folders for which the user has the delete permission or there isn't an
 	 * immutable document inside it.
+	 * <p>
+	 * 
+	 * <b>Important:</b> Remember to delete orphaned documents
 	 * 
 	 * @param folderId Folder to delete
 	 * @param transaction entry to log the event (set the user)
@@ -299,12 +305,12 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 *         folder with the given targetId
 	 */
 	public boolean isInPath(long folderId, long targetId);
-	
+
 	/**
-	 * Propagates the security policies of a node to the whole subree 
+	 * Propagates the security policies of a node to the whole subree
 	 */
 	public boolean applyRithtToTree(long id, History transaction);
-	
+
 	/**
 	 * Counts the number of folders
 	 */

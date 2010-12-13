@@ -177,6 +177,15 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 	}
 
 	@Test
+	public void testDeleteOrphaned() {
+		folderDao.delete(6);
+		Assert.assertNull(folderDao.findById(6));
+		dao.deleteOrphaned(1);
+		Document doc=dao.findById(1);
+		Assert.assertTrue(doc==null || doc.getDeleted()==1);
+	}
+
+	@Test
 	public void testStore() throws IOException {
 		Document doc = new Document();
 		Folder folder = folderDao.findById(Folder.ROOTID);

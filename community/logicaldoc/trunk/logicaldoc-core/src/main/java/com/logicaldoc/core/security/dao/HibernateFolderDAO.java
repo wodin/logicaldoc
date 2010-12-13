@@ -954,7 +954,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public List<Folder> deleteTree(long folderId, History transaction) throws Exception {
-		return deleteTree(findById(folderId), transaction);
+		List<Folder> notDeleted = deleteTree(findById(folderId), transaction);
+		return notDeleted;
 	}
 
 	@Override
@@ -1019,8 +1020,13 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				}
 			}
 
-			// Modify document history entry
+			// Modify history entry
 			deleteAll(deletableFolders, transaction);
+
+			// Delete orphaned documents
+			DocumentDAO documentDAO = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			documentDAO.deleteOrphaned(transaction.getUserId());
+
 			return notDeletableFolders;
 		} catch (Throwable e) {
 			log.error(e);

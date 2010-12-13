@@ -745,10 +745,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	@Override
-	public boolean deleteOrfaned(long deleteUserId) {
+	public boolean deleteOrphaned(long deleteUserId) {
 		try {
-			bulkUpdate("set ld_deleted=1,ld_deleteuserid=" + deleteUserId
-					+ " where ld_deleted=0 and ld_folderid in (select ld_id from ld_folder where ld_deleted = 1)", null);
+			jdbcUpdate("update ld_document set ld_deleted=1,ld_deleteuserid=" + deleteUserId
+					+ " where ld_deleted=0 and ld_folderid in (select ld_id from ld_folder where ld_deleted = 1)");
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
