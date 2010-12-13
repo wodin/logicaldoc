@@ -35,9 +35,13 @@ public class IndexOptimizer extends Task {
 
 	@Override
 	protected void runTask() throws Exception {
+		if (indexer.isLocked()) {
+			log.warn("Index locked, skipping optimization");
+			return;
+		}
+
 		log.info("Start index optimization");
 		try {
-			indexer.unlock();
 			deleteOrphaned();
 			indexer.optimize();
 		} finally {
