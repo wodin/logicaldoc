@@ -498,6 +498,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 				transaction.setEvent(History.EVENT_FOLDER_DELETED);
 				List<Folder> notDeletableFolders = folderDAO.deleteTree(folder, transaction);
+
 				if (notDeletableFolders.size() > 0) {
 					throw new RuntimeException("Unable to delete some subfolders.");
 				}

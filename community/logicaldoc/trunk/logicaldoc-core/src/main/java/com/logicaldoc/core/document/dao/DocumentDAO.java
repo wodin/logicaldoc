@@ -199,7 +199,7 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	/**
 	 * Finds the list of deleted documents.
 	 * <p>
-	 * <b>Attention:</b> The returded objects are not fully operative and are
+	 * <b>Attention:</b> The returned objects are not fully operative and are
 	 * populated with a minimal set of data.
 	 */
 	public List<Document> findDeletedDocs();
@@ -292,5 +292,5 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * @param deleteUserId The id of the user that performs the deleting.
 	 * @return True if successfully deleted from the database.
 	 */
-	public boolean deleteOrfaned(long deleteUserId);
+	public boolean deleteOrphaned(long deleteUserId);
 }
