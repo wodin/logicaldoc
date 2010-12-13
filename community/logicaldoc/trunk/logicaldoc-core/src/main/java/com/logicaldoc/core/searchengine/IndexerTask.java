@@ -23,7 +23,7 @@ public class IndexerTask extends Task {
 	private DocumentDAO documentDao;
 
 	private Indexer indexer;
-	
+
 	private long indexed = 0;
 
 	private long errors = 0;
@@ -48,12 +48,15 @@ public class IndexerTask extends Task {
 
 	@Override
 	protected void runTask() throws Exception {
+		if (indexer.isLocked()) {
+			log.warn("Index locked, skipping indexing");
+			return;
+		}
+
 		log.info("Start indexing of all documents");
 		errors = 0;
 		indexed = 0;
 		try {
-			indexer.unlock();
-			
 			// First of all find documents to be indexed
 			size = documentDao.countByIndexed(0);
 			log.info("Found a total of " + size + " documents to be indexed");
@@ -77,7 +80,7 @@ public class IndexerTask extends Task {
 			log.info("Indexing finished");
 			log.info("Documents indexed: " + indexed);
 			log.info("Errors: " + errors);
-			
+
 			indexer.unlock();
 		}
 	}
