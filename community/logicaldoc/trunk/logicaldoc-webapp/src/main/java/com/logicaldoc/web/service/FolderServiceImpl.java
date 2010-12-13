@@ -382,6 +382,11 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				else
 					fg.setWorkflow(0);
 
+				if (isAdmin || right.isSign())
+					fg.setSign(1);
+				else
+					fg.setSign(0);
+
 				if (isAdmin || right.isDownload())
 					fg.setDownload(1);
 				else
