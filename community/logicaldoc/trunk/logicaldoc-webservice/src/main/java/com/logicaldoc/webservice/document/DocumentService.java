@@ -170,9 +170,10 @@ public interface DocumentService {
 	 * 
 	 * @param sid Session identifier
 	 * @param docId The document id
+	 * @param folderId The target folder id
 	 * @throws Exception
 	 */
-	public void restore(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId) throws Exception;
+	public void restore(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId, @WebParam(name = "folderId") long folderId) throws Exception;
 
 	/**
 	 * Gets the version history of an existing document with the given

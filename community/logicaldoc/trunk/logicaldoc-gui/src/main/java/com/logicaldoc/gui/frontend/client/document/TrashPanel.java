@@ -18,8 +18,6 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
-import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
-import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
@@ -91,42 +89,35 @@ public class TrashPanel extends VLayout {
 		list.setFilterOnKeypress(true);
 		addMember(list);
 
-		list.addCellDoubleClickHandler(new CellDoubleClickHandler() {
-			@Override
-			public void onCellDoubleClick(CellDoubleClickEvent event) {
-				ListGridRecord record = event.getRecord();
-				restore(Long.parseLong(record.getAttributeAsString("id")),
-						Long.parseLong(record.getAttributeAsString("folderId")));
-			}
-		});
-
-		list.addCellContextClickHandler(new CellContextClickHandler() {
-			@Override
-			public void onCellContextClick(CellContextClickEvent event) {
-				showContextMenu();
-				event.cancel();
-			}
-		});
+		if (Session.get().getCurrentFolder()!=null && Session.get().getCurrentFolder().isWrite())
+			list.addCellContextClickHandler(new CellContextClickHandler() {
+				@Override
+				public void onCellContextClick(CellContextClickEvent event) {
+					showContextMenu();
+					event.cancel();
+				}
+			});
 	}
 
-	private void restore(final long docId, final long folderId) {
-		service.restore(Session.get().getSid(), docId, new AsyncCallback<Void>() {
+	private void restore(final long docId) {
+		service.restore(Session.get().getSid(), docId, Session.get().getCurrentFolder().getId(),
+				new AsyncCallback<Void>() {
 
-			@Override
-			public void onFailure(Throwable caught) {
-				Log.serverError(caught);
-			}
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-			@Override
-			public void onSuccess(Void ret) {
-				list.removeSelectedData();
-				Log.info(I18N.message("documentrestored"), I18N.message("documentrestoreddetail", Long.toString(docId)));
+					@Override
+					public void onSuccess(Void ret) {
+						list.removeSelectedData();
+						Log.info(I18N.message("documentrestored"),
+								I18N.message("documentrestoreddetail", Long.toString(docId)));
 
-				// If the case force a refresh
-				if (Session.get().getCurrentFolder() != null && Session.get().getCurrentFolder().getId() == folderId)
-					Session.get().setCurrentFolder(Session.get().getCurrentFolder());
-			}
-		});
+						// Force a refresh
+						Session.get().setCurrentFolder(Session.get().getCurrentFolder());
+					}
+				});
 	}
 
 	private void showContextMenu() {
@@ -137,8 +128,7 @@ public class TrashPanel extends VLayout {
 		execute.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord record = list.getSelectedRecord();
-				restore(Long.parseLong(record.getAttribute("id")),
-						Long.parseLong(record.getAttributeAsString("folderId")));
+				restore(Long.parseLong(record.getAttribute("id")));
 			}
 		});
 

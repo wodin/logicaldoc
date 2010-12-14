@@ -594,14 +594,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void restore(long docId) {
-		bulkUpdate("set ld_deleted=0 where ld_id=" + docId, null);
-		String query = "select ld_folderid from ld_document where ld_id = " + docId;
-
-		List<Long> folders = (List<Long>) queryForList(query, Long.class);
-		for (Long folderId : folders) {
-			folderDAO.restore(folderId, true);
-		}
+	public void restore(long docId, long folderId) {
+		bulkUpdate("set ld_deleted=0, ld_folderid=" + folderId + ", ld_lastmodified=CURRENT_TIMESTAMP where ld_id="
+				+ docId, null);
 	}
 
 	@Override
@@ -691,8 +686,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public List<Document> findDeleted(long userId, Integer maxHits) {
 		List<Document> results = new ArrayList<Document>();
 		try {
-			String query = "select A.ld_id, A.ld_title, A.ld_lastmodified, A.ld_filename, A.ld_customid, A.ld_folderid from ld_document A, ld_folder B where A.ld_folderid=B.ld_id and B.ld_deleted=0 and A.ld_deleted=1 and A.ld_deleteuserid = "
-					+ userId + " order by A.ld_lastmodified desc";
+			String query = "select ld_id, ld_title, ld_lastmodified, ld_filename, ld_customid, ld_folderid from ld_document where ld_deleted=1 and ld_deleteuserid = "
+					+ userId + " order by ld_lastmodified desc";
 
 			RowMapper docMapper = new BeanPropertyRowMapper() {
 				public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -747,7 +742,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@Override
 	public boolean deleteOrphaned(long deleteUserId) {
 		try {
-			jdbcUpdate("update ld_document set ld_deleted=1,ld_deleteuserid=" + deleteUserId
+			jdbcUpdate("update ld_document set ld_deleted=1,ld_customid=CONCAT(ld_id,CONCAT('.',ld_customid)), ld_deleteuserid="
+					+ deleteUserId
 					+ " where ld_deleted=0 and ld_folderid in (select ld_id from ld_folder where ld_deleted = 1)");
 		} catch (Exception e) {
 			if (log.isErrorEnabled())

@@ -237,7 +237,7 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 	}
 
 	@Override
-	public void restore(String sid, long docId) {
+	public void restore(String sid, long docId, long folderId) {
 		return;
 	}
 
