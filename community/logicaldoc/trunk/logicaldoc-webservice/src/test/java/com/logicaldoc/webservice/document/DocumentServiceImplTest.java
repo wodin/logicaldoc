@@ -109,10 +109,9 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		Assert.assertNotNull(newDoc);
 		docDao.initialize(newDoc);
 
-		Assert.assertNull(docDao.findById(50));
 		WSDocument wsDoc = WSDocument.fromDocument(newDoc);
 		Assert.assertEquals(2, wsDoc.getId());
-		wsDoc.setId(50);
+		wsDoc.setId(51);
 		wsDoc.setTitle("document test");
 		File file = new File("pom.xml");
 		docServiceImpl.create("", wsDoc, new DataHandler(new FileDataSource(file)));
