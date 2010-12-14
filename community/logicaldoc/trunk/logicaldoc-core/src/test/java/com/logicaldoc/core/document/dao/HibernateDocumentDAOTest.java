@@ -502,8 +502,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 		deletedDocs = dao.findDeleted(2, 4);
 		Assert.assertNotNull(deletedDocs);
-		// The size is 0 because the document folderid is deleted
-		Assert.assertEquals(0, deletedDocs.size());
+		Assert.assertEquals(2, deletedDocs.size());
 
 		deletedDocs = dao.findDeleted(1, 1);
 		Assert.assertNotNull(deletedDocs);
