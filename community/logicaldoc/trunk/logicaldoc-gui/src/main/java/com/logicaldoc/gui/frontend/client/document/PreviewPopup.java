@@ -50,11 +50,11 @@ public class PreviewPopup extends Window {
 			}
 		});
 
-		String f=filename.toLowerCase();
+		String f = filename.toLowerCase();
 
-        if (Util.isImageFile(filename)) {
+        if (Util.isImageFile(filename) || (Feature.enabled(Feature.PREVIEW) == false && f.endsWith(".pdf"))) {
 			ImageViewer iv = null;
-			if (f.endsWith(".tif") || f.endsWith(".tiff") || f.endsWith(".bmp")) {
+			if (f.endsWith(".tif") || f.endsWith(".tiff") || f.endsWith(".bmp") || f.endsWith(".pdf")) {
 				iv = new ImageViewer(GWT.getHostPageBaseURL() + "thumbnail?sid=" + Session.get().getSid() + "&docId="
 						+ docId, 600);
 			} else {
@@ -99,7 +99,7 @@ public class PreviewPopup extends Window {
 				applet = new HTML();
 				String tmp = "<applet name=\"PreviewApplet\" archive=\""
 						+ Util.contextPath()
-						+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.preview.PreviewApplet\" width=\"600\" height=\"460\">";
+						+ "applet/logicaldoc-enterprise-core.jar\" code=\"com.logicaldoc.enterprise.preview.PreviewApplet\" width=\"600\" height=\"460\">";
 				tmp += "<param name=\"url\" value=\"" + GWT.getHostPageBaseURL() + "convertpdf?sid="
 						+ Session.get().getSid() + "&docId=" + docId + "\" />";
 				tmp += "</applet>";
