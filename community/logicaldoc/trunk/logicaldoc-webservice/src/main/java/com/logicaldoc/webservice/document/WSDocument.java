@@ -316,8 +316,7 @@ public class WSDocument {
 		doc.setFileSize(fileSize);
 		doc.setDigest(digest);
 		doc.setDocRef(docRef);
-		doc.setLastModified(AbstractService.convertStringToDate(lastModified));
-
+		
 		return doc;
 	}
 
