@@ -88,7 +88,7 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	/**
 	 * Finds all documents whose id is included in the given pool of ids
 	 */
-	public List<Document> findByIds(long[] ids, Integer max);
+	public List<Document> findByIds(Long[] ids, Integer max);
 
 	/**
 	 * This method finds all Doc Ids by a tag.

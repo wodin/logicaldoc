@@ -223,4 +223,11 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(0, docs.length);
 	}
+	
+	@Test
+	public void testGetDocuments() throws Exception {
+		WSDocument[] docs = docServiceImpl.getDocuments("", new Long[]{1L,2L,3L});
+		Assert.assertNotNull(docs);
+		Assert.assertEquals(2, docs.length);
+	}
 }
