@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.common.client.widgets;
 
+
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.reveregroup.gwt.imagepreloader.FitImage;
 import com.reveregroup.gwt.imagepreloader.ImageLoadEvent;
@@ -28,6 +29,7 @@ public class ImageViewer extends VLayout {
 	private VLayout imageContainer = new VLayout();
 
 	private int baseSize = 600;
+	private int maxSize = 600;
 
 	private String url;
 
@@ -61,6 +63,7 @@ public class ImageViewer extends VLayout {
 	}
 
 	private void setupToolbar() {
+		
 		toolBar = new ToolStrip();
 		toolBar.setHeight(20);
 		toolBar.setWidth100();
@@ -87,15 +90,50 @@ public class ImageViewer extends VLayout {
 				refreshImage();
 			}
 		});
+		
+		ToolStripButton effectiveSize = new ToolStripButton();
+		effectiveSize.setTitle(I18N.message("effectivesize"));
+		toolBar.addButton(effectiveSize);
+		effectiveSize.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				
+				int originalWidth = ImageViewer.this.image.getOriginalWidth();
+				int originalHeight = ImageViewer.this.image.getOriginalHeight();
+								
+				int maxSize = Math.max(originalWidth, originalHeight);
+				ImageViewer.this.maxSize = maxSize;
+				refreshImageEffectiveSize();
+			}
+		});		
 
 		toolBar.addFill();
-	}
+	}	
 
 	private void refreshImage() {
+		
 		if (contains(imageContainer))
 			removeMember(imageContainer);
-
+		
 		image = new FitImage(url, baseSize + (ImageViewer.this.zoom * 50), baseSize + (ImageViewer.this.zoom * 50));
+
+		imageContainer = new VLayout();
+		imageContainer.setMargin(0);
+		imageContainer.setPadding(0);
+		imageContainer.setWidth100();
+		imageContainer.setHeight100();
+		imageContainer.addMember(image);
+		imageContainer.setOverflow(Overflow.SCROLL);
+
+		addMember(imageContainer);
+	}
+	
+	private void refreshImageEffectiveSize() {
+		
+		if (contains(imageContainer))
+			removeMember(imageContainer);
+		
+		image = new FitImage(url, maxSize, maxSize);
 
 		imageContainer = new VLayout();
 		imageContainer.setMargin(0);
