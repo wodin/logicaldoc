@@ -155,6 +155,8 @@ public class WSDocument {
 
 	private String comment;
 
+	private String lastModified;
+
 	public static WSDocument fromDocument(AbstractDocument document) {
 		WSDocument wsDoc = new WSDocument();
 
@@ -228,6 +230,7 @@ public class WSDocument {
 			wsDoc.setDigest(document.getDigest());
 			wsDoc.setRecipient(document.getRecipient());
 			wsDoc.setDocRef(document.getDocRef());
+			wsDoc.setLastModified(AbstractService.convertDateToString(document.getLastModified()));
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -313,6 +316,7 @@ public class WSDocument {
 		doc.setFileSize(fileSize);
 		doc.setDigest(digest);
 		doc.setDocRef(docRef);
+		doc.setLastModified(AbstractService.convertStringToDate(lastModified));
 
 		return doc;
 	}
@@ -699,5 +703,13 @@ public class WSDocument {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(String lastModified) {
+		this.lastModified = lastModified;
 	}
 }

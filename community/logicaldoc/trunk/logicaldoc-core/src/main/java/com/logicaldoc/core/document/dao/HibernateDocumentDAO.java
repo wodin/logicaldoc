@@ -724,7 +724,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	@Override
-	public List<Document> findByIds(long[] ids, Integer max) {
+	public List<Document> findByIds(Long[] ids, Integer max) {
 		List<Document> docs = new ArrayList<Document>();
 		if (ids.length < 1)
 			return docs;
@@ -735,6 +735,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				sb.append(",");
 			sb.append(ids[i]);
 		}
+		
 		docs = findByWhere("_entity.id in(" + sb.toString() + ")", null, null, max);
 		return docs;
 	}

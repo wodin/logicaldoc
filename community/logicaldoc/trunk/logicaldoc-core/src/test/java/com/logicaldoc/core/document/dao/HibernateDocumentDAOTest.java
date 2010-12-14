@@ -512,11 +512,11 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindByIds() {
-		List<Document> docs = dao.findByIds(new long[0], 5);
+		List<Document> docs = dao.findByIds(new Long[0], 5);
 		Assert.assertNotNull(docs);
 		Assert.assertTrue(docs.isEmpty());
 
-		docs = dao.findByIds(new long[] { 1, 2, 3, 4, 5, 6, 7, 8 }, null);
+		docs = dao.findByIds(new Long[] { 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L }, null);
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(3, docs.size());
 	}

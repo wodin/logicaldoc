@@ -112,7 +112,12 @@ public class DocumentClient implements DocumentService {
 	}
 
 	@Override
-	public WSDocument[] getDocuments(String sid, long[] docIds) throws Exception {
+	public WSDocument[] getDocuments(String sid, Long[] docIds) throws Exception {
 		return client.getDocuments(sid, docIds);
+	}
+
+	@Override
+	public WSDocument[] getRecentDocuments(String sid, Integer max) throws Exception {
+		return client.getRecentDocuments(sid, max);
 	}
 }

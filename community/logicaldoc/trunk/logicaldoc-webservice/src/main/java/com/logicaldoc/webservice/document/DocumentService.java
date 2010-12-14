@@ -100,7 +100,7 @@ public interface DocumentService {
 	 * @throws Exception
 	 */
 	@WebResult(name = "documents")
-	public WSDocument[] getDocuments(@WebParam(name = "sid") String sid, @WebParam(name = "docIds") long[] docIds)
+	public WSDocument[] getDocuments(@WebParam(name = "sid") String sid, @WebParam(name = "docIds") Long[] docIds)
 			throws Exception;
 
 	/**
@@ -173,7 +173,8 @@ public interface DocumentService {
 	 * @param folderId The target folder id
 	 * @throws Exception
 	 */
-	public void restore(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId, @WebParam(name = "folderId") long folderId) throws Exception;
+	public void restore(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
+			@WebParam(name = "folderId") long folderId) throws Exception;
 
 	/**
 	 * Gets the version history of an existing document with the given
@@ -200,4 +201,17 @@ public interface DocumentService {
 	@WebResult(name = "document")
 	public WSDocument[] list(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
 			throws Exception;
+
+	/**
+	 * Lists of last modified documents of the current session's user.
+	 * 
+	 * @param sid Session identifier
+	 * @param maxHits Maximum number of returned records
+	 * @return Array of documents
+	 * 
+	 * @throws Exception
+	 */
+	@WebResult(name = "document")
+	public WSDocument[] getRecentDocuments(@WebParam(name = "sid") String sid,
+			@WebParam(name = "maxHits") Integer maxHits) throws Exception;
 }

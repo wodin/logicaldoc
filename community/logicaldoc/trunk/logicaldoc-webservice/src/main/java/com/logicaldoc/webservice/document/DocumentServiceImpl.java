@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -17,6 +19,7 @@ import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Permission;
@@ -326,7 +329,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 	}
 
 	@Override
-	public WSDocument[] getDocuments(String sid, long[] docIds) throws Exception {
+	public WSDocument[] getDocuments(String sid, Long[] docIds) throws Exception {
 		User user = validateSession(sid);
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		List<Long> folderIds = fdao.findFolderIdByUserId(user.getId());
@@ -363,5 +366,32 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		}
 
 		return wsVersions;
+	}
+
+	@Override
+	public WSDocument[] getRecentDocuments(String sid, Integer max) throws Exception {
+		User user = validateSession(sid);
+
+		HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+		StringBuffer query = new StringBuffer("select distinct(docId) from History where deleted=0 and (docId is not NULL) and userId="
+				+ user.getId());
+		query.append(" order by date desc");
+		List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, max);
+
+		Set<Long> docIds = new HashSet<Long>();
+		
+		/*
+		 * Iterate over records composing the response XML document
+		 */
+		for (Object record : records) {
+			Long id = (Long) record;
+			// Discard a record if already visited
+			if (docIds.contains(id))
+				continue;
+			else
+				docIds.add(id);
+		}
+
+		return getDocuments(sid, docIds.toArray(new Long[0]));
 	}
 }
