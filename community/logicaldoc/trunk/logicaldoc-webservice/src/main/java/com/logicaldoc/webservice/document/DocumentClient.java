@@ -102,8 +102,8 @@ public class DocumentClient implements DocumentService {
 	}
 
 	@Override
-	public void restore(String sid, long docId) throws Exception {
-		client.restore(sid, docId);
+	public void restore(String sid, long docId, long folderId) throws Exception {
+		client.restore(sid, docId, folderId);
 	}
 
 	@Override

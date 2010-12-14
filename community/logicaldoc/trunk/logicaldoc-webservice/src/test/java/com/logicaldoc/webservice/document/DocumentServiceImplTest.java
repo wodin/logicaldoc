@@ -194,10 +194,8 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 	@Test
 	public void testRestore() throws Exception {
 		Assert.assertNull(docDao.findById(4));
-		docServiceImpl.restore("", 4);
+		docServiceImpl.restore("", 4, 5);
 		Assert.assertNotNull(docDao.findById(4));
-		Assert.assertNotNull(folderDao.findById(1100));
-		Assert.assertNotNull(folderDao.findById(1000));
 	}
 
 	@Test

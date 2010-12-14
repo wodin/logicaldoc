@@ -228,8 +228,9 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * Restores a previously deleted document
 	 * 
 	 * @param docId Id of the document to be restored
+	 * @param folderId Id of the folder the document will be restored into
 	 */
-	public void restore(long docId);
+	public void restore(long docId, long folderId);
 
 	/**
 	 * Marks the document, with the given docId, as immutable. Unlocks the

@@ -140,7 +140,7 @@ public interface DocumentService extends RemoteService {
 	/**
 	 * Restores a given document
 	 */
-	public void restore(String sid, long docId) throws InvalidSessionException;
+	public void restore(String sid, long docId, long folderId) throws InvalidSessionException;
 
 	/**
 	 * Adds new bookmarks

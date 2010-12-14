@@ -181,8 +181,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		folderDao.delete(6);
 		Assert.assertNull(folderDao.findById(6));
 		dao.deleteOrphaned(1);
-		Document doc=dao.findById(1);
-		Assert.assertTrue(doc==null || doc.getDeleted()==1);
+		Document doc = dao.findById(1);
+		Assert.assertTrue(doc == null || doc.getDeleted() == 1);
 	}
 
 	@Test
@@ -447,10 +447,9 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testRestore() {
 		Assert.assertNull(dao.findById(4));
-		dao.restore(4);
+		dao.restore(4, 5);
 		Assert.assertNotNull(dao.findById(4));
-		Assert.assertNotNull(folderDao.findById(6));
-		Assert.assertNotNull(folderDao.findById(6));
+		Assert.assertEquals(5L, dao.findById(4).getFolder().getId());
 	}
 
 	@Test

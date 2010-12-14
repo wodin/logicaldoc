@@ -463,7 +463,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				document.setLastModified(doc.getLastModified());
 				document.setLockUserId(doc.getLockUserId());
 				document.setStatus(doc.getStatus());
-				
+
 				if (doc.getTemplate() != null) {
 					document.setTemplate(doc.getTemplate().getName());
 					document.setTemplateId(doc.getTemplate().getId());
@@ -795,11 +795,11 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public void restore(String sid, long docId) throws InvalidSessionException {
+	public void restore(String sid, long docId, long folderId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		docDao.restore(docId);
+		docDao.restore(docId, folderId);
 	}
 
 	@Override

@@ -231,7 +231,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
 		checkPermission(Permission.DELETE, user, doc.getFolder().getId());
-		
+
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Folder folder = dao.findById(folderId);
 		checkLocked(user, doc);
@@ -256,10 +256,10 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 	}
 
 	@Override
-	public void restore(String sid, long docId) throws Exception {
+	public void restore(String sid, long docId, long folderId) throws Exception {
 		validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		docDao.restore(docId);
+		docDao.restore(docId, folderId);
 	}
 
 	@Override

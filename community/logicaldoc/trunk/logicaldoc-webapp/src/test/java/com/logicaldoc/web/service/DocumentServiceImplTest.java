@@ -305,8 +305,10 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 	public void testRestore() throws InvalidSessionException {
 		docDao.delete(4);
 		Assert.assertNull(docDao.findById(4));
-		service.restore(session.getSid(), 4);
+		service.restore(session.getSid(), 4, 5);
 		Assert.assertNotNull(docDao.findById(4));
+		Assert.assertNotNull(docDao.findById(4));
+		Assert.assertEquals(5L, docDao.findById(4).getFolder().getId());
 	}
 
 	@Test
