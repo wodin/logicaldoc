@@ -272,8 +272,10 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		// If the 'doc' is a shortcut, it must not be re-indexed, because it is
 		// re-indexed when it is analyzed the referenced doc
-		if (doc==null || doc.getDocRef() != null)
+		if (doc == null || doc.getDocRef() != null)
 			return;
+
+		log.debug("Reindexing document " + docId + " - " + doc.getTitle());
 
 		documentDAO.initialize(doc);
 

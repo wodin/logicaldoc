@@ -100,7 +100,7 @@ public class Indexer {
 		// Then add the record in the index
 		String indexdir = config.getPropertyWithSubstitutions("conf.indexdir");
 		Language language = LanguageManager.getInstance().getLanguage(locale);
-		Analyzer analyzer = language.getAnalyzer();
+		Analyzer analyzer = getAnalyzer(language);
 		IndexWriter writer = null;
 		try {
 			writer = new IndexWriter(getIndexDirectory(language), analyzer, IndexWriter.MaxFieldLength.UNLIMITED);
@@ -117,6 +117,15 @@ public class Indexer {
 					log.error("Error closing index: " + language + ", " + e.getMessage(), e);
 				}
 		}
+	}
+
+	/**
+	 * Creates an analyzer able to separate sub-words. This analyzer cannot be
+	 * used during search because it will slow the search. But in indexing it is
+	 * useful to tokenize sub-words.
+	 */
+	private static Analyzer getAnalyzer(Language language) {
+		return new WordDelimiterAnalyzer(language.getAnalyzer());
 	}
 
 	/**
@@ -162,7 +171,7 @@ public class Indexer {
 	 */
 	protected synchronized void optimize(Language language) {
 		try {
-			Analyzer analyzer = language.getAnalyzer();
+			Analyzer analyzer = getAnalyzer(language);
 			IndexWriter writer = new IndexWriter(getIndexDirectory(language), analyzer,
 					IndexWriter.MaxFieldLength.UNLIMITED);
 			writer.optimize();
@@ -182,7 +191,7 @@ public class Indexer {
 			// Get languages from LanguageManager
 			Collection<Language> languages = LanguageManager.getInstance().getActiveLanguages();
 			for (Language language : languages) {
-				Analyzer analyzer = language.getAnalyzer();
+				Analyzer analyzer = getAnalyzer(language);
 				IndexWriter writer = new IndexWriter(getIndexDirectory(language), analyzer,
 						IndexWriter.MaxFieldLength.UNLIMITED);
 				writer.optimize();
@@ -529,7 +538,7 @@ public class Indexer {
 			indexPath.mkdir();
 			IndexWriter writer = null;
 			try {
-				writer = new IndexWriter(getIndexDirectory(language), language.getAnalyzer(), true,
+				writer = new IndexWriter(getIndexDirectory(language), getAnalyzer(language), true,
 						IndexWriter.MaxFieldLength.UNLIMITED);
 			} finally {
 				try {

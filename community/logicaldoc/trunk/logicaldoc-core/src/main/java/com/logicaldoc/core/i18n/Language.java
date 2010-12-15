@@ -178,8 +178,7 @@ public class Language {
 					getStopWords());
 			log.debug("Using default snowball analyzer");
 		}
-
-		analyzer = new WordDelimiterAnalyzer(analyzer);
+ 
 		return analyzer;
 	}
 
