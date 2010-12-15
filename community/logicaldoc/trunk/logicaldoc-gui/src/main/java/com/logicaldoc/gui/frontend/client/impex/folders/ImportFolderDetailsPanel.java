@@ -98,7 +98,9 @@ public class ImportFolderDetailsPanel extends VLayout {
 						}
 					});
 				} else {
-					setShare(new GUIShare());
+					GUIShare newshare = new GUIShare();
+					newshare.setProvider(share.getProvider());
+					setShare(newshare);
 				}
 				savePanel.setVisible(false);
 			}
