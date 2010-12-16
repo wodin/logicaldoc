@@ -88,6 +88,7 @@ public class ChangePassword extends Window {
 
 		ButtonItem apply = new ButtonItem();
 		apply.setTitle(I18N.message("apply"));
+		apply.setAutoFit(true);
 		apply.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				vm.validate();

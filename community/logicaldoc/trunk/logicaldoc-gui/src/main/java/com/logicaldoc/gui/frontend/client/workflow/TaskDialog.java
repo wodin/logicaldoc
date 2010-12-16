@@ -232,6 +232,7 @@ public class TaskDialog extends Window {
 		participantsForm.setItems(participantsList);
 
 		removeUser = new Button(I18N.message("removeuser"));
+		removeUser.setAutoFit(true);
 		removeUser.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
@@ -243,8 +244,8 @@ public class TaskDialog extends Window {
 		participantsLayout.setMembers(participantsForm, removeUser);
 
 		buttonForm = new DynamicForm();
-		ButtonItem saveItem = new ButtonItem();
-		saveItem.setTitle(I18N.message("save"));
+		ButtonItem saveItem = new ButtonItem("save", I18N.message("save"));
+		saveItem.setAutoFit(true);
 		saveItem.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				final Map<String, Object> values = vm.getValues();

@@ -92,6 +92,7 @@ public class ScanDialog extends Window {
 		send = new ButtonItem();
 		send.setStartRow(false);
 		send.setTitle(I18N.message("send"));
+		send.setAutoFit(true);
 		send.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

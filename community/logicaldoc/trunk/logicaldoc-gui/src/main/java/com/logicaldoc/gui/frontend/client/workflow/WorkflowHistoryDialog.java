@@ -100,6 +100,7 @@ public class WorkflowHistoryDialog extends Window {
 		selectionWorkflowLayout.addMember(workflowForm);
 
 		Button load = new Button(I18N.message("load"));
+		load.setAutoFit(true);
 		load.addClickHandler(new ClickHandler() {
 
 			@Override

@@ -53,6 +53,7 @@ public class ArchiveDialog extends Window {
 		ButtonItem send = new ButtonItem();
 		send.setStartRow(false);
 		send.setTitle(I18N.message("sendtoarchive"));
+		send.setAutoFit(true);
 		send.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

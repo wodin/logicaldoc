@@ -81,6 +81,7 @@ public class FolderDetailsPanel extends VLayout {
 		savePanel.setStyleName("warn");
 		savePanel.setWidth100();
 		Button saveButton = new Button(I18N.message("save"));
+		saveButton.setAutoFit(true);
 		saveButton.setMargin(2);
 		saveButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override

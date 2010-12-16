@@ -86,6 +86,7 @@ public class DocumentDetailsPanel extends VLayout {
 		savePanel = new HLayout();
 		saveForm = new DynamicForm();
 		Button saveButton = new Button(I18N.message("save"));
+		saveButton.setAutoFit(true);
 		saveButton.setMargin(2);
 		saveButton.addClickHandler(new ClickHandler() {
 			@Override

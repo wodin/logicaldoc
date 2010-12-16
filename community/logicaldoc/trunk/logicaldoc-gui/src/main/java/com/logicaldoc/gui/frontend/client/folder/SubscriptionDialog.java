@@ -58,6 +58,7 @@ public class SubscriptionDialog extends Window {
 
 		ButtonItem subscribe = new ButtonItem();
 		subscribe.setTitle(I18N.message("subscribe"));
+		subscribe.setAutoFit(true);
 		subscribe.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				service.subscribeFolder(Session.get().getSid(), folderId,

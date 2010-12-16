@@ -59,6 +59,7 @@ public class SaveDialog extends Window {
 
 		ButtonItem save = new ButtonItem();
 		save.setTitle(I18N.message("save"));
+		save.setAutoFit(true);
 		save.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				vm.validate();

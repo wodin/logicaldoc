@@ -297,7 +297,7 @@ public class WorkflowDetailsDialog extends Window {
 		});
 
 		Button appendDocsButton = new Button(I18N.message("appenddocuments"));
-		appendDocsButton.setWidth(100);
+		appendDocsButton.setAutoFit(true);
 		appendDocsButton.setVisible(workflow.getSelectedTask().getTaskState().equals("started"));
 		appendDocsButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
@@ -323,6 +323,7 @@ public class WorkflowDetailsDialog extends Window {
 		}
 
 		Button reassignButton = new Button(I18N.message("workflowtaskreassign"));
+		reassignButton.setAutoFit(true);
 		reassignButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
 			@Override
@@ -416,6 +417,7 @@ public class WorkflowDetailsDialog extends Window {
 		});
 
 		Button startButton = new Button(I18N.message("workflowtaskstart"));
+		startButton.setAutoFit(true);
 		startButton.setMargin(2);
 		startButton.setVisible((workflow.getSelectedTask().getStartDate() == null));
 		startButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
@@ -461,6 +463,7 @@ public class WorkflowDetailsDialog extends Window {
 		});
 
 		Button suspendButton = new Button(I18N.message("workflowtasksuspend"));
+		suspendButton.setAutoFit(true);
 		suspendButton.setMargin(2);
 		suspendButton.setVisible(workflow.getSelectedTask().getTaskState().equals("started"));
 		suspendButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
@@ -505,6 +508,7 @@ public class WorkflowDetailsDialog extends Window {
 		});
 
 		Button resumeButton = new Button(I18N.message("workflowtaskresume"));
+		resumeButton.setAutoFit(true);
 		resumeButton.setMargin(2);
 		resumeButton.setVisible(workflow.getSelectedTask().getTaskState().equals("suspended"));
 		resumeButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
@@ -549,6 +553,7 @@ public class WorkflowDetailsDialog extends Window {
 		});
 
 		Button saveTaskStateButton = new Button(I18N.message("save"));
+		saveTaskStateButton.setAutoFit(true);
 		saveTaskStateButton.setMargin(2);
 		saveTaskStateButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
@@ -592,6 +597,7 @@ public class WorkflowDetailsDialog extends Window {
 		});
 
 		Button takeButton = new Button(I18N.message("workflowtasktake"));
+		takeButton.setAutoFit(true);
 		takeButton.setMargin(2);
 		takeButton.setVisible(!workflow.getSelectedTask().getPooledActors().isEmpty()
 				&& workflow.getSelectedTask().getOwner().trim().isEmpty());
@@ -637,6 +643,7 @@ public class WorkflowDetailsDialog extends Window {
 		});
 
 		Button turnBackButton = new Button(I18N.message("workflowtaskturnback"));
+		turnBackButton.setAutoFit(true);
 		turnBackButton.setMargin(2);
 		turnBackButton.setVisible(!workflow.getSelectedTask().getPooledActors().isEmpty()
 				&& !workflow.getSelectedTask().getOwner().trim().isEmpty());
@@ -696,6 +703,7 @@ public class WorkflowDetailsDialog extends Window {
 				for (GUITransition transition : workflow.getSelectedTask().getTransitions()) {
 					final String transitionName = transition.getText();
 					transitionButton = new Button(transition.getText());
+					transitionButton.setAutoFit(true);
 					transitionButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 						@Override
 						public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
