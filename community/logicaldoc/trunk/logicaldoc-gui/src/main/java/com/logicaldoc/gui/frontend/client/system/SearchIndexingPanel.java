@@ -18,6 +18,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
+import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineService;
@@ -94,7 +95,7 @@ public class SearchIndexingPanel extends VLayout {
 
 		this.searchEngine = searchEngine;
 
-		Tab searchEngineTab = fillSearchEngineTab();
+		Tab searchEngineTab = fillSearchEngineTab(searchEngine);
 
 		Tab parsersInfoTab = fillParsersTab();
 
@@ -361,7 +362,7 @@ public class SearchIndexingPanel extends VLayout {
 		return languagesTab;
 	}
 
-	private Tab fillSearchEngineTab() {
+	private Tab fillSearchEngineTab(GUISearchEngine searchEngine) {
 		Tab searchEngineTab = new Tab(I18N.message("searchengine"));
 		searchEngineTabPanel = new VLayout();
 		searchEngineTabPanel.setWidth100();
@@ -423,6 +424,19 @@ public class SearchIndexingPanel extends VLayout {
 								@Override
 								public void onSuccess(Void ret) {
 									Log.info(I18N.message("settingssaved"), null);
+									service.getInfo(Session.get().getSid(), new AsyncCallback<GUISearchEngine>() {
+
+										@Override
+										public void onFailure(Throwable caught) {
+											Log.serverError(caught);
+										}
+
+										@Override
+										public void onSuccess(GUISearchEngine searchEngine) {
+											AdminPanel.get().setContent(new SearchIndexingPanel(searchEngine));
+										}
+
+									});
 								}
 							});
 				}
@@ -443,6 +457,19 @@ public class SearchIndexingPanel extends VLayout {
 					@Override
 					public void onSuccess(Void ret) {
 						Log.info(I18N.message("indexunlocked"), null);
+						service.getInfo(Session.get().getSid(), new AsyncCallback<GUISearchEngine>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUISearchEngine searchEngine) {
+								AdminPanel.get().setContent(new SearchIndexingPanel(searchEngine));
+							}
+
+						});
 					}
 				});
 			}
@@ -463,6 +490,19 @@ public class SearchIndexingPanel extends VLayout {
 					@Override
 					public void onSuccess(Void ret) {
 						Log.info(I18N.message("docsreindex"), null);
+						service.getInfo(Session.get().getSid(), new AsyncCallback<GUISearchEngine>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUISearchEngine searchEngine) {
+								AdminPanel.get().setContent(new SearchIndexingPanel(searchEngine));
+							}
+
+						});
 					}
 				});
 			}
@@ -502,7 +542,12 @@ public class SearchIndexingPanel extends VLayout {
 
 	private void refresh(Integer max) {
 		fillIndexingQueueTab(max);
-		tabSet.setTabPane(2, indexingQueueTabPanel);
+		tabSet.setTabPane(3, indexingQueueTabPanel);
+	}
+
+	private void refreshSearchEngineTab(GUISearchEngine searchEngine) {
+		fillSearchEngineTab(searchEngine);
+		tabSet.setTabPane(0, searchEngineTabPanel);
 	}
 
 	private void showIndexQueueMenu() {
