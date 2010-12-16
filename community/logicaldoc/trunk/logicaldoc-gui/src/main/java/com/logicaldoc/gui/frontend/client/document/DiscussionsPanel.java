@@ -81,6 +81,7 @@ public class DiscussionsPanel extends DocumentDetailTab {
 		container.addMember(listGrid);
 
 		Button startDiscussion = new Button(I18N.message("startdiscussion"));
+		startDiscussion.setAutoFit(true);
 		container.addMember(startDiscussion);
 		startDiscussion.addClickHandler(new ClickHandler() {
 

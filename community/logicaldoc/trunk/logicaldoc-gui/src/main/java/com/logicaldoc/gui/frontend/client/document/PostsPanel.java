@@ -94,6 +94,7 @@ public class PostsPanel extends DocumentDetailTab {
 		container.addMember(listGrid);
 
 		Button backToDiscussions = new Button("<< " + I18N.message("back"));
+		backToDiscussions.setAutoFit(true);
 		container.addMember(backToDiscussions);
 		backToDiscussions.addClickHandler(new ClickHandler() {
 			@Override

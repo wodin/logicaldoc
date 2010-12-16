@@ -60,7 +60,7 @@ public class WorkflowsFolderPanel extends VLayout {
 
 		HLayout buttons = new HLayout();
 		Button addTrigger = new Button(I18N.message("workflowtriggeradd"));
-		addTrigger.setWidth(180);
+		addTrigger.setAutoFit(true);
 		buttons.addMember(addTrigger);
 		buttons.setMembersMargin(4);
 		buttons.setWidth100();

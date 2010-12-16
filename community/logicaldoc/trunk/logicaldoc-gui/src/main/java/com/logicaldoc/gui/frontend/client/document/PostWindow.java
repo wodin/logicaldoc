@@ -46,6 +46,7 @@ public class PostWindow extends Window {
 
 		sendItem = new ButtonItem();
 		sendItem.setTitle(I18N.message("send"));
+		sendItem.setAutoFit(true);
 		sendItem.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				vm.validate();
@@ -78,6 +79,7 @@ public class PostWindow extends Window {
 
 		sendItem = new ButtonItem();
 		sendItem.setTitle(I18N.message("send"));
+		sendItem.setAutoFit(true);
 		sendItem.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				vm.validate();

@@ -108,6 +108,7 @@ public class MessageDialog extends Window {
 		SelectItem priority = ItemFactory.newPrioritySelector("priority", I18N.message("priority"));
 
 		ButtonItem sendItem = new ButtonItem();
+		sendItem.setAutoFit(true);
 		sendItem.setTitle(I18N.message("send"));
 		sendItem.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {

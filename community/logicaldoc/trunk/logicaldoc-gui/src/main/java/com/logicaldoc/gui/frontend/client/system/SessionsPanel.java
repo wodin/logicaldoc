@@ -46,6 +46,7 @@ public class SessionsPanel extends VLayout {
 		if (showRefresh) {
 			HLayout buttons = new HLayout();
 			Button refresh = new Button(I18N.message("refresh"));
+			refresh.setAutoFit(true);
 			buttons.addMember(refresh);
 			buttons.setMembersMargin(4);
 			buttons.setWidth100();

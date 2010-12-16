@@ -39,8 +39,8 @@ public class MoveDialog extends Dialog {
 		folders.setHeight(150);
 		folders.setWidth100();
 
-		Button move = new Button();
-		move.setTitle(I18N.message("move"));
+		Button move = new Button(I18N.message("move"));
+		move.setAutoFit(true);
 		move.setMargin(1);
 		move.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {

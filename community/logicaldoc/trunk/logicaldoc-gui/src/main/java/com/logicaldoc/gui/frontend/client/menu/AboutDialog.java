@@ -101,6 +101,7 @@ public class AboutDialog extends Window {
 		vspacer2.setOverflow(Overflow.HIDDEN);
 
 		Button button = new Button("OK");
+		button.setAutoFit(true);
 		button.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

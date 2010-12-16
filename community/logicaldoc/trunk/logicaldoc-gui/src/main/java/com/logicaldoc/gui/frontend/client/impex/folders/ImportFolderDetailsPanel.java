@@ -66,6 +66,7 @@ public class ImportFolderDetailsPanel extends VLayout {
 		savePanel.setStyleName("warn");
 		savePanel.setWidth100();
 		Button saveButton = new Button(I18N.message("save"));
+		saveButton.setAutoFit(true);
 		saveButton.setMargin(2);
 		saveButton.addClickHandler(new ClickHandler() {
 			@Override

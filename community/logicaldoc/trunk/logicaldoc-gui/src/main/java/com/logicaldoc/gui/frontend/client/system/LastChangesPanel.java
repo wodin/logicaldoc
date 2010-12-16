@@ -93,6 +93,8 @@ public class LastChangesPanel extends VLayout {
 
 		ButtonItem searchButton = new ButtonItem();
 		searchButton.setTitle(I18N.message("search"));
+		searchButton.setAutoFit(true);
+		searchButton.setAutoFit(true);
 		searchButton.setEndRow(false);
 		searchButton.addClickHandler(new ClickHandler() {
 			@Override

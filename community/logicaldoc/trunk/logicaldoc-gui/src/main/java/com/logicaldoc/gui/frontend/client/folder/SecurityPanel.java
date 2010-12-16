@@ -174,11 +174,11 @@ public class SecurityPanel extends FolderDetailTab {
 		container.addMember(buttons);
 
 		Button applyRights = new Button(I18N.message("applyrights"));
-		applyRights.setWidth(120);
+		applyRights.setAutoFit(true);
 		buttons.addMember(applyRights);
 
 		Button applyRightsSubfolders = new Button(I18N.message("applytosubfolders"));
-		applyRightsSubfolders.setWidth(150);
+		applyRightsSubfolders.setAutoFit(true);
 		buttons.addMember(applyRightsSubfolders);
 
 		applyRights.addClickHandler(new ClickHandler() {
