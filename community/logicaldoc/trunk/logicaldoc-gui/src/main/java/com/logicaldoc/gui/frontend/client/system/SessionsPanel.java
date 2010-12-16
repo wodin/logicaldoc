@@ -105,6 +105,7 @@ public class SessionsPanel extends VLayout {
 				}
 			}
 		};
+		list.setEmptyMessage(I18N.message("notitemstoshow"));
 
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);

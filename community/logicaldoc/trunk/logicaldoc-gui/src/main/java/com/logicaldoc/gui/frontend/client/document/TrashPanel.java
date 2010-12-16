@@ -79,6 +79,7 @@ public class TrashPanel extends VLayout {
 		customId.setCanFilter(true);
 
 		list = new ListGrid();
+		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setWidth100();
 		list.setHeight100();
 		list.setAutoFetchData(true);

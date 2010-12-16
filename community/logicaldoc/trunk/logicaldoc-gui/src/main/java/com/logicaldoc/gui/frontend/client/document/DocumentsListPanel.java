@@ -168,6 +168,7 @@ public class DocumentsListPanel extends VLayout {
 				}
 			}
 		};
+		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
@@ -178,7 +179,8 @@ public class DocumentsListPanel extends VLayout {
 		list.setDataSource(dataSource);
 		list.setFields(indexed, locked, immutable, signed, icon, filename, title, lastModified, type, size, version,
 				publisher, published, creator, created, customId);
-
+		
+		
 		// Prepare a panel containing a title and the documents list
 		infoPanel = new InfoPanel("");
 

@@ -110,6 +110,7 @@ public class SubscriptionsPanel extends VLayout {
 		created.setCanFilter(false);
 
 		list = new ListGrid();
+		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);

@@ -130,7 +130,7 @@ public class MessagesPanel extends VLayout {
 				}
 			}
 		};
-
+		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setCanExpandRecords(true);
 		list.setExpansionMode(ExpansionMode.DETAIL_FIELD);
 		list.setDetailField("text");

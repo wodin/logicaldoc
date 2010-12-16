@@ -58,6 +58,7 @@ public class EventsWindow extends Window {
 					return "color: #577ED0";
 			}
 		};
+		grid.setEmptyMessage(I18N.message("notitemstoshow"));
 		grid.setWidth100();
 		grid.setHeight100();
 		grid.setCanReorderFields(false);

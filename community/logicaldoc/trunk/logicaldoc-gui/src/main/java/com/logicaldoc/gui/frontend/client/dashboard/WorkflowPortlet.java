@@ -63,6 +63,7 @@ public class WorkflowPortlet extends Portlet {
 		ListGridField pooledAssignees = new ListGridField("pooledassignees", I18N.message("pooledassignees"), 150);
 
 		list = new ListGrid();
+		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setCanFreezeFields(true);
 		list.setAutoFetchData(true);
 		list.setShowHeader(true);

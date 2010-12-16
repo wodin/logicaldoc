@@ -275,6 +275,7 @@ public class WorkflowDetailsDialog extends Window {
 		icon.setCanFilter(false);
 
 		docsAppendedList = new ListGrid();
+		docsAppendedList.setEmptyMessage(I18N.message("notitemstoshow"));
 		docsAppendedList.setWidth(350);
 		docsAppendedList.setHeight(200);
 		docsAppendedList.setCanFreezeFields(true);

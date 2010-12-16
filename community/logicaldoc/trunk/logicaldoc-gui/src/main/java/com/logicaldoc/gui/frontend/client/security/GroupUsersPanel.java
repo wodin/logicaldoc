@@ -86,6 +86,7 @@ public class GroupUsersPanel extends VLayout {
 		enabled.setCanFilter(false);
 
 		list = new ListGrid();
+		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);

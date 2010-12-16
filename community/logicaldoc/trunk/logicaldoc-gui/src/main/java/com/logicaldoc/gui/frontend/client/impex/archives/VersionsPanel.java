@@ -123,6 +123,7 @@ public class VersionsPanel extends VLayout {
 		icon.setCanFilter(false);
 
 		listGrid = new ListGrid();
+		listGrid.setEmptyMessage(I18N.message("notitemstoshow"));
 		listGrid.setCanFreezeFields(true);
 		listGrid.setAutoFetchData(true);
 		dataSource = new VersionsDS(null, archiveId, max);

@@ -77,6 +77,7 @@ public class ImportFoldersList extends VLayout {
 		date.setCanFilter(false);
 
 		list = new ListGrid();
+		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setShowAllRecords(true);
 		list.setAutoFetchData(true);
 		list.setWidth100();

@@ -121,6 +121,7 @@ public class SecurityPanel extends FolderDetailTab {
 		workflow.setCanEdit(true);
 
 		list = new ListGrid();
+		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setCanFreezeFields(true);
 		list.setSelectionType(SelectionStyle.MULTIPLE);
 		list.setAutoFetchData(true);

@@ -75,6 +75,7 @@ public class VersionsDiff extends Window {
 		ListGridField val2 = new ListGridField("val2", version2.getVersion());
 
 		ListGrid listGrid = new ListGrid();
+		listGrid.setEmptyMessage(I18N.message("notitemstoshow"));
 		listGrid.setCanFreezeFields(false);
 		listGrid.setCanGroupBy(false);
 		listGrid.setAutoFetchData(true);

@@ -86,6 +86,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		setMembersMargin(10);
 
 		attributesList = new ListGrid();
+		attributesList.setEmptyMessage(I18N.message("notitemstoshow"));
 		attributesList.setWidth(150);
 		attributesList.setHeight(160);
 		attributesList.setEmptyMessage(I18N.message("norecords"));

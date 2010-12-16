@@ -125,6 +125,7 @@ public class TagsForm extends VLayout {
 		ListGridField word = new ListGridField("word", I18N.message("tag"), 200);
 		ListGridField count = new ListGridField("count", I18N.message("count"), 60);
 		tags = new ListGrid();
+		tags.setEmptyMessage(I18N.message("notitemstoshow"));
 		tags.setWidth100();
 		tags.setHeight100();
 		tags.setFields(index, word, count);

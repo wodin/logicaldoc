@@ -76,6 +76,7 @@ public class LinksPanel extends DocumentDetailTab {
 		GUIFolder folder = Session.get().getCurrentFolder();
 
 		listGrid = new ListGrid();
+		listGrid.setEmptyMessage(I18N.message("notitemstoshow"));
 		listGrid.setCanFreezeFields(true);
 		listGrid.setAutoFetchData(true);
 		dataSource = new LinksDS(document.getId());

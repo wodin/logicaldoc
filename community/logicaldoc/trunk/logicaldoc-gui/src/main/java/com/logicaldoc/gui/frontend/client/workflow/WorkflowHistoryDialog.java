@@ -197,6 +197,7 @@ public class WorkflowHistoryDialog extends Window {
 		ListGridField historySid = new ListGridField("sessionid", I18N.message("sid"), 240);
 
 		historiesList = new ListGrid();
+		historiesList.setEmptyMessage(I18N.message("notitemstoshow"));
 		historiesList.setCanFreezeFields(true);
 		historiesList.setAutoFetchData(true);
 		historiesList.setShowHeader(true);

@@ -94,6 +94,7 @@ public class CustomIdPanel extends VLayout {
 		regenerate.setType(ListGridFieldType.BOOLEAN);
 
 		schemes = new ListGrid();
+		schemes.setEmptyMessage(I18N.message("notitemstoshow"));
 		schemes.setShowAllRecords(true);
 		schemes.setCanEdit(true);
 		schemes.setWidth100();
