@@ -25,7 +25,7 @@ public class WordDelimiterAnalyzer extends Analyzer {
 	@Override
 	public TokenStream tokenStream(String fieldName, Reader reader) {
 		TokenStream ts = wrapped.tokenStream(fieldName, reader);
-		ts = new WordDelimiterFilter(ts, 1, 1, 0, 0, 0, 0, 1, 0, 0, null);
+		ts = new WordDelimiterFilter(ts, 1, 1, 0, 0, 0, 0, 1, 1, 0, null);
 		return ts;
 	}
 
