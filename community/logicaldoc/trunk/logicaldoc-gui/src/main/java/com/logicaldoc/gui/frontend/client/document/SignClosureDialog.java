@@ -1,12 +1,9 @@
 package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.impex.archives.ExportArchivesList;
 import com.logicaldoc.gui.frontend.client.services.ArchiveService;
@@ -40,20 +37,9 @@ public class SignClosureDialog extends Window {
 		addCloseClickHandler(new CloseClickHandler() {
 			@Override
 			public void onCloseClick(CloseClientEvent event) {
-				service.setStatus(Session.get().getSid(), Long.parseLong(archiveId), GUIArchive.STATUS_FINALIZED,
-						new AsyncCallback<Void>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(Void result) {
-								archivesList.refresh();
-								archivesList.showDetails(Long.parseLong(archiveId), false);
-								destroy();
-							}
-						});
+				destroy();
+				archivesList.refresh();
+				archivesList.showDetails(Long.parseLong(archiveId), false);
 			}
 		});
 
