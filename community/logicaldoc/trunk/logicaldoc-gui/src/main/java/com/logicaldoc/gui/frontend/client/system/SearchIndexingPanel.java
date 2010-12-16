@@ -232,6 +232,7 @@ public class SearchIndexingPanel extends VLayout {
 				}
 			}
 		};
+		docsList.setEmptyMessage(I18N.message("notitemstoshow"));
 
 		docsList.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override

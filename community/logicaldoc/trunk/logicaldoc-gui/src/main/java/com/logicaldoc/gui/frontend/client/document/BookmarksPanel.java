@@ -82,6 +82,7 @@ public class BookmarksPanel extends VLayout {
 		icon.setCanFilter(false);
 
 		list = new ListGrid();
+		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setCanEdit(true);
 		list.setEditEvent(ListGridEditEvent.DOUBLECLICK);
 		list.setModalEditing(true);

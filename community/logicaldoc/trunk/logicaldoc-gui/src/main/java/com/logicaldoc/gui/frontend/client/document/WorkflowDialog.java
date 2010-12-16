@@ -149,6 +149,7 @@ public class WorkflowDialog extends Window {
 		ListGridField descr = new ListGridField("description", I18N.message("description"), 150);
 
 		deployedWorkflowsList = new ListGrid();
+		deployedWorkflowsList.setEmptyMessage(I18N.message("notitemstoshow"));
 		deployedWorkflowsList.setCanFreezeFields(true);
 		deployedWorkflowsList.setAutoFetchData(true);
 		deployedWorkflowsList.setShowHeader(true);
@@ -222,6 +223,7 @@ public class WorkflowDialog extends Window {
 		icon.setCanFilter(false);
 
 		docsAppendedList = new ListGrid();
+		docsAppendedList.setEmptyMessage(I18N.message("notitemstoshow"));
 		docsAppendedList.setCanFreezeFields(true);
 		docsAppendedList.setAutoFetchData(true);
 		docsAppendedList.setShowHeader(true);

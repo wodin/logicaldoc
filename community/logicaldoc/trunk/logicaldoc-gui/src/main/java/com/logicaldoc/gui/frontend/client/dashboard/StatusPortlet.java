@@ -58,6 +58,7 @@ public class StatusPortlet extends Portlet {
 		icon.setCanFilter(false);
 
 		list = new ListGrid();
+		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setCanFreezeFields(true);
 		list.setAutoFetchData(true);
 		list.setShowHeader(false);

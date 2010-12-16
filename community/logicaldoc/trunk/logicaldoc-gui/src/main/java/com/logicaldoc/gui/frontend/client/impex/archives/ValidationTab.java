@@ -150,6 +150,7 @@ public class ValidationTab extends Tab {
 		ListGridField error = new ListGridField("error", I18N.message("error"), 190);
 
 		docsList = new ListGrid();
+		docsList.setEmptyMessage(I18N.message("notitemstoshow"));
 		docsList.setCanFreezeFields(true);
 		docsList.setAutoFetchData(true);
 		docsList.setShowHeader(true);

@@ -55,6 +55,7 @@ public class GUILanguagesPanel extends VLayout {
 		name.setCanEdit(false);
 
 		list = new ListGrid();
+		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setCanEdit(false);
 		list.setWidth100();
 		list.setHeight100();

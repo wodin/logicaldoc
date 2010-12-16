@@ -163,6 +163,7 @@ public class LastChangesPanel extends VLayout {
 		sid.setAlign(Alignment.CENTER);
 
 		histories = new ListGrid();
+		histories.setEmptyMessage(I18N.message("notitemstoshow"));
 		histories.setWidth100();
 		histories.setHeight100();
 		histories.setFields(eventField, date, userField, name, folder, sid);

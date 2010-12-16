@@ -176,7 +176,8 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 				}
 			}
 		};
-
+		list.setEmptyMessage(I18N.message("notitemstoshow"));
+		
 		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT) {
 			list.setCanExpandRecords(true);
 			list.setExpansionMode(ExpansionMode.DETAIL_FIELD);

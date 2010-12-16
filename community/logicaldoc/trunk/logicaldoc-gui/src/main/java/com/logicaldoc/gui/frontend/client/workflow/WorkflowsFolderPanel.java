@@ -174,6 +174,7 @@ public class WorkflowsFolderPanel extends VLayout {
 				return super.getCellCSSText(record, rowNum, colNum);
 			}
 		};
+		list.setEmptyMessage(I18N.message("notitemstoshow"));
 
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);

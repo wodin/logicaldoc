@@ -51,6 +51,7 @@ public class SavedSearchesPanel extends VLayout {
 		ListGridField description = new ListGridField("description", I18N.message("description"));
 
 		listGrid = new ListGrid();
+		listGrid.setEmptyMessage(I18N.message("notitemstoshow"));
 		listGrid.setCanFreezeFields(true);
 		listGrid.setAutoFetchData(true);
 		dataSource = new SavedSearchesDS();

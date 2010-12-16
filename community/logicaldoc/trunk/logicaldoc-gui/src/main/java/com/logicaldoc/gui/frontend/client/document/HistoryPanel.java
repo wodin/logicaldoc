@@ -46,6 +46,7 @@ public class HistoryPanel extends DocumentDetailTab {
 		ListGridField sid = new ListGridField("sid", I18N.message("sid"));
 
 		listGrid = new ListGrid();
+		listGrid.setEmptyMessage(I18N.message("notitemstoshow"));
 		listGrid.setCanFreezeFields(true);
 		listGrid.setAutoFetchData(true);
 		dataSource = new DocumentHistoryDS(document.getId(), null);

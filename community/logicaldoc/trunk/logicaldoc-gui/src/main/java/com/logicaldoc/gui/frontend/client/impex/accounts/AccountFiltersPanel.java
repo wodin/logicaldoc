@@ -157,6 +157,7 @@ public class AccountFiltersPanel extends AccountDetailsTab {
 				}
 			}
 		};
+		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setShowAllRecords(true);
 		list.setCanEdit(true);
 		list.setWidth100();

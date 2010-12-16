@@ -62,6 +62,7 @@ public class VersionsPanel extends DocumentDetailTab {
 		ListGridField comment = new ListGridField("comment", I18N.message("comment"));
 
 		listGrid = new ListGrid();
+		listGrid.setEmptyMessage(I18N.message("notitemstoshow"));
 		listGrid.setCanFreezeFields(true);
 		listGrid.setAutoFetchData(true);
 		dataSource = new VersionsDS(document.getId(), null, 100);

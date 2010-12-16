@@ -72,6 +72,7 @@ public class DiscussionsPanel extends DocumentDetailTab {
 		lastPost.setCanFilter(false);
 
 		listGrid = new ListGrid();
+		listGrid.setEmptyMessage(I18N.message("notitemstoshow"));
 		listGrid.setCanFreezeFields(true);
 		listGrid.setAutoFetchData(true);
 		dataSource = new DiscussionsDS(document.getId());

@@ -91,6 +91,7 @@ public class HistoryPortlet extends Portlet {
 				}
 			}
 		};
+		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setCanFreezeFields(true);
 		list.setAutoFetchData(true);
 		list.setShowHeader(false);
