@@ -102,7 +102,7 @@ public class TasksPanel extends VLayout {
 			}
 		});
 
-		if (GUITask.STATUS_RUNNING == list.getSelectedRecord().getAttributeAsInt("status")
+		if (GUITask.STATUS_IDLE != list.getSelectedRecord().getAttributeAsInt("status")
 				|| !list.getSelectedRecord().getAttributeAsBoolean("eenabled"))
 			taskExecution.setEnabled(false);
 
@@ -118,8 +118,7 @@ public class TasksPanel extends VLayout {
 
 					@Override
 					public void onSuccess(Boolean result) {
-						list.getSelectedRecord().setAttribute("status", GUITask.STATUS_IDLE);
-						list.getSelectedRecord().setAttribute("runningIcon", "idle_task");
+						list.getSelectedRecord().setAttribute("status", GUITask.STATUS_STOPPING);
 						list.updateData(list.getSelectedRecord());
 					}
 				});
@@ -127,7 +126,7 @@ public class TasksPanel extends VLayout {
 			}
 		});
 
-		if (GUITask.STATUS_IDLE == list.getSelectedRecord().getAttributeAsInt("status")
+		if (GUITask.STATUS_RUNNING != list.getSelectedRecord().getAttributeAsInt("status")
 				|| !list.getSelectedRecord().getAttributeAsBoolean("eenabled"))
 			taskStop.setEnabled(false);
 
@@ -181,7 +180,7 @@ public class TasksPanel extends VLayout {
 		});
 
 		if (!list.getSelectedRecord().getAttributeAsBoolean("eenabled")
-				|| list.getSelectedRecord().getAttributeAsInt("status") == GUITask.STATUS_RUNNING)
+				|| list.getSelectedRecord().getAttributeAsInt("status") != GUITask.STATUS_IDLE)
 			disableTask.setEnabled(false);
 
 		contextMenu.setItems(taskExecution, taskStop, enableTask, disableTask);
@@ -221,7 +220,7 @@ public class TasksPanel extends VLayout {
 
 							for (ListGridRecord record : list.getRecords()) {
 								if (record.getAttribute("name").equals(guiTask.getName())
-										&& guiTask.getStatus() == GUITask.STATUS_RUNNING) {
+										&& guiTask.getStatus() != GUITask.STATUS_IDLE) {
 									record.setAttribute("runningIcon", "running_task");
 									record.setAttribute("completion", guiTask.getCompletionPercentage());
 									list.updateData(record);
@@ -370,9 +369,9 @@ public class TasksPanel extends VLayout {
 								public void onSuccess(GUITask task) {
 									record.setAttribute("status", task.getStatus());
 									record.setAttribute("eenabled", task.getScheduling().isEnabled());
-									if (task.getStatus() == GUITask.STATUS_RUNNING) {
+									if (task.getStatus() != GUITask.STATUS_IDLE) {
 										record.setAttribute("runningIcon", "running_task");
-									} else if (task.getStatus() == GUITask.STATUS_IDLE) {
+									} else {
 										record.setAttribute("runningIcon", "idle_task");
 									}
 									list.updateData(record);

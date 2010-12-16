@@ -22,6 +22,8 @@ public abstract class Task implements Runnable {
 
 	public final static int STATUS_RUNNING = 1;
 
+	public final static int STATUS_STOPPING = 2;
+
 	private int status = STATUS_IDLE;
 
 	protected long size = 0;
@@ -122,6 +124,7 @@ public abstract class Task implements Runnable {
 
 	public void interrupt() {
 		interruptRequested = true;
+		setStatus(STATUS_STOPPING);
 	}
 
 	public boolean isInterrupted() {
