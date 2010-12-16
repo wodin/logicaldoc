@@ -15,6 +15,8 @@ public class GUITask implements Serializable {
 	public final static int STATUS_IDLE = 0;
 
 	public final static int STATUS_RUNNING = 1;
+	
+	public final static int STATUS_STOPPING = 2;
 
 	private int status = STATUS_IDLE;
 
