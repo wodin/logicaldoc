@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -14,6 +15,8 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.i18n.Language;
+import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.Hit;
 import com.logicaldoc.core.searchengine.Search;
@@ -51,6 +54,20 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 
 		try {
 			SearchOptions searchOptions = toSearchOptions(options);
+
+			if (searchOptions instanceof FulltextSearchOptions) {
+				Locale exprLoc = LocaleUtil.toLocale(options.getExpressionLanguage());
+
+				Language lang = LanguageManager.getInstance().getLanguage(exprLoc);
+				if (lang == null) {
+					// Try to find another supported language
+					exprLoc = LocaleUtil.toLocale(exprLoc.getLanguage());
+					lang = LanguageManager.getInstance().getLanguage(exprLoc);
+
+					if (exprLoc != null)
+						((FulltextSearchOptions) searchOptions).setExpressionLanguage(exprLoc.getLanguage());
+				}
+			}
 
 			// Retrieve the search machinery
 			Search search = Search.get(searchOptions);
