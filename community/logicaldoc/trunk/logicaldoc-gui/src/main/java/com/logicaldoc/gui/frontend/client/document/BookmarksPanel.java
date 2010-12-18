@@ -5,12 +5,15 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
+import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.BookmarksDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.FolderService;
+import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -37,6 +40,8 @@ import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
  */
 public class BookmarksPanel extends VLayout {
 	private DocumentServiceAsync docService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+
+	private FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
 
 	private ListGrid list;
 
@@ -98,7 +103,20 @@ public class BookmarksPanel extends VLayout {
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				showContextMenu();
+				ListGridRecord record = list.getSelectedRecord();
+				folderService.getFolder(Session.get().getSid(),
+						Long.parseLong(record.getAttributeAsString("folderId")), false, new AsyncCallback<GUIFolder>() {
+
+							@Override
+							public void onSuccess(GUIFolder folder) {
+								showContextMenu(folder);
+							}
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+						});
 				event.cancel();
 			}
 		});
@@ -106,14 +124,29 @@ public class BookmarksPanel extends VLayout {
 		list.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGridRecord record = list.getSelectedRecord();
-				DocumentsPanel.get().onFolderSelect(Long.parseLong(record.getAttributeAsString("folderId")),
-						Long.parseLong(record.getAttributeAsString("docId")));
+				final ListGridRecord record = list.getSelectedRecord();
+				folderService.getFolder(Session.get().getSid(),
+						Long.parseLong(record.getAttributeAsString("folderId")), false, new AsyncCallback<GUIFolder>() {
+
+							@Override
+							public void onSuccess(GUIFolder folder) {
+								if (folder != null) {
+									DocumentsPanel.get().onFolderSelect(
+											Long.parseLong(record.getAttributeAsString("folderId")),
+											Long.parseLong(record.getAttributeAsString("docId")));
+								}
+							}
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+						});
 			}
 		});
 	}
 
-	private void showContextMenu() {
+	private void showContextMenu(GUIFolder folder) {
 		Menu contextMenu = new Menu();
 
 		MenuItem edit = new MenuItem();
@@ -185,6 +218,13 @@ public class BookmarksPanel extends VLayout {
 				});
 			}
 		});
+
+		if (folder != null && !folder.isDownload())
+			download.setEnabled(false);
+		else if (folder == null) {
+			download.setEnabled(false);
+			openInFolder.setEnabled(false);
+		}
 
 		contextMenu.setItems(edit, download, delete, openInFolder);
 		contextMenu.showContextMenu();
