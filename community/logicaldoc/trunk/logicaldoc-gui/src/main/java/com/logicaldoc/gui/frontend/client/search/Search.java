@@ -94,6 +94,7 @@ public class Search {
 						record.setAttribute("size", hit.getSize());
 						record.setAttribute("icon", hit.getIcon());
 						record.setAttribute("type", hit.getType());
+						record.setAttribute("sourceDate", hit.getSourceDate());
 					}
 
 					for (SearchObserver observer : observers) {

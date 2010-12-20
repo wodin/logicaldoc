@@ -102,6 +102,13 @@ public class DocumentsListPanel extends VLayout {
 		created.setCanFilter(false);
 		created.setHidden(true);
 		
+		ListGridField sourceDate = new ListGridField("sourceDate", I18N.message("date"), 110);
+		sourceDate.setAlign(Alignment.CENTER);
+		sourceDate.setType(ListGridFieldType.DATE);
+		sourceDate.setCellFormatter(new DateCellFormatter(true));
+		sourceDate.setCanFilter(false);
+		sourceDate.setHidden(true);
+		
 		ListGridField customId = new ListGridField("customId", I18N.message("customid"), 110);
 		customId.setType(ListGridFieldType.TEXT);
 
@@ -178,7 +185,7 @@ public class DocumentsListPanel extends VLayout {
 		dataSource = new DocumentsDS(folder.getId(), null, max, null);
 		list.setDataSource(dataSource);
 		list.setFields(indexed, locked, immutable, signed, icon, filename, title, lastModified, type, size, version,
-				publisher, published, creator, created, customId);
+				publisher, published, creator, created, sourceDate, customId);
 		
 		
 		// Prepare a panel containing a title and the documents list

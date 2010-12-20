@@ -37,6 +37,8 @@ public class GUIHit implements Serializable {
 
 	private int score;
 
+	private Date sourceDate;
+
 	public String getSummary() {
 		return summary;
 	}
@@ -131,5 +133,13 @@ public class GUIHit implements Serializable {
 
 	public void setIcon(String icon) {
 		this.icon = icon;
+	}
+
+	public Date getSourceDate() {
+		return sourceDate;
+	}
+
+	public void setSourceDate(Date sourceDate) {
+		this.sourceDate = sourceDate;
 	}
 }
