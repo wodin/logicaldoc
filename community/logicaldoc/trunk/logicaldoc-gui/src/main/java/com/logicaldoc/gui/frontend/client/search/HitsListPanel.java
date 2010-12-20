@@ -126,6 +126,13 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		creation.setCellFormatter(new DateCellFormatter(true));
 		creation.setCanFilter(false);
 
+		ListGridField sourceDate = new ListGridField("sourceDate", I18N.message("date"), 110);
+		sourceDate.setAlign(Alignment.CENTER);
+		sourceDate.setType(ListGridFieldType.DATE);
+		sourceDate.setCellFormatter(new DateCellFormatter(true));
+		sourceDate.setCanFilter(false);
+		sourceDate.setHidden(true);
+
 		ListGridField customId = new ListGridField("customId", I18N.message("customid"), 110);
 
 		ListGridField filename = new ListGridField("filename", I18N.message("filename"), 200);
@@ -177,7 +184,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			}
 		};
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
-		
+
 		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT) {
 			list.setCanExpandRecords(true);
 			list.setExpansionMode(ExpansionMode.DETAIL_FIELD);
@@ -192,11 +199,11 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT) {
 			// list.setFields(id, folderId, icon, title, size, creation, score,
 			// customId);
-			list.setFields(id, folderId, icon, title, type, size, published, creation, score, customId);
+			list.setFields(id, folderId, icon, title, type, size, published, creation, sourceDate, score, customId);
 		} else {
 			// list.setFields(id, folderId, icon, title, size, creation,
 			// customId);
-			list.setFields(id, folderId, icon, title, type, size, published, creation, customId);
+			list.setFields(id, folderId, icon, title, type, size, published, creation, sourceDate, customId);
 		}
 
 		list.addSelectionChangedHandler(new SelectionChangedHandler() {

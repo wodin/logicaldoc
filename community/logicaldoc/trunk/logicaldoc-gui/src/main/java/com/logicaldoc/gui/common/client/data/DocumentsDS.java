@@ -57,9 +57,11 @@ public class DocumentsDS extends DataSource {
 		lockUserId.setHidden(true);
 		DataSourceTextField aliasId = new DataSourceTextField("aliasId");
 		aliasId.setHidden(true);
-
+		DataSourceDateTimeField sourceDate = new DataSourceDateTimeField("sourceDate");
+		sourceDate.setHidden(true);
+		
 		setFields(id, title, type, size, publisher, version, docref, lastModified, published, created, creator,
-				customId, icon, immutable, iindexed, signed, locked, lockUserId, filename, status);
+				sourceDate, customId, icon, immutable, iindexed, signed, locked, lockUserId, filename, status);
 		setClientOnly(true);
 		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&folderId="
 				+ (folderId != null ? folderId : "") + "&filename=" + (fileFilter != null ? fileFilter : "") + "&max="

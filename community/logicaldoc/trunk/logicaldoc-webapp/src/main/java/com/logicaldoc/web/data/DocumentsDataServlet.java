@@ -112,7 +112,7 @@ public class DocumentsDataServlet extends HttpServlet {
 				 */
 				StringBuffer query = new StringBuffer(
 						"select A.id, A.customId, A.docRef, A.type, A.title, A.version, A.lastModified, A.date, A.publisher,"
-								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status, A.signed, A.type "
+								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status, A.signed, A.type, A.sourceDate "
 								+ "from Document A where A.deleted = 0 ");
 				if (folderId != null)
 					query.append(" and A.folder.id=" + folderId);
@@ -183,7 +183,11 @@ public class DocumentsDataServlet extends HttpServlet {
 						writer.print("<signed>rosette</signed>");
 
 					writer.print("<type>" + cols[18] + "</type>");
-					
+
+					if (cols[19] != null)
+						writer.print("<sourceDate>" + (cols[19] != null ? df.format(cols[19]) : "")
+								+ "</sourceDate>");
+
 					writer.print("</document>");
 				}
 
@@ -229,6 +233,9 @@ public class DocumentsDataServlet extends HttpServlet {
 					writer.print("<filename><![CDATA[" + doc.getFileName() + "]]></filename>");
 					writer.print("<status>" + doc.getStatus() + "</status>");
 					writer.print("<aliasId>" + id + "</aliasId>");
+
+					writer.print("<sourceDate>" + (doc.getSourceDate() != null ? df.format(doc.getSourceDate()) : "")
+							+ "</sourceDate>");
 					writer.print("</document>");
 				}
 			}
