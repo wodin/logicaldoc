@@ -401,6 +401,10 @@ public class SearchIndexingPanel extends VLayout {
 		excludePatters.setHint(I18N.message("separatedcomma"));
 		excludePatters.setHintStyle("hint");
 
+		// The optional batch
+		IntegerItem batch = ItemFactory.newIntegerItem("batch", "batch", this.searchEngine.getBatch());
+		batch.setHintStyle("hint");
+
 		HLayout buttons = new HLayout();
 
 		IButton save = new IButton();
@@ -413,6 +417,11 @@ public class SearchIndexingPanel extends VLayout {
 				if (vm.validate()) {
 					SearchIndexingPanel.this.searchEngine.setIncludePatters((String) values.get("includePatters"));
 					SearchIndexingPanel.this.searchEngine.setExcludePatters((String) values.get("excludePatters"));
+					String btch = vm.getValueAsString("batch");
+					if (btch == null || "".equals(btch.trim()))
+						SearchIndexingPanel.this.searchEngine.setBatch(0);
+					else
+						SearchIndexingPanel.this.searchEngine.setBatch(new Integer(btch));
 
 					service.save(Session.get().getSid(), SearchIndexingPanel.this.searchEngine,
 							new AsyncCallback<Void>() {
@@ -531,7 +540,7 @@ public class SearchIndexingPanel extends VLayout {
 			}
 		});
 
-		searchEngineForm.setItems(entries, locked, includePatters, excludePatters);
+		searchEngineForm.setItems(entries, locked, includePatters, excludePatters, batch);
 		buttons.setMembers(save, unlock, rescheduleAll, check);
 		buttons.setMembersMargin(5);
 		searchEngineTabPanel.setMembers(searchEngineForm, buttons);

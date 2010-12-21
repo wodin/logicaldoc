@@ -3,6 +3,7 @@ package com.logicaldoc.web.service;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -42,6 +43,10 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			searchEngine.setExcludePatters(conf.getPropertyWithSubstitutions("index.excludes"));
 			searchEngine.setIncludePatters(conf.getPropertyWithSubstitutions("index.includes"));
+			if (StringUtils.isNotEmpty(conf.getProperty("index.batch")))
+				searchEngine.setBatch(new Integer(conf.getProperty("index.batch")));
+			else
+				searchEngine.setBatch(0);
 
 			// Populate the list of supported languages
 			searchEngine.setLanguages("");
@@ -120,6 +125,8 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			conf.setProperty("index.excludes", searchEngine.getExcludePatters());
 			conf.setProperty("index.includes", searchEngine.getIncludePatters());
+			System.out.println(Integer.toString(searchEngine.getBatch()));
+			conf.setProperty("index.batch", Integer.toString(searchEngine.getBatch()));
 			conf.write();
 		} catch (IOException t) {
 			log.error(t.getMessage(), t);
