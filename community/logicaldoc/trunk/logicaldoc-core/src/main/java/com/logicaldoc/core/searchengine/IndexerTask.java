@@ -8,6 +8,8 @@ import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.task.Task;
+import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * This task enlists all non-indexed documents and performs the indexing
@@ -59,10 +61,21 @@ public class IndexerTask extends Task {
 		try {
 			// First of all find documents to be indexed
 			size = documentDao.countByIndexed(0);
+
+			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			Integer max = config.getProperty("index.batch") != null ? new Integer(config.getProperty("index.batch"))
+					: null;
+
+			if (max != null && max.intValue() < size && max.intValue() > 0)
+				size = max.intValue();
+
+			if (max != null && max.intValue() < 1)
+				max = null;
+
 			log.info("Found a total of " + size + " documents to be indexed");
 
 			List<Long> ids = documentDao.findIdsByWhere("_entity.indexed = " + AbstractDocument.INDEX_TO_INDEX, null,
-					null);
+					max);
 			for (Long id : ids) {
 				try {
 					log.debug("Indexing document " + id);

@@ -22,6 +22,8 @@ public class GUISearchEngine implements Serializable {
 
 	private String excludePatters = "*.exe,*.bin,*.iso";
 
+	private Integer batch = 200;
+
 	public String getLanguages() {
 		return languages;
 	}
@@ -60,5 +62,13 @@ public class GUISearchEngine implements Serializable {
 
 	public void setExcludePatters(String excludePatters) {
 		this.excludePatters = excludePatters;
+	}
+
+	public Integer getBatch() {
+		return batch;
+	}
+
+	public void setBatch(Integer batch) {
+		this.batch = batch;
 	}
 }
