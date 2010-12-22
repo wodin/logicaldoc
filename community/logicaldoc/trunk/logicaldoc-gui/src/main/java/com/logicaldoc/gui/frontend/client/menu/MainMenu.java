@@ -230,7 +230,7 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				Window.open(Session.get().getInfo().getHelp() + "?lang=" + I18N.getLocale(), "_blank",
-						"location=no,status=no,toolbar=no,menubar=no,resizable=yes");
+						"location=no,status=no,toolbar=no,menubar=no,resizable=yes,scrollbars=yes");
 			}
 		});
 
@@ -239,7 +239,7 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				Window.open(Session.get().getInfo().getBugs(), "_blank",
-						"location=no,status=no,toolbar=no,menubar=no,resizable=yes");
+						"location=no,status=no,toolbar=no,menubar=no,resizable=yes,scrollbars=yes");
 			}
 		});
 
@@ -248,7 +248,7 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				Window.open(Session.get().getInfo().getForum(), "_blank",
-						"location=no,status=no,toolbar=no,menubar=no,resizable=yes");
+						"location=no,status=no,toolbar=no,menubar=no,resizable=yes,scrollbars=yes");
 			}
 		});
 
