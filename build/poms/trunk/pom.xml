@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>36</version>
+  <version>37</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -12,10 +12,17 @@
     <url>http://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</url>
   </scm>
   <build>
+    <extensions>
+      <extension>
+         <groupId>org.apache.maven.wagon</groupId>
+         <artifactId>wagon-ssh</artifactId>
+      </extension>
+    </extensions>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
         <configuration>
           <source>1.6</source>
           <target>1.6</target>
@@ -510,11 +517,11 @@
         <name>Ibiblio Repository</name>
         <url>http://www.ibiblio.org/maven2</url>
       </repository>
-      <repository>
+      <!--repository>
         <id>java.net</id>
         <url>http://download.java.net/maven/1</url>
         <layout>legacy</layout>
-      </repository>
+      </repository-->
       <repository>
         <id>maven2-repository.dev.java.net</id>
         <name>Java.net Repository for Maven</name>
