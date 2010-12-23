@@ -329,16 +329,23 @@ public class TemplatePropertiesPanel extends HLayout {
 						att.setPosition(guiAttributes.size());
 						att.setMandatory((Boolean) mandatory.getValue());
 						att.setType(Integer.parseInt((String) type.getValue()));
-						if (form2.validate())
+						if (form2.validate()) {
+							changedHandler.onChanged(null);
 							addAttribute(att);
+						}
 					} else {
 						GUIExtendedAttribute att = guiAttributes.get(updatingAttributeName);
-						att.setMandatory((Boolean) mandatory.getValue());
-						if (type.getValue() instanceof String)
-							att.setType(Integer.parseInt((String) type.getValue()));
-						else
-							att.setType((Integer) type.getValue());
-						clean();
+						if (att != null) {
+							changedHandler.onChanged(null);
+							att.setMandatory((Boolean) mandatory.getValue());
+							if (type.getValue() instanceof String)
+								att.setType(Integer.parseInt((String) type.getValue()));
+							else
+								att.setType((Integer) type.getValue());
+
+							clean();
+							detailsPanel.getSavePanel().setVisible(true);
+						}
 					}
 				}
 			}
