@@ -13,9 +13,6 @@
 	<dependencySets>
 		<dependencySet>
 			<outputDirectory>WEB-INF/lib</outputDirectory>
-			<includes>
-				<include>*:jar:*</include>
-			</includes>
 		</dependencySet>
 	</dependencySets>
 </assembly>
