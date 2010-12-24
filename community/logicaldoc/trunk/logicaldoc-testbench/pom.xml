@@ -6,7 +6,6 @@
 		<groupId>com.logicaldoc</groupId>
 		<artifactId>logicaldoc</artifactId>
 		<version>6.0.0</version>
-		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>logicaldoc-testbench</artifactId>
 	<name>logicaldoc-testbench</name>
@@ -61,7 +60,6 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2-beta-1</version>
 				<configuration>
 					<descriptors>
 						<descriptor>
