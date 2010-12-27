@@ -54,8 +54,8 @@ public class HibernateDiscussionThreadDAO extends HibernatePersistentObjectDAO<D
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DiscussionComment> findCommentsByUserId(long userId, Integer maxEntries) {
-		String query = "select ld_threadid, ld_replyto, ld_replypath, ld_userid, ld_username, ld_date, ld_subject, ld_body, ld_deleted, ld_id"
-				+ " from ld_dcomment where ld_deleted = 0 and  ld_userid=" + userId + " order by ld_date desc";
+		String query = "select A.ld_threadid, A.ld_replyto, A.ld_replypath, A.ld_userid, A.ld_username, A.ld_date, A.ld_subject, A.ld_body, A.ld_deleted, A.ld_id, B.ld_docid"
+				+ " from ld_dcomment A, ld_dthread B where A.ld_deleted = 0 and B.ld_deleted=0 and A.ld_threadid=B.ld_id and A.ld_userid=" + userId + " order by A.ld_date desc";
 
 		RowMapper discussionMapper = new BeanPropertyRowMapper() {
 
@@ -71,6 +71,7 @@ public class HibernateDiscussionThreadDAO extends HibernatePersistentObjectDAO<D
 				comment.setSubject(rs.getString(7));
 				comment.setBody(rs.getString(8));
 				comment.setDeleted(rs.getInt(9));
+				comment.setDocId(rs.getLong(11));
 
 				return comment;
 			}

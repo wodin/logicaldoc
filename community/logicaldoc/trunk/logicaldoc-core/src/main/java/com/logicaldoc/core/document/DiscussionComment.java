@@ -26,6 +26,8 @@ public class DiscussionComment implements Comparable<DiscussionComment> {
 	private int deleted = 0;
 
 	private Long threadId;
+	
+	private Long docId;
 
 	public long getUserId() {
 		return userId;
@@ -114,5 +116,13 @@ public class DiscussionComment implements Comparable<DiscussionComment> {
 
 	public void setThreadId(Long threadId) {
 		this.threadId = threadId;
+	}
+
+	public Long getDocId() {
+		return docId;
+	}
+
+	public void setDocId(Long docId) {
+		this.docId = docId;
 	}
 }
