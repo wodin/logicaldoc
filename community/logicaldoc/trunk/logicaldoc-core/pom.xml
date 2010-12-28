@@ -225,6 +225,16 @@
 			<artifactId>pdfbox</artifactId>
 			<version>1.4.0</version>
 		</dependency>
+		<!-- 
+      Extracting text in languages whose text goes from right to left (such as Arabic and Hebrew) in PDF files can result in text that is backwards. 
+      PDFBox can normalize and reverse the text if the ICU4J jar file has been placed on the classpath (it is an optional dependency).
+      http://pdfbox.apache.org/userguide/text_extraction.html
+    -->
+		<dependency>
+			<groupId>com.ibm.icu</groupId>
+			<artifactId>icu4j</artifactId>
+			<version>3.8</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-core</artifactId>
