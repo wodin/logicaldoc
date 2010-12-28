@@ -12,6 +12,7 @@ import java.io.OutputStreamWriter;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -53,14 +54,14 @@ public class PDFParser extends AbstractParser {
 	}
 
 	/**
-	 * @return Returns the sourceDate.
+	 * @return the sourceDate.
 	 */
 	public String getSourceDate() {
 		return sourceDate;
 	}
 
 	/**
-	 * @return Returns the tags.
+	 * @return the tags.
 	 */
 	public String getTags() {
 		return tags;
@@ -125,7 +126,6 @@ public class PDFParser extends AbstractParser {
 			}
 
 			pdfDocument = parser.getPDDocument();
-
 			if (pdfDocument == null) {
 				throw new Exception("Can not get pdf document " + file.getName() + " for parsing");
 			}
@@ -137,37 +137,26 @@ public class PDFParser extends AbstractParser {
 				}
 
 				author = information.getAuthor();
-
 				if (author == null) {
 					author = "";
 				}
 
 				title = information.getTitle();
-
 				if (title == null) {
 					title = "";
 				}
-
-				Calendar calendar = null;
+								
 				try {
-					calendar = information.getCreationDate();
+					Calendar calendar = information.getCreationDate();
+					Date date = calendar.getTime();
+					sourceDate = DateFormat.getDateInstance().format(date);
+					//sourceDate = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ENGLISH).format(date);
 				} catch (Throwable e) {
 					log.error("Bad date format " + e.getMessage());
-				}
-				Date date = null;
-
-				if (calendar != null) {
-					date = calendar.getTime();
-				}
-
-				if (date != null) {
-					sourceDate = DateFormat.getDateInstance().format(date);
-				} else {
 					sourceDate = "";
-				}
+				}		
 
 				tags = information.getKeywords();
-
 				if (tags == null) {
 					tags = "";
 				}
@@ -176,11 +165,15 @@ public class PDFParser extends AbstractParser {
 				e.printStackTrace();
 			}
 
-			// create a tmp output stream with the size of the content.
+			// create a temporary output stream
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			OutputStreamWriter writer = new OutputStreamWriter(out, "UTF-8");
 
 			PDFTextStripper stripper = new PDFTextStripper();
+			
+			// Sorting of tokens reduces performances
+			// @see http://pdfbox.apache.org/apidocs/org/apache/pdfbox/util/PDFTextStripper.html#setSortByPosition%28boolean%29
+			// stripper.setSortByPosition(true);
 
 			try {
 				if (pdfDocument.isEncrypted()) {
