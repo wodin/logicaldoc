@@ -87,7 +87,7 @@ public class PostsPanel extends DocumentDetailTab {
 		listGrid.setWrapCells(true);
 		listGrid.setCellHeight(56);
 		listGrid.setCellPadding(2);
-		dataSource = new PostsDS(discussionId);
+		dataSource = new PostsDS(discussionId, null);
 		listGrid.setDataSource(dataSource);
 		listGrid.setFields(id, title, user, date, message, indent);
 		container.setHeight100();
@@ -155,18 +155,17 @@ public class PostsPanel extends DocumentDetailTab {
 			@Override
 			public void execute(Boolean value) {
 				if (value) {
-					documentService.deletePosts(Session.get().getSid(), discussionId, ids,
-							new AsyncCallback<Void>() {
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+					documentService.deletePosts(Session.get().getSid(), discussionId, ids, new AsyncCallback<Void>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
 
-								@Override
-								public void onSuccess(Void result) {
-									listGrid.removeSelectedData();
-								}
-							});
+						@Override
+						public void onSuccess(Void result) {
+							listGrid.removeSelectedData();
+						}
+					});
 				}
 			}
 		});

@@ -164,7 +164,7 @@ public class HistoryPortlet extends Portlet {
 		HeaderIcon portletIcon = ItemFactory.newHeaderIcon(icn);
 		HeaderControl hcicon = new HeaderControl(portletIcon);
 		hcicon.setSize(16);
-		
+
 		setHeaderControls(hcicon, HeaderControls.HEADER_LABEL, markAsRead, refresh);
 
 		// Count the total of events and the total of unchecked events

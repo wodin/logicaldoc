@@ -112,7 +112,7 @@ public class DocumentsDataServlet extends HttpServlet {
 				 */
 				StringBuffer query = new StringBuffer(
 						"select A.id, A.customId, A.docRef, A.type, A.title, A.version, A.lastModified, A.date, A.publisher,"
-								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status, A.signed, A.type, A.sourceDate "
+								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status, A.signed, A.type, A.sourceDate, A.sourceAuthor "
 								+ "from Document A where A.deleted = 0 ");
 				if (folderId != null)
 					query.append(" and A.folder.id=" + folderId);
@@ -185,8 +185,10 @@ public class DocumentsDataServlet extends HttpServlet {
 					writer.print("<type>" + cols[18] + "</type>");
 
 					if (cols[19] != null)
-						writer.print("<sourceDate>" + (cols[19] != null ? df.format(cols[19]) : "")
-								+ "</sourceDate>");
+						writer.print("<sourceDate>" + (cols[19] != null ? df.format(cols[19]) : "") + "</sourceDate>");
+
+					if (cols[20] != null)
+						writer.print("<sourceAuthor>" + cols[20] + "</sourceAuthor>");
 
 					writer.print("</document>");
 				}

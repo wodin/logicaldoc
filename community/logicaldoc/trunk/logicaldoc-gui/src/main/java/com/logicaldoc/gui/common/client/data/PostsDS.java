@@ -13,7 +13,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class PostsDS extends DataSource {
-	public PostsDS(long discussionId) {
+	public PostsDS(Long discussionId, Long userId) {
 		setRecordXPath("/list/post");
 		DataSourceTextField title = new DataSourceTextField("title");
 		DataSourceTextField id = new DataSourceTextField("id");
@@ -25,10 +25,13 @@ public class PostsDS extends DataSource {
 		DataSourceTextField message = new DataSourceTextField("message");
 		DataSourceDateTimeField date = new DataSourceDateTimeField("date");
 		DataSourceTextField replyPath = new DataSourceTextField("replyPath");
+		DataSourceTextField documentId = new DataSourceTextField("docId");
 		replyPath.setHidden(true);
 
-		setFields(id, title, user, indent, message, date, replyPath);
+		setFields(id, title, user, indent, message, date, replyPath, documentId);
 		setClientOnly(true);
-		setDataURL("data/posts.xml?sid=" + Session.get().getSid() + "&discussionId=" + discussionId);
+
+		setDataURL("data/posts.xml?sid=" + Session.get().getSid() + "&"
+				+ (discussionId != null ? ("discussionId=" + discussionId) : ("userId=" + userId)));
 	}
 }
