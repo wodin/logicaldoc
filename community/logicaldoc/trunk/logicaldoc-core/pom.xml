@@ -345,6 +345,7 @@
 									<exclude name="*nekohtml*" />
 									<exclude name="*icepdf*" />
 									<exclude name="*jai*" />
+									<exclude name="*icu*" />
 								</delete>
 
 								<copy

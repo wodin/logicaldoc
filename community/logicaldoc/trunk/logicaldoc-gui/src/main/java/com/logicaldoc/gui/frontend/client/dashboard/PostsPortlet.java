@@ -1,14 +1,11 @@
 package com.logicaldoc.gui.frontend.client.dashboard;
 
-import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.PostsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
-import com.logicaldoc.gui.frontend.client.services.DocumentService;
-import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.DragAppearance;
@@ -26,7 +23,7 @@ import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 import com.smartgwt.client.widgets.layout.Portlet;
 
 /**
- * Portlet specialized in listing history records
+ * Portlet specialized in listing the most recent posts of the current user.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
@@ -36,8 +33,6 @@ public class PostsPortlet extends Portlet {
 	private PostsDS dataSource;
 
 	private ListGrid list;
-
-	private DocumentServiceAsync service = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	public PostsPortlet() {
 		refresh();

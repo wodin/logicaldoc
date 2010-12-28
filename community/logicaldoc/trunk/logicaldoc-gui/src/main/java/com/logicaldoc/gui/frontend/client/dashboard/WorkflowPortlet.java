@@ -7,12 +7,16 @@ import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.data.WorkflowTasksDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.logicaldoc.gui.frontend.client.workflow.WorkflowDetailsDialog;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.DragAppearance;
+import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.widgets.HeaderControl;
+import com.smartgwt.client.widgets.HeaderControl.HeaderIcon;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
@@ -56,6 +60,12 @@ public class WorkflowPortlet extends Portlet {
 		} else if (type == WorkflowDashboard.TASKS_SUPERVISOR) {
 			setTitle(I18N.message("workflowtaskssupervisor"));
 		}
+		
+		HeaderIcon portletIcon = ItemFactory.newHeaderIcon("blank.gif");
+		HeaderControl hcicon = new HeaderControl(portletIcon);
+		hcicon.setSize(16);
+		setHeaderControls(hcicon, HeaderControls.HEADER_LABEL);
+
 
 		ListGridField workflow = new ListGridField("workflow", I18N.message("workflow"), 100);
 		ListGridField id = new ListGridField("id", I18N.message("id"), 70);
