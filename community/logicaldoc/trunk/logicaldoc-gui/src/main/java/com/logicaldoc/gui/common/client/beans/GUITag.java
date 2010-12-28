@@ -17,6 +17,8 @@ public class GUITag implements Serializable {
 	private int count;
 
 	private int scale;
+	
+	private String link;
 
 	public String getTag() {
 		return tag;
@@ -40,6 +42,14 @@ public class GUITag implements Serializable {
 
 	public void setScale(int scale) {
 		this.scale = scale;
+	}
+
+	public String getLink() {
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
 	}
 
 }

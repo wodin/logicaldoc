@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimeZone;
 
 import javax.servlet.ServletException;
@@ -38,7 +40,13 @@ public class PostsDataServlet extends HttpServlet {
 		try {
 			SessionUtil.validateSession(request);
 
-			long discussionId = Long.parseLong(request.getParameter("discussionId"));
+			Long discussionId = null;
+			if (request.getParameter("discussionId") != null)
+				discussionId = Long.parseLong(request.getParameter("discussionId"));
+
+			Long userId = null;
+			if (request.getParameter("userId") != null)
+				userId = Long.parseLong(request.getParameter("userId"));
 
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
@@ -49,8 +57,22 @@ public class PostsDataServlet extends HttpServlet {
 			response.setHeader("Expires", "0");
 
 			DiscussionThreadDAO dao = (DiscussionThreadDAO) Context.getInstance().getBean(DiscussionThreadDAO.class);
-			DiscussionThread thread = dao.findById(discussionId);
-			dao.initialize(thread);
+			List<DiscussionComment> posts = new ArrayList<DiscussionComment>();
+
+			if (discussionId != null) {
+				DiscussionThread thread = dao.findById(discussionId);
+				dao.initialize(thread);
+				posts = thread.getComments();
+
+				// Increase the views counter
+				if (thread.getComments().size() > 0) {
+					thread.setViews(thread.getViews() + 1);
+					dao.store(thread);
+				}
+			} else {
+				posts = dao.findCommentsByUserId(userId, 10);
+			}
+
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
@@ -58,7 +80,7 @@ public class PostsDataServlet extends HttpServlet {
 			writer.write("<list>");
 
 			int i = 0;
-			for (DiscussionComment post : thread.getComments()) {
+			for (DiscussionComment post : posts) {
 				writer.print("<post>");
 				writer.print("<id>" + i + "</id>");
 				writer.print("<title>" + post.getSubject() + "</title>");
@@ -67,15 +89,12 @@ public class PostsDataServlet extends HttpServlet {
 				writer.print("<date>" + df.format(post.getDate()) + "</date>");
 				writer.print("<replyPath>" + post.getReplyPath() + "</replyPath>");
 				writer.print("<message>" + post.getBody() + "</message>");
+				if (post.getDocId() != null)
+					writer.print("<docId>" + post.getDocId() + "</docId>");
 				writer.print("</post>");
 				i++;
 			}
 			writer.write("</list>");
-
-			if (thread.getComments().size() > 0) {
-				thread.setViews(thread.getViews() + 1);
-				dao.store(thread);
-			}
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 			if (e instanceof ServletException)

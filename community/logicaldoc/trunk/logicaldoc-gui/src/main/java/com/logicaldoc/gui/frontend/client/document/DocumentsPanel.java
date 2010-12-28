@@ -119,6 +119,27 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		MainPanel.get().selectDocumentsTab();
 	}
 
+	public void openInFolder(long docId) {
+		documentService.getById(Session.get().getSid(), docId, new AsyncCallback<GUIDocument>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				/*
+				 * Sometimes we can have spurious errors using Firefox.
+				 */
+				if (Session.get().isDevel())
+					Log.serverError(caught);
+			}
+
+			@Override
+			public void onSuccess(GUIDocument result) {
+				GUIFolder folder = result.getFolder();
+				if (folder != null) {
+					openInFolder(folder.getId(), result.getId());
+				}
+			}
+		});
+	}
+
 	/**
 	 * Shows the document details
 	 * 

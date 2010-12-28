@@ -140,7 +140,7 @@ public class MessagesPanel extends VLayout {
 		list.setAutoFetchData(true);
 		list.setSelectionType(SelectionStyle.MULTIPLE);
 		list.setFilterOnKeypress(true);
-		list.setShowFilterEditor(true);
+		list.setShowFilterEditor(false);
 		list.setDataSource(new MessagesDS());
 		list.setFields(id, priority, username, from, sent);
 

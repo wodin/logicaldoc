@@ -4,7 +4,6 @@
   <inherits name="com.logicaldoc.gui.common.Common" />
   <inherits name="com.smartclient.theme.enterprise.EnterpriseResources" />
   <inherits name="com.rednels.ofcgwt.OFCGWT" />
-  <inherits name="gdurelle.tagcloud.TagCloud" />
   <inherits name="com.bramosystems.oss.player.core.Core" />
   
   <entry-point class="com.logicaldoc.gui.frontend.client.Frontend" />

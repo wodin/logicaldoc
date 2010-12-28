@@ -117,7 +117,7 @@ public class SubscriptionsPanel extends VLayout {
 		list.setAutoFetchData(true);
 		list.setSelectionType(SelectionStyle.MULTIPLE);
 		list.setFilterOnKeypress(true);
-		list.setShowFilterEditor(true);
+		list.setShowFilterEditor(false);
 		list.setDataSource(new SubscriptionsDS());
 		list.setFields(id, created, icon, name);
 

@@ -30,20 +30,36 @@ public class DashboardPanel extends VLayout implements UserObserver {
 
 	private Tab userTab = null;
 
+	private Tab tagsTab = null;
+
 	private DashboardPanel() {
 		userTab = new Tab(I18N.message("user"));
+		userTab.setID("user");
 		userTab.setPane(new UserDashboard());
 
+		tagsTab = new Tab(I18N.message("tags"));
+		tagsTab.setID("tags");
+		tagsTab.setPane(new TagsDashboard());
+
 		messagesTab = new Tab(I18N.message("messages"));
+		messagesTab.setID("messages");
 		messagesTab.setPane(new MessagesPanel());
 
 		subscriptionsTab = new Tab(I18N.message("subscriptions"));
+		subscriptionsTab.setID("subscriptions");
 		subscriptionsTab.setPane(new SubscriptionsPanel());
 
 		workflowTab = new Tab(I18N.message("workflow"));
+		workflowTab.setID("workflow");
 		workflowTab.setPane(new WorkflowDashboard());
 
 		tabSet.addTab(userTab);
+
+		if (Feature.visible(Feature.TAGS)) {
+			tabSet.addTab(tagsTab);
+			if (!Feature.enabled(Feature.TAGS))
+				tagsTab.setPane(new TagsDashboard());
+		}
 
 		if (Feature.visible(Feature.MESSAGES)) {
 			tabSet.addTab(messagesTab);
@@ -95,23 +111,28 @@ public class DashboardPanel extends VLayout implements UserObserver {
 	}
 
 	public void updateUserTab() {
-		tabSet.setTabPane(0, new UserDashboard());
-		tabSet.selectTab(0);
+		tabSet.setTabPane("user", new UserDashboard());
+		tabSet.selectTab("user");
+	}
+
+	public void updateTagsTab() {
+		tabSet.setTabPane("tags", new TagsDashboard());
+		tabSet.selectTab("tags");
 	}
 
 	public void updateMessageTab() {
-		tabSet.setTabPane(1, new MessagesPanel());
-		tabSet.selectTab(1);
+		tabSet.setTabPane("messages", new MessagesPanel());
+		tabSet.selectTab("messages");
 	}
 
 	public void updateSubscriptionsTab() {
-		tabSet.setTabPane(2, new SubscriptionsPanel());
-		tabSet.selectTab(2);
+		tabSet.setTabPane("subscriptions", new SubscriptionsPanel());
+		tabSet.selectTab("subscriptions");
 	}
 
 	public void updateWorkflowTab() {
-		tabSet.setTabPane(3, new WorkflowDashboard());
-		tabSet.selectTab(0);
+		tabSet.setTabPane("workflow", new WorkflowDashboard());
+		tabSet.selectTab("workflow");
 	}
 
 	@Override

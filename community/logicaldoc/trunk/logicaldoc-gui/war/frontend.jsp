@@ -96,6 +96,8 @@ body {
 </script>
 		<script src='frontend/sc/modules/ISC_DataBinding.js'></script>
 
+    <script src='flash/swfobject.js'></script>
+
 <!--load skin-->
 <script type="text/javascript">document.getElementById('loadingMsg').innerHTML = 'Loading skin...';</script>
 <script type="text/javascript">

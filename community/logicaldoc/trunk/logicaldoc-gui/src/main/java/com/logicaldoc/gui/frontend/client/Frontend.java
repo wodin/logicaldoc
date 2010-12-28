@@ -20,6 +20,7 @@ import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
+import com.logicaldoc.gui.frontend.client.search.TagsForm;
 import com.logicaldoc.gui.frontend.client.security.LoginPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
@@ -56,9 +57,9 @@ public class Frontend implements EntryPoint {
 		GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 			@Override
 			public void onUncaughtException(Throwable caught) {
-				//Log unhandled errors only when in devel mode
-				if(Session.get().isDevel())
-				  Log.error(caught.getMessage(), null, caught);
+				// Log unhandled errors only when in devel mode
+				if (Session.get().isDevel())
+					Log.error(caught.getMessage(), null, caught);
 			}
 
 		});
@@ -86,6 +87,7 @@ public class Frontend implements EntryPoint {
 		mainPanel = MainPanel.get();
 
 		setUploadTrigger(this);
+		setSearchTag(this);
 
 		infoService.getInfo(I18N.getLocale(), new AsyncCallback<GUIInfo>() {
 			@Override
@@ -148,12 +150,26 @@ public class Frontend implements EntryPoint {
 				});
 	}
 
+	public void searchTag(String tag) {
+		TagsForm.searchTag(tag);
+	}
+
 	/**
 	 * Declares the javascript function used to trigger the upload.
 	 */
 	public static native void setUploadTrigger(Frontend frontend) /*-{
 		$wnd.triggerUpload = function () {
 		   frontend.@com.logicaldoc.gui.frontend.client.Frontend::triggerUpload()();
+		};
+	}-*/;
+
+	/**
+	 * Declares the javascript function used to trigger the search for a
+	 * specific tag.
+	 */
+	public static native void setSearchTag(Frontend frontend) /*-{
+		$wnd.searchTag = function (tag) {
+		   frontend.@com.logicaldoc.gui.frontend.client.Frontend::searchTag(Ljava/lang/String;)(tag);
 		};
 	}-*/;
 }
