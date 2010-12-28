@@ -44,6 +44,8 @@ public class WorkflowPortlet extends Portlet {
 	public WorkflowPortlet(WorkflowDashboard dashboard, int type) {
 		this.workflowDashboard = dashboard;
 
+		setCanDrag(false);
+		setCanDrop(false);
 		setShowShadow(true);
 		setAnimateMinimize(true);
 		setDragAppearance(DragAppearance.OUTLINE);

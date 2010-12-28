@@ -36,26 +36,28 @@ public class TagsPortlet extends Portlet {
 		if (container != null)
 			removeChild(container);
 
-		container = new HLayout();
-		container.setWidth100();
-		container.setHeight100();
-		container.setAlign(Alignment.CENTER);
-		container.setMargin(25);
-
-		addChild(container);
-
-		setShowShadow(true);
-		setAnimateMinimize(true);
-		setDragAppearance(DragAppearance.OUTLINE);
-		setDragOpacity(30);
-		setCanDrag(false);
-		setCanDrop(false);
-
 		HeaderIcon portletIcon = ItemFactory.newHeaderIcon("tag_blue.png");
 		HeaderControl hcicon = new HeaderControl(portletIcon);
 		hcicon.setSize(16);
 
 		setHeaderControls(hcicon, HeaderControls.HEADER_LABEL);
+
+		setCanDrag(false);
+		setCanDrop(false);
+		setShowShadow(true);
+		setAnimateMinimize(true);
+		setDragAppearance(DragAppearance.OUTLINE);
+		setDragOpacity(30);
+
+		container = new HLayout();
+		container.setWidth100();
+		container.setHeight100();
+		container.setAlign(Alignment.CENTER);
+		container.setMargin(25);
+		
+		addChild(container);
+		
+		addChild(container);
 
 		container.addMember(new TagsForm(false));
 	}

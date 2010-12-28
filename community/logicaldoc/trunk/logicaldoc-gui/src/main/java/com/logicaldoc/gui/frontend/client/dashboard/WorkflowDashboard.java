@@ -85,8 +85,6 @@ public class WorkflowDashboard extends VLayout {
 		portalLayout.setShowColumnMenus(false);
 		portalLayout.setShowEdges(false);
 		portalLayout.setShowShadow(false);
-		portalLayout.setShowEdges(false);
-		portalLayout.setShowShadow(false);
 		portalLayout.setCanDrag(false);
 		portalLayout.setCanDrop(false);
 		portalLayout.setColumnBorder("0px");
