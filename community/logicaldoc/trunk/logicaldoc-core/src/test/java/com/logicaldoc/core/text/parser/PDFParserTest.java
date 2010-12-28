@@ -41,7 +41,7 @@ public class PDFParserTest {
 		assertTrue(StringUtils.isNotEmpty(content));
 
 		System.out.println("content.length(): " + content.length());
-		assertTrue(content.length() == 27269);
+		assertTrue(content.length() == 27179);
 		System.out.println("content : " + content);
 	}
 
