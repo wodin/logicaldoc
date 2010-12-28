@@ -51,9 +51,29 @@ public class MostUsedTagsPortlet extends Portlet {
 	private void refresh() {
 		setTitle(I18N.message("mostusedtags"));
 
+		HeaderControl refresh = new HeaderControl(HeaderControl.REFRESH, new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				refresh();
+			}
+		});
+		
 		if (container != null)
 			removeChild(container);
 
+		HeaderIcon portletIcon = ItemFactory.newHeaderIcon("tag_blue.png");
+		HeaderControl hcicon = new HeaderControl(portletIcon);
+		hcicon.setSize(16);
+
+		setHeaderControls(hcicon, HeaderControls.HEADER_LABEL, refresh);
+
+		setCanDrag(false);
+		setCanDrop(false);
+		setShowShadow(true);
+		setAnimateMinimize(true);
+		setDragAppearance(DragAppearance.OUTLINE);
+		setDragOpacity(30);
+		
 		container = new HLayout();
 		container.setWidth100();
 		container.setHeight100();
@@ -61,25 +81,6 @@ public class MostUsedTagsPortlet extends Portlet {
 		container.setMargin(25);
 		
 		addChild(container);
-		
-		setShowShadow(true);
-		setAnimateMinimize(true);
-		setDragAppearance(DragAppearance.OUTLINE);
-		setDragOpacity(30);
-		setCanDrag(false);
-		setCanDrop(false);
-		HeaderControl refresh = new HeaderControl(HeaderControl.REFRESH, new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				refresh();
-			}
-		});
-
-		HeaderIcon portletIcon = ItemFactory.newHeaderIcon("tag_blue.png");
-		HeaderControl hcicon = new HeaderControl(portletIcon);
-		hcicon.setSize(16);
-
-		setHeaderControls(hcicon, HeaderControls.HEADER_LABEL, refresh);
 		
 		service.getTagCloud(new AsyncCallback<GUITag[]>() {
 			@Override
@@ -117,5 +118,4 @@ public class MostUsedTagsPortlet extends Portlet {
 			}
 		});
 	}
-
 }
