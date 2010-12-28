@@ -33,8 +33,7 @@ public class UserDashboard extends PortalLayout {
 		setColumnBorder("0px");
 
 		refresh();
-		// if (Feature.visible(Feature.TAGS))
-		// addPortlet(new TagCloudPortlet(), 1, 2);
+
 		if (Feature.visible(Feature.FORUMS))
 			addPortlet(new PostsPortlet(), 1, 2);
 

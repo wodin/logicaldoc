@@ -9,7 +9,7 @@ import com.logicaldoc.gui.common.client.beans.GUITag;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
- * 
+ * This represent a tag cloud using a 3-D ball.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
