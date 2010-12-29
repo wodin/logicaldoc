@@ -66,6 +66,7 @@
     <dependency>
       <groupId>com.bramosystems.oss.player</groupId>
       <artifactId>bst-player-api</artifactId>
+      <version>1.2</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

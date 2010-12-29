@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.logicaldoc.gui.common.client.beans.GUITag;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
@@ -70,30 +71,41 @@ public class TagCloud extends VLayout {
 	}
 
 	/**
-	 * Refresh the display of the tagcloud. Usually used after an adding or
+	 * Refresh the display of the tag cloud. Usually used after an adding or
 	 * deletion of word.
 	 */
 	public void refresh() {
 		String tcloud = "<tags>";
 		for (GUITag w : tags) {
-			tcloud += "<a href='" + URL.encode(w.getLink()) + "' style='font-size: " + (w.getScale() + 4)
-					+ "pt;' color='0x000000' hicolor='0x314976'>" + w.getTag() + "</a>";
+			tcloud += "<a href='" + URL.encode(w.getLink()) + "' style='" + (w.getScale() + 4)
+					+ "' color='0x000000' hicolor='0x314976'>" + w.getTag() + "</a>";
 			;
 		}
 		tcloud += "</tags>";
+		tcloud = "tcolor=0x111111&tcolor2=0x336699&hicolor=0x&tspeed=100&distr=true&mode=both&tagcloud=" + tcloud;
 
-		String tmp = "<div style='width:97%'><div id=\"flashcontent\" style='height:" + (getHeight() - 20)
-				+ "'>You need Flash</div></div>\n<script type=\"text/javascript\">\n";
-		tmp += " var so = new SWFObject(\"flash/tagcloud.swf\", \"tagcloud\", \"" + (getWidth() - 10) + "\", \""
-				+ (getHeight() - 20) + "\", \"7\", \"#ffffff\");\n";
-		tmp += " so.addParam(\"wmode\", \"transparent\");\n";
-		tmp += " so.addVariable(\"tcolor\", \"0x999999\");\n";
-		tmp += " so.addVariable(\"mode\", \"tags\");\n";
-		tmp += " so.addVariable(\"distr\", \"true\");\n";
-		tmp += " so.addVariable(\"tspeed\", \"100\");\n";
-		tmp += " so.addVariable(\"tagcloud\", \"" + tcloud + "\");\n";
-		tmp += " so.write(\"flashcontent\");\n";
-		tmp += "</script>";
+		// String tmp =
+		// "<div align=\"center\"><object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" width=\""
+		// + (getWidth() - 40) + "\" height=\"" + (getHeight() - 40) +
+		// "\" align=\"middle\">\n";
+		// tmp += " <param name=\"allowScriptAccess\" value=\"always\" />\n";
+		// tmp += " <param name=\"allowFullScreen\" value=\"false\" />\n";
+		// tmp += " <param name=\"movie\" value=\"flash/tagcloud.swf\" />\n";
+		// tmp += " <param name=\"quality\" value=\"high\" />\n";
+		// tmp += " <param name=\"bgcolor\" value=\"#ffffff\" />\n";
+		// tmp += " <param name=\"wmode\" value=\"transparent\" />\n";
+		// tmp +=
+		// " <param name=\"flashvars\" value=\"tcolor=0x111111&tcolor2=0x336699&hicolor=0x&tspeed=100&distr=true&mode=both&tagcloud="
+		// + tcloud + "\" />";
+		// tmp +=
+		// "	<embed type=\"application/x-shockwave-flash\" src=\"flash/tagcloud.swf\" height=\""
+		// + (getHeight() - 40)
+		// + "\" width=\""
+		// + (getWidth() - 40)
+		// +
+		// "\" id=\"tagcloud\" name=\"tagcloud\" bgcolor=\"#ffffff\" quality=\"high\" flashvars=\"tcolor=0x333333&mode=tags&distr=true&tspeed=100&tagcloud="
+		// + tcloud + "\" />";
+		// tmp += "</object></div>\n";
 
 		if (container != null)
 			removeMember(container);
@@ -102,8 +114,7 @@ public class TagCloud extends VLayout {
 		container.setHeight(getHeight() - 20);
 		addMember(container);
 
-		html = new HTMLPanel(tmp);
-		html.setHeight("" + (getHeight() - 20));
+		html = new HTMLPanel(Util.flashHTML("tagcloud.swf", getWidth() - 40, getHeight() - 40, tcloud));
 		container.addMember(html);
 	}
 
