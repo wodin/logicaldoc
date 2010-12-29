@@ -1,18 +1,15 @@
 package com.logicaldoc.core.text.parser;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.CharArrayReader;
 import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -106,6 +103,7 @@ public class PDFParser extends AbstractParser {
 
 	@Override
 	public void parse(File file) {
+		
 		log.info("Parsing file " + file.getPath());
 
 		author = "";
@@ -150,6 +148,7 @@ public class PDFParser extends AbstractParser {
 					Calendar calendar = information.getCreationDate();
 					Date date = calendar.getTime();
 					sourceDate = DateFormat.getDateInstance().format(date);
+					// In Italian it will be like 27-giu-2007
 					//sourceDate = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ENGLISH).format(date);
 				} catch (Throwable e) {
 					log.error("Bad date format " + e.getMessage());
@@ -165,15 +164,9 @@ public class PDFParser extends AbstractParser {
 				e.printStackTrace();
 			}
 
-			// create a temporary output stream
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			OutputStreamWriter writer = new OutputStreamWriter(out, "UTF-8");
 
-			PDFTextStripper stripper = new PDFTextStripper();
-			
-			// Sorting of tokens reduces performances
-			// @see http://pdfbox.apache.org/apidocs/org/apache/pdfbox/util/PDFTextStripper.html#setSortByPosition%28boolean%29
-			// stripper.setSortByPosition(true);
+			CharArrayWriter writer = new CharArrayWriter();
+			PDFTextStripper stripper = new PDFTextStripper("UTF-8");
 
 			try {
 				if (pdfDocument.isEncrypted()) {
@@ -188,11 +181,8 @@ public class PDFParser extends AbstractParser {
 				title = file.getName().substring(0, file.getName().lastIndexOf('.'));
 				author = "";
 		    }
-			writer.flush();
-			writer.close();
-			content = new String(out.toByteArray(), "UTF-8");
-			is.close();
-			out.close();
+			content = writer.toString();
+			is.close();			
 		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
 			ex.printStackTrace();

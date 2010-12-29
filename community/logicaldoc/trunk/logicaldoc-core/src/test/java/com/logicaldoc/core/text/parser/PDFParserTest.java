@@ -4,26 +4,64 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.apache.commons.lang.StringUtils;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 public class PDFParserTest {
 	
+	private long startTime;
+	private long mem1;
+
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@Before
+	public void setUp() throws Exception {
+		this.startTime = System.currentTimeMillis();
+		//this.mem1 = Runtime.getRuntime().freeMemory(); 
+		System.out.println("freeMemory: " + Runtime.getRuntime().freeMemory());
+		System.out.println("totalMemory: " + Runtime.getRuntime().totalMemory());
+	}
+
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@After
+	public void tearDown() throws Exception {
+		long elapsedMillis = System.currentTimeMillis() - this.startTime;
+		System.err.println("elapsedMillis: " + elapsedMillis);
+		long mem2 = Runtime.getRuntime().freeMemory();
+		
+		System.err.println("freeMemory AFTER: " + Runtime.getRuntime().freeMemory());
+		System.err.println("totalMemory AFTER: " + Runtime.getRuntime().totalMemory());
+		
+		mem1 = Runtime.getRuntime().totalMemory();
+		System.err.println("Memory used by allocation: " + ((mem1 - mem2)/1024) + " KB");
+		//System.out.println("Memory used by allocation: " + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1024) + " KB");
+		Runtime.getRuntime().gc(); // request garbage collection
+	}
+	
 	@Test
 	public void testParse() throws UnsupportedEncodingException {
 		
-		// This is a pdf document that PDFBox version 0.7.3 in not able to read
+		// This is a pdf German document that PDFBox version 0.7.3 in not able to read
 		// The new version of PDFBox 1.3.1 is able to open such document
 		// This pdf has been created with Adobe PDF Library 9.0
-		File file = new File(URLDecoder.decode(getClass().getClassLoader().getResource("Digital_Day.pdf").getPath(), "UTF-8"));		
+		String inputFile = "target/test-classes/Digital_Day.pdf";
+		File file = new File(inputFile);
 		String filename = file.getPath();
 		
 		Parser parser = ParserFactory.getParser(filename);
@@ -46,8 +84,8 @@ public class PDFParserTest {
 
 		System.out.println("content.length(): " + content.length());
 		assertTrue(content.length() == 27179);
-		System.out.println("content : " + content);
-	}
+		//System.out.println("content : " + content);
+	}	
 	
 	@Test
 	public void testParseArabic() throws UnsupportedEncodingException {
@@ -56,7 +94,7 @@ public class PDFParserTest {
 		// The text in the left column is left aligned, while the text in the right goes from right to left (Arabic)
 		// The documentation of PDFBox 1.4.0 states that this requires ICU4J 3.8
 		String inputFile = "target/test-classes/Arabic/imaging14.pdf";
-		String outputFile = "C:/tmp/testdocs/imaging14_icu4j.txt";
+		String outputFile = "C:/tmp/testdocs/imaging14_icu4j-UTF8.txt";
 		File file = new File(inputFile);		
 		String filename = file.getPath();
 		
@@ -93,17 +131,17 @@ public class PDFParserTest {
 
 		System.err.println("content.length(): " + content.length());
 		assertTrue(content.length() == 3001);
-		System.out.println("content : " + content);
+		//System.out.println("content : " + content);
 		
-//		try {
-//			FileOutputStream out = new FileOutputStream(outputFile);
-//			BufferedWriter BW = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
-//			BW.write(content);			
-//			BW.close();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}		
+		try {
+			FileOutputStream out = new FileOutputStream(outputFile);
+			BufferedWriter BW = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
+			BW.write(content);			
+			BW.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 	}	
 	
 	@Test
@@ -113,7 +151,7 @@ public class PDFParserTest {
 		// The text goes from right to left (Arabic)
 		// The documentation of PDFBox 1.4.0 states that this requires ICU4J 3.8
 		String inputFile = "target/test-classes/Arabic/SharePoint.pdf";
-		String outputFile = "C:/tmp/testdocs/SharePoint_icu4j.txt";
+		String outputFile = "C:/tmp/testdocs/SharePoint_icu4j-UTF8.txt";
 		File file = new File(inputFile);		
 		String filename = file.getPath();
 		
@@ -132,7 +170,7 @@ public class PDFParserTest {
 
 		System.err.println("content.length(): " + content.length());
 		assertTrue(content.length() == 8598);
-		System.out.println("content : " + content);
+		//System.out.println("content : " + content);
 		
 //		try {
 //			FileOutputStream out = new FileOutputStream(outputFile);
