@@ -2,7 +2,6 @@ package com.logicaldoc.webservice.search;
 
 import com.logicaldoc.core.searchengine.HitImpl;
 import com.logicaldoc.util.SnippetStripper;
-import com.logicaldoc.util.StringUtil;
 
 /**
  * Represents a web service search result
@@ -60,7 +59,7 @@ public class WSSearchResult {
 	public void setHits(HitImpl[] hits) {
 		this.hits = hits;
 		for (HitImpl hitImpl : hits) {
-			hitImpl.setSummary("--");
+			hitImpl.setSummary(SnippetStripper.strip(hitImpl.getSummary()));
 		}
 	}
 }

@@ -1,11 +1,5 @@
 package com.logicaldoc.util;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-
-import org.apache.commons.lang.StringEscapeUtils;
-
 /**
  * Useful class used to filter snippets from lucene, excluding those characters
  * that invalidate HTML page
@@ -39,23 +33,23 @@ public class SnippetStripper {
 		summary = summary.replaceAll(LUCENE_HILIGHT_STOP, "</font>");
 		String outString = summary;
 
-		
-		//Remove all control characters
+		// Remove all control characters
 		outString = outString.replaceAll("[\\u0000-\\u0020]", " ");
 		outString = outString.replaceAll("\\u007F", " ");
 		outString = outString.replaceAll("[\\u0080-\\u009F]", " ");
-		
+
 		return outString;
 	}
-	
-//	public static void write(String str){
-//		try {
-//			OutputStreamWriter sout = new OutputStreamWriter (new FileOutputStream(new File("/C:/test.txt")),"UTF8");
-//			sout.write(str);
-//			sout.flush();
-//			sout.close();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}		
-//	}
+
+	// public static void write(String str){
+	// try {
+	// OutputStreamWriter sout = new OutputStreamWriter (new
+	// FileOutputStream(new File("/C:/test.txt")),"UTF8");
+	// sout.write(str);
+	// sout.flush();
+	// sout.close();
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
 }
