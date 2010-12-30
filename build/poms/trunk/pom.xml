@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>37</version>
+  <version>38</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -14,8 +14,8 @@
   <build>
     <extensions>
       <extension>
-         <groupId>org.apache.maven.wagon</groupId>
-         <artifactId>wagon-ssh</artifactId>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ssh</artifactId>
       </extension>
     </extensions>
     <plugins>
@@ -27,6 +27,49 @@
           <source>1.6</source>
           <target>1.6</target>
           <encoding>iso-8859-1</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.0-beta-3</version>
+        <configuration>
+          <reportPlugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-javadoc-plugin</artifactId>
+              <version>2.7</version>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-jxr-plugin</artifactId>
+              <version>2.2</version>
+              <configuration>
+                <aggregate>true</aggregate>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-surefire-report-plugin</artifactId>
+              <version>2.7.1</version>
+            </plugin>
+            <!--plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>cobertura-maven-plugin</artifactId>
+              <version>2.4</version>
+              <configuration>
+                <formats>
+                  <format>xml</format>
+                  <format>html</format>
+                </formats>
+              </configuration>
+            </plugin-->
+            <!--plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-checkstyle-plugin</artifactId>
+              <version>2.6</version>
+            </plugin-->
+          </reportPlugins>
         </configuration>
       </plugin>
     </plugins>
@@ -453,7 +496,7 @@
       </dependency>
       <dependency>
         <groupId>com.smartgwt</groupId>
-        <artifactId>smartgwt-skins</artifactId>                                                        
+        <artifactId>smartgwt-skins</artifactId>
         <version>2.2</version>
       </dependency>
       <dependency>
@@ -562,10 +605,9 @@
         <url>http://downloads.bramosystems.com/maven2/releases</url>
       </repository>
       <repository>
-			  <id>gwt-image-loader-repo</id>
-			  <url>http://gwt-image-loader.googlecode.com/svn/repo</url>
-		  </repository>
-
+        <id>gwt-image-loader-repo</id>
+        <url>http://gwt-image-loader.googlecode.com/svn/repo</url>
+      </repository>
     </repositories>
     <distributionManagement>
       <repository>
