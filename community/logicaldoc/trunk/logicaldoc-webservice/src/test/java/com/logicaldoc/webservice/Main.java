@@ -1,16 +1,20 @@
 package com.logicaldoc.webservice;
 
+import com.logicaldoc.core.searchengine.FulltextSearchOptions;
+import com.logicaldoc.core.searchengine.Hit;
+import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.webservice.auth.AuthClient;
+import com.logicaldoc.webservice.search.SearchClient;
+import com.logicaldoc.webservice.search.WSSearchResult;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		AuthClient auth = new AuthClient("http://localhost:8080/logicaldoc/services/Auth");
+		AuthClient auth = new AuthClient("http://localhost:9080/logicaldoc/services/Auth");
 		// DocumentClient documentClient = new
 		// DocumentClient("http://localhost:8080/logicaldoc/services/Document");
 		// FolderClient folderClient = new
 		// FolderClient("http://localhost:8080/logicaldoc/services/Folder");
-		// SearchClient searchClient = new
-		// SearchClient("http://localhost:8080/logicaldoc/services/Search");
+		SearchClient searchClient = new SearchClient("http://localhost:9080/logicaldoc/services/Search");
 
 		// Open a session
 		// This is a user 'author' with different permissions than the authors.
@@ -23,22 +27,20 @@ public class Main {
 		//
 		// sid = auth.login("matteo", "matteo1982");
 
-		// FulltextSearchOptions opt = new FulltextSearchOptions();
-		// opt.setLanguage("it");
-		// opt.setExpression("mail");
-		// opt.setExpressionLanguage("en");
-		// opt.setTemplate(-97L);
-		// opt.setType(SearchOptions.TYPE_FULLTEXT);
-		// opt.setSizeMax(2662400L);
-		// opt.setSizeMin(2457600L);
-		//
-		// WSSearchResult result = searchClient.find(sid, opt);
-		// System.out.println("result: " + result.getTotalHits());
-		// for (Hit hit : result.getHits()) {
-		// System.out.println("hit doc id: " + hit.getDocId());
-		// System.out.println("hit title: " + hit.getTitle());
-		// System.out.println("hit folder id: " + hit.getFolderId());
-		// }
+		FulltextSearchOptions opt = new FulltextSearchOptions();
+		opt.setLanguage("it");
+		opt.setExpression("kartha");
+		opt.setExpressionLanguage("it");
+		opt.setType(SearchOptions.TYPE_FULLTEXT);
+
+		WSSearchResult result = searchClient.find(sid, opt);
+		System.out.println("result: " + result.getTotalHits());
+		for (Hit hit : result.getHits()) {
+			System.out.println("hit doc id: " + hit.getDocId());
+			System.out.println("hit title: " + hit.getTitle());
+			System.out.println("hit folder id: " + hit.getFolderId());
+			System.out.println(hit.getSummary());
+		}
 
 		// TagCloud[] tags = searchClient.getTagCloud(sid);
 		// for (TagCloud tag : tags) {
