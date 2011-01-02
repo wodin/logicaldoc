@@ -67,6 +67,8 @@
         <include name="community/**" />
         <exclude name="**/target/**" />
         <exclude name="**/.*/**" />
+        <exclude name="**/checkout.bat" />
+        <exclude name="**/checkout.sh" />
         <!--include name="enterprise/**" /-->
       </fileset>
     </copy>
