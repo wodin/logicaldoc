@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.template;
+package com.logicaldoc.gui.frontend.client.metadata;
 
 import java.util.ArrayList;
 import java.util.List;

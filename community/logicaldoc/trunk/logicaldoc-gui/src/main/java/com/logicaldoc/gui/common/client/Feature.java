@@ -89,6 +89,8 @@ public class Feature {
 
 	public static final int DROP_SPOT = 63;
 
+	public static final int BARCODES = 64;
+	
 	private static Set<String> features = new HashSet<String>();
 
 	static public void init(GUIInfo info) {

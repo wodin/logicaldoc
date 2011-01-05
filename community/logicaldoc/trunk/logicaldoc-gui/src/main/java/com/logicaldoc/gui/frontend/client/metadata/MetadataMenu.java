@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.template;
+package com.logicaldoc.gui.frontend.client.metadata;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -65,6 +65,24 @@ public class MetadataMenu extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				AdminPanel.get().setContent(new TemplatesPanel());
+			}
+		});
+
+		Button barcode = new Button(I18N.message("barcodes"));
+		barcode.setWidth100();
+		barcode.setHeight(25);
+
+		if (Feature.visible(Feature.BARCODES) && Menu.enabled(Menu.BARCODES)) {
+			addMember(barcode);
+			if (!Feature.enabled(Feature.BARCODES)) {
+				barcode.setDisabled(true);
+				barcode.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+		barcode.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new BarcodesEnginePanel());
 			}
 		});
 

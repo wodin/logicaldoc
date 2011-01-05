@@ -34,6 +34,8 @@ public class History extends AbstractHistory {
 	public final static String EVENT_DELETED = "event.deleted";
 	
 	public final static String EVENT_SENT = "event.sent";
+	
+	public final static String EVENT_BARCODED = "event.barcoded";
 
 	// Events on folders
 	public final static String EVENT_FOLDER_CREATED = "event.folder.created";
@@ -61,7 +63,8 @@ public class History extends AbstractHistory {
 	public final static String EVENT_SHORTCUT_MOVED = "event.shortcut.moved";
 
 	public final static String EVENT_SHORTCUT_DELETED = "event.shortcut.deleted";
-
+	
+	
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		History history = new History();

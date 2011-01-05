@@ -80,6 +80,11 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>BarcodeService</servlet-name>
+		<servlet-class>com.logicaldoc.gui.frontend.server.MockBarcodeServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>TemplateService</servlet-name>
 		<servlet-class>com.logicaldoc.gui.frontend.server.MockTemplateServiceImpl</servlet-class>
 	</servlet>
@@ -223,11 +228,11 @@
 		<servlet-name>EmailAccountsData</servlet-name>
 		<servlet-class>com.logicaldoc.gui.common.server.MockEmailAccountsDataServlet</servlet-class>
 	</servlet>
-  
-    <servlet>
-        <servlet-name>WorkflowTriggersData</servlet-name>
-        <servlet-class>com.logicaldoc.gui.common.server.MockWorkflowTriggersDataServlet</servlet-class>
-    </servlet>
+
+	<servlet>
+		<servlet-name>WorkflowTriggersData</servlet-name>
+		<servlet-class>com.logicaldoc.gui.common.server.MockWorkflowTriggersDataServlet</servlet-class>
+	</servlet>
 
 	<servlet>
 		<servlet-name>LanguagesData</servlet-name>
@@ -329,7 +334,7 @@
 		<url-pattern>/frontend/search</url-pattern>
 	</servlet-mapping>
 
-    <servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>TagService</servlet-name>
 		<url-pattern>/frontend/tag</url-pattern>
 	</servlet-mapping>
@@ -357,6 +362,11 @@
 	<servlet-mapping>
 		<servlet-name>SearchEngineService</servlet-name>
 		<url-pattern>/frontend/searchengine</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>BarcodeService</servlet-name>
+		<url-pattern>/frontend/barcode</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -548,11 +558,11 @@
 		<servlet-name>IncrementalArchivesData</servlet-name>
 		<url-pattern>/data/incrementalarchives.xml</url-pattern>
 	</servlet-mapping>
-  
-    <servlet-mapping>
-        <servlet-name>WorkflowTriggersData</servlet-name>
-        <url-pattern>/data/workflowtriggers.xml</url-pattern>
-    </servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>WorkflowTriggersData</servlet-name>
+		<url-pattern>/data/workflowtriggers.xml</url-pattern>
+	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>LanguagesData</servlet-name>
@@ -568,11 +578,11 @@
 		<servlet-name>Download</servlet-name>
 		<url-pattern>/download</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet-mapping>
-      <servlet-name>Download</servlet-name>
-      <url-pattern>/download/*</url-pattern>
-    </servlet-mapping>
+		<servlet-name>Download</servlet-name>
+		<url-pattern>/download/*</url-pattern>
+	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>MockServlet</servlet-name>

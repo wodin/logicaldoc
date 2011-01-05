@@ -125,7 +125,6 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			conf.setProperty("index.excludes", searchEngine.getExcludePatters());
 			conf.setProperty("index.includes", searchEngine.getIncludePatters());
-			System.out.println(Integer.toString(searchEngine.getBatch()));
 			conf.setProperty("index.batch", Integer.toString(searchEngine.getBatch()));
 			conf.write();
 		} catch (IOException t) {

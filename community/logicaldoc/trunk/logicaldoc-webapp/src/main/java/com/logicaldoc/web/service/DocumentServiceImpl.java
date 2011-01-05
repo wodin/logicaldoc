@@ -756,15 +756,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				manager.changeIndexingStatus(docDao.findById(id), AbstractDocument.INDEX_SKIP);
 				unindexableCount++;
 			}
-
-			if (unindexableCount > 0) {
-				// TODO Message???
-			}
-
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
-			// TODO Message???
 		}
 	}
 

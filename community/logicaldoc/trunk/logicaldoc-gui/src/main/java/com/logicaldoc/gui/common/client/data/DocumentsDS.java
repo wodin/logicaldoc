@@ -23,11 +23,12 @@ public class DocumentsDS extends DataSource {
 	 * 
 	 * @param folderId The folder to be listed (optional)
 	 * @param filename A filter on the file nale (optional)
-	 * @param max The marimum number of records (if not specified MAX_ROWS is
+	 * @param max The maximum number of records (if not specified MAX_ROWS is
 	 *        used)
-	 * @param indexable The indexable flag
+	 * @param indexed The indexed flag
+	 * @param barcoded The barcoded flag
 	 */
-	public DocumentsDS(Long folderId, String fileFilter, Integer max, Integer indexed) {
+	public DocumentsDS(Long folderId, String fileFilter, Integer max, Integer indexed, Integer barcoded) {
 		setTitleField("title");
 		setRecordXPath("/list/document");
 		DataSourceTextField title = new DataSourceTextField("title");
@@ -68,7 +69,8 @@ public class DocumentsDS extends DataSource {
 		setClientOnly(true);
 		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&folderId="
 				+ (folderId != null ? folderId : "") + "&filename=" + (fileFilter != null ? fileFilter : "") + "&max="
-				+ (max != null ? max : MAX) + "&indexed=" + (indexed != null ? indexed.toString() : ""));
+				+ (max != null ? max : MAX) + "&indexed=" + (indexed != null ? indexed.toString() : "") + "&barcoded="
+				+ (barcoded != null ? barcoded.toString() : ""));
 	}
 
 	public DocumentsDS(String docIds) {

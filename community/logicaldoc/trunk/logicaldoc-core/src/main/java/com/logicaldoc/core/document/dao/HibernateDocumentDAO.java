@@ -220,6 +220,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					doc.setIndexed(Document.INDEX_SKIP);
 			}
 
+			// Check if the document must be barcoded
+			if (!FileUtil.matches(doc.getTitle(),
+					config.getProperty("barcode.includes") == null ? "" : config.getProperty("barcode.includes"),
+					config.getProperty("barcode.excludes") == null ? "" : config.getProperty("barcode.excludes")))
+				doc.setBarcoded(Document.BARCODE_SKIP);
+
 			// Save the document
 			getHibernateTemplate().saveOrUpdate(doc);
 
@@ -735,7 +741,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				sb.append(",");
 			sb.append(ids[i]);
 		}
-		
+
 		docs = findByWhere("_entity.id in(" + sb.toString() + ")", null, null, max);
 		return docs;
 	}

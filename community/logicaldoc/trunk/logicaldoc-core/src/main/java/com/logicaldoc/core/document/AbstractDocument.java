@@ -52,6 +52,13 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	public static final int INDEX_SKIP = 2;
 
+	public static final int BARCODE_TO_PROCESS = 0;
+
+	public static final int BARCODE_PROCESSED = 1;
+
+	public static final int BARCODE_SKIP = 2;
+
+	
 	private long fileSize = 0;
 
 	/**
@@ -108,6 +115,8 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	private String fileName;
 
 	private int indexed = INDEX_TO_INDEX;
+	
+	private int barcoded = BARCODE_TO_PROCESS;
 
 	private int signed = 0;
 
@@ -607,5 +616,13 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	public boolean isToIndex() {
 		return indexed == INDEX_TO_INDEX;
+	}
+
+	public int getBarcoded() {
+		return barcoded;
+	}
+
+	public void setBarcoded(int barcoded) {
+		this.barcoded = barcoded;
 	}
 }
