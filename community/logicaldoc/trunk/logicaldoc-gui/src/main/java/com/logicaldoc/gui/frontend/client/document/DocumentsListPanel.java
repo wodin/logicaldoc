@@ -101,7 +101,7 @@ public class DocumentsListPanel extends VLayout {
 		created.setCellFormatter(new DateCellFormatter(false));
 		created.setCanFilter(false);
 		created.setHidden(true);
-		
+
 		ListGridField sourceDate = new ListGridField("sourceDate", I18N.message("date"), 110);
 		sourceDate.setAlign(Alignment.CENTER);
 		sourceDate.setType(ListGridFieldType.DATE);
@@ -114,7 +114,6 @@ public class DocumentsListPanel extends VLayout {
 		sourceAuthor.setCanFilter(true);
 		sourceAuthor.setHidden(true);
 
-		
 		ListGridField customId = new ListGridField("customId", I18N.message("customid"), 110);
 		customId.setType(ListGridFieldType.TEXT);
 
@@ -122,7 +121,6 @@ public class DocumentsListPanel extends VLayout {
 		type.setType(ListGridFieldType.TEXT);
 		type.setAlign(Alignment.CENTER);
 
-		
 		ListGridField immutable = new ListGridField("immutable", " ", 24);
 		immutable.setType(ListGridFieldType.IMAGE);
 		immutable.setCanSort(false);
@@ -188,12 +186,11 @@ public class DocumentsListPanel extends VLayout {
 		list.setAutoFetchData(true);
 		list.setSelectionType(SelectionStyle.MULTIPLE);
 		list.setFilterOnKeypress(true);
-		dataSource = new DocumentsDS(folder.getId(), null, max, null);
+		dataSource = new DocumentsDS(folder.getId(), null, max, null, null);
 		list.setDataSource(dataSource);
 		list.setFields(indexed, locked, immutable, signed, icon, filename, title, lastModified, type, size, version,
 				publisher, published, creator, created, sourceDate, sourceAuthor, customId);
-		
-		
+
 		// Prepare a panel containing a title and the documents list
 		infoPanel = new InfoPanel("");
 

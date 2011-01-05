@@ -102,6 +102,9 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			document.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 			document.setSigned(0);
+			if (document.getBarcoded() != AbstractDocument.BARCODE_SKIP)
+				;
+			document.setBarcoded(AbstractDocument.BARCODE_TO_PROCESS);
 			documentDAO.store(document);
 
 			Folder folder = document.getFolder();

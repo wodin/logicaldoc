@@ -132,7 +132,7 @@ public class SearchIndexingPanel extends VLayout {
 			}
 		});
 
-		// Prepare a panel containing a title and the documents list
+		// Prepare a panel containing a title and the documents number
 		infoPanel = new InfoPanel("");
 
 		ListGridField id = new ListGridField("id");
@@ -256,7 +256,7 @@ public class SearchIndexingPanel extends VLayout {
 		docsList.setSelectionType(SelectionStyle.MULTIPLE);
 		docsList.setShowFilterEditor(true);
 		docsList.setFilterOnKeypress(true);
-		dataSource = new DocumentsDS(null, null, maxValue, 0);
+		dataSource = new DocumentsDS(null, null, maxValue, 0, null);
 		docsList.setDataSource(dataSource);
 		docsList.setFields(locked, immutable, icon, title, size, lastModified, version, publisher, published, creator,
 				created, customId, filename);

@@ -542,7 +542,7 @@ public class ItemFactory {
 		return select;
 	}
 
-	public static SelectItem newTemplateSelector(boolean multipleSelection, Long folderId) {
+	public static SelectItem newTemplateSelector(boolean multipleSelection, Long templateId) {
 		SelectItem templateItem = new SelectItem("template", I18N.message("template"));
 		templateItem.setDisplayField("name");
 		templateItem.setValueField("id");
@@ -550,9 +550,9 @@ public class ItemFactory {
 		templateItem.setMultiple(true);
 		templateItem.setMultipleAppearance(MultipleAppearance.PICKLIST);
 		if (!multipleSelection)
-			templateItem.setOptionDataSource(new TemplatesDS(true, folderId));
+			templateItem.setOptionDataSource(new TemplatesDS(true, templateId));
 		else
-			templateItem.setOptionDataSource(new TemplatesDS(false, folderId));
+			templateItem.setOptionDataSource(new TemplatesDS(false, templateId));
 		if (!Feature.enabled(Feature.TEMPLATE))
 			templateItem.setDisabled(true);
 		templateItem.setHintStyle("hint");

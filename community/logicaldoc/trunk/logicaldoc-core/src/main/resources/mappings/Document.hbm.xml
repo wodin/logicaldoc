@@ -34,6 +34,7 @@
 		<property name="fileName" type="string" column="ld_filename" length="255" />
 		<property name="fileSize" type="long" column="ld_filesize" />
 		<property name="indexed" type="int" column="ld_indexed" not-null="true"/>
+		<property name="barcoded" type="int" column="ld_barcoded" not-null="true"/>
 		<property name="signed" type="int" column="ld_signed" not-null="true"/>
 		<property name="digest" type="string" column="ld_digest" length="255" />
 		<property name="recipient" type="string" column="ld_recipient" length="1000" />

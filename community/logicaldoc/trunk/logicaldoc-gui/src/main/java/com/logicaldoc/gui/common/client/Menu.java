@@ -30,6 +30,8 @@ public class Menu {
 
 	public static final int WORKFLOW = 23;
 
+	public static final long BARCODES = 30;
+
 	private static Set<Long> menues = new HashSet<Long>();
 
 	static public void init(GUIUser user) {
