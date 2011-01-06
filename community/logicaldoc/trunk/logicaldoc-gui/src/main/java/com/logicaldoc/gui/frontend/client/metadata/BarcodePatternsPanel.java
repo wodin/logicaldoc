@@ -135,7 +135,7 @@ public class BarcodePatternsPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							patternsGrid.deselectRecord(patternsGrid.getSelectedRecord());
+							patternsGrid.removeData(patternsGrid.getSelectedRecord());
 						}
 					}
 				});
