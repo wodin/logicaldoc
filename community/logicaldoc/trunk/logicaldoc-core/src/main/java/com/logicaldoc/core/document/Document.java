@@ -3,6 +3,8 @@ package com.logicaldoc.core.document;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.apache.commons.validator.ISBNValidator;
+
 import com.logicaldoc.core.ExtendedAttribute;
 
 /**
@@ -46,6 +48,7 @@ public class Document extends AbstractDocument {
 		cloned.setFileSize(getFileSize());
 		if (getIndexed() != INDEX_INDEXED)
 			cloned.setIndexed(getIndexed());
+		cloned.setBarcoded(getBarcoded());
 		cloned.setDigest(getDigest());
 		cloned.setRecipient(getRecipient());
 		cloned.setDocRef(getDocRef());
