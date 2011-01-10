@@ -344,7 +344,8 @@ public class DocumentManagerImpl implements DocumentManager {
 
 				// The document must be re-indexed
 				doc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
-
+				doc.setBarcoded(docVO.getBarcoded());
+				
 				// Intercept locale changes
 				if (!doc.getLocale().equals(docVO.getLocale())) {
 					indexer.deleteDocument(Long.toString(doc.getId()), doc.getLocale());
