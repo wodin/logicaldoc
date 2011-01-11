@@ -2,7 +2,9 @@ package com.logicaldoc.web.service;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.security.AccessControlException;
 import java.util.Arrays;
 import java.util.Date;
@@ -46,6 +48,7 @@ import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.transfer.InMemoryZipImport;
+import com.logicaldoc.core.transfer.ZipExport;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
@@ -965,8 +968,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			mail.setSubject(email.getSubject());
 			mail.setUserName(user.getUserName());
 
-			if (!email.isSendAsTicket() && email.getDocId() > 0)
-				createAttachment(mail, email.getDocId());
+			// Needed in case the zip compression was requested by the user
+			File zipFile = null;
 
 			if (email.isSendAsTicket()) {
 				// Prepare a new download ticket
@@ -974,7 +977,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				String ticketid = CryptUtil.cryptString(temp);
 				DownloadTicket ticket = new DownloadTicket();
 				ticket.setTicketId(ticketid);
-				ticket.setDocId(email.getDocId());
+				ticket.setDocId(email.getDocIds()[0]);
 				ticket.setUserId(user.getId());
 
 				// Store the ticket
@@ -990,6 +993,35 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						+ request.getServerPort() + request.getContextPath();
 				String address = urlPrefix + "/download-ticket?ticketId=" + ticketid;
 				mail.setMessageText(email.getMessage() + "\nURL: " + address);
+			} else {
+				if (email.isZipCompression()) {
+					/*
+					 * Create a temporary archive for sending it as unique
+					 * attachment
+					 */
+					zipFile = File.createTempFile("email", "zip");
+					OutputStream out = null;
+
+					try {
+						out = new FileOutputStream(zipFile);
+						ZipExport export = new ZipExport();
+						export.process(email.getDocIds(), out);
+						createAttachment(mail, zipFile);
+
+						System.out.println("Created attachment " + zipFile.getPath());
+					} catch (Throwable t) {
+						log.error(t.getMessage(), t);
+						try {
+							if (out != null)
+								out.close();
+						} catch (Throwable q) {
+
+						}
+					}
+				} else {
+					for (long id : email.getDocIds())
+						createAttachment(mail, id);
+				}
 			}
 
 			try {
@@ -997,23 +1029,27 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
 				sender.send(mail);
 
+				if (zipFile != null)
+					FileUtils.forceDelete(zipFile);
+
 				DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 				FolderDAO fDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+				for (long id : email.getDocIds()) {
+					Document doc = docDao.findById(id);
 
-				Document doc = docDao.findById(email.getDocId());
-
-				// Create the document history event
-				HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
-				History history = new History();
-				history.setSessionId(sid);
-				history.setDocId(email.getDocId());
-				history.setEvent(History.EVENT_SENT);
-				history.setUser(SessionUtil.getSessionUser(sid));
-				history.setComment(StringUtils.abbreviate(email.getRecipients(), 4000));
-				history.setTitle(doc.getTitle());
-				history.setVersion(doc.getVersion());
-				history.setPath(fDao.computePathExtended(doc.getFolder().getId()));
-				dao.store(history);
+					// Create the document history event
+					HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+					History history = new History();
+					history.setSessionId(sid);
+					history.setDocId(id);
+					history.setEvent(History.EVENT_SENT);
+					history.setUser(SessionUtil.getSessionUser(sid));
+					history.setComment(StringUtils.abbreviate(email.getRecipients(), 4000));
+					history.setTitle(doc.getTitle());
+					history.setVersion(doc.getVersion());
+					history.setPath(fDao.computePathExtended(doc.getFolder().getId()));
+					dao.store(history);
+				}
 
 				return "ok";
 			} catch (Exception ex) {
@@ -1039,7 +1075,19 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		att.setMimeType(MimeType.get(extension));
 
 		if (att != null) {
-			email.addAttachment(2, att);
+			email.addAttachment(2 + email.getAttachments().size(), att);
+		}
+	}
+
+	private void createAttachment(EMail email, File zipFile) throws IOException {
+		EMailAttachment att = new EMailAttachment();
+		att.setFile(zipFile);
+		att.setFileName("doc.zip");
+		String extension = "zip";
+		att.setMimeType(MimeType.get(extension));
+
+		if (att != null) {
+			email.addAttachment(2 + email.getAttachments().size(), att);
 		}
 	}
 

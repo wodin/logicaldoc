@@ -145,11 +145,15 @@ public class DocumentContextMenu extends Menu {
 		sendMail.setTitle(I18N.message("sendmail"));
 		sendMail.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord record = list.getSelectedRecord();
-				if (record == null)
+				ListGridRecord[] selection = list.getSelection();
+				if (selection == null || selection.length < 1)
 					return;
-				EmailDialog window = new EmailDialog(Long.parseLong(record.getAttribute("id")), record
-						.getAttribute("title"));
+
+				long[] ids = new long[selection.length];
+				for (int i = 0; i < selection.length; i++) {
+					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
+				}
+				EmailDialog window = new EmailDialog(ids, selection[0].getAttribute("title"));
 				window.show();
 			}
 		});
@@ -609,7 +613,7 @@ public class DocumentContextMenu extends Menu {
 				if (filename == null)
 					filename = list.getSelectedRecord().getAttribute("title") + "."
 							+ list.getSelectedRecord().getAttribute("type");
-				
+
 				PreviewPopup iv = new PreviewPopup(id, version, filename);
 				iv.show();
 			}
@@ -629,7 +633,7 @@ public class DocumentContextMenu extends Menu {
 			isOfficeFile = Util.isOfficeFile(selection[0].getAttribute("filename"));
 		else if (selection[0].getAttribute("type") != null)
 			isOfficeFile = Util.isOfficeFileType(selection[0].getAttribute("type"));
-		
+
 		if (selection != null && selection.length == 1) {
 			ListGridRecord record = selection[0];
 			if ("blank".equals(record.getAttribute("locked")) && "blank".equals(record.getAttribute("immutable"))) {
@@ -643,9 +647,10 @@ public class DocumentContextMenu extends Menu {
 					enableUnlock = true;
 			}
 		}
-		
-		boolean enableOffice = (enableUnlock||enableLock) && (selection != null && selection.length == 1 && isOfficeFile
-		&& "true".equals(Config.getProperty(Constants.OFFICE_ENABLED)) && folder.isDownload());
+
+		boolean enableOffice = (enableUnlock || enableLock)
+				&& (selection != null && selection.length == 1 && isOfficeFile
+						&& "true".equals(Config.getProperty(Constants.OFFICE_ENABLED)) && folder.isDownload());
 
 		for (ListGridRecord record : selection)
 			if (!"blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable"))) {
@@ -664,7 +669,6 @@ public class DocumentContextMenu extends Menu {
 
 		if (list.getSelection().length != 1) {
 			download.setEnabled(false);
-			sendMail.setEnabled(false);
 			similar.setEnabled(false);
 		}
 
@@ -747,7 +751,7 @@ public class DocumentContextMenu extends Menu {
 			else
 				edit.setEnabled(enableOffice);
 		}
-		
+
 		if (Feature.visible(Feature.DIGITAL_SIGN)) {
 			moreMenu.addItem(sign);
 			if (!folder.hasPermission(Constants.PERMISSION_SIGN) || !Feature.enabled(Feature.DIGITAL_SIGN))
