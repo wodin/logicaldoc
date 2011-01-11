@@ -20,11 +20,13 @@ public class GUIEmail implements Serializable {
 
 	private boolean sendAsTicket = false;
 
+	private boolean zipCompression = false;
+	
 	private String message;
 
 	private GUIUser user;
 
-	private long docId;
+	private long[] docIds;
 
 	public String getRecipients() {
 		return recipients;
@@ -74,11 +76,19 @@ public class GUIEmail implements Serializable {
 		this.user = user;
 	}
 
-	public long getDocId() {
-		return docId;
+	public long[] getDocIds() {
+		return docIds;
 	}
 
-	public void setDocId(long docId) {
-		this.docId = docId;
+	public void setDocIds(long[] docIds) {
+		this.docIds = docIds;
+	}
+
+	public boolean isZipCompression() {
+		return zipCompression;
+	}
+
+	public void setZipCompression(boolean zipCompression) {
+		this.zipCompression = zipCompression;
 	}
 }

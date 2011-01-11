@@ -154,16 +154,19 @@ public class EMailSender {
 		Multipart mpMessage = new MimeMultipart();
 		mpMessage.addBodyPart(body);
 
-		EMailAttachment att = email.getAttachment(2);
-		if (att != null) {
-			DataSource fdSource = new FileDataSource(att.getFile());
-			DataHandler fdHandler = new DataHandler(fdSource);
-			MimeBodyPart part = new MimeBodyPart();
-			part.setDataHandler(fdHandler);
-			String fileName = MimeUtility.encodeText(att.getFileName(), "UTF-8", null);
-			part.setFileName(fileName);
-			mpMessage.addBodyPart(part);
+		for (Integer partId : email.getAttachments().keySet()) {
+			EMailAttachment att = email.getAttachment(partId);
+			if (att != null) {
+				DataSource fdSource = new FileDataSource(att.getFile());
+				DataHandler fdHandler = new DataHandler(fdSource);
+				MimeBodyPart part = new MimeBodyPart();
+				part.setDataHandler(fdHandler);
+				String fileName = MimeUtility.encodeText(att.getFileName(), "UTF-8", null);
+				part.setFileName(fileName);
+				mpMessage.addBodyPart(part);
+			}
 		}
+
 		message.setContent(mpMessage);
 
 		Transport trans = null;

@@ -31,15 +31,15 @@ import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
  * @since 6.0
  */
 public class EmailDialog extends Window {
-	private long docId;
+	private long[] docIds;
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private ValuesManager vm = new ValuesManager();
 
-	public EmailDialog(long docId, String docTitle) {
+	public EmailDialog(long[] docIds, String docTitle) {
 		super();
-		this.docId = docId;
+		this.docIds = docIds;
 
 		addCloseClickHandler(new CloseClickHandler() {
 			@Override
@@ -88,6 +88,10 @@ public class EmailDialog extends Window {
 		ticket.setName("sendticket");
 		ticket.setTitle(I18N.message("sendticket"));
 
+		final CheckboxItem zip = new CheckboxItem();
+		zip.setName("zip");
+		zip.setTitle(I18N.message("zipattachments"));
+
 		ButtonItem sendItem = new ButtonItem();
 		sendItem.setTitle(I18N.message("send"));
 		sendItem.setAutoFit(true);
@@ -101,7 +105,8 @@ public class EmailDialog extends Window {
 					mail.setSubject(vm.getValueAsString("subject"));
 					mail.setMessage(vm.getValueAsString("message"));
 					mail.setSendAsTicket("true".equals(vm.getValueAsString("sendticket")));
-					mail.setDocId(EmailDialog.this.docId);
+					mail.setZipCompression("true".equals(vm.getValueAsString("zip")));
+					mail.setDocIds(EmailDialog.this.docIds);
 
 					documentService.sendAsEmail(Session.get().getSid(), mail, new AsyncCallback<String>() {
 
@@ -114,7 +119,8 @@ public class EmailDialog extends Window {
 						@Override
 						public void onSuccess(String result) {
 							if ("ok".equals(result)) {
-								EventPanel.get().info(I18N.message("messagesent")+". "+I18N.message("documentcopysent"), null);
+								EventPanel.get().info(
+										I18N.message("messagesent") + ". " + I18N.message("documentcopysent"), null);
 							} else {
 								EventPanel.get().error(I18N.message("messagenotsent"), null);
 							}
@@ -125,7 +131,12 @@ public class EmailDialog extends Window {
 			}
 		});
 
-		form.setFields(recipients, cc, subject, ticket, message, sendItem);
+		// The download ticket is available on single selection only
+		if (docIds.length == 1)
+			form.setFields(recipients, cc, subject, ticket, message, sendItem);
+		else
+			form.setFields(recipients, cc, subject, zip, message, sendItem);
+
 		addItem(form);
 	}
 }

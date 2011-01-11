@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -79,6 +80,32 @@ public class ZipExport {
 	}
 
 	/**
+	 * Exports a selection of documents
+	 * 
+	 * @param docIds Identifiers of the documents
+	 * @return The Stream of the zip archive
+	 */
+	public void process(long[] docIds, OutputStream out) {
+		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		zos = new ZipOutputStream(out);
+		zos.setEncoding("Cp850");
+		try {
+			for (long id : docIds) {
+				Document doc = dao.findById(id);
+				addDocument("", doc);
+			}
+		} finally {
+			try {
+				zos.flush();
+				zos.close();
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	/**
 	 * If allLevel set true all children of a specified folder will be export.
 	 * Otherwise only the first level will be export.
 	 * 
@@ -116,35 +143,42 @@ public class ZipExport {
 	 */
 	protected void addFolderDocuments(Folder folder) {
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		Collection<Document> docs = ddao.findByFolder(folder.getId(), null);
 
 		for (Document document : docs) {
-			File documentFile = manager.getDocumentFile(document);
-			InputStream is = null;
-			BufferedInputStream bis = null;
+			addDocument(getZipEntryPath(folder), document);
+		}
+	}
+
+	/**
+	 * Adds a single document into the archive in the specified path.
+	 */
+	private void addDocument(String path, Document document) {
+		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		File documentFile = manager.getDocumentFile(document);
+		InputStream is = null;
+		BufferedInputStream bis = null;
+		try {
+			is = new FileInputStream(documentFile);
+			bis = new BufferedInputStream(is);
+
+			ZipEntry entry = new ZipEntry(document.getFileName());
+			zos.putNextEntry(entry);
+
+			// Transfer bytes from the file to the ZIP file
+			int len;
+			while ((len = bis.read()) != -1) {
+				zos.write(len);
+			}
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		} finally {
 			try {
-				is = new FileInputStream(documentFile);
-				bis = new BufferedInputStream(is);
-
-				ZipEntry entry = new ZipEntry(getZipEntryPath(folder) + document.getFileName());
-				zos.putNextEntry(entry);
-
-				// Transfer bytes from the file to the ZIP file
-				int len;
-				while ((len = bis.read()) != -1) {
-					zos.write(len);
-				}
+				if (bis != null)
+					bis.close();
+				if (is != null)
+					is.close();
 			} catch (IOException e) {
-				log.error(e.getMessage());
-			} finally {
-				try {
-					if (bis != null)
-						bis.close();
-					if (is != null)
-						is.close();
-				} catch (IOException e) {
-				}
 			}
 		}
 	}
