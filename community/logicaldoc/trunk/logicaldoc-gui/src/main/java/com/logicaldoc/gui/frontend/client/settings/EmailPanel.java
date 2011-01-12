@@ -13,6 +13,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -120,7 +121,7 @@ public class EmailPanel extends VLayout {
 					EmailPanel.this.emailSettings.setUsername((String) values.get("username"));
 					EmailPanel.this.emailSettings.setPwd((String) values.get("password"));
 					EmailPanel.this.emailSettings.setConnSecurity((String) values.get("connSecurity"));
-					EmailPanel.this.emailSettings.setSecureAuth(values.get("secureAuth").equals("yes") ? true : false);
+					EmailPanel.this.emailSettings.setSecureAuth(values.get("secureAuth").toString().equals("true") ? true : false);
 					EmailPanel.this.emailSettings.setSenderEmail((String) values.get("senderEmail"));
 
 					service.saveEmailSettings(Session.get().getSid(), EmailPanel.this.emailSettings,
