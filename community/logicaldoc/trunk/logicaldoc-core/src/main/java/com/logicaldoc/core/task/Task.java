@@ -1,13 +1,28 @@
 package com.logicaldoc.core.task;
 
 import java.security.InvalidParameterException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.StringTokenizer;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.logicaldoc.core.communication.EMail;
+import com.logicaldoc.core.communication.EMailSender;
+import com.logicaldoc.core.communication.Recipient;
+import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.i18n.I18N;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * A task is a long running sequence of operations
@@ -40,6 +55,14 @@ public abstract class Task implements Runnable {
 
 	private List<TaskListener> taskListeners = Collections.synchronizedList(new ArrayList<TaskListener>());
 
+	protected Throwable lastRunError = null;
+
+	protected ContextProperties config;
+
+	protected EMailSender sender = null;
+
+	protected UserDAO userDao = null;
+
 	public Task(String name) {
 		this.name = name;
 	}
@@ -49,7 +72,7 @@ public abstract class Task implements Runnable {
 	}
 
 	private void setStatus(int status) {
-		if (status != STATUS_IDLE && status != STATUS_RUNNING)
+		if (status != STATUS_IDLE && status != STATUS_RUNNING && status != STATUS_STOPPING)
 			throw new InvalidParameterException("Invalid status  value");
 		boolean needNotification = this.status != status;
 		this.status = status;
@@ -107,6 +130,7 @@ public abstract class Task implements Runnable {
 		interruptRequested = false;
 		setStatus(STATUS_RUNNING);
 		setProgress(0);
+		lastRunError = null;
 		getScheduling().setPreviousFireTime(new Date());
 
 		try {
@@ -114,11 +138,14 @@ public abstract class Task implements Runnable {
 		} catch (Throwable t) {
 			log.error("Error caught " + t.getMessage(), t);
 			log.error("The task is stopped");
+			lastRunError = t;
 		} finally {
 			setStatus(STATUS_IDLE);
 			interruptRequested = false;
 			saveWork();
 			log.info("Task " + getName() + " finished");
+			if (isSendActivityReport() && StringUtils.isNotEmpty(getReportRecipients()))
+				notifyReport();
 		}
 	}
 
@@ -212,6 +239,68 @@ public abstract class Task implements Runnable {
 			taskListeners.remove(listener);
 	}
 
+	public void notifyReport() {
+		StringTokenizer st = new StringTokenizer(getReportRecipients(), ", ;", false);
+
+		// Iterate over tokens loading the user to be notified
+		while (st.hasMoreTokens()) {
+			String userId = st.nextToken();
+			User recipient = userDao.findById(Long.parseLong(userId));
+			if (recipient == null || StringUtils.isEmpty(recipient.getEmail()))
+				continue;
+
+			EMail email = new EMail();
+			String taskname = I18N.message("task.name." + name, recipient.getLocale());
+			email.setSubject(taskname);
+
+			// Prepare the mail recipient
+			Set<Recipient> rec = new HashSet<Recipient>();
+			Recipient r = new Recipient();
+			r.setAddress(recipient.getEmail());
+			r.setType(Recipient.TYPE_EMAIL);
+			r.setMode(Recipient.MODE_EMAIL_TO);
+			rec.add(r);
+			email.setRecipients(rec);
+
+			// Prepare the mail body
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			StringBuffer body = new StringBuffer();
+			body.append(taskname);
+			body.append("\n");
+			body.append(I18N.message("startedon", recipient.getLocale()) + ": ");
+			body.append(df.format(scheduling.getPreviousFireTime()));
+			body.append("\n");
+			body.append(I18N.message("finishedon", recipient.getLocale()) + ": ");
+			body.append(df.format(new Date()));
+			body.append("\n-----------------------------------\n");
+			if (lastRunError != null) {
+				body.append(I18N.message("error", recipient.getLocale()) + ": ");
+				body.append(lastRunError.getMessage());
+				body.append("\n-----------------------------------\n");
+			}
+
+			String report = getReport(recipient.getLocale());
+			if (StringUtils.isNotEmpty(report))
+				body.append(getReport(recipient.getLocale()));
+			email.setMessageText(body.toString());
+
+			// Send the email
+			try {
+				sender.send(email);
+				log.info("Report sent to: " + recipient.getEmail());
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		}
+	}
+
+	/**
+	 * Implementations may compose a locale specific report.
+	 */
+	protected String getReport(Locale locale) {
+		return null;
+	}
+
 	/**
 	 * Concrete implementations must override this method implementing their own
 	 * processing logic.
@@ -226,4 +315,28 @@ public abstract class Task implements Runnable {
 	 * length
 	 */
 	abstract public boolean isIndeterminate();
+
+	public boolean isSendActivityReport() {
+		return "true".equals(config.getProperty("task.sendreport." + name));
+	}
+
+	public String getReportRecipients() {
+		return config.getProperty("task.recipients." + name);
+	}
+
+	public ContextProperties getConfig() {
+		return config;
+	}
+
+	public void setConfig(ContextProperties config) {
+		this.config = config;
+	}
+
+	public void setSender(EMailSender sender) {
+		this.sender = sender;
+	}
+
+	public void setUserDao(UserDAO userDao) {
+		this.userDao = userDao;
+	}
 }
