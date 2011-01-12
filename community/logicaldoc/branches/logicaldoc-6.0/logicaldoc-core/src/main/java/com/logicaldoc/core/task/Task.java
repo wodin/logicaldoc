@@ -49,7 +49,7 @@ public abstract class Task implements Runnable {
 	}
 
 	private void setStatus(int status) {
-		if (status != STATUS_IDLE && status != STATUS_RUNNING)
+		if (status != STATUS_IDLE && status != STATUS_RUNNING && status != STATUS_STOPPING)
 			throw new InvalidParameterException("Invalid status  value");
 		boolean needNotification = this.status != status;
 		this.status = status;
