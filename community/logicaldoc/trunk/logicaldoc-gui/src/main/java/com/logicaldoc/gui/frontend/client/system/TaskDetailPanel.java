@@ -2,11 +2,13 @@ package com.logicaldoc.gui.frontend.client.system;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUITask;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -125,7 +127,10 @@ public class TaskDetailPanel extends VLayout {
 		notificationTabPanel = new HLayout();
 		notificationTabPanel.setWidth100();
 		notificationTabPanel.setHeight100();
-		notificationTab.setPane(notificationTabPanel);
+		if (Feature.enabled(Feature.TASK_REPORT_NOTIFICATION))
+			notificationTab.setPane(notificationTabPanel);
+		else
+			notificationTab.setPane(new FeatureDisabled());
 
 		Tab logTab = new Tab(I18N.message("log"));
 		logTabPanel = new HLayout();
@@ -133,7 +138,10 @@ public class TaskDetailPanel extends VLayout {
 		logTabPanel.setHeight100();
 		logTab.setPane(logTabPanel);
 
-		tabSet.setTabs(schedulingTab, notificationTab, logTab);
+		if (Feature.visible(Feature.TASK_REPORT_NOTIFICATION))
+			tabSet.setTabs(schedulingTab, notificationTab, logTab);
+		else
+			tabSet.setTabs(schedulingTab, logTab);
 
 		addMember(tabSet);
 	}
@@ -178,7 +186,7 @@ public class TaskDetailPanel extends VLayout {
 		}
 		notificationPanel = new TaskNotificationPanel(task, changeHandler);
 		notificationTabPanel.addMember(notificationPanel);
-		
+
 		/*
 		 * Prepare the log tab
 		 */
