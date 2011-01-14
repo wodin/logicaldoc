@@ -43,11 +43,15 @@ public class TaskDetailPanel extends VLayout {
 
 	private Layout logTabPanel;
 
+	private Layout notificationTabPanel;
+
 	private GUITask task;
 
 	private SchedulingPanel schedulingPanel;
 
 	private LogPanel logPanel;
+
+	private TaskNotificationPanel notificationPanel;
 
 	private HLayout savePanel;
 
@@ -117,13 +121,19 @@ public class TaskDetailPanel extends VLayout {
 		schedulingTabPanel.setHeight100();
 		schedulingTab.setPane(schedulingTabPanel);
 
+		Tab notificationTab = new Tab(I18N.message("notifications"));
+		notificationTabPanel = new HLayout();
+		notificationTabPanel.setWidth100();
+		notificationTabPanel.setHeight100();
+		notificationTab.setPane(notificationTabPanel);
+
 		Tab logTab = new Tab(I18N.message("log"));
 		logTabPanel = new HLayout();
 		logTabPanel.setWidth100();
 		logTabPanel.setHeight100();
 		logTab.setPane(logTabPanel);
 
-		tabSet.setTabs(schedulingTab, logTab);
+		tabSet.setTabs(schedulingTab, notificationTab, logTab);
 
 		addMember(tabSet);
 	}
@@ -158,6 +168,17 @@ public class TaskDetailPanel extends VLayout {
 		schedulingPanel = new SchedulingPanel(task, changeHandler);
 		schedulingTabPanel.addMember(schedulingPanel);
 
+		/*
+		 * Prepare the notifications tab
+		 */
+		if (notificationPanel != null) {
+			notificationPanel.destroy();
+			if (notificationTabPanel.contains(notificationPanel))
+				notificationTabPanel.removeMember(notificationPanel);
+		}
+		notificationPanel = new TaskNotificationPanel(task, changeHandler);
+		notificationTabPanel.addMember(notificationPanel);
+		
 		/*
 		 * Prepare the log tab
 		 */
