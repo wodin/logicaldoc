@@ -15,7 +15,7 @@ public class GUITask implements Serializable {
 	public final static int STATUS_IDLE = 0;
 
 	public final static int STATUS_RUNNING = 1;
-	
+
 	public final static int STATUS_STOPPING = 2;
 
 	private int status = STATUS_IDLE;
@@ -33,6 +33,46 @@ public class GUITask implements Serializable {
 	private boolean indeterminate = false;
 
 	private int completionPercentage = 0;
+
+	private boolean sendActivityReport = false;
+
+	private GUIUser[] notifiedUsers = new GUIUser[0];
+
+	public GUIUser[] getReportRecipients() {
+		return notifiedUsers;
+	}
+
+	public void setNotifiedUsers(GUIUser[] notifiedUsers) {
+		this.notifiedUsers = notifiedUsers;
+	}
+
+	public void addReportRecipient(GUIUser user) {
+		GUIUser[] tmp = new GUIUser[notifiedUsers.length + 1];
+		int i = 0;
+		for (GUIUser u : notifiedUsers) {
+			// Skip if the user already exists
+			if (u.getUserName().equals(user.getUserName()))
+				return;
+			tmp[i++] = u;
+		}
+		tmp[i] = user;
+		notifiedUsers = tmp;
+	}
+
+	public void removeNotifiedUser(String username) {
+		if (notifiedUsers.length == 0)
+			return;
+
+		GUIUser[] tmp = new GUIUser[notifiedUsers.length - 1];
+		int i = 0;
+		for (GUIUser u : notifiedUsers) {
+			if (!u.getUserName().equals(username)) {
+				tmp[i] = u;
+				i++;
+			}
+		}
+		notifiedUsers = tmp;
+	}
 
 	public int getStatus() {
 		return status;
@@ -97,4 +137,13 @@ public class GUITask implements Serializable {
 	public void setCompletionPercentage(int completionPercentage) {
 		this.completionPercentage = completionPercentage;
 	}
+
+	public boolean isSendActivityReport() {
+		return sendActivityReport;
+	}
+
+	public void setSendActivityReport(boolean sendActivityReport) {
+		this.sendActivityReport = sendActivityReport;
+	}
+
 }
