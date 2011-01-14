@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -16,6 +17,8 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
+import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserHistoryDAO;
 import com.logicaldoc.core.stats.StatsCollector;
 import com.logicaldoc.core.task.Task;
@@ -26,6 +29,7 @@ import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIScheduling;
 import com.logicaldoc.gui.common.client.beans.GUITask;
+import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
@@ -295,6 +299,27 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 				task.setScheduling(scheduling);
 
+				task.setSendActivityReport(tsk.isSendActivityReport());
+
+				/*
+				 * Parse the recipients ids and check the users existence
+				 */
+				UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+				if (tsk.getReportRecipients() != null) {
+					StringTokenizer st = new StringTokenizer(tsk.getReportRecipients(), ",", false);
+					while (st.hasMoreTokens()) {
+						User user = dao.findById(Long.parseLong(st.nextToken()));
+						if (user != null) {
+							GUIUser u = new GUIUser();
+							u.setId(user.getId());
+							u.setUserName(user.getUserName());
+							u.setName(user.getName());
+							u.setFirstName(user.getFirstName());
+							task.addReportRecipient(u);
+						}
+					}
+				}
+
 				return task;
 			}
 		} catch (Throwable e) {
@@ -354,6 +379,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 				task.setScheduling(scheduling);
 
+				task.setSendActivityReport(t.isSendActivityReport());
+
 				tasks[i] = task;
 				i++;
 			}
@@ -404,7 +431,16 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				tsk.getScheduling().setMaxLength(task.getScheduling().getMaxLength());
 				tsk.getScheduling().setMinCpuIdle((task.getScheduling().getMinCpuIdle()));
 
-				tsk.getScheduling().save();
+				tsk.setSendActivityReport(task.isSendActivityReport());
+				StringBuffer sb = new StringBuffer();
+				for (GUIUser user : task.getReportRecipients()) {
+					if (sb.length() > 0)
+						sb.append(",");
+					sb.append(user.getId());
+				}
+				tsk.setReportRecipients(sb.toString());
+
+				tsk.save();
 			}
 
 			return task;

@@ -374,6 +374,9 @@
 	<bean id="IndexOptimizer" class="com.logicaldoc.core.searchengine.IndexOptimizer">
 		<property name="indexer" ref="Indexer" />
 		<property name="documentDao" ref="DocumentDAO" />
+		<property name="config" ref="ContextProperties" />
+		<property name="sender" ref="EMailSender" />
+		<property name="userDao" ref="UserDAO" />
 	</bean>
 
 	<bean id="IndexOptimizerJob"
@@ -390,12 +393,11 @@
 	</bean>
 
 	<bean id="TagCloudGenerator" class="com.logicaldoc.core.document.TagCloudGenerator">
-		<property name="documentDao">
-			<ref bean="DocumentDAO" />
-		</property>
-		<property name="genericDao">
-			<ref bean="GenericDAO" />
-		</property>
+		<property name="documentDao" ref="DocumentDAO" />
+		<property name="genericDao" ref="GenericDAO" />
+		<property name="config" ref="ContextProperties" />
+		<property name="sender" ref="EMailSender" />
+		<property name="userDao" ref="UserDAO" />
 	</bean>
 
 	<bean id="TagCloudGeneratorJob"
@@ -415,6 +417,9 @@
 		<property name="indexer" ref="Indexer" />
 		<property name="documentDao" ref="DocumentDAO" />
 		<property name="documentManager" ref="DocumentManager" />
+		<property name="config" ref="ContextProperties" />
+		<property name="sender" ref="EMailSender" />
+		<property name="userDao" ref="UserDAO" />
 	</bean>
 
 	<bean id="IndexerTaskJob"
@@ -431,22 +436,13 @@
 	</bean>
 
 	<bean id="StatsCollector" class="com.logicaldoc.core.stats.StatsCollector">
+		<property name="documentDAO" ref="DocumentDAO" />
+		<property name="folderDAO" ref="FolderDAO" />
+		<property name="genericDAO" ref="GenericDAO" />
+		<property name="groupDAO" ref="GroupDAO" />
 		<property name="config" ref="ContextProperties" />
-		<property name="documentDAO">
-			<ref bean="DocumentDAO" />
-		</property>
-		<property name="folderDAO">
-			<ref bean="FolderDAO" />
-		</property>
-		<property name="genericDAO">
-			<ref bean="GenericDAO" />
-		</property>
-		<property name="userDAO">
-			<ref bean="UserDAO" />
-		</property>
-		<property name="groupDAO">
-			<ref bean="GroupDAO" />
-		</property>
+		<property name="sender" ref="EMailSender" />
+		<property name="userDao" ref="UserDAO" />
 	</bean>
 
 	<bean id="StatsCollectorJob"

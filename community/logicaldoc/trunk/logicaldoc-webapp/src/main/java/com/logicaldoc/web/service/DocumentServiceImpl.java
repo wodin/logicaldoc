@@ -1007,8 +1007,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						ZipExport export = new ZipExport();
 						export.process(email.getDocIds(), out);
 						createAttachment(mail, zipFile);
-
-						System.out.println("Created attachment " + zipFile.getPath());
 					} catch (Throwable t) {
 						log.error(t.getMessage(), t);
 						try {
