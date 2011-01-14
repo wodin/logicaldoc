@@ -221,6 +221,13 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.logicaldoc</groupId>
+			<artifactId>logicaldoc-i18n</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
 			<version>1.4.0</version>
