@@ -1,6 +1,7 @@
 package com.logicaldoc.core.searchengine;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.logging.LogFactory;
 
@@ -8,6 +9,7 @@ import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.task.Task;
+import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 
@@ -93,7 +95,7 @@ public class IndexerTask extends Task {
 			}
 		} finally {
 			log.info("Indexing finished");
-			log.info("Documents indexed: " + indexed);
+			log.info("Indexed documents: " + indexed);
 			log.info("Errors: " + errors);
 
 			indexer.unlock();
@@ -102,5 +104,16 @@ public class IndexerTask extends Task {
 
 	public void setIndexer(Indexer indexer) {
 		this.indexer = indexer;
+	}
+
+	@Override
+	protected String prepareReport(Locale locale) {
+		StringBuffer sb = new StringBuffer();
+		sb.append(I18N.message("indexeddocs", locale) + ": ");
+		sb.append(indexed);
+		sb.append("\n");
+		sb.append(I18N.message("errors", locale) + ": ");
+		sb.append(errors);
+		return sb.toString();
 	}
 }

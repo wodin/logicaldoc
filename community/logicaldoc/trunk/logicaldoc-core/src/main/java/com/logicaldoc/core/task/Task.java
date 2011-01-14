@@ -1,7 +1,9 @@
 package com.logicaldoc.core.task;
 
+import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +24,7 @@ import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.i18n.I18N;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 
 /**
@@ -62,6 +65,10 @@ public abstract class Task implements Runnable {
 	protected EMailSender sender = null;
 
 	protected UserDAO userDao = null;
+
+	protected boolean sendActivityReport = false;
+
+	private String reportRecipients = null;
 
 	public Task(String name) {
 		this.name = name;
@@ -279,9 +286,9 @@ public abstract class Task implements Runnable {
 				body.append("\n-----------------------------------\n");
 			}
 
-			String report = getReport(recipient.getLocale());
+			String report = prepareReport(recipient.getLocale());
 			if (StringUtils.isNotEmpty(report))
-				body.append(getReport(recipient.getLocale()));
+				body.append(prepareReport(recipient.getLocale()));
 			email.setMessageText(body.toString());
 
 			// Send the email
@@ -297,7 +304,7 @@ public abstract class Task implements Runnable {
 	/**
 	 * Implementations may compose a locale specific report.
 	 */
-	protected String getReport(Locale locale) {
+	protected String prepareReport(Locale locale) {
 		return null;
 	}
 
@@ -316,12 +323,8 @@ public abstract class Task implements Runnable {
 	 */
 	abstract public boolean isIndeterminate();
 
-	public boolean isSendActivityReport() {
-		return "true".equals(config.getProperty("task.sendreport." + name));
-	}
-
 	public String getReportRecipients() {
-		return config.getProperty("task.recipients." + name);
+		return reportRecipients;
 	}
 
 	public ContextProperties getConfig() {
@@ -330,6 +333,8 @@ public abstract class Task implements Runnable {
 
 	public void setConfig(ContextProperties config) {
 		this.config = config;
+		sendActivityReport = "true".equals(config.getProperty("task.sendreport." + name));
+		reportRecipients = config.getProperty("task.recipients." + name);
 	}
 
 	public void setSender(EMailSender sender) {
@@ -338,5 +343,31 @@ public abstract class Task implements Runnable {
 
 	public void setUserDao(UserDAO userDao) {
 		this.userDao = userDao;
+	}
+
+	/**
+	 * Saves the task configuration
+	 * 
+	 * @throws ParseException
+	 * @throws IOException
+	 */
+	public void save() throws IOException, ParseException {
+		getScheduling().save();
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		config.setProperty("task.recipients." + name, getReportRecipients());
+		config.setProperty("task.sendreport." + name, isSendActivityReport() ? "true" : "false");
+		config.write();
+	}
+
+	public boolean isSendActivityReport() {
+		return sendActivityReport;
+	}
+
+	public void setSendActivityReport(boolean sendActivityReport) {
+		this.sendActivityReport = sendActivityReport;
+	}
+
+	public void setReportRecipients(String reportRecipients) {
+		this.reportRecipients = reportRecipients;
 	}
 }
