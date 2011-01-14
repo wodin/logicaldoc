@@ -59,6 +59,8 @@ public class Feature {
 
 	public static final int INDEX_LANGUAGES = 25;
 
+	public static final int TASK_REPORT_NOTIFICATION = 26;
+	
 	public static final int SHOW_LICENSEE = 40;
 
 	public static final int SHOW_USERS_WARNING = 41;
