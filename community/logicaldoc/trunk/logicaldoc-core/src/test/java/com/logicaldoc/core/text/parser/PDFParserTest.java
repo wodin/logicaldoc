@@ -83,8 +83,47 @@ public class PDFParserTest {
 		assertTrue(StringUtils.isNotEmpty(content));
 
 		System.out.println("content.length(): " + content.length());
-		assertEquals(27269, content.length());
+		assertEquals(27179, content.length());
+
 		// System.out.println("content : " + content);
+	}
+
+	@Test
+	public void testSmall() throws UnsupportedEncodingException {
+		String inputFile = "target/test-classes/small.pdf";
+		File file = new File(inputFile);
+		String filename = file.getPath();
+
+		Parser parser = ParserFactory.getParser(filename);
+		PDFParser pdfp = (PDFParser) parser;
+		pdfp.parse(file);
+
+		assertTrue(pdfp.getContent().startsWith("1: prova"));
+	}
+
+	@Test
+	public void testStress() throws UnsupportedEncodingException {
+		File file1 = new File("target/test-classes/Digital_Day.pdf");
+		String filename1 = file1.getPath();
+		File file2 = new File("target/test-classes/Arabic/SharePoint.pdf");
+		String filename2 = file2.getPath();
+
+		for (int i = 0; i < 500; i++) {
+			Parser parser = null;
+			if (i % 2 == 0)
+				parser = ParserFactory.getParser(filename1);
+			else
+				parser = ParserFactory.getParser(filename2);
+
+			PDFParser pdfp = (PDFParser) parser;
+			if (i % 2 == 0) {
+				pdfp.parse(file1);
+				assertEquals(27179, parser.getContent().length());
+			} else {
+				pdfp.parse(file2);
+				assertEquals(8457, parser.getContent().length());
+			}
+		}
 	}
 
 	@Test
@@ -152,13 +191,13 @@ public class PDFParserTest {
 		// The text goes from right to left (Arabic)
 		// The documentation of PDFBox 1.4.0 states that this requires ICU4J 3.8
 		String inputFile = "target/test-classes/Arabic/SharePoint.pdf";
-			File file = new File(inputFile);
+		File file = new File(inputFile);
 		String filename = file.getPath();
 
 		Parser parser = ParserFactory.getParser(filename);
 		PDFParser pdfp = (PDFParser) parser;
 		pdfp.parse(file);
-		
+
 		String author = pdfp.getAuthor();
 		System.out.println("author: " + author);
 		assertTrue(StringUtils.isNotEmpty(author));
@@ -169,7 +208,7 @@ public class PDFParserTest {
 		assertTrue(StringUtils.isNotEmpty(content));
 
 		System.err.println("content.length(): " + content.length());
-		assertEquals(8447, content.length());
+		assertEquals(8457, content.length());
 	}
 
 }

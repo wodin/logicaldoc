@@ -128,7 +128,6 @@ public class PDFParser extends AbstractParser {
 
 				Writer writer = new CharArrayWriter();
 				PDFTextStripper stripper = new PDFTextStripper("UTF-8");
-				
 				try {
 					if (pdfDocument.isEncrypted()) {
 						writer.write("encrypted document");
@@ -181,6 +180,7 @@ public class PDFParser extends AbstractParser {
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
+			System.gc();
 		}
 	}
 }
