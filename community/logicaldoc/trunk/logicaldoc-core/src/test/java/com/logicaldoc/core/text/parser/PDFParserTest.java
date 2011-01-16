@@ -108,7 +108,7 @@ public class PDFParserTest {
 		File file2 = new File("target/test-classes/Arabic/SharePoint.pdf");
 		String filename2 = file2.getPath();
 
-		for (int i = 0; i < 500; i++) {
+		for (int i = 0; i < 10; i++) {
 			Parser parser = null;
 			if (i % 2 == 0)
 				parser = ParserFactory.getParser(filename1);
