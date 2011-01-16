@@ -107,7 +107,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.startsWith("webservice") || name.startsWith("webdav") || name.startsWith("runlevel")
 					|| name.startsWith("stat") || name.startsWith("index") || name.startsWith("proxy")
 					|| name.equals("id") || name.startsWith("lang") || name.startsWith("reg.")
-					|| name.startsWith("ocr.")|| name.startsWith("barcode."))
+					|| name.startsWith("ocr.")|| name.startsWith("barcode.")|| name.startsWith("task."))
 				continue;
 
 			sortedSet.add(key.toString());
