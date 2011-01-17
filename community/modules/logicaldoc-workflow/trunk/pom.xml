@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.logicaldoc</groupId>
 		<artifactId>logicaldoc</artifactId>
-		<version>6.0.0</version>
+		<version>6.0.1</version>
 	</parent>
 	<artifactId>logicaldoc-workflow</artifactId>
 	<name>logicaldoc-workflow</name>
