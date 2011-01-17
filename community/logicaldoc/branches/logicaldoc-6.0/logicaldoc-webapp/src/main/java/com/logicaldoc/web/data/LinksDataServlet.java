@@ -52,8 +52,8 @@ public class LinksDataServlet extends HttpServlet {
 					"select A.id, B.folder.id, A.type, A.document1.id, A.document1.title, A.document1.type, A.document2.id, A.document2.title, A.document2.type "
 							+ "from DocumentLink A, Document B where A.deleted = 0 and B.deleted = 0 ");
 			if (docId != null) {
-				query.append(" and (A.document1.id = B.id and A.document1.id=" + docId + " )");
-				query.append(" or  (A.document2.id = B.id and A.document2.id=" + docId + " )");
+				query.append(" and ((A.document1.id = B.id and A.document1.id=" + docId + " )");
+				query.append(" or  (A.document2.id = B.id and A.document2.id=" + docId + " ))");
 			}
 
 			List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, null);
@@ -65,16 +65,17 @@ public class LinksDataServlet extends HttpServlet {
 				Object[] cols = (Object[]) record;
 
 				writer.print("<link>");
+				writer.print("<id>" + cols[0] + "</id>");
 				writer.print("<folderId>" + cols[1] + "</folderId>");
 				writer.print("<type>" + cols[2] + "</type>");
 				if (docId.longValue() == (Long) cols[3]) {
-					writer.print("<id>" + cols[6] + "</id>");
+					writer.print("<documentId>" + cols[6] + "</documentId>");
 					writer.print("<title><![CDATA[" + (String) cols[7] + "]]></title>");
 					writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon((String) cols[8]))
 							+ "</icon>");
 					writer.print("<direction>out</direction>");
-				} else if (docId.longValue() == (Long) cols[6]) {
-					writer.print("<id>" + cols[3] + "</id>");
+				} else {
+					writer.print("<documentId>" + cols[3] + "</documentId>");
 					writer.print("<title><![CDATA[" + (String) cols[4] + "]]></title>");
 					writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon((String) cols[5]))
 							+ "</icon>");
