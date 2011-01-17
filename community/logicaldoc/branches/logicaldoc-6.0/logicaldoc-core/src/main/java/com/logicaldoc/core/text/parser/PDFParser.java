@@ -1,12 +1,11 @@
 package com.logicaldoc.core.text.parser;
 
-import java.io.BufferedInputStream;
-import java.io.CharArrayReader;
 import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Writer;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -16,8 +15,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.util.PDFTextStripper;
-
-import com.logicaldoc.util.StringUtil;
 
 /**
  * Text extractor for Portable Document Format (PDF). For parsing uses an
@@ -73,39 +70,6 @@ public class PDFParser extends AbstractParser {
 
 	@Override
 	public void parse(InputStream input) {
-		try {
-			org.apache.pdfbox.pdfparser.PDFParser parser = new org.apache.pdfbox.pdfparser.PDFParser(new BufferedInputStream(input));
-			try {
-				parser.parse();
-				PDDocument document = parser.getPDDocument();
-				CharArrayWriter writer = new CharArrayWriter();
-
-				PDFTextStripper stripper = new PDFTextStripper();
-				stripper.setLineSeparator("\n");
-				stripper.writeText(document, writer);
-
-				content = StringUtil.writeToString(new CharArrayReader(writer.toCharArray()));
-			} finally {
-				try {
-					PDDocument doc = parser.getPDDocument();
-					if (doc != null) {
-						doc.close();
-					}
-				} catch (IOException e) {
-				}
-			}
-		} catch (Exception e) {
-			// it may happen that PDFParser throws a runtime
-			// exception when parsing certain pdf documents
-			log.warn("Failed to extract PDF text content", e);
-		}
-	}
-
-	@Override
-	public void parse(File file) {
-		
-		log.info("Parsing file " + file.getPath());
-
 		author = "";
 		title = "";
 		sourceDate = "";
@@ -114,78 +78,80 @@ public class PDFParser extends AbstractParser {
 		PDDocument pdfDocument = null;
 
 		try {
-			InputStream is = new FileInputStream(file);
-			org.apache.pdfbox.pdfparser.PDFParser parser = new org.apache.pdfbox.pdfparser.PDFParser(is);
+			org.apache.pdfbox.pdfparser.PDFParser parser = new org.apache.pdfbox.pdfparser.PDFParser(input);
 
 			if (parser != null) {
 				parser.parse();
-			} else {
-				throw new Exception("Can not parse pdf file " + file.getName());
-			}
 
-			pdfDocument = parser.getPDDocument();
-			if (pdfDocument == null) {
-				throw new Exception("Can not get pdf document " + file.getName() + " for parsing");
-			}
-
-			try {
-				PDDocumentInformation information = pdfDocument.getDocumentInformation();
-				if (information == null) {
-					throw new Exception("Can not get information from pdf document " + file.getName());
+				pdfDocument = parser.getPDDocument();
+				if (pdfDocument == null) {
+					throw new Exception("Can not get pdf document for parsing");
 				}
 
-				author = information.getAuthor();
-				if (author == null) {
-					author = "";
-				}
-
-				title = information.getTitle();
-				if (title == null) {
-					title = "";
-				}
-								
 				try {
-					Calendar calendar = information.getCreationDate();
-					Date date = calendar.getTime();
-					sourceDate = DateFormat.getDateInstance().format(date);
-					// In Italian it will be like 27-giu-2007
-					//sourceDate = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ENGLISH).format(date);
-				} catch (Throwable e) {
-					log.error("Bad date format " + e.getMessage());
-					sourceDate = "";
-				}		
+					PDDocumentInformation information = pdfDocument.getDocumentInformation();
+					if (information == null) {
+						throw new Exception("Can not get information from pdf document");
+					}
 
-				tags = information.getKeywords();
-				if (tags == null) {
-					tags = "";
+					author = information.getAuthor();
+					if (author == null) {
+						author = "";
+					}
+
+					title = information.getTitle();
+					if (title == null) {
+						title = "";
+					}
+
+					try {
+						Calendar calendar = information.getCreationDate();
+						Date date = calendar.getTime();
+						sourceDate = DateFormat.getDateInstance().format(date);
+						// In Italian it will be like 27-giu-2007
+						// sourceDate =
+						// DateFormat.getDateInstance(DateFormat.SHORT,
+						// Locale.ENGLISH).format(date);
+					} catch (Throwable e) {
+						log.error("Bad date format " + e.getMessage());
+						sourceDate = "";
+					}
+
+					tags = information.getKeywords();
+					if (tags == null) {
+						tags = "";
+					}
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-				e.printStackTrace();
+
+				Writer writer = new CharArrayWriter();
+				PDFTextStripper stripper = new PDFTextStripper("UTF-8");
+				try {
+					if (pdfDocument.isEncrypted()) {
+						writer.write("encrypted document");
+						log.warn("Unable to decrypt pdf document");
+						throw new IOException("Encrypted document");
+					}
+
+					stripper.writeText(pdfDocument, writer);
+					writer.flush();
+					content = writer.toString();
+				} catch (Throwable tw) {
+					log.error("Exception reading pdf document: " + tw.getMessage());
+					author = "";
+				} finally {
+					try {
+						writer.close();
+					} catch (Throwable e) {
+						log.error(e.getMessage(), e);
+					}
+				}
+
 			}
-
-
-			CharArrayWriter writer = new CharArrayWriter();
-			PDFTextStripper stripper = new PDFTextStripper("UTF-8");
-
-			try {
-				if (pdfDocument.isEncrypted()) {
-					writer.write("encrypted document");
-					log.warn("Unable to decrypt pdf document");
-					throw new IOException("Encrypted document");
-				}
-
-				stripper.writeText(pdfDocument, writer);				
-			} catch(Throwable tw) {
-				log.error("Exception reading pdf document: " + tw.getMessage());
-				title = file.getName().substring(0, file.getName().lastIndexOf('.'));
-				author = "";
-		    }
-			content = writer.toString();
-			is.close();			
-		} catch (Exception ex) {
+		} catch (Throwable ex) {
 			log.error(ex.getMessage(), ex);
-			ex.printStackTrace();
 		} finally {
 			try {
 				if (pdfDocument != null) {
@@ -193,8 +159,28 @@ public class PDFParser extends AbstractParser {
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
-				e.printStackTrace();
 			}
+		}
+	}
+
+	@Override
+	public void parse(File file) {
+
+		log.info("Parsing file " + file.getPath());
+
+		InputStream is = null;
+		try {
+			is = new FileInputStream(file);
+			parse(is);
+		} catch (Exception ex) {
+			log.error(ex.getMessage(), ex);
+		} finally {
+			try {
+				is.close();
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+			System.gc();
 		}
 	}
 }
