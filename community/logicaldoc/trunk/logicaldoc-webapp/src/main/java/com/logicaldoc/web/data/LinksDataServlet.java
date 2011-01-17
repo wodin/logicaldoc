@@ -65,15 +65,16 @@ public class LinksDataServlet extends HttpServlet {
 				Object[] cols = (Object[]) record;
 
 				writer.print("<link>");
-				writer.print("<id>" + cols[0] + "</id>");
 				writer.print("<folderId>" + cols[1] + "</folderId>");
 				writer.print("<type>" + cols[2] + "</type>");
 				if (docId.longValue() == (Long) cols[3]) {
+					writer.print("<id>" + cols[6] + "</id>");
 					writer.print("<title><![CDATA[" + (String) cols[7] + "]]></title>");
 					writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon((String) cols[8]))
 							+ "</icon>");
 					writer.print("<direction>out</direction>");
 				} else if (docId.longValue() == (Long) cols[6]) {
+					writer.print("<id>" + cols[3] + "</id>");
 					writer.print("<title><![CDATA[" + (String) cols[4] + "]]></title>");
 					writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon((String) cols[5]))
 							+ "</icon>");
