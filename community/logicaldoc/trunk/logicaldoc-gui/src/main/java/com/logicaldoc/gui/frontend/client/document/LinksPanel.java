@@ -157,7 +157,6 @@ public class LinksPanel extends DocumentDetailTab {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				String documentId = listGrid.getSelectedRecord().getAttribute("documentId");
-				Log.info("id="+documentId, null);
 				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + documentId
 						+ "&open=true", "_blank", "");
 			}
