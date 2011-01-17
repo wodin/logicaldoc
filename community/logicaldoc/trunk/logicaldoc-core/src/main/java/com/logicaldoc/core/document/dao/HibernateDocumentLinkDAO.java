@@ -59,4 +59,12 @@ public class HibernateDocumentLinkDAO extends HibernatePersistentObjectDAO<Docum
 			link = links.iterator().next();
 		return link;
 	}
+
+	@Override
+	public boolean delete(long id) {
+		DocumentLink link = findById(id);
+		if (link != null)
+			getHibernateTemplate().delete(link);
+		return true;
+	}
 }

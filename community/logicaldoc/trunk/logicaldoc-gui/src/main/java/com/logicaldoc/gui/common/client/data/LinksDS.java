@@ -21,12 +21,13 @@ public class LinksDS extends DataSource {
 		id.setHidden(true);
 		id.setRequired(true);
 		DataSourceTextField folderId = new DataSourceTextField("folderId");
+		DataSourceTextField documentId = new DataSourceTextField("documentId");
 
 		DataSourceImageField icon = new DataSourceImageField("icon");
 		DataSourceTextField direction = new DataSourceTextField("direction");
 		DataSourceTextField type = new DataSourceTextField("type");
 
-		setFields(id, folderId, title, icon, direction, type);
+		setFields(id, folderId, documentId, title, icon, direction, type);
 		setClientOnly(true);
 		setDataURL("data/links.xml?sid=" + Session.get().getSid() + "&docId=" + docId);
 	}
