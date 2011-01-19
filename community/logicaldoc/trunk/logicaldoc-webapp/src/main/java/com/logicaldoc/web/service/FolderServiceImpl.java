@@ -278,14 +278,15 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		try {
 			Folder f;
+			String folderName = folder.getName().replace("/", "");
 			if (folder.getId() != 0) {
 				f = folderDao.findById(folder.getId());
 				f.setDescription(folder.getDescription());
-				if (f.getName().trim().equals(folder.getName())) {
-					f.setName(folder.getName());
+				if (f.getName().trim().equals(folderName)) {
+					f.setName(folderName);
 					folderDao.store(f);
 				} else {
-					f.setName(folder.getName());
+					f.setName(folderName);
 					History history = new History();
 					history.setUser(SessionUtil.getSessionUser(sid));
 					history.setEvent(History.EVENT_FOLDER_RENAMED);
@@ -298,7 +299,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				transaction.setUser(SessionUtil.getSessionUser(sid));
 				transaction.setSessionId(sid);
 
-				f = folderDao.create(folderDao.findById(folder.getParentId()), folder.getName(), transaction);
+				f = folderDao.create(folderDao.findById(folder.getParentId()), folderName, transaction);
 				f.setDescription(folder.getDescription());
 				folderDao.store(f);
 			}
