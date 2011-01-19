@@ -11,6 +11,7 @@ import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.validator.DoesntContainValidator;
 
 /**
  * Shows document's standard properties and read-only data
@@ -46,6 +47,10 @@ public class PropertiesPanel extends FolderDetailTab {
 		StaticTextItem idItem = ItemFactory.newStaticTextItem("id", "id", Long.toString(folder.getId()));
 
 		TextItem name = ItemFactory.newTextItem("name", "name", folder.getName());
+		DoesntContainValidator validator = new DoesntContainValidator();
+		validator.setSubstring("/");
+		validator.setErrorMessage(I18N.message("invalidchar"));
+		name.setValidators(validator);
 		name.addChangedHandler(changedHandler);
 		name.setRequired(true);
 
@@ -57,7 +62,7 @@ public class PropertiesPanel extends FolderDetailTab {
 				formatter.format(folder.getCreation()));
 
 		StaticTextItem creator = ItemFactory.newStaticTextItem("creator", "creator", folder.getCreator());
-		
+
 		StaticTextItem pathItem = ItemFactory.newStaticTextItem("path", "path", folder.getPathExtended());
 		pathItem.setTitle(I18N.message("path"));
 		pathItem.setValue(folder.getPathExtended());
