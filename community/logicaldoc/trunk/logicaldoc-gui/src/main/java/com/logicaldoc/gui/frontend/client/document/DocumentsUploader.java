@@ -181,6 +181,10 @@ public class DocumentsUploader extends Window {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
+						// We have to refresh the documents list because maybe
+						// some documents have been stored.
+						DocumentsPanel.get().refresh();
+						destroy();
 					}
 
 					@Override

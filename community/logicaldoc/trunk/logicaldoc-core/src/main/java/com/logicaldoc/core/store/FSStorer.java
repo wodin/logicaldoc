@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.security.SystemQuota;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.StringUtil;
 import com.logicaldoc.util.config.ContextProperties;
@@ -67,7 +68,10 @@ public class FSStorer implements Storer {
 		try {
 			File dir = getDirectory(docId);
 			FileUtils.forceMkdir(dir);
-			FileUtil.writeFile(stream, new StringBuilder(dir.getPath()).append("/").append(filename).toString());
+			File file = new File(new StringBuilder(dir.getPath()).append("/").append(filename).toString());
+			FileUtil.writeFile(stream, file.getPath());
+			SystemQuota.increment(file.length());
+			SystemQuota.checkOverQuota();
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return false;
@@ -133,15 +137,28 @@ public class FSStorer implements Storer {
 				if (listFiles[i].isFile() && listFiles[i].getName().endsWith(".deleted")) {
 					String version = listFiles[i].getName().substring(0, listFiles[i].getName().indexOf(".deleted"));
 					deletedVersions.add(version);
+					SystemQuota.decrement(listFiles[i].length());
 					listFiles[i].delete();
 				}
 			}
 			for (String deletedVersion : deletedVersions) {
 				for (int i = 0; i < listFiles.length; i++) {
-					if (listFiles[i].isFile() && listFiles[i].getName().startsWith(deletedVersion + "-"))
+					if (listFiles[i].isFile() && listFiles[i].getName().startsWith(deletedVersion + "-")) {
+						SystemQuota.decrement(listFiles[i].length());
 						listFiles[i].delete();
+					}
 				}
 			}
 		}
+	}
+
+	@Override
+	public long getTotalSize() {
+		long size = 0;
+		File docDir = new File(config.getPropertyWithSubstitutions("conf.docdir"));
+		if (docDir.exists())
+			size = FileUtils.sizeOfDirectory(docDir);
+
+		return size;
 	}
 }

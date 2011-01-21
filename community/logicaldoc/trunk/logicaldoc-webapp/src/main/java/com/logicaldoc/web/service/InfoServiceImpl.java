@@ -18,6 +18,7 @@ import com.logicaldoc.core.communication.dao.SystemMessageDAO;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.core.security.SystemQuota;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
@@ -113,6 +114,22 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 					}
 					messages.add(setupReminder);
 				}
+			}
+
+			// Checks if the system quota or the quota threshold is exceeded.
+			boolean quotaExcedeed = false;
+			try {
+				SystemQuota.checkOverQuota();
+			} catch (Throwable e) {
+				quotaExcedeed = true;
+				GUIMessage m = new GUIMessage();
+				m.setMessage(I18N.message("quotaexceeded", locale));
+				messages.add(m);
+			}
+			if (SystemQuota.checkOverThreshold() && !quotaExcedeed) {
+				GUIMessage m = new GUIMessage();
+				m.setMessage(I18N.message("quotathresholdexceeded", locale));
+				messages.add(m);
 			}
 
 			info.setMessages(messages.toArray(new GUIMessage[0]));

@@ -133,4 +133,19 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 		params[5] = new GUIParameter("ocr.timeout", "60");
 		return params;
 	}
+
+	@Override
+	public GUIParameter[] loadQuotaSettings(String sid) throws InvalidSessionException {
+		GUIParameter[] params = new GUIParameter[2];
+		params[0] = new GUIParameter("quota", "20");
+		params[1] = new GUIParameter("quota.threshold", "10");
+
+		return params;
+	}
+
+	@Override
+	public void saveQuotaSettings(String sid, GUIParameter[] quotaSettings) throws InvalidSessionException {
+		// TODO Auto-generated method stub
+
+	}
 }
