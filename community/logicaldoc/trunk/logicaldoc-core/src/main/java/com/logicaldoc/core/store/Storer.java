@@ -76,4 +76,9 @@ public interface Storer {
 	 * @param docId The document identifier
 	 */
 	public void clean(long docId);
+	
+	/**
+	 * Computes the total size of the documents repository(in bytes)
+	 */
+	public long getTotalSize();
 }

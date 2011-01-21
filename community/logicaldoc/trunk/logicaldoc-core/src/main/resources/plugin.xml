@@ -197,4 +197,9 @@
   <extension plugin-id="logicaldoc-core" point-id="Task" id="taskStatsCollector">
 	<parameter id="name" value="StatsCollector" />
   </extension>
+  
+  <extension plugin-id="logicaldoc-core" point-id="DocumentListener" id="quotaListener">
+	<parameter id="position" value="5" />
+	<parameter id="class" value="com.logicaldoc.core.security.SystemQuota" />
+  </extension>
 </plugin>

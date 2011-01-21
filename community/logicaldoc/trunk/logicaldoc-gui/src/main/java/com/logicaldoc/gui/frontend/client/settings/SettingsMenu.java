@@ -56,6 +56,10 @@ public class SettingsMenu extends VLayout {
 		ocr.setWidth100();
 		ocr.setHeight(25);
 
+		Button quota = new Button(I18N.message("quota"));
+		quota.setWidth100();
+		quota.setHeight(25);
+
 		if (Feature.visible(Feature.CLIENT_TOOLS) && Menu.enabled(Menu.CLIENTS)) {
 			addMember(clientTools);
 			if (!Feature.enabled(Feature.CLIENT_TOOLS)) {
@@ -76,8 +80,9 @@ public class SettingsMenu extends VLayout {
 			}
 		}
 
+		addMember(quota);
 		addMember(parameters);
-
+		
 		clientTools.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -114,7 +119,7 @@ public class SettingsMenu extends VLayout {
 				});
 			}
 		});
-		
+
 		parameters.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -184,6 +189,24 @@ public class SettingsMenu extends VLayout {
 					@Override
 					public void onSuccess(GUIParameter[] folders) {
 						AdminPanel.get().setContent(new FoldersPanel(folders));
+					}
+				});
+			}
+		});
+
+		quota.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				service.loadQuotaSettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUIParameter[] settings) {
+						AdminPanel.get().setContent(new SystemQuotaPanel(settings));
 					}
 				});
 			}

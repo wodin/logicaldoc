@@ -42,4 +42,9 @@ public class MockStorer implements Storer {
 		return new File("pom.xml");
 	}
 
+	@Override
+	public long getTotalSize() {
+		return 0;
+	}
+
 }

@@ -146,6 +146,7 @@ public class DocumentCheckin extends Window {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
+						destroy();
 					}
 
 					@Override
