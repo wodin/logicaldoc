@@ -104,6 +104,14 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			f.setCreator(folder.getCreator());
 			f.setCreatorId(folder.getCreatorId());
 
+			/*
+			 * Count the children
+			 */
+			f.setDocumentCount(dao
+					.queryForInt("select count(ld_id) from ld_document where ld_deleted=0 and ld_folderid=" + folderId));
+			f.setSubfolderCount(dao
+					.queryForInt("select count(ld_id) from ld_folder where not ld_id=ld_parentid and ld_deleted=0 and ld_parentid=" + folderId));
+
 			Set<Permission> permissions = dao.getEnabledPermissions(folderId, session.getUserId());
 			List<String> permissionsList = new ArrayList<String>();
 			for (Permission permission : permissions) {
