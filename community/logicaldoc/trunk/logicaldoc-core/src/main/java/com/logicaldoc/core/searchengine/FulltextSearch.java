@@ -9,6 +9,7 @@ import java.util.Locale;
 import org.apache.commons.lang.LocaleUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
@@ -46,6 +47,31 @@ public class FulltextSearch extends Search {
 	@Override
 	public void internalSearch() throws Exception {
 		FulltextSearchOptions opt = (FulltextSearchOptions) options;
+		String expr = opt.getExpression();
+
+		/*
+		 * Create the expression locale using the string representation. This is
+		 * particularly important for the variants like pt_BR.
+		 */
+		Locale expressionLocale = LocaleUtils.toLocale(opt.getExpressionLanguage());
+		Analyzer analyzer = LanguageManager.getInstance().getLanguage(expressionLocale).getAnalyzer();
+		search(analyzer);
+
+		// If there are no hits, try with a 'contains approach'
+		if (hits.isEmpty()) {
+			opt.setExpression("*" + expr + "*");
+			search(analyzer);
+		}
+
+		// If there are no hits, try with a keyword analyzer
+		if (hits.isEmpty()) {
+			opt.setExpression(expr);
+			search(new KeywordAnalyzer());
+		}
+	}
+
+	private void search(Analyzer analyzer) throws Exception {
+		FulltextSearchOptions opt = (FulltextSearchOptions) options;
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 		String[] languages = null;
@@ -70,13 +96,6 @@ public class FulltextSearch extends Search {
 
 		MultiSearcher multiSearcher = new MultiSearcher(searcher);
 
-		/*
-		 * Create the expression locale using the string representation. This is
-		 * particularly important for the variants like pt_BR.
-		 */
-		Locale expressionLocale = LocaleUtils.toLocale(opt.getExpressionLanguage());
-		Analyzer analyzer = LanguageManager.getInstance().getLanguage(expressionLocale).getAnalyzer();
-
 		if (opt.getFields() == null) {
 			String[] fields = new String[] { LuceneDocument.FIELD_CONTENT, LuceneDocument.FIELD_TAGS,
 					LuceneDocument.FIELD_TITLE };
@@ -86,6 +105,7 @@ public class FulltextSearch extends Search {
 		multiSearcher.setSimilarity(new SquareSimilarity());
 
 		MultiFieldQueryParser parser = new MultiFieldQueryParser(Indexer.LUCENE_VERSION, opt.getFields(), analyzer);
+		parser.setAllowLeadingWildcard(true);
 
 		Query query = parser.parse(opt.getExpression());
 
