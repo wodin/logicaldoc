@@ -36,6 +36,10 @@ public class GUIFolder implements Serializable {
 	private Long creatorId;
 
 	private Date creation;
+	
+	private int documentCount;
+	
+	private int subfolderCount;
 
 	public long getId() {
 		return id;
@@ -154,5 +158,21 @@ public class GUIFolder implements Serializable {
 
 	public void setCreation(Date creation) {
 		this.creation = creation;
+	}
+
+	public int getDocumentCount() {
+		return documentCount;
+	}
+
+	public void setDocumentCount(int documentCount) {
+		this.documentCount = documentCount;
+	}
+
+	public int getSubfolderCount() {
+		return subfolderCount;
+	}
+
+	public void setSubfolderCount(int subfolderCount) {
+		this.subfolderCount = subfolderCount;
 	}
 }
