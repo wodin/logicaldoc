@@ -69,15 +69,20 @@ public class PropertiesPanel extends FolderDetailTab {
 		pathItem.addChangedHandler(changedHandler);
 		pathItem.setWidth(300);
 
+		StaticTextItem documents = ItemFactory.newStaticTextItem("documents", "documents",
+				"" + folder.getDocumentCount());
+		StaticTextItem subfolders = ItemFactory
+				.newStaticTextItem("folders", "folders", "" + folder.getSubfolderCount());
+
 		if (!folder.hasPermission(Constants.PERMISSION_RENAME)) {
 			name.setDisabled(true);
 			description.setDisabled(true);
 		}
 
 		if (folder.getId() == Constants.DOCUMENTS_FOLDERID)
-			form.setItems(idItem, pathItem, creation, creator);
+			form.setItems(idItem, pathItem, creation, creator, documents, subfolders);
 		else
-			form.setItems(idItem, pathItem, name, description, creation, creator);
+			form.setItems(idItem, pathItem, name, description, creation, creator, documents, subfolders);
 		addMember(form);
 	}
 
