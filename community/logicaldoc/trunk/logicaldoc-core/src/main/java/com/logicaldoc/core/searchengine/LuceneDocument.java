@@ -104,7 +104,7 @@ public class LuceneDocument {
 	}
 
 	protected void setTitle() {
-		doc.add(new Field(FIELD_TITLE, document.getTitle(), Field.Store.YES, Field.Index.ANALYZED));
+		doc.add(new Field(FIELD_TITLE, document.getTitle(), Field.Store.YES, Field.Index.NOT_ANALYZED));
 	}
 
 	protected void setSize() {
@@ -114,13 +114,13 @@ public class LuceneDocument {
 
 	protected void setDocData() {
 		doc.add(new Field(FIELD_SOURCE, document.getSource() != null ? document.getSource() : "", Field.Store.YES,
-				Field.Index.ANALYZED));
+				Field.Index.NOT_ANALYZED));
 		doc.add(new Field(FIELD_SOURCE_AUTHOR, document.getSourceAuthor() != null ? document.getSourceAuthor() : "",
-				Field.Store.NO, Field.Index.ANALYZED));
+				Field.Store.NO, Field.Index.NOT_ANALYZED));
 		doc.add(new Field(FIELD_SOURCE_TYPE, document.getSourceType() != null ? document.getSourceType() : "",
-				Field.Store.NO, Field.Index.ANALYZED));
+				Field.Store.NO, Field.Index.NOT_ANALYZED));
 		doc.add(new Field(FIELD_COVERAGE, document.getCoverage() != null ? document.getCoverage() : "", Field.Store.NO,
-				Field.Index.ANALYZED));
+				Field.Index.NOT_ANALYZED));
 		doc.add(new Field(FIELD_SOURCE_DATE, document.getSourceDate() != null ? DateBean.toCompactString(document
 				.getSourceDate()) : "", Field.Store.YES, Field.Index.NOT_ANALYZED));
 		doc.add(new Field(FIELD_DATE, document.getDate() != null ? DateBean.toCompactString(document.getDate()) : "",
@@ -155,7 +155,7 @@ public class LuceneDocument {
 			if (ext.getType() == ExtendedAttribute.TYPE_STRING && StringUtils.isNotEmpty(ext.getStringValue())) {
 				// Prefix all extended attributes with 'ext_' in order to avoid
 				// collisions with standard fields
-				doc.add(new Field("ext_" + attribute, ext.getStringValue(), Field.Store.NO, Field.Index.ANALYZED));
+				doc.add(new Field("ext_" + attribute, ext.getStringValue(), Field.Store.NO, Field.Index.NOT_ANALYZED));
 			}
 		}
 	}
@@ -165,6 +165,6 @@ public class LuceneDocument {
 	}
 
 	protected void setTags() {
-		doc.add(new Field(FIELD_TAGS, document.getTagsString(), Field.Store.YES, Field.Index.ANALYZED));
+		doc.add(new Field(FIELD_TAGS, document.getTagsString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
 	}
 }
