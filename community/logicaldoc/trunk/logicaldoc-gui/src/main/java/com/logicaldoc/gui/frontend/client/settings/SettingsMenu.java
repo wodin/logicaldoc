@@ -80,9 +80,16 @@ public class SettingsMenu extends VLayout {
 			}
 		}
 
-		addMember(quota);
+		if (Feature.visible(Feature.QUOTAS)) {
+			addMember(quota);
+			if (!Feature.enabled(Feature.QUOTAS)) {
+				quota.setDisabled(true);
+				quota.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+
 		addMember(parameters);
-		
+
 		clientTools.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
