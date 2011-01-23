@@ -93,6 +93,8 @@ public class Feature {
 
 	public static final int BARCODES = 64;
 	
+	public static final int QUOTAS = 65;
+	
 	private static Set<String> features = new HashSet<String>();
 
 	static public void init(GUIInfo info) {
