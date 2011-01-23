@@ -16,6 +16,8 @@ import com.logicaldoc.core.i18n.DateBean;
  * @author Michael Scholz, Marco Meschieri
  */
 public class LuceneDocument {
+	private static final String _NA = "_na";
+
 	public static final String FIELD_TEMPLATE_ID = "templateId";
 
 	public static final String FIELD_TAGS = "tags";
@@ -65,9 +67,8 @@ public class LuceneDocument {
 	/**
 	 * Builds a lucene compatible document of a file. The document contains 7
 	 * Fields: name - name of the document size - size of the document in bytes
-	 * type - file format (e.g pdf, sxw) date - date of
-	 * creation content - full text of the document summary - first 500 letters
-	 * of the content
+	 * type - file format (e.g pdf, sxw) date - date of creation content - full
+	 * text of the document summary - first 500 letters of the content
 	 * 
 	 * @param f - File of which the document should be built.
 	 * @return
@@ -104,7 +105,8 @@ public class LuceneDocument {
 	}
 
 	protected void setTitle() {
-		doc.add(new Field(FIELD_TITLE, document.getTitle(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+		doc.add(new Field(FIELD_TITLE, document.getTitle(), Field.Store.YES, Field.Index.ANALYZED));
+		doc.add(new Field(FIELD_TITLE + _NA, document.getTitle(), Field.Store.NO, Field.Index.NOT_ANALYZED));
 	}
 
 	protected void setSize() {
@@ -113,14 +115,24 @@ public class LuceneDocument {
 	}
 
 	protected void setDocData() {
-		doc.add(new Field(FIELD_SOURCE, document.getSource() != null ? document.getSource() : "", Field.Store.YES,
+		doc.add(new Field(FIELD_SOURCE, document.getSource() != null ? document.getSource() : "", Field.Store.NO,
+				Field.Index.ANALYZED));
+		doc.add(new Field(FIELD_SOURCE + _NA, document.getSource() != null ? document.getSource() : "", Field.Store.NO,
 				Field.Index.NOT_ANALYZED));
+
 		doc.add(new Field(FIELD_SOURCE_AUTHOR, document.getSourceAuthor() != null ? document.getSourceAuthor() : "",
-				Field.Store.NO, Field.Index.NOT_ANALYZED));
+				Field.Store.NO, Field.Index.ANALYZED));
+		doc.add(new Field(FIELD_SOURCE_AUTHOR + _NA, document.getSourceAuthor() != null ? document.getSourceAuthor()
+				: "", Field.Store.NO, Field.Index.NOT_ANALYZED));
+
 		doc.add(new Field(FIELD_SOURCE_TYPE, document.getSourceType() != null ? document.getSourceType() : "",
 				Field.Store.NO, Field.Index.NOT_ANALYZED));
+
 		doc.add(new Field(FIELD_COVERAGE, document.getCoverage() != null ? document.getCoverage() : "", Field.Store.NO,
-				Field.Index.NOT_ANALYZED));
+				Field.Index.ANALYZED));
+		doc.add(new Field(FIELD_COVERAGE + _NA, document.getCoverage() != null ? document.getCoverage() : "",
+				Field.Store.NO, Field.Index.NOT_ANALYZED));
+
 		doc.add(new Field(FIELD_SOURCE_DATE, document.getSourceDate() != null ? DateBean.toCompactString(document
 				.getSourceDate()) : "", Field.Store.YES, Field.Index.NOT_ANALYZED));
 		doc.add(new Field(FIELD_DATE, document.getDate() != null ? DateBean.toCompactString(document.getDate()) : "",
@@ -155,7 +167,9 @@ public class LuceneDocument {
 			if (ext.getType() == ExtendedAttribute.TYPE_STRING && StringUtils.isNotEmpty(ext.getStringValue())) {
 				// Prefix all extended attributes with 'ext_' in order to avoid
 				// collisions with standard fields
-				doc.add(new Field("ext_" + attribute, ext.getStringValue(), Field.Store.NO, Field.Index.NOT_ANALYZED));
+				doc.add(new Field("ext_" + attribute, ext.getStringValue(), Field.Store.NO, Field.Index.ANALYZED));
+				doc.add(new Field("ext_" + attribute + _NA, ext.getStringValue(), Field.Store.NO,
+						Field.Index.NOT_ANALYZED));
 			}
 		}
 	}
@@ -165,6 +179,7 @@ public class LuceneDocument {
 	}
 
 	protected void setTags() {
-		doc.add(new Field(FIELD_TAGS, document.getTagsString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+		doc.add(new Field(FIELD_TAGS, document.getTagsString(), Field.Store.YES, Field.Index.ANALYZED));
+		doc.add(new Field(FIELD_TAGS + _NA, document.getTagsString(), Field.Store.NO, Field.Index.NOT_ANALYZED));
 	}
 }
