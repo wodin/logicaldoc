@@ -153,14 +153,10 @@ public class FulltextSearch extends Search {
 		 * perform this check only if the search is not restricted to one folder
 		 * only.
 		 */
+		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		List<Long> accessibleIds = new ArrayList<Long>();
-		if (opt.getFolderId() != null)
-			accessibleIds.add(opt.getFolderId());
-		if (searchInSingleFolder) {
-			accessibleIds.add(opt.getFolderId());
-		} else {
+		if (!searchInSingleFolder) {
 			log.info("DB search");
-			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			if (opt.getFolderId() == null)
 				accessibleIds = fdao.findFolderIdByUserId(opt.getUserId());
 			else {
@@ -168,6 +164,8 @@ public class FulltextSearch extends Search {
 			}
 			log.info("End of DB search");
 		}
+		if (opt.getFolderId() != null && fdao.isReadEnable(opt.getFolderId(), opt.getUserId()))
+			accessibleIds.add(opt.getFolderId());
 
 		int maxNumFragmentsRequired = 4;
 		String fragmentSeparator = "&nbsp;...&nbsp;";
