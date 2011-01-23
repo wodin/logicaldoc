@@ -10,6 +10,7 @@ import org.apache.commons.lang.LocaleUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
+import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
@@ -55,19 +56,13 @@ public class FulltextSearch extends Search {
 		 */
 		Locale expressionLocale = LocaleUtils.toLocale(opt.getExpressionLanguage());
 		Analyzer analyzer = LanguageManager.getInstance().getLanguage(expressionLocale).getAnalyzer();
-		search(analyzer);
 
-		// If there are no hits, try with a 'contains approach'
-		if (hits.isEmpty()) {
-			opt.setExpression("*" + expr + "*");
-			search(analyzer);
+		PerFieldAnalyzerWrapper wrapper = new PerFieldAnalyzerWrapper(analyzer);
+		for (String field : getSearchedFields(opt)) {
+			if (!LuceneDocument.FIELD_CONTENT.equals(field))
+				wrapper.addAnalyzer(field + "_na", new KeywordAnalyzer());
 		}
-
-		// If there are no hits, try with a keyword analyzer
-		if (hits.isEmpty()) {
-			opt.setExpression(expr);
-			search(new KeywordAnalyzer());
-		}
+		search(wrapper);
 	}
 
 	private void search(Analyzer analyzer) throws Exception {
@@ -96,15 +91,13 @@ public class FulltextSearch extends Search {
 
 		MultiSearcher multiSearcher = new MultiSearcher(searcher);
 
-		if (opt.getFields() == null) {
-			String[] fields = new String[] { LuceneDocument.FIELD_CONTENT, LuceneDocument.FIELD_TAGS,
-					LuceneDocument.FIELD_TITLE };
-			opt.setFields(fields);
-		}
+		// Include even all not analized fields
+		List<String> fields = getSearchedFields(opt);
 
 		multiSearcher.setSimilarity(new SquareSimilarity());
 
-		MultiFieldQueryParser parser = new MultiFieldQueryParser(Indexer.LUCENE_VERSION, opt.getFields(), analyzer);
+		MultiFieldQueryParser parser = new MultiFieldQueryParser(Indexer.LUCENE_VERSION, fields.toArray(new String[0]),
+				analyzer);
 		parser.setAllowLeadingWildcard(true);
 
 		Query query = parser.parse(opt.getExpression());
@@ -241,6 +234,25 @@ public class FulltextSearch extends Search {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Retrieves all searched fields, analyzed and not(ending with _na).
+	 */
+	private List<String> getSearchedFields(FulltextSearchOptions opt) {
+		if (opt.getFields() == null) {
+			String[] fields = new String[] { LuceneDocument.FIELD_CONTENT, LuceneDocument.FIELD_TAGS,
+					LuceneDocument.FIELD_TITLE };
+			opt.setFields(fields);
+		}
+
+		List<String> fields = new ArrayList<String>();
+		for (String fld : opt.getFields()) {
+			fields.add(fld);
+			if (!LuceneDocument.FIELD_CONTENT.equals(fld))
+				fields.add(fld + "_na");
+		}
+		return fields;
 	}
 
 	protected boolean isRelevant(Hit hit) {
