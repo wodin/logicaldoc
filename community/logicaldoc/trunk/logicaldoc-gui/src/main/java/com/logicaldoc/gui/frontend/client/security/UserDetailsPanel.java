@@ -2,11 +2,13 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -39,6 +41,8 @@ public class UserDetailsPanel extends VLayout {
 
 	private Layout propertiesTabPanel;
 
+	private Layout quotaTabPanel;
+
 	private Layout historyTabPanel;
 
 	private UserPropertiesPanel propertiesPanel;
@@ -50,6 +54,8 @@ public class UserDetailsPanel extends VLayout {
 	private TabSet tabSet = new TabSet();
 
 	private UsersPanel usersPanel;
+
+	private UserQuotaPanel quotaPanel;
 
 	private UserHistoryPanel historyPanel;
 
@@ -128,6 +134,19 @@ public class UserDetailsPanel extends VLayout {
 		propertiesTab.setPane(propertiesTabPanel);
 		tabSet.addTab(propertiesTab);
 
+		Tab quotaTab = new Tab(I18N.message("quota"));
+		if (Feature.visible(Feature.QUOTAS)) {
+			if (Feature.enabled(Feature.QUOTAS)) {
+				quotaTabPanel = new HLayout();
+				quotaTabPanel.setWidth100();
+				quotaTabPanel.setHeight100();
+			} else {
+				quotaTabPanel = new FeatureDisabled();
+			}
+			quotaTab.setPane(quotaTabPanel);
+			tabSet.addTab(quotaTab);
+		}
+
 		Tab historyTab = new Tab(I18N.message("history"));
 		historyTabPanel = new HLayout();
 		historyTabPanel.setWidth100();
@@ -163,6 +182,17 @@ public class UserDetailsPanel extends VLayout {
 
 		propertiesPanel = new UserPropertiesPanel(user, changeHandler);
 		propertiesTabPanel.addMember(propertiesPanel);
+
+		/*
+		 * Prepare the quota tab
+		 */
+		if (quotaPanel != null) {
+			quotaPanel.destroy();
+			if (quotaTabPanel.contains(quotaPanel))
+				quotaTabPanel.removeMember(quotaPanel);
+		}
+		quotaPanel = new UserQuotaPanel(user);
+		quotaTabPanel.addMember(quotaPanel);
 
 		/*
 		 * Prepare the history tab

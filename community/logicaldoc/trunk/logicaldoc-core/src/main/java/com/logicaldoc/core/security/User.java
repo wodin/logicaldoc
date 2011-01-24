@@ -83,6 +83,10 @@ public class User extends PersistentObject implements Serializable {
 
 	private int source = 0;
 
+	private long quota = -1;
+
+	private long quotaCount = 0;
+
 	public User() {
 	}
 
@@ -369,5 +373,21 @@ public class User extends PersistentObject implements Serializable {
 
 	public void setSource(int source) {
 		this.source = source;
+	}
+
+	public long getQuota() {
+		return quota;
+	}
+
+	public void setQuota(long quota) {
+		this.quota = quota;
+	}
+
+	public long getQuotaCount() {
+		return quotaCount;
+	}
+
+	public void setQuotaCount(long quotaCount) {
+		this.quotaCount = quotaCount;
 	}
 }
