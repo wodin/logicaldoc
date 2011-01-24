@@ -20,6 +20,8 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
  */
 public class HttpUpload {
 
+	private static final int TIMEOUT = 15000;
+
 	private String url;
 
 	private File file;
@@ -61,7 +63,7 @@ public class HttpUpload {
 
 			HttpClient client = new HttpClient();
 
-			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+			client.getHttpConnectionManager().getParams().setConnectionTimeout(TIMEOUT);
 
 			int status = client.executeMethod(filePost);
 
