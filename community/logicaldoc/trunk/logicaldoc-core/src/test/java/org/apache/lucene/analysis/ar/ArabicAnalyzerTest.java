@@ -55,7 +55,7 @@ public class ArabicAnalyzerTest {
 		}
 
 		System.err.println(counter);
-		Assert.assertEquals(613, counter);
+		Assert.assertEquals(371, counter);
 	}
 
 	@Test

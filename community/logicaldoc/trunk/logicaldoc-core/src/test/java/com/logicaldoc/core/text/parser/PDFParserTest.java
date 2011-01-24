@@ -121,7 +121,7 @@ public class PDFParserTest {
 				assertEquals(27179, parser.getContent().length());
 			} else {
 				pdfp.parse(file2);
-				assertEquals(8457, parser.getContent().length());
+				assertEquals(8598, parser.getContent().length());
 			}
 		}
 	}
@@ -171,7 +171,7 @@ public class PDFParserTest {
 		assertTrue(StringUtils.isNotEmpty(content));
 
 		System.err.println("content.length(): " + content.length());
-		assertEquals(2986, content.length());
+		assertEquals(3001, content.length());
 
 		try {
 			FileOutputStream out = new FileOutputStream(outputFile);
@@ -208,7 +208,7 @@ public class PDFParserTest {
 		assertTrue(StringUtils.isNotEmpty(content));
 
 		System.err.println("content.length(): " + content.length());
-		assertEquals(8457, content.length());
+		assertEquals(8598, content.length());
 	}
 
 }

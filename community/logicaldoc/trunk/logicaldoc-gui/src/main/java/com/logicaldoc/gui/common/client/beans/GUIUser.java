@@ -75,6 +75,10 @@ public class GUIUser implements Serializable {
 	private int subscriptions = 0;
 
 	private Long[] menues = new Long[0];
+	
+	private long quota;
+
+	private long quotaCount;
 
 	private Set<UserObserver> observers = new HashSet<UserObserver>();
 
@@ -350,5 +354,21 @@ public class GUIUser implements Serializable {
 			this.subscriptions = subscriptions;
 			notifyObservers(ALL_SUBSCRIPTIONS);
 		}
+	}
+
+	public long getQuota() {
+		return quota;
+	}
+
+	public void setQuota(long quota) {
+		this.quota = quota;
+	}
+
+	public long getQuotaCount() {
+		return quotaCount;
+	}
+
+	public void setQuotaCount(long quotaCount) {
+		this.quotaCount = quotaCount;
 	}
 }
