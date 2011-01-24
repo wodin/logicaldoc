@@ -2,8 +2,10 @@ package com.logicaldoc.webservice.document;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,9 +13,13 @@ import java.util.Set;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.communication.EMail;
+import com.logicaldoc.core.communication.EMailAttachment;
+import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
@@ -26,6 +32,7 @@ import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.MimeType;
 import com.logicaldoc.webservice.AbstractService;
 
 /**
@@ -373,13 +380,14 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		User user = validateSession(sid);
 
 		HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
-		StringBuffer query = new StringBuffer("select distinct(docId) from History where deleted=0 and (docId is not NULL) and userId="
-				+ user.getId());
+		StringBuffer query = new StringBuffer(
+				"select distinct(docId) from History where deleted=0 and (docId is not NULL) and userId="
+						+ user.getId());
 		query.append(" order by date desc");
 		List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, max);
 
 		Set<Long> docIds = new HashSet<Long>();
-		
+
 		/*
 		 * Iterate over records composing the response XML document
 		 */
@@ -393,5 +401,79 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		}
 
 		return getDocuments(sid, docIds.toArray(new Long[0]));
+	}
+
+	@Override
+	public void sendEmail(String sid, Long[] docIds, String recipients, String subject, String message)
+			throws Exception {
+		User user = validateSession(sid);
+
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+
+		EMail mail;
+		try {
+			mail = new EMail();
+
+			mail.setAccountId(-1);
+			mail.setAuthor(user.getUserName());
+			mail.setAuthorAddress(user.getEmail());
+			mail.parseRecipients(recipients);
+			mail.setFolder("outbox");
+			mail.setMessageText(message);
+			mail.setRead(1);
+			mail.setSentDate(new Date());
+			mail.setSubject(subject);
+			mail.setUserName(user.getUserName());
+
+			/*
+			 * Only readable documents can be sent
+			 */
+			List<Document> docs = new ArrayList<Document>();
+			for (long id : docIds) {
+				Document doc = docDao.findById(id);
+				if (folderDao.isReadEnable(doc.getFolder().getId(), user.getId())) {
+					createAttachment(mail, doc);
+					docs.add(doc);
+				}
+			}
+
+			// Send the message
+			EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
+			sender.send(mail);
+
+			for (Document doc : docs) {
+				// Create the document history event
+				HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+				History history = new History();
+				history.setSessionId(sid);
+				history.setDocId(doc.getId());
+				history.setEvent(History.EVENT_SENT);
+				history.setUser(user);
+				history.setComment(StringUtils.abbreviate(recipients, 4000));
+				history.setTitle(doc.getTitle());
+				history.setVersion(doc.getVersion());
+				history.setPath(folderDao.computePathExtended(doc.getFolder().getId()));
+				dao.store(history);
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw e;
+		}
+	}
+
+	private void createAttachment(EMail email, Document doc) throws IOException {
+		EMailAttachment att = new EMailAttachment();
+		att.setIcon(doc.getIcon());
+		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		File file = manager.getDocumentFile(doc);
+		att.setFile(file);
+		att.setFileName(doc.getFileName());
+		String extension = doc.getFileExtension();
+		att.setMimeType(MimeType.get(extension));
+
+		if (att != null) {
+			email.addAttachment(2 + email.getAttachments().size(), att);
+		}
 	}
 }

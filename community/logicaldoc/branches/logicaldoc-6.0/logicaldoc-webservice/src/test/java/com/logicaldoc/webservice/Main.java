@@ -1,17 +1,14 @@
 package com.logicaldoc.webservice;
 
-import com.logicaldoc.core.searchengine.FulltextSearchOptions;
-import com.logicaldoc.core.searchengine.Hit;
-import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.webservice.auth.AuthClient;
+import com.logicaldoc.webservice.document.DocumentClient;
 import com.logicaldoc.webservice.search.SearchClient;
-import com.logicaldoc.webservice.search.WSSearchResult;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
 		AuthClient auth = new AuthClient("http://localhost:9080/logicaldoc/services/Auth");
-		// DocumentClient documentClient = new
-		// DocumentClient("http://localhost:8080/logicaldoc/services/Document");
+		DocumentClient documentClient = new
+		DocumentClient("http://localhost:9080/logicaldoc/services/Document");
 		// FolderClient folderClient = new
 		// FolderClient("http://localhost:8080/logicaldoc/services/Folder");
 		SearchClient searchClient = new SearchClient("http://localhost:9080/logicaldoc/services/Search");
@@ -27,20 +24,9 @@ public class Main {
 		//
 		// sid = auth.login("matteo", "matteo1982");
 
-		FulltextSearchOptions opt = new FulltextSearchOptions();
-		opt.setLanguage("it");
-		opt.setExpression("kartha");
-		opt.setExpressionLanguage("it");
-		opt.setType(SearchOptions.TYPE_FULLTEXT);
 
-		WSSearchResult result = searchClient.find(sid, opt);
-		System.out.println("result: " + result.getTotalHits());
-		for (Hit hit : result.getHits()) {
-			System.out.println("hit doc id: " + hit.getDocId());
-			System.out.println("hit title: " + hit.getTitle());
-			System.out.println("hit folder id: " + hit.getFolderId());
-			System.out.println(hit.getSummary());
-		}
+		documentClient.sendEmail(sid, new Long[]{13L,9L}, "m.meschieri@logicalobjects.it, info@logicalobjects.it", "test ws", "message test ws");
+		
 
 		// TagCloud[] tags = searchClient.getTagCloud(sid);
 		// for (TagCloud tag : tags) {
