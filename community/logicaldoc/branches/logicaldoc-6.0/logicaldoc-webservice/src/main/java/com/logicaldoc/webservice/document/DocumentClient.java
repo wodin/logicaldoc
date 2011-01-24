@@ -120,4 +120,10 @@ public class DocumentClient implements DocumentService {
 	public WSDocument[] getRecentDocuments(String sid, Integer max) throws Exception {
 		return client.getRecentDocuments(sid, max);
 	}
+
+	@Override
+	public void sendEmail(String sid, Long[] docIds, String recipients, String subject, String message)
+			throws Exception {
+		client.sendEmail(sid, docIds, recipients, subject, message);
+	}
 }

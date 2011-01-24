@@ -214,4 +214,16 @@ public interface DocumentService {
 	@WebResult(name = "document")
 	public WSDocument[] getRecentDocuments(@WebParam(name = "sid") String sid,
 			@WebParam(name = "maxHits") Integer maxHits) throws Exception;
+
+	/**
+	 * Sends a set of documents as mail attachments
+	 * 
+	 * @param sid Session identifiers
+	 * @param docIds Set of document ids
+	 * @param recipients Set of recipients(comma separated)
+	 * @param subject The email subject
+	 * @param message The email message body
+	 */
+	public void sendEmail(@WebParam(name = "sid") String sid, @WebParam(name = "docIds") Long[] docIds,
+			@WebParam(name = "recipients") String recipients, String subject, String message) throws Exception;
 }
