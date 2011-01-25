@@ -55,10 +55,17 @@ public class SystemMenu extends VLayout {
 		searchAndIndexing.setHeight(25);
 		addMember(searchAndIndexing);
 
-		Button guiLangs = new Button(I18N.message("guilanguages"));
+    Button guiLangs = new Button(I18N.message("guilanguages"));
 		guiLangs.setWidth100();
 		guiLangs.setHeight(25);
-		addMember(guiLangs);
+
+		if (Feature.visible(Feature.GUI_LANGUAGES)) {
+			addMember(guiLangs);
+			if (!Feature.enabled(Feature.GUI_LANGUAGES)) {
+				guiLangs.setDisabled(true);
+				guiLangs.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
 
 		addInformations();
 
