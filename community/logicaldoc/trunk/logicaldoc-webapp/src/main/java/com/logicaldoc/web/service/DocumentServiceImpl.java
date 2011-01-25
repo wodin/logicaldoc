@@ -43,6 +43,7 @@ import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.SystemQuota;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
@@ -123,7 +124,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	@Override
 	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip,
 			final Long templateId) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession userSession = SessionUtil.validateSession(sid);
 
 		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
 		log.debug("Uploading " + uploadedFilesMap.size() + " files");
@@ -184,6 +185,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					// And launch it
 					zipImporter.start();
 				} else {
+					// Check if the user can upload another document.
+					SystemQuota.checkUserQuota(userSession.getUserId(), file.length());
+
 					String title = filename.substring(0, filename.lastIndexOf("."));
 
 					// Create the document history event

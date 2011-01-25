@@ -47,7 +47,7 @@ public class SystemQuotaPanel extends VLayout {
 		tabs.setWidth(380);
 		tabs.setHeight(270);
 		Tab systemQuota = new Tab();
-		systemQuota.setTitle(I18N.message("quota"));
+		systemQuota.setTitle(I18N.message("docsquota"));
 
 		DynamicForm systemQuotaForm = new DynamicForm();
 		systemQuotaForm.setValuesManager(vm);

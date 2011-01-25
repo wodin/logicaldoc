@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.logicaldoc.gui.common.client.beans.GUISession;
+import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -201,6 +202,10 @@ public class LoginPanel extends VLayout {
 							}
 
 							FoldersNavigator.get().selectFolder(Constants.DOCUMENTS_FOLDERID);
+
+							GUIUser user = session.getUser();
+							if (user.getQuotaCount() >= user.getQuota())
+								Log.warn("Reached your maximum documents uploaded quota", null);
 						} else if (session.getUser() != null && session.getUser().isExpired()) {
 							new ChangePassword(session.getUser(), "needtochangepassword").show();
 						} else {

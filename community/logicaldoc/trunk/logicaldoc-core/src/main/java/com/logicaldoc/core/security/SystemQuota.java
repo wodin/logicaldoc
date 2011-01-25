@@ -65,4 +65,23 @@ public class SystemQuota implements DocumentListener {
 	public void beforeStore(Document document, History transaction, Map<String, Object> dictionary) throws Exception {
 
 	}
+
+	public static synchronized void decrementUserQuota(Document document) {
+	}
+
+	public static synchronized void incrementUserQuota(Document document, Long filesize) {
+	}
+
+	public static synchronized void checkUserQuota(Document document) throws Exception {
+	}
+
+	public static synchronized void checkUserQuota(long userId, Long filesize) throws Exception {
+	}
+
+	public static synchronized boolean isOverQuota(User user) {
+		return false;
+	}
+
+	public static synchronized void incrementUserQuota(long docId, Long filesize) {
+	}
 }
