@@ -191,7 +191,7 @@ public class UserDetailsPanel extends VLayout {
 			if (quotaTabPanel.contains(quotaPanel))
 				quotaTabPanel.removeMember(quotaPanel);
 		}
-		quotaPanel = new UserQuotaPanel(user);
+		quotaPanel = new UserQuotaPanel(user, changeHandler);
 		quotaTabPanel.addMember(quotaPanel);
 
 		/*
@@ -204,6 +204,8 @@ public class UserDetailsPanel extends VLayout {
 		}
 		historyPanel = new UserHistoryPanel(user.getId());
 		historyTabPanel.addMember(historyPanel);
+		
+		tabSet.selectTab(0);
 	}
 
 	public GUIUser getUser() {
@@ -221,9 +223,12 @@ public class UserDetailsPanel extends VLayout {
 
 	private boolean validate() {
 		boolean stdValid = propertiesPanel.validate();
+		boolean quotaValid = quotaPanel.validate();
 		if (!stdValid)
 			tabSet.selectTab(0);
-		return stdValid;
+		else if (!quotaValid)
+			tabSet.selectTab(1);
+		return stdValid && quotaValid;
 	}
 
 	public void onSave() {

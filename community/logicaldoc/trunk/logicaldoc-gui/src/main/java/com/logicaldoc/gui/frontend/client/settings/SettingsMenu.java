@@ -56,7 +56,7 @@ public class SettingsMenu extends VLayout {
 		ocr.setWidth100();
 		ocr.setHeight(25);
 
-		Button quota = new Button(I18N.message("quota"));
+		Button quota = new Button(I18N.message("docsquota"));
 		quota.setWidth100();
 		quota.setHeight(25);
 

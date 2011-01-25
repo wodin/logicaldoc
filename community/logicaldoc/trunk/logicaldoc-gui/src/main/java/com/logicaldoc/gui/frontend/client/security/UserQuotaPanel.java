@@ -26,8 +26,9 @@ public class UserQuotaPanel extends HLayout {
 
 	private ChangedHandler changedHandler;
 
-	public UserQuotaPanel(GUIUser user) {
+	public UserQuotaPanel(GUIUser user, ChangedHandler changedHandler) {
 		this.user = user;
+		this.changedHandler = changedHandler;
 
 		setWidth100();
 		setHeight100();
@@ -51,7 +52,7 @@ public class UserQuotaPanel extends HLayout {
 
 		IntegerItem quota = ItemFactory.newIntegerItem("quota", "quota", null);
 		quota.setRequired(false);
-		quota.setValue(user.getQuota() >= 0 ? user.getQuota() : 0);
+		quota.setValue(user.getQuota() >= 0 ? user.getQuota() / (1024 * 1024) : 0);
 		quota.setHint("MB");
 		if (!readonly)
 			quota.addChangedHandler(changedHandler);
@@ -59,10 +60,8 @@ public class UserQuotaPanel extends HLayout {
 		IntegerItem quotaCount = ItemFactory.newIntegerItem("quotaCount", "quotacount", null);
 		quotaCount.setRequired(false);
 		quotaCount.setDisabled(true);
-		quotaCount.setValue(user.getQuotaCount());
+		quotaCount.setValue(user.getQuotaCount() / (1024 * 1024));
 		quotaCount.setHint("MB");
-		if (!readonly)
-			quotaCount.addChangedHandler(changedHandler);
 
 		form1.setItems(quota, quotaCount);
 		addMember(form1);
@@ -79,7 +78,7 @@ public class UserQuotaPanel extends HLayout {
 				quota = Integer.parseInt((String) values.get("quota"));
 			else
 				quota = (Integer) values.get("quota");
-			user.setQuota(quota);
+			user.setQuota(quota * (1024 * 1024));
 		}
 		return !vm.hasErrors();
 	}

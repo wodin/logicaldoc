@@ -70,8 +70,12 @@ public class FSStorer implements Storer {
 			FileUtils.forceMkdir(dir);
 			File file = new File(new StringBuilder(dir.getPath()).append("/").append(filename).toString());
 			FileUtil.writeFile(stream, file.getPath());
+
+			// Performs increment and check of the system quota, then increments
+			// the user quota count
 			SystemQuota.increment(file.length());
 			SystemQuota.checkOverQuota();
+			SystemQuota.incrementUserQuota(docId, file.length());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return false;

@@ -116,6 +116,9 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 						AbstractDocument.DOC_CHECKED_OUT).size());
 				guiUser.setUnreadMessages(messageDao.getCount(username, SystemMessage.TYPE_SYSTEM, 0));
 
+				guiUser.setQuota(user.getQuota());
+				guiUser.setQuotaCount(user.getQuotaCount());
+
 				session.setSid(AuthenticationChain.getSessionId());
 				session.setUser(guiUser);
 				session.setLoggedIn(true);
@@ -296,6 +299,9 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			}
 			usr.setGroups(grps);
 
+			usr.setQuota(user.getQuota());
+			usr.setQuotaCount(user.getQuotaCount());
+
 			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			usr.setPasswordMinLenght(Integer.parseInt(config.getProperty("password.size")));
 			return usr;
@@ -383,6 +389,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setUserName(user.getUserName());
 			usr.setEnabled(user.isEnabled() ? 1 : 0);
 			usr.setPasswordExpires(user.isPasswordExpires() ? 1 : 0);
+
+			usr.setQuota(user.getQuota());
 
 			if (createNew) {
 				// Generate an initial password
