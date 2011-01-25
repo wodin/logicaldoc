@@ -20,6 +20,7 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.LinkItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.logicaldoc.gui.common.client.Feature;
 
 /**
  * This panel shows the administration system menu
