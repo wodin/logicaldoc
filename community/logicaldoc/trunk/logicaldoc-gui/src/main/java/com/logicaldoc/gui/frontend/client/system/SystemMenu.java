@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.system;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Menu;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
@@ -58,7 +59,14 @@ public class SystemMenu extends VLayout {
 		Button guiLangs = new Button(I18N.message("guilanguages"));
 		guiLangs.setWidth100();
 		guiLangs.setHeight(25);
-		addMember(guiLangs);
+
+		if (Feature.visible(Feature.GUI_LANGUAGES)) {
+			addMember(guiLangs);
+			if (!Feature.enabled(Feature.GUI_LANGUAGES)) {
+				guiLangs.setDisabled(true);
+				guiLangs.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
 
 		addInformations();
 
