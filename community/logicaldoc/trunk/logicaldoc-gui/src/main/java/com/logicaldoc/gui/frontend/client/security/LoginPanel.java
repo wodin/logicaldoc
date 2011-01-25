@@ -135,8 +135,13 @@ public class LoginPanel extends VLayout {
 			}
 		});
 
-		language = ItemFactory.newLanguageSelector("language", true, true);
-		language.setDefaultValue("");
+		if (I18N.getSupportedGuiLanguages(false).size() > 1) {
+			language = ItemFactory.newLanguageSelector("language", true, true);
+			language.setDefaultValue("");
+		} else {
+			language = ItemFactory.newLanguageSelector("language", false, true);
+			language.setDefaultValue(I18N.getSupportedGuiLanguages(false).keySet().iterator().next());
+		}
 
 		form.setFields(username, password, language);
 
