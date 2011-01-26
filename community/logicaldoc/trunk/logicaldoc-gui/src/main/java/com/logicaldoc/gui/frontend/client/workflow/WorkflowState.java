@@ -62,8 +62,6 @@ public class WorkflowState extends VLayout {
 				getDesigner().onStateDelete(getWfState());
 			}
 		});
-		if (!designer.isReadOnly())
-			commands.addMember(delete);
 
 		Label edit = ItemFactory.newLinkLabel("edit");
 		edit.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
@@ -73,7 +71,7 @@ public class WorkflowState extends VLayout {
 				getDesigner().onStateSelect(getWfState());
 			}
 		});
-		
+
 		Label addtransition = ItemFactory.newLinkLabel("addtransition");
 		addtransition.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
@@ -94,10 +92,12 @@ public class WorkflowState extends VLayout {
 						}, dialog);
 			}
 		});
-		
-		if (!designer.isReadOnly()){
+
+		if (!designer.isReadOnly()) {
+			commands.addMember(delete);
 			commands.addMember(edit);
-			commands.addMember(addtransition);
+			if (wfState.getType() == GUIWFState.TYPE_TASK)
+				commands.addMember(addtransition);
 		}
 	}
 
