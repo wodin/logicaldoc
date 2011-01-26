@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.beans.GUITransition;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
@@ -129,7 +130,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 	public void onStateDelete(GUIWFState workflowState) {
 		final GUIWFState wfState = workflowState;
 
-		SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+		LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 			@Override
 			public void execute(Boolean value) {
 				if (value) {
@@ -154,7 +155,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 		final GUIWFState fromState = from;
 		final String transitionText = transition;
 
-		SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+		LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 			@Override
 			public void execute(Boolean value) {
 				if (value) {
@@ -197,7 +198,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 		final GUIWorkflow workflow = this.getWorkflow();
 		final String transitionText = transition;
 
-		SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+		LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 			@Override
 			public void execute(Boolean value) {
 				if (value) {

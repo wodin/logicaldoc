@@ -10,6 +10,7 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.LinksDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
@@ -17,7 +18,6 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.util.BooleanCallback;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -124,7 +124,7 @@ public class LinksPanel extends DocumentDetailTab {
 								ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 							}
 
-							SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+							LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 								@Override
 								public void execute(Boolean value) {
 									if (value) {
@@ -157,8 +157,8 @@ public class LinksPanel extends DocumentDetailTab {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				String documentId = listGrid.getSelectedRecord().getAttribute("documentId");
-				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + documentId
-						+ "&open=true", "_blank", "");
+				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+						+ documentId + "&open=true", "_blank", "");
 			}
 		});
 	}
