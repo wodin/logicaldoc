@@ -13,6 +13,7 @@ import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
@@ -115,7 +116,7 @@ public class DocumentContextMenu extends Menu {
 						ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+				LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {

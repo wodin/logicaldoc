@@ -13,6 +13,7 @@ import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.data.WorkflowsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
@@ -265,7 +266,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		delete.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+				LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {

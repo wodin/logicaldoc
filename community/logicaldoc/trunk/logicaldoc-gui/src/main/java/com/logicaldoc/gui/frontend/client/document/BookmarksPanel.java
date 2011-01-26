@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.BookmarksDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
@@ -18,7 +19,6 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.util.BooleanCallback;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.validator.LengthRangeValidator;
@@ -198,7 +198,7 @@ public class BookmarksPanel extends VLayout {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+				LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {

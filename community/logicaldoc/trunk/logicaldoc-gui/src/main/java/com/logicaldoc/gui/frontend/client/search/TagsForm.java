@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.TagService;
 import com.logicaldoc.gui.frontend.client.services.TagServiceAsync;
@@ -212,7 +213,7 @@ public class TagsForm extends VLayout {
 			delete.setTitle(I18N.message("ddelete"));
 			delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 				public void onClick(MenuItemClickEvent event) {
-					SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+					LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 						@Override
 						public void execute(Boolean value) {
 							if (value) {

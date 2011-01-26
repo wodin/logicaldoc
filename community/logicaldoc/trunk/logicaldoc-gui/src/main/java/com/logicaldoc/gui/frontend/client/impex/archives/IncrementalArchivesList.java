@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.data.IncrementalArchivesDS;
 import com.logicaldoc.gui.common.client.formatters.DaysCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.frontend.client.impex.folders.ImportFolderDetailsPanel;
@@ -17,7 +18,6 @@ import com.logicaldoc.gui.frontend.client.services.ArchiveServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -193,7 +193,7 @@ public class IncrementalArchivesList extends VLayout {
 		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+				LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {

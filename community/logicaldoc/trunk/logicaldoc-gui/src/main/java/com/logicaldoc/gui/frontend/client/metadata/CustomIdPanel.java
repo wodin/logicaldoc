@@ -10,13 +10,13 @@ import com.logicaldoc.gui.common.client.beans.GUICustomId;
 import com.logicaldoc.gui.common.client.beans.GUISequence;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.CustomIdService;
 import com.logicaldoc.gui.frontend.client.services.CustomIdServiceAsync;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -215,7 +215,7 @@ public class CustomIdPanel extends VLayout {
 		clean.setTitle(I18N.message("clean"));
 		clean.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				SC.ask(I18N.message("question"), I18N.message("confirmclean"), new BooleanCallback() {
+				LD.ask(I18N.message("question"), I18N.message("confirmclean"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {

@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.data.WorkflowTriggersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -205,7 +206,7 @@ public class WorkflowsFolderPanel extends VLayout {
 		deleteTrigger.setTitle(I18N.message("ddelete"));
 		deleteTrigger.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+				LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {

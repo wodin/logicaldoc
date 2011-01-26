@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.FoldersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
@@ -169,7 +170,7 @@ public class FoldersNavigator extends TreeGrid {
 		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+				LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
