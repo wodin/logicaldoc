@@ -377,4 +377,8 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 	public boolean isReadOnly() {
 		return readOnly;
 	}
+
+	public DrawingPanel getDrawingPanel() {
+		return drawingPanel;
+	}
 }

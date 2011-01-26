@@ -1,5 +1,7 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -232,6 +234,15 @@ public class WorkflowToolstrip extends ToolStrip {
 					if (values.get("supervisor") != null)
 						currentWorkflow.setSupervisor((String) values.get("supervisor"));
 
+					//Order the rows as displayed to the user
+					int i = 0;
+					List<GUIWFState> states = new ArrayList<GUIWFState>();
+					for (i = 0; i < WorkflowToolstrip.this.designer.getDrawingPanel().getMembers().length; i++) {
+						WorkflowRow r = (WorkflowRow) WorkflowToolstrip.this.designer.getDrawingPanel().getMembers()[i];
+						states.add(r.getState().getWfState());
+					}
+					currentWorkflow.setStates(states.toArray(new GUIWFState[0]));
+
 					workflowService.deploy(Session.get().getSid(), currentWorkflow, new AsyncCallback<Void>() {
 						@Override
 						public void onFailure(Throwable caught) {
@@ -313,6 +324,15 @@ public class WorkflowToolstrip extends ToolStrip {
 			currentWorkflow.setReminderBody((String) values.get("reminderBody"));
 		if (values.get("supervisor") != null)
 			currentWorkflow.setSupervisor((String) values.get("supervisor"));
+
+		//Order the rows as displayed to the user
+		int i = 0;
+		List<GUIWFState> states = new ArrayList<GUIWFState>();
+		for (i = 0; i < designer.getDrawingPanel().getMembers().length; i++) {
+			WorkflowRow r = (WorkflowRow) designer.getDrawingPanel().getMembers()[i];
+			states.add(r.getState().getWfState());
+		}
+		currentWorkflow.setStates(states.toArray(new GUIWFState[0]));
 
 		workflowService.save(Session.get().getSid(), currentWorkflow, new AsyncCallback<GUIWorkflow>() {
 			@Override
