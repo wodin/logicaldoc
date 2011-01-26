@@ -12,7 +12,7 @@ public class Util {
 	public static String[] IMAGE_EXTS = new String[] { ".gif", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".png" };
 
 	public static String[] MEDIA_EXTS = new String[] { ".mp3", ".mp4", ".wav", ".avi", ".mpg", ".wmv", ".wma", ".asf",
-			".mov", ".rm", ".flv", ".aac", ".vlc", ".ogg", ".webm", ".swf" };
+			".mov", ".rm", ".flv", ".aac", ".vlc", ".ogg", ".webm", ".swf", ".mpeg", ".swf" };
 
 	/**
 	 * Generates HTML image code with style.
