@@ -9,12 +9,12 @@ import com.logicaldoc.gui.common.client.beans.GUIEmailRule;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.widgets.FolderChangeListener;
 import com.logicaldoc.gui.common.client.widgets.FolderSelector;
 import com.smartgwt.client.types.DragDataAction;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -241,7 +241,7 @@ public class AccountFiltersPanel extends AccountDetailsTab {
 		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+				LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {

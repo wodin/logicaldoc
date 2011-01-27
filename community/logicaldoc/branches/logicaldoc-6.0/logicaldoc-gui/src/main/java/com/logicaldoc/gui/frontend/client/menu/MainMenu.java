@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.personal.ChangePassword;
@@ -99,7 +100,7 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 		exitItem.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				SC.ask(I18N.message("question"), I18N.message("confirmexit"), new BooleanCallback() {
+				LD.ask(I18N.message("question"), I18N.message("confirmexit"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {

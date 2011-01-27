@@ -11,14 +11,13 @@ import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.TagService;
 import com.logicaldoc.gui.frontend.client.services.TagServiceAsync;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
-import com.smartgwt.client.widgets.Dialog;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.PickerIcon;
@@ -177,10 +176,7 @@ public class TagsForm extends VLayout {
 			rename.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 
 				public void onClick(MenuItemClickEvent event) {
-					Dialog dialog = new Dialog();
-					dialog.setWidth(200);
-
-					SC.askforValue(I18N.message("rename"), I18N.message("newtag"), "", new ValueCallback() {
+					LD.askforValue(I18N.message("rename"), I18N.message("newtag"), "", "200", new ValueCallback() {
 						@Override
 						public void execute(final String value) {
 							if (value == null || "".equals(value.trim()))
@@ -203,7 +199,7 @@ public class TagsForm extends VLayout {
 										}
 									});
 						}
-					}, dialog);
+					});
 				}
 			});
 			contextMenu.addItem(rename);
@@ -212,7 +208,7 @@ public class TagsForm extends VLayout {
 			delete.setTitle(I18N.message("ddelete"));
 			delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 				public void onClick(MenuItemClickEvent event) {
-					SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+					LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 						@Override
 						public void execute(Boolean value) {
 							if (value) {

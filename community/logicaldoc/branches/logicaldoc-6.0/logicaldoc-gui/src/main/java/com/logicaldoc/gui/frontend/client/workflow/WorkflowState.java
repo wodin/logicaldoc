@@ -3,10 +3,9 @@ package com.logicaldoc.gui.frontend.client.workflow;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
-import com.smartgwt.client.widgets.Dialog;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -77,10 +76,7 @@ public class WorkflowState extends VLayout {
 
 			@Override
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				Dialog dialog = new Dialog();
-				dialog.setWidth(200);
-
-				SC.askforValue(I18N.message("addtransition"), "<b>" + I18N.message("name") + ":</b>", "",
+				LD.askforValue(I18N.message("addtransition"), "<b>" + I18N.message("name") + ":</b>", "", "200",
 						new ValueCallback() {
 							@Override
 							public void execute(String value) {
@@ -89,7 +85,7 @@ public class WorkflowState extends VLayout {
 
 								workflowDesigner.onAddTransition(getWfState(), null, value);
 							}
-						}, dialog);
+						});
 			}
 		});
 
