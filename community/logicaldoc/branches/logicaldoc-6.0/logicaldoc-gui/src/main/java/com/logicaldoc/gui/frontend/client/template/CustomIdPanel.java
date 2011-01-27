@@ -10,13 +10,13 @@ import com.logicaldoc.gui.common.client.beans.GUICustomId;
 import com.logicaldoc.gui.common.client.beans.GUISequence;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.CustomIdService;
 import com.logicaldoc.gui.frontend.client.services.CustomIdServiceAsync;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -40,7 +40,8 @@ import com.smartgwt.client.widgets.tab.TabSet;
  * @since 6.0
  */
 public class CustomIdPanel extends VLayout {
-	private CustomIdServiceAsync service = (CustomIdServiceAsync) GWT.create(CustomIdService.class);
+	private CustomIdServiceAsync service = (CustomIdServiceAsync) GWT
+			.create(CustomIdService.class);
 
 	private ListGrid schemes;
 
@@ -63,33 +64,36 @@ public class CustomIdPanel extends VLayout {
 		setupSchemesPanel(schemesData);
 		setupSequencesPanel(sequencesData);
 
-		VLayout sc=new VLayout();
-		HTMLFlow hint=new HTMLFlow(I18N.message("customidhint"));
+		VLayout sc = new VLayout();
+		HTMLFlow hint = new HTMLFlow(I18N.message("customidhint"));
 		hint.setMargin(3);
 		sc.addMember(hint);
 		sc.addMember(schemes);
-		
-		
+
 		schemesTab.setPane(sc);
 		sequencesTab.setPane(sequences);
 	}
 
 	private void setupSchemesPanel(GUICustomId[] data) {
-		ListGridField template = new ListGridField("templateName", I18N.message("template"));
+		ListGridField template = new ListGridField("templateName",
+				I18N.message("template"));
 		template.setWidth(120);
 		template.setCanEdit(false);
 
-		ListGridField scheme = new ListGridField("scheme", I18N.message("scheme"));
+		ListGridField scheme = new ListGridField("scheme",
+				I18N.message("scheme"));
 		scheme.setWidth(200);
 		scheme.setRequired(true);
 		scheme.setCellFormatter(new CellFormatter() {
 			@Override
-			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
+			public String format(Object value, ListGridRecord record,
+					int rowNum, int colNum) {
 				return Util.strip(record.getAttributeAsString("scheme"));
 			}
 		});
 
-		final ListGridField regenerate = new ListGridField("regenerate", I18N.message("regenerateaftercheckin"));
+		final ListGridField regenerate = new ListGridField("regenerate",
+				I18N.message("regenerateaftercheckin"));
 		regenerate.setWidth(150);
 		regenerate.setType(ListGridFieldType.BOOLEAN);
 
@@ -107,8 +111,10 @@ public class CustomIdPanel extends VLayout {
 		if (data != null)
 			for (GUICustomId cid : data) {
 				ListGridRecord record = new ListGridRecord();
-				record.setAttribute("templateId", Long.toString(cid.getTemplateId()));
-				record.setAttribute("templateName", Util.strip(cid.getTemplateName()));
+				record.setAttribute("templateId",
+						Long.toString(cid.getTemplateId()));
+				record.setAttribute("templateName",
+						Util.strip(cid.getTemplateName()));
 				if (cid.getScheme() != null)
 					record.setAttribute("scheme", cid.getScheme());
 				record.setAttribute("regenerate", cid.isRegenerate());
@@ -131,35 +137,40 @@ public class CustomIdPanel extends VLayout {
 			public void onEditComplete(EditCompleteEvent event) {
 				GUICustomId cid = new GUICustomId();
 				ListGridRecord record = schemes.getRecord(event.getRowNum());
-				cid.setTemplateId(Long.parseLong(record.getAttribute("templateId")));
+				cid.setTemplateId(Long.parseLong(record
+						.getAttribute("templateId")));
 				cid.setRegenerate(record.getAttributeAsBoolean("regenerate"));
 				cid.setScheme(record.getAttributeAsString("scheme"));
 
-				service.save(Session.get().getSid(), cid, new AsyncCallback<Void>() {
+				service.save(Session.get().getSid(), cid,
+						new AsyncCallback<Void>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
 
-					@Override
-					public void onSuccess(Void ret) {
-					}
-				});
+							@Override
+							public void onSuccess(Void ret) {
+							}
+						});
 			}
 		});
 	}
 
 	private void setupSequencesPanel(GUISequence[] data) {
-		ListGridField frequency = new ListGridField("frequency", I18N.message("frequency"));
+		ListGridField frequency = new ListGridField("frequency",
+				I18N.message("frequency"));
 		frequency.setWidth(80);
 		frequency.setCanEdit(false);
 
-		ListGridField template = new ListGridField("template", I18N.message("template"));
+		ListGridField template = new ListGridField("template",
+				I18N.message("template"));
 		template.setWidth(200);
 		template.setCanEdit(false);
 
-		final ListGridField value = new ListGridField("value", I18N.message("value"));
+		final ListGridField value = new ListGridField("value",
+				I18N.message("value"));
 		value.setWidth(80);
 		value.setType(ListGridFieldType.INTEGER);
 		value.setRequired(true);
@@ -178,7 +189,8 @@ public class CustomIdPanel extends VLayout {
 			for (GUISequence cid : data) {
 				ListGridRecord record = new ListGridRecord();
 				record.setAttribute("template", Util.strip(cid.getTemplate()));
-				record.setAttribute("frequency", I18N.message(cid.getFrequency()));
+				record.setAttribute("frequency",
+						I18N.message(cid.getFrequency()));
 				record.setAttribute("year", cid.getYear());
 				record.setAttribute("month", cid.getMonth());
 				record.setAttribute("id", cid.getId());
@@ -193,8 +205,10 @@ public class CustomIdPanel extends VLayout {
 			@Override
 			public void onEditComplete(EditCompleteEvent event) {
 				ListGridRecord record = sequences.getRecord(event.getRowNum());
-				service.resetSequence(Session.get().getSid(), Long.parseLong(record.getAttribute("id")),
-						(Integer) record.getAttributeAsInt("value"), new AsyncCallback<Void>() {
+				service.resetSequence(Session.get().getSid(),
+						Long.parseLong(record.getAttribute("id")),
+						(Integer) record.getAttributeAsInt("value"),
+						new AsyncCallback<Void>() {
 							@Override
 							public void onFailure(Throwable caught) {
 								Log.serverError(caught);
@@ -215,31 +229,43 @@ public class CustomIdPanel extends VLayout {
 		clean.setTitle(I18N.message("clean"));
 		clean.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				SC.ask(I18N.message("question"), I18N.message("confirmclean"), new BooleanCallback() {
-					@Override
-					public void execute(Boolean value) {
-						if (value) {
-							final ListGridRecord record = schemes.getSelectedRecord();
-							service.delete(Session.get().getSid(),
-									Long.parseLong(record.getAttributeAsString("templateId")),
-									new AsyncCallback<Void>() {
+				LD.ask(I18N.message("question"), I18N.message("confirmclean"),
+						new BooleanCallback() {
+							@Override
+							public void execute(Boolean value) {
+								if (value) {
+									final ListGridRecord record = schemes
+											.getSelectedRecord();
+									service.delete(
+											Session.get().getSid(),
+											Long.parseLong(record
+													.getAttributeAsString("templateId")),
+											new AsyncCallback<Void>() {
 
-										@Override
-										public void onFailure(Throwable caught) {
-											Log.serverError(caught);
-										}
+												@Override
+												public void onFailure(
+														Throwable caught) {
+													Log.serverError(caught);
+												}
 
-										@Override
-										public void onSuccess(Void ret) {
-											schemes.getSelectedRecord().setAttribute("scheme", (String) null);
-											schemes.getSelectedRecord().setAttribute("regenerate", false);
-											schemes.updateData(record);
-											schemes.refreshRow(schemes.getRecordIndex(record));
-										}
-									});
-						}
-					}
-				});
+												@Override
+												public void onSuccess(Void ret) {
+													schemes.getSelectedRecord()
+															.setAttribute(
+																	"scheme",
+																	(String) null);
+													schemes.getSelectedRecord()
+															.setAttribute(
+																	"regenerate",
+																	false);
+													schemes.updateData(record);
+													schemes.refreshRow(schemes
+															.getRecordIndex(record));
+												}
+											});
+								}
+							}
+						});
 			}
 		});
 
