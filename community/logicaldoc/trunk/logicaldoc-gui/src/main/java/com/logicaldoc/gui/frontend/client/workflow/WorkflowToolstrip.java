@@ -22,7 +22,6 @@ import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
-import com.smartgwt.client.widgets.Dialog;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -146,11 +145,8 @@ public class WorkflowToolstrip extends ToolStrip {
 		clone.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				Dialog dialog = new Dialog();
-				dialog.setWidth(200);
-
 				// Ask for new name
-				SC.askforValue(I18N.message("clone"), I18N.message("newname"), "", new ValueCallback() {
+				LD.askforValue(I18N.message("clone"), I18N.message("newname"), "", "200", new ValueCallback() {
 					@Override
 					public void execute(String value) {
 						if (value == null || "".equals(value.trim()))
@@ -161,7 +157,7 @@ public class WorkflowToolstrip extends ToolStrip {
 						WorkflowToolstrip.this.designer.getAccordion().setWorkflowName(value);
 						onSave();
 					}
-				}, dialog);
+				});
 			}
 		});
 		addButton(clone);
@@ -235,7 +231,7 @@ public class WorkflowToolstrip extends ToolStrip {
 					if (values.get("supervisor") != null)
 						currentWorkflow.setSupervisor((String) values.get("supervisor"));
 
-					//Order the rows as displayed to the user
+					// Order the rows as displayed to the user
 					int i = 0;
 					List<GUIWFState> states = new ArrayList<GUIWFState>();
 					for (i = 0; i < WorkflowToolstrip.this.designer.getDrawingPanel().getMembers().length; i++) {
@@ -326,7 +322,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		if (values.get("supervisor") != null)
 			currentWorkflow.setSupervisor((String) values.get("supervisor"));
 
-		//Order the rows as displayed to the user
+		// Order the rows as displayed to the user
 		int i = 0;
 		List<GUIWFState> states = new ArrayList<GUIWFState>();
 		for (i = 0; i < designer.getDrawingPanel().getMembers().length; i++) {

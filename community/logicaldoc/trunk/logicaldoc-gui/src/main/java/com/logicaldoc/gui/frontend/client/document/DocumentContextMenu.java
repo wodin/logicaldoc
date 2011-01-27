@@ -30,7 +30,6 @@ import com.logicaldoc.gui.frontend.client.workflow.WorkflowDetailsDialog;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
-import com.smartgwt.client.widgets.Dialog;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.menu.Menu;
@@ -231,36 +230,35 @@ public class DocumentContextMenu extends Menu {
 					ids[j] = Long.parseLong(selection[j].getAttribute("id"));
 				}
 
-				Dialog dialogProperties = new Dialog();
-				dialogProperties.setWidth("50%");
-				SC.askforValue(I18N.message("warning"), I18N.message("immutableadvice"), "", new ValueCallback() {
+				LD.askforValue(I18N.message("warning"), I18N.message("immutableadvice"), "", "50%",
+						new ValueCallback() {
 
-					@Override
-					public void execute(String value) {
-						if (value == null)
-							return;
+							@Override
+							public void execute(String value) {
+								if (value == null)
+									return;
 
-						if (value.isEmpty())
-							SC.warn(I18N.message("commentrequired"));
-						else
-							documentService.makeImmutable(Session.get().getSid(), ids, value,
-									new AsyncCallback<Void>() {
-										@Override
-										public void onFailure(Throwable caught) {
-											Log.serverError(caught);
-										}
+								if (value.isEmpty())
+									SC.warn(I18N.message("commentrequired"));
+								else
+									documentService.makeImmutable(Session.get().getSid(), ids, value,
+											new AsyncCallback<Void>() {
+												@Override
+												public void onFailure(Throwable caught) {
+													Log.serverError(caught);
+												}
 
-										@Override
-										public void onSuccess(Void result) {
-											for (ListGridRecord record : selection) {
-												record.setAttribute("immutable", "stop");
-												list.refreshRow(list.getRecordIndex(record));
-											}
-										}
-									});
-					}
+												@Override
+												public void onSuccess(Void result) {
+													for (ListGridRecord record : selection) {
+														record.setAttribute("immutable", "stop");
+														list.refreshRow(list.getRecordIndex(record));
+													}
+												}
+											});
+							}
 
-				}, dialogProperties);
+						});
 			}
 		});
 
@@ -275,9 +273,7 @@ public class DocumentContextMenu extends Menu {
 					ids[j] = Long.parseLong(selection[j].getAttribute("id"));
 				}
 
-				Dialog dialogProperties = new Dialog();
-				dialogProperties.setWidth("50%");
-				SC.askforValue(I18N.message("info"), I18N.message("lockadvice"), "", new ValueCallback() {
+				LD.askforValue(I18N.message("info"), I18N.message("lockadvice"), "", "50%", new ValueCallback() {
 
 					@Override
 					public void execute(String value) {
@@ -301,7 +297,7 @@ public class DocumentContextMenu extends Menu {
 							});
 					}
 
-				}, dialogProperties);
+				});
 			}
 		});
 
