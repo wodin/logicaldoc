@@ -6,10 +6,12 @@ import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.BooleanCallback;
-import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.util.ValueCallback;
+import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VStack;
 
@@ -21,13 +23,17 @@ import com.smartgwt.client.widgets.layout.VStack;
  */
 public class LD {
 
+	/**
+	 * Show a dialog to confirm a operation.
+	 */
 	public static void ask(String title, String message, final BooleanCallback callback) {
 		final Window dialog = new Window();
 		dialog.setAutoCenter(true);
 		dialog.setIsModal(true);
+		dialog.setShowModalMask(true);
 		dialog.setShowHeader(true);
 		dialog.setWidth(330);
-		dialog.setHeight(150);
+		dialog.setHeight(120);
 		dialog.setAlign(Alignment.CENTER);
 		dialog.setAlign(VerticalAlignment.CENTER);
 
@@ -39,9 +45,8 @@ public class LD {
 
 		VStack container = new VStack();
 		container.setWidth("100%");
-		container.setMembersMargin(10);
-		container.setTop(8);
-		container.setMargin(4);
+		container.setMembersMargin(8);
+		container.setMargin(3);
 		container.setAlign(Alignment.CENTER);
 		container.setDefaultLayoutAlign(Alignment.CENTER);
 
@@ -55,7 +60,7 @@ public class LD {
 		text.setAlign(Alignment.CENTER);
 		textForm.setFields(text);
 
-		Button yes = new Button(I18N.message("yes"));
+		IButton yes = new IButton(I18N.message("yes"));
 		yes.setWidth(70);
 		yes.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
@@ -64,7 +69,7 @@ public class LD {
 			}
 		});
 
-		Button no = new Button(I18N.message("no"));
+		IButton no = new IButton(I18N.message("no"));
 		no.setWidth(70);
 		no.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
@@ -79,6 +84,77 @@ public class LD {
 		buttons.setHeight(20);
 		buttons.addMember(yes);
 		buttons.addMember(no);
+		buttons.setAlign(Alignment.CENTER);
+
+		container.addMember(textForm);
+		container.addMember(buttons);
+
+		dialog.addItem(container);
+		dialog.show();
+	}
+
+	/**
+	 * Show a dialog asking for a value to complete a operation.
+	 */
+	public static void askforValue(String title, String message, String defaultValue, String width,
+			final ValueCallback callback) {
+		final Window dialog = new Window();
+		dialog.setAutoCenter(true);
+		dialog.setIsModal(true);
+		dialog.setShowModalMask(true);
+		dialog.setShowHeader(true);
+		dialog.setWidth(330);
+		dialog.setHeight(140);
+		dialog.setAlign(Alignment.CENTER);
+		dialog.setAlign(VerticalAlignment.CENTER);
+
+		dialog.setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
+		dialog.setCanDragResize(false);
+		dialog.setCanDrag(true);
+		dialog.centerInPage();
+		dialog.setTitle(title);
+		if (width != null)
+			dialog.setWidth(width);
+
+		VStack container = new VStack();
+		container.setWidth("100%");
+		container.setMembersMargin(8);
+		container.setMargin(3);
+		container.setAlign(Alignment.CENTER);
+		container.setDefaultLayoutAlign(Alignment.CENTER);
+
+		DynamicForm textForm = new DynamicForm();
+		textForm.setTitleOrientation(TitleOrientation.TOP);
+		textForm.setNumCols(1);
+		final TextItem comment = ItemFactory.newTextItem("message", message, defaultValue);
+		comment.setWrapTitle(false);
+		comment.setWidth("100%");
+		textForm.setFields(comment);
+
+		IButton ok = new IButton(I18N.message("ok"));
+		ok.setWidth(70);
+		ok.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+				callback.execute(comment.getValue().toString());
+				dialog.destroy();
+			}
+		});
+
+		IButton cancel = new IButton(I18N.message("cancel"));
+		cancel.setWidth(70);
+		cancel.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+				callback.execute(null);
+				dialog.destroy();
+			}
+		});
+
+		HLayout buttons = new HLayout();
+		buttons.setMembersMargin(10);
+		buttons.setWidth100();
+		buttons.setHeight(20);
+		buttons.addMember(ok);
+		buttons.addMember(cancel);
 		buttons.setAlign(Alignment.CENTER);
 
 		container.addMember(textForm);

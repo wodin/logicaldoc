@@ -10,6 +10,7 @@ import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.services.LdapService;
 import com.logicaldoc.gui.frontend.client.services.LdapServiceAsync;
@@ -219,7 +220,7 @@ public class LdapPanel extends VLayout {
 		activedir.setTitle(I18N.message("activedirectory"));
 		activedir.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				SC.askforValue(I18N.message("activedirectory"), I18N.message("addomain"), new ValueCallback() {
+				LD.askforValue(I18N.message("activedirectory"), I18N.message("addomain"), "", "", new ValueCallback() {
 					@Override
 					public void execute(String value) {
 						String node = value.replaceAll("\\.", ",DC=");

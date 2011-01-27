@@ -16,7 +16,6 @@ import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
-import com.smartgwt.client.widgets.Dialog;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VStack;
 
@@ -80,9 +79,6 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 			TaskDialog taskDialog = new TaskDialog(this, workflow, wfState);
 			taskDialog.show();
 		} else {
-			Dialog dialog = new Dialog();
-			dialog.setWidth(200);
-
 			String typeString = "";
 			if (wfState.getType() == TYPE_JOIN) {
 				typeString = I18N.message("join");
@@ -92,8 +88,8 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 				typeString = I18N.message("endstate");
 			}
 
-			SC.askforValue(I18N.message("editworkflowstate", typeString), "<b>" + I18N.message("name") + ":</b>",
-					wfState.getName(), new ValueCallback() {
+			LD.askforValue(I18N.message("editworkflowstate", typeString), "<b>" + I18N.message("name") + ":</b>",
+					wfState.getName(), "200", new ValueCallback() {
 						@Override
 						public void execute(String value) {
 							if (value == null || "".equals(value.trim()))
@@ -118,7 +114,7 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 							AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
 
 						}
-					}, dialog);
+					});
 		}
 	}
 

@@ -388,7 +388,7 @@ public class FoldersNavigator extends TreeGrid {
 		Dialog dialog = new Dialog();
 		dialog.setWidth(200);
 
-		SC.askforValue(I18N.message("newfolder"), I18N.message("newfoldername"), I18N.message("newfolder"),
+		LD.askforValue(I18N.message("newfolder"), I18N.message("newfoldername"), I18N.message("newfolder"), "200px",
 				new ValueCallback() {
 					@Override
 					public void execute(String value) {
@@ -422,7 +422,7 @@ public class FoldersNavigator extends TreeGrid {
 							}
 						});
 					}
-				}, dialog);
+				});
 	}
 
 	private void onPaste() {
