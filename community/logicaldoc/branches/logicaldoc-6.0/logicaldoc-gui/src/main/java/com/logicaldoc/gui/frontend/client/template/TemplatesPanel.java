@@ -7,6 +7,7 @@ import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.frontend.client.services.TemplateService;
@@ -15,7 +16,6 @@ import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -43,7 +43,8 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  * @since 6.0
  */
 public class TemplatesPanel extends VLayout {
-	private TemplateServiceAsync service = (TemplateServiceAsync) GWT.create(TemplateService.class);
+	private TemplateServiceAsync service = (TemplateServiceAsync) GWT
+			.create(TemplateService.class);
 
 	private Layout listing;
 
@@ -57,7 +58,8 @@ public class TemplatesPanel extends VLayout {
 
 	private ToolStrip toolStrip;
 
-	final static Canvas SELECT_TEMPLATE = new HTMLPanel("&nbsp;" + I18N.message("selecttemplate"));
+	final static Canvas SELECT_TEMPLATE = new HTMLPanel("&nbsp;"
+			+ I18N.message("selecttemplate"));
 
 	public TemplatesPanel() {
 		setWidth100();
@@ -85,11 +87,13 @@ public class TemplatesPanel extends VLayout {
 		ListGridField id = new ListGridField("id", 50);
 		id.setHidden(true);
 
-		ListGridField name = new ListGridField("name", I18N.message("name"), 200);
+		ListGridField name = new ListGridField("name", I18N.message("name"),
+				200);
 		name.setCanFilter(true);
 		name.setCanSort(false);
 
-		ListGridField description = new ListGridField("description", I18N.message("description"), 300);
+		ListGridField description = new ListGridField("description",
+				I18N.message("description"), 300);
 		description.setCanFilter(true);
 		description.setCanSort(false);
 
@@ -143,7 +147,8 @@ public class TemplatesPanel extends VLayout {
 			public void onSelectionChanged(SelectionEvent event) {
 				Record record = list.getSelectedRecord();
 				if (record != null)
-					service.getTemplate(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
+					service.getTemplate(Session.get().getSid(),
+							Long.parseLong(record.getAttributeAsString("id")),
 							new AsyncCallback<GUITemplate>() {
 
 								@Override
@@ -162,7 +167,8 @@ public class TemplatesPanel extends VLayout {
 		list.addDataArrivedHandler(new DataArrivedHandler() {
 			@Override
 			public void onDataArrived(DataArrivedEvent event) {
-				infoPanel.setMessage(I18N.message("showtemplates", Integer.toString(list.getTotalRows())));
+				infoPanel.setMessage(I18N.message("showtemplates",
+						Integer.toString(list.getTotalRows())));
 			}
 		});
 
@@ -182,26 +188,30 @@ public class TemplatesPanel extends VLayout {
 		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
-					@Override
-					public void execute(Boolean value) {
-						if (value) {
-							service.delete(Session.get().getSid(), id, new AsyncCallback<Void>() {
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+				LD.ask(I18N.message("question"), I18N.message("confirmclean"),
+						new BooleanCallback() {
+							@Override
+							public void execute(Boolean value) {
+								if (value) {
+									service.delete(Session.get().getSid(), id,
+											new AsyncCallback<Void>() {
+												@Override
+												public void onFailure(
+														Throwable caught) {
+													Log.serverError(caught);
+												}
 
-								@Override
-								public void onSuccess(Void result) {
-									list.removeSelectedData();
-									list.deselectAllRecords();
-									showTemplateDetails(null);
+												@Override
+												public void onSuccess(
+														Void result) {
+													list.removeSelectedData();
+													list.deselectAllRecords();
+													showTemplateDetails(null);
+												}
+											});
 								}
-							});
-						}
-					}
-				});
+							}
+						});
 			}
 		});
 
@@ -234,7 +244,8 @@ public class TemplatesPanel extends VLayout {
 		record.setAttribute("description", template.getDescription());
 
 		if (record.getAttributeAsString("id") != null
-				&& (template.getId() == Long.parseLong(record.getAttributeAsString("id")))) {
+				&& (template.getId() == Long.parseLong(record
+						.getAttributeAsString("id")))) {
 			list.updateData(record);
 		} else {
 			// Append a new record
