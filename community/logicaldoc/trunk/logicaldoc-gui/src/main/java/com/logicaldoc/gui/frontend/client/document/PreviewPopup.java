@@ -95,7 +95,7 @@ public class PreviewPopup extends Window {
 				Canvas mediaCanvas = new Canvas();
 				media = PlayerUtil.getPlayer(plugin, GWT.getHostPageBaseURL() + "download?sid="
 						+ Session.get().getSid() + "&docId=" + docId + "&open=true&filename=" + filename, true,
-						getHeight() - 25 + "px", getWidth() - 15 + "px");
+						getHeight() - 32 + "px", getWidth() - 17 + "px");
 				mediaCanvas.addChild(media);
 				setCanDragResize(false);
 				addItem(mediaCanvas);
