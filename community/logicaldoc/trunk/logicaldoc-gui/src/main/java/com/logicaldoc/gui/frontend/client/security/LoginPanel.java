@@ -204,8 +204,8 @@ public class LoginPanel extends VLayout {
 							FoldersNavigator.get().selectFolder(Constants.DOCUMENTS_FOLDERID);
 
 							GUIUser user = session.getUser();
-							if (user.getQuotaCount() >= user.getQuota())
-								Log.warn("Reached your maximum documents uploaded quota", null);
+							if (user.getQuotaCount() >= user.getQuota() && user.getQuota() >= 0)
+								Log.warn(I18N.message("quotadocsexceeded"), null);
 						} else if (session.getUser() != null && session.getUser().isExpired()) {
 							new ChangePassword(session.getUser(), "needtochangepassword").show();
 						} else {
