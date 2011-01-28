@@ -29,7 +29,7 @@ public class HibernateSystemMessageDAOTest extends AbstractCoreTCase {
 		super.setUp();
 
 		// Retrieve the instance under test from spring context.
-		// Make sure that it is an HibernateSystemMessageDAOo
+		// Make sure that it is an HibernateSystemMessageDAO
 		dao = (SystemMessageDAO) context.getBean("SystemMessageDAO");
 	}
 
