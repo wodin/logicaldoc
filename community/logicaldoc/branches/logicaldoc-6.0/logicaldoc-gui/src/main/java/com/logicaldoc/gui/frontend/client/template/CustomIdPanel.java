@@ -53,13 +53,12 @@ public class CustomIdPanel extends VLayout {
 		setMembersMargin(5);
 
 		TabSet tabs = new TabSet();
-		addMember(tabs);
-
+		
 		Tab schemesTab = new Tab();
 		schemesTab.setTitle(I18N.message("customid"));
 		Tab sequencesTab = new Tab();
 		sequencesTab.setTitle(I18N.message("sequences"));
-		tabs.setTabs(schemesTab, sequencesTab);
+		
 
 		setupSchemesPanel(schemesData);
 		setupSequencesPanel(sequencesData);
@@ -72,6 +71,9 @@ public class CustomIdPanel extends VLayout {
 
 		schemesTab.setPane(sc);
 		sequencesTab.setPane(sequences);
+		
+		tabs.setTabs(schemesTab, sequencesTab);
+		addMember(tabs);
 	}
 
 	private void setupSchemesPanel(GUICustomId[] data) {
