@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>38</version>
+  <version>39</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -78,7 +78,7 @@
     <spring.version>3.0.4.RELEASE</spring.version>
     <hibernate.version>3.3.2.GA</hibernate.version>
     <lucene.version>3.0.3</lucene.version>
-    <gwt.version>2.0.4</gwt.version>
+    <gwt.version>2.1.1</gwt.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -492,12 +492,12 @@
       <dependency>
         <groupId>com.smartgwt</groupId>
         <artifactId>smartgwt</artifactId>
-        <version>2.2</version>
+        <version>2.4</version>
       </dependency>
       <dependency>
         <groupId>com.smartgwt</groupId>
         <artifactId>smartgwt-skins</artifactId>
-        <version>2.2</version>
+        <version>2.4</version>
       </dependency>
       <dependency>
         <groupId>com.bramosystems.oss.player</groupId>
