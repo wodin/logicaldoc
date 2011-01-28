@@ -127,7 +127,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
-        <version>1.2</version>
+        <version>2.1.0-1</version>
         <configuration>
           <webappDirectory>./war</webappDirectory>
           <webXml>./war/WEB-INF/web.xml</webXml>
