@@ -220,7 +220,7 @@ public class LdapPanel extends VLayout {
 		activedir.setTitle(I18N.message("activedirectory"));
 		activedir.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				LD.askforValue(I18N.message("activedirectory"), I18N.message("addomain"), "", "", new ValueCallback() {
+				LD.askforValue(I18N.message("activedirectory"), I18N.message("addomain"), "", "200", new ValueCallback() {
 					@Override
 					public void execute(String value) {
 						String node = value.replaceAll("\\.", ",DC=");
