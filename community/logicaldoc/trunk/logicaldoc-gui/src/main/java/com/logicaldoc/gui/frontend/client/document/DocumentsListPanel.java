@@ -17,8 +17,11 @@ import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
+import com.smartgwt.client.widgets.events.DrawEvent;
+import com.smartgwt.client.widgets.events.DrawHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -258,6 +261,17 @@ public class DocumentsListPanel extends VLayout {
 					DocumentsListPanel.this.hiliteDocument(hiliteDoc);
 			}
 		});
+
+		final String previouslySavedState = (String) Offline.get("doclist");
+		if (previouslySavedState != null) {
+			list.addDrawHandler(new DrawHandler() {
+				@Override
+				public void onDraw(DrawEvent event) {
+					// restore any previously saved view state for this grid
+					list.setViewState(previouslySavedState);
+				}
+			});
+		}
 	}
 
 	@Override
