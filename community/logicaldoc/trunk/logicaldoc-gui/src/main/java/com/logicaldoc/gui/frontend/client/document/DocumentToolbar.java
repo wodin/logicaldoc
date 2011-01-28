@@ -398,6 +398,16 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
+		addSeparator();
+		ToolStripButton saveGrid = new ToolStripButton(I18N.message("savegrid"));
+		saveGrid.setAutoFit(true);
+		addButton(saveGrid);
+		saveGrid.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				DocumentsPanel.get().saveGrid();
+			}
+		});
+
 		update(null);
 		Session.get().addFolderObserver(this);
 	}

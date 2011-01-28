@@ -26,10 +26,13 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ExpansionMode;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
+import com.smartgwt.client.widgets.events.DrawEvent;
+import com.smartgwt.client.widgets.events.DrawHandler;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -273,6 +276,17 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			}
 		});
 
+		final String previouslySavedState = (String) Offline.get("hitslist");
+		if (previouslySavedState != null) {
+			list.addDrawHandler(new DrawHandler() {
+				@Override
+				public void onDraw(DrawEvent event) {
+					// restore any previously saved view state for this grid
+					list.setViewState(previouslySavedState);
+				}
+			});
+		}
+
 		// Prepare the toolbar with some buttons
 		setupToolbar(options.getType());
 
@@ -379,6 +393,18 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 				}
 			});
 		}
+
+		ToolStripButton saveGrid = new ToolStripButton(I18N.message("savegrid"));
+		saveGrid.setAutoFit(true);
+		saveGrid.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				String viewState = list.getViewState();
+				Offline.put("hitslist", viewState);
+				Log.info(I18N.message("settingssaved"), null);
+			}
+		});
+		toolStrip.addSeparator();
+		toolStrip.addButton(saveGrid);
 
 		final ToolStripButton toggle = new ToolStripButton();
 		if (SearchMenu.get().getWidth() > 0)
