@@ -442,7 +442,7 @@
 		<property name="groupDAO" ref="GroupDAO" />
 		<property name="config" ref="ContextProperties" />
 		<property name="sender" ref="EMailSender" />
-		<property name="userDao" ref="UserDAO" />
+		<property name="userDAO" ref="UserDAO" />
 	</bean>
 
 	<bean id="StatsCollectorJob"
