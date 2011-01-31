@@ -84,6 +84,7 @@ public class StatsCollector extends Task {
 		String userlanguage = System.getProperty("user.language");
 		String usercountry = System.getProperty("user.country");
 		String javaarch = System.getProperty("sun.arch.data.model");
+		String dbms = config.getProperty("jdbc.dbms");
 
 		log.debug("Collected environment data");
 
@@ -230,6 +231,7 @@ public class StatsCollector extends Task {
 			post.setParameter("java_version", javaversion != null ? javaversion : "");
 			post.setParameter("java_vendor", javavendor != null ? javavendor : "");
 			post.setParameter("java_arch", javaarch != null ? javaarch : "");
+			post.setParameter("dbms", dbms != null ? dbms : "");
 
 			post.setParameter("os_name", osname != null ? osname : "");
 			post.setParameter("os_version", osversion != null ? osversion : "");
