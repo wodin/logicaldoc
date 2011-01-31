@@ -33,7 +33,7 @@ import com.logicaldoc.util.io.FileUtil;
 public class FSStorer implements Storer {
 	protected static Log log = LogFactory.getLog(FSStorer.class);
 
-	private ContextProperties config;
+	protected ContextProperties config;
 
 	public FSStorer() {
 	}
@@ -58,8 +58,8 @@ public class FSStorer implements Storer {
 
 	@Override
 	public File getDirectory(long docId) {
-		String path = StringUtil.split(Long.toString(docId), '/', 3);
-		path = config.getPropertyWithSubstitutions("conf.docdir") + "/" + path + "/doc";
+		String relativePath = computeRelativePath(docId);
+		String path = config.getPropertyWithSubstitutions("conf.docdir") + "/" + relativePath;
 		return new File(path);
 	}
 
@@ -164,5 +164,13 @@ public class FSStorer implements Storer {
 			size = FileUtils.sizeOfDirectory(docDir);
 
 		return size;
+	}
+
+	/**
+	 * Computes the relative path of a document's folder inside the storage
+	 * root.
+	 */
+	protected String computeRelativePath(long docId) {
+		return StringUtil.split(Long.toString(docId), '/', 3) + "/doc";
 	}
 }
