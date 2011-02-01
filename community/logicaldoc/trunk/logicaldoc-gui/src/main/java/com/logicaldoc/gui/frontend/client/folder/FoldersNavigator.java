@@ -106,8 +106,6 @@ public class FoldersNavigator extends TreeGrid {
 							@Override
 							public void onSuccess(Void result) {
 								DocumentsPanel.get().onFolderSelect(Session.get().getCurrentFolder());
-//								TreeNode node = new TreeNode(Session.get().getCurrentFolder().getName());
-//								getTree().reloadChildren(node);
 								Log.debug("Drag&Drop operation completed.");
 							}
 						});
@@ -125,8 +123,9 @@ public class FoldersNavigator extends TreeGrid {
 		addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				service.getFolder(Session.get().getSid(), Long.parseLong(event.getRecord().getAttributeAsString("folderId")),
-						true, new AsyncCallback<GUIFolder>() {
+				service.getFolder(Session.get().getSid(),
+						Long.parseLong(event.getRecord().getAttributeAsString("folderId")), true,
+						new AsyncCallback<GUIFolder>() {
 
 							@Override
 							public void onFailure(Throwable caught) {
