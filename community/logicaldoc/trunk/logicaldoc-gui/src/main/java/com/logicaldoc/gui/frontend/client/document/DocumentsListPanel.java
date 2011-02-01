@@ -191,6 +191,10 @@ public class DocumentsListPanel extends VLayout {
 		list.setFilterOnKeypress(true);
 		dataSource = new DocumentsDS(folder.getId(), null, max, null, null);
 		list.setDataSource(dataSource);
+
+		list.setCanDrag(true);
+		list.setCanDragRecordsOut(true);
+
 		list.setFields(indexed, locked, immutable, signed, icon, filename, title, lastModified, type, size, version,
 				publisher, published, creator, created, sourceDate, sourceAuthor, customId);
 

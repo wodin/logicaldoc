@@ -37,7 +37,7 @@ public class MockFoldersDataServlet extends HttpServlet {
 		if (parent == Constants.ROOT_FOLDERID) {
 			// Add the 'Documents' root
 			writer.print("<folder>");
-			writer.print("<id>5</id>");
+			writer.print("<folderId>5</folderId>");
 			writer.print("<parent>" + parent + "</parent>");
 			writer.print("<name>/</name>");
 			writer.print("<" + Constants.PERMISSION_ADD + ">true</" + Constants.PERMISSION_ADD + ">");
@@ -49,7 +49,7 @@ public class MockFoldersDataServlet extends HttpServlet {
 		} else {
 			for (int i = 0; i < 10; i++) {
 				writer.print("<folder>");
-				writer.print("<id>" + parent + "" + i + "</id>");
+				writer.print("<folderId>" + parent + "" + i + "</folderId>");
 				writer.print("<parent>" + parent + "</parent>");
 				writer.print("<name>Folder " + parent + "" + i + "</name>");
 				writer.print("<" + Constants.PERMISSION_ADD + ">true</" + Constants.PERMISSION_ADD + ">");

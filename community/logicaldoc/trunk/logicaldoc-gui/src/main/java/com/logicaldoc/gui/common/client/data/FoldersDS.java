@@ -31,13 +31,13 @@ public class FoldersDS extends DataSource {
 		setRecordXPath("/list/folder");
 		DataSourceTextField nameField = new DataSourceTextField("name", I18N.message("name"), 255);
 
-		DataSourceTextField folderId = new DataSourceTextField("id", I18N.message("id"));
+		DataSourceTextField folderId = new DataSourceTextField("folderId", I18N.message("id"));
 		folderId.setPrimaryKey(true);
 		folderId.setRequired(true);
 
 		DataSourceTextField parentId = new DataSourceTextField("parent", "Parent ID");
 		parentId.setRequired(true);
-		parentId.setForeignKey(dsId + ".id");
+		parentId.setForeignKey(dsId + ".folderId");
 		parentId.setRootValue("-1");
 
 		setFields(nameField, folderId, parentId);

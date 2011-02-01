@@ -59,7 +59,7 @@ public class FoldersDataServlet extends HttpServlet {
 			if (parent == Constants.ROOT_FOLDERID && dao.isReadEnable(Folder.ROOTID, session.getUserId())) {
 				// Add the 'Documents' root
 				writer.print("<folder>");
-				writer.print("<id>" + Folder.ROOTID + "</id>");
+				writer.print("<folderId>" + Folder.ROOTID + "</folderId>");
 				writer.print("<parent>" + parent + "</parent>");
 				writer.print("<name>/</name>");
 				writer.print("</folder>");
@@ -86,7 +86,7 @@ public class FoldersDataServlet extends HttpServlet {
 			 */
 			for (Folder folder : folders) {
 				writer.print("<folder>");
-				writer.print("<id>" + folder.getId() + "</id>");
+				writer.print("<folderId>" + folder.getId() + "</folderId>");
 				writer.print("<parent>" + folder.getParentId() + "</parent>");
 				writer.print("<name><![CDATA[" + folder.getName() + "]]></name>");
 				writer.print("</folder>");

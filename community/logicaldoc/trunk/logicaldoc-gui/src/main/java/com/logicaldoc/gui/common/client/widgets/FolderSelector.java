@@ -42,7 +42,7 @@ public class FolderSelector extends TextItem {
 		setWrapTitle(false);
 		setValue("");
 		setRedrawOnChange(true);
-		setValueField("id");
+		setValueField("folderId");
 		setDisplayField("name");
 
 		menu.setCanSelectParentItems(true);
@@ -52,7 +52,7 @@ public class FolderSelector extends TextItem {
 		menu.addItemClickHandler(new ItemClickHandler() {
 			public void onItemClick(ItemClickEvent event) {
 				MenuItem item = event.getItem();
-				setFolder(new Long(item.getAttributeAsString("id")), item.getAttributeAsString("name"));
+				setFolder(new Long(item.getAttributeAsString("folderId")), item.getAttributeAsString("name"));
 			}
 		});
 

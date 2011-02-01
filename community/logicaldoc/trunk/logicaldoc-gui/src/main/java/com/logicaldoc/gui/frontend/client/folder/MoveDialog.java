@@ -45,7 +45,7 @@ public class MoveDialog extends Dialog {
 		move.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				FoldersNavigator.get().moveTo(
-						Long.parseLong(folders.getSelectedRecord().getAttributeAsString("id")));
+						Long.parseLong(folders.getSelectedRecord().getAttributeAsString("folderId")));
 				destroy();
 			}
 		});
