@@ -68,6 +68,8 @@ public class Feature {
 	public static final int SHOW_DISABLED = 50;
 
 	public static final int PREVIEW = 51;
+	
+	public static final int MULTI_STORAGE = 52;
 
 	public static final int BOOKMARKS = 53;
 
