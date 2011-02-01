@@ -19,10 +19,15 @@ import com.logicaldoc.gui.frontend.client.search.Search;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.util.EventHandler;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.Dialog;
+import com.smartgwt.client.widgets.events.DropEvent;
+import com.smartgwt.client.widgets.events.DropHandler;
+import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellClickHandler;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
@@ -57,13 +62,61 @@ public class FoldersNavigator extends TreeGrid {
 		setManyItemsImage("cubes_all.png");
 		setAppImgDir("pieces/16/");
 		setCanReorderRecords(false);
-		setCanAcceptDroppedRecords(false);
 		setCanDragRecordsOut(false);
 		setAutoFetchData(true);
 		setLoadDataOnDemand(true);
 		setDataSource(FoldersDS.get());
 		setCanSelectAll(false);
 		setShowConnectors(true);
+
+		setCanAcceptDrop(true);
+		setCanAcceptDroppedRecords(true);
+
+		addDropHandler(new DropHandler() {
+			public void onDrop(DropEvent event) {
+				try {
+					ListGrid list = null;
+					if (EventHandler.getDragTarget() instanceof ListGrid) {
+						list = (ListGrid) EventHandler.getDragTarget();
+
+						final ListGridRecord[] selection = list.getSelection();
+						if (selection == null || selection.length == 0)
+							return;
+						final long[] ids = new long[selection.length];
+						for (int i = 0; i < selection.length; i++) {
+							if (selection[i].getAttribute("aliasId") != null)
+								ids[i] = Long.parseLong(selection[i].getAttribute("aliasId"));
+							else
+								ids[i] = Long.parseLong(selection[i].getAttribute("id"));
+						}
+
+						final TreeNode selectedNode = getDropFolder();
+						final long folderId = Long.parseLong(selectedNode.getAttribute("folderId"));
+
+						if (Session.get().getCurrentFolder().getId() == folderId)
+							return;
+
+						service.paste(Session.get().getSid(), ids, folderId, "cut", new AsyncCallback<Void>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(Void result) {
+								DocumentsPanel.get().onFolderSelect(Session.get().getCurrentFolder());
+//								TreeNode node = new TreeNode(Session.get().getCurrentFolder().getName());
+//								getTree().reloadChildren(node);
+								Log.debug("Drag&Drop operation completed.");
+							}
+						});
+
+					}
+				} catch (Throwable e) {
+				}
+			}
+		});
 
 		ListGridField name = new ListGridField("name");
 		setFields(name);
@@ -72,7 +125,7 @@ public class FoldersNavigator extends TreeGrid {
 		addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				service.getFolder(Session.get().getSid(), Long.parseLong(event.getRecord().getAttributeAsString("id")),
+				service.getFolder(Session.get().getSid(), Long.parseLong(event.getRecord().getAttributeAsString("folderId")),
 						true, new AsyncCallback<GUIFolder>() {
 
 							@Override
@@ -95,7 +148,7 @@ public class FoldersNavigator extends TreeGrid {
 		addCellClickHandler(new CellClickHandler() {
 			@Override
 			public void onCellClick(CellClickEvent event) {
-				selectFolder(Long.parseLong(event.getRecord().getAttributeAsString("id")));
+				selectFolder(Long.parseLong(event.getRecord().getAttributeAsString("folderId")));
 
 				// Expand the selected node if it is not already expanded
 				TreeNode selectedNode = (TreeNode) getSelectedRecord();
@@ -147,7 +200,7 @@ public class FoldersNavigator extends TreeGrid {
 	 */
 	private Menu setupContextMenu(GUIFolder folder) {
 		final TreeNode selectedNode = (TreeNode) getSelectedRecord();
-		final long id = Long.parseLong(selectedNode.getAttribute("id"));
+		final long id = Long.parseLong(selectedNode.getAttribute("folderId"));
 		final String name = selectedNode.getAttribute("name");
 
 		GUIFolder parent = folder.getParent();
@@ -187,8 +240,8 @@ public class FoldersNavigator extends TreeGrid {
 									 * behaviours if we directly delete the
 									 * selected node.
 									 */
-									TreeNode node = getTree().find("id", Long.toString(id));
-									TreeNode parent = getTree().find("id", node.getAttribute("parent"));
+									TreeNode node = getTree().find("folderId", Long.toString(id));
+									TreeNode parent = getTree().find("folderId", node.getAttribute("parent"));
 									getTree().closeFolder(parent);
 									getTree().remove(node);
 									getTree().openFolder(parent);
@@ -329,7 +382,7 @@ public class FoldersNavigator extends TreeGrid {
 				TreeNode parent = getTree().getRoot();
 				for (GUIFolder fld : folder.getPath()) {
 					TreeNode node = new TreeNode(fld.getName());
-					node.setAttribute("id", Long.toString(fld.getId()));
+					node.setAttribute("folderId", Long.toString(fld.getId()));
 					node.setAttribute(Constants.PERMISSION_ADD, fld.hasPermission(Constants.PERMISSION_ADD));
 					node.setAttribute(Constants.PERMISSION_DELETE, fld.hasPermission(Constants.PERMISSION_DELETE));
 					node.setAttribute(Constants.PERMISSION_RENAME, fld.hasPermission(Constants.PERMISSION_RENAME));
@@ -338,7 +391,7 @@ public class FoldersNavigator extends TreeGrid {
 					parent = node;
 				}
 				TreeNode node = new TreeNode(folder.getName());
-				node.setAttribute("id", Long.toString(folder.getId()));
+				node.setAttribute("folderId", Long.toString(folder.getId()));
 				node.setAttribute(Constants.PERMISSION_ADD,
 						Boolean.toString(folder.hasPermission(Constants.PERMISSION_ADD)));
 				node.setAttribute(Constants.PERMISSION_DELETE,
@@ -357,7 +410,7 @@ public class FoldersNavigator extends TreeGrid {
 	}
 
 	public String getPath(long folderId) {
-		TreeNode selectedNode = getTree().find("id", Long.toString(folderId));
+		TreeNode selectedNode = getTree().find("folderId", Long.toString(folderId));
 		String path = "";
 		TreeNode[] parents = getTree().getParents(selectedNode);
 		for (int i = parents.length - 1; i >= 0; i--) {
@@ -369,7 +422,7 @@ public class FoldersNavigator extends TreeGrid {
 	}
 
 	public void onSavedFolder(GUIFolder folder) {
-		TreeNode selectedNode = getTree().find("id", Long.toString(folder.getId()));
+		TreeNode selectedNode = getTree().find("folderId", Long.toString(folder.getId()));
 		if (selectedNode != null) {
 			selectedNode.setTitle(folder.getName());
 			selectedNode.setName(folder.getName());
@@ -378,7 +431,7 @@ public class FoldersNavigator extends TreeGrid {
 	}
 
 	private void onReload() {
-		TreeNode rootNode = getTree().find("id", "5");
+		TreeNode rootNode = getTree().find("folderId", "5");
 		removeData(rootNode);
 		setDataSource(FoldersDS.get());
 		fetchData();
@@ -398,7 +451,7 @@ public class FoldersNavigator extends TreeGrid {
 						TreeNode selectedNode = (TreeNode) getSelectedRecord();
 						final GUIFolder data = new GUIFolder();
 						data.setName(value);
-						data.setParentId(Long.parseLong(selectedNode.getAttributeAsString("id")));
+						data.setParentId(Long.parseLong(selectedNode.getAttributeAsString("folderId")));
 						data.setDescription("");
 
 						service.save(Session.get().getSid(), data, new AsyncCallback<GUIFolder>() {
@@ -413,7 +466,7 @@ public class FoldersNavigator extends TreeGrid {
 								TreeNode selectedNode = (TreeNode) getSelectedRecord();
 								TreeNode newNode = new TreeNode(newFolder.getName());
 								newNode.setAttribute("name", newFolder.getName());
-								newNode.setAttribute("id", Long.toString(newFolder.getId()));
+								newNode.setAttribute("folderId", Long.toString(newFolder.getId()));
 
 								if (!getTree().isOpen(selectedNode)) {
 									getTree().openFolder(selectedNode);
@@ -427,7 +480,7 @@ public class FoldersNavigator extends TreeGrid {
 
 	private void onPaste() {
 		TreeNode selectedNode = (TreeNode) getSelectedRecord();
-		final long folderId = Long.parseLong(selectedNode.getAttribute("id"));
+		final long folderId = Long.parseLong(selectedNode.getAttribute("folderId"));
 		final long[] docIds = new long[Clipboard.getInstance().size()];
 		int i = 0;
 		for (GUIDocument doc : Clipboard.getInstance()) {
@@ -445,6 +498,7 @@ public class FoldersNavigator extends TreeGrid {
 					@Override
 					public void onSuccess(Void result) {
 						DocumentsPanel.get().onFolderSelect(Session.get().getCurrentFolder());
+
 						Clipboard.getInstance().clear();
 						Log.debug("Paste operation completed.");
 					}
@@ -453,7 +507,7 @@ public class FoldersNavigator extends TreeGrid {
 
 	private void onPasteAsAlias() {
 		TreeNode selectedNode = (TreeNode) getSelectedRecord();
-		final long folderId = Long.parseLong(selectedNode.getAttribute("id"));
+		final long folderId = Long.parseLong(selectedNode.getAttribute("folderId"));
 		final long[] docIds = new long[Clipboard.getInstance().size()];
 		int i = 0;
 		for (GUIDocument doc : Clipboard.getInstance()) {
@@ -491,8 +545,8 @@ public class FoldersNavigator extends TreeGrid {
 		final TreeNode selected = (TreeNode) getSelectedRecord();
 		final TreeNode target = getTree().findById(Long.toString(targetFolderId));
 
-		Log.debug("try to move folder " + selected.getAttribute("id"));
-		service.move(Session.get().getSid(), Long.parseLong(selected.getAttribute("id")), targetFolderId,
+		Log.debug("try to move folder " + selected.getAttribute("folderId"));
+		service.move(Session.get().getSid(), Long.parseLong(selected.getAttribute("folderId")), targetFolderId,
 				new AsyncCallback<Void>() {
 
 					@Override
