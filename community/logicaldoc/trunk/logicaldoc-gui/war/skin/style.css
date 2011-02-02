@@ -186,3 +186,8 @@
 	padding-left: 3px;
 	color: #7694B5;
 }
+
+.forgotpwd {
+	text-decoration: underline;
+	color: blue;
+}

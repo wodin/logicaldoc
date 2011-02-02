@@ -154,16 +154,16 @@ insert into ld_document
 values     (6,8,'2010-04-01',1,0,'g','DELETED 4','testDocVer4','2006-12-19','2006-12-19','myself',1,1,'TIFF',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','topolino',122345,1,0,'',1,0,2,0);
 
 insert into ld_ticket
-           (ld_id,ld_lastmodified,ld_deleted,ld_ticketid,ld_docid,ld_userid)
-values     (1,'2008-10-22',0,'1',1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_ticketid,ld_docid,ld_userid,ld_type,ld_creation,ld_expired,ld_count)
+values     (1,'2008-10-22',0,'1',1,1,0,'2011-01-01','2011-01-02',0);
 
 insert into ld_ticket
-           (ld_id,ld_lastmodified,ld_deleted,ld_ticketid,ld_docid,ld_userid)
-values     (2,'2008-10-22',0,'2',2,3);
+           (ld_id,ld_lastmodified,ld_deleted,ld_ticketid,ld_docid,ld_userid,ld_type,ld_creation,ld_expired,ld_count)
+values     (2,'2008-10-22',0,'2',2,3,0,'2011-01-01','2011-01-02',0);
 
 insert into ld_ticket
-           (ld_id,ld_lastmodified,ld_deleted,ld_ticketid,ld_docid,ld_userid)
-values     (3,'2008-12-22',0,'3',1,3);
+           (ld_id,ld_lastmodified,ld_deleted,ld_ticketid,ld_docid,ld_userid,ld_type,ld_creation,ld_expired,ld_count)
+values     (3,'2008-12-22',0,'3',1,3,0,'2011-01-01','2011-01-02',0);
 
 insert into ld_userdoc
            (ld_id,ld_lastmodified,ld_deleted,ld_docid,ld_userid,ld_date)

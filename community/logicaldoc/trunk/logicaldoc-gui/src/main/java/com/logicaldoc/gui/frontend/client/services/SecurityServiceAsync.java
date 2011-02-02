@@ -42,4 +42,6 @@ public interface SecurityServiceAsync {
 	void applyRights(String sid, GUIMenu menu, AsyncCallback<Void> callback);
 
 	void getMenu(String sid, long id, AsyncCallback<GUIMenu> callback);
+
+	void resetPassword(String username, String emailAddress, String productName, AsyncCallback<Void> callback);
 }

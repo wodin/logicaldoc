@@ -1,6 +1,7 @@
 package com.logicaldoc.web.service;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -22,7 +23,9 @@ import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.core.communication.dao.SystemMessageDAO;
 import com.logicaldoc.core.document.AbstractDocument;
+import com.logicaldoc.core.document.DownloadTicket;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
@@ -638,5 +641,63 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		}
 
 		return null;
+	}
+
+	@Override
+	public void resetPassword(String username, String emailAddress, String productName) throws Exception {
+		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		User user = userDao.findByUserName(username);
+
+		if (user == null)
+			throw new Exception("User " + username + " not found");
+		else if (!user.getEmail().trim().equals(emailAddress.trim()))
+			throw new Exception("User with email" + emailAddress + " not found");
+
+		EMail email;
+		try {
+			email = new EMail();
+			Recipient recipient = new Recipient();
+			recipient.setAddress(user.getEmail());
+			email.addRecipient(recipient);
+			email.setFolder("outbox");
+
+			// Prepare a new download ticket
+			String temp = new Date().toString() + user.getId();
+			String ticketid = CryptUtil.cryptString(temp);
+			DownloadTicket ticket = new DownloadTicket();
+			ticket.setTicketId(ticketid);
+			ticket.setDocId(0L);
+			ticket.setUserId(user.getId());
+			ticket.setType(DownloadTicket.PSW_RECOVERY);
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.MINUTE, +5);
+			ticket.setExpired(cal.getTime());
+
+			// Store the ticket
+			DownloadTicketDAO ticketDao = (DownloadTicketDAO) Context.getInstance().getBean(DownloadTicketDAO.class);
+			ticketDao.store(ticket);
+
+			// Try to clean the DB from old tickets
+			ticketDao.deleteOlder();
+
+			Locale locale = new Locale(user.getLanguage());
+
+			email.setRead(1);
+			email.setSentDate(new Date());
+			email.setSubject(productName + " " + I18N.message("passwordrequest", locale));
+			email.setUserName(user.getUserName());
+
+			HttpServletRequest request = this.getThreadLocalRequest();
+			String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+					+ request.getContextPath();
+			String address = urlPrefix + "/pswrecovery?ticketId=" + ticketid + "&userId=" + user.getId();
+			email.setMessageText(productName + " - " + I18N.message("passwordrequest", locale) + " - " + "\n"
+					+ I18N.message("clickhere", locale) + ": " + address);
+
+			EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
+			sender.send(email);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+		}
 	}
 }

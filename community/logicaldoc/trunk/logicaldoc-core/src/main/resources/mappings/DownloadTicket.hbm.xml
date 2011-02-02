@@ -12,5 +12,9 @@
 		<property name="ticketId" type="string" column="ld_ticketid" not-null="true" />
 		<property name="docId" type="long" column="ld_docid" not-null="true" />
 		<property name="userId" type="long" column="ld_userid" not-null="true" />
+		<property name="type" type="int" column="ld_type" not-null="true"/>
+		<property name="creation" type="timestamp" column="ld_creation" not-null="true"/>
+		<property name="expired" type="timestamp" column="ld_expired" not-null="true"/>
+		<property name="count" type="int" column="ld_count" not-null="true"/>
 	</class>
 </hibernate-mapping>
