@@ -36,6 +36,8 @@ public class PDFParser extends AbstractParser {
 
 	protected static Log log = LogFactory.getLog(PDFParser.class);
 
+	private static int count = Integer.MAX_VALUE;
+
 	public String getContent() {
 		return content;
 	}
@@ -161,6 +163,11 @@ public class PDFParser extends AbstractParser {
 				log.error(e.getMessage(), e);
 			}
 		}
+
+		// PDF Box is memory intensive so execute a gc every 100 parses
+		if (count % 100 == 0)
+			System.gc();
+		count++;
 	}
 
 	@Override
@@ -180,7 +187,6 @@ public class PDFParser extends AbstractParser {
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
-			System.gc();
 		}
 	}
 }
