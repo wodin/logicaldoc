@@ -75,10 +75,10 @@ public class GUIUser implements Serializable {
 	private int subscriptions = 0;
 
 	private Long[] menues = new Long[0];
-	
-	private long quota;
 
-	private long quotaCount;
+	private long quota = -1;
+
+	private long quotaCount = 0;
 
 	private Set<UserObserver> observers = new HashSet<UserObserver>();
 
