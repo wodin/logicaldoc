@@ -42,10 +42,10 @@ public class TestBench {
 
 		genFiles = new GenerateFiles();
 		genFiles.setLogicalDocLayout(true);
-		File docsRoot = new File(context.getProperty("conf.docdir") + "/tmp/5");
+		File docsRoot = new File(context.getProperty("store.1.dir") + "/tmp/5");
 		docsRoot.mkdirs();
 		docsRoot.mkdir();
-		genFiles.setRootFolder(new File(context.getProperty("conf.docdir") + "/tmp/5"));
+		genFiles.setRootFolder(new File(context.getProperty("store.1.dir") + "/tmp/5"));
 
 		popDatabase = new PopulateDatabase();
 		popDatabase.setJdbcClass(context.getProperty("jdbc.driver"));
@@ -64,7 +64,7 @@ public class TestBench {
 		File indexFolder = new File(context.getProperty("conf.indexdir") + "/" + popDatabase.getLanguage());
 		popIndex.setIndexFolder(indexFolder);
 		popIndex.setTempFolder(genFiles.getRootFolder());
-		popIndex.setRootFolder(new File(context.getProperty("conf.docdir")));
+		popIndex.setRootFolder(new File(context.getProperty("store.1.dir")));
 
 		prepareFilesystem = new PrepareFileSystem();
 		prepareFilesystem.setRootFolder(popIndex.getRootFolder());
