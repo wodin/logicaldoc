@@ -437,9 +437,6 @@ public class FoldersNavigator extends TreeGrid {
 	}
 
 	private void onCreate() {
-		Dialog dialog = new Dialog();
-		dialog.setWidth(200);
-
 		LD.askforValue(I18N.message("newfolder"), I18N.message("newfoldername"), I18N.message("newfolder"), "200px",
 				new ValueCallback() {
 					@Override
