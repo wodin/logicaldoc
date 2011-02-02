@@ -52,7 +52,7 @@ public class UserQuotaPanel extends HLayout {
 
 		IntegerItem quota = ItemFactory.newIntegerItem("quota", "quota", null);
 		quota.setRequired(false);
-		quota.setValue(user.getQuota() >= 0 ? user.getQuota() / (1024 * 1024) : 0);
+		quota.setValue(user.getQuota() >= 0 ? user.getQuota() / (1024 * 1024) : -1);
 		quota.setHint("MB");
 		if (!readonly)
 			quota.addChangedHandler(changedHandler);
@@ -78,7 +78,8 @@ public class UserQuotaPanel extends HLayout {
 				quota = Integer.parseInt((String) values.get("quota"));
 			else
 				quota = (Integer) values.get("quota");
-			user.setQuota(quota * (1024 * 1024));
+			if (quota > 0)
+				user.setQuota(quota * (1024 * 1024));
 		}
 		return !vm.hasErrors();
 	}
