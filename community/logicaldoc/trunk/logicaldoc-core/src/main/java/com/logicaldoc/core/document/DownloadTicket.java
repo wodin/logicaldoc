@@ -1,5 +1,7 @@
 package com.logicaldoc.core.document;
 
+import java.util.Date;
+
 import com.logicaldoc.core.PersistentObject;
 
 /**
@@ -10,11 +12,23 @@ import com.logicaldoc.core.PersistentObject;
  */
 public class DownloadTicket extends PersistentObject {
 
+	public static final int TICKET = 0;
+
+	public static final int PSW_RECOVERY = 1;
+
 	private String ticketId = "";
 
 	private long docId = 0;
 
 	private long userId = -1;
+
+	private int type = TICKET;
+
+	private Date creation = new Date();
+
+	private Date expired = null;
+
+	private int count = 0;
 
 	public DownloadTicket() {
 
@@ -48,5 +62,41 @@ public class DownloadTicket extends PersistentObject {
 
 	public void setUserId(long userId) {
 		this.userId = userId;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public Date getCreation() {
+		return creation;
+	}
+
+	public void setCreation(Date creation) {
+		this.creation = creation;
+	}
+
+	public Date getExpired() {
+		return expired;
+	}
+
+	public void setExpired(Date expired) {
+		this.expired = expired;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
+	public boolean isTicketExpired() {
+		return new Date().getTime() > expired.getTime();
 	}
 }

@@ -161,7 +161,25 @@ public class LoginPanel extends VLayout {
 		inner.addMember(separator);
 		inner.addMember(form);
 		inner.addMember(separator);
-		inner.addMember(loginButton);
+		Layout bottom = new HLayout(60);
+		bottom.setAlign(Alignment.RIGHT);
+		bottom.addMember(loginButton);
+		GUIMessage forgotPwd = new GUIMessage();
+		forgotPwd.setMessage(I18N.message("forgotpassword"));
+		MessageLabel forgotMessage = new MessageLabel(forgotPwd);
+		forgotMessage.setAlign(Alignment.RIGHT);
+		forgotMessage.setIcon(null);
+		forgotMessage.setStyleName("forgotpwd");
+		final String productName = info.getProductName();
+		forgotMessage.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				onForgottenPwd(productName);
+			}
+		});
+		bottom.addMember(forgotMessage);
+		inner.addMember(bottom);
 		inner.setPadding(5);
 
 		Layout outer = new VStack();
@@ -213,5 +231,10 @@ public class LoginPanel extends VLayout {
 						}
 					}
 				});
+	}
+
+	private void onForgottenPwd(String productName) {
+		PasswordReset pwdReset = new PasswordReset(productName);
+		pwdReset.show();
 	}
 }

@@ -28,6 +28,14 @@ public class HibernateDownloadTicketDAO extends HibernatePersistentObjectDAO<Dow
 
 	@Override
 	public boolean store(DownloadTicket entity) {
+		if (entity.getExpired() == null) {
+			// Retrieve the time to live
+			int ttl = contextProperties.getInt("ticket.ttl");
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.HOUR_OF_DAY, +ttl);
+			entity.setExpired(cal.getTime());
+		}
+
 		boolean ret = super.store(entity);
 		return ret;
 	}
@@ -107,7 +115,7 @@ public class HibernateDownloadTicketDAO extends HibernatePersistentObjectDAO<Dow
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean deleteOlder(Date date) {
-		log.debug("delete all tickets before "+date);
+		log.debug("delete all tickets before " + date);
 		boolean result = true;
 		try {
 			Collection<DownloadTicket> coll = (Collection<DownloadTicket>) getHibernateTemplate().find(

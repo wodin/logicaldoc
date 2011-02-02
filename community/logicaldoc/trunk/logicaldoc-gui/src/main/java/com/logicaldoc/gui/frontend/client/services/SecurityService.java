@@ -113,4 +113,13 @@ public interface SecurityService extends RemoteService {
 	 * Retrieves the specified menu
 	 */
 	public GUIMenu getMenu(String sid, long id) throws InvalidSessionException;
+
+	/**
+	 * Reset the password for the given email.
+	 * 
+	 *  @param emailAddress the username for which reset password
+	 * @param emailAddress the email for which reset password
+	 * @param productName the application product name
+	 */
+	public void resetPassword(String username, String emailAddress, String productName) throws Exception;
 }

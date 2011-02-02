@@ -259,6 +259,11 @@
 		<servlet-name>TicketDownload</servlet-name>
 		<servlet-class>com.logicaldoc.web.TicketDownload</servlet-class>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>PswRecovery</servlet-name>
+		<servlet-class>com.logicaldoc.web.PswRecovery</servlet-class>
+	</servlet>
 
 	<servlet>
 		<servlet-name>ExportZip</servlet-name>
@@ -507,6 +512,11 @@
 	<servlet-mapping>
 		<servlet-name>TicketDownload</servlet-name>
 		<url-pattern>/download-ticket</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>PswRecovery</servlet-name>
+		<url-pattern>/pswrecovery</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

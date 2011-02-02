@@ -210,4 +210,9 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void resetPassword(String username, String emailAddress, String productName) throws Exception {
+		// TODO Auto-generated method stub
+	}
 }
