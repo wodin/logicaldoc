@@ -145,16 +145,16 @@ values     (4,5,'2008-10-22',0,0,'d','testDocname4','testDocVer','2006-12-19','2
 
 
 insert into ld_ticket
-           (ld_id,ld_lastmodified,ld_deleted,ld_ticketid,ld_docid,ld_userid)
-values     (1,'2008-10-22',0,'1',1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_ticketid,ld_docid,ld_userid,ld_type,ld_creation,ld_expired,ld_count)
+values     (1,'2008-10-22',0,'1',1,1,0,'2011-01-01','2011-01-02',0);
 
 insert into ld_ticket
-           (ld_id,ld_lastmodified,ld_deleted,ld_ticketid,ld_docid,ld_userid)
-values     (2,'2008-10-22',0,'2',2,3);
+           (ld_id,ld_lastmodified,ld_deleted,ld_ticketid,ld_docid,ld_userid,ld_type,ld_creation,ld_expired,ld_count)
+values     (2,'2008-10-22',0,'2',2,3,0,'2011-01-01','2011-01-02',0);
 
 insert into ld_ticket
-           (ld_id,ld_lastmodified,ld_deleted,ld_ticketid,ld_docid,ld_userid)
-values     (3,'2008-12-22',0,'3',1,3);
+           (ld_id,ld_lastmodified,ld_deleted,ld_ticketid,ld_docid,ld_userid,ld_type,ld_creation,ld_expired,ld_count)
+values     (3,'2008-12-22',0,'3',1,3,0,'2011-01-01','2011-01-02',0);
 
 insert into ld_userdoc
            (ld_id,ld_lastmodified,ld_deleted,ld_docid,ld_userid,ld_date)
