@@ -20,6 +20,7 @@ import com.logicaldoc.core.generic.dao.GenericDAO;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.core.task.Task;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
@@ -47,6 +48,8 @@ public class StatsCollector extends Task {
 
 	private ContextProperties config;
 
+	private Storer storer;
+	
 	private static String userno = "community";
 
 	private static String product = "LogicalDOC";
@@ -106,10 +109,7 @@ public class StatsCollector extends Task {
 		/*
 		 * Compute repository statistics
 		 */
-		long docdir = 0;
-		File docDir = new File(config.getPropertyWithSubstitutions("conf.docdir"));
-		if (docDir.exists())
-			docdir = FileUtils.sizeOfDirectory(docDir);
+		long docdir = storer.getTotalSize();
 		saveStatistic("docdir", Long.toString(docdir));
 
 		long userdir = 0;
@@ -390,5 +390,9 @@ public class StatsCollector extends Task {
 
 	public static void setProductName(String productName) {
 		StatsCollector.productName = productName;
+	}
+
+	public void setStorer(Storer storer) {
+		this.storer = storer;
 	}
 }

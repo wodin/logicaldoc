@@ -443,6 +443,7 @@
 		<property name="config" ref="ContextProperties" />
 		<property name="sender" ref="EMailSender" />
 		<property name="userDAO" ref="UserDAO" />
+		<property name="storer" ref="Storer" />
 	</bean>
 
 	<bean id="StatsCollectorJob"
