@@ -59,7 +59,7 @@ public class FSStorer implements Storer {
 	@Override
 	public File getDirectory(long docId) {
 		String relativePath = computeRelativePath(docId);
-		String path = config.getPropertyWithSubstitutions("conf.docdir") + "/" + relativePath;
+		String path = config.getPropertyWithSubstitutions("store.1.dir") + "/" + relativePath;
 		return new File(path);
 	}
 
@@ -159,7 +159,7 @@ public class FSStorer implements Storer {
 	@Override
 	public long getTotalSize() {
 		long size = 0;
-		File docDir = new File(config.getPropertyWithSubstitutions("conf.docdir"));
+		File docDir = new File(config.getPropertyWithSubstitutions("store.1.dir"));
 		if (docDir.exists())
 			size = FileUtils.sizeOfDirectory(docDir);
 
