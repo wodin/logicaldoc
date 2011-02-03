@@ -94,11 +94,13 @@ public class PDFParserTest {
 		File file = new File(inputFile);
 		String filename = file.getPath();
 
-		Parser parser = ParserFactory.getParser(filename);
-		PDFParser pdfp = (PDFParser) parser;
-		pdfp.parse(file);
+		for (int i = 0; i < 300; i++) {
+			Parser parser = ParserFactory.getParser(filename);
+			PDFParser pdfp = (PDFParser) parser;
+			pdfp.parse(file);
 
-		assertTrue(pdfp.getContent().startsWith("1: prova"));
+			assertTrue(pdfp.getContent().startsWith("1: prova"));
+		}
 	}
 
 	@Test
