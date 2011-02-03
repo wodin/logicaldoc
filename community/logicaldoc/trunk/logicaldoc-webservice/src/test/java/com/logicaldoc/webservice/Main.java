@@ -1,17 +1,19 @@
 package com.logicaldoc.webservice;
 
+import javax.activation.DataHandler;
+
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
+import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.search.SearchClient;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		AuthClient auth = new AuthClient("http://localhost:9080/logicaldoc/services/Auth");
-		DocumentClient documentClient = new
-		DocumentClient("http://localhost:9080/logicaldoc/services/Document");
+		AuthClient auth = new AuthClient("http://localhost:1000/logicaldoc/services/Auth");
+		DocumentClient documentClient = new DocumentClient("http://localhost:1000/logicaldoc/services/Document");
 		// FolderClient folderClient = new
 		// FolderClient("http://localhost:8080/logicaldoc/services/Folder");
-		SearchClient searchClient = new SearchClient("http://localhost:9080/logicaldoc/services/Search");
+		SearchClient searchClient = new SearchClient("http://localhost:1000/logicaldoc/services/Search");
 
 		// Open a session
 		// This is a user 'author' with different permissions than the authors.
@@ -24,9 +26,9 @@ public class Main {
 		//
 		// sid = auth.login("matteo", "matteo1982");
 
-
-		documentClient.sendEmail(sid, new Long[]{13L,9L}, "m.meschieri@logicalobjects.it, info@logicalobjects.it", "test ws", "message test ws");
-		
+		// documentClient.sendEmail(sid, new Long[]{13L,9L},
+		// "m.meschieri@logicalobjects.it, info@logicalobjects.it", "test ws",
+		// "message test ws");
 
 		// TagCloud[] tags = searchClient.getTagCloud(sid);
 		// for (TagCloud tag : tags) {
@@ -65,10 +67,11 @@ public class Main {
 		// System.out.println("folder desc: " + doc.getDescription());
 		// }
 
-		// WSDocument document = documentClient.getDocument(sid, 55);
-		// document.setTitle("test_5");
-		// DataHandler data = documentClient.getContent(sid, 34);
-		// WSDocument doc = documentClient.create(sid, document, data);
+		WSDocument document = documentClient.getDocument(sid, 3);
+		document.setTitle("test_5");
+		document.setSourceDate("2010-05-01");
+		DataHandler data = documentClient.getContent(sid, 3);
+		WSDocument doc = documentClient.create(sid, document, data);
 		// System.out.println("created doc: " + doc.getId());
 
 		// System.out.println("doc id: " + document.getId());

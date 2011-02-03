@@ -6,7 +6,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.History;
-import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
@@ -113,6 +112,22 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	}
 
 	@Override
+	public WSFolder[] listChildren(String sid, long folderId) throws Exception {
+		User user = validateSession(sid);
+		checkReadEnable(user, folderId);
+
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		List<Folder> folders = folderDao.findChildren(folderId, user.getId());
+		WSFolder[] wsFolders = new WSFolder[folders.size()];
+		for (int i = 0; i < folders.size(); i++) {
+			folderDao.initialize(folders.get(i));
+			wsFolders[i] = WSFolder.fromFolder(folders.get(i));
+		}
+
+		return wsFolders;
+	}
+
+	@Override
 	public void move(String sid, long folderId, long parentId) throws Exception {
 		User user = validateSession(sid);
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
@@ -177,5 +192,10 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			transaction.setSessionId(sid);
 			folderDao.store(folder, transaction);
 		}
+	}
+
+	@Override
+	public WSFolder getRootFolder(String sid) throws Exception {
+		return getFolder(sid, Folder.ROOTID);
 	}
 }
