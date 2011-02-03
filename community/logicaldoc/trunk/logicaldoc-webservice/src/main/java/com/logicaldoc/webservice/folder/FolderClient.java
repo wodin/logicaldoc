@@ -60,4 +60,14 @@ public class FolderClient implements FolderService {
 	public void rename(String sid, long folderId, String name) throws Exception {
 		client.rename(sid, folderId, name);
 	}
+
+	@Override
+	public WSFolder[] listChildren(String sid, long folderId) throws Exception {
+		return client.listChildren(sid, folderId);
+	}
+
+	@Override
+	public WSFolder getRootFolder(String sid) throws Exception {
+		return client.getRootFolder(sid);
+	}
 }
