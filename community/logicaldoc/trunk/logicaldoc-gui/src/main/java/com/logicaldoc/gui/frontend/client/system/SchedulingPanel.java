@@ -135,7 +135,7 @@ public class SchedulingPanel extends VLayout {
 
 		// Seconds
 		seconds = ItemFactory.newTextItem("seconds", "seconds", null);
-		seconds.setDefaultValue(task.getScheduling().getSeconds());
+		seconds.setValue(task.getScheduling().getSeconds());
 		seconds.setVisible(!simplePolicy);
 		seconds.addChangedHandler(changedHandler);
 		seconds.setRequired(true);
@@ -144,7 +144,7 @@ public class SchedulingPanel extends VLayout {
 
 		// Minutes
 		minutes = ItemFactory.newTextItem("minutes", "minutes", null);
-		minutes.setDefaultValue(task.getScheduling().getMinutes());
+		minutes.setValue(task.getScheduling().getMinutes());
 		minutes.setVisible(!simplePolicy);
 		minutes.addChangedHandler(changedHandler);
 		minutes.setRequired(true);
@@ -153,7 +153,7 @@ public class SchedulingPanel extends VLayout {
 
 		// Hours
 		hours = ItemFactory.newTextItem("hours", "hours", null);
-		hours.setDefaultValue(task.getScheduling().getHours());
+		hours.setValue(task.getScheduling().getHours());
 		hours.setVisible(!simplePolicy);
 		hours.addChangedHandler(changedHandler);
 		hours.setRequired(true);
@@ -162,7 +162,7 @@ public class SchedulingPanel extends VLayout {
 
 		// Day of month
 		dayMonth = ItemFactory.newTextItem("dayMonth", "daymonth", null);
-		dayMonth.setDefaultValue(task.getScheduling().getDayOfMonth());
+		dayMonth.setValue(task.getScheduling().getDayOfMonth());
 		dayMonth.setVisible(!simplePolicy);
 		dayMonth.addChangedHandler(changedHandler);
 		dayMonth.setRequired(true);
@@ -171,7 +171,7 @@ public class SchedulingPanel extends VLayout {
 
 		// Month
 		month = ItemFactory.newTextItem("month", "month", null);
-		month.setDefaultValue(task.getScheduling().getMonth());
+		month.setValue(task.getScheduling().getMonth());
 		month.setVisible(!simplePolicy);
 		month.addChangedHandler(changedHandler);
 		month.setRequired(true);
@@ -180,7 +180,7 @@ public class SchedulingPanel extends VLayout {
 
 		// Day of week
 		dayWeek = ItemFactory.newTextItem("dayWeek", "dayweek", null);
-		dayWeek.setDefaultValue(task.getScheduling().getDayOfWeek());
+		dayWeek.setValue(task.getScheduling().getDayOfWeek());
 		dayWeek.setVisible(!simplePolicy);
 		dayWeek.addChangedHandler(changedHandler);
 		dayWeek.setRequired(true);
@@ -202,8 +202,8 @@ public class SchedulingPanel extends VLayout {
 					SchedulingPanel.this.cpuIdle.setValue(-1);
 					SchedulingPanel.this.initialDelay.setValue(1800);
 					SchedulingPanel.this.repeatInterval.setValue(1800);
-					SchedulingPanel.this.seconds.setValue("00");
-					SchedulingPanel.this.minutes.setValue("00");
+					SchedulingPanel.this.seconds.setValue("0");
+					SchedulingPanel.this.minutes.setValue("10");
 					SchedulingPanel.this.hours.setValue("4/4");
 					SchedulingPanel.this.dayMonth.setValue("*");
 					SchedulingPanel.this.month.setValue("*");
@@ -227,6 +227,7 @@ public class SchedulingPanel extends VLayout {
 					task.getScheduling().setSimple(true);
 				else
 					task.getScheduling().setSimple(false);
+
 				task.getScheduling().setMaxLength(Long.parseLong((String) values.get("maxDuration")));
 				int intValue = 0;
 				if (values.get("cpuIdle") instanceof String)
