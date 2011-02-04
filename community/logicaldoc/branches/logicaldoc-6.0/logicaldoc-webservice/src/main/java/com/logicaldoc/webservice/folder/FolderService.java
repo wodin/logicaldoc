@@ -69,6 +69,16 @@ public interface FolderService {
 			throws Exception;
 
 	/**
+	 * Gets root metadata
+	 * 
+	 * @param sid Session identifier
+	 * @return A value object containing the folder's metadata.
+	 * @throws Exception
+	 */
+	@WebResult(name = "folder")
+	public WSFolder getRootFolder(@WebParam(name = "sid") String sid) throws Exception;
+
+	/**
 	 * Test if a folder identifier is readable.
 	 * 
 	 * @param sid Session identifier
@@ -80,7 +90,7 @@ public interface FolderService {
 			throws Exception;
 
 	/**
-	 * Lists the folders inside a folder
+	 * Lists all the folders(direct and indirect) of a parent folder
 	 * 
 	 * @param sid Session identifier
 	 * @param folderId The folder id
@@ -89,5 +99,17 @@ public interface FolderService {
 	 */
 	@WebResult(name = "folder")
 	public WSFolder[] list(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
+			throws Exception;
+
+	/**
+	 * Lists all direct folders of a parent folder
+	 * 
+	 * @param sid Session identifier
+	 * @param folderId The folder id
+	 * @return Array of folders contained in the folder
+	 * @throws Exception
+	 */
+	@WebResult(name = "folder")
+	public WSFolder[] listChildren(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
 			throws Exception;
 }

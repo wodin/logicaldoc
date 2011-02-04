@@ -188,7 +188,7 @@ public class DocumentsDataServlet extends HttpServlet {
 						writer.print("<sourceDate>" + (cols[19] != null ? df.format(cols[19]) : "") + "</sourceDate>");
 
 					if (cols[20] != null)
-						writer.print("<sourceAuthor>" + cols[20] + "</sourceAuthor>");
+						writer.print("<sourceAuthor><![CDATA[" + cols[20] + "]]></sourceAuthor>");
 
 					writer.print("</document>");
 				}
