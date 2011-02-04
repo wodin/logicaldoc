@@ -20,9 +20,9 @@ public interface SettingServiceAsync {
 
 	void loadValues(String sid, String[] names, AsyncCallback<String[]> callback);
 
-	void loadFolders(String sid, AsyncCallback<GUIParameter[]> callback);
+	void loadRepositories(String sid, AsyncCallback<GUIParameter[][]> callback);
 
-	void saveFolders(String sid, GUIParameter[] folders, AsyncCallback<Void> callback);
+	void saveRepositories(String sid, GUIParameter[][] repos, AsyncCallback<Void> callback);
 
 	void loadProxySettings(String sid, AsyncCallback<GUIParameter[]> callback);
 
@@ -33,4 +33,6 @@ public interface SettingServiceAsync {
 	void loadQuotaSettings(String sid, AsyncCallback<GUIParameter[]> callback);
 
 	void saveQuotaSettings(String sid, GUIParameter[] quotaSettings, AsyncCallback<Void> callback);
+
+	void computeStoragesSize(String sid, AsyncCallback<GUIParameter[]> callback);
 }

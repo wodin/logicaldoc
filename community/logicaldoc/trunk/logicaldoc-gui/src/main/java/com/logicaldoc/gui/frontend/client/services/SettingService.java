@@ -41,14 +41,20 @@ public interface SettingService extends RemoteService {
 	public GUIEmailSettings loadEmailSettings(String sid) throws InvalidSessionException;
 
 	/**
-	 * Load the folders paths
+	 * Load the repositories paths.
+	 * 
+	 * <ol>
+	 * <li>The first array contains the folders paths.</li>
+	 * <li>The second array contains the available repositories paths.</li>
+	 * </ol>
+	 * 
 	 */
-	public GUIParameter[] loadFolders(String sid) throws InvalidSessionException;
+	public GUIParameter[][] loadRepositories(String sid) throws InvalidSessionException;
 
 	/**
 	 * Saves folders path
 	 */
-	public void saveFolders(String sid, GUIParameter[] folders) throws InvalidSessionException;
+	public void saveRepositories(String sid, GUIParameter[][] repos) throws InvalidSessionException;
 
 	/**
 	 * Saves email settings (SMTP connection)
@@ -79,7 +85,7 @@ public interface SettingService extends RemoteService {
 	 * Loads the OCR settings
 	 */
 	public GUIParameter[] loadOcrSettings(String sid) throws InvalidSessionException;
-	
+
 	/**
 	 * Load the system quota setting
 	 */
@@ -89,4 +95,11 @@ public interface SettingService extends RemoteService {
 	 * Saves system quota setting
 	 */
 	public void saveQuotaSettings(String sid, GUIParameter[] quotaSettings) throws InvalidSessionException;
+	
+	/**
+	 * Retrieves the size of all saved storages.
+	 * 
+	 * @param sid The current user session
+	 */
+	public GUIParameter[] computeStoragesSize(String sid) throws InvalidSessionException;
 }
