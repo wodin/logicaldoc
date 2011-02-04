@@ -32,7 +32,7 @@ public class SettingsMenu extends VLayout {
 		setMargin(10);
 		setMembersMargin(5);
 
-		Button folders = new Button(I18N.message("folders"));
+		Button folders = new Button(I18N.message("repositories"));
 		folders.setWidth100();
 		folders.setHeight(25);
 
@@ -186,7 +186,7 @@ public class SettingsMenu extends VLayout {
 		folders.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				settingService.loadFolders(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
+				settingService.loadRepositories(Session.get().getSid(), new AsyncCallback<GUIParameter[][]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -194,8 +194,8 @@ public class SettingsMenu extends VLayout {
 					}
 
 					@Override
-					public void onSuccess(GUIParameter[] folders) {
-						AdminPanel.get().setContent(new FoldersPanel(folders));
+					public void onSuccess(GUIParameter[][] repos) {
+						AdminPanel.get().setContent(new RepositoriesPanel(repos));
 					}
 				});
 			}

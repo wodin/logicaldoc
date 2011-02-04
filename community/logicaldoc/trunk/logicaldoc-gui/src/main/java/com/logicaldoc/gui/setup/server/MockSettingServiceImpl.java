@@ -88,22 +88,24 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 	}
 
 	@Override
-	public GUIParameter[] loadFolders(String sid) throws InvalidSessionException {
-		GUIParameter[] params = new GUIParameter[8];
-		params[0] = new GUIParameter("dbdir", "db");
-		params[1] = new GUIParameter("docdir", "docs");
-		params[2] = new GUIParameter("exportdir", "export");
-		params[3] = new GUIParameter("importdir", "import");
-		params[4] = new GUIParameter("indexdir", "index");
-		params[5] = new GUIParameter("logdir", "log");
-		params[6] = new GUIParameter("plugindir", "plugin");
-		params[7] = new GUIParameter("userdir", "user");
+	public GUIParameter[][] loadRepositories(String sid) throws InvalidSessionException {
+		GUIParameter[][] repos = new GUIParameter[2][7];
+		repos[0][0] = new GUIParameter("dbdir", "db");
+		repos[0][1] = new GUIParameter("exportdir", "export");
+		repos[0][2] = new GUIParameter("importdir", "import");
+		repos[0][3] = new GUIParameter("indexdir", "index");
+		repos[0][4] = new GUIParameter("logdir", "log");
+		repos[0][5] = new GUIParameter("plugindir", "plugin");
+		repos[0][6] = new GUIParameter("userdir", "user");
 
-		return params;
+		repos[1][0] = new GUIParameter("store1", "store1");
+		repos[1][1] = new GUIParameter("store2", "store2");
+
+		return repos;
 	}
 
 	@Override
-	public void saveFolders(String sid, GUIParameter[] folders) throws InvalidSessionException {
+	public void saveRepositories(String sid, GUIParameter[][] repos) throws InvalidSessionException {
 
 	}
 
@@ -147,5 +149,19 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 	public void saveQuotaSettings(String sid, GUIParameter[] quotaSettings) throws InvalidSessionException {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public GUIParameter[] computeStoragesSize(String sid) throws InvalidSessionException {
+		GUIParameter[] params = new GUIParameter[2];
+
+		for (int i = 0; i < 2; i++) {
+			GUIParameter param = new GUIParameter();
+			param.setName("store." + i);
+			param.setValue("23456789" + i);
+			params[i] = param;
+		}
+
+		return params;
 	}
 }

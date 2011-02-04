@@ -31,41 +31,61 @@ import com.smartgwt.client.widgets.tab.TabSet;
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
  */
-public class FoldersPanel extends VLayout {
+public class RepositoriesPanel extends VLayout {
 
 	private SettingServiceAsync service = (SettingServiceAsync) GWT.create(SettingService.class);
 
 	private ValuesManager vm = new ValuesManager();
 
-	public FoldersPanel(GUIParameter[] folders) {
+	private Tab tab1 = null;
+
+	private Tab tab2 = null;
+
+	private GUIParameter[] foldersParameter = null;
+
+	private GUIParameter[] storagesParameter = null;
+
+	private TabSet tabs = new TabSet();
+
+	public RepositoriesPanel(GUIParameter[][] repos) {
+		this.foldersParameter = repos[0];
+		this.storagesParameter = repos[1];
+
 		setWidth100();
 		setMembersMargin(10);
 		setMargin(30);
 		setHeight(400);
 
-		TabSet tabs = new TabSet();
-		tabs.setWidth(380);
+		tabs = new TabSet();
+		tabs.setWidth(500);
 		tabs.setHeight(270);
-		Tab tab = new Tab();
-		tab.setTitle(I18N.message("folders"));
-		tabs.setTabs(tab);
 
+		// The Folders Tab
+		tab1 = new Tab();
+		tab1.setTitle(I18N.message("folders"));
 		DynamicForm foldersForm = new DynamicForm();
 		foldersForm.setWidth(300);
 		foldersForm.setColWidths(1, "*");
 		foldersForm.setValuesManager(vm);
 		foldersForm.setTitleOrientation(TitleOrientation.LEFT);
-
 		List<FormItem> items = new ArrayList<FormItem>();
 
-		for (GUIParameter f : folders) {
+		for (GUIParameter f : this.foldersParameter) {
 			TextItem item = ItemFactory.newTextItem(f.getName(), f.getName(), f.getValue());
 			item.setRequired(true);
 			item.setWidth(250);
 			items.add(item);
 		}
-
 		foldersForm.setItems(items.toArray(new FormItem[0]));
+		tab1.setPane(foldersForm);
+
+		// The Storages Tab
+		tab2 = new Tab();
+		tab2.setTitle(I18N.message("storages"));
+		tab2.setID("repos");
+		tab2.setPane(new StoragesPanel(storagesParameter, vm));
+
+		tabs.setTabs(tab1, tab2);
 
 		IButton save = new IButton();
 		save.setTitle(I18N.message("save"));
@@ -74,30 +94,47 @@ public class FoldersPanel extends VLayout {
 				final Map<String, Object> values = vm.getValues();
 
 				if (vm.validate()) {
+					final GUIParameter[][] repos = new GUIParameter[2][7];
 					List<GUIParameter> folders = new ArrayList<GUIParameter>();
+					List<GUIParameter> storages = new ArrayList<GUIParameter>();
+					GUIParameter repo = null;
 					for (String name : values.keySet()) {
-						GUIParameter dir = new GUIParameter(name, (String) values.get(name));
-						folders.add(dir);
+						if (name.startsWith("isc"))
+							continue;
+						repo = new GUIParameter(name, (String) values.get(name));
+						if (name.startsWith("store")) {
+							storages.add(repo);
+						} else if (name.equals("radio")) {
+							String storeSelected = (String) values.get(name);
+							storeSelected = storeSelected.replaceAll(".dir", "");
+							repo = new GUIParameter("store.write", storeSelected.substring(storeSelected
+									.lastIndexOf(".") + 1));
+							storages.add(repo);
+						} else {
+							folders.add(repo);
+						}
 					}
 
-					service.saveFolders(Session.get().getSid(), folders.toArray(new GUIParameter[0]),
-							new AsyncCallback<Void>() {
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+					repos[0] = folders.toArray(new GUIParameter[0]);
+					repos[1] = storages.toArray(new GUIParameter[0]);
 
-								@Override
-								public void onSuccess(Void result) {
-									Log.info(I18N.message("settingssaved"), null);
-								}
-							});
+					service.saveRepositories(Session.get().getSid(), repos, new AsyncCallback<Void>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
+
+						@Override
+						public void onSuccess(Void result) {
+							tabs.setTabPane("repos", new StoragesPanel(repos[1], vm));
+							Log.info(I18N.message("settingssaved"), null);
+						}
+					});
 				}
 			}
 		});
 		save.setDisabled(Session.get().isDemo() && Session.get().getUser().getId() == 1);
 
-		tab.setPane(foldersForm);
 		setMembers(tabs, save);
 	}
 }

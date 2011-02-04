@@ -1,10 +1,12 @@
 package com.logicaldoc.web.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -195,31 +197,50 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public GUIParameter[] loadFolders(String sid) throws InvalidSessionException {
+	public GUIParameter[][] loadRepositories(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
-		GUIParameter[] params = new GUIParameter[7];
-		params[0] = new GUIParameter("dbdir", conf.getProperty("conf.dbdir"));
-		params[1] = new GUIParameter("exportdir", conf.getProperty("conf.exportdir"));
-		params[2] = new GUIParameter("importdir", conf.getProperty("conf.importdir"));
-		params[3] = new GUIParameter("indexdir", conf.getProperty("conf.indexdir"));
-		params[4] = new GUIParameter("logdir", conf.getProperty("conf.logdir"));
-		params[5] = new GUIParameter("plugindir", conf.getProperty("conf.plugindir"));
-		params[6] = new GUIParameter("userdir", conf.getProperty("conf.userdir"));
+		GUIParameter[][] repos = new GUIParameter[2][7];
 
-		return params;
+		// In the first array insert the folders
+		repos[0][0] = new GUIParameter("dbdir", conf.getProperty("conf.dbdir"));
+		repos[0][1] = new GUIParameter("exportdir", conf.getProperty("conf.exportdir"));
+		repos[0][2] = new GUIParameter("importdir", conf.getProperty("conf.importdir"));
+		repos[0][3] = new GUIParameter("indexdir", conf.getProperty("conf.indexdir"));
+		repos[0][4] = new GUIParameter("logdir", conf.getProperty("conf.logdir"));
+		repos[0][5] = new GUIParameter("plugindir", conf.getProperty("conf.plugindir"));
+		repos[0][6] = new GUIParameter("userdir", conf.getProperty("conf.userdir"));
+
+		// In the second array insert the available stores
+		int i = 0;
+		for (Object key : conf.keySet()) {
+			String name = key.toString();
+			if (name.startsWith("store.")) {
+				repos[1][i] = new GUIParameter(name, conf.getProperty(name));
+				i++;
+			}
+		}
+
+		return repos;
 	}
 
 	@Override
-	public void saveFolders(String sid, GUIParameter[] folders) throws InvalidSessionException {
+	public void saveRepositories(String sid, GUIParameter[][] repos) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		try {
-			for (GUIParameter f : folders) {
+			// First of all the folders
+			for (GUIParameter f : repos[0]) {
 				conf.setProperty("conf." + f.getName(), f.getValue());
+			}
+			// Now the storages
+			for (GUIParameter f : repos[1]) {
+				if (f == null || f.getValue().trim().isEmpty())
+					continue;
+				conf.setProperty(f.getName(), f.getValue());
 			}
 			conf.write();
 		} catch (IOException e) {
@@ -300,5 +321,26 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
 		}
+	}
+
+	@Override
+	public GUIParameter[] computeStoragesSize(String sid) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		List<GUIParameter> storagesList = new ArrayList<GUIParameter>();
+		GUIParameter param = null;
+		for (Object key : conf.keySet()) {
+			String name = key.toString();
+			if (name.startsWith("store.") && !name.endsWith("write")) {
+				File docDir = new File(conf.getProperty(name));
+				if (docDir.exists()) {
+					param = new GUIParameter(name, "" + (FileUtils.sizeOfDirectory(docDir) / (1024 * 1024)));
+					storagesList.add(param);
+				}
+			}
+		}
+
+		return storagesList.toArray(new GUIParameter[0]);
 	}
 }
