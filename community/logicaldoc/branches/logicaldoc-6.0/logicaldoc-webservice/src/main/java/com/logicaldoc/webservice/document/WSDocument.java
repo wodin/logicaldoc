@@ -139,8 +139,6 @@ public class WSDocument {
 	// Contains the snippet search text
 	private String summary;
 
-	private int dateCategory;
-
 	private int docType;
 
 	private Integer score;
@@ -316,7 +314,7 @@ public class WSDocument {
 		doc.setFileSize(fileSize);
 		doc.setDigest(digest);
 		doc.setDocRef(docRef);
-		
+
 		return doc;
 	}
 
@@ -638,14 +636,6 @@ public class WSDocument {
 
 	public void setSummary(String summary) {
 		this.summary = summary;
-	}
-
-	public int getDateCategory() {
-		return dateCategory;
-	}
-
-	public void setDateCategory(int dateCategory) {
-		this.dateCategory = dateCategory;
 	}
 
 	public int getDocType() {
