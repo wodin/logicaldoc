@@ -62,7 +62,7 @@ public class AccountStandardProperties extends AccountDetailsTab {
 			formsContainer.removeChild(form);
 
 		form = new DynamicForm();
-		form.setNumCols(2);
+		form.setNumCols(3);
 		form.setTitleOrientation(TitleOrientation.TOP);
 
 		TextItem mailaddress = ItemFactory.newEmailItem("mailaddress", "email", false);
@@ -97,7 +97,12 @@ public class AccountStandardProperties extends AccountDetailsTab {
 		protocol.setRequired(true);
 		protocol.setValue(account.getProvider());
 
-		form.setItems(mailaddress, server, username, password, targetSelector, language, protocol, port, ssl);
+		SelectItem foldering = ItemFactory.newEmailFolderingSelector("foldering", "foldering");
+		foldering.addChangedHandler(changedHandler);
+		foldering.setRequired(true);
+		foldering.setValue("" + account.getFoldering());
+
+		form.setItems(mailaddress, server, targetSelector, username, password, foldering, language, protocol, port, ssl);
 
 		formsContainer.addMember(form);
 	}
@@ -119,7 +124,7 @@ public class AccountStandardProperties extends AccountDetailsTab {
 			else
 				account.setPort(Integer.parseInt((String) values.get("port")));
 			account.setSsl("yes".equals((String) values.get("ssl")));
-
+			account.setFoldering(Integer.parseInt((String) values.get("foldering")));
 		}
 		return !form.hasErrors();
 	}

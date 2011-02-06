@@ -567,6 +567,18 @@ public class ItemFactory {
 		return select;
 	}
 
+	public static SelectItem newEmailFolderingSelector(String name, String title) {
+		SelectItem select = new SelectItem(name, I18N.message(title));
+		select.setWidth(110);
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		map.put("0", I18N.message("none"));
+		map.put("1", I18N.message("year"));
+		map.put("2", I18N.message("month"));
+		map.put("3", I18N.message("day"));
+		select.setValueMap(map);
+		return select;
+	}
+
 	public static SelectItem newEmailFields(String name, String title) {
 		SelectItem select = new SelectItem(name, I18N.message(title));
 		select.setWidth(110);

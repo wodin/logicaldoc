@@ -49,6 +49,8 @@ public class GUIEmailAccount implements Serializable {
 
 	private boolean ssl = false;
 
+	private int foldering = 2;
+
 	/**
 	 * This attribute defines the EmailAccount storage format.
 	 * 
@@ -63,7 +65,7 @@ public class GUIEmailAccount implements Serializable {
 
 	public GUIEmailAccount() {
 		super();
-		target=null;
+		target = null;
 	}
 
 	public Long getId() {
@@ -200,5 +202,13 @@ public class GUIEmailAccount implements Serializable {
 
 	public void setRules(GUIEmailRule[] rules) {
 		this.rules = rules;
+	}
+
+	public int getFoldering() {
+		return foldering;
+	}
+
+	public void setFoldering(int foldering) {
+		this.foldering = foldering;
 	}
 }
