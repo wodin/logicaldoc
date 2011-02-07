@@ -40,7 +40,8 @@ public class AccountStandardProperties extends AccountDetailsTab {
 		targetSelector.setTitle(I18N.message("target"));
 		targetSelector.setColSpan(2);
 		targetSelector.setEndRow(true);
-		targetSelector.setFolder(account.getTarget());
+		if (account.getTarget() != null)
+			targetSelector.setFolder(account.getTarget());
 		targetSelector.addFolderChangeListener(new FolderChangeListener() {
 			@Override
 			public void onChanged(GUIFolder folder) {
