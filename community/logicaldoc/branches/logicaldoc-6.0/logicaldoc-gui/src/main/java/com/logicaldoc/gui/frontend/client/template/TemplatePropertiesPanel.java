@@ -12,12 +12,15 @@ import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.services.TemplateService;
 import com.logicaldoc.gui.frontend.client.services.TemplateServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
+import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VerticalAlignment;
+import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.TransferImgButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -35,11 +38,16 @@ import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
+import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.layout.VStack;
+import com.smartgwt.client.widgets.menu.Menu;
+import com.smartgwt.client.widgets.menu.MenuItem;
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 public class TemplatePropertiesPanel extends HLayout {
 
@@ -63,8 +71,6 @@ public class TemplatePropertiesPanel extends HLayout {
 	public String updatingAttributeName = "";
 
 	private ListGrid attributesList;
-
-	private ListGridRecord[] lastAttributesGrid = new ListGridRecord[0];
 
 	public TemplatePropertiesPanel() {
 
@@ -96,8 +102,17 @@ public class TemplatePropertiesPanel extends HLayout {
 		attributesList.setCanGroupBy(false);
 		attributesList.setLeaveScrollbarGap(false);
 		attributesList.setShowHeader(true);
+		attributesList.setSelectionType(SelectionStyle.SINGLE);
 		ListGridField name = new ListGridField("name", I18N.message("attributes"));
 		attributesList.setFields(name);
+		if (!template.isReadonly())
+			attributesList.addCellContextClickHandler(new CellContextClickHandler() {
+				@Override
+				public void onCellContextClick(CellContextClickEvent event) {
+					showContextMenu();
+					event.cancel();
+				}
+			});
 		if (template.getId() != 0)
 			fillAttributesList(template.getId());
 
@@ -123,8 +138,6 @@ public class TemplatePropertiesPanel extends HLayout {
 						guiAttributes.put(att.getName(), att);
 						attributesList.getRecordList().add(record);
 					}
-					lastAttributesGrid = new ListGridRecord[attributesList.getRecords().length];
-					lastAttributesGrid = attributesList.getRecords();
 				}
 			}
 		});
@@ -177,7 +190,6 @@ public class TemplatePropertiesPanel extends HLayout {
 						form2.setValue("mandatory", extAttr.isMandatory());
 						form2.setValue("type", extAttr.getType());
 						updatingAttributeName = extAttr.getName();
-						form2.getField("attributeName").setDisabled(true);
 					}
 				}
 			});
@@ -337,11 +349,14 @@ public class TemplatePropertiesPanel extends HLayout {
 						GUIExtendedAttribute att = guiAttributes.get(updatingAttributeName);
 						if (att != null) {
 							changedHandler.onChanged(null);
+							att.setName(attributeName.getValueAsString());
 							att.setMandatory((Boolean) mandatory.getValue());
 							if (type.getValue() instanceof String)
 								att.setType(Integer.parseInt((String) type.getValue()));
 							else
 								att.setType((Integer) type.getValue());
+
+							updateAttribute(att, updatingAttributeName);
 
 							clean();
 							detailsPanel.getSavePanel().setVisible(true);
@@ -404,6 +419,19 @@ public class TemplatePropertiesPanel extends HLayout {
 		attributesList.deselectRecord(record);
 	}
 
+	private void updateAttribute(GUIExtendedAttribute att, String oldAttrName) {
+		attributesList.removeSelectedData();
+		guiAttributes.remove(oldAttrName);
+
+		ListGridRecord record = new ListGridRecord();
+		record.setAttribute("name", att.getName());
+		attributesList.getDataAsRecordList().add(record);
+		guiAttributes.put(att.getName(), att);
+		detailsPanel.getSavePanel().setVisible(true);
+		form2.clearValues();
+		attributesList.deselectRecord(record);
+	}
+
 	private void clean() {
 		form2.clearValues();
 		form2.getField("attributeName").setDisabled(false);
@@ -413,7 +441,45 @@ public class TemplatePropertiesPanel extends HLayout {
 	}
 
 	private void restore() {
-		attributesList.setData(lastAttributesGrid);
+		guiAttributes.clear();
+		attributesList.clear();
+		attributesList.setRecords(new ListGridRecord[0]);
+		fillAttributesList(template.getId());
 		clean();
+	}
+
+	private void showContextMenu() {
+		Menu contextMenu = new Menu();
+
+		MenuItem delete = new MenuItem();
+		delete.setTitle(I18N.message("ddelete"));
+		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				final ListGridRecord[] selection = attributesList.getSelection();
+				if (selection == null || selection.length == 0)
+					return;
+				final String[] names = new String[selection.length];
+				for (int i = 0; i < selection.length; i++) {
+					names[i] = selection[i].getAttribute("name");
+				}
+
+				LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							detailsPanel.getSavePanel().setVisible(true);
+							for (String attrName : names) {
+								guiAttributes.remove(attrName);
+							}
+							attributesList.removeSelectedData();
+							clean();
+						}
+					}
+				});
+			}
+		});
+
+		contextMenu.setItems(delete);
+		contextMenu.showContextMenu();
 	}
 }
