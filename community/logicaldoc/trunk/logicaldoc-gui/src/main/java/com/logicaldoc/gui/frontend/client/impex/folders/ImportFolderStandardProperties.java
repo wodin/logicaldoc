@@ -38,7 +38,8 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 		targetSelector.setTitle(I18N.message("target"));
 		targetSelector.setColSpan(2);
 		targetSelector.setEndRow(true);
-		targetSelector.setFolder(share.getTarget());
+		if (share.getTarget() != null)
+			targetSelector.setFolder(share.getTarget());
 		targetSelector.addFolderChangeListener(new FolderChangeListener() {
 			@Override
 			public void onChanged(GUIFolder folder) {
