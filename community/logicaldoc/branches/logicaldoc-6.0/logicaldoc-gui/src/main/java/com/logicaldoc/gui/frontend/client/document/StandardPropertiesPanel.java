@@ -125,8 +125,10 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 	}
 
 	private void prepareRightForm() {
-		if (formsContainer.contains(form2))
+		if (formsContainer.contains(form2)) {
 			formsContainer.removeMember(form2);
+			form2.destroy();
+		}
 
 		form2 = new DynamicForm();
 		form2.setValuesManager(vm);
