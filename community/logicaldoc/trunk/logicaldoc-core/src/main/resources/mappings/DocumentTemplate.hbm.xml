@@ -16,6 +16,7 @@
       <key column="ld_templateid" />
       <map-key type="string" column="ld_name" length="255" />
       <composite-element class="com.logicaldoc.core.ExtendedAttribute">
+        <property name="label" type="string" column="ld_label" length="255"/>
         <property name="mandatory" type="int" column="ld_mandatory" not-null="true" />
         <property name="type" type="int" column="ld_type" not-null="true" />
         <property name="position" type="int" column="ld_position" not-null="true"/>

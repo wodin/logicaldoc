@@ -69,11 +69,11 @@ public class ItemFactory {
 	 * 
 	 * @param name The item name (mandatory)
 	 */
-	public static DateItem newDateItemForExtendedAttribute(String name) {
+	public static DateItem newDateItemForExtendedAttribute(String name, String label) {
 		// We cannot use spaces in items name
 		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		final DateItem date = new DateItem(itemName);
-		date.setTitle(name);
+		date.setTitle(label);
 		date.setUseTextField(true);
 		date.setUseMask(false);
 		date.setShowPickerIcon(true);
@@ -377,12 +377,12 @@ public class ItemFactory {
 	 * @param name The item name (mandatory)
 	 * @param value The item value (optional)
 	 */
-	public static TextItem newTextItemForExtendedAttribute(String name, String value) {
+	public static TextItem newTextItemForExtendedAttribute(String name, String label, String value) {
 		// We cannot use spaces in items name
 		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		TextItem item = new TextItem();
 		item.setName(itemName);
-		item.setTitle(name);
+		item.setTitle(label);
 		if (value != null)
 			item.setValue(value);
 		else
@@ -463,12 +463,12 @@ public class ItemFactory {
 	 * @param name The item name (mandatory)
 	 * @param value The item value (optional)
 	 */
-	public static IntegerItem newIntegerItemForExtendedAttribute(String name, Integer value) {
+	public static IntegerItem newIntegerItemForExtendedAttribute(String name, String label, Integer value) {
 		// We cannot use spaces in items name
 		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		IntegerItem item = new IntegerItem();
 		item.setName(itemName);
-		item.setTitle(name);
+		item.setTitle(label);
 		if (value != null)
 			item.setValue(value);
 		item.setRequiredMessage(I18N.message("fieldrequired"));
@@ -680,12 +680,12 @@ public class ItemFactory {
 	 * @param name The item name (mandatory)
 	 * @param value The item value (optional)
 	 */
-	public static FloatItem newFloatItemForExtendedAttribute(String name, Float value) {
+	public static FloatItem newFloatItemForExtendedAttribute(String name, String label, Float value) {
 		// We cannot use spaces in items name
 		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		FloatItem item = new FloatItem();
 		item.setName(itemName);
-		item.setTitle(name);
+		item.setTitle(label);
 		if (value != null)
 			item.setValue(value);
 		item.setRequiredMessage(I18N.message("fieldrequired"));

@@ -74,11 +74,11 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		TextItem sourceItem = ItemFactory.newTextItem("source", "source", document.getSource());
 		sourceItem.addChangedHandler(changedHandler);
 		sourceItem.setDisabled(!update);
-		
+
 		TextItem sourceId = ItemFactory.newTextItem("sourceid", "sourceid", document.getSourceId());
 		sourceId.addChangedHandler(changedHandler);
 		sourceId.setDisabled(!update);
-		
+
 		final DateItem sourceDate = ItemFactory.newDateItem("date", "date");
 		sourceDate.setValue(document.getSourceDate());
 		sourceDate.addChangedHandler(changedHandler);
@@ -194,7 +194,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 				List<FormItem> items = new ArrayList<FormItem>();
 				for (GUIExtendedAttribute att : result) {
 					if (att.getType() == GUIExtendedAttribute.TYPE_STRING) {
-						TextItem item = ItemFactory.newTextItemForExtendedAttribute(att.getName(), null);
+						TextItem item = ItemFactory.newTextItemForExtendedAttribute(att.getName(), att.getLabel(), null);
 						if (document.getValue(att.getName()) != null)
 							item.setValue((String) document.getValue(att.getName()));
 						item.setRequired(att.isMandatory());
@@ -202,7 +202,8 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.setDisabled(!update);
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
-						IntegerItem item = ItemFactory.newIntegerItemForExtendedAttribute(att.getName(), null);
+						IntegerItem item = ItemFactory.newIntegerItemForExtendedAttribute(att.getName(),
+								att.getLabel(), null);
 						if (document.getValue(att.getName()) != null)
 							item.setValue((Long) document.getValue(att.getName()));
 						item.setRequired(att.isMandatory());
@@ -210,7 +211,8 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.setDisabled(!update);
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
-						FloatItem item = ItemFactory.newFloatItemForExtendedAttribute(att.getName(), null);
+						FloatItem item = ItemFactory.newFloatItemForExtendedAttribute(att.getName(), att.getLabel(),
+								null);
 						if (document.getValue(att.getName()) != null)
 							item.setValue((Double) document.getValue(att.getName()));
 						item.setRequired(att.isMandatory());
@@ -218,7 +220,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.setDisabled(!update);
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
-						final DateItem item = ItemFactory.newDateItemForExtendedAttribute(att.getName());
+						final DateItem item = ItemFactory.newDateItemForExtendedAttribute(att.getName(), att.getLabel());
 						if (document.getValue(att.getName()) != null)
 							item.setValue((Date) document.getValue(att.getName()));
 						item.setRequired(att.isMandatory());
