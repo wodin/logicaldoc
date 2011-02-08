@@ -409,6 +409,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			att.setPosition(extAttr.getPosition());
 			att.setMandatory(extAttr.getMandatory() == 1 ? true : false);
 			att.setType(extAttr.getType());
+			att.setLabel(extAttr.getLabel());
 
 			if (extAttr.getValue() instanceof String)
 				att.setStringValue(extAttr.getStringValue());
@@ -481,6 +482,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						ExtendedAttribute extAttr = doc.getAttributes().get(name);
 						GUIExtendedAttribute attr = new GUIExtendedAttribute();
 						attr.setName(name);
+						attr.setLabel(extAttr.getLabel());
 						attr.setType(extAttr.getType());
 						if (extAttr.getValue() == null) {
 							if (extAttr.getType() == ExtendedAttribute.TYPE_INT) {
@@ -904,6 +906,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 									}
 								}
 
+								extAttr.setLabel(attr.getLabel());
 								extAttr.setType(templateType);
 								extAttr.setPosition(attr.getPosition());
 								extAttr.setMandatory(attr.isMandatory() ? 1 : 0);

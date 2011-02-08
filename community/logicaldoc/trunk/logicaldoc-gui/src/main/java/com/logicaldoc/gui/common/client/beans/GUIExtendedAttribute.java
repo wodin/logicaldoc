@@ -38,6 +38,8 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 	private int position = 0;
 
 	private String name;
+	
+	private String label;
 
 	public String getStringValue() {
 		return stringValue;
@@ -154,5 +156,13 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 }

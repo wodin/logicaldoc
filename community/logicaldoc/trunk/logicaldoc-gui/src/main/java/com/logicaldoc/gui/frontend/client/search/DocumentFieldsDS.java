@@ -125,27 +125,27 @@ public class DocumentFieldsDS extends DataSource {
 			for (GUIExtendedAttribute att : template.getAttributes()) {
 				DataSourceField field = null;
 				String name = "_" + att.getName().replaceAll(" ", Constants.BLANK_PLACEHOLDER);
-				String titl = att.getName() + " (" + template.getName() + ")";
+				String titl = att.getLabel() + " (" + template.getName() + ")";
 				if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
 					field = new DataSourceDateTimeField();
 					field.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN);
 					field.setEditorType(ItemFactory.newDateItem(name, titl));
-					name=name+Constants.BLANK_PLACEHOLDER+"type:"+GUIExtendedAttribute.TYPE_DATE;
+					name = name + Constants.BLANK_PLACEHOLDER + "type:" + GUIExtendedAttribute.TYPE_DATE;
 				} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
 					field = new DataSourceFloatField();
 					field.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN, OperatorId.EQUALS,
 							OperatorId.NOT_EQUAL);
-					name=name+Constants.BLANK_PLACEHOLDER+"type:"+GUIExtendedAttribute.TYPE_DOUBLE;
+					name = name + Constants.BLANK_PLACEHOLDER + "type:" + GUIExtendedAttribute.TYPE_DOUBLE;
 				} else if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
 					field = new DataSourceIntegerField();
 					field.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN, OperatorId.EQUALS,
 							OperatorId.NOT_EQUAL);
-					name=name+Constants.BLANK_PLACEHOLDER+"type:"+GUIExtendedAttribute.TYPE_INT;
+					name = name + Constants.BLANK_PLACEHOLDER + "type:" + GUIExtendedAttribute.TYPE_INT;
 				} else {
 					field = new DataSourceTextField();
 					field.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
 							OperatorId.NOT_EQUAL);
-					name=name+Constants.BLANK_PLACEHOLDER+"type:"+GUIExtendedAttribute.TYPE_STRING;
+					name = name + Constants.BLANK_PLACEHOLDER + "type:" + GUIExtendedAttribute.TYPE_STRING;
 				}
 
 				field.setName(name);

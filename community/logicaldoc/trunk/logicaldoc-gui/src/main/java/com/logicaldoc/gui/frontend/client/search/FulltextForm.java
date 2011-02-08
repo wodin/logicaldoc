@@ -312,7 +312,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 					// We cannot use spaces in items name
 					String itemName = "_" + att.getName().replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 					if (att.getType() == GUIExtendedAttribute.TYPE_STRING) {
-						CheckboxItem item = new CheckboxItem(itemName, att.getName());
+						CheckboxItem item = new CheckboxItem(itemName, att.getLabel());
 						items.add(item);
 					}
 				}

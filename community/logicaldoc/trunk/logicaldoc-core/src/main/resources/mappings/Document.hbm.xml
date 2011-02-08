@@ -48,7 +48,7 @@
 		<many-to-one name="folder" class="com.logicaldoc.core.security.Folder" column="ld_folderid" />
 		<many-to-one name="template" class="com.logicaldoc.core.document.DocumentTemplate" column="ld_templateid" />
 		
-		<set name="tags" table="ld_tag" lazy="true" cascade="all" order-by="ld_tag">
+		<set name="tags" table="ld_tag" lazy="true" cascade="all" order-by="ld_tag"> 
 			<key column="ld_docid" />
 			<element type="string" column="ld_tag" length="255" />
 		</set>
@@ -56,6 +56,7 @@
 		   <key column="ld_docid" />
 		   <map-key type="string" column="ld_name" length="255"/>
 		   <composite-element class="com.logicaldoc.core.ExtendedAttribute">
+		   	   <property name="label" type="string" column="ld_label" length="255"/>
     	       <property name="mandatory" type="int" column="ld_mandatory" not-null="true"/>
     	       <property name="type" type="int" column="ld_type" not-null="true"/>
                <property name="position" type="int" column="ld_position" not-null="true"/>

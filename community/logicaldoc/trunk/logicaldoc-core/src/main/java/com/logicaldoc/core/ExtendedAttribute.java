@@ -20,6 +20,8 @@ public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 
 	public static final int TYPE_DATE = 3;
 
+	private String label;
+
 	private String stringValue;
 
 	private Long intValue;
@@ -144,5 +146,13 @@ public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 	@Override
 	public int compareTo(ExtendedAttribute o) {
 		return new Integer(getPosition()).compareTo(o.getPosition());
+	}
+	
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 }

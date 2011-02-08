@@ -64,6 +64,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 						att.setPosition(attribute.getPosition());
 						att.setMandatory(attribute.isMandatory() ? 1 : 0);
 						att.setType(attribute.getType());
+						att.setLabel(attribute.getLabel());
 						if (attribute.getValue() instanceof String)
 							att.setStringValue(attribute.getStringValue());
 						else if (attribute.getValue() instanceof Long)
@@ -87,7 +88,6 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 			throw new RuntimeException(t.getMessage(), t);
 		}
 
-		// TODO Rinumerare gli attributi in base all'ordine nell'array
 		return template;
 	}
 
@@ -116,6 +116,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 				att.setPosition(extAttr.getPosition());
 				att.setMandatory(extAttr.getMandatory() == 1 ? true : false);
 				att.setType(extAttr.getType());
+				att.setLabel(extAttr.getLabel());
 				if (extAttr.getValue() instanceof String)
 					att.setStringValue(extAttr.getStringValue());
 				else if (extAttr.getValue() instanceof Long)

@@ -187,6 +187,7 @@ public class TemplatePropertiesPanel extends HLayout {
 						String selectedAttributeName = record.getAttributeAsString("name");
 						GUIExtendedAttribute extAttr = guiAttributes.get(selectedAttributeName);
 						form2.setValue("attributeName", extAttr.getName());
+						form2.setValue("label", extAttr.getLabel());
 						form2.setValue("mandatory", extAttr.isMandatory());
 						form2.setValue("type", extAttr.getType());
 						updatingAttributeName = extAttr.getName();
@@ -292,8 +293,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		form2.setTitleOrientation(TitleOrientation.LEFT);
 
 		// Attribute Name
-		final TextItem attributeName = ItemFactory.newSimpleTextItem("attributeName", I18N.message("attributename"),
-				null);
+		final TextItem attributeName = ItemFactory.newSimpleTextItem("attributeName", "attributename", null);
 		attributeName.setRequired(true);
 		PickerIcon cleanPicker = new PickerIcon(PickerIcon.CLEAR, new FormItemClickHandler() {
 			public void onFormItemClick(FormItemIconClickEvent event) {
@@ -305,6 +305,10 @@ public class TemplatePropertiesPanel extends HLayout {
 			attributeName.setIcons(cleanPicker);
 		} else
 			attributeName.setDisabled(true);
+
+		// Attribute Name
+		final TextItem label = ItemFactory.newTextItem("label", "label", null);
+		label.setDisabled(template.isReadonly());
 
 		// Mandatory
 		final CheckboxItem mandatory = new CheckboxItem();
@@ -338,6 +342,7 @@ public class TemplatePropertiesPanel extends HLayout {
 					if (updatingAttributeName.trim().isEmpty()) {
 						GUIExtendedAttribute att = new GUIExtendedAttribute();
 						att.setName((String) attributeName.getValue());
+						att.setLabel((String) label.getValue());
 						att.setPosition(guiAttributes.size());
 						att.setMandatory((Boolean) mandatory.getValue());
 						att.setType(Integer.parseInt((String) type.getValue()));
@@ -350,6 +355,7 @@ public class TemplatePropertiesPanel extends HLayout {
 						if (att != null) {
 							changedHandler.onChanged(null);
 							att.setName(attributeName.getValueAsString());
+							att.setLabel((String) label.getValue());
 							att.setMandatory((Boolean) mandatory.getValue());
 							if (type.getValue() instanceof String)
 								att.setType(Integer.parseInt((String) type.getValue()));
@@ -374,7 +380,7 @@ public class TemplatePropertiesPanel extends HLayout {
 			}
 		});
 
-		form2.setItems(attributeName, mandatory, type);
+		form2.setItems(attributeName, label, mandatory, type);
 		if (!template.isReadonly())
 			buttons.setMembers(addUpdate, restore);
 		buttons.setMembersMargin(10);

@@ -64,6 +64,7 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 
 		GUIExtendedAttribute att = new GUIExtendedAttribute();
 		att.setName("Attribute A");
+		att.setLabel("Attribute A");
 		att.setPosition(0);
 		att.setMandatory(true);
 		att.setType(GUIExtendedAttribute.TYPE_INT);
@@ -71,18 +72,21 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 
 		att = new GUIExtendedAttribute();
 		att.setName("Attribute B");
+		att.setLabel("Attribute B");
 		att.setPosition(1);
 		att.setType(GUIExtendedAttribute.TYPE_DOUBLE);
 		attributes[1] = att;
 
 		att = new GUIExtendedAttribute();
 		att.setName("Attribute C");
+		att.setLabel("Attribute C");
 		att.setPosition(2);
 		att.setType(GUIExtendedAttribute.TYPE_STRING);
 		attributes[2] = att;
 
 		att = new GUIExtendedAttribute();
 		att.setName("Attribute D");
+		att.setLabel("Attribute D");
 		att.setPosition(3);
 		att.setType(GUIExtendedAttribute.TYPE_DATE);
 		attributes[3] = att;
