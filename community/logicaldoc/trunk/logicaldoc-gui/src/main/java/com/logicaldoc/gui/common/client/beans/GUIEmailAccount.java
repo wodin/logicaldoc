@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.common.client.beans;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Model of an email account.
@@ -50,6 +51,8 @@ public class GUIEmailAccount implements Serializable {
 	private boolean ssl = false;
 
 	private int foldering = 2;
+
+	private Date startDate;
 
 	/**
 	 * This attribute defines the EmailAccount storage format.
@@ -210,5 +213,13 @@ public class GUIEmailAccount implements Serializable {
 
 	public void setFoldering(int foldering) {
 		this.foldering = foldering;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
 	}
 }

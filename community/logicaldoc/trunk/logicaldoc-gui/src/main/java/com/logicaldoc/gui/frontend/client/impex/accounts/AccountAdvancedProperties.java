@@ -1,17 +1,22 @@
 package com.logicaldoc.gui.frontend.client.impex.accounts;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.logicaldoc.gui.common.client.beans.GUIEmailAccount;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 
 /**
@@ -72,7 +77,27 @@ public class AccountAdvancedProperties extends AccountDetailsTab {
 		deleteFomMailbox.addChangedHandler(changedHandler);
 		deleteFomMailbox.setValue(account.isDeleteFromMailbox());
 
-		form.setItems(folder, format, include, exclude, deleteFomMailbox);
+		final DateItem startDate = ItemFactory.newDateItem("startdate", "earliestdate");
+		startDate.addChangedHandler(changedHandler);
+		startDate.setValue(account.getStartDate());
+		startDate.setUseMask(false);
+		startDate.setShowPickerIcon(true);
+		startDate.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
+		startDate.addKeyPressHandler(new KeyPressHandler() {
+			@Override
+			public void onKeyPress(KeyPressEvent event) {
+				if ("backspace".equals(event.getKeyName().toLowerCase())
+						|| "delete".equals(event.getKeyName().toLowerCase())) {
+					startDate.clearValue();
+					startDate.setValue((Date) null);
+					changedHandler.onChanged(null);
+				} else {
+					changedHandler.onChanged(null);
+				}
+			}
+		});
+
+		form.setItems(folder, format, include, exclude, startDate, deleteFomMailbox);
 
 		formsContainer.addMember(form);
 	}
@@ -87,6 +112,7 @@ public class AccountAdvancedProperties extends AccountDetailsTab {
 			account.setDeleteFromMailbox((Boolean) values.get("delete"));
 			account.setMailFolder((String) values.get("mailfolder"));
 			account.setFormat(Integer.parseInt((String) values.get("format")));
+			account.setStartDate((Date) values.get("startdate"));
 		}
 		return !form.hasErrors();
 	}
