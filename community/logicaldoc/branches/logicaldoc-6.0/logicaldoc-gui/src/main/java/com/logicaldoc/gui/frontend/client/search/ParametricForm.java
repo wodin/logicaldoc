@@ -268,11 +268,11 @@ public class ParametricForm extends VLayout {
 		List<GUICriterion> list = new ArrayList<GUICriterion>();
 		for (RowCriteria row : criteriaRows) {
 
-			String fieldName = row.getCriteriaFieldsItem().getValueAsString();
+			String fieldName = (String)row.getCriteriaFieldsItem().getValue();
 			fieldName = fieldName.replaceAll(Constants.BLANK_PLACEHOLDER, " ");
 			if (fieldName.startsWith("_"))
 				fieldName = fieldName.substring(1);
-			String fieldOperator = row.getOperatorsFieldsItem().getValueAsString();
+			String fieldOperator = (String)row.getOperatorsFieldsItem().getValue();
 			Object fieldValue = row.getValueFieldsItem().getValue();
 
 			// This lines are necessary to avoid error for GWT values type.

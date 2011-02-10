@@ -349,7 +349,7 @@ public class TemplatePropertiesPanel extends HLayout {
 						GUIExtendedAttribute att = guiAttributes.get(updatingAttributeName);
 						if (att != null) {
 							changedHandler.onChanged(null);
-							att.setName(attributeName.getValueAsString());
+							att.setName((String) attributeName.getValue());
 							att.setMandatory((Boolean) mandatory.getValue());
 							if (type.getValue() instanceof String)
 								att.setType(Integer.parseInt((String) type.getValue()));

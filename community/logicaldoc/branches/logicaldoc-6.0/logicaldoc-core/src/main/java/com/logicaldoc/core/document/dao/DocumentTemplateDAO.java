@@ -17,4 +17,12 @@ public interface DocumentTemplateDAO extends PersistentObjectDAO<DocumentTemplat
 	 * @return DocumentTemplate with given name.
 	 */
 	public DocumentTemplate findByName(String name);
+
+	/**
+	 * Counts the total number of documents using this template
+	 * 
+	 * @param id The template ID
+	 * @return the documents count
+	 */
+	public int countDocs(long id);
 }
