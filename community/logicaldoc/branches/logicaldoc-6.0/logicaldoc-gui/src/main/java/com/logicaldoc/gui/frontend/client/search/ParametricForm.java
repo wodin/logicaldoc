@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.search;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,24 +21,24 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.FolderSelector;
 import com.logicaldoc.gui.frontend.client.services.TemplateService;
 import com.logicaldoc.gui.frontend.client.services.TemplateServiceAsync;
-import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.types.TopOperatorAppearance;
 import com.smartgwt.client.util.JSOHelper;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
-import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.ImgButton;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.FilterBuilder;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
+import com.smartgwt.client.widgets.form.fields.IntegerItem;
+import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
@@ -55,27 +56,81 @@ public class ParametricForm extends VLayout {
 
 	private FolderSelector folder;
 
-	private FilterBuilder filterBuilder;
+	private List<RowCriteria> criteriaRows = null;
+
+	private GUITemplate selectedTemplate = null;
+
+	private VLayout rowsLayout = null;
 
 	public ParametricForm() {
 		setHeight100();
 		setMargin(3);
+		setTop(5);
 		setMembersMargin(5);
 		setAlign(Alignment.LEFT);
 
-		filterBuilder = new FilterBuilder();
-		filterBuilder.setDataSource(new DocumentFieldsDS(null));
-		filterBuilder.setTopOperatorAppearance(TopOperatorAppearance.RADIO);
+		HLayout topLayout = new HLayout(85);
+
+		final DynamicForm languageForm = new DynamicForm();
+		languageForm.setValuesManager(vm);
+		languageForm.setTitleOrientation(TitleOrientation.TOP);
+		languageForm.setNumCols(2);
+		SelectItem language = ItemFactory.newLanguageSelector("language", true, false);
+		language.setDefaultValue("");
+		languageForm.setItems(language);
+
+		IButton search = new IButton(I18N.message("search"));
+		search.setWidth(100);
+		search.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
+			@Override
+			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+				search();
+			}
+		});
+
+		topLayout.setMembers(languageForm, search);
+		topLayout.setTop(5);
+		topLayout.setHeight(15);
+		addMember(topLayout);
+
+		final DynamicForm form = new DynamicForm();
+		form.setValuesManager(vm);
+		form.setTitleOrientation(TitleOrientation.TOP);
+		form.setNumCols(2);
+		form.setWidth(400);
+
+		folder = new FolderSelector(null, true);
+		folder.setColSpan(2);
+		folder.setEndRow(true);
+
+		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders2"));
+		subfolders.setColSpan(2);
+		subfolders.setEndRow(true);
+		subfolders.setShowIfCondition(new FormItemIfFunction() {
+			public boolean execute(FormItem item, Object value, DynamicForm form) {
+				return folder.getValue() != null && !"".equals(folder.getValue());
+			}
+		});
+
+		LinkedHashMap<String, String> matchMap = new LinkedHashMap<String, String>();
+		matchMap.put("and", I18N.message("matchall"));
+		matchMap.put("or", I18N.message("matchany"));
+		matchMap.put("not", I18N.message("matchnone"));
+		RadioGroupItem match = new RadioGroupItem("match");
+		match.setDefaultValue("and");
+		match.setShowTitle(false);
+		match.setValueMap(matchMap);
+		match.setVertical(false);
+		match.setWrap(false);
+		match.setWrapTitle(false);
+		match.setWidth(300);
 
 		if (Feature.visible(Feature.TEMPLATE)) {
-			DynamicForm templateForm = new DynamicForm();
-			templateForm.setTitleOrientation(TitleOrientation.TOP);
-			templateForm.setNumCols(1);
-			templateForm.setValuesManager(vm);
-			templateForm.setWidth(300);
-
 			SelectItem template = ItemFactory.newTemplateSelector(false, null);
 			template.setMultiple(false);
+			template.setColSpan(2);
+			template.setEndRow(true);
 			template.addChangedHandler(new ChangedHandler() {
 				@Override
 				public void onChanged(ChangedEvent event) {
@@ -89,56 +144,103 @@ public class ParametricForm extends VLayout {
 
 									@Override
 									public void onSuccess(GUITemplate result) {
-										filterBuilder.setDataSource(new DocumentFieldsDS(result));
+										selectedTemplate = result;
+										reloadCriteriaRows(selectedTemplate, true);
 									}
 								});
 					} else {
-						filterBuilder.setDataSource(new DocumentFieldsDS(null));
+						selectedTemplate = null;
+						reloadCriteriaRows(selectedTemplate, true);
 					}
 				}
 			});
 
-			templateForm.setItems(template);
-			addMember(templateForm);
+			form.setItems(folder, subfolders, template, match);
+		} else {
+			form.setItems(folder, subfolders, match);
 		}
 
-		addMember(filterBuilder);
-
-		final DynamicForm form = new DynamicForm();
-		form.setValuesManager(vm);
-		form.setTitleOrientation(TitleOrientation.TOP);
-		form.setNumCols(1);
-		form.setWidth(300);
-
-		SelectItem language = ItemFactory.newLanguageSelector("language", true, false);
-
-		folder = new FolderSelector(null, true);
-
-		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders2"));
-		subfolders.setColSpan(3);
-		subfolders.setShowIfCondition(new FormItemIfFunction() {
-			public boolean execute(FormItem item, Object value, DynamicForm form) {
-				return folder.getValue() != null && !"".equals(folder.getValue());
-			}
-		});
-
-		form.setItems(language, folder, subfolders);
 		addMember(form);
 
-		IButton search = new IButton(I18N.message("search"));
-		addMember(search);
+		ImgButton addImg = new ImgButton();
+		addImg.setShowDown(false);
+		addImg.setShowRollOver(false);
+		addImg.setLayoutAlign(Alignment.LEFT);
+		addImg.setSrc("[SKIN]/actions/add.png");
+		addImg.setHeight(18);
+		addImg.setWidth(18);
+		addImg.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
-		search.addClickHandler(new ClickHandler() {
 			@Override
-			public void onClick(ClickEvent event) {
-				search();
+			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+				addCriteriaRow();
 			}
 		});
+
+		addMember(addImg);
+
+		reloadCriteriaRows(null, false);
+	}
+
+	public void reloadCriteriaRows(GUITemplate template, boolean reload) {
+		// When the selected template change, we have to retrieve the correct
+		// criteria row,because someone has been deleted
+		if (criteriaRows != null && reload) {
+			criteriaRows.clear();
+			for (Canvas canvas : rowsLayout.getMembers()) {
+				if (canvas instanceof RowCriteria)
+					criteriaRows.add((RowCriteria) canvas);
+			}
+		}
+
+		if (rowsLayout != null) {
+			for (Canvas member : rowsLayout.getMembers()) {
+				removeMember(member);
+			}
+			removeMember(rowsLayout);
+		}
+
+		rowsLayout = new VLayout(5);
+
+		if (criteriaRows == null || criteriaRows.isEmpty()) {
+			criteriaRows = new ArrayList<RowCriteria>();
+			criteriaRows.add(new RowCriteria(template, 0));
+		}
+
+		// When the selected template change, we must reload the criteria
+		// field,so we reload all criteria rows
+		if (reload) {
+			int count = criteriaRows.size();
+			criteriaRows.clear();
+			for (int i = 0; i < count; i++) {
+				criteriaRows.add(new RowCriteria(selectedTemplate, i));
+			}
+		}
+
+		for (RowCriteria row : criteriaRows) {
+			rowsLayout.addMember(row);
+		}
+
+		addMember(rowsLayout);
+	}
+
+	public void addCriteriaRow() {
+		criteriaRows.clear();
+		for (Canvas canvas : rowsLayout.getMembers()) {
+			if (canvas instanceof RowCriteria)
+				criteriaRows.add((RowCriteria) canvas);
+		}
+
+		RowCriteria row = new RowCriteria(selectedTemplate, criteriaRows.size());
+		row.reload();
+		criteriaRows.add(row);
+
+		reloadCriteriaRows(selectedTemplate, false);
 	}
 
 	@SuppressWarnings("unchecked")
 	private void search() {
-		if (!vm.validate() || !filterBuilder.validate())
+		if (!vm.validate())
 			return;
 
 		Map<String, Object> values = vm.getValues();
@@ -156,63 +258,57 @@ public class ParametricForm extends VLayout {
 		if (values.containsKey("template") && !((String) values.get("template")).isEmpty())
 			options.setTemplate(new Long((String) values.get("template")));
 
+		options.setTopOperator((String) values.get("match"));
+
 		options.setFolder(folder.getFolderId());
 		options.setFolderName(folder.getFolderName());
 
 		options.setSearchInSubPath(new Boolean(vm.getValueAsString("subfolders")).booleanValue());
 
 		List<GUICriterion> list = new ArrayList<GUICriterion>();
-		Criteria criteria = filterBuilder.getCriteria();
-		if (criteria != null) {
+		for (RowCriteria row : criteriaRows) {
 
-			// build a map from the JSO
-			Map criteriaMap = JSOHelper.convertToMap(criteria.getJsObj());
+			String fieldName = row.getCriteriaFieldsItem().getValueAsString();
+			fieldName = fieldName.replaceAll(Constants.BLANK_PLACEHOLDER, " ");
+			if (fieldName.startsWith("_"))
+				fieldName = fieldName.substring(1);
+			String fieldOperator = row.getOperatorsFieldsItem().getValueAsString();
+			Object fieldValue = row.getValueFieldsItem().getValue();
 
-			// get the and|or|not Radio Button param
-			String topOperator = (String) criteriaMap.get("operator");
-			options.setTopOperator(topOperator);
+			// This lines are necessary to avoid error for GWT values type.
+			if (row.getValueFieldsItem() instanceof IntegerItem)
+				fieldValue = Long.parseLong(fieldValue.toString());
+			if (fieldName.endsWith("type:1") || fieldName.endsWith("type:2"))
+				fieldValue = Long.parseLong(fieldValue.toString());
+			else if (fieldName.endsWith("type:3"))
+				fieldValue = (Date) fieldValue;
 
-			// get all the actual criteria as array of JSO objects
-			Object[] criteriaObjects = JSOHelper.convertToJavaObjectArray((JavaScriptObject) criteriaMap
-					.get("criteria"));
-			for (int i = 0; i < criteriaObjects.length; i++) {
+			GUICriterion criterion = new GUICriterion();
+			criterion.setField(fieldName);
 
-				// extract the fields as a map from the object
-				Map criteriaFieldsMap = JSOHelper.convertToMap((JavaScriptObject) criteriaObjects[i]);
-				String fieldName = (String) criteriaFieldsMap.get("fieldName");
-				fieldName = fieldName.replaceAll(Constants.BLANK_PLACEHOLDER, " ");
-				if (fieldName.startsWith("_"))
-					fieldName = fieldName.substring(1);
-				String fieldOperator = (String) criteriaFieldsMap.get("operator");
-				Object fieldValue = (Object) criteriaFieldsMap.get("value");
-
-				GUICriterion criterion = new GUICriterion();
-				criterion.setField(fieldName);
-
-				if (fieldValue instanceof Date)
-					criterion.setDateValue((Date) fieldValue);
-				else if (fieldValue instanceof Integer)
-					criterion.setLongValue(new Long((Integer) fieldValue));
-				else if (fieldValue instanceof Long)
-					criterion.setLongValue((Long) fieldValue);
-				else if (fieldValue instanceof Float)
-					criterion.setDoubleValue(new Double((Float) fieldValue));
-				else if (fieldValue instanceof Double)
-					criterion.setDoubleValue((Double) fieldValue);
-				else if (fieldValue instanceof String)
-					criterion.setStringValue((String) fieldValue);
-				else if (fieldValue instanceof JavaScriptObject) {
-					Map m = JSOHelper.convertToMap((JavaScriptObject) fieldValue);
-					SC.say("" + m.get("value"));
-				}
-
-				criterion.setOperator(fieldOperator.toLowerCase());
-
-				list.add(criterion);
+			if (fieldValue instanceof Date)
+				criterion.setDateValue((Date) fieldValue);
+			else if (fieldValue instanceof Integer)
+				criterion.setLongValue(new Long((Integer) fieldValue));
+			else if (fieldValue instanceof Long)
+				criterion.setLongValue((Long) fieldValue);
+			else if (fieldValue instanceof Float)
+				criterion.setDoubleValue(new Double((Float) fieldValue));
+			else if (fieldValue instanceof Double)
+				criterion.setDoubleValue((Double) fieldValue);
+			else if (fieldValue instanceof String)
+				criterion.setStringValue((String) fieldValue);
+			else if (fieldValue instanceof JavaScriptObject) {
+				Map m = JSOHelper.convertToMap((JavaScriptObject) fieldValue);
+				SC.say("" + m.get("value"));
 			}
+
+			criterion.setOperator(fieldOperator.toLowerCase());
+
+			list.add(criterion);
 		}
 
-		if (!NO_LANGUAGE.equals(vm.getValueAsString("language"))) {
+		if (!NO_LANGUAGE.equals(vm.getValueAsString("language").trim())) {
 			GUICriterion criterion = new GUICriterion();
 			criterion.setField("language");
 			criterion.setOperator("equals");
@@ -220,7 +316,7 @@ public class ParametricForm extends VLayout {
 			list.add(criterion);
 		}
 
-		if (values.containsKey("template") && !((String) values.get("template")).isEmpty()) {
+		if (values.containsKey("template") && !((String) values.get("template")).trim().isEmpty()) {
 			GUICriterion criterion = new GUICriterion();
 			criterion.setField("template");
 			criterion.setOperator("equals");
