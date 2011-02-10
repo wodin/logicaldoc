@@ -101,7 +101,7 @@ public class EMail extends Message {
 	public InternetAddress[] getAddressesCC() throws Exception {
 		return getAddresses(recipientsCC);
 	}
-	
+
 	public InternetAddress[] getAddressesBCC() throws Exception {
 		return getAddresses(recipientsBCC);
 	}
@@ -135,7 +135,7 @@ public class EMail extends Message {
 	public void parseRecipientsCC(String str) {
 		parse(str, recipientsCC);
 	}
-	
+
 	public void parseRecipientsBCC(String str) {
 		parse(str, recipientsBCC);
 	}

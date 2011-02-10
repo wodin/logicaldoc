@@ -31,6 +31,7 @@ public class MockTemplatesDataServlet extends HttpServlet {
 			writer.print("<template>");
 			writer.print("<id></id>");
 			writer.print("<name> </name>");
+			writer.print("<documents>0</documents>");
 			writer.print("</template>");
 		}
 
@@ -39,6 +40,7 @@ public class MockTemplatesDataServlet extends HttpServlet {
 			writer.print("<template>");
 			writer.print("<id>" + i + "</id>");
 			writer.print("<name>Template" + i + "</name>");
+			writer.print("<documents>0</documents>");
 			writer.print("<description>Description" + i + "</description>");
 			writer.print("</template>");
 		}
