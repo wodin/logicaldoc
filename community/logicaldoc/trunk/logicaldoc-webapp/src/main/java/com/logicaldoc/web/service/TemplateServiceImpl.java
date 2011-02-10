@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -65,6 +66,8 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 						att.setMandatory(attribute.isMandatory() ? 1 : 0);
 						att.setType(attribute.getType());
 						att.setLabel(attribute.getLabel());
+						if (StringUtils.isEmpty(attribute.getLabel()))
+							att.setLabel(attribute.getName());
 						if (attribute.getValue() instanceof String)
 							att.setStringValue(attribute.getStringValue());
 						else if (attribute.getValue() instanceof Long)
@@ -116,7 +119,10 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 				att.setPosition(extAttr.getPosition());
 				att.setMandatory(extAttr.getMandatory() == 1 ? true : false);
 				att.setType(extAttr.getType());
-				att.setLabel(extAttr.getLabel());
+				if (StringUtils.isEmpty(extAttr.getLabel()))
+					att.setLabel(attrName);
+				else
+					att.setLabel(extAttr.getLabel());
 				if (extAttr.getValue() instanceof String)
 					att.setStringValue(extAttr.getStringValue());
 				else if (extAttr.getValue() instanceof Long)
