@@ -43,8 +43,7 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  * @since 6.0
  */
 public class TemplatesPanel extends VLayout {
-	private TemplateServiceAsync service = (TemplateServiceAsync) GWT
-			.create(TemplateService.class);
+	private TemplateServiceAsync service = (TemplateServiceAsync) GWT.create(TemplateService.class);
 
 	private Layout listing;
 
@@ -58,8 +57,7 @@ public class TemplatesPanel extends VLayout {
 
 	private ToolStrip toolStrip;
 
-	final static Canvas SELECT_TEMPLATE = new HTMLPanel("&nbsp;"
-			+ I18N.message("selecttemplate"));
+	final static Canvas SELECT_TEMPLATE = new HTMLPanel("&nbsp;" + I18N.message("selecttemplate"));
 
 	public TemplatesPanel() {
 		setWidth100();
@@ -87,13 +85,14 @@ public class TemplatesPanel extends VLayout {
 		ListGridField id = new ListGridField("id", 50);
 		id.setHidden(true);
 
-		ListGridField name = new ListGridField("name", I18N.message("name"),
-				200);
+		ListGridField name = new ListGridField("name", I18N.message("name"), 200);
 		name.setCanFilter(true);
 		name.setCanSort(false);
 
-		ListGridField description = new ListGridField("description",
-				I18N.message("description"), 300);
+		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 100);
+		name.setCanSort(true);
+
+		ListGridField description = new ListGridField("description", I18N.message("description"), 300);
 		description.setCanFilter(true);
 		description.setCanSort(false);
 
@@ -103,7 +102,7 @@ public class TemplatesPanel extends VLayout {
 		list.setAutoFetchData(true);
 		list.setWidth100();
 		list.setHeight100();
-		list.setFields(name, description);
+		list.setFields(name, description, documents);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
@@ -147,8 +146,7 @@ public class TemplatesPanel extends VLayout {
 			public void onSelectionChanged(SelectionEvent event) {
 				Record record = list.getSelectedRecord();
 				if (record != null)
-					service.getTemplate(Session.get().getSid(),
-							Long.parseLong(record.getAttributeAsString("id")),
+					service.getTemplate(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
 							new AsyncCallback<GUITemplate>() {
 
 								@Override
@@ -167,8 +165,7 @@ public class TemplatesPanel extends VLayout {
 		list.addDataArrivedHandler(new DataArrivedHandler() {
 			@Override
 			public void onDataArrived(DataArrivedEvent event) {
-				infoPanel.setMessage(I18N.message("showtemplates",
-						Integer.toString(list.getTotalRows())));
+				infoPanel.setMessage(I18N.message("showtemplates", Integer.toString(list.getTotalRows())));
 			}
 		});
 
@@ -188,32 +185,31 @@ public class TemplatesPanel extends VLayout {
 		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				LD.ask(I18N.message("question"), I18N.message("confirmclean"),
-						new BooleanCallback() {
-							@Override
-							public void execute(Boolean value) {
-								if (value) {
-									service.delete(Session.get().getSid(), id,
-											new AsyncCallback<Void>() {
-												@Override
-												public void onFailure(
-														Throwable caught) {
-													Log.serverError(caught);
-												}
-
-												@Override
-												public void onSuccess(
-														Void result) {
-													list.removeSelectedData();
-													list.deselectAllRecords();
-													showTemplateDetails(null);
-												}
-											});
+				LD.ask(I18N.message("question"), I18N.message("confirmclean"), new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							service.delete(Session.get().getSid(), id, new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
 								}
-							}
-						});
+
+								@Override
+								public void onSuccess(Void result) {
+									list.removeSelectedData();
+									list.deselectAllRecords();
+									showTemplateDetails(null);
+								}
+							});
+						}
+					}
+				});
 			}
 		});
+
+		if (record.getAttributeAsInt("documents") > 0)
+			delete.setEnabled(false);
 
 		contextMenu.setItems(delete);
 		contextMenu.showContextMenu();
@@ -244,8 +240,7 @@ public class TemplatesPanel extends VLayout {
 		record.setAttribute("description", template.getDescription());
 
 		if (record.getAttributeAsString("id") != null
-				&& (template.getId() == Long.parseLong(record
-						.getAttributeAsString("id")))) {
+				&& (template.getId() == Long.parseLong(record.getAttributeAsString("id")))) {
 			list.updateData(record);
 		} else {
 			// Append a new record
