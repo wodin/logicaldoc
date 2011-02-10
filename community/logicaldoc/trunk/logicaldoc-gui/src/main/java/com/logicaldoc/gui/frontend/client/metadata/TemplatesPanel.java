@@ -93,13 +93,16 @@ public class TemplatesPanel extends VLayout {
 		description.setCanFilter(true);
 		description.setCanSort(false);
 
+		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 100);
+		documents.setCanSort(true);
+
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setShowAllRecords(true);
 		list.setAutoFetchData(true);
 		list.setWidth100();
 		list.setHeight100();
-		list.setFields(name, description);
+		list.setFields(name, description, documents);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
@@ -204,6 +207,9 @@ public class TemplatesPanel extends VLayout {
 				});
 			}
 		});
+
+		if (record.getAttributeAsInt("documents") != 0)
+			delete.setEnabled(false);
 
 		contextMenu.setItems(delete);
 		contextMenu.showContextMenu();

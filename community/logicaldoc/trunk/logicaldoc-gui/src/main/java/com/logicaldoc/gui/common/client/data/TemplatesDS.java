@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.common.client.data;
 
 import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
 /**
@@ -16,8 +17,9 @@ public class TemplatesDS extends DataSource {
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
 		DataSourceTextField name = new DataSourceTextField("name");
-		DataSourceTextField readonly = new DataSourceTextField("readonly");	
-		setFields(id, name, readonly);
+		DataSourceTextField readonly = new DataSourceTextField("readonly");
+		DataSourceIntegerField documents = new DataSourceIntegerField("documents");
+		setFields(id, name, documents, readonly);
 		setDataURL("data/templates.xml" + (withEmpty ? "?withempty=true" : "")
 				+ (folderId != null ? "&folderId=" + folderId : ""));
 		setClientOnly(true);
