@@ -113,9 +113,10 @@ public class ServletDocUtil {
 
 		int letter = 0;
 
+		byte[] buffer = new byte[128 * 1024];
 		try {
-			while ((letter = is.read()) != -1) {
-				os.write(letter);
+			while ((letter = is.read(buffer)) != -1) {
+				os.write(buffer, 0, letter);
 			}
 		} finally {
 			os.flush();
@@ -204,10 +205,13 @@ public class ServletDocUtil {
 		InputStream is = new StringInputStream(content.trim(), "UTF-8");
 		OutputStream os;
 		os = response.getOutputStream();
+		
 		int letter = 0;
+		byte[] buffer = new byte[128 * 1024];
 		try {
-			while ((letter = is.read()) != -1) {
-				os.write(letter);
+			while ((letter = is.read(buffer)) != -1) {
+
+				os.write(buffer, 0, letter);
 			}
 		} finally {
 			os.flush();

@@ -9,11 +9,11 @@ import com.logicaldoc.webservice.search.SearchClient;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		AuthClient auth = new AuthClient("http://localhost:1000/logicaldoc/services/Auth");
-		DocumentClient documentClient = new DocumentClient("http://localhost:1000/logicaldoc/services/Document");
+		AuthClient auth = new AuthClient("http://localhost:8080/services/Auth");
+		DocumentClient documentClient = new DocumentClient("http://localhost:8080/services/Document");
 		// FolderClient folderClient = new
 		// FolderClient("http://localhost:8080/logicaldoc/services/Folder");
-		SearchClient searchClient = new SearchClient("http://localhost:1000/logicaldoc/services/Search");
+		SearchClient searchClient = new SearchClient("http://localhost:8080/services/Search");
 
 		// Open a session
 		// This is a user 'author' with different permissions than the authors.
@@ -67,11 +67,11 @@ public class Main {
 		// System.out.println("folder desc: " + doc.getDescription());
 		// }
 
-		WSDocument document = documentClient.getDocument(sid, 3);
-		document.setTitle("test_5");
-		document.setSourceDate("2010-05-01");
-		DataHandler data = documentClient.getContent(sid, 3);
-		WSDocument doc = documentClient.create(sid, document, data);
+//		WSDocument document = documentClient.getDocument(sid, 3);
+//		document.setTitle("test_5");
+//		document.setSourceDate("2010-05-01");
+//		DataHandler data = documentClient.getContent(sid, 3);
+//		WSDocument doc = documentClient.create(sid, document, data);
 		// System.out.println("created doc: " + doc.getId());
 
 		// System.out.println("doc id: " + document.getId());
@@ -140,6 +140,15 @@ public class Main {
 		// DataHandler data = documentClient.getContent(sid, 68);
 		// System.out.println("data: " + data.toString());
 
-		auth.logout(sid);
+//		WSDocument[] docs = documentClient.list(sid, 5);
+//		for (WSDocument wsDocument : docs) {
+//			System.out.println("+++ "+wsDocument.getTitle());
+//		}
+		
+		for (int i = 0; i < 50; i++) {
+			System.out.println("+++ " + auth.login("admin", "admin"));
+		}
+		
+		//auth.logout(sid);
 	}
 }
