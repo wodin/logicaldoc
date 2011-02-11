@@ -309,3 +309,12 @@ values		(3,'2010-04-19',0,2,1,'book3','this is a bookmark 3',3);
 insert into ld_bookmark
 		(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_docid, ld_title, ld_description, ld_position)
 values		(4,'2010-04-19',1,2,2,'book4','this is a bookmark 4',4);
+
+insert into ld_feedmessage (ld_id, ld_lastmodified,ld_deleted, ld_guid, ld_title, ld_description, ld_pubdate, ld_read)
+values (1,'2011-02-08',0,'feed1_guid', 'feed1','feed1_desc','2011-02-05',0);
+
+insert into ld_feedmessage (ld_id, ld_lastmodified,ld_deleted, ld_guid, ld_title, ld_description, ld_pubdate, ld_read)
+values (2,'2011-02-08',0,'feed2_guid', 'feed2','feed2_desc','2011-02-02',0);
+
+insert into ld_feedmessage (ld_id, ld_lastmodified,ld_deleted, ld_guid, ld_title, ld_description, ld_pubdate, ld_read)
+values (3,'2011-02-08',0,'feed3_guid', 'feed3','feed3_desc','2010-01-10',1);

@@ -288,6 +288,11 @@
 		<servlet-name>IncrementalArchivesData</servlet-name>
 		<servlet-class>com.logicaldoc.gui.common.server.MockIncrementalArchivesDataServlet</servlet-class>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>FeedMessageData</servlet-name>
+		<servlet-class>com.logicaldoc.gui.common.server.MockFeedMessageDataServlet</servlet-class>
+  	</servlet>
 
 	<servlet>
 		<servlet-name>log</servlet-name>
@@ -567,6 +572,11 @@
 	<servlet-mapping>
 		<servlet-name>LanguagesData</servlet-name>
 		<url-pattern>/data/languages.xml</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>FeedMessageData</servlet-name>
+		<url-pattern>/data/feedmessage.xml</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

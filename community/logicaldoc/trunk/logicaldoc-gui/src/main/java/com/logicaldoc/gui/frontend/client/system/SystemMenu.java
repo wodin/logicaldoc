@@ -59,7 +59,6 @@ public class SystemMenu extends VLayout {
 		Button guiLangs = new Button(I18N.message("guilanguages"));
 		guiLangs.setWidth100();
 		guiLangs.setHeight(25);
-
 		if (Feature.visible(Feature.GUI_LANGUAGES)) {
 			addMember(guiLangs);
 			if (!Feature.enabled(Feature.GUI_LANGUAGES)) {
@@ -67,6 +66,11 @@ public class SystemMenu extends VLayout {
 				guiLangs.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
+		
+		Button productNews = new Button(I18N.message("task.name.ProductNews"));
+		productNews.setWidth100();
+		productNews.setHeight(25);
+		addMember(productNews);
 
 		addInformations();
 
@@ -114,6 +118,13 @@ public class SystemMenu extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				AdminPanel.get().setContent(new GUILanguagesPanel());
+			}
+		});
+
+		productNews.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new ProductNewsPanel());
 			}
 		});
 	}

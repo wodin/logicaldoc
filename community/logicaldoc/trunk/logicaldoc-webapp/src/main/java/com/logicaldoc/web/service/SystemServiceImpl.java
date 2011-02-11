@@ -17,6 +17,8 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
+import com.logicaldoc.core.rss.FeedMessage;
+import com.logicaldoc.core.rss.dao.FeedMessageDAO;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserHistoryDAO;
@@ -621,6 +623,45 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 		} catch (IOException t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
+		}
+	}
+
+	@Override
+	public void maskFeedMsgAsRead(String sid, long[] ids) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		Context context = Context.getInstance();
+		FeedMessageDAO dao = (FeedMessageDAO) context.getBean(FeedMessageDAO.class);
+		for (long id : ids) {
+			FeedMessage message = dao.findById(id);
+			dao.initialize(message);
+			message.setRead(1);
+			dao.store(message);
+		}
+	}
+
+	@Override
+	public void maskFeedMsgAsNotRead(String sid, long[] ids) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		Context context = Context.getInstance();
+		FeedMessageDAO dao = (FeedMessageDAO) context.getBean(FeedMessageDAO.class);
+		for (long id : ids) {
+			FeedMessage message = dao.findById(id);
+			dao.initialize(message);
+			message.setRead(0);
+			dao.store(message);
+		}
+	}
+
+	@Override
+	public void deleteFeedMessages(String sid, long[] ids) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		Context context = Context.getInstance();
+		FeedMessageDAO dao = (FeedMessageDAO) context.getBean(FeedMessageDAO.class);
+		for (long id : ids) {
+			dao.delete(id);
 		}
 	}
 }

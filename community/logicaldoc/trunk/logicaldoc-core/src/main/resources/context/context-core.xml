@@ -304,6 +304,20 @@
 			</bean>
 		</property>
 	</bean>
+	
+	<bean id="FeedMessageDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean class="com.logicaldoc.core.rss.dao.HibernateFeedMessageDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+			</bean>
+		</property>
+	</bean>
 
 	<!-- Managers -->
 	<bean id="SecurityManager" parent="ApplicationBaseTransactionProxy"
@@ -456,6 +470,25 @@
 	<bean id="StatsCollectorTrigger" class="com.logicaldoc.core.task.TaskTrigger">
 		<property name="task" ref="StatsCollector" />
 		<property name="jobDetail" ref="StatsCollectorJob" />
+		<property name="config" ref="ContextProperties" />
+	</bean>
+	
+	<bean id="ProductNews" class="com.logicaldoc.core.rss.ProductNews">
+		<property name="feedMessageDao" ref="FeedMessageDAO" />
+		<property name="config" ref="ContextProperties" />
+		<property name="userDao" ref="UserDAO" />
+	</bean>
+
+	<bean id="ProductNewsJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="ProductNews" />
+		<property name="targetMethod" value="run" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<bean id="ProductNewsTrigger" class="com.logicaldoc.core.task.TaskTrigger">
+		<property name="task" ref="ProductNews" />
+		<property name="jobDetail" ref="ProductNewsJob" />
 		<property name="config" ref="ContextProperties" />
 	</bean>
 

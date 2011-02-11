@@ -22,31 +22,31 @@ import org.apache.commons.lang.StringUtils;
  * @since 6.1
  */
 public class FeedParser {
-	static final String TITLE = "title";
+	public static final String TITLE = "title";
 
-	static final String DESCRIPTION = "description";
+	public static final String DESCRIPTION = "description";
 
-	static final String CHANNEL = "channel";
+	public static final String CHANNEL = "channel";
 
-	static final String LANGUAGE = "language";
+	public static final String LANGUAGE = "language";
 
-	static final String COPYRIGHT = "copyright";
+	public static final String COPYRIGHT = "copyright";
 
-	static final String LINK = "link";
+	public static final String LINK = "link";
 
-	static final String AUTHOR = "author";
+	public static final String AUTHOR = "author";
 
-	static final String ITEM = "item";
+	public static final String ITEM = "item";
 
-	static final String PUB_DATE = "pubDate";
+	public static final String PUB_DATE = "pubDate";
 
-	static final String GUID = "guid";
+	public static final String GUID = "guid";
 
-	final URL url;
+	public final URL url;
 
 	public FeedParser(String feedUrl) {
 		try {
-			if (feedUrl != null)
+			if (feedUrl != null && StringUtils.isNotEmpty(feedUrl))
 				this.url = new URL(feedUrl);
 			else
 				this.url = new URL("http://www.logicaldoc.com/company/news.feed?type=rss");

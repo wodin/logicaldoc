@@ -269,6 +269,11 @@
     <servlet-name>MessagesData</servlet-name>
     <servlet-class>com.logicaldoc.web.data.MessagesDataServlet</servlet-class>
   </servlet>
+  
+  <servlet>
+	<servlet-name>FeedMessageData</servlet-name>
+	<servlet-class>com.logicaldoc.web.data.FeedMessageDataServlet</servlet-class>
+  </servlet>
 
   <servlet>
     <servlet-name>Log</servlet-name>
@@ -447,6 +452,11 @@
   <servlet-mapping>
     <servlet-name>ParsersData</servlet-name>
     <url-pattern>/data/parsers.xml</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+	<servlet-name>FeedMessageData</servlet-name>
+	<url-pattern>/data/feedmessage.xml</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

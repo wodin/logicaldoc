@@ -29,4 +29,10 @@ public interface SystemServiceAsync {
 	void saveTask(String sid, GUITask task, String locale, AsyncCallback<GUITask> callback);
 
 	void setGUILanguageStatus(String sid, String language, boolean active, AsyncCallback<Void> callback);
+
+	void deleteFeedMessages(String sid, long[] ids, AsyncCallback<Void> callback);
+
+	void maskFeedMsgAsNotRead(String sid, long[] ids, AsyncCallback<Void> callback);
+
+	void maskFeedMsgAsRead(String sid, long[] ids, AsyncCallback<Void> callback);
 }

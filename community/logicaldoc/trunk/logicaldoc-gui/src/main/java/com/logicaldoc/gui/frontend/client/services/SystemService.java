@@ -114,4 +114,19 @@ public interface SystemService extends RemoteService {
 	 * Changes the activation status of a language
 	 */
 	public void setGUILanguageStatus(String sid, String language, boolean active) throws InvalidSessionException;
+	
+	/**
+	 * Marks as read a list of Feed Messages
+	 */
+	public void maskFeedMsgAsRead(String sid, long[] ids) throws InvalidSessionException;
+	
+	/**
+	 * Marks as not read a list of Feed Messages
+	 */
+	public void maskFeedMsgAsNotRead(String sid, long[] ids) throws InvalidSessionException;
+	
+	/**
+	 * Deletes a list of Feed Messages
+	 */
+	public void deleteFeedMessages(String sid, long[] ids) throws InvalidSessionException;
 }

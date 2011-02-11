@@ -11,19 +11,19 @@ import java.util.List;
  */
 public class Feed {
 
-	final String title;
+	private String title;
 
-	final String link;
+	private String link;
 
-	final String description;
+	private String description;
 
-	final String language;
+	private String language;
 
-	final String copyright;
+	private String copyright;
 
-	final String pubDate;
+	private String pubDate;
 
-	final List<FeedMessage> entries = new ArrayList<FeedMessage>();
+	private List<FeedMessage> entries = new ArrayList<FeedMessage>();
 
 	public Feed(String title, String link, String description, String language, String copyright, String pubDate) {
 		this.title = title;
