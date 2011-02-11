@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,7 +29,8 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserDoc;
-import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
@@ -64,19 +66,22 @@ public class ServletDocUtil {
 	 * @param docId Id of the document
 	 * @param fileVersion name of the file version; if null the latest version
 	 *        will be returned
+	 * @throws ServletException
 	 */
 	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, long docId,
-			String fileVersion, String suffix, User user) throws FileNotFoundException, IOException {
-		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc = ddao.findById(docId);
+			String fileVersion, String fileName, String suffix, User user) throws FileNotFoundException, IOException,
+			ServletException {
 
-		if (doc == null) {
-			throw new FileNotFoundException();
-		}
+		UserSession session = SessionUtil.validateSession(request);
+
+		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Document doc = dao.findById(docId);
 
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		File file = documentManager.getDocumentFile(doc, fileVersion);
-		String filename = doc.getFileName();
+		String filename = fileName;
+		if (filename == null)
+			filename = doc.getFileName();
 		if (!file.exists()) {
 			throw new FileNotFoundException(file.getPath());
 		}
@@ -85,7 +90,7 @@ public class ServletDocUtil {
 			file = new File(file.getParent(), file.getName() + "-" + suffix);
 			filename = filename + "." + FilenameUtils.getExtension(suffix);
 		}
-		long size=file.length();
+		long size = file.length();
 		InputStream is = new FileInputStream(file);
 
 		// get the mimetype
@@ -99,7 +104,8 @@ public class ServletDocUtil {
 		response.setHeader("Pragma", "public");
 		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 		response.setHeader("Expires", "0");
-		// Aggiungo lo header di lunghezza, necessario per i browser .NET, C#
+
+		// Add this header for compatibility with internal .NET browsers
 		response.setHeader("Content-Length", Long.toString(size));
 
 		OutputStream os;
@@ -107,9 +113,10 @@ public class ServletDocUtil {
 
 		int letter = 0;
 
+		byte[] buffer = new byte[128 * 1024];
 		try {
-			while ((letter = is.read()) != -1) {
-				os.write(letter);
+			while ((letter = is.read(buffer)) != -1) {
+				os.write(buffer, 0, letter);
 			}
 		} finally {
 			os.flush();
@@ -120,14 +127,17 @@ public class ServletDocUtil {
 		if (user != null && StringUtils.isEmpty(suffix)) {
 			// Add an history entry to track the download of the document
 			History history = new History();
-			history.setDocId(docId);
+			history.setDocId(doc.getId());
 			history.setTitle(doc.getTitle());
 			history.setVersion(doc.getVersion());
 
-			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-			history.setPath(mdao.computePathExtended(doc.getFolder().getId()));
+			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			history.setPath(fdao.computePathExtended(doc.getFolder().getId()));
 			history.setEvent(History.EVENT_DOWNLOADED);
+			history.setFilename(doc.getFileName());
+			history.setFolderId(doc.getFolder().getId());
 			history.setUser(user);
+			history.setSessionId(session.getId());
 
 			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 			hdao.store(history);
@@ -141,6 +151,7 @@ public class ServletDocUtil {
 			throws UnsupportedEncodingException {
 		// Encode the filename
 		String userAgent = request.getHeader("User-Agent");
+
 		String encodedFileName = null;
 		if (userAgent.contains("MSIE") || userAgent.contains("Opera") || userAgent.contains("Safari")) {
 			encodedFileName = URLEncoder.encode(filename, "UTF-8");
@@ -194,10 +205,13 @@ public class ServletDocUtil {
 		InputStream is = new StringInputStream(content.trim(), "UTF-8");
 		OutputStream os;
 		os = response.getOutputStream();
+		
 		int letter = 0;
+		byte[] buffer = new byte[128 * 1024];
 		try {
-			while ((letter = is.read()) != -1) {
-				os.write(letter);
+			while ((letter = is.read(buffer)) != -1) {
+
+				os.write(buffer, 0, letter);
 			}
 		} finally {
 			os.flush();
@@ -207,7 +221,7 @@ public class ServletDocUtil {
 	}
 
 	/**
-	 * sends the specified document to the response object; the client will
+	 * Sends the specified document to the response object; the client will
 	 * receive it as a download
 	 * 
 	 * @param request the current request
@@ -215,10 +229,13 @@ public class ServletDocUtil {
 	 * @param docId Id of the document
 	 * @param fileVersion name of the file version; if null the latest version
 	 *        will be returned
+	 * @throws ServletException
+	 * @throws NumberFormatException
 	 */
 	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, String docId,
-			String fileVersion, User user) throws FileNotFoundException, IOException {
-		downloadDocument(request, response, Integer.parseInt(docId), fileVersion, null, user);
+			String fileVersion, String fileName, User user) throws FileNotFoundException, IOException,
+			NumberFormatException, ServletException {
+		downloadDocument(request, response, Integer.parseInt(docId), fileVersion, fileName, null, user);
 	}
 
 	/**
