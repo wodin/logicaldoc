@@ -8,7 +8,7 @@ public class ReadTest {
 		Feed feed = parser.readFeed();
 		System.out.println(feed);
 		for (FeedMessage message : feed.getMessages()) {
-			System.out.println(message);
+			System.out.println(message.getLink());
 		}
 	}
 }

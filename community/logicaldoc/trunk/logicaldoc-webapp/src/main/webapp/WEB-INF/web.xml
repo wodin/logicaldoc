@@ -294,6 +294,11 @@
 		<servlet-name>LanguagesData</servlet-name>
 		<servlet-class>com.logicaldoc.web.data.LanguagesDataServlet</servlet-class>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>FeedMessageData</servlet-name>
+		<servlet-class>com.logicaldoc.web.data.FeedMessageDataServlet</servlet-class>
+	</servlet>
 
 	<servlet>
 		<servlet-name>Log</servlet-name>
@@ -492,6 +497,11 @@
 	<servlet-mapping>
 		<servlet-name>LanguagesData</servlet-name>
 		<url-pattern>/data/languages.xml</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>FeedMessageData</servlet-name>
+		<url-pattern>/data/feedmessage.xml</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

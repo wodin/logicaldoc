@@ -12,19 +12,19 @@ import com.logicaldoc.core.PersistentObject;
  */
 public class FeedMessage extends PersistentObject {
 
-	String title;
+	private String title;
 
-	String description;
+	private String description;
 
-	String link;
+	private String link;
 
-	String author;
+	private String author;
 
-	String guid;
+	private String guid;
 
-	Date pubDate;
+	private Date pubDate;
 
-	int read = 0;
+	private int read = 0;
 
 	public String getTitle() {
 		return title;

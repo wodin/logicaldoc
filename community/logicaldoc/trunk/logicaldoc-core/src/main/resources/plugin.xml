@@ -197,4 +197,8 @@
   <extension plugin-id="logicaldoc-core" point-id="Task" id="taskStatsCollector">
 	<parameter id="name" value="StatsCollector" />
   </extension>
+  
+  <extension plugin-id="logicaldoc-core" point-id="Task" id="taskProductNews">
+	<parameter id="name" value="ProductNews" />
+  </extension>
 </plugin>

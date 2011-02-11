@@ -342,4 +342,19 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 	public void setGUILanguageStatus(String sid, String language, boolean active) throws InvalidSessionException {
 
 	}
+
+	@Override
+	public void maskFeedMsgAsRead(String sid, long[] ids) throws InvalidSessionException {
+		return;
+	}
+
+	@Override
+	public void maskFeedMsgAsNotRead(String sid, long[] ids) throws InvalidSessionException {
+		return;
+	}
+
+	@Override
+	public void deleteFeedMessages(String sid, long[] ids) throws InvalidSessionException {
+		return;
+	}
 }

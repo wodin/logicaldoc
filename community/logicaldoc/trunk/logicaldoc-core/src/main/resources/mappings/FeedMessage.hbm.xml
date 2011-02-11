@@ -17,6 +17,7 @@
 		<property name="guid" type="string" column="ld_guid" />
 		<property name="title" type="string" column="ld_title" />
 		<property name="description" type="string" column="ld_description" />
+		<property name="link" type="string" column="ld_link" />
 		<property name="pubDate" type="timestamp" column="ld_pubdate" />
 	</class>
 </hibernate-mapping>

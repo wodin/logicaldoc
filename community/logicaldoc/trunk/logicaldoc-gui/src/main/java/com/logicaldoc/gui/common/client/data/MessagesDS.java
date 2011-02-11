@@ -7,7 +7,7 @@ import com.smartgwt.client.data.fields.DataSourceImageField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
 /**
- * Datasource to retrieve the system messages the current user.
+ * Datasource to retrieve the system messages for the current user.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
