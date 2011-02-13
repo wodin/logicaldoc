@@ -212,18 +212,7 @@ public class LoginPanel extends VLayout {
 					@Override
 					public void onSuccess(GUISession session) {
 						if (session.isLoggedIn()) {
-							try {
-								Session.get().init(session);
-								Frontend.get().showMain();
-							} catch (Throwable e) {
-								SC.warn(e.getMessage());
-							}
-
-							FoldersNavigator.get().selectFolder(Constants.DOCUMENTS_FOLDERID);
-
-							GUIUser user = session.getUser();
-							if (user.getQuotaCount() >= user.getQuota() && user.getQuota() >= 0)
-								Log.warn(I18N.message("quotadocsexceeded"), null);
+							onLoggedIn(session);
 						} else if (session.getUser() != null && session.getUser().isExpired()) {
 							new ChangePassword(session.getUser(), "needtochangepassword").show();
 						} else {
@@ -236,5 +225,20 @@ public class LoginPanel extends VLayout {
 	private void onForgottenPwd(String productName) {
 		PasswordReset pwdReset = new PasswordReset(productName);
 		pwdReset.show();
+	}
+
+	protected void onLoggedIn(GUISession session) {
+		try {
+			Session.get().init(session);
+			Frontend.get().showMain();
+		} catch (Throwable e) {
+			SC.warn(e.getMessage());
+		}
+
+		FoldersNavigator.get().selectFolder(Constants.DOCUMENTS_FOLDERID);
+
+		GUIUser user = session.getUser();
+		if (user.getQuotaCount() >= user.getQuota() && user.getQuota() >= 0)
+			Log.warn(I18N.message("quotadocsexceeded"), null);
 	}
 }
