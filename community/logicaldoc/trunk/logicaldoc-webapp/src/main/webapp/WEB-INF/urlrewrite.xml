@@ -16,4 +16,8 @@
 		<from>/sessions/$</from>
 		<to type="redirect">%{context-path}/sessions.jsp</to>
 	</rule>
+	<rule>
+		<from>/basic/$</from>
+		<to type="redirect">%{context-path}/basic.jsp</to>
+	</rule>
 </urlrewrite>

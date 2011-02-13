@@ -191,3 +191,30 @@
 	text-decoration: underline;
 	color: blue;
 }
+
+.basicSearchForm {
+  font-size: 32pt;
+}
+
+
+.basicSearchForm .formTitle, .basicSearchForm .formTitleFocused, .basicSearchForm .formTitleDisabled, 
+.basicSearchForm .formCellError, .basicSearchForm .formTitleError, .basicSearchForm .formHint,
+.basicSearchForm .headerItem, .basicSearchForm .headerItemDisabled, .basicSearchForm .headerItemError,
+.basicSearchForm .staticTextItem, .basicSearchForm .staticTextItemDisabled, .basicSearchForm .staticTextItemError,
+.basicSearchForm .textItem,  .basicSearchForm .textItemFocused, .basicSearchForm .textItemDisabled,
+.basicSearchForm .textItemError, .basicSearchForm .textItemHint, .basicSearchForm .selectItemControl,
+.basicSearchForm .selectItemControlError, .basicSearchForm .selectItemControlFocused, .basicSearchForm .selectItemText,
+.basicSearchForm .selectItemTextError, .basicSearchForm .selectItemTextDisabled, .basicSearchForm .selectItemTextFocused,
+.basicSearchForm .pickListCell, .basicSearchForm .pickListCellSelected, .basicSearchForm .pickListCellDisabled,
+.basicSearchForm .pickListCellDark, .basicSearchForm .pickListCellSelectedDark, .basicSearchForm .tallPickListCell,
+.basicSearchForm .tallPickListCellSelected, .basicSearchForm .tallPickListCellDisabled, .basicSearchForm .tallPickListCellDark,
+.basicSearchForm .tallPickListCellSelectedDark, .basicSearchForm .labelAnchor, .basicSearchForm .labelAnchorDisabled,
+.basicSearchForm .labelAnchorError, .basicSearchForm .labelAnchorFocused, .basicSearchForm .pickListCellSelected,
+.basicSearchForm .pickListCellSelectedDark,.basicSearchForm .buttonTitle,.basicSearchForm .buttonTitleOver,
+.basicSearchForm .buttonTitleDown, .basicSearchForm .buttonTitleSelected,.basicSearchForm .buttonTitleFocused,
+.basicSearchForm .buttonTitleSelectedFocused, .basicSearchForm .buttonTitleSelectedOver, .basicSearchForm .buttonTitleFocusedOver,
+.basicSearchForm .buttonTitleSelectedFocusedOver, .basicSearchForm .buttonTitleSelectedDown, 
+.basicSearchForm .buttonTitleFocusedDown, .basicSearchForm .buttonTitleSelectedFocusedDown,
+.basicSearchForm .buttonTitleDisabled, .basicSearchForm .buttonTitleSelectedDisabled {
+  font-size: 32pt;
+}

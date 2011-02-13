@@ -57,9 +57,9 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  */
 public class HitsListPanel extends VLayout implements SearchObserver, DocumentObserver {
 
-	private ListGrid list;
+	protected ListGrid list;
 
-	private ToolStrip toolStrip;
+	protected ToolStrip toolStrip;
 
 	private InfoPanel infoPanel;
 
@@ -212,8 +212,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		list.addSelectionChangedHandler(new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChanged(SelectionEvent event) {
-				if (list.getSelectedRecord() != null)
-					SearchPanel.get().onSelectedHit(Long.parseLong(list.getSelectedRecord().getAttribute("id")));
+				onHitSelected();
 			}
 		});
 
@@ -324,7 +323,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	/**
 	 * Prepares the toolbar containing the search report and a set of buttons
 	 */
-	private void setupToolbar(int optionsType) {
+	protected void setupToolbar(int optionsType) {
 		if (toolStrip == null)
 			toolStrip = new ToolStrip();
 		else {
@@ -467,5 +466,10 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 	@Override
 	public void onOptionsChanged(GUISearchOptions newOptions) {
+	}
+
+	protected void onHitSelected() {
+		if (list.getSelectedRecord() != null)
+			SearchPanel.get().onSelectedHit(Long.parseLong(list.getSelectedRecord().getAttribute("id")));
 	}
 }
