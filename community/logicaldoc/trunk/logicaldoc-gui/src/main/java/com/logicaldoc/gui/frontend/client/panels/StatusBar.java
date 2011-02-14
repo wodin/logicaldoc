@@ -11,7 +11,7 @@ import com.smartgwt.client.widgets.layout.HLayout;
  */
 public class StatusBar extends HLayout {
 
-	public StatusBar() {
+	public StatusBar(boolean includeIcons) {
 		setHeight(20);
 		setWidth100();
 		setMembersMargin(2);
@@ -21,6 +21,8 @@ public class StatusBar extends HLayout {
 		events.setWidth100();
 
 		addMember(events);
-		addMember(StatusBarIcons.get());
+
+		if (includeIcons)
+			addMember(StatusBarIcons.get());
 	}
 }

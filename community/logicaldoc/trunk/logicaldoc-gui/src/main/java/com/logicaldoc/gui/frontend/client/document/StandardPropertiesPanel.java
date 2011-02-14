@@ -191,7 +191,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 	}
 
 	@SuppressWarnings("unchecked")
-	boolean validate() {
+	public boolean validate() {
 		Map<String, Object> values = (Map<String, Object>) vm.getValues();
 		vm.validate();
 		if (!vm.hasErrors()) {

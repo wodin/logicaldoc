@@ -65,12 +65,16 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 	private FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
 
+	protected ListGridField customId;
+
+	protected ListGridField published;
+
 	public HitsListPanel() {
 		initialize();
 		Search.get().addObserver(this);
 	}
 
-	private void initialize() {
+	protected void initialize() {
 		if (list != null) {
 			removeMember(list);
 		}
@@ -113,7 +117,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		ListGridField publisher = new ListGridField("publisher", I18N.message("publisher"), 90);
 		publisher.setAlign(Alignment.CENTER);
 
-		ListGridField published = new ListGridField("date", I18N.message("publishedon"), 110);
+		published = new ListGridField("date", I18N.message("publishedon"), 110);
 		published.setAlign(Alignment.CENTER);
 		published.setType(ListGridFieldType.DATE);
 		published.setCellFormatter(new DateCellFormatter(true));
@@ -136,7 +140,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		sourceDate.setCanFilter(false);
 		sourceDate.setHidden(true);
 
-		ListGridField customId = new ListGridField("customId", I18N.message("customid"), 110);
+		customId = new ListGridField("customId", I18N.message("customid"), 110);
 
 		ListGridField filename = new ListGridField("filename", I18N.message("filename"), 200);
 		filename.setHidden(true);
