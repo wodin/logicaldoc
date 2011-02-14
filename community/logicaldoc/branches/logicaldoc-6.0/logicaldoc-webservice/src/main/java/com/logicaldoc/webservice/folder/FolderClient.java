@@ -70,4 +70,9 @@ public class FolderClient implements FolderService {
 	public WSFolder getRootFolder(String sid) throws Exception {
 		return client.getRootFolder(sid);
 	}
+
+	@Override
+	public boolean isWriteable(String sid, long folderId) throws Exception {
+		return client.isWriteable(sid, folderId);
+	}
 }
