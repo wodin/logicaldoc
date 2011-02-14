@@ -198,4 +198,16 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	public WSFolder getRootFolder(String sid) throws Exception {
 		return getFolder(sid, Folder.ROOTID);
 	}
+
+	@Override
+	public boolean isWriteable(String sid, long folderId) throws Exception {
+		User user = validateSession(sid);
+		try {
+			checkWriteEnable(user, folderId);
+		} catch (Exception e) {
+			return false;
+		}
+
+		return true;
+	}
 }
