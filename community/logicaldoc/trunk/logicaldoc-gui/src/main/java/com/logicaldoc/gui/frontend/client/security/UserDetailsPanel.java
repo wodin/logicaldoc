@@ -186,13 +186,15 @@ public class UserDetailsPanel extends VLayout {
 		/*
 		 * Prepare the quota tab
 		 */
-		if (quotaPanel != null) {
-			quotaPanel.destroy();
-			if (quotaTabPanel.contains(quotaPanel))
-				quotaTabPanel.removeMember(quotaPanel);
+		if (Feature.enabled(Feature.QUOTAS)) {
+			if (quotaPanel != null) {
+				quotaPanel.destroy();
+				if (quotaTabPanel.contains(quotaPanel))
+					quotaTabPanel.removeMember(quotaPanel);
+			}
+			quotaPanel = new UserQuotaPanel(user, changeHandler);
+			quotaTabPanel.addMember(quotaPanel);
 		}
-		quotaPanel = new UserQuotaPanel(user, changeHandler);
-		quotaTabPanel.addMember(quotaPanel);
 
 		/*
 		 * Prepare the history tab
@@ -204,7 +206,7 @@ public class UserDetailsPanel extends VLayout {
 		}
 		historyPanel = new UserHistoryPanel(user.getId());
 		historyTabPanel.addMember(historyPanel);
-		
+
 		tabSet.selectTab(0);
 	}
 
