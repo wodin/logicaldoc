@@ -23,6 +23,7 @@ import com.logicaldoc.gui.setup.client.services.SetupServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
@@ -227,7 +228,7 @@ public class Setup implements EntryPoint {
 		repositoryItem.setDefaultValue(getDefaultFolder());
 		repositoryForm.setFields(repositoryItem);
 		repositoryForm.setDisabled(true);
-		
+
 		repositoryTab.setPane(repositoryForm);
 		return repositoryTab;
 	}
@@ -451,7 +452,7 @@ public class Setup implements EntryPoint {
 		regForm.setID("regForm");
 		regForm.setValuesManager(vm);
 		regForm.setFields(regName, regEmail, regOrganization, regWebsite);
-		
+
 		registrationTab.setPane(regForm);
 		return registrationTab;
 	}
@@ -521,6 +522,9 @@ public class Setup implements EntryPoint {
 					}
 				});
 				submit.setDisabled(true);
+
+				// Clear an eventually saved documents list grid settings.
+				Offline.put("doclist", "");
 			} else {
 				// Go to the next tab and enable the contained panel
 				tabs.selectTab(tabIndex + 1);
