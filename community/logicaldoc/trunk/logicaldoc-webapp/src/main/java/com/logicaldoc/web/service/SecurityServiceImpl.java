@@ -26,6 +26,7 @@ import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.DownloadTicket;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DownloadTicketDAO;
+import com.logicaldoc.core.rss.dao.FeedMessageDAO;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
@@ -38,6 +39,7 @@ import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
@@ -129,6 +131,14 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 				List<Long> menues = mdao.findMenuIdByUserId(user.getId());
 				guiUser.setMenues((Long[]) menues.toArray(new Long[0]));
+
+				if (guiUser.isMemberOf(Constants.GROUP_ADMIN)) {
+					// Check if there are incoming messages not already read
+					FeedMessageDAO feedMessageDao = (FeedMessageDAO) Context.getInstance()
+							.getBean(FeedMessageDAO.class);
+					if (feedMessageDao.checkNotRead())
+						session.setIncomingMessage(I18N.message("productnewsmessage", locale));
+				}
 
 				// Define the current locale
 				UserSession userSession = SessionManager.getInstance().get(session.getSid());

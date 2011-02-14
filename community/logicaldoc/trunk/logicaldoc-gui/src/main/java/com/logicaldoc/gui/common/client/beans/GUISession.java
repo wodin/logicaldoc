@@ -19,6 +19,8 @@ public class GUISession implements Serializable {
 	private String sid;
 
 	private GUIInfo info;
+	
+	private String incomingMessage;
 
 	public GUIUser getUser() {
 		return user;
@@ -50,5 +52,13 @@ public class GUISession implements Serializable {
 
 	public void setInfo(GUIInfo info) {
 		this.info = info;
+	}
+
+	public String getIncomingMessage() {
+		return incomingMessage;
+	}
+
+	public void setIncomingMessage(String incomingMessage) {
+		this.incomingMessage = incomingMessage;
 	}
 }

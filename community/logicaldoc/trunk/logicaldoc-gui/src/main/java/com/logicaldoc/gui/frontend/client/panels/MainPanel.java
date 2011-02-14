@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.SessionObserver;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.widgets.IncomingMessage;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.dashboard.DashboardPanel;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
@@ -46,6 +47,8 @@ public class MainPanel extends VLayout implements SessionObserver {
 
 	private static MainPanel instance;
 
+	private IncomingMessage incomingMessage = null;
+
 	public static MainPanel get() {
 		if (instance == null)
 			instance = new MainPanel();
@@ -75,6 +78,10 @@ public class MainPanel extends VLayout implements SessionObserver {
 		administrationTab = new Tab(I18N.message("administration"));
 
 		addMember(topPanel);
+		
+		incomingMessage = new IncomingMessage("", null);
+		addMember(incomingMessage);
+		
 		addMember(new MainMenu());
 		addMember(tabSet);
 		addMember(new StatusBar());
@@ -154,5 +161,13 @@ public class MainPanel extends VLayout implements SessionObserver {
 		dp.getTabSet().selectTab(DashboardPanel.get().getMessagesTab());
 		dashboardTab.setPane(dp);
 		tabSet.selectTab(dashboardTab);
+	}
+
+	public IncomingMessage getIncomingMessage() {
+		return incomingMessage;
+	}
+
+	public void setIncomingMessage(IncomingMessage incomingMessage) {
+		this.incomingMessage = incomingMessage;
 	}
 }

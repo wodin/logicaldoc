@@ -64,6 +64,13 @@ public class Session {
 			return null;
 	}
 
+	public String getIncomingMessage() {
+		if (session != null)
+			return session.getIncomingMessage();
+		else
+			return null;
+	}
+
 	public void close() {
 		session = null;
 		sessionObservers.clear();

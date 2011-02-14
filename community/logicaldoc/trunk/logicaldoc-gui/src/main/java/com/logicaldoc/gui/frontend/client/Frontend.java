@@ -25,6 +25,8 @@ import com.logicaldoc.gui.frontend.client.security.LoginPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 
 /**
  * The Frontend entry point
@@ -126,6 +128,18 @@ public class Frontend implements EntryPoint {
 	}
 
 	public void showMain() {
+		if (Session.get().getIncomingMessage() != null) {
+			mainPanel.getIncomingMessage().setMessage(Session.get().getIncomingMessage());
+			mainPanel.getIncomingMessage().setClickHandler(new ClickHandler() {
+
+				@Override
+				public void onClick(ClickEvent event) {
+					mainPanel.getIncomingMessage().setVisible(false);
+				}
+			});
+			mainPanel.getIncomingMessage().setVisible(true);
+		}
+
 		mainPanel.show();
 		loginPanel.hide();
 	}
