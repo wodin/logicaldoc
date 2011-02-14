@@ -213,7 +213,7 @@ public class DocumentDetailsPanel extends VLayout {
 		return observer;
 	}
 
-	private void refresh() {
+	protected void refresh() {
 		if (savePanel != null)
 			savePanel.setVisible(false);
 
