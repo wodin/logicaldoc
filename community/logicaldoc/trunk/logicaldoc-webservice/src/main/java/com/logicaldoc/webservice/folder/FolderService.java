@@ -83,10 +83,21 @@ public interface FolderService {
 	 * 
 	 * @param sid Session identifier
 	 * @param folderId The folder id
-	 * @return True if the identifier denotes a folder, otherwise false.
+	 * @return True if the identifier denotes a readable folder, otherwise false.
 	 * @throws Exception
 	 */
 	public boolean isReadable(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
+			throws Exception;
+	
+	/**
+	 * Test if a folder identifier is writeable.
+	 * 
+	 * @param sid Session identifier
+	 * @param folderId The folder id
+	 * @return True if the identifier denotes a writeable folder, otherwise false.
+	 * @throws Exception
+	 */
+	public boolean isWriteable(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
 			throws Exception;
 
 	/**
