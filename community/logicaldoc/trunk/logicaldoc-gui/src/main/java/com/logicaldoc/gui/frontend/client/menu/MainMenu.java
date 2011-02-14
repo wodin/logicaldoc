@@ -51,7 +51,7 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 
 	private static final String EMPTY_DIV = "<div style=\"margin-top:3px; width=\"80\"; height=\"20\"\" />";
 
-	public MainMenu() {
+	public MainMenu(boolean includeDropSpot) {
 		super();
 		setWidth100();
 
@@ -66,18 +66,18 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 		}
 
 		addMenuButton(getHelpMenu());
-
 		addFill();
 
 		dropArea.setContents(EMPTY_DIV);
 		dropArea.setWidth(81);
-		if (Feature.enabled(Feature.DROP_SPOT))
-			dropArea.setTooltip(I18N.message("dropfiles"));
-		else
-			dropArea.setTooltip(I18N.message("featuredisabled"));
-		dropArea.setAlign(Alignment.CENTER);
-		addMember(dropArea);
-
+		if (includeDropSpot) {
+			if (Feature.enabled(Feature.DROP_SPOT))
+				dropArea.setTooltip(I18N.message("dropfiles"));
+			else
+				dropArea.setTooltip(I18N.message("featuredisabled"));
+			dropArea.setAlign(Alignment.CENTER);
+			addMember(dropArea);
+		}
 		addFill();
 
 		Label userInfo = new Label(I18N.message("loggedin") + " " + Session.get().getUser().getUserName());
@@ -234,6 +234,7 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 						"location=no,status=no,toolbar=no,menubar=no,resizable=yes,scrollbars=yes");
 			}
 		});
+		menu.addItem(documentation);
 
 		MenuItem bugReport = new MenuItem(I18N.message("bug.report"));
 		bugReport.addClickHandler(new ClickHandler() {
@@ -243,6 +244,8 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 						"location=no,status=no,toolbar=no,menubar=no,resizable=yes,scrollbars=yes");
 			}
 		});
+		if (Session.get().getInfo().getBugs() != null && !"-".equals(Session.get().getInfo().getBugs()))
+			menu.addItem(bugReport);
 
 		MenuItem forum = new MenuItem(I18N.message("forum"));
 		forum.addClickHandler(new ClickHandler() {
@@ -252,6 +255,8 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 						"location=no,status=no,toolbar=no,menubar=no,resizable=yes,scrollbars=yes");
 			}
 		});
+		if (Session.get().getInfo().getForum() != null && !"-".equals(Session.get().getInfo().getForum()))
+			menu.addItem(forum);
 
 		MenuItem about = new MenuItem(I18N.message("about") + " " + Session.get().getInfo().getProduct());
 		about.addClickHandler(new ClickHandler() {
@@ -261,7 +266,7 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 				dialog.show();
 			}
 		});
-		menu.setItems(documentation, forum, bugReport, about);
+		menu.addItem(about);
 
 		ToolStripMenuButton menuButton = new ToolStripMenuButton(I18N.message("help"), menu);
 		menuButton.setWidth(100);

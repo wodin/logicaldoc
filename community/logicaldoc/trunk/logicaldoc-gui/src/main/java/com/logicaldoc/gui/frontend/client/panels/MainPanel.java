@@ -78,13 +78,11 @@ public class MainPanel extends VLayout implements SessionObserver {
 		administrationTab = new Tab(I18N.message("administration"));
 
 		addMember(topPanel);
-		
 		incomingMessage = new IncomingMessage("", null);
 		addMember(incomingMessage);
-		
-		addMember(new MainMenu());
+		addMember(new MainMenu(true));
 		addMember(tabSet);
-		addMember(new StatusBar());
+		addMember(new StatusBar(true));
 
 		Window.addResizeHandler(new ResizeHandler() {
 			public void onResize(ResizeEvent event) {

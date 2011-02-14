@@ -41,39 +41,51 @@ import com.smartgwt.client.widgets.tab.TabSet;
 public class DocumentDetailsPanel extends VLayout {
 	private GUIDocument document;
 
-	private Layout propertiesTabPanel;
+	protected Layout propertiesTabPanel;
 
-	private Layout extendedPropertiesTabPanel;
+	protected Layout extendedPropertiesTabPanel;
 
-	private Layout versionsTabPanel;
+	protected Layout versionsTabPanel;
 
-	private Layout historyTabPanel;
+	protected Layout historyTabPanel;
 
-	private Layout linksTabPanel;
+	protected Layout linksTabPanel;
 
-	private Layout discussionTabPanel;
+	protected Layout discussionTabPanel;
 
-	private StandardPropertiesPanel propertiesPanel;
+	protected StandardPropertiesPanel propertiesPanel;
 
-	private ExtendedPropertiesPanel extendedPropertiesPanel;
+	protected ExtendedPropertiesPanel extendedPropertiesPanel;
 
-	private VersionsPanel versionsPanel;
+	protected VersionsPanel versionsPanel;
 
-	private HistoryPanel historyPanel;
+	protected HistoryPanel historyPanel;
 
-	private LinksPanel linksPanel;
+	protected LinksPanel linksPanel;
 
-	private Discussion discussionPanel;
+	protected Discussion discussionPanel;
 
-	private HLayout savePanel;
+	protected HLayout savePanel;
 
-	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	private TabSet tabSet = new TabSet();
+	protected TabSet tabSet = new TabSet();
 
-	private DynamicForm saveForm;
+	protected DynamicForm saveForm;
 
-	private DocumentObserver observer;
+	protected DocumentObserver observer;
+
+	protected Tab propertiesTab;
+
+	protected Tab extendedPropertiesTab;
+
+	protected Tab linksTab;
+
+	protected Tab discussionTab;
+
+	protected Tab versionsTab;
+
+	protected Tab historyTab;
 
 	public DocumentDetailsPanel(DocumentObserver observer) {
 		super();
@@ -137,54 +149,61 @@ public class DocumentDetailsPanel extends VLayout {
 		savePanel.setWidth100();
 		addMember(savePanel);
 
+		prepareTabs();
+		prepareTabset();
+	}
+
+	protected void prepareTabs() {
+		propertiesTab = new Tab(I18N.message("properties"));
+		propertiesTabPanel = new HLayout();
+		propertiesTabPanel.setWidth100();
+		propertiesTabPanel.setHeight100();
+		propertiesTab.setPane(propertiesTabPanel);
+
+		extendedPropertiesTab = new Tab(I18N.message("propertiesext"));
+		extendedPropertiesTabPanel = new HLayout();
+		extendedPropertiesTabPanel.setWidth100();
+		extendedPropertiesTabPanel.setHeight100();
+		extendedPropertiesTab.setPane(extendedPropertiesTabPanel);
+
+		linksTab = new Tab(I18N.message("links"));
+		linksTabPanel = new HLayout();
+		linksTabPanel.setWidth100();
+		linksTabPanel.setHeight100();
+		linksTab.setPane(linksTabPanel);
+
+		discussionTab = new Tab(I18N.message("discussions"));
+		discussionTabPanel = new HLayout();
+		discussionTabPanel.setWidth100();
+		discussionTabPanel.setHeight100();
+		discussionTab.setPane(discussionTabPanel);
+
+		versionsTab = new Tab(I18N.message("versions"));
+		versionsTabPanel = new HLayout();
+		versionsTabPanel.setWidth100();
+		versionsTabPanel.setHeight100();
+		versionsTab.setPane(versionsTabPanel);
+
+		historyTab = new Tab(I18N.message("history"));
+		historyTabPanel = new HLayout();
+		historyTabPanel.setWidth100();
+		historyTabPanel.setHeight100();
+		historyTab.setPane(historyTabPanel);
+	}
+
+	protected void prepareTabset() {
 		tabSet = new TabSet();
 		tabSet.setTabBarPosition(Side.TOP);
 		tabSet.setTabBarAlign(Side.LEFT);
 		tabSet.setWidth100();
 		tabSet.setHeight100();
 
-		Tab propertiesTab = new Tab(I18N.message("properties"));
-		propertiesTabPanel = new HLayout();
-		propertiesTabPanel.setWidth100();
-		propertiesTabPanel.setHeight100();
-		propertiesTab.setPane(propertiesTabPanel);
 		tabSet.addTab(propertiesTab);
-
-		Tab extendedPropertiesTab = new Tab(I18N.message("propertiesext"));
-		extendedPropertiesTabPanel = new HLayout();
-		extendedPropertiesTabPanel.setWidth100();
-		extendedPropertiesTabPanel.setHeight100();
-		extendedPropertiesTab.setPane(extendedPropertiesTabPanel);
 		tabSet.addTab(extendedPropertiesTab);
-
-		Tab linksTab = new Tab(I18N.message("links"));
-		linksTabPanel = new HLayout();
-		linksTabPanel.setWidth100();
-		linksTabPanel.setHeight100();
-		linksTab.setPane(linksTabPanel);
 		tabSet.addTab(linksTab);
-
-		Tab discussionTab = new Tab(I18N.message("discussions"));
-		discussionTabPanel = new HLayout();
-		discussionTabPanel.setWidth100();
-		discussionTabPanel.setHeight100();
-		discussionTab.setPane(discussionTabPanel);
-
 		if (Feature.visible(Feature.FORUMS))
 			tabSet.addTab(discussionTab);
-
-		Tab versionsTab = new Tab(I18N.message("versions"));
-		versionsTabPanel = new HLayout();
-		versionsTabPanel.setWidth100();
-		versionsTabPanel.setHeight100();
-		versionsTab.setPane(versionsTabPanel);
 		tabSet.addTab(versionsTab);
-
-		Tab historyTab = new Tab(I18N.message("history"));
-		historyTabPanel = new HLayout();
-		historyTabPanel.setWidth100();
-		historyTabPanel.setHeight100();
-		historyTab.setPane(historyTabPanel);
 		tabSet.addTab(historyTab);
 
 		addMember(tabSet);
