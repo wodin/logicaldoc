@@ -1,19 +1,17 @@
 package com.logicaldoc.webservice;
 
-import javax.activation.DataHandler;
-
 import com.logicaldoc.webservice.auth.AuthClient;
-import com.logicaldoc.webservice.document.DocumentClient;
 import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.search.SearchClient;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		AuthClient auth = new AuthClient("http://localhost:1000/logicaldoc/services/Auth");
-		DocumentClient documentClient = new DocumentClient("http://localhost:1000/logicaldoc/services/Document");
+		AuthClient auth = new AuthClient("http://localhost:9080/logicaldoc/services/Auth");
+		// DocumentClient documentClient = new
+		// DocumentClient("http://localhost:9080/logicaldoc/services/Document");
 		// FolderClient folderClient = new
-		// FolderClient("http://localhost:8080/logicaldoc/services/Folder");
-		SearchClient searchClient = new SearchClient("http://localhost:1000/logicaldoc/services/Search");
+		// FolderClient("http://localhost:9080/logicaldoc/services/Folder");
+		SearchClient searchClient = new SearchClient("http://localhost:9080/logicaldoc/services/Search");
 
 		// Open a session
 		// This is a user 'author' with different permissions than the authors.
@@ -53,12 +51,12 @@ public class Main {
 		// System.out.println("doc folderid: " + doc.getFolderId());
 		// }
 
-		// WSDocument[] docs = searchClient.findByFilename(sid, "reference%");
-		// for (WSDocument doc : docs) {
-		// System.out.println("doc id: " + doc.getId());
-		// System.out.println("doc title: " + doc.getTitle());
-		// System.out.println("doc folderid: " + doc.getFolderId());
-		// }
+		WSDocument[] docs = searchClient.findByFilename(sid, "logicaldoc%");
+		for (WSDocument doc : docs) {
+			System.out.println("doc id: " + doc.getId());
+			System.out.println("doc title: " + doc.getTitle());
+			System.out.println("doc folderid: " + doc.getFolderId());
+		}
 		//
 		// WSFolder[] folders = searchClient.findFolders(sid, "test");
 		// for (WSFolder doc : folders) {
@@ -67,11 +65,11 @@ public class Main {
 		// System.out.println("folder desc: " + doc.getDescription());
 		// }
 
-		WSDocument document = documentClient.getDocument(sid, 3);
-		document.setTitle("test_5");
-		document.setSourceDate("2010-05-01");
-		DataHandler data = documentClient.getContent(sid, 3);
-		WSDocument doc = documentClient.create(sid, document, data);
+		// WSDocument document = documentClient.getDocument(sid, 3);
+		// document.setTitle("test_5");
+		// document.setSourceDate("2010-05-01");
+		// DataHandler data = documentClient.getContent(sid, 3);
+		// WSDocument doc = documentClient.create(sid, document, data);
 		// System.out.println("created doc: " + doc.getId());
 
 		// System.out.println("doc id: " + document.getId());
@@ -117,17 +115,18 @@ public class Main {
 		// System.out.println("doc file version: " + doc.getFileVersion());
 		// System.out.println("doc name: " + doc.getTitle());
 		// }
-
+		//
 		// WSFolder newFolder = new WSFolder();
 		// newFolder.setName("ddddd");
 		// newFolder.setDescription("new folder ddddd");
-		// newFolder.setParentId(6);
+		// newFolder.setParentId(5);
+		// newFolder = folderClient.create(sid, newFolder);
 		// WSFolder[] folders = folderClient.list(sid, 5);
 		// for (WSFolder folder : folders) {
 		// System.out.println("folder id: " + folder.getId());
 		// System.out.println("folder name : " + folder.getName());
 		// }
-
+		//
 		// System.out.println("folder id : " + newFolder.getId());
 		// System.out.println("folder desc: " + newFolder.getDescription());
 
