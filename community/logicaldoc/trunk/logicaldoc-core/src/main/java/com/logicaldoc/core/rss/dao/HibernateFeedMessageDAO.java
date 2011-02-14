@@ -41,7 +41,7 @@ public class HibernateFeedMessageDAO extends HibernatePersistentObjectDAO<FeedMe
 
 	@Override
 	public boolean checkNotRead() {
-		String query = "select count(ld_id) from ld_feedmessage where ld_deleted=0 and ld_read <> 0";
+		String query = "select count(ld_id) from ld_feedmessage where ld_deleted=0 and ld_read=0";
 		return queryForInt(query) > 0;
 	}
 

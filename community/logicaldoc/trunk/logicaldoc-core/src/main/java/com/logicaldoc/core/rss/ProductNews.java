@@ -1,10 +1,20 @@
 package com.logicaldoc.core.rss;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.communication.Message;
+import com.logicaldoc.core.communication.Recipient;
+import com.logicaldoc.core.communication.SystemMessage;
+import com.logicaldoc.core.communication.dao.SystemMessageDAO;
 import com.logicaldoc.core.rss.dao.FeedMessageDAO;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.task.Task;
 import com.logicaldoc.i18n.I18N;
@@ -79,6 +89,9 @@ public class ProductNews extends Task {
 				if (interruptRequested)
 					return;
 			}
+			if (saved > 0) {
+				createMessages();
+			}
 		} finally {
 			log.info("Retrieving news finished");
 			log.info("Retrieved news: " + saved);
@@ -90,13 +103,57 @@ public class ProductNews extends Task {
 	protected String prepareReport(Locale locale) {
 		StringBuffer sb = new StringBuffer();
 		if (saved > 0)
-			sb.append(I18N.message("feednewsfound", locale, new Object[] { saved }) + ": ");
+			sb.append(I18N.message("feednewsfound", locale, new Object[] { saved }));
 		else
 			sb.append(I18N.message("feednewsnotfound", locale));
 		sb.append("\n");
 		sb.append(I18N.message("errors", locale) + ": ");
 		sb.append(errors);
 		return sb.toString();
+	}
+
+	/**
+	 * Creates the system message for the administrator user.
+	 */
+	private void createMessages() {
+		SystemMessageDAO systemMessageDao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
+		Map<Locale, Set<Recipient>> recipientsLocalesMap = new HashMap<Locale, Set<Recipient>>();
+		try {
+			for (Long userId : userDao.findAllIds()) {
+				User user = userDao.findById(userId);
+				if (user.isInGroup("admin")) {
+					Recipient recipient = new Recipient();
+					recipient.setName(user.getUserName());
+					recipient.setAddress(user.getUserName());
+					recipient.setType(Recipient.TYPE_SYSTEM);
+					recipient.setMode(Recipient.MODE_EMAIL_TO);
+					// Add the recipient to the recipients list according to the
+					// user Locale
+					if (recipientsLocalesMap.containsKey(user.getLocale())) {
+						recipientsLocalesMap.get(user.getLocale()).add(recipient);
+					} else {
+						Set<Recipient> recipients = new HashSet<Recipient>();
+						recipients.add(recipient);
+						recipientsLocalesMap.put(user.getLocale(), recipients);
+					}
+				}
+			}
+
+			for (Locale locale : recipientsLocalesMap.keySet()) {
+				SystemMessage message = new SystemMessage();
+				message.setType(Message.TYPE_NOTIFICATION);
+				message.setAuthor("SYSTEM");
+				message.setRead(0);
+				message.setSentDate(new Date());
+				message.setRecipients(recipientsLocalesMap.get(locale));
+				message.setSubject(I18N.message("feednewsfound", locale, new Object[] { saved }));
+				message.setMessageText(I18N.message("productnewsmessage", locale));
+
+				systemMessageDao.store(message);
+			}
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+		}
 	}
 
 	public UserDAO getUserDao() {
