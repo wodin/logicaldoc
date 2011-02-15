@@ -1,8 +1,8 @@
 package com.logicaldoc.webservice;
 
 import com.logicaldoc.webservice.auth.AuthClient;
-import com.logicaldoc.webservice.document.WSDocument;
-import com.logicaldoc.webservice.search.SearchClient;
+import com.logicaldoc.webservice.system.SystemClient;
+import com.logicaldoc.webservice.system.WSInfo;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
@@ -11,13 +11,27 @@ public class Main {
 		// DocumentClient("http://localhost:9080/logicaldoc/services/Document");
 		// FolderClient folderClient = new
 		// FolderClient("http://localhost:9080/logicaldoc/services/Folder");
-		SearchClient searchClient = new SearchClient("http://localhost:9080/logicaldoc/services/Search");
+		// SearchClient searchClient = new
+		// SearchClient("http://localhost:9080/logicaldoc/services/Search");
+		SystemClient systemClient = new SystemClient("http://localhost:9080/logicaldoc/services/System");
 
 		// Open a session
 		// This is a user 'author' with different permissions than the authors.
 		// String sid = auth.login("matteo", "matteo1982");
 		String sid = auth.login("admin", "admin");
 		System.out.println("sid: " + sid);
+
+		WSInfo info = systemClient.getInfo(sid);
+		System.out.println("vendorAddress: " + info.getVendorAddress());
+		System.out.println("id: " + info.getInstallationId());
+		System.out.println("release: " + info.getRelease());
+		System.out.println("year: " + info.getYear());
+
+		WSParameter[] parameters = systemClient.getStatistics(sid);
+		for (WSParameter param : parameters) {
+			System.out.println("param name: " + param.getName());
+			System.out.println("param value: " + param.getValue());
+		}
 
 		// auth.grantGroup(sid, 8, 2, 0, true);
 		// auth.logout(sid);
@@ -51,12 +65,12 @@ public class Main {
 		// System.out.println("doc folderid: " + doc.getFolderId());
 		// }
 
-		WSDocument[] docs = searchClient.findByFilename(sid, "logicaldoc%");
-		for (WSDocument doc : docs) {
-			System.out.println("doc id: " + doc.getId());
-			System.out.println("doc title: " + doc.getTitle());
-			System.out.println("doc folderid: " + doc.getFolderId());
-		}
+		// WSDocument[] docs = searchClient.findByFilename(sid, "logicaldoc%");
+		// for (WSDocument doc : docs) {
+		// System.out.println("doc id: " + doc.getId());
+		// System.out.println("doc title: " + doc.getTitle());
+		// System.out.println("doc folderid: " + doc.getFolderId());
+		// }
 		//
 		// WSFolder[] folders = searchClient.findFolders(sid, "test");
 		// for (WSFolder doc : folders) {
