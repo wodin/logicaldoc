@@ -63,6 +63,7 @@
         <value>/mappings/DocumentTemplate.hbm.xml</value>
         <value>/mappings/SystemMessage.hbm.xml</value>
         <value>/mappings/Version.hbm.xml</value>
+        <value>/mappings/Generic.hbm.xml</value>
       </list>
     </property>
 

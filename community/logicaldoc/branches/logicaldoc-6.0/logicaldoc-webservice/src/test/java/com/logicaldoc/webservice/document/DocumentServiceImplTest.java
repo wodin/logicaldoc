@@ -39,7 +39,7 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		docDao = (DocumentDAO) context.getBean("DocumentDAO");
 		folderDao = (FolderDAO) context.getBean("FolderDAO");
 
-		// Make sure that this is a AuthServiceImpl instance
+		// Make sure that this is a DocumentServiceImpl instance
 		docServiceImpl = new DocumentServiceImpl();
 		docServiceImpl.setValidateSession(false);
 	}

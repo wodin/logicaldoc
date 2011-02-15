@@ -160,18 +160,6 @@ insert into ld_document
            (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_deleteuserid)
 values     (6,'2010-04-01',1,0,'g','DELETED 4','testDocVer4','2006-12-19','2006-12-19','myself',1,1,'TIFF',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','topolino',122345,1,1100,0,'',1,0,2);
 
-insert into ld_ticket
-           (ld_id,ld_lastmodified,ld_deleted,ld_ticketid,ld_docid,ld_userid)
-values     (1,'2008-10-22',0,'1',1,1);
-
-insert into ld_ticket
-           (ld_id,ld_lastmodified,ld_deleted,ld_ticketid,ld_docid,ld_userid)
-values     (2,'2008-10-22',0,'2',2,3);
-
-insert into ld_ticket
-           (ld_id,ld_lastmodified,ld_deleted,ld_ticketid,ld_docid,ld_userid)
-values     (3,'2008-12-22',0,'3',1,3);
-
 insert into ld_userdoc
            (ld_id,ld_lastmodified,ld_deleted,ld_docid,ld_userid,ld_date)
 values     (1,'2008-12-22',0,1,1,'2006-12-17');
@@ -300,3 +288,24 @@ values     (2,'2008-10-22',0,1,'2006-12-25','author','data test 02','reason test
 insert into ld_user_history 
 			    (ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_notified)
 values     (3,'2008-10-22',0,3,'2006-12-27','sebastian','data test 03','reason test 03',1);
+
+insert into ld_generic
+		(ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_string1, ld_string2, ld_integer1)
+values
+		(6,'2008-11-19',0,'stat','docdir','5437281','str2',0);
+insert into ld_generic
+		(ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_string1, ld_string2, ld_integer1)
+values
+		(7,'2008-11-19',0,'stat','dbdir','986753','str2',10);
+insert into ld_generic
+		(ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_string1, ld_string2, ld_integer1)
+values
+		(8,'2008-11-19',0,'stat','indexeddocs','str1','str2',181);
+insert into ld_generic
+		(ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_string1, ld_string2, ld_integer1)
+values
+		(9,'2010-04-23',0,'stat','withdocs','str1','str2',45);
+insert into ld_generic
+		(ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_string1, ld_string2, ld_integer1)
+values
+		(10,'2010-04-23',0,'stat','lastrun','2011-02-15 10:46:27','str2',10);

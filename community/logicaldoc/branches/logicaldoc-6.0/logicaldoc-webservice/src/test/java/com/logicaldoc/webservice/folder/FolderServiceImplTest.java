@@ -29,7 +29,7 @@ public class FolderServiceImplTest extends AbstractWebServiceTestCase {
 		super.setUp();
 		folderDao = (FolderDAO) context.getBean("FolderDAO");
 
-		// Make sure that this is a AuthServiceImpl instance
+		// Make sure that this is a FolderServiceImpl instance
 		folderServiceImpl = new FolderServiceImpl();
 		folderServiceImpl.setValidateSession(false);
 	}
