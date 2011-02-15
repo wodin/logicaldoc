@@ -200,7 +200,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		String dbDirectory = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/db/");
 
 		ContextProperties pbean = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		pbean.setProperty("store.1", docDir);
+		pbean.setProperty("store.1.dir", docDir);
 		pbean.setProperty("store.write", "1");
 		pbean.setProperty("conf.indexdir", indexDir);
 		pbean.setProperty("conf.userdir", userDir);
