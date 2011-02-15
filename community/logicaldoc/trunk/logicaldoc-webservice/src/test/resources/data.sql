@@ -300,3 +300,24 @@ values     (2,'2008-10-22',0,1,'2006-12-25','author','data test 02','reason test
 insert into ld_user_history 
 			    (ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_notified)
 values     (3,'2008-10-22',0,3,'2006-12-27','sebastian','data test 03','reason test 03',1);
+
+insert into ld_generic
+		(ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_string1, ld_string2, ld_integer1)
+values
+		(6,'2008-11-19',0,'stat','docdir','5437281','str2',0);
+insert into ld_generic
+		(ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_string1, ld_string2, ld_integer1)
+values
+		(7,'2008-11-19',0,'stat','dbdir','986753','str2',10);
+insert into ld_generic
+		(ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_string1, ld_string2, ld_integer1)
+values
+		(8,'2008-11-19',0,'stat','indexeddocs','str1','str2',181);
+insert into ld_generic
+		(ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_string1, ld_string2, ld_integer1)
+values
+		(9,'2010-04-23',0,'stat','withdocs','str1','str2',45);
+insert into ld_generic
+		(ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_string1, ld_string2, ld_integer1)
+values
+		(10,'2010-04-23',0,'stat','lastrun','2011-02-15 10:46:27','str2',10);
