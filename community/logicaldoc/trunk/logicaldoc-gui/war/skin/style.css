@@ -196,7 +196,6 @@
   font-size: 32pt;
 }
 
-
 .basicSearchForm .formTitle, .basicSearchForm .formTitleFocused, .basicSearchForm .formTitleDisabled, 
 .basicSearchForm .formCellError, .basicSearchForm .formTitleError, .basicSearchForm .formHint,
 .basicSearchForm .headerItem, .basicSearchForm .headerItemDisabled, .basicSearchForm .headerItemError,
@@ -217,4 +216,8 @@
 .basicSearchForm .buttonTitleFocusedDown, .basicSearchForm .buttonTitleSelectedFocusedDown,
 .basicSearchForm .buttonTitleDisabled, .basicSearchForm .buttonTitleSelectedDisabled {
   font-size: 32pt;
+}
+
+.bigtext {
+  font-size: 24pt;
 }
