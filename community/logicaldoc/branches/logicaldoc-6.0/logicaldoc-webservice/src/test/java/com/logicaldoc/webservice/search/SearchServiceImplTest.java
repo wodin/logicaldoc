@@ -25,7 +25,7 @@ public class SearchServiceImplTest extends AbstractWebServiceTestCase {
 		super.setUp();
 		docDao = (DocumentDAO) context.getBean("DocumentDAO");
 
-		// Make sure that this is a AuthServiceImpl instance
+		// Make sure that this is a SearchServiceImpl instance
 		searchServiceImpl = new SearchServiceImpl();
 		searchServiceImpl.setValidateSession(false);
 	}
