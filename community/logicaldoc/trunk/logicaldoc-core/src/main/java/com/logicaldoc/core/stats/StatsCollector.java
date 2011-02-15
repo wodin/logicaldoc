@@ -200,10 +200,10 @@ public class StatsCollector extends Task {
 		int links = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_link");
 		int aliases = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_document WHERE ld_docref IS NOT NULL");
 
-		int workflow_histories = -1;
+		int workflow_histories = 0;
 		try {
 			workflow_histories = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_workflowhistory");
-		} catch (Exception e) {
+		} catch (Throwable e) {
 		}
 
 		/*
