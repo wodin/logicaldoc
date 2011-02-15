@@ -31,27 +31,27 @@ import com.smartgwt.client.widgets.layout.VLayout;
  */
 public class DocumentsPanel extends HLayout implements FolderObserver, DocumentObserver {
 
-	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	private FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
+	protected FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
 
-	private Layout listing = new VLayout();
+	protected Layout listing = new VLayout();
 
-	private Layout details = new VLayout();
+	protected Layout details = new VLayout();
 
-	private Canvas listingPanel;
+	protected Canvas listingPanel;
 
-	private Canvas detailPanel;
+	protected Canvas detailPanel;
 
-	private static DocumentsPanel instance;
+	protected static DocumentsPanel instance;
 
-	private DocumentToolbar toolbar;
+	protected DocumentToolbar toolbar;
 
-	private VLayout right = new VLayout();
+	protected VLayout right = new VLayout();
 
-	private GUIFolder folder;
+	protected GUIFolder folder;
 
-	private DocumentsMenu documentsMenu;
+	protected DocumentsMenu documentsMenu;
 
 	public DocumentsMenu getDocumentsMenu() {
 		return documentsMenu;
@@ -62,16 +62,13 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 
 	private Integer max;
 
-	private DocumentsPanel() {
+	protected DocumentsPanel() {
 		// Register to folders events
 		Session.get().addFolderObserver(this);
 
 		setWidth100();
 
-		// Prepare the collapsible menu
-		documentsMenu = new DocumentsMenu();
-		documentsMenu.setWidth(280);
-		documentsMenu.setShowResizeBar(true);
+		prepareMenu();
 
 		// Initialize the listing panel as placeholder
 		listingPanel = new Label("&nbsp;" + I18N.message("selectfolder"));
@@ -96,6 +93,15 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		addMember(right);
 
 		setShowEdges(true);
+	}
+
+	/**
+	 * Prepare the collapsible menu
+	 */
+	protected void prepareMenu() {
+		documentsMenu = new DocumentsMenu();
+		documentsMenu.setWidth(280);
+		documentsMenu.setShowResizeBar(true);
 	}
 
 	public static DocumentsPanel get() {

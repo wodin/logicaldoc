@@ -39,7 +39,7 @@ import com.smartgwt.client.widgets.tab.TabSet;
  * @since 6.0
  */
 public class DocumentDetailsPanel extends VLayout {
-	private GUIDocument document;
+	protected GUIDocument document;
 
 	protected Layout propertiesTabPanel;
 

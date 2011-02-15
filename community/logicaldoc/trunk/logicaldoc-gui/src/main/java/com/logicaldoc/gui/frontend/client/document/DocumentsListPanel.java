@@ -232,9 +232,7 @@ public class DocumentsListPanel extends VLayout {
 		list.addSelectionChangedHandler(new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChanged(SelectionEvent event) {
-				ListGridRecord record = list.getSelectedRecord();
-				if (record != null)
-					DocumentsPanel.get().onSelectedDocument(Long.parseLong(record.getAttribute("id")), false);
+				onRecordSelected();
 			}
 		});
 
@@ -321,5 +319,11 @@ public class DocumentsListPanel extends VLayout {
 	public void toggleFilters() {
 		list.setShowFilterEditor(!filters);
 		filters = !filters;
+	}
+
+	protected void onRecordSelected() {
+		ListGridRecord record = list.getSelectedRecord();
+		if (record != null)
+			DocumentsPanel.get().onSelectedDocument(Long.parseLong(record.getAttribute("id")), false);
 	}
 }

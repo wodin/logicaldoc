@@ -27,6 +27,10 @@ public class DocumentsMenu extends SectionStack {
 	private SectionStackSection trashSection = null;
 
 	public DocumentsMenu() {
+		this(true, true, true);
+	}
+
+	public DocumentsMenu(boolean folders, boolean bookmarks, boolean trash) {
 		setVisibilityMode(VisibilityMode.MUTEX);
 		setWidth(250);
 
@@ -35,9 +39,10 @@ public class DocumentsMenu extends SectionStack {
 		foldersSection.setCanCollapse(true);
 		foldersTree = FoldersNavigator.get();
 		foldersSection.setItems(foldersTree);
-		addSection(foldersSection);
+		if (folders)
+			addSection(foldersSection);
 
-		if (Feature.visible(Feature.BOOKMARKS)) {
+		if (bookmarks && Feature.visible(Feature.BOOKMARKS)) {
 			bookmarksSection = new SectionStackSection(I18N.message("bookmarks"));
 			bookmarksSection.setName("bookmarks");
 			bookmarksSection.setCanCollapse(true);
@@ -49,7 +54,7 @@ public class DocumentsMenu extends SectionStack {
 			addSection(bookmarksSection);
 		}
 
-		if (Feature.visible(Feature.TRASH)) {
+		if (trash && Feature.visible(Feature.TRASH)) {
 			trashSection = new SectionStackSection(I18N.message("trash"));
 			trashSection.setName("trash");
 			trashSection.setCanCollapse(true);
