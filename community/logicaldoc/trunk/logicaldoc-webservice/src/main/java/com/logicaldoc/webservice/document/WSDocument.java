@@ -154,6 +154,9 @@ public class WSDocument {
 	private String comment;
 
 	private String lastModified;
+	
+	//Just for .Net compatibility
+	private int dateCategory;
 
 	public static WSDocument fromDocument(AbstractDocument document) {
 		WSDocument wsDoc = new WSDocument();
@@ -700,5 +703,13 @@ public class WSDocument {
 
 	public void setLastModified(String lastModified) {
 		this.lastModified = lastModified;
+	}
+
+	public int getDateCategory() {
+		return dateCategory;
+	}
+
+	public void setDateCategory(int dateCategory) {
+		this.dateCategory = dateCategory;
 	}
 }
