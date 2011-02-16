@@ -38,4 +38,9 @@ public class SystemClient implements SystemService {
 	public WSParameter[] getStatistics(String sid) throws Exception {
 		return client.getStatistics(sid);
 	}
+
+	@Override
+	public String[] getLanguages(String sid) throws Exception {
+		return client.getLanguages(sid);
+	}
 }

@@ -34,4 +34,13 @@ public interface SystemService {
 	 */
 	@WebResult(name = "parameters")
 	public WSParameter[] getStatistics(@WebParam(name = "sid") String sid) throws Exception;
+	
+	/**
+	 * Retrieves the languages enabled in the server.
+	 * 
+	 * @param sid Session identifier
+	 * @return Array of active languages (en, it, es ....)
+	 * @throws Exception
+	 */
+	public String[] getLanguages(@WebParam(name = "sid") String sid) throws Exception;
 }
