@@ -18,13 +18,13 @@ import com.smartgwt.client.widgets.layout.events.SectionHeaderClickHandler;
  */
 public class DocumentsMenu extends SectionStack {
 
-	private FoldersNavigator foldersTree;
+	protected FoldersNavigator foldersTree;
 
-	private SectionStackSection foldersSection = null;
+	protected SectionStackSection foldersSection = null;
 
-	private SectionStackSection bookmarksSection = null;
+	protected SectionStackSection bookmarksSection = null;
 
-	private SectionStackSection trashSection = null;
+	protected SectionStackSection trashSection = null;
 
 	public DocumentsMenu() {
 		this(true, true, true);

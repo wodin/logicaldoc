@@ -232,7 +232,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		hiliteDocId = null;
 	}
 
-	private void updateListingPanel(GUIFolder folder, Long hiliteDocId, Integer max) {
+	protected void updateListingPanel(GUIFolder folder, Long hiliteDocId, Integer max) {
 		listing.removeMember(listingPanel);
 		listingPanel.destroy();
 		listingPanel = new DocumentsListPanel(folder, hiliteDocId, max);
