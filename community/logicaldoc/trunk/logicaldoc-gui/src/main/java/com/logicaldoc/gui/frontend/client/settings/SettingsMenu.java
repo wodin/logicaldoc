@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.client.settings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.Menu;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
@@ -36,10 +35,6 @@ public class SettingsMenu extends VLayout {
 		folders.setWidth100();
 		folders.setHeight(25);
 
-		Button clientTools = new Button(I18N.message("clienttools"));
-		clientTools.setWidth100();
-		clientTools.setHeight(25);
-
 		Button parameters = new Button(I18N.message("parameters"));
 		parameters.setWidth100();
 		parameters.setHeight(25);
@@ -59,14 +54,6 @@ public class SettingsMenu extends VLayout {
 		Button quota = new Button(I18N.message("docsquota"));
 		quota.setWidth100();
 		quota.setHeight(25);
-
-		if (Feature.visible(Feature.CLIENT_TOOLS) && Menu.enabled(Menu.CLIENTS)) {
-			addMember(clientTools);
-			if (!Feature.enabled(Feature.CLIENT_TOOLS)) {
-				clientTools.setDisabled(true);
-				clientTools.setTooltip(I18N.message("featuredisabled"));
-			}
-		}
 
 		addMember(email);
 		addMember(proxy);
@@ -89,25 +76,6 @@ public class SettingsMenu extends VLayout {
 		}
 
 		addMember(parameters);
-
-		clientTools.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				service.loadClientSettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(GUIParameter[] settings) {
-						AdminPanel.get().setContent(new ClientToolsSettingsPanel(settings));
-					}
-
-				});
-			}
-		});
 
 		ocr.addClickHandler(new ClickHandler() {
 			@Override

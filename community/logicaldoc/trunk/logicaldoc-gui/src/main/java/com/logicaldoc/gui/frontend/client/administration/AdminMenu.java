@@ -8,6 +8,7 @@ import com.logicaldoc.gui.frontend.client.metadata.MetadataMenu;
 import com.logicaldoc.gui.frontend.client.security.SecurityMenu;
 import com.logicaldoc.gui.frontend.client.settings.SettingsMenu;
 import com.logicaldoc.gui.frontend.client.system.SystemMenu;
+import com.logicaldoc.gui.frontend.client.tools.ToolsMenu;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
@@ -59,6 +60,14 @@ public class AdminMenu extends SectionStack {
 			impexSection.addItem(new ImpexMenu());
 			addSection(impexSection);
 		}
+
+		// TODO
+		// if (Menu.enabled(Menu.TOOLS)) {
+		SectionStackSection toolsSection = new SectionStackSection(I18N.message("tools"));
+		toolsSection.setExpanded(false);
+		toolsSection.addItem(new ToolsMenu());
+		addSection(toolsSection);
+		// }
 
 		if (Menu.enabled(Menu.SETTINGS)) {
 			SectionStackSection sysConfSection = new SectionStackSection(I18N.message("settings"));
