@@ -58,9 +58,9 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	}
 
 	// The document that must be hilighted
-	private Long hiliteDocId = null;
+	protected Long hiliteDocId = null;
 
-	private Integer max;
+	protected Integer max;
 
 	protected DocumentsPanel() {
 		// Register to folders events
