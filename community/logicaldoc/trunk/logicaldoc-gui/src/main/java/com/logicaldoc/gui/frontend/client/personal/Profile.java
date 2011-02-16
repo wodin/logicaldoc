@@ -67,6 +67,8 @@ public class Profile extends Window {
 		TextItem state = ItemFactory.newTextItem("state", "state", user.getState());
 		TextItem phone = ItemFactory.newTextItem("phone", "phone", user.getPhone());
 		TextItem cell = ItemFactory.newTextItem("cell", "cell", user.getCell());
+		TextItem quota = ItemFactory.newTextItem("quota", "quota", Long.toString(user.getQuota()));
+		quota.setDisabled(true);
 
 		ButtonItem apply = new ButtonItem();
 		apply.setTitle(I18N.message("apply"));
@@ -119,7 +121,7 @@ public class Profile extends Window {
 		});
 
 		form.setFields(firstName, lastName, email, language, address, postalCode, city, country, state, phone, cell,
-				apply);
+				quota, apply);
 
 		addItem(form);
 	}
