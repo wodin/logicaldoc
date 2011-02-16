@@ -2,7 +2,9 @@ package com.logicaldoc.webservice.system;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,6 +12,8 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
+import com.logicaldoc.core.i18n.Language;
+import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.stats.StatsCollector;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webservice.AbstractService;
@@ -179,5 +183,21 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 		}
 
 		return parameters;
+	}
+
+	@Override
+	public String[] getLanguages(String sid) throws Exception {
+		validateSession(sid);
+		List<String> langs = new ArrayList<String>();
+
+		try {
+			for (Language lang : LanguageManager.getInstance().getActiveLanguages()) {
+				langs.add(lang.getLanguage());
+			}
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+		}
+
+		return langs.toArray(new String[0]);
 	}
 }
