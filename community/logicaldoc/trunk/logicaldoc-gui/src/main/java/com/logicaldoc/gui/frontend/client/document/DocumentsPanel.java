@@ -82,8 +82,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		details.setAlign(Alignment.CENTER);
 		details.addMember(detailPanel);
 
-		toolbar = new DocumentToolbar();
-		toolbar.setWidth100();
+		prepareToolBar();
 
 		right.addMember(toolbar);
 		right.addMember(listing);
@@ -93,6 +92,11 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		addMember(right);
 
 		setShowEdges(true);
+	}
+
+	protected void prepareToolBar() {
+		toolbar = new DocumentToolbar();
+		toolbar.setWidth100();
 	}
 
 	/**

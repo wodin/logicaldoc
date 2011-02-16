@@ -42,38 +42,45 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  * @since 6.0
  */
 public class DocumentToolbar extends ToolStrip implements FolderObserver {
-	private ToolStripButton download = new ToolStripButton();
+	protected ToolStripButton download = new ToolStripButton();
 
-	private ToolStripButton rss = new ToolStripButton();
+	protected ToolStripButton rss = new ToolStripButton();
 
-	private ToolStripButton pdf = new ToolStripButton();
+	protected ToolStripButton pdf = new ToolStripButton();
 
-	private ToolStripButton add = new ToolStripButton();
+	protected ToolStripButton add = new ToolStripButton();
 
-	private ToolStripButton subscribe = new ToolStripButton();
+	protected ToolStripButton subscribe = new ToolStripButton();
 
-	private ToolStripButton scan = new ToolStripButton();
+	protected ToolStripButton scan = new ToolStripButton();
 
-	private ToolStripButton archive = new ToolStripButton();
+	protected ToolStripButton archive = new ToolStripButton();
 
-	private ToolStripButton archiveDematerialization = new ToolStripButton();
+	protected ToolStripButton archiveDematerialization = new ToolStripButton();
 
-	private ToolStripButton office = new ToolStripButton();
+	protected ToolStripButton office = new ToolStripButton();
 
-	private ToolStripButton startWorkflow = new ToolStripButton();
+	protected ToolStripButton startWorkflow = new ToolStripButton();
 
-	private ToolStripButton addToWorkflow = new ToolStripButton();
+	protected ToolStripButton addToWorkflow = new ToolStripButton();
 
-	private GUIDocument document;
+	protected GUIDocument document;
 
-	private AuditServiceAsync audit = (AuditServiceAsync) GWT.create(AuditService.class);
+	protected AuditServiceAsync audit = (AuditServiceAsync) GWT.create(AuditService.class);
 
-	private WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
+	protected WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
 
 	public DocumentToolbar() {
 		GUIFolder folder = Session.get().getCurrentFolder();
 		boolean downloadEnabled = folder != null && folder.isDownload();
 
+		prepareButtons(downloadEnabled);
+
+		update(null);
+		Session.get().addFolderObserver(this);
+	}
+
+	protected void prepareButtons(boolean downloadEnabled) {
 		download.setTooltip(I18N.message("download"));
 		download.setIcon(ItemFactory.newImgIcon("download.png").getSrc());
 		download.addClickHandler(new ClickHandler() {
@@ -407,9 +414,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				DocumentsPanel.get().saveGrid();
 			}
 		});
-
-		update(null);
-		Session.get().addFolderObserver(this);
 	}
 
 	/**
