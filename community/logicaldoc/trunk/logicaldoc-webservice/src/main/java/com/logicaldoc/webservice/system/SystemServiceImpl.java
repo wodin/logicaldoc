@@ -7,11 +7,11 @@ import java.util.Date;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
 import com.logicaldoc.core.stats.StatsCollector;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.webservice.AbstractService;
 import com.logicaldoc.webservice.WSParameter;
 
@@ -26,17 +26,10 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 	public static Log log = LogFactory.getLog(SystemServiceImpl.class);
 
 	@Override
-	public WSInfo getInfo(String sid) throws Exception {
+	public SystemInfo getInfo(String sid) throws Exception {
 		validateSession(sid);
 
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-
-		WSInfo info = new WSInfo();
-		info.setInstallationId(config.getProperty("id"));
-		info.setRelease(config.getProperty("product.release"));
-		info.setYear(config.getProperty("product.year"));
-
-		return info;
+		return SystemInfo.get();
 	}
 
 	@Override

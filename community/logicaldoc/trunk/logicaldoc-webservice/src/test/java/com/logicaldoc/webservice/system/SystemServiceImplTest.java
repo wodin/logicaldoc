@@ -4,6 +4,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.webservice.AbstractWebServiceTestCase;
 import com.logicaldoc.webservice.WSParameter;
 
@@ -28,7 +29,7 @@ public class SystemServiceImplTest extends AbstractWebServiceTestCase {
 
 	@Test
 	public void testGetInfo() throws Exception {
-		WSInfo info = systemServiceImpl.getInfo("");
+		SystemInfo info = systemServiceImpl.getInfo("");
 		Assert.assertEquals("via Carlo Marx 131/2", info.getVendorAddress());
 		Assert.assertEquals("1234567890", info.getInstallationId());
 		Assert.assertEquals("6.1 Beta2", info.getRelease());

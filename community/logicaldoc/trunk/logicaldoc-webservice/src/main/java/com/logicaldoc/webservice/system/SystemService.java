@@ -4,6 +4,7 @@ import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 
+import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.webservice.WSParameter;
 
 /**
@@ -22,7 +23,7 @@ public interface SystemService {
 	 * @throws Exception
 	 */
 	@WebResult(name = "info")
-	public WSInfo getInfo(@WebParam(name = "sid") String sid) throws Exception;
+	public SystemInfo getInfo(@WebParam(name = "sid") String sid) throws Exception;
 
 	/**
 	 * Retrieves the system statistics.

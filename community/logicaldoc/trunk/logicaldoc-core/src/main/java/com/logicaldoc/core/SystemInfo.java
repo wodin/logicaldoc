@@ -15,43 +15,43 @@ import com.logicaldoc.util.plugin.PluginRegistry;
 public class SystemInfo {
 	protected static Log log = LogFactory.getLog(SystemInfo.class);
 
-	private static final long serialVersionUID = 1L;
+	protected static final long serialVersionUID = 1L;
 
-	private String productName = "LogicalDOC Community";
+	protected String productName = "LogicalDOC Community";
 
-	private String product = "LogicalDOC";
+	protected String product = "LogicalDOC";
 
-	private String release = "6.1";
+	protected String release = "6.1";
 
-	private String year = "2010";
+	protected String year = "2010";
 
-	private String help = "http://help.logicaldoc.com";
+	protected String help = "http://help.logicaldoc.com";
 
-	private String bugs = "http://bugs.logicaldoc.com";
+	protected String bugs = "http://bugs.logicaldoc.com";
 
-	private String url = "http://www.logicaldoc.com";
+	protected String url = "http://www.logicaldoc.com";
 
-	private String forum = "http://forums.logicaldoc.com";
+	protected String forum = "http://forums.logicaldoc.com";
 
-	private String vendor = "Logical Objects Srl";
+	protected String vendor = "Logical Objects Srl";
 
-	private String vendorAddress = "via Carlo Marx 131/2";
+	protected String vendorAddress = "via Carlo Marx 131/2";
 
-	private String vendorCap = "41012";
+	protected String vendorCap = "41012";
 
-	private String vendorCountry = "Italy";
+	protected String vendorCountry = "Italy";
 
-	private String vendorCity = "Carpi";
+	protected String vendorCity = "Carpi";
 
-	private String support = "support@logicaldoc.com";
+	protected String support = "support@logicaldoc.com";
 
-	private String installationId;
+	protected String installationId;
 
-	private String licensee;
+	protected String licensee;
 
-	private String runLevel;
+	protected String runLevel;
 
-	private String[] features;
+	protected String[] features;
 
 	public String getProductName() {
 		return productName;
@@ -193,6 +193,24 @@ public class SystemInfo {
 		SystemInfo info = new SystemInfo();
 
 		/*
+		 * Collect installed features
+		 */
+		try {
+			List<String> features = new ArrayList<String>();
+			PluginRegistry registry = PluginRegistry.getInstance();
+			Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "Feature");
+			for (Extension extension : exts) {
+				// Retrieve the task name
+				String name = extension.getParameter("name").valueAsString();
+				if (!features.contains(name))
+					features.add(name);
+			}
+			info.setFeatures(features.toArray(new String[0]));
+		} catch (Throwable e) {
+			log.error(e.getMessage());
+		}
+
+		/*
 		 * Collect product identification
 		 */
 		try {
@@ -230,24 +248,6 @@ public class SystemInfo {
 			info.setYear(config.getProperty("product.year"));
 			info.setRunLevel(config.getProperty("runlevel"));
 			info.setInstallationId(config.getProperty("id"));
-		} catch (Throwable e) {
-			log.error(e.getMessage());
-		}
-
-		/*
-		 * Collect installed features
-		 */
-		try {
-			List<String> features = new ArrayList<String>();
-			PluginRegistry registry = PluginRegistry.getInstance();
-			Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "Feature");
-			for (Extension extension : exts) {
-				// Retrieve the task name
-				String name = extension.getParameter("name").valueAsString();
-				if (!features.contains(name))
-					features.add(name);
-			}
-			info.setFeatures(features.toArray(new String[0]));
 		} catch (Throwable e) {
 			log.error(e.getMessage());
 		}

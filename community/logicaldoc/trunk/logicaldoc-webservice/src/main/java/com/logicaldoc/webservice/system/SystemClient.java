@@ -6,6 +6,7 @@ import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 
+import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.webservice.WSParameter;
 
 /**
@@ -29,7 +30,7 @@ public class SystemClient implements SystemService {
 	}
 
 	@Override
-	public WSInfo getInfo(String sid) throws Exception {
+	public SystemInfo getInfo(String sid) throws Exception {
 		return client.getInfo(sid);
 	}
 
