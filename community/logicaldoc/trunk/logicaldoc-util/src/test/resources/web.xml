@@ -274,6 +274,11 @@
 	<servlet-name>FeedMessageData</servlet-name>
 	<servlet-class>com.logicaldoc.web.data.FeedMessageDataServlet</servlet-class>
   </servlet>
+  
+  <servlet>
+	<servlet-name>DuplicatesData</servlet-name>
+	<servlet-class>com.logicaldoc.gui.common.server.MockDuplicatesDataServlet</servlet-class>
+  </servlet>
 
   <servlet>
     <servlet-name>Log</servlet-name>
