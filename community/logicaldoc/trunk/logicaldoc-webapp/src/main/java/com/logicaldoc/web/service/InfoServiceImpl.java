@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.java.plugin.registry.Extension;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.SystemInfo;
@@ -30,7 +29,6 @@ import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.config.ContextProperties;
-import com.logicaldoc.util.plugin.PluginRegistry;
 import com.logicaldoc.web.ApplicationInitializer;
 
 /**
@@ -134,8 +132,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			}
 
 			info.setMessages(messages.toArray(new GUIMessage[0]));
-			
-			
+
 			/*
 			 * Populate the infos from the SystemInfo
 			 */
