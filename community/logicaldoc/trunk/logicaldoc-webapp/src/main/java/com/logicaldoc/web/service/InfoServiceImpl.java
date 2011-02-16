@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.core.communication.dao.SystemMessageDAO;
 import com.logicaldoc.core.i18n.Language;
@@ -133,22 +134,30 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			}
 
 			info.setMessages(messages.toArray(new GUIMessage[0]));
-
-			// Collect installed features
-			List<String> features = new ArrayList<String>();
-			PluginRegistry registry = PluginRegistry.getInstance();
-			Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "Feature");
-			for (Extension extension : exts) {
-				// Retrieve the task name
-				String name = extension.getParameter("name").valueAsString();
-				if (!features.contains(name))
-					features.add(name);
-			}
-			info.setFeatures(features.toArray(new String[0]));
-
-			info.setInstallationId(config.getProperty("id"));
-			info.setRelease(config.getProperty("product.release"));
-			info.setYear(config.getProperty("product.year"));
+			
+			
+			/*
+			 * Populate the infos from the SystemInfo
+			 */
+			SystemInfo inf = SystemInfo.get();
+			info.setBugs(inf.getBugs());
+			info.setFeatures(inf.getFeatures());
+			info.setForum(inf.getForum());
+			info.setHelp(inf.getHelp());
+			info.setInstallationId(inf.getInstallationId());
+			info.setLicensee(inf.getLicensee());
+			info.setProduct(inf.getProduct());
+			info.setProductName(inf.getProductName());
+			info.setRelease(inf.getRelease());
+			info.setRunLevel(inf.getRunLevel());
+			info.setSupport(inf.getSupport());
+			info.setUrl(inf.getUrl());
+			info.setVendor(inf.getVendor());
+			info.setVendorAddress(inf.getVendorAddress());
+			info.setVendorCap(inf.getVendorCap());
+			info.setVendorCity(inf.getVendorCity());
+			info.setVendorCountry(inf.getVendorCountry());
+			info.setYear(inf.getYear());
 			info.setSessionHeartbeat(Integer.parseInt(config.getProperty("session.heartbeat")));
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
