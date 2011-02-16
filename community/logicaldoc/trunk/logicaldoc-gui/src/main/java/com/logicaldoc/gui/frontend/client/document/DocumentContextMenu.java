@@ -44,11 +44,11 @@ import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
  */
 public class DocumentContextMenu extends Menu {
 
-	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	private SearchServiceAsync searchService = (SearchServiceAsync) GWT.create(SearchService.class);
+	protected SearchServiceAsync searchService = (SearchServiceAsync) GWT.create(SearchService.class);
 
-	private WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
+	protected WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
 
 	public DocumentContextMenu(final GUIFolder folder, final ListGrid list) {
 		final ListGridRecord[] selection = list.getSelection();
