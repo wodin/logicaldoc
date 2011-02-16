@@ -229,6 +229,7 @@ public class SystemInfo {
 			info.setRelease(config.getProperty("product.release"));
 			info.setYear(config.getProperty("product.year"));
 			info.setRunLevel(config.getProperty("runlevel"));
+			info.setInstallationId(config.getProperty("id"));
 		} catch (Throwable e) {
 			log.error(e.getMessage());
 		}
