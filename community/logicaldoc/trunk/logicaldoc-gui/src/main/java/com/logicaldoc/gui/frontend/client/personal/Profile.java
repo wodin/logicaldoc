@@ -68,6 +68,7 @@ public class Profile extends Window {
 		TextItem phone = ItemFactory.newTextItem("phone", "phone", user.getPhone());
 		TextItem cell = ItemFactory.newTextItem("cell", "cell", user.getCell());
 		TextItem quota = ItemFactory.newTextItem("quota", "quota", Long.toString(user.getQuota()));
+		quota.setHint("MB");
 		quota.setDisabled(true);
 
 		ButtonItem apply = new ButtonItem();
