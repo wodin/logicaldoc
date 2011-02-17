@@ -36,8 +36,13 @@ public class DuplicatesDS extends DataSource {
 		DataSourceDateTimeField lastModified = new DataSourceDateTimeField("lastModified");
 		DataSourceTextField filename = new DataSourceTextField("filename");
 		DataSourceTextField digest = new DataSourceTextField("digest");
+		DataSourceImageField immutable = new DataSourceImageField("immutable");
+		DataSourceTextField folderId = new DataSourceTextField("folderId");
+		DataSourceTextField type = new DataSourceTextField("type");
+		DataSourceImageField locked = new DataSourceImageField("locked");
 
-		setFields(id, title, size, publisher, version, lastModified, customId, icon, filename, digest);
+		setFields(id, title, size, publisher, version, lastModified, customId, icon, filename, digest, immutable,
+				folderId, type, locked);
 		setClientOnly(true);
 		setDataURL("data/duplicates.xml?sid=" + Session.get().getSid());
 	}

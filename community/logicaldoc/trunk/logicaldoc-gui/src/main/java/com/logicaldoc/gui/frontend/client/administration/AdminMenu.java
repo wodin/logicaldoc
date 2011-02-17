@@ -61,13 +61,12 @@ public class AdminMenu extends SectionStack {
 			addSection(impexSection);
 		}
 
-		// TODO
-		// if (Menu.enabled(Menu.TOOLS)) {
-		SectionStackSection toolsSection = new SectionStackSection(I18N.message("tools"));
-		toolsSection.setExpanded(false);
-		toolsSection.addItem(new ToolsMenu());
-		addSection(toolsSection);
-		// }
+		if (Menu.enabled(Menu.TOOLS)) {
+			SectionStackSection toolsSection = new SectionStackSection(I18N.message("tools"));
+			toolsSection.setExpanded(false);
+			toolsSection.addItem(new ToolsMenu());
+			addSection(toolsSection);
+		}
 
 		if (Menu.enabled(Menu.SETTINGS)) {
 			SectionStackSection sysConfSection = new SectionStackSection(I18N.message("settings"));
