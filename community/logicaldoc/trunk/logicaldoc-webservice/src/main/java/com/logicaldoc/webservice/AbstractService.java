@@ -76,6 +76,25 @@ public class AbstractService {
 		return user;
 	}
 
+	/**
+	 * Checks if the current user belongs to a group
+	 */
+	protected void checkGroup(String sid, String group) throws Exception {
+		User user = validateSession(sid);
+		if (!user.isInGroup(group)) {
+			String message = "User " + user.getUserName() + " doesn't belong to group " + group;
+			log.error(message);
+			throw new Exception(message);
+		}
+	}
+
+	/**
+	 * Checks if the current user is an administrator (group admin).
+	 */
+	protected void checkAdministrator(String sid) throws Exception {
+		checkGroup(sid, "admin");
+	}
+
 	protected void checkPermission(Permission permission, User user, long folderId) throws Exception {
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		if (!dao.isPermissionEnabled(permission, folderId, user.getId())) {
