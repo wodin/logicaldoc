@@ -318,3 +318,19 @@ values (2,'2011-02-08',0,'feed2_guid', 'feed2','feed2_desc','2011-02-02',1);
 
 insert into ld_feedmessage (ld_id, ld_lastmodified,ld_deleted, ld_guid, ld_title, ld_description, ld_pubdate, ld_read)
 values (3,'2011-02-08',0,'feed3_guid', 'feed3','feed3_desc','2010-01-10',0);
+
+insert into ld_rating
+		(ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_userid, ld_vote)
+values		(1,'2011-02-18',0,1,1,1);
+
+insert into ld_rating
+		(ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_userid, ld_vote)
+values		(2,'2011-02-18',0,1,2,4);
+
+insert into ld_rating
+		(ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_userid, ld_vote)
+values		(3,'2011-02-18',0,2,1,3);
+
+insert into ld_rating
+		(ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_userid, ld_vote)
+values		(4,'2011-02-18',1,2,2,4);

@@ -58,7 +58,6 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	public static final int BARCODE_SKIP = 2;
 
-	
 	private long fileSize = 0;
 
 	/**
@@ -115,7 +114,7 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	private String fileName;
 
 	private int indexed = INDEX_TO_INDEX;
-	
+
 	private int barcoded = BARCODE_TO_PROCESS;
 
 	private int signed = 0;
@@ -141,6 +140,8 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	private Long docRef;
 
 	private Long deleteUserId;
+
+	private Integer rating;
 
 	public Long getDeleteUserId() {
 		return deleteUserId;
@@ -624,5 +625,13 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	public void setBarcoded(int barcoded) {
 		this.barcoded = barcoded;
+	}
+
+	public Integer getRating() {
+		return rating;
+	}
+
+	public void setRating(Integer rating) {
+		this.rating = rating;
 	}
 }

@@ -318,6 +318,20 @@
 			</bean>
 		</property>
 	</bean>
+	
+	<bean id="RatingDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean class="com.logicaldoc.core.document.dao.HibernateRatingDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+			</bean>
+		</property>
+	</bean>
 
 	<!-- Managers -->
 	<bean id="SecurityManager" parent="ApplicationBaseTransactionProxy"
