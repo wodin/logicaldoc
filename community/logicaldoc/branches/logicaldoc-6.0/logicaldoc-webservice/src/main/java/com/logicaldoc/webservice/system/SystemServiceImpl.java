@@ -2,16 +2,20 @@ package com.logicaldoc.webservice.system;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
+import com.logicaldoc.core.i18n.Language;
+import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.stats.StatsCollector;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.webservice.AbstractService;
 import com.logicaldoc.webservice.WSParameter;
 
@@ -26,17 +30,10 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 	public static Log log = LogFactory.getLog(SystemServiceImpl.class);
 
 	@Override
-	public WSInfo getInfo(String sid) throws Exception {
+	public SystemInfo getInfo(String sid) throws Exception {
 		validateSession(sid);
 
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-
-		WSInfo info = new WSInfo();
-		info.setInstallationId(config.getProperty("id"));
-		info.setRelease(config.getProperty("product.release"));
-		info.setYear(config.getProperty("product.year"));
-
-		return info;
+		return SystemInfo.get();
 	}
 
 	@Override
@@ -186,5 +183,21 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 		}
 
 		return parameters;
+	}
+
+	@Override
+	public String[] getLanguages(String sid) throws Exception {
+		validateSession(sid);
+		List<String> langs = new ArrayList<String>();
+
+		try {
+			for (Language lang : LanguageManager.getInstance().getActiveLanguages()) {
+				langs.add(lang.getLanguage());
+			}
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+		}
+
+		return langs.toArray(new String[0]);
 	}
 }
