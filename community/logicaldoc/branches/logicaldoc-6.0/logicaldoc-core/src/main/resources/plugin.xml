@@ -46,7 +46,9 @@
   <extension-point id="Feature">
     <parameter-def id="name" />
   </extension-point>
-  
+  <extension-point id="SystemInfo">
+    <parameter-def id="class" />
+  </extension-point>  
 
   <extension plugin-id="logicaldoc-core" point-id="Authentication" id="BasicAuthentication">
     <parameter id="providerId" value="BasicAuthentication" />
