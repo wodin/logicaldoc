@@ -1,8 +1,8 @@
 package com.logicaldoc.webservice;
 
+import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.system.SystemClient;
-import com.logicaldoc.webservice.system.WSInfo;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
@@ -23,7 +23,7 @@ public class Main {
 		String sid = auth.login("admin", "admin");
 		System.out.println("sid: " + sid);
 
-		WSInfo info = systemClient.getInfo(sid);
+		SystemInfo info = systemClient.getInfo(sid);
 		System.out.println("vendorAddress: " + info.getVendorAddress());
 		System.out.println("id: " + info.getInstallationId());
 		System.out.println("release: " + info.getRelease());
