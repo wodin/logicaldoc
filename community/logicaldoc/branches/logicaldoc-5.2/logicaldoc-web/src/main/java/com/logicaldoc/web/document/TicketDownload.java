@@ -70,7 +70,7 @@ public class TicketDownload extends HttpServlet {
 			DownloadTicket ticket = ticketDao.findByTicketId(ticketId);
 
 			if ((ticket != null) && (ticket.getDocId() != 0)) {
-				ServletDocUtil.downloadDocument(request, response, ticket.getDocId(), null, null, null);
+				ServletDocUtil.downloadDocument(request, response, ticket.getDocId(), null, null, null, null);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

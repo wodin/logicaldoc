@@ -26,11 +26,10 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserDoc;
-import com.logicaldoc.core.security.UserSession;
-import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
@@ -71,12 +70,13 @@ public class ServletDocUtil {
 	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, long docId,
 			String fileVersion, String fileName, String suffix, User user) throws FileNotFoundException, IOException,
 			ServletException {
-
-		UserSession session = SessionUtil.validateSession(request);
-
-		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+    	DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = dao.findById(docId);
 
+		if (doc == null) {
+			throw new FileNotFoundException();
+		}
+		
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		File file = documentManager.getDocumentFile(doc, fileVersion);
 		String filename = fileName;
@@ -137,7 +137,6 @@ public class ServletDocUtil {
 			history.setFilename(doc.getFileName());
 			history.setFolderId(doc.getFolder().getId());
 			history.setUser(user);
-			history.setSessionId(session.getId());
 
 			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 			hdao.store(history);
@@ -205,7 +204,7 @@ public class ServletDocUtil {
 		InputStream is = new StringInputStream(content.trim(), "UTF-8");
 		OutputStream os;
 		os = response.getOutputStream();
-		
+
 		int letter = 0;
 		byte[] buffer = new byte[128 * 1024];
 		try {
