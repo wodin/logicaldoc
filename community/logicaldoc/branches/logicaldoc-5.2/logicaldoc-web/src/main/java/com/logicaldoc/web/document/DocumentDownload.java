@@ -114,7 +114,8 @@ public class DocumentDownload extends HttpServlet {
 				if ("true".equals(downloadText)) {
 					ServletDocUtil.downloadDocumentText(request, response, doc.getId());
 				} else {
-					ServletDocUtil.downloadDocument(request, response, doc.getId(), fileVersion, suffix, user);
+					ServletDocUtil.downloadDocument(request, response, doc.getId(), fileVersion, doc.getFileName(),
+							suffix, user);
 
 					// add the file to the recent files of the user
 					ServletDocUtil.addToRecentFiles(user.getId(), doc.getId());
