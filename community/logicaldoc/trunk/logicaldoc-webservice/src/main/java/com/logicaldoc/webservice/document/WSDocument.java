@@ -149,6 +149,7 @@ public class WSDocument {
 
 	private String path;
 
+	//We should delete this because not used, use fileSize instead
 	private long size;
 
 	private String comment;
