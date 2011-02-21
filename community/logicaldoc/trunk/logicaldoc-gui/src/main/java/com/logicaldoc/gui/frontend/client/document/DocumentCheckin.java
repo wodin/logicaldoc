@@ -24,6 +24,8 @@ import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.BooleanItem;
 import com.smartgwt.client.widgets.form.fields.SubmitItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -73,11 +75,19 @@ public class DocumentCheckin extends Window {
 		versionItem.setName("majorversion");
 		versionItem.setTitle(I18N.message("majorversion"));
 
-		BooleanItem filenameItem = new BooleanItem();
+		final BooleanItem filenameItem = new BooleanItem();
 		filenameItem.setWidth(280);
 		filenameItem.setName("checkfilename");
 		filenameItem.setTitle(I18N.message("checkfilename"));
 		filenameItem.setDefaultValue(true);
+		filenameItem.addChangedHandler(new ChangedHandler() {
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if (!filenameItem.getValueAsBoolean())
+					sendButton.setDisabled(false);
+				multiUploader.reset();
+			}
+		});
 
 		TextItem commentItem = ItemFactory.newTextItem("comment", "comment", null);
 		commentItem.setRequired(true);
@@ -120,7 +130,7 @@ public class DocumentCheckin extends Window {
 			}
 
 			// This check is done because IE8 works differently from Firefox
- 			String uploadedFilename = uploader.getFileName();
+			String uploadedFilename = uploader.getFileName();
 			if (uploadedFilename.lastIndexOf('/') != -1)
 				uploadedFilename = uploadedFilename.substring(uploadedFilename.lastIndexOf('/') + 1);
 			if (uploadedFilename.lastIndexOf('\\') != -1)
