@@ -1,5 +1,6 @@
 package com.logicaldoc.webservice.folder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -209,5 +210,34 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		}
 
 		return true;
+	}
+
+	@Override
+	public WSFolder[] getPath(String sid, long folderId) throws Exception {
+		User user = validateSession(sid);
+		try {
+			checkReadEnable(user, folderId);
+		} catch (Exception e) {
+			throw new Exception("user does't have read permission");
+		}
+
+		List<WSFolder> path = new ArrayList<WSFolder>();
+
+		if (folderId == Folder.ROOTID)
+			path.add(getRootFolder(sid));
+		else {
+			// Iterate on the parents and populate the path
+			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			List<Folder> folders = folderDao.findParents(folderId);
+			for (Folder folder : folders) {
+				WSFolder wsFolder = WSFolder.fromFolder(folder);
+				path.add(wsFolder);
+			}
+			// Insert the target folder itself
+			WSFolder wsFolder = WSFolder.fromFolder(folderDao.findById(folderId));
+			path.add(wsFolder);
+		}
+
+		return path.toArray(new WSFolder[0]);
 	}
 }

@@ -83,18 +83,20 @@ public interface FolderService {
 	 * 
 	 * @param sid Session identifier
 	 * @param folderId The folder id
-	 * @return True if the identifier denotes a readable folder, otherwise false.
+	 * @return True if the identifier denotes a readable folder, otherwise
+	 *         false.
 	 * @throws Exception
 	 */
 	public boolean isReadable(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
 			throws Exception;
-	
+
 	/**
 	 * Test if a folder identifier is writeable.
 	 * 
 	 * @param sid Session identifier
 	 * @param folderId The folder id
-	 * @return True if the identifier denotes a writeable folder, otherwise false.
+	 * @return True if the identifier denotes a writeable folder, otherwise
+	 *         false.
 	 * @throws Exception
 	 */
 	public boolean isWriteable(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
@@ -116,11 +118,24 @@ public interface FolderService {
 	 * Lists all direct folders of a parent folder
 	 * 
 	 * @param sid Session identifier
-	 * @param folderId The folder id
+	 * @param folderId
 	 * @return Array of folders contained in the folder
 	 * @throws Exception
 	 */
 	@WebResult(name = "folder")
 	public WSFolder[] listChildren(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
+			throws Exception;
+
+	/**
+	 * Computes the path from the root to the target folder.
+	 * 
+	 * @param sid Session identifier
+	 * @param folderId The target folder id
+	 * @return The list of folder, the first is the root, the last is the target
+	 *         folder
+	 * @throws Exception
+	 */
+	@WebResult(name = "folders")
+	public WSFolder[] getPath(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
 			throws Exception;
 }
