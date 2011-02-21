@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.logicaldoc.gui.common.client.beans.GUIRating;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 
@@ -278,5 +279,19 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 
 	@Override
 	public void cleanUploadedFileFolder(String sid) throws InvalidSessionException {
+	}
+
+	@Override
+	public GUIRating getRating(String sid, long docId) throws InvalidSessionException {
+		GUIRating rating = new GUIRating();
+		rating.setUserId(1);
+		rating.setDocId(docId);
+		rating.setVote(5);
+		return rating;
+	}
+
+	@Override
+	public int saveRating(String sid, GUIRating rating) throws InvalidSessionException {
+		return 3;
 	}
 }

@@ -5,6 +5,7 @@ import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIRating;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 
 public interface DocumentServiceAsync {
@@ -63,4 +64,8 @@ public interface DocumentServiceAsync {
 	void markUnindexable(String sid, long[] docIds, AsyncCallback<Void> callback);
 
 	void cleanUploadedFileFolder(String sid, AsyncCallback<Void> callback);
+
+	void getRating(String sid, long docId, AsyncCallback<GUIRating> callback);
+
+	void saveRating(String sid, GUIRating rating, AsyncCallback<Integer> callback);
 }

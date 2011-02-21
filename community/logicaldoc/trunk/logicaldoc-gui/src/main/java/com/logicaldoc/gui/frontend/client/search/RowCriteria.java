@@ -147,7 +147,7 @@ public class RowCriteria extends HLayout {
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("", " ");
 
-		if (criteriaField.equals("id") || criteriaField.equals("fileSize")) {
+		if (criteriaField.equals("id") || criteriaField.equals("fileSize") || criteriaField.equals("rating")) {
 			map.put("greaterthan", I18N.message("greaterthan"));
 			map.put("lessthan", I18N.message("lessthan"));
 			map.put("equals", I18N.message("equals"));
@@ -167,7 +167,7 @@ public class RowCriteria extends HLayout {
 	}
 
 	private FormItem valueItemFor(String criteriaField) {
-		if (criteriaField.equals("id") || criteriaField.equals("fileSize")) {
+		if (criteriaField.equals("id") || criteriaField.equals("fileSize") || criteriaField.equals("rating")) {
 			return ItemFactory.newIntegerItem("value", "integer", null);
 		} else if (criteriaField.equals("sourceDate") || criteriaField.equals("lastModified")
 				|| criteriaField.equals("published") || criteriaField.equals("created")) {

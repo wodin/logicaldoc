@@ -56,7 +56,7 @@ public class HibernateRatingDAOTest extends AbstractCoreTCase {
 		Rating rat1 = dao.findVotesByDocId(1);
 		Assert.assertNotNull(rat1);
 		Assert.assertEquals(2, rat1.getCount().intValue());
-		Assert.assertEquals(new Float(2.0), rat1.getAverage().floatValue());
+		Assert.assertEquals(new Float(2.5), rat1.getAverage().floatValue());
 
 		rat1 = dao.findVotesByDocId(2);
 		Assert.assertNotNull(rat1);

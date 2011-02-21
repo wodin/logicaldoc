@@ -5,14 +5,21 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
+import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.beans.GUIRating;
 import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.frontend.client.services.DocumentService;
+import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
@@ -39,6 +46,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.0
  */
 public class StandardPropertiesPanel extends DocumentDetailTab {
+	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+
 	private DynamicForm form1 = new DynamicForm();
 
 	private DynamicForm form2 = new DynamicForm();
@@ -134,6 +143,30 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		form2.setValuesManager(vm);
 
 		List<FormItem> items = new ArrayList<FormItem>();
+
+		FormItemIcon ratingIcon = ItemFactory.newItemIcon("rating" + document.getRating() + ".png");
+		StaticTextItem vote = ItemFactory.newStaticTextItem("vote", "vote", "");
+		vote.setIcons(ratingIcon);
+		vote.setIconWidth(88);
+		vote.addIconClickHandler(new IconClickHandler() {
+			public void onIconClick(IconClickEvent event) {
+				documentService.getRating(Session.get().getSid(), document.getId(), new AsyncCallback<GUIRating>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUIRating rating) {
+						if (rating != null) {
+							RatingDialog dialog = new RatingDialog(3, rating);
+							dialog.show();
+						}
+					}
+				});
+			}
+		});
+		items.add(vote);
 
 		TextItem customId = ItemFactory.newTextItem("customId", "customid", document.getCustomId());
 		customId.addChangedHandler(changedHandler);
