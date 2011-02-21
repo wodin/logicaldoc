@@ -185,7 +185,6 @@ public class DuplicatesPanel extends VLayout {
 		toolStrip.addSpacer(2);
 		final SelectItem groupBy = new SelectItem("groupBy", I18N.message("groupby"));
 		groupBy.setWrapTitle(false);
-		groupBy.setWrapTitle(false);
 		groupBy.setWidth(100);
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("", " ");

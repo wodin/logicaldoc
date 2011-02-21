@@ -1,17 +1,22 @@
 package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.logicaldoc.gui.common.client.beans.GUIRating;
 import com.logicaldoc.gui.common.client.data.DocumentsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
+import com.logicaldoc.gui.frontend.client.services.DocumentService;
+import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.types.Alignment;
@@ -43,6 +48,8 @@ import com.smartgwt.client.widgets.menu.Menu;
  * @since 6.0
  */
 public class DocumentsListPanel extends VLayout {
+	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+
 	private DocumentsDS dataSource;
 
 	private ListGrid list;
@@ -168,6 +175,16 @@ public class DocumentsListPanel extends VLayout {
 		lockUserId.setHidden(true);
 		lockUserId.setCanFilter(false);
 
+		ListGridField rating = new ListGridField("rating", I18N.message("rating"), 95);
+		rating.setType(ListGridFieldType.IMAGE);
+		rating.setCanSort(false);
+		rating.setAlign(Alignment.CENTER);
+		rating.setImageURLPrefix(Util.imagePrefix());
+		rating.setImageURLSuffix(".png");
+		rating.setImageWidth(88);
+		rating.setCanFilter(false);
+		rating.setHidden(true);
+
 		list = new ListGrid() {
 			@Override
 			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
@@ -196,7 +213,7 @@ public class DocumentsListPanel extends VLayout {
 		list.setCanDragRecordsOut(true);
 
 		list.setFields(indexed, locked, immutable, signed, icon, filename, title, lastModified, type, size, version,
-				publisher, published, creator, created, sourceDate, sourceAuthor, customId);
+				publisher, published, creator, created, sourceDate, sourceAuthor, customId, rating);
 
 		// Prepare a panel containing a title and the documents list
 		infoPanel = new InfoPanel("");
@@ -225,6 +242,24 @@ public class DocumentsListPanel extends VLayout {
 							event.cancel();
 						}
 					}
+				} else if ("rating".equals(list.getFieldName(event.getColNum()))) {
+					long id = Long.parseLong(list.getSelectedRecord().getAttribute("id"));
+					String ratingImageName = list.getSelectedRecord().getAttribute("rating");
+					final int docRating = Integer.parseInt(ratingImageName.replace("rating", ""));
+					documentService.getRating(Session.get().getSid(), id, new AsyncCallback<GUIRating>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
+
+						@Override
+						public void onSuccess(GUIRating rating) {
+							if (rating != null) {
+								RatingDialog dialog = new RatingDialog(docRating, rating);
+								dialog.show();
+							}
+						}
+					});
 				}
 			}
 		});

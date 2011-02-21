@@ -30,20 +30,29 @@ public class HibernateRatingDAO extends HibernatePersistentObjectDAO<Rating> imp
 	public Rating findVotesByDocId(long docId) {
 		List<Rating> coll = new ArrayList<Rating>();
 		try {
-			String query = "select count(*), AVG(ld_vote) from ld_rating where ld_deleted=0 and ld_docid = " + docId;
 
-			RowMapper docMapper = new BeanPropertyRowMapper() {
+			/*
+			 * Don't use AVG function to have more control on rounding policy
+			 */
+			String query = "select count(*), SUM(ld_vote) from ld_rating where ld_deleted=0 and ld_docid = " + docId;
+
+			RowMapper ratingMapper = new BeanPropertyRowMapper() {
 				public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 					Rating rating = new Rating();
 					rating.setCount(rs.getInt(1));
-					rating.setAverage(rs.getFloat(2));
+					if (rs.getInt(1) > 0) {
+						float div = (float) rs.getInt(2) / (float) rs.getInt(1);
+						double avg = Math.round(div * 100.0) / 100.0;
+						rating.setAverage(new Double(avg).floatValue());
+					} else
+						rating.setAverage(0F);
 
 					return rating;
 				}
 			};
 
-			coll = (List<Rating>) query(query, new Object[] {}, docMapper, null);
+			coll = (List<Rating>) query(query, new Object[] {}, ratingMapper, null);
 			if (coll.get(0).getCount() != 0)
 				return coll.get(0);
 

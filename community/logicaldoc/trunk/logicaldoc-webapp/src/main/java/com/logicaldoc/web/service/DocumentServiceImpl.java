@@ -33,6 +33,7 @@ import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.DownloadTicket;
 import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.document.Rating;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.BookmarkDAO;
 import com.logicaldoc.core.document.dao.DiscussionThreadDAO;
@@ -41,6 +42,7 @@ import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
+import com.logicaldoc.core.document.dao.RatingDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.SystemQuota;
@@ -56,6 +58,7 @@ import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.logicaldoc.gui.common.client.beans.GUIRating;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.util.Context;
@@ -471,6 +474,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				document.setLastModified(doc.getLastModified());
 				document.setLockUserId(doc.getLockUserId());
 				document.setStatus(doc.getStatus());
+				document.setRating(doc.getRating());
 
 				if (doc.getTemplate() != null) {
 					document.setTemplate(doc.getTemplate().getName());
@@ -840,6 +844,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					docVO.setSourceAuthor(document.getSourceAuthor());
 					docVO.setSourceDate(document.getSourceDate());
 					docVO.setSourceId(document.getSourceId());
+					docVO.setRating(document.getRating());
 
 					if (document.getTemplateId() != null) {
 						docVO.setTemplateId(document.getTemplateId());
@@ -1194,5 +1199,64 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		SessionUtil.validateSession(sid);
 
 		UploadServlet.cleanReceivedFiles(sid);
+	}
+
+	@Override
+	public GUIRating getRating(String sid, long docId) throws InvalidSessionException {
+		UserSession userSession = SessionUtil.validateSession(sid);
+
+		RatingDAO ratingDao = (RatingDAO) Context.getInstance().getBean(RatingDAO.class);
+
+		try {
+			GUIRating rating = new GUIRating();
+			Rating rat = ratingDao.findVotesByDocId(docId);
+			if (rat != null) {
+				ratingDao.initialize(rat);
+
+				rating.setId(rat.getId());
+				rating.setDocId(docId);
+				// We use the rating userId value to know in the GUI if the user
+				// has already vote this document.
+				if (ratingDao.findByDocIdAndUserId(docId, userSession.getUserId()))
+					rating.setUserId(userSession.getUserId());
+				rating.setCount(rat.getCount());
+				rating.setAverage(rat.getAverage());
+			} else {
+				rating.setDocId(docId);
+				rating.setCount(0);
+				rating.setAverage(0F);
+			}
+
+			return rating;
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
+	}
+
+	@Override
+	public int saveRating(String sid, GUIRating rating) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		RatingDAO ratingDao = (RatingDAO) Context.getInstance().getBean(RatingDAO.class);
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		try {
+			Rating rat = new Rating();
+			rat.setDocId(rating.getDocId());
+			rat.setUserId(rating.getUserId());
+			rat.setVote(rating.getVote());
+			ratingDao.store(rat);
+
+			Rating votesDoc = ratingDao.findVotesByDocId(rating.getDocId());
+			Document doc = docDao.findById(rating.getDocId());
+			docDao.initialize(doc);
+			doc.setRating(votesDoc.getAverage().intValue());
+			docDao.store(doc);
+
+			return votesDoc.getAverage().intValue();
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
 	}
 }

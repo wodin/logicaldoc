@@ -112,17 +112,17 @@ public class DocumentsDataServlet extends HttpServlet {
 				 */
 				StringBuffer query = new StringBuffer(
 						"select A.id, A.customId, A.docRef, A.type, A.title, A.version, A.lastModified, A.date, A.publisher,"
-								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status, A.signed, A.type, A.sourceDate, A.sourceAuthor "
+								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status, A.signed, A.type, A.sourceDate, A.sourceAuthor, A.rating "
 								+ "from Document A where A.deleted = 0 ");
 				if (folderId != null)
 					query.append(" and A.folder.id=" + folderId);
 				if (StringUtils.isNotEmpty(request.getParameter("indexed")))
 					query.append(" and A.indexed=" + request.getParameter("indexed"));
-				if (StringUtils.isNotEmpty(request.getParameter("barcoded"))){
+				if (StringUtils.isNotEmpty(request.getParameter("barcoded"))) {
 					query.append(" and A.barcoded=" + request.getParameter("barcoded"));
 					query.append(" and A.type in('gif','png','tif','tiff','jpg','jpeg','pdf') ");
 				}
-				
+
 				if (filename != null)
 					query.append(" and lower(A.fileName) like '%" + filename.toLowerCase() + "%' ");
 				query.append(" order by A.lastModified desc");
@@ -194,6 +194,10 @@ public class DocumentsDataServlet extends HttpServlet {
 					if (cols[20] != null)
 						writer.print("<sourceAuthor><![CDATA[" + cols[20] + "]]></sourceAuthor>");
 
+					if (cols[21] == null)
+						writer.print("<rating>rating0</rating>");
+					else
+						writer.print("<rating>rating" + cols[21] + "</rating>");
 					writer.print("</document>");
 				}
 
@@ -242,6 +246,10 @@ public class DocumentsDataServlet extends HttpServlet {
 
 					writer.print("<sourceDate>" + (doc.getSourceDate() != null ? df.format(doc.getSourceDate()) : "")
 							+ "</sourceDate>");
+					if (doc.getRating() == null)
+						writer.print("<rating>rating0</rating>");
+					else
+						writer.print("<rating>rating" + doc.getRating() + "</rating>");
 					writer.print("</document>");
 				}
 			}

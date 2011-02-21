@@ -7,6 +7,7 @@ import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIRating;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 
 /**
@@ -180,4 +181,16 @@ public interface DocumentService extends RemoteService {
 	 * Cleans the uploaded files folder.
 	 */
 	public void cleanUploadedFileFolder(String sid) throws InvalidSessionException;
+
+	/**
+	 * Retrieves the rating of the given document.
+	 */
+	public GUIRating getRating(String sid, long docId) throws InvalidSessionException;
+
+	/**
+	 * Save a rating vote on a document.
+	 * 
+	 * @return the new document rating value
+	 */
+	public int saveRating(String sid, GUIRating rating) throws InvalidSessionException;
 }

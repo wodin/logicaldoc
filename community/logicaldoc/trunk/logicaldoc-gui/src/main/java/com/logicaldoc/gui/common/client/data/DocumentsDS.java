@@ -62,10 +62,11 @@ public class DocumentsDS extends DataSource {
 		sourceDate.setHidden(true);
 		DataSourceTextField sourceAuthor = new DataSourceTextField("sourceAuthor");
 		sourceAuthor.setHidden(true);
+		DataSourceImageField rating = new DataSourceImageField("rating");
 
 		setFields(id, title, type, size, publisher, version, docref, lastModified, published, created, creator,
 				sourceDate, sourceAuthor, customId, icon, immutable, iindexed, signed, locked, lockUserId, filename,
-				status);
+				status, rating);
 		setClientOnly(true);
 		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&folderId="
 				+ (folderId != null ? folderId : "") + "&filename=" + (fileFilter != null ? fileFilter : "") + "&max="

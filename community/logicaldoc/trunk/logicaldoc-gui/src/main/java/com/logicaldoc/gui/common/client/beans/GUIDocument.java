@@ -77,6 +77,8 @@ public class GUIDocument implements Serializable {
 	private int status = 0;
 
 	private int immutable = 0;
+	
+	private int rating = 0;
 
 	public long getId() {
 		return id;
@@ -420,5 +422,13 @@ public class GUIDocument implements Serializable {
 
 	public void setPathExtended(String pathExtended) {
 		this.pathExtended = pathExtended;
+	}
+
+	public int getRating() {
+		return rating;
+	}
+
+	public void setRating(int rating) {
+		this.rating = rating;
 	}
 }
