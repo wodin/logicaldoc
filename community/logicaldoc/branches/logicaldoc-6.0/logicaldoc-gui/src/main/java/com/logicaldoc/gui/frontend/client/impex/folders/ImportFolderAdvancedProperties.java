@@ -65,6 +65,8 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 		SelectItem template = ItemFactory.newTemplateSelector(false, null);
 		template.addChangedHandler(changedHandler);
 		template.setMultiple(false);
+    if (share.getTemplateId() != null)
+			template.setValue(share.getTemplateId().toString());
 
 		CheckboxItem delImport = new CheckboxItem();
 		delImport.setName("delImport");
