@@ -245,6 +245,8 @@ public class TemplatesPanel extends VLayout {
 		} else {
 			// Append a new record
 			record.setAttribute("id", template.getId());
+			record.setAttribute("readonly", "" + template.isReadonly());
+			record.setAttribute("documents", "" + 0);
 			list.addData(record);
 			list.selectRecord(record);
 		}
