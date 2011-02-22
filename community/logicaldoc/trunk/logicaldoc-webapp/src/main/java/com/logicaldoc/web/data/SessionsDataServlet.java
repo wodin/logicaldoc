@@ -52,7 +52,7 @@ public class SessionsDataServlet extends HttpServlet {
 
 			for (UserSession session : sessions) {
 				writer.print("<session>");
-				writer.print("<sid>" + session.getId() + "</sid>");
+				writer.print("<sid><![CDATA[" + session.getId() + "]]></sid>");
 				writer.print("<status>" + session.getStatus() + "</status>");
 				if (session.getStatus() == UserSession.STATUS_OPEN)
 					writer.print("<statusLabel>" + I18N.message("opened", locale) + "</statusLabel>");
