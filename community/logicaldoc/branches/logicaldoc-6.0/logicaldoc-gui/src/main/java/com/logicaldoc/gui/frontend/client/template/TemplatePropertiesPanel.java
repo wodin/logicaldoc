@@ -467,12 +467,12 @@ public class TemplatePropertiesPanel extends HLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							detailsPanel.getSavePanel().setVisible(true);
 							for (String attrName : names) {
 								guiAttributes.remove(attrName);
 							}
 							attributesList.removeSelectedData();
 							clean();
+							detailsPanel.getSavePanel().setVisible(true);
 						}
 					}
 				});
