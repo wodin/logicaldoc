@@ -62,7 +62,7 @@ public class LanguagesDataServlet extends HttpServlet {
 					Locale lc = LocaleUtil.toLocale(loc);
 
 					writer.print("<lang>");
-					writer.print("<code>" + loc + "</code>");
+					writer.print("<code><![CDATA[" + loc + "]]></code>");
 					writer.print("<name><![CDATA[" + lc.getDisplayName(LocaleUtil.toLocale(locale)) + "]]></name>");
 					if ("enabled".equals(pbean.getProperty("lang." + loc + ".gui")))
 						writer.print("<eenabled>0</eenabled>");
@@ -76,7 +76,7 @@ public class LanguagesDataServlet extends HttpServlet {
 
 				for (Language language : languages) {
 					writer.print("<lang>");
-					writer.print("<code>" + language.toString() + "</code>");
+					writer.print("<code><![CDATA[" + language.toString() + "]]></code>");
 					writer.print("<name><![CDATA[" + language.getLocale().getDisplayName(LocaleUtil.toLocale(locale))
 							+ "]]></name>");
 					if (activeLanguages.contains(language))

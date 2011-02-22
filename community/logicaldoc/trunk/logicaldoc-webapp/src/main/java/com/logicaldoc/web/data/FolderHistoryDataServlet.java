@@ -70,8 +70,8 @@ public class FolderHistoryDataServlet extends HttpServlet {
 				writer.print("<date>" + df.format((Date) cols[2]) + "</date>");
 				writer.print("<comment><![CDATA[" + cols[3] + "]]></comment>");
 				writer.print("<title><![CDATA[" + cols[4] + "]]></title>");
-				writer.print("<path>" + cols[5] + "</path>");
-				writer.print("<sid>" + cols[6] + "</sid>");
+				writer.print("<path><![CDATA[" + cols[5] + "]]></path>");
+				writer.print("<sid><![CDATA[" + cols[6] + "]]></sid>");
 				writer.print("</history>");
 			}
 			writer.write("</list>");

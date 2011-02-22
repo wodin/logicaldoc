@@ -83,12 +83,12 @@ public class PostsDataServlet extends HttpServlet {
 			for (DiscussionComment post : posts) {
 				writer.print("<post>");
 				writer.print("<id>" + i + "</id>");
-				writer.print("<title>" + post.getSubject() + "</title>");
-				writer.print("<user>" + post.getUserName() + "</user>");
+				writer.print("<title><![CDATA[" + post.getSubject() + "]]></title>");
+				writer.print("<user><![CDATA[" + post.getUserName() + "]]></user>");
 				writer.print("<indent>" + post.getIndentLevel() + "</indent>");
 				writer.print("<date>" + df.format(post.getDate()) + "</date>");
-				writer.print("<replyPath>" + post.getReplyPath() + "</replyPath>");
-				writer.print("<message>" + post.getBody() + "</message>");
+				writer.print("<replyPath><![CDATA[" + post.getReplyPath() + "]]></replyPath>");
+				writer.print("<message><![CDATA[" + post.getBody() + "]]></message>");
 				if (post.getDocId() != null)
 					writer.print("<docId>" + post.getDocId() + "</docId>");
 				writer.print("</post>");
