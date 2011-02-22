@@ -59,7 +59,7 @@ public class TagsDataServlet extends HttpServlet {
 			for (String tag : words) {
 				writer.print("<tag>");
 				writer.print("<index>" + i++ + "</index>");
-				writer.print("<word>" + tag + "</word>");
+				writer.print("<word><![CDATA[" + tag + "]]></word>");
 				writer.print("<count>" + tgs.get(tag) + "</count>");
 				writer.print("</tag>");
 			}
