@@ -474,7 +474,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				document.setLastModified(doc.getLastModified());
 				document.setLockUserId(doc.getLockUserId());
 				document.setStatus(doc.getStatus());
-				document.setRating(doc.getRating());
+				if (doc.getRating() != null)
+					document.setRating(doc.getRating());
 
 				if (doc.getTemplate() != null) {
 					document.setTemplate(doc.getTemplate().getName());
