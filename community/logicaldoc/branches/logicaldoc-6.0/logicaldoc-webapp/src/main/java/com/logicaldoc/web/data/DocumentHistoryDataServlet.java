@@ -104,8 +104,8 @@ public class DocumentHistoryDataServlet extends HttpServlet {
 				writer.print("<new>" + (1 == (Integer) cols[7]) + "</new>");
 				writer.print("<folderId>" + cols[8] + "</folderId>");
 				writer.print("<docId>" + cols[9] + "</docId>");
-				writer.print("<path>" + cols[10] + "</path>");
-				writer.print("<sid>" + cols[11] + "</sid>");
+				writer.print("<path><![CDATA[" + cols[10] + "]]></path>");
+				writer.print("<sid><![CDATA[" + cols[11] + "]]></sid>");
 				writer.print("<userid>" + cols[12] + "</userid>");
 				writer.print("</history>");
 			}
