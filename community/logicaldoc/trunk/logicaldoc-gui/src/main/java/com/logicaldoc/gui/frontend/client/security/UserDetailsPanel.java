@@ -225,10 +225,13 @@ public class UserDetailsPanel extends VLayout {
 
 	private boolean validate() {
 		boolean stdValid = propertiesPanel.validate();
-		boolean quotaValid = quotaPanel.validate();
+		boolean quotaValid = true;
+		if (quotaPanel != null)
+			quotaValid = quotaPanel.validate();
+
 		if (!stdValid)
 			tabSet.selectTab(0);
-		else if (!quotaValid)
+		else if (quotaPanel != null && !quotaValid)
 			tabSet.selectTab(1);
 		return stdValid && quotaValid;
 	}
