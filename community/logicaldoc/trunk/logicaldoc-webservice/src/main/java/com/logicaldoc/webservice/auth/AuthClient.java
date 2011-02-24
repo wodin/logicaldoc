@@ -27,37 +27,6 @@ public class AuthClient implements AuthService {
 	}
 
 	@Override
-	public Right[] getGrantedGroups(String sid, long folderId) throws Exception {
-		return client.getGrantedGroups(sid, folderId);
-	}
-
-	@Override
-	public Right[] getGrantedUsers(String sid, long folderId) throws Exception {
-		return client.getGrantedUsers(sid, folderId);
-	}
-
-	@Override
-	public long[] getGroups(String sid) throws Exception {
-		return client.getGroups(sid);
-	}
-
-	@Override
-	public long[] getUsers(String sid) throws Exception {
-		return client.getUsers(sid);
-	}
-
-	@Override
-	public void grantGroup(String sid, long folderId, long groupId, int permissions, boolean recursive)
-			throws Exception {
-		client.grantGroup(sid, folderId, groupId, permissions, recursive);
-	}
-
-	@Override
-	public void grantUser(String sid, long folderId, long userId, int permissions, boolean recursive) throws Exception {
-		client.grantUser(sid, folderId, userId, permissions, recursive);
-	}
-
-	@Override
 	public String login(String username, String password) throws Exception {
 		return client.login(username, password);
 	}

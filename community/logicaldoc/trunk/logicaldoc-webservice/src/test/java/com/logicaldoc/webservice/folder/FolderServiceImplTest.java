@@ -8,8 +8,15 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.FolderGroup;
+import com.logicaldoc.core.security.Group;
+import com.logicaldoc.core.security.Permission;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
+import com.logicaldoc.core.security.dao.GroupDAO;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.webservice.AbstractWebServiceTestCase;
+import com.logicaldoc.webservice.auth.Right;
 
 /**
  * Test case for <code>FolderServiceImpl</code>
@@ -21,6 +28,10 @@ public class FolderServiceImplTest extends AbstractWebServiceTestCase {
 
 	private FolderDAO folderDao;
 
+	private UserDAO userDao;
+
+	private GroupDAO groupDao;
+
 	// Instance under test
 	private FolderServiceImpl folderServiceImpl;
 
@@ -28,6 +39,8 @@ public class FolderServiceImplTest extends AbstractWebServiceTestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 		folderDao = (FolderDAO) context.getBean("FolderDAO");
+		userDao = (UserDAO) context.getBean("UserDAO");
+		groupDao = (GroupDAO) context.getBean("GroupDAO");
 
 		// Make sure that this is a FolderServiceImpl instance
 		folderServiceImpl = new FolderServiceImpl();
@@ -118,5 +131,56 @@ public class FolderServiceImplTest extends AbstractWebServiceTestCase {
 		folders = folderServiceImpl.list("", 1203);
 		Assert.assertNotNull(folders);
 		Assert.assertEquals(0, folders.length);
+	}
+
+	@Test
+	public void testGrantUser() throws Exception {
+		User user = userDao.findById(4);
+
+		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.ADD, 100, user.getId()));
+		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.IMMUTABLE, 100, user.getId()));
+
+		folderServiceImpl.grantUser("", 100, user.getId(), 4091, false);
+
+		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.IMMUTABLE, 100, user.getId()));
+		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.ADD, 100, user.getId()));
+	}
+
+	@Test
+	public void testGrantGroup() throws Exception {
+		Group group = groupDao.findById(3);
+		Assert.assertNotNull(group);
+		Folder folder = folderDao.findById(99);
+		Assert.assertNotNull(folder);
+		Folder folder2 = folderDao.findById(100);
+		Assert.assertNotNull(folder2);
+		FolderGroup mg = folder.getFolderGroup(3);
+		Assert.assertNull(mg);
+		FolderGroup mg2 = folder2.getFolderGroup(3);
+		Assert.assertNotNull(mg2);
+
+		folderServiceImpl.grantGroup("", 99, 3, 4095, false);
+
+		folder = folderDao.findById(99);
+		mg = folder.getFolderGroup(3);
+		Assert.assertNotNull(mg);
+	}
+
+	@Test
+	public void testGetGrantedUsers() {
+		try {
+			Right[] rights = new Right[0];
+			rights = folderServiceImpl.getGrantedUsers("", 100);
+			Assert.assertEquals(2, rights.length);
+			Assert.assertEquals(3, rights[0].getId());
+		} catch (Exception e) {
+		}
+	}
+
+	@Test
+	public void testGetGrantedGroups() throws Exception {
+		Right[] rights = new Right[0];
+		rights = folderServiceImpl.getGrantedGroups("", 100);
+		Assert.assertEquals(2, rights.length);
 	}
 }
