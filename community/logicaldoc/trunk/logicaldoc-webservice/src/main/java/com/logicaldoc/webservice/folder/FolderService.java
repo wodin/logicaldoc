@@ -105,7 +105,8 @@ public interface FolderService {
 			throws Exception;
 
 	/**
-	 * Lists all the folders(direct and indirect) of a parent folder
+	 * Lists all the folders(direct and indirect) of a parent folder.<br>
+	 * Attention: if the current user can read the folderId, all sub-folders are returned without regards to read permission.
 	 * 
 	 * @param sid Session identifier
 	 * @param folderId The folder id
@@ -117,7 +118,8 @@ public interface FolderService {
 			throws Exception;
 
 	/**
-	 * Lists all direct folders of a parent folder
+	 * Lists all direct folders of a parent folder.<br>
+	 * Attention: readable only sub-folders are returned.
 	 * 
 	 * @param sid Session identifier
 	 * @param folderId
