@@ -4,6 +4,8 @@ import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 
+import com.logicaldoc.webservice.auth.Right;
+
 /**
  * Folder Web Service definition interface
  * 
@@ -138,4 +140,53 @@ public interface FolderService {
 	@WebResult(name = "folders")
 	public WSFolder[] getPath(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
 			throws Exception;
+
+	/**
+	 * Grant user permission to the folder.
+	 * 
+	 * @param sid Session identifier
+	 * @param folderId Folder id
+	 * @param userId User Id
+	 * @param permissions the permission integer representation. If '0', the
+	 *        user will be not granted to access the folder.
+	 * @param recursive recursion option. If true, the grant operation is
+	 *        applied also to the subfolders.
+	 * @throws Exception
+	 */
+	public void grantUser(String sid, long folderId, long userId, int permissions, boolean recursive) throws Exception;
+
+	/**
+	 * Grant group permission to the folder.
+	 * 
+	 * @param sid Session identifier
+	 * @param folderId Folder id
+	 * @param groupId Group Id
+	 * @param permissions the permission integer representation. If '0', the
+	 *        group will be not granted to access the folder.
+	 * @param recursive recursion option. If true, the grant operation is
+	 *        applied also to the subfolders.
+	 * @throws Exception
+	 */
+	public void grantGroup(String sid, long folderId, long groupId, int permissions, boolean recursive)
+			throws Exception;
+
+	/**
+	 * Retrieves the list of granted users for the given folder.
+	 * 
+	 * @param sid Session identifier
+	 * @param folderId Folder id
+	 * @return 'error' if error occurred, the right objects collection.
+	 * @throws Exception
+	 */
+	public Right[] getGrantedUsers(String sid, long folderId) throws Exception;
+
+	/**
+	 * Retrieves the list of granted groups for the given folder.
+	 * 
+	 * @param sid Session identifier
+	 * @param folderId Folder id
+	 * @return 'error' if error occurred, the right objects collection.
+	 * @throws Exception
+	 */
+	public Right[] getGrantedGroups(String sid, long folderId) throws Exception;
 }
