@@ -78,41 +78,10 @@ public class ClientToolsSettingsPanel extends VLayout {
 		webServiceForm.setPadding(5);
 
 		// Url
-		StaticTextItem url = new StaticTextItem("url", "<b>" + I18N.message("url") + "</b>");
-
-		StaticTextItem authService = ItemFactory.newStaticTextItem("authService", "Auth", GWT.getHostPageBaseURL()
-				+ "services/Auth");
-		StaticTextItem docService = ItemFactory.newStaticTextItem("docService", "Document", GWT.getHostPageBaseURL()
-				+ "services/Document");
-		StaticTextItem folderService = ItemFactory.newStaticTextItem("folderService", "Folder",
-				GWT.getHostPageBaseURL() + "services/Folder");
-		StaticTextItem searchService = ItemFactory.newStaticTextItem("searchService", "Search",
-				GWT.getHostPageBaseURL() + "services/Search");
-		StaticTextItem enterpriseSearchService = ItemFactory.newStaticTextItem("enterpriseSearchService",
-				"EnterpriseSearch", GWT.getHostPageBaseURL() + "services/EnterpriseSearch");
-
-		// Descriptor
-		StaticTextItem descriptor = new StaticTextItem("descriptor", "<b>" + I18N.message("descriptor") + "</b>");
-
-		LinkItem descriptorAuth = new LinkItem("Auth");
-		descriptorAuth.setLinkTitle(GWT.getHostPageBaseURL() + "services/Auth?wsdl");
-		descriptorAuth.setValue(GWT.getHostPageBaseURL() + "services/Auth?wsdl");
-
-		LinkItem descriptorDoc = new LinkItem("Document");
-		descriptorDoc.setLinkTitle(GWT.getHostPageBaseURL() + "services/Document?wsdl");
-		descriptorDoc.setValue(GWT.getHostPageBaseURL() + "services/Document?wsdl");
-
-		LinkItem descriptorFolder = new LinkItem("Folder");
-		descriptorFolder.setLinkTitle(GWT.getHostPageBaseURL() + "services/Folder?wsdl");
-		descriptorFolder.setValue(GWT.getHostPageBaseURL() + "services/Folder?wsdl");
-
-		LinkItem descriptorSearch = new LinkItem("Search");
-		descriptorSearch.setLinkTitle(GWT.getHostPageBaseURL() + "services/Search?wsdl");
-		descriptorSearch.setValue(GWT.getHostPageBaseURL() + "services/Search?wsdl");
-
-		LinkItem descriptorEnterpriseSearch = new LinkItem("EnterpriseSearch");
-		descriptorEnterpriseSearch.setLinkTitle(GWT.getHostPageBaseURL() + "services/EnterpriseSearch?wsdl");
-		descriptorEnterpriseSearch.setValue(GWT.getHostPageBaseURL() + "services/EnterpriseSearch?wsdl");
+		LinkItem url = new LinkItem(I18N.message("url"));
+		url.setRequired(true);
+		url.setLinkTitle(GWT.getHostPageBaseURL() + "services");
+		url.setValue(GWT.getHostPageBaseURL() + "services");
 
 		// Web Service Enabled
 		RadioGroupItem wsEnabled = ItemFactory.newBooleanSelector("wsEnabled", "enabled");
@@ -120,13 +89,7 @@ public class ClientToolsSettingsPanel extends VLayout {
 		wsEnabled.setRequired(true);
 		wsEnabled.setValue(wsSettings.getValue().equals("true") ? "yes" : "no");
 
-		if (Feature.visible(Feature.ENTERPRISE_SEARCH))
-			webServiceForm.setItems(url, authService, docService, folderService, searchService,
-					enterpriseSearchService, descriptor, descriptorAuth, descriptorDoc, descriptorFolder,
-					descriptorSearch, descriptorEnterpriseSearch, wsEnabled);
-		else
-			webServiceForm.setItems(url, authService, docService, folderService, searchService, descriptor,
-					descriptorAuth, descriptorDoc, descriptorFolder, descriptorSearch, wsEnabled);
+		webServiceForm.setItems(url, wsEnabled);
 		webService.setPane(webServiceForm);
 
 		Tab webDav = new Tab();
