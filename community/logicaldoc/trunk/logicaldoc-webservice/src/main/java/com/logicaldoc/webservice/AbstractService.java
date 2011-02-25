@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -142,6 +143,9 @@ public class AbstractService {
 	}
 
 	public static Date convertStringToDate(String date) {
+		if(StringUtils.isEmpty(date))
+			return null;
+		
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			return df.parse(date);

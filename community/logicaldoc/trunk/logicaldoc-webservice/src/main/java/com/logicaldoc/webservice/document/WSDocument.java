@@ -26,7 +26,7 @@ import com.logicaldoc.webservice.AbstractService;
 import com.logicaldoc.webservice.WSAttribute;
 
 /**
- * Web Service Document. Useful class to create reporitory Documents.
+ * Web Service Document. Useful class to create repository Documents.
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
@@ -139,24 +139,26 @@ public class WSDocument {
 	// Contains the snippet search text
 	private String summary;
 
+	// TODO to be removed?
 	private int docType;
 
 	private Integer score;
 
 	private String icon;
 
+	// TODO to be removed?
 	private int lengthCategory;
 
 	private String path;
 
-	//We should delete this because not used, use fileSize instead
+	// TODO We should delete this because not used, use fileSize instead
 	private long size;
 
 	private String comment;
 
 	private String lastModified;
-	
-	//Just for .Net compatibility
+
+	// TODO Just for .Net compatibility (6.0.x)
 	private int dateCategory;
 
 	public static WSDocument fromDocument(AbstractDocument document) {

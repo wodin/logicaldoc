@@ -14,6 +14,7 @@ public class WSSearchResult {
 
 	private long estimatedHitsNumber = 0;
 
+	// TODO For 6.1 use a WSHit object to remove Date dependencies
 	private HitImpl[] hits = new HitImpl[0];
 
 	private int moreHits = 0;
