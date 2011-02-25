@@ -190,7 +190,7 @@ public class MenuGroup {
 	/**
 	 * Set each permission evaluating the given integer representation.
 	 * 
-	 * @param permissions permissions mask(the last slot is for the 'read'
+	 * @param permissions mask(the last slot is for the 'read'
 	 *        permission and it is not evaluated)
 	 */
 	public void setPermissions(int permissions) {
