@@ -1024,7 +1024,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			deleteAll(deletableFolders, transaction);
 
 			getSession().flush();
-			
+
 			// Delete orphaned documents
 			DocumentDAO documentDAO = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 			documentDAO.deleteOrphaned(transaction.getUserId());

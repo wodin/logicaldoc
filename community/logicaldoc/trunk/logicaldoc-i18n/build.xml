@@ -78,10 +78,11 @@
 		<!-- Rename the norwegian PO (no to nb) -->
 		<for list="${bundles}" param="bundle">
 			<sequential>
-               <move file="target/po/@{bundle}/no.po" tofile="target/po/@{bundle}/nb.po" />		
+               <move file="target/po/@{bundle}/no.po" tofile="target/po/@{bundle}/nb.po" failonerror="false"/>		
 			</sequential>
 		</for>
 		
+		<echo>Building tarball</echo>
 		<tar destfile="target/${pom.artifactId}-${pom.version}.tar">
 			<tarfileset dir="target/po" preserveLeadingSlashes="true">
 			</tarfileset>
