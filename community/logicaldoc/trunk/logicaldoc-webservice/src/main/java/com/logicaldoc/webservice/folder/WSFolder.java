@@ -4,9 +4,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.webservice.AbstractService;
 
 /**
- * Web Service Folder. Useful class to create reporitory Folders.
+ * Web Service Folder. Useful class to create repository Folders.
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
@@ -23,12 +24,15 @@ public class WSFolder {
 
 	private String description = "";
 
+	private String lastModified;
+
 	public static WSFolder fromFolder(Folder folder) {
 		WSFolder wsFolder = new WSFolder();
 		wsFolder.setId(folder.getId());
 		wsFolder.setName(folder.getName());
 		wsFolder.setDescription(folder.getDescription());
 		wsFolder.setParentId(folder.getParentId());
+		wsFolder.setLastModified(AbstractService.convertDateToString(folder.getLastModified()));
 
 		return wsFolder;
 	}
@@ -63,5 +67,13 @@ public class WSFolder {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(String lastModified) {
+		this.lastModified = lastModified;
 	}
 }

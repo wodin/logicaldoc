@@ -1,8 +1,5 @@
 package com.logicaldoc.webservice.system;
 
-import java.util.Arrays;
-import java.util.List;
-
 import junit.framework.Assert;
 
 import org.junit.Test;
