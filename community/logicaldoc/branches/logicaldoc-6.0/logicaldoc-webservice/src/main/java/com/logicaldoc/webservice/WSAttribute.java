@@ -36,6 +36,8 @@ public class WSAttribute {
 	private int mandatory = 0;
 
 	private int position = 0;
+	
+	private String label;
 
 	public WSAttribute() {
 	}
@@ -107,6 +109,14 @@ public class WSAttribute {
 
 	public void setPosition(int position) {
 		this.position = position;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 
 	/**
