@@ -13,9 +13,9 @@ import javax.jws.WebService;
 @WebService
 public interface SecurityService {
 	/**
-	 * Gets user metadata of all existing users.
+	 * Gets metadata of all existing users.
 	 * 
-	 * @param sid Session identifier
+	 * @param sid Session identifier. Must be an administrator.
 	 * @return A value object containing the users metadata.
 	 * @throws Exception
 	 */
@@ -25,7 +25,7 @@ public interface SecurityService {
 	/**
 	 * Gets group metadata of all existing groups.
 	 * 
-	 * @param sid Session identifier
+	 * @param sid Session identifier. Must be an administrator.
 	 * @return A value object containing the groups metadata.
 	 * @throws Exception
 	 */
@@ -34,9 +34,9 @@ public interface SecurityService {
 
 	/**
 	 * Create/Update a user. You can completely customize the user through a value
-	 * object containing the user's metadata.
+	 * object containing the user's metadata. The current user must be an administrator.
 	 * 
-	 * @param sid Session identifier
+	 * @param sid Session identifier. Must be an administrator.
 	 * @param user Web service value object containing the user's metadata
 	 * @return id of the created/updated user.
 	 * @throws Exception
@@ -48,7 +48,7 @@ public interface SecurityService {
 	 * Create/Update a group. You can completely customize the group through a value
 	 * object containing the group's metadata.
 	 * 
-	 * @param sid Session identifier
+	 * @param sid Session identifier. Must be an administrator.
 	 * @param group Web service value object containing the group's metadata
 	 * @return id of the created/updated group.
 	 * @throws Exception
@@ -60,7 +60,7 @@ public interface SecurityService {
 	/**
 	 * Deletes an existing user with the given identifier.
 	 * 
-	 * @param sid Session identifier
+	 * @param sid Session identifier. Must be an administrator.
 	 * @param userId The user id
 	 * @throws Exception
 	 */
@@ -69,7 +69,7 @@ public interface SecurityService {
 	/**
 	 * Deletes an existing group with the given identifier.
 	 * 
-	 * @param sid Session identifier
+	 * @param sid Session identifier. Must be an administrator.
 	 * @param groupId The group id
 	 * @throws Exception
 	 */
@@ -79,7 +79,7 @@ public interface SecurityService {
 	/**
 	 * Changes the password of a user
 	 * 
-	 * @param userId The user Identifier
+	 * @param userId The user Identifier. Must be an administrator.
 	 * @param oldPassword can be null
 	 * @param newPassword
 	 * @return 0 if all is ok, 1 if the password is incorrect, 2 if the new
