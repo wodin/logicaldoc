@@ -39,9 +39,18 @@
 			<entry key="mtom-enabled" value="${webservice.mtom}" />
 		</jaxws:properties>
 	</jaxws:endpoint>
-	
+
 	<jaxws:endpoint id="system"
-		implementor="com.logicaldoc.webservice.system.SystemServiceImpl" address="/System">
+		implementor="com.logicaldoc.webservice.system.SystemServiceImpl"
+		address="/System">
+		<jaxws:properties>
+			<entry key="mtom-enabled" value="${webservice.mtom}" />
+		</jaxws:properties>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint id="security"
+		implementor="com.logicaldoc.webservice.security.SecurityServiceImpl"
+		address="/Security">
 		<jaxws:properties>
 			<entry key="mtom-enabled" value="${webservice.mtom}" />
 		</jaxws:properties>
