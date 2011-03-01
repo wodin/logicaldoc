@@ -72,38 +72,6 @@ public class LoggingConfigurator {
 	}
 
 	/**
-	 * This method select all file appenders and filepath.
-	 */
-	@SuppressWarnings("unchecked")
-	public Collection getFiles() {
-		Collection result = new ArrayList();
-		List list = xml.getAllChild("appender");
-		Iterator iter = list.iterator();
-
-		while (iter.hasNext()) {
-			Element elem = (Element) iter.next();
-			List childs = elem.getChildren("param");
-			Iterator children = childs.iterator();
-
-			while (children.hasNext()) {
-				Element child = (Element) children.next();
-
-				if (child.getAttributeValue("name").equals("File")) {
-					String appender = elem.getAttributeValue("name");
-					String file = getFile(appender);
-
-					LoggerProperty logger = new LoggerProperty();
-					logger.setAppender(appender.toLowerCase());
-					logger.setFile(file);
-					result.add(logger);
-				}
-			}
-		}
-
-		return result;
-	}
-
-	/**
 	 * same as getFile(appender, true)
 	 */
 	public String getFile(String appender) {
