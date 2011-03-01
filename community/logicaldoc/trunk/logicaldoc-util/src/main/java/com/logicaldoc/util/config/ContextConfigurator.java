@@ -171,11 +171,6 @@ public class ContextConfigurator {
 		return null;
 	}
 
-	public void setDialect(String dbms) {
-		DBMSConfigurator conf = new DBMSConfigurator();
-		setPropValue("SessionFactory", "hibernateProperties", "hibernate.dialect", conf.getAttribute(dbms, "dialect"));
-	}
-
 	public String getDialect() {
 		return getPropertyProp("SessionFactory", "hibernateProperties", "hibernate.dialect");
 	}
