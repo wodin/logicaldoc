@@ -52,6 +52,7 @@ import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.transfer.InMemoryZipImport;
 import com.logicaldoc.core.transfer.ZipExport;
+import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
@@ -64,7 +65,6 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.MimeType;
-import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.io.CryptUtil;
 import com.logicaldoc.web.UploadServlet;
 import com.logicaldoc.web.util.SessionUtil;
@@ -153,18 +153,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				if (filename.endsWith(".zip") && importZip) {
 					log.debug("file = " + file);
 
-					ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-					String path = conf.getPropertyWithSubstitutions("conf.userdir");
-
-					if (!path.endsWith("_")) {
-						path += "_";
-					}
-					path += SessionUtil.getSessionUser(sid).getUserName() + "_" + File.separator;
-
-					FileUtils.forceMkdir(new File(path));
-
 					// copy the file into the user folder
-					final File destFile = new File(path, filename);
+					final File destFile = new File(UserUtil.getUserResource(SessionUtil.getSessionUser(sid).getId(),
+							"zip"), filename);
 					FileUtils.copyFile(file, destFile);
 
 					final long userId = SessionUtil.getSessionUser(sid).getId();

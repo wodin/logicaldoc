@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.java.plugin.JpfException;
 import org.java.plugin.ObjectFactory;
@@ -254,5 +255,66 @@ public abstract class PluginRegistry {
 
 	void setRestartRequired() {
 		this.restartRequired = true;
+	}
+
+	/**
+	 * This method retrieves the folder of the given plugin. If not exists, it
+	 * creates the folder. The folder is: <conf.plugindir>/<pluginName>
+	 * 
+	 * @param pluginName The plugin name
+	 */
+	public static File getPluginHome(String pluginName) {
+		File root = getPluginsDir();
+		File userDir = new File(root, pluginName);
+		if (!userDir.exists()) {
+			try {
+				FileUtils.forceMkdir(userDir);
+			} catch (IOException e) {
+				return null;
+			}
+		}
+		return userDir;
+	}
+
+	/**
+	 * This method retrieves the plugins root folder. If not exists, it creates
+	 * the folder. The folder is: <conf.plugindir>
+	 */
+	public static File getPluginsDir() {
+		File userpath = null;
+		try {
+			ContextProperties conf = new ContextProperties();
+			userpath = new File(conf.getPropertyWithSubstitutions("conf.plugindir"));
+		} catch (IOException e1) {
+		}
+
+		try {
+			FileUtils.forceMkdir(userpath);
+		} catch (IOException e) {
+			return null;
+		}
+		return userpath;
+	}
+
+	/**
+	 * This method retrieves a plugin folder resource (file or folder). If the
+	 * resource is a folder and not exists, it creates the folder. The folder
+	 * will be: <conf.plugindir>/<pluginName>/<path>
+	 * 
+	 * @param pluginName The plugin name
+	 * @param path The resource path
+	 * @return
+	 */
+	public static File getPluginResource(String pluginName, String path) {
+		File root = getPluginHome(pluginName);
+		File resource = new File(root.getPath() + "/" + path);
+		if (!resource.exists() && !path.contains("."))
+			try {
+				FileUtils.forceMkdir(resource);
+			} catch (IOException e) {
+				return null;
+			}
+
+		return resource;
 	}
 }

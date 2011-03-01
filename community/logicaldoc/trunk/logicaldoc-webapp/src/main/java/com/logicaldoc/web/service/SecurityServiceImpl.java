@@ -1,6 +1,5 @@
 package com.logicaldoc.web.service;
 
-import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -39,6 +38,7 @@ import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
@@ -176,12 +176,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			if (session == null)
 				return;
 
-			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-			FileUtils.deleteDirectory(new File(conf.getPropertyWithSubstitutions("conf.userdir") + "/"
-					+ session.getUserName() + "/temp"));
-
+			FileUtils.forceDelete(UserUtil.getUserResource(session.getUserId(), "temp"));
 			log.info("User " + session.getUserName() + " logged out.");
-
 			SessionManager.getInstance().kill(sid);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
