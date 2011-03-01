@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -326,6 +328,13 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		List<Document> docs = docDao.findByFolder(folderId, null);
+		if (docs.size() > 1)
+			Collections.sort(docs, new Comparator<Document>() {
+				@Override
+				public int compare(Document o1, Document o2) {
+					return o1.getTitle().compareTo(o2.getTitle());
+				}
+			});
 		WSDocument[] wsDocs = new WSDocument[docs.size()];
 		for (int i = 0; i < docs.size(); i++) {
 			docDao.initialize(docs.get(i));
