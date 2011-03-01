@@ -27,9 +27,9 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.text.analyzer.AnalyzerManager;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
+import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.TagUtil;
-import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.io.ZipUtil;
 
 /**
@@ -87,15 +87,7 @@ public class ZipImport {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		this.user = userDao.findById(userId);
 
-		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		String userpath = conf.getPropertyWithSubstitutions("conf.userdir");
-
-		if (!userpath.endsWith("_")) {
-			userpath += "_";
-		}
-
-		userpath += userId + "_" + "unzip";
-		File dir = new File(userpath);
+		File dir = UserUtil.getUserResource(userId, "unzip");
 		if (dir.exists()) {
 			try {
 				FileUtils.deleteDirectory(dir);
@@ -107,7 +99,7 @@ public class ZipImport {
 			FileUtils.forceMkdir(dir);
 		} catch (IOException e) {
 		}
-		ZipUtil.unzip(zipFile.getPath(), userpath);
+		ZipUtil.unzip(zipFile.getPath(), dir.getPath());
 		File[] files = dir.listFiles();
 
 		for (int i = 0; i < files.length; i++) {
@@ -201,12 +193,12 @@ public class ZipImport {
 	 */
 	protected void sendNotificationMessage() {
 		SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
-		Date now = new Date();		
+		Date now = new Date();
 		Recipient recipient = new Recipient();
 		recipient.setName(user.getUserName());
 		recipient.setAddress(user.getUserName());
-		recipient.setType(Recipient.TYPE_SYSTEM);		
-		recipient.setMode("message");		
+		recipient.setType(Recipient.TYPE_SYSTEM);
+		recipient.setMode("message");
 		Set<Recipient> recipients = new HashSet<Recipient>();
 		recipients.add(recipient);
 		SystemMessage sysmess = new SystemMessage();

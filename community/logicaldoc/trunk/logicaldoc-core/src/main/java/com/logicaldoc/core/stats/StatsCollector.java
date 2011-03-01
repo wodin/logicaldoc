@@ -22,8 +22,10 @@ import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.core.task.Task;
+import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
+import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
  * Collects statistical informations to the stats site
@@ -49,7 +51,7 @@ public class StatsCollector extends Task {
 	private ContextProperties config;
 
 	private Storer storer;
-	
+
 	private static String userno = "community";
 
 	private static String product = "LogicalDOC";
@@ -113,9 +115,8 @@ public class StatsCollector extends Task {
 		saveStatistic("docdir", Long.toString(docdir));
 
 		long userdir = 0;
-		File userDir = new File(config.getPropertyWithSubstitutions("conf.userdir"));
-		if (userDir.exists())
-			userdir = FileUtils.sizeOfDirectory(userDir);
+		File userDir = UserUtil.getUsersDir();
+		userdir = FileUtils.sizeOfDirectory(userDir);
 		saveStatistic("userdir", Long.toString(userdir));
 
 		long indexdir = 0;
@@ -137,9 +138,8 @@ public class StatsCollector extends Task {
 		saveStatistic("exportdir", Long.toString(exportdir));
 
 		long plugindir = 0;
-		File pluginsDir = new File(config.getPropertyWithSubstitutions("conf.plugindir"));
-		if (pluginsDir.exists())
-			plugindir = FileUtils.sizeOfDirectory(pluginsDir);
+		File pluginsDir = PluginRegistry.getPluginsDir();
+		plugindir = FileUtils.sizeOfDirectory(pluginsDir);
 		saveStatistic("plugindir", Long.toString(plugindir));
 
 		long dbdir = 0;

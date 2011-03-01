@@ -110,8 +110,7 @@ public class ApplicationInitializer implements ServletContextListener {
 	 * @throws IOException
 	 */
 	private void unpackPlugins(ServletContext context) throws IOException {
-		ContextProperties config = new ContextProperties();
-		File pluginsDir = new File(config.getProperty("conf.plugindir"));
+		File pluginsDir = PluginRegistry.getPluginsDir();
 		File[] archives = pluginsDir.listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {

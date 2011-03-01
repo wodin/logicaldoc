@@ -23,6 +23,7 @@ import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.text.analyzer.AnalyzerManager;
+import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIHit;
 import com.logicaldoc.gui.common.client.beans.GUIResult;
@@ -30,7 +31,6 @@ import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
-import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
@@ -107,7 +107,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 				h.setSize(hit.getSize());
 				h.setScore(hit.getScore());
 				h.setSourceDate(hit.getSourceDate());
-				
+
 				// Check if the document is not an alias to visualize the
 				// correct icon: if the document is an alias the FULL-TEXT
 				// search returns a custom id null, the PARAMETRIC and TAG
@@ -134,12 +134,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		try {
 			SearchOptions opt = toSearchOptions(options);
 
-			File file = getQueriesDir(session.getUserName());
-			if (!file.exists()) {
-				file.mkdirs();
-				file.mkdir();
-			}
-
+			File file = UserUtil.getUserResource(session.getUserId(), "queries");
 			file = new File(file, opt.getName() + ".ser");
 			if (file.exists()) {
 				return false;
@@ -164,7 +159,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		UserSession session = SessionUtil.validateSession(sid);
 
 		try {
-			File dir = getQueriesDir(session.getUserName());
+			File dir = UserUtil.getUserResource(session.getUserId(), "queries");
 
 			for (String name : names) {
 				File file = new File(dir, name + ".ser");
@@ -185,7 +180,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		UserSession session = SessionUtil.validateSession(sid);
 
 		try {
-			File dir = getQueriesDir(session.getUserName());
+			File dir = UserUtil.getUserResource(session.getUserId(), "queries");
 			File file = new File(dir, name + ".ser");
 			SearchOptions opt = null;
 			try {
@@ -234,7 +229,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 	 * @return the list of search options
 	 */
 	public List<SearchOptions> getSearches(UserSession user) {
-		File file = getQueriesDir(user.getUserName());
+		File file = UserUtil.getUserResource(user.getUserId(), "queries");
 		if (!file.exists()) {
 			return null;
 		}
@@ -257,17 +252,6 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		}
 
 		return queries;
-	}
-
-	private File getQueriesDir(String username) {
-		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		String userpath = conf.getPropertyWithSubstitutions("conf.userdir");
-		if (!userpath.endsWith("_")) {
-			userpath += "_";
-		}
-		userpath += username + "_" + "/" + "queries";
-		File file = new File(userpath.toLowerCase());
-		return file;
 	}
 
 	protected GUISearchOptions toGUIOptions(SearchOptions searchOptions) {
