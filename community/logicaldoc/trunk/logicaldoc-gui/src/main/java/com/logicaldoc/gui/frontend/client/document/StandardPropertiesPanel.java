@@ -159,7 +159,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 					@Override
 					public void onSuccess(GUIRating rating) {
 						if (rating != null) {
-							RatingDialog dialog = new RatingDialog(3, rating);
+							RatingDialog dialog = new RatingDialog(document.getRating(), rating);
 							dialog.show();
 						}
 					}
