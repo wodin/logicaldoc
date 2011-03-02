@@ -9,8 +9,13 @@ import java.net.URLDecoder;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Log4jConfigurer;
 
 import com.logicaldoc.util.config.ContextProperties;
@@ -24,7 +29,10 @@ import com.logicaldoc.util.plugin.PluginRegistry;
  * @author Alessandro Gasparini - Logical Objects
  * @since 3.0
  */
-public class ApplicationInitializer implements ServletContextListener {
+public class ApplicationInitializer implements ServletContextListener,
+		HttpSessionListener {
+
+	private static Log log = LogFactory.getLog(ApplicationInitializer.class);
 
 	public static boolean needRestart = false;
 
@@ -46,12 +54,14 @@ public class ApplicationInitializer implements ServletContextListener {
 		try {
 			URL configFile = null;
 			try {
-				configFile = LoggingConfigurator.class.getClassLoader().getResource("/log.xml");
+				configFile = LoggingConfigurator.class.getClassLoader()
+						.getResource("/log.xml");
 			} catch (Throwable t) {
 			}
 
 			if (configFile == null)
-				configFile = LoggingConfigurator.class.getClassLoader().getResource("log.xml");
+				configFile = LoggingConfigurator.class.getClassLoader()
+						.getResource("log.xml");
 
 			log4jPath = URLDecoder.decode(configFile.getPath(), "UTF-8");
 
@@ -87,6 +97,7 @@ public class ApplicationInitializer implements ServletContextListener {
 			if (uploadDir.exists())
 				FileUtils.forceDelete(uploadDir);
 		} catch (IOException e) {
+			log.warn(e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -96,6 +107,7 @@ public class ApplicationInitializer implements ServletContextListener {
 		try {
 			unpackPlugins(context);
 		} catch (IOException e) {
+			log.warn(e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -129,5 +141,28 @@ public class ApplicationInitializer implements ServletContextListener {
 				FileUtils.forceDelete(archive);
 				needRestart = true;
 			}
+	}
+
+	@Override
+	public void sessionCreated(HttpSessionEvent event) {
+
+	}
+
+	/**
+	 * Frees temporary upload folders.
+	 */
+	@Override
+	public void sessionDestroyed(HttpSessionEvent event) {
+		HttpSession session = event.getSession();
+		String id = session.getId();
+		File uploadFolder = new File(session.getServletContext().getRealPath(
+				"upload"));
+		uploadFolder = new File(uploadFolder, id);
+		try {
+			if (uploadFolder.exists())
+				FileUtils.forceDelete(uploadFolder);
+		} catch (Throwable e) {
+			log.warn(e.getMessage());
+		}
 	}
 }
