@@ -17,6 +17,7 @@ import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.events.ResizedEvent;
 import com.smartgwt.client.widgets.events.ResizedHandler;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
  * This popup window is used to show the document preview.
@@ -39,19 +40,23 @@ public class PreviewPopup extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("preview"));
 		setWidth(620);
-		setHeight(490);
+		setHeight(600);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
 		setMargin(2);
+		
+		VLayout layout = new VLayout(5);
+		layout.setTop(20);
+		layout.setMargin(5);
 
 		String f = filename.toLowerCase();
 
 		if (Util.isImageFile(filename) || (Feature.enabled(Feature.PREVIEW) == false && f.endsWith(".pdf"))) {
-			final PreviewPortlet image = new PreviewPortlet(PreviewPortlet.IMAGE, fileName, id, "" + (getWidth() - 15),
-					"" + (getHeight() - 15));
-			addChild(image);
+			final PreviewPortlet image = new PreviewPortlet(PreviewPortlet.IMAGE, fileName, id, "" + (getWidth() - 26),
+					"" + (getHeight() - 40));
+			layout.addMember(image);
 
 			addResizedHandler(new ResizedHandler() {
 
@@ -98,7 +103,7 @@ public class PreviewPopup extends Window {
 						getHeight() - 32 + "px", getWidth() - 17 + "px");
 				mediaCanvas.addChild(media);
 				setCanDragResize(false);
-				addItem(mediaCanvas);
+				layout.addMember(mediaCanvas);
 			} catch (Exception e) {
 				Log.error("An error occured while loading the multimedia player", null, e);
 			}
@@ -106,7 +111,7 @@ public class PreviewPopup extends Window {
 			if (Feature.enabled(Feature.PREVIEW)) {
 				final PreviewPortlet applet = new PreviewPortlet(PreviewPortlet.APPLET, fileName, id, ""
 						+ (getWidth() - 15), "" + (getHeight() - 15));
-				addChild(applet);
+				layout.addMember(applet);
 
 				addResizedHandler(new ResizedHandler() {
 
@@ -130,5 +135,7 @@ public class PreviewPopup extends Window {
 				destroy();
 			}
 		});
+		
+		addChild(layout);
 	}
 }
