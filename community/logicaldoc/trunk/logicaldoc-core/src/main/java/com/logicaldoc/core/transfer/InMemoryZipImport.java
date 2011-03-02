@@ -61,9 +61,9 @@ public class InMemoryZipImport extends ZipImport {
 		this.user = userDao.findById(userId);
 
 		logger.debug("Using encoding: " + encoding);
-
+		ZipFile zip = null;
 		try {
-			ZipFile zip = new ZipFile(zipFile, encoding);
+			zip = new ZipFile(zipFile, encoding);
 			Enumeration zipEntries = zip.getEntries();
 			ZipEntry zipe = null;
 			while (zipEntries.hasMoreElements()) {
@@ -82,6 +82,13 @@ public class InMemoryZipImport extends ZipImport {
 			}
 		} catch (IOException e) {
 			logger.error("InMemoryZipImport process failed", e);
+		} finally {
+			if (zip != null)
+				try {
+					zip.close();
+				} catch (IOException e) {
+					logger.error("InMemoryZipImport error closing zip file", e);
+				}
 		}
 
 		if (isNotifyUser())
