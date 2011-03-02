@@ -21,7 +21,7 @@ import com.logicaldoc.web.util.SessionUtil;
 /**
  * Check if the user session was expired or active. In addition a binding
  * between UserSession and ServletSession is maintained as internal state. If
- * the kill parameter is fount in the request, the given session is killed.
+ * the kill parameter is found in the request, the given session is killed.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0

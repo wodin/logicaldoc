@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -54,6 +55,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.io.CryptUtil;
 import com.logicaldoc.util.security.PasswordGenerator;
+import com.logicaldoc.web.SessionFilter;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
@@ -178,7 +180,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 			FileUtils.forceDelete(UserUtil.getUserResource(session.getUserId(), "temp"));
 			log.info("User " + session.getUserName() + " logged out.");
-			SessionManager.getInstance().kill(sid);
+			kill(sid);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
@@ -519,7 +521,14 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 	@Override
 	public void kill(String sid) {
+		//Kill the LogicalDOC session
 		SessionManager.getInstance().kill(sid);
+		
+		//Also kill the servlet container session, if any
+		HttpSession httpSession = SessionFilter.getServletSession(sid);
+		if (httpSession != null) {
+			httpSession.invalidate();
+		}
 	}
 
 	@Override
