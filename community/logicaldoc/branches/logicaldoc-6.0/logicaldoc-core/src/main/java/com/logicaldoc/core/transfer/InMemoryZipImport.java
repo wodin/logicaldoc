@@ -82,6 +82,13 @@ public class InMemoryZipImport extends ZipImport {
 			}
 		} catch (IOException e) {
 			logger.error("InMemoryZipImport process failed", e);
+		} finally {
+			if (zip != null)
+				try {
+					zip.close();
+				} catch (IOException e) {
+					logger.error("InMemoryZipImport error closing zip file", e);
+				}
 		}
 
 		if (isNotifyUser())
