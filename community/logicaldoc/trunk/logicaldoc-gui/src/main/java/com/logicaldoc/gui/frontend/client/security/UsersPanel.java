@@ -2,6 +2,8 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.data.UsersDS;
@@ -11,6 +13,7 @@ import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
+import com.logicaldoc.gui.frontend.client.personal.MySignature;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.smartgwt.client.data.Record;
@@ -255,11 +258,27 @@ public class UsersPanel extends VLayout {
 		});
 		password.setEnabled(!(Session.get().isDemo() && Session.get().getUser().getId() == 1));
 
+		MenuItem signature = new MenuItem();
+		signature.setTitle(I18N.message("signature"));
+		signature.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				MySignature signature = new MySignature(id);
+				signature.show();
+			}
+		});
+
 		if ("admin".equals(record.getAttributeAsString("username"))) {
 			delete.setEnabled(false);
 		}
 
 		contextMenu.setItems(password, delete);
+		if (Feature.visible(Feature.DIGITAL_SIGN)) {
+			contextMenu.addItem(signature);
+			if (!Feature.enabled(Feature.DIGITAL_SIGN))
+				signature.setEnabled(false);
+			else
+				signature.setEnabled(Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN));
+		}
 		contextMenu.showContextMenu();
 	}
 }

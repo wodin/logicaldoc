@@ -1,8 +1,10 @@
-package com.logicaldoc.gui.frontend.client.document;
+package com.logicaldoc.gui.frontend.client.personal;
 
 import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
 import gwtupload.client.MultiUploader;
+
+import java.util.LinkedHashMap;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -14,27 +16,24 @@ import com.logicaldoc.gui.frontend.client.services.SignService;
 import com.logicaldoc.gui.frontend.client.services.SignServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
-import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.Window;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.LinkItem;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.SubmitItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
- * This popup window is used to sign documents or view signatures.
+ * This is the form used to load the user signature.
  * 
- * @author Marco Meschieri - Logical Objects
- * @since 6.0
+ * @author Matteo Caruso - Logical Objects
+ * @since 6.1
  */
-public class SignDialog extends Window {
+public class MySignature extends Window {
 	private SignServiceAsync signService = (SignServiceAsync) GWT.create(SignService.class);
 
 	private SubmitItem sendButton;
@@ -47,51 +46,27 @@ public class SignDialog extends Window {
 
 	private VLayout layout = new VLayout();
 
-	private long docId;
+	private SelectItem certificates = null;
 
-	public SignDialog(String id, String filename, boolean validation) {
-		docId = Long.parseLong(id);
+	private long userId;
 
-		layout.setMargin(15);
-		layout.setMembersMargin(2);
+	public MySignature(long id) {
+		super();
 
-		final boolean archiveValidation = validation;
+		this.userId = id;
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		if (!archiveValidation)
-			addCloseClickHandler(new CloseClickHandler() {
-
-				@Override
-				public void onCloseClick(CloseClientEvent event) {
-					DocumentsPanel.get().refresh();
-					destroy();
-				}
-			});
-
-		setTitle(I18N.message("signdocument"));
-		setWidth(550);
-		setHeight(230);
+		setTitle(I18N.message("mysignature"));
+		setWidth(430);
+		setHeight(250);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
 
-		DynamicForm urlForm = new DynamicForm();
-		urlForm.setMargin(3);
-		LinkItem downloadUrl = ItemFactory.newLinkItem(I18N.message("downloadfiletosign"), "");
-		downloadUrl.setTitleOrientation(TitleOrientation.TOP);
-		downloadUrl.setLinkTitle(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id);
-		downloadUrl.setValue(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id);
-		urlForm.setItems(downloadUrl);
-		layout.addMember(urlForm, 0);
-
-		DynamicForm messageForm = new DynamicForm();
-		messageForm.setMargin(3);
-		StaticTextItem uploadMessage = ItemFactory.newStaticTextItem(I18N.message(""),
-				I18N.message("signandupload", filename), null);
-		uploadMessage.setWidth(500);
-		messageForm.setItems(uploadMessage);
-		layout.addMember(messageForm, 1);
+		HTMLFlow hint = new HTMLFlow(I18N.message("mysignaturehint"));
+		hint.setWidth(400);
+		layout.addMember(hint, 0);
 
 		reloadForm();
 
@@ -108,7 +83,7 @@ public class SignDialog extends Window {
 		uploader.addOnFinishUploadHandler(onFinishUploaderHandler);
 		uploader.addOnCancelUploadHandler(onCancelUploaderHandler);
 
-		layout.addMember(uploader, 2);
+		layout.addMember(uploader, 1);
 		layout.setMembersMargin(10);
 		layout.setTop(25);
 		layout.setMargin(5);
@@ -125,6 +100,19 @@ public class SignDialog extends Window {
 		vm = new ValuesManager();
 		form.setValuesManager(vm);
 
+		certificates = ItemFactory.newSelectItem("certificates", I18N.message("certificatesfound"));
+		certificates.setWidth(150);
+		certificates.setRequired(true);
+
+		String signatureId = Session.get().getUser().getSignatureId();
+		String signatureInfo = Session.get().getUser().getSignatureInfo();
+		if (!signatureId.trim().isEmpty() && !signatureInfo.trim().isEmpty()) {
+			LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+			map.put(signatureInfo, signatureInfo);
+			certificates.setValueMap(map);
+			certificates.setValue(signatureInfo);
+		}
+
 		sendButton = new SubmitItem();
 		sendButton.setTitle(I18N.message("send"));
 		sendButton.setDisabled(true);
@@ -136,9 +124,9 @@ public class SignDialog extends Window {
 			}
 		});
 
-		form.setItems(sendButton);
+		form.setItems(certificates, sendButton);
 
-		layout.addMember(form, 3);
+		layout.addMember(form, 2);
 	}
 
 	// Load the image in the document and in the case of success attach it to
@@ -147,6 +135,30 @@ public class SignDialog extends Window {
 		public void onFinish(IUploader uploader) {
 			if (uploader.getStatus() == Status.SUCCESS) {
 				sendButton.setDisabled(false);
+
+				signService.extractSubjectSignatures(Session.get().getSid(), userId, new AsyncCallback<String[]>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+						destroy();
+					}
+
+					@Override
+					public void onSuccess(String[] result) {
+						if (result != null && result.length > 0) {
+							certificates.clearValue();
+							LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+							for (String cert : result) {
+								map.put(cert, cert);
+							}
+							certificates.setValueMap(map);
+						} else {
+							SC.warn(I18N.message("mysignatureerrorcertificates"));
+							cancel();
+						}
+					}
+				});
 			}
 		}
 	};
@@ -166,7 +178,7 @@ public class SignDialog extends Window {
 		if (!vm.validate())
 			return;
 
-		signService.signDocument(Session.get().getSid(), Session.get().getUser().getId(), docId,
+		signService.storeSignature(Session.get().getSid(), userId, vm.getValueAsString("certificates"),
 				new AsyncCallback<String>() {
 
 					@Override
@@ -178,7 +190,6 @@ public class SignDialog extends Window {
 					@Override
 					public void onSuccess(String result) {
 						if (result == "ok") {
-							DocumentsPanel.get().refresh();
 							destroy();
 						} else {
 							SC.warn(I18N.message(result));
@@ -189,5 +200,20 @@ public class SignDialog extends Window {
 
 	private void cancel() {
 		sendButton.setDisabled(true);
+		certificates.clearValue();
+		String signatureId = Session.get().getUser().getSignatureId();
+		String signatureInfo = Session.get().getUser().getSignatureInfo();
+		if (!signatureId.trim().isEmpty() && !signatureInfo.trim().isEmpty()) {
+			LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+			map.put(signatureInfo, signatureInfo);
+			certificates.setValueMap(map);
+			certificates.setValue(signatureInfo);
+		} else {
+			LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+			map.put("", "");
+			certificates.setValueMap(map);
+			certificates.clearValue();
+		}
+
 	}
 }

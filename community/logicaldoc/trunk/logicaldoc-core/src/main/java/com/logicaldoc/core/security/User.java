@@ -86,6 +86,10 @@ public class User extends PersistentObject implements Serializable {
 	private long quota = -1;
 
 	private long quotaCount = 0;
+	
+	private String signatureId = "";
+
+	private String signatureInfo = "";
 
 	public User() {
 	}
@@ -389,5 +393,21 @@ public class User extends PersistentObject implements Serializable {
 
 	public void setQuotaCount(long quotaCount) {
 		this.quotaCount = quotaCount;
+	}
+
+	public String getSignatureId() {
+		return signatureId;
+	}
+
+	public void setSignatureId(String signatureId) {
+		this.signatureId = signatureId;
+	}
+
+	public String getSignatureInfo() {
+		return signatureInfo;
+	}
+
+	public void setSignatureInfo(String signatureInfo) {
+		this.signatureInfo = signatureInfo;
 	}
 }

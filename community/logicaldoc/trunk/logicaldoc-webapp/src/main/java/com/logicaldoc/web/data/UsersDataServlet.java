@@ -78,12 +78,15 @@ public class UsersDataServlet extends HttpServlet {
 					writer.print("<email><![CDATA[" + user.getEmail() + "]]></email>");
 					writer.print("<phone><![CDATA[" + user.getTelephone() + "]]></phone>");
 					writer.print("<cell><![CDATA[" + user.getTelephone2() + "]]></cell>");
+					writer.print("<signatureid><![CDATA[" + user.getSignatureId() + "]]></signatureid>");
+					writer.print("<signatureinfo><![CDATA[" + user.getSignatureInfo() + "]]></signatureinfo>");
 					writer.print("<usergroup>" + user.getUserGroup().getId() + "</usergroup>");
 					writer.print("</user>");
 				}
 			} else {
 				UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-				String query = "select A.ld_id, A.ld_username, A.ld_enabled, A.ld_name, A.ld_firstname, A.ld_email, A.ld_telephone, A.ld_telephone2, B.ld_id "
+				String query = "select A.ld_id, A.ld_username, A.ld_enabled, A.ld_name, A.ld_firstname, A.ld_email, A.ld_telephone, "
+						+ "A.ld_telephone2, A.ld_signatureid, A.ld_signatureinfo, B.ld_id "
 						+ "from ld_user A, ld_group B where A.ld_deleted = 0 and A.ld_type = 0 and B.ld_type=1 "
 						+ "and B.ld_id in(select ld_groupid from ld_usergroup where ld_userid=A.ld_id)";
 
@@ -99,10 +102,13 @@ public class UsersDataServlet extends HttpServlet {
 						user.setEmail(rs.getString(6));
 						user.setTelephone(rs.getString(7));
 						user.setTelephone2(rs.getString(8));
+						user.setSignatureId(rs.getString(9));
+						user.setSignatureInfo(rs.getString(10));
 						Group group = new Group();
-						group.setId(rs.getLong(9));
+						group.setId(rs.getLong(11));
 						group.setName("_user_" + user.getId());
 						user.getGroups().add(group);
+
 						return user;
 					}
 				}, null);
@@ -124,6 +130,8 @@ public class UsersDataServlet extends HttpServlet {
 					writer.print("<email><![CDATA[" + user.getEmail() + "]]></email>");
 					writer.print("<phone><![CDATA[" + user.getTelephone() + "]]></phone>");
 					writer.print("<cell><![CDATA[" + user.getTelephone2() + "]]></cell>");
+					writer.print("<signatureid><![CDATA[" + user.getSignatureId() + "]]></signatureid>");
+					writer.print("<signatureinfo><![CDATA[" + user.getSignatureInfo() + "]]></signatureinfo>");
 					writer.print("<usergroup>" + user.getGroups().iterator().next().getId() + "</usergroup>");
 					writer.print("</user>");
 				}

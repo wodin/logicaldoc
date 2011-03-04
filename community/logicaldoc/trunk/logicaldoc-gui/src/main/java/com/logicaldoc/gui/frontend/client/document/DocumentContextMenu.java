@@ -460,18 +460,14 @@ public class DocumentContextMenu extends Menu {
 		sign.setTitle(I18N.message("sign"));
 		sign.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				String ids = "";
-				String names = "";
-				for (ListGridRecord rec : selection) {
-					ids += "," + rec.getAttributeAsString("id");
-					names += "," + rec.getAttributeAsString("title");
-				}
-				if (ids.startsWith(","))
-					ids = ids.substring(1);
-				if (names.startsWith(","))
-					names = names.substring(1);
+				ListGridRecord selection = list.getSelectedRecord();
+				if (selection == null)
+					return;
 
-				SignDialog dialog = new SignDialog(ids, names, false);
+				String id = selection.getAttribute("id");
+				String filename = selection.getAttribute("filename");
+
+				SignDialog dialog = new SignDialog(id, filename, false);
 				dialog.show();
 			}
 		});
@@ -754,7 +750,7 @@ public class DocumentContextMenu extends Menu {
 			if (!folder.hasPermission(Constants.PERMISSION_SIGN) || !Feature.enabled(Feature.DIGITAL_SIGN))
 				sign.setEnabled(false);
 			else
-				sign.setEnabled(enableSign);
+				sign.setEnabled(enableSign && selection.length == 1);
 		}
 
 		if (Feature.visible(Feature.ARCHIVES)) {

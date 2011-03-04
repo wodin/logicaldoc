@@ -501,8 +501,10 @@ public class ItemFactory {
 
 	public static LinkItem newLinkItem(String name, String title) {
 		LinkItem linkItem = new LinkItem(name);
-		linkItem.setTitle(I18N.message(title));
-		linkItem.setLinkTitle(I18N.message(title));
+		if (!title.trim().isEmpty()) {
+			linkItem.setTitle(I18N.message(title));
+			linkItem.setLinkTitle(I18N.message(title));
+		}
 		linkItem.setHintStyle("hint");
 		return linkItem;
 	}

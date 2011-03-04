@@ -126,6 +126,9 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				guiUser.setQuota(user.getQuota());
 				guiUser.setQuotaCount(user.getQuotaCount());
 
+				guiUser.setSignatureId(user.getSignatureId());
+				guiUser.setSignatureInfo(user.getSignatureInfo());
+
 				session.setSid(AuthenticationChain.getSessionId());
 				session.setUser(guiUser);
 				session.setLoggedIn(true);
@@ -297,6 +300,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setState(user.getState());
 			usr.setUserName(user.getUserName());
 			usr.setPasswordExpires(user.getPasswordExpires() == 1);
+			usr.setSignatureId(user.getSignatureId());
+			usr.setSignatureInfo(user.getSignatureInfo());
 
 			GUIGroup[] grps = new GUIGroup[user.getGroups().size()];
 			int i = 0;
@@ -400,6 +405,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setUserName(user.getUserName());
 			usr.setEnabled(user.isEnabled() ? 1 : 0);
 			usr.setPasswordExpires(user.isPasswordExpires() ? 1 : 0);
+			usr.setSignatureId(user.getSignatureId());
+			usr.setSignatureInfo(user.getSignatureInfo());
 
 			usr.setQuota(user.getQuota());
 
@@ -509,6 +516,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setState(user.getState());
 			usr.setTelephone(user.getPhone());
 			usr.setTelephone2(user.getCell());
+			usr.setSignatureId(user.getSignatureId());
+			usr.setSignatureInfo(user.getSignatureInfo());
 
 			userDao.store(usr);
 		} catch (Throwable e) {
@@ -521,10 +530,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 	@Override
 	public void kill(String sid) {
-		//Kill the LogicalDOC session
+		// Kill the LogicalDOC session
 		SessionManager.getInstance().kill(sid);
-		
-		//Also kill the servlet container session, if any
+
+		// Also kill the servlet container session, if any
 		HttpSession httpSession = SessionFilter.getServletSession(sid);
 		if (httpSession != null) {
 			httpSession.invalidate();
