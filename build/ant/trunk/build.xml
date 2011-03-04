@@ -76,4 +76,19 @@
     <zip destfile="${logicaldoc.devroot}/logicaldoc-src.zip" basedir="${logicaldoc.devroot}/logicaldoc-src"   />
     <delete dir="${logicaldoc.devroot}/logicaldoc-src"/>
   </target>
+  
+  <target name="prepare-workspace">
+    <copy todir="${logicaldoc.devroot}/logicaldoc-workspace">
+      <fileset dir="${logicaldoc.devroot}">
+        <exclude name="**/target/**" />
+        <!--exclude name="**/.project" />
+        <exclude name="**/.classpath" />
+        <exclude name="**/.settings/**" />
+        <exclude name="**/.metadata/**" />
+        <exclude name="**/docs/**" /-->
+      </fileset>
+    </copy>
+    <zip destfile="${logicaldoc.devroot}/logicaldoc-workspace.zip" basedir="${logicaldoc.devroot}/logicaldoc-workspace"   />
+    <delete dir="${logicaldoc.devroot}/logicaldoc-workspace"/>
+  </target>
 </project>
