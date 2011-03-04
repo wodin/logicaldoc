@@ -29,6 +29,8 @@
         <property name="source" type="int" column="ld_source" not-null="true" />
         <property name="quota" type="long" column="ld_quota" not-null="true" />
     	<property name="quotaCount" type="long" column="ld_quotacount" not-null="true" />
+    	<property name="signatureId" type="string" column="ld_signatureid" length="255" />
+		<property name="signatureInfo" type="string" column="ld_signatureinfo" length="255" />
 		<set name="groups" table="ld_usergroup" inverse="true" lazy="false" >
 			<key column="ld_userid" />
 			<many-to-many column="ld_groupid" class="com.logicaldoc.core.security.Group" where="ld_deleted=0" />

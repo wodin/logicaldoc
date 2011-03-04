@@ -108,6 +108,11 @@
 		<servlet-name>ImportFoldersService</servlet-name>
 		<servlet-class>com.logicaldoc.gui.frontend.server.MockImportFoldersServiceImpl</servlet-class>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>SignService</servlet-name>
+		<servlet-class>com.logicaldoc.gui.frontend.server.MockSignServiceImpl</servlet-class>
+	</servlet>
 
 	<servlet>
 		<servlet-name>EmailAccountService</servlet-name>
@@ -407,6 +412,11 @@
 	<servlet-mapping>
 		<servlet-name>ImportFoldersService</servlet-name>
 		<url-pattern>/frontend/importfolders</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>SignService</servlet-name>
+		<url-pattern>/frontend/sign</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

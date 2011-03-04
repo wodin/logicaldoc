@@ -15,6 +15,7 @@ import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.personal.ChangePassword;
+import com.logicaldoc.gui.frontend.client.personal.MySignature;
 import com.logicaldoc.gui.frontend.client.personal.Profile;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
@@ -213,7 +214,19 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 		});
 		changePswd.setEnabled(!(Session.get().isDemo() && Session.get().getUser().getId() == 1));
 
-		menu.setItems(profile, changePswd);
+		MenuItem mySignature = new MenuItem(I18N.message("mysignature"));
+		mySignature.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				MySignature mysign = new MySignature(Session.get().getUser().getId());
+				mysign.show();
+			}
+		});
+
+		if (Feature.enabled(Feature.DIGITAL_SIGN))
+			menu.setItems(profile, changePswd, mySignature);
+		else
+			menu.setItems(profile, changePswd);
 
 		ToolStripMenuButton menuButton = new ToolStripMenuButton(I18N.message("personal"), menu);
 		menuButton.setWidth(100);
