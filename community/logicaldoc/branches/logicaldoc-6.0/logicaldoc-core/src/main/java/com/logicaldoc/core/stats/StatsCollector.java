@@ -201,7 +201,12 @@ public class StatsCollector extends Task {
 
 		int workflow_histories = -1;
 		try {
-			workflow_histories = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_workflowhistory");
+			try {
+				Class.forName("com.logicaldoc.workflow.WorkflowHistory");
+				workflow_histories = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_workflowhistory");
+			} catch (ClassNotFoundException exception) {
+
+			}
 		} catch (Exception e) {
 		}
 
