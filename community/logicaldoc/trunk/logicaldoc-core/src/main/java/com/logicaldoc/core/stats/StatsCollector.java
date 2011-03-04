@@ -200,10 +200,15 @@ public class StatsCollector extends Task {
 		int links = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_link");
 		int aliases = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_document WHERE ld_docref IS NOT NULL");
 
-		int workflow_histories = 0;
+		int workflow_histories = -1;
 		try {
-			workflow_histories = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_workflowhistory");
-		} catch (Throwable e) {
+			try {
+				Class.forName("com.logicaldoc.workflow.WorkflowHistory");
+				workflow_histories = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_workflowhistory");
+			} catch (ClassNotFoundException exception) {
+
+			}
+		} catch (Exception e) {
 		}
 
 		/*
