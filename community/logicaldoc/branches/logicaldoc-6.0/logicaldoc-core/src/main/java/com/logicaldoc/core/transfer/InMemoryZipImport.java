@@ -62,8 +62,9 @@ public class InMemoryZipImport extends ZipImport {
 
 		logger.debug("Using encoding: " + encoding);
 
+		ZipFile zip = null;
 		try {
-			ZipFile zip = new ZipFile(zipFile, encoding);
+			zip = new ZipFile(zipFile, encoding);
 			Enumeration zipEntries = zip.getEntries();
 			ZipEntry zipe = null;
 			while (zipEntries.hasMoreElements()) {

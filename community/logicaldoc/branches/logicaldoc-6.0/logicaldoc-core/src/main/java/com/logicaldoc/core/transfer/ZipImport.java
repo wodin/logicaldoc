@@ -201,12 +201,12 @@ public class ZipImport {
 	 */
 	protected void sendNotificationMessage() {
 		SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
-		Date now = new Date();		
+		Date now = new Date();
 		Recipient recipient = new Recipient();
 		recipient.setName(user.getUserName());
 		recipient.setAddress(user.getUserName());
-		recipient.setType(Recipient.TYPE_SYSTEM);		
-		recipient.setMode("message");		
+		recipient.setType(Recipient.TYPE_SYSTEM);
+		recipient.setMode("message");
 		Set<Recipient> recipients = new HashSet<Recipient>();
 		recipients.add(recipient);
 		SystemMessage sysmess = new SystemMessage();
