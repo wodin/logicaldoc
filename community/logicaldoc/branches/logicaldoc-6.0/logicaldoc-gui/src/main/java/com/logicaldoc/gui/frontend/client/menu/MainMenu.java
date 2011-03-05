@@ -234,6 +234,7 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 						"location=no,status=no,toolbar=no,menubar=no,resizable=yes,scrollbars=yes");
 			}
 		});
+		menu.addItem(documentation);
 
 		MenuItem bugReport = new MenuItem(I18N.message("bug.report"));
 		bugReport.addClickHandler(new ClickHandler() {
@@ -243,6 +244,8 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 						"location=no,status=no,toolbar=no,menubar=no,resizable=yes,scrollbars=yes");
 			}
 		});
+		if(!"-".equals(Session.get().getInfo().getBugs())&&!"".equals(Session.get().getInfo().getBugs()))
+			menu.addItem(bugReport);
 
 		MenuItem forum = new MenuItem(I18N.message("forum"));
 		forum.addClickHandler(new ClickHandler() {
@@ -252,7 +255,9 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 						"location=no,status=no,toolbar=no,menubar=no,resizable=yes,scrollbars=yes");
 			}
 		});
-
+		if(!"-".equals(Session.get().getInfo().getForum())&&!"".equals(Session.get().getInfo().getForum()))
+			menu.addItem(forum);
+		
 		MenuItem about = new MenuItem(I18N.message("about") + " " + Session.get().getInfo().getProduct());
 		about.addClickHandler(new ClickHandler() {
 			@Override
@@ -261,7 +266,7 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 				dialog.show();
 			}
 		});
-		menu.setItems(documentation, forum, bugReport, about);
+		menu.addItem(about);
 
 		ToolStripMenuButton menuButton = new ToolStripMenuButton(I18N.message("help"), menu);
 		menuButton.setWidth(100);
