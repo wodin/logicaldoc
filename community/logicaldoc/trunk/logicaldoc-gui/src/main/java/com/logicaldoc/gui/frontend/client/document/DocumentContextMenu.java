@@ -761,10 +761,10 @@ public class DocumentContextMenu extends Menu {
 				archive.setEnabled(enableSign);
 		}
 
-		if (Feature.visible(Feature.PAPER_DEMATERIALIZATION)) {
+		if (Feature.visible(Feature.AOS)) {
 			moreMenu.addItem(archiveDematerialization);
 			if (!folder.hasPermission(Constants.PERMISSION_ARCHIVE)
-					|| !Feature.enabled(Feature.PAPER_DEMATERIALIZATION))
+					|| !Feature.enabled(Feature.AOS))
 				archiveDematerialization.setEnabled(false);
 			else
 				archiveDematerialization.setEnabled(enableSign);

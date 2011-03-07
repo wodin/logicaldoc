@@ -62,9 +62,9 @@ public class IncrementalSettingsPanel extends VLayout {
 		templates.addChangedHandler(changedHandler);
 		templates.setValues(incremental.getTemplateIds());
 
-		if (Feature.visible(Feature.PAPER_DEMATERIALIZATION) && incremental.getId() == 0) {
+		if (Feature.visible(Feature.AOS) && incremental.getId() == 0) {
 			form.setFields(prefix, type, frequency, folderSelector, templates);
-			if (!Feature.enabled(Feature.PAPER_DEMATERIALIZATION))
+			if (!Feature.enabled(Feature.AOS))
 				type.setDisabled(true);
 		} else
 			form.setFields(prefix, frequency, folderSelector, templates);

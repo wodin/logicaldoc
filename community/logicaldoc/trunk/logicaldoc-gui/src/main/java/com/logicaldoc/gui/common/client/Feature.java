@@ -39,7 +39,7 @@ public class Feature {
 
 	public static final int INCREMENTAL_ARCHIVES = 14;
 
-	public static final int PAPER_DEMATERIALIZATION = 15;
+	public static final int AOS = 15;
 
 	public static final int SCAN = 16;
 
