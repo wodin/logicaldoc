@@ -266,6 +266,9 @@ public class UsersPanel extends VLayout {
 				signature.show();
 			}
 		});
+		if (Session.get().getUser().getId() != 1) {
+			signature.setEnabled(false);
+		}
 
 		if ("admin".equals(record.getAttributeAsString("username"))) {
 			delete.setEnabled(false);
