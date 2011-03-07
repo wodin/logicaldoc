@@ -78,10 +78,12 @@ public class SignDialog extends Window {
 
 		DynamicForm urlForm = new DynamicForm();
 		urlForm.setMargin(3);
-		LinkItem downloadUrl = ItemFactory.newLinkItem(I18N.message("downloadfiletosign"), "");
-		downloadUrl.setTitleOrientation(TitleOrientation.TOP);
-		downloadUrl.setLinkTitle(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id);
+		LinkItem downloadUrl = ItemFactory.newLinkItem("", "<b>(1)</b> " + I18N.message("downloadfiletosign"));
+		downloadUrl.setTitleOrientation(TitleOrientation.LEFT);
+		downloadUrl.setWrapTitle(false);
 		downloadUrl.setValue(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id);
+		downloadUrl.setLinkTitle(filename);
+		
 		urlForm.setItems(downloadUrl);
 		layout.addMember(urlForm, 0);
 
@@ -89,7 +91,9 @@ public class SignDialog extends Window {
 		messageForm.setMargin(3);
 		StaticTextItem uploadMessage = ItemFactory.newStaticTextItem(I18N.message(""),
 				I18N.message("signandupload", filename), null);
+		uploadMessage.setTitle("<b>(2)</b> " + uploadMessage.getTitle());
 		uploadMessage.setWidth(500);
+		uploadMessage.setWrapTitle(false);
 		messageForm.setItems(uploadMessage);
 		layout.addMember(messageForm, 1);
 
