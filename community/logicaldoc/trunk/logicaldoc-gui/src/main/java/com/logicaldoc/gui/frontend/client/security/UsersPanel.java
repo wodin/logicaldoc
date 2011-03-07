@@ -256,7 +256,7 @@ public class UsersPanel extends VLayout {
 				dialog.show();
 			}
 		});
-		password.setEnabled(!(Session.get().isDemo() && Session.get().getUser().getId() == 1));
+		password.setEnabled(!Session.get().isDemo());
 
 		MenuItem signature = new MenuItem();
 		signature.setTitle(I18N.message("signature"));
@@ -266,13 +266,6 @@ public class UsersPanel extends VLayout {
 				signature.show();
 			}
 		});
-		if (Session.get().getUser().getId() != 1) {
-			signature.setEnabled(false);
-		}
-
-		if ("admin".equals(record.getAttributeAsString("username"))) {
-			delete.setEnabled(false);
-		}
 
 		contextMenu.setItems(password, delete);
 		if (Feature.visible(Feature.DIGITAL_SIGN)) {
@@ -282,6 +275,15 @@ public class UsersPanel extends VLayout {
 			else
 				signature.setEnabled(Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN));
 		}
+			
+		if ("admin".equals(record.getAttributeAsString("username"))) {
+			delete.setEnabled(false);
+			if (!Session.get().getUser().getUserName().equalsIgnoreCase("admin")) {
+				password.setEnabled(false);
+				signature.setEnabled(false);
+			}
+		}
+		
 		contextMenu.showContextMenu();
 	}
 }
