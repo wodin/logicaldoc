@@ -106,7 +106,8 @@ public class MySignature extends Window {
 
 		String signatureId = Session.get().getUser().getSignatureId();
 		String signatureInfo = Session.get().getUser().getSignatureInfo();
-		if (!signatureId.trim().isEmpty() && !signatureInfo.trim().isEmpty()) {
+		if ((signatureId != null && !signatureId.trim().isEmpty())
+				&& (signatureInfo != null && !signatureInfo.trim().isEmpty())) {
 			LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 			map.put(signatureInfo, signatureInfo);
 			certificates.setValueMap(map);
