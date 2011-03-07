@@ -361,7 +361,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				archive.setDisabled(true);
 				archive.setTooltip(I18N.message("featuredisabled"));
 			}
-			if (!Feature.enabled(Feature.PAPER_DEMATERIALIZATION)) {
+			if (!Feature.enabled(Feature.AOS)) {
 				archiveDematerialization.setDisabled(true);
 				archiveDematerialization.setTooltip(I18N.message("featuredisabled"));
 			}
@@ -476,7 +476,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 						|| !Feature.enabled(Feature.ARCHIVES));
 				archiveDematerialization.setDisabled(document == null
 						|| !folder.hasPermission(Constants.PERMISSION_ARCHIVE)
-						|| !Feature.enabled(Feature.PAPER_DEMATERIALIZATION));
+						|| !Feature.enabled(Feature.AOS));
 				startWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)
 						|| !Feature.enabled(Feature.WORKFLOW));
 				addToWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)

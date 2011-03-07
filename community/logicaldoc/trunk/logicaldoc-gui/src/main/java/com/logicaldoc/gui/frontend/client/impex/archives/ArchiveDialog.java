@@ -108,9 +108,9 @@ public class ArchiveDialog extends Window {
 			}
 		});
 
-		if (Feature.visible(Feature.PAPER_DEMATERIALIZATION)) {
+		if (Feature.visible(Feature.AOS)) {
 			form.setFields(creator, name, description, type, save);
-			if (!Feature.enabled(Feature.PAPER_DEMATERIALIZATION))
+			if (!Feature.enabled(Feature.AOS))
 				type.setDisabled(true);
 		} else
 			form.setFields(creator, name, description, save);
