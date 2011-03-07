@@ -505,6 +505,7 @@ public class ItemFactory {
 			linkItem.setTitle(I18N.message(title));
 			linkItem.setLinkTitle(I18N.message(title));
 		}
+		linkItem.setWrapTitle(false);
 		linkItem.setHintStyle("hint");
 		return linkItem;
 	}
