@@ -253,12 +253,14 @@ public class UsersPanel extends VLayout {
 				dialog.show();
 			}
 		});
-		password.setEnabled(!(Session.get().isDemo() && Session.get().getUser().getId() == 1));
+		password.setEnabled(!Session.get().isDemo());
 
 		if ("admin".equals(record.getAttributeAsString("username"))) {
 			delete.setEnabled(false);
+			if (!Session.get().getUser().getUserName().equalsIgnoreCase("admin")) {
+				password.setEnabled(false);
+			}
 		}
-
 		contextMenu.setItems(password, delete);
 		contextMenu.showContextMenu();
 	}

@@ -161,6 +161,11 @@ public class UserDetailsPanel extends VLayout {
 			}
 		};
 
+		// Admin only can change the 'admin' user
+		if (user.getUserName().equalsIgnoreCase("admin")
+				&& !Session.get().getUser().getUserName().equalsIgnoreCase("admin"))
+			changeHandler = null;
+
 		propertiesPanel = new UserPropertiesPanel(user, changeHandler);
 		propertiesTabPanel.addMember(propertiesPanel);
 
