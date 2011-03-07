@@ -119,8 +119,12 @@ public class DocumentFieldsDS extends DataSource {
 		rating.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN, OperatorId.EQUALS, OperatorId.NOT_EQUAL);
 		rating.setEditorType(ItemFactory.newTextItem("rating", I18N.message("rating"), null));
 
+		DataSourceTextField tags = new DataSourceTextField("tags", I18N.message("tags"));
+		sourceid.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS);
+		sourceid.setEditorType(ItemFactory.newTextItem("tags", I18N.message("tags"), null));
+
 		setFields(author, coverage, id, title, object, fileSize, publisher, version, sourceDate, lastModified,
-				published, created, creator, customId, filename, recipient, source, sourceid, type, rating);
+				published, created, creator, customId, filename, recipient, source, sourceid, type, rating, tags);
 
 		/*
 		 * Define extended attributes
