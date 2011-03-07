@@ -220,7 +220,12 @@ public class UserDetailsPanel extends VLayout {
 	}
 
 	public void onModified() {
-		savePanel.setVisible(true);
+		//Admin only can change the admin user
+		if (user.getUserName().equalsIgnoreCase("admin")
+				&& !Session.get().getUser().getUserName().equalsIgnoreCase("admin"))
+			savePanel.setVisible(false);
+		else
+			savePanel.setVisible(true);
 	}
 
 	private boolean validate() {
