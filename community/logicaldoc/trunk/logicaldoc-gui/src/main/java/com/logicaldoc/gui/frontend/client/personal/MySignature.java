@@ -56,7 +56,7 @@ public class MySignature extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("mysignature"));
 		setWidth(310);
-		setHeight(180);
+		setHeight(250);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
