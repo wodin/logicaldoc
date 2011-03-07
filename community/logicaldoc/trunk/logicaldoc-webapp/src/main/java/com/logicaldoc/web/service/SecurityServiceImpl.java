@@ -126,8 +126,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				guiUser.setQuota(user.getQuota());
 				guiUser.setQuotaCount(user.getQuotaCount());
 
-				guiUser.setSignatureId(user.getSignatureId());
-				guiUser.setSignatureInfo(user.getSignatureInfo());
+				if (StringUtils.isNotEmpty(user.getSignatureId()))
+					guiUser.setSignatureId(user.getSignatureId());
+				if (StringUtils.isNotEmpty(user.getSignatureInfo()))
+					guiUser.setSignatureInfo(user.getSignatureInfo());
 
 				session.setSid(AuthenticationChain.getSessionId());
 				session.setUser(guiUser);
