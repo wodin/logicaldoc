@@ -123,7 +123,7 @@ public class PDFParserTest {
 				assertEquals(27179, parser.getContent().length());
 			} else {
 				pdfp.parse(file2);
-				assertEquals(8598, parser.getContent().length());
+				assertEquals(8602, parser.getContent().length());
 			}
 		}
 	}
@@ -210,7 +210,7 @@ public class PDFParserTest {
 		assertTrue(StringUtils.isNotEmpty(content));
 
 		System.err.println("content.length(): " + content.length());
-		assertEquals(8598, content.length());
+		assertEquals(8602, content.length());
 	}
 
 }
