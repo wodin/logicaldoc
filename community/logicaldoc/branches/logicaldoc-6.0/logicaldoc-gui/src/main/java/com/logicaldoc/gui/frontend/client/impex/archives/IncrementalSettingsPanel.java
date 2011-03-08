@@ -82,14 +82,20 @@ public class IncrementalSettingsPanel extends VLayout {
 			incremental.setFrequency(Integer.parseInt(vm.getValueAsString("frequency")));
 			incremental.setFolder(folderSelector.getFolder());
 
-			Object[] selection = (Object[]) JSOHelper.convertToJavaObjectArray((JavaScriptObject) vm.getValues().get(
-					"template"));
-			GUITemplate[] templates = new GUITemplate[selection.length];
-			for (int i = 0; i < templates.length; i++) {
-				templates[i] = new GUITemplate();
-				templates[i].setId(Long.parseLong(selection[i].toString()));
+			if (vm.getValues().get("template") != null) {
+				String templateIdString = vm.getValues().get("template").toString().trim().replace("[", "")
+						.replace("]", "");
+				if (!templateIdString.isEmpty()) {
+					String[] selection = templateIdString.split(",");
+					List<GUITemplate> templates = new ArrayList<GUITemplate>();
+					for (String selectionId : selection) {
+						GUITemplate currentTemplate = new GUITemplate();
+						currentTemplate.setId(Long.parseLong(selectionId.trim()));
+						templates.add(currentTemplate);
+					}
+					incremental.setTemplates(templates.toArray(new GUITemplate[0]));
+				}
 			}
-			incremental.setTemplates(templates);
 
 			return true;
 		} else
