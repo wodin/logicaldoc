@@ -213,4 +213,23 @@ public class PDFParserTest {
 		assertEquals(8602, content.length());
 	}
 
+	
+	@Test
+	public void testForm() throws UnsupportedEncodingException {
+		String inputFile = "target/test-classes/pdf_form_fields.pdf";
+		File file = new File(inputFile);
+		String filename = file.getPath();
+
+		Parser parser = ParserFactory.getParser(filename);
+		PDFParser pdfp = (PDFParser) parser;
+		pdfp.parse(file);
+
+		String content = pdfp.getContent();
+		assertNotNull(content);
+		System.out.println(content);
+		assertTrue(StringUtils.isNotEmpty(content));
+
+		System.err.println("content.length(): " + content.length());
+		assertEquals(1853, content.length());
+	}
 }
