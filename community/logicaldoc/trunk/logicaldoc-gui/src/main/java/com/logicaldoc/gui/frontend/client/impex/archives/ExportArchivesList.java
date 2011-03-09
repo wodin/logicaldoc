@@ -62,17 +62,24 @@ public class ExportArchivesList extends VLayout {
 
 	final static Canvas SELECT_ELEMENT = new HTMLPanel("&nbsp;" + I18N.message("selectarchive"));
 
-	public ExportArchivesList() {
+	private int archivesType = GUIArchive.TYPE_DEFAULT;
+
+	private boolean showHistory = false;
+
+	public ExportArchivesList(int archsType, boolean history) {
 		setWidth100();
 		infoPanel = new InfoPanel("");
-		refresh();
+		refresh(archsType, history);
 	}
 
-	public void refresh() {
+	public void refresh(int archivesType, boolean history) {
 		Canvas[] members = getMembers();
 		for (Canvas canvas : members) {
 			removeMember(canvas);
 		}
+
+		this.archivesType = archivesType;
+		this.showHistory = history;
 
 		listing = new VLayout();
 		detailsContainer = new VLayout();
@@ -126,14 +133,17 @@ public class ExportArchivesList extends VLayout {
 		list.setAutoFetchData(true);
 		list.setWidth100();
 		list.setHeight100();
-		list.setFields(id, created, name, typeLabel, size, status, creator, closer);
+		list.setFields(id, created, name, size, status, creator, closer);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
 		list.setFilterOnKeypress(true);
 		list.setShowFilterEditor(true);
-		list.setDataSource(new ArchivesDS(GUIArchive.MODE_EXPORT, null, null));
+		if (this.archivesType == GUIArchive.TYPE_STORAGE && this.showHistory)
+			list.setDataSource(new ArchivesDS(GUIArchive.MODE_EXPORT, this.archivesType, GUIArchive.STATUS_FINALIZED));
+		else
+			list.setDataSource(new ArchivesDS(GUIArchive.MODE_EXPORT, this.archivesType, null));
 
 		listing.addMember(infoPanel);
 		listing.addMember(list);
@@ -149,7 +159,7 @@ public class ExportArchivesList extends VLayout {
 		refresh.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				refresh();
+				refresh(ExportArchivesList.this.archivesType, ExportArchivesList.this.showHistory);
 			}
 		});
 
@@ -321,5 +331,9 @@ public class ExportArchivesList extends VLayout {
 						showDetails(Long.parseLong(record.getAttributeAsString("id")), false);
 					}
 				});
+	}
+
+	public int getArchivesType() {
+		return archivesType;
 	}
 }

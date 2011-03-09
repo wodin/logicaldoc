@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.impex.archives;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -50,7 +49,7 @@ public class ArchiveDialog extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("addarchive"));
 		setWidth(280);
-		setHeight(250);
+		setHeight(220);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -65,8 +64,6 @@ public class ArchiveDialog extends Window {
 		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setNumCols(1);
 
-		SelectItem type = ItemFactory.newArchiveTypeSelector();
-
 		TextItem name = ItemFactory.newSimpleTextItem("name", "name", null);
 		name.setRequired(true);
 
@@ -74,6 +71,8 @@ public class ArchiveDialog extends Window {
 
 		StaticTextItem creator = ItemFactory.newStaticTextItem("creator", "creator", Session.get().getUser()
 				.getFullName());
+
+		SelectItem user = ItemFactory.newAosManagerSelector("user", "adduser");
 
 		ButtonItem save = new ButtonItem();
 		save.setTitle(I18N.message("save"));
@@ -101,19 +100,20 @@ public class ArchiveDialog extends Window {
 						@Override
 						public void onSuccess(GUIArchive result) {
 							destroy();
-							ArchiveDialog.this.archivesPanel.refresh();
+							// We can reload the archives list with the saved
+							// archive, because all archives of the same list
+							// have the same type
+							ArchiveDialog.this.archivesPanel.refresh(result.getType(), false);
 						}
 					});
 				}
 			}
 		});
 
-		if (Feature.visible(Feature.AOS)) {
-			form.setFields(creator, name, description, type, save);
-			if (!Feature.enabled(Feature.AOS))
-				type.setDisabled(true);
-		} else
+		if (this.archivesPanel.getArchivesType() == GUIArchive.TYPE_DEFAULT)
 			form.setFields(creator, name, description, save);
+		else if (this.archivesPanel.getArchivesType() == GUIArchive.TYPE_STORAGE)
+			form.setFields(creator, name, description, user, save);
 		addItem(form);
 	}
 }

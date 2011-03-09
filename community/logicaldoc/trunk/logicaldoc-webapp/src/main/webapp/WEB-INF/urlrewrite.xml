@@ -8,7 +8,7 @@
 		<from>/setup/$</from>
 		<to type="redirect">%{context-path}/setup.jsp</to>
 	</rule>
-    <rule>
+	<rule>
 		<from>/license/$</from>
 		<to type="redirect">%{context-path}/license.jsp</to>
 	</rule>
@@ -19,5 +19,9 @@
 	<rule>
 		<from>/basic/$</from>
 		<to type="redirect">%{context-path}/basic.jsp</to>
+	</rule>
+	<rule>
+		<from>/aos/$</from>
+		<to type="redirect">%{context-path}/aos.jsp</to>
 	</rule>
 </urlrewrite>

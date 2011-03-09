@@ -59,17 +59,22 @@ public class IncrementalArchivesList extends VLayout {
 
 	final static Canvas SELECT_ELEMENT = new HTMLPanel("&nbsp;" + I18N.message("selectconfig"));
 
-	public IncrementalArchivesList() {
+	private int archivesType = GUIArchive.TYPE_DEFAULT;
+
+	public IncrementalArchivesList(int archsType) {
 		setWidth100();
 		infoPanel = new InfoPanel("");
-		refresh();
+		refresh(archsType);
 	}
 
-	public void refresh() {
+	public void refresh(int archsType) {
 		Canvas[] members = getMembers();
 		for (Canvas canvas : members) {
 			removeMember(canvas);
 		}
+
+		this.archivesType = archsType;
+
 		listing = new VLayout();
 		detailsContainer = new VLayout();
 		details = SELECT_ELEMENT;
@@ -102,14 +107,14 @@ public class IncrementalArchivesList extends VLayout {
 		list.setAutoFetchData(true);
 		list.setWidth100();
 		list.setHeight100();
-		list.setFields(id, prefix, type, frequency);
+		list.setFields(id, prefix, frequency);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
 		list.setFilterOnKeypress(true);
 		list.setShowFilterEditor(true);
-		list.setDataSource(new IncrementalArchivesDS());
+		list.setDataSource(new IncrementalArchivesDS(this.archivesType));
 
 		listing.addMember(infoPanel);
 		listing.addMember(list);
@@ -125,7 +130,7 @@ public class IncrementalArchivesList extends VLayout {
 		refresh.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				refresh();
+				refresh(IncrementalArchivesList.this.archivesType);
 			}
 		});
 
@@ -135,7 +140,9 @@ public class IncrementalArchivesList extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				list.deselectAllRecords();
-				showDetails(new GUIIncrementalArchive());
+				GUIIncrementalArchive archive = new GUIIncrementalArchive();
+				archive.setType(IncrementalArchivesList.this.archivesType);
+				showDetails(archive);
 				event.cancel();
 			}
 		});

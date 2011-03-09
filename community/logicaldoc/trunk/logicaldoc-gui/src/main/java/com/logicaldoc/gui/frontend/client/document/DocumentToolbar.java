@@ -187,7 +187,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				ArchiveDialog archiveDialod = new ArchiveDialog(ids, GUIArchive.TYPE_DEFAULT);
+				SendDocsToArchiveDialog archiveDialod = new SendDocsToArchiveDialog(ids, GUIArchive.TYPE_DEFAULT);
 				archiveDialod.show();
 			}
 		});
@@ -206,7 +206,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				ArchiveDialog archiveDialod = new ArchiveDialog(ids, GUIArchive.TYPE_STORAGE);
+				SendDocsToArchiveDialog archiveDialod = new SendDocsToArchiveDialog(ids, GUIArchive.TYPE_STORAGE);
 				archiveDialod.show();
 			}
 		});
@@ -356,11 +356,16 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		if (Feature.visible(Feature.ARCHIVES)) {
 			addSeparator();
 			addButton(archive);
-			addButton(archiveDematerialization);
 			if (!Feature.enabled(Feature.ARCHIVES)) {
 				archive.setDisabled(true);
 				archive.setTooltip(I18N.message("featuredisabled"));
 			}
+		}
+
+		if (Feature.visible(Feature.AOS)) {
+			if (!archive.isVisible())
+				addSeparator();
+			addButton(archiveDematerialization);
 			if (!Feature.enabled(Feature.AOS)) {
 				archiveDematerialization.setDisabled(true);
 				archiveDematerialization.setTooltip(I18N.message("featuredisabled"));
@@ -475,8 +480,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				archive.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_ARCHIVE)
 						|| !Feature.enabled(Feature.ARCHIVES));
 				archiveDematerialization.setDisabled(document == null
-						|| !folder.hasPermission(Constants.PERMISSION_ARCHIVE)
-						|| !Feature.enabled(Feature.AOS));
+						|| !folder.hasPermission(Constants.PERMISSION_ARCHIVE) || !Feature.enabled(Feature.AOS));
 				startWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)
 						|| !Feature.enabled(Feature.WORKFLOW));
 				addToWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)

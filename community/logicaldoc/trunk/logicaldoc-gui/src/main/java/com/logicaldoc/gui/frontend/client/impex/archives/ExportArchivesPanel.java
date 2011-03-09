@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.impex.archives;
 
 import com.logicaldoc.gui.common.client.Feature;
+import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.smartgwt.client.types.Side;
@@ -25,7 +26,7 @@ public class ExportArchivesPanel extends VLayout {
 		tabSet.setHeight100();
 
 		Tab archivesTab = new Tab(I18N.message("exportarchives"));
-		archivesTab.setPane(new ExportArchivesList());
+		archivesTab.setPane(new ExportArchivesList(GUIArchive.TYPE_DEFAULT, false));
 		tabSet.addTab(archivesTab);
 
 		Tab incremetalTab = new Tab(I18N.message("incrementalarchives"));
@@ -34,7 +35,7 @@ public class ExportArchivesPanel extends VLayout {
 			if (!Feature.enabled(Feature.INCREMENTAL_ARCHIVES))
 				incremetalTab.setPane(new FeatureDisabled());
 			else
-				incremetalTab.setPane(new IncrementalArchivesList());
+				incremetalTab.setPane(new IncrementalArchivesList(GUIArchive.TYPE_DEFAULT));
 		}
 
 		addMember(tabSet);

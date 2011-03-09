@@ -1,13 +1,11 @@
 package com.logicaldoc.gui.frontend.client.document;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HTML;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.impex.archives.ExportArchivesList;
-import com.logicaldoc.gui.frontend.client.services.ArchiveService;
-import com.logicaldoc.gui.frontend.client.services.ArchiveServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
@@ -21,8 +19,6 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.0
  */
 public class SignClosureDialog extends Window {
-	private ArchiveServiceAsync service = (ArchiveServiceAsync) GWT.create(ArchiveService.class);
-
 	private HTML applet = new HTML();
 
 	private ExportArchivesList archivesList = null;
@@ -38,7 +34,7 @@ public class SignClosureDialog extends Window {
 			@Override
 			public void onCloseClick(CloseClientEvent event) {
 				destroy();
-				archivesList.refresh();
+				archivesList.refresh(GUIArchive.TYPE_DEFAULT, false);
 				archivesList.showDetails(Long.parseLong(archiveId), false);
 			}
 		});
