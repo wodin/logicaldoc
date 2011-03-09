@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.communication.Message;
@@ -63,6 +64,9 @@ public class ProductNews extends Task {
 
 			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			String url = config.getProperty("news.url");
+			if (StringUtils.isEmpty(url))
+				url = "http://www.logicaldoc.com/company/news.feed?type=rss";
+
 			FeedParser parser = new FeedParser(url);
 			Feed feed = parser.readFeed();
 			// First of all feed messages to be saved
