@@ -1242,10 +1242,13 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			Rating votesDoc = ratingDao.findVotesByDocId(rating.getDocId());
 			Document doc = docDao.findById(rating.getDocId());
 			docDao.initialize(doc);
-			doc.setRating(votesDoc.getAverage().intValue());
+			int average = 0;
+			if (votesDoc != null && votesDoc.getAverage() != null)
+				average = votesDoc.getAverage().intValue();
+			doc.setRating(average);
 			docDao.store(doc);
 
-			return votesDoc.getAverage().intValue();
+			return average;
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
