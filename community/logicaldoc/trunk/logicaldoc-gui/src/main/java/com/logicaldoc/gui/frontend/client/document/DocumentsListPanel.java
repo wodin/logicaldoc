@@ -190,7 +190,7 @@ public class DocumentsListPanel extends VLayout {
 		rating.setCanFilter(false);
 		rating.setHidden(true);
 
-		ListGridField fileVersion = new ListGridField("fileVersion", I18N.message("fileversion"), 200);
+		ListGridField fileVersion = new ListGridField("fileVersion", I18N.message("fileversion"), 60);
 		filename.setHidden(true);
 		filename.setCanFilter(false);
 
