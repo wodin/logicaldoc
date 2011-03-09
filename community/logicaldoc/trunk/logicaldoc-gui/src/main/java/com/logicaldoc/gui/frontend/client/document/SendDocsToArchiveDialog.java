@@ -24,20 +24,20 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class ArchiveDialog extends Window {
+public class SendDocsToArchiveDialog extends Window {
 
 	private ArchiveServiceAsync service = (ArchiveServiceAsync) GWT.create(ArchiveService.class);
 
 	private DynamicForm form = new DynamicForm();
 
-	public ArchiveDialog(final long[] ids, int type) {
+	public SendDocsToArchiveDialog(final long[] ids, int type) {
 		VLayout layout = new VLayout();
 		layout.setMargin(25);
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
 		setTitle(type == GUIArchive.TYPE_STORAGE ? I18N.message("sendtostoragearchive") : I18N.message("sendtoarchive"));
-		setWidth(350);
+		setWidth(360);
 		setHeight(100);
 		setCanDragResize(true);
 		setIsModal(true);

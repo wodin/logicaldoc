@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
+import com.logicaldoc.gui.common.client.data.AosManagersDS;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
@@ -694,5 +695,26 @@ public class ItemFactory {
 		item.setRequiredMessage(I18N.message("fieldrequired"));
 		item.setHintStyle("hint");
 		return item;
+	}
+
+	/**
+	 * Creates a new SelectItem for the AOS Managers.
+	 * 
+	 * @param name The item name
+	 * @param title The item title
+	 */
+	public static SelectItem newAosManagerSelector(String name, String title) {
+		SelectItem user = new SelectItem(name);
+		user.setTitle(I18N.message(title));
+		user.setWrapTitle(false);
+		ListGridField username = new ListGridField("username");
+		ListGridField label = new ListGridField("label");
+		user.setValueField("id");
+		user.setDisplayField("username");
+		user.setPickListWidth(300);
+		user.setPickListFields(username, label);
+		user.setOptionDataSource(new AosManagersDS());
+		user.setHintStyle("hint");
+		return user;
 	}
 }

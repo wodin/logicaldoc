@@ -208,7 +208,7 @@ public class ValidationTab extends Tab {
 
 								@Override
 								public void onSuccess(Void result) {
-									window.getArchivesList().refresh();
+									window.getArchivesList().refresh(GUIArchive.TYPE_STORAGE, false);
 									window.getArchivesList().showDetails(archive, false);
 									window.destroy();
 								}

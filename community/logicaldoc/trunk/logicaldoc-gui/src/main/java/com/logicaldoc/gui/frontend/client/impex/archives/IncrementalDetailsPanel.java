@@ -99,7 +99,9 @@ public class IncrementalDetailsPanel extends VLayout implements FolderChangeList
 								}
 							});
 				} else {
-					setIncremental(new GUIIncrementalArchive());
+					GUIIncrementalArchive archive = new GUIIncrementalArchive();
+					archive.setType(IncrementalDetailsPanel.this.incremental.getType());
+					setIncremental(archive);
 				}
 				savePanel.setVisible(false);
 			}

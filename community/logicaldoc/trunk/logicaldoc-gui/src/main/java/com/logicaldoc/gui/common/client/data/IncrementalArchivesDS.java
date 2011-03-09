@@ -14,7 +14,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class IncrementalArchivesDS extends DataSource {
-	public IncrementalArchivesDS() {
+	public IncrementalArchivesDS(int archivesType) {
 		setTitleField("name");
 		setRecordXPath("/list/archive");
 
@@ -30,6 +30,7 @@ public class IncrementalArchivesDS extends DataSource {
 
 		setFields(id, prefix, type, typelabel, frequency);
 		setClientOnly(true);
-		setDataURL("data/incrementalarchives.xml?sid=" + Session.get().getSid() + "&locale=" + I18N.getLocale());
+		setDataURL("data/incrementalarchives.xml?sid=" + Session.get().getSid() + "&locale=" + I18N.getLocale()
+				+ "&type=" + archivesType);
 	}
 }
