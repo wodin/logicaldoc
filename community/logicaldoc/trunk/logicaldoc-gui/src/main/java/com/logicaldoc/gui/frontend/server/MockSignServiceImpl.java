@@ -15,7 +15,8 @@ public class MockSignServiceImpl extends RemoteServiceServlet implements SignSer
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public String[] extractSubjectSignatures(String sid, long userId) throws InvalidSessionException {
+	public String[] extractSubjectSignatures(String sid, long userId, Long docId, String fileVersion)
+			throws InvalidSessionException {
 		return new String[] { "subject1", "subject2" };
 	}
 
@@ -27,5 +28,10 @@ public class MockSignServiceImpl extends RemoteServiceServlet implements SignSer
 	@Override
 	public String signDocument(String sid, long userId, long docId) throws InvalidSessionException {
 		return "ok";
+	}
+
+	@Override
+	public boolean resetSignature(String sid, long userId) throws InvalidSessionException {
+		return true;
 	}
 }

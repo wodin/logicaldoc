@@ -262,8 +262,19 @@ public class UsersPanel extends VLayout {
 		signature.setTitle(I18N.message("signature"));
 		signature.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				MySignature signature = new MySignature(id);
-				signature.show();
+				service.getUser(Session.get().getSid(), id, new AsyncCallback<GUIUser>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUIUser user) {
+						MySignature mysign = new MySignature(user, true);
+						mysign.show();
+					}
+				});
 			}
 		});
 
@@ -275,7 +286,7 @@ public class UsersPanel extends VLayout {
 			else
 				signature.setEnabled(Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN));
 		}
-			
+
 		if ("admin".equals(record.getAttributeAsString("username"))) {
 			delete.setEnabled(false);
 			if (!Session.get().getUser().getUserName().equalsIgnoreCase("admin")) {
@@ -283,7 +294,7 @@ public class UsersPanel extends VLayout {
 				signature.setEnabled(false);
 			}
 		}
-		
+
 		contextMenu.showContextMenu();
 	}
 }

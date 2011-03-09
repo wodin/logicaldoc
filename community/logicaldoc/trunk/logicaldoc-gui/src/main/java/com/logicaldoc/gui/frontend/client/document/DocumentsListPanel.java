@@ -17,12 +17,15 @@ import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.SignService;
+import com.logicaldoc.gui.frontend.client.services.SignServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.Offline;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.events.DrawEvent;
@@ -49,6 +52,8 @@ import com.smartgwt.client.widgets.menu.Menu;
  */
 public class DocumentsListPanel extends VLayout {
 	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+
+	private SignServiceAsync signService = (SignServiceAsync) GWT.create(SignService.class);
 
 	private DocumentsDS dataSource;
 
@@ -185,6 +190,10 @@ public class DocumentsListPanel extends VLayout {
 		rating.setCanFilter(false);
 		rating.setHidden(true);
 
+		ListGridField fileVersion = new ListGridField("fileVersion", I18N.message("fileversion"), 200);
+		filename.setHidden(true);
+		filename.setCanFilter(false);
+
 		list = new ListGrid() {
 			@Override
 			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
@@ -213,7 +222,7 @@ public class DocumentsListPanel extends VLayout {
 		list.setCanDragRecordsOut(true);
 
 		list.setFields(indexed, locked, immutable, signed, icon, filename, title, lastModified, type, size, version,
-				publisher, published, creator, created, sourceDate, sourceAuthor, customId, rating);
+				publisher, published, creator, created, sourceDate, sourceAuthor, customId, rating, fileVersion);
 
 		// Prepare a panel containing a title and the documents list
 		infoPanel = new InfoPanel("");
@@ -235,11 +244,29 @@ public class DocumentsListPanel extends VLayout {
 				} else if ("signed".equals(list.getFieldName(event.getColNum()))) {
 					if (Feature.enabled(Feature.DIGITAL_SIGN)) {
 						if ("rosette".equals(record.getAttribute("signed"))) {
-							String id = list.getSelectedRecord().getAttribute("id");
-							String fileName = list.getSelectedRecord().getAttribute("filename") + ".p7m";
-							SignVerifyDialog verify = new SignVerifyDialog(id, fileName);
-							verify.show();
-							event.cancel();
+							final String id = list.getSelectedRecord().getAttribute("id");
+							final String fileName = list.getSelectedRecord().getAttribute("filename") + ".p7m";
+							String fileVersion = list.getSelectedRecord().getAttribute("fileVersion");
+
+							signService.extractSubjectSignatures(Session.get().getSid(), Session.get().getUser()
+									.getId(), Long.parseLong(id), fileVersion, new AsyncCallback<String[]>() {
+
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+									destroy();
+								}
+
+								@Override
+								public void onSuccess(String[] result) {
+									if (result != null && result.length > 0) {
+										SignVerifyDialog verify = new SignVerifyDialog(id, fileName, result);
+										verify.show();
+									} else {
+										SC.warn(I18N.message("verificationfailed"));
+									}
+								}
+							});
 						}
 					}
 				} else if ("rating".equals(list.getFieldName(event.getColNum()))) {

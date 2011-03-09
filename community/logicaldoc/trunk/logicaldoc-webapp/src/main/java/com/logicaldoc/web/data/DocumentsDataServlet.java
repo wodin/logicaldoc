@@ -112,8 +112,9 @@ public class DocumentsDataServlet extends HttpServlet {
 				 */
 				StringBuffer query = new StringBuffer(
 						"select A.id, A.customId, A.docRef, A.type, A.title, A.version, A.lastModified, A.date, A.publisher,"
-								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status, A.signed, A.type, A.sourceDate, A.sourceAuthor, A.rating "
-								+ "from Document A where A.deleted = 0 ");
+								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status,"
+								+ " A.signed, A.type, A.sourceDate, A.sourceAuthor, A.rating, A.fileVersion"
+								+ " from Document A where A.deleted = 0 ");
 				if (folderId != null)
 					query.append(" and A.folder.id=" + folderId);
 				if (StringUtils.isNotEmpty(request.getParameter("indexed")))
@@ -198,6 +199,9 @@ public class DocumentsDataServlet extends HttpServlet {
 						writer.print("<rating>rating0</rating>");
 					else
 						writer.print("<rating>rating" + cols[21] + "</rating>");
+
+					writer.print("<fileVersion><![CDATA[" + cols[22] + "]]></fileVersion>");
+
 					writer.print("</document>");
 				}
 
@@ -242,6 +246,11 @@ public class DocumentsDataServlet extends HttpServlet {
 						writer.print("<lockUserId>" + doc.getLockUserId() + "</lockUserId>");
 					writer.print("<filename><![CDATA[" + doc.getFileName() + "]]></filename>");
 					writer.print("<status>" + doc.getStatus() + "</status>");
+					if (doc.getSigned() == 0)
+						writer.print("<signed>blank</signed>");
+					else if (doc.getSigned() == 1)
+						writer.print("<signed>rosette</signed>");
+
 					writer.print("<aliasId>" + id + "</aliasId>");
 
 					writer.print("<sourceDate>" + (doc.getSourceDate() != null ? df.format(doc.getSourceDate()) : "")
@@ -250,6 +259,7 @@ public class DocumentsDataServlet extends HttpServlet {
 						writer.print("<rating>rating0</rating>");
 					else
 						writer.print("<rating>rating" + doc.getRating() + "</rating>");
+					writer.print("<fileVersion><![CDATA[" + doc.getFileVersion() + "]]></fileVersion>");
 					writer.print("</document>");
 				}
 			}

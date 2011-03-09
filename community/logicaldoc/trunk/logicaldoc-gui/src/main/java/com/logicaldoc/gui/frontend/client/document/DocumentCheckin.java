@@ -177,6 +177,7 @@ public class DocumentCheckin extends Window {
 								selection.setAttribute("locked", "blank");
 								selection.setAttribute("status", Constants.DOC_UNLOCKED);
 								selection.setAttribute("indexed", Constants.INDEX_TO_INDEX);
+								selection.setAttribute("signed", "blank");
 								documentsGrid.refreshRow(documentsGrid.getRecordIndex(selection));
 								Session.get().getUser()
 										.setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() - 1);
