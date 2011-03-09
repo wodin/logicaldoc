@@ -259,12 +259,10 @@ public class DocumentsListPanel extends VLayout {
 
 								@Override
 								public void onSuccess(String[] result) {
-									if (result != null && result.length > 0) {
-										SignVerifyDialog verify = new SignVerifyDialog(id, fileName, result);
-										verify.show();
-									} else {
+									SignVerifyDialog verify = new SignVerifyDialog(id, fileName, result);
+									verify.show();
+									if (result == null || result.length < 1)
 										SC.warn(I18N.message("verificationfailed"));
-									}
 								}
 							});
 						}

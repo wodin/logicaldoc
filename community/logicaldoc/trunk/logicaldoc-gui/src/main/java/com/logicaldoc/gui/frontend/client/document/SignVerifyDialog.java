@@ -42,9 +42,10 @@ public class SignVerifyDialog extends Window {
 		certificates.setWidth(150);
 		certificates.setRequired(true);
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		for (String signer : signers) {
-			map.put(signer, signer);
-		}
+		if (signers != null)
+			for (String signer : signers) {
+				map.put(signer, signer);
+			}
 		certificates.setValueMap(map);
 		if (!map.isEmpty())
 			certificates.setValue(map.keySet().iterator().next());
