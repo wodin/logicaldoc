@@ -54,6 +54,7 @@ public class DocumentsDS extends DataSource {
 		DataSourceImageField locked = new DataSourceImageField("locked");
 		DataSourceTextField lockUserId = new DataSourceTextField("lockUserId");
 		DataSourceTextField filename = new DataSourceTextField("filename");
+		DataSourceTextField fileVersion = new DataSourceTextField("fileVersion");
 		DataSourceIntegerField status = new DataSourceIntegerField("status");
 		lockUserId.setHidden(true);
 		DataSourceTextField aliasId = new DataSourceTextField("aliasId");
@@ -66,7 +67,7 @@ public class DocumentsDS extends DataSource {
 
 		setFields(id, title, type, size, publisher, version, docref, lastModified, published, created, creator,
 				sourceDate, sourceAuthor, customId, icon, immutable, iindexed, signed, locked, lockUserId, filename,
-				status, rating);
+				status, rating, fileVersion);
 		setClientOnly(true);
 		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&folderId="
 				+ (folderId != null ? folderId : "") + "&filename=" + (fileFilter != null ? fileFilter : "") + "&max="

@@ -14,15 +14,18 @@ import com.logicaldoc.gui.common.client.InvalidSessionException;
 @RemoteServiceRelativePath("sign")
 public interface SignService extends RemoteService {
 	/**
-	 * Extracts the certificate subjects names from an uploaded .p7m file or
-	 * .cer file.
+	 * Extracts the certificate subjects names from an uploaded .p7m file.
 	 * 
 	 * @param sid The session identifier
-	 * @param userid Identifier of the user that is saving the signature
+	 * @param userid Identifier of the user that is saving the signature or that
+	 *        wants to retrieve the signers of a signed document to verify it.
+	 * @param docId Id of signed document to verify (optional)
+	 * @param fileVersion The file version of the document to verify (optional)
 	 * @return Subjects names array.
 	 * @throws InvalidSessionException
 	 */
-	public String[] extractSubjectSignatures(String sid, long userId) throws InvalidSessionException;
+	public String[] extractSubjectSignatures(String sid, long userId, Long docId, String fileVersion)
+			throws InvalidSessionException;
 
 	/**
 	 * Stores on the user folder the certificate file associated to the given
@@ -47,4 +50,15 @@ public interface SignService extends RemoteService {
 	 * @throws InvalidSessionException
 	 */
 	public String signDocument(String sid, long userId, long docId) throws InvalidSessionException;
+
+	/**
+	 * Reset from the user folder the signature file associated to the given
+	 * user.
+	 * 
+	 * @param sid The session identifier
+	 * @param userid Identifier of the user for which will be reset the
+	 *        signature
+	 * @throws InvalidSessionException
+	 */
+	public boolean resetSignature(String sid, long userId) throws InvalidSessionException;
 }

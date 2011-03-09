@@ -52,8 +52,17 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 
 	private static final String EMPTY_DIV = "<div style=\"margin-top:3px; width=\"80\"; height=\"20\"\" />";
 
+	private boolean showQuickSearch = true;
+
 	public MainMenu(boolean includeDropSpot) {
+		this(includeDropSpot, true);
+	}
+
+	public MainMenu(boolean includeDropSpot, boolean quickSearch) {
 		super();
+
+		this.showQuickSearch = quickSearch;
+
 		setWidth100();
 
 		ToolStripMenuButton menu = getFileMenu();
@@ -81,13 +90,14 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 		}
 		addFill();
 
-		Label userInfo = new Label(I18N.message("loggedin") + " " + Session.get().getUser().getUserName());
+		Label userInfo = new Label(I18N.message("loggedin") + " <b>" + Session.get().getUser().getUserName() + "</b>");
 		userInfo.setWrap(false);
 
 		addMember(userInfo);
 		addSeparator();
 
-		addFormItem(new SearchBox());
+		if (showQuickSearch)
+			addFormItem(new SearchBox());
 
 		Session.get().addFolderObserver(this);
 		onFolderSelect(Session.get().getCurrentFolder());
@@ -218,8 +228,20 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 		mySignature.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				MySignature mysign = new MySignature(Session.get().getUser().getId());
-				mysign.show();
+				securityService.getUser(Session.get().getSid(), Session.get().getUser().getId(),
+						new AsyncCallback<GUIUser>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUIUser user) {
+								MySignature mysign = new MySignature(user, false);
+								mysign.show();
+							}
+						});
 			}
 		});
 

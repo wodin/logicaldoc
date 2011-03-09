@@ -6,7 +6,7 @@ import com.smartgwt.client.data.fields.DataSourceImageField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
 /**
- * Datasource to retrieve all templates. It is based on Xml parsing.
+ * Datasource to retrieve all users. It is based on Xml parsing.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0

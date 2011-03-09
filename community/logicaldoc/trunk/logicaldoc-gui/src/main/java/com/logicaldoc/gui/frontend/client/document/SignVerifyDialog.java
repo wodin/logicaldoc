@@ -1,51 +1,68 @@
 package com.logicaldoc.gui.frontend.client.document;
 
-import com.google.gwt.user.client.ui.HTML;
+import java.util.LinkedHashMap;
+
+import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.HeaderControls;
+import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.Window;
+import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.LinkItem;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
- * This popup window is used to sign documents or view signatures.
+ * This popup window is used to view signatures.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
 public class SignVerifyDialog extends Window {
-	private HTML applet = new HTML();
+	private VLayout layout = new VLayout();
 
-	public SignVerifyDialog(String docId, String fileName) {
-		VLayout layout = new VLayout();
+	public SignVerifyDialog(String docId, String fileName, String[] signers) {
 		layout.setMargin(25);
+		layout.setMembersMargin(5);
+		layout.setTop(10);
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("verification"));
-		setWidth(460);
-		setHeight(340);
+		setWidth(380);
+		setHeight(150);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
 
-		String tmp = "<applet name=\"SignVerify\" archive=\""
-				+ Util.contextPath()
-				+ "applet/logicaldoc-sign.jar\"  code=\"com.logicaldoc.sign.applet.Verifier\" width=\"400\" height=\"300\">";
-		tmp += "<param name=\"lang\" value=\"" + I18N.getLocale() + "\" />";
-		tmp += "<param name=\"downloadUrl\" value=\"" + Util.contextPath() + "download?docId=" + docId + "&sid="
-				+ Session.get().getSid() + "&suffix=sign.p7m\" />";
-		tmp += "<param name=\"forceCRLDownload\" value=\"true\" />";
-		tmp += "<param name=\"fileName\" value=\"" + fileName + "\" />";
-		tmp += "<param name=\"checkcrl\" value=\"" + Session.get().getInfo().getConfig("checkcrl") + "\" />";
-		tmp += "</applet>";
+		DynamicForm signatureForm = new DynamicForm();
+		SelectItem certificates = ItemFactory.newSelectItem("certificates", I18N.message("signers"));
+		certificates.setWidth(150);
+		certificates.setRequired(true);
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		for (String signer : signers) {
+			map.put(signer, signer);
+		}
+		certificates.setValueMap(map);
+		if (!map.isEmpty())
+			certificates.setValue(map.keySet().iterator().next());
+		signatureForm.setItems(certificates);
+		layout.addMember(signatureForm, 0);
 
-		applet.setHTML(tmp);
-		applet.setWidth("420px");
-		applet.setHeight("320px");
+		DynamicForm urlForm = new DynamicForm();
+		urlForm.setMargin(3);
+		LinkItem downloadUrl = ItemFactory.newLinkItem("", I18N.message("downloadsignedfile"));
+		downloadUrl.setTitleOrientation(TitleOrientation.LEFT);
+		downloadUrl.setWrapTitle(false);
+		downloadUrl.setValue(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + docId
+				+ "&suffix=sign.p7m");
+		downloadUrl.setLinkTitle(fileName);
 
-		layout.addMember(applet);
+		urlForm.setItems(downloadUrl);
+		layout.addMember(urlForm, 1);
+
 		addChild(layout);
 	}
 }
