@@ -82,8 +82,7 @@ public class ArchiveDialog extends Window {
 				vm.validate();
 				if (!vm.hasErrors()) {
 					GUIArchive archive = new GUIArchive();
-					if (vm.getValueAsString("archivetype") != null)
-						archive.setType(Integer.parseInt(vm.getValueAsString("archivetype")));
+					archive.setType(ArchiveDialog.this.archivesPanel.getArchivesType());
 					archive.setName(vm.getValueAsString("name"));
 					archive.setDescription(vm.getValueAsString("description"));
 					archive.setCreatorId(Session.get().getUser().getId());
