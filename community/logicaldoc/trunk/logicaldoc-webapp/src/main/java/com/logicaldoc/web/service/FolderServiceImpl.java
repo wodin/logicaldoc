@@ -110,7 +110,8 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			f.setDocumentCount(dao
 					.queryForInt("select count(ld_id) from ld_document where ld_deleted=0 and ld_folderid=" + folderId));
 			f.setSubfolderCount(dao
-					.queryForInt("select count(ld_id) from ld_folder where not ld_id=ld_parentid and ld_deleted=0 and ld_parentid=" + folderId));
+					.queryForInt("select count(ld_id) from ld_folder where not ld_id=ld_parentid and ld_deleted=0 and ld_parentid="
+							+ folderId));
 
 			Set<Permission> permissions = dao.getEnabledPermissions(folderId, session.getUserId());
 			List<String> permissionsList = new ArrayList<String>();
@@ -448,13 +449,10 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 				// Check if the selected document is a shortcut
 				if (doc.getDocRef() != null) {
-					long docId = doc.getDocRef();
-					doc = docDao.findById(docId);
 					if (doc.getFolder().getId() != selectedFolderFolder.getId()) {
 						transaction.setEvent(History.EVENT_SHORTCUT_MOVED);
 						docManager.moveToFolder(doc, selectedFolderFolder, transaction);
 					} else
-						// TODO Message?
 						continue;
 				}
 
@@ -505,8 +503,6 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				if (doc.getDocRef() == null) {
 					docManager.copyToFolder(doc, selectedFolderFolder, transaction);
 				} else {
-					long docId = doc.getDocRef();
-					doc = docDao.findById(docId);
 					if (doc.getFolder().getId() != selectedFolderFolder.getId()) {
 						transaction.setEvent(History.EVENT_SHORTCUT_STORED);
 						docManager.copyToFolder(doc, selectedFolderFolder, transaction);
