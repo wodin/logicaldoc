@@ -71,7 +71,11 @@ public class DocumentContextMenu extends Menu {
 					return;
 				Clipboard.getInstance().clear();
 				for (int i = 0; i < selection.length; i++) {
-					String id = selection[i].getAttribute("id");
+					String id = "";
+					if (selection[i].getAttribute("aliasId") != null)
+						id = selection[i].getAttribute("aliasId");
+					else
+						id = selection[i].getAttribute("id");
 					GUIDocument document = new GUIDocument();
 					document.setId(Long.parseLong(id));
 					document.setTitle(selection[i].getAttribute("title"));
@@ -90,7 +94,11 @@ public class DocumentContextMenu extends Menu {
 					return;
 				Clipboard.getInstance().clear();
 				for (int i = 0; i < selection.length; i++) {
-					String id = selection[i].getAttribute("id");
+					String id = "";
+					if (selection[i].getAttribute("aliasId") != null)
+						id = selection[i].getAttribute("aliasId");
+					else
+						id = selection[i].getAttribute("id");
 					GUIDocument document = new GUIDocument();
 					document.setId(Long.parseLong(id));
 					document.setTitle(selection[i].getAttribute("title"));
@@ -763,8 +771,7 @@ public class DocumentContextMenu extends Menu {
 
 		if (Feature.visible(Feature.AOS)) {
 			moreMenu.addItem(archiveDematerialization);
-			if (!folder.hasPermission(Constants.PERMISSION_ARCHIVE)
-					|| !Feature.enabled(Feature.AOS))
+			if (!folder.hasPermission(Constants.PERMISSION_ARCHIVE) || !Feature.enabled(Feature.AOS))
 				archiveDematerialization.setEnabled(false);
 			else
 				archiveDematerialization.setEnabled(enableSign);
