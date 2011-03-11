@@ -207,7 +207,6 @@ public class VersionControlledResourceImpl extends DeltaVResourceImpl implements
 	 * @see org.apache.jackrabbit.webdav.version.VersionControlledResource#getVersionHistory()
 	 * @see javax.jcr.Node#getVersionHistory()
 	 */
-	@SuppressWarnings("unused")
 	public VersionHistoryResource getVersionHistory() {
 
 		DavResourceLocator loc = getLocatorFromResource(resource);

@@ -42,7 +42,7 @@ public class VersionHistoryResourceImpl extends DeltaVResourceImpl implements Ve
 		super(locator, factory, session, config, resource);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public DavResourceIterator getMembers() {
 		ArrayList list = new ArrayList();
 		return new DavResourceIteratorImpl(list);
@@ -69,7 +69,7 @@ public class VersionHistoryResourceImpl extends DeltaVResourceImpl implements Ve
 		throw new DavException(DavServletResponse.SC_FORBIDDEN);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public MultiStatusResponse alterProperties(List changeList) throws DavException {
 		throw new DavException(DavServletResponse.SC_FORBIDDEN);
 	}
