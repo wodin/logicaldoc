@@ -119,7 +119,7 @@ public class ClientToolsSettingsPanel extends VLayout {
 		cache.setWrapTitle(false);
 		cache.setValue(wdCache.getValue().equals("true") ? "yes" : "no");
 
-		webDavForm.setItems(url, wdUrl, wdEnabled, cache);
+		webDavForm.setItems(wdUrl, wdEnabled, cache);
 		webDav.setPane(webDavForm);
 
 		Tab office = new Tab();
