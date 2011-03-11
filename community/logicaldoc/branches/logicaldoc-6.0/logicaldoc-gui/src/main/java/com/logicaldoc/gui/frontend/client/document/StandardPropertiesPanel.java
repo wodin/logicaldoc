@@ -71,7 +71,6 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 	}
 
 	private void refresh() {
-		vm.clearValues();
 		vm.clearErrors(false);
 
 		if (form1 != null)
