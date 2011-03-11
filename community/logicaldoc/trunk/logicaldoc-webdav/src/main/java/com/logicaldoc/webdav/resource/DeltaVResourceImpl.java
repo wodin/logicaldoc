@@ -115,7 +115,7 @@ public class DeltaVResourceImpl extends DavResourceImpl implements
 		throw new DavException(DavServletResponse.SC_FORBIDDEN);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public DavResource[] getReferenceResources(DavPropertyName hrefPropertyName)
 			throws DavException {
 		DavProperty prop = getProperty(hrefPropertyName);

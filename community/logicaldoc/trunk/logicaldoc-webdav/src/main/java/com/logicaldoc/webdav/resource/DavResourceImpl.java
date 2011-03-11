@@ -329,7 +329,7 @@ public class DavResourceImpl implements DavResource, Serializable {
 		throw new UnsupportedOperationException();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public MultiStatusResponse alterProperties(List changeList) throws DavException {
 		throw new UnsupportedOperationException();
 	}

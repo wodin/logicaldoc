@@ -79,7 +79,7 @@ public class VersionResourceImpl extends DeltaVResourceImpl implements VersionRe
         throw new DavException(DavServletResponse.SC_FORBIDDEN);
     }
 
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public MultiStatusResponse alterProperties(List changeList) throws DavException {
         throw new DavException(DavServletResponse.SC_FORBIDDEN);
     }

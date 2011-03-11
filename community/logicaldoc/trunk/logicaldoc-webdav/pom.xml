@@ -15,29 +15,32 @@
 			<artifactId>servlet-api</artifactId>
 			<version>2.4</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency>  
+		
 		<dependency>
 			<groupId>javax.jcr</groupId>
 			<artifactId>jcr</artifactId>
 			<version>1.0.1</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.jackrabbit</groupId>
 			<artifactId>jackrabbit-webapp</artifactId>
-			<version>1.4</version>
+			<version>1.6.4</version>
 			<scope>runtime</scope>
-		</dependency>
+		</dependency> 
 		<dependency>
 			<groupId>org.apache.jackrabbit</groupId>
 			<artifactId>jackrabbit-jcr-server</artifactId>
-			<version>1.4.1</version>
+			<version>1.6.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.jackrabbit</groupId>
 			<artifactId>jackrabbit-webdav</artifactId>
-			<version>1.4</version>
+			<version>1.6.4</version>
 			<scope>compile</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -55,15 +58,6 @@
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
-	
-  <!--	
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring</artifactId>
-			<scope>provided</scope>
-		</dependency>
--->		
-		
 		<dependency>
 			<groupId>net.sf.jpf</groupId>
 			<artifactId>jpf-boot</artifactId>

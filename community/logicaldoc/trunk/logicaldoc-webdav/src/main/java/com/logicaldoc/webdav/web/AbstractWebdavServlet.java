@@ -402,7 +402,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	 * @param resource
 	 * @throws IOException
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	protected void doPropPatch(WebdavRequest request, WebdavResponse response, DavResource resource)
 			throws IOException, DavException {
 		log.debug("doPropPatch");

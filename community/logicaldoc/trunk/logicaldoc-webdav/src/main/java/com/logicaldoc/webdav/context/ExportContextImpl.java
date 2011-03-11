@@ -30,7 +30,7 @@ public class ExportContextImpl extends AbstractExportContext {
 
 	protected static Log log = LogFactory.getLog(ExportContextImpl.class);
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	private final Map properties = new HashMap();
 	private final OutputContext outputCtx;
 
@@ -112,7 +112,7 @@ public class ExportContextImpl extends AbstractExportContext {
 		properties.put(propertyName, propertyValue);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public void informCompleted(boolean success) {
 		checkCompleted();
 		completed = true;
