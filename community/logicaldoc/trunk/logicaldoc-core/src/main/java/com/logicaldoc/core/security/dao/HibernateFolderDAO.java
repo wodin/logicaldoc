@@ -659,11 +659,11 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			}
 
 			StringBuffer query = new StringBuffer(
-					"select A.LD_WRITE as LDWRITE, A.LD_ADD as LDADD, A.ld_security as LDSECURITY, A.ld_immutable as LDIMMUTABLE, A.LD_DELETE as LDDELETE, A.LD_RENAME as LDRENAME, A.ld_import as LDIMPORT, A.ld_export as LDEXPORT, A.LD_SIGN as LDSIGN, A.LD_ARCHIVE as LDARCHIVE, A.LD_WORKFLOW as LDWORKFLOW, A.LD_DOWNLOAD as LDDOWNLOAD");
+					"select A.ld_write as LDWRITE, A.ld_add as LDADD, A.ld_security as LDSECURITY, A.ld_immutable as LDIMMUTABLE, A.ld_delete as LDDELETE, A.ld_rename as LDRENAME, A.ld_import as LDIMPORT, A.ld_export as LDEXPORT, A.ld_sign as LDSIGN, A.ld_archive as LDARCHIVE, A.ld_workflow as LDWORKFLOW, A.ld_download as LDDOWNLOAD");
 			query.append(" from ld_foldergroup A");
 			query.append(" where ");
-			query.append(" A.LD_FOLDERID=" + id);
-			query.append(" and A.LD_GROUPID in (");
+			query.append(" A.ld_folderid=" + id);
+			query.append(" and A.ld_groupid in (");
 
 			boolean first = true;
 			Iterator<Group> iter = groups.iterator();
