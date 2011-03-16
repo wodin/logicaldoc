@@ -218,8 +218,10 @@ public class DocumentsListPanel extends VLayout {
 		dataSource = new DocumentsDS(folder.getId(), null, max, null, null);
 		list.setDataSource(dataSource);
 
-		list.setCanDrag(true);
-		list.setCanDragRecordsOut(true);
+		if (folder.isDownload()) {
+			list.setCanDrag(true);
+			list.setCanDragRecordsOut(true);
+		}
 
 		list.setFields(indexed, locked, immutable, signed, icon, filename, title, lastModified, type, size, version,
 				publisher, published, creator, created, sourceDate, sourceAuthor, customId, rating, fileVersion);
