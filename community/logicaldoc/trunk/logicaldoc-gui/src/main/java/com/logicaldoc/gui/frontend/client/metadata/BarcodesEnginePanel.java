@@ -275,14 +275,12 @@ public class BarcodesEnginePanel extends VLayout {
 		form.setValuesManager(vm);
 
 		// Include Patters
-		TextItem includePatters = ItemFactory.newTextItem("includePatters", "includepatters", null);
-		includePatters.setDefaultValue(this.engine.getIncludePatters());
+		TextItem includePatters = ItemFactory.newTextItem("includePatters", "includepatters", this.engine.getIncludePatters());
 		includePatters.setHint(I18N.message("separatedcomma"));
 		includePatters.setHintStyle("hint");
 
 		// Exclude Patters
-		TextItem excludePatters = ItemFactory.newTextItem("excludePatters", "excludepatters", null);
-		excludePatters.setDefaultValue(this.engine.getExcludePatters());
+		TextItem excludePatters = ItemFactory.newTextItem("excludePatters", "excludepatters", this.engine.getExcludePatters());
 		excludePatters.setHint(I18N.message("separatedcomma"));
 		excludePatters.setHintStyle("hint");
 
