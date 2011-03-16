@@ -127,13 +127,19 @@ public class ExportArchivesList extends VLayout {
 		size.setCellFormatter(new FileSizeCellFormatter());
 		size.setCanFilter(false);
 
+		ListGridField aosManager = new ListGridField("aosmanager", I18N.message("aosmanager"), 110);
+		aosManager.setCanFilter(true);
+
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setShowAllRecords(true);
 		list.setAutoFetchData(true);
 		list.setWidth100();
 		list.setHeight100();
-		list.setFields(id, created, name, size, status, creator, closer);
+		if (this.archivesType == GUIArchive.TYPE_STORAGE)
+			list.setFields(id, created, name, size, status, creator, closer, aosManager);
+		else
+			list.setFields(id, created, name, size, status, creator, closer);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
@@ -141,9 +147,11 @@ public class ExportArchivesList extends VLayout {
 		list.setFilterOnKeypress(true);
 		list.setShowFilterEditor(true);
 		if (this.archivesType == GUIArchive.TYPE_STORAGE && this.showHistory)
-			list.setDataSource(new ArchivesDS(GUIArchive.MODE_EXPORT, this.archivesType, GUIArchive.STATUS_FINALIZED));
+			list.setDataSource(new ArchivesDS(GUIArchive.MODE_EXPORT, this.archivesType, GUIArchive.STATUS_FINALIZED,
+					Session.get().getUser().getId()));
 		else
-			list.setDataSource(new ArchivesDS(GUIArchive.MODE_EXPORT, this.archivesType, null));
+			list.setDataSource(new ArchivesDS(GUIArchive.MODE_EXPORT, this.archivesType, null, Session.get().getUser()
+					.getId()));
 
 		listing.addMember(infoPanel);
 		listing.addMember(list);
@@ -285,8 +293,9 @@ public class ExportArchivesList extends VLayout {
 			public void onClick(MenuItemClickEvent event) {
 				String id = record.getAttributeAsString("id");
 				String name = record.getAttributeAsString("name");
+				String aosManagerName = record.getAttributeAsString("aosManagerName");
 
-				SignClosureDialog dialog = new SignClosureDialog(ExportArchivesList.this, id, name);
+				SignClosureDialog dialog = new SignClosureDialog(ExportArchivesList.this, id, name, aosManagerName);
 				dialog.show();
 			}
 		});

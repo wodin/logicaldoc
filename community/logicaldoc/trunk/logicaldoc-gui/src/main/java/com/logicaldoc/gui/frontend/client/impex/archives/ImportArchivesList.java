@@ -123,7 +123,7 @@ public class ImportArchivesList extends VLayout {
 		list.setCanFreezeFields(true);
 		list.setFilterOnKeypress(true);
 		list.setShowFilterEditor(true);
-		list.setDataSource(new ArchivesDS(GUIArchive.MODE_IMPORT, null, null));
+		list.setDataSource(new ArchivesDS(GUIArchive.MODE_IMPORT, null, null, null));
 
 		listing.addMember(infoPanel);
 		listing.addMember(list);

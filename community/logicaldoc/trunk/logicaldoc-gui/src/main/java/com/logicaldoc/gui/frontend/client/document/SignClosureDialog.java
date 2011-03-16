@@ -7,12 +7,13 @@ import gwtupload.client.MultiUploader;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.impex.archives.ExportArchivesList;
-import com.logicaldoc.gui.frontend.client.services.SignService;
-import com.logicaldoc.gui.frontend.client.services.SignServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.ArchiveService;
+import com.logicaldoc.gui.frontend.client.services.ArchiveServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.TitleOrientation;
@@ -38,7 +39,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class SignClosureDialog extends Window {
 	private ExportArchivesList archivesList = null;
 
-	private SignServiceAsync signService = (SignServiceAsync) GWT.create(SignService.class);
+	private ArchiveServiceAsync archiveService = (ArchiveServiceAsync) GWT.create(ArchiveService.class);
 
 	private SubmitItem sendButton;
 
@@ -50,28 +51,28 @@ public class SignClosureDialog extends Window {
 
 	private VLayout layout = new VLayout();
 
-	private long docId;
+	private long archiveId;
 
-	public SignClosureDialog(ExportArchivesList list, String id, String name) {
+	public SignClosureDialog(ExportArchivesList list, String id, String name, String manager) {
+		layout.setMargin(15);
+		layout.setMembersMargin(2);
+
 		this.archivesList = list;
-		final String archiveId = id;
-
-		VLayout layout = new VLayout();
-		layout.setMargin(25);
+		this.archiveId = Long.parseLong(id);
 
 		addCloseClickHandler(new CloseClickHandler() {
 			@Override
 			public void onCloseClick(CloseClientEvent event) {
 				destroy();
 				archivesList.refresh(archivesList.getArchivesType(), false);
-				archivesList.showDetails(Long.parseLong(archiveId), false);
+				archivesList.showDetails(archiveId, false);
 			}
 		});
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
-		setTitle(I18N.message("signdocument"));
-		setWidth(550);
+		setTitle(I18N.message("signandmarkarchive"));
+		setWidth(650);
 		setHeight(230);
 		setCanDragResize(true);
 		setIsModal(true);
@@ -80,7 +81,7 @@ public class SignClosureDialog extends Window {
 
 		DynamicForm urlForm = new DynamicForm();
 		urlForm.setMargin(3);
-		LinkItem downloadUrl = ItemFactory.newLinkItem("", "<b>(1)</b> " + I18N.message("downloadfiletosign"));
+		LinkItem downloadUrl = ItemFactory.newLinkItem("", "<b>(1)</b> " + I18N.message("downloadindexfiletosign"));
 		downloadUrl.setTitleOrientation(TitleOrientation.LEFT);
 		downloadUrl.setWrapTitle(false);
 		downloadUrl.setValue(GWT.getHostPageBaseURL() + "downloadarchive?archiveId=" + id + "&sid="
@@ -93,9 +94,9 @@ public class SignClosureDialog extends Window {
 		DynamicForm messageForm = new DynamicForm();
 		messageForm.setMargin(3);
 		StaticTextItem uploadMessage = ItemFactory.newStaticTextItem(I18N.message(""),
-				I18N.message("signmarkandupload", name), null);
+				I18N.message("signmarkandupload", new String[] { name + ".zip", manager }), null);
 		uploadMessage.setTitle("<b>(2)</b> " + uploadMessage.getTitle());
-		uploadMessage.setWidth(500);
+		uploadMessage.setWidth(600);
 		uploadMessage.setWrapTitle(false);
 		messageForm.setItems(uploadMessage);
 		layout.addMember(messageForm, 1);
@@ -173,14 +174,14 @@ public class SignClosureDialog extends Window {
 		if (!vm.validate())
 			return;
 
-		// TODO See the method 'signDocument' of the SignService. Here we have
-		// to upload the .m7m file uploaded by the user, but only after the
-		// original file digest verification with the file contained
-		// into the uploaded file (inside the .p7m file contained into the .m7m
-		// file).
-		// See the 'CloseArchive servlet' for the archive closure.
+		if (!uploader.getFileInput().getFilename().toLowerCase().endsWith(".tsd")) {
+			SC.warn(I18N.message("invalidfile"));
+			return;
+		}
 
-		signService.signDocument(Session.get().getSid(), Session.get().getUser().getId(), docId,
+		final ExportArchivesList list = this.archivesList;
+
+		archiveService.signArchive(Session.get().getSid(), Session.get().getUser().getId(), archiveId,
 				new AsyncCallback<String>() {
 
 					@Override
@@ -192,8 +193,9 @@ public class SignClosureDialog extends Window {
 					@Override
 					public void onSuccess(String result) {
 						if (result == "ok") {
-							DocumentsPanel.get().refresh();
+							list.refresh(GUIArchive.TYPE_STORAGE, false);
 							destroy();
+							Log.info(I18N.message("signandmarksuccess"), null);
 						} else {
 							SC.warn(I18N.message(result));
 						}

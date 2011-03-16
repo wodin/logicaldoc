@@ -205,8 +205,8 @@ public class ItemFactory {
 		group.setValueField("id");
 		group.setDisplayField("name");
 		group.setPickListWidth(300);
-		ListGridField n = new ListGridField("name");
-		ListGridField description = new ListGridField("description");
+		ListGridField n = new ListGridField("name", I18N.message("name"));
+		ListGridField description = new ListGridField("description", I18N.message("description"));
 		group.setPickListFields(n, description);
 		group.setOptionDataSource(GroupsDS.get());
 		group.setHintStyle("hint");
@@ -217,8 +217,8 @@ public class ItemFactory {
 		SelectItem user = new SelectItem(name);
 		user.setTitle(I18N.message(title));
 		user.setWrapTitle(false);
-		ListGridField username = new ListGridField("username");
-		ListGridField label = new ListGridField("label");
+		ListGridField username = new ListGridField("username", I18N.message("username"));
+		ListGridField label = new ListGridField("label", I18N.message("name"));
 		user.setValueField("id");
 		user.setDisplayField("username");
 		user.setPickListWidth(300);
@@ -613,11 +613,17 @@ public class ItemFactory {
 		return item;
 	}
 
-	public static SelectItem newArchiveSelector(int mode, int type, Integer status) {
-		SelectItem item = newSelectItem("archive", null);
-
-		item.setOptionDataSource(new ArchivesDS(mode, type, status));
+	public static SelectItem newArchiveSelector(int mode, Integer status) {
+		SelectItem item = new SelectItem("archive");
+		item.setTitle("");
+		item.setRequiredMessage(I18N.message("fieldrequired"));
+		ListGridField name = new ListGridField("name", I18N.message("name"));
+		ListGridField description = new ListGridField("description", I18N.message("description"));
 		item.setValueField("id");
+		item.setDisplayField("name");
+		item.setPickListWidth(300);
+		item.setPickListFields(name, description);
+		item.setOptionDataSource(new ArchivesDS(mode, null, status, null));
 		if (!Feature.enabled(Feature.ARCHIVES))
 			item.setDisabled(true);
 		item.setHintStyle("hint");
@@ -707,12 +713,11 @@ public class ItemFactory {
 		SelectItem user = new SelectItem(name);
 		user.setTitle(I18N.message(title));
 		user.setWrapTitle(false);
-		ListGridField username = new ListGridField("username");
 		ListGridField label = new ListGridField("label");
 		user.setValueField("id");
-		user.setDisplayField("username");
-		user.setPickListWidth(300);
-		user.setPickListFields(username, label);
+		user.setDisplayField("label");
+		user.setPickListWidth(180);
+		user.setPickListFields(label);
 		user.setOptionDataSource(new AosManagersDS());
 		user.setHintStyle("hint");
 		return user;

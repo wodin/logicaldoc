@@ -98,4 +98,9 @@ public class MockArchiveServiceImpl extends RemoteServiceServlet implements Arch
 	public GUISostConfig[] getSostConfigurations(String sid, long archiveId) throws InvalidSessionException {
 		return null;
 	}
+
+	@Override
+	public String signArchive(String sid, long userId, long archiveId) throws InvalidSessionException {
+		return "ok";
+	}
 }

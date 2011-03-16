@@ -72,7 +72,7 @@ public class ArchiveDialog extends Window {
 		StaticTextItem creator = ItemFactory.newStaticTextItem("creator", "creator", Session.get().getUser()
 				.getFullName());
 
-		SelectItem user = ItemFactory.newAosManagerSelector("user", "adduser");
+		SelectItem aosManager = ItemFactory.newAosManagerSelector("aosmanager", "aosmanager");
 
 		ButtonItem save = new ButtonItem();
 		save.setTitle(I18N.message("save"));
@@ -88,6 +88,10 @@ public class ArchiveDialog extends Window {
 					archive.setCreatorId(Session.get().getUser().getId());
 					archive.setCreatorName(Session.get().getUser().getFullName());
 					archive.setMode(GUIArchive.MODE_EXPORT);
+					if (ArchiveDialog.this.archivesPanel.getArchivesType() == GUIArchive.TYPE_STORAGE
+							&& vm.getValueAsString("aosmanager") != null) {
+						archive.setAosManagerId(Long.parseLong(vm.getValueAsString("aosmanager")));
+					}
 
 					archiveService.save(Session.get().getSid(), archive, new AsyncCallback<GUIArchive>() {
 						@Override
@@ -112,7 +116,7 @@ public class ArchiveDialog extends Window {
 		if (this.archivesPanel.getArchivesType() == GUIArchive.TYPE_DEFAULT)
 			form.setFields(creator, name, description, save);
 		else if (this.archivesPanel.getArchivesType() == GUIArchive.TYPE_STORAGE)
-			form.setFields(creator, name, description, user, save);
+			form.setFields(creator, name, description, aosManager, save);
 		addItem(form);
 	}
 }
