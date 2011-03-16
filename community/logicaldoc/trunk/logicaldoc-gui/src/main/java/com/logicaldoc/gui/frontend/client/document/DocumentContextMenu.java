@@ -6,7 +6,6 @@ import com.logicaldoc.gui.common.client.Config;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
@@ -493,7 +492,7 @@ public class DocumentContextMenu extends Menu {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				SendDocsToArchiveDialog archiveDialog = new SendDocsToArchiveDialog(ids, GUIArchive.TYPE_DEFAULT);
+				SendDocsToArchiveDialog archiveDialog = new SendDocsToArchiveDialog(ids);
 				archiveDialog.show();
 			}
 		});
@@ -511,7 +510,7 @@ public class DocumentContextMenu extends Menu {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				SendDocsToArchiveDialog archiveDialog = new SendDocsToArchiveDialog(ids, GUIArchive.TYPE_STORAGE);
+				SendDocsToArchiveDialog archiveDialog = new SendDocsToArchiveDialog(ids);
 				archiveDialog.show();
 
 			}
@@ -735,6 +734,8 @@ public class DocumentContextMenu extends Menu {
 			download.setEnabled(false);
 			sendMail.setEnabled(false);
 			checkout.setEnabled(false);
+			copy.setEnabled(false);
+			cut.setEnabled(false);
 			enableOffice = false;
 			enableSign = false;
 		}
