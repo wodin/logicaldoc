@@ -119,10 +119,6 @@ public class DocumentsDataServlet extends HttpServlet {
 					query.append(" and A.folder.id=" + folderId);
 				if (StringUtils.isNotEmpty(request.getParameter("indexed")))
 					query.append(" and A.indexed=" + request.getParameter("indexed"));
-				if (StringUtils.isNotEmpty(request.getParameter("barcoded"))) {
-					query.append(" and A.barcoded=" + request.getParameter("barcoded"));
-					query.append(" and A.type in('gif','png','tif','tiff','jpg','jpeg','pdf') ");
-				}
 
 				if (filename != null)
 					query.append(" and lower(A.fileName) like '%" + filename.toLowerCase() + "%' ");
