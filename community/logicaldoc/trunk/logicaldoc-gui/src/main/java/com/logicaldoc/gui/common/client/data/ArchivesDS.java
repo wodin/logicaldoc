@@ -15,7 +15,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class ArchivesDS extends DataSource {
-	public ArchivesDS(int mode, Integer type, Integer status) {
+	public ArchivesDS(int mode, Integer type, Integer status, Long managerId) {
 		setTitleField("name");
 		setRecordXPath("/list/archive");
 
@@ -26,7 +26,7 @@ public class ArchivesDS extends DataSource {
 
 		DataSourceTextField name = new DataSourceTextField("name");
 		DataSourceTextField description = new DataSourceTextField("description");
-		
+
 		DataSourceTextField stat = new DataSourceTextField("status");
 		DataSourceImageField statusicon = new DataSourceImageField("statusicon");
 		DataSourceTextField ttype = new DataSourceTextField("type");
@@ -35,10 +35,12 @@ public class ArchivesDS extends DataSource {
 		DataSourceTextField creator = new DataSourceTextField("creator");
 		DataSourceTextField closer = new DataSourceTextField("closer");
 		DataSourceDateTimeField created = new DataSourceDateTimeField("created");
+		DataSourceTextField aosmanager = new DataSourceTextField("aosmanager");
 
-		setFields(id, name, description, size, closer, creator, ttype, typelabel, stat, statusicon, created);
+		setFields(id, name, description, size, closer, creator, ttype, typelabel, stat, statusicon, created, aosmanager);
 		setClientOnly(true);
 		setDataURL("data/archives.xml?sid=" + Session.get().getSid() + "&mode=" + mode + "&locale=" + I18N.getLocale()
-				+ (status != null ? "&status=" + status : "") + (type != null ? "&type=" + type : ""));
+				+ (status != null ? "&status=" + status : "") + (type != null ? "&type=" + type : "")
+				+ (managerId != null ? "&managerId=" + managerId : ""));
 	}
 }

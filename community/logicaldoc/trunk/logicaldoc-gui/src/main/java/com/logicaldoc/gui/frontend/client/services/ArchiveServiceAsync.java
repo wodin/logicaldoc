@@ -30,4 +30,6 @@ public interface ArchiveServiceAsync {
 	void load(String sid, long archiveId, AsyncCallback<GUIArchive> callback);
 
 	void getSostConfigurations(String sid, long archiveId, AsyncCallback<GUISostConfig[]> callback);
+
+	void signArchive(String sid, long userId, long archiveId, AsyncCallback<String> callback);
 }

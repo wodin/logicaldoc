@@ -6,7 +6,6 @@ import com.logicaldoc.gui.common.client.Config;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
@@ -493,27 +492,8 @@ public class DocumentContextMenu extends Menu {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				SendDocsToArchiveDialog archiveDialog = new SendDocsToArchiveDialog(ids,GUIArchive.TYPE_DEFAULT);
+				SendDocsToArchiveDialog archiveDialog = new SendDocsToArchiveDialog(ids);
 				archiveDialog.show();
-			}
-		});
-
-		MenuItem archiveDematerialization = new MenuItem(I18N.message("sendtostoragearchive"));
-		archiveDematerialization.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getList();
-				ListGridRecord[] selection = list.getSelection();
-				if (selection == null || selection.length == 0)
-					return;
-				final long[] ids = new long[selection.length];
-				for (int i = 0; i < selection.length; i++) {
-					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
-				}
-
-				SendDocsToArchiveDialog archiveDialog = new SendDocsToArchiveDialog(ids, GUIArchive.TYPE_STORAGE);
-				archiveDialog.show();
-
 			}
 		});
 
@@ -769,14 +749,6 @@ public class DocumentContextMenu extends Menu {
 				archive.setEnabled(false);
 			else
 				archive.setEnabled(enableSign);
-		}
-
-		if (Feature.visible(Feature.AOS)) {
-			moreMenu.addItem(archiveDematerialization);
-			if (!folder.hasPermission(Constants.PERMISSION_ARCHIVE) || !Feature.enabled(Feature.AOS))
-				archiveDematerialization.setEnabled(false);
-			else
-				archiveDematerialization.setEnabled(enableSign);
 		}
 
 		if (Feature.visible(Feature.WORKFLOW)) {

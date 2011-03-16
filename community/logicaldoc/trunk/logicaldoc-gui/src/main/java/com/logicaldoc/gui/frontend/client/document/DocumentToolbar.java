@@ -56,8 +56,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 	protected ToolStripButton archive = new ToolStripButton();
 
-	protected ToolStripButton archiveDematerialization = new ToolStripButton();
-
 	protected ToolStripButton office = new ToolStripButton();
 
 	protected ToolStripButton startWorkflow = new ToolStripButton();
@@ -187,27 +185,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				SendDocsToArchiveDialog archiveDialod = new SendDocsToArchiveDialog(ids, GUIArchive.TYPE_DEFAULT);
-				archiveDialod.show();
-			}
-		});
-
-		archiveDematerialization.setIcon(ItemFactory.newImgIcon("server_cd.png").getSrc());
-		archiveDematerialization.setTooltip(I18N.message("sendtostoragearchive"));
-		archiveDematerialization.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getList();
-				ListGridRecord[] selection = list.getSelection();
-				if (selection == null || selection.length == 0)
-					return;
-				final long[] ids = new long[selection.length];
-				for (int i = 0; i < selection.length; i++) {
-					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
-				}
-
-				SendDocsToArchiveDialog archiveDialod = new SendDocsToArchiveDialog(ids, GUIArchive.TYPE_STORAGE);
-				archiveDialod.show();
+				SendDocsToArchiveDialog archiveDialog = new SendDocsToArchiveDialog(ids);
+				archiveDialog.show();
 			}
 		});
 
@@ -362,16 +341,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		}
 
-		if (Feature.visible(Feature.AOS)) {
-			if (!archive.isVisible())
-				addSeparator();
-			addButton(archiveDematerialization);
-			if (!Feature.enabled(Feature.AOS)) {
-				archiveDematerialization.setDisabled(true);
-				archiveDematerialization.setTooltip(I18N.message("featuredisabled"));
-			}
-		}
-
 		if (Feature.visible(Feature.WORKFLOW)) {
 			addSeparator();
 			addButton(startWorkflow);
@@ -468,7 +437,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				pdf.setDisabled(true);
 				subscribe.setDisabled(true);
 				archive.setDisabled(true);
-				archiveDematerialization.setDisabled(true);
 				office.setDisabled(true);
 				startWorkflow.setDisabled(true);
 				addToWorkflow.setDisabled(true);
@@ -479,8 +447,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				scan.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE) || !Feature.enabled(Feature.SCAN));
 				archive.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_ARCHIVE)
 						|| !Feature.enabled(Feature.ARCHIVES));
-				archiveDematerialization.setDisabled(document == null
-						|| !folder.hasPermission(Constants.PERMISSION_ARCHIVE) || !Feature.enabled(Feature.AOS));
 				startWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)
 						|| !Feature.enabled(Feature.WORKFLOW));
 				addToWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)
@@ -489,7 +455,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				add.setDisabled(true);
 				scan.setDisabled(true);
 				archive.setDisabled(true);
-				archiveDematerialization.setDisabled(true);
 				startWorkflow.setDisabled(true);
 				addToWorkflow.setDisabled(true);
 			}

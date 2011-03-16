@@ -76,4 +76,17 @@ public interface ArchiveService extends RemoteService {
 	 * Retrieves the sost configurations for the versions of the given archive
 	 */
 	public GUISostConfig[] getSostConfigurations(String sid, long archiveId) throws InvalidSessionException;
+
+	/**
+	 * Verifies the user signature file, extracts the original file contained
+	 * into the uploaded m7m file and checks if its digest and the archive's
+	 * file digest are equals, then signs and marks the archive.
+	 * 
+	 * @param sid The session identifier
+	 * @param userid Identifier of the user that is performing the signature
+	 * @param archiveId Identifier of the archive to sign
+	 * @return 'ok' if no errors occurred, otherwise returns the error message.
+	 * @throws InvalidSessionException
+	 */
+	public String signArchive(String sid, long userId, long archiveId) throws InvalidSessionException;
 }

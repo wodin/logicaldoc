@@ -30,14 +30,14 @@ public class SendDocsToArchiveDialog extends Window {
 
 	private DynamicForm form = new DynamicForm();
 
-	public SendDocsToArchiveDialog(final long[] ids, int type) {
+	public SendDocsToArchiveDialog(final long[] ids) {
 		VLayout layout = new VLayout();
 		layout.setMargin(25);
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
-		setTitle(type == GUIArchive.TYPE_STORAGE ? I18N.message("sendtostoragearchive") : I18N.message("sendtoarchive"));
-		setWidth(360);
+		setTitle(I18N.message("sendtoarchive"));
+		setWidth(380);
 		setHeight(100);
 		setCanDragResize(true);
 		setIsModal(true);
@@ -46,8 +46,9 @@ public class SendDocsToArchiveDialog extends Window {
 
 		layout.addMember(form);
 
-		SelectItem archive = ItemFactory.newArchiveSelector(GUIArchive.MODE_EXPORT, type, GUIArchive.STATUS_OPENED);
+		SelectItem archive = ItemFactory.newArchiveSelector(GUIArchive.MODE_EXPORT, GUIArchive.STATUS_OPENED);
 		archive.setTitle(I18N.message("selectopenarchive"));
+		archive.setWrapTitle(false);
 		archive.setRequired(true);
 
 		ButtonItem send = new ButtonItem();

@@ -14,7 +14,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 public class AosManagersDS extends DataSource {
 	public AosManagersDS() {
 		setTitleField("label");
-		setRecordXPath("/list/aosmanager");
+		setRecordXPath("/list/user");
 
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
@@ -25,11 +25,8 @@ public class AosManagersDS extends DataSource {
 		DataSourceTextField name = new DataSourceTextField("name");
 		DataSourceTextField firstName = new DataSourceTextField("firstName");
 		DataSourceTextField email = new DataSourceTextField("email");
-		DataSourceTextField phone = new DataSourceTextField("phone");
-		DataSourceTextField cell = new DataSourceTextField("cell");
-		DataSourceTextField usergroup = new DataSourceTextField("usergroup");
 
-		setFields(id, username, label, enabled, name, firstName, email, phone, cell, usergroup);
+		setFields(id, username, label, enabled, name, firstName, email);
 		setDataURL("data/aosmanagers.xml?sid=" + Session.get().getSid());
 		setClientOnly(true);
 	}

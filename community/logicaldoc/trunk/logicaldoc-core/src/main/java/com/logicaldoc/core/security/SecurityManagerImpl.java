@@ -182,13 +182,7 @@ public class SecurityManagerImpl implements SecurityManager {
 
 	@Override
 	public boolean isMemberOf(long userId, long groupId) {
-		User user = userDAO.findById(userId);
-		if (user == null)
-			return false;
-		for (Group group : user.getGroups())
-			if (group.getId() == groupId)
-				return true;
-		return false;
+		return userDAO.queryForInt("select count(*) from ld_usergroup where ld_userid="+userId+ " and ld_groupid="+groupId) > 0;
 	}
 
 	@Override
