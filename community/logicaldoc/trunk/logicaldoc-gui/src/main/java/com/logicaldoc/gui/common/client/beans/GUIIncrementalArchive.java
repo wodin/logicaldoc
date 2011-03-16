@@ -23,6 +23,8 @@ public class GUIIncrementalArchive implements Serializable {
 	private int type = GUIArchive.TYPE_DEFAULT;
 
 	private GUITemplate[] templates;
+	
+	private Long aosManagerId;
 
 	public GUIIncrementalArchive() {
 		folder = new GUIFolder();
@@ -86,5 +88,13 @@ public class GUIIncrementalArchive implements Serializable {
 			ids[i] = Long.toString(templates[i].getId());
 		}
 		return ids;
+	}
+
+	public Long getAosManagerId() {
+		return aosManagerId;
+	}
+
+	public void setAosManagerId(Long aosManagerId) {
+		this.aosManagerId = aosManagerId;
 	}
 }
