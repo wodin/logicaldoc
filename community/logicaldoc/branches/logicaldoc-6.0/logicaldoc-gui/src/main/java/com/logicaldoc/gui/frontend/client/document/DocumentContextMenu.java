@@ -727,6 +727,8 @@ public class DocumentContextMenu extends Menu {
 			download.setEnabled(false);
 			sendMail.setEnabled(false);
 			checkout.setEnabled(false);
+			copy.setEnabled(false);
+			cut.setEnabled(false);
 			enableOffice = false;
 			enableSign = false;
 		}
