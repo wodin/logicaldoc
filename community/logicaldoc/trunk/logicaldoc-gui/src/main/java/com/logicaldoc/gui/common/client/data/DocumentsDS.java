@@ -69,10 +69,13 @@ public class DocumentsDS extends DataSource {
 				sourceDate, sourceAuthor, customId, icon, immutable, iindexed, signed, locked, lockUserId, filename,
 				status, rating, fileVersion);
 		setClientOnly(true);
-		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&folderId="
-				+ (folderId != null ? folderId : "") + "&filename=" + (fileFilter != null ? fileFilter : "") + "&max="
-				+ (max != null ? max : MAX) + "&indexed=" + (indexed != null ? indexed.toString() : "") + "&barcoded="
-				+ (barcoded != null ? barcoded.toString() : ""));
+
+		if (barcoded == null)
+			setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&folderId="
+					+ (folderId != null ? folderId : "") + "&filename=" + (fileFilter != null ? fileFilter : "")
+					+ "&max=" + (max != null ? max : MAX) + "&indexed=" + (indexed != null ? indexed.toString() : ""));
+		else
+			setDataURL("data/tobarcode.xml?sid=" + Session.get().getSid() + "&max=" + (max != null ? max : MAX));
 	}
 
 	public DocumentsDS(String docIds) {
