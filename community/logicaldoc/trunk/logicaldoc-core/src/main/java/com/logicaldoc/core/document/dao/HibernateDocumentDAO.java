@@ -595,7 +595,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public List<Document> findByIndexed(int indexed) {
-		return findByWhere("_entity.indexed=" + indexed, "order by _entity.lastModified asc", null);
+		return findByWhere("_entity.docref is null and _entity.indexed=" + indexed,
+				"order by _entity.lastModified asc", null);
 	}
 
 	@SuppressWarnings("unchecked")
