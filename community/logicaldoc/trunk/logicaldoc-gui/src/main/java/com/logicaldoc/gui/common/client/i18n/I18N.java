@@ -54,6 +54,25 @@ public class I18N {
 		return locale;
 	}
 
+	/**
+	 * Computes the default suitable language for documents
+	 */
+	public static String getDefaultLocaleForDoc() {
+		// Search for exact match
+		for (GUIValuePair l : languages) {
+			if (l.getCode().equals(locale))
+				return l.getCode();
+		}
+
+		// Check the first 2 letters(the language)
+		for (GUIValuePair l : languages) {
+			if (l.getCode().startsWith(locale.substring(0, 2)))
+				return l.getCode();
+		}
+
+		return languages[0].getCode();
+	}
+
 	public static char groupingSepator() {
 		String gs = message("grouping_separator");
 		return gs.charAt(gs.length() - 1);

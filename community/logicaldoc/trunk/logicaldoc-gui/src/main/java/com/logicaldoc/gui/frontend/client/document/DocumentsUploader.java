@@ -114,7 +114,7 @@ public class DocumentsUploader extends Window {
 
 		SelectItem languageItem = ItemFactory.newLanguageSelector("language", false, false);
 		languageItem.setRequired(true);
-		languageItem.setValue(I18N.getLocale());
+		languageItem.setValue(I18N.getDefaultLocaleForDoc());
 
 		CheckboxItem zipItem = new CheckboxItem();
 		zipItem.setName("zip");
