@@ -76,7 +76,7 @@ public class IndexerTask extends Task {
 
 			log.info("Found a total of " + size + " documents to be indexed");
 
-			List<Long> ids = documentDao.findIdsByWhere("_entity.indexed = " + AbstractDocument.INDEX_TO_INDEX, null,
+			List<Long> ids = documentDao.findIdsByWhere("_entity.docref is null and _entity.indexed = " + AbstractDocument.INDEX_TO_INDEX, null,
 					max);
 			for (Long id : ids) {
 				try {

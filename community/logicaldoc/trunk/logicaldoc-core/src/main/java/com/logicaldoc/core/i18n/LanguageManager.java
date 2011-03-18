@@ -32,14 +32,11 @@ public class LanguageManager {
 
 	private Map<Locale, Language> languages = new HashMap<Locale, Language>();
 
-	private Language defaultLanguage;
-
 	private LanguageManager() {
 		init();
 	}
 
 	public void init() {
-		defaultLanguage = new Language(Locale.ENGLISH);
 		languages.clear();
 
 		// Acquire the 'Language' extensions of the core plugin and add defined
@@ -95,10 +92,6 @@ public class LanguageManager {
 		return actives;
 	}
 
-	public Language getDefaultLanguage() {
-		return defaultLanguage;
-	}
-
 	/**
 	 * Retrieves the Language for the given language Null is returned if the
 	 * corresponding Language could not be found
@@ -112,10 +105,6 @@ public class LanguageManager {
 
 	public void addLanguage(Locale locale, Language lang) {
 		languages.put(locale, lang);
-	}
-
-	public void setDefaultLanguage(Language language) {
-		this.defaultLanguage = language;
 	}
 
 	public List<String> getLanguagesAsString() {
