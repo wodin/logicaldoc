@@ -1,9 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
-    String locale = request.getParameter("locale");
+  String locale = request.getParameter("locale");
 	if (locale == null || "".equals(locale))
 		locale = "";
+		
+	String dir="ltr";
+	if (locale.startsWith("ar") || locale.startsWith("dv") || locale.startsWith("ha") || locale.startsWith("he")
+				|| locale.startsWith("fa") || locale.startsWith("ps") || locale.startsWith("ur")
+				|| locale.startsWith("yi"))
+		dir="rtl";
 %>
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -54,9 +60,13 @@ body {
 
            var sessionId=null;
            var exitMessage="You are trying to leave the application without closing the current session. Please use the 'exit' menu.";
+            
+             isc.Canvas.addProperties({
+		            showCustomScrollbars:<%=dir.equals("rtl") ? "false":"true"%>
+    		     });
         </script>
 	</head>
-	<body>
+	<body dir="<%=dir%>">
 		<!--add loading indicator while the app is being loaded-->
 		<div id="loadingWrapper">
 			<div id="loading">
