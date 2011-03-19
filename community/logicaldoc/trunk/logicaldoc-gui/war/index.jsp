@@ -43,6 +43,6 @@ body {
 <link rel="shortcut icon" type="image/x-icon" href='./skin/brand/favicon.ico' />
 </head>
 <body onunload="unloadTrigger(event);">
-  <iframe id="frame" src="./frontend.jsp" width="100%" height="100%" scrolling="auto" frameborder="0" />
+  <iframe id="frame" src="./frontend.jsp?<%=request.getQueryString()%>" width="100%" height="100%" scrolling="auto" frameborder="0" />
 </body>
 </html>
