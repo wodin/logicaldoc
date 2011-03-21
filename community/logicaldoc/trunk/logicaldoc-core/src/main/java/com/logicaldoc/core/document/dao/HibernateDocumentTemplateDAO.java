@@ -62,4 +62,9 @@ public class HibernateDocumentTemplateDAO extends HibernatePersistentObjectDAO<D
 	public int countDocs(long id) {
 		return queryForInt("select count(*) from ld_document where ld_deleted=0 and ld_templateid=" + id);
 	}
+
+	@Override
+	public List<DocumentTemplate> findByType(int type) {
+		return findByWhere("_entity.type =" + type, "order by _entity.category asc", null);
+	}
 }

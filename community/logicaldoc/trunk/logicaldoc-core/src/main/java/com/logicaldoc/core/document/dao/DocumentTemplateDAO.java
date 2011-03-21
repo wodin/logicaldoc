@@ -1,5 +1,7 @@
 package com.logicaldoc.core.document.dao;
 
+import java.util.List;
+
 import com.logicaldoc.core.PersistentObjectDAO;
 import com.logicaldoc.core.document.DocumentTemplate;
 
@@ -25,4 +27,12 @@ public interface DocumentTemplateDAO extends PersistentObjectDAO<DocumentTemplat
 	 * @return the documents count
 	 */
 	public int countDocs(long id);
+
+	/**
+	 * This method finds a template by type.
+	 * 
+	 * @param type Type of the template.
+	 * @return DocumentTemplate with given type.
+	 */
+	public List<DocumentTemplate> findByType(int type);
 }

@@ -47,11 +47,11 @@ public class TemplatesPanel extends VLayout {
 
 	private Layout listing;
 
-	private Layout detailsContainer;
+	protected Layout detailsContainer;
 
-	private ListGrid list;
+	protected ListGrid list;
 
-	private Canvas details = SELECT_TEMPLATE;
+	protected Canvas details = SELECT_TEMPLATE;
 
 	private InfoPanel infoPanel;
 
@@ -64,10 +64,10 @@ public class TemplatesPanel extends VLayout {
 
 		infoPanel = new InfoPanel("");
 
-		refresh();
+		refresh(GUITemplate.TYPE_DEFAULT);
 	}
 
-	public void refresh() {
+	protected void refresh(int type) {
 		Canvas[] members = getMembers();
 		for (Canvas canvas : members) {
 			removeMember(canvas);
@@ -96,19 +96,27 @@ public class TemplatesPanel extends VLayout {
 		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 100);
 		documents.setCanSort(true);
 
+		ListGridField typeTemplate = new ListGridField("type", I18N.message("type"), 100);
+		typeTemplate.setHidden(true);
+
+		ListGridField category = new ListGridField("category", I18N.message("category"), 300);
+		category.setCanFilter(true);
+		category.setCanSort(false);
+		category.setHidden(type == GUITemplate.TYPE_DEFAULT);
+
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setShowAllRecords(true);
 		list.setAutoFetchData(true);
 		list.setWidth100();
 		list.setHeight100();
-		list.setFields(name, description, documents);
+		list.setFields(name, description, documents, category);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
 		list.setFilterOnKeypress(true);
-		list.setDataSource(new TemplatesDS(false, null));
+		list.setDataSource(new TemplatesDS(false, null, type));
 		list.setShowFilterEditor(true);
 
 		listing.addMember(infoPanel);
@@ -124,8 +132,7 @@ public class TemplatesPanel extends VLayout {
 		add.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				list.deselectAllRecords();
-				showTemplateDetails(new GUITemplate());
+				onAddingTemplate();
 			}
 		});
 		toolStrip.addFill();
@@ -215,7 +222,7 @@ public class TemplatesPanel extends VLayout {
 		contextMenu.showContextMenu();
 	}
 
-	private void showTemplateDetails(GUITemplate template) {
+	protected void showTemplateDetails(GUITemplate template) {
 		if (!(details instanceof TemplateDetailsPanel)) {
 			detailsContainer.removeMember(details);
 			details = new TemplateDetailsPanel(this);
@@ -250,5 +257,10 @@ public class TemplatesPanel extends VLayout {
 			list.addData(record);
 			list.selectRecord(record);
 		}
+	}
+
+	protected void onAddingTemplate() {
+		list.deselectAllRecords();
+		showTemplateDetails(new GUITemplate());
 	}
 }

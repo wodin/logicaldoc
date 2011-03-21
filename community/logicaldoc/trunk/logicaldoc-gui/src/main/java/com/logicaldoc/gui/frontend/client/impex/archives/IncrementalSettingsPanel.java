@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.client.impex.archives;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIIncrementalArchive;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -27,13 +26,19 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.0
  */
 public class IncrementalSettingsPanel extends VLayout {
-	private GUIIncrementalArchive incremental;
+	protected GUIIncrementalArchive incremental;
 
-	private ValuesManager vm = new ValuesManager();
+	protected ValuesManager vm = new ValuesManager();
 
-	private DynamicForm form = new DynamicForm();
+	protected DynamicForm form = new DynamicForm();
 
-	private FolderSelector folderSelector = new FolderSelector("folder", false);
+	protected FolderSelector folderSelector = new FolderSelector("folder", false);
+	
+	protected TextItem prefix = null;
+	
+	protected IntegerItem frequency = null;
+	
+	protected SelectItem templates = null;
 
 	public IncrementalSettingsPanel(GUIIncrementalArchive incremental, ChangedHandler changedHandler,
 			FolderChangeListener folderListener) {
@@ -42,11 +47,11 @@ public class IncrementalSettingsPanel extends VLayout {
 		form.setValuesManager(vm);
 		form.setTitleOrientation(TitleOrientation.TOP);
 
-		TextItem prefix = ItemFactory.newSimpleTextItem("prefix", "prefix", incremental.getPrefix());
+		prefix = ItemFactory.newSimpleTextItem("prefix", "prefix", incremental.getPrefix());
 		prefix.setRequired(true);
 		prefix.addChangedHandler(changedHandler);
 
-		IntegerItem frequency = ItemFactory.newIntegerItem("frequency", "frequency", incremental.getFrequency());
+		frequency = ItemFactory.newIntegerItem("frequency", "frequency", incremental.getFrequency());
 		IntegerRangeValidator min = new IntegerRangeValidator();
 		min.setMin(1);
 		frequency.setValidators(min);
@@ -57,18 +62,11 @@ public class IncrementalSettingsPanel extends VLayout {
 		folderSelector.setRequired(true);
 		folderSelector.addFolderChangeListener(folderListener);
 
-		SelectItem templates = ItemFactory.newTemplateSelector(true, null);
+		templates = ItemFactory.newTemplateSelector(true, null);
 		templates.addChangedHandler(changedHandler);
 		templates.setValues(incremental.getTemplateIds());
 
-		SelectItem aosManager = ItemFactory.newAosManagerSelector("aosmanager", "aosmanager");
-		if (incremental.getAosManagerId() != null)
-			aosManager.setValue(incremental.getAosManagerId());
-
-		if (incremental.getType() == GUIArchive.TYPE_STORAGE)
-			form.setFields(prefix, frequency, folderSelector, templates, aosManager);
-		else
-			form.setFields(prefix, frequency, folderSelector, templates);
+		form.setFields(prefix, frequency, folderSelector, templates);
 
 		addMember(form);
 	}
@@ -80,9 +78,6 @@ public class IncrementalSettingsPanel extends VLayout {
 			incremental.setPrefix(vm.getValueAsString("prefix").toString());
 			incremental.setFrequency(Integer.parseInt(vm.getValueAsString("frequency")));
 			incremental.setFolder(folderSelector.getFolder());
-			if (incremental.getType() == GUIArchive.TYPE_STORAGE && vm.getValueAsString("aosmanager") != null) {
-				incremental.setAosManagerId(Long.parseLong(vm.getValueAsString("aosmanager")));
-			}
 
 			if (vm.getValues().get("template") != null) {
 				String templateIdString = vm.getValues().get("template").toString().trim().replace("[", "")

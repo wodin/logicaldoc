@@ -49,17 +49,17 @@ public class IncrementalArchivesList extends VLayout {
 
 	private Layout listing;
 
-	private Layout detailsContainer;
+	protected Layout detailsContainer;
 
-	private ListGrid list;
+	protected ListGrid list;
 
-	private Canvas details = SELECT_ELEMENT;
+	protected Canvas details = SELECT_ELEMENT;
 
 	private InfoPanel infoPanel;
 
 	final static Canvas SELECT_ELEMENT = new HTMLPanel("&nbsp;" + I18N.message("selectconfig"));
 
-	private int archivesType = GUIArchive.TYPE_DEFAULT;
+	protected int archivesType = GUIArchive.TYPE_DEFAULT;
 
 	public IncrementalArchivesList(int archsType) {
 		setWidth100();
@@ -139,10 +139,7 @@ public class IncrementalArchivesList extends VLayout {
 		addIncremental.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				list.deselectAllRecords();
-				GUIIncrementalArchive archive = new GUIIncrementalArchive();
-				archive.setType(IncrementalArchivesList.this.archivesType);
-				showDetails(archive);
+				onAddingIncrementalArchive();
 				event.cancel();
 			}
 		});
@@ -226,7 +223,7 @@ public class IncrementalArchivesList extends VLayout {
 		contextMenu.showContextMenu();
 	}
 
-	public void showDetails(GUIIncrementalArchive incremental) {
+	protected void showDetails(GUIIncrementalArchive incremental) {
 		if (details != null)
 			detailsContainer.removeMember(details);
 		if (incremental != null)
@@ -263,5 +260,12 @@ public class IncrementalArchivesList extends VLayout {
 			list.addData(record);
 			list.selectRecord(record);
 		}
+	}
+	
+	protected void onAddingIncrementalArchive() {
+		list.deselectAllRecords();
+		GUIIncrementalArchive archive = new GUIIncrementalArchive();
+		archive.setType(IncrementalArchivesList.this.archivesType);
+		showDetails(archive);
 	}
 }

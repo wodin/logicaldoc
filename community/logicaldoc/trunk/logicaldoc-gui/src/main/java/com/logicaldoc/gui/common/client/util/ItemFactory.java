@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
-import com.logicaldoc.gui.common.client.data.AosManagersDS;
+import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
@@ -555,9 +555,9 @@ public class ItemFactory {
 		templateItem.setMultiple(true);
 		templateItem.setMultipleAppearance(MultipleAppearance.PICKLIST);
 		if (!multipleSelection)
-			templateItem.setOptionDataSource(new TemplatesDS(true, templateId));
+			templateItem.setOptionDataSource(new TemplatesDS(true, templateId, GUITemplate.TYPE_DEFAULT));
 		else
-			templateItem.setOptionDataSource(new TemplatesDS(false, templateId));
+			templateItem.setOptionDataSource(new TemplatesDS(false, templateId, GUITemplate.TYPE_DEFAULT));
 		if (!Feature.enabled(Feature.TEMPLATE))
 			templateItem.setDisabled(true);
 		templateItem.setHintStyle("hint");
@@ -701,25 +701,5 @@ public class ItemFactory {
 		item.setRequiredMessage(I18N.message("fieldrequired"));
 		item.setHintStyle("hint");
 		return item;
-	}
-
-	/**
-	 * Creates a new SelectItem for the AOS Managers.
-	 * 
-	 * @param name The item name
-	 * @param title The item title
-	 */
-	public static SelectItem newAosManagerSelector(String name, String title) {
-		SelectItem user = new SelectItem(name);
-		user.setTitle(I18N.message(title));
-		user.setWrapTitle(false);
-		ListGridField label = new ListGridField("label");
-		user.setValueField("id");
-		user.setDisplayField("label");
-		user.setPickListWidth(180);
-		user.setPickListFields(label);
-		user.setOptionDataSource(new AosManagersDS());
-		user.setHintStyle("hint");
-		return user;
 	}
 }
