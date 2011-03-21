@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.common.client.beans;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * A Share(Import Folder) representation
@@ -17,7 +18,7 @@ public class GUIShare implements Serializable {
 	private String path;
 
 	private String domain;
-	
+
 	private String username;
 
 	private String password;
@@ -45,6 +46,8 @@ public class GUIShare implements Serializable {
 	private int depth = 5;
 
 	private boolean delImport = false;
+
+	private Date startDate;
 
 	public GUIShare() {
 		super();
@@ -186,5 +189,13 @@ public class GUIShare implements Serializable {
 
 	public void setDomain(String domain) {
 		this.domain = domain;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
 	}
 }
