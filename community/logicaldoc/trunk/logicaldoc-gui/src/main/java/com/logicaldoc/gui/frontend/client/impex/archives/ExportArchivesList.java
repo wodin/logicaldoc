@@ -50,21 +50,21 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 public class ExportArchivesList extends VLayout {
 	private ArchiveServiceAsync service = (ArchiveServiceAsync) GWT.create(ArchiveService.class);
 
-	private Layout listing;
+	protected Layout listing;
 
-	private Layout detailsContainer;
+	protected Layout detailsContainer;
 
-	private ListGrid list;
+	protected ListGrid list;
 
-	private Canvas details = SELECT_ELEMENT;
+	protected Canvas details = SELECT_ELEMENT;
 
 	private InfoPanel infoPanel;
 
 	final static Canvas SELECT_ELEMENT = new HTMLPanel("&nbsp;" + I18N.message("selectarchive"));
 
-	private int archivesType = GUIArchive.TYPE_DEFAULT;
+	protected int archivesType = GUIArchive.TYPE_DEFAULT;
 
-	private boolean showHistory = false;
+	protected boolean showHistory = false;
 
 	public ExportArchivesList(int archsType, boolean history) {
 		setWidth100();
@@ -153,7 +153,8 @@ public class ExportArchivesList extends VLayout {
 			list.setDataSource(new ArchivesDS(GUIArchive.MODE_EXPORT, this.archivesType, null, Session.get().getUser()
 					.getId()));
 
-		listing.addMember(infoPanel);
+		if (!showHistory)
+			listing.addMember(infoPanel);
 		listing.addMember(list);
 
 		ToolStrip toolStrip = new ToolStrip();
@@ -176,8 +177,7 @@ public class ExportArchivesList extends VLayout {
 		addArchive.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ArchiveDialog dialog = new ArchiveDialog(ExportArchivesList.this);
-				dialog.show();
+				onAddingArchive();
 				event.cancel();
 			}
 		});
@@ -213,7 +213,10 @@ public class ExportArchivesList extends VLayout {
 		detailsContainer.setAlign(Alignment.CENTER);
 		detailsContainer.addMember(details);
 
-		setMembers(toolStrip, listing, detailsContainer);
+		if (!showHistory)
+			setMembers(toolStrip, listing, detailsContainer);
+		else
+			setMembers(listing, detailsContainer);
 	}
 
 	private void showContextMenu() {
@@ -344,5 +347,10 @@ public class ExportArchivesList extends VLayout {
 
 	public int getArchivesType() {
 		return archivesType;
+	}
+
+	protected void onAddingArchive() {
+		ArchiveDialog dialog = new ArchiveDialog(ExportArchivesList.this);
+		dialog.show();
 	}
 }

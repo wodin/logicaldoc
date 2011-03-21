@@ -18,6 +18,7 @@ import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
+import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 
 /**
@@ -37,6 +38,11 @@ public class TemplatesDataServlet extends HttpServlet {
 			IOException {
 		try {
 			String folderId = request.getParameter("folderId");
+
+			int type = 0;
+			if (request.getParameter("templateType") != null)
+				type = new Integer(request.getParameter("templateType"));
+
 			List<Long> templateIds = new ArrayList<Long>();
 			if (StringUtils.isNotEmpty(folderId)) {
 				GenericDAO genericDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
@@ -77,7 +83,7 @@ public class TemplatesDataServlet extends HttpServlet {
 			/*
 			 * Iterate over the collection of templates
 			 */
-			for (DocumentTemplate template : dao.findAll()) {
+			for (DocumentTemplate template : dao.findByType(type)) {
 				if (templateIds.contains(template.getId()))
 					continue;
 
@@ -87,6 +93,9 @@ public class TemplatesDataServlet extends HttpServlet {
 				writer.print("<documents>" + dao.countDocs(template.getId()) + "</documents>");
 				writer.print("<description><![CDATA[" + template.getDescription() + "]]></description>");
 				writer.print("<readonly>" + Boolean.toString(template.getReadonly() == 1) + "</readonly>");
+				writer.print("<type>" + template.getType() + "</type>");
+				writer.print("<category><![CDATA[" + I18N.message("sostdoctype." + template.getCategory())
+						+ "]]></category>");
 				writer.print("</template>");
 			}
 

@@ -6,14 +6,32 @@ public class GUITemplate implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	public static int TYPE_DEFAULT = 0;
+
+	public static int TYPE_AOS = 1;
+
+	public static int CATEGORY_GENERIC = 0;
+
+	public static int CATEGORY_ACTIVE_INVOICE = 1;
+
+	public static int CATEGORY_PASSIVE_INVOICE = 2;
+
+	public static int CATEGORY_DDT = 3;
+
+	public static int CATEGORY_CONTRACT = 4;
+
 	private long id = 0;
 
 	private String name;
 
 	private String description;
 
-	private boolean readonly=false;
-	
+	private boolean readonly = false;
+
+	private int type = TYPE_DEFAULT;
+
+	private int category = CATEGORY_GENERIC;
+
 	private GUIExtendedAttribute[] attributes;
 
 	public long getId() {
@@ -54,5 +72,21 @@ public class GUITemplate implements Serializable {
 
 	public void setReadonly(boolean readonly) {
 		this.readonly = readonly;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public int getCategory() {
+		return category;
+	}
+
+	public void setCategory(int category) {
+		this.category = category;
 	}
 }

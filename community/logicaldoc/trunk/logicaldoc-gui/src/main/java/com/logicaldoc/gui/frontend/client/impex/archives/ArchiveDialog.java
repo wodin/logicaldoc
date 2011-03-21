@@ -17,7 +17,6 @@ import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
-import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
@@ -72,8 +71,6 @@ public class ArchiveDialog extends Window {
 		StaticTextItem creator = ItemFactory.newStaticTextItem("creator", "creator", Session.get().getUser()
 				.getFullName());
 
-		SelectItem aosManager = ItemFactory.newAosManagerSelector("aosmanager", "aosmanager");
-
 		ButtonItem save = new ButtonItem();
 		save.setTitle(I18N.message("save"));
 		save.setAutoFit(true);
@@ -88,10 +85,6 @@ public class ArchiveDialog extends Window {
 					archive.setCreatorId(Session.get().getUser().getId());
 					archive.setCreatorName(Session.get().getUser().getFullName());
 					archive.setMode(GUIArchive.MODE_EXPORT);
-					if (ArchiveDialog.this.archivesPanel.getArchivesType() == GUIArchive.TYPE_STORAGE
-							&& vm.getValueAsString("aosmanager") != null) {
-						archive.setAosManagerId(Long.parseLong(vm.getValueAsString("aosmanager")));
-					}
 
 					archiveService.save(Session.get().getSid(), archive, new AsyncCallback<GUIArchive>() {
 						@Override
@@ -113,10 +106,7 @@ public class ArchiveDialog extends Window {
 			}
 		});
 
-		if (this.archivesPanel.getArchivesType() == GUIArchive.TYPE_DEFAULT)
-			form.setFields(creator, name, description, save);
-		else if (this.archivesPanel.getArchivesType() == GUIArchive.TYPE_STORAGE)
-			form.setFields(creator, name, description, aosManager, save);
+		form.setFields(creator, name, description, save);
 		addItem(form);
 	}
 }

@@ -51,11 +51,52 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 				dao.initialize(templ);
 			} else {
 				templ = new DocumentTemplate();
+				if (template.getType() == GUITemplate.TYPE_AOS) {
+					// Retrieve the attributes of the template with the same
+					// category. This template was already created at the
+					// startup.
+					// By default, hypothesize that the template belongs to
+					// Generic category.
+					long templateId = -93;
+					if (template.getCategory() == DocumentTemplate.CATEGORY_ACTIVE_INVOICE)
+						templateId = -98;
+					else if (template.getCategory() == DocumentTemplate.CATEGORY_PASSIVE_INVOICE)
+						templateId = -97;
+					else if (template.getCategory() == DocumentTemplate.CATEGORY_DDT)
+						templateId = -95;
+					else if (template.getCategory() == DocumentTemplate.CATEGORY_CONTRACT)
+						templateId = -94;
+
+					DocumentTemplate t = dao.findById(templateId);
+					Map<String, ExtendedAttribute> attributes = t.getAttributes();
+					GUIExtendedAttribute[] guiAttr = new GUIExtendedAttribute[attributes.size()];
+					int i = 0;
+					for (String attrName : attributes.keySet()) {
+						ExtendedAttribute extAttr = attributes.get(attrName);
+						GUIExtendedAttribute att = new GUIExtendedAttribute();
+						att.setName(attrName);
+						att.setPosition(extAttr.getPosition());
+						att.setMandatory(extAttr.getMandatory() == 1 ? true : false);
+						att.setType(extAttr.getType());
+						if (StringUtils.isEmpty(extAttr.getLabel()))
+							att.setLabel(attrName);
+						else
+							att.setLabel(extAttr.getLabel());
+
+						guiAttr[i] = att;
+						i++;
+					}
+					if (guiAttr.length > 0)
+						template.setAttributes(guiAttr);
+				}
 			}
 
 			templ.setName(template.getName());
 			templ.setDescription(template.getDescription());
 			templ.setReadonly(template.isReadonly() ? 1 : 0);
+			templ.setType(template.getType());
+			templ.setCategory(template.getCategory());
+
 			Map<String, ExtendedAttribute> attrs = new HashMap<String, ExtendedAttribute>();
 			if (template.getAttributes() != null && template.getAttributes().length > 0) {
 				templ.getAttributes().clear();
@@ -109,6 +150,8 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 			templ.setName(template.getName());
 			templ.setDescription(template.getDescription());
 			templ.setReadonly(template.getReadonly() == 1);
+			templ.setType(template.getType());
+			templ.setCategory(template.getCategory());
 
 			GUIExtendedAttribute[] attributes = new GUIExtendedAttribute[template.getAttributeNames().size()];
 			int i = 0;

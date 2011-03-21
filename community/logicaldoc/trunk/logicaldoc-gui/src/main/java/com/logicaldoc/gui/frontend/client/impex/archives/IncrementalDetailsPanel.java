@@ -38,15 +38,15 @@ import com.smartgwt.client.widgets.tab.TabSet;
 public class IncrementalDetailsPanel extends VLayout implements FolderChangeListener {
 	private ArchiveServiceAsync service = (ArchiveServiceAsync) GWT.create(ArchiveService.class);
 
-	private Layout settingsTabPanel;
+	protected Layout settingsTabPanel;
 
-	private IncrementalSettingsPanel settingsPanel;
+	protected IncrementalSettingsPanel settingsPanel;
 
-	private HLayout savePanel;
+	protected HLayout savePanel;
 
 	private TabSet tabSet = new TabSet();
 
-	private GUIIncrementalArchive incremental;
+	protected GUIIncrementalArchive incremental;
 
 	private IncrementalArchivesList listPanel;
 
@@ -143,7 +143,7 @@ public class IncrementalDetailsPanel extends VLayout implements FolderChangeList
 		refresh();
 	}
 
-	private void refresh() {
+	protected void refresh() {
 		if (savePanel != null)
 			savePanel.setVisible(false);
 

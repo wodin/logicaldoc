@@ -34,15 +34,15 @@ import com.smartgwt.client.widgets.tab.TabSet;
  * @since 6.0
  */
 public class TemplateDetailsPanel extends VLayout {
-	private GUITemplate template;
+	protected GUITemplate template;
 
-	private Layout propertiesTabPanel;
+	protected Layout propertiesTabPanel;
 
-	private TemplatePropertiesPanel propertiesPanel;
+	protected TemplatePropertiesPanel propertiesPanel;
 
-	private HLayout savePanel;
+	protected HLayout savePanel;
 
-	private TemplateServiceAsync service = (TemplateServiceAsync) GWT.create(TemplateService.class);
+	protected TemplateServiceAsync service = (TemplateServiceAsync) GWT.create(TemplateService.class);
 
 	private TabSet tabSet = new TabSet();
 
@@ -126,7 +126,7 @@ public class TemplateDetailsPanel extends VLayout {
 		addMember(tabSet);
 	}
 
-	private void refresh() {
+	protected void refresh() {
 		if (savePanel != null)
 			savePanel.setVisible(false);
 
@@ -167,14 +167,14 @@ public class TemplateDetailsPanel extends VLayout {
 		return savePanel;
 	}
 
-	private boolean validate() {
+	protected boolean validate() {
 		boolean stdValid = propertiesPanel.validate();
 		if (!stdValid)
 			tabSet.selectTab(0);
 		return stdValid;
 	}
 
-	public void onSave() {
+	protected void onSave() {
 		if (validate()) {
 			service.save(Session.get().getSid(), template, new AsyncCallback<GUITemplate>() {
 				@Override

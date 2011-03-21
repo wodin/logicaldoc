@@ -49,24 +49,30 @@ import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
+/**
+ * This panel shows all template properties.
+ * 
+ * @author Matteo Caruso - Logical Objects
+ * @since 6.0
+ */
 public class TemplatePropertiesPanel extends HLayout {
 
 	private TemplateServiceAsync templateService = (TemplateServiceAsync) GWT.create(TemplateService.class);
 
 	private DynamicForm form1 = new DynamicForm();
 
-	private DynamicForm form2 = new DynamicForm();
+	protected DynamicForm form2 = new DynamicForm();
 
-	private ValuesManager vm = new ValuesManager();
+	protected ValuesManager vm = new ValuesManager();
 
-	private GUITemplate template;
+	protected GUITemplate template;
 
 	private ChangedHandler changedHandler;
 
 	private TemplateDetailsPanel detailsPanel;
 
 	// Useful map to retrieve the extended attribute values
-	private Map<String, GUIExtendedAttribute> guiAttributes = new HashMap<String, GUIExtendedAttribute>();
+	protected Map<String, GUIExtendedAttribute> guiAttributes = new HashMap<String, GUIExtendedAttribute>();
 
 	public String updatingAttributeName = "";
 
@@ -91,7 +97,19 @@ public class TemplatePropertiesPanel extends HLayout {
 		setHeight100();
 		setMembersMargin(10);
 
-		attributesList = new ListGrid();
+		attributesList = new ListGrid() {
+			final int category = TemplatePropertiesPanel.this.template.getCategory();
+
+			@Override
+			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
+				if (isMandatory(category, record.getAttribute("name"))) {
+					return "color: #888888; font-style: italic;";
+				} else {
+					return super.getCellCSSText(record, rowNum, colNum);
+				}
+
+			}
+		};
 		attributesList.setEmptyMessage(I18N.message("notitemstoshow"));
 		attributesList.setWidth(150);
 		attributesList.setHeight(160);
@@ -105,21 +123,22 @@ public class TemplatePropertiesPanel extends HLayout {
 		attributesList.setSelectionType(SelectionStyle.SINGLE);
 		ListGridField name = new ListGridField("name", I18N.message("attributes"));
 		attributesList.setFields(name);
-		if (!template.isReadonly())
-			attributesList.addCellContextClickHandler(new CellContextClickHandler() {
-				@Override
-				public void onCellContextClick(CellContextClickEvent event) {
-					showContextMenu();
-					event.cancel();
-				}
-			});
+		attributesList.addCellContextClickHandler(new CellContextClickHandler() {
+			@Override
+			public void onCellContextClick(CellContextClickEvent event) {
+				if (!TemplatePropertiesPanel.this.template.isReadonly())
+					onContextMenuCreation(TemplatePropertiesPanel.this.template.getCategory(), attributesList
+							.getSelectedRecord().getAttributeAsString("name"));
+				event.cancel();
+			}
+		});
 		if (template.getId() != 0)
 			fillAttributesList(template.getId());
 
 		refresh();
 	}
 
-	private void fillAttributesList(long templateId) {
+	protected void fillAttributesList(long templateId) {
 		// Get the template attributes
 		templateService.getTemplate(Session.get().getSid(), templateId, new AsyncCallback<GUITemplate>() {
 
@@ -143,7 +162,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		});
 	}
 
-	private void refresh() {
+	protected void refresh() {
 		boolean readonly = (changedHandler == null);
 		vm.clearValues();
 		vm.clearErrors(false);
@@ -178,22 +197,13 @@ public class TemplatePropertiesPanel extends HLayout {
 		addMember(form1);
 		form1.setWidth(200);
 
-		if (!template.isReadonly())
-			attributesList.addSelectionChangedHandler(new SelectionChangedHandler() {
-				@Override
-				public void onSelectionChanged(SelectionEvent event) {
-					Record record = attributesList.getSelectedRecord();
-					if (record != null) {
-						String selectedAttributeName = record.getAttributeAsString("name");
-						GUIExtendedAttribute extAttr = guiAttributes.get(selectedAttributeName);
-						form2.setValue("attributeName", extAttr.getName());
-						form2.setValue("label", extAttr.getLabel());
-						form2.setValue("mandatory", extAttr.isMandatory());
-						form2.setValue("type", extAttr.getType());
-						updatingAttributeName = extAttr.getName();
-					}
-				}
-			});
+		attributesList.addSelectionChangedHandler(new SelectionChangedHandler() {
+			@Override
+			public void onSelectionChanged(SelectionEvent event) {
+				Record record = attributesList.getSelectedRecord();
+				onChangeSelectedAttribute(record);
+			}
+		});
 
 		VStack modifyStack = new VStack(3);
 		modifyStack.setWidth(20);
@@ -431,7 +441,7 @@ public class TemplatePropertiesPanel extends HLayout {
 
 		ListGridRecord record = new ListGridRecord();
 		record.setAttribute("name", att.getName());
-		attributesList.getDataAsRecordList().add(record);
+		attributesList.getDataAsRecordList().addAt(record, att.getPosition());
 		guiAttributes.put(att.getName(), att);
 		detailsPanel.getSavePanel().setVisible(true);
 		form2.clearValues();
@@ -454,7 +464,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		clean();
 	}
 
-	private void showContextMenu() {
+	protected void showContextMenu() {
 		Menu contextMenu = new Menu();
 
 		MenuItem delete = new MenuItem();
@@ -487,5 +497,25 @@ public class TemplatePropertiesPanel extends HLayout {
 
 		contextMenu.setItems(delete);
 		contextMenu.showContextMenu();
+	}
+
+	protected void onChangeSelectedAttribute(Record record) {
+		if (record != null) {
+			String selectedAttributeName = record.getAttributeAsString("name");
+			GUIExtendedAttribute extAttr = guiAttributes.get(selectedAttributeName);
+			form2.setValue("attributeName", extAttr.getName());
+			form2.setValue("label", extAttr.getLabel());
+			form2.setValue("mandatory", extAttr.isMandatory());
+			form2.setValue("type", extAttr.getType());
+			updatingAttributeName = extAttr.getName();
+		}
+	}
+
+	protected void onContextMenuCreation(int category, String attributeName) {
+		showContextMenu();
+	}
+
+	protected boolean isMandatory(int category, String attributeName) {
+		return false;
 	}
 }
