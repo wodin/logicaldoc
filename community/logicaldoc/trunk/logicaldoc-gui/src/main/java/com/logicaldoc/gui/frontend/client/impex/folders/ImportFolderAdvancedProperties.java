@@ -1,17 +1,22 @@
 package com.logicaldoc.gui.frontend.client.impex.folders;
 
+import java.util.Date;
 import java.util.Map;
 
 import com.logicaldoc.gui.common.client.beans.GUIShare;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 
 /**
@@ -79,7 +84,27 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 		TextItem tags = ItemFactory.newTextItem("tags", "tags", share.getTags());
 		tags.addChangedHandler(changedHandler);
 
-		form.setItems(depth, size, template, include, exclude, tags, delImport);
+		final DateItem startDate = ItemFactory.newDateItem("startdate", "earliestdate");
+		startDate.addChangedHandler(changedHandler);
+		startDate.setValue(share.getStartDate());
+		startDate.setUseMask(false);
+		startDate.setShowPickerIcon(true);
+		startDate.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
+		startDate.addKeyPressHandler(new KeyPressHandler() {
+			@Override
+			public void onKeyPress(KeyPressEvent event) {
+				if ("backspace".equals(event.getKeyName().toLowerCase())
+						|| "delete".equals(event.getKeyName().toLowerCase())) {
+					startDate.clearValue();
+					startDate.setValue((Date) null);
+					changedHandler.onChanged(null);
+				} else {
+					changedHandler.onChanged(null);
+				}
+			}
+		});
+
+		form.setItems(depth, size, include, exclude, startDate, template, tags, delImport);
 
 		formsContainer.addMember(form);
 
@@ -109,6 +134,7 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 				share.setTags((String) values.get("tags"));
 			else
 				share.setTags(null);
+			share.setStartDate((Date) values.get("startdate"));
 		}
 		return !form.hasErrors();
 	}

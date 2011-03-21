@@ -36,8 +36,6 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 		targetSelector = new FolderSelector("target", false);
 		targetSelector.setRequired(true);
 		targetSelector.setTitle(I18N.message("target"));
-		targetSelector.setColSpan(2);
-		targetSelector.setEndRow(true);
 		if (share.getTarget() != null)
 			targetSelector.setFolder(share.getTarget());
 		targetSelector.addFolderChangeListener(new FolderChangeListener() {
@@ -60,7 +58,7 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 			formsContainer.removeChild(form);
 
 		form = new DynamicForm();
-		form.setNumCols(1);
+		form.setNumCols(2);
 		form.setTitleOrientation(TitleOrientation.TOP);
 
 		TextItem path = ItemFactory.newTextItem("path", "path", share.getPath());
@@ -82,7 +80,7 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 		language.setValue(share.getLanguage());
 
 		if ("smb".equals(share.getProvider()))
-			form.setItems(path, targetSelector, language, username, password, domain);
+			form.setItems(path, targetSelector, language, domain, username, password );
 		else
 			form.setItems(path, targetSelector, language);
 

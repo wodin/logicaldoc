@@ -56,14 +56,13 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public T findById(long id) {
 		T entity = null;
 		try {
 			entity = (T) getHibernateTemplate().get(entityClass, id);
 			if (entity != null && entity.getDeleted() == 1)
 				return null;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
