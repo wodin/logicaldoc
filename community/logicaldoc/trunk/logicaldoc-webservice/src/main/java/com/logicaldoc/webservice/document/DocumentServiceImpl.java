@@ -485,4 +485,34 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			email.addAttachment(2 + email.getAttachments().size(), att);
 		}
 	}
+
+	@Override
+	public WSDocument createAlias(String sid, long docId, long folderId) throws Exception {
+		User user = validateSession(sid);
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Document originalDoc = docDao.findById(docId);
+		checkDownloadEnable(user, originalDoc.getFolder().getId());
+
+		checkWriteEnable(user, folderId);
+
+		FolderDAO mdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		Folder folder = mdao.findById(folderId);
+		if (folder == null) {
+			log.error("Folder " + folder + " not found");
+			throw new Exception("error - folder not found");
+		}
+
+		// Create the document history event
+		History transaction = new History();
+		transaction.setSessionId(sid);
+		transaction.setEvent(History.EVENT_SHORTCUT_STORED);
+		transaction.setComment("");
+		transaction.setUser(user);
+
+		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+
+		Document doc = documentManager.createShortcut(originalDoc, folder, transaction);
+
+		return WSDocument.fromDocument(doc);
+	}
 }
