@@ -126,4 +126,9 @@ public class DocumentClient implements DocumentService {
 			throws Exception {
 		client.sendEmail(sid, docIds, recipients, subject, message);
 	}
+
+	@Override
+	public WSDocument createAlias(String sid, long docId, long folderId) throws Exception {
+		return client.createAlias(sid, docId, folderId);
+	}
 }

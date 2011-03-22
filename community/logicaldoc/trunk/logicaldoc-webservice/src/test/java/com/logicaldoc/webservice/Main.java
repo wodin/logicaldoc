@@ -1,14 +1,13 @@
 package com.logicaldoc.webservice;
 
 import com.logicaldoc.webservice.auth.AuthClient;
+import com.logicaldoc.webservice.document.DocumentClient;
 import com.logicaldoc.webservice.security.SecurityClient;
-import com.logicaldoc.webservice.security.WSGroup;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
 		AuthClient auth = new AuthClient("http://localhost:9080/logicaldoc/services/Auth");
-		// DocumentClient documentClient = new
-		// DocumentClient("http://localhost:9080/logicaldoc/services/Document");
+		DocumentClient documentClient = new DocumentClient("http://localhost:9080/logicaldoc/services/Document");
 		// FolderClient folderClient = new
 		// FolderClient("http://localhost:9080/logicaldoc/services/Folder");
 		// SearchClient searchClient = new
@@ -19,8 +18,8 @@ public class Main {
 
 		// Open a session
 		// This is a user 'author' with different permissions than the authors.
-		// String sid = auth.login("matteo", "matteo1982");
-		String sid = auth.login("admin", "admin");
+		String sid = auth.login("matteo", "matteo1982");
+		// String sid = auth.login("admin", "admin");
 		System.out.println("sid: " + sid);
 
 		// WSUser newUser = new WSUser();
@@ -31,29 +30,29 @@ public class Main {
 		// newUser.setFirstName("ciccio");
 		// securityClient.storeUser(sid, newUser);
 
-//		WSUser[] users = securityClient.listUsers(sid);
-//		WSUser editingUser = null;
-//		for (WSUser wsUser : users) {
-//			if (wsUser.getId() == 3) {
-//				editingUser = wsUser;
-//				break;
-//			}
-//		}
-//
-//		if (editingUser != null) {
-//			editingUser.setGroupIds(new long[] { 3 });
-//			securityClient.storeUser(sid, editingUser);
-//		}
-//
-//		users = securityClient.listUsers(sid);
-//		for (WSUser wsUser : users) {
-//			System.out.println("--- " + wsUser.getId());
-//			System.out.println("--- " + wsUser.getUserName());
-//			System.out.println("--- " + wsUser.getEmail());
-//			System.out.println("--- " + wsUser.getStreet());
-//			System.out.println("--- " + wsUser.getGroupIds()[0]);
-//			System.out.println("------------------------------------");
-//		}
+		// WSUser[] users = securityClient.listUsers(sid);
+		// WSUser editingUser = null;
+		// for (WSUser wsUser : users) {
+		// if (wsUser.getId() == 3) {
+		// editingUser = wsUser;
+		// break;
+		// }
+		// }
+		//
+		// if (editingUser != null) {
+		// editingUser.setGroupIds(new long[] { 3 });
+		// securityClient.storeUser(sid, editingUser);
+		// }
+		//
+		// users = securityClient.listUsers(sid);
+		// for (WSUser wsUser : users) {
+		// System.out.println("--- " + wsUser.getId());
+		// System.out.println("--- " + wsUser.getUserName());
+		// System.out.println("--- " + wsUser.getEmail());
+		// System.out.println("--- " + wsUser.getStreet());
+		// System.out.println("--- " + wsUser.getGroupIds()[0]);
+		// System.out.println("------------------------------------");
+		// }
 
 		// WSGroup newGroup = new WSGroup();
 		// newGroup.setName("pippo");
@@ -68,26 +67,26 @@ public class Main {
 		// securityClient.storeGroup(sid, editGroup);
 
 		// securityClient.deleteGroup(sid, 6);
-
-		WSGroup[] groups = securityClient.listGroups(sid);
-		WSGroup editingGroup = null;
-		for (WSGroup wsGroup : groups) {
-			if (wsGroup.getId() == 2) {
-				editingGroup = wsGroup;
-				break;
-			}
-		}
-		if (editingGroup != null) {
-			editingGroup.setUserIds(new long[] { 2, 3 });
-			securityClient.storeGroup(sid, editingGroup);
-		}
-		
-		for (WSGroup wsGroup : groups) {
-			System.out.println("--- " + wsGroup.getId());
-			System.out.println("--- " + wsGroup.getName());
-			System.out.println("--- " + wsGroup.getDescription());
-			System.out.println("+++++++++++++++++++++++++++++++++++++");
-		}
+		//
+		// WSGroup[] groups = securityClient.listGroups(sid);
+		// WSGroup editingGroup = null;
+		// for (WSGroup wsGroup : groups) {
+		// if (wsGroup.getId() == 2) {
+		// editingGroup = wsGroup;
+		// break;
+		// }
+		// }
+		// if (editingGroup != null) {
+		// editingGroup.setUserIds(new long[] { 2, 3 });
+		// securityClient.storeGroup(sid, editingGroup);
+		// }
+		//
+		// for (WSGroup wsGroup : groups) {
+		// System.out.println("--- " + wsGroup.getId());
+		// System.out.println("--- " + wsGroup.getName());
+		// System.out.println("--- " + wsGroup.getDescription());
+		// System.out.println("+++++++++++++++++++++++++++++++++++++");
+		// }
 
 		// WSFolder[] path = folderClient.getPath(sid, 20L);
 		// System.out.println("\n");
@@ -120,6 +119,8 @@ public class Main {
 		// for (WSDocument wsDocument : docs) {
 		// System.out.println("doc: "+wsDocument.getTitle());
 		// }
+
+		documentClient.createAlias(sid, 3L, 6L);
 
 		// DataHandler data = documentClient.getContent(sid, 68);
 		// System.out.println("data: " + data.toString());

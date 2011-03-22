@@ -27,7 +27,7 @@ public interface DocumentService {
 	 */
 	@WebResult(name = "document")
 	public WSDocument create(@WebParam(name = "sid") String sid, @WebParam(name = "document") WSDocument document,
-			@WebParam(name = "content") DataHandler content) throws Exception;;
+			@WebParam(name = "content") DataHandler content) throws Exception;
 
 	/**
 	 * Deletes an existing document with the given identifier.
@@ -226,4 +226,19 @@ public interface DocumentService {
 	 */
 	public void sendEmail(@WebParam(name = "sid") String sid, @WebParam(name = "docIds") Long[] docIds,
 			@WebParam(name = "recipients") String recipients, String subject, String message) throws Exception;
+
+	/**
+	 * Create a new document alias for the given document id and inside the
+	 * given folder id.
+	 * 
+	 * @param sid Session identifier
+	 * @param docId The original document id
+	 * @param folderId Identifier of the folder in which will be stored the
+	 *        alias.
+	 * @return The value object containing the document's metadata.
+	 * @throws Exception
+	 */
+	@WebResult(name = "document")
+	public WSDocument createAlias(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
+			@WebParam(name = "folderId") long folderId) throws Exception;;
 }
