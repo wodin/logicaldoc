@@ -296,7 +296,7 @@ public class ExportArchivesList extends VLayout {
 			public void onClick(MenuItemClickEvent event) {
 				String id = record.getAttributeAsString("id");
 				String name = record.getAttributeAsString("name");
-				String aosManagerName = record.getAttributeAsString("aosManagerName");
+				String aosManagerName = record.getAttributeAsString("aosmanager");
 
 				SignClosureDialog dialog = new SignClosureDialog(ExportArchivesList.this, id, name, aosManagerName);
 				dialog.show();
