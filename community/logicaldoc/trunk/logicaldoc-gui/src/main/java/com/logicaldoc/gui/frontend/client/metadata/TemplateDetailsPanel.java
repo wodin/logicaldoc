@@ -186,6 +186,7 @@ public class TemplateDetailsPanel extends VLayout {
 				public void onSuccess(GUITemplate result) {
 					savePanel.setVisible(false);
 					templatesPanel.updateRecord(result);
+					setTemplate(result);
 				}
 			});
 		}

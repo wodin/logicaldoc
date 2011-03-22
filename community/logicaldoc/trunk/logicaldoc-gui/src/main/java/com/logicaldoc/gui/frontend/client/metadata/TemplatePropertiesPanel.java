@@ -17,16 +17,17 @@ import com.logicaldoc.gui.frontend.client.services.TemplateService;
 import com.logicaldoc.gui.frontend.client.services.TemplateServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.BooleanCallback;
-import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.TransferImgButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.PickerIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -300,7 +301,6 @@ public class TemplatePropertiesPanel extends HLayout {
 			removeChild(form2);
 		form2 = new DynamicForm();
 		form2.setNumCols(2);
-		form2.setTitleOrientation(TitleOrientation.LEFT);
 
 		// Attribute Name
 		final TextItem attributeName = ItemFactory.newSimpleTextItem("attributeName", "attributename", null);
@@ -341,13 +341,14 @@ public class TemplatePropertiesPanel extends HLayout {
 		type.setDefaultValue("" + GUIExtendedAttribute.TYPE_STRING);
 		type.setDisabled(template.isReadonly());
 
-		HLayout buttons = new HLayout();
-
-		IButton addUpdate = new IButton();
+		ButtonItem addUpdate = new ButtonItem();
 		addUpdate.setTitle(I18N.message("addupdate"));
-		addUpdate.setWidth(150);
-		addUpdate.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
+		addUpdate.setAutoFit(true);
+		addUpdate.setColSpan(2);
+		addUpdate.setAlign(Alignment.RIGHT);
+		addUpdate.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+			@Override
+			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
 				if (attributeName.getValue() != null && !((String) attributeName.getValue()).trim().isEmpty()) {
 					if (updatingAttributeName.trim().isEmpty()) {
 						GUIExtendedAttribute att = new GUIExtendedAttribute();
@@ -382,19 +383,12 @@ public class TemplatePropertiesPanel extends HLayout {
 			}
 		});
 
-		IButton restore = new IButton();
-		restore.setTitle(I18N.message("restore"));
-		restore.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				restore();
-			}
-		});
-
-		form2.setItems(attributeName, label, mandatory, type);
 		if (!template.isReadonly())
-			buttons.setMembers(addUpdate, restore);
-		buttons.setMembersMargin(10);
-		attributesLayout.setMembers(form2, buttons);
+			form2.setItems(attributeName, label, mandatory, type, addUpdate);
+		else
+			form2.setItems(attributeName, label, mandatory, type);
+
+		attributesLayout.setMembers(form2);
 		attributesLayout.setMembersMargin(15);
 		attributesLayout.setWidth(250);
 		addMember(attributesLayout);
@@ -454,14 +448,6 @@ public class TemplatePropertiesPanel extends HLayout {
 		updatingAttributeName = "";
 		detailsPanel.getSavePanel().setVisible(false);
 		attributesList.deselectAllRecords();
-	}
-
-	private void restore() {
-		guiAttributes.clear();
-		attributesList.clear();
-		attributesList.setRecords(new ListGridRecord[0]);
-		fillAttributesList(template.getId());
-		clean();
 	}
 
 	protected void showContextMenu() {
