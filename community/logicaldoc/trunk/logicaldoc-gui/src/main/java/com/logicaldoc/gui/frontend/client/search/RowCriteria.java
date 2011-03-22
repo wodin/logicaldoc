@@ -86,7 +86,7 @@ public class RowCriteria extends HLayout {
 
 		criteriaFieldsItem = new SelectItem("fields", "fields");
 		criteriaFieldsItem.setShowTitle(false);
-		criteriaFieldsItem.setPickListWidth(150);
+		criteriaFieldsItem.setPickListWidth(120);
 		criteriaFieldsItem.setWidth(120);
 		criteriaFieldsItem.setMultiple(false);
 		DataSource ds = null;
@@ -105,7 +105,7 @@ public class RowCriteria extends HLayout {
 		criteriaFieldsItem.setColSpan(1);
 
 		operatorsFieldsItem = new SelectItem("operators", "operators");
-		operatorsFieldsItem.setPickListWidth(120);
+		operatorsFieldsItem.setPickListWidth(90);
 		operatorsFieldsItem.setWidth(90);
 		operatorsFieldsItem.setMultiple(false);
 		operatorsFieldsItem.setShowTitle(false);
@@ -114,7 +114,7 @@ public class RowCriteria extends HLayout {
 		if (fieldSelected != null && !fieldSelected.trim().isEmpty())
 			operatorsFieldsItem.setValueMap(operatorsFor(fieldSelected));
 		else
-			operatorsFieldsItem.setValueMap(operatorsFor("title"));
+			operatorsFieldsItem.setValueMap(operatorsFor(null));
 
 		criteriaFieldsItem.addChangedHandler(new ChangedHandler() {
 
@@ -146,6 +146,8 @@ public class RowCriteria extends HLayout {
 	private LinkedHashMap<String, String> operatorsFor(String criteriaField) {
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("", " ");
+		if (criteriaField == null)
+			return map;
 
 		if (criteriaField.equals("id") || criteriaField.equals("fileSize") || criteriaField.equals("rating")) {
 			map.put("greaterthan", I18N.message("greaterthan"));
