@@ -118,6 +118,7 @@ public class MessageDialog extends Window {
 					message.setRecipient(form.getValueAsString("recipient"));
 					message.setSubject(form.getValueAsString("subject"));
 					message.setMessage(form.getValueAsString("message"));
+					message.setConfirmation("true".equals(form.getValueAsString("confirmation")));
 					if (form.getValueAsString("validity") != null)
 						message.setValidity(Integer.parseInt(form.getValueAsString("validity")));
 
