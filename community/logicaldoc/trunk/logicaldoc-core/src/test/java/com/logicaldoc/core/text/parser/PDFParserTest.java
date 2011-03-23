@@ -17,6 +17,7 @@ import java.util.GregorianCalendar;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -66,26 +67,33 @@ public class PDFParserTest {
 
 		Parser parser = ParserFactory.getParser(filename);
 		PDFParser pdfp = (PDFParser) parser;
+		// pdfp.parse(file);
+		//
+		// String title = pdfp.getTitle();
+		// System.out.println("title: " + title);
+		// assertTrue(StringUtils.isNotEmpty(title));
+		// assertEquals("Folie 1", title);
+		//
+		// String author = pdfp.getAuthor();
+		// System.out.println("author: " + author);
+		// assertTrue(StringUtils.isNotEmpty(author));
+		// assertEquals("Marcus Joost", author);
+		//
+		// String content = pdfp.getContent();
+		// assertNotNull(content);
+		// assertTrue(StringUtils.isNotEmpty(content));
+		//
+		// System.out.println("content.length(): " + content.length());
+		// assertEquals(27179, content.length());
+
+		inputFile = "target/test-classes/probiotic-1.4.pdf";
+		file = new File(inputFile);
+		filename = file.getPath();
+
+		parser = ParserFactory.getParser(filename);
+		pdfp = (PDFParser) parser;
 		pdfp.parse(file);
-
-		String title = pdfp.getTitle();
-		System.out.println("title: " + title);
-		assertTrue(StringUtils.isNotEmpty(title));
-		assertEquals("Folie 1", title);
-
-		String author = pdfp.getAuthor();
-		System.out.println("author: " + author);
-		assertTrue(StringUtils.isNotEmpty(author));
-		assertEquals("Marcus Joost", author);
-
-		String content = pdfp.getContent();
-		assertNotNull(content);
-		assertTrue(StringUtils.isNotEmpty(content));
-
-		System.out.println("content.length(): " + content.length());
-		assertEquals(27179, content.length());
-
-		// System.out.println("content : " + content);
+		Assert.assertTrue(pdfp.getContent().contains("adequate"));
 	}
 
 	@Test
@@ -213,7 +221,6 @@ public class PDFParserTest {
 		assertEquals(8602, content.length());
 	}
 
-	
 	@Test
 	public void testForm() throws UnsupportedEncodingException {
 		String inputFile = "target/test-classes/pdf_form_fields.pdf";
