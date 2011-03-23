@@ -39,7 +39,7 @@ public class TemplatesDataServlet extends HttpServlet {
 		try {
 			String folderId = request.getParameter("folderId");
 
-			int type = 0;
+			Integer type = null;
 			if (request.getParameter("templateType") != null)
 				type = new Integer(request.getParameter("templateType"));
 
@@ -79,11 +79,16 @@ public class TemplatesDataServlet extends HttpServlet {
 			}
 
 			DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
+			List<DocumentTemplate> templates = null;
+			if (type != null)
+				templates = dao.findByType(type);
+			else
+				templates = dao.findAll();
 
 			/*
 			 * Iterate over the collection of templates
 			 */
-			for (DocumentTemplate template : dao.findByType(type)) {
+			for (DocumentTemplate template : templates) {
 				if (templateIds.contains(template.getId()))
 					continue;
 

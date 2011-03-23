@@ -5,7 +5,6 @@ import java.util.LinkedHashMap;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
-import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
@@ -555,9 +554,9 @@ public class ItemFactory {
 		templateItem.setMultiple(true);
 		templateItem.setMultipleAppearance(MultipleAppearance.PICKLIST);
 		if (!multipleSelection)
-			templateItem.setOptionDataSource(new TemplatesDS(true, templateId, GUITemplate.TYPE_DEFAULT));
+			templateItem.setOptionDataSource(new TemplatesDS(true, templateId, null));
 		else
-			templateItem.setOptionDataSource(new TemplatesDS(false, templateId, GUITemplate.TYPE_DEFAULT));
+			templateItem.setOptionDataSource(new TemplatesDS(false, templateId, null));
 		if (!Feature.enabled(Feature.TEMPLATE))
 			templateItem.setDisabled(true);
 		templateItem.setHintStyle("hint");
