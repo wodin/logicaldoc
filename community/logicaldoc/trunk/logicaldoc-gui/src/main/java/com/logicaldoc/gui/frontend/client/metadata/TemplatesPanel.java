@@ -104,6 +104,9 @@ public class TemplatesPanel extends VLayout {
 		category.setCanSort(false);
 		category.setHidden(type == GUITemplate.TYPE_DEFAULT);
 
+		ListGridField signRequired = new ListGridField("signRequired", I18N.message("signrequired"), 100);
+		signRequired.setHidden(true);
+
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setShowAllRecords(true);

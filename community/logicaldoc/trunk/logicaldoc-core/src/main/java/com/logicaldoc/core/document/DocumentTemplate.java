@@ -23,6 +23,10 @@ public class DocumentTemplate extends ExtensibleObject {
 	public static int CATEGORY_DDT = 3;
 
 	public static int CATEGORY_CONTRACT = 4;
+	
+	public static int SIGNED_NO = 0;
+	
+	public static int SIGNED_REQUIRED = 1;
 
 	private String name;
 
@@ -33,6 +37,8 @@ public class DocumentTemplate extends ExtensibleObject {
 	private int type = TYPE_DEFAULT;
 
 	private int category = CATEGORY_GENERIC;
+	
+	private int signRequired = SIGNED_NO;
 
 	public String getName() {
 		return name;
@@ -72,5 +78,13 @@ public class DocumentTemplate extends ExtensibleObject {
 
 	public void setCategory(int category) {
 		this.category = category;
+	}
+
+	public int getSignRequired() {
+		return signRequired;
+	}
+
+	public void setSignRequired(int signRequired) {
+		this.signRequired = signRequired;
 	}
 }
