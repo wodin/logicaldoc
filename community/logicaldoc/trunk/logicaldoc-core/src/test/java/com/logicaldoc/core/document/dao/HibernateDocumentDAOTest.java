@@ -149,8 +149,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 		docs = dao.findByIndexed(0);
 		Assert.assertNotNull(docs);
-		Assert.assertEquals(1, docs.size());
-		Assert.assertEquals(2, docs.get(0).getId());
+		// The document with is 2 has a docRef not null
+		Assert.assertEquals(0, docs.size());
 	}
 
 	@Test
