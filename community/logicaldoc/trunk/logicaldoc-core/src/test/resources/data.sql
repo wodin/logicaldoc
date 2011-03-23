@@ -139,7 +139,7 @@ values     (2,6,'2008-10-22',0,0,'b','testDocname2','2.0','2006-12-19','2006-12-
 
 insert into ld_document
            (ld_id,ld_folderid,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_deleteuserid,ld_barcoded)
-values     (3,6,'2010-04-02',0,0,'c','DELETED 1','testDocVer1','2006-12-19','2006-12-19','myself',1,1,'PDF',3,'source2','sourceauthor','2008-12-19','sourcetype','coverage','en','pluto',122345,1,0,'',1,0,1,0);
+values     (3,6,'2010-04-02',0,0,'c','testDocname3 1','testDocVer1','2006-12-19','2006-12-19','myself',1,1,'PDF',3,'source2','sourceauthor','2008-12-19','sourcetype','coverage','en','pluto',122345,1,0,'',1,0,1,0);
 
 insert into ld_document
            (ld_id,ld_folderid,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_deleteuserid,ld_barcoded)

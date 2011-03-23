@@ -595,11 +595,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public List<Document> findByIndexed(int indexed) {
-		return findByWhere("_entity.docref is null and _entity.indexed=" + indexed,
+		return findByWhere("_entity.docRef is null and _entity.indexed=" + indexed,
 				"order by _entity.lastModified asc", null);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void restore(long docId, long folderId) {
 		bulkUpdate("set ld_deleted=0, ld_folderid=" + folderId + ", ld_lastmodified=CURRENT_TIMESTAMP where ld_id="
