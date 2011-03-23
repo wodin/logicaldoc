@@ -60,7 +60,7 @@ public class TemplatePropertiesPanel extends HLayout {
 
 	private TemplateServiceAsync templateService = (TemplateServiceAsync) GWT.create(TemplateService.class);
 
-	private DynamicForm form1 = new DynamicForm();
+	protected DynamicForm form1 = new DynamicForm();
 
 	protected DynamicForm form2 = new DynamicForm();
 
@@ -68,7 +68,7 @@ public class TemplatePropertiesPanel extends HLayout {
 
 	protected GUITemplate template;
 
-	private ChangedHandler changedHandler;
+	protected ChangedHandler changedHandler;
 
 	private TemplateDetailsPanel detailsPanel;
 
@@ -175,28 +175,8 @@ public class TemplatePropertiesPanel extends HLayout {
 
 		if (contains(form1))
 			removeChild(form1);
-		form1 = new DynamicForm();
-		form1.setNumCols(1);
-		form1.setValuesManager(vm);
-		form1.setTitleOrientation(TitleOrientation.LEFT);
-
-		StaticTextItem id = ItemFactory.newStaticTextItem("id", "id", Long.toString(template.getId()));
-		id.setDisabled(true);
-
-		TextItem name = ItemFactory.newTextItem("name", I18N.message("name"), template.getName());
-		name.setRequired(true);
-		name.setDisabled(readonly || template.getId() != 0);
-		if (!readonly)
-			name.addChangedHandler(changedHandler);
-
-		TextItem description = ItemFactory.newTextItem("description", "description", template.getDescription());
-		description.setDisabled(readonly);
-		if (!readonly)
-			description.addChangedHandler(changedHandler);
-
-		form1.setItems(id, name, description);
+		addTemplateMetadata(readonly);
 		addMember(form1);
-		form1.setWidth(200);
 
 		attributesList.addSelectionChangedHandler(new SelectionChangedHandler() {
 			@Override
@@ -394,29 +374,57 @@ public class TemplatePropertiesPanel extends HLayout {
 		addMember(attributesLayout);
 	}
 
+	protected void addTemplateMetadata(boolean readonly) {
+		form1 = new DynamicForm();
+		form1.setNumCols(1);
+		form1.setValuesManager(vm);
+		form1.setTitleOrientation(TitleOrientation.LEFT);
+
+		StaticTextItem id = ItemFactory.newStaticTextItem("id", "id", Long.toString(template.getId()));
+		id.setDisabled(true);
+
+		TextItem name = ItemFactory.newTextItem("name", I18N.message("name"), template.getName());
+		name.setRequired(true);
+		name.setDisabled(readonly || template.getId() != 0);
+		if (!readonly)
+			name.addChangedHandler(changedHandler);
+
+		TextItem description = ItemFactory.newTextItem("description", "description", template.getDescription());
+		description.setDisabled(readonly);
+		if (!readonly)
+			description.addChangedHandler(changedHandler);
+
+		form1.setItems(id, name, description);
+		form1.setWidth(200);
+	}
+
 	@SuppressWarnings("unchecked")
-	boolean validate() {
+	protected boolean validate() {
 		Map<String, Object> values = (Map<String, Object>) vm.getValues();
 		vm.validate();
 		if (!vm.hasErrors()) {
-			template.setName((String) values.get("name"));
-			template.setDescription((String) values.get("description"));
-			if (guiAttributes.size() > 0) {
-				for (String attrName : guiAttributes.keySet()) {
-					for (ListGridRecord record : attributesList.getRecords()) {
-						int idx = attributesList.getRecordIndex(record);
-						if (record.getAttributeAsString("name").equals(attrName)) {
-							GUIExtendedAttribute extAttr = guiAttributes.get(attrName);
-							extAttr.setPosition(idx);
-							guiAttributes.remove(attrName);
-							guiAttributes.put(attrName, extAttr);
-						}
-					}
-				}
-				template.setAttributes(guiAttributes.values().toArray(new GUIExtendedAttribute[0]));
-			}
+			validateFields(values);
 		}
 		return !vm.hasErrors();
+	}
+
+	protected void validateFields(Map<String, Object> values) {
+		template.setName((String) values.get("name"));
+		template.setDescription((String) values.get("description"));
+		if (guiAttributes.size() > 0) {
+			for (String attrName : guiAttributes.keySet()) {
+				for (ListGridRecord record : attributesList.getRecords()) {
+					int idx = attributesList.getRecordIndex(record);
+					if (record.getAttributeAsString("name").equals(attrName)) {
+						GUIExtendedAttribute extAttr = guiAttributes.get(attrName);
+						extAttr.setPosition(idx);
+						guiAttributes.remove(attrName);
+						guiAttributes.put(attrName, extAttr);
+					}
+				}
+			}
+			template.setAttributes(guiAttributes.values().toArray(new GUIExtendedAttribute[0]));
+		}
 	}
 
 	private void addAttribute(GUIExtendedAttribute att) {

@@ -19,6 +19,10 @@ public class GUITemplate implements Serializable {
 	public static int CATEGORY_DDT = 3;
 
 	public static int CATEGORY_CONTRACT = 4;
+	
+	public static int SIGNED_NO = 0;
+	
+	public static int SIGNED_REQUIRED = 1;
 
 	private long id = 0;
 
@@ -33,6 +37,8 @@ public class GUITemplate implements Serializable {
 	private int category = CATEGORY_GENERIC;
 
 	private GUIExtendedAttribute[] attributes;
+	
+	private int signRequired = SIGNED_NO;
 
 	public long getId() {
 		return id;
@@ -88,5 +94,13 @@ public class GUITemplate implements Serializable {
 
 	public void setCategory(int category) {
 		this.category = category;
+	}
+
+	public int getSignRequired() {
+		return signRequired;
+	}
+
+	public void setSignRequired(int signRequired) {
+		this.signRequired = signRequired;
 	}
 }

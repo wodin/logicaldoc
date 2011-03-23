@@ -96,6 +96,7 @@ public class TemplatesDataServlet extends HttpServlet {
 				writer.print("<type>" + template.getType() + "</type>");
 				writer.print("<category><![CDATA[" + I18N.message("sostdoctype." + template.getCategory())
 						+ "]]></category>");
+				writer.print("<signrequired>" + template.getType() + "</signrequired>");
 				writer.print("</template>");
 			}
 

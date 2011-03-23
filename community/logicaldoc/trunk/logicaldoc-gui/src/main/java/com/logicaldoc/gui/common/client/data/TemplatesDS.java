@@ -21,7 +21,8 @@ public class TemplatesDS extends DataSource {
 		DataSourceIntegerField documents = new DataSourceIntegerField("documents");
 		DataSourceIntegerField type = new DataSourceIntegerField("type");
 		DataSourceTextField category = new DataSourceTextField("category");
-		setFields(id, name, documents, readonly, type, category);
+		DataSourceIntegerField signRequired = new DataSourceIntegerField("signrequired");
+		setFields(id, name, documents, readonly, type, category, signRequired);
 		setDataURL("data/templates.xml?withempty=" + withEmpty + (folderId != null ? "&folderId=" + folderId : "")
 				+ (templateType != null ? "&templateType=" + templateType : ""));
 		setClientOnly(true);

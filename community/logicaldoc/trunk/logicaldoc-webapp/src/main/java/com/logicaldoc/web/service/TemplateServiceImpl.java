@@ -96,6 +96,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 			templ.setReadonly(template.isReadonly() ? 1 : 0);
 			templ.setType(template.getType());
 			templ.setCategory(template.getCategory());
+			templ.setSignRequired(template.getSignRequired());
 
 			Map<String, ExtendedAttribute> attrs = new HashMap<String, ExtendedAttribute>();
 			if (template.getAttributes() != null && template.getAttributes().length > 0) {
@@ -152,6 +153,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 			templ.setReadonly(template.getReadonly() == 1);
 			templ.setType(template.getType());
 			templ.setCategory(template.getCategory());
+			templ.setSignRequired(template.getSignRequired());
 
 			GUIExtendedAttribute[] attributes = new GUIExtendedAttribute[template.getAttributeNames().size()];
 			int i = 0;
