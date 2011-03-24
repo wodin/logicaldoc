@@ -14,7 +14,6 @@ import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
-import com.logicaldoc.gui.frontend.client.document.SignClosureDialog;
 import com.logicaldoc.gui.frontend.client.services.ArchiveService;
 import com.logicaldoc.gui.frontend.client.services.ArchiveServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -48,7 +47,7 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  * @since 6.0
  */
 public class ExportArchivesList extends VLayout {
-	private ArchiveServiceAsync service = (ArchiveServiceAsync) GWT.create(ArchiveService.class);
+	protected ArchiveServiceAsync service = (ArchiveServiceAsync) GWT.create(ArchiveService.class);
 
 	protected Layout listing;
 
@@ -219,7 +218,7 @@ public class ExportArchivesList extends VLayout {
 			setMembers(listing, detailsContainer);
 	}
 
-	private void showContextMenu() {
+	protected void showContextMenu() {
 		Menu contextMenu = new Menu();
 
 		final ListGridRecord record = list.getSelectedRecord();
@@ -260,56 +259,18 @@ public class ExportArchivesList extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							if (record.getAttributeAsString("type").equals("" + GUIArchive.TYPE_STORAGE)) {
-								service.getSostConfigurations(Session.get().getSid(), id,
-										new AsyncCallback<GUISostConfig[]>() {
-											@Override
-											public void onFailure(Throwable caught) {
-												Log.serverError(caught);
-											}
-
-											@Override
-											public void onSuccess(GUISostConfig[] configs) {
-												if (configs.length > 0) {
-													// Show Archive validation
-													// panel
-													ArchiveValidation validation = new ArchiveValidation(
-															ExportArchivesList.this, configs, id);
-													validation.show();
-												} else {
-													closeArchive(record);
-												}
-											}
-										});
-							} else {
-								closeArchive(record);
-							}
+							onClosingArchive(record, id);
 						}
 					}
 				});
 			}
 		});
 
-		MenuItem sign = new MenuItem();
-		sign.setTitle(I18N.message("sign"));
-		sign.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			public void onClick(MenuItemClickEvent event) {
-				String id = record.getAttributeAsString("id");
-				String name = record.getAttributeAsString("name");
-				String aosManagerName = record.getAttributeAsString("aosmanager");
-
-				SignClosureDialog dialog = new SignClosureDialog(ExportArchivesList.this, id, name, aosManagerName);
-				dialog.show();
-			}
-		});
-
 		if (GUIArchive.STATUS_OPENED != Integer.parseInt(record.getAttributeAsString("status")))
 			close.setEnabled(false);
 
-		if (GUIArchive.STATUS_READYTOSIGN != Integer.parseInt(record.getAttributeAsString("status")))
-			sign.setEnabled(false);
-
-		contextMenu.setItems(close, delete, sign);
+		contextMenu.setItems(close, delete);
+		addUsefulMenuItem(record, contextMenu);
 		contextMenu.showContextMenu();
 	}
 
@@ -327,7 +288,7 @@ public class ExportArchivesList extends VLayout {
 		return list;
 	}
 
-	private void closeArchive(final ListGridRecord record) {
+	protected void closeArchive(final ListGridRecord record) {
 		service.setStatus(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
 				GUIArchive.STATUS_CLOSED, new AsyncCallback<Void>() {
 					@Override
@@ -352,5 +313,38 @@ public class ExportArchivesList extends VLayout {
 	protected void onAddingArchive() {
 		ArchiveDialog dialog = new ArchiveDialog(ExportArchivesList.this);
 		dialog.show();
+	}
+
+	/**
+	 * This method is used only by the classes that extend this class.
+	 */
+	protected Menu addUsefulMenuItem(final ListGridRecord record, Menu contextMenu) {
+		// DO NOTHING
+		return contextMenu;
+	}
+
+	protected void onClosingArchive(final ListGridRecord record, final long id) {
+		if (record.getAttributeAsString("type").equals("" + GUIArchive.TYPE_STORAGE)) {
+			service.getSostConfigurations(Session.get().getSid(), id, new AsyncCallback<GUISostConfig[]>() {
+				@Override
+				public void onFailure(Throwable caught) {
+					Log.serverError(caught);
+				}
+
+				@Override
+				public void onSuccess(GUISostConfig[] configs) {
+					if (configs.length > 0) {
+						// Show Archive validation
+						// panel
+						ArchiveValidation validation = new ArchiveValidation(ExportArchivesList.this, configs, id);
+						validation.show();
+					} else {
+						closeArchive(record);
+					}
+				}
+			});
+		} else {
+			closeArchive(record);
+		}
 	}
 }

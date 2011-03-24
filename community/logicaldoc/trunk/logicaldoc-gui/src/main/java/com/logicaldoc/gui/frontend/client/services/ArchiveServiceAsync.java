@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIIncrementalArchive;
 import com.logicaldoc.gui.common.client.beans.GUISostConfig;
+import com.logicaldoc.gui.common.client.beans.GUIVersion;
 
 public interface ArchiveServiceAsync {
 
@@ -32,4 +33,6 @@ public interface ArchiveServiceAsync {
 	void getSostConfigurations(String sid, long archiveId, AsyncCallback<GUISostConfig[]> callback);
 
 	void signArchive(String sid, long userId, long archiveId, AsyncCallback<String> callback);
+
+	void verifyArchive(String sid, long archiveId, AsyncCallback<GUIVersion[]> callback);
 }

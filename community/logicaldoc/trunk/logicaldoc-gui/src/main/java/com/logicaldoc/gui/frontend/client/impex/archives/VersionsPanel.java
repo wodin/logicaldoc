@@ -122,13 +122,15 @@ public class VersionsPanel extends VLayout {
 		icon.setImageURLSuffix(".png");
 		icon.setCanFilter(false);
 
+		ListGridField template = new ListGridField("template", I18N.message("template"), 200);
+
 		listGrid = new ListGrid();
 		listGrid.setEmptyMessage(I18N.message("notitemstoshow"));
 		listGrid.setCanFreezeFields(true);
 		listGrid.setAutoFetchData(true);
 		dataSource = new VersionsDS(null, archiveId, max);
 		listGrid.setDataSource(dataSource);
-		listGrid.setFields(id, docid, customid, icon, title, version, date, size);
+		listGrid.setFields(id, docid, customid, icon, title, version, date, size, template);
 		addMember(listGrid, 1);
 
 		listGrid.addCellDoubleClickHandler(new CellDoubleClickHandler() {

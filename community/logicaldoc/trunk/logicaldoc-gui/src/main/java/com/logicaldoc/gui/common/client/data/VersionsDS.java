@@ -32,8 +32,9 @@ public class VersionsDS extends DataSource {
 		DataSourceTextField title = new DataSourceTextField("title");
 		DataSourceFloatField size = new DataSourceFloatField("size");
 		DataSourceImageField icon = new DataSourceImageField("icon");
+		DataSourceTextField template = new DataSourceTextField("template");
 
-		setFields(id, user, event, version, fileVersion, date, comment, docid, customid, title, size, icon);
+		setFields(id, user, event, version, fileVersion, date, comment, docid, customid, title, size, icon, template);
 		setClientOnly(true);
 		setDataURL("data/versions.xml?sid=" + Session.get().getSid()
 				+ (docId != null ? "&docId=" + docId : "&archiveId=" + archiveId) + "&locale=" + I18N.getLocale()

@@ -62,7 +62,7 @@ public class VersionsDataServlet extends HttpServlet {
 			VersionDAO dao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
 
 			StringBuffer query = new StringBuffer(
-					"select A.id, A.username, A.event, A.version, A.fileVersion, A.versionDate, A.comment, A.docId, A.title, A.customId, A.fileSize, A.type ");
+					"select A.id, A.username, A.event, A.version, A.fileVersion, A.versionDate, A.comment, A.docId, A.title, A.customId, A.fileSize, A.type, A.templateName ");
 			if (request.getParameter("docId") != null) {
 				query.append(" from Version A where A.deleted = 0 and A.docId=" + request.getParameter("docId"));
 			} else {
@@ -96,6 +96,7 @@ public class VersionsDataServlet extends HttpServlet {
 				writer.print("<size>" + cols[10] + "</size>");
 				writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon((String) cols[11]))
 						+ "</icon>");
+				writer.print("<template><![CDATA[" + cols[12] + "]]></template>");
 				writer.print("</version>");
 			}
 

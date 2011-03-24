@@ -20,6 +20,11 @@ public class GUIVersion extends GUIDocument {
 
 	private Date versionDate = new Date();
 
+	private int signed = 0;
+
+	// Used to show error message on the archived version
+	private String errorText;
+
 	public long getDocId() {
 		return docId;
 	}
@@ -50,5 +55,21 @@ public class GUIVersion extends GUIDocument {
 
 	public void setVersionDate(Date versionDate) {
 		this.versionDate = versionDate;
+	}
+
+	public int getSigned() {
+		return signed;
+	}
+
+	public void setSigned(int signed) {
+		this.signed = signed;
+	}
+
+	public String getErrorText() {
+		return errorText;
+	}
+
+	public void setErrorText(String errorText) {
+		this.errorText = errorText;
 	}
 }
