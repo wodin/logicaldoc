@@ -7,6 +7,7 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIIncrementalArchive;
 import com.logicaldoc.gui.common.client.beans.GUISostConfig;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
+import com.logicaldoc.gui.common.client.beans.GUIVersion;
 import com.logicaldoc.gui.frontend.client.services.ArchiveService;
 
 /**
@@ -102,5 +103,24 @@ public class MockArchiveServiceImpl extends RemoteServiceServlet implements Arch
 	@Override
 	public String signArchive(String sid, long userId, long archiveId) throws InvalidSessionException {
 		return "ok";
+	}
+
+	@Override
+	public GUIVersion[] verifyArchive(String sid, long archiveId) throws InvalidSessionException {
+		GUIVersion[] versions = new GUIVersion[2];
+
+		GUIVersion version = new GUIVersion();
+		version.setUsername("Marco Meschieri");
+		version.setComment("comment");
+		version.setId(1);
+		version.setTitle("Version " + 1);
+		versions[0] = version;
+		version = new GUIVersion();
+		version.setUsername("Alle Alle");
+		version.setComment("comment2");
+		version.setId(2);
+		version.setTitle("Version " + 2);
+		versions[1] = version;
+		return versions;
 	}
 }

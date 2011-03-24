@@ -6,6 +6,7 @@ import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIIncrementalArchive;
 import com.logicaldoc.gui.common.client.beans.GUISostConfig;
+import com.logicaldoc.gui.common.client.beans.GUIVersion;
 
 /**
  * The client side stub for the Archive Service. This service allows r/w
@@ -89,4 +90,16 @@ public interface ArchiveService extends RemoteService {
 	 * @throws InvalidSessionException
 	 */
 	public String signArchive(String sid, long userId, long archiveId) throws InvalidSessionException;
+
+	/**
+	 * Verifies the archive with the given identifier. First of all, checks if
+	 * there are some archived documents that missing a required signature
+	 * (looking at their template). Then validates the archive.
+	 * 
+	 * @param sid The session identifier
+	 * @param archiveId Identifier of the archive to verify
+	 * @return Array of documents versions that have some errors.
+	 * @throws InvalidSessionException
+	 */
+	public GUIVersion[] verifyArchive(String sid, long archiveId) throws InvalidSessionException;
 }
