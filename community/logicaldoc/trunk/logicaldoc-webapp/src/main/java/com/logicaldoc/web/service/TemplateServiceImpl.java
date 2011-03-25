@@ -57,15 +57,15 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 					// startup.
 					// By default, hypothesize that the template belongs to
 					// Generic category.
-					long templateId = -93;
+					long templateId = DocumentTemplate.GENERIC;
 					if (template.getCategory() == DocumentTemplate.CATEGORY_ACTIVE_INVOICE)
-						templateId = -98;
+						templateId = DocumentTemplate.ACTIVE_INVOICE;
 					else if (template.getCategory() == DocumentTemplate.CATEGORY_PASSIVE_INVOICE)
-						templateId = -97;
+						templateId = DocumentTemplate.PASSIVE_INVOICE;
 					else if (template.getCategory() == DocumentTemplate.CATEGORY_DDT)
-						templateId = -95;
+						templateId = DocumentTemplate.DDT;
 					else if (template.getCategory() == DocumentTemplate.CATEGORY_CONTRACT)
-						templateId = -94;
+						templateId = DocumentTemplate.CONTRACT;
 
 					DocumentTemplate t = dao.findById(templateId);
 					Map<String, ExtendedAttribute> attributes = t.getAttributes();

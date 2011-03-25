@@ -19,14 +19,24 @@ public class DocumentTemplate extends ExtensibleObject {
 	public static int CATEGORY_ACTIVE_INVOICE = 1;
 
 	public static int CATEGORY_PASSIVE_INVOICE = 2;
-	
+
 	public static int CATEGORY_DDT = 3;
 
 	public static int CATEGORY_CONTRACT = 4;
-	
+
 	public static int SIGNED_NO = 0;
-	
+
 	public static int SIGNED_REQUIRED = 1;
+
+	public static int ACTIVE_INVOICE = -98;
+
+	public static int PASSIVE_INVOICE = -97;
+
+	public static int DDT = -95;
+
+	public static int CONTRACT = -94;
+
+	public static int GENERIC = -93;
 
 	private String name;
 
@@ -37,7 +47,7 @@ public class DocumentTemplate extends ExtensibleObject {
 	private int type = TYPE_DEFAULT;
 
 	private int category = CATEGORY_GENERIC;
-	
+
 	private int signRequired = SIGNED_NO;
 
 	public String getName() {

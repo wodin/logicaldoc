@@ -162,23 +162,9 @@ public class LoginPanel extends VLayout {
 		inner.addMember(form);
 		inner.addMember(separator);
 		Layout bottom = new HLayout(60);
-		bottom.setAlign(Alignment.RIGHT);
+		bottom.setAlign(Alignment.LEFT);
 		bottom.addMember(loginButton);
-		GUIMessage forgotPwd = new GUIMessage();
-		forgotPwd.setMessage(I18N.message("forgotpassword"));
-		MessageLabel forgotMessage = new MessageLabel(forgotPwd);
-		forgotMessage.setAlign(Alignment.RIGHT);
-		forgotMessage.setIcon(null);
-		forgotMessage.setStyleName("forgotpwd");
-		final String productName = info.getProductName();
-		forgotMessage.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				onForgottenPwd(productName);
-			}
-		});
-		bottom.addMember(forgotMessage);
+		retrievePwd(info, bottom);
 		inner.addMember(bottom);
 		inner.setPadding(5);
 
@@ -199,6 +185,24 @@ public class LoginPanel extends VLayout {
 				+ info.getInstallationId() + "' width='1px' height='1px' border='0'/>";
 		HTMLFlow f = new HTMLFlow(img);
 		addMember(f);
+	}
+
+	protected void retrievePwd(GUIInfo info, Layout bottom) {
+		GUIMessage forgotPwd = new GUIMessage();
+		forgotPwd.setMessage(I18N.message("forgotpassword"));
+		MessageLabel forgotMessage = new MessageLabel(forgotPwd);
+		forgotMessage.setAlign(Alignment.RIGHT);
+		forgotMessage.setIcon(null);
+		forgotMessage.setStyleName("forgotpwd");
+		final String productName = info.getProductName();
+		forgotMessage.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				onForgottenPwd(productName);
+			}
+		});
+		bottom.addMember(forgotMessage);
 	}
 
 	protected void onLogin() {
