@@ -206,7 +206,7 @@ public class LoginPanel extends VLayout {
 				new AsyncCallback<GUISession>() {
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
-						SC.warn(caught.getMessage());
+						SC.warn(I18N.message("accesdenied"));
 					}
 
 					@Override
