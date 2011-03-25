@@ -49,8 +49,12 @@ public class SignDialog extends Window {
 
 	private long docId;
 
-	public SignDialog(String id, String filename, boolean validation) {
+	private String version = "";
+
+	public SignDialog(String id, String filename, boolean validation, String versionToBeSigned) {
 		docId = Long.parseLong(id);
+		if (versionToBeSigned != null)
+			this.version = versionToBeSigned;
 
 		layout.setMargin(15);
 		layout.setMembersMargin(2);
@@ -63,7 +67,7 @@ public class SignDialog extends Window {
 
 				@Override
 				public void onCloseClick(CloseClientEvent event) {
-					DocumentsPanel.get().refresh();
+					onClose();
 					destroy();
 				}
 			});
@@ -83,7 +87,7 @@ public class SignDialog extends Window {
 		downloadUrl.setWrapTitle(false);
 		downloadUrl.setValue(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id);
 		downloadUrl.setLinkTitle(filename);
-		
+
 		urlForm.setItems(downloadUrl);
 		layout.addMember(urlForm, 0);
 
@@ -170,7 +174,7 @@ public class SignDialog extends Window {
 		if (!vm.validate())
 			return;
 
-		signService.signDocument(Session.get().getSid(), Session.get().getUser().getId(), docId,
+		signService.signDocument(Session.get().getSid(), Session.get().getUser().getId(), docId, version,
 				new AsyncCallback<String>() {
 
 					@Override
@@ -182,7 +186,7 @@ public class SignDialog extends Window {
 					@Override
 					public void onSuccess(String result) {
 						if (result == "ok") {
-							DocumentsPanel.get().refresh();
+							onClose();
 							destroy();
 						} else {
 							SC.warn(I18N.message(result));
@@ -193,5 +197,9 @@ public class SignDialog extends Window {
 
 	private void cancel() {
 		sendButton.setDisabled(true);
+	}
+
+	protected void onClose() {
+		DocumentsPanel.get().refresh();
 	}
 }

@@ -125,7 +125,7 @@ public class ValidationTab extends Tab {
 					names = names.substring(1);
 
 				if (!ids.trim().isEmpty()) {
-					final SignDialog dialog = new SignDialog(ids, names, true);
+					final SignDialog dialog = new SignDialog(ids, names, true, null);
 					dialog.show();
 					dialog.addCloseClickHandler(new CloseClickHandler() {
 						@Override

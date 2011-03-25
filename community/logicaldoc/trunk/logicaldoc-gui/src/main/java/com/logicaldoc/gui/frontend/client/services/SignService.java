@@ -46,10 +46,12 @@ public interface SignService extends RemoteService {
 	 * @param sid The session identifier
 	 * @param userid Identifier of the user that is performing the signature
 	 * @param docId Identifier of the document to sign
+	 * @param version The version of the given document that must be sugned
+	 *        (optional)
 	 * @return 'ok' if no errors occurred, otherwise returns the error message.
 	 * @throws InvalidSessionException
 	 */
-	public String signDocument(String sid, long userId, long docId) throws InvalidSessionException;
+	public String signDocument(String sid, long userId, long docId, String version) throws InvalidSessionException;
 
 	/**
 	 * Reset from the user folder the signature file associated to the given

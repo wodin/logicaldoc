@@ -26,7 +26,7 @@ public class MockSignServiceImpl extends RemoteServiceServlet implements SignSer
 	}
 
 	@Override
-	public String signDocument(String sid, long userId, long docId) throws InvalidSessionException {
+	public String signDocument(String sid, long userId, long docId, String version) throws InvalidSessionException {
 		return "ok";
 	}
 

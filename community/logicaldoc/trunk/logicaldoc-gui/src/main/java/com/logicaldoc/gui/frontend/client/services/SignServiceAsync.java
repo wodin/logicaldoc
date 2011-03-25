@@ -9,7 +9,7 @@ public interface SignServiceAsync {
 
 	void storeSignature(String sid, long userId, String signerName, AsyncCallback<String> callback);
 
-	void signDocument(String sid, long userId, long docId, AsyncCallback<String> callback);
+	void signDocument(String sid, long userId, long docId, String version, AsyncCallback<String> callback);
 
 	void resetSignature(String sid, long userId, AsyncCallback<Boolean> callback);
 }
