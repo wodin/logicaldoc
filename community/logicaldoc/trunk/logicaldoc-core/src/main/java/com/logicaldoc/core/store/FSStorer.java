@@ -66,6 +66,8 @@ public class FSStorer implements Storer {
 	@Override
 	public boolean store(InputStream stream, long docId, String filename) {
 		try {
+			SystemQuota.checkOverQuota();
+			
 			File dir = getDirectory(docId);
 			FileUtils.forceMkdir(dir);
 			File file = new File(new StringBuilder(dir.getPath()).append("/").append(filename).toString());
@@ -74,7 +76,6 @@ public class FSStorer implements Storer {
 			// Performs increment and check of the system quota, then increments
 			// the user quota count
 			SystemQuota.increment(file.length());
-			SystemQuota.checkOverQuota();
 			SystemQuota.incrementUserQuota(docId, file.length());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
