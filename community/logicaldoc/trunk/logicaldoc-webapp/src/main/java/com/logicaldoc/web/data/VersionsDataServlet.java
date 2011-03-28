@@ -96,7 +96,10 @@ public class VersionsDataServlet extends HttpServlet {
 				writer.print("<size>" + cols[10] + "</size>");
 				writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon((String) cols[11]))
 						+ "</icon>");
-				writer.print("<template><![CDATA[" + cols[12] + "]]></template>");
+				if (cols[12] != null)
+					writer.print("<template><![CDATA[" + cols[12] + "]]></template>");
+				else
+					writer.print("<template></template>");
 				writer.print("</version>");
 			}
 
