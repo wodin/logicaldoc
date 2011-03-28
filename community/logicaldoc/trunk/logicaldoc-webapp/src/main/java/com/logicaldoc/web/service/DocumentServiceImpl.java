@@ -179,8 +179,12 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					// And launch it
 					zipImporter.start();
 				} else {
-					// Check if the user can upload another document.
-					SystemQuota.checkUserQuota(userSession.getUserId(), file.length());
+					try {
+						// Check if the user can upload another document.
+						SystemQuota.checkUserQuota(userSession.getUserId(), file.length());
+					} catch (Exception e) {
+						return;
+					}
 
 					String title = filename.substring(0, filename.lastIndexOf("."));
 
