@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>40</version>
+  <version>41</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -592,6 +592,10 @@
       <repository>
         <id>gwt-image-loader-repo</id>
         <url>http://gwt-image-loader.googlecode.com/svn/repo</url>
+      </repository>
+      <repository>
+        <id>ice-repo</id>
+        <url>http://anonsvn.icefaces.org/repo/maven2/releases</url>
       </repository>
     </repositories>
     <distributionManagement>
