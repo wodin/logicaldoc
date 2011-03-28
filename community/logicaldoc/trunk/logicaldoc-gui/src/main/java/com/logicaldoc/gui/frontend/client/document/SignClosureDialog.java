@@ -65,7 +65,7 @@ public class SignClosureDialog extends Window {
 			public void onCloseClick(CloseClientEvent event) {
 				destroy();
 				archivesList.refresh(archivesList.getArchivesType(), false);
-				archivesList.showDetails(archiveId, false);
+				archivesList.showDetails(archiveId, true);
 			}
 		});
 

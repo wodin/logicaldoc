@@ -64,7 +64,6 @@ public class SignDialog extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		if (!archiveValidation)
 			addCloseClickHandler(new CloseClickHandler() {
-
 				@Override
 				public void onCloseClick(CloseClientEvent event) {
 					onClose();
