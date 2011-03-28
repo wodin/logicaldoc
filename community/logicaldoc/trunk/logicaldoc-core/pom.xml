@@ -280,7 +280,7 @@
 		<dependency>
 			<groupId>org.icepdf</groupId>
 			<artifactId>icepdf-core</artifactId>
-			<version>4.1.1</version>
+			<version>4.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.media</groupId>
