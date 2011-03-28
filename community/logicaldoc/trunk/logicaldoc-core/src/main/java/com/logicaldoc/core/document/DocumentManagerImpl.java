@@ -100,11 +100,14 @@ public class DocumentManagerImpl implements DocumentManager {
 				listener.beforeCheckin(document, transaction, dictionary);
 			}
 
+			// store the document in the repository (on the file system)
+			store(document, fileInputStream);
+
 			document.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 			document.setSigned(0);
 			if (document.getBarcoded() != AbstractDocument.BARCODE_SKIP)
-				;
-			document.setBarcoded(AbstractDocument.BARCODE_TO_PROCESS);
+				document.setBarcoded(AbstractDocument.BARCODE_TO_PROCESS);
+
 			documentDAO.store(document);
 
 			Folder folder = document.getFolder();
@@ -134,9 +137,6 @@ public class DocumentManagerImpl implements DocumentManager {
 			// create search index entry
 			if (immediateIndexing)
 				createIndexEntry(document);
-
-			// store the document in the repository (on the file system)
-			store(document, fileInputStream);
 
 			log.debug("Invoke listeners after store");
 			for (DocumentListener listener : listenerManager.getListeners()) {
@@ -177,7 +177,9 @@ public class DocumentManagerImpl implements DocumentManager {
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 
 		// stores it in folder
-		storer.store(content, doc.getId(), doc.getFileVersion());
+		boolean stored = storer.store(content, doc.getId(), doc.getFileVersion());
+		if (!stored)
+			throw new IOException("Unable to store the document");
 	}
 
 	/**
@@ -345,7 +347,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				// The document must be re-indexed
 				doc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 				doc.setBarcoded(docVO.getBarcoded());
-				
+
 				// Intercept locale changes
 				if (!doc.getLocale().equals(docVO.getLocale())) {
 					indexer.deleteDocument(Long.toString(doc.getId()), doc.getLocale());
@@ -576,7 +578,11 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.store(docVO, transaction);
 
 			/* store the document into filesystem */
-			store(docVO, content);
+			try {
+				store(docVO, content);
+			} catch (Exception e) {
+				documentDAO.delete(docVO.getId());
+			}
 
 			File file = getDocumentFile(docVO);
 			if (immediateIndexing) {
