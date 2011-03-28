@@ -32,6 +32,8 @@ import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
+import com.smartgwt.client.widgets.form.validator.IsFloatValidator;
+import com.smartgwt.client.widgets.form.validator.IsIntegerValidator;
 import com.smartgwt.client.widgets.grid.ListGridField;
 
 /**
@@ -454,6 +456,9 @@ public class ItemFactory {
 			item.setValue(value);
 		item.setRequiredMessage(I18N.message("fieldrequired"));
 		item.setHintStyle("hint");
+		IsIntegerValidator iv = new IsIntegerValidator();
+		iv.setErrorMessage(I18N.message("wholenumber"));
+		item.setValidators(iv);
 		return item;
 	}
 
@@ -466,13 +471,7 @@ public class ItemFactory {
 	public static IntegerItem newIntegerItemForExtendedAttribute(String name, String label, Integer value) {
 		// We cannot use spaces in items name
 		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
-		IntegerItem item = new IntegerItem();
-		item.setName(itemName);
-		item.setTitle(label);
-		if (value != null)
-			item.setValue(value);
-		item.setRequiredMessage(I18N.message("fieldrequired"));
-		item.setHintStyle("hint");
+		IntegerItem item = newIntegerItem(itemName, label, value);
 		return item;
 	}
 
@@ -487,14 +486,21 @@ public class ItemFactory {
 	 */
 	public static IntegerItem newValidateIntegerItem(String name, String title, Integer value, Integer min, Integer max) {
 		IntegerItem item = newIntegerItem(name, I18N.message(title), value);
+		IntegerRangeValidator rv = null;
 		if (min != null || max != null) {
-			IntegerRangeValidator iv = new IntegerRangeValidator();
+			rv = new IntegerRangeValidator();
 			if (min != null)
-				iv.setMin(min);
+				rv.setMin(min);
 			if (max != null)
-				iv.setMax(max);
-			item.setValidators(iv);
+				rv.setMax(max);
 		}
+		IsIntegerValidator iv = new IsIntegerValidator();
+		iv.setErrorMessage(I18N.message("wholenumber"));
+		if (rv == null)
+			item.setValidators(iv);
+		else
+			item.setValidators(iv, rv);
+
 		item.setHintStyle("hint");
 		return item;
 	}
@@ -680,6 +686,9 @@ public class ItemFactory {
 			item.setValue(value);
 		item.setRequiredMessage(I18N.message("fieldrequired"));
 		item.setHintStyle("hint");
+		IsFloatValidator iv = new IsFloatValidator();
+		iv.setErrorMessage(I18N.message("wholenumber"));
+		item.setValidators(iv);
 		return item;
 	}
 
@@ -692,13 +701,7 @@ public class ItemFactory {
 	public static FloatItem newFloatItemForExtendedAttribute(String name, String label, Float value) {
 		// We cannot use spaces in items name
 		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
-		FloatItem item = new FloatItem();
-		item.setName(itemName);
-		item.setTitle(label);
-		if (value != null)
-			item.setValue(value);
-		item.setRequiredMessage(I18N.message("fieldrequired"));
-		item.setHintStyle("hint");
+		FloatItem item = newFloatItem(itemName, label, value);
 		return item;
 	}
 }

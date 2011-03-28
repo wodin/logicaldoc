@@ -195,7 +195,7 @@ public class ExportArchivesList extends VLayout {
 			public void onSelectionChanged(SelectionEvent event) {
 				ListGridRecord record = list.getSelectedRecord();
 				try {
-					showDetails(Long.parseLong(record.getAttribute("id")), Integer.toString(GUIArchive.STATUS_OPENED)
+					showDetails(Long.parseLong(record.getAttribute("id")), !Integer.toString(GUIArchive.STATUS_OPENED)
 							.equals(record.getAttribute("status")));
 				} catch (Throwable t) {
 				}
@@ -301,7 +301,7 @@ public class ExportArchivesList extends VLayout {
 						record.setAttribute("status", "1");
 						record.setAttribute("statusicon", "lock");
 						list.updateData(record);
-						showDetails(Long.parseLong(record.getAttributeAsString("id")), false);
+						showDetails(Long.parseLong(record.getAttributeAsString("id")), true);
 					}
 				});
 	}

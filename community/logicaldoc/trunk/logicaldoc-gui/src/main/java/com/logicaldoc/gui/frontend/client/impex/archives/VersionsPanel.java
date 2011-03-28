@@ -203,7 +203,7 @@ public class VersionsPanel extends VLayout {
 			}
 		});
 
-		if (!readonly)
+		if (readonly)
 			delete.setEnabled(false);
 
 		contextMenu.setItems(delete);
