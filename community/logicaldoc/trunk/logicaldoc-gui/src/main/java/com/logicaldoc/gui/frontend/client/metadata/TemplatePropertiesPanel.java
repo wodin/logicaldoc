@@ -288,6 +288,9 @@ public class TemplatePropertiesPanel extends HLayout {
 		PickerIcon cleanPicker = new PickerIcon(PickerIcon.CLEAR, new FormItemClickHandler() {
 			public void onFormItemClick(FormItemIconClickEvent event) {
 				clean();
+				form2.getField("label").setDisabled(false);
+				form2.getField("mandatory").setDisabled(false);
+				form2.getField("type").setDisabled(false);
 			}
 		});
 		if (!template.isReadonly()) {
