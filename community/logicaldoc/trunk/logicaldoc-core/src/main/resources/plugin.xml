@@ -96,10 +96,6 @@
 	<parameter id="locale" value="hu" />
 	<parameter id="analyzer" value="-" />
   </extension>
-  <extension plugin-id="logicaldoc-core" point-id="Language" id="nlLanguage">
-	<parameter id="locale" value="nl" />
-	<parameter id="analyzer" value="-" />
-  </extension>
   <extension plugin-id="logicaldoc-core" point-id="Language" id="ptLanguage">
 	<parameter id="locale" value="pt" />
 	<parameter id="analyzer" value="-" />
