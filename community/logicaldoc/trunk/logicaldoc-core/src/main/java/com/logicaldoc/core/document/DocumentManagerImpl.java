@@ -378,6 +378,7 @@ public class DocumentManagerImpl implements DocumentManager {
 								ExtendedAttribute templateExtAttribute = template.getAttributes().get(attrName);
 								ExtendedAttribute docExtendedAttribute = docVO.getAttributes().get(attrName);
 								docExtendedAttribute.setMandatory(templateExtAttribute.getMandatory());
+								docExtendedAttribute.setLabel(templateExtAttribute.getLabel());
 								if (templateExtAttribute.getType() == docExtendedAttribute.getType()) {
 									doc.getAttributes().put(attrName, docExtendedAttribute);
 								} else {
