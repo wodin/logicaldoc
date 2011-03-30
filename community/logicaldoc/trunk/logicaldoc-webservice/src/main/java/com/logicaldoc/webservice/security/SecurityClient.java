@@ -60,4 +60,14 @@ public class SecurityClient implements SecurityService {
 	public int changePassword(String sid, long userId, String oldPassword, String newPassword) throws Exception {
 		return client.changePassword(sid, userId, oldPassword, newPassword);
 	}
+
+	@Override
+	public WSUser getUser(String sid, long userId) throws Exception {
+		return client.getUser(sid, userId);
+	}
+
+	@Override
+	public WSGroup getGroup(String sid, long groupId) throws Exception {
+		return client.getGroup(sid, groupId);
+	}
 }

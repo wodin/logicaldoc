@@ -33,8 +33,9 @@ public interface SecurityService {
 	public WSGroup[] listGroups(@WebParam(name = "sid") String sid) throws Exception;
 
 	/**
-	 * Create/Update a user. You can completely customize the user through a value
-	 * object containing the user's metadata. The current user must be an administrator.
+	 * Create/Update a user. You can completely customize the user through a
+	 * value object containing the user's metadata. The current user must be an
+	 * administrator.
 	 * 
 	 * @param sid Session identifier. Must be an administrator.
 	 * @param user Web service value object containing the user's metadata
@@ -45,8 +46,8 @@ public interface SecurityService {
 	public long storeUser(@WebParam(name = "sid") String sid, @WebParam(name = "user") WSUser user) throws Exception;
 
 	/**
-	 * Create/Update a group. You can completely customize the group through a value
-	 * object containing the group's metadata.
+	 * Create/Update a group. You can completely customize the group through a
+	 * value object containing the group's metadata.
 	 * 
 	 * @param sid Session identifier. Must be an administrator.
 	 * @param group Web service value object containing the group's metadata
@@ -89,5 +90,28 @@ public interface SecurityService {
 	@WebResult(name = "changeResult")
 	public int changePassword(@WebParam(name = "sid") String sid, @WebParam(name = "userId") long userId,
 			@WebParam(name = "oldPassword") String oldPassword, @WebParam(name = "newPassword") String newPassword)
+			throws Exception;
+
+	/**
+	 * Gets user metadata of an existing user with the given identifier.
+	 * 
+	 * @param sid Session identifier
+	 * @param userId The user id
+	 * @return A value object containing the user's metadata.
+	 * @throws Exception
+	 */
+	@WebResult(name = "user")
+	public WSUser getUser(@WebParam(name = "sid") String sid, @WebParam(name = "userId") long userId) throws Exception;
+
+	/**
+	 * Gets group metadata of an existing group with the given identifier.
+	 * 
+	 * @param sid Session identifier
+	 * @param groupId The group id
+	 * @return A value object containing the group's metadata.
+	 * @throws Exception
+	 */
+	@WebResult(name = "group")
+	public WSGroup getGroup(@WebParam(name = "sid") String sid, @WebParam(name = "groupId") long groupId)
 			throws Exception;
 }
