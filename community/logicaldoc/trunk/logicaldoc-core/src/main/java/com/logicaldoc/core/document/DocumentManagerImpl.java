@@ -343,6 +343,8 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.setSourceType(docVO.getSourceType());
 				doc.setCoverage(docVO.getCoverage());
 				doc.setRecipient(docVO.getRecipient());
+				if (docVO.getRating() != null)
+					doc.setRating(docVO.getRating());
 
 				// The document must be re-indexed
 				doc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
