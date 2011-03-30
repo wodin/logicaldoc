@@ -147,9 +147,6 @@ public class ItemFactory {
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		// Eight-bit Unicode (or UCS) Transformation Format
 		map.put("UTF8", "UTF-8 Unicode");
-		// Default plaform encoding for file names
-		// TODO I need the Charset class
-		// map.put(platformEncoding, ce.name() + " Default");
 		// PC Greek
 		map.put("Cp737", "PC Greek");
 		// ISO-8859-1, Latin Alphabet No. 1

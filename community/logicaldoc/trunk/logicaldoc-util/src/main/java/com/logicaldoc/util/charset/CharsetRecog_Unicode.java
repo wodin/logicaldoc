@@ -33,7 +33,7 @@ abstract class CharsetRecog_Unicode extends CharsetRecognizer {
                 return 100;
             }
             
-            // TODO: Do some statistics to check for unsigned UTF-16BE
+            // Do some statistics to check for unsigned UTF-16BE
             return 0;
         }
     }
@@ -59,7 +59,7 @@ abstract class CharsetRecog_Unicode extends CharsetRecognizer {
                return 100;
             }        
             
-            // TODO: Do some statistics to check for unsigned UTF-16LE
+            // Do some statistics to check for unsigned UTF-16LE
             return 0;
         }
     }

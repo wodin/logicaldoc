@@ -147,9 +147,7 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 
 	@Override
 	public void saveQuotaSettings(String sid, GUIParameter[] quotaSettings) throws InvalidSessionException {
-		// TODO Auto-generated method stub
-
-	}
+    }
 
 	@Override
 	public GUIParameter[] computeStoragesSize(String sid) throws InvalidSessionException {

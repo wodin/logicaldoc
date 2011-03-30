@@ -203,7 +203,6 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			Folder folderToMove = folderDao.findById(folderId);
 			// Check destParentId MUST BE <> 0 (initial value)
 			if (targetId == 0 || folderDao.isInPath(folderToMove.getId(), targetId)) {
-				// TODO Message?
 				return;
 			}
 
@@ -242,7 +241,6 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
-			// TODO Message?
 		}
 	}
 
@@ -254,7 +252,6 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		try {
 			List<Folder> folders = dao.findByNameAndParentId(name, dao.findById(folderId).getParentId());
 			if (folders.size() > 0 && folders.get(0).getId() != folderId) {
-				// TODO Message?
 				return;
 			}
 			// To avoid a 'org.hibernate.StaleObjectStateException', we
@@ -267,16 +264,10 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			history.setEvent(History.EVENT_FOLDER_RENAMED);
 			history.setSessionId(sid);
 
-			boolean stored = dao.store(folder, history);
-			if (!stored) {
-				// TODO Message?
-			} else {
-				// TODO Message?
-			}
+			dao.store(folder, history);
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
-			// TODO Message?
 		}
 	}
 
@@ -470,14 +461,10 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 				docManager.moveToFolder(doc, selectedFolderFolder, transaction);
 			}
-			if (skippedSome || lockedSome) {
-				// TODO Message?
-			}
 		} catch (AccessControlException t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
 		} catch (Exception t) {
-			// TODO Message?
 			log.error("Exception moving documents: " + t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
 		}
@@ -506,8 +493,6 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					if (doc.getFolder().getId() != selectedFolderFolder.getId()) {
 						transaction.setEvent(History.EVENT_SHORTCUT_STORED);
 						docManager.copyToFolder(doc, selectedFolderFolder, transaction);
-					} else {
-						// TODO Message?
 					}
 				}
 			}
@@ -515,7 +500,6 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
 		} catch (Exception e) {
-			// TODO Message?
 			log.error("Exception copying documents: " + e.getMessage(), e);
 			throw new RuntimeException(e.getMessage(), e);
 		}
@@ -547,7 +531,6 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
 		} catch (Exception t) {
-			// TODO Message?
 			log.error("Exception copying documents alias: " + t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
 		}

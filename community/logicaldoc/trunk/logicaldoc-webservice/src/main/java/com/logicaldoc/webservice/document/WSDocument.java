@@ -139,14 +139,14 @@ public class WSDocument {
 	// Contains the snippet search text
 	private String summary;
 
-	// TODO to be removed?
+	// TODO to be removed
 	private int docType;
 
 	private Integer score;
 
 	private String icon;
 
-	// TODO to be removed?
+	// TODO to be removed
 	private int lengthCategory;
 
 	private String path;
@@ -158,7 +158,7 @@ public class WSDocument {
 
 	private String lastModified;
 
-	// TODO Just for .Net compatibility (6.0.x)
+	// TODO Just for .Net compatibility (6.0.x) We could be remove it in the future
 	private int dateCategory;
 
 	public static WSDocument fromDocument(AbstractDocument document) {

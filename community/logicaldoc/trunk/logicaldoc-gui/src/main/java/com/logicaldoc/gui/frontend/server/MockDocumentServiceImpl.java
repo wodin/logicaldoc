@@ -273,7 +273,6 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 
 	@Override
 	public void markUnindexable(String sid, long[] docIds) {
-		// TODO if the document is indexed, it must be removed from the index.
 		return;
 	}
 

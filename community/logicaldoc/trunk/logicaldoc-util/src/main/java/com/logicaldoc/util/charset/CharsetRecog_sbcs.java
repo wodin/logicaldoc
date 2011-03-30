@@ -145,7 +145,7 @@ abstract class CharsetRecog_sbcs extends CharsetRecognizer {
 //                    return 0;
 //                }
             
-            // TODO - This is a bit of a hack to take care of a case
+            // This is a bit of a hack to take care of a case
             // were we were getting a confidence of 135...
             if (rawPercent > 0.33) {
                 return 98;
