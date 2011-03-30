@@ -161,6 +161,8 @@ public class WSDocument {
 	// TODO Just for .Net compatibility (6.0.x) We could be remove it in the future
 	private int dateCategory;
 
+	private Integer rating;
+	
 	public static WSDocument fromDocument(AbstractDocument document) {
 		WSDocument wsDoc = new WSDocument();
 
@@ -235,6 +237,7 @@ public class WSDocument {
 			wsDoc.setRecipient(document.getRecipient());
 			wsDoc.setDocRef(document.getDocRef());
 			wsDoc.setLastModified(AbstractService.convertDateToString(document.getLastModified()));
+			wsDoc.setRating(document.getRating());
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -320,6 +323,7 @@ public class WSDocument {
 		doc.setFileSize(fileSize);
 		doc.setDigest(digest);
 		doc.setDocRef(docRef);
+		doc.setRating(rating);
 
 		return doc;
 	}
@@ -714,5 +718,13 @@ public class WSDocument {
 
 	public void setDateCategory(int dateCategory) {
 		this.dateCategory = dateCategory;
+	}
+
+	public Integer getRating() {
+		return rating;
+	}
+
+	public void setRating(Integer rating) {
+		this.rating = rating;
 	}
 }

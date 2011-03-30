@@ -1,7 +1,10 @@
 package com.logicaldoc.webservice;
 
+import javax.activation.DataHandler;
+
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
+import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.security.SecurityClient;
 
 public class Main {
@@ -14,12 +17,12 @@ public class Main {
 		// SearchClient("http://localhost:9080/logicaldoc/services/Search");
 		// SystemClient systemClient = new
 		// SystemClient("http://localhost:9080/logicaldoc/services/System");
-		SecurityClient securityClient = new SecurityClient("http://localhost:9080/logicaldoc/services/Security");
+//		SecurityClient securityClient = new SecurityClient("http://localhost:9080/logicaldoc/services/Security");
 
 		// Open a session
 		// This is a user 'author' with different permissions than the authors.
-		String sid = auth.login("matteo", "matteo1982");
-		// String sid = auth.login("admin", "admin");
+		// String sid = auth.login("matteo", "matteo1982");
+		String sid = auth.login("admin", "admin");
 		System.out.println("sid: " + sid);
 
 		// WSUser newUser = new WSUser();
@@ -120,7 +123,15 @@ public class Main {
 		// System.out.println("doc: "+wsDocument.getTitle());
 		// }
 
-		documentClient.createAlias(sid, 3L, 6L);
+		WSDocument doc = documentClient.getDocument(sid, 1);
+		System.out.println("rating: " + doc.getRating());
+		doc.setRating(5);
+		documentClient.update(sid, doc);
+
+		DataHandler data = documentClient.getContent(sid, 1);
+		doc.setRating(4);
+		doc = documentClient.create(sid, doc, data);
+		System.out.println("rating: " + doc.getRating());
 
 		// DataHandler data = documentClient.getContent(sid, 68);
 		// System.out.println("data: " + data.toString());
