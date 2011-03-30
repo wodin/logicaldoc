@@ -169,7 +169,7 @@ public class CharsetDetector {
      * @stable ICU 3.4
      */
     public CharsetMatch detect() {
-//   TODO:  A better implementation would be to copy the detect loop from
+//          A better implementation would be to copy the detect loop from
 //          detectAll(), and cut it short as soon as a match with a high confidence
 //          is found.  This is something to be done later, after things are otherwise
 //          working.

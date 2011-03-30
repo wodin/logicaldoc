@@ -201,18 +201,14 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 
 	@Override
 	public void applyRights(String sid, GUIMenu menu) throws InvalidSessionException {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public GUIMenu getMenu(String sid, long id) throws InvalidSessionException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void resetPassword(String username, String emailAddress, String productName) throws Exception {
-		// TODO Auto-generated method stub
 	}
 }

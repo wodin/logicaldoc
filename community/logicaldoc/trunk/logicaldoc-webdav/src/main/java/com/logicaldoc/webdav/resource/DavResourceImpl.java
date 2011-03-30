@@ -506,7 +506,7 @@ public class DavResourceImpl implements DavResource, Serializable {
 		}
 
 		if (shallow && isCollection()) {
-			// TODO: currently no support for shallow copy; however this is
+			// Currently no support for shallow copy; however this is
 			// only relevant if the source resource is a collection, because
 			// otherwise it doesn't make a difference
 			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Unable to perform shallow copy.");

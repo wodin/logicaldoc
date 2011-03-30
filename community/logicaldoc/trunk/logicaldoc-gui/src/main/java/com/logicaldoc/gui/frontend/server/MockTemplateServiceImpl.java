@@ -24,8 +24,6 @@ public class MockTemplateServiceImpl extends RemoteServiceServlet implements Tem
 	public GUITemplate save(String sid, GUITemplate template) {
 		if (template.getId() == 0)
 			template.setId(9999);
-
-		// TODO Rinumerare gli attributi in base all'ordine nell'array
 		return template;
 	}
 

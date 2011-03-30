@@ -165,7 +165,6 @@ public class CharsetMatch implements Comparable {
      * @provisional This API might change or be removed in a future release.
      */
     public int getMatchType() {
-//      TODO: create a list of enum-like constants for common combinations of types of matches.
         return 0;
     }
 

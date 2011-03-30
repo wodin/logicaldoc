@@ -180,7 +180,7 @@ abstract class CharsetRecog_mbcs extends CharsetRecognizer {
       */
      static class CharsetRecog_sjis extends CharsetRecog_mbcs {
          static int [] commonChars = 
-             // TODO:  This set of data comes from the character frequency-
+             //        This set of data comes from the character frequency-
              //        of-occurence analysis tool.  The data needs to be moved
              //        into a resource and loaded from there.
             {0x8140, 0x8141, 0x8142, 0x8145, 0x815b, 0x8169, 0x816a, 0x8175, 0x8176, 0x82a0, 
@@ -238,7 +238,7 @@ abstract class CharsetRecog_mbcs extends CharsetRecognizer {
       */
      static class CharsetRecog_big5 extends CharsetRecog_mbcs {
          static int [] commonChars = 
-             // TODO:  This set of data comes from the character frequency-
+             //        This set of data comes from the character frequency-
              //        of-occurence analysis tool.  The data needs to be moved
              //        into a resource and loaded from there.
             {0xa140, 0xa141, 0xa142, 0xa143, 0xa147, 0xa149, 0xa175, 0xa176, 0xa440, 0xa446, 
@@ -373,7 +373,7 @@ abstract class CharsetRecog_mbcs extends CharsetRecognizer {
           */
          static class CharsetRecog_euc_jp extends CharsetRecog_euc {
              static int [] commonChars = 
-                 // TODO:  This set of data comes from the character frequency-
+                 //        This set of data comes from the character frequency-
                  //        of-occurence analysis tool.  The data needs to be moved
                  //        into a resource and loaded from there.
                 {0xa1a1, 0xa1a2, 0xa1a3, 0xa1a6, 0xa1bc, 0xa1ca, 0xa1cb, 0xa1d6, 0xa1d7, 0xa4a2, 
@@ -406,7 +406,7 @@ abstract class CharsetRecog_mbcs extends CharsetRecognizer {
           */
          static class CharsetRecog_euc_kr extends CharsetRecog_euc {
              static int [] commonChars = 
-                 // TODO:  This set of data comes from the character frequency-
+                 //        This set of data comes from the character frequency-
                  //        of-occurence analysis tool.  The data needs to be moved
                  //        into a resource and loaded from there.
                 {0xb0a1, 0xb0b3, 0xb0c5, 0xb0cd, 0xb0d4, 0xb0e6, 0xb0ed, 0xb0f8, 0xb0fa, 0xb0fc, 
@@ -502,7 +502,7 @@ abstract class CharsetRecog_mbcs extends CharsetRecognizer {
          }
          
          static int [] commonChars = 
-             // TODO:  This set of data comes from the character frequency-
+             //        This set of data comes from the character frequency-
              //        of-occurence analysis tool.  The data needs to be moved
              //        into a resource and loaded from there.
             {0xa1a1, 0xa1a2, 0xa1a3, 0xa1a4, 0xa1b0, 0xa1b1, 0xa1f1, 0xa1f3, 0xa3a1, 0xa3ac, 

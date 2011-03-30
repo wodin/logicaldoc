@@ -113,15 +113,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				throw new RuntimeException(e.getMessage(), e);
 			}
 		}
-
-		if (alreadyAdded != 0) {
-			// TODO Message?
-		}
-
-		if (added != 0) {
-			// TODO Message?
-		}
-
 	}
 
 	@Override
@@ -238,15 +229,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						.getBean(DocumentManager.class);
 				documentManager.checkin(docId, new FileInputStream(file), fileName, major, false, transaction);
 
-				/* create positive log message */
-				// TODO Message?
 			} catch (Throwable t) {
 				log.error(t.getMessage(), t);
 				throw new RuntimeException(t.getMessage(), t);
-				// TODO Message?
 			}
-		} else {
-			// TODO Message?
 		}
 	}
 
@@ -323,17 +309,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				} catch (Exception t) {
 					log.error(t.getMessage(), t);
 					throw new RuntimeException(t.getMessage(), t);
-					// TODO Message?
 				}
 			}
-			if (deletedSome) {
-				// TODO Message?
-			}
-			if (skippedSome || lockedSome) {
-				// TODO Message?
-			}
-		} else {
-			// TODO Message?
 		}
 	}
 
@@ -382,11 +359,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				comment.setDeleted(1);
 			}
 			dao.store(thread);
-			// TODO Message?
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
-			// TODO Message?
 		}
 	}
 
@@ -638,12 +613,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					}
 				}
 			} catch (Throwable t) {
-				// TODO Message?
 				log.error("Exception linking documents: " + t.getMessage(), t);
 				throw new RuntimeException(t.getMessage(), t);
 			}
-		} else {
-			// TODO Message?
 		}
 	}
 
@@ -664,13 +636,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			for (long id : docIds) {
 				documentManager.lock(id, Document.DOC_LOCKED, transaction);
 			}
-
-			/* create positive log message */
-			// TODO Message?
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
-			// TODO Message?
 		}
 	}
 
@@ -704,16 +672,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					immutableSome = true;
 				}
 			}
-			if (immutableSome) {
-				// TODO Message?
-			}
-			if (lockedSome) {
-				// TODO Message?
-			}
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
-			// TODO Message?
 		}
 	}
 
@@ -741,15 +702,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				manager.changeIndexingStatus(docDao.findById(id), AbstractDocument.INDEX_TO_INDEX);
 				indexableCount++;
 			}
-
-			if (indexableCount > 0) {
-				// TODO Message???
-			}
-
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
-			// TODO Message???
 		}
 	}
 
@@ -788,11 +743,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			dao.initialize(thread);
 			thread.appendComment(comment);
 			dao.store(thread);
-			// TODO Message?
 			return thread.getReplies();
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			// TODO Message?
 			return 0;
 		}
 	}
@@ -1120,12 +1073,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			DiscussionThreadDAO dao = (DiscussionThreadDAO) Context.getInstance().getBean(DiscussionThreadDAO.class);
 			dao.store(thread);
 
-			// TODO Message?
-
 			return thread.getId();
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
-			// TODO Message?
 			return 0;
 		}
 	}
@@ -1146,13 +1096,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			for (long id : docIds) {
 				documentManager.unlock(id, transaction);
 			}
-
-			/* create positive log message */
-			// TODO Message?
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
-			// TODO Message?
 		}
 	}
 
