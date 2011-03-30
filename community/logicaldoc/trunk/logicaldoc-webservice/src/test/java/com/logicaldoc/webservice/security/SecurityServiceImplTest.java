@@ -119,13 +119,12 @@ public class SecurityServiceImplTest extends AbstractWebServiceTestCase {
 		newUser.setUserName("user");
 		newUser.setFirstName("test");
 		newUser.setEmail("user@acme.com");
-		newUser.setPassword("logicaldoc");
 
 		Long userId = securityServiceImpl.storeUser("", newUser);
 		Assert.assertNotNull(userId);
 		Assert.assertEquals(new Long(6L), userId);
 
-		int changeResult = securityServiceImpl.changePassword("", new Long(6L), "logicaldoc", "newpassword");
+		int changeResult = securityServiceImpl.changePassword("", new Long(6L), null, "newpassword");
 		Assert.assertEquals(0, changeResult);
 	}
 }

@@ -103,6 +103,11 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 				throw new Exception("Missing mandatory value 'FirstName'");
 
 			if (user.getGroupIds() != null && user.getGroupIds().length > 0) {
+				// This store is mandatory to avoid errors assigning groups to a
+				// not already stored user.
+				if (user.getId() == 0)
+					dao.store(usr);
+
 				SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
 				manager.removeUserFromAllGroups(usr);
 				manager.assignUserToGroups(usr, user.getGroupIds());
@@ -136,6 +141,9 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 				grp.setType(group.getType());
 			}
 
+			if (StringUtils.isEmpty(grp.getName()))
+				throw new Exception("Missing mandatory value 'Name'");
+
 			if (group.getUserIds() != null && group.getUserIds().length > 0) {
 				UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 				SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
@@ -145,11 +153,12 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 					User user = userDao.findById(userId);
 					users.add(user);
 				}
-				manager.assignUsersToGroup(users, grp);
+				try {
+					manager.assignUsersToGroup(users, grp);
+				} catch (Exception e) {
+					throw new Exception("Unable to assign users to group");
+				}
 			}
-
-			if (StringUtils.isEmpty(grp.getName()))
-				throw new Exception("Missing mandatory value 'Name'");
 
 			if (dao.store(grp)) {
 				if (group.getInheritGroupId() != null && group.getInheritGroupId().longValue() > 0)
@@ -179,7 +188,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 			dao.delete(userId);
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
-			throw new Exception(t.getMessage());
+			throw new Exception("Unable to delete the user with id " + userId);
 		}
 	}
 
@@ -199,7 +208,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 			dao.delete(groupId);
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
-			throw new Exception(t.getMessage());
+			throw new Exception("Unable to delete the group with id " + groupId);
 		}
 	}
 
@@ -239,5 +248,31 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 			log.error(e.getMessage(), e);
 			return 1;
 		}
+	}
+
+	@Override
+	public WSUser getUser(String sid, long userId) throws Exception {
+		checkAdministrator(sid);
+
+		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		User user = userDao.findById(userId);
+		if (user == null)
+			return null;
+
+		userDao.initialize(user);
+		return WSUser.fromUser(user);
+	}
+
+	@Override
+	public WSGroup getGroup(String sid, long groupId) throws Exception {
+		checkAdministrator(sid);
+
+		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+		Group group = groupDao.findById(groupId);
+		if (group == null)
+			return null;
+
+		groupDao.initialize(group);
+		return WSGroup.fromGroup(group);
 	}
 }
