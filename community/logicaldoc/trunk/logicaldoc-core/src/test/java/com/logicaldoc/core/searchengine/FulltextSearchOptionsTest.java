@@ -21,7 +21,7 @@ public class FulltextSearchOptionsTest extends AbstractCoreTCase {
 		opt.setLanguage("it");
 
 		opt.setExpression("prova test");
-		opt.setExpressionLanguage("italiano");
+		opt.setExpressionLanguage("it");
 		opt.setTemplate(1L);
 		opt.setSizeMax(3000L);
 		opt.setSizeMin(2L);
@@ -33,7 +33,7 @@ public class FulltextSearchOptionsTest extends AbstractCoreTCase {
 		FulltextSearchOptions opt2 = (FulltextSearchOptions) SearchOptions.read(file);
 
 		Assert.assertEquals("prova test", opt2.getExpression());
-		Assert.assertEquals("italiano", opt2.getExpressionLanguage());
+		Assert.assertEquals("it", opt2.getExpressionLanguage());
 		Assert.assertEquals(1, opt2.getTemplate().longValue());
 		Assert.assertEquals(3000, opt2.getSizeMax().longValue());
 		Assert.assertEquals(2, opt2.getSizeMin().longValue());

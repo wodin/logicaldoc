@@ -158,11 +158,12 @@ public class WSDocument {
 
 	private String lastModified;
 
-	// TODO Just for .Net compatibility (6.0.x) We could be remove it in the future
+	// TODO Just for .Net compatibility (6.0.x) We could be remove it in the
+	// future
 	private int dateCategory;
 
 	private Integer rating;
-	
+
 	public static WSDocument fromDocument(AbstractDocument document) {
 		WSDocument wsDoc = new WSDocument();
 
@@ -196,6 +197,7 @@ public class WSDocument {
 			}
 
 			wsDoc.setId(document.getId());
+			wsDoc.setCustomId(document.getCustomId());
 			wsDoc.setTitle(document.getTitle());
 			wsDoc.setSource(document.getSource());
 			wsDoc.setSourceAuthor(document.getSourceAuthor());
