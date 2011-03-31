@@ -51,7 +51,7 @@ public class SignDialog extends Window {
 
 	private String version = "";
 
-	public SignDialog(String id, String filename, boolean validation, String versionToBeSigned) {
+	public SignDialog(String id, String filename, String versionToBeSigned) {
 		docId = Long.parseLong(id);
 		if (versionToBeSigned != null)
 			this.version = versionToBeSigned;
@@ -59,17 +59,15 @@ public class SignDialog extends Window {
 		layout.setMargin(15);
 		layout.setMembersMargin(2);
 
-		final boolean archiveValidation = validation;
-
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		if (!archiveValidation)
-			addCloseClickHandler(new CloseClickHandler() {
-				@Override
-				public void onCloseClick(CloseClientEvent event) {
-					onClose();
-					destroy();
-				}
-			});
+
+		addCloseClickHandler(new CloseClickHandler() {
+			@Override
+			public void onCloseClick(CloseClientEvent event) {
+				onClose();
+				destroy();
+			}
+		});
 
 		setTitle(I18N.message("signdocument"));
 		setWidth(550);

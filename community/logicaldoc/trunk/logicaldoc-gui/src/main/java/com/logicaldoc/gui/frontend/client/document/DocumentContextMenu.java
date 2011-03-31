@@ -474,7 +474,7 @@ public class DocumentContextMenu extends Menu {
 				String id = selection.getAttribute("id");
 				String filename = selection.getAttribute("filename");
 
-				SignDialog dialog = new SignDialog(id, filename, false, null);
+				SignDialog dialog = new SignDialog(id, filename, null);
 				dialog.show();
 			}
 		});
