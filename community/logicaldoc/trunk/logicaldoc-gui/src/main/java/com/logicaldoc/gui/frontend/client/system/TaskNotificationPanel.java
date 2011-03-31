@@ -98,8 +98,7 @@ public class TaskNotificationPanel extends VLayout {
 		int i = 0;
 
 		for (GUIUser u : task.getReportRecipients()) {
-			final StaticTextItem usrItem = ItemFactory.newStaticTextItem("usr" + i++, "user", null);
-			usrItem.setDefaultValue(u.getUserName());
+			final StaticTextItem usrItem = ItemFactory.newStaticTextItem("usr" + i++, "user", u.getUserName());
 			usrItem.setIcons(icon);
 			usrItem.addIconClickHandler(new IconClickHandler() {
 				public void onIconClick(IconClickEvent event) {
