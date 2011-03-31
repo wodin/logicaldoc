@@ -57,12 +57,14 @@ public class SystemQuotaPanel extends VLayout {
 		final IntegerItem quotaSize = ItemFactory.newIntegerItem("quota", "quota", null);
 		if (!settings[0].getValue().isEmpty())
 			quotaSize.setDefaultValue(Integer.parseInt(settings[0].getValue()));
+		quotaSize.setRequired(true);
 		quotaSize.setWrapTitle(false);
 		quotaSize.setHint("MB");
 
 		final IntegerItem quotaThreshold = ItemFactory.newIntegerItem("quotaThreshold", "threshold", null);
 		if (!settings[1].getValue().isEmpty())
 			quotaThreshold.setDefaultValue(Integer.parseInt(settings[1].getValue()));
+		quotaThreshold.setRequired(true);
 		quotaThreshold.setWrapTitle(false);
 		quotaThreshold.setHint("MB");
 
