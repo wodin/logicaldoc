@@ -31,8 +31,6 @@ import com.logicaldoc.util.config.ContextProperties;
 public class ProductNews extends Task {
 	public static final String NAME = "ProductNews";
 
-	private UserDAO userDao;
-
 	private FeedMessageDAO feedMessageDao;
 
 	private ContextProperties config;
@@ -162,10 +160,6 @@ public class ProductNews extends Task {
 
 	public UserDAO getUserDao() {
 		return userDao;
-	}
-
-	public void setUserDao(UserDAO userDao) {
-		this.userDao = userDao;
 	}
 
 	public FeedMessageDAO getFeedMessageDao() {
