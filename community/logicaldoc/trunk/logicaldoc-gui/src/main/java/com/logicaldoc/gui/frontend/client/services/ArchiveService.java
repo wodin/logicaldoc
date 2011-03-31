@@ -5,7 +5,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIIncrementalArchive;
-import com.logicaldoc.gui.common.client.beans.GUISostConfig;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 
 /**
@@ -72,11 +71,6 @@ public interface ArchiveService extends RemoteService {
 	 * Create a new import archive for the specified bundle folder
 	 */
 	public void startImport(String sid, String folderName) throws InvalidSessionException;
-
-	/**
-	 * Retrieves the sost configurations for the versions of the given archive
-	 */
-	public GUISostConfig[] getSostConfigurations(String sid, long archiveId) throws InvalidSessionException;
 
 	/**
 	 * Verifies the user signature file, extracts the original file contained

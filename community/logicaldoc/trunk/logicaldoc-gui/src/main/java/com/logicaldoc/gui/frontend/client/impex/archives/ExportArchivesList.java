@@ -4,7 +4,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
-import com.logicaldoc.gui.common.client.beans.GUISostConfig;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
@@ -324,27 +323,6 @@ public class ExportArchivesList extends VLayout {
 	}
 
 	protected void onClosingArchive(final ListGridRecord record, final long id) {
-		if (record.getAttributeAsString("type").equals("" + GUIArchive.TYPE_STORAGE)) {
-			service.getSostConfigurations(Session.get().getSid(), id, new AsyncCallback<GUISostConfig[]>() {
-				@Override
-				public void onFailure(Throwable caught) {
-					Log.serverError(caught);
-				}
-
-				@Override
-				public void onSuccess(GUISostConfig[] configs) {
-					if (configs.length > 0) {
-						// Show Archive validation
-						// panel
-						ArchiveValidation validation = new ArchiveValidation(ExportArchivesList.this, configs, id);
-						validation.show();
-					} else {
-						closeArchive(record);
-					}
-				}
-			});
-		} else {
-			closeArchive(record);
-		}
+		closeArchive(record);
 	}
 }

@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.client.services;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIIncrementalArchive;
-import com.logicaldoc.gui.common.client.beans.GUISostConfig;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 
 public interface ArchiveServiceAsync {
@@ -29,8 +28,6 @@ public interface ArchiveServiceAsync {
 	void startImport(String sid, String folderName, AsyncCallback<Void> callback);
 
 	void load(String sid, long archiveId, AsyncCallback<GUIArchive> callback);
-
-	void getSostConfigurations(String sid, long archiveId, AsyncCallback<GUISostConfig[]> callback);
 
 	void signArchive(String sid, long userId, long archiveId, AsyncCallback<String> callback);
 
