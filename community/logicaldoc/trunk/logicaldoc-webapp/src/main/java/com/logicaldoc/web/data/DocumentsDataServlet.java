@@ -133,22 +133,28 @@ public class DocumentsDataServlet extends HttpServlet {
 				for (Object record : records) {
 					Object[] cols = (Object[]) record;
 					if (cols[2] != null) {
-						docRefIds.add((Long) cols[0]);
-						continue;
+						if (cols[2].toString().equals("0")) {
+							cols[2] = null;
+						} else {
+							docRefIds.add((Long) cols[0]);
+							continue;
+						}
 					}
+
 					writer.print("<document>");
 					writer.print("<id>" + cols[0] + "</id>");
 					if (cols[1] != null)
 						writer.print("<customId><![CDATA[" + cols[1] + "]]></customId>");
 					else
 						writer.print("<customId> </customId>");
-					writer.print("<docref>" + cols[2] + "</docref>");
+					writer.print("<docref>" + (cols[2] != null ? cols[2] : "") + "</docref>");
 					if (cols[2] != null)
 						writer.print("<icon>alias</icon>");
 					else {
 						writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon((String) cols[3]))
 								+ "</icon>");
 					}
+
 					writer.print("<title><![CDATA[" + cols[4] + "]]></title>");
 					writer.print("<version>" + cols[5] + "</version>");
 					writer.print("<lastModified>" + df.format(cols[6]) + "</lastModified>");
