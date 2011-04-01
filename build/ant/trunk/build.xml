@@ -66,6 +66,13 @@
         <include name="build/**" />
         <include name="community/**" />
         <exclude name="**/target/**" />
+        <exclude name="**/null/**" />
+        <exclude name="**/war/WEB-INF/classes/**" />
+        <exclude name="**/war/WEB-INF/lib/**" />
+        <exclude name="**/war/frontend/**" />
+        <exclude name="**/war/common/**" />
+        <exclude name="**/war/setup/**" />
+        <exclude name="**/war/applet/**" />
         <exclude name="**/.*/**" />
         <exclude name="**/checkout.bat" />
         <exclude name="**/checkout.sh" />
@@ -80,7 +87,7 @@
   <target name="prepare-workspace">
     <copy todir="${logicaldoc.devroot}/logicaldoc-workspace">
       <fileset dir="${logicaldoc.devroot}">
-        <exclude name="**/target/**" />
+        <exclude name="**/target/**" />  
         <!--exclude name="**/.project" />
         <exclude name="**/.classpath" />
         <exclude name="**/.settings/**" />
