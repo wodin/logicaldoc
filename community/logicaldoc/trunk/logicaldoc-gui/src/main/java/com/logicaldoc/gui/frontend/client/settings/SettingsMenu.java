@@ -46,7 +46,7 @@ public class SettingsMenu extends VLayout {
 		Button email = new Button(I18N.message("email"));
 		email.setWidth100();
 		email.setHeight(25);
-		if (!Session.get().isDemo()) {
+		if (Session.get().isDemo()) {
 			email.setDisabled(true);
 			email.setTooltip(I18N.message("featuredisabled"));
 		}
