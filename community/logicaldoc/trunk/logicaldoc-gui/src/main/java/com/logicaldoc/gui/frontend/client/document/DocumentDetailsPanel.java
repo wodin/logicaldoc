@@ -232,7 +232,7 @@ public class DocumentDetailsPanel extends VLayout {
 				onModified();
 			}
 		};
-		propertiesPanel = new StandardPropertiesPanel(document, changeHandler);
+		propertiesPanel = new StandardPropertiesPanel(document, changeHandler, getObserver());
 		propertiesTabPanel.addMember(propertiesPanel);
 
 		/*

@@ -13,6 +13,7 @@ import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -126,5 +127,9 @@ public class SearchPanel extends HLayout implements SearchObserver {
 			SearchMenu.get().setWidth(0);
 		else
 			SearchMenu.get().setWidth(350);
+	}
+
+	public ListGrid getList() {
+		return ((HitsListPanel) listingPanel).getList();
 	}
 }

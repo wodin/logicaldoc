@@ -480,4 +480,8 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		contextMenu.addItem(openInFolder);
 		return contextMenu;
 	}
+	
+	public ListGrid getList() {
+		return list;
+	}
 }

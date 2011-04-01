@@ -190,9 +190,10 @@ public class DocumentsListPanel extends VLayout {
 		rating.setCanFilter(false);
 		rating.setHidden(true);
 
-		ListGridField fileVersion = new ListGridField("fileVersion", I18N.message("fileversion"), 60);
-		filename.setHidden(true);
-		filename.setCanFilter(false);
+		ListGridField fileVersion = new ListGridField("fileVersion", I18N.message("fileversion"), 70);
+		fileVersion.setHidden(true);
+		fileVersion.setCanFilter(false);
+		fileVersion.setAlign(Alignment.CENTER);
 
 		list = new ListGrid() {
 			@Override
@@ -282,7 +283,7 @@ public class DocumentsListPanel extends VLayout {
 						@Override
 						public void onSuccess(GUIRating rating) {
 							if (rating != null) {
-								RatingDialog dialog = new RatingDialog(docRating, rating);
+								RatingDialog dialog = new RatingDialog(docRating, rating, null);
 								dialog.show();
 							}
 						}

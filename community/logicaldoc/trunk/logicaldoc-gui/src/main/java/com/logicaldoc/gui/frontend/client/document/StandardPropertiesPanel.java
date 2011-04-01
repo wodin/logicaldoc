@@ -59,9 +59,12 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 	private ValuesManager vm = new ValuesManager();
 
 	private Canvas path;
+	
+	protected DocumentObserver observer;
 
-	public StandardPropertiesPanel(GUIDocument document, ChangedHandler changedHandler) {
+	public StandardPropertiesPanel(GUIDocument document, ChangedHandler changedHandler, DocumentObserver observer) {
 		super(document, changedHandler);
+		this.observer = observer;
 		setWidth100();
 		setHeight100();
 		container.setWidth100();
@@ -158,7 +161,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 					@Override
 					public void onSuccess(GUIRating rating) {
 						if (rating != null) {
-							RatingDialog dialog = new RatingDialog(document.getRating(), rating);
+							RatingDialog dialog = new RatingDialog(document.getRating(), rating, observer);
 							dialog.show();
 						}
 					}
