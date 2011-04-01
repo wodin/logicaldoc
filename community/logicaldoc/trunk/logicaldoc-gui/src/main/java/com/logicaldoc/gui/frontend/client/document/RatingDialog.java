@@ -9,6 +9,8 @@ import com.logicaldoc.gui.common.client.beans.GUIRating;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.frontend.client.search.HitsListPanel;
+import com.logicaldoc.gui.frontend.client.search.SearchPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -37,10 +39,13 @@ public class RatingDialog extends Window {
 
 	private ValuesManager vm = new ValuesManager();
 
-	public RatingDialog(int documentRating, GUIRating rat) {
+	protected DocumentObserver observer;
+
+	public RatingDialog(int documentRating, GUIRating rat, DocumentObserver observer) {
 		super();
 		this.docRating = documentRating;
 		this.rating = rat;
+		this.observer = observer;
 
 		addCloseClickHandler(new CloseClickHandler() {
 			@Override
@@ -124,11 +129,29 @@ public class RatingDialog extends Window {
 
 								@Override
 								public void onSuccess(Integer rating) {
-									ListGridRecord selectedRecord = DocumentsPanel.get().getList().getSelectedRecord();
-									selectedRecord.setAttribute("rating", "rating" + rating);
-									DocumentsPanel.get().getList().updateData(selectedRecord);
-									DocumentsPanel.get().onSelectedDocument(
-											Long.parseLong(selectedRecord.getAttribute("id")), false);
+									// We have to reload the document because
+									// the rating is changed. We need to know if
+									// this operation into the Documents list
+									// panel or into the Search list panel.
+
+									if (RatingDialog.this.observer == null
+											|| RatingDialog.this.observer instanceof DocumentsPanel) {
+										ListGridRecord selectedRecord = DocumentsPanel.get().getList()
+												.getSelectedRecord();
+										selectedRecord.setAttribute("rating", "rating" + rating);
+										DocumentsPanel.get().getList().updateData(selectedRecord);
+										DocumentsPanel.get().onSelectedDocument(
+												Long.parseLong(selectedRecord.getAttribute("id")), false);
+									}
+
+									else if (RatingDialog.this.observer instanceof HitsListPanel) {
+										ListGridRecord selectedRecord = SearchPanel.get().getList().getSelectedRecord();
+										selectedRecord.setAttribute("rating", "rating" + rating);
+										SearchPanel.get().getList().updateData(selectedRecord);
+										SearchPanel.get().onSelectedHit(
+												Long.parseLong(selectedRecord.getAttribute("id")));
+									}
+
 									Log.info(I18N.message("votesaved"), null);
 									destroy();
 								}
