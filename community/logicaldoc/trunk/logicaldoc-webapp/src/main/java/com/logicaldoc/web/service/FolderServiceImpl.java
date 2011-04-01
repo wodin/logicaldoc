@@ -429,8 +429,6 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Folder selectedFolderFolder = folderDao.findById(folderId);
 		try {
-			boolean skippedSome = false;
-			boolean lockedSome = false;
 			for (long id : docIds) {
 				Document doc = docDao.findById(id);
 				// Create the document history event
@@ -449,13 +447,11 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 				// The document must be not immutable
 				if (doc.getImmutable() == 1 && !transaction.getUser().isInGroup("admin")) {
-					skippedSome = true;
 					continue;
 				}
 
 				// The document must be not locked
 				if (doc.getStatus() != Document.DOC_UNLOCKED || doc.getExportStatus() != Document.EXPORT_UNLOCKED) {
-					lockedSome = true;
 					continue;
 				}
 
