@@ -1,7 +1,6 @@
 package com.logicaldoc.webservice;
 
 import com.logicaldoc.webservice.auth.AuthClient;
-import com.logicaldoc.webservice.auth.Right;
 import com.logicaldoc.webservice.document.DocumentClient;
 import com.logicaldoc.webservice.folder.FolderClient;
 import com.logicaldoc.webservice.search.SearchClient;
@@ -19,8 +18,8 @@ public class Main {
 
 		// Open a session
 		// This is a user 'author' with different permissions than the authors.
-		// String sid = auth.login("matteo", "matteo1982");
-		String sid = auth.login("admin", "admin");
+		String sid = auth.login("matteo", "matteo1982");
+		// String sid = auth.login("admin", "admin");
 		System.out.println("sid: " + sid);
 
 		// WSUser wsUserTest = new WSUser();
@@ -283,16 +282,140 @@ public class Main {
 		// System.out.println("**************************************");
 		// }
 
-//		folderClient.grantGroup(sid, 13, 2, 4091, true);
-//		folderClient.grantGroup(sid, 13, 3, 4091, true);
-//		folderClient.grantGroup(sid, 13, -20, 0, true);
-//		folderClient.grantUser(sid, 13, 2, 0, false);
-//		Right[] rights = folderClient.getGrantedUsers(sid, 14);
-//		System.out.println("--- " + rights.length);
-//		for (Right right : rights) {
-//			System.out.println("+++ " + right.getId());
-//		}
-		
+		// folderClient.grantGroup(sid, 13, 2, 4091, true);
+		// folderClient.grantGroup(sid, 13, 3, 4091, true);
+		// folderClient.grantGroup(sid, 13, -20, 0, true);
+		// folderClient.grantUser(sid, 13, 2, 0, false);
+		// Right[] rights = folderClient.getGrantedUsers(sid, 14);
+		// System.out.println("--- " + rights.length);
+		// for (Right right : rights) {
+		// System.out.println("+++ " + right.getId());
+		// }
+
+		// WSDocument wsDoc = documentClient.getDocument(sid, 1);
+		// wsDoc.setId(0);
+		// wsDoc.setTitle("document test");
+		// wsDoc.setCustomId("xxxxxxx");
+		// wsDoc.setFolderId(14L);
+		// DataHandler data = documentClient.getContent(sid, 1);
+		// File file = new
+		// File("/C:/Users/Matteo/Desktop/doctest/signdoc_en.pdf");
+		// documentClient.create(sid, wsDoc, data);
+		//
+		// WSDocument[] docs = documentClient.list(sid, 14);
+		// for (WSDocument wsDocument : docs) {
+		// System.out.println("doc id: " + wsDocument.getId());
+		// System.out.println("doc title: " + wsDocument.getTitle());
+		// }
+
+		// documentClient.delete(sid, 32);
+
+		// WSDocument[] docs = documentClient.getDocuments(sid, new
+		// long[]{100,101,102,103});
+		// for (WSDocument wsDocument : docs) {
+		// System.out.println("doc: "+wsDocument.getTitle());
+		// }
+
+		// WSDocument doc = documentClient.getDocument(sid, 1);
+		// System.out.println("rating: " + doc.getRating());
+		// doc.setRating(5);
+		// documentClient.update(sid, doc);
+		//
+		// DataHandler data = documentClient.getContent(sid, 1);
+		// doc.setRating(4);
+		// doc = documentClient.create(sid, doc, data);
+		// System.out.println("rating: " + doc.getRating());
+
+		// DataHandler data = documentClient.getContent(sid, 68);
+		// System.out.println("data: " + data.toString());
+
+		// documentClient.lock(sid, 30);
+		// WSDocument doc = documentClient.getDocument(sid, 30);
+		// System.out.println("status: " + doc.getStatus());
+		// System.out.println("locked user id: " +
+		// doc.getLockUserId().longValue());
+
+		// documentClient.move(sid, 30, 13);
+		// WSDocument doc = documentClient.getDocument(sid, 30);
+		// System.out.println("folderId: " + doc.getFolderId());
+
+		// documentClient.unlock(sid, 30);
+		// WSDocument doc = documentClient.getDocument(sid, 30);
+		// System.out.println("status: " + doc.getStatus());
+		// System.out.println("locked user id: " +
+		// doc.getLockUserId().longValue());
+
+		// documentClient.rename(sid, 30, "pluto");
+		// WSDocument wsDoc = documentClient.getDocument(sid, 30);
+		// System.out.println("doc title: " + wsDoc.getTitle());
+
+		// WSDocument[] docs = documentClient.getDocuments(sid, new Long[] {
+		// 55L, 30L, 32L, 29L });
+		// for (WSDocument wsDocument : docs) {
+		// System.out.println("doc: " + wsDocument.getTitle());
+		// }
+
+		// WSDocument doc = documentClient.getDocument(sid, 27);
+		// System.out.println("rating: " + doc.getRating());
+		// doc.setRating(5);
+		// doc.setSource("xyzxxx");
+		// doc.setCustomId("aaaabbbbb");
+		// documentClient.update(sid, doc);
+		// doc = documentClient.getDocument(sid, 27);
+		// System.out.println("rating: " + doc.getRating());
+		// System.out.println("source: " + doc.getSource());
+		// System.out.println("customid: " + doc.getCustomId());
+
+		// documentClient.checkout(sid, 27);
+		//
+		// WSDocument doc = documentClient.getDocument(sid, 27);
+		// System.out.println("status: " + doc.getStatus());
+		// System.out.println("locked user id: " +
+		// doc.getLockUserId().longValue());
+		// System.out.println("indexed: " + doc.getIndexed());
+		//
+		// DataHandler data = documentClient.getContent(sid, 27);
+		// documentClient.checkin(sid, 27, "comment", "prova.pdf", true, data);
+		//
+		// doc = documentClient.getDocument(sid, 30);
+		// System.out.println("status: " + doc.getStatus());
+		// System.out.println("indexed: " + doc.getIndexed());
+
+		// WSDocument doc = documentClient.getDocument(sid, 29);
+		// Assert.assertNull(doc);
+		// documentClient.restore(sid, 29, 13);
+		//
+		// doc = documentClient.getDocument(sid, 29);
+		// System.out.println("title: " + doc.getTitle());
+
+		// for (WSDocument wsDocument : documentClient.getVersions(sid, 30)) {
+		// System.out.println("title: " + wsDocument.getVersion());
+		// }
+
+		// WSDocument[] docs = documentClient.list(sid, 13);
+		// for (WSDocument wsDocument : docs) {
+		// System.out.println("doc id: " + wsDocument.getId());
+		// System.out.println("doc title: " + wsDocument.getTitle());
+		// System.out.println("doc customid: " + wsDocument.getCustomId());
+		// }
+
+		// WSDocument[] docs = documentClient.getRecentDocuments(sid, 4);
+		// System.out.println("docs: " + docs.length);
+		// for (WSDocument wsDocument : docs) {
+		// System.out.println("doc id: " + wsDocument.getId());
+		// System.out.println("doc title: " + wsDocument.getTitle());
+		// System.out.println("doc customid: " + wsDocument.getCustomId());
+		// System.out.println("--------------------------------------");
+		// }
+
+		// WSDocument doc = documentClient.createAlias(sid, 30, 14);
+		// System.out.println("doc id: " + doc.getId());
+		// System.out.println("doc title: " + doc.getTitle());
+		// System.out.println("doc customid: " + doc.getCustomId());
+
+		// documentClient.sendEmail(sid, new Long[] { 690L, 32L, 29L },
+		// "m.caruso@logicalobjects.it", "Test Invio Mail 2",
+		// "Questa mail è un test");
 
 		auth.logout(sid);
 	}
