@@ -59,7 +59,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			throw new Exception("error - folder not found");
 		}
 
-		Document doc = document.toDocument(user);
+		Document doc = document.toDocument();
 
 		// Create the document history event
 		History transaction = new History();
@@ -163,10 +163,10 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			return;
 
 		if (doc.getImmutable() == 1)
-			throw new Exception("the document is immutable");
+			throw new Exception("The document " + doc.getId() + " is immutable");
 
 		if (doc.getStatus() != Document.DOC_UNLOCKED && user.getId() != doc.getLockUserId())
-			throw new Exception("the document is locked");
+			throw new Exception("The document " + doc.getId() + " is locked");
 	}
 
 	@Override
@@ -308,6 +308,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 		// Initialize the lazy loaded collections
 		docDao.initialize(doc);
+		doc.setCustomId(document.getCustomId());
 
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 
@@ -318,7 +319,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		transaction.setComment("");
 		transaction.setUser(user);
 
-		manager.update(doc, document.toDocument(user), transaction);
+		manager.update(doc, document.toDocument(), transaction);
 	}
 
 	@Override
@@ -390,8 +391,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 		HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 		StringBuffer query = new StringBuffer(
-				"select distinct(docId) from History where deleted=0 and (docId is not NULL) and userId="
-						+ user.getId());
+				"select docId from History where deleted=0 and (docId is not NULL) and userId=" + user.getId());
 		query.append(" order by date desc");
 		List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, max);
 
@@ -439,11 +439,13 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			 * Only readable documents can be sent
 			 */
 			List<Document> docs = new ArrayList<Document>();
-			for (long id : docIds) {
-				Document doc = docDao.findById(id);
-				if (folderDao.isReadEnable(doc.getFolder().getId(), user.getId())) {
-					createAttachment(mail, doc);
-					docs.add(doc);
+			if (docIds != null && docIds.length > 0) {
+				for (long id : docIds) {
+					Document doc = docDao.findById(id);
+					if (doc != null && folderDao.isReadEnable(doc.getFolder().getId(), user.getId())) {
+						createAttachment(mail, doc);
+						docs.add(doc);
+					}
 				}
 			}
 

@@ -18,7 +18,6 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.security.Folder;
-import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
@@ -247,7 +246,7 @@ public class WSDocument {
 		return wsDoc;
 	}
 
-	public Document toDocument(User user) throws Exception {
+	public Document toDocument() throws Exception {
 		FolderDAO mdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Folder folder = mdao.findById(folderId);
 		if (folder == null) {
@@ -325,7 +324,8 @@ public class WSDocument {
 		doc.setFileSize(fileSize);
 		doc.setDigest(digest);
 		doc.setDocRef(docRef);
-		doc.setRating(rating);
+		if (rating != null)
+			doc.setRating(rating);
 
 		return doc;
 	}
