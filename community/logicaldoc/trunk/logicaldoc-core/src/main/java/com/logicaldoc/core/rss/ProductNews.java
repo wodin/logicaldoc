@@ -16,7 +16,6 @@ import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.core.communication.dao.SystemMessageDAO;
 import com.logicaldoc.core.rss.dao.FeedMessageDAO;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.task.Task;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
@@ -156,10 +155,6 @@ public class ProductNews extends Task {
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
-	}
-
-	public UserDAO getUserDao() {
-		return userDao;
 	}
 
 	public FeedMessageDAO getFeedMessageDao() {
