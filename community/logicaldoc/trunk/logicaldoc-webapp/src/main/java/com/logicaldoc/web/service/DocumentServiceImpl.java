@@ -262,9 +262,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 		if (ids.length > 0) {
 			DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-			boolean skippedSome = false;
-			boolean deletedSome = false;
-			boolean lockedSome = false;
 			for (long id : ids) {
 				try {
 					Document doc = dao.findById(id);
@@ -279,20 +276,17 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					if (doc.getDocRef() != null) {
 						transaction.setEvent(History.EVENT_SHORTCUT_DELETED);
 						dao.delete(doc.getId(), transaction);
-						deletedSome = true;
 						continue;
 					}
 
 					// The document of the selected documentRecord must be
 					// not immutable
 					if (doc.getImmutable() == 1 && !transaction.getUser().isInGroup("admin")) {
-						skippedSome = true;
 						continue;
 					}
 
 					// The document must be not locked
 					if (doc.getStatus() != Document.DOC_UNLOCKED || doc.getExportStatus() != Document.EXPORT_UNLOCKED) {
-						lockedSome = true;
 						continue;
 					}
 					// Check if there are some shortcuts associated to the
@@ -302,7 +296,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 							dao.delete(shortcutId);
 						}
 					dao.delete(doc.getId(), transaction);
-					deletedSome = true;
 				} catch (AccessControlException t) {
 					log.error(t.getMessage(), t);
 					throw new RuntimeException(t.getMessage(), t);
@@ -649,8 +642,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		try {
 			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 			DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-			boolean lockedSome = false;
-			boolean immutableSome = false;
 			for (long id : docIds) {
 				Document doc = docDao.findById(id);
 
@@ -658,7 +649,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					// The document of the selected documentRecord must be
 					// not locked
 					if (doc.getStatus() != Document.DOC_UNLOCKED || doc.getExportStatus() != Document.EXPORT_UNLOCKED) {
-						lockedSome = true;
 						continue;
 					}
 
@@ -669,7 +659,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					transaction.setUser(SessionUtil.getSessionUser(sid));
 
 					manager.makeImmutable(id, transaction);
-					immutableSome = true;
 				}
 			}
 		} catch (Throwable t) {
