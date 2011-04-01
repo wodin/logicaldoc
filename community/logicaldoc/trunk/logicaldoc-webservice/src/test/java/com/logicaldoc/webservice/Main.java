@@ -18,8 +18,8 @@ public class Main {
 
 		// Open a session
 		// This is a user 'author' with different permissions than the authors.
-		String sid = auth.login("matteo", "matteo1982");
-		// String sid = auth.login("admin", "admin");
+		// String sid = auth.login("matteo", "matteo1982");
+		String sid = auth.login("admin", "admin");
 		System.out.println("sid: " + sid);
 
 		// WSUser wsUserTest = new WSUser();
