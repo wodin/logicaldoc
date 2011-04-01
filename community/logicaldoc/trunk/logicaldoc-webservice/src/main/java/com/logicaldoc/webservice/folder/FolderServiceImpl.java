@@ -67,16 +67,14 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		Folder folder = folderDao.findById(folderId);
 		Folder parentFolder = folderDao.findById(folder.getParentId());
 		checkPermission(Permission.DELETE, user, parentFolder.getParentId());
-		try {
-			// Add a folder history entry
-			History transaction = new History();
-			transaction.setUser(user);
-			transaction.setEvent(History.EVENT_FOLDER_DELETED);
-			transaction.setSessionId(sid);
-			folderDao.deleteTree(folderId, transaction);
-		} catch (Exception e) {
-			log.error("Some elements were not deleted");
-			throw new Exception("error");
+		// Add a folder history entry
+		History transaction = new History();
+		transaction.setUser(user);
+		transaction.setEvent(History.EVENT_FOLDER_DELETED);
+		transaction.setSessionId(sid);
+		List<Folder> notDeletedFolder = folderDao.deleteTree(folder, transaction);
+		if (notDeletedFolder.contains(folder)) {
+			throw new Exception("User " + user.getUserName() + " cannot delete folder " + folderId);
 		}
 	}
 
@@ -222,11 +220,8 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	@Override
 	public WSFolder[] getPath(String sid, long folderId) throws Exception {
 		User user = validateSession(sid);
-		try {
-			checkReadEnable(user, folderId);
-		} catch (Exception e) {
-			throw new Exception("user does't have read permission");
-		}
+		
+		checkReadEnable(user, folderId);
 
 		List<WSFolder> path = new ArrayList<WSFolder>();
 
@@ -271,6 +266,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			addFolderGroup(folder, groupId, permissions);
 
 			if (recursive) {
+				folderDao.initialize(folder);
 				folderDao.applyRithtToTree(folder.getId(), null);
 			}
 		} catch (Exception e) {

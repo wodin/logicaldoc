@@ -1,6 +1,7 @@
 package com.logicaldoc.webservice;
 
 import com.logicaldoc.webservice.auth.AuthClient;
+import com.logicaldoc.webservice.auth.Right;
 import com.logicaldoc.webservice.document.DocumentClient;
 import com.logicaldoc.webservice.folder.FolderClient;
 import com.logicaldoc.webservice.search.SearchClient;
@@ -244,6 +245,54 @@ public class Main {
 		// System.out.println("hit creation: " + hit.getCreation());
 		// System.out.println("************************");
 		// }
+
+		// WSFolder folder = folderClient.getFolder(sid, 6);
+		// System.out.println("parent id: " + folder.getParentId());
+		// folderClient.move(sid, 6, 13);
+		// folder = folderClient.getFolder(sid, 6);
+		// System.out.println("parent id: " + folder.getParentId());
+
+		// WSFolder wsFolderTest = new WSFolder();
+		// wsFolderTest.setName("new folder");
+		// wsFolderTest.setDescription("descr folder test");
+		// wsFolderTest.setParentId(6);
+		//
+		// WSFolder wsFolder = folderClient.create(sid, wsFolderTest);
+		// System.out.println("folder name: "+wsFolder.getName());
+		// System.out.println("folder parentid: "+wsFolder.getParentId());
+
+		// folderClient.delete(sid, 6);
+
+		// folderClient.rename(sid, 14, "paperino");
+		// WSFolder wsFolder = folderClient.getFolder(sid, 14);
+		// System.out.println("folder name: " + wsFolder.getName());
+
+		// WSFolder[] folders = folderClient.listChildren(sid, 13);
+		// for (WSFolder wsFolder : folders) {
+		// System.out.println("folder id: " + wsFolder.getId());
+		// System.out.println("folder name: " + wsFolder.getName());
+		// System.out.println("folder descr: " + wsFolder.getDescription());
+		// System.out.println("**************************************");
+		// }
+
+		// WSFolder[] folders = folderClient.getPath(sid, 14);
+		// for (WSFolder wsFolder : folders) {
+		// System.out.println("folder id: " + wsFolder.getId());
+		// System.out.println("folder name: " + wsFolder.getName());
+		// System.out.println("folder descr: " + wsFolder.getDescription());
+		// System.out.println("**************************************");
+		// }
+
+//		folderClient.grantGroup(sid, 13, 2, 4091, true);
+//		folderClient.grantGroup(sid, 13, 3, 4091, true);
+//		folderClient.grantGroup(sid, 13, -20, 0, true);
+//		folderClient.grantUser(sid, 13, 2, 0, false);
+//		Right[] rights = folderClient.getGrantedUsers(sid, 14);
+//		System.out.println("--- " + rights.length);
+//		for (Right right : rights) {
+//			System.out.println("+++ " + right.getId());
+//		}
+		
 
 		auth.logout(sid);
 	}
