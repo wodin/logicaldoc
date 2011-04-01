@@ -19,7 +19,6 @@ import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
-import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.core.task.Task;
 import com.logicaldoc.core.util.UserUtil;
@@ -37,8 +36,6 @@ public class StatsCollector extends Task {
 	public static final String STAT = "stat";
 
 	public final static String NAME = "StatsCollector";
-
-	private UserDAO userDAO;
 
 	private DocumentDAO documentDAO;
 
@@ -104,7 +101,7 @@ public class StatsCollector extends Task {
 		/*
 		 * Collect users data
 		 */
-		int users = userDAO.count();
+		int users = userDao.count();
 		int groups = groupDAO.count();
 		log.debug("Collected users data");
 
@@ -335,14 +332,6 @@ public class StatsCollector extends Task {
 	@Override
 	public boolean isIndeterminate() {
 		return true;
-	}
-
-	public UserDAO getUserDAO() {
-		return userDAO;
-	}
-
-	public void setUserDAO(UserDAO userDAO) {
-		this.userDAO = userDAO;
 	}
 
 	public GenericDAO getGenericDAO() {
