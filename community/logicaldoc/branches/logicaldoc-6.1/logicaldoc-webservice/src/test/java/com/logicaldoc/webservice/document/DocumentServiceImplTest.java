@@ -58,6 +58,7 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		WSDocument wsDoc = WSDocument.fromDocument(newDoc);
 		Assert.assertEquals(2, wsDoc.getId());
 		wsDoc.setId(1);
+		wsDoc.setCustomId("xxxxxxxx");
 		Assert.assertEquals(1, wsDoc.getId());
 		Assert.assertEquals("testDocname2", wsDoc.getTitle());
 		Assert.assertEquals("sourceauthor2", wsDoc.getSourceAuthor());
@@ -113,6 +114,7 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		Assert.assertEquals(2, wsDoc.getId());
 		wsDoc.setId(51);
 		wsDoc.setTitle("document test");
+		wsDoc.setCustomId("yyyyyyyy");
 		File file = new File("pom.xml");
 		docServiceImpl.create("", wsDoc, new DataHandler(new FileDataSource(file)));
 
