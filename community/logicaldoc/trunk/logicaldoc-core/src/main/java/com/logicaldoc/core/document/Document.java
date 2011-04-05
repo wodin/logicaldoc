@@ -3,8 +3,6 @@ package com.logicaldoc.core.document;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.apache.commons.validator.ISBNValidator;
-
 import com.logicaldoc.core.ExtendedAttribute;
 
 /**
