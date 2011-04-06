@@ -100,9 +100,6 @@ public class DocumentManagerImpl implements DocumentManager {
 				listener.beforeCheckin(document, transaction, dictionary);
 			}
 
-			// store the document in the repository (on the file system)
-			store(document, fileInputStream);
-
 			document.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 			document.setSigned(0);
 			if (document.getBarcoded() != AbstractDocument.BARCODE_SKIP)
@@ -134,6 +131,9 @@ public class DocumentManagerImpl implements DocumentManager {
 			versionDAO.store(version);
 			log.debug("Stored version " + version.getVersion());
 
+			// store the document in the repository (on the file system)
+			store(document, fileInputStream);
+			
 			// create search index entry
 			if (immediateIndexing)
 				createIndexEntry(document);
