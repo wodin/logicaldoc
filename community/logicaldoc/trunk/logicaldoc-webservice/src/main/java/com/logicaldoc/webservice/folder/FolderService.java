@@ -48,6 +48,15 @@ public interface FolderService {
 			@WebParam(name = "name") String name) throws Exception;
 
 	/**
+	 * Updates an existing folder. To perform this you need the RENAME permission. 
+	 * 
+	 * @param sid Session identifier
+	 * @param folder The folders metadata(please compile the ID)
+	 * @throws Exception
+	 */
+	public void update(@WebParam(name = "sid") String sid, @WebParam(name = "folder") WSFolder folder) throws Exception;
+
+	/**
 	 * Moves an existing folder with the given identifier.
 	 * 
 	 * @param sid Session identifier
@@ -106,7 +115,8 @@ public interface FolderService {
 
 	/**
 	 * Lists all the folders(direct and indirect) of a parent folder.<br>
-	 * Attention: if the current user can read the folderId, all sub-folders are returned without regards to read permission.
+	 * Attention: if the current user can read the folderId, all sub-folders are
+	 * returned without regards to read permission.
 	 * 
 	 * @param sid Session identifier
 	 * @param folderId The folder id

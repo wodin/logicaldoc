@@ -103,4 +103,9 @@ public class FolderClient implements FolderService {
 	public void grantUser(String sid, long folderId, long userId, int permissions, boolean recursive) throws Exception {
 		client.grantUser(sid, folderId, userId, permissions, recursive);
 	}
+
+	@Override
+	public void update(String sid, WSFolder folder) throws Exception {
+		client.update(sid, folder);
+	}
 }
