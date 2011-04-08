@@ -1,5 +1,6 @@
 package com.logicaldoc.core.text.parser;
 
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.io.StringReader;
 
@@ -22,14 +23,34 @@ import com.logicaldoc.util.StringUtil;
  * @author Alessandro Gasparini - Logical Objects
  * @since 3.5
  */
-public class DOCParser extends AbstractParser {
+public class DOCParser extends RTFParser {
 
 	protected static Log log = LogFactory.getLog(DOCParser.class);
 
 	@Override
 	public void parse(InputStream input) {
 		try {
-			String tmp = new WordExtractor(input).getText();
+
+			BufferedInputStream bis = new BufferedInputStream(input);
+			bis.mark(Integer.MAX_VALUE);
+
+			String tmp = "";
+			try {
+				tmp = new WordExtractor(bis).getText();
+			} catch (Throwable e) {
+				// Maybe the document to be parsed is not a Word file.
+				// Try to evaluate it as a RTF file.
+			}
+
+			try {
+				bis.reset();
+			} catch (Exception e) {
+			}
+
+			if (tmp.length() == 0) {
+				// Try to evaluate it as a RTF file.
+				tmp = super.extractText(bis);
+			}
 
 			// Replace Control characters
 			if (tmp != null)
