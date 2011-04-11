@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -94,6 +95,11 @@ public class StoragesPanel extends VLayout {
 			}
 		});
 
+		if (!Feature.enabled(Feature.MULTI_STORAGE)) {
+			addStorageButton.setDisabled(true);
+			addStorageButton.setTooltip(I18N.message("featuredisabled"));
+		}
+
 		computeSizeButton = new IButton();
 		computeSizeButton.setTitle(I18N.message("computesize"));
 		computeSizeButton.setAutoFit(true);
@@ -103,7 +109,10 @@ public class StoragesPanel extends VLayout {
 			}
 		});
 
-		buttons.setMembers(addStorageButton, computeSizeButton);
+		if (Feature.visible(Feature.MULTI_STORAGE))
+			buttons.setMembers(addStorageButton, computeSizeButton);
+		else
+			buttons.setMembers(computeSizeButton);
 		addMember(buttons, 0);
 
 		storeItems = new ArrayList<TextItem>();
