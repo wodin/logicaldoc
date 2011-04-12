@@ -367,7 +367,7 @@ public class BarcodesEnginePanel extends VLayout {
 
 	private void refresh(Integer max) {
 		fillProcessingQueueTab(max);
-		tabSet.setTabPane(1, processingQueueTabPanel);
+		tabSet.setTabPane(2, processingQueueTabPanel);
 	}
 
 	private void showQueueMenu() {
