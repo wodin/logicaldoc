@@ -280,7 +280,7 @@ public class ResourceServiceImpl implements ResourceService {
 				doc.setFolder(parentFolder);
 				doc.setLocale(user.getLocale());
 
-				documentManager.create(is, doc, transaction, false);
+				documentManager.create(is, doc, transaction);
 			} catch (Exception e) {
 				log.error(e);
 			} finally {
@@ -319,7 +319,7 @@ public class ResourceServiceImpl implements ResourceService {
 			transaction.setComment("");
 
 			documentManager.checkin(Long.parseLong(resource.getID()), context.getInputStream(), resource.getName(),
-					false, false, transaction);
+					false, transaction);
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (DavException de) {

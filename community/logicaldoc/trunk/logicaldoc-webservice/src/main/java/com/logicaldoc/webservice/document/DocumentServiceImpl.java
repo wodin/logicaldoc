@@ -73,7 +73,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 
-		doc = documentManager.create(stream, doc, transaction, false);
+		doc = documentManager.create(stream, doc, transaction);
 
 		return WSDocument.fromDocument(doc);
 	}
@@ -107,7 +107,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 				// something goes wrong
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()
 						.getBean(DocumentManager.class);
-				documentManager.checkin(document.getId(), stream, filename, release, false, transaction);
+				documentManager.checkin(document.getId(), stream, filename, release, transaction);
 
 				/* create positive log message */
 				log.info("Document " + docId + " checked in");
