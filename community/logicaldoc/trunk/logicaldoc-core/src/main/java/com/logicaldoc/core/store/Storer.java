@@ -32,10 +32,10 @@ public interface Storer {
 	public void delete(long docId);
 
 	/**
-	 * Finds the folder where all document's files are stored
+	 * Finds the container where all document's files are stored
 	 * 
 	 * @param docId The document identifier
-	 * @return The document's folder
+	 * @return The document's container
 	 */
 	public File getDirectory(long docId);
 
