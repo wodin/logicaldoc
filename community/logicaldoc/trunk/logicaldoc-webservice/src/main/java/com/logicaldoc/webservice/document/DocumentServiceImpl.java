@@ -33,6 +33,7 @@ import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
+import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
 import com.logicaldoc.webservice.AbstractService;
@@ -177,8 +178,8 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		checkReadEnable(user, doc.getFolder().getId());
 		checkDownloadEnable(user, doc.getFolder().getId());
 
-		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		File file = documentManager.getDocumentFile(doc);
+		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+		File file = storer.getFile(doc, null, null);
 
 		if (!file.exists()) {
 			throw new FileNotFoundException(file.getPath());
@@ -476,8 +477,8 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 	private void createAttachment(EMail email, Document doc) throws IOException {
 		EMailAttachment att = new EMailAttachment();
 		att.setIcon(doc.getIcon());
-		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		File file = manager.getDocumentFile(doc);
+		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+		File file = storer.getFile(doc, null, null);
 		att.setFile(file);
 		att.setFileName(doc.getFileName());
 		String extension = doc.getFileExtension();

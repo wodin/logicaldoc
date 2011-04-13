@@ -1,7 +1,5 @@
 package com.logicaldoc.core.searchengine;
 
-import java.io.File;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
@@ -52,8 +50,6 @@ public class LuceneDocument {
 
 	public static final String FIELD_DOCREF = "docRef";
 
-	private File file = null;
-
 	private Document doc;
 
 	private String content = "";
@@ -73,8 +69,7 @@ public class LuceneDocument {
 	 * @param f - File of which the document should be built.
 	 * @return
 	 */
-	public Document getDocument(File f, String content) {
-		file = f;
+	public Document getDocument(String content) {
 		doc = new Document();
 		setDocId();
 		setTitle();
@@ -111,7 +106,7 @@ public class LuceneDocument {
 
 	protected void setSize() {
 		// Save the size in bytes
-		doc.add(new Field(FIELD_SIZE, Long.toString(file.length()), Field.Store.YES, Field.Index.NOT_ANALYZED));
+		doc.add(new Field(FIELD_SIZE, Long.toString(document.getFileSize()), Field.Store.YES, Field.Index.NOT_ANALYZED));
 	}
 
 	protected void setDocData() {

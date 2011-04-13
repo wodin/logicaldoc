@@ -18,6 +18,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.filters.StringInputStream;
@@ -32,6 +33,7 @@ import com.logicaldoc.core.security.UserDoc;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
+import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
 
@@ -77,8 +79,8 @@ public class ServletDocUtil {
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = dao.findById(docId);
 
-		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		File file = documentManager.getDocumentFile(doc, fileVersion);
+		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+		File file = storer.getFile(doc, fileVersion, null);
 		String filename = fileName;
 		if (filename == null)
 			filename = doc.getFileName();
@@ -205,7 +207,7 @@ public class ServletDocUtil {
 		InputStream is = new StringInputStream(content.trim(), "UTF-8");
 		OutputStream os;
 		os = response.getOutputStream();
-		
+
 		int letter = 0;
 		byte[] buffer = new byte[128 * 1024];
 		try {
@@ -267,9 +269,7 @@ public class ServletDocUtil {
 		if (StringUtils.isEmpty(ver))
 			ver = doc.getFileVersion();
 
-		DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		File file = docManager.getDocumentFile(doc, fileVersion);
-		String path = file.getParent();
+		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		// Configure the factory here, if desired.
@@ -278,8 +278,18 @@ public class ServletDocUtil {
 		List<FileItem> fileItems = upload.parseRequest(request);
 		for (FileItem item : fileItems) {
 			if (!item.isFormField()) {
-				File savedFile = new File(path, ver + "-" + suffix);
+				File savedFile = File.createTempFile("", "");
 				item.write(savedFile);
+
+				InputStream is = null;
+				try {
+					is = item.getInputStream();
+					storer.store(item.getInputStream(), Long.parseLong(docId), ver + "-" + suffix);
+				} finally {
+					if (is != null)
+						is.close();
+					FileUtils.forceDelete(savedFile);
+				}
 			}
 		}
 	}

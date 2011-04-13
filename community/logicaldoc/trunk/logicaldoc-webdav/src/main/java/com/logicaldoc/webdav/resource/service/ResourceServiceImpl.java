@@ -1,10 +1,6 @@
 package com.logicaldoc.webdav.resource.service;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,6 +23,7 @@ import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webdav.context.ImportContext;
 import com.logicaldoc.webdav.exception.DavResourceIOException;
@@ -52,6 +49,8 @@ public class ResourceServiceImpl implements ResourceService {
 	private FolderDAO folderDAO;
 
 	private DocumentManager documentManager;
+
+	private Storer storer;
 
 	private UserDAO userDAO;
 
@@ -596,19 +595,13 @@ public class ResourceServiceImpl implements ResourceService {
 		if (document.getVersion() != null && document.getVersion().equals(resource.getVersionLabel()))
 			version = null;
 
-		File file = null;
+		InputStream is = null;
 
 		if (version == null || version.equals(""))
-			file = documentManager.getDocumentFile(document, null);
+			is = storer.getStream(document, null, null);
 		else
-			file = documentManager.getDocumentFile(document, resource.getVersionLabel());
-
-		try {
-			FileInputStream fis = new FileInputStream(file);
-			return new BufferedInputStream(fis, 2048);
-		} catch (IOException e) {
-			throw new DavResourceIOException(e.getMessage());
-		}
+			is = storer.getStream(document, resource.getVersionLabel(), null);
+		return is;
 	}
 
 	@Override
@@ -693,5 +686,9 @@ public class ResourceServiceImpl implements ResourceService {
 
 	public void setFolderDAO(FolderDAO folderDAO) {
 		this.folderDAO = folderDAO;
+	}
+
+	public void setStorer(Storer storer) {
+		this.storer = storer;
 	}
 }

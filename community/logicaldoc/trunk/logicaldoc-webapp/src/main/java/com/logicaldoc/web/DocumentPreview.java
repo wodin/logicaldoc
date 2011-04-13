@@ -1,7 +1,5 @@
 package com.logicaldoc.web;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,9 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.thumbnail.ThumbnailManager;
+import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
 
@@ -60,33 +60,43 @@ public class DocumentPreview extends HttpServlet {
 		String id = request.getParameter(DOC_ID);
 		String fileVersion = request.getParameter(FILE_VERSION);
 
-		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		Storer storer = (Storer) Context.getInstance().getBean(DocumentManager.class);
 
 		// 1) check if the document exists
 		long docId = Long.parseLong(id);
 		String suffix = "thumb.jpg";
-		File thumbnail = manager.getDocumentFile(docId, fileVersion, suffix);
-		log.debug("thumbnail: " + thumbnail.getPath());
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Document doc = docDao.findById(docId);
 
-		// 2) the thumbnail doesn't exist, create it
-		if (thumbnail.exists() == false) {
-			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-			ThumbnailManager thumbManaher = (ThumbnailManager) Context.getInstance().getBean(ThumbnailManager.class);
-			try {
-				thumbManaher.createTumbnail(docDao.findById(docId), fileVersion);
-			} catch (Throwable t) {
-				log.error(t.getMessage(), t);
+		InputStream thumbnail = null;
+
+		try {
+			thumbnail = storer.getStream(doc, fileVersion, suffix);
+
+			// 2) the thumbnail doesn't exist, create it
+			if (thumbnail == null) {
+				ThumbnailManager thumbManaher = (ThumbnailManager) Context.getInstance()
+						.getBean(ThumbnailManager.class);
+				try {
+					thumbManaher.createTumbnail(doc, fileVersion);
+				} catch (Throwable t) {
+					log.error(t.getMessage(), t);
+				}
+				thumbnail = storer.getStream(doc, fileVersion, suffix);
 			}
-		}
 
-		if (thumbnail.exists() == false) {
-			log.debug("thumbnail.exists == false");
-			forwardPreviewNotAvailable(request, response);
-			return;
-		}
+			if (thumbnail == null) {
+				log.debug("thumbnail not available");
+				forwardPreviewNotAvailable(request, response);
+				return;
+			}
 
-		// 3) return the the thumbnail
-		downloadDocument(request, response, thumbnail);
+			// 3) return the the thumbnail
+			downloadDocument(request, response, thumbnail, storer.getResourceName(doc, fileVersion, suffix));
+		} finally {
+			if (thumbnail != null)
+				thumbnail.close();
+		}
 	}
 
 	private void forwardPreviewNotAvailable(HttpServletRequest request, HttpServletResponse response) {
@@ -104,14 +114,9 @@ public class DocumentPreview extends HttpServlet {
 	 * 
 	 * @param request the current request
 	 * @param response the document is written to this object
-	 * @param fileVersion name of the file version; if null the latest version
-	 *        will be returned
 	 */
-	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, File file)
-			throws FileNotFoundException, IOException {
-
-		String filename = file.getName();
-		InputStream is = new FileInputStream(file);
+	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, InputStream is,
+			String filename) throws FileNotFoundException, IOException {
 
 		// get the mimetype
 		String mimetype = MimeType.getByFilename(filename);

@@ -1,7 +1,5 @@
 package com.logicaldoc.web;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,13 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.Document;
-import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DownloadTicket;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -31,6 +27,7 @@ import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
+import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
 
@@ -120,42 +117,34 @@ public class TicketDownload extends HttpServlet {
 	private void downloadDocument(HttpServletRequest request, HttpServletResponse response, Document doc,
 			String fileVersion, String suffix, User user) throws FileNotFoundException, IOException, ServletException {
 
-		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		File file = documentManager.getDocumentFile(doc, fileVersion);
+		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 		String filename = doc.getFileName();
-		if (!file.exists()) {
-			throw new FileNotFoundException(file.getPath());
-		}
 
-		if (StringUtils.isNotEmpty(suffix)) {
-			file = new File(file.getParent(), file.getName() + "-" + suffix);
-			filename = filename + "." + FilenameUtils.getExtension(suffix);
-		}
-		InputStream is = new FileInputStream(file);
-
-		// get the mimetype
-		String mimetype = MimeType.getByFilename(filename);
-		// it seems everything is fine, so we can now start writing to the
-		// response object
-		response.setContentType(mimetype);
-		setContentDisposition(request, response, filename);
-
-		// Headers required by Internet Explorer
-		response.setHeader("Pragma", "public");
-		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
-		response.setHeader("Expires", "0");
-
-		OutputStream os;
-		os = response.getOutputStream();
-
-		int letter = 0;
-
+		InputStream is = storer.getStream(doc, fileVersion, suffix);
+		OutputStream os = null;
 		try {
+			// get the mimetype
+			String mimetype = MimeType.getByFilename(filename);
+			// it seems everything is fine, so we can now start writing to the
+			// response object
+			response.setContentType(mimetype);
+			setContentDisposition(request, response, filename);
+
+			// Headers required by Internet Explorer
+			response.setHeader("Pragma", "public");
+			response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
+			response.setHeader("Expires", "0");
+
+			os = response.getOutputStream();
+
+			int letter = 0;
+
 			while ((letter = is.read()) != -1) {
 				os.write(letter);
 			}
 		} finally {
-			os.flush();
+			if (os != null)
+				os.flush();
 			os.close();
 			is.close();
 		}

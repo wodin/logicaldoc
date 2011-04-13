@@ -1,6 +1,8 @@
 package com.logicaldoc.core.store;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -48,7 +50,7 @@ public class FSStorer implements Storer {
 
 	@Override
 	public void delete(long docId) {
-		File docDir = getDirectory(docId);
+		File docDir = getContainer(docId);
 		try {
 			FileUtils.forceDelete(docDir);
 		} catch (IOException e) {
@@ -57,7 +59,7 @@ public class FSStorer implements Storer {
 	}
 
 	@Override
-	public File getDirectory(long docId) {
+	public File getContainer(long docId) {
 		String relativePath = computeRelativePath(docId);
 		String path = config.getPropertyWithSubstitutions("store.1.dir") + "/" + relativePath;
 		return new File(path);
@@ -67,8 +69,8 @@ public class FSStorer implements Storer {
 	public boolean store(InputStream stream, long docId, String filename) {
 		try {
 			SystemQuota.checkOverQuota();
-			
-			File dir = getDirectory(docId);
+
+			File dir = getContainer(docId);
 			FileUtils.forceMkdir(dir);
 			File file = new File(new StringBuilder(dir.getPath()).append("/").append(filename).toString());
 			FileUtil.writeFile(stream, file.getPath());
@@ -85,15 +87,8 @@ public class FSStorer implements Storer {
 	}
 
 	@Override
-	public File getFile(long docId, String filename) {
-		File docDir = getDirectory(docId);
-		return new File(docDir, filename);
-	}
-
-	@Override
-	public File getFile(Document doc, String fileVersion, String suffix) {
+	public String getResourceName(Document doc, String fileVersion, String suffix) {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-
 		Document document = doc;
 
 		/*
@@ -117,12 +112,69 @@ public class FSStorer implements Storer {
 
 		/*
 		 * Document's related resources are stored with a suffix, e.g.
-		 * "docId/2.1-thumb.jpg"
+		 * "doc/2.1-thumb.jpg"
 		 */
 		if (StringUtils.isNotEmpty(suffix))
 			filename += "-" + suffix;
 
-		return getFile(document.getId(), filename);
+		return filename;
+	}
+
+	@Override
+	public InputStream getStream(Document doc, String fileVersion, String suffix) {
+		String filename = getResourceName(doc, fileVersion, suffix);
+
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Document document = doc;
+
+		/*
+		 * All versions of a document are stored in the same directory as the
+		 * current version, but the filename is the version number without
+		 * extension, e.g. "docId/2.1"
+		 */
+		if (doc.getDocRef() != null) {
+			// The shortcut document doesn't have the 'fileversion' and the
+			// 'version'
+			document = docDao.findById(doc.getDocRef());
+		}
+
+		File container = getContainer(document.getId());
+		File file = new File(container, filename);
+
+		try {
+			return new BufferedInputStream(new FileInputStream(file), 2048);
+		} catch (Throwable e) {
+			log.error(e.getMessage());
+			return null;
+		}
+	}
+
+	@Override
+	public InputStream getStream(long docId, String fileVersion, String suffix) {
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Document doc = docDao.findById(docId);
+		return getStream(doc, fileVersion, suffix);
+	}
+
+	@Override
+	public File getFile(Document doc, String fileVersion, String suffix) {
+		String filename = getResourceName(doc, fileVersion, suffix);
+
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Document document = doc;
+
+		/*
+		 * All versions of a document are stored in the same directory as the
+		 * current version, but the filename is the version number without
+		 * extension, e.g. "docId/2.1"
+		 */
+		if (doc.getDocRef() != null) {
+			// The shortcut document doesn't have the 'fileversion' and the
+			// 'version'
+			document = docDao.findById(doc.getDocRef());
+		}
+
+		return new File(getContainer(document.getId()), filename);
 	}
 
 	@Override
@@ -134,7 +186,7 @@ public class FSStorer implements Storer {
 
 	@Override
 	public void clean(long docId) {
-		File docDir = getDirectory(docId);
+		File docDir = getContainer(docId);
 		File[] listFiles = docDir.listFiles();
 		List<String> deletedVersions = new ArrayList<String>();
 		if (listFiles != null) {

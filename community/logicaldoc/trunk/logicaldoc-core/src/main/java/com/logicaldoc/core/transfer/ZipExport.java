@@ -2,8 +2,6 @@ package com.logicaldoc.core.transfer;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -19,10 +17,10 @@ import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 
 import com.logicaldoc.core.document.Document;
-import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.dao.FolderDAO;
+import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 
 /**
@@ -154,12 +152,11 @@ public class ZipExport {
 	 * Adds a single document into the archive in the specified path.
 	 */
 	private void addDocument(String path, Document document) {
-		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		File documentFile = manager.getDocumentFile(document);
+		Storer manager = (Storer) Context.getInstance().getBean(Storer.class);
 		InputStream is = null;
 		BufferedInputStream bis = null;
 		try {
-			is = new FileInputStream(documentFile);
+			is = manager.getStream(document, null, null);
 			bis = new BufferedInputStream(is);
 
 			ZipEntry entry = new ZipEntry(document.getFileName());
