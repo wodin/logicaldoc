@@ -304,7 +304,7 @@
 			</bean>
 		</property>
 	</bean>
-	
+
 	<bean id="FeedMessageDAO" parent="ApplicationBaseTransactionProxy"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
@@ -318,7 +318,7 @@
 			</bean>
 		</property>
 	</bean>
-	
+
 	<bean id="RatingDAO" parent="ApplicationBaseTransactionProxy"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
@@ -381,7 +381,7 @@
 	<bean id="UserListenerManager" class="com.logicaldoc.core.security.UserListenerManager" />
 
 	<bean id="ThumbnailManager" class="com.logicaldoc.core.document.thumbnail.ThumbnailManager">
-		<property name="documentManager" ref="DocumentManager" />
+		<property name="storer" ref="Storer" />
 	</bean>
 
 	<!-- Mail sender -->
@@ -486,7 +486,7 @@
 		<property name="jobDetail" ref="StatsCollectorJob" />
 		<property name="config" ref="ContextProperties" />
 	</bean>
-	
+
 	<bean id="ProductNews" class="com.logicaldoc.core.rss.ProductNews">
 		<property name="feedMessageDao" ref="FeedMessageDAO" />
 		<property name="config" ref="ContextProperties" />

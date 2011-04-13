@@ -15,7 +15,7 @@ import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
 
 import com.logicaldoc.core.document.Document;
-import com.logicaldoc.core.document.DocumentManager;
+import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
@@ -28,7 +28,7 @@ import com.logicaldoc.util.plugin.PluginRegistry;
 public class ThumbnailManager {
 	protected static Log log = LogFactory.getLog(ThumbnailManager.class);
 
-	private DocumentManager documentManager;
+	private Storer storer;
 
 	// Key is the extension, value is the associated builder
 	private Map<String, ThumbnailBuilder> builders = new HashMap<String, ThumbnailBuilder>();
@@ -46,7 +46,7 @@ public class ThumbnailManager {
 		if (builder == null) {
 			log.warn("No registered thumbnail for extension " + document.getFileExtension());
 			try {
-				MagicMatch match = Magic.getMagicMatch(documentManager.getDocumentFile(document), true);
+				MagicMatch match = Magic.getMagicMatch(storer.getFile(document, null, null), true);
 				if ("text/plain".equals(match.getMimeType())) {
 					log.warn("Try to convert as plain text");
 					builder = getBuilders().get("txt");
@@ -91,7 +91,7 @@ public class ThumbnailManager {
 			String fver = fileVersion;
 			if (fver == null)
 				fver = document.getFileVersion();
-			File src = documentManager.getDocumentFile(document, fver);
+			File src = storer.getFile(document, fver, null);
 			File dest = new File(src.getParentFile(), src.getName() + "-thumb.jpg");
 			builder.build(src, document.getFileName(), size, dest, scaleAlgorithm, quality);
 		} catch (Exception e) {
@@ -136,13 +136,13 @@ public class ThumbnailManager {
 		}
 	}
 
-	public void setDocumentManager(DocumentManager documentManager) {
-		this.documentManager = documentManager;
-	}
-
 	public Map<String, ThumbnailBuilder> getBuilders() {
 		if (builders.isEmpty())
 			initBuilders();
 		return builders;
+	}
+
+	public void setStorer(Storer storer) {
+		this.storer = storer;
 	}
 }

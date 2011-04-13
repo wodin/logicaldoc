@@ -210,37 +210,6 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public File getDocumentFile(Document doc) {
-		return getDocumentFile(doc, null);
-	}
-
-	@Override
-	public File getDocumentFile(long docId) {
-		return getDocumentFile(docId, null);
-	}
-
-	@Override
-	public File getDocumentFile(long docId, String fileVersion) {
-		return getDocumentFile(docId, fileVersion, null);
-	}
-
-	@Override
-	public File getDocumentFile(long docId, String fileVersion, String suffix) {
-		Document doc = documentDAO.findById(docId);
-		return getDocumentFile(doc, fileVersion, suffix);
-	}
-
-	@Override
-	public File getDocumentFile(Document doc, String fileVersion) {
-		return getDocumentFile(doc, fileVersion, null);
-	}
-
-	@Override
-	public File getDocumentFile(Document doc, String fileVersion, String suffix) {
-		return storer.getFile(doc, fileVersion, suffix);
-	}
-
-	@Override
 	public String getDocumentContent(Document doc) {
 		String content = null;
 
@@ -250,7 +219,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			doc = documentDAO.findById(docId);
 		}
 
-		File file = getDocumentFile(doc);
+		File file = storer.getFile(doc, null, null);
 
 		// Parses the file where it is already stored
 		Locale locale = doc.getLocale();
@@ -300,16 +269,16 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		// Add the document to the index (lucene 2.x doesn't support the update
 		// operation)
-		File file = getDocumentFile(doc);
+		File file = storer.getFile(doc, null, null);
 
-		indexer.addFile(file, doc, content, locale);
+		indexer.addFile(doc, content, locale);
 		doc = documentDAO.findById(doc.getId());
 		doc.setIndexed(AbstractDocument.INDEX_INDEXED);
 		documentDAO.store(doc);
 
 		for (Long shortcutId : shortcutIds) {
 			Document shortcutDoc = documentDAO.findById(shortcutId);
-			indexer.addFile(getDocumentFile(doc), shortcutDoc);
+			indexer.addFile(file, shortcutDoc);
 			shortcutDoc.setIndexed(AbstractDocument.INDEX_INDEXED);
 			documentDAO.store(shortcutDoc);
 		}
@@ -562,7 +531,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				documentDAO.delete(docVO.getId());
 			}
 
-			File file = getDocumentFile(docVO);
+			File file = storer.getFile(docVO, null, null);
 			docVO.setFileSize(file.length());
 
 			documentDAO.store(docVO);
@@ -629,7 +598,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			return createShortcut(doc, folder, transaction);
 		}
 
-		File sourceFile = storer.getFile(doc.getId(), doc.getFileVersion());
+		File sourceFile = storer.getFile(doc.getId(), doc.getFileVersion(), null);
 
 		InputStream is = new FileInputStream(sourceFile);
 		try {
@@ -639,6 +608,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			return create(is, cloned, transaction);
 		} finally {
 			is.close();
+			is = null;
 		}
 	}
 

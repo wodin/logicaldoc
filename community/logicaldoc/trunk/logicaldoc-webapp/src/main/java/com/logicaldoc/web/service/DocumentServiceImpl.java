@@ -50,6 +50,7 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.core.transfer.InMemoryZipImport;
 import com.logicaldoc.core.transfer.ZipExport;
 import com.logicaldoc.core.util.UserUtil;
@@ -1015,8 +1016,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		EMailAttachment att = new EMailAttachment();
 		Document doc = docDao.findById(docId);
 		att.setIcon(doc.getIcon());
-		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		File file = manager.getDocumentFile(doc);
+		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+		File file = storer.getFile(doc, null, null);
 		att.setFile(file);
 		att.setFileName(doc.getFileName());
 		String extension = doc.getFileExtension();

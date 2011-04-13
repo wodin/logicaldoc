@@ -6,7 +6,7 @@ import java.io.InputStream;
 import com.logicaldoc.core.document.Document;
 
 /**
- * The Storer manages the filesystem where document files are maintained.
+ * The Storer manages the repository where document files are maintained.
  * 
  * @author Michael Scholz, Marco Meschieri
  */
@@ -37,37 +37,63 @@ public interface Storer {
 	 * @param docId The document identifier
 	 * @return The document's container
 	 */
-	public File getDirectory(long docId);
-
+	public File getContainer(long docId);
+	
+	
 	/**
-	 * Finds a specific file of a stored document
+	 * Computes the resource name inside the container
 	 * 
 	 * @param docId The document identifier
-	 * @return The document's file
+	 * @param fileVersion The file version (use null for the latest version)
+	 * @param suffix The file suffix (use null if you want the exact document
+	 *        file)
+	 * @return The document's resource name
 	 */
-	public File getFile(long docId, String filename);
+	public String getResourceName(Document doc, String fileVersion, String suffix);
+
+	 /**
+	 * Obtains the document's file for the specified version
+	 *
+	 * @param doc The document representation
+	 * @param fileVersion The file version (use null for the latest version)
+	 * @param suffix The file suffix (use null if you want the exact document
+	 * file)
+	 * @return The document file
+	 */
+	 public File getFile(Document doc, String fileVersion, String suffix);
+
+	 /**
+	 * Obtains the document's file for the specified version
+	 *
+	 * @param docId The document identifier
+	 * @param fileVersion The file version (use null for the latest version)
+	 * @param suffix The file suffix (use null if you want the exact document
+	 * file)
+	 * @return The document file
+	 */
+	 public File getFile(long docId, String fileVersion, String suffix);
+	
+	/**
+	 * Obtains the document's content for the specified version
+	 * 
+	 * @param docId The document identifier
+	 * @param fileVersion The file version (use null for the latest version)
+	 * @param suffix The file suffix (use null if you want the exact document
+	 *        file)
+	 * @return The document file's content
+	 */
+	public InputStream getStream(long docId, String fileVersion, String suffix);
 
 	/**
-	 * Obtains the document's file for the specified version
+	 * Obtains the document's content for the specified version
 	 * 
 	 * @param doc The document representation
 	 * @param fileVersion The file version (use null for the latest version)
 	 * @param suffix The file suffix (use null if you want the exact document
 	 *        file)
-	 * @return The document file
+	 * @return The document file's content
 	 */
-	public File getFile(Document doc, String fileVersion, String suffix);
-
-	/**
-	 * Obtains the document's file for the specified version
-	 * 
-	 * @param docId The document identifier
-	 * @param fileVersion The file version (use null for the latest version)
-	 * @param suffix The file suffix (use null if you want the exact document
-	 *        file)
-	 * @return The document file
-	 */
-	public File getFile(long docId, String fileVersion, String suffix);
+	public InputStream getStream(Document doc, String fileVersion, String suffix);
 
 	/**
 	 * Deletes from the document storage all the files related to a deleted
@@ -76,7 +102,7 @@ public interface Storer {
 	 * @param docId The document identifier
 	 */
 	public void clean(long docId);
-	
+
 	/**
 	 * Computes the total size of the documents repository(in bytes)
 	 */

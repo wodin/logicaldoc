@@ -1,6 +1,7 @@
 package com.logicaldoc.core.document;
 
 import java.io.File;
+import java.io.FileInputStream;
 
 import junit.framework.Assert;
 
@@ -181,7 +182,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		transaction.setNotified(0);
 		transaction.setComment("pippo_reason");
 
-		Document newDoc = documentManager.create(documentManager.getDocumentFile(doc), doc, transaction);
+		Document newDoc = documentManager.create(new FileInputStream("pom.xml"), doc, transaction);
 
 		newDoc = docDao.findById(newDoc.getId());
 		Assert.assertEquals(newDoc.getTitle(), doc.getTitle());
@@ -228,7 +229,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 
 		documentManager.checkout(1L, transaction);
 
-		File file = documentManager.getDocumentFile(1L);
+		File file = new File("pom.xml");
 
 		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);

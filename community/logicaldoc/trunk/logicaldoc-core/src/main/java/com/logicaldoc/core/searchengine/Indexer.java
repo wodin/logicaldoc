@@ -73,13 +73,13 @@ public class Indexer {
 	 * @return
 	 * @throws Exception
 	 */
-	public synchronized void addFile(File file, com.logicaldoc.core.document.Document document, String content,
-			Locale locale) throws Exception {
+	public synchronized void addFile(com.logicaldoc.core.document.Document document, String content, Locale locale)
+			throws Exception {
 		LuceneDocument lDoc = new LuceneDocument(document);
 		log.info("document: " + document.getId());
 		try {
-			log.info("addFile: " + file.toString());
-			Document doc = lDoc.getDocument(file, content);
+			log.info("addFile: " + document.getFileName());
+			Document doc = lDoc.getDocument(content);
 			log.info("doc path: " + doc.getField(LuceneDocument.FIELD_FOLDER_ID).stringValue());
 			addDocument(doc, locale);
 		} catch (Throwable e) {
@@ -163,7 +163,7 @@ public class Indexer {
 					+ document.getSourceAuthor());
 		}
 
-		addFile(file, document, content, locale);
+		addFile(document, content, locale);
 	}
 
 	/**
