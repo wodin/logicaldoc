@@ -22,12 +22,11 @@ public interface DocumentManager {
 	 * @param filename new filename (can also be the old one)
 	 * @param release True if this is a new release(eg: 2.0) rather than a
 	 *        subversion(eg: 1.1)
-	 * @param immediateIndexing if true the document is immediately indexed
 	 * @param transaction entry to log the event, set the user and comment
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	public void checkin(long docId, InputStream fileInputStream, String filename, boolean release,
-			boolean immediateIndexing, History transaction) throws Exception;
+	public void checkin(long docId, InputStream fileInputStream, String filename, boolean release, History transaction)
+			throws Exception;
 
 	/**
 	 * Checks in the given document
@@ -37,12 +36,10 @@ public interface DocumentManager {
 	 * @param filename new filename (can also be the old one)
 	 * @param release True if this is a new release(eg: 2.0) rather than a
 	 *        subversion(eg: 1.1)
-	 * @param immediateIndexing if true the document is immediately indexed
 	 * @param transaction entry to log the event, set the user and comment
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	void checkin(long docId, File file, String filename, boolean release, boolean immediateIndexing, History transaction)
-			throws Exception;
+	void checkin(long docId, File file, String filename, boolean release, History transaction) throws Exception;
 
 	/**
 	 * Checks out the given document
@@ -81,11 +78,10 @@ public interface DocumentManager {
 	 * @param docVO The value object containing the document's metadata
 	 * @param transaction The trandaction metadata (remember to set the user and
 	 *        the comment)
-	 * @param immediateIndexing True if the document must be indexed immediately
 	 * @return The newly created document
 	 * @throws Exception
 	 */
-	public Document create(File file, Document docVO, History transaction, boolean immediateIndexing) throws Exception;
+	public Document create(File file, Document docVO, History transaction) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -95,12 +91,10 @@ public interface DocumentManager {
 	 * @param docVO The value object containing the document's metadata
 	 * @param transaction The transaction metadata (remember to set the user and
 	 *        the comment)
-	 * @param immediateIndexing True if the document must be indexed immediately
 	 * @return The newly created document
 	 * @throws Exception
 	 */
-	public Document create(InputStream content, Document docVO, History transaction, boolean immediateIndexing)
-			throws Exception;
+	public Document create(InputStream content, Document docVO, History transaction) throws Exception;
 
 	/**
 	 * Obtains the document's file

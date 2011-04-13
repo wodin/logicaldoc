@@ -181,7 +181,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		transaction.setNotified(0);
 		transaction.setComment("pippo_reason");
 
-		Document newDoc = documentManager.create(documentManager.getDocumentFile(doc), doc, transaction, false);
+		Document newDoc = documentManager.create(documentManager.getDocumentFile(doc), doc, transaction);
 
 		newDoc = docDao.findById(newDoc.getId());
 		Assert.assertEquals(newDoc.getTitle(), doc.getTitle());
@@ -236,7 +236,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 
 		Assert.assertEquals(Document.DOC_CHECKED_OUT, doc.getStatus());
 
-		documentManager.checkin(1L, file, "pippo", true, false, transaction);
+		documentManager.checkin(1L, file, "pippo", true, transaction);
 
 		doc = docDao.findById(1);
 		Assert.assertNotNull(doc);

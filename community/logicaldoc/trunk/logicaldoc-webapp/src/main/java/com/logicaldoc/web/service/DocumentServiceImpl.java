@@ -192,7 +192,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					doc.setFolder(parent);
 					doc.setTemplate(template);
 
-					doc = documentManager.create(file, doc, transaction, false);
+					doc = documentManager.create(file, doc, transaction);
 				}
 			}
 		} catch (Throwable t) {
@@ -227,7 +227,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				// something goes wrong
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()
 						.getBean(DocumentManager.class);
-				documentManager.checkin(docId, new FileInputStream(file), fileName, major, false, transaction);
+				documentManager.checkin(docId, new FileInputStream(file), fileName, major, transaction);
 
 			} catch (Throwable t) {
 				log.error(t.getMessage(), t);

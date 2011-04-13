@@ -169,7 +169,7 @@ public class InMemoryZipImport extends ZipImport {
 				doc.setTags(tagSet);
 				doc.setTemplateId(templateId);
 
-				docManager.create(stream, doc, transaction, immediateIndexing);
+				docManager.create(stream, doc, transaction);
 			} catch (Exception e) {
 				logger.error("InMemoryZipImport addEntry failed", e);
 			} finally {

@@ -51,8 +51,6 @@ public class ZipImport {
 
 	protected boolean extractTags = false;
 
-	protected boolean immediateIndexing = false;
-
 	protected int tagsNumber = 3;
 
 	protected String tags;
@@ -64,18 +62,6 @@ public class ZipImport {
 	protected String sessionId = null;
 
 	public ZipImport() {
-	}
-
-	public boolean isImmediateIndexing() {
-		return immediateIndexing;
-	}
-
-	/**
-	 * This flag controls if newly imported documents must be immediately
-	 * indexed
-	 */
-	public void setImmediateIndexing(boolean immediateIndexing) {
-		this.immediateIndexing = immediateIndexing;
 	}
 
 	public void process(File zipsource, Locale locale, Folder parent, long userId, Long templateId, String sessionId) {
@@ -179,7 +165,7 @@ public class ZipImport {
 				doc.setFolder(parent);
 				doc.setTags(tagSet);
 				doc.setTemplateId(templateId);
-				docManager.create(file, doc, transaction, immediateIndexing);
+				docManager.create(file, doc, transaction);
 			} catch (Exception e) {
 				logger.error("InMemoryZipImport addEntry failed", e);
 			}
@@ -207,7 +193,7 @@ public class ZipImport {
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.messages", user.getLocale());
 		sysmess.setSubject(bundle.getString("zip.import.subject"));
 		String message = bundle.getString("zip.import.body");
-		String body = MessageFormat.format(message, new String[] { zipFile.getName() });
+		String body = MessageFormat.format(message, new Object[] { zipFile.getName() });
 		sysmess.setMessageText(body);
 		sysmess.setSentDate(now);
 		sysmess.setRead(0);

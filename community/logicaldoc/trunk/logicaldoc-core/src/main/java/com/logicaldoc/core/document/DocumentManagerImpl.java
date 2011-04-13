@@ -70,19 +70,18 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void checkin(long docId, File file, String filename, boolean release, boolean immediateIndexing,
-			History transaction) throws Exception {
+	public void checkin(long docId, File file, String filename, boolean release, History transaction) throws Exception {
 		FileInputStream is = new FileInputStream(file);
 		try {
-			checkin(docId, is, filename, release, immediateIndexing, transaction);
+			checkin(docId, is, filename, release, transaction);
 		} finally {
 			is.close();
 		}
 	}
 
 	@Override
-	public void checkin(long docId, InputStream fileInputStream, String filename, boolean release,
-			boolean immediateIndexing, History transaction) throws Exception {
+	public void checkin(long docId, InputStream fileInputStream, String filename, boolean release, History transaction)
+			throws Exception {
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 		assert (transaction.getComment() != null);
@@ -133,10 +132,6 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			// store the document in the repository (on the file system)
 			store(document, fileInputStream);
-			
-			// create search index entry
-			if (immediateIndexing)
-				createIndexEntry(document);
 
 			log.debug("Invoke listeners after store");
 			for (DocumentListener listener : listenerManager.getListeners()) {
@@ -423,23 +418,6 @@ public class DocumentManagerImpl implements DocumentManager {
 		}
 	}
 
-	/** Creates a new search index entry for the given document */
-	private void createIndexEntry(Document document) throws Exception {
-		indexer.addFile(getDocumentFile(document), document);
-		document.setIndexed(AbstractDocument.INDEX_INDEXED);
-		documentDAO.store(document);
-
-		// Check if there are some shortcuts associated to the indexing
-		// document. They must be re-indexed.
-		List<Long> shortcutIds = documentDAO.findShortcutIds(document.getId());
-		for (Long shortcutId : shortcutIds) {
-			Document shortcutDoc = documentDAO.findById(shortcutId);
-			indexer.addFile(getDocumentFile(document), shortcutDoc);
-			shortcutDoc.setIndexed(AbstractDocument.INDEX_INDEXED);
-			documentDAO.store(shortcutDoc);
-		}
-	}
-
 	@Override
 	public String getDocumentContent(long docId) {
 		Document doc = documentDAO.findById(docId);
@@ -510,19 +488,18 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public Document create(File file, Document docVO, History transaction, boolean immediateIndexing) throws Exception {
+	public Document create(File file, Document docVO, History transaction) throws Exception {
 
 		InputStream is = new FileInputStream(file);
 		try {
-			return create(is, docVO, transaction, immediateIndexing);
+			return create(is, docVO, transaction);
 		} finally {
 			is.close();
 		}
 	}
 
 	@Override
-	public Document create(InputStream content, Document docVO, History transaction, boolean immediateIndexing)
-			throws Exception {
+	public Document create(InputStream content, Document docVO, History transaction) throws Exception {
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 		assert (transaction.getComment() != null);
@@ -586,12 +563,6 @@ public class DocumentManagerImpl implements DocumentManager {
 			}
 
 			File file = getDocumentFile(docVO);
-			if (immediateIndexing) {
-				/* create search index entry */
-				Locale loc = docVO.getLocale();
-				indexer.addFile(file, docVO, getDocumentContent(docVO), loc);
-				docVO.setIndexed(AbstractDocument.INDEX_INDEXED);
-			}
 			docVO.setFileSize(file.length());
 
 			documentDAO.store(docVO);
@@ -665,7 +636,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			Document cloned = (Document) doc.clone();
 			cloned.setId(0);
 			cloned.setFolder(folder);
-			return create(is, cloned, transaction, false);
+			return create(is, cloned, transaction);
 		} finally {
 			is.close();
 		}
