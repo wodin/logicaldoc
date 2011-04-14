@@ -96,6 +96,7 @@ public abstract class LogicalDOCPlugin extends Plugin {
 			path = path.substring("jar:file:".length());
 		path = path.substring(0, path.lastIndexOf("!"));
 		try {
+			// The path may contain URL-encoded sequences
 			path = URLDecoder.decode(path, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 		}

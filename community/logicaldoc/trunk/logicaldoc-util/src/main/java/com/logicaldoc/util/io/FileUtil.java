@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +18,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -106,19 +108,11 @@ public class FileUtil {
 		logger.error(message);
 	}
 
-	/**
-	 * This method calculates the digest of a file using the algorithm SHA-1.
-	 * 
-	 * @param file The file for which will be computed the digest
-	 * @return digest
-	 */
-	public static String computeDigest(File file) {
+	public static String computeDigest(InputStream is) {
 		String digest = "";
-		InputStream is = null;
 		MessageDigest sha = null;
 
 		try {
-			is = new BufferedInputStream(new FileInputStream(file), BUFF_SIZE);
 			if (is != null) {
 				sha = MessageDigest.getInstance("SHA-1");
 				byte[] message = new byte[BUFF_SIZE];
@@ -150,6 +144,28 @@ public class FileUtil {
 			log.error("Error generating digest: ", io);
 		} catch (Throwable t) {
 			log.error("Error generating digest: ", t);
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * This method calculates the digest of a file using the algorithm SHA-1.
+	 * 
+	 * @param file The file for which will be computed the digest
+	 * @return digest
+	 */
+	public static String computeDigest(File file) {
+		InputStream is;
+		try {
+			is = new BufferedInputStream(new FileInputStream(file), BUFF_SIZE);
+			return computeDigest(is);
+		} catch (FileNotFoundException e) {
+			log.error(e.getMessage());
 		}
 		return null;
 	}
@@ -348,13 +364,30 @@ public class FileUtil {
 			out.write(content);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			if(out!=null)
+		} finally {
+			if (out != null)
 				try {
 					out.close();
 				} catch (IOException e) {
-					
+
 				}
 		}
+	}
+
+	public static byte[] toByteArray(File file) {
+		InputStream is = null;
+		try {
+			is = new BufferedInputStream(new FileInputStream(file), 2048);
+			return IOUtils.toByteArray(is);
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		} finally {
+			if (is != null)
+				try {
+					is.close();
+				} catch (IOException e) {
+				}
+		}
+		return null;
 	}
 }

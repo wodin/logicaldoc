@@ -67,6 +67,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.MimeType;
 import com.logicaldoc.util.io.CryptUtil;
+import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.web.UploadServlet;
 import com.logicaldoc.web.util.SessionUtil;
 
@@ -1017,8 +1018,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		Document doc = docDao.findById(docId);
 		att.setIcon(doc.getIcon());
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
-		File file = storer.getFile(doc, null, null);
-		att.setFile(file);
+		att.setData(storer.getBytes(doc, null, null));
 		att.setFileName(doc.getFileName());
 		String extension = doc.getFileExtension();
 		att.setMimeType(MimeType.get(extension));
@@ -1030,7 +1030,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 	private void createAttachment(EMail email, File zipFile) throws IOException {
 		EMailAttachment att = new EMailAttachment();
-		att.setFile(zipFile);
+		att.setData(FileUtil.toByteArray(zipFile));
 		att.setFileName("doc.zip");
 		String extension = "zip";
 		att.setMimeType(MimeType.get(extension));

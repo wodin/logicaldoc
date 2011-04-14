@@ -219,11 +219,9 @@ public class DocumentManagerImpl implements DocumentManager {
 			doc = documentDAO.findById(docId);
 		}
 
-		File file = storer.getFile(doc, null, null);
-
 		// Parses the file where it is already stored
 		Locale locale = doc.getLocale();
-		Parser parser = ParserFactory.getParser(file, doc.getFileName(), locale, null);
+		Parser parser = ParserFactory.getParser(storer.getStream(doc, null, null), doc.getFileName(), locale, null);
 
 		// and gets some fields
 		if (parser != null) {
@@ -598,9 +596,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			return createShortcut(doc, folder, transaction);
 		}
 
-		File sourceFile = storer.getFile(doc.getId(), doc.getFileVersion(), null);
-
-		InputStream is = new FileInputStream(sourceFile);
+		InputStream is = storer.getStream(doc.getId(), doc.getFileVersion(), null);
 		try {
 			Document cloned = (Document) doc.clone();
 			cloned.setId(0);

@@ -46,7 +46,7 @@ public class ThumbnailManager {
 		if (builder == null) {
 			log.warn("No registered thumbnail for extension " + document.getFileExtension());
 			try {
-				MagicMatch match = Magic.getMagicMatch(storer.getFile(document, null, null), true);
+				MagicMatch match = Magic.getMagicMatch(storer.getBytes(document, null, null), true);
 				if ("text/plain".equals(match.getMimeType())) {
 					log.warn("Try to convert as plain text");
 					builder = getBuilders().get("txt");

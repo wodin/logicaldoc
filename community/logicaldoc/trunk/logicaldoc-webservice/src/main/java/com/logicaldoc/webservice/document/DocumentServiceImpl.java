@@ -478,8 +478,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		EMailAttachment att = new EMailAttachment();
 		att.setIcon(doc.getIcon());
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
-		File file = storer.getFile(doc, null, null);
-		att.setFile(file);
+		att.setData(storer.getBytes(doc, null, null));
 		att.setFileName(doc.getFileName());
 		String extension = doc.getFileExtension();
 		att.setMimeType(MimeType.get(extension));
