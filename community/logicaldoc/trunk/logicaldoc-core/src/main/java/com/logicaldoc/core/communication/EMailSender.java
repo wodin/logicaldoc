@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import javax.mail.Address;
 import javax.mail.Multipart;
 import javax.mail.Session;
@@ -14,6 +13,10 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
+import javax.mail.util.ByteArrayDataSource;
+
+import net.sf.jmimemagic.Magic;
+import net.sf.jmimemagic.MagicMatch;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -157,7 +160,8 @@ public class EMailSender {
 		for (Integer partId : email.getAttachments().keySet()) {
 			EMailAttachment att = email.getAttachment(partId);
 			if (att != null) {
-				DataSource fdSource = new FileDataSource(att.getFile());
+				MagicMatch match = Magic.getMagicMatch(att.getData(), true);
+				DataSource fdSource = new ByteArrayDataSource(att.getData(), match.getMimeType());
 				DataHandler fdHandler = new DataHandler(fdSource);
 				MimeBodyPart part = new MimeBodyPart();
 				part.setDataHandler(fdHandler);

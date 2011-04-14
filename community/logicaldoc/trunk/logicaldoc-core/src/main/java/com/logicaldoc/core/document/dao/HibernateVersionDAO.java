@@ -1,6 +1,5 @@
 package com.logicaldoc.core.document.dao;
 
-import java.io.File;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -37,8 +36,8 @@ public class HibernateVersionDAO extends HibernatePersistentObjectDAO<Version> i
 
 	@Override
 	public Version findByVersion(long docId, String version) {
-		List<Version> versions = findByWhere(
-				" _entity.docId=" + docId + " and _entity.version='" + version + "'", null, null);
+		List<Version> versions = findByWhere(" _entity.docId=" + docId + " and _entity.version='" + version + "'",
+				null, null);
 		if (!versions.isEmpty())
 			return versions.get(0);
 		else
@@ -88,14 +87,17 @@ public class HibernateVersionDAO extends HibernatePersistentObjectDAO<Version> i
 							filesToBeRetained.add(versions.get(i).getFileVersion());
 
 					for (int i = 0; i < versionNumToBeDeleted; i++) {
-						// Logically delete the version
+						// Delete the version
 						Version deleteVersion = versions.get(i);
 						initialize(deleteVersion);
 						deleteVersion.setDeleted(1);
 						store(deleteVersion);
 						if (!filesToBeRetained.contains(deleteVersion.getFileVersion())) {
-							File file = storer.getFile(deleteVersion.getDocId(), deleteVersion.getFileVersion(), null);
-							file.renameTo(new File(file.getParent(), file.getName() + ".deleted"));
+							List<String> resources = storer.listResources(deleteVersion.getDocId(),
+									deleteVersion.getFileVersion());
+							for (String resource : resources) {
+								storer.delete(deleteVersion.getDocId(), resource);
+							}
 						}
 					}
 				}

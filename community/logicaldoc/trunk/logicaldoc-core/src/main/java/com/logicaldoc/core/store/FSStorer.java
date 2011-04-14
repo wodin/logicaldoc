@@ -3,12 +3,14 @@ package com.logicaldoc.core.store;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -185,37 +187,11 @@ public class FSStorer implements Storer {
 	}
 
 	@Override
-	public void clean(long docId) {
-		File docDir = getContainer(docId);
-		File[] listFiles = docDir.listFiles();
-		List<String> deletedVersions = new ArrayList<String>();
-		if (listFiles != null) {
-			for (int i = 0; i < listFiles.length; i++) {
-				if (listFiles[i].isFile() && listFiles[i].getName().endsWith(".deleted")) {
-					String version = listFiles[i].getName().substring(0, listFiles[i].getName().indexOf(".deleted"));
-					deletedVersions.add(version);
-					SystemQuota.decrement(listFiles[i].length());
-					listFiles[i].delete();
-				}
-			}
-			for (String deletedVersion : deletedVersions) {
-				for (int i = 0; i < listFiles.length; i++) {
-					if (listFiles[i].isFile() && listFiles[i].getName().startsWith(deletedVersion + "-")) {
-						SystemQuota.decrement(listFiles[i].length());
-						listFiles[i].delete();
-					}
-				}
-			}
-		}
-	}
-
-	@Override
 	public long getTotalSize() {
 		long size = 0;
 		File docDir = new File(config.getPropertyWithSubstitutions("store.1.dir"));
 		if (docDir.exists())
 			size = FileUtils.sizeOfDirectory(docDir);
-
 		return size;
 	}
 
@@ -225,5 +201,64 @@ public class FSStorer implements Storer {
 	 */
 	protected String computeRelativePath(long docId) {
 		return StringUtil.split(Long.toString(docId), '/', 3) + "/doc";
+	}
+
+	@Override
+	public byte[] getBytes(Document doc, String fileVersion, String suffix) {
+		InputStream is = null;
+		try {
+			is = getStream(doc, fileVersion, suffix);
+			byte[] bytes = IOUtils.toByteArray(is);
+			return bytes;
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		} finally {
+			if (is != null)
+				try {
+					is.close();
+				} catch (IOException e) {
+
+				}
+		}
+		return null;
+	}
+
+	@Override
+	public void delete(long docId, String resourceName) {
+		File file = new File(getContainer(docId), resourceName);
+		if (file.exists())
+			try {
+				FileUtils.forceDelete(file);
+			} catch (IOException e) {
+				log.error(e.getMessage());
+			}
+	}
+
+	@Override
+	public List<String> listResources(long docId, final String fileVersion) {
+		List<String> resources = new ArrayList<String>();
+		File container = getContainer(docId);
+		File[] buf = container.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				if (name.startsWith("."))
+					return false;
+				else if (StringUtils.isNotEmpty(fileVersion)) {
+					return name.startsWith(fileVersion);
+				}
+				return true;
+			}
+		});
+		for (File file : buf) {
+			resources.add(file.getName());
+		}
+		return resources;
+	}
+
+	@Override
+	public long getSize(long docId, String resourceName) {
+		File file = getContainer(docId);
+		file = new File(file, resourceName);
+		return file.length();
 	}
 }

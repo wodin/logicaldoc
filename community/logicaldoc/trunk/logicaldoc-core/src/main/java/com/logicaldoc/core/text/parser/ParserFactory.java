@@ -1,6 +1,8 @@
 package com.logicaldoc.core.text.parser;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
@@ -11,6 +13,7 @@ import net.sf.jmimemagic.Magic;
 import net.sf.jmimemagic.MagicMatch;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -110,11 +113,28 @@ public class ParserFactory {
 	}
 
 	public static Parser getParser(File file, String filename, Locale locale, String encoding) {
+		Parser parser = detectParser(file, null, filename, locale, encoding);
+		parser.parse(file);
+		return parser;
+	}
+
+	/**
+	 * Internal method containing the lookup logic. can be invoked with a File
+	 * OR an InputStream.
+	 * 
+	 * @param file
+	 * @param is
+	 * @param filename
+	 * @param locale
+	 * @param encoding
+	 * @return
+	 */
+	protected static Parser detectParser(File file, InputStream is, String filename, Locale locale, String encoding) {
 		if (parsers.isEmpty())
 			init();
 
 		String ext = filename != null ? FilenameUtils.getExtension(filename) : null;
-		if (StringUtils.isEmpty(ext)) {
+		if (StringUtils.isEmpty(ext) && file != null) {
 			String fileName = file.getName().toLowerCase();
 			ext = FilenameUtils.getExtension(fileName);
 		} else {
@@ -133,7 +153,11 @@ public class ParserFactory {
 		} else {
 			log.warn("No registered parser for extension " + ext);
 			try {
-				MagicMatch match = Magic.getMagicMatch(file, true);
+				MagicMatch match = null;
+				if (file != null)
+					match = Magic.getMagicMatch(file, true);
+				else
+					match = Magic.getMagicMatch(IOUtils.toByteArray(is), true);
 				if ("text/plain".equals(match.getMimeType())) {
 					log.warn("Try to parse the file as plain text");
 					parser = new TXTParser();
@@ -147,8 +171,21 @@ public class ParserFactory {
 		parser.setFilename(filename);
 		parser.setLocale(locale);
 		parser.setEncoding(encoding);
-		parser.parse(file);
 		return parser;
+	}
+
+	public static Parser getParser(InputStream is, String filename, Locale locale, String encoding) {
+		try {
+			Parser parser = detectParser(null, is, filename, locale, encoding);
+			parser.parse(is);
+			return parser;
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+
+			}
+		}
 	}
 
 	public static Parser getParser(String filename) {
