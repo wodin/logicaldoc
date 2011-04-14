@@ -463,12 +463,8 @@ public abstract class AbstractDocument extends ExtensibleObject {
 		return immutable;
 	}
 
-	/**
-	 * <b>NOTE:</b> Once this flag is set to 1, it cannot be reverted to 0
-	 */
 	public void setImmutable(int immutable) {
-		if (this.immutable == 0)
-			this.immutable = immutable;
+		this.immutable = immutable;
 	}
 
 	public String getSourceId() {
