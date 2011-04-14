@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -93,6 +95,10 @@ public abstract class LogicalDOCPlugin extends Plugin {
 		if (path.startsWith("jar:file:"))
 			path = path.substring("jar:file:".length());
 		path = path.substring(0, path.lastIndexOf("!"));
+		try {
+			path = URLDecoder.decode(path, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+		}
 		return path;
 	}
 
