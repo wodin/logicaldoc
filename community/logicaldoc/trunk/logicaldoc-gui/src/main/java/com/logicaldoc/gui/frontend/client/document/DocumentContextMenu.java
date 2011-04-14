@@ -330,6 +330,9 @@ public class DocumentContextMenu extends Menu {
 						for (ListGridRecord record : selection) {
 							record.setAttribute("locked", "blank");
 							record.setAttribute("status", Constants.DOC_UNLOCKED);
+							if (Session.get().getUser().isMemberOf("admin")) {
+								record.setAttribute("immutable", "blank");
+							}
 							list.refreshRow(list.getRecordIndex(record));
 						}
 						Session.get().getUser().setLockedDocs(Session.get().getUser().getLockedDocs() - ids.length);

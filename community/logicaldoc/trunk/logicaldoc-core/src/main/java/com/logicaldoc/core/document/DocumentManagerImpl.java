@@ -621,6 +621,9 @@ public class DocumentManagerImpl implements DocumentManager {
 		documentDAO.initialize(document);
 		document.setLockUserId(null);
 		document.setStatus(Document.DOC_UNLOCKED);
+		if (transaction.getUser().isInGroup("admin")) {
+			document.setImmutable(0);
+		}
 
 		// Modify document history entry
 		transaction.setEvent(History.EVENT_UNLOCKED);
