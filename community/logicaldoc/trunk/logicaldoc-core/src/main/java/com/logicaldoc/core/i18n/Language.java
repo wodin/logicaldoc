@@ -16,8 +16,6 @@ import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
 import org.apache.lucene.util.Version;
 
 import com.logicaldoc.core.searchengine.Indexer;
-import com.logicaldoc.core.searchengine.WordDelimiterAnalyzer;
-import com.logicaldoc.util.io.ResourceUtil;
 
 /**
  * Instances of this class represent a language supported by the LogicalDOC DMS
@@ -37,12 +35,9 @@ public class Language {
 
 	private String analyzerClass;
 
-	private char[] charset;
-
 	public Language(Locale locale) {
 		this.locale = locale;
 		loadStopwords();
-		loadCharsets();
 	}
 
 	public Locale getLocale() {
@@ -91,21 +86,6 @@ public class Language {
 			stopWords = swSet;
 		} catch (Throwable e) {
 			log.warn(e.getMessage());
-		}
-	}
-
-	/**
-	 * Populates the field charsets reading the resource
-	 * /charsets/charset_<locale>.txt
-	 */
-	private void loadCharsets() {
-		try {
-			String charsetResource = "/charsets/charset_" + getLocale().toString() + ".txt";
-			String buf = ResourceUtil.readAsString(charsetResource);
-			charset = buf.toCharArray();
-		} catch (Throwable e) {
-			log.warn(e.getMessage());
-			charset = new char[] {};
 		}
 	}
 
@@ -178,20 +158,12 @@ public class Language {
 					getStopWords());
 			log.debug("Using default snowball analyzer");
 		}
- 
+
 		return analyzer;
 	}
 
 	public void setAnalyzer(Analyzer analyzer) {
 		this.analyzer = analyzer;
-	}
-
-	public char[] getCharset() {
-		return charset;
-	}
-
-	public void setCharset(char[] charset) {
-		this.charset = charset;
 	}
 
 	@Override
