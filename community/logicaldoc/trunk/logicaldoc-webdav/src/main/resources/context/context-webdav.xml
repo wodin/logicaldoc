@@ -10,6 +10,7 @@
 		<property name="documentManager" ref="DocumentManager" />
 		<property name="userDAO" ref="UserDAO" />
 		<property name="versionDAO" ref="VersionDAO" />
+		<property name="storer" ref="Storer" />
 	</bean>
 
 	<bean id="IOManager" class="com.logicaldoc.webdav.io.manager.DefaultIOManager">
