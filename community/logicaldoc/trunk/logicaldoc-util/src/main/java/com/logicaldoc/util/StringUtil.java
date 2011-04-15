@@ -4,8 +4,12 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
@@ -100,15 +104,34 @@ public class StringUtil {
 			}
 		}
 	}
-	
+
+	public static String writeToString(InputStream is, String targetEncoding) throws IOException {
+		String enc = "UTF-8";
+		if (StringUtils.isNotEmpty(targetEncoding))
+			enc = targetEncoding;
+
+		Writer writer = new StringWriter();
+		char[] buffer = new char[1024];
+		try {
+			Reader reader = new BufferedReader(new InputStreamReader(is, enc));
+			int n;
+			while ((n = reader.read(buffer)) != -1) {
+				writer.write(buffer, 0, n);
+			}
+		} finally {
+			is.close();
+		}
+		return writer.toString();
+	}
+
 	public static String arrayToString(Object[] a, String separator) {
-	    String result = "";
-	    if (a.length > 0) {
-	        result = a[0].toString();    // start with the first element
-	        for (int i=1; i<a.length; i++) {
-	            result = result + separator + a[i];
-	        }
-	    }
-	    return result;
+		String result = "";
+		if (a.length > 0) {
+			result = a[0].toString(); // start with the first element
+			for (int i = 1; i < a.length; i++) {
+				result = result + separator + a[i];
+			}
+		}
+		return result;
 	}
 }

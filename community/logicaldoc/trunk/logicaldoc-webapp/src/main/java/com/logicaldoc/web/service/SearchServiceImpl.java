@@ -201,7 +201,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 
 		try {
 			DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-			String text = manager.getDocumentContent(docId);
+			DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			String text = manager.parseDocument(dao.findById(docId));
 			// Extracts the most used 10 words
 			AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
 
