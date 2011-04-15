@@ -222,7 +222,8 @@ public class DocumentManagerImpl implements DocumentManager {
 		// Parses the file where it is already stored
 		Locale locale = doc.getLocale();
 		String resource = storer.getResourceName(doc, null, null);
-		Parser parser = ParserFactory.getParser(storer.getStream(doc.getId(), resource), doc.getFileName(), locale, null);
+		Parser parser = ParserFactory.getParser(storer.getStream(doc.getId(), resource), doc.getFileName(), locale,
+				null);
 
 		// and gets some fields
 		if (parser != null) {
@@ -269,7 +270,6 @@ public class DocumentManagerImpl implements DocumentManager {
 		// Add the document to the index (lucene 2.x doesn't support the update
 		// operation)
 		String resource = storer.getResourceName(doc.getId(), null, null);
-		File file = storer.getFile(doc.getId(), resource);
 
 		indexer.addFile(doc, content, locale);
 		doc = documentDAO.findById(doc.getId());
@@ -278,7 +278,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		for (Long shortcutId : shortcutIds) {
 			Document shortcutDoc = documentDAO.findById(shortcutId);
-			indexer.addFile(file, shortcutDoc);
+			indexer.addFile(storer.getStream(doc.getId(), resource), shortcutDoc);
 			shortcutDoc.setIndexed(AbstractDocument.INDEX_INDEXED);
 			documentDAO.store(shortcutDoc);
 		}

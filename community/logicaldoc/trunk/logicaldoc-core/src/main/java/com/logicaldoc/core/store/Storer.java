@@ -26,6 +26,11 @@ public interface Storer {
 	public boolean store(InputStream stream, long docId, String resource);
 
 	/**
+	 * @see store(InputStream stream, long docId, String resource)
+	 */
+	public boolean store(File file, long docId, String resource);
+
+	/**
 	 * Deletes all resources of a document from the storage.
 	 * 
 	 * @param docId The document identifier
@@ -100,14 +105,13 @@ public interface Storer {
 	public boolean exists(long docId, String resourceName);
 
 	/**
-	 * Obtains the document's file for the specified version
+	 * Writes the specified resource in a file
 	 * 
 	 * @param docId The document identifier
 	 * @param resource Name of the resource
-	 * 
-	 * @return The document file
+	 * @param file File that will receive the resource's content
 	 */
-	public File getFile(long docId, String resource);
+	public void writeTo(long docId, String resource, File out);
 
 	/**
 	 * Obtains the document's content for the specified version

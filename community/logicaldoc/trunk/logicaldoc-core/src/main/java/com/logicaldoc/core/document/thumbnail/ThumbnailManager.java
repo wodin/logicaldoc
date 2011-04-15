@@ -10,6 +10,7 @@ import java.util.Map;
 import net.sf.jmimemagic.Magic;
 import net.sf.jmimemagic.MagicMatch;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
@@ -88,16 +89,28 @@ public class ThumbnailManager {
 			log.error(t.getMessage());
 		}
 
+		// Prepare I/O files
+		File src = File.createTempFile("", "orig");
+		File dest = File.createTempFile("", "thumb.jpg");
+
 		try {
 			String fver = fileVersion;
 			if (fver == null)
 				fver = document.getFileVersion();
 			String resource = storer.getResourceName(document.getId(), fver, null);
-			File src = storer.getFile(document.getId(), resource);
-			File dest = new File(storer.getContainer(document.getId()), resource + "-thumb.jpg");
+
+			// Perform the elaboration
 			builder.build(src, document.getFileName(), size, dest, scaleAlgorithm, quality);
+
+			// Put the resource
+			resource = storer.getResourceName(document.getId(), fver, "thumb.jpg");
+			storer.store(dest, document.getId(), resource);
 		} catch (Exception e) {
 			log.warn("Error creating thumbnail for document: " + document.getTitle());
+		} finally {
+			// Delete temporary resources
+			FileUtils.forceDelete(src);
+			FileUtils.forceDelete(dest);
 		}
 	}
 
