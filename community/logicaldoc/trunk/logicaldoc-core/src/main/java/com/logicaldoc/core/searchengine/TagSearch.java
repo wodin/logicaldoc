@@ -91,9 +91,9 @@ public class TagSearch extends Search {
 		query.append(") ");
 	}
 
-	public class HitMapper implements RowMapper {
+	public class HitMapper implements RowMapper<Hit> {
 
-		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+		public Hit mapRow(ResultSet rs, int rowNum) throws SQLException {
 			Hit hit = new HitImpl();
 			hit.setDocId(rs.getLong(1));
 			hit.setFolderId(rs.getLong(2));

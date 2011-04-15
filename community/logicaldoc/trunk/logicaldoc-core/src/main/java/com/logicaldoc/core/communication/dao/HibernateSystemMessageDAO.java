@@ -23,9 +23,9 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @since 3.0
  */
 public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<SystemMessage> implements SystemMessageDAO {
-	public class SystemMessageMapper implements RowMapper {
+	public class SystemMessageMapper implements RowMapper<SystemMessage> {
 
-		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+		public SystemMessage mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 			SystemMessage message = new SystemMessage();
 			message.setLastModified(rs.getTimestamp(1));
