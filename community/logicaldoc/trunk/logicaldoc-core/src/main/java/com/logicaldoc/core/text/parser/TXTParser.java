@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
@@ -30,7 +29,6 @@ public class TXTParser extends AbstractParser {
 
 	@Override
 	public void parse(File file) {
-
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;
 		try {
@@ -70,8 +68,7 @@ public class TXTParser extends AbstractParser {
 	@Override
 	public void parse(InputStream input) {
 		try {
-			if (getEncoding() != null)
-				content = StringUtil.writeToString(new InputStreamReader(input, getEncoding()));
+			content = StringUtil.writeToString(input, getEncoding());
 		} catch (UnsupportedEncodingException e) {
 			log.warn("Unsupported encoding '" + getEncoding() + "', using default ("
 					+ System.getProperty("file.encoding") + ") instead.");

@@ -204,7 +204,7 @@ public class ServletDocUtil {
 		response.setHeader("Expires", "0");
 
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		String content = manager.getDocumentContent(doc.getId());
+		String content = manager.parseDocument(doc);
 
 		InputStream is = new StringInputStream(content.trim(), "UTF-8");
 		OutputStream os;

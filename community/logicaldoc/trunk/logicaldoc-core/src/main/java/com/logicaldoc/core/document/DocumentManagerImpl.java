@@ -210,7 +210,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public String getDocumentContent(Document doc) {
+	public String parseDocument(Document doc) {
 		String content = null;
 
 		// Check if the document is a shortcut
@@ -224,7 +224,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		String resource = storer.getResourceName(doc, null, null);
 		Parser parser = ParserFactory.getParser(storer.getStream(doc.getId(), resource), doc.getFileName(), locale,
 				null);
-
+		
 		// and gets some fields
 		if (parser != null) {
 			content = parser.getContent();
@@ -252,7 +252,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		Locale locale = doc.getLocale();
 
 		// Extract the content from the file
-		String content = getDocumentContent(doc);
+		String content = parseDocument(doc);
 
 		// The document must be re-indexed
 		doc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
@@ -385,22 +385,6 @@ public class DocumentManagerImpl implements DocumentManager {
 			log.error(e.getMessage(), e);
 			throw e;
 		}
-	}
-
-	@Override
-	public String getDocumentContent(long docId) {
-		Document doc = documentDAO.findById(docId);
-		// Check if the document is a shortcut
-		if (doc.getDocRef() != null) {
-			docId = doc.getDocRef();
-			doc = documentDAO.findById(docId);
-		}
-		org.apache.lucene.document.Document luceneDoc = indexer.getDocument(Long.toString(docId), doc.getLocale());
-		// If not found, search the document using it's folder id
-		if (luceneDoc != null)
-			return luceneDoc.get(LuceneDocument.FIELD_CONTENT);
-		else
-			return "";
 	}
 
 	@Override

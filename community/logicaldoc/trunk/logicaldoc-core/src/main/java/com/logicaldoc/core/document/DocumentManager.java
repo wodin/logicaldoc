@@ -102,7 +102,7 @@ public interface DocumentManager {
 	 * @param doc The document representation
 	 * @return The document's content
 	 */
-	public String getDocumentContent(Document doc);
+	public String parseDocument(Document doc);
 
 	/**
 	 * Reindexes an existing document in the full-text index.
@@ -132,14 +132,6 @@ public interface DocumentManager {
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
 	public void update(Document doc, Document docVO, History transaction) throws Exception;
-
-	/**
-	 * Retrieves the full-text document content
-	 * 
-	 * @param docId The document identifier
-	 * @return The value of the 'content' field in the full-text index
-	 */
-	public String getDocumentContent(long docId);
 
 	/**
 	 * Utility method for document removal from index and database update(flag

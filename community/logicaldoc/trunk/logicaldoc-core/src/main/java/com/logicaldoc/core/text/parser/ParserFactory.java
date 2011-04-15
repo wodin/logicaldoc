@@ -140,6 +140,8 @@ public class ParserFactory {
 		} else {
 			ext = ext.toLowerCase();
 		}
+		if (StringUtils.isEmpty(ext))
+			ext = "txt";
 
 		Parser parser = null;
 		Class parserClass = parsers.get(ext);
@@ -165,6 +167,7 @@ public class ParserFactory {
 					parser = new DummyParser();
 				}
 			} catch (Exception e) {
+				log.error(e.getMessage());
 				parser = new DummyParser();
 			}
 		}

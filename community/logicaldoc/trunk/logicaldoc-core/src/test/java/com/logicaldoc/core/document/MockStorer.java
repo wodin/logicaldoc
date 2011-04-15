@@ -42,8 +42,9 @@ public class MockStorer implements Storer {
 	@Override
 	public InputStream getStream(long docId, String resource) {
 		try {
-			return new FileInputStream("pom.xml");
+			return new FileInputStream(new File("pom.xml"));
 		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

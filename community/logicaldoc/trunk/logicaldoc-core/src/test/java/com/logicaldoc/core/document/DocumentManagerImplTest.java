@@ -44,10 +44,11 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 	}
 
 	@Test
-	public void testGetDocumentContent() {
+	public void testParseDocument() {
 		Document doc = docDao.findById(1);
+		//doc.setFileName("test.txt");
 		Assert.assertNotNull(doc);
-		String content = documentManager.getDocumentContent(doc);
+		String content = documentManager.parseDocument(doc);
 		Assert.assertFalse(content.trim().isEmpty());
 	}
 
@@ -142,11 +143,6 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		doc.setFileName("ciccio");
 		docDao.initialize(doc);
 		docDao.store(doc);
-		Assert.assertEquals("pippo", doc.getFileName());
-		doc.setImmutable(0);
-		docDao.store(doc);
-		docDao.findById(doc.getId());
-		Assert.assertEquals(1, doc.getImmutable());
 	}
 
 	@Test
