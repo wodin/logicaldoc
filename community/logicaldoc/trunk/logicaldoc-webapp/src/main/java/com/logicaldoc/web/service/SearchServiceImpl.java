@@ -13,12 +13,13 @@ import org.apache.commons.logging.LogFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.document.Document;
-import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.Hit;
+import com.logicaldoc.core.searchengine.Indexer;
+import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.security.UserSession;
@@ -200,9 +201,9 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		SessionUtil.validateSession(sid);
 
 		try {
-			DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-			DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-			String text = manager.parseDocument(dao.findById(docId));
+			Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
+			String text = indexer.getDocument(Long.toString(docId)).getField(LuceneDocument.FIELD_CONTENT).stringValue();
+
 			// Extracts the most used 10 words
 			AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
 

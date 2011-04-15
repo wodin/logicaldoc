@@ -355,6 +355,15 @@ public class Indexer {
 		return null;
 	}
 
+	public Document getDocument(String docId) {
+		for (Language lang : LanguageManager.getInstance().getActiveLanguages()) {
+			Document doc = getDocument(docId, lang.getLocale());
+			if (doc != null)
+				return doc;
+		}
+		return null;
+	}
+
 	/**
 	 * This method can unlock a locked index.
 	 */

@@ -44,15 +44,6 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 	}
 
 	@Test
-	public void testParseDocument() {
-		Document doc = docDao.findById(1);
-		//doc.setFileName("test.txt");
-		Assert.assertNotNull(doc);
-		String content = documentManager.parseDocument(doc);
-		Assert.assertFalse(content.trim().isEmpty());
-	}
-
-	@Test
 	public void testUpdate() throws Exception {
 		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);

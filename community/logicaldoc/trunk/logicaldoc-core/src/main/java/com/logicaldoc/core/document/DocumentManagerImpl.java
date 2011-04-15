@@ -209,8 +209,14 @@ public class DocumentManagerImpl implements DocumentManager {
 		}
 	}
 
-	@Override
-	public String parseDocument(Document doc) {
+	
+	/**
+	 * Retrieves the document's content as a string
+	 * 
+	 * @param doc The document representation
+	 * @return The document's content
+	 */
+	private String parseDocument(Document doc) {
 		String content = null;
 
 		// Check if the document is a shortcut
