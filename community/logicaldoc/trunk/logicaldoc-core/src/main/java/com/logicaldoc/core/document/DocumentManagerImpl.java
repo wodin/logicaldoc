@@ -172,7 +172,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 
 		// stores it in folder
-		boolean stored = storer.store(content, doc.getId(), doc.getFileVersion());
+		boolean stored = storer.store(content, doc.getId(), storer.getResourceName(doc, null, null));
 		if (!stored)
 			throw new IOException("Unable to store the document");
 	}
@@ -221,7 +221,8 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		// Parses the file where it is already stored
 		Locale locale = doc.getLocale();
-		Parser parser = ParserFactory.getParser(storer.getStream(doc, null, null), doc.getFileName(), locale, null);
+		String resource = storer.getResourceName(doc, null, null);
+		Parser parser = ParserFactory.getParser(storer.getStream(doc.getId(), resource), doc.getFileName(), locale, null);
 
 		// and gets some fields
 		if (parser != null) {
@@ -267,7 +268,8 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		// Add the document to the index (lucene 2.x doesn't support the update
 		// operation)
-		File file = storer.getFile(doc, null, null);
+		String resource = storer.getResourceName(doc.getId(), null, null);
+		File file = storer.getFile(doc.getId(), resource);
 
 		indexer.addFile(doc, content, locale);
 		doc = documentDAO.findById(doc.getId());
@@ -529,8 +531,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				documentDAO.delete(docVO.getId());
 			}
 
-			File file = storer.getFile(docVO, null, null);
-			docVO.setFileSize(file.length());
+			docVO.setFileSize(storer.size(docVO.getId(), storer.getResourceName(docVO, null, null)));
 
 			documentDAO.store(docVO);
 
@@ -596,7 +597,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			return createShortcut(doc, folder, transaction);
 		}
 
-		InputStream is = storer.getStream(doc.getId(), doc.getFileVersion(), null);
+		String resource = storer.getResourceName(doc, null, null);
+		InputStream is = storer.getStream(doc.getId(), resource);
 		try {
 			Document cloned = (Document) doc.clone();
 			cloned.setId(0);

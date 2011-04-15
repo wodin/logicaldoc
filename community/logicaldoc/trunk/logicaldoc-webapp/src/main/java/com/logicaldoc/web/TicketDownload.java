@@ -118,11 +118,14 @@ public class TicketDownload extends HttpServlet {
 			String fileVersion, String suffix, User user) throws FileNotFoundException, IOException, ServletException {
 
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+		String resource = storer.getResourceName(doc, fileVersion, suffix);
 		String filename = doc.getFileName();
 
-		InputStream is = storer.getStream(doc, fileVersion, suffix);
+		InputStream is = null;
 		OutputStream os = null;
 		try {
+			is = storer.getStream(doc.getId(), resource);
+
 			// get the mimetype
 			String mimetype = MimeType.getByFilename(filename);
 			// it seems everything is fine, so we can now start writing to the

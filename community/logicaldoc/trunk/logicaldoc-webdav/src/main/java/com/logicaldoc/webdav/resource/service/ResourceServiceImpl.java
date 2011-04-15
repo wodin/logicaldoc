@@ -597,10 +597,13 @@ public class ResourceServiceImpl implements ResourceService {
 
 		InputStream is = null;
 
-		if (version == null || version.equals(""))
-			is = storer.getStream(document, null, null);
-		else
-			is = storer.getStream(document, resource.getVersionLabel(), null);
+		if (version == null || version.equals("")) {
+			String res = storer.getResourceName(document, null, null);
+			is = storer.getStream(document.getId(), res);
+		} else {
+			String res = storer.getResourceName(document, resource.getVersionLabel(), null);
+			is = storer.getStream(document.getId(), res);
+		}
 		return is;
 	}
 

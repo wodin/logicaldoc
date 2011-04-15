@@ -40,7 +40,7 @@ public class MockStorer implements Storer {
 	}
 
 	@Override
-	public InputStream getStream(long docId, String fileVersion, String suffix) {
+	public InputStream getStream(long docId, String resource) {
 		try {
 			return new FileInputStream("pom.xml");
 		} catch (FileNotFoundException e) {
@@ -49,24 +49,14 @@ public class MockStorer implements Storer {
 	}
 
 	@Override
-	public InputStream getStream(Document doc, String fileVersion, String suffix) {
-		return getStream(0, fileVersion, suffix);
-	}
-
-	@Override
-	public File getFile(Document doc, String fileVersion, String suffix) {
+	public File getFile(long docId, String resource) {
 		return new File("pom.xml");
 	}
 
 	@Override
-	public File getFile(long docId, String fileVersion, String suffix) {
-		return new File("pom.xml");
-	}
-
-	@Override
-	public byte[] getBytes(Document doc, String fileVersion, String suffix) {
+	public byte[] getBytes(long docId, String resource) {
 		try {
-			return IOUtils.toByteArray(getStream(doc, fileVersion, suffix));
+			return IOUtils.toByteArray(getStream(docId, resource));
 		} catch (IOException e) {
 		}
 		return new byte[0];
@@ -82,7 +72,17 @@ public class MockStorer implements Storer {
 	}
 
 	@Override
-	public long getSize(long docId, String resourceName) {
+	public long size(long docId, String resourceName) {
 		return 0;
+	}
+
+	@Override
+	public boolean exists(long docId, String resourceName) {
+		return "pom.xml".equals(resourceName);
+	}
+
+	@Override
+	public String getResourceName(long docId, String fileVersion, String suffix) {
+		return getResourceName(new Document(), fileVersion, suffix);
 	}
 }

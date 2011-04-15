@@ -1,6 +1,6 @@
 package com.logicaldoc.core.document.dao;
 
-import java.io.File;
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -230,11 +230,19 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			getHibernateTemplate().saveOrUpdate(doc);
 
 			// Update size and digest
-			File docFile = storer.getFile(doc, doc.getFileVersion(), null);
-			if (docFile.exists()) {
-				long size = docFile.length();
+			String resource = storer.getResourceName(doc, doc.getFileVersion(), null);
+			if (storer.exists(doc.getId(), resource)) {
+				long size = storer.size(doc.getId(), resource);
 				doc.setFileSize(size);
-				doc.setDigest(FileUtil.computeDigest(docFile));
+				InputStream in = null;
+				try {
+					in = storer.getStream(doc.getId(), resource);
+					doc.setDigest(FileUtil.computeDigest(in));
+				} finally {
+					if (in != null)
+						in.close();
+				}
+
 				getHibernateTemplate().saveOrUpdate(doc);
 			}
 

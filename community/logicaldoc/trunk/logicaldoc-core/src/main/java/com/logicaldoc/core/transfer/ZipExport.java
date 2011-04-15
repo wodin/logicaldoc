@@ -152,11 +152,12 @@ public class ZipExport {
 	 * Adds a single document into the archive in the specified path.
 	 */
 	private void addDocument(String path, Document document) {
-		Storer manager = (Storer) Context.getInstance().getBean(Storer.class);
+		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 		InputStream is = null;
 		BufferedInputStream bis = null;
+		String resource = storer.getResourceName(document, null, null);
 		try {
-			is = manager.getStream(document, null, null);
+			is = storer.getStream(document.getId(), resource);
 			bis = new BufferedInputStream(is);
 
 			ZipEntry entry = new ZipEntry(document.getFileName());
