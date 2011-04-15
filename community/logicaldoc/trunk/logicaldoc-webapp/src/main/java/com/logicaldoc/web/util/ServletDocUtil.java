@@ -23,10 +23,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 
 import com.logicaldoc.core.document.Document;
-import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
+import com.logicaldoc.core.searchengine.Indexer;
+import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserDoc;
 import com.logicaldoc.core.security.UserSession;
@@ -190,6 +191,10 @@ public class ServletDocUtil {
 			throw new FileNotFoundException();
 		}
 
+		if (doc.getDocRef() != null) {
+			doc = ddao.findById(doc.getDocRef());
+		}
+
 		String mimetype = "text/plain";
 
 		// it seems everything is fine, so we can now start writing to the
@@ -203,8 +208,8 @@ public class ServletDocUtil {
 		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 		response.setHeader("Expires", "0");
 
-		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		String content = manager.parseDocument(doc);
+		Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
+		String content = indexer.getDocument(Long.toString(docId)).getField(LuceneDocument.FIELD_CONTENT).stringValue();
 
 		InputStream is = new StringInputStream(content.trim(), "UTF-8");
 		OutputStream os;
@@ -214,7 +219,6 @@ public class ServletDocUtil {
 		byte[] buffer = new byte[128 * 1024];
 		try {
 			while ((letter = is.read(buffer)) != -1) {
-
 				os.write(buffer, 0, letter);
 			}
 		} finally {

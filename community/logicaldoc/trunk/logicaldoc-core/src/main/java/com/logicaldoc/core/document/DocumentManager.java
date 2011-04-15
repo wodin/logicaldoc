@@ -96,13 +96,6 @@ public interface DocumentManager {
 	 */
 	public Document create(InputStream content, Document docVO, History transaction) throws Exception;
 
-	/**
-	 * Retrieves the document's content as a string
-	 * 
-	 * @param doc The document representation
-	 * @return The document's content
-	 */
-	public String parseDocument(Document doc);
 
 	/**
 	 * Reindexes an existing document in the full-text index.
