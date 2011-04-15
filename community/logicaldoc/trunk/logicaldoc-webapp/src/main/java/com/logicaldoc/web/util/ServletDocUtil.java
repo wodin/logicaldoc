@@ -1,7 +1,6 @@
 package com.logicaldoc.web.util;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,20 +79,20 @@ public class ServletDocUtil {
 		Document doc = dao.findById(docId);
 
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
-		File file = storer.getFile(doc, fileVersion, null);
+		String resource = storer.getResourceName(doc, fileVersion, null);
+
 		String filename = fileName;
 		if (filename == null)
 			filename = doc.getFileName();
-		if (!file.exists()) {
-			throw new FileNotFoundException(file.getPath());
+		if (!storer.exists(doc.getId(), resource)) {
+			throw new FileNotFoundException(resource);
 		}
 
 		if (StringUtils.isNotEmpty(suffix)) {
-			file = new File(file.getParent(), file.getName() + "-" + suffix);
+			resource = storer.getResourceName(doc, fileVersion, suffix);
 			filename = filename + "." + FilenameUtils.getExtension(suffix);
 		}
-		long size = file.length();
-		InputStream is = new FileInputStream(file);
+		long size = storer.size(doc.getId(), resource);
 
 		// get the mimetype
 		String mimetype = MimeType.getByFilename(filename);
@@ -110,13 +109,16 @@ public class ServletDocUtil {
 		// Add this header for compatibility with internal .NET browsers
 		response.setHeader("Content-Length", Long.toString(size));
 
-		OutputStream os;
-		os = response.getOutputStream();
+		InputStream is = null;
+		OutputStream os = null;
 
-		int letter = 0;
-
-		byte[] buffer = new byte[128 * 1024];
 		try {
+			is = storer.getStream(doc.getId(), resource);
+			os = response.getOutputStream();
+
+			int letter = 0;
+
+			byte[] buffer = new byte[128 * 1024];
 			while ((letter = is.read(buffer)) != -1) {
 				os.write(buffer, 0, letter);
 			}
@@ -284,7 +286,7 @@ public class ServletDocUtil {
 				InputStream is = null;
 				try {
 					is = item.getInputStream();
-					storer.store(item.getInputStream(), Long.parseLong(docId), ver + "-" + suffix);
+					storer.store(item.getInputStream(), Long.parseLong(docId), storer.getResourceName(doc, ver, suffix));
 				} finally {
 					if (is != null)
 						is.close();

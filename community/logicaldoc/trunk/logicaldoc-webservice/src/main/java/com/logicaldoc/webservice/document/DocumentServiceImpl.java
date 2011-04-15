@@ -1,6 +1,5 @@
 package com.logicaldoc.webservice.document;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +12,9 @@ import java.util.List;
 import java.util.Set;
 
 import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
+
+import net.sf.jmimemagic.Magic;
+import net.sf.jmimemagic.MagicMatch;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -179,17 +180,19 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		checkDownloadEnable(user, doc.getFolder().getId());
 
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
-		File file = storer.getFile(doc, null, null);
+		String resourceName = storer.getResourceName(doc, null, null);
 
-		if (!file.exists()) {
-			throw new FileNotFoundException(file.getPath());
+		if (!storer.exists(doc.getId(), resourceName)) {
+			throw new FileNotFoundException(resourceName);
 		}
 
-		log.debug("Attach file " + file.getPath());
+		log.debug("Attach file " + resourceName);
 
 		// Now we can append the 'document' attachment to the response
-		DataHandler content = new DataHandler(new FileDataSource(file));
-
+		String resource = storer.getResourceName(doc, null, null);
+		byte[] bytes = storer.getBytes(doc.getId(), resource);
+		MagicMatch match = Magic.getMagicMatch(bytes, true);
+		DataHandler content = new DataHandler(bytes, match.getMimeType());
 		return content;
 	}
 
@@ -478,7 +481,8 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		EMailAttachment att = new EMailAttachment();
 		att.setIcon(doc.getIcon());
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
-		att.setData(storer.getBytes(doc, null, null));
+		String resource = storer.getResourceName(doc, null, null);
+		att.setData(storer.getBytes(doc.getId(), resource));
 		att.setFileName(doc.getFileName());
 		String extension = doc.getFileExtension();
 		att.setMimeType(MimeType.get(extension));

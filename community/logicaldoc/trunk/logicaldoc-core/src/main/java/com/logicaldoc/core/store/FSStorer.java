@@ -62,19 +62,28 @@ public class FSStorer implements Storer {
 
 	@Override
 	public File getContainer(long docId) {
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Document document = docDao.findById(docId);
+
+		if (document.getDocRef() != null) {
+			// The shortcut document doesn't have the 'fileversion' and the
+			// 'version'
+			document = docDao.findById(document.getDocRef());
+		}
+
 		String relativePath = computeRelativePath(docId);
 		String path = config.getPropertyWithSubstitutions("store.1.dir") + "/" + relativePath;
 		return new File(path);
 	}
 
 	@Override
-	public boolean store(InputStream stream, long docId, String filename) {
+	public boolean store(InputStream stream, long docId, String resource) {
 		try {
 			SystemQuota.checkOverQuota();
 
 			File dir = getContainer(docId);
 			FileUtils.forceMkdir(dir);
-			File file = new File(new StringBuilder(dir.getPath()).append("/").append(filename).toString());
+			File file = new File(new StringBuilder(dir.getPath()).append("/").append(resource).toString());
 			FileUtil.writeFile(stream, file.getPath());
 
 			// Performs increment and check of the system quota, then increments
@@ -123,25 +132,16 @@ public class FSStorer implements Storer {
 	}
 
 	@Override
-	public InputStream getStream(Document doc, String fileVersion, String suffix) {
-		String filename = getResourceName(doc, fileVersion, suffix);
-
+	public String getResourceName(long docId, String fileVersion, String suffix) {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document document = doc;
+		Document doc = docDao.findById(docId);
+		return getResourceName(doc, fileVersion, suffix);
+	}
 
-		/*
-		 * All versions of a document are stored in the same directory as the
-		 * current version, but the filename is the version number without
-		 * extension, e.g. "docId/2.1"
-		 */
-		if (doc.getDocRef() != null) {
-			// The shortcut document doesn't have the 'fileversion' and the
-			// 'version'
-			document = docDao.findById(doc.getDocRef());
-		}
-
-		File container = getContainer(document.getId());
-		File file = new File(container, filename);
+	@Override
+	public InputStream getStream(long docId, String resource) {
+		File container = getContainer(docId);
+		File file = new File(container, resource);
 
 		try {
 			return new BufferedInputStream(new FileInputStream(file), 2048);
@@ -152,38 +152,8 @@ public class FSStorer implements Storer {
 	}
 
 	@Override
-	public InputStream getStream(long docId, String fileVersion, String suffix) {
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc = docDao.findById(docId);
-		return getStream(doc, fileVersion, suffix);
-	}
-
-	@Override
-	public File getFile(Document doc, String fileVersion, String suffix) {
-		String filename = getResourceName(doc, fileVersion, suffix);
-
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document document = doc;
-
-		/*
-		 * All versions of a document are stored in the same directory as the
-		 * current version, but the filename is the version number without
-		 * extension, e.g. "docId/2.1"
-		 */
-		if (doc.getDocRef() != null) {
-			// The shortcut document doesn't have the 'fileversion' and the
-			// 'version'
-			document = docDao.findById(doc.getDocRef());
-		}
-
-		return new File(getContainer(document.getId()), filename);
-	}
-
-	@Override
-	public File getFile(long docId, String fileVersion, String suffix) {
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc = docDao.findById(docId);
-		return getFile(doc, fileVersion, suffix);
+	public File getFile(long docId, String resource) {
+		return new File(getContainer(docId), resource);
 	}
 
 	@Override
@@ -195,19 +165,11 @@ public class FSStorer implements Storer {
 		return size;
 	}
 
-	/**
-	 * Computes the relative path of a document's folder inside the storage
-	 * root.
-	 */
-	protected String computeRelativePath(long docId) {
-		return StringUtil.split(Long.toString(docId), '/', 3) + "/doc";
-	}
-
 	@Override
-	public byte[] getBytes(Document doc, String fileVersion, String suffix) {
+	public byte[] getBytes(long docId, String resource) {
 		InputStream is = null;
 		try {
-			is = getStream(doc, fileVersion, suffix);
+			is = getStream(docId, resource);
 			byte[] bytes = IOUtils.toByteArray(is);
 			return bytes;
 		} catch (IOException e) {
@@ -256,9 +218,24 @@ public class FSStorer implements Storer {
 	}
 
 	@Override
-	public long getSize(long docId, String resourceName) {
+	public long size(long docId, String resourceName) {
 		File file = getContainer(docId);
 		file = new File(file, resourceName);
 		return file.length();
+	}
+
+	@Override
+	public boolean exists(long docId, String resourceName) {
+		File file = getContainer(docId);
+		file = new File(file, resourceName);
+		return file.exists();
+	}
+	
+	/**
+	 * Computes the relative path of a document's folder inside the storage
+	 * root.
+	 */
+	protected String computeRelativePath(long docId) {
+		return StringUtil.split(Long.toString(docId), '/', 3) + "/doc";
 	}
 }

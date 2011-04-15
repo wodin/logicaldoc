@@ -46,7 +46,8 @@ public class ThumbnailManager {
 		if (builder == null) {
 			log.warn("No registered thumbnail for extension " + document.getFileExtension());
 			try {
-				MagicMatch match = Magic.getMagicMatch(storer.getBytes(document, null, null), true);
+				String resource = storer.getResourceName(document, null, null);
+				MagicMatch match = Magic.getMagicMatch(storer.getBytes(document.getId(), resource), true);
 				if ("text/plain".equals(match.getMimeType())) {
 					log.warn("Try to convert as plain text");
 					builder = getBuilders().get("txt");
@@ -91,8 +92,9 @@ public class ThumbnailManager {
 			String fver = fileVersion;
 			if (fver == null)
 				fver = document.getFileVersion();
-			File src = storer.getFile(document, fver, null);
-			File dest = new File(src.getParentFile(), src.getName() + "-thumb.jpg");
+			String resource = storer.getResourceName(document.getId(), fver, null);
+			File src = storer.getFile(document.getId(), resource);
+			File dest = new File(storer.getContainer(document.getId()), resource + "-thumb.jpg");
 			builder.build(src, document.getFileName(), size, dest, scaleAlgorithm, quality);
 		} catch (Exception e) {
 			log.warn("Error creating thumbnail for document: " + document.getTitle());

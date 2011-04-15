@@ -71,10 +71,11 @@ public class DocumentPreview extends HttpServlet {
 		InputStream thumbnail = null;
 
 		try {
-			thumbnail = storer.getStream(doc, fileVersion, suffix);
+			String resource = storer.getResourceName(docId, fileVersion, suffix);
+			thumbnail = storer.getStream(docId, resource);
 
 			// 2) the thumbnail doesn't exist, create it
-			if (thumbnail == null) {
+			if (storer.exists(docId, resource)) {
 				ThumbnailManager thumbManaher = (ThumbnailManager) Context.getInstance()
 						.getBean(ThumbnailManager.class);
 				try {
@@ -82,7 +83,7 @@ public class DocumentPreview extends HttpServlet {
 				} catch (Throwable t) {
 					log.error(t.getMessage(), t);
 				}
-				thumbnail = storer.getStream(doc, fileVersion, suffix);
+				thumbnail = storer.getStream(docId, resource);
 			}
 
 			if (thumbnail == null) {

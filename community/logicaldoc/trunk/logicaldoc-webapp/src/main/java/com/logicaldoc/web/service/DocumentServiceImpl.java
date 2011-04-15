@@ -1018,7 +1018,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		Document doc = docDao.findById(docId);
 		att.setIcon(doc.getIcon());
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
-		att.setData(storer.getBytes(doc, null, null));
+		String resource = storer.getResourceName(doc, null, null);
+		att.setData(storer.getBytes(doc.getId(), resource));
 		att.setFileName(doc.getFileName());
 		String extension = doc.getFileExtension();
 		att.setMimeType(MimeType.get(extension));
