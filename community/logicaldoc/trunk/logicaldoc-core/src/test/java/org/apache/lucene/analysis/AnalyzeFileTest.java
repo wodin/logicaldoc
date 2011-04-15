@@ -12,7 +12,7 @@ import java.util.Locale;
 import junit.framework.TestCase;
 
 import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
-import org.apache.lucene.analysis.tokenattributes.TermAttributeImpl;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttributeImpl;
 import org.apache.lucene.util.AttributeImpl;
 import org.junit.Test;
 
@@ -40,15 +40,15 @@ public class AnalyzeFileTest extends TestCase {
 		List<String> resultList = new ArrayList<String>();
 		while (true) {
 			boolean ret = ts.incrementToken();
-			if (!ret){
+			if (!ret) {
 				ts.end();
 				break;
 			}
 			java.util.Iterator<AttributeImpl> attributes = ts.getAttributeImplsIterator();
 			while (attributes.hasNext()) {
-				AttributeImpl att=attributes.next();
-				if(att instanceof TermAttributeImpl)
-				  resultList.add(((TermAttributeImpl)att).term());
+				AttributeImpl att = attributes.next();
+				if (att instanceof CharTermAttributeImpl)
+					resultList.add(((CharTermAttributeImpl) att).term());
 			}
 		}
 		ts.close();
