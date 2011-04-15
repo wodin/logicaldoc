@@ -1,11 +1,15 @@
 package com.logicaldoc.core.store;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,8 +97,24 @@ public class FSStorer implements Storer {
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return false;
+		} finally {
+			try {
+				stream.close();
+			} catch (IOException e) {
+			}
 		}
 		return true;
+	}
+
+	@Override
+	public boolean store(File file, long docId, String resource) {
+		InputStream is = null;
+		try {
+			is = new BufferedInputStream(new FileInputStream(file), 2048);
+		} catch (FileNotFoundException e) {
+			return false;
+		}
+		return store(is, docId, resource);
 	}
 
 	@Override
@@ -149,11 +169,6 @@ public class FSStorer implements Storer {
 			log.error(e.getMessage());
 			return null;
 		}
-	}
-
-	@Override
-	public File getFile(long docId, String resource) {
-		return new File(getContainer(docId), resource);
 	}
 
 	@Override
@@ -225,17 +240,43 @@ public class FSStorer implements Storer {
 	}
 
 	@Override
-	public boolean exists(long docId, String resourceName) {
+	public boolean exists(long docId, String resource) {
 		File file = getContainer(docId);
-		file = new File(file, resourceName);
+		file = new File(file, resource);
 		return file.exists();
 	}
-	
+
 	/**
 	 * Computes the relative path of a document's folder inside the storage
 	 * root.
 	 */
 	protected String computeRelativePath(long docId) {
 		return StringUtil.split(Long.toString(docId), '/', 3) + "/doc";
+	}
+
+	@Override
+	public void writeTo(long docId, String resource, File out) {
+		OutputStream os = null;
+		InputStream is = null;
+		try {
+			os = new BufferedOutputStream(new FileOutputStream(out, false), 2048);
+			is = getStream(docId, resource);
+			FileUtil.writeFile(is, out.getPath());
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		} finally {
+			if (os != null) {
+				try {
+					os.flush();
+					os.close();
+				} catch (Throwable e) {
+				}
+			}
+			if (is != null)
+				try {
+					is.close();
+				} catch (Throwable e) {
+				}
+		}
 	}
 }

@@ -3,6 +3,7 @@ package com.logicaldoc.core.searchengine;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -131,17 +132,17 @@ public class Indexer {
 	/**
 	 * Adds a new document to the index
 	 * 
-	 * @param file The document file
+	 * @param input Stream of the document's file
 	 * @param doc The document that we want to add
 	 * @throws Exception
 	 */
-	public synchronized void addFile(File file, com.logicaldoc.core.document.Document doc) throws Exception {
+	public synchronized void addFile(InputStream input, com.logicaldoc.core.document.Document doc) throws Exception {
 		com.logicaldoc.core.document.Document document = doc;
 
 		Locale locale = document.getLocale();
 		if (locale == null)
 			locale = Locale.ENGLISH;
-		Parser parser = ParserFactory.getParser(file, document.getFileName(), locale, null);
+		Parser parser = ParserFactory.getParser(input, document.getFileName(), locale, null);
 		if (parser == null) {
 			return;
 		}

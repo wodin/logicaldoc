@@ -49,11 +49,6 @@ public class MockStorer implements Storer {
 	}
 
 	@Override
-	public File getFile(long docId, String resource) {
-		return new File("pom.xml");
-	}
-
-	@Override
 	public byte[] getBytes(long docId, String resource) {
 		try {
 			return IOUtils.toByteArray(getStream(docId, resource));
@@ -84,5 +79,19 @@ public class MockStorer implements Storer {
 	@Override
 	public String getResourceName(long docId, String fileVersion, String suffix) {
 		return getResourceName(new Document(), fileVersion, suffix);
+	}
+
+	@Override
+	public void writeTo(long docId, String resource, File out) {
+
+	}
+
+	@Override
+	public boolean store(File file, long docId, String resource) {
+		try {
+			return store(new FileInputStream(file), docId, resource);
+		} catch (FileNotFoundException e) {
+			return false;
+		}
 	}
 }
