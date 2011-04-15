@@ -218,8 +218,14 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		for (Object key : conf.keySet()) {
 			String name = key.toString();
 			if (name.startsWith("store.")) {
-				repos[1][i] = new GUIParameter(name, conf.getProperty(name));
-				i++;
+				String buf = name.substring(6);
+				try {
+					// Check if it is in the form of store.N
+					Integer.parseInt(buf);
+					repos[1][i] = new GUIParameter(name, conf.getProperty(name));
+					i++;
+				} catch (NumberFormatException e) {
+				}
 			}
 		}
 
