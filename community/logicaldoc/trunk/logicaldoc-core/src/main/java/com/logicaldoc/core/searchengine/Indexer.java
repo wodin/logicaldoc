@@ -22,11 +22,11 @@ import org.apache.lucene.index.CheckIndex.Status;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.Searcher;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.LockObtainFailedException;
@@ -49,7 +49,7 @@ public class Indexer {
 
 	private static final String WRITE_LOCK = "write.lock";
 
-	public static final Version LUCENE_VERSION = Version.LUCENE_30;
+	public static final Version LUCENE_VERSION = Version.LUCENE_31;
 
 	protected static Log log = LogFactory.getLog(Indexer.class);
 
@@ -102,10 +102,10 @@ public class Indexer {
 		String indexdir = config.getPropertyWithSubstitutions("conf.indexdir");
 		Language language = LanguageManager.getInstance().getLanguage(locale);
 		Analyzer analyzer = getAnalyzer(language);
+		IndexWriterConfig config = new IndexWriterConfig(LUCENE_VERSION, analyzer);
 		IndexWriter writer = null;
 		try {
-			writer = new IndexWriter(getIndexDirectory(language), analyzer, IndexWriter.MaxFieldLength.UNLIMITED);
-			writer.setSimilarity(new SquareSimilarity());
+			writer = new IndexWriter(getIndexDirectory(language), config);
 			writer.addDocument(doc);
 		} catch (Exception e) {
 			log.error("Exception adding Document to Lucene index: " + indexdir + ", " + e.getMessage(), e);
@@ -173,8 +173,8 @@ public class Indexer {
 	protected synchronized void optimize(Language language) {
 		try {
 			Analyzer analyzer = getAnalyzer(language);
-			IndexWriter writer = new IndexWriter(getIndexDirectory(language), analyzer,
-					IndexWriter.MaxFieldLength.UNLIMITED);
+			IndexWriterConfig config = new IndexWriterConfig(LUCENE_VERSION, analyzer);
+			IndexWriter writer = new IndexWriter(getIndexDirectory(language), config);
 			writer.optimize();
 			writer.close();
 		} catch (Exception e) {
@@ -193,8 +193,8 @@ public class Indexer {
 			Collection<Language> languages = LanguageManager.getInstance().getActiveLanguages();
 			for (Language language : languages) {
 				Analyzer analyzer = getAnalyzer(language);
-				IndexWriter writer = new IndexWriter(getIndexDirectory(language), analyzer,
-						IndexWriter.MaxFieldLength.UNLIMITED);
+				IndexWriterConfig config = new IndexWriterConfig(LUCENE_VERSION, analyzer);
+				IndexWriter writer = new IndexWriter(getIndexDirectory(language), config);
 				writer.optimize();
 				writer.close();
 			}
@@ -339,7 +339,7 @@ public class Indexer {
 		Language language = LanguageManager.getInstance().getLanguage(locale);
 		try {
 			IndexReader reader = IndexReader.open(getIndexDirectory(language), true);
-			Searcher searcher = new IndexSearcher(reader);
+			IndexSearcher searcher = new IndexSearcher(reader);
 
 			// Compose a query for docId
 			QueryParser parser = new QueryParser(LUCENE_VERSION, LuceneDocument.FIELD_DOC_ID, new KeywordAnalyzer());
@@ -537,10 +537,11 @@ public class Indexer {
 		if (!indexPath.exists()) {
 			indexPath.mkdirs();
 			indexPath.mkdir();
+			IndexWriterConfig config = new IndexWriterConfig(LUCENE_VERSION, getAnalyzer(language));
+			config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
 			IndexWriter writer = null;
 			try {
-				writer = new IndexWriter(getIndexDirectory(language), getAnalyzer(language), true,
-						IndexWriter.MaxFieldLength.UNLIMITED);
+				writer = new IndexWriter(getIndexDirectory(language), config);
 			} finally {
 				try {
 					writer.close();

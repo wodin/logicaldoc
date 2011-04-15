@@ -13,15 +13,15 @@ import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.MultiReader;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.misc.ChainedFilter;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
+import org.apache.lucene.search.ChainedFilter;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.MultiSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.QueryWrapperFilter;
-import org.apache.lucene.search.Searcher;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.highlight.Highlighter;
@@ -48,7 +48,6 @@ public class FulltextSearch extends Search {
 	@Override
 	public void internalSearch() throws Exception {
 		FulltextSearchOptions opt = (FulltextSearchOptions) options;
-		String expr = opt.getExpression();
 
 		/*
 		 * Create the expression locale using the string representation. This is
@@ -77,7 +76,7 @@ public class FulltextSearch extends Search {
 			languages = new String[] { opt.getLanguage() };
 		}
 
-		Searcher[] searcher = new Searcher[languages.length];
+		IndexReader[] readers = new IndexReader[languages.length];
 		String indexPath = conf.getPropertyWithSubstitutions("conf.indexdir");
 
 		if (!indexPath.endsWith(File.pathSeparator)) {
@@ -86,15 +85,17 @@ public class FulltextSearch extends Search {
 
 		for (int i = 0; i < languages.length; i++) {
 			String lang = languages[i];
-			searcher[i] = new IndexSearcher(Indexer.getIndexDirectory(lang));
+			// searcher[i] = new IndexSearcher(Indexer.getIndexDirectory(lang));
+			readers[i] = IndexReader.open(Indexer.getIndexDirectory(lang));
 		}
 
-		MultiSearcher multiSearcher = new MultiSearcher(searcher);
+		MultiReader reader = new MultiReader(readers);
+		IndexSearcher indexSearcher = new IndexSearcher(reader);
 
 		// Include even all not analized fields
 		List<String> fields = getSearchedFields(opt);
 
-		multiSearcher.setSimilarity(new SquareSimilarity());
+		// multiSearcher.setSimilarity(new SquareSimilarity());
 
 		MultiFieldQueryParser parser = new MultiFieldQueryParser(Indexer.LUCENE_VERSION, fields.toArray(new String[0]),
 				analyzer);
@@ -131,10 +132,10 @@ public class FulltextSearch extends Search {
 		log.info("Fulltext query: " + query.toString());
 
 		if (filters.isEmpty()) {
-			topDocs = multiSearcher.search(query, 1000);
+			topDocs = indexSearcher.search(query, 1000);
 		} else {
 			ChainedFilter chainedFilter = new ChainedFilter(filters.toArray(new Filter[0]), ChainedFilter.AND);
-			topDocs = multiSearcher.search(query, chainedFilter, 1000);
+			topDocs = indexSearcher.search(query, chainedFilter, 1000);
 		}
 
 		log.info("End of Full-text search");
@@ -176,7 +177,7 @@ public class FulltextSearch extends Search {
 					break;
 				}
 
-				Document doc = multiSearcher.doc(topDocs.scoreDocs[i].doc);
+				Document doc = indexSearcher.doc(topDocs.scoreDocs[i].doc);
 
 				String fid = doc.get(LuceneDocument.FIELD_FOLDER_ID);
 				// Support the old 'path' attribute
