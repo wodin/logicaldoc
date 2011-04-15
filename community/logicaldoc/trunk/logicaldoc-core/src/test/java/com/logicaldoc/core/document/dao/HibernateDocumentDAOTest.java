@@ -201,7 +201,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		doc.setVersion("1.0");
 
 		// Prepare the document file for digest computation
-		File docFile = storer.getContainer(7L);
+		File docFile = storer.getContainer(1L);
 		docFile = new File(docFile, doc.getFileVersion());
 		FileUtils.forceMkdir(docFile.getParentFile());
 		Writer out = new FileWriter(docFile);
