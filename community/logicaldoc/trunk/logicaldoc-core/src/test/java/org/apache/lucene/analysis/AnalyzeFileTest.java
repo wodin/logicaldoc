@@ -48,7 +48,7 @@ public class AnalyzeFileTest extends TestCase {
 			while (attributes.hasNext()) {
 				AttributeImpl att = attributes.next();
 				if (att instanceof CharTermAttributeImpl)
-					resultList.add(((CharTermAttributeImpl) att).term());
+					resultList.add(((CharTermAttributeImpl) att).toString());
 			}
 		}
 		ts.close();
