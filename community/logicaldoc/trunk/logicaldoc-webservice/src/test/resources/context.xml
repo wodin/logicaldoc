@@ -57,7 +57,7 @@
         <value>/mappings/DownloadTicket.hbm.xml</value>
         <value>/mappings/History.hbm.xml</value>
         <value>/mappings/Document.hbm.xml</value>
-        <value>/mappings/DiscussionThread.hbm.xml</value>
+        <value>/mappings/DocumentNote.hbm.xml</value>
         <value>/mappings/DocumentLink.hbm.xml</value>
         <value>/mappings/Folder.hbm.xml</value>
         <value>/mappings/DocumentTemplate.hbm.xml</value>

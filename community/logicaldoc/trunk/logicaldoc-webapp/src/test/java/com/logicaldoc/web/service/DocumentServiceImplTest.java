@@ -9,15 +9,15 @@ import org.junit.Test;
 
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Bookmark;
-import com.logicaldoc.core.document.DiscussionThread;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentLink;
+import com.logicaldoc.core.document.DocumentNote;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.BookmarkDAO;
-import com.logicaldoc.core.document.dao.DiscussionThreadDAO;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentLinkDAO;
+import com.logicaldoc.core.document.dao.DocumentNoteDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.SessionManager;
@@ -42,7 +42,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 
 	private DocumentTemplateDAO templateDao;
 
-	private DiscussionThreadDAO dthreadDao;
+	private DocumentNoteDAO noteDao;
 
 	private BookmarkDAO bookDao;
 
@@ -55,7 +55,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		docDao = (DocumentDAO) context.getBean("DocumentDAO");
 		templateDao = (DocumentTemplateDAO) context.getBean("DocumentTemplateDAO");
 		linkDao = (DocumentLinkDAO) context.getBean("DocumentLinkDAO");
-		dthreadDao = (DiscussionThreadDAO) context.getBean("DiscussionThreadDAO");
+		noteDao = (DocumentNoteDAO) context.getBean("DocumentNoteDAO");
 		bookDao = (BookmarkDAO) context.getBean("BookmarkDAO");
 		historyDao = (HistoryDAO) context.getBean("HistoryDAO");
 
@@ -189,57 +189,35 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testDeleteDiscussions() throws InvalidSessionException {
-		DiscussionThread dthread = dthreadDao.findById(1);
-		Assert.assertNotNull(dthread);
-		Assert.assertEquals("subject", dthread.getSubject());
+	public void testDeleteNotes() throws InvalidSessionException {
+		List<DocumentNote> notes = noteDao.findByDocId(1);
+		Assert.assertNotNull(notes);
+		Assert.assertEquals(2, notes.size());
+		Assert.assertEquals("message for note 1", notes.get(0).getMessage());
 
-		service.deleteDiscussions(session.getSid(), new long[] { 1 });
+		service.deleteNotes(session.getSid(), new long[] { 1 });
 
-		dthread = dthreadDao.findById(1);
-		Assert.assertNull(dthread);
+		notes = noteDao.findByDocId(1);
+		Assert.assertNotNull(notes);
+		Assert.assertEquals(1, notes.size());
 	}
 
 	@Test
-	public void testStartDiscussion() throws InvalidSessionException {
-		List<DiscussionThread> threads = dthreadDao.findByDocId(1L);
-		Assert.assertNotNull(threads);
-		Assert.assertEquals(2, threads.size());
+	public void testAddNote() throws InvalidSessionException {
+		List<DocumentNote> notes = noteDao.findByDocId(1L);
+		Assert.assertNotNull(notes);
+		Assert.assertEquals(2, notes.size());
 
-		long dThreadId = service.startDiscussion(session.getSid(), 1L, "pippo", "logicaldoc");
+		long noteId = service.addNote(session.getSid(), 1L, "pippo");
 
-		Assert.assertEquals(4, dThreadId);
-		DiscussionThread dthread = dthreadDao.findById(dThreadId);
-		Assert.assertNotNull(dthread);
-		Assert.assertEquals("pippo", dthread.getSubject());
+		Assert.assertEquals(5, noteId);
+		DocumentNote note = noteDao.findById(noteId);
+		Assert.assertNotNull(note);
+		Assert.assertEquals("pippo", note.getMessage());
 
-		threads = dthreadDao.findByDocId(1L);
-		Assert.assertNotNull(threads);
-		Assert.assertEquals(3, threads.size());
-	}
-
-	@Test
-	public void testReplyPost() throws InvalidSessionException {
-		int commentPosition = service.replyPost(session.getSid(), 1L, 1, "pippo", "logicaldoc");
-		Assert.assertEquals(3, commentPosition);
-	}
-
-	@Test
-	public void testDeletePosts() throws InvalidSessionException {
-		DiscussionThread dthread = dthreadDao.findById(1);
-		Assert.assertNotNull(dthread);
-		dthreadDao.initialize(dthread);
-		Assert.assertEquals(2, dthread.getComments().size());
-		Assert.assertEquals("body1", dthread.getComments().get(0).getBody());
-		Assert.assertEquals("body2", dthread.getComments().get(1).getBody());
-
-		service.deletePosts(session.getSid(), 1L, new int[] { 0, 1 });
-
-		dthread = dthreadDao.findById(1);
-		Assert.assertNotNull(dthread);
-		dthreadDao.initialize(dthread);
-		Assert.assertEquals(1, dthread.getComments().get(0).getDeleted());
-		Assert.assertEquals(1, dthread.getComments().get(1).getDeleted());
+		notes = noteDao.findByDocId(1L);
+		Assert.assertNotNull(notes);
+		Assert.assertEquals(3, notes.size());
 	}
 
 	@Test

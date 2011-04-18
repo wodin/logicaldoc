@@ -183,26 +183,6 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 	}
 
 	@Override
-	public void deleteDiscussions(String sid, long[] ids) {
-		return;
-	}
-
-	@Override
-	public long startDiscussion(String sid, long docId, String title, String message) {
-		return 10;
-	}
-
-	@Override
-	public int replyPost(String sid, long discussionId, int replyTo, String title, String message) {
-		return 0;
-	}
-
-	@Override
-	public void deletePosts(String sid, long discussionId, int[] ids) {
-		return;
-	}
-
-	@Override
 	public void makeImmutable(String sid, long[] ids, String comment) {
 		return;
 	}
@@ -292,5 +272,15 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 	@Override
 	public int saveRating(String sid, GUIRating rating) throws InvalidSessionException {
 		return 3;
+	}
+
+	@Override
+	public void deleteNotes(String sid, long[] ids) throws InvalidSessionException {
+		return;
+	}
+
+	@Override
+	public long addNote(String sid, long docId, String message) throws InvalidSessionException {
+		return 10;
 	}
 }

@@ -51,7 +51,7 @@ public class Feature {
 
 	public static final int ENTERPRISE_SEARCH = 21;
 
-	public static final int FORUMS = 22;
+	public static final int NOTES = 22;
 
 	public static final int TAGS_ADMIN = 23;
 

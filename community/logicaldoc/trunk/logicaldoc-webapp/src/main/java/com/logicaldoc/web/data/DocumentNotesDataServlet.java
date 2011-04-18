@@ -16,21 +16,22 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.core.document.dao.DiscussionThreadDAO;
+import com.logicaldoc.core.document.DocumentNote;
+import com.logicaldoc.core.document.dao.DocumentNoteDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
- * This servlet is responsible for document discussions data.
+ * This servlet is responsible for document notes data.
  * 
- * @author Marco Meschieri - Logical Objects
- * @since 6.0
+ * @author Matteo Caruso - Logical Objects
+ * @since 6.2
  */
-public class DiscussionsDataServlet extends HttpServlet {
+public class DocumentNotesDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(DiscussionsDataServlet.class);
+	private static Log log = LogFactory.getLog(DocumentNotesDataServlet.class);
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
@@ -46,32 +47,31 @@ public class DiscussionsDataServlet extends HttpServlet {
 			response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 			response.setHeader("Expires", "0");
 
+			/*
+			 * Iterate over the collection of bookmarks
+			 */
+
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
-			DiscussionThreadDAO dao = (DiscussionThreadDAO) Context.getInstance().getBean(DiscussionThreadDAO.class);
-			StringBuffer query = new StringBuffer(
-					"select A.id, A.subject, A.creatorName, A.replies, A.views, A.lastPost from DiscussionThread A where A.deleted = 0 ");
-			query.append(" and A.docId=" + request.getParameter("docId"));
-			query.append(" order by A.lastPost desc ");
-
+			DocumentNoteDAO dao = (DocumentNoteDAO) Context.getInstance().getBean(DocumentNoteDAO.class);
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
-			List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, null);
+
+			List<DocumentNote> notes = dao.findByDocId(Long.parseLong(request.getParameter("docId")));
 
 			/*
 			 * Iterate over records composing the response XML document
 			 */
-			for (Object record : records) {
-				Object[] cols = (Object[]) record;
-				writer.print("<discussion>");
-				writer.print("<id>" + cols[0] + "</id>");
-				writer.print("<title><![CDATA[" + cols[1] + "]]></title>");
-				writer.print("<user><![CDATA[" + cols[2] + "]]></user>");
-				writer.print("<posts>" + cols[3] + "</posts>");
-				writer.print("<visits>" + cols[4] + "</visits>");
-				writer.print("<lastPost>" + df.format((Date) cols[5]) + "</lastPost>");
-				writer.print("</discussion>");
+			for (DocumentNote note : notes) {
+				writer.print("<note>");
+				writer.print("<id>" + note.getId() + "</id>");
+				writer.print("<docId>" + note.getDocId() + "</docId>");
+				writer.print("<userId>" + note.getUserId() + "</userId>");
+				writer.print("<username><![CDATA[" + note.getUsername() + "]]></username>");
+				writer.print("<date>" + df.format((Date) note.getDate()) + "</date>");
+				writer.print("<message><![CDATA[" + note.getMessage() + "]]></message>");
+				writer.print("</note>");
 			}
 			writer.write("</list>");
 		} catch (Throwable e) {

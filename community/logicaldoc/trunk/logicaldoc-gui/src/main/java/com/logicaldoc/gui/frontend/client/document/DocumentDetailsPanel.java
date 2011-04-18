@@ -51,7 +51,7 @@ public class DocumentDetailsPanel extends VLayout {
 
 	protected Layout linksTabPanel;
 
-	protected Layout discussionTabPanel;
+	protected Layout notesTabPanel;
 
 	protected StandardPropertiesPanel propertiesPanel;
 
@@ -63,7 +63,7 @@ public class DocumentDetailsPanel extends VLayout {
 
 	protected LinksPanel linksPanel;
 
-	protected Discussion discussionPanel;
+	protected NotesPanel notesPanel;
 
 	protected HLayout savePanel;
 
@@ -80,8 +80,8 @@ public class DocumentDetailsPanel extends VLayout {
 	protected Tab extendedPropertiesTab;
 
 	protected Tab linksTab;
-
-	protected Tab discussionTab;
+	
+	protected Tab notesTab;
 
 	protected Tab versionsTab;
 
@@ -172,11 +172,11 @@ public class DocumentDetailsPanel extends VLayout {
 		linksTabPanel.setHeight100();
 		linksTab.setPane(linksTabPanel);
 
-		discussionTab = new Tab(I18N.message("discussions"));
-		discussionTabPanel = new HLayout();
-		discussionTabPanel.setWidth100();
-		discussionTabPanel.setHeight100();
-		discussionTab.setPane(discussionTabPanel);
+		notesTab = new Tab(I18N.message("notes"));
+		notesTabPanel = new HLayout();
+		notesTabPanel.setWidth100();
+		notesTabPanel.setHeight100();
+		notesTab.setPane(notesTabPanel);
 
 		versionsTab = new Tab(I18N.message("versions"));
 		versionsTabPanel = new HLayout();
@@ -201,8 +201,8 @@ public class DocumentDetailsPanel extends VLayout {
 		tabSet.addTab(propertiesTab);
 		tabSet.addTab(extendedPropertiesTab);
 		tabSet.addTab(linksTab);
-		if (Feature.visible(Feature.FORUMS))
-			tabSet.addTab(discussionTab);
+		if (Feature.visible(Feature.NOTES))
+			tabSet.addTab(notesTab);
 		tabSet.addTab(versionsTab);
 		tabSet.addTab(historyTab);
 
@@ -282,13 +282,13 @@ public class DocumentDetailsPanel extends VLayout {
 		/*
 		 * Prepare the discussion tab
 		 */
-		if (discussionPanel != null) {
-			discussionPanel.destroy();
-			if (discussionTabPanel.contains(discussionPanel))
-				discussionTabPanel.removeMember(discussionPanel);
+		if (notesPanel != null) {
+			notesPanel.destroy();
+			if (notesTabPanel.contains(notesPanel))
+				notesTabPanel.removeMember(notesPanel);
 		}
-		discussionPanel = new Discussion(document);
-		discussionTabPanel.addMember(discussionPanel);
+		notesPanel = new NotesPanel(document);
+		notesTabPanel.addMember(notesPanel);
 	}
 
 	public GUIDocument getDocument() {

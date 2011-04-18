@@ -268,20 +268,6 @@ values(4, '2010-04-23',0,'sequence','customid-year_seq','str1','str2',10,11,1.5,
 insert into ld_generic(ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_string1, ld_string2, ld_integer1, ld_integer2, ld_double1, ld_double2, ld_date1, ld_date2)
 values(5, '2010-04-23',0,'sequence','customid-month_seq','str1','str2',10,11,1.5,1.6,'2008-11-20','2008-11-20');
 
-insert into ld_dthread (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_creation, ld_creatorid, ld_creatorname, ld_lastpost, ld_subject, ld_replies, ld_views)
-values(1, '2009-04-01',0,1,'2009-04-01',1,'Admin','2009-04-03','subject',2,1);
-
-insert into ld_dcomment (ld_threadid, ld_id, ld_replyto, ld_userid, ld_username, ld_date, ld_subject, ld_body, ld_deleted, ld_replypath)
-values(1,0,null,1,'Admin','2009-04-01','subject','body1',0,'/');
-insert into ld_dcomment (ld_threadid, ld_id, ld_replyto, ld_userid, ld_username, ld_date, ld_subject, ld_body, ld_deleted, ld_replypath)
-values(1,1,null,1,'Admin','2009-04-02','RE: subject','body2',0,'/');
-
-insert into ld_dthread (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_creation, ld_creatorid, ld_creatorname, ld_lastpost, ld_subject, ld_replies, ld_views)
-values(2, '2009-05-01',0,1,'2009-04-01',1,'Admin','2009-04-03','subject',2,1);
-
-insert into ld_dthread (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_creation, ld_creatorid, ld_creatorname, ld_lastpost, ld_subject, ld_replies, ld_views)
-values(3, '2009-05-01',1,1,'2009-04-01',1,'Admin','2009-04-03','subject',2,1);
-
 insert into ld_user_history 
 				(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_notified, ld_new)
 values     (1,'2008-10-22',0,1,'2006-12-20','author','data test 01','reason test 01',0,1);
@@ -334,3 +320,15 @@ values		(3,'2011-02-18',0,2,1,3);
 insert into ld_rating
 		(ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_userid, ld_vote)
 values		(4,'2011-02-18',1,2,2,4);
+
+insert into ld_note (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_username, ld_userid, ld_date, ld_message)
+values(1, '2011-04-18',0,1,'Admin',1,'2011-04-18','message for note 1');
+
+insert into ld_note (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_username, ld_userid, ld_date, ld_message)
+values(2, '2011-04-18',0,1,'Admin',1,'2011-04-18','message for note 2');
+
+insert into ld_note (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_username, ld_userid, ld_date, ld_message)
+values(3, '2011-04-18',0,4,'John',3,'2011-04-18','message for note 3');
+
+insert into ld_note (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_username, ld_userid, ld_date, ld_message)
+values(4, '2011-04-18',1,1,'Admin',1,'2011-04-18','message for note 4');

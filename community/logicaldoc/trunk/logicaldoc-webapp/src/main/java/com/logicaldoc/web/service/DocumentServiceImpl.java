@@ -25,20 +25,19 @@ import com.logicaldoc.core.communication.EMailAttachment;
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Bookmark;
-import com.logicaldoc.core.document.DiscussionComment;
-import com.logicaldoc.core.document.DiscussionThread;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentLink;
 import com.logicaldoc.core.document.DocumentManager;
+import com.logicaldoc.core.document.DocumentNote;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.DownloadTicket;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Rating;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.BookmarkDAO;
-import com.logicaldoc.core.document.dao.DiscussionThreadDAO;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentLinkDAO;
+import com.logicaldoc.core.document.dao.DocumentNoteDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
@@ -321,42 +320,12 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public void deleteDiscussions(String sid, long[] ids) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
-
-		DiscussionThreadDAO dao = (DiscussionThreadDAO) Context.getInstance().getBean(DiscussionThreadDAO.class);
-		for (long id : ids) {
-			dao.delete(id);
-		}
-	}
-
-	@Override
 	public void deleteLinks(String sid, long[] ids) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		DocumentLinkDAO dao = (DocumentLinkDAO) Context.getInstance().getBean(DocumentLinkDAO.class);
 		for (long id : ids) {
 			dao.delete(id);
-		}
-	}
-
-	@Override
-	public void deletePosts(String sid, long discussionId, int[] postIds) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
-
-		try {
-			DiscussionThreadDAO dao = (DiscussionThreadDAO) Context.getInstance().getBean(DiscussionThreadDAO.class);
-			DiscussionThread thread = dao.findById(discussionId);
-			dao.initialize(thread);
-			DiscussionComment comment = null;
-			for (int postId : postIds) {
-				comment = thread.getComments().get(postId);
-				comment.setDeleted(1);
-			}
-			dao.store(thread);
-		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
 		}
 	}
 
@@ -718,30 +687,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public int replyPost(String sid, long discussionId, int replyTo, String title, String message)
-			throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
-
-		DiscussionComment comment = new DiscussionComment();
-		comment.setReplyTo(replyTo);
-		comment.setSubject(title);
-		comment.setBody(message);
-		comment.setUserId(SessionUtil.getSessionUser(sid).getId());
-		comment.setUserName(SessionUtil.getSessionUser(sid).getFullName());
-		try {
-			DiscussionThreadDAO dao = (DiscussionThreadDAO) Context.getInstance().getBean(DiscussionThreadDAO.class);
-			DiscussionThread thread = dao.findById(discussionId);
-			dao.initialize(thread);
-			thread.appendComment(comment);
-			dao.store(thread);
-			return thread.getReplies();
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			return 0;
-		}
-	}
-
-	@Override
 	public void restore(String sid, long docId, long folderId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
@@ -1042,36 +987,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public long startDiscussion(String sid, long docId, String title, String message) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
-
-		try {
-			DiscussionThread thread = new DiscussionThread();
-			thread.setDocId(docId);
-			thread.setCreatorId(SessionUtil.getSessionUser(sid).getId());
-			thread.setCreatorName(SessionUtil.getSessionUser(sid).getFullName());
-			thread.setLastPost(thread.getCreation());
-
-			DiscussionComment firstComment = new DiscussionComment();
-			firstComment.setSubject(title);
-			firstComment.setBody(message);
-			firstComment.setUserId(thread.getCreatorId());
-			firstComment.setUserName(thread.getCreatorName());
-			firstComment.setDate(thread.getLastPost());
-			thread.getComments().add(firstComment);
-			thread.setSubject(title);
-
-			DiscussionThreadDAO dao = (DiscussionThreadDAO) Context.getInstance().getBean(DiscussionThreadDAO.class);
-			dao.store(thread);
-
-			return thread.getId();
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
-			return 0;
-		}
-	}
-
-	@Override
 	public void unlock(String sid, long[] docIds) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
@@ -1193,6 +1108,38 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
+		}
+	}
+
+	@Override
+	public long addNote(String sid, long docId, String message) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		try {
+			DocumentNote note = new DocumentNote();
+			note.setDocId(docId);
+			note.setUserId(SessionUtil.getSessionUser(sid).getId());
+			note.setUsername(SessionUtil.getSessionUser(sid).getFullName());
+			note.setDate(new Date());
+			note.setMessage(message);
+
+			DocumentNoteDAO dao = (DocumentNoteDAO) Context.getInstance().getBean(DocumentNoteDAO.class);
+			dao.store(note);
+
+			return note.getId();
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+			return 0;
+		}
+	}
+
+	@Override
+	public void deleteNotes(String sid, long[] ids) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		DocumentNoteDAO dao = (DocumentNoteDAO) Context.getInstance().getBean(DocumentNoteDAO.class);
+		for (long id : ids) {
+			dao.delete(id);
 		}
 	}
 }

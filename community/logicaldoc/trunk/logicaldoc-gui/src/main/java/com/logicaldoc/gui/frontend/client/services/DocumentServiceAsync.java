@@ -25,15 +25,6 @@ public interface DocumentServiceAsync {
 
 	void delete(String sid, long[] ids, AsyncCallback<Void> callback);
 
-	void deleteDiscussions(String sid, long[] ids, AsyncCallback<Void> callback);
-
-	void startDiscussion(String sid, long docId, String title, String message, AsyncCallback<Long> callback);
-
-	void replyPost(String sid, long discussionId, int replyTo, String title, String message,
-			AsyncCallback<Integer> callback);
-
-	void deletePosts(String sid, long discussionId, int[] ids, AsyncCallback<Void> callback);
-
 	void makeImmutable(String sid, long[] ids, String comment, AsyncCallback<Void> callback);
 
 	void lock(String sid, long[] ids, String comment, AsyncCallback<Void> callback);
@@ -68,4 +59,8 @@ public interface DocumentServiceAsync {
 	void getRating(String sid, long docId, AsyncCallback<GUIRating> callback);
 
 	void saveRating(String sid, GUIRating rating, AsyncCallback<Integer> callback);
+
+	void deleteNotes(String sid, long[] ids, AsyncCallback<Void> callback);
+
+	void addNote(String sid, long docId, String message, AsyncCallback<Long> callback);
 }
