@@ -74,27 +74,6 @@ public interface DocumentService extends RemoteService {
 	public void delete(String sid, long[] ids) throws InvalidSessionException;
 
 	/**
-	 * Deletes a selection of discussions
-	 */
-	public void deleteDiscussions(String sid, long[] ids) throws InvalidSessionException;
-
-	/**
-	 * Starts a new discussion on the given document
-	 */
-	public long startDiscussion(String sid, long docId, String title, String message) throws InvalidSessionException;
-
-	/**
-	 * Starts a new discussion on the given document
-	 */
-	public int replyPost(String sid, long discussionId, int replyTo, String title, String message)
-			throws InvalidSessionException;
-
-	/**
-	 * Deletes a selection of posts
-	 */
-	public void deletePosts(String sid, long discussionId, int[] postIds) throws InvalidSessionException;
-
-	/**
 	 * Makes immutable a set of documents
 	 */
 	public void makeImmutable(String sid, long[] docIds, String comment) throws InvalidSessionException;
@@ -193,4 +172,14 @@ public interface DocumentService extends RemoteService {
 	 * @return the new document rating value
 	 */
 	public int saveRating(String sid, GUIRating rating) throws InvalidSessionException;
+
+	/**
+	 * Adds a new document note on the given document
+	 */
+	public long addNote(String sid, long docId, String message) throws InvalidSessionException;
+
+	/**
+	 * Deletes a selection of document notes
+	 */
+	public void deleteNotes(String sid, long[] ids) throws InvalidSessionException;
 }

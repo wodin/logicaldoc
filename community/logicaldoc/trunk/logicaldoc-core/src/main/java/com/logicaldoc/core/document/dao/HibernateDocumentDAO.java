@@ -18,11 +18,11 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
-import com.logicaldoc.core.document.DiscussionThread;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentLink;
 import com.logicaldoc.core.document.DocumentListener;
 import com.logicaldoc.core.document.DocumentListenerManager;
+import com.logicaldoc.core.document.DocumentNote;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.security.Folder;
@@ -46,7 +46,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	private VersionDAO versionDAO;
 
-	private DiscussionThreadDAO discussionDAO;
+	private DocumentNoteDAO noteDAO;
 
 	private FolderDAO folderDAO;
 
@@ -105,10 +105,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					getHibernateTemplate().saveOrUpdate(version);
 				}
 
-				// Remove discussions
-				for (DiscussionThread discussion : discussionDAO.findByDocId(docId)) {
-					discussion.setDeleted(1);
-					getHibernateTemplate().saveOrUpdate(discussion);
+				// Remove notes
+				for (DocumentNote note : noteDAO.findByDocId(docId)) {
+					note.setDeleted(1);
+					getHibernateTemplate().saveOrUpdate(note);
 				}
 
 				// Remove links
@@ -662,8 +662,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	}
 
-	public void setDiscussionDAO(DiscussionThreadDAO discussionDAO) {
-		this.discussionDAO = discussionDAO;
+	public void setNoteDAO(DocumentNoteDAO noteDAO) {
+		this.noteDAO = noteDAO;
 	}
 
 	public void setStorer(Storer storer) {

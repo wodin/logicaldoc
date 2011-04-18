@@ -134,20 +134,6 @@
 		</property>
 	</bean>
 
-	<bean id="DiscussionThreadDAO" parent="ApplicationBaseTransactionProxy"
-		abstract="false" lazy-init="default" autowire="default"
-		dependency-check="default">
-		<property name="target">
-			<bean class="com.logicaldoc.core.document.dao.HibernateDiscussionThreadDAO"
-				abstract="false" lazy-init="default" autowire="default"
-				dependency-check="default">
-				<property name="sessionFactory">
-					<ref bean="SessionFactory" />
-				</property>
-			</bean>
-		</property>
-	</bean>
-
 	<bean id="VersionDAO" parent="ApplicationBaseTransactionProxy"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
@@ -173,8 +159,8 @@
 				<property name="sessionFactory">
 					<ref bean="SessionFactory" />
 				</property>
-				<property name="discussionDAO">
-					<ref bean="DiscussionThreadDAO" />
+				<property name="noteDAO">
+					<ref bean="DocumentNoteDAO" />
 				</property>
 				<property name="historyDAO">
 					<ref bean="HistoryDAO" />
@@ -324,6 +310,20 @@
 		dependency-check="default">
 		<property name="target">
 			<bean class="com.logicaldoc.core.document.dao.HibernateRatingDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="DocumentNoteDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean class="com.logicaldoc.core.document.dao.HibernateDocumentNoteDAO"
 				abstract="false" lazy-init="default" autowire="default"
 				dependency-check="default">
 				<property name="sessionFactory">

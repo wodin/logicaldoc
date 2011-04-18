@@ -34,7 +34,7 @@ public class UserDashboard extends PortalLayout {
 
 		refresh();
 
-		if (Feature.visible(Feature.FORUMS))
+		if (Feature.visible(Feature.NOTES))
 			addPortlet(new PostsPortlet(), 1, 2);
 
 	}

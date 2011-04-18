@@ -305,6 +305,11 @@
   	</servlet>
   	
   	<servlet>
+		<servlet-name>DocumentNotesData</servlet-name>
+		<servlet-class>com.logicaldoc.gui.common.server.MockDocumentNotesDataServlet</servlet-class>
+	</servlet>
+  	
+  	<servlet>
 		<servlet-name>AosManagersData</servlet-name>
 		<servlet-class>com.logicaldoc.gui.common.server.MockAosManagersDataServlet</servlet-class>
 	</servlet>
@@ -602,6 +607,11 @@
 	<servlet-mapping>
 		<servlet-name>DuplicatesData</servlet-name>
 		<url-pattern>/data/duplicates.xml</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>DocumentNotesData</servlet-name>
+		<url-pattern>/data/documentnotes.xml</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>
