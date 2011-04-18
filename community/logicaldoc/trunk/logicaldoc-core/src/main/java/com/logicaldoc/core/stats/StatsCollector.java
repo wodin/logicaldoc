@@ -193,7 +193,7 @@ public class StatsCollector extends Task {
 		 * Collect features statistics
 		 */
 		int bookmarks = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_bookmark");
-		int forum_posts = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_dcomment");
+		int notes = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_note");
 		int links = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_link");
 		int aliases = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_document WHERE ld_docref IS NOT NULL");
 
@@ -254,7 +254,7 @@ public class StatsCollector extends Task {
 
 			// Features usage
 			post.setParameter("bookmarks", Integer.toString(bookmarks));
-			post.setParameter("forum_posts", Integer.toString(forum_posts));
+			post.setParameter("notes", Integer.toString(notes));
 			post.setParameter("links", Integer.toString(links));
 			post.setParameter("aliases", Integer.toString(aliases));
 			post.setParameter("workflow_histories", Integer.toString(workflow_histories));
