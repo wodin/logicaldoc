@@ -203,9 +203,11 @@ public class LastChangesPanel extends VLayout {
 		return items.toArray(new SelectItem[0]);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void onSearch() {
 		histories.setData(new ListGridRecord[0]);
-		final Map<String, Object> values = vm.getValues();
+
+		final Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 		if (vm.validate()) {
 			String[] eventValues = new String[0];

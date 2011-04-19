@@ -166,7 +166,7 @@ public class WorkflowDetailsDialog extends Window {
 		for (Canvas canvas : members) {
 			form.removeMember(canvas);
 		}
-		
+
 		members = appendedDocsLayout.getMembers();
 		for (Canvas canvas : members) {
 			appendedDocsLayout.removeMember(canvas);
@@ -368,8 +368,9 @@ public class WorkflowDetailsDialog extends Window {
 				saveButton.setAlign(Alignment.LEFT);
 				saveButton.addClickHandler(new ClickHandler() {
 					@Override
+					@SuppressWarnings("unchecked")
 					public void onClick(ClickEvent event) {
-						final Map<String, Object> values = vm.getValues();
+						Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 						if ((values.get("user") == null) || values.get("user").toString().trim().isEmpty()) {
 							return;
@@ -423,8 +424,9 @@ public class WorkflowDetailsDialog extends Window {
 		startButton.setVisible((workflow.getSelectedTask().getStartDate() == null));
 		startButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
+			@SuppressWarnings("unchecked")
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				final Map<String, Object> values = vm.getValues();
+				final Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				String comment = "";
 				if (values.get("taskComment") != null) {
@@ -469,8 +471,9 @@ public class WorkflowDetailsDialog extends Window {
 		suspendButton.setVisible(workflow.getSelectedTask().getTaskState().equals("started"));
 		suspendButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
+			@SuppressWarnings("unchecked")
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				final Map<String, Object> values = vm.getValues();
+				final Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				String comment = "";
 				if (values.get("taskComment") != null) {
@@ -514,8 +517,9 @@ public class WorkflowDetailsDialog extends Window {
 		resumeButton.setVisible(workflow.getSelectedTask().getTaskState().equals("suspended"));
 		resumeButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
+			@SuppressWarnings("unchecked")
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				final Map<String, Object> values = vm.getValues();
+				final Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				String comment = "";
 				if (values.get("taskComment") != null) {
@@ -558,8 +562,9 @@ public class WorkflowDetailsDialog extends Window {
 		saveTaskStateButton.setMargin(2);
 		saveTaskStateButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
+			@SuppressWarnings("unchecked")
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				final Map<String, Object> values = vm.getValues();
+				final Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				String comment = "";
 				if (values.get("taskComment") != null) {
@@ -604,8 +609,9 @@ public class WorkflowDetailsDialog extends Window {
 				&& workflow.getSelectedTask().getOwner().trim().isEmpty());
 		takeButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
+			@SuppressWarnings("unchecked")
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				final Map<String, Object> values = vm.getValues();
+				final Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				String comment = "";
 				if (values.get("taskComment") != null) {
@@ -650,8 +656,9 @@ public class WorkflowDetailsDialog extends Window {
 				&& !workflow.getSelectedTask().getOwner().trim().isEmpty());
 		turnBackButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
+			@SuppressWarnings("unchecked")
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				final Map<String, Object> values = vm.getValues();
+				final Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				String comment = "";
 				if (values.get("taskComment") != null) {
@@ -707,8 +714,9 @@ public class WorkflowDetailsDialog extends Window {
 					transitionButton.setAutoFit(true);
 					transitionButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 						@Override
+						@SuppressWarnings("unchecked")
 						public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-							final Map<String, Object> values = vm.getValues();
+							final Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 							String comment = "";
 							if (values.get("taskComment") != null) {

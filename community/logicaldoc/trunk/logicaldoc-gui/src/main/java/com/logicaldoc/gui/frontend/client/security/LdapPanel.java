@@ -136,8 +136,9 @@ public class LdapPanel extends VLayout {
 		save.setAutoFit(true);
 		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
+			@SuppressWarnings("unchecked")
 			public void onClick(ClickEvent event) {
-				final Map<String, Object> values = vm.getValues();
+				Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				if (vm.validate()) {
 					LdapPanel.this.ldapSettings.setImplementation((String) values.get("implementation"));
@@ -176,8 +177,9 @@ public class LdapPanel extends VLayout {
 		test.setAutoFit(true);
 		test.setTitle(I18N.message("testconnection"));
 		test.addClickHandler(new ClickHandler() {
+			@SuppressWarnings("unchecked")
 			public void onClick(ClickEvent event) {
-				final Map<String, Object> values = vm.getValues();
+				Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				if (vm.validate()) {
 					LdapPanel.this.ldapSettings.setImplementation((String) values.get("implementation"));
@@ -220,23 +222,24 @@ public class LdapPanel extends VLayout {
 		activedir.setTitle(I18N.message("activedirectory"));
 		activedir.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				LD.askforValue(I18N.message("activedirectory"), I18N.message("addomain"), "", "200", new ValueCallback() {
-					@Override
-					public void execute(String value) {
-						String node = value.replaceAll("\\.", ",DC=");
-						node = "DC=" + node;
-						vm.setValue("url", "ldap://AD_SERVER:389");
-						vm.setValue("username", "CN=Administrator,CN=Users," + node);
-						vm.setValue("useridentifierattr", "CN");
-						vm.setValue("grpidentifierattr", "CN");
-						vm.setValue("logonattr", "sAMAccountName");
-						vm.setValue("userclass", "person");
-						vm.setValue("grpclass", "group");
-						vm.setValue("userclass", "person");
-						vm.setValue("usersbasenode", "CN=Users," + node);
-						vm.setValue("grpsbasenode", "CN=Builtin," + node);
-					}
-				});
+				LD.askforValue(I18N.message("activedirectory"), I18N.message("addomain"), "", "200",
+						new ValueCallback() {
+							@Override
+							public void execute(String value) {
+								String node = value.replaceAll("\\.", ",DC=");
+								node = "DC=" + node;
+								vm.setValue("url", "ldap://AD_SERVER:389");
+								vm.setValue("username", "CN=Administrator,CN=Users," + node);
+								vm.setValue("useridentifierattr", "CN");
+								vm.setValue("grpidentifierattr", "CN");
+								vm.setValue("logonattr", "sAMAccountName");
+								vm.setValue("userclass", "person");
+								vm.setValue("grpclass", "group");
+								vm.setValue("userclass", "person");
+								vm.setValue("usersbasenode", "CN=Users," + node);
+								vm.setValue("grpsbasenode", "CN=Builtin," + node);
+							}
+						});
 			}
 		});
 

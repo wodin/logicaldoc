@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
+import com.logicaldoc.gui.frontend.client.system.LastChangesPanel;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -28,28 +29,41 @@ public class ToolsMenu extends VLayout {
 	public ToolsMenu() {
 		setMargin(10);
 		setMembersMargin(5);
-
-		Button clientTools = new Button(I18N.message("clienttools"));
-		clientTools.setWidth100();
-		clientTools.setHeight(25);
+		
+		Button lastChanges = new Button(I18N.message("lastchanges"));
+		lastChanges.setWidth100();
+		lastChanges.setHeight(25);
+		if (Menu.enabled(Menu.LAST_CHANGES))
+			addMember(lastChanges);
 
 		Button duplicates = new Button(I18N.message("searchduplicates"));
 		duplicates.setWidth100();
 		duplicates.setHeight(25);
 
-		if (Feature.visible(Feature.CLIENT_TOOLS) && Menu.enabled(Menu.CLIENTS)) {
-			addMember(clientTools);
-			if (!Feature.enabled(Feature.CLIENT_TOOLS)) {
-				clientTools.setDisabled(true);
-				clientTools.setTooltip(I18N.message("featuredisabled"));
+		Button clientTools = new Button(I18N.message("clienttools"));
+		clientTools.setWidth100();
+		clientTools.setHeight(25);
+		
+		lastChanges.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new LastChangesPanel());
 			}
-		}
+		});
 
 		if (Feature.visible(Feature.DUPLICATES_DISCOVERY)) {
 			addMember(duplicates);
 			if (!Feature.enabled(Feature.DUPLICATES_DISCOVERY)) {
 				duplicates.setDisabled(true);
 				duplicates.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+		
+		if (Feature.visible(Feature.CLIENT_TOOLS) && Menu.enabled(Menu.CLIENTS)) {
+			addMember(clientTools);
+			if (!Feature.enabled(Feature.CLIENT_TOOLS)) {
+				clientTools.setDisabled(true);
+				clientTools.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
 

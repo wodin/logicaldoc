@@ -5,6 +5,9 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -12,6 +15,7 @@ import java.util.StringTokenizer;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.java.plugin.registry.PluginDescriptor;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.document.dao.HistoryDAO;
@@ -32,10 +36,12 @@ import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIScheduling;
 import com.logicaldoc.gui.common.client.beans.GUITask;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
+import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
+import com.logicaldoc.util.plugin.PluginRegistry;
 import com.logicaldoc.util.sql.SqlUtil;
 import com.logicaldoc.web.util.SessionUtil;
 
@@ -663,5 +669,43 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 		for (long id : ids) {
 			dao.delete(id);
 		}
+	}
+
+	@Override
+	public GUIValuePair[] getPlugins(String sid) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		Collection<PluginDescriptor> descriptors = PluginRegistry.getInstance().getPlugins();
+		List<GUIValuePair> plugins = new ArrayList<GUIValuePair>();
+		for (PluginDescriptor descriptor : descriptors) {
+			try {
+				GUIValuePair plugin = new GUIValuePair();
+				String pluginName = descriptor.getId();
+				if (pluginName.startsWith("logicaldoc-"))
+					pluginName = pluginName.replaceAll("logicaldoc-", "");
+				plugin.setCode(pluginName);
+				plugin.setValue(descriptor.getVersion().toString());
+				plugins.add(plugin);
+			} catch (Exception t) {
+				log.error(t.getMessage(), t);
+				throw new RuntimeException(t.getMessage(), t);
+			}
+		}
+
+		if (plugins.size() > 1) {
+			// Sort by ascending date and number
+			Collections.sort(plugins, new Comparator<GUIValuePair>() {
+				public int compare(GUIValuePair c1, GUIValuePair c2) {
+					if (c1.getCode() != null && c2.getCode() != null) {
+						int compare = c1.getCode().compareTo(c2.getCode());
+						if (compare != 0)
+							return compare;
+					}
+					return c1.getValue().compareTo(c2.getValue());
+				}
+			});
+		}
+
+		return plugins.toArray(new GUIValuePair[0]);
 	}
 }

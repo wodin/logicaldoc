@@ -195,8 +195,6 @@ public class SchedulingPanel extends VLayout {
 		restoreDefaults.setWidth(150);
 		restoreDefaults.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				final Map<String, Object> values = vm.getValues();
-
 				if (vm.validate()) {
 					SchedulingPanel.this.maxDuration.setValue("-1");
 					SchedulingPanel.this.cpuIdle.setValue(-1);
@@ -218,6 +216,7 @@ public class SchedulingPanel extends VLayout {
 		return form;
 	}
 
+	@SuppressWarnings("unchecked")
 	boolean validate() {
 		try {
 			Map<String, Object> values = (Map<String, Object>) vm.getValues();

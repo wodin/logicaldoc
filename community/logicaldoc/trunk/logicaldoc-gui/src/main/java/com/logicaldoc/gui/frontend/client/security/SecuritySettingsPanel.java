@@ -98,10 +98,11 @@ public class SecuritySettingsPanel extends VLayout {
 		IButton save = new IButton();
 		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
+			@SuppressWarnings("unchecked")
 			public void onClick(ClickEvent event) {
 				vm.validate();
 
-				final Map<String, Object> values = vm.getValues();
+				final Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				if (vm.validate()) {
 					SecuritySettingsPanel.this.settings.setPwdExpiration((Integer) values.get("pwdExp"));
