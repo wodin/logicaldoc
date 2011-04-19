@@ -90,8 +90,9 @@ public class RepositoriesPanel extends VLayout {
 		IButton save = new IButton();
 		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
+			@SuppressWarnings("unchecked")
 			public void onClick(ClickEvent event) {
-				final Map<String, Object> values = vm.getValues();
+				Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				if (vm.validate()) {
 					final GUIParameter[][] repos = new GUIParameter[2][7];

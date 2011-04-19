@@ -162,9 +162,10 @@ public class Accordion extends SectionStack {
 		supervisor.setValue(id);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> getValues() {
 		if (vm.validate()) {
-			return vm.getValues();
+			return (Map<String, Object>) vm.getValues();
 		} else
 			return null;
 	}

@@ -65,12 +65,9 @@ public class FolderDetailsPanel extends VLayout {
 
 	private Tab workflowTab = null;
 
-	private String pathExtended = "";
-
 	public FolderDetailsPanel(GUIFolder folder) {
 		super();
 		this.folder = folder;
-		this.pathExtended = folder.getPathExtended();
 		setHeight100();
 		setWidth100();
 		setMembersMargin(10);

@@ -254,11 +254,12 @@ public class WorkflowDialog extends Window {
 		startWorkflow.setTitle(I18N.message("startworkflow"));
 		startWorkflow.setDisabled(selectedWorkflow == null);
 		startWorkflow.addClickHandler(new ClickHandler() {
+			@SuppressWarnings("unchecked")
 			public void onClick(ClickEvent event) {
 				if (selectedWorkflow == null)
 					return;
 
-				final Map<String, Object> values = vm.getValues();
+				final Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				if (vm.validate()) {
 					selectedWorkflow.setDescription((String) values.get("wfldescr"));

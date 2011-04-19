@@ -555,11 +555,6 @@ public class SearchIndexingPanel extends VLayout {
 		tabSet.setTabPane(3, indexingQueueTabPanel);
 	}
 
-	private void refreshSearchEngineTab(GUISearchEngine searchEngine) {
-		fillSearchEngineTab(searchEngine);
-		tabSet.setTabPane(0, searchEngineTabPanel);
-	}
-
 	private void showIndexQueueMenu() {
 		final ListGridRecord[] selection = docsList.getSelection();
 

@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUITask;
+import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 
 /**
  * The client side stub for the System Service. This service allows the
@@ -114,19 +115,26 @@ public interface SystemService extends RemoteService {
 	 * Changes the activation status of a language
 	 */
 	public void setGUILanguageStatus(String sid, String language, boolean active) throws InvalidSessionException;
-	
+
 	/**
 	 * Marks as read a list of Feed Messages
 	 */
 	public void maskFeedMsgAsRead(String sid, long[] ids) throws InvalidSessionException;
-	
+
 	/**
 	 * Marks as not read a list of Feed Messages
 	 */
 	public void maskFeedMsgAsNotRead(String sid, long[] ids) throws InvalidSessionException;
-	
+
 	/**
 	 * Deletes a list of Feed Messages
 	 */
 	public void deleteFeedMessages(String sid, long[] ids) throws InvalidSessionException;
+
+	/**
+	 * Retrieves all plugins.
+	 * 
+	 * @param sid The current user session
+	 */
+	public GUIValuePair[] getPlugins(String sid) throws InvalidSessionException;
 }

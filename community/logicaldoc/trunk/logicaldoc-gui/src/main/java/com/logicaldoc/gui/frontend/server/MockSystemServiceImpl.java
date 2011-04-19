@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIScheduling;
 import com.logicaldoc.gui.common.client.beans.GUITask;
+import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 
@@ -356,5 +357,19 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 	@Override
 	public void deleteFeedMessages(String sid, long[] ids) throws InvalidSessionException {
 		return;
+	}
+
+	@Override
+	public GUIValuePair[] getPlugins(String sid) throws InvalidSessionException {
+		GUIValuePair[] plugins = new GUIValuePair[20];
+
+		for (int i = 0; i < plugins.length; i++) {
+			GUIValuePair task = new GUIValuePair();
+			task.setCode("Plugin" + i);
+			task.setValue("version" + i);
+			plugins[i] = task;
+		}
+
+		return plugins;
 	}
 }

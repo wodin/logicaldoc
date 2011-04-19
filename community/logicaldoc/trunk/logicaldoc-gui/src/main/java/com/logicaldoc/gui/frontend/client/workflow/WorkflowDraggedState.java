@@ -17,15 +17,12 @@ public class WorkflowDraggedState extends WorkflowState {
 
 	private GUIWFState fromState = null;
 
-	private GUIWFState targetState = null;
-
 	private GUITransition transition = null;
 
 	public WorkflowDraggedState(WorkflowDesigner designer, GUIWFState from, GUIWFState target, GUITransition trans) {
 		super(designer, target);
 
 		this.fromState = from;
-		this.targetState = target;
 		if (trans != null)
 			this.transition = trans;
 		else

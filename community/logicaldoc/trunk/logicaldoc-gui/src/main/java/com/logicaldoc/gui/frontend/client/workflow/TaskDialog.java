@@ -62,12 +62,9 @@ public class TaskDialog extends Window {
 
 	private DynamicForm buttonForm;
 
-	private WorkflowDesigner workflowDesigner = null;
-
 	public TaskDialog(WorkflowDesigner designer, GUIWorkflow wfl, GUIWFState wfState) {
 		this.workflow = wfl;
 		this.task = wfState;
-		this.workflowDesigner = designer;
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("editworkflowstate", I18N.message("task")));
@@ -247,8 +244,9 @@ public class TaskDialog extends Window {
 		ButtonItem saveItem = new ButtonItem("save", I18N.message("save"));
 		saveItem.setAutoFit(true);
 		saveItem.addClickHandler(new ClickHandler() {
+			@SuppressWarnings("unchecked")
 			public void onClick(ClickEvent event) {
-				final Map<String, Object> values = vm.getValues();
+				Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				if (vm.validate()) {
 					TaskDialog.this.task.setName((String) values.get("taskName"));
