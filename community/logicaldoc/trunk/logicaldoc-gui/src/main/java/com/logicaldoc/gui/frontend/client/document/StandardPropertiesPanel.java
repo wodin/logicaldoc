@@ -31,7 +31,10 @@ import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.fields.events.FocusEvent;
+import com.smartgwt.client.widgets.form.fields.events.FocusHandler;
 import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.KeyDownEvent;
@@ -59,7 +62,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 	private ValuesManager vm = new ValuesManager();
 
 	private Canvas path;
-	
+
 	protected DocumentObserver observer;
 
 	public StandardPropertiesPanel(GUIDocument document, ChangedHandler changedHandler, DocumentObserver observer) {
@@ -185,11 +188,35 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		if (Feature.enabled(Feature.TAGS)) {
 			final ComboBoxItem tagItem = new ComboBoxItem("tag");
 			tagItem.setTitle(I18N.message("tag"));
+			tagItem.addFocusHandler(new FocusHandler() {
+				@Override
+				public void onFocus(FocusEvent event) {
+					if (event.getItem().getValue() != null) {
+						String value = event.getItem().getValue() + "";
+						event.getItem().clearValue();
+						event.getItem().setValue(value);
+					}
+				}
+			});
 			tagItem.setHint(I18N.message("pressentertoaddtag"));
 			tagItem.setHintStyle("hint");
 			tagItem.setPickListWidth(250);
+			tagItem.setHideEmptyPickList(true);
 			tagItem.setOptionDataSource(new TagsDS(null));
 			tagItem.setDisabled(!update);
+
+			tagItem.addChangedHandler(new ChangedHandler() {
+				@Override
+				public void onChanged(ChangedEvent event) {
+					if (event.getItem().getSelectedRecord() != null) {
+						document.addTag(event.getItem().getSelectedRecord().getAttribute("word"));
+						tagItem.clearValue();
+						changedHandler.onChanged(null);
+						refresh();
+					}
+				}
+			});
+
 			tagItem.addKeyDownHandler(new KeyDownHandler() {
 				@Override
 				public void onKeyDown(KeyDownEvent event) {
