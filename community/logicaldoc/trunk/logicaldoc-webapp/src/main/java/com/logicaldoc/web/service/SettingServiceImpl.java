@@ -202,32 +202,29 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
-		GUIParameter[][] repos = new GUIParameter[2][7];
+		// Collect the directories
+		GUIParameter[] dirs = new GUIParameter[7];
+		dirs[0] = new GUIParameter("dbdir", conf.getProperty("conf.dbdir"));
+		dirs[1] = new GUIParameter("exportdir", conf.getProperty("conf.exportdir"));
+		dirs[2] = new GUIParameter("importdir", conf.getProperty("conf.importdir"));
+		dirs[3] = new GUIParameter("indexdir", conf.getProperty("conf.indexdir"));
+		dirs[4] = new GUIParameter("logdir", conf.getProperty("conf.logdir"));
+		dirs[5] = new GUIParameter("plugindir", conf.getProperty("conf.plugindir"));
+		dirs[6] = new GUIParameter("userdir", conf.getProperty("conf.userdir"));
 
-		// In the first array insert the folders
-		repos[0][0] = new GUIParameter("dbdir", conf.getProperty("conf.dbdir"));
-		repos[0][1] = new GUIParameter("exportdir", conf.getProperty("conf.exportdir"));
-		repos[0][2] = new GUIParameter("importdir", conf.getProperty("conf.importdir"));
-		repos[0][3] = new GUIParameter("indexdir", conf.getProperty("conf.indexdir"));
-		repos[0][4] = new GUIParameter("logdir", conf.getProperty("conf.logdir"));
-		repos[0][5] = new GUIParameter("plugindir", conf.getProperty("conf.plugindir"));
-		repos[0][6] = new GUIParameter("userdir", conf.getProperty("conf.userdir"));
-
-		// In the second array insert the available stores
-		int i = 0;
+		// Prepare the stores
+		List<GUIParameter> tmp = new ArrayList<GUIParameter>();
 		for (Object key : conf.keySet()) {
 			String name = key.toString();
-			if (name.startsWith("store.")) {
-				String buf = name.substring(6);
-				try {
-					// Check if it is in the form of store.N
-					Integer.parseInt(buf);
-					repos[1][i] = new GUIParameter(name, conf.getProperty(name));
-					i++;
-				} catch (NumberFormatException e) {
-				}
-			}
+			if (name.startsWith("store."))
+				tmp.add(new GUIParameter(name, conf.getProperty(name)));
 		}
+
+		GUIParameter[][] repos = new GUIParameter[2][Math.max(dirs.length, tmp.size())];
+		// In the first array insert the folders
+		repos[0] = dirs;
+		// In the second array insert the stores configuration
+		repos[1] = tmp.toArray(new GUIParameter[0]);
 
 		return repos;
 	}

@@ -50,11 +50,13 @@ public class StoragesPanel extends VLayout {
 
 	private DynamicForm storesForm = null;
 
-	private GUIParameter[] storagesParameter = null;
+	private GUIParameter[] parameters = null;
 
-	private String selectedItem = "";
+	private String selectedWriteTo = "";
 
-	private RadioGroupItem style = null;
+	private RadioGroupItem writeTo = null;
+
+	private RadioGroupItem compression = null;
 
 	private IButton addStorageButton = null;
 
@@ -62,25 +64,25 @@ public class StoragesPanel extends VLayout {
 
 	private List<TextItem> storeItems = null;
 
-	private DynamicForm radioForm = null;
+	private DynamicForm optionsForm = null;
 
 	private LinkedHashMap<String, String> storagesMap = null;
 
 	private LinkedHashMap<String, String> sizesMap = null;
 
-	public StoragesPanel(GUIParameter[] storagesParam, ValuesManager valueManager) {
-		this.storagesParameter = storagesParam;
+	public StoragesPanel(GUIParameter[] params, ValuesManager valueManager) {
+		this.parameters = params;
 		this.vm = valueManager;
 
 		setMembersMargin(5);
 		setMargin(10);
 
-		for (GUIParameter param : this.storagesParameter) {
+		for (GUIParameter param : this.parameters) {
 			if (param == null)
 				continue;
 
-			if (param.getName().endsWith("write")) {
-				selectedItem = "store." + param.getValue() + ".dir";
+			if (param.getName().equals("store.write")) {
+				selectedWriteTo = "store." + param.getValue() + ".dir";
 			}
 		}
 
@@ -91,7 +93,7 @@ public class StoragesPanel extends VLayout {
 		addStorageButton.setAutoFit(true);
 		addStorageButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				reloadStorages(storagesParameter, selectedItem, true);
+				reloadStorages(parameters, selectedWriteTo, true);
 			}
 		});
 
@@ -105,7 +107,7 @@ public class StoragesPanel extends VLayout {
 		computeSizeButton.setAutoFit(true);
 		computeSizeButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				computeStoragesSize(storagesParameter, selectedItem);
+				computeStoragesSize(parameters, selectedWriteTo);
 			}
 		});
 
@@ -118,7 +120,7 @@ public class StoragesPanel extends VLayout {
 		storeItems = new ArrayList<TextItem>();
 		storagesMap = new LinkedHashMap<String, String>();
 		int i = 1;
-		List<GUIParameter> storages = Arrays.asList(storagesParameter);
+		List<GUIParameter> storages = Arrays.asList(parameters);
 		Collections.sort(storages, new Comparator<GUIParameter>() {
 			@Override
 			public int compare(GUIParameter o1, GUIParameter o2) {
@@ -132,7 +134,7 @@ public class StoragesPanel extends VLayout {
 			if (f == null || f.getValue().trim().isEmpty())
 				continue;
 
-			if (!f.getName().endsWith("write")) {
+			if (!f.getName().endsWith("write") && !f.getName().endsWith("compress")) {
 				TextItem item = ItemFactory.newTextItem(f.getName(), "Storage " + i, f.getValue());
 				item.setRequired(true);
 				item.setWidth(250);
@@ -143,29 +145,44 @@ public class StoragesPanel extends VLayout {
 			}
 		}
 
-		reloadStorages(this.storagesParameter, selectedItem, false);
+		reloadStorages(this.parameters, selectedWriteTo, false);
 	}
 
-	private void reloadStorages(GUIParameter[] repos, String selectedItemName, boolean addStorage) {
-		if (radioForm != null) {
-			removeMember(radioForm);
+	private void reloadStorages(GUIParameter[] params, String selectedItemName, boolean addStorage) {
+		if (optionsForm != null) {
+			removeMember(optionsForm);
 			removeMember(storesForm);
-			radioForm.destroy();
+			optionsForm.destroy();
 			storesForm.destroy();
 		}
 
-		radioForm = new DynamicForm();
-		radioForm.setWidth(300);
-		radioForm.setColWidths(1, "*");
-		radioForm.setValuesManager(vm);
-		radioForm.setTitleOrientation(TitleOrientation.LEFT);
+		optionsForm = new DynamicForm();
+		optionsForm.setWidth(300);
+		optionsForm.setColWidths(1, "*");
+		optionsForm.setValuesManager(vm);
+		optionsForm.setTitleOrientation(TitleOrientation.LEFT);
+		addMember(optionsForm, 1);
 
-		style = new RadioGroupItem("radio", I18N.message("writeto"));
-		style.setVertical(false);
-		style.setShowTitle(true);
-		style.setWrap(false);
-		style.setWrapTitle(false);
-		addMember(radioForm, 1);
+		writeTo = new RadioGroupItem("writeto", I18N.message("writeto"));
+		writeTo.setVertical(false);
+		writeTo.setShowTitle(true);
+		writeTo.setWrap(false);
+		writeTo.setWrapTitle(false);
+
+		compression = ItemFactory.newYesNoItem("compression", "compression");
+		if (!Feature.enabled(Feature.COMPRESSED_REPO)) {
+			compression.setDisabled(true);
+			compression.setTooltip(I18N.message("featuredisabled"));
+		}
+
+		// Initialize the radio button
+		for (GUIParameter p : params) {
+			if (p == null)
+				continue;
+			
+			if ("store.compress".equals(p.getName()))
+				compression.setValue(p.getValue());
+		}
 
 		storesForm = new DynamicForm();
 		storesForm.setWidth(350);
@@ -188,9 +205,13 @@ public class StoragesPanel extends VLayout {
 			storagesMap.put("store." + (newStoreItems.size()) + ".dir", "Storage " + (newStoreItems.size()));
 		}
 
-		style.setDefaultValue(selectedItem);
-		style.setValueMap(storagesMap);
-		radioForm.setItems(style);
+		writeTo.setDefaultValue(selectedWriteTo);
+		writeTo.setValueMap(storagesMap);
+
+		if (Feature.visible(Feature.COMPRESSED_REPO))
+			optionsForm.setItems(writeTo, compression);
+		else
+			optionsForm.setItems(writeTo);
 
 		storeItems = new ArrayList<TextItem>();
 		for (TextItem textItem : newStoreItems) {

@@ -701,4 +701,23 @@ public class ItemFactory {
 		FloatItem item = newFloatItem(itemName, label, value);
 		return item;
 	}
+
+	/**
+	 * Simple yes/no radio button. yes=true, no=false 
+	 */
+	public static RadioGroupItem newYesNoItem(String name, String label) {
+		RadioGroupItem item = new RadioGroupItem(name, I18N.message(label));
+		item.setVertical(false);
+		item.setShowTitle(true);
+		item.setWrap(false);
+		item.setWrapTitle(false);
+		
+		LinkedHashMap<String, String> values=new LinkedHashMap<String, String>();
+		values.put("true", I18N.message("yes"));
+		values.put("false", I18N.message("no"));
+		item.setValueMap(values);
+		item.setValue("true");
+		
+		return item;
+	}
 }
