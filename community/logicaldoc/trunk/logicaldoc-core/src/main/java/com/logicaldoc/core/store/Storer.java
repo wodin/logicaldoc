@@ -89,20 +89,20 @@ public interface Storer {
 	 * Computed the size of a specific resource.
 	 * 
 	 * @param docId The document's identifier
-	 * @param resourceName The resource
+	 * @param resource The resource
 	 * 
 	 * @return the size in bytes
 	 */
-	public long size(long docId, String resourceName);
+	public long size(long docId, String resource);
 
 	/**
 	 * Checks if the passed resource exists in the document's container
 	 * 
 	 * @param docId ID of the document
-	 * @param resourceName Name of the resource
+	 * @param resource Name of the resource
 	 * @return true only if the resource already exists
 	 */
-	public boolean exists(long docId, String resourceName);
+	public boolean exists(long docId, String resource);
 
 	/**
 	 * Writes the specified resource in a file

@@ -99,6 +99,8 @@ public class Feature {
 	
 	public static final int DUPLICATES_DISCOVERY = 66;
 	
+	public static final int COMPRESSED_REPO = 67;
+	
 	private static Set<String> features = new HashSet<String>();
 
 	static public void init(GUIInfo info) {

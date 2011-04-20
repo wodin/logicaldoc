@@ -92,7 +92,7 @@ public class RepositoriesPanel extends VLayout {
 		save.addClickHandler(new ClickHandler() {
 			@SuppressWarnings("unchecked")
 			public void onClick(ClickEvent event) {
-				Map<String, Object> values = (Map<String, Object>) vm.getValues();
+				final Map<String, Object> values = vm.getValues();
 
 				if (vm.validate()) {
 					final GUIParameter[][] repos = new GUIParameter[2][7];
@@ -105,7 +105,7 @@ public class RepositoriesPanel extends VLayout {
 						repo = new GUIParameter(name, (String) values.get(name));
 						if (name.startsWith("store")) {
 							storages.add(repo);
-						} else if (name.equals("radio")) {
+						} else if (name.equals("writeto")) {
 							String storeSelected = (String) values.get(name);
 							storeSelected = storeSelected.replaceAll(".dir", "");
 							repo = new GUIParameter("store.write", storeSelected.substring(storeSelected

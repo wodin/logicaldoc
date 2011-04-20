@@ -201,8 +201,8 @@ public class FSStorer implements Storer {
 	}
 
 	@Override
-	public void delete(long docId, String resourceName) {
-		File file = new File(getContainer(docId), resourceName);
+	public void delete(long docId, String resource) {
+		File file = new File(getContainer(docId), resource);
 		if (file.exists())
 			try {
 				FileUtils.forceDelete(file);
@@ -233,9 +233,9 @@ public class FSStorer implements Storer {
 	}
 
 	@Override
-	public long size(long docId, String resourceName) {
+	public long size(long docId, String resource) {
 		File file = getContainer(docId);
-		file = new File(file, resourceName);
+		file = new File(file, resource);
 		return file.length();
 	}
 
