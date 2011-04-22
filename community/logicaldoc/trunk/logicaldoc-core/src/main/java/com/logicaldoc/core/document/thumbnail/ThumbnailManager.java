@@ -107,7 +107,6 @@ public class ThumbnailManager {
 			resource = storer.getResourceName(document.getId(), fver, "thumb.jpg");
 			storer.store(dest, document.getId(), resource);
 		} catch (Exception e) {
-			e.printStackTrace();
 			log.warn("Error creating thumbnail for document: " + document.getTitle());
 		} finally {
 			// Delete temporary resources
