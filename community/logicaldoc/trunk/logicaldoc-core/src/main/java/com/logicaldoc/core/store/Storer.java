@@ -46,14 +46,6 @@ public interface Storer {
 	public void delete(long docId, String resource);
 
 	/**
-	 * Finds the container where all document's files are stored
-	 * 
-	 * @param docId The document identifier
-	 * @return The document's container
-	 */
-	public File getContainer(long docId);
-
-	/**
 	 * Computes the resource name inside the container
 	 * 
 	 * @param doc The document representation
