@@ -90,14 +90,15 @@ public class ThumbnailManager {
 		}
 
 		// Prepare I/O files
-		File src = File.createTempFile("", "orig");
-		File dest = File.createTempFile("", "thumb.jpg");
+		File src = File.createTempFile("scr", "orig");
+		File dest = File.createTempFile("dest", "thumb.jpg");
 
 		try {
 			String fver = fileVersion;
 			if (fver == null)
 				fver = document.getFileVersion();
 			String resource = storer.getResourceName(document.getId(), fver, null);
+			storer.writeTo(document.getId(), resource, src);
 
 			// Perform the elaboration
 			builder.build(src, document.getFileName(), size, dest, scaleAlgorithm, quality);
@@ -106,6 +107,7 @@ public class ThumbnailManager {
 			resource = storer.getResourceName(document.getId(), fver, "thumb.jpg");
 			storer.store(dest, document.getId(), resource);
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.warn("Error creating thumbnail for document: " + document.getTitle());
 		} finally {
 			// Delete temporary resources
