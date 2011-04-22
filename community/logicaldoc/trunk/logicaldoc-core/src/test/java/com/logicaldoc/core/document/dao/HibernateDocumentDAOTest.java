@@ -201,7 +201,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		doc.setVersion("1.0");
 
 		// Prepare the document file for digest computation
-		File docFile = storer.getContainer(1L);
+		File docFile = new File("target");
+		docFile = new File(docFile, "store");
 		docFile = new File(docFile, doc.getFileVersion());
 		FileUtils.forceMkdir(docFile.getParentFile());
 		Writer out = new FileWriter(docFile);
@@ -244,7 +245,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		transaction.setUserId(1);
 		transaction.setNotified(0);
 
-		docFile = storer.getContainer(doc.getId());
+		docFile = new File("target");
+		docFile = new File(docFile, "store");
 		docFile = new File(docFile, doc.getFileVersion());
 		FileUtils.forceMkdir(docFile.getParentFile());
 		out = new FileWriter(docFile);

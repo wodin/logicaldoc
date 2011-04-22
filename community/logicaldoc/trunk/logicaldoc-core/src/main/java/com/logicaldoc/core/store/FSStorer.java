@@ -64,7 +64,12 @@ public class FSStorer implements Storer {
 		}
 	}
 
-	@Override
+	/**
+	 * Finds the container where all document's files are stored
+	 * 
+	 * @param docId The document identifier
+	 * @return The document's container
+	 */
 	public File getContainer(long docId) {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document document = docDao.findById(docId);
