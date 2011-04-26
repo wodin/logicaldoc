@@ -84,29 +84,6 @@ public class TagCloud extends VLayout {
 		tcloud += "</tags>";
 		tcloud = "tcolor=0x111111&tcolor2=0x336699&hicolor=0x&tspeed=100&distr=true&mode=both&tagcloud=" + tcloud;
 
-		// String tmp =
-		// "<div align=\"center\"><object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" width=\""
-		// + (getWidth() - 40) + "\" height=\"" + (getHeight() - 40) +
-		// "\" align=\"middle\">\n";
-		// tmp += " <param name=\"allowScriptAccess\" value=\"always\" />\n";
-		// tmp += " <param name=\"allowFullScreen\" value=\"false\" />\n";
-		// tmp += " <param name=\"movie\" value=\"flash/tagcloud.swf\" />\n";
-		// tmp += " <param name=\"quality\" value=\"high\" />\n";
-		// tmp += " <param name=\"bgcolor\" value=\"#ffffff\" />\n";
-		// tmp += " <param name=\"wmode\" value=\"transparent\" />\n";
-		// tmp +=
-		// " <param name=\"flashvars\" value=\"tcolor=0x111111&tcolor2=0x336699&hicolor=0x&tspeed=100&distr=true&mode=both&tagcloud="
-		// + tcloud + "\" />";
-		// tmp +=
-		// "	<embed type=\"application/x-shockwave-flash\" src=\"flash/tagcloud.swf\" height=\""
-		// + (getHeight() - 40)
-		// + "\" width=\""
-		// + (getWidth() - 40)
-		// +
-		// "\" id=\"tagcloud\" name=\"tagcloud\" bgcolor=\"#ffffff\" quality=\"high\" flashvars=\"tcolor=0x333333&mode=tags&distr=true&tspeed=100&tagcloud="
-		// + tcloud + "\" />";
-		// tmp += "</object></div>\n";
-
 		if (container != null)
 			removeMember(container);
 		container = new VLayout();
