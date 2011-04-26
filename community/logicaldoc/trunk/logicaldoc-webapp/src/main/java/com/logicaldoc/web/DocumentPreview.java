@@ -50,7 +50,7 @@ public class DocumentPreview extends HttpServlet {
 
 	private static String EXTS_AVAILABLE = "gif, png, pdf, jpeg, jpg, tiff, tif";
 
-	public static String IMG2PDF = "img2swf";
+	public static String IMG2PDF = "img2pdf";
 
 	protected static Log log = LogFactory.getLog(DocumentPreview.class);
 
