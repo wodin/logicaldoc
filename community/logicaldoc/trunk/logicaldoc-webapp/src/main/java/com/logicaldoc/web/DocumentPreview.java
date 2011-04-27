@@ -46,11 +46,11 @@ public class DocumentPreview extends HttpServlet {
 
 	private static final long serialVersionUID = -6956612970433309888L;
 
-	private static String PDF2SWF = "pdf2swf";
+	private static String PDF2SWF = "command.pdf2swf";
 
 	private static String EXTS_AVAILABLE = "gif, png, pdf, jpeg, jpg, tiff, tif";
 
-	public static String IMG2PDF = "img2pdf";
+	public static String IMG2PDF = "command.convert";
 
 	protected static Log log = LogFactory.getLog(DocumentPreview.class);
 
@@ -233,39 +233,28 @@ public class DocumentPreview extends HttpServlet {
 	private void convert2swf(File input, File output) throws IOException {
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		String[] cmd = composeCmd(conf.getProperty(PDF2SWF), input, output);
-		// log.debug("Command: {}", Arrays.toString(cmd));
-		// System.out.println(Arrays.toString(cmd));
 		BufferedReader stdout = null;
-		String line;
-
+		Process process = null;
 		try {
 			ProcessBuilder pb = new ProcessBuilder(cmd);
-			Process process = pb.start();
+			process = pb.start();
 			stdout = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-			while ((line = stdout.readLine()) != null) {
-				// log.debug("STDOUT: {}", line);
+			while (stdout.readLine() != null) {
+				// Do nothing
 			}
 
 			process.waitFor();
 
 			// Check return code
-			if (process.exitValue() != 0) {
-				// log.warn("Abnormal program termination: {}" +
-				// process.exitValue());
-				// log.warn("STDERR: {}",
-				// IOUtils.toString(process.getErrorStream()));
-			} else {
-				// log.debug("Normal program termination");
-			}
-
-			process.destroy();
-			// log.debug("Elapse pdf2swf time: {}",
-			// FormatUtil.formatSeconds(System.currentTimeMillis() - start));
+			if (process.exitValue() != 0)
+				throw new Exception("Conversion exited with error code " + process.exitValue());
 		} catch (Throwable e) {
 			output.delete();
 			log.error("Error in PDF to SWF conversion", e);
 		} finally {
+			if (process != null)
+				process.destroy();
 			IOUtils.closeQuietly(stdout);
 		}
 	}
