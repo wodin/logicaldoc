@@ -42,15 +42,16 @@ public class DocumentPreview extends HttpServlet {
 
 	public static final String DOC_ID = "docId";
 
-	private static final String FILE_VERSION = "fileVersion";
+	protected static final String FILE_VERSION = "fileVersion";
 
-	private static final long serialVersionUID = -6956612970433309888L;
+	protected static final long serialVersionUID = -6956612970433309888L;
 
-	private static String PDF2SWF = "command.pdf2swf";
+	protected static String PDF2SWF = "command.pdf2swf";
 
-	private static String EXTS_AVAILABLE = "gif, png, pdf, jpeg, jpg, tiff, tif";
+	protected static String IMG2PDF = "command.convert";
 
-	public static String IMG2PDF = "command.convert";
+	/** For these extensions we are able to directly convert to SWF */
+	protected String SWF_DIRECT_CONVERSION_EXTS = "gif, png, pdf, jpeg, jpg, tiff, tif";
 
 	protected static Log log = LogFactory.getLog(DocumentPreview.class);
 
@@ -76,7 +77,7 @@ public class DocumentPreview extends HttpServlet {
 		String fileVersion = request.getParameter(FILE_VERSION);
 
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
-		File swfFile = File.createTempFile("LDOC", ".swf");
+		File swfFile = File.createTempFile("preview", ".swf");
 		InputStream is = null;
 		File tmpFile = null;
 
@@ -86,8 +87,9 @@ public class DocumentPreview extends HttpServlet {
 			Document doc = docDao.findById(docId);
 			String docExtension = FilenameUtils.getExtension(doc.getFileName());
 			String res = "";
+			tmpFile = File.createTempFile("preview", "");
 			InputStream docInput = null;
-			if (!EXTS_AVAILABLE.contains(docExtension)) {
+			if (!SWF_DIRECT_CONVERSION_EXTS.contains(docExtension)) {
 				res = storer.getResourceName(doc, fileVersion, "thumb.jpg");
 				docInput = storer.getStream(docId, res);
 
@@ -102,11 +104,9 @@ public class DocumentPreview extends HttpServlet {
 					}
 					docInput = storer.getStream(doc.getId(), res);
 				}
-				tmpFile = File.createTempFile("LDOC", ".jpg");
 			} else {
 				res = storer.getResourceName(doc, fileVersion, null);
 				docInput = storer.getStream(doc.getId(), res);
-				tmpFile = File.createTempFile("LDOC", "." + docExtension);
 			}
 
 			if (docInput == null) {
@@ -117,9 +117,9 @@ public class DocumentPreview extends HttpServlet {
 
 			if (docExtension.equals("pdf")) {
 				FileUtil.writeFile(docInput, tmpFile.getPath());
-				convert2swf(tmpFile, swfFile);
+				pdf2swf(tmpFile, swfFile);
 			} else {
-				convertImageToPdf(swfFile, docExtension, docInput);
+				img2pdf(swfFile, docExtension, docInput);
 			}
 
 			is = new FileInputStream(swfFile);
@@ -143,13 +143,13 @@ public class DocumentPreview extends HttpServlet {
 	 * @param docInput
 	 * @throws IOException
 	 */
-	protected void convertImageToPdf(File swfCache, String docExtension, InputStream docInput) throws IOException {
+	protected void img2pdf(File swfCache, String docExtension, InputStream docInput) throws IOException {
 		File tmpPdf = File.createTempFile("tmpPdf", ".pdf");
 		img2pdf(docInput, docExtension, tmpPdf);
-		convert2swf(tmpPdf, swfCache);
+		pdf2swf(tmpPdf, swfCache);
 	}
 
-	private void forwardPreviewNotAvailable(HttpServletRequest request, HttpServletResponse response) {
+	protected void forwardPreviewNotAvailable(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			RequestDispatcher rd = request.getRequestDispatcher("/skin/images/preview_na.gif");
 			rd.forward(request, response);
@@ -191,7 +191,7 @@ public class DocumentPreview extends HttpServlet {
 	/**
 	 * Convert IMG to PDF (for document preview feature).
 	 */
-	private void img2pdf(InputStream is, String mimeType, File output) throws IOException {
+	protected void img2pdf(InputStream is, String mimeType, File output) throws IOException {
 		File tmp = File.createTempFile("LDOC", mimeType);
 		String inputFile = tmp.getPath() + "[0]";
 		FileOutputStream fos = null;
@@ -228,9 +228,9 @@ public class DocumentPreview extends HttpServlet {
 	}
 
 	/**
-	 * Convert to SWF (for document preview feature).
+	 * Convert a PDF to SWF (for document preview feature).
 	 */
-	private void convert2swf(File input, File output) throws IOException {
+	protected void pdf2swf(File input, File output) throws IOException {
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		String[] cmd = composeCmd(conf.getProperty(PDF2SWF), input, output);
 		BufferedReader stdout = null;
@@ -262,7 +262,7 @@ public class DocumentPreview extends HttpServlet {
 	/**
 	 * Composes the correct command to be executed.
 	 */
-	private String[] composeCmd(String command, File input, File output) {
+	protected String[] composeCmd(String command, File input, File output) {
 		String standardCmd[] = { command, "-T 9", input.getPath(), "-o", output.getPath() };
 		String imgCmd[] = { command, "-T 9 -q 30", input.getPath(), "-o", output.getPath() };
 		if (command.endsWith("convert"))
