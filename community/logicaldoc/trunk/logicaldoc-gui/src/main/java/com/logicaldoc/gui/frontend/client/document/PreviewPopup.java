@@ -123,7 +123,7 @@ public class PreviewPopup extends Window {
 	private void reloadImage(long docId, boolean printEnabled, String language) {
 		image = new HTMLFlow();
 		String url = GWT.getHostPageBaseURL() + "thumbnail?sid=" + Session.get().getSid() + "%26docId=" + docId;
-		String tmp = Util.flashPreview("FlexPaperViewer.swf", (getWidth() - 26), (getHeight() - 40), "SwfFile=" + url,
+		String tmp = Util.flashPreview("flexpaperviewer.swf", (getWidth() - 26), (getHeight() - 40), "SwfFile=" + url,
 				printEnabled, getPreviewLanguage(language));
 		image.setContents(tmp);
 		layout.addMember(image);
