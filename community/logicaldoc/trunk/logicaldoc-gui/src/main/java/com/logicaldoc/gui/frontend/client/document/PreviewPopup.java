@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
-import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -59,15 +58,11 @@ public class PreviewPopup extends Window {
 		layout.setTop(20);
 		layout.setMargin(5);
 
-		String f = filename.toLowerCase();
+		retrieveUserInfo();
 
-		if ((Util.isImageFile(filename) || f.endsWith(".pdf")) && (Feature.enabled(Feature.PREVIEW))) {
-			retrieveUserInfo();
-			reloadImage(id, printEnabled, language);
-		} else if (Util.isMediaFile(filename)) {
+		if (Util.isMediaFile(filename.toLowerCase())) {
 			reloadMedia(id, filename);
-		} else if (Feature.enabled(Feature.PREVIEW)) {
-			retrieveUserInfo();
+		} else {
 			reloadImage(id, printEnabled, language);
 		}
 
@@ -122,7 +117,8 @@ public class PreviewPopup extends Window {
 	 */
 	private void reloadImage(long docId, boolean printEnabled, String language) {
 		image = new HTMLFlow();
-		String url = GWT.getHostPageBaseURL() + "thumbnail?sid=" + Session.get().getSid() + "%26docId=" + docId;
+		String url = GWT.getHostPageBaseURL() + "thumbnail?sid=" + Session.get().getSid() + "%26docId=" + docId
+				+ "%26suffix=preview.swf";
 		String tmp = Util.flashPreview("flexpaperviewer.swf", (getWidth() - 26), (getHeight() - 40), "SwfFile=" + url,
 				printEnabled, getPreviewLanguage(language));
 		image.setContents(tmp);
