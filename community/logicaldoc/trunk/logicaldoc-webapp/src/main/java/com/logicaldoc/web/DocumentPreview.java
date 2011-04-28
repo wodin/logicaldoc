@@ -158,12 +158,12 @@ public class DocumentPreview extends HttpServlet {
 				if (SWF_DIRECT_CONVERSION_EXTS.contains(docExtension)) {
 					// Perform a direct conversion using the document's file
 					is = storer.getStream(doc.getId(), storer.getResourceName(doc, fileVersion, null));
-					img2swf(tmp, docExtension, is);
+					document2swf(tmp, docExtension, is);
 				} else {
 					// Retrieve the previously computed thumbnail
 					is = storer.getStream(doc.getId(), thumbResource);
 					// Convert the thumbnail to SWF
-					img2swf(tmp, "jpg", is);
+					document2swf(tmp, "jpg", is);
 				}
 
 				storer.store(tmp, doc.getId(), resource);
@@ -226,7 +226,7 @@ public class DocumentPreview extends HttpServlet {
 	 * Convert a generic document(image or PDF) to SWF (for document preview
 	 * feature).
 	 */
-	protected void img2swf(File swfCache, String extension, InputStream docInput) throws IOException {
+	protected void document2swf(File swfCache, String extension, InputStream docInput) throws IOException {
 		File tmpPdf = null;
 		try {
 			tmpPdf = File.createTempFile("preview", ".pdf");
