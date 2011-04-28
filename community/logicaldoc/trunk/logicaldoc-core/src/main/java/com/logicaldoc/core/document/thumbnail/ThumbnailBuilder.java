@@ -23,5 +23,5 @@ public interface ThumbnailBuilder {
 	 * @param compressionQuality JPEG compression quality(0..1, 1 is maximum quality)
 	 * @throws IOException
 	 */
-	public void build(File src, String srcFileName,int size, File dest, int scaleAlgorithm, float compressionQuality) throws IOException;
+	public void build(File src, String srcFileName, int size, File dest, int scaleAlgorithm, float compressionQuality) throws IOException;
 }

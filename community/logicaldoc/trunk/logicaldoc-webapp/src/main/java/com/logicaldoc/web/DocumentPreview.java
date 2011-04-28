@@ -2,7 +2,6 @@ package com.logicaldoc.web;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -29,22 +29,28 @@ import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
 import com.logicaldoc.util.config.ContextProperties;
-import com.logicaldoc.util.io.FileUtil;
+import com.logicaldoc.web.util.SessionUtil;
 
 /**
  * This servlet is responsible for document preview. It searches for the
- * attribute docId in any scope and extracts the proper document's content.
+ * attribute docId in any scope and extracts the proper document's content. You
+ * may specify the suffix to download the thumbnail or the flash.
  * 
  * @author Alessandro Gasparini - Logical Objects
  * @since 4.5
  */
 public class DocumentPreview extends HttpServlet {
 
+	/** Format can be thumb.jpg or preview.swf */
+	protected static final String SUFFIX = "suffix";
+
 	public static final String DOC_ID = "docId";
 
-	protected static final String FILE_VERSION = "fileVersion";
+	private static final String FILE_VERSION = "fileVersion";
 
-	protected static final long serialVersionUID = -6956612970433309888L;
+	private static final long serialVersionUID = -6956612970433309888L;
+
+	protected static Log log = LogFactory.getLog(DocumentPreview.class);
 
 	protected static String PDF2SWF = "command.pdf2swf";
 
@@ -52,8 +58,6 @@ public class DocumentPreview extends HttpServlet {
 
 	/** For these extensions we are able to directly convert to SWF */
 	protected String SWF_DIRECT_CONVERSION_EXTS = "gif, png, pdf, jpeg, jpg, tiff, tif";
-
-	protected static Log log = LogFactory.getLog(DocumentPreview.class);
 
 	/**
 	 * Constructor of the object.
@@ -75,78 +79,108 @@ public class DocumentPreview extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String id = request.getParameter(DOC_ID);
 		String fileVersion = request.getParameter(FILE_VERSION);
+		String suffix = request.getParameter(SUFFIX);
 
-		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
-		File swfFile = File.createTempFile("preview", ".swf");
-		InputStream is = null;
-		File tmpFile = null;
-
+		InputStream stream = null;
 		try {
+			Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+
+			// 1) check if the document exists
 			long docId = Long.parseLong(id);
+			if (StringUtils.isEmpty(suffix))
+				suffix = "thumb.jpg";
 			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 			Document doc = docDao.findById(docId);
-			String docExtension = FilenameUtils.getExtension(doc.getFileName());
-			String res = "";
-			tmpFile = File.createTempFile("preview", "");
-			InputStream docInput = null;
-			if (!SWF_DIRECT_CONVERSION_EXTS.contains(docExtension)) {
-				res = storer.getResourceName(doc, fileVersion, "thumb.jpg");
-				docInput = storer.getStream(docId, res);
+			if (StringUtils.isEmpty(fileVersion))
+				fileVersion = doc.getFileVersion();
 
-				// the thumbnail doesn't exist, create it
-				if (docInput == null) {
-					ThumbnailManager thumbManaher = (ThumbnailManager) Context.getInstance().getBean(
-							ThumbnailManager.class);
-					try {
-						thumbManaher.createTumbnail(doc, fileVersion);
-					} catch (Throwable t) {
-						log.error(t.getMessage(), t);
-					}
-					docInput = storer.getStream(doc.getId(), res);
-				}
-			} else {
-				res = storer.getResourceName(doc, fileVersion, null);
-				docInput = storer.getStream(doc.getId(), res);
+			SessionUtil.validateSession(request.getParameter("sid"));
+
+			String resource = storer.getResourceName(docId, fileVersion, suffix);
+
+			// 2) the thumbnail/preview doesn't exist, create it
+			if (!storer.exists(docId, resource)) {
+				log.debug("Need for preview creation");
+				createPreviewResource(doc, fileVersion, resource);
 			}
 
-			if (docInput == null) {
-				log.debug("resource not available");
+			stream = storer.getStream(docId, resource);
+
+			if (stream == null) {
+				log.debug("thumbnail not available");
 				forwardPreviewNotAvailable(request, response);
 				return;
 			}
 
-			if (docExtension.equals("pdf")) {
-				FileUtil.writeFile(docInput, tmpFile.getPath());
-				pdf2swf(tmpFile, swfFile);
-			} else {
-				img2pdf(swfFile, docExtension, docInput);
-			}
-
-			is = new FileInputStream(swfFile);
-
-			downloadDocument(request, response, is, doc.getFileName());
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
+			// 3) return the the thumbnail/preview resource
+			downloadDocument(request, response, stream, storer.getResourceName(doc, fileVersion, suffix));
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			new IOException(t.getMessage());
 		} finally {
-			is.close();
-			// Delete temporary resources
-			FileUtils.forceDelete(tmpFile);
-			FileUtils.forceDelete(swfFile);
+			if (stream != null)
+				stream.close();
 		}
 	}
 
 	/**
-	 * Convert IMG to PDF (for document preview feature).
-	 * 
-	 * @param swfCache
-	 * @param docExtension
-	 * @param docInput
-	 * @throws IOException
+	 * Creates the preview resource according to the specified format storing it
+	 * in the repository for future access.
 	 */
-	protected void img2pdf(File swfCache, String docExtension, InputStream docInput) throws IOException {
-		File tmpPdf = File.createTempFile("tmpPdf", ".pdf");
-		img2pdf(docInput, docExtension, tmpPdf);
-		pdf2swf(tmpPdf, swfCache);
+	protected void createPreviewResource(Document doc, String fileVersion, String resource) {
+		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+		String thumbResource = storer.getResourceName(doc, fileVersion, "thumb.jpg");
+
+		// In any case try to produce the thumbnail
+		if (!storer.exists(doc.getId(), thumbResource)) {
+			ThumbnailManager thumbManager = (ThumbnailManager) Context.getInstance().getBean(ThumbnailManager.class);
+			try {
+				thumbManager.createTumbnail(doc, fileVersion);
+				log.debug("Created thumbnail " + resource);
+			} catch (Throwable t) {
+				log.error(t.getMessage(), t);
+			}
+		}
+
+		if (resource.endsWith(".jpg"))
+			return;
+
+		/*
+		 * We need to produce the SWF conversion
+		 */
+		if (!storer.exists(doc.getId(), resource)) {
+			InputStream is = null;
+			File tmp = null;
+			try {
+				tmp = File.createTempFile("preview", "");
+
+				String docExtension = FilenameUtils.getExtension(doc.getFileName());
+				if (SWF_DIRECT_CONVERSION_EXTS.contains(docExtension)) {
+					// Perform a direct conversion using the document's file
+					is = storer.getStream(doc.getId(), storer.getResourceName(doc, fileVersion, null));
+					img2swf(tmp, docExtension, is);
+				} else {
+					// Retrieve the previously computed thumbnail
+					is = storer.getStream(doc.getId(), thumbResource);
+					// Convert the thumbnail to SWF
+					img2swf(tmp, "jpg", is);
+				}
+
+				storer.store(tmp, doc.getId(), resource);
+				log.debug("Created preview " + resource);
+			} catch (Throwable e) {
+				log.error(e.getMessage(), e);
+			} finally {
+				if (tmp != null)
+					FileUtils.deleteQuietly(tmp);
+				if (is != null)
+					try {
+						is.close();
+					} catch (IOException e) {
+
+					}
+			}
+		}
 	}
 
 	protected void forwardPreviewNotAvailable(HttpServletRequest request, HttpServletResponse response) {
@@ -154,7 +188,7 @@ public class DocumentPreview extends HttpServlet {
 			RequestDispatcher rd = request.getRequestDispatcher("/skin/images/preview_na.gif");
 			rd.forward(request, response);
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			e.printStackTrace();
 		}
 	}
 
@@ -189,10 +223,38 @@ public class DocumentPreview extends HttpServlet {
 	}
 
 	/**
+	 * Convert a generic document(image or PDF) to SWF (for document preview
+	 * feature).
+	 */
+	protected void img2swf(File swfCache, String extension, InputStream docInput) throws IOException {
+		File tmpPdf = null;
+		try {
+			tmpPdf = File.createTempFile("preview", ".pdf");
+			if ("pdf".equals(extension.toLowerCase())) {
+				FileOutputStream fos = null;
+				try {
+					fos = new FileOutputStream(tmpPdf);
+					IOUtils.copy(docInput, fos);
+					fos.flush();
+				} catch (Throwable e) {
+					throw new IOException("Error in IMG to PDF conversion", e);
+				} finally {
+					IOUtils.closeQuietly(fos);
+				}
+			} else
+				img2pdf(docInput, extension, tmpPdf);
+			pdf2swf(tmpPdf, swfCache);
+		} finally {
+			if (tmpPdf != null)
+				FileUtils.deleteQuietly(tmpPdf);
+		}
+	}
+
+	/**
 	 * Convert IMG to PDF (for document preview feature).
 	 */
-	protected void img2pdf(InputStream is, String mimeType, File output) throws IOException {
-		File tmp = File.createTempFile("LDOC", mimeType);
+	protected void img2pdf(InputStream is, String extension, File output) throws IOException {
+		File tmp = File.createTempFile("preview", extension);
 		String inputFile = tmp.getPath() + "[0]";
 		FileOutputStream fos = null;
 
@@ -209,17 +271,7 @@ public class DocumentPreview extends HttpServlet {
 			Process process = pb.start();
 			process.waitFor();
 			process.destroy();
-
-			// Check return code
-			if (process.exitValue() == 1) {
-				// log.warn(info);
-			}
-
-			// log.debug("Elapse img2pdf time: {}",
-			// FormatUtil.formatSeconds(System.currentTimeMillis() - start));
-		} catch (Exception e) {
-			// log.error("Error in IMG to PDF conversion", e);
-			output.delete();
+		} catch (Throwable e) {
 			throw new IOException("Error in IMG to PDF conversion", e);
 		} finally {
 			IOUtils.closeQuietly(fos);
@@ -245,10 +297,6 @@ public class DocumentPreview extends HttpServlet {
 			}
 
 			process.waitFor();
-
-			// Check return code
-			if (process.exitValue() != 0)
-				throw new Exception("Conversion exited with error code " + process.exitValue());
 		} catch (Throwable e) {
 			output.delete();
 			log.error("Error in PDF to SWF conversion", e);
