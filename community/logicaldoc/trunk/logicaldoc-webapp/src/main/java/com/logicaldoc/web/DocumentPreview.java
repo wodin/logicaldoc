@@ -311,7 +311,8 @@ public class DocumentPreview extends HttpServlet {
 	 * Composes the correct command to be executed.
 	 */
 	protected String[] composeCmd(String command, File input, File output) {
-		String standardCmd[] = { command, "-T 9", input.getPath(), "-o", output.getPath() };
+		String standardCmd[] = { command, "-f", "-T 9", "-t", "-G", "-s storeallcharacters", input.getPath(), "-o",
+				output.getPath() };
 		String imgCmd[] = { command, "-T 9 -q 30", input.getPath(), "-o", output.getPath() };
 		if (command.endsWith("convert"))
 			return imgCmd;
