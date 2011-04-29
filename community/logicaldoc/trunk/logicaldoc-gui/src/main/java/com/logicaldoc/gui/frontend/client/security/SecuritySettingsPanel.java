@@ -165,7 +165,7 @@ public class SecuritySettingsPanel extends VLayout {
 
 		for (GUIUser u : settings.getNotifiedUsers()) {
 			final StaticTextItem usrItem = ItemFactory.newStaticTextItem("usr" + i++, "user", null);
-			usrItem.setDefaultValue(u.getUserName());
+			usrItem.setValue(u.getUserName());
 			usrItem.setIcons(icon);
 			usrItem.addIconClickHandler(new IconClickHandler() {
 				public void onIconClick(IconClickEvent event) {
