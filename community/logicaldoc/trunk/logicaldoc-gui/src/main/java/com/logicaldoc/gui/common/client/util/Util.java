@@ -57,7 +57,7 @@ public class Util {
 				+ "&amp;PrintEnabled=" + printEnabled + "&amp;ProgressiveLoading=true" + "&amp;MinZoomSize=0.3"
 				+ "&amp;MaxZoomSize=5" + "&amp;PrintToolsVisible=true" + "&amp;ViewModeToolsVisible=true"
 				+ "&amp;ZoomToolsVisible=true" + "&amp;FullScreenVisible=true" + "&amp;NavToolsVisible=true"
-				+ "&amp;CursorToolsVisible=true" + "&amp;SearchToolsVisible=true" + "&amp;localeChain=" + language;
+				+ "&amp;CursorToolsVisible=" + printEnabled + "&amp;SearchToolsVisible=true" + "&amp;localeChain=" + language;
 		String tmp = "<div align=\"center\"><object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0\" width=\""
 				+ width + "\" height=\"" + height + "\" align=\"middle\">\n";
 		tmp += " <param name=\"allowScriptAccess\" value=\"always\" />\n";
