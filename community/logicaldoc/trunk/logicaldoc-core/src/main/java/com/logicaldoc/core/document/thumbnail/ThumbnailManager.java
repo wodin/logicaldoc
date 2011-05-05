@@ -11,6 +11,7 @@ import net.sf.jmimemagic.Magic;
 import net.sf.jmimemagic.MagicMatch;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
@@ -90,7 +91,7 @@ public class ThumbnailManager {
 		}
 
 		// Prepare I/O files
-		File src = File.createTempFile("scr", "orig");
+		File src = File.createTempFile("scr", "." + FilenameUtils.getExtension(document.getFileName()));
 		File dest = File.createTempFile("dest", "thumb.jpg");
 
 		try {
