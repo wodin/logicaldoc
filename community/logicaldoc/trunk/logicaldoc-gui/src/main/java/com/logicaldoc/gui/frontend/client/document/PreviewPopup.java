@@ -30,6 +30,8 @@ public class PreviewPopup extends Window {
 
 	private HTMLFlow media = null;
 
+	private HTMLFlow cad = null;
+
 	private VLayout layout = null;
 
 	private long id;
@@ -61,9 +63,11 @@ public class PreviewPopup extends Window {
 		retrieveUserInfo();
 
 		if (Util.isMediaFile(filename.toLowerCase())) {
-			reloadMedia(id, filename);
+			reloadMedia();
+		} else if (filename.toLowerCase().endsWith(".dxf")) {
+			reloadCAD(printEnabled);
 		} else {
-			reloadImage(id, printEnabled, language);
+			reloadImage(printEnabled, language);
 		}
 
 		addCloseClickHandler(new CloseClickHandler() {
@@ -79,10 +83,13 @@ public class PreviewPopup extends Window {
 			public void onResized(ResizedEvent event) {
 				if (image != null) {
 					layout.removeMember(image);
-					reloadImage(id, printEnabled, language);
+					reloadImage(printEnabled, language);
 				} else if (media != null) {
 					layout.removeMember(media);
-					reloadMedia(id, fileName);
+					reloadMedia();
+				} else if (cad != null) {
+					layout.removeMember(cad);
+					reloadCAD(printEnabled);
 				}
 			}
 		});
@@ -93,9 +100,9 @@ public class PreviewPopup extends Window {
 	/**
 	 * Reloads a media preview.
 	 */
-	private void reloadMedia(long docId, String filename) {
+	private void reloadMedia() {
 		String mediaProvider = "";
-		String f = filename.toLowerCase();
+		String f = fileName.toLowerCase();
 
 		if (f.endsWith(".mp3") || f.endsWith(".wav") || f.endsWith(".wma")) {
 			mediaProvider = "sound";
@@ -104,8 +111,8 @@ public class PreviewPopup extends Window {
 		}
 
 		media = new HTMLFlow();
-		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "%26docId=" + docId
-				+ "%26filename=" + filename;
+		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "%26docId=" + id
+				+ "%26filename=" + fileName;
 		String tmp = Util.flashPreviewAudioVideo("player.swf", url, mediaProvider, (getWidth() - 26),
 				(getHeight() - 40));
 		media.setContents(tmp);
@@ -113,11 +120,30 @@ public class PreviewPopup extends Window {
 	}
 
 	/**
+	 * Reloads a CAD preview.
+	 */
+	private void reloadCAD(boolean printEnabled) {
+		cad = new HTMLFlow();
+		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id;
+		String tmp = "<applet name=\"CAD Applet\" archive=\"" + Util.contextPath()
+				+ "applet/dxf-applet.jar\"  code=\"de.caff.dxf.applet.DxfApplet\" width=\"" + (getWidth() - 26)
+				+ "\" height=\"" + (getHeight() - 40) + "\">";
+		tmp += "<param name=\"dxf.file\" value=\"" + url + "\" />";
+		tmp += "<param name=\"dxf.applet.gui.descr\" value=\"" + Util.contextPath() + "applet/"
+				+ (printEnabled ? "Print.xml" : "Default.xml") + "\" />";
+		tmp += "<param name=\"locale\" value=\"" + I18N.getLocale() + "\" /";
+		tmp += "</applet>";
+
+		cad.setContents(tmp);
+		layout.addMember(cad);
+	}
+
+	/**
 	 * Reloads an image preview.
 	 */
-	private void reloadImage(long docId, boolean printEnabled, String language) {
+	private void reloadImage(boolean printEnabled, String language) {
 		image = new HTMLFlow();
-		String url = GWT.getHostPageBaseURL() + "thumbnail?sid=" + Session.get().getSid() + "%26docId=" + docId
+		String url = GWT.getHostPageBaseURL() + "thumbnail?sid=" + Session.get().getSid() + "%26docId=" + id
 				+ "%26suffix=preview.swf";
 		String tmp = Util.flashPreview("flexpaperviewer.swf", (getWidth() - 26), (getHeight() - 40), "SwfFile=" + url,
 				printEnabled, getPreviewLanguage(language));
