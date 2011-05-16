@@ -1,13 +1,17 @@
 package com.logicaldoc.web.service;
 
+import java.util.List;
+
 import junit.framework.Assert;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
@@ -40,13 +44,25 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 		Assert.assertNotNull(SessionManager.getInstance().get(session.getSid()));
 	}
 
+	@After
+	public void tearDown() throws Exception {
+		super.tearDown();
+		List<UserSession> sessions = SessionManager.getInstance().getSessions();
+		for (UserSession session : sessions) {
+			try {
+				SessionManager.getInstance().kill(session.getId());
+			} catch (Throwable t) {
+			}
+		}
+	}
+
 	@Test
 	public void testLogin() {
 		Assert.assertEquals("admin", session.getUser().getUserName());
+		int sessions = SessionManager.getInstance().countOpened();
 		Assert.assertEquals(1, session.getUser().getId());
-		Assert.assertEquals(1, SessionManager.getInstance().countOpened());
 		SessionManager.getInstance().get(session.getSid()).setClosed();
-		Assert.assertEquals(0, SessionManager.getInstance().countOpened());
+		Assert.assertEquals(sessions - 1, SessionManager.getInstance().countOpened());
 
 		session = service.login("admin", "password", null);
 		Assert.assertFalse(session.isLoggedIn());
@@ -58,11 +74,10 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 	public void testLogout() {
 		Assert.assertEquals("admin", session.getUser().getUserName());
 		Assert.assertEquals(1, session.getUser().getId());
-		Assert.assertEquals(1, SessionManager.getInstance().countOpened());
-
+		int sessions = SessionManager.getInstance().countOpened();
 		service.logout(session.getSid());
 
-		Assert.assertEquals(0, SessionManager.getInstance().countOpened());
+		Assert.assertEquals(sessions - 1, SessionManager.getInstance().countOpened());
 	}
 
 	@Test

@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.system;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -52,7 +53,14 @@ public class SystemMenu extends VLayout {
 		Button productNews = new Button(I18N.message("task.name.ProductNews"));
 		productNews.setWidth100();
 		productNews.setHeight(25);
-		addMember(productNews);
+
+		if (Feature.visible(Feature.PRODUCT_NEWS)) {
+			addMember(productNews);
+			if (!Feature.enabled(Feature.PRODUCT_NEWS)) {
+				productNews.setDisabled(true);
+				productNews.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
 
 		addInformations();
 
