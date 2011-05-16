@@ -63,6 +63,8 @@ public class ProductNews extends Task {
 			String url = config.getProperty("news.url");
 			if (StringUtils.isEmpty(url))
 				url = "http://www.logicaldoc.com/company/news.feed?type=rss";
+			else if ("-".equals(url))
+				return;
 
 			FeedParser parser = new FeedParser(url);
 			Feed feed = parser.readFeed();

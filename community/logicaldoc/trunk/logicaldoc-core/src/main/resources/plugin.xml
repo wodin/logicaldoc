@@ -187,6 +187,9 @@
   <extension plugin-id="logicaldoc-core" point-id="Feature" id="f56">
 	<parameter id="name" value="Feature_56" />
   </extension>
+   <extension plugin-id="logicaldoc-core" point-id="Feature" id="f27">
+	<parameter id="name" value="Feature_27" />
+  </extension>
   <extension plugin-id="logicaldoc-core" point-id="Feature" id="f13">
 	<parameter id="name" value="Feature_13" />
   </extension>

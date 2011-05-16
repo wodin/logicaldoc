@@ -164,8 +164,4 @@ public class MainPanel extends VLayout implements SessionObserver {
 	public IncomingMessage getIncomingMessage() {
 		return incomingMessage;
 	}
-
-	public void setIncomingMessage(IncomingMessage incomingMessage) {
-		this.incomingMessage = incomingMessage;
-	}
 }

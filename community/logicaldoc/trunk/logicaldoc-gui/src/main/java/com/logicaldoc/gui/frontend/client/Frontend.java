@@ -128,7 +128,7 @@ public class Frontend implements EntryPoint {
 	}
 
 	public void showMain() {
-		if (Session.get().getIncomingMessage() != null) {
+		if (Session.get().getIncomingMessage() != null && Feature.enabled(Feature.PRODUCT_NEWS)) {
 			mainPanel.getIncomingMessage().setMessage(Session.get().getIncomingMessage());
 			mainPanel.getIncomingMessage().setClickHandler(new ClickHandler() {
 
