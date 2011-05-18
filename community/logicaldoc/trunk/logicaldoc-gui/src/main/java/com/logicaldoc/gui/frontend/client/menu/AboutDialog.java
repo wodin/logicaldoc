@@ -37,7 +37,7 @@ public class AboutDialog extends Window {
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("about") + " " + Session.get().getInfo().getProductName());
-		setWidth(300);
+		setWidth(400);
 		setHeight(280);
 		setPadding(5);
 		setAutoSize(true);
@@ -72,7 +72,7 @@ public class AboutDialog extends Window {
 
 		Label trademark = new Label(I18N.message("copyrights", new String[] { Session.get().getInfo().getProduct(),
 				Session.get().getInfo().getProduct(), Session.get().getInfo().getVendor() }));
-		trademark.setWidth("90%");
+		trademark.setWidth("80%");
 		trademark.setHeight(40);
 		trademark.setAlign(Alignment.CENTER);
 
@@ -82,7 +82,7 @@ public class AboutDialog extends Window {
 				+ "</a></div>";
 		HTMLPane sitelink = new HTMLPane();
 		sitelink.setContents(htmlUrl);
-		sitelink.setPixelSize(200, 16);
+		sitelink.setPixelSize(300, 16);
 		sitelink.setAlign(Alignment.CENTER);
 		sitelink.setLayoutAlign(Alignment.CENTER);
 
@@ -91,7 +91,7 @@ public class AboutDialog extends Window {
 		String htmlSupp = "<div style='text-align: center;'><a href='mailto:" + support + "'>" + support + "</a></div>";
 		HTMLPane maillink = new HTMLPane();
 		maillink.setContents(htmlSupp);
-		maillink.setPixelSize(200, 16);
+		maillink.setPixelSize(300, 16);
 		maillink.setAlign(Alignment.CENTER);
 		maillink.setLayoutAlign(Alignment.CENTER);
 
