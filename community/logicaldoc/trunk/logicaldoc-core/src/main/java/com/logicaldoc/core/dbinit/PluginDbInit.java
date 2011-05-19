@@ -13,6 +13,8 @@ import org.java.plugin.registry.Extension;
 import com.logicaldoc.util.dbinit.DBInit;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
+
 /**
  * Database initialization manager
  * 
@@ -24,10 +26,13 @@ public class PluginDbInit extends DBInit {
 	protected static Log log = LogFactory.getLog(PluginDbInit.class);
 
 	/**
-	 * Intitialises the database using sql92.sql from the core plugin and
-	 * appending all other extensions connected to the 'DbInit' extension point.
+	 * Intitialises the database using 'DbInit' extension point.
 	 */
 	public void init() {
+		init(null);
+	}
+
+	public void init(String[] ids) {
 		log.info("Start database initialization");
 		log.info("Database is " + getDbms());
 
@@ -54,10 +59,18 @@ public class PluginDbInit extends DBInit {
 				}
 			});
 
-			// Acquire the ordered list of sql files
 			getSqlList().clear();
 
+			List<String> idSet = new ArrayList<String>();
+			if (ids != null)
+				idSet = (List<String>) Arrays.asList(ids);
+
+			// Acquire the ordered list of sql files
 			for (Extension ext : sortedExts) {
+				String id = ext.getDeclaringPluginDescriptor().getId();
+				if (!idSet.isEmpty() && !idSet.contains(id))
+					continue;
+
 				String sqlFile = ext.getParameter("sqlFile").valueAsString();
 				if (exists(sqlFile + "." + getDbms().toLowerCase()))
 					getSqlList().add(sqlFile + "." + getDbms().toLowerCase());
