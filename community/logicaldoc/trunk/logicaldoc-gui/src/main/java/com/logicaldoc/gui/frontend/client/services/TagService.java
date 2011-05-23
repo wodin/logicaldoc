@@ -28,4 +28,24 @@ public interface TagService extends RemoteService {
 	 * Rename an existing tag to another label
 	 */
 	public void rename(String sid, String tag, String newTag) throws InvalidSessionException;
+
+	/**
+	 * Adds a new tag in the list of available tags.
+	 */
+	public void addTag(String sid, String tag) throws InvalidSessionException;
+
+	/**
+	 * Removes an available from the list of available tags.
+	 */
+	public void removeTag(String sid, String tag) throws InvalidSessionException;
+
+	/**
+	 * Checks the tags input mode, can be 'free' or 'preset'
+	 */
+	public String getMode(String sid) throws InvalidSessionException;
+
+	/**
+	 * Checks the tags input mode, can be 'free' or 'preset'
+	 */
+	public void setMode(String sid, String mode) throws InvalidSessionException;
 }

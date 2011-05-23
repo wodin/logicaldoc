@@ -186,7 +186,19 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		items.add(language);
 
 		if (Feature.enabled(Feature.TAGS)) {
-			final ComboBoxItem tagItem = new ComboBoxItem("tag");
+			String mode = Session.get().getInfo().getConfig("tag.mode");
+
+			final FormItem tagItem;
+			if (mode.equals("preset")) {
+				tagItem = new SelectItem("tag");
+				tagItem.setOptionDataSource(new TagsDS("preset"));
+			} else {
+				tagItem = new ComboBoxItem("tag");
+				((ComboBoxItem) tagItem).setPickListWidth(250);
+				((ComboBoxItem) tagItem).setHideEmptyPickList(true);
+				tagItem.setOptionDataSource(new TagsDS(null));
+			}
+
 			tagItem.setTitle(I18N.message("tag"));
 			tagItem.addFocusHandler(new FocusHandler() {
 				@Override
@@ -200,9 +212,6 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 			});
 			tagItem.setHint(I18N.message("pressentertoaddtag"));
 			tagItem.setHintStyle("hint");
-			tagItem.setPickListWidth(250);
-			tagItem.setHideEmptyPickList(true);
-			tagItem.setOptionDataSource(new TagsDS(null));
 			tagItem.setDisabled(!update);
 
 			tagItem.addChangedHandler(new ChangedHandler() {

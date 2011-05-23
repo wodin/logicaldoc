@@ -11,9 +11,10 @@ import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
-import com.logicaldoc.gui.frontend.client.search.TagsForm;
 import com.logicaldoc.gui.frontend.client.services.CustomIdService;
 import com.logicaldoc.gui.frontend.client.services.CustomIdServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.TagService;
+import com.logicaldoc.gui.frontend.client.services.TagServiceAsync;
 import com.logicaldoc.gui.frontend.client.workflow.WorkflowDesigner;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -28,6 +29,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
  */
 public class MetadataMenu extends VLayout {
 	private CustomIdServiceAsync customIdService = (CustomIdServiceAsync) GWT.create(CustomIdService.class);
+
+	private TagServiceAsync tagService = (TagServiceAsync) GWT.create(TagService.class);
 
 	public MetadataMenu() {
 		setMargin(10);
@@ -46,7 +49,18 @@ public class MetadataMenu extends VLayout {
 		tags.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				AdminPanel.get().setContent(new TagsForm(true));
+				tagService.getMode(Session.get().getSid(), new AsyncCallback<String>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(String mode) {
+						AdminPanel.get().setContent(new TagsPanel(mode));
+					}
+				});
 			}
 		});
 
