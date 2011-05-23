@@ -13,6 +13,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.document.TagCloud;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUITag;
 import com.logicaldoc.gui.frontend.client.services.TagService;
 import com.logicaldoc.util.Context;
@@ -70,17 +71,36 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService {
 
 	@Override
 	public void delete(String sid, String tag) {
-		
+
 	}
 
 	@Override
 	public void rename(String sid, String tag, String newTag) {
-		
+
 	}
 
 	class TagCloudComparatorName implements Comparator<TagCloud> {
 		public int compare(TagCloud tc0, TagCloud tc1) {
 			return tc0.getTag().compareTo(tc1.getTag());
 		}
+	}
+
+	@Override
+	public void addTag(String sid, String tag) throws InvalidSessionException {
+
+	}
+
+	@Override
+	public void removeTag(String sid, String tag) throws InvalidSessionException {
+
+	}
+
+	@Override
+	public String getMode(String sid) throws InvalidSessionException {
+		return "free";
+	}
+
+	@Override
+	public void setMode(String sid, String mode) throws InvalidSessionException {
 	}
 }

@@ -16,6 +16,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.generic.Generic;
+import com.logicaldoc.core.generic.dao.GenericDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
 
@@ -46,8 +48,20 @@ public class TagsDataServlet extends HttpServlet {
 			response.setHeader("Expires", "0");
 
 			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-			HashMap<String, Integer> tgs = (HashMap<String, Integer>) docDao.findTags(request
-					.getParameter("firstLetter"));
+
+			String firstLetter = request.getParameter("firstLetter");
+
+			HashMap<String, Integer> tgs = new HashMap<String, Integer>();
+
+			if (firstLetter.equals("preset")) {
+				// We have to return the preset only
+				GenericDAO gDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
+				List<Generic> buf = gDao.findByTypeAndSubtype("tag", null);
+				for (Generic generic : buf) {
+					tgs.put(generic.getSubtype(), 0);
+				}
+			} else
+				tgs = (HashMap<String, Integer>) docDao.findTags(firstLetter);
 
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");

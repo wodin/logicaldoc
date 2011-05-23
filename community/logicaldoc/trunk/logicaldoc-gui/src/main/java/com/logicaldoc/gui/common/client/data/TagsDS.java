@@ -21,7 +21,7 @@ public class TagsDS extends DataSource {
 		DataSourceTextField count = new DataSourceTextField("count");
 		setFields(index, word, count);
 		setDataURL("data/tags.xml?sid=" + Session.get().getSid()
-				+ (firstLetter != null ? "&firstLetter=" + firstLetter.charAt(0) : ""));
+				+ (firstLetter != null ? "&firstLetter=" + firstLetter : ""));
 		setClientOnly(true);
 	}
 }

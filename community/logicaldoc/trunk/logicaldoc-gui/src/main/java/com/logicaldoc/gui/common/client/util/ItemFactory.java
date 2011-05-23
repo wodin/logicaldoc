@@ -720,4 +720,21 @@ public class ItemFactory {
 		
 		return item;
 	}
+	
+	public static SelectItem newTagInputMode(String name, String title) {
+		SelectItem mode = new SelectItem();
+		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
+		opts.put("free", I18N.message("free"));
+		opts.put("preset", I18N.message("preset"));
+		mode.setValueMap(opts);
+		mode.setName(name);
+		if (title != null)
+			mode.setTitle(I18N.message(title));
+		else
+			mode.setShowTitle(false);
+		mode.setDefaultValue("free");
+		mode.setWidth(100);
+		mode.setHintStyle("hint");
+		return mode;
+	}
 }
