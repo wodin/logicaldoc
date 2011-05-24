@@ -391,13 +391,13 @@ public class SearchIndexingPanel extends VLayout {
 
 		// Include Patters
 		TextItem includePatters = ItemFactory.newTextItem("includePatters", "includepatters", null);
-		includePatters.setDefaultValue(this.searchEngine.getIncludePatters());
+		includePatters.setValue(this.searchEngine.getIncludePatters());
 		includePatters.setHint(I18N.message("separatedcomma"));
 		includePatters.setHintStyle("hint");
 
 		// Exclude Patters
 		TextItem excludePatters = ItemFactory.newTextItem("excludePatters", "excludepatters", null);
-		excludePatters.setDefaultValue(this.searchEngine.getExcludePatters());
+		excludePatters.setValue(this.searchEngine.getExcludePatters());
 		excludePatters.setHint(I18N.message("separatedcomma"));
 		excludePatters.setHintStyle("hint");
 

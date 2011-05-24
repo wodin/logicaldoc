@@ -227,8 +227,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public List<Folder> findChildren(long parentId, Integer max) {
-		return findByWhere("_entity.parentId = ? and _entity.id!=_entity.parentId", new Object[] { parentId }, null,
-				max);
+		return findByWhere("_entity.parentId = ? and _entity.id!=_entity.parentId", new Object[] { parentId },
+				"_entity.name", max);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
