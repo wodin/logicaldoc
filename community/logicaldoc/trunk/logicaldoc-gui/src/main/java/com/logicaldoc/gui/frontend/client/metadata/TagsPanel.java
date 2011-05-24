@@ -16,6 +16,10 @@ public class TagsPanel extends HLayout {
 
 	private TabSet tabs = new TabSet();
 
+	/**
+	 * 
+	 * @param tagMode The current input mode: 'free' or 'preset'
+	 */
 	public TagsPanel(String tagMode) {
 		setWidth100();
 		setHeight100();

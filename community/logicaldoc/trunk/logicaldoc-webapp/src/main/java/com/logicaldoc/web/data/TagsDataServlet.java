@@ -53,7 +53,7 @@ public class TagsDataServlet extends HttpServlet {
 
 			HashMap<String, Integer> tgs = new HashMap<String, Integer>();
 
-			if (firstLetter.equals("preset")) {
+			if ("preset".equals(firstLetter)) {
 				// We have to return the preset only
 				GenericDAO gDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
 				List<Generic> buf = gDao.findByTypeAndSubtype("tag", null);

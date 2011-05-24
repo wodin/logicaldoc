@@ -7,16 +7,25 @@ import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.services.TagService;
 import com.logicaldoc.gui.frontend.client.services.TagServiceAsync;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
+import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.menu.Menu;
+import com.smartgwt.client.widgets.menu.MenuItem;
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 /**
  * This panel shows the tags list with each tag count.
@@ -30,12 +39,14 @@ public class TagsPreset extends VLayout {
 
 	private TagServiceAsync tagService = (TagServiceAsync) GWT.create(TagService.class);
 
+	private ButtonItem addTag;
+
 	public TagsPreset(String tagMode) {
 		setMembersMargin(3);
 
-		final DynamicForm form1 = new DynamicForm();
+		final DynamicForm form = new DynamicForm();
 
-		final SelectItem mode = ItemFactory.newTagInputMode("mode", "taginputmode");
+		final SelectItem mode = ItemFactory.newTagInputMode("mode", "inputmode");
 		mode.setValue(tagMode);
 		mode.addChangedHandler(new ChangedHandler() {
 
@@ -44,7 +55,14 @@ public class TagsPreset extends VLayout {
 				tagService.setMode(Session.get().getSid(), mode.getValueAsString(), new AsyncCallback<Void>() {
 					@Override
 					public void onSuccess(Void arg) {
-						// Nothing to do
+						Log.info(I18N.message("settingssaved"), null);
+						if (mode.getValueAsString().equals("preset")) {
+							addTag.setDisabled(false);
+							tags.setDisabled(false);
+						} else {
+							addTag.setDisabled(true);
+							tags.setDisabled(true);
+						}
 					}
 
 					@Override
@@ -55,29 +73,100 @@ public class TagsPreset extends VLayout {
 			}
 		});
 
-		form1.setItems(mode);
+		addTag = new ButtonItem();
+		addTag.setTitle(I18N.message("addtag"));
+		addTag.setAutoFit(true);
+		addTag.setRequired(true);
+		addTag.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+			@Override
+			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+				LD.askforValue(I18N.message("addtag"), I18N.message("tag"), "", "350", new ValueCallback() {
+					@Override
+					public void execute(String value) {
+						if (value != null && !"".equals(value))
+							tagService.addTag(Session.get().getSid(), value, new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
 
-		addMember(form1);
+								@Override
+								public void onSuccess(Void arg0) {
+									Log.info(I18N.message("settingssaved"), null);
+									reloadTags();
+								}
+							});
+					}
+				});
+			}
+		});
 
-		// reloadTags(admin, null);
+		form.setItems(mode, addTag);
+		addMember(form);
+
+		reloadTags();
+		
+		if (mode.getValueAsString().equals("preset")) {
+			addTag.setDisabled(false);
+			tags.setDisabled(false);
+		} else {
+			addTag.setDisabled(true);
+			tags.setDisabled(true);
+		}
 	}
 
-	private void reloadTags(final boolean admin, String letter) {
-		if (tags != null) {
+	private void reloadTags() {
+		if (tags != null)
 			removeMember(tags);
-		}
 
-		ListGridField index = new ListGridField("index", " ", 10);
-		index.setHidden(true);
-		ListGridField word = new ListGridField("word", I18N.message("tag"), 200);
-		ListGridField count = new ListGridField("count", I18N.message("count"), 60);
 		tags = new ListGrid();
 		tags.setEmptyMessage(I18N.message("notitemstoshow"));
-		tags.setWidth100();
-		tags.setHeight100();
-		tags.setFields(index, word, count);
+		tags.setWidth(200);
+		tags.setHeight(200);
+		tags.setEmptyMessage(I18N.message("norecords"));
 		tags.setSelectionType(SelectionStyle.SINGLE);
-		tags.setDataSource(new TagsDS(letter));
+		ListGridField index = new ListGridField("index", " ", 10);
+		index.setHidden(true);
+		ListGridField word = new ListGridField("word", I18N.message("tag"));
+		tags.setFields(index, word);
+		tags.setDataSource(new TagsDS("preset"));
+		tags.setAutoFetchData(true);
+		tags.addCellContextClickHandler(new CellContextClickHandler() {
+			@Override
+			public void onCellContextClick(CellContextClickEvent event) {
+				showContextMenu();
+				event.cancel();
+			}
+		});
+
 		addMember(tags);
+	}
+
+	private void showContextMenu() {
+		Menu contextMenu = new Menu();
+
+		MenuItem delete = new MenuItem();
+		delete.setTitle(I18N.message("delete"));
+		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				ListGridRecord selection = tags.getSelectedRecord();
+				tagService.removeTag(Session.get().getSid(), selection.getAttributeAsString("word"),
+						new AsyncCallback<Void>() {
+
+							@Override
+							public void onSuccess(Void arg0) {
+								tags.removeSelectedData();
+							}
+
+							@Override
+							public void onFailure(Throwable arg0) {
+								Log.serverError(arg0);
+							}
+						});
+			}
+		});
+		contextMenu.addItem(delete);
+
+		contextMenu.showContextMenu();
 	}
 }
