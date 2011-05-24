@@ -189,16 +189,18 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 			String mode = Session.get().getInfo().getConfig("tag.mode");
 
 			final FormItem tagItem;
-			if (mode.equals("preset")) {
+			if ("preset".equals(mode)) {
 				tagItem = new SelectItem("tag");
-				tagItem.setOptionDataSource(new TagsDS("preset"));
+				tagItem.setOptionDataSource(new TagsDS(mode));
 			} else {
 				tagItem = new ComboBoxItem("tag");
 				((ComboBoxItem) tagItem).setPickListWidth(250);
 				((ComboBoxItem) tagItem).setHideEmptyPickList(true);
-				tagItem.setOptionDataSource(new TagsDS(null));
+				((ComboBoxItem) tagItem).setOptionDataSource(new TagsDS(null));
+				tagItem.setHint(I18N.message("pressentertoaddtag"));
 			}
 
+			tagItem.setValueField("word");
 			tagItem.setTitle(I18N.message("tag"));
 			tagItem.addFocusHandler(new FocusHandler() {
 				@Override
@@ -210,7 +212,6 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 					}
 				}
 			});
-			tagItem.setHint(I18N.message("pressentertoaddtag"));
 			tagItem.setHintStyle("hint");
 			tagItem.setDisabled(!update);
 
