@@ -41,8 +41,9 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			searchEngine.setEntries(indexer.getCount());
 
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-			searchEngine.setExcludePatters(conf.getPropertyWithSubstitutions("index.excludes"));
-			searchEngine.setIncludePatters(conf.getPropertyWithSubstitutions("index.includes"));
+			searchEngine.setExcludePatters(conf.getProperty("index.excludes"));
+			searchEngine.setIncludePatters(conf.getProperty("index.includes"));
+			
 			if (StringUtils.isNotEmpty(conf.getProperty("index.batch")))
 				searchEngine.setBatch(new Integer(conf.getProperty("index.batch")));
 			else

@@ -394,9 +394,7 @@ public class SearchIndexingPanel extends VLayout {
 		includePatters.setValue(this.searchEngine.getIncludePatters());
 		includePatters.setHint(I18N.message("separatedcomma"));
 		includePatters.setHintStyle("hint");
-
-		Log.info(this.searchEngine.getIncludePatters(), null);
-		
+	
 		// Exclude Patters
 		TextItem excludePatters = ItemFactory.newTextItem("excludePatters", "excludepatters", null);
 		excludePatters.setValue(this.searchEngine.getExcludePatters());
