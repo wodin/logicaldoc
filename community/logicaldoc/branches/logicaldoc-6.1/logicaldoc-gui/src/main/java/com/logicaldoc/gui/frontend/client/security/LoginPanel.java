@@ -89,8 +89,9 @@ public class LoginPanel extends VLayout {
 		logoImage.setWidth("205px");
 
 		// Prepare the form footer that contains copyright and website link
-		String htmlString = "\u00A9 " + info.getYear() + " " + info.getVendor() + "  &#160; &#8226; &#160; <a href='"
-				+ info.getUrl() + "'>" + info.getUrl() + "</a>";
+		String htmlString = "\u00A9 " + info.getYear() + " " + info.getVendor();
+		if (info.getUrl() != null && !"-".equals(info.getUrl()))
+			htmlString += "  &#160; &#8226; &#160; <a href='" + info.getUrl() + "'>" + info.getUrl() + "</a>";
 		HTMLFlow footer = new HTMLFlow(htmlString);
 		footer.setStyleName("loginFooter");
 
