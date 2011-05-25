@@ -58,7 +58,7 @@ public class AboutDialog extends Window {
 		productName.setWrap(false);
 		productName.setHeight(10);
 		productName.setAlign(Alignment.CENTER);
-		
+
 		Label version = new Label(I18N.message("version") + " " + Session.get().getInfo().getRelease());
 		version.setWrap(false);
 		version.setHeight(10);
@@ -78,8 +78,11 @@ public class AboutDialog extends Window {
 
 		// Prepare the website link
 		String wsurl = Session.get().getInfo().getUrl();
-		String htmlUrl = "<div style='text-align: center;'><a href='" + wsurl + "' target='_blank'>" + wsurl
-				+ "</a></div>";
+
+		String htmlUrl = "";
+		if (Session.get().getInfo().getUrl() != null && !"-".equals(Session.get().getInfo().getUrl()))
+			htmlUrl = "<div style='text-align: center;'><a href='" + wsurl + "' target='_blank'>" + wsurl
+					+ "</a></div>";
 		HTMLPane sitelink = new HTMLPane();
 		sitelink.setContents(htmlUrl);
 		sitelink.setPixelSize(300, 16);
@@ -117,7 +120,8 @@ public class AboutDialog extends Window {
 		content.setAlign(Alignment.CENTER);
 		content.setDefaultLayoutAlign(Alignment.CENTER);
 		content.setBackgroundColor("#ffffff");
-		content.setMembers(vspacer1, logoImage, productName, version, copyright, trademark, sitelink, maillink, vspacer2, button);
+		content.setMembers(vspacer1, logoImage, productName, version, copyright, trademark, sitelink, maillink,
+				vspacer2, button);
 
 		addChild(content);
 	}

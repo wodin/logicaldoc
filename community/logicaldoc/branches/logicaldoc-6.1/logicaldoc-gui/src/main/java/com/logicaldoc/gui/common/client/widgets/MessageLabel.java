@@ -2,6 +2,7 @@ package com.logicaldoc.gui.common.client.widgets;
 
 import com.google.gwt.user.client.Window;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -16,7 +17,8 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 public class MessageLabel extends Label {
 
 	public MessageLabel(final GUIMessage message) {
-		super(message.getMessage());
+		super(message.getMessage()
+				+ (message.getUrl() != null ? " (<b>" + I18N.message("clickhere").toLowerCase() + "</b>)" : ""));
 		setHeight(25);
 		setWrap(false);
 		if (message.getPriority() == GUIMessage.PRIO_INFO)
@@ -26,7 +28,6 @@ public class MessageLabel extends Label {
 		if (message.getUrl() != null) {
 			setCursor(Cursor.HAND);
 			addClickHandler(new ClickHandler() {
-
 				@Override
 				public void onClick(ClickEvent event) {
 					Window.open(message.getUrl(), "_self", "");
