@@ -79,7 +79,7 @@ public class TemplatesPanel extends VLayout {
 
 		// Initialize the listing panel
 		listing.setAlign(Alignment.CENTER);
-		listing.setHeight("60%");
+		listing.setHeight("55%");
 		listing.setShowResizeBar(true);
 
 		ListGridField id = new ListGridField("id", 50);

@@ -1,8 +1,11 @@
 package com.logicaldoc.web.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -82,6 +85,8 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 							att.setLabel(attrName);
 						else
 							att.setLabel(extAttr.getLabel());
+						att.setEditor(extAttr.getEditor());
+						att.setStringValue(extAttr.getStringValue());
 
 						guiAttr[i] = att;
 						i++;
@@ -108,6 +113,8 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 						att.setMandatory(attribute.isMandatory() ? 1 : 0);
 						att.setType(attribute.getType());
 						att.setLabel(attribute.getLabel());
+						att.setEditor(attribute.getEditor());
+						att.setStringValue(attribute.getStringValue());
 						if (StringUtils.isEmpty(attribute.getLabel()))
 							att.setLabel(attribute.getName());
 						if (attribute.getValue() instanceof String)
@@ -177,6 +184,18 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 				else if (extAttr.getValue() instanceof Date)
 					att.setDateValue(extAttr.getDateValue());
 
+				att.setEditor(extAttr.getEditor());
+				if (extAttr.getEditor() == ExtendedAttribute.EDITOR_LISTBOX) {
+					String buf = (String) extAttr.getStringValue();
+					List<String> list = new ArrayList<String>();
+					StringTokenizer st = new StringTokenizer(buf, ",");
+					while (st.hasMoreElements()) {
+						String val = (String) st.nextElement();
+						if (!list.contains(val))
+							list.add(val);
+					}
+					att.setOptions(list.toArray(new String[0]));
+				}
 				attributes[i] = att;
 				i++;
 			}

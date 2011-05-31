@@ -20,6 +20,10 @@ public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 
 	public static final int TYPE_DATE = 3;
 
+	public static final int EDITOR_DEFAULT = 0;
+
+	public static final int EDITOR_LISTBOX = 1;
+
 	private String label;
 
 	private String stringValue;
@@ -35,6 +39,8 @@ public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 	private int mandatory = 0;
 
 	private int position = 0;
+
+	private int editor = EDITOR_DEFAULT;
 
 	public String getStringValue() {
 		return stringValue;
@@ -147,12 +153,20 @@ public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 	public int compareTo(ExtendedAttribute o) {
 		return new Integer(getPosition()).compareTo(o.getPosition());
 	}
-	
+
 	public String getLabel() {
 		return label;
 	}
 
 	public void setLabel(String label) {
 		this.label = label;
+	}
+
+	public int getEditor() {
+		return editor;
+	}
+
+	public void setEditor(int editor) {
+		this.editor = editor;
 	}
 }

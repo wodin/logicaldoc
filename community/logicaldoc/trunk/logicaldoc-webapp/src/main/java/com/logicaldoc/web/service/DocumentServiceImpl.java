@@ -6,10 +6,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.AccessControlException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -337,6 +340,12 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				.getBean(DocumentTemplateDAO.class);
 		DocumentTemplate template = templateDao.findById(templateId);
 
+		GUIExtendedAttribute[] attributes = prepareGUIAttributes(template, null);
+
+		return attributes;
+	}
+
+	private GUIExtendedAttribute[] prepareGUIAttributes(DocumentTemplate template, Document doc) {
 		GUIExtendedAttribute[] attributes = new GUIExtendedAttribute[template.getAttributeNames().size()];
 		int i = 0;
 		for (String attrName : template.getAttributeNames()) {
@@ -344,23 +353,30 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			GUIExtendedAttribute att = new GUIExtendedAttribute();
 			att.setName(attrName);
 			att.setPosition(extAttr.getPosition());
-			att.setMandatory(extAttr.getMandatory() == 1 ? true : false);
 			att.setType(extAttr.getType());
 			att.setLabel(extAttr.getLabel());
+			att.setMandatory(extAttr.getMandatory() == 1);
+			att.setEditor(extAttr.getEditor());
 
-			if (extAttr.getValue() instanceof String)
-				att.setStringValue(extAttr.getStringValue());
-			else if (extAttr.getValue() instanceof Long)
-				att.setIntValue(extAttr.getIntValue());
-			else if (extAttr.getValue() instanceof Double)
-				att.setDoubleValue(extAttr.getDoubleValue());
-			else if (extAttr.getValue() instanceof Date)
-				att.setDateValue(extAttr.getDateValue());
+			// If the case, populate the options
+			if (att.getEditor() == ExtendedAttribute.EDITOR_LISTBOX) {
+				String buf = (String) extAttr.getStringValue();
+				List<String> list = new ArrayList<String>();
+				StringTokenizer st = new StringTokenizer(buf, ",");
+				while (st.hasMoreElements()) {
+					String val = (String) st.nextElement();
+					if (!list.contains(val))
+						list.add(val);
+				}
+				att.setOptions(list.toArray(new String[0]));
+			}
+
+			if (doc != null && doc.getValue(attrName) != null)
+				att.setValue(doc.getValue(attrName));
 
 			attributes[i] = att;
 			i++;
 		}
-
 		return attributes;
 	}
 
@@ -415,30 +431,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					document.setTemplate(doc.getTemplate().getName());
 					document.setTemplateId(doc.getTemplate().getId());
 
-					GUIExtendedAttribute[] attributes = new GUIExtendedAttribute[doc.getAttributes().size()];
-					int i = 0;
-					for (String name : doc.getAttributeNames()) {
-						ExtendedAttribute extAttr = doc.getAttributes().get(name);
-						GUIExtendedAttribute attr = new GUIExtendedAttribute();
-						attr.setName(name);
-						attr.setLabel(extAttr.getLabel());
-						attr.setType(extAttr.getType());
-						if (extAttr.getValue() == null) {
-							if (extAttr.getType() == ExtendedAttribute.TYPE_INT) {
-								attr.setIntValue(null);
-							} else if (extAttr.getType() == ExtendedAttribute.TYPE_DOUBLE) {
-								attr.setDoubleValue(null);
-							} else if (extAttr.getType() == ExtendedAttribute.TYPE_DATE) {
-								attr.setDateValue(null);
-							}
-						} else
-							attr.setValue(extAttr.getValue());
-						attr.setPosition(extAttr.getPosition());
-						attr.setMandatory(extAttr.getMandatory() == 1);
-
-						attributes[i] = attr;
-						i++;
-					}
+					GUIExtendedAttribute[] attributes = prepareGUIAttributes(doc.getTemplate(), doc);
 					document.setAttributes(attributes);
 				}
 
