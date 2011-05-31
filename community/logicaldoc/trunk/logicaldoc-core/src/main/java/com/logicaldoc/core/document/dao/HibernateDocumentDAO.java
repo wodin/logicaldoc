@@ -240,7 +240,11 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					doc.setDigest(FileUtil.computeDigest(in));
 				} finally {
 					if (in != null)
-						in.close();
+						try {
+							in.close();
+						} catch (Throwable t) {
+
+						}
 				}
 
 				getHibernateTemplate().saveOrUpdate(doc);

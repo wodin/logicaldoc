@@ -194,10 +194,9 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 				List<FormItem> items = new ArrayList<FormItem>();
 				for (GUIExtendedAttribute att : result) {
 					if (att.getType() == GUIExtendedAttribute.TYPE_STRING) {
-						TextItem item = ItemFactory.newTextItemForExtendedAttribute(att.getName(), att.getLabel(), null);
+						FormItem item = ItemFactory.newStringItemForExtendedAttribute(att);
 						if (document.getValue(att.getName()) != null)
 							item.setValue((String) document.getValue(att.getName()));
-						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!update);
 						items.add(item);

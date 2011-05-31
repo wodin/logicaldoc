@@ -125,8 +125,8 @@ public class FolderServiceImplTest extends AbstractWebServiceTestCase {
 		Assert.assertNotNull(folders);
 		Assert.assertEquals(2, folders.length);
 		List<WSFolder> foldersList = Arrays.asList(folders);
-		Assert.assertEquals(1202, foldersList.get(0).getId());
-		Assert.assertEquals(1203, foldersList.get(1).getId());
+		Assert.assertEquals(1203, foldersList.get(0).getId());
+		Assert.assertEquals(1202, foldersList.get(1).getId());
 
 		folders = folderServiceImpl.list("", 1203);
 		Assert.assertNotNull(folders);

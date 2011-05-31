@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
+import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
@@ -22,6 +23,7 @@ import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.FloatItem;
+import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.LinkItem;
@@ -376,19 +378,30 @@ public class ItemFactory {
 	 * @param name The item name (mandatory)
 	 * @param value The item value (optional)
 	 */
-	public static TextItem newTextItemForExtendedAttribute(String name, String label, String value) {
+	public static FormItem newStringItemForExtendedAttribute(GUIExtendedAttribute att) {
 		// We cannot use spaces in items name
-		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
-		TextItem item = new TextItem();
+		String itemName = "_" + att.getName().replaceAll(" ", Constants.BLANK_PLACEHOLDER);
+		FormItem item = new TextItem();
+		if (att.getEditor() == GUIExtendedAttribute.EDITOR_LISTBOX) {
+			item = new SelectItem();
+			SelectItem select = (SelectItem) item;
+			LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+			if (!att.isMandatory())
+				map.put(null, "");
+			if (att.getOptions() != null)
+				for (String a : att.getOptions()) {
+					map.put(a, a);
+				}
+			select.setValueMap(map);
+		}
+
 		item.setName(itemName);
-		item.setTitle(label);
-		if (value != null)
-			item.setValue(value);
-		else
-			item.setValue("");
+		item.setTitle(att.getLabel());
 		item.setWrapTitle(false);
 		item.setRequiredMessage(I18N.message("fieldrequired"));
 		item.setHintStyle("hint");
+		item.setRequired(att.isMandatory());
+
 		return item;
 	}
 
@@ -703,7 +716,7 @@ public class ItemFactory {
 	}
 
 	/**
-	 * Simple yes/no radio button. yes=true, no=false 
+	 * Simple yes/no radio button. yes=true, no=false
 	 */
 	public static RadioGroupItem newYesNoItem(String name, String label) {
 		RadioGroupItem item = new RadioGroupItem(name, I18N.message(label));
@@ -711,16 +724,16 @@ public class ItemFactory {
 		item.setShowTitle(true);
 		item.setWrap(false);
 		item.setWrapTitle(false);
-		
-		LinkedHashMap<String, String> values=new LinkedHashMap<String, String>();
+
+		LinkedHashMap<String, String> values = new LinkedHashMap<String, String>();
 		values.put("true", I18N.message("yes"));
 		values.put("false", I18N.message("no"));
 		item.setValueMap(values);
 		item.setValue("true");
-		
+
 		return item;
 	}
-	
+
 	public static SelectItem newTagInputMode(String name, String title) {
 		SelectItem mode = new SelectItem();
 		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();

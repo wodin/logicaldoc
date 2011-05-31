@@ -23,6 +23,12 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 
 	public static final int TYPE_DATE = 3;
 
+	public static final int EDITOR_DEFAULT = 0;
+
+	public static final int EDITOR_LISTBOX = 1;
+
+	private int editor = EDITOR_DEFAULT;
+
 	private String stringValue;
 
 	private Long intValue;
@@ -38,8 +44,11 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 	private int position = 0;
 
 	private String name;
-	
+
 	private String label;
+
+	// Optional array of possible values
+	private String[] options;
 
 	public String getStringValue() {
 		return stringValue;
@@ -164,5 +173,21 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 
 	public void setLabel(String label) {
 		this.label = label;
+	}
+
+	public int getEditor() {
+		return editor;
+	}
+
+	public void setEditor(int editor) {
+		this.editor = editor;
+	}
+
+	public String[] getOptions() {
+		return options;
+	}
+
+	public void setOptions(String[] options) {
+		this.options = options;
 	}
 }

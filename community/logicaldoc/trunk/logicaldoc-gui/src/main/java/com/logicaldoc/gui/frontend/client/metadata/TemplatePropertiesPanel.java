@@ -33,6 +33,7 @@ import com.smartgwt.client.widgets.form.fields.PickerIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
@@ -78,6 +79,12 @@ public class TemplatePropertiesPanel extends HLayout {
 	public String updatingAttributeName = "";
 
 	private ListGrid attributesList;
+
+	private SelectItem type;
+
+	private SelectItem editor;
+
+	private TextItem values;
 
 	public TemplatePropertiesPanel() {
 
@@ -291,6 +298,8 @@ public class TemplatePropertiesPanel extends HLayout {
 				form2.getField("label").setDisabled(false);
 				form2.getField("mandatory").setDisabled(false);
 				form2.getField("type").setDisabled(false);
+				form2.getField("editor").setDisabled(false);
+				form2.getField("values").setDisabled(false);
 			}
 		});
 		if (!template.isReadonly()) {
@@ -312,23 +321,49 @@ public class TemplatePropertiesPanel extends HLayout {
 		mandatory.setDefaultValue(false);
 		mandatory.setDisabled(template.isReadonly());
 
+		// Editor
+		editor = new SelectItem("editor", I18N.message("inputmode"));
+		LinkedHashMap<String, String> editors = new LinkedHashMap<String, String>();
+		editors.put("" + GUIExtendedAttribute.EDITOR_DEFAULT, I18N.message("free"));
+		editors.put("" + GUIExtendedAttribute.EDITOR_LISTBOX, I18N.message("preset"));
+		editor.setValueMap(editors);
+		editor.setWrapTitle(false);
+		editor.setDefaultValue("" + GUIExtendedAttribute.EDITOR_DEFAULT);
+		editor.setDisabled(template.isReadonly());
+		editor.addChangedHandler(new ChangedHandler() {
+			@Override
+			public void onChanged(ChangedEvent event) {
+				refreshFieldForm();
+			}
+		});
+
 		// Type
-		final SelectItem type = new SelectItem("type", I18N.message("type"));
-		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		map.put("" + GUIExtendedAttribute.TYPE_STRING, I18N.message("string"));
-		map.put("" + GUIExtendedAttribute.TYPE_INT, I18N.message("integer"));
-		map.put("" + GUIExtendedAttribute.TYPE_DOUBLE, I18N.message("decimal"));
-		map.put("" + GUIExtendedAttribute.TYPE_DATE, I18N.message("date"));
-		type.setValueMap(map);
+		type = new SelectItem("type", I18N.message("type"));
+		LinkedHashMap<String, String> types = new LinkedHashMap<String, String>();
+		types.put("" + GUIExtendedAttribute.TYPE_STRING, I18N.message("string"));
+		types.put("" + GUIExtendedAttribute.TYPE_INT, I18N.message("integer"));
+		types.put("" + GUIExtendedAttribute.TYPE_DOUBLE, I18N.message("decimal"));
+		types.put("" + GUIExtendedAttribute.TYPE_DATE, I18N.message("date"));
+		type.setValueMap(types);
 		type.setWrapTitle(false);
 		type.setDefaultValue("" + GUIExtendedAttribute.TYPE_STRING);
 		type.setDisabled(template.isReadonly());
+		type.addChangedHandler(new ChangedHandler() {
+			@Override
+			public void onChanged(ChangedEvent event) {
+				refreshFieldForm();
+			}
+		});
+
+		// Values (for preset editor)
+		values = ItemFactory.newSimpleTextItem("values", "values", null);
+		values.setHint(I18N.message("separatedcomma"));
 
 		ButtonItem addUpdate = new ButtonItem();
 		addUpdate.setTitle(I18N.message("addupdate"));
 		addUpdate.setAutoFit(true);
 		addUpdate.setColSpan(2);
-		addUpdate.setAlign(Alignment.RIGHT);
+		addUpdate.setAlign(Alignment.LEFT);
 		addUpdate.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 			@Override
 			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
@@ -340,6 +375,10 @@ public class TemplatePropertiesPanel extends HLayout {
 						att.setPosition(guiAttributes.size());
 						att.setMandatory((Boolean) mandatory.getValue());
 						att.setType(Integer.parseInt((String) type.getValue()));
+						att.setEditor(Integer.parseInt((String) editor.getValue()));
+						if (att.getEditor() == GUIExtendedAttribute.EDITOR_LISTBOX)
+							att.setStringValue(values.getValueAsString());
+
 						if (form2.validate()) {
 							changedHandler.onChanged(null);
 							addAttribute(att);
@@ -355,6 +394,11 @@ public class TemplatePropertiesPanel extends HLayout {
 								att.setType(Integer.parseInt((String) type.getValue()));
 							else
 								att.setType((Integer) type.getValue());
+							att.setEditor(Integer.parseInt((String) editor.getValue()));
+							if (att.getEditor() == GUIExtendedAttribute.EDITOR_LISTBOX)
+								att.setStringValue(values.getValueAsString());
+							else
+								att.setStringValue(null);
 
 							updateAttribute(att, updatingAttributeName);
 
@@ -367,9 +411,9 @@ public class TemplatePropertiesPanel extends HLayout {
 		});
 
 		if (!template.isReadonly())
-			form2.setItems(attributeName, label, mandatory, type, addUpdate);
+			form2.setItems(attributeName, label, mandatory, type, editor, values, addUpdate);
 		else
-			form2.setItems(attributeName, label, mandatory, type);
+			form2.setItems(attributeName, label, mandatory, type, editor, values);
 
 		attributesLayout.setMembers(form2);
 		attributesLayout.setMembersMargin(15);
@@ -504,7 +548,25 @@ public class TemplatePropertiesPanel extends HLayout {
 			form2.setValue("label", extAttr.getLabel());
 			form2.setValue("mandatory", extAttr.isMandatory());
 			form2.setValue("type", extAttr.getType());
+			form2.setValue("editor", extAttr.getEditor());
+			form2.setValue("values", extAttr.getStringValue());
 			updatingAttributeName = extAttr.getName();
+			refreshFieldForm();
+		}
+	}
+
+	public void refreshFieldForm() {
+		if (form2.getValueAsString("type").equals("" + GUIExtendedAttribute.TYPE_STRING)) {
+			editor.setDisabled(false);
+
+			if (form2.getValueAsString("editor").equals("" + GUIExtendedAttribute.EDITOR_LISTBOX)) {
+				values.setDisabled(false);
+			} else {
+				values.setDisabled(true);
+			}
+		} else {
+			editor.setDisabled(true);
+			values.setDisabled(true);
 		}
 	}
 
