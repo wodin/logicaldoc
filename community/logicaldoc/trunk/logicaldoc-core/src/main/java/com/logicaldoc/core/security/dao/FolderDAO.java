@@ -274,7 +274,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * immutable document inside it.
 	 * <p>
 	 * 
-	 * <b>Important:</b> Remember to delete orphaned documents
+	 * <b>Important:</b> All the contained documents will be deleted
 	 * 
 	 * @param folderId Folder to delete
 	 * @param transaction entry to log the event (set the user)
