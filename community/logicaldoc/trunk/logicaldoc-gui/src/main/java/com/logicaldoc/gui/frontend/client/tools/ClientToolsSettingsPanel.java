@@ -45,8 +45,6 @@ public class ClientToolsSettingsPanel extends VLayout {
 
 	private GUIParameter wdCache = null;
 
-	private GUIParameter officeSettings = null;
-
 	public ClientToolsSettingsPanel(GUIParameter[] settings) {
 		for (GUIParameter parameter : settings) {
 			if (parameter.getName().startsWith("webservice"))
@@ -55,8 +53,6 @@ public class ClientToolsSettingsPanel extends VLayout {
 				wdSettings = parameter;
 			else if (parameter.getName().equals("webdav.usecache"))
 				wdCache = parameter;
-			else if (parameter.getName().startsWith("office"))
-				officeSettings = parameter;
 		}
 
 		setWidth100();
@@ -122,24 +118,6 @@ public class ClientToolsSettingsPanel extends VLayout {
 		webDavForm.setItems(wdUrl, wdEnabled, cache);
 		webDav.setPane(webDavForm);
 
-		Tab office = new Tab();
-		office.setTitle(I18N.message("office"));
-		DynamicForm officeForm = new DynamicForm();
-		officeForm.setValuesManager(vm);
-		officeForm.setTitleOrientation(TitleOrientation.LEFT);
-		officeForm.setNumCols(2);
-		officeForm.setColWidths(1, "*");
-		officeForm.setPadding(5);
-
-		// Status
-		RadioGroupItem officeEnabled = ItemFactory.newBooleanSelector("officeEnabled", "enabled");
-		officeEnabled.setName("officeEnabled");
-		officeEnabled.setRequired(true);
-		officeEnabled.setValue(officeSettings.getValue().equals("true") ? "yes" : "no");
-
-		officeForm.setItems(officeEnabled);
-		office.setPane(officeForm);
-
 		if (Feature.visible(Feature.WEBSERVICE)) {
 			tabs.addTab(webService);
 			if (!Feature.enabled(Feature.WEBSERVICE))
@@ -150,12 +128,6 @@ public class ClientToolsSettingsPanel extends VLayout {
 			tabs.addTab(webDav);
 			if (!Feature.enabled(Feature.WEBDAV))
 				webDav.setPane(new FeatureDisabled());
-		}
-
-		if (Feature.visible(Feature.OFFICE)) {
-			tabs.addTab(office);
-			if (!Feature.enabled(Feature.OFFICE))
-				office.setPane(new FeatureDisabled());
 		}
 
 		IButton save = new IButton();
@@ -175,14 +147,10 @@ public class ClientToolsSettingsPanel extends VLayout {
 					ClientToolsSettingsPanel.this.wdCache.setValue(values.get("wdCache").equals("yes") ? "true"
 							: "false");
 
-					ClientToolsSettingsPanel.this.officeSettings
-							.setValue(values.get("officeEnabled").equals("yes") ? "true" : "false");
-
 					GUIParameter[] params = new GUIParameter[3];
 					params[0] = ClientToolsSettingsPanel.this.wsSettings;
 					params[1] = ClientToolsSettingsPanel.this.wdSettings;
 					params[2] = ClientToolsSettingsPanel.this.wdCache;
-					params[3] = ClientToolsSettingsPanel.this.officeSettings;
 
 					service.saveClientSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
 
