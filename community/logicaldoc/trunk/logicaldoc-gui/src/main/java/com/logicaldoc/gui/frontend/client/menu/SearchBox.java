@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.menu;
 
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.search.Search;
@@ -60,7 +61,9 @@ public class SearchBox extends TextItem {
 		options.setFolder(null);
 		options.setTemplate(null);
 		options.setLanguage("");
-		options.setMaxHits(40);
+
+		String hits=Session.get().getInfo().getConfig("search.hits");
+		options.setMaxHits(Integer.parseInt(hits));
 		Search.get().setOptions(options);
 		Search.get().search();
 	}
