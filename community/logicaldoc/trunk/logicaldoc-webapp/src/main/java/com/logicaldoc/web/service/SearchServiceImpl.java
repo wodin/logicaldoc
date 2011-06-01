@@ -55,7 +55,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 
 		try {
 			SearchOptions searchOptions = toSearchOptions(options);
-
+			
 			if (searchOptions instanceof FulltextSearchOptions) {
 				Locale exprLoc = LocaleUtil.toLocale(options.getExpressionLanguage());
 

@@ -246,7 +246,8 @@ public class ParametricForm extends VLayout {
 		Map<String, Object> values = vm.getValues();
 
 		GUISearchOptions options = new GUISearchOptions();
-		options.setMaxHits(40);
+		String hits=Session.get().getInfo().getConfig("search.hits");
+		options.setMaxHits(Integer.parseInt(hits));
 		options.setType(GUISearchOptions.TYPE_PARAMETRIC);
 
 		if (NO_LANGUAGE.equals(vm.getValueAsString("language")))
