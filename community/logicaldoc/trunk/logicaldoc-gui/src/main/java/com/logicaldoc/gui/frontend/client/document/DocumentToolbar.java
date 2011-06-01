@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.client.document;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Config;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.FolderObserver;
@@ -15,7 +14,6 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
-import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.dashboard.WorkflowDashboard;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
@@ -54,8 +52,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	protected ToolStripButton scan = new ToolStripButton();
 
 	protected ToolStripButton archive = new ToolStripButton();
-
-	protected ToolStripButton office = new ToolStripButton();
 
 	protected ToolStripButton startWorkflow = new ToolStripButton();
 
@@ -189,19 +185,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		office.setTooltip(I18N.message("editwithoffice"));
-		office.setIcon(ItemFactory.newImgIcon("page_white_office.png").getSrc());
-		office.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if (document == null)
-					return;
-
-				WindowUtils.openUrl("ldedit:" + GWT.getHostPageBaseURL() + "ldeditnow?action=edit&sid="
-						+ Session.get().getSid() + "&docId=" + document.getId());
-			}
-		});
-
 		startWorkflow.setIcon(ItemFactory.newImgIcon("cog_go.png").getSrc());
 		startWorkflow.setTooltip(I18N.message("startworkflow"));
 		startWorkflow.addClickHandler(new ClickHandler() {
@@ -296,16 +279,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				scan.setDisabled(true);
 				scan.setTooltip(I18N.message("featuredisabled"));
 			}
-		}
-
-		if (Feature.visible(Feature.OFFICE) && "true".equals(Config.getProperty(Constants.OFFICE_ENABLED))) {
-			addButton(office);
-			if (!Feature.enabled(Feature.OFFICE) || (document != null && !Util.isOfficeFile(document.getFileName()))
-					|| !downloadEnabled) {
-				office.setDisabled(true);
-			}
-			if (!Feature.enabled(Feature.OFFICE))
-				office.setTooltip(I18N.message("featuredisabled"));
 		}
 
 		final IntegerItem max = ItemFactory.newValidateIntegerItem("max", "", null, 1, null);
@@ -412,31 +385,12 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				if (!pdf.isDisabled())
 					pdf.setTooltip(I18N.message("exportpdf"));
 				subscribe.setDisabled(!Feature.enabled(Feature.AUDIT));
-
-				boolean isOfficeFile = false;
-				if (document.getFileName() != null)
-					isOfficeFile = Util.isOfficeFile(document.getFileName());
-				else if (document.getType() != null)
-					isOfficeFile = Util.isOfficeFileType(document.getType());
-
-				office.setDisabled(!Feature.enabled(Feature.OFFICE) || !isOfficeFile || !downloadEnabled);
-				if (document.getStatus() != Constants.DOC_UNLOCKED
-						&& !Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN)) {
-					if (document.getLockUserId() != null
-							&& Session.get().getUser().getId() != document.getLockUserId().longValue())
-						office.setDisabled(true);
-				}
-
-				if (!office.isDisabled())
-					office.setTooltip(I18N.message("editwithoffice"));
-
 			} else {
 				download.setDisabled(true);
 				rss.setDisabled(true);
 				pdf.setDisabled(true);
 				subscribe.setDisabled(true);
 				archive.setDisabled(true);
-				office.setDisabled(true);
 				startWorkflow.setDisabled(true);
 				addToWorkflow.setDisabled(true);
 			}

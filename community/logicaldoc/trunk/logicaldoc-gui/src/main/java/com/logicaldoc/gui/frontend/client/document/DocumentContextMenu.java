@@ -500,19 +500,6 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
-		MenuItem edit = new MenuItem();
-		edit.setTitle(I18N.message("editwithoffice"));
-		edit.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord selection = list.getSelectedRecord();
-				if (selection == null)
-					return;
-				long id = Long.parseLong(selection.getAttribute("id"));
-				WindowUtils.triggerUrl("ldedit:" + GWT.getHostPageBaseURL() + "ldeditnow?action=edit&sid="
-						+ Session.get().getSid() + "&docId=" + id);
-			}
-		});
-
 		MenuItem startWorkflow = new MenuItem(I18N.message("startworkflow"));
 		startWorkflow.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			@Override
@@ -612,12 +599,6 @@ public class DocumentContextMenu extends Menu {
 		boolean enableDelete = true;
 		boolean enableSign = selection != null && selection.length > 0;
 
-		boolean isOfficeFile = false;
-		if (selection[0].getAttribute("filename") != null)
-			isOfficeFile = Util.isOfficeFile(selection[0].getAttribute("filename"));
-		else if (selection[0].getAttribute("type") != null)
-			isOfficeFile = Util.isOfficeFileType(selection[0].getAttribute("type"));
-
 		if (selection != null && selection.length == 1) {
 			ListGridRecord record = selection[0];
 			if ("blank".equals(record.getAttribute("locked")) && "blank".equals(record.getAttribute("immutable"))) {
@@ -631,10 +612,6 @@ public class DocumentContextMenu extends Menu {
 					enableUnlock = true;
 			}
 		}
-
-		boolean enableOffice = (enableUnlock || enableLock)
-				&& (selection != null && selection.length == 1 && isOfficeFile
-						&& "true".equals(Config.getProperty(Constants.OFFICE_ENABLED)) && folder.isDownload());
 
 		for (ListGridRecord record : selection)
 			if (!"blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable"))) {
@@ -720,7 +697,6 @@ public class DocumentContextMenu extends Menu {
 			checkout.setEnabled(false);
 			copy.setEnabled(false);
 			cut.setEnabled(false);
-			enableOffice = false;
 			enableSign = false;
 		}
 
@@ -729,14 +705,6 @@ public class DocumentContextMenu extends Menu {
 
 		Menu moreMenu = new Menu();
 		moreMenu.setItems(similar, immutable, markIndexable, markUnindexable);
-
-		if (Feature.visible(Feature.OFFICE)) {
-			moreMenu.addItem(edit);
-			if (!Feature.enabled(Feature.OFFICE))
-				edit.setEnabled(false);
-			else
-				edit.setEnabled(enableOffice);
-		}
 
 		if (Feature.visible(Feature.DIGITAL_SIGN)) {
 			moreMenu.addItem(sign);

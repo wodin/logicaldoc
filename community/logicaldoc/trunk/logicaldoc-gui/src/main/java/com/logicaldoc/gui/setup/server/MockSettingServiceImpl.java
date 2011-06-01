@@ -28,13 +28,8 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 		wsSettings.setName("webdav.enabled");
 		wsSettings.setValue("true");
 
-		GUIParameter officeSettings = new GUIParameter();
-		officeSettings.setName("office.enabled");
-		officeSettings.setValue("true");
-
 		settings[0] = wsSettings;
 		settings[1] = wdSettings;
-		settings[2] = wdSettings;
 
 		return settings;
 	}
@@ -147,7 +142,7 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 
 	@Override
 	public void saveQuotaSettings(String sid, GUIParameter[] quotaSettings) throws InvalidSessionException {
-    }
+	}
 
 	@Override
 	public GUIParameter[] computeStoragesSize(String sid) throws InvalidSessionException {
