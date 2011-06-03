@@ -61,6 +61,7 @@ public class SearchBox extends TextItem {
 		options.setFolder(null);
 		options.setTemplate(null);
 		options.setLanguage("");
+		options.setFilterIds(null);
 
 		String hits=Session.get().getInfo().getConfig("search.hits");
 		options.setMaxHits(Integer.parseInt(hits));

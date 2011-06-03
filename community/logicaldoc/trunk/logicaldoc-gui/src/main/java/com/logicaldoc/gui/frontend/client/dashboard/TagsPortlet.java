@@ -54,12 +54,12 @@ public class TagsPortlet extends Portlet {
 		container.setHeight100();
 		container.setAlign(Alignment.CENTER);
 		container.setMargin(25);
-		
-		addChild(container);
-		
+
 		addChild(container);
 
-		container.addMember(new TagsForm(false));
+		addChild(container);
+
+		container.addMember(new TagsForm(false, false));
 	}
 
 }

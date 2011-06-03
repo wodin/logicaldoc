@@ -68,6 +68,8 @@ public class GUISearchOptions implements Serializable {
 
 	private String topOperator;
 
+	private Long[] filterIds;
+
 	/** Creates a new instance of SearchOptions */
 	public GUISearchOptions() {
 	}
@@ -272,5 +274,13 @@ public class GUISearchOptions implements Serializable {
 
 	public void setTopOperator(String topOperator) {
 		this.topOperator = topOperator;
+	}
+
+	public Long[] getFilterIds() {
+		return filterIds;
+	}
+
+	public void setFilterIds(Long[] filterIds) {
+		this.filterIds = filterIds;
 	}
 }

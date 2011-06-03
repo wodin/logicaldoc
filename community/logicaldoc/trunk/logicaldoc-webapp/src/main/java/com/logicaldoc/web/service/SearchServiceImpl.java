@@ -3,8 +3,10 @@ package com.logicaldoc.web.service;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -55,7 +57,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 
 		try {
 			SearchOptions searchOptions = toSearchOptions(options);
-			
+
 			if (searchOptions instanceof FulltextSearchOptions) {
 				Locale exprLoc = LocaleUtil.toLocale(options.getExpressionLanguage());
 
@@ -78,7 +80,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
-
+			
 			List<Hit> hits = search.getHits();
 
 			result.setTime(search.getExecTime());
@@ -202,7 +204,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 
 		try {
 			Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
-			String text = indexer.getDocument(Long.toString(docId)).getField(LuceneDocument.FIELD_CONTENT).stringValue();
+			String text = indexer.getDocument(Long.toString(docId)).getField(LuceneDocument.FIELD_CONTENT)
+					.stringValue();
 
 			// Extracts the most used 10 words
 			AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
@@ -284,6 +287,10 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			op.setSizeMin(((FulltextSearchOptions) searchOptions).getSizeMin());
 		}
 
+		if (!searchOptions.getFilterIds().isEmpty()) {
+			op.setFilterIds(searchOptions.getFilterIds().toArray(new Long[0]));
+		}
+
 		return op;
 	}
 
@@ -312,6 +319,14 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			((FulltextSearchOptions) searchOptions).setSearchInSubPath(options.isSearchInSubPath());
 			((FulltextSearchOptions) searchOptions).setSizeMax(options.getSizeMax());
 			((FulltextSearchOptions) searchOptions).setSizeMin(options.getSizeMin());
+		}
+
+		if (options.getFilterIds() != null && options.getFilterIds().length > 0) {
+			Set<Long> ids = new HashSet<Long>();
+			for (Long id : options.getFilterIds()) {
+				ids.add(id);
+			}
+			searchOptions.setFilterIds(ids);
 		}
 
 		return searchOptions;

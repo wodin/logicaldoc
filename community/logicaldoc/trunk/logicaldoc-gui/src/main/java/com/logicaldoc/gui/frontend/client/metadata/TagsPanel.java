@@ -28,7 +28,7 @@ public class TagsPanel extends HLayout {
 
 		Tab used = new Tab();
 		used.setTitle(I18N.message("usedtags"));
-		used.setPane(new TagsForm(true));
+		used.setPane(new TagsForm(true, false));
 
 		Tab preset = new Tab();
 		preset.setTitle(I18N.message("tagspreset"));

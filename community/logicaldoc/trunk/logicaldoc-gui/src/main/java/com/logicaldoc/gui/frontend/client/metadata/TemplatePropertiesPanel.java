@@ -26,9 +26,11 @@ import com.smartgwt.client.widgets.TransferImgButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.PickerIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
@@ -358,6 +360,11 @@ public class TemplatePropertiesPanel extends HLayout {
 		// Values (for preset editor)
 		values = ItemFactory.newSimpleTextItem("values", "values", null);
 		values.setHint(I18N.message("separatedcomma"));
+		values.setShowIfCondition(new FormItemIfFunction() {
+			public boolean execute(FormItem item, Object value, DynamicForm form) {
+				return !editor.isDisabled() && Integer.parseInt(editor.getValueAsString()) == GUIExtendedAttribute.EDITOR_LISTBOX;
+			}
+		});
 
 		ButtonItem addUpdate = new ButtonItem();
 		addUpdate.setTitle(I18N.message("addupdate"));

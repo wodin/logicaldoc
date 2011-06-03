@@ -38,6 +38,7 @@ import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -48,6 +49,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.0
  */
 public class ParametricForm extends VLayout {
+	private static final String SEARCHINHITS = "searchinhits";
+
 	private static final String NO_LANGUAGE = "";
 
 	private ValuesManager vm = new ValuesManager();
@@ -113,6 +116,9 @@ public class ParametricForm extends VLayout {
 			}
 		});
 
+		CheckboxItem searchinhits = new CheckboxItem(SEARCHINHITS, I18N.message(SEARCHINHITS));
+		searchinhits.setColSpan(3);
+
 		LinkedHashMap<String, String> matchMap = new LinkedHashMap<String, String>();
 		matchMap.put("and", I18N.message("matchall"));
 		matchMap.put("or", I18N.message("matchany"));
@@ -155,9 +161,9 @@ public class ParametricForm extends VLayout {
 				}
 			});
 
-			form.setItems(folder, subfolders, template, match);
+			form.setItems(folder, subfolders, searchinhits, template, match);
 		} else {
-			form.setItems(folder, subfolders, match);
+			form.setItems(folder, subfolders, searchinhits, match);
 		}
 
 		addMember(form);
@@ -246,7 +252,7 @@ public class ParametricForm extends VLayout {
 		Map<String, Object> values = vm.getValues();
 
 		GUISearchOptions options = new GUISearchOptions();
-		String hits=Session.get().getInfo().getConfig("search.hits");
+		String hits = Session.get().getInfo().getConfig("search.hits");
 		options.setMaxHits(Integer.parseInt(hits));
 		options.setType(GUISearchOptions.TYPE_PARAMETRIC);
 
@@ -336,6 +342,18 @@ public class ParametricForm extends VLayout {
 		}
 
 		options.setCriteria(list.toArray(new GUICriterion[0]));
+
+		if (new Boolean(vm.getValueAsString(SEARCHINHITS)).booleanValue()) {
+			ListGridRecord[] records = Search.get().getLastResult();
+			Long[] ids = new Long[records.length];
+			int i = 0;
+			for (ListGridRecord rec : records) {
+				ids[i] = new Long(rec.getAttribute("id"));
+				i++;
+			}
+			options.setFilterIds(ids);
+		} else
+			options.setFilterIds(null);
 
 		Search.get().setOptions(options);
 		Search.get().search();

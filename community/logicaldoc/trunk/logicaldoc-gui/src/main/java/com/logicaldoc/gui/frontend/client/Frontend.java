@@ -165,15 +165,15 @@ public class Frontend implements EntryPoint {
 	}
 
 	public void searchTag(String tag) {
-		TagsForm.searchTag(tag);
+		TagsForm.searchTag(tag, false);
 	}
 
 	/**
 	 * Declares the javascript function used to trigger the upload.
 	 */
 	public static native void setUploadTrigger(Frontend frontend) /*-{
-		$wnd.triggerUpload = function () {
-		   frontend.@com.logicaldoc.gui.frontend.client.Frontend::triggerUpload()();
+		$wnd.triggerUpload = function() {
+			frontend.@com.logicaldoc.gui.frontend.client.Frontend::triggerUpload()();
 		};
 	}-*/;
 
@@ -182,8 +182,8 @@ public class Frontend implements EntryPoint {
 	 * specific tag.
 	 */
 	public static native void setSearchTag(Frontend frontend) /*-{
-		$wnd.searchTag = function (tag) {
-		   frontend.@com.logicaldoc.gui.frontend.client.Frontend::searchTag(Ljava/lang/String;)(tag);
+		$wnd.searchTag = function(tag) {
+			frontend.@com.logicaldoc.gui.frontend.client.Frontend::searchTag(Ljava/lang/String;)(tag);
 		};
 	}-*/;
 }

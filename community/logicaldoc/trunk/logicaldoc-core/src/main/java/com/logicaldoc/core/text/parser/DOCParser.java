@@ -56,7 +56,7 @@ public class DOCParser extends RTFParser {
 			if (tmp != null)
 				tmp = tmp.replaceAll("[\\p{Cntrl}&&[^\\n]]", " ");
 			content = StringUtil.writeToString(new StringReader(tmp));
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.warn("Failed to extract Word text content", e);
 		}
 	}
