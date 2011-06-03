@@ -19,6 +19,7 @@ import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.PickerIcon;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
@@ -48,6 +49,8 @@ import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
  */
 public class TagsForm extends VLayout {
 
+	private static final String SEARCHINHITS = "searchinhits";
+
 	private ListGrid tags;
 
 	private static TagsForm instance;
@@ -56,13 +59,21 @@ public class TagsForm extends VLayout {
 
 	private boolean admin = false;
 
+	private DynamicForm form1;
+
+	private DynamicForm form2;
+
 	public static TagsForm get() {
 		if (instance == null)
-			instance = new TagsForm(false);
+			instance = new TagsForm(false, true);
 		return instance;
 	}
 
-	public TagsForm(final boolean admin) {
+	/**
+	 * @param admin Is for Admin mode
+	 * @param searchInHits True if the search in hits must be shown
+	 */
+	public TagsForm(final boolean admin, final boolean searchInHits) {
 		setMembersMargin(3);
 		this.admin = admin;
 
@@ -70,7 +81,7 @@ public class TagsForm extends VLayout {
 		vocabulary.setMargin(5);
 		vocabulary.setMembersMargin(10);
 
-		final DynamicForm form1 = new DynamicForm();
+		form1 = new DynamicForm();
 		form1.setNumCols(9);
 		List<FormItem> items = new ArrayList<FormItem>();
 		String str = Session.get().getInfo().getConfig("tag.vocabulary");
@@ -85,9 +96,10 @@ public class TagsForm extends VLayout {
 			});
 			items.add(item);
 		}
+
 		form1.setItems(items.toArray(new FormItem[0]));
 
-		final DynamicForm form2 = new DynamicForm();
+		form2 = new DynamicForm();
 		form2.setNumCols(3);
 
 		PickerIcon searchPicker = new PickerIcon(PickerIcon.SEARCH, new FormItemClickHandler() {
@@ -104,7 +116,13 @@ public class TagsForm extends VLayout {
 		otherChar.setWidth(50);
 		otherChar.setEndRow(false);
 		otherChar.setIcons(searchPicker);
-		form2.setItems(otherChar);
+
+		CheckboxItem searchinhits = new CheckboxItem("searchinhits", I18N.message("searchinhits"));
+		searchinhits.setColSpan(3);
+		if (searchInHits && !admin)
+			form2.setItems(otherChar, searchinhits);
+		else
+			form2.setItems(otherChar);
 
 		vocabulary.addMember(form1);
 		vocabulary.addMember(form2);
@@ -150,11 +168,7 @@ public class TagsForm extends VLayout {
 	}
 
 	private void executeSearch(ListGridRecord record) {
-		GUISearchOptions options = new GUISearchOptions();
-		options.setType(GUISearchOptions.TYPE_TAGS);
-		options.setExpression(record.getAttributeAsString("word"));
-		Search.get().setOptions(options);
-		Search.get().search();
+		searchTag(record.getAttributeAsString("word"), new Boolean(form2.getValueAsString(SEARCHINHITS)).booleanValue());
 	}
 
 	private void showContextMenu(boolean admin) {
@@ -247,13 +261,26 @@ public class TagsForm extends VLayout {
 	/**
 	 * Launches the search for one tag
 	 */
-	public static void searchTag(String word) {
+	public static void searchTag(String word, boolean searchInHits) {
 		MainPanel.get().selectSearchTab();
 		SearchMenu.get().openTagsSection();
 		TagsForm.get().onLetterSelect(word.substring(0, 1));
 		GUISearchOptions options = new GUISearchOptions();
 		options.setType(GUISearchOptions.TYPE_TAGS);
 		options.setExpression(word);
+
+		if (searchInHits) {
+			ListGridRecord[] records = Search.get().getLastResult();
+			Long[] ids = new Long[records.length];
+			int i = 0;
+			for (ListGridRecord rec : records) {
+				ids[i] = new Long(rec.getAttribute("id"));
+				i++;
+			}
+			options.setFilterIds(ids);
+		} else
+			options.setFilterIds(null);
+
 		Search.get().setOptions(options);
 		Search.get().search();
 	}

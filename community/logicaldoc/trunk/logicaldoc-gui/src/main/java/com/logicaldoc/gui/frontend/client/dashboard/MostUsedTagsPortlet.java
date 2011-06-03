@@ -57,7 +57,7 @@ public class MostUsedTagsPortlet extends Portlet {
 				refresh();
 			}
 		});
-		
+
 		if (container != null)
 			removeChild(container);
 
@@ -73,15 +73,15 @@ public class MostUsedTagsPortlet extends Portlet {
 		setAnimateMinimize(true);
 		setDragAppearance(DragAppearance.OUTLINE);
 		setDragOpacity(30);
-		
+
 		container = new HLayout();
 		container.setWidth100();
 		container.setHeight100();
 		container.setAlign(Alignment.CENTER);
 		container.setMargin(25);
-		
+
 		addChild(container);
-		
+
 		service.getTagCloud(new AsyncCallback<GUITag[]>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -112,7 +112,7 @@ public class MostUsedTagsPortlet extends Portlet {
 					@Override
 					public void onCellDoubleClick(CellDoubleClickEvent event) {
 						ListGridRecord record = event.getRecord();
-						TagsForm.searchTag(record.getAttributeAsString("word"));
+						TagsForm.searchTag(record.getAttributeAsString("word"), false);
 					}
 				});
 			}

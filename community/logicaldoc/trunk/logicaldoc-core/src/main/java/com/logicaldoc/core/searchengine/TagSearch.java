@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -63,32 +64,35 @@ public class TagSearch extends Search {
 	private void appendWhereClause(boolean searchShortcut, StringBuffer query) {
 		query.append(" where A.ld_deleted=0 ");
 
+		// Ids string to be used in the query
+		String ids = null;
+		if (getOptions().getFilterIds() != null && !getOptions().getFilterIds().isEmpty()) {
+			ids = getOptions().getFilterIds().toString();
+			ids = ids.replace("[", "(").replace("]", ")");
+		}
+
+		if (StringUtils.isNotEmpty(ids)) {
+			query.append(" and A.ld_id in ");
+			query.append(ids);
+		}
+
 		if (searchShortcut)
 			query.append(" and REF.ld_deleted=0 and A.ld_docref = REF.ld_id ");
 		else
 			query.append(" and A.ld_docref is null ");
 
-		boolean first = true;
-		if (searchShortcut)
-			query.append(" and REF.ld_id in (");
-		else
-			query.append(" and A.ld_id in (");
-
 		/*
-		 * Search for all docs with tag
+		 * Search for all docs with specific tag
 		 */
+		if (searchShortcut)
+			query.append(" and REF.ld_id in ");
+		else
+			query.append(" and A.ld_id in ");
+
 		DocumentDAO docDAO = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Set<Long> precoll = docDAO.findDocIdByUserIdAndTag(options.getUserId(), options.getExpression());
-		StringBuffer buf = new StringBuffer();
-		for (Long id : precoll) {
-			if (!first)
-				buf.append(",");
-			buf.append(id);
-			first = false;
-		}
-
-		query.append(buf.toString());
-		query.append(") ");
+		String buf = precoll.toString().replace("[", "(").replace("]", ")");
+		query.append(buf);
 	}
 
 	public class HitMapper implements RowMapper<Hit> {

@@ -9,6 +9,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Search options
@@ -40,6 +42,12 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 	private long userId = -1;
 
 	private String topOperator;
+
+	/**
+	 * Optional set of document ids. If specified only documents inside this set
+	 * will be returned.
+	 */
+	protected Set<Long> filterIds = new HashSet<Long>();
 
 	public Object[] getParameters() {
 		return parameters;
@@ -145,5 +153,13 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 
 	public void setTopOperator(String topOperator) {
 		this.topOperator = topOperator;
+	}
+
+	public Set<Long> getFilterIds() {
+		return filterIds;
+	}
+
+	public void setFilterIds(Set<Long> filterIds) {
+		this.filterIds = filterIds;
 	}
 }

@@ -179,6 +179,13 @@ public class FulltextSearch extends Search {
 
 				Document doc = indexSearcher.doc(topDocs.scoreDocs[i].doc);
 
+				// Skip a document if not in the filter set
+				if (opt.getFilterIds() != null && !opt.getFilterIds().isEmpty()) {
+					Long id = new Long(doc.get(LuceneDocument.FIELD_DOC_ID));
+					if (!opt.getFilterIds().contains(id))
+						continue;
+				}
+
 				String fid = doc.get(LuceneDocument.FIELD_FOLDER_ID);
 				// Support the old 'path' attribute
 				if (fid == null)

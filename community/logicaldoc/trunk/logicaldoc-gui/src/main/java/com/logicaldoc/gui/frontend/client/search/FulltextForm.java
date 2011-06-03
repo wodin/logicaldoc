@@ -39,6 +39,7 @@ import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
@@ -48,6 +49,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.0
  */
 public class FulltextForm extends VLayout implements SearchObserver {
+	private static final String SEARCHINHITS = "searchinhits";
+
 	private static final String BEFORE = "before";
 
 	private static final String DATE = "date";
@@ -110,6 +113,9 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			}
 		});
 
+		CheckboxItem searchinhits = new CheckboxItem("searchinhits", I18N.message("searchinhits"));
+		searchinhits.setColSpan(3);
+
 		SelectItem language = ItemFactory.newLanguageSelector("language", true, false);
 		language.setDefaultValue(NO_LANGUAGE);
 		language.setColSpan(4);
@@ -165,8 +171,8 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			}
 		});
 
-		form.setItems(expression, language, sizeOperator, size, dateSelector, dateOperator, date, template, folder,
-				subfolders, searchin);
+		form.setItems(expression, language, searchinhits, sizeOperator, size, dateSelector, dateOperator, date,
+				template, folder, subfolders, searchin);
 		addMember(form);
 
 		prepareExtendedAttributes(null);
@@ -182,19 +188,19 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		Map<String, Object> values = vm.getValues();
 
 		GUISearchOptions options = new GUISearchOptions();
-		
-		String hits=Session.get().getInfo().getConfig("search.hits");
+
+		String hits = Session.get().getInfo().getConfig("search.hits");
 		options.setMaxHits(Integer.parseInt(hits));
 		options.setType(GUISearchOptions.TYPE_FULLTEXT);
 		options.setExpression(vm.getValueAsString("expression"));
-		if (NO_LANGUAGE.equals(vm.getValueAsString("language"))){
+		if (NO_LANGUAGE.equals(vm.getValueAsString("language"))) {
 			options.setLanguage(null);
 			options.setExpressionLanguage(I18N.getLocale());
 		} else {
 			options.setLanguage(vm.getValueAsString("language"));
 			options.setExpressionLanguage(options.getLanguage());
 		}
-		
+
 		Long size = vm.getValueAsString("size") != null ? new Long(vm.getValueAsString("size")) : null;
 		if (size != null && !NOLIMIT.equals(vm.getValueAsString("sizeOperator"))) {
 			if (LESSTHAN.equals(vm.getValueAsString("sizeOperator")))
@@ -257,7 +263,19 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		options.setFolderName(folder.getFolderName());
 
 		options.setSearchInSubPath(new Boolean(vm.getValueAsString("subfolders")).booleanValue());
-		
+
+		if (new Boolean(vm.getValueAsString(SEARCHINHITS)).booleanValue()) {
+			ListGridRecord[] records = Search.get().getLastResult();
+			Long[] ids = new Long[records.length];
+			int i = 0;
+			for (ListGridRecord rec : records) {
+				ids[i] = new Long(rec.getAttribute("id"));
+				i++;
+			}
+			options.setFilterIds(ids);
+		} else
+			options.setFilterIds(null);
+
 		Search.get().setOptions(options);
 		Search.get().search();
 	}
