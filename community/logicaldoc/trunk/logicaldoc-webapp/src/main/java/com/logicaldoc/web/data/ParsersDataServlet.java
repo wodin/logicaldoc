@@ -2,6 +2,9 @@ package com.logicaldoc.web.data;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,7 +17,11 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.core.util.IconSelector;
+import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.web.util.SessionUtil;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * This servlet is responsible for parsers data.
@@ -33,6 +40,7 @@ public class ParsersDataServlet extends HttpServlet {
 			IOException {
 		try {
 			SessionUtil.validateSession(request);
+			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
@@ -45,13 +53,23 @@ public class ParsersDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 			int i = 0;
-			for (String ext : ParserFactory.getParsers().keySet()) {
+			Set<String> keys = ParserFactory.getParsers().keySet();
+			List<String> sort = new ArrayList<String>();
+			for (String ext : keys) {
+				sort.add(ext);
+			}
+			Collections.sort(sort);
+
+			for (String ext : sort) {
 				writer.print("<parser>");
 				writer.print("<id>" + i + "</id>");
 				writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(ext.toLowerCase()))
 						+ "</icon>");
 				writer.print("<extension>" + ext.toLowerCase() + "</extension>");
 				writer.print("<name><![CDATA[" + ParserFactory.getParsers().get(ext).getSimpleName() + "]]></name>");
+
+				String aliasProp = config.getProperty("parser.alias." + ext.toLowerCase());
+				writer.print("<aliases><![CDATA[" + (aliasProp != null ? aliasProp : "") + "]]></aliases>");
 				writer.print("</parser>");
 			}
 			writer.write("</list>");

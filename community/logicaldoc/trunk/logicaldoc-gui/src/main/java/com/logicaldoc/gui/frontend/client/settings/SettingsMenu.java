@@ -15,7 +15,6 @@ import com.logicaldoc.gui.frontend.client.services.SearchEngineServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.logicaldoc.gui.frontend.client.system.GUILanguagesPanel;
-import com.logicaldoc.gui.frontend.client.system.SearchIndexingPanel;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;

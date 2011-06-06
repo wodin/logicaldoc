@@ -1,7 +1,8 @@
 package com.logicaldoc.web.service;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -11,6 +12,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.Indexer;
+import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineService;
@@ -43,7 +45,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			searchEngine.setExcludePatters(conf.getProperty("index.excludes"));
 			searchEngine.setIncludePatters(conf.getProperty("index.includes"));
-			
+
 			if (StringUtils.isNotEmpty(conf.getProperty("index.batch")))
 				searchEngine.setBatch(new Integer(conf.getProperty("index.batch")));
 			else
@@ -128,7 +130,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			conf.setProperty("index.includes", searchEngine.getIncludePatters());
 			conf.setProperty("index.batch", Integer.toString(searchEngine.getBatch()));
 			conf.write();
-		} catch (IOException t) {
+		} catch (Exception t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
 		}
@@ -141,7 +143,24 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			conf.setProperty("lang." + language, active ? "enabled" : "disabled");
 			conf.write();
-		} catch (IOException t) {
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
+	}
+
+	@Override
+	public void setAliases(String sid, String extension, String aliases) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		try {
+			StringTokenizer st = new StringTokenizer(aliases, ",", false);
+			List<String> buf = new ArrayList<String>();
+			while (st.hasMoreElements())
+				buf.add(((String) st.nextElement()).trim());
+
+			ParserFactory.setAliases(extension, buf.toArray(new String[0]));
+		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
 		}

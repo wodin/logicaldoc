@@ -31,8 +31,9 @@ public class ParsersDS extends DataSource {
 		DataSourceImageField icon = new DataSourceImageField("icon");
 		DataSourceTextField extension = new DataSourceTextField("extension");
 		DataSourceTextField name = new DataSourceTextField("name");
+		DataSourceTextField aliases = new DataSourceTextField("aliases");
 
-		setFields(id, icon, extension, name);
+		setFields(id, icon, extension, name, aliases);
 		setClientOnly(true);
 		setDataURL("data/parsers.xml?sid=" + Session.get().getSid());
 	}

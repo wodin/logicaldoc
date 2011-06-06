@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.system;
+package com.logicaldoc.gui.frontend.client.settings;
 
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.types.HeaderControls;
