@@ -371,9 +371,11 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				att.setOptions(list.toArray(new String[0]));
 			}
 
-			if (doc != null && doc.getValue(attrName) != null)
-				att.setValue(doc.getValue(attrName));
-
+			if (doc != null) {
+				if (doc.getValue(attrName) != null)
+					att.setValue(doc.getValue(attrName));
+			} else
+				att.setValue(extAttr.getValue());
 			attributes[i] = att;
 			i++;
 		}

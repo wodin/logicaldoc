@@ -93,6 +93,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		Assert.assertEquals(3, template.getId());
 
 		GUIExtendedAttribute[] extAttr = service.getAttributes(session.getSid(), 3);
+		Assert.assertEquals(GUIExtendedAttribute.TYPE_STRING, extAttr[0].getType());
 		Assert.assertEquals("a1", extAttr[0].getName());
 		Assert.assertEquals("v1", extAttr[0].getValue());
 		Assert.assertEquals("a2", extAttr[1].getName());

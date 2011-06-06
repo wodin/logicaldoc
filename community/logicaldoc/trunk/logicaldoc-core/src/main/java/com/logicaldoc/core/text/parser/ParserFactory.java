@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import net.sf.jmimemagic.Magic;
 import net.sf.jmimemagic.MagicMatch;
@@ -20,6 +21,8 @@ import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
 
 import com.logicaldoc.core.text.parser.wordperfect.WordPerfectParser;
+import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
@@ -30,11 +33,21 @@ import com.logicaldoc.util.plugin.PluginRegistry;
  */
 public class ParserFactory {
 
+	private static final String PARSER_ALIAS = "parser.alias.";
+
 	protected static Log log = LogFactory.getLog(ParserFactory.class);
 
-	// This is the list of registered parsers: key is the file extension, value
-	// is the parser class
+	/**
+	 * This is the map of registered parsers: key is the file extension, value
+	 * is the parser class
+	 */
 	private static Map<String, Class> parsers = new HashMap<String, Class>();
+
+	/**
+	 * The map of aliases. Key is the alias, value is the registered extension.
+	 * (eg. test->odt
+	 */
+	private static Map<String, String> aliases = new HashMap<String, String>();
 
 	/**
 	 * Registers all parsers from extension points
@@ -110,6 +123,8 @@ public class ParserFactory {
 				log.error(e.getMessage());
 			}
 		}
+
+		initAliases();
 	}
 
 	public static Parser getParser(File file, String filename, Locale locale, String encoding) {
@@ -153,6 +168,15 @@ public class ParserFactory {
 				parser = new TXTParser();
 			}
 		} else {
+			log.info("No registered parser for extension " + ext + ". Search for alias.");
+
+			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			String alias = config.getProperty("extalias." + ext.toLowerCase());
+			if (StringUtils.isNotEmpty(alias)) {
+				log.info("Found alias " + alias);
+				return getParser(alias);
+			}
+
 			log.warn("No registered parser for extension " + ext);
 			try {
 				MagicMatch match = null;
@@ -224,5 +248,56 @@ public class ParserFactory {
 		if (parsers.isEmpty())
 			init();
 		return parsers;
+	}
+
+	/**
+	 * Adds new aliases for the specified extension.
+	 * <p>
+	 * Each alias is saved as property <b>parser.alias.&lt;ext&gt;</b><br>
+	 * example: parser.alias.odt = test, acme<br>
+	 * In this case an extension 'test' will be treated as 'odt'
+	 * 
+	 * @param ext Must be one of the registered extensions
+	 * @param aliases Array of extension aliases (eg. test, acme ...)
+	 */
+	public static void setAliases(String ext, String[] aliases) {
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		String pAlias = PARSER_ALIAS + ext.toLowerCase();
+		if (aliases == null || aliases.length == 0) {
+			config.setProperty(pAlias, "");
+		} else {
+			// Save as comma-separated values
+			StringBuffer sb = new StringBuffer();
+			for (String alias : aliases) {
+				sb.append(",");
+				sb.append(alias.trim());
+			}
+			config.setProperty(pAlias, sb.substring(1));
+		}
+
+		initAliases();
+
+		try {
+			config.write();
+		} catch (IOException e) {
+			log.warn("Unable to save context properties.", e);
+		}
+	}
+
+	private static void initAliases() {
+		aliases.clear();
+
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		for (Object key : config.keySet()) {
+			if (key.toString().startsWith(PARSER_ALIAS)) {
+				String ext = key.toString().substring(PARSER_ALIAS.length());
+
+				StringTokenizer st = new StringTokenizer(config.getProperty(key.toString()), ",", false);
+				while (st.hasMoreElements()) {
+					String alias = (String) st.nextElement();
+					aliases.put(alias.trim(), ext);
+				}
+			}
+		}
 	}
 }

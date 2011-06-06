@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.system;
+package com.logicaldoc.gui.frontend.client.settings;
 
 import java.util.Map;
 
@@ -37,6 +37,7 @@ import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.validator.LengthRangeValidator;
+import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -44,6 +45,8 @@ import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
 import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
+import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
+import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -294,20 +297,54 @@ public class SearchIndexingPanel extends VLayout {
 		extension.setCanEdit(false);
 		extension.setValidators(validator);
 
-		ListGridField name = new ListGridField("name", I18N.message("name"));
+		ListGridField name = new ListGridField("name", I18N.message("name"), 180);
 		name.setCanEdit(false);
 		name.setValidators(validator);
 
+		ListGridField aliases = new ListGridField("aliases", I18N.message("aliases"));
+		aliases.setCanEdit(true);
+		aliases.setCanFilter(false);
+		aliases.setCanSort(false);
+		aliases.setCellFormatter(new CellFormatter() {
+			@Override
+			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
+				return Util.strip(record.getAttributeAsString("aliases"));
+			}
+		});
+
 		parsersList = new ListGrid();
-		parsersList.setCanEdit(false);
+		parsersList.setCanEdit(true);
 		parsersList.setSelectionType(SelectionStyle.SINGLE);
 		parsersList.setWidth100();
 		parsersList.setHeight100();
 		parsersList.setAutoFetchData(true);
-		parsersList.setFields(icon, extension, name);
+		parsersList.setFields(icon, extension, name, aliases);
 		parsersList.setDataSource(ParsersDS.get());
 		parsersList.setShowFilterEditor(true);
 		parsersList.setFilterOnKeypress(true);
+		parsersList.setModalEditing(true);
+
+		parsersList.addEditCompleteHandler(new EditCompleteHandler() {
+			@Override
+			public void onEditComplete(EditCompleteEvent event) {
+				ListGridRecord record = parsersList.getRecord(event.getRowNum());
+
+				service.setAliases(Session.get().getSid(), record.getAttributeAsString("extension"), (String) event
+						.getNewValues().get("aliases"), new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void ret) {
+						parsersList.invalidateCache();
+						parsersList.getDataSource().invalidateCache();
+						parsersList.redraw();
+					}
+				});
+			}
+		});
 
 		parsersInfoTabPanel.addMember(parsersList);
 		parsersInfoTab.setPane(parsersInfoTabPanel);
@@ -394,7 +431,7 @@ public class SearchIndexingPanel extends VLayout {
 		includePatters.setValue(this.searchEngine.getIncludePatters());
 		includePatters.setHint(I18N.message("separatedcomma"));
 		includePatters.setHintStyle("hint");
-	
+
 		// Exclude Patters
 		TextItem excludePatters = ItemFactory.newTextItem("excludePatters", "excludepatters", null);
 		excludePatters.setValue(this.searchEngine.getExcludePatters());

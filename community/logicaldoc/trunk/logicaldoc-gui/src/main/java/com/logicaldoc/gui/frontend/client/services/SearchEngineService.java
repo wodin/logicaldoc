@@ -22,7 +22,7 @@ public interface SearchEngineService extends RemoteService {
 	 * Unlocks the indexer.
 	 */
 	public void unlocks(String sid) throws InvalidSessionException;
-	
+
 	/**
 	 * Checks the indexer.
 	 */
@@ -42,4 +42,10 @@ public interface SearchEngineService extends RemoteService {
 	 * Changes the activation status of a language
 	 */
 	public void setLanguageStatus(String sid, String language, boolean active) throws InvalidSessionException;
+
+	/**
+	 * Sets the parser aliases for the given extension. Aliases must be a
+	 * comma-separated values.
+	 */
+	public void setAliases(String sid, String extension, String aliases) throws InvalidSessionException;
 }

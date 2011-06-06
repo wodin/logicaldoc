@@ -16,4 +16,6 @@ public interface SearchEngineServiceAsync {
 	void setLanguageStatus(String sid, String language, boolean active, AsyncCallback<Void> callback);
 
 	void check(String sid, AsyncCallback<String> callback);
+
+	void setAliases(String sid, String extension, String aliases, AsyncCallback<Void> callback);
 }

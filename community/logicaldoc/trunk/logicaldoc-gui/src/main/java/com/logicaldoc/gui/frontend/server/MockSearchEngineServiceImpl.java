@@ -41,11 +41,17 @@ public class MockSearchEngineServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public void setLanguageStatus(String sid, String language, boolean active) {
-		
+
 	}
 
 	@Override
 	public String check(String sid) throws InvalidSessionException {
 		return "All OK";
+	}
+	
+	@Override
+	public void setAliases(String sid, String extension, String aliases) throws InvalidSessionException {
+		// TODO Auto-generated method stub
+		
 	}
 }
