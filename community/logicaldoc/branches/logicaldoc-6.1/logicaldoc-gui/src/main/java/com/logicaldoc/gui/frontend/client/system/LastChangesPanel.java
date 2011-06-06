@@ -225,11 +225,17 @@ public class LastChangesPanel extends VLayout {
 			if (values.get("sid") != null)
 				sid = (String) values.get("sid");
 
-			int displayMaxValue = 0;
-			if (values.get("displayMax") instanceof Integer)
-				displayMaxValue = (Integer) values.get("displayMax");
-			else
-				displayMaxValue = Integer.parseInt((String) values.get("displayMax"));
+      int displayMaxValue = 0;
+			try {
+				if (values.get("displayMax") != null) {
+					if (values.get("displayMax") instanceof Integer)
+						displayMaxValue = (Integer) values.get("displayMax");
+					else
+						displayMaxValue = Integer.parseInt((String) values.get("displayMax"));
+				}
+			} catch (Throwable t) {
+
+			}
 
 			service.search(Session.get().getSid(), userValue, fromValue, tillValue, displayMaxValue, sid, eventValues,
 					new AsyncCallback<GUIHistory[]>() {
