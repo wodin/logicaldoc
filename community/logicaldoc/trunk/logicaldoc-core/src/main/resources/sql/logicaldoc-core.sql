@@ -92,7 +92,7 @@ values     (17,CURRENT_TIMESTAMP,0,'customid',2,'menu.png',1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
-values     (16,CURRENT_TIMESTAMP,0,'tools',2,'menu.png',1);
+values     (16,CURRENT_TIMESTAMP,0,'reports',2,'menu.png',1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)

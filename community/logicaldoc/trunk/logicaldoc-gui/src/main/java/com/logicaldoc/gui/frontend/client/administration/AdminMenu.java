@@ -5,10 +5,10 @@ import com.logicaldoc.gui.common.client.Menu;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.impex.ImpexMenu;
 import com.logicaldoc.gui.frontend.client.metadata.MetadataMenu;
+import com.logicaldoc.gui.frontend.client.reports.ReportsMenu;
 import com.logicaldoc.gui.frontend.client.security.SecurityMenu;
 import com.logicaldoc.gui.frontend.client.settings.SettingsMenu;
 import com.logicaldoc.gui.frontend.client.system.SystemMenu;
-import com.logicaldoc.gui.frontend.client.tools.ToolsMenu;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
@@ -61,10 +61,10 @@ public class AdminMenu extends SectionStack {
 			addSection(impexSection);
 		}
 
-		if (Menu.enabled(Menu.TOOLS)) {
-			SectionStackSection toolsSection = new SectionStackSection(I18N.message("tools"));
+		if (Menu.enabled(Menu.REPORTS)) {
+			SectionStackSection toolsSection = new SectionStackSection(I18N.message("reports"));
 			toolsSection.setExpanded(false);
-			toolsSection.addItem(new ToolsMenu());
+			toolsSection.addItem(new ReportsMenu());
 			addSection(toolsSection);
 		}
 

@@ -135,7 +135,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		List<GUIParameter> params = new ArrayList<GUIParameter>();
 		for (Object key : conf.keySet()) {
-			if (key.toString().equals("webservice.enabled") || key.toString().startsWith("webdav")) {
+			if (key.toString().equals("webservice.enabled") || key.toString().startsWith("webdav")
+					|| key.toString().startsWith("command") || key.toString().startsWith("openoffice")) {
 				GUIParameter p = new GUIParameter(key.toString(), conf.getProperty(key.toString()));
 				params.add(p);
 			}

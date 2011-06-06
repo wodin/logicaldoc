@@ -32,7 +32,7 @@ public class Menu {
 
 	public static final long BARCODES = 30;
 
-	public static final long TOOLS = 16;
+	public static final long REPORTS = 16;
 
 	public static final long AOS = -20;
 
