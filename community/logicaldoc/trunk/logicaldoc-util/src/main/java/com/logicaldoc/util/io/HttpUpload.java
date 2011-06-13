@@ -7,6 +7,7 @@ import java.util.Date;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
@@ -28,15 +29,24 @@ public class HttpUpload {
 
 	private String fileName;
 
+	private CountingRequestEntity.ProgressListener listener;
+
 	public void UploadFile() {
 	}
 
 	public static void main(String[] args) throws Exception {
-		File f = new File("C:/email.txt");
+		File f = new File("C:/tmp/weblicense.sql");
 		HttpUpload upload = new HttpUpload();
 		upload.setFile(f);
-		upload.setFileName("test.jpg");
+		upload.setFileName("weblicense.sql");
 		upload.setURL("http://localhost:9080/logicaldoc/upload?sid=test");
+		upload.setListener(new CountingRequestEntity.ProgressListener() {
+					@Override
+					public void transferred(long total, long increment) {
+						System.out.println("Transfered " + increment);
+						System.out.println("Total " + total);
+					}
+				});
 		upload.upload();
 	}
 
@@ -59,7 +69,17 @@ public class HttpUpload {
 			filePart.setCharSet("utf8");
 			Part[] parts = { filePart };
 
-			filePost.setRequestEntity(new MultipartRequestEntity(parts, filePost.getParams()));
+			// Prepare the multipart request
+			MultipartRequestEntity multipart = new MultipartRequestEntity(parts, filePost.getParams());
+
+			RequestEntity request = multipart;
+
+			if (listener != null) {
+				// Wrap with the counter request in order to track the upload
+				request = new CountingRequestEntity(multipart, listener);
+			}
+
+			filePost.setRequestEntity(request);
 
 			HttpClient client = new HttpClient();
 
@@ -101,5 +121,13 @@ public class HttpUpload {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+	public CountingRequestEntity.ProgressListener getListener() {
+		return listener;
+	}
+
+	public void setListener(CountingRequestEntity.ProgressListener listener) {
+		this.listener = listener;
 	}
 }
