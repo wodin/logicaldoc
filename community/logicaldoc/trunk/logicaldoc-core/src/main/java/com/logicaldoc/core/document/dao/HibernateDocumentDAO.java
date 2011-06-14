@@ -226,9 +226,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					config.getProperty("barcode.excludes") == null ? "" : config.getProperty("barcode.excludes")))
 				doc.setBarcoded(Document.BARCODE_SKIP);
 
+			
 			// Save the document
 			getHibernateTemplate().saveOrUpdate(doc);
-
+			
 			// Update size and digest
 			String resource = storer.getResourceName(doc, doc.getFileVersion(), null);
 			if (storer.exists(doc.getId(), resource)) {
@@ -243,7 +244,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 						try {
 							in.close();
 						} catch (Throwable t) {
-
 						}
 				}
 

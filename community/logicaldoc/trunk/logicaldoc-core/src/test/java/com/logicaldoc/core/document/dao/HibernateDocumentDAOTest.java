@@ -245,26 +245,6 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		transaction.setUserId(1);
 		transaction.setNotified(0);
 
-		docFile = new File("target");
-		docFile = new File(docFile, "store");
-		docFile = new File(docFile, doc.getFileVersion());
-		FileUtils.forceMkdir(docFile.getParentFile());
-		out = new FileWriter(docFile);
-		out.write("Questo file serve per fare il test del digest su un documento");
-		out.flush();
-		out.close();
-		Assert.assertTrue(docFile.exists());
-		dao.store(doc, transaction);
-
-		Assert.assertEquals(7, doc.getId());
-		Assert.assertEquals(3, doc.getTags().size());
-		Assert.assertTrue(doc.getTags().contains("pluto"));
-		Assert.assertTrue(doc.getTags().contains("123456789123456789123456789"));
-		Assert.assertEquals("val 1", doc.getValue("att_1"));
-		Assert.assertTrue(docFile.exists());
-		Assert.assertNotNull(doc.getDigest());
-		Assert.assertEquals(doc.getDigest(), digest);
-
 		// Try to change the version comment
 		doc = dao.findById(7);
 		dao.initialize(doc);

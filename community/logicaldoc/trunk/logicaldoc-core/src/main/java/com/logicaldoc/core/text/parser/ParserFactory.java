@@ -287,6 +287,9 @@ public class ParserFactory {
 	private static void initAliases() {
 		aliases.clear();
 
+		if (Context.getInstance() == null)
+			return;
+
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		for (Object key : config.keySet()) {
 			if (key.toString().startsWith(PARSER_ALIAS)) {
