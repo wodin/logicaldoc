@@ -1,7 +1,9 @@
 package com.logicaldoc.webservice;
 
+import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
+import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.FolderClient;
 import com.logicaldoc.webservice.search.SearchClient;
 import com.logicaldoc.webservice.security.SecurityClient;
@@ -417,6 +419,11 @@ public class Main {
 		// "m.caruso@logicalobjects.it", "Test Invio Mail 2",
 		// "Questa mail è un test");
 
+		
+		WSDocument[] docs = documentClient.list(sid, 5);
+		for (WSDocument wsDocument : docs) {
+		 System.out.println("ID=" + wsDocument.getId());
+		}
 		auth.logout(sid);
 	}
 }

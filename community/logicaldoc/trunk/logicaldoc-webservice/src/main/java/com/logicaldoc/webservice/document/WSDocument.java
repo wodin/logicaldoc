@@ -167,34 +167,6 @@ public class WSDocument {
 		WSDocument wsDoc = new WSDocument();
 
 		try {
-			// Populate extended attributes
-			WSAttribute[] attributes = new WSAttribute[0];
-			if (document.getAttributes() != null && document.getAttributes().size() > 0) {
-				attributes = new WSAttribute[document.getAttributeNames().size()];
-				int i = 0;
-				for (String name : document.getAttributeNames()) {
-					ExtendedAttribute attr = document.getExtendedAttribute(name);
-					WSAttribute attribute = new WSAttribute();
-					attribute.setName(name);
-					attribute.setMandatory(attr.getMandatory());
-					attribute.setPosition(attr.getPosition());
-					attribute.setType(attr.getType());
-					attribute.setValue(attr.getValue());
-					attributes[i++] = attribute;
-				}
-			}
-
-			String[] tags = new String[0];
-			if (document.getTags() != null && document.getTags().size() > 0) {
-				tags = new String[document.getTags().size()];
-				List<String> docTags = new ArrayList<String>(document.getTags());
-				if (docTags != null && docTags.size() > 0) {
-					for (int j = 0; j < docTags.size(); j++) {
-						tags[j] = docTags.get(j);
-					}
-				}
-			}
-
 			wsDoc.setId(document.getId());
 			wsDoc.setCustomId(document.getCustomId());
 			wsDoc.setTitle(document.getTitle());
@@ -203,13 +175,11 @@ public class WSDocument {
 			wsDoc.setSourceType(document.getSourceType());
 			wsDoc.setCoverage(document.getCoverage());
 			wsDoc.setLanguage(document.getLanguage());
-			wsDoc.setTags(tags);
 			wsDoc.setSourceId(document.getSourceId());
 			wsDoc.setObject(document.getObject());
 			wsDoc.setRecipient(document.getRecipient());
 			if (document.getTemplate() != null)
 				wsDoc.setTemplateId(document.getTemplate().getId());
-			wsDoc.setExtendedAttributes(attributes);
 			String sourceDate = null;
 			if (document.getSourceDate() != null)
 				sourceDate = AbstractService.convertDateToString(document.getSourceDate());
@@ -239,6 +209,38 @@ public class WSDocument {
 			wsDoc.setDocRef(document.getDocRef());
 			wsDoc.setLastModified(AbstractService.convertDateToString(document.getLastModified()));
 			wsDoc.setRating(document.getRating());
+		
+		
+			// Populate extended attributes
+			WSAttribute[] attributes = new WSAttribute[0];
+			if (document.getAttributes() != null && document.getAttributes().size() > 0) {
+				attributes = new WSAttribute[document.getAttributeNames().size()];
+				int i = 0;
+				for (String name : document.getAttributeNames()) {
+					ExtendedAttribute attr = document.getExtendedAttribute(name);
+					WSAttribute attribute = new WSAttribute();
+					attribute.setName(name);
+					attribute.setMandatory(attr.getMandatory());
+					attribute.setPosition(attr.getPosition());
+					attribute.setType(attr.getType());
+					attribute.setValue(attr.getValue());
+					attributes[i++] = attribute;
+				}
+			}
+			wsDoc.setExtendedAttributes(attributes);
+
+			String[] tags = new String[0];
+			if (document.getTags() != null && document.getTags().size() > 0) {
+				tags = new String[document.getTags().size()];
+				List<String> docTags = new ArrayList<String>(document.getTags());
+				if (docTags != null && docTags.size() > 0) {
+					for (int j = 0; j < docTags.size(); j++) {
+						tags[j] = docTags.get(j);
+					}
+				}
+			}
+			wsDoc.setTags(tags);
+			
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}

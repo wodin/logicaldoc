@@ -36,7 +36,7 @@ public class WSAttribute {
 	private int mandatory = 0;
 
 	private int position = 0;
-	
+
 	private String label;
 
 	public WSAttribute() {
@@ -158,10 +158,13 @@ public class WSAttribute {
 			setDateValue(AbstractService.convertDateToString((Date) value));
 		} else {
 			this.type = TYPE_DATE;
-			XMLGregorianCalendar theXGCal = (XMLGregorianCalendar) value;
-			GregorianCalendar theGCal = theXGCal.toGregorianCalendar();
-			Date theDate = theGCal.getTime();
-			setDateValue(AbstractService.convertDateToString((Date) theDate));
+			if (value != null) {
+				XMLGregorianCalendar theXGCal = (XMLGregorianCalendar) value;
+				GregorianCalendar theGCal = theXGCal.toGregorianCalendar();
+				Date theDate = theGCal.getTime();
+				setDateValue(AbstractService.convertDateToString((Date) theDate));
+			} else
+				setDateValue(null);
 		}
 	}
 }
