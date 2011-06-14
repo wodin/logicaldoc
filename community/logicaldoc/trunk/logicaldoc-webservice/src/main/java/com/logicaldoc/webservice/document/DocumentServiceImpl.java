@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.activation.DataHandler;
+import javax.mail.util.ByteArrayDataSource;
 
 import net.sf.jmimemagic.Magic;
 import net.sf.jmimemagic.MagicMatch;
@@ -191,8 +192,9 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		// Now we can append the 'document' attachment to the response
 		String resource = storer.getResourceName(doc, null, null);
 		byte[] bytes = storer.getBytes(doc.getId(), resource);
+		storer.getStream(doc.getId(), resource);
 		MagicMatch match = Magic.getMagicMatch(bytes, true);
-		DataHandler content = new DataHandler(bytes, match.getMimeType());
+		DataHandler content = new DataHandler(new ByteArrayDataSource(bytes, match.getMimeType()));
 		return content;
 	}
 

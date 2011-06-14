@@ -1,6 +1,9 @@
 package com.logicaldoc.webservice;
 
-import com.logicaldoc.core.SystemInfo;
+import java.io.FileOutputStream;
+
+import javax.activation.DataHandler;
+
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
 import com.logicaldoc.webservice.document.WSDocument;
@@ -376,12 +379,13 @@ public class Main {
 		// doc.getLockUserId().longValue());
 		// System.out.println("indexed: " + doc.getIndexed());
 		//
-		// DataHandler data = documentClient.getContent(sid, 27);
-		// documentClient.checkin(sid, 27, "comment", "prova.pdf", true, data);
-		//
-		// doc = documentClient.getDocument(sid, 30);
-		// System.out.println("status: " + doc.getStatus());
-		// System.out.println("indexed: " + doc.getIndexed());
+		DataHandler data = documentClient.getContent(sid, 665);
+		data.writeTo(new FileOutputStream("C:/tmp/buf.doc"));
+		
+		
+//		doc = documentClient.getDocument(sid, 30);
+//		System.out.println("status: " + doc.getStatus());
+//		System.out.println("indexed: " + doc.getIndexed());
 
 		// WSDocument doc = documentClient.getDocument(sid, 29);
 		// Assert.assertNull(doc);
