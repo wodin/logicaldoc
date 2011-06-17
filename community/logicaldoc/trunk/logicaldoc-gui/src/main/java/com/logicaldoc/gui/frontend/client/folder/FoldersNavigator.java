@@ -75,7 +75,24 @@ public class FoldersNavigator extends TreeGrid {
 			public void onDrop(DropEvent event) {
 				try {
 					ListGrid list = null;
-					if (EventHandler.getDragTarget() instanceof ListGrid) {
+					if (EventHandler.getDragTarget() instanceof FoldersNavigator) {
+						final long source = Long.parseLong(getDragData()[0].getAttributeAsString("folderId"));
+						final long target = Long.parseLong(getDropFolder().getAttributeAsString("folderId"));
+
+						service.move(Session.get().getSid(), source, target, new AsyncCallback<Void>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+								Log.warn(I18N.message("operationnotallowed"), null);
+							}
+
+							@Override
+							public void onSuccess(Void ret) {
+
+							}
+						});
+
+					} else if (EventHandler.getDragTarget() instanceof ListGrid) {
 						list = (ListGrid) EventHandler.getDragTarget();
 
 						final ListGridRecord[] selection = list.getSelection();
@@ -96,7 +113,6 @@ public class FoldersNavigator extends TreeGrid {
 							return;
 
 						service.paste(Session.get().getSid(), ids, folderId, "cut", new AsyncCallback<Void>() {
-
 							@Override
 							public void onFailure(Throwable caught) {
 								Log.serverError(caught);
