@@ -464,90 +464,117 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	public GUIVersion[] getVersionsById(String sid, long id1, long id2) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		VersionDAO versDao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
-		Version docVersion = versDao.findById(id1);
+		try {
+			VersionDAO versDao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
+			Version docVersion = versDao.findById(id1);
 
-		GUIVersion version1 = null;
-		if (docVersion != null) {
-			version1 = new GUIVersion();
-			version1.setUsername(docVersion.getUsername());
-			version1.setComment(docVersion.getComment());
-			version1.setId(id1);
-			version1.setTitle(docVersion.getTitle());
-			version1.setCustomId(docVersion.getCustomId());
-			version1.setTags(docVersion.getTags().toArray(new String[docVersion.getTags().size()]));
-			version1.setType(docVersion.getType());
-			version1.setFileName(docVersion.getFileName());
-			version1.setVersion(docVersion.getVersion());
-			version1.setCreation(docVersion.getCreation());
-			version1.setCreator(docVersion.getCreator());
-			version1.setDate(docVersion.getDate());
-			version1.setPublisher(docVersion.getPublisher());
-			version1.setFileVersion(docVersion.getFileVersion());
-			version1.setLanguage(docVersion.getLanguage());
-			version1.setTemplateId(docVersion.getTemplateId());
-			version1.setFileSize(new Float(docVersion.getFileSize()));
-			version1.setTemplate(docVersion.getTemplateName());
-			versDao.initialize(docVersion);
-			for (String attrName : docVersion.getAttributeNames()) {
-				ExtendedAttribute extAttr = docVersion.getAttributes().get(attrName);
-				version1.setValue(attrName, extAttr);
+			GUIVersion version1 = null;
+			if (docVersion != null) {
+				version1 = new GUIVersion();
+				version1.setUsername(docVersion.getUsername());
+				version1.setComment(docVersion.getComment());
+				version1.setId(id1);
+				version1.setTitle(docVersion.getTitle());
+				version1.setCustomId(docVersion.getCustomId());
+				version1.setTags(docVersion.getTags().toArray(new String[docVersion.getTags().size()]));
+				version1.setType(docVersion.getType());
+				version1.setFileName(docVersion.getFileName());
+				version1.setVersion(docVersion.getVersion());
+				version1.setCreation(docVersion.getCreation());
+				version1.setCreator(docVersion.getCreator());
+				version1.setDate(docVersion.getDate());
+				version1.setPublisher(docVersion.getPublisher());
+				version1.setFileVersion(docVersion.getFileVersion());
+				version1.setLanguage(docVersion.getLanguage());
+				version1.setTemplateId(docVersion.getTemplateId());
+				version1.setFileSize(new Float(docVersion.getFileSize()));
+				version1.setSource(docVersion.getSource());
+				version1.setCoverage(docVersion.getCoverage());
+				version1.setRecipient(docVersion.getRecipient());
+				version1.setObject(docVersion.getObject());
+				if (docVersion.getRating() != null)
+					version1.setRating(docVersion.getRating());
+				version1.setSourceType(docVersion.getSourceType());
+				version1.setSourceAuthor(docVersion.getSourceAuthor());
+				version1.setSourceId(docVersion.getSourceId());
+				version1.setSourceDate(docVersion.getSourceDate());
+
+				version1.setTemplate(docVersion.getTemplateName());
+				versDao.initialize(docVersion);
+				for (String attrName : docVersion.getAttributeNames()) {
+					ExtendedAttribute extAttr = docVersion.getAttributes().get(attrName);
+					version1.setValue(attrName, extAttr);
+				}
+				GUIFolder folder1 = new GUIFolder();
+				folder1.setName(docVersion.getFolderName());
+				folder1.setId(docVersion.getFolderId());
+				version1.setFolder(folder1);
 			}
-			GUIFolder folder1 = new GUIFolder();
-			folder1.setName(docVersion.getFolderName());
-			folder1.setId(docVersion.getFolderId());
-			version1.setFolder(folder1);
-		}
 
-		docVersion = versDao.findById(id2);
+			docVersion = versDao.findById(id2);
 
-		GUIVersion version2 = null;
-		if (docVersion != null) {
-			version2 = new GUIVersion();
-			version2.setUsername(docVersion.getUsername());
-			version2.setComment(docVersion.getComment());
-			version2.setId(id1);
-			version2.setTitle(docVersion.getTitle());
-			version2.setCustomId(docVersion.getCustomId());
-			version2.setTags(docVersion.getTags().toArray(new String[docVersion.getTags().size()]));
-			version2.setType(docVersion.getType());
-			version2.setFileName(docVersion.getFileName());
-			version2.setVersion(docVersion.getVersion());
-			version2.setCreation(docVersion.getCreation());
-			version2.setCreator(docVersion.getCreator());
-			version2.setDate(docVersion.getDate());
-			version2.setPublisher(docVersion.getPublisher());
-			version2.setFileVersion(docVersion.getFileVersion());
-			version2.setLanguage(docVersion.getLanguage());
-			version2.setTemplateId(docVersion.getTemplateId());
-			version2.setFileSize(new Float(docVersion.getFileSize()));
-			version2.setTemplate(docVersion.getTemplateName());
-			versDao.initialize(docVersion);
-			for (String attrName : docVersion.getAttributeNames()) {
-				ExtendedAttribute extAttr = docVersion.getAttributes().get(attrName);
-				version2.setValue(attrName, extAttr);
+			GUIVersion version2 = null;
+			if (docVersion != null) {
+				version2 = new GUIVersion();
+				version2.setUsername(docVersion.getUsername());
+				version2.setComment(docVersion.getComment());
+				version2.setId(id1);
+				version2.setTitle(docVersion.getTitle());
+				version2.setCustomId(docVersion.getCustomId());
+				version2.setTags(docVersion.getTags().toArray(new String[docVersion.getTags().size()]));
+				version2.setType(docVersion.getType());
+				version2.setFileName(docVersion.getFileName());
+				version2.setVersion(docVersion.getVersion());
+				version2.setCreation(docVersion.getCreation());
+				version2.setCreator(docVersion.getCreator());
+				version2.setDate(docVersion.getDate());
+				version2.setPublisher(docVersion.getPublisher());
+				version2.setFileVersion(docVersion.getFileVersion());
+				version2.setLanguage(docVersion.getLanguage());
+				version2.setFileSize(new Float(docVersion.getFileSize()));
+				version2.setSource(docVersion.getSource());
+				version2.setCoverage(docVersion.getCoverage());
+				version2.setRecipient(docVersion.getRecipient());
+				version2.setObject(docVersion.getObject());
+				if (docVersion.getRating() != null)
+					version2.setRating(docVersion.getRating());
+				version2.setSourceType(docVersion.getSourceType());
+				version2.setSourceAuthor(docVersion.getSourceAuthor());
+				version2.setSourceId(docVersion.getSourceId());
+				version2.setSourceDate(docVersion.getSourceDate());
+
+				version2.setTemplateId(docVersion.getTemplateId());
+				version2.setTemplate(docVersion.getTemplateName());
+				versDao.initialize(docVersion);
+				for (String attrName : docVersion.getAttributeNames()) {
+					ExtendedAttribute extAttr = docVersion.getAttributes().get(attrName);
+					version2.setValue(attrName, extAttr);
+				}
+				GUIFolder folder2 = new GUIFolder();
+				folder2.setName(docVersion.getFolderName());
+				folder2.setId(docVersion.getFolderId());
+				version2.setFolder(folder2);
 			}
-			GUIFolder folder2 = new GUIFolder();
-			folder2.setName(docVersion.getFolderName());
-			folder2.setId(docVersion.getFolderId());
-			version2.setFolder(folder2);
+
+			GUIVersion[] versions = null;
+			if (version1 != null && version2 != null) {
+				versions = new GUIVersion[2];
+				versions[0] = version1;
+				versions[1] = version2;
+			} else if (version1 != null && version2 == null) {
+				versions = new GUIVersion[1];
+				versions[0] = version1;
+			} else if (version1 == null && version2 != null) {
+				versions = new GUIVersion[1];
+				versions[0] = version2;
+			} else
+				return null;
+
+			return versions;
+		} catch (Throwable t) {
+			log.error("Exception linking documents: " + t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
-
-		GUIVersion[] versions = null;
-		if (version1 != null && version2 != null) {
-			versions = new GUIVersion[2];
-			versions[0] = version1;
-			versions[1] = version2;
-		} else if (version1 != null && version2 == null) {
-			versions = new GUIVersion[1];
-			versions[0] = version1;
-		} else if (version1 == null && version2 != null) {
-			versions = new GUIVersion[1];
-			versions[0] = version2;
-		} else
-			return null;
-
-		return versions;
 	}
 
 	@Override
