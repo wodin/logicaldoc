@@ -131,4 +131,9 @@ public class DocumentClient implements DocumentService {
 	public WSDocument createAlias(String sid, long docId, long folderId) throws Exception {
 		return client.createAlias(sid, docId, folderId);
 	}
+
+	@Override
+	public void renameFile(String sid, long docId, String name) throws Exception {
+		client.renameFile(sid, docId, name);
+	}
 }
