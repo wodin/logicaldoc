@@ -356,7 +356,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		});
 
 		// Values (for preset editor)
-		values = ItemFactory.newSimpleTextItem("values", "values", null);
+		values = ItemFactory.newTextItem("values", "values", null);
 		values.setHint(I18N.message("separatedcomma"));
 		values.setDisabled(true);
 		
@@ -379,7 +379,6 @@ public class TemplatePropertiesPanel extends HLayout {
 						att.setEditor(Integer.parseInt((String) editor.getValue()));
 						if (att.getEditor() == GUIExtendedAttribute.EDITOR_LISTBOX)
 							att.setStringValue(values.getValueAsString());
-
 						if (form2.validate()) {
 							changedHandler.onChanged(null);
 							addAttribute(att);
@@ -391,16 +390,14 @@ public class TemplatePropertiesPanel extends HLayout {
 							att.setName(attributeName.getValueAsString());
 							att.setLabel((String) label.getValue());
 							att.setMandatory((Boolean) mandatory.getValue());
-							if (type.getValue() instanceof String)
-								att.setType(Integer.parseInt((String) type.getValue()));
-							else
-								att.setType((Integer) type.getValue());
-							att.setEditor(Integer.parseInt((String) editor.getValue()));
+							att.setType(Integer.parseInt(type.getValueAsString()));
+							att.setEditor(Integer.parseInt((String) editor.getValueAsString()));
+							
 							if (att.getEditor() == GUIExtendedAttribute.EDITOR_LISTBOX)
 								att.setStringValue(values.getValueAsString());
 							else
 								att.setStringValue(null);
-
+							
 							updateAttribute(att, updatingAttributeName);
 
 							clean();
@@ -551,7 +548,7 @@ public class TemplatePropertiesPanel extends HLayout {
 			form2.setValue("type", extAttr.getType());
 			form2.setValue("editor", extAttr.getEditor());
 			form2.setValue("values", extAttr.getStringValue());
-			updatingAttributeName = extAttr.getName();
+			updatingAttributeName = selectedAttributeName;
 			refreshFieldForm();
 		}
 	}
