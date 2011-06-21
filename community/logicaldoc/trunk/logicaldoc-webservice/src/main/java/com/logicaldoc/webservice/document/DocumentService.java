@@ -57,14 +57,25 @@ public interface DocumentService {
 	public void unlock(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId) throws Exception;
 
 	/**
-	 * Renames an existing document with the given identifier.
+	 * Renames the title of an existing document with the given identifier.
 	 * 
 	 * @param sid Session identifier
 	 * @param docId The document id
-	 * @param name The new document name
+	 * @param name The new document title
 	 * @throws Exception
 	 */
 	public void rename(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
+			@WebParam(name = "name") String name) throws Exception;
+
+	/**
+	 * Renames the filename of an existing document with the given identifier.
+	 * 
+	 * @param sid Session identifier
+	 * @param docId The document id
+	 * @param name The new document file name
+	 * @throws Exception
+	 */
+	public void renameFile(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
 			@WebParam(name = "name") String name) throws Exception;
 
 	/**

@@ -173,6 +173,23 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		Assert.assertEquals("sourcetype1", doc.getSourceType());
 		Assert.assertEquals("coverage1", doc.getCoverage());
 	}
+	
+	@Test
+	public void testRenameFile() throws Exception {
+		Document doc = docDao.findById(1);
+		Assert.assertNotNull(doc);
+		Assert.assertEquals("testDocname", doc.getTitle());
+		docDao.initialize(doc);
+
+		docServiceImpl.renameFile("", 1, "pippo.doc");
+
+		docDao.initialize(doc);
+		Assert.assertEquals("pippo.doc", doc.getFileName());
+		Assert.assertEquals("doc", doc.getType());
+		Assert.assertEquals("sourceauthor1", doc.getSourceAuthor());
+		Assert.assertEquals("sourcetype1", doc.getSourceType());
+		Assert.assertEquals("coverage1", doc.getCoverage());
+	}
 
 	@Test
 	public void testGetDocument() throws Exception {
