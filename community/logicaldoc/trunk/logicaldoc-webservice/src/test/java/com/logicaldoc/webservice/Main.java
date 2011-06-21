@@ -424,10 +424,11 @@ public class Main {
 		// "Questa mail è un test");
 
 		
-		WSDocument[] docs = documentClient.list(sid, 5);
-		for (WSDocument wsDocument : docs) {
-		 System.out.println("ID=" + wsDocument.getId());
+		for(int i=0;i<20;i++){
+	      System.out.println("Created SID: " + auth.login("admin", "admin"));
 		}
-		auth.logout(sid);
+		
+	
+		//auth.logout(sid);
 	}
 }
