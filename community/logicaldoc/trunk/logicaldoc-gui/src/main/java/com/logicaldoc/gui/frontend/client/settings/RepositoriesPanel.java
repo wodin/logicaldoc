@@ -103,7 +103,10 @@ public class RepositoriesPanel extends VLayout {
 						if (name.startsWith("isc"))
 							continue;
 						repo = new GUIParameter(name, (String) values.get(name));
-						if (name.startsWith("store")) {
+						if (name.equals("compression")) {
+							repo = new GUIParameter("store.compress", (String) values.get(name));
+							storages.add(repo);
+						} else if (name.startsWith("store")) {
 							storages.add(repo);
 						} else if (name.equals("writeto")) {
 							String storeSelected = (String) values.get(name);
