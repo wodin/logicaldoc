@@ -657,8 +657,11 @@ public class DocumentManagerImpl implements DocumentManager {
 			} else {
 				document.setFileName(newName.trim());
 				String extension = FilenameUtils.getExtension(newName.trim());
-				if (StringUtils.isNotEmpty(extension))
+				if (StringUtils.isNotEmpty(extension)) {
 					document.setType(FilenameUtils.getExtension(newName));
+				} else { 
+				  document.setType("unknown");
+				}
 				setUniqueFilename(document);
 			}
 			document.setIndexed(AbstractDocument.INDEX_TO_INDEX);
