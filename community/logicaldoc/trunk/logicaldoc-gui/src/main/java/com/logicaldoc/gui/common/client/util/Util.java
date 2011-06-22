@@ -1,9 +1,11 @@
 package com.logicaldoc.gui.common.client.util;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 
 public class Util {
@@ -52,12 +54,19 @@ public class Util {
 	 */
 	public static String flashPreview(String flashName, int width, int height, String flashvars, boolean printEnabled,
 			String language) {
+		String key = Session.get().getInfo().getConfig("flexpaperviewer.key");
 		String vars = flashvars + "&amp;Scale=1" + "&amp;ZoomTransition=easeOut" + "&amp;ZoomTime=0.5"
 				+ "&amp;ZoomInterval=0.2" + "&amp;FitPageOnLoad=false" + "&amp;FitWidthOnLoad=false"
 				+ "&amp;PrintEnabled=" + printEnabled + "&amp;ProgressiveLoading=true" + "&amp;MinZoomSize=0.3"
 				+ "&amp;MaxZoomSize=5" + "&amp;PrintToolsVisible=true" + "&amp;ViewModeToolsVisible=true"
 				+ "&amp;ZoomToolsVisible=true" + "&amp;FullScreenVisible=true" + "&amp;NavToolsVisible=true"
-				+ "&amp;CursorToolsVisible=" + printEnabled + "&amp;SearchToolsVisible=true" + "&amp;localeChain=" + language;
+				+ "&amp;CursorToolsVisible=" + printEnabled + "&amp;SearchToolsVisible=true" + "&amp;localeChain="
+				+ language+"&amp;FullScreenAsMaxWindow=false";
+
+		if (key != null) {
+			vars += "&amp;key=" + URL.encode(key);
+		}
+
 		String tmp = "<div align=\"center\"><object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0\" width=\""
 				+ width + "\" height=\"" + height + "\" align=\"middle\">\n";
 		tmp += " <param name=\"allowScriptAccess\" value=\"always\" />\n";
@@ -67,9 +76,11 @@ public class Util {
 		tmp += " <param name=\"bgcolor\" value=\"#ffffff\" />\n";
 		tmp += " <param name=\"wmode\" value=\"transparent\" />\n";
 		tmp += " <param name=\"flashvars\" value=\"" + vars + "\" />";
+		if (key != null)
+			tmp += " <param name=\"key\" value=\"" + key + "\" />";
 		tmp += "	<embed type=\"application/x-shockwave-flash\" src=\"" + Util.flashUrl(flashName) + "\" height=\""
 				+ height + "\" width=\"" + width + "\" id=\"" + flashName + "\" name=\"" + flashName
-				+ "\" bgcolor=\"#ffffff\" quality=\"high\" flashvars=\"" + vars + "\" />";
+				+ "\" bgcolor=\"#ffffff\" quality=\"high\" allowFullScreen=\"true\" flashvars=\"" + vars + "\" />";
 		tmp += "</object></div>\n";
 		return tmp;
 	}
@@ -204,13 +215,13 @@ public class Util {
 	 */
 	public static native String formatSize(double size) /*-{
 		if (size / 1024 < 1) {
-		  str = size + " Bytes";
+			str = size + " Bytes";
 		} else if (size / 1048576 < 1) {
-		  str = (size / 1024).toFixed(1) + " KBytes";
-		} else if(size / 1073741824 <1){
-		  str = (size / 1048576).toFixed(1) + " MBytes";
+			str = (size / 1024).toFixed(1) + " KBytes";
+		} else if (size / 1073741824 < 1) {
+			str = (size / 1048576).toFixed(1) + " MBytes";
 		} else {
-		  str = (size / 1073741824).toFixed(1) + " GBytes";
+			str = (size / 1073741824).toFixed(1) + " GBytes";
 		}
 		return str;
 	}-*/;
@@ -300,7 +311,7 @@ public class Util {
 	public static native String formatPercentage(double value, int fixed) /*-{
 		str = value.toFixed(fixed);
 
-		return str+"%";
+		return str + "%";
 	}-*/;
 
 	/**
@@ -309,12 +320,13 @@ public class Util {
 	 * @return The language in ISO 639 format.
 	 */
 	public static native String getBrowserLanguage() /*-{
-		var lang = navigator.language? navigator.language : navigator.userLanguage;
+		var lang = navigator.language ? navigator.language
+				: navigator.userLanguage;
 
 		if (lang) {
-		return lang;
+			return lang;
 		} else {
-		return "en";
+			return "en";
 		}
 	}-*/;
 
@@ -323,14 +335,21 @@ public class Util {
 	 */
 	public static native String getUserAgent() /*-{
 		try {
-		if ( window.opera ) return 'opera';
-		var ua = navigator.userAgent.toLowerCase();
-		if ( ua.indexOf('webkit' ) != -1 ) return 'safari';
-		if ( ua.indexOf('msie 6.0') != -1 ) return 'ie6';
-		if ( ua.indexOf('msie 7.0') != -1 ) return 'ie7';
-		if ( ua.indexOf('gecko') != -1 ) return 'gecko';
-		return 'unknown';
-		} catch ( e ) { return 'unknown' }
+			if (window.opera)
+				return 'opera';
+			var ua = navigator.userAgent.toLowerCase();
+			if (ua.indexOf('webkit') != -1)
+				return 'safari';
+			if (ua.indexOf('msie 6.0') != -1)
+				return 'ie6';
+			if (ua.indexOf('msie 7.0') != -1)
+				return 'ie7';
+			if (ua.indexOf('gecko') != -1)
+				return 'gecko';
+			return 'unknown';
+		} catch (e) {
+			return 'unknown'
+		}
 	}-*/;
 
 	public static native void copyToClipboard(String text) /*-{
