@@ -165,34 +165,41 @@ public class ParserFactory {
 				parser = (Parser) parserClass.newInstance();
 			} catch (Exception e) {
 				log.error(e.getMessage());
-				parser = new TXTParser();
+				parser = new DummyParser();
 			}
 		} else {
 			log.info("No registered parser for extension " + ext + ". Search for alias.");
 
-			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-			String alias = config.getProperty("extalias." + ext.toLowerCase());
+			String alias = aliases.get(ext);
 			if (StringUtils.isNotEmpty(alias)) {
 				log.info("Found alias " + alias);
-				return getParser(alias);
-			}
-
-			log.warn("No registered parser for extension " + ext);
-			try {
-				MagicMatch match = null;
-				if (file != null)
-					match = Magic.getMagicMatch(file, true);
-				else
-					match = Magic.getMagicMatch(IOUtils.toByteArray(is), true);
-				if ("text/plain".equals(match.getMimeType())) {
-					log.warn("Try to parse the file as plain text");
-					parser = new TXTParser();
-				} else {
+				parserClass = parsers.get(alias);
+				if (parserClass != null) {
+					try {
+						parser = (Parser) parserClass.newInstance();
+					} catch (Exception e) {
+						log.error(e.getMessage());
+						parser = new DummyParser();
+					}
+				}
+			} else {
+				log.warn("No registered parser for extension " + ext);
+				try {
+					MagicMatch match = null;
+					if (file != null)
+						match = Magic.getMagicMatch(file, true);
+					else
+						match = Magic.getMagicMatch(IOUtils.toByteArray(is), true);
+					if ("text/plain".equals(match.getMimeType())) {
+						log.warn("Try to parse the file as plain text");
+						parser = new TXTParser();
+					} else {
+						parser = new DummyParser();
+					}
+				} catch (Exception e) {
+					log.error(e.getMessage());
 					parser = new DummyParser();
 				}
-			} catch (Exception e) {
-				log.error(e.getMessage());
-				parser = new DummyParser();
 			}
 		}
 		parser.setFilename(filename);
@@ -275,13 +282,13 @@ public class ParserFactory {
 			config.setProperty(pAlias, sb.substring(1));
 		}
 
-		initAliases();
-
 		try {
 			config.write();
 		} catch (IOException e) {
 			log.warn("Unable to save context properties.", e);
 		}
+
+		initAliases();
 	}
 
 	private static void initAliases() {
@@ -298,7 +305,7 @@ public class ParserFactory {
 				StringTokenizer st = new StringTokenizer(config.getProperty(key.toString()), ",", false);
 				while (st.hasMoreElements()) {
 					String alias = (String) st.nextElement();
-					aliases.put(alias.trim(), ext);
+					aliases.put(alias.toLowerCase().trim(), ext);
 				}
 			}
 		}

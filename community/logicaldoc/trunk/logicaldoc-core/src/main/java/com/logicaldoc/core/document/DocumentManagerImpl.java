@@ -209,7 +209,6 @@ public class DocumentManagerImpl implements DocumentManager {
 		}
 	}
 
-	
 	/**
 	 * Retrieves the document's content as a string
 	 * 
@@ -230,7 +229,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		String resource = storer.getResourceName(doc, null, null);
 		Parser parser = ParserFactory.getParser(storer.getStream(doc.getId(), resource), doc.getFileName(), locale,
 				null);
-		
+
 		// and gets some fields
 		if (parser != null) {
 			content = parser.getContent();
@@ -304,6 +303,8 @@ public class DocumentManagerImpl implements DocumentManager {
 					renameTransaction.setEvent(History.EVENT_RENAMED);
 				}
 
+				if (StringUtils.isNotEmpty(docVO.getFileName()))
+					doc.setFileName(docVO.getFileName());
 				doc.setTitle(docVO.getTitle());
 				doc.setSource(docVO.getSource());
 				doc.setSourceId(docVO.getSourceId());
