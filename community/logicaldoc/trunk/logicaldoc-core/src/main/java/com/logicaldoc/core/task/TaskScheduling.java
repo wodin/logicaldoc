@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.StringTokenizer;
 
 import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
 import com.logicaldoc.util.Context;
@@ -209,9 +210,14 @@ public class TaskScheduling {
 		try {
 			// Reschedule the job
 			scheduler.deleteJob(taskName + "Job", "DEFAULT");
-			scheduler.scheduleJob(trigger.getJobDetail(), trigger);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+
+		try {
+			scheduler.scheduleJob(trigger.getJobDetail(), trigger);
+		} catch (SchedulerException e) {
+			throw new IOException(e.getMessage(), e);
 		}
 
 		load();
