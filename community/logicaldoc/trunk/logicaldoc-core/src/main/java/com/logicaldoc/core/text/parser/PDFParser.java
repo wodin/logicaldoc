@@ -261,9 +261,13 @@ public class PDFParser extends AbstractParser {
 				}
 			}
 		} else {
-			if (StringUtils.isNotEmpty(field.getValue())) {
-				buffer.append(" ");
-				buffer.append(field.getValue());
+			try {
+				if (StringUtils.isNotEmpty(field.getValue())) {
+					buffer.append(" ");
+					buffer.append(field.getValue());
+				}
+			} catch (Throwable t) {
+
 			}
 		}
 	}
