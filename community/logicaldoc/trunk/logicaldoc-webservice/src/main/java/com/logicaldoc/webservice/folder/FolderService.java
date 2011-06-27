@@ -48,7 +48,8 @@ public interface FolderService {
 			@WebParam(name = "name") String name) throws Exception;
 
 	/**
-	 * Updates an existing folder. To perform this you need the RENAME permission. 
+	 * Updates an existing folder. To perform this you need the RENAME
+	 * permission.
 	 * 
 	 * @param sid Session identifier
 	 * @param folder The folders metadata(please compile the ID)
@@ -201,4 +202,16 @@ public interface FolderService {
 	 * @throws Exception
 	 */
 	public Right[] getGrantedGroups(String sid, long folderId) throws Exception;
+
+	/**
+	 * Creates the folder for the specified path. All unexisting nodes specified
+	 * in the path will be created.
+	 * 
+	 * @param sid Session identifier
+	 * @param parentId The parent folder
+	 * @param path The folder path(for example /dog/cat/mouse)
+	 * 
+	 * @return The created folder
+	 */
+	public WSFolder createPath(String sid, long parentId, String path) throws Exception;
 }
