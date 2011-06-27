@@ -108,4 +108,9 @@ public class FolderClient implements FolderService {
 	public void update(String sid, WSFolder folder) throws Exception {
 		client.update(sid, folder);
 	}
+
+	@Override
+	public WSFolder createPath(String sid, long parentId, String path) throws Exception {
+		return client.createPath(sid, parentId, path);
+	}
 }

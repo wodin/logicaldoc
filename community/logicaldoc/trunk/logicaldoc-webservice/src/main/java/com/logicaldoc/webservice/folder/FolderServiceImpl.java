@@ -339,8 +339,8 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		User user = validateSession(sid);
 
 		long folderId = folder.getId();
-		String name=folder.getName();
-		
+		String name = folder.getName();
+
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		if (!folderDao.isPermissionEnabled(Permission.RENAME, folderId, user.getId())) {
 			throw new Exception("user does't have rename permission");
@@ -352,14 +352,14 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		Folder flder = folderDao.findById(folderId);
 		if (flder == null)
 			throw new Exception("cannot find folder " + folderId);
-		
+
 		List<Folder> folders = folderDao.findByNameAndParentId(name, flder.getParentId());
 		if (folders.size() > 0 && folders.get(0).getId() != flder.getId()) {
 			throw new Exception("duplicate folder name " + name);
 		} else {
 			flder.setName(name);
 			flder.setDescription(folder.getDescription());
-			
+
 			// Add a folder history entry
 			History transaction = new History();
 			transaction.setUser(user);
@@ -367,5 +367,23 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			transaction.setSessionId(sid);
 			folderDao.store(flder, transaction);
 		}
+	}
+
+	@Override
+	public WSFolder createPath(String sid, long parentId, String path) throws Exception {
+		User user = validateSession(sid);
+		checkPermission(Permission.ADD, user, parentId);
+
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		Folder parent = folderDao.findById(parentId);
+
+		History transaction = new History();
+		transaction.setUser(user);
+		transaction.setEvent(History.EVENT_FOLDER_CREATED);
+		transaction.setSessionId(sid);
+
+		Folder folder = folderDao.createPath(parent, path, transaction);
+
+		return WSFolder.fromFolder(folder);
 	}
 }
