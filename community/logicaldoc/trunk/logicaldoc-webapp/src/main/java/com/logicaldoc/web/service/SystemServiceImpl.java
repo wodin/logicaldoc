@@ -448,7 +448,11 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				}
 				tsk.setReportRecipients(sb.toString());
 
-				tsk.save();
+				try {
+					tsk.save();
+				} catch (IOException e) {
+					return null;
+				}
 			}
 
 			return task;
