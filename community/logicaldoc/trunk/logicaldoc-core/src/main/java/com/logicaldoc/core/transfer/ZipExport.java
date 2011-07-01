@@ -160,7 +160,7 @@ public class ZipExport {
 			is = storer.getStream(document.getId(), resource);
 			bis = new BufferedInputStream(is);
 
-			ZipEntry entry = new ZipEntry(document.getFileName());
+			ZipEntry entry = new ZipEntry(path + document.getFileName());
 			zos.putNextEntry(entry);
 
 			// Transfer bytes from the file to the ZIP file
