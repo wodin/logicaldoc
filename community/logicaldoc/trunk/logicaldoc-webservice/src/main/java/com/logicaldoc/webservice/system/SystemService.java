@@ -15,17 +15,15 @@ import com.logicaldoc.webservice.WSParameter;
  */
 @WebService
 public interface SystemService {
+
 	/**
 	 * Retrieves the Installation informations.
 	 * 
+	 * @param sid not used
 	 * @return The value object containing the installation informations.
 	 * @throws Exception
 	 */
-	@WebResult(name = "info")
-	public SystemInfo getInfo() throws Exception;
-
-	@Deprecated
-	public SystemInfo getInfo(String sid) throws Exception;
+	public SystemInfo getInfo(@WebParam(name = "sid") String sid) throws Exception;
 
 	/**
 	 * Retrieves the system statistics.

@@ -30,11 +30,6 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 	public static Log log = LogFactory.getLog(SystemServiceImpl.class);
 
 	@Override
-	public SystemInfo getInfo() throws Exception {
-		return SystemInfo.get();
-	}
-
-	@Override
 	public WSParameter[] getStatistics(String sid) throws Exception {
 		validateSession(sid);
 
@@ -200,6 +195,6 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 
 	@Override
 	public SystemInfo getInfo(String sid) throws Exception {
-		return getInfo();
+		return SystemInfo.get();
 	}
 }
