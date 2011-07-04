@@ -197,4 +197,9 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 
 		return langs.toArray(new String[0]);
 	}
+
+	@Override
+	public SystemInfo getInfo(String sid) throws Exception {
+		return getInfo();
+	}
 }

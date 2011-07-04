@@ -43,4 +43,9 @@ public class SystemClient implements SystemService {
 	public String[] getLanguages() throws Exception {
 		return client.getLanguages();
 	}
+
+	@Override
+	public SystemInfo getInfo(String sid) throws Exception {
+		return getInfo();
+	}
 }
