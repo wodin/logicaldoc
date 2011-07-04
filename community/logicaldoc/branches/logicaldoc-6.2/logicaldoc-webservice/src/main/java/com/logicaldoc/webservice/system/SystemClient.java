@@ -30,8 +30,8 @@ public class SystemClient implements SystemService {
 	}
 
 	@Override
-	public SystemInfo getInfo(String sid) throws Exception {
-		return client.getInfo(sid);
+	public SystemInfo getInfo() throws Exception {
+		return client.getInfo();
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class SystemClient implements SystemService {
 	}
 
 	@Override
-	public String[] getLanguages(String sid) throws Exception {
-		return client.getLanguages(sid);
+	public String[] getLanguages() throws Exception {
+		return client.getLanguages();
 	}
 }

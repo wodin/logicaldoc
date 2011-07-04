@@ -126,8 +126,10 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 		SessionUtil.validateSession(sid);
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-			conf.setProperty("index.excludes", searchEngine.getExcludePatters());
-			conf.setProperty("index.includes", searchEngine.getIncludePatters());
+			conf.setProperty("index.excludes",
+					searchEngine.getExcludePatters() != null ? searchEngine.getExcludePatters() : "");
+			conf.setProperty("index.includes",
+					searchEngine.getIncludePatters() != null ? searchEngine.getIncludePatters() : "");
 			conf.setProperty("index.batch", Integer.toString(searchEngine.getBatch()));
 			conf.write();
 		} catch (Exception t) {

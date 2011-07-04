@@ -211,7 +211,6 @@
                 <copy todir="target/plugin">
                   <fileset dir="war">
                     <exclude name="**/WEB-INF/**" />
-                    <exclude name="**/applet/**" />
                     <exclude name="**/common/**" />
                   </fileset>
                 </copy>

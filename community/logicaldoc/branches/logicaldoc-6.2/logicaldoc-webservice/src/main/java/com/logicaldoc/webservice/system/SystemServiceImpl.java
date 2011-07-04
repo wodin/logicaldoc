@@ -30,9 +30,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 	public static Log log = LogFactory.getLog(SystemServiceImpl.class);
 
 	@Override
-	public SystemInfo getInfo(String sid) throws Exception {
-		validateSession(sid);
-
+	public SystemInfo getInfo() throws Exception {
 		return SystemInfo.get();
 	}
 
@@ -186,8 +184,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 	}
 
 	@Override
-	public String[] getLanguages(String sid) throws Exception {
-		validateSession(sid);
+	public String[] getLanguages() throws Exception {
 		List<String> langs = new ArrayList<String>();
 
 		try {

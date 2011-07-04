@@ -18,12 +18,11 @@ public interface SystemService {
 	/**
 	 * Retrieves the Installation informations.
 	 * 
-	 * @param sid Session identifier
 	 * @return The value object containing the installation informations.
 	 * @throws Exception
 	 */
 	@WebResult(name = "info")
-	public SystemInfo getInfo(@WebParam(name = "sid") String sid) throws Exception;
+	public SystemInfo getInfo() throws Exception;
 
 	/**
 	 * Retrieves the system statistics.
@@ -38,9 +37,8 @@ public interface SystemService {
 	/**
 	 * Retrieves the languages enabled in the server.
 	 * 
-	 * @param sid Session identifier
 	 * @return Array of active languages (en, it, es ....)
 	 * @throws Exception
 	 */
-	public String[] getLanguages(@WebParam(name = "sid") String sid) throws Exception;
+	public String[] getLanguages() throws Exception;
 }
