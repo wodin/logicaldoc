@@ -213,8 +213,12 @@ public class TaskDetailPanel extends VLayout {
 
 				@Override
 				public void onSuccess(GUITask task) {
-					tasksPanel.updateSelectedRecord(task);
-					savePanel.setVisible(false);
+					if (task != null) {
+						tasksPanel.updateSelectedRecord(task);
+						savePanel.setVisible(false);
+					} else {
+						Log.error(I18N.message("genericerror"), null, null);
+					}
 				}
 			});
 		}
