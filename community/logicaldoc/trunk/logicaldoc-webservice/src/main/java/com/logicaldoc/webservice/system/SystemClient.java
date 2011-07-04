@@ -30,11 +30,6 @@ public class SystemClient implements SystemService {
 	}
 
 	@Override
-	public SystemInfo getInfo() throws Exception {
-		return client.getInfo();
-	}
-
-	@Override
 	public WSParameter[] getStatistics(String sid) throws Exception {
 		return client.getStatistics(sid);
 	}
@@ -46,6 +41,6 @@ public class SystemClient implements SystemService {
 
 	@Override
 	public SystemInfo getInfo(String sid) throws Exception {
-		return getInfo();
+		return client.getInfo(sid);
 	}
 }
