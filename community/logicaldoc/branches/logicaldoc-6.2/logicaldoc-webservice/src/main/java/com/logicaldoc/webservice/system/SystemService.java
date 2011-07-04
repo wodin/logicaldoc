@@ -24,6 +24,9 @@ public interface SystemService {
 	@WebResult(name = "info")
 	public SystemInfo getInfo() throws Exception;
 
+	@Deprecated
+	public SystemInfo getInfo(String sid) throws Exception;
+
 	/**
 	 * Retrieves the system statistics.
 	 * 
@@ -33,7 +36,7 @@ public interface SystemService {
 	 */
 	@WebResult(name = "parameters")
 	public WSParameter[] getStatistics(@WebParam(name = "sid") String sid) throws Exception;
-	
+
 	/**
 	 * Retrieves the languages enabled in the server.
 	 * 
