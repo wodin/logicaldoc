@@ -1,12 +1,8 @@
 package com.logicaldoc.webservice;
 
-import java.io.FileOutputStream;
-
-import javax.activation.DataHandler;
-
+import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
-import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.FolderClient;
 import com.logicaldoc.webservice.search.SearchClient;
 import com.logicaldoc.webservice.security.SecurityClient;
@@ -14,12 +10,13 @@ import com.logicaldoc.webservice.system.SystemClient;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		AuthClient auth = new AuthClient("http://localhost:9080/logicaldoc/services/Auth");
-		DocumentClient documentClient = new DocumentClient("http://localhost:9080/logicaldoc/services/Document");
-		FolderClient folderClient = new FolderClient("http://localhost:9080/logicaldoc/services/Folder");
-		SearchClient searchClient = new SearchClient("http://localhost:9080/logicaldoc/services/Search");
-		SystemClient systemClient = new SystemClient("http://localhost:9080/logicaldoc/services/System");
-		SecurityClient securityClient = new SecurityClient("http://localhost:9080/logicaldoc/services/Security");
+		String base = "http://localhost:8080/services";
+		AuthClient auth = new AuthClient(base + "/Auth");
+		DocumentClient documentClient = new DocumentClient(base + "/Document");
+		FolderClient folderClient = new FolderClient(base + "/Folder");
+		SearchClient searchClient = new SearchClient(base + "/Search");
+		SystemClient systemClient = new SystemClient(base + "/System");
+		SecurityClient securityClient = new SecurityClient(base + "/Security");
 
 		// Open a session
 		// This is a user 'author' with different permissions than the authors.
@@ -379,13 +376,12 @@ public class Main {
 		// doc.getLockUserId().longValue());
 		// System.out.println("indexed: " + doc.getIndexed());
 		//
-		DataHandler data = documentClient.getContent(sid, 665);
-		data.writeTo(new FileOutputStream("C:/tmp/buf.doc"));
-		
-		
-//		doc = documentClient.getDocument(sid, 30);
-//		System.out.println("status: " + doc.getStatus());
-//		System.out.println("indexed: " + doc.getIndexed());
+		// DataHandler data = documentClient.getContent(sid, 665);
+		// data.writeTo(new FileOutputStream("C:/tmp/buf.doc"));
+
+		// doc = documentClient.getDocument(sid, 30);
+		// System.out.println("status: " + doc.getStatus());
+		// System.out.println("indexed: " + doc.getIndexed());
 
 		// WSDocument doc = documentClient.getDocument(sid, 29);
 		// Assert.assertNull(doc);
@@ -423,11 +419,10 @@ public class Main {
 		// "m.caruso@logicalobjects.it", "Test Invio Mail 2",
 		// "Questa mail è un test");
 
-		
-		WSDocument[] docs = documentClient.list(sid, 5);
-		for (WSDocument wsDocument : docs) {
-		 System.out.println("ID=" + wsDocument.getId());
+		SystemInfo info = systemClient.getInfo(null);
+		for (String string : info.getFeatures()) {
+			System.out.println(string);
 		}
-		auth.logout(sid);
+	    auth.logout(sid);
 	}
 }
