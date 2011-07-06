@@ -1,6 +1,7 @@
 package com.logicaldoc.webservice.document;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,8 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.webservice.AbstractService;
 import com.logicaldoc.webservice.WSAttribute;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 /**
  * Web Service Document. Useful class to create repository Documents.
@@ -209,8 +212,7 @@ public class WSDocument {
 			wsDoc.setDocRef(document.getDocRef());
 			wsDoc.setLastModified(AbstractService.convertDateToString(document.getLastModified()));
 			wsDoc.setRating(document.getRating());
-		
-		
+
 			// Populate extended attributes
 			WSAttribute[] attributes = new WSAttribute[0];
 			if (document.getAttributes() != null && document.getAttributes().size() > 0) {
@@ -240,12 +242,28 @@ public class WSDocument {
 				}
 			}
 			wsDoc.setTags(tags);
-			
+
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 
 		return wsDoc;
+	}
+
+	public Collection<String> listAttributeNames() {
+		List<String> names = new ArrayList<String>();
+		for (WSAttribute att : getExtendedAttributes()) {
+			names.add(att.getName());
+		}
+		return names;
+	}
+
+	public WSAttribute attribute(String name) {
+		for (WSAttribute att : getExtendedAttributes()) {
+			if (att.getName().equals(name))
+				return att;
+		}
+		return null;
 	}
 
 	public Document toDocument() throws Exception {
@@ -730,5 +748,11 @@ public class WSDocument {
 
 	public void setRating(Integer rating) {
 		this.rating = rating;
+	}
+
+	public void addExtendedAttribute(WSAttribute att) {
+		List<WSAttribute> buf = (List<WSAttribute>) Arrays.asList(getExtendedAttributes());
+		buf.add(att);
+		setExtendedAttributes(buf.toArray(new WSAttribute[0]));
 	}
 }
