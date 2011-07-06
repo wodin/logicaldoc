@@ -83,7 +83,11 @@ public class DocumentClient implements DocumentService {
 	public void checkin(String sid, long docId, String comment, String filename, boolean release, DataHandler content)
 			throws Exception {
 		client.checkin(sid, docId, comment, filename, release, content);
+	}
 
+	public void checkin(String sid, long docId, String comment, String filename, boolean release, File content)
+			throws Exception {
+		this.checkin(sid, docId, comment, filename, release, new DataHandler(new FileDataSource(content)));
 	}
 
 	@Override

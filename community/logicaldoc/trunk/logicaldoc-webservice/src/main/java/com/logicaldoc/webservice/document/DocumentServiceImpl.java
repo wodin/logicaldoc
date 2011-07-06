@@ -58,7 +58,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		FolderDAO mdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Folder folder = mdao.findById(document.getFolderId());
 		if (folder == null) {
-			log.error("Folder " + folder + " not found");
+			log.error("Folder " + document.getFolderId() + " not found");
 			throw new Exception("error - folder not found");
 		}
 
