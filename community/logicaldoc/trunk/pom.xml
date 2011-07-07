@@ -5,11 +5,11 @@
   <parent>
     <groupId>com.logicaldoc</groupId>
     <artifactId>logicaldoc-parent-pom</artifactId>
-    <version>43</version>
+    <version>44</version>
   </parent>
 	<groupId>com.logicaldoc</groupId>
 	<artifactId>logicaldoc</artifactId>
-	<version>6.2.0</version>
+	<version>6.3.0</version>
 	<packaging>pom</packaging>
 	<name>logicaldoc</name>
 	<description>
