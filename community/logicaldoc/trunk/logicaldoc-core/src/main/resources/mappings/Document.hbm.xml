@@ -11,6 +11,7 @@
 		<property name="deleted" type="int" column="ld_deleted" not-null="true" />
 		<property name="immutable" type="int" column="ld_immutable" not-null="true" />
 		<property name="customId" type="string" column="ld_customid" length="700" />
+		<property name="comment" type="string" column="ld_comment" length="1000" />
 		<property name="title" type="string" column="ld_title" length="255" />
 		<property name="version" type="string" column="ld_version" length="10" />
 		<property name="fileVersion" type="string" column="ld_fileversion" length="10" />

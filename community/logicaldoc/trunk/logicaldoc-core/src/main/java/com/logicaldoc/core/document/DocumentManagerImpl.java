@@ -88,6 +88,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		// identify the document and folder
 		Document document = documentDAO.findById(docId);
+		document.setComment(transaction.getComment());
 
 		if (document.getImmutable() == 0) {
 			documentDAO.initialize(document);
@@ -660,8 +661,8 @@ public class DocumentManagerImpl implements DocumentManager {
 				String extension = FilenameUtils.getExtension(newName.trim());
 				if (StringUtils.isNotEmpty(extension)) {
 					document.setType(FilenameUtils.getExtension(newName));
-				} else { 
-				  document.setType("unknown");
+				} else {
+					document.setType("unknown");
 				}
 				setUniqueFilename(document);
 			}

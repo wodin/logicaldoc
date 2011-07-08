@@ -231,9 +231,10 @@ public class FSStorer implements Storer {
 				return true;
 			}
 		});
-		for (File file : buf) {
-			resources.add(file.getName());
-		}
+		if (buf != null)
+			for (File file : buf) {
+				resources.add(file.getName());
+			}
 		return resources;
 	}
 

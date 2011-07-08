@@ -50,6 +50,8 @@ public class LuceneDocument {
 
 	public static final String FIELD_DOCREF = "docRef";
 
+	public static final String FIELD_COMMENT = "comment";
+
 	private Document doc;
 
 	private String content = "";
@@ -137,6 +139,11 @@ public class LuceneDocument {
 		if (document.getDocRef() != null && document.getDocRef() > 0)
 			doc.add(new Field(FIELD_DOCREF, Long.toString(document.getDocRef()), Field.Store.YES,
 					Field.Index.NOT_ANALYZED));
+
+		doc.add(new Field(FIELD_COMMENT, document.getComment() != null ? document.getComment() : "", Field.Store.YES,
+				Field.Index.ANALYZED));
+		doc.add(new Field(FIELD_COMMENT + _NA, document.getComment() != null ? document.getComment() : "",
+				Field.Store.NO, Field.Index.NOT_ANALYZED));
 	}
 
 	protected void setFolder() {

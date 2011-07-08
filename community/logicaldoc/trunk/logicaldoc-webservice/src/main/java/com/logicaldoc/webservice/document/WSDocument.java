@@ -181,6 +181,7 @@ public class WSDocument {
 			wsDoc.setSourceId(document.getSourceId());
 			wsDoc.setObject(document.getObject());
 			wsDoc.setRecipient(document.getRecipient());
+			wsDoc.setComment(document.getComment());
 			if (document.getTemplate() != null)
 				wsDoc.setTemplateId(document.getTemplate().getId());
 			String sourceDate = null;
@@ -306,6 +307,7 @@ public class WSDocument {
 		doc.setTitle(title);
 		doc.setFileName(fileName);
 		doc.setFolder(folder);
+		doc.setComment(comment);
 		doc.setLocale(LocaleUtil.toLocale(language));
 		Date sdate = null;
 		if (StringUtils.isNotEmpty(sourceDate))

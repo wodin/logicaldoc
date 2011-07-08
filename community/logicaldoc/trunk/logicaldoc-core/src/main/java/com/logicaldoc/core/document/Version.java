@@ -33,8 +33,6 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 
 	private Date versionDate = new Date();
 
-	private String comment;
-
 	private long userId;
 
 	private long folderId;
@@ -74,24 +72,10 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 	}
 
 	/**
-	 * @see Version#getComment()
-	 */
-	public String getComment() {
-		return comment;
-	}
-
-	/**
 	 * @see Version#setUsername(java.lang.String)
 	 */
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	/**
-	 * @see Version#setComment(java.lang.String)
-	 */
-	public void setComment(String comment) {
-		this.comment = comment;
 	}
 
 	/**
@@ -132,7 +116,7 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 
 	@Override
 	public String toString() {
-		return getVersion() + "-" + comment;
+		return getVersion() + "-" + getComment();
 	}
 
 	public Date getVersionDate() {
@@ -203,6 +187,7 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 		version.setDeleted(0);
 		version.setLastModified(null);
 		version.setComment(comment);
+		document.setComment(comment);
 		version.setEvent(event);
 		version.setUserId(user.getId());
 		version.setUsername(user.getFullName());

@@ -314,6 +314,8 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		items.add(authorFlag);
 		CheckboxItem typeFlag = new CheckboxItem("typeFlag", I18N.message("type"));
 		items.add(typeFlag);
+		CheckboxItem commentFlag = new CheckboxItem("commentFlag", I18N.message("comment"));
+		items.add(commentFlag);
 
 		if (templateId == null) {
 			extForm.setItems(items.toArray(new FormItem[0]));
