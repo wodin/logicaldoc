@@ -431,6 +431,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				document.setSourceId(doc.getSourceId());
 				document.setLastModified(doc.getLastModified());
 				document.setLockUserId(doc.getLockUserId());
+				document.setComment(doc.getComment());
 				document.setStatus(doc.getStatus());
 				if (doc.getRating() != null)
 					document.setRating(doc.getRating());
@@ -733,6 +734,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				doc = docDao.findById(document.getId());
 				docDao.initialize(doc);
 				doc.setCustomId(document.getCustomId());
+				doc.setComment(document.getComment());
 				try {
 					Document docVO = new Document();
 					docVO.setTitle(document.getTitle());

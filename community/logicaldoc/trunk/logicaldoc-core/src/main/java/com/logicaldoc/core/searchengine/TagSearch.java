@@ -39,12 +39,12 @@ public class TagSearch extends Search {
 	private void prepareExpression() {
 		// Find all real documents
 		StringBuffer query = new StringBuffer(
-				"select A.ld_id,A.ld_folderid,A.ld_title,A.ld_type,A.ld_customid,A.ld_filesize,A.ld_docref,A.ld_date,A.ld_sourcedate,A.ld_creation,A.ld_source "
+				"select A.ld_id,A.ld_folderid,A.ld_title,A.ld_type,A.ld_customid,A.ld_filesize,A.ld_docref,A.ld_date,A.ld_sourcedate,A.ld_creation,A.ld_source,A.ld_comment "
 						+ "from ld_document A ");
 		appendWhereClause(false, query);
 
 		// Append all shortcuts
-		query.append(" UNION select REF.ld_id,A.ld_folderid,REF.ld_title,REF.ld_type,REF.ld_customid,REF.ld_filesize,A.ld_docref,REF.ld_date,REF.ld_sourcedate,REF.ld_creation,REF.ld_source "
+		query.append(" UNION select REF.ld_id,A.ld_folderid,REF.ld_title,REF.ld_type,REF.ld_customid,REF.ld_filesize,A.ld_docref,REF.ld_date,REF.ld_sourcedate,REF.ld_creation,REF.ld_source,REF.ld_comment "
 				+ "from ld_document A, ld_document REF ");
 		appendWhereClause(true, query);
 
@@ -110,7 +110,8 @@ public class TagSearch extends Search {
 			hit.setSourceDate(rs.getTimestamp(9));
 			hit.setCreation(rs.getTimestamp(10));
 			hit.setSource(rs.getString(11));
-
+			hit.setComment(rs.getString(12));
+			
 			return hit;
 		}
 	};

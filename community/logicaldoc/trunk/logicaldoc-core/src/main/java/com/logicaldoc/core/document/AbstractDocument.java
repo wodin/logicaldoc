@@ -57,6 +57,8 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	public static final int BARCODE_PROCESSED = 1;
 
 	public static final int BARCODE_SKIP = 2;
+	
+	private String comment;
 
 	private long fileSize = 0;
 
@@ -629,5 +631,19 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	public void setRating(Integer rating) {
 		this.rating = rating;
+	}
+	
+	/**
+	 * @see Version#getComment()
+	 */
+	public String getComment() {
+		return comment;
+	}
+
+	/**
+	 * @see Version#setComment(java.lang.String)
+	 */
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 }

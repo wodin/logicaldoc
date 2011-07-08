@@ -40,6 +40,8 @@ public class HitImpl implements Serializable, Hit {
 	private String source;
 
 	private String path;
+	
+	private String comment;
 
 	public HitImpl() {
 	}
@@ -221,5 +223,13 @@ public class HitImpl implements Serializable, Hit {
 
 	public void setFolderId(long folderId) {
 		this.folderId = folderId;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 }

@@ -79,6 +79,8 @@ public class GUIDocument implements Serializable {
 	private int immutable = 0;
 	
 	private int rating = 0;
+	
+	private String comment;
 
 	public long getId() {
 		return id;
@@ -430,5 +432,13 @@ public class GUIDocument implements Serializable {
 
 	public void setRating(int rating) {
 		this.rating = rating;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 }

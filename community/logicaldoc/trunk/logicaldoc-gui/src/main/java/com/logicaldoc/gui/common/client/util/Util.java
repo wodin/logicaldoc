@@ -61,7 +61,7 @@ public class Util {
 				+ "&amp;MaxZoomSize=5" + "&amp;PrintToolsVisible=true" + "&amp;ViewModeToolsVisible=true"
 				+ "&amp;ZoomToolsVisible=true" + "&amp;FullScreenVisible=true" + "&amp;NavToolsVisible=true"
 				+ "&amp;CursorToolsVisible=" + printEnabled + "&amp;SearchToolsVisible=true" + "&amp;localeChain="
-				+ language+"&amp;FullScreenAsMaxWindow=false";
+				+ language + "&amp;FullScreenAsMaxWindow=false";
 
 		if (key != null) {
 			vars += "&amp;key=" + URL.encode(key);
@@ -366,4 +366,11 @@ public class Util {
 	/*-{
 		$wnd.location.replace(url);
 	}-*/;
+
+	public static String padLeft(String s, int n) {
+		if (s.length() > n) {
+			return s.substring(0, n - 3) + "...";
+		} else
+			return s;
+	}
 }

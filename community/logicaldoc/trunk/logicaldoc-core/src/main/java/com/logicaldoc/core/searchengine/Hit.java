@@ -71,4 +71,8 @@ public interface Hit {
 	public void setFolderId(long folderId);
 
 	public void setDocRef(Long docRef);
+
+	public void setComment(String comment);
+
+	public String getComment();
 }

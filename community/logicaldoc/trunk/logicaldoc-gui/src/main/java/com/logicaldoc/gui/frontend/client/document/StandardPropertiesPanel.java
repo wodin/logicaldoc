@@ -122,6 +122,12 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		title.setDisabled(!update);
 
 		StaticTextItem version = ItemFactory.newStaticTextItem("version", "version", document.getVersion());
+		String comment = document.getComment();
+
+		if (comment != null && !"".equals(comment)) {
+			comment = Util.padLeft(comment, 40);
+			version.setValue(document.getVersion() + " (" + comment + ")");
+		}
 
 		StaticTextItem fileVersion = ItemFactory.newStaticTextItem("fileVersion", "fileversion",
 				document.getFileVersion());
