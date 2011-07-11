@@ -195,6 +195,10 @@ public class DocumentsListPanel extends VLayout {
 		fileVersion.setCanFilter(false);
 		fileVersion.setAlign(Alignment.CENTER);
 
+		ListGridField comment = new ListGridField("comment", I18N.message("comment"), 300);
+		comment.setHidden(true);
+		comment.setCanFilter(true);
+
 		list = new ListGrid() {
 			@Override
 			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
@@ -225,7 +229,8 @@ public class DocumentsListPanel extends VLayout {
 		}
 
 		list.setFields(indexed, locked, immutable, signed, icon, filename, title, lastModified, type, size, version,
-				publisher, published, creator, created, sourceDate, sourceAuthor, customId, rating, fileVersion);
+				publisher, published, creator, created, sourceDate, sourceAuthor, customId, rating, fileVersion,
+				comment);
 
 		// Prepare a panel containing a title and the documents list
 		infoPanel = new InfoPanel("");

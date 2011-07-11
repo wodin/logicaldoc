@@ -39,6 +39,8 @@ public class GUIHit implements Serializable {
 
 	private Date sourceDate;
 
+	private String comment;
+
 	public String getSummary() {
 		return summary;
 	}
@@ -141,5 +143,13 @@ public class GUIHit implements Serializable {
 
 	public void setSourceDate(Date sourceDate) {
 		this.sourceDate = sourceDate;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 }

@@ -113,7 +113,7 @@ public class DocumentsDataServlet extends HttpServlet {
 				StringBuffer query = new StringBuffer(
 						"select A.id, A.customId, A.docRef, A.type, A.title, A.version, A.lastModified, A.date, A.publisher,"
 								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status,"
-								+ " A.signed, A.type, A.sourceDate, A.sourceAuthor, A.rating, A.fileVersion"
+								+ " A.signed, A.type, A.sourceDate, A.sourceAuthor, A.rating, A.fileVersion, A.comment"
 								+ " from Document A where A.deleted = 0 ");
 				if (folderId != null)
 					query.append(" and A.folder.id=" + folderId);
@@ -204,6 +204,11 @@ public class DocumentsDataServlet extends HttpServlet {
 
 					writer.print("<fileVersion><![CDATA[" + cols[22] + "]]></fileVersion>");
 
+					if (cols[23] == null)
+						writer.print("<comment></comment>");
+					else
+						writer.print("<comment>" + cols[23] + "</comment>");
+
 					writer.print("</document>");
 				}
 
@@ -262,6 +267,11 @@ public class DocumentsDataServlet extends HttpServlet {
 					else
 						writer.print("<rating>rating" + doc.getRating() + "</rating>");
 					writer.print("<fileVersion><![CDATA[" + doc.getFileVersion() + "]]></fileVersion>");
+					if (doc.getComment() == null)
+						writer.print("<comment>rating0</comment>");
+					else
+						writer.print("<comment>rating" + doc.getComment() + "</comment>");
+
 					writer.print("</document>");
 				}
 			}
