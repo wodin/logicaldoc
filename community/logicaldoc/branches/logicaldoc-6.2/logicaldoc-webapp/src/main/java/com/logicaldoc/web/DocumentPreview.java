@@ -162,6 +162,7 @@ public class DocumentPreview extends HttpServlet {
 				} else {
 					// Retrieve the previously computed thumbnail
 					is = storer.getStream(doc.getId(), thumbResource);
+
 					// Convert the thumbnail to SWF
 					document2swf(tmp, "jpg", is);
 				}
@@ -268,8 +269,34 @@ public class DocumentPreview extends HttpServlet {
 
 			ProcessBuilder pb = new ProcessBuilder(conf.getProperty(IMG2PDF), inputFile,
 					"  -compress None -quality 100 ", output.getPath());
-			Process process = pb.start();
-			process.waitFor();
+			// Launch the process
+			final Process process = pb.start();
+
+			Thread wrapper = new Thread() {
+				@Override
+				public void run() {
+					/*
+					 * This will wait until the command terminates. But
+					 * sometimes it rest appended.
+					 */
+					try {
+						process.waitFor();
+					} catch (InterruptedException e) {
+					}
+				}
+			};
+			wrapper.start();
+
+			// Wait 10 seconds
+			for (int i = 0; i < 10; i++) {
+				if (wrapper.isAlive())
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+					}
+			}
+			wrapper.interrupt();
+
 			process.destroy();
 		} catch (Throwable e) {
 			throw new IOException("Error in IMG to PDF conversion", e);
