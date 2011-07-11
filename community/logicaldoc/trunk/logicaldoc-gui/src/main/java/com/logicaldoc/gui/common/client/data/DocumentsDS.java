@@ -64,10 +64,12 @@ public class DocumentsDS extends DataSource {
 		DataSourceTextField sourceAuthor = new DataSourceTextField("sourceAuthor");
 		sourceAuthor.setHidden(true);
 		DataSourceImageField rating = new DataSourceImageField("rating");
+		DataSourceTextField comment = new DataSourceTextField("comment");
+		sourceAuthor.setHidden(true);
 
 		setFields(id, title, type, size, publisher, version, docref, lastModified, published, created, creator,
 				sourceDate, sourceAuthor, customId, icon, immutable, iindexed, signed, locked, lockUserId, filename,
-				status, rating, fileVersion);
+				status, rating, fileVersion, comment);
 		setClientOnly(true);
 
 		if (barcoded == null)

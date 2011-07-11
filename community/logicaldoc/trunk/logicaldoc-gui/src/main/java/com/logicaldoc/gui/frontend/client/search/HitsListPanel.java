@@ -176,6 +176,10 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		ListGridField summary = new ListGridField("summary", I18N.message("summary"));
 		summary.setWidth(300);
 
+		ListGridField comment = new ListGridField("comment", I18N.message("comment"), 300);
+		comment.setWidth(300);
+		comment.setHidden(true);
+
 		list = new ListGrid() {
 			@Override
 			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
@@ -206,11 +210,12 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT) {
 			// list.setFields(id, folderId, icon, title, size, creation, score,
 			// customId);
-			list.setFields(id, folderId, icon, title, type, size, published, creation, sourceDate, score, customId);
+			list.setFields(id, folderId, icon, title, type, size, published, creation, sourceDate, score, customId,
+					comment);
 		} else {
 			// list.setFields(id, folderId, icon, title, size, creation,
 			// customId);
-			list.setFields(id, folderId, icon, title, type, size, published, creation, sourceDate, customId);
+			list.setFields(id, folderId, icon, title, type, size, published, creation, sourceDate, customId, comment);
 		}
 
 		list.addSelectionChangedHandler(new SelectionChangedHandler() {
@@ -463,24 +468,22 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		if (list.getSelectedRecord() != null)
 			SearchPanel.get().onSelectedHit(Long.parseLong(list.getSelectedRecord().getAttribute("id")));
 	}
-	
+
 	protected Menu prepareContextMenu(GUIFolder folder) {
 		Menu contextMenu = new DocumentContextMenu(folder, list);
 		MenuItem openInFolder = new MenuItem();
 		openInFolder.setTitle(I18N.message("openinfolder"));
-		openInFolder
-				.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-					public void onClick(MenuItemClickEvent event) {
-						ListGridRecord record = list.getSelectedRecord();
-						DocumentsPanel.get().openInFolder(
-								Long.parseLong(record.getAttributeAsString("folderId")),
-								Long.parseLong(record.getAttributeAsString("id")));
-					}
-				});
+		openInFolder.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				ListGridRecord record = list.getSelectedRecord();
+				DocumentsPanel.get().openInFolder(Long.parseLong(record.getAttributeAsString("folderId")),
+						Long.parseLong(record.getAttributeAsString("id")));
+			}
+		});
 		contextMenu.addItem(openInFolder);
 		return contextMenu;
 	}
-	
+
 	public ListGrid getList() {
 		return list;
 	}

@@ -80,7 +80,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
-			
+
 			List<Hit> hits = search.getHits();
 
 			result.setTime(search.getExecTime());
@@ -110,6 +110,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 				h.setSize(hit.getSize());
 				h.setScore(hit.getScore());
 				h.setSourceDate(hit.getSourceDate());
+				h.setComment(hit.getComment());
 
 				// Check if the document is not an alias to visualize the
 				// correct icon: if the document is an alias the FULL-TEXT
