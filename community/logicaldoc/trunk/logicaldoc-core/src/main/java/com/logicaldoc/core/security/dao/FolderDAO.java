@@ -25,8 +25,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	public List<Folder> findByName(String name);
 
 	/**
-	 * Finds all folders by folder text, contained in the parent folder and of
-	 * the specified type
+	 * Finds all folders by folder text, contained in the parent folder.
 	 * 
 	 * @param parent The parent folder(optional)
 	 * @param name The folder name to search for
