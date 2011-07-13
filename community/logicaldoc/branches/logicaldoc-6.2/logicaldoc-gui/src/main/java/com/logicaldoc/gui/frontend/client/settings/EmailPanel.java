@@ -118,6 +118,9 @@ public class EmailPanel extends VLayout {
 					EmailPanel.this.emailSettings.setSmtpServer((String) values.get("smtpServer"));
 					if (values.get("port") instanceof Integer)
 						EmailPanel.this.emailSettings.setPort((Integer) values.get("port"));
+					else
+						EmailPanel.this.emailSettings.setPort(new Integer(values.get("port").toString()));
+						
 					EmailPanel.this.emailSettings.setUsername((String) values.get("username"));
 					EmailPanel.this.emailSettings.setPwd((String) values.get("password"));
 					EmailPanel.this.emailSettings.setConnSecurity((String) values.get("connSecurity"));
