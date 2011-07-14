@@ -377,7 +377,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				} else
 					att.setValue(extAttr.getValue());
 				att.setType(extAttr.getType());
-				
+
 				attributes[i] = att;
 				i++;
 			}
@@ -845,7 +845,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					History transaction = new History();
 					transaction.setSessionId(sid);
 					transaction.setEvent(History.EVENT_CHANGED);
-					transaction.setComment(document.getVersionComment());
+					transaction.setComment(document.getComment());
 					transaction.setUser(SessionUtil.getSessionUser(sid));
 
 					DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
@@ -864,7 +864,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				return null;
 
 			return document;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 			log.warn(e.getMessage(), e);
 		}
@@ -1170,6 +1170,41 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		DocumentNoteDAO dao = (DocumentNoteDAO) Context.getInstance().getBean(DocumentNoteDAO.class);
 		for (long id : ids) {
 			dao.delete(id);
+		}
+	}
+
+	@Override
+	public void bulkUpdate(String sid, long[] ids, GUIDocument vo) throws InvalidSessionException {
+		for (long id : ids) {
+			GUIDocument buf = getById(sid, id);
+
+			buf.setComment(vo.getComment() != null ? vo.getComment() : "");
+			if (StringUtils.isNotEmpty(vo.getLanguage()))
+				buf.setLanguage(vo.getLanguage());
+			if (vo.getTags() != null && vo.getTags().length > 0)
+				buf.setTags(vo.getTags());
+			if (StringUtils.isNotEmpty(vo.getCoverage()))
+				buf.setCoverage(vo.getCoverage());
+			if (StringUtils.isNotEmpty(vo.getObject()))
+				buf.setObject(vo.getObject());
+			if (StringUtils.isNotEmpty(vo.getRecipient()))
+				buf.setRecipient(vo.getRecipient());
+			if (StringUtils.isNotEmpty(vo.getSource()))
+				buf.setSource(vo.getSource());
+			if (StringUtils.isNotEmpty(vo.getSourceAuthor()))
+				buf.setSourceAuthor(vo.getSourceAuthor());
+			if (StringUtils.isNotEmpty(vo.getSourceId()))
+				buf.setSourceId(vo.getSourceId());
+			if (StringUtils.isNotEmpty(vo.getSourceType()))
+				buf.setSourceType(vo.getSourceType());
+			if (vo.getTemplateId() != null)
+				buf.setTemplateId(vo.getTemplateId());
+			if (vo.getAttributes() != null && vo.getAttributes().length > 0)
+				buf.setAttributes(vo.getAttributes());
+			if (vo.getSourceDate() != null)
+				buf.setSourceDate(vo.getSourceDate());
+
+			save(sid, buf);
 		}
 	}
 }

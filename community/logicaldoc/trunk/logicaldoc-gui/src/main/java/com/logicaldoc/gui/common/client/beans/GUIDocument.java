@@ -66,8 +66,6 @@ public class GUIDocument implements Serializable {
 
 	private GUIExtendedAttribute[] attributes = new GUIExtendedAttribute[0];
 
-	private String versionComment;
-
 	private GUIFolder folder;
 
 	private String icon = "generic";
@@ -77,9 +75,9 @@ public class GUIDocument implements Serializable {
 	private int status = 0;
 
 	private int immutable = 0;
-	
+
 	private int rating = 0;
-	
+
 	private String comment;
 
 	public long getId() {
@@ -135,26 +133,31 @@ public class GUIDocument implements Serializable {
 	}
 
 	public void addTag(String tag) {
-		String[] tmp = new String[tags.length + 1];
-		int i = 0;
-		for (String tg : tags) {
-			// Skip if the tag already exists
-			if (tg.equals(tag))
-				return;
-			tmp[i++] = tg;
-		}
-		tmp[i] = tag;
-		tags = tmp;
+		String[] tmp = null;
+		if (tags != null) {
+			tmp = new String[tags.length + 1];
+
+			int i = 0;
+			for (String tg : tags) {
+				// Skip if the tag already exists
+				if (tg.equals(tag))
+					return;
+				tmp[i++] = tg;
+			}
+			tmp[i] = tag;
+			tags = tmp;
+		} else
+			tags = new String[] { tag };
 	}
 
 	public void removeTag(String tag) {
-		if (tags.length == 0)
+		if (tags == null || tags.length == 0)
 			return;
 
 		String[] tmp = new String[tags.length - 1];
 		int i = 0;
 		for (String tg : tags) {
-			if (!tg.equals(tag))
+			if (!tg.equals(tag) && tmp.length > 0)
 				tmp[i++] = tg;
 		}
 		tags = tmp;
@@ -343,14 +346,6 @@ public class GUIDocument implements Serializable {
 
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
-	}
-
-	public String getVersionComment() {
-		return versionComment;
-	}
-
-	public void setVersionComment(String versionComment) {
-		this.versionComment = versionComment;
 	}
 
 	public GUIExtendedAttribute setValue(String name, Object value) {

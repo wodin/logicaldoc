@@ -80,7 +80,7 @@ public class DocumentDetailsPanel extends VLayout {
 	protected Tab extendedPropertiesTab;
 
 	protected Tab linksTab;
-	
+
 	protected Tab notesTab;
 
 	protected Tab versionsTab;
@@ -234,7 +234,7 @@ public class DocumentDetailsPanel extends VLayout {
 		};
 		propertiesPanel = new StandardPropertiesPanel(document, changeHandler, getObserver());
 		propertiesTabPanel.addMember(propertiesPanel);
-
+		
 		/*
 		 * Prepare the extended properties tab
 		 */
@@ -316,7 +316,7 @@ public class DocumentDetailsPanel extends VLayout {
 
 	public void onSave() {
 		if (validate()) {
-			document.setVersionComment(saveForm.getValueAsString("versionComment"));
+			document.setComment(saveForm.getValueAsString("versionComment"));
 			documentService.save(Session.get().getSid(), document, new AsyncCallback<GUIDocument>() {
 				@Override
 				public void onFailure(Throwable caught) {
@@ -326,11 +326,13 @@ public class DocumentDetailsPanel extends VLayout {
 
 				@Override
 				public void onSuccess(GUIDocument result) {
-					observer.onDocumentSaved(result);
-					if (result != null)
-						DocumentsPanel.get().onSelectedDocument(result.getId(), false);
-					savePanel.setVisible(false);
-					saveForm.setValue("versionComment", "");
+					if (observer != null) {
+						observer.onDocumentSaved(result);
+						if (result != null)
+							DocumentsPanel.get().onSelectedDocument(result.getId(), false);
+						savePanel.setVisible(false);
+						saveForm.setValue("versionComment", "");
+					}
 				}
 			});
 		}
