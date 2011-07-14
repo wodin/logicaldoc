@@ -51,6 +51,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 	protected ToolStripButton scan = new ToolStripButton();
 
+	protected ToolStripButton bulkUpdate = new ToolStripButton();
+
 	protected ToolStripButton archive = new ToolStripButton();
 
 	protected ToolStripButton startWorkflow = new ToolStripButton();
@@ -287,6 +289,25 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		max.setDefaultValue(100);
 		max.setWidth(40);
 
+		bulkUpdate.setIcon(ItemFactory.newImgIcon("server_add.png").getSrc());
+		bulkUpdate.setTooltip(I18N.message("bulkupdate"));
+		bulkUpdate.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				ListGrid list = DocumentsPanel.get().getList();
+				ListGridRecord[] selection = list.getSelection();
+				if (selection == null || selection.length == 0)
+					return;
+				final long[] ids = new long[selection.length];
+				for (int i = 0; i < selection.length; i++) {
+					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
+				}
+
+				BulkUpdateDialog dialog = new BulkUpdateDialog(ids);
+				dialog.show();
+			}
+		});
+
 		if (Feature.visible(Feature.AUDIT)) {
 			addSeparator();
 			addButton(subscribe);
@@ -310,6 +331,15 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			if (!Feature.enabled(Feature.ARCHIVES)) {
 				archive.setDisabled(true);
 				archive.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+
+		if (Feature.visible(Feature.BULK_UPDATE)) {
+			addSeparator();
+			addButton(bulkUpdate);
+			if (!Feature.enabled(Feature.BULK_UPDATE)) {
+				bulkUpdate.setDisabled(true);
+				bulkUpdate.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
 
@@ -385,6 +415,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				if (!pdf.isDisabled())
 					pdf.setTooltip(I18N.message("exportpdf"));
 				subscribe.setDisabled(!Feature.enabled(Feature.AUDIT));
+				bulkUpdate.setDisabled(!Feature.enabled(Feature.BULK_UPDATE));
 			} else {
 				download.setDisabled(true);
 				rss.setDisabled(true);
@@ -393,6 +424,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				archive.setDisabled(true);
 				startWorkflow.setDisabled(true);
 				addToWorkflow.setDisabled(true);
+				bulkUpdate.setDisabled(true);
 			}
 
 			if (folder != null) {
@@ -404,12 +436,15 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 						|| !Feature.enabled(Feature.WORKFLOW));
 				addToWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)
 						|| !Feature.enabled(Feature.WORKFLOW) || Session.get().getCurrentWorkflow() == null);
+				addToWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WRITE)
+						|| !folder.hasPermission(Constants.PERMISSION_IMPORT) || !Feature.enabled(Feature.BULK_UPDATE));
 			} else {
 				add.setDisabled(true);
 				scan.setDisabled(true);
 				archive.setDisabled(true);
 				startWorkflow.setDisabled(true);
 				addToWorkflow.setDisabled(true);
+				bulkUpdate.setDisabled(true);
 			}
 		} catch (Throwable t) {
 

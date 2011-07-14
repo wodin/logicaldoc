@@ -283,4 +283,9 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 	public long addNote(String sid, long docId, String message) throws InvalidSessionException {
 		return 10;
 	}
+
+	@Override
+	public void bulkUpdate(String sid, long[] ids, GUIDocument vo) throws InvalidSessionException {
+		
+	}
 }

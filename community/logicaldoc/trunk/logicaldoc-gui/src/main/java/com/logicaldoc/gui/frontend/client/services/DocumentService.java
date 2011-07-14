@@ -182,4 +182,9 @@ public interface DocumentService extends RemoteService {
 	 * Deletes a selection of document notes
 	 */
 	public void deleteNotes(String sid, long[] ids) throws InvalidSessionException;
+	
+	/**
+	 * Applies to a selection of documents all the given data.
+	 */
+	public void bulkUpdate(String sid, long[] ids, GUIDocument vo) throws InvalidSessionException;
 }

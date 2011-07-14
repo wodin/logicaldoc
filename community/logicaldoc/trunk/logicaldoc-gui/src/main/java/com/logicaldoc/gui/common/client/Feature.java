@@ -63,6 +63,8 @@ public class Feature {
 	
 	public static final int PRODUCT_NEWS = 27;
 	
+	public static final int BULK_UPDATE = 28;
+	
 	public static final int SHOW_LICENSEE = 40;
 
 	public static final int SHOW_USERS_WARNING = 41;

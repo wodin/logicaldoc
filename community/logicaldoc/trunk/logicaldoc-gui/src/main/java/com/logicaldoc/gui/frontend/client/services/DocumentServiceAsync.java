@@ -63,4 +63,6 @@ public interface DocumentServiceAsync {
 	void deleteNotes(String sid, long[] ids, AsyncCallback<Void> callback);
 
 	void addNote(String sid, long docId, String message, AsyncCallback<Long> callback);
+
+	void bulkUpdate(String sid, long[] ids, GUIDocument vo, AsyncCallback<Void> callback);
 }
