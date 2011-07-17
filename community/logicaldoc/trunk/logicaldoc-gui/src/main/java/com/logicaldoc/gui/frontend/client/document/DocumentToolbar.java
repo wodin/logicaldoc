@@ -289,7 +289,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		max.setDefaultValue(100);
 		max.setWidth(40);
 
-		bulkUpdate.setIcon(ItemFactory.newImgIcon("server_add.png").getSrc());
+		bulkUpdate.setIcon(ItemFactory.newImgIcon("application_form_edit.png").getSrc());
 		bulkUpdate.setTooltip(I18N.message("bulkupdate"));
 		bulkUpdate.addClickHandler(new ClickHandler() {
 			@Override

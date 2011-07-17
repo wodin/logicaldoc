@@ -157,5 +157,23 @@ public class MetadataMenu extends VLayout {
 				AdminPanel.get().setContent(new WorkflowDesigner(new GUIWorkflow(), false));
 			}
 		});
+
+		Button folderTemplates = new Button(I18N.message("foldertemplates"));
+		folderTemplates.setWidth100();
+		folderTemplates.setHeight(25);
+		folderTemplates.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new FolderTemplatesPanel());
+			}
+		});
+		
+		if (Feature.visible(Feature.FOLDER_TEMPLATE)) {
+			addMember(folderTemplates);
+			if (!Feature.enabled(Feature.FOLDER_TEMPLATE)) {
+				folderTemplates.setDisabled(true);
+				folderTemplates.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
 	}
 }

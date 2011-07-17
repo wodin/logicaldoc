@@ -105,7 +105,7 @@ public class TagsPreset extends VLayout {
 		addMember(form);
 
 		reloadTags();
-		
+
 		if (mode.getValueAsString().equals("preset")) {
 			addTag.setDisabled(false);
 			tags.setDisabled(false);

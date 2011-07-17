@@ -25,6 +25,7 @@ import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
+import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.util.Context;
@@ -530,5 +531,20 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			log.error("Exception copying documents alias: " + t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
 		}
+	}
+
+	@Override
+	public GUIValuePair[] loadTemplates(String sid) throws InvalidSessionException {
+		return new GUIValuePair[0];
+	}
+
+	@Override
+	public void saveTemplates(String sid, GUIValuePair[] templates) throws InvalidSessionException {
+
+	}
+
+	@Override
+	public void applyTemplate(String sid, long folderId, long templateId) throws InvalidSessionException {
+
 	}
 }

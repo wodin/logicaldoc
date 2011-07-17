@@ -10,6 +10,7 @@ import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -97,6 +98,18 @@ public class LD {
 	 * Show a dialog asking for a value to complete a operation.
 	 */
 	public static void askforValue(String title, String message, String defaultValue, String width,
+			ValueCallback callback) {
+		TextItem textItem = ItemFactory.newTextItem("value", message, defaultValue);
+		textItem.setWrapTitle(false);
+		textItem.setWidth("100%");
+		askforValue(title, message, defaultValue, width, textItem, callback);
+	}
+
+	/**
+	 * Show a dialog asking for a value to complete a operation. The privided
+	 * form item will be used.
+	 */
+	public static void askforValue(String title, String message, String defaultValue, String width, FormItem item,
 			final ValueCallback callback) {
 		final Window dialog = new Window();
 		dialog.setAutoCenter(true);
@@ -123,19 +136,23 @@ public class LD {
 		container.setAlign(Alignment.CENTER);
 		container.setDefaultLayoutAlign(Alignment.CENTER);
 
-		DynamicForm textForm = new DynamicForm();
-		textForm.setTitleOrientation(TitleOrientation.TOP);
-		textForm.setNumCols(1);
-		final TextItem comment = ItemFactory.newTextItem("message", message, defaultValue);
-		comment.setWrapTitle(false);
-		comment.setWidth("100%");
-		textForm.setFields(comment);
+		final DynamicForm form = new DynamicForm();
+		form.setTitleOrientation(TitleOrientation.TOP);
+		form.setNumCols(1);
+
+		item.setWrapTitle(false);
+		item.setWidth("100%");
+		item.setName("value");
+		item.setTitle(I18N.message(message));
+		if (defaultValue != null)
+			item.setValue(defaultValue);
+		form.setFields(item);
 
 		IButton ok = new IButton(I18N.message("ok"));
 		ok.setWidth(70);
 		ok.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				callback.execute(comment.getValue().toString());
+				callback.execute(form.getValue("value").toString());
 				dialog.destroy();
 			}
 		});
@@ -157,7 +174,7 @@ public class LD {
 		buttons.addMember(cancel);
 		buttons.setAlign(Alignment.CENTER);
 
-		container.addMember(textForm);
+		container.addMember(form);
 		container.addMember(buttons);
 
 		dialog.addItem(container);
