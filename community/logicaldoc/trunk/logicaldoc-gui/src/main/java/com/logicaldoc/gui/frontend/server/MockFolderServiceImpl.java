@@ -2,7 +2,9 @@ package com.logicaldoc.gui.frontend.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 
 /**
@@ -66,6 +68,21 @@ public class MockFolderServiceImpl extends RemoteServiceServlet implements Folde
 
 	@Override
 	public void pasteAsAlias(String sid, long[] docIds, long folderId) {
+
+	}
+
+	@Override
+	public GUIValuePair[] loadTemplates(String sid) throws InvalidSessionException {
+		return null;
+	}
+
+	@Override
+	public void saveTemplates(String sid, GUIValuePair[] templates) throws InvalidSessionException {
+
+	}
+
+	@Override
+	public void applyTemplate(String sid, long folderId, long templateId) throws InvalidSessionException {
 
 	}
 }

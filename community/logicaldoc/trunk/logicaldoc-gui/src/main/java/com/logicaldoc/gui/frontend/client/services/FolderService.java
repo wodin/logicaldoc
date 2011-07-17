@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 
 /**
  * The client side stub for the Folder Service. This service allows r/w
@@ -72,4 +73,19 @@ public interface FolderService extends RemoteService {
 	 * @param folderId The target folder identifier.
 	 */
 	public void pasteAsAlias(String sid, long[] docIds, long folderId) throws InvalidSessionException;
+
+	/**
+	 * Loads the folders templates
+	 */
+	public GUIValuePair[] loadTemplates(String sid) throws InvalidSessionException;
+
+	/**
+	 * Saves the passed folder templates
+	 */
+	public void saveTemplates(String sid, GUIValuePair[] templates) throws InvalidSessionException;
+
+	/**
+	 * Applies a template to a folder
+	 */
+	public void applyTemplate(String sid, long folderId, long templateId) throws InvalidSessionException;
 }

@@ -7,6 +7,7 @@ import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
+import com.logicaldoc.gui.common.client.data.FolderTemplatesDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
 import com.logicaldoc.gui.common.client.data.UsersDS;
@@ -749,5 +750,18 @@ public class ItemFactory {
 		mode.setWidth(100);
 		mode.setHintStyle("hint");
 		return mode;
+	}
+
+	public static SelectItem newFolderTemplateSelector() {
+		SelectItem item = new SelectItem("foldertemplate");
+		item.setTitle(I18N.message("ttemplate"));
+		item.setRequiredMessage(I18N.message("fieldrequired"));
+		item.setValueField("id");
+		item.setDisplayField("name");
+		item.setOptionDataSource(new FolderTemplatesDS());
+		if (!Feature.enabled(Feature.FOLDER_TEMPLATE))
+			item.setDisabled(true);
+		item.setHintStyle("hint");
+		return item;
 	}
 }

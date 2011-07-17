@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.FoldersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
@@ -269,11 +270,19 @@ public class FoldersNavigator extends TreeGrid {
 			}
 		});
 
-		MenuItem addItem = new MenuItem();
-		addItem.setTitle(I18N.message("newfolder"));
-		addItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem createItem = new MenuItem();
+		createItem.setTitle(I18N.message("newfolder"));
+		createItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				onCreate();
+			}
+		});
+
+		MenuItem applyItem = new MenuItem();
+		applyItem.setTitle(I18N.message("applytemplate"));
+		applyItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				onApplyTemplate();
 			}
 		});
 
@@ -340,10 +349,10 @@ public class FoldersNavigator extends TreeGrid {
 			}
 		});
 
-		if (id != Constants.DOCUMENTS_FOLDERID)
-			reload.setEnabled(false);
-		if (!folder.hasPermission(Constants.PERMISSION_ADD))
-			addItem.setEnabled(false);
+		if (!folder.hasPermission(Constants.PERMISSION_ADD)) {
+			createItem.setEnabled(false);
+		}
+
 		if (id == Constants.DOCUMENTS_FOLDERID || !parent.hasPermission(Constants.PERMISSION_DELETE)) {
 			delete.setEnabled(false);
 			move.setEnabled(false);
@@ -359,7 +368,7 @@ public class FoldersNavigator extends TreeGrid {
 		if (Clipboard.getInstance().getLastAction().equals(Clipboard.CUT))
 			pasteAsAliasItem.setEnabled(false);
 
-		contextMenu.setItems(reload, search, addItem, delete, pasteItem, pasteAsAliasItem, move, exportZip);
+		contextMenu.setItems(reload, search, createItem, delete, pasteItem, pasteAsAliasItem, move, exportZip);
 
 		if (Feature.visible(Feature.AUDIT)) {
 			contextMenu.addItem(audit);
@@ -371,7 +380,44 @@ public class FoldersNavigator extends TreeGrid {
 			rss.setEnabled(Feature.enabled(Feature.RSS));
 		}
 
+		if (Feature.visible(Feature.FOLDER_TEMPLATE)) {
+			contextMenu.addItem(applyItem);
+			applyItem.setEnabled(Feature.enabled(Feature.FOLDER_TEMPLATE));
+		}
+
 		return contextMenu;
+	}
+
+	/**
+	 * Allows the selection of a folders template to appy to the current node
+	 */
+	private void onApplyTemplate() {
+		LD.askforValue(I18N.message("applytemplate"), I18N.message("ttemplate"), null, "200px",
+				ItemFactory.newFolderTemplateSelector(), new ValueCallback() {
+					@Override
+					public void execute(String value) {
+						if (value == null)
+							return;
+
+						final TreeNode selectedNode = (TreeNode) getSelectedRecord();
+						final long folderId = Long.parseLong(selectedNode.getAttributeAsString("folderId"));
+						long templateId = Long.parseLong(value);
+
+						service.applyTemplate(Session.get().getSid(), folderId, templateId, new AsyncCallback<Void>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(Void arg0) {
+								FoldersNavigator.this.getTree().reloadChildren(selectedNode);
+								Log.info(I18N.message("templateapplied"), null);
+							}
+						});
+					}
+				});
 	}
 
 	public static FoldersNavigator get() {
@@ -445,10 +491,8 @@ public class FoldersNavigator extends TreeGrid {
 	}
 
 	private void onReload() {
-		TreeNode rootNode = getTree().find("folderId", "5");
-		removeData(rootNode);
-		setDataSource(FoldersDS.get());
-		fetchData();
+		TreeNode selectedNode = (TreeNode) getSelectedRecord();
+		getTree().reloadChildren(selectedNode);
 	}
 
 	private void onCreate() {

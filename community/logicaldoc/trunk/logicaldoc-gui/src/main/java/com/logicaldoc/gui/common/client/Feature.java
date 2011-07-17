@@ -69,6 +69,8 @@ public class Feature {
 
 	public static final int SHOW_USERS_WARNING = 41;
 
+	public static final int FOLDER_TEMPLATE = 42;
+	
 	public static final int SHOW_DISABLED = 50;
 
 	public static final int PREVIEW = 51;
