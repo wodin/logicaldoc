@@ -273,6 +273,21 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		updateDocument(sid, wsDoc);
 	}
 
+
+	@Override
+	public void renameFile(String sid, long docId, String name) throws Exception {
+		User user = validateSession(sid);
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Document doc = docDao.findById(docId);
+		checkPermission(Permission.RENAME, user, doc.getFolder().getId());
+		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+
+		History transaction = new History();
+		transaction.setSessionId(sid);
+		transaction.setUser(user);
+		manager.rename(doc, name, false, transaction);
+	}
+	
 	@Override
 	public void restore(String sid, long docId, long folderId) throws Exception {
 		validateSession(sid);
