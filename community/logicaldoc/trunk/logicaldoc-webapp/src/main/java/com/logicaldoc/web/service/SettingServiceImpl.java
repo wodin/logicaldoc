@@ -287,13 +287,15 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
-		GUIParameter[] params = new GUIParameter[6];
+		GUIParameter[] params = new GUIParameter[7];
 		params[0] = new GUIParameter("ocr.enabled", conf.getProperty("ocr.enabled"));
 		params[1] = new GUIParameter("ocr.resolution.threshold", conf.getProperty("ocr.resolution.threshold"));
 		params[2] = new GUIParameter("ocr.text.threshold", conf.getProperty("ocr.text.threshold"));
 		params[3] = new GUIParameter("ocr.includes", conf.getProperty("ocr.includes"));
 		params[4] = new GUIParameter("ocr.excludes", conf.getProperty("ocr.excludes"));
 		params[5] = new GUIParameter("ocr.timeout", conf.getProperty("ocr.timeout"));
+		params[6] = new GUIParameter("ocr.engine", conf.getProperty("ocr.engine"));
+		
 		return params;
 	}
 
