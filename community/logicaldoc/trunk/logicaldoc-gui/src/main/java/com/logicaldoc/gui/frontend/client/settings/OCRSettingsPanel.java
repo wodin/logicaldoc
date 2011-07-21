@@ -78,8 +78,13 @@ public class OCRSettingsPanel extends VLayout {
 		resolutionThreshold.setRequired(true);
 		resolutionThreshold.setWrapTitle(false);
 		resolutionThreshold.setHint("pixels");
+		
+		RadioGroupItem engine = ItemFactory.newBooleanSelector("ocr.engine", "engine");
+		engine.setRequired(true);
+		engine.setValueMap("tesseract", "omnipage");
+		engine.setValue(settings[6].getValue());
 
-		form.setItems(enabled, timeout, includes, excludes, textThreshold, resolutionThreshold);
+		form.setItems(enabled, timeout, includes, excludes, textThreshold, resolutionThreshold, engine);
 
 		IButton save = new IButton();
 		save.setTitle(I18N.message("save"));
@@ -112,6 +117,8 @@ public class OCRSettingsPanel extends VLayout {
 					else
 						params[5] = new GUIParameter("ocr.timeout", (String) values.get("ocr.timeout"));
 
+					params[6] = new GUIParameter("ocr.engine", (String) values.get("ocr.engine"));
+					
 					service.saveSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
 
 						@Override
