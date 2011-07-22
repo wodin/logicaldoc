@@ -605,6 +605,7 @@ public class ItemFactory {
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("0", I18N.message("subject"));
 		map.put("1", I18N.message("sender"));
+		map.put("2", I18N.message("content"));
 		select.setValueMap(map);
 		select.setHintStyle("hint");
 		return select;
