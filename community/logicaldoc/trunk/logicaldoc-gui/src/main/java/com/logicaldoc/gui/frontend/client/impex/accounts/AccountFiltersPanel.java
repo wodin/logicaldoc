@@ -90,8 +90,10 @@ public class AccountFiltersPanel extends AccountDetailsTab {
 			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
 				if ("0".equals(value))
 					return I18N.message("subject");
-				else
+				else if("1".equals(value))
 					return I18N.message("sender");
+				else
+					return I18N.message("content");
 			}
 		});
 
