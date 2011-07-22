@@ -41,6 +41,8 @@ public class GUIHit implements Serializable {
 
 	private String comment;
 
+	private String folderName;
+	
 	public String getSummary() {
 		return summary;
 	}
@@ -151,5 +153,13 @@ public class GUIHit implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getFolderName() {
+		return folderName;
+	}
+
+	public void setFolderName(String folderName) {
+		this.folderName = folderName;
 	}
 }

@@ -145,7 +145,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		ListGridField filename = new ListGridField("filename", I18N.message("filename"), 200);
 		filename.setHidden(true);
 
-		ListGridField folderId = new ListGridField("folderId", I18N.message("folder"), 200);
+		ListGridField folderId = new ListGridField("folderId", I18N.message("folderid"), 200);
 		folderId.setHidden(true);
 		folderId.setCanFilter(false);
 
@@ -176,10 +176,15 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		ListGridField summary = new ListGridField("summary", I18N.message("summary"));
 		summary.setWidth(300);
 
+		ListGridField folder = new ListGridField("folder", I18N.message("folder"), 200);
+		folder.setWidth(200);
+		folder.setHidden(true);
+
+		
 		ListGridField comment = new ListGridField("comment", I18N.message("comment"), 300);
 		comment.setWidth(300);
 		comment.setHidden(true);
-
+		
 		list = new ListGrid() {
 			@Override
 			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
@@ -211,11 +216,11 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			// list.setFields(id, folderId, icon, title, size, creation, score,
 			// customId);
 			list.setFields(id, folderId, icon, title, type, size, published, creation, sourceDate, score, customId,
-					comment);
+					folder, comment);
 		} else {
 			// list.setFields(id, folderId, icon, title, size, creation,
 			// customId);
-			list.setFields(id, folderId, icon, title, type, size, published, creation, sourceDate, customId, comment);
+			list.setFields(id, folderId, icon, title, type, size, published, creation, sourceDate, customId, folder, comment);
 		}
 
 		list.addSelectionChangedHandler(new SelectionChangedHandler() {

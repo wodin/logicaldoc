@@ -227,6 +227,7 @@ public class FulltextSearch extends Search {
 					result.setCustomId(doc.get(LuceneDocument.FIELD_CUSTOM_ID));
 					result.setSource(doc.get(LuceneDocument.FIELD_SOURCE));
 					result.setComment(doc.get(LuceneDocument.FIELD_COMMENT));
+					result.setFolderName(doc.get(LuceneDocument.FIELD_FOLDER_NAME));
 
 					fid = doc.get(LuceneDocument.FIELD_FOLDER_ID);
 					// Support the old 'path' attribute

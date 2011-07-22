@@ -196,9 +196,11 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			GUIParameter[] parameters = new GUIParameter[1];
 
 			UserSession session = SessionManager.getInstance().get(sid);
-			GUIParameter messages = new GUIParameter("messages", ""
-					+ messageDao.getCount(session.getUserName(), SystemMessage.TYPE_SYSTEM, 0));
-			parameters[0] = messages;
+			if (session != null) {
+				GUIParameter messages = new GUIParameter("messages", ""
+						+ messageDao.getCount(session.getUserName(), SystemMessage.TYPE_SYSTEM, 0));
+				parameters[0] = messages;
+			}
 			return parameters;
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);

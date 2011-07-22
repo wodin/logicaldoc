@@ -39,13 +39,13 @@ public class TagSearch extends Search {
 	private void prepareExpression() {
 		// Find all real documents
 		StringBuffer query = new StringBuffer(
-				"select A.ld_id,A.ld_folderid,A.ld_title,A.ld_type,A.ld_customid,A.ld_filesize,A.ld_docref,A.ld_date,A.ld_sourcedate,A.ld_creation,A.ld_source,A.ld_comment "
-						+ "from ld_document A ");
+				"select A.ld_id,A.ld_folderid,A.ld_title,A.ld_type,A.ld_customid,A.ld_filesize,A.ld_docref,A.ld_date,A.ld_sourcedate,A.ld_creation,A.ld_source,A.ld_comment,B.ld_name "
+						+ "from ld_document A, ld_folder B ");
 		appendWhereClause(false, query);
 
 		// Append all shortcuts
-		query.append(" UNION select REF.ld_id,A.ld_folderid,REF.ld_title,REF.ld_type,REF.ld_customid,REF.ld_filesize,A.ld_docref,REF.ld_date,REF.ld_sourcedate,REF.ld_creation,REF.ld_source,REF.ld_comment "
-				+ "from ld_document A, ld_document REF ");
+		query.append(" UNION select REF.ld_id,A.ld_folderid,REF.ld_title,REF.ld_type,REF.ld_customid,REF.ld_filesize,A.ld_docref,REF.ld_date,REF.ld_sourcedate,REF.ld_creation,REF.ld_source,REF.ld_comment,B.ld_name "
+				+ "from ld_document A, ld_document REF, ld_folder B ");
 		appendWhereClause(true, query);
 
 		log.info("executing tag search query=" + query.toString());
@@ -62,7 +62,7 @@ public class TagSearch extends Search {
 	 * @param query
 	 */
 	private void appendWhereClause(boolean searchShortcut, StringBuffer query) {
-		query.append(" where A.ld_deleted=0 ");
+		query.append(" where A.ld_deleted=0 and A.ld_folderid=B.ld_id");
 
 		// Ids string to be used in the query
 		String ids = null;
@@ -111,6 +111,7 @@ public class TagSearch extends Search {
 			hit.setCreation(rs.getTimestamp(10));
 			hit.setSource(rs.getString(11));
 			hit.setComment(rs.getString(12));
+			hit.setFolderName(rs.getString(13));
 			
 			return hit;
 		}

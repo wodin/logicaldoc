@@ -96,6 +96,7 @@ public class Search {
 						record.setAttribute("type", hit.getType());
 						record.setAttribute("sourceDate", hit.getSourceDate());
 						record.setAttribute("comment", hit.getComment());
+						record.setAttribute("folder", hit.getFolderName());
 					}
 
 					for (SearchObserver observer : observers) {
