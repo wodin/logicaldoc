@@ -26,6 +26,8 @@ public class LuceneDocument {
 
 	public static final String FIELD_FOLDER_ID = "folderId";
 
+	public static final String FIELD_FOLDER_NAME = "folderName";
+
 	public static final String FIELD_SOURCE_TYPE = "sourceType";
 
 	public static final String FIELD_CREATION = "creation";
@@ -149,6 +151,7 @@ public class LuceneDocument {
 	protected void setFolder() {
 		doc.add(new Field(FIELD_FOLDER_ID, Long.toString(document.getFolder().getId()), Field.Store.YES,
 				Field.Index.NOT_ANALYZED));
+		doc.add(new Field(FIELD_FOLDER_NAME, document.getFolder().getName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
 	}
 
 	protected void setType() {

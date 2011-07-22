@@ -111,7 +111,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 				h.setScore(hit.getScore());
 				h.setSourceDate(hit.getSourceDate());
 				h.setComment(hit.getComment());
-
+				h.setFolderName(hit.getFolderName());
+				
 				// Check if the document is not an alias to visualize the
 				// correct icon: if the document is an alias the FULL-TEXT
 				// search returns a custom id null, the PARAMETRIC and TAG
