@@ -1,0 +1,1 @@
+mvn deploy:deploy-file -Dfile=artifact.jar -Dsources=artifact.jar -DgroupId=group -DartifactId=artifact -Dversion=version -Dpackaging=jar -DrepositoryId=logicaldoc-community -Durl=sftp://web.sourceforge.net/home/groups/l/lo/logicaldoc/htdocs/maven
