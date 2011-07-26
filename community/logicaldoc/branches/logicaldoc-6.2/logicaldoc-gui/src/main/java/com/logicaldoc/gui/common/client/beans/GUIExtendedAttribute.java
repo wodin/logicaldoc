@@ -115,7 +115,7 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 	 * @param value The attribute value.
 	 */
 	public void setValue(Object value) {
-		if (value instanceof String) {
+		if (value instanceof java.lang.String) {
 			this.type = TYPE_STRING;
 			setStringValue((String) value);
 		} else if (value instanceof Long) {
@@ -130,8 +130,14 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 		} else if (value instanceof Date) {
 			this.type = TYPE_DATE;
 			setDateValue((Date) value);
+		} else if (value == null) {
+			setStringValue(null);
+			setDoubleValue(null);
+			setIntValue(null);
+			setDateValue(null);
 		} else {
-			throw new IllegalArgumentException("No a String, Long, Double or Date value");
+			throw new IllegalArgumentException("Not a String, Long, Double or Date value: "
+					+ value.getClass().getName());
 		}
 	}
 
