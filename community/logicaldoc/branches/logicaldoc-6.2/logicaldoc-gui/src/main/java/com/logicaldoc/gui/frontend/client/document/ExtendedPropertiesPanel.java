@@ -43,13 +43,15 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 
 	private DynamicForm form2 = new DynamicForm();
 
-	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT
+			.create(DocumentService.class);
 
 	private ValuesManager vm = new ValuesManager();
 
 	private GUIExtendedAttribute[] currentExtAttributes = null;
 
-	public ExtendedPropertiesPanel(GUIDocument document, ChangedHandler changedHandler) {
+	public ExtendedPropertiesPanel(GUIDocument document,
+			ChangedHandler changedHandler) {
 		super(document, changedHandler);
 		setWidth100();
 		setHeight100();
@@ -71,11 +73,13 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		form1.setTitleOrientation(TitleOrientation.TOP);
 		List<FormItem> items = new ArrayList<FormItem>();
 
-		TextItem sourceItem = ItemFactory.newTextItem("source", "source", document.getSource());
+		TextItem sourceItem = ItemFactory.newTextItem("source", "source",
+				document.getSource());
 		sourceItem.addChangedHandler(changedHandler);
 		sourceItem.setDisabled(!update);
 
-		TextItem sourceId = ItemFactory.newTextItem("sourceid", "sourceid", document.getSourceId());
+		TextItem sourceId = ItemFactory.newTextItem("sourceid", "sourceid",
+				document.getSourceId());
 		sourceId.addChangedHandler(changedHandler);
 		sourceId.setDisabled(!update);
 
@@ -100,23 +104,28 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 			}
 		});
 
-		TextItem authorItem = ItemFactory.newTextItem("author", "author", document.getSourceAuthor());
+		TextItem authorItem = ItemFactory.newTextItem("author", "author",
+				document.getSourceAuthor());
 		authorItem.addChangedHandler(changedHandler);
 		authorItem.setDisabled(!update);
 
-		TextItem typeItem = ItemFactory.newTextItem("type", "type", document.getSourceType());
+		TextItem typeItem = ItemFactory.newTextItem("type", "type",
+				document.getSourceType());
 		typeItem.addChangedHandler(changedHandler);
 		typeItem.setDisabled(!update);
 
-		TextItem recipientItem = ItemFactory.newTextItem("recipient", "recipient", document.getRecipient());
+		TextItem recipientItem = ItemFactory.newTextItem("recipient",
+				"recipient", document.getRecipient());
 		recipientItem.addChangedHandler(changedHandler);
 		recipientItem.setDisabled(!update);
 
-		TextItem objectItem = ItemFactory.newTextItem("object", "object", document.getObject());
+		TextItem objectItem = ItemFactory.newTextItem("object", "object",
+				document.getObject());
 		objectItem.addChangedHandler(changedHandler);
 		objectItem.setDisabled(!update);
 
-		TextItem coverageItem = ItemFactory.newTextItem("coverage", "coverage", document.getCoverage());
+		TextItem coverageItem = ItemFactory.newTextItem("coverage", "coverage",
+				document.getCoverage());
 		coverageItem.addChangedHandler(changedHandler);
 		coverageItem.setDisabled(!update);
 
@@ -130,9 +139,11 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		templateItem.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
-				if (event.getValue() != null && !"".equals(event.getValue().toString())) {
+				if (event.getValue() != null
+						&& !"".equals(event.getValue().toString())) {
 					document.setAttributes(new GUIExtendedAttribute[0]);
-					prepareExtendedAttributes(new Long(event.getValue().toString()));
+					prepareExtendedAttributes(new Long(event.getValue()
+							.toString()));
 				} else {
 					document.setAttributes(new GUIExtendedAttribute[0]);
 					prepareExtendedAttributes(null);
@@ -182,68 +193,84 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		if (templateId == null)
 			return;
 
-		documentService.getAttributes(Session.get().getSid(), templateId, new AsyncCallback<GUIExtendedAttribute[]>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				Log.serverError(caught);
-			}
-
-			@Override
-			public void onSuccess(GUIExtendedAttribute[] result) {
-				currentExtAttributes = result;
-				List<FormItem> items = new ArrayList<FormItem>();
-				for (GUIExtendedAttribute att : result) {
-					if (att.getType() == GUIExtendedAttribute.TYPE_STRING) {
-						FormItem item = ItemFactory.newStringItemForExtendedAttribute(att);
-						if (document.getValue(att.getName()) != null)
-							item.setValue((String) document.getValue(att.getName()));
-						item.addChangedHandler(changedHandler);
-						item.setDisabled(!update);
-						items.add(item);
-					} else if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
-						IntegerItem item = ItemFactory.newIntegerItemForExtendedAttribute(att.getName(),
-								att.getLabel(), null);
-						if (document.getValue(att.getName()) != null)
-							item.setValue((Long) document.getValue(att.getName()));
-						item.setRequired(att.isMandatory());
-						item.addChangedHandler(changedHandler);
-						item.setDisabled(!update);
-						items.add(item);
-					} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
-						FloatItem item = ItemFactory.newFloatItemForExtendedAttribute(att.getName(), att.getLabel(),
-								null);
-						if (document.getValue(att.getName()) != null)
-							item.setValue((Double) document.getValue(att.getName()));
-						item.setRequired(att.isMandatory());
-						item.addChangedHandler(changedHandler);
-						item.setDisabled(!update);
-						items.add(item);
-					} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
-						final DateItem item = ItemFactory.newDateItemForExtendedAttribute(att.getName(), att.getLabel());
-						if (document.getValue(att.getName()) != null)
-							item.setValue((Date) document.getValue(att.getName()));
-						item.setRequired(att.isMandatory());
-						item.addChangedHandler(changedHandler);
-						item.addKeyPressHandler(new KeyPressHandler() {
-							@Override
-							public void onKeyPress(KeyPressEvent event) {
-								if ("backspace".equals(event.getKeyName().toLowerCase())
-										|| "delete".equals(event.getKeyName().toLowerCase())) {
-									item.clearValue();
-									item.setValue((Date) null);
-									changedHandler.onChanged(null);
-								} else {
-									changedHandler.onChanged(null);
-								}
-							}
-						});
-						item.setDisabled(!update);
-						items.add(item);
+		documentService.getAttributes(Session.get().getSid(), templateId,
+				new AsyncCallback<GUIExtendedAttribute[]>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
 					}
-				}
-				form2.setItems(items.toArray(new FormItem[0]));
-			}
-		});
+
+					@Override
+					public void onSuccess(GUIExtendedAttribute[] result) {
+						currentExtAttributes = result;
+						List<FormItem> items = new ArrayList<FormItem>();
+
+						for (GUIExtendedAttribute att : result) {
+							if (att.getType() == GUIExtendedAttribute.TYPE_STRING) {
+								FormItem item = ItemFactory
+										.newStringItemForExtendedAttribute(att);
+								if (document.getValue(att.getName()) != null)
+									item.setValue((String) document
+											.getValue(att.getName()));
+								item.addChangedHandler(changedHandler);
+								item.setDisabled(!update);
+								items.add(item);
+							} else if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
+								IntegerItem item = ItemFactory
+										.newIntegerItemForExtendedAttribute(
+												att.getName(), att.getLabel(),
+												null);
+								if (document.getValue(att.getName()) != null)
+									item.setValue((Long) document.getValue(att
+											.getName()));
+								item.setRequired(att.isMandatory());
+								item.addChangedHandler(changedHandler);
+								item.setDisabled(!update);
+								items.add(item);
+							} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
+								FloatItem item = ItemFactory
+										.newFloatItemForExtendedAttribute(
+												att.getName(), att.getLabel(),
+												null);
+								if (document.getValue(att.getName()) != null)
+									item.setValue((Double) document
+											.getValue(att.getName()));
+								item.setRequired(att.isMandatory());
+								item.addChangedHandler(changedHandler);
+								item.setDisabled(!update);
+								items.add(item);
+							} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
+								final DateItem item = ItemFactory
+										.newDateItemForExtendedAttribute(
+												att.getName(), att.getLabel());
+								if (document.getValue(att.getName()) != null)
+									item.setValue((Date) document.getValue(att
+											.getName()));
+								item.setRequired(att.isMandatory());
+								item.addChangedHandler(changedHandler);
+								item.addKeyPressHandler(new KeyPressHandler() {
+									@Override
+									public void onKeyPress(KeyPressEvent event) {
+										if ("backspace".equals(event
+												.getKeyName().toLowerCase())
+												|| "delete".equals(event
+														.getKeyName()
+														.toLowerCase())) {
+											item.clearValue();
+											item.setValue((Date) null);
+											changedHandler.onChanged(null);
+										} else {
+											changedHandler.onChanged(null);
+										}
+									}
+								});
+								item.setDisabled(!update);
+								items.add(item);
+							}
+						}
+						form2.setItems(items.toArray(new FormItem[0]));
+					}
+				});
 	}
 
 	@SuppressWarnings("unchecked")
@@ -261,28 +288,34 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 			document.setCoverage((String) values.get("coverage"));
 
 			if (Feature.enabled(Feature.TEMPLATE)) {
-				if (values.get("template") == null || "".equals(values.get("template").toString()))
+				if (values.get("template") == null
+						|| "".equals(values.get("template").toString()))
 					document.setTemplateId(null);
 				else {
-					document.setTemplateId(Long.parseLong(values.get("template").toString()));
+					document.setTemplateId(Long.parseLong(values
+							.get("template").toString()));
 				}
 				for (String name : values.keySet()) {
 					if (name.startsWith("_")) {
 						Object val = values.get(name);
-						String nm = name.substring(1).replaceAll(Constants.BLANK_PLACEHOLDER, " ");
+						String nm = name.substring(1).replaceAll(
+								Constants.BLANK_PLACEHOLDER, " ");
 						if (val != null) {
 							document.setValue(nm, val);
 						} else {
 							for (GUIExtendedAttribute extAttr : currentExtAttributes) {
 								if (extAttr.getName().equals(nm)) {
 									if (extAttr.getType() == GUIExtendedAttribute.TYPE_INT) {
-										document.getExtendedAttribute(nm).setIntValue(null);
+										document.getExtendedAttribute(nm)
+												.setIntValue(null);
 										break;
 									} else if (extAttr.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
-										document.getExtendedAttribute(nm).setDoubleValue(null);
+										document.getExtendedAttribute(nm)
+												.setDoubleValue(null);
 										break;
 									} else if (extAttr.getType() == GUIExtendedAttribute.TYPE_DATE) {
-										document.getExtendedAttribute(nm).setDateValue(null);
+										document.getExtendedAttribute(nm)
+												.setDateValue(null);
 										break;
 									} else {
 										document.setValue(nm, "");
