@@ -41,6 +41,10 @@
       <artifactId>gwt-incubator</artifactId>
     </dependency>
     <dependency>
+        <groupId>com.allen_sauer.gwt.dnd</groupId>
+        <artifactId>gwt-dnd</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.timepedia.exporter</groupId>
       <artifactId>gwtexporter</artifactId>
     </dependency>
@@ -68,6 +72,12 @@
       <artifactId>bst-player-api</artifactId>
       <version>1.2</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.orange.links</groupId>
+      <artifactId>gwt-links</artifactId>
+      <version>1.4</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.reveregroup.gwt</groupId>
@@ -127,7 +137,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
-        <version>2.1.0-1</version>
+        <version>${gwt.version}</version>
         <configuration>
           <webappDirectory>./war</webappDirectory>
           <webXml>./war/WEB-INF/web.xml</webXml>

@@ -48,4 +48,8 @@ public class AdminPanel extends HLayout {
 			instance = new AdminPanel();
 		return instance;
 	}
+
+	public Canvas getContent() {
+		return content;
+	}
 }

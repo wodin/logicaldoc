@@ -51,6 +51,8 @@ public class ClientAndExternalAppsPanel extends VLayout {
 
 	private GUIParameter p2swf = null;
 
+	private GUIParameter ghost = null;
+	
 	private GUIParameter openofficePath = null;
 
 	public ClientAndExternalAppsPanel(GUIParameter[] settings) {
@@ -65,6 +67,8 @@ public class ClientAndExternalAppsPanel extends VLayout {
 				convert = parameter;
 			else if (parameter.getName().equals("command.pdf2swf"))
 				p2swf = parameter;
+			else if (parameter.getName().equals("command.gs"))
+				ghost = parameter;
 			else if (parameter.getName().equals("openoffice.path"))
 				openofficePath = parameter;
 		}
@@ -140,9 +144,10 @@ public class ClientAndExternalAppsPanel extends VLayout {
 		extAppForm.setPadding(5);
 
 		TextItem convertCommand = ItemFactory.newTextItem("convertCommand", "Convert", convert.getValue());
-		TextItem p2swtCommand = ItemFactory.newTextItem("p2swtCommand", "P2Swt", p2swf.getValue());
+		TextItem p2swtCommand = ItemFactory.newTextItem("p2swtCommand", "P2Swf", p2swf.getValue());
+		TextItem ghostCommand = ItemFactory.newTextItem("ghostCommand", "Ghostscript", ghost.getValue());
 		TextItem openOffice = ItemFactory.newTextItem("openOffice", "OpenOffice dist", openofficePath.getValue());
-		extAppForm.setItems(convertCommand, p2swtCommand, openOffice);
+		extAppForm.setItems(convertCommand, p2swtCommand, ghostCommand,openOffice);
 		extApps.setPane(extAppForm);
 
 		if (Feature.visible(Feature.WEBSERVICE)) {
@@ -177,15 +182,17 @@ public class ClientAndExternalAppsPanel extends VLayout {
 							: "false");
 					ClientAndExternalAppsPanel.this.convert.setValue(values.get("convertCommand").toString());
 					ClientAndExternalAppsPanel.this.p2swf.setValue(values.get("p2swtCommand").toString());
+					ClientAndExternalAppsPanel.this.ghost.setValue(values.get("ghostCommand").toString());
 					ClientAndExternalAppsPanel.this.openofficePath.setValue(values.get("openOffice").toString());
 
-					GUIParameter[] params = new GUIParameter[6];
+					GUIParameter[] params = new GUIParameter[7];
 					params[0] = ClientAndExternalAppsPanel.this.wsSettings;
 					params[1] = ClientAndExternalAppsPanel.this.wdSettings;
 					params[2] = ClientAndExternalAppsPanel.this.wdCache;
 					params[3] = ClientAndExternalAppsPanel.this.convert;
 					params[4] = ClientAndExternalAppsPanel.this.p2swf;
-					params[5] = ClientAndExternalAppsPanel.this.openofficePath;
+					params[5] = ClientAndExternalAppsPanel.this.ghost;
+					params[6] = ClientAndExternalAppsPanel.this.openofficePath;
 
 					service.saveClientSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
 

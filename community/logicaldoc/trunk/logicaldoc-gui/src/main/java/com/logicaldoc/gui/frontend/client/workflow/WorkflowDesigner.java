@@ -1,21 +1,24 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.Widget;
 import com.logicaldoc.gui.common.client.beans.GUITransition;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.util.LD;
-import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
-import com.smartgwt.client.util.BooleanCallback;
-import com.smartgwt.client.util.SC;
-import com.smartgwt.client.util.ValueCallback;
+import com.orange.links.client.connection.Connection;
+import com.orange.links.client.shapes.FunctionShape;
+import com.orange.links.client.shapes.Point;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VStack;
 
@@ -25,7 +28,7 @@ import com.smartgwt.client.widgets.layout.VStack;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class WorkflowDesigner extends VStack implements WorkflowObserver {
+public class WorkflowDesigner extends VStack {
 
 	public final static int TYPE_TASK = 0;
 
@@ -60,315 +63,46 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 		}
 
 		if (this.workflow != null && !readOnly) {
-			accordion = new Accordion(workflow);
+			accordion = new Accordion();
+			accordion.redraw(workflow);
 			layout.addMember(accordion);
 		}
 
-		if (this.workflow != null) {
-			drawingPanel = new DrawingPanel(this);
-			layout.addMember(drawingPanel);
-			addMember(layout);
-		}
-	}
-
-	@Override
-	public void onStateSelect(GUIWFState state) {
-		final GUIWFState wfState = state;
-
-		if (wfState.getType() == TYPE_TASK) {
-			TaskDialog taskDialog = new TaskDialog(this, workflow, wfState);
-			taskDialog.show();
-		} else {
-			String typeString = "";
-			if (wfState.getType() == TYPE_JOIN) {
-				typeString = I18N.message("join");
-			} else if (wfState.getType() == TYPE_FORK) {
-				typeString = I18N.message("fork");
-			} else if (wfState.getType() == TYPE_END) {
-				typeString = I18N.message("endstate");
-			}
-
-			LD.askforValue(I18N.message("editworkflowstate", typeString), "<b>" + I18N.message("name") + ":</b>",
-					wfState.getName(), "200", new ValueCallback() {
-						@Override
-						public void execute(String value) {
-							if (value == null || "".equals(value.trim()))
-								return;
-
-							wfState.setName(value);
-
-							GUIWFState[] states = new GUIWFState[workflow.getStates().length];
-							int i = 0;
-							for (GUIWFState state : workflow.getStates()) {
-								if (!state.getId().equals(wfState.getId())) {
-									states[i] = state;
-									i++;
-								} else {
-									states[i] = wfState;
-									i++;
-								}
-							}
-
-							workflow.setStates(states);
-
-							AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
-
-						}
-					});
-		}
+		drawingPanel = new DrawingPanel(this);
+		layout.addMember(drawingPanel);
+		addMember(layout);
 	}
 
 	public GUIWorkflow getWorkflow() {
 		return workflow;
 	}
 
-	@Override
-	public void onStateDelete(GUIWFState workflowState) {
-		final GUIWFState wfState = workflowState;
+	public void redraw(GUIWorkflow workflow) {
+		// removeMember(layout);
+		// accordion.destroy();
+		// drawingPanel.destroy();
+		//
+		// accordion = new Accordion(workflow);
+		// drawingPanel = new DrawingPanel(this);
+		// layout.addMember(accordion);
+		// layout.addMember(drawingPanel);
+		// addMember(layout);
 
-		LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
-			@Override
-			public void execute(Boolean value) {
-				if (value) {
-					GUIWFState[] states = new GUIWFState[workflow.getStates().length - 1];
-					int i = 0;
-					for (GUIWFState state : workflow.getStates()) {
-						if (!state.getId().equals(wfState.getId())) {
-							states[i] = state;
-							i++;
-						}
-					}
-					workflow.setStates(states);
-
-					AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
-				}
-			}
-		});
-	}
-
-	@Override
-	public void onTransitionDelete(GUIWFState from, String transition) {
-		final GUIWFState fromState = from;
-		final String transitionText = transition;
-
-		LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
-			@Override
-			public void execute(Boolean value) {
-				if (value) {
-					if (fromState.getTransitions().length == 1)
-						fromState.setTransitions(null);
-					else {
-						GUITransition[] newTransitions = new GUITransition[fromState.getTransitions().length - 1];
-						int i = 0;
-						for (GUITransition transition : fromState.getTransitions()) {
-							if (!transition.getText().equals(transitionText)) {
-								newTransitions[i] = transition;
-								i++;
-							}
-						}
-						fromState.setTransitions(newTransitions);
-					}
-
-					GUIWFState[] states = new GUIWFState[workflow.getStates().length];
-					int j = 0;
-					for (GUIWFState state : workflow.getStates()) {
-						if (!state.getId().equals(fromState.getId())) {
-							states[j] = state;
-							j++;
-						} else {
-							states[j] = fromState;
-							j++;
-						}
-					}
-					workflow.setStates(states);
-
-					AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
-				}
-			}
-		});
-	}
-
-	@Override
-	public void onDraggedStateDelete(GUIWFState from, String transition) {
-		final GUIWFState fromState = from;
-		final GUIWorkflow workflow = this.getWorkflow();
-		final String transitionText = transition;
-
-		LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
-			@Override
-			public void execute(Boolean value) {
-				if (value) {
-					GUITransition[] newTransitions = new GUITransition[fromState.getTransitions().length];
-					int i = 0;
-					for (GUITransition transition : fromState.getTransitions()) {
-						if (!transition.getText().equals(transitionText)) {
-							newTransitions[i] = transition;
-							i++;
-						} else {
-							GUIWFState target = new GUIWFState();
-							target.setId("" + (workflow.getStates().length + 1));
-							target.setType(GUIWFState.TYPE_UNDEFINED);
-							newTransitions[i] = new GUITransition(transition.getText(), target);
-							i++;
-						}
-					}
-					fromState.setTransitions(newTransitions);
-
-					GUIWFState[] states = new GUIWFState[workflow.getStates().length];
-					int j = 0;
-					for (GUIWFState state : workflow.getStates()) {
-						if (!state.getId().equals(fromState.getId())) {
-							states[j] = state;
-							j++;
-						} else {
-							states[j] = fromState;
-							j++;
-						}
-					}
-					workflow.setStates(states);
-
-					AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
-				}
-			}
-		});
-	}
-
-	@Override
-	public void onAddTransition(GUIWFState fromState, GUIWFState targetState, String transitionText) {
-		if (fromState.getTransitions() != null && fromState.getTransitions().length > 0) {
-			List<GUITransition> transitionsList = Arrays.asList(fromState.getTransitions());
-			for (GUITransition transition : transitionsList) {
-				if (transition.getText().equals(transitionText) && targetState == null) {
-					SC.warn(I18N.message("workflowtransitionalreadyexist"));
-					return;
-				}
-			}
-		}
-
-		GUITransition[] newTransitions = null;
-		if (targetState == null || fromState.getType() == GUIWFState.TYPE_FORK) {
-			// Adding a new transition without a dragged state, so put an empty
-			// drop area
-			if (fromState.getTransitions() != null)
-				newTransitions = new GUITransition[fromState.getTransitions().length + 1];
-			else
-				newTransitions = new GUITransition[1];
-		} else {
-			// Dragging a workflow state into an existing transition, so into an
-			// empty drop area
-			if (fromState.getTransitions() != null)
-				newTransitions = new GUITransition[fromState.getTransitions().length];
-			else
-				newTransitions = new GUITransition[1];
-		}
-
-		if (fromState.getTransitions() != null && fromState.getTransitions().length > 0) {
-			GUITransition[] transitions = fromState.getTransitions();
-			for (int i = 0; i < transitions.length; i++) {
-				if (transitionText != null && transitionText.equals(transitions[i].getText())) {
-					// Associate the targetState to an existing transition
-					GUITransition t = new GUITransition(transitionText, targetState);
-					newTransitions[i] = t;
-				} else {
-					newTransitions[i] = transitions[i];
-				}
-			}
-		} else {
-			// Associate the targetState to an existing transition
-			GUITransition t = new GUITransition(transitionText, targetState);
-			newTransitions[0] = t;
-		}
-
-		if (targetState == null) {
-			// The user has clicked the 'add transition' link into the task
-			// dialog element.
-			GUIWFState target = new GUIWFState();
-			target.setId("" + (this.getWorkflow().getStates().length + 1));
-			target.setType(GUIWFState.TYPE_UNDEFINED);
-			newTransitions[newTransitions.length - 1] = new GUITransition(transitionText, target);
-		} else if (fromState.getType() == GUIWFState.TYPE_FORK) {
-			newTransitions[newTransitions.length - 1] = new GUITransition(transitionText, targetState);
-		}
-
-		fromState.setTransitions(newTransitions);
-
-		GUIWFState[] states = new GUIWFState[workflow.getStates().length];
-		int j = 0;
-		for (GUIWFState state : workflow.getStates()) {
-			if (!state.getId().equals(fromState.getId())) {
-				states[j] = state;
-				j++;
-			} else {
-				states[j] = fromState;
-				j++;
-			}
-		}
-
-		workflow.setStates(states);
-
-		AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
-	}
-
-	public void reloadDrawingPanel() {
-		removeMember(layout);
-		accordion.destroy();
-		drawingPanel.destroy();
-
-		accordion = new Accordion(workflow);
-		drawingPanel = new DrawingPanel(this);
-		layout.addMember(accordion);
-		layout.addMember(drawingPanel);
-		addMember(layout);
+		this.workflow = workflow;
+		accordion.redraw(workflow);
+		drawingPanel.redraw();
 	}
 
 	public Accordion getAccordion() {
 		return accordion;
 	}
 
-	@Override
-	public void onAddState(GUIWorkflow wfl, int type) {
-		workflow = wfl;
-
-		GUIWFState[] newStates = null;
-		if (workflow.getStates() != null && workflow.getStates().length > 0) {
-			newStates = new GUIWFState[workflow.getStates().length + 1];
-			int j = 0;
-			for (GUIWFState state : workflow.getStates()) {
-				newStates[j] = state;
-				j++;
-			}
-		} else {
-			newStates = new GUIWFState[1];
-		}
-
-		GUIWFState newState = new GUIWFState("" + (newStates.length), I18N.message("taskwithnoname"), type);
-		newStates[newStates.length - 1] = newState;
-		if (workflow.getStartStateId().equals("0"))
-			if (newState.getType() == GUIWFState.TYPE_TASK) {
-				workflow.setStartStateId(newState.getId());
-			}
-
-		workflow.setStates(newStates);
-
-		final Map<String, Object> values = getAccordion().getValues();
-		if (values != null) {
-			if (values.get("workflowName") != null)
-				workflow.setName((String) values.get("workflowName"));
-			if (values.get("workflowDescr") != null)
-				workflow.setDescription((String) values.get("workflowDescr"));
-			if (values.get("assignmentSubject") != null)
-				workflow.setTaskAssignmentSubject((String) values.get("assignmentSubject"));
-			if (values.get("assignmentBody") != null)
-				workflow.setTaskAssignmentBody((String) values.get("assignmentBody"));
-			if (values.get("reminderSubject") != null)
-				workflow.setReminderSubject((String) values.get("reminderSubject"));
-			if (values.get("reminderBody") != null)
-				workflow.setReminderBody((String) values.get("reminderBody"));
-			if (values.get("supervisor") != null)
-				workflow.setSupervisor((String) values.get("supervisor"));
-		}
-
-		AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
+	// @Override
+	public void onAddState(int type) {
+		GUIWFState state = new GUIWFState("" + new Date().getTime(), I18N.message("statename"), type);
+		StateWidget sw = new StateWidget(drawingPanel, state);
+		drawingPanel.getDiagramController().addWidget(sw, 10, 10);
+		drawingPanel.getDiagramController().makeDraggable(sw);
 	}
 
 	public boolean isReadOnly() {
@@ -377,5 +111,69 @@ public class WorkflowDesigner extends VStack implements WorkflowObserver {
 
 	public DrawingPanel getDrawingPanel() {
 		return drawingPanel;
+	}
+
+	/**
+	 * Saves the current diagram into the object model.
+	 */
+	public void saveModel() {
+		final Map<String, Object> values = getAccordion().getValues();
+		if (values == null || ((String) values.get("workflowName")).trim().isEmpty())
+			return;
+		workflow.setName((String) values.get("workflowName"));
+		if (values.get("workflowDescr") != null)
+			workflow.setDescription((String) values.get("workflowDescr"));
+		if (values.get("assignmentSubject") != null)
+			workflow.setTaskAssignmentSubject((String) values.get("assignmentSubject"));
+		if (values.get("assignmentBody") != null)
+			workflow.setTaskAssignmentBody((String) values.get("assignmentBody"));
+		if (values.get("reminderSubject") != null)
+			workflow.setReminderSubject((String) values.get("reminderSubject"));
+		if (values.get("reminderBody") != null)
+			workflow.setReminderBody((String) values.get("reminderBody"));
+		if (values.get("supervisor") != null)
+			workflow.setSupervisor((String) values.get("supervisor"));
+
+		// Collect all the states as drawn in the designer.
+		List<GUIWFState> states = new ArrayList<GUIWFState>();
+		Iterator<FunctionShape> iter = getDrawingPanel().getDiagramController().getShapes().iterator();
+		int i = 0;
+		while (iter.hasNext()) {
+			FunctionShape shape = iter.next();
+			StateWidget widget = (StateWidget) shape.getWidget();
+			GUIWFState wfState = widget.getWfState();
+			wfState.setId(Integer.toString(i++));
+			wfState.setTop(shape.getTop());
+			wfState.setLeft(shape.getLeft());
+			states.add(wfState);
+		}
+		workflow.setStates(states.toArray(new GUIWFState[0]));
+
+		// Collect all the transitions as drawn in the designer
+		iter = getDrawingPanel().getDiagramController().getShapes().iterator();
+		Map<Widget, Map<Widget, Connection>> functionsMap = getDrawingPanel().getDiagramController().getFunctionsMap();
+		while (iter.hasNext()) {
+			FunctionShape shape = iter.next();
+			StateWidget srcWidget = (StateWidget) shape.getWidget();
+
+			List<GUITransition> transitions = new ArrayList<GUITransition>();
+			Map<Widget, Connection> map = functionsMap.get(srcWidget);
+			for (Entry<Widget, Connection> entry : map.entrySet()) {
+				StateWidget targetWidget = (StateWidget) entry.getKey();
+				Connection connection = entry.getValue();
+				Label decoration = (Label) connection.getDecoration().getWidget();
+				GUITransition transition = new GUITransition(decoration.getContents(), targetWidget.getWfState());
+				transitions.add(transition);
+
+				StringBuffer sb = new StringBuffer("");
+				for (Point point : connection.getMovablePoints()) {
+					sb.append("" + point.getLeft());
+					sb.append("," + point.getTop());
+					sb.append(";");
+				}
+				transition.setPoints(sb.toString());
+			}
+			srcWidget.getWfState().setTransitions(transitions.toArray(new GUITransition[0]));
+		}
 	}
 }
