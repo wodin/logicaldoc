@@ -51,8 +51,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		super();
 
 		this.designer = designer;
-		if (designer.getWorkflow() != null)
-			currentWorkflow = designer.getWorkflow();
+		this.currentWorkflow = designer.getWorkflow();
 
 		setWidth100();
 
@@ -94,7 +93,7 @@ public class WorkflowToolstrip extends ToolStrip {
 								@Override
 								public void onSuccess(GUIWorkflow result) {
 									currentWorkflow = result;
-									AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
+									WorkflowToolstrip.this.designer.redraw(currentWorkflow);
 								}
 							});
 				}
@@ -121,7 +120,7 @@ public class WorkflowToolstrip extends ToolStrip {
 							@Override
 							public void onSuccess(GUIWorkflow result) {
 								currentWorkflow = result;
-								AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
+								WorkflowToolstrip.this.designer.redraw(result);
 							}
 						});
 			}
@@ -231,13 +230,7 @@ public class WorkflowToolstrip extends ToolStrip {
 					if (values.get("supervisor") != null)
 						currentWorkflow.setSupervisor((String) values.get("supervisor"));
 
-					// Order the rows as displayed to the user
-					int i = 0;
 					List<GUIWFState> states = new ArrayList<GUIWFState>();
-					for (i = 0; i < WorkflowToolstrip.this.designer.getDrawingPanel().getMembers().length; i++) {
-						WorkflowRow r = (WorkflowRow) WorkflowToolstrip.this.designer.getDrawingPanel().getMembers()[i];
-						states.add(r.getState().getWfState());
-					}
 					currentWorkflow.setStates(states.toArray(new GUIWFState[0]));
 
 					workflowService.deploy(Session.get().getSid(), currentWorkflow, new AsyncCallback<Void>() {
@@ -276,7 +269,7 @@ public class WorkflowToolstrip extends ToolStrip {
 										@Override
 										public void onSuccess(Void result) {
 											currentWorkflow = null;
-											AdminPanel.get().setContent(new WorkflowDesigner(new GUIWorkflow(), false));
+											WorkflowToolstrip.this.designer.redraw(new GUIWorkflow());
 										}
 									});
 						}
@@ -292,7 +285,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		close.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				AdminPanel.get().setContent(new WorkflowDesigner(null, false));
+				WorkflowToolstrip.this.designer.redraw(new GUIWorkflow());
 			}
 		});
 		addButton(close);
@@ -305,31 +298,7 @@ public class WorkflowToolstrip extends ToolStrip {
 	}
 
 	private void onSave() {
-		final Map<String, Object> values = WorkflowToolstrip.this.designer.getAccordion().getValues();
-		if (values == null || ((String) values.get("workflowName")).trim().isEmpty())
-			return;
-		currentWorkflow.setName((String) values.get("workflowName"));
-		if (values.get("workflowDescr") != null)
-			currentWorkflow.setDescription((String) values.get("workflowDescr"));
-		if (values.get("assignmentSubject") != null)
-			currentWorkflow.setTaskAssignmentSubject((String) values.get("assignmentSubject"));
-		if (values.get("assignmentBody") != null)
-			currentWorkflow.setTaskAssignmentBody((String) values.get("assignmentBody"));
-		if (values.get("reminderSubject") != null)
-			currentWorkflow.setReminderSubject((String) values.get("reminderSubject"));
-		if (values.get("reminderBody") != null)
-			currentWorkflow.setReminderBody((String) values.get("reminderBody"));
-		if (values.get("supervisor") != null)
-			currentWorkflow.setSupervisor((String) values.get("supervisor"));
-
-		// Order the rows as displayed to the user
-		int i = 0;
-		List<GUIWFState> states = new ArrayList<GUIWFState>();
-		for (i = 0; i < designer.getDrawingPanel().getMembers().length; i++) {
-			WorkflowRow r = (WorkflowRow) designer.getDrawingPanel().getMembers()[i];
-			states.add(r.getState().getWfState());
-		}
-		currentWorkflow.setStates(states.toArray(new GUIWFState[0]));
+		designer.saveModel();
 
 		workflowService.save(Session.get().getSid(), currentWorkflow, new AsyncCallback<GUIWorkflow>() {
 			@Override
@@ -343,9 +312,6 @@ public class WorkflowToolstrip extends ToolStrip {
 					SC.warn(I18N.message("workflowalreadyexist"));
 				} else {
 					currentWorkflow = result;
-					// Necessary reload to visualize a new saved
-					// workflow of the workflows drop down menu.
-					AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
 				}
 			}
 		});

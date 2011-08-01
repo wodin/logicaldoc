@@ -38,7 +38,7 @@ public class StateToolstrip extends ToolStrip {
 		newTask.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				workflowDesigner.onAddState(workflowDesigner.getWorkflow(), GUIWFState.TYPE_TASK);
+				workflowDesigner.onAddState(GUIWFState.TYPE_TASK);
 			}
 		});
 		addButton(newTask);
@@ -50,7 +50,7 @@ public class StateToolstrip extends ToolStrip {
 		newEndState.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				workflowDesigner.onAddState(workflowDesigner.getWorkflow(), GUIWFState.TYPE_END);
+				workflowDesigner.onAddState(GUIWFState.TYPE_END);
 			}
 		});
 		addButton(newEndState);
@@ -62,7 +62,7 @@ public class StateToolstrip extends ToolStrip {
 		newFork.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				workflowDesigner.onAddState(workflowDesigner.getWorkflow(), GUIWFState.TYPE_FORK);
+				workflowDesigner.onAddState(GUIWFState.TYPE_FORK);
 			}
 		});
 		addButton(newFork);
@@ -74,7 +74,7 @@ public class StateToolstrip extends ToolStrip {
 		newJoin.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				workflowDesigner.onAddState(workflowDesigner.getWorkflow(), GUIWFState.TYPE_JOIN);
+				workflowDesigner.onAddState(GUIWFState.TYPE_JOIN);
 			}
 		});
 		addButton(newJoin);

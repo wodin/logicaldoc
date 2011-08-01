@@ -5,10 +5,8 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
-import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
@@ -44,8 +42,6 @@ public class TaskDialog extends Window {
 
 	protected WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
 
-	private GUIWorkflow workflow = null;
-
 	private ValuesManager vm = new ValuesManager();
 
 	private GUIWFState task;
@@ -62,9 +58,11 @@ public class TaskDialog extends Window {
 
 	private DynamicForm buttonForm;
 
-	public TaskDialog(WorkflowDesigner designer, GUIWorkflow wfl, GUIWFState wfState) {
-		this.workflow = wfl;
-		this.task = wfState;
+	private StateWidget widget;
+
+	public TaskDialog(StateWidget widget) {
+		this.task = widget.getWfState();
+		this.widget = widget;
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("editworkflowstate", I18N.message("task")));
@@ -257,26 +255,16 @@ public class TaskDialog extends Window {
 					TaskDialog.this.task.setReminderUnit((String) values.get("remindTime"));
 					TaskDialog.this.task.setParticipants(participants.keySet().toArray(new String[0]));
 
-					GUIWFState[] states = new GUIWFState[workflow.getStates().length];
-					int i = 0;
-					for (GUIWFState state : workflow.getStates()) {
-						if (!state.getId().equals(task.getId())) {
-							states[i] = state;
-							i++;
-						} else {
-							states[i] = task;
-							i++;
-						}
-					}
-					workflow.setStates(states);
-
-					AdminPanel.get().setContent(new WorkflowDesigner(workflow, false));
-					destroy();
-
 					if (TaskDialog.this.task.getParticipants() == null
 							|| TaskDialog.this.task.getParticipants().length == 0) {
 						SC.warn(I18N.message("workflowtaskparticipantatleast"));
+						return;
 					}
+
+					widget.setContents("<b>" + task.getName() + "</b>");
+					widget.getDrawingPanel().getDiagramController().update();
+
+					destroy();
 				}
 			}
 		});

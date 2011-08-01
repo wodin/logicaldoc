@@ -16,6 +16,8 @@ public class GUITransition implements Serializable {
 
 	private GUIWFState targetState;
 
+	private String points;
+	
 	public GUITransition() {
 	}
 
@@ -38,5 +40,13 @@ public class GUITransition implements Serializable {
 
 	public void setTargetState(GUIWFState targetState) {
 		this.targetState = targetState;
+	}
+
+	public String getPoints() {
+		return points;
+	}
+
+	public void setPoints(String points) {
+		this.points = points;
 	}
 }

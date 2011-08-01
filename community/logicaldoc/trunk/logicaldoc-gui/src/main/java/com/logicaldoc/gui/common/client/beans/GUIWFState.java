@@ -73,6 +73,10 @@ public class GUIWFState implements Serializable {
 
 	private String comment;
 
+	private int top = 0;
+
+	private int left = 0;
+
 	public GUIWFState() {
 	}
 
@@ -230,5 +234,21 @@ public class GUIWFState implements Serializable {
 
 	public void setPooledActors(String pooledActors) {
 		this.pooledActors = pooledActors;
+	}
+
+	public int getTop() {
+		return top;
+	}
+
+	public void setTop(int top) {
+		this.top = top;
+	}
+
+	public int getLeft() {
+		return left;
+	}
+
+	public void setLeft(int left) {
+		this.left = left;
 	}
 }

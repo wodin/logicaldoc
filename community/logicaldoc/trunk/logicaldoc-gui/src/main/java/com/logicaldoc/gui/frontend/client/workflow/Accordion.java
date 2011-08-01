@@ -46,7 +46,7 @@ public class Accordion extends SectionStack {
 
 	private TextItem workflowName = null;
 
-	public Accordion(GUIWorkflow workflow) {
+	public Accordion() {
 		setVisibilityMode(VisibilityMode.MUTEX);
 		setWidth(250);
 		setHeight(557);
@@ -56,19 +56,16 @@ public class Accordion extends SectionStack {
 		wfSettingsSection.setExpanded(true);
 		wfSettingsSection.setCanCollapse(true);
 		addSection(wfSettingsSection);
-
-		refresh(workflow);
 	}
 
-	public void refresh(GUIWorkflow workflow) {
+	public void redraw(GUIWorkflow workflow) {
 		if (wfForm != null) {
 			wfLayout.removeMember(wfForm);
 			wfForm.destroy();
+			vm.clearValues();
 		}
-
-		if (workflow != null) {
-			this.workflow = workflow;
-		}
+        this.workflow = workflow;
+		
 
 		wfForm = new DynamicForm();
 		wfForm.setTitleOrientation(TitleOrientation.TOP);
