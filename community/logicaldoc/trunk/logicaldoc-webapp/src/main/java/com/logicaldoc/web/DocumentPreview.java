@@ -54,7 +54,7 @@ public class DocumentPreview extends HttpServlet {
 
 	protected static String PDF2SWF = "command.pdf2swf";
 
-	protected static String IMG2PDF = "command.convert";
+	protected static String CONVERT = "command.convert";
 
 	/** For these extensions we are able to directly convert to SWF */
 	protected String SWF_DIRECT_CONVERSION_EXTS = "gif, png, pdf, jpeg, jpg, tiff, tif";
@@ -267,7 +267,7 @@ public class DocumentPreview extends HttpServlet {
 
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
-			ProcessBuilder pb = new ProcessBuilder(conf.getProperty(IMG2PDF), inputFile,
+			ProcessBuilder pb = new ProcessBuilder(conf.getProperty(CONVERT), inputFile,
 					"  -compress None -quality 100 ", output.getPath());
 			// Launch the process
 			final Process process = pb.start();

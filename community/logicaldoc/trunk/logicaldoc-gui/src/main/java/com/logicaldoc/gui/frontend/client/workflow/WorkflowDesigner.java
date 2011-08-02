@@ -13,7 +13,6 @@ import com.logicaldoc.gui.common.client.beans.GUITransition;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.orange.links.client.connection.Connection;
@@ -53,7 +52,7 @@ public class WorkflowDesigner extends VStack {
 	private boolean readOnly = false;
 
 	private WorkflowToolstrip workflowToolstrip;
-	
+
 	public WorkflowDesigner(GUIWorkflow workflow, boolean readOnly) {
 		this.workflow = workflow;
 		this.readOnly = readOnly;
@@ -66,7 +65,7 @@ public class WorkflowDesigner extends VStack {
 			addMember(new StateToolstrip(this));
 		}
 
-		if (this.workflow != null && !readOnly) {
+		if (this.workflow != null) {
 			accordion = new Accordion();
 			accordion.redraw(workflow);
 			layout.addMember(accordion);
@@ -75,6 +74,9 @@ public class WorkflowDesigner extends VStack {
 		drawingPanel = new DrawingPanel(this);
 		layout.addMember(drawingPanel);
 		addMember(layout);
+
+		if (workflow != null)
+			redraw(workflow);
 	}
 
 	public GUIWorkflow getWorkflow() {
@@ -82,8 +84,9 @@ public class WorkflowDesigner extends VStack {
 	}
 
 	public void redraw(GUIWorkflow workflow) {
-		this.workflow = workflow;		
-		accordion.redraw(workflow);
+		this.workflow = workflow;
+		if (accordion != null && !isReadOnly())
+			accordion.redraw(workflow);
 		drawingPanel.redraw();
 	}
 
