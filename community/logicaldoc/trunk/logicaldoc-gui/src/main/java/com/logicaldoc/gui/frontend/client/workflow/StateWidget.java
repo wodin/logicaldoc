@@ -6,7 +6,6 @@ import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.orange.links.client.DiagramController;
 import com.orange.links.client.connection.Connection;
-import com.orange.links.client.shapes.FunctionShape;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.BooleanCallback;
@@ -134,7 +133,8 @@ public class StateWidget extends Label {
 			TaskDialog taskDialog = new TaskDialog(StateWidget.this);
 			taskDialog.show();
 		} else {
-			LD.askforValue(I18N.message("name"), "<b>" + I18N.message("name") + ":</b>", getContents(), "200",
+			String oldName = getContents().replaceAll("<b>", "").replaceAll("</b>", "").replaceAll("&nbsp;", "");
+			LD.askforValue(I18N.message("name"), "<b>" + I18N.message("name") + ":</b>", oldName, "200",
 					new ValueCallback() {
 						@Override
 						public void execute(String value) {

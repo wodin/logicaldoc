@@ -1,6 +1,7 @@
 package com.logicaldoc.web.util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,6 +37,7 @@ import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
+import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
  * Some helper utilities to download/upload a document and its resources. The
@@ -43,7 +45,7 @@ import com.logicaldoc.util.MimeType;
  * 
  * @author Sebastian Stein
  */
-public class ServletDocUtil {
+public class ServletIOUtil {
 	/**
 	 * Adds the given document to the recent files entry of the user
 	 * 
@@ -57,6 +59,65 @@ public class ServletDocUtil {
 
 		UserDocDAO uddao = (UserDocDAO) Context.getInstance().getBean(UserDocDAO.class);
 		uddao.store(userdoc);
+	}
+
+	/**
+	 * Downloads a plugin resource
+	 * 
+	 * @param request
+	 * @param response
+	 * @param pluginName name of the plug-in
+	 * @param resourcePath Relative path ot the plug-in's resource
+	 * @param fileName Optional file name
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	public static void downloadPluginResource(HttpServletRequest request, HttpServletResponse response,
+			String pluginName, String resourcePath, String fileName) throws FileNotFoundException, IOException,
+			ServletException {
+
+		SessionUtil.validateSession(request);
+		String filename = fileName;
+		if (filename == null)
+			filename = FilenameUtils.getName(resourcePath);
+
+		File file = PluginRegistry.getInstance().getPluginResource(pluginName, resourcePath);
+
+		// get the mimetype
+		String mimetype = MimeType.getByFilename(filename);
+		// it seems everything is fine, so we can now start writing to the
+		// response object
+		response.setContentType(mimetype);
+		setContentDisposition(request, response, filename);
+
+		// Headers required by Internet Explorer
+		response.setHeader("Pragma", "public");
+		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
+		response.setHeader("Expires", "0");
+
+		// Add this header for compatibility with internal .NET browsers
+		response.setHeader("Content-Length", Long.toString(file.length()));
+
+		InputStream is = null;
+		OutputStream os = null;
+
+		try {
+			is = new FileInputStream(file);
+			os = response.getOutputStream();
+
+			int letter = 0;
+
+			byte[] buffer = new byte[128 * 1024];
+			while ((letter = is.read(buffer)) != -1) {
+				os.write(buffer, 0, letter);
+			}
+		} finally {
+			os.flush();
+			os.close();
+			is.close();
+		}
+		
 	}
 
 	/**

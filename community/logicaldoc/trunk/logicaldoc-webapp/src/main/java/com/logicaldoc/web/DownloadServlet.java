@@ -1,5 +1,6 @@
 package com.logicaldoc.web;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -19,7 +20,7 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.ServletDocUtil;
+import com.logicaldoc.web.util.ServletIOUtil;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
@@ -48,13 +49,27 @@ public class DownloadServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		UserSession session = SessionUtil.validateSession(request);
 
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		VersionDAO versDao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
 		// Load the user associated to the session
+		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		User user = udao.findById(session.getUserId());
 		if (user == null)
 			return;
+
+		try {
+			if (request.getParameter("pluginId") != null)
+				ServletIOUtil.downloadPluginResource(request, response, request.getParameter("pluginId"),
+						request.getParameter("resourcePath"), request.getParameter("fileName"));
+			else
+				downloadDocument(request, response, user);
+		} catch (Throwable ex) {
+			log.error(ex.getMessage(), ex);
+		}
+	}
+
+	protected void downloadDocument(HttpServletRequest request, HttpServletResponse response, User user)
+			throws FileNotFoundException, IOException, ServletException {
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		VersionDAO versDao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
 
 		// Flag indicating to download only indexed text
 		String downloadText = request.getParameter("downloadText");
@@ -66,55 +81,51 @@ public class DownloadServlet extends HttpServlet {
 		Version version = null;
 		Document doc = null;
 
-		try {
-			if (!StringUtils.isEmpty(docId))
-				doc = docDao.findById(Long.parseLong(docId));
-			if (!StringUtils.isEmpty(versionId)) {
-				version = versDao.findById(Long.parseLong(versionId));
-				if (doc == null)
-					doc = docDao.findById(version.getDocId());
-			}
+		if (!StringUtils.isEmpty(docId))
+			doc = docDao.findById(Long.parseLong(docId));
+		if (!StringUtils.isEmpty(versionId)) {
+			version = versDao.findById(Long.parseLong(versionId));
+			if (doc == null)
+				doc = docDao.findById(version.getDocId());
+		}
 
+		if (version != null)
+			filename = version.getFileName();
+		else
+			filename = doc.getFileName();
+
+		response.setHeader("Content-Length", Long.toString(doc.getFileSize()));
+		response.setHeader("Pragma", "public");
+		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
+		response.setHeader("Expires", "0");
+
+		if (request.getParameter("open") == null) {
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+		} else {
+			response.setHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
+		}
+
+		if (StringUtils.isEmpty(fileVersion)) {
 			if (version != null)
-				filename = version.getFileName();
+				fileVersion = version.getFileVersion();
 			else
-				filename = doc.getFileName();
+				fileVersion = doc.getFileVersion();
+		}
 
-			response.setHeader("Content-Length", Long.toString(doc.getFileSize()));
-			response.setHeader("Pragma", "public");
-			response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
-			response.setHeader("Expires", "0");
-			
-			if (request.getParameter("open") == null) {
-				response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
-			} else {
-				response.setHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
-			}
+		String suffix = request.getParameter("suffix");
+		if (StringUtils.isEmpty(suffix)) {
+			suffix = "";
+		}
 
-			if (StringUtils.isEmpty(fileVersion)) {
-				if (version != null)
-					fileVersion = version.getFileVersion();
-				else
-					fileVersion = doc.getFileVersion();
-			}
+		if (version != null)
+			log.debug("Download version id=" + versionId);
+		else
+			log.debug("Download document id=" + docId);
 
-			String suffix = request.getParameter("suffix");
-			if (StringUtils.isEmpty(suffix)) {
-				suffix = "";
-			}
-
-			if (version != null)
-				log.debug("Download version id=" + versionId);
-			else
-				log.debug("Download document id=" + docId);
-
-			if ("true".equals(downloadText)) {
-				ServletDocUtil.downloadDocumentText(request, response, doc.getId());
-			} else {
-				ServletDocUtil.downloadDocument(request, response, doc.getId(), fileVersion, filename, suffix, user);
-			}
-		} catch (Throwable ex) {
-			log.error(ex.getMessage(), ex);
+		if ("true".equals(downloadText)) {
+			ServletIOUtil.downloadDocumentText(request, response, doc.getId());
+		} else {
+			ServletIOUtil.downloadDocument(request, response, doc.getId(), fileVersion, filename, suffix, user);
 		}
 	}
 }
