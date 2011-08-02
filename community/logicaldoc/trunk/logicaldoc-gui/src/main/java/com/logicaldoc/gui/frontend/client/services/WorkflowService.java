@@ -22,6 +22,11 @@ public interface WorkflowService extends RemoteService {
 	public void delete(String sid, String workflowName) throws InvalidSessionException;
 
 	/**
+	 * Imports a new workflow schema.
+	 */
+	public GUIWorkflow importSchema(String sid) throws InvalidSessionException;
+
+	/**
 	 * Creates or updates a workflow
 	 */
 	public GUIWorkflow save(String sid, GUIWorkflow workflow) throws InvalidSessionException;
@@ -108,8 +113,8 @@ public interface WorkflowService extends RemoteService {
 	public int countActiveUserTasks(String sid, String username) throws InvalidSessionException;
 
 	/**
-	 * Appends to the workflow of the given taskId the documents with the given doc ids.
+	 * Appends to the workflow of the given taskId the documents with the given
+	 * doc ids.
 	 */
-	public void appendDocuments(String sid, String taskId, String docIds)
-			throws InvalidSessionException;
+	public void appendDocuments(String sid, String taskId, String docIds) throws InvalidSessionException;
 }

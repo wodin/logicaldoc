@@ -1,7 +1,5 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -14,6 +12,7 @@ import com.logicaldoc.gui.common.client.data.WorkflowsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
+import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
@@ -47,7 +46,23 @@ public class WorkflowToolstrip extends ToolStrip {
 
 	private WorkflowDesigner designer = null;
 
-	public WorkflowToolstrip(WorkflowDesigner designer) {
+	private ToolStripButton export = null;
+
+	private ToolStripButton _import = null;
+
+	private ToolStripButton save = null;
+
+	private ToolStripButton clone = null;
+
+	private ToolStripButton deploy = null;
+
+	private ToolStripButton delete = null;
+
+	private ToolStripButton close = null;
+
+	private SelectItem workflowSelect = null;
+
+	public WorkflowToolstrip(final WorkflowDesigner designer) {
 		super();
 
 		this.designer = designer;
@@ -61,25 +76,22 @@ public class WorkflowToolstrip extends ToolStrip {
 			public void onClick(ClickEvent event) {
 				currentWorkflow = new GUIWorkflow();
 				AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
+				update();
 			}
 		});
 		addButton(newTemplate);
 		addSeparator();
 
-		final SelectItem workflow = new SelectItem("workflow", " ");
-		workflow.setShowTitle(false);
-		workflow.setWidth(200);
+		workflowSelect = new SelectItem("workflow", " ");
+		workflowSelect.setShowTitle(false);
+		workflowSelect.setWidth(200);
 		ListGridField name = new ListGridField("name");
-		workflow.setValueField("name");
-		workflow.setDisplayField("name");
-		workflow.setPickListWidth(300);
-		workflow.setPickListFields(name);
-		workflow.setOptionDataSource(new WorkflowsDS(null, false, false));
-		if (currentWorkflow != null && !currentWorkflow.getName().trim().isEmpty())
-			workflow.setValue(currentWorkflow.getName());
-		else
-			workflow.setValue(I18N.message("workflowselect") + "...");
-		workflow.addChangedHandler(new ChangedHandler() {
+		workflowSelect.setValueField("name");
+		workflowSelect.setDisplayField("name");
+		workflowSelect.setPickListWidth(300);
+		workflowSelect.setPickListFields(name);
+
+		workflowSelect.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
 				if (event.getValue() != null && !"".equals((String) event.getValue())) {
@@ -94,19 +106,20 @@ public class WorkflowToolstrip extends ToolStrip {
 								public void onSuccess(GUIWorkflow result) {
 									currentWorkflow = result;
 									WorkflowToolstrip.this.designer.redraw(currentWorkflow);
+									update();
 								}
 							});
 				}
 
 			}
 		});
-		addFormItem(workflow);
+		addFormItem(workflowSelect);
 
 		ToolStripButton load = new ToolStripButton(I18N.message("load"));
 		load.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGridRecord selectedRecord = workflow.getSelectedRecord();
+				ListGridRecord selectedRecord = workflowSelect.getSelectedRecord();
 				if (selectedRecord == null)
 					return;
 
@@ -121,6 +134,7 @@ public class WorkflowToolstrip extends ToolStrip {
 							public void onSuccess(GUIWorkflow result) {
 								currentWorkflow = result;
 								WorkflowToolstrip.this.designer.redraw(result);
+								update();
 							}
 						});
 			}
@@ -128,8 +142,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		addButton(load);
 		addSeparator();
 
-		final ToolStripButton save = new ToolStripButton(I18N.message("save"));
-		save.setDisabled(currentWorkflow == null);
+		save = new ToolStripButton(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -139,8 +152,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		addButton(save);
 		addSeparator();
 
-		ToolStripButton clone = new ToolStripButton(I18N.message("clone"));
-		clone.setDisabled(currentWorkflow == null);
+		clone = new ToolStripButton(I18N.message("clone"));
 		clone.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -162,11 +174,36 @@ public class WorkflowToolstrip extends ToolStrip {
 		addButton(clone);
 		addSeparator();
 
-		ToolStripButton deploy = new ToolStripButton(I18N.message("deploy"));
-		deploy.setDisabled(currentWorkflow == null);
+		export = new ToolStripButton(I18N.message("eexport"));
+		export.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
+						+ "&pluginId=logicaldoc-workflow&resourcePath=templates/" + currentWorkflow.getId() + ".jbpm");
+			}
+		});
+		addButton(export);
+		addSeparator();
+
+		_import = new ToolStripButton(I18N.message("iimport"));
+		_import.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				WorkflowUploader uploader = new WorkflowUploader(WorkflowToolstrip.this.designer);
+				uploader.show();
+				update();
+			}
+		});
+		addButton(_import);
+		addSeparator();
+
+		deploy = new ToolStripButton(I18N.message("deploy"));
 		deploy.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				WorkflowToolstrip.this.designer.saveModel();
+				currentWorkflow = WorkflowToolstrip.this.designer.getWorkflow();
+
 				final Map<String, Object> values = WorkflowToolstrip.this.designer.getAccordion().getValues();
 				if (values == null || ((String) values.get("workflowName")).trim().isEmpty())
 					return;
@@ -216,23 +253,6 @@ public class WorkflowToolstrip extends ToolStrip {
 				else if (transitionErrorFound)
 					SC.warn(I18N.message("workflowtransitiontarget"));
 				else {
-					currentWorkflow.setName((String) values.get("workflowName"));
-					if (values.get("workflowDescr") != null)
-						currentWorkflow.setDescription((String) values.get("workflowDescr"));
-					if (values.get("assignmentSubject") != null)
-						currentWorkflow.setTaskAssignmentSubject((String) values.get("assignmentSubject"));
-					if (values.get("assignmentBody") != null)
-						currentWorkflow.setTaskAssignmentBody((String) values.get("assignmentBody"));
-					if (values.get("reminderSubject") != null)
-						currentWorkflow.setReminderSubject((String) values.get("reminderSubject"));
-					if (values.get("reminderBody") != null)
-						currentWorkflow.setReminderBody((String) values.get("reminderBody"));
-					if (values.get("supervisor") != null)
-						currentWorkflow.setSupervisor((String) values.get("supervisor"));
-
-					List<GUIWFState> states = new ArrayList<GUIWFState>();
-					currentWorkflow.setStates(states.toArray(new GUIWFState[0]));
-
 					workflowService.deploy(Session.get().getSid(), currentWorkflow, new AsyncCallback<Void>() {
 						@Override
 						public void onFailure(Throwable caught) {
@@ -242,6 +262,7 @@ public class WorkflowToolstrip extends ToolStrip {
 						@Override
 						public void onSuccess(Void result) {
 							SC.say(I18N.message("workflowdeployed", currentWorkflow.getName()));
+							update();
 						}
 					});
 				}
@@ -250,8 +271,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		addButton(deploy);
 		addSeparator();
 
-		ToolStripButton delete = new ToolStripButton(I18N.message("ddelete"));
-		delete.setDisabled(currentWorkflow == null);
+		delete = new ToolStripButton(I18N.message("ddelete"));
 		delete.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -268,8 +288,9 @@ public class WorkflowToolstrip extends ToolStrip {
 
 										@Override
 										public void onSuccess(Void result) {
-											currentWorkflow = null;
-											WorkflowToolstrip.this.designer.redraw(new GUIWorkflow());
+											currentWorkflow = new GUIWorkflow();
+											AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
+											update();
 										}
 									});
 						}
@@ -280,25 +301,46 @@ public class WorkflowToolstrip extends ToolStrip {
 		addButton(delete);
 		addSeparator();
 
-		ToolStripButton close = new ToolStripButton(I18N.message("close"));
-		close.setDisabled(currentWorkflow == null);
+		close = new ToolStripButton(I18N.message("close"));
 		close.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				WorkflowToolstrip.this.designer.redraw(new GUIWorkflow());
+				currentWorkflow = new GUIWorkflow();
+				AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
+				update();
 			}
 		});
 		addButton(close);
 
 		addFill();
+
+		update();
 	}
 
 	public WorkflowDesigner getDesigner() {
 		return designer;
 	}
 
+	public void update() {
+		GUIWorkflow wf = currentWorkflow;
+		export.setDisabled(wf == null || wf.getId() == 0);
+		_import.setDisabled(wf == null);
+		save.setDisabled(currentWorkflow == null);
+		clone.setDisabled(currentWorkflow == null || wf.getId() == 0);
+		deploy.setDisabled(currentWorkflow == null || wf.getId() == 0);
+		delete.setDisabled(currentWorkflow == null || wf.getId() == 0);
+		close.setDisabled(currentWorkflow == null);
+		workflowSelect.setOptionDataSource(new WorkflowsDS(null, false, false));
+		if (currentWorkflow != null && !currentWorkflow.getName().trim().isEmpty())
+			workflowSelect.setValue(currentWorkflow.getName());
+		else
+			workflowSelect.setValue(I18N.message("workflowselect") + "...");
+		workflowSelect.redraw();
+	}
+
 	private void onSave() {
 		designer.saveModel();
+		currentWorkflow = designer.getWorkflow();
 
 		workflowService.save(Session.get().getSid(), currentWorkflow, new AsyncCallback<GUIWorkflow>() {
 			@Override
@@ -312,7 +354,9 @@ public class WorkflowToolstrip extends ToolStrip {
 					SC.warn(I18N.message("workflowalreadyexist"));
 				} else {
 					currentWorkflow = result;
+					designer.redraw(currentWorkflow);
 				}
+				update();
 			}
 		});
 	}

@@ -270,4 +270,9 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	@Override
 	public void appendDocuments(String sid, String taskId, String docIds) throws InvalidSessionException {
 	}
+
+	@Override
+	public GUIWorkflow importSchema(String sid) throws InvalidSessionException {
+		return new GUIWorkflow();
+	}
 }

@@ -43,4 +43,7 @@ public interface WorkflowServiceAsync {
 	void countActiveUserTasks(String sid, String username, AsyncCallback<Integer> callback);
 
 	void appendDocuments(String sid, String taskId, String docIds, AsyncCallback<Void> callback);
+
+	void importSchema(String sid, AsyncCallback<GUIWorkflow> callback);
+
 }

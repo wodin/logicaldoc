@@ -14,7 +14,6 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
-import com.logicaldoc.gui.frontend.client.workflow.WorkflowDesigner;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
@@ -55,8 +54,6 @@ public class WorkflowDialog extends Window {
 
 	private Tab workflowSettings = null;
 
-	private Tab workflowAssignment = null;
-
 	private Tab chooseWorkflow = null;
 
 	private ListGrid deployedWorkflowsList;
@@ -80,8 +77,6 @@ public class WorkflowDialog extends Window {
 	private TextAreaItem wflDescriptionItem = null;
 
 	private Layout wflLayout = null;
-
-	private WorkflowDesigner workflowDesigner = null;
 
 	public WorkflowDialog(String ids) {
 		this.docIds = ids;
@@ -134,10 +129,6 @@ public class WorkflowDialog extends Window {
 
 		workflowSettings = new Tab(I18N.message("workflowsettings"));
 		tabs.addTab(workflowSettings, 1);
-
-		workflowAssignment = new Tab(I18N.message("workflowassignment"));
-		workflowAssignment.setPane(new Canvas());
-		tabs.addTab(workflowAssignment, 2);
 
 		DynamicForm chooseWorkflowForm = new DynamicForm();
 		chooseWorkflowForm.setTitleOrientation(TitleOrientation.TOP);
@@ -237,14 +228,6 @@ public class WorkflowDialog extends Window {
 
 		workflowSettingsLayout.addMember(docsAppendedList);
 		workflowSettings.setPane(workflowSettingsLayout);
-
-		if (selectedWorkflow != null) {
-			workflowDesigner = new WorkflowDesigner(selectedWorkflow, true);
-			wflLayout.addMember(workflowDesigner);
-		} else
-			wflLayout.addMember(new WorkflowDesigner(new GUIWorkflow(), true));
-
-		workflowAssignment.setPane(wflLayout);
 
 		tabs.setSelectedTab(selectedTab);
 
