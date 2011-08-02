@@ -33,7 +33,6 @@ import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
@@ -76,8 +75,6 @@ public class WorkflowDialog extends Window {
 
 	private TextAreaItem wflDescriptionItem = null;
 
-	private Layout wflLayout = null;
-
 	public WorkflowDialog(String ids) {
 		this.docIds = ids;
 
@@ -97,8 +94,6 @@ public class WorkflowDialog extends Window {
 		workflowSettingsLayout = new VLayout(5);
 		workflowSettingsLayout.setMargin(5);
 
-		wflLayout = new Layout();
-
 		refreshTabs(0);
 	}
 
@@ -106,11 +101,6 @@ public class WorkflowDialog extends Window {
 		Canvas[] members = workflowSettingsLayout.getMembers();
 		for (Canvas canvas : members) {
 			workflowSettingsLayout.removeMember(canvas);
-		}
-
-		members = wflLayout.getMembers();
-		for (Canvas canvas : members) {
-			wflLayout.removeMember(canvas);
 		}
 
 		if (tabs != null) {

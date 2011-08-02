@@ -47,6 +47,8 @@ public class FunctionShape extends AbstractShape {
 
 	public boolean isMouseNearSelectableArea(Point mousePoint) {
 		if (widget instanceof StateWidget) {
+			if (((StateWidget) widget).isReadonly())
+				return false;
 			if (((StateWidget) widget).getWfState().getType() == GUIWFState.TYPE_JOIN) {
 				if (getConnections() != null && getConnections().size() > 0)
 					return false;

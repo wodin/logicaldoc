@@ -58,13 +58,15 @@ public class DrawingPanel extends VStack {
 			Map<String, StateWidget> states = new HashMap<String, StateWidget>();
 			for (GUIWFState state : workflow.getStates()) {
 				StateWidget widget = new StateWidget(this, state);
+				widget.setReadonly(workflowDesigner.isReadOnly());
 				controller.addWidget(widget, state.getLeft(), state.getTop());
 				states.put(state.getId(), widget);
 			}
 
-			for (StateWidget widget : states.values()) {
-				controller.makeDraggable(widget);
-			}
+			if (!workflowDesigner.isReadOnly())
+				for (StateWidget widget : states.values()) {
+					controller.makeDraggable(widget);
+				}
 
 			// Draw the transitions
 			for (GUIWFState state : workflow.getStates()) {

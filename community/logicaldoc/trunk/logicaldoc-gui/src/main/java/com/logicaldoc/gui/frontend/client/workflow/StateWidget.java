@@ -33,6 +33,8 @@ public class StateWidget extends Label {
 
 	private Connection connection;
 
+	private boolean readonly = false;
+
 	/**
 	 * Constructor used by transitions.
 	 */
@@ -44,6 +46,9 @@ public class StateWidget extends Label {
 		addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
+				if(readonly)
+					return;
+				
 				Menu contextMenu = new Menu();
 
 				MenuItem edit = new MenuItem();
@@ -210,5 +215,13 @@ public class StateWidget extends Label {
 
 	public void setConnection(Connection connection) {
 		this.connection = connection;
+	}
+
+	public boolean isReadonly() {
+		return readonly;
+	}
+
+	public void setReadonly(boolean readonly) {
+		this.readonly = readonly;
 	}
 }
