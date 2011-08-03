@@ -12,7 +12,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class OpenOfficeParserTest {
+import com.logicaldoc.core.AbstractCoreTCase;
+
+public class OpenOfficeParserTest extends AbstractCoreTCase {
 
 	private long startTime;
 
@@ -23,6 +25,7 @@ public class OpenOfficeParserTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		super.setUp();
 		this.startTime = System.currentTimeMillis();
 		this.mem1 = Runtime.getRuntime().totalMemory();
 		System.out.println("freeMemory: " + Runtime.getRuntime().freeMemory());
@@ -34,6 +37,7 @@ public class OpenOfficeParserTest {
 	 */
 	@After
 	public void tearDown() throws Exception {
+		super.tearDown();
 		long elapsedMillis = System.currentTimeMillis() - this.startTime;
 		System.err.println("elapsedMillis: " + elapsedMillis);
 		long mem2 = Runtime.getRuntime().totalMemory();
@@ -47,7 +51,6 @@ public class OpenOfficeParserTest {
 
 	@Test
 	public void testParse() throws UnsupportedEncodingException {
-
 		String inputFile = "target/test-classes/logicaldoc-user_manual-en.odt";
 		File file = new File(inputFile);
 		String filename = file.getPath();

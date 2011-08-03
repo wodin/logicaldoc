@@ -18,7 +18,7 @@ public class WordPerfectParser extends AbstractParser {
 	protected static Log log = LogFactory.getLog(WordPerfectParser.class);
 
 	@Override
-	public void parse(InputStream input) {
+	public void internalParse(InputStream input) {
 		try {
 			WPStringExtractor extractor = new WPStringExtractor();
 			String text = extractor.extract(input).trim();

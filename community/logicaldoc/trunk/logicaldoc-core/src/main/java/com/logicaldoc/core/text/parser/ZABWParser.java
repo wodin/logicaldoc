@@ -40,7 +40,7 @@ public class ZABWParser extends AbstractParser {
 	}
 
 	@Override
-	public void parse(InputStream input) {
+	public void internalParse(InputStream input) {
 		try {
 			AbiWordParser parser = new AbiWordParser();
 			parser.parse(input);

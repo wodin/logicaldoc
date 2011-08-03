@@ -22,7 +22,7 @@ public class XLSParser extends AbstractParser {
 	protected static Log log = LogFactory.getLog(XLSParser.class);
 
 	@Override
-	public void parse(InputStream input) {
+	public void internalParse(InputStream input) {
 		try {
 			POIFSFileSystem fs = new POIFSFileSystem(input);
 			String tmp = new ExcelExtractor(fs).getText();

@@ -5,10 +5,18 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Locale;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * Abstract implementation of a Parser
@@ -100,4 +108,63 @@ public abstract class AbstractParser implements Parser {
 				}
 		}
 	}
+
+	@Override
+	public void parse(final InputStream input) {
+		log.debug("Parse started");
+
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		String to = config.getProperty("parser.timeout");
+		long timeout = -1;
+		if (org.apache.commons.lang.StringUtils.isNotEmpty(to))
+			timeout = Long.parseLong(to);
+
+		if (timeout <= 0)
+			try {
+				internalParse(input);
+			} catch (Throwable e) {
+				log.error(e);
+			}
+		else {
+			// Invoke in a separate thread
+			ExecutorService executor = Executors.newSingleThreadExecutor();
+			String ret = null;
+			try {
+				ret = executor.invokeAll(Arrays.asList(new InternalParseTask(input)), timeout, TimeUnit.SECONDS).get(0)
+						.get();
+			} catch (Throwable e) {
+				log.warn(e.getMessage());
+			}
+			if (!"completed".equals(ret))
+				log.warn("Parse timed out");
+			executor.shutdown();
+		}
+		log.debug("Parse Finished");
+	}
+
+	/**
+	 * Callable that performs the internal parsing.
+	 */
+	class InternalParseTask implements Callable<String> {
+		private InputStream is;
+
+		InternalParseTask(InputStream is) {
+			this.is = is;
+		}
+
+		public String call() throws Exception {
+			try {
+				internalParse(is);
+				return "completed";
+			} catch (InterruptedException e) {
+				log.warn("Parse timed out");
+			}
+			return null;
+		}
+	}
+
+	/**
+	 * Invoked by the parse method
+	 */
+	abstract protected void internalParse(InputStream is) throws Exception;
 }

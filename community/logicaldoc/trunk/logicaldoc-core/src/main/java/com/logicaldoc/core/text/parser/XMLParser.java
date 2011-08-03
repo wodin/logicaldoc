@@ -33,7 +33,7 @@ public class XMLParser extends AbstractParser {
 	protected static Log log = LogFactory.getLog(XMLParser.class);
 
 	@Override
-	public void parse(InputStream input) {
+	public void internalParse(InputStream input) {
 		try {
 			CharArrayWriter writer = new CharArrayWriter();
 			ExtractorHandler handler = new ExtractorHandler(writer);

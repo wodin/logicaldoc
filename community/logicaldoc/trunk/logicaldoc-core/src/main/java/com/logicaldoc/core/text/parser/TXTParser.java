@@ -66,7 +66,7 @@ public class TXTParser extends AbstractParser {
 	}
 
 	@Override
-	public void parse(InputStream input) {
+	public void internalParse(InputStream input) {
 		try {
 			content = StringUtil.writeToString(input, getEncoding());
 		} catch (UnsupportedEncodingException e) {

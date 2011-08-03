@@ -33,7 +33,7 @@ public class RTFParser extends AbstractParser {
 	protected static Log log = LogFactory.getLog(RTFParser.class);
 
 	@Override
-	public void parse(InputStream input) {
+	public void internalParse(InputStream input) {
 		try {
 			BufferedInputStream bis0 = new BufferedInputStream(input);
 			bis0.mark(Integer.MAX_VALUE);

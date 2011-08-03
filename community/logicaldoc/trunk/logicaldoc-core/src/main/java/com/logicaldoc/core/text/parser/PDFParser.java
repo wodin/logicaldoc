@@ -79,7 +79,7 @@ public class PDFParser extends AbstractParser {
 	}
 
 	@Override
-	public void parse(InputStream input) {
+	public void internalParse(InputStream input) {
 		author = "";
 		title = "";
 		sourceDate = "";

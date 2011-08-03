@@ -70,8 +70,14 @@ public class OpenOfficeParser extends AbstractParser {
 	}
 
 	@Override
-	public void parse(InputStream input) {
+	public void internalParse(InputStream input) {
 		try {
+			try{
+			Thread.sleep(4000);
+			}catch(Throwable t){
+				
+			}
+			
 			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 			saxParserFactory.setValidating(false);
 			SAXParser saxParser = saxParserFactory.newSAXParser();

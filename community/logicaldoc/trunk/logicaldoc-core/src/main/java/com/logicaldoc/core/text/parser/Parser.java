@@ -72,6 +72,9 @@ public interface Parser {
 	 * is invoked simultaneously by different threads to extract the text
 	 * content of different documents. On the other hand the returned reader
 	 * does not need to be thread-safe.
+	 * <p>
+	 * The parsing has to be completed before the seconds specified in the
+	 * <b>parser.timeout</b> config. property.
 	 * 
 	 * @param input binary document from which to extract text
 	 */
