@@ -51,6 +51,11 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			else
 				searchEngine.setBatch(0);
 
+			if (StringUtils.isNotEmpty(conf.getProperty("parser.timeout")))
+				searchEngine.setParsingTimeout(new Integer(conf.getProperty("parser.timeout")));
+			else
+				searchEngine.setParsingTimeout(0);
+
 			// Populate the list of supported languages
 			searchEngine.setLanguages("");
 			LanguageManager lm = LanguageManager.getInstance();
@@ -131,6 +136,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			conf.setProperty("index.includes",
 					searchEngine.getIncludePatters() != null ? searchEngine.getIncludePatters() : "");
 			conf.setProperty("index.batch", Integer.toString(searchEngine.getBatch()));
+			conf.setProperty("parser.timeout", Integer.toString(searchEngine.getParsingTimeout()));
 			conf.write();
 		} catch (Exception t) {
 			log.error(t.getMessage(), t);
