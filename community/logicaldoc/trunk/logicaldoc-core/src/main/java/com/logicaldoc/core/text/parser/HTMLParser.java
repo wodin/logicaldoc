@@ -77,7 +77,7 @@ public class HTMLParser extends AbstractParser {
 	}
 
 	@Override
-	public void parse(InputStream input) {
+	public void internalParse(InputStream input) {
 		try {
 			TransformerFactory factory = TransformerFactory.newInstance();
 			Transformer transformer = factory.newTransformer();

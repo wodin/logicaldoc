@@ -21,7 +21,7 @@ public class PPTParser extends AbstractParser {
 	protected static Log log = LogFactory.getLog(PPTParser.class);
 
 	@Override
-	public void parse(InputStream input) {
+	public void internalParse(InputStream input) {
 		try {
 			PowerPointExtractor extractor = new PowerPointExtractor(input);
 			String tmp = extractor.getText(true, true);

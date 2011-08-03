@@ -69,7 +69,7 @@ public class AbiWordParser extends AbstractParser {
 	}
 
 	@Override
-	public void parse(InputStream input) {
+	public void internalParse(InputStream input) {
 		try {
 			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 			saxParserFactory.setValidating(false);

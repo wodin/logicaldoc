@@ -24,6 +24,8 @@ public class GUISearchEngine implements Serializable {
 
 	private Integer batch = 200;
 
+	private Integer parsingTimeout;
+
 	public String getLanguages() {
 		return languages;
 	}
@@ -70,5 +72,13 @@ public class GUISearchEngine implements Serializable {
 
 	public void setBatch(Integer batch) {
 		this.batch = batch;
+	}
+
+	public Integer getParsingTimeout() {
+		return parsingTimeout;
+	}
+
+	public void setParsingTimeout(Integer parsingTimeout) {
+		this.parsingTimeout = parsingTimeout;
 	}
 }

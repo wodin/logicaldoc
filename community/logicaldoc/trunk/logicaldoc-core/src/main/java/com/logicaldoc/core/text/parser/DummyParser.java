@@ -11,7 +11,7 @@ import java.io.InputStream;
 public class DummyParser extends AbstractParser {
 
 	@Override
-	public void parse(InputStream input) {
+	public void internalParse(InputStream input) {
 		content = "";
 	}
 }

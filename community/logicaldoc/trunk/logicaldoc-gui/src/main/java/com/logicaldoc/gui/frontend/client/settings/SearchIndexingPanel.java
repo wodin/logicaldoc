@@ -442,6 +442,11 @@ public class SearchIndexingPanel extends VLayout {
 		IntegerItem batch = ItemFactory.newIntegerItem("batch", "batch", this.searchEngine.getBatch());
 		batch.setHintStyle("hint");
 
+		// The optional parse timeout
+		IntegerItem timeout = ItemFactory.newIntegerItem("timeout", "parsingtimeout", this.searchEngine.getParsingTimeout());
+		timeout.setHintStyle("hint");
+		timeout.setHint(I18N.message("seconds"));
+		
 		HLayout buttons = new HLayout();
 
 		IButton save = new IButton();
@@ -459,6 +464,12 @@ public class SearchIndexingPanel extends VLayout {
 						SearchIndexingPanel.this.searchEngine.setBatch(0);
 					else
 						SearchIndexingPanel.this.searchEngine.setBatch(new Integer(btch));
+					
+					String timeout = vm.getValueAsString("timeout");
+					if (timeout == null || "".equals(timeout.trim()))
+						SearchIndexingPanel.this.searchEngine.setParsingTimeout(0);
+					else
+						SearchIndexingPanel.this.searchEngine.setParsingTimeout(new Integer(timeout));
 
 					service.save(Session.get().getSid(), SearchIndexingPanel.this.searchEngine,
 							new AsyncCallback<Void>() {
@@ -577,7 +588,7 @@ public class SearchIndexingPanel extends VLayout {
 			}
 		});
 
-		searchEngineForm.setItems(entries, locked, includePatters, excludePatters, batch);
+		searchEngineForm.setItems(entries, locked, includePatters, excludePatters, batch, timeout);
 		buttons.setMembers(save, unlock, rescheduleAll, check);
 		buttons.setMembersMargin(5);
 		searchEngineTabPanel.setMembers(searchEngineForm, buttons);

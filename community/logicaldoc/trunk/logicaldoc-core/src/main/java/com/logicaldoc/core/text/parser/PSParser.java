@@ -125,7 +125,7 @@ public class PSParser extends AbstractParser {
 	}
 
 	@Override
-	public void parse(InputStream input) {
+	public void internalParse(InputStream input) {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 			String version = "";
