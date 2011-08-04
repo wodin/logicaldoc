@@ -107,6 +107,8 @@ public class Feature {
 	
 	public static final int COMPRESSED_REPO = 67;
 	
+	public static final int ADVANCED_OCR = 68;
+	
 	private static Set<String> features = new HashSet<String>();
 
 	static public void init(GUIInfo info) {

@@ -1,6 +1,5 @@
 package com.logicaldoc.webservice;
 
-import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
 import com.logicaldoc.webservice.folder.FolderClient;
@@ -10,7 +9,7 @@ import com.logicaldoc.webservice.system.SystemClient;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		String base = "http://localhost:8080/services";
+		String base = "http://localhost:9080/logicaldoc/services";
 		AuthClient auth = new AuthClient(base + "/Auth");
 		DocumentClient documentClient = new DocumentClient(base + "/Document");
 		FolderClient folderClient = new FolderClient(base + "/Folder");
@@ -21,8 +20,8 @@ public class Main {
 		// Open a session
 		// This is a user 'author' with different permissions than the authors.
 		// String sid = auth.login("matteo", "matteo1982");
-		String sid = auth.login("admin", "admin");
-		System.out.println("sid: " + sid);
+//		String sid = auth.login("admin", "admin");
+//		System.out.println("sid: " + sid);
 
 		// WSUser wsUserTest = new WSUser();
 		// wsUserTest.setName("marco");
@@ -415,14 +414,14 @@ public class Main {
 		// System.out.println("doc title: " + doc.getTitle());
 		// System.out.println("doc customid: " + doc.getCustomId());
 
-		// documentClient.sendEmail(sid, new Long[] { 690L, 32L, 29L },
-		// "m.caruso@logicalobjects.it", "Test Invio Mail 2",
-		// "Questa mail è un test");
+		 documentClient.sendEmail("ciccio", new Long[] { 690L, 32L, 29L },
+		 "m.caruso@logicalobjects.it", "Test Invio Mail 2",
+		 "Questa mail è un test");
 
-		SystemInfo info = systemClient.getInfo(null);
-		for (String string : info.getFeatures()) {
-			System.out.println(string);
-		}
-	    auth.logout(sid);
+//		SystemInfo info = systemClient.getInfo(null);
+//		for (String string : info.getFeatures()) {
+//			System.out.println(string);
+//		}
+	    //auth.logout(sid);
 	}
 }
