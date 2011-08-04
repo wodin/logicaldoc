@@ -84,7 +84,12 @@ public class OCRSettingsPanel extends VLayout {
 		engine.setValueMap("tesseract", "omnipage");
 		engine.setValue(settings[6].getValue());
 
-		form.setItems(enabled, timeout, includes, excludes, textThreshold, resolutionThreshold, engine);
+
+		TextItem tesseract = ItemFactory.newTextItem("command.tesseract", "Tesseract", settings[7].getValue());
+
+		TextItem omnipagePath = ItemFactory.newTextItem("omnipage.path", "Omnipage dist", settings[8].getValue());
+
+		form.setItems(enabled, timeout, includes, excludes, textThreshold, resolutionThreshold, engine, tesseract, omnipagePath);
 
 		IButton save = new IButton();
 		save.setTitle(I18N.message("save"));
@@ -94,7 +99,7 @@ public class OCRSettingsPanel extends VLayout {
 				Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				if (vm.validate()) {
-					GUIParameter[] params = new GUIParameter[4];
+					GUIParameter[] params = new GUIParameter[9];
 					params[0] = new GUIParameter("ocr.enabled", values.get("ocr.enabled").equals("yes") ? "true"
 							: "false");
 					params[1] = new GUIParameter("ocr.includes", (String) values.get("ocr.includes"));
@@ -118,6 +123,8 @@ public class OCRSettingsPanel extends VLayout {
 						params[5] = new GUIParameter("ocr.timeout", (String) values.get("ocr.timeout"));
 
 					params[6] = new GUIParameter("ocr.engine", (String) values.get("ocr.engine"));
+					params[7] = new GUIParameter("command.tesseract", (String) values.get("command.tesseract"));
+					params[8] = new GUIParameter("omnipage.path", (String) values.get("omnipage.path"));
 					
 					service.saveSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
 

@@ -111,8 +111,8 @@ public class ThumbnailManager {
 			log.warn("Error creating thumbnail for document: " + document.getTitle());
 		} finally {
 			// Delete temporary resources
-			FileUtils.forceDelete(src);
-			FileUtils.forceDelete(dest);
+			FileUtils.deleteQuietly(src);
+			FileUtils.deleteQuietly(dest);
 		}
 	}
 

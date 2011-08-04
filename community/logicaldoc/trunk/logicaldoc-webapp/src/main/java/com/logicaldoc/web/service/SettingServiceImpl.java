@@ -111,7 +111,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.startsWith("index") || name.startsWith("proxy") || name.equals("id")
 					|| name.startsWith("lang") || name.startsWith("reg.") || name.startsWith("ocr.")
 					|| name.startsWith("barcode.") || name.startsWith("task.") || name.startsWith("quota")
-					|| name.startsWith("store") || name.startsWith("flexpaperviewer"))
+					|| name.startsWith("store") || name.startsWith("flexpaperviewer") || name.startsWith("omnipage."))
 				continue;
 
 			sortedSet.add(key.toString());
@@ -136,7 +136,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		List<GUIParameter> params = new ArrayList<GUIParameter>();
 		for (Object key : conf.keySet()) {
 			if (key.toString().equals("webservice.enabled") || key.toString().startsWith("webdav")
-					|| key.toString().startsWith("command") || key.toString().startsWith("openoffice")) {
+					|| key.toString().startsWith("command.") || key.toString().startsWith("openoffice")) {
 				GUIParameter p = new GUIParameter(key.toString(), conf.getProperty(key.toString()));
 				params.add(p);
 			}
@@ -287,7 +287,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
-		GUIParameter[] params = new GUIParameter[7];
+		GUIParameter[] params = new GUIParameter[9];
 		params[0] = new GUIParameter("ocr.enabled", conf.getProperty("ocr.enabled"));
 		params[1] = new GUIParameter("ocr.resolution.threshold", conf.getProperty("ocr.resolution.threshold"));
 		params[2] = new GUIParameter("ocr.text.threshold", conf.getProperty("ocr.text.threshold"));
@@ -295,7 +295,9 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		params[4] = new GUIParameter("ocr.excludes", conf.getProperty("ocr.excludes"));
 		params[5] = new GUIParameter("ocr.timeout", conf.getProperty("ocr.timeout"));
 		params[6] = new GUIParameter("ocr.engine", conf.getProperty("ocr.engine"));
-		
+		params[7] = new GUIParameter("command.tesseract", conf.getProperty("command.tesseract"));
+		params[8] = new GUIParameter("omnipage.path", conf.getProperty("omnipage.path"));
+
 		return params;
 	}
 
