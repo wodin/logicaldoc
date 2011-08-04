@@ -55,32 +55,40 @@ public class Util {
 	public static String flashPreview(String flashName, int width, int height, String flashvars, boolean printEnabled,
 			String language) {
 		String key = Session.get().getInfo().getConfig("flexpaperviewer.key");
-		String vars = flashvars + "&amp;Scale=1" + "&amp;ZoomTransition=easeOut" + "&amp;ZoomTime=0.5"
-				+ "&amp;ZoomInterval=0.2" + "&amp;FitPageOnLoad=false" + "&amp;FitWidthOnLoad=false"
-				+ "&amp;PrintEnabled=" + printEnabled + "&amp;ProgressiveLoading=true" + "&amp;MinZoomSize=0.3"
-				+ "&amp;MaxZoomSize=5" + "&amp;PrintToolsVisible=true" + "&amp;ViewModeToolsVisible=true"
+		String vars = flashvars + "&amp;Scale=0.6" 
+//				+ "&amp;ZoomTransition=easeOut" + "&amp;ZoomTime=0.5"
+//				+ "&amp;ZoomInterval=0.2" + "&amp;FitPageOnLoad=false" + "&amp;FitWidthOnLoad=false"
+				+ "&amp;PrintEnabled=" + printEnabled 
+				+ "&amp;ProgressiveLoading=true" 
+//				+ "&amp;MinZoomSize=0.3" + "&amp;MaxZoomSize=5" 
+				+ "&amp;PrintToolsVisible=true" + "&amp;ViewModeToolsVisible=true"
 				+ "&amp;ZoomToolsVisible=true" + "&amp;FullScreenVisible=true" + "&amp;NavToolsVisible=true"
-				+ "&amp;CursorToolsVisible=" + printEnabled + "&amp;SearchToolsVisible=true" + "&amp;localeChain="
-				+ language+"&amp;FullScreenAsMaxWindow=false";
-
+				+ "&amp;CursorToolsVisible=" + printEnabled + "&amp;SearchToolsVisible=true";
+//				+ "&amp;localeChain=" +language +"&amp;FullScreenAsMaxWindow=false";
+		
+		
+		vars = flashvars + "&Scale=0.6"		
+		+ "&PrintEnabled=" +printEnabled
+		+ "&ProgressiveLoading=true" 
+		+ "&ViewModeToolsVisible=true" + "&ZoomToolsVisible=true" + "&NavToolsVisible=true" 
+		+ "&CursorToolsVisible=true" + "&SearchToolsVisible=true";	
+	
 		if (key != null) {
-			vars += "&amp;key=" + URL.encode(key);
+			vars += "&key=" +key;
 		}
-
-		String tmp = "<div align=\"center\"><object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0\" width=\""
-				+ width + "\" height=\"" + height + "\" align=\"middle\">\n";
+	  	
+		String tmp = "<div align=\"center\">";
+		tmp += "<object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" id=\"FlexPaperViewer\" width=\""+width +"\" height=\"" +height+"\" codebase=\"http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab\">\n";
 		tmp += " <param name=\"allowScriptAccess\" value=\"always\" />\n";
 		tmp += " <param name=\"allowFullScreen\" value=\"true\" />\n";
 		tmp += " <param name=\"movie\" value=\"" + Util.flashUrl(flashName) + "\" />\n";
 		tmp += " <param name=\"quality\" value=\"high\" />\n";
 		tmp += " <param name=\"bgcolor\" value=\"#ffffff\" />\n";
-		tmp += " <param name=\"wmode\" value=\"transparent\" />\n";
-		tmp += " <param name=\"flashvars\" value=\"" + vars + "\" />";
-		if (key != null)
-			tmp += " <param name=\"key\" value=\"" + key + "\" />";
-		tmp += "	<embed type=\"application/x-shockwave-flash\" src=\"" + Util.flashUrl(flashName) + "\" height=\""
-				+ height + "\" width=\"" + width + "\" id=\"" + flashName + "\" name=\"" + flashName
-				+ "\" bgcolor=\"#ffffff\" quality=\"high\" allowFullScreen=\"true\" flashvars=\"" + vars + "\" />";
+		tmp += " <param name=\"flashvars\" value=\"" + vars + "\" />\n";
+		tmp += " 	<embed type=\"application/x-shockwave-flash\" src=\"" + Util.flashUrl(flashName) + "\" height=\""
+				+ height + "\" width=\"" + width + "\" name=\"FlexPaperViewer\""
+				+ " bgcolor=\"#ffffff\" quality=\"high\" allowFullScreen=\"true\" flashvars=\"" + vars + "\">\n";
+		tmp += "</embed>\n";
 		tmp += "</object></div>\n";
 		return tmp;
 	}
