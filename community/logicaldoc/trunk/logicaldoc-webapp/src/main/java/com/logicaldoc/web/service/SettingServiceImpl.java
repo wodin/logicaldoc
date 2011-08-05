@@ -152,7 +152,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			for (int i = 0; i < settings.length; i++) {
-				conf.setProperty(settings[i].getName(), settings[i].getValue());
+				conf.setProperty(settings[i].getName(), settings[i].getValue() != null ? settings[i].getValue() : "");
 			}
 
 			conf.write();
@@ -160,6 +160,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 			log.info("Parameters settings data written successfully.");
 		} catch (Exception e) {
 			log.error("Exception writing Parameters settings data: " + e.getMessage(), e);
+			e.printStackTrace();
 		}
 	}
 
@@ -287,7 +288,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
-		GUIParameter[] params = new GUIParameter[9];
+		GUIParameter[] params = new GUIParameter[10];
 		params[0] = new GUIParameter("ocr.enabled", conf.getProperty("ocr.enabled"));
 		params[1] = new GUIParameter("ocr.resolution.threshold", conf.getProperty("ocr.resolution.threshold"));
 		params[2] = new GUIParameter("ocr.text.threshold", conf.getProperty("ocr.text.threshold"));
@@ -297,6 +298,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		params[6] = new GUIParameter("ocr.engine", conf.getProperty("ocr.engine"));
 		params[7] = new GUIParameter("command.tesseract", conf.getProperty("command.tesseract"));
 		params[8] = new GUIParameter("omnipage.path", conf.getProperty("omnipage.path"));
+		params[9] = new GUIParameter("ocr.count", conf.getProperty("ocr.count"));
 
 		return params;
 	}

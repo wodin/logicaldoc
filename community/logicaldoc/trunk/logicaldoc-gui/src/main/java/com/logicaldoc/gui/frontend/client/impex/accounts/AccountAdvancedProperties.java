@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.logicaldoc.gui.common.client.beans.GUIEmailAccount;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.TitleOrientation;
@@ -109,7 +110,7 @@ public class AccountAdvancedProperties extends AccountDetailsTab {
 		if (!form.hasErrors()) {
 			account.setIncludes((String) values.get("include"));
 			account.setExcludes((String) values.get("exclude"));
-			account.setDeleteFromMailbox((Boolean) values.get("delete"));
+			account.setDeleteFromMailbox(new Boolean(values.get("delete").toString()));
 			account.setMailFolder((String) values.get("mailfolder"));
 			account.setFormat(Integer.parseInt((String) values.get("format")));
 			account.setStartDate((Date) values.get("startdate"));

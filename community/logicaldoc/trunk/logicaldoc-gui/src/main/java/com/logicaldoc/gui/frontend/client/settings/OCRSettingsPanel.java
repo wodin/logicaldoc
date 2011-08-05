@@ -19,6 +19,7 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
+import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
@@ -39,12 +40,12 @@ public class OCRSettingsPanel extends VLayout {
 
 	public OCRSettingsPanel(GUIParameter[] settings) {
 		setWidth100();
-		setHeight(370);
+		setHeight(400);
 		setMembersMargin(10);
 		setMargin(30);
 
 		tabs.setWidth(450);
-		tabs.setHeight(300);
+		tabs.setHeight(350);
 
 		DynamicForm form = new DynamicForm();
 		form.setValuesManager(vm);
@@ -78,18 +79,21 @@ public class OCRSettingsPanel extends VLayout {
 		resolutionThreshold.setRequired(true);
 		resolutionThreshold.setWrapTitle(false);
 		resolutionThreshold.setHint("pixels");
-		
+
 		RadioGroupItem engine = ItemFactory.newBooleanSelector("ocr.engine", "engine");
 		engine.setRequired(true);
 		engine.setValueMap("tesseract", "omnipage");
 		engine.setValue(settings[6].getValue());
 
-
 		TextItem tesseract = ItemFactory.newTextItem("command.tesseract", "Tesseract", settings[7].getValue());
 
 		TextItem omnipagePath = ItemFactory.newTextItem("omnipage.path", "Omnipage dist", settings[8].getValue());
 
-		form.setItems(enabled, timeout, includes, excludes, textThreshold, resolutionThreshold, engine, tesseract, omnipagePath);
+		StaticTextItem count = ItemFactory.newStaticTextItem("ocr.count", I18N.message("monthlycounter"),
+				settings[9].getValue());
+
+		form.setItems(enabled, timeout, includes, excludes, textThreshold, resolutionThreshold, engine, tesseract,
+				omnipagePath, count);
 
 		IButton save = new IButton();
 		save.setTitle(I18N.message("save"));
@@ -125,7 +129,7 @@ public class OCRSettingsPanel extends VLayout {
 					params[6] = new GUIParameter("ocr.engine", (String) values.get("ocr.engine"));
 					params[7] = new GUIParameter("command.tesseract", (String) values.get("command.tesseract"));
 					params[8] = new GUIParameter("omnipage.path", (String) values.get("omnipage.path"));
-					
+
 					service.saveSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
 
 						@Override

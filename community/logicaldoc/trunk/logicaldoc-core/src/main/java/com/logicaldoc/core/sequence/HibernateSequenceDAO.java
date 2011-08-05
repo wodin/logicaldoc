@@ -61,6 +61,15 @@ public class HibernateSequenceDAO extends HibernateDaoSupport implements Sequenc
 	}
 
 	@Override
+	public int getCurrentValue(String sequence) {
+		Generic generic = genericDao.findByAlternateKey(TYPE, sequence);
+		if (generic == null)
+			return 0;
+		else
+			return generic.getInteger1();
+	}
+
+	@Override
 	public List<Generic> findByName(String name) {
 		String query = " 1=1 ";
 		query += " and _entity.type like '" + SqlUtil.doubleQuotes(TYPE) + "' ";
