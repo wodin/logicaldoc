@@ -152,7 +152,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			for (int i = 0; i < settings.length; i++) {
-				conf.setProperty(settings[i].getName(), settings[i].getValue());
+				conf.setProperty(settings[i].getName(), settings[i].getValue()!=null?settings[i].getValue():"");
 			}
 
 			conf.write();
