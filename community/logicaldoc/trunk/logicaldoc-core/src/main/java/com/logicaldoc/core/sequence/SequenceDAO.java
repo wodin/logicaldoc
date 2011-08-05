@@ -36,4 +36,9 @@ public interface SequenceDAO {
 	 * Finds all sequences whose name starts with the passed name
 	 */
 	public List<Generic> findByName(String name);
+
+	/**
+	 * Gets the current value
+	 */
+	int getCurrentValue(String sequence);
 }
