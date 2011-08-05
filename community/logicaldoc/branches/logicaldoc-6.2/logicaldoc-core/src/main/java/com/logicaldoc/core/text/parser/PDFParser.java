@@ -1,8 +1,6 @@
 package com.logicaldoc.core.text.parser;
 
 import java.io.CharArrayWriter;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
@@ -194,26 +192,6 @@ public class PDFParser extends AbstractParser {
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
-		}
-	}
-
-	@Override
-	public void parse(File file) {
-
-		log.info("Parsing file " + file.getPath());
-
-		InputStream is = null;
-		try {
-			is = new FileInputStream(file);
-			parse(is);
-		} catch (Exception ex) {
-			log.error(ex.getMessage(), ex);
-		} finally {
-			try {
-				is.close();
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-			}
 		}
 	}
 
