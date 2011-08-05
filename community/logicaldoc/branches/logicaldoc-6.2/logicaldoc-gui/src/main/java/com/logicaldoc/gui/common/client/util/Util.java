@@ -54,24 +54,13 @@ public class Util {
 	 */
 	public static String flashPreview(String flashName, int width, int height, String flashvars, boolean printEnabled,
 			String language) {
+		
 		String key = Session.get().getInfo().getConfig("flexpaperviewer.key");
-		String vars = flashvars + "&amp;Scale=0.6" 
-//				+ "&amp;ZoomTransition=easeOut" + "&amp;ZoomTime=0.5"
-//				+ "&amp;ZoomInterval=0.2" + "&amp;FitPageOnLoad=false" + "&amp;FitWidthOnLoad=false"
-				+ "&amp;PrintEnabled=" + printEnabled 
-				+ "&amp;ProgressiveLoading=true" 
-//				+ "&amp;MinZoomSize=0.3" + "&amp;MaxZoomSize=5" 
-				+ "&amp;PrintToolsVisible=true" + "&amp;ViewModeToolsVisible=true"
-				+ "&amp;ZoomToolsVisible=true" + "&amp;FullScreenVisible=true" + "&amp;NavToolsVisible=true"
-				+ "&amp;CursorToolsVisible=" + printEnabled + "&amp;SearchToolsVisible=true";
-//				+ "&amp;localeChain=" +language +"&amp;FullScreenAsMaxWindow=false";
-		
-		
-		vars = flashvars + "&Scale=0.6"		
-		+ "&PrintEnabled=" +printEnabled
-		+ "&ProgressiveLoading=true" 
-		+ "&ViewModeToolsVisible=true" + "&ZoomToolsVisible=true" + "&NavToolsVisible=true" 
-		+ "&CursorToolsVisible=true" + "&SearchToolsVisible=true";	
+		String vars = flashvars + "&Scale=0.6"		
+			+ "&PrintEnabled=" +printEnabled
+			+ "&ProgressiveLoading=true" 
+			+ "&ViewModeToolsVisible=true" + "&ZoomToolsVisible=true" + "&NavToolsVisible=true" 
+			+ "&CursorToolsVisible=true" + "&SearchToolsVisible=true";	
 	
 		if (key != null) {
 			vars += "&key=" +key;
@@ -90,6 +79,7 @@ public class Util {
 				+ " bgcolor=\"#ffffff\" quality=\"high\" allowFullScreen=\"true\" flashvars=\"" + vars + "\">\n";
 		tmp += "</embed>\n";
 		tmp += "</object></div>\n";
+		
 		return tmp;
 	}
 
