@@ -29,7 +29,7 @@ public class TXTParserTest {
 
 	@Test
 	public void testParse() throws UnsupportedEncodingException, FileNotFoundException {
-		String inputFile = "target/test-classes/AnalyzeFileTest_enc.txt";
+		String inputFile = "src/test/resources/AnalyzeFileTest_enc.txt";
 		File file = new File(inputFile);
 		String filename = file.getPath();
 		Parser parser = ParserFactory.getParser(filename);

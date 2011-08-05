@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.logicaldoc</groupId>
 		<artifactId>logicaldoc</artifactId>
-		<version>6.2.2</version>
+		<version>6.2.3</version>
 	</parent>
 	<artifactId>logicaldoc-testbench</artifactId>
 	<name>logicaldoc-testbench</name>
