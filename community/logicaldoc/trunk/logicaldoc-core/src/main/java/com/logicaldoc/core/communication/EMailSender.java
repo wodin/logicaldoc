@@ -135,10 +135,11 @@ public class EMailSender {
 
 		Session sess = Session.getDefaultInstance(props);
 		MimeMessage message = new MimeMessage(sess);
-		String frm = email.getAuthorAddress();
-		if (StringUtils.isEmpty(frm))
-			frm = sender;
-		InternetAddress from = new InternetAddress(frm);
+
+		// The FROM field must to be the one configured for the SMTP connection.
+		// because of errors will be returned in the case the sender is not in
+		// the SMTP domain.
+		InternetAddress from = new InternetAddress(sender);
 		InternetAddress[] to = email.getAddresses();
 		InternetAddress[] cc = email.getAddressesCC();
 		InternetAddress[] bcc = email.getAddressesBCC();
@@ -160,8 +161,14 @@ public class EMailSender {
 		for (Integer partId : email.getAttachments().keySet()) {
 			EMailAttachment att = email.getAttachment(partId);
 			if (att != null) {
-				MagicMatch match = Magic.getMagicMatch(att.getData(), true);
-				DataSource fdSource = new ByteArrayDataSource(att.getData(), match.getMimeType());
+				String mime = "text/plain";
+				try {
+					MagicMatch match = Magic.getMagicMatch(att.getData(), true);
+					mime = match.getMimeType();
+				} catch (Throwable t) {
+
+				}
+				DataSource fdSource = new ByteArrayDataSource(att.getData(), mime);
 				DataHandler fdHandler = new DataHandler(fdSource);
 				MimeBodyPart part = new MimeBodyPart();
 				part.setDataHandler(fdHandler);
