@@ -232,6 +232,20 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		}
 		return 0;
 	}
+	
+	@Override
+	public int jdbcUpdate(String statement, Object... args) {
+		try {
+			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+			return jdbcTemplate.update(statement, args);
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+		return 0;
+	}	
 
 	@Override
 	public void deleteAll(Collection<T> entities) {
