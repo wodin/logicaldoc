@@ -49,7 +49,7 @@ public class Indexer {
 
 	private static final String WRITE_LOCK = "write.lock";
 
-	public static final Version LUCENE_VERSION = Version.LUCENE_31;
+	public static final Version LUCENE_VERSION = Version.LUCENE_33;
 
 	protected static Log log = LogFactory.getLog(Indexer.class);
 
