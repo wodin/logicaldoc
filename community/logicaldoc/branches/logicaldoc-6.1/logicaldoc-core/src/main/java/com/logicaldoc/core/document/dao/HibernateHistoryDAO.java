@@ -52,46 +52,52 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 		return findByWhere("_entity.notified = 0", null, "order by _entity.date asc", null);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void cleanOldDocumentHistories(int ttl) {
+
 		if (ttl > 0) {
-			Date date = new Date();
+			Date today = new Date();
 			GregorianCalendar cal = new GregorianCalendar();
-			cal.setTime(date);
 			cal.add(Calendar.DAY_OF_MONTH, -ttl);
-			date = cal.getTime();
-
-			// Retrieve all old user histories
-			String query = "select ld_id from ld_history where ld_deleted = 0 and ld_docid > 0 and ld_date < ?";
-
-			List<Long> histories = (List<Long>) queryForList(query, new Object[] { new Timestamp(date.getTime()) },
-					Long.class, null);
-			for (Long historyId : histories) {
-				super.bulkUpdate("set ld_deleted = 1 where ld_id = " + historyId, null);
+			Date ldDate = cal.getTime();
+			
+			log.debug("today: " + today);
+			log.debug("ldDate: " + ldDate);			
+			
+			try {				
+				int rowsUpdated = jdbcUpdate("UPDATE ld_history SET ld_deleted = 1, ld_lastmodified = ?"
+						+ " WHERE ld_deleted = 0 AND ld_docid > 0 AND ld_date < ?", today, ldDate);
+				
+				log.info("cleanOldDocumentHistories rows updated: " + rowsUpdated);
+			} catch (Exception e) {
+				if (log.isErrorEnabled())
+					log.error(e.getMessage(), e);
 			}
-		}
+		}		
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void cleanOldFolderHistories(int ttl) {
+
 		if (ttl > 0) {
-			Date date = new Date();
+			Date today = new Date();
 			GregorianCalendar cal = new GregorianCalendar();
-			cal.setTime(date);
 			cal.add(Calendar.DAY_OF_MONTH, -ttl);
-			date = cal.getTime();
-
-			// Retrieve all old user histories
-			String query = "select ld_id from ld_history where ld_deleted = 0 and ld_docid is null and ld_date < ?";
-
-			List<Long> histories = (List<Long>) queryForList(query, new Object[] { new Timestamp(date.getTime()) },
-					Long.class, null);
-			for (Long historyId : histories) {
-				super.bulkUpdate("set ld_deleted = 1 where ld_id = " + historyId, null);
+			Date ldDate = cal.getTime();
+			
+			log.debug("today: " + today);
+			log.debug("ldDate: " + ldDate);			
+			
+			try {				
+				int rowsUpdated = jdbcUpdate("UPDATE ld_history SET ld_deleted = 1, ld_lastmodified = ?"
+						+ " WHERE ld_deleted = 0 AND ld_docid IS NULL AND ld_date < ?", today, ldDate);
+				
+				log.info("cleanOldFolderHistories rows updated: " + rowsUpdated);
+			} catch (Exception e) {
+				if (log.isErrorEnabled())
+					log.error(e.getMessage(), e);
 			}
-		}
+		}		
 	}
 
 	@Override
