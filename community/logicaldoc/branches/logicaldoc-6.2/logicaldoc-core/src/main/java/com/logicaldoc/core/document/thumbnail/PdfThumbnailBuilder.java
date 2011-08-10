@@ -1,20 +1,18 @@
 package com.logicaldoc.core.document.thumbnail;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.concurrent.TimeoutException;
 
-import javax.imageio.ImageIO;
-
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.icepdf.core.exceptions.PDFException;
-import org.icepdf.core.exceptions.PDFSecurityException;
-import org.icepdf.core.pobjects.Document;
-import org.icepdf.core.pobjects.Page;
-import org.icepdf.core.util.GraphicsRenderingHints;
+
+import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * This builder generates the thumbnail for a Pdf document.
@@ -29,49 +27,105 @@ public class PdfThumbnailBuilder extends ImageThumbnailBuilder {
 	public synchronized void build(File src, String srcFileName, int size, File dest, int scaleAlgorithm,
 			float compressionQuality) throws IOException {
 
-		Document document = new Document();
+		File tmp = File.createTempFile("rendertmb", "thumb.jpg");
 		try {
-			document.setFile(src.getPath());
-		} catch (PDFException ex) {
-			log.error("Error parsing PDF document " + ex);
-		} catch (PDFSecurityException ex) {
-			log.error("Error encryption not supported " + ex);
-		} catch (FileNotFoundException ex) {
-			log.error("Error file not found " + ex);
-		} catch (IOException ex) {
-			log.error("Error handling PDF document " + ex);
+			renderPage(src, tmp, 1);
+			super.build(tmp, srcFileName, size, dest, scaleAlgorithm, compressionQuality);
+		} catch (Throwable e) {
+			log.error("Thumbnail building " + e.getMessage(), e);
+		} finally {
+			FileUtils.deleteQuietly(tmp);
+		}
+	}
+
+	/**
+	 * When Runtime.exec() won't.
+	 * http://www.javaworld.com/javaworld/jw-12-2000/jw-1229-traps.html
+	 */
+	class StreamGobbler extends Thread {
+
+		InputStream is;
+
+		StreamGobbler(InputStream is) {
+			this.is = is;
 		}
 
-		// save page captures to file.
-		float scale = 1.0f;
-		float rotation = 0f;
-
-		// Paint the first page content to an image and write the image to a
-		// file
-		BufferedImage image = (BufferedImage) document.getPageImage(0, GraphicsRenderingHints.SCREEN,
-				Page.BOUNDARY_CROPBOX, rotation, scale);
-		RenderedImage rendImage = image;
-		// capture the page image to file
-		File file = null;
-		try {
-			log.debug("Capturing pdf image");
-			file = new File(src.getName() + "-" + System.currentTimeMillis() + ".jpg");
-			ImageIO.write(rendImage, "jpg", file);
-			super.build(file, srcFileName, size, dest, scaleAlgorithm, compressionQuality);
-		} catch (Throwable e) {
-			log.error(e.getMessage());
-		} finally {
+		@Override
+		public void run() {
 			try {
-				if (file != null) {
-					if (file.exists())
-						file.delete();
+				InputStreamReader isr = new InputStreamReader(is);
+				BufferedReader br = new BufferedReader(isr);
+				String line = null;
+				while ((line = br.readLine()) != null) {
+					System.out.println(line);
 				}
-			} catch (Exception e) {
+			} catch (IOException ioe) {
+				log.error(ioe.getMessage());
 			}
 		}
-		image.flush();
-		// clean up resources
-		document.dispose();
-		file = null;
+	}
+
+	protected static class Worker extends Thread {
+		private final Process process;
+
+		private Integer exit;
+
+		public Worker(Process process) {
+			this.process = process;
+		}
+
+		public void run() {
+			try {
+				exit = process.waitFor();
+			} catch (InterruptedException ignore) {
+				return;
+			}
+		}
+
+		public Integer getExit() {
+			return exit;
+		}
+	}
+
+	protected void renderPage(File src, File dst, int page) {
+		ContextProperties context = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		String ghostCommand = context.getProperty("command.gs");
+		String[] cmd = new String[] { ghostCommand, "-q", "-sDEVICE=jpeg", "-dJPEGQ=100", "-dQFactor=1", "-dBATCH",
+				"-dNOPAUSE", "-dFirstPage=" + page, "-dLastPage=" + page, "-r150", "-sOutputFile=" + dst.getPath(),
+				src.getPath() };
+
+		log.debug("Executing: " + ghostCommand);
+
+		ProcessBuilder pb = new ProcessBuilder();
+		pb.redirectErrorStream(true);
+		pb.command(cmd);
+		Worker worker = null;
+		Process process = null;
+		try {
+			process = pb.start();
+
+			StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream());
+			outputGobbler.start();
+
+			worker = new Worker(process);
+			worker.start();
+
+			worker.join(10000);
+			if (worker.getExit() == null)
+				throw new TimeoutException();
+
+			process.waitFor();
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		} catch (TimeoutException e) {
+			log.error("Rendering timed out");
+		} catch (InterruptedException ex) {
+			if (worker != null)
+				worker.interrupt();
+			Thread.currentThread().interrupt();
+		} finally {
+			if (process != null)
+				process.destroy();
+		}
 	}
 }

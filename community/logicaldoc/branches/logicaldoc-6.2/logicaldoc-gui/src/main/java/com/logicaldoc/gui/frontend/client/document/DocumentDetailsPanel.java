@@ -86,6 +86,13 @@ public class DocumentDetailsPanel extends VLayout {
 	protected Tab versionsTab;
 
 	protected Tab historyTab;
+	
+	protected Layout thumbnailTabPanel;
+	
+	protected ThumbnailPanel thumbnailPanel;
+	
+	protected Tab thumbnailTab;
+	
 
 	public DocumentDetailsPanel(DocumentObserver observer) {
 		super();
@@ -189,6 +196,12 @@ public class DocumentDetailsPanel extends VLayout {
 		historyTabPanel.setWidth100();
 		historyTabPanel.setHeight100();
 		historyTab.setPane(historyTabPanel);
+		
+		thumbnailTab = new Tab(I18N.message("thumbnail"));
+		thumbnailTabPanel = new HLayout();
+		thumbnailTabPanel.setWidth100();
+		thumbnailTabPanel.setHeight100();
+		thumbnailTab.setPane(thumbnailTabPanel);
 	}
 
 	protected void prepareTabset() {
@@ -205,6 +218,7 @@ public class DocumentDetailsPanel extends VLayout {
 			tabSet.addTab(notesTab);
 		tabSet.addTab(versionsTab);
 		tabSet.addTab(historyTab);
+		tabSet.addTab(thumbnailTab);
 
 		addMember(tabSet);
 	}
@@ -289,6 +303,17 @@ public class DocumentDetailsPanel extends VLayout {
 		}
 		notesPanel = new NotesPanel(document);
 		notesTabPanel.addMember(notesPanel);
+
+		/*
+		 * Prepare the thumbnail tab
+		 */
+		if (thumbnailPanel != null) {
+			thumbnailPanel.destroy();
+			if (thumbnailPanel.contains(thumbnailPanel))
+				thumbnailPanel.removeMember(thumbnailPanel);
+		}
+		thumbnailPanel = new ThumbnailPanel(document);
+		thumbnailTabPanel.addMember(thumbnailPanel);
 	}
 
 	public GUIDocument getDocument() {
