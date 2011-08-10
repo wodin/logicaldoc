@@ -166,14 +166,14 @@ public class PreviewPopup extends Window {
 	 * Retrieves the correct language code for the preview viewer for the given
 	 * language.
 	 */
-	private String getPreviewLanguage(String language) {
+	public static String getPreviewLanguage(String language) {
 		return getPreviewLanguageMap().get(language) != null ? getPreviewLanguageMap().get(language) : "en_US";
 	}
 
 	/**
 	 * Retrieves the correct language code for the preview viewer.
 	 */
-	private Map<String, String> getPreviewLanguageMap() {
+	private static Map<String, String> getPreviewLanguageMap() {
 		Map<String, String> languages = new HashMap<String, String>();
 		languages.put("en", "en_US");
 		languages.put("it", "it_IT");
