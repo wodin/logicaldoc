@@ -201,4 +201,13 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * Executes the given SQL update statement
 	 */
 	public int jdbcUpdate(String statement);
+	
+    /**
+     * Issue a single SQL update operation (such as an insert, update or delete statement) via a prepared statement, binding the given arguments.
+     *
+     * @param statement SQL containing bind parameters
+     * @param args arguments to bind to the query (leaving it to the PreparedStatement to guess the corresponding SQL type); may also contain SqlParameterValue objects which indicate not only the argument value but also the SQL type and optionally the scale
+     * @return the number of rows affected 
+     */   
+    public int jdbcUpdate(String statement, Object... args);
 }
