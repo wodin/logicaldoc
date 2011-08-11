@@ -42,6 +42,8 @@ import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
+import com.smartgwt.client.widgets.grid.events.SelectionUpdatedEvent;
+import com.smartgwt.client.widgets.grid.events.SelectionUpdatedHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
@@ -213,9 +215,9 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			list.setFields(id, folderId, icon, title, type, size, published, creation, sourceDate, customId);
 		}
 
-		list.addSelectionChangedHandler(new SelectionChangedHandler() {
+		list.addSelectionUpdatedHandler(new SelectionUpdatedHandler() {
 			@Override
-			public void onSelectionChanged(SelectionEvent event) {
+			public void onSelectionUpdated(SelectionUpdatedEvent event) {
 				onHitSelected();
 			}
 		});
