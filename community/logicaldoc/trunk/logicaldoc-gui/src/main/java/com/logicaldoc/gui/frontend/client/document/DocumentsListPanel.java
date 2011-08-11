@@ -39,8 +39,8 @@ import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
 import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
-import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
-import com.smartgwt.client.widgets.grid.events.SelectionEvent;
+import com.smartgwt.client.widgets.grid.events.SelectionUpdatedEvent;
+import com.smartgwt.client.widgets.grid.events.SelectionUpdatedHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 
@@ -297,9 +297,9 @@ public class DocumentsListPanel extends VLayout {
 			}
 		});
 
-		list.addSelectionChangedHandler(new SelectionChangedHandler() {
+		list.addSelectionUpdatedHandler(new SelectionUpdatedHandler() {
 			@Override
-			public void onSelectionChanged(SelectionEvent event) {
+			public void onSelectionUpdated(SelectionUpdatedEvent event) {
 				onRecordSelected();
 			}
 		});
@@ -390,6 +390,10 @@ public class DocumentsListPanel extends VLayout {
 	}
 
 	protected void onRecordSelected() {
+		// Avoid server load in case of multiple selections
+		if (list.getSelectedRecords() != null && list.getSelectedRecords().length > 1)
+			return;
+
 		ListGridRecord record = list.getSelectedRecord();
 		if (record != null)
 			DocumentsPanel.get().onSelectedDocument(Long.parseLong(record.getAttribute("id")), false);

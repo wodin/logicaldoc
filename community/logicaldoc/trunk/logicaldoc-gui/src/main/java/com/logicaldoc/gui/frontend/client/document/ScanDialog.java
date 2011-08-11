@@ -1,10 +1,10 @@
 package com.logicaldoc.gui.frontend.client.document;
 
-import com.google.gwt.user.client.ui.HTML;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.HeaderControls;
+import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -15,7 +15,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.0
  */
 public class ScanDialog extends Window {
-	private HTML applet = new HTML();
+	private HTMLFlow applet = new HTMLFlow();
 
 	public ScanDialog() {
 		VLayout layout = new VLayout();
@@ -38,7 +38,7 @@ public class ScanDialog extends Window {
 				+ Session.get().getSid() + "\" />";
 		tmp += "</applet>";
 
-		applet.setHTML(tmp);
+		applet.setContents(tmp);
 		applet.setWidth("620px");
 		applet.setHeight("400px");
 

@@ -35,10 +35,10 @@ public class MockUploadServlet extends UploadAction {
 
 	Hashtable<String, String> receivedContentTypes = new Hashtable<String, String>();
 
-	public MockUploadServlet(){
-		super.maxSize=123452423425342300L;
+	public MockUploadServlet() {
+		super.maxSize = 123452423425342300L;
 	}
-	
+
 	/**
 	 * Override executeAction to save the received files in a custom place and
 	 * delete this items from session.
@@ -50,7 +50,6 @@ public class MockUploadServlet extends UploadAction {
 		String path = getServletContext().getRealPath("/upload/" + request.getSession().getId());
 		File uploadFolder = new File(path);
 
-		
 		// Google App Engine doesn't support disk writing
 		// uploadFolder.mkdirs();
 		// uploadFolder.mkdir();
@@ -69,7 +68,7 @@ public class MockUploadServlet extends UploadAction {
 
 					receivedFiles.put(item.getFieldName(), file);
 					receivedContentTypes.put(item.getFieldName(), item.getContentType());
-					
+
 					System.out.println("** received file " + item.getFieldName());
 				} catch (Throwable e) {
 					e.printStackTrace();
@@ -108,6 +107,7 @@ public class MockUploadServlet extends UploadAction {
 	 */
 	@Override
 	public void getUploadedFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		super.getUploadedFile(request, response);
 		String fieldName = request.getParameter(PARAM_SHOW);
 		File f = receivedFiles.get(fieldName);
 		if (f != null) {

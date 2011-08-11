@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
@@ -79,7 +78,7 @@ public class LoginPanel extends VLayout {
 		addMember(hPanel);
 
 		// Prepare the form header that contains the product name and version
-		HTML header = new HTML(info.getProductName() + " " + info.getRelease());
+		HTMLFlow header = new HTMLFlow(info.getProductName() + " " + info.getRelease());
 		header.setStyleName("loginHeader");
 		header.setHeight("12px");
 

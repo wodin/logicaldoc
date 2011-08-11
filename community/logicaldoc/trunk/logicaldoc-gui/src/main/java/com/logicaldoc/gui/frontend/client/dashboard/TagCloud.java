@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.logicaldoc.gui.common.client.beans.GUITag;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
@@ -23,7 +23,7 @@ public class TagCloud extends VLayout {
 
 	private int maxNumberOfTags;// the number of tags shown in the cloud.
 
-	private HTMLPanel html = null;
+	private HTMLFlow html = null;
 
 	public TagCloud() {
 		tags = new ArrayList<GUITag>();
@@ -91,7 +91,7 @@ public class TagCloud extends VLayout {
 		container.setHeight(getHeight() - 20);
 		addMember(container);
 
-		html = new HTMLPanel(Util.flashHTML("tagcloud.swf", getWidth() - 40, getHeight() - 40, tcloud));
+		html = new HTMLFlow(Util.flashHTML("tagcloud.swf", getWidth() - 40, getHeight() - 40, tcloud));
 		container.addMember(html);
 	}
 
