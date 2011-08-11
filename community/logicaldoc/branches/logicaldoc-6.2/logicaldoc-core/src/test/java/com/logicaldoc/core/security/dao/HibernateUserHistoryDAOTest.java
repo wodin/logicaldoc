@@ -97,18 +97,12 @@ public class HibernateUserHistoryDAOTest extends AbstractCoreTCase {
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void testCleanOldHistories() {
-		UserHistory history = dao.findById(1);
-		Assert.assertNotNull(history);
-
-		Collection histories = dao.findAll();
-		Assert.assertNotNull(histories);
-		Assert.assertEquals(3, histories.size());
 
 		dao.cleanOldHistories(5);
 
-		history = dao.findById(1);
+		UserHistory history = dao.findById(1);
 		Assert.assertNull(history);
-		histories = dao.findAll();
+		Collection histories = dao.findAll();
 		Assert.assertEquals(1, histories.size());
 	}
 }
