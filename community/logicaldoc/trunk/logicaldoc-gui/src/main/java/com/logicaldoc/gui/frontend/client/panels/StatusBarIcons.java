@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.frontend.client.panels;
 
-import com.google.gwt.user.client.ui.HTML;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
@@ -12,6 +11,7 @@ import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.clipboard.ClipboardObserver;
 import com.logicaldoc.gui.frontend.client.clipboard.ClipboardWindow;
 import com.smartgwt.client.types.Cursor;
+import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -26,15 +26,15 @@ import com.smartgwt.client.widgets.layout.HLayout;
 public class StatusBarIcons extends HLayout implements ClipboardObserver, UserObserver {
 	private static StatusBarIcons instance;
 
-	private HTML clipboardSize = new HTML("0");
+	private HTMLFlow clipboardSize = new HTMLFlow("0");
 
-	private HTML lockedCount = new HTML("0");
+	private HTMLFlow lockedCount = new HTMLFlow("0");
 
-	private HTML checkoutCount = new HTML("0");
+	private HTMLFlow checkoutCount = new HTMLFlow("0");
 
-	private HTML messagesCount = new HTML("0");
+	private HTMLFlow messagesCount = new HTMLFlow("0");
 
-	private HTML workflowsCount = new HTML("0");
+	private HTMLFlow workflowsCount = new HTMLFlow("0");
 
 	private StatusBarIcons() {
 		Img clipboardImage = ItemFactory.newImgIcon("page_white_paste.png");
@@ -129,19 +129,19 @@ public class StatusBarIcons extends HLayout implements ClipboardObserver, UserOb
 
 	@Override
 	public void onAdd(GUIDocument entry) {
-		clipboardSize.setText(Integer.toString(Clipboard.getInstance().size()));
+		clipboardSize.setContents(Integer.toString(Clipboard.getInstance().size()));
 	}
 
 	@Override
 	public void onRemove(GUIDocument entry) {
-		clipboardSize.setText(Integer.toString(Clipboard.getInstance().size()));
+		clipboardSize.setContents(Integer.toString(Clipboard.getInstance().size()));
 	}
 
 	@Override
 	public void onUserChanged(GUIUser user, String attribute) {
-		checkoutCount.setText(Integer.toString(user.getCheckedOutDocs()));
-		lockedCount.setText(Integer.toString(user.getLockedDocs()));
-		messagesCount.setText(Integer.toString(user.getUnreadMessages()));
-		workflowsCount.setText(Integer.toString(user.getActiveTasks()));
+		checkoutCount.setContents(Integer.toString(user.getCheckedOutDocs()));
+		lockedCount.setContents(Integer.toString(user.getLockedDocs()));
+		messagesCount.setContents(Integer.toString(user.getUnreadMessages()));
+		workflowsCount.setContents(Integer.toString(user.getActiveTasks()));
 	}
 }

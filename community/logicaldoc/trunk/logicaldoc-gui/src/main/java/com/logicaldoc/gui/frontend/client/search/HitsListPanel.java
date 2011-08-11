@@ -40,8 +40,8 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
-import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
-import com.smartgwt.client.widgets.grid.events.SelectionEvent;
+import com.smartgwt.client.widgets.grid.events.SelectionUpdatedEvent;
+import com.smartgwt.client.widgets.grid.events.SelectionUpdatedHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
@@ -180,11 +180,10 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		folder.setWidth(200);
 		folder.setHidden(true);
 
-		
 		ListGridField comment = new ListGridField("comment", I18N.message("comment"), 300);
 		comment.setWidth(300);
 		comment.setHidden(true);
-		
+
 		list = new ListGrid() {
 			@Override
 			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
@@ -220,12 +219,13 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		} else {
 			// list.setFields(id, folderId, icon, title, size, creation,
 			// customId);
-			list.setFields(id, folderId, icon, title, type, size, published, creation, sourceDate, customId, folder, comment);
+			list.setFields(id, folderId, icon, title, type, size, published, creation, sourceDate, customId, folder,
+					comment);
 		}
 
-		list.addSelectionChangedHandler(new SelectionChangedHandler() {
+		list.addSelectionUpdatedHandler(new SelectionUpdatedHandler() {
 			@Override
-			public void onSelectionChanged(SelectionEvent event) {
+			public void onSelectionUpdated(SelectionUpdatedEvent event) {
 				onHitSelected();
 			}
 		});
@@ -470,6 +470,10 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	}
 
 	protected void onHitSelected() {
+		// Avoid server load in case of multiple selections
+		if (list.getSelectedRecords() != null && list.getSelectedRecords().length > 1)
+			return;
+
 		if (list.getSelectedRecord() != null)
 			SearchPanel.get().onSelectedHit(Long.parseLong(list.getSelectedRecord().getAttribute("id")));
 	}

@@ -29,14 +29,6 @@
       <artifactId>gwtupload</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.googlecode.gwtupload</groupId>
-      <artifactId>jsupload</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.googlecode.gwtupload</groupId>
-      <artifactId>gwtupload-gae</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-incubator</artifactId>
     </dependency>
