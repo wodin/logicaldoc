@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTCase;
+import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.i18n.DateBean;
 import com.logicaldoc.core.security.UserHistory;
 
@@ -47,7 +48,6 @@ public class HibernateUserHistoryDAOTest extends AbstractCoreTCase {
 		Assert.assertNotNull(histories);
 		Assert.assertEquals(0, histories.size());
 	}
-
 
 	@SuppressWarnings("rawtypes")
 	@Test
@@ -93,22 +93,14 @@ public class HibernateUserHistoryDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(hStored.getEvent(), "second test User History store");
 	}
 
-	
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void testCleanOldHistories() {
-		UserHistory history = dao.findById(1);
-		Assert.assertNotNull(history);
-
-		Collection histories = dao.findAll();
-		Assert.assertNotNull(histories);
-		Assert.assertEquals(3, histories.size());
-
 		dao.cleanOldHistories(5);
 
-		history = dao.findById(1);
+		UserHistory history = dao.findById(1);
 		Assert.assertNull(history);
-		histories = dao.findAll();
+		Collection histories = dao.findAll();
 		Assert.assertEquals(1, histories.size());
 	}
 }
