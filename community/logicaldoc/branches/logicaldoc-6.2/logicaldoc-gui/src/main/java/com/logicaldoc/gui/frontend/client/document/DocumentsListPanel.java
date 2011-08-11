@@ -314,7 +314,7 @@ public class DocumentsListPanel extends VLayout {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
-			s	if (Session.get().getCurrentFolder().isDownload())
+			if (Session.get().getCurrentFolder().isDownload())
 					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
 							+ id + "&open=true");
 			}
