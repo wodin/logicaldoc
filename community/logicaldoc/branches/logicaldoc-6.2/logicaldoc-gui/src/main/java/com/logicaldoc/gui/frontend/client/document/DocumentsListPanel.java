@@ -41,6 +41,8 @@ import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
 import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
+import com.smartgwt.client.widgets.grid.events.SelectionUpdatedEvent;
+import com.smartgwt.client.widgets.grid.events.SelectionUpdatedHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 
@@ -292,9 +294,9 @@ public class DocumentsListPanel extends VLayout {
 			}
 		});
 
-		list.addSelectionChangedHandler(new SelectionChangedHandler() {
+		list.addSelectionUpdatedHandler(new SelectionUpdatedHandler() {
 			@Override
-			public void onSelectionChanged(SelectionEvent event) {
+			public void onSelectionUpdated(SelectionUpdatedEvent event) {
 				onRecordSelected();
 			}
 		});
@@ -312,7 +314,7 @@ public class DocumentsListPanel extends VLayout {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
-				if (Session.get().getCurrentFolder().isDownload())
+			s	if (Session.get().getCurrentFolder().isDownload())
 					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
 							+ id + "&open=true");
 			}
