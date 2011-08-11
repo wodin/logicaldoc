@@ -16,7 +16,7 @@ public class GUIInfo implements Serializable {
 
 	private String product = "LogicalDOC";
 
-	private String release = "6.2.3";
+	private String release = "6.2.4";
 
 	private String year = "2011";
 
