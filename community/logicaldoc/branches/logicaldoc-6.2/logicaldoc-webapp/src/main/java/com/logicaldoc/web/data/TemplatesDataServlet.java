@@ -38,6 +38,7 @@ public class TemplatesDataServlet extends HttpServlet {
 			IOException {
 		try {
 			String folderId = request.getParameter("folderId");
+			boolean count = "true".equals(request.getParameter("count"));
 
 			Integer type = null;
 			if (request.getParameter("templateType") != null)
@@ -95,13 +96,13 @@ public class TemplatesDataServlet extends HttpServlet {
 				writer.print("<template>");
 				writer.print("<id>" + template.getId() + "</id>");
 				writer.print("<name><![CDATA[" + template.getName() + "]]></name>");
-				writer.print("<documents>" + dao.countDocs(template.getId()) + "</documents>");
+				writer.print("<documents>" + (count ? dao.countDocs(template.getId()) : "") + "</documents>");
 				writer.print("<description><![CDATA[" + template.getDescription() + "]]></description>");
 				writer.print("<readonly>" + Boolean.toString(template.getReadonly() == 1) + "</readonly>");
 				writer.print("<type>" + template.getType() + "</type>");
 				writer.print("<category><![CDATA[" + I18N.message("sostdoctype." + template.getCategory())
 						+ "]]></category>");
-				writer.print("<signrequired>" + template.getType() + "</signrequired>");
+				writer.print("<signrequired>" + template.getSignRequired() + "</signrequired>");
 				writer.print("</template>");
 			}
 
