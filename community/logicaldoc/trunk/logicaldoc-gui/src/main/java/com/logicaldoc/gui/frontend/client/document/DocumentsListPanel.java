@@ -246,8 +246,12 @@ public class DocumentsListPanel extends VLayout {
 					if ("indexed".equals(record.getAttribute("indexed"))) {
 						String id = list.getSelectedRecord().getAttribute("id");
 						if (Session.get().getCurrentFolder().isDownload())
-							WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
-									+ "&docId=" + id + "&downloadText=true");
+							try {
+								WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
+										+ "&docId=" + id + "&downloadText=true");
+							} catch (Throwable t) {
+
+							}
 					}
 				} else if ("signed".equals(list.getFieldName(event.getColNum()))) {
 					if (Feature.enabled(Feature.DIGITAL_SIGN)) {
@@ -318,8 +322,14 @@ public class DocumentsListPanel extends VLayout {
 			public void onDoubleClick(DoubleClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
 				if (Session.get().getCurrentFolder().isDownload())
-					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-							+ id + "&open=true");
+					try {
+						Log.info("download",null);
+						WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
+								+ "&docId=" + id + "&open=true");
+					} catch (Throwable t) {
+
+					}
+				event.cancel();
 			}
 		});
 
