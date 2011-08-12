@@ -509,7 +509,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				versDao.initialize(docVersion);
 				for (String attrName : docVersion.getAttributeNames()) {
 					ExtendedAttribute extAttr = docVersion.getAttributes().get(attrName);
-					version1.setValue(attrName, extAttr);
+					version1.setValue(attrName, extAttr.getValue());
 				}
 				GUIFolder folder1 = new GUIFolder();
 				folder1.setName(docVersion.getFolderName());
@@ -554,7 +554,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				versDao.initialize(docVersion);
 				for (String attrName : docVersion.getAttributeNames()) {
 					ExtendedAttribute extAttr = docVersion.getAttributes().get(attrName);
-					version2.setValue(attrName, extAttr);
+					version2.setValue(attrName, extAttr.getValue());
 				}
 				GUIFolder folder2 = new GUIFolder();
 				folder2.setName(docVersion.getFolderName());
