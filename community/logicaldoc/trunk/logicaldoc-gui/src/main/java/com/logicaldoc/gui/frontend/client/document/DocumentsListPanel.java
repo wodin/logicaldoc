@@ -39,8 +39,8 @@ import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
 import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
-import com.smartgwt.client.widgets.grid.events.SelectionUpdatedEvent;
-import com.smartgwt.client.widgets.grid.events.SelectionUpdatedHandler;
+import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
+import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 
@@ -238,6 +238,21 @@ public class DocumentsListPanel extends VLayout {
 		addMember(infoPanel);
 		addMember(list);
 
+		list.addDoubleClickHandler(new DoubleClickHandler() {
+			@Override
+			public void onDoubleClick(DoubleClickEvent event) {
+				String id = list.getSelectedRecord().getAttribute("id");
+				if (Session.get().getCurrentFolder().isDownload())
+					try {
+						WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
+								+ "&docId=" + id + "&open=true");
+					} catch (Throwable t) {
+
+					}
+				event.cancel();
+			}
+		});
+
 		list.addCellClickHandler(new CellClickHandler() {
 			@Override
 			public void onCellClick(CellClickEvent event) {
@@ -253,6 +268,7 @@ public class DocumentsListPanel extends VLayout {
 
 							}
 					}
+					event.cancel();
 				} else if ("signed".equals(list.getFieldName(event.getColNum()))) {
 					if (Feature.enabled(Feature.DIGITAL_SIGN)) {
 						if ("rosette".equals(record.getAttribute("signed"))) {
@@ -279,6 +295,7 @@ public class DocumentsListPanel extends VLayout {
 							});
 						}
 					}
+					event.cancel();
 				} else if ("rating".equals(list.getFieldName(event.getColNum()))) {
 					long id = Long.parseLong(list.getSelectedRecord().getAttribute("id"));
 					String ratingImageName = list.getSelectedRecord().getAttribute("rating");
@@ -297,13 +314,14 @@ public class DocumentsListPanel extends VLayout {
 							}
 						}
 					});
+					event.cancel();
 				}
 			}
 		});
 
-		list.addSelectionUpdatedHandler(new SelectionUpdatedHandler() {
+		list.addSelectionChangedHandler(new SelectionChangedHandler() {
 			@Override
-			public void onSelectionUpdated(SelectionUpdatedEvent event) {
+			public void onSelectionChanged(SelectionEvent event) {
 				onRecordSelected();
 			}
 		});
@@ -313,22 +331,6 @@ public class DocumentsListPanel extends VLayout {
 			public void onCellContextClick(CellContextClickEvent event) {
 				Menu contextMenu = new DocumentContextMenu(Session.get().getCurrentFolder(), list);
 				contextMenu.showContextMenu();
-				event.cancel();
-			}
-		});
-
-		list.addDoubleClickHandler(new DoubleClickHandler() {
-			@Override
-			public void onDoubleClick(DoubleClickEvent event) {
-				String id = list.getSelectedRecord().getAttribute("id");
-				if (Session.get().getCurrentFolder().isDownload())
-					try {
-						Log.info("download",null);
-						WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
-								+ "&docId=" + id + "&open=true");
-					} catch (Throwable t) {
-
-					}
 				event.cancel();
 			}
 		});
