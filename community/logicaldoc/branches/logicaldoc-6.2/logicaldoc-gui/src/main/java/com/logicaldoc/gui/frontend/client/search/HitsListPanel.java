@@ -42,8 +42,6 @@ import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
-import com.smartgwt.client.widgets.grid.events.SelectionUpdatedEvent;
-import com.smartgwt.client.widgets.grid.events.SelectionUpdatedHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
@@ -215,9 +213,9 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			list.setFields(id, folderId, icon, title, type, size, published, creation, sourceDate, customId);
 		}
 
-		list.addSelectionUpdatedHandler(new SelectionUpdatedHandler() {
+		list.addSelectionChangedHandler(new SelectionChangedHandler() {
 			@Override
-			public void onSelectionUpdated(SelectionUpdatedEvent event) {
+			public void onSelectionChanged(SelectionEvent event) {
 				onHitSelected();
 			}
 		});
@@ -260,8 +258,12 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 							@Override
 							public void onSuccess(GUIFolder folder) {
 								if (folder.isDownload())
-									Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
-											+ "&docId=" + id + "&open=true", "_blank", "");
+									try {
+										Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
+												+ "&docId=" + id + "&open=true", "_blank", "");
+									} catch (Throwable t) {
+
+									}
 							}
 						});
 				event.cancel();
@@ -462,27 +464,29 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	}
 
 	protected void onHitSelected() {
+		// Avoid server load in case of multiple selections
+		if (list.getSelectedRecords() != null && list.getSelectedRecords().length > 1)
+			return;
+
 		if (list.getSelectedRecord() != null)
 			SearchPanel.get().onSelectedHit(Long.parseLong(list.getSelectedRecord().getAttribute("id")));
 	}
-	
+
 	protected Menu prepareContextMenu(GUIFolder folder) {
 		Menu contextMenu = new DocumentContextMenu(folder, list);
 		MenuItem openInFolder = new MenuItem();
 		openInFolder.setTitle(I18N.message("openinfolder"));
-		openInFolder
-				.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-					public void onClick(MenuItemClickEvent event) {
-						ListGridRecord record = list.getSelectedRecord();
-						DocumentsPanel.get().openInFolder(
-								Long.parseLong(record.getAttributeAsString("folderId")),
-								Long.parseLong(record.getAttributeAsString("id")));
-					}
-				});
+		openInFolder.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				ListGridRecord record = list.getSelectedRecord();
+				DocumentsPanel.get().openInFolder(Long.parseLong(record.getAttributeAsString("folderId")),
+						Long.parseLong(record.getAttributeAsString("id")));
+			}
+		});
 		contextMenu.addItem(openInFolder);
 		return contextMenu;
 	}
-	
+
 	public ListGrid getList() {
 		return list;
 	}

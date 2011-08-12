@@ -41,8 +41,6 @@ import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
 import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
-import com.smartgwt.client.widgets.grid.events.SelectionUpdatedEvent;
-import com.smartgwt.client.widgets.grid.events.SelectionUpdatedHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 
@@ -243,8 +241,12 @@ public class DocumentsListPanel extends VLayout {
 					if ("indexed".equals(record.getAttribute("indexed"))) {
 						String id = list.getSelectedRecord().getAttribute("id");
 						if (Session.get().getCurrentFolder().isDownload())
-							WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
-									+ "&docId=" + id + "&downloadText=true");
+							try {
+								WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
+										+ "&docId=" + id + "&downloadText=true");
+							} catch (Throwable t) {
+
+							}
 					}
 				} else if ("signed".equals(list.getFieldName(event.getColNum()))) {
 					if (Feature.enabled(Feature.DIGITAL_SIGN)) {
@@ -294,9 +296,9 @@ public class DocumentsListPanel extends VLayout {
 			}
 		});
 
-		list.addSelectionUpdatedHandler(new SelectionUpdatedHandler() {
+		list.addSelectionChangedHandler(new SelectionChangedHandler() {
 			@Override
-			public void onSelectionUpdated(SelectionUpdatedEvent event) {
+			public void onSelectionChanged(SelectionEvent event) {
 				onRecordSelected();
 			}
 		});
@@ -314,9 +316,13 @@ public class DocumentsListPanel extends VLayout {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
-			if (Session.get().getCurrentFolder().isDownload())
-					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-							+ id + "&open=true");
+				if (Session.get().getCurrentFolder().isDownload())
+					try {
+						WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
+								+ "&docId=" + id + "&open=true");
+					} catch (Throwable t) {
+
+					}
 			}
 		});
 
@@ -387,6 +393,10 @@ public class DocumentsListPanel extends VLayout {
 	}
 
 	protected void onRecordSelected() {
+		// Avoid server load in case of multiple selections
+		if (list.getSelectedRecords() != null && list.getSelectedRecords().length > 1)
+			return;
+
 		ListGridRecord record = list.getSelectedRecord();
 		if (record != null)
 			DocumentsPanel.get().onSelectedDocument(Long.parseLong(record.getAttribute("id")), false);
