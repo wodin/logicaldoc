@@ -121,18 +121,18 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setLockUserId(null);
 			document.setFolder(folder);
 
-			// create new version
-			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
-					Version.EVENT_CHECKIN, release);
+			// store the document in the repository (on the file system)
+			store(document, fileInputStream);
+			
 			if (documentDAO.store(document, transaction) == false)
 				throw new Exception();
 
 			// Store the version
+			// create new version
+			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
+					Version.EVENT_CHECKIN, release);
 			versionDAO.store(version);
 			log.debug("Stored version " + version.getVersion());
-
-			// store the document in the repository (on the file system)
-			store(document, fileInputStream);
 
 			log.debug("Invoke listeners after store");
 			for (DocumentListener listener : listenerManager.getListeners()) {

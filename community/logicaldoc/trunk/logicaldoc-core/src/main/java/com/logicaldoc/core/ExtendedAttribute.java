@@ -110,6 +110,9 @@ public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 		if (value instanceof String) {
 			this.type = TYPE_STRING;
 			setStringValue((String) value);
+		} else if (value instanceof Integer) {
+			this.type = TYPE_INT;
+			setIntValue(new Long((Integer)value));
 		} else if (value instanceof Long) {
 			this.type = TYPE_INT;
 			setIntValue((Long) value);
