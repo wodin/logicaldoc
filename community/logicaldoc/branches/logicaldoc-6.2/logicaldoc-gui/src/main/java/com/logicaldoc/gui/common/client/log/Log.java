@@ -28,6 +28,10 @@ public class Log {
 	 * @param caught The caught exception (if any)
 	 */
 	public static void serverError(String message, Throwable caught) {
+		//Hide download exceptions that normally are raised on double click.
+		if("0".equals(message))
+			return;
+		
 		EventPanel.get().error(I18N.message("servererror"), message);
 		GWT.log("Server error: " + message, caught);
 
