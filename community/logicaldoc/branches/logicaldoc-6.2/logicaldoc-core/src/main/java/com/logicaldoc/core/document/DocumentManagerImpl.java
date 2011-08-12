@@ -130,8 +130,12 @@ public class DocumentManagerImpl implements DocumentManager {
 			// store the document in the repository (on the file system)
 			store(document, fileInputStream);
 
+			// store to update file size
+			if (documentDAO.store(document, null) == false)
+				throw new Exception();
+			
 			version.setFileSize(document.getFileSize());
-			version.setDigest(document.getDigest());
+			version.setDigest(document.getDigest());	
 			versionDAO.store(version);
 			log.debug("Stored version " + version.getVersion());
 
@@ -177,6 +181,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		boolean stored = storer.store(content, doc.getId(), storer.getResourceName(doc, null, null));
 		if (!stored)
 			throw new IOException("Unable to store the document");
+		doc.setFileSize(storer.size(doc.getId(), storer.getResourceName(doc, null, null)));
 	}
 
 	/**
