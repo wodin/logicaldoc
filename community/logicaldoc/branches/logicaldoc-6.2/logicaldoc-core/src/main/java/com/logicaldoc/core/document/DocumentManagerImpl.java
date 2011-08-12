@@ -181,7 +181,6 @@ public class DocumentManagerImpl implements DocumentManager {
 		boolean stored = storer.store(content, doc.getId(), storer.getResourceName(doc, null, null));
 		if (!stored)
 			throw new IOException("Unable to store the document");
-		doc.setFileSize(storer.size(doc.getId(), storer.getResourceName(doc, null, null)));
 	}
 
 	/**
