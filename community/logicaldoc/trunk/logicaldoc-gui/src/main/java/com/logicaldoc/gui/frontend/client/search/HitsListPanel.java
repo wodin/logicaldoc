@@ -40,8 +40,8 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
-import com.smartgwt.client.widgets.grid.events.SelectionUpdatedEvent;
-import com.smartgwt.client.widgets.grid.events.SelectionUpdatedHandler;
+import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
+import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
@@ -223,9 +223,9 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 					comment);
 		}
 
-		list.addSelectionUpdatedHandler(new SelectionUpdatedHandler() {
+		list.addSelectionChangedHandler(new SelectionChangedHandler() {
 			@Override
-			public void onSelectionUpdated(SelectionUpdatedEvent event) {
+			public void onSelectionChanged(SelectionEvent event) {
 				onHitSelected();
 			}
 		});

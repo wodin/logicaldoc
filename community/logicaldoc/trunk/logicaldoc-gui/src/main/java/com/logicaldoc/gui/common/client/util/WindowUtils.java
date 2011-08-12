@@ -77,9 +77,4 @@ public class WindowUtils {
 	public static native void openUrl(String url)/*-{
 		$wnd.location=url;
 	}-*/;
-
-	public static native void triggerUrl(String url) /*-{
-		var popup=$wnd.open(url,"tmp","width=1, height=1");
-		popup.close();
-	}-*/;
 }
