@@ -47,8 +47,7 @@
       <ref bean="DataSource" />
     </property>
 
-    <!-- property name="mappingLocations"><value>classpath*:**/*.hbm.xml</value></property-->
-    <property name="mappingResources">
+     <property name="mappingResources">
       <list>
         <value>/mappings/User.hbm.xml</value>
         <value>/mappings/Menu.hbm.xml</value>

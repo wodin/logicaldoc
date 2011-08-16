@@ -571,9 +571,9 @@ public class ItemFactory {
 		templateItem.setMultiple(true);
 		templateItem.setMultipleAppearance(MultipleAppearance.PICKLIST);
 		if (!multipleSelection)
-			templateItem.setOptionDataSource(new TemplatesDS(true, templateId, null));
+			templateItem.setOptionDataSource(new TemplatesDS(true, templateId, null, false));
 		else
-			templateItem.setOptionDataSource(new TemplatesDS(false, templateId, null));
+			templateItem.setOptionDataSource(new TemplatesDS(false, templateId, null, false));
 		if (!Feature.enabled(Feature.TEMPLATE))
 			templateItem.setDisabled(true);
 		templateItem.setHintStyle("hint");

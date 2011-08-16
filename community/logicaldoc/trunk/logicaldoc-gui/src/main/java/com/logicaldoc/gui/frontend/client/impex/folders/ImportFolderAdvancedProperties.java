@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.impex.folders;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.logicaldoc.gui.common.client.beans.GUIShare;
@@ -104,7 +105,16 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 			}
 		});
 
-		form.setItems(depth, size, include, exclude, startDate, template, tags, delImport);
+		SelectItem updatePolicy = ItemFactory.newSelectItem("updatePolicy", "onupdate");
+		updatePolicy.addChangedHandler(changedHandler);
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		map.put("0", I18N.message("createnewversion"));
+		map.put("1", I18N.message("createnewdoc"));
+		updatePolicy.setValueMap(map);
+		updatePolicy.setValue(Integer.toString(share.getUpdatePolicy()));
+
+		
+		form.setItems(depth, size, include, exclude, startDate, template, tags, updatePolicy, delImport);
 
 		formsContainer.addMember(form);
 
@@ -123,6 +133,7 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 				share.setMaxSize(Integer.parseInt((String) values.get("sizemax")));
 
 			share.setDepth(Integer.parseInt(values.get("depth").toString()));
+			share.setUpdatePolicy(Integer.parseInt(values.get("updatePolicy").toString()));
 			share.setIncludes((String) values.get("include"));
 			share.setExcludes((String) values.get("exclude"));
 			if (values.get("template") == null || "".equals((String) values.get("template")))
@@ -135,6 +146,8 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 			else
 				share.setTags(null);
 			share.setStartDate((Date) values.get("startdate"));
+			
+		
 		}
 		return !form.hasErrors();
 	}

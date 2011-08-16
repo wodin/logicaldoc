@@ -21,7 +21,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PDFParserTest {
+import com.logicaldoc.core.AbstractCoreTCase;
+
+public class PDFParserTest extends AbstractCoreTCase{
 
 	private long startTime;
 
@@ -32,6 +34,7 @@ public class PDFParserTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		super.setUp();
 		this.startTime = System.currentTimeMillis();
 		this.mem1 = Runtime.getRuntime().totalMemory();
 		System.out.println("freeMemory: " + Runtime.getRuntime().freeMemory());
@@ -52,6 +55,7 @@ public class PDFParserTest {
 
 		System.err.println("Difference in memory allocation: " + ((mem2 - mem1) / 1024) + " KB");
 		Runtime.getRuntime().gc(); // request garbage collection
+		super.tearDown();
 	}
 
 	@Test
@@ -61,7 +65,7 @@ public class PDFParserTest {
 		// to read
 		// The new version of PDFBox 1.3.1 is able to open such document
 		// This pdf has been created with Adobe PDF Library 9.0
-		String inputFile = "target/test-classes/Digital_Day.pdf";
+		String inputFile = "src/test/resources/Digital_Day.pdf";
 		File file = new File(inputFile);
 		String filename = file.getPath();
 
@@ -86,7 +90,7 @@ public class PDFParserTest {
 		// System.out.println("content.length(): " + content.length());
 		// assertEquals(27179, content.length());
 
-		inputFile = "target/test-classes/probiotic-1.4.pdf";
+		inputFile = "src/test/resources/probiotic-1.4.pdf";
 		file = new File(inputFile);
 		filename = file.getPath();
 
@@ -98,7 +102,7 @@ public class PDFParserTest {
 
 	@Test
 	public void testSmall() throws UnsupportedEncodingException {
-		String inputFile = "target/test-classes/small.pdf";
+		String inputFile = "src/test/resources/small.pdf";
 		File file = new File(inputFile);
 		String filename = file.getPath();
 
@@ -113,9 +117,9 @@ public class PDFParserTest {
 
 	@Test
 	public void testStress() throws UnsupportedEncodingException {
-		File file1 = new File("target/test-classes/Digital_Day.pdf");
+		File file1 = new File("src/test/resources/Digital_Day.pdf");
 		String filename1 = file1.getPath();
-		File file2 = new File("target/test-classes/Arabic/SharePoint.pdf");
+		File file2 = new File("src/test/resources/Arabic/SharePoint.pdf");
 		String filename2 = file2.getPath();
 
 		for (int i = 0; i < 10; i++) {
@@ -144,8 +148,8 @@ public class PDFParserTest {
 		// The text in the left column is left aligned, while the text in the
 		// right goes from right to left (Arabic)
 		// The documentation of PDFBox 1.4.0 states that this requires ICU4J 3.8
-		String inputFile = "target/test-classes/Arabic/imaging14.pdf";
-		String outputFile = "target/test-classes/Arabic/UTF-8.txt";
+		String inputFile = "src/test/resources/Arabic/imaging14.pdf";
+		String outputFile = "src/test/resources/Arabic/UTF-8.txt";
 		File file = new File(inputFile);
 		String filename = file.getPath();
 
@@ -199,7 +203,7 @@ public class PDFParserTest {
 		// This is an Arabic pdf document
 		// The text goes from right to left (Arabic)
 		// The documentation of PDFBox 1.4.0 states that this requires ICU4J 3.8
-		String inputFile = "target/test-classes/Arabic/SharePoint.pdf";
+		String inputFile = "src/test/resources/Arabic/SharePoint.pdf";
 		File file = new File(inputFile);
 		String filename = file.getPath();
 
@@ -222,7 +226,7 @@ public class PDFParserTest {
 
 	@Test
 	public void testForm() throws UnsupportedEncodingException {
-		String inputFile = "target/test-classes/pdf_form_fields.pdf";
+		String inputFile = "src/test/reaources/pdf_form_fields.pdf";
 		File file = new File(inputFile);
 		String filename = file.getPath();
 
@@ -238,7 +242,7 @@ public class PDFParserTest {
 //		System.err.println("content.length(): " + content.length());
 //		assertEquals(1853, content.length());
 //		
-		inputFile = "target/test-classes/fillablePDF1.pdf";
+		inputFile = "src/test/resources/fillablePDF1.pdf";
 		file = new File(inputFile);
 		filename = file.getPath();
 

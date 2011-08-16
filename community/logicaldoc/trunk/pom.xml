@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.logicaldoc</groupId>
     <artifactId>logicaldoc-parent-pom</artifactId>
-    <version>44</version>
+    <version>46</version>
   </parent>
 	<groupId>com.logicaldoc</groupId>
 	<artifactId>logicaldoc</artifactId>
@@ -114,11 +114,6 @@
       <id>logicaldoc</id>
       <name>LogicalDOC Repository</name>
       <url>http://logicaldoc.sourceforge.net/maven</url>
-    </repository>
-    <repository>
-      <id>jboss</id>
-      <name>Jboss Repository</name>
-      <url>http://repository.jboss.com/maven2</url>
     </repository>
   </repositories>
 	

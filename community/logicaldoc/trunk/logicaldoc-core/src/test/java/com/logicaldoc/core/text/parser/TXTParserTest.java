@@ -5,31 +5,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-public class TXTParserTest {
+import com.logicaldoc.core.AbstractCoreTCase;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-	}
+public class TXTParserTest extends AbstractCoreTCase{
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-
-	}
 
 	@Test
 	public void testParse() throws UnsupportedEncodingException, FileNotFoundException {
-		String inputFile = "target/test-classes/AnalyzeFileTest_enc.txt";
+		String inputFile = "src/test/resources/AnalyzeFileTest_enc.txt";
 		File file = new File(inputFile);
 		String filename = file.getPath();
 		Parser parser = ParserFactory.getParser(filename);

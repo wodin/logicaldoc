@@ -38,11 +38,70 @@ public class SystemQuota implements DocumentListener {
 
 	}
 
+	/**
+	 * Retrieve the total size of documents folder into the file system (in
+	 * bytes)
+	 */
+	public static synchronized long getTotalSize() {
+		return -1;
+	}
+
+	/**
+	 * Increments the total size counter of the document file size
+	 */
 	public static synchronized void increment(long docSize) {
 
 	}
 
+	/**
+	 * Decrements the total size counter of the document file size
+	 */
 	public static synchronized void decrement(long docSize) {
+
+	}
+
+	/**
+	 * Decrements user quota counter of the document file size
+	 */
+	public static synchronized void decrementUserQuota(Document document) {
+
+	}
+
+	/**
+	 * Increments user quota counter of the document file size retrieving the
+	 * userid from the given document
+	 */
+	public static synchronized void incrementUserQuota(Document document, Long filesize) {
+
+	}
+
+	/**
+	 * Increments user quota counter of the document file size retrieving the
+	 * userid from the given document id
+	 */
+	public static synchronized void incrementUserQuota(long docId, Long filesize) {
+
+	}
+
+	/**
+	 * Checks if user quota will be exceeded adding a document
+	 */
+	public static synchronized void checkUserQuota(Document document) throws Exception {
+
+	}
+
+	/**
+	 * Checks if user quota has be exceeded
+	 */
+	public static synchronized boolean isOverQuota(User user) {
+		return false;
+	}
+
+	/**
+	 * Checks if the quota of the user (with the given user id) will be exceeded
+	 * adding a document with the given file size
+	 */
+	public static synchronized void checkUserQuota(long userId, Long filesize) throws Exception {
 
 	}
 
@@ -58,30 +117,9 @@ public class SystemQuota implements DocumentListener {
 
 	@Override
 	public void beforeCheckin(Document document, History transaction, Map<String, Object> dictionary) throws Exception {
-
 	}
 
 	@Override
 	public void beforeStore(Document document, History transaction, Map<String, Object> dictionary) throws Exception {
-
-	}
-
-	public static synchronized void decrementUserQuota(Document document) {
-	}
-
-	public static synchronized void incrementUserQuota(Document document, Long filesize) {
-	}
-
-	public static synchronized void checkUserQuota(Document document) throws Exception {
-	}
-
-	public static synchronized void checkUserQuota(long userId, Long filesize) throws Exception {
-	}
-
-	public static synchronized boolean isOverQuota(User user) {
-		return false;
-	}
-
-	public static synchronized void incrementUserQuota(long docId, Long filesize) {
 	}
 }
