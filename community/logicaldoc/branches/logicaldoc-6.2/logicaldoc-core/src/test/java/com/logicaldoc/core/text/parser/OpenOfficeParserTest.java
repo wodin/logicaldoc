@@ -48,7 +48,7 @@ public class OpenOfficeParserTest {
 	@Test
 	public void testParse() throws UnsupportedEncodingException {
 
-		String inputFile = "target/test-classes/logicaldoc-user_manual-en.odt";
+		String inputFile = "src/test/resources/logicaldoc-user_manual-en.odt";
 		File file = new File(inputFile);
 		String filename = file.getPath();
 
