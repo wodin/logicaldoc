@@ -33,7 +33,7 @@ public class GUIShare implements Serializable {
 
 	private int extractTags = 0;
 
-	private String includes = "*.pdf,*.doc,*.txt";
+	private String includes = "*.pdf,*.doc,*.xls";
 
 	private String excludes = "*~,#*#,.#*,%*%,._*,.DS_Store";
 
@@ -48,6 +48,8 @@ public class GUIShare implements Serializable {
 	private boolean delImport = false;
 
 	private Date startDate;
+
+	private int updatePolicy = 0;
 
 	public GUIShare() {
 		super();
@@ -197,5 +199,13 @@ public class GUIShare implements Serializable {
 
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
+	}
+
+	public int getUpdatePolicy() {
+		return updatePolicy;
+	}
+
+	public void setUpdatePolicy(int updatePolicy) {
+		this.updatePolicy = updatePolicy;
 	}
 }

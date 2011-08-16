@@ -44,17 +44,13 @@ public abstract class AbstractWebServiceTestCase {
 	protected File dataFile;
 
 	private String userHome;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		userHome = System.getProperty("user.home");
 		System.setProperty("user.home", tempDir.getPath());
 
-		try {
-			context = new ClassPathXmlApplicationContext(new String[] { "/context.xml" });
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		context = new ClassPathXmlApplicationContext(new String[] { "/context.xml" });
 
 		createTestDirs();
 		createTestDatabase();

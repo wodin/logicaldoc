@@ -121,16 +121,22 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setLockUserId(null);
 			document.setFolder(folder);
 
-			// store the document in the repository (on the file system)
-			store(document, fileInputStream);
-			
+			// Create new version (a new version number is created)
+			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
+					Version.EVENT_CHECKIN, release);
+
 			if (documentDAO.store(document, transaction) == false)
 				throw new Exception();
 
-			// Store the version
-			// create new version
-			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
-					Version.EVENT_CHECKIN, release);
+			// store the document in the repository (on the file system)
+			store(document, fileInputStream);
+
+			// store to update file size
+			if (documentDAO.store(document, null) == false)
+				throw new Exception();
+			
+			version.setFileSize(document.getFileSize());
+			version.setDigest(document.getDigest());	
 			versionDAO.store(version);
 			log.debug("Stored version " + version.getVersion());
 
@@ -171,7 +177,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	private void store(Document doc, InputStream content) throws IOException {
 		// Get file to upload inputStream
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
-
+		
 		// stores it in folder
 		boolean stored = storer.store(content, doc.getId(), storer.getResourceName(doc, null, null));
 		if (!stored)

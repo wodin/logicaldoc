@@ -113,11 +113,16 @@ public abstract class AbstractParser implements Parser {
 	public void parse(final InputStream input) {
 		log.debug("Parse started");
 
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		String to = config.getProperty("parser.timeout");
 		long timeout = -1;
-		if (org.apache.commons.lang.StringUtils.isNotEmpty(to))
-			timeout = Long.parseLong(to);
+
+		try {
+			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			String to = config.getProperty("parser.timeout");
+			if (org.apache.commons.lang.StringUtils.isNotEmpty(to))
+				timeout = Long.parseLong(to);
+		} catch (Throwable t) {
+
+		}
 
 		if (timeout <= 0)
 			try {

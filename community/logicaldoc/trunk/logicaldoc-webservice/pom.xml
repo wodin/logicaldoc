@@ -76,35 +76,37 @@
 			<artifactId>commons-dbcp</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
-		<!--
+
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring</artifactId>
+			<artifactId>spring-orm</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		-->
-				<dependency>
+		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
+			<artifactId>spring-context-support</artifactId>
 			<scope>provided</scope>
 		</dependency>
-     <dependency>
-   <groupId>org.springframework</groupId>
-   <artifactId>spring-jdbc</artifactId>
-   <scope>provided</scope>
- </dependency>
-  <dependency>
-   <groupId>org.springframework</groupId>
-   <artifactId>spring-orm</artifactId>
-   <scope>provided</scope>
- </dependency>
-   <dependency>
-   <groupId>org.springframework</groupId>
-   <artifactId>spring-context-support</artifactId>
-   <scope>provided</scope>
- </dependency>
- 
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-ehcache</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.ant</groupId>
 			<artifactId>ant</artifactId>
