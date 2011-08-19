@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Showing a 2D view with toolbar, status bar and layer bar inpage, and an
+     additional menu in frame. -->
+<dxfapplet frametitle="${titleFrame}">
+  <menubar>
+    <menu tag="menuFile">
+      <action name="print"/>
+      <separator/>
+      <menu tag="menuSave">
+        <action name="imgsave"/>
+        <separator/>
+        <action name="savepdf"/>
+        <action name="saveps"/>
+        <action name="savesvg"/>
+      </menu>
+      <separator/>
+      <action name="close"/>
+    </menu>
+  </menubar>
+  <!-- splitpane type="horizontal" pos="Center" split="60%">
+    <modelview type="2D+"
+               pos="Left"
+               bgcolor="black"
+               coordsys="true"
+               coordsyspos="NW"
+               staticreduce="20000"
+               dynamicreduce="2000"
+               reducemode="dynamic"
+               antialias="true"
+               skipsize="0"
+               skiptextsize="2"
+               useltypes="true"
+               allowpicking="false"
+               invertwheel="true"
+               states="all-picking"
+               preactions="print,close,"
+               animation="0"
+               border="titled(etched(),'${titleModel}')"/>
+    <layerpanel pos="right" border="titled(etched(),'${titleLayer}')"/>
+  </splitpane -->
+  <panel pos="Center">
+    <modelview type="2D+"
+               pos="Center"
+               bgcolor="black"
+               coordsys="true"
+               coordsyspos="NW"
+               staticreduce="20000"
+               dynamicreduce="2000"
+               reducemode="dynamic"
+               antialias="true"
+               skipsize="0"
+               skiptextsize="2"
+               useltypes="true"
+               allowpicking="false"
+               invertwheel="true"
+               states="all-picking"
+               preactions="print,close,"
+               animation="0"
+               border="titled(etched(),'${titleModel}')"/>
+    <layerpanel pos="East" border="titled(etched(),'${titleLayer}')"/>
+  </panel>
+  <statusbar pos="South"/>
+</dxfapplet>
