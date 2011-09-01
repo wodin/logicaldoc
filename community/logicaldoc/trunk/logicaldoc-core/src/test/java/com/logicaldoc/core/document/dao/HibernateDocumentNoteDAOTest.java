@@ -36,4 +36,13 @@ public class HibernateDocumentNoteDAOTest extends AbstractCoreTCase {
 		DocumentNote note = notes.get(0);
 		Assert.assertEquals("message for note 1", note.getMessage());
 	}
+	
+	@Test
+	public void testFindByUserId() {
+		List<DocumentNote> notes = dao.findByUserId(1L);
+		Assert.assertNotNull(notes);
+		Assert.assertEquals(2, notes.size());
+		DocumentNote note = notes.get(0);
+		Assert.assertEquals("message for note 1", note.getMessage());
+	}
 }

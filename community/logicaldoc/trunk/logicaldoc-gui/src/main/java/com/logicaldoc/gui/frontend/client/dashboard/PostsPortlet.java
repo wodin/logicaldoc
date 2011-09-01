@@ -23,7 +23,7 @@ import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 import com.smartgwt.client.widgets.layout.Portlet;
 
 /**
- * Portlet specialized in listing the most recent posts of the current user.
+ * Portlet specialized in listing the most recent comments of the current user.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
@@ -63,7 +63,7 @@ public class PostsPortlet extends Portlet {
 		list.setSelectionType(SelectionStyle.NONE);
 		list.setHeight100();
 		list.setBorder("0px");
-		dataSource = new PostsDS(null, userId);
+		dataSource = new PostsDS(userId);
 		list.setDataSource(dataSource);
 		list.setFields(date, title);
 
