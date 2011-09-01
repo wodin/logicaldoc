@@ -1,6 +1,8 @@
 package com.logicaldoc.web.service;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -16,6 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.PluginDescriptor;
+import org.springframework.jdbc.core.RowMapper;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.document.dao.HistoryDAO;
@@ -25,7 +28,6 @@ import com.logicaldoc.core.rss.FeedMessage;
 import com.logicaldoc.core.rss.dao.FeedMessageDAO;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
-import com.logicaldoc.core.security.dao.UserHistoryDAO;
 import com.logicaldoc.core.stats.StatsCollector;
 import com.logicaldoc.core.task.Task;
 import com.logicaldoc.core.task.TaskManager;
@@ -462,33 +464,28 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public GUIHistory[] search(String sid, String userName, Date from, Date till, int maxResult, String historySid,
 			String[] event) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		boolean searchOnUserHistory = false;
-		for (String e : event) {
-			if (e.contains("user")) {
-				searchOnUserHistory = true;
-				break;
-			}
-		}
-
 		HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 		List<GUIHistory> histories = new ArrayList<GUIHistory>();
 		try {
+
+			// Search in the document/folder history
 			StringBuffer query = new StringBuffer(
-					"select A.userName, A.event, A.date, A.title, A.folderId, A.path, A.sessionId from History A where 1=1 ");
+					"select A.ld_username, A.ld_event, A.ld_date, A.ld_title, A.ld_folderid, A.ld_path, A.ld_sessionid from ld_history A where 1=1 ");
 			if (userName != null && StringUtils.isNotEmpty(userName))
-				query.append(" and lower(A.userName) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");
+				query.append(" and lower(A.ld_username) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");
 			if (historySid != null && StringUtils.isNotEmpty(historySid))
 				query.append(" and A.sessionId=" + historySid);
 			if (from != null) {
-				query.append(" and A.date > '" + new Timestamp(from.getTime()) + "'");
+				query.append(" and A.ld_date > '" + new Timestamp(from.getTime()) + "'");
 			}
 			if (till != null) {
-				query.append(" and A.date < '" + new Timestamp(till.getTime()) + "'");
+				query.append(" and A.ld_date < '" + new Timestamp(till.getTime()) + "'");
 			}
 			if (event.length > 0) {
 				boolean first = true;
@@ -498,83 +495,82 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 					else
 						query.append(" or ");
 
-					query.append(" A.event = '" + SqlUtil.doubleQuotes(e) + "'");
+					query.append(" A.ld_event = '" + SqlUtil.doubleQuotes(e) + "'");
 					first = false;
 				}
 				query.append(" ) ");
 			}
-			query.append(" order by A.date desc ");
 
-			List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, maxResult);
-
-			for (Object record : records) {
-				Object[] cols = (Object[]) record;
-
-				GUIHistory history = new GUIHistory();
-				history.setUserName((String) cols[0]);
-				history.setEvent((String) cols[1]);
-				history.setDate((Date) cols[2]);
-				history.setTitle((String) cols[3]);
-				history.setFolderId((Long) cols[4]);
-				history.setPath((String) cols[5]);
-				history.setSessionId((String) cols[6]);
-
-				histories.add(history);
+			// Search in the user history
+			query.append("union select B.ld_username, B.ld_event, B.ld_date, null, null, null, B.ld_sessionid from ld_user_history B where 1=1 ");
+			if (userName != null && StringUtils.isNotEmpty(userName))
+				query.append(" and lower(B.ld_username) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");
+			if (historySid != null && StringUtils.isNotEmpty(historySid))
+				query.append(" and B.ld_sessionid=" + historySid);
+			if (from != null) {
+				query.append(" and B.ld_date > '" + new Timestamp(from.getTime()) + "'");
 			}
+			if (till != null) {
+				query.append(" and B.ld_date < '" + new Timestamp(till.getTime()) + "'");
+			}
+			if (event.length > 0) {
+				boolean first = true;
+				for (String e : event) {
+					if (first)
+						query.append(" and (");
+					else
+						query.append(" or ");
 
-			if (searchOnUserHistory && histories.size() < maxResult) {
-				UserHistoryDAO userHistoryDao = (UserHistoryDAO) Context.getInstance().getBean(UserHistoryDAO.class);
-				try {
-					query = new StringBuffer(
-							"select A.userName, A.event, A.date, A.sessionId from UserHistory A where 1=1 ");
-					if (userName != null && StringUtils.isNotEmpty(userName))
-						query.append(" and lower(A.userName) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase())
-								+ "%'");
-					if (historySid != null && StringUtils.isNotEmpty(historySid))
-						query.append(" and A.sessionId=" + historySid);
-					if (from != null) {
-						query.append(" and A.date > '" + new Timestamp(from.getTime()) + "'");
-					}
-					if (till != null) {
-						query.append(" and A.date < '" + new Timestamp(till.getTime()) + "'");
-					}
-					if (event.length > 0) {
-						boolean first = true;
-						for (String e : event) {
-							if (first)
-								query.append(" and (");
-							else
-								query.append(" or ");
-
-							query.append(" A.event = '" + SqlUtil.doubleQuotes(e) + "'");
-							first = false;
-						}
-						query.append(" ) ");
-					}
-					query.append(" order by A.date desc ");
-
-					records = (List<Object>) userHistoryDao.findByQuery(query.toString(), null, maxResult);
-
-					for (Object record : records) {
-						Object[] cols = (Object[]) record;
-
-						GUIHistory history = new GUIHistory();
-						history.setUserName((String) cols[0]);
-						history.setEvent((String) cols[1]);
-						history.setDate((Date) cols[2]);
-						history.setTitle("");
-						history.setFolderId(0);
-						history.setPath("");
-						history.setSessionId((String) cols[3]);
-
-						histories.add(history);
-						if (histories.size() == maxResult)
-							break;
-					}
-				} catch (Throwable e) {
-					log.error(e.getMessage(), e);
+					query.append(" B.ld_event = '" + SqlUtil.doubleQuotes(e) + "'");
+					first = false;
 				}
+				query.append(" ) ");
 			}
+
+			// Search in the workflow history
+			query.append("union select C.ld_username, C.ld_event, C.ld_date, null, null, null, C.ld_sessionid from ld_workflowhistory C where 1=1 ");
+			if (userName != null && StringUtils.isNotEmpty(userName))
+				query.append(" and lower(C.ld_username) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");
+			if (historySid != null && StringUtils.isNotEmpty(historySid))
+				query.append(" and C.ld_sessionid=" + historySid);
+			if (from != null) {
+				query.append(" and C.ld_date > '" + new Timestamp(from.getTime()) + "'");
+			}
+			if (till != null) {
+				query.append(" and C.ld_date < '" + new Timestamp(till.getTime()) + "'");
+			}
+			if (event.length > 0) {
+				boolean first = true;
+				for (String e : event) {
+					if (first)
+						query.append(" and (");
+					else
+						query.append(" or ");
+
+					query.append(" C.ld_event = '" + SqlUtil.doubleQuotes(e.trim()) + "'");
+					first = false;
+				}
+				query.append(" ) ");
+			}
+
+			query.append(" order by 3 desc ");
+
+			histories = (List<GUIHistory>) dao.query(query.toString(), null, new RowMapper<GUIHistory>() {
+
+				@Override
+				public GUIHistory mapRow(ResultSet rs, int arg1) throws SQLException {
+					GUIHistory history = new GUIHistory();
+					history.setUserName(rs.getString(1));
+					history.setEvent(rs.getString(2));
+					history.setDate(rs.getDate(3));
+					history.setTitle(rs.getString(4));
+					history.setFolderId(rs.getLong(5));
+					history.setPath(rs.getString(6));
+					history.setSessionId(rs.getString(7));
+					return history;
+				}
+
+			}, maxResult);
 
 			return histories.toArray(new GUIHistory[histories.size()]);
 		} catch (Throwable e) {

@@ -87,6 +87,7 @@ public class LastChangesPanel extends VLayout {
 
 		// Max results
 		TextItem displayMax = ItemFactory.newTextItem("displayMax", "displaymax", null);
+		displayMax.setValue(100);
 		displayMax.setDefaultValue(100);
 		displayMax.setWidth(40);
 		displayMax.setHint(I18N.message("elements"));
@@ -211,8 +212,14 @@ public class LastChangesPanel extends VLayout {
 
 		if (vm.validate()) {
 			String[] eventValues = new String[0];
-			if (values.get("event") != null)
-				eventValues = values.get("event").toString().trim().toLowerCase().split(",");
+			if (values.get("event") != null) {
+				String buf = values.get("event").toString().trim().toLowerCase();
+				buf = buf.replace('[', ' ');
+				buf = buf.replace(']', ' ');
+				buf = buf.replace(" ", "");
+				eventValues = buf.split(",");
+			}
+
 			String userValue = null;
 			if ((values.get("user") != null))
 				userValue = (String) values.get("user");
