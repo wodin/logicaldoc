@@ -63,7 +63,7 @@ public class PostsPortlet extends Portlet {
 		list.setSelectionType(SelectionStyle.NONE);
 		list.setHeight100();
 		list.setBorder("0px");
-		dataSource = new PostsDS(null, userId);
+		dataSource = new PostsDS(userId);
 		list.setDataSource(dataSource);
 		list.setFields(date, title);
 
