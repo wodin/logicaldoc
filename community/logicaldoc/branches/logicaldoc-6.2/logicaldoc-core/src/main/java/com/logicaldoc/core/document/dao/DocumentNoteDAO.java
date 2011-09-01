@@ -21,4 +21,13 @@ public interface DocumentNoteDAO extends PersistentObjectDAO<DocumentNote> {
 	 * @return The list of document note.
 	 */
 	public List<DocumentNote> findByDocId(long docId);
+	
+	/**
+	 * This method finds the list of document notes regarding posted by a
+	 * specific user.
+	 * 
+	 * @param userId ID of the user
+	 * @return The list of document notes ordered by descending date
+	 */
+	public List<DocumentNote> findByUserId(long userId);
 }
