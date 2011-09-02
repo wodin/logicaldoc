@@ -325,7 +325,7 @@ public class Setup implements EntryPoint {
 				"jdbc:postgresql:[<//server>[<:5432>/]]<database>", "org.hibernate.dialect.PostgreSQLDialect",
 				"SELECT 1" });
 		engines.put(ORACLE, new String[] { "Oracle 10g/11g", "oracle.jdbc.driver.OracleDriver",
-				"jdbc:oracle:thin:@<server>[<:1521>]:<database>", "org.hibernate.dialect.Oracle10gDialect",
+				"jdbc:oracle:thin:@<server>[<:1521>]:<sid>", "org.hibernate.dialect.Oracle10gDialect",
 				"SELECT 1 FROM DUAL" });
 		engines.put(SQLSERVER, new String[] { "SQL Server 2005/2008", "net.sourceforge.jtds.jdbc.Driver",
 				"jdbc:jtds:sqlserver://<server>[:<1433>]/<database>", "org.hibernate.dialect.SQLServerDialect",
