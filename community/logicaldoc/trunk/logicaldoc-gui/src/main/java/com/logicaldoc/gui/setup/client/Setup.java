@@ -67,7 +67,9 @@ public class Setup implements EntryPoint {
 
 	private static final String ORACLE = "Oracle";
 
-	private static final String DB_MYSQL = "MySQL";
+	private static final String MYSQL = "MySQL";
+
+	private static final String SQLSERVER = "MSSQL";
 
 	private static final String REPOSITORY_FOLDER = "repositoryFolder";
 
@@ -316,15 +318,18 @@ public class Setup implements EntryPoint {
 	 */
 	private Tab setupDatabase(final ValuesManager vm) {
 		// Prepare the map with all database engines
-		engines.put(DB_MYSQL, new String[] { "MySQL 5.x", "com.mysql.jdbc.Driver",
+		engines.put(MYSQL, new String[] { "MySQL 5.x", "com.mysql.jdbc.Driver",
 				"jdbc:mysql://<server>[,<failoverhost>][<:3306>]/<database>", "org.hibernate.dialect.MySQLDialect",
 				"SELECT 1" });
-		engines.put("PostgreSQL", new String[] { "PostgreSQL 8.x", "org.postgresql.Driver",
+		engines.put("PostgreSQL", new String[] { "PostgreSQL 9.x", "org.postgresql.Driver",
 				"jdbc:postgresql:[<//server>[<:5432>/]]<database>", "org.hibernate.dialect.PostgreSQLDialect",
 				"SELECT 1" });
 		engines.put(ORACLE, new String[] { "Oracle 10g/11g", "oracle.jdbc.driver.OracleDriver",
 				"jdbc:oracle:thin:@<server>[<:1521>]:<database>", "org.hibernate.dialect.Oracle10gDialect",
 				"SELECT 1 FROM DUAL" });
+		engines.put(SQLSERVER, new String[] { "SQL Server 2005/2008", "net.sourceforge.jtds.jdbc.Driver",
+				"jdbc:jtds:sqlserver://<server>[:<1433>]/<database>", "org.hibernate.dialect.SQLServerDialect",
+				"SELECT 1" });
 
 		Tab databaseTab = new Tab();
 		databaseTab.setTitle(I18N.message("database"));
@@ -351,7 +356,7 @@ public class Setup implements EntryPoint {
 		dbEngine.setWrapTitle(false);
 		dbEngine.setVisible(false);
 		dbEngine.setName(DB_ENGINE);
-		dbEngine.setDefaultValue(DB_MYSQL);
+		dbEngine.setDefaultValue(MYSQL);
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
 		for (String engine : engines.keySet()) {
 			valueMap.put(engine, engines.get(engine)[0]);
@@ -380,7 +385,7 @@ public class Setup implements EntryPoint {
 		// The driver for the external DB
 		TextItem dbDriver = ItemFactory.newTextItem(DB_DRIVER, "driverclass", null);
 		dbDriver.setVisible(false);
-		dbDriver.setDefaultValue(engines.get(DB_MYSQL)[1]);
+		dbDriver.setDefaultValue(engines.get(MYSQL)[1]);
 		dbDriver.setWrapTitle(false);
 		dbDriver.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
@@ -393,7 +398,7 @@ public class Setup implements EntryPoint {
 		TextItem dbUrl = ItemFactory.newTextItem(DB_URL, "connectionurl", null);
 		dbUrl.setWidth(200);
 		dbUrl.setVisible(false);
-		dbUrl.setDefaultValue(engines.get(DB_MYSQL)[2]);
+		dbUrl.setDefaultValue(engines.get(MYSQL)[2]);
 		dbUrl.setWrapTitle(false);
 		dbUrl.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
