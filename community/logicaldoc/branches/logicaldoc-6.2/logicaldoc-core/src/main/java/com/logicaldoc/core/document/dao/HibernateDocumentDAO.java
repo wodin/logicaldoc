@@ -226,10 +226,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					config.getProperty("barcode.excludes") == null ? "" : config.getProperty("barcode.excludes")))
 				doc.setBarcoded(Document.BARCODE_SKIP);
 
-			
 			// Save the document
 			getHibernateTemplate().saveOrUpdate(doc);
-			
+
 			// Update size and digest
 			String resource = storer.getResourceName(doc, doc.getFileVersion(), null);
 			if (storer.exists(doc.getId(), resource)) {
@@ -761,7 +760,15 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@Override
 	public boolean deleteOrphaned(long deleteUserId) {
 		try {
-			jdbcUpdate("update ld_document set ld_deleted=1,ld_customid=CONCAT(ld_id,CONCAT('.',ld_customid)), ld_deleteuserid="
+			String dbms = config.getProperty("jdbc.dbms").toLowerCase();
+
+			String concat = "CONCAT(ld_id,CONCAT('.',ld_customid))";
+			if (dbms.contains("postgre"))
+				concat = "ld_id || '.' || ld_customid";
+			if (dbms.contains("mssql"))
+				concat = "ld_id + '.' + ld_customid";
+
+			jdbcUpdate("update ld_document set ld_deleted=1,ld_customid=" + concat + ", ld_deleteuserid="
 					+ deleteUserId
 					+ " where ld_deleted=0 and ld_folderid in (select ld_id from ld_folder where ld_deleted = 1)");
 		} catch (Exception e) {
