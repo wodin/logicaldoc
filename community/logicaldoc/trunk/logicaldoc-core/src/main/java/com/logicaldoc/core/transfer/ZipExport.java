@@ -10,11 +10,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.zip.ZipEntry;
 
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream.UnicodeExtraFieldPolicy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.tools.zip.ZipEntry;
-import org.apache.tools.zip.ZipOutputStream;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -33,7 +35,7 @@ public class ZipExport {
 
 	protected static Log log = LogFactory.getLog(ZipExport.class);
 
-	private ZipOutputStream zos;
+	private ZipArchiveOutputStream zos;
 
 	private long userId;
 
@@ -61,8 +63,12 @@ public class ZipExport {
 		this.userId = userId;
 		this.startFolderId = folder.getId();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		zos = new ZipOutputStream(bos);
-		zos.setEncoding("Cp850");
+		zos = new ZipArchiveOutputStream(bos);
+		zos.setMethod(ZipEntry.DEFLATED);
+		zos.setEncoding("UTF-8");
+		zos.setCreateUnicodeExtraFields(UnicodeExtraFieldPolicy.ALWAYS);
+		zos.setUseLanguageEncodingFlag(true);
+
 		try {
 			appendChildren(folder, 0);
 		} finally {
@@ -85,8 +91,12 @@ public class ZipExport {
 	 */
 	public void process(long[] docIds, OutputStream out) {
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		zos = new ZipOutputStream(out);
-		zos.setEncoding("Cp850");
+		zos = new ZipArchiveOutputStream(out);
+		zos.setEncoding("UTF-8");
+		zos.setMethod(ZipEntry.DEFLATED);
+		zos.setCreateUnicodeExtraFields(UnicodeExtraFieldPolicy.ALWAYS);
+		zos.setUseLanguageEncodingFlag(true);
+
 		try {
 			for (long id : docIds) {
 				Document doc = dao.findById(id);
@@ -161,7 +171,8 @@ public class ZipExport {
 			bis = new BufferedInputStream(is);
 
 			ZipEntry entry = new ZipEntry(path + document.getFileName());
-			zos.putNextEntry(entry);
+			entry.setMethod(ZipEntry.DEFLATED);
+			zos.putArchiveEntry(new ZipArchiveEntry(entry));
 
 			// Transfer bytes from the file to the ZIP file
 			int len;
@@ -172,6 +183,7 @@ public class ZipExport {
 			log.error(e.getMessage());
 		} finally {
 			try {
+				zos.closeArchiveEntry();
 				if (bis != null)
 					bis.close();
 				if (is != null)
