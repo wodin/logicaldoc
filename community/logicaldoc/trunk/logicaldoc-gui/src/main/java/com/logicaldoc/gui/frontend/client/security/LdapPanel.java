@@ -226,6 +226,8 @@ public class LdapPanel extends VLayout {
 						new ValueCallback() {
 							@Override
 							public void execute(String value) {
+								if(value==null)
+									return;
 								String node = value.replaceAll("\\.", ",DC=");
 								node = "DC=" + node;
 								vm.setValue("url", "ldap://AD_SERVER:389");

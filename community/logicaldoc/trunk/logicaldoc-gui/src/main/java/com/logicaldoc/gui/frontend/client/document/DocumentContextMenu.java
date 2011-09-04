@@ -217,7 +217,7 @@ public class DocumentContextMenu extends Menu {
 
 					@Override
 					public void onSuccess(Void result) {
-						// Nothing to do
+						Clipboard.getInstance().clear();
 					}
 
 				});
