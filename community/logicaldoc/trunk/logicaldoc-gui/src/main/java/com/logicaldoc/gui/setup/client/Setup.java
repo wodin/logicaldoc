@@ -328,7 +328,7 @@ public class Setup implements EntryPoint {
 				"jdbc:oracle:thin:@<server>[<:1521>]:<sid>", "org.hibernate.dialect.Oracle10gDialect",
 				"SELECT 1 FROM DUAL" });
 		engines.put(SQLSERVER, new String[] { "SQL Server 2005/2008", "net.sourceforge.jtds.jdbc.Driver",
-				"jdbc:jtds:sqlserver://<server>[:<1433>]/<database>", "org.hibernate.dialect.SQLServerDialect",
+				"jdbc:jtds:sqlserver://<server>[:<1433>]/<database>;instance=<instance>", "org.hibernate.dialect.SQLServerDialect",
 				"SELECT 1" });
 
 		Tab databaseTab = new Tab();
