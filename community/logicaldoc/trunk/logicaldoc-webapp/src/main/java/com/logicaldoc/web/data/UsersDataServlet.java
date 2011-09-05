@@ -72,14 +72,15 @@ public class UsersDataServlet extends HttpServlet {
 						writer.print("<eenabled>0</eenabled>");
 					else if (user.getEnabled() == 0)
 						writer.print("<eenabled>2</eenabled>");
-					writer.print("<name><![CDATA[" + user.getName() + "]]></name>");
-					writer.print("<firstName><![CDATA[" + user.getFirstName() + "]]></firstName>");
-					writer.print("<label><![CDATA[" + user.getFullName() + "]]></label>");
-					writer.print("<email><![CDATA[" + user.getEmail() + "]]></email>");
-					writer.print("<phone><![CDATA[" + user.getTelephone() + "]]></phone>");
-					writer.print("<cell><![CDATA[" + user.getTelephone2() + "]]></cell>");
-					writer.print("<signatureid><![CDATA[" + user.getSignatureId() + "]]></signatureid>");
-					writer.print("<signatureinfo><![CDATA[" + user.getSignatureInfo() + "]]></signatureinfo>");
+					writer.print("<name><![CDATA[" + (user.getName() == null ? "" : user.getName()) + "]]></name>");
+					writer.print("<firstName><![CDATA[" + (user.getFirstName() == null ? "" : user.getFirstName())
+							+ "]]></firstName>");
+					writer.print("<label><![CDATA[" + (user.getFullName() == null ? "" : user.getFullName()) + "]]></label>");
+					writer.print("<email><![CDATA[" + (user.getEmail() == null ? "" : user.getEmail()) + "]]></email>");
+					writer.print("<phone><![CDATA[" + (user.getTelephone() == null ? "" : user.getTelephone()) + "]]></phone>");
+					writer.print("<cell><![CDATA[" + (user.getTelephone2() == null ? "" : user.getTelephone2()) + "]]></cell>");
+					writer.print("<signatureid><![CDATA[" + (user.getSignatureId() == null ? "" : user.getSignatureId()) + "]]></signatureid>");
+					writer.print("<signatureinfo><![CDATA[" + (user.getSignatureInfo() == null ? "" : user.getSignatureInfo()) + "]]></signatureinfo>");
 					writer.print("<usergroup>" + user.getUserGroup().getId() + "</usergroup>");
 					writer.print("</user>");
 				}
@@ -124,15 +125,15 @@ public class UsersDataServlet extends HttpServlet {
 						writer.print("<eenabled>0</eenabled>");
 					else if (user.getEnabled() == 0)
 						writer.print("<eenabled>2</eenabled>");
-					writer.print("<name><![CDATA[" + user.getName() + "]]></name>");
-					writer.print("<firstName><![CDATA[" + user.getFirstName() + "]]></firstName>");
-					writer.print("<label><![CDATA[" + user.getFirstName() + " " + user.getName() + "]]></label>");
-					writer.print("<email><![CDATA[" + user.getEmail() + "]]></email>");
-					writer.print("<phone><![CDATA[" + user.getTelephone() + "]]></phone>");
-					writer.print("<cell><![CDATA[" + user.getTelephone2() + "]]></cell>");
-					writer.print("<signatureid><![CDATA[" + user.getSignatureId() + "]]></signatureid>");
-					writer.print("<signatureinfo><![CDATA[" + user.getSignatureInfo() + "]]></signatureinfo>");
-					writer.print("<usergroup>" + user.getGroups().iterator().next().getId() + "</usergroup>");
+					writer.print("<name><![CDATA[" + (user.getName() == null ? "" : user.getName()) + "]]></name>");
+					writer.print("<firstName><![CDATA[" + (user.getFirstName() == null ? "" : user.getFirstName())
+							+ "]]></firstName>");
+					writer.print("<label><![CDATA[" + (user.getFullName() == null ? "" : user.getFullName()) + "]]></label>");
+					writer.print("<email><![CDATA[" + (user.getEmail() == null ? "" : user.getEmail()) + "]]></email>");
+					writer.print("<phone><![CDATA[" + (user.getTelephone() == null ? "" : user.getTelephone()) + "]]></phone>");
+					writer.print("<cell><![CDATA[" + (user.getTelephone2() == null ? "" : user.getTelephone2()) + "]]></cell>");
+					writer.print("<signatureid><![CDATA[" + (user.getSignatureId() == null ? "" : user.getSignatureId()) + "]]></signatureid>");
+					writer.print("<signatureinfo><![CDATA[" + (user.getSignatureInfo() == null ? "" : user.getSignatureInfo()) + "]]></signatureinfo>");					writer.print("<usergroup>" + user.getGroups().iterator().next().getId() + "</usergroup>");
 					writer.print("</user>");
 				}
 			}

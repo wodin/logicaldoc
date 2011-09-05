@@ -90,7 +90,7 @@ public class GroupsDataServlet extends HttpServlet {
 					writer.print("<group>");
 					writer.print("<id>" + cols[0] + "</id>");
 					writer.print("<name><![CDATA[" + cols[1] + "]]></name>");
-					writer.print("<description><![CDATA[" + cols[2] + "]]></description>");
+					writer.print("<description><![CDATA[" + (cols[2] == null ? "" : cols[2]) + "]]></description>");
 					writer.print("<label><![CDATA[" + I18N.message("group", locale) + ": " + (String) cols[1]
 							+ "]]></label>");
 					writer.print("</group>");
