@@ -84,15 +84,15 @@ public class VersionsDataServlet extends HttpServlet {
 
 				writer.print("<version>");
 				writer.print("<id>" + cols[0] + "</id>");
-				writer.print("<user><![CDATA[" + cols[1] + "]]></user>");
+				writer.print("<user><![CDATA[" + (cols[1] == null ? "" : cols[1]) + "]]></user>");
 				writer.print("<event><![CDATA[" + I18N.message((String) cols[2], locale) + "]]></event>");
 				writer.print("<version>" + cols[3] + "</version>");
 				writer.print("<fileVersion>" + cols[4] + "</fileVersion>");
 				writer.print("<date>" + df.format((Date) cols[5]) + "</date>");
-				writer.print("<comment><![CDATA[" + cols[6] + "]]></comment>");
+				writer.print("<comment><![CDATA[" + (cols[6] == null ? "" : cols[6]) + "]]></comment>");
 				writer.print("<docid>" + cols[7] + "</docid>");
-				writer.print("<title><![CDATA[" + cols[8] + "]]></title>");
-				writer.print("<customid><![CDATA[" + cols[9] + "]]></customid>");
+				writer.print("<title><![CDATA[" + (cols[8] == null ? "" : cols[8]) + "]]></title>");
+				writer.print("<customid><![CDATA[" + (cols[9] == null ? "" : cols[9]) + "]]></customid>");
 				writer.print("<size>" + cols[10] + "</size>");
 				writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon((String) cols[11]))
 						+ "</icon>");

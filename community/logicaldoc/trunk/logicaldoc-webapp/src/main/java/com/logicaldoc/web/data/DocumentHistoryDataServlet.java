@@ -96,16 +96,16 @@ public class DocumentHistoryDataServlet extends HttpServlet {
 				writer.print("<event><![CDATA[" + I18N.message((String) cols[1], locale) + "]]></event>");
 				writer.print("<version>" + cols[2] + "</version>");
 				writer.print("<date>" + df.format((Date) cols[3]) + "</date>");
-				writer.print("<comment><![CDATA[" + cols[4] + "]]></comment>");
-				writer.print("<title><![CDATA[" + cols[5] + "]]></title>");
+				writer.print("<comment><![CDATA[" + (cols[4] == null ? "" : cols[4]) + "]]></comment>");
+				writer.print("<title><![CDATA[" + (cols[5] == null ? "" : cols[5]) + "]]></title>");
 				writer.print("<icon>"
 						+ FilenameUtils.getBaseName(IconSelector.selectIcon(FilenameUtils
 								.getExtension((String) cols[6]))) + "</icon>");
 				writer.print("<new>" + (1 == (Integer) cols[7]) + "</new>");
 				writer.print("<folderId>" + cols[8] + "</folderId>");
 				writer.print("<docId>" + cols[9] + "</docId>");
-				writer.print("<path><![CDATA[" + cols[10] + "]]></path>");
-				writer.print("<sid><![CDATA[" + cols[11] + "]]></sid>");
+				writer.print("<path><![CDATA[" + (cols[10] == null ? "" : cols[10]) + "]]></path>");
+				writer.print("<sid><![CDATA[" + (cols[11] == null ? "" : cols[11]) + "]]></sid>");
 				writer.print("<userid>" + cols[12] + "</userid>");
 				writer.print("</history>");
 			}

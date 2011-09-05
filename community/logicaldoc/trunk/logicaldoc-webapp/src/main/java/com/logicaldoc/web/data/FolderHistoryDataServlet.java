@@ -65,13 +65,13 @@ public class FolderHistoryDataServlet extends HttpServlet {
 				Object[] cols = (Object[]) record;
 
 				writer.print("<history>");
-				writer.print("<user><![CDATA[" + cols[0] + "]]></user>");
+				writer.print("<user><![CDATA[" + (cols[0] == null ? "" : cols[0]) + "]]></user>");
 				writer.print("<event><![CDATA[" + I18N.message((String) cols[1], locale) + "]]></event>");
 				writer.print("<date>" + df.format((Date) cols[2]) + "</date>");
-				writer.print("<comment><![CDATA[" + cols[3] + "]]></comment>");
-				writer.print("<title><![CDATA[" + cols[4] + "]]></title>");
-				writer.print("<path><![CDATA[" + cols[5] + "]]></path>");
-				writer.print("<sid><![CDATA[" + cols[6] + "]]></sid>");
+				writer.print("<comment><![CDATA[" + (cols[3] == null ? "" : cols[3]) + "]]></comment>");
+				writer.print("<title><![CDATA[" + (cols[4] == null ? "" : cols[4]) + "]]></title>");
+				writer.print("<path><![CDATA[" + (cols[5] == null ? "" : cols[5]) + "]]></path>");
+				writer.print("<sid><![CDATA[" + (cols[6] == null ? "" : cols[6]) + "]]></sid>");
 				writer.print("</history>");
 			}
 			writer.write("</list>");

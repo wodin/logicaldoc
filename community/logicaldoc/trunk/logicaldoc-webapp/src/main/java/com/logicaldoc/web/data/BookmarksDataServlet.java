@@ -39,7 +39,7 @@ public class BookmarksDataServlet extends HttpServlet {
 
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
-			
+
 			// Headers required by Internet Explorer
 			response.setHeader("Pragma", "public");
 			response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
@@ -70,12 +70,12 @@ public class BookmarksDataServlet extends HttpServlet {
 				writer.print("<id>" + cols[0] + "</id>");
 				writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon((String) cols[1]))
 						+ "</icon>");
-				writer.print("<name><![CDATA[" + cols[2] + "]]></name>");
-				writer.print("<description><![CDATA[" + cols[3] + "]]></description>");
-				writer.print("<position>" + cols[4] + "</position>");
-				writer.print("<userId>" + cols[5] + "</userId>");
-				writer.print("<docId>" + cols[6] + "</docId>");
-				writer.print("<folderId>" + cols[7] + "</folderId>");
+				writer.print("<name><![CDATA[" + (cols[2] == null ? "" : cols[2]) + "]]></name>");
+				writer.print("<description><![CDATA[" + (cols[3] == null ? "" : cols[3]) + "]]></description>");
+				writer.print("<position>" + (cols[4] == null ? "" : cols[4]) + "</position>");
+				writer.print("<userId>" + (cols[5] == null ? "" : cols[5]) + "</userId>");
+				writer.print("<docId>" + (cols[6] == null ? "" : cols[6]) + "</docId>");
+				writer.print("<folderId>" + (cols[7] == null ? "" : cols[7]) + "</folderId>");
 				writer.print("</bookmark>");
 			}
 			writer.write("</list>");
