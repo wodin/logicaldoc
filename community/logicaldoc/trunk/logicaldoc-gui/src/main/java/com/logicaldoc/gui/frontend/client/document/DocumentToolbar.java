@@ -59,6 +59,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 	protected ToolStripButton addToWorkflow = new ToolStripButton();
 
+	protected ToolStripButton print = new ToolStripButton();
+
 	protected GUIDocument document;
 
 	protected AuditServiceAsync audit = (AuditServiceAsync) GWT.create(AuditService.class);
@@ -388,6 +390,17 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		saveGrid.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				DocumentsPanel.get().saveGrid();
+			}
+		});
+
+		addSeparator();
+		ToolStripButton print = new ToolStripButton(I18N.message("print"));
+		print.setAutoFit(true);
+		addButton(print);
+		print.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				DocumentsPanel.get().printPreview();
 			}
 		});
 	}

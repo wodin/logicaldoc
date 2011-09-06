@@ -20,6 +20,7 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -95,8 +96,7 @@ public class LastChangesPanel extends VLayout {
 		ButtonItem searchButton = new ButtonItem();
 		searchButton.setTitle(I18N.message("search"));
 		searchButton.setAutoFit(true);
-		searchButton.setAutoFit(true);
-		searchButton.setEndRow(false);
+		searchButton.setEndRow(true);
 		searchButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -112,8 +112,21 @@ public class LastChangesPanel extends VLayout {
 				vm.clearValues();
 			}
 		});
+		resetButton.setAutoFit(true);
+		resetButton.setEndRow(false);
+		
+		ButtonItem print = new ButtonItem();
+		print.setTitle(I18N.message("print"));
+		print.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Canvas.printComponents(new Object[] { histories });
+			}
+		});
+		print.setAutoFit(true);
+		print.setEndRow(true);
 
-		form.setItems(user, sessionId, fromDate, tillDate, displayMax, searchButton, resetButton);
+		form.setItems(user, sessionId, fromDate, tillDate, displayMax, searchButton, resetButton, print);
 
 		DynamicForm eventForm = new DynamicForm();
 		eventForm.setValuesManager(vm);

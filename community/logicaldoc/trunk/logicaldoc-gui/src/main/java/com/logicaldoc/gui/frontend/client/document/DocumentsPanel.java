@@ -268,6 +268,12 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		}
 	}
 
+	public void printPreview() {
+		if (listingPanel instanceof DocumentsListPanel) {
+			Canvas.printComponents(new Object[] { ((DocumentsListPanel) listingPanel).getList() });
+		}
+	}
+
 	public ListGrid getList() {
 		return ((DocumentsListPanel) listingPanel).getList();
 	}

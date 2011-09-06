@@ -24,6 +24,9 @@ import com.smartgwt.client.types.GroupStartOpen;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -43,6 +46,7 @@ import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
  * This panel shows a list of duplicates documents in a tabular way.
@@ -204,6 +208,17 @@ public class DuplicatesPanel extends VLayout {
 			}
 		});
 		toolStrip.addFormItem(groupBy);
+		
+		ToolStripButton print = new ToolStripButton(I18N.message("print"));
+		print.setAutoFit(true);
+		print.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				Canvas.printComponents(new Object[] { list });
+			}
+		});
+		toolStrip.addSeparator();
+		toolStrip.addButton(print);
+		
 		toolStrip.addFill();
 
 		// Prepare a panel containing a title and the documents list
