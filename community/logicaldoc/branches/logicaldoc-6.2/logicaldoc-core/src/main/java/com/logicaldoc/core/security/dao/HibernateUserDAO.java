@@ -128,7 +128,6 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 				listener.afterStore(user, transaction, dictionary);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 			result = false;
