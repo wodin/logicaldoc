@@ -100,7 +100,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 			log.debug("Invoke listeners before store");
 			for (UserListener listener : userListenerManager.getListeners()) {
-				listener.beforeStore(user, transaction, dictionary);
+				  listener.beforeStore(user, transaction, dictionary);
 			}
 
 			getHibernateTemplate().saveOrUpdate(user);
@@ -128,7 +128,6 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 				listener.afterStore(user, transaction, dictionary);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 			result = false;
