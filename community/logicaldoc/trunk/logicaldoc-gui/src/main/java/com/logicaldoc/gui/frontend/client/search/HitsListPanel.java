@@ -27,6 +27,7 @@ import com.smartgwt.client.types.ExpansionMode;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.Offline;
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
@@ -405,6 +406,16 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		});
 		toolStrip.addSeparator();
 		toolStrip.addButton(saveGrid);
+
+		ToolStripButton print = new ToolStripButton(I18N.message("print"));
+		print.setAutoFit(true);
+		print.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				Canvas.printComponents(new Object[] { list });
+			}
+		});
+		toolStrip.addSeparator();
+		toolStrip.addButton(print);
 
 		final ToolStripButton toggle = new ToolStripButton();
 		if (SearchMenu.get().getWidth() > 0)
