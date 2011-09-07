@@ -403,6 +403,23 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				DocumentsPanel.get().printPreview();
 			}
 		});
+
+		if (Feature.visible(Feature.EXPORT_CSV)) {
+			addSeparator();
+			ToolStripButton export = new ToolStripButton(I18N.message("export"));
+			export.setAutoFit(true);
+			addButton(export);
+			export.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					DocumentsPanel.get().export();
+				}
+			});
+			if (!Feature.enabled(Feature.EXPORT_CSV)) {
+				export.setDisabled(true);
+				export.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
 	}
 
 	/**

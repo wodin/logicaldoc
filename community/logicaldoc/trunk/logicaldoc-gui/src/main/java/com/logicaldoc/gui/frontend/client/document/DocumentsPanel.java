@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.folder.FolderDetailsPanel;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -271,6 +272,12 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	public void printPreview() {
 		if (listingPanel instanceof DocumentsListPanel) {
 			Canvas.printComponents(new Object[] { ((DocumentsListPanel) listingPanel).getList() });
+		}
+	}
+
+	public void export() {
+		if (listingPanel instanceof DocumentsListPanel) {
+			Util.exportCSV(((DocumentsListPanel) listingPanel).getList());
 		}
 	}
 

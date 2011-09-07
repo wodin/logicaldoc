@@ -417,6 +417,23 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		toolStrip.addSeparator();
 		toolStrip.addButton(print);
 
+		if (Feature.visible(Feature.EXPORT_CSV)) {
+			toolStrip.addSeparator();
+			ToolStripButton export = new ToolStripButton(I18N.message("export"));
+			export.setAutoFit(true);
+			toolStrip.addButton(export);
+			export.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					Util.exportCSV(list);
+				}
+			});
+			if (!Feature.enabled(Feature.EXPORT_CSV)) {
+				export.setDisabled(true);
+				export.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+
 		final ToolStripButton toggle = new ToolStripButton();
 		if (SearchMenu.get().getWidth() > 0)
 			toggle.setTitle(I18N.message("closeseleftpanel"));
