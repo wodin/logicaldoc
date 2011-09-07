@@ -209,7 +209,7 @@ public class DuplicatesPanel extends VLayout {
 			}
 		});
 		toolStrip.addFormItem(groupBy);
-		
+
 		ToolStripButton print = new ToolStripButton(I18N.message("print"));
 		print.setAutoFit(true);
 		print.addClickHandler(new ClickHandler() {
@@ -219,7 +219,7 @@ public class DuplicatesPanel extends VLayout {
 		});
 		toolStrip.addSeparator();
 		toolStrip.addButton(print);
-		
+
 		if (Feature.visible(Feature.EXPORT_CSV)) {
 			toolStrip.addSeparator();
 			ToolStripButton export = new ToolStripButton(I18N.message("export"));
@@ -236,8 +236,7 @@ public class DuplicatesPanel extends VLayout {
 				export.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
-		
-		
+
 		toolStrip.addFill();
 
 		// Prepare a panel containing a title and the documents list

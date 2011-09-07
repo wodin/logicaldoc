@@ -21,6 +21,7 @@ import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
+import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.IButton;
@@ -136,6 +137,12 @@ public class LoginPanel extends VLayout {
 			}
 		});
 
+		//If the case, initialize the credentials from client's cookies
+		if ("true".equals(info.getConfig("gui.savelogin"))) {
+			username.setValue(Offline.get("ldoc-user"));
+			password.setValue(Offline.get("ldoc-password"));
+		}
+
 		if (I18N.getSupportedGuiLanguages(false).size() > 1) {
 			language = ItemFactory.newLanguageSelector("language", true, true);
 			language.setDefaultValue("");
@@ -237,6 +244,12 @@ public class LoginPanel extends VLayout {
 			Frontend.get().showMain();
 		} catch (Throwable e) {
 			SC.warn(e.getMessage());
+		}
+
+		// If the case, save the credentials into client cookies
+		if ("true".equals(Session.get().getInfo().getConfig("gui.savelogin"))) {
+			Offline.put("ldoc-user", (String) username.getValue());
+			Offline.put("ldoc-password", (String) username.getValue());
 		}
 
 		FoldersNavigator.get().selectFolder(Constants.DOCUMENTS_FOLDERID);
