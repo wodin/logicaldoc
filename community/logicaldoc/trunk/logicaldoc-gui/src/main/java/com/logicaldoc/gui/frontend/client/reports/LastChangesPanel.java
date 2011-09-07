@@ -7,12 +7,14 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
@@ -97,6 +99,7 @@ public class LastChangesPanel extends VLayout {
 		searchButton.setTitle(I18N.message("search"));
 		searchButton.setAutoFit(true);
 		searchButton.setEndRow(true);
+		searchButton.setColSpan(2);
 		searchButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -112,9 +115,10 @@ public class LastChangesPanel extends VLayout {
 				vm.clearValues();
 			}
 		});
+		resetButton.setColSpan(2);
 		resetButton.setAutoFit(true);
-		resetButton.setEndRow(false);
-		
+		resetButton.setEndRow(true);
+
 		ButtonItem print = new ButtonItem();
 		print.setTitle(I18N.message("print"));
 		print.addClickHandler(new ClickHandler() {
@@ -124,9 +128,27 @@ public class LastChangesPanel extends VLayout {
 			}
 		});
 		print.setAutoFit(true);
-		print.setEndRow(true);
+		print.setEndRow(false);
 
-		form.setItems(user, sessionId, fromDate, tillDate, displayMax, searchButton, resetButton, print);
+		ButtonItem export = new ButtonItem();
+		export.setTitle(I18N.message("export"));
+		export.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Util.exportCSV(histories);
+			}
+		});
+		if (!Feature.enabled(Feature.EXPORT_CSV)) {
+			export.setDisabled(true);
+			export.setTooltip(I18N.message("featuredisabled"));
+		}
+		export.setAutoFit(true);
+		export.setEndRow(true);
+
+		if (Feature.visible(Feature.EXPORT_CSV))
+			form.setItems(user, sessionId, fromDate, tillDate, displayMax, searchButton, resetButton, print, export);
+		else
+			form.setItems(user, sessionId, fromDate, tillDate, displayMax, searchButton, resetButton, print);
 
 		DynamicForm eventForm = new DynamicForm();
 		eventForm.setValuesManager(vm);

@@ -269,7 +269,7 @@ public class ItemFactory {
 	public static SelectItem newEventsSelector(String name, String title) {
 		SelectItem select = newMultipleSelector(name, title);
 		select.setWidth(300);
-		select.setHeight(150);
+		select.setHeight(200);
 		select.setMultipleAppearance(MultipleAppearance.GRID);
 
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();

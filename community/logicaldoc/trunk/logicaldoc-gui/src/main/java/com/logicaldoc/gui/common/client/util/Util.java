@@ -1,12 +1,23 @@
 package com.logicaldoc.gui.common.client.util;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
+import com.smartgwt.client.types.ListGridFieldType;
+import com.smartgwt.client.widgets.grid.ListGrid;
+import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class Util {
 	public static String[] OFFICE_EXTS = new String[] { ".doc", ".xls", ".ppt", ".docx", ".xlsx", ".pptx" };
@@ -372,5 +383,86 @@ public class Util {
 			return s.substring(0, n - 3) + "...";
 		} else
 			return s;
+	}
+
+	/**
+	 * Exports into the CSV format the content of a ListGrid.
+	 * 
+	 * @param listGrid Grid containing the data
+	 * @return The CSV document as tring
+	 */
+	public static void exportCSV(ListGrid listGrid) {
+		StringBuilder stringBuilder = new StringBuilder(); // csv data in here
+
+		// column names
+		ListGridField[] fields = listGrid.getFields();
+		for (int i = 0; i < fields.length; i++) {
+			ListGridField listGridField = fields[i];
+			if (listGridField.getType().equals(ListGridFieldType.ICON)
+					|| listGridField.getType().equals(ListGridFieldType.IMAGE)
+					|| listGridField.getType().equals(ListGridFieldType.IMAGEFILE)
+					|| listGridField.getType().equals(ListGridFieldType.BINARY))
+				continue;
+
+			stringBuilder.append("\"");
+			stringBuilder.append(listGridField.getTitle());
+			stringBuilder.append("\";");
+		}
+		stringBuilder.deleteCharAt(stringBuilder.length() - 1); // remove last
+																// ";"
+		stringBuilder.append("\n");
+
+		// column data
+		ListGridRecord[] records = listGrid.getRecords();
+
+		DateTimeFormat formatter = DateTimeFormat.getFormat(I18N.message("format_dateshort"));
+		for (int i = 0; i < records.length; i++) {
+			ListGridRecord listGridRecord = records[i];
+			ListGridField[] listGridFields = listGrid.getFields();
+			for (int j = 0; j < listGridFields.length; j++) {
+				ListGridField listGridField = listGridFields[j];
+				if (listGridField.getType().equals(ListGridFieldType.ICON)
+						|| listGridField.getType().equals(ListGridFieldType.IMAGE)
+						|| listGridField.getType().equals(ListGridFieldType.IMAGEFILE)
+						|| listGridField.getType().equals(ListGridFieldType.BINARY))
+					continue;
+
+				stringBuilder.append("\"");
+				if (listGridField.getType().equals(ListGridFieldType.DATE)) {
+					stringBuilder.append(formatter.format(listGridRecord.getAttributeAsDate(listGridField.getName())));
+				} else {
+					stringBuilder.append(listGridRecord.getAttribute(listGridField.getName()));
+				}
+				stringBuilder.append("\";");
+			}
+			stringBuilder.deleteCharAt(stringBuilder.length() - 1); // remove
+																	// last ";"
+			stringBuilder.append("\n");
+		}
+		String content = stringBuilder.toString();
+
+		/*
+		 * Now post the CSV content to the server
+		 */
+		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, Util.contextPath() + "/csv?sid="
+				+ Session.get().getSid());
+		builder.setHeader("Content-type", "application/csv");
+
+		try {
+			builder.sendRequest(content, new RequestCallback() {
+				public void onError(Request request, Throwable exception) {
+					Log.error(exception.getMessage(), null, exception);
+				}
+
+				public void onResponseReceived(Request request, Response response) {
+					/*
+					 * Now we can download the complete file
+					 */
+					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "/csv?sid=" + Session.get().getSid());
+				}
+			});
+		} catch (RequestException e) {
+			GWT.log("error", e);
+		}
 	}
 }

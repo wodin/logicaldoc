@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.DuplicatesDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
@@ -218,6 +219,24 @@ public class DuplicatesPanel extends VLayout {
 		});
 		toolStrip.addSeparator();
 		toolStrip.addButton(print);
+		
+		if (Feature.visible(Feature.EXPORT_CSV)) {
+			toolStrip.addSeparator();
+			ToolStripButton export = new ToolStripButton(I18N.message("export"));
+			export.setAutoFit(true);
+			toolStrip.addButton(export);
+			export.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					Util.exportCSV(list);
+				}
+			});
+			if (!Feature.enabled(Feature.EXPORT_CSV)) {
+				export.setDisabled(true);
+				export.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+		
 		
 		toolStrip.addFill();
 

@@ -109,6 +109,8 @@ public class Feature {
 	
 	public static final int ADVANCED_OCR = 68;
 	
+	public static final int EXPORT_CSV = 69;
+	
 	private static Set<String> features = new HashSet<String>();
 
 	static public void init(GUIInfo info) {

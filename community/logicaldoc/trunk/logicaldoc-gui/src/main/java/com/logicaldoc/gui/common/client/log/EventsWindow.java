@@ -53,7 +53,7 @@ public class EventsWindow extends Window {
 				if (GUIEvent.ERROR.equals(record.getAttribute("severity")))
 					return "color: #EF4A4A";
 				if (GUIEvent.WARNING.equals(record.getAttribute("severity")))
-					return "color: #FFBE0F";
+					return "color: #FF8723";
 				else
 					return "color: #577ED0";
 			}
