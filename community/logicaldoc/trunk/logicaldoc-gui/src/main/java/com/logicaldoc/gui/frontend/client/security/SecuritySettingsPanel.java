@@ -23,6 +23,7 @@ import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
+import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
@@ -77,15 +78,21 @@ public class SecuritySettingsPanel extends VLayout {
 
 		final IntegerItem pwdSize = ItemFactory.newValidateIntegerItem("pwdSize", "passwdsize", null, 4, null);
 		pwdSize.setRequired(true);
-		pwdSize.setDefaultValue(settings.getPwdSize());
+		pwdSize.setValue(settings.getPwdSize());
 
 		final IntegerItem pwdExp = ItemFactory.newValidateIntegerItem("pwdExp", "passwdexpiration", null, 1, null);
 		pwdExp.setHint(I18N.message("days"));
-		pwdExp.setDefaultValue(settings.getPwdExpiration());
+		pwdExp.setValue(settings.getPwdExpiration());
 		pwdExp.setWrapTitle(false);
 		pwdExp.setRequired(true);
-
-		pwdForm.setFields(pwdSize, pwdExp);
+		
+		final RadioGroupItem savelogin = ItemFactory.newBooleanSelector("savelogin", I18N.message("savelogin"));
+		savelogin.setHint(I18N.message("saveloginhint"));
+		savelogin.setValue(settings.isSaveLogin() ? "yes" : "no");
+		savelogin.setWrapTitle(false);
+		savelogin.setRequired(true);
+		
+		pwdForm.setFields(pwdSize, pwdExp, savelogin);
 		password.setPane(pwdForm);
 
 		notifications.setTitle(I18N.message("notifications"));
@@ -107,6 +114,7 @@ public class SecuritySettingsPanel extends VLayout {
 				if (vm.validate()) {
 					SecuritySettingsPanel.this.settings.setPwdExpiration((Integer) values.get("pwdExp"));
 					SecuritySettingsPanel.this.settings.setPwdSize((Integer) values.get("pwdSize"));
+					SecuritySettingsPanel.this.settings.setSaveLogin(values.get("savelogin").equals("yes") ? true : false);
 
 					service.saveSettings(Session.get().getSid(), SecuritySettingsPanel.this.settings,
 							new AsyncCallback<Void>() {

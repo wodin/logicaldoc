@@ -553,6 +553,9 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 			securitySettings.setPwdExpiration(Integer.parseInt(pbean.getProperty("password.ttl")));
 			securitySettings.setPwdSize(Integer.parseInt(pbean.getProperty("password.size")));
+			if (StringUtils.isNotEmpty(pbean.getProperty("gui.savelogin")))
+				securitySettings.setSaveLogin("true".equals(pbean.getProperty("gui.savelogin")));
+
 			StringTokenizer st = new StringTokenizer(pbean.getProperty("audit.user"), ",", false);
 			while (st.hasMoreTokens()) {
 				String username = st.nextToken();
@@ -578,6 +581,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 			conf.setProperty("password.ttl", Integer.toString(settings.getPwdExpiration()));
 			conf.setProperty("password.size", Integer.toString(settings.getPwdSize()));
+			conf.setProperty("gui.savelogin", Boolean.toString(settings.isSaveLogin()));
 
 			String users = "";
 			for (GUIUser user : settings.getNotifiedUsers()) {

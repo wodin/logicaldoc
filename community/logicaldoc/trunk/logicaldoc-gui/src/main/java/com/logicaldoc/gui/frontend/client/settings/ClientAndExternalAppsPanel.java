@@ -49,7 +49,7 @@ public class ClientAndExternalAppsPanel extends VLayout {
 
 	private GUIParameter convert = null;
 
-	private GUIParameter p2swf = null;
+	private GUIParameter pdf2swf = null;
 
 	private GUIParameter ghost = null;
 
@@ -68,7 +68,7 @@ public class ClientAndExternalAppsPanel extends VLayout {
 			else if (parameter.getName().equals("command.convert"))
 				convert = parameter;
 			else if (parameter.getName().equals("command.pdf2swf"))
-				p2swf = parameter;
+				pdf2swf = parameter;
 			else if (parameter.getName().equals("command.gs"))
 				ghost = parameter;
 			else if (parameter.getName().equals("command.tesseract"))
@@ -148,7 +148,7 @@ public class ClientAndExternalAppsPanel extends VLayout {
 		extAppForm.setPadding(5);
 
 		TextItem convertCommand = ItemFactory.newTextItem("convertCommand", "Convert", convert.getValue());
-		TextItem p2swtCommand = ItemFactory.newTextItem("p2swtCommand", "P2Swf", p2swf.getValue());
+		TextItem p2swtCommand = ItemFactory.newTextItem("pdf2swfCommand", "Pdf2Swf", pdf2swf.getValue());
 		TextItem ghostCommand = ItemFactory.newTextItem("ghostCommand", "Ghostscript", ghost.getValue());
 		TextItem tesseractCommand = ItemFactory.newTextItem("tesseractCommand", "Tesseract", tesseract.getValue());
 		TextItem openOffice = ItemFactory.newTextItem("openOffice", "OpenOffice dist", openofficePath.getValue());
@@ -186,7 +186,7 @@ public class ClientAndExternalAppsPanel extends VLayout {
 					ClientAndExternalAppsPanel.this.wdCache.setValue(values.get("wdCache").equals("yes") ? "true"
 							: "false");
 					ClientAndExternalAppsPanel.this.convert.setValue(values.get("convertCommand").toString());
-					ClientAndExternalAppsPanel.this.p2swf.setValue(values.get("p2swtCommand").toString());
+					ClientAndExternalAppsPanel.this.pdf2swf.setValue(values.get("pdf2swfCommand").toString());
 					ClientAndExternalAppsPanel.this.ghost.setValue(values.get("ghostCommand").toString());
 					ClientAndExternalAppsPanel.this.tesseract.setValue(values.get("tesseractCommand").toString());
 					ClientAndExternalAppsPanel.this.openofficePath.setValue(values.get("openOffice").toString());
@@ -196,7 +196,7 @@ public class ClientAndExternalAppsPanel extends VLayout {
 					params[1] = ClientAndExternalAppsPanel.this.wdSettings;
 					params[2] = ClientAndExternalAppsPanel.this.wdCache;
 					params[3] = ClientAndExternalAppsPanel.this.convert;
-					params[4] = ClientAndExternalAppsPanel.this.p2swf;
+					params[4] = ClientAndExternalAppsPanel.this.pdf2swf;
 					params[5] = ClientAndExternalAppsPanel.this.ghost;
 					params[6] = ClientAndExternalAppsPanel.this.tesseract;
 					params[7] = ClientAndExternalAppsPanel.this.openofficePath;

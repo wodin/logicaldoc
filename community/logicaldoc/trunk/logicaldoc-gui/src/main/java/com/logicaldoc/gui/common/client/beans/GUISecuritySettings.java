@@ -16,6 +16,8 @@ public class GUISecuritySettings implements Serializable {
 
 	private int pwdExpiration;
 
+	private boolean saveLogin = false;
+
 	private GUIUser[] notifiedUsers = new GUIUser[0];
 
 	public GUIUser[] getNotifiedUsers() {
@@ -72,5 +74,13 @@ public class GUISecuritySettings implements Serializable {
 			}
 		}
 		notifiedUsers = tmp;
+	}
+
+	public boolean isSaveLogin() {
+		return saveLogin;
+	}
+
+	public void setSaveLogin(boolean saveLogin) {
+		this.saveLogin = saveLogin;
 	}
 }
