@@ -49,6 +49,8 @@ public class SecurityManagerImpl implements SecurityManager {
 	 *      com.logicaldoc.core.security.Group)
 	 */
 	public void assignUsersToGroup(Collection<User> users, Group group) {
+		groupDAO.initialize(group);
+		
 		for (Iterator<User> iter = users.iterator(); iter.hasNext();) {
 			User user = iter.next();
 			if (!group.getUsers().contains(user)) {
@@ -90,6 +92,7 @@ public class SecurityManagerImpl implements SecurityManager {
 	 *      com.logicaldoc.core.security.Group)
 	 */
 	public void removeUsersFromGroup(Collection<User> users, Group group) {
+		groupDAO.initialize(group);
 		Set<User> oldUsers = group.getUsers();
 		for (User user : users) {
 			if (oldUsers.contains(user) && !group.getName().equals(user.getUserGroupName())) {

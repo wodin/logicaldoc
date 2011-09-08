@@ -435,6 +435,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			manager.assignUserToGroups(usr, ids);
 
 			Group adminGroup = groupDao.findByName("admin");
+			groupDao.initialize(adminGroup);
+			
 			// The admin user must always member of admin group
 			if ("admin".equals(user.getUserName()) && !user.isMemberOf("admin")) {
 				manager.assignUserToGroup(usr, adminGroup);

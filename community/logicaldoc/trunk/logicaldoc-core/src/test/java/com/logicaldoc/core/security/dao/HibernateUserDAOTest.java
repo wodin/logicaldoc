@@ -66,6 +66,7 @@ public class HibernateUserDAOTest extends AbstractCoreTCase {
 		Assert.assertNull(groupDao.findByName(name));
 
 		Group group = groupDao.findByName("guest");
+		groupDao.initialize(group);
 		Assert.assertFalse(group.getUsers().contains(testUser));
 	}
 
