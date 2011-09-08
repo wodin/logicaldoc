@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.security.Group;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.util.sql.SqlUtil;
 
 /**
@@ -193,5 +194,17 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 	public int count() {
 		String query = "select count(*) from ld_group where ld_deleted=0";
 		return queryForInt(query);
+	}
+	
+	@Override
+	public void initialize(Group group) {
+		getHibernateTemplate().refresh(group);
+
+		for (String attribute : group.getAttributes().keySet()) {
+			attribute.getBytes();
+		}
+		for (User usr : group.getUsers()) {
+			usr.getId();
+		}
 	}
 }

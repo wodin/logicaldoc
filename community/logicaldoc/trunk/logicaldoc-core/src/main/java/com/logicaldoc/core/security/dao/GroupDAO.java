@@ -17,14 +17,15 @@ public interface GroupDAO extends PersistentObjectDAO<Group> {
 	public boolean insert(Group group, long parentGroupId);
 
 	/**
-	 * This method replicates all ACLs of the parent group to another group.<p>
+	 * This method replicates all ACLs of the parent group to another group.
+	 * <p>
 	 * <b>Attention:</b> The group(groupId) ACLs will be discarded.
-	 *  
+	 * 
 	 * @param groupId The group to be altered.
 	 * @param parentGroupId The group whose ACLs will be inherited.
 	 */
-	public void inheritACLs(long groupId, long parentGroupId); 
-	
+	public void inheritACLs(long groupId, long parentGroupId);
+
 	/**
 	 * Finds a group by name.
 	 * 
@@ -45,9 +46,14 @@ public interface GroupDAO extends PersistentObjectDAO<Group> {
 	 * @return Collection of selected groups.
 	 */
 	public Collection<Group> findByLikeName(String name);
-	
+
 	/**
 	 * Counts the total number of groups
 	 */
 	public int count();
+
+	/**
+	 * Initialize the group collections.
+	 */
+	public void initialize(Group group);
 }

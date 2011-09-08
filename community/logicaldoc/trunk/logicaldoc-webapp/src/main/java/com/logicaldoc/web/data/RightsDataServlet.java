@@ -95,6 +95,7 @@ public class RightsDataServlet extends HttpServlet {
 		 * Iterate over records composing the response XML document
 		 */
 		for (Group group : groupDao.findAll()) {
+			groupDao.initialize(group);
 			if (group.getType() == Group.TYPE_DEFAULT
 					|| ((group.getType() != Group.TYPE_DEFAULT) && (group.getUsers().isEmpty() || group.getUsers()
 							.iterator().next().getType() == User.TYPE_DEFAULT))) {
@@ -144,6 +145,7 @@ public class RightsDataServlet extends HttpServlet {
 		 * Iterate over records composing the response XML document
 		 */
 		for (Group group : groupDao.findAll()) {
+			groupDao.initialize(group);
 			if (group.getType() == Group.TYPE_DEFAULT
 					|| ((group.getType() != Group.TYPE_DEFAULT) && (group.getUsers().isEmpty() || group.getUsers()
 							.iterator().next().getType() == User.TYPE_DEFAULT))) {
