@@ -13,6 +13,8 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
+import com.logicaldoc.gui.common.client.util.RequestInfo;
+import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
@@ -176,7 +178,18 @@ public class FoldersNavigator extends TreeGrid {
 			@Override
 			public void onDataArrived(DataArrivedEvent event) {
 				if (isFirstTime()) {
-					getTree().openFolder(getTree().findById("" + Constants.DOCUMENTS_FOLDERID));
+					/*
+					 * Redirect the user to the correct folder and/or document
+					 */
+					RequestInfo loc = WindowUtils.getRequestInfo();
+					if (loc.getParameter("folderId") != null) {
+						DocumentsPanel.get().openInFolder(Long.parseLong(loc.getParameter("folderId")), null);
+					} else if (loc.getParameter("docId") != null) {
+						DocumentsPanel.get().openInFolder(Long.parseLong(loc.getParameter("docId")));
+					} else {
+						getTree().openFolder(getTree().findById("" + Constants.DOCUMENTS_FOLDERID));
+					}
+
 					FoldersNavigator.this.firstTime = false;
 				}
 			}

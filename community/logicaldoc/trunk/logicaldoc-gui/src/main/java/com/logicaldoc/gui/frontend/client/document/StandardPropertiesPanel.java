@@ -22,12 +22,12 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
+import com.smartgwt.client.widgets.form.fields.LinkItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -74,9 +74,15 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		container.setMembersMargin(5);
 		addMember(container);
 
-		path = new Label(I18N.message("path") + ": " + document.getPathExtended());
-		path.setWidth100();
-		path.setHeight(15);
+		DynamicForm path = new DynamicForm();
+
+		LinkItem pathItem = ItemFactory.newLinkItem("path", document.getPathExtended());
+		pathItem.setTitle(I18N.message("path"));
+		pathItem.setValue(Util.contextPath() + "?docId=" + document.getId());
+		pathItem.addChangedHandler(changedHandler);
+		pathItem.setWidth(400);
+
+		path.setItems(pathItem);
 
 		formsContainer.setWidth100();
 		formsContainer.setMembersMargin(10);

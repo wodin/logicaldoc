@@ -5,9 +5,11 @@ import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.form.fields.LinkItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -63,11 +65,11 @@ public class PropertiesPanel extends FolderDetailTab {
 
 		StaticTextItem creator = ItemFactory.newStaticTextItem("creator", "creator", folder.getCreator());
 
-		StaticTextItem pathItem = ItemFactory.newStaticTextItem("path", "path", folder.getPathExtended());
+		LinkItem pathItem = ItemFactory.newLinkItem("path", folder.getPathExtended());
 		pathItem.setTitle(I18N.message("path"));
-		pathItem.setValue(folder.getPathExtended());
+		pathItem.setValue(Util.contextPath() + "?folderId=" + folder.getId());
 		pathItem.addChangedHandler(changedHandler);
-		pathItem.setWidth(300);
+		pathItem.setWidth(400);
 
 		StaticTextItem documents = ItemFactory.newStaticTextItem("documents", "documents",
 				"" + folder.getDocumentCount());
