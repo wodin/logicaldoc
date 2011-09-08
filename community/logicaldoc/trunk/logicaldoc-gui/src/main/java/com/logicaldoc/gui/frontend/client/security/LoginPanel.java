@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
@@ -13,7 +12,6 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.MessageLabel;
 import com.logicaldoc.gui.frontend.client.Frontend;
-import com.logicaldoc.gui.frontend.client.folder.FoldersNavigator;
 import com.logicaldoc.gui.frontend.client.personal.ChangePassword;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
@@ -137,7 +135,7 @@ public class LoginPanel extends VLayout {
 			}
 		});
 
-		//If the case, initialize the credentials from client's cookies
+		// If the case, initialize the credentials from client's cookies
 		if ("true".equals(info.getConfig("gui.savelogin"))) {
 			username.setValue(Offline.get("ldoc-user"));
 			password.setValue(Offline.get("ldoc-password"));
@@ -251,8 +249,6 @@ public class LoginPanel extends VLayout {
 			Offline.put("ldoc-user", (String) username.getValue());
 			Offline.put("ldoc-password", (String) username.getValue());
 		}
-
-		FoldersNavigator.get().selectFolder(Constants.DOCUMENTS_FOLDERID);
 
 		GUIUser user = session.getUser();
 		if (user.getQuotaCount() >= user.getQuota() && user.getQuota() >= 0)

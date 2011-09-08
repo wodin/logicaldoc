@@ -110,7 +110,7 @@ public class Frontend implements EntryPoint {
 
 				Feature.init(info);
 				Session.get().setInfo(info);
-
+				
 				loginPanel = new LoginPanel(info);
 				RootPanel.get().add(loginPanel);
 
