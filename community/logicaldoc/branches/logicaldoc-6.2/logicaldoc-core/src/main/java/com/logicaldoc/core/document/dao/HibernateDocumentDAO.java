@@ -760,7 +760,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@Override
 	public boolean deleteOrphaned(long deleteUserId) {
 		try {
-			String dbms = config.getProperty("jdbc.dbms").toLowerCase();
+			String dbms = "mysql";
+
+			if (config.getProperty("jdbc.dbms") != null)
+				dbms = config.getProperty("jdbc.dbms").toLowerCase();
 
 			String concat = "CONCAT(ld_id,CONCAT('.',ld_customid))";
 			if (dbms.contains("postgre"))
