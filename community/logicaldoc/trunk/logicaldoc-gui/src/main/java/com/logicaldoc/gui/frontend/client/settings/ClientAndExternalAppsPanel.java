@@ -219,5 +219,10 @@ public class ClientAndExternalAppsPanel extends VLayout {
 
 		addMember(tabs);
 		addMember(save);
+
+		if (Session.get().isDemo()) {
+			// In demo mode you cannot alter the client configurationss
+			save.setDisabled(true);
+		}
 	}
 }
