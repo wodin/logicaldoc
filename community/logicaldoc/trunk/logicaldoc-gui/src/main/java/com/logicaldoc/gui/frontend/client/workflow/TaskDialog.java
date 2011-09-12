@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -120,6 +121,12 @@ public class TaskDialog extends Window {
 		remindTimeItem.setValue(this.task.getReminderNumber());
 		SelectItem remindTime = ItemFactory.newTimeSelector("remindTime", "");
 		remindTime.setValue(this.task.getReminderUnit());
+		if (Session.get().isDemo()) {
+			// In demo mode disable the remind setting because of this may send
+			// massive emails
+			remindTimeItem.setDisabled(true);
+			remindTime.setDisabled(true);
+		}
 		escalationForm.setFields(duedateTimeItem, duedateTime, remindTimeItem, remindTime);
 		addItem(escalationForm);
 
