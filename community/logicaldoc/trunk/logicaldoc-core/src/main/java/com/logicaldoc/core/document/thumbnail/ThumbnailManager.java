@@ -43,10 +43,10 @@ public class ThumbnailManager {
 	 * @throws IOException
 	 */
 	public void createTumbnail(Document document, String fileVersion) throws IOException {
-		ThumbnailBuilder builder = getBuilders().get(document.getFileExtension());
+		ThumbnailBuilder builder = getBuilders().get(document.getFileExtension().toLowerCase());
 
 		if (builder == null) {
-			log.warn("No registered thumbnail for extension " + document.getFileExtension());
+			log.warn("No registered thumbnail for extension " + document.getFileExtension().toLowerCase());
 			try {
 				String resource = storer.getResourceName(document, null, null);
 				MagicMatch match = Magic.getMagicMatch(storer.getBytes(document.getId(), resource), true);
@@ -69,7 +69,7 @@ public class ThumbnailManager {
 			log.error(t.getMessage());
 		}
 
-		float quality = 1;
+		int quality = 100;
 		try {
 			ContextProperties conf = new ContextProperties();
 			int buf = Integer.parseInt(conf.getProperty("gui.thumbnail.quality"));
@@ -77,7 +77,7 @@ public class ThumbnailManager {
 				buf = 1;
 			if (buf > 100)
 				buf = 100;
-			quality = (float) buf / (float) 100;
+			quality = buf;
 		} catch (Throwable t) {
 			log.error(t.getMessage());
 		}
