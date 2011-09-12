@@ -3,8 +3,10 @@ package com.logicaldoc.core.searchengine;
 import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.LocaleUtils;
 import org.apache.commons.lang.StringUtils;
@@ -148,7 +150,7 @@ public class FulltextSearch extends Search {
 		 * only.
 		 */
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		List<Long> accessibleIds = new ArrayList<Long>();
+		Collection<Long> accessibleIds = new TreeSet<Long>();
 		if (!searchInSingleFolder) {
 			log.info("DB search");
 			if (opt.getFolderId() == null)

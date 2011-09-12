@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -376,7 +377,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 	public WSDocument[] getDocuments(String sid, Long[] docIds) throws Exception {
 		User user = validateSession(sid);
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		List<Long> folderIds = fdao.findFolderIdByUserId(user.getId());
+		Collection<Long> folderIds = fdao.findFolderIdByUserId(user.getId());
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		List<Document> docs = docDao.findByIds(docIds, null);
