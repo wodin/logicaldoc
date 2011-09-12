@@ -385,7 +385,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				/*
 				 * Search for all accessible folders
 				 */
-				List<Long> precoll = folderDAO.findFolderIdByUserId(userId);
+				Collection<Long> precoll = folderDAO.findFolderIdByUserId(userId);
 
 				StringBuffer buf = new StringBuffer();
 				boolean first = true;
