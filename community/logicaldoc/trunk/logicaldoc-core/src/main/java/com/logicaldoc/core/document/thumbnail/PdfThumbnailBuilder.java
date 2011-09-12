@@ -25,12 +25,12 @@ public class PdfThumbnailBuilder extends ImageThumbnailBuilder {
 
 	@Override
 	public synchronized void build(File src, String srcFileName, int size, File dest, int scaleAlgorithm,
-			float compressionQuality) throws IOException {
+			int compression) throws IOException {
 
 		File tmp = File.createTempFile("rendertmb", "thumb.jpg");
 		try {
 			renderPage(src, tmp, 1);
-			super.build(tmp, srcFileName, size, dest, scaleAlgorithm, compressionQuality);
+			super.build(tmp, srcFileName, size, dest, scaleAlgorithm, compression);
 		} catch (Throwable e) {
 			throw new IOException("Thumbnail building " + e.getMessage(), e);
 		} finally {
