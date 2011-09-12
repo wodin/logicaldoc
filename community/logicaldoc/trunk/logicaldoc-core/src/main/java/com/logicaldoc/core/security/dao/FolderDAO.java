@@ -1,5 +1,6 @@
 package com.logicaldoc.core.security.dao;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -50,7 +51,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * @param permission The permission to check
 	 * @return
 	 */
-	public List<Long> findFolderIdByUserIdAndPermission(long userId, Permission permission);
+	public Collection<Long> findFolderIdByUserIdAndPermission(long userId, Permission permission);
 
 	/**
 	 * Finds direct children of a folder.
@@ -123,7 +124,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * @param userId ID of the user.
 	 * @return List of selected folder ID's.
 	 */
-	public List<Long> findFolderIdByUserId(long userId);
+	public Collection<Long> findFolderIdByUserId(long userId);
 
 	/**
 	 * This method selects only the folder ID from the folders for which a user
