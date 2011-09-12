@@ -43,7 +43,7 @@ public class ThumbnailManager {
 	 * @throws IOException
 	 */
 	public void createTumbnail(Document document, String fileVersion) throws IOException {
-		ThumbnailBuilder builder = getBuilders().get(document.getFileExtension());
+		ThumbnailBuilder builder = getBuilders().get(document.getFileExtension().toLowerCase());
 
 		if (builder == null) {
 			log.warn("No registered thumbnail for extension " + document.getFileExtension());

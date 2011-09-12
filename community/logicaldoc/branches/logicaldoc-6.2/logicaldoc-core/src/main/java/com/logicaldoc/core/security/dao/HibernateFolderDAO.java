@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -374,7 +375,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public List<Long> findFolderIdByUserId(long userId) {
+	public Collection<Long> findFolderIdByUserId(long userId) {
 		return findFolderIdByUserIdAndPermission(userId, Permission.READ);
 	}
 
@@ -731,8 +732,12 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Long> findFolderIdByUserIdAndPermission(long userId, Permission permission) {
-		List<Long> ids = new ArrayList<Long>();
+	public Collection<Long> findFolderIdByUserIdAndPermission(long userId, Permission permission) {
+		/*
+		 * Important: use an HashSet because of extremely quick in existence
+		 * checks.
+		 */
+		Set<Long> ids = new HashSet<Long>();
 		try {
 			User user = userDAO.findById(userId);
 			if (user == null)
@@ -766,7 +771,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				}
 				query1.append(")");
 
-				ids = (List<Long>) queryForList(query1.toString(), Long.class);
+				ids.addAll((List<Long>) queryForList(query1.toString(), Long.class));
 
 				/*
 				 * Now search for those folderes that references the previously
@@ -780,7 +785,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 					if (!ids.contains(folderId))
 						ids.add(folderId);
 				}
-
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -967,7 +971,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		List<Folder> deletableFolders = new ArrayList<Folder>();
 		List<Folder> notDeletableFolders = new ArrayList<Folder>();
 
-		List<Long> deletableIds = findFolderIdByUserIdAndPermission(transaction.getUserId(), Permission.DELETE);
+		Collection<Long> deletableIds = findFolderIdByUserIdAndPermission(transaction.getUserId(), Permission.DELETE);
 
 		if (deletableIds.contains(folder.getId())) {
 			deletableFolders.add(folder);
