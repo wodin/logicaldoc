@@ -1,6 +1,5 @@
 package com.logicaldoc.core.document.thumbnail;
 
-import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -82,14 +81,6 @@ public class ThumbnailManager {
 			log.error(t.getMessage());
 		}
 
-		int scaleAlgorithm = Image.SCALE_SMOOTH;
-		try {
-			ContextProperties conf = new ContextProperties();
-			scaleAlgorithm = Integer.parseInt(conf.getProperty("gui.thumbnail.scale"));
-		} catch (Throwable t) {
-			log.error(t.getMessage());
-		}
-
 		// Prepare I/O files
 		File src = File.createTempFile("scr", "." + FilenameUtils.getExtension(document.getFileName()));
 		File dest = File.createTempFile("dest", "thumb.jpg");
@@ -102,7 +93,7 @@ public class ThumbnailManager {
 			storer.writeTo(document.getId(), resource, src);
 
 			// Perform the elaboration
-			builder.build(src, document.getFileName(), size, dest, scaleAlgorithm, quality);
+			builder.build(src, document.getFileName(), size, dest, quality);
 
 			// Put the resource
 			resource = storer.getResourceName(document.getId(), fver, "thumb.jpg");

@@ -19,10 +19,8 @@ public interface ThumbnailBuilder {
 	 * @param srcFileName The original file name
 	 * @param size The thumbnail size
 	 * @param dest The destination thumbnail file
-	 * @param scaleAlgorithm Algorithm for the scaling(one of Image.SCALE_x)
 	 * @param quality Compression quality(0..100, 100 is maximum quality)
 	 * @throws IOException
 	 */
-	public void build(File src, String srcFileName, int size, File dest, int scaleAlgorithm, int quality)
-			throws IOException;
+	public void build(File src, String srcFileName, int size, File dest, int quality) throws IOException;
 }

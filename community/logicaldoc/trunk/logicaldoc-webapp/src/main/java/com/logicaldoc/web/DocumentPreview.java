@@ -1,12 +1,10 @@
 package com.logicaldoc.web;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 import javax.servlet.RequestDispatcher;
@@ -159,13 +157,13 @@ public class DocumentPreview extends HttpServlet {
 				if (SWF_DIRECT_CONVERSION_EXTS.contains(docExtension)) {
 					// Perform a direct conversion using the document's file
 					is = storer.getStream(doc.getId(), storer.getResourceName(doc, fileVersion, null));
-					document2swf(tmp, docExtension, is);
+					document2swf(is, docExtension, tmp);
 				} else {
 					// Retrieve the previously computed thumbnail
 					is = storer.getStream(doc.getId(), thumbResource);
 
 					// Convert the thumbnail to SWF
-					document2swf(tmp, "jpg", is);
+					document2swf(is, "jpg", tmp);
 				}
 
 				storer.store(tmp, doc.getId(), resource);
@@ -228,32 +226,7 @@ public class DocumentPreview extends HttpServlet {
 	 * Convert a generic document(image or PDF) to SWF (for document preview
 	 * feature).
 	 */
-	protected void document2swf(File swfCache, String extension, InputStream docInput) throws IOException {
-		System.out.println("***document2swf " + extension);
-
-		if ("pdf".equals(extension.toLowerCase())) {
-			File tmpPdf = File.createTempFile("preview", ".pdf");
-			FileOutputStream fos = null;
-			try {
-				fos = new FileOutputStream(tmpPdf);
-				IOUtils.copy(docInput, fos);
-				fos.flush();
-			} catch (Throwable e) {
-				throw new IOException("Error in IMG to PDF conversion", e);
-			} finally {
-				IOUtils.closeQuietly(fos);
-				FileUtils.deleteQuietly(tmpPdf);
-
-			}
-			pdf2swf(tmpPdf, swfCache);
-		} else
-			img2swf(docInput, extension, swfCache);
-	}
-
-	/**
-	 * Convert an image to SWF (for document preview feature).
-	 */
-	protected void img2swf(InputStream is, String extension, File output) throws IOException {
+	protected void document2swf(InputStream is, String extension, File swf) throws IOException {
 		File tmp = File.createTempFile("preview", "." + extension.toLowerCase());
 		FileOutputStream fos = null;
 
@@ -264,7 +237,9 @@ public class DocumentPreview extends HttpServlet {
 			fos.close();
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			String command = conf.getProperty(SWFTOOLSPATH);
-			if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg"))
+			if (extension.equalsIgnoreCase("pdf"))
+				command += File.separatorChar + "pdf2swf";
+			else if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg"))
 				command += File.separatorChar + "jpeg2swf";
 			else if (extension.equalsIgnoreCase("png"))
 				command += File.separatorChar + "png2swf";
@@ -272,7 +247,7 @@ public class DocumentPreview extends HttpServlet {
 				command += File.separatorChar + "gif2swf";
 			else if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff")
 					|| extension.equalsIgnoreCase("bmp")) {
-				// In this case we have to convert to temporary jpeg first
+				// In this case we have to convert to temporary jpg first
 				File jpegTmp = File.createTempFile("preview", ".jpg");
 				String jpegCommand = "\"" + new File(conf.getProperty(CONVERT)).getPath() + "\" \"" + tmp.getPath()
 						+ "\" \"" + jpegTmp.getPath() + "\"";
@@ -283,60 +258,20 @@ public class DocumentPreview extends HttpServlet {
 				command += File.separatorChar + "jpeg2swf";
 			}
 
-			command = "\"" + new File(command).getPath() + "\" ";
-			command += "-T 9 \"" + tmp.getPath() + "\" -o \"" + output.getPath() + "\"";
+			command = "\"" + new File(command).getPath() + "\" -T 9 ";
+
+			if (extension.equalsIgnoreCase("pdf"))
+				command += "-f -t -G -s storeallcharacters";
+
+			command += " \"" + tmp.getPath() + "\" -o \"" + swf.getPath() + "\"";
 
 			Exec.exec(command, null, null, 10);
 		} catch (Throwable e) {
-			output.delete();
-			log.error("Error in IMG to SWF conversion", e);
+			FileUtils.deleteQuietly(swf);
+			log.error("Error in document to SWF conversion", e);
 		} finally {
 			IOUtils.closeQuietly(fos);
 			FileUtils.deleteQuietly(tmp);
 		}
-	}
-
-	/**
-	 * Convert a PDF to SWF (for document preview feature).
-	 */
-	protected void pdf2swf(File input, File output) throws IOException {
-		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		String[] cmd = composeCmd(conf.getProperty(SWFTOOLSPATH) + File.separatorChar + "pdf2swf", "pdf", input, output);
-		BufferedReader stdout = null;
-		Process process = null;
-		try {
-			ProcessBuilder pb = new ProcessBuilder(cmd);
-			process = pb.start();
-			stdout = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-			while (stdout.readLine() != null) {
-				// Do nothing
-			}
-
-			process.waitFor();
-		} catch (Throwable e) {
-			output.delete();
-			log.error("Error in PDF to SWF conversion", e);
-		} finally {
-			if (process != null)
-				process.destroy();
-			IOUtils.closeQuietly(stdout);
-		}
-	}
-
-	/**
-	 * Composes the correct command to be executed.
-	 */
-	protected String[] composeCmd(String command, String extension, File input, File output) {
-		String pdf2swfCmd[] = { command, "-f", "-T 9", "-t", "-G", "-s storeallcharacters", input.getPath(), "-o",
-				output.getPath() };
-		String img2swfCmd[] = { command, "-T 9", input.getPath(), "-o", output.getPath() };
-		String convertCmd[] = { command, input.getPath(), output.getPath() };
-		if (command.toLowerCase().endsWith("convert") || command.toLowerCase().endsWith("convert.exe"))
-			return convertCmd;
-		else if (command.toLowerCase().endsWith("pdf2swf") || command.toLowerCase().endsWith("pdf2swf.exe"))
-			return pdf2swfCmd;
-		else
-			return img2swfCmd;
 	}
 }
