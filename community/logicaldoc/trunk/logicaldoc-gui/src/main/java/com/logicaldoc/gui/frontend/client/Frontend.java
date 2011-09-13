@@ -110,7 +110,7 @@ public class Frontend implements EntryPoint {
 
 				Feature.init(info);
 				Session.get().setInfo(info);
-				
+
 				loginPanel = new LoginPanel(info);
 				RootPanel.get().add(loginPanel);
 
@@ -128,7 +128,7 @@ public class Frontend implements EntryPoint {
 	}
 
 	public void showMain() {
-		if (Session.get().getIncomingMessage() != null && Feature.enabled(Feature.PRODUCT_NEWS)) {
+		if (Session.get().getIncomingMessage() != null) {
 			mainPanel.getIncomingMessage().setMessage(Session.get().getIncomingMessage());
 			mainPanel.getIncomingMessage().setClickHandler(new ClickHandler() {
 

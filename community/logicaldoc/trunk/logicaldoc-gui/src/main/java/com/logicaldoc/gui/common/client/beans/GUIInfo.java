@@ -177,6 +177,18 @@ public class GUIInfo implements Serializable {
 		return features;
 	}
 
+	public boolean isEnabled(String feature) {
+		if (features == null || features.length == 0)
+			return false;
+		else {
+			for (String f : features) {
+				if (f.equals(feature))
+					return true;
+			}
+		}
+		return false;
+	}
+
 	public void setFeatures(String[] features) {
 		this.features = features;
 	}

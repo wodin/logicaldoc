@@ -187,7 +187,7 @@ public class FoldersNavigator extends TreeGrid {
 					} else if (loc.getParameter("docId") != null) {
 						DocumentsPanel.get().openInFolder(Long.parseLong(loc.getParameter("docId")));
 					} else {
-						DocumentsPanel.get().openInFolder(Constants.DOCUMENTS_FOLDERID);
+						DocumentsPanel.get().openInFolder(Constants.DOCUMENTS_FOLDERID, null);
 					}
 
 					FoldersNavigator.this.firstTime = false;
