@@ -18,8 +18,7 @@ public class ImageThumbnailBuilder implements ThumbnailBuilder {
 	protected static String CONVERT = "command.convert";
 
 	@Override
-	public synchronized void build(File src, String srcFileName, int size, File dest, int scaleAlgorithm, int quality)
-			throws IOException {
+	public synchronized void build(File src, String srcFileName, int size, File dest, int quality) throws IOException {
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			String commandLine = conf.getProperty(CONVERT) + " -compress JPEG -quality " + Integer.toString(quality)
