@@ -21,9 +21,8 @@ public class ImageThumbnailBuilder implements ThumbnailBuilder {
 	public synchronized void build(File src, String srcFileName, int size, File dest, int scaleAlgorithm, int quality)
 			throws IOException {
 		try {
-			//TODO how to decide the compression algorithm?
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-			String commandLine = conf.getProperty(CONVERT) + " -compress None -quality " + Integer.toString(quality)
+			String commandLine = conf.getProperty(CONVERT) + " -compress JPEG -quality " + Integer.toString(quality)
 					+ " -resize " + Integer.toString(size) + " " + src.getPath() + " " + dest.getPath();
 			Exec.exec(commandLine, null, null, 10);
 		} catch (Throwable e) {
