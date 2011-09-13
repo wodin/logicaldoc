@@ -2,9 +2,11 @@ package com.logicaldoc.web.service;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -139,13 +142,28 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				List<Long> menues = mdao.findMenuIdByUserId(user.getId());
 				guiUser.setMenues((Long[]) menues.toArray(new Long[0]));
 
-				if (guiUser.isMemberOf(Constants.GROUP_ADMIN)) {
+				/*
+				 * Prepare an incoming message, if any
+				 */
+				ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+				String incomingMessage = config.getProperty("gui.welcome");
+				if (StringUtils.isNotEmpty(incomingMessage)) {
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("user", user.getFullName());
+					incomingMessage = StrSubstitutor.replace(incomingMessage, map);
+				}
+
+				// In case of news overwrite the incoming message
+				if (guiUser.isMemberOf(Constants.GROUP_ADMIN) && info.isEnabled("Feature_27")) {
 					// Check if there are incoming messages not already read
 					FeedMessageDAO feedMessageDao = (FeedMessageDAO) Context.getInstance()
 							.getBean(FeedMessageDAO.class);
 					if (feedMessageDao.checkNotRead())
-						session.setIncomingMessage(I18N.message("productnewsmessage", locale));
+						incomingMessage = I18N.message("productnewsmessage", locale);
 				}
+
+				if (StringUtils.isNotEmpty(incomingMessage))
+					session.setIncomingMessage(incomingMessage);
 
 				// Define the current locale
 				UserSession userSession = SessionManager.getInstance().get(session.getSid());
@@ -436,7 +454,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 			Group adminGroup = groupDao.findByName("admin");
 			groupDao.initialize(adminGroup);
-			
+
 			// The admin user must always member of admin group
 			if ("admin".equals(user.getUserName()) && !user.isMemberOf("admin")) {
 				manager.assignUserToGroup(usr, adminGroup);

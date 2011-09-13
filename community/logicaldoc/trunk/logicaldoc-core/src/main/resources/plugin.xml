@@ -149,6 +149,14 @@
     <parameter id="extension" value="bmp" />
     <parameter id="class" value="com.logicaldoc.core.document.thumbnail.ImageThumbnailBuilder" />
   </extension>
+  <extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="tifThumb">
+    <parameter id="extension" value="tif" />
+    <parameter id="class" value="com.logicaldoc.core.document.thumbnail.ImageThumbnailBuilder" />
+  </extension>
+  <extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="tiffThumb">
+    <parameter id="extension" value="tiff" />
+    <parameter id="class" value="com.logicaldoc.core.document.thumbnail.ImageThumbnailBuilder" />
+  </extension>
   <extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="pdfThumb">
     <parameter id="extension" value="pdf" />
     <parameter id="class" value="com.logicaldoc.core.document.thumbnail.PdfThumbnailBuilder" />
