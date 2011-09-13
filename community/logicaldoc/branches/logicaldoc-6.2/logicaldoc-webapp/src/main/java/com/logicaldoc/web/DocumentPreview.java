@@ -154,7 +154,7 @@ public class DocumentPreview extends HttpServlet {
 			try {
 				tmp = File.createTempFile("preview", "");
 
-				String docExtension = FilenameUtils.getExtension(doc.getFileName());
+				String docExtension = FilenameUtils.getExtension(doc.getFileName()).toLowerCase();
 				if (SWF_DIRECT_CONVERSION_EXTS.contains(docExtension)) {
 					// Perform a direct conversion using the document's file
 					is = storer.getStream(doc.getId(), storer.getResourceName(doc, fileVersion, null));
@@ -341,7 +341,7 @@ public class DocumentPreview extends HttpServlet {
 		String standardCmd[] = { command, "-f", "-T 9", "-t", "-G", "-s storeallcharacters", input.getPath(), "-o",
 				output.getPath() };
 		String imgCmd[] = { command, "-T 9 -q 30", input.getPath(), "-o", output.getPath() };
-		if (command.endsWith("convert"))
+		if (command.endsWith("convert") || command.endsWith("convert.exe"))
 			return imgCmd;
 		else
 			return standardCmd;
