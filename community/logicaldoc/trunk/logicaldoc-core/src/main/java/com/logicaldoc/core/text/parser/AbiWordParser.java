@@ -82,7 +82,7 @@ public class AbiWordParser extends AbstractParser {
 			xmlReader.setContentHandler(contentHandler);
 			xmlReader.parse(new InputSource(input));
 
-			content = StringUtil.writeToString(new StringReader(contentHandler.getContent()));
+			content.append(StringUtil.writeToString(new StringReader(contentHandler.getContent())));
 		} catch (Exception e) {
 			log.warn("Failed to extract AbiWord text content", e);
 		}

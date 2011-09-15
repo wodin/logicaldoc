@@ -12,6 +12,6 @@ public class DummyParser extends AbstractParser {
 
 	@Override
 	public void internalParse(InputStream input) {
-		content = "";
+		
 	}
 }

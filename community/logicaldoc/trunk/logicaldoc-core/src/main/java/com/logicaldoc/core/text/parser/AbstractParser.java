@@ -28,7 +28,7 @@ public abstract class AbstractParser implements Parser {
 
 	protected static Log log = LogFactory.getLog(AbstractParser.class);
 
-	protected String content = "";
+	protected StringBuffer content = new StringBuffer();
 
 	protected String filename;
 
@@ -43,7 +43,7 @@ public abstract class AbstractParser implements Parser {
 
 	@Override
 	public String getContent() {
-		return content;
+		return content.toString();
 	}
 
 	@Override
@@ -112,6 +112,7 @@ public abstract class AbstractParser implements Parser {
 	@Override
 	public void parse(final InputStream input) {
 		log.debug("Parse started");
+		content = new StringBuffer();
 
 		long timeout = -1;
 
@@ -142,7 +143,7 @@ public abstract class AbstractParser implements Parser {
 			}
 			if (!"completed".equals(ret))
 				log.warn("Parse timed out");
-			executor.shutdown();
+			executor.shutdownNow();
 		}
 		log.debug("Parse Finished");
 	}

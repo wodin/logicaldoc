@@ -260,9 +260,17 @@ public class DocumentPreview extends HttpServlet {
 
 			command = "\"" + new File(command).getPath() + "\" -T 9 ";
 
-			if (extension.equalsIgnoreCase("pdf"))
-				command += "-f -t -G -s storeallcharacters";
+			if (extension.equalsIgnoreCase("pdf")){
+				int pages = -1;
+				try {
+					pages = conf.getInt("gui.preview.pages");
+				} catch (Throwable t) {
 
+				}
+				
+				command += (pages > 0 ? " -p 1-" + pages : "") + " -f -t -G -s storeallcharacters";
+			}
+			
 			command += " \"" + tmp.getPath() + "\" -o \"" + swf.getPath() + "\"";
 
 			Exec.exec(command, null, null, 10);

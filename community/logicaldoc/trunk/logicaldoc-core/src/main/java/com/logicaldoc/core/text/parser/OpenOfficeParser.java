@@ -99,7 +99,7 @@ public class OpenOfficeParser extends AbstractParser {
 				zis.close();
 			}
 
-			content = StringUtil.writeToString(new StringReader(contentHandler.getContent()));
+			content.append(StringUtil.writeToString(new StringReader(contentHandler.getContent())));
 		} catch (Exception e) {
 			log.warn("Failed to extract OpenOffice text content", e);
 		}

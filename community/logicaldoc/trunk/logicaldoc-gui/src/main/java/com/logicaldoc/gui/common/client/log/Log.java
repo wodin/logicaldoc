@@ -29,7 +29,7 @@ public class Log {
 	 */
 	public static void serverError(String message, Throwable caught) {
 		//Hide download exceptions that normally are raised on double click.
-		if("0".equals(message))
+		if("0".equals(message.trim()))
 			return;
 		
 		EventPanel.get().error(I18N.message("servererror"), message);
@@ -50,6 +50,10 @@ public class Log {
 	}
 
 	public static void error(String message, String detail, Throwable caught) {
+		//Hide download exceptions that normally are raised on double click.
+		if("0".equals(message))
+			return;
+		
 		EventPanel.get().error(message, detail);
 		GWT.log("error: " + message, caught);
 	}

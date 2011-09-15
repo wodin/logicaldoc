@@ -22,7 +22,7 @@ public class ImageThumbnailBuilder implements ThumbnailBuilder {
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			String commandLine = conf.getProperty(CONVERT) + " -compress JPEG -quality " + Integer.toString(quality)
-					+ " -resize " + Integer.toString(size) + " " + src.getPath() + " " + dest.getPath();
+					+ " -resize x" + Integer.toString(size) + " " + src.getPath() + " " + dest.getPath();
 			Exec.exec(commandLine, null, null, 10);
 		} catch (Throwable e) {
 			throw new IOException("Error in IMG to JPEG conversion", e);

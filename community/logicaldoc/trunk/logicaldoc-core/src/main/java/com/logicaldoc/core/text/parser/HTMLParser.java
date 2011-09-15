@@ -104,7 +104,7 @@ public class HTMLParser extends AbstractParser {
 			}
 			SAXSource source = new SAXSource(parser, new InputSource(reader));
 			transformer.transform(source, result);
-			content = StringUtil.writeToString(new StringReader(parser.getContents()));
+			content.append(StringUtil.writeToString(new StringReader(parser.getContents())));
 		} catch (Exception e) {
 			log.warn("Failed to extract HTML text content", e);
 		}

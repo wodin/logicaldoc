@@ -44,7 +44,7 @@ public class ZABWParser extends AbstractParser {
 		try {
 			AbiWordParser parser = new AbiWordParser();
 			parser.parse(input);
-			content = parser.getContent();
+			content.append(parser.getContent());
 		} catch (Exception e) {
 			log.warn("Failed to extract AbiWord Compressed zabw text content", e);
 		}
