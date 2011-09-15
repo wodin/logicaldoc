@@ -39,7 +39,7 @@ public class RTFParser extends AbstractParser {
 			bis0.mark(Integer.MAX_VALUE);
 
 			String text = extractText(bis0);
-			content = StringUtil.writeToString(new StringReader(text));
+			content.append(StringUtil.writeToString(new StringReader(text)));
 
 			// Check if there are some variable code that must be added to the
 			// content
@@ -79,7 +79,7 @@ public class RTFParser extends AbstractParser {
 			input.close();
 			out.close();
 
-			content = strBuf.toString();
+			content.append(strBuf.toString());
 
 			// Delete temp file when program exits.
 			tempFile.deleteOnExit();

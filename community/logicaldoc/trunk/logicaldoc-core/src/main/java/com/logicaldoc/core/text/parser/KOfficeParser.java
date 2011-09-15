@@ -91,7 +91,7 @@ public class KOfficeParser extends AbstractParser {
 				zis.close();
 			}
 
-			content = StringUtil.writeToString(new StringReader(contentHandler.getContent()));
+			content.append(StringUtil.writeToString(new StringReader(contentHandler.getContent())));
 		} catch (Exception e) {
 			log.warn("Failed to extract KOffice text content", e);
 		}

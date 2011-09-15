@@ -52,7 +52,6 @@ public class TXTParser extends AbstractParser {
 			parse(bis);
 		} catch (Exception ex) {
 			log.warn("Failed to extract TXT text content", ex);
-			content = "";
 		} finally {
 			try {
 				if (bis != null)
@@ -68,7 +67,7 @@ public class TXTParser extends AbstractParser {
 	@Override
 	public void internalParse(InputStream input) {
 		try {
-			content = StringUtil.writeToString(input, getEncoding());
+			content.append(StringUtil.writeToString(input, getEncoding()));
 		} catch (UnsupportedEncodingException e) {
 			log.warn("Unsupported encoding '" + getEncoding() + "', using default ("
 					+ System.getProperty("file.encoding") + ") instead.");

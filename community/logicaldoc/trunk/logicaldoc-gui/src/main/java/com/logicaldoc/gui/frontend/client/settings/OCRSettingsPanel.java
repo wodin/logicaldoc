@@ -40,12 +40,12 @@ public class OCRSettingsPanel extends VLayout {
 
 	public OCRSettingsPanel(GUIParameter[] settings) {
 		setWidth100();
-		setHeight(400);
+		setHeight(480);
 		setMembersMargin(10);
 		setMargin(30);
 
 		tabs.setWidth(450);
-		tabs.setHeight(350);
+		tabs.setHeight(450);
 
 		DynamicForm form = new DynamicForm();
 		form.setValuesManager(vm);
@@ -80,6 +80,24 @@ public class OCRSettingsPanel extends VLayout {
 		resolutionThreshold.setWrapTitle(false);
 		resolutionThreshold.setHint("pixels");
 
+		IntegerItem ocrrendres = ItemFactory.newIntegerItem("ocr.rendres", I18N.message("ocrrendres"),
+				Integer.parseInt(settings[10].getValue()));
+		ocrrendres.setRequired(true);
+		ocrrendres.setWrapTitle(false);
+		ocrrendres.setHint("dpi");
+
+		IntegerItem barcoderendres = ItemFactory.newIntegerItem("ocr.rendres.barcode", I18N.message("barcoderendres"),
+				Integer.parseInt(settings[11].getValue()));
+		barcoderendres.setRequired(true);
+		barcoderendres.setWrapTitle(false);
+		barcoderendres.setHint("dpi");
+
+		IntegerItem batch = ItemFactory.newIntegerItem("ocr.batch", I18N.message("batch"),
+				Integer.parseInt(settings[12].getValue()));
+		batch.setRequired(true);
+		batch.setWrapTitle(false);
+		batch.setHint("pages");
+
 		RadioGroupItem engine = ItemFactory.newBooleanSelector("ocr.engine", "engine");
 		engine.setRequired(true);
 		engine.setValueMap("tesseract", "omnipage");
@@ -87,13 +105,13 @@ public class OCRSettingsPanel extends VLayout {
 
 		TextItem tesseract = ItemFactory.newTextItem("command.tesseract", "Tesseract", settings[7].getValue());
 
-		TextItem omnipagePath = ItemFactory.newTextItem("omnipage.path", "Omnipage dist", settings[8].getValue());
+		TextItem omnipagePath = ItemFactory.newTextItem("omnipage.path", "OmniPage path", settings[8].getValue());
 
 		StaticTextItem count = ItemFactory.newStaticTextItem("ocr.count", I18N.message("monthlycounter"),
 				settings[9].getValue());
 
-		form.setItems(enabled, timeout, includes, excludes, textThreshold, resolutionThreshold, engine, tesseract,
-				omnipagePath, count);
+		form.setItems(enabled, timeout, includes, excludes, textThreshold, resolutionThreshold, ocrrendres,
+				barcoderendres, batch, engine, tesseract, omnipagePath, count);
 
 		IButton save = new IButton();
 		save.setTitle(I18N.message("save"));
@@ -103,7 +121,7 @@ public class OCRSettingsPanel extends VLayout {
 				Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				if (vm.validate()) {
-					GUIParameter[] params = new GUIParameter[9];
+					GUIParameter[] params = new GUIParameter[12];
 					params[0] = new GUIParameter("ocr.enabled", values.get("ocr.enabled").equals("yes") ? "true"
 							: "false");
 					params[1] = new GUIParameter("ocr.includes", (String) values.get("ocr.includes"));
@@ -126,9 +144,25 @@ public class OCRSettingsPanel extends VLayout {
 					else
 						params[5] = new GUIParameter("ocr.timeout", (String) values.get("ocr.timeout"));
 
-					params[6] = new GUIParameter("ocr.engine", (String) values.get("ocr.engine"));
-					params[7] = new GUIParameter("command.tesseract", (String) values.get("command.tesseract"));
-					params[8] = new GUIParameter("omnipage.path", (String) values.get("omnipage.path"));
+					if (values.get("ocr.rendres") instanceof Integer)
+						params[6] = new GUIParameter("ocr.rendres", ((Integer) values.get("ocr.rendres")).toString());
+					else
+						params[6] = new GUIParameter("ocr.rendres", (String) values.get("ocr.rendres"));
+
+					if (values.get("ocr.rendres.barcode") instanceof Integer)
+						params[7] = new GUIParameter("ocr.rendres.barcode", ((Integer) values
+								.get("ocr.rendres.barcode")).toString());
+					else
+						params[7] = new GUIParameter("ocr.rendres.barcode", (String) values.get("ocr.rendres.barcode"));
+
+					if (values.get("ocr.batch") instanceof Integer)
+						params[11] = new GUIParameter("ocr.batch", ((Integer) values.get("ocr.batch")).toString());
+					else
+						params[11] = new GUIParameter("ocr.batch", (String) values.get("ocr.batch"));
+
+					params[8] = new GUIParameter("ocr.engine", (String) values.get("ocr.engine"));
+					params[9] = new GUIParameter("command.tesseract", (String) values.get("command.tesseract"));
+					params[10] = new GUIParameter("omnipage.path", (String) values.get("omnipage.path"));
 
 					service.saveSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
 

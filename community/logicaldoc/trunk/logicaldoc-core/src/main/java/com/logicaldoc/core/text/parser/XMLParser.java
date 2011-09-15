@@ -63,7 +63,7 @@ public class XMLParser extends AbstractParser {
 			}
 			reader.parse(source);
 
-			content = StringUtil.writeToString(new CharArrayReader(writer.toCharArray()));
+			content.append(StringUtil.writeToString(new CharArrayReader(writer.toCharArray())));
 		} catch (Exception e) {
 			log.warn("Failed to extract XML text content", e);
 		}

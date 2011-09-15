@@ -20,7 +20,7 @@ public class ThumbnailPanel extends DocumentDetailTab {
 		String url = Util.contextPath() + "/thumbnail?docId=" + document.getId() + "&sid=" + Session.get().getSid();
 		int size = Integer.parseInt(Session.get().getInfo().getConfig("gui.thumbnail.size"));
 		Image image = new Image(url);
-		image.setWidth(size + "px");
+		image.setHeight(size + "px");
 
 		addMember(image);
 	}

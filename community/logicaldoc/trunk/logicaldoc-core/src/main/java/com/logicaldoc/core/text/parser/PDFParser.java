@@ -44,10 +44,6 @@ public class PDFParser extends AbstractParser {
 
 	private static int count = Integer.MAX_VALUE;
 
-	public String getContent() {
-		return content;
-	}
-
 	/**
 	 * @return Returns the author.
 	 */
@@ -82,7 +78,6 @@ public class PDFParser extends AbstractParser {
 		title = "";
 		sourceDate = "";
 		tags = "";
-		content = "";
 		PDDocument pdfDocument = null;
 
 		// Will store the extracted text
@@ -116,7 +111,7 @@ public class PDFParser extends AbstractParser {
 				parseForm(pdfDocument, buffer);
 
 				// Store all the extracted contents
-				content = buffer.toString();
+				content.append(buffer.toString());
 			}
 		} catch (Throwable ex) {
 			log.error(ex.getMessage(), ex);

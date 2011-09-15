@@ -289,7 +289,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
-		GUIParameter[] params = new GUIParameter[10];
+		GUIParameter[] params = new GUIParameter[13];
 		params[0] = new GUIParameter("ocr.enabled", conf.getProperty("ocr.enabled"));
 		params[1] = new GUIParameter("ocr.resolution.threshold", conf.getProperty("ocr.resolution.threshold"));
 		params[2] = new GUIParameter("ocr.text.threshold", conf.getProperty("ocr.text.threshold"));
@@ -300,6 +300,9 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		params[7] = new GUIParameter("command.tesseract", conf.getProperty("command.tesseract"));
 		params[8] = new GUIParameter("omnipage.path", conf.getProperty("omnipage.path"));
 		params[9] = new GUIParameter("ocr.count", conf.getProperty("ocr.count"));
+		params[10] = new GUIParameter("ocr.rendres", conf.getProperty("ocr.rendres"));
+		params[11] = new GUIParameter("ocr.rendres.barcode", conf.getProperty("ocr.rendres.barcode"));
+		params[12] = new GUIParameter("ocr.batch", conf.getProperty("ocr.batch"));
 
 		return params;
 	}

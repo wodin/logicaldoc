@@ -31,7 +31,7 @@ public class XLSParser extends AbstractParser {
 			if (tmp != null)
 				tmp = tmp.replaceAll("[\\p{Cntrl}&&[^\\n]]", " ");
 
-			content = StringUtil.writeToString(new StringReader(tmp));
+			content.append(StringUtil.writeToString(new StringReader(tmp)));
 		} catch (Exception e) {
 			log.warn("Failed to extract Excel text content", e);
 		}

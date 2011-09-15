@@ -143,7 +143,7 @@ public class PSParser extends AbstractParser {
 					textExtracted = parse_v3(reader);
 				}
 			}
-			content = StringUtil.writeToString(new StringReader(textExtracted));
+			content.append(StringUtil.writeToString(new StringReader(textExtracted)));
 		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
 		}
