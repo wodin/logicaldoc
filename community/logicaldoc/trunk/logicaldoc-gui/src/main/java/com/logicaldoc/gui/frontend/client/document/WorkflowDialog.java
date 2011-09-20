@@ -236,8 +236,8 @@ public class WorkflowDialog extends Window {
 
 				if (vm.validate()) {
 					selectedWorkflow.setDescription((String) values.get("wfldescr"));
-					service.startWorkflow(Session.get().getSid(), selectedWorkflow.getName(), values.get("wfldescr")
-							.toString(), docIds, new AsyncCallback<Void>() {
+					service.startWorkflow(Session.get().getSid(), selectedWorkflow.getName(), values.get("wfldescr")!=null ? values.get("wfldescr")
+							.toString() : "", docIds, new AsyncCallback<Void>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
