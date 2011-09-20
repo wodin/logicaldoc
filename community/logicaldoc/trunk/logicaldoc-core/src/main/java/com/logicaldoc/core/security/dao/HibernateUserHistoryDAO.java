@@ -59,7 +59,8 @@ public class HibernateUserHistoryDAO extends HibernatePersistentObjectDAO<UserHi
 			try {
 				int rowsUpdated = jdbcUpdate("UPDATE ld_user_history SET ld_deleted = 1, ld_lastmodified = ?"
 						+ " WHERE ld_deleted = 0 AND ld_date < ?", today, ldDate);
-				log.info("rows updated: " + rowsUpdated);
+				
+				log.info("cleanOldHistories rows updated: " + rowsUpdated);
 			} catch (Exception e) {
 				if (log.isErrorEnabled())
 					log.error(e.getMessage(), e);

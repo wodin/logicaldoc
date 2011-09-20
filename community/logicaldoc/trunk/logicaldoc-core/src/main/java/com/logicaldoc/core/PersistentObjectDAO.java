@@ -207,7 +207,8 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
      *
      * @param statement SQL containing bind parameters
      * @param args arguments to bind to the query (leaving it to the PreparedStatement to guess the corresponding SQL type); may also contain SqlParameterValue objects which indicate not only the argument value but also the SQL type and optionally the scale
-     * @return the number of rows affected 
+     * @return the number of rows affected
+     * @since 6.2.4
      */   
     public int jdbcUpdate(String statement, Object... args);
 }
