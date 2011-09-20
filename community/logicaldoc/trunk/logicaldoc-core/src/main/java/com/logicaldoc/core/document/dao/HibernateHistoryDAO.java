@@ -70,7 +70,8 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 			try {
 				int rowsUpdated = jdbcUpdate("UPDATE ld_history SET ld_deleted = 1, ld_lastmodified = ?"
 						+ " WHERE ld_deleted = 0 AND ld_docid > 0 AND ld_date < ?", today, ldDate);
-				log.info("rows updated: " + rowsUpdated);
+				
+				log.info("cleanOldDocumentHistories rows updated: " + rowsUpdated);
 			} catch (Exception e) {
 				if (log.isErrorEnabled())
 					log.error(e.getMessage(), e);
@@ -93,8 +94,9 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 
 			try {
 				int rowsUpdated = jdbcUpdate("UPDATE ld_history SET ld_deleted = 1, ld_lastmodified = ?"
-						+ " WHERE ld_deleted = 0 AND ld_docid is null AND ld_date < ?", today, ldDate);
-				log.info("rows updated: " + rowsUpdated);
+						+ " WHERE ld_deleted = 0 AND ld_docid IS NULL AND ld_date < ?", today, ldDate);
+				
+				log.info("cleanOldFolderHistories rows updated: " + rowsUpdated);
 			} catch (Exception e) {
 				if (log.isErrorEnabled())
 					log.error(e.getMessage(), e);
