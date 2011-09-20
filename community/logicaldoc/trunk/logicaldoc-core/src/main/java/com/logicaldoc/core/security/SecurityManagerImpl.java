@@ -142,6 +142,7 @@ public class SecurityManagerImpl implements SecurityManager {
 	 * @see com.logicaldoc.core.security.SecurityManager#removeAllUsersFromGroup(com.logicaldoc.core.security.Group)
 	 */
 	public void removeAllUsersFromGroup(Group group) {
+		groupDAO.initialize(group);
 		removeUsersFromGroup(group.getUsers(), group);
 	}
 
