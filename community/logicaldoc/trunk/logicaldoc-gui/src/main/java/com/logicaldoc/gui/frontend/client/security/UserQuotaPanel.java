@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import java.util.Map;
 
+import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.TitleOrientation;
@@ -56,7 +57,8 @@ public class UserQuotaPanel extends HLayout {
 		quota.setHint("MB");
 		if (!readonly)
 			quota.addChangedHandler(changedHandler);
-
+		quota.setDisabled(Session.get().isDemo());
+		
 		IntegerItem quotaCount = ItemFactory.newIntegerItem("quotaCount", "quotacount", null);
 		quotaCount.setRequired(false);
 		quotaCount.setDisabled(true);
@@ -80,6 +82,8 @@ public class UserQuotaPanel extends HLayout {
 				quota = (Integer) values.get("quota");
 			if (quota > 0)
 				user.setQuota(quota * (1024 * 1024));
+			else
+				user.setQuota(-1);
 		}
 		return !vm.hasErrors();
 	}
