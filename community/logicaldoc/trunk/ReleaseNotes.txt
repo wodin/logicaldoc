@@ -1,4 +1,4 @@
-The LogicalDOC development team is happy to announce the immediate availability of LogicalDOC CE 6.0-RC2
+The LogicalDOC development team is happy to announce the immediate availability of LogicalDOC CE 6.3
 
 You can get this distribution in tomcat-bundle archive from SourceForge: 
 http://sourceforge.net/projects/logicaldoc/files/distribution/LogicalDOC%20CE%206.0/logicaldoc-6.0RC2-tomcat-bundle.zip/download
