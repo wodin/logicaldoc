@@ -433,6 +433,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				document.setLockUserId(doc.getLockUserId());
 				document.setComment(doc.getComment());
 				document.setStatus(doc.getStatus());
+				document.setWorkflowStatus(doc.getWorkflowStatus());
 				if (doc.getRating() != null)
 					document.setRating(doc.getRating());
 
@@ -461,7 +462,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			}
 
 			return document;
-
 		}
 
 		return null;
@@ -499,6 +499,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				version1.setCoverage(docVersion.getCoverage());
 				version1.setRecipient(docVersion.getRecipient());
 				version1.setObject(docVersion.getObject());
+				version1.setWorkflowStatus(docVersion.getWorkflowStatus());
 				if (docVersion.getRating() != null)
 					version1.setRating(docVersion.getRating());
 				version1.setSourceType(docVersion.getSourceType());
@@ -549,7 +550,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				version2.setSourceAuthor(docVersion.getSourceAuthor());
 				version2.setSourceId(docVersion.getSourceId());
 				version2.setSourceDate(docVersion.getSourceDate());
-
+				version2.setWorkflowStatus(docVersion.getWorkflowStatus());
+				
 				version2.setTemplateId(docVersion.getTemplateId());
 				version2.setTemplate(docVersion.getTemplateName());
 				versDao.initialize(docVersion);
@@ -760,6 +762,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					docVO.setSourceDate(document.getSourceDate());
 					docVO.setSourceId(document.getSourceId());
 					docVO.setRating(document.getRating());
+					docVO.setWorkflowStatus(document.getWorkflowStatus());
 
 					if (document.getTemplateId() != null) {
 						docVO.setTemplateId(document.getTemplateId());
@@ -1203,7 +1206,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				buf.setAttributes(vo.getAttributes());
 			if (vo.getSourceDate() != null)
 				buf.setSourceDate(vo.getSourceDate());
-
+			if (StringUtils.isNotEmpty(vo.getWorkflowStatus()))
+				buf.setSource(vo.getWorkflowStatus());
 			save(sid, buf);
 		}
 	}
