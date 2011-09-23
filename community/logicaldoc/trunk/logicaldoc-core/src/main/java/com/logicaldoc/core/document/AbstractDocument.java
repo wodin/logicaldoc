@@ -145,6 +145,8 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	private Integer rating;
 
+	private String workflowStatus;
+	
 	public Long getDeleteUserId() {
 		return deleteUserId;
 	}
@@ -645,5 +647,13 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	 */
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getWorkflowStatus() {
+		return workflowStatus;
+	}
+
+	public void setWorkflowStatus(String workflowStatus) {
+		this.workflowStatus = workflowStatus;
 	}
 }

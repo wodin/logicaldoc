@@ -165,6 +165,8 @@ public class WSDocument {
 	private int dateCategory;
 
 	private Integer rating;
+	
+	private String workflowStatus;
 
 	public static WSDocument fromDocument(AbstractDocument document) {
 		WSDocument wsDoc = new WSDocument();
@@ -182,6 +184,7 @@ public class WSDocument {
 			wsDoc.setObject(document.getObject());
 			wsDoc.setRecipient(document.getRecipient());
 			wsDoc.setComment(document.getComment());
+			wsDoc.setWorkflowStatus(document.getWorkflowStatus());
 			if (document.getTemplate() != null)
 				wsDoc.setTemplateId(document.getTemplate().getId());
 			String sourceDate = null;
@@ -308,6 +311,7 @@ public class WSDocument {
 		doc.setFileName(fileName);
 		doc.setFolder(folder);
 		doc.setComment(comment);
+		doc.setWorkflowStatus(workflowStatus);
 		doc.setLocale(LocaleUtil.toLocale(language));
 		Date sdate = null;
 		if (StringUtils.isNotEmpty(sourceDate))
@@ -756,5 +760,13 @@ public class WSDocument {
 		List<WSAttribute> buf = (List<WSAttribute>) Arrays.asList(getExtendedAttributes());
 		buf.add(att);
 		setExtendedAttributes(buf.toArray(new WSAttribute[0]));
+	}
+
+	public String getWorkflowStatus() {
+		return workflowStatus;
+	}
+
+	public void setWorkflowStatus(String workflowStatus) {
+		this.workflowStatus = workflowStatus;
 	}
 }

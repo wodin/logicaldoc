@@ -20,8 +20,6 @@ import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
-import com.logicaldoc.core.store.Storer;
-import com.logicaldoc.util.io.FileUtil;
 
 /**
  * Test case for <code>HibernateDocumentDAO</code>
@@ -36,8 +34,6 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 	private FolderDAO folderDao;
 
-	private Storer storer;
-
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
@@ -46,7 +42,6 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		// it is an HibernateDocumentDAO
 		dao = (DocumentDAO) context.getBean("DocumentDAO");
 		folderDao = (FolderDAO) context.getBean("FolderDAO");
-		storer = (Storer) context.getBean("Storer");
 	}
 
 	@Test
@@ -210,7 +205,6 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		out.flush();
 		out.close();
 		Assert.assertTrue(docFile.exists());
-		String digest = FileUtil.computeDigest(docFile);
 		System.out.println("Saved file " + docFile.getPath());
 
 		Assert.assertEquals("1.0", doc.getFileVersion());

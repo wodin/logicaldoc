@@ -80,6 +80,8 @@ public class GUIDocument implements Serializable {
 
 	private String comment;
 
+	private String workflowStatus;
+	
 	public long getId() {
 		return id;
 	}
@@ -435,5 +437,13 @@ public class GUIDocument implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getWorkflowStatus() {
+		return workflowStatus;
+	}
+
+	public void setWorkflowStatus(String workflowStatus) {
+		this.workflowStatus = workflowStatus;
 	}
 }
