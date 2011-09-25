@@ -274,7 +274,6 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		updateDocument(sid, wsDoc);
 	}
 
-
 	@Override
 	public void renameFile(String sid, long docId, String name) throws Exception {
 		User user = validateSession(sid);
@@ -288,7 +287,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		transaction.setUser(user);
 		manager.rename(doc, name, false, transaction);
 	}
-	
+
 	@Override
 	public void restore(String sid, long docId, long folderId) throws Exception {
 		validateSession(sid);
@@ -538,5 +537,12 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		Document doc = documentManager.createShortcut(originalDoc, folder, transaction);
 
 		return WSDocument.fromDocument(doc);
+	}
+
+	@Override
+	public void reindex(String sid, long docId) throws Exception {
+		validateSession(sid);
+		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		documentManager.reindex(docId);
 	}
 }
