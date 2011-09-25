@@ -78,7 +78,6 @@ public interface DocumentService {
 	public void renameFile(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
 			@WebParam(name = "name") String name) throws Exception;
 
-	
 	/**
 	 * Moves an existing document with the given identifier.
 	 * 
@@ -253,4 +252,14 @@ public interface DocumentService {
 	@WebResult(name = "document")
 	public WSDocument createAlias(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
 			@WebParam(name = "folderId") long folderId) throws Exception;;
+
+	/**
+	 * Reindexes(or indexes) a document
+	 * 
+	 * @param sid Session identifier
+	 * @param docId The document id
+	 * 
+	 * @throws Exception
+	 */
+	public void reindex(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId) throws Exception;
 }
