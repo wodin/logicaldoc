@@ -67,7 +67,8 @@ public class TXTParser extends AbstractParser {
 	@Override
 	public void internalParse(InputStream input) {
 		try {
-			content.append(StringUtil.writeToString(input, getEncoding()));
+			if (input != null)
+				content.append(StringUtil.writeToString(input, getEncoding()));
 		} catch (UnsupportedEncodingException e) {
 			log.warn("Unsupported encoding '" + getEncoding() + "', using default ("
 					+ System.getProperty("file.encoding") + ") instead.");

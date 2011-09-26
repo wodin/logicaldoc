@@ -545,4 +545,11 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 		return WSDocument.fromDocument(doc);
 	}
+
+	@Override
+	public void reindex(String sid, long docId) throws Exception {
+		validateSession(sid);
+		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		documentManager.reindex(docId);		
+	}
 }

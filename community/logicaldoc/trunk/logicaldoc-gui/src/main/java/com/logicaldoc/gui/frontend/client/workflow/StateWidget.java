@@ -46,9 +46,9 @@ public class StateWidget extends Label {
 		addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
-				if(readonly)
+				if (readonly)
 					return;
-				
+
 				Menu contextMenu = new Menu();
 
 				MenuItem edit = new MenuItem();

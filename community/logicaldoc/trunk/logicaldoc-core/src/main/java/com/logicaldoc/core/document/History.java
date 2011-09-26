@@ -36,6 +36,8 @@ public class History extends AbstractHistory {
 	public final static String EVENT_SENT = "event.sent";
 	
 	public final static String EVENT_BARCODED = "event.barcoded";
+	
+	public final static String EVENT_WORKFLOWSTATUS = "event.workflowstatus";
 
 	// Events on folders
 	public final static String EVENT_FOLDER_CREATED = "event.folder.created";

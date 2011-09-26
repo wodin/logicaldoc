@@ -288,7 +288,7 @@ public class WorkflowToolstrip extends ToolStrip {
 
 										@Override
 										public void onSuccess(Void result) {
-											currentWorkflow = new GUIWorkflow();
+											WorkflowToolstrip.this.currentWorkflow = new GUIWorkflow();
 											AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
 											update();
 										}
@@ -305,9 +305,13 @@ public class WorkflowToolstrip extends ToolStrip {
 		close.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				currentWorkflow = new GUIWorkflow();
-				AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
-				update();
+				try {
+					currentWorkflow = new GUIWorkflow();
+					AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
+					update();
+				} catch (Throwable t) {
+
+				}
 			}
 		});
 		addButton(close);

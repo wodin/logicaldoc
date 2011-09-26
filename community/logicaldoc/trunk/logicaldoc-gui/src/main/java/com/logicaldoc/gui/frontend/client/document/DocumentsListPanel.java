@@ -199,6 +199,10 @@ public class DocumentsListPanel extends VLayout {
 		comment.setHidden(true);
 		comment.setCanFilter(true);
 
+		ListGridField wfStatus = new ListGridField("workflowStatus", I18N.message("workflowstatus"), 100);
+		wfStatus.setHidden(true);
+		wfStatus.setCanFilter(true);
+
 		list = new ListGrid() {
 			@Override
 			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
@@ -230,7 +234,7 @@ public class DocumentsListPanel extends VLayout {
 
 		list.setFields(indexed, locked, immutable, signed, icon, filename, title, lastModified, type, size, version,
 				publisher, published, creator, created, sourceDate, sourceAuthor, customId, rating, fileVersion,
-				comment);
+				comment, wfStatus);
 
 		// Prepare a panel containing a title and the documents list
 		infoPanel = new InfoPanel("");

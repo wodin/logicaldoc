@@ -65,11 +65,11 @@ public class DocumentsDS extends DataSource {
 		sourceAuthor.setHidden(true);
 		DataSourceImageField rating = new DataSourceImageField("rating");
 		DataSourceTextField comment = new DataSourceTextField("comment");
-		sourceAuthor.setHidden(true);
+		DataSourceIntegerField wfStatus = new DataSourceIntegerField("workflowStatus");
 
 		setFields(id, title, type, size, publisher, version, docref, lastModified, published, created, creator,
 				sourceDate, sourceAuthor, customId, icon, immutable, iindexed, signed, locked, lockUserId, filename,
-				status, rating, fileVersion, comment);
+				status, rating, fileVersion, comment, wfStatus);
 		setClientOnly(true);
 
 		if (barcoded == null)
