@@ -127,20 +127,28 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		title.setRequired(true);
 		title.setDisabled(!update);
 
-		StaticTextItem version = ItemFactory.newStaticTextItem("version", "version", document.getVersion());
-		String comment = document.getComment();
+		StaticTextItem wfStatus = ItemFactory.newStaticTextItem("wfStatus", "workflowstatus",
+				document.getWorkflowStatus());
 
+		StaticTextItem version = ItemFactory.newStaticTextItem("version", "version", document.getVersion());
+
+		String comment = document.getComment();
 		if (comment != null && !"".equals(comment)) {
-			comment = Util.padLeft(comment, 40);
-			version.setValue(document.getVersion() + " (" + comment + ")");
+			comment = Util.padLeft(comment, 35);
+			version.setValue(version.getValue() + " (" + comment + ")");
 		}
 
-		StaticTextItem fileVersion = ItemFactory.newStaticTextItem("fileVersion", "fileversion",
-				document.getFileVersion());
+		StaticTextItem filename = ItemFactory.newStaticTextItem("fileName", "file", document.getFileName());
+		if (!document.getVersion().equals(document.getFileVersion())) {
+			filename.setValue(document.getFileName() + " (" + document.getFileVersion()
+					+ ")");
+		}
 
-		StaticTextItem filename = ItemFactory.newStaticTextItem("fileName", "filename", document.getFileName());
+		if (Feature.enabled(Feature.WORKFLOW))
+			form1.setItems(id, title, wfStatus, version, filename, size, creation, published, creator, publisher);
+		else
+			form1.setItems(id, title, version, filename, size, creation, published, creator, publisher);
 
-		form1.setItems(id, title, version, fileVersion, filename, size, creation, published, creator, publisher);
 		formsContainer.addMember(form1, 0);
 
 		/*

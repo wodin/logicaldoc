@@ -18,10 +18,8 @@ public class Main {
 		SecurityClient securityClient = new SecurityClient(base + "/Security");
 
 		// Open a session
-		// This is a user 'author' with different permissions than the authors.
-		// String sid = auth.login("matteo", "matteo1982");
-//		String sid = auth.login("admin", "admin");
-//		System.out.println("sid: " + sid);
+		String sid = auth.login("admin", "admin");
+		System.out.println("sid: " + sid);
 
 		// WSUser wsUserTest = new WSUser();
 		// wsUserTest.setName("marco");
@@ -414,14 +412,12 @@ public class Main {
 		// System.out.println("doc title: " + doc.getTitle());
 		// System.out.println("doc customid: " + doc.getCustomId());
 
-		 documentClient.sendEmail("ciccio", new Long[] { 690L, 32L, 29L },
-		 "m.caruso@logicalobjects.it", "Test Invio Mail 2",
-		 "Questa mail è un test");
+//		 documentClient.sendEmail("ciccio", new Long[] { 690L, 32L, 29L },
+//		 "m.caruso@logicalobjects.it", "Test Invio Mail 2",
+//		 "Questa mail è un test");
 
-//		SystemInfo info = systemClient.getInfo(null);
-//		for (String string : info.getFeatures()) {
-//			System.out.println(string);
-//		}
-	    //auth.logout(sid);
+         documentClient.reindex(sid, 3868);
+		
+		auth.logout(sid);
 	}
 }

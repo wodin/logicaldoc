@@ -757,6 +757,7 @@ public class WSDocument {
 	}
 
 	public void addExtendedAttribute(WSAttribute att) {
+		@SuppressWarnings("unchecked")
 		List<WSAttribute> buf = (List<WSAttribute>) Arrays.asList(getExtendedAttributes());
 		buf.add(att);
 		setExtendedAttributes(buf.toArray(new WSAttribute[0]));

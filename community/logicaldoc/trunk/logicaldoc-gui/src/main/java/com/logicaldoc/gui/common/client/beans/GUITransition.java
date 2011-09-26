@@ -17,7 +17,11 @@ public class GUITransition implements Serializable {
 	private GUIWFState targetState;
 
 	private String points;
-	
+
+	private String effect;
+
+	private Long targetFolder;
+
 	public GUITransition() {
 	}
 
@@ -48,5 +52,21 @@ public class GUITransition implements Serializable {
 
 	public void setPoints(String points) {
 		this.points = points;
+	}
+
+	public String getEffect() {
+		return effect;
+	}
+
+	public void setEffect(String effect) {
+		this.effect = effect;
+	}
+
+	public Long getTargetFolder() {
+		return targetFolder;
+	}
+
+	public void setTargetFolder(Long targetFolder) {
+		this.targetFolder = targetFolder;
 	}
 }

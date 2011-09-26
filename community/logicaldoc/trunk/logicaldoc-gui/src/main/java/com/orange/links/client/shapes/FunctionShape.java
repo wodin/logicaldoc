@@ -6,6 +6,7 @@ import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.frontend.client.workflow.StateWidget;
 import com.orange.links.client.DiagramController;
 import com.orange.links.client.canvas.DiagramCanvas;
+import com.orange.links.client.connection.Connection;
 import com.orange.links.client.utils.Couple;
 import com.orange.links.client.utils.Direction;
 
@@ -50,8 +51,11 @@ public class FunctionShape extends AbstractShape {
 			if (((StateWidget) widget).isReadonly())
 				return false;
 			if (((StateWidget) widget).getWfState().getType() == GUIWFState.TYPE_JOIN) {
-				if (getConnections() != null && getConnections().size() > 0)
-					return false;
+				// just one outcoming connection for a join node
+				for (Connection con : getConnections()) {
+				  if(con.getStartShape().equals(this))
+					  return false;
+				}			
 			}
 		}
 		return getSelectableArea(mousePoint) != null;

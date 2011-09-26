@@ -139,7 +139,7 @@ public abstract class AbstractParser implements Parser {
 				ret = executor.invokeAll(Arrays.asList(new InternalParseTask(input)), timeout, TimeUnit.SECONDS).get(0)
 						.get();
 			} catch (Throwable e) {
-				log.warn(e.getMessage());
+				log.warn(e.getMessage(), e);
 			}
 			if (!"completed".equals(ret))
 				log.warn("Parse timed out");
