@@ -362,6 +362,10 @@ public class DocumentContextMenu extends Menu {
 						list.refreshRow(list.getRecordIndex(record));
 						Session.get().getUser().setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() + 1);
 						Log.info(I18N.message("documentcheckedout"), null);
+						
+						String id = list.getSelectedRecord().getAttribute("id");
+						WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+								+ id);
 					}
 				});
 			}
