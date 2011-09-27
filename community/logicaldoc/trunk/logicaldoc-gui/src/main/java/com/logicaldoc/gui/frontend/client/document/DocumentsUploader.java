@@ -55,7 +55,7 @@ public class DocumentsUploader extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("adddocuments"));
 		setWidth(430);
-		setHeight(280);
+		setHeight(250);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -110,10 +110,6 @@ public class DocumentsUploader extends Window {
 		form.setValuesManager(vm);
 		form.setHeight(90);
 
-		SelectItem languageItem = ItemFactory.newLanguageSelector("language", false, false);
-		languageItem.setRequired(true);
-		languageItem.setValue(I18N.getDefaultLocaleForDoc());
-
 		CheckboxItem zipItem = new CheckboxItem();
 		zipItem.setName("zip");
 		zipItem.setTitle(I18N.message("importfromzip"));
@@ -147,7 +143,7 @@ public class DocumentsUploader extends Window {
 			}
 		});
 
-		form.setItems(languageItem, zipItem, encodingItem, sendButton);
+		form.setItems(zipItem, encodingItem, sendButton);
 
 		layout.addMember(form, 0);
 	}
@@ -170,6 +166,7 @@ public class DocumentsUploader extends Window {
 
 		GUIDocument metadata = new GUIDocument();
 		metadata.setFolder(Session.get().getCurrentFolder());
+		metadata.setLanguage(I18N.getDefaultLocaleForDoc());
 
 		BulkUpdateDialog bulk = new BulkUpdateDialog(null, metadata);
 		bulk.show();
