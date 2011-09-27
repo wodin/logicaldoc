@@ -46,7 +46,7 @@
         <property name="docRef" type="long" column="ld_docref" />
         <property name="deleteUserId" type="long" column="ld_deleteuserid" />
         <property name="rating" type="int" column="ld_rating"/>
-        <property name="workflowStatus" type="string" column="ld_wfstatus" length="1000" />
+        <property name="workflowStatus" type="string" column="ld_workflowstatus" length="1000" />
 
 		<many-to-one name="folder" class="com.logicaldoc.core.security.Folder" column="ld_folderid" />
 		<many-to-one name="template" class="com.logicaldoc.core.document.DocumentTemplate" column="ld_templateid" />
