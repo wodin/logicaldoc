@@ -6,14 +6,13 @@ import gwtupload.client.MultiUploader;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
-import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Window;
@@ -37,6 +36,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.0
  */
 public class DocumentsUploader extends Window {
+
 	private SubmitItem sendButton;
 
 	private MultiUploader multiUploader;
@@ -66,8 +66,6 @@ public class DocumentsUploader extends Window {
 		// Create a new uploader panel and attach it to the window
 		multiUploader = new MultiUploader();
 
-		// Add a finish handler which will load the image once the upload
-		// finishes
 		multiUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
 		multiUploader.setStyleName("upload");
 		multiUploader.setHeight("100%");
@@ -130,6 +128,10 @@ public class DocumentsUploader extends Window {
 		zipItem.addChangeHandler(new ChangeHandler() {
 			public void onChange(ChangeEvent event) {
 				zipImport = !zipImport;
+				if (zipImport)
+					sendButton.setDisabled(true);
+				else if (sendButton.isDisabled())
+					sendButton.setDisabled(false);
 				reloadForm();
 			}
 		});
@@ -137,7 +139,7 @@ public class DocumentsUploader extends Window {
 		sendButton = new SubmitItem();
 		sendButton.setTitle(I18N.message("send"));
 		sendButton.setDisabled(true);
-		sendButton.setAlign(Alignment.RIGHT);
+		sendButton.setEndRow(true);
 		sendButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -145,20 +147,11 @@ public class DocumentsUploader extends Window {
 			}
 		});
 
-		if (Feature.visible(Feature.TEMPLATE)) {
-			form.setItems(languageItem, zipItem, encodingItem, template, sendButton);
-			if (!Feature.enabled(Feature.TEMPLATE)) {
-				template.setDisabled(true);
-				template.setTooltip(I18N.message("featuredisabled"));
-			}
-		} else
-			form.setItems(languageItem, zipItem, encodingItem, sendButton);
+		form.setItems(languageItem, zipItem, encodingItem, sendButton);
 
 		layout.addMember(form, 0);
 	}
 
-	// Load the image in the document and in the case of success attach it to
-	// the viewer
 	private IUploader.OnFinishUploaderHandler onFinishUploaderHandler = new IUploader.OnFinishUploaderHandler() {
 		public void onFinish(IUploader uploader) {
 			if (uploader.getStatus() == Status.SUCCESS) {
@@ -175,35 +168,12 @@ public class DocumentsUploader extends Window {
 		if (!vm.validate())
 			return;
 
-		documentService.addDocuments(Session.get().getSid(), getLanguage(), Session.get().getCurrentFolder().getId(),
-				getEncoding(), getImportZip(), getTemplate(), new AsyncCallback<Void>() {
+		GUIDocument metadata = new GUIDocument();
+		metadata.setFolder(Session.get().getCurrentFolder());
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-						// We have to refresh the documents list because maybe
-						// some documents have been stored.
-						DocumentsPanel.get().refresh();
-						destroy();
-					}
-
-					@Override
-					public void onSuccess(Void result) {
-						DocumentsPanel.get().refresh();
-						destroy();
-					}
-				});
-	}
-
-	public Long getTemplate() {
-		if (vm.getValueAsString("template") != null)
-			return new Long(vm.getValueAsString("template"));
-		else
-			return null;
-	}
-
-	public String getLanguage() {
-		return vm.getValueAsString("language");
+		BulkUpdateDialog bulk = new BulkUpdateDialog(null, metadata);
+		bulk.show();
+		destroy();
 	}
 
 	public String getEncoding() {

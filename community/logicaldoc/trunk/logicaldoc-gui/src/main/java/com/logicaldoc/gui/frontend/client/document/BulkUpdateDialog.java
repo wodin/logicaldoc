@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.document;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -39,7 +40,11 @@ public class BulkUpdateDialog extends Window {
 
 	private BulkUpdatePanel bulkPanel;
 
-	public BulkUpdateDialog(final long[] ids) {
+	private String encoding;
+
+	private boolean zip = false;
+
+	public BulkUpdateDialog(final long[] ids, GUIDocument metadata) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
 		addCloseClickHandler(new CloseClickHandler() {
@@ -57,7 +62,7 @@ public class BulkUpdateDialog extends Window {
 		setShowModalMask(true);
 		centerInPage();
 
-		bulkPanel = new BulkUpdatePanel();
+		bulkPanel = new BulkUpdatePanel(metadata);
 		bulkPanel.setWidth100();
 		bulkPanel.setHeight("84%");
 		bulkPanel.setShowResizeBar(false);
@@ -89,29 +94,52 @@ public class BulkUpdateDialog extends Window {
 				if (!bulkPanel.validate())
 					return;
 
-				LD.ask(I18N.message("bulkupdate"), I18N.message("bulkwarning"), new BooleanCallback() {
-					@Override
-					public void execute(Boolean value) {
-						if (value) {
-							bulkPanel.getDocument().setComment(saveForm.getValueAsString("versionComment"));
-							documentService.bulkUpdate(Session.get().getSid(), ids, bulkPanel.getDocument(),
-									new AsyncCallback<Void>() {
+				if (ids != null && ids.length > 0)
+					LD.ask(I18N.message("bulkupdate"), I18N.message("bulkwarning"), new BooleanCallback() {
+						@Override
+						public void execute(Boolean value) {
+							if (value) {
+								bulkPanel.getDocument().setComment(saveForm.getValueAsString("versionComment"));
+								documentService.bulkUpdate(Session.get().getSid(), ids, bulkPanel.getDocument(),
+										new AsyncCallback<Void>() {
 
-										@Override
-										public void onSuccess(Void arg0) {
-											Log.info(I18N.message("bulkapplied"), null);
-											DocumentsPanel.get().refresh();
-											destroy();
-										}
+											@Override
+											public void onSuccess(Void arg0) {
+												Log.info(I18N.message("bulkapplied"), null);
+												DocumentsPanel.get().refresh();
+												destroy();
+											}
 
-										@Override
-										public void onFailure(Throwable error) {
-											Log.serverError(error);
-										}
-									});
+											@Override
+											public void onFailure(Throwable error) {
+												Log.serverError(error);
+											}
+										});
+							}
 						}
-					}
-				});
+					});
+				else {
+					bulkPanel.getDocument().setComment(saveForm.getValueAsString("versionComment"));
+					documentService.addDocuments(Session.get().getSid(), encoding, zip, bulkPanel.getDocument(),
+							new AsyncCallback<Void>() {
+
+								@Override
+								public void onSuccess(Void arg0) {
+									DocumentsPanel.get().refresh();
+									destroy();
+								}
+
+								@Override
+								public void onFailure(Throwable error) {
+									Log.serverError(error);
+									
+									// We have to refresh the documents list because maybe
+									// some documents have been stored.
+									DocumentsPanel.get().refresh();
+									destroy();
+								}
+							});
+				}
 			}
 		});
 
@@ -121,7 +149,7 @@ public class BulkUpdateDialog extends Window {
 		savePanel.setHeight("16%");
 		savePanel.setMembersMargin(10);
 		savePanel.setWidth100();
-	
+
 		layout.setMembersMargin(10);
 		layout.setTop(25);
 		layout.setMargin(3);
@@ -130,5 +158,21 @@ public class BulkUpdateDialog extends Window {
 		layout.setMembers(bulkPanel, savePanel);
 
 		addChild(layout);
+	}
+
+	public String getEncoding() {
+		return encoding;
+	}
+
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
+	}
+
+	public boolean isZip() {
+		return zip;
+	}
+
+	public void setZip(boolean zip) {
+		this.zip = zip;
 	}
 }

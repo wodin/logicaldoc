@@ -41,8 +41,11 @@ public class BulkUpdatePanel extends VLayout {
 
 	protected Tab extendedPropertiesTab;
 
-	public BulkUpdatePanel() {
+	public BulkUpdatePanel(GUIDocument metadata) {
 		super();
+
+		if (metadata != null)
+			document = metadata;
 
 		setHeight100();
 		setWidth100();

@@ -120,8 +120,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip,
-			final Long templateId) throws InvalidSessionException {
+	public void addDocuments(String sid, String encoding, boolean importZip, final GUIDocument metadata)
+			throws InvalidSessionException {
 		UserSession userSession = SessionUtil.validateSession(sid);
 
 		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
@@ -131,13 +131,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 
-		DocumentTemplateDAO tDao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
-		DocumentTemplate template = null;
-		if (templateId != null)
-			template = tDao.findById(templateId);
-
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		final Folder parent = folderDao.findById(folderId);
+		final Folder parent = folderDao.findById(metadata.getFolder().getId());
 		if (uploadedFilesMap.isEmpty())
 			throw new RuntimeException("No file uploaded");
 		try {
@@ -155,14 +150,14 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 					final long userId = SessionUtil.getSessionUser(sid).getId();
 					final String sessionId = sid;
-					final String zipLanguage = language;
+					final String zipLanguage = metadata.getLanguage();
 					final String zipEncoding = encoding;
 					// Prepare the import thread
 					Thread zipImporter = new Thread(new Runnable() {
 						public void run() {
 							InMemoryZipImport importer = new InMemoryZipImport();
-							importer.process(destFile, LocaleUtil.toLocale(zipLanguage), parent, userId, templateId,
-									zipEncoding, sessionId);
+							importer.process(destFile, LocaleUtil.toLocale(zipLanguage), parent, userId,
+									metadata.getTemplateId(), zipEncoding, sessionId);
 							try {
 								FileUtils.forceDelete(destFile);
 							} catch (IOException e) {
@@ -181,21 +176,17 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						return;
 					}
 
-					String title = filename.substring(0, filename.lastIndexOf("."));
-
 					// Create the document history event
 					History transaction = new History();
 					transaction.setSessionId(sid);
 					transaction.setEvent(History.EVENT_STORED);
 					transaction.setUser(SessionUtil.getSessionUser(sid));
-
-					Document doc = new Document();
+					transaction.setComment(metadata.getComment());
+					
+					Document doc = toDocument(metadata);
 					doc.setFileName(filename);
-					doc.setLocale(LocaleUtil.toLocale(language));
-					doc.setTitle(title);
-					doc.setFolder(parent);
-					doc.setTemplate(template);
-
+					doc.setTitle(filename.substring(0, filename.lastIndexOf(".")));
+					doc.setCreation(new Date());
 					doc = documentManager.create(file, doc, transaction);
 				}
 			}
@@ -203,6 +194,16 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
 		}
+	}
+
+	@Override
+	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip,
+			final Long templateId) throws InvalidSessionException {
+		GUIDocument metadata = new GUIDocument();
+		metadata.setLanguage(language);
+		metadata.setFolder(new GUIFolder(folderId));
+		metadata.setTemplateId(templateId);
+		addDocuments(sid, encoding, importZip, metadata);
 	}
 
 	@Override
@@ -551,7 +552,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				version2.setSourceId(docVersion.getSourceId());
 				version2.setSourceDate(docVersion.getSourceDate());
 				version2.setWorkflowStatus(docVersion.getWorkflowStatus());
-				
+
 				version2.setTemplateId(docVersion.getTemplateId());
 				version2.setTemplate(docVersion.getTemplateName());
 				versDao.initialize(docVersion);
@@ -738,111 +739,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				doc.setCustomId(document.getCustomId());
 				doc.setComment(document.getComment());
 				try {
-					Document docVO = new Document();
-					docVO.setTitle(document.getTitle());
-					if (document.getTags().length > 0)
-						docVO.setTags(new HashSet<String>(Arrays.asList(document.getTags())));
-
-					docVO.setSourceType(document.getSourceType());
-					docVO.setFileName(document.getFileName());
-					docVO.setVersion(document.getVersion());
-					docVO.setCreation(document.getCreation());
-					docVO.setCreator(document.getCreator());
-					docVO.setDate(document.getDate());
-					docVO.setPublisher(document.getPublisher());
-					docVO.setFileVersion(document.getFileVersion());
-					docVO.setLanguage(document.getLanguage());
-					if (document.getFileSize() != null)
-						docVO.setFileSize(document.getFileSize().longValue());
-					docVO.setSource(document.getSource());
-					docVO.setRecipient(document.getRecipient());
-					docVO.setObject(document.getObject());
-					docVO.setCoverage(document.getCoverage());
-					docVO.setSourceAuthor(document.getSourceAuthor());
-					docVO.setSourceDate(document.getSourceDate());
-					docVO.setSourceId(document.getSourceId());
-					docVO.setRating(document.getRating());
-					docVO.setWorkflowStatus(document.getWorkflowStatus());
-
-					if (document.getTemplateId() != null) {
-						docVO.setTemplateId(document.getTemplateId());
-						DocumentTemplateDAO templateDao = (DocumentTemplateDAO) Context.getInstance().getBean(
-								DocumentTemplateDAO.class);
-						DocumentTemplate template = templateDao.findById(document.getTemplateId());
-						docVO.setTemplate(template);
-						if (document.getAttributes().length > 0) {
-							for (GUIExtendedAttribute attr : document.getAttributes()) {
-								ExtendedAttribute templateAttribute = template.getAttributes().get(attr.getName());
-								// This control is necessary because, changing
-								// the template, the values of the old template
-								// attributes keys remains on the form value
-								// manager,
-								// so the GUIDocument contains also the old
-								// template attributes keys that must be
-								// skipped.
-								if (templateAttribute == null)
-									continue;
-
-								ExtendedAttribute extAttr = new ExtendedAttribute();
-								int templateType = templateAttribute.getType();
-								int extAttrType = attr.getType();
-
-								if (templateType != extAttrType) {
-									// This check is useful to avoid errors
-									// related to the old template
-									// attributes keys that remains on the form
-									// value manager
-									if (attr.getValue().toString().trim().isEmpty() && templateType != 0) {
-										if (templateType == ExtendedAttribute.TYPE_INT) {
-											extAttr.setIntValue(null);
-										} else if (templateType == ExtendedAttribute.TYPE_DOUBLE) {
-											extAttr.setDoubleValue(null);
-										} else if (templateType == ExtendedAttribute.TYPE_DATE) {
-											extAttr.setDateValue(null);
-										}
-									} else if (templateType == GUIExtendedAttribute.TYPE_DOUBLE) {
-										extAttr.setValue(Double.parseDouble(attr.getValue().toString()));
-									} else if (templateType == GUIExtendedAttribute.TYPE_INT) {
-										extAttr.setValue(Long.parseLong(attr.getValue().toString()));
-									}
-								} else {
-									if (templateType == ExtendedAttribute.TYPE_INT) {
-										if (attr.getValue() != null)
-											extAttr.setIntValue((Long) attr.getValue());
-										else
-											extAttr.setIntValue(null);
-									} else if (templateType == ExtendedAttribute.TYPE_DOUBLE) {
-										if (attr.getValue() != null)
-											extAttr.setDoubleValue((Double) attr.getValue());
-										else
-											extAttr.setDoubleValue(null);
-									} else if (templateType == ExtendedAttribute.TYPE_DATE) {
-										if (attr.getValue() != null)
-											extAttr.setDateValue((Date) attr.getValue());
-										else
-											extAttr.setDateValue(null);
-									} else if (templateType == ExtendedAttribute.TYPE_STRING) {
-										if (attr.getValue() != null)
-											extAttr.setStringValue((String) attr.getValue());
-										else
-											extAttr.setStringValue(null);
-									}
-								}
-
-								extAttr.setLabel(attr.getLabel());
-								extAttr.setType(templateType);
-								extAttr.setPosition(attr.getPosition());
-								extAttr.setMandatory(attr.isMandatory() ? 1 : 0);
-
-								docVO.getAttributes().put(attr.getName(), extAttr);
-							}
-						}
-					}
-
-					docVO.setStatus(document.getStatus());
-					FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-					if (document.getFolder() != null)
-						docVO.setFolder(fdao.findById(document.getFolder().getId()));
+					Document docVO = toDocument(document);
 
 					// Create the document history event
 					History transaction = new History();
@@ -872,6 +769,120 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			log.warn(e.getMessage(), e);
 		}
 		return null;
+	}
+
+	/**
+	 * Produces a plain new Document from a GUIDocument
+	 */
+	protected Document toDocument(GUIDocument document) {
+		Document docVO = new Document();
+		docVO.setTitle(document.getTitle());
+		if (document.getTags().length > 0)
+			docVO.setTags(new HashSet<String>(Arrays.asList(document.getTags())));
+
+		docVO.setSourceType(document.getSourceType());
+		docVO.setFileName(document.getFileName());
+		docVO.setVersion(document.getVersion());
+		docVO.setCreation(document.getCreation());
+		docVO.setCreator(document.getCreator());
+		docVO.setDate(document.getDate());
+		docVO.setPublisher(document.getPublisher());
+		docVO.setFileVersion(document.getFileVersion());
+		docVO.setLanguage(document.getLanguage());
+		if (document.getFileSize() != null)
+			docVO.setFileSize(document.getFileSize().longValue());
+		docVO.setSource(document.getSource());
+		docVO.setRecipient(document.getRecipient());
+		docVO.setObject(document.getObject());
+		docVO.setCoverage(document.getCoverage());
+		docVO.setSourceAuthor(document.getSourceAuthor());
+		docVO.setSourceDate(document.getSourceDate());
+		docVO.setSourceId(document.getSourceId());
+		docVO.setRating(document.getRating());
+		docVO.setComment(document.getComment());
+		docVO.setWorkflowStatus(document.getWorkflowStatus());
+
+		
+		if (document.getTemplateId() != null) {
+			docVO.setTemplateId(document.getTemplateId());
+			DocumentTemplateDAO templateDao = (DocumentTemplateDAO) Context.getInstance().getBean(
+					DocumentTemplateDAO.class);
+			DocumentTemplate template = templateDao.findById(document.getTemplateId());
+			docVO.setTemplate(template);
+			if (document.getAttributes().length > 0) {
+				for (GUIExtendedAttribute attr : document.getAttributes()) {
+					ExtendedAttribute templateAttribute = template.getAttributes().get(attr.getName());
+					// This control is necessary because, changing
+					// the template, the values of the old template
+					// attributes keys remains on the form value
+					// manager,
+					// so the GUIDocument contains also the old
+					// template attributes keys that must be
+					// skipped.
+					if (templateAttribute == null)
+						continue;
+
+					ExtendedAttribute extAttr = new ExtendedAttribute();
+					int templateType = templateAttribute.getType();
+					int extAttrType = attr.getType();
+
+					if (templateType != extAttrType) {
+						// This check is useful to avoid errors
+						// related to the old template
+						// attributes keys that remains on the form
+						// value manager
+						if (attr.getValue().toString().trim().isEmpty() && templateType != 0) {
+							if (templateType == ExtendedAttribute.TYPE_INT) {
+								extAttr.setIntValue(null);
+							} else if (templateType == ExtendedAttribute.TYPE_DOUBLE) {
+								extAttr.setDoubleValue(null);
+							} else if (templateType == ExtendedAttribute.TYPE_DATE) {
+								extAttr.setDateValue(null);
+							}
+						} else if (templateType == GUIExtendedAttribute.TYPE_DOUBLE) {
+							extAttr.setValue(Double.parseDouble(attr.getValue().toString()));
+						} else if (templateType == GUIExtendedAttribute.TYPE_INT) {
+							extAttr.setValue(Long.parseLong(attr.getValue().toString()));
+						}
+					} else {
+						if (templateType == ExtendedAttribute.TYPE_INT) {
+							if (attr.getValue() != null)
+								extAttr.setIntValue((Long) attr.getValue());
+							else
+								extAttr.setIntValue(null);
+						} else if (templateType == ExtendedAttribute.TYPE_DOUBLE) {
+							if (attr.getValue() != null)
+								extAttr.setDoubleValue((Double) attr.getValue());
+							else
+								extAttr.setDoubleValue(null);
+						} else if (templateType == ExtendedAttribute.TYPE_DATE) {
+							if (attr.getValue() != null)
+								extAttr.setDateValue((Date) attr.getValue());
+							else
+								extAttr.setDateValue(null);
+						} else if (templateType == ExtendedAttribute.TYPE_STRING) {
+							if (attr.getValue() != null)
+								extAttr.setStringValue((String) attr.getValue());
+							else
+								extAttr.setStringValue(null);
+						}
+					}
+
+					extAttr.setLabel(attr.getLabel());
+					extAttr.setType(templateType);
+					extAttr.setPosition(attr.getPosition());
+					extAttr.setMandatory(attr.isMandatory() ? 1 : 0);
+
+					docVO.getAttributes().put(attr.getName(), extAttr);
+				}
+			}
+		}
+
+		docVO.setStatus(document.getStatus());
+		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		if (document.getFolder() != null)
+			docVO.setFolder(fdao.findById(document.getFolder().getId()));
+		return docVO;
 	}
 
 	@Override
