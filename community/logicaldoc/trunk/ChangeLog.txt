@@ -30,6 +30,7 @@ LogicalDOC 6.3 (2011-10-10; logicaldoc-6.3)
 9	  - Printing search results	- Improvement;	User Interface
 69	- Bulk Update	- New Feature;	User Interface
 107	- CVS Export utility for documents lists -	New Feature;	User Interface
+110 -	Edit metadata while adding new documents - Improvement; User Interface
 
 
 LogicalDOC 6.2.4 (2011-08-29; logicaldoc-6.2.4)
