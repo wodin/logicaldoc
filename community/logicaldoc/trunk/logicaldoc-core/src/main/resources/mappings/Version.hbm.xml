@@ -54,7 +54,7 @@
     <property name="exportName" type="string" column="ld_exportname" length="255" />
     <property name="exportVersion" type="string" column="ld_exportversion" length="10" />
     <property name="deleteUserId" type="long" column="ld_deleteuserid" />
-    <property name="workflowStatus" type="string" column="ld_wfstatus" length="1000" />
+    <property name="workflowStatus" type="string" column="ld_workflowstatus" length="1000" />
    
     <map name="attributes" table="ld_version_ext" lazy="true" cascade="all" order-by="ld_position asc">
       <key column="ld_versionid" />
