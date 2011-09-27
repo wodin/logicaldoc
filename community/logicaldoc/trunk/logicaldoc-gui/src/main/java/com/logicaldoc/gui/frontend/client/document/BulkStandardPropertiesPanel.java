@@ -81,6 +81,9 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 		List<FormItem> items = new ArrayList<FormItem>();
 
 		SelectItem language = ItemFactory.newLanguageSelector("language", true, false);
+		if (document.getLanguage()!=null)
+			language = ItemFactory.newLanguageSelector("language", false, false);
+
 		language.setValue(document.getLanguage());
 		items.add(language);
 
