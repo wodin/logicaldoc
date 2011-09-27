@@ -777,7 +777,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	protected Document toDocument(GUIDocument document) {
 		Document docVO = new Document();
 		docVO.setTitle(document.getTitle());
-		if (document.getTags().length > 0)
+		if (document.getTags()!=null && document.getTags().length > 0)
 			docVO.setTags(new HashSet<String>(Arrays.asList(document.getTags())));
 
 		docVO.setSourceType(document.getSourceType());
