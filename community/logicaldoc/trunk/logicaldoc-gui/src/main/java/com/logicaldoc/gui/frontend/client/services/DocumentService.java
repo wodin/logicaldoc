@@ -99,7 +99,7 @@ public interface DocumentService extends RemoteService {
 	 * @param sid The session identifier
 	 * @param language The language applied to all documents
 	 * @param folderId The destination folder identifier
-	 * @param encoding The encoding
+	 * @param encoding The zip encoding
 	 * @param importZip If .zip files have to be unpacked and the contained
 	 *        documents imported
 	 * @param templateId The documents template
@@ -107,6 +107,17 @@ public interface DocumentService extends RemoteService {
 	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip,
 			Long templateId) throws InvalidSessionException;
 
+	/**
+	 * Adds new documents previously uploaded, with metadata specification.
+	 * 
+	 * @param sid The session identifier
+	 * @param vo The metadata applied to all new documents
+	 * @param encoding The zip encoding
+	 * @param importZip If .zip files have to be unpacked and the contained
+	 *        documents imported.
+	 */
+	public void addDocuments(String sid, String encoding, boolean importZip, GUIDocument metadata) throws InvalidSessionException;
+	
 	/**
 	 * Checks-in a new document version
 	 * 

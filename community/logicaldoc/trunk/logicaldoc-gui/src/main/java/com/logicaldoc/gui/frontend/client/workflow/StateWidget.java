@@ -81,8 +81,18 @@ public class StateWidget extends Label {
 					}
 				});
 
+				MenuItem straight = new MenuItem();
+				straight.setTitle(I18N.message("straight"));
+				straight.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+					public void onClick(MenuItemClickEvent event) {
+						restoreStraight();
+					}
+				});
+
 				if (isTask())
 					contextMenu.setItems(edit, makeStart, delete);
+				else if (isConnection())
+					contextMenu.setItems(edit, straight, delete);
 				else
 					contextMenu.setItems(edit, delete);
 				contextMenu.showContextMenu();
@@ -193,6 +203,10 @@ public class StateWidget extends Label {
 			return false;
 	}
 
+	public boolean isConnection() {
+		return connection != null;
+	}
+
 	public GUIWFState getWfState() {
 		return wfState;
 	}
@@ -223,5 +237,14 @@ public class StateWidget extends Label {
 
 	public void setReadonly(boolean readonly) {
 		this.readonly = readonly;
+	}
+
+	/**
+	 * Restore the connection to a straight segment
+	 */
+	private void restoreStraight() {
+		connection.getMovablePoints().clear();
+		connection.setStraight();
+		diagramController.runRefresh();
 	}
 }

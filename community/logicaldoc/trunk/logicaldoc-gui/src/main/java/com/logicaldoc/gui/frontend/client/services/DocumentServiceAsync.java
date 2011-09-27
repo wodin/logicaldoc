@@ -65,4 +65,6 @@ public interface DocumentServiceAsync {
 	void addNote(String sid, long docId, String message, AsyncCallback<Long> callback);
 
 	void bulkUpdate(String sid, long[] ids, GUIDocument vo, AsyncCallback<Void> callback);
+
+	void addDocuments(String sid, String encoding, boolean importZip, GUIDocument metadata, AsyncCallback<Void> callback);
 }

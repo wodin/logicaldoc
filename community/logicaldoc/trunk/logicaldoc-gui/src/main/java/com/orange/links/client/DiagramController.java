@@ -32,7 +32,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.workflow.StateWidget;
 import com.orange.links.client.canvas.BackgroundCanvas;
 import com.orange.links.client.canvas.DiagramCanvas;
@@ -86,13 +85,13 @@ public class DiagramController implements HasNewFunctionHandlers, HasTieLinkHand
 	 * If the distance between the mouse and segment is under this number in
 	 * pixels, then, the mouse is considered over the segment
 	 */
-	public static int minDistanceToSegment = 10;
+	public static int minDistanceToSegment = 6;
 
 	/**
 	 * Timer refresh duration, in milliseconds. It defers if the application is
 	 * running in development mode or in the web mode
 	 */
-	public static int refreshRate = GWT.isScript() ? 25 : 50;
+	public static int refreshRate = GWT.isScript() ? 25 : 40;
 
 	private DiagramCanvas topCanvas;
 
@@ -291,7 +290,7 @@ public class DiagramController implements HasNewFunctionHandlers, HasTieLinkHand
 		return drawConnection(cf, startShape, endShape);
 	}
 
-	private <C extends Connection> C drawConnection(ConnectionFactory<C> cf, Shape start, Shape end) {
+	public <C extends Connection> C drawConnection(ConnectionFactory<C> cf, Shape start, Shape end) {
 		// Create Connection and Store it in the controller
 		C c = cf.create(this, start, end);
 		c.setController(this);
@@ -516,7 +515,6 @@ public class DiagramController implements HasNewFunctionHandlers, HasTieLinkHand
 
 			@Override
 			public void onDragEnd(DragEndEvent event) {
-				Log.info("+onDragEnd", null);
 				inDragWidget = false;
 				Widget widget = event.getContext().draggable;
 				Shape s = widgetShapeMap.get(widget);
