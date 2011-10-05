@@ -12,25 +12,25 @@
 
 LogicalDOC 6.3 (2011-10-10; logicaldoc-6.3)
 ===============
-87	- Recognize PDF vectorial barcodes - Improvement;	Barcode
-102	- Export folder contents in .ZIP does not handle properly non latin chars	- Bug; Core
-82	- Professional OCR Engine	- Improvement;	Core
-109	- Workflow status tracking	- Improvement;	Core
-5	  - Searcheable version comment	- Improvement;	Core
-90	- Parsing timeout - Improvement;	Core
-71	- Folders tree template	- New Feature;	Core
-99	- Direct link to folder and document - New Feature;	Core
-103	- Compatibility with MS SQLServer	- Task;	Core
-83	- Routing policy for e-mail content -	Improvement;	Import/Export
-94	- Configurable import policy - Improvement;	Import/Export
-4	  - Extending RSS Feed - Improvement;	RSS
-88	- Visual workflow designer - Improvement;	User Interface
-10	- Showing folder name in search results - Improvement;	User Interface
-106	- Option to save credentials in browser	- Improvement;	User Interface
-9	  - Printing search results	- Improvement;	User Interface
-69	- Bulk Update	- New Feature;	User Interface
-107	- CVS Export utility for documents lists -	New Feature;	User Interface
-110 -	Edit metadata while adding new documents - Improvement; User Interface
+87	- Recognize PDF vectorial barcodes - Improvement - Barcode
+102	- Export folder contents in .ZIP does not handle properly non latin chars	- Bug - Core
+82	- Professional OCR Engine	- Improvement - Core
+109	- Workflow status tracking	- Improvement - Core
+5	  - Searcheable version comment	- Improvement - Core
+90	- Parsing timeout - Improvement - Core
+71	- Folders tree template	- New Feature - Core
+99	- Direct link to folder and document - New Feature - Core
+103	- Compatibility with MS SQLServer	- Task - Core
+83	- Routing policy for e-mail content -	Improvement - Import/Export
+94	- Configurable import policy - Improvement - Import/Export
+4	  - Extending RSS Feed - Improvement - RSS
+88	- Visual workflow designer - Improvement - User Interface
+10	- Showing folder name in search results - Improvement - User Interface
+106	- Option to save credentials in browser	- Improvement - User Interface
+9	  - Printing search results	- Improvement - User Interface
+69	- Bulk Update	- New Feature - User Interface
+107	- CVS Export utility for documents lists -	New Feature - User Interface
+110 -	Edit metadata while adding new documents - Improvement - User Interface
 
 
 LogicalDOC 6.2.4 (2011-08-29; logicaldoc-6.2.4)
