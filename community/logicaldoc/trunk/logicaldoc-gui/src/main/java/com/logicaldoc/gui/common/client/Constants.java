@@ -85,6 +85,4 @@ public final class Constants {
 	public static final String LOCALE = "locale";
 
 	public static final String BLANK_PLACEHOLDER = "___";
-	
-	public static final String OFFICE_ENABLED = "office.enabled";
 }
