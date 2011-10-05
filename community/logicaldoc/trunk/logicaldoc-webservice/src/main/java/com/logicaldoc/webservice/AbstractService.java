@@ -22,6 +22,7 @@ import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * Basepoint for creating webservices implementations
@@ -62,6 +63,9 @@ public class AbstractService {
 			user.setGroups(groups);
 			return user;
 		}
+
+		if (!"true".equals(getSettings().get("webservice.enabled")))
+			throw new Exception("WebServices are disabled");
 
 		if (!SessionManager.getInstance().isValid(sid)) {
 			throw new Exception("Invalid session");
@@ -143,9 +147,9 @@ public class AbstractService {
 	}
 
 	public static Date convertStringToDate(String date) {
-		if(StringUtils.isEmpty(date))
+		if (StringUtils.isEmpty(date))
 			return null;
-		
+
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			return df.parse(date);
@@ -157,5 +161,9 @@ public class AbstractService {
 			}
 		}
 		return null;
+	}
+
+	protected ContextProperties getSettings() {
+		return (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 	}
 }
