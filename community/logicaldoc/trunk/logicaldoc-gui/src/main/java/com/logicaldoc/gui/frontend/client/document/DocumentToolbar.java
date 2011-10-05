@@ -14,6 +14,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.dashboard.WorkflowDashboard;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
@@ -58,6 +59,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	protected ToolStripButton startWorkflow = new ToolStripButton();
 
 	protected ToolStripButton addToWorkflow = new ToolStripButton();
+
+	protected ToolStripButton office = new ToolStripButton();
 
 	protected ToolStripButton print = new ToolStripButton();
 
@@ -274,6 +277,16 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		}
 
+		if (Feature.visible(Feature.OFFICE)) {
+			addButton(office);
+			if (!Feature.enabled(Feature.OFFICE) || (document != null && !Util.isOfficeFile(document.getFileName()))
+					|| !downloadEnabled) {
+				office.setDisabled(true);
+			}
+			if (!Feature.enabled(Feature.OFFICE))
+				office.setTooltip(I18N.message("featuredisabled"));
+		}
+		
 		addSeparator();
 		addButton(add);
 
@@ -284,6 +297,19 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				scan.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
+
+		office.setTooltip(I18N.message("editwithoffice"));
+		office.setIcon(ItemFactory.newImgIcon("page_white_office.png").getSrc());
+		office.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (document == null)
+					return;
+
+				WindowUtils.openUrl("ldedit:" + GWT.getHostPageBaseURL() + "ldedit?action=edit&sid="
+						+ Session.get().getSid() + "&docId=" + document.getId());
+			}
+		});
 
 		final IntegerItem max = ItemFactory.newValidateIntegerItem("max", "", null, 1, null);
 		max.setHint(I18N.message("elements"));
@@ -446,6 +472,23 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					pdf.setTooltip(I18N.message("exportpdf"));
 				subscribe.setDisabled(!Feature.enabled(Feature.AUDIT));
 				bulkUpdate.setDisabled(!Feature.enabled(Feature.BULK_UPDATE));
+				
+				boolean isOfficeFile = false;
+				if (document.getFileName() != null)
+					isOfficeFile = Util.isOfficeFile(document.getFileName());
+				else if (document.getType() != null)
+					isOfficeFile = Util.isOfficeFileType(document.getType());
+
+				office.setDisabled(!Feature.enabled(Feature.OFFICE) || !isOfficeFile || !downloadEnabled);
+				if (document.getStatus() != Constants.DOC_UNLOCKED
+						&& !Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN)) {
+					if (document.getLockUserId() != null
+							&& Session.get().getUser().getId() != document.getLockUserId().longValue())
+						office.setDisabled(true);
+				}
+
+				if (!office.isDisabled())
+					office.setTooltip(I18N.message("editwithoffice"));				
 			} else {
 				download.setDisabled(true);
 				rss.setDisabled(true);
