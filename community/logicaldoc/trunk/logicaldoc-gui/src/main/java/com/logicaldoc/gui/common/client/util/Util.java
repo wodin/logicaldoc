@@ -13,10 +13,11 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.smartgwt.client.data.Record;
+import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class Util {
 	public static String[] OFFICE_EXTS = new String[] { ".doc", ".xls", ".ppt", ".docx", ".xlsx", ".pptx" };
@@ -64,20 +65,20 @@ public class Util {
 	 */
 	public static String flashPreview(String flashName, int width, int height, String flashvars, boolean printEnabled,
 			String language) {
-		
+
 		String key = Session.get().getInfo().getConfig("flexpaperviewer.key");
-		String vars = flashvars + "&Scale=0.6"		
-			+ "&PrintEnabled=" +printEnabled
-			+ "&ProgressiveLoading=true" 
-			+ "&ViewModeToolsVisible=true" + "&ZoomToolsVisible=true" + "&NavToolsVisible=true" 
-			+ "&CursorToolsVisible=true" + "&SearchToolsVisible=true";	
-	
+		String vars = flashvars + "&Scale=0.6" + "&PrintEnabled=" + printEnabled + "&ProgressiveLoading=true"
+				+ "&ViewModeToolsVisible=true" + "&ZoomToolsVisible=true" + "&NavToolsVisible=true"
+				+ "&CursorToolsVisible=true" + "&SearchToolsVisible=true";
+
 		if (key != null) {
-			vars += "&key=" +key;
+			vars += "&key=" + key;
 		}
-	  	
+
 		String tmp = "<div align=\"center\">";
-		tmp += "<object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" id=\"FlexPaperViewer\" width=\""+width +"\" height=\"" +height+"\" codebase=\"http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab\">\n";
+		tmp += "<object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" id=\"FlexPaperViewer\" width=\"" + width
+				+ "\" height=\"" + height
+				+ "\" codebase=\"http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab\">\n";
 		tmp += " <param name=\"allowScriptAccess\" value=\"always\" />\n";
 		tmp += " <param name=\"allowFullScreen\" value=\"true\" />\n";
 		tmp += " <param name=\"movie\" value=\"" + Util.flashUrl(flashName) + "\" />\n";
@@ -89,7 +90,7 @@ public class Util {
 				+ " bgcolor=\"#ffffff\" quality=\"high\" allowFullScreen=\"true\" flashvars=\"" + vars + "\">\n";
 		tmp += "</embed>\n";
 		tmp += "</object></div>\n";
-		
+
 		return tmp;
 	}
 
@@ -410,27 +411,52 @@ public class Util {
 		stringBuilder.append("\n");
 
 		// column data
-		ListGridRecord[] records = listGrid.getRecords();
+		Record[] records = new Record[0];
+		try {
+			records = listGrid.getRecords();
+		} catch (Throwable t) {
+		}
+
+		if (records == null || records.length < 1) {
+			/*
+			 * In case of data bound grid, we need to call the original records
+			 * list
+			 */
+			RecordList buf = listGrid.getOriginalRecordList();
+			if (buf != null) {
+				records = new Record[buf.getLength()];
+				for (int i = 0; i < records.length; i++)
+					records[i] = buf.get(i);
+			}
+		}
 
 		DateTimeFormat formatter = DateTimeFormat.getFormat(I18N.message("format_dateshort"));
 		for (int i = 0; i < records.length; i++) {
-			ListGridRecord listGridRecord = records[i];
+			Record record = records[i];
 			ListGridField[] listGridFields = listGrid.getFields();
-			for (int j = 0; j < listGridFields.length; j++) {
-				ListGridField listGridField = listGridFields[j];
-				if (listGridField.getType().equals(ListGridFieldType.ICON)
-						|| listGridField.getType().equals(ListGridFieldType.IMAGE)
-						|| listGridField.getType().equals(ListGridFieldType.IMAGEFILE)
-						|| listGridField.getType().equals(ListGridFieldType.BINARY))
-					continue;
 
-				stringBuilder.append("\"");
-				if (listGridField.getType().equals(ListGridFieldType.DATE)) {
-					stringBuilder.append(formatter.format(listGridRecord.getAttributeAsDate(listGridField.getName())));
-				} else {
-					stringBuilder.append(listGridRecord.getAttribute(listGridField.getName()));
+			for (int j = 0; j < listGridFields.length; j++) {
+				try {
+					ListGridField listGridField = listGridFields[j];
+					if (listGridField.getType().equals(ListGridFieldType.ICON)
+							|| listGridField.getType().equals(ListGridFieldType.IMAGE)
+							|| listGridField.getType().equals(ListGridFieldType.IMAGEFILE)
+							|| listGridField.getType().equals(ListGridFieldType.BINARY))
+						continue;
+
+					stringBuilder.append("\"");
+					if (listGridField.getType().equals(ListGridFieldType.DATE)) {
+						stringBuilder.append(formatter.format(record.getAttributeAsDate(listGridField.getName())));
+					} else {
+						stringBuilder.append(record.getAttribute(listGridField.getName()));
+					}
+					stringBuilder.append("\";");
+				} catch (Throwable t) {
+					/*
+					 * May be that not all the rows are available, since we can
+					 * count just on the rows that were rendered.
+					 */
 				}
-				stringBuilder.append("\";");
 			}
 			stringBuilder.deleteCharAt(stringBuilder.length() - 1); // remove
 																	// last ";"

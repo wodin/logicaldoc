@@ -150,7 +150,7 @@ public class FolderTemplatesPanel extends VLayout {
 		folders.setRequired(true);
 		folders.setEditorType(new TextAreaItem());
 
-		ListGridField name = new ListGridField("name", I18N.message("ttemplate"));
+		ListGridField name = new ListGridField("name", I18N.message("foldertemplates"));
 		name.setWidth(150);
 		name.setRequired(true);
 
