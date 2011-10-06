@@ -402,10 +402,10 @@ public class FoldersNavigator extends TreeGrid {
 	}
 
 	/**
-	 * Allows the selection of a folders template to appy to the current node
+	 * Allows the selection of a folders template to apply to the current node
 	 */
 	private void onApplyTemplate() {
-		LD.askforValue(I18N.message("applytemplate"), I18N.message("ttemplate"), null, "200px",
+		LD.askforValue(I18N.message("applytemplate"), I18N.message("foldertemplates"), null, "200px",
 				ItemFactory.newFolderTemplateSelector(), new ValueCallback() {
 					@Override
 					public void execute(String value) {
