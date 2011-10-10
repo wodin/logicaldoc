@@ -80,9 +80,6 @@ public class PDFParser extends AbstractParser {
 		tags = "";
 		PDDocument pdfDocument = null;
 
-		// Will store the extracted text
-		StringBuffer buffer = new StringBuffer();
-
 		try {
 			org.apache.pdfbox.pdfparser.PDFParser parser = new org.apache.pdfbox.pdfparser.PDFParser(input);
 
@@ -99,19 +96,16 @@ public class PDFParser extends AbstractParser {
 						pdfDocument.decrypt("");
 					} catch (InvalidPasswordException e) {
 						log.error("Error: The document is encrypted.");
-						buffer.append("The document is encrypted");
+						content.append("The document is encrypted");
 						return;
 					}
 				}
 
 				// Strip text from the entire document
-				parseDocument(pdfDocument, buffer);
+				parseDocument(pdfDocument);
 
 				// Now parse the forms
-				parseForm(pdfDocument, buffer);
-
-				// Store all the extracted contents
-				content.append(buffer.toString());
+				parseForm(pdfDocument);
 			}
 		} catch (Throwable ex) {
 			log.error(ex.getMessage(), ex);
@@ -134,7 +128,7 @@ public class PDFParser extends AbstractParser {
 	/**
 	 * Extract text and metadata from the main document
 	 */
-	protected void parseDocument(PDDocument pdfDocument, StringBuffer buffer) {
+	protected void parseDocument(PDDocument pdfDocument) {
 		try {
 			PDDocumentInformation information = pdfDocument.getDocumentInformation();
 			if (information == null) {
@@ -160,7 +154,7 @@ public class PDFParser extends AbstractParser {
 				// DateFormat.getDateInstance(DateFormat.SHORT,
 				// Locale.ENGLISH).format(date);
 			} catch (Throwable e) {
-				log.error("Bad date format " + e.getMessage());
+				log.debug("Bad date format " + e.getMessage());
 				sourceDate = "";
 			}
 
@@ -169,20 +163,32 @@ public class PDFParser extends AbstractParser {
 				tags = "";
 			}
 
-			Writer writer = new CharArrayWriter();
+			/*
+			 * Incrementally read all pages
+			 */
 			PDFTextStripper stripper = new PDFTextStripper("UTF-8");
-			try {
-				stripper.writeText(pdfDocument, writer);
-				writer.flush();
-				buffer.append(writer.toString());
-			} catch (Throwable tw) {
-				log.error("Exception reading pdf document: " + tw.getMessage());
-				author = "";
-			} finally {
+			int pages = pdfDocument.getNumberOfPages();
+			for (int i = 1; i <= pages; i++) {
+				Writer writer = new CharArrayWriter();
+	
 				try {
-					writer.close();
-				} catch (Throwable e) {
-					log.error(e.getMessage(), e);
+					stripper.setStartPage(i);
+					stripper.setEndPage(i);
+					stripper.setPageSeparator("\n");
+					stripper.setPageEnd("\n");
+					stripper.setAddMoreFormatting(false);
+					stripper.writeText(pdfDocument, writer);
+					writer.flush();
+					content.append(writer.toString());
+				} catch (Throwable tw) {
+					log.error("Exception reading pdf document: " + tw.getMessage());
+					author = "";
+				} finally {
+					try {
+						writer.close();
+					} catch (Throwable e) {
+						log.error(e.getMessage(), e);
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -194,14 +200,14 @@ public class PDFParser extends AbstractParser {
 	 * Extract the text from the form fields
 	 */
 	@SuppressWarnings("rawtypes")
-	public void parseForm(PDDocument pdfDocument, StringBuffer buffer) throws IOException {
+	public void parseForm(PDDocument pdfDocument) throws IOException {
 		PDDocumentCatalog docCatalog = pdfDocument.getDocumentCatalog();
 		PDAcroForm acroForm = docCatalog.getAcroForm();
 
 		if (acroForm == null)
 			return;
 
-		buffer.append("\n");
+		content.append("\n");
 
 		List fields = acroForm.getFields();
 		Iterator fieldsIter = fields.iterator();
@@ -210,7 +216,7 @@ public class PDFParser extends AbstractParser {
 
 		while (fieldsIter.hasNext()) {
 			PDField field = (PDField) fieldsIter.next();
-			parseField(field, "|--", field.getPartialName(), buffer);
+			parseField(field, "|--", field.getPartialName());
 		}
 	}
 
@@ -218,7 +224,7 @@ public class PDFParser extends AbstractParser {
 	 * Extracts the field contents populating the given buffer. This method is
 	 * recursive, use carefully.
 	 */
-	private void parseField(PDField field, String sLevel, String sParent, StringBuffer buffer) throws IOException {
+	private void parseField(PDField field, String sLevel, String sParent) throws IOException {
 		List<COSObjectable> kids = field.getKids();
 		if (kids != null) {
 			Iterator<COSObjectable> kidsIter = kids.iterator();
@@ -230,14 +236,14 @@ public class PDFParser extends AbstractParser {
 				Object pdfObj = kidsIter.next();
 				if (pdfObj instanceof PDField) {
 					PDField kid = (PDField) pdfObj;
-					parseField(kid, "|  " + sLevel, sParent, buffer);
+					parseField(kid, "|  " + sLevel, sParent);
 				}
 			}
 		} else {
 			try {
 				if (StringUtils.isNotEmpty(field.getValue())) {
-					buffer.append(" ");
-					buffer.append(field.getValue());
+					content.append(" ");
+					content.append(field.getValue());
 				}
 			} catch (Throwable t) {
 

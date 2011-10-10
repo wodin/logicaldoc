@@ -110,7 +110,7 @@ public class PDFParserTest extends AbstractCoreTCase{
 			Parser parser = ParserFactory.getParser(filename);
 			PDFParser pdfp = (PDFParser) parser;
 			pdfp.parse(file);
-
+			
 			assertTrue(pdfp.getContent().startsWith("1: prova"));
 		}
 	}
@@ -135,7 +135,7 @@ public class PDFParserTest extends AbstractCoreTCase{
 				assertEquals(27179, parser.getContent().length());
 			} else {
 				pdfp.parse(file2);
-				assertEquals(8602, parser.getContent().length());
+				assertEquals(8614, parser.getContent().length());
 			}
 		}
 	}
