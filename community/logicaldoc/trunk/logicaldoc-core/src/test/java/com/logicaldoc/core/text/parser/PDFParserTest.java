@@ -132,10 +132,10 @@ public class PDFParserTest extends AbstractCoreTCase{
 			PDFParser pdfp = (PDFParser) parser;
 			if (i % 2 == 0) {
 				pdfp.parse(file1);
-				assertEquals(27179, parser.getContent().length());
+				assertEquals(27124, parser.getContent().length());
 			} else {
 				pdfp.parse(file2);
-				assertEquals(8614, parser.getContent().length());
+				assertEquals(8596, parser.getContent().length());
 			}
 		}
 	}
@@ -185,7 +185,7 @@ public class PDFParserTest extends AbstractCoreTCase{
 		assertTrue(StringUtils.isNotEmpty(content));
 
 		System.err.println("content.length(): " + content.length());
-		assertEquals(3001, content.length());
+		assertEquals(3000, content.length());
 
 		try {
 			FileOutputStream out = new FileOutputStream(outputFile);
@@ -221,7 +221,7 @@ public class PDFParserTest extends AbstractCoreTCase{
 		assertTrue(StringUtils.isNotEmpty(content));
 
 		System.err.println("content.length(): " + content.length());
-		assertEquals(8602, content.length());
+		assertEquals(8596, content.length());
 	}
 
 	@Test
