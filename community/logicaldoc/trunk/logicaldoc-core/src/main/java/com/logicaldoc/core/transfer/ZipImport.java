@@ -10,7 +10,6 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -24,12 +23,8 @@ import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
-import com.logicaldoc.core.text.analyzer.AnalyzerManager;
-import com.logicaldoc.core.text.parser.Parser;
-import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.TagUtil;
 import com.logicaldoc.util.io.ZipUtil;
 
 /**
@@ -41,19 +36,9 @@ import com.logicaldoc.util.io.ZipUtil;
  */
 public class ZipImport {
 
-	protected Locale locale;
-
-	protected Long templateId = null;
-
 	protected User user;
 
 	protected static Log logger = LogFactory.getLog(ZipImport.class);
-
-	protected boolean extractTags = false;
-
-	protected int tagsNumber = 3;
-
-	protected String tags;
 
 	protected File zipFile;
 
@@ -61,13 +46,19 @@ public class ZipImport {
 
 	protected String sessionId = null;
 
-	public ZipImport() {
+	protected Document docVo = null;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param docVo Value object for the common documents metadata.
+	 */
+	public ZipImport(Document docVo) {
+		this.docVo = docVo;
 	}
 
-	public void process(File zipsource, Locale locale, Folder parent, long userId, Long templateId, String sessionId) {
+	public void process(File zipsource, Folder parent, long userId, String sessionId) {
 		this.zipFile = zipsource;
-		this.locale = locale;
-		this.templateId = templateId;
 		this.sessionId = sessionId;
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -103,7 +94,7 @@ public class ZipImport {
 
 	public void process(String zipsource, Locale locale, Folder parent, long userId, Long templateId, String sessionId) {
 		File srcfile = new File(zipsource);
-		process(srcfile, locale, parent, userId, templateId, sessionId);
+		process(srcfile, parent, userId, sessionId);
 	}
 
 	/**
@@ -123,7 +114,6 @@ public class ZipImport {
 
 		if (file.isDirectory()) {
 			// creates a logicaldoc folder
-
 			Folder folder = dao.create(parent, folderName, transaction);
 
 			File[] files = file.listFiles();
@@ -132,26 +122,6 @@ public class ZipImport {
 				addEntry(files[i], folder);
 			}
 		} else {
-			Set<String> tagSet = null;
-			if (extractTags) {
-				AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
-
-				// also extract tags and save on document
-				Parser parser = ParserFactory.getParser(file, file.getName(), locale, null);
-				parser.parse(file);
-				String words = parser.getTags();
-				if (StringUtils.isEmpty(words)) {
-					try {
-						words = analyzer.getTermsAsString(tagsNumber, parser.getContent(), locale);
-					} catch (Exception e) {
-						logger.error(e.getMessage(), e);
-					}
-				}
-				tagSet = TagUtil.extractTags(words);
-			} else if (StringUtils.isNotEmpty(tags)) {
-				tagSet = TagUtil.extractTags(tags);
-			}
-
 			// creates a document
 			DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 			try {
@@ -159,12 +129,9 @@ public class ZipImport {
 				transaction.setComment("");
 				transaction.setUser(user);
 
-				Document doc = new Document();
-				doc.setFileName(file.getName());
-				doc.setLocale(locale);
+				Document doc = (Document) docVo.clone();
 				doc.setFolder(parent);
-				doc.setTags(tagSet);
-				doc.setTemplateId(templateId);
+
 				docManager.create(file, doc, transaction);
 			} catch (Exception e) {
 				logger.error("InMemoryZipImport addEntry failed", e);
@@ -201,41 +168,6 @@ public class ZipImport {
 		sysmess.setPrio(0);
 		sysmess.setDateScope(1);
 		smdao.store(sysmess);
-	}
-
-	public String getTags() {
-		return tags;
-	}
-
-	public void setTags(String tags) {
-		this.tags = tags;
-	}
-
-	public boolean isExtractTags() {
-		return extractTags;
-	}
-
-	public void setExtractTags(boolean extractTags) {
-		this.extractTags = extractTags;
-	}
-
-	/**
-	 * The number of auto-extracted tags
-	 */
-	public int getTagsNumber() {
-		return tagsNumber;
-	}
-
-	public void setTagsNumber(int tagsNumber) {
-		this.tagsNumber = tagsNumber;
-	}
-
-	public Locale getLocale() {
-		return locale;
-	}
-
-	public void setLocale(Locale locale) {
-		this.locale = locale;
 	}
 
 	public boolean isNotifyUser() {

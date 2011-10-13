@@ -137,9 +137,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			throw new RuntimeException("No file uploaded");
 		try {
 			for (String fileId : uploadedFilesMap.keySet()) {
-				File file = uploadedFilesMap.get(fileId);
-				String filename = uploadedFileNames.get(fileId);
-
+				final File file = uploadedFilesMap.get(fileId);
+				final String filename = uploadedFileNames.get(fileId);
+				
 				if (filename.endsWith(".zip") && importZip) {
 					log.debug("file = " + file);
 
@@ -150,14 +150,18 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 					final long userId = SessionUtil.getSessionUser(sid).getId();
 					final String sessionId = sid;
-					final String zipLanguage = metadata.getLanguage();
 					final String zipEncoding = encoding;
 					// Prepare the import thread
 					Thread zipImporter = new Thread(new Runnable() {
 						public void run() {
-							InMemoryZipImport importer = new InMemoryZipImport();
-							importer.process(destFile, LocaleUtil.toLocale(zipLanguage), parent, userId,
-									metadata.getTemplateId(), zipEncoding, sessionId);
+							/*
+							 * Prepare the Master document used to create the new one
+							 */
+							Document doc = toDocument(metadata);
+							doc.setCreation(new Date());
+							
+							InMemoryZipImport importer = new InMemoryZipImport(doc);
+							importer.process(destFile, parent, userId, zipEncoding, sessionId);
 							try {
 								FileUtils.forceDelete(destFile);
 							} catch (IOException e) {
@@ -183,10 +187,15 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					transaction.setUser(SessionUtil.getSessionUser(sid));
 					transaction.setComment(metadata.getComment());
 					
+					/*
+					 * Prepare the Master document used to create the new one
+					 */
 					Document doc = toDocument(metadata);
 					doc.setFileName(filename);
 					doc.setTitle(filename.substring(0, filename.lastIndexOf(".")));
 					doc.setCreation(new Date());
+				
+					// Create the new
 					doc = documentManager.create(file, doc, transaction);
 				}
 			}
