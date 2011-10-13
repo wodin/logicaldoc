@@ -4,12 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Set;
 import java.util.zip.ZipException;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tools.zip.ZipEntry;
@@ -21,11 +18,7 @@ import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
-import com.logicaldoc.core.text.analyzer.AnalyzerManager;
-import com.logicaldoc.core.text.parser.Parser;
-import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.TagUtil;
 
 /**
  * This is an import utilities that imports documents stored in a zip archive.
@@ -41,20 +34,18 @@ public class InMemoryZipImport extends ZipImport {
 
 	protected static Log logger = LogFactory.getLog(InMemoryZipImport.class);
 
-	public InMemoryZipImport() {
+	public InMemoryZipImport(Document docVo) {
+		super(docVo);
 	}
 
-	public void process(File zipsource, Locale locale, Folder parent, long userId, Long templateId, String sessionId) {
+	public void process(File zipsource, Folder parent, long userId, String sessionId) {
 		// process the files in the zip using UTF-8 encoding for file names
-		process(zipsource, locale, parent, userId, templateId, "UTF-8", sessionId);
+		process(zipsource, parent, userId, "UTF-8", sessionId);
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	public void process(File zipsource, Locale locale, Folder parent, long userId, Long templateId, String encoding,
-			String sessionId) {
+	public void process(File zipsource, Folder parent, long userId, String encoding, String sessionId) {
 		this.zipFile = zipsource;
-		this.locale = locale;
-		this.templateId = templateId;
 		this.sessionId = sessionId;
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -127,47 +118,20 @@ public class InMemoryZipImport extends ZipImport {
 			String folderPath = FilenameUtils.getFullPathNoEndSeparator(ze.getName());
 			Folder documentPath = dao.createPath(parent, folderPath, transaction);
 
-			Set<String> tagSet = null;
-			if (extractTags) {
-				AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
-
-				// also extract tags and save on document
-				Parser parser = ParserFactory.getParser(filename);
-				parser.setEncoding(zip.getEncoding());
-				// This reader will be automatically closed by method
-				// parser.readText
-				parser.parse(stream);
-				String words = parser.getTags();
-				if (StringUtils.isEmpty(words)) {
-					try {
-						String text = parser.getContent();
-						words = analyzer.getTermsAsString(tagsNumber, text, locale);
-					} catch (Exception e) {
-						logger.error("Error in text extraction from document", e);
-					}
-				}
-				tagSet = TagUtil.extractTags(words);
-			} else if (StringUtils.isNotEmpty(tags)) {
-				tagSet = TagUtil.extractTags(tags);
-			}
-
 			// create a document
 			DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 			try {
+				Document doc = (Document) docVo.clone();
+				doc.setTitle(doctitle);
+				doc.setFileName(filename);
+				doc.setFolder(documentPath);
+				
 				// Reopen the stream (the parser has closed it)
 				stream = zip.getInputStream(ze);
 
 				transaction.setEvent(History.EVENT_STORED);
 				transaction.setComment("");
 				transaction.setUser(user);
-
-				Document doc = new Document();
-				doc.setFileName(filename);
-				doc.setLocale(locale);
-				doc.setFolder(documentPath);
-				doc.setTitle(doctitle);
-				doc.setTags(tagSet);
-				doc.setTemplateId(templateId);
 
 				docManager.create(stream, doc, transaction);
 			} catch (Exception e) {

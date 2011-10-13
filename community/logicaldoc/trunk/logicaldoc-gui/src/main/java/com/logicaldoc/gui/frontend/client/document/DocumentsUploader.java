@@ -124,17 +124,12 @@ public class DocumentsUploader extends Window {
 		zipItem.addChangeHandler(new ChangeHandler() {
 			public void onChange(ChangeEvent event) {
 				zipImport = !zipImport;
-				if (zipImport)
-					sendButton.setDisabled(true);
-				else if (sendButton.isDisabled())
-					sendButton.setDisabled(false);
 				reloadForm();
 			}
 		});
 
 		sendButton = new SubmitItem();
 		sendButton.setTitle(I18N.message("send"));
-		sendButton.setDisabled(true);
 		sendButton.setEndRow(true);
 		sendButton.addClickHandler(new ClickHandler() {
 			@Override
