@@ -169,6 +169,8 @@ public class DocumentsUploader extends Window {
 		metadata.setLanguage(I18N.getDefaultLocaleForDoc());
 
 		BulkUpdateDialog bulk = new BulkUpdateDialog(null, metadata);
+		bulk.setZip(getImportZip());
+		bulk.setEncoding(getEncoding());
 		bulk.show();
 		destroy();
 	}
