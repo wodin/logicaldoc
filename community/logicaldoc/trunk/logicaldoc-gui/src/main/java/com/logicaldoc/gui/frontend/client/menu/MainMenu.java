@@ -316,7 +316,7 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 				if (dropArea.getContents().equals(EMPTY_DIV)) {
 					String tmp = "<div style=\"z-index:-100;margin-top:3px; width=\"80\"; height=\"20\"\"><applet name=\"DropApplet\" archive=\""
 							+ Util.contextPath()
-							+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.upload.DropApplet\" width=\"80\" height=\"20\">";
+							+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.upload.DropApplet\" width=\"80\" height=\"20\" mayscript>";
 					tmp += "<param name=\"uploadUrl\" value=\"" + Util.contextPath()
 							+ "servlet.gupld?new_session=true&sid=" + Session.get().getSid() + "\" />";
 					tmp += "</applet></div>";
