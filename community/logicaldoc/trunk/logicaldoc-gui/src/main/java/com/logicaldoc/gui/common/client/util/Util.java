@@ -387,12 +387,12 @@ public class Util {
 	public static void openDropSpot() {
 		Widget dropSpotApplet = RootPanel.get("DropSpot");
 		dropSpotApplet.setSize("1", "1");
-		String tmp = "<div style=\"z-index:-100;margin-top:3px; width=\"80\"; height=\"20\"\"><applet name=\"DropApplet\" archive=\""
+		String tmp = "<applet name=\"DropApplet\" archive=\""
 				+ Util.contextPath()
-				+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.upload.DropApplet\" width=\"80\" height=\"20\" mayscript>";
+				+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.upload.DropApplet\" width=\"1\" height=\"1\" mayscript>";
 		tmp += "<param name=\"uploadUrl\" value=\"" + Util.contextPath() + "servlet.gupld?new_session=true&sid="
 				+ Session.get().getSid() + "\" />";
-		tmp += "</applet></div>";
+		tmp += "</applet>";
 		dropSpotApplet.getElement().setInnerHTML(tmp);
 	}
 
