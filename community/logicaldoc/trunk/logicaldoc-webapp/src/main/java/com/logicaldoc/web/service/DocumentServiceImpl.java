@@ -66,7 +66,6 @@ import com.logicaldoc.gui.common.client.beans.GUIRating;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.MimeType;
 import com.logicaldoc.util.io.CryptUtil;
 import com.logicaldoc.util.io.FileUtil;
@@ -135,11 +134,17 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		final Folder parent = folderDao.findById(metadata.getFolder().getId());
 		if (uploadedFilesMap.isEmpty())
 			throw new RuntimeException("No file uploaded");
+
+		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		if (!fdao.isWriteEnable(metadata.getFolder().getId(), userSession.getUserId())) {
+			throw new RuntimeException("The user doesn't have the write permission on the current folder");
+		}
+
 		try {
 			for (String fileId : uploadedFilesMap.keySet()) {
 				final File file = uploadedFilesMap.get(fileId);
 				final String filename = uploadedFileNames.get(fileId);
-				
+
 				if (filename.endsWith(".zip") && importZip) {
 					log.debug("file = " + file);
 
@@ -155,11 +160,12 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					Thread zipImporter = new Thread(new Runnable() {
 						public void run() {
 							/*
-							 * Prepare the Master document used to create the new one
+							 * Prepare the Master document used to create the
+							 * new one
 							 */
 							Document doc = toDocument(metadata);
 							doc.setCreation(new Date());
-							
+
 							InMemoryZipImport importer = new InMemoryZipImport(doc);
 							importer.process(destFile, parent, userId, zipEncoding, sessionId);
 							try {
@@ -186,7 +192,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					transaction.setEvent(History.EVENT_STORED);
 					transaction.setUser(SessionUtil.getSessionUser(sid));
 					transaction.setComment(metadata.getComment());
-					
+
 					/*
 					 * Prepare the Master document used to create the new one
 					 */
@@ -194,7 +200,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					doc.setFileName(filename);
 					doc.setTitle(filename.substring(0, filename.lastIndexOf(".")));
 					doc.setCreation(new Date());
-				
+
 					// Create the new
 					doc = documentManager.create(file, doc, transaction);
 				}
@@ -786,7 +792,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	protected Document toDocument(GUIDocument document) {
 		Document docVO = new Document();
 		docVO.setTitle(document.getTitle());
-		if (document.getTags()!=null && document.getTags().length > 0)
+		if (document.getTags() != null && document.getTags().length > 0)
 			docVO.setTags(new HashSet<String>(Arrays.asList(document.getTags())));
 
 		docVO.setSourceType(document.getSourceType());
@@ -811,7 +817,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		docVO.setComment(document.getComment());
 		docVO.setWorkflowStatus(document.getWorkflowStatus());
 
-		
 		if (document.getTemplateId() != null) {
 			docVO.setTemplateId(document.getTemplateId());
 			DocumentTemplateDAO templateDao = (DocumentTemplateDAO) Context.getInstance().getBean(

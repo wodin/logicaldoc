@@ -48,6 +48,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 	protected ToolStripButton add = new ToolStripButton();
 
+	protected ToolStripButton dropSpot = new ToolStripButton();
+
 	protected ToolStripButton subscribe = new ToolStripButton();
 
 	protected ToolStripButton scan = new ToolStripButton();
@@ -160,6 +162,15 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 						}
 					}
 				});
+			}
+		});
+
+		dropSpot.setIcon(ItemFactory.newImgIcon("drive_add.png").getSrc());
+		dropSpot.setTooltip(I18N.message("dropfiles"));
+		dropSpot.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Util.openDropSpot();
 			}
 		});
 
@@ -286,9 +297,17 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			if (!Feature.enabled(Feature.OFFICE))
 				office.setTooltip(I18N.message("featuredisabled"));
 		}
-		
+
 		addSeparator();
 		addButton(add);
+
+		if (Feature.visible(Feature.DROP_SPOT)) {
+			addButton(dropSpot);
+			if (!Feature.enabled(Feature.DROP_SPOT)) {
+				scan.setDisabled(true);
+				scan.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
 
 		if (Feature.visible(Feature.SCAN)) {
 			addButton(scan);
@@ -472,7 +491,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					pdf.setTooltip(I18N.message("exportpdf"));
 				subscribe.setDisabled(!Feature.enabled(Feature.AUDIT));
 				bulkUpdate.setDisabled(!Feature.enabled(Feature.BULK_UPDATE));
-				
+
 				boolean isOfficeFile = false;
 				if (document.getFileName() != null)
 					isOfficeFile = Util.isOfficeFile(document.getFileName());
@@ -488,7 +507,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				}
 
 				if (!office.isDisabled())
-					office.setTooltip(I18N.message("editwithoffice"));				
+					office.setTooltip(I18N.message("editwithoffice"));
 			} else {
 				download.setDisabled(true);
 				rss.setDisabled(true);
@@ -502,6 +521,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 			if (folder != null) {
 				add.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));
+				dropSpot.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE)
+						|| !Feature.enabled(Feature.SCAN));
 				scan.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE) || !Feature.enabled(Feature.SCAN));
 				archive.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_ARCHIVE)
 						|| !Feature.enabled(Feature.ARCHIVES));

@@ -10,6 +10,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -381,6 +382,18 @@ public class Util {
 			return s.substring(0, n - 3) + "...";
 		} else
 			return s;
+	}
+
+	public static void openDropSpot() {
+		Widget dropSpotApplet = RootPanel.get("DropSpot");
+		dropSpotApplet.setSize("1", "1");
+		String tmp = "<div style=\"z-index:-100;margin-top:3px; width=\"80\"; height=\"20\"\"><applet name=\"DropApplet\" archive=\""
+				+ Util.contextPath()
+				+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.upload.DropApplet\" width=\"80\" height=\"20\" mayscript>";
+		tmp += "<param name=\"uploadUrl\" value=\"" + Util.contextPath() + "servlet.gupld?new_session=true&sid="
+				+ Session.get().getSid() + "\" />";
+		tmp += "</applet></div>";
+		dropSpotApplet.getElement().setInnerHTML(tmp);
 	}
 
 	/**

@@ -118,5 +118,7 @@ body {
 		
 		<!--include the nocache JS-->
 		<script type="text/javascript" src="frontend/frontend.nocache.js"></script>
+		
+		<div id="DropSpot"></div>
 	</body>
 </html>
