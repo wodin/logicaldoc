@@ -10,13 +10,7 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/classes/context.xml</param-value>
 	</context-param>
-
-
-	<context-param>
-		<!-- max size of the upload request -->
-		<param-name>maxSize</param-name>
-		<param-value>100000000</param-value>
-	</context-param>
+	
 	<context-param>
 		<!-- Useful in development mode to slow down the uploads in fast networks. 
 			Put the number of milliseconds to sleep in each block received in the server. 

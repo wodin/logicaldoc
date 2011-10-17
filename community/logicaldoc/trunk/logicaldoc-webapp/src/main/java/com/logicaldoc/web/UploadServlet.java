@@ -211,7 +211,7 @@ public class UploadServlet extends UploadAction {
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		int max = Integer.parseInt(config.getProperty("upload.maxsize")) * 1024 * 1024;
 		if (max > 0) {
-			maxSize = Integer.parseInt(config.getProperty("upload.maxsize")) * 1024 * 1024;
+			super.maxSize = Integer.parseInt(config.getProperty("upload.maxsize")) * 1024 * 1024;
 			super.checkRequest(request);
 		}
 	}
