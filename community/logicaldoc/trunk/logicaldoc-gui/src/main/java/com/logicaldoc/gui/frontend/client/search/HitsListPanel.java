@@ -340,7 +340,8 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		toolStrip.setWidth100();
 		toolStrip.addSpacer(2);
 		ToolStripButton showSnippets = new ToolStripButton();
-		showSnippets.setTitle(I18N.message("showsnippets"));
+		showSnippets.setIcon(ItemFactory.newImgIcon("page_white_text.png").getSrc());
+		showSnippets.setTooltip(I18N.message("showsnippets"));
 		showSnippets.setDisabled(optionsType != GUISearchOptions.TYPE_FULLTEXT);
 		toolStrip.addButton(showSnippets);
 		showSnippets.addClickHandler(new ClickHandler() {
@@ -351,7 +352,8 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		});
 
 		ToolStripButton save = new ToolStripButton();
-		save.setTitle(I18N.message("save"));
+		save.setIcon(ItemFactory.newImgIcon("disk.png").getSrc());
+		save.setTooltip(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -373,6 +375,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			toolStrip.addSeparator();
 			final IntegerItem max = ItemFactory.newValidateIntegerItem("repeatNumber", "", null, 1, null);
 			max.setHint(I18N.message("hits"));
+			max.setHintStyle("");
 			max.setShowTitle(false);
 			max.setDefaultValue(40);
 			max.setWidth(40);
@@ -395,7 +398,9 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			});
 		}
 
-		ToolStripButton saveGrid = new ToolStripButton(I18N.message("savegrid"));
+		ToolStripButton saveGrid = new ToolStripButton();
+		saveGrid.setIcon(ItemFactory.newImgIcon("table_save.png").getSrc());
+		saveGrid.setTooltip(I18N.message("savegrid"));
 		saveGrid.setAutoFit(true);
 		saveGrid.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -407,7 +412,9 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		toolStrip.addSeparator();
 		toolStrip.addButton(saveGrid);
 
-		ToolStripButton print = new ToolStripButton(I18N.message("print"));
+		ToolStripButton print = new ToolStripButton();
+		print.setIcon(ItemFactory.newImgIcon("printer.png").getSrc());
+		print.setTooltip(I18N.message("print"));
 		print.setAutoFit(true);
 		print.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -419,7 +426,9 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 		if (Feature.visible(Feature.EXPORT_CSV)) {
 			toolStrip.addSeparator();
-			ToolStripButton export = new ToolStripButton(I18N.message("export"));
+			ToolStripButton export = new ToolStripButton();
+			export.setIcon(ItemFactory.newImgIcon("table_row_insert.png").getSrc());
+			export.setTooltip(I18N.message("export"));
 			export.setAutoFit(true);
 			toolStrip.addButton(export);
 			export.addClickHandler(new ClickHandler() {
@@ -435,18 +444,24 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		}
 
 		final ToolStripButton toggle = new ToolStripButton();
-		if (SearchMenu.get().getWidth() > 0)
-			toggle.setTitle(I18N.message("closeseleftpanel"));
-		else
-			toggle.setTitle(I18N.message("openleftpanel"));
+		if (SearchMenu.get().getWidth() > 0) {
+			toggle.setIcon(ItemFactory.newImgIcon("application_side_contract.png").getSrc());
+			toggle.setTooltip(I18N.message("closeseleftpanel"));
+		} else {
+			toggle.setIcon(ItemFactory.newImgIcon("application_side_expand.png").getSrc());
+			toggle.setTooltip(I18N.message("openleftpanel"));
+		}
 		toggle.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				SearchPanel.get().toggleMenu();
-				if (SearchPanel.get().isMenuOpened())
-					toggle.setTitle(I18N.message("closeseleftpanel"));
-				else
-					toggle.setTitle(I18N.message("openleftpanel"));
+				if (SearchPanel.get().isMenuOpened()) {
+					toggle.setIcon(ItemFactory.newImgIcon("application_side_contract.png").getSrc());
+					toggle.setTooltip(I18N.message("closeseleftpanel"));
+				} else {
+					toggle.setIcon(ItemFactory.newImgIcon("application_side_expand.png").getSrc());
+					toggle.setTooltip(I18N.message("openleftpanel"));
+				}
 			}
 		});
 		toolStrip.addSeparator();

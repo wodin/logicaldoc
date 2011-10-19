@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
@@ -210,7 +211,9 @@ public class DuplicatesPanel extends VLayout {
 		});
 		toolStrip.addFormItem(groupBy);
 
-		ToolStripButton print = new ToolStripButton(I18N.message("print"));
+		ToolStripButton print = new ToolStripButton();
+		print.setIcon(ItemFactory.newImgIcon("printer.png").getSrc());
+		print.setTooltip(I18N.message("print"));
 		print.setAutoFit(true);
 		print.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -222,7 +225,9 @@ public class DuplicatesPanel extends VLayout {
 
 		if (Feature.visible(Feature.EXPORT_CSV)) {
 			toolStrip.addSeparator();
-			ToolStripButton export = new ToolStripButton(I18N.message("export"));
+			ToolStripButton export = new ToolStripButton();
+			export.setIcon(ItemFactory.newImgIcon("table_row_insert.png").getSrc());
+			export.setTooltip(I18N.message("export"));
 			export.setAutoFit(true);
 			toolStrip.addButton(export);
 			export.addClickHandler(new ClickHandler() {
