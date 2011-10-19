@@ -66,6 +66,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 	protected ToolStripButton print = new ToolStripButton();
 
+	protected ToolStripButton export = new ToolStripButton();
+
 	protected GUIDocument document;
 
 	protected AuditServiceAsync audit = (AuditServiceAsync) GWT.create(AuditService.class);
@@ -166,7 +168,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		});
 
 		dropSpot.setIcon(ItemFactory.newImgIcon("drive_add.png").getSrc());
-		dropSpot.setTooltip(I18N.message("dropfiles"));
+		dropSpot.setTooltip("Drop Spot");
 		dropSpot.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -332,6 +334,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		final IntegerItem max = ItemFactory.newValidateIntegerItem("max", "", null, 1, null);
 		max.setHint(I18N.message("elements"));
+		max.setHintStyle("");
 		max.setShowTitle(false);
 		max.setDefaultValue(100);
 		max.setWidth(40);
@@ -418,8 +421,9 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		addSeparator();
 		ToolStripButton filter = new ToolStripButton();
+		filter.setIcon(ItemFactory.newImgIcon("filter.png").getSrc());
+		filter.setTooltip(I18N.message("filter"));
 		filter.setActionType(SelectionType.CHECKBOX);
-		filter.setTitle(I18N.message("filter"));
 		addButton(filter);
 		filter.addClickHandler(new ClickHandler() {
 			@Override
@@ -429,7 +433,9 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		});
 
 		addSeparator();
-		ToolStripButton saveGrid = new ToolStripButton(I18N.message("savegrid"));
+		ToolStripButton saveGrid = new ToolStripButton();
+		saveGrid.setIcon(ItemFactory.newImgIcon("table_save.png").getSrc());
+		saveGrid.setTooltip(I18N.message("savegrid"));
 		saveGrid.setAutoFit(true);
 		addButton(saveGrid);
 		saveGrid.addClickHandler(new ClickHandler() {
@@ -439,7 +445,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		});
 
 		addSeparator();
-		ToolStripButton print = new ToolStripButton(I18N.message("print"));
+		print.setIcon(ItemFactory.newImgIcon("printer.png").getSrc());
+		print.setTooltip(I18N.message("print"));
 		print.setAutoFit(true);
 		addButton(print);
 		print.addClickHandler(new ClickHandler() {
@@ -451,7 +458,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		if (Feature.visible(Feature.EXPORT_CSV)) {
 			addSeparator();
-			ToolStripButton export = new ToolStripButton(I18N.message("export"));
+			export.setIcon(ItemFactory.newImgIcon("table_row_insert.png").getSrc());
+			export.setTooltip(I18N.message("export"));
 			export.setAutoFit(true);
 			addButton(export);
 			export.addClickHandler(new ClickHandler() {
