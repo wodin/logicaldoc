@@ -45,8 +45,11 @@ public class BaseURL {
 		String localURL = null;
 		String serverUrl = getServerURL(request, true);
 		if (serverUrl != null) {
-			localURL = serverUrl + getWebAppName(request) + '/';
+			localURL = serverUrl + getWebAppName(request);
+			if (!localURL.endsWith("/"))
+				localURL = localURL + "/";
 		}
+
 		if (localURL == null) {
 			log.error("Could not retrieve loacl url correctly");
 		}
