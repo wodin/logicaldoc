@@ -184,12 +184,6 @@ public class LoginPanel extends VLayout {
 		form.focusInItem(username);
 		form.setAutoFocus(true);
 		form.focus();
-
-		String img = "<img style='visibility:hidden' src='http://stat.logicaldoc.com/getimg.php?name="
-				+ info.getProductName() + "&release=" + info.getRelease() + "&vendor=" + info.getVendor() + "&"
-				+ info.getInstallationId() + "' width='1px' height='1px' border='0'/>";
-		HTMLFlow f = new HTMLFlow(img);
-		addMember(f);
 	}
 
 	protected void retrievePwd(GUIInfo info, Layout bottom) {
