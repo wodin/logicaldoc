@@ -181,6 +181,7 @@ public class DocumentCheckin extends Window {
 								documentsGrid.refreshRow(documentsGrid.getRecordIndex(selection));
 								Session.get().getUser()
 										.setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() - 1);
+								DocumentsPanel.get().onSelectedDocument(document.getId(), false);
 								destroy();
 							}
 						});
