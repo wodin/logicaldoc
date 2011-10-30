@@ -459,7 +459,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			Iterator iter = precoll.iterator();
 			if (!precoll.isEmpty()) {
 				query1 = new StringBuffer("select distinct(A.ld_folderid) from ld_foldergroup A, ld_folder B "
-						+ " where B.ld_deleted=0 and A.ld_folderid=B.ld_id AND B.ld_parentid=" + parentId
+						+ " where B.ld_deleted=0 and A.ld_folderid=B.ld_id AND (B.ld_parentid=" + parentId
+						+ " OR B.ld_id=" + parentId+")"
 						+ " AND A.ld_groupid in (");
 				boolean first = true;
 				while (iter.hasNext()) {
@@ -474,7 +475,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				ids = (List<Long>) queryForList(query1.toString(), Long.class);
 
 				/*
-				 * Now find all folderes referencing the previously found ones
+				 * Now find all folders referencing the previously found ones
 				 */
 				StringBuffer query2 = new StringBuffer("select B.ld_id from ld_folder B where B.ld_deleted=0 ");
 				query2.append(" and B.ld_parentid=" + parentId);
