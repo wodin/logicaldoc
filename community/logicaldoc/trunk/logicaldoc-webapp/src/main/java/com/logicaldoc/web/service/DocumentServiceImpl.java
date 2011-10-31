@@ -411,13 +411,17 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
 
+		GUIDocument document = null;
+		GUIFolder folder = FolderServiceImpl.getFolder(sid, doc.getFolder().getId());
+
 		if (doc != null) {
 			// Check if it is an alias
 			if (doc.getDocRef() != null) {
 				long id = doc.getDocRef();
 				doc = docDao.findById(id);
 			}
-			GUIDocument document = new GUIDocument();
+
+			document = new GUIDocument();
 			try {
 				docDao.initialize(doc);
 				document.setId(doc.getId());
@@ -450,37 +454,33 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				document.setComment(doc.getComment());
 				document.setStatus(doc.getStatus());
 				document.setWorkflowStatus(doc.getWorkflowStatus());
+				document.setImmutable(doc.getImmutable());
+				document.setFileSize(new Long(doc.getFileSize()).floatValue());
+
 				if (doc.getRating() != null)
 					document.setRating(doc.getRating());
 
 				if (doc.getTemplate() != null) {
 					document.setTemplate(doc.getTemplate().getName());
 					document.setTemplateId(doc.getTemplate().getId());
-
 					GUIExtendedAttribute[] attributes = prepareGUIAttributes(doc.getTemplate(), doc);
 					document.setAttributes(attributes);
 				}
-
-				FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-				document.setPathExtended(fdao.computePathExtended(doc.getFolder().getId()));
-				document.setFileSize(new Long(doc.getFileSize()).floatValue());
 
 				if (doc.getCustomId() != null)
 					document.setCustomId(doc.getCustomId());
 				else
 					document.setCustomId("");
 
-				GUIFolder folder = FolderServiceImpl.getFolder(sid, doc.getFolder().getId());
 				document.setFolder(folder);
+				FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+				document.setPathExtended(fdao.computePathExtended(folder.getId()));
 			} catch (Throwable t) {
 				log.error(t.getMessage(), t);
 				throw new RuntimeException(t.getMessage(), t);
 			}
-
-			return document;
 		}
-
-		return null;
+		return document;
 	}
 
 	@Override
