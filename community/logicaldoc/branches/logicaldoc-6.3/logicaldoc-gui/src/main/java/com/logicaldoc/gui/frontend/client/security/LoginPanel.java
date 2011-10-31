@@ -241,7 +241,7 @@ public class LoginPanel extends VLayout {
 		// If the case, save the credentials into client cookies
 		if ("true".equals(Session.get().getInfo().getConfig("gui.savelogin"))) {
 			Offline.put("ldoc-user", (String) username.getValue());
-			Offline.put("ldoc-password", (String) username.getValue());
+			Offline.put("ldoc-password", (String) password.getValue());
 		}
 
 		GUIUser user = session.getUser();
