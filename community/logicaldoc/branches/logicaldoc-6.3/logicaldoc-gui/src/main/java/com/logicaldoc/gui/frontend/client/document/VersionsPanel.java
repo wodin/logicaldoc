@@ -1,8 +1,5 @@
 package com.logicaldoc.gui.frontend.client.document;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -76,10 +73,7 @@ public class VersionsPanel extends DocumentDetailTab {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				ListGridRecord record = event.getRecord();
-				Window.open(
-						GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-								+ document.getId() + "&versionId=" + record.getAttribute("id") + "&open=true",
-						"_blank", "");
+				onDownload(document, record);
 			}
 		});
 
@@ -92,18 +86,24 @@ public class VersionsPanel extends DocumentDetailTab {
 		});
 	}
 
+	protected void onDownload(final GUIDocument document, ListGridRecord record) {
+		if (document.getFolder().isDownload())
+			Window.open(
+					GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + document.getId()
+							+ "&versionId=" + record.getAttribute("id") + "&open=true", "_blank", "");
+	}
+
 	/**
 	 * Prepares the context menu.
 	 */
 	private void setupContextMenu() {
 		contextMenu = new Menu();
-		List<MenuItem> items = new ArrayList<MenuItem>();
-		MenuItem downloadItem = new MenuItem();
-		downloadItem.setTitle(I18N.message("compare"));
-		downloadItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem compareItem = new MenuItem();
+		compareItem.setTitle(I18N.message("compare"));
+		compareItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				// Detect the two selected records
-				ListGridRecord[] selection = listGrid.getSelection();
+				ListGridRecord[] selection = listGrid.getSelectedRecords();
 				if (selection == null || selection.length != 2) {
 					SC.warn(I18N.message("select2versions"));
 					return;
@@ -126,8 +126,21 @@ public class VersionsPanel extends DocumentDetailTab {
 			}
 		});
 
-		items.add(downloadItem);
-		contextMenu.setItems(items.toArray(new MenuItem[0]));
+		MenuItem downloadItem = new MenuItem();
+		downloadItem.setTitle(I18N.message("download"));
+		downloadItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				// Detect the two selected records
+				ListGridRecord[] selection = listGrid.getSelectedRecords();
+				if (selection == null || selection.length < 1) {
+					return;
+				}
+				onDownload(document, selection[0]);
+			}
+		});
+		downloadItem.setEnabled(document.getFolder().isDownload());
+
+		contextMenu.setItems(downloadItem, compareItem);
 	}
 
 	@Override
