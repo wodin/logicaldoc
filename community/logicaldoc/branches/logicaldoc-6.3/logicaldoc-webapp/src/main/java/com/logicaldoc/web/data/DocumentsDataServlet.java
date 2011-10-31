@@ -224,12 +224,12 @@ public class DocumentsDataServlet extends HttpServlet {
 					Document aliasDoc = dao.findById(id);
 					Document doc = dao.findById(aliasDoc.getDocRef());
 					writer.print("<document>");
-					writer.print("<id>" + doc.getId() + "</id>");
+					writer.print("<id>" + id + "</id>");
 					if (doc.getCustomId() != null)
 						writer.print("<customId><![CDATA[" + doc.getCustomId() + "]]></customId>");
 					else
 						writer.print("<customId> </customId>");
-					writer.print("<docref>" + id + "</docref>");
+					writer.print("<docref>" + doc.getId() + "</docref>");
 					writer.print("<icon>alias</icon>");
 					writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
 					writer.print("<version>" + doc.getVersion() + "</version>");
