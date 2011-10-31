@@ -13,6 +13,8 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VStack;
 
@@ -144,8 +146,16 @@ public class LD {
 		item.setWidth("100%");
 		item.setName("value");
 		item.setTitle(I18N.message(message));
-		if (defaultValue != null)
-			item.setValue(defaultValue);
+		item.addKeyPressHandler(new KeyPressHandler() {
+			@Override
+			public void onKeyPress(KeyPressEvent event) {
+				if (event.getKeyName() != null && "enter".equals(event.getKeyName().toLowerCase())) {
+					callback.execute(form.getValue("value").toString());
+					dialog.destroy();
+				}
+			}
+		});
+
 		form.setFields(item);
 
 		IButton ok = new IButton(I18N.message("ok"));
@@ -179,5 +189,18 @@ public class LD {
 
 		dialog.addItem(container);
 		dialog.show();
+
+		if (defaultValue != null) {
+			item.setValue(defaultValue);
+			if (item instanceof TextItem) {
+				((TextItem) item).selectValue();
+				if (defaultValue.length() > 0)
+					((TextItem) item).setSelectionRange(0, defaultValue.length());
+			} else {
+				form.focusInItem(item);
+				form.setAutoFocus(true);
+				form.focus();
+			}
+		}
 	}
 }
