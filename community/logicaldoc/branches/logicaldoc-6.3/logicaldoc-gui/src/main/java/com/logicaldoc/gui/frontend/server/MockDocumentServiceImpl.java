@@ -294,4 +294,10 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 			throws InvalidSessionException {
 
 	}
+
+	@Override
+	public void rename(String sid, long docId, String name) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 }
