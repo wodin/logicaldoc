@@ -125,7 +125,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		TextItem title = ItemFactory.newTextItem("title", "title", document.getTitle());
 		title.addChangedHandler(changedHandler);
 		title.setRequired(true);
-		title.setDisabled(!update);
+		title.setDisabled(!update||!document.getFolder().isRename());
 
 		StaticTextItem wfStatus = ItemFactory.newStaticTextItem("wfStatus", "workflowstatus",
 				document.getWorkflowStatus());
