@@ -72,6 +72,10 @@ public class GUIFolder implements Serializable {
 	public boolean isDownload() {
 		return hasPermission(Constants.PERMISSION_DOWNLOAD);
 	}
+	
+	public boolean isRename() {
+		return hasPermission(Constants.PERMISSION_RENAME);
+	}
 
 	public boolean hasPermission(String permission) {
 		if (permissions == null)

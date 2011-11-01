@@ -116,8 +116,9 @@ public interface DocumentService extends RemoteService {
 	 * @param importZip If .zip files have to be unpacked and the contained
 	 *        documents imported.
 	 */
-	public void addDocuments(String sid, String encoding, boolean importZip, GUIDocument metadata) throws InvalidSessionException;
-	
+	public void addDocuments(String sid, String encoding, boolean importZip, GUIDocument metadata)
+			throws InvalidSessionException;
+
 	/**
 	 * Checks-in a new document version
 	 * 
@@ -193,9 +194,14 @@ public interface DocumentService extends RemoteService {
 	 * Deletes a selection of document notes
 	 */
 	public void deleteNotes(String sid, long[] ids) throws InvalidSessionException;
-	
+
 	/**
 	 * Applies to a selection of documents all the given data.
 	 */
 	public void bulkUpdate(String sid, long[] ids, GUIDocument vo) throws InvalidSessionException;
+
+	/**
+	 * Renames the specified document
+	 */
+	public void rename(String sid, long docId, String name) throws Exception;
 }

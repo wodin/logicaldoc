@@ -49,7 +49,7 @@ public class DocumentContextMenu extends Menu {
 	protected WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
 
 	public DocumentContextMenu(final GUIFolder folder, final ListGrid list) {
-		final ListGridRecord[] selection = list.getSelection();
+		final ListGridRecord[] selection = list.getSelectedRecords();
 
 		MenuItem download = new MenuItem();
 		download.setTitle(I18N.message("download"));
@@ -107,6 +107,41 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
+		MenuItem rename = new MenuItem();
+		rename.setTitle(I18N.message("rename"));
+		rename.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				final ListGridRecord selection = list.getSelectedRecord();
+
+				LD.askforValue(I18N.message("rename"), I18N.message("title"), selection.getAttribute("title"), "200",
+						new ValueCallback() {
+							@Override
+							public void execute(final String value) {
+								if (value == null || value.isEmpty())
+									return;
+
+								documentService.rename(Session.get().getSid(),
+										Long.parseLong(selection.getAttribute("id")), value, new AsyncCallback<Void>() {
+											@Override
+											public void onFailure(Throwable caught) {
+												Log.serverError(caught);
+											}
+
+											@Override
+											public void onSuccess(Void result) {
+												selection.setAttribute("title", value);
+												selection.setAttribute("indexed", "blank");
+												list.refreshRow(list.getRecordIndex(selection));
+												DocumentsPanel.get().showFolderDetails();
+												DocumentsPanel.get().onSelectedDocument(
+														Long.parseLong(selection.getAttribute("id")), false);
+											}
+										});
+							}
+						});
+			}
+		});
+
 		MenuItem delete = new MenuItem();
 		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
@@ -151,7 +186,7 @@ public class DocumentContextMenu extends Menu {
 		sendMail.setTitle(I18N.message("sendmail"));
 		sendMail.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord[] selection = list.getSelection();
+				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length < 1)
 					return;
 
@@ -390,7 +425,7 @@ public class DocumentContextMenu extends Menu {
 		bookmark.setTitle(I18N.message("addbookmark"));
 		bookmark.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord[] selection = list.getSelection();
+				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
 				long[] ids = new long[selection.length];
@@ -490,7 +525,7 @@ public class DocumentContextMenu extends Menu {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				ListGrid list = DocumentsPanel.get().getList();
-				ListGridRecord[] selection = list.getSelection();
+				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
 				final long[] ids = new long[selection.length];
@@ -521,7 +556,7 @@ public class DocumentContextMenu extends Menu {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				ListGrid list = DocumentsPanel.get().getList();
-				ListGridRecord[] selection = list.getSelection();
+				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
 
@@ -542,7 +577,7 @@ public class DocumentContextMenu extends Menu {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				ListGrid list = DocumentsPanel.get().getList();
-				ListGridRecord[] selection = list.getSelection();
+				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
 
@@ -614,6 +649,7 @@ public class DocumentContextMenu extends Menu {
 		boolean enableImmutable = false;
 		boolean enableDelete = true;
 		boolean enableSign = selection != null && selection.length > 0;
+		boolean enableRename = selection != null && selection.length == 1 && folder.isRename();
 
 		boolean isOfficeFile = false;
 		if (selection[0].getAttribute("filename") != null)
@@ -641,6 +677,7 @@ public class DocumentContextMenu extends Menu {
 		for (ListGridRecord record : selection)
 			if (!"blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable"))) {
 				cut.setEnabled(false);
+				enableRename = false;
 				break;
 			}
 
@@ -653,9 +690,10 @@ public class DocumentContextMenu extends Menu {
 			}
 		}
 
-		if (list.getSelection().length != 1) {
+		if (list.getSelectedRecords().length != 1) {
 			download.setEnabled(false);
 			similar.setEnabled(false);
+			rename.setEnabled(false);
 		}
 
 		if (Clipboard.getInstance().isEmpty()) {
@@ -727,8 +765,10 @@ public class DocumentContextMenu extends Menu {
 			enableSign = false;
 		}
 
-		setItems(download, preview, cut, copy, delete, bookmark, sendMail, links, checkout, checkin, lock, unlockItem,
-				more);
+		rename.setEnabled(enableRename);
+
+		setItems(download, preview, cut, copy, rename, delete, bookmark, sendMail, links, checkout, checkin, lock,
+				unlockItem, more);
 
 		Menu moreMenu = new Menu();
 		moreMenu.setItems(similar, immutable, markIndexable, markUnindexable);
