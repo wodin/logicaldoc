@@ -235,6 +235,7 @@ public class DocumentPreview extends HttpServlet {
 			IOUtils.copy(is, fos);
 			fos.flush();
 			fos.close();
+
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			String command = conf.getProperty(SWFTOOLSPATH);
 			if (extension.equalsIgnoreCase("pdf"))
@@ -258,26 +259,27 @@ public class DocumentPreview extends HttpServlet {
 				command += File.separatorChar + "jpeg2swf";
 			}
 
-			command = "\"" + new File(command).getPath() + "\" -T 9 ";
+			command = new File(command).getPath() + " -T 9 ";
 
-			if (extension.equalsIgnoreCase("pdf")){
+			if (extension.equalsIgnoreCase("pdf")) {
 				int pages = -1;
 				try {
 					pages = conf.getInt("gui.preview.pages");
 				} catch (Throwable t) {
 
 				}
-				
+
 				command += (pages > 0 ? " -p 1-" + pages : "") + " -f -t -G -s storeallcharacters";
 			}
-			
-			command += " \"" + tmp.getPath() + "\" -o \"" + swf.getPath() + "\"";
+
+			command += " " + tmp.getPath() + " -o " + swf.getPath();
 
 			Exec.exec(command, null, null, 10);
 		} catch (Throwable e) {
 			FileUtils.deleteQuietly(swf);
 			log.error("Error in document to SWF conversion", e);
 		} finally {
+			IOUtils.closeQuietly(is);
 			IOUtils.closeQuietly(fos);
 			FileUtils.deleteQuietly(tmp);
 		}
