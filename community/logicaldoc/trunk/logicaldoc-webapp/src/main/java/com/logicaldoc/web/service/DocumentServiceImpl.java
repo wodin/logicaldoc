@@ -456,7 +456,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				document.setWorkflowStatus(doc.getWorkflowStatus());
 				document.setImmutable(doc.getImmutable());
 				document.setFileSize(new Long(doc.getFileSize()).floatValue());
-
+				document.setStartPublishing(doc.getStartPublishing());
+				document.setStopPublishing(doc.getStopPublishing());
+				document.setPublished(doc.getPublished());
+				
 				if (doc.getRating() != null)
 					document.setRating(doc.getRating());
 
@@ -522,7 +525,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				version1.setSourceAuthor(docVersion.getSourceAuthor());
 				version1.setSourceId(docVersion.getSourceId());
 				version1.setSourceDate(docVersion.getSourceDate());
-
+				version1.setStartPublishing(docVersion.getStartPublishing());
+				version1.setStopPublishing(docVersion.getStopPublishing());
+				version1.setPublished(docVersion.getPublished());
+				
 				version1.setTemplate(docVersion.getTemplateName());
 				versDao.initialize(docVersion);
 				for (String attrName : docVersion.getAttributeNames()) {
@@ -567,7 +573,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				version2.setSourceId(docVersion.getSourceId());
 				version2.setSourceDate(docVersion.getSourceDate());
 				version2.setWorkflowStatus(docVersion.getWorkflowStatus());
-
+				version2.setStartPublishing(docVersion.getStartPublishing());
+				version2.setStopPublishing(docVersion.getStopPublishing());
+				version2.setPublished(docVersion.getPublished());
+				
 				version2.setTemplateId(docVersion.getTemplateId());
 				version2.setTemplate(docVersion.getTemplateName());
 				versDao.initialize(docVersion);
@@ -816,7 +825,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		docVO.setRating(document.getRating());
 		docVO.setComment(document.getComment());
 		docVO.setWorkflowStatus(document.getWorkflowStatus());
-
+		docVO.setStartPublishing(document.getStartPublishing());
+		docVO.setStopPublishing(document.getStopPublishing());
+		docVO.setPublished(document.getPublished());
+		
 		if (document.getTemplateId() != null) {
 			docVO.setTemplateId(document.getTemplateId());
 			DocumentTemplateDAO templateDao = (DocumentTemplateDAO) Context.getInstance().getBean(

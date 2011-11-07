@@ -13,10 +13,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.ibm.icu.util.Calendar;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentLink;
@@ -190,6 +192,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public boolean store(final Document doc, final History transaction) {
 		boolean result = true;
 		try {
+			// Truncate publishing dates
+			if (doc.getStartPublishing() != null)
+				doc.setStartPublishing(DateUtils.truncate(doc.getStartPublishing(), Calendar.DATE));
+			if (doc.getStopPublishing() != null)
+				doc.setStopPublishing(DateUtils.truncate(doc.getStopPublishing(), Calendar.DATE));
+
 			Set<String> src = doc.getTags();
 			if (src != null && src.size() > 0) {
 				// Trim too long tags

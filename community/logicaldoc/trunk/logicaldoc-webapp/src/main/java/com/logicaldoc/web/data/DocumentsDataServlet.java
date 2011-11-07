@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -20,7 +21,9 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.util.Context;
@@ -42,7 +45,11 @@ public class DocumentsDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
+			Context context = Context.getInstance();
 			UserSession session = SessionUtil.validateSession(request);
+			UserDAO udao = (UserDAO) context.getBean(UserDAO.class);
+			User user = udao.findById(session.getUserId());
+			udao.initialize(user);
 
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
@@ -52,7 +59,6 @@ public class DocumentsDataServlet extends HttpServlet {
 			response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 			response.setHeader("Expires", "0");
 
-			Context context = Context.getInstance();
 			DocumentDAO dao = (DocumentDAO) context.getBean(DocumentDAO.class);
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -113,7 +119,7 @@ public class DocumentsDataServlet extends HttpServlet {
 				StringBuffer query = new StringBuffer(
 						"select A.id, A.customId, A.docRef, A.type, A.title, A.version, A.lastModified, A.date, A.publisher,"
 								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status,"
-								+ " A.signed, A.type, A.sourceDate, A.sourceAuthor, A.rating, A.fileVersion, A.comment, A.workflowStatus "
+								+ " A.signed, A.type, A.sourceDate, A.sourceAuthor, A.rating, A.fileVersion, A.comment, A.workflowStatus, A.startPublishing, A.stopPublishing, A.published "
 								+ " from Document A where A.deleted = 0 ");
 				if (folderId != null)
 					query.append(" and A.folder.id=" + folderId);
@@ -132,6 +138,15 @@ public class DocumentsDataServlet extends HttpServlet {
 				 */
 				for (Object record : records) {
 					Object[] cols = (Object[]) record;
+
+					boolean published = isPublished(Integer.parseInt(cols[27].toString()), (Date) cols[25],
+							(Date) cols[26]);
+
+					if (!user.isInGroup("admin") && !user.isInGroup("publisher")) {
+						if (!published)
+							continue;
+					}
+
 					if (cols[2] != null) {
 						if (cols[2].toString().equals("0")) {
 							cols[2] = null;
@@ -208,12 +223,18 @@ public class DocumentsDataServlet extends HttpServlet {
 						writer.print("<comment></comment>");
 					else
 						writer.print("<comment><![CDATA[" + cols[23] + "]]></comment>");
-					
+
 					if (cols[24] == null)
 						writer.print("<workflowStatus></workflowStatus>");
 					else
 						writer.print("<workflowStatus><![CDATA[" + cols[24] + "]]></workflowStatus>");
 
+					writer.print("<startPublishing>" + df.format(cols[25]) + "</startPublishing>");
+					if (cols[26] != null)
+						writer.print("<stopPublishing>" + df.format(cols[26]) + "</stopPublishing>");
+					else
+						writer.print("<stopPublishing></stopPublishing>");
+					writer.print("<publishedStatus>" + (published ? "yes" : "no") + "</publishedStatus>");
 
 					writer.print("</document>");
 				}
@@ -282,7 +303,13 @@ public class DocumentsDataServlet extends HttpServlet {
 					else
 						writer.print("<workflowStatus><![CDATA[" + doc.getWorkflowStatus() + "]]></workflowStatus>");
 
-					
+					writer.print("<startPublishing>" + df.format(doc.getStartPublishing()) + "</startPublishing>");
+					if (doc.getStopPublishing() != null)
+						writer.print("<stopPublishing>" + df.format(doc.getStopPublishing()) + "</stopPublishing>");
+					else
+						writer.print("<stopPublishing></stopPublishing>");
+					writer.print("<publishedStatus>" + (doc.isPublishing() ? "yes" : "no") + "</publishedStatus>");
+
 					writer.print("</document>");
 				}
 			}
@@ -296,5 +323,17 @@ public class DocumentsDataServlet extends HttpServlet {
 			else
 				throw new ServletException(e.getMessage(), e);
 		}
+	}
+
+	protected static boolean isPublished(int published, Date startPublihing, Date stopPublishing) {
+		Date now = new Date();
+		if (published != 1)
+			return false;
+		else if (now.before(startPublihing))
+			return false;
+		else if (stopPublishing == null)
+			return true;
+		else
+			return now.after(stopPublishing);
 	}
 }

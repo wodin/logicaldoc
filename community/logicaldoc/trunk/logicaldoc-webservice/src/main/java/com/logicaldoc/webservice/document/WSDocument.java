@@ -165,8 +165,14 @@ public class WSDocument {
 	private int dateCategory;
 
 	private Integer rating;
-	
+
 	private String workflowStatus;
+
+	private int published = 1;
+
+	private Date startPublishing = new Date();
+
+	private Date stopPublishing;
 
 	public static WSDocument fromDocument(AbstractDocument document) {
 		WSDocument wsDoc = new WSDocument();
@@ -352,7 +358,10 @@ public class WSDocument {
 		doc.setDocRef(docRef);
 		if (rating != null)
 			doc.setRating(rating);
-
+		doc.setPublished(published);
+		doc.setStartPublishing(startPublishing);
+		doc.setStopPublishing(stopPublishing);
+		
 		return doc;
 	}
 
@@ -769,5 +778,29 @@ public class WSDocument {
 
 	public void setWorkflowStatus(String workflowStatus) {
 		this.workflowStatus = workflowStatus;
+	}
+
+	public int getPublished() {
+		return published;
+	}
+
+	public void setPublished(int published) {
+		this.published = published;
+	}
+
+	public Date getStartPublishing() {
+		return startPublishing;
+	}
+
+	public void setStartPublishing(Date startPublishing) {
+		this.startPublishing = startPublishing;
+	}
+
+	public Date getStopPublishing() {
+		return stopPublishing;
+	}
+
+	public void setStopPublishing(Date stopPublishing) {
+		this.stopPublishing = stopPublishing;
 	}
 }

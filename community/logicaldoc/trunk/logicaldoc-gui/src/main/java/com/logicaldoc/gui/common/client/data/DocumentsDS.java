@@ -9,7 +9,7 @@ import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
 /**
- * Datasource to handle documents grid lists. It is based on Xml parsing
+ * Data Source to handle documents grid lists. It is based on Xml parsing
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
@@ -66,10 +66,14 @@ public class DocumentsDS extends DataSource {
 		DataSourceImageField rating = new DataSourceImageField("rating");
 		DataSourceTextField comment = new DataSourceTextField("comment");
 		DataSourceIntegerField wfStatus = new DataSourceIntegerField("workflowStatus");
+		DataSourceTextField publishedStatus = new DataSourceTextField("publishedStatus");
+		publishedStatus.setHidden(true);
+		DataSourceDateTimeField startPublishing = new DataSourceDateTimeField("startPublishing");
+		DataSourceDateTimeField stopPublishing = new DataSourceDateTimeField("stopPublishing");
 
 		setFields(id, title, type, size, publisher, version, docref, lastModified, published, created, creator,
 				sourceDate, sourceAuthor, customId, icon, immutable, iindexed, signed, locked, lockUserId, filename,
-				status, rating, fileVersion, comment, wfStatus);
+				status, rating, fileVersion, comment, wfStatus, publishedStatus, startPublishing, stopPublishing);
 		setClientOnly(true);
 
 		if (barcoded == null)

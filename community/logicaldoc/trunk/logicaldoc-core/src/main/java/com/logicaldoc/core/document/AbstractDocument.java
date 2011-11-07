@@ -57,7 +57,7 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	public static final int BARCODE_PROCESSED = 1;
 
 	public static final int BARCODE_SKIP = 2;
-	
+
 	private String comment;
 
 	private long fileSize = 0;
@@ -146,7 +146,13 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	private Integer rating;
 
 	private String workflowStatus;
-	
+
+	private int published = 1;
+
+	private Date startPublishing = new Date();
+
+	private Date stopPublishing;
+
 	public Long getDeleteUserId() {
 		return deleteUserId;
 	}
@@ -634,7 +640,7 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	public void setRating(Integer rating) {
 		this.rating = rating;
 	}
-	
+
 	/**
 	 * @see Version#getComment()
 	 */
@@ -655,5 +661,41 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	public void setWorkflowStatus(String workflowStatus) {
 		this.workflowStatus = workflowStatus;
+	}
+
+	public int getPublished() {
+		return published;
+	}
+
+	public void setPublished(int published) {
+		this.published = published;
+	}
+
+	public Date getStartPublishing() {
+		return startPublishing;
+	}
+
+	public void setStartPublishing(Date startPublishing) {
+		this.startPublishing = startPublishing;
+	}
+
+	public Date getStopPublishing() {
+		return stopPublishing;
+	}
+
+	public void setStopPublishing(Date stopPublishing) {
+		this.stopPublishing = stopPublishing;
+	}
+
+	public boolean isPublishing() {
+		Date now = new Date();
+		if (published != 1)
+			return false;
+		else if (now.before(startPublishing))
+			return false;
+		else if (stopPublishing == null)
+			return true;
+		else
+			return now.after(stopPublishing);
 	}
 }

@@ -65,6 +65,8 @@ public final class Constants {
 
 	public static final String GROUP_ADMIN = "admin";
 
+	public static final String GROUP_PUBLISHER = "publisher";
+	
 	public final static String EVENT_LOCKED = "event.locked";
 
 	public final static String EVENT_CHECKEDOUT = "event.checkedout";

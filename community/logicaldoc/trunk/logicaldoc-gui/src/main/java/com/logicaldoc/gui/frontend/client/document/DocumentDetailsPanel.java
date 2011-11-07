@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
@@ -55,6 +56,8 @@ public class DocumentDetailsPanel extends VLayout {
 
 	protected Layout thumbnailTabPanel;
 
+	protected Layout retentionPoliciesTabPanel;
+
 	protected StandardPropertiesPanel propertiesPanel;
 
 	protected ExtendedPropertiesPanel extendedPropertiesPanel;
@@ -68,7 +71,9 @@ public class DocumentDetailsPanel extends VLayout {
 	protected NotesPanel notesPanel;
 
 	protected ThumbnailPanel thumbnailPanel;
-	
+
+	protected RetentionPoliciesPanel retentionPoliciesPanel;
+
 	protected HLayout savePanel;
 
 	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
@@ -90,8 +95,10 @@ public class DocumentDetailsPanel extends VLayout {
 	protected Tab versionsTab;
 
 	protected Tab historyTab;
-	
+
 	protected Tab thumbnailTab;
+
+	protected Tab retentionPoliciesTab;
 
 	public DocumentDetailsPanel(DocumentObserver observer) {
 		super();
@@ -195,12 +202,18 @@ public class DocumentDetailsPanel extends VLayout {
 		historyTabPanel.setWidth100();
 		historyTabPanel.setHeight100();
 		historyTab.setPane(historyTabPanel);
-		
+
 		thumbnailTab = new Tab(I18N.message("thumbnail"));
 		thumbnailTabPanel = new HLayout();
 		thumbnailTabPanel.setWidth100();
 		thumbnailTabPanel.setHeight100();
 		thumbnailTab.setPane(thumbnailTabPanel);
+
+		retentionPoliciesTab = new Tab(I18N.message("publishing"));
+		retentionPoliciesTabPanel = new HLayout();
+		retentionPoliciesTabPanel.setWidth100();
+		retentionPoliciesTabPanel.setHeight100();
+		retentionPoliciesTab.setPane(retentionPoliciesTabPanel);
 	}
 
 	protected void prepareTabset() {
@@ -212,6 +225,11 @@ public class DocumentDetailsPanel extends VLayout {
 
 		tabSet.addTab(propertiesTab);
 		tabSet.addTab(extendedPropertiesTab);
+		if (Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN)
+				|| Session.get().getUser().isMemberOf(Constants.GROUP_PUBLISHER))
+			if (Feature.visible(Feature.NOTES))
+				tabSet.addTab(retentionPoliciesTab);
+
 		tabSet.addTab(linksTab);
 		if (Feature.visible(Feature.NOTES))
 			tabSet.addTab(notesTab);
@@ -247,7 +265,7 @@ public class DocumentDetailsPanel extends VLayout {
 		};
 		propertiesPanel = new StandardPropertiesPanel(document, changeHandler, getObserver());
 		propertiesTabPanel.addMember(propertiesPanel);
-		
+
 		/*
 		 * Prepare the extended properties tab
 		 */
@@ -258,6 +276,17 @@ public class DocumentDetailsPanel extends VLayout {
 		}
 		extendedPropertiesPanel = new ExtendedPropertiesPanel(document, changeHandler);
 		extendedPropertiesTabPanel.addMember(extendedPropertiesPanel);
+
+		/*
+		 * Prepare the retention policies tab
+		 */
+		if (retentionPoliciesPanel != null) {
+			retentionPoliciesPanel.destroy();
+			if (retentionPoliciesTabPanel.contains(retentionPoliciesPanel))
+				retentionPoliciesTabPanel.removeMember(retentionPoliciesPanel);
+		}
+		retentionPoliciesPanel = new RetentionPoliciesPanel(document, changeHandler);
+		retentionPoliciesTabPanel.addMember(retentionPoliciesPanel);
 
 		/*
 		 * Prepare the versions tab
@@ -302,14 +331,14 @@ public class DocumentDetailsPanel extends VLayout {
 		}
 		notesPanel = new NotesPanel(document);
 		notesTabPanel.addMember(notesPanel);
-		
+
 		/*
 		 * Prepare the thumbnail tab
 		 */
 		if (thumbnailPanel != null) {
 			thumbnailPanel.destroy();
-			if (thumbnailPanel.contains(thumbnailPanel))
-				thumbnailPanel.removeMember(thumbnailPanel);
+			if (thumbnailTabPanel.contains(thumbnailPanel))
+				thumbnailTabPanel.removeMember(thumbnailPanel);
 		}
 		thumbnailPanel = new ThumbnailPanel(document);
 		thumbnailTabPanel.addMember(thumbnailPanel);
@@ -331,10 +360,13 @@ public class DocumentDetailsPanel extends VLayout {
 	private boolean validate() {
 		boolean stdValid = propertiesPanel.validate();
 		boolean extValid = extendedPropertiesPanel.validate();
+		boolean publishingValid = retentionPoliciesPanel.validate();
 		if (!stdValid)
 			tabSet.selectTab(0);
 		else if (!extValid)
 			tabSet.selectTab(1);
+		else if (!publishingValid)
+			tabSet.selectTab(2);
 		return stdValid && extValid;
 	}
 

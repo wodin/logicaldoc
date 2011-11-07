@@ -55,6 +55,9 @@
     <property name="exportVersion" type="string" column="ld_exportversion" length="10" />
     <property name="deleteUserId" type="long" column="ld_deleteuserid" />
     <property name="workflowStatus" type="string" column="ld_workflowstatus" length="1000" />
+    <property name="published" type="int" column="ld_published"/>
+    <property name="startPublishing" type="timestamp" column="ld_startpublishing" />
+    <property name="stopPublishing" type="timestamp" column="ld_stoppublishing" />
    
     <map name="attributes" table="ld_version_ext" lazy="true" cascade="all" order-by="ld_position asc">
       <key column="ld_versionid" />
