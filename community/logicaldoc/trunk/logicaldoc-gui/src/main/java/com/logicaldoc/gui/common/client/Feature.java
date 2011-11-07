@@ -111,6 +111,8 @@ public class Feature {
 	
 	public static final int EXPORT_CSV = 69;
 	
+	public static final int RETENTION_POLICIES = 70;
+	
 	private static Set<String> features = new HashSet<String>();
 
 	static public void init(GUIInfo info) {

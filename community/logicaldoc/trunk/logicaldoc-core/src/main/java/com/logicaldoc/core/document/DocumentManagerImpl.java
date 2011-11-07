@@ -134,9 +134,9 @@ public class DocumentManagerImpl implements DocumentManager {
 			// store to update file size
 			if (documentDAO.store(document, null) == false)
 				throw new Exception();
-			
+
 			version.setFileSize(document.getFileSize());
-			version.setDigest(document.getDigest());	
+			version.setDigest(document.getDigest());
 			versionDAO.store(version);
 			log.debug("Stored version " + version.getVersion());
 
@@ -177,7 +177,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	private void store(Document doc, InputStream content) throws IOException {
 		// Get file to upload inputStream
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
-		
+
 		// stores it in folder
 		boolean stored = storer.store(content, doc.getId(), storer.getResourceName(doc, null, null));
 		if (!stored)
@@ -325,6 +325,12 @@ public class DocumentManagerImpl implements DocumentManager {
 				// The document must be re-indexed
 				doc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 				doc.setBarcoded(docVO.getBarcoded());
+				doc.setWorkflowStatus(docVO.getWorkflowStatus());
+
+				// Save retention policies
+				doc.setPublished(docVO.getPublished());
+				doc.setStartPublishing(docVO.getStartPublishing());
+				doc.setStopPublishing(docVO.getStopPublishing());
 
 				// Intercept locale changes
 				if (!doc.getLocale().equals(docVO.getLocale())) {

@@ -81,7 +81,13 @@ public class GUIDocument implements Serializable {
 	private String comment;
 
 	private String workflowStatus;
-	
+
+	private int published = 1;
+
+	private Date startPublishing = new Date();
+
+	private Date stopPublishing;
+
 	public long getId() {
 		return id;
 	}
@@ -445,5 +451,29 @@ public class GUIDocument implements Serializable {
 
 	public void setWorkflowStatus(String workflowStatus) {
 		this.workflowStatus = workflowStatus;
+	}
+
+	public int getPublished() {
+		return published;
+	}
+
+	public void setPublished(int published) {
+		this.published = published;
+	}
+
+	public Date getStartPublishing() {
+		return startPublishing;
+	}
+
+	public void setStartPublishing(Date startPublishing) {
+		this.startPublishing = startPublishing;
+	}
+
+	public Date getStopPublishing() {
+		return stopPublishing;
+	}
+
+	public void setStopPublishing(Date stopPublishing) {
+		this.stopPublishing = stopPublishing;
 	}
 }

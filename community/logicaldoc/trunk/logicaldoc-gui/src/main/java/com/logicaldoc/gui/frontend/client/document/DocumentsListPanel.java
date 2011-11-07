@@ -203,11 +203,30 @@ public class DocumentsListPanel extends VLayout {
 		wfStatus.setHidden(true);
 		wfStatus.setCanFilter(true);
 
+		ListGridField startPublishing = new ListGridField("startPublishing", I18N.message("startpublishing"), 110);
+		startPublishing.setAlign(Alignment.CENTER);
+		startPublishing.setType(ListGridFieldType.DATE);
+		startPublishing.setCellFormatter(new DateCellFormatter(false));
+		startPublishing.setCanFilter(false);
+		startPublishing.setHidden(true);
+
+		ListGridField stopPublishing = new ListGridField("stopPublishing", I18N.message("stoppublishing"), 110);
+		stopPublishing.setAlign(Alignment.CENTER);
+		stopPublishing.setType(ListGridFieldType.DATE);
+		stopPublishing.setCellFormatter(new DateCellFormatter(false));
+		stopPublishing.setCanFilter(false);
+		stopPublishing.setHidden(true);
+
+		ListGridField publishedStatus = new ListGridField("publishedStatus", I18N.message("published"), 50);
+		publishedStatus.setHidden(true);
+		publishedStatus.setCanFilter(true);
+
 		list = new ListGrid() {
 			@Override
 			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
 				if (getFieldName(colNum).equals("title")) {
-					if ("stop".equals(record.getAttribute("immutable"))) {
+					if ("stop".equals(record.getAttribute("immutable"))
+							|| !"yes".equals(record.getAttribute("publishedStatus"))) {
 						return "color: #888888; font-style: italic;";
 					} else {
 						return super.getCellCSSText(record, rowNum, colNum);
@@ -234,7 +253,7 @@ public class DocumentsListPanel extends VLayout {
 
 		list.setFields(indexed, locked, immutable, signed, icon, filename, title, lastModified, type, size, version,
 				publisher, published, creator, created, sourceDate, sourceAuthor, customId, rating, fileVersion,
-				comment, wfStatus);
+				comment, wfStatus, startPublishing, stopPublishing);
 
 		// Prepare a panel containing a title and the documents list
 		infoPanel = new InfoPanel("");
