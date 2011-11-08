@@ -214,7 +214,7 @@ public class GroupsPanel extends VLayout {
 			}
 		});
 
-		if (Constants.GROUP_ADMIN.equals(record.getAttributeAsString("name"))||Constants.GROUP_PUBLISHER.equals(record.getAttributeAsString("publisher"))) {
+		if (Constants.GROUP_ADMIN.equals(record.getAttributeAsString("name"))||Constants.GROUP_PUBLISHER.equals(record.getAttributeAsString("name"))) {
 			delete.setEnabled(false);
 		}
 
