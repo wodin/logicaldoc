@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
@@ -213,7 +214,7 @@ public class GroupsPanel extends VLayout {
 			}
 		});
 
-		if ("admin".equals(record.getAttributeAsString("name"))) {
+		if (Constants.GROUP_ADMIN.equals(record.getAttributeAsString("name"))||Constants.GROUP_PUBLISHER.equals(record.getAttributeAsString("publisher"))) {
 			delete.setEnabled(false);
 		}
 
