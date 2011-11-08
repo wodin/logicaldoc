@@ -100,18 +100,19 @@ public class Util {
 	 */
 	public static String flashPreviewAudioVideo(String flashName, String mediaUrl, String mediaProvider, int width,
 			int height) {
-		String vars = "file=" + mediaUrl + "&amp;provider=" + mediaProvider + "&amp;autostart=true";
-		String tmp = "<div align=\"center\"><object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0\" width=\""
+		String vars = "file=" + mediaUrl + "&provider=" + mediaProvider + "&autostart=true";
+		
+		String tmp = "<div align=\"center\"><object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0\" width=\""
 				+ width + "\" height=\"" + height + "\" align=\"middle\">\n";
 		tmp += " <param name=\"allowScriptAccess\" value=\"always\" />\n";
+		tmp += " <param name=\"allowFullScreen\" value=\"true\" />\n";
 		tmp += " <param name=\"movie\" value=\"" + Util.flashUrl(flashName) + "\" />\n";
 		tmp += " <param name=\"quality\" value=\"high\" />\n";
 		tmp += " <param name=\"bgcolor\" value=\"#ffffff\" />\n";
-		tmp += " <param name=\"wmode\" value=\"transparent\" />\n";
 		tmp += " <param name=\"flashvars\" value=\"" + vars + "\" />";
 		tmp += "	<embed type=\"application/x-shockwave-flash\" src=\"" + Util.flashUrl(flashName) + "\" height=\""
-				+ height + "\" width=\"" + width + "\" id=\"" + flashName + "\" name=\"" + flashName
-				+ "\" bgcolor=\"#ffffff\" quality=\"high\" flashvars=\"" + vars + "\" />";
+				+ height + "\" width=\"" + width + "\""
+				+ " bgcolor=\"#ffffff\" quality=\"high\" allowFullScreen=\"true\" flashvars=\"" + vars + "\">\n";
 		tmp += "</object></div>\n";
 		return tmp;
 	}
