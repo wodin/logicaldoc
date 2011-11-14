@@ -306,8 +306,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		if (Feature.visible(Feature.DROP_SPOT)) {
 			addButton(dropSpot);
 			if (!Feature.enabled(Feature.DROP_SPOT)) {
-				scan.setDisabled(true);
-				scan.setTooltip(I18N.message("featuredisabled"));
+				dropSpot.setDisabled(true);
+				dropSpot.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
 
@@ -530,7 +530,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			if (folder != null) {
 				add.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));
 				dropSpot.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE)
-						|| !Feature.enabled(Feature.SCAN));
+						|| !Feature.enabled(Feature.DROP_SPOT));
 				scan.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE) || !Feature.enabled(Feature.SCAN));
 				archive.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_ARCHIVE)
 						|| !Feature.enabled(Feature.ARCHIVES));
@@ -547,6 +547,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				startWorkflow.setDisabled(true);
 				addToWorkflow.setDisabled(true);
 				bulkUpdate.setDisabled(true);
+				dropSpot.setDisabled(true);
 			}
 		} catch (Throwable t) {
 
