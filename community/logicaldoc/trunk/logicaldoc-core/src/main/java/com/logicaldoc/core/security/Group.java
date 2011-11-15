@@ -25,6 +25,8 @@ public class Group extends ExtensibleObject implements Serializable {
 
 	public static final long GROUPID_ADMIN = 1;
 
+	public static final long GROUPID_PUBLISHER = -10000;
+	
 	public static int TYPE_DEFAULT = 0;
 
 	public static int TYPE_USER = 1;

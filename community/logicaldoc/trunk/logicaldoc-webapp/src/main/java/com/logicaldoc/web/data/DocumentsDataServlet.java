@@ -139,11 +139,9 @@ public class DocumentsDataServlet extends HttpServlet {
 				for (Object record : records) {
 					Object[] cols = (Object[]) record;
 
-					boolean published = isPublished(Integer.parseInt(cols[27].toString()), (Date) cols[25],
-							(Date) cols[26]);
+					boolean published = isPublished((Integer) cols[27], (Date) cols[25], (Date) cols[26]);
 
-					if (!user.isInGroup("admin") && !user.isInGroup("publisher")) {
-						if (!published)
+					if (!published && !user.isInGroup("admin") && !user.isInGroup("publisher")) {
 							continue;
 					}
 
@@ -325,15 +323,15 @@ public class DocumentsDataServlet extends HttpServlet {
 		}
 	}
 
-	protected static boolean isPublished(int published, Date startPublihing, Date stopPublishing) {
+	protected static boolean isPublished(int published, Date startPublishing, Date stopPublishing) {
 		Date now = new Date();
 		if (published != 1)
 			return false;
-		else if (now.before(startPublihing))
+		else if (now.before(startPublishing))
 			return false;
 		else if (stopPublishing == null)
 			return true;
 		else
-			return now.after(stopPublishing);
+			return now.before(stopPublishing);
 	}
 }

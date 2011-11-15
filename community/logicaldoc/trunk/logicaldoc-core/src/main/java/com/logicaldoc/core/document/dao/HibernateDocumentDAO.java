@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -787,5 +788,30 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		}
 
 		return true;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Collection<Long> findPublishedIds(Collection<Long> folderIds) {
+		StringBuffer query = new StringBuffer("select ld_id from ld_document where ld_deleted=0 ");
+		if (folderIds != null && !folderIds.isEmpty()) {
+			query.append(" and ld_folderid in (");
+			query.append(folderIds.toString().replace('[', ' ').replace(']', ' '));
+			query.append(" ) ");
+		}
+		query.append(" and ld_published = 1 ");
+		query.append(" and ld_startpublishing <= ? ");
+		query.append(" and ( ld_stoppublishing is null or ld_stoppublishing > ? )");
+
+		Date now = new Date();
+
+		Collection<Long> buf = (Collection<Long>) queryForList(query.toString(), new Object[] { now, now }, Long.class,
+				null);
+		Set<Long> ids = new HashSet<Long>();
+		for (Long id : buf) {
+			if (!ids.contains(id))
+				ids.add(id);
+		}
+		return buf;
 	}
 }

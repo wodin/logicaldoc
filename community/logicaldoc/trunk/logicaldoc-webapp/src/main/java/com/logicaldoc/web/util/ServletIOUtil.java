@@ -33,6 +33,7 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserDoc;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
@@ -82,7 +83,7 @@ public class ServletIOUtil {
 		if (filename == null)
 			filename = FilenameUtils.getName(resourcePath);
 
-		File file = PluginRegistry.getInstance().getPluginResource(pluginName, resourcePath);
+		File file = PluginRegistry.getPluginResource(pluginName, resourcePath);
 
 		// get the mimetype
 		String mimetype = MimeType.getByFilename(filename);
@@ -117,7 +118,7 @@ public class ServletIOUtil {
 			os.close();
 			is.close();
 		}
-		
+
 	}
 
 	/**
@@ -134,11 +135,15 @@ public class ServletIOUtil {
 	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, long docId,
 			String fileVersion, String fileName, String suffix, User user) throws FileNotFoundException, IOException,
 			ServletException {
-
 		UserSession session = SessionUtil.validateSession(request);
+		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		udao.initialize(user);
 
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = dao.findById(docId);
+
+		if (doc != null && !user.isInGroup("admin") && !user.isInGroup("publisher") && !doc.isPublishing())
+			throw new FileNotFoundException("Document not published");
 
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 		String resource = storer.getResourceName(doc, fileVersion, null);
@@ -239,8 +244,8 @@ public class ServletIOUtil {
 	 * @param version name of the version; if null the latest version will
 	 *        returned
 	 */
-	public static void downloadDocumentText(HttpServletRequest request, HttpServletResponse response, long docId)
-			throws FileNotFoundException, IOException {
+	public static void downloadDocumentText(HttpServletRequest request, HttpServletResponse response, long docId,
+			User user) throws FileNotFoundException, IOException {
 
 		response.setCharacterEncoding("UTF-8");
 
@@ -269,8 +274,13 @@ public class ServletIOUtil {
 		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 		response.setHeader("Expires", "0");
 
+		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		udao.initialize(user);
+		if (doc != null && !user.isInGroup("admin") && !user.isInGroup("publisher") && !doc.isPublishing())
+			throw new FileNotFoundException("Document not published");
+
 		Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
-		String content = indexer.getDocument(Long.toString(docId)).getField(LuceneDocument.FIELD_CONTENT).stringValue();
+		String content = indexer.getDocument(Long.toString(docId)).get(LuceneDocument.FIELD_CONTENT);
 
 		InputStream is = new StringInputStream(content.trim(), "UTF-8");
 		OutputStream os;

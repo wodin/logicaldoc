@@ -151,14 +151,16 @@ public class RowCriteria extends HLayout {
 		if (criteriaField == null)
 			return map;
 
-		if (criteriaField.equals("id") || criteriaField.equals("fileSize") || criteriaField.equals("rating")
+		if (criteriaField.equals("id") || criteriaField.equals("fileSize") 
+				|| criteriaField.equals("rating") || criteriaField.equals("published")
 				|| criteriaField.endsWith("type:1") || criteriaField.endsWith("type:2")) {
 			map.put("greaterthan", I18N.message("greaterthan"));
 			map.put("lessthan", I18N.message("lessthan"));
 			map.put("equals", I18N.message("equals"));
 			map.put("notequal", I18N.message("notequal"));
 		} else if (criteriaField.equals("sourceDate") || criteriaField.equals("lastModified")
-				|| criteriaField.equals("date") || criteriaField.equals("creation")
+				|| criteriaField.equals("date") || criteriaField.equals("creation") 
+				|| criteriaField.equals("startPublishing") || criteriaField.equals("stopPublishing")
 				|| criteriaField.endsWith("type:3")) {
 			map.put("greaterthan", I18N.message("greaterthan"));
 			map.put("lessthan", I18N.message("lessthan"));
@@ -177,7 +179,8 @@ public class RowCriteria extends HLayout {
 				|| criteriaField.endsWith("type:1") || criteriaField.endsWith("type:2")) {
 			return ItemFactory.newIntegerItem("value", "integer", null);
 		} else if (criteriaField.equals("sourceDate") || criteriaField.equals("lastModified")
-				|| criteriaField.equals("date") || criteriaField.equals("creation")
+				|| criteriaField.equals("date") || criteriaField.equals("creation") 
+				|| criteriaField.equals("startPublishing") || criteriaField.equals("stopPublishing") 
 				|| criteriaField.endsWith("type:3")) {
 			return ItemFactory.newDateItem("value", "date");
 		} else {

@@ -2,6 +2,7 @@ package com.logicaldoc.core.searchengine;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -39,12 +40,12 @@ public class TagSearch extends Search {
 	private void prepareExpression() {
 		// Find all real documents
 		StringBuffer query = new StringBuffer(
-				"select A.ld_id,A.ld_folderid,A.ld_title,A.ld_type,A.ld_customid,A.ld_filesize,A.ld_docref,A.ld_date,A.ld_sourcedate,A.ld_creation,A.ld_source,A.ld_comment,B.ld_name "
+				"select A.ld_id,A.ld_folderid,A.ld_title,A.ld_type,A.ld_customid,A.ld_filesize,A.ld_docref,A.ld_date,A.ld_sourcedate,A.ld_creation,A.ld_source,A.ld_comment,B.ld_name,A.ld_published,A.ld_startpublishing,A.ld_stoppublishing "
 						+ "from ld_document A, ld_folder B ");
 		appendWhereClause(false, query);
 
 		// Append all shortcuts
-		query.append(" UNION select REF.ld_id,A.ld_folderid,REF.ld_title,REF.ld_type,REF.ld_customid,REF.ld_filesize,A.ld_docref,REF.ld_date,REF.ld_sourcedate,REF.ld_creation,REF.ld_source,REF.ld_comment,B.ld_name "
+		query.append(" UNION select REF.ld_id,A.ld_folderid,REF.ld_title,REF.ld_type,REF.ld_customid,REF.ld_filesize,A.ld_docref,REF.ld_date,REF.ld_sourcedate,REF.ld_creation,REF.ld_source,REF.ld_comment,B.ld_name,A.ld_published,A.ld_startpublishing,A.ld_stoppublishing "
 				+ "from ld_document A, ld_document REF, ld_folder B ");
 		appendWhereClause(true, query);
 
@@ -93,6 +94,13 @@ public class TagSearch extends Search {
 		Set<Long> precoll = docDAO.findDocIdByUserIdAndTag(options.getUserId(), options.getExpression());
 		String buf = precoll.toString().replace("[", "(").replace("]", ")");
 		query.append(buf);
+
+		// For normal users we have to exclude not published documents
+		if (!searchUser.isInGroup("admin") && !searchUser.isInGroup("publisher")) {
+			query.append(" and A.ld_published = 1 ");
+			query.append(" and A.ld_startpublishing <= CURRENT_TIMESTAMP ");
+			query.append(" and ( A.ld_stoppublishing is null or A.ld_stoppublishing > CURRENT_TIMESTAMP )");
+		}
 	}
 
 	public class HitMapper implements RowMapper<Hit> {
@@ -112,7 +120,20 @@ public class TagSearch extends Search {
 			hit.setSource(rs.getString(11));
 			hit.setComment(rs.getString(12));
 			hit.setFolderName(rs.getString(13));
-			
+
+			int published = rs.getInt(14);
+			Date startPublishing = rs.getDate(15);
+			Date stopPublishing = rs.getDate(16);
+
+			// Check the publishing status
+			Date now = new Date();
+			if (published != 1)
+				hit.setPublished(0);
+			else if (now.before(startPublishing))
+				hit.setPublished(0);
+			else if (stopPublishing != null && stopPublishing.before(now))
+				hit.setPublished(0);
+
 			return hit;
 		}
 	};

@@ -185,11 +185,16 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		comment.setWidth(300);
 		comment.setHidden(true);
 
+		ListGridField publishedStatus = new ListGridField("publishedStatus", I18N.message("published"), 50);
+		publishedStatus.setHidden(true);
+		publishedStatus.setCanFilter(true);
+
 		list = new ListGrid() {
 			@Override
 			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
 				if (getFieldName(colNum).equals("title")) {
-					if ("stop".equals(record.getAttribute("immutable"))) {
+					if ("stop".equals(record.getAttribute("immutable"))
+							|| !"yes".equals(record.getAttribute("publishedStatus").toString())) {
 						return "color: #888888; font-style: italic;";
 					} else {
 						return super.getCellCSSText(record, rowNum, colNum);
@@ -213,15 +218,11 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		list.setShowRowNumbers(true);
 		list.setWrapCells(true);
 		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT) {
-			// list.setFields(id, folderId, icon, title, size, creation, score,
-			// customId);
 			list.setFields(id, folderId, icon, title, type, size, published, creation, sourceDate, score, customId,
-					folder, comment);
+					folder, comment, publishedStatus);
 		} else {
-			// list.setFields(id, folderId, icon, title, size, creation,
-			// customId);
 			list.setFields(id, folderId, icon, title, type, size, published, creation, sourceDate, customId, folder,
-					comment);
+					comment, publishedStatus);
 		}
 
 		list.addSelectionChangedHandler(new SelectionChangedHandler() {

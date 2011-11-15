@@ -30,6 +30,7 @@ import org.apache.lucene.search.highlight.Highlighter;
 import org.apache.lucene.search.highlight.QueryScorer;
 import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 
+import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.i18n.DateBean;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.security.dao.FolderDAO;
@@ -87,14 +88,13 @@ public class FulltextSearch extends Search {
 
 		for (int i = 0; i < languages.length; i++) {
 			String lang = languages[i];
-			// searcher[i] = new IndexSearcher(Indexer.getIndexDirectory(lang));
 			readers[i] = IndexReader.open(Indexer.getIndexDirectory(lang));
 		}
 
 		MultiReader reader = new MultiReader(readers);
 		IndexSearcher indexSearcher = new IndexSearcher(reader);
 
-		// Include even all not analized fields
+		// Include even all not analyzed fields
 		List<String> fields = getSearchedFields(opt);
 
 		// multiSearcher.setSimilarity(new SquareSimilarity());
@@ -163,6 +163,13 @@ public class FulltextSearch extends Search {
 		if (opt.getFolderId() != null && fdao.isReadEnable(opt.getFolderId(), opt.getUserId()))
 			accessibleIds.add(opt.getFolderId());
 
+		/*
+		 * Prepare the list of published documents
+		 */
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+
+		Collection<Long> publishedIds = docDao.findPublishedIds(accessibleIds);
+
 		int maxNumFragmentsRequired = 4;
 		String fragmentSeparator = "&nbsp;...&nbsp;";
 
@@ -230,6 +237,7 @@ public class FulltextSearch extends Search {
 					result.setSource(doc.get(LuceneDocument.FIELD_SOURCE));
 					result.setComment(doc.get(LuceneDocument.FIELD_COMMENT));
 					result.setFolderName(doc.get(LuceneDocument.FIELD_FOLDER_NAME));
+					result.setPublished(publishedIds.contains(result.getDocId()) ? 1 : 0);
 
 					fid = doc.get(LuceneDocument.FIELD_FOLDER_ID);
 					// Support the old 'path' attribute
@@ -240,9 +248,8 @@ public class FulltextSearch extends Search {
 					result.setSummary(summary);
 					result.setScore(createScore(maxScore, score));
 
-					if (isRelevant(result)) {
+					if (isRelevant(result))
 						hits.add(result);
-					}
 				}
 			}
 		}
@@ -268,53 +275,56 @@ public class FulltextSearch extends Search {
 	}
 
 	protected boolean isRelevant(Hit hit) {
-		boolean result = true;
+		boolean relevant = true;
 
 		FulltextSearchOptions opt = (FulltextSearchOptions) options;
 
 		if (!StringUtils.isEmpty(opt.getFormat()) && !opt.getFormat().equals("all")) {
 			if (!hit.getType().toLowerCase().equals(opt.getFormat())) {
-				result = false;
+				relevant = false;
 			}
 		}
 
 		if (opt.getSizeMin() != null && hit.getSize() < opt.getSizeMin().longValue())
-			result = false;
+			relevant = false;
 
 		if (opt.getSizeMax() != null && hit.getSize() > opt.getSizeMax().longValue())
-			result = false;
+			relevant = false;
 
 		if (opt.getCreationFrom() != null) {
 			if (hit.getCreation().before(opt.getCreationFrom()))
-				result = false;
+				relevant = false;
 		}
 
 		if (opt.getCreationTo() != null) {
 			if (hit.getCreation().after(opt.getDateTo()))
-				result = false;
+				relevant = false;
 		}
 
 		if (opt.getDateTo() != null) {
 			if (hit.getDate().after(opt.getDateTo()))
-				result = false;
+				relevant = false;
 		}
 
 		if (opt.getDateFrom() != null && hit.getDate() != null) {
 			if (hit.getDate().before(opt.getDateFrom()))
-				result = false;
+				relevant = false;
 		}
 
 		if (opt.getSourceDateFrom() != null && hit.getSourceDate() != null) {
 			if (hit.getSourceDate().before(opt.getSourceDateFrom()))
-				result = false;
+				relevant = false;
 		}
 
 		if (opt.getSourceDateTo() != null && hit.getSourceDate() != null) {
 			if (hit.getSourceDate().after(opt.getSourceDateTo()))
-				result = false;
+				relevant = false;
 		}
 
-		return result;
+		if (hit.getPublished() != 1 && !searchUser.isInGroup("admin") && !searchUser.isInGroup("publisher"))
+			relevant = false;
+
+		return relevant;
 	}
 
 	protected static int createScore(float max, float score) {

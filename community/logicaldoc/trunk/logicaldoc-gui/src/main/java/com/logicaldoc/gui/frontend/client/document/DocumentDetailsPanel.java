@@ -367,7 +367,7 @@ public class DocumentDetailsPanel extends VLayout {
 			tabSet.selectTab(1);
 		else if (!publishingValid)
 			tabSet.selectTab(2);
-		return stdValid && extValid;
+		return stdValid && extValid && publishingValid;
 	}
 
 	public void onSave() {

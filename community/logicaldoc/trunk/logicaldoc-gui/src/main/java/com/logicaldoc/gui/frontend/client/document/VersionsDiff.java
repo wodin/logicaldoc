@@ -67,6 +67,18 @@ public class VersionsDiff extends Window {
 				version1.getFolder().getId() == Constants.DOCUMENTS_FOLDERID ? "/" : version1.getFolder().getName(),
 				version2.getFolder().getId() == Constants.DOCUMENTS_FOLDERID ? "/" : version2.getFolder().getName()));
 		records.add(new DiffRecord(I18N.message("tags"), version1.getTagsString(), version2.getTagsString()));
+
+		records.add(new DiffRecord(I18N.message("published"), version1.getPublished() == 1 ? I18N.message("yes") : I18N
+				.message("no"), version2.getPublished() == 1 ? I18N.message("yes") : I18N.message("no")));
+
+		records.add(new DiffRecord(I18N.message("startpublishing"), version1.getStartPublishing() != null ? formatter
+				.format(version1.getStartPublishing()) : null, version2.getStartPublishing() != null ? formatter
+				.format(version2.getStartPublishing()) : null));
+
+		records.add(new DiffRecord(I18N.message("stoppublishing"), version1.getStopPublishing() != null ? formatter
+				.format(version1.getStopPublishing()) : null, version2.getStopPublishing() != null ? formatter
+				.format(version2.getStopPublishing()) : null));
+
 		records.add(new DiffRecord(I18N.message("template"), version1.getTemplate(), version2.getTemplate()));
 		printExtendedAttributes(records, version1, version2);
 

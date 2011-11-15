@@ -97,6 +97,7 @@ public class Search {
 						record.setAttribute("sourceDate", hit.getSourceDate());
 						record.setAttribute("comment", hit.getComment());
 						record.setAttribute("folder", hit.getFolderName());
+						record.setAttribute("publishedStatus", hit.getPublished() == 1 ? "yes" : "no");
 					}
 
 					for (SearchObserver observer : observers) {
