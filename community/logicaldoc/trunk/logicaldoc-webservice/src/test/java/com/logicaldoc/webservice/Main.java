@@ -2,6 +2,7 @@ package com.logicaldoc.webservice;
 
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
+import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.FolderClient;
 import com.logicaldoc.webservice.search.SearchClient;
 import com.logicaldoc.webservice.security.SecurityClient;
@@ -391,12 +392,12 @@ public class Main {
 		// System.out.println("title: " + wsDocument.getVersion());
 		// }
 
-		// WSDocument[] docs = documentClient.list(sid, 13);
-		// for (WSDocument wsDocument : docs) {
-		// System.out.println("doc id: " + wsDocument.getId());
-		// System.out.println("doc title: " + wsDocument.getTitle());
-		// System.out.println("doc customid: " + wsDocument.getCustomId());
-		// }
+		WSDocument[] docs = documentClient.list(sid, 5);
+		for (WSDocument wsDocument : docs) {
+			System.out.println("doc id: " + wsDocument.getId());
+			System.out.println("doc title: " + wsDocument.getTitle());
+			System.out.println("doc customid: " + wsDocument.getCustomId());
+		}
 
 		// WSDocument[] docs = documentClient.getRecentDocuments(sid, 4);
 		// System.out.println("docs: " + docs.length);
@@ -412,12 +413,10 @@ public class Main {
 		// System.out.println("doc title: " + doc.getTitle());
 		// System.out.println("doc customid: " + doc.getCustomId());
 
-//		 documentClient.sendEmail("ciccio", new Long[] { 690L, 32L, 29L },
-//		 "m.caruso@logicalobjects.it", "Test Invio Mail 2",
-//		 "Questa mail è un test");
+		// documentClient.sendEmail("ciccio", new Long[] { 690L, 32L, 29L },
+		// "m.caruso@logicalobjects.it", "Test Invio Mail 2",
+		// "Questa mail è un test");
 
-         documentClient.reindex(sid, 3868);
-		
 		auth.logout(sid);
 	}
 }

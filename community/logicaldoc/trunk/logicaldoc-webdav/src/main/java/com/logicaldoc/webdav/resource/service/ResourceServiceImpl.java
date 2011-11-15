@@ -116,6 +116,9 @@ public class ResourceServiceImpl implements ResourceService {
 		final Long folderID = Long.parseLong(parentResource.getID());
 		boolean hasAccess = folderDAO.isReadEnable(folderID, parentResource.getRequestedPerson());
 
+		User user = userDAO.findById(parentResource.getRequestedPerson());
+		userDAO.initialize(user);
+
 		if (hasAccess == false)
 			return resourceList;
 
@@ -133,6 +136,11 @@ public class ResourceServiceImpl implements ResourceService {
 		Collection<Document> documents = documentDAO.findByFolder(folderID, null);
 		for (Iterator<Document> iterator = documents.iterator(); iterator.hasNext();) {
 			Document document = iterator.next();
+			try {
+				checkPublished(user, document);
+			} catch (Throwable t) {
+				continue;
+			}
 			resourceList.add(marshallDocument(document, parentResource.getSession()));
 		}
 
@@ -190,6 +198,10 @@ public class ResourceServiceImpl implements ResourceService {
 		if (hasAccess == false)
 			throw new DavException(DavServletResponse.SC_FORBIDDEN,
 					"You have no appropriated rights to read this document");
+
+		User user = userDAO.findById(userId);
+		userDAO.initialize(user);
+		checkPublished(user, document);
 
 		return marshallDocument(document, session);
 	}
@@ -331,6 +343,8 @@ public class ResourceServiceImpl implements ResourceService {
 	public Resource getChildByName(Resource parentResource, String name) {
 		Folder parentFolder = folderDAO.findById(Long.parseLong(parentResource.getID()));
 		Collection<Document> docs = documentDAO.findByFileNameAndParentFolderId(parentFolder.getId(), name, null, null);
+		User user = userDAO.findById(parentResource.getRequestedPerson());
+		userDAO.initialize(user);
 		if (!docs.isEmpty()) {
 			Document document = docs.iterator().next();
 			return marshallDocument(document, parentResource.getSession());
@@ -612,6 +626,8 @@ public class ResourceServiceImpl implements ResourceService {
 		String sid = (String) session.getObject("sid");
 
 		User user = userDAO.findById(resource.getRequestedPerson());
+		userDAO.initialize(user);
+		checkPublished(user, Long.parseLong(resource.getID()));
 
 		// verify the write permission on the parent folder
 		Resource parent = getParentResource(resource);
@@ -632,12 +648,21 @@ public class ResourceServiceImpl implements ResourceService {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-
 	}
 
 	public boolean isCheckedOut(Resource resource) {
 		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
 		return document.getStatus() == Document.DOC_CHECKED_OUT;
+	}
+
+	protected void checkPublished(User user, Document doc) throws DavException {
+		if (!user.isInGroup("admin") && !user.isInGroup("publisher") && !doc.isPublishing())
+			throw new DavException(1, "Document not published");
+	}
+
+	protected void checkPublished(User user, long docId) throws DavException {
+		Document document = documentDAO.findById(docId);
+		checkPublished(user, document);
 	}
 
 	public List<Resource> getHistory(Resource resource) {

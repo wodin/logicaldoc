@@ -180,6 +180,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 				davSession.putObject("sid", sid);
 				UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 				User user = dao.findByUserName(username);
+				dao.initialize(user);
 				davSession.putObject("id", user.getId());
 				davSession.putObject("user", user);
 

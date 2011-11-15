@@ -1,5 +1,6 @@
 package com.logicaldoc.webservice;
 
+import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.SessionManager;
@@ -130,6 +132,11 @@ public class AbstractService {
 			log.error(message);
 			throw new Exception(message);
 		}
+	}
+
+	protected void checkPublished(User user, Document doc) throws Exception {
+		if (!user.isInGroup("admin") && !user.isInGroup("publisher") && !doc.isPublishing())
+			throw new FileNotFoundException("Document not published");
 	}
 
 	public static String convertDateToString(Date date) {
