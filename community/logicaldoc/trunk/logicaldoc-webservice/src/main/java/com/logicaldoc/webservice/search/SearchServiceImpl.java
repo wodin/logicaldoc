@@ -66,6 +66,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 		for (int i = 0; i < docs.size(); i++) {
 			try {
 				checkReadEnable(user, docs.get(i).getFolder().getId());
+				checkPublished(user, docs.get(i));
 			} catch (Exception e) {
 				continue;
 			}
@@ -84,6 +85,11 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 		List<Document> docs = docDao.findByUserIdAndTag(user.getId(), tag, null);
 		WSDocument[] wsDocs = new WSDocument[docs.size()];
 		for (int i = 0; i < docs.size(); i++) {
+			try {
+				checkPublished(user, docs.get(i));
+			} catch (Exception e) {
+				continue;
+			}
 			docDao.initialize(docs.get(i));
 			wsDocs[i] = WSDocument.fromDocument(docs.get(i));
 		}

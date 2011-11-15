@@ -2,6 +2,7 @@ package com.logicaldoc.web.service;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -422,7 +423,11 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			}
 
 			document = new GUIDocument();
+
 			try {
+				User user = SessionUtil.getSessionUser(sid);
+				checkPublished(user, doc);
+
 				docDao.initialize(doc);
 				document.setId(doc.getId());
 				document.setTitle(doc.getTitle());
@@ -1274,5 +1279,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				buf.setStopPublishing(vo.getStopPublishing());
 			save(sid, buf);
 		}
+	}
+
+	protected void checkPublished(User user, Document doc) throws Exception {
+		if (!user.isInGroup("admin") && !user.isInGroup("publisher") && !doc.isPublishing())
+			throw new FileNotFoundException("Document not published");
 	}
 }

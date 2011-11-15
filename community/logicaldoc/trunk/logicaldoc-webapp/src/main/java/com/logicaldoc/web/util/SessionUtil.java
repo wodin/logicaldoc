@@ -8,7 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.util.Context;
 
 /**
  * Various methods related to the user session
@@ -57,11 +59,17 @@ public class SessionUtil {
 
 	public static User getSessionUser(String sid) throws InvalidSessionException {
 		UserSession session = validateSession(sid);
-		return (User) session.getDictionary().get(USER);
+		User user = (User) session.getDictionary().get(USER);
+		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		userDao.initialize(user);
+		return user;
 	}
 
 	public static User getSessionUser(HttpServletRequest request) throws ServletException {
 		UserSession session = validateSession(request);
-		return (User) session.getDictionary().get(USER);
+		User user = (User) session.getDictionary().get(USER);
+		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		userDao.initialize(user);
+		return user;
 	}
 }

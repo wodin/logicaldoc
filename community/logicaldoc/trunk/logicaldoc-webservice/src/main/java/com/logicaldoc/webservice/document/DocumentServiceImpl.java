@@ -133,6 +133,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			throw new Exception("The document is immutable");
 
 		checkWriteEnable(user, doc.getFolder().getId());
+		checkPublished(user, doc);
 
 		// Create the document history event
 		History transaction = new History();
@@ -152,6 +153,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		Document doc = docDao.findById(docId);
 		checkLocked(user, doc);
 		checkPermission(Permission.DELETE, user, doc.getFolder().getId());
+		checkPublished(user, doc);
 
 		// Create the document history event
 		History transaction = new History();
@@ -180,6 +182,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		Document doc = docDao.findById(docId);
 		checkReadEnable(user, doc.getFolder().getId());
 		checkDownloadEnable(user, doc.getFolder().getId());
+		checkPublished(user, doc);
 
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 		String resourceName = storer.getResourceName(doc, null, null);
@@ -207,6 +210,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		if (doc == null)
 			return null;
 		checkReadEnable(user, doc.getFolder().getId());
+		checkPublished(user, doc);
 
 		docDao.initialize(doc);
 		return WSDocument.fromDocument(doc);
@@ -232,6 +236,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		Document doc = docDao.findById(docId);
 		checkLocked(user, doc);
 		checkWriteEnable(user, doc.getFolder().getId());
+		checkPublished(user, doc);
 
 		// Create the document history event
 		History transaction = new History();
@@ -250,6 +255,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
 		checkPermission(Permission.DELETE, user, doc.getFolder().getId());
+		checkPublished(user, doc);
 
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Folder folder = dao.findById(folderId);
@@ -273,6 +279,8 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
 		checkPermission(Permission.RENAME, user, doc.getFolder().getId());
+		checkPublished(user, doc);
+
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 
 		History transaction = new History();
@@ -287,6 +295,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
 		checkPermission(Permission.RENAME, user, doc.getFolder().getId());
+		checkPublished(user, doc);
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 
 		History transaction = new History();
@@ -333,6 +342,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			throw new Exception("unexisting document " + document.getId());
 		checkLocked(user, doc);
 		checkWriteEnable(user, doc.getFolder().getId());
+		checkPublished(user, doc);
 
 		// Initialize the lazy loaded collections
 		docDao.initialize(doc);
@@ -366,6 +376,11 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			});
 		WSDocument[] wsDocs = new WSDocument[docs.size()];
 		for (int i = 0; i < docs.size(); i++) {
+			try {
+				checkPublished(user, docs.get(i));
+			} catch (Throwable t) {
+				continue;
+			}
 			docDao.initialize(docs.get(i));
 			wsDocs[i] = WSDocument.fromDocument(docs.get(i));
 		}
@@ -383,6 +398,11 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		List<Document> docs = docDao.findByIds(docIds, null);
 		List<WSDocument> wsDocs = new ArrayList<WSDocument>();
 		for (int i = 0; i < docs.size(); i++) {
+			try {
+				checkPublished(user, docs.get(i));
+			} catch (Throwable t) {
+				continue;
+			}
 			docDao.initialize(docs.get(i));
 			if (folderIds.contains(docs.get(i).getFolder().getId()))
 				wsDocs.add(WSDocument.fromDocument(docs.get(i)));
@@ -400,6 +420,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			throw new Exception("unexisting document " + docId);
 
 		checkReadEnable(user, doc.getFolder().getId());
+		checkPublished(user, doc);
 
 		VersionDAO versDao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
 		List<Version> versions = versDao.findByDocId(docId);
@@ -470,6 +491,12 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			if (docIds != null && docIds.length > 0) {
 				for (long id : docIds) {
 					Document doc = docDao.findById(id);
+					try {
+						checkPublished(user, doc);
+					} catch (Throwable t) {
+						continue;
+					}
+
 					if (doc != null && folderDao.isReadEnable(doc.getFolder().getId(), user.getId())) {
 						createAttachment(mail, doc);
 						docs.add(doc);
@@ -482,6 +509,12 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			sender.send(mail);
 
 			for (Document doc : docs) {
+				try {
+					checkPublished(user, doc);
+				} catch (Throwable t) {
+					continue;
+				}
+
 				// Create the document history event
 				HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 				History history = new History();
@@ -522,7 +555,6 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document originalDoc = docDao.findById(docId);
 		checkDownloadEnable(user, originalDoc.getFolder().getId());
-
 		checkWriteEnable(user, folderId);
 
 		FolderDAO mdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
@@ -543,6 +575,8 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 		Document doc = documentManager.createShortcut(originalDoc, folder, transaction);
 
+		checkPublished(user, doc);
+
 		return WSDocument.fromDocument(doc);
 	}
 
@@ -550,6 +584,6 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 	public void reindex(String sid, long docId) throws Exception {
 		validateSession(sid);
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		documentManager.reindex(docId);		
+		documentManager.reindex(docId);
 	}
 }
