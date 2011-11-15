@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>47</version>
+  <version>48</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -147,6 +147,12 @@
         <groupId>commons-logging</groupId>
         <artifactId>commons-logging</artifactId>
         <version>1.1.1</version>
+        <type>jar</type>
+      </dependency>
+      <dependency>
+        <groupId>commons-cli</groupId>
+        <artifactId>commons-cli</artifactId>
+        <version>1.1</version>
         <type>jar</type>
       </dependency>
       <dependency>
@@ -473,16 +479,6 @@
         <artifactId>gwtupload</artifactId>
         <version>0.6.3-compat</version>
       </dependency>
-      <!--dependency>
-        <groupId>com.googlecode.gwtupload</groupId>
-        <artifactId>jsupload</artifactId>
-        <version>0.6.3</version>
-      </dependency>
-      <dependency>
-        <groupId>com.googlecode.gwtupload</groupId>
-        <artifactId>gwtupload-gae</artifactId>
-        <version>0.6.3</version>
-      </dependency-->
       <dependency>
         <groupId>com.google.gwt</groupId>
         <artifactId>gwt-incubator</artifactId>
@@ -546,6 +542,11 @@
           <version>3.7</version>
           <type>jar</type>
         </dependency>
+		    <dependency>
+			    <groupId>org.hyperic.sigar</groupId>
+			    <artifactId>sigar</artifactId>
+			    <version>1.6.4</version>
+		    </dependency>
       </dependencies>
     </dependencyManagement>
     <repositories>
@@ -559,11 +560,6 @@
         <name>Ibiblio Repository</name>
         <url>http://www.ibiblio.org/maven2</url>
       </repository>
-      <!--repository>
-        <id>java.net</id>
-        <url>http://download.java.net/maven/1</url>
-        <layout>legacy</layout>
-      </repository-->
       <repository>
         <id>maven2-repository.dev.java.net</id>
         <name>Java.net Repository for Maven</name>
