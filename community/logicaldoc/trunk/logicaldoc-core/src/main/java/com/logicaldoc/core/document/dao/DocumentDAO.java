@@ -294,4 +294,13 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * @return True if successfully deleted from the database.
 	 */
 	public boolean deleteOrphaned(long deleteUserId);
+
+	/**
+	 * Finds all document ids inside the specified folders that are published in
+	 * the current date.
+	 * 
+	 * @param folderIds Set of folder ids in which the method will search
+	 * @return List of published document ids
+	 */
+	public Collection<Long> findPublishedIds(Collection<Long> folderIds);
 }

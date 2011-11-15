@@ -112,7 +112,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 				h.setSourceDate(hit.getSourceDate());
 				h.setComment(hit.getComment());
 				h.setFolderName(hit.getFolderName());
-				
+				h.setPublished(hit.getPublished());
+
 				// Check if the document is not an alias to visualize the
 				// correct icon: if the document is an alias the FULL-TEXT
 				// search returns a custom id null, the PARAMETRIC and TAG
@@ -206,8 +207,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 
 		try {
 			Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
-			String text = indexer.getDocument(Long.toString(docId)).getField(LuceneDocument.FIELD_CONTENT)
-					.stringValue();
+			String text = indexer.getDocument(Long.toString(docId)).get(LuceneDocument.FIELD_CONTENT);
 
 			// Extracts the most used 10 words
 			AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);

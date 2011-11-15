@@ -77,6 +77,10 @@ public class TicketDownload extends HttpServlet {
 
 			if ((ticket != null) && (ticket.getDocId() != 0)) {
 				Document doc = docDao.findById(ticket.getDocId());
+
+				if (!doc.isPublishing())
+					throw new IOException("Document not published");
+
 				downloadDocument(request, response, doc, null, null, null);
 				ticket.setCount(ticket.getCount() + 1);
 				ticketDao.store(ticket);

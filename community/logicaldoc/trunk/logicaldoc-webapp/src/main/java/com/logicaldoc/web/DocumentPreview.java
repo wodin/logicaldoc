@@ -23,6 +23,9 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.thumbnail.ThumbnailManager;
+import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.Exec;
@@ -93,7 +96,12 @@ public class DocumentPreview extends HttpServlet {
 			if (StringUtils.isEmpty(fileVersion))
 				fileVersion = doc.getFileVersion();
 
-			SessionUtil.validateSession(request.getParameter("sid"));
+			UserSession session = SessionUtil.validateSession(request.getParameter("sid"));
+			UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			User user = udao.findById(session.getUserId());
+
+			if (doc != null && !user.isInGroup("admin") && !user.isInGroup("publisher") && !doc.isPublishing())
+				throw new FileNotFoundException("Document not published");
 
 			String resource = storer.getResourceName(docId, fileVersion, suffix);
 

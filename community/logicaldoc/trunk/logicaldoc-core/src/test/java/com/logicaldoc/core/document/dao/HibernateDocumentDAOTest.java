@@ -5,7 +5,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -13,6 +16,8 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.ibm.icu.util.Calendar;
+import com.ibm.icu.util.GregorianCalendar;
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.History;
@@ -178,6 +183,69 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		dao.deleteOrphaned(1);
 		Document doc = dao.findById(1);
 		Assert.assertTrue(doc == null || doc.getDeleted() == 1);
+	}
+
+	@Test
+	public void testFindPublishedIds() throws IOException {
+		GregorianCalendar cal = new GregorianCalendar();
+		
+		Document doc = new Document();
+		Folder folder = folderDao.findById(Folder.ROOTID);
+		doc.setFolder(folder);
+		doc.setFileVersion("1.0");
+		doc.setVersion("1.0");
+		doc.setPublisher("admin");
+		doc.setPublisherId(1);
+		doc.setTitle("test");
+		doc.setFileName("test.txt");
+		
+		// Prepare the document file for digest computation
+		File docFile = new File("target");
+		docFile = new File(docFile, "store");
+		docFile = new File(docFile, doc.getFileVersion());
+		FileUtils.forceMkdir(docFile.getParentFile());
+		Writer out = new FileWriter(docFile);
+		out.write("Questo file serve per fare il test del digest su un documento");
+		out.flush();
+		out.close();
+		Assert.assertTrue(docFile.exists());
+		System.out.println("Saved file " + docFile.getPath());
+		
+		dao.store(doc);
+
+		Set<Long> fids = new HashSet<Long>();
+		fids.add(Folder.ROOTID);
+
+		Collection<Long> ids = dao.findPublishedIds(fids);
+		System.out.println("*ids="+ids);
+		Assert.assertTrue(ids.contains(doc.getId()));
+		
+		doc.setPublished(0);
+		dao.store(doc);
+		ids = dao.findPublishedIds(fids);
+		Assert.assertFalse(ids.contains(doc.getId()));
+		
+		cal.add(Calendar.DATE, 1);
+		Date pick=cal.getTime();
+		doc.setPublished(1);
+		doc.setStartPublishing(pick);
+		dao.store(doc);
+		ids = dao.findPublishedIds(fids);
+		Assert.assertFalse(ids.contains(doc.getId()));
+		
+		cal.add(Calendar.DATE, -3);
+		pick=cal.getTime();
+		doc.setStartPublishing(pick);
+		dao.store(doc);
+		ids = dao.findPublishedIds(fids);
+		Assert.assertTrue(ids.contains(doc.getId()));
+		
+		cal.add(Calendar.DATE, 1);
+		pick=cal.getTime();
+		doc.setStopPublishing(pick);
+		dao.store(doc);
+		ids = dao.findPublishedIds(fids);
+		Assert.assertFalse(ids.contains(doc.getId()));
 	}
 
 	@Test

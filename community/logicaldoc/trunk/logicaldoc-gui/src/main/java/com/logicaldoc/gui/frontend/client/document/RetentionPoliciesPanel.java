@@ -46,10 +46,13 @@ public class RetentionPoliciesPanel extends DocumentDetailTab {
 		form1 = new DynamicForm();
 		form1.setValuesManager(vm);
 		form1.setTitleOrientation(TitleOrientation.TOP);
+		form1.setWrapItemTitles(false);
 
 		RadioGroupItem published = ItemFactory.newBooleanSelector("published", "published");
-		published.setRequired(true);
-		published.setValue(document.getPublished() == 1 ? "yes" : "no");
+		if (document.getPublished() != -1) {
+			published.setRequired(true);
+			published.setValue(document.getPublished() == 1 ? "yes" : "no");
+		}
 		published.setEndRow(true);
 		published.addChangedHandler(changedHandler);
 
@@ -57,7 +60,7 @@ public class RetentionPoliciesPanel extends DocumentDetailTab {
 		startPublishing.setValue(document.getStartPublishing());
 		startPublishing.addChangedHandler(changedHandler);
 		startPublishing.setDisabled(!update);
-		startPublishing.setRequired(true);
+		startPublishing.setRequired(document.getPublished() != -1);
 		startPublishing.setUseMask(false);
 		startPublishing.setShowPickerIcon(true);
 		startPublishing.setWrapTitle(false);
@@ -110,7 +113,8 @@ public class RetentionPoliciesPanel extends DocumentDetailTab {
 		Map<String, Object> values = (Map<String, Object>) vm.getValues();
 		vm.validate();
 		if (!vm.hasErrors()) {
-			document.setPublished("yes".equals(values.get("published")) ? 1 : 0);
+			if (!"".equals(values.get("published")) && values.get("published") != null)
+				document.setPublished("yes".equals(values.get("published")) ? 1 : 0);
 			document.setStartPublishing((Date) values.get("startpublishing"));
 			document.setStopPublishing((Date) values.get("stoppublishing"));
 		}

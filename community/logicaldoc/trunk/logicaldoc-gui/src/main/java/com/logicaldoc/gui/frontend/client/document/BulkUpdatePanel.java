@@ -1,6 +1,9 @@
 package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
+import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.Feature;
+import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -29,9 +32,13 @@ public class BulkUpdatePanel extends VLayout {
 
 	protected Layout extendedPropertiesTabPanel;
 
+	protected Layout retentionPoliciesTabPanel;
+
 	protected BulkStandardPropertiesPanel propertiesPanel;
 
 	protected ExtendedPropertiesPanel extendedPropertiesPanel;
+
+	protected RetentionPoliciesPanel retentionPoliciesPanel;
 
 	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
@@ -41,11 +48,17 @@ public class BulkUpdatePanel extends VLayout {
 
 	protected Tab extendedPropertiesTab;
 
+	protected Tab retentionPoliciesTab;
+
 	public BulkUpdatePanel(GUIDocument metadata) {
 		super();
 
 		if (metadata != null)
 			document = metadata;
+		else {
+			document.setStartPublishing(null);
+			document.setPublished(-1);
+		}
 
 		setHeight100();
 		setWidth100();
@@ -74,6 +87,12 @@ public class BulkUpdatePanel extends VLayout {
 		extendedPropertiesTabPanel.setWidth100();
 		extendedPropertiesTabPanel.setHeight100();
 		extendedPropertiesTab.setPane(extendedPropertiesTabPanel);
+
+		retentionPoliciesTab = new Tab(I18N.message("publishing"));
+		retentionPoliciesTabPanel = new HLayout();
+		retentionPoliciesTabPanel.setWidth100();
+		retentionPoliciesTabPanel.setHeight100();
+		retentionPoliciesTab.setPane(retentionPoliciesTabPanel);
 	}
 
 	protected void prepareTabset() {
@@ -85,6 +104,10 @@ public class BulkUpdatePanel extends VLayout {
 
 		tabSet.addTab(propertiesTab);
 		tabSet.addTab(extendedPropertiesTab);
+		if (Feature.enabled(Feature.RETENTION_POLICIES)
+				&& (Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN) || Session.get().getUser()
+						.isMemberOf(Constants.GROUP_PUBLISHER)))
+			tabSet.addTab(retentionPoliciesTab);
 
 		addMember(tabSet);
 	}
@@ -119,6 +142,18 @@ public class BulkUpdatePanel extends VLayout {
 		};
 		extendedPropertiesPanel = new ExtendedPropertiesPanel(document, nothingToDo);
 		extendedPropertiesTabPanel.addMember(extendedPropertiesPanel);
+
+		/*
+		 * Prepare the retention policies tab
+		 */
+		if (retentionPoliciesPanel != null) {
+			retentionPoliciesPanel.destroy();
+			if (retentionPoliciesTabPanel.contains(retentionPoliciesPanel))
+				retentionPoliciesTabPanel.removeMember(retentionPoliciesPanel);
+		}
+
+		retentionPoliciesPanel = new RetentionPoliciesPanel(document, nothingToDo);
+		retentionPoliciesTabPanel.addMember(retentionPoliciesPanel);
 	}
 
 	public GUIDocument getDocument() {
@@ -128,10 +163,13 @@ public class BulkUpdatePanel extends VLayout {
 	public boolean validate() {
 		boolean stdValid = propertiesPanel.validate();
 		boolean extValid = extendedPropertiesPanel.validate();
+		boolean publishingValid = retentionPoliciesPanel.validate();
 		if (!stdValid)
 			tabSet.selectTab(0);
 		else if (!extValid)
 			tabSet.selectTab(1);
-		return stdValid && extValid;
+		else if (!publishingValid)
+			tabSet.selectTab(2);
+		return stdValid && extValid && publishingValid;
 	}
 }

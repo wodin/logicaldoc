@@ -124,16 +124,32 @@ public class DocumentFieldsDS extends DataSource {
 		sourceid.setEditorType(ItemFactory.newTextItem("tags", I18N.message("tags"), null));
 
 		DataSourceTextField comment = new DataSourceTextField("comment", I18N.message("comment"));
-		comment.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS, OperatorId.NOT_EQUAL);
+		comment.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
+				OperatorId.NOT_EQUAL);
 		comment.setEditorType(ItemFactory.newTextItem("comment", I18N.message("comment"), null));
-		
+
 		DataSourceTextField wfStatus = new DataSourceTextField("workflowStatus", I18N.message("workflowstatus"));
-		wfStatus.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS, OperatorId.NOT_EQUAL);
+		wfStatus.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
+				OperatorId.NOT_EQUAL);
 		wfStatus.setEditorType(ItemFactory.newTextItem("workflowStatus", I18N.message("workflowstatus"), null));
 
-		
+		DataSourceDateTimeField startPublishing = new DataSourceDateTimeField("startPublishing",
+				I18N.message("startpublishing"));
+		startPublishing.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN);
+		startPublishing.setEditorType(ItemFactory.newDateItem("startPublishing", I18N.message("startpublishing")));
+
+		DataSourceDateTimeField stopPublishing = new DataSourceDateTimeField("stopPublishing",
+				I18N.message("stoppublishing"));
+		stopPublishing.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN);
+		stopPublishing.setEditorType(ItemFactory.newDateItem("stopPublishing", I18N.message("stoppublishing")));
+
+		DataSourceIntegerField publishedStatus = new DataSourceIntegerField("published", I18N.message("published"));
+		publishedStatus.setValidOperators(OperatorId.EQUALS, OperatorId.NOT_EQUAL);
+		publishedStatus.setEditorType(ItemFactory.newIntegerItem("published", I18N.message("published"), null));
+
 		setFields(author, coverage, id, title, object, fileSize, publisher, version, sourceDate, lastModified,
-				published, created, creator, customId, filename, recipient, source, sourceid, type, rating, tags, comment, wfStatus);
+				published, created, creator, customId, filename, recipient, source, sourceid, type, rating, tags,
+				comment, wfStatus, publishedStatus, startPublishing, stopPublishing);
 
 		/*
 		 * Define extended attributes

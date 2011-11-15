@@ -123,7 +123,7 @@ public class DownloadServlet extends HttpServlet {
 			log.debug("Download document id=" + docId);
 
 		if ("true".equals(downloadText)) {
-			ServletIOUtil.downloadDocumentText(request, response, doc.getId());
+			ServletIOUtil.downloadDocumentText(request, response, doc.getId(), user);
 		} else {
 			ServletIOUtil.downloadDocument(request, response, doc.getId(), fileVersion, filename, suffix, user);
 		}

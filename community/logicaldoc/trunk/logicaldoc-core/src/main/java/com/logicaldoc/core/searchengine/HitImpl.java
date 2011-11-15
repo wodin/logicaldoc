@@ -45,6 +45,8 @@ public class HitImpl implements Serializable, Hit {
 
 	private String folderName;
 
+	private int published = 1;
+
 	public HitImpl() {
 	}
 
@@ -241,5 +243,13 @@ public class HitImpl implements Serializable, Hit {
 
 	public void setFolderName(String folderName) {
 		this.folderName = folderName;
+	}
+
+	public int getPublished() {
+		return published;
+	}
+
+	public void setPublished(int published) {
+		this.published = published;
 	}
 }

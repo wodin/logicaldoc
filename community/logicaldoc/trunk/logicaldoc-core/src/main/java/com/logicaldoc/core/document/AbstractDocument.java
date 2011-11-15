@@ -696,6 +696,6 @@ public abstract class AbstractDocument extends ExtensibleObject {
 		else if (stopPublishing == null)
 			return true;
 		else
-			return now.after(stopPublishing);
+			return now.before(stopPublishing);
 	}
 }

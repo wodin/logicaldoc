@@ -41,7 +41,7 @@ public interface Hit {
 	public String getSource();
 
 	public String getPath();
-	
+
 	public String getFolderName();
 
 	public long getFolderId();
@@ -73,10 +73,14 @@ public interface Hit {
 	public void setFolderId(long folderId);
 
 	public void setFolderName(String folderName);
-	
+
 	public void setDocRef(Long docRef);
 
 	public void setComment(String comment);
 
 	public String getComment();
+
+	public void setPublished(int published);
+
+	public int getPublished();
 }

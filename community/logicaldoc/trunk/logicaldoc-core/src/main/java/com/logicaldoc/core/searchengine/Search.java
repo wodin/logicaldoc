@@ -9,6 +9,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
 
+import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
@@ -28,6 +31,8 @@ public abstract class Search {
 	protected int estimatedHitsNumber = 0;
 
 	protected long execTime = 0;
+
+	protected User searchUser;
 
 	public static Search get(SearchOptions opt) {
 		// Acquire the 'Search' extensions of the core plugin
@@ -100,6 +105,11 @@ public abstract class Search {
 	public final List<Hit> search() {
 		log.info("Launch search");
 		log.info("Expression: " + options.getExpression());
+
+		UserDAO uDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		searchUser = uDao.findById(options.getUserId());
+		uDao.initialize(searchUser);
+		log.info("Search User: " + searchUser.getUserName());
 
 		Date start = new Date();
 		hits.clear();
