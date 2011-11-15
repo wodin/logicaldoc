@@ -556,6 +556,11 @@
         <url>http://repo2.maven.org/maven2/</url>
       </repository>
       <repository>
+        <id>logicaldoc</id>
+        <name>LogicalDOC Repository</name>
+        <url>http://logicaldoc.sourceforge.net/maven</url>
+      </repository>
+      <repository>
         <id>ibiblio</id>
         <name>Ibiblio Repository</name>
         <url>http://www.ibiblio.org/maven2</url>
@@ -565,11 +570,6 @@
         <name>Java.net Repository for Maven</name>
         <url>http://download.java.net/maven/2/</url>
         <layout>default</layout>
-      </repository>
-      <repository>
-        <id>logicaldoc</id>
-        <name>LogicalDOC Repository</name>
-        <url>http://logicaldoc.sourceforge.net/maven</url>
       </repository>
       <repository>
         <id>org.springsource.maven</id>
