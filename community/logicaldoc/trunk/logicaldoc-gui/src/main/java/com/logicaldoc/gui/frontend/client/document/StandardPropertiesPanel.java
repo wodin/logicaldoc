@@ -125,7 +125,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		TextItem title = ItemFactory.newTextItem("title", "title", document.getTitle());
 		title.addChangedHandler(changedHandler);
 		title.setRequired(true);
-		title.setDisabled(!update||!document.getFolder().isRename());
+		title.setDisabled(!update || !document.getFolder().isRename());
 
 		StaticTextItem wfStatus = ItemFactory.newStaticTextItem("wfStatus", "workflowstatus",
 				document.getWorkflowStatus());
@@ -140,8 +140,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		StaticTextItem filename = ItemFactory.newStaticTextItem("fileName", "file", document.getFileName());
 		if (!document.getVersion().equals(document.getFileVersion())) {
-			filename.setValue(document.getFileName() + " (" + document.getFileVersion()
-					+ ")");
+			filename.setValue(document.getFileName() + " (" + document.getFileVersion() + ")");
 		}
 
 		if (Feature.enabled(Feature.WORKFLOW))
@@ -263,7 +262,8 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 			int i = 0;
 			for (String str : document.getTags()) {
 				final StaticTextItem tgItem = ItemFactory.newStaticTextItem("tag" + i++, "tag", str);
-				tgItem.setIcons(icon);
+				if (update)
+					tgItem.setIcons(icon);
 				tgItem.addIconClickHandler(new IconClickHandler() {
 					public void onIconClick(IconClickEvent event) {
 						document.removeTag((String) tgItem.getValue());
@@ -275,6 +275,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 						tgItem.setIcons(ItemFactory.newItemIcon("blank.gif"));
 					}
 				});
+				tgItem.setDisabled(!update);
 				items.add(tgItem);
 			}
 		}
