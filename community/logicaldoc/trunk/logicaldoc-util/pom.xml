@@ -82,7 +82,6 @@
 		<dependency>
 			<groupId>org.hyperic.sigar</groupId>
 			<artifactId>sigar</artifactId>
-			<version>1.6.3</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
