@@ -250,6 +250,14 @@ public class ExportArchivesList extends VLayout {
 			}
 		});
 
+		MenuItem open = new MenuItem();
+		open.setTitle(I18N.message("open"));
+		open.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				openArchive(record);
+			}
+		});
+
 		MenuItem close = new MenuItem();
 		close.setTitle(I18N.message("close"));
 		close.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
@@ -268,7 +276,11 @@ public class ExportArchivesList extends VLayout {
 		if (GUIArchive.STATUS_OPENED != Integer.parseInt(record.getAttributeAsString("status")))
 			close.setEnabled(false);
 
-		contextMenu.setItems(close, delete);
+		if (GUIArchive.STATUS_ERROR != Integer.parseInt(record.getAttributeAsString("status")))
+			open.setEnabled(false);
+
+		
+		contextMenu.setItems(close, open, delete);
 		addUsefulMenuItem(record, contextMenu);
 		contextMenu.showContextMenu();
 	}
@@ -324,5 +336,23 @@ public class ExportArchivesList extends VLayout {
 
 	protected void onClosingArchive(final ListGridRecord record, final long id) {
 		closeArchive(record);
+	}
+	
+	protected void openArchive(final ListGridRecord record) {
+		service.setStatus(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
+				GUIArchive.STATUS_OPENED, new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						record.setAttribute("status", "0");
+						record.setAttribute("statusicon", "lock_open");
+						list.updateData(record);
+						showDetails(Long.parseLong(record.getAttributeAsString("id")), true);
+					}
+				});
 	}
 }
