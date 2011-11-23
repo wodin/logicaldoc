@@ -10,6 +10,18 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC 6.3.1 (2011-11-23; logicaldoc-6.3.1)
+===============
+113 - Problem with permissions and alias properties invisible - Bug - Core
+114 - Sub-folder search difference between non-admin & admin account - Bug - Search
+119 - Preview not Working on Linux - Bug - Core
+116 - Automatic focus on New Folder dialog box - Improvement - User Interface
+124 - A user with only read privileges can delete tags on document - Bug - User Interface
+125 - Unable to build export archives - Bug - Import Export
+115 - Download item in versions context menu - Improvement - User Interface
+117 - Rename item in Document's context menu - Improvement - User Interface
+
+
 LogicalDOC 6.3 (2011-10-10; logicaldoc-6.3)
 ===============
 87	- Recognize PDF vectorial barcodes - Improvement - Barcode
