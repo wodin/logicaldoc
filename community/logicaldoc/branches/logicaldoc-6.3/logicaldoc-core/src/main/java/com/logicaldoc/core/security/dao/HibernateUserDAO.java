@@ -100,8 +100,11 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 			log.debug("Invoke listeners before store");
 			for (UserListener listener : userListenerManager.getListeners()) {
-				  listener.beforeStore(user, transaction, dictionary);
+				listener.beforeStore(user, transaction, dictionary);
 			}
+
+			if (user.getId() != 0)
+				initialize(user);
 
 			getHibernateTemplate().saveOrUpdate(user);
 
@@ -109,7 +112,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 			for (Group group : user.getGroups()) {
 				groupDAO.initialize(group);
 			}
-			
+
 			String userGroupName = "_user_" + Long.toString(user.getId());
 			Group grp = groupDAO.findByName(userGroupName);
 			if (grp == null) {
@@ -283,5 +286,14 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 	public UserListenerManager getUserListenerManager() {
 		return userListenerManager;
+	}
+
+	@Override
+	public void initialize(User user) {
+		getHibernateTemplate().refresh(user);
+
+		for (Group group : user.getGroups()) {
+			group.getName();
+		}
 	}
 }
