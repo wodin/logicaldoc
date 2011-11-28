@@ -211,16 +211,18 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 	@Override
 	public int changePassword(long userId, String oldPassword, String newPassword) {
+
 		try {
 			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 			User user = userDao.findById(userId);
 			if (user == null)
 				throw new Exception("User " + userId + " not found");
+			userDao.initialize(user);
 
 			if (oldPassword != null && !CryptUtil.cryptString(oldPassword).equals(user.getPassword())) {
 				return 1;
 			}
-
+			
 			UserHistory history = null;
 			// The password was changed
 			user.setDecodedPassword(newPassword);
@@ -232,9 +234,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			history.setComment("");
 			user.setRepass("");
 
-			UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-
-			boolean stored = dao.store(user, history);
+			
+			boolean stored = userDao.store(user, history);
 
 			if (!stored)
 				throw new Exception("User not stored");

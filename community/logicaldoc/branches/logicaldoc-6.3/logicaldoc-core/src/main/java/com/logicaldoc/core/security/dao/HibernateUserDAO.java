@@ -103,15 +103,9 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 				listener.beforeStore(user, transaction, dictionary);
 			}
 
-			if (user.getId() != 0)
-				initialize(user);
-
 			getHibernateTemplate().saveOrUpdate(user);
 
 			GroupDAO groupDAO = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
-			for (Group group : user.getGroups()) {
-				groupDAO.initialize(group);
-			}
 
 			String userGroupName = "_user_" + Long.toString(user.getId());
 			Group grp = groupDAO.findByName(userGroupName);
