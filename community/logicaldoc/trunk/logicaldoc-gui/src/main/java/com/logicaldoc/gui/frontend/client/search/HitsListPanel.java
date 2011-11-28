@@ -376,7 +376,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			toolStrip.addSeparator();
 			final IntegerItem max = ItemFactory.newValidateIntegerItem("repeatNumber", "", null, 1, null);
 			max.setHint(I18N.message("hits"));
-			max.setHintStyle("");
+			max.setHintStyle("hint");
 			max.setShowTitle(false);
 			max.setDefaultValue(40);
 			max.setWidth(40);

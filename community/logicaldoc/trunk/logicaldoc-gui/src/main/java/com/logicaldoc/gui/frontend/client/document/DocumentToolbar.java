@@ -334,7 +334,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		final IntegerItem max = ItemFactory.newValidateIntegerItem("max", "", null, 1, null);
 		max.setHint(I18N.message("elements"));
-		max.setHintStyle("");
+		max.setHintStyle("hint");
 		max.setShowTitle(false);
 		max.setDefaultValue(100);
 		max.setWidth(40);
