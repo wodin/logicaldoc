@@ -68,7 +68,7 @@ public class Util {
 			String language) {
 
 		String key = Session.get().getInfo().getConfig("flexpaperviewer.key");
-		String vars = flashvars + "&Scale=0.6" + "&PrintEnabled=" + printEnabled + "&ProgressiveLoading=true"
+		String vars = flashvars + "&Scale=0.6&FitPageOnLoad=false&FitWidthOnLoad=true" + "&PrintEnabled=" + printEnabled + "&ProgressiveLoading=true"
 				+ "&ViewModeToolsVisible=true" + "&ZoomToolsVisible=true" + "&NavToolsVisible=true"
 				+ "&CursorToolsVisible=true" + "&SearchToolsVisible=true";
 
