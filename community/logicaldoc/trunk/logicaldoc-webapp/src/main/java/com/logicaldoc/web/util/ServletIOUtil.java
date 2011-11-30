@@ -168,10 +168,6 @@ public class ServletIOUtil {
 		response.setContentType(mimetype);
 		setContentDisposition(request, response, filename);
 
-		// Headers required by Internet Explorer
-		response.setHeader("Pragma", "public");
-		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
-		response.setHeader("Expires", "0");
 
 		// Add this header for compatibility with internal .NET browsers
 		response.setHeader("Content-Length", Long.toString(size));
@@ -218,7 +214,7 @@ public class ServletIOUtil {
 	/**
 	 * Sets the correct Content-Disposition header into the response
 	 */
-	private static void setContentDisposition(HttpServletRequest request, HttpServletResponse response, String filename)
+	public static void setContentDisposition(HttpServletRequest request, HttpServletResponse response, String filename)
 			throws UnsupportedEncodingException {
 		// Encode the filename
 		String userAgent = request.getHeader("User-Agent");
@@ -232,6 +228,11 @@ public class ServletIOUtil {
 					+ "?=";
 		}
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedFileName + "\"");
+
+		// Headers required by Internet Explorer
+		response.setHeader("Pragma", "public");
+		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
+		response.setHeader("Expires", "0");
 	}
 
 	/**
