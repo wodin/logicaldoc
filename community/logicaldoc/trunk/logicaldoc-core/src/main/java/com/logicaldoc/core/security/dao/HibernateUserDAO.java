@@ -284,8 +284,11 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 	@Override
 	public void initialize(User user) {
+		if(user==null)
+			return;
+		
 		getHibernateTemplate().refresh(user);
-
+		
 		for (Group group : user.getGroups()) {
 			group.getName();
 		}
