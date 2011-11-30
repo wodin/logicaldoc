@@ -45,8 +45,18 @@ public class PreviewPopup extends Window {
 	public PreviewPopup(long docId, String version, String filename) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("preview"));
-		setWidth(680);
-		setHeight(600);
+
+		int size = 100;
+		try {
+			size = Integer.parseInt(Session.get().getInfo().getConfig("gui.preview.size"));
+			if (size <= 0 || size > 100)
+				size = 100;
+		} catch (Throwable t) {
+
+		}
+
+		setWidth(Math.round((float) com.google.gwt.user.client.Window.getClientWidth() * (float) size / 100F));
+		setHeight(Math.round((float) com.google.gwt.user.client.Window.getClientHeight() * (float) size / 100F));
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
