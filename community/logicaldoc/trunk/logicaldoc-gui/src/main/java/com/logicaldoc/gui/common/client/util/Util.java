@@ -68,9 +68,9 @@ public class Util {
 			String language) {
 
 		String key = Session.get().getInfo().getConfig("flexpaperviewer.key");
-		String vars = flashvars + "&Scale=0.6" + "&PrintEnabled=" + printEnabled + "&ProgressiveLoading=true"
-				+ "&ViewModeToolsVisible=true" + "&ZoomToolsVisible=true" + "&NavToolsVisible=true"
-				+ "&CursorToolsVisible=true" + "&SearchToolsVisible=true";
+		String vars = flashvars + "&Scale=0.6&FitPageOnLoad=false&FitWidthOnLoad=true" + "&PrintEnabled="
+				+ printEnabled + "&ProgressiveLoading=true" + "&ViewModeToolsVisible=true" + "&ZoomToolsVisible=true"
+				+ "&NavToolsVisible=true" + "&CursorToolsVisible=true" + "&SearchToolsVisible=true";
 
 		if (key != null) {
 			vars += "&key=" + key;
@@ -101,7 +101,7 @@ public class Util {
 	public static String flashPreviewAudioVideo(String flashName, String mediaUrl, String mediaProvider, int width,
 			int height) {
 		String vars = "file=" + mediaUrl + "&provider=" + mediaProvider + "&autostart=true";
-		
+
 		String tmp = "<div align=\"center\"><object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0\" width=\""
 				+ width + "\" height=\"" + height + "\" align=\"middle\">\n";
 		tmp += " <param name=\"allowScriptAccess\" value=\"always\" />\n";

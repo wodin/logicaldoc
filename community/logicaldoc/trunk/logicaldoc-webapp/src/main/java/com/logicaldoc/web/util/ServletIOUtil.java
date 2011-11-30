@@ -142,7 +142,7 @@ public class ServletIOUtil {
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = dao.findById(docId);
 
-		if (doc != null && !user.isInGroup("admin") && !user.isInGroup("publisher") && !doc.isPublishing())
+		if (doc != null && user!=null && !user.isInGroup("admin") && !user.isInGroup("publisher") && !doc.isPublishing())
 			throw new FileNotFoundException("Document not published");
 
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
