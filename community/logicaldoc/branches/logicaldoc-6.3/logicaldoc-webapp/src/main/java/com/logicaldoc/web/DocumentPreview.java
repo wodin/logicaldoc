@@ -106,8 +106,8 @@ public class DocumentPreview extends HttpServlet {
 			stream = storer.getStream(docId, resource);
 
 			if (stream == null) {
-				log.debug("thumbnail not available");
-				forwardPreviewNotAvailable(request, response);
+				log.debug("Preview resource not available");
+				forwardPreviewNotAvailable(request, response, suffix);
 				return;
 			}
 
@@ -166,8 +166,10 @@ public class DocumentPreview extends HttpServlet {
 					document2swf(is, "jpg", tmp);
 				}
 
-				storer.store(tmp, doc.getId(), resource);
-				log.debug("Created preview " + resource);
+				if (tmp.length() > 0) {
+					storer.store(tmp, doc.getId(), resource);
+					log.debug("Created preview " + resource);
+				}
 			} catch (Throwable e) {
 				log.error(e.getMessage(), e);
 			} finally {
@@ -183,9 +185,13 @@ public class DocumentPreview extends HttpServlet {
 		}
 	}
 
-	protected void forwardPreviewNotAvailable(HttpServletRequest request, HttpServletResponse response) {
+	protected void forwardPreviewNotAvailable(HttpServletRequest request, HttpServletResponse response, String suffix) {
 		try {
-			RequestDispatcher rd = request.getRequestDispatcher("/skin/images/preview_na.gif");
+			RequestDispatcher rd = request.getRequestDispatcher("/flash/previewnotavailable.swf");
+
+			if ("thumb.jpg".equals(suffix))
+				rd = request.getRequestDispatcher("/skin/images/preview_na.gif");
+			
 			rd.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
