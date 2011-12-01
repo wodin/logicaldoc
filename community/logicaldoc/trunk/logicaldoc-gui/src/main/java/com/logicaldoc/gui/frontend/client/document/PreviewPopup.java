@@ -204,6 +204,7 @@ public class PreviewPopup extends Window {
 		languages.put("pl", "pl_PL");
 		languages.put("pv", "pv_FN");
 		languages.put("hu", "hu_HU");
+		languages.put("ja", "ja_JA");
 
 		return languages;
 	}
