@@ -155,8 +155,9 @@ public class PreviewPopup extends Window {
 		image = new HTMLFlow();
 		String url = GWT.getHostPageBaseURL() + "thumbnail?sid=" + Session.get().getSid() + "%26docId=" + id
 				+ "%26suffix=preview.swf";
-		String tmp = Util.flashPreview("flexpaperviewer.swf", (getWidth() - 26), (getHeight() - 40), "SwfFile=" + url,
-				printEnabled, getPreviewLanguage(language));
+
+		String tmp = Util.flashPreview("flexpaperviewer.swf", (getWidth() - 26), (getHeight() - 40), getZoom(),
+				"SwfFile=" + url, printEnabled, getPreviewLanguage(language));
 		image.setContents(tmp);
 		layout.addMember(image);
 	}
@@ -178,6 +179,14 @@ public class PreviewPopup extends Window {
 	 */
 	public static String getPreviewLanguage(String language) {
 		return getPreviewLanguageMap().get(language) != null ? getPreviewLanguageMap().get(language) : "en_US";
+	}
+
+	public static int getZoom() {
+		try {
+			return Integer.parseInt(Session.get().getInfo().getConfig("gui.preview.zoom"));
+		} catch (Throwable t) {
+			return 100;
+		}
 	}
 
 	/**

@@ -37,8 +37,12 @@ public class ImageViewer extends VLayout {
 
 	private String url;
 
-	public ImageViewer(String url, int baseSize) {
-		this.baseSize = baseSize;
+	/**
+	 * Constructs the image respecting the original image size
+	 * 
+	 * @param url the image URL
+	 */
+	public ImageViewer(String url) {
 		this.url = url;
 		setWidth100();
 		setHeight100();
@@ -48,9 +52,6 @@ public class ImageViewer extends VLayout {
 		ImagePreloader.load(url, new ImageLoadHandler() {
 			@Override
 			public void imageLoaded(ImageLoadEvent event) {
-				ImageViewer.this.baseSize = event.getDimensions().getWidth() < 600 ? event.getDimensions().getWidth()
-						: 600;
-
 				image = new FitImage(ImageViewer.this.url, ImageViewer.this.baseSize, ImageViewer.this.baseSize);
 				imageContainer = new VLayout();
 				imageContainer.setMargin(0);
@@ -62,6 +63,10 @@ public class ImageViewer extends VLayout {
 
 				addMember(toolBar);
 				addMember(imageContainer);
+
+				ImageViewer.this.baseSize = ImageViewer.this.image.getOriginalHeight();
+
+				onEffectiveSize();
 			}
 		});
 	}
@@ -132,17 +137,20 @@ public class ImageViewer extends VLayout {
 		effectiveSize.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-
-				int originalWidth = ImageViewer.this.image.getOriginalWidth();
-				int originalHeight = ImageViewer.this.image.getOriginalHeight();
-
-				int maxSize = Math.max(originalWidth, originalHeight);
-				ImageViewer.this.maxSize = maxSize;
-				refreshImageEffectiveSize();
+				onEffectiveSize();
 			}
 		});
 
 		toolBar.addFill();
+	}
+
+	protected void onEffectiveSize() {
+		int originalWidth = ImageViewer.this.image.getOriginalWidth();
+		int originalHeight = ImageViewer.this.image.getOriginalHeight();
+
+		int maxSize = Math.max(originalWidth, originalHeight);
+		ImageViewer.this.maxSize = maxSize;
+		refreshImageEffectiveSize();
 	}
 
 	private void refreshImage() {
