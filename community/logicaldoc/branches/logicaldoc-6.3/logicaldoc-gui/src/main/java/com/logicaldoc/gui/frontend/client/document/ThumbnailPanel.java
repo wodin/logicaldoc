@@ -1,9 +1,9 @@
 package com.logicaldoc.gui.frontend.client.document;
 
-import com.google.gwt.user.client.ui.Image;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.common.client.widgets.ImageViewer;
 
 /**
  * This panel shows the notes on a document
@@ -18,10 +18,8 @@ public class ThumbnailPanel extends DocumentDetailTab {
 		setMembersMargin(1);
 
 		String url = Util.contextPath() + "/thumbnail?docId=" + document.getId() + "&sid=" + Session.get().getSid();
-		int size = Integer.parseInt(Session.get().getInfo().getConfig("gui.thumbnail.size"));
-		Image image = new Image(url);
-		image.setHeight(size + "px");
 
-		addMember(image);
+		ImageViewer viewer = new ImageViewer(url);
+		setMembers(viewer);
 	}
 }
