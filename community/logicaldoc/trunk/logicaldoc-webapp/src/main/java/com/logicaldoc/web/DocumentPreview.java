@@ -199,7 +199,7 @@ public class DocumentPreview extends HttpServlet {
 
 			if ("thumb.jpg".equals(suffix))
 				rd = request.getRequestDispatcher("/skin/images/preview_na.gif");
-			
+
 			rd.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -258,24 +258,33 @@ public class DocumentPreview extends HttpServlet {
 				command += File.separatorChar + "jpeg2swf";
 			else if (extension.equalsIgnoreCase("png"))
 				command += File.separatorChar + "png2swf";
-			else if (extension.equalsIgnoreCase("gif"))
-				command += File.separatorChar + "gif2swf";
-			else if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff")
-					|| extension.equalsIgnoreCase("bmp")) {
+			else if (extension.equalsIgnoreCase("bmp") || extension.equalsIgnoreCase("gif")) {
 				// In this case we have to convert to temporary jpg first
 				File jpegTmp = File.createTempFile("preview", ".jpg");
 				String jpegCommand = "\"" + new File(conf.getProperty(CONVERT)).getPath() + "\" \"" + tmp.getPath()
 						+ "\" \"" + jpegTmp.getPath() + "\"";
 				Exec.exec(jpegCommand, null, null, 10);
+
 				FileUtils.deleteQuietly(tmp);
 				tmp = jpegTmp;
 
 				command += File.separatorChar + "jpeg2swf";
+			} else if (extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("tif")) {
+				// In this case we have to convert to temporary pdf first to
+				// collect all the pages into a single file
+				File pdfTmp = File.createTempFile("preview", ".pdf");
+				String pdfCommand = "\"" + new File(conf.getProperty(CONVERT)).getPath() + "\" \"" + tmp.getPath()
+						+ "\" \"" + pdfTmp.getPath() + "\"";
+				Exec.exec(pdfCommand, null, null, 10);
+
+				tmp = pdfTmp;
+				command += File.separatorChar + "pdf2swf";
 			}
 
-			command = new File(command).getPath() + " -T 9 ";
+			command = new File(command).getPath();
 
-			if (extension.equalsIgnoreCase("pdf")) {
+			if (extension.equalsIgnoreCase("pdf") || extension.equalsIgnoreCase("tiff")
+					|| extension.equalsIgnoreCase("tif")) {
 				int pages = -1;
 				try {
 					pages = conf.getInt("gui.preview.pages");
@@ -283,10 +292,17 @@ public class DocumentPreview extends HttpServlet {
 
 				}
 
-				command += (pages > 0 ? " -p 1-" + pages : "") + " -f -t -G -s storeallcharacters";
+				command += " -T 9 " + (pages > 0 ? " -p 1-" + pages : "") + " -f -t -G -s storeallcharacters";
+			} else if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg")
+					|| extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("tif")
+					|| extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("bmp")
+					|| extension.equalsIgnoreCase("gif")) {
+				command += " -T 9 ";
 			}
 
 			command += " " + tmp.getPath() + " -o " + swf.getPath();
+
+			log.debug("Executing command: " + command);
 
 			Exec.exec(command, null, null, 10);
 		} catch (Throwable e) {
