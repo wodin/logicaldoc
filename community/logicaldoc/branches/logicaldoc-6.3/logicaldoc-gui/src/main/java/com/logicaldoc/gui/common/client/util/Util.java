@@ -64,11 +64,20 @@ public class Util {
 	/**
 	 * Generates Flash code for Image Preview
 	 */
-	public static String flashPreview(String flashName, int width, int height, String flashvars, boolean printEnabled,
-			String language) {
+	public static String flashPreview(String flashName, int width, int height, int zoom, String flashvars,
+			boolean printEnabled, String language) {
 
 		String key = Session.get().getInfo().getConfig("flexpaperviewer.key");
-		String vars = flashvars + "&Scale=0.6&FitPageOnLoad=false&FitWidthOnLoad=true" + "&PrintEnabled=" + printEnabled + "&ProgressiveLoading=true"
+
+		Float fzoom = new Float(1.0F);
+		try {
+			fzoom = new Float(((float) zoom) / 100);
+		} catch (Throwable t) {
+
+		}
+
+		String vars = flashvars + "&Scale=" + (zoom > 0 ? fzoom.toString() : "1.0") + "&FitPageOnLoad=false&FitWidthOnLoad="
+				+ (zoom <= 0 ? "true" : "false") + "&PrintEnabled=" + printEnabled + "&ProgressiveLoading=true"
 				+ "&ViewModeToolsVisible=true" + "&ZoomToolsVisible=true" + "&NavToolsVisible=true"
 				+ "&CursorToolsVisible=true" + "&SearchToolsVisible=true";
 
