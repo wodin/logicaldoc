@@ -142,7 +142,7 @@ public class FoldersNavigator extends TreeGrid {
 							return;
 
 						final String sourceName = selection.length == 1 ? selection[0].getAttribute("title")
-								: (selection.length + " " + I18N.message("documents"));
+								: (selection.length + " " + I18N.message("documents").toLowerCase());
 						final String targetName = selectedNode.getAttributeAsString("name");
 
 						LD.ask(I18N.message("move"), I18N.message("moveask", new String[] { sourceName, targetName }),
