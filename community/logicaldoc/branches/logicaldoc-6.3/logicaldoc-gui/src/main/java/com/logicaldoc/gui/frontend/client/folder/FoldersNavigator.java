@@ -75,30 +75,56 @@ public class FoldersNavigator extends TreeGrid {
 		setCanAcceptDroppedRecords(true);
 
 		addDropHandler(new DropHandler() {
-			public void onDrop(DropEvent event) {
+			public void onDrop(final DropEvent event) {
 				try {
 					ListGrid list = null;
 					if (EventHandler.getDragTarget() instanceof FoldersNavigator) {
 						final long source = Long.parseLong(getDragData()[0].getAttributeAsString("folderId"));
 						final long target = Long.parseLong(getDropFolder().getAttributeAsString("folderId"));
 
-						service.move(Session.get().getSid(), source, target, new AsyncCallback<Void>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-								Log.warn(I18N.message("operationnotallowed"), null);
-							}
+						final String sourceName = getDragData()[0].getAttributeAsString("name");
+						final String targetName = getDropFolder().getAttributeAsString("name");
 
-							@Override
-							public void onSuccess(Void ret) {
+						LD.ask(I18N.message("move"), I18N.message("moveask", new String[] { sourceName, targetName }),
+								new BooleanCallback() {
 
-							}
-						});
+									@Override
+									public void execute(Boolean value) {
+										if (value) {
+											service.move(Session.get().getSid(), source, target,
+													new AsyncCallback<Void>() {
+														@Override
+														public void onFailure(Throwable caught) {
+															Log.serverError(caught);
+															Log.warn(I18N.message("operationnotallowed"), null);
+														}
 
+														@Override
+														public void onSuccess(Void ret) {
+
+														}
+													});
+										}
+
+										TreeNode node = getTree().find("folderId", source);
+										if (node != null) {
+											node = getTree().getParent(node);
+											if (node != null)
+												getTree().reloadChildren(node);
+										}
+										node = getTree().find("folderId", target);
+										if (node != null) {
+											getTree().reloadChildren(node);
+										}
+									}
+								});
 					} else if (EventHandler.getDragTarget() instanceof ListGrid) {
+						/*
+						 * In this case we are moving a document
+						 */
 						list = (ListGrid) EventHandler.getDragTarget();
 
-						final ListGridRecord[] selection = list.getSelection();
+						final ListGridRecord[] selection = list.getSelectedRecords();
 						if (selection == null || selection.length == 0)
 							return;
 						final long[] ids = new long[selection.length];
@@ -115,19 +141,38 @@ public class FoldersNavigator extends TreeGrid {
 						if (Session.get().getCurrentFolder().getId() == folderId)
 							return;
 
-						service.paste(Session.get().getSid(), ids, folderId, "cut", new AsyncCallback<Void>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+						final String sourceName = selection.length == 1 ? selection[0].getAttribute("title")
+								: (selection.length + " " + I18N.message("documents"));
+						final String targetName = selectedNode.getAttributeAsString("name");
 
-							@Override
-							public void onSuccess(Void result) {
-								DocumentsPanel.get().onFolderSelect(Session.get().getCurrentFolder());
-								Log.debug("Drag&Drop operation completed.");
-							}
-						});
+						LD.ask(I18N.message("move"), I18N.message("moveask", new String[] { sourceName, targetName }),
+								new BooleanCallback() {
 
+									@Override
+									public void execute(Boolean value) {
+										if (value) {
+											service.paste(Session.get().getSid(), ids, folderId, "cut",
+													new AsyncCallback<Void>() {
+														@Override
+														public void onFailure(Throwable caught) {
+															Log.serverError(caught);
+														}
+
+														@Override
+														public void onSuccess(Void result) {
+															DocumentsPanel.get().onFolderSelect(
+																	Session.get().getCurrentFolder());
+															Log.debug("Drag&Drop operation completed.");
+														}
+													});
+										}
+
+										TreeNode node = getTree().find("folderId", folderId);
+										if (node != null) {
+												getTree().reloadChildren(node);
+										}
+									}
+								});
 					}
 				} catch (Throwable e) {
 				}
