@@ -19,6 +19,7 @@ import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -32,6 +33,8 @@ import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
+import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
+import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 /**
  * This panel collects all documents details
@@ -224,19 +227,73 @@ public class DocumentDetailsPanel extends VLayout {
 		tabSet.setHeight100();
 
 		tabSet.addTab(propertiesTab);
+		propertiesTab.addTabSelectedHandler(new TabSelectedHandler() {
+			@Override
+			public void onTabSelected(TabSelectedEvent event) {
+				propertiesPanel.onTabSelected();
+			}
+		});
+
 		tabSet.addTab(extendedPropertiesTab);
+		propertiesTab.addTabSelectedHandler(new TabSelectedHandler() {
+			@Override
+			public void onTabSelected(TabSelectedEvent event) {
+				extendedPropertiesPanel.onTabSelected();
+			}
+		});
+
 		if (Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN)
 				|| Session.get().getUser().isMemberOf(Constants.GROUP_PUBLISHER))
-			if (Feature.visible(Feature.NOTES))
+			if (Feature.visible(Feature.RETENTION_POLICIES))
 				tabSet.addTab(retentionPoliciesTab);
+		retentionPoliciesTab.addTabSelectedHandler(new TabSelectedHandler() {
+			@Override
+			public void onTabSelected(TabSelectedEvent event) {
+				retentionPoliciesPanel.onTabSelected();
+			}
+		});
 
 		tabSet.addTab(linksTab);
-		if (Feature.visible(Feature.NOTES))
-			tabSet.addTab(notesTab);
-		tabSet.addTab(versionsTab);
-		tabSet.addTab(historyTab);
-		tabSet.addTab(thumbnailTab);
+		linksTab.addTabSelectedHandler(new TabSelectedHandler() {
+			@Override
+			public void onTabSelected(TabSelectedEvent event) {
+				linksPanel.onTabSelected();
+			}
+		});
 
+		if (Feature.visible(Feature.NOTES)) {
+			tabSet.addTab(notesTab);
+			notesTab.addTabSelectedHandler(new TabSelectedHandler() {
+				@Override
+				public void onTabSelected(TabSelectedEvent event) {
+					notesPanel.onTabSelected();
+				}
+			});
+		}
+
+		tabSet.addTab(versionsTab);
+		versionsTab.addTabSelectedHandler(new TabSelectedHandler() {
+			@Override
+			public void onTabSelected(TabSelectedEvent event) {
+				versionsPanel.onTabSelected();
+			}
+		});
+
+		tabSet.addTab(historyTab);
+		historyTab.addTabSelectedHandler(new TabSelectedHandler() {
+			@Override
+			public void onTabSelected(TabSelectedEvent event) {
+				historyPanel.onTabSelected();
+			}
+		});
+
+		tabSet.addTab(thumbnailTab);
+		thumbnailTab.addTabSelectedHandler(new TabSelectedHandler() {
+			@Override
+			public void onTabSelected(TabSelectedEvent event) {
+				thumbnailPanel.onTabSelected();
+			}
+		});
 		addMember(tabSet);
 	}
 
@@ -342,6 +399,12 @@ public class DocumentDetailsPanel extends VLayout {
 		}
 		thumbnailPanel = new ThumbnailPanel(document);
 		thumbnailTabPanel.addMember(thumbnailPanel);
+
+		if (tabSet != null && tabSet.getSelectedTab() != null) {
+			Tab selectedTab = tabSet.getSelectedTab();
+			Canvas pane = selectedTab.getPane();
+			((DocumentDetailTab) pane.getChildren()[0]).onTabSelected();
+		}
 	}
 
 	public GUIDocument getDocument() {
