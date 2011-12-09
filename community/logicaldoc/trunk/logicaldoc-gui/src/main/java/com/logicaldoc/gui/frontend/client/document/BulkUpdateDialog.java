@@ -126,17 +126,44 @@ public class BulkUpdateDialog extends Window {
 								@Override
 								public void onSuccess(Void arg0) {
 									DocumentsPanel.get().refresh();
-									destroy();
+									documentService.cleanUploadedFileFolder(Session.get().getSid(),
+											new AsyncCallback<Void>() {
+
+												@Override
+												public void onFailure(Throwable caught) {
+													Log.serverError(caught);
+													destroy();
+												}
+
+												@Override
+												public void onSuccess(Void result) {
+													destroy();
+												}
+											});
 								}
 
 								@Override
 								public void onFailure(Throwable error) {
 									Log.serverError(error);
-									
-									// We have to refresh the documents list because maybe
+
+									// We have to refresh the documents list
+									// because maybe
 									// some documents have been stored.
 									DocumentsPanel.get().refresh();
-									destroy();
+									documentService.cleanUploadedFileFolder(Session.get().getSid(),
+											new AsyncCallback<Void>() {
+
+												@Override
+												public void onFailure(Throwable caught) {
+													Log.serverError(caught);
+													destroy();
+												}
+
+												@Override
+												public void onSuccess(Void result) {
+													destroy();
+												}
+											});
 								}
 							});
 				}
