@@ -19,6 +19,7 @@ LogicalDOC 6.3.2 (2011-12-13; logicaldoc-6.3.2)
 131 -	Preview for TIFF and GIF images - Bug - Core
 132 -	Better thumbnail presentation - Improvement - User Interface
 135 -	Confirmation prompt when moving items/folders -	Improvement -	User Interface 
+133 - Improved preview for stored emails - Improvement - User Interface
 
 
 LogicalDOC 6.3.1 (2011-11-23; logicaldoc-6.3.1)
