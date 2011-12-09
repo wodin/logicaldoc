@@ -44,4 +44,11 @@ public abstract class DocumentDetailTab extends HLayout {
 	public ChangedHandler getChangedHandler() {
 		return changedHandler;
 	}
+	
+	/**
+	 * Place here special logic that will be invoked when the user opens the tab
+	 */
+	protected void onTabSelected(){
+		
+	}
 }

@@ -13,13 +13,20 @@ import com.logicaldoc.gui.common.client.widgets.ImageViewer;
  */
 public class ThumbnailPanel extends DocumentDetailTab {
 
+	ImageViewer viewer = null;
+
 	public ThumbnailPanel(final GUIDocument document) {
 		super(document, null);
 		setMembersMargin(1);
+	}
 
-		String url = Util.contextPath() + "/thumbnail?docId=" + document.getId() + "&sid=" + Session.get().getSid();
+	@Override
+	protected void onTabSelected() {
+		if (viewer == null) {
+			String url = Util.contextPath() + "/thumbnail?docId=" + document.getId() + "&sid=" + Session.get().getSid();
 
-		ImageViewer viewer = new ImageViewer(url);
-		setMembers(viewer);
+			ImageViewer viewer = new ImageViewer(url);
+			setMembers(viewer);
+		}
 	}
 }
