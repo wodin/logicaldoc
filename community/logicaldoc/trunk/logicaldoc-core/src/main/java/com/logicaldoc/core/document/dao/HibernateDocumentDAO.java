@@ -776,7 +776,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			if (dbms.contains("postgre"))
 				concat = "ld_id || '.' || ld_customid";
 			if (dbms.contains("mssql"))
-				concat = "ld_id + '.' + ld_customid";
+				concat = "CAST(ld_id AS varchar) + '.' + ld_customid";
 
 			jdbcUpdate("update ld_document set ld_deleted=1,ld_customid=" + concat + ", ld_deleteuserid="
 					+ deleteUserId
