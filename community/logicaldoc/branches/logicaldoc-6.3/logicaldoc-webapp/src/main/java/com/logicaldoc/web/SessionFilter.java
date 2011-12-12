@@ -37,7 +37,7 @@ public class SessionFilter implements Filter {
 
 		if (StringUtils.isNotEmpty(kill)) {
 			try {
-				SessionManager.getInstance().kill(kill);
+				SessionManager.getInstance().kill(sid);
 				servletSessionMapping.remove(sid);
 			} catch (Throwable e) {
 				
