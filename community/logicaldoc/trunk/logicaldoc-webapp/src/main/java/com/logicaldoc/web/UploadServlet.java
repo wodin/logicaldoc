@@ -53,6 +53,7 @@ public class UploadServlet extends UploadAction {
 	public String executeAction(HttpServletRequest request, List<FileItem> sessionFiles) throws UploadActionException {
 		try {
 			HttpSession session = SessionFilter.getServletSession(request.getParameter("sid"));
+			
 			if (session == null)
 				session = request.getSession();
 
@@ -112,8 +113,9 @@ public class UploadServlet extends UploadAction {
 						}
 					}
 				}
-				removeSessionFileItems(request);
 			}
+
+			removeSessionFileItems(request);
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 
@@ -160,6 +162,7 @@ public class UploadServlet extends UploadAction {
 		String fieldName = request.getParameter(PARAM_SHOW);
 
 		HttpSession session = SessionFilter.getServletSession(request.getParameter("sid"));
+		
 		if (session == null)
 			session = request.getSession();
 
@@ -184,14 +187,11 @@ public class UploadServlet extends UploadAction {
 	@SuppressWarnings("unchecked")
 	public static Map<String, File> getReceivedFiles(HttpServletRequest request, String sid) {
 		HttpSession session = SessionFilter.getServletSession(sid);
+
 		if (session == null)
 			session = request.getSession();
-
-		Map<String, File> receivedFiles = (Map<String, File>) session.getAttribute(RECEIVEDFILES);
-
-		session.setAttribute(RECEIVEDFILES, new Hashtable<String, File>());
-		session.setAttribute(RECEIVEDCONTENTTYPES, new Hashtable<String, String>());
-		return receivedFiles;
+		
+		return (Map<String, File>) session.getAttribute(RECEIVEDFILES);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -200,10 +200,7 @@ public class UploadServlet extends UploadAction {
 		if (session == null)
 			session = request.getSession();
 
-		Map<String, String> receivedFileNames = (Map<String, String>) session.getAttribute(RECEIVEDFILENAMES);
-
-		session.setAttribute(RECEIVEDFILENAMES, new Hashtable<String, String>());
-		return receivedFileNames;
+		return (Map<String, String>) session.getAttribute(RECEIVEDFILENAMES);
 	}
 
 	@Override
