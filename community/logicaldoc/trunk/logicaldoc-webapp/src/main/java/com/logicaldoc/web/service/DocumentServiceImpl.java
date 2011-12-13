@@ -413,9 +413,11 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		Document doc = docDao.findById(docId);
 
 		GUIDocument document = null;
-		GUIFolder folder = FolderServiceImpl.getFolder(sid, doc.getFolder().getId());
-
+		GUIFolder folder = null;
+			
 		if (doc != null) {
+			folder = FolderServiceImpl.getFolder(sid, doc.getFolder().getId());
+
 			// Check if it is an alias
 			if (doc.getDocRef() != null) {
 				long id = doc.getDocRef();
