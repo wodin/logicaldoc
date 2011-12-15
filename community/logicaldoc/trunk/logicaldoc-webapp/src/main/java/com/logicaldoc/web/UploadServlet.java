@@ -53,7 +53,7 @@ public class UploadServlet extends UploadAction {
 	public String executeAction(HttpServletRequest request, List<FileItem> sessionFiles) throws UploadActionException {
 		try {
 			HttpSession session = SessionFilter.getServletSession(request.getParameter("sid"));
-			
+
 			if (session == null)
 				session = request.getSession();
 
@@ -162,7 +162,7 @@ public class UploadServlet extends UploadAction {
 		String fieldName = request.getParameter(PARAM_SHOW);
 
 		HttpSession session = SessionFilter.getServletSession(request.getParameter("sid"));
-		
+
 		if (session == null)
 			session = request.getSession();
 
@@ -190,7 +190,7 @@ public class UploadServlet extends UploadAction {
 
 		if (session == null)
 			session = request.getSession();
-		
+
 		return (Map<String, File>) session.getAttribute(RECEIVEDFILES);
 	}
 
@@ -215,10 +215,16 @@ public class UploadServlet extends UploadAction {
 
 	public static void cleanReceivedFiles(String sid) {
 		HttpSession session = SessionFilter.getServletSession(sid);
-		session.setAttribute(RECEIVEDFILES, new Hashtable<String, File>());
-		session.setAttribute(RECEIVEDCONTENTTYPES, new Hashtable<String, String>());
-		String path = session.getServletContext().getRealPath("/upload/" + session.getId());
+		cleanReceivedFiles(session);
+	}
+
+	public static void cleanReceivedFiles(HttpSession session) {
+		if (session == null)
+			return;
 		try {
+			session.setAttribute(RECEIVEDFILES, new Hashtable<String, File>());
+			session.setAttribute(RECEIVEDCONTENTTYPES, new Hashtable<String, String>());
+			String path = session.getServletContext().getRealPath("/upload/" + session.getId());
 			FileUtils.forceDelete(new File(path));
 		} catch (IOException e) {
 		}
