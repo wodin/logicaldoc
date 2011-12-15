@@ -215,10 +215,16 @@ public class UploadServlet extends UploadAction {
 
 	public static void cleanReceivedFiles(String sid) {
 		HttpSession session = SessionFilter.getServletSession(sid);
-		session.setAttribute(RECEIVEDFILES, new Hashtable<String, File>());
-		session.setAttribute(RECEIVEDCONTENTTYPES, new Hashtable<String, String>());
-		String path = session.getServletContext().getRealPath("/upload/" + session.getId());
+		cleanReceivedFiles(session);
+	}
+
+	public static void cleanReceivedFiles(HttpSession session) {
+		if (session == null)
+			return;
 		try {
+			session.setAttribute(RECEIVEDFILES, new Hashtable<String, File>());
+			session.setAttribute(RECEIVEDCONTENTTYPES, new Hashtable<String, String>());
+			String path = session.getServletContext().getRealPath("/upload/" + session.getId());
 			FileUtils.forceDelete(new File(path));
 		} catch (IOException e) {
 		}
