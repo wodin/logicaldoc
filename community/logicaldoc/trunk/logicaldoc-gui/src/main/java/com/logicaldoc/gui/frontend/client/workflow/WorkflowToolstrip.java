@@ -146,7 +146,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		save.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				onSave();
+				save();
 			}
 		});
 		addButton(save);
@@ -166,7 +166,7 @@ public class WorkflowToolstrip extends ToolStrip {
 						// request a save
 						currentWorkflow.setId(0);
 						WorkflowToolstrip.this.designer.getAccordion().setWorkflowName(value);
-						onSave();
+						save();
 					}
 				});
 			}
@@ -342,7 +342,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		workflowSelect.redraw();
 	}
 
-	private void onSave() {
+	private void save() {
 		designer.saveModel();
 		currentWorkflow = designer.getWorkflow();
 

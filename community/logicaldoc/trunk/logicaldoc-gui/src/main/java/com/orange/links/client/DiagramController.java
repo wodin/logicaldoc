@@ -31,6 +31,7 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.logicaldoc.gui.common.client.beans.GUITransition;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.workflow.StateWidget;
 import com.orange.links.client.canvas.BackgroundCanvas;
@@ -284,6 +285,14 @@ public class DiagramController implements HasNewFunctionHandlers, HasTieLinkHand
 		return c;
 	}
 
+	public Connection drawStraightArrowConnection(Widget startWidget, Widget endWidget, GUITransition transition) {
+		Connection c = drawConnection(ConnectionFactory.ARROW, startWidget, endWidget);
+		functionsMap.get(startWidget).put(endWidget, c);
+		StateWidget widget = new StateWidget(c, this, transition);
+		addDecoration(widget, c);
+		return c;
+	}
+
 	private <C extends Connection> C drawConnection(ConnectionFactory<C> cf, Widget start, Widget end) {
 		FunctionShape startShape = widgetShapeMap.get(start);
 		FunctionShape endShape = widgetShapeMap.get(end);
@@ -299,7 +308,7 @@ public class DiagramController implements HasNewFunctionHandlers, HasTieLinkHand
 
 		start.addConnection(c);
 		end.addConnection(c);
-		
+
 		return c;
 	}
 
@@ -730,7 +739,7 @@ public class DiagramController implements HasNewFunctionHandlers, HasTieLinkHand
 			if (functionUnderMouse != null) {
 				Widget widgetSelected = functionUnderMouse.asWidget();
 				if (startFunctionWidget != widgetSelected) {
-					Connection c = drawStraightArrowConnection(startFunctionWidget, widgetSelected, null);
+					Connection c = drawStraightArrowConnection(startFunctionWidget, widgetSelected, (String)null);
 					fireEvent(new TieLinkEvent(startFunctionWidget, widgetSelected, c));
 				}
 			}
@@ -919,7 +928,7 @@ public class DiagramController implements HasNewFunctionHandlers, HasTieLinkHand
 			if (link.type != null && link.type.equals("straight")) {
 				c = drawStraightConnection(w1, w2);
 			} else {
-				c = drawStraightArrowConnection(w1, w2, null);
+				c = drawStraightArrowConnection(w1, w2, (String)null);
 			}
 			if (link.decoration != null) {
 				addDecoration(saveFactory.getDecorationByType(link.decoration.identifier, link.decoration.content), c);

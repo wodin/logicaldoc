@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
+import com.logicaldoc.gui.common.client.beans.GUITransition;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.LD;
@@ -9,7 +10,6 @@ import com.orange.links.client.connection.Connection;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.BooleanCallback;
-import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
@@ -27,6 +27,8 @@ public class StateWidget extends Label {
 
 	private GUIWFState wfState;
 
+	private GUITransition transition;
+
 	private DrawingPanel drawingPanel;
 
 	private DiagramController diagramController;
@@ -35,13 +37,20 @@ public class StateWidget extends Label {
 
 	private boolean readonly = false;
 
-	/**
-	 * Constructor used by transitions.
-	 */
-	public StateWidget(Connection connection, DiagramController diagramController, String name) {
-		super(name);
+	public StateWidget(Connection connection, DiagramController diagramController, GUITransition trans) {
+		super(trans.getText());
+
+		String name = trans.getText();
+		if (name != null) {
+			name = name.replaceAll("<b>", "");
+			name = name.replaceAll("</b>", "");
+			name = name.replaceAll("&nbsp;", "");
+		}
+
 		this.connection = connection;
 		this.diagramController = diagramController;
+		this.transition = trans;
+		transition.setText(name);
 
 		addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
@@ -101,6 +110,13 @@ public class StateWidget extends Label {
 		});
 	}
 
+	/**
+	 * Constructor used by new transitions.
+	 */
+	public StateWidget(Connection connection, DiagramController diagramController, String name) {
+		this(connection, diagramController, new GUITransition(name));
+	}
+
 	public StateWidget(DrawingPanel dp, GUIWFState state) {
 		this(null, dp.getDiagramController(), "<b>" + state.getName() + "</b>&nbsp;");
 		this.wfState = state;
@@ -145,25 +161,11 @@ public class StateWidget extends Label {
 
 	public void edit() {
 		if (isTask()) {
-			TaskDialog taskDialog = new TaskDialog(StateWidget.this);
-			taskDialog.show();
+			TaskDialog dialog = new TaskDialog(StateWidget.this);
+			dialog.show();
 		} else {
-			String oldName = getContents().replaceAll("<b>", "").replaceAll("</b>", "").replaceAll("&nbsp;", "");
-			LD.askforValue(I18N.message("name"), "<b>" + I18N.message("name") + ":</b>", oldName, "200",
-					new ValueCallback() {
-						@Override
-						public void execute(String value) {
-							if (value == null || "".equals(value.trim()))
-								return;
-							if (wfState != null) {
-								wfState.setName(value);
-								update();
-							} else {
-								// This is a transaction's decorator
-								setContents(value);
-							}
-						}
-					});
+			TransitionDialog dialog = new TransitionDialog(StateWidget.this);
+			dialog.show();
 		}
 	}
 
@@ -246,5 +248,9 @@ public class StateWidget extends Label {
 		connection.getMovablePoints().clear();
 		connection.setStraight();
 		diagramController.runRefresh();
+	}
+
+	public GUITransition getTransition() {
+		return transition;
 	}
 }
