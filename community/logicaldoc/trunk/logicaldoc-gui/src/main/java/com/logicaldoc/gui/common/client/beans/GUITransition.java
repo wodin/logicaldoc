@@ -25,6 +25,10 @@ public class GUITransition implements Serializable {
 	public GUITransition() {
 	}
 
+	public GUITransition(String text) {
+		this.text = text;
+	}
+
 	public GUITransition(String text, GUIWFState targetState) {
 		this.text = text;
 		this.targetState = targetState;

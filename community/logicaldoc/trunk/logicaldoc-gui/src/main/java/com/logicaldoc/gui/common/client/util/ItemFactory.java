@@ -298,7 +298,6 @@ public class ItemFactory {
 		map.put("event.barcoded", I18N.message("event.barcoded"));
 		map.put("event.workflowstatus", I18N.message("event.workflowstatus"));
 
-		
 		// User events
 		map.put("event.user.deleted", I18N.message("event.user.deleted"));
 		map.put("event.user.login", I18N.message("event.user.login"));
@@ -597,6 +596,17 @@ public class ItemFactory {
 		map.put("1", I18N.message("year"));
 		map.put("2", I18N.message("month"));
 		map.put("3", I18N.message("day"));
+		select.setValueMap(map);
+		return select;
+	}
+
+	public static SelectItem newEffectSelector(String name, String title) {
+		SelectItem select = new SelectItem(name, I18N.message(title));
+		select.setWidth(110);
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		map.put("", "");
+		map.put("move", I18N.message("move"));
+		map.put("copy", I18N.message("copy"));
 		select.setValueMap(map);
 		return select;
 	}

@@ -420,6 +420,9 @@ public class DocumentManagerImpl implements DocumentManager {
 			doc.setFolder(folder);
 			setUniqueTitle(doc);
 			setUniqueFilename(doc);
+			
+			//To avoid 'optimistic locking failed' exceptions
+			doc.setLastModified(new Date());
 
 			// Modify document history entry
 			if (transaction.getEvent().trim().isEmpty())
@@ -597,6 +600,10 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		// initialize the document
 		documentDAO.initialize(doc);
+				
+		//To avoid 'optimistic locking failed' exceptions
+		doc.setLastModified(new Date());
+
 		if (doc.getDocRef() != null) {
 			return createShortcut(doc, folder, transaction);
 		}

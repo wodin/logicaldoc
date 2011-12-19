@@ -18,7 +18,6 @@ import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.orange.links.client.connection.Connection;
 import com.orange.links.client.shapes.FunctionShape;
 import com.orange.links.client.shapes.Point;
-import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VStack;
 
@@ -157,8 +156,8 @@ public class WorkflowDesigner extends VStack {
 			for (Entry<Widget, Connection> entry : map.entrySet()) {
 				StateWidget targetWidget = (StateWidget) entry.getKey();
 				Connection connection = entry.getValue();
-				Label decoration = (Label) connection.getDecoration().getWidget();
-				GUITransition transition = new GUITransition(decoration.getContents(), targetWidget.getWfState());
+				GUITransition transition = ((StateWidget) connection.getDecoration().getWidget()).getTransition();
+				transition.setTargetState(targetWidget.getWfState());
 				transitions.add(transition);
 
 				StringBuffer sb = new StringBuffer("");

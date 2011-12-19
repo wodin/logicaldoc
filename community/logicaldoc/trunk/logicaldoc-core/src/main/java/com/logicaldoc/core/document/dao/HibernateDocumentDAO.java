@@ -548,7 +548,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@Override
 	public void initialize(Document doc) {
 		getHibernateTemplate().refresh(doc);
-
+		
 		for (String attribute : doc.getAttributes().keySet()) {
 			attribute.getBytes();
 		}

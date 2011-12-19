@@ -74,7 +74,7 @@ public class DrawingPanel extends VStack {
 					for (GUITransition trans : state.getTransitions()) {
 						StateWidget src = states.get(state.getId());
 						StateWidget dst = states.get(trans.getTargetState().getId());
-						Connection c = controller.drawStraightArrowConnection(src, dst, trans.getText());
+						Connection c = controller.drawStraightArrowConnection(src, dst, trans);
 						c.setSynchronized(true);
 						c.setAllowSynchronized(true);
 
