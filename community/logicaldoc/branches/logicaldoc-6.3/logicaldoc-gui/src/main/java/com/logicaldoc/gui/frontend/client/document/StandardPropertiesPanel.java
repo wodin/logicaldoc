@@ -234,18 +234,21 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 			tagItem.setHintStyle("hint");
 			tagItem.setDisabled(!update);
 
-			tagItem.addChangedHandler(new ChangedHandler() {
-				@Override
-				public void onChanged(ChangedEvent event) {
-					if (event.getItem().getSelectedRecord() != null) {
-						document.addTag(event.getItem().getSelectedRecord().getAttribute("word"));
-						tagItem.clearValue();
-						changedHandler.onChanged(null);
-						refresh();
+			if ("preset".equals(mode))
+				tagItem.addChangedHandler(new ChangedHandler() {
+					@Override
+					public void onChanged(ChangedEvent event) {
+						// In the preset mode at each selection immediately add
+						// the tag
+						if (event.getItem().getSelectedRecord() != null) {
+							document.addTag(event.getItem().getSelectedRecord().getAttribute("word"));
+							tagItem.clearValue();
+							changedHandler.onChanged(null);
+							refresh();
+						}
 					}
-				}
-			});
-
+				});
+				
 			tagItem.addKeyDownHandler(new KeyDownHandler() {
 				@Override
 				public void onKeyDown(KeyDownEvent event) {
