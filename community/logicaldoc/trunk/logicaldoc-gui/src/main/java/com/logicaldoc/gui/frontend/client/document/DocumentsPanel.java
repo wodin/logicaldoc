@@ -105,7 +105,6 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	 */
 	protected void prepareMenu() {
 		documentsMenu = new DocumentsMenu();
-		documentsMenu.setWidth(280);
 		documentsMenu.setShowResizeBar(true);
 	}
 
@@ -263,8 +262,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 
 	public void saveGrid() {
 		if (listingPanel instanceof DocumentsListPanel) {
-			String viewState = ((DocumentsListPanel) listingPanel).getList().getViewState();
-			Offline.put("doclist", viewState);
+			((DocumentsListPanel) listingPanel).getList().getViewState();
 			Log.info(I18N.message("settingssaved"), null);
 		}
 	}

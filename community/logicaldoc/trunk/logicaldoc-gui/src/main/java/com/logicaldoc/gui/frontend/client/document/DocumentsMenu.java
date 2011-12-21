@@ -5,6 +5,9 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.folder.FoldersNavigator;
 import com.smartgwt.client.types.VisibilityMode;
+import com.smartgwt.client.util.Offline;
+import com.smartgwt.client.widgets.events.ResizedEvent;
+import com.smartgwt.client.widgets.events.ResizedHandler;
 import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
 import com.smartgwt.client.widgets.layout.events.SectionHeaderClickEvent;
@@ -26,14 +29,23 @@ public class DocumentsMenu extends SectionStack {
 
 	protected SectionStackSection trashSection = null;
 
+	private boolean initialized = false;
+
 	public DocumentsMenu() {
 		this(true, true, true);
 	}
 
 	public DocumentsMenu(boolean folders, boolean bookmarks, boolean trash) {
 		setVisibilityMode(VisibilityMode.MUTEX);
-		setWidth(250);
 
+		try {
+			// Retrieve the saved menu width
+			String w = (String) Offline.get("ldoc-docsmenu-w");
+			setWidth(Integer.parseInt(w));
+		} catch (Throwable t) {
+			setWidth(280);
+		}
+		
 		foldersSection = new SectionStackSection(I18N.message("folders"));
 		foldersSection.setName("folders");
 		foldersSection.setCanCollapse(true);
@@ -71,6 +83,17 @@ public class DocumentsMenu extends SectionStack {
 				if (event.getSection() != null) {
 					refresh(event.getSection().getAttributeAsString("name"));
 				}
+			}
+		});
+
+		addResizedHandler(new ResizedHandler() {
+			@Override
+			public void onResized(ResizedEvent event) {
+				if (initialized) {
+					// Save the new width in a cookie
+					Offline.put("ldoc-docsmenu-w", getWidthAsString());
+				} else
+					initialized = true;
 			}
 		});
 	}
