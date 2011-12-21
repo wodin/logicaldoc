@@ -26,13 +26,22 @@ public class DocumentsMenu extends SectionStack {
 
 	protected SectionStackSection trashSection = null;
 
+  private boolean initialized = false;
+
 	public DocumentsMenu() {
 		this(true, true, true);
 	}
 
 	public DocumentsMenu(boolean folders, boolean bookmarks, boolean trash) {
 		setVisibilityMode(VisibilityMode.MUTEX);
-		setWidth(250);
+		
+		try {
+			// Retrieve the saved menu width
+			String w = (String) Offline.get("ldoc-docsmenu-w");
+			setWidth(Integer.parseInt(w));
+		} catch (Throwable t) {
+			setWidth(280);
+		}
 
 		foldersSection = new SectionStackSection(I18N.message("folders"));
 		foldersSection.setName("folders");
@@ -71,6 +80,17 @@ public class DocumentsMenu extends SectionStack {
 				if (event.getSection() != null) {
 					refresh(event.getSection().getAttributeAsString("name"));
 				}
+			}
+		});
+		
+		addResizedHandler(new ResizedHandler() {
+			@Override
+			public void onResized(ResizedEvent event) {
+				if (initialized) {
+					// Save the new width in a cookie
+					Offline.put("ldoc-docsmenu-w", getWidthAsString());
+				} else
+					initialized = true;
 			}
 		});
 	}
