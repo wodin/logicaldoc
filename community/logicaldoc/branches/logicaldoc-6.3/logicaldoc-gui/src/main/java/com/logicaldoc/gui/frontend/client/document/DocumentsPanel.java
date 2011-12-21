@@ -105,7 +105,6 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	 */
 	protected void prepareMenu() {
 		documentsMenu = new DocumentsMenu();
-		documentsMenu.setWidth(280);
 		documentsMenu.setShowResizeBar(true);
 	}
 
