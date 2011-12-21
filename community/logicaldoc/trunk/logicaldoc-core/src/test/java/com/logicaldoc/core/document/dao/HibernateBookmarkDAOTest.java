@@ -71,7 +71,7 @@ public class HibernateBookmarkDAOTest extends AbstractCoreTCase {
 
 		Bookmark book1 = dao.findById(1);
 		dao.initialize(book1);
-		book1.setDocId(3);
+		book1.setTargetId(3);
 		dao.store(book1);
 
 		bookmarks = dao.findByUserIdAndDocId(1, 1);

@@ -227,7 +227,7 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 	}
 
 	@Override
-	public void addBookmarks(String sid, long[] docIds) {
+	public void addBookmarks(String sid, long[] targetIds, int type) {
 
 	}
 

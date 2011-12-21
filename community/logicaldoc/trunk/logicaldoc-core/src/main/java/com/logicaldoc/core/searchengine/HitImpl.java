@@ -51,7 +51,7 @@ public class HitImpl implements Serializable, Hit {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.searchengine.Hit.Result#getDocId()
+	 * @see com.logicaldoc.core.searchengine.Hit.Result#getTargetId()
 	 */
 	public long getDocId() {
 		return docId;

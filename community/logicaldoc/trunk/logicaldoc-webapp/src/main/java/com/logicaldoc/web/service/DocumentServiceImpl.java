@@ -86,27 +86,38 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	private static Log log = LogFactory.getLog(DocumentServiceImpl.class);
 
 	@Override
-	public void addBookmarks(String sid, long[] docIds) throws InvalidSessionException {
+	public void addBookmarks(String sid, long[] ids, int type) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		BookmarkDAO bookmarkDao = (BookmarkDAO) Context.getInstance().getBean(BookmarkDAO.class);
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+
 		int added = 0;
 		int alreadyAdded = 0;
-		for (long id : docIds) {
+		for (long id : ids) {
 			try {
 				Bookmark bookmark = null;
 				if (bookmarkDao.findByUserIdAndDocId(SessionUtil.getSessionUser(sid).getId(), id).size() > 0) {
 					// The bookmark already exists
 					alreadyAdded++;
 				} else {
-					Document doc = dao.findById(id);
 					bookmark = new Bookmark();
-					bookmark.setTitle(doc.getTitle());
+					bookmark.setType(type);
+					bookmark.setTargetId(id);
 					bookmark.setUserId(SessionUtil.getSessionUser(sid).getId());
-					bookmark.setDocId(id);
-					bookmark.setFileType(doc.getType());
+
+					if (type == Bookmark.TYPE_DOCUMENT) {
+						Document doc = dao.findById(id);
+						bookmark.setTitle(doc.getTitle());
+						bookmark.setFileType(doc.getType());
+					} else {
+						Folder f = fdao.findById(id);
+						bookmark.setTitle(f.getName());
+					}
+             
 					bookmarkDao.store(bookmark);
+
 					added++;
 				}
 			} catch (AccessControlException e) {
