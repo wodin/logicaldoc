@@ -137,7 +137,7 @@ public interface DocumentService extends RemoteService {
 	/**
 	 * Adds new bookmarks
 	 */
-	public void addBookmarks(String sid, long[] docIds) throws InvalidSessionException;
+	public void addBookmarks(String sid, long[] targetIds, int type) throws InvalidSessionException;
 
 	/**
 	 * Deletes a set of bookmarks

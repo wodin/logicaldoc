@@ -14,10 +14,13 @@ import com.logicaldoc.util.Context;
  * 
  */
 public class Bookmark extends PersistentObject {
+	public static final int TYPE_DOCUMENT = 0;
+
+	public static final int TYPE_FOLDER = 1;
 
 	private long userId;
 
-	private long docId;
+	private long targetId;
 
 	private String title = "";
 
@@ -27,6 +30,8 @@ public class Bookmark extends PersistentObject {
 
 	// The document file extension
 	private String fileType;
+
+	private int type = TYPE_DOCUMENT;
 
 	public Bookmark() {
 	}
@@ -39,12 +44,12 @@ public class Bookmark extends PersistentObject {
 		this.userId = userId;
 	}
 
-	public long getDocId() {
-		return docId;
+	public long getTargetId() {
+		return targetId;
 	}
 
-	public void setDocId(long docId) {
-		this.docId = docId;
+	public void setTargetId(long targetId) {
+		this.targetId = targetId;
 	}
 
 	public String getTitle() {
@@ -97,6 +102,14 @@ public class Bookmark extends PersistentObject {
 	public String getPath() {
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		return folderDao.computePathExtended(docDao.findById(docId).getFolder().getId());
+		return folderDao.computePathExtended(docDao.findById(targetId).getFolder().getId());
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 }

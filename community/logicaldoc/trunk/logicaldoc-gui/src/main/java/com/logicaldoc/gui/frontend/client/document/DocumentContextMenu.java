@@ -432,7 +432,7 @@ public class DocumentContextMenu extends Menu {
 				for (int i = 0; i < selection.length; i++) {
 					ids[i] = Long.parseLong(selection[i].getAttributeAsString("id"));
 				}
-				documentService.addBookmarks(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+				documentService.addBookmarks(Session.get().getSid(), ids, 0, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);

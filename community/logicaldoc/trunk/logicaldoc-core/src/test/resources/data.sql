@@ -281,20 +281,20 @@ insert into ld_user_history
 values     (3,'2008-10-22',0,3,'2006-12-27','sebastian','data test 03','reason test 03',1,1);
 
 insert into ld_bookmark
-		(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_docid, ld_title, ld_description, ld_position)
-values		(1,'2010-04-19',0,1,1,'book1','this is a bookmark 1',1);
+		(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_docid, ld_title, ld_description, ld_position, ld_type)
+values		(1,'2010-04-19',0,1,1,'book1','this is a bookmark 1',1,0);
 
 insert into ld_bookmark
-		(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_docid, ld_title, ld_description, ld_position)
-values		(2,'2010-04-19',0,1,2,'book2','this is a bookmark 2',2);
+		(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_docid, ld_title, ld_description, ld_position, ld_type)
+values		(2,'2010-04-19',0,1,2,'book2','this is a bookmark 2',2,0);
 
 insert into ld_bookmark
-		(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_docid, ld_title, ld_description, ld_position)
-values		(3,'2010-04-19',0,2,1,'book3','this is a bookmark 3',3);
+		(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_docid, ld_title, ld_description, ld_position, ld_type)
+values		(3,'2010-04-19',0,2,1,'book3','this is a bookmark 3',3,0);
 
 insert into ld_bookmark
-		(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_docid, ld_title, ld_description, ld_position)
-values		(4,'2010-04-19',1,2,2,'book4','this is a bookmark 4',4);
+		(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_docid, ld_title, ld_description, ld_position, ld_type)
+values		(4,'2010-04-19',1,2,2,'book4','this is a bookmark 4',4,0);
 
 insert into ld_feedmessage (ld_id, ld_lastmodified,ld_deleted, ld_guid, ld_title, ld_description, ld_pubdate, ld_read)
 values (1,'2011-02-08',0,'feed1_guid', 'feed1','feed1_desc','2011-02-05',1);

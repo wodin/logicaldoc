@@ -19,6 +19,8 @@ import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.search.Search;
+import com.logicaldoc.gui.frontend.client.services.DocumentService;
+import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.util.BooleanCallback;
@@ -50,6 +52,8 @@ import com.smartgwt.client.widgets.tree.TreeNode;
  */
 public class FoldersNavigator extends TreeGrid {
 	private FolderServiceAsync service = (FolderServiceAsync) GWT.create(FolderService.class);
+
+	private DocumentServiceAsync docService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private static FoldersNavigator instance = new FoldersNavigator();
 
@@ -169,7 +173,7 @@ public class FoldersNavigator extends TreeGrid {
 
 										TreeNode node = getTree().find("folderId", folderId);
 										if (node != null) {
-												getTree().reloadChildren(node);
+											getTree().reloadChildren(node);
 										}
 									}
 								});
@@ -328,9 +332,9 @@ public class FoldersNavigator extends TreeGrid {
 			}
 		});
 
-		MenuItem createItem = new MenuItem();
-		createItem.setTitle(I18N.message("newfolder"));
-		createItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem create = new MenuItem();
+		create.setTitle(I18N.message("newfolder"));
+		create.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				onCreate();
 			}
@@ -361,17 +365,17 @@ public class FoldersNavigator extends TreeGrid {
 			}
 		});
 
-		MenuItem pasteItem = new MenuItem();
-		pasteItem.setTitle(I18N.message("paste"));
-		pasteItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem paste = new MenuItem();
+		paste.setTitle(I18N.message("paste"));
+		paste.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				onPaste();
 			}
 		});
 
-		MenuItem pasteAsAliasItem = new MenuItem();
-		pasteAsAliasItem.setTitle(I18N.message("pasteasalias"));
-		pasteAsAliasItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem pasteAsAlias = new MenuItem();
+		pasteAsAlias.setTitle(I18N.message("pasteasalias"));
+		pasteAsAlias.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				onPasteAsAlias();
 			}
@@ -407,8 +411,16 @@ public class FoldersNavigator extends TreeGrid {
 			}
 		});
 
+		MenuItem addBookmark = new MenuItem();
+		addBookmark.setTitle(I18N.message("addbookmark"));
+		addBookmark.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				onAddBookmark();
+			}
+		});
+
 		if (!folder.hasPermission(Constants.PERMISSION_ADD)) {
-			createItem.setEnabled(false);
+			create.setEnabled(false);
 		}
 
 		if (id == Constants.DOCUMENTS_FOLDERID || !parent.hasPermission(Constants.PERMISSION_DELETE)) {
@@ -419,14 +431,14 @@ public class FoldersNavigator extends TreeGrid {
 			exportZip.setEnabled(false);
 
 		if (!folder.hasPermission(Constants.PERMISSION_WRITE) || Clipboard.getInstance().isEmpty()) {
-			pasteItem.setEnabled(false);
-			pasteAsAliasItem.setEnabled(false);
+			paste.setEnabled(false);
+			pasteAsAlias.setEnabled(false);
 		}
 
 		if (Clipboard.getInstance().getLastAction().equals(Clipboard.CUT))
-			pasteAsAliasItem.setEnabled(false);
+			pasteAsAlias.setEnabled(false);
 
-		contextMenu.setItems(reload, search, createItem, delete, pasteItem, pasteAsAliasItem, move, exportZip);
+		contextMenu.setItems(reload, search, create, delete, addBookmark, paste, pasteAsAlias, move, exportZip);
 
 		if (Feature.visible(Feature.AUDIT)) {
 			contextMenu.addItem(audit);
@@ -476,6 +488,26 @@ public class FoldersNavigator extends TreeGrid {
 						});
 					}
 				});
+	}
+
+	/**
+	 * Adds a bookmark to the currently selected folder.
+	 */
+	private void onAddBookmark() {
+		final TreeNode selectedNode = (TreeNode) getSelectedRecord();
+		final long folderId = Long.parseLong(selectedNode.getAttributeAsString("folderId"));
+
+		docService.addBookmarks(Session.get().getSid(), new long[] { folderId }, 1, new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
+
+			@Override
+			public void onSuccess(Void v) {
+			}
+		});
 	}
 
 	public static FoldersNavigator get() {

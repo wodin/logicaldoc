@@ -292,7 +292,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testBookmarks() throws InvalidSessionException {
-		service.addBookmarks(session.getSid(), new long[] { 1, 2 });
+		service.addBookmarks(session.getSid(), new long[] { 1, 2 }, 0);
 
 		Bookmark book = bookDao.findByUserIdAndDocId(1, 1).get(0);
 		Assert.assertNotNull(book);

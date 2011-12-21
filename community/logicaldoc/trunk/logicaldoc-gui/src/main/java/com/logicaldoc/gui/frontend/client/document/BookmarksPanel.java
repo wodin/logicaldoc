@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.frontend.client.folder.FoldersNavigator;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
@@ -131,9 +132,13 @@ public class BookmarksPanel extends VLayout {
 							@Override
 							public void onSuccess(GUIFolder folder) {
 								if (folder != null) {
-									DocumentsPanel.get().onFolderSelect(
-											Long.parseLong(record.getAttributeAsString("folderId")),
-											Long.parseLong(record.getAttributeAsString("docId")));
+									if (record.getAttributeAsString("type").equals("0"))
+										DocumentsPanel.get().onFolderSelect(
+												Long.parseLong(record.getAttributeAsString("folderId")),
+												Long.parseLong(record.getAttributeAsString("targetId")));
+									else
+										FoldersNavigator.get().openFolder(
+												Long.parseLong(record.getAttributeAsString("targetId")));
 								}
 							}
 
@@ -181,7 +186,7 @@ public class BookmarksPanel extends VLayout {
 			}
 		});
 
-		if (!(list.getSelection() != null && list.getSelection().length == 1)) {
+		if (!(list.getSelectedRecords() != null && list.getSelectedRecords().length == 1)) {
 			download.setEnabled(false);
 			openInFolder.setEnabled(false);
 		}
@@ -190,7 +195,7 @@ public class BookmarksPanel extends VLayout {
 		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				final ListGridRecord[] selection = list.getSelection();
+				final ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
 				final long[] ids = new long[selection.length];
