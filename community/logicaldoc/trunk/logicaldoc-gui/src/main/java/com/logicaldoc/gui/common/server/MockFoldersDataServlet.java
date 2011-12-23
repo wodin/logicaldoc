@@ -34,7 +34,7 @@ public class MockFoldersDataServlet extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
 
-		if (parent == Constants.ROOT_FOLDERID) {
+		if (parent == Constants.DOCUMENTS_FOLDERID) {
 			// Add the 'Documents' root
 			writer.print("<folder>");
 			writer.print("<folderId>5</folderId>");

@@ -460,8 +460,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			if (!precoll.isEmpty()) {
 				query1 = new StringBuffer("select distinct(A.ld_folderid) from ld_foldergroup A, ld_folder B "
 						+ " where B.ld_deleted=0 and A.ld_folderid=B.ld_id AND (B.ld_parentid=" + parentId
-						+ " OR B.ld_id=" + parentId+")"
-						+ " AND A.ld_groupid in (");
+						+ " OR B.ld_id=" + parentId + ")" + " AND A.ld_groupid in (");
 				boolean first = true;
 				while (iter.hasNext()) {
 					if (!first)
@@ -1059,5 +1058,11 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	public int count(boolean computeDeleted) {
 		return queryForInt("SELECT COUNT(A.ld_id) FROM ld_document A "
 				+ (computeDeleted ? "" : "where A.ld_deleted = 0 "));
+	}
+
+	@Override
+	public List<Folder> findWorkspaces() {
+		return findByWhere("_entity.parentId=" + Folder.ROOTID + " and _entity.type=" + Folder.TYPE_WORKSPACE,
+				"order by _entity.lower(_entity.name)", null);
 	}
 }

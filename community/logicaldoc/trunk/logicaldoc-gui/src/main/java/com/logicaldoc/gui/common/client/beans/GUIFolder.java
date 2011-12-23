@@ -41,6 +41,8 @@ public class GUIFolder implements Serializable {
 
 	private int subfolderCount;
 
+	private int type;
+
 	public GUIFolder() {
 
 	}
@@ -72,7 +74,7 @@ public class GUIFolder implements Serializable {
 	public boolean isDownload() {
 		return hasPermission(Constants.PERMISSION_DOWNLOAD);
 	}
-	
+
 	public boolean isRename() {
 		return hasPermission(Constants.PERMISSION_RENAME);
 	}
@@ -186,5 +188,13 @@ public class GUIFolder implements Serializable {
 
 	public void setSubfolderCount(int subfolderCount) {
 		this.subfolderCount = subfolderCount;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 }

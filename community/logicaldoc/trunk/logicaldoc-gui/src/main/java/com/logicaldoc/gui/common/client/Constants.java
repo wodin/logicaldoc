@@ -19,10 +19,10 @@ public final class Constants {
 	// Sessions the context key of the sessions map
 	public static final String SESSIONS = "sessions";
 
-	public static final long ROOT_FOLDERID = -1;
-
 	public static final long DOCUMENTS_FOLDERID = 5;
 
+	public static final long WORKSPACE_DEFAULTID = 4;
+	
 	public static final String PERMISSION_DELETE = "delete";
 
 	public static final String PERMISSION_IMMUTABLE = "immutable";

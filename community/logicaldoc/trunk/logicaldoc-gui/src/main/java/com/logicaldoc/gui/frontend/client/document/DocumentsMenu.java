@@ -3,7 +3,7 @@ package com.logicaldoc.gui.frontend.client.document;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
-import com.logicaldoc.gui.frontend.client.folder.FoldersNavigator;
+import com.logicaldoc.gui.frontend.client.folder.Navigator;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.widgets.events.ResizedEvent;
@@ -21,9 +21,9 @@ import com.smartgwt.client.widgets.layout.events.SectionHeaderClickHandler;
  */
 public class DocumentsMenu extends SectionStack {
 
-	protected FoldersNavigator foldersTree;
+	protected Navigator browserTree;
 
-	protected SectionStackSection foldersSection = null;
+	protected SectionStackSection browser = null;
 
 	protected SectionStackSection bookmarksSection = null;
 
@@ -35,7 +35,7 @@ public class DocumentsMenu extends SectionStack {
 		this(true, true, true);
 	}
 
-	public DocumentsMenu(boolean folders, boolean bookmarks, boolean trash) {
+	public DocumentsMenu(boolean showBrowser, boolean showBookmarks, boolean showTrash) {
 		setVisibilityMode(VisibilityMode.MUTEX);
 
 		try {
@@ -45,16 +45,16 @@ public class DocumentsMenu extends SectionStack {
 		} catch (Throwable t) {
 			setWidth(280);
 		}
-		
-		foldersSection = new SectionStackSection(I18N.message("folders"));
-		foldersSection.setName("folders");
-		foldersSection.setCanCollapse(true);
-		foldersTree = FoldersNavigator.get();
-		foldersSection.setItems(foldersTree);
-		if (folders)
-			addSection(foldersSection);
 
-		if (bookmarks && Feature.visible(Feature.BOOKMARKS)) {
+		browser = new SectionStackSection(I18N.message("browser"));
+		browser.setName("browser");
+		browser.setCanCollapse(true);
+		browserTree = Navigator.get();
+		browser.setItems(browserTree);
+		if (showBrowser)
+			addSection(browser);
+
+		if (showBookmarks && Feature.visible(Feature.BOOKMARKS)) {
 			bookmarksSection = new SectionStackSection(I18N.message("bookmarks"));
 			bookmarksSection.setName("bookmarks");
 			bookmarksSection.setCanCollapse(true);
@@ -66,7 +66,7 @@ public class DocumentsMenu extends SectionStack {
 			addSection(bookmarksSection);
 		}
 
-		if (trash && Feature.visible(Feature.TRASH)) {
+		if (showTrash && Feature.visible(Feature.TRASH)) {
 			trashSection = new SectionStackSection(I18N.message("trash"));
 			trashSection.setName("trash");
 			trashSection.setCanCollapse(true);
@@ -107,6 +107,6 @@ public class DocumentsMenu extends SectionStack {
 	}
 
 	public void openFolder(long folderId) {
-		foldersTree.openFolder(folderId);
+		browserTree.openFolder(folderId);
 	}
 }

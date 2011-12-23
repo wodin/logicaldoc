@@ -315,4 +315,10 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * Counts the number of folders
 	 */
 	public int count(boolean computeDeleted);
+
+	/**
+	 * Retrieves all the workspaces in the system, that are the first-level
+	 * folders of type 1.
+	 */
+	public List<Folder> findWorkspaces();
 }

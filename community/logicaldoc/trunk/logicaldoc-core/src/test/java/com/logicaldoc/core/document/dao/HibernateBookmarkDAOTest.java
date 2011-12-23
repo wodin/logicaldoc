@@ -63,7 +63,7 @@ public class HibernateBookmarkDAOTest extends AbstractCoreTCase {
 	}
 	
 	@Test
-	public void testFindByUserIdAndDocId() {
+	public void testFindByUserIdAndTargetId() {
 		List<Bookmark> bookmarks = dao.findByUserIdAndDocId(1, 1);
 		Assert.assertEquals(1, bookmarks.size());
 		bookmarks = dao.findByUserIdAndDocId(1, 2);

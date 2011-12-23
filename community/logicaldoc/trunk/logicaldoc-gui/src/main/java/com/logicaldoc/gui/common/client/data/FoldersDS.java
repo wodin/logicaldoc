@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.common.client.data;
 
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.data.DataSource;
@@ -29,18 +30,21 @@ public class FoldersDS extends DataSource {
 		setID(dsId);
 		setTitleField("name");
 		setRecordXPath("/list/folder");
-		DataSourceTextField nameField = new DataSourceTextField("name", I18N.message("name"), 255);
+		DataSourceTextField name = new DataSourceTextField("name", I18N.message("name"), 255);
 
 		DataSourceTextField folderId = new DataSourceTextField("folderId", I18N.message("id"));
 		folderId.setPrimaryKey(true);
 		folderId.setRequired(true);
 
+		DataSourceTextField type = new DataSourceTextField("type", I18N.message("type"));
+		type.setRequired(true);
+
 		DataSourceTextField parentId = new DataSourceTextField("parent", "Parent ID");
 		parentId.setRequired(true);
 		parentId.setForeignKey(dsId + ".folderId");
-		parentId.setRootValue("-1");
+		parentId.setRootValue("" + Constants.DOCUMENTS_FOLDERID);
 
-		setFields(nameField, folderId, parentId);
+		setFields(name, folderId, parentId, type);
 
 		setDataURL("data/folders.xml?sid=" + Session.get().getSid());
 		setClientOnly(false);

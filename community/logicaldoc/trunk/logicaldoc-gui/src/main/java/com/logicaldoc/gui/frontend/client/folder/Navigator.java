@@ -14,6 +14,7 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.RequestInfo;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
@@ -23,10 +24,13 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.EventHandler;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
+import com.smartgwt.client.widgets.events.DragStartEvent;
+import com.smartgwt.client.widgets.events.DragStartHandler;
 import com.smartgwt.client.widgets.events.DropEvent;
 import com.smartgwt.client.widgets.events.DropHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -45,28 +49,26 @@ import com.smartgwt.client.widgets.tree.TreeGrid;
 import com.smartgwt.client.widgets.tree.TreeNode;
 
 /**
- * The panel that shows the folders navigation tree
+ * The panel that shows the workspaces/folders navigation tree
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class FoldersNavigator extends TreeGrid {
+public class Navigator extends TreeGrid {
 	private FolderServiceAsync service = (FolderServiceAsync) GWT.create(FolderService.class);
 
 	private DocumentServiceAsync docService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	private static FoldersNavigator instance = new FoldersNavigator();
+	private static Navigator instance = new Navigator();
 
 	private boolean firstTime = true;
 
-	private FoldersNavigator() {
+	private Navigator() {
 		setWidth100();
 		setBorder("0px");
 		setBodyStyleName("normal");
 		setShowHeader(false);
 		setLeaveScrollbarGap(false);
-		setManyItemsImage("cubes_all.png");
-		setAppImgDir("pieces/16/");
 		setCanReorderRecords(false);
 		setCanDragRecordsOut(false);
 		setAutoFetchData(true);
@@ -74,15 +76,36 @@ public class FoldersNavigator extends TreeGrid {
 		setDataSource(FoldersDS.get());
 		setCanSelectAll(false);
 		setShowConnectors(true);
-
+		setShowRoot(false);
 		setCanAcceptDrop(true);
 		setCanAcceptDroppedRecords(true);
+
+		addDragStartHandler(new DragStartHandler() {
+
+			@Override
+			public void onDragStart(DragStartEvent ev) {
+				if (EventHandler.getDragTarget() instanceof Navigator) {
+					// Workspaces cannot be moved
+					if ("1".equals(getDragData()[0].getAttributeAsString("type"))){
+						ev.cancel();
+						return;
+					}
+				}
+			}
+
+		});
 
 		addDropHandler(new DropHandler() {
 			public void onDrop(final DropEvent event) {
 				try {
 					ListGrid list = null;
-					if (EventHandler.getDragTarget() instanceof FoldersNavigator) {
+					if (EventHandler.getDragTarget() instanceof Navigator) {
+						// Workspaces cannot be moved
+						if ("1".equals(getDragData()[0].getAttributeAsString("type"))){
+							event.cancel();
+							return;
+						}
+
 						final long source = Long.parseLong(getDragData()[0].getAttributeAsString("folderId"));
 						final long target = Long.parseLong(getDropFolder().getAttributeAsString("folderId"));
 
@@ -236,10 +259,28 @@ public class FoldersNavigator extends TreeGrid {
 					} else if (loc.getParameter("docId") != null) {
 						DocumentsPanel.get().openInFolder(Long.parseLong(loc.getParameter("docId")));
 					} else {
-						DocumentsPanel.get().openInFolder(Constants.DOCUMENTS_FOLDERID, null);
+						TreeNode rootNode = getTree().find("folderId", Long.toString(Constants.DOCUMENTS_FOLDERID));
+						TreeNode[] children = getTree().getChildren(rootNode);
+						if (children != null && children.length > 0) {
+							getTree().openFolder(children[0]);
+						}
+
+						service.getFolder(Session.get().getSid(), Long.parseLong(children[0].getAttribute("folderId")),
+								true, new AsyncCallback<GUIFolder>() {
+
+									@Override
+									public void onFailure(Throwable caught) {
+										Log.serverError(caught);
+									}
+
+									@Override
+									public void onSuccess(GUIFolder folder) {
+										Session.get().setCurrentFolder(folder);
+									}
+								});
 					}
 
-					FoldersNavigator.this.firstTime = false;
+					Navigator.this.firstTime = false;
 				}
 			}
 		});
@@ -340,6 +381,14 @@ public class FoldersNavigator extends TreeGrid {
 			}
 		});
 
+		MenuItem createWorkspace = new MenuItem();
+		createWorkspace.setTitle(I18N.message("newworkspace"));
+		createWorkspace.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				onCreateWorkspace();
+			}
+		});
+
 		MenuItem applyItem = new MenuItem();
 		applyItem.setTitle(I18N.message("applytemplate"));
 		applyItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
@@ -423,12 +472,10 @@ public class FoldersNavigator extends TreeGrid {
 			create.setEnabled(false);
 		}
 
-		if (id == Constants.DOCUMENTS_FOLDERID || !parent.hasPermission(Constants.PERMISSION_DELETE)) {
+		if (id == Constants.WORKSPACE_DEFAULTID || !parent.hasPermission(Constants.PERMISSION_DELETE)) {
 			delete.setEnabled(false);
 			move.setEnabled(false);
 		}
-		if (id == Constants.DOCUMENTS_FOLDERID)
-			exportZip.setEnabled(false);
 
 		if (!folder.hasPermission(Constants.PERMISSION_WRITE) || Clipboard.getInstance().isEmpty()) {
 			paste.setEnabled(false);
@@ -438,7 +485,15 @@ public class FoldersNavigator extends TreeGrid {
 		if (Clipboard.getInstance().getLastAction().equals(Clipboard.CUT))
 			pasteAsAlias.setEnabled(false);
 
-		contextMenu.setItems(reload, search, create, delete, addBookmark, paste, pasteAsAlias, move, exportZip);
+		if (Session.get().getUser().isMemberOf("admin") && folder.getType() == 1
+				&& Feature.visible(Feature.MULTI_WORKSPACE)) {
+			delete.setEnabled(folder.getId() != Constants.WORKSPACE_DEFAULTID);
+			move.setEnabled(false);
+			createWorkspace.setEnabled(Feature.enabled(Feature.MULTI_WORKSPACE));
+			contextMenu.setItems(reload, search, create, createWorkspace, delete, addBookmark, paste, pasteAsAlias,
+					move, exportZip);
+		} else
+			contextMenu.setItems(reload, search, create, delete, addBookmark, paste, pasteAsAlias, move, exportZip);
 
 		if (Feature.visible(Feature.AUDIT)) {
 			contextMenu.addItem(audit);
@@ -482,7 +537,7 @@ public class FoldersNavigator extends TreeGrid {
 
 							@Override
 							public void onSuccess(Void arg0) {
-								FoldersNavigator.this.getTree().reloadChildren(selectedNode);
+								Navigator.this.getTree().reloadChildren(selectedNode);
 								Log.info(I18N.message("templateapplied"), null);
 							}
 						});
@@ -510,7 +565,7 @@ public class FoldersNavigator extends TreeGrid {
 		});
 	}
 
-	public static FoldersNavigator get() {
+	public static Navigator get() {
 		return instance;
 	}
 
@@ -531,8 +586,11 @@ public class FoldersNavigator extends TreeGrid {
 			public void onSuccess(GUIFolder folder) {
 				TreeNode parent = getTree().getRoot();
 				for (GUIFolder fld : folder.getPath()) {
+					if (fld.getId() == Constants.DOCUMENTS_FOLDERID)
+						continue;
 					TreeNode node = new TreeNode(fld.getName());
 					node.setAttribute("folderId", Long.toString(fld.getId()));
+					node.setAttribute("type", Integer.toString(fld.getType()));
 					node.setAttribute(Constants.PERMISSION_ADD, fld.hasPermission(Constants.PERMISSION_ADD));
 					node.setAttribute(Constants.PERMISSION_DELETE, fld.hasPermission(Constants.PERMISSION_DELETE));
 					node.setAttribute(Constants.PERMISSION_RENAME, fld.hasPermission(Constants.PERMISSION_RENAME));
@@ -542,6 +600,7 @@ public class FoldersNavigator extends TreeGrid {
 				}
 				TreeNode node = new TreeNode(folder.getName());
 				node.setAttribute("folderId", Long.toString(folder.getId()));
+				node.setAttribute("type", Integer.toString(folder.getType()));
 				node.setAttribute(Constants.PERMISSION_ADD,
 						Boolean.toString(folder.hasPermission(Constants.PERMISSION_ADD)));
 				node.setAttribute(Constants.PERMISSION_DELETE,
@@ -617,6 +676,41 @@ public class FoldersNavigator extends TreeGrid {
 									getTree().openFolder(selectedNode);
 								}
 								getTree().add(newNode, selectedNode);
+							}
+						});
+					}
+				});
+	}
+
+	private void onCreateWorkspace() {
+		LD.askforValue(I18N.message("newworkspace"), I18N.message("newworkspacename"), I18N.message("newworkspace"),
+				"200px", new ValueCallback() {
+					@Override
+					public void execute(String value) {
+						if (value == null || "".equals(value.trim()))
+							return;
+
+						final GUIFolder data = new GUIFolder();
+						data.setName(value);
+						data.setParentId(Constants.DOCUMENTS_FOLDERID);
+						data.setDescription("");
+						data.setType(1);
+
+						service.save(Session.get().getSid(), data, new AsyncCallback<GUIFolder>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUIFolder newFolder) {
+								TreeNode newNode = new TreeNode(newFolder.getName());
+								newNode.setAttribute("name", newFolder.getName());
+								newNode.setAttribute("folderId", Long.toString(newFolder.getId()));
+								newNode.setAttribute("type", Long.toString(newFolder.getType()));
+
+								getTree().add(newNode, getTree().getRoot());
 							}
 						});
 					}
@@ -712,5 +806,21 @@ public class FoldersNavigator extends TreeGrid {
 
 	public boolean isFirstTime() {
 		return firstTime;
+	}
+
+	@Override
+	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
+		if ("1".equals(record.getAttribute("type"))) {
+			return "font-weight:bold;";
+		} else
+			return super.getCellCSSText(record, rowNum, colNum);
+	}
+
+	@Override
+	protected String getIcon(Record record, boolean defaultState) {
+		if ("1".equals(record.getAttribute("type"))) {
+			setCustomNodeIcon(record, Util.imageUrl("cube_blue16.png"));
+		}
+		return super.getIcon(record, defaultState);
 	}
 }

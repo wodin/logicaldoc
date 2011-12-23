@@ -81,7 +81,7 @@ public class PropertiesPanel extends FolderDetailTab {
 			description.setDisabled(true);
 		}
 
-		if (folder.getId() == Constants.DOCUMENTS_FOLDERID)
+		if (folder.getId() == Constants.WORKSPACE_DEFAULTID)
 			form.setItems(idItem, pathItem, creation, creator, documents, subfolders);
 		else
 			form.setItems(idItem, pathItem, name, description, creation, creator, documents, subfolders);
