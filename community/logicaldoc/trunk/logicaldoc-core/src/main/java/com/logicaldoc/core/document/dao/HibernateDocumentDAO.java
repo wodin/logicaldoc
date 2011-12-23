@@ -221,16 +221,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				listener.beforeStore(doc, transaction, dictionary);
 			}
 
-			if (doc.getId() == 0) {
-				// This is the first creation so check if it is indexable
-				if (!FileUtil.matches(doc.getFileName(),
-						config.getProperty("index.includes") == null ? "" : config.getProperty("index.includes"),
-						config.getProperty("index.excludes") == null ? "" : config.getProperty("index.excludes")))
-					doc.setIndexed(Document.INDEX_SKIP);
-			}
-
 			// Check if the document must be barcoded
-			if (!FileUtil.matches(doc.getTitle(),
+			if (!FileUtil.matches(doc.getFileName(),
 					config.getProperty("barcode.includes") == null ? "" : config.getProperty("barcode.includes"),
 					config.getProperty("barcode.excludes") == null ? "" : config.getProperty("barcode.excludes")))
 				doc.setBarcoded(Document.BARCODE_SKIP);
@@ -548,7 +540,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@Override
 	public void initialize(Document doc) {
 		getHibernateTemplate().refresh(doc);
-		
+
 		for (String attribute : doc.getAttributes().keySet()) {
 			attribute.getBytes();
 		}
