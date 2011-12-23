@@ -562,7 +562,11 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 					GUIHistory history = new GUIHistory();
 					history.setUserName(rs.getString(1));
 					history.setEvent(rs.getString(2));
-					history.setDate(rs.getDate(3));
+					if(rs.getObject(3) instanceof Timestamp)
+						history.setDate(rs.getTimestamp(3));
+					else
+						history.setDate(rs.getDate(3));
+
 					history.setTitle(rs.getString(4));
 					history.setFolderId(rs.getLong(5));
 					history.setPath(rs.getString(6));
