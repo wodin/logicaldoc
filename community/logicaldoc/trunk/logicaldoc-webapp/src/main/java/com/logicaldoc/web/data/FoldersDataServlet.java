@@ -16,7 +16,6 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
-import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
 
@@ -56,16 +55,18 @@ public class FoldersDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
-			if (parent == Constants.ROOT_FOLDERID && dao.isReadEnable(Folder.ROOTID, session.getUserId())) {
-				// Add the 'Documents' root
-				writer.print("<folder>");
-				writer.print("<folderId>" + Folder.ROOTID + "</folderId>");
-				writer.print("<parent>" + parent + "</parent>");
-				writer.print("<name>/</name>");
-				writer.print("</folder>");
-				writer.write("</list>");
-				return;
-			}
+			// if (parent == Constants.ROOT_FOLDERID &&
+			// dao.isReadEnable(Folder.ROOTID, session.getUserId())) {
+			// // Add the 'Documents' root
+			// writer.print("<folder>");
+			// writer.print("<folderId>" + Folder.ROOTID + "</folderId>");
+			// writer.print("<parent>" + parent + "</parent>");
+			// writer.print("<name>/</name>");
+			// writer.print("<type>1</type>");
+			// writer.print("</folder>");
+			// writer.write("</list>");
+			// return;
+			// }
 
 			/*
 			 * Get the visible children
@@ -89,6 +90,7 @@ public class FoldersDataServlet extends HttpServlet {
 				writer.print("<folderId>" + folder.getId() + "</folderId>");
 				writer.print("<parent>" + folder.getParentId() + "</parent>");
 				writer.print("<name><![CDATA[" + folder.getName() + "]]></name>");
+				writer.print("<type>" + folder.getType() + "</type>");
 				writer.print("</folder>");
 			}
 

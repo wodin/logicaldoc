@@ -299,7 +299,6 @@ public class LastChangesPanel extends VLayout {
 									record.setAttribute("date", result[i].getDate());
 									record.setAttribute("user", result[i].getUserName());
 									record.setAttribute("name", result[i].getTitle());
-									record.setAttribute("name", result[i].getTitle());
 									record.setAttribute("folder", result[i].getPath());
 									record.setAttribute("sid", result[i].getSessionId());
 									records[i] = record;

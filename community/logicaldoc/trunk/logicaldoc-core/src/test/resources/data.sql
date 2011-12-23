@@ -105,21 +105,23 @@ values     (5,3);
 insert into ld_group
 values     (10,'2008-10-22',0,'testGroup','Group for tests',0);
 
+insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
+values (3000,CURRENT_TIMESTAMP,0,'Workspace X',5,1);
 
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values (6,CURRENT_TIMESTAMP,0,'folder6',5,1);
+values (6,CURRENT_TIMESTAMP,0,'folder6',5,0);
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values (7,CURRENT_TIMESTAMP,0,'folder7',5,1);
+values (7,CURRENT_TIMESTAMP,0,'folder7',5,0);
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values (8,CURRENT_TIMESTAMP,1,'folder8',7,1);
+values (8,CURRENT_TIMESTAMP,1,'folder8',7,0);
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values (1200,CURRENT_TIMESTAMP,0,'test',5,1);
+values (1200,CURRENT_TIMESTAMP,0,'test',5,0);
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values (1201,CURRENT_TIMESTAMP,0,'ABC',1200,1);
+values (1201,CURRENT_TIMESTAMP,0,'ABC',1200,0);
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values (1202,CURRENT_TIMESTAMP,0,'xyz',1201,1);
+values (1202,CURRENT_TIMESTAMP,0,'xyz',1201,0);
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values (1204,CURRENT_TIMESTAMP,1,'deleted',1201,1);
+values (1204,CURRENT_TIMESTAMP,1,'deleted',1201,0);
 
 insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
 values (6,2,1,1,0,0,1,1,0,0,0,0,0,1);

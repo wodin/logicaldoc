@@ -122,14 +122,14 @@ public class TagSearch extends Search {
 			hit.setFolderName(rs.getString(13));
 
 			int published = rs.getInt(14);
-			Date startPublishing = rs.getDate(15);
-			Date stopPublishing = rs.getDate(16);
+			Date startPublishing = rs.getTimestamp(15);
+			Date stopPublishing = rs.getTimestamp(16);
 
 			// Check the publishing status
 			Date now = new Date();
 			if (published != 1)
 				hit.setPublished(0);
-			else if (now.before(startPublishing))
+			else if (startPublishing != null && now.before(startPublishing))
 				hit.setPublished(0);
 			else if (stopPublishing != null && stopPublishing.before(now))
 				hit.setPublished(0);

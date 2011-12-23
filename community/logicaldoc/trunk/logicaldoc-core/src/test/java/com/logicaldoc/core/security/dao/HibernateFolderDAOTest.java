@@ -289,7 +289,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(2, folder.getFolderGroups().size());
 		Assert.assertTrue(dao.store(folder));
 		folder = dao.findById(Folder.ROOTID);
-		Assert.assertEquals(4, folder.getFolderGroups().size());
+		Assert.assertEquals(0, folder.getFolderGroups().size());
 
 		folder = dao.findById(1200);
 		folder.setName("pippo");
@@ -327,7 +327,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertNotNull(folder);
 		Assert.assertEquals(Folder.ROOTID, folder.getId());
 		Assert.assertEquals("/", folder.getName());
-		Assert.assertEquals(4, folder.getFolderGroups().size());
+		Assert.assertEquals(0, folder.getFolderGroups().size());
 
 		// Try with unexisting id
 		folder = dao.findById(99999);
@@ -360,7 +360,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	public void testFindByUserId() {
 		List<Folder> folders = dao.findByUserId(1, Folder.ROOTID);
 		Assert.assertNotNull(folders);
-		Assert.assertEquals(3, folders.size());
+		Assert.assertEquals(5, folders.size());
 
 		// Try with unexisting user and folders
 		folders = dao.findByUserId(1, 70);
@@ -373,14 +373,14 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 		folders = dao.findByUserId(4, Folder.ROOTID);
 		Assert.assertNotNull(folders);
-		Assert.assertEquals(1, folders.size());
+		Assert.assertEquals(2, folders.size());
 	}
 
 	@Test
 	public void testFindByParentId() {
 		List<Folder> folders = dao.findByParentId(Folder.ROOTID);
 		Assert.assertNotNull(folders);
-		Assert.assertEquals(5, folders.size());
+		Assert.assertEquals(7, folders.size());
 
 		// Try with unexisting parent
 		folders = dao.findByParentId(999);
@@ -434,7 +434,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	public void testFindFolderIdByUserId() {
 		Collection<Long> ids = dao.findFolderIdByUserId(3);
 		Assert.assertNotNull(ids);
-		Assert.assertEquals(6, ids.size());
+		Assert.assertEquals(8, ids.size());
 
 		// Try with unexisting user
 		ids = dao.findFolderIdByUserId(99);
@@ -475,7 +475,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testFindByGroupId() {
 		Collection<Folder> folders = dao.findByGroupId(1);
-		Assert.assertEquals(6, folders.size());
+		Assert.assertEquals(8, folders.size());
 		folders = dao.findByGroupId(10);
 		Assert.assertEquals(0, folders.size());
 		folders = dao.findByGroupId(2);
@@ -518,7 +518,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 		ids = dao.findFolderIdByUserIdAndPermission(3, Permission.WRITE);
 		Assert.assertNotNull(ids);
-		Assert.assertEquals(6, ids.size());
+		Assert.assertEquals(8, ids.size());
 	}
 
 	@Test

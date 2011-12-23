@@ -104,6 +104,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			f.setCreation(folder.getCreation());
 			f.setCreator(folder.getCreator());
 			f.setCreatorId(folder.getCreatorId());
+			f.setType(folder.getType());
 
 			/*
 			 * Count the children
@@ -180,7 +181,12 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					if (list.isEmpty())
 						return null;
 
-					path[j] = getFolder(sid, parent.getId(), false);
+					if (parent.getId() == Folder.ROOTID) {
+						GUIFolder f = new GUIFolder(Folder.ROOTID);
+						f.setName("/");
+						path[j] = f;
+					} else
+						path[j] = getFolder(sid, parent.getId(), false);
 					parent = list.get(0);
 					j++;
 				}
@@ -283,6 +289,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			if (folder.getId() != 0) {
 				f = folderDao.findById(folder.getId());
 				f.setDescription(folder.getDescription());
+				f.setType(folder.getType());
 				if (f.getName().trim().equals(folderName)) {
 					f.setName(folderName);
 					folderDao.store(f);
@@ -302,6 +309,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 				f = folderDao.create(folderDao.findById(folder.getParentId()), folderName, transaction);
 				f.setDescription(folder.getDescription());
+				f.setType(folder.getType());
 				folderDao.store(f);
 			}
 

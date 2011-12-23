@@ -12,6 +12,8 @@ import com.logicaldoc.core.PersistentObject;
  * groups to a given folder and grant some permissions. Also setting the
  * recurityRef you can specify another reference folder that contains the
  * security policies.
+ * <p>
+ * Folders have a type: 0 for standard folders, 1 for workspaces.
  * 
  * @author Marco Meschieri - Logical Objects
  * @version 6.0
@@ -20,24 +22,30 @@ public class Folder extends PersistentObject implements Comparable<Folder> {
 
 	public static final long ROOTID = 5;
 
+	public static final long DEFAULTWORKSPACE = 4;
+
+	public static final int TYPE_DEFAULT = 0;
+
+	public static final int TYPE_WORKSPACE = 1;
+
 	private long id = 0;
 
 	private String name = "";
 
-	private long parentId = ROOTID;
+	private long parentId = DEFAULTWORKSPACE;
 
 	private Long securityRef;
 
 	private String description = "";
 
-	private int type = 0;
+	private int type = TYPE_DEFAULT;
 
 	private Date creation = new Date();
-	
+
 	private String creator;
 
 	private Long creatorId;
-	
+
 	protected Set<FolderGroup> folderGroups = new HashSet<FolderGroup>();
 
 	public Folder() {

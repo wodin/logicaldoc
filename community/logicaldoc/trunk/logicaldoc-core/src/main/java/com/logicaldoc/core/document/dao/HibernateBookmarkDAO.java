@@ -27,7 +27,7 @@ public class HibernateBookmarkDAO extends HibernatePersistentObjectDAO<Bookmark>
 
 	@Override
 	public List<Bookmark> findByUserIdAndDocId(long userId, long docId) {
-		return findByWhere("_entity.userId =" + userId + " and _entity.docId =" + docId, null,
-				"order by _entity.position asc", null);
+		return findByWhere("_entity.userId =" + userId + " and _entity.targetId =" + docId + " and _entity.type="
+				+ Bookmark.TYPE_DOCUMENT, null, "order by _entity.position asc", null);
 	}
 }
