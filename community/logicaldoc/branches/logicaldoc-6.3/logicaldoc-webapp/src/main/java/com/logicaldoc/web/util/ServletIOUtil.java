@@ -140,12 +140,20 @@ public class ServletIOUtil {
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = dao.findById(docId);
 
+		if (doc != null && user != null && !user.isInGroup("admin") && !user.isInGroup("publisher")
+				&& !doc.isPublishing())
+			throw new FileNotFoundException("Document not published");
+
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 		String resource = storer.getResourceName(doc, fileVersion, null);
 
 		String filename = fileName;
 		if (filename == null)
 			filename = doc.getFileName();
+
+		if (StringUtils.isNotEmpty(suffix) && !suffix.endsWith(".p7m") && !suffix.endsWith(".m7m"))
+			filename = FilenameUtils.getBaseName(filename);
+
 		if (!storer.exists(doc.getId(), resource)) {
 			throw new FileNotFoundException(resource);
 		}
@@ -162,11 +170,6 @@ public class ServletIOUtil {
 		// response object
 		response.setContentType(mimetype);
 		setContentDisposition(request, response, filename);
-
-		// Headers required by Internet Explorer
-		response.setHeader("Pragma", "public");
-		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
-		response.setHeader("Expires", "0");
 
 		// Add this header for compatibility with internal .NET browsers
 		response.setHeader("Content-Length", Long.toString(size));
