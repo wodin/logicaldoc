@@ -26,10 +26,13 @@ public class WSFolder {
 
 	private String lastModified;
 
+	private int type = Folder.TYPE_DEFAULT;
+
 	public static WSFolder fromFolder(Folder folder) {
 		WSFolder wsFolder = new WSFolder();
 		wsFolder.setId(folder.getId());
 		wsFolder.setName(folder.getName());
+		wsFolder.setType(folder.getType());
 		wsFolder.setDescription(folder.getDescription());
 		wsFolder.setParentId(folder.getParentId());
 		wsFolder.setLastModified(AbstractService.convertDateToString(folder.getLastModified()));
@@ -75,5 +78,13 @@ public class WSFolder {
 
 	public void setLastModified(String lastModified) {
 		this.lastModified = lastModified;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 }

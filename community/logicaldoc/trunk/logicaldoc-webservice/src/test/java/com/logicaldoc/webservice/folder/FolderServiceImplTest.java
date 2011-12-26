@@ -183,4 +183,12 @@ public class FolderServiceImplTest extends AbstractWebServiceTestCase {
 		rights = folderServiceImpl.getGrantedGroups("", 100);
 		Assert.assertEquals(2, rights.length);
 	}
+
+	@Test
+	public void testListWorkspaces() throws Exception {
+		WSFolder[] folders = folderServiceImpl.listWorkspaces("");
+		Assert.assertNotNull(folders);
+		Assert.assertEquals(1, folders.length);
+		Assert.assertEquals("Default", folders[0].getName());
+	}
 }

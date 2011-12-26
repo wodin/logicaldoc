@@ -48,6 +48,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 
 		Folder f = folderDao.create(parentFolder, folder.getName(), transaction);
 		f.setDescription(folder.getDescription());
+		f.setType(folder.getType());
 		boolean stored = folderDao.store(f);
 
 		if (!stored) {
@@ -385,5 +386,20 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		Folder folder = folderDao.createPath(parent, path, transaction);
 
 		return WSFolder.fromFolder(folder);
+	}
+
+	@Override
+	public WSFolder[] listWorkspaces(String sid) throws Exception {
+		validateSession(sid);
+
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		List<Folder> folders = folderDao.findWorkspaces();
+		WSFolder[] wsFolders = new WSFolder[folders.size()];
+		for (int i = 0; i < folders.size(); i++) {
+			folderDao.initialize(folders.get(i));
+			wsFolders[i] = WSFolder.fromFolder(folders.get(i));
+		}
+
+		return wsFolders;
 	}
 }

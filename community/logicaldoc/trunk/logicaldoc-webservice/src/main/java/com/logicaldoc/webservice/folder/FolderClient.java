@@ -113,4 +113,9 @@ public class FolderClient implements FolderService {
 	public WSFolder createPath(String sid, long parentId, String path) throws Exception {
 		return client.createPath(sid, parentId, path);
 	}
+
+	@Override
+	public WSFolder[] listWorkspaces(String sid) throws Exception {
+		return client.listWorkspaces(sid);
+	}
 }
