@@ -557,4 +557,12 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		folder = dao.findById(1202);
 		Assert.assertEquals(5L, folder.getSecurityRef().longValue());
 	}
+
+	@Test
+	public void testFindWorkspaces() {
+		List<Folder> dirs = dao.findWorkspaces();
+		Assert.assertNotNull(dirs);
+		Assert.assertEquals(2, dirs.size());
+		Assert.assertEquals("Default", dirs.get(0).getName());
+	}
 }
