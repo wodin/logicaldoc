@@ -214,4 +214,13 @@ public interface FolderService {
 	 * @return The created folder
 	 */
 	public WSFolder createPath(String sid, long parentId, String path) throws Exception;
+
+	/**
+	 * Retrieves the list of all workspaces.
+	 * 
+	 * @param sid Session identifier
+	 * 
+	 * @return the list of all workspaces
+	 */
+	public WSFolder[] listWorkspaces(String sid) throws Exception;
 }
