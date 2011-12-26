@@ -1062,7 +1062,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public List<Folder> findWorkspaces() {
-		return findByWhere("_entity.parentId=" + Folder.ROOTID + " and _entity.type=" + Folder.TYPE_WORKSPACE,
-				"order by _entity.lower(_entity.name)", null);
+		return findByWhere(" (not _entity.id=" + Folder.ROOTID + ") and _entity.parentId=" + Folder.ROOTID
+				+ " and _entity.type=" + Folder.TYPE_WORKSPACE, "order by _entity.lower(_entity.name)", null);
 	}
 }
