@@ -27,6 +27,7 @@ import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -53,6 +54,8 @@ public class LoginPanel extends VLayout {
 
 	protected PasswordItem password = new PasswordItem();
 
+	protected CheckboxItem savelogin = new CheckboxItem();
+
 	protected SelectItem language;
 
 	public LoginPanel(GUIInfo info) {
@@ -64,14 +67,14 @@ public class LoginPanel extends VLayout {
 		HLayout hPanel = new HLayout();
 		hPanel.setDefaultLayoutAlign(Alignment.LEFT);
 		hPanel.setDefaultLayoutAlign(VerticalAlignment.CENTER);
-		hPanel.setWidth(350);
+		hPanel.setWidth(400);
 		hPanel.setHeight100();
 
 		// Panel for vertical centering
 		VLayout content = new VLayout();
 		content.setDefaultLayoutAlign(VerticalAlignment.CENTER);
 		content.setWidth100();
-		content.setHeight(200);
+		content.setHeight(250);
 		hPanel.addMember(content);
 
 		addMember(hPanel);
@@ -135,8 +138,13 @@ public class LoginPanel extends VLayout {
 			}
 		});
 
+		savelogin.setTitle(I18N.message("savelogin"));
+		savelogin.setRequired(false);
+		savelogin.setWrapTitle(false);
+		savelogin.setValue("true".equals(Offline.get("ldoc-savelogin")));
+
 		// If the case, initialize the credentials from client's cookies
-		if ("true".equals(info.getConfig("gui.savelogin"))) {
+		if ("true".equals(info.getConfig("gui.savelogin")) && savelogin.getValueAsBoolean()) {
 			username.setValue(Offline.get("ldoc-user"));
 			password.setValue(Offline.get("ldoc-password"));
 		}
@@ -149,7 +157,10 @@ public class LoginPanel extends VLayout {
 			language.setDefaultValue(I18N.getSupportedGuiLanguages(false).keySet().iterator().next());
 		}
 
-		form.setFields(username, password, language);
+		if ("true".equals(info.getConfig("gui.savelogin")))
+			form.setFields(username, password, language, savelogin);
+		else
+			form.setFields(username, password, language);
 
 		IButton loginButton = new IButton(I18N.message("login"));
 		loginButton.addClickHandler(new ClickHandler() {
@@ -240,8 +251,13 @@ public class LoginPanel extends VLayout {
 
 		// If the case, save the credentials into client cookies
 		if ("true".equals(Session.get().getInfo().getConfig("gui.savelogin"))) {
-			Offline.put("ldoc-user", (String) username.getValue());
-			Offline.put("ldoc-password", (String) password.getValue());
+			Offline.put("ldoc-savelogin", (String) savelogin.getValueAsBoolean().toString());
+			Offline.put("ldoc-user", savelogin.getValueAsBoolean() ? (String) username.getValue() : "");
+			Offline.put("ldoc-password", savelogin.getValueAsBoolean() ? (String) password.getValue() : "");
+		} else {
+			Offline.put("ldoc-savelogin", "false");
+			Offline.put("ldoc-user", "");
+			Offline.put("ldoc-password", "");
 		}
 
 		GUIUser user = session.getUser();
