@@ -1,8 +1,10 @@
 package com.logicaldoc.gui.frontend.client.folder;
 
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.widgets.FolderTree;
 import com.smartgwt.client.types.HeaderControls;
+import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Dialog;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -22,7 +24,7 @@ public class MoveDialog extends Dialog {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("move"));
 		setWidth(250);
-		setHeight(205);
+		setHeight(280);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -36,8 +38,12 @@ public class MoveDialog extends Dialog {
 		content.setMembersMargin(3);
 
 		final TreeGrid folders = new FolderTree();
-		folders.setHeight(150);
 		folders.setWidth100();
+		folders.setHeight100();
+
+		VLayout buttons = new VLayout();
+		buttons.setWidth100();
+		buttons.setHeight(50);
 
 		Button move = new Button(I18N.message("move"));
 		move.setAutoFit(true);
@@ -50,7 +56,9 @@ public class MoveDialog extends Dialog {
 			}
 		});
 
-		content.setMembers(folders, move);
+		buttons.setMembers(move);
+
+		content.setMembers(folders, buttons);
 		addChild(content);
 	}
 }
