@@ -16,8 +16,10 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
+import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.ServletIOUtil;
@@ -70,8 +72,9 @@ public class DownloadServlet extends HttpServlet {
 			throws FileNotFoundException, IOException, ServletException {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		VersionDAO versDao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
-
-		// Flag indicating to download only indexed text
+    FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		
+    // Flag indicating to download only indexed text
 		String downloadText = request.getParameter("downloadText");
 		String docId = request.getParameter("docId");
 		String versionId = request.getParameter("versionId");
@@ -81,12 +84,33 @@ public class DownloadServlet extends HttpServlet {
 		Version version = null;
 		Document doc = null;
 
-		if (!StringUtils.isEmpty(docId))
+		if (!StringUtils.isEmpty(docId)) {
 			doc = docDao.findById(Long.parseLong(docId));
+
+			if (!folderDao.isPermissionEnabled(Permission.DOWNLOAD, doc.getFolder().getId(), user.getId()))
+				throw new IOException("You don't have the DOWNLOAD permission");
+			
+			/*
+			 * In case of alias we have to work on the real document
+			 */
+			if (doc.getDocRef() != null)
+				doc = docDao.findById(doc.getDocRef());
+		}
+
 		if (!StringUtils.isEmpty(versionId)) {
 			version = versDao.findById(Long.parseLong(versionId));
-			if (doc == null)
+			if (doc == null){
 				doc = docDao.findById(version.getDocId());
+				
+				if (!folderDao.isPermissionEnabled(Permission.DOWNLOAD, doc.getFolder().getId(), user.getId()))
+					throw new IOException("You don't have the DOWNLOAD permission");
+				
+				/*
+				 * In case of alias we have to work on the real document
+				 */
+				if (doc.getDocRef() != null)
+					doc = docDao.findById(doc.getDocRef());
+			}
 		}
 
 		if (version != null)
