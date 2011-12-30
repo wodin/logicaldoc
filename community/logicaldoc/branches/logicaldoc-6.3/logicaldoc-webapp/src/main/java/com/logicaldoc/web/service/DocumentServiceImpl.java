@@ -198,7 +198,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					 */
 					Document doc = toDocument(metadata);
 					doc.setFileName(filename);
-					doc.setTitle(filename.substring(0, filename.lastIndexOf(".")));
+					if(filename.lastIndexOf(".")>0)
+					  doc.setTitle(filename.substring(0, filename.lastIndexOf(".")));
+				    else
+				      doc.setTitle(filename);
 					doc.setCreation(new Date());
 
 					// Create the new
