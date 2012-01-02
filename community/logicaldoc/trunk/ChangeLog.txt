@@ -10,6 +10,15 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC 6.3.3 (2012-01-07; logicaldoc-6.3.3)
+===============
+138 - Tags are taken over too soon during type in - Bug - User Interface
+143 - Remember view in folder pane - Improvement - User Interface
+148 - Events timestamp not correctly shown in Last Changes - Bug - User Interface
+151 - Size of "Move" dialogue box - Improvement - User Interface
+153 - Exception when downloading an alias - Bug - Core
+
+
 LogicalDOC 6.3.2 (2011-12-13; logicaldoc-6.3.2)
 ===============
 123 -	Japanese support - Improvement - Core
