@@ -9,7 +9,6 @@ import com.allen_sauer.gwt.dnd.client.DragController;
 import com.allen_sauer.gwt.dnd.client.DragEndEvent;
 import com.allen_sauer.gwt.dnd.client.DragHandlerAdapter;
 import com.allen_sauer.gwt.dnd.client.DragStartEvent;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Position;
@@ -86,13 +85,14 @@ public class DiagramController implements HasNewFunctionHandlers, HasTieLinkHand
 	 * If the distance between the mouse and segment is under this number in
 	 * pixels, then, the mouse is considered over the segment
 	 */
-	public static int minDistanceToSegment = 6;
+	public static int minDistanceToSegment = 5;
 
 	/**
 	 * Timer refresh duration, in milliseconds. It defers if the application is
 	 * running in development mode or in the web mode
 	 */
-	public static int refreshRate = GWT.isScript() ? 25 : 40;
+	public static int refreshRate = 80;
+		//GWT.isScript() ? 25 : 50;
 
 	private DiagramCanvas topCanvas;
 

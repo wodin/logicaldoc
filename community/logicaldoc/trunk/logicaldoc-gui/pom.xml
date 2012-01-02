@@ -68,7 +68,7 @@
     <dependency>
       <groupId>com.orange.links</groupId>
       <artifactId>gwt-links</artifactId>
-      <version>1.4</version>
+      <version>1.4.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
