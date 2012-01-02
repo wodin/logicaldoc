@@ -356,7 +356,7 @@ public class Setup implements EntryPoint {
 		dbEngine.setWrapTitle(false);
 		dbEngine.setVisible(false);
 		dbEngine.setName(DB_ENGINE);
-		dbEngine.setDefaultValue(MYSQL);
+		dbEngine.setValue(MYSQL);
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
 		for (String engine : engines.keySet()) {
 			valueMap.put(engine, engines.get(engine)[0]);
@@ -385,7 +385,7 @@ public class Setup implements EntryPoint {
 		// The driver for the external DB
 		TextItem dbDriver = ItemFactory.newTextItem(DB_DRIVER, "driverclass", null);
 		dbDriver.setVisible(false);
-		dbDriver.setDefaultValue(engines.get(MYSQL)[1]);
+		dbDriver.setValue(engines.get(MYSQL)[1]);
 		dbDriver.setWrapTitle(false);
 		dbDriver.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
@@ -398,7 +398,7 @@ public class Setup implements EntryPoint {
 		TextItem dbUrl = ItemFactory.newTextItem(DB_URL, "connectionurl", null);
 		dbUrl.setWidth(200);
 		dbUrl.setVisible(false);
-		dbUrl.setDefaultValue(engines.get(MYSQL)[2]);
+		dbUrl.setValue(engines.get(MYSQL)[2]);
 		dbUrl.setWrapTitle(false);
 		dbUrl.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
