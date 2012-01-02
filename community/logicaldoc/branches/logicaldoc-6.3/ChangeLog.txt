@@ -10,6 +10,15 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC 6.3.3 (2012-01-07; logicaldoc-6.3.3)
+===============
+138 - Tags are taken over too soon during type in - Bug - User Interface
+143 - Remember view in folder pane - Improvement - User Interface
+148 - Events timestamp not correctly shown in Last Changes - Bug - User Interface
+151 - Size of "Move" dialogue box - Improvement - User Interface
+153 - Exception when downloading an alias - Bug - Core
+
+
 LogicalDOC 6.3.2 (2011-12-13; logicaldoc-6.3.2)
 ===============
 123 -	Japanese support - Improvement - Core
@@ -18,8 +27,8 @@ LogicalDOC 6.3.2 (2011-12-13; logicaldoc-6.3.2)
 129 -	Upgrade the component for the preview of documents - Task - User Interface
 131 -	Preview for TIFF and GIF images - Bug - Core
 132 -	Better thumbnail presentation - Improvement - User Interface
-135 -	Confirmation prompt when moving items/folders -	Improvement -	User Interface 
 133 - Improved preview for stored emails - Improvement - User Interface
+135 -	Confirmation prompt when moving items/folders -	Improvement -	User Interface
 
 
 LogicalDOC 6.3.1 (2011-11-23; logicaldoc-6.3.1)
