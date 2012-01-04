@@ -25,6 +25,9 @@ public class DrawingPanel extends VStack {
 
 	private DiagramController controller;
 
+	// stateId - widget instance
+	private Map<String, StateWidget> widgets = new HashMap<String, StateWidget>();
+
 	public DrawingPanel(WorkflowDesigner designer) {
 		super();
 		setHeight(500);
@@ -55,16 +58,16 @@ public class DrawingPanel extends VStack {
 
 		try {
 			// Put all the states
-			Map<String, StateWidget> states = new HashMap<String, StateWidget>();
+			widgets.clear();
 			for (GUIWFState state : workflow.getStates()) {
 				StateWidget widget = new StateWidget(this, state);
 				widget.setReadonly(workflowDesigner.isReadOnly());
 				controller.addWidget(widget, state.getLeft(), state.getTop());
-				states.put(state.getId(), widget);
+				widgets.put(state.getId(), widget);
 			}
 
 			if (!workflowDesigner.isReadOnly())
-				for (StateWidget widget : states.values()) {
+				for (StateWidget widget : widgets.values()) {
 					controller.makeDraggable(widget);
 				}
 
@@ -72,8 +75,8 @@ public class DrawingPanel extends VStack {
 			for (GUIWFState state : workflow.getStates()) {
 				if (state.getTransitions() != null)
 					for (GUITransition trans : state.getTransitions()) {
-						StateWidget src = states.get(state.getId());
-						StateWidget dst = states.get(trans.getTargetState().getId());
+						StateWidget src = widgets.get(state.getId());
+						StateWidget dst = widgets.get(trans.getTargetState().getId());
 						Connection c = controller.drawStraightArrowConnection(src, dst, trans);
 						c.setSynchronized(true);
 						c.setAllowSynchronized(true);
@@ -95,5 +98,9 @@ public class DrawingPanel extends VStack {
 		} catch (Throwable t) {
 			Log.error(t.getMessage(), null, t);
 		}
+	}
+
+	public StateWidget getWidget(String id) {
+		return widgets.get(id);
 	}
 }
