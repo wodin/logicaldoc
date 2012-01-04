@@ -1,6 +1,8 @@
 package com.logicaldoc.gui.common.client.widgets;
 
 import com.logicaldoc.gui.common.client.data.FoldersDS;
+import com.logicaldoc.gui.common.client.util.Util;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.widgets.tree.TreeGrid;
 
 /**
@@ -25,5 +27,13 @@ public class FolderTree extends TreeGrid {
 		setLoadDataOnDemand(true);
 		setDataSource(FoldersDS.get());
 		setCanSelectAll(false);
+	}
+	
+	@Override
+	protected String getIcon(Record record, boolean defaultState) {
+		if ("1".equals(record.getAttribute("type"))) {
+			setCustomNodeIcon(record, Util.imageUrl("cube_blue16.png"));
+		}
+		return super.getIcon(record, defaultState);
 	}
 }
