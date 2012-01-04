@@ -1,8 +1,9 @@
 package com.logicaldoc.webservice;
 
+import javax.activation.DataHandler;
+
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
-import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.FolderClient;
 import com.logicaldoc.webservice.search.SearchClient;
 import com.logicaldoc.webservice.security.SecurityClient;
@@ -19,7 +20,7 @@ public class Main {
 		SecurityClient securityClient = new SecurityClient(base + "/Security");
 
 		// Open a session
-		String sid = auth.login("admin", "admin");
+		String sid = auth.login("admin", "12345678");
 		System.out.println("sid: " + sid);
 
 		// WSUser wsUserTest = new WSUser();
@@ -160,8 +161,8 @@ public class Main {
 		// doc = documentClient.create(sid, doc, data);
 		// System.out.println("rating: " + doc.getRating());
 
-		// DataHandler data = documentClient.getContent(sid, 68);
-		// System.out.println("data: " + data.toString());
+		 DataHandler data = documentClient.getContent(sid, 5561);
+		 System.out.println("data: " + data.toString());
 
 		// SystemInfo info = systemClient.getInfo(sid);
 		// System.out.println("installation id: " + info.getInstallationId());
@@ -391,13 +392,6 @@ public class Main {
 		// for (WSDocument wsDocument : documentClient.getVersions(sid, 30)) {
 		// System.out.println("title: " + wsDocument.getVersion());
 		// }
-
-		WSDocument[] docs = documentClient.list(sid, 5);
-		for (WSDocument wsDocument : docs) {
-			System.out.println("doc id: " + wsDocument.getId());
-			System.out.println("doc title: " + wsDocument.getTitle());
-			System.out.println("doc customid: " + wsDocument.getCustomId());
-		}
 
 		// WSDocument[] docs = documentClient.getRecentDocuments(sid, 4);
 		// System.out.println("docs: " + docs.length);
