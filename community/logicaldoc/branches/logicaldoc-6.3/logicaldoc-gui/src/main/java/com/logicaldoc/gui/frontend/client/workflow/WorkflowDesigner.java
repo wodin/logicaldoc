@@ -90,6 +90,14 @@ public class WorkflowDesigner extends VStack {
 		drawingPanel.redraw();
 	}
 
+	public void refresh(){
+		for (GUIWFState status : workflow.getStates()) {
+			StateWidget widget=getDrawingPanel().getWidget(status.getId());
+			if(widget!=null && widget.isTask())
+				widget.update();
+		}
+	}
+	
 	public Accordion getAccordion() {
 		return accordion;
 	}
