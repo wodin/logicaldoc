@@ -51,7 +51,9 @@ public class StateWidget extends Label {
 		this.diagramController = diagramController;
 		this.transition = trans;
 		transition.setText(name);
-
+        setAutoFit(true);
+        setAutoHeight();
+		
 		addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
@@ -156,6 +158,9 @@ public class StateWidget extends Label {
 		} else if (type == GUIWFState.TYPE_FORK) {
 			setIcon(Util.imageUrl("fork.png"));
 			setBorder("3px solid #F2EE07");
+		} else {
+			setAutoFit(true);
+			setAutoHeight();
 		}
 	}
 
