@@ -185,10 +185,9 @@ public class StateWidget extends Label {
 
 	public void makeStartState() {
 		WorkflowDesigner workflowDesigner = getDrawingPanel().getWorkflowDesigner();
-		workflowDesigner.saveModel();
 		workflowDesigner.getWorkflow().setStartStateId(wfState.getId());
 		workflowDesigner.saveModel();
-		workflowDesigner.redraw(workflowDesigner.getWorkflow());
+		workflowDesigner.refresh();
 	}
 
 	public boolean isEnd() {
