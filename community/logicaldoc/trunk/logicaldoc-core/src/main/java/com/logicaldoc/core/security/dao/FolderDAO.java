@@ -321,4 +321,15 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * folders of type 1.
 	 */
 	public List<Folder> findWorkspaces();
+
+	/**
+	 * Finds all the accessible ids of the folders contained in a specific tree.
+	 * The method is recursive so use it carefully.
+	 * 
+	 * @param parentId The parent folder id
+	 * @param userId The user who is requesting the operation
+	 * @param depth The maximum nesting level (controls the recursivity)
+	 * @param ids The set in which all ids will be stored
+	 */
+	public void findTreeIds(long parentId, long userId, Integer depth, Collection<Long> ids);
 }
