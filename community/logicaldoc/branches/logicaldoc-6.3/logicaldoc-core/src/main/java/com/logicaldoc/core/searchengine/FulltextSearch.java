@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.TreeSet;
@@ -156,7 +157,8 @@ public class FulltextSearch extends Search {
 			if (opt.getFolderId() == null)
 				accessibleIds = fdao.findFolderIdByUserId(opt.getUserId());
 			else {
-				accessibleIds = fdao.findIdByUserId(opt.getUserId(), opt.getFolderId());
+				accessibleIds = new HashSet<Long>();
+				fdao.findTreeIds(opt.getFolderId(), opt.getUserId(), opt.getDepth(), (HashSet<Long>) accessibleIds);
 			}
 			log.info("End of DB search");
 		}

@@ -29,6 +29,8 @@ public class FulltextSearchOptions extends SearchOptions {
 
 	private boolean searchInSubPath = false;
 
+	private int depth = 1;
+
 	private Long folderId = null;
 
 	private String[] fields = null;
@@ -206,5 +208,13 @@ public class FulltextSearchOptions extends SearchOptions {
 		if ((not != null) && !not.equals("")) {
 			expression += " NOT (" + not + ")";
 		}
+	}
+
+	public int getDepth() {
+		return depth;
+	}
+
+	public void setDepth(int depth) {
+		this.depth = depth;
 	}
 }
