@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.TreeSet;
@@ -150,25 +151,26 @@ public class FulltextSearch extends Search {
 		 * only.
 		 */
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Collection<Long> accessibleIds = new TreeSet<Long>();
+		Collection<Long> accessibleFolderIds = new TreeSet<Long>();
 		if (!searchInSingleFolder) {
 			log.info("DB search");
 			if (opt.getFolderId() == null)
-				accessibleIds = fdao.findFolderIdByUserId(opt.getUserId());
+				accessibleFolderIds = fdao.findFolderIdByUserId(opt.getUserId());
 			else {
-				accessibleIds = fdao.findIdByUserId(opt.getUserId(), opt.getFolderId());
+				accessibleFolderIds=new HashSet<Long>();
+				fdao.findTreeIds(opt.getFolderId(), opt.getUserId(), opt.getDepth(), (HashSet<Long>)accessibleFolderIds);
 			}
 			log.info("End of DB search");
 		}
 		if (opt.getFolderId() != null && fdao.isReadEnable(opt.getFolderId(), opt.getUserId()))
-			accessibleIds.add(opt.getFolderId());
+			accessibleFolderIds.add(opt.getFolderId());
 
 		/*
 		 * Prepare the list of published documents
 		 */
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 
-		Collection<Long> publishedIds = docDao.findPublishedIds(accessibleIds);
+		Collection<Long> publishedIds = docDao.findPublishedIds(accessibleFolderIds);
 
 		int maxNumFragmentsRequired = 4;
 		String fragmentSeparator = "&nbsp;...&nbsp;";
@@ -204,7 +206,7 @@ public class FulltextSearch extends Search {
 
 				// When user can see document with folderId then put it into
 				// result-collection.
-				if (accessibleIds.contains(folderId)) {
+				if (accessibleFolderIds.contains(folderId)) {
 					String size = doc.get(LuceneDocument.FIELD_SIZE);
 
 					if (size.equals("0")) {

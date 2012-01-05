@@ -1065,4 +1065,24 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		return findByWhere(" (not _entity.id=" + Folder.ROOTID + ") and _entity.parentId=" + Folder.ROOTID
 				+ " and _entity.type=" + Folder.TYPE_WORKSPACE, "order by _entity.lower(_entity.name)", null);
 	}
+
+	@Override
+	public void findTreeIds(long parentId, long userId, Integer depth, Collection<Long> ids) {
+		if (depth != null && depth.intValue() < 1)
+			return;
+
+		List<Folder> children = findChildren(parentId, userId);
+		for (Folder folder : children) {
+			if (!ids.contains(folder.getId()))
+				ids.add(folder.getId());
+		}
+
+		int d = -1;
+		if (depth != null)
+			d = depth - 1;
+
+		for (Folder folder : children) {
+			findTreeIds(folder.getId(), userId, d, ids);
+		}
+	}
 }

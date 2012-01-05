@@ -1,6 +1,7 @@
 package com.logicaldoc.core.security.dao;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -539,6 +540,32 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	}
 
 	@Test
+	public void testFindTreeIds() {
+		HashSet<Long> ids = new HashSet<Long>();
+		dao.findTreeIds(1200L, 1L, 5, ids);
+		Assert.assertEquals(2, ids.size());
+		Assert.assertTrue(ids.contains(1202L));
+		Assert.assertTrue(ids.contains(1201L));
+
+		ids.clear();
+		dao.findTreeIds(5L, 3L, null, ids);
+		Assert.assertEquals(5, ids.size());
+		Assert.assertTrue(ids.contains(1200L));
+		Assert.assertTrue(ids.contains(6L));
+
+		ids.clear();
+		dao.findTreeIds(1200L, 3L, 1, ids);
+		Assert.assertEquals(1, ids.size());
+		Assert.assertTrue(ids.contains(1201L));
+
+		ids.clear();
+		dao.findTreeIds(1200L, 3L, 2, ids);
+		Assert.assertEquals(2, ids.size());
+		Assert.assertTrue(ids.contains(1201L));
+		Assert.assertTrue(ids.contains(1202L));
+	}
+
+	@Test
 	public void testApplyRightsToTree() {
 		History transaction = new History();
 		User user = new User();
@@ -565,4 +592,5 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(2, dirs.size());
 		Assert.assertEquals("Default", dirs.get(0).getName());
 	}
+
 }
