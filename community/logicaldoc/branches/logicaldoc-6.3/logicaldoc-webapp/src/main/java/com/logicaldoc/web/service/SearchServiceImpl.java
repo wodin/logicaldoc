@@ -285,6 +285,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			op.setFormat(((FulltextSearchOptions) searchOptions).getFormat());
 			op.setLanguage(((FulltextSearchOptions) searchOptions).getLanguage());
 			op.setSearchInSubPath(((FulltextSearchOptions) searchOptions).isSearchInSubPath());
+			op.setDepth(((FulltextSearchOptions) searchOptions).getDepth());
 			op.setSizeMax(((FulltextSearchOptions) searchOptions).getSizeMax());
 			op.setSizeMin(((FulltextSearchOptions) searchOptions).getSizeMin());
 		}
@@ -319,6 +320,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			((FulltextSearchOptions) searchOptions).setFormat(options.getFormat());
 			((FulltextSearchOptions) searchOptions).setLanguage(options.getLanguage());
 			((FulltextSearchOptions) searchOptions).setSearchInSubPath(options.isSearchInSubPath());
+			((FulltextSearchOptions) searchOptions).setDepth(options.getDepth());
 			((FulltextSearchOptions) searchOptions).setSizeMax(options.getSizeMax());
 			((FulltextSearchOptions) searchOptions).setSizeMin(options.getSizeMin());
 		}

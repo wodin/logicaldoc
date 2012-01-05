@@ -36,6 +36,8 @@ public class GUISearchOptions implements Serializable {
 
 	private boolean searchInSubPath = false;
 
+	private int depth = 1;
+
 	private long userId = -1;
 
 	private Long folder = null;
@@ -282,5 +284,13 @@ public class GUISearchOptions implements Serializable {
 
 	public void setFilterIds(Long[] filterIds) {
 		this.filterIds = filterIds;
+	}
+
+	public int getDepth() {
+		return depth;
+	}
+
+	public void setDepth(int depth) {
+		this.depth = depth;
 	}
 }

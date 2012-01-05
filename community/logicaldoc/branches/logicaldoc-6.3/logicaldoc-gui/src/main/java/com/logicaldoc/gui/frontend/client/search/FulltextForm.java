@@ -190,7 +190,13 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		GUISearchOptions options = new GUISearchOptions();
 
 		String hits = Session.get().getInfo().getConfig("search.hits");
-		options.setMaxHits(Integer.parseInt(hits));
+		if (hits != null)
+			options.setMaxHits(Integer.parseInt(hits));
+
+		String depth = Session.get().getInfo().getConfig("search.depth");
+		if (depth != null)
+			options.setDepth(Integer.parseInt(depth));
+
 		options.setType(GUISearchOptions.TYPE_FULLTEXT);
 		options.setExpression(vm.getValueAsString("expression"));
 		if (NO_LANGUAGE.equals(vm.getValueAsString("language"))) {
