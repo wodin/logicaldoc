@@ -17,6 +17,7 @@ LogicalDOC 6.3.3 (2012-01-07; logicaldoc-6.3.3)
 148 - Events timestamp not correctly shown in Last Changes - Bug - User Interface
 151 - Size of "Move" dialogue box - Improvement - User Interface
 153 - Exception when downloading an alias - Bug - Core
+161 -	Search in folder and sub-folders (more than one level) - Improvement - Search
 
 
 LogicalDOC 6.3.2 (2011-12-13; logicaldoc-6.3.2)
