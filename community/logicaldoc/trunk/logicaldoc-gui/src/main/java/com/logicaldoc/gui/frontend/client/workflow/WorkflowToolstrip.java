@@ -357,7 +357,11 @@ public class WorkflowToolstrip extends ToolStrip {
 				if (result == null) {
 					SC.warn(I18N.message("workflowalreadyexist"));
 				} else {
-					currentWorkflow = result;
+					if (currentWorkflow.getId() == 0) {
+						currentWorkflow = result;
+						designer.redraw(currentWorkflow);
+					} else
+						currentWorkflow = result;
 				}
 				update();
 			}
