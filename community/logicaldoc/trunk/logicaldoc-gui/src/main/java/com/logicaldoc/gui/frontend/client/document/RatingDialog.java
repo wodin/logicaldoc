@@ -148,7 +148,7 @@ public class RatingDialog extends Window {
 										ListGridRecord selectedRecord = SearchPanel.get().getList().getSelectedRecord();
 										selectedRecord.setAttribute("rating", "rating" + rating);
 										SearchPanel.get().getList().updateData(selectedRecord);
-										SearchPanel.get().onSelectedHit(
+										SearchPanel.get().onSelectedDocumentHit(
 												Long.parseLong(selectedRecord.getAttribute("id")));
 									}
 

@@ -116,8 +116,8 @@ insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_t
 values (8,CURRENT_TIMESTAMP,1,'folder8',7,0);
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
 values (1200,CURRENT_TIMESTAMP,0,'test',5,0);
-insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values (1201,CURRENT_TIMESTAMP,0,'ABC',1200,0);
+insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_creation,ld_description)
+values (1201,CURRENT_TIMESTAMP,0,'ABC',1200,0,'2012-01-08','test description');
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
 values (1202,CURRENT_TIMESTAMP,0,'xyz',1201,0);
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)

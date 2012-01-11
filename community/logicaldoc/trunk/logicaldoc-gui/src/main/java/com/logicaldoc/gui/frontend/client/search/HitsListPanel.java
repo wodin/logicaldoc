@@ -5,6 +5,7 @@ import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
+import com.logicaldoc.gui.common.client.FolderObserver;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
@@ -56,7 +57,7 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class HitsListPanel extends VLayout implements SearchObserver, DocumentObserver {
+public class HitsListPanel extends VLayout implements SearchObserver, DocumentObserver, FolderObserver {
 
 	protected ListGrid list;
 
@@ -220,6 +221,9 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT) {
 			list.setFields(id, folderId, icon, title, type, size, published, creation, sourceDate, score, customId,
 					folder, comment, publishedStatus);
+		} else if (options.getType() == GUISearchOptions.TYPE_FOLDERS) {
+			list.setFields(id, folderId, icon, title, creation, comment);
+			comment.setHidden(false);
 		} else {
 			list.setFields(id, folderId, icon, title, type, size, published, creation, sourceDate, customId, folder,
 					comment, publishedStatus);
@@ -235,21 +239,25 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				folderService.getFolder(Session.get().getSid(),
-						Long.parseLong(list.getSelectedRecord().getAttributeAsString("folderId")), false,
-						new AsyncCallback<GUIFolder>() {
+				final String type = list.getSelectedRecord().getAttributeAsString("type");
+				long id = Long.parseLong(list.getSelectedRecord().getAttributeAsString("folderId"));
+				if ("fodler".equals(type)) {
+					id = Long.parseLong(list.getSelectedRecord().getAttributeAsString("id"));
+				}
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+				folderService.getFolder(Session.get().getSid(), id, false, new AsyncCallback<GUIFolder>() {
 
-							@Override
-							public void onSuccess(GUIFolder folder) {
-								Menu contextMenu = prepareContextMenu(folder);
-								contextMenu.showContextMenu();
-							}
-						});
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUIFolder folder) {
+						Menu contextMenu = prepareContextMenu(folder, !"folder".equals(type));
+						contextMenu.showContextMenu();
+					}
+				});
 				event.cancel();
 			}
 		});
@@ -505,7 +513,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 	@Override
 	public void onDocumentSaved(GUIDocument document) {
-		SearchPanel.get().onSelectedHit(document.getId());
+		SearchPanel.get().onSelectedDocumentHit(document.getId());
 		updateSelectedRecord(document);
 	}
 
@@ -518,19 +526,25 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		if (list.getSelectedRecords() != null && list.getSelectedRecords().length > 1)
 			return;
 
-		if (list.getSelectedRecord() != null)
-			SearchPanel.get().onSelectedHit(Long.parseLong(list.getSelectedRecord().getAttribute("id")));
+		if (list.getSelectedRecord() != null) {
+			if ("folder".equals(list.getSelectedRecord().getAttribute("type")))
+				SearchPanel.get().onSelectedFolderHit(Long.parseLong(list.getSelectedRecord().getAttribute("id")));
+			else
+				SearchPanel.get().onSelectedDocumentHit(Long.parseLong(list.getSelectedRecord().getAttribute("id")));
+		}
 	}
 
-	protected Menu prepareContextMenu(GUIFolder folder) {
-		Menu contextMenu = new DocumentContextMenu(folder, list);
+	protected Menu prepareContextMenu(GUIFolder folder, final boolean document) {
+		Menu contextMenu = new Menu();
+		if (document)
+			contextMenu = new DocumentContextMenu(folder, list);
 		MenuItem openInFolder = new MenuItem();
 		openInFolder.setTitle(I18N.message("openinfolder"));
 		openInFolder.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord record = list.getSelectedRecord();
 				DocumentsPanel.get().openInFolder(Long.parseLong(record.getAttributeAsString("folderId")),
-						Long.parseLong(record.getAttributeAsString("id")));
+						document ? Long.parseLong(record.getAttributeAsString("id")) : null);
 			}
 		});
 		contextMenu.addItem(openInFolder);
@@ -539,5 +553,20 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 	public ListGrid getList() {
 		return list;
+	}
+
+	@Override
+	public void onFolderSelected(GUIFolder folder) {
+		// Nothing to do
+	}
+
+	@Override
+	public void onFolderSaved(GUIFolder folder) {
+		ListGridRecord selectedRecord = list.getSelectedRecord();
+		if (selectedRecord != null) {
+			selectedRecord.setAttribute("title", folder.getName());
+			selectedRecord.setAttribute("comment", folder.getDescription());
+			list.refreshRow(list.getRecordIndex(selectedRecord));
+		}
 	}
 }

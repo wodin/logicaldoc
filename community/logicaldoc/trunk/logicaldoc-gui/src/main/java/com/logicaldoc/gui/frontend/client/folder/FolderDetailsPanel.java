@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
+import com.logicaldoc.gui.common.client.FolderObserver;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -65,9 +66,12 @@ public class FolderDetailsPanel extends VLayout {
 
 	private Tab workflowTab = null;
 
-	public FolderDetailsPanel(GUIFolder folder) {
+	private FolderObserver listener = null;
+
+	public FolderDetailsPanel(GUIFolder folder, FolderObserver listener) {
 		super();
 		this.folder = folder;
+		this.listener = listener;
 		setHeight100();
 		setWidth100();
 		setMembersMargin(10);
@@ -261,9 +265,16 @@ public class FolderDetailsPanel extends VLayout {
 
 				@Override
 				public void onSuccess(GUIFolder folder) {
-					Navigator.get().onSavedFolder(folder);
-					folder.setPathExtended(Navigator.get().getPath(folder.getId()));
+					if(listener!=null)
+						listener.onFolderSaved(folder);
+					
+					//Adjust the path
+					String p=folder.getPathExtended();
+					p=p.substring(0,p.lastIndexOf('/'));
+					p+="/"+folder.getName();
+					folder.setPathExtended(p);
 					setFolder(folder);
+	
 					savePanel.setVisible(false);
 				}
 			});

@@ -109,7 +109,12 @@ public abstract class Search {
 		UserDAO uDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		searchUser = uDao.findById(options.getUserId());
 		uDao.initialize(searchUser);
-		log.info("Search User: " + searchUser.getUserName());
+		if (searchUser == null) {
+			log.warn("Unexisting user");
+			return hits;
+		} else {
+			log.info("Search User: " + searchUser.getUserName());
+		}
 
 		Date start = new Date();
 		hits.clear();

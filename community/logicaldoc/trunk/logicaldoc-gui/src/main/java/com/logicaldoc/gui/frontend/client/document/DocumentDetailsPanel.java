@@ -137,7 +137,7 @@ public class DocumentDetailsPanel extends VLayout {
 				if (getObserver() instanceof DocumentsPanel)
 					DocumentsPanel.get().onSelectedDocument(document.getId(), false);
 				else if (getObserver() instanceof HitsListPanel)
-					SearchPanel.get().onSelectedHit(document.getId());
+					SearchPanel.get().onSelectedDocumentHit(document.getId());
 				savePanel.setVisible(false);
 			}
 		});

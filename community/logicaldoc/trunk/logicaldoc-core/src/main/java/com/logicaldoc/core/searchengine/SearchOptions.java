@@ -27,6 +27,8 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 
 	public static final int TYPE_PARAMETRIC = 2;
 
+	public static final int TYPE_FOLDERS = 3;
+	
 	protected int maxHits = 40;
 
 	private int type = TYPE_FULLTEXT;

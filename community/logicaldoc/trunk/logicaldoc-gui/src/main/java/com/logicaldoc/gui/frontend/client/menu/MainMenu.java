@@ -77,7 +77,7 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 			addFormItem(new SearchBox());
 
 		Session.get().addFolderObserver(this);
-		onFolderSelect(Session.get().getCurrentFolder());
+		onFolderSelected(Session.get().getCurrentFolder());
 	}
 
 	private ToolStripMenuButton getFileMenu() {
@@ -297,7 +297,12 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 	}
 
 	@Override
-	public void onFolderSelect(GUIFolder folder) {
+	public void onFolderSelected(GUIFolder folder) {
+		// Do nothing
+	}
+
+	@Override
+	public void onFolderSaved(GUIFolder folder) {
 		// Do nothing
 	}
 }

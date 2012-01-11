@@ -10,13 +10,13 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.folder.FolderDetailsPanel;
+import com.logicaldoc.gui.frontend.client.folder.Navigator;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -212,7 +212,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	}
 
 	@Override
-	public void onFolderSelect(GUIFolder folder) {
+	public void onFolderSelected(GUIFolder folder) {
 		this.folder = folder;
 		refresh();
 	}
@@ -248,7 +248,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 			onSelectedDocument(hiliteDocId, false);
 		else {
 			detailPanel.destroy();
-			detailPanel = new FolderDetailsPanel(folder);
+			detailPanel = new FolderDetailsPanel(folder, Navigator.get());
 			details.addMember(detailPanel);
 			details.redraw();
 		}
@@ -281,5 +281,10 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 
 	public ListGrid getList() {
 		return ((DocumentsListPanel) listingPanel).getList();
+	}
+
+	@Override
+	public void onFolderSaved(GUIFolder folder) {
+		// Nothing to do
 	}
 }
