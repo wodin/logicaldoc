@@ -555,7 +555,12 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	}
 
 	@Override
-	public void onFolderSelect(GUIFolder folder) {
+	public void onFolderSelected(GUIFolder folder) {
 		update(null);
+	}
+
+	@Override
+	public void onFolderSaved(GUIFolder folder) {
+		// Nothing to do
 	}
 }

@@ -17,9 +17,11 @@ public class SearchMenu extends SectionStack {
 
 	private static final int FULLTEXT_SECTION = 0;
 
-	private static final int TAGS_SECTION = 1;
+	private static final int FOLDERS_SECTION = 1;
 
-	private static final int PARAMETRIC_SECTION = 2;
+	private static final int TAGS_SECTION = 2;
+
+	private static final int PARAMETRIC_SECTION = 3;
 
 	private static SearchMenu instance;
 
@@ -37,6 +39,11 @@ public class SearchMenu extends SectionStack {
 		fulltextSection.setExpanded(true);
 		fulltextSection.addItem(new FulltextForm());
 		addSection(fulltextSection);
+
+		SectionStackSection foldersSection = new SectionStackSection(I18N.message("folders"));
+		foldersSection.setExpanded(false);
+		foldersSection.addItem(new FoldersForm());
+		addSection(foldersSection);
 
 		if (Feature.visible(Feature.TAGS)) {
 			SectionStackSection tagsSection = new SectionStackSection(I18N.message("tags"));
@@ -74,6 +81,10 @@ public class SearchMenu extends SectionStack {
 
 	public void openTagsSection() {
 		expandSection(TAGS_SECTION);
+	}
+
+	public void openFoldersSection() {
+		expandSection(FOLDERS_SECTION);
 	}
 
 	public void openParametricSection() {

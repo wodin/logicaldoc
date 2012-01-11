@@ -18,6 +18,7 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
+import com.logicaldoc.core.searchengine.FolderSearchOptions;
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.Hit;
 import com.logicaldoc.core.searchengine.Indexer;
@@ -28,6 +29,7 @@ import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.text.analyzer.AnalyzerManager;
 import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.beans.GUICriterion;
 import com.logicaldoc.gui.common.client.beans.GUIHit;
 import com.logicaldoc.gui.common.client.beans.GUIResult;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
@@ -122,6 +124,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 					h.setIcon(FilenameUtils.getBaseName(hit.getIcon()));
 				else
 					h.setIcon("alias");
+				if ("folder".equals(hit.getType()))
+					h.setIcon("folder_closed");
 				guiResults.add(h);
 			}
 			result.setHits(guiResults.toArray(new GUIHit[guiResults.size()]));
@@ -288,6 +292,28 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			op.setDepth(((FulltextSearchOptions) searchOptions).getDepth());
 			op.setSizeMax(((FulltextSearchOptions) searchOptions).getSizeMax());
 			op.setSizeMin(((FulltextSearchOptions) searchOptions).getSizeMin());
+		} else if (searchOptions.getType() == SearchOptions.TYPE_FOLDERS) {
+			List<GUICriterion> criteria = new ArrayList<GUICriterion>();
+
+			if (((FolderSearchOptions) searchOptions).getName() != null) {
+				GUICriterion criterion = new GUICriterion();
+				criterion.setField("name");
+				criterion.setStringValue(((FolderSearchOptions) searchOptions).getName());
+				criteria.add(criterion);
+			}
+			if (((FolderSearchOptions) searchOptions).getDescription() != null) {
+				GUICriterion criterion = new GUICriterion();
+				criterion.setField("description");
+				criterion.setStringValue(((FolderSearchOptions) searchOptions).getDescription());
+				criteria.add(criterion);
+			}
+
+			op.setCriteria(criteria.toArray(new GUICriterion[0]));
+			op.setCreationFrom(((FolderSearchOptions) searchOptions).getCreationFrom());
+			op.setCreationTo(((FolderSearchOptions) searchOptions).getCreationTo());
+			op.setDepth(((FolderSearchOptions) searchOptions).getDepth());
+			op.setFolder(((FolderSearchOptions) searchOptions).getFolderId());
+			op.setSearchInSubPath(((FolderSearchOptions) searchOptions).isSearchInSubPath());
 		}
 
 		if (!searchOptions.getFilterIds().isEmpty()) {
@@ -305,7 +331,6 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		searchOptions.setMaxHits(options.getMaxHits());
 		searchOptions.setName(options.getName());
 		searchOptions.setUserId(options.getUserId());
-		
 
 		if (options.getType() == SearchOptions.TYPE_FULLTEXT) {
 			((FulltextSearchOptions) searchOptions).setTemplate(options.getTemplate());
@@ -324,6 +349,21 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			((FulltextSearchOptions) searchOptions).setDepth(options.getDepth());
 			((FulltextSearchOptions) searchOptions).setSizeMax(options.getSizeMax());
 			((FulltextSearchOptions) searchOptions).setSizeMin(options.getSizeMin());
+		} else if (options.getType() == SearchOptions.TYPE_FOLDERS) {
+			for (GUICriterion criterion : options.getCriteria()) {
+				if ("name".equals(criterion.getField())) {
+					((FolderSearchOptions) searchOptions).setFolderName(criterion.getStringValue());
+				}
+				if ("description".equals(criterion.getField())) {
+					((FolderSearchOptions) searchOptions).setFolderDescription(criterion.getStringValue());
+				}
+			}
+
+			((FolderSearchOptions) searchOptions).setFolderId(options.getFolder());
+			((FolderSearchOptions) searchOptions).setSearchInSubPath(options.isSearchInSubPath());
+			((FolderSearchOptions) searchOptions).setCreationFrom(options.getCreationFrom());
+			((FolderSearchOptions) searchOptions).setCreationTo(options.getCreationTo());
+			((FolderSearchOptions) searchOptions).setDepth(options.getDepth());
 		}
 
 		if (options.getFilterIds() != null && options.getFilterIds().length > 0) {

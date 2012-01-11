@@ -5,6 +5,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
+import com.logicaldoc.gui.common.client.FolderObserver;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
@@ -54,7 +55,7 @@ import com.smartgwt.client.widgets.tree.TreeNode;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class Navigator extends TreeGrid {
+public class Navigator extends TreeGrid implements FolderObserver {
 	private FolderServiceAsync service = (FolderServiceAsync) GWT.create(FolderService.class);
 
 	private DocumentServiceAsync docService = (DocumentServiceAsync) GWT.create(DocumentService.class);
@@ -86,7 +87,7 @@ public class Navigator extends TreeGrid {
 			public void onDragStart(DragStartEvent ev) {
 				if (EventHandler.getDragTarget() instanceof Navigator) {
 					// Workspaces cannot be moved
-					if ("1".equals(getDragData()[0].getAttributeAsString("type"))){
+					if ("1".equals(getDragData()[0].getAttributeAsString("type"))) {
 						ev.cancel();
 						return;
 					}
@@ -101,7 +102,7 @@ public class Navigator extends TreeGrid {
 					ListGrid list = null;
 					if (EventHandler.getDragTarget() instanceof Navigator) {
 						// Workspaces cannot be moved
-						if ("1".equals(getDragData()[0].getAttributeAsString("type"))){
+						if ("1".equals(getDragData()[0].getAttributeAsString("type"))) {
 							event.cancel();
 							return;
 						}
@@ -187,7 +188,7 @@ public class Navigator extends TreeGrid {
 
 														@Override
 														public void onSuccess(Void result) {
-															DocumentsPanel.get().onFolderSelect(
+															DocumentsPanel.get().onFolderSelected(
 																	Session.get().getCurrentFolder());
 															Log.debug("Drag&Drop operation completed.");
 														}
@@ -630,13 +631,15 @@ public class Navigator extends TreeGrid {
 		return path;
 	}
 
-	public void onSavedFolder(GUIFolder folder) {
+	@Override
+	public void onFolderSaved(GUIFolder folder) {
 		TreeNode selectedNode = getTree().find("folderId", Long.toString(folder.getId()));
 		if (selectedNode != null) {
 			selectedNode.setTitle(folder.getName());
 			selectedNode.setName(folder.getName());
 			getTree().reloadChildren(selectedNode);
 		}
+		folder.setPathExtended(getPath(folder.getId()));
 	}
 
 	private void onReload() {
@@ -736,7 +739,7 @@ public class Navigator extends TreeGrid {
 
 					@Override
 					public void onSuccess(Void result) {
-						DocumentsPanel.get().onFolderSelect(Session.get().getCurrentFolder());
+						DocumentsPanel.get().onFolderSelected(Session.get().getCurrentFolder());
 
 						Clipboard.getInstance().clear();
 						Log.debug("Paste operation completed.");
@@ -762,7 +765,7 @@ public class Navigator extends TreeGrid {
 
 			@Override
 			public void onSuccess(Void result) {
-				DocumentsPanel.get().onFolderSelect(Session.get().getCurrentFolder());
+				DocumentsPanel.get().onFolderSelected(Session.get().getCurrentFolder());
 				Clipboard.getInstance().clear();
 				Log.debug("Paste as Alias operation completed.");
 			}
@@ -822,5 +825,10 @@ public class Navigator extends TreeGrid {
 			setCustomNodeIcon(record, Util.imageUrl("cube_blue16.png"));
 		}
 		return super.getIcon(record, defaultState);
+	}
+
+	@Override
+	public void onFolderSelected(GUIFolder folder) {
+		// Nothing to do
 	}
 }

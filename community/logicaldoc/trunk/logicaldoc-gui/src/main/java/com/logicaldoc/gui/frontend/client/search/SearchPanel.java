@@ -4,12 +4,16 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.document.DocumentDetailsPanel;
+import com.logicaldoc.gui.frontend.client.folder.FolderDetailsPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.FolderService;
+import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
@@ -27,6 +31,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class SearchPanel extends HLayout implements SearchObserver {
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+
+	private FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
 
 	private Layout content = new VLayout();
 
@@ -80,19 +86,19 @@ public class SearchPanel extends HLayout implements SearchObserver {
 		return instance;
 	}
 
-	public void onSelectedHit(long docId) {
+	public void onSelectedDocumentHit(long id) {
 		if (details.contains(detailPanel))
 			details.removeMember(detailPanel);
 		detailPanel.destroy();
-		if (docId > 0)
+		if (id > 0)
 			detailPanel = new DocumentDetailsPanel(listingPanel);
 		else
 			detailPanel = new Label("&nbsp;" + I18N.message("selectahit"));
 
 		details.addMember(detailPanel);
 
-		if (docId > 0 && (detailPanel instanceof DocumentDetailsPanel))
-			documentService.getById(Session.get().getSid(), docId, new AsyncCallback<GUIDocument>() {
+		if (id > 0 && (detailPanel instanceof DocumentDetailsPanel))
+			documentService.getById(Session.get().getSid(), id, new AsyncCallback<GUIDocument>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					Log.serverError(caught);
@@ -108,9 +114,33 @@ public class SearchPanel extends HLayout implements SearchObserver {
 			});
 	}
 
+	public void onSelectedFolderHit(long id) {
+		if (details.contains(detailPanel))
+			details.removeMember(detailPanel);
+		detailPanel.destroy();
+		if (id > 0) {
+			folderService.getFolder(Session.get().getSid(), id, true, new AsyncCallback<GUIFolder>() {
+
+				@Override
+				public void onFailure(Throwable caught) {
+					Log.serverError(caught);
+				}
+
+				@Override
+				public void onSuccess(GUIFolder fld) {
+					detailPanel = new FolderDetailsPanel(fld, listingPanel);
+					details.addMember(detailPanel);
+				}
+			});
+		} else {
+			detailPanel = new Label("&nbsp;" + I18N.message("selectahit"));
+			details.addMember(detailPanel);
+		}
+	}
+
 	@Override
 	public void onSearchArrived() {
-		onSelectedHit(-1);
+		onSelectedDocumentHit(-1);
 	}
 
 	@Override
