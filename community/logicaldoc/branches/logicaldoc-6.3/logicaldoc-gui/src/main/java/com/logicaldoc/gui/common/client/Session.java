@@ -144,6 +144,7 @@ public class Session {
 
 	public void setCurrentFolder(GUIFolder folder) {
 		this.currentFolder = folder;
+		WindowUtils.setTitle(Session.get().getInfo(), folder.getPathExtended());
 		for (FolderObserver listener : folderObservers) {
 			listener.onFolderSelect(folder);
 		}
