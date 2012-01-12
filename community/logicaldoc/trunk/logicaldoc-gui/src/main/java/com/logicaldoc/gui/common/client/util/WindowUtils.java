@@ -1,5 +1,7 @@
 package com.logicaldoc.gui.common.client.util;
 
+import com.logicaldoc.gui.common.client.beans.GUIInfo;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 
 /**
  * Utilities for accessing the javascript Window object
@@ -59,22 +61,31 @@ public class WindowUtils {
 	}-*/;
 
 	public static native void setTitle(String title)/*-{
-		$doc.title=title;
+		$doc.title = title;
 		//Change also the main frame window if any
-		if($wnd.parent)
-		    $wnd.parent.document.title=title;
+		if ($wnd.parent)
+			$wnd.parent.document.title = title;
 	}-*/;
 
+	public static void setTitle(GUIInfo info, String suffix) {
+		String buf = info.getProductName() + " " + info.getRelease()
+				+ (info.getLicensee() != null ? " - " + I18N.message("licensedto") + ": " + info.getLicensee() : "");
+		if (suffix != null) {
+			buf += " - " + suffix;
+		}
+		WindowUtils.setTitle(buf);
+	}
+
 	public static native void setSid(String sid, String exitMessage)/*-{
-	  $wnd.sessionId=sid;
-	  $wnd.exitMessage=exitMessage;
-	  if($wnd.parent){
-	    $wnd.parent.sessionId=sid;
-	    $wnd.parent.exitMessage=exitMessage;
-	  }
-    }-*/;
-	
+		$wnd.sessionId = sid;
+		$wnd.exitMessage = exitMessage;
+		if ($wnd.parent) {
+			$wnd.parent.sessionId = sid;
+			$wnd.parent.exitMessage = exitMessage;
+		}
+	}-*/;
+
 	public static native void openUrl(String url)/*-{
-		$wnd.location=url;
+		$wnd.location = url;
 	}-*/;
 }

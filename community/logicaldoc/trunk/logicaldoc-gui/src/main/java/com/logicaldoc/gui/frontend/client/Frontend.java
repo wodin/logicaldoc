@@ -102,11 +102,7 @@ public class Frontend implements EntryPoint {
 				Config.init(info);
 				I18N.init(info);
 
-				WindowUtils.setTitle(info.getProductName()
-						+ " "
-						+ info.getRelease()
-						+ (info.getLicensee() != null ? " - " + I18N.message("licensedto") + ": " + info.getLicensee()
-								: ""));
+				WindowUtils.setTitle(info, null);
 
 				Feature.init(info);
 				Session.get().setInfo(info);
