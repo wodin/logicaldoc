@@ -303,7 +303,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		addSeparator();
 		addButton(add);
 
-		if (Feature.visible(Feature.DROP_SPOT)) {
+		if (Feature.visible(Feature.DROP_SPOT)
+				&& !"embedded".equals(Session.get().getInfo().getConfig("gui.dropspot.mode"))) {
 			addButton(dropSpot);
 			if (!Feature.enabled(Feature.DROP_SPOT)) {
 				dropSpot.setDisabled(true);
