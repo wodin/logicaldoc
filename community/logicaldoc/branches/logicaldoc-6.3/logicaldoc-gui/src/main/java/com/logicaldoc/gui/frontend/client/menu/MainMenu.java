@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.menu;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.FolderObserver;
 import com.logicaldoc.gui.common.client.Session;
@@ -22,8 +23,10 @@ import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
@@ -45,12 +48,23 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 
 	private SettingServiceAsync settingService = (SettingServiceAsync) GWT.create(SettingService.class);
 
-	private boolean showQuickSearch = true;
+	private boolean quickSearch = true;
+
+	private boolean dropSpot = false;
+
+	private HTMLFlow dropArea = new HTMLFlow();
+
+	private static final String EMPTY_DIV = "<div style=\"margin-top:3px; width=\"80\"; height=\"20\"\" />";
 
 	public MainMenu(boolean quickSearch) {
+		this(quickSearch, false);
+	}
+
+	public MainMenu(boolean quickSearch, boolean dropSpot) {
 		super();
 
-		this.showQuickSearch = quickSearch;
+		this.quickSearch = quickSearch;
+		this.dropSpot = dropSpot;
 
 		setWidth100();
 
@@ -67,13 +81,25 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 		addMenuButton(getHelpMenu());
 		addFill();
 
+		dropArea.setContents(EMPTY_DIV);
+		dropArea.setWidth(81);
+		if (dropSpot) {
+			if (Feature.enabled(Feature.DROP_SPOT))
+				dropArea.setTooltip(I18N.message("dropfiles"));
+			else
+				dropArea.setTooltip(I18N.message("featuredisabled"));
+			dropArea.setAlign(Alignment.CENTER);
+			addMember(dropArea);
+		}
+		addFill();
+
 		Label userInfo = new Label(I18N.message("loggedin") + " <b>" + Session.get().getUser().getUserName() + "</b>");
 		userInfo.setWrap(false);
 
 		addMember(userInfo);
 		addSeparator();
 
-		if (showQuickSearch)
+		if (quickSearch)
 			addFormItem(new SearchBox());
 
 		Session.get().addFolderObserver(this);
@@ -123,7 +149,8 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		if (Feature.enabled(Feature.DROP_SPOT))
+		if (Feature.enabled(Feature.DROP_SPOT)
+				&& !"embedded".equals(Session.get().getInfo().getConfig("gui.dropspot.mode")))
 			menu.setItems(dropSpotItem, exitItem);
 		else
 			menu.setItems(exitItem);
@@ -298,6 +325,24 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 
 	@Override
 	public void onFolderSelect(GUIFolder folder) {
-		// Do nothing
+		if (Feature.visible(Feature.DROP_SPOT)
+				&& "embedded".equals(Session.get().getInfo().getConfig("gui.dropspot.mode"))) {
+			if (folder != null && folder.hasPermission(Constants.PERMISSION_WRITE)
+					&& Feature.enabled(Feature.DROP_SPOT)) {
+				if (dropArea.getContents().equals(EMPTY_DIV)) {
+					String tmp = "<div style=\"z-index:-100;margin-top:3px; width=\"80\"; height=\"20\"\"><applet name=\"DropApplet\" archive=\""
+							+ Util.contextPath()
+							+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.upload.DropApplet2\" width=\"80\" height=\"20\">";
+					tmp += "<param name=\"uploadUrl\" value=\"" + Util.contextPath()
+							+ "servlet.gupld?new_session=true&sid=" + Session.get().getSid() + "\" />";
+					tmp += "</applet></div>";
+					dropArea.setContents(tmp);
+				}
+			} else {
+				dropArea.setContents(EMPTY_DIV);
+			}
+		} else {
+			dropArea.setContents(EMPTY_DIV);
+		}
 	}
 }
