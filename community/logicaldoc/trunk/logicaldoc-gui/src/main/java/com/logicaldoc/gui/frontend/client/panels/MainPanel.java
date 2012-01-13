@@ -80,7 +80,7 @@ public class MainPanel extends VLayout implements SessionObserver {
 		addMember(topPanel);
 		incomingMessage = new IncomingMessage("", null);
 		addMember(incomingMessage);
-		addMember(new MainMenu(true));
+		addMember(new MainMenu(true, "embedded".equals(Session.get().getInfo().getConfig("gui.dropspot.mode"))));
 		addMember(tabSet);
 		addMember(new StatusBar(true));
 
