@@ -18,8 +18,6 @@ import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.FocusEvent;
 import com.smartgwt.client.widgets.form.fields.events.FocusHandler;
 import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
@@ -81,7 +79,7 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 		List<FormItem> items = new ArrayList<FormItem>();
 
 		SelectItem language = ItemFactory.newLanguageSelector("language", true, false);
-		if (document.getLanguage()!=null)
+		if (document.getLanguage() != null)
 			language = ItemFactory.newLanguageSelector("language", false, false);
 
 		language.setValue(document.getLanguage());
@@ -115,17 +113,6 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 				}
 			});
 			tagItem.setHintStyle("hint");
-
-			tagItem.addChangedHandler(new ChangedHandler() {
-				@Override
-				public void onChanged(ChangedEvent event) {
-					if (event.getItem().getSelectedRecord() != null) {
-						document.addTag(event.getItem().getSelectedRecord().getAttribute("word"));
-						tagItem.clearValue();
-						refresh();
-					}
-				}
-			});
 
 			tagItem.addKeyDownHandler(new KeyDownHandler() {
 				@Override
