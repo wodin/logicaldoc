@@ -33,8 +33,10 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserDoc;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.core.store.Storer;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
 import com.logicaldoc.util.plugin.PluginRegistry;
@@ -73,16 +75,24 @@ public class ServletIOUtil {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	public static void downloadPluginResource(HttpServletRequest request, HttpServletResponse response,
+	public static void downloadPluginResource(HttpServletRequest request, HttpServletResponse response, String sid,
 			String pluginName, String resourcePath, String fileName) throws FileNotFoundException, IOException,
 			ServletException {
 
-		SessionUtil.validateSession(request);
+		if (sid != null)
+			try {
+				SessionUtil.validateSession(sid);
+			} catch (InvalidSessionException e) {
+				throw new ServletException(e.getMessage(), e);
+			}
+		else
+			SessionUtil.validateSession(request);
+
 		String filename = fileName;
 		if (filename == null)
 			filename = FilenameUtils.getName(resourcePath);
 
-		File file = PluginRegistry.getInstance().getPluginResource(pluginName, resourcePath);
+		File file = PluginRegistry.getPluginResource(pluginName, resourcePath);
 
 		// get the mimetype
 		String mimetype = MimeType.getByFilename(filename);
@@ -117,7 +127,7 @@ public class ServletIOUtil {
 			os.close();
 			is.close();
 		}
-		
+
 	}
 
 	/**
@@ -126,16 +136,29 @@ public class ServletIOUtil {
 	 * 
 	 * @param request the current request
 	 * @param response the document is written to this object
+	 * @param sid Session identifier, if not provided the request parameter is
+	 *        inspected
 	 * @param docId Id of the document
 	 * @param fileVersion name of the file version; if null the latest version
 	 *        will be returned
 	 * @throws ServletException
 	 */
-	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, long docId,
-			String fileVersion, String fileName, String suffix, User user) throws FileNotFoundException, IOException,
-			ServletException {
+	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, String sid,
+			long docId, String fileVersion, String fileName, String suffix, User user) throws FileNotFoundException,
+			IOException, ServletException {
+		UserSession session = null;
 
-		UserSession session = SessionUtil.validateSession(request);
+		if (sid != null)
+			try {
+				session = SessionUtil.validateSession(sid);
+			} catch (InvalidSessionException e) {
+				throw new ServletException(e.getMessage(), e);
+			}
+		else
+			session = SessionUtil.validateSession(request);
+
+		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		udao.initialize(user);
 
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = dao.findById(docId);
@@ -202,8 +225,10 @@ public class ServletIOUtil {
 			history.setFilename(doc.getFileName());
 			history.setFolderId(doc.getFolder().getId());
 			history.setUser(user);
-			history.setSessionId(session.getId());
-
+			if (session != null)
+				history.setSessionId(session.getId());
+			else
+				history.setSessionId(sid);
 			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 			hdao.store(history);
 		}
@@ -212,7 +237,7 @@ public class ServletIOUtil {
 	/**
 	 * Sets the correct Content-Disposition header into the response
 	 */
-	private static void setContentDisposition(HttpServletRequest request, HttpServletResponse response, String filename)
+	public static void setContentDisposition(HttpServletRequest request, HttpServletResponse response, String filename)
 			throws UnsupportedEncodingException {
 		// Encode the filename
 		String userAgent = request.getHeader("User-Agent");
@@ -226,6 +251,11 @@ public class ServletIOUtil {
 					+ "?=";
 		}
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedFileName + "\"");
+
+		// Headers required by Internet Explorer
+		response.setHeader("Pragma", "public");
+		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
+		response.setHeader("Expires", "0");
 	}
 
 	/**
@@ -238,8 +268,8 @@ public class ServletIOUtil {
 	 * @param version name of the version; if null the latest version will
 	 *        returned
 	 */
-	public static void downloadDocumentText(HttpServletRequest request, HttpServletResponse response, long docId)
-			throws FileNotFoundException, IOException {
+	public static void downloadDocumentText(HttpServletRequest request, HttpServletResponse response, long docId,
+			User user) throws FileNotFoundException, IOException {
 
 		response.setCharacterEncoding("UTF-8");
 
@@ -268,8 +298,11 @@ public class ServletIOUtil {
 		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 		response.setHeader("Expires", "0");
 
+		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		udao.initialize(user);
+
 		Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
-		String content = indexer.getDocument(Long.toString(docId)).getField(LuceneDocument.FIELD_CONTENT).stringValue();
+		String content = indexer.getDocument(Long.toString(docId)).get(LuceneDocument.FIELD_CONTENT);
 
 		InputStream is = new StringInputStream(content.trim(), "UTF-8");
 		OutputStream os;
@@ -300,10 +333,10 @@ public class ServletIOUtil {
 	 * @throws ServletException
 	 * @throws NumberFormatException
 	 */
-	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, String docId,
-			String fileVersion, String fileName, User user) throws FileNotFoundException, IOException,
+	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, String sid,
+			String docId, String fileVersion, String fileName, User user) throws FileNotFoundException, IOException,
 			NumberFormatException, ServletException {
-		downloadDocument(request, response, Integer.parseInt(docId), fileVersion, fileName, null, user);
+		downloadDocument(request, response, sid, Integer.parseInt(docId), fileVersion, fileName, null, user);
 	}
 
 	/**

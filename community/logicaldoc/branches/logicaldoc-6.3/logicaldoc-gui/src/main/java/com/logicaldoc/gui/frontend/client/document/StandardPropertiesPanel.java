@@ -80,9 +80,15 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		pathItem.setTitle(I18N.message("path"));
 		pathItem.setValue(Util.contextPath() + "?docId=" + document.getId());
 		pathItem.addChangedHandler(changedHandler);
-		pathItem.setWidth(400);
+		
+		String downloadUrl = Util.contextPath() + "download?docId=" + document.getId();
+		LinkItem download = ItemFactory.newLinkItem("download", downloadUrl);
+		download.setTitle(I18N.message("download"));
+		download.setValue(downloadUrl);
+		download.addChangedHandler(changedHandler);
+		download.setWidth(400);
 
-		path.setItems(pathItem);
+		path.setItems(pathItem, download);
 
 		formsContainer.setWidth100();
 		formsContainer.setMembersMargin(10);
