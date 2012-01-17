@@ -36,6 +36,7 @@ import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.core.store.Storer;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
 import com.logicaldoc.util.plugin.PluginRegistry;
@@ -74,11 +75,19 @@ public class ServletIOUtil {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	public static void downloadPluginResource(HttpServletRequest request, HttpServletResponse response,
+	public static void downloadPluginResource(HttpServletRequest request, HttpServletResponse response, String sid,
 			String pluginName, String resourcePath, String fileName) throws FileNotFoundException, IOException,
 			ServletException {
 
-		SessionUtil.validateSession(request);
+		if (sid != null)
+			try {
+				SessionUtil.validateSession(sid);
+			} catch (InvalidSessionException e) {
+				throw new ServletException(e.getMessage(), e);
+			}
+		else
+			SessionUtil.validateSession(request);
+
 		String filename = fileName;
 		if (filename == null)
 			filename = FilenameUtils.getName(resourcePath);
@@ -127,15 +136,27 @@ public class ServletIOUtil {
 	 * 
 	 * @param request the current request
 	 * @param response the document is written to this object
+	 * @param sid Session identifier, if not provided the request parameter is
+	 *        inspected
 	 * @param docId Id of the document
 	 * @param fileVersion name of the file version; if null the latest version
 	 *        will be returned
 	 * @throws ServletException
 	 */
-	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, long docId,
-			String fileVersion, String fileName, String suffix, User user) throws FileNotFoundException, IOException,
-			ServletException {
-		UserSession session = SessionUtil.validateSession(request);
+	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, String sid,
+			long docId, String fileVersion, String fileName, String suffix, User user) throws FileNotFoundException,
+			IOException, ServletException {
+		UserSession session = null;
+
+		if (sid != null)
+			try {
+				session = SessionUtil.validateSession(sid);
+			} catch (InvalidSessionException e) {
+				throw new ServletException(e.getMessage(), e);
+			}
+		else
+			session = SessionUtil.validateSession(request);
+
 		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		udao.initialize(user);
 
@@ -208,8 +229,10 @@ public class ServletIOUtil {
 			history.setFilename(doc.getFileName());
 			history.setFolderId(doc.getFolder().getId());
 			history.setUser(user);
-			history.setSessionId(session.getId());
-
+			if (session != null)
+				history.setSessionId(session.getId());
+			else
+				history.setSessionId(sid);
 			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 			hdao.store(history);
 		}
@@ -316,10 +339,10 @@ public class ServletIOUtil {
 	 * @throws ServletException
 	 * @throws NumberFormatException
 	 */
-	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, String docId,
-			String fileVersion, String fileName, User user) throws FileNotFoundException, IOException,
+	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, String sid,
+			String docId, String fileVersion, String fileName, User user) throws FileNotFoundException, IOException,
 			NumberFormatException, ServletException {
-		downloadDocument(request, response, Integer.parseInt(docId), fileVersion, fileName, null, user);
+		downloadDocument(request, response, sid, Integer.parseInt(docId), fileVersion, fileName, null, user);
 	}
 
 	/**

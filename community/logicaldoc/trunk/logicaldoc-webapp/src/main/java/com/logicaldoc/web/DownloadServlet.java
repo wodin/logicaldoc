@@ -3,6 +3,7 @@ package com.logicaldoc.web;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import javax.naming.AuthenticationException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,11 +18,15 @@ import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.Permission;
+import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.web.util.AuthenticationUtil;
+import com.logicaldoc.web.util.AuthenticationUtil.Credentials;
 import com.logicaldoc.web.util.ServletIOUtil;
 import com.logicaldoc.web.util.SessionUtil;
 
@@ -49,7 +54,53 @@ public class DownloadServlet extends HttpServlet {
 	 * @throws IOException if an error occurred
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		UserSession session = SessionUtil.validateSession(request);
+		UserSession session = null;
+		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
+				AuthenticationChain.class);
+		String sid = null;
+
+		try {
+			session = SessionUtil.validateSession(request);
+		} catch (Exception e) {
+			/*
+			 * No current session, try to handle a basic authentication
+			 */
+			if (request.getHeader(AuthenticationUtil.HEADER_AUTHORIZATION) != null) {
+				Credentials credentials = null;
+				try {
+					credentials = AuthenticationUtil.authenticate(request);
+				} catch (AuthenticationException e1) {
+					AuthenticationUtil.sendAuthorisationCommand(response);
+					return;
+				}
+
+				// Check the credentials
+				if (!authenticationChain.validate(credentials.getUserName(), credentials.getPassword())) {
+					AuthenticationUtil.sendAuthorisationCommand(response);
+					return;
+				}
+
+				// No active session found, new login required
+				if (sid == null) {
+					boolean isLoggedOn = authenticationChain.authenticate(credentials.getUserName(),
+							credentials.getPassword());
+					if (isLoggedOn == false) {
+						AuthenticationUtil.sendAuthorisationCommand(response);
+						return;
+					} else {
+						sid = AuthenticationChain.getSessionId();
+						session = SessionManager.getInstance().get(sid);
+					}
+				}
+			} else {
+				AuthenticationUtil.sendAuthorisationCommand(response);
+				return;
+			}
+		}
+
+		/*
+		 * We can reach this poin only if a valid session was created
+		 */
 
 		// Load the user associated to the session
 		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -59,16 +110,20 @@ public class DownloadServlet extends HttpServlet {
 
 		try {
 			if (request.getParameter("pluginId") != null)
-				ServletIOUtil.downloadPluginResource(request, response, request.getParameter("pluginId"),
+				ServletIOUtil.downloadPluginResource(request, response, sid, request.getParameter("pluginId"),
 						request.getParameter("resourcePath"), request.getParameter("fileName"));
 			else
-				downloadDocument(request, response, user);
+				downloadDocument(request, response, sid, user);
 		} catch (Throwable ex) {
 			log.error(ex.getMessage(), ex);
+		} finally {
+			if (request.getHeader(AuthenticationUtil.HEADER_AUTHORIZATION) != null) {
+				SessionManager.getInstance().kill(sid);
+			}
 		}
 	}
 
-	protected void downloadDocument(HttpServletRequest request, HttpServletResponse response, User user)
+	protected void downloadDocument(HttpServletRequest request, HttpServletResponse response, String sid, User user)
 			throws FileNotFoundException, IOException, ServletException {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		VersionDAO versDao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
@@ -89,7 +144,7 @@ public class DownloadServlet extends HttpServlet {
 
 			if (!folderDao.isPermissionEnabled(Permission.DOWNLOAD, doc.getFolder().getId(), user.getId()))
 				throw new IOException("You don't have the DOWNLOAD permission");
-			
+
 			/*
 			 * In case of alias we have to work on the real document
 			 */
@@ -99,12 +154,12 @@ public class DownloadServlet extends HttpServlet {
 
 		if (!StringUtils.isEmpty(versionId)) {
 			version = versDao.findById(Long.parseLong(versionId));
-			if (doc == null){
+			if (doc == null) {
 				doc = docDao.findById(version.getDocId());
-				
+
 				if (!folderDao.isPermissionEnabled(Permission.DOWNLOAD, doc.getFolder().getId(), user.getId()))
 					throw new IOException("You don't have the DOWNLOAD permission");
-				
+
 				/*
 				 * In case of alias we have to work on the real document
 				 */
@@ -149,7 +204,7 @@ public class DownloadServlet extends HttpServlet {
 		if ("true".equals(downloadText)) {
 			ServletIOUtil.downloadDocumentText(request, response, doc.getId(), user);
 		} else {
-			ServletIOUtil.downloadDocument(request, response, doc.getId(), fileVersion, filename, suffix, user);
+			ServletIOUtil.downloadDocument(request, response, sid, doc.getId(), fileVersion, filename, suffix, user);
 		}
 	}
 }

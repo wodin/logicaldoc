@@ -65,7 +65,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 	protected DocumentObserver observer;
 
-	public StandardPropertiesPanel(GUIDocument document, ChangedHandler changedHandler, DocumentObserver observer) {
+	public StandardPropertiesPanel(final GUIDocument document, ChangedHandler changedHandler, DocumentObserver observer) {
 		super(document, changedHandler);
 		this.observer = observer;
 		setWidth100();
@@ -82,7 +82,14 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		pathItem.addChangedHandler(changedHandler);
 		pathItem.setWidth(400);
 
-		path.setItems(pathItem);
+		String downloadUrl = Util.contextPath() + "download?docId=" + document.getId();
+		LinkItem download = ItemFactory.newLinkItem("download", downloadUrl);
+		download.setTitle(I18N.message("download"));
+		download.setValue(downloadUrl);
+		download.addChangedHandler(changedHandler);
+		download.setWidth(400);
+
+		path.setItems(pathItem, download);
 
 		formsContainer.setWidth100();
 		formsContainer.setMembersMargin(10);
