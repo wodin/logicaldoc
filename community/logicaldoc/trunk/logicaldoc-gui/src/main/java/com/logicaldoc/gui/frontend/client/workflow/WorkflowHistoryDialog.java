@@ -10,6 +10,7 @@ import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.data.Record;
@@ -17,6 +18,7 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -26,10 +28,15 @@ import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
+import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.menu.Menu;
+import com.smartgwt.client.widgets.menu.MenuItem;
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 /**
  * This popup window is used to visualize the workflows histories.
@@ -178,6 +185,13 @@ public class WorkflowHistoryDialog extends Window {
 			}
 		});
 		instancesList.setFields(id, startDate, endDate, documents);
+		instancesList.addCellContextClickHandler(new CellContextClickHandler() {
+			@Override
+			public void onCellContextClick(CellContextClickEvent event) {
+				showContextMenu();
+				event.cancel();
+			}
+		});
 		workflowInstancesLayout.addMember(instancesList);
 
 		form.addMember(workflowInstancesLayout);
@@ -202,7 +216,7 @@ public class WorkflowHistoryDialog extends Window {
 		historiesList.setAutoFetchData(true);
 		historiesList.setShowHeader(true);
 		historiesList.setCanSelectAll(false);
-		historiesList.setSelectionType(SelectionStyle.NONE);
+		historiesList.setSelectionType(SelectionStyle.SINGLE);
 		historiesList.setHeight(200);
 		historiesList.setBorder("1px solid #E1E1E1");
 		if (selectedWorkflowInstance != null) {
@@ -224,5 +238,44 @@ public class WorkflowHistoryDialog extends Window {
 
 	public void setUser(String id) {
 		user.setValue(id);
+	}
+
+	private void showContextMenu() {
+		Menu contextMenu = new Menu();
+
+		final ListGridRecord selection = instancesList.getSelectedRecord();
+		if (selection == null)
+			return;
+
+		MenuItem delete = new MenuItem();
+		delete.setTitle(I18N.message("ddelete"));
+		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							service.deleteInstance(Session.get().getSid(), selection.getAttributeAsLong("id"), new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(Void result) {
+									instancesList.removeSelectedData();
+									instancesList.deselectAllRecords();
+									historiesList.removeSelectedData();
+									historiesList.deselectAllRecords();
+								}
+							});
+						}
+					}
+				});
+			}
+		});
+
+		contextMenu.setItems(delete);
+		contextMenu.showContextMenu();
 	}
 }

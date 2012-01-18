@@ -22,6 +22,11 @@ public interface WorkflowService extends RemoteService {
 	public void delete(String sid, String workflowName) throws InvalidSessionException;
 
 	/**
+	 * Deletes a given workflow instance
+	 */
+	public void deleteInstance(String sid, long id) throws InvalidSessionException;
+	
+	/**
 	 * Imports a new workflow schema.
 	 */
 	public GUIWorkflow importSchema(String sid) throws InvalidSessionException;
