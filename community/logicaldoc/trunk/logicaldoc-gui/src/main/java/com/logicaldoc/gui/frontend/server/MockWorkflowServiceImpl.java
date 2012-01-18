@@ -275,4 +275,9 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	public GUIWorkflow importSchema(String sid) throws InvalidSessionException {
 		return new GUIWorkflow();
 	}
+
+	@Override
+	public void deleteInstance(String sid, long id) throws InvalidSessionException {
+
+	}
 }
