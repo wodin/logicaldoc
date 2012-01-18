@@ -195,7 +195,7 @@ public class MessagesPanel extends VLayout {
 	private void showContextMenu() {
 		Menu contextMenu = new Menu();
 
-		ListGridRecord[] selection = list.getSelection();
+		ListGridRecord[] selection = list.getSelectedRecords();
 		if (selection == null || selection.length == 0)
 			return;
 		final long[] ids = new long[selection.length];
