@@ -22,6 +22,7 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -54,7 +55,7 @@ public class LdapPanel extends VLayout {
 		setMargin(30);
 
 		tabs.setWidth(400);
-		tabs.setHeight(320);
+		tabs.setHeight(350);
 
 		Tab ldap = new Tab();
 		ldap.setTitle(I18N.message("ldap"));
@@ -114,13 +115,17 @@ public class LdapPanel extends VLayout {
 		TextItem groupsBaseNode = ItemFactory.newTextItem("grpsbasenode", "grpsbasenode",
 				this.ldapSettings.getGrpsBaseNode());
 
+		// Page size
+		IntegerItem pageSize = ItemFactory.newIntegerItem("pagesize", "pagesize", this.ldapSettings.getPageSize());
+		pageSize.setRequired(true);
+
 		// Language
 		SelectItem language = ItemFactory.newLanguageSelector("language", false, true);
 		language.setName("language");
 		language.setValue(this.ldapSettings.getLanguage());
 
 		ldapForm.setItems(implementation, enabled, url, realm, username, password, userIdentifierAttr,
-				grpIdentifierAttr, userClass, groupClass, logonAttr, language, usersBaseNode, groupsBaseNode);
+				grpIdentifierAttr, userClass, groupClass, logonAttr, language, usersBaseNode, groupsBaseNode, pageSize);
 
 		ldap.setPane(ldapForm);
 
@@ -155,6 +160,7 @@ public class LdapPanel extends VLayout {
 					LdapPanel.this.ldapSettings.setUsersBaseNode((String) values.get("usersbasenode"));
 					LdapPanel.this.ldapSettings.setGrpsBaseNode((String) values.get("grpsbasenode"));
 					LdapPanel.this.ldapSettings.setLanguage((String) values.get("language"));
+					LdapPanel.this.ldapSettings.setPageSize(Integer.parseInt(values.get("pagesize").toString()));
 
 					service.saveSettings(Session.get().getSid(), LdapPanel.this.ldapSettings,
 							new AsyncCallback<Void>() {
@@ -226,7 +232,7 @@ public class LdapPanel extends VLayout {
 						new ValueCallback() {
 							@Override
 							public void execute(String value) {
-								if(value==null)
+								if (value == null)
 									return;
 								String node = value.replaceAll("\\.", ",DC=");
 								node = "DC=" + node;
