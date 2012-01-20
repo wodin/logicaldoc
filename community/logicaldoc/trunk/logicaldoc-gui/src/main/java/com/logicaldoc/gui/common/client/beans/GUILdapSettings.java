@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
  */
-public class GUILdapSettings implements Serializable{
+public class GUILdapSettings implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -39,6 +39,8 @@ public class GUILdapSettings implements Serializable{
 	private String grpsBaseNode;
 
 	private String language;
+
+	private int pageSize = 100;
 
 	public String getImplementation() {
 		return implementation;
@@ -150,5 +152,13 @@ public class GUILdapSettings implements Serializable{
 
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+
+	public int getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
 	}
 }
