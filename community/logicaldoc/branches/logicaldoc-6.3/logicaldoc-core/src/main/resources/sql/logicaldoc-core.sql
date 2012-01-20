@@ -62,7 +62,6 @@ create unique index  AK_TEMPLATE on ld_template (ld_name);
 create unique index  AK_GENERIC on ld_generic (ld_type, ld_subtype);
 create unique index  AK_VERSION on ld_version (ld_documentid, ld_version);
 create unique index  AK_RATING on ld_rating (ld_docid, ld_userid);
-alter table ld_version add constraint FK_VERSION_USER foreign key (ld_userid) references ld_user(ld_id);
 
 
 insert into ld_menu
