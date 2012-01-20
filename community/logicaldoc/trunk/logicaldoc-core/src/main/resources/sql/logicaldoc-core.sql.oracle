@@ -54,7 +54,6 @@ alter table ld_menu add constraint FK_MENU_PARENT foreign key (ld_parentid) refe
 alter table ld_folder add constraint FK_FOLDER_PARENT foreign key (ld_parentid) references ld_folder(ld_id);
 alter table ld_foldergroup add constraint FK_FGROUP_FOLDER foreign key (ld_folderid) references ld_folder(ld_id) on delete cascade;
 
-
 --On MySQL AK fields cannot be larger than
 create unique index  AK_DOCUMENT on ld_document (ld_customid);
 create unique index  AK_USER on ld_user (ld_username);
@@ -65,7 +64,6 @@ create unique index  AK_TEMPLATE on ld_template (ld_name);
 create unique index  AK_GENERIC on ld_generic (ld_type, ld_subtype);
 create unique index  AK_VERSION on ld_version (ld_documentid, ld_version);
 create unique index  AK_RATING on ld_rating (ld_docid, ld_userid);
-alter table ld_version add constraint FK_VERSION_USER foreign key (ld_userid) references ld_user(ld_id);
 
 
 insert into ld_menu
