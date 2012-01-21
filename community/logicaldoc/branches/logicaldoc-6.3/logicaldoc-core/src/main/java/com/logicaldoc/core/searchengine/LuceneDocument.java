@@ -125,6 +125,8 @@ public class LuceneDocument {
 				: "", Field.Store.NO, Field.Index.NOT_ANALYZED));
 
 		doc.add(new Field(FIELD_SOURCE_TYPE, document.getSourceType() != null ? document.getSourceType() : "",
+				Field.Store.NO, Field.Index.ANALYZED));
+		doc.add(new Field(FIELD_SOURCE_TYPE + _NA, document.getSourceType() != null ? document.getSourceType() : "",
 				Field.Store.NO, Field.Index.NOT_ANALYZED));
 
 		doc.add(new Field(FIELD_COVERAGE, document.getCoverage() != null ? document.getCoverage() : "", Field.Store.NO,

@@ -318,7 +318,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		items.add(coverageFlag);
 		CheckboxItem authorFlag = new CheckboxItem("sourceAuthorFlag", I18N.message("author"));
 		items.add(authorFlag);
-		CheckboxItem typeFlag = new CheckboxItem("typeFlag", I18N.message("type"));
+		CheckboxItem typeFlag = new CheckboxItem("sourceTypeFlag", I18N.message("type"));
 		items.add(typeFlag);
 		CheckboxItem commentFlag = new CheckboxItem("commentFlag", I18N.message("comment"));
 		items.add(commentFlag);
