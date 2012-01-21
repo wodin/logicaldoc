@@ -252,7 +252,7 @@ public class ParametricForm extends VLayout {
 		Map<String, Object> values = vm.getValues();
 
 		GUISearchOptions options = new GUISearchOptions();
-		
+
 		String hits = Session.get().getInfo().getConfig("search.hits");
 		if (hits != null)
 			options.setMaxHits(Integer.parseInt(hits));
@@ -260,8 +260,7 @@ public class ParametricForm extends VLayout {
 		String depth = Session.get().getInfo().getConfig("search.depth");
 		if (depth != null)
 			options.setDepth(Integer.parseInt(depth));
-		
-		
+
 		options.setType(GUISearchOptions.TYPE_PARAMETRIC);
 
 		if (NO_LANGUAGE.equals(vm.getValueAsString("language")))

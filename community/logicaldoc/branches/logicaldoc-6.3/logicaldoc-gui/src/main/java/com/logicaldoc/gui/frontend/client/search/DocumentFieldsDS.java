@@ -45,9 +45,10 @@ public class DocumentFieldsDS extends DataSource {
 				OperatorId.NOT_EQUAL);
 		object.setEditorType(ItemFactory.newTextItem("object", I18N.message("object"), null));
 
-		DataSourceTextField type = new DataSourceTextField("type", I18N.message("type"));
-		type.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS, OperatorId.NOT_EQUAL);
-		type.setEditorType(ItemFactory.newTextItem("type", I18N.message("type"), null));
+		DataSourceTextField sourceType = new DataSourceTextField("sourceType", I18N.message("type"));
+		sourceType.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
+				OperatorId.NOT_EQUAL);
+		sourceType.setEditorType(ItemFactory.newTextItem("sourceType", I18N.message("type"), null));
 
 		DataSourceTextField coverage = new DataSourceTextField("coverage", I18N.message("coverage"));
 		coverage.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
@@ -124,16 +125,18 @@ public class DocumentFieldsDS extends DataSource {
 		sourceid.setEditorType(ItemFactory.newTextItem("tags", I18N.message("tags"), null));
 
 		DataSourceTextField comment = new DataSourceTextField("comment", I18N.message("comment"));
-		comment.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS, OperatorId.NOT_EQUAL);
+		comment.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
+				OperatorId.NOT_EQUAL);
 		comment.setEditorType(ItemFactory.newTextItem("comment", I18N.message("comment"), null));
-		
+
 		DataSourceTextField wfStatus = new DataSourceTextField("workflowStatus", I18N.message("workflowstatus"));
-		wfStatus.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS, OperatorId.NOT_EQUAL);
+		wfStatus.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
+				OperatorId.NOT_EQUAL);
 		wfStatus.setEditorType(ItemFactory.newTextItem("workflowStatus", I18N.message("workflowstatus"), null));
 
-		
 		setFields(author, coverage, id, title, object, fileSize, publisher, version, sourceDate, lastModified,
-				published, created, creator, customId, filename, recipient, source, sourceid, type, rating, tags, comment, wfStatus);
+				published, created, creator, customId, filename, recipient, source, sourceid, sourceType, rating, tags,
+				comment, wfStatus);
 
 		/*
 		 * Define extended attributes
