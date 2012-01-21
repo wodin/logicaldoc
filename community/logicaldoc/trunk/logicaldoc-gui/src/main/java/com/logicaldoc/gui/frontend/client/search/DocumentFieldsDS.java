@@ -45,9 +45,9 @@ public class DocumentFieldsDS extends DataSource {
 				OperatorId.NOT_EQUAL);
 		object.setEditorType(ItemFactory.newTextItem("object", I18N.message("object"), null));
 
-		DataSourceTextField type = new DataSourceTextField("type", I18N.message("type"));
-		type.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS, OperatorId.NOT_EQUAL);
-		type.setEditorType(ItemFactory.newTextItem("type", I18N.message("type"), null));
+		DataSourceTextField sourceType = new DataSourceTextField("sourceType", I18N.message("type"));
+		sourceType.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS, OperatorId.NOT_EQUAL);
+		sourceType.setEditorType(ItemFactory.newTextItem("sourceType", I18N.message("type"), null));
 
 		DataSourceTextField coverage = new DataSourceTextField("coverage", I18N.message("coverage"));
 		coverage.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
@@ -148,7 +148,7 @@ public class DocumentFieldsDS extends DataSource {
 		publishedStatus.setEditorType(ItemFactory.newIntegerItem("published", I18N.message("published"), null));
 
 		setFields(author, coverage, id, title, object, fileSize, publisher, version, sourceDate, lastModified,
-				published, created, creator, customId, filename, recipient, source, sourceid, type, rating, tags,
+				published, created, creator, customId, filename, recipient, source, sourceid, sourceType, rating, tags,
 				comment, wfStatus, publishedStatus, startPublishing, stopPublishing);
 
 		/*
