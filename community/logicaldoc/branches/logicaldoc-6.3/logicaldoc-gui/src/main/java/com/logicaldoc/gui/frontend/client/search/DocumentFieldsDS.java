@@ -50,6 +50,11 @@ public class DocumentFieldsDS extends DataSource {
 				OperatorId.NOT_EQUAL);
 		sourceType.setEditorType(ItemFactory.newTextItem("sourceType", I18N.message("type"), null));
 
+    DataSourceTextField extension = new DataSourceTextField("type", I18N.message("fileext"));
+		extension.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
+				OperatorId.NOT_EQUAL);
+		extension.setEditorType(ItemFactory.newTextItem("type", I18N.message("fileext"), null));
+
 		DataSourceTextField coverage = new DataSourceTextField("coverage", I18N.message("coverage"));
 		coverage.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
 				OperatorId.NOT_EQUAL);
@@ -135,7 +140,7 @@ public class DocumentFieldsDS extends DataSource {
 		wfStatus.setEditorType(ItemFactory.newTextItem("workflowStatus", I18N.message("workflowstatus"), null));
 
 		setFields(author, coverage, id, title, object, fileSize, publisher, version, sourceDate, lastModified,
-				published, created, creator, customId, filename, recipient, source, sourceid, sourceType, rating, tags,
+				published, created, creator, customId, filename, extension, recipient, source, sourceid, sourceType, rating, tags,
 				comment, wfStatus);
 
 		/*
