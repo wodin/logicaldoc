@@ -2,6 +2,8 @@ package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
+import com.logicaldoc.gui.common.client.beans.GUIUser;
+import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 
 public interface LdapServiceAsync {
 
@@ -11,4 +13,7 @@ public interface LdapServiceAsync {
 
 	void testConnection(String sid, GUILdapSettings ldapSettings, AsyncCallback<Boolean> callback);
 
+	void listUsers(String sid, String login, AsyncCallback<GUIUser[]> callback);
+
+	void importUsers(String sid, String[] dns, AsyncCallback<GUIValuePair[]> callback);
 }

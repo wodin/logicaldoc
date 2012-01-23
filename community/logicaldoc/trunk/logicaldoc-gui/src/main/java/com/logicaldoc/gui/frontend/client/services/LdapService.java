@@ -4,6 +4,8 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
+import com.logicaldoc.gui.common.client.beans.GUIUser;
+import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 
 /**
  * The client side stub for the LdapService.
@@ -24,4 +26,20 @@ public interface LdapService extends RemoteService {
 	 * Loads external authentication settings
 	 */
 	public GUILdapSettings loadSettings(String sid) throws InvalidSessionException;
+
+	/**
+	 * Search for users in the LDAP repository
+	 * 
+	 * @login used with LIKE operator to restrict the search
+	 */
+	public GUIUser[] listUsers(String sid, String login) throws InvalidSessionException;
+
+	/**
+	 * Imports a selection of users
+	 * 
+	 * @param sid The session identifier
+	 * @param usernames The list of usernames to import
+	 * @return Number of imports, updates, errors.
+	 */
+	public GUIValuePair[] importUsers(String sid, String[] usernames) throws InvalidSessionException;
 }

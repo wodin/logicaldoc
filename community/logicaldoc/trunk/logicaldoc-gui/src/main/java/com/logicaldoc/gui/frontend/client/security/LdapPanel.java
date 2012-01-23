@@ -47,6 +47,8 @@ public class LdapPanel extends VLayout {
 
 	private GUILdapSettings ldapSettings;
 
+	private LdapBrowser browser = new LdapBrowser();
+
 	public LdapPanel(GUILdapSettings settings) {
 		this.ldapSettings = settings;
 
@@ -54,11 +56,14 @@ public class LdapPanel extends VLayout {
 		setMembersMargin(10);
 		setMargin(30);
 
-		tabs.setWidth(400);
-		tabs.setHeight(350);
+		tabs.setWidth(500);
+		tabs.setHeight(450);
 
-		Tab ldap = new Tab();
-		ldap.setTitle(I18N.message("ldap"));
+		Tab ldapTab = new Tab();
+		ldapTab.setTitle(I18N.message("ldap"));
+
+		Tab browserTab = new Tab();
+		browserTab.setTitle(I18N.message("browser"));
 
 		DynamicForm ldapForm = new DynamicForm();
 		ldapForm.setValuesManager(vm);
@@ -125,16 +130,20 @@ public class LdapPanel extends VLayout {
 		language.setValue(this.ldapSettings.getLanguage());
 
 		ldapForm.setItems(implementation, enabled, url, realm, username, password, userIdentifierAttr,
-				grpIdentifierAttr, userClass, groupClass, logonAttr, language, usersBaseNode, groupsBaseNode, pageSize);
+				grpIdentifierAttr, userClass, groupClass, usersBaseNode, groupsBaseNode, logonAttr, language, pageSize);
 
-		ldap.setPane(ldapForm);
+		ldapTab.setPane(ldapForm);
 
 		if (Feature.visible(Feature.LDAP)) {
-			tabs.addTab(ldap);
-			if (!Feature.enabled(Feature.LDAP))
-				ldap.setPane(new FeatureDisabled());
-			else
-				ldap.setPane(ldapForm);
+			tabs.addTab(ldapTab);
+			tabs.addTab(browserTab);
+			if (!Feature.enabled(Feature.LDAP)) {
+				ldapTab.setPane(new FeatureDisabled());
+				browserTab.setPane(new FeatureDisabled());
+			} else {
+				ldapTab.setPane(ldapForm);
+				browserTab.setPane(browser);
+			}
 		}
 
 		IButton save = new IButton();
