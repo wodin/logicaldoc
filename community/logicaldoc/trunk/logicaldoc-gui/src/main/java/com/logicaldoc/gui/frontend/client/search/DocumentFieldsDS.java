@@ -46,8 +46,14 @@ public class DocumentFieldsDS extends DataSource {
 		object.setEditorType(ItemFactory.newTextItem("object", I18N.message("object"), null));
 
 		DataSourceTextField sourceType = new DataSourceTextField("sourceType", I18N.message("type"));
-		sourceType.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS, OperatorId.NOT_EQUAL);
+		sourceType.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
+				OperatorId.NOT_EQUAL);
 		sourceType.setEditorType(ItemFactory.newTextItem("sourceType", I18N.message("type"), null));
+
+		DataSourceTextField extension = new DataSourceTextField("type", I18N.message("fileext"));
+		extension.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
+				OperatorId.NOT_EQUAL);
+		extension.setEditorType(ItemFactory.newTextItem("type", I18N.message("fileext"), null));
 
 		DataSourceTextField coverage = new DataSourceTextField("coverage", I18N.message("coverage"));
 		coverage.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
@@ -148,8 +154,8 @@ public class DocumentFieldsDS extends DataSource {
 		publishedStatus.setEditorType(ItemFactory.newIntegerItem("published", I18N.message("published"), null));
 
 		setFields(author, coverage, id, title, object, fileSize, publisher, version, sourceDate, lastModified,
-				published, created, creator, customId, filename, recipient, source, sourceid, sourceType, rating, tags,
-				comment, wfStatus, publishedStatus, startPublishing, stopPublishing);
+				published, created, creator, customId, filename, extension, recipient, source, sourceid, sourceType,
+				rating, tags, comment, wfStatus, publishedStatus, startPublishing, stopPublishing);
 
 		/*
 		 * Define extended attributes
