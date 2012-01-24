@@ -49,6 +49,15 @@ public class ExportZip extends HttpServlet {
 				level = "all";
 			}
 
+			long[] docIds = null;
+			if (request.getParameterValues("docId") != null && request.getParameterValues("docId").length > 0) {
+				String[] ids = request.getParameterValues("docId");
+				docIds = new long[ids.length];
+				for (int i = 0; i < ids.length; i++) {
+					docIds[i] = Long.parseLong(ids[i]);
+				}
+			}
+
 			ZipExport exporter = new ZipExport();
 
 			if (level.equals("all")) {
@@ -57,7 +66,13 @@ public class ExportZip extends HttpServlet {
 
 			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 
-			ByteArrayOutputStream bos = exporter.process(Long.parseLong(folderId), userId.longValue());
+			ByteArrayOutputStream bos = null;
+
+			if (docIds == null || docIds.length > 0)
+				bos = exporter.process(docIds);
+			else
+				bos = exporter.process(Long.parseLong(folderId), userId.longValue());
+
 			response.setContentType("application/zip");
 			response.setContentLength(bos.size());
 			response.setHeader("Content-Disposition",
@@ -74,6 +89,7 @@ public class ExportZip extends HttpServlet {
 			os.write(bos.toByteArray());
 			os.flush();
 			os.close();
+			bos.close();
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}

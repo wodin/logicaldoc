@@ -55,9 +55,19 @@ public class DocumentContextMenu extends Menu {
 		download.setTitle(I18N.message("download"));
 		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				String id = list.getSelectedRecord().getAttribute("id");
-				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-						+ id);
+				ListGridRecord[] selection = list.getSelectedRecords();
+				if (selection.length == 1) {
+					String id = list.getSelectedRecord().getAttribute("id");
+					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+							+ id);
+				} else {
+					String url = GWT.getHostPageBaseURL() + "zip-export?sid=" + Session.get().getSid() + "&folderId="
+							+ folder.getId();
+					for (ListGridRecord record : selection) {
+						url += "&docId=" + record.getAttributeAsString("id");
+					}
+					WindowUtils.openUrl(url);
+				}
 			}
 		});
 
@@ -691,7 +701,6 @@ public class DocumentContextMenu extends Menu {
 		}
 
 		if (list.getSelectedRecords().length != 1) {
-			download.setEnabled(false);
 			similar.setEnabled(false);
 			rename.setEnabled(false);
 		}
