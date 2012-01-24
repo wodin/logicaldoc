@@ -26,7 +26,8 @@ import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 
 /**
- * Exports a folder hierarchy and all documents in it as a zip file.
+ * Exports a folder hierarchy and all documents in it as a zip file. Can also be
+ * used to export a selection of documents
  * 
  * @author Alessandro Gasparini - Logical Objects
  * @author Matteo Caruso - Logical Objects
@@ -47,7 +48,7 @@ public class ZipExport {
 		zos = null;
 		userId = -1;
 		allLevel = false;
-		startFolderId = Folder.ROOTID;
+		startFolderId = Folder.DEFAULTWORKSPACE;
 	}
 
 	/**
@@ -88,6 +89,18 @@ public class ZipExport {
 	 * 
 	 * @param docIds Identifiers of the documents
 	 * @return The Stream of the zip archive
+	 */
+	public ByteArrayOutputStream process(long[] docIds) {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		process(docIds, bos);
+		return bos;
+	}
+
+	/**
+	 * Exports a selection of documents
+	 * 
+	 * @param docIds Identifiers of the documents
+	 * @param out The stream that will receive the zip
 	 */
 	public void process(long[] docIds, OutputStream out) {
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
