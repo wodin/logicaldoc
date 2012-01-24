@@ -10,6 +10,16 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC 6.3.4 (2012-01-27; logicaldoc-6.3.4)
+===============
+164 - Ability to download multiple files at once - Improvement - User Interface
+165 - Have tab/page title show folder selected - Improvement - User Interface
+168 - Tag entry issue - Bug - User Interface
+170 - Permanent Download Link - New Feature - Core
+174 - Unable to search for source type - Bug - Search
+166 - Settings changes should take immediate effect - Improvement - User Interface
+
+
 LogicalDOC 6.3.3 (2012-01-07; logicaldoc-6.3.3)
 ===============
 138 - Tags are taken over too soon during type in - Bug - User Interface
