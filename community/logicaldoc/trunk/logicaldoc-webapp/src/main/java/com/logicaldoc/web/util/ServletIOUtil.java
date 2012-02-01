@@ -158,7 +158,8 @@ public class ServletIOUtil {
 			session = SessionUtil.validateSession(request);
 
 		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		udao.initialize(user);
+        if(user!=null)
+		   udao.initialize(user);
 
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = dao.findById(docId);
