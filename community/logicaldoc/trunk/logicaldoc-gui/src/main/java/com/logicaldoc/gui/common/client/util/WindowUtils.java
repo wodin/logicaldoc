@@ -67,11 +67,11 @@ public class WindowUtils {
 			$wnd.parent.document.title = title;
 	}-*/;
 
-	public static void setTitle(GUIInfo info, String suffix) {
+	public static void setTitle(GUIInfo info, String prefix) {
 		String buf = info.getProductName() + " " + info.getRelease()
 				+ (info.getLicensee() != null ? " - " + I18N.message("licensedto") + ": " + info.getLicensee() : "");
-		if (suffix != null) {
-			buf += " - " + suffix;
+		if (prefix != null) {
+			buf = prefix + " - " + buf;
 		}
 		WindowUtils.setTitle(buf);
 	}
