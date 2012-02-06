@@ -105,7 +105,7 @@ public class UserPropertiesPanel extends HLayout {
 			enabled.addChangedHandler(changedHandler);
 		}
 
-		TextItem username = ItemFactory.newSimpleTextItem("username", "username", user.getUserName());
+		TextItem username = ItemFactory.newTextItem("username", "username", user.getUserName());
 		username.setRequired(true);
 		username.setSelectOnFocus(true);
 		username.setDisabled(readonly || user.getId() != 0);
