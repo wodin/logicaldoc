@@ -11,6 +11,8 @@ import com.orange.links.client.DiagramController;
 import com.orange.links.client.connection.Connection;
 import com.orange.links.client.shapes.Point;
 import com.smartgwt.client.types.Overflow;
+import com.smartgwt.client.widgets.events.ScrolledEvent;
+import com.smartgwt.client.widgets.events.ScrolledHandler;
 import com.smartgwt.client.widgets.layout.VStack;
 
 /**
@@ -29,7 +31,6 @@ public class DrawingPanel extends VStack {
 	private Map<String, StateWidget> widgets = new HashMap<String, StateWidget>();
 	
 	public DrawingPanel(WorkflowDesigner designer) {
-		super();
 		setHeight(500);
 		setMembersMargin(5);
 		setShowCustomScrollbars(true);
@@ -39,6 +40,15 @@ public class DrawingPanel extends VStack {
 		controller = new DiagramController(2000, 2000);
 		controller.showGrid(true);
 		addMember(controller.getView());
+
+		addScrolledHandler(new ScrolledHandler() {
+			
+			@Override
+			public void onScrolled(ScrolledEvent event) {
+				//This will avoid connection explosions when scrolling
+				controller.unsynchronizedShapes();
+			}
+		});
 	}
 
 	public WorkflowDesigner getWorkflowDesigner() {
