@@ -137,18 +137,18 @@ public class DashboardPanel extends VLayout implements UserObserver {
 
 	@Override
 	public void onUserChanged(GUIUser user, String attribute) {
-		try {
-			if (attribute.equals(GUIUser.CHECKED_OUT_DOCS) || attribute.equals(GUIUser.LOCKED_DOCS)) {
-				updateUserTab();
-			} else if (attribute.equals(GUIUser.ALL_MESSAGES) || attribute.equals(GUIUser.UNREAD_MESSAGES)) {
-				updateMessageTab();
-			} else if (attribute.equals(GUIUser.ALL_SUBSCRIPTIONS)) {
-				updateSubscriptionsTab();
-			} else if (attribute.equals(GUIUser.ALL_TASKS)) {
-				updateWorkflowTab();
-			}
-		} catch (Throwable t) {
-
-		}
+//		try {
+//			if (attribute.equals(GUIUser.CHECKED_OUT_DOCS) || attribute.equals(GUIUser.LOCKED_DOCS)) {
+//				updateUserTab();
+//			} else if (attribute.equals(GUIUser.ALL_MESSAGES) || attribute.equals(GUIUser.UNREAD_MESSAGES)) {
+//				updateMessageTab();
+//			} else if (attribute.equals(GUIUser.ALL_SUBSCRIPTIONS)) {
+//				updateSubscriptionsTab();
+//			} else if (attribute.equals(GUIUser.ALL_TASKS)) {
+//				updateWorkflowTab();
+//			}
+//		} catch (Throwable t) {
+//
+//		}
 	}
 }
