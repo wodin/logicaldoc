@@ -35,6 +35,14 @@ public class EMail extends Message {
 
 	private Set<Recipient> recipientsBCC = new HashSet<Recipient>();
 
+	/**
+	 * This images are added as part of the body, each image will be identified
+	 * with 'image-i'. Use an URL to reference them.
+	 */
+	private Set<String> images = new HashSet<String>();
+
+	private boolean html = false;
+
 	public EMail() {
 	}
 
@@ -167,5 +175,21 @@ public class EMail extends Message {
 
 	public void setRecipientsBCC(Set<Recipient> recipientsBCC) {
 		this.recipientsBCC = recipientsBCC;
+	}
+
+	public boolean isHtml() {
+		return html;
+	}
+
+	public void setHtml(boolean html) {
+		this.html = html;
+	}
+
+	public Set<String> getImages() {
+		return images;
+	}
+
+	public void setImages(Set<String> images) {
+		this.images = images;
 	}
 }

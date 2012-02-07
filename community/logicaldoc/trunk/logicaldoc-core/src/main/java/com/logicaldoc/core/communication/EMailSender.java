@@ -1,9 +1,11 @@
 package com.logicaldoc.core.communication;
 
+import java.net.URL;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
+import javax.activation.URLDataSource;
 import javax.mail.Address;
 import javax.mail.Multipart;
 import javax.mail.Session;
@@ -152,11 +154,23 @@ public class EMailSender {
 		message.setSubject(email.getSubject(), "UTF-8");
 
 		MimeBodyPart body = new MimeBodyPart();
-		body.setContent(email.getMessageText(), "text/plain");
-		body.setText(email.getMessageText(), "UTF-8");
+		if (email.isHtml())
+			body.setContent(email.getMessageText(), "text/html");
+		else
+			body.setText(email.getMessageText(), "UTF-8");
 
-		Multipart mpMessage = new MimeMultipart();
+		Multipart mpMessage = new MimeMultipart("related");
 		mpMessage.addBodyPart(body);
+
+		int i = 1;
+		for (String image : email.getImages()) {
+			MimeBodyPart imageBodyPart = new MimeBodyPart();
+			DataSource ds = new URLDataSource(new URL(image));
+			imageBodyPart.setDataHandler(new DataHandler(ds));
+			imageBodyPart.setHeader("Content-ID", "<image_" + (i++) + ">");
+			imageBodyPart.setDisposition("inline");
+			mpMessage.addBodyPart(imageBodyPart);
+		}
 
 		for (Integer partId : email.getAttachments().keySet()) {
 			EMailAttachment att = email.getAttachment(partId);
