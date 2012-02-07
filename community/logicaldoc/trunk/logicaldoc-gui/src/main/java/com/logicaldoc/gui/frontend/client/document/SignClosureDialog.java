@@ -20,7 +20,7 @@ import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
+import com.smartgwt.client.widgets.events.CloseClickEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.LinkItem;
@@ -62,7 +62,7 @@ public class SignClosureDialog extends Window {
 
 		addCloseClickHandler(new CloseClickHandler() {
 			@Override
-			public void onCloseClick(CloseClientEvent event) {
+			public void onCloseClick(CloseClickEvent event) {
 				destroy();
 				archivesList.refresh(archivesList.getArchivesType(), false);
 				archivesList.showDetails(archiveId, true);
