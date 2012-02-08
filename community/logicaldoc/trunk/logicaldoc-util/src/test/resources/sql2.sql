@@ -59,9 +59,9 @@ VALUES(2,'testDocname2','testDocVer','2006-12-20','myself', 1, 8, 'PDF','sebasti
 
 
 INSERT INTO co_versions 
-VALUES(1,'testVersion','testUser','2006-12-19','testComment');
+VALUES(1,'testVers01','testUser','2006-12-19','testComment');
 INSERT INTO co_versions 
-VALUES(1,'testVersion2','testUser','2006-12-20','testComment');
+VALUES(1,'testVers02','testUser','2006-12-20','testComment');
 
 INSERT INTO co_keywords VALUES(1,'abc');
 INSERT INTO co_keywords VALUES(1,'def');

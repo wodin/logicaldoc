@@ -1,6 +1,7 @@
 package com.logicaldoc.webservice.document;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.webservice.AbstractService;
 import com.logicaldoc.webservice.WSAttribute;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
+//import edu.emory.mathcs.backport.java.util.Arrays;
 
 /**
  * Web Service Document. Useful class to create repository Documents.
@@ -766,7 +767,6 @@ public class WSDocument {
 	}
 
 	public void addExtendedAttribute(WSAttribute att) {
-		@SuppressWarnings("unchecked")
 		List<WSAttribute> buf = (List<WSAttribute>) Arrays.asList(getExtendedAttributes());
 		buf.add(att);
 		setExtendedAttributes(buf.toArray(new WSAttribute[0]));

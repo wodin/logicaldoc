@@ -53,11 +53,15 @@ public class SecurityServiceImplTest extends AbstractWebServiceTestCase {
 	public void testListGroups() throws Exception {
 		WSGroup[] groups = securityServiceImpl.listGroups("");
 		Assert.assertNotNull(groups);
-		Assert.assertEquals(5, groups.length);
+		Assert.assertEquals(6, groups.length);
 		List<WSGroup> groupsList = Arrays.asList(groups);
-		Assert.assertEquals(1, groupsList.get(0).getId());
-		Assert.assertEquals(2, groupsList.get(1).getId());
-		Assert.assertEquals("Group of authors", groupsList.get(1).getDescription());
+		
+		WSGroup dummy = new WSGroup();
+		dummy.setId(1);
+		Assert.assertTrue(groupsList.contains(dummy));		
+		dummy.setId(2);
+		Assert.assertTrue(groupsList.contains(dummy));
+		Assert.assertEquals("Group of authors", groupsList.get(groupsList.indexOf(dummy)).getDescription());		
 	}
 
 	@Test

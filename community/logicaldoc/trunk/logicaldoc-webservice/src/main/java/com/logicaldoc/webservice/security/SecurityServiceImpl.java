@@ -47,13 +47,15 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	@Override
 	public WSGroup[] listGroups(String sid) throws Exception {
 		checkAdministrator(sid);
-
 		try {
 			List<WSGroup> groups = new ArrayList<WSGroup>();
 			GroupDAO dao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
-			for (Group grp : dao.findAll())
-				if (grp.getType() == Group.TYPE_DEFAULT)
+			for (Group grp : dao.findAll()) {				
+				if (grp.getType() == Group.TYPE_DEFAULT) {
+					dao.initialize(grp);
 					groups.add(WSGroup.fromGroup(grp));
+				}
+			}
 			return groups.toArray(new WSGroup[0]);
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);

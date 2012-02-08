@@ -140,8 +140,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@Override
 	public List<Long> findByUserId(long userId) {
 		Collection<Folder> folders = folderDAO.findByUserId(userId);
-		if (folders.isEmpty())
-			return new ArrayList<Long>();
+		if (folders.isEmpty()) 
+			return new ArrayList<Long>();			
 
 		StringBuffer query = new StringBuffer();
 		query.append("_entity.folder.id in (");
@@ -149,7 +149,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		for (Folder folder : folders) {
 			if (!first)
 				query.append(",");
-			query.append("'" + folder.getId() + "'");
+			query.append(folder.getId());
 			first = false;
 		}
 		query.append(")");

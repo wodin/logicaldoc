@@ -1,6 +1,7 @@
 package com.logicaldoc.core.dbinit;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -13,7 +14,6 @@ import org.java.plugin.registry.Extension;
 import com.logicaldoc.util.dbinit.DBInit;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 /**
  * Database initialization manager
@@ -62,7 +62,7 @@ public class PluginDbInit extends DBInit {
 			getSqlList().clear();
 
 			List<String> idSet = new ArrayList<String>();
-			if (ids != null)
+			if (ids != null) 
 				idSet = (List<String>) Arrays.asList(ids);
 
 			// Acquire the ordered list of sql files

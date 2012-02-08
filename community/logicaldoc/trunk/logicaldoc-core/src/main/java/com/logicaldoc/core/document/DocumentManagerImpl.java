@@ -421,8 +421,9 @@ public class DocumentManagerImpl implements DocumentManager {
 			setUniqueTitle(doc);
 			setUniqueFilename(doc);
 			
-			//To avoid 'optimistic locking failed' exceptions
-			doc.setLastModified(new Date());
+			//To avoid 'optimistic locking failed' exceptions. 
+			// Perhaps no more needed with Hibernate 3.6.9
+			//doc.setLastModified(new Date());
 
 			// Modify document history entry
 			if (transaction.getEvent().trim().isEmpty())

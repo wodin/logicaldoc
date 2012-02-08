@@ -22,7 +22,8 @@ public class DBInitTest extends TestCase {
 		sqlList.add("sql1.sql");
 		sqlList.add("sql2.sql");
 		dbinit = new DBInit(sqlList);
-		dbinit.setDriver("org.hsqldb.jdbcDriver");
+		//dbinit.setDriver("org.hsqldb.jdbcDriver"); // version 1.8
+		dbinit.setDriver("org.hsqldb.jdbc.JDBCDriver");
 		dbinit.setUrl("jdbc:hsqldb:mem:logicaldoc");
 		dbinit.setUsername("sa");
 		dbinit.setPassword("");

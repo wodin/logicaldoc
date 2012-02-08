@@ -161,6 +161,8 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		transaction.setEvent(History.EVENT_DELETED);
 		transaction.setComment("");
 		transaction.setUser(user);
+		
+		// TODO: fails to initialize a lazy collection (Tags)
 		docDao.delete(docId, transaction);
 	}
 
