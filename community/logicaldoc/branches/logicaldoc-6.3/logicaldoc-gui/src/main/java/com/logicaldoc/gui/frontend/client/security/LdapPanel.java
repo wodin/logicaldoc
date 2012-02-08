@@ -74,6 +74,10 @@ public class LdapPanel extends VLayout {
 		RadioGroupItem enabled = ItemFactory.newBooleanSelector("eenabled", "enabled");
 		enabled.setValue(this.ldapSettings.isEnabled() ? "yes" : "no");
 
+		// Anonymous Login
+		RadioGroupItem anon = ItemFactory.newBooleanSelector("anon", "anonymous");
+		anon.setValue(this.ldapSettings.isAnonymous() ? "yes" : "no");
+		
 		// Url
 		TextItem url = ItemFactory.newTextItem("url", "url", this.ldapSettings.getUrl());
 		url.setRequired(true);
@@ -119,8 +123,8 @@ public class LdapPanel extends VLayout {
 		language.setName("language");
 		language.setValue(this.ldapSettings.getLanguage());
 
-		ldapForm.setItems(implementation, enabled, url, realm, username, password, userIdentifierAttr,
-				grpIdentifierAttr, userClass, groupClass, logonAttr, language, usersBaseNode, groupsBaseNode);
+		ldapForm.setItems(implementation, enabled, anon, language, url, realm, username, password, userIdentifierAttr,
+				grpIdentifierAttr, userClass, groupClass, usersBaseNode, groupsBaseNode, logonAttr);
 
 		ldap.setPane(ldapForm);
 
@@ -143,6 +147,7 @@ public class LdapPanel extends VLayout {
 				if (vm.validate()) {
 					LdapPanel.this.ldapSettings.setImplementation((String) values.get("implementation"));
 					LdapPanel.this.ldapSettings.setEnabled(values.get("eenabled").equals("yes") ? true : false);
+					LdapPanel.this.ldapSettings.setAnonymous(values.get("anon").equals("yes") ? true : false);
 					LdapPanel.this.ldapSettings.setUrl((String) values.get("url"));
 					LdapPanel.this.ldapSettings.setUsername((String) values.get("username"));
 					LdapPanel.this.ldapSettings.setPwd((String) values.get("password"));
@@ -184,6 +189,7 @@ public class LdapPanel extends VLayout {
 				if (vm.validate()) {
 					LdapPanel.this.ldapSettings.setImplementation((String) values.get("implementation"));
 					LdapPanel.this.ldapSettings.setEnabled(values.get("eenabled").equals("yes") ? true : false);
+					LdapPanel.this.ldapSettings.setAnonymous(values.get("anon").equals("yes") ? true : false);
 					LdapPanel.this.ldapSettings.setUrl((String) values.get("url"));
 					LdapPanel.this.ldapSettings.setUsername((String) values.get("username"));
 					LdapPanel.this.ldapSettings.setPwd((String) values.get("password"));
@@ -240,6 +246,7 @@ public class LdapPanel extends VLayout {
 								vm.setValue("userclass", "person");
 								vm.setValue("usersbasenode", "CN=Users," + node);
 								vm.setValue("grpsbasenode", "CN=Builtin," + node);
+								vm.setValue("anon", "no");
 							}
 						});
 			}
