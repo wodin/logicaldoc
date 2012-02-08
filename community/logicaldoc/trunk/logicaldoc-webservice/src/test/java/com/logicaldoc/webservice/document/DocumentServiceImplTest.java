@@ -85,7 +85,8 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		docDao.initialize(doc);
 		doc.setIndexed(0);
 		docDao.store(doc);
-		docServiceImpl.move("", doc.getId(), newFolder.getId());
+		docServiceImpl.move("", doc.getId(), newFolder.getId()); 
+		// attenzione: errore optimistic lock
 		Assert.assertSame(1L, doc.getId());
 		docDao.initialize(doc);
 		Assert.assertEquals(newFolder, doc.getFolder());
@@ -152,9 +153,16 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 	@Test
 	public void testDelete() throws Exception {
 		Document doc = docDao.findById(1);
+		System.err.println("doc: " + doc);
 		Assert.assertNotNull(doc);
+		System.err.println("doc.getId(): " + doc.getId());
 		docServiceImpl.delete("", doc.getId());
-		doc = docDao.findById(1);
+		// NOTE: you can see an exception of this type: 
+		//1    [main] ERROR com.logicaldoc.core.document.dao.HibernateDocumentDAO  - 
+		//java.lang.NullPointerException
+        // this is due since we are trying to find a deleted document		
+		doc = docDao.findById(1);	
+		System.err.println("doc: " + doc);
 		Assert.assertNull(doc);
 	}
 
@@ -165,6 +173,10 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		Assert.assertEquals("testDocname", doc.getTitle());
 		docDao.initialize(doc);
 
+		// TODO: fails to initialize a lazy collection (Tags)
+		// TODO: this test may fails; file may not exists
+		// you can see an exception of this type: 
+		// failed to lazily initialize a collection of role: com.logicaldoc.core.document.Document.tags, no session or session was closed		
 		docServiceImpl.rename("", 1, "pippo");
 
 		docDao.initialize(doc);
@@ -181,6 +193,9 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		Assert.assertEquals("testDocname", doc.getTitle());
 		docDao.initialize(doc);
 
+		// TODO: this test may fails; file may not exists
+		// you can see an exception of this type: 
+		// failed to lazily initialize a collection of role: com.logicaldoc.core.document.Document.tags, no session or session was closed
 		docServiceImpl.renameFile("", 1, "pippo.doc");
 
 		docDao.initialize(doc);
@@ -221,8 +236,8 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		WSDocument[] versions = docServiceImpl.getVersions("", 1);
 		Assert.assertEquals(2, versions.length);
 		List<WSDocument> versionsList = Arrays.asList(versions);
-		Assert.assertEquals("testVersion2", versionsList.get(0).getVersion());
-		Assert.assertEquals("testVersion", versionsList.get(1).getVersion());
+		Assert.assertEquals("testVer02", versionsList.get(0).getVersion());
+		Assert.assertEquals("testVer01", versionsList.get(1).getVersion());
 
 		versions = docServiceImpl.getVersions("", 2);
 		Assert.assertEquals(0, versions.length);

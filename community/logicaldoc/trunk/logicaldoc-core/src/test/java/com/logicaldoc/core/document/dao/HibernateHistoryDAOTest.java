@@ -137,14 +137,22 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 		Collection<History> histories = (Collection<History>) dao.findByUserId(3);
 		Assert.assertNotNull(histories);
 		Assert.assertFalse(histories.isEmpty());
+//		System.err.println("histories.size(): " + histories.size());
+//		System.err.println("folderHistory.getId(): " + folderHistory.getId());
+		
+		History hStored = null;
+		for (History history2 : histories) {
+			if (history2.getId() == folderHistory.getId()) {	
+				hStored = history2;
+				break;
+			}
+		}
 
-		Iterator<History> itHist = histories.iterator();
-		History hStored = itHist.next();
 		Assert.assertTrue(hStored.equals(folderHistory));
-		Assert.assertEquals(hStored.getFolderId(), 5);
+		Assert.assertEquals(hStored.getFolderId(), 5);		
 		Assert.assertEquals(hStored.getDate().getTime(), DateBean.dateFromCompactString("20061220").getTime());
 		Assert.assertEquals(hStored.getUserName(), "sebastian");
-		Assert.assertEquals(hStored.getEvent(), "test History store");
+		Assert.assertEquals(hStored.getEvent(), "test History store");		
 	}
 
 

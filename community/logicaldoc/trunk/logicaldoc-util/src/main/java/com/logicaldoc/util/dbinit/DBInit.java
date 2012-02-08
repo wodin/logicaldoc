@@ -11,9 +11,8 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hsqldb.util.SqlFile;
-import org.hsqldb.util.SqlToolError;
-
+import org.hsqldb.cmdline.SqlFile;
+import org.hsqldb.cmdline.SqlToolError;
 import com.logicaldoc.util.io.FileUtil;
 
 /**
@@ -119,9 +118,14 @@ public class DBInit {
 			FileUtil.copyResource(sqlFile, file);
 		}
 
-		SqlFile sFile = new SqlFile(file, false, null);
+
+		//SqlFile sFile = new SqlFile(file, false, null);
+		SqlFile sFile = new SqlFile(file, "Cp1252", false);
+		// TODO: verificare se vale la pena di passare lo encoding oppure null (JVM default encoding)
 		try {
-			sFile.execute(con, new Boolean(true));
+			//sFile.execute(con, new Boolean(true));
+			sFile.setConnection(con);
+			sFile.execute();
 		} catch (SqlToolError e) {
 			throw new SQLException(e.getMessage());
 		}

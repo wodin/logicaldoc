@@ -78,11 +78,13 @@ public class HibernateFeedMessageDAOTest extends AbstractCoreTCase {
 	public void testDeleteOld() {
 		List<FeedMessage> feedMessages = dao.findAll();
 		Assert.assertEquals(3, feedMessages.size());
+		System.err.println("feedMessages.size(): " +feedMessages.size());
 		Assert.assertTrue(feedMessages.contains(dao.findById(3)));
 
 		dao.deleteOld();
 
 		feedMessages = dao.findAll();
+		System.err.println("feedMessages.size(): " +feedMessages.size());
 		Assert.assertEquals(2, feedMessages.size());
 		Assert.assertFalse(feedMessages.contains(dao.findById(3)));
 	}

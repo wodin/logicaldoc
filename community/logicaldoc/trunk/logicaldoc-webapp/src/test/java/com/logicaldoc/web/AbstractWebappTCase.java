@@ -10,8 +10,7 @@ import javax.sql.DataSource;
 import junit.framework.Assert;
 
 import org.apache.commons.io.FileUtils;
-import org.hsqldb.util.SqlFile;
-import org.hsqldb.util.SqlTool.SqlToolException;
+import org.hsqldb.cmdline.SqlFile;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.context.ApplicationContext;
@@ -125,12 +124,14 @@ public abstract class AbstractWebappTCase {
 			con = ds.getConnection();
 
 			// Load schema
-			SqlFile sqlFile = new SqlFile(dbSchemaFile, false, null);
-			sqlFile.execute(con, false);
+			SqlFile sqlFile = new SqlFile(dbSchemaFile, "Cp1252", false);	
+			sqlFile.setConnection(con);
+			sqlFile.execute();		
 
 			// Load data
-			sqlFile = new SqlFile(dataFile, false, null);
-			sqlFile.execute(con, false);
+			sqlFile = new SqlFile(dataFile, "Cp1252", false);	
+			sqlFile.setConnection(con);
+			sqlFile.execute();	
 
 			// Test the connection
 			ResultSet rs = con.createStatement().executeQuery("select * from ld_menu where ld_id=2");

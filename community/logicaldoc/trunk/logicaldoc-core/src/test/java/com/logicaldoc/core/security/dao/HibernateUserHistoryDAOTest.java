@@ -1,7 +1,6 @@
 package com.logicaldoc.core.security.dao;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import junit.framework.Assert;
 
@@ -9,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTCase;
-import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.i18n.DateBean;
 import com.logicaldoc.core.security.UserHistory;
 
@@ -84,9 +82,15 @@ public class HibernateUserHistoryDAOTest extends AbstractCoreTCase {
 		Collection<UserHistory> histories = (Collection<UserHistory>) dao.findByUserId(3);
 		Assert.assertNotNull(histories);
 		Assert.assertFalse(histories.isEmpty());
+		
+		UserHistory hStored = null;
+        for (UserHistory userHistory2 : histories) {
+			if (userHistory2.getId() == newUserHistory.getId()) {
+				hStored = userHistory2;
+				break;
+			}
+		}		
 
-		Iterator<UserHistory> itHist = histories.iterator();
-		UserHistory hStored = itHist.next();
 		Assert.assertTrue(hStored.equals(newUserHistory));
 		Assert.assertEquals(hStored.getDate().getTime(), DateBean.dateFromCompactString("20061220").getTime());
 		Assert.assertEquals(hStored.getUserName(), "sebastian");

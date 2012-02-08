@@ -105,7 +105,8 @@ public class WSGroup {
 			group.setType(getType());
 
 			if (getUserIds().length > 0) {
-				UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+				UserDAO userDao = (UserDAO) Context.getInstance().getBean(
+						UserDAO.class);
 				Set<User> users = new HashSet<User>();
 				for (long userId : getUserIds()) {
 					User user = userDao.findById(userId);
@@ -130,7 +131,8 @@ public class WSGroup {
 			wsGroup.setName(group.getName());
 			wsGroup.setDescription(group.getDescription());
 			wsGroup.setType(group.getType());
-			wsGroup.setLastModified(AbstractService.convertDateToString(group.getLastModified()));
+			wsGroup.setLastModified(AbstractService.convertDateToString(group
+					.getLastModified()));
 
 			if (group.getUsers() != null && group.getUsers().size() > 0) {
 				long[] userIds = new long[group.getUsers().size()];
@@ -146,5 +148,15 @@ public class WSGroup {
 		}
 
 		return wsGroup;
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		return id == ((WSGroup) other).getId();
+	}
+
+	@Override
+	public int hashCode() {
+		return new Long(id).hashCode();
 	}
 }
