@@ -142,6 +142,11 @@ public class EMailSender {
 		// because of errors will be returned in the case the sender is not in
 		// the SMTP domain.
 		InternetAddress from = new InternetAddress(sender);
+		if (StringUtils.isNotEmpty(email.getAuthorAddress()))
+			try {
+				from = new InternetAddress(email.getAuthorAddress());
+			} catch (Throwable t) {
+			}
 		InternetAddress[] to = email.getAddresses();
 		InternetAddress[] cc = email.getAddressesCC();
 		InternetAddress[] bcc = email.getAddressesBCC();
@@ -159,7 +164,10 @@ public class EMailSender {
 		else
 			body.setText(email.getMessageText(), "UTF-8");
 
-		Multipart mpMessage = new MimeMultipart("related");
+		/*
+		 * If we have to images, the parts must be 'related' otherwise 'mixed'
+		 */
+		Multipart mpMessage = new MimeMultipart(email.getImages().isEmpty() ? "mixed" : "related");
 		mpMessage.addBodyPart(body);
 
 		int i = 1;

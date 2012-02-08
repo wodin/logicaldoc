@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,6 +48,7 @@ import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.document.dao.RatingDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
+import com.logicaldoc.core.document.thumbnail.ThumbnailManager;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.SystemQuota;
 import com.logicaldoc.core.security.User;
@@ -66,6 +68,7 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIRating;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
+import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
 import com.logicaldoc.util.io.CryptUtil;
@@ -302,7 +305,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			for (long id : ids) {
 				try {
 					Document doc = dao.findById(id);
-					
+
 					// Create the document history event
 					History transaction = new History();
 					transaction.setSessionId(sid);
@@ -936,21 +939,26 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	public String sendAsEmail(String sid, GUIEmail email) throws InvalidSessionException {
 		UserSession session = SessionUtil.validateSession(sid);
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		DocumentDAO documentDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		User user = userDao.findById(session.getUserId());
 
 		EMail mail;
 		try {
 			mail = new EMail();
+			mail.setHtml(true);
 
 			mail.setAccountId(-1);
 			mail.setAuthor(user.getUserName());
 			mail.setAuthorAddress(user.getEmail());
+
 			if (StringUtils.isNotEmpty(email.getRecipients()))
 				mail.parseRecipients(email.getRecipients());
 			if (StringUtils.isNotEmpty(email.getCc()))
 				mail.parseRecipientsCC(email.getCc());
 			mail.setFolder("outbox");
-			mail.setMessageText(email.getMessage());
+
+			String message = email.getMessage();
+
 			mail.setRead(1);
 			mail.setSentDate(new Date());
 			mail.setSubject(email.getSubject());
@@ -976,11 +984,25 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				// Try to clean the DB from old tickets
 				ticketDao.deleteOlder();
 
+				Document doc = documentDao.findById(ticket.getDocId());
+
 				HttpServletRequest request = this.getThreadLocalRequest();
 				String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":"
 						+ request.getServerPort() + request.getContextPath();
 				String address = urlPrefix + "/download-ticket?ticketId=" + ticketid;
-				mail.setMessageText(email.getMessage() + "\nURL: " + address);
+				message = email.getMessage()
+						+ "<div style='margin-top:10px; border-top:1px solid black; background-color:#CCCCCC;'><b>&nbsp;"
+						+ I18N.message("clicktodownload") + ": <a href='" + address + "'>" + doc.getFileName()
+						+ "</a></b></div>";
+
+				String thumb = createPreview(doc, user.getId());
+				if (thumb != null) {
+					mail.getImages().add(thumb);
+					message += "<p><img src='cid:image_1'/></p>";
+				}
+
+				mail.setMessageText("<html>" + message + "</html>");
+
 			} else {
 				if (email.isZipCompression()) {
 					/*
@@ -1011,6 +1033,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			}
 
 			try {
+				message = "<html>" + message + "</html>";
+				mail.setMessageText(message);
+
 				// Send the message
 				EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
 				sender.send(mail);
@@ -1046,6 +1071,33 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			log.warn(e.getMessage(), e);
 			return "error";
 		}
+	}
+
+	private String createPreview(Document doc, long userId) {
+		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+		String thumbResource = storer.getResourceName(doc, doc.getFileVersion(), "thumb.jpg");
+
+		// In any case try to produce the thumbnail
+		if (!storer.exists(doc.getId(), thumbResource)) {
+			ThumbnailManager thumbManager = (ThumbnailManager) Context.getInstance().getBean(ThumbnailManager.class);
+			try {
+				thumbManager.createTumbnail(doc, doc.getFileVersion());
+			} catch (Throwable t) {
+				log.error(t.getMessage(), t);
+			}
+		}
+
+		if (storer.exists(doc.getId(), thumbResource)) {
+			File file = UserUtil.getUserResource(userId, "/tmp/thumb.jpg");
+			storer.writeTo(doc.getId(), thumbResource, file);
+			try {
+				return file.toURI().toURL().toString();
+			} catch (MalformedURLException e) {
+
+			}
+		}
+
+		return null;
 	}
 
 	private void createAttachment(EMail email, long docId) throws IOException {

@@ -13,13 +13,13 @@ import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.Window;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClickEvent;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
-import com.smartgwt.client.widgets.form.fields.TextAreaItem;
+import com.smartgwt.client.widgets.form.fields.RichTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
@@ -50,8 +50,8 @@ public class EmailDialog extends Window {
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("sendmail"));
-		setWidth(290);
-		setHeight(280);
+		setWidth(500);
+		setHeight(400);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -62,7 +62,7 @@ public class EmailDialog extends Window {
 		final DynamicForm form = new DynamicForm();
 		form.setID("emailform");
 		form.setValuesManager(vm);
-		form.setWidth(280);
+		form.setWidth(380);
 		form.setMargin(5);
 		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setNumCols(1);
@@ -78,11 +78,12 @@ public class EmailDialog extends Window {
 		subject.setRequired(true);
 		subject.setWidth(250);
 
-		final TextAreaItem message = new TextAreaItem();
+		final RichTextItem message = new RichTextItem();
 		message.setName("message");
 		message.setTitle(I18N.message("message"));
 		message.setValue("");
-		message.setWidth(250);
+		message.setWidth(490);
+		message.setHeight(200);
 
 		final CheckboxItem ticket = new CheckboxItem();
 		ticket.setName("sendticket");
