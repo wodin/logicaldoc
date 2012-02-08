@@ -37,13 +37,7 @@ public class EmailDummy {
 
 	protected static EMailSender prepareEmailSender() {
 		EMailSender sender = new EMailSender();
-		sender.setHost("smtp.logicalobjects.com");
-		sender.setPort(25);
-		sender.setUsername("m.meschieri@logicalobjects.com");
-		sender.setPassword("paf75peR");
-		sender.setAuthEncripted(false);
-		sender.setConnectionSecurity(0);
-		sender.setSender("m.meschieri@logicalobjects.com");
+		
 		return sender;
 	}
 }
