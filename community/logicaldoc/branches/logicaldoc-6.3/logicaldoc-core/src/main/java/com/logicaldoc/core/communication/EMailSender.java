@@ -140,6 +140,12 @@ public class EMailSender {
 		// because of errors will be returned in the case the sender is not in
 		// the SMTP domain.
 		InternetAddress from = new InternetAddress(sender);
+		if (StringUtils.isNotEmpty(email.getAuthor()))
+			try {
+				from = new InternetAddress(email.getAuthor());
+			} catch (Throwable t) {
+			}
+		
 		InternetAddress[] to = email.getAddresses();
 		InternetAddress[] cc = email.getAddressesCC();
 		InternetAddress[] bcc = email.getAddressesBCC();
