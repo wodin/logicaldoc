@@ -701,6 +701,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			List<Long> shortcutIds = documentDAO.findShortcutIds(document.getId());
 			for (Long shortcutId : shortcutIds) {
 				Document shortcutDoc = documentDAO.findById(shortcutId);
+				documentDAO.initialize(shortcutDoc);
 				shortcutDoc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 				documentDAO.store(shortcutDoc);
 			}

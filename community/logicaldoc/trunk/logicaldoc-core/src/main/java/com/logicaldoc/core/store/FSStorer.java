@@ -67,12 +67,19 @@ public class FSStorer implements Storer {
 	/**
 	 * Finds the container where all document's files are stored
 	 * 
-	 * @param docId The document identifier
+	 * @param docId
+	 *            The document identifier
 	 * @return The document's container
 	 */
 	public File getContainer(long docId) {
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(
+				DocumentDAO.class);
 		Document document = docDao.findById(docId);
+
+		if (document == null) {
+			log.warn("Document NOT found: " + docId);
+			return null;
+		}
 
 		if (document.getDocRef() != null) {
 			// The shortcut document doesn't have the 'fileversion' and the
@@ -81,7 +88,8 @@ public class FSStorer implements Storer {
 		}
 
 		String relativePath = computeRelativePath(docId);
-		String path = config.getPropertyWithSubstitutions("store.1.dir") + "/" + relativePath;
+		String path = config.getPropertyWithSubstitutions("store.1.dir") + "/"
+				+ relativePath;
 		return new File(path);
 	}
 
@@ -92,7 +100,8 @@ public class FSStorer implements Storer {
 
 			File dir = getContainer(docId);
 			FileUtils.forceMkdir(dir);
-			File file = new File(new StringBuilder(dir.getPath()).append("/").append(resource).toString());
+			File file = new File(new StringBuilder(dir.getPath()).append("/")
+					.append(resource).toString());
 			FileUtil.writeFile(stream, file.getPath());
 
 			// Performs increment and check of the system quota, then increments
@@ -123,8 +132,10 @@ public class FSStorer implements Storer {
 	}
 
 	@Override
-	public String getResourceName(Document doc, String fileVersion, String suffix) {
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+	public String getResourceName(Document doc, String fileVersion,
+			String suffix) {
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(
+				DocumentDAO.class);
 		Document document = doc;
 
 		/*
@@ -158,7 +169,8 @@ public class FSStorer implements Storer {
 
 	@Override
 	public String getResourceName(long docId, String fileVersion, String suffix) {
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(
+				DocumentDAO.class);
 		Document doc = docDao.findById(docId);
 		return getResourceName(doc, fileVersion, suffix);
 	}
@@ -179,7 +191,8 @@ public class FSStorer implements Storer {
 	@Override
 	public long getTotalSize() {
 		long size = 0;
-		File docDir = new File(config.getPropertyWithSubstitutions("store.1.dir"));
+		File docDir = new File(
+				config.getPropertyWithSubstitutions("store.1.dir"));
 		if (docDir.exists())
 			size = FileUtils.sizeOfDirectory(docDir);
 		return size;
@@ -265,7 +278,8 @@ public class FSStorer implements Storer {
 		OutputStream os = null;
 		InputStream is = null;
 		try {
-			os = new BufferedOutputStream(new FileOutputStream(out, false), 2048);
+			os = new BufferedOutputStream(new FileOutputStream(out, false),
+					2048);
 			is = getStream(docId, resource);
 			FileUtil.writeFile(is, out.getPath());
 		} catch (Exception e) {
