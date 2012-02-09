@@ -15,6 +15,8 @@ public class GUILdapSettings implements Serializable {
 	private String implementation = "";
 
 	private boolean enabled = false;
+	
+	private boolean anon = false;
 
 	private String url;
 
@@ -160,5 +162,13 @@ public class GUILdapSettings implements Serializable {
 
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
+	}
+
+	public boolean isAnonymous() {
+		return anon;
+	}
+
+	public void setAnonymous(boolean anon) {
+		this.anon = anon;
 	}
 }
