@@ -54,8 +54,6 @@ public class WorkflowPortlet extends Portlet {
 
 		setCanDrag(false);
 		setCanDrop(false);
-		setShowShadow(true);
-		setAnimateMinimize(true);
 		setDragAppearance(DragAppearance.OUTLINE);
 		setDragOpacity(30);
 

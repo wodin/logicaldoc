@@ -112,8 +112,6 @@ public class HistoryPortlet extends Portlet {
 			}
 		});
 
-		setShowShadow(true);
-		setAnimateMinimize(true);
 		setDragAppearance(DragAppearance.OUTLINE);
 		setDragOpacity(30);
 		setCanDrag(false);

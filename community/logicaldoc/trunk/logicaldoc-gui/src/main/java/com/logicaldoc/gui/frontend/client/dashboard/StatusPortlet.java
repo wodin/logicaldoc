@@ -30,6 +30,9 @@ public class StatusPortlet extends Portlet {
 	private ListGrid list;
 
 	public StatusPortlet(final String eventCode) {
+		setCanDrag(false);
+		setCanDrop(false);
+
 		int max = 10;
 		int status = 0;
 		String icn = "blank.gif";
@@ -40,6 +43,10 @@ public class StatusPortlet extends Portlet {
 			icn = "page_white_lock.png";
 			status = Constants.DOC_LOCKED;
 		}
+		HeaderIcon portletIcon = ItemFactory.newHeaderIcon(icn);
+		HeaderControl hcicon = new HeaderControl(portletIcon);
+		hcicon.setSize(16);
+		setHeaderControls(hcicon, HeaderControls.HEADER_LABEL);
 
 		ListGridField version = new ListGridField("version", I18N.message("version"), 70);
 		ListGridField lastModified = new ListGridField("lastModified", I18N.message("date"), 110);
@@ -78,17 +85,6 @@ public class StatusPortlet extends Portlet {
 						Long.parseLong(record.getAttributeAsString("id")));
 			}
 		});
-
-		setShowShadow(true);
-		setAnimateMinimize(true);
-		setCanDrag(false);
-		setCanDrop(false);
-
-		HeaderIcon portletIcon = ItemFactory.newHeaderIcon(icn);
-		HeaderControl hcicon = new HeaderControl(portletIcon);
-		hcicon.setSize(16);
-
-		setHeaderControls(hcicon, HeaderControls.HEADER_LABEL);
 
 		// Count the total of events and the total of unchecked events
 		list.addDataArrivedHandler(new DataArrivedHandler() {
