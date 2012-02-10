@@ -51,9 +51,9 @@ public class StateWidget extends Label {
 		this.diagramController = diagramController;
 		this.transition = trans;
 		transition.setText(name);
-        setAutoFit(true);
-        setAutoHeight();
-		
+		setAutoFit(true);
+		setAutoHeight();
+
 		addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
@@ -168,6 +168,9 @@ public class StateWidget extends Label {
 		if (isTask()) {
 			TaskDialog dialog = new TaskDialog(StateWidget.this);
 			dialog.show();
+		} else if (isJoin() || isEnd() || isFork()) {
+			StatusDialog dialog = new StatusDialog(StateWidget.this);
+			dialog.show();
 		} else {
 			TransitionDialog dialog = new TransitionDialog(StateWidget.this);
 			dialog.show();
@@ -200,6 +203,10 @@ public class StateWidget extends Label {
 
 	public boolean isJoin() {
 		return wfState != null && wfState.getType() == GUIWFState.TYPE_JOIN;
+	}
+
+	public boolean isFork() {
+		return wfState != null && wfState.getType() == GUIWFState.TYPE_FORK;
 	}
 
 	public boolean isStartState() {
