@@ -75,8 +75,6 @@ public class PostsPortlet extends Portlet {
 			}
 		});
 
-		setShowShadow(true);
-		setAnimateMinimize(true);
 		setDragAppearance(DragAppearance.OUTLINE);
 		setDragOpacity(30);
 		setCanDrag(false);
