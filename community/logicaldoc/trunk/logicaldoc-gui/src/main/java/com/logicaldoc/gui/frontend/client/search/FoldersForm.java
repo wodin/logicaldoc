@@ -85,7 +85,7 @@ public class FoldersForm extends VLayout {
 		folder = new FolderSelector(null, true);
 		folder.setColSpan(3);
 
-		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders"));
+		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders",Session.get().getInfo().getConfig("search.depth")));
 		subfolders.setColSpan(3);
 		subfolders.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
