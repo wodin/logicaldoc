@@ -118,13 +118,10 @@ public class DBInit {
 			FileUtil.copyResource(sqlFile, file);
 		}
 
-
-		//SqlFile sFile = new SqlFile(file, false, null);
 		SqlFile sFile = new SqlFile(file, "Cp1252", false);
-		// TODO: verificare se vale la pena di passare lo encoding oppure null (JVM default encoding)
 		try {
-			//sFile.execute(con, new Boolean(true));
-			sFile.setConnection(con);
+			sFile.setContinueOnError(true);
+			sFile.setConnection(con);			
 			sFile.execute();
 		} catch (SqlToolError e) {
 			throw new SQLException(e.getMessage());
