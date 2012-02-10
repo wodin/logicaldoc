@@ -1,9 +1,6 @@
 package com.logicaldoc.gui.frontend.client.dashboard;
 
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIUser;
-import com.logicaldoc.gui.common.client.beans.UserObserver;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -16,7 +13,7 @@ import com.smartgwt.client.widgets.tab.TabSet;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class DashboardPanel extends VLayout implements UserObserver {
+public class DashboardPanel extends VLayout {
 
 	private static DashboardPanel instance;
 
@@ -80,8 +77,6 @@ public class DashboardPanel extends VLayout implements UserObserver {
 		}
 
 		setMembers(tabSet);
-
-		Session.get().getUser().addObserver(this);
 	}
 
 	public static DashboardPanel get() {
@@ -133,22 +128,5 @@ public class DashboardPanel extends VLayout implements UserObserver {
 	public void updateWorkflowTab() {
 		tabSet.setTabPane("workflow", new WorkflowDashboard());
 		tabSet.selectTab("workflow");
-	}
-
-	@Override
-	public void onUserChanged(GUIUser user, String attribute) {
-//		try {
-//			if (attribute.equals(GUIUser.CHECKED_OUT_DOCS) || attribute.equals(GUIUser.LOCKED_DOCS)) {
-//				updateUserTab();
-//			} else if (attribute.equals(GUIUser.ALL_MESSAGES) || attribute.equals(GUIUser.UNREAD_MESSAGES)) {
-//				updateMessageTab();
-//			} else if (attribute.equals(GUIUser.ALL_SUBSCRIPTIONS)) {
-//				updateSubscriptionsTab();
-//			} else if (attribute.equals(GUIUser.ALL_TASKS)) {
-//				updateWorkflowTab();
-//			}
-//		} catch (Throwable t) {
-//
-//		}
 	}
 }
