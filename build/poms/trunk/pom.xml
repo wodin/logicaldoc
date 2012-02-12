@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>51</version>
+  <version>52</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -84,7 +84,7 @@
   </build>
   <properties>
     <spring.version>3.0.7.RELEASE</spring.version>
-    <hibernate.version>3.6.9.Final</hibernate.version>
+    <hibernate.version>3.6.10.Final</hibernate.version>
     <lucene.version>3.5.0</lucene.version>
     <gwt.version>2.3.0</gwt.version>
     <smartgwt.version>3.0</smartgwt.version>
