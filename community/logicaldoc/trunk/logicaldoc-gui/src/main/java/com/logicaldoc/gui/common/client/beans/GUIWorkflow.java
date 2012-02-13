@@ -27,7 +27,7 @@ public class GUIWorkflow implements Serializable {
 
 	private String reminderBody = "";
 
-	private String startStateId = "0";
+	private String startStateId = null;
 
 	private String supervisor = "";
 
