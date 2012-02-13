@@ -86,14 +86,24 @@ public class GUISettingsPanel extends VLayout {
 		savelogin.setWrapTitle(false);
 
 		TextItem previewPages = ItemFactory.newIntegerItem("previewpages", I18N.message("previewpages"), null);
-		TextItem previewSize = ItemFactory.newIntegerItem("previewsize", I18N.message("previewsize"), null);
+		previewPages.setRequired(true);
+		
+		TextItem previewSize = ItemFactory.newIntegerItem("previewsize", I18N.message("previewwindow"), null);
 		previewSize.setHint("%");
+		previewSize.setRequired(true);
+		
 		TextItem previewZoom = ItemFactory.newIntegerItem("previewzoom", I18N.message("previewzoom"), null);
 		previewZoom.setHint("%");
-		TextItem thumbSize = ItemFactory.newIntegerItem("phumbsize", I18N.message("thumbsize"), null);
+		previewZoom.setRequired(true);
+		
+		TextItem thumbSize = ItemFactory.newIntegerItem("thumbsize", I18N.message("thumbsize"), null);
 		thumbSize.setHint("px");
-		TextItem thumbQuality = ItemFactory.newIntegerItem("phumbquality", I18N.message("thumbquality"), null);
+		thumbSize.setRequired(true);
+		
+		TextItem thumbQuality = ItemFactory.newIntegerItem("thumbquality", I18N.message("thumbquality"), null);
 		thumbQuality.setHint("%");
+		thumbQuality.setRequired(true);
+		thumbQuality.setWrapTitle(false);
 
 		parametersForm.setItems(welcome, dropspot, previewPages, previewSize, previewZoom, thumbSize, thumbQuality,
 				savelogin);
@@ -130,11 +140,11 @@ public class GUISettingsPanel extends VLayout {
 					params.add(new GUIParameter("gui.dropspot.mode", (String) values.get("dropspot")));
 					params.add(new GUIParameter("gui.savelogin", "yes".equals(values.get("savelogin")) ? "true"
 							: "false"));
-					params.add(new GUIParameter("gui.preview.pages", (String) values.get("previewpages")));
-					params.add(new GUIParameter("gui.preview.size", (String) values.get("previewsize")));
-					params.add(new GUIParameter("gui.preview.zoom", (String) values.get("previewzoom")));
-					params.add(new GUIParameter("gui.thumbnail.size", (String) values.get("thumbsize")));
-					params.add(new GUIParameter("gui.thumbnail.quality", (String) values.get("thumbquality")));
+					params.add(new GUIParameter("gui.preview.pages", values.get("previewpages").toString()));
+					params.add(new GUIParameter("gui.preview.size", values.get("previewsize").toString()));
+					params.add(new GUIParameter("gui.preview.zoom", values.get("previewzoom").toString()));
+					params.add(new GUIParameter("gui.thumbnail.size", values.get("thumbsize").toString()));
+					params.add(new GUIParameter("gui.thumbnail.quality", values.get("thumbquality").toString()));
 
 					service.saveSettings(Session.get().getSid(), params.toArray(new GUIParameter[0]),
 							new AsyncCallback<Void>() {
