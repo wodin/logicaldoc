@@ -2,8 +2,8 @@ package com.logicaldoc.gui.frontend.client.dashboard;
 
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.UserObserver;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
-import com.logicaldoc.gui.common.client.beans.UserObserver;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.smartgwt.client.widgets.layout.VLayout;
