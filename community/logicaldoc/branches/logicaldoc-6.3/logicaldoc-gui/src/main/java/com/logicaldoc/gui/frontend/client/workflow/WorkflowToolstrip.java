@@ -165,7 +165,8 @@ public class WorkflowToolstrip extends ToolStrip {
 						// Set the new name in the designer, then
 						// request a save
 						currentWorkflow.setId(0);
-						WorkflowToolstrip.this.designer.getAccordion().setWorkflowName(value);
+						currentWorkflow.setName(value.trim());
+						WorkflowToolstrip.this.designer.getAccordion().setWorkflowName(value.trim());
 						onSave();
 					}
 				});
@@ -343,7 +344,11 @@ public class WorkflowToolstrip extends ToolStrip {
 	}
 
 	private void onSave() {
-		designer.saveModel();
+		try {
+			designer.saveModel();
+		} catch (Throwable t) {
+		}
+		
 		currentWorkflow = designer.getWorkflow();
 
 		workflowService.save(Session.get().getSid(), currentWorkflow, new AsyncCallback<GUIWorkflow>() {
