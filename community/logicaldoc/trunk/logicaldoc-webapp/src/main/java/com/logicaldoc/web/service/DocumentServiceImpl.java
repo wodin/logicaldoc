@@ -272,6 +272,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			} catch (Throwable t) {
 				log.error(t.getMessage(), t);
 				throw new RuntimeException(t.getMessage(), t);
+			} finally {
+				UploadServlet.cleanReceivedFiles(getThreadLocalRequest().getSession());
 			}
 		}
 	}
