@@ -1,4 +1,6 @@
-package com.logicaldoc.gui.common.client.beans;
+package com.logicaldoc.gui.common.client;
+
+import com.logicaldoc.gui.common.client.beans.GUIUser;
 
 /**
  * Definition of a generic observer on user's attributes.

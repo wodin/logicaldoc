@@ -189,6 +189,10 @@ public class StateWidget extends Label {
 	public void makeStartState() {
 		WorkflowDesigner workflowDesigner = getDrawingPanel().getWorkflowDesigner();
 		workflowDesigner.getWorkflow().setStartStateId(wfState.getId());
+		for (GUIWFState s : workflowDesigner.getWorkflow().getStates()) {
+			s.setInitial(false);
+		}
+		getWfState().setInitial(true);
 		workflowDesigner.saveModel();
 		workflowDesigner.refresh();
 	}
@@ -211,7 +215,7 @@ public class StateWidget extends Label {
 
 	public boolean isStartState() {
 		if (wfState != null)
-			return getDrawingPanel().getWorkflowDesigner().getWorkflow().getStartStateId().equals(wfState.getId());
+			return wfState.isInitial();
 		else
 			return false;
 	}

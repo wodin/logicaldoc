@@ -77,6 +77,8 @@ public class GUIWFState implements Serializable {
 
 	private int left = 0;
 
+	private boolean initial = false;
+
 	public GUIWFState() {
 	}
 
@@ -250,5 +252,13 @@ public class GUIWFState implements Serializable {
 
 	public void setLeft(int left) {
 		this.left = left;
+	}
+
+	public boolean isInitial() {
+		return initial;
+	}
+
+	public void setInitial(boolean initial) {
+		this.initial = initial;
 	}
 }

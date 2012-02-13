@@ -89,21 +89,24 @@ public class WorkflowDesigner extends VStack {
 		drawingPanel.redraw();
 	}
 
-	
-	public void refresh(){
+	public void refresh() {
 		for (GUIWFState status : workflow.getStates()) {
-			StateWidget widget=getDrawingPanel().getWidget(status.getId());
-			if(widget!=null && widget.isTask())
+			StateWidget widget = getDrawingPanel().getWidget(status.getId());
+			if (widget != null && widget.isTask())
 				widget.update();
 		}
 	}
-	
+
 	public Accordion getAccordion() {
 		return accordion;
 	}
 
 	public void onAddState(int type) {
 		GUIWFState state = new GUIWFState("" + new Date().getTime(), I18N.message("statename"), type);
+		if (getWorkflow().getStartStateId() == null && type == GUIWFState.TYPE_TASK) {
+			state.setInitial(true);
+			getWorkflow().setStartStateId(state.getId());
+		}
 		StateWidget sw = new StateWidget(drawingPanel, state);
 		drawingPanel.getDiagramController().addWidget(sw, 10, 10);
 		drawingPanel.getDiagramController().makeDraggable(sw);
