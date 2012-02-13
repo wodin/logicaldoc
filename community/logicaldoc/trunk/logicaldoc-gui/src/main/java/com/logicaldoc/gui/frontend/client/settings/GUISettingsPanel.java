@@ -81,13 +81,40 @@ public class GUISettingsPanel extends VLayout {
 		RadioGroupItem dropspot = ItemFactory.newBooleanSelector("dropspot", "dropspot");
 		dropspot.setValueMap("default", "embedded");
 
-		parametersForm.setItems(welcome, dropspot);
+		RadioGroupItem savelogin = ItemFactory.newBooleanSelector("savelogin", I18N.message("savelogin"));
+		savelogin.setHint(I18N.message("saveloginhint"));
+		savelogin.setWrapTitle(false);
+
+		TextItem previewPages = ItemFactory.newIntegerItem("previewpages", I18N.message("previewpages"), null);
+		TextItem previewSize = ItemFactory.newIntegerItem("previewsize", I18N.message("previewsize"), null);
+		previewSize.setHint("%");
+		TextItem previewZoom = ItemFactory.newIntegerItem("previewzoom", I18N.message("previewzoom"), null);
+		previewZoom.setHint("%");
+		TextItem thumbSize = ItemFactory.newIntegerItem("phumbsize", I18N.message("thumbsize"), null);
+		thumbSize.setHint("px");
+		TextItem thumbQuality = ItemFactory.newIntegerItem("phumbquality", I18N.message("thumbquality"), null);
+		thumbQuality.setHint("%");
+
+		parametersForm.setItems(welcome, dropspot, previewPages, previewSize, previewZoom, thumbSize, thumbQuality,
+				savelogin);
 
 		for (GUIParameter p : settings) {
 			if (p.getName().equals("gui.welcome"))
 				welcome.setValue(p.getValue());
 			if (p.getName().equals("gui.dropspot.mode"))
 				dropspot.setValue(p.getValue());
+			if (p.getName().equals("gui.savelogin"))
+				savelogin.setValue(p.getValue().equals("true") ? "yes" : "no");
+			if (p.getName().equals("gui.preview.pages"))
+				previewPages.setValue(Integer.parseInt(p.getValue()));
+			if (p.getName().equals("gui.preview.size"))
+				previewSize.setValue(Integer.parseInt(p.getValue()));
+			if (p.getName().equals("gui.preview.zoom"))
+				previewZoom.setValue(Integer.parseInt(p.getValue()));
+			if (p.getName().equals("gui.thumbnail.size"))
+				thumbSize.setValue(Integer.parseInt(p.getValue()));
+			if (p.getName().equals("gui.thumbnail.quality"))
+				thumbQuality.setValue(Integer.parseInt(p.getValue()));
 		}
 
 		IButton save = new IButton();
@@ -101,33 +128,13 @@ public class GUISettingsPanel extends VLayout {
 					List<GUIParameter> params = new ArrayList<GUIParameter>();
 					params.add(new GUIParameter("gui.welcome", (String) values.get("welcome")));
 					params.add(new GUIParameter("gui.dropspot.mode", (String) values.get("dropspot")));
-					
-					// GUISettingsPanel.this.wsSettings.setValue(values.get("wsEnabled").equals("yes")
-					// ? "true"
-					// : "false");
-					//
-					// GUISettingsPanel.this.wdSettings.setValue(values.get("wdEnabled").equals("yes")
-					// ? "true"
-					// : "false");
-					//
-					// GUISettingsPanel.this.wdCache.setValue(values.get("wdCache").equals("yes")
-					// ? "true"
-					// : "false");
-					// GUISettingsPanel.this.convert.setValue(values.get("convertCommand").toString());
-					// GUISettingsPanel.this.ghost.setValue(values.get("ghostCommand").toString());
-					// GUISettingsPanel.this.tesseract.setValue(values.get("tesseractCommand").toString());
-					// GUISettingsPanel.this.swftoolsPath.setValue(values.get("swftools").toString());
-					// GUISettingsPanel.this.openofficePath.setValue(values.get("openOffice").toString());
-					//
-					// GUIParameter[] params = new GUIParameter[7];
-					// params[0] = GUISettingsPanel.this.wsSettings;
-					// params[1] = GUISettingsPanel.this.wdSettings;
-					// params[2] = GUISettingsPanel.this.wdCache;
-					// params[3] = GUISettingsPanel.this.convert;
-					// params[4] = GUISettingsPanel.this.swftoolsPath;
-					// params[5] = GUISettingsPanel.this.ghost;
-					// params[6] = GUISettingsPanel.this.tesseract;
-					// params[7] = GUISettingsPanel.this.openofficePath;
+					params.add(new GUIParameter("gui.savelogin", "yes".equals(values.get("savelogin")) ? "true"
+							: "false"));
+					params.add(new GUIParameter("gui.preview.pages", (String) values.get("previewpages")));
+					params.add(new GUIParameter("gui.preview.size", (String) values.get("previewsize")));
+					params.add(new GUIParameter("gui.preview.zoom", (String) values.get("previewzoom")));
+					params.add(new GUIParameter("gui.thumbnail.size", (String) values.get("thumbsize")));
+					params.add(new GUIParameter("gui.thumbnail.quality", (String) values.get("thumbquality")));
 
 					service.saveSettings(Session.get().getSid(), params.toArray(new GUIParameter[0]),
 							new AsyncCallback<Void>() {
