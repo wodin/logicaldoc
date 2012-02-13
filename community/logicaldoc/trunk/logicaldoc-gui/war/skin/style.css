@@ -184,6 +184,7 @@
 .hint {
 	white-space: nowrap;
 	padding-left: 3px;
+	color: grey;
 }
 
 .forgotpwd {
