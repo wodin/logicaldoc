@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.logicaldoc.gui.common.client.UserObserver;
+
 /**
  * User bean as used in the GUI
  * 
