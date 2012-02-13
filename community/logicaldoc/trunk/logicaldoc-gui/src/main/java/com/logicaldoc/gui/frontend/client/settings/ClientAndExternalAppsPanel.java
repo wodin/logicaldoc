@@ -78,12 +78,12 @@ public class ClientAndExternalAppsPanel extends VLayout {
 		}
 
 		setWidth100();
-		setHeight(370);
+		setHeight(250);
 		setMembersMargin(10);
 		setMargin(30);
 
 		tabs.setWidth(450);
-		tabs.setHeight(350);
+		tabs.setHeight(240);
 
 		Tab webService = new Tab();
 		webService.setTitle(I18N.message("webservice"));

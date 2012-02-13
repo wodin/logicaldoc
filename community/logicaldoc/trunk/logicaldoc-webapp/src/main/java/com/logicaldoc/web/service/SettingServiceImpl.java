@@ -112,7 +112,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.startsWith("lang") || name.startsWith("reg.") || name.startsWith("ocr.")
 					|| name.startsWith("barcode.") || name.startsWith("task.") || name.startsWith("quota")
 					|| name.startsWith("store") || name.startsWith("flexpaperviewer") || name.startsWith("omnipage.")
-					|| name.startsWith("command."))
+					|| name.startsWith("command.") || name.startsWith("gui."))
 				continue;
 
 			sortedSet.add(key.toString());
@@ -357,5 +357,20 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		}
 
 		return storagesList.toArray(new GUIParameter[0]);
+	}
+
+	@Override
+	public GUIParameter[] loadGUISettings(String sid) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+
+		List<GUIParameter> params = new ArrayList<GUIParameter>();
+		for (Object name : conf.keySet()) {
+			if (name.toString().startsWith("gui."))
+				params.add(new GUIParameter(name.toString(), conf.getProperty(name.toString())));
+		}
+
+		return params.toArray(new GUIParameter[0]);
 	}
 }

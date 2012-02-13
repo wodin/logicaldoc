@@ -140,8 +140,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@Override
 	public List<Long> findByUserId(long userId) {
 		Collection<Folder> folders = folderDAO.findByUserId(userId);
-		if (folders.isEmpty()) 
-			return new ArrayList<Long>();			
+		if (folders.isEmpty())
+			return new ArrayList<Long>();
 
 		StringBuffer query = new StringBuffer();
 		query.append("_entity.folder.id in (");
@@ -620,18 +620,19 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@Override
 	public Document findByCustomId(String customId) {
 		Document doc = null;
-		try {
-			String query = "_entity.customId = '" + SqlUtil.doubleQuotes(customId) + "'";
-			List<Document> coll = findByWhere(query, null, null);
-			if (!coll.isEmpty()) {
-				doc = coll.get(0);
-				if (doc.getDeleted() == 1)
-					doc = null;
+		if (customId != null)
+			try {
+				String query = "_entity.customId = '" + SqlUtil.doubleQuotes(customId) + "'";
+				List<Document> coll = findByWhere(query, null, null);
+				if (!coll.isEmpty()) {
+					doc = coll.get(0);
+					if (doc.getDeleted() == 1)
+						doc = null;
+				}
+			} catch (Exception e) {
+				if (log.isErrorEnabled())
+					log.error(e.getMessage(), e);
 			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-		}
 		return doc;
 	}
 
