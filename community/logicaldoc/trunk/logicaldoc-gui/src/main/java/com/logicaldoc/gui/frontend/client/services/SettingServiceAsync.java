@@ -35,4 +35,6 @@ public interface SettingServiceAsync {
 	void saveQuotaSettings(String sid, GUIParameter[] quotaSettings, AsyncCallback<Void> callback);
 
 	void computeStoragesSize(String sid, AsyncCallback<GUIParameter[]> callback);
+
+	void loadGUISettings(String sid, AsyncCallback<GUIParameter[]> callback);
 }

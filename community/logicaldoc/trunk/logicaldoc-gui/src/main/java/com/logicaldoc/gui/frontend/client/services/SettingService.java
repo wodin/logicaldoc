@@ -92,6 +92,11 @@ public interface SettingService extends RemoteService {
 	public GUIParameter[] loadQuotaSettings(String sid) throws InvalidSessionException;
 
 	/**
+	 * Load the GUI settings
+	 */
+	public GUIParameter[] loadGUISettings(String sid) throws InvalidSessionException;
+
+	/**
 	 * Saves system quota setting
 	 */
 	public void saveQuotaSettings(String sid, GUIParameter[] quotaSettings) throws InvalidSessionException;

@@ -157,4 +157,10 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 
 		return params;
 	}
+
+	@Override
+	public GUIParameter[] loadGUISettings(String sid) throws InvalidSessionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -15,7 +15,6 @@ import com.logicaldoc.gui.frontend.client.services.SearchEngineService;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
-import com.logicaldoc.gui.frontend.client.system.GUILanguagesPanel;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -28,8 +27,6 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.0
  */
 public class SettingsMenu extends VLayout {
-	private SettingServiceAsync service = (SettingServiceAsync) GWT.create(SettingService.class);
-
 	private SettingServiceAsync settingService = (SettingServiceAsync) GWT.create(SettingService.class);
 
 	private SearchEngineServiceAsync seService = (SearchEngineServiceAsync) GWT.create(SearchEngineService.class);
@@ -59,16 +56,10 @@ public class SettingsMenu extends VLayout {
 			}
 		}
 
-		Button guiLangs = new Button(I18N.message("guilanguages"));
-		guiLangs.setWidth100();
-		guiLangs.setHeight(25);
-		if (Feature.visible(Feature.GUI_LANGUAGES)) {
-			addMember(guiLangs);
-			if (!Feature.enabled(Feature.GUI_LANGUAGES)) {
-				guiLangs.setDisabled(true);
-				guiLangs.setTooltip(I18N.message("featuredisabled"));
-			}
-		}
+		Button guiSettings = new Button(I18N.message("guisettings"));
+		guiSettings.setWidth100();
+		guiSettings.setHeight(25);
+		addMember(guiSettings);
 
 		Button ocr = new Button(I18N.message("ocr"));
 		ocr.setWidth100();
@@ -112,7 +103,7 @@ public class SettingsMenu extends VLayout {
 		clientTools.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				service.loadClientSettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
+				settingService.loadClientSettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -151,17 +142,27 @@ public class SettingsMenu extends VLayout {
 			}
 		});
 
-		guiLangs.addClickHandler(new ClickHandler() {
+		guiSettings.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				AdminPanel.get().setContent(new GUILanguagesPanel());
+				settingService.loadGUISettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUIParameter[] settings) {
+						AdminPanel.get().setContent(new GUISettingsPanel(settings));
+					}
+				});
 			}
 		});
 
 		ocr.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				service.loadOcrSettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
+				settingService.loadOcrSettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -179,7 +180,7 @@ public class SettingsMenu extends VLayout {
 		parameters.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				service.loadSettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
+				settingService.loadSettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -198,7 +199,7 @@ public class SettingsMenu extends VLayout {
 		email.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				service.loadEmailSettings(Session.get().getSid(), new AsyncCallback<GUIEmailSettings>() {
+				settingService.loadEmailSettings(Session.get().getSid(), new AsyncCallback<GUIEmailSettings>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -217,7 +218,7 @@ public class SettingsMenu extends VLayout {
 		proxy.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				service.loadProxySettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
+				settingService.loadProxySettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -253,7 +254,7 @@ public class SettingsMenu extends VLayout {
 		quota.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				service.loadQuotaSettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
+				settingService.loadQuotaSettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

@@ -43,7 +43,7 @@ public class ProxyPanel extends VLayout {
 		setWidth100();
 		setMembersMargin(10);
 		setMargin(30);
-		setHeight(400);
+		setHeight(300);
 
 		TabSet tabs = new TabSet();
 		tabs.setWidth(380);

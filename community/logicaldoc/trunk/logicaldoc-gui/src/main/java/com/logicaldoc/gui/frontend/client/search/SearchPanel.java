@@ -51,10 +51,7 @@ public class SearchPanel extends HLayout implements SearchObserver {
 
 		// Prepare the collapsible menu
 		SearchMenu leftMenu = SearchMenu.get();
-		if ("true".equals(Session.get().getInfo().getConfig("gui.search.openform")))
-			leftMenu.setWidth(350);
-		else
-			leftMenu.setWidth(2);
+		leftMenu.setWidth(350);
 		leftMenu.setShowResizeBar(true);
 
 		// Initialize the listing panel as placeholder

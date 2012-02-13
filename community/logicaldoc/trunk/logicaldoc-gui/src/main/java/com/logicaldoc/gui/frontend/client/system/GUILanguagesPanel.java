@@ -61,8 +61,6 @@ public class GUILanguagesPanel extends VLayout {
 		list.setHeight100();
 		list.setAutoFetchData(true);
 		list.setDataSource(new LanguagesDS(true));
-		list.setShowFilterEditor(true);
-		list.setFilterOnKeypress(true);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setFields(enabled, code, name);
 
