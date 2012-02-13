@@ -10,6 +10,13 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC 6.3.5 (2012-02-15; logicaldoc-6.3.5)
+===============      
+180 	Move folder name to beginning of tab/window title - Improvement - User Interface
+184 	Additional characters for usernames - Improvement - User Interface
+190 	Indicate effective search depth - Improvement - User Interface 
+
+
 LogicalDOC 6.3.4 (2012-01-27; logicaldoc-6.3.4)
 ===============
 164 - Ability to download multiple files at once - Improvement - User Interface
