@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +92,7 @@ public class UploadServlet extends UploadAction {
 					try {
 						File file = new File(uploadFolder, item.getFieldName());
 						log.debug("Received file " + item.getName());
+
 						os = new FileOutputStream(file);
 						copyFromInputStreamToOutputStream(item.getInputStream(), os);
 
@@ -224,6 +226,7 @@ public class UploadServlet extends UploadAction {
 		try {
 			session.setAttribute(RECEIVEDFILES, new Hashtable<String, File>());
 			session.setAttribute(RECEIVEDCONTENTTYPES, new Hashtable<String, String>());
+			session.setAttribute(RECEIVEDFILENAMES, new HashMap<String, String>());
 			String path = session.getServletContext().getRealPath("/upload/" + session.getId());
 			FileUtils.forceDelete(new File(path));
 		} catch (IOException e) {
