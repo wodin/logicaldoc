@@ -68,7 +68,7 @@ public class ExportZip extends HttpServlet {
 
 			ByteArrayOutputStream bos = null;
 
-			if (docIds == null || docIds.length > 0)
+			if (docIds != null && docIds.length > 0)
 				bos = exporter.process(docIds);
 			else
 				bos = exporter.process(Long.parseLong(folderId), userId.longValue());
