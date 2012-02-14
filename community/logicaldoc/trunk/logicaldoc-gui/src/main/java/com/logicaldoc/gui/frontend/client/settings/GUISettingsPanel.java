@@ -97,7 +97,7 @@ public class GUISettingsPanel extends VLayout {
 		previewZoom.setRequired(true);
 		
 		TextItem thumbSize = ItemFactory.newIntegerItem("thumbsize", I18N.message("thumbsize"), null);
-		thumbSize.setHint("px");
+		thumbSize.setHint("pixels");
 		thumbSize.setRequired(true);
 		
 		TextItem thumbQuality = ItemFactory.newIntegerItem("thumbquality", I18N.message("thumbquality"), null);
