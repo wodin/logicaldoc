@@ -104,15 +104,38 @@ public class WorkflowDesigner extends VStack {
 
 	public void onAddState(int type) {
 		GUIWFState state = new GUIWFState("" + new Date().getTime(), I18N.message("statename"), type);
-		if (getWorkflow().getStartStateId() == null && type == GUIWFState.TYPE_TASK) {
-			state.setInitial(true);
-			getWorkflow().setStartStateId(state.getId());
+		
+		try {
+			saveModel();
+		} catch (Throwable t) {
 		}
+		
+		/*
+		 * Check if this must be the initial state
+		 */
+		if (type == GUIWFState.TYPE_TASK) {
+			state.setInitial(true);			
+			if (getWorkflow().getStates() != null)
+				for (GUIWFState s : getWorkflow().getStates()) {
+					if (s.getType() == GUIWFState.TYPE_TASK && s.isInitial()) {
+						state.setInitial(false);
+						break;
+					}
+				}
+		}
+		
+		try {
+			saveModel();
+		} catch (Throwable t) {
+		}
+		
+		if(state.isInitial())
+			getWorkflow().setStartStateId(state.getId());
+
 		StateWidget sw = new StateWidget(drawingPanel, state);
 		drawingPanel.getDiagramController().addWidget(sw, 10, 10);
 		drawingPanel.getDiagramController().makeDraggable(sw);
 	}
-
 	public boolean isReadOnly() {
 		return readOnly;
 	}
