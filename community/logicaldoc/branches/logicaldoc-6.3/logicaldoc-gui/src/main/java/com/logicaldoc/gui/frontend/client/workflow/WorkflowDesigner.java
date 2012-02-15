@@ -104,17 +104,17 @@ public class WorkflowDesigner extends VStack {
 
 	public void onAddState(int type) {
 		GUIWFState state = new GUIWFState("" + new Date().getTime(), I18N.message("statename"), type);
-		
+
 		try {
 			saveModel();
 		} catch (Throwable t) {
 		}
-		
+
 		/*
 		 * Check if this must be the initial state
 		 */
 		if (type == GUIWFState.TYPE_TASK) {
-			state.setInitial(true);			
+			state.setInitial(true);
 			if (getWorkflow().getStates() != null)
 				for (GUIWFState s : getWorkflow().getStates()) {
 					if (s.getType() == GUIWFState.TYPE_TASK && s.isInitial()) {
@@ -123,19 +123,20 @@ public class WorkflowDesigner extends VStack {
 					}
 				}
 		}
-		
+
 		try {
 			saveModel();
 		} catch (Throwable t) {
 		}
-		
-		if(state.isInitial())
+
+		if (state.isInitial())
 			getWorkflow().setStartStateId(state.getId());
 
 		StateWidget sw = new StateWidget(drawingPanel, state);
 		drawingPanel.getDiagramController().addWidget(sw, 10, 10);
 		drawingPanel.getDiagramController().makeDraggable(sw);
 	}
+
 	public boolean isReadOnly() {
 		return readOnly;
 	}
@@ -148,23 +149,6 @@ public class WorkflowDesigner extends VStack {
 	 * Saves the current diagram into the object model.
 	 */
 	public void saveModel() {
-		final Map<String, Object> values = getAccordion().getValues();
-		if (values == null || ((String) values.get("workflowName")).trim().isEmpty())
-			return;
-		workflow.setName((String) values.get("workflowName"));
-		if (values.get("workflowDescr") != null)
-			workflow.setDescription((String) values.get("workflowDescr"));
-		if (values.get("assignmentSubject") != null)
-			workflow.setTaskAssignmentSubject((String) values.get("assignmentSubject"));
-		if (values.get("assignmentBody") != null)
-			workflow.setTaskAssignmentBody((String) values.get("assignmentBody"));
-		if (values.get("reminderSubject") != null)
-			workflow.setReminderSubject((String) values.get("reminderSubject"));
-		if (values.get("reminderBody") != null)
-			workflow.setReminderBody((String) values.get("reminderBody"));
-		if (values.get("supervisor") != null)
-			workflow.setSupervisor((String) values.get("supervisor"));
-
 		// Collect all the states as drawn in the designer.
 		List<GUIWFState> states = new ArrayList<GUIWFState>();
 		Iterator<FunctionShape> iter = getDrawingPanel().getDiagramController().getShapes().iterator();
@@ -206,5 +190,22 @@ public class WorkflowDesigner extends VStack {
 			}
 			srcWidget.getWfState().setTransitions(transitions.toArray(new GUITransition[0]));
 		}
+
+		final Map<String, Object> values = getAccordion().getValues();
+		if (values == null || ((String) values.get("workflowName")).trim().isEmpty())
+			return;
+		workflow.setName((String) values.get("workflowName"));
+		if (values.get("workflowDescr") != null)
+			workflow.setDescription((String) values.get("workflowDescr"));
+		if (values.get("assignmentSubject") != null)
+			workflow.setTaskAssignmentSubject((String) values.get("assignmentSubject"));
+		if (values.get("assignmentBody") != null)
+			workflow.setTaskAssignmentBody((String) values.get("assignmentBody"));
+		if (values.get("reminderSubject") != null)
+			workflow.setReminderSubject((String) values.get("reminderSubject"));
+		if (values.get("reminderBody") != null)
+			workflow.setReminderBody((String) values.get("reminderBody"));
+		if (values.get("supervisor") != null)
+			workflow.setSupervisor((String) values.get("supervisor"));
 	}
 }
