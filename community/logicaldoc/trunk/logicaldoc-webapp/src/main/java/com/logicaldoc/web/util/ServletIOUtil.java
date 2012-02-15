@@ -248,7 +248,7 @@ public class ServletIOUtil {
 		String userAgent = request.getHeader("User-Agent");
 
 		String encodedFileName = null;
-		if (userAgent.contains("MSIE") || userAgent.contains("Opera") || userAgent.contains("Safari")) {
+		if (userAgent.contains("MSIE") || userAgent.contains("Opera")) {
 			encodedFileName = URLEncoder.encode(filename, "UTF-8");
 			encodedFileName = encodedFileName.replace("+", "%20");
 		} else {
