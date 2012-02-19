@@ -78,6 +78,8 @@ public class ResourceServiceImpl implements ResourceService {
 		resource.setLastModified(folder.getLastModified());
 		resource.setSession(session);
 		resource.isFolder(true);
+		if (folder.getType() == Folder.TYPE_WORKSPACE)
+			resource.isWorkspace(true);
 
 		if (session != null && (Long) session.getObject("id") != null) {
 			resource.setRequestedPerson((Long) session.getObject("id"));
@@ -252,6 +254,9 @@ public class ResourceServiceImpl implements ResourceService {
 		if (session != null)
 			sid = (String) session.getObject("sid");
 
+		if (parentFolder.getId() == Folder.ROOTID)
+			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Cannot write in the root.");
+
 		if (isCollection) {
 			// check permission to add folder
 			boolean addChildEnabled = parentResource.isAddChildEnabled();
@@ -363,7 +368,9 @@ public class ResourceServiceImpl implements ResourceService {
 	public Resource move(Resource source, Resource destination, DavSession session) throws DavException {
 		String sid = (String) session.getObject("sid");
 
-		if (source.isFolder()) {
+		if (source.isWorkspace()) {
+			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Cannot move a workspace");
+		} else if (source.isFolder()) {
 			return folderRenameOrMove(source, destination, session, sid);
 		} else {
 			return fileRenameOrMove(source, destination, session, sid);
@@ -440,6 +447,9 @@ public class ResourceServiceImpl implements ResourceService {
 		long currentParentFolder = currentFolder.getParentId();
 		long destinationParentFolder = Long.parseLong(destination.getID());
 
+		if (currentFolder.getType() == Folder.TYPE_WORKSPACE)
+			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Cannot more nor rename a workspace");
+
 		// distinction between folder move and folder rename
 		if (currentParentFolder != destinationParentFolder) {
 			// Folder Move
@@ -505,7 +515,9 @@ public class ResourceServiceImpl implements ResourceService {
 		transaction.setUser(user);
 
 		try {
-			if (resource.isFolder()) {
+			if (folder.getType() == Folder.TYPE_WORKSPACE) {
+				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Cannot delete a workspace.");
+			} else if (resource.isFolder()) {
 				if (!resource.isDeleteEnabled())
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
 
@@ -543,6 +555,12 @@ public class ResourceServiceImpl implements ResourceService {
 
 	public void copyResource(Resource destinationResource, Resource resource, DavSession session) throws DavException {
 		String sid = (String) session.getObject("sid");
+
+		/*
+		 * Cannot write in the root
+		 */
+		if (destinationResource.isFolder() && Long.parseLong(destinationResource.getID()) == Folder.ROOTID)
+			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Cannot write in the root");
 
 		if (resource.isFolder() == true) {
 			throw new RuntimeException("FolderCopy not supported");

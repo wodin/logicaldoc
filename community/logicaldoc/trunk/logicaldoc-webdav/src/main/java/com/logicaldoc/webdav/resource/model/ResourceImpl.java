@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.Set;
 
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
@@ -23,6 +24,8 @@ public class ResourceImpl implements Resource {
 	private Long contentLength;
 
 	private boolean isFolder;
+
+	private boolean isWorkspace;
 
 	private boolean isLocked;
 
@@ -82,8 +85,16 @@ public class ResourceImpl implements Resource {
 		this.isFolder = isFolder;
 	}
 
+	public void isWorkspace(boolean isWorkspace) {
+		this.isFolder = isWorkspace;
+	}
+
 	public boolean isFolder() {
 		return this.isFolder;
+	}
+
+	public boolean isWorkspace() {
+		return this.isWorkspace;
 	}
 
 	public void isLocked(boolean isLocked) {
@@ -250,16 +261,29 @@ public class ResourceImpl implements Resource {
 
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Set<Permission> permissions = null;
+		long fid = 0;
 		if (isFolder)
-			permissions = fdao.getEnabledPermissions(Long.parseLong(id), personRequest);
+			fid = Long.parseLong(id);
 		else
-			permissions = fdao.getEnabledPermissions(Long.parseLong(folderId), personRequest);
+			fid = Long.parseLong(folderId);
 
-		writeEnabled = permissions.contains(Permission.WRITE);
-		deleteEnabled = permissions.contains(Permission.DELETE);
-		renameEnabled = permissions.contains(Permission.RENAME);
-		addChildEnabled = permissions.contains(Permission.ADD);
-		downloadEnabled = permissions.contains(Permission.DOWNLOAD);
+		Folder folder = fdao.findById(fid);
+		isWorkspace = folder.getType() == Folder.TYPE_WORKSPACE;
+
+		if (fid == Folder.ROOTID) {
+			writeEnabled = false;
+			deleteEnabled = false;
+			renameEnabled = false;
+			addChildEnabled = false;
+			downloadEnabled = false;
+		} else {
+			permissions = fdao.getEnabledPermissions(fid, personRequest);
+			writeEnabled = permissions.contains(Permission.WRITE);
+			deleteEnabled = permissions.contains(Permission.DELETE);
+			renameEnabled = permissions.contains(Permission.RENAME);
+			addChildEnabled = permissions.contains(Permission.ADD);
+			downloadEnabled = permissions.contains(Permission.DOWNLOAD);
+		}
 	}
 
 	public boolean isDownloadEnabled() {
