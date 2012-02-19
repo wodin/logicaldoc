@@ -33,6 +33,8 @@ public interface Resource {
 	public void setName(String name);
 
 	public boolean isFolder();
+	
+	public boolean isWorkspace();
 
 	public boolean isLocked();
 
@@ -59,6 +61,8 @@ public interface Resource {
 	public void isLocked(boolean isLocked);
 
 	public void isFolder(boolean isFolder);
+	
+	public void isWorkspace(boolean isWorkspace);
 
 	public String getPath();
 
