@@ -91,6 +91,17 @@ public interface FolderService {
 	public WSFolder getRootFolder(@WebParam(name = "sid") String sid) throws Exception;
 
 	/**
+	 * Gets the Default workspace
+	 * 
+	 * @param sid Session identifier
+	 * @return A value object containing the workspace's metadata.
+	 * @throws Exception
+	 */
+	@WebResult(name = "workspace")
+	public WSFolder getDefaultWorkspace(@WebParam(name = "sid") String sid) throws Exception;
+
+	
+	/**
 	 * Test if a folder identifier is readable.
 	 * 
 	 * @param sid Session identifier

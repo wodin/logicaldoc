@@ -205,6 +205,11 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	public WSFolder getRootFolder(String sid) throws Exception {
 		return getFolder(sid, Folder.ROOTID);
 	}
+	
+	@Override
+	public WSFolder getDefaultWorkspace(String sid) throws Exception {
+		return getFolder(sid, Folder.DEFAULTWORKSPACE);
+	}
 
 	@Override
 	public boolean isWriteable(String sid, long folderId) throws Exception {
