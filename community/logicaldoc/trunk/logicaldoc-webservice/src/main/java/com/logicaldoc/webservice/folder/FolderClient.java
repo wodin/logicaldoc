@@ -74,6 +74,11 @@ public class FolderClient implements FolderService {
 	}
 
 	@Override
+	public WSFolder getDefaultWorkspace(String sid) throws Exception {
+		return client.getDefaultWorkspace(sid);
+	}
+	
+	@Override
 	public boolean isWriteable(String sid, long folderId) throws Exception {
 		return client.isWriteable(sid, folderId);
 	}
