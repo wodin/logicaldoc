@@ -136,6 +136,11 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 
 	@Override
 	public void move(String sid, long folderId, long parentId) throws Exception {
+		if (parentId == Folder.ROOTID) {
+			log.error("Cannot move folders in the root");
+			throw new Exception("Cannot move folders in the root");
+		}
+
 		User user = validateSession(sid);
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Folder destParentFolder = folderDao.findById(parentId);
@@ -205,7 +210,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	public WSFolder getRootFolder(String sid) throws Exception {
 		return getFolder(sid, Folder.ROOTID);
 	}
-	
+
 	@Override
 	public WSFolder getDefaultWorkspace(String sid) throws Exception {
 		return getFolder(sid, Folder.DEFAULTWORKSPACE);
@@ -353,7 +358,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		}
 
 		if (folderId == Folder.ROOTID)
-			throw new Exception("cannot rename the root folder");
+			throw new Exception("cannot update the root folder");
 
 		Folder flder = folderDao.findById(folderId);
 		if (flder == null)
@@ -387,6 +392,33 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		transaction.setUser(user);
 		transaction.setEvent(History.EVENT_FOLDER_CREATED);
 		transaction.setSessionId(sid);
+
+		if (path.startsWith("/"))
+			path.substring(1);
+
+		/*
+		 * Cannot write in the root so if the parent is the root, we have to
+		 * guarantee that the first element in the path is a workspace. If not
+		 * the Default one will be used.
+		 */
+		if (parentId == Folder.ROOTID) {
+			Folder workspace = null;
+
+			/*
+			 * Check if the path contains the workspace specification
+			 */
+			for (WSFolder w : listWorkspaces(sid)) {
+				if (path.startsWith(w.getName())) {
+					workspace = folderDao.findById(w.getId());
+					break;
+				}
+			}
+
+			if (workspace == null) {
+				log.debug("Path " + path + " will be created in the Default workspace");
+				parent = folderDao.findById(Folder.DEFAULTWORKSPACE);
+			}
+		}
 
 		Folder folder = folderDao.createPath(parent, path, transaction);
 

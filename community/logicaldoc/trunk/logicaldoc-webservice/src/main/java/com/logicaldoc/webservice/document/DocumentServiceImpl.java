@@ -61,6 +61,9 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		if (folder == null) {
 			log.error("Folder " + document.getFolderId() + " not found");
 			throw new Exception("error - folder not found");
+		} else if (folder.getId() == Folder.ROOTID) {
+			log.error("Cannot add documents in the root");
+			throw new Exception("Cannot add documents in the root");
 		}
 
 		Document doc = document.toDocument();
@@ -161,7 +164,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		transaction.setEvent(History.EVENT_DELETED);
 		transaction.setComment("");
 		transaction.setUser(user);
-		
+
 		// TODO: fails to initialize a lazy collection (Tags)
 		docDao.delete(docId, transaction);
 	}
@@ -198,7 +201,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		// Now we can append the 'document' attachment to the response
 		String resource = storer.getResourceName(doc, null, null);
 		byte[] bytes = storer.getBytes(doc.getId(), resource);
-		
+
 		String mime = "application/octet-stream";
 		try {
 			MagicMatch match = Magic.getMagicMatch(bytes, true);
@@ -206,7 +209,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		} catch (Throwable t) {
 
 		}
-		
+
 		DataHandler content = new DataHandler(new ByteArrayDataSource(bytes, mime));
 		return content;
 	}
@@ -260,6 +263,11 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void move(String sid, long docId, long folderId) throws Exception {
+		if (folderId == Folder.ROOTID) {
+			log.error("Cannot move documents in the root");
+			throw new Exception("Cannot move documents in the root");
+		}
+		
 		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
@@ -560,6 +568,11 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public WSDocument createAlias(String sid, long docId, long folderId) throws Exception {
+		if (folderId == Folder.ROOTID) {
+			log.error("Cannot create alias in the root");
+			throw new Exception("Cannot create alias in the root");
+		}
+		
 		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document originalDoc = docDao.findById(docId);
