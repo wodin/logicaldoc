@@ -20,6 +20,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.ibm.icu.util.Calendar;
+import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentLink;
@@ -212,6 +213,38 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 						dst.add(s);
 				}
 				doc.setTags(dst);
+			}
+
+			/*
+			 * Check for attributes defaults
+			 */
+			folderDAO.initialize(doc.getFolder());
+			if (doc.getFolder().getTemplate() != null) {
+				if (doc.getTemplate() == null || doc.getTemplate().equals(doc.getFolder().getTemplate())) {
+					doc.setTemplate(doc.getFolder().getTemplate());
+					for (String name : doc.getFolder().getAttributeNames()) {
+						ExtendedAttribute fAtt = doc.getFolder().getExtendedAttribute(name);
+						if (fAtt.getValue() == null || StringUtils.isEmpty(fAtt.getValue().toString()))
+							continue;
+						ExtendedAttribute dAtt = doc.getExtendedAttribute(name);
+						if (dAtt == null) {
+							dAtt = new ExtendedAttribute();
+							dAtt.setType(fAtt.getType());
+							dAtt.setEditor(fAtt.getEditor());
+							dAtt.setLabel(fAtt.getLabel());
+							dAtt.setMandatory(fAtt.getMandatory());
+							dAtt.setPosition(fAtt.getPosition());
+							doc.getAttributes().put(name, dAtt);
+						}
+
+						if (dAtt.getValue() == null || StringUtils.isEmpty(dAtt.getValue().toString())) {
+							dAtt.setStringValue(fAtt.getStringValue());
+							dAtt.setDateValue(fAtt.getDateValue());
+							dAtt.setDoubleValue(fAtt.getDoubleValue());
+							dAtt.setIntValue(fAtt.getIntValue());
+						}
+					}
+				}
 			}
 
 			Map<String, Object> dictionary = new HashMap<String, Object>();

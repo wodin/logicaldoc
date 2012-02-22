@@ -944,6 +944,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		if (isInPath(source.getId(), target.getId()))
 			throw new IllegalArgumentException("Cannot move a dolder inside the same path");
 
+		initialize(source);
+
 		// Change the parent folder
 		source.setParentId(target.getId());
 
@@ -1063,7 +1065,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	@Override
 	public List<Folder> findWorkspaces() {
 		return findByWhere(" (not _entity.id=" + Folder.ROOTID + ") and _entity.parentId=" + Folder.ROOTID
-		+ " and _entity.type=" + Folder.TYPE_WORKSPACE, "order by lower(_entity.name)", null);		
+				+ " and _entity.type=" + Folder.TYPE_WORKSPACE, "order by lower(_entity.name)", null);
 	}
 
 	@Override
@@ -1083,6 +1085,18 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 		for (Folder folder : children) {
 			findTreeIds(folder.getId(), userId, d, ids);
+		}
+	}
+
+	@Override
+	public void initialize(Folder folder) {
+		getHibernateTemplate().refresh(folder);
+
+		for (String attribute : folder.getAttributes().keySet()) {
+			attribute.getBytes();
+		}
+		for (FolderGroup fg : folder.getFolderGroups()) {
+			fg.getWrite();
 		}
 	}
 }

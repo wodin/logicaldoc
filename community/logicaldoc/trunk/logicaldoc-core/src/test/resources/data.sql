@@ -105,9 +105,17 @@ values     (5,3);
 insert into ld_group
 values     (10,'2008-10-22 00:00:00',0,'testGroup','Group for tests',0);
 
+
+insert into ld_template (ld_id, ld_lastmodified,ld_deleted, ld_name, ld_description, ld_readonly, ld_type, ld_category, ld_signrequired)
+values (1, '2008-11-07 00:00:00',0,'test1','test1_desc',0,0,0,0);
+insert into ld_template_ext (ld_templateid, ld_mandatory, ld_position, ld_type, ld_stringvalue, ld_name, ld_editor)
+values (1, 0, 0, 0, 'val1', 'attr1',0);
+insert into ld_template (ld_id, ld_lastmodified,ld_deleted, ld_name, ld_description, ld_readonly, ld_type, ld_category, ld_signrequired)
+values (2, '2008-11-07 00:00:00',0,'test2','test2_desc',0,0,0,0);
+
+
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
 values (3000,CURRENT_TIMESTAMP,0,'Workspace X',5,1);
-
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
 values (6,CURRENT_TIMESTAMP,0,'folder6',5,0);
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
@@ -118,8 +126,10 @@ insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_t
 values (1200,CURRENT_TIMESTAMP,0,'test',5,0);
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_creation,ld_description)
 values (1201,CURRENT_TIMESTAMP,0,'ABC',1200,0,'2012-01-08 00:00:00','test description');
-insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values (1202,CURRENT_TIMESTAMP,0,'xyz',1201,0);
+insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templateid)
+values (1202,CURRENT_TIMESTAMP,0,'xyz',1201,0,1);
+insert into ld_folder_ext (ld_folderid, ld_mandatory, ld_position, ld_type, ld_stringvalue, ld_name, ld_editor)
+values (1202, 0, 0, 0, 'test_val_1', 'val1',0);
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
 values (1204,CURRENT_TIMESTAMP,1,'deleted',1201,0);
 
@@ -249,13 +259,6 @@ values   (3,'2008-10-22 00:00:00',0,1,2,'xxx');
 insert into ld_link(ld_id, ld_lastmodified,ld_deleted, ld_docid1, ld_docid2,ld_type)
 values   (4,'2008-10-22 00:00:00',0,2,1,'');
 
-insert into ld_template (ld_id, ld_lastmodified,ld_deleted, ld_name, ld_description, ld_readonly, ld_type, ld_category, ld_signrequired)
-values (1, '2008-11-07 00:00:00',0,'test1','test1_desc',0,0,0,0);
-insert into ld_template_ext (ld_templateid, ld_mandatory, ld_position, ld_type, ld_stringvalue, ld_name, ld_editor)
-values (1, 0, 0, 0, 'val1', 'attr1',0);
-
-insert into ld_template (ld_id, ld_lastmodified,ld_deleted, ld_name, ld_description, ld_readonly, ld_type, ld_category, ld_signrequired)
-values (2, '2008-11-07 00:00:00',0,'test2','test2_desc',0,0,0,0);
 
 insert into ld_generic(ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_string1, ld_string2, ld_integer1, ld_integer2, ld_double1, ld_double2, ld_date1, ld_date2)
 values(1, '2008-11-19 00:00:00',0,'a','a1','str1','str2',0,1,1.5,1.6,'2008-11-20 00:00:00','2008-11-20 00:00:00');

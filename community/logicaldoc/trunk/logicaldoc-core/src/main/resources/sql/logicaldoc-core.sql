@@ -32,7 +32,8 @@ create table ld_version (ld_id bigint not null, ld_lastmodified timestamp not nu
                          ld_exportid bigint, ld_exportname varchar(255), ld_exportversion varchar(10), ld_deleteuserid bigint, ld_workflowstatus varchar(1000), 
                          ld_published int not null, ld_startpublishing timestamp, ld_stoppublishing timestamp null, primary key (ld_id));
 create table ld_version_ext (ld_versionid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_versionid, ld_name));
-create table ld_folder(ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_name varchar(255), ld_parentid bigint not null, ld_securityref bigint, ld_description varchar(4000), ld_type int not null, ld_creation timestamp, ld_creator varchar(255), ld_creatorid bigint, primary key (ld_id));
+create table ld_folder(ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_name varchar(255), ld_parentid bigint not null, ld_securityref bigint, ld_description varchar(4000), ld_type int not null, ld_creation timestamp, ld_creator varchar(255), ld_creatorid bigint, ld_templateid bigint, primary key (ld_id));
+create table ld_folder_ext (ld_folderid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_folderid, ld_name));
 create table ld_foldergroup (ld_folderid bigint not null, ld_groupid bigint not null, ld_write int not null, ld_add int not null, ld_security int not null, ld_immutable int not null, ld_delete int not null, ld_rename int not null, ld_import int not null, ld_export int not null, ld_sign int not null, ld_archive int not null, ld_workflow int not null, ld_download int not null, primary key (ld_folderid, ld_groupid, ld_write, ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download));
 create table ld_feedmessage (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_guid varchar(512) null, ld_title varchar(512) null, ld_description  varchar(4000) null, ld_link varchar(512) null, ld_pubdate timestamp, ld_read int not null, primary key (ld_id));
 create table ld_rating (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_userid bigint not null, ld_vote int not null, primary key (ld_id));
@@ -60,6 +61,8 @@ alter table ld_userdoc add constraint FK_USERDOC_DOC foreign key (ld_docid) refe
 alter table ld_userdoc add constraint FK_USERDOC_USER foreign key (ld_userid) references ld_user(ld_id);
 alter table ld_menu add constraint FK_MENU_PARENT foreign key (ld_parentid) references ld_menu(ld_id);
 alter table ld_folder add constraint FK_FOLDER_PARENT foreign key (ld_parentid) references ld_folder(ld_id) on delete cascade;
+alter table ld_folder add constraint FK_FOLDER_TEMPLATE foreign key (ld_templateid) references ld_template(ld_id);
+alter table ld_folder_ext add constraint FK_FOLDEREXT_FOLDER foreign key (ld_folderid) references ld_folder(ld_id);
 alter table ld_foldergroup add constraint FK_FGROUP_FOLDER foreign key (ld_folderid) references ld_folder(ld_id) on delete cascade;
 
 

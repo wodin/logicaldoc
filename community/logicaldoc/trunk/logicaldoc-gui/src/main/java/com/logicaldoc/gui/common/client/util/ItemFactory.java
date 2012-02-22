@@ -281,6 +281,7 @@ public class ItemFactory {
 		map.put("event.deleted", I18N.message("event.deleted"));
 		map.put("event.downloaded", I18N.message("event.downloaded"));
 		map.put("event.folder.created", I18N.message("event.folder.created"));
+		map.put("event.folder.changed", I18N.message("event.folder.changed"));
 		map.put("event.folder.deleted", I18N.message("event.folder.deleted"));
 		map.put("event.folder.permission", I18N.message("event.folder.permission"));
 		map.put("event.folder.renamed", I18N.message("event.folder.renamed"));

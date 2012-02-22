@@ -49,6 +49,8 @@ public class History extends AbstractHistory {
 	public final static String EVENT_FOLDER_DELETED = "event.folder.deleted";
 
 	public final static String EVENT_FOLDER_MOVED = "event.folder.moved";
+	
+	public final static String EVENT_FOLDER_CHANGED = "event.folder.changed";
 
 	// Events on sub-folders
 	public final static String EVENT_FOLDER_SUBFOLDER_CREATED = "event.folder.subfolder.created";

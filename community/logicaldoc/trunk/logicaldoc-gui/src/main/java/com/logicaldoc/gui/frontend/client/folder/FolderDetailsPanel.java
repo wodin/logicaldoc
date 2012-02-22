@@ -44,6 +44,8 @@ public class FolderDetailsPanel extends VLayout {
 
 	private Layout propertiesTabPanel;
 
+	private Layout extendedPropertiesTabPanel;
+	
 	private Layout securityTabPanel;
 
 	private Layout historyTabPanel;
@@ -51,6 +53,8 @@ public class FolderDetailsPanel extends VLayout {
 	private Layout workflowsTabPanel;
 
 	private PropertiesPanel propertiesPanel;
+	
+	private ExtendedPropertiesPanel extendedPropertiesPanel;
 
 	private SecurityPanel securityPanel;
 
@@ -136,13 +140,20 @@ public class FolderDetailsPanel extends VLayout {
 		tabSet.setHeight100();
 
 		Tab propertiesTab = new Tab(I18N.message("properties"));
-		propertiesTab.setID("folderproperties");
 		propertiesTabPanel = new HLayout();
 		propertiesTabPanel.setWidth100();
 		propertiesTabPanel.setHeight100();
 		propertiesTab.setPane(propertiesTabPanel);
 		tabSet.addTab(propertiesTab);
 
+		Tab extendedPropertiesTab  = new Tab(I18N.message("propertiesext"));
+		extendedPropertiesTabPanel = new HLayout();
+		extendedPropertiesTabPanel.setWidth100();
+		extendedPropertiesTabPanel.setHeight100();
+		extendedPropertiesTab.setPane(extendedPropertiesTabPanel);
+		tabSet.addTab(extendedPropertiesTab);
+
+		
 		Tab securityTab = new Tab(I18N.message("security"));
 		securityTabPanel = new HLayout();
 		securityTabPanel.setWidth100();
@@ -198,6 +209,19 @@ public class FolderDetailsPanel extends VLayout {
 			propertiesPanel = new PropertiesPanel(folder, changeHandler);
 			propertiesTabPanel.addMember(propertiesPanel);
 
+			
+			/*
+			 * Prepare the extended properties tab
+			 */
+			if (extendedPropertiesPanel != null) {
+				extendedPropertiesPanel.destroy();
+				extendedPropertiesTabPanel.removeMember(extendedPropertiesPanel);
+			}
+			extendedPropertiesPanel = new ExtendedPropertiesPanel(folder, changeHandler);
+			if (Feature.enabled(Feature.TEMPLATE)){
+			  extendedPropertiesTabPanel.addMember(extendedPropertiesPanel);
+			}
+			
 			/*
 			 * Prepare the security properties tab
 			 */
@@ -252,6 +276,12 @@ public class FolderDetailsPanel extends VLayout {
 		boolean propValid = propertiesPanel.validate();
 		if (!propValid)
 			tabSet.selectTab(0);
+		if (propValid && Feature.enabled(Feature.TEMPLATE)){
+			propValid = extendedPropertiesPanel.validate();
+			if (!propValid)
+				tabSet.selectTab(1);
+		}
+
 		return propValid;
 	}
 

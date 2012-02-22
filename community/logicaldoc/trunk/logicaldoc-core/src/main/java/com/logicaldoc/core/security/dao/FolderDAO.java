@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.logicaldoc.core.PersistentObjectDAO;
+import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Permission;
@@ -332,4 +333,12 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * @param ids The set in which all ids will be stored
 	 */
 	public void findTreeIds(long parentId, long userId, Integer depth, Collection<Long> ids);
+	
+	/**
+	 * Initializes lazy loaded collections
+	 * 
+	 * @param folder The folder to be initialized
+	 */
+	public void initialize(Folder folder);
+
 }
