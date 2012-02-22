@@ -142,28 +142,15 @@ public class WSDocument {
 	// Contains the snippet search text
 	private String summary;
 
-	// TODO to be removed
-	private int docType;
-
 	private Integer score;
 
 	private String icon;
 
-	// TODO to be removed
-	private int lengthCategory;
-
 	private String path;
-
-	// TODO We should delete this because not used, use fileSize instead
-	private long size;
 
 	private String comment;
 
 	private String lastModified;
-
-	// TODO Just for .Net compatibility (6.0.x) We could be remove it in the
-	// future
-	private int dateCategory;
 
 	private Integer rating;
 
@@ -686,14 +673,6 @@ public class WSDocument {
 		this.summary = summary;
 	}
 
-	public int getDocType() {
-		return docType;
-	}
-
-	public void setDocType(int docType) {
-		this.docType = docType;
-	}
-
 	public Integer getScore() {
 		return score;
 	}
@@ -709,29 +688,13 @@ public class WSDocument {
 	public void setIcon(String icon) {
 		this.icon = icon;
 	}
-
-	public int getLengthCategory() {
-		return lengthCategory;
-	}
-
-	public void setLengthCategory(int lengthCategory) {
-		this.lengthCategory = lengthCategory;
-	}
-
+	
 	public String getPath() {
 		return path;
 	}
 
 	public void setPath(String path) {
 		this.path = path;
-	}
-
-	public long getSize() {
-		return size;
-	}
-
-	public void setSize(long size) {
-		this.size = size;
 	}
 
 	public String getComment() {
@@ -748,14 +711,6 @@ public class WSDocument {
 
 	public void setLastModified(String lastModified) {
 		this.lastModified = lastModified;
-	}
-
-	public int getDateCategory() {
-		return dateCategory;
-	}
-
-	public void setDateCategory(int dateCategory) {
-		this.dateCategory = dateCategory;
 	}
 
 	public Integer getRating() {
