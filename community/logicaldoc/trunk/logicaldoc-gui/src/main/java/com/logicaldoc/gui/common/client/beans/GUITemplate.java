@@ -30,6 +30,8 @@ public class GUITemplate implements Serializable {
 
 	private String description;
 
+	private Integer retentionDays;
+	
 	private boolean readonly = false;
 
 	private int type = TYPE_DEFAULT;
@@ -102,5 +104,13 @@ public class GUITemplate implements Serializable {
 
 	public void setSignRequired(int signRequired) {
 		this.signRequired = signRequired;
+	}
+
+	public Integer getRetentionDays() {
+		return retentionDays;
+	}
+
+	public void setRetentionDays(Integer retentionDays) {
+		this.retentionDays = retentionDays;
 	}
 }

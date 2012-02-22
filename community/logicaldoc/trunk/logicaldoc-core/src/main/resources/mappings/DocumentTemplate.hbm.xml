@@ -11,6 +11,7 @@
     <property name="deleted" type="int" column="ld_deleted" not-null="true" />
     <property name="name" type="string" column="ld_name" length="255" not-null="true" />
     <property name="description" type="string" column="ld_description" length="2000" />
+    <property name="retentionDays" type="integer" column="ld_retentiondays" length="2000" />
     <property name="readonly" type="int" column="ld_readonly" not-null="true" />
     <property name="type" type="int" column="ld_type" not-null="true" />
     <property name="category" type="int" column="ld_category" not-null="true" />

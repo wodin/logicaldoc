@@ -218,8 +218,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			/*
 			 * Check for attributes defaults
 			 */
-			folderDAO.initialize(doc.getFolder());
 			if (doc.getFolder().getTemplate() != null) {
+				folderDAO.initialize(doc.getFolder());
 				if (doc.getTemplate() == null || doc.getTemplate().equals(doc.getFolder().getTemplate())) {
 					doc.setTemplate(doc.getFolder().getTemplate());
 					for (String name : doc.getFolder().getAttributeNames()) {
@@ -246,7 +246,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					}
 				}
 			}
-
+			
+			
 			Map<String, Object> dictionary = new HashMap<String, Object>();
 
 			log.debug("Invoke listeners before store");
