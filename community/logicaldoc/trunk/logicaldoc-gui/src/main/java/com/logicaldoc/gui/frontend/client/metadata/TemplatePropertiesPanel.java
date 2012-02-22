@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
@@ -359,7 +360,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		values = ItemFactory.newTextItem("values", "values", null);
 		values.setHint(I18N.message("separatedcomma"));
 		values.setDisabled(true);
-		
+
 		ButtonItem addUpdate = new ButtonItem();
 		addUpdate.setTitle(I18N.message("addupdate"));
 		addUpdate.setAutoFit(true);
@@ -392,12 +393,12 @@ public class TemplatePropertiesPanel extends HLayout {
 							att.setMandatory((Boolean) mandatory.getValue());
 							att.setType(Integer.parseInt(type.getValueAsString()));
 							att.setEditor(Integer.parseInt((String) editor.getValueAsString()));
-							
+
 							if (att.getEditor() == GUIExtendedAttribute.EDITOR_LISTBOX)
 								att.setStringValue(values.getValueAsString());
 							else
 								att.setStringValue(null);
-							
+
 							updateAttribute(att, updatingAttributeName);
 
 							clean();
@@ -439,7 +440,17 @@ public class TemplatePropertiesPanel extends HLayout {
 		if (!readonly)
 			description.addChangedHandler(changedHandler);
 
-		form1.setItems(id, name, description);
+		TextItem retentionDays = ItemFactory.newIntegerItem("retentionDays", "retention", template.getRetentionDays());
+		retentionDays.setHint(I18N.message("days"));
+		retentionDays.setDisabled(readonly);
+		if (!readonly)
+			retentionDays.addChangedHandler(changedHandler);
+
+		if (Feature.enabled(Feature.RETENTION_POLICIES))
+			form1.setItems(id, name, description, retentionDays);
+		else
+			form1.setItems(id, name, description);
+
 		form1.setWidth(200);
 	}
 
@@ -456,6 +467,11 @@ public class TemplatePropertiesPanel extends HLayout {
 	protected void validateFields(Map<String, Object> values) {
 		template.setName((String) values.get("name"));
 		template.setDescription((String) values.get("description"));
+		if (values.get("retentionDays") != null)
+			template.setRetentionDays(new Integer(values.get("retentionDays").toString()));
+		else
+			template.setRetentionDays(null);
+
 		if (guiAttributes.size() > 0) {
 			for (String attrName : guiAttributes.keySet()) {
 				for (ListGridRecord record : attributesList.getRecords()) {

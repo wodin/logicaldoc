@@ -54,7 +54,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 		setWidth100();
 		setHeight100();
 		setMembersMargin(20);
-		update = folder.hasPermission(Constants.PERMISSION_WRITE);
+		update = folder.hasPermission(Constants.PERMISSION_RENAME);
 		refresh();
 	}
 
