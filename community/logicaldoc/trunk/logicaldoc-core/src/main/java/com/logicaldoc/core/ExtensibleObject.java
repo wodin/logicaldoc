@@ -39,7 +39,9 @@ public abstract class ExtensibleObject extends PersistentObject {
 	}
 
 	public ExtendedAttribute setValue(String name, Object value) {
-		ExtendedAttribute ext = new ExtendedAttribute();
+		ExtendedAttribute ext = getExtendedAttribute(name);
+		if (ext == null)
+			ext = new ExtendedAttribute();
 		ext.setValue(value);
 		return attributes.put(name, ext);
 	}

@@ -2,6 +2,7 @@ package com.logicaldoc.web.service;
 
 import java.security.AccessControlException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,10 +12,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
+import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderGroup;
 import com.logicaldoc.core.security.Permission;
@@ -23,6 +27,7 @@ import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.beans.GUIValuePair;
@@ -84,7 +89,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		}
 	}
 
-	static GUIFolder getFolder(String sid, long folderId) throws InvalidSessionException {
+	public static GUIFolder getFolder(String sid, long folderId) throws InvalidSessionException {
 		UserSession session = SessionUtil.validateSession(sid);
 		try {
 			FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
@@ -105,6 +110,14 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			f.setCreator(folder.getCreator());
 			f.setCreatorId(folder.getCreatorId());
 			f.setType(folder.getType());
+
+			if (folder.getTemplate() != null) {
+				dao.initialize(folder);
+				f.setTemplateId(folder.getTemplate().getId());
+				f.setTemplate(folder.getTemplate().getName());
+				GUIExtendedAttribute[] attributes = prepareGUIAttributes(folder.getTemplate(), folder);
+				f.setAttributes(attributes);
+			}
 
 			/*
 			 * Count the children
@@ -286,30 +299,31 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		try {
 			Folder f;
 			String folderName = folder.getName().replace("/", "");
+
+			History transaction = new History();
+			transaction.setUser(SessionUtil.getSessionUser(sid));
+			transaction.setSessionId(sid);
+
 			if (folder.getId() != 0) {
 				f = folderDao.findById(folder.getId());
+				folderDao.initialize(f);
 				f.setDescription(folder.getDescription());
 				f.setType(folder.getType());
 				if (f.getName().trim().equals(folderName)) {
 					f.setName(folderName);
-					folderDao.store(f);
+					transaction.setEvent(History.EVENT_FOLDER_CHANGED);
 				} else {
 					f.setName(folderName);
-					History history = new History();
-					history.setUser(SessionUtil.getSessionUser(sid));
-					history.setEvent(History.EVENT_FOLDER_RENAMED);
-					history.setSessionId(sid);
-					folderDao.store(f, history);
+					transaction.setEvent(History.EVENT_FOLDER_RENAMED);
 				}
-			} else {
-				// Add a folder history entry
-				History transaction = new History();
-				transaction.setUser(SessionUtil.getSessionUser(sid));
-				transaction.setSessionId(sid);
 
+				updateExtendedAttributes(f, folder);
+				folderDao.store(f, transaction);
+			} else {
 				f = folderDao.create(folderDao.findById(folder.getParentId()), folderName, transaction);
 				f.setDescription(folder.getDescription());
 				f.setType(folder.getType());
+				updateExtendedAttributes(f, folder);
 				folderDao.store(f);
 			}
 
@@ -554,5 +568,131 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	@Override
 	public void applyTemplate(String sid, long folderId, long templateId) throws InvalidSessionException {
 
+	}
+
+	/**
+	 * Updates the extended attributes of a folder on the basis of the user's
+	 * input
+	 * 
+	 * @param folder The folder to update
+	 * @param f The model to use
+	 */
+	private void updateExtendedAttributes(Folder folder, GUIFolder f) {
+		if (f.getTemplateId() != null) {
+			DocumentTemplateDAO templateDao = (DocumentTemplateDAO) Context.getInstance().getBean(
+					DocumentTemplateDAO.class);
+			DocumentTemplate template = templateDao.findById(f.getTemplateId());
+			folder.setTemplate(template);
+			if (f.getAttributes().length > 0) {
+				for (GUIExtendedAttribute attr : f.getAttributes()) {
+					ExtendedAttribute templateAttribute = template.getAttributes().get(attr.getName());
+					// This control is necessary because, changing
+					// the template, the values of the old template
+					// attributes keys remains on the form value
+					// manager,
+					// so the GUIDocument contains also the old
+					// template attributes keys that must be
+					// skipped.
+					if (templateAttribute == null)
+						continue;
+
+					ExtendedAttribute extAttr = new ExtendedAttribute();
+					int templateType = templateAttribute.getType();
+					int extAttrType = attr.getType();
+
+					if (templateType != extAttrType) {
+						// This check is useful to avoid errors
+						// related to the old template
+						// attributes keys that remains on the form
+						// value manager
+						if (attr.getValue().toString().trim().isEmpty() && templateType != 0) {
+							if (templateType == ExtendedAttribute.TYPE_INT) {
+								extAttr.setIntValue(null);
+							} else if (templateType == ExtendedAttribute.TYPE_DOUBLE) {
+								extAttr.setDoubleValue(null);
+							} else if (templateType == ExtendedAttribute.TYPE_DATE) {
+								extAttr.setDateValue(null);
+							}
+						} else if (templateType == GUIExtendedAttribute.TYPE_DOUBLE) {
+							extAttr.setValue(Double.parseDouble(attr.getValue().toString()));
+						} else if (templateType == GUIExtendedAttribute.TYPE_INT) {
+							extAttr.setValue(Long.parseLong(attr.getValue().toString()));
+						}
+					} else {
+						if (templateType == ExtendedAttribute.TYPE_INT) {
+							if (attr.getValue() != null)
+								extAttr.setIntValue((Long) attr.getValue());
+							else
+								extAttr.setIntValue(null);
+						} else if (templateType == ExtendedAttribute.TYPE_DOUBLE) {
+							if (attr.getValue() != null)
+								extAttr.setDoubleValue((Double) attr.getValue());
+							else
+								extAttr.setDoubleValue(null);
+						} else if (templateType == ExtendedAttribute.TYPE_DATE) {
+							if (attr.getValue() != null)
+								extAttr.setDateValue((Date) attr.getValue());
+							else
+								extAttr.setDateValue(null);
+						} else if (templateType == ExtendedAttribute.TYPE_STRING) {
+							if (attr.getValue() != null)
+								extAttr.setStringValue((String) attr.getValue());
+							else
+								extAttr.setStringValue(null);
+						}
+					}
+
+					extAttr.setLabel(attr.getLabel());
+					extAttr.setType(templateType);
+					extAttr.setPosition(attr.getPosition());
+					extAttr.setMandatory(attr.isMandatory() ? 1 : 0);
+
+					folder.getAttributes().put(attr.getName(), extAttr);
+				}
+			}
+		}
+	}
+
+	private static GUIExtendedAttribute[] prepareGUIAttributes(DocumentTemplate template, Folder folder) {
+		try {
+			GUIExtendedAttribute[] attributes = new GUIExtendedAttribute[template.getAttributeNames().size()];
+			int i = 0;
+			for (String attrName : template.getAttributeNames()) {
+				ExtendedAttribute extAttr = template.getAttributes().get(attrName);
+				GUIExtendedAttribute att = new GUIExtendedAttribute();
+				att.setName(attrName);
+				att.setPosition(extAttr.getPosition());
+				att.setLabel(extAttr.getLabel());
+				att.setMandatory(extAttr.getMandatory() == 1);
+				att.setEditor(extAttr.getEditor());
+
+				// If the case, populate the options
+				if (att.getEditor() == ExtendedAttribute.EDITOR_LISTBOX) {
+					String buf = (String) extAttr.getStringValue();
+					List<String> list = new ArrayList<String>();
+					StringTokenizer st = new StringTokenizer(buf, ",");
+					while (st.hasMoreElements()) {
+						String val = (String) st.nextElement();
+						if (!list.contains(val))
+							list.add(val);
+					}
+					att.setOptions(list.toArray(new String[0]));
+				}
+
+				if (folder != null) {
+					if (folder.getValue(attrName) != null)
+						att.setValue(folder.getValue(attrName));
+				} else
+					att.setValue(extAttr.getValue());
+				att.setType(extAttr.getType());
+
+				attributes[i] = att;
+				i++;
+			}
+			return attributes;
+		} catch (Throwable t) {
+			log.error(t);
+			return null;
+		}
 	}
 }

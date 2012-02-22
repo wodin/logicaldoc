@@ -49,6 +49,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		Folder f = folderDao.create(parentFolder, folder.getName(), transaction);
 		f.setDescription(folder.getDescription());
 		f.setType(folder.getType());
+		folder.updateExtendedAttributes(f);
 		boolean stored = folderDao.store(f);
 
 		if (!stored) {
@@ -192,6 +193,8 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		if (folder == null)
 			throw new Exception("cannot find folder " + folderId);
 
+		folderDao.initialize(folder);
+
 		List<Folder> folders = folderDao.findByNameAndParentId(name, folder.getParentId());
 		if (folders.size() > 0 && folders.get(0).getId() != folder.getId()) {
 			throw new Exception("duplicate folder name " + name);
@@ -243,6 +246,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			List<Folder> folders = folderDao.findParents(folderId);
 			for (Folder folder : folders) {
+				folderDao.initialize(folder);
 				WSFolder wsFolder = WSFolder.fromFolder(folder);
 				path.add(wsFolder);
 			}
@@ -368,8 +372,12 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		if (folders.size() > 0 && folders.get(0).getId() != flder.getId()) {
 			throw new Exception("duplicate folder name " + name);
 		} else {
+			folderDao.initialize(flder);
+
 			flder.setName(name);
 			flder.setDescription(folder.getDescription());
+
+			folder.updateExtendedAttributes(flder);
 
 			// Add a folder history entry
 			History transaction = new History();

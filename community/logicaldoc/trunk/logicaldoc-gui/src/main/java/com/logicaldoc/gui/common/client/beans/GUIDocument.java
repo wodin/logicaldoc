@@ -9,7 +9,7 @@ import java.util.Date;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class GUIDocument implements Serializable {
+public class GUIDocument extends GUIExtensibleObject implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private long id;
@@ -54,17 +54,11 @@ public class GUIDocument implements Serializable {
 
 	private String coverage;
 
-	private String template;
-
-	private Long templateId;
-
 	private Float fileSize;
 
 	private Date lastModified;
 
 	private String pathExtended;
-
-	private GUIExtendedAttribute[] attributes = new GUIExtendedAttribute[0];
 
 	private GUIFolder folder;
 
@@ -300,46 +294,6 @@ public class GUIDocument implements Serializable {
 		this.coverage = coverage;
 	}
 
-	public String getTemplate() {
-		return template;
-	}
-
-	public void setTemplate(String template) {
-		this.template = template;
-	}
-
-	public Long getTemplateId() {
-		return templateId;
-	}
-
-	public void setTemplateId(Long templateId) {
-		this.templateId = templateId;
-	}
-
-	public GUIExtendedAttribute[] getAttributes() {
-		return attributes;
-	}
-
-	public void setAttributes(GUIExtendedAttribute[] attributes) {
-		this.attributes = attributes;
-	}
-
-	public Object getValue(String attributeName) {
-		for (GUIExtendedAttribute att : attributes) {
-			if (att.getName().equals(attributeName) && att.getValue() != null)
-				return att.getValue();
-		}
-		return null;
-	}
-
-	public GUIExtendedAttribute getExtendedAttribute(String attributeName) {
-		for (GUIExtendedAttribute att : attributes) {
-			if (att.getName().equals(attributeName))
-				return att;
-		}
-		return null;
-	}
-
 	public Float getFileSize() {
 		return fileSize;
 	}
@@ -356,20 +310,6 @@ public class GUIDocument implements Serializable {
 		this.lastModified = lastModified;
 	}
 
-	public GUIExtendedAttribute setValue(String name, Object value) {
-		GUIExtendedAttribute[] tmp = new GUIExtendedAttribute[attributes.length + 1];
-		int i = 0;
-		for (GUIExtendedAttribute a : attributes) {
-			tmp[i++] = a;
-		}
-
-		GUIExtendedAttribute ext = new GUIExtendedAttribute();
-		ext.setName(name);
-		ext.setValue(value);
-		tmp[i] = ext;
-		attributes = tmp;
-		return ext;
-	}
 
 	@Override
 	public boolean equals(Object obj) {

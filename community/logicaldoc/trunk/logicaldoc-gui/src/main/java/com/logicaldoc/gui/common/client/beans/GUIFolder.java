@@ -11,7 +11,7 @@ import com.logicaldoc.gui.common.client.Constants;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class GUIFolder implements Serializable {
+public class GUIFolder extends GUIExtensibleObject implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

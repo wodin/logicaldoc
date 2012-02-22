@@ -234,6 +234,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	@Override
 	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip,
 			final Long templateId) throws InvalidSessionException {
+		if(folderId==Folder.ROOTID)
+			throw new RuntimeException("Cannot add documents in the root");
+		
 		GUIDocument metadata = new GUIDocument();
 		metadata.setLanguage(language);
 		metadata.setFolder(new GUIFolder(folderId));
@@ -419,7 +422,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			}
 			return attributes;
 		} catch (Throwable t) {
-			t.printStackTrace();
+			log.error(t);
 			return null;
 		}
 	}

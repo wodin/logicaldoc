@@ -4,7 +4,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.logicaldoc.core.PersistentObject;
+import com.logicaldoc.core.ExtensibleObject;
+import com.logicaldoc.core.document.DocumentTemplate;
 
 /**
  * This class represents the key concept of security of documents. The Folder is
@@ -18,7 +19,7 @@ import com.logicaldoc.core.PersistentObject;
  * @author Marco Meschieri - Logical Objects
  * @version 6.0
  */
-public class Folder extends PersistentObject implements Comparable<Folder> {
+public class Folder extends ExtensibleObject implements Comparable<Folder> {
 
 	public static final long ROOTID = 5;
 
@@ -47,6 +48,8 @@ public class Folder extends PersistentObject implements Comparable<Folder> {
 	private Long creatorId;
 
 	protected Set<FolderGroup> folderGroups = new HashSet<FolderGroup>();
+
+	private DocumentTemplate template;
 
 	public Folder() {
 	}
@@ -185,5 +188,13 @@ public class Folder extends PersistentObject implements Comparable<Folder> {
 
 	public void setCreatorId(Long creatorId) {
 		this.creatorId = creatorId;
+	}
+
+	public DocumentTemplate getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(DocumentTemplate template) {
+		this.template = template;
 	}
 }
