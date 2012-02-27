@@ -39,6 +39,8 @@ public class WSAttribute {
 
 	private String label;
 
+	private int editor = 0;
+
 	public WSAttribute() {
 	}
 
@@ -166,5 +168,13 @@ public class WSAttribute {
 			} else
 				setDateValue(null);
 		}
+	}
+
+	public int getEditor() {
+		return editor;
+	}
+
+	public void setEditor(int editor) {
+		this.editor = editor;
 	}
 }

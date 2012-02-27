@@ -294,6 +294,7 @@ public class WSDocument {
 						extAttribute.setPosition(extendedAttributes[i].getPosition());
 						extAttribute.setType(extendedAttributes[i].getType());
 						extAttribute.setValue(extendedAttributes[i].getValue());
+						extAttribute.setEditor(extendedAttributes[i].getEditor());
 						attributes.put(extendedAttributes[i].getName(), extAttribute);
 					}
 				}
