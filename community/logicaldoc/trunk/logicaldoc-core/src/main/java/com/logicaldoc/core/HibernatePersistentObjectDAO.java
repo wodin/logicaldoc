@@ -37,11 +37,12 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		boolean result = true;
 		try {
 			T entity = findById(id);
+			if(entity==null)
+				return false;
 			entity.setDeleted(1);
 			store(entity);
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 			result = false;
 		}
 		return result;

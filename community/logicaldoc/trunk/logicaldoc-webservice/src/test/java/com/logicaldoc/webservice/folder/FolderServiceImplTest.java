@@ -104,7 +104,7 @@ public class FolderServiceImplTest extends AbstractWebServiceTestCase {
 	public void testGetFolder() throws Exception {
 		Folder folder = folderDao.findById(103);
 		Assert.assertNotNull(folder);
-
+		
 		WSFolder wsFolder = folderServiceImpl.getFolder("", 103);
 
 		Assert.assertEquals(103, wsFolder.getId());

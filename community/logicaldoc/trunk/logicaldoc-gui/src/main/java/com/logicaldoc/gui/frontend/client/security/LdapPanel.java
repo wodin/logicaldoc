@@ -15,6 +15,7 @@ import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.services.LdapService;
 import com.logicaldoc.gui.frontend.client.services.LdapServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.IButton;
@@ -79,6 +80,7 @@ public class LdapPanel extends VLayout {
 		// Enabled
 		RadioGroupItem enabled = ItemFactory.newBooleanSelector("eenabled", "enabled");
 		enabled.setValue(this.ldapSettings.isEnabled() ? "yes" : "no");
+		enabled.setCellStyle("warn");
 
 		// Anonymous Login
 		RadioGroupItem anon = ItemFactory.newBooleanSelector("anon", "anonymous");
@@ -87,14 +89,17 @@ public class LdapPanel extends VLayout {
 		// Url
 		TextItem url = ItemFactory.newTextItem("url", "url", this.ldapSettings.getUrl());
 		url.setRequired(true);
+		url.setCellStyle("warn");
 
 		// Username
 		TextItem username = ItemFactory.newTextItem("username", "user", this.ldapSettings.getUsername());
+		username.setCellStyle("warn");
 
 		// Password
 		PasswordItem password = new PasswordItem("password", I18N.message("password"));
 		password.setName("password");
 		password.setValue(this.ldapSettings.getPwd());
+		password.setCellStyle("warn");
 
 		// Realm
 		TextItem realm = ItemFactory.newTextItem("realm", "realm", this.ldapSettings.getRealm());
@@ -133,7 +138,7 @@ public class LdapPanel extends VLayout {
 		language.setName("language");
 		language.setValue(this.ldapSettings.getLanguage());
 
-		ldapForm.setItems(implementation, enabled, anon, language, url, realm, username, password, userIdentifierAttr,
+		ldapForm.setItems(enabled, url, username, password, implementation, anon, language, realm, userIdentifierAttr,
 				grpIdentifierAttr, userClass, groupClass, usersBaseNode, groupsBaseNode, logonAttr, pageSize);
 
 		ldapTab.setPane(ldapForm);
@@ -228,9 +233,19 @@ public class LdapPanel extends VLayout {
 
 								@Override
 								public void onSuccess(Boolean ret) {
-									if (ret)
-										SC.say(I18N.message("connectionestablished"));
-									else
+									if (ret) {
+										LD.ask(I18N.message("testconnection"), I18N.message("connectionestablished")
+												+ ".\n" + I18N.message("openldapexplorer"), new BooleanCallback() {
+											@Override
+											public void execute(Boolean value) {
+												if (value) {
+													LdapExplorer explorer = new LdapExplorer(
+															LdapPanel.this.ldapSettings);
+													explorer.show();
+												}
+											}
+										});
+									} else
 										SC.warn(I18N.message("connectionfailed"));
 								}
 							});

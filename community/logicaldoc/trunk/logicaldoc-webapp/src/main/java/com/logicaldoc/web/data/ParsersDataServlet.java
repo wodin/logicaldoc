@@ -3,6 +3,7 @@ package com.logicaldoc.web.data;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -21,7 +22,6 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.web.util.SessionUtil;
 
-import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * This servlet is responsible for parsers data.
