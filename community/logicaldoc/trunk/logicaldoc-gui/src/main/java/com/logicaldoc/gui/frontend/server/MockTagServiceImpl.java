@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUITag;
 import com.logicaldoc.gui.frontend.client.services.TagService;
 
@@ -50,12 +51,7 @@ public class MockTagServiceImpl extends RemoteServiceServlet implements TagServi
 	}
 
 	@Override
-	public String getMode(String sid) throws InvalidSessionException {
-		return "free";
-	}
-
-	@Override
-	public void setMode(String sid, String mode) throws InvalidSessionException {
-
+	public GUIParameter[] getSettings(String sid) throws InvalidSessionException {
+		return new GUIParameter[] { new GUIParameter("tag.mode", "free") };
 	}
 }

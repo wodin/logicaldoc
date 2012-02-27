@@ -17,6 +17,7 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
@@ -60,7 +61,7 @@ public class ParametersSettingsPanel extends VLayout {
 		TextItem[] items = new TextItem[settings.length];
 
 		int i = 0;
-		for (GUIParameter parameter : settings) {
+		for (GUIParameter parameter : settings) { 
 			TextItem item = ItemFactory.newTextItem(parameter.getName(), parameter.getName(), parameter.getValue());
 			items[i] = item;
 			i++;

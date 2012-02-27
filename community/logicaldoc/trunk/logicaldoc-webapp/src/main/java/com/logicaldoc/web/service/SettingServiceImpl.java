@@ -112,7 +112,10 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.startsWith("lang") || name.startsWith("reg.") || name.startsWith("ocr.")
 					|| name.startsWith("barcode.") || name.startsWith("task.") || name.startsWith("quota")
 					|| name.startsWith("store") || name.startsWith("flexpaperviewer") || name.startsWith("omnipage.")
-					|| name.startsWith("command.") || name.startsWith("gui."))
+					|| name.startsWith("command.") || name.startsWith("gui.") || name.startsWith("upload.")
+					|| name.equals("userno") || name.startsWith("search.") || name.startsWith("swftools.")
+					|| name.contains("password") || name.startsWith("audit.") || name.startsWith("openoffice.path")
+					|| name.startsWith("tag.")|| name.startsWith("jdbc."))
 				continue;
 
 			sortedSet.add(key.toString());
@@ -370,6 +373,9 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 			if (name.toString().startsWith("gui."))
 				params.add(new GUIParameter(name.toString(), conf.getProperty(name.toString())));
 		}
+		params.add(new GUIParameter("upload.maxsize", conf.getProperty("upload.maxsize")));
+		params.add(new GUIParameter("search.maxhits", conf.getProperty("search.maxhits")));
+		params.add(new GUIParameter("search.depth", conf.getProperty("search.depth")));
 
 		return params.toArray(new GUIParameter[0]);
 	}

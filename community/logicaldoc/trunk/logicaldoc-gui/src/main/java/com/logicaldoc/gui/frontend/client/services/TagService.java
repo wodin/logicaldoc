@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.services;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUITag;
 
 /**
@@ -40,12 +41,7 @@ public interface TagService extends RemoteService {
 	public void removeTag(String sid, String tag) throws InvalidSessionException;
 
 	/**
-	 * Checks the tags input mode, can be 'free' or 'preset'
+	 * Gets the tag settings
 	 */
-	public String getMode(String sid) throws InvalidSessionException;
-
-	/**
-	 * Checks the tags input mode, can be 'free' or 'preset'
-	 */
-	public void setMode(String sid, String mode) throws InvalidSessionException;
+	public GUIParameter[] getSettings(String sid) throws InvalidSessionException;
 }

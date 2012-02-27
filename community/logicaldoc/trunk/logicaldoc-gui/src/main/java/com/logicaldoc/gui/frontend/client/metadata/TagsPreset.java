@@ -3,11 +3,14 @@ package com.logicaldoc.gui.frontend.client.metadata;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
+import com.logicaldoc.gui.frontend.client.services.SettingService;
+import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.TagService;
 import com.logicaldoc.gui.frontend.client.services.TagServiceAsync;
 import com.smartgwt.client.types.SelectionStyle;
@@ -37,6 +40,8 @@ public class TagsPreset extends VLayout {
 
 	private ListGrid tags;
 
+	private SettingServiceAsync settingService = (SettingServiceAsync) GWT.create(SettingService.class);
+
 	private TagServiceAsync tagService = (TagServiceAsync) GWT.create(TagService.class);
 
 	private ButtonItem addTag;
@@ -52,7 +57,8 @@ public class TagsPreset extends VLayout {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				tagService.setMode(Session.get().getSid(), mode.getValueAsString(), new AsyncCallback<Void>() {
+				settingService.saveSettings(Session.get().getSid(), new GUIParameter[] { new GUIParameter("tag.mode",
+						mode.getValueAsString()) }, new AsyncCallback<Void>() {
 					@Override
 					public void onSuccess(Void arg) {
 						Log.info(I18N.message("settingssaved"), null);

@@ -125,7 +125,7 @@ public class Util {
 		tmp += "</object></div>\n";
 		return tmp;
 	}
-
+	
 	public static String imageUrl(String imageName) {
 		return imagePrefix() + imageName;
 	}

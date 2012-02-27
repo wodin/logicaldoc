@@ -100,7 +100,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testMoveFolder_Simple() throws Exception {
-		Folder docsFolder = dao.findById(6);
+		Folder docsFolder = dao.findById(Folder.DEFAULTWORKSPACE);
 		Folder folderA = dao.create(docsFolder, "folderA", null);
 		Folder folderB = dao.create(docsFolder, "folderB", null);
 		Folder folderC = dao.create(folderB, "folderC", null);
@@ -347,7 +347,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		folder = dao.findById(1202);
 		dao.initialize(folder);
 		Assert.assertNotNull(folder);
-		Assert.assertEquals("val1", folder.getValue("test_val_1"));
+		Assert.assertEquals("test_val_1", folder.getValue("val1"));
 	}
 
 	@Test

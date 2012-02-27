@@ -105,8 +105,21 @@ public class GUISettingsPanel extends VLayout {
 		thumbQuality.setRequired(true);
 		thumbQuality.setWrapTitle(false);
 
+		TextItem uploadmax = ItemFactory.newIntegerItem("uploadmax", I18N.message("uploadmax"), null);
+		uploadmax.setHint("MB");
+		uploadmax.setRequired(true);
+		uploadmax.setWrapTitle(false);
+		
+		TextItem searchhits = ItemFactory.newIntegerItem("searchhits", I18N.message("searchhits"), null);
+		searchhits.setRequired(true);
+		searchhits.setWrapTitle(false);
+		
+		TextItem searchdepth = ItemFactory.newIntegerItem("searchdepth", I18N.message("searchdepth"), null);
+		searchdepth.setRequired(true);
+		searchdepth.setWrapTitle(false);
+		
 		parametersForm.setItems(welcome, dropspot, previewPages, previewSize, previewZoom, thumbSize, thumbQuality,
-				savelogin);
+				uploadmax, searchhits, searchdepth, savelogin);
 
 		for (GUIParameter p : settings) {
 			if (p.getName().equals("gui.welcome"))
@@ -125,6 +138,12 @@ public class GUISettingsPanel extends VLayout {
 				thumbSize.setValue(Integer.parseInt(p.getValue()));
 			if (p.getName().equals("gui.thumbnail.quality"))
 				thumbQuality.setValue(Integer.parseInt(p.getValue()));
+			if (p.getName().equals("upload.maxsize"))
+				uploadmax.setValue(Integer.parseInt(p.getValue()));
+			if (p.getName().equals("search.hits"))
+				searchhits.setValue(Integer.parseInt(p.getValue()));
+			if (p.getName().equals("search.depth"))
+				searchdepth.setValue(Integer.parseInt(p.getValue()));
 		}
 
 		IButton save = new IButton();
@@ -145,6 +164,9 @@ public class GUISettingsPanel extends VLayout {
 					params.add(new GUIParameter("gui.preview.zoom", values.get("previewzoom").toString()));
 					params.add(new GUIParameter("gui.thumbnail.size", values.get("thumbsize").toString()));
 					params.add(new GUIParameter("gui.thumbnail.quality", values.get("thumbquality").toString()));
+					params.add(new GUIParameter("upload.maxsize", values.get("uploadmax").toString()));
+					params.add(new GUIParameter("search.hits", values.get("searchhits").toString()));
+					params.add(new GUIParameter("search.depth", values.get("searchdepth").toString()));
 
 					service.saveSettings(Session.get().getSid(), params.toArray(new GUIParameter[0]),
 							new AsyncCallback<Void>() {

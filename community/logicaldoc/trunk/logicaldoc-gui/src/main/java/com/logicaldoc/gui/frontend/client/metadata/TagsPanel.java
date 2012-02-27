@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.metadata;
 
+import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.search.TagsForm;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -20,11 +21,15 @@ public class TagsPanel extends HLayout {
 	 * 
 	 * @param tagMode The current input mode: 'free' or 'preset'
 	 */
-	public TagsPanel(String tagMode) {
+	public TagsPanel(GUIParameter[] parameters) {
 		setWidth100();
 		setHeight100();
 
 		setMembersMargin(10);
+
+		Tab settings = new Tab();
+		settings.setTitle(I18N.message("settings"));
+		settings.setPane(new TagsSettingsPanel(parameters));
 
 		Tab used = new Tab();
 		used.setTitle(I18N.message("usedtags"));
@@ -32,9 +37,14 @@ public class TagsPanel extends HLayout {
 
 		Tab preset = new Tab();
 		preset.setTitle(I18N.message("tagspreset"));
-		preset.setPane(new TagsPreset(tagMode));
+		for (GUIParameter p : parameters) {
+			if ("tag.mode".equals(p.getName())) {
+				preset.setPane(new TagsPreset(p.getValue()));
+				break;
+			}
+		}
 
-		tabs.setTabs(used, preset);
+		tabs.setTabs(settings, used, preset);
 
 		setMembers(tabs);
 	}

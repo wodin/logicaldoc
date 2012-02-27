@@ -81,7 +81,7 @@ public class WSFolder {
 
 		// Populate extended attributes
 		WSAttribute[] attributes = new WSAttribute[0];
-		if (folder.getAttributes() != null && folder.getAttributes().size() > 0) {
+		if (folder.getTemplate()!=null && folder.getAttributes() != null && folder.getAttributes().size() > 0) {
 			attributes = new WSAttribute[folder.getAttributeNames().size()];
 			int i = 0;
 			for (String name : folder.getAttributeNames()) {

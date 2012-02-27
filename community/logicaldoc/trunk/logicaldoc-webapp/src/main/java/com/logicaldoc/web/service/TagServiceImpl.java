@@ -14,9 +14,12 @@ import com.logicaldoc.core.document.TagCloud;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUITag;
 import com.logicaldoc.gui.frontend.client.services.TagService;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
+import com.logicaldoc.web.util.SessionUtil;
 
 /**
  * Implementation of the TagService
@@ -96,11 +99,20 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService {
 	}
 
 	@Override
-	public String getMode(String sid) throws InvalidSessionException {
-		return "free";
-	}
+	public GUIParameter[] getSettings(String sid) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
 
-	@Override
-	public void setMode(String sid, String mode) throws InvalidSessionException {
+		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+
+		List<GUIParameter> params = new ArrayList<GUIParameter>();
+		for (Object name : conf.keySet()) {
+			if (name.toString().startsWith("tag."))
+				if (name.equals("tag.mode"))
+					params.add(new GUIParameter(name.toString(), "free"));
+				else
+					params.add(new GUIParameter(name.toString(), conf.getProperty(name.toString())));
+		}
+
+		return params.toArray(new GUIParameter[0]);
 	}
 }

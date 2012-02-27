@@ -6,6 +6,7 @@ import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Menu;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUICustomId;
+import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUISequence;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -49,7 +50,7 @@ public class MetadataMenu extends VLayout {
 		tags.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				tagService.getMode(Session.get().getSid(), new AsyncCallback<String>() {
+				tagService.getSettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -57,8 +58,8 @@ public class MetadataMenu extends VLayout {
 					}
 
 					@Override
-					public void onSuccess(String mode) {
-						AdminPanel.get().setContent(new TagsPanel(mode));
+					public void onSuccess(GUIParameter[] parameters) {
+						AdminPanel.get().setContent(new TagsPanel(parameters));
 					}
 				});
 			}
@@ -167,7 +168,7 @@ public class MetadataMenu extends VLayout {
 				AdminPanel.get().setContent(new FolderTemplatesPanel());
 			}
 		});
-		
+
 		if (Feature.visible(Feature.FOLDER_TEMPLATE)) {
 			addMember(folderTemplates);
 			if (!Feature.enabled(Feature.FOLDER_TEMPLATE)) {

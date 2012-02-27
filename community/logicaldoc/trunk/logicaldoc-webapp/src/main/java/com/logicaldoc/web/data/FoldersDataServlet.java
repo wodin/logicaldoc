@@ -2,6 +2,7 @@ package com.logicaldoc.web.data;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -18,8 +19,6 @@ import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * This servlet is responsible for folders data.
