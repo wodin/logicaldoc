@@ -39,6 +39,16 @@ public class WSAttribute {
 
 	private String label;
 
+	private int editor = 0;
+	
+	public int getEditor() {
+		return editor;
+	}
+
+	public void setEditor(int editor) {
+		this.editor = editor;
+	}
+
 	public WSAttribute() {
 	}
 
