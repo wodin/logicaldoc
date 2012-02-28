@@ -23,6 +23,7 @@ import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
@@ -46,6 +47,12 @@ public class DocumentManagerImpl implements DocumentManager {
 	private DocumentListenerManager listenerManager;
 
 	private VersionDAO versionDAO;
+	
+	private UserDAO userDAO;
+
+	public void setUserDAO(UserDAO userDAO) {
+		this.userDAO = userDAO;
+	}
 
 	private Indexer indexer;
 
@@ -534,7 +541,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.store(docVO);
 
 			// Store the initial version (default 1.0)
-			Version vers = Version.create(docVO, transaction.getUser(), transaction.getComment(), Version.EVENT_STORED,
+			Version vers = Version.create(docVO, userDAO.findById(transaction.getUserId()), transaction.getComment(), Version.EVENT_STORED,
 					true);
 			versionDAO.store(vers);
 
