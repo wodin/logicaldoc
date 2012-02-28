@@ -362,6 +362,7 @@
 				<property name="config" ref="ContextProperties" />
 				<property name="documentDAO" ref="DocumentDAO" />
 				<property name="versionDAO" ref="VersionDAO" />
+				<property name="userDAO" ref="UserDAO" />
 				<property name="documentTemplateDAO" ref="DocumentTemplateDAO" />
 				<property name="storer" ref="Storer" />
 				<property name="indexer" ref="Indexer" />

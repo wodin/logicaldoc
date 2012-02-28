@@ -23,6 +23,7 @@ import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
@@ -46,6 +47,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	private DocumentListenerManager listenerManager;
 
 	private VersionDAO versionDAO;
+
+	private UserDAO userDAO;
 
 	private Indexer indexer;
 
@@ -420,10 +423,10 @@ public class DocumentManagerImpl implements DocumentManager {
 			doc.setFolder(folder);
 			setUniqueTitle(doc);
 			setUniqueFilename(doc);
-			
-			//To avoid 'optimistic locking failed' exceptions. 
+
+			// To avoid 'optimistic locking failed' exceptions.
 			// Perhaps no more needed with Hibernate 3.6.9
-			//doc.setLastModified(new Date());
+			// doc.setLastModified(new Date());
 
 			// Modify document history entry
 			if (transaction.getEvent().trim().isEmpty())
@@ -544,7 +547,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.store(docVO);
 
 			// Store the initial version (default 1.0)
-			Version vers = Version.create(docVO, transaction.getUser(), transaction.getComment(), Version.EVENT_STORED,
+			Version vers = Version.create(docVO, userDAO.findById(transaction.getUserId()), transaction.getComment(), Version.EVENT_STORED,
 					true);
 			versionDAO.store(vers);
 
@@ -601,8 +604,8 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		// initialize the document
 		documentDAO.initialize(doc);
-				
-		//To avoid 'optimistic locking failed' exceptions
+
+		// To avoid 'optimistic locking failed' exceptions
 		doc.setLastModified(new Date());
 
 		if (doc.getDocRef() != null) {
@@ -812,5 +815,9 @@ public class DocumentManagerImpl implements DocumentManager {
 			deleteFromIndex(doc);
 		doc.setIndexed(status);
 		documentDAO.store(doc);
+	}
+
+	public void setUserDAO(UserDAO userDAO) {
+		this.userDAO = userDAO;
 	}
 }
