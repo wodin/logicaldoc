@@ -374,7 +374,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 				params.add(new GUIParameter(name.toString(), conf.getProperty(name.toString())));
 		}
 		params.add(new GUIParameter("upload.maxsize", conf.getProperty("upload.maxsize")));
-		params.add(new GUIParameter("search.maxhits", conf.getProperty("search.maxhits")));
+		params.add(new GUIParameter("search.hits", conf.getProperty("search.hits")));
 		params.add(new GUIParameter("search.depth", conf.getProperty("search.depth")));
 
 		return params.toArray(new GUIParameter[0]);
