@@ -481,7 +481,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public Document create(InputStream content, Document docVO, History transaction) throws Exception {
 		assert (transaction != null);
-		assert (transaction.getUser() != null);
+		assert (transaction.getUserId() != 0);
 		assert (transaction.getComment() != null);
 		assert (docVO != null);
 		assert (content != null);
@@ -547,8 +547,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.store(docVO);
 
 			// Store the initial version (default 1.0)
-			Version vers = Version.create(docVO, userDAO.findById(transaction.getUserId()), transaction.getComment(), Version.EVENT_STORED,
-					true);
+			Version vers = Version.create(docVO, userDAO.findById(transaction.getUserId()), transaction.getComment(),
+					Version.EVENT_STORED, true);
 			versionDAO.store(vers);
 
 			log.debug("Stored version " + vers.getVersion());
