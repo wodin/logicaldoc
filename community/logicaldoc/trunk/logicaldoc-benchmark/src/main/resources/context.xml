@@ -22,7 +22,7 @@
 		<property name="sourceDir" value="${load.sourcedir}" />
 	</bean>
 	
-	<bean id="BMLoader" class="com.logicaldoc.benchmark.BMLoader">
+	<bean id="Loader" class="com.logicaldoc.benchmark.WsLoader">
 		<property name="randomFile" ref="RandomFile" />
 		<property name="url" value="${connection.url}" />
 		<property name="username" value="${connection.username}" />
