@@ -8,8 +8,8 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
+//import java.util.concurrent.BrokenBarrierException;
+//import java.util.concurrent.CyclicBarrier;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -55,7 +55,7 @@ public abstract class AbstractLoader {
 
 	protected long startTime;
 
-	protected CyclicBarrier barrier;
+	//protected CyclicBarrier barrier;
 
 	protected List<Loader> loaders = new ArrayList<Loader>();
 
@@ -176,7 +176,6 @@ public abstract class AbstractLoader {
 			}
 
 			log.info("All threads finished");
-
 			log.info("Prepare the report");
 
 			printReport();
@@ -211,7 +210,7 @@ public abstract class AbstractLoader {
 		try {
 			iteration = 0;
 			sid = null;
-			barrier = new CyclicBarrier(threads);
+			//barrier = new CyclicBarrier(threads);
 		} catch (Throwable e) {
 			log.error("Unable to initialize", e);
 		}
@@ -279,11 +278,11 @@ public abstract class AbstractLoader {
 							throw new Exception("Error getting folder");
 						}
 
-						try {
-							barrier.await();
-						} catch (InterruptedException e) {
-						} catch (BrokenBarrierException e) {
-						}
+//						try {
+//							barrier.await();
+//						} catch (InterruptedException e) {
+//						} catch (BrokenBarrierException e) {
+//						}
 
 						File file = randomFile.getFile();
 						long c = next();
@@ -295,13 +294,13 @@ public abstract class AbstractLoader {
 							statCount++;
 						} else {
 							throw new Exception("Error creating document " + title);
-						}
+						} 
 
-						try {
-							barrier.await();
-						} catch (InterruptedException e) {
-						} catch (BrokenBarrierException e) {
-						}
+//						try {
+//							barrier.await();
+//						} catch (InterruptedException e) {
+//						} catch (BrokenBarrierException e) {
+//						}
 					} catch (Throwable ex) {
 						log.error(ex.getMessage(), ex);
 						statErrors++;
