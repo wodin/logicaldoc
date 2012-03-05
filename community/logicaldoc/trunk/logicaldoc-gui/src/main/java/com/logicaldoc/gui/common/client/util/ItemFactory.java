@@ -266,6 +266,20 @@ public class ItemFactory {
 		return select;
 	}
 
+	public static SelectItem newWelcomeScreenSelector(String name, Integer value) {
+		SelectItem select = new SelectItem("welcomescreen", I18N.message("welcomescreen"));
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		map.put("1500", I18N.message("documents"));
+		map.put("1510", I18N.message("search"));
+		map.put("1520", I18N.message("dashboard"));
+		select.setValueMap(map);
+		if (value != null)
+			select.setValue(value.toString());
+		else
+			select.setValue("1500");
+		return select;
+	}
+
 	public static SelectItem newEventsSelector(String name, String title) {
 		SelectItem select = newMultipleSelector(name, title);
 		select.setWidth(300);

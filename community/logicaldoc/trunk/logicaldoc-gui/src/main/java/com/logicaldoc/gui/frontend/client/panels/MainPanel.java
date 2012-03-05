@@ -70,11 +70,8 @@ public class MainPanel extends VLayout implements SessionObserver {
 		tabSet.setWidth100();
 		tabSet.setHeight("*");
 		documentsTab = new Tab(I18N.message("documents"));
-		tabSet.addTab(documentsTab);
 		searchTab = new Tab(I18N.message("search"));
-		tabSet.addTab(searchTab);
 		dashboardTab = new Tab(I18N.message("dashboard"));
-		tabSet.addTab(dashboardTab);
 		administrationTab = new Tab(I18N.message("administration"));
 
 		addMember(topPanel);
@@ -98,16 +95,36 @@ public class MainPanel extends VLayout implements SessionObserver {
 	public void onUserLoggedIn(final GUIUser user) {
 		initGUI();
 
-		documentsTab.setPane(DocumentsPanel.get());
-		searchTab.setPane(SearchPanel.get());
-		dashboardTab.setPane(DashboardPanel.get());
-		administrationTab.setPane(AdminPanel.get());
+		int welcomeScreen = 1500;
+		if (user.getWelcomeScreen() != null)
+			welcomeScreen = user.getWelcomeScreen().intValue();
 
-		if (Menu.enabled(Menu.ADMINISTRATION)) {
-			tabSet.addTab(administrationTab);
+		if (Menu.enabled(Menu.DOCUMENTS)) {
+			documentsTab.setPane(DocumentsPanel.get());
+			tabSet.addTab(documentsTab);
 		}
 
-		tabSet.selectTab(documentsTab);
+		if (Menu.enabled(Menu.SEARCH)) {
+			searchTab.setPane(SearchPanel.get());
+			tabSet.addTab(searchTab);
+		}
+
+		if (Menu.enabled(Menu.DASHBOARD)) {
+			dashboardTab.setPane(DashboardPanel.get());
+			tabSet.addTab(dashboardTab);
+		}
+
+		if (Menu.enabled(Menu.ADMINISTRATION)) {
+			administrationTab.setPane(AdminPanel.get());
+			tabSet.addTab(administrationTab);
+		}
+		
+		if (welcomeScreen == Menu.DOCUMENTS && Menu.enabled(Menu.DOCUMENTS))
+			tabSet.selectTab(documentsTab);
+		else if (welcomeScreen == Menu.SEARCH && Menu.enabled(Menu.SEARCH))
+			tabSet.selectTab(searchTab);
+		else if (welcomeScreen == Menu.DASHBOARD && Menu.enabled(Menu.DASHBOARD))
+			tabSet.selectTab(dashboardTab);
 
 		WorkflowServiceAsync service = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
 		service.countActiveUserTasks(Session.get().getSid(), user.getUserName(), new AsyncCallback<Integer>() {

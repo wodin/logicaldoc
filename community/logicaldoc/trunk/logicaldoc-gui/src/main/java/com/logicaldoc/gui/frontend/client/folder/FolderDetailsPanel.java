@@ -287,6 +287,7 @@ public class FolderDetailsPanel extends VLayout {
 
 	public void onSave() {
 		if (validate()) {
+			folder.setName(folder.getName().trim());
 			folderService.save(Session.get().getSid(), folder, new AsyncCallback<GUIFolder>() {
 				@Override
 				public void onFailure(Throwable caught) {
@@ -301,7 +302,7 @@ public class FolderDetailsPanel extends VLayout {
 					//Adjust the path
 					String p=folder.getPathExtended();
 					p=p.substring(0,p.lastIndexOf('/'));
-					p+="/"+folder.getName();
+					p+="/"+folder.getName().trim();
 					folder.setPathExtended(p);
 					setFolder(folder);
 	

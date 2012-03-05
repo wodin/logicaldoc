@@ -142,7 +142,7 @@ public class DocumentsDataServlet extends HttpServlet {
 					boolean published = isPublished((Integer) cols[27], (Date) cols[25], (Date) cols[26]);
 
 					if (!published && !user.isInGroup("admin") && !user.isInGroup("publisher")) {
-							continue;
+						continue;
 					}
 
 					if (cols[2] != null) {
@@ -242,6 +242,14 @@ public class DocumentsDataServlet extends HttpServlet {
 				for (Long id : docRefIds) {
 					Document aliasDoc = dao.findById(id);
 					Document doc = dao.findById(aliasDoc.getDocRef());
+
+					boolean published = isPublished(doc.getPublished(), doc.getStartPublishing(),
+							doc.getStopPublishing());
+
+					if (!published && !user.isInGroup("admin") && !user.isInGroup("publisher")) {
+						continue;
+					}
+
 					writer.print("<document>");
 					writer.print("<id>" + id + "</id>");
 					if (doc.getCustomId() != null)

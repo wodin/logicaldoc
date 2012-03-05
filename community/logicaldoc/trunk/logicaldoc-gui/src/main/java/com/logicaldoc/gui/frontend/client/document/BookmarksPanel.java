@@ -104,13 +104,13 @@ public class BookmarksPanel extends VLayout {
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				ListGridRecord record = list.getSelectedRecord();
+				final ListGridRecord record = list.getSelectedRecord();
 				folderService.getFolder(Session.get().getSid(),
 						Long.parseLong(record.getAttributeAsString("folderId")), false, new AsyncCallback<GUIFolder>() {
 
 							@Override
 							public void onSuccess(GUIFolder folder) {
-								showContextMenu(folder);
+								showContextMenu(folder, record.getAttributeAsString("type").equals("0"));
 							}
 
 							@Override
@@ -151,7 +151,7 @@ public class BookmarksPanel extends VLayout {
 		});
 	}
 
-	private void showContextMenu(GUIFolder folder) {
+	private void showContextMenu(GUIFolder folder, boolean isDocument) {
 		Menu contextMenu = new Menu();
 
 		MenuItem edit = new MenuItem();
@@ -231,7 +231,10 @@ public class BookmarksPanel extends VLayout {
 			openInFolder.setEnabled(false);
 		}
 
+		if(isDocument)
 		contextMenu.setItems(edit, download, delete, openInFolder);
+		else
+			contextMenu.setItems(edit, delete, openInFolder);	
 		contextMenu.showContextMenu();
 	}
 

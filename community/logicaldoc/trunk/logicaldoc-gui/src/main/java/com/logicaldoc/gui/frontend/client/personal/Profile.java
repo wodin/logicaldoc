@@ -36,7 +36,7 @@ public class Profile extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("profile"));
 		setWidth(450);
-		setHeight(250);
+		setHeight(270);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
@@ -67,6 +67,8 @@ public class Profile extends Window {
 		TextItem state = ItemFactory.newTextItem("state", "state", user.getState());
 		TextItem phone = ItemFactory.newTextItem("phone", "phone", user.getPhone());
 		TextItem cell = ItemFactory.newTextItem("cell", "cell", user.getCell());
+		SelectItem welcomeScreen = ItemFactory.newWelcomeScreenSelector("welcomescreen", user.getWelcomeScreen());
+
 		TextItem quota = ItemFactory.newTextItem("quota", "quota", Long.toString(user.getQuota()));
 		quota.setHint("MB");
 		quota.setDisabled(true);
@@ -92,6 +94,7 @@ public class Profile extends Window {
 					u.setState(vm.getValueAsString("state"));
 					u.setPhone(vm.getValueAsString("phone"));
 					u.setCell(vm.getValueAsString("cell"));
+					u.setWelcomeScreen(new Integer(vm.getValueAsString("welcomescreen")));
 
 					securityService.saveProfile(Session.get().getSid(), u, new AsyncCallback<GUIUser>() {
 						@Override
@@ -113,6 +116,7 @@ public class Profile extends Window {
 							user.setState(ret.getState());
 							user.setPhone(ret.getPhone());
 							user.setCell(ret.getCell());
+							user.setWelcomeScreen(ret.getWelcomeScreen());
 
 							Profile.this.destroy();
 						}
@@ -122,7 +126,7 @@ public class Profile extends Window {
 		});
 
 		form.setFields(firstName, lastName, email, language, address, postalCode, city, country, state, phone, cell,
-				quota, apply);
+				welcomeScreen, quota, apply);
 
 		addItem(form);
 	}

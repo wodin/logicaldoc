@@ -168,6 +168,11 @@ public class GUISettingsPanel extends VLayout {
 					params.add(new GUIParameter("search.hits", values.get("searchhits").toString()));
 					params.add(new GUIParameter("search.depth", values.get("searchdepth").toString()));
 
+					//Update the current session parameters.
+					for (GUIParameter p : params) {
+						Session.get().getInfo().setConfig(p.getName(), p.getValue());
+					}
+					
 					service.saveSettings(Session.get().getSid(), params.toArray(new GUIParameter[0]),
 							new AsyncCallback<Void>() {
 

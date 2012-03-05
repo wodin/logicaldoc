@@ -113,6 +113,8 @@ public class ZipExport {
 		try {
 			for (long id : docIds) {
 				Document doc = dao.findById(id);
+				if (doc.getDocRef() != null)
+					doc = dao.findById(doc.getDocRef());
 				addDocument("", doc);
 			}
 		} finally {

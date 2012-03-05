@@ -93,6 +93,10 @@ public class DocumentPreview extends HttpServlet {
 				suffix = "thumb.jpg";
 			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 			Document doc = docDao.findById(docId);
+			if(doc.getDocRef()!=null){
+				doc=docDao.findById(doc.getDocRef());
+				docId=doc.getId();
+			}
 			if (StringUtils.isEmpty(fileVersion))
 				fileVersion = doc.getFileVersion();
 

@@ -15,7 +15,6 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.LockMode;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.Document;
@@ -945,7 +944,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		if (isInPath(source.getId(), target.getId()))
 			throw new IllegalArgumentException("Cannot move a dolder inside the same path");
 
-//		initialize(source);
+		// initialize(source);
 
 		// Change the parent folder
 		source.setParentId(target.getId());
@@ -1096,10 +1095,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		for (FolderGroup fg : folder.getFolderGroups()) {
 			fg.getWrite();
 		}
-		
-		if (folder.getTemplate() != null && folder.getAttributes() != null)
-			for (String attribute : folder.getAttributes().keySet()) {
-				attribute.getBytes();
-			}
+
+		for (String attribute : folder.getAttributes().keySet()) {
+			attribute.getBytes();
+		}
 	}
 }

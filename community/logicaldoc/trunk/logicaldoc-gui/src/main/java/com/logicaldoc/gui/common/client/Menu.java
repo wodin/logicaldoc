@@ -16,6 +16,12 @@ public class Menu {
 
 	public static final int ADMINISTRATION = 2;
 
+	public static final int DOCUMENTS = 1500;
+
+	public static final int SEARCH = 1510;
+
+	public static final int DASHBOARD = 1520;
+	
 	public static final int SECURITY = 9;
 
 	public static final int CLIENTS = 3;

@@ -1,6 +1,3 @@
-/*
- * Created on 16.11.2004
- */
 package com.logicaldoc.core.text.analyzer;
 
 /**

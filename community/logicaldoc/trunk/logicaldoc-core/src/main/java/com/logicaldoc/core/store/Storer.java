@@ -7,7 +7,7 @@ import java.util.List;
 import com.logicaldoc.core.document.Document;
 
 /**
- * The Storer manages the repository where document files are maintained.
+ * The Storer manages the repository where document files are maintained and all general resources are stored.
  * 
  * @author Michael Scholz, Marco Meschieri
  */

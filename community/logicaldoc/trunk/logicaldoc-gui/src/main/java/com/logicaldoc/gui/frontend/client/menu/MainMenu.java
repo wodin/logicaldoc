@@ -83,7 +83,7 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 
 		dropArea.setContents(EMPTY_DIV);
 		dropArea.setWidth(81);
-		if (dropSpot) {
+		if (dropSpot && com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.DOCUMENTS)) {
 			if (Feature.enabled(Feature.DROP_SPOT))
 				dropArea.setTooltip(I18N.message("dropfiles"));
 			else
@@ -150,7 +150,8 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 		});
 
 		if (Feature.enabled(Feature.DROP_SPOT)
-				&& !"embedded".equals(Session.get().getInfo().getConfig("gui.dropspot.mode")))
+				&& !"embedded".equals(Session.get().getInfo().getConfig("gui.dropspot.mode"))
+				&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.DOCUMENTS))
 			menu.setItems(dropSpotItem, exitItem);
 		else
 			menu.setItems(exitItem);

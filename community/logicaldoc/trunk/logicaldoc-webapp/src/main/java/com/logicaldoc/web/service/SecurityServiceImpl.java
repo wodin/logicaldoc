@@ -128,7 +128,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 				guiUser.setQuota(user.getQuota());
 				guiUser.setQuotaCount(user.getQuotaCount());
-
+				guiUser.setWelcomeScreen(user.getWelcomeScreen());
+				
 				if (StringUtils.isNotEmpty(user.getSignatureId()))
 					guiUser.setSignatureId(user.getSignatureId());
 				if (StringUtils.isNotEmpty(user.getSignatureInfo()))
@@ -323,7 +324,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setPasswordExpires(user.getPasswordExpires() == 1);
 			usr.setSignatureId(user.getSignatureId());
 			usr.setSignatureInfo(user.getSignatureInfo());
-
+			usr.setWelcomeScreen(user.getWelcomeScreen());
+			
 			GUIGroup[] grps = new GUIGroup[user.getGroups().size()];
 			int i = 0;
 			for (Group group : user.getGroups()) {
@@ -428,7 +430,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setPasswordExpires(user.isPasswordExpires() ? 1 : 0);
 			usr.setSignatureId(user.getSignatureId());
 			usr.setSignatureInfo(user.getSignatureInfo());
-
+			usr.setWelcomeScreen(user.getWelcomeScreen());
+			
 			usr.setQuota(user.getQuota());
 
 			if (createNew) {
@@ -541,7 +544,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setTelephone2(user.getCell());
 			usr.setSignatureId(user.getSignatureId());
 			usr.setSignatureInfo(user.getSignatureInfo());
-
+			usr.setWelcomeScreen(user.getWelcomeScreen());
+			
 			userDao.store(usr);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
