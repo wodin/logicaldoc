@@ -201,6 +201,7 @@ public abstract class AbstractLoader {
 	 * Initializes resources and connects to the WebService
 	 */
 	protected void init() {
+		System.setProperty("org.apache.cxf.Logger", "org.apache.cxf.common.logging.Log4jLogger");
 		log.info("Connect to the server");
 		try {
 			iteration = 0;
