@@ -657,7 +657,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 
 						TreeNode selectedNode = (TreeNode) getSelectedRecord();
 						final GUIFolder data = new GUIFolder();
-						data.setName(value);
+						data.setName(value.trim());
 						data.setParentId(Long.parseLong(selectedNode.getAttributeAsString("folderId")));
 						data.setDescription("");
 
@@ -694,7 +694,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 							return;
 
 						final GUIFolder data = new GUIFolder();
-						data.setName(value);
+						data.setName(value.trim());
 						data.setParentId(Constants.DOCUMENTS_FOLDERID);
 						data.setDescription("");
 						data.setType(1);

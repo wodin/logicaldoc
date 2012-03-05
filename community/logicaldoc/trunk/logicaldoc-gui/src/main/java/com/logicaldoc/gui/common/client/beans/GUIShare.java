@@ -25,7 +25,7 @@ public class GUIShare implements Serializable {
 
 	private String provider = "smb";
 
-	private GUIFolder target = new GUIFolder();
+	private GUIFolder target = null;
 
 	private int enabled = 1;
 

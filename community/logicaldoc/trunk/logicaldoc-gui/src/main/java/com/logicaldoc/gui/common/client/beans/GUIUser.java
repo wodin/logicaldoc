@@ -81,10 +81,12 @@ public class GUIUser implements Serializable {
 	private long quota = -1;
 
 	private long quotaCount = 0;
-	
+
 	private String signatureId = "";
 
 	private String signatureInfo = "";
+
+	private Integer welcomeScreen = 1500;
 
 	private Set<UserObserver> observers = new HashSet<UserObserver>();
 
@@ -392,5 +394,13 @@ public class GUIUser implements Serializable {
 
 	public void setSignatureInfo(String signatureInfo) {
 		this.signatureInfo = signatureInfo;
+	}
+
+	public Integer getWelcomeScreen() {
+		return welcomeScreen;
+	}
+
+	public void setWelcomeScreen(Integer welcomeScreen) {
+		this.welcomeScreen = welcomeScreen;
 	}
 }

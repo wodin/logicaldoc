@@ -1,8 +1,12 @@
 package com.logicaldoc.util;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+
+import net.sf.ehcache.CacheManager;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -57,6 +61,17 @@ public class Context implements ApplicationContextAware, ApplicationListener {
 	}
 
 	/**
+	 * Retrieves the list of bean of the same type
+	 */
+	public List<Object> getBeansOfType(@SuppressWarnings("rawtypes") Class clazz) {
+		List<Object> beans = new ArrayList<Object>();
+		for (String name : applicationContext.getBeanNamesForType(clazz)) {
+			beans.add(getBean(name));
+		}
+		return beans;
+	}
+
+	/**
 	 * Retrieves a bean registered in the Spring context using a class name. At
 	 * first the fully qualified class name is checked, then if nothing was
 	 * found the simple class name is used as bean id.
@@ -82,12 +97,25 @@ public class Context implements ApplicationContextAware, ApplicationListener {
 	public static void refresh() {
 		if (applicationContext != null) {
 			try {
+				closeCaches();
 				((AbstractApplicationContext) applicationContext).stop();
 				((AbstractApplicationContext) applicationContext).start();
 				((AbstractApplicationContext) applicationContext).refresh();
 			} catch (Throwable e) {
-//				e.printStackTrace();
+				e.printStackTrace();
 			}
+		}
+	}
+
+	/**
+	 * Takes care of shutting down all cache managers
+	 */
+	private static void closeCaches() {
+		CacheManager cm1 = CacheManager.getInstance();
+		cm1.shutdown();
+
+		for (Object cm : Context.getInstance().getBeansOfType(CacheManager.class)) {
+			((CacheManager) cm).shutdown();
 		}
 	}
 
@@ -162,7 +190,7 @@ public class Context implements ApplicationContextAware, ApplicationListener {
 
 	private void processEvents(SystemEventStatus st) {
 		LinkedList<SystemEvent> evts = Context.systemEvents.get(st);
-		
+
 		// surely its possible that no one event have been
 		// registered to the current spring event
 		if (evts == null || evts.size() == 0)

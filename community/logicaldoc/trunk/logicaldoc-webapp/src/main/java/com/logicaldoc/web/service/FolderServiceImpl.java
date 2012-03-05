@@ -277,7 +277,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			// To avoid a 'org.hibernate.StaleObjectStateException', we
 			// must retrieve the folder from database.
 			Folder folder = dao.findById(folderId);
-			folder.setName(name);
+			folder.setName(name.trim());
 			// Add a folder history entry
 			History history = new History();
 			history.setUser(SessionUtil.getSessionUser(sid));
@@ -310,23 +310,22 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				f.setDescription(folder.getDescription());
 				f.setType(folder.getType());
 				if (f.getName().trim().equals(folderName)) {
-					f.setName(folderName);
+					f.setName(folderName.trim());
 					transaction.setEvent(History.EVENT_FOLDER_CHANGED);
 				} else {
-					f.setName(folderName);
+					f.setName(folderName.trim());
 					transaction.setEvent(History.EVENT_FOLDER_RENAMED);
 				}
 
-				updateExtendedAttributes(f, folder);
 				folderDao.store(f, transaction);
 			} else {
 				f = folderDao.create(folderDao.findById(folder.getParentId()), folderName, transaction);
 				f.setDescription(folder.getDescription());
 				f.setType(folder.getType());
-				updateExtendedAttributes(f, folder);
 				folderDao.store(f);
 			}
-
+			folderDao.initialize(f);
+			updateExtendedAttributes(f, folder);
 			folder.setId(f.getId());
 			folder.setName(f.getName());
 		} catch (Throwable t) {
@@ -583,6 +582,8 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					DocumentTemplateDAO.class);
 			DocumentTemplate template = templateDao.findById(f.getTemplateId());
 			folder.setTemplate(template);
+			folder.getAttributes().clear();
+			
 			if (f.getAttributes().length > 0) {
 				for (GUIExtendedAttribute attr : f.getAttributes()) {
 					ExtendedAttribute templateAttribute = template.getAttributes().get(attr.getName());
@@ -595,7 +596,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					// skipped.
 					if (templateAttribute == null)
 						continue;
-
+					
 					ExtendedAttribute extAttr = new ExtendedAttribute();
 					int templateType = templateAttribute.getType();
 					int extAttrType = attr.getType();
@@ -650,6 +651,9 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					folder.getAttributes().put(attr.getName(), extAttr);
 				}
 			}
+		}else{
+			folder.setTemplate(null);
+			folder.getAttributes().clear();
 		}
 	}
 

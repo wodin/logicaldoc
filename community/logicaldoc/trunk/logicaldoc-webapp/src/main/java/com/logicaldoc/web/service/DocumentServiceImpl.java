@@ -234,9 +234,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	@Override
 	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip,
 			final Long templateId) throws InvalidSessionException {
-		if(folderId==Folder.ROOTID)
+		if (folderId == Folder.ROOTID)
 			throw new RuntimeException("Cannot add documents in the root");
-		
+
 		GUIDocument metadata = new GUIDocument();
 		metadata.setLanguage(language);
 		metadata.setFolder(new GUIFolder(folderId));
@@ -1000,6 +1000,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						+ I18N.message("clicktodownload") + ": <a href='" + address + "'>" + doc.getFileName()
 						+ "</a></b></div>";
 
+				if (doc.getDocRef() != null)
+					doc = documentDao.findById(doc.getDocRef());
 				String thumb = createPreview(doc, user.getId());
 				if (thumb != null) {
 					mail.getImages().add(thumb);
@@ -1052,6 +1054,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				FolderDAO fDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 				for (long id : email.getDocIds()) {
 					Document doc = docDao.findById(id);
+					if (doc.getDocRef() != null)
+						doc = documentDao.findById(doc.getDocRef());
 
 					// Create the document history event
 					HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
@@ -1094,6 +1098,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 		if (storer.exists(doc.getId(), thumbResource)) {
 			File file = UserUtil.getUserResource(userId, "/tmp/thumb.jpg");
+			file.getParentFile().mkdirs();
 			storer.writeTo(doc.getId(), thumbResource, file);
 			try {
 				return file.toURI().toURL().toString();
@@ -1109,6 +1114,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		EMailAttachment att = new EMailAttachment();
 		Document doc = docDao.findById(docId);
+		if (doc.getDocRef() != null)
+			doc = docDao.findById(doc.getDocRef());
 		att.setIcon(doc.getIcon());
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 		String resource = storer.getResourceName(doc, null, null);

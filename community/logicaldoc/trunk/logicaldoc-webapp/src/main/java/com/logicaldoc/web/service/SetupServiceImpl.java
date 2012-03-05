@@ -6,11 +6,14 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.Collection;
 
+import net.sf.ehcache.CacheManager;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.SessionFactory;
 import org.java.plugin.registry.PluginDescriptor;
 import org.springframework.util.Log4jConfigurer;
 
@@ -61,6 +64,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			// Reload the application context in order to reconnect DAOs to the
 			// database
 			Context.refresh();
+
 		} catch (Throwable caught) {
 			log.error(caught.getMessage(), caught);
 			throw new RuntimeException(caught.getMessage(), caught);
