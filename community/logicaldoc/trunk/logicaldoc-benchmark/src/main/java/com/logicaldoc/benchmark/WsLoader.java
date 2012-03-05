@@ -49,7 +49,7 @@ public class WsLoader extends AbstractLoader {
 	}
 
 	@Override
-	protected Long createPath(String path) {
+	protected Long createFolder(String path) {
 		WSFolder folder = null;
 		try {
 			if (sid == null)

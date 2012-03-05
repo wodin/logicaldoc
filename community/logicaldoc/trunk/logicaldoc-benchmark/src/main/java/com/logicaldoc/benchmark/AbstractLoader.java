@@ -37,6 +37,8 @@ public abstract class AbstractLoader {
 
 	protected List<String> paths = new ArrayList<String>();
 
+	protected List<Long> folderIds = new ArrayList<Long>();
+
 	protected String url;
 
 	protected String username;
@@ -56,6 +58,8 @@ public abstract class AbstractLoader {
 	protected CyclicBarrier barrier;
 
 	protected List<Loader> loaders = new ArrayList<Loader>();
+
+	private Random generator = new Random();
 
 	public static void main(String[] args) {
 		ApplicationContext context = new ClassPathXmlApplicationContext(new String[] { "/context.xml" });
@@ -95,6 +99,7 @@ public abstract class AbstractLoader {
 		for (int i = 1; i <= n; i++) {
 			String path = parent + "/" + formatter.format(paths.size() + 1);
 			paths.add(path);
+			folderIds.add(null);
 			// System.out.println("Create folder " + path);
 			preparePaths(path, subProfile);
 		}
@@ -216,15 +221,35 @@ public abstract class AbstractLoader {
 		this.threads = threads;
 	}
 
-	protected abstract Long createPath(String path);
+	/**
+	 * Gets a random path and retrieves the respective folder ID. If the folder
+	 * doesn't exists it is created and the ID cached.
+	 */
+	protected Long getRandomFolder() {
+		int index = generator.nextInt(paths.size());
+		String path = AbstractLoader.this.paths.get(index);
+		Long folder = folderIds.get(index);
+		if (folder == null) {
+			synchronized (AbstractLoader.this.paths) {
+				try {
+					folder = AbstractLoader.this.createFolder(path);
+					folderIds.set(index, folder);
+				} catch (Throwable ex) {
+					log.error(ex.getMessage(), ex);
+					folder = null;
+				}
+			}
+		}
+		return folder;
+	}
+
+	protected abstract Long createFolder(String path);
 
 	protected abstract Long createDocument(long folderId, String title, File file);
 
 	protected class Loader extends Thread {
 
 		private NumberFormat formatter = new DecimalFormat("Document-00000000000");
-
-		private Random generator = new Random();
 
 		private long count;
 
@@ -249,21 +274,10 @@ public abstract class AbstractLoader {
 					long t = System.currentTimeMillis();
 
 					try {
-						String path = AbstractLoader.this.paths.get(generator.nextInt(paths.size()));
-						Long folder = null;
-						synchronized (AbstractLoader.this.paths) {
-							try {
-								if (sid == null)
-									continue;
-								folder = AbstractLoader.this.createPath(path);
-							} catch (Throwable ex) {
-								log.error(ex.getMessage(), ex);
-								folder = null;
-							}
-						}
+						Long folder = getRandomFolder();
 
 						if (folder == null) {
-							throw new Exception("Error creating folder " + path);
+							throw new Exception("Error getting folder");
 						}
 
 						try {
