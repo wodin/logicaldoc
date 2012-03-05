@@ -223,7 +223,8 @@ public abstract class AbstractLoader {
 
 	/**
 	 * Gets a random path and retrieves the respective folder ID. If the folder
-	 * doesn't exists it is created and the ID cached.
+	 * doesn't exists it is cre
+	 * ated and the ID cached.
 	 */
 	protected Long getRandomFolder() {
 		int index = generator.nextInt(paths.size());
@@ -251,15 +252,13 @@ public abstract class AbstractLoader {
 
 		private NumberFormat formatter = new DecimalFormat("Document-00000000000");
 
-		private long count;
+		// Statistics
+		private int statCount = 0;
+		private long statTotalMs = 0;
+		private int statErrors = 0;
 
-		private long errors;
-
-		private long totalTime = 0;
-
-		private long average = 0;
-
-		private long sum = 0;
+		//private long average = 0;
+		//private long sum = 0;
 
 		public Loader(String name) {
 			super(name);
@@ -271,7 +270,7 @@ public abstract class AbstractLoader {
 
 			try {
 				while (sid != null && AbstractLoader.this.iteration < AbstractLoader.this.iterations) {
-					long t = System.currentTimeMillis();
+					//long t = System.currentTimeMillis();
 
 					try {
 						Long folder = getRandomFolder();
@@ -293,7 +292,7 @@ public abstract class AbstractLoader {
 						Long docId = AbstractLoader.this.createDocument(folder, title, file);
 
 						if (docId != null) {
-							count++;
+							statCount++;
 						} else {
 							throw new Exception("Error creating document " + title);
 						}
@@ -305,38 +304,45 @@ public abstract class AbstractLoader {
 						}
 					} catch (Throwable ex) {
 						log.error(ex.getMessage(), ex);
-						errors++;
+						statErrors++;
 						continue;
 					} finally {
-						long now = System.currentTimeMillis();
-						totalTime = now - startTime;
-						long time = now - t;
-						sum += time;
-						average = Math.round((double) sum / count);
+//						long now = System.currentTimeMillis();
+//						statTotalMs = now - startTime;
+//						long time = now - t;
+//						sum += time;
+//						average = Math.round((double) sum / statCount);
+						statTotalMs = System.currentTimeMillis() - startTime;
 					}
 				}
 			} finally {
-				totalTime = System.currentTimeMillis() - startTime;
-				average = Math.round((double) sum / count);
+//				statTotalMs = System.currentTimeMillis() - startTime;
+//				average = Math.round((double) sum / statCount);
+				statTotalMs = System.currentTimeMillis() - startTime;
 				log.info(getName() + " finished");
 			}
 		}
 
-		public long getCount() {
-			return count;
+		public int getStatErrors() {
+			return statErrors;
 		}
 
-		public long getErrors() {
-			return errors;
+		public double getStatTotalSec() {
+			return statTotalMs / 1000.0;
 		}
 
-		public long getTotalTime() {
-			return totalTime;
+		public int getStatCount() {
+			return statCount;
 		}
 
-		public long getAverage() {
-			return average;
+		public double getStatAveSec() {
+	        return getStatTotalSec() / statCount;
 		}
+
+		public double getStatPerSec() {
+			return statCount / getStatTotalSec();
+		}
+
 	}
 
 	public void setIterations(long iterations) {
@@ -344,7 +350,8 @@ public abstract class AbstractLoader {
 	}
 
 	private void printReport() {
-		long totalTime = System.currentTimeMillis() - startTime;
+		
+		double statTotalMs = System.currentTimeMillis() - startTime;
 
 		PrintStream out = System.out;
 
@@ -352,40 +359,42 @@ public abstract class AbstractLoader {
 		out.print("\n");
 		out.print(StringUtils.leftPad("NAME", 9));
 		out.print(StringUtils.leftPad("COUNT", 15));
-		out.print(StringUtils.leftPad("ERRORS", 15));
+		//out.print(StringUtils.leftPad("ERRORS", 15));
 		out.print(StringUtils.leftPad("TOTAL TIME", 20));
 		out.print(StringUtils.leftPad("AVERAGE TIME", 20));
 		out.print(StringUtils.leftPad("PER SECOND", 12));
 
-		long count = 0;
-		long errors = 0;
-		long average = 0;
+		float statCount = 0;
+		int errors = 0;
 
 		for (Loader th : loaders) {
-			count += th.getCount();
-			errors += th.getErrors();
-			average += th.getAverage();
+			statCount += th.getStatCount();
+			errors += th.getStatErrors();
 		}
-		average = Math.round((double) average / loaders.size());
+        double statTotalSec = statTotalMs / 1000.0;
+        double statPerSec = statCount / statTotalSec;
+        double statAveSec = statTotalSec / statCount;
 
-		DecimalFormat nb = new DecimalFormat("#####.###");
+		//DecimalFormat nb = new DecimalFormat("#####.###");
 
 		out.print("\n");
 		out.print(StringUtils.leftPad("main", 9));
-		out.print(StringUtils.leftPad(Long.toString(count), 15));
-		out.print(StringUtils.leftPad(Long.toString(errors), 15));
-		out.print(StringUtils.leftPad(Util.formatFriendlyTimeSpan(totalTime), 20));
-		out.print(StringUtils.leftPad(Util.formatFriendlyTimeSpan(average), 20));
-		out.print(StringUtils.leftPad(nb.format((double) 1 / (double) average * 1000), 12));
+		out.print(StringUtils.leftPad(String.format("%15.0f", (float)statCount), 15));
+		//out.print(StringUtils.leftPad(Long.toString(errors), 15));
+		out.print(StringUtils.leftPad(String.format("%15.3f", statTotalSec), 20));
+		out.print(StringUtils.leftPad(String.format("%15.3f", statAveSec), 20));
+		out.print(StringUtils.leftPad(String.format("%15.3f", statPerSec), 12));
+		
 
 		for (Loader th : loaders) {
 			out.print("\n");
 			out.print(StringUtils.leftPad(th.getName(), 9));
-			out.print(StringUtils.leftPad(Long.toString(th.getCount()), 15));
-			out.print(StringUtils.leftPad(Long.toString(th.getErrors()), 15));
-			out.print(StringUtils.leftPad(Util.formatFriendlyTimeSpan(th.getTotalTime()), 20));
-			out.print(StringUtils.leftPad(Util.formatFriendlyTimeSpan(th.getAverage()), 20));
-			out.print(StringUtils.leftPad(nb.format((double) 1 / (double) th.getAverage() * 1000), 12));
+			out.print(StringUtils.leftPad(String.format("%15.0f", (float)th.getStatCount()), 15));
+			//out.print(StringUtils.leftPad(Long.toString(th.getErrors()), 15));
+			out.print(StringUtils.leftPad(String.format("%15.3f", th.getStatTotalSec()), 20));
+			out.print(StringUtils.leftPad(String.format("%15.3f", th.getStatAveSec()), 20));
+			//out.print(StringUtils.leftPad(nb.format((double) 1 / (double) th.getStatPerSec() * 1000), 12));
+			out.print(StringUtils.leftPad(String.format("%15.3f", th.getStatPerSec()), 12));
 		}
 		out.print("\n");
 		out.print("\n");
