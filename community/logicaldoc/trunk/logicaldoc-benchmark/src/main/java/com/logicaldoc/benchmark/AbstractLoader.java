@@ -258,8 +258,7 @@ public abstract class AbstractLoader {
 			long startTime = System.currentTimeMillis();
 
 			try {
-				while (sid != null) {
-					
+				while (sid != null && (testCount <= testTotal)) {
 					try {												
 						Long folder = getRandomFolder();
 						if (folder == null) {
@@ -274,24 +273,19 @@ public abstract class AbstractLoader {
 							statCount++;
 						} else {
 							throw new Exception("Error creating document " + title);
-						}				
-						
-		                // Have we done this enough?
-		                testCount++;
-		                if (testCount > testTotal)
-		                {
-		                    break;
-		                }								
+						}									
 					} catch (Throwable ex) {
 						log.error(ex.getMessage(), ex);
 						statErrors++;
 					} finally {
 						statTotalMs = System.currentTimeMillis() - startTime;
-					}							
+						
+		                // Increment iterations
+		                testCount++;		
+					}	
 				}
 			} finally {
 				statTotalMs = System.currentTimeMillis() - startTime;
-				log.info(getName() + " finished");
 				log.info(getName() + " finished in ms: " +statTotalMs);
 			}
 		}
@@ -341,7 +335,7 @@ public abstract class AbstractLoader {
 
 		for (LoaderThread th : loaders) {
 			statCount += th.getStatCount();
-			errors += th.getStatErrors();
+			//errors += th.getStatErrors();
 		}
         double statTotalSec = statTotalMs / 1000.0;
         double statPerSec = statCount / statTotalSec;
