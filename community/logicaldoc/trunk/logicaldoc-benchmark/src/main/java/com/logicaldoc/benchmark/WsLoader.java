@@ -18,7 +18,7 @@ import com.logicaldoc.webservice.folder.WSFolder;
  * @author Marco Meschieri - Logical Objects
  * @since 6.4
  */
-public class WsLoader extends AbstractLoader {
+public class WsLoader extends Loader {
 
 	private static Log log = LogFactory.getLog(WsLoader.class);
 
