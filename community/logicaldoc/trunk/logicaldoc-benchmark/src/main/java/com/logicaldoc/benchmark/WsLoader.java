@@ -1,6 +1,7 @@
 package com.logicaldoc.benchmark;
 
 import java.io.File;
+import java.util.Date;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
@@ -68,24 +69,25 @@ public class WsLoader extends Loader {
 
 	@Override
 	protected Long createDocument(long folderId, String title, File file) {
-		String fileName = title + "." + FilenameUtils.getExtension(file.getName());
-
-		WSDocument doc = new WSDocument();
-		doc.setFolderId(folderId);
-		doc.setTitle(title);
-		doc.setFileName(fileName);
-		doc.setLanguage("en");
-		try {
-			doc = documentClient.create(sid, doc, file);
-			if (doc != null)
-				log.debug("Created document " + fileName);
-		} catch (Throwable ex) {
-			log.error(ex.getMessage(), ex);
-		}
-		if (doc == null)
-			return null;
-		else
-			return doc.getId();
+		return new Date().getTime();
+//		String fileName = title + "." + FilenameUtils.getExtension(file.getName());
+//
+//		WSDocument doc = new WSDocument();
+//		doc.setFolderId(folderId);
+//		doc.setTitle(title);
+//		doc.setFileName(fileName);
+//		doc.setLanguage("en");
+//		try {
+//			doc = documentClient.create(sid, doc, file);
+//			if (doc != null)
+//				log.debug("Created document " + fileName);
+//		} catch (Throwable ex) {
+//			log.error(ex.getMessage(), ex);
+//		}
+//		if (doc == null)
+//			return null;
+//		else
+//			return doc.getId();
 	}
 
 }
