@@ -243,7 +243,7 @@ public class BookmarksPanel extends VLayout {
 	}
 
 	private void download() {
-		String id = list.getSelectedRecord().getAttribute("docId");
+		String id = list.getSelectedRecord().getAttribute("id");
 		Window.open(
 				GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id + "&open=true",
 				"_blank", "");
