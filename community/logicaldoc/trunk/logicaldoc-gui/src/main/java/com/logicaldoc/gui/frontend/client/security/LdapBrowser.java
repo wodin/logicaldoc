@@ -197,7 +197,7 @@ public class LdapBrowser extends VLayout {
 		}
 
 		MenuItem _import = new MenuItem();
-		_import.setTitle(I18N.message("import"));
+		_import.setTitle(I18N.message("iimport"));
 		_import.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				service.importUsers(Session.get().getSid(), usernames, new AsyncCallback<GUIValuePair[]>() {
