@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
@@ -27,17 +26,17 @@
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-util</artifactId>
 			<version>${project.version}</version>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-core</artifactId>
 			<version>${project.version}</version>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-webservice</artifactId>
 			<version>${project.version}</version>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -62,6 +61,47 @@
 						<goals>
 							<goal>attached</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>package</id>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<delete dir="target/tool" quiet="true" />
+								<unzip
+									src="target/${project.artifactId}-${project.version}-tool.zip"
+									dest="target/tool" />
+								<delete
+									file="target/${project.artifactId}-${project.version}-plugin.zip" />
+
+
+								<unzip
+									src="target/tool/lib/${project.artifactId}-${project.version}.${project.packaging}"
+									dest="target/tool/lib/tmp" />
+								<delete
+									file="target/tool/lib/${project.artifactId}-${project.version}.${project.packaging}" />
+								<delete>
+									<fileset dir="target/tool/lib/tmp" includes="context.*,log4j*" />
+								</delete>
+								<zip
+									destfile="target/tool/lib/${project.artifactId}-${project.version}.${project.packaging}"
+									basedir="target/tool/lib/tmp" />
+								<delete dir="target/tool/lib/tmp" quiet="true" />
+
+								<zip destfile="target/${project.artifactId}-${project.version}-tool.zip"
+									basedir="target/tool" />
+								<delete dir="target/tool" quiet="true" />
+							</tasks>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
