@@ -279,6 +279,7 @@ public abstract class AbstractLoader {
 							throw new Exception("Error creating document " + title);
 						}	
 						
+						// Note: this piece of code is here to allow correctly comparation with the competitors, do not remove
 						// Have we done this enough?
 						testCount++;
 						if (testCount > testTotal) {
