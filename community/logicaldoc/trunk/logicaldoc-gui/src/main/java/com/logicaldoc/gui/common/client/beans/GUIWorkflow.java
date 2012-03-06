@@ -32,17 +32,17 @@ public class GUIWorkflow implements Serializable {
 	private String supervisor = "";
 
 	private GUIWFState[] states;
-	
+
 	private GUIWFState selectedTask = null;
-	
+
 	private Date startDate;
-	
+
 	private Date endDate;
-	
+
 	private GUIDocument[] appendedDocs;
-	
+
 	private String appendedDocIds;
-	
+
 	private GUIWFState[] wflHistory;
 
 	public GUIWFState getStateById(String id) {
@@ -182,5 +182,13 @@ public class GUIWorkflow implements Serializable {
 
 	public void setAppendedDocIds(String appendedDocIds) {
 		this.appendedDocIds = appendedDocIds;
+	}
+
+	public void addState(GUIWFState status) {
+		GUIWFState[] buf = new GUIWFState[getStates().length];
+		for (int i = 0; i < getStates().length; i++) {
+			buf[i] = getStates()[i];
+		}
+		buf[buf.length - 1] = status;
 	}
 }

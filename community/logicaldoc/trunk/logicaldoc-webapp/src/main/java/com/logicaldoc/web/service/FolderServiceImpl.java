@@ -316,16 +316,16 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					f.setName(folderName.trim());
 					transaction.setEvent(History.EVENT_FOLDER_RENAMED);
 				}
-
-				folderDao.store(f, transaction);
+				
 			} else {
 				f = folderDao.create(folderDao.findById(folder.getParentId()), folderName, transaction);
 				f.setDescription(folder.getDescription());
 				f.setType(folder.getType());
-				folderDao.store(f);
 			}
-			folderDao.initialize(f);
+
 			updateExtendedAttributes(f, folder);
+			folderDao.store(f, transaction);
+			
 			folder.setId(f.getId());
 			folder.setName(f.getName());
 		} catch (Throwable t) {

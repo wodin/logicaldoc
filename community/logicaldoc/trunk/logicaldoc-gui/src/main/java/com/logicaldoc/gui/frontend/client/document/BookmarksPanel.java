@@ -182,7 +182,7 @@ public class BookmarksPanel extends VLayout {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord record = list.getSelectedRecord();
 				DocumentsPanel.get().openInFolder(Long.parseLong(record.getAttributeAsString("folderId")),
-						Long.parseLong(record.getAttributeAsString("docId")));
+						Long.parseLong(record.getAttributeAsString("targetId")));
 			}
 		});
 
@@ -231,10 +231,10 @@ public class BookmarksPanel extends VLayout {
 			openInFolder.setEnabled(false);
 		}
 
-		if(isDocument)
-		contextMenu.setItems(edit, download, delete, openInFolder);
+		if (isDocument)
+			contextMenu.setItems(edit, download, delete, openInFolder);
 		else
-			contextMenu.setItems(edit, delete, openInFolder);	
+			contextMenu.setItems(edit, delete, openInFolder);
 		contextMenu.showContextMenu();
 	}
 
@@ -243,7 +243,7 @@ public class BookmarksPanel extends VLayout {
 	}
 
 	private void download() {
-		String id = list.getSelectedRecord().getAttribute("id");
+		String id = list.getSelectedRecord().getAttribute("targetId");
 		Window.open(
 				GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id + "&open=true",
 				"_blank", "");

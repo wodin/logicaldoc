@@ -104,17 +104,14 @@ public class WorkflowDesigner extends VStack {
 
 	public void onAddState(int type) {
 		GUIWFState state = new GUIWFState("" + new Date().getTime(), I18N.message("statename"), type);
-		
-		try {
-			saveModel();
-		} catch (Throwable t) {
-		}
-		
+
+		getWorkflow().addState(state);
+
 		/*
 		 * Check if this must be the initial state
 		 */
 		if (type == GUIWFState.TYPE_TASK) {
-			state.setInitial(true);			
+			state.setInitial(true);
 			if (getWorkflow().getStates() != null)
 				for (GUIWFState s : getWorkflow().getStates()) {
 					if (s.getType() == GUIWFState.TYPE_TASK && s.isInitial()) {
@@ -123,18 +120,18 @@ public class WorkflowDesigner extends VStack {
 					}
 				}
 		}
-		
-		try {
-			saveModel();
-		} catch (Throwable t) {
-		}
-		
-		if(state.isInitial())
+
+		if (state.isInitial())
 			getWorkflow().setStartStateId(state.getId());
 
 		StateWidget sw = new StateWidget(drawingPanel, state);
 		drawingPanel.getDiagramController().addWidget(sw, 10, 10);
 		drawingPanel.getDiagramController().makeDraggable(sw);
+
+		try {
+			saveModel();
+		} catch (Throwable t) {
+		}
 	}
 
 	public boolean isReadOnly() {
@@ -156,8 +153,16 @@ public class WorkflowDesigner extends VStack {
 		while (iter.hasNext()) {
 			FunctionShape shape = iter.next();
 			StateWidget widget = (StateWidget) shape.getWidget();
+
+			String id = Integer.toString(i++);
+
 			GUIWFState wfState = widget.getWfState();
-			wfState.setId(Integer.toString(i++));
+			if (wfState.getId().equals(workflow.getStartStateId())) {
+				workflow.setStartStateId(id);
+				wfState.setInitial(true);
+			} else
+				wfState.setInitial(false);
+			wfState.setId(id);
 			wfState.setTop(shape.getTop());
 			wfState.setLeft(shape.getLeft());
 			states.add(wfState);
@@ -190,7 +195,7 @@ public class WorkflowDesigner extends VStack {
 			}
 			srcWidget.getWfState().setTransitions(transitions.toArray(new GUITransition[0]));
 		}
-		
+
 		final Map<String, Object> values = getAccordion().getValues();
 		if (values == null || ((String) values.get("workflowName")).trim().isEmpty())
 			return;
