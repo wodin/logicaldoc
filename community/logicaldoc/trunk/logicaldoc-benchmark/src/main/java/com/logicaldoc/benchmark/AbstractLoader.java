@@ -241,9 +241,13 @@ public abstract class AbstractLoader {
 
 		private long testTotal;
 		
-		// Statistics
+		// Total number of successfull iterations
 		private int statCount = 0;
+		
+		// Total execution time
 		private long statTotalMs = 0;
+		
+		// Total errors
 		private int statErrors = 0;
 
 		public LoaderThread(String name, long testTotal) {
@@ -258,7 +262,7 @@ public abstract class AbstractLoader {
 			long startTime = System.currentTimeMillis();
 
 			try {
-				while (sid != null && (testCount <= testTotal)) {
+				while (sid != null) {
 					try {												
 						Long folder = getRandomFolder();
 						if (folder == null) {
@@ -273,15 +277,19 @@ public abstract class AbstractLoader {
 							statCount++;
 						} else {
 							throw new Exception("Error creating document " + title);
-						}									
+						}	
+						
+						// Have we done this enough?
+						testCount++;
+						if (testCount > testTotal) {
+							break;
+						}
+						
 					} catch (Throwable ex) {
 						log.error(ex.getMessage(), ex);
 						statErrors++;
 					} finally {
-						statTotalMs = System.currentTimeMillis() - startTime;
-						
-		                // Increment iterations
-		                testCount++;		
+						statTotalMs = System.currentTimeMillis() - startTime;	
 					}	
 				}
 			} finally {
