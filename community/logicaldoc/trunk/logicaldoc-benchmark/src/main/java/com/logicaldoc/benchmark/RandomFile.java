@@ -1,7 +1,6 @@
 package com.logicaldoc.benchmark;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -15,15 +14,15 @@ public class RandomFile {
 	private String sourceDir = "docs";
 
 	private File[] sourceFiles = null;
-
+	
+	private Random random = new Random();	
+	
 	public File getFile() throws Exception {
 		
-		if (sourceFiles == null) {
+		if (sourceFiles == null) 
 			sourceFiles = getSourceFiles(new File(sourceDir));
-		}
-
-		Random generator = new Random();		
-		return sourceFiles[generator.nextInt(sourceFiles.length)];
+		
+		return sourceFiles[random.nextInt(sourceFiles.length)];
 	}
 
 	public String getSourceDir() {
@@ -33,13 +32,8 @@ public class RandomFile {
 	public void setSourceDir(String sourceDir) {
 		this.sourceDir = sourceDir;
 	}
-		
-    public File[] getSourceFiles()
-    {
-        return sourceFiles;
-    }	
     
-    private static File[] getSourceFiles(File sourceDir) throws Exception
+    private File[] getSourceFiles(File sourceDir) throws Exception
     {
         // Ensure that the source directory is present, if specified
         if (sourceDir != null)
@@ -48,19 +42,7 @@ public class RandomFile {
             {
                 throw new Exception("The source directory to contain upload files is missing: " + sourceDir);
             }
-            // Check that there is something in it
-            File[] allFiles = sourceDir.listFiles();
-            ArrayList<File> sourceFiles = new ArrayList<File>(allFiles.length);
-            for (File file : allFiles)
-            {
-                if (file.isDirectory())
-                {
-                    continue;
-                }
-                sourceFiles.add(file);
-            }
-            File[] ret = new File[sourceFiles.size()];
-            return sourceFiles.toArray(ret);
+            return sourceDir.listFiles();
         }
         else
         {
