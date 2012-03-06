@@ -23,9 +23,9 @@ import com.logicaldoc.core.security.Folder;
  * @author Marco Meschieri - Logical Objects
  * @since 6.4
  */
-public abstract class AbstractLoader {
+public abstract class Loader {
 
-	private static Log log = LogFactory.getLog(AbstractLoader.class);
+	private static Log log = LogFactory.getLog(Loader.class);
 
 	protected RandomFile randomFile;
 
@@ -58,7 +58,7 @@ public abstract class AbstractLoader {
 	public static void main(String[] args) {
 		ApplicationContext context = new ClassPathXmlApplicationContext(new String[] { "/context.xml" });
 
-		AbstractLoader loader = (AbstractLoader) context.getBean("Loader");
+		Loader loader = (Loader) context.getBean("Loader");
 		loader.execute();
 	}
 
@@ -215,12 +215,12 @@ public abstract class AbstractLoader {
 	 */
 	protected Long getRandomFolder() {
 		int index = generator.nextInt(paths.size());
-		String path = AbstractLoader.this.paths.get(index);
+		String path = Loader.this.paths.get(index);
 		Long folder = folderIds.get(index);
 		if (folder == null) {
-			synchronized (AbstractLoader.this.paths) {
+			synchronized (Loader.this.paths) {
 				try {
-					folder = AbstractLoader.this.createFolder(path);
+					folder = Loader.this.createFolder(path);
 					folderIds.set(index, folder);
 				} catch (Throwable ex) {
 					log.error(ex.getMessage(), ex);
@@ -272,7 +272,7 @@ public abstract class AbstractLoader {
 						File file = randomFile.getFile();
 						String title = formatter.format(testCount);
 
-						Long docId = AbstractLoader.this.createDocument(folder, title, file);
+						Long docId = Loader.this.createDocument(folder, title, file);
 						if (docId != null) {
 							statCount++;
 						} else {
