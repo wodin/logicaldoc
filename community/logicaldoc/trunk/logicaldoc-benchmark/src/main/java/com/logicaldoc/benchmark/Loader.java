@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -33,7 +34,7 @@ public abstract class Loader {
 
 	protected long rootFolder = Folder.DEFAULTWORKSPACE;
 
-	protected String[] paths = null;
+	protected List<String> paths = new ArrayList<String>();
 
 	protected Long[] folderIds = null;
 
@@ -74,7 +75,6 @@ public abstract class Loader {
 	 * @param profile The folder profile to be applied to children
 	 */
 	private void preparePaths(String parent, String profile) {
-
 		if (StringUtils.isEmpty(profile))
 			return;
 
@@ -91,13 +91,9 @@ public abstract class Loader {
 		if (index > 0)
 			subProfile = profile.substring(index + 1);
 
-		paths = new String[n];
-		folderIds = new Long[n];
-
 		for (int i = 0; i < n; i++) {
 			String path = parent + "/" + formatter.format(i + 1);
-			paths[i] = path;
-			folderIds[i] = null;
+			paths.add(path);
 			// System.out.println("Create folder " + path);
 			preparePaths(path, subProfile);
 		}
@@ -106,9 +102,12 @@ public abstract class Loader {
 	private void execute() {
 		// Prepare the paths we will use to populate the database
 		loaders.clear();
-		paths = null;
+		paths.clear();
 		folderIds = null;
 		preparePaths("", folderProfile);
+		folderIds = new Long[paths.size()];
+		Arrays.fill(folderIds, null);
+		log.info("Prepared " + paths.size() + " paths");
 
 		startTime = System.currentTimeMillis();
 
@@ -139,33 +138,38 @@ public abstract class Loader {
 			 */
 			System.out.println("   Enter 'q' to quit.");
 			System.out.println("   Enter 's' to dump a thread summary.");
-			boolean alive = true;
-			while (alive) {
+
+			boolean finished = false;
+			while (!finished) {
 				try {
 					Thread.sleep(500);
 				} catch (InterruptedException e) {
 
 				}
 				for (LoaderThread th : loaders) {
-					if (!th.isAlive())
-						alive = false;
-				}
-
-				try {
-					int keyPress = System.in.read();
-
-					if (keyPress == 'Q' || keyPress == 'q') {
-						for (LoaderThread th : loaders)
-							th.interrupt();
-						alive = false;
-						log.info("Requested stop");
-					} else if (keyPress == 'S' || keyPress == 's') {
-						printReport();
-						log.info("Requested report print");
+					if (!th.isFinished()) {
+						finished = false;
+						break;
 					}
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
+
+				if (!finished)
+					try {
+						int keyPress = System.in.read();
+
+						if (keyPress == 'Q' || keyPress == 'q') {
+							sid = null;
+							for (LoaderThread th : loaders)
+								th.interrupt();
+							finished = true;
+							log.info("Requested stop");
+						} else if (keyPress == 'S' || keyPress == 's') {
+							printReport();
+							log.info("Requested report print");
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 			}
 
 			log.info("All threads finished");
@@ -217,13 +221,13 @@ public abstract class Loader {
 	 * doesn't exists it is created and the ID cached.
 	 */
 	protected Long getRandomFolder() {
-		int index = generator.nextInt(paths.length);
-		String path = paths[index];
+		int index = generator.nextInt(paths.size());
+		String path = paths.get(index);
 		Long folder = folderIds[index];
 		if (folder == null) {
 			synchronized (Loader.this.paths) {
 				try {
-					folder = Loader.this.createFolder(path);
+					folder = createFolder(path);
 					folderIds[index] = folder;
 				} catch (Throwable ex) {
 					log.error(ex.getMessage(), ex);
@@ -244,8 +248,11 @@ public abstract class Loader {
 
 		private long testTotal;
 
-		// Total number of successfull iterations
+		// Total number of successful iterations
 		private int statCount = 0;
+
+		// Total number of iterations
+		private int testCount = 0;
 
 		// Total execution time
 		private long statTotalMs = 0;
@@ -261,7 +268,7 @@ public abstract class Loader {
 
 		@Override
 		public void run() {
-			int testCount = 0;
+			testCount = 0;
 			long startTime = System.currentTimeMillis();
 
 			try {
@@ -287,14 +294,15 @@ public abstract class Loader {
 						// Have we done this enough?
 						testCount++;
 						if (testCount > testTotal) {
+							log.info("end");
 							break;
 						}
-
 					} catch (Throwable ex) {
 						log.error(ex.getMessage(), ex);
 						statErrors++;
 					} finally {
 						statTotalMs = System.currentTimeMillis() - startTime;
+						// testCount++;
 					}
 				}
 			} finally {
@@ -321,6 +329,10 @@ public abstract class Loader {
 
 		public double getStatPerSec() {
 			return statCount / getStatTotalSec();
+		}
+
+		public boolean isFinished() {
+			return testCount > testTotal;
 		}
 	}
 
