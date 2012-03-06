@@ -33,9 +33,9 @@ public abstract class Loader {
 
 	protected long rootFolder = Folder.DEFAULTWORKSPACE;
 
-	protected List<String> paths = new ArrayList<String>();
+	protected String[] paths = null;
 
-	protected List<Long> folderIds = new ArrayList<Long>();
+	protected Long[] folderIds = null;
 
 	protected String url;
 
@@ -74,7 +74,7 @@ public abstract class Loader {
 	 * @param profile The folder profile to be applied to children
 	 */
 	private void preparePaths(String parent, String profile) {
-		
+
 		if (StringUtils.isEmpty(profile))
 			return;
 
@@ -91,20 +91,23 @@ public abstract class Loader {
 		if (index > 0)
 			subProfile = profile.substring(index + 1);
 
-		for (int i = 1; i <= n; i++) {
-			String path = parent + "/" + formatter.format(paths.size() + 1);
-			paths.add(path);
-			folderIds.add(null);
+		paths = new String[n];
+		folderIds = new Long[n];
+
+		for (int i = 0; i < n; i++) {
+			String path = parent + "/" + formatter.format(i + 1);
+			paths[i] = path;
+			folderIds[i] = null;
 			// System.out.println("Create folder " + path);
 			preparePaths(path, subProfile);
 		}
 	}
-	
 
 	private void execute() {
 		// Prepare the paths we will use to populate the database
 		loaders.clear();
-		paths.clear();
+		paths = null;
+		folderIds = null;
 		preparePaths("", folderProfile);
 
 		startTime = System.currentTimeMillis();
@@ -198,7 +201,7 @@ public abstract class Loader {
 		System.setProperty("org.apache.cxf.Logger", "org.apache.cxf.common.logging.Log4jLogger");
 		log.info("Connect to the server");
 		try {
-			//iteration = 0;
+			// iteration = 0;
 			sid = null;
 		} catch (Throwable e) {
 			log.error("Unable to initialize", e);
@@ -214,14 +217,14 @@ public abstract class Loader {
 	 * doesn't exists it is created and the ID cached.
 	 */
 	protected Long getRandomFolder() {
-		int index = generator.nextInt(paths.size());
-		String path = Loader.this.paths.get(index);
-		Long folder = folderIds.get(index);
+		int index = generator.nextInt(paths.length);
+		String path = paths[index];
+		Long folder = folderIds[index];
 		if (folder == null) {
 			synchronized (Loader.this.paths) {
 				try {
 					folder = Loader.this.createFolder(path);
-					folderIds.set(index, folder);
+					folderIds[index] = folder;
 				} catch (Throwable ex) {
 					log.error(ex.getMessage(), ex);
 					folder = null;
@@ -240,20 +243,20 @@ public abstract class Loader {
 		private NumberFormat formatter = new DecimalFormat("Loader_00000000000");
 
 		private long testTotal;
-		
+
 		// Total number of successfull iterations
 		private int statCount = 0;
-		
+
 		// Total execution time
 		private long statTotalMs = 0;
-		
+
 		// Total errors
 		private int statErrors = 0;
 
 		public LoaderThread(String name, long testTotal) {
 			super(name);
 			this.testTotal = testTotal < 1 ? Integer.MAX_VALUE : testTotal;
-			formatter = new DecimalFormat(name +"_00000000000");
+			formatter = new DecimalFormat(name + "_00000000000");
 		}
 
 		@Override
@@ -263,7 +266,7 @@ public abstract class Loader {
 
 			try {
 				while (sid != null) {
-					try {												
+					try {
 						Long folder = getRandomFolder();
 						if (folder == null) {
 							throw new Exception("Error getting folder");
@@ -277,25 +280,26 @@ public abstract class Loader {
 							statCount++;
 						} else {
 							throw new Exception("Error creating document " + title);
-						}	
-						
-						// Note: this piece of code is here to allow correctly comparation with the competitors, do not remove
+						}
+
+						// Note: this piece of code is here to allow correctly
+						// comparation with the competitors, do not remove
 						// Have we done this enough?
 						testCount++;
 						if (testCount > testTotal) {
 							break;
 						}
-						
+
 					} catch (Throwable ex) {
 						log.error(ex.getMessage(), ex);
 						statErrors++;
 					} finally {
-						statTotalMs = System.currentTimeMillis() - startTime;	
-					}	
+						statTotalMs = System.currentTimeMillis() - startTime;
+					}
 				}
 			} finally {
 				statTotalMs = System.currentTimeMillis() - startTime;
-				log.info(getName() + " finished in ms: " +statTotalMs);
+				log.info(getName() + " finished in ms: " + statTotalMs);
 			}
 		}
 
@@ -312,7 +316,7 @@ public abstract class Loader {
 		}
 
 		public double getStatAveSec() {
-	        return getStatTotalSec() / statCount;
+			return getStatTotalSec() / statCount;
 		}
 
 		public double getStatPerSec() {
@@ -325,7 +329,7 @@ public abstract class Loader {
 	}
 
 	private void printReport() {
-		
+
 		double statTotalMs = System.currentTimeMillis() - startTime;
 
 		PrintStream out = System.out;
@@ -334,7 +338,7 @@ public abstract class Loader {
 		out.print("\n");
 		out.print(StringUtils.leftPad("NAME", 9));
 		out.print(StringUtils.leftPad("COUNT", 15));
-		//out.print(StringUtils.leftPad("ERRORS", 15));
+		// out.print(StringUtils.leftPad("ERRORS", 15));
 		out.print(StringUtils.leftPad("TOTAL TIME", 20));
 		out.print(StringUtils.leftPad("AVERAGE TIME", 20));
 		out.print(StringUtils.leftPad("PER SECOND", 12));
@@ -344,26 +348,26 @@ public abstract class Loader {
 
 		for (LoaderThread th : loaders) {
 			statCount += th.getStatCount();
-			//errors += th.getStatErrors();
+			// errors += th.getStatErrors();
 		}
-        double statTotalSec = statTotalMs / 1000.0;
-        double statPerSec = statCount / statTotalSec;
-        double statAveSec = statTotalSec / statCount;
+		double statTotalSec = statTotalMs / 1000.0;
+		double statPerSec = statCount / statTotalSec;
+		double statAveSec = statTotalSec / statCount;
 
 		out.print("\n");
 		out.print(StringUtils.leftPad("main", 9));
-		out.print(StringUtils.leftPad(String.format("%15.0f", (float)statCount), 15));
-		//out.print(StringUtils.leftPad(Long.toString(errors), 15));
+		out.print(StringUtils.leftPad(String.format("%15.0f", (float) statCount), 15));
+		// out.print(StringUtils.leftPad(Long.toString(errors), 15));
 		out.print(StringUtils.leftPad(String.format("%15.3f", statTotalSec), 20));
 		out.print(StringUtils.leftPad(String.format("%15.3f", statAveSec), 20));
 		out.print(StringUtils.leftPad(String.format("%15.3f", statPerSec), 12));
-		
 
 		for (LoaderThread th : loaders) {
 			out.print("\n");
 			out.print(StringUtils.leftPad(th.getName(), 9));
-			out.print(StringUtils.leftPad(String.format("%15.0f", (float)th.getStatCount()), 15));
-			//out.print(StringUtils.leftPad(Long.toString(th.getErrors()), 15));
+			out.print(StringUtils.leftPad(String.format("%15.0f", (float) th.getStatCount()), 15));
+			// out.print(StringUtils.leftPad(Long.toString(th.getErrors()),
+			// 15));
 			out.print(StringUtils.leftPad(String.format("%15.3f", th.getStatTotalSec()), 20));
 			out.print(StringUtils.leftPad(String.format("%15.3f", th.getStatAveSec()), 20));
 			out.print(StringUtils.leftPad(String.format("%15.3f", th.getStatPerSec()), 12));
