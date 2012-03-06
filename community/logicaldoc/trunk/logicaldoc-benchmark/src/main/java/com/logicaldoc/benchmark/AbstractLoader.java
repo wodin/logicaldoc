@@ -8,8 +8,6 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-//import java.util.concurrent.BrokenBarrierException;
-//import java.util.concurrent.CyclicBarrier;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -49,15 +47,11 @@ public abstract class AbstractLoader {
 
 	protected int threads = 2;
 
-	protected long iteration = 0;
-
-	protected long iterations;
+	protected long iterations = 0L;
 
 	protected long startTime;
 
-	//protected CyclicBarrier barrier;
-
-	protected List<Loader> loaders = new ArrayList<Loader>();
+	protected List<LoaderThread> loaders = new ArrayList<LoaderThread>();
 
 	private Random generator = new Random();
 
@@ -80,6 +74,7 @@ public abstract class AbstractLoader {
 	 * @param profile The folder profile to be applied to children
 	 */
 	private void preparePaths(String parent, String profile) {
+		
 		if (StringUtils.isEmpty(profile))
 			return;
 
@@ -104,15 +99,10 @@ public abstract class AbstractLoader {
 			preparePaths(path, subProfile);
 		}
 	}
-
-	private synchronized long next() {
-		iteration++;
-		return iteration;
-	}
+	
 
 	private void execute() {
 		// Prepare the paths we will use to populate the database
-		iteration = 0;
 		loaders.clear();
 		paths.clear();
 		preparePaths("", folderProfile);
@@ -127,14 +117,14 @@ public abstract class AbstractLoader {
 			 * Prepare the threads
 			 */
 			for (int i = 0; i < threads; i++) {
-				Loader th = new Loader("Loader-" + (i + 1));
+				LoaderThread th = new LoaderThread("Loader-" + (i + 1), this.iterations);
 				loaders.add(th);
 			}
 
 			/*
 			 * Launch all the threads
 			 */
-			for (Loader loadThread : loaders) {
+			for (LoaderThread loadThread : loaders) {
 				loadThread.start();
 			}
 
@@ -153,7 +143,7 @@ public abstract class AbstractLoader {
 				} catch (InterruptedException e) {
 
 				}
-				for (Loader th : loaders) {
+				for (LoaderThread th : loaders) {
 					if (!th.isAlive())
 						alive = false;
 				}
@@ -162,7 +152,7 @@ public abstract class AbstractLoader {
 					int keyPress = System.in.read();
 
 					if (keyPress == 'Q' || keyPress == 'q') {
-						for (Loader th : loaders)
+						for (LoaderThread th : loaders)
 							th.interrupt();
 						alive = false;
 						log.info("Requested stop");
@@ -208,9 +198,8 @@ public abstract class AbstractLoader {
 		System.setProperty("org.apache.cxf.Logger", "org.apache.cxf.common.logging.Log4jLogger");
 		log.info("Connect to the server");
 		try {
-			iteration = 0;
+			//iteration = 0;
 			sid = null;
-			//barrier = new CyclicBarrier(threads);
 		} catch (Throwable e) {
 			log.error("Unable to initialize", e);
 		}
@@ -222,8 +211,7 @@ public abstract class AbstractLoader {
 
 	/**
 	 * Gets a random path and retrieves the respective folder ID. If the folder
-	 * doesn't exists it is cre
-	 * ated and the ID cached.
+	 * doesn't exists it is created and the ID cached.
 	 */
 	protected Long getRandomFolder() {
 		int index = generator.nextInt(paths.size());
@@ -247,78 +235,64 @@ public abstract class AbstractLoader {
 
 	protected abstract Long createDocument(long folderId, String title, File file);
 
-	protected class Loader extends Thread {
+	protected class LoaderThread extends Thread {
 
-		private NumberFormat formatter = new DecimalFormat("Document-00000000000");
+		private NumberFormat formatter = new DecimalFormat("Loader_00000000000");
 
+		private long testTotal;
+		
 		// Statistics
 		private int statCount = 0;
 		private long statTotalMs = 0;
 		private int statErrors = 0;
 
-		//private long average = 0;
-		//private long sum = 0;
-
-		public Loader(String name) {
+		public LoaderThread(String name, long testTotal) {
 			super(name);
+			this.testTotal = testTotal < 1 ? Integer.MAX_VALUE : testTotal;
+			formatter = new DecimalFormat(name +"_00000000000");
 		}
 
 		@Override
 		public void run() {
+			int testCount = 0;
 			long startTime = System.currentTimeMillis();
 
 			try {
-				while (sid != null && AbstractLoader.this.iteration < AbstractLoader.this.iterations) {
-					//long t = System.currentTimeMillis();
-
-					try {
+				while (sid != null) {
+					
+					try {												
 						Long folder = getRandomFolder();
-
 						if (folder == null) {
 							throw new Exception("Error getting folder");
 						}
 
-//						try {
-//							barrier.await();
-//						} catch (InterruptedException e) {
-//						} catch (BrokenBarrierException e) {
-//						}
-
 						File file = randomFile.getFile();
-						long c = next();
-						String title = formatter.format(c);
+						String title = formatter.format(testCount);
 
 						Long docId = AbstractLoader.this.createDocument(folder, title, file);
-
 						if (docId != null) {
 							statCount++;
 						} else {
 							throw new Exception("Error creating document " + title);
-						} 
-
-//						try {
-//							barrier.await();
-//						} catch (InterruptedException e) {
-//						} catch (BrokenBarrierException e) {
-//						}
+						}				
+						
+		                // Have we done this enough?
+		                testCount++;
+		                if (testCount > testTotal)
+		                {
+		                    break;
+		                }								
 					} catch (Throwable ex) {
 						log.error(ex.getMessage(), ex);
 						statErrors++;
-						continue;
 					} finally {
-//						long now = System.currentTimeMillis();
-//						statTotalMs = now - startTime;
-//						long time = now - t;
-//						sum += time;
-//						average = Math.round((double) sum / statCount);
 						statTotalMs = System.currentTimeMillis() - startTime;
-					}
+					}							
 				}
 			} finally {
-//				statTotalMs = System.currentTimeMillis() - startTime;
-//				average = Math.round((double) sum / statCount);
 				statTotalMs = System.currentTimeMillis() - startTime;
 				log.info(getName() + " finished");
+				log.info(getName() + " finished in ms: " +statTotalMs);
 			}
 		}
 
@@ -341,7 +315,6 @@ public abstract class AbstractLoader {
 		public double getStatPerSec() {
 			return statCount / getStatTotalSec();
 		}
-
 	}
 
 	public void setIterations(long iterations) {
@@ -366,15 +339,13 @@ public abstract class AbstractLoader {
 		float statCount = 0;
 		int errors = 0;
 
-		for (Loader th : loaders) {
+		for (LoaderThread th : loaders) {
 			statCount += th.getStatCount();
 			errors += th.getStatErrors();
 		}
         double statTotalSec = statTotalMs / 1000.0;
         double statPerSec = statCount / statTotalSec;
         double statAveSec = statTotalSec / statCount;
-
-		//DecimalFormat nb = new DecimalFormat("#####.###");
 
 		out.print("\n");
 		out.print(StringUtils.leftPad("main", 9));
@@ -385,14 +356,13 @@ public abstract class AbstractLoader {
 		out.print(StringUtils.leftPad(String.format("%15.3f", statPerSec), 12));
 		
 
-		for (Loader th : loaders) {
+		for (LoaderThread th : loaders) {
 			out.print("\n");
 			out.print(StringUtils.leftPad(th.getName(), 9));
 			out.print(StringUtils.leftPad(String.format("%15.0f", (float)th.getStatCount()), 15));
 			//out.print(StringUtils.leftPad(Long.toString(th.getErrors()), 15));
 			out.print(StringUtils.leftPad(String.format("%15.3f", th.getStatTotalSec()), 20));
 			out.print(StringUtils.leftPad(String.format("%15.3f", th.getStatAveSec()), 20));
-			//out.print(StringUtils.leftPad(nb.format((double) 1 / (double) th.getStatPerSec() * 1000), 12));
 			out.print(StringUtils.leftPad(String.format("%15.3f", th.getStatPerSec()), 12));
 		}
 		out.print("\n");
