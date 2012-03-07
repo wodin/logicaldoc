@@ -189,6 +189,10 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		if (folderId == Folder.ROOTID)
 			throw new Exception("cannot rename the root folder");
 
+		if (folderId == Folder.DEFAULTWORKSPACE)
+			throw new Exception("cannot rename the Default workspace");
+
+		
 		Folder folder = folderDao.findById(folderId);
 		if (folder == null)
 			throw new Exception("cannot find folder " + folderId);
@@ -435,16 +439,17 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 
 	@Override
 	public WSFolder[] listWorkspaces(String sid) throws Exception {
-		validateSession(sid);
+		User user = validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		List<Folder> folders = folderDao.findWorkspaces();
-		WSFolder[] wsFolders = new WSFolder[folders.size()];
-		for (int i = 0; i < folders.size(); i++) {
-			folderDao.initialize(folders.get(i));
-			wsFolders[i] = WSFolder.fromFolder(folders.get(i));
+		List<Folder> folders = folderDao.findByUserId(user.getId(), Folder.ROOTID);
+		List<WSFolder> wsFolders = new ArrayList<WSFolder>();
+		for (Folder folder : folders) {
+			if (folder.getType() == Folder.TYPE_WORKSPACE) {
+				folderDao.initialize(folder);
+				wsFolders.add(WSFolder.fromFolder(folder));
+			}
 		}
-
-		return wsFolders;
+		return wsFolders.toArray(new WSFolder[0]);
 	}
 }
