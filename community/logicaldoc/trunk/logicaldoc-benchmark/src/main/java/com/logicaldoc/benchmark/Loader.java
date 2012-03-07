@@ -56,11 +56,15 @@ public abstract class Loader {
 
 	private Random generator = new Random();
 
+	private boolean finished = false;
+
 	public static void main(String[] args) {
 		ApplicationContext context = new ClassPathXmlApplicationContext(new String[] { "/context.xml" });
 
 		Loader loader = (Loader) context.getBean("Loader");
 		loader.execute();
+		
+		System.exit(0);
 	}
 
 	public void setRandomFile(RandomFile randomFile) {
@@ -109,6 +113,43 @@ public abstract class Loader {
 		Arrays.fill(folderIds, null);
 		log.info("Prepared " + paths.size() + " paths");
 
+		// This threads listen for input
+		Thread consoleThread = new Thread() {
+
+			@Override
+			public void run() {
+				/*
+				 * Waiting the end of the job
+				 */
+				System.out.println("   Enter 'q' to quit.");
+				System.out.println("   Enter 's' to dump a thread summary.");
+
+				while (!finished) {
+					int keyPress = 0;
+					try {
+						keyPress = System.in.read();
+					} catch (IOException e) {
+						break;
+					}
+
+					if (keyPress == 'Q' || keyPress == 'q') {
+						for (LoaderThread th : loaders)
+							th.interrupt();
+						finished = true;
+						printReport();
+						log.info("Requested stop");
+						break;
+					} else if (keyPress == 'S' || keyPress == 's') {
+						printReport();
+						log.info("Requested report print");
+					}
+				}
+			}
+		};
+
+		consoleThread.setPriority(Thread.MIN_PRIORITY);
+		consoleThread.start();
+
 		startTime = System.currentTimeMillis();
 
 		try {
@@ -133,13 +174,6 @@ public abstract class Loader {
 			// Now lower this threads priority
 			Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 
-			/*
-			 * Waiting the end of the job
-			 */
-			System.out.println("   Enter 'q' to quit.");
-			System.out.println("   Enter 's' to dump a thread summary.");
-
-			boolean finished = false;
 			while (!finished) {
 				try {
 					Thread.sleep(500);
@@ -147,39 +181,26 @@ public abstract class Loader {
 
 				}
 				for (LoaderThread th : loaders) {
+					finished = true;
 					if (!th.isFinished()) {
 						finished = false;
 						break;
 					}
 				}
-
-				if (!finished)
-					try {
-						int keyPress = System.in.read();
-
-						if (keyPress == 'Q' || keyPress == 'q') {
-							sid = null;
-							for (LoaderThread th : loaders)
-								th.interrupt();
-							finished = true;
-							log.info("Requested stop");
-						} else if (keyPress == 'S' || keyPress == 's') {
-							printReport();
-							log.info("Requested report print");
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
 			}
+
+			consoleThread.interrupt();
 
 			log.info("All threads finished");
 			log.info("Prepare the report");
 
 			printReport();
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 		} finally {
+			end();
 			sid = null;
 		}
-
 	}
 
 	public void setFolderProfile(String folderProfile) {
@@ -205,7 +226,7 @@ public abstract class Loader {
 		System.setProperty("org.apache.cxf.Logger", "org.apache.cxf.common.logging.Log4jLogger");
 		log.info("Connect to the server");
 		try {
-			// iteration = 0;
+			finished = false;
 			sid = null;
 		} catch (Throwable e) {
 			log.error("Unable to initialize", e);
@@ -225,14 +246,12 @@ public abstract class Loader {
 		String path = paths.get(index);
 		Long folder = folderIds[index];
 		if (folder == null) {
-			synchronized (Loader.this.paths) {
-				try {
-					folder = createFolder(path);
-					folderIds[index] = folder;
-				} catch (Throwable ex) {
-					log.error(ex.getMessage(), ex);
-					folder = null;
-				}
+			try {
+				folder = createFolder(path);
+				folderIds[index] = folder;
+			} catch (Throwable ex) {
+				log.error(ex.getMessage(), ex);
+				folder = null;
 			}
 		}
 		return folder;
@@ -241,6 +260,8 @@ public abstract class Loader {
 	protected abstract Long createFolder(String path);
 
 	protected abstract Long createDocument(long folderId, String title, File file);
+
+	protected abstract void end();
 
 	protected class LoaderThread extends Thread {
 
@@ -293,7 +314,7 @@ public abstract class Loader {
 						// comparation with the competitors, do not remove
 						// Have we done this enough?
 						testCount++;
-						if (testCount > testTotal) {
+						if (testCount >= testTotal) {
 							log.info("end");
 							break;
 						}
@@ -332,7 +353,7 @@ public abstract class Loader {
 		}
 
 		public boolean isFinished() {
-			return testCount > testTotal;
+			return testCount >= testTotal;
 		}
 	}
 
