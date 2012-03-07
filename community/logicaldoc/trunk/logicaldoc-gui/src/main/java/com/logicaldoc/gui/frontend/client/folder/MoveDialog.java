@@ -61,11 +61,10 @@ public class MoveDialog extends Dialog {
 									Navigator.get()
 											.moveTo(Long.parseLong(folders.getSelectedRecord().getAttributeAsString(
 													"folderId")));
-
 								}
+								destroy();
 							}
 						});
-				destroy();
 			}
 		});
 
