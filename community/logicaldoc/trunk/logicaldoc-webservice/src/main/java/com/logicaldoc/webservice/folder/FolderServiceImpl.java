@@ -8,9 +8,9 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderGroup;
+import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
@@ -42,7 +42,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		checkPermission(Permission.ADD, user, folder.getParentId());
 
 		// Add a folder history entry
-		History transaction = new History();
+		FolderHistory transaction = new FolderHistory();
 		transaction.setUser(user);
 		transaction.setSessionId(sid);
 
@@ -70,9 +70,9 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		Folder parentFolder = folderDao.findById(folder.getParentId());
 		checkPermission(Permission.DELETE, user, parentFolder.getParentId());
 		// Add a folder history entry
-		History transaction = new History();
+		FolderHistory transaction = new FolderHistory();
 		transaction.setUser(user);
-		transaction.setEvent(History.EVENT_FOLDER_DELETED);
+		transaction.setEvent(FolderHistory.EVENT_FOLDER_DELETED);
 		transaction.setSessionId(sid);
 		List<Folder> notDeletedFolder = folderDao.deleteTree(folder, transaction);
 		if (notDeletedFolder.contains(folder)) {
@@ -170,7 +170,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			throw new SecurityException("Add Rights not granted to this user");
 
 		// Add a folder history entry
-		History transaction = new History();
+		FolderHistory transaction = new FolderHistory();
 		transaction.setSessionId(sid);
 		transaction.setUser(user);
 
@@ -201,9 +201,9 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		} else {
 			folder.setName(name);
 			// Add a folder history entry
-			History transaction = new History();
+			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(user);
-			transaction.setEvent(History.EVENT_FOLDER_RENAMED);
+			transaction.setEvent(FolderHistory.EVENT_FOLDER_RENAMED);
 			transaction.setSessionId(sid);
 			folderDao.store(folder, transaction);
 		}
@@ -380,9 +380,9 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			folder.updateExtendedAttributes(flder);
 
 			// Add a folder history entry
-			History transaction = new History();
+			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(user);
-			transaction.setEvent(History.EVENT_FOLDER_RENAMED);
+			transaction.setEvent(FolderHistory.EVENT_FOLDER_RENAMED);
 			transaction.setSessionId(sid);
 			folderDao.store(flder, transaction);
 		}
@@ -396,9 +396,9 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Folder parent = folderDao.findById(parentId);
 
-		History transaction = new History();
+		FolderHistory transaction = new FolderHistory();
 		transaction.setUser(user);
-		transaction.setEvent(History.EVENT_FOLDER_CREATED);
+		transaction.setEvent(FolderHistory.EVENT_FOLDER_CREATED);
 		transaction.setSessionId(sid);
 
 		if (path.startsWith("/"))

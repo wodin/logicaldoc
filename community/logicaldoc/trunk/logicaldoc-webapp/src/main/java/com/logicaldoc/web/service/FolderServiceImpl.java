@@ -21,6 +21,7 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderGroup;
+import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
@@ -59,11 +60,11 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				/*
 				 * Just apply the current security settings to the whole subtree
 				 */
-				History history = new History();
+				FolderHistory history = new FolderHistory();
 				history.setUser(SessionUtil.getSessionUser(sid));
-				history.setEvent(History.EVENT_FOLDER_PERMISSION);
+				history.setEvent(FolderHistory.EVENT_FOLDER_PERMISSION);
 				history.setSessionId(sid);
-
+				
 				mdao.applyRithtToTree(folder.getId(), history);
 			}
 		} catch (Throwable t) {
@@ -79,9 +80,9 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		try {
 			// Add a folder history entry
-			History transaction = new History();
+			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(SessionUtil.getSessionUser(sid));
-			transaction.setEvent(History.EVENT_FOLDER_DELETED);
+			transaction.setEvent(FolderHistory.EVENT_FOLDER_DELETED);
 			transaction.setSessionId(sid);
 			dao.deleteTree(folderId, transaction);
 		} catch (Throwable t) {
@@ -253,7 +254,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				throw new SecurityException("AddChild Rights not granted to this user");
 
 			// Add a folder history entry
-			History transaction = new History();
+			FolderHistory transaction = new FolderHistory();
 			transaction.setSessionId(sid);
 			transaction.setUser(user);
 
@@ -279,9 +280,9 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			Folder folder = dao.findById(folderId);
 			folder.setName(name.trim());
 			// Add a folder history entry
-			History history = new History();
+			FolderHistory history = new FolderHistory();
 			history.setUser(SessionUtil.getSessionUser(sid));
-			history.setEvent(History.EVENT_FOLDER_RENAMED);
+			history.setEvent(FolderHistory.EVENT_FOLDER_RENAMED);
 			history.setSessionId(sid);
 
 			dao.store(folder, history);
@@ -300,7 +301,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			Folder f;
 			String folderName = folder.getName().replace("/", "");
 
-			History transaction = new History();
+			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(SessionUtil.getSessionUser(sid));
 			transaction.setSessionId(sid);
 
@@ -311,21 +312,22 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				f.setType(folder.getType());
 				if (f.getName().trim().equals(folderName)) {
 					f.setName(folderName.trim());
-					transaction.setEvent(History.EVENT_FOLDER_CHANGED);
+					transaction.setEvent(FolderHistory.EVENT_FOLDER_CHANGED);
 				} else {
 					f.setName(folderName.trim());
-					transaction.setEvent(History.EVENT_FOLDER_RENAMED);
+					transaction.setEvent(FolderHistory.EVENT_FOLDER_RENAMED);
 				}
-				
 			} else {
 				f = folderDao.create(folderDao.findById(folder.getParentId()), folderName, transaction);
 				f.setDescription(folder.getDescription());
 				f.setType(folder.getType());
+				transaction.setEvent(FolderHistory.EVENT_FOLDER_CREATED);
 			}
 
 			updateExtendedAttributes(f, folder);
-			folderDao.store(f, transaction);
 			
+			folderDao.store(f, transaction);
+
 			folder.setId(f.getId());
 			folder.setName(f.getName());
 		} catch (Throwable t) {
@@ -337,13 +339,13 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	private boolean saveRules(String sid, Folder folder, long userId, GUIRight[] rights) throws Exception {
-		FolderDAO mdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 
 		boolean sqlerrors = false;
 		try {
 			folder.setSecurityRef(null);
 			folder.getFolderGroups().clear();
-			mdao.store(folder);
+			fdao.store(folder);
 			sqlerrors = false;
 			Set<FolderGroup> grps = new HashSet<FolderGroup>();
 			for (GUIRight right : rights) {
@@ -417,17 +419,17 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			}
 
 			folder.setFolderGroups(grps);
-			boolean stored = mdao.store(folder);
+			boolean stored = fdao.store(folder);
 			if (!stored) {
 				sqlerrors = true;
 			}
 
 			// Add a folder history entry
-			History history = new History();
+			FolderHistory history = new FolderHistory();
 			history.setUser(SessionUtil.getSessionUser(sid));
-			history.setEvent(History.EVENT_FOLDER_PERMISSION);
+			history.setEvent(FolderHistory.EVENT_FOLDER_PERMISSION);
 			history.setSessionId(sid);
-			mdao.store(folder, history);
+			fdao.store(folder, history);
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
@@ -583,7 +585,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			DocumentTemplate template = templateDao.findById(f.getTemplateId());
 			folder.setTemplate(template);
 			folder.getAttributes().clear();
-			
+
 			if (f.getAttributes().length > 0) {
 				for (GUIExtendedAttribute attr : f.getAttributes()) {
 					ExtendedAttribute templateAttribute = template.getAttributes().get(attr.getName());
@@ -596,7 +598,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					// skipped.
 					if (templateAttribute == null)
 						continue;
-					
+
 					ExtendedAttribute extAttr = new ExtendedAttribute();
 					int templateType = templateAttribute.getType();
 					int extAttrType = attr.getType();
@@ -651,7 +653,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					folder.getAttributes().put(attr.getName(), extAttr);
 				}
 			}
-		}else{
+		} else {
 			folder.setTemplate(null);
 			folder.getAttributes().clear();
 		}

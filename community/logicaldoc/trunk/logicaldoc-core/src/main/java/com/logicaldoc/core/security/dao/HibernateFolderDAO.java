@@ -18,11 +18,10 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.Document;
-import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderGroup;
+import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
@@ -39,7 +38,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	private UserDAO userDAO;
 
-	private HistoryDAO historyDAO;
+	private FolderHistoryDAO historyDAO;
 
 	protected HibernateFolderDAO() {
 		super(Folder.class);
@@ -60,7 +59,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public boolean store(Folder folder, History transaction) {
+	public boolean store(Folder folder, FolderHistory transaction) {
 		boolean result = true;
 
 		try {
@@ -70,6 +69,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			if (transaction != null) {
 				folder.setCreator(transaction.getUser().getFullName());
 				folder.setCreatorId(transaction.getUserId());
+				if(folder.getId()==0 && transaction.getEvent()==null)
+					transaction.setEvent(FolderHistory.EVENT_FOLDER_CREATED);
 			}
 			getHibernateTemplate().saveOrUpdate(folder);
 			saveFolderHistory(folder, transaction);
@@ -535,7 +536,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	 * @param folder
 	 * @param transaction
 	 */
-	private void saveFolderHistory(Folder folder, History transaction) {
+	private void saveFolderHistory(Folder folder, FolderHistory transaction) {
 		if (transaction == null)
 			return;
 
@@ -559,7 +560,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			// The parent folder can be 'null' when the user wants to delete a
 			// folder with sub-folders under it (method 'deleteAll()').
 			if (parent != null) {
-				History parentHistory = new History();
+				FolderHistory parentHistory = new FolderHistory();
 				parentHistory.setFolderId(parent.getId());
 				parentHistory.setTitle(parent.getId() != Folder.ROOTID ? parent.getName() : "/");
 				if (deletedFolderPathExtended != null)
@@ -568,15 +569,15 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 					parentHistory.setPath(computePathExtended(folder.getId()));
 
 				parentHistory.setUser(transaction.getUser());
-				if (transaction.getEvent().equals(History.EVENT_FOLDER_CREATED)
-						|| transaction.getEvent().equals(History.EVENT_FOLDER_MOVED)) {
-					parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_CREATED);
-				} else if (transaction.getEvent().equals(History.EVENT_FOLDER_RENAMED)) {
-					parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_RENAMED);
-				} else if (transaction.getEvent().equals(History.EVENT_FOLDER_PERMISSION)) {
-					parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_PERMISSION);
-				} else if (transaction.getEvent().equals(History.EVENT_FOLDER_DELETED)) {
-					parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_DELETED);
+				if (transaction.getEvent().equals(FolderHistory.EVENT_FOLDER_CREATED)
+						|| transaction.getEvent().equals(FolderHistory.EVENT_FOLDER_MOVED)) {
+					parentHistory.setEvent(FolderHistory.EVENT_FOLDER_SUBFOLDER_CREATED);
+				} else if (transaction.getEvent().equals(FolderHistory.EVENT_FOLDER_RENAMED)) {
+					parentHistory.setEvent(FolderHistory.EVENT_FOLDER_SUBFOLDER_RENAMED);
+				} else if (transaction.getEvent().equals(FolderHistory.EVENT_FOLDER_PERMISSION)) {
+					parentHistory.setEvent(FolderHistory.EVENT_FOLDER_SUBFOLDER_PERMISSION);
+				} else if (transaction.getEvent().equals(FolderHistory.EVENT_FOLDER_DELETED)) {
+					parentHistory.setEvent(FolderHistory.EVENT_FOLDER_SUBFOLDER_DELETED);
 				}
 				parentHistory.setComment("");
 				parentHistory.setSessionId(transaction.getSessionId());
@@ -793,20 +794,20 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		return ids;
 	}
 
-	public HistoryDAO getHistoryDAO() {
+	public FolderHistoryDAO getHistoryDAO() {
 		return historyDAO;
 	}
 
-	public void setHistoryDAO(HistoryDAO historyDAO) {
+	public void setHistoryDAO(FolderHistoryDAO historyDAO) {
 		this.historyDAO = historyDAO;
 	}
 
 	@Override
-	public void deleteAll(List<Folder> folders, History transaction) {
+	public void deleteAll(List<Folder> folders, FolderHistory transaction) {
 		for (Folder folder : folders) {
 			try {
-				History deleteHistory = (History) transaction.clone();
-				deleteHistory.setEvent(History.EVENT_FOLDER_DELETED);
+				FolderHistory deleteHistory = (FolderHistory) transaction.clone();
+				deleteHistory.setEvent(FolderHistory.EVENT_FOLDER_DELETED);
 				deleteHistory.setFolderId(folder.getId());
 				deleteHistory.setPath(computePathExtended(folder.getId()));
 				delete(folder.getId(), deleteHistory);
@@ -818,7 +819,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public boolean delete(long folderId, History transaction) {
+	public boolean delete(long folderId, FolderHistory transaction) {
 		if (folderId == Folder.ROOTID)
 			throw new RuntimeException("Not allowed to delete the Root folder");
 
@@ -826,7 +827,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		try {
 			Folder folder = (Folder) getHibernateTemplate().get(Folder.class, folderId);
 			folder.setDeleted(1);
-			transaction.setEvent(History.EVENT_FOLDER_DELETED);
+			transaction.setEvent(FolderHistory.EVENT_FOLDER_DELETED);
 			transaction.setFolderId(folderId);
 			store(folder, transaction);
 		} catch (Throwable e) {
@@ -839,10 +840,10 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public boolean applyRithtToTree(long id, History transaction) {
+	public boolean applyRithtToTree(long id, FolderHistory transaction) {
 		boolean result = true;
 		try {
-			transaction.setEvent(History.EVENT_FOLDER_PERMISSION);
+			transaction.setEvent(FolderHistory.EVENT_FOLDER_PERMISSION);
 			Folder parent = findById(id);
 			Long securityRef = id;
 			if (parent.getSecurityRef() != null)
@@ -852,7 +853,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			List<Folder> children = findChildren(id, null);
 			for (Folder folder : children) {
 				if (!securityRef.equals(folder.getSecurityRef())) {
-					History tr = (History) transaction.clone();
+					FolderHistory tr = (FolderHistory) transaction.clone();
 					tr.setFolderId(folder.getId());
 					folder.setSecurityRef(securityRef);
 					folder.getFolderGroups().clear();
@@ -870,7 +871,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public Folder create(Folder parent, String name, History transaction) {
+	public Folder create(Folder parent, String name, FolderHistory transaction) {
 		Folder folder = new Folder();
 		folder.setName(name);
 		folder.setParentId(parent.getId());
@@ -882,23 +883,26 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 		setUniqueName(folder);
 		if (transaction != null)
-			transaction.setEvent(History.EVENT_FOLDER_CREATED);
+			transaction.setEvent(FolderHistory.EVENT_FOLDER_CREATED);
 		if (store(folder, transaction) == false)
 			return null;
 		return folder;
 	}
 
 	@Override
-	public Folder createPath(Folder parent, String path, History transaction) {
+	public Folder createPath(Folder parent, String path, FolderHistory transaction) {
 		StringTokenizer st = new StringTokenizer(path, "/", false);
 
 		Folder folder = parent;
 		while (st.hasMoreTokens()) {
 			String name = st.nextToken();
 			List<Folder> childs = findByName(folder, name, true);
-			Folder dir;
+			Folder dir = null;
 			if (childs.isEmpty())
-				dir = create(folder, name, transaction);
+				try {
+					dir = create(folder, name, (FolderHistory) transaction.clone());
+				} catch (CloneNotSupportedException e) {
+				}
 			else {
 				dir = childs.iterator().next();
 			}
@@ -935,7 +939,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public void move(Folder source, Folder target, History transaction) throws Exception {
+	public void move(Folder source, Folder target, FolderHistory transaction) throws Exception {
 		assert (source != null);
 		assert (target != null);
 		assert (transaction != null);
@@ -953,19 +957,19 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		setUniqueName(source);
 
 		// Modify folder history entry
-		transaction.setEvent(History.EVENT_FOLDER_MOVED);
+		transaction.setEvent(FolderHistory.EVENT_FOLDER_MOVED);
 
 		store(source, transaction);
 	}
 
 	@Override
-	public List<Folder> deleteTree(long folderId, History transaction) throws Exception {
+	public List<Folder> deleteTree(long folderId, FolderHistory transaction) throws Exception {
 		List<Folder> notDeleted = deleteTree(findById(folderId), transaction);
 		return notDeleted;
 	}
 
 	@Override
-	public List<Folder> deleteTree(Folder folder, History transaction) throws Exception {
+	public List<Folder> deleteTree(Folder folder, FolderHistory transaction) throws Exception {
 		assert (folder != null);
 		assert (transaction != null);
 		assert (transaction.getUser() != null);

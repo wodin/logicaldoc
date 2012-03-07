@@ -16,6 +16,7 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
@@ -100,7 +101,7 @@ public class InMemoryZipImport extends ZipImport {
 	protected void addEntry(ZipFile zip, ZipEntry ze, Folder parent) throws ZipException, IOException {
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 
-		History transaction = new History();
+		FolderHistory transaction = new FolderHistory();
 		transaction.setSessionId(sessionId);
 		transaction.setUser(user);
 
@@ -125,15 +126,17 @@ public class InMemoryZipImport extends ZipImport {
 				doc.setTitle(doctitle);
 				doc.setFileName(filename);
 				doc.setFolder(documentPath);
-				
+
 				// Reopen the stream (the parser has closed it)
 				stream = zip.getInputStream(ze);
 
-				transaction.setEvent(History.EVENT_STORED);
-				transaction.setComment("");
-				transaction.setUser(user);
-
-				docManager.create(stream, doc, transaction);
+	
+				History history = new History();
+				history.setEvent(History.EVENT_STORED);
+				history.setComment("");
+				history.setUser(user);
+				transaction.setSessionId(sessionId);
+				docManager.create(stream, doc, history);
 			} catch (Exception e) {
 				logger.error("InMemoryZipImport addEntry failed", e);
 			} finally {
