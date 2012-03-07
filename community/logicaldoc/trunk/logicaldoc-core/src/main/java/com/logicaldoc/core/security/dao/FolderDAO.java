@@ -5,9 +5,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.logicaldoc.core.PersistentObjectDAO;
-import com.logicaldoc.core.document.Document;
-import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.Permission;
 
 /**
@@ -178,9 +177,9 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	public List<Folder> findByNameAndParentId(String text, long parentId);
 
 	/**
-	 * Same as store(Folder, boolean, History)
+	 * Same as store(Folder, boolean, FolderHistory)
 	 */
-	public boolean store(Folder folder, History transaction);
+	public boolean store(Folder folder, FolderHistory transaction);
 
 	/**
 	 * For each folder, save the folder delete history entry for each folder and
@@ -189,7 +188,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * @param folder List of folder to be delete
 	 * @param transaction entry to log the event on each folder
 	 */
-	public void deleteAll(List<Folder> folders, History transaction);
+	public void deleteAll(List<Folder> folders, FolderHistory transaction);
 
 	/**
 	 * This method deletes the folder object and insert a new folder history
@@ -199,7 +198,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * @param transaction entry to log the event
 	 * @return True if successfully deleted from the database.
 	 */
-	public boolean delete(long id, History transaction);
+	public boolean delete(long id, FolderHistory transaction);
 
 	/**
 	 * Creates a new folder in the parent Folder
@@ -209,7 +208,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * @transaction optional transaction entry to log the event
 	 * @return The newly created folder
 	 */
-	public Folder create(Folder parent, String name, History transaction);
+	public Folder create(Folder parent, String name, FolderHistory transaction);
 
 	/**
 	 * Creates the folder for the specified path. All unexisting nodes specified
@@ -221,7 +220,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * 
 	 * @return The created folder
 	 */
-	public Folder createPath(Folder parent, String path, History transaction);
+	public Folder createPath(Folder parent, String path, FolderHistory transaction);
 
 	/**
 	 * Dynamically computes the path extended for the specified folder. The path
@@ -249,7 +248,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * @param transaction entry to log the event (set the user)
 	 * @throws Exception
 	 */
-	public void move(Folder source, Folder target, History transaction) throws Exception;
+	public void move(Folder source, Folder target, FolderHistory transaction) throws Exception;
 
 	/**
 	 * Delete a folder and all its sub-folders that a user can delete. After
@@ -266,7 +265,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 *         immutable documents presents)
 	 * @throws Exception
 	 */
-	public List<Folder> deleteTree(Folder folder, History transaction) throws Exception;
+	public List<Folder> deleteTree(Folder folder, FolderHistory transaction) throws Exception;
 
 	/**
 	 * Delete a folder and all its sub-folders that a user can delete. After
@@ -283,7 +282,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 *         immutable documents presents)
 	 * @throws Exception
 	 */
-	public List<Folder> deleteTree(long folderId, History transaction) throws Exception;
+	public List<Folder> deleteTree(long folderId, FolderHistory transaction) throws Exception;
 
 	public void setUniqueName(Folder folder);
 
@@ -310,7 +309,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	/**
 	 * Propagates the security policies of a node to the whole subree
 	 */
-	public boolean applyRithtToTree(long id, History transaction);
+	public boolean applyRithtToTree(long id, FolderHistory transaction);
 
 	/**
 	 * Counts the number of folders
@@ -333,7 +332,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * @param ids The set in which all ids will be stored
 	 */
 	public void findTreeIds(long parentId, long userId, Integer depth, Collection<Long> ids);
-	
+
 	/**
 	 * Initializes lazy loaded collections
 	 * 

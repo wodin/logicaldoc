@@ -44,16 +44,6 @@ public interface HistoryDAO extends PersistentObjectDAO<History> {
 	public List<History> findNotNotified();
 
 	/**
-	 * This method deletes all the folder history entries oldest than the given
-	 * days from now. If <code>ttl</code> is 0 or -1, the cancellation is not
-	 * made.
-	 * 
-	 * @param ttl The maximum number of days over which the history is
-	 *        considered old
-	 */
-	public void cleanOldFolderHistories(int ttl);
-
-	/**
 	 * This method deletes all the document history entries oldest than the
 	 * given days from now. If <code>ttl</code> is 0 or -1, the cancellation is
 	 * not made.
@@ -61,7 +51,7 @@ public interface HistoryDAO extends PersistentObjectDAO<History> {
 	 * @param ttl The maximum number of days over which the history is
 	 *        considered old
 	 */
-	public void cleanOldDocumentHistories(int ttl);
+	public void cleanOldHistories(int ttl);
 
 	/**
 	 * This method selects all histories of a given user and related to the

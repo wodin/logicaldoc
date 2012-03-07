@@ -20,6 +20,7 @@ import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
@@ -266,7 +267,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 			User user = (User) session.getObject("user");
 			// Add a folder history entry
-			History transaction = new History();
+			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(user);
 			transaction.setSessionId(sid);
 			Folder createdFolder = folderDAO.create(parentFolder, name, transaction);
@@ -466,7 +467,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 			User user = (User) session.getObject("user");
 			// Add a folder history entry
-			History transaction = new History();
+			FolderHistory transaction = new FolderHistory();
 			transaction.setSessionId(sid);
 			transaction.setUser(user);
 
@@ -488,10 +489,11 @@ public class ResourceServiceImpl implements ResourceService {
 			currentFolder.setName(source.getName());
 
 			User user = (User) session.getObject("user");
+
 			// Add a folder history entry
-			History transaction = new History();
+			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(user);
-			transaction.setEvent(History.EVENT_FOLDER_RENAMED);
+			transaction.setEvent(FolderHistory.EVENT_FOLDER_RENAMED);
 			transaction.setSessionId(sid);
 			folderDAO.store(currentFolder, transaction);
 
@@ -509,7 +511,7 @@ public class ResourceServiceImpl implements ResourceService {
 		User user = userDAO.findById(resource.getRequestedPerson());
 
 		// Add a folder history entry
-		History transaction = new History();
+		FolderHistory transaction = new FolderHistory();
 		transaction.setUser(user);
 		transaction.setSessionId(sid);
 		transaction.setUser(user);
@@ -521,7 +523,7 @@ public class ResourceServiceImpl implements ResourceService {
 				if (!resource.isDeleteEnabled())
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
 
-				transaction.setEvent(History.EVENT_FOLDER_DELETED);
+				transaction.setEvent(FolderHistory.EVENT_FOLDER_DELETED);
 				List<Folder> notDeletableFolders = folderDAO.deleteTree(folder, transaction);
 
 				if (notDeletableFolders.size() > 0) {

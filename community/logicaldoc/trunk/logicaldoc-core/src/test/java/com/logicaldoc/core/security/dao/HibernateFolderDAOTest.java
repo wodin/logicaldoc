@@ -13,10 +13,9 @@ import org.junit.Test;
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
-import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
 
@@ -35,7 +34,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 	private DocumentDAO docDao;
 
-	private HistoryDAO historyDao;
+	private FolderHistoryDAO historyDao;
 
 	@Before
 	public void setUp() throws Exception {
@@ -46,7 +45,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		dao = (FolderDAO) context.getBean("FolderDAO");
 		userDao = (UserDAO) context.getBean("UserDAO");
 		docDao = (DocumentDAO) context.getBean("DocumentDAO");
-		historyDao = (HistoryDAO) context.getBean("HistoryDAO");
+		historyDao = (FolderHistoryDAO) context.getBean("FolderHistoryDAO");
 	}
 
 	@Test
@@ -90,7 +89,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		User user = new User();
 		user.setUserName("admin");
 		user.setId(1);
-		History history = new History();
+		FolderHistory history = new FolderHistory();
 		history.setUser(user);
 		dao.deleteTree(dao.findById(1200), history);
 		Assert.assertNull(dao.findById(1200));
@@ -107,7 +106,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 		User user = userDao.findByUserName("admin");
 
-		History transaction = new History();
+		FolderHistory transaction = new FolderHistory();
 		transaction.setNotified(0);
 		transaction.setComment("");
 		transaction.setUser(user);
@@ -135,7 +134,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 		User user = userDao.findByUserName("admin");
 
-		History transaction = new History();
+		FolderHistory transaction = new FolderHistory();
 		transaction.setNotified(0);
 		transaction.setComment("");
 		transaction.setUser(user);
@@ -173,7 +172,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 		User user = userDao.findByUserName("admin");
 
-		History transaction = new History();
+		FolderHistory transaction = new FolderHistory();
 		transaction.setNotified(0);
 		transaction.setComment("");
 		transaction.setUser(user);
@@ -192,12 +191,12 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(0, docs.size());
 
 		// Check the history creation
-		List<History> folderHistory = historyDao.findByFolderId(folderC.getId());
-		Assert.assertTrue(folderHistory.size() > 0);
+		List<FolderHistory> folderFolderHistory = historyDao.findByFolderId(folderC.getId());
+		Assert.assertTrue(folderFolderHistory.size() > 0);
 
 		boolean eventPresent = false;
-		for (History history : folderHistory) {
-			if (history.getEvent().equals(History.EVENT_FOLDER_MOVED))
+		for (FolderHistory history : folderFolderHistory) {
+			if (history.getEvent().equals(FolderHistory.EVENT_FOLDER_MOVED))
 				eventPresent = true;
 		}
 		Assert.assertTrue(eventPresent);
@@ -214,7 +213,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 		User user = userDao.findByUserName("admin");
 
-		History transaction = new History();
+		FolderHistory transaction = new FolderHistory();
 		transaction.setNotified(0);
 		transaction.setComment("");
 		transaction.setUser(user);
@@ -266,9 +265,9 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		folder = dao.findById(6);
 		Assert.assertEquals("folder6", folder.getName());
 
-		History transaction = new History();
+		FolderHistory transaction = new FolderHistory();
 		transaction.setFolderId(folder.getId());
-		transaction.setEvent(History.EVENT_FOLDER_RENAMED);
+		transaction.setEvent(FolderHistory.EVENT_FOLDER_RENAMED);
 		transaction.setUser(userDao.findById(1));
 		transaction.setNotified(0);
 		dao.store(folder, transaction);
@@ -278,9 +277,9 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 		folder = dao.findById(7);
 		folder.setName("xxxx");
-		transaction = new History();
+		transaction = new FolderHistory();
 		transaction.setFolderId(folder.getId());
-		transaction.setEvent(History.EVENT_FOLDER_RENAMED);
+		transaction.setEvent(FolderHistory.EVENT_FOLDER_RENAMED);
 		transaction.setUser(userDao.findById(1));
 		transaction.setNotified(0);
 		dao.store(folder, transaction);
@@ -582,7 +581,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testApplyRightsToTree() {
-		History transaction = new History();
+		FolderHistory transaction = new FolderHistory();
 		User user = new User();
 		user.setId(4);
 		transaction.setUser(user);
