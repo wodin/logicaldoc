@@ -65,6 +65,10 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	@Override
 	public void delete(String sid, long folderId) throws Exception {
 		User user = validateSession(sid);
+
+		if (folderId == Folder.ROOTID || folderId == Folder.DEFAULTWORKSPACE)
+			throw new Exception("Cannot delete root folder or Default workspace");
+
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Folder folder = folderDao.findById(folderId);
 		Folder parentFolder = folderDao.findById(folder.getParentId());
@@ -192,7 +196,6 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		if (folderId == Folder.DEFAULTWORKSPACE)
 			throw new Exception("cannot rename the Default workspace");
 
-		
 		Folder folder = folderDao.findById(folderId);
 		if (folder == null)
 			throw new Exception("cannot find folder " + folderId);
