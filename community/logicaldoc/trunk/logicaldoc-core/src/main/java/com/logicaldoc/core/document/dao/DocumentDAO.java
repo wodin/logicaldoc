@@ -303,4 +303,11 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * @return List of published document ids
 	 */
 	public Collection<Long> findPublishedIds(Collection<Long> folderIds);
+
+	/**
+	 * Updates the document's digest (SHA-1)
+	 * 
+	 * @param doc The document to be processed
+	 */
+	public void updateDigest(Document doc);
 }

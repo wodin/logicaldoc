@@ -521,6 +521,28 @@
 		<property name="config" ref="ContextProperties" />
 	</bean>
 
+
+	<bean id="DigestProcessor" class="com.logicaldoc.core.document.DigestProcessor">
+		<property name="documentDao" ref="DocumentDAO" />
+		<property name="config" ref="ContextProperties" />
+		<property name="sender" ref="EMailSender" />
+		<property name="userDao" ref="UserDAO" />
+	</bean>
+
+	<bean id="DigestProcessorJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="DigestProcessor" />
+		<property name="targetMethod" value="run" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<bean id="DigestProcessorTrigger" class="com.logicaldoc.core.task.TaskTrigger">
+		<property name="task" ref="IndexerTask" />
+		<property name="jobDetail" ref="DigestProcessorJob" />
+		<property name="config" ref="ContextProperties" />
+	</bean>
+
+
 	<!-- Authentication -->
 	<bean id="BasicAuthentication"
 		class="com.logicaldoc.core.security.authentication.BasicAuthentication">

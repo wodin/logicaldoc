@@ -3,6 +3,7 @@ package com.logicaldoc.core.document.dao;
 import java.util.List;
 
 import com.logicaldoc.core.PersistentObjectDAO;
+import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
 
 /**
@@ -38,4 +39,11 @@ public interface VersionDAO extends PersistentObjectDAO<Version> {
 	 * @return True if successfully stored in a database.
 	 */
 	public boolean store(Version version);
+
+	/**
+	 * Updates the version's digest (SHA-1)
+	 * 
+	 * @param doc The version to be processed
+	 */
+	public void updateDigest(Version version);
 }
