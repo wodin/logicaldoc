@@ -13,6 +13,7 @@ import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.util.io.FileUtil;
 
 /**
  * Test case for <code>DocumentManagerImpl</code>
@@ -220,6 +221,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 
 		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
+		Assert.assertEquals(AbstractDocument.INDEX_INDEXED, doc.getIndexed());
 		docDao.initialize(doc);
 
 		Assert.assertEquals(Document.DOC_CHECKED_OUT, doc.getStatus());
@@ -230,6 +232,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		Assert.assertNotNull(doc);
 		docDao.initialize(doc);
 
+		Assert.assertEquals(doc.getDigest(), FileUtil.computeDigest(file));
 		Assert.assertEquals(AbstractDocument.INDEX_TO_INDEX, doc.getIndexed());
 		Assert.assertEquals(0, doc.getSigned());
 		Assert.assertEquals(Document.DOC_UNLOCKED, doc.getStatus());

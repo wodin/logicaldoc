@@ -134,9 +134,13 @@ public class DocumentManagerImpl implements DocumentManager {
 			// store the document in the repository (on the file system)
 			store(document, fileInputStream);
 
+
 			// store to update file size
 			if (documentDAO.store(document, null) == false)
 				throw new Exception();
+
+			if (document.getDigest() == null)
+				documentDAO.updateDigest(document);
 
 			version.setFileSize(document.getFileSize());
 			version.setDigest(document.getDigest());

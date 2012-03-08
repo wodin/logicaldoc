@@ -1,6 +1,7 @@
 package com.logicaldoc.core.document.dao;
 
 //import java.util.Collections;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -13,6 +14,7 @@ import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.config.ContextProperties;
+import com.logicaldoc.util.io.FileUtil;
 
 //import edu.emory.mathcs.backport.java.util.Collections;
 
@@ -110,6 +112,26 @@ public class HibernateVersionDAO extends HibernatePersistentObjectDAO<Version> i
 			result = false;
 		}
 		return result;
+	}
+
+	@Override
+	public void updateDigest(Version version) {
+		initialize(version);
+		String resource = storer.getResourceName(version.getDocId(), version.getFileVersion(), null);
+		if (storer.exists(version.getDocId(), resource)) {
+			InputStream in = null;
+			try {
+				in = storer.getStream(version.getDocId(), resource);
+				version.setDigest(FileUtil.computeDigest(in));
+			} finally {
+				if (in != null)
+					try {
+						in.close();
+					} catch (Throwable t) {
+					}
+			}
+			getHibernateTemplate().saveOrUpdate(version);
+		}
 	}
 
 	public void setStorer(Storer storer) {

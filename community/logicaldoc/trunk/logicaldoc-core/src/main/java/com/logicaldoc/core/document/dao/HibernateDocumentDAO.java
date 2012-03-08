@@ -246,8 +246,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					}
 				}
 			}
-			
-			
+
 			Map<String, Object> dictionary = new HashMap<String, Object>();
 
 			log.debug("Invoke listeners before store");
@@ -264,23 +263,11 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			// Save the document
 			getHibernateTemplate().saveOrUpdate(doc);
 
-			// Update size and digest
+			// Update size
 			String resource = storer.getResourceName(doc, doc.getFileVersion(), null);
 			if (storer.exists(doc.getId(), resource)) {
 				long size = storer.size(doc.getId(), resource);
 				doc.setFileSize(size);
-				InputStream in = null;
-				try {
-					in = storer.getStream(doc.getId(), resource);
-					doc.setDigest(FileUtil.computeDigest(in));
-				} finally {
-					if (in != null)
-						try {
-							in.close();
-						} catch (Throwable t) {
-						}
-				}
-
 				getHibernateTemplate().saveOrUpdate(doc);
 			}
 
@@ -303,6 +290,31 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		}
 
 		return result;
+	}
+
+	@Override
+	public void updateDigest(Document doc) {
+		String resource = storer.getResourceName(doc, doc.getFileVersion(), null);
+		if (storer.exists(doc.getId(), resource)) {
+			InputStream in = null;
+			try {
+				in = storer.getStream(doc.getId(), resource);
+				doc.setDigest(FileUtil.computeDigest(in));
+			} finally {
+				if (in != null)
+					try {
+						in.close();
+					} catch (Throwable t) {
+					}
+			}
+
+			jdbcUpdate("update ld_document set ld_lastmodified=?, ld_digest=?  where ld_id=?", new Date(),
+					doc.getDigest(), doc.getId());
+
+			// Update the versions also
+			jdbcUpdate("update ld_version set ld_digest=?  where ld_documentid=? and ld_fileversion=?",
+					doc.getDigest(), doc.getId(), doc.getFileVersion());
+		}
 	}
 
 	@SuppressWarnings("unchecked")

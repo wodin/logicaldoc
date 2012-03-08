@@ -69,7 +69,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			if (transaction != null) {
 				folder.setCreator(transaction.getUser().getFullName());
 				folder.setCreatorId(transaction.getUserId());
-				if(folder.getId()==0 && transaction.getEvent()==null)
+				if (folder.getId() == 0 && transaction.getEvent() == null)
 					transaction.setEvent(FolderHistory.EVENT_FOLDER_CREATED);
 			}
 			getHibernateTemplate().saveOrUpdate(folder);
@@ -900,7 +900,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			Folder dir = null;
 			if (childs.isEmpty())
 				try {
-					dir = create(folder, name, (FolderHistory) transaction.clone());
+					dir = create(folder, name, transaction != null ? (FolderHistory) transaction.clone() : null);
 				} catch (CloneNotSupportedException e) {
 				}
 			else {
