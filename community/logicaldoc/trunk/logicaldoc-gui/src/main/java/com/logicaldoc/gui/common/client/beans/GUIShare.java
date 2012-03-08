@@ -53,8 +53,6 @@ public class GUIShare implements Serializable {
 
 	public GUIShare() {
 		super();
-		target.setId(5);
-		target.setName("/");
 	}
 
 	public long getId() {
