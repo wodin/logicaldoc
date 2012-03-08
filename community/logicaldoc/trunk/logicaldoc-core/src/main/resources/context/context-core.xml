@@ -537,7 +537,7 @@
 	</bean>
 
 	<bean id="DigestProcessorTrigger" class="com.logicaldoc.core.task.TaskTrigger">
-		<property name="task" ref="DigesterProcessor" />
+		<property name="task" ref="DigestProcessor" />
 		<property name="jobDetail" ref="DigestProcessorJob" />
 		<property name="config" ref="ContextProperties" />
 	</bean>
