@@ -1365,4 +1365,17 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		if (!user.isInGroup("admin") && !user.isInGroup("publisher") && !doc.isPublishing())
 			throw new FileNotFoundException("Document not published");
 	}
+
+	@Override
+	public void updateNote(String sid, long docId, long noteId, String message) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+		try {
+			DocumentNoteDAO dao = (DocumentNoteDAO) Context.getInstance().getBean(DocumentNoteDAO.class);
+			DocumentNote note = dao.findById(noteId);
+			note.setMessage(message);
+			dao.store(note);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+		}		
+	}
 }
