@@ -123,7 +123,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setType(document.getFileExtension());
 			document.setLockUserId(null);
 			document.setFolder(folder);
-
+			document.setDigest(null);
+			
 			// Create new version (a new version number is created)
 			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
 					Version.EVENT_CHECKIN, release);
@@ -134,16 +135,12 @@ public class DocumentManagerImpl implements DocumentManager {
 			// store the document in the repository (on the file system)
 			store(document, fileInputStream);
 
-
 			// store to update file size
 			if (documentDAO.store(document, null) == false)
 				throw new Exception();
 
-			if (document.getDigest() == null)
-				documentDAO.updateDigest(document);
-
 			version.setFileSize(document.getFileSize());
-			version.setDigest(document.getDigest());
+			version.setDigest(null);
 			versionDAO.store(version);
 			log.debug("Stored version " + version.getVersion());
 
