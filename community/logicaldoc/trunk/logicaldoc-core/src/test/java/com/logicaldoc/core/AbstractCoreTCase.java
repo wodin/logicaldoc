@@ -97,6 +97,8 @@ public abstract class AbstractCoreTCase {
 	 */
 	private void destroyDatabase() {
 		Connection con = null;
+		if(ds==null)
+			return;
 		try {
 			con = ds.getConnection();
 			con.createStatement().execute("SHUTDOWN IMMEDIATELY");
