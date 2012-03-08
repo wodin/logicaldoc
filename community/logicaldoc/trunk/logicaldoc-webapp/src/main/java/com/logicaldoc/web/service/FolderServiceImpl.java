@@ -76,7 +76,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	@Override
 	public void delete(String sid, long folderId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
-
+		
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		try {
 			// Add a folder history entry
