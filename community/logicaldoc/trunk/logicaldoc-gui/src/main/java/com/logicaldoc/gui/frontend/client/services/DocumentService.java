@@ -191,6 +191,11 @@ public interface DocumentService extends RemoteService {
 	public long addNote(String sid, long docId, String message) throws InvalidSessionException;
 
 	/**
+	 * Updates a document note on the given document
+	 */
+	public void updateNote(String sid, long docId, long noteId, String message) throws InvalidSessionException;
+	
+	/**
 	 * Deletes a selection of document notes
 	 */
 	public void deleteNotes(String sid, long[] ids) throws InvalidSessionException;

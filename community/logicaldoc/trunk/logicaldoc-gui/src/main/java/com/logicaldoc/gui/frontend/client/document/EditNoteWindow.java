@@ -24,14 +24,15 @@ import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
  * @author Matteo Caruso - Logical Objects
  * @since 6.2
  */
-public class AddNoteWindow extends Window {
+public class EditNoteWindow extends Window {
+	
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private NotesPanel notesPanel;
 
 	private ButtonItem sendItem;
-
-	public AddNoteWindow(final long docId, final NotesPanel notesPanel) {
+	
+	public EditNoteWindow(final long docId, final Long noteId, final NotesPanel notesPanel, String text) {
 		super();
 		this.notesPanel = notesPanel;
 
@@ -44,8 +45,8 @@ public class AddNoteWindow extends Window {
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("sendpost"));
-		setWidth(600);
-		setHeight(200);
+		setWidth(700);
+		setHeight(300);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -54,18 +55,17 @@ public class AddNoteWindow extends Window {
 		setAutoSize(true);
 
 		final RichTextEditor message = new RichTextEditor();
-		message.setWidth(595);
-		message.setHeight(155);
+		message.setWidth(690);
+		message.setHeight(260);
 		message.setMargin(5);
 		message.setOverflow(Overflow.HIDDEN);
 		message.setCanDragResize(true);
 		message.setShowEdges(true);
-		message.setValue("");
+		message.setValue(text);
 		addItem(message);
 
 		DynamicForm noteForm = new DynamicForm();
 		noteForm.setID("noteform");
-		noteForm.setWidth(350);
 		noteForm.setMargin(5);
 
 		sendItem = new ButtonItem();
@@ -74,6 +74,7 @@ public class AddNoteWindow extends Window {
 		sendItem.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (!message.getValue().trim().isEmpty()) {
+				   if(noteId==null){
 					documentService.addNote(Session.get().getSid(), docId, message.getValue(),
 							new AsyncCallback<Long>() {
 
@@ -85,10 +86,27 @@ public class AddNoteWindow extends Window {
 
 								@Override
 								public void onSuccess(Long result) {
-									AddNoteWindow.this.notesPanel.onNoteAdded(result.longValue(), message.getValue());
+									EditNoteWindow.this.notesPanel.onAdded(result.longValue(), message.getValue());
 									destroy();
 								}
 							});
+				   }else{
+					   documentService.updateNote(Session.get().getSid(), docId, noteId, message.getValue(),
+								new AsyncCallback<Void>() {
+
+									@Override
+									public void onFailure(Throwable caught) {
+										Log.serverError(caught);
+										destroy();
+									}
+
+									@Override
+									public void onSuccess(Void result) {
+										EditNoteWindow.this.notesPanel.onUpdated(message.getValue());
+										destroy();
+									}
+								});
+				   }
 				}
 			}
 		});
