@@ -74,7 +74,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		transaction.setEvent(History.EVENT_STORED);
 		transaction.setComment("");
 		transaction.setUserId(user.getId());
-		transaction.setUserName(user.getUserName());
+		transaction.setUserName(user.getFullName());
 		
 		// Get file to upload inputStream
 		InputStream stream = content.getInputStream();
