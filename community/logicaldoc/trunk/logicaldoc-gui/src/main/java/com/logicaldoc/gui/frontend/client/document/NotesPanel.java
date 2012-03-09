@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.DocumentNotesDS;
@@ -15,6 +16,7 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.ExpansionMode;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.Button;
@@ -27,6 +29,8 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
+import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
+import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
@@ -68,14 +72,13 @@ public class NotesPanel extends DocumentDetailTab {
 		ListGridField id = new ListGridField("id", I18N.message("id"), 50);
 		id.setHidden(true);
 
-		ListGridField username = new ListGridField("username", I18N.message("author"), 140);
-		ListGridField date = new ListGridField("date", I18N.message("date"), 110);
-		date.setAlign(Alignment.CENTER);
+		ListGridField username = new ListGridField("username", I18N.message("author"), 200);
+		ListGridField date = new ListGridField("date", I18N.message("date"));
+		date.setAlign(Alignment.LEFT);
 		date.setType(ListGridFieldType.DATE);
 		date.setCellFormatter(new DateCellFormatter(false));
 		date.setCanFilter(false);
-		ListGridField message = new ListGridField("message", I18N.message("message"), 500);
-		message.setAutoFitWidth(true);
+		date.setWidth("*");
 
 		listGrid = new ListGrid();
 		listGrid.setEmptyMessage(I18N.message("notitemstoshow"));
@@ -83,8 +86,12 @@ public class NotesPanel extends DocumentDetailTab {
 		listGrid.setAutoFetchData(true);
 		dataSource = new DocumentNotesDS(document.getId());
 		listGrid.setDataSource(dataSource);
-		listGrid.setFields(id, username, date, message);
+		listGrid.setFields(id, username, date);
 		listGrid.setWidth100();
+		listGrid.setCanExpandRecords(true);
+		listGrid.setExpansionMode(ExpansionMode.DETAIL_FIELD);
+		listGrid.setDetailField("message");
+
 		container.setHeight100();
 		container.setWidth100();
 		container.addMember(listGrid);
@@ -136,23 +143,25 @@ public class NotesPanel extends DocumentDetailTab {
 					}
 				});
 
-				// Only administrators or the note's author can delete a note
-				boolean editingEnabled = true;
 				ListGridRecord[] selection = listGrid.getSelectedRecords();
-				for (int i = 0; i < selection.length; i++) {
-					if (!Session.get().getUser().isMemberOf("admin")
-							&& Session.get().getUser().getId() != Long.parseLong(selection[i].getAttribute("userId"))) {
-						editingEnabled = false;
-					}
-				}
 
-				delete.setEnabled(editingEnabled);
-				edit.setEnabled(editingEnabled && selection.length == 1);
+				delete.setEnabled(document.getFolder().hasPermission(Constants.PERMISSION_DELETE));
+				edit.setEnabled(document.getFolder().isWrite() && selection.length == 1);
 				print.setEnabled(selection.length == 1);
 
 				contextMenu.setItems(edit, print, delete);
 				contextMenu.showContextMenu();
 				event.cancel();
+			}
+		});
+
+		//Expand all notes after arrived
+		listGrid.addDataArrivedHandler(new DataArrivedHandler() {
+			@Override
+			public void onDataArrived(DataArrivedEvent event) {
+				for (ListGridRecord rec : listGrid.getRecords()) {
+					listGrid.expandRecord(rec);
+				}
 			}
 		});
 	}
@@ -187,13 +196,6 @@ public class NotesPanel extends DocumentDetailTab {
 	}
 
 	public void onAdded(long id, String message) {
-		// ListGridRecord record = new ListGridRecord();
-		// record.setAttribute("id", Long.toString(id));
-		// record.setAttribute("username",
-		// Session.get().getUser().getFullName());
-		// record.setAttribute("date", new Date());
-		// record.setAttribute("message", message);
-		// listGrid.addData(record);
 		init();
 	}
 
