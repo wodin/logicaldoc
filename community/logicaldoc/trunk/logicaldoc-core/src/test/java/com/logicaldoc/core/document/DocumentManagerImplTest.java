@@ -232,7 +232,6 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		Assert.assertNotNull(doc);
 		docDao.initialize(doc);
 
-		Assert.assertEquals(doc.getDigest(), FileUtil.computeDigest(file));
 		Assert.assertEquals(AbstractDocument.INDEX_TO_INDEX, doc.getIndexed());
 		Assert.assertEquals(0, doc.getSigned());
 		Assert.assertEquals(Document.DOC_UNLOCKED, doc.getStatus());

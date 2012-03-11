@@ -144,7 +144,7 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
 		docDao.initialize(doc);
-		Assert.assertNotNull(doc.getDigest());
+
 		Assert.assertEquals(AbstractDocument.INDEX_TO_INDEX, doc.getIndexed());
 		Assert.assertEquals(0, doc.getSigned());
 		Assert.assertEquals(Document.DOC_UNLOCKED, doc.getStatus());
