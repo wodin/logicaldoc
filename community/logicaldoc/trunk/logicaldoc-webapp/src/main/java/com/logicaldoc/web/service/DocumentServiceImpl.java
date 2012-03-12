@@ -1368,14 +1368,17 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 	@Override
 	public void updateNote(String sid, long docId, long noteId, String message) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 		try {
+			User user = SessionUtil.getSessionUser(session.getId());
 			DocumentNoteDAO dao = (DocumentNoteDAO) Context.getInstance().getBean(DocumentNoteDAO.class);
 			DocumentNote note = dao.findById(noteId);
+			note.setUserId(user.getId());
+			note.setUsername(user.getFullName());
 			note.setMessage(message);
 			dao.store(note);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
-		}		
+		}
 	}
 }
