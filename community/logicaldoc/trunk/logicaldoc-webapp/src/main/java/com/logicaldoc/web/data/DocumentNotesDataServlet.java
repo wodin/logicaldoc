@@ -69,7 +69,7 @@ public class DocumentNotesDataServlet extends HttpServlet {
 				writer.print("<docId>" + note.getDocId() + "</docId>");
 				writer.print("<userId>" + note.getUserId() + "</userId>");
 				writer.print("<username><![CDATA[" + note.getUsername() + "]]></username>");
-				writer.print("<date>" + df.format((Date) note.getDate()) + "</date>");
+				writer.print("<date>" + df.format((Date) note.getLastModified()) + "</date>");
 				writer.print("<message><![CDATA[" + note.getMessage() + "]]></message>");
 				writer.print("</note>");
 			}
