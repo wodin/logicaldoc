@@ -94,20 +94,13 @@
 	<target name="po2prop" depends="init-all">
 		<echo>Produce the properties bak</echo>
 		<mkdir dir="target/po" />
-
-		<!-- Rename the norwegian PO (nb to no) -->
-		<for list="${bundles}" param="bundle">
-			<sequential>
-               <move file="target/po/@{bundle}/@{bundle}-nb.po" tofile="target/po/@{bundle}/@{bundle}-no.po" failonerror="false"/>		
-			</sequential>
-		</for>
 		
 		<for list="${bundles}" param="bundle">
 			<sequential>
 				<for list="${locales}" param="locale">
 					<sequential>
 						<mkdir dir="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}properties" />
-						<exec executable="po2prop" searchpath="true" resolveexecutable="true">
+						<exec executable="po2prop" searchpath="true" resolveexecutable="true" failonerror="false">
 							<arg value="-t" />
 							<arg value="${i18n.root}${file.separator}src${file.separator}main${file.separator}resources${file.separator}i18n${file.separator}@{bundle}.properties" />
 							<arg value="${i18n.root}${file.separator}target${file.separator}po${file.separator}@{bundle}${file.separator}@{bundle}-@{locale}.po" />
