@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>53</version>
+  <version>54</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -86,6 +86,7 @@
     <spring.version>3.0.7.RELEASE</spring.version>
     <hibernate.version>3.6.9.Final</hibernate.version>
     <lucene.version>3.5.0</lucene.version>
+    <solr.version>3.5.0</solr.version>
     <gwt.version>2.3.0</gwt.version>
     <smartgwt.version>3.0</smartgwt.version>
   </properties>
@@ -399,6 +400,12 @@
       </dependency>
       <dependency>
         <groupId>org.apache.lucene</groupId>
+        <artifactId>lucene-spellchecker</artifactId>
+        <version>${lucene.version}</version>
+        <type>jar</type>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.lucene</groupId>
         <artifactId>lucene-misc</artifactId>
         <version>${lucene.version}</version>
         <type>jar</type>
@@ -415,6 +422,19 @@
         <version>${lucene.version}</version>
         <type>jar</type>
       </dependency>
+      <dependency>
+        <groupId>org.apache.solr</groupId>
+        <artifactId>solr-core</artifactId>
+        <version>${solr.version}</version>
+        <type>jar</type>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.solr</groupId>
+        <artifactId>solr-solrj</artifactId>
+        <version>${solr.version}</version>
+        <type>jar</type>
+      </dependency>
+
       <dependency>
         <groupId>org.hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
