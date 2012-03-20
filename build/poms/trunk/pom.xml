@@ -374,13 +374,18 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.5.8</version>
+        <version>1.6.4</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-log4j12</artifactId>
-        <version>1.5.8</version>
+        <version>1.6.4</version>
       </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-jdk14</artifactId>
+        <version>1.6.4</version>
+      </dependency> 
       <dependency>
         <groupId>net.sf.ehcache</groupId>
         <artifactId>ehcache-core</artifactId>
@@ -427,14 +432,37 @@
         <artifactId>solr-core</artifactId>
         <version>${solr.version}</version>
         <type>jar</type>
+        <exclusions>
+         <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>jcl-over-slf4j</artifactId>
+         </exclusion>
+        </exclusions> 
       </dependency>
       <dependency>
         <groupId>org.apache.solr</groupId>
         <artifactId>solr-solrj</artifactId>
         <version>${solr.version}</version>
         <type>jar</type>
+        <exclusions>
+         <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>jcl-over-slf4j</artifactId>
+         </exclusion>
+        </exclusions> 
       </dependency>
-
+      <dependency>
+        <groupId>org.apache.solr</groupId>
+        <artifactId>solr-velocity</artifactId>
+        <version>${solr.version}</version>
+        <type>jar</type> 
+      </dependency>    
+      <dependency>
+        <groupId>org.apache.velocity</groupId>
+        <artifactId>velocity</artifactId>
+        <version>1.6.4</version>
+        <type>jar</type>
+      </dependency>
       <dependency>
         <groupId>org.hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
