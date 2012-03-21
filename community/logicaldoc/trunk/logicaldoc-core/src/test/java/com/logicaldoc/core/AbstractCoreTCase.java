@@ -11,6 +11,7 @@ import junit.framework.Assert;
 
 import org.apache.commons.io.FileUtils;
 import org.hsqldb.cmdline.SqlFile;
+import org.hsqldb.cmdline.SqlTool.SqlToolException;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.context.ApplicationContext;
@@ -18,6 +19,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.logicaldoc.util.io.FileUtil;
+import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
  * Abstract test case for the Core module. This class initialises a test
@@ -50,11 +52,10 @@ public abstract class AbstractCoreTCase {
 	@Before
 	public void setUp() throws Exception {
 		tempDir = new File("target/tmp");
-
 		userHome = System.getProperty("user.home");
 		System.setProperty("user.home", tempDir.getPath());
-		context = new ClassPathXmlApplicationContext(new String[] { "/context.xml" });
 		createTestDirs();
+		context = new ClassPathXmlApplicationContext(new String[] { "/context.xml" });
 		createTestDatabase();
 	}
 
@@ -88,6 +89,7 @@ public abstract class AbstractCoreTCase {
 		destroyDatabase();
 		((AbstractApplicationContext) context).close();
 
+		
 		// Restore user home system property
 		System.setProperty("user.home", userHome);
 	}
@@ -97,7 +99,7 @@ public abstract class AbstractCoreTCase {
 	 */
 	private void destroyDatabase() {
 		Connection con = null;
-		if(ds==null)
+		if (ds == null)
 			return;
 		try {
 			con = ds.getConnection();
@@ -133,7 +135,7 @@ public abstract class AbstractCoreTCase {
 			sqlFile.execute();
 
 			// Load data
-			sqlFile = new SqlFile(dataFile, "Cp1252", false);	
+			sqlFile = new SqlFile(dataFile, "Cp1252", false);
 			sqlFile.setConnection(con);
 			sqlFile.execute();
 

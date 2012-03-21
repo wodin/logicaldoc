@@ -136,7 +136,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			@Override
 			public void onClick(ClickEvent event) {
 				ListGrid list = DocumentsPanel.get().getList();
-				ListGridRecord[] selection = list.getSelection();
+				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
 				final long[] ids = new long[selection.length];
@@ -192,7 +192,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			@Override
 			public void onClick(ClickEvent event) {
 				ListGrid list = DocumentsPanel.get().getList();
-				ListGridRecord[] selection = list.getSelection();
+				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
 				final long[] ids = new long[selection.length];
@@ -211,7 +211,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			@Override
 			public void onClick(ClickEvent event) {
 				ListGrid list = DocumentsPanel.get().getList();
-				ListGridRecord[] selection = list.getSelection();
+				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
 
@@ -233,7 +233,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			@Override
 			public void onClick(ClickEvent event) {
 				ListGrid list = DocumentsPanel.get().getList();
-				ListGridRecord[] selection = list.getSelection();
+				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
 
@@ -346,7 +346,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			@Override
 			public void onClick(ClickEvent event) {
 				ListGrid list = DocumentsPanel.get().getList();
-				ListGridRecord[] selection = list.getSelection();
+				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
 				final long[] ids = new long[selection.length];

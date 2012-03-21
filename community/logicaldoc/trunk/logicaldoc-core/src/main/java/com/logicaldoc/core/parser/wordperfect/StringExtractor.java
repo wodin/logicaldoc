@@ -1,4 +1,4 @@
-package com.logicaldoc.core.text.parser.wordperfect;
+package com.logicaldoc.core.parser.wordperfect;
 
 import java.io.IOException;
 import java.io.InputStream;

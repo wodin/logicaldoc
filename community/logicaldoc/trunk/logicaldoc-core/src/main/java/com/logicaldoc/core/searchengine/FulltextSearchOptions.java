@@ -1,11 +1,7 @@
 package com.logicaldoc.core.searchengine;
 
-import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Locale;
-
-import com.logicaldoc.core.text.StringParser;
 
 /**
  * Search options specialization for the Full text search.
@@ -177,37 +173,6 @@ public class FulltextSearchOptions extends SearchOptions {
 
 	public void setExpressionLanguage(String expressionLanguage) {
 		this.expressionLanguage = expressionLanguage;
-	}
-
-	public void setExpression(String expr, String phrase, String any, String not) {
-		this.expression = expr;
-
-		if ((phrase != null) && !phrase.equals("")) {
-			expression += " \"" + phrase + "\"";
-		}
-
-		if ((any != null) && !any.equals("")) {
-			boolean first = true;
-			StringParser sp = new StringParser(any);
-			Collection<String> collany = sp.getWordTable();
-			Iterator<String> iter = collany.iterator();
-
-			while (iter.hasNext()) {
-				String word = iter.next();
-
-				if (!first) {
-					expression += " OR";
-				} else {
-					first = false;
-				}
-
-				expression += " " + word;
-			}
-		}
-
-		if ((not != null) && !not.equals("")) {
-			expression += " NOT (" + not + ")";
-		}
 	}
 
 	public int getDepth() {

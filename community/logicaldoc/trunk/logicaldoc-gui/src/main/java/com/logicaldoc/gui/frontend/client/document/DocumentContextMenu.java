@@ -7,7 +7,6 @@ import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
-import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -17,7 +16,6 @@ import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.dashboard.WorkflowDashboard;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
-import com.logicaldoc.gui.frontend.client.search.Search;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
@@ -206,33 +204,6 @@ public class DocumentContextMenu extends Menu {
 				}
 				EmailDialog window = new EmailDialog(ids, selection[0].getAttribute("title"));
 				window.show();
-			}
-		});
-
-		MenuItem similar = new MenuItem();
-		similar.setTitle(I18N.message("similardocuments"));
-		similar.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			public void onClick(MenuItemClickEvent event) {
-				final ListGridRecord record = list.getSelectedRecord();
-				if (record == null)
-					return;
-				Long id = Long.parseLong(record.getAttribute("id"));
-				searchService.getSimilarityOptions(Session.get().getSid(), id, I18N.getLocale(),
-						new AsyncCallback<GUISearchOptions>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(GUISearchOptions options) {
-								if (options.getExpression().trim().isEmpty()) {
-									options.setExpression(record.getAttribute("title"));
-								}
-								Search.get().setOptions(options);
-								Search.get().search();
-							}
-						});
 			}
 		});
 
@@ -701,7 +672,6 @@ public class DocumentContextMenu extends Menu {
 		}
 
 		if (list.getSelectedRecords().length != 1) {
-			similar.setEnabled(false);
 			rename.setEnabled(false);
 		}
 
@@ -780,7 +750,7 @@ public class DocumentContextMenu extends Menu {
 				unlockItem, more);
 
 		Menu moreMenu = new Menu();
-		moreMenu.setItems(similar, immutable, markIndexable, markUnindexable);
+		moreMenu.setItems(immutable, markIndexable, markUnindexable);
 
 		if (Feature.visible(Feature.OFFICE)) {
 			moreMenu.addItem(edit);
@@ -790,7 +760,7 @@ public class DocumentContextMenu extends Menu {
 				edit.setEnabled(enableOffice);
 		}
 
-		if (Feature.visible(Feature.DIGITAL_SIGN)) {
+		if (enableSign && Feature.visible(Feature.DIGITAL_SIGN)) {
 			moreMenu.addItem(sign);
 			if (!folder.hasPermission(Constants.PERMISSION_SIGN) || !Feature.enabled(Feature.DIGITAL_SIGN))
 				sign.setEnabled(false);

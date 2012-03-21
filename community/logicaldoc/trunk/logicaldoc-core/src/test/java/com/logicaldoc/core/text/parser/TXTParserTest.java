@@ -9,6 +9,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTCase;
+import com.logicaldoc.core.parser.Parser;
+import com.logicaldoc.core.parser.ParserFactory;
+import com.logicaldoc.core.parser.TXTParser;
 
 public class TXTParserTest extends AbstractCoreTCase{
 

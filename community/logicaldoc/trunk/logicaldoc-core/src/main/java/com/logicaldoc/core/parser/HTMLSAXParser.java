@@ -1,4 +1,4 @@
-package com.logicaldoc.core.text.parser;
+package com.logicaldoc.core.parser;
 
 import org.apache.xerces.parsers.AbstractSAXParser;
 import org.apache.xerces.xni.Augmentations;

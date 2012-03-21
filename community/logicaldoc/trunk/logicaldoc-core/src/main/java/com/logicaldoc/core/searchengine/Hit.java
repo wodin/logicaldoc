@@ -83,4 +83,12 @@ public interface Hit {
 	public void setPublished(int published);
 
 	public int getPublished();
+
+	public String getLanguage();
+
+	public void setLanguage(String language);
+
+	public String getContent();
+
+	public void setContent(String content);
 }

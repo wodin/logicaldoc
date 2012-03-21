@@ -14,18 +14,20 @@ import junit.framework.TestCase;
 import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttributeImpl;
 import org.apache.lucene.util.AttributeImpl;
+import org.apache.lucene.util.Version;
 import org.junit.Test;
 
 import com.logicaldoc.core.i18n.Language;
-import com.logicaldoc.core.searchengine.Indexer;
 
 public class AnalyzeFileTest extends TestCase {
 
 	private Analyzer sbitAnal;
 
+	private static final Version LUCENE_VERSION = Version.LUCENE_35;
+
 	public AnalyzeFileTest() {
 		Language language = new Language(new Locale("it"));
-		sbitAnal = new SnowballAnalyzer(Indexer.LUCENE_VERSION, "Italian", language.getStopWords());
+		sbitAnal = new SnowballAnalyzer(LUCENE_VERSION, "Italian", language.getStopWords());
 	}
 
 	/**

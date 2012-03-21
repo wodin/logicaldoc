@@ -14,19 +14,17 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.lucene.document.Field;
 
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
-import com.logicaldoc.core.searchengine.Indexer;
-import com.logicaldoc.core.searchengine.LuceneDocument;
+import com.logicaldoc.core.parser.Parser;
+import com.logicaldoc.core.parser.ParserFactory;
+import com.logicaldoc.core.searchengine.SearchEngine;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
-import com.logicaldoc.core.text.parser.Parser;
-import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 
@@ -50,7 +48,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	private UserDAO userDAO;
 
-	private Indexer indexer;
+	private SearchEngine indexer;
 
 	private Storer storer;
 
@@ -68,7 +66,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		this.documentTemplateDAO = documentTemplateDAO;
 	}
 
-	public void setIndexer(Indexer indexer) {
+	public void setIndexer(SearchEngine indexer) {
 		this.indexer = indexer;
 	}
 
@@ -124,7 +122,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setLockUserId(null);
 			document.setFolder(folder);
 			document.setDigest(null);
-			
+
 			// Create new version (a new version number is created)
 			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
 					Version.EVENT_CHECKIN, release);
@@ -200,7 +198,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			// Physically remove the document from full-text index
 			if (doc != null) {
-				indexer.deleteDocument(String.valueOf(docId), doc.getLocale());
+				indexer.deleteHit(docId);
 			}
 
 			doc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
@@ -211,7 +209,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			List<Long> shortcutIds = documentDAO.findShortcutIds(doc.getId());
 			for (Long shortcutId : shortcutIds) {
 				Document shortcutDoc = documentDAO.findById(shortcutId);
-				indexer.deleteDocument(String.valueOf(shortcutId), doc.getLocale());
+				indexer.deleteHit(shortcutId);
 				shortcutDoc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 				documentDAO.store(shortcutDoc);
 			}
@@ -264,9 +262,6 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		documentDAO.initialize(doc);
 
-		/* get search index entry */
-		Locale locale = doc.getLocale();
-
 		// Extract the content from the file
 		String content = parseDocument(doc);
 
@@ -287,14 +282,14 @@ public class DocumentManagerImpl implements DocumentManager {
 		// operation)
 		String resource = storer.getResourceName(doc.getId(), null, null);
 
-		indexer.addFile(doc, content, locale);
+		indexer.addHit(doc, content);
 		doc = documentDAO.findById(doc.getId());
 		doc.setIndexed(AbstractDocument.INDEX_INDEXED);
 		documentDAO.store(doc);
 
 		for (Long shortcutId : shortcutIds) {
 			Document shortcutDoc = documentDAO.findById(shortcutId);
-			indexer.addFile(storer.getStream(doc.getId(), resource), shortcutDoc);
+			indexer.addHit(shortcutDoc, storer.getStream(doc.getId(), resource));
 			shortcutDoc.setIndexed(AbstractDocument.INDEX_INDEXED);
 			documentDAO.store(shortcutDoc);
 		}
@@ -338,7 +333,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 				// Intercept locale changes
 				if (!doc.getLocale().equals(docVO.getLocale())) {
-					indexer.deleteDocument(Long.toString(doc.getId()), doc.getLocale());
+					indexer.deleteHit(doc.getId());
 					doc.setLocale(docVO.getLocale());
 				}
 
@@ -425,6 +420,16 @@ public class DocumentManagerImpl implements DocumentManager {
 			setUniqueTitle(doc);
 			setUniqueFilename(doc);
 
+			// The document needs to be reindexed
+			if (doc.getIndexed() == AbstractDocument.INDEX_INDEXED) {
+				doc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
+				indexer.deleteHit(doc.getId());
+
+				// The same thing should be done on each shortcut
+				documentDAO.jdbcUpdate("update ld_document set ld_indexed=" + AbstractDocument.INDEX_TO_INDEX
+						+ " where ld_docref=" + doc.getId());
+			}
+
 			// To avoid 'optimistic locking failed' exceptions.
 			// Perhaps no more needed with Hibernate 3.6.9
 			// doc.setLastModified(new Date());
@@ -437,32 +442,6 @@ public class DocumentManagerImpl implements DocumentManager {
 			Version version = Version.create(doc, transaction.getUser(), transaction.getComment(), Version.EVENT_MOVED,
 					false);
 			versionDAO.store(version);
-
-			if (doc.getIndexed() == AbstractDocument.INDEX_INDEXED) {
-				Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
-				org.apache.lucene.document.Document indexDocument = null;
-				indexDocument = indexer.getDocument(String.valueOf(doc.getId()), doc.getLocale());
-				if (indexDocument != null) {
-					indexDocument.removeField(LuceneDocument.FIELD_FOLDER_ID);
-					indexDocument.add(new Field(LuceneDocument.FIELD_FOLDER_ID, Long.toString(doc.getFolder().getId()),
-							Field.Store.YES, Field.Index.NOT_ANALYZED));
-					indexer.addDocument(indexDocument, doc.getLocale());
-
-					// Make the same operation for the shortcuts
-					if (documentDAO.findShortcutIds(doc.getId()).size() > 0) {
-						org.apache.lucene.document.Document shortcutIndexDocument = null;
-						for (Long shortcutId : documentDAO.findShortcutIds(doc.getId())) {
-							shortcutIndexDocument = indexer.getDocument(String.valueOf(shortcutId), doc.getLocale());
-							if (shortcutIndexDocument != null) {
-								shortcutIndexDocument.removeField(LuceneDocument.FIELD_FOLDER_ID);
-								shortcutIndexDocument.add(new Field(LuceneDocument.FIELD_FOLDER_ID, Long.toString(doc
-										.getFolder().getId()), Field.Store.YES, Field.Index.NOT_ANALYZED));
-								indexer.addDocument(shortcutIndexDocument, doc.getLocale());
-							}
-						}
-					}
-				}
-			}
 		} else {
 			throw new Exception("Document is immutable");
 		}

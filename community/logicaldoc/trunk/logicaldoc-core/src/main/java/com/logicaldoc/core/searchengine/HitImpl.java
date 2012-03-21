@@ -3,6 +3,7 @@ package com.logicaldoc.core.searchengine;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.util.IconSelector;
 
 /**
@@ -47,44 +48,34 @@ public class HitImpl implements Serializable, Hit {
 
 	private int published = 1;
 
+	private String language;
+	
+	private String content;
+
 	public HitImpl() {
 	}
 
-	/**
-	 * @see com.logicaldoc.core.searchengine.Hit.Result#getTargetId()
-	 */
+	@Override
 	public long getDocId() {
 		return docId;
 	}
 
-	public void setDocid(long docId) {
-		this.docId = docId;
-	}
-
-	/**
-	 * @see com.logicaldoc.core.searchengine.Hit.Result#getTitle()
-	 */
+	@Override
 	public String getTitle() {
 		return title;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.searchengine.Hit.Result#getSummary()
-	 */
+	@Override
 	public String getSummary() {
 		return summary;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.searchengine.Hit.Result#getType()
-	 */
+	@Override
 	public String getType() {
 		return type;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.searchengine.Hit.Result#getIcon()
-	 */
+	@Override
 	public String getIcon() {
 		String icon = IconSelector.selectIcon("");
 		try {
@@ -94,63 +85,67 @@ public class HitImpl implements Serializable, Hit {
 		return icon;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.searchengine.Hit.Result#getSize()
-	 */
+	@Override
 	public long getSize() {
 		return size;
 	}
 
+	@Override
 	public int getScore() {
 		return score;
 	}
 
+	@Override
 	public void setScore(int score) {
 		this.score = score;
 	}
 
+	@Override
 	public void setDocRef(Long docRef) {
 		this.docRef = docRef;
 	}
 
+	@Override
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
+	@Override
 	public void setSummary(String summ) {
 		summary = summ;
 	}
 
+	@Override
 	public void setDocId(long docId) {
 		this.docId = docId;
 	}
 
+	@Override
 	public void setType(String typ) {
 		type = typ;
 	}
 
+	@Override
 	public void setSize(long size) {
 		this.size = size;
 	}
 
+	@Override
 	public void setDate(Date d) {
 		date = d;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.searchengine.Hit.Result#getDate()
-	 */
+	@Override
 	public Date getDate() {
 		return date;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.searchengine.Hit.Result#getSourceDate()
-	 */
+	@Override
 	public Date getSourceDate() {
 		return sourceDate;
 	}
 
+	@Override
 	public void setSourceDate(Date sourceDate) {
 		this.sourceDate = sourceDate;
 	}
@@ -199,20 +194,17 @@ public class HitImpl implements Serializable, Hit {
 		return docRef;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.searchengine.Hit#getSource()
-	 */
+	@Override
 	public String getSource() {
 		return source;
 	}
 
+	@Override
 	public void setSource(String source) {
 		this.source = source;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.searchengine.Hit#getPath()
-	 */
+	@Override
 	public String getPath() {
 		return path;
 	}
@@ -245,11 +237,49 @@ public class HitImpl implements Serializable, Hit {
 		this.folderName = folderName;
 	}
 
+	@Override
 	public int getPublished() {
 		return published;
 	}
 
+	@Override
 	public void setPublished(int published) {
 		this.published = published;
+	}
+
+	@Override
+	public String getLanguage() {
+		return language;
+	}
+
+	@Override
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+	public static Hit fromDocument(AbstractDocument doc) {
+		Hit hit = new HitImpl();
+		hit.setComment(doc.getComment());
+		hit.setCreation(doc.getCreation());
+		hit.setCustomId(doc.getCustomId());
+		hit.setDate(doc.getDate());
+		hit.setDocId(doc.getId());
+		hit.setDocRef(doc.getDocRef());
+		hit.setFolderId(doc.getFolder().getId());
+		hit.setFolderName(doc.getFolder().getName());
+		hit.setLanguage(doc.getLanguage());
+        hit.setPublished(doc.getPublished());
+		hit.setSource(doc.getSource());
+		hit.setSourceDate(doc.getSourceDate());
+		hit.setTitle(doc.getTitle());
+		return hit;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 }

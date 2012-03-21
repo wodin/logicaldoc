@@ -137,7 +137,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		dateSelector.setValueMap(opts);
 		dateSelector.setName("dateSelector");
 		dateSelector.setTitle(I18N.message(DATE));
-		dateSelector.setDefaultValue(CREATEDON);
+		dateSelector.setValue(CREATEDON);
 		dateSelector.setWidth(80);
 
 		SelectItem dateOperator = ItemFactory.newDateOperator("dateOperator", null);
@@ -163,7 +163,8 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		folder = new FolderSelector(null, true);
 		folder.setColSpan(3);
 
-		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders",Session.get().getInfo().getConfig("search.depth")));
+		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders", Session.get()
+				.getInfo().getConfig("search.depth")));
 		subfolders.setColSpan(3);
 		subfolders.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
@@ -211,7 +212,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		if (size != null && !NOLIMIT.equals(vm.getValueAsString("sizeOperator"))) {
 			if (LESSTHAN.equals(vm.getValueAsString("sizeOperator")))
 				options.setSizeMax(size * 1024);
-			else
+			else if (!NOLIMIT.equals(vm.getValueAsString("sizeOperator")))
 				options.setSizeMin(size * 1024);
 		}
 
@@ -219,20 +220,20 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		Date date = (Date) vm.getValues().get(DATE);
 		if (date != null && !NOLIMIT.equals(operator)) {
 			String whatDate = vm.getValueAsString("dateSelector");
-			if (date.equals(whatDate)) {
+			if (DATE.equals(whatDate)) {
 				if (BEFORE.equals(operator))
 					options.setSourceDateTo(date);
-				else
+				else if (!NOLIMIT.equals(operator))
 					options.setSourceDateFrom(date);
-			} else if (CREATEDON.equals(operator)) {
+			} else if (CREATEDON.equals(whatDate)) {
 				if (BEFORE.equals(operator))
 					options.setCreationTo(date);
-				else
+				else if (!NOLIMIT.equals(operator))
 					options.setCreationFrom(date);
 			} else {
 				if (BEFORE.equals(operator))
 					options.setDateTo(date);
-				else
+				else if (!NOLIMIT.equals(operator))
 					options.setDateFrom(date);
 			}
 		}

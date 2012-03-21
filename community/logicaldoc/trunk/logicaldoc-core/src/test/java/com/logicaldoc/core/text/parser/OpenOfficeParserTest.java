@@ -13,6 +13,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTCase;
+import com.logicaldoc.core.parser.OpenOfficeParser;
+import com.logicaldoc.core.parser.Parser;
+import com.logicaldoc.core.parser.ParserFactory;
 
 public class OpenOfficeParserTest extends AbstractCoreTCase {
 

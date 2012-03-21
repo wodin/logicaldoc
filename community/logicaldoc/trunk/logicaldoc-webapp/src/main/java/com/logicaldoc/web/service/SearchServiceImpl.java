@@ -21,12 +21,9 @@ import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.FolderSearchOptions;
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.Hit;
-import com.logicaldoc.core.searchengine.Indexer;
-import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.security.UserSession;
-import com.logicaldoc.core.text.analyzer.AnalyzerManager;
 import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUICriterion;
@@ -56,10 +53,9 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		options.setUserId(session.getUserId());
 
 		GUIResult result = new GUIResult();
-
 		try {
 			SearchOptions searchOptions = toSearchOptions(options);
-
+			
 			if (searchOptions instanceof FulltextSearchOptions) {
 				Locale exprLoc = LocaleUtil.toLocale(options.getExpressionLanguage());
 
@@ -199,34 +195,6 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 				log.error(e.getMessage(), e);
 			}
 			return toGUIOptions(opt);
-		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
-		}
-	}
-
-	@Override
-	public GUISearchOptions getSimilarityOptions(String sid, long docId, String locale) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
-
-		try {
-			Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
-			String text = indexer.getDocument(Long.toString(docId)).get(LuceneDocument.FIELD_CONTENT);
-
-			// Extracts the most used 10 words
-			AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
-
-			String terms = "";
-			try {
-				terms = analyzer.getTermsAsString(10, text, LocaleUtil.toLocale(locale));
-				terms = terms.replaceAll(",", " ");
-			} catch (Exception e) {
-				log.error(e);
-			}
-
-			GUISearchOptions opt = new GUISearchOptions();
-			opt.setExpression(terms);
-			return opt;
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);

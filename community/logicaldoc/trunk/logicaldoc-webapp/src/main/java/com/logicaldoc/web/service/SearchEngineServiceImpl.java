@@ -11,8 +11,8 @@ import org.apache.commons.logging.LogFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.i18n.LanguageManager;
-import com.logicaldoc.core.searchengine.Indexer;
-import com.logicaldoc.core.text.parser.ParserFactory;
+import com.logicaldoc.core.parser.ParserFactory;
+import com.logicaldoc.core.searchengine.SearchEngine;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineService;
@@ -38,7 +38,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 		try {
 			GUISearchEngine searchEngine = new GUISearchEngine();
 
-			Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
+			SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
 			searchEngine.setLocked(indexer.isLocked());
 			searchEngine.setEntries(indexer.getCount());
 
@@ -77,8 +77,8 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	public void rescheduleAll(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 		try {
-			Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
-			indexer.recreateIndexes();
+			SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
+			indexer.dropIndexes();
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw new RuntimeException(e.getMessage(), e);
@@ -106,7 +106,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	public void unlocks(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 		try {
-			Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
+			SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
 			indexer.unlock();
 		} catch (Exception t) {
 			log.error(t.getMessage(), t);
@@ -118,7 +118,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	public String check(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 		try {
-			Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
+			SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
 			return indexer.check();
 		} catch (Exception t) {
 			log.error(t.getMessage(), t);

@@ -2,10 +2,15 @@ package com.logicaldoc.core.searchengine;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Locale;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.document.Fieldable;
+import org.apache.solr.analysis.SolrAnalyzer;
+
+import com.logicaldoc.core.i18n.Language;
+import com.logicaldoc.core.i18n.LanguageManager;
+import com.logicaldoc.util.LocaleUtil;
 
 /**
  * This analyzer is a wrapper to be used to allow searches in subwords tokens,
@@ -14,48 +19,42 @@ import org.apache.lucene.document.Fieldable;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class WordDelimiterAnalyzer extends Analyzer {
+public class WordDelimiterAnalyzer extends SolrAnalyzer {
 
-	private Analyzer wrapped;
+	public static final ThreadLocal<String> lang = new ThreadLocal<String>() {
+		@Override
+		protected String initialValue() {
+			return "en";
+		}
+	};
 
-	public WordDelimiterAnalyzer(Analyzer wrapped) {
-		this.wrapped = wrapped;
+	public WordDelimiterAnalyzer() {
+	}
+
+	private Analyzer getAnalyzer() {
+		LanguageManager man = LanguageManager.getInstance();
+		Language language = man.getLanguage(LocaleUtil.toLocale(lang.get()));
+		if (language == null)
+			language = new Language(Locale.ENGLISH);
+		return language.getAnalyzer();
 	}
 
 	@Override
 	public TokenStream tokenStream(String fieldName, Reader reader) {
-		TokenStream ts = wrapped.tokenStream(fieldName, reader);
+		TokenStream ts = getAnalyzer().tokenStream(fieldName, reader);
 		ts = new WordDelimiterFilter(ts, 1, 1, 0, 0, 0, 0, 1, 1, 0, null);
 		return ts;
 	}
 
-	public void close() {
-		wrapped.close();
-	}
-
-	public boolean equals(Object obj) {
-		return wrapped.equals(obj);
-	}
-
-	public int getOffsetGap(Fieldable field) {
-		return wrapped.getOffsetGap(field);
-	}
-
-	public int getPositionIncrementGap(String fieldName) {
-		return wrapped.getPositionIncrementGap(fieldName);
-	}
-
-	public int hashCode() {
-		return wrapped.hashCode();
-	}
-
+	@Override
 	public TokenStream reusableTokenStream(String fieldName, Reader reader) throws IOException {
-		TokenStream ts = wrapped.tokenStream(fieldName, reader);
+		TokenStream ts = getAnalyzer().tokenStream(fieldName, reader);
 		ts = new WordDelimiterFilter(ts, 1, 1, 1, 1, 1, 1, 1, 1, 1, null);
 		return ts;
 	}
 
-	public String toString() {
-		return wrapped.toString();
+	@Override
+	public TokenStreamInfo getStream(String fieldName, Reader reader) {
+		return null;
 	}
 }

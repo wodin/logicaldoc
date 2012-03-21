@@ -81,9 +81,9 @@ public class LanguageManager {
 
 	public Collection<Language> getActiveLanguages() {
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		if(config==null)
+		if (config == null)
 			return getLanguages();
-		
+
 		Collection<Language> actives = new ArrayList<Language>();
 		for (Language l : getLanguages()) {
 			if ("enabled".equals(config.getProperty("lang." + l)))
