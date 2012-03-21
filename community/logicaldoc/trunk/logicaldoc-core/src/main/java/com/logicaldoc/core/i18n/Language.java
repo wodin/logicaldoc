@@ -15,8 +15,6 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
 import org.apache.lucene.util.Version;
 
-import com.logicaldoc.core.searchengine.Indexer;
-
 /**
  * Instances of this class represent a language supported by the LogicalDOC DMS
  * 
@@ -34,6 +32,8 @@ public class Language {
 	private Analyzer analyzer;
 
 	private String analyzerClass;
+
+	private static final Version LUCENE_VERSION = Version.LUCENE_35;
 
 	public Language(Locale locale) {
 		this.locale = locale;
@@ -85,7 +85,7 @@ public class Language {
 
 			stopWords = swSet;
 		} catch (Throwable e) {
-			log.warn(e.getMessage());
+			log.warn(e.getMessage(), e);
 		}
 	}
 
@@ -125,7 +125,7 @@ public class Language {
 					Constructor constructor = aClass.getConstructor(new Class[] { org.apache.lucene.util.Version.class,
 							java.util.Set.class });
 					if (constructor != null)
-						analyzer = (Analyzer) constructor.newInstance(Version.LUCENE_30, stopWords);
+						analyzer = (Analyzer) constructor.newInstance(LUCENE_VERSION, stopWords);
 				} catch (Throwable e) {
 					log.debug("constructor (Version matchVersion, Set<?> stopwords)  not found");
 				}
@@ -137,7 +137,7 @@ public class Language {
 					Constructor constructor = aClass
 							.getConstructor(new Class[] { org.apache.lucene.util.Version.class });
 					if (constructor != null)
-						analyzer = (Analyzer) constructor.newInstance(Version.LUCENE_30);
+						analyzer = (Analyzer) constructor.newInstance(LUCENE_VERSION);
 				} catch (Throwable t) {
 					log.debug("constructor (Version matchVersion) not found");
 				}
@@ -154,8 +154,7 @@ public class Language {
 		}
 
 		if (analyzer == null) {
-			analyzer = new SnowballAnalyzer(Indexer.LUCENE_VERSION, getLocale().getDisplayName(Locale.ENGLISH),
-					getStopWords());
+			analyzer = new SnowballAnalyzer(LUCENE_VERSION, getLocale().getDisplayName(Locale.ENGLISH), getStopWords());
 			log.debug("Using default snowball analyzer");
 		}
 

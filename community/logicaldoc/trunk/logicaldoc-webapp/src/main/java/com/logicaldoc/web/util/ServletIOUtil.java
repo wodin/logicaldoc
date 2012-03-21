@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -21,14 +22,12 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.tools.ant.filters.StringInputStream;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
-import com.logicaldoc.core.searchengine.Indexer;
-import com.logicaldoc.core.searchengine.LuceneDocument;
+import com.logicaldoc.core.searchengine.SearchEngine;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserDoc;
 import com.logicaldoc.core.security.UserSession;
@@ -158,8 +157,8 @@ public class ServletIOUtil {
 			session = SessionUtil.validateSession(request);
 
 		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-        if(user!=null)
-		   udao.initialize(user);
+		if (user != null)
+			udao.initialize(user);
 
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = dao.findById(docId);
@@ -310,23 +309,17 @@ public class ServletIOUtil {
 		if (doc != null && !user.isInGroup("admin") && !user.isInGroup("publisher") && !doc.isPublishing())
 			throw new FileNotFoundException("Document not published");
 
-		Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
-		String content = indexer.getDocument(Long.toString(docId)).get(LuceneDocument.FIELD_CONTENT);
+		SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
 
-		InputStream is = new StringInputStream(content.trim(), "UTF-8");
-		OutputStream os;
-		os = response.getOutputStream();
+		String content = indexer.getHit(docId).getContent();
+		if (content == null)
+			content = "";
 
-		int letter = 0;
-		byte[] buffer = new byte[128 * 1024];
 		try {
-			while ((letter = is.read(buffer)) != -1) {
-				os.write(buffer, 0, letter);
-			}
+			response.getOutputStream().write(content.getBytes(Charset.forName("UTF-8")));
 		} finally {
-			os.flush();
-			os.close();
-			is.close();
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
 		}
 	}
 

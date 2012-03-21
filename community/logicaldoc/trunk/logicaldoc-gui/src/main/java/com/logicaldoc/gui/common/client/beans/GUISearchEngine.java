@@ -14,7 +14,7 @@ public class GUISearchEngine implements Serializable {
 
 	private String languages = "en, it, de, fr, es";
 
-	private int entries;
+	private long entries;
 
 	private boolean locked;
 
@@ -34,11 +34,11 @@ public class GUISearchEngine implements Serializable {
 		this.languages = languages;
 	}
 
-	public int getEntries() {
+	public long getEntries() {
 		return entries;
 	}
 
-	public void setEntries(int entries) {
+	public void setEntries(long entries) {
 		this.entries = entries;
 	}
 

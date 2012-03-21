@@ -16,7 +16,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.core.text.parser.ParserFactory;
+import com.logicaldoc.core.parser.ParserFactory;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;

@@ -272,6 +272,18 @@
 			<artifactId>lucene-memory</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-solrj</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-velocity</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>jmimemagic</groupId>
 			<artifactId>jmimemagic</artifactId>
 			<version>0.1.2</version>
@@ -352,6 +364,8 @@
 									<exclude name="*icepdf*" />
 									<exclude name="*jai*" />
 									<exclude name="*icu4j*" />
+									<exclude name="*solr*" />
+									<exclude name="velocity*" />
 								</delete>
 
 								<copy

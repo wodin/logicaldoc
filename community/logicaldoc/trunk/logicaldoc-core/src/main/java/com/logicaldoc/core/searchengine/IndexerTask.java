@@ -26,7 +26,7 @@ public class IndexerTask extends Task {
 
 	private DocumentDAO documentDao;
 
-	private Indexer indexer;
+	private SearchEngine indexer;
 
 	private long indexed = 0;
 
@@ -102,7 +102,7 @@ public class IndexerTask extends Task {
 		}
 	}
 
-	public void setIndexer(Indexer indexer) {
+	public void setIndexer(SearchEngine indexer) {
 		this.indexer = indexer;
 	}
 

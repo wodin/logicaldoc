@@ -20,7 +20,7 @@ import org.springframework.util.Log4jConfigurer;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.dbinit.PluginDbInit;
-import com.logicaldoc.core.searchengine.Indexer;
+import com.logicaldoc.core.searchengine.SearchEngine;
 import com.logicaldoc.gui.setup.client.SetupInfo;
 import com.logicaldoc.gui.setup.client.services.SetupService;
 import com.logicaldoc.util.Context;
@@ -160,8 +160,9 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			path += "/";
 		}
 
-		Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
-		indexer.createIndexes();
+		SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
+		indexer.close();
+		indexer.init();
 
 		// Initialize plugins filesystem
 		Collection<PluginDescriptor> descriptors = PluginRegistry.getInstance().getPlugins();

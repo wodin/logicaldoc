@@ -16,7 +16,7 @@ import com.logicaldoc.core.task.Task;
 public class IndexOptimizer extends Task {
 	public static final String NAME = "IndexOptimizer";
 
-	private Indexer indexer;
+	private SearchEngine indexer;
 
 	private DocumentDAO documentDao;
 
@@ -25,11 +25,11 @@ public class IndexOptimizer extends Task {
 		log = LogFactory.getLog(IndexOptimizer.class);
 	}
 
-	public Indexer getIndexer() {
+	public SearchEngine getIndexer() {
 		return indexer;
 	}
 
-	public void setIndexer(Indexer indexer) {
+	public void setIndexer(SearchEngine indexer) {
 		this.indexer = indexer;
 	}
 
@@ -55,7 +55,7 @@ public class IndexOptimizer extends Task {
 	 */
 	private void deleteOrphaned() {
 		List<Long> ids = documentDao.findDeletedDocIds();
-		indexer.deleteDocuments(ids);
+		indexer.deleteHits(ids);
 	}
 
 	@Override

@@ -63,7 +63,7 @@ public class Search {
 
 	public void search() {
 		ContactingServer.get().show();
-
+		
 		service.search(Session.get().getSid(), options, new AsyncCallback<GUIResult>() {
 
 			@Override

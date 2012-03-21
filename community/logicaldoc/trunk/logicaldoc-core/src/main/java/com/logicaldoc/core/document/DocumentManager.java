@@ -100,7 +100,7 @@ public interface DocumentManager {
 	/**
 	 * Reindexes an existing document in the full-text index.
 	 * 
-	 * @param docId The document to be reindexed
+	 * @param docId The document to be indexed
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
 	public void reindex(long docId) throws Exception;

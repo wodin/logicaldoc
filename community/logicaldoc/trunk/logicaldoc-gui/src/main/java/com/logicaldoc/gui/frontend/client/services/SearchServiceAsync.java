@@ -13,6 +13,4 @@ public interface SearchServiceAsync {
 	void load(String sid, String name, AsyncCallback<GUISearchOptions> callback);
 
 	void delete(String sid, String[] names, AsyncCallback<Void> callback);
-
-	void getSimilarityOptions(String sid, long docId, String locale, AsyncCallback<GUISearchOptions> callback);
 }

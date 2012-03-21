@@ -22,6 +22,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTCase;
+import com.logicaldoc.core.parser.PDFParser;
+import com.logicaldoc.core.parser.Parser;
+import com.logicaldoc.core.parser.ParserFactory;
 
 public class PDFParserTest extends AbstractCoreTCase{
 

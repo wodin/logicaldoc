@@ -44,7 +44,7 @@ public class GUISearchOptions implements Serializable {
 
 	private Long folder = null;
 
-	private String[] fields = null;
+	private String[] fields = new String[]{"title","content","tags"};
 
 	private String language = null;
 

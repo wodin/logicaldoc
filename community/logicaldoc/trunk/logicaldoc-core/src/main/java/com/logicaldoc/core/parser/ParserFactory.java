@@ -1,4 +1,4 @@
-package com.logicaldoc.core.text.parser;
+package com.logicaldoc.core.parser;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
 
-import com.logicaldoc.core.text.parser.wordperfect.WordPerfectParser;
+import com.logicaldoc.core.parser.wordperfect.WordPerfectParser;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.plugin.PluginRegistry;
