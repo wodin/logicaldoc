@@ -1,4 +1,4 @@
-package com.logicaldoc.core.text.parser;
+package com.logicaldoc.core.parser;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

@@ -59,9 +59,6 @@
 
 		<property name="hibernateProperties">
 			<props>
-				<!-- 
-					<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
-				-->
 				<prop key="hibernate.dialect">
 					org.hibernate.dialect.HSQLDialect
 				</prop>
