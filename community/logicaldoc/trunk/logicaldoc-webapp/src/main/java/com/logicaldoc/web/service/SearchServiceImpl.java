@@ -55,7 +55,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		GUIResult result = new GUIResult();
 		try {
 			SearchOptions searchOptions = toSearchOptions(options);
-			
+
 			if (searchOptions instanceof FulltextSearchOptions) {
 				Locale exprLoc = LocaleUtil.toLocale(options.getExpressionLanguage());
 
@@ -79,6 +79,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 				log.error(e.getMessage(), e);
 			}
 
+			result.setSuggestion(search.getSuggestion());
+			System.out.println("getEstimatedHitsNumber "+search.getEstimatedHitsNumber());
 			List<Hit> hits = search.getHits();
 
 			result.setTime(search.getExecTime());
@@ -93,8 +95,10 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 					// This settings are necessary for the 'open in folder'
 					// feature.
 					Document shortcutDoc = docDAO.findById(hit.getDocId());
-					h.setId(shortcutDoc.getDocRef());
-					h.setFolderId(shortcutDoc.getFolder().getId());
+					if (shortcutDoc != null && shortcutDoc.getDocRef()!=null) {
+						h.setId(shortcutDoc.getDocRef());
+						h.setFolderId(shortcutDoc.getFolder().getId());
+					}
 				} else {
 					h.setId(hit.getDocId());
 					h.setFolderId(hit.getFolderId());
@@ -309,7 +313,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			((FulltextSearchOptions) searchOptions).setCreationFrom(options.getCreationFrom());
 			((FulltextSearchOptions) searchOptions).setCreationTo(options.getCreationTo());
 			((FulltextSearchOptions) searchOptions).setExpressionLanguage(options.getExpressionLanguage());
-			((FulltextSearchOptions) searchOptions).setFields(options.getFields());
+			((FulltextSearchOptions) searchOptions).setFields(options.getFields());	
 			((FulltextSearchOptions) searchOptions).setFolderId(options.getFolder());
 			((FulltextSearchOptions) searchOptions).setFormat(options.getFormat());
 			((FulltextSearchOptions) searchOptions).setLanguage(options.getLanguage());

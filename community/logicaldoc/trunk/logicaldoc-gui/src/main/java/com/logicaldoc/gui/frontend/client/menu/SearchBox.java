@@ -60,10 +60,11 @@ public class SearchBox extends TextItem {
 		options.setExpressionLanguage(I18N.getLocale());
 		options.setFolder(null);
 		options.setTemplate(null);
-		options.setLanguage("");
+		options.setLanguage(null);
 		options.setFilterIds(null);
+		options.setFields(new String[] { "title", "content", "tags" });
 
-		String hits=Session.get().getInfo().getConfig("search.hits");
+		String hits = Session.get().getInfo().getConfig("search.hits");
 		options.setMaxHits(Integer.parseInt(hits));
 		Search.get().setOptions(options);
 		Search.get().search();

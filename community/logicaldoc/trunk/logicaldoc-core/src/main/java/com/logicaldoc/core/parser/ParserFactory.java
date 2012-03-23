@@ -215,8 +215,9 @@ public class ParserFactory {
 			return parser;
 		} finally {
 			try {
-				is.close();
-			} catch (IOException e) {
+				if (is != null)
+					is.close();
+			} catch (Throwable e) {
 
 			}
 		}

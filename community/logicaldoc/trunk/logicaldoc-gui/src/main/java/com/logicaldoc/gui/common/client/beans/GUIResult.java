@@ -17,6 +17,8 @@ public class GUIResult implements Serializable {
 	private boolean hasMore = false;
 
 	private GUIHit[] hits = new GUIHit[0];
+	
+	private String suggestion;
 
 	public long getTime() {
 		return time;
@@ -40,5 +42,13 @@ public class GUIResult implements Serializable {
 
 	public void setHits(GUIHit[] hits) {
 		this.hits = hits;
+	}
+
+	public String getSuggestion() {
+		return suggestion;
+	}
+
+	public void setSuggestion(String suggestion) {
+		this.suggestion = suggestion;
 	}
 }

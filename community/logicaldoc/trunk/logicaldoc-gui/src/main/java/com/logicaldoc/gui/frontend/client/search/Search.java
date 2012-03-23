@@ -36,6 +36,8 @@ public class Search {
 
 	private boolean hasMore = false;
 
+	private String suggestion;
+
 	private Search() {
 	}
 
@@ -63,7 +65,7 @@ public class Search {
 
 	public void search() {
 		ContactingServer.get().show();
-		
+
 		service.search(Session.get().getSid(), options, new AsyncCallback<GUIResult>() {
 
 			@Override
@@ -75,6 +77,7 @@ public class Search {
 			@Override
 			public void onSuccess(GUIResult result) {
 				try {
+					suggestion = result.getSuggestion();
 					time = result.getTime();
 					lastResult = new ListGridRecord[result.getHits().length];
 					hasMore = result.isHasMore();
@@ -128,5 +131,9 @@ public class Search {
 
 	public void setHasMore(boolean hasMore) {
 		this.hasMore = hasMore;
+	}
+
+	public String getSuggestion() {
+		return suggestion;
 	}
 }
