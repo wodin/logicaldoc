@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>54</version>
+  <version>55</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -601,6 +601,11 @@
 			    <artifactId>sigar</artifactId>
 			    <version>1.6.4</version>
 		    </dependency>
+        <dependency>
+	        <groupId>org.jgroups</groupId>
+	        <artifactId>jgroups</artifactId>
+	        <version>3.0.8.Final</version>
+        </dependency>
       </dependencies>
     </dependencyManagement>
     <repositories>
