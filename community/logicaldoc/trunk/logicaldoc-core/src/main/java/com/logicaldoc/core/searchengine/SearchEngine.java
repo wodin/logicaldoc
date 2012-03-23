@@ -19,7 +19,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.index.CheckIndex;
 import org.apache.lucene.index.CheckIndex.Status;
-import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -31,6 +30,7 @@ import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.core.CoreContainer;
+import org.apache.solr.update.SolrIndexWriter;
 
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.Document;
@@ -83,7 +83,7 @@ public class SearchEngine {
 	protected static final String FIELD_COMMENT = "comment";
 
 	protected static final String FIELD_LANGUAGE = "language";
-	
+
 	protected static final String FIELD_TYPE = "type";
 
 	protected static Log log = LogFactory.getLog(SearchEngine.class);
@@ -132,7 +132,7 @@ public class SearchEngine {
 			doc.addField(FIELD_FOLDER_ID, document.getFolder().getId());
 			doc.addField(FIELD_FOLDER_NAME, document.getFolder().getName());
 		}
-		
+
 		if (document.getTemplateId() != null) {
 			doc.addField(FIELD_TEMPLATE_ID, document.getTemplateId());
 
@@ -188,12 +188,13 @@ public class SearchEngine {
 	}
 
 	/**
-	 * Launch the index optimization.
+	 * Launch the index optimization and triggers the build of spellcheck
+	 * dictionary
 	 */
 	public synchronized void optimize() {
 		log.warn("Started optimization of the index");
 		try {
-			server.optimize();
+			server.optimize(true, true);
 		} catch (Exception e) {
 			log.error("Error during optimization: " + e.getMessage(), e);
 		}
@@ -326,8 +327,8 @@ public class SearchEngine {
 	/**
 	 * Search for hits
 	 */
-	public Hits search(String expression, String[] filters, String searchLanguage, Integer rows) {
-		WordDelimiterAnalyzer.lang.set(searchLanguage);
+	public Hits search(String expression, String[] filters, String expressionLanguage, Integer rows) {
+		WordDelimiterAnalyzer.lang.set(expressionLanguage);
 		Hits hits = null;
 		SolrQuery query = new SolrQuery();
 		query.setFields("*");
@@ -339,6 +340,7 @@ public class SearchEngine {
 		query.setHighlightSnippets(4);
 		query.setParam("hl.mergeContiguous", true);
 		query.setTermsMaxCount(1000);
+
 		if (rows != null)
 			query.setRows(rows);
 
@@ -375,18 +377,19 @@ public class SearchEngine {
 	 * This method can unlock a locked index.
 	 */
 	public synchronized void unlock() {
-		close();
-
 		try {
-			Directory index = getIndexDataDirectory();
-			if (IndexWriter.isLocked(index)) {
-				IndexWriter.unlock(index);
+			Directory directory = getIndexDataDirectory();
+			if (SolrIndexWriter.isLocked(directory)) {
+				SolrIndexWriter.unlock(directory);
+			}
+
+			directory = getSpellcheckerDataDirectory();
+			if (SolrIndexWriter.isLocked(directory)) {
+				SolrIndexWriter.unlock(directory);
 			}
 		} catch (Exception e) {
 			log.warn("unlock " + e.getMessage(), e);
 		}
-
-		init();
 	}
 
 	/**
@@ -399,8 +402,8 @@ public class SearchEngine {
 		boolean result = false;
 
 		try {
-			Directory index = getIndexDataDirectory();
-			if (IndexWriter.isLocked(index)) {
+			Directory directory = getIndexDataDirectory();
+			if (SolrIndexWriter.isLocked(directory)) {
 				result = true;
 			}
 		} catch (Exception e) {
@@ -433,6 +436,7 @@ public class SearchEngine {
 		try {
 			close();
 			FileUtils.deleteDirectory(getIndexDataFolder());
+			FileUtils.deleteDirectory(getSpellcheckerDataFolder());
 			init();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -443,10 +447,21 @@ public class SearchEngine {
 		return new NIOFSDirectory(getIndexDataFolder());
 	}
 
+	static Directory getSpellcheckerDataDirectory() throws IOException {
+		File indexdir = getSpellcheckerDataFolder();
+		return new NIOFSDirectory(indexdir);
+	}
+
 	static File getIndexDataFolder() throws IOException {
 		File indexdir = new File(config.getPropertyWithSubstitutions("conf.indexdir"));
 		indexdir = new File(indexdir, "data");
 		return new File(indexdir, "index");
+	}
+
+	static File getSpellcheckerDataFolder() throws IOException {
+		File indexdir = new File(config.getPropertyWithSubstitutions("conf.indexdir"));
+		indexdir = new File(indexdir, "data");
+		return new File(indexdir, "spellchecker");
 	}
 
 	/**
@@ -492,6 +507,7 @@ public class SearchEngine {
 			CoreContainer container = new CoreContainer();
 			container.load(home.getPath(), solr_xml);
 			server = new EmbeddedSolrServer(container, "");
+			unlock();
 		} catch (Exception e) {
 			log.error("Unable to initialize the Full-text search engine", e);
 		}

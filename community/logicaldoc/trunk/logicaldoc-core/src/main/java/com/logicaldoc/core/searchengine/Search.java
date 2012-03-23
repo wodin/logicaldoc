@@ -28,11 +28,13 @@ public abstract class Search {
 
 	protected List<Hit> hits = new ArrayList<Hit>();
 
-	protected int estimatedHitsNumber = 0;
+	protected long estimatedHitsNumber = 0;
 
 	protected long execTime = 0;
 
 	protected User searchUser;
+
+	protected String suggestion;
 
 	public static Search get(SearchOptions opt) {
 		// Acquire the 'Search' extensions of the core plugin
@@ -118,6 +120,7 @@ public abstract class Search {
 
 		Date start = new Date();
 		hits.clear();
+		suggestion = null;
 		moreHitsPresent = false;
 
 		try {
@@ -151,7 +154,7 @@ public abstract class Search {
 		this.moreHitsPresent = moreHitsPresent;
 	}
 
-	public int getEstimatedHitsNumber() {
+	public long getEstimatedHitsNumber() {
 		return estimatedHitsNumber;
 	}
 
@@ -168,5 +171,9 @@ public abstract class Search {
 
 	public void setOptions(SearchOptions options) {
 		this.options = options;
+	}
+
+	public String getSuggestion() {
+		return suggestion;
 	}
 }

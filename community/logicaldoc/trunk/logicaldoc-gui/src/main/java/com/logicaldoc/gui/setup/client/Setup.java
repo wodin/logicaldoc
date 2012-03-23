@@ -356,7 +356,6 @@ public class Setup implements EntryPoint {
 		dbEngine.setWrapTitle(false);
 		dbEngine.setVisible(false);
 		dbEngine.setName(DB_ENGINE);
-		dbEngine.setValue(MYSQL);
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
 		for (String engine : engines.keySet()) {
 			valueMap.put(engine, engines.get(engine)[0]);
@@ -381,11 +380,11 @@ public class Setup implements EntryPoint {
 				databaseForm.getField(DB_URL).setValue(engines.get(selectedItem)[2]);
 			}
 		});
+		dbEngine.setValue("MySQL 5.x");
 
 		// The driver for the external DB
 		TextItem dbDriver = ItemFactory.newTextItem(DB_DRIVER, "driverclass", null);
 		dbDriver.setVisible(false);
-		dbDriver.setValue(engines.get(MYSQL)[1]);
 		dbDriver.setWrapTitle(false);
 		dbDriver.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
@@ -393,12 +392,12 @@ public class Setup implements EntryPoint {
 			}
 		});
 		dbDriver.setValidators(ifValidator);
+		dbDriver.setValue("com.mysql.jdbc.Driver");
 
 		// The connection URL to external DB
 		TextItem dbUrl = ItemFactory.newTextItem(DB_URL, "connectionurl", null);
 		dbUrl.setWidth(200);
 		dbUrl.setVisible(false);
-		dbUrl.setValue(engines.get(MYSQL)[2]);
 		dbUrl.setWrapTitle(false);
 		dbUrl.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
@@ -406,6 +405,7 @@ public class Setup implements EntryPoint {
 			}
 		});
 		dbUrl.setValidators(ifValidator);
+		dbUrl.setValue("jdbc:mysql://<server>[,<failoverhost>][<:3306>]/<database>");
 
 		// The username to access the external DB
 		TextItem dbUsername = ItemFactory.newTextItem(DB_USERNAME, "username", null);

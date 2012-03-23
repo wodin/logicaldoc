@@ -3,7 +3,10 @@ package com.logicaldoc.core.searchengine;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.TreeSet;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.ibm.icu.text.SimpleDateFormat;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -48,7 +51,7 @@ public class FulltextSearch extends Search {
 		if (searchInSingleFolder)
 			filters.add(SearchEngine.FIELD_FOLDER_ID + ":" + opt.getFolderId());
 
-		if (opt.getLanguage() != null)
+		if (StringUtils.isNotEmpty(opt.getLanguage()))
 			filters.add(SearchEngine.FIELD_LANGUAGE + ":" + opt.getLanguage());
 
 		if (opt.getSizeMin() != null) {
@@ -79,7 +82,6 @@ public class FulltextSearch extends Search {
 			filters.add(SearchEngine.FIELD_CREATION + ":[* TO " + df.format(opt.getCreationTo()) + "T00:00:00Z]");
 		}
 
-		
 		/*
 		 * Launch the search
 		 */
@@ -117,13 +119,13 @@ public class FulltextSearch extends Search {
 		Collection<Long> publishedIds = docDao.findPublishedIds(accessibleFolderIds);
 
 		while (results.hasNext()) {
-			Hit hit = results.next();
-
 			if (hits.size() == opt.getMaxHits()) {
 				// The maximum number of hits was reached for a quick query
 				moreHitsPresent = true;
 				break;
 			}
+
+			Hit hit = results.next();
 
 			// Skip a document if not in the filter set
 			if (opt.getFilterIds() != null && !opt.getFilterIds().isEmpty()) {
@@ -141,6 +143,18 @@ public class FulltextSearch extends Search {
 			}
 		}
 
+		estimatedHitsNumber = results.getEstimatedCount();
+
+		/*
+		 * Check for suggestions
+		 */
+		Map<String, String> suggestions = (Map<String, String>) results.getSuggestions();
+		if (!results.getSuggestions().isEmpty()) {
+			suggestion = options.getExpression();
+			for (String token : results.getSuggestions().keySet()) {
+				suggestion = suggestion.replaceFirst(token, suggestions.get(token));
+			}
+		}
 	}
 
 	protected boolean isRelevant(Hit hit) {

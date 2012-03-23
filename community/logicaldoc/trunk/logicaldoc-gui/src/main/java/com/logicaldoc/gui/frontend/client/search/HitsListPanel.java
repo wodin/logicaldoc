@@ -307,26 +307,25 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			addMember(infoPanel);
 		}
 
-		if (Search.get().isEmpty())
-			infoPanel.setVisible(false);
-		else
-			infoPanel.setVisible(true);
+
+		infoPanel.setVisible(true);
 
 		// Prepare a stack for 2 sections the Title with search time and the
 		// list of hits
 		NumberFormat format = NumberFormat.getFormat("#.###");
-		String stats = null;
+
+		String stats = "";
 		if (options.getType() != GUISearchOptions.TYPE_PARAMETRIC) {
-			stats = I18N.message(
+			stats += I18N.message(
 					"resultstat",
 					new String[] { options.getExpression(),
 							format.format((double) Search.get().getTime() / (double) 1000) });
 		} else {
-			stats = "(<b>" + format.format((double) Search.get().getTime() / (double) 1000) + "</b> "
+			stats += "(<b>" + format.format((double) Search.get().getTime() / (double) 1000) + "</b> "
 					+ I18N.message("seconds").toLowerCase() + ")";
 		}
 		infoPanel.setMessage(stats);
-
+		
 		ListGridRecord[] result = Search.get().getLastResult();
 		list.setRecords(result);
 
@@ -342,10 +341,8 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		else {
 			toolStrip.removeMembers(toolStrip.getMembers());
 		}
-		if (Search.get().isEmpty())
-			toolStrip.setVisible(false);
-		else
-			toolStrip.setVisible(true);
+
+		toolStrip.setVisible(true);
 
 		toolStrip.setHeight(20);
 		toolStrip.setWidth100();
@@ -479,6 +476,20 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		toolStrip.addButton(toggle);
 
 		toolStrip.addFill();
+		
+		if(Search.get().getSuggestion() != null){
+			ToolStripButton repeat = new ToolStripButton(I18N.message("searchinstaed")+" <b>"+ Search.get().getSuggestion()+"</b>");
+			repeat.setAutoFit(true);
+			repeat.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					Search.get().getOptions().setExpression(Search.get().getSuggestion());
+					Search.get().search();
+				}
+			});
+			toolStrip.addButton(repeat);
+		}
+		
 		addMember(toolStrip);
 	}
 
