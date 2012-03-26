@@ -395,7 +395,7 @@
       <dependency>
         <groupId>net.sf.ehcache</groupId>
         <artifactId>ehcache-jgroupsreplication</artifactId>
-        <version>${ehcache.version}</version>
+        <version>1.5</version>
       </dependency>
       <dependency>
         <groupId>org.apache.lucene</groupId>
