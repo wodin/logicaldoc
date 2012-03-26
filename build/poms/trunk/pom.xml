@@ -85,6 +85,7 @@
   <properties>
     <spring.version>3.0.7.RELEASE</spring.version>
     <hibernate.version>3.6.9.Final</hibernate.version>
+    <ehcache.version>2.5.1</ehcache.version>
     <lucene.version>3.5.0</lucene.version>
     <solr.version>3.5.0</solr.version>
     <gwt.version>2.3.0</gwt.version>
@@ -389,7 +390,12 @@
       <dependency>
         <groupId>net.sf.ehcache</groupId>
         <artifactId>ehcache-core</artifactId>
-        <version>2.5.1</version>
+        <version>${ehcache.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>net.sf.ehcache</groupId>
+        <artifactId>ehcache-jgroupsreplication</artifactId>
+        <version>${ehcache.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.lucene</groupId>
