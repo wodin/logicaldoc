@@ -36,7 +36,7 @@ import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
- * Implementation of the SecurityService
+ * Implementation of the SearchService
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
@@ -80,7 +80,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			}
 
 			result.setSuggestion(search.getSuggestion());
-			System.out.println("getEstimatedHitsNumber "+search.getEstimatedHitsNumber());
+			result.setEstimatedHits(search.getEstimatedHitsNumber());
+			
 			List<Hit> hits = search.getHits();
 
 			result.setTime(search.getExecTime());

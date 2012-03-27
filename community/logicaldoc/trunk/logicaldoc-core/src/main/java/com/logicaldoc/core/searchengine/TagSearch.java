@@ -32,6 +32,10 @@ public class TagSearch extends Search {
 		hits.addAll((List<Hit>) dao.query(options.getExpression(), null, new HitMapper(), options.getMaxHits()));
 
 		moreHitsPresent = (hits.size() >= options.getMaxHits());
+		if (moreHitsPresent)
+			estimatedHitsNumber = hits.size() + 1;
+		else
+			estimatedHitsNumber = hits.size();
 	}
 
 	/**

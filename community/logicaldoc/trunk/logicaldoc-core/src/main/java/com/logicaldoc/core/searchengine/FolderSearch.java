@@ -43,6 +43,10 @@ public class FolderSearch extends Search {
 				options.getMaxHits()));
 
 		moreHitsPresent = (hits.size() >= options.getMaxHits());
+		if (moreHitsPresent)
+			estimatedHitsNumber = hits.size() + 1;
+		else
+			estimatedHitsNumber = hits.size();
 	}
 
 	/**
