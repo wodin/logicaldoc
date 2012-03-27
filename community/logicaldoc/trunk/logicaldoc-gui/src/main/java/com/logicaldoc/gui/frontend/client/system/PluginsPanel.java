@@ -1,7 +1,13 @@
 package com.logicaldoc.gui.frontend.client.system;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.frontend.client.services.SystemService;
+import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -15,10 +21,11 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.2
  */
 public class PluginsPanel extends VLayout {
+	private SystemServiceAsync service = (SystemServiceAsync) GWT.create(SystemService.class);
 
 	private ListGrid list;
 
-	public PluginsPanel(GUIValuePair[] plugins) {
+	public PluginsPanel() {
 		setMembersMargin(3);
 
 		ListGridField name = new ListGridField("name", I18N.message("name"), 250);
@@ -38,14 +45,24 @@ public class PluginsPanel extends VLayout {
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setFields(name, version);
 
-		ListGridRecord[] records = new ListGridRecord[plugins.length];
-		for (int i = 0; i < plugins.length; i++) {
-			records[i] = new ListGridRecord();
-			records[i].setAttribute("name", plugins[i].getCode());
-			records[i].setAttribute("version", plugins[i].getValue());
-		}
-		list.setRecords(records);
-
 		addMember(list);
+
+		service.getPlugins(Session.get().getSid(), new AsyncCallback<GUIValuePair[]>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
+
+			@Override
+			public void onSuccess(GUIValuePair[] plugins) {
+				ListGridRecord[] records = new ListGridRecord[plugins.length];
+				for (int i = 0; i < plugins.length; i++) {
+					records[i] = new ListGridRecord();
+					records[i].setAttribute("name", plugins[i].getCode());
+					records[i].setAttribute("version", plugins[i].getValue());
+				}
+				list.setRecords(records);
+			}
+		});
 	}
 }
