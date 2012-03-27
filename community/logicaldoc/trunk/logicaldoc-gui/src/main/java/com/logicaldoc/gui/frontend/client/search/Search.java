@@ -37,6 +37,8 @@ public class Search {
 	private boolean hasMore = false;
 
 	private String suggestion;
+	
+	private long estimatedHits;
 
 	private Search() {
 	}
@@ -79,6 +81,7 @@ public class Search {
 				try {
 					suggestion = result.getSuggestion();
 					time = result.getTime();
+					estimatedHits = result.getEstimatedHits();
 					lastResult = new ListGridRecord[result.getHits().length];
 					hasMore = result.isHasMore();
 					for (int i = 0; i < result.getHits().length; i++) {
@@ -135,5 +138,13 @@ public class Search {
 
 	public String getSuggestion() {
 		return suggestion;
+	}
+
+	public long getEstimatedHits() {
+		return estimatedHits;
+	}
+
+	public void setEstimatedResults(long estimatedResults) {
+		this.estimatedHits = estimatedResults;
 	}
 }

@@ -307,25 +307,21 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			addMember(infoPanel);
 		}
 
-
 		infoPanel.setVisible(true);
 
 		// Prepare a stack for 2 sections the Title with search time and the
 		// list of hits
 		NumberFormat format = NumberFormat.getFormat("#.###");
 
-		String stats = "";
-		if (options.getType() != GUISearchOptions.TYPE_PARAMETRIC) {
-			stats += I18N.message(
-					"resultstat",
-					new String[] { options.getExpression(),
-							format.format((double) Search.get().getTime() / (double) 1000) });
-		} else {
-			stats += "(<b>" + format.format((double) Search.get().getTime() / (double) 1000) + "</b> "
-					+ I18N.message("seconds").toLowerCase() + ")";
-		}
+		String stats = I18N.message(
+				"aboutresults",
+				new String[] { "" + Search.get().getEstimatedHits(),
+						format.format((double) Search.get().getTime() / (double) 1000) });
+		stats += " (<b>" + format.format((double) Search.get().getTime() / (double) 1000) + "</b> "
+				+ I18N.message("seconds").toLowerCase() + ")";
+
 		infoPanel.setMessage(stats);
-		
+
 		ListGridRecord[] result = Search.get().getLastResult();
 		list.setRecords(result);
 
@@ -476,9 +472,10 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		toolStrip.addButton(toggle);
 
 		toolStrip.addFill();
-		
-		if(Search.get().getSuggestion() != null){
-			ToolStripButton repeat = new ToolStripButton(I18N.message("searchinstaed")+" <b>"+ Search.get().getSuggestion()+"</b>");
+
+		if (Search.get().getSuggestion() != null) {
+			ToolStripButton repeat = new ToolStripButton(I18N.message("searchinstaed") + " <b>"
+					+ Search.get().getSuggestion() + "</b>");
 			repeat.setAutoFit(true);
 			repeat.addClickHandler(new ClickHandler() {
 				@Override
@@ -489,7 +486,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			});
 			toolStrip.addButton(repeat);
 		}
-		
+
 		addMember(toolStrip);
 	}
 
