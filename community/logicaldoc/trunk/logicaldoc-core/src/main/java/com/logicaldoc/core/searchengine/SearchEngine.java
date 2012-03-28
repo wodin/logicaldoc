@@ -22,7 +22,6 @@ import org.apache.lucene.index.CheckIndex.Status;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -48,51 +47,13 @@ import com.logicaldoc.util.io.FileUtil;
  */
 public class SearchEngine {
 
-	protected static final String FIELD_TEMPLATE_ID = "templateId";
-
-	protected static final String FIELD_TAGS = "tags";
-
-	protected static final String FIELD_CONTENT = "content";
-
-	protected static final String FIELD_FOLDER_ID = "folderId";
-
-	protected static final String FIELD_FOLDER_NAME = "folderName";
-
-	protected static final String FIELD_CREATION = "creation";
-
-	protected static final String FIELD_DATE = "date";
-
-	protected static final String FIELD_SOURCE_DATE = "sourceDate";
-
-	protected static final String FIELD_COVERAGE = "coverage";
-
-	protected static final String FIELD_SOURCE_AUTHOR = "sourceAuthor";
-
-	protected static final String FIELD_SOURCE = "source";
-
-	protected static final String FIELD_SIZE = "size";
-
-	protected static final String FIELD_TITLE = "title";
-
-	protected static final String FIELD_ID = "id";
-
-	protected static final String FIELD_CUSTOM_ID = "customId";
-
-	protected static final String FIELD_DOCREF = "docRef";
-
-	protected static final String FIELD_COMMENT = "comment";
-
-	protected static final String FIELD_LANGUAGE = "language";
-
-	protected static final String FIELD_TYPE = "type";
-
 	protected static Log log = LogFactory.getLog(SearchEngine.class);
 
 	private static ContextProperties config;
 
 	private DocumentDAO documentDao;
 
-	protected EmbeddedSolrServer server;
+	EmbeddedSolrServer server;
 
 	private SearchEngine() {
 	}
@@ -111,30 +72,31 @@ public class SearchEngine {
 	 */
 	public synchronized void addHit(Document document, String content) throws Exception {
 		SolrInputDocument doc = new SolrInputDocument();
-		doc.addField(FIELD_ID, Long.toString(document.getId()));
-		doc.addField(FIELD_LANGUAGE, document.getLanguage());
-		doc.addField(FIELD_TITLE, document.getTitle());
-		doc.addField(FIELD_SIZE, document.getFileSize());
-		doc.addField(FIELD_DATE, document.getDate());
-		doc.addField(FIELD_SOURCE_DATE, document.getSourceDate());
-		doc.addField(FIELD_CREATION, document.getCreation());
-		doc.addField(FIELD_CUSTOM_ID, document.getCustomId());
-		doc.addField(FIELD_SOURCE, document.getSource());
-		doc.addField(FIELD_COMMENT, document.getComment());
-		doc.addField(FIELD_TAGS, document.getTagsString());
-		doc.addField(FIELD_COVERAGE, document.getCoverage());
-		doc.addField(FIELD_SOURCE_AUTHOR, document.getSourceAuthor());
-		doc.addField(FIELD_DOCREF, document.getDocRef());
-		doc.addField(FIELD_TYPE, FilenameUtils.getExtension(document.getFileName()));
-		doc.addField(FIELD_CONTENT, content);
+
+		doc.addField(Fields.ID.getName(), Long.toString(document.getId()));
+		doc.addField(Fields.LANGUAGE.getName(), document.getLanguage());
+		doc.addField(Fields.TITLE.getName(), document.getTitle());
+		doc.addField(Fields.SIZE.getName(), document.getFileSize());
+		doc.addField(Fields.DATE.getName(), document.getDate());
+		doc.addField(Fields.SOURCE_DATE.getName(), document.getSourceDate());
+		doc.addField(Fields.CREATION.getName(), document.getCreation());
+		doc.addField(Fields.CUSTOM_ID.getName(), document.getCustomId());
+		doc.addField(Fields.SOURCE.getName(), document.getSource());
+		doc.addField(Fields.COMMENT.getName(), document.getComment());
+		doc.addField(Fields.TAGS.getName(), document.getTagsString());
+		doc.addField(Fields.COVERAGE.getName(), document.getCoverage());
+		doc.addField(Fields.SOURCE_AUTHOR.getName(), document.getSourceAuthor());
+		doc.addField(Fields.DOC_REF.getName(), document.getDocRef());
+		doc.addField(Fields.TYPE.getName(), FilenameUtils.getExtension(document.getFileName()));
+		doc.addField(Fields.CONTENT.getName(), content);
 
 		if (document.getFolder() != null) {
-			doc.addField(FIELD_FOLDER_ID, document.getFolder().getId());
-			doc.addField(FIELD_FOLDER_NAME, document.getFolder().getName());
+			doc.addField(Fields.FOLDER_ID.getName(), document.getFolder().getId());
+			doc.addField(Fields.FOLDER_NAME.getName(), document.getFolder().getName());
 		}
 
 		if (document.getTemplateId() != null) {
-			doc.addField(FIELD_TEMPLATE_ID, document.getTemplateId());
+			doc.addField(Fields.TEMPLATE_ID.getName(), document.getTemplateId());
 
 			for (String attribute : document.getAttributeNames()) {
 				ExtendedAttribute ext = document.getExtendedAttribute(attribute);
@@ -316,7 +278,7 @@ public class SearchEngine {
 
 			SolrDocument doc = docs.get(0);
 			Hit hit = Hits.toHit(doc);
-			hit.setContent((String) doc.getFieldValue(FIELD_CONTENT));
+			hit.setContent((String) doc.getFieldValue(Fields.CONTENT.getName()));
 			return hit;
 		} catch (SolrServerException e) {
 			log.error(e);
@@ -331,15 +293,16 @@ public class SearchEngine {
 		WordDelimiterAnalyzer.lang.set(expressionLanguage);
 		Hits hits = null;
 		SolrQuery query = new SolrQuery();
-		query.setFields("*");
 		query.setQuery(expression);
-		query.setIncludeScore(true);
-		query.setSortField("score", ORDER.desc);
-		query.setHighlight(true);
-		query.addHighlightField("content");
-		query.setHighlightSnippets(4);
-		query.setParam("hl.mergeContiguous", true);
-		query.setTermsMaxCount(1000);
+		
+		// query.setFields(Fields.searchList());
+		// query.setIncludeScore(true);
+		// query.setSortField("score", ORDER.desc);
+		// query.setHighlight(true);
+		// query.addHighlightField("content");
+		// query.setHighlightSnippets(4);
+		// query.setParam("hl.mergeContiguous", true);
+		// query.setTermsMaxCount(1000);
 
 		if (rows != null)
 			query.setRows(rows);

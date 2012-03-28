@@ -208,8 +208,8 @@ public class WebConfigurator extends XMLBean {
 	}
 
 	/**
-	 * Adds a new servlet mapping to the deployment descriptor. If the mapping
-	 * already exists no modifications are committed.
+	 * Adds a new servlet to the deployment descriptor. If the servlet already
+	 * exists no modifications are committed.
 	 * 
 	 * @param name The servlet name
 	 * @param clazz The servlet class fully qualified name
@@ -252,6 +252,55 @@ public class WebConfigurator extends XMLBean {
 			// Add the new element to the next index along.
 			// This does cover the case where indexOf returned -1.
 			children.add(index + 1, servlet);
+		}
+
+		writeXMLDoc();
+	}
+
+	/**
+	 * Adds a new filter to the deployment descriptor. If the filter already
+	 * exists no modifications are committed.
+	 * 
+	 * @param name The filter name
+	 * @param clazz The filter class fully qualified name
+	 */
+	@SuppressWarnings("unchecked")
+	public void addFilter(String name, String clazz) {
+		Element filter = null;
+		Element filterClass = null;
+
+		// Search for the specified filter
+		List filters = getRootElement().getChildren("filter", getRootElement().getNamespace());
+		filter = this.elementLookUp(filters, "filter-name", name);
+		if (filter != null) {
+			// The filter already exists, so update it
+			filterClass = filter.getChild("filter-class", getRootElement().getNamespace());
+			filterClass.setText(clazz);
+		} else {
+
+			// Retrieve the last <filter> element
+			Element lastFilter = (Element) filters.get(filters.size() - 1);
+
+			List children = getRootElement().getChildren();
+
+			// Find the index of the element to add the new element after.
+			int index = children.indexOf(lastFilter);
+
+			// Prepare the new mapping
+			filter = new Element("filter", getRootElement().getNamespace());
+			Element filterNameElement = new Element("filter-name", getRootElement().getNamespace());
+			filterNameElement.setText(name);
+			filterClass = new Element("filter-class", getRootElement().getNamespace());
+			filterClass.setText(clazz);
+			filter.addContent("\n ");
+			filter.addContent(filterNameElement);
+			filter.addContent("\n ");
+			filter.addContent(filterClass);
+			filter.addContent("\n ");
+
+			// Add the new element to the next index along.
+			// This does cover the case where indexOf returned -1.
+			children.add(index + 1, filter);
 		}
 
 		writeXMLDoc();
@@ -301,6 +350,53 @@ public class WebConfigurator extends XMLBean {
 		// Add the new element to the next index along.
 		// This does cover the case where indexOf returned -1.
 		children.add(index + 1, servletMapping);
+		writeXMLDoc();
+	}
+
+	/**
+	 * Adds a new filter mapping to the deployment descriptor. If the mapping
+	 * already exists no modifications are committed.
+	 * 
+	 * @param filter The name of the filter
+	 * @param pattern The mapping pattern
+	 */
+	@SuppressWarnings("unchecked")
+	public void addFilterMapping(String filter, String pattern) {
+		// Search for the specified mapping
+		List mappings = getRootElement().getChildren("filter-mapping", getRootElement().getNamespace());
+		for (Iterator iterator = mappings.iterator(); iterator.hasNext();) {
+			Element elem = (Element) iterator.next();
+			Element filterName = elem.getChild("filter-name", elem.getNamespace());
+			Element urlPattern = elem.getChild("url-pattern", elem.getNamespace());
+
+			if (filterName.getText().trim().equals(filter) && urlPattern.getText().trim().equals(pattern)) {
+				// The mapping already exists
+				return;
+			}
+		}
+
+		// Retrieve the last <servlet-mapping> element
+		Element lastMapping = (Element) mappings.get(mappings.size() - 1);
+
+		List children = getRootElement().getChildren();
+		// Find the index of the element to add the new element after.
+		int index = children.indexOf(lastMapping);
+
+		// Prepare the new mapping
+		Element filterMapping = new Element("filter-mapping", getRootElement().getNamespace());
+		Element filterName = new Element("filter-name", getRootElement().getNamespace());
+		filterName.setText(filter);
+		Element filterPattern = new Element("url-pattern", getRootElement().getNamespace());
+		filterPattern.setText(pattern);
+		filterMapping.addContent("\n ");
+		filterMapping.addContent(filterName);
+		filterMapping.addContent("\n ");
+		filterMapping.addContent(filterPattern);
+		filterMapping.addContent("\n ");
+
+		// Add the new element to the next index along.
+		// This does cover the case where indexOf returned -1.
+		children.add(index + 1, filterMapping);
 		writeXMLDoc();
 	}
 
