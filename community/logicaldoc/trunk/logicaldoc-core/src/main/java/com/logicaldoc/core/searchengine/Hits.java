@@ -80,22 +80,22 @@ public class Hits implements Iterator<Hit> {
 
 	public static Hit toHit(SolrDocument sdoc) {
 		Hit hit = new HitImpl();
-		hit.setDocId(Long.parseLong((String) sdoc.get(SearchEngine.FIELD_ID)));
-		hit.setLanguage((String) sdoc.get(SearchEngine.FIELD_LANGUAGE));
-		hit.setTitle((String) sdoc.get(SearchEngine.FIELD_TITLE));
-		if (sdoc.get(SearchEngine.FIELD_FOLDER_ID) != null)
-			hit.setFolderId((Long) sdoc.get(SearchEngine.FIELD_FOLDER_ID));
-		hit.setFolderName((String) sdoc.get(SearchEngine.FIELD_FOLDER_NAME));
-		if (sdoc.get(SearchEngine.FIELD_SIZE) != null)
-			hit.setSize((Long) sdoc.get(SearchEngine.FIELD_SIZE));
-		hit.setDate((Date) sdoc.get(SearchEngine.FIELD_DATE));
-		hit.setSourceDate((Date) sdoc.get(SearchEngine.FIELD_SOURCE_DATE));
-		hit.setCreation((Date) sdoc.get(SearchEngine.FIELD_CREATION));
-		hit.setCustomId((String) sdoc.get(SearchEngine.FIELD_CUSTOM_ID));
-		hit.setSource((String) sdoc.get(SearchEngine.FIELD_SOURCE));
-		hit.setComment((String) sdoc.get(SearchEngine.FIELD_COMMENT));
-		hit.setType((String) sdoc.get(SearchEngine.FIELD_TYPE));
-		hit.setDocRef((Long) sdoc.get(SearchEngine.FIELD_DOCREF));
+		hit.setDocId(Long.parseLong((String) sdoc.get(Fields.ID.getName())));
+		hit.setLanguage((String) sdoc.get(Fields.LANGUAGE.getName()));
+		hit.setTitle((String) sdoc.get(Fields.TITLE.getName()));
+		if (sdoc.get(Fields.FOLDER_ID.getName()) != null)
+			hit.setFolderId((Long) sdoc.get(Fields.FOLDER_ID.getName()));
+		hit.setFolderName((String) sdoc.get(Fields.FOLDER_NAME.getName()));
+		if (sdoc.get(Fields.SIZE.getName()) != null)
+			hit.setSize((Long) sdoc.get(Fields.SIZE.getName()));
+		hit.setDate((Date) sdoc.get(Fields.DATE.getName()));
+		hit.setSourceDate((Date) sdoc.get(Fields.SOURCE_DATE.getName()));
+		hit.setCreation((Date) sdoc.get(Fields.CREATION.getName()));
+		hit.setCustomId((String) sdoc.get(Fields.CUSTOM_ID.getName()));
+		hit.setSource((String) sdoc.get(Fields.SOURCE.getName()));
+		hit.setComment((String) sdoc.get(Fields.COMMENT.getName()));
+		hit.setType((String) sdoc.get(Fields.TYPE.getName()));
+		hit.setDocRef((Long) sdoc.get(Fields.DOC_REF.getName()));
 
 		if (sdoc.getFieldValue("score") != null) {
 			Float score = (Float) sdoc.getFieldValue("score");
