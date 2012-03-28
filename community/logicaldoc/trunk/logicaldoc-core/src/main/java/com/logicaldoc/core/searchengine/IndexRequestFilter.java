@@ -33,7 +33,7 @@ public class IndexRequestFilter extends SolrDispatchFilter {
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
-		 this.pathPrefix = "/index";
+		this.pathPrefix = "/index";
 	}
 
 	@Override
@@ -58,9 +58,15 @@ public class IndexRequestFilter extends SolrDispatchFilter {
 			abortErrorMessage = "Search engine not already available";
 		}
 
+		// Setup the expression language
+		String lang = request.getParameter("exprLang");
+		if (lang != null)
+			WordDelimiterAnalyzer.lang.set(lang);
+
+		log.debug("Use expressionLanguage="+lang);
+		
 		// Call standard logic that will prepare the SolrRequest
 		super.doFilter(request, response, chain);
-		
-		
+
 	}
 }
