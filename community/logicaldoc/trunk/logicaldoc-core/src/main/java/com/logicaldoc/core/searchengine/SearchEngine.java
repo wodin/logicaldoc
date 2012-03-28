@@ -294,15 +294,6 @@ public class SearchEngine {
 		Hits hits = null;
 		SolrQuery query = new SolrQuery();
 		query.setQuery(expression);
-		
-		// query.setFields(Fields.searchList());
-		// query.setIncludeScore(true);
-		// query.setSortField("score", ORDER.desc);
-		// query.setHighlight(true);
-		// query.addHighlightField("content");
-		// query.setHighlightSnippets(4);
-		// query.setParam("hl.mergeContiguous", true);
-		// query.setTermsMaxCount(1000);
 
 		if (rows != null)
 			query.setRows(rows);
