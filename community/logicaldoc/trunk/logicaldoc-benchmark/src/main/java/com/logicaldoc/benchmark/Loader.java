@@ -49,6 +49,12 @@ public abstract class Loader {
 	protected int threads = 2;
 
 	protected long iterations = 0L;
+	
+	protected String language = "en";
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
 
 	protected long startTime;
 
@@ -79,6 +85,7 @@ public abstract class Loader {
 	 * @param profile The folder profile to be applied to children
 	 */
 	private void preparePaths(String parent, String profile) {
+		
 		if (StringUtils.isEmpty(profile))
 			return;
 

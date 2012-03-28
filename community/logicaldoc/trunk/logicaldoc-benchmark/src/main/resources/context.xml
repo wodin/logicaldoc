@@ -30,5 +30,47 @@
 		<property name="folderProfile" value="${load.folderprofile}" />
 		<property name="threads" value="${load.threads}" />
 		<property name="iterations" value="${load.iterations}" />
+		<property name="language" value="${load.language}" />
 	</bean>
+	
+	
+	<bean id="TestUpload" class="com.logicaldoc.benchmark.TestDefinition">
+		<property name="name" value="upload.fast" />
+		<property name="type" value="upload" />
+		<property name="testCount" value="2" />
+		<property name="iterations" value="10000" />		
+	</bean>
+	
+	<bean id="TestTotals" class="com.logicaldoc.benchmark.TestDefinition">
+		<property name="name" value="totals.basic" />
+		<property name="type" value="totals" />
+		<property name="testCount" value="1" />
+		<property name="iterations" value="50" />
+	</bean>	
+	
+	<bean id="TestListFolders" class="com.logicaldoc.benchmark.TestDefinition">
+		<property name="name" value="listFolders.fast" />
+		<property name="type" value="listFolders" />
+		<property name="testCount" value="1" />
+		<property name="iterations" value="50" />
+	</bean>
+	
+	<bean id="MultiLoader" class="com.logicaldoc.benchmark.MultiLoader">		
+		<property name="url" value="${connection.url}" />
+		<property name="username" value="${connection.username}" />
+		<property name="password" value="${connection.password}" />
+		<property name="sourceDir" value="${load.sourcedir}" />
+		<property name="folderProfile" value="${load.folderprofile}" />
+		<property name="language" value="${load.language}" />
+		<property name="testList">
+			<list>
+			    <ref bean="TestUpload" />
+			    <!-- 
+			    <ref bean="TestTotals" />
+			    <ref bean="TestListFolders" />
+			    -->			    
+			</list>
+		</property>
+	</bean>	
+
 </beans>

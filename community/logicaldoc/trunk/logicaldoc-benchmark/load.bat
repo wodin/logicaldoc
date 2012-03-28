@@ -1,1 +1,1 @@
-java -Xmx500m  -cp conf/;lib/* com.logicaldoc.benchmark.Loader
+java -Xmx500m  -cp conf/;classes/;lib/* com.logicaldoc.benchmark.MultiLoader
