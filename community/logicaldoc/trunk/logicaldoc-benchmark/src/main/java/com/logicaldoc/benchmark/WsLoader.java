@@ -74,7 +74,7 @@ public class WsLoader extends Loader {
 		doc.setFolderId(folderId);
 		doc.setTitle(title);
 		doc.setFileName(fileName);
-		doc.setLanguage("en");
+		doc.setLanguage(this.language);
 		try {
 			doc = documentClient.create(sid, doc, file);
 			if (doc != null)
