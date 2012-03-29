@@ -1,8 +1,11 @@
 package com.logicaldoc.benchmark;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
@@ -138,8 +141,7 @@ public class MultiLoader {
 		for (AbstractLoaderThread thread : loaderThreads) {
 			thread.setStop();
 		}
-		// Now join each thread to make sure they all finish their current
-		// operation
+		// Now join each thread to make sure they all finish their current operation
 		for (AbstractLoaderThread thread : loaderThreads) {
 			// Notify any waits
 			synchronized (thread) {
@@ -150,11 +152,13 @@ public class MultiLoader {
 			} catch (InterruptedException e) {
 			}
 		}
+		
 		// Log each thread's summary
 		for (AbstractLoaderThread thread : loaderThreads) {
 			String summary = thread.getSummary();
 			session.logSummary(summary);
 		}
+		session.close();
 	}
 
 	public void setFolderProfile(String folderProfile) {
@@ -187,6 +191,14 @@ public class MultiLoader {
         
         session = MultiLoader.makeSession(username, password, url, rootFolder, sourceDir, folderProfile, language);
         loaderThreads = MultiLoader.makeThreads(session, testList);
+        
+        // Log the initial summaries
+        String summary = session.getSummary();
+        session.logSummary(summary);
+        
+        // Header the outputs
+        session.logSummary(LoaderSession.getLineEnding());
+        session.logSummary(COLUMNS_SUMMARY);        
 	}
 	
 	
@@ -216,6 +228,10 @@ public class MultiLoader {
 	            } else if (type.equals("listFolders"))
 	            {
 	                thread = new LoaderListFoldersThread(session, name, iterations);
+	            } else if (type.equals("searchFullText"))
+	            {
+	            	List<String> queries = loadFullTextQueries();
+	                thread = new LoaderSearchFullText(session, name, iterations, queries);
 	            }
 	            else
 	            {
@@ -231,6 +247,32 @@ public class MultiLoader {
         return alThreads.toArray(ret);        
 	}
 
+	private static List<String> loadFullTextQueries() {
+
+		String config = "conf/query.properties";
+		List<String> aaaa = new ArrayList<String>(3);
+
+		try {
+			File propertiesFile = new File(config);
+			if (!propertiesFile.exists()) {
+				System.err.println("Unable to find config file: " + config);
+			}
+			Properties properties = new Properties();
+			properties.load(new FileInputStream(propertiesFile));
+			
+			Iterator<Object> it = properties.keySet().iterator();
+			while (it.hasNext()) {
+				String key = (String) it.next();
+				String val = properties.getProperty(key);
+				aaaa.add((String) val);
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return aaaa;
+	}
 
 	/**
      * Factory method to construct a session using the given properties.

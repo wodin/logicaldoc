@@ -19,6 +19,7 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
 import com.logicaldoc.webservice.folder.FolderClient;
+import com.logicaldoc.webservice.search.SearchClient;
 import com.logicaldoc.webservice.system.SystemClient;
 
 public class LoaderSession {
@@ -111,6 +112,19 @@ public class LoaderSession {
 		// Record the start time
 		startTime = System.currentTimeMillis();
 	}
+	
+    public synchronized void close()
+    {
+        //try { outVerbose.close(); } catch (Throwable e) {}
+        //try { outSummary.close(); } catch (Throwable e) {}
+        //try { outError.close(); } catch (Throwable e) {}
+        
+        //outVerbose = null;
+        //outSummary = null;
+        //outError = null;
+        
+        this.remoteServer.authClient.logout(remoteServer.ticket);
+    }	
 
 	private static LoaderServerProxy connect(String wsUrl, String username, String password) throws Exception {
 		log.info("Connect to the server");
@@ -122,6 +136,7 @@ public class LoaderSession {
 			DocumentClient documentClient = new DocumentClient(wsUrl + "/services/Document");
 			FolderClient folderClient = new FolderClient(wsUrl + "/services/Folder");
 			SystemClient systemClient = new SystemClient(wsUrl + "/services/System");
+			SearchClient searchClient = new SearchClient(wsUrl + "/services/Search");
 			log.info("Connection established");
 			
 			// Authenticate
@@ -131,10 +146,12 @@ public class LoaderSession {
 	        // Store the service references
 	        LoaderServerProxy lsp = new LoaderServerProxy(
 	        		wsUrl,
-	                ticket,
+	                ticket,	
+	                auth,
 	                folderClient,
 	                documentClient,
-	                systemClient);	
+	                systemClient,
+	                searchClient);	
 	        remoteServer = lsp;
 		} catch (Throwable e) {
 			log.error("Unable to initialize WebServices connection", e);
