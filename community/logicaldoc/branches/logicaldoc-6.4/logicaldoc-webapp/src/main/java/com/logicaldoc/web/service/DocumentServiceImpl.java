@@ -793,6 +793,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				doc.setComment(document.getComment());
 				try {
 					Document docVO = toDocument(document);
+					docVO.setBarcoded(doc.getBarcoded());
 
 					// Create the document history event
 					History transaction = new History();
