@@ -793,6 +793,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				doc.setComment(document.getComment());
 				try {
 					Document docVO = toDocument(document);
+					docVO.setBarcoded(doc.getBarcoded());
 
 					// Create the document history event
 					History transaction = new History();
@@ -857,6 +858,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		docVO.setStartPublishing(document.getStartPublishing());
 		docVO.setStopPublishing(document.getStopPublishing());
 		docVO.setPublished(document.getPublished());
+		docVO.setBarcoded(document.getBarcoded());
 
 		if (document.getTemplateId() != null) {
 			docVO.setTemplateId(document.getTemplateId());

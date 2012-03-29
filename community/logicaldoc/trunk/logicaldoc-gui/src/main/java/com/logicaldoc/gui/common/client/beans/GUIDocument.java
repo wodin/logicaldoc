@@ -78,6 +78,8 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 
 	private int published = 1;
 
+	private int barcoded = 0;
+	
 	private Date startPublishing = new Date();
 
 	private Date stopPublishing;
@@ -415,5 +417,13 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 
 	public void setStopPublishing(Date stopPublishing) {
 		this.stopPublishing = stopPublishing;
+	}
+
+	public int getBarcoded() {
+		return barcoded;
+	}
+
+	public void setBarcoded(int barcoded) {
+		this.barcoded = barcoded;
 	}
 }
