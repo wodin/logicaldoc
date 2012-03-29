@@ -37,8 +37,8 @@
 	<bean id="TestUpload" class="com.logicaldoc.benchmark.TestDefinition">
 		<property name="name" value="upload.fast" />
 		<property name="type" value="upload" />
-		<property name="testCount" value="2" />
-		<property name="iterations" value="10000" />		
+		<property name="testCount" value="${load.threads}" />
+		<property name="iterations" value="${load.iterations}" />		
 	</bean>
 	
 	<bean id="TestTotals" class="com.logicaldoc.benchmark.TestDefinition">
@@ -55,6 +55,13 @@
 		<property name="iterations" value="50" />
 	</bean>
 	
+	<bean id="TestSearchFullText" class="com.logicaldoc.benchmark.TestDefinition">
+		<property name="name" value="searchFullText.fast" />
+		<property name="type" value="searchFullText" />
+		<property name="testCount" value="1" />
+		<property name="iterations" value="500" />
+	</bean>	
+	
 	<bean id="MultiLoader" class="com.logicaldoc.benchmark.MultiLoader">		
 		<property name="url" value="${connection.url}" />
 		<property name="username" value="${connection.username}" />
@@ -68,6 +75,7 @@
 			    <!-- 
 			    <ref bean="TestTotals" />
 			    <ref bean="TestListFolders" />
+			    <ref bean="TestSearchFullText" />
 			    -->			    
 			</list>
 		</property>
