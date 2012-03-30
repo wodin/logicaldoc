@@ -48,7 +48,7 @@ public class IndexRequestFilter extends SolrDispatchFilter {
 		try {
 			Field field = EmbeddedSolrServer.class.getDeclaredField("coreContainer");
 			field.setAccessible(true);
-			SearchEngine engine = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
+			StandardSearchEngine engine = (StandardSearchEngine) Context.getInstance().getBean(SearchEngine.class);
 			cores = (CoreContainer) field.get(engine.server);
 		} catch (Throwable e) {
 			log.warn(e.getMessage(), e);
@@ -63,8 +63,8 @@ public class IndexRequestFilter extends SolrDispatchFilter {
 		if (lang != null)
 			WordDelimiterAnalyzer.lang.set(lang);
 
-		log.debug("Use expressionLanguage="+lang);
-		
+		log.debug("Use expressionLanguage=" + lang);
+
 		// Call standard logic that will prepare the SolrRequest
 		super.doFilter(request, response, chain);
 

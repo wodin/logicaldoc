@@ -14,7 +14,7 @@
 	</bean>
 
 	<!-- SearchEngine -->
-	<bean id="SearchEngine" class="com.logicaldoc.core.searchengine.SearchEngine"
+	<bean id="SearchEngine" class="${searchengine}"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default" init-method="init" destroy-method="close">
 		<property name="config" ref="ContextProperties" />
