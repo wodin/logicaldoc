@@ -21,6 +21,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.dbinit.PluginDbInit;
 import com.logicaldoc.core.searchengine.SearchEngine;
+import com.logicaldoc.core.searchengine.StandardSearchEngine;
 import com.logicaldoc.gui.setup.client.SetupInfo;
 import com.logicaldoc.gui.setup.client.services.SetupService;
 import com.logicaldoc.util.Context;
@@ -160,7 +161,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			path += "/";
 		}
 
-		SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
+		SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(StandardSearchEngine.class);
 		indexer.close();
 		indexer.init();
 
