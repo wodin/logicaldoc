@@ -19,7 +19,7 @@ public class ChannelsPanel extends VLayout {
 	public ChannelsPanel() {
 		setMembersMargin(3);
 
-		ListGridField name = new ListGridField("name", I18N.message("channel"), 250);
+		ListGridField name = new ListGridField("name", I18N.message("channel"), 150);
 		name.setCanEdit(false);
 
 		ListGridField members = new ListGridField("members", I18N.message("members"));

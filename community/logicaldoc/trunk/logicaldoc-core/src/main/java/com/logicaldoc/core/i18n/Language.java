@@ -69,6 +69,10 @@ public class Language {
 			if (is == null)
 				is = getClass().getResourceAsStream(stopwordsResource);
 
+			if (is == null) {
+				log.warn("No stopwords found for locale " + getLocale().toString());
+			}
+
 			InputStreamReader isr = new InputStreamReader(is, "UTF-8");
 			BufferedReader br = new BufferedReader(isr);
 			String line = null;
