@@ -1,11 +1,16 @@
-package com.logicaldoc.benchmark;
+package com.logicaldoc.bm;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.webservice.folder.WSFolder;
 
-
+/**
+ * A loader thread that retrieves the folders beneath each directory from
+ * the root.  This is an expensive process but should reach a stable execution time
+ * once the folders in the profile have all been created.
+ * @since 6.5
+ */
 public class LoaderListFoldersThread extends AbstractLoaderThread
 {
 	private static Log log = LogFactory.getLog(LoaderListFoldersThread.class);

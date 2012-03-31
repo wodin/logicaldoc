@@ -1,7 +1,8 @@
-package com.logicaldoc.benchmark;
+package com.logicaldoc.bm;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -56,6 +57,10 @@ public class MultiLoader {
 
 	private List<TestDefinition> testList;
 
+	private Thread consoleThread;
+	
+	private boolean finished = false;
+
 	public void setTestList(List<TestDefinition> testList) {
 		this.testList = testList;
 	}
@@ -63,7 +68,8 @@ public class MultiLoader {
 	public void setSourceDir(String sourceDir) {
 		this.sourceDir = sourceDir;
 	}
-
+	
+	
 	public static void main(String[] args) {
 
 		try {
@@ -76,32 +82,28 @@ public class MultiLoader {
 
 			// Run
 			app.start();
-
+			
 			// Now lower this threads priority
 			Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+			
+			while (!app.finished) {
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
 
-			// Wait for a quit signal
-			System.out.println("Running test " + app.session.getName() + ".");
-			System.out.println("   Enter 'q' to quit.");
-			System.out.println("   Enter 's' to dump a thread summary.");
-			while (true) {				
-				int keyPress = System.in.read();
-				if (keyPress == 'Q' || keyPress == 'q') {
+				}
+				if (app.allThreadsFinished()) {
+					System.out.println("The test is complete.");
+					app.finished = true;
 					break;
-				} else if (keyPress == 'S' || keyPress == 's') {
-					app.dumpThreadSummaries();
-				} else if (System.in.available() > 0) {
-					// Don't wait, just process
-					continue;
-				}							
-				
-				// No more keypresses so just wait
-				Thread.yield();
-			}
+				}
+			}			
+
 			// Finish off
-			app.stop();
-			System.out.println("The test is complete.");
-		} catch (Exception e) {
+ 			app.stopAll();
+ 			app.dumpThreadSummaries();
+ 			
+		} catch (LoaderClientException e) {
 			System.err.println(e.getMessage());
 			System.exit(1);
 		} catch (Throwable e) {
@@ -110,14 +112,24 @@ public class MultiLoader {
 			System.exit(1);
 		}
 		System.exit(0);
-	}
+	}	
 	
+	private boolean allThreadsFinished() {
+		for (AbstractLoaderThread alt : loaderThreads) {
+			if (!alt.isFinished()) 
+				return false;
+		}
+		return true;
+	}
+
 	public synchronized void start() {
 		
         if (session == null || loaderThreads == null)
         {
             throw new RuntimeException("Application not initialized");
-        }
+        }     
+        
+        consoleThread.start();
         
         // Fire up the threads
         for (Thread thread : loaderThreads)
@@ -126,17 +138,42 @@ public class MultiLoader {
         }		
 	}
 
-	public void dumpThreadSummaries() {
-		System.out.println("");
-		System.out.println(COLUMNS_SUMMARY);
-		// Dump each thread's summary
-		for (AbstractLoaderThread thread : loaderThreads) {
-			String summary = thread.getSummary();
-			System.out.println(summary);
-		}
+	private void initConsole() {
+		
+		consoleThread = new Thread() {
+			
+			@Override
+			public void run() {
+				/*
+				 * Waiting the end of the job
+				 */
+				System.out.println("   Enter 'q' to quit.");
+				System.out.println("   Enter 's' to dump a thread summary.");
+
+				while (!finished) {
+					int keyPress = 0;
+					try {
+						keyPress = System.in.read();
+					} catch (IOException e) {
+						break;
+					}
+
+					if (keyPress == 'Q' || keyPress == 'q') {
+						log.info("Requested stop");
+						stopThreads();
+						finished = true;						
+						break;
+					} else if (keyPress == 'S' || keyPress == 's') {
+						dumpThreadSummaries();
+					}
+				}
+			}
+		};
+
+		consoleThread.setPriority(Thread.MIN_PRIORITY);       
 	}
 
-	public synchronized void stop() {
+	protected synchronized void stopThreads() {
 		// Stop the threads
 		for (AbstractLoaderThread thread : loaderThreads) {
 			thread.setStop();
@@ -151,15 +188,30 @@ public class MultiLoader {
 				thread.join();
 			} catch (InterruptedException e) {
 			}
+		}				
+	}
+
+	public void dumpThreadSummaries() {
+		System.out.println("");
+		System.out.println(COLUMNS_SUMMARY);
+		// Dump each thread's summary
+		for (AbstractLoaderThread thread : loaderThreads) {
+			String summary = thread.getSummary();
+			System.out.println(summary);
 		}
+	}
+	
+	public synchronized void stopAll() {
 		
-		// Log each thread's summary
+		consoleThread.interrupt();
+				
+		// Print and Log each thread's summary
 		for (AbstractLoaderThread thread : loaderThreads) {
 			String summary = thread.getSummary();
 			session.logSummary(summary);
 		}
 		session.close();
-	}
+	}	
 
 	public void setFolderProfile(String folderProfile) {
 		this.folderProfile = folderProfile;
@@ -198,7 +250,10 @@ public class MultiLoader {
         
         // Header the outputs
         session.logSummary(LoaderSession.getLineEnding());
-        session.logSummary(COLUMNS_SUMMARY);        
+        session.logSummary(COLUMNS_SUMMARY);
+        
+        // Initialize control console
+        initConsole();           
 	}
 	
 	
@@ -299,7 +354,7 @@ public class MultiLoader {
         }
         if (folderProfiles.length == 0 || folderProfiles[0] != 1)
         {
-            throw new Exception(
+            throw new LoaderClientException(
                     "'load.folderprofile' must always start with '1', " +
                     "which represents the root of the hierarchy, and have at least one other value.  " +
                     "E.g. '1, 3'");

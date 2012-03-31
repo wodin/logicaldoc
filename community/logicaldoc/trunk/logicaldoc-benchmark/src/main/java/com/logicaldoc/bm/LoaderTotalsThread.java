@@ -1,7 +1,11 @@
-package com.logicaldoc.benchmark;
+package com.logicaldoc.bm;
 
 import com.logicaldoc.webservice.WSParameter;
 
+/**
+ * A loader thread that merely reports the size of the remote repository.
+ * @since 6.5
+ */
 public class LoaderTotalsThread extends AbstractLoaderThread
 {
     public LoaderTotalsThread(LoaderSession session, String loaderName, long testTotal) {
