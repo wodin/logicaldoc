@@ -1,4 +1,4 @@
-package com.logicaldoc.benchmark;
+package com.logicaldoc.bm;
 
 public class TestDefinition {
 

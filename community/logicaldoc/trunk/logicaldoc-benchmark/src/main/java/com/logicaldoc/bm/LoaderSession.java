@@ -1,21 +1,17 @@
-package com.logicaldoc.benchmark;
+package com.logicaldoc.bm;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.collections.iterators.ArrayIterator;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.benchmark.RandomFile;
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
 import com.logicaldoc.webservice.folder.FolderClient;
@@ -44,8 +40,6 @@ public class LoaderSession {
 	private long startTime;
 
 	protected RandomFile randomFile;
-	private List<String> paths = new ArrayList<String>();
-	private Long[] folderIds;
 	
 	public int[] getFolderProfiles() {
 		return folderProfiles;
@@ -79,22 +73,7 @@ public class LoaderSession {
         {
             throw new RuntimeException("The client has already been initialized");
         }		
-        remoteServer = LoaderSession.connect(wsUrl, username, password);
-        
-        this.randomFile = new RandomFile();
-        randomFile.setSourceDir(sourceDir.getPath());
-
-        ArrayIterator ai = new ArrayIterator(folderProfiles);
-        String folderProfileStr = StringUtils.join(ai, ", ");
-        
-    	// Prepare the paths we will use to populate the database
-		paths.clear();
-		folderIds = null;
-		preparePaths("", folderProfileStr);
-		folderIds = new Long[paths.size()];
-		Arrays.fill(folderIds, null);
-		log.info("Prepared " + paths.size() + " paths");        
-
+        remoteServer = LoaderSession.connect(wsUrl, username, password); 
 		
 	    // Get the source files
         this.randomFile = new RandomFile();
@@ -167,52 +146,6 @@ public class LoaderSession {
 
 	public long getRootFolder() {
 		return rootFolder;
-	}
-	
-	
-	/**
-	 * Prepares the paths that will be used during the population. This method
-	 * is recursive, invoke it carefully.
-	 * 
-	 * @param parent The parent path
-	 * @param profile The folder profile to be applied to children
-	 */
-	private void preparePaths(String parent, String profile) {
-		
-		if (StringUtils.isEmpty(profile))
-			return;
-
-		NumberFormat formatter = new DecimalFormat("Folder-000000");
-
-		int index = profile.indexOf(',');
-		int n = 0;
-		if (index < 0)
-			n = Integer.parseInt(profile.trim());
-		else
-			n = Integer.parseInt(profile.substring(0, index).trim());
-
-		String subProfile = null;
-		if (index > 0)
-			subProfile = profile.substring(index + 1);
-
-		for (int i = 0; i < n; i++) {
-			String path = parent + "/" + formatter.format(i + 1);
-			paths.add(path);
-			// System.out.println("Create folder " + path);
-			preparePaths(path, subProfile);
-		}
-	}
-
-	public List<String> getPaths() {
-		return paths;
-	}
-	
-	public Long getFolderIds(int index) {
-		return folderIds[index];
-	}
-
-	public void setFolderIds(int index, Long folder) {
-		folderIds[index] = folder;
 	}
 	
     public static String getLineEnding()

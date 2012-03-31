@@ -1,5 +1,5 @@
 
-package com.logicaldoc.benchmark;
+package com.logicaldoc.bm;
 
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
@@ -7,7 +7,9 @@ import com.logicaldoc.webservice.folder.FolderClient;
 import com.logicaldoc.webservice.search.SearchClient;
 import com.logicaldoc.webservice.system.SystemClient;
 
-
+/**
+ * Helper class to store remote service connections.
+ */
 public class LoaderServerProxy
 {
     public final String rmiUrl;
