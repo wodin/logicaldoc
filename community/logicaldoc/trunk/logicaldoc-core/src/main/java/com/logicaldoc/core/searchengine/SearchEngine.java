@@ -101,4 +101,8 @@ public interface SearchEngine {
 	 */
 	public void init();
 
+	/**
+	 * Service method to get access from the internal core
+	 */
+	public Object getServer();
 }

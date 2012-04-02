@@ -25,6 +25,7 @@ import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
  * Listener that initialises relevant system stuffs during application startup
+ * and session life cycle.
  * 
  * @author Alessandro Gasparini - Logical Objects
  * @since 3.0

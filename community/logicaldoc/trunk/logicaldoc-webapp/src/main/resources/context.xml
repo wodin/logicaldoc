@@ -72,7 +72,7 @@
 					true
 				</prop -->
 				<prop key="hibernate.cache.region.factory_class">
-					net.sf.ehcache.hibernate.EhCacheRegionFactory
+				    ${hibernate.cache.factory}
 				</prop>
 			</props>
 		</property>
