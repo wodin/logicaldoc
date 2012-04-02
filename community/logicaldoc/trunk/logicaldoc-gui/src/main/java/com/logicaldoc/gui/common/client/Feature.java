@@ -115,7 +115,7 @@ public class Feature {
 	
 	public static final int MULTI_WORKSPACE = 71;
 	
-	public static final int CLUSTER = 72;
+	public static final int CLUSTERING = 72;
 	
 	private static Set<String> features = new HashSet<String>();
 

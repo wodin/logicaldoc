@@ -53,9 +53,9 @@ public class StandardSearchEngine implements SearchEngine {
 
 	protected DocumentDAO documentDao;
 
-	EmbeddedSolrServer server;
+	protected EmbeddedSolrServer server;
 
-	private StandardSearchEngine() {
+	protected StandardSearchEngine() {
 	}
 
 	public void setConfig(ContextProperties config) {
@@ -317,14 +317,7 @@ public class StandardSearchEngine implements SearchEngine {
 	public Hits search(String expression, String[] filters, String expressionLanguage, Integer rows) {
 		WordDelimiterAnalyzer.lang.set(expressionLanguage);
 		Hits hits = null;
-		SolrQuery query = new SolrQuery();
-		query.setQuery(expression);
-
-		if (rows != null)
-			query.setRows(rows);
-
-		if (filters != null)
-			query.addFilterQuery(filters);
+		SolrQuery query = prepareSearchQuery(expression, filters, expressionLanguage, rows);
 
 		try {
 			log.info("Execute search: " + expression);
@@ -334,6 +327,20 @@ public class StandardSearchEngine implements SearchEngine {
 			log.error(e);
 		}
 		return hits;
+	}
+
+	/**
+	 * Prepares the query for a search.
+	 */
+	protected SolrQuery prepareSearchQuery(String expression, String[] filters, String expressionLanguage, Integer rows) {
+		SolrQuery query = new SolrQuery();
+		query.setQuery(expression);
+		if (rows != null)
+			query.setRows(rows);
+		if (filters != null)
+			query.addFilterQuery(filters);
+		query.set("exprLang", expressionLanguage);
+		return query;
 	}
 
 	/*
@@ -503,5 +510,10 @@ public class StandardSearchEngine implements SearchEngine {
 		} catch (Exception e) {
 			log.error("Unable to initialize the Full-text search engine", e);
 		}
+	}
+
+	@Override
+	public Object getServer() {
+		return server;
 	}
 }

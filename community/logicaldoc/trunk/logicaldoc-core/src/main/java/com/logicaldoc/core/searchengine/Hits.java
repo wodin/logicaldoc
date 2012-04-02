@@ -25,7 +25,7 @@ public class Hits implements Iterator<Hit> {
 	public Hits() {
 	}
 
-	Hits(QueryResponse rsp) {
+	public Hits(QueryResponse rsp) {
 		super();
 		this.rsp = rsp;
 		this.internal = rsp.getResults().iterator();

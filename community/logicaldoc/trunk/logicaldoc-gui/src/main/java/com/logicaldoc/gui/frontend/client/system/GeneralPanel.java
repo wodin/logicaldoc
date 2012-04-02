@@ -42,7 +42,7 @@ public class GeneralPanel extends HLayout {
 		log.setTitle(I18N.message("log"));
 		log.setPane(new LogPanel("DMS_WEB"));
 
-		if (Feature.visible(Feature.CLUSTER))
+		if (Feature.visible(Feature.CLUSTERING))
 			tabs.setTabs(stats, sessions, plugins, cluster, log);
 		else
 			tabs.setTabs(stats, sessions, plugins, log);
