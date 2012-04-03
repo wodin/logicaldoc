@@ -74,15 +74,6 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 	}
 
 	@Override
-	public String[] loadValues(String sid, String[] names) throws InvalidSessionException {
-		String values[] = new String[names.length];
-		for (int i = 0; i < names.length; i++) {
-			values[i] = names[i] + 1;
-		}
-		return values;
-	}
-
-	@Override
 	public GUIParameter[][] loadRepositories(String sid) throws InvalidSessionException {
 		GUIParameter[][] repos = new GUIParameter[2][7];
 		repos[0][0] = new GUIParameter("dbdir", "db");
@@ -145,7 +136,11 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 
 	@Override
 	public GUIParameter[] loadGUISettings(String sid) throws InvalidSessionException {
-		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public GUIParameter[] loadSettingsByNames(String sid, String[] names) throws InvalidSessionException {
+		return loadSettings(sid);
 	}
 }

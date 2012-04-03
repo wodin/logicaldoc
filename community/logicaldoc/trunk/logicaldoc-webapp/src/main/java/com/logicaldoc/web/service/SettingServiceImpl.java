@@ -187,15 +187,15 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public String[] loadValues(String sid, String[] names) throws InvalidSessionException {
+	public GUIParameter[] loadSettingsByNames(String sid, String[] names) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		String[] values = new String[names.length];
+		GUIParameter[] values = new GUIParameter[names.length];
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 			for (int i = 0; i < names.length; i++) {
-				values[i] = conf.getProperty(names[i]);
+				values[i] = new GUIParameter(names[i], conf.getProperty(names[i]));
 			}
 		} catch (Exception e) {
 			log.error("Exception reading settings: " + e.getMessage(), e);

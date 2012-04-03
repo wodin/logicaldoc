@@ -26,9 +26,19 @@ public interface SettingService extends RemoteService {
 	public GUIParameter[] loadClientSettings(String sid) throws InvalidSessionException;
 
 	/**
-	 * Loads settings
+	 * Loads the complete settings set
 	 */
 	public GUIParameter[] loadSettings(String sid) throws InvalidSessionException;
+
+	/**
+	 * Loads a set of settings values
+	 * 
+	 * @param sid The current session identifier
+	 * @param names The setting names to be retrieved
+	 * @return The array of settings
+	 * @throws InvalidSessionException
+	 */
+	public GUIParameter[] loadSettingsByNames(String sid, String[] names) throws InvalidSessionException;
 
 	/**
 	 * Saves settings
@@ -60,16 +70,6 @@ public interface SettingService extends RemoteService {
 	 * Saves email settings (SMTP connection)
 	 */
 	public void saveEmailSettings(String sid, GUIEmailSettings settings) throws InvalidSessionException;
-
-	/**
-	 * Loads a set of settings values
-	 * 
-	 * @param sid The current session identifier
-	 * @param names The setting names to be retrieved
-	 * @return The array of values
-	 * @throws InvalidSessionException
-	 */
-	public String[] loadValues(String sid, String[] names) throws InvalidSessionException;
 
 	/**
 	 * Loads the OCR settings

@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.FolderObserver;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -177,8 +178,8 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 		registration.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				settingService.loadValues(Session.get().getSid(), new String[] { "reg.name", "reg.email",
-						"reg.organization", "reg.website" }, new AsyncCallback<String[]>() {
+				settingService.loadSettingsByNames(Session.get().getSid(), new String[] { "reg.name", "reg.email",
+						"reg.organization", "reg.website" }, new AsyncCallback<GUIParameter[]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -186,8 +187,12 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 					}
 
 					@Override
-					public void onSuccess(String[] reg) {
-						Registration r = new Registration(reg);
+					public void onSuccess(GUIParameter[] reg) {
+						String[] values = new String[reg.length];
+						for (int j = 0; j < reg.length; j++) {
+							values[j] = reg[j].getValue();
+						}
+						Registration r = new Registration(values);
 						r.show();
 					}
 				});
