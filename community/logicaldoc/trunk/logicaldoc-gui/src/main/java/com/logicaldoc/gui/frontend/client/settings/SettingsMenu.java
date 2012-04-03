@@ -72,17 +72,13 @@ public class SettingsMenu extends VLayout {
 			}
 		}
 
-		Button email = new Button(I18N.message("outgoingemail"));
-		email.setWidth100();
-		email.setHeight(25);
+		Button smtp = new Button(I18N.message("outgoingemail"));
+		smtp.setWidth100();
+		smtp.setHeight(25);
 		if (Session.get().isDemo()) {
-			email.setDisabled(true);
-			email.setTooltip(I18N.message("featuredisabled"));
+			smtp.setDisabled(true);
+			smtp.setTooltip(I18N.message("featuredisabled"));
 		}
-
-		Button proxy = new Button(I18N.message("proxy"));
-		proxy.setWidth100();
-		proxy.setHeight(25);
 
 		Button clientTools = new Button(I18N.message("clienandextapps"));
 		clientTools.setWidth100();
@@ -119,8 +115,7 @@ public class SettingsMenu extends VLayout {
 			}
 		});
 
-		addMember(email);
-		addMember(proxy);
+		addMember(smtp);
 		addMember(parameters);
 
 		searchAndIndexing.addClickHandler(new ClickHandler() {
@@ -196,7 +191,7 @@ public class SettingsMenu extends VLayout {
 			}
 		});
 
-		email.addClickHandler(new ClickHandler() {
+		smtp.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				settingService.loadEmailSettings(Session.get().getSid(), new AsyncCallback<GUIEmailSettings>() {
@@ -211,24 +206,6 @@ public class SettingsMenu extends VLayout {
 						AdminPanel.get().setContent(new EmailPanel(settings));
 					}
 
-				});
-			}
-		});
-
-		proxy.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				settingService.loadProxySettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(GUIParameter[] settings) {
-						AdminPanel.get().setContent(new ProxyPanel(settings));
-					}
 				});
 			}
 		});

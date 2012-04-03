@@ -72,16 +72,6 @@ public interface SettingService extends RemoteService {
 	public String[] loadValues(String sid, String[] names) throws InvalidSessionException;
 
 	/**
-	 * Load the proxy setting
-	 */
-	public GUIParameter[] loadProxySettings(String sid) throws InvalidSessionException;
-
-	/**
-	 * Saves proxy setting
-	 */
-	public void saveProxySettings(String sid, GUIParameter[] proxySettings) throws InvalidSessionException;
-
-	/**
 	 * Loads the OCR settings
 	 */
 	public GUIParameter[] loadOcrSettings(String sid) throws InvalidSessionException;
@@ -100,7 +90,7 @@ public interface SettingService extends RemoteService {
 	 * Saves system quota setting
 	 */
 	public void saveQuotaSettings(String sid, GUIParameter[] quotaSettings) throws InvalidSessionException;
-	
+
 	/**
 	 * Retrieves the size of all saved storages.
 	 * 

@@ -105,21 +105,6 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 	}
 
 	@Override
-	public GUIParameter[] loadProxySettings(String sid) throws InvalidSessionException {
-		GUIParameter[] params = new GUIParameter[8];
-		params[0] = new GUIParameter("host", "host");
-		params[1] = new GUIParameter("port", "8080");
-		params[2] = new GUIParameter("username", "john");
-		params[3] = new GUIParameter("password", "scott");
-
-		return params;
-	}
-
-	@Override
-	public void saveProxySettings(String sid, GUIParameter[] proxySettings) throws InvalidSessionException {
-	}
-
-	@Override
 	public GUIParameter[] loadOcrSettings(String sid) throws InvalidSessionException {
 		GUIParameter[] params = new GUIParameter[6];
 		params[0] = new GUIParameter("ocr.enabled", "true");

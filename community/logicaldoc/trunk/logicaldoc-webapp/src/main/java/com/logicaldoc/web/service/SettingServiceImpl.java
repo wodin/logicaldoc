@@ -108,14 +108,14 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.startsWith("ldap") || name.startsWith("schedule") || name.startsWith("smtp")
 					|| name.startsWith("password") || name.startsWith("ad") || name.startsWith("webservice")
 					|| name.startsWith("webdav") || name.startsWith("runlevel") || name.startsWith("stat")
-					|| name.startsWith("index") || name.startsWith("proxy") || name.equals("id")
-					|| name.startsWith("lang") || name.startsWith("reg.") || name.startsWith("ocr.")
-					|| name.startsWith("barcode.") || name.startsWith("task.") || name.startsWith("quota")
-					|| name.startsWith("store") || name.startsWith("flexpaperviewer") || name.startsWith("omnipage.")
+					|| name.startsWith("index") || name.equals("id") || name.startsWith("lang")
+					|| name.startsWith("reg.") || name.startsWith("ocr.") || name.startsWith("barcode.")
+					|| name.startsWith("task.") || name.startsWith("quota") || name.startsWith("store")
+					|| name.startsWith("flexpaperviewer") || name.startsWith("omnipage.")
 					|| name.startsWith("command.") || name.startsWith("gui.") || name.startsWith("upload.")
 					|| name.equals("userno") || name.startsWith("search.") || name.startsWith("swftools.")
 					|| name.contains("password") || name.startsWith("audit.") || name.startsWith("openoffice.path")
-					|| name.startsWith("tag.")|| name.startsWith("jdbc."))
+					|| name.startsWith("tag.") || name.startsWith("jdbc."))
 				continue;
 
 			sortedSet.add(key.toString());
@@ -251,35 +251,6 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 				if (f == null || f.getValue().trim().isEmpty())
 					continue;
 				conf.setProperty(f.getName(), f.getValue());
-			}
-			conf.write();
-		} catch (IOException e) {
-			log.error(e.getMessage(), e);
-		}
-	}
-
-	public GUIParameter[] loadProxySettings(String sid) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
-
-		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-
-		GUIParameter[] params = new GUIParameter[4];
-		params[0] = new GUIParameter("host", conf.getProperty("proxy.host"));
-		params[1] = new GUIParameter("port", conf.getProperty("proxy.port"));
-		params[2] = new GUIParameter("username", conf.getProperty("proxy.username"));
-		params[3] = new GUIParameter("password", conf.getProperty("proxy.password"));
-
-		return params;
-	}
-
-	@Override
-	public void saveProxySettings(String sid, GUIParameter[] proxySettings) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
-
-		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		try {
-			for (GUIParameter f : proxySettings) {
-				conf.setProperty("proxy." + f.getName(), f.getValue());
 			}
 			conf.write();
 		} catch (IOException e) {
