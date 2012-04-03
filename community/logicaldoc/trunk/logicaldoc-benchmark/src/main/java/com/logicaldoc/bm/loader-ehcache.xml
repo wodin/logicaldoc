@@ -18,7 +18,7 @@
         maxElementsInMemory="100000" 
         eternal="true"
         overflowToDisk="true"
-        diskPersistent="true"
+        diskPersistent="false"
         />
         
 </ehcache>

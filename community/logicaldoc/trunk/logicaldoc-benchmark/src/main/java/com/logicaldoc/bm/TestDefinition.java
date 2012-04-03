@@ -6,7 +6,11 @@ public class TestDefinition {
 	public String type;	
 	public int testCount = 1;
 	public long iterations = 0L;
+	public long depth = 1L;
 	
+	public void setDepth(long depth) {
+		this.depth = depth;
+	}
 	public void setIterations(long iterations) {
 		this.iterations = iterations;
 	}
