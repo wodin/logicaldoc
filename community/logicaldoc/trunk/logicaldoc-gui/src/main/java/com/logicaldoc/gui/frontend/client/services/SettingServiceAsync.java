@@ -24,10 +24,6 @@ public interface SettingServiceAsync {
 
 	void saveRepositories(String sid, GUIParameter[][] repos, AsyncCallback<Void> callback);
 
-	void loadProxySettings(String sid, AsyncCallback<GUIParameter[]> callback);
-
-	void saveProxySettings(String sid, GUIParameter[] proxySettings, AsyncCallback<Void> callback);
-
 	void loadOcrSettings(String sid, AsyncCallback<GUIParameter[]> callback);
 
 	void loadQuotaSettings(String sid, AsyncCallback<GUIParameter[]> callback);

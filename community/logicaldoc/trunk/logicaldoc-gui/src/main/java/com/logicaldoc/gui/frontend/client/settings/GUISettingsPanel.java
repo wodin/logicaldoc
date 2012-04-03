@@ -44,12 +44,12 @@ public class GUISettingsPanel extends VLayout {
 
 	public GUISettingsPanel(GUIParameter[] settings) {
 		setWidth100();
-		setHeight(370);
+		setHeight(300);
 		setMembersMargin(10);
 		setMargin(30);
 
 		tabs.setWidth(450);
-		tabs.setHeight(400);
+		tabs.setHeight(430);
 
 		Tab parameters = new Tab();
 		parameters.setTitle(I18N.message("parameters"));
