@@ -41,6 +41,8 @@ public class Menu {
 	public static final long REPORTS = 16;
 
 	public static final long AOS = -20;
+	
+	public static final long CLUSTERING = -1110;
 
 	private static Set<Long> menues = new HashSet<Long>();
 

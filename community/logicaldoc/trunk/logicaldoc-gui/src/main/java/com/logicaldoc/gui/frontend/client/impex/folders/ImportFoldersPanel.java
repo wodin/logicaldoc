@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIShare;
 import com.logicaldoc.gui.common.client.data.ImportFoldersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -179,16 +180,17 @@ public class ImportFoldersPanel extends VLayout {
 		discovery.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				settingService.loadValues(Session.get().getSid(), new String[] { "smb.username", "smb.password",
-						"smb.lang" }, new AsyncCallback<String[]>() {
+				settingService.loadSettingsByNames(Session.get().getSid(), new String[] { "smb.username",
+						"smb.password", "smb.lang" }, new AsyncCallback<GUIParameter[]>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
 					}
 
 					@Override
-					public void onSuccess(String[] values) {
-						DiscoveryDialog discovery = new DiscoveryDialog(values[0], values[1], values[2]);
+					public void onSuccess(GUIParameter[] reg) {
+						DiscoveryDialog discovery = new DiscoveryDialog(reg[0].getValue(), reg[1].getValue(), reg[2]
+								.getValue());
 						discovery.show();
 					}
 				});

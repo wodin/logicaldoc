@@ -11,7 +11,6 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
-import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ExpansionMode;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -26,8 +25,6 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
-import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
-import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
@@ -177,18 +174,18 @@ public class ProductNewsPanel extends VLayout {
 
 		listing.addMember(list);
 
-		// Count the total unread feed messages
-		list.addDataArrivedHandler(new DataArrivedHandler() {
-			@Override
-			public void onDataArrived(DataArrivedEvent event) {
-				Record[] records = list.getRecordList().toArray();
-				int unread = 0;
-				for (Record record : records) {
-					if ("0".equals(record.getAttributeAsString("read")))
-						unread++;
-				}
-			}
-		});
+		// // Count the total unread feed messages
+		// list.addDataArrivedHandler(new DataArrivedHandler() {
+		// @Override
+		// public void onDataArrived(DataArrivedEvent event) {
+		// Record[] records = list.getRecordList().toArray();
+		// int unread = 0;
+		// for (Record record : records) {
+		// if ("0".equals(record.getAttributeAsString("read")))
+		// unread++;
+		// }
+		// }
+		// });
 
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
@@ -210,7 +207,7 @@ public class ProductNewsPanel extends VLayout {
 	private void showContextMenu() {
 		Menu contextMenu = new Menu();
 
-		final ListGridRecord[] selection = list.getSelection();
+		final ListGridRecord[] selection = list.getSelectedRecords();
 		if (selection == null || selection.length == 0)
 			return;
 		final long[] ids = new long[selection.length];

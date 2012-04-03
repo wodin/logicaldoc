@@ -10,15 +10,11 @@ public interface SettingServiceAsync {
 
 	void saveClientSettings(String sid, GUIParameter[] settings, AsyncCallback<Void> callback);
 
-	void loadSettings(String sid, AsyncCallback<GUIParameter[]> callback);
-
 	void saveSettings(String sid, GUIParameter[] settings, AsyncCallback<Void> callback);
 
 	void loadEmailSettings(String sid, AsyncCallback<GUIEmailSettings> callback);
 
 	void saveEmailSettings(String sid, GUIEmailSettings settings, AsyncCallback<Void> callback);
-
-	void loadValues(String sid, String[] names, AsyncCallback<String[]> callback);
 
 	void loadRepositories(String sid, AsyncCallback<GUIParameter[][]> callback);
 
@@ -33,4 +29,8 @@ public interface SettingServiceAsync {
 	void computeStoragesSize(String sid, AsyncCallback<GUIParameter[]> callback);
 
 	void loadGUISettings(String sid, AsyncCallback<GUIParameter[]> callback);
+
+	void loadSettingsByNames(String sid, String[] names, AsyncCallback<GUIParameter[]> callback);
+
+	void loadSettings(String sid, AsyncCallback<GUIParameter[]> callback);
 }
