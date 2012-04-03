@@ -40,14 +40,14 @@ public class WordDelimiterAnalyzer extends SolrAnalyzer {
 	}
 
 	@Override
-	public TokenStream tokenStream(String fieldName, Reader reader) {
+	public final TokenStream tokenStream(String fieldName, Reader reader) {
 		TokenStream ts = getAnalyzer().tokenStream(fieldName, reader);
 		ts = new WordDelimiterFilter(ts, 1, 1, 0, 0, 0, 0, 1, 1, 0, null);
 		return ts;
 	}
 
 	@Override
-	public TokenStream reusableTokenStream(String fieldName, Reader reader) throws IOException {
+	public final TokenStream reusableTokenStream(String fieldName, Reader reader) throws IOException {
 		TokenStream ts = getAnalyzer().tokenStream(fieldName, reader);
 		ts = new WordDelimiterFilter(ts, 1, 1, 1, 1, 1, 1, 1, 1, 1, null);
 		return ts;
