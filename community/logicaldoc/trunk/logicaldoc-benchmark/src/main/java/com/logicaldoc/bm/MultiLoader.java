@@ -268,6 +268,7 @@ public class MultiLoader {
 			String type = test.type;
 			String name = test.name;
 			long iterations = test.iterations;
+			long testDepth = test.depth;
 			
 			// Construct
 	        for (int i = 0; i < threadCount; i++)
@@ -275,18 +276,18 @@ public class MultiLoader {
 	            AbstractLoaderThread thread = null;
 	            if (type.equals("upload"))
 	            {
-	                thread = new LoaderUploadThread(session, name, iterations);
+	                thread = new LoaderUploadThread(session, name, iterations, testDepth);
 	            }
 	            else if (type.equals("totals"))
 	            {
-	                thread = new LoaderTotalsThread(session, name, iterations);
+	                thread = new LoaderTotalsThread(session, name, iterations, testDepth);
 	            } else if (type.equals("listFolders"))
 	            {
-	                thread = new LoaderListFoldersThread(session, name, iterations);
+	                thread = new LoaderListFoldersThread(session, name, iterations, testDepth);
 	            } else if (type.equals("searchFullText"))
 	            {
 	            	List<String> queries = loadFullTextQueries();
-	                thread = new LoaderSearchFullText(session, name, iterations, queries);
+	                thread = new LoaderSearchFullText(session, name, iterations, testDepth, queries);
 	            }
 	            else
 	            {

@@ -15,8 +15,8 @@ public class LoaderSearchFullText extends AbstractLoaderThread {
 	private List<String> queries;
 	private String messageRecord;
 
-	public LoaderSearchFullText(LoaderSession session, String loaderName, long testTotal, List<String> queries) {
-		super(session, loaderName, testTotal);
+	public LoaderSearchFullText(LoaderSession session, String loaderName, long testTotal, long testLoadDepth, List<String> queries) {
+		super(session, loaderName, testTotal, testLoadDepth);
 		this.queries = queries;
 		random = new Random();
 	}

@@ -30,6 +30,7 @@ public abstract class AbstractLoaderThread extends Thread {
 	protected final LoaderSession session;
 	protected final String loaderName;
 	protected final long testTotal;
+	protected final long testLoadDepth;
 
 	private AtomicBoolean mustStop;
 	protected Random random;
@@ -39,6 +40,9 @@ public abstract class AbstractLoaderThread extends Thread {
 	private long statTotalMs = 0; // Total execution time
 	private int statErrors = 0; // Total errors
 	protected int testCount = 0;
+
+	private String basePath;
+
     
     private static EhCacheAdapter<String, Long> pathCache;
 
@@ -53,13 +57,14 @@ public abstract class AbstractLoaderThread extends Thread {
         pathCache.setCache(cache);
     }
 
-	public AbstractLoaderThread(LoaderSession session, String loaderName, long testTotal) {
+	public AbstractLoaderThread(LoaderSession session, String loaderName, long testTotal, long testLoadDepth) {
 
 		super(LoaderSession.THREAD_GROUP, "LoaderThread-" + loaderName);
 
 		this.session = session;
 		this.loaderName = loaderName;
-		this.testTotal = testTotal < 1 ? Integer.MAX_VALUE : testTotal;
+        this.testTotal = testTotal < 1 ? Integer.MAX_VALUE : testTotal;
+        this.testLoadDepth = testLoadDepth;
 
 		this.mustStop = new AtomicBoolean(false);
 		this.random = new Random();
@@ -157,7 +162,7 @@ public abstract class AbstractLoaderThread extends Thread {
 		return testCount >= testTotal;
 	}	
 	
-    protected List<String> chooseFolderPath(long testLoadDepth)
+    protected List<String> chooseFolderPath()
     {
         int[] folderProfiles = session.getFolderProfiles();
         // We work through these until we get the required depth.
@@ -176,7 +181,7 @@ public abstract class AbstractLoaderThread extends Thread {
     /**
      * Creates or find the folders based on caching.
      */
-    protected Long makeFoldersExactly(String ticket,
+    protected Long makeFolders(String ticket,
             LoaderServerProxy serverProxy, Long rootFolder, List<String> folderPath) throws Exception
     {
         // Iterate down the path, checking the cache and populating it as necessary
@@ -215,35 +220,52 @@ public abstract class AbstractLoaderThread extends Thread {
         }
         // Done
         return currentParentFolderID;
-    }	   
+    }	
     
-    
-    
+
     /**
      * Creates or find the folders based on caching.
      */
     protected Long makeFoldersFromPath(String ticket,
             LoaderServerProxy serverProxy, Long rootFolder, List<String> folderPath) throws Exception
-    {
+    {    	
         // Iterate down the path, checking the cache and populating it as necessary
-        String currentKey = "";
+        String currentKey = getBasePath(serverProxy, rootFolder);
         for (String aFolderPath : folderPath)
         {
         	currentKey += ("/" + aFolderPath);
         }
+        //System.out.println("currentKey: " +currentKey);
         
-        Long nodeRef = pathCache.get(currentKey);
+        Long folderID = pathCache.get(currentKey);
         
         // It is not there, so create it
-        if (nodeRef == null) {
-        	WSFolder folder = serverProxy.folderClient.createPath(ticket, rootFolder, currentKey);
+        if (folderID == null) {
+        	WSFolder folder = serverProxy.folderClient.createPath(ticket, rootFolder, currentKey);        	
         	
-        	nodeRef = folder.getId();
+        	folderID = folder.getId();
            // Cache the new node
-           pathCache.put(currentKey, nodeRef);
+           pathCache.put(currentKey, folderID);
+           //System.out.println("created path: " +currentKey);
         }
         
-        return nodeRef;
-    }	       
+        return folderID;
+    }
+
+	private String getBasePath(LoaderServerProxy serverProxy, Long rootFolder) {		
+		if (basePath == null) {
+			try {
+				String pathString = "";
+				WSFolder[] folders = serverProxy.folderClient.getPath(serverProxy.ticket, rootFolder);
+				for (int i = 0; i < folders.length; i++) {
+					pathString += "/" + folders[i].getName();
+				}
+				basePath = pathString;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
+		}
+		return basePath;
+	}
 
 }

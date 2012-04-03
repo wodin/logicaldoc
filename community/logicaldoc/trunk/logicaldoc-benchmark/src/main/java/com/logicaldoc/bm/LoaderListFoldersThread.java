@@ -19,8 +19,8 @@ public class LoaderListFoldersThread extends AbstractLoaderThread
 
 	private int totalFolders;
 
-	public LoaderListFoldersThread(LoaderSession session, String loaderName, long testTotal) {
-    	super(session, loaderName, testTotal);
+	public LoaderListFoldersThread(LoaderSession session, String loaderName, long testTotal, long testLoadDepth) {
+    	super(session, loaderName, testTotal, testLoadDepth);
     }
 
     /**

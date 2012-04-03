@@ -8,8 +8,8 @@ import com.logicaldoc.webservice.WSParameter;
  */
 public class LoaderTotalsThread extends AbstractLoaderThread
 {
-    public LoaderTotalsThread(LoaderSession session, String loaderName, long testTotal) {
-		super(session, loaderName, testTotal);
+    public LoaderTotalsThread(LoaderSession session, String loaderName, long testTotal, long testLoadDepth) {
+		super(session, loaderName, testTotal, testLoadDepth);
     }
 
     /**

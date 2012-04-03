@@ -18,19 +18,18 @@ public class LoaderUploadThread extends AbstractLoaderThread {
 
 	private static Log log = LogFactory.getLog(LoaderUploadThread.class);
 	
-	public LoaderUploadThread(LoaderSession session, String loaderName, long testTotal) {
-		super(session, loaderName, testTotal);
+	public LoaderUploadThread(LoaderSession session, String loaderName, long testTotal, long testLoadDepth) {
+		super(session, loaderName, testTotal, testLoadDepth);
 	}
 
 	@Override
 	protected String doLoading(LoaderServerProxy serverProxy, long rootFolder) throws Exception {
         
     	// Get a random folder
-        List<String> folderPath = super.chooseFolderPath(5L);
+        List<String> folderPath = super.chooseFolderPath();
      
         // Make sure the folder exists        
-        //Long folderID = makeFoldersFromPath(serverProxy.ticket, serverProxy, rootFolder, folderPath);
-        Long folderID = makeFoldersExactly(serverProxy.ticket, serverProxy, rootFolder, folderPath);
+        Long folderID = makeFolders(serverProxy.ticket, serverProxy, rootFolder, folderPath);
 		
 		File file = super.getFile();
 		String title = formatter.format(testCount);

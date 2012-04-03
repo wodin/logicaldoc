@@ -38,7 +38,8 @@
 		<property name="name" value="upload.fast" />
 		<property name="type" value="upload" />
 		<property name="testCount" value="${load.threads}" />
-		<property name="iterations" value="${load.iterations}" />		
+		<property name="iterations" value="${load.iterations}" />
+		<property name="depth" value="2" />		
 	</bean>
 	
 	<bean id="TestTotals" class="com.logicaldoc.bm.TestDefinition">
@@ -46,6 +47,7 @@
 		<property name="type" value="totals" />
 		<property name="testCount" value="1" />
 		<property name="iterations" value="50" />
+		<property name="depth" value="1" />
 	</bean>	
 	
 	<bean id="TestListFolders" class="com.logicaldoc.bm.TestDefinition">
@@ -53,6 +55,7 @@
 		<property name="type" value="listFolders" />
 		<property name="testCount" value="1" />
 		<property name="iterations" value="50" />
+		<property name="depth" value="1" />
 	</bean>
 	
 	<bean id="TestSearchFullText" class="com.logicaldoc.bm.TestDefinition">
@@ -60,6 +63,7 @@
 		<property name="type" value="searchFullText" />
 		<property name="testCount" value="1" />
 		<property name="iterations" value="500" />
+		<property name="depth" value="1" />
 	</bean>	
 	
 	<bean id="MultiLoader" class="com.logicaldoc.bm.MultiLoader">		
