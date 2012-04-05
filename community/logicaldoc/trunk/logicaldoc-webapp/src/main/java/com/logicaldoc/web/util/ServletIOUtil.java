@@ -28,7 +28,6 @@ import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.searchengine.SearchEngine;
-import com.logicaldoc.core.searchengine.StandardSearchEngine;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserDoc;
 import com.logicaldoc.core.security.UserSession;
@@ -310,7 +309,7 @@ public class ServletIOUtil {
 		if (doc != null && !user.isInGroup("admin") && !user.isInGroup("publisher") && !doc.isPublishing())
 			throw new FileNotFoundException("Document not published");
 
-		SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(StandardSearchEngine.class);
+		SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
 
 		String content = indexer.getHit(docId).getContent();
 		if (content == null)

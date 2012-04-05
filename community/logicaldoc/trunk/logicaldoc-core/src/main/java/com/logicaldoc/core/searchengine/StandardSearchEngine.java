@@ -290,6 +290,7 @@ public class StandardSearchEngine implements SearchEngine {
 	public Hit getHit(long id) {
 		SolrQuery query = new SolrQuery();
 		query.setQuery("id:" + id);
+		query.setFields("*");
 		try {
 			QueryResponse rsp = server.query(query);
 			SolrDocumentList docs = rsp.getResults();
