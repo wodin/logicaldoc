@@ -1,5 +1,6 @@
 package com.logicaldoc.core.searchengine;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -8,7 +9,7 @@ import java.util.Date;
  * @author Marco Meschieri - Logical Objects
  * @since 5.2
  */
-public interface Hit {
+public interface Hit extends Serializable {
 
 	public long getDocId();
 
