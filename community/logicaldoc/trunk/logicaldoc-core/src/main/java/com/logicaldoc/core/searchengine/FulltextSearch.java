@@ -118,7 +118,7 @@ public class FulltextSearch extends Search {
 
 		Collection<Long> publishedIds = docDao.findPublishedIds(accessibleFolderIds);
 
-		while (results.hasNext()) {
+		while (results!=null && results.hasNext()) {
 			if (hits.size() == opt.getMaxHits()) {
 				// The maximum number of hits was reached for a quick query
 				moreHitsPresent = true;

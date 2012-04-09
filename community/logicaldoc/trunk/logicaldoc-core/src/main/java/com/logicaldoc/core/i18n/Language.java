@@ -71,22 +71,21 @@ public class Language {
 
 			if (is == null) {
 				log.warn("No stopwords found for locale " + getLocale().toString());
-			}
-
-			InputStreamReader isr = new InputStreamReader(is, "UTF-8");
-			BufferedReader br = new BufferedReader(isr);
-			String line = null;
-			while ((line = br.readLine()) != null) {
-				line = line.trim();
-				if (line.indexOf("|") != -1) {
-					line = line.substring(0, line.indexOf("|"));
+			} else {
+				InputStreamReader isr = new InputStreamReader(is, "UTF-8");
+				BufferedReader br = new BufferedReader(isr);
+				String line = null;
+				while ((line = br.readLine()) != null) {
 					line = line.trim();
-				}
-				if (line != null && line.length() > 0 && !swSet.contains(line)) {
-					swSet.add(line);
+					if (line.indexOf("|") != -1) {
+						line = line.substring(0, line.indexOf("|"));
+						line = line.trim();
+					}
+					if (line != null && line.length() > 0 && !swSet.contains(line)) {
+						swSet.add(line);
+					}
 				}
 			}
-
 			stopWords = swSet;
 		} catch (Throwable e) {
 			log.warn(e.getMessage(), e);

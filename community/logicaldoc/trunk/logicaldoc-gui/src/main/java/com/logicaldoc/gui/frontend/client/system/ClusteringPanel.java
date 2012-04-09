@@ -15,6 +15,7 @@ import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
+import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
@@ -57,6 +58,16 @@ public class ClusteringPanel extends HLayout {
 		TextItem name = ItemFactory.newTextItem("name", I18N.message("name"), parameters[1].getValue());
 		name.setRequired(true);
 
+		TextItem host = ItemFactory.newTextItem("host", I18N.message("host"), parameters[2].getValue());
+		host.setRequired(true);
+
+		IntegerItem port = ItemFactory.newIntegerItem("port", I18N.message("port"),
+				Integer.parseInt(parameters[3].getValue()));
+		port.setRequired(true);
+
+		TextItem context = ItemFactory.newTextItem("context", I18N.message("contextpath"), parameters[4].getValue());
+		context.setRequired(true);
+
 		ButtonItem save = new ButtonItem();
 		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
@@ -69,6 +80,9 @@ public class ClusteringPanel extends HLayout {
 					settings[0] = new GUIParameter("cluster.enabled", values.get("eenabled").equals("yes") ? "true"
 							: "false");
 					settings[1] = new GUIParameter("cluster.name", vm.getValueAsString("name"));
+					settings[2] = new GUIParameter("cluster.node.host", vm.getValueAsString("host"));
+					settings[3] = new GUIParameter("cluster.node.port", vm.getValueAsString("port"));
+					settings[4] = new GUIParameter("cluster.node.context", vm.getValueAsString("context"));
 
 					service.saveSettings(Session.get().getSid(), settings, new AsyncCallback<Void>() {
 						@Override
@@ -85,7 +99,7 @@ public class ClusteringPanel extends HLayout {
 			}
 		});
 
-		clusterForm.setItems(enabled, name, save);
+		clusterForm.setItems(enabled, name, host, port, context, save);
 		settings.setPane(clusterForm);
 
 		Tab channels = new Tab();
