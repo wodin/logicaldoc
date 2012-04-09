@@ -115,7 +115,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.startsWith("command.") || name.startsWith("gui.") || name.startsWith("upload.")
 					|| name.equals("userno") || name.startsWith("search.") || name.startsWith("swftools.")
 					|| name.contains("password") || name.startsWith("audit.") || name.startsWith("openoffice.path")
-					|| name.startsWith("tag.") || name.startsWith("jdbc."))
+					|| name.startsWith("tag.") || name.startsWith("jdbc.") || name.startsWith("cluster"))
 				continue;
 
 			sortedSet.add(key.toString());
