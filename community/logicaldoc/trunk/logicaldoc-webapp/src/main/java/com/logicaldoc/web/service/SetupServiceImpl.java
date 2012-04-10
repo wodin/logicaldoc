@@ -6,14 +6,11 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.Collection;
 
-import net.sf.ehcache.CacheManager;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.SessionFactory;
 import org.java.plugin.registry.PluginDescriptor;
 import org.springframework.util.Log4jConfigurer;
 
@@ -21,7 +18,6 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.dbinit.PluginDbInit;
 import com.logicaldoc.core.searchengine.SearchEngine;
-import com.logicaldoc.core.searchengine.StandardSearchEngine;
 import com.logicaldoc.gui.setup.client.SetupInfo;
 import com.logicaldoc.gui.setup.client.services.SetupService;
 import com.logicaldoc.util.Context;
@@ -161,7 +157,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			path += "/";
 		}
 
-		SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(StandardSearchEngine.class);
+		SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
 		indexer.close();
 		indexer.init();
 

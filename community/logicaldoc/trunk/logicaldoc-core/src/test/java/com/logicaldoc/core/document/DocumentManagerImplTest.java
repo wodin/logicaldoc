@@ -13,7 +13,6 @@ import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
-import com.logicaldoc.util.io.FileUtil;
 
 /**
  * Test case for <code>DocumentManagerImpl</code>

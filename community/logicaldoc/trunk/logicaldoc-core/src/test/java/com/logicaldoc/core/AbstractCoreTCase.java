@@ -19,7 +19,6 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.logicaldoc.util.io.FileUtil;
-import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
  * Abstract test case for the Core module. This class initialises a test
