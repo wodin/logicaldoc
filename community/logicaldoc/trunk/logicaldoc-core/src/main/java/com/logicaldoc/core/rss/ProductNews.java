@@ -49,6 +49,11 @@ public class ProductNews extends Task {
 	}
 
 	@Override
+	public boolean isConcurrent() {
+		return true;
+	}
+	
+	@Override
 	protected void runTask() throws Exception {
 		log.info("Start retrieving news");
 		errors = 0;

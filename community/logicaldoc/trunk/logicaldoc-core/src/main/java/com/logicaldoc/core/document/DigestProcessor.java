@@ -37,6 +37,11 @@ public class DigestProcessor extends Task {
 	public boolean isIndeterminate() {
 		return false;
 	}
+	
+	@Override
+	public boolean isConcurrent() {
+		return true;
+	}
 
 	@Override
 	protected void runTask() throws Exception {
