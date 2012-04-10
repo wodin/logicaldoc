@@ -334,6 +334,11 @@ public class StatsCollector extends Task {
 		return true;
 	}
 
+	@Override
+	public boolean isConcurrent() {
+		return true;
+	}
+	
 	public GenericDAO getGenericDAO() {
 		return genericDAO;
 	}

@@ -62,6 +62,11 @@ public class IndexOptimizer extends Task {
 	public boolean isIndeterminate() {
 		return true;
 	}
+	
+	@Override
+	public boolean isConcurrent() {
+		return true;
+	}
 
 	public void setDocumentDao(DocumentDAO documentDao) {
 		this.documentDao = documentDao;

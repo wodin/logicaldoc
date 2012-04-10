@@ -158,21 +158,22 @@ public abstract class Task implements Runnable {
 			 * Need to acquire the lock
 			 */
 			transactionId = UUID.randomUUID().toString();
-			if (lockManager.get(getName(), transactionId))
+			if (isConcurrent() || lockManager.get(getName(), transactionId))
 				runTask();
 		} catch (Throwable t) {
 			log.error("Error caught " + t.getMessage(), t);
 			log.error("The task is stopped");
 			lastRunError = t;
 		} finally {
-			lockManager.release(getName(), transactionId);
-			transactionId = null;
+			if (!isConcurrent())
+				lockManager.release(getName(), transactionId);
 			setStatus(STATUS_IDLE);
 			interruptRequested = false;
 			saveWork();
 			log.info("Task " + getName() + " finished");
 			if (isSendActivityReport() && StringUtils.isNotEmpty(getReportRecipients()))
 				notifyReport();
+			transactionId = null;
 		}
 	}
 
@@ -342,6 +343,12 @@ public abstract class Task implements Runnable {
 	 * length
 	 */
 	abstract public boolean isIndeterminate();
+
+	/**
+	 * Concrete implementations must override this method declaring if the task
+	 * supports multiple instances running concurrently.
+	 */
+	abstract public boolean isConcurrent();
 
 	public String getReportRecipients() {
 		return reportRecipients;
