@@ -39,7 +39,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 		try {
 			GUISearchEngine searchEngine = new GUISearchEngine();
 
-			SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(StandardSearchEngine.class);
+			SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
 			searchEngine.setLocked(indexer.isLocked());
 			searchEngine.setEntries(indexer.getCount());
 
@@ -78,7 +78,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	public void rescheduleAll(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 		try {
-			SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(StandardSearchEngine.class);
+			SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
 			indexer.dropIndexes();
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -107,7 +107,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	public void unlocks(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 		try {
-			SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(StandardSearchEngine.class);
+			SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
 			indexer.unlock();
 		} catch (Exception t) {
 			log.error(t.getMessage(), t);
@@ -119,7 +119,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	public String check(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 		try {
-			SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(StandardSearchEngine.class);
+			SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
 			return indexer.check();
 		} catch (Exception t) {
 			log.error(t.getMessage(), t);

@@ -45,41 +45,41 @@ public class FulltextSearch extends Search {
 		 */
 		ArrayList<String> filters = new ArrayList<String>();
 		if (opt.getTemplate() != null)
-			filters.add(Fields.TEMPLATE_ID.name() + ":" + opt.getTemplate());
+			filters.add(Fields.TEMPLATE_ID + ":" + opt.getTemplate());
 
 		boolean searchInSingleFolder = (opt.getFolderId() != null && !opt.isSearchInSubPath());
 		if (searchInSingleFolder)
-			filters.add(Fields.FOLDER_ID.name() + ":" + opt.getFolderId());
+			filters.add(Fields.FOLDER_ID + ":" + opt.getFolderId());
 
 		if (StringUtils.isNotEmpty(opt.getLanguage()))
-			filters.add(Fields.LANGUAGE.name() + ":" + opt.getLanguage());
+			filters.add(Fields.LANGUAGE + ":" + opt.getLanguage());
 
 		if (opt.getSizeMin() != null) {
-			filters.add(Fields.SIZE.name() + ":[" + opt.getSizeMin() + " TO *]");
+			filters.add(Fields.SIZE + ":[" + opt.getSizeMin() + " TO *]");
 		}
 
 		if (opt.getSizeMax() != null) {
-			filters.add(Fields.SIZE.name() + ":[* TO " + opt.getSizeMax() + "]");
+			filters.add(Fields.SIZE + ":[* TO " + opt.getSizeMax() + "]");
 		}
 
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		if (opt.getDateFrom() != null) {
-			filters.add(Fields.DATE.name() + ":[" + df.format(opt.getDateFrom()) + "T00:00:00Z TO *]");
+			filters.add(Fields.DATE + ":[" + df.format(opt.getDateFrom()) + "T00:00:00Z TO *]");
 		}
 		if (opt.getDateTo() != null) {
-			filters.add(Fields.DATE.name() + ":[* TO " + df.format(opt.getDateTo()) + "T00:00:00Z]");
+			filters.add(Fields.DATE + ":[* TO " + df.format(opt.getDateTo()) + "T00:00:00Z]");
 		}
 		if (opt.getSourceDateFrom() != null) {
-			filters.add(Fields.SOURCE_DATE.name() + ":[" + df.format(opt.getSourceDateFrom()) + "T00:00:00Z TO *]");
+			filters.add(Fields.SOURCE_DATE + ":[" + df.format(opt.getSourceDateFrom()) + "T00:00:00Z TO *]");
 		}
 		if (opt.getSourceDateTo() != null) {
-			filters.add(Fields.SOURCE_DATE.name() + ":[* TO " + df.format(opt.getSourceDateTo()) + "T00:00:00Z]");
+			filters.add(Fields.SOURCE_DATE + ":[* TO " + df.format(opt.getSourceDateTo()) + "T00:00:00Z]");
 		}
 		if (opt.getCreationFrom() != null) {
-			filters.add(Fields.CREATION.name() + ":[" + df.format(opt.getCreationFrom()) + "T00:00:00Z TO *]");
+			filters.add(Fields.CREATION + ":[" + df.format(opt.getCreationFrom()) + "T00:00:00Z TO *]");
 		}
 		if (opt.getCreationTo() != null) {
-			filters.add(Fields.CREATION.name() + ":[* TO " + df.format(opt.getCreationTo()) + "T00:00:00Z]");
+			filters.add(Fields.CREATION + ":[* TO " + df.format(opt.getCreationTo()) + "T00:00:00Z]");
 		}
 
 		/*
@@ -118,7 +118,7 @@ public class FulltextSearch extends Search {
 
 		Collection<Long> publishedIds = docDao.findPublishedIds(accessibleFolderIds);
 
-		while (results!=null && results.hasNext()) {
+		while (results != null && results.hasNext()) {
 			if (hits.size() == opt.getMaxHits()) {
 				// The maximum number of hits was reached for a quick query
 				moreHitsPresent = true;

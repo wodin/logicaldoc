@@ -21,7 +21,6 @@ import com.ibm.icu.util.GregorianCalendar;
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.History;
-import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
@@ -485,7 +484,6 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testCount() {
-		dao.initialize(null);
 		Assert.assertEquals(6L, dao.count(true));
 		Assert.assertEquals(3L, dao.count(false));
 	}

@@ -56,7 +56,7 @@ public class Hits implements Iterator<Hit> {
 		// Compose the summary as concatenation of snippets
 		StringBuffer summary = new StringBuffer();
 		Object id = doc.getFieldValue("id");
-		if (rsp.getHighlighting().get(id) != null) {
+		if (rsp.getHighlighting()!=null && rsp.getHighlighting().get(id) != null) {
 			List<String> snippets = rsp.getHighlighting().get(id).get("content");
 			if (snippets != null)
 				for (String string : snippets) {
@@ -67,7 +67,8 @@ public class Hits implements Iterator<Hit> {
 		}
 
 		Float score = (Float) doc.getFieldValue("score");
-		hit.setScore(createScore(rsp.getResults().getMaxScore(), score));
+		if(score!=null)
+		  hit.setScore(createScore(rsp.getResults().getMaxScore(), score));
 		hit.setSummary(summary.toString());
 
 		return hit;

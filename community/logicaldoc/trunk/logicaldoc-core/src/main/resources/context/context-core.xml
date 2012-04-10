@@ -14,9 +14,9 @@
 	</bean>
 
 	<!-- SearchEngine -->
-	<bean id="SearchEngine" class="${searchengine}"
-		abstract="false" lazy-init="default" autowire="default"
-		dependency-check="default" init-method="init" destroy-method="close">
+	<bean id="SearchEngine" class="${searchengine}" abstract="false"
+		lazy-init="default" autowire="default" dependency-check="default"
+		init-method="init" destroy-method="close">
 		<property name="config" ref="ContextProperties" />
 		<property name="documentDao" ref="DocumentDAO" />
 	</bean>
@@ -333,7 +333,7 @@
 			</bean>
 		</property>
 	</bean>
-	
+
 	<bean id="DocumentNoteDAO" parent="ApplicationBaseTransactionProxy"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
@@ -398,6 +398,11 @@
 		<property name="storer" ref="Storer" />
 	</bean>
 
+	<bean id="LockManager" class="com.logicaldoc.core.lock.LockManager">
+		<property name="config" ref="ContextProperties" />
+		<property name="genericDao" ref="GenericDAO" />
+	</bean>
+
 	<!-- Mail sender -->
 	<bean id="EMailSender" class="com.logicaldoc.core.communication.EMailSender"
 		abstract="false" lazy-init="default" autowire="default"
@@ -419,6 +424,7 @@
 		<property name="config" ref="ContextProperties" />
 		<property name="sender" ref="EMailSender" />
 		<property name="userDao" ref="UserDAO" />
+		<property name="lockManager" ref="LockManager" />
 	</bean>
 
 	<bean id="IndexOptimizerJob"
@@ -440,6 +446,7 @@
 		<property name="config" ref="ContextProperties" />
 		<property name="sender" ref="EMailSender" />
 		<property name="userDao" ref="UserDAO" />
+		<property name="lockManager" ref="LockManager" />
 	</bean>
 
 	<bean id="TagCloudGeneratorJob"
@@ -462,6 +469,7 @@
 		<property name="config" ref="ContextProperties" />
 		<property name="sender" ref="EMailSender" />
 		<property name="userDao" ref="UserDAO" />
+		<property name="lockManager" ref="LockManager" />
 	</bean>
 
 	<bean id="IndexerTaskJob"
@@ -486,6 +494,7 @@
 		<property name="sender" ref="EMailSender" />
 		<property name="userDao" ref="UserDAO" />
 		<property name="storer" ref="Storer" />
+		<property name="lockManager" ref="LockManager" />
 	</bean>
 
 	<bean id="StatsCollectorJob"
@@ -505,6 +514,7 @@
 		<property name="feedMessageDao" ref="FeedMessageDAO" />
 		<property name="config" ref="ContextProperties" />
 		<property name="userDao" ref="UserDAO" />
+		<property name="lockManager" ref="LockManager" />
 	</bean>
 
 	<bean id="ProductNewsJob"
@@ -526,6 +536,7 @@
 		<property name="config" ref="ContextProperties" />
 		<property name="sender" ref="EMailSender" />
 		<property name="userDao" ref="UserDAO" />
+		<property name="lockManager" ref="LockManager" />
 	</bean>
 
 	<bean id="DigestProcessorJob"

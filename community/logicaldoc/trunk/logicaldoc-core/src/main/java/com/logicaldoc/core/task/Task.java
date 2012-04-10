@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -21,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.communication.Recipient;
+import com.logicaldoc.core.lock.LockManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.i18n.I18N;
@@ -70,6 +72,10 @@ public abstract class Task implements Runnable {
 
 	private String reportRecipients = null;
 
+	protected String transactionId = null;
+
+	private LockManager lockManager;
+
 	public Task(String name) {
 		this.name = name;
 	}
@@ -98,6 +104,9 @@ public abstract class Task implements Runnable {
 	 */
 	protected void next() {
 		setProgress(progress + 1);
+
+		// Reset the timeout
+		lockManager.get(getName(), transactionId);
 	}
 
 	protected void setProgress(long progress) {
@@ -145,12 +154,19 @@ public abstract class Task implements Runnable {
 		getScheduling().setPreviousFireTime(new Date());
 
 		try {
-			runTask();
+			/*
+			 * Need to acquire the lock
+			 */
+			transactionId = UUID.randomUUID().toString();
+			if (lockManager.get(getName(), transactionId))
+				runTask();
 		} catch (Throwable t) {
 			log.error("Error caught " + t.getMessage(), t);
 			log.error("The task is stopped");
 			lastRunError = t;
 		} finally {
+			lockManager.release(getName(), transactionId);
+			transactionId = null;
 			setStatus(STATUS_IDLE);
 			interruptRequested = false;
 			saveWork();
@@ -373,5 +389,9 @@ public abstract class Task implements Runnable {
 
 	public void setReportRecipients(String reportRecipients) {
 		this.reportRecipients = reportRecipients;
+	}
+
+	public void setLockManager(LockManager lockManager) {
+		this.lockManager = lockManager;
 	}
 }
