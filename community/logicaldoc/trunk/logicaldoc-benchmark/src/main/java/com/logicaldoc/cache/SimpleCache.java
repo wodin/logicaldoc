@@ -17,8 +17,3 @@ public abstract interface SimpleCache<K extends Serializable, V>
 
   public abstract void clear();
 }
-
-/* Location:           C:\Users\Cecio\Desktop\Alfresco Benchmark\builds\alfresco-bm-3.3\main\main.jar
- * Qualified Name:     org.alfresco.repo.cache.SimpleCache
- * JD-Core Version:    0.6.0
- */

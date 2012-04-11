@@ -70,7 +70,8 @@
 		<property name="url" value="${connection.url}" />
 		<property name="username" value="${connection.username}" />
 		<property name="password" value="${connection.password}" />
-		<property name="sourceDir" value="${load.sourcedir}" />
+		<property name="rootFolder" value="${load.rootfolder}" />
+		<property name="sourceDir" value="${load.sourcedir}" />		
 		<property name="folderProfile" value="${load.folderprofile}" />
 		<property name="language" value="${load.language}" />
 		<property name="testList">
