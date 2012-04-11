@@ -853,4 +853,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		}
 		return buf;
 	}
+
+	@Override
+	public void cleanExpiredTransactions() {
+		jdbcUpdate("update ld_document set ld_transactionid=null where not (ld_transactionid is null) and not exists(select B.ld_id from ld_generic B where B.ld_type='lock' and B.ld_string1=ld_transactionid)",
+				null);
+	}
 }

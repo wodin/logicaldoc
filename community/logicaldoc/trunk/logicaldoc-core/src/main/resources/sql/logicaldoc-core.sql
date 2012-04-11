@@ -1,10 +1,15 @@
 create table ld_bookmark (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_userid bigint not null, ld_docid bigint not null, ld_title varchar(255) not null, ld_description varchar(4000), ld_position int not null, ld_filetype varchar(40), ld_type int not null, primary key (ld_id));
-create table ld_document (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_immutable int not null, ld_customid varchar(255), ld_title varchar(255), ld_version varchar(10), ld_fileversion varchar(10), ld_date timestamp, 
-                          ld_creation timestamp not null, ld_publisher varchar(255), ld_publisherid bigint not null, ld_creator varchar(255), ld_creatorid bigint not null, ld_status int, ld_type varchar(255), ld_lockuserid bigint, ld_source varchar(4000),
-                          ld_sourceauthor varchar(255), ld_sourcedate timestamp null, ld_sourceid varchar(1000), ld_sourcetype varchar(255), ld_object varchar(1000), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), 
-                          ld_filesize bigint, ld_indexed int not null, ld_barcoded int not null, ld_signed int not null, ld_digest varchar(255), ld_recipient varchar(1000), ld_folderid bigint, ld_templateid bigint, ld_exportstatus int not null, 
-                          ld_exportid bigint, ld_exportname varchar(255), ld_exportversion varchar(10), ld_docref bigint, ld_deleteuserid bigint, ld_rating int, ld_comment varchar(1000), ld_workflowstatus varchar(1000), 
-                          ld_published int not null, ld_startpublishing timestamp, ld_stoppublishing timestamp null, primary key (ld_id));
+create table ld_document (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_immutable int not null,
+                          ld_customid varchar(255), ld_title varchar(255), ld_version varchar(10), ld_fileversion varchar(10), ld_date timestamp, 
+                          ld_creation timestamp not null, ld_publisher varchar(255), ld_publisherid bigint not null, ld_creator varchar(255),
+                          ld_creatorid bigint not null, ld_status int, ld_type varchar(255), ld_lockuserid bigint, ld_source varchar(4000),
+                          ld_sourceauthor varchar(255), ld_sourcedate timestamp null, ld_sourceid varchar(1000), ld_sourcetype varchar(255),
+                          ld_object varchar(1000), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), 
+                          ld_filesize bigint, ld_indexed int not null, ld_barcoded int not null, ld_signed int not null, ld_digest varchar(255),
+                          ld_recipient varchar(1000), ld_folderid bigint, ld_templateid bigint, ld_exportstatus int not null, ld_exportid bigint,
+                          ld_exportname varchar(255), ld_exportversion varchar(10), ld_docref bigint, ld_deleteuserid bigint, ld_rating int,
+                          ld_comment varchar(1000), ld_workflowstatus varchar(1000), ld_published int not null, ld_startpublishing timestamp,
+                          ld_stoppublishing timestamp null, ld_transactionid varchar(255), primary key (ld_id));
 create table ld_document_ext (ld_docid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_docid, ld_name));
 create table ld_generic (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_type varchar(255) not null, ld_subtype varchar(255) not null, ld_string1 varchar(4000), ld_string2 varchar(4000), ld_integer1 int, ld_integer2 int, ld_double1 float, ld_double2 float, ld_date1 timestamp null, ld_date2 timestamp null, primary key (ld_id));
 create table ld_generic_ext (ld_genid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_genid, ld_name));
@@ -24,13 +29,17 @@ create table ld_user (ld_id bigint not null, ld_lastmodified timestamp not null,
 create table ld_user_history (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_userid bigint, ld_date timestamp, ld_username varchar(255), ld_event varchar(255), ld_comment varchar(4000), ld_notified int not null, ld_sessionid varchar(255), ld_new int, ld_filename varchar(255), primary key (ld_id));
 create table ld_userdoc (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_userid bigint not null, ld_date timestamp, primary key (ld_id));
 create table ld_usergroup (ld_groupid bigint not null, ld_userid bigint not null, primary key (ld_groupid, ld_userid));
-create table ld_version (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_immutable int not null, ld_customid varchar(255), ld_title varchar(255), ld_version varchar(10), ld_fileversion varchar(10), ld_date timestamp, 
-                         ld_creation timestamp, ld_publisher varchar(255), ld_publisherid bigint not null,  ld_creator varchar(255), ld_creatorid bigint not null, ld_status int, ld_type varchar(255), ld_lockuserid bigint, ld_source varchar(4000), 
-                         ld_sourceauthor varchar(255), ld_sourcedate timestamp null, ld_sourceid varchar(1000), ld_sourcetype varchar(255), ld_object varchar(1000), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), 
-                         ld_filesize bigint, ld_indexed int not null, ld_barcoded int not null, ld_signed int not null, ld_digest varchar(255), ld_recipient varchar(1000), ld_folderid bigint, ld_foldername varchar(1000), ld_templateid bigint, 
-                         ld_templatename varchar(1000), ld_tgs varchar(1000), ld_username varchar(255), ld_userid bigint, ld_versiondate timestamp, ld_comment varchar(1000),ld_event varchar(255), ld_documentid bigint not null, ld_exportstatus int not null, 
-                         ld_exportid bigint, ld_exportname varchar(255), ld_exportversion varchar(10), ld_deleteuserid bigint, ld_workflowstatus varchar(1000), 
-                         ld_published int not null, ld_startpublishing timestamp, ld_stoppublishing timestamp null, primary key (ld_id));
+create table ld_version (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_immutable int not null, ld_customid varchar(255),
+                         ld_title varchar(255), ld_version varchar(10), ld_fileversion varchar(10), ld_date timestamp, ld_creation timestamp, ld_publisher varchar(255),
+                         ld_publisherid bigint not null,  ld_creator varchar(255), ld_creatorid bigint not null, ld_status int, ld_type varchar(255),
+                         ld_lockuserid bigint, ld_source varchar(4000), ld_sourceauthor varchar(255), ld_sourcedate timestamp null, ld_sourceid varchar(1000),
+                         ld_sourcetype varchar(255), ld_object varchar(1000), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), 
+                         ld_filesize bigint, ld_indexed int not null, ld_barcoded int not null, ld_signed int not null, ld_digest varchar(255),
+                         ld_recipient varchar(1000), ld_folderid bigint, ld_foldername varchar(1000), ld_templateid bigint, ld_templatename varchar(1000),
+                         ld_tgs varchar(1000), ld_username varchar(255), ld_userid bigint, ld_versiondate timestamp, ld_comment varchar(1000),ld_event varchar(255),
+                         ld_documentid bigint not null, ld_exportstatus int not null, ld_exportid bigint, ld_exportname varchar(255), ld_exportversion varchar(10),
+                         ld_deleteuserid bigint, ld_workflowstatus varchar(1000), ld_published int not null, ld_startpublishing timestamp,
+                         ld_stoppublishing timestamp null, ld_transactionid varchar(255) ,primary key (ld_id));
 create table ld_version_ext (ld_versionid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_versionid, ld_name));
 create table ld_folder(ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_name varchar(255), ld_parentid bigint not null, ld_securityref bigint, ld_description varchar(4000), ld_type int not null, ld_creation timestamp, ld_creator varchar(255), ld_creatorid bigint, ld_templateid bigint, primary key (ld_id));
 create table ld_folder_ext (ld_folderid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_folderid, ld_name));

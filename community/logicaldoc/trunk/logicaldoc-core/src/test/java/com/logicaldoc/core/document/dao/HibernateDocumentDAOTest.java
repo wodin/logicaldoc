@@ -21,6 +21,7 @@ import com.ibm.icu.util.GregorianCalendar;
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.lock.LockManager;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
@@ -38,6 +39,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 	private FolderDAO folderDao;
 
+	private LockManager lockManager;
+
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
@@ -46,6 +49,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		// it is an HibernateDocumentDAO
 		dao = (DocumentDAO) context.getBean("DocumentDAO");
 		folderDao = (FolderDAO) context.getBean("FolderDAO");
+		lockManager = (LockManager) context.getBean("LockManager");
 	}
 
 	@Test
@@ -187,7 +191,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testFindPublishedIds() throws IOException {
 		GregorianCalendar cal = new GregorianCalendar();
-		
+
 		Document doc = new Document();
 		Folder folder = folderDao.findById(Folder.ROOTID);
 		doc.setFolder(folder);
@@ -197,7 +201,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		doc.setPublisherId(1);
 		doc.setTitle("test");
 		doc.setFileName("test.txt");
-		
+
 		// Prepare the document file for digest computation
 		File docFile = new File("target");
 		docFile = new File(docFile, "store");
@@ -209,38 +213,38 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		out.close();
 		Assert.assertTrue(docFile.exists());
 		System.out.println("Saved file " + docFile.getPath());
-		
+
 		dao.store(doc);
 
 		Set<Long> fids = new HashSet<Long>();
 		fids.add(Folder.ROOTID);
 
 		Collection<Long> ids = dao.findPublishedIds(fids);
-		System.out.println("*ids="+ids);
+		System.out.println("*ids=" + ids);
 		Assert.assertTrue(ids.contains(doc.getId()));
-		
+
 		doc.setPublished(0);
 		dao.store(doc);
 		ids = dao.findPublishedIds(fids);
 		Assert.assertFalse(ids.contains(doc.getId()));
-		
+
 		cal.add(Calendar.DATE, 1);
-		Date pick=cal.getTime();
+		Date pick = cal.getTime();
 		doc.setPublished(1);
 		doc.setStartPublishing(pick);
 		dao.store(doc);
 		ids = dao.findPublishedIds(fids);
 		Assert.assertFalse(ids.contains(doc.getId()));
-		
+
 		cal.add(Calendar.DATE, -3);
-		pick=cal.getTime();
+		pick = cal.getTime();
 		doc.setStartPublishing(pick);
 		dao.store(doc);
 		ids = dao.findPublishedIds(fids);
 		Assert.assertTrue(ids.contains(doc.getId()));
-		
+
 		cal.add(Calendar.DATE, 1);
-		pick=cal.getTime();
+		pick = cal.getTime();
 		doc.setStopPublishing(pick);
 		dao.store(doc);
 		ids = dao.findPublishedIds(fids);
@@ -251,87 +255,83 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 	public void testStore() throws IOException {
 		Document doc = new Document();
 		Folder folder = folderDao.findById(Folder.ROOTID);
-//		doc.setFolder(folder);
-//		doc.setPublisher("admin");
-//		doc.setPublisherId(1);
-//		doc.setTitle("test");
-//		doc.addTag("pippo");
-//		doc.addTag("pluto");
-//		doc.setValue("att_1", "val 1");
-//		doc.setFileName("test.txt");
-//		doc.setFileVersion("1.0");
-//		doc.setVersion("1.0");
-//
-//		// Prepare the document file for digest computation
-//		File docFile = new File("target");
-//		docFile = new File(docFile, "store");
-//		docFile = new File(docFile, doc.getFileVersion());
-//		FileUtils.forceMkdir(docFile.getParentFile());
-//		Writer out = new FileWriter(docFile);
-//		out.write("Questo file serve per fare il test del digest su un documento");
-//		out.flush();
-//		out.close();
-//		Assert.assertTrue(docFile.exists());
-//		System.out.println("Saved file " + docFile.getPath());
-//
-//		Assert.assertEquals("1.0", doc.getFileVersion());
-//
-//		// Try a long tag
-//		doc.addTag("123456789123456789123456789");
-//		User user = new User();
-//		user.setId(1);
-//		Version version = Version.create(doc, user, "comment", Version.EVENT_CHECKIN, true);
-//
-//		History transaction = new History();
-//		transaction.setFolderId(folder.getId());
-//		transaction.setDocId(doc.getId());
-//		transaction.setEvent(History.EVENT_STORED);
-//		transaction.setUserId(1);
-//		transaction.setNotified(0);
-//
-//		Assert.assertTrue(docFile.exists());
-//		Assert.assertEquals("2.0", doc.getFileVersion());
-//		Assert.assertTrue(dao.store(doc, transaction));
-//
-//		Assert.assertTrue(docFile.exists());
-//		Assert.assertEquals(7, doc.getId());
-//		doc = dao.findById(7);
-//		Assert.assertNotNull(doc);
-//		dao.initialize(doc);
-//
-//		transaction = new History();
-//		transaction.setFolderId(folder.getId());
-//		transaction.setDocId(doc.getId());
-//		transaction.setEvent(History.EVENT_CHANGED);
-//		transaction.setUserId(1);
-//		transaction.setNotified(0);
-//
-//		// Try to change the version comment
-//		doc = dao.findById(7);
-//		dao.initialize(doc);
-//		version.setComment("xxxx");
-//		version.setVersion("1.0");
-//		version.setUserId(1);
-//		dao.store(doc);
-//		doc = dao.findById(7);
-//		dao.initialize(doc);
+		// doc.setFolder(folder);
+		// doc.setPublisher("admin");
+		// doc.setPublisherId(1);
+		// doc.setTitle("test");
+		// doc.addTag("pippo");
+		// doc.addTag("pluto");
+		// doc.setValue("att_1", "val 1");
+		// doc.setFileName("test.txt");
+		// doc.setFileVersion("1.0");
+		// doc.setVersion("1.0");
+		//
+		// // Prepare the document file for digest computation
+		// File docFile = new File("target");
+		// docFile = new File(docFile, "store");
+		// docFile = new File(docFile, doc.getFileVersion());
+		// FileUtils.forceMkdir(docFile.getParentFile());
+		// Writer out = new FileWriter(docFile);
+		// out.write("Questo file serve per fare il test del digest su un documento");
+		// out.flush();
+		// out.close();
+		// Assert.assertTrue(docFile.exists());
+		// System.out.println("Saved file " + docFile.getPath());
+		//
+		// Assert.assertEquals("1.0", doc.getFileVersion());
+		//
+		// // Try a long tag
+		// doc.addTag("123456789123456789123456789");
+		// User user = new User();
+		// user.setId(1);
+		// Version version = Version.create(doc, user, "comment",
+		// Version.EVENT_CHECKIN, true);
+		//
+		// History transaction = new History();
+		// transaction.setFolderId(folder.getId());
+		// transaction.setDocId(doc.getId());
+		// transaction.setEvent(History.EVENT_STORED);
+		// transaction.setUserId(1);
+		// transaction.setNotified(0);
+		//
+		// Assert.assertTrue(docFile.exists());
+		// Assert.assertEquals("2.0", doc.getFileVersion());
+		// Assert.assertTrue(dao.store(doc, transaction));
+		//
+		// Assert.assertTrue(docFile.exists());
+		// Assert.assertEquals(7, doc.getId());
+		// doc = dao.findById(7);
+		// Assert.assertNotNull(doc);
+		// dao.initialize(doc);
+		//
+		// transaction = new History();
+		// transaction.setFolderId(folder.getId());
+		// transaction.setDocId(doc.getId());
+		// transaction.setEvent(History.EVENT_CHANGED);
+		// transaction.setUserId(1);
+		// transaction.setNotified(0);
+		//
+		// // Try to change the version comment
+		// doc = dao.findById(7);
+		// dao.initialize(doc);
+		// version.setComment("xxxx");
+		// version.setVersion("1.0");
+		// version.setUserId(1);
+		// dao.store(doc);
+		// doc = dao.findById(7);
+		// dao.initialize(doc);
 
-
-		
-		
-		
-		
 		doc = dao.findById(1);
 		Assert.assertNotNull(doc);
 		dao.initialize(doc);
-		
+
 		// Try to store it inside a folder with extended attributes
-		folder=folderDao.findById(1202);
+		folder = folderDao.findById(1202);
 		doc.setFolder(folder);
 		dao.store(doc);
-		
-		//Check if the defaults were applied
-		doc=dao.findById(1);
+
+		// Check if the defaults were applied
+		doc = dao.findById(1);
 		dao.initialize(doc);
 		Assert.assertEquals(1, doc.getTemplate().getId());
 		Assert.assertEquals("test_val_1", doc.getValue("val1"));
@@ -569,5 +569,32 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		docs = dao.findByIds(new Long[] { 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L }, null);
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(3, docs.size());
+	}
+
+	@Test
+	public void testCleanExpiredTransactions() {
+		Document doc = dao.findById(1);
+		Assert.assertNotNull(doc);
+		dao.initialize(doc);
+		doc.setTransactionId("transaction");
+		dao.store(doc);
+
+		// The document is now in transaction
+		lockManager.get("Test", "transaction");
+
+		dao.cleanExpiredTransactions();
+		dao.findById(1);
+		Assert.assertNotNull(doc);
+		dao.initialize(doc);
+		Assert.assertEquals("transaction", doc.getTransactionId());
+
+		// Now the transaction expired
+		lockManager.release("Test", "transaction");
+
+		dao.cleanExpiredTransactions();
+		dao.findById(1);
+		Assert.assertNotNull(doc);
+		dao.initialize(doc);
+		Assert.assertNull(doc.getTransactionId());
 	}
 }

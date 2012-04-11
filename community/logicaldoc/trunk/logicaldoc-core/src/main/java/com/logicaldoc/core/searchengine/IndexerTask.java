@@ -49,7 +49,7 @@ public class IndexerTask extends Task {
 	public boolean isIndeterminate() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean isConcurrent() {
 		return true;
@@ -62,12 +62,19 @@ public class IndexerTask extends Task {
 			return;
 		}
 
+		if (!lockManager.get(getName(), transactionId)) {
+			log.warn("Unable to acquire lock " + getName() + ", skipping indexing");
+			return;
+		}
+
 		log.info("Start indexing of all documents");
 		errors = 0;
 		indexed = 0;
 		try {
-			// First of all find documents to be indexed
-			size = documentDao.countByIndexed(0);
+			/*
+			 * Cleanup all references to expired transactions
+			 */
+			documentDao.cleanExpiredTransactions();
 
 			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			Integer max = config.getProperty("index.batch") != null ? new Integer(config.getProperty("index.batch"))
@@ -79,10 +86,21 @@ public class IndexerTask extends Task {
 			if (max != null && max.intValue() < 1)
 				max = null;
 
+			// First of all find documents to be indexed and not already
+			// involved into a transaction
+			List<Long> ids = documentDao.findIdsByWhere("_entity.docRef is null and _entity.indexed = "
+					+ AbstractDocument.INDEX_TO_INDEX + " and _entity.transactionId is null", null, max);
+			size = ids.size();
 			log.info("Found a total of " + size + " documents to be indexed");
 
-			List<Long> ids = documentDao.findIdsByWhere("_entity.docRef is null and _entity.indexed = " + AbstractDocument.INDEX_TO_INDEX, null,
-					max);
+			// Mark all these documents as belonging to the current transaction
+			documentDao.bulkUpdate("set ld_transactionid='" + transactionId
+					+ "' where ld_docref is null and ld_indexed=" + AbstractDocument.INDEX_TO_INDEX
+					+ " ld_transactionid is null", null);
+
+			// Now we can release the lock
+			lockManager.release(getName(), transactionId);
+
 			for (Long id : ids) {
 				try {
 					log.debug("Indexing document " + id);
@@ -104,6 +122,12 @@ public class IndexerTask extends Task {
 			log.info("Errors: " + errors);
 
 			indexer.unlock();
+
+			// To be safer always release the lock
+			lockManager.release(getName(), transactionId);
+
+			// Remove the transaction reference
+			documentDao.bulkUpdate("set ld_transactionid=null where ld_transactionId='" + transactionId + "'", null);
 		}
 	}
 
