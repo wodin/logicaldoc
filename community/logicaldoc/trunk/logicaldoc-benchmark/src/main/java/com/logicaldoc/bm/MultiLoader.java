@@ -14,8 +14,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.logicaldoc.core.security.Folder;
-
 /**
  * Loads the LogicalDOC instance with a population of documents
  * 
@@ -26,10 +24,16 @@ import com.logicaldoc.core.security.Folder;
 public class MultiLoader {
 
 	private static Log log = LogFactory.getLog(MultiLoader.class);
+	
+	private final static long DEFAULTWORKSPACE = 4L;
 
 	protected String folderProfile;
 
-	protected long rootFolder = Folder.DEFAULTWORKSPACE;
+	protected long rootFolder = DEFAULTWORKSPACE;
+
+	public void setRootFolder(long rootFolder) {
+		this.rootFolder = rootFolder;
+	}
 
 	protected String url;
 
