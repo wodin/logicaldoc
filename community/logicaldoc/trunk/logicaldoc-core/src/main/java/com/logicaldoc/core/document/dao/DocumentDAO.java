@@ -310,4 +310,11 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * @param doc The document to be processed
 	 */
 	public void updateDigest(Document doc);
+
+	/**
+	 * Cleans all references to expired transactions. If no lock is found for a
+	 * document referencing a given transaction, the transactionId will be set
+	 * to null.
+	 */
+	public void cleanExpiredTransactions();
 }

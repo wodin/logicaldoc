@@ -9,6 +9,7 @@ import java.util.Set;
 import org.apache.commons.io.FilenameUtils;
 
 import com.logicaldoc.core.ExtensibleObject;
+import com.logicaldoc.core.TransactionalObject;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.LocaleUtil;
@@ -34,7 +35,7 @@ import com.logicaldoc.util.LocaleUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 4.5
  */
-public abstract class AbstractDocument extends ExtensibleObject {
+public abstract class AbstractDocument extends ExtensibleObject implements TransactionalObject {
 
 	public static final int DOC_UNLOCKED = 0;
 
@@ -152,6 +153,10 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	private Date startPublishing = new Date();
 
 	private Date stopPublishing;
+
+	private String transactionId;
+
+	private String transactionAgent;
 
 	public Long getDeleteUserId() {
 		return deleteUserId;
@@ -697,5 +702,15 @@ public abstract class AbstractDocument extends ExtensibleObject {
 			return true;
 		else
 			return now.before(stopPublishing);
+	}
+
+	@Override
+	public String getTransactionId() {
+		return transactionId;
+	}
+
+	@Override
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
 	}
 }

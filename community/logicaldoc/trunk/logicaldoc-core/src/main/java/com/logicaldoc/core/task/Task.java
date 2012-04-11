@@ -74,7 +74,7 @@ public abstract class Task implements Runnable {
 
 	protected String transactionId = null;
 
-	private LockManager lockManager;
+	protected LockManager lockManager;
 
 	public Task(String name) {
 		this.name = name;
