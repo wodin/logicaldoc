@@ -59,7 +59,8 @@ public class WSSearchResult {
 	public void setHits(WSDocument[] hits) {
 		this.hits = hits;
 		for (WSDocument hit : hits) {
-			hit.setSummary(SnippetStripper.strip(hit.getSummary()));
+			if (hit.getSummary() != null)
+				hit.setSummary(SnippetStripper.strip(hit.getSummary()));
 		}
 	}
 }
