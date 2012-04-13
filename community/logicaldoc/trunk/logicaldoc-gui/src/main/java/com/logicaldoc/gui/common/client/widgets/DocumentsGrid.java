@@ -357,6 +357,7 @@ public class DocumentsGrid extends ListGrid {
 			selectedRecord.setAttribute("published", document.getDate());
 			selectedRecord.setAttribute("creator", document.getCreator());
 			selectedRecord.setAttribute("created", document.getCreation());
+			selectedRecord.setAttribute("rating", "rating"+document.getRating());
 			updateData(selectedRecord);
 		}
 	}
