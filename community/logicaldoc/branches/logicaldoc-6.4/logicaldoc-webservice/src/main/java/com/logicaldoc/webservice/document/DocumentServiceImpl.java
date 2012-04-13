@@ -72,7 +72,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		History transaction = new History();
 		transaction.setSessionId(sid);
 		transaction.setEvent(History.EVENT_STORED);
-		transaction.setComment("");
+		transaction.setComment(document.getComment());
 		transaction.setUserId(user.getId());
 		transaction.setUserName(user.getFullName());
 		
@@ -371,7 +371,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		History transaction = new History();
 		transaction.setSessionId(sid);
 		transaction.setEvent(History.EVENT_CHANGED);
-		transaction.setComment("");
+		transaction.setComment(document.getComment());
 		transaction.setUser(user);
 
 		manager.update(doc, document.toDocument(), transaction);
