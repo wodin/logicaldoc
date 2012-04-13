@@ -2,7 +2,6 @@ package com.logicaldoc.core.searchengine;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -10,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.util.Context;
 
 /**
@@ -42,15 +42,26 @@ public class TagSearch extends Search {
 	 * Utility method that prepare the query expression.
 	 */
 	private void prepareExpression() {
+
 		// Find all real documents
 		StringBuffer query = new StringBuffer(
-				"select A.ld_id,A.ld_folderid,A.ld_title,A.ld_type,A.ld_customid,A.ld_filesize,A.ld_docref,A.ld_date,A.ld_sourcedate,A.ld_creation,A.ld_source,A.ld_comment,B.ld_name,A.ld_published,A.ld_startpublishing,A.ld_stoppublishing "
-						+ "from ld_document A, ld_folder B ");
+				"select A.ld_id, A.ld_customid, A.ld_docref, A.ld_type, A.ld_title, A.ld_version, A.ld_lastmodified, ");
+		query.append(" A.ld_date, A.ld_publisher, A.ld_creation, A.ld_creator, A.ld_filesize, A.ld_immutable, ");
+		query.append(" A.ld_indexed, A.ld_lockuserid, A.ld_filename, A.ld_status, A.ld_signed, A.ld_type, A.ld_sourcedate, ");
+		query.append(" A.ld_sourceauthor, A.ld_rating, A.ld_fileversion, A.ld_comment, A.ld_workflowstatus, A.ld_startpublishing, ");
+		query.append(" A.ld_stoppublishing, A.ld_published, B.ld_name, A.ld_folderid ");
+		query.append(" from ld_document A, ld_folder B ");
+
 		appendWhereClause(false, query);
 
 		// Append all shortcuts
-		query.append(" UNION select REF.ld_id,A.ld_folderid,REF.ld_title,REF.ld_type,REF.ld_customid,REF.ld_filesize,A.ld_docref,REF.ld_date,REF.ld_sourcedate,REF.ld_creation,REF.ld_source,REF.ld_comment,B.ld_name,A.ld_published,A.ld_startpublishing,A.ld_stoppublishing "
-				+ "from ld_document A, ld_document REF, ld_folder B ");
+		query.append(" UNION select REF.ld_id, REF.ld_customid, A.ld_docref, REF.ld_type, REF.ld_title, REF.ld_version, REF.ld_lastmodified, ");
+		query.append(" REF.ld_date, REF.ld_publisher, REF.ld_creation, REF.ld_creator, REF.ld_filesize, REF.ld_immutable, ");
+		query.append(" REF.ld_indexed, REF.ld_lockuserid, REF.ld_filename, REF.ld_status, REF.ld_signed, REF.ld_type, REF.ld_sourcedate, ");
+		query.append(" REF.ld_sourceauthor, REF.ld_rating, REF.ld_fileversion, REF.ld_comment, REF.ld_workflowstatus, A.ld_startpublishing, ");
+		query.append(" A.ld_stoppublishing, A.ld_published, B.ld_name, A.ld_folderid ");
+		query.append(" from ld_document A, ld_document REF, ld_folder B ");
+
 		appendWhereClause(true, query);
 
 		log.info("executing tag search query=" + query.toString());
@@ -73,7 +84,7 @@ public class TagSearch extends Search {
 		String ids = null;
 		if (getOptions().getFilterIds() != null && !getOptions().getFilterIds().isEmpty()) {
 			ids = getOptions().getFilterIds().toString();
-			ids = ids.replace("[", "(").replace("]", ")");
+			ids = ids.replace('[', '(').replace(']', ')');
 		}
 
 		if (StringUtils.isNotEmpty(ids)) {
@@ -110,33 +121,39 @@ public class TagSearch extends Search {
 	public class HitMapper implements RowMapper<Hit> {
 
 		public Hit mapRow(ResultSet rs, int rowNum) throws SQLException {
-			Hit hit = new HitImpl();
-			hit.setDocId(rs.getLong(1));
-			hit.setFolderId(rs.getLong(2));
-			hit.setTitle(rs.getString(3));
+			Hit hit = new Hit();
+			hit.setId(rs.getLong(1));
+			hit.setCustomId(rs.getString(2));
+			hit.setDocRef(rs.getLong(3));
 			hit.setType(rs.getString(4));
-			hit.setCustomId(rs.getString(5));
-			hit.setSize(rs.getLong(6));
-			hit.setDocRef(rs.getLong(7));
+			hit.setTitle(rs.getString(5));
+			hit.setVersion(rs.getString(6));
+			hit.setLastModified(rs.getTimestamp(7));
 			hit.setDate(rs.getTimestamp(8));
-			hit.setSourceDate(rs.getTimestamp(9));
+			hit.setPublisher(rs.getString(9));
 			hit.setCreation(rs.getTimestamp(10));
-			hit.setSource(rs.getString(11));
-			hit.setComment(rs.getString(12));
-			hit.setFolderName(rs.getString(13));
-
-			int published = rs.getInt(14);
-			Date startPublishing = rs.getTimestamp(15);
-			Date stopPublishing = rs.getTimestamp(16);
-
-			// Check the publishing status
-			Date now = new Date();
-			if (published != 1)
-				hit.setPublished(0);
-			else if (startPublishing != null && now.before(startPublishing))
-				hit.setPublished(0);
-			else if (stopPublishing != null && stopPublishing.before(now))
-				hit.setPublished(0);
+			hit.setCreator(rs.getString(11));
+			hit.setFileSize(rs.getLong(12));
+			hit.setImmutable(rs.getInt(13));
+			hit.setIndexed(rs.getInt(14));
+			hit.setLockUserId(rs.getLong(15));
+			hit.setFileName(rs.getString(16));
+			hit.setStatus(rs.getInt(17));
+			hit.setSigned(rs.getInt(18));
+			hit.setType(rs.getString(19));
+			hit.setSourceDate(rs.getTimestamp(20));
+			hit.setSourceAuthor(rs.getString(21));
+			hit.setRating(rs.getInt(22));
+			hit.setFileVersion(rs.getString(23));
+			hit.setComment(rs.getString(24));
+			hit.setWorkflowStatus(rs.getString(25));
+			hit.setStartPublishing(rs.getTimestamp(26));
+			hit.setStopPublishing(rs.getTimestamp(27));
+			hit.setPublished(rs.getInt(28));
+			Folder folder = new Folder();
+			folder.setId(rs.getLong(30));
+			folder.setName(rs.getString(29));
+			hit.setFolder(folder);
 
 			return hit;
 		}

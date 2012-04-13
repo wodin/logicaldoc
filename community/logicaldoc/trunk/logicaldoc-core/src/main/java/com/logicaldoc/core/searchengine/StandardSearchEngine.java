@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -91,7 +90,6 @@ public class StandardSearchEngine implements SearchEngine {
 		doc.addField(Fields.COVERAGE.getName(), document.getCoverage());
 		doc.addField(Fields.SOURCE_AUTHOR.getName(), document.getSourceAuthor());
 		doc.addField(Fields.DOC_REF.getName(), document.getDocRef());
-		doc.addField(Fields.TYPE.getName(), FilenameUtils.getExtension(document.getFileName()));
 		doc.addField(Fields.CONTENT.getName(), content);
 
 		if (document.getFolder() != null) {

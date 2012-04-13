@@ -94,9 +94,9 @@ public class IndexerTask extends Task {
 			log.info("Found a total of " + size + " documents to be indexed");
 
 			// Mark all these documents as belonging to the current transaction
+			String idsStr = ids.toString().replace('[', '(').replace(']', ')');
 			documentDao.bulkUpdate("set ld_transactionid='" + transactionId
-					+ "' where ld_docref is null and ld_indexed=" + AbstractDocument.INDEX_TO_INDEX
-					+ " ld_transactionid is null", null);
+					+ "' where ld_transactionid is null and ld_id in " + idsStr, null);
 
 			// Now we can release the lock
 			lockManager.release(getName(), transactionId);

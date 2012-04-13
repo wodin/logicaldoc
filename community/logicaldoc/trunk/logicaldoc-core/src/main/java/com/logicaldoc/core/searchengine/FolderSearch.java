@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
 
@@ -95,20 +96,20 @@ public class FolderSearch extends Search {
 	public class HitMapper implements RowMapper<Hit> {
 
 		public Hit mapRow(ResultSet rs, int rowNum) throws SQLException {
-			Hit hit = new HitImpl();
-			hit.setDocId(rs.getLong(1));
-			hit.setFolderId(rs.getLong(2));
+			Hit hit = new Hit();
+			hit.setId(rs.getLong(1));
+
+			Folder folder = new Folder();
+			folder.setId(rs.getLong(2));
+			folder.setName(rs.getString(3));
+			hit.setFolder(folder);
 			hit.setTitle(rs.getString(3));
 			hit.setType("folder");
 			hit.setCustomId(Long.toString(rs.getLong(1)));
-			hit.setSize(0);
-			hit.setDocRef(null);
 			hit.setDate(rs.getTimestamp(6));
-			hit.setSourceDate(null);
 			hit.setCreation(rs.getTimestamp(5));
 			hit.setSource(null);
 			hit.setComment(rs.getString(4));
-			hit.setFolderName(rs.getString(3));
 			hit.setPublished(1);
 			return hit;
 		}

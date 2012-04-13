@@ -26,6 +26,7 @@ import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.Label;
@@ -266,10 +267,25 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 			}
 		});
 
+		MenuItem removeCookies = new MenuItem(I18N.message("removecookies"));
+		removeCookies.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				Offline.remove(Constants.COOKIE_HITSLIST);
+				Offline.remove(Constants.COOKIE_DOCSLIST);
+				Offline.remove(Constants.COOKIE_DOCSMENU_W);
+				Offline.remove(Constants.COOKIE_PASSWORD);
+				Offline.remove(Constants.COOKIE_SAVELOGIN);
+				Offline.remove(Constants.COOKIE_USER);
+
+				Log.info(I18N.message("cookiesremoved"), null);
+			}
+		});
+
 		if (Feature.enabled(Feature.DIGITAL_SIGN))
-			menu.setItems(profile, changePswd, mySignature);
+			menu.setItems(profile, changePswd, mySignature, removeCookies);
 		else
-			menu.setItems(profile, changePswd);
+			menu.setItems(profile, changePswd, removeCookies);
 
 		ToolStripMenuButton menuButton = new ToolStripMenuButton(I18N.message("personal"), menu);
 		menuButton.setWidth(100);

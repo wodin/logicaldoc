@@ -2,7 +2,10 @@ package com.logicaldoc.core.searchengine;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -28,6 +31,11 @@ public class FulltextSearch extends Search {
 	public void internalSearch() throws Exception {
 		FulltextSearchOptions opt = (FulltextSearchOptions) options;
 		SearchEngine engine = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
+
+		if (opt.getFields() == null) {
+			String[] fields = new String[] { Fields.TITLE.toString(), Fields.TAGS.toString(), Fields.CONTENT.toString() };
+			opt.setFields(fields);
+		}
 
 		/*
 		 * Prepare the query: the expression must be applied to all requested
@@ -116,8 +124,11 @@ public class FulltextSearch extends Search {
 		 */
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 
+		// List of published documents
 		Collection<Long> publishedIds = docDao.findPublishedIds(accessibleFolderIds);
 
+		// Save here the binding between ID and Hit
+		Map<Long, Hit> hitsMap = new HashMap<Long, Hit>();
 		while (results != null && results.hasNext()) {
 			if (hits.size() == opt.getMaxHits()) {
 				// The maximum number of hits was reached for a quick query
@@ -129,21 +140,69 @@ public class FulltextSearch extends Search {
 
 			// Skip a document if not in the filter set
 			if (opt.getFilterIds() != null && !opt.getFilterIds().isEmpty()) {
-				if (!opt.getFilterIds().contains(hit.getDocId()))
+				if (!opt.getFilterIds().contains(hit.getId()))
 					continue;
 			}
 
 			// When user can see document with folderId then put it into
 			// result-collection.
-			if (accessibleFolderIds.contains(hit.getFolderId())) {
-				hit.setPublished(publishedIds.contains(hit.getDocId()) ? 1 : 0);
+			if (accessibleFolderIds.contains(hit.getFolder().getId())) {
+				hit.setPublished(publishedIds.contains(hit.getId()) ? 1 : 0);
 
-				if (isRelevant(hit))
+				if (isRelevant(hit)) {
 					hits.add(hit);
+					hitsMap.put(hit.getId(), hit);
+				}
 			}
 		}
 
 		estimatedHitsNumber = results.getEstimatedCount();
+
+		String hitsIdsStr = hitsMap.keySet().toString().replace('[', '(').replace(']', ')');
+		StringBuffer richQuery = new StringBuffer();
+		richQuery.append(" select A.id, A.customId, A.docRef, A.type, A.title, A.version, A.lastModified, ");
+		richQuery.append(" A.date, A.publisher, A.creation, A.creator, A.fileSize, A.immutable, ");
+		richQuery.append(" A.indexed, A.lockUserId, A.fileName, A.status, A.signed, A.type, A.sourceDate, ");
+		richQuery.append(" A.sourceAuthor, A.rating, A.fileVersion, A.comment, A.workflowStatus, A.startPublishing, ");
+		richQuery.append(" A.stopPublishing, A.published, A.folder.name, A.folder.id ");
+		richQuery.append(" from Document A where A.deleted = 0 and A.id in ");
+		richQuery.append(hitsIdsStr);
+
+		List<Object> records = (List<Object>) docDao.findByQuery(richQuery.toString(), null, null);
+		for (Object rec : records) {
+			Object[] cols = (Object[]) rec;
+
+			Hit hit = hitsMap.get((Long) cols[0]);
+			hit.setCustomId((String) cols[1]);
+			hit.setDocRef((Long) cols[2]);
+			hit.setType((String) cols[3]);
+			hit.setTitle((String) cols[4]);
+			hit.setVersion((String) cols[5]);
+			hit.setLastModified((Date) cols[6]);
+			hit.setDate((Date) cols[7]);
+			hit.setPublisher((String) cols[8]);
+			hit.setCreation((Date) cols[9]);
+			hit.setCreator((String) cols[10]);
+			hit.setFileSize((Long) cols[11]);
+			hit.setImmutable((Integer) cols[12]);
+			hit.setIndexed((Integer) cols[13]);
+			hit.setLockUserId((Long) cols[14]);
+			hit.setFileName((String) cols[15]);
+			hit.setStatus((Integer) cols[16]);
+			hit.setSigned((Integer) cols[17]);
+			hit.setType((String) cols[18]);
+			hit.setSourceDate((Date) cols[19]);
+			hit.setSourceAuthor((String) cols[20]);
+			hit.setRating((Integer) cols[21]);
+			hit.setFileVersion((String) cols[22]);
+			hit.setComment((String) cols[23]);
+			hit.setWorkflowStatus((String) cols[24]);
+			hit.setStartPublishing((Date) cols[25]);
+			hit.setStopPublishing((Date) cols[26]);
+			hit.setPublished((Integer) cols[27]);
+			hit.getFolder().setName((String) cols[28]);
+			hit.getFolder().setId((Long) cols[29]);
+		}
 
 		/*
 		 * Check for suggestions

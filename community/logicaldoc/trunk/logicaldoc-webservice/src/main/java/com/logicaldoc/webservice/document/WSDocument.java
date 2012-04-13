@@ -240,7 +240,6 @@ public class WSDocument {
 				}
 			}
 			wsDoc.setTags(tags);
-
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}

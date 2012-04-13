@@ -1,12 +1,12 @@
 package com.logicaldoc.webservice.search;
 
-import com.logicaldoc.core.searchengine.HitImpl;
 import com.logicaldoc.util.SnippetStripper;
+import com.logicaldoc.webservice.document.WSDocument;
 
 /**
  * Represents a web service search result
  * 
- * @author Matteo Caruso - Logical Object
+ * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
 public class WSSearchResult {
@@ -14,7 +14,7 @@ public class WSSearchResult {
 
 	private long estimatedHitsNumber = 0;
 
-	private HitImpl[] hits = new HitImpl[0];
+	private WSDocument[] hits = new WSDocument[0];
 
 	private int moreHits = 0;
 
@@ -52,14 +52,14 @@ public class WSSearchResult {
 		this.moreHits = moreHits;
 	}
 
-	public HitImpl[] getHits() {
+	public WSDocument[] getHits() {
 		return hits;
 	}
 
-	public void setHits(HitImpl[] hits) {
+	public void setHits(WSDocument[] hits) {
 		this.hits = hits;
-		for (HitImpl hitImpl : hits) {
-			hitImpl.setSummary(SnippetStripper.strip(hitImpl.getSummary()));
+		for (WSDocument hit : hits) {
+			hit.setSummary(SnippetStripper.strip(hit.getSummary()));
 		}
 	}
 }

@@ -87,4 +87,16 @@ public final class Constants {
 	public static final String LOCALE = "locale";
 
 	public static final String BLANK_PLACEHOLDER = "___";
+	
+	public static final String COOKIE_HITSLIST = "ldoc-hitslist";
+	
+	public static final String COOKIE_DOCSLIST = "ldoc-docslist";
+	
+	public static final String COOKIE_DOCSMENU_W = "ldoc-docsmenu-w";
+	
+	public static final String COOKIE_SAVELOGIN = "ldoc-savelogin";
+	
+	public static final String COOKIE_USER = "ldoc-user";
+	
+	public static final String COOKIE_PASSWORD = "ldoc-password";
 }

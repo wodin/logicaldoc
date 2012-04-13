@@ -1,5 +1,6 @@
 package com.logicaldoc.webservice.search;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -13,7 +14,6 @@ import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.Hit;
-import com.logicaldoc.core.searchengine.HitImpl;
 import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
@@ -44,8 +44,13 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 		lastSearch.search();
 		List<Hit> hitsList = lastSearch.getHits();
 
+		List<WSDocument> docs = new ArrayList<WSDocument>();
+		for (Hit hit : hitsList) {
+			docs.add(WSDocument.fromDocument(hit));
+		}
+
 		searchResult.setTotalHits(hitsList.size());
-		searchResult.setHits(hitsList.toArray(new HitImpl[0]));
+		searchResult.setHits(docs.toArray(new WSDocument[0]));
 		searchResult.setEstimatedHitsNumber(lastSearch.getEstimatedHitsNumber());
 		searchResult.setTime(lastSearch.getExecTime());
 		searchResult.setMoreHits(lastSearch.isMoreHitsPresent() ? 1 : 0);

@@ -14,6 +14,8 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 
 	private long id;
 
+	private Long docRef;
+
 	private String title;
 
 	private String customId;
@@ -70,6 +72,10 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 
 	private int immutable = 0;
 
+	private int indexed = 0;
+
+	private int signed = 0;
+
 	private int rating = 0;
 
 	private String comment;
@@ -79,10 +85,14 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 	private int published = 1;
 
 	private int barcoded = 0;
-	
+
 	private Date startPublishing = new Date();
 
 	private Date stopPublishing;
+
+	private String summary;
+
+	private int score;
 
 	public long getId() {
 		return id;
@@ -312,7 +322,6 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 		this.lastModified = lastModified;
 	}
 
-
 	@Override
 	public boolean equals(Object obj) {
 		return id == ((GUIDocument) obj).getId();
@@ -425,5 +434,45 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 
 	public void setBarcoded(int barcoded) {
 		this.barcoded = barcoded;
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public int getIndexed() {
+		return indexed;
+	}
+
+	public void setIndexed(int indexed) {
+		this.indexed = indexed;
+	}
+
+	public int getSigned() {
+		return signed;
+	}
+
+	public void setSigned(int signed) {
+		this.signed = signed;
+	}
+
+	public Long getDocRef() {
+		return docRef;
+	}
+
+	public void setDocRef(Long docRef) {
+		this.docRef = docRef;
 	}
 }

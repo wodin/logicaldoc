@@ -1,21 +1,22 @@
 package com.logicaldoc.gui.frontend.client.search;
 
+import com.gargoylesoftware.htmlunit.util.Cookie;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.FolderObserver;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
-import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
-import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.common.client.widgets.DocumentsGrid;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.frontend.client.document.DocumentContextMenu;
 import com.logicaldoc.gui.frontend.client.document.DocumentObserver;
@@ -23,10 +24,7 @@ import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
-import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ExpansionMode;
-import com.smartgwt.client.types.ListGridFieldType;
-import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -36,7 +34,6 @@ import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.events.DrawEvent;
 import com.smartgwt.client.widgets.events.DrawHandler;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
-import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -59,7 +56,7 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  */
 public class HitsListPanel extends VLayout implements SearchObserver, DocumentObserver, FolderObserver {
 
-	protected ListGrid list;
+	protected DocumentsGrid grid;
 
 	protected ToolStrip toolStrip;
 
@@ -67,18 +64,14 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 	private FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
 
-	protected ListGridField customId;
-
-	protected ListGridField published;
-
 	public HitsListPanel() {
 		initialize();
 		Search.get().addObserver(this);
 	}
 
 	protected void initialize() {
-		if (list != null) {
-			removeMember(list);
+		if (grid != null) {
+			removeMember(grid);
 		}
 
 		if (toolStrip != null) {
@@ -90,159 +83,43 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		ListGridField id = new ListGridField("id", 60);
 		id.setHidden(true);
 
-		ListGridField title = new ListGridField("title", I18N.message("title"), 300);
-
-		ListGridField size = new ListGridField("size", I18N.message("size"), 90);
-		size.setAlign(Alignment.RIGHT);
-		size.setType(ListGridFieldType.FLOAT);
-		size.setCellFormatter(new FileSizeCellFormatter());
-		size.setCanFilter(false);
-
-		ListGridField icon = new ListGridField("icon", " ", 24);
-		icon.setType(ListGridFieldType.IMAGE);
-		icon.setCanSort(false);
-		icon.setAlign(Alignment.CENTER);
-		icon.setShowDefaultContextMenu(false);
-		icon.setImageURLPrefix(Util.imagePrefix());
-		icon.setImageURLSuffix(".png");
-		icon.setCanFilter(false);
-
-		ListGridField version = new ListGridField("version", I18N.message("version"), 55);
-		version.setAlign(Alignment.CENTER);
-
-		ListGridField lastModified = new ListGridField("lastModified", I18N.message("lastmodified"), 110);
-		lastModified.setAlign(Alignment.CENTER);
-		lastModified.setType(ListGridFieldType.DATE);
-		lastModified.setCellFormatter(new DateCellFormatter(false));
-		lastModified.setCanFilter(false);
-
-		ListGridField publisher = new ListGridField("publisher", I18N.message("publisher"), 90);
-		publisher.setAlign(Alignment.CENTER);
-
-		published = new ListGridField("date", I18N.message("publishedon"), 110);
-		published.setAlign(Alignment.CENTER);
-		published.setType(ListGridFieldType.DATE);
-		published.setCellFormatter(new DateCellFormatter(true));
-		published.setCanFilter(false);
-
-		ListGridField creator = new ListGridField("creator", I18N.message("creator"), 90);
-		creator.setAlign(Alignment.CENTER);
-		creator.setCanFilter(false);
-
-		ListGridField creation = new ListGridField("creation", I18N.message("createdon"), 110);
-		creation.setAlign(Alignment.CENTER);
-		creation.setType(ListGridFieldType.DATE);
-		creation.setCellFormatter(new DateCellFormatter(true));
-		creation.setCanFilter(false);
-
-		ListGridField sourceDate = new ListGridField("sourceDate", I18N.message("date"), 110);
-		sourceDate.setAlign(Alignment.CENTER);
-		sourceDate.setType(ListGridFieldType.DATE);
-		sourceDate.setCellFormatter(new DateCellFormatter(true));
-		sourceDate.setCanFilter(false);
-		sourceDate.setHidden(true);
-
-		customId = new ListGridField("customId", I18N.message("customid"), 110);
-
-		ListGridField filename = new ListGridField("filename", I18N.message("filename"), 200);
-		filename.setHidden(true);
-
-		ListGridField folderId = new ListGridField("folderId", I18N.message("folderid"), 200);
-		folderId.setHidden(true);
-		folderId.setCanFilter(false);
-
-		ListGridField lockUserId = new ListGridField("lockUserId", " ", 24);
-		lockUserId.setHidden(true);
-		lockUserId.setCanFilter(false);
-
-		ListGridField type = new ListGridField("type", I18N.message("type"), 85);
-		type.setHidden(true);
-
-		ListGridField score = new ListGridField("score", I18N.message("score"), 120);
-		score.setCanFilter(false);
-		score.setCellFormatter(new CellFormatter() {
-			@Override
-			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
-				try {
-					int score = record.getAttributeAsInt("score");
-					int red = 100 - score > 0 ? 100 - score : 0;
-					return "<img src='" + Util.imageUrl("dotblue.gif") + "' style='width: " + score
-							+ "px; height: 8px' title='" + score + "%'/>" + "<img src='" + Util.imageUrl("dotgrey.gif")
-							+ "' style='width: " + red + "px; height: 8px' title='" + score + "%'/>";
-				} catch (Throwable e) {
-					return "";
-				}
-			}
-		});
-
-		ListGridField summary = new ListGridField("summary", I18N.message("summary"));
-		summary.setWidth(300);
-
-		ListGridField folder = new ListGridField("folder", I18N.message("folder"), 200);
-		folder.setWidth(200);
-		folder.setHidden(true);
-
-		ListGridField comment = new ListGridField("comment", I18N.message("comment"), 300);
-		comment.setWidth(300);
-		comment.setHidden(true);
-
-		ListGridField publishedStatus = new ListGridField("publishedStatus", I18N.message("published"), 50);
-		publishedStatus.setHidden(true);
-		publishedStatus.setCanFilter(true);
-
-		list = new ListGrid() {
-			@Override
-			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
-				if (getFieldName(colNum).equals("title")) {
-					if ("stop".equals(record.getAttribute("immutable"))
-							|| !"yes".equals(record.getAttribute("publishedStatus").toString())) {
-						return "color: #888888; font-style: italic;";
-					} else {
-						return super.getCellCSSText(record, rowNum, colNum);
-					}
-				} else {
-					return super.getCellCSSText(record, rowNum, colNum);
-				}
-			}
-		};
-		list.setEmptyMessage(I18N.message("notitemstoshow"));
+		grid = new DocumentsGrid(null);
 
 		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT) {
-			list.setCanExpandRecords(true);
-			list.setExpansionMode(ExpansionMode.DETAIL_FIELD);
-			list.setDetailField("summary");
+			grid.setCanExpandRecords(true);
+			grid.setExpansionMode(ExpansionMode.DETAIL_FIELD);
+			grid.setDetailField("summary");
 		}
-		list.setShowRecordComponents(true);
-		list.setShowRecordComponentsByCell(true);
-		list.setCanFreezeFields(true);
-		list.setSelectionType(SelectionStyle.SINGLE);
-		list.setShowRowNumbers(true);
-		list.setWrapCells(true);
-		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT) {
-			list.setFields(id, folderId, icon, title, type, size, published, creation, sourceDate, score, customId,
-					folder, comment, publishedStatus);
-		} else if (options.getType() == GUISearchOptions.TYPE_FOLDERS) {
-			list.setFields(id, folderId, icon, title, creation, comment);
-			comment.setHidden(false);
-		} else {
-			list.setFields(id, folderId, icon, title, type, size, published, creation, sourceDate, customId, folder,
-					comment, publishedStatus);
-		}
+		grid.setShowRecordComponents(true);
+		grid.setShowRecordComponentsByCell(true);
 
-		list.addSelectionChangedHandler(new SelectionChangedHandler() {
+		// if (options.getType() == GUISearchOptions.TYPE_FULLTEXT) {
+		// list.setFields(id, folderId, icon, title, type, size, published,
+		// creation, sourceDate, score, customId,
+		// folder, comment, publishedStatus);
+		// } else if (options.getType() == GUISearchOptions.TYPE_FOLDERS) {
+		// list.setFields(id, folderId, icon, title, creation, comment);
+		// comment.setHidden(false);
+		// } else {
+		// list.setFields(id, folderId, icon, title, type, size, published,
+		// creation, sourceDate, customId, folder,
+		// comment, publishedStatus);
+		// }
+
+		grid.addSelectionChangedHandler(new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChanged(SelectionEvent event) {
 				onHitSelected();
 			}
 		});
 
-		list.addCellContextClickHandler(new CellContextClickHandler() {
+		grid.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				final String type = list.getSelectedRecord().getAttributeAsString("type");
-				long id = Long.parseLong(list.getSelectedRecord().getAttributeAsString("folderId"));
-				if ("fodler".equals(type)) {
-					id = Long.parseLong(list.getSelectedRecord().getAttributeAsString("id"));
+				final String type = grid.getSelectedRecord().getAttributeAsString("type");
+				long id = Long.parseLong(grid.getSelectedRecord().getAttributeAsString("folderId"));
+				if ("folder".equals(type)) {
+					id = Long.parseLong(grid.getSelectedRecord().getAttributeAsString("id"));
 				}
 
 				folderService.getFolder(Session.get().getSid(), id, false, new AsyncCallback<GUIFolder>() {
@@ -262,13 +139,13 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			}
 		});
 
-		list.addDoubleClickHandler(new DoubleClickHandler() {
+		grid.addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				if (Search.get().getOptions().getType() != GUISearchOptions.TYPE_FOLDERS) {
-					final String id = list.getSelectedRecord().getAttribute("id");
+					final String id = grid.getSelectedRecord().getAttribute("id");
 					folderService.getFolder(Session.get().getSid(),
-							Long.parseLong(list.getSelectedRecord().getAttributeAsString("folderId")), false,
+							Long.parseLong(grid.getSelectedRecord().getAttributeAsString("folderId")), false,
 							new AsyncCallback<GUIFolder>() {
 
 								@Override
@@ -288,13 +165,13 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			}
 		});
 
-		final String previouslySavedState = (String) Offline.get("hitslist");
+		final String previouslySavedState = (String) Offline.get(Constants.COOKIE_HITSLIST);
 		if (previouslySavedState != null) {
-			list.addDrawHandler(new DrawHandler() {
+			grid.addDrawHandler(new DrawHandler() {
 				@Override
 				public void onDraw(DrawEvent event) {
 					// restore any previously saved view state for this grid
-					list.setViewState(previouslySavedState);
+					grid.setViewState(previouslySavedState);
 				}
 			});
 		}
@@ -323,9 +200,9 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		infoPanel.setMessage(stats);
 
 		ListGridRecord[] result = Search.get().getLastResult();
-		list.setRecords(result);
+		grid.setRecords(result);
 
-		addMember(list);
+		addMember(grid);
 	}
 
 	/**
@@ -408,8 +285,8 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		saveGrid.setAutoFit(true);
 		saveGrid.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				String viewState = list.getViewState();
-				Offline.put("hitslist", viewState);
+				String viewState = grid.getViewState();
+				Offline.put(Constants.COOKIE_HITSLIST, viewState);
 				Log.info(I18N.message("settingssaved"), null);
 			}
 		});
@@ -422,7 +299,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		print.setAutoFit(true);
 		print.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				Canvas.printComponents(new Object[] { list });
+				Canvas.printComponents(new Object[] { grid });
 			}
 		});
 		toolStrip.addSeparator();
@@ -438,7 +315,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			export.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					Util.exportCSV(list);
+					Util.exportCSV(grid);
 				}
 			});
 			if (!Feature.enabled(Feature.EXPORT_CSV)) {
@@ -491,11 +368,11 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	}
 
 	protected void expandVisibleRows() {
-		Integer[] rows = list.getVisibleRows();
+		Integer[] rows = grid.getVisibleRows();
 		if (rows[0] == -1 || rows[1] == -1)
 			return;
 		for (int i = rows[0]; i < rows[1]; i++) {
-			list.expandRecord(list.getRecord(i));
+			grid.expandRecord(grid.getRecord(i));
 		}
 	}
 
@@ -508,23 +385,10 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		}
 	}
 
-	/**
-	 * Updates the selected record with new data
-	 */
-	public void updateSelectedRecord(GUIDocument document) {
-		ListGridRecord selectedRecord = list.getSelectedRecord();
-		if (selectedRecord != null) {
-			selectedRecord.setAttribute("title", document.getTitle());
-			selectedRecord.setAttribute("customId", document.getCustomId());
-			selectedRecord.setAttribute("size", document.getFileSize());
-			list.refreshRow(list.getRecordIndex(selectedRecord));
-		}
-	}
-
 	@Override
 	public void onDocumentSaved(GUIDocument document) {
 		SearchPanel.get().onSelectedDocumentHit(document.getId());
-		updateSelectedRecord(document);
+		grid.updateSelectedRecord(document);
 	}
 
 	@Override
@@ -533,27 +397,27 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 	protected void onHitSelected() {
 		// Avoid server load in case of multiple selections
-		if (list.getSelectedRecords() != null && list.getSelectedRecords().length > 1)
+		if (grid.getSelectedRecords() != null && grid.getSelectedRecords().length > 1)
 			return;
 
-		if (list.getSelectedRecord() != null) {
-			if ("folder".equals(list.getSelectedRecord().getAttribute("type")))
-				SearchPanel.get().onSelectedFolderHit(Long.parseLong(list.getSelectedRecord().getAttribute("id")));
+		if (grid.getSelectedRecord() != null) {
+			if ("folder".equals(grid.getSelectedRecord().getAttribute("type")))
+				SearchPanel.get().onSelectedFolderHit(Long.parseLong(grid.getSelectedRecord().getAttribute("id")));
 			else
-				SearchPanel.get().onSelectedDocumentHit(Long.parseLong(list.getSelectedRecord().getAttribute("id")));
+				SearchPanel.get().onSelectedDocumentHit(Long.parseLong(grid.getSelectedRecord().getAttribute("id")));
 		}
 	}
 
 	protected Menu prepareContextMenu(GUIFolder folder, final boolean document) {
 		Menu contextMenu = new Menu();
 		if (document)
-			contextMenu = new DocumentContextMenu(folder, list);
+			contextMenu = new DocumentContextMenu(folder, grid);
 		if (com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.DOCUMENTS)) {
 			MenuItem openInFolder = new MenuItem();
 			openInFolder.setTitle(I18N.message("openinfolder"));
 			openInFolder.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 				public void onClick(MenuItemClickEvent event) {
-					ListGridRecord record = list.getSelectedRecord();
+					ListGridRecord record = grid.getSelectedRecord();
 					DocumentsPanel.get().openInFolder(Long.parseLong(record.getAttributeAsString("folderId")),
 							document ? Long.parseLong(record.getAttributeAsString("id")) : null);
 				}
@@ -564,7 +428,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	}
 
 	public ListGrid getList() {
-		return list;
+		return grid;
 	}
 
 	@Override
@@ -574,11 +438,11 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 	@Override
 	public void onFolderSaved(GUIFolder folder) {
-		ListGridRecord selectedRecord = list.getSelectedRecord();
+		ListGridRecord selectedRecord = grid.getSelectedRecord();
 		if (selectedRecord != null) {
 			selectedRecord.setAttribute("title", folder.getName());
 			selectedRecord.setAttribute("comment", folder.getDescription());
-			list.refreshRow(list.getRecordIndex(selectedRecord));
+			grid.refreshRow(grid.getRecordIndex(selectedRecord));
 		}
 	}
 }
