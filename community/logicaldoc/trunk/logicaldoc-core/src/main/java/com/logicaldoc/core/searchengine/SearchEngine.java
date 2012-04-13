@@ -62,7 +62,9 @@ public interface SearchEngine {
 	public Hit getHit(long id);
 
 	/**
-	 * Search for hits
+	 * Search for hits.<br>
+	 * Attention: The hits will be populated with just the fields stored in the
+	 * index.
 	 */
 	public Hits search(String expression, String[] filters, String expressionLanguage, Integer rows);
 

@@ -18,7 +18,7 @@ public class GUIResult implements Serializable {
 
 	private boolean hasMore = false;
 
-	private GUIHit[] hits = new GUIHit[0];
+	private GUIDocument[] hits = new GUIDocument[0];
 
 	private String suggestion;
 
@@ -38,11 +38,11 @@ public class GUIResult implements Serializable {
 		this.hasMore = hasMore;
 	}
 
-	public GUIHit[] getHits() {
+	public GUIDocument[] getHits() {
 		return hits;
 	}
 
-	public void setHits(GUIHit[] hits) {
+	public void setHits(GUIDocument[] hits) {
 		this.hits = hits;
 	}
 

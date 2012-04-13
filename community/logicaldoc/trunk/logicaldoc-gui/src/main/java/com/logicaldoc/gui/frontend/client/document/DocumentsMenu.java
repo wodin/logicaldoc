@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.document;
 
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
@@ -40,7 +41,7 @@ public class DocumentsMenu extends SectionStack {
 
 		try {
 			// Retrieve the saved menu width
-			String w = (String) Offline.get("ldoc-docsmenu-w");
+			String w = (String) Offline.get(Constants.COOKIE_DOCSMENU_W);
 			setWidth(Integer.parseInt(w));
 		} catch (Throwable t) {
 			setWidth(280);
@@ -91,7 +92,7 @@ public class DocumentsMenu extends SectionStack {
 			public void onResized(ResizedEvent event) {
 				if (initialized) {
 					// Save the new width in a cookie
-					Offline.put("ldoc-docsmenu-w", getWidthAsString());
+					Offline.put(Constants.COOKIE_DOCSMENU_W, getWidthAsString());
 				} else
 					initialized = true;
 			}

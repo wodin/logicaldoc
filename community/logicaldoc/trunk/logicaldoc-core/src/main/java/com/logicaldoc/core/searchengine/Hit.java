@@ -1,7 +1,6 @@
 package com.logicaldoc.core.searchengine;
 
-import java.io.Serializable;
-import java.util.Date;
+import com.logicaldoc.core.document.Document;
 
 /**
  * Search result
@@ -9,87 +8,35 @@ import java.util.Date;
  * @author Marco Meschieri - Logical Objects
  * @since 5.2
  */
-public interface Hit extends Serializable {
+public class Hit extends Document {
 
-	public long getDocId();
+	private int score;
 
-	// If the document is a shortcut, this is the original document id
-	public Long getDocRef();
+	private String content;
 
-	public void setDocId(long docId);
+	private String summary;
 
-	public String getTitle();
+	public int getScore() {
+		return score;
+	}
 
-	public String getSummary();
+	public void setScore(int score) {
+		this.score = score;
+	}
 
-	public String getType();
+	public String getContent() {
+		return content;
+	}
 
-	public String getIcon();
+	public void setContent(String content) {
+		this.content = content;
+	}
 
-	// The file size in bytes
-	public long getSize();
+	public String getSummary() {
+		return summary;
+	}
 
-	public int getScore();
-
-	public Date getDate();
-
-	public Date getCreation();
-
-	public Date getSourceDate();
-
-	public int getDocType();
-
-	public String getSource();
-
-	public String getPath();
-
-	public String getFolderName();
-
-	public long getFolderId();
-
-	public void setTitle(String title);
-
-	public void setDate(Date date);
-
-	public void setCustomId(String customId);
-
-	public String getCustomId();
-
-	public void setCreation(Date creation);
-
-	public void setSourceDate(Date date);
-
-	public void setSize(long sze);
-
-	public void setType(String typ);
-
-	public void setSummary(String summary);
-
-	public void setSource(String source);
-
-	public void setPath(String path);
-
-	public void setScore(int score);
-
-	public void setFolderId(long folderId);
-
-	public void setFolderName(String folderName);
-
-	public void setDocRef(Long docRef);
-
-	public void setComment(String comment);
-
-	public String getComment();
-
-	public void setPublished(int published);
-
-	public int getPublished();
-
-	public String getLanguage();
-
-	public void setLanguage(String language);
-
-	public String getContent();
-
-	public void setContent(String content);
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
 }

@@ -14,8 +14,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.logicaldoc.core.document.Document;
-import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.FolderSearchOptions;
@@ -27,11 +25,10 @@ import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUICriterion;
-import com.logicaldoc.gui.common.client.beans.GUIHit;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIResult;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
-import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.web.util.SessionUtil;
 
@@ -81,41 +78,17 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 
 			result.setSuggestion(search.getSuggestion());
 			result.setEstimatedHits(search.getEstimatedHitsNumber());
-			
+
 			List<Hit> hits = search.getHits();
 
 			result.setTime(search.getExecTime());
 			result.setHasMore(search.isMoreHitsPresent());
 
-			List<GUIHit> guiResults = new ArrayList<GUIHit>();
+			List<GUIDocument> guiResults = new ArrayList<GUIDocument>();
 			for (Hit hit : hits) {
-				GUIHit h = new GUIHit();
-				if (hit.getCustomId() == null) {
-					// This document is a shortcut
-					DocumentDAO docDAO = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-					// This settings are necessary for the 'open in folder'
-					// feature.
-					Document shortcutDoc = docDAO.findById(hit.getDocId());
-					if (shortcutDoc != null && shortcutDoc.getDocRef()!=null) {
-						h.setId(shortcutDoc.getDocRef());
-						h.setFolderId(shortcutDoc.getFolder().getId());
-					}
-				} else {
-					h.setId(hit.getDocId());
-					h.setFolderId(hit.getFolderId());
-				}
-				h.setDate(hit.getDate());
-				h.setCreation(hit.getCreation());
-				h.setTitle(hit.getTitle());
-				h.setCustomId(hit.getCustomId());
-				h.setType(hit.getType());
-				h.setSummary(hit.getSummary());
-				h.setSize(hit.getSize());
+				GUIDocument h = DocumentServiceImpl.fromDocument(hit, null);
 				h.setScore(hit.getScore());
-				h.setSourceDate(hit.getSourceDate());
-				h.setComment(hit.getComment());
-				h.setFolderName(hit.getFolderName());
-				h.setPublished(hit.getPublished());
+				h.setSummary(hit.getSummary());
 
 				// Check if the document is not an alias to visualize the
 				// correct icon: if the document is an alias the FULL-TEXT
@@ -129,7 +102,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 					h.setIcon("folder_closed");
 				guiResults.add(h);
 			}
-			result.setHits(guiResults.toArray(new GUIHit[guiResults.size()]));
+			result.setHits(guiResults.toArray(new GUIDocument[0]));
 
 			return result;
 		} catch (Throwable t) {
@@ -314,7 +287,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			((FulltextSearchOptions) searchOptions).setCreationFrom(options.getCreationFrom());
 			((FulltextSearchOptions) searchOptions).setCreationTo(options.getCreationTo());
 			((FulltextSearchOptions) searchOptions).setExpressionLanguage(options.getExpressionLanguage());
-			((FulltextSearchOptions) searchOptions).setFields(options.getFields());	
+			((FulltextSearchOptions) searchOptions).setFields(options.getFields());
 			((FulltextSearchOptions) searchOptions).setFolderId(options.getFolder());
 			((FulltextSearchOptions) searchOptions).setFormat(options.getFormat());
 			((FulltextSearchOptions) searchOptions).setLanguage(options.getLanguage());

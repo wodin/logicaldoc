@@ -5,8 +5,9 @@ import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIHit;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIResult;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -37,7 +38,7 @@ public class Search {
 	private boolean hasMore = false;
 
 	private String suggestion;
-	
+
 	private long estimatedHits;
 
 	private Search() {
@@ -85,25 +86,54 @@ public class Search {
 					lastResult = new ListGridRecord[result.getHits().length];
 					hasMore = result.isHasMore();
 					for (int i = 0; i < result.getHits().length; i++) {
-						GUIHit hit = result.getHits()[i];
+						GUIDocument hit = result.getHits()[i];
 						ListGridRecord record = new ListGridRecord();
 						lastResult[i] = record;
-						record.setAttribute("title", hit.getTitle());
 						record.setAttribute("id", hit.getId());
-						record.setAttribute("docRef", hit.getDocRef());
+						record.setAttribute("title", hit.getTitle());
+						record.setAttribute("size", hit.getFileSize());
+						record.setAttribute("icon", hit.getIcon());
+						record.setAttribute("version", hit.getVersion());
+						record.setAttribute("lastModified", hit.getLastModified());
+						record.setAttribute("published", hit.getDate());
+						record.setAttribute("publisher", hit.getPublisher());
+						record.setAttribute("creator", hit.getCreator());
+						record.setAttribute("created", hit.getCreation());
+						record.setAttribute("sourceDate", hit.getSourceDate());
+						record.setAttribute("sourceAuthor", hit.getSourceAuthor());
+						record.setAttribute("customId", hit.getCustomId());
+						record.setAttribute("type", hit.getType());
+						record.setAttribute("immutable", hit.getImmutable() == 1 ? "stop" : "blank");
+						record.setAttribute("signed", hit.getSigned() == 1 ? "rosette" : "blank");
+						record.setAttribute("filename", hit.getFileName());
+						record.setAttribute("fileVersion", hit.getFileVersion());
+						record.setAttribute("fileVersion", hit.getFileVersion());
+						record.setAttribute("comment", hit.getComment());
+						record.setAttribute("workflowStatus", hit.getWorkflowStatus());
+						record.setAttribute("startPublishing", hit.getStartPublishing());
+						record.setAttribute("stopPublishing", hit.getStopPublishing());
+						record.setAttribute("publishedStatus", hit.getPublished() == 1 ? "yes" : "no");
 						record.setAttribute("score", hit.getScore());
 						record.setAttribute("summary", hit.getSummary());
-						record.setAttribute("creation", hit.getCreation());
-						record.setAttribute("date", hit.getDate());
-						record.setAttribute("customId", hit.getCustomId());
-						record.setAttribute("folderId", hit.getFolderId());
-						record.setAttribute("size", hit.getSize());
-						record.setAttribute("icon", hit.getIcon());
-						record.setAttribute("type", hit.getType());
-						record.setAttribute("sourceDate", hit.getSourceDate());
-						record.setAttribute("comment", hit.getComment());
-						record.setAttribute("folder", hit.getFolderName());
-						record.setAttribute("publishedStatus", hit.getPublished() == 1 ? "yes" : "no");
+						record.setAttribute("lockUserId", hit.getLockUserId());
+						record.setAttribute("folderId", hit.getFolder().getId());
+						record.setAttribute("folder", hit.getFolder().getName());
+						record.setAttribute("docRef", hit.getDocRef());
+						record.setAttribute("rating", "rating" + hit.getRating());
+
+						if (hit.getIndexed() == Constants.INDEX_INDEXED)
+							record.setAttribute("indexed", "indexed");
+						else if (hit.getIndexed() == Constants.INDEX_SKIP)
+							record.setAttribute("indexed", "unindexable");
+						else
+							record.setAttribute("indexed", "blank");
+
+						if (hit.getStatus() == Constants.DOC_LOCKED)
+							record.setAttribute("locked", "stop");
+						else if (hit.getStatus() == Constants.DOC_CHECKED_OUT)
+							record.setAttribute("locked", "page_edit");
+						else
+							record.setAttribute("locked", "blank");
 					}
 
 					for (SearchObserver observer : observers) {

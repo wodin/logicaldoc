@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.FolderObserver;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
@@ -264,7 +265,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	public void saveGrid() {
 		if (listingPanel instanceof DocumentsListPanel) {
 			String viewState = ((DocumentsListPanel) listingPanel).getList().getViewState();
-			Offline.put("doclist", viewState);
+			Offline.put(Constants.COOKIE_DOCSLIST, viewState);
 			Log.info(I18N.message("settingssaved"), null);
 		}
 	}

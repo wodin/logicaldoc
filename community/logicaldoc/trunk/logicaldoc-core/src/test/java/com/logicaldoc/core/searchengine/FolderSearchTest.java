@@ -32,8 +32,8 @@ public class FolderSearchTest extends AbstractCoreTCase {
 
 		List<Hit> results = search.getHits();
 		Assert.assertEquals(1, results.size());
-		Assert.assertEquals(1201, results.get(0).getDocId());
-		Assert.assertEquals(1200, results.get(0).getFolderId());
+		Assert.assertEquals(1201, results.get(0).getId());
+		Assert.assertEquals(1200, results.get(0).getFolder().getId());
 
 		opt.setUserId(5);
 		search = new FolderSearch();
@@ -62,8 +62,8 @@ public class FolderSearchTest extends AbstractCoreTCase {
 		opt.setFolderId(5L);
 		search.search();
 		Assert.assertEquals(1, results.size());
-		Assert.assertEquals(1201, results.get(0).getDocId());
-		Assert.assertEquals(1200, results.get(0).getFolderId());
+		Assert.assertEquals(1201, results.get(0).getId());
+		Assert.assertEquals(1200, results.get(0).getFolder().getId());
 
 		opt.setCreationFrom(new Date());
 		search.search();
@@ -73,8 +73,8 @@ public class FolderSearchTest extends AbstractCoreTCase {
 		opt.setCreationTo(new Date());
 		search.search();
 		Assert.assertEquals(1, results.size());
-		Assert.assertEquals(1201, results.get(0).getDocId());
-		Assert.assertEquals(1200, results.get(0).getFolderId());
+		Assert.assertEquals(1201, results.get(0).getId());
+		Assert.assertEquals(1200, results.get(0).getFolder().getId());
 
 		opt.setFolderDescription("cocco");
 		search.search();
@@ -83,7 +83,7 @@ public class FolderSearchTest extends AbstractCoreTCase {
 		opt.setFolderDescription("EsT");
 		search.search();
 		Assert.assertEquals(1, results.size());
-		Assert.assertEquals(1201, results.get(0).getDocId());
-		Assert.assertEquals(1200, results.get(0).getFolderId());
+		Assert.assertEquals(1201, results.get(0).getId());
+		Assert.assertEquals(1200, results.get(0).getFolder().getId());
 	}
 }

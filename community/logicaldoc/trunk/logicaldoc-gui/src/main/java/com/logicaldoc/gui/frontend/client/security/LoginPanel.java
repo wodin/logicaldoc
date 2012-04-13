@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
@@ -141,12 +142,12 @@ public class LoginPanel extends VLayout {
 		savelogin.setTitle(I18N.message("savelogin"));
 		savelogin.setRequired(false);
 		savelogin.setWrapTitle(false);
-		savelogin.setValue("true".equals(Offline.get("ldoc-savelogin")));
+		savelogin.setValue("true".equals(Offline.get(Constants.COOKIE_SAVELOGIN)));
 
 		// If the case, initialize the credentials from client's cookies
 		if ("true".equals(info.getConfig("gui.savelogin")) && savelogin.getValueAsBoolean()) {
-			username.setValue(Offline.get("ldoc-user"));
-			password.setValue(Offline.get("ldoc-password"));
+			username.setValue(Offline.get(Constants.COOKIE_USER));
+			password.setValue(Offline.get(Constants.COOKIE_PASSWORD));
 		}
 
 		if (I18N.getSupportedGuiLanguages(false).size() > 1) {
@@ -251,13 +252,13 @@ public class LoginPanel extends VLayout {
 
 		// If the case, save the credentials into client cookies
 		if ("true".equals(Session.get().getInfo().getConfig("gui.savelogin"))) {
-			Offline.put("ldoc-savelogin", (String) savelogin.getValueAsBoolean().toString());
-			Offline.put("ldoc-user", savelogin.getValueAsBoolean() ? (String) username.getValue() : "");
-			Offline.put("ldoc-password", savelogin.getValueAsBoolean() ? (String) password.getValue() : "");
+			Offline.put(Constants.COOKIE_SAVELOGIN, (String) savelogin.getValueAsBoolean().toString());
+			Offline.put(Constants.COOKIE_USER, savelogin.getValueAsBoolean() ? (String) username.getValue() : "");
+			Offline.put(Constants.COOKIE_PASSWORD, savelogin.getValueAsBoolean() ? (String) password.getValue() : "");
 		} else {
-			Offline.put("ldoc-savelogin", "false");
-			Offline.put("ldoc-user", "");
-			Offline.put("ldoc-password", "");
+			Offline.put(Constants.COOKIE_SAVELOGIN, "false");
+			Offline.put(Constants.COOKIE_USER, "");
+			Offline.put(Constants.COOKIE_PASSWORD, "");
 		}
 
 		GUIUser user = session.getUser();

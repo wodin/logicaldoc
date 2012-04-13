@@ -384,7 +384,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		return attributes;
 	}
 
-	private GUIExtendedAttribute[] prepareGUIAttributes(DocumentTemplate template, Document doc) {
+	private static GUIExtendedAttribute[] prepareGUIAttributes(DocumentTemplate template, Document doc) {
 		try {
 			GUIExtendedAttribute[] attributes = new GUIExtendedAttribute[template.getAttributeNames().size()];
 			int i = 0;
@@ -446,65 +446,12 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				doc = docDao.findById(id);
 			}
 
-			document = new GUIDocument();
-
 			try {
 				User user = SessionUtil.getSessionUser(sid);
 				checkPublished(user, doc);
 
 				docDao.initialize(doc);
-				document.setId(doc.getId());
-				document.setTitle(doc.getTitle());
-				document.setCustomId(doc.getCustomId());
-				if (doc.getTags().size() > 0)
-					document.setTags(doc.getTags().toArray(new String[doc.getTags().size()]));
-				else
-					document.setTags(new String[0]);
-				document.setType(doc.getType());
-				document.setFileName(doc.getFileName());
-				document.setVersion(doc.getVersion());
-				document.setCreation(doc.getCreation());
-				document.setCreator(doc.getCreator());
-				document.setDate(doc.getDate());
-				document.setPublisher(doc.getPublisher());
-				document.setFileVersion(doc.getFileVersion());
-				document.setLanguage(doc.getLanguage());
-				document.setSource(doc.getSource());
-				document.setRecipient(doc.getRecipient());
-				document.setTemplateId(doc.getTemplateId());
-				document.setSourceType(doc.getSourceType());
-				document.setObject(doc.getObject());
-				document.setCoverage(doc.getCoverage());
-				document.setSourceAuthor(doc.getSourceAuthor());
-				document.setSourceDate(doc.getSourceDate());
-				document.setSourceId(doc.getSourceId());
-				document.setLastModified(doc.getLastModified());
-				document.setLockUserId(doc.getLockUserId());
-				document.setComment(doc.getComment());
-				document.setStatus(doc.getStatus());
-				document.setWorkflowStatus(doc.getWorkflowStatus());
-				document.setImmutable(doc.getImmutable());
-				document.setFileSize(new Long(doc.getFileSize()).floatValue());
-				document.setStartPublishing(doc.getStartPublishing());
-				document.setStopPublishing(doc.getStopPublishing());
-				document.setPublished(doc.getPublished());
-
-				if (doc.getRating() != null)
-					document.setRating(doc.getRating());
-
-				if (doc.getTemplate() != null) {
-					document.setTemplate(doc.getTemplate().getName());
-					document.setTemplateId(doc.getTemplate().getId());
-					GUIExtendedAttribute[] attributes = prepareGUIAttributes(doc.getTemplate(), doc);
-					document.setAttributes(attributes);
-				}
-
-				if (doc.getCustomId() != null)
-					document.setCustomId(doc.getCustomId());
-				else
-					document.setCustomId("");
-
-				document.setFolder(folder);
+				document = fromDocument(doc, folder);
 				FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 				document.setPathExtended(fdao.computePathExtended(folder.getId()));
 			} catch (Throwable t) {
@@ -512,6 +459,73 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				throw new RuntimeException(t.getMessage(), t);
 			}
 		}
+		return document;
+	}
+
+	public static GUIDocument fromDocument(Document doc, GUIFolder folder) {
+		GUIDocument document = new GUIDocument();
+		document.setId(doc.getId());
+		document.setTitle(doc.getTitle());
+		document.setCustomId(doc.getCustomId());
+		if (doc.getTags().size() > 0)
+			document.setTags(doc.getTags().toArray(new String[doc.getTags().size()]));
+		else
+			document.setTags(new String[0]);
+		document.setType(doc.getType());
+		document.setFileName(doc.getFileName());
+		document.setVersion(doc.getVersion());
+		document.setCreation(doc.getCreation());
+		document.setCreator(doc.getCreator());
+		document.setDate(doc.getDate());
+		document.setPublisher(doc.getPublisher());
+		document.setFileVersion(doc.getFileVersion());
+		document.setLanguage(doc.getLanguage());
+		document.setSource(doc.getSource());
+		document.setRecipient(doc.getRecipient());
+		document.setTemplateId(doc.getTemplateId());
+		document.setSourceType(doc.getSourceType());
+		document.setObject(doc.getObject());
+		document.setCoverage(doc.getCoverage());
+		document.setSourceAuthor(doc.getSourceAuthor());
+		document.setSourceDate(doc.getSourceDate());
+		document.setSourceId(doc.getSourceId());
+		document.setLastModified(doc.getLastModified());
+		document.setLockUserId(doc.getLockUserId());
+		document.setComment(doc.getComment());
+		document.setStatus(doc.getStatus());
+		document.setWorkflowStatus(doc.getWorkflowStatus());
+		document.setImmutable(doc.getImmutable());
+		document.setFileSize(new Long(doc.getFileSize()).floatValue());
+		document.setStartPublishing(doc.getStartPublishing());
+		document.setStopPublishing(doc.getStopPublishing());
+		document.setPublished(doc.getPublished());
+		document.setSigned(doc.getSigned());
+		document.setBarcoded(doc.getBarcoded());
+		document.setIndexed(doc.getIndexed());
+
+		if (doc.getRating() != null)
+			document.setRating(doc.getRating());
+
+		if (doc.getCustomId() != null)
+			document.setCustomId(doc.getCustomId());
+		else
+			document.setCustomId("");
+
+		if (doc.getTemplate() != null) {
+			document.setTemplate(doc.getTemplate().getName());
+			document.setTemplateId(doc.getTemplate().getId());
+			GUIExtendedAttribute[] attributes = prepareGUIAttributes(doc.getTemplate(), doc);
+			document.setAttributes(attributes);
+		}
+
+		if (folder != null) {
+			document.setFolder(folder);
+		} else {
+			GUIFolder f = new GUIFolder(doc.getFolder().getId());
+			f.setName(doc.getFolder().getName());
+			document.setFolder(f);
+		}
+
 		return document;
 	}
 

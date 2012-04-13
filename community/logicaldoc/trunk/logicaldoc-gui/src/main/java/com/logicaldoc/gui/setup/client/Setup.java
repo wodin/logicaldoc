@@ -529,7 +529,7 @@ public class Setup implements EntryPoint {
 				submit.setDisabled(true);
 
 				// Clear an eventually saved documents list grid settings.
-				Offline.put("doclist", "");
+				Offline.put(Constants.COOKIE_DOCSLIST, "");
 			} else {
 				// Go to the next tab and enable the contained panel
 				tabs.selectTab(tabIndex + 1);

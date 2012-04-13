@@ -1,6 +1,5 @@
 package com.logicaldoc.core.searchengine;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -9,6 +8,8 @@ import java.util.Map;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.SpellCheckResponse.Suggestion;
 import org.apache.solr.common.SolrDocument;
+
+import com.logicaldoc.core.security.Folder;
 
 /**
  * Iterator on the collection of hits, plus some statistical informations about
@@ -56,7 +57,7 @@ public class Hits implements Iterator<Hit> {
 		// Compose the summary as concatenation of snippets
 		StringBuffer summary = new StringBuffer();
 		Object id = doc.getFieldValue("id");
-		if (rsp.getHighlighting()!=null && rsp.getHighlighting().get(id) != null) {
+		if (rsp.getHighlighting() != null && rsp.getHighlighting().get(id) != null) {
 			List<String> snippets = rsp.getHighlighting().get(id).get("content");
 			if (snippets != null)
 				for (String string : snippets) {
@@ -67,8 +68,8 @@ public class Hits implements Iterator<Hit> {
 		}
 
 		Float score = (Float) doc.getFieldValue("score");
-		if(score!=null)
-		  hit.setScore(createScore(rsp.getResults().getMaxScore(), score));
+		if (score != null)
+			hit.setScore(createScore(rsp.getResults().getMaxScore(), score));
 		hit.setSummary(summary.toString());
 
 		return hit;
@@ -80,27 +81,18 @@ public class Hits implements Iterator<Hit> {
 	}
 
 	public static Hit toHit(SolrDocument sdoc) {
-		Hit hit = new HitImpl();
-		hit.setDocId(Long.parseLong((String) sdoc.get(Fields.ID.getName())));
-		hit.setLanguage((String) sdoc.get(Fields.LANGUAGE.getName()));
-		hit.setTitle((String) sdoc.get(Fields.TITLE.getName()));
-		if (sdoc.get(Fields.FOLDER_ID.getName()) != null)
-			hit.setFolderId((Long) sdoc.get(Fields.FOLDER_ID.getName()));
-		hit.setFolderName((String) sdoc.get(Fields.FOLDER_NAME.getName()));
-		if (sdoc.get(Fields.SIZE.getName()) != null)
-			hit.setSize((Long) sdoc.get(Fields.SIZE.getName()));
-		hit.setDate((Date) sdoc.get(Fields.DATE.getName()));
-		hit.setSourceDate((Date) sdoc.get(Fields.SOURCE_DATE.getName()));
-		hit.setCreation((Date) sdoc.get(Fields.CREATION.getName()));
-		hit.setCustomId((String) sdoc.get(Fields.CUSTOM_ID.getName()));
-		hit.setSource((String) sdoc.get(Fields.SOURCE.getName()));
-		hit.setComment((String) sdoc.get(Fields.COMMENT.getName()));
-		hit.setType((String) sdoc.get(Fields.TYPE.getName()));
-		hit.setDocRef((Long) sdoc.get(Fields.DOC_REF.getName()));
+		Hit hit = new Hit();
+		hit.setId(Long.parseLong((String) sdoc.get(Fields.ID.getName())));
 
 		if (sdoc.getFieldValue("score") != null) {
 			Float score = (Float) sdoc.getFieldValue("score");
 			hit.setScore((int) (score * 100));
+		}
+
+		if (sdoc.get(Fields.FOLDER_ID.getName()) != null) {
+			Folder folder = new Folder();
+			folder.setId((Long) sdoc.get(Fields.FOLDER_ID.getName()));
+			hit.setFolder(folder);
 		}
 
 		return hit;
