@@ -6,21 +6,24 @@ import java.util.Random;
 import org.apache.commons.lang.StringUtils;
 
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
-import com.logicaldoc.core.searchengine.HitImpl;
+import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.search.WSSearchResult;
 
 public class LoaderSearchFullText extends AbstractLoaderThread {
 
 	private Random random;
+
 	private List<String> queries;
+
 	private String messageRecord;
 
-	public LoaderSearchFullText(LoaderSession session, String loaderName, long testTotal, long testLoadDepth, List<String> queries) {
+	public LoaderSearchFullText(LoaderSession session, String loaderName, long testTotal, long testLoadDepth,
+			List<String> queries) {
 		super(session, loaderName, testTotal, testLoadDepth);
 		this.queries = queries;
 		random = new Random();
 	}
-    
+
 	@Override
 	protected String doLoading(LoaderServerProxy serverProxy, long rootFolder) throws Exception {
 
@@ -31,12 +34,11 @@ public class LoaderSearchFullText extends AbstractLoaderThread {
 		return msg;
 	}
 
-    @Override
-    public String getSummary()
-    {
-        return super.getSummary() + messageRecord;
-    }
-    
+	@Override
+	public String getSummary() {
+		return super.getSummary() + messageRecord;
+	}
+
 	private String getRandomQuery() {
 
 		if (queries != null && queries.size() > 0) {
@@ -55,11 +57,11 @@ public class LoaderSearchFullText extends AbstractLoaderThread {
 		String lang = session.getLanguage();
 		if (StringUtils.isEmpty(lang))
 			lang = "en";
-		
+
 		// This is the language of the document
 		options.setLanguage(lang);
 		options.setExpression(query);
-		
+
 		// This is the language of the query
 		options.setExpressionLanguage(lang);
 
@@ -69,18 +71,18 @@ public class LoaderSearchFullText extends AbstractLoaderThread {
 
 		WSSearchResult sr = serverProxy.searchClient.find(serverProxy.ticket, options);
 
-//		System.out.println("HITS: " + sr.getTotalHits());
-//		System.out.println("search completed in ms: " + sr.getTime());
+		// System.out.println("HITS: " + sr.getTotalHits());
+		// System.out.println("search completed in ms: " + sr.getTime());
 
 		if (sr.getHits() != null) {
-			for (HitImpl res : sr.getHits()) {
-//				System.out.println("title: " + res.getTitle());
-//				System.out.println("res.id: " + res.getDocId());
-//				System.out.println("res.summary: " + res.getSummary());
-//				System.out.println("res.size: " + res.getSize());
-//				System.out.println("res.date: " + res.getDate());
-//				System.out.println("res.type: " + res.getType());
-//				System.out.println("res.score: " + res.getScore());
+			for (WSDocument res : sr.getHits()) {
+				// System.out.println("title: " + res.getTitle());
+				// System.out.println("res.id: " + res.getDocId());
+				// System.out.println("res.summary: " + res.getSummary());
+				// System.out.println("res.size: " + res.getSize());
+				// System.out.println("res.date: " + res.getDate());
+				// System.out.println("res.type: " + res.getType());
+				// System.out.println("res.score: " + res.getScore());
 				results++;
 			}
 		}
