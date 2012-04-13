@@ -137,7 +137,8 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		StaticTextItem wfStatus = ItemFactory.newStaticTextItem("wfStatus", "workflowstatus",
 				document.getWorkflowStatus());
 
-		StaticTextItem version = ItemFactory.newStaticTextItem("version", "version", document.getVersion());
+		StaticTextItem version = ItemFactory.newStaticTextItem("version", "fileversion", document.getFileVersion() + " ("
+				+ document.getVersion() + ")");
 
 		String comment = document.getComment();
 		if (comment != null && !"".equals(comment)) {
@@ -146,9 +147,6 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		}
 
 		StaticTextItem filename = ItemFactory.newStaticTextItem("fileName", "file", document.getFileName());
-		if (!document.getVersion().equals(document.getFileVersion())) {
-			filename.setValue(document.getFileName() + " (" + document.getFileVersion() + ")");
-		}
 
 		if (Feature.enabled(Feature.WORKFLOW))
 			form1.setItems(id, title, wfStatus, version, filename, size, creation, published, creator, publisher);

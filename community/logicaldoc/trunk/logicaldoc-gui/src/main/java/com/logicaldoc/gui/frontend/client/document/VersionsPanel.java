@@ -64,7 +64,7 @@ public class VersionsPanel extends DocumentDetailTab {
 		listGrid.setAutoFetchData(true);
 		dataSource = new VersionsDS(document.getId(), null, 100);
 		listGrid.setDataSource(dataSource);
-		listGrid.setFields(user, event, version, fileVersion, date, comment);
+		listGrid.setFields(user, event, fileVersion, version, date, comment);
 		addMember(listGrid);
 
 		setupContextMenu();
