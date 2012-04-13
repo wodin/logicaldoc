@@ -46,17 +46,20 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 
 		List<WSDocument> docs = new ArrayList<WSDocument>();
 		for (Hit hit : hitsList) {
-			docs.add(WSDocument.fromDocument(hit));
+			WSDocument doc = WSDocument.fromDocument(hit);
+			doc.setScore(hit.getScore());
+			doc.setSummary(hit.getSummary());
+			docs.add(doc);
 		}
 
-		searchResult.setTotalHits(hitsList.size());
+		searchResult.setTotalHits(docs.size());
 		searchResult.setHits(docs.toArray(new WSDocument[0]));
 		searchResult.setEstimatedHitsNumber(lastSearch.getEstimatedHitsNumber());
 		searchResult.setTime(lastSearch.getExecTime());
 		searchResult.setMoreHits(lastSearch.isMoreHitsPresent() ? 1 : 0);
 
 		log.info("User: " + user.getUserName() + " Query: " + options.getExpression());
-		log.info("Results number: " + hitsList.size());
+		log.info("Results number: " + docs.size());
 
 		return searchResult;
 	}

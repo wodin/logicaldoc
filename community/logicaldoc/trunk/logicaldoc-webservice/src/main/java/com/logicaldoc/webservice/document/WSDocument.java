@@ -181,10 +181,6 @@ public class WSDocument {
 			wsDoc.setWorkflowStatus(document.getWorkflowStatus());
 			if (document.getTemplate() != null)
 				wsDoc.setTemplateId(document.getTemplate().getId());
-			String sourceDate = null;
-			if (document.getSourceDate() != null)
-				sourceDate = AbstractService.convertDateToString(document.getSourceDate());
-			wsDoc.setSourceDate(sourceDate);
 			wsDoc.setImmutable(document.getImmutable());
 			if (document.getFolder() != null)
 				wsDoc.setFolderId(document.getFolder().getId());
@@ -192,10 +188,6 @@ public class WSDocument {
 				wsDoc.setIndexed(document.getIndexed());
 			wsDoc.setVersion(document.getVersion());
 			wsDoc.setFileVersion(document.getFileVersion());
-			String date = null;
-			if (document.getDate() != null)
-				date = AbstractService.convertDateToString(document.getDate());
-			wsDoc.setDate(date);
 			wsDoc.setPublisher(document.getPublisher());
 			wsDoc.setPublisherId(document.getPublisherId());
 			wsDoc.setCreator(document.getCreator());
@@ -210,6 +202,19 @@ public class WSDocument {
 			wsDoc.setDocRef(document.getDocRef());
 			wsDoc.setLastModified(AbstractService.convertDateToString(document.getLastModified()));
 			wsDoc.setRating(document.getRating());
+
+			String date = null;
+			if (document.getSourceDate() != null)
+				date = AbstractService.convertDateToString(document.getSourceDate());
+			wsDoc.setSourceDate(date);
+			date = null;
+			if (document.getDate() != null)
+				date = AbstractService.convertDateToString(document.getDate());
+			wsDoc.setDate(date);
+			date = null;
+			if (document.getCreation() != null)
+				date = AbstractService.convertDateToString(document.getCreation());
+			wsDoc.setCreation(date);
 
 			// Populate extended attributes
 			WSAttribute[] attributes = new WSAttribute[0];
@@ -349,7 +354,7 @@ public class WSDocument {
 		doc.setPublished(published);
 		doc.setStartPublishing(startPublishing);
 		doc.setStopPublishing(stopPublishing);
-		
+
 		return doc;
 	}
 
@@ -688,7 +693,7 @@ public class WSDocument {
 	public void setIcon(String icon) {
 		this.icon = icon;
 	}
-	
+
 	public String getPath() {
 		return path;
 	}
