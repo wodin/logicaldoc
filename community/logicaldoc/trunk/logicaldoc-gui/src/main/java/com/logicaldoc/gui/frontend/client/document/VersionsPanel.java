@@ -57,14 +57,18 @@ public class VersionsPanel extends DocumentDetailTab {
 		date.setCellFormatter(new DateCellFormatter(false));
 		date.setCanFilter(false);
 		ListGridField comment = new ListGridField("comment", I18N.message("comment"));
-
+		
+		ListGridField type = new ListGridField("type", I18N.message("type"), 55);
+		type.setType(ListGridFieldType.TEXT);
+		type.setAlign(Alignment.CENTER);
+		
 		listGrid = new ListGrid();
 		listGrid.setEmptyMessage(I18N.message("notitemstoshow"));
 		listGrid.setCanFreezeFields(true);
 		listGrid.setAutoFetchData(true);
 		dataSource = new VersionsDS(document.getId(), null, 100);
 		listGrid.setDataSource(dataSource);
-		listGrid.setFields(user, event, fileVersion, version, date, comment);
+		listGrid.setFields(user, event, type, fileVersion, version, date, comment);
 		addMember(listGrid);
 
 		setupContextMenu();

@@ -100,6 +100,7 @@ public class VersionsDataServlet extends HttpServlet {
 					writer.print("<template><![CDATA[" + cols[12] + "]]></template>");
 				else
 					writer.print("<template></template>");
+				writer.print("<type>" + (String) cols[11] + "</type>");
 				writer.print("</version>");
 			}
 
