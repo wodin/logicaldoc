@@ -150,4 +150,9 @@ public class DocumentClient implements DocumentService {
 	public void reindex(String sid, long docId) throws Exception {
 		client.reindex(sid, docId);
 	}
+
+	@Override
+	public WSHistory[] getHistory(String sid, long docId) throws Exception {
+		return client.getHistory(sid, docId);
+	}
 }

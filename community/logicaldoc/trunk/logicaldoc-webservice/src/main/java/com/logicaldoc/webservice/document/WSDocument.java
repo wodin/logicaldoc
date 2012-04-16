@@ -26,7 +26,6 @@ import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.webservice.AbstractService;
 import com.logicaldoc.webservice.WSAttribute;
 
-//import edu.emory.mathcs.backport.java.util.Arrays;
 
 /**
  * Web Service Document. Useful class to create repository Documents.

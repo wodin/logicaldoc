@@ -5,6 +5,7 @@ import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
 import com.logicaldoc.webservice.document.WSDocument;
+import com.logicaldoc.webservice.document.WSHistory;
 import com.logicaldoc.webservice.folder.FolderClient;
 import com.logicaldoc.webservice.search.SearchClient;
 import com.logicaldoc.webservice.search.WSSearchResult;
@@ -417,6 +418,10 @@ public class Main {
 			// "m.caruso@logicalobjects.it", "Test Invio Mail 2",
 			// "Questa mail è un test");
 
+			WSHistory[] history = documentClient.getHistory(sid, 12724);
+			for (WSHistory h : history) {
+				System.out.println(h.getDate()+"->"+h.getEvent()+" - "+h.getVersion());
+			}
 		} finally {
 			auth.logout(sid);
 		}
