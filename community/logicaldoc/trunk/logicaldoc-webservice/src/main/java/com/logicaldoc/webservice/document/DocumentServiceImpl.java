@@ -75,7 +75,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		transaction.setComment(document.getComment());
 		transaction.setUserId(user.getId());
 		transaction.setUserName(user.getFullName());
-		
+
 		// Get file to upload inputStream
 		InputStream stream = content.getInputStream();
 
@@ -182,6 +182,11 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public DataHandler getContent(String sid, long docId) throws Exception {
+		return getVersionContent(sid, docId, null);
+	}
+
+	@Override
+	public DataHandler getVersionContent(String sid, long docId, String version) throws Exception {
 		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
@@ -189,8 +194,15 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		checkDownloadEnable(user, doc.getFolder().getId());
 		checkPublished(user, doc);
 
+		String fileVersion = null;
+		if (version != null) {
+			VersionDAO vDao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
+			Version v = vDao.findByVersion(docId, version);
+			fileVersion = v.getFileVersion();
+		}
+
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
-		String resourceName = storer.getResourceName(doc, null, null);
+		String resourceName = storer.getResourceName(doc, fileVersion, null);
 
 		if (!storer.exists(doc.getId(), resourceName)) {
 			throw new FileNotFoundException(resourceName);
@@ -199,8 +211,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		log.debug("Attach file " + resourceName);
 
 		// Now we can append the 'document' attachment to the response
-		String resource = storer.getResourceName(doc, null, null);
-		byte[] bytes = storer.getBytes(doc.getId(), resource);
+		byte[] bytes = storer.getBytes(doc.getId(), resourceName);
 
 		String mime = "application/octet-stream";
 		try {
@@ -267,7 +278,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			log.error("Cannot move documents in the root");
 			throw new Exception("Cannot move documents in the root");
 		}
-		
+
 		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
@@ -572,7 +583,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			log.error("Cannot create alias in the root");
 			throw new Exception("Cannot create alias in the root");
 		}
-		
+
 		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document originalDoc = docDao.findById(docId);

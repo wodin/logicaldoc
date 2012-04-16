@@ -101,6 +101,11 @@ public class DocumentClient implements DocumentService {
 	}
 
 	@Override
+	public DataHandler getVersionContent(String sid, long docId, String version) throws Exception {
+		return client.getVersionContent(sid, docId, version);
+	}
+
+	@Override
 	public WSDocument[] getVersions(String sid, long docId) throws Exception {
 		return client.getVersions(sid, docId);
 	}
