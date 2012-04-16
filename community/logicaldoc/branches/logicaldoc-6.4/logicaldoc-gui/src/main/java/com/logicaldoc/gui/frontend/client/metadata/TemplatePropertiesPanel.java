@@ -431,7 +431,7 @@ public class TemplatePropertiesPanel extends HLayout {
 
 		TextItem name = ItemFactory.newTextItem("name", I18N.message("name"), template.getName());
 		name.setRequired(true);
-		name.setDisabled(readonly || template.getId() != 0);
+		name.setDisabled(readonly);
 		if (!readonly)
 			name.addChangedHandler(changedHandler);
 
