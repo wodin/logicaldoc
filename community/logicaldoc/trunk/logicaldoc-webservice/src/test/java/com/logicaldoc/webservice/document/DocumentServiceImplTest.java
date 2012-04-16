@@ -117,7 +117,8 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		wsDoc.setTitle("document test");
 		wsDoc.setCustomId("yyyyyyyy");
 		File file = new File("pom.xml");
-		docServiceImpl.create("", wsDoc, new DataHandler(new FileDataSource(file)));
+		wsDoc.setComment("comment");
+		docServiceImpl.create("xxxx", wsDoc, new DataHandler(new FileDataSource(file)));
 
 		Document doc = docDao.findByTitleAndParentFolderId(wsDoc.getFolderId(), wsDoc.getTitle(), null).get(0);
 		Assert.assertNotNull(doc);
