@@ -131,11 +131,23 @@ public interface DocumentService {
 	 * 
 	 * @param sid Session identifier
 	 * @param docId The document id
-	 * @param version The specific version(it can be empty)
 	 * @return The requested document's binary
 	 * @throws Exception
 	 */
 	public DataHandler getContent(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId)
+			throws Exception;
+	
+	/**
+	 * Gets the document content of an existing document with the given
+	 * identifier.
+	 * 
+	 * @param sid Session identifier
+	 * @param docId The document id
+	 * @param version The specific version(it can be empty)
+	 * @return The requested document's binary
+	 * @throws Exception
+	 */
+	public DataHandler getVersionContent(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId, @WebParam(name = "version" ) String version) 
 			throws Exception;
 
 	/**

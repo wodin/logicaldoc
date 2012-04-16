@@ -379,8 +379,9 @@ public class Main {
 			// doc.getLockUserId().longValue());
 			// System.out.println("indexed: " + doc.getIndexed());
 			//
-			// DataHandler data = documentClient.getContent(sid, 665);
-			// data.writeTo(new FileOutputStream("C:/tmp/buf.doc"));
+			// DataHandler data = documentClient.getVersionContent(sid, 12724,
+			// "1.1");
+			// data.writeTo(new FileOutputStream("C:/tmp/buf.txt"));
 
 			// doc = documentClient.getDocument(sid, 30);
 			// System.out.println("status: " + doc.getStatus());
@@ -415,12 +416,7 @@ public class Main {
 			// documentClient.sendEmail("ciccio", new Long[] { 690L, 32L, 29L },
 			// "m.caruso@logicalobjects.it", "Test Invio Mail 2",
 			// "Questa mail è un test");
-			
-			
-			WSDocument wsDoc = documentClient.getDocument(sid, 12727L);
-			wsDoc.setComment("xxxxxx");
-			wsDoc.setCoverage("boh");
-			documentClient.update(sid, wsDoc);
+
 		} finally {
 			auth.logout(sid);
 		}
