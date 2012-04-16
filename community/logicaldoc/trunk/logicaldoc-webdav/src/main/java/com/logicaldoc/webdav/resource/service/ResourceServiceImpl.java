@@ -180,7 +180,7 @@ public class ResourceServiceImpl implements ResourceService {
 			if (path.equals("/") && name.equals("")) {
 				folder = folderDAO.findById(Folder.ROOTID);
 			} else
-				folder = folderDAO.find(name, path);
+				folder = folderDAO.findByPath(path + "/" + name);
 
 			// if this resource request is a folder
 			if (folder != null)
@@ -237,7 +237,7 @@ public class ResourceServiceImpl implements ResourceService {
 		if ("/".equals(resourcePath.trim()) && "".equals(name))
 			folder = folderDAO.findById(Folder.ROOTID);
 		else
-			folder = folderDAO.find(name, resourcePath);
+			folder = folderDAO.findByPath(resourcePath + "/" + name);
 
 		return marshallFolder(folder, userId, session);
 	}

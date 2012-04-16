@@ -100,7 +100,6 @@ public interface FolderService {
 	@WebResult(name = "workspace")
 	public WSFolder getDefaultWorkspace(@WebParam(name = "sid") String sid) throws Exception;
 
-	
 	/**
 	 * Test if a folder identifier is readable.
 	 * 
@@ -221,11 +220,21 @@ public interface FolderService {
 	 * 
 	 * @param sid Session identifier
 	 * @param parentId The parent folder
-	 * @param path The folder path(for example /dog/cat/mouse)
+	 * @param path The folder path(for example /Default/dog/cat/mouse)
 	 * 
 	 * @return The created folder
 	 */
 	public WSFolder createPath(String sid, long parentId, String path) throws Exception;
+
+	/**
+	 * Finds the folder at the specified path
+	 * 
+	 * @param sid Session identifier
+	 * @param path The folder path(for example /Default/dog/cat/mouse)
+	 * 
+	 * @return The created folder
+	 */
+	public WSFolder findByPath(String sid, String path) throws Exception;
 
 	/**
 	 * Retrieves the list of all workspaces.

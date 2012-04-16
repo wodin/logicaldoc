@@ -912,21 +912,21 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public Folder find(String name, String pathExtended) {
+	public Folder findByPath(String pathExtended) {
 		StringTokenizer st = new StringTokenizer(pathExtended, "/", false);
-		Folder parent = findById(Folder.ROOTID);
+		Folder folder = findById(Folder.ROOTID);
 		while (st.hasMoreTokens()) {
-			List<Folder> list = findByName(parent, st.nextToken(), true);
-			if (list.isEmpty())
-				return null;
-			parent = list.get(0);
-
+			String token = st.nextToken();
+			if (StringUtils.isEmpty(token))
+				continue;
+			List<Folder> list = findByName(folder, token, true);
+			if (list.isEmpty()) {
+				folder = null;
+				break;
+			}
+			folder = list.get(0);
 		}
-
-		List<Folder> specified_folder = findByName(parent, name, true);
-		if (specified_folder != null && specified_folder.size() > 0)
-			return specified_folder.iterator().next();
-		return null;
+		return folder;
 	}
 
 	@Override

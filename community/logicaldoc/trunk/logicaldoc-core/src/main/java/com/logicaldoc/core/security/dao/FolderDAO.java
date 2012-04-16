@@ -232,13 +232,12 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	public String computePathExtended(long id);
 
 	/**
-	 * Retrieval of a folder by the parent extended path
+	 * Retrieval of a folder by the extended path
 	 * 
-	 * @param name
 	 * @param pathExtended
 	 * @return
 	 */
-	public Folder find(String name, String pathExtended);
+	public Folder findByPath(String pathExtended);
 
 	/**
 	 * Move a folder into another folder
