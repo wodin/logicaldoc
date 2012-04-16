@@ -1,10 +1,10 @@
-package com.logicaldoc.benchmark;
+package com.logicaldoc.bm;
 
 import java.io.File;
 import java.util.Random;
 
 /**
- * Gives a random file from the docs in the docsFolder
+ * Gives a random file from the docs in a source folder
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.4

@@ -1,4 +1,4 @@
-package com.logicaldoc.cache;
+package com.logicaldoc.bm.cache;
 
 import java.io.Serializable;
 import java.util.Collection;

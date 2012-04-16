@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans SYSTEM "spring-beans-2.0.dtd">
-<beans default-lazy-init="false" default-autowire="no" default-dependency-check="none">
+<beans default-lazy-init="false" default-autowire="no"
+	default-dependency-check="none">
 
 	<!-- This post processor ensures placeholders substitutions -->
 	<bean id="PropertyPlaceholderConfigurer" class="com.logicaldoc.util.spring.PropertiesPlaceHolder"
@@ -18,72 +19,16 @@
 	<bean id="Context" class="com.logicaldoc.util.Context" abstract="false"
 		lazy-init="default" autowire="default" dependency-check="default" />
 
-	<bean id="RandomFile" class="com.logicaldoc.benchmark.RandomFile">
-		<property name="sourceDir" value="${load.sourcedir}" />
+	<bean id="LoaderSession" class="com.logicaldoc.bm.LoaderSession"
+		init-method="connect" destroy-method="close">
+		<property name="url" value="${session.url}" />
+		<property name="username" value="${session.username}" />
+		<property name="password" value="${session.password}" />
+		<property name="language" value="${session.language}" />
 	</bean>
-	
-	<bean id="Loader" class="com.logicaldoc.benchmark.WsLoader">
-		<property name="randomFile" ref="RandomFile" />
-		<property name="url" value="${connection.url}" />
-		<property name="username" value="${connection.username}" />
-		<property name="password" value="${connection.password}" />
-		<property name="folderProfile" value="${load.folderprofile}" />
-		<property name="threads" value="${load.threads}" />
-		<property name="iterations" value="${load.iterations}" />
-		<property name="language" value="${load.language}" />
-	</bean>
-	
-	
-	<bean id="TestUpload" class="com.logicaldoc.bm.TestDefinition">
-		<property name="name" value="upload.fast" />
-		<property name="type" value="upload" />
-		<property name="testCount" value="${load.threads}" />
-		<property name="iterations" value="${load.iterations}" />
-		<property name="depth" value="2" />		
-	</bean>
-	
-	<bean id="TestTotals" class="com.logicaldoc.bm.TestDefinition">
-		<property name="name" value="totals.basic" />
-		<property name="type" value="totals" />
-		<property name="testCount" value="1" />
-		<property name="iterations" value="50" />
-		<property name="depth" value="1" />
-	</bean>	
-	
-	<bean id="TestListFolders" class="com.logicaldoc.bm.TestDefinition">
-		<property name="name" value="listFolders.fast" />
-		<property name="type" value="listFolders" />
-		<property name="testCount" value="1" />
-		<property name="iterations" value="50" />
-		<property name="depth" value="1" />
-	</bean>
-	
-	<bean id="TestSearchFullText" class="com.logicaldoc.bm.TestDefinition">
-		<property name="name" value="searchFullText.fast" />
-		<property name="type" value="searchFullText" />
-		<property name="testCount" value="1" />
-		<property name="iterations" value="500" />
-		<property name="depth" value="1" />
-	</bean>	
-	
-	<bean id="MultiLoader" class="com.logicaldoc.bm.MultiLoader">		
-		<property name="url" value="${connection.url}" />
-		<property name="username" value="${connection.username}" />
-		<property name="password" value="${connection.password}" />
-		<property name="rootFolder" value="${load.rootfolder}" />
-		<property name="sourceDir" value="${load.sourcedir}" />		
-		<property name="folderProfile" value="${load.folderprofile}" />
-		<property name="language" value="${load.language}" />
-		<property name="testList">
-			<list>
-			    <ref bean="TestUpload" />
-			    <!-- 
-			    <ref bean="TestTotals" />
-			    <ref bean="TestListFolders" />
-			    <ref bean="TestSearchFullText" />
-			    -->			    
-			</list>
-		</property>
-	</bean>	
 
+	<bean id="MultiLoader" class="com.logicaldoc.bm.MultiLoader" init-method="init">
+		<property name="session" ref="LoaderSession" />
+		<property name="config" ref="ContextProperties" />	
+	</bean>
 </beans>
