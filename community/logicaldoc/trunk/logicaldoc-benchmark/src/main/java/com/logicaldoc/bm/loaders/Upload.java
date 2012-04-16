@@ -13,7 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.bm.AbstractLoader;
-import com.logicaldoc.bm.LoadServerProxy;
+import com.logicaldoc.bm.ServerProxy;
 import com.logicaldoc.bm.RandomFile;
 import com.logicaldoc.bm.cache.EhCacheAdapter;
 import com.logicaldoc.util.Context;
@@ -82,18 +82,18 @@ public class Upload extends AbstractLoader {
 	}
 
 	@Override
-	protected String doLoading(LoadServerProxy serverProxy) throws Exception {
+	protected String doLoading(ServerProxy serverProxy) throws Exception {
 
 		// Get a random folder
 		List<String> folderPath = chooseFolderPath();
 
 		// Make sure the folder exists
-		Long folderID = makeFolders(serverProxy.ticket, serverProxy, rootFolder, folderPath);
+		Long folderID = makeFolders(serverProxy.sid, serverProxy, rootFolder, folderPath);
 
 		File file = getFile();
 		String title = formatter.format(loaderCount);
 
-		Long docId = createDocument(serverProxy.ticket, serverProxy, folderID, title, file);
+		Long docId = createDocument(serverProxy.sid, serverProxy, folderID, title, file);
 		if (docId == null) {
 			throw new Exception("Error creating document: " + file.getName());
 		}
@@ -101,7 +101,7 @@ public class Upload extends AbstractLoader {
 		return null;
 	}
 
-	private Long createDocument(String ticket, LoadServerProxy serverProxy, long folderId, String title, File file) {
+	private Long createDocument(String ticket, ServerProxy serverProxy, long folderId, String title, File file) {
 		String fileName = file.getName();
 
 		WSDocument doc = new WSDocument();
@@ -138,7 +138,7 @@ public class Upload extends AbstractLoader {
 	/**
 	 * Creates or find the folders based on caching.
 	 */
-	protected Long makeFolders(String ticket, LoadServerProxy serverProxy, Long rootFolder, List<String> folderPath)
+	protected Long makeFolders(String ticket, ServerProxy serverProxy, Long rootFolder, List<String> folderPath)
 			throws Exception {
 		// Iterate down the path, checking the cache and populating it as
 		// necessary
@@ -178,7 +178,7 @@ public class Upload extends AbstractLoader {
 	/**
 	 * Creates or find the folders based on caching.
 	 */
-	protected Long makeFoldersFromPath(String ticket, LoadServerProxy serverProxy, Long rootFolder,
+	protected Long makeFoldersFromPath(String ticket, ServerProxy serverProxy, Long rootFolder,
 			List<String> folderPath) throws Exception {
 		// Iterate down the path, checking the cache and populating it as
 		// necessary
@@ -203,11 +203,11 @@ public class Upload extends AbstractLoader {
 		return folderID;
 	}
 
-	private String getBasePath(LoadServerProxy serverProxy, Long rootFolder) {
+	private String getBasePath(ServerProxy serverProxy, Long rootFolder) {
 		if (basePath == null) {
 			try {
 				String pathString = "";
-				WSFolder[] folders = serverProxy.folderClient.getPath(serverProxy.ticket, rootFolder);
+				WSFolder[] folders = serverProxy.folderClient.getPath(serverProxy.sid, rootFolder);
 				for (int i = 0; i < folders.length; i++) {
 					pathString += "/" + folders[i].getName();
 				}

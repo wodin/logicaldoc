@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.bm.AbstractLoader;
-import com.logicaldoc.bm.LoadServerProxy;
+import com.logicaldoc.bm.ServerProxy;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.webservice.folder.WSFolder;
@@ -36,7 +36,7 @@ public class ListFolders extends AbstractLoader {
 	 * Go to a directory and get a listing of the folders beneath it.
 	 */
 	@Override
-	protected String doLoading(LoadServerProxy serverProxy) throws Exception {
+	protected String doLoading(ServerProxy serverProxy) throws Exception {
 		totalFolders = 0;
 		listFoldersRecursive(serverProxy, rootFolder);
 
@@ -54,11 +54,11 @@ public class ListFolders extends AbstractLoader {
 	/**
 	 * Recursive method to list all folders in the hierarchy.
 	 */
-	private void listFoldersRecursive(LoadServerProxy serverProxy, long parentFolder) {
+	private void listFoldersRecursive(ServerProxy serverProxy, long parentFolder) {
 
 		WSFolder[] folders = new WSFolder[0];
 		try {
-			folders = serverProxy.folderClient.listChildren(serverProxy.ticket, parentFolder);
+			folders = serverProxy.folderClient.listChildren(serverProxy.sid, parentFolder);
 		} catch (Exception e) {
 			log.warn("listFoldersRecursive(): ", e);
 		}

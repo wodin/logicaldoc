@@ -5,7 +5,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Random;
+import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,29 +41,39 @@ public class LoadSession {
 
 	private String language = "en";
 
-	private LoadServerProxy remoteServer;
-
 	private OutputStream outSummary;
 
 	private long startTime;
+
+	private List<String> urls = new ArrayList<String>();
+
+	private Random random = new Random();
+
+	private List<ServerProxy> servers = new ArrayList<ServerProxy>();
 
 	public LoadSession() {
 
 	}
 
-	public LoadServerProxy getRemoteServer() {
-		return remoteServer;
+	public ServerProxy getRemoteServer() {
+		if (servers != null && servers.size() > 0) {
+			int idx = random.nextInt(servers.size());
+			return servers.get(idx);
+		}
+		return null;
 	}
 
 	/**
 	 * Connects to the server before first use.
 	 */
 	public synchronized void connect() throws Exception {
-
-		if (remoteServer != null) {
-			throw new RuntimeException("The client has already been initialized");
+		StringTokenizer tokenizer = new StringTokenizer(url, ",", false);
+		while (tokenizer.hasMoreTokens()) {
+			String s = tokenizer.nextToken().trim();
+			ServerProxy server = LoadSession.connect(s, username, password);
+			servers.add(server);
+			log.info("Connected to server " + s);
 		}
-		remoteServer = LoadSession.connect(url, username, password);
 
 		// Construct output and error files
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
@@ -74,13 +88,15 @@ public class LoadSession {
 	}
 
 	public synchronized void close() {
-		this.remoteServer.authClient.logout(remoteServer.ticket);
+		for (ServerProxy server : servers) {
+			server.logout();
+		}
 	}
 
-	private static LoadServerProxy connect(String url, String username, String password) throws Exception {
+	private static ServerProxy connect(String url, String username, String password) throws Exception {
 		log.info("Connect to the server");
 
-		LoadServerProxy remoteServer = null;
+		ServerProxy remoteServer = null;
 
 		try {
 			AuthClient auth = new AuthClient(url + "/services/Auth");
@@ -91,13 +107,13 @@ public class LoadSession {
 			log.info("Connection established");
 
 			// Authenticate
-			String ticket = auth.login(username, password);
-			log.info("Created SID: " + ticket);
 
 			// Store the service references
-			LoadServerProxy lsp = new LoadServerProxy(url, ticket, auth, folderClient, documentClient, systemClient,
-					searchClient);
+			ServerProxy lsp = new ServerProxy(url, auth, folderClient, documentClient, systemClient, searchClient);
 			remoteServer = lsp;
+			lsp.login(username, password);
+			String ticket = auth.login(username, password);
+			log.info("Created SID: " + ticket);
 		} catch (Throwable e) {
 			log.error("Unable to initialize WebServices connection", e);
 		}
@@ -158,8 +174,8 @@ public class LoadSession {
 		return url;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setUrl(String urls) {
+		this.url = urls;
 	}
 
 	public void setLanguage(String language) {

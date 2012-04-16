@@ -19,7 +19,7 @@
 	<bean id="Context" class="com.logicaldoc.util.Context" abstract="false"
 		lazy-init="default" autowire="default" dependency-check="default" />
 
-	<bean id="LoaderSession" class="com.logicaldoc.bm.LoaderSession"
+	<bean id="LoadSession" class="com.logicaldoc.bm.LoadSession"
 		init-method="connect" destroy-method="close">
 		<property name="url" value="${session.url}" />
 		<property name="username" value="${session.username}" />
@@ -27,8 +27,9 @@
 		<property name="language" value="${session.language}" />
 	</bean>
 
-	<bean id="MultiLoader" class="com.logicaldoc.bm.MultiLoader" init-method="init">
-		<property name="session" ref="LoaderSession" />
-		<property name="config" ref="ContextProperties" />	
+	<bean id="MultiLoader" class="com.logicaldoc.bm.MultiLoader"
+		init-method="init">
+		<property name="session" ref="LoadSession" />
+		<property name="config" ref="ContextProperties" />
 	</bean>
 </beans>
