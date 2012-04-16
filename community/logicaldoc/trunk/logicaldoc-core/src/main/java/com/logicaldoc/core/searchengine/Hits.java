@@ -95,6 +95,10 @@ public class Hits implements Iterator<Hit> {
 			hit.setFolder(folder);
 		}
 
+		if (sdoc.getFieldValue(Fields.LANGUAGE.getName()) != null) {
+			hit.setLanguage(sdoc.getFieldValue(Fields.LANGUAGE.getName()).toString());
+		}
+		
 		return hit;
 	}
 
