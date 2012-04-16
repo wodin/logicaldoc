@@ -461,7 +461,6 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public Document create(InputStream content, Document docVO, History transaction) throws Exception {
 		assert (transaction != null);
-		assert (transaction.getComment() != null);
 		assert (docVO != null);
 		assert (content != null);
 

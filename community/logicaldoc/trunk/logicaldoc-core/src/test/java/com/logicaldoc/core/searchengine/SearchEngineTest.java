@@ -61,13 +61,9 @@ public class SearchEngineTest extends AbstractCoreTCase {
 
 		Hit hit = engine.getHit(1L);
 		Assert.assertEquals(1L, hit.getId());
-		Assert.assertEquals("Document test 1", hit.getTitle());
-		Assert.assertEquals("it", hit.getLanguage());
 
 		hit = engine.getHit(111L);
 		Assert.assertEquals(111L, hit.getId());
-		Assert.assertEquals("Document test 111", hit.getTitle());
-		Assert.assertEquals("en", hit.getLanguage());
 
 		Assert.assertEquals(2, engine.getCount());
 
@@ -80,7 +76,6 @@ public class SearchEngineTest extends AbstractCoreTCase {
 		testAddHit();
 		Hit hit = engine.getHit(1L);
 		Assert.assertEquals(1L, hit.getId());
-		Assert.assertEquals("Document test 1", hit.getTitle());
 		Assert.assertEquals("it", hit.getLanguage());
 
 		engine.deleteHit(1L);
@@ -126,7 +121,6 @@ public class SearchEngineTest extends AbstractCoreTCase {
 
 		Hit hit = engine.getHit(1L);
 		Assert.assertEquals(1L, hit.getId());
-		Assert.assertEquals("Document test 1", hit.getTitle());
 		Assert.assertEquals("en", hit.getLanguage());
 
 		engine.close();
