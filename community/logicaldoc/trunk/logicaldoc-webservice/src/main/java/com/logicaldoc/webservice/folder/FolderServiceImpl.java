@@ -96,6 +96,20 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	}
 
 	@Override
+	public WSFolder findByPath(String sid, String path) throws Exception {
+		User user = validateSession(sid);
+
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		Folder folder = folderDao.findByPath(path);
+		if (folder == null)
+			return null;
+
+		folderDao.initialize(folder);
+		checkReadEnable(user, folder.getId());
+		return WSFolder.fromFolder(folder);
+	}
+
+	@Override
 	public boolean isReadable(String sid, long folderId) throws Exception {
 		User user = validateSession(sid);
 		try {

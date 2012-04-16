@@ -68,17 +68,17 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFind() {
-		Folder folder = dao.find("test", "/");
+		Folder folder = dao.findByPath("/test");
 		Assert.assertNotNull(folder);
 		Assert.assertEquals("test", folder.getName());
 		Assert.assertEquals(1200, folder.getId());
 
-		folder = dao.find("xyz", "/test/ABC");
+		folder = dao.findByPath("/test/ABC/xyz");
 		Assert.assertNotNull(folder);
 		Assert.assertEquals("xyz", folder.getName());
 		Assert.assertEquals(1202, folder.getId());
 
-		folder = dao.find("qqq", "/test/ABC");
+		folder = dao.findByPath("/test/ABC/qqq");
 		Assert.assertNull(folder);
 	}
 
