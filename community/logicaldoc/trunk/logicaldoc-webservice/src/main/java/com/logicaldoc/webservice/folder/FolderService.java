@@ -136,6 +136,7 @@ public interface FolderService {
 	 * @throws Exception
 	 */
 	@WebResult(name = "folder")
+	@Deprecated
 	public WSFolder[] list(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
 			throws Exception;
 

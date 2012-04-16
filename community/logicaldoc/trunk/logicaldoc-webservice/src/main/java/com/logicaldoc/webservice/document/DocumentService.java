@@ -136,7 +136,7 @@ public interface DocumentService {
 	 */
 	public DataHandler getContent(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId)
 			throws Exception;
-	
+
 	/**
 	 * Gets the document content of an existing document with the given
 	 * identifier.
@@ -147,8 +147,8 @@ public interface DocumentService {
 	 * @return The requested document's binary
 	 * @throws Exception
 	 */
-	public DataHandler getVersionContent(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId, @WebParam(name = "version" ) String version) 
-			throws Exception;
+	public DataHandler getVersionContent(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
+			@WebParam(name = "version") String version) throws Exception;
 
 	/**
 	 * Checkouts an existing document with the given identifier.
@@ -239,6 +239,18 @@ public interface DocumentService {
 			@WebParam(name = "maxHits") Integer maxHits) throws Exception;
 
 	/**
+	 * Gets the history of a given document
+	 * 
+	 * @param sid Session identifier
+	 * @param docId The document id
+	 * @return Array of history records
+	 * @throws Exception
+	 */
+	@WebResult(name = "history")
+	public WSHistory[] getHistory(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId)
+			throws Exception;
+
+	/**
 	 * Sends a set of documents as mail attachments
 	 * 
 	 * @param sid Session identifiers
@@ -264,7 +276,7 @@ public interface DocumentService {
 	@WebResult(name = "document")
 	public WSDocument createAlias(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
 			@WebParam(name = "folderId") long folderId) throws Exception;
-	
+
 	/**
 	 * Reindexes(or indexes) a document
 	 * 
@@ -274,5 +286,5 @@ public interface DocumentService {
 	 * @throws Exception
 	 */
 	public void reindex(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId) throws Exception;
-	
+
 }
