@@ -12,10 +12,10 @@ import com.logicaldoc.webservice.system.SystemClient;
  * @author Alessandro Gasparini - Logical Objects
  * @since 6.5
  */
-public class LoadServerProxy {
-	public final String rmiUrl;
+public class ServerProxy {
+	public final String url;
 
-	public final String ticket;
+	public String sid;
 
 	public AuthClient authClient;
 
@@ -27,14 +27,22 @@ public class LoadServerProxy {
 
 	public final SearchClient searchClient;
 
-	public LoadServerProxy(String rmiUrl, String ticket, AuthClient authClient, FolderClient folderClient,
+	public ServerProxy(String url, AuthClient authClient, FolderClient folderClient,
 			DocumentClient documentClient, SystemClient systemClient, SearchClient searchClient) {
-		this.rmiUrl = rmiUrl;
-		this.ticket = ticket;
+		this.url = url;
 		this.authClient = authClient;
 		this.folderClient = folderClient;
 		this.documentClient = documentClient;
 		this.systemClient = systemClient;
 		this.searchClient = searchClient;
+	}
+
+	public void logout() {
+		authClient.logout(sid);
+	}
+
+	public String login(String username, String password) throws Exception {
+		sid = authClient.login(username, password);
+		return sid;
 	}
 }

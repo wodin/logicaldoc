@@ -12,7 +12,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.bm.AbstractLoader;
-import com.logicaldoc.bm.LoadServerProxy;
+import com.logicaldoc.bm.ServerProxy;
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.search.WSSearchResult;
@@ -26,7 +26,7 @@ import com.logicaldoc.webservice.search.WSSearchResult;
 public class Search extends AbstractLoader {
 	private static Log log = LogFactory.getLog(Search.class);
 
-	private Random random;
+	private Random random = new Random();
 
 	private List<String> expressions = new ArrayList<String>();
 
@@ -34,12 +34,11 @@ public class Search extends AbstractLoader {
 
 	public Search() {
 		super(Search.class.getName().substring(Search.class.getName().lastIndexOf('.') + 1));
-		random = new Random();
 		loadExpressions();
 	}
 
 	@Override
-	protected String doLoading(LoadServerProxy serverProxy) throws Exception {
+	protected String doLoading(ServerProxy serverProxy) throws Exception {
 		String query = getRandomQuery();
 		int results = performFullTextSearch(serverProxy, query);
 		String msg = String.format("%d hits for query \"%s\"", results, query);
@@ -60,7 +59,7 @@ public class Search extends AbstractLoader {
 		return null;
 	}
 
-	private int performFullTextSearch(LoadServerProxy serverProxy, String query) throws Exception {
+	private int performFullTextSearch(ServerProxy serverProxy, String query) throws Exception {
 		int results = 0;
 
 		FulltextSearchOptions options = new FulltextSearchOptions();
@@ -80,7 +79,7 @@ public class Search extends AbstractLoader {
 		// for this search
 		options.setMaxHits(50);
 
-		WSSearchResult sr = serverProxy.searchClient.find(serverProxy.ticket, options);
+		WSSearchResult sr = serverProxy.searchClient.find(serverProxy.sid, options);
 
 		// System.out.println("HITS: " + sr.getTotalHits());
 		// System.out.println("search completed in ms: " + sr.getTime());
