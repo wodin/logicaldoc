@@ -17,6 +17,7 @@ import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
+import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
@@ -68,6 +69,8 @@ public class ClusteringPanel extends HLayout {
 		TextItem context = ItemFactory.newTextItem("context", I18N.message("contextpath"), parameters[4].getValue());
 		context.setRequired(true);
 
+		StaticTextItem id = ItemFactory.newStaticTextItem("id", I18N.message("id"), parameters[5].getValue());
+		
 		ButtonItem save = new ButtonItem();
 		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
@@ -99,7 +102,7 @@ public class ClusteringPanel extends HLayout {
 			}
 		});
 
-		clusterForm.setItems(enabled, name, host, port, context, save);
+		clusterForm.setItems(enabled, id, name, host, port, context, save);
 		settings.setPane(clusterForm);
 
 		Tab channels = new Tab();
