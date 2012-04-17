@@ -156,6 +156,9 @@ public class FulltextSearch extends Search {
 			}
 		}
 
+		if(hitsMap.isEmpty())
+			return;
+		
 		estimatedHitsNumber = results.getEstimatedCount();
 
 		String hitsIdsStr = hitsMap.keySet().toString().replace('[', '(').replace(']', ')');
