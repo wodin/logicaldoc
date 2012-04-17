@@ -96,7 +96,7 @@ public class SystemMenu extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				service.loadSettingsByNames(Session.get().getSid(), new String[] { "cluster.enabled", "cluster.name",
-						"cluster.node.host", "cluster.node.port", "cluster.node.context" },
+						"cluster.node.host", "cluster.node.port", "cluster.node.context", "cluster.id" },
 						new AsyncCallback<GUIParameter[]>() {
 
 							@Override
