@@ -602,11 +602,6 @@
           <version>3.7</version>
           <type>jar</type>
         </dependency>
-		    <dependency>
-			    <groupId>org.hyperic.sigar</groupId>
-			    <artifactId>sigar</artifactId>
-			    <version>1.6.4</version>
-		    </dependency>
         <dependency>
 	        <groupId>org.jgroups</groupId>
 	        <artifactId>jgroups</artifactId>
