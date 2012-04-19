@@ -33,8 +33,6 @@ public class GUIScheduling implements Serializable {
 
 	private long interval = 60000;
 
-	private int minCpuIdle = 0;
-
 	private Date previousFireTime = new Date();
 
 	private Date nextFireTime = new Date();
@@ -132,15 +130,7 @@ public class GUIScheduling implements Serializable {
 	public void setInterval(long interval) {
 		this.interval = interval;
 	}
-
-	public int getMinCpuIdle() {
-		return minCpuIdle;
-	}
-
-	public void setMinCpuIdle(int minCpuIdle) {
-		this.minCpuIdle = minCpuIdle;
-	}
-
+	
 	public Date getPreviousFireTime() {
 		return previousFireTime;
 	}

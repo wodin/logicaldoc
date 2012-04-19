@@ -110,11 +110,6 @@ public class SchedulingPanel extends VLayout {
 		maxDuration.setDefaultValue(Long.toString(task.getScheduling().getMaxLength()));
 		maxDuration.addChangedHandler(changedHandler);
 
-		// CPU Idle
-		cpuIdle = ItemFactory.newValidateIntegerItem("cpuIdle", "schedulingidle", null, -1, null);
-		cpuIdle.setDefaultValue(task.getScheduling().getMinCpuIdle());
-		cpuIdle.addChangedHandler(changedHandler);
-
 		// Initial delay
 		initialDelay = ItemFactory.newValidateIntegerItem("initialDelay", "initialdelay", null, 1, null);
 		initialDelay.setDefaultValue(new Integer(Long.toString(task.getScheduling().getDelay())));
@@ -228,13 +223,6 @@ public class SchedulingPanel extends VLayout {
 					task.getScheduling().setSimple(false);
 
 				task.getScheduling().setMaxLength(Long.parseLong((String) values.get("maxDuration")));
-				int intValue = 0;
-				if (values.get("cpuIdle") instanceof String)
-					intValue = Integer.parseInt((String) values.get("cpuIdle"));
-				else
-					intValue = ((Integer) values.get("cpuIdle")).intValue();
-
-				task.getScheduling().setMinCpuIdle(intValue);
 
 				if (task.getScheduling().isSimple() || ((String) values.get("simple")).equals("true")) {
 					long longValue = 0;
