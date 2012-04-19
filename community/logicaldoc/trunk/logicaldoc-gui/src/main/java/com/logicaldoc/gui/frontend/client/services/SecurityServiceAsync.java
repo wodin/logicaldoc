@@ -13,7 +13,8 @@ public interface SecurityServiceAsync {
 
 	void logout(String sid, AsyncCallback<Void> callback);
 
-	void changePassword(long userId, String oldPassword, String newPassword, AsyncCallback<Integer> callback);
+	void changePassword(long userId, String oldPassword, String newPassword, boolean notify,
+			AsyncCallback<Integer> callback);
 
 	void deleteUser(String sid, long userId, AsyncCallback<Void> callback);
 

@@ -22,6 +22,7 @@ import com.smartgwt.client.types.MultipleAppearance;
 import com.smartgwt.client.widgets.HeaderControl.HeaderIcon;
 import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.FloatItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
@@ -244,6 +245,14 @@ public class ItemFactory {
 		return radioGroupItem;
 	}
 
+	public static CheckboxItem newCheckbox(String name, String title) {
+		CheckboxItem item = new CheckboxItem();
+		item.setName(name);
+		item.setTitle(I18N.message(title));
+		item.setHintStyle("hint");
+		return item;
+	}
+	
 	public static SelectItem newMultipleSelector(String name, String title) {
 		SelectItem selectItemMultipleGrid = new SelectItem();
 		selectItemMultipleGrid.setName(name);

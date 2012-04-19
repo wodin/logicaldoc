@@ -45,26 +45,19 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 
 	@Override
 	public GUIInfo getInfo(String locale) {
-		GUIInfo info = new GUIInfo();
-		try {
-			ContextProperties pbean = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
-			ArrayList<GUIValuePair> values = new ArrayList<GUIValuePair>();
-			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-			for (Object key : config.keySet()) {
-				GUIValuePair pair = new GUIValuePair();
-				pair.setCode((String) key);
-				pair.setValue(config.getProperty((String) key));
-				values.add(pair);
-			}
-			info.setConfig(values.toArray(new GUIValuePair[0]));
+		GUIInfo info = null;
+		try {
+			info = getInfo();
+			info.setBundle(getBundle(locale));
 
 			Locale withLocale = LocaleUtil.toLocale(locale);
 			ArrayList<GUIValuePair> supportedLanguages = new ArrayList<GUIValuePair>();
 
 			List<String> installedLocales = I18N.getLocales();
 			for (String loc : installedLocales) {
-				if ("enabled".equals(pbean.getProperty("lang." + loc + ".gui"))) {
+				if ("enabled".equals(config.getProperty("lang." + loc + ".gui"))) {
 					Locale lc = LocaleUtil.toLocale(loc);
 					GUIValuePair l = new GUIValuePair();
 					l.setCode(loc);
@@ -74,7 +67,6 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			}
 
 			info.setSupportedGUILanguages(supportedLanguages.toArray(new GUIValuePair[0]));
-			info.setBundle(getBundle(locale));
 
 			LanguageManager manager = LanguageManager.getInstance();
 			Collection<Language> languages = manager.getActiveLanguages();
@@ -90,8 +82,6 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 
 			List<GUIMessage> messages = new ArrayList<GUIMessage>();
 
-			info.setRunLevel(pbean.getProperty("runlevel"));
-
 			// Check if the application needs to be restarted
 			if (ApplicationInitializer.needRestart) {
 				GUIMessage restartReminder = new GUIMessage();
@@ -101,7 +91,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 
 			if (!ApplicationInitializer.needRestart) {
 				// Checks if LogicalDOC has been initialised
-				String jdbcUrl = pbean.getProperty("jdbc.url");
+				String jdbcUrl = config.getProperty("jdbc.url");
 				if (jdbcUrl.startsWith("jdbc:hsqldb:mem:")) {
 					GUIMessage setupReminder = new GUIMessage();
 					setupReminder.setMessage(getValue(info, "setup.reminder"));
@@ -133,29 +123,55 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 
 			info.setMessages(messages.toArray(new GUIMessage[0]));
 
-			/*
-			 * Populate the infos from the SystemInfo
-			 */
-			SystemInfo inf = SystemInfo.get();
-			info.setBugs(inf.getBugs());
-			info.setFeatures(inf.getFeatures());
-			info.setForum(inf.getForum());
-			info.setHelp(inf.getHelp());
-			info.setInstallationId(inf.getInstallationId());
-			info.setLicensee(inf.getLicensee());
-			info.setProduct(inf.getProduct());
-			info.setProductName(inf.getProductName());
-			info.setRelease(inf.getRelease());
-			info.setRunLevel(inf.getRunLevel());
-			info.setSupport(inf.getSupport());
-			info.setUrl(inf.getUrl());
-			info.setVendor(inf.getVendor());
-			info.setVendorAddress(inf.getVendorAddress());
-			info.setVendorCap(inf.getVendorCap());
-			info.setVendorCity(inf.getVendorCity());
-			info.setVendorCountry(inf.getVendorCountry());
-			info.setYear(inf.getYear());
-			info.setSessionHeartbeat(Integer.parseInt(config.getProperty("session.heartbeat")));
+			return info;
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
+	}
+
+	/**
+	 * Retrieves the informations but not localization issues like messages and
+	 * installed languages.
+	 */
+	public static GUIInfo getInfo() {
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+
+		/*
+		 * Populate the infos from the SystemInfo
+		 */
+		GUIInfo info = new GUIInfo();
+		SystemInfo inf = SystemInfo.get();
+		info.setBugs(inf.getBugs());
+		info.setFeatures(inf.getFeatures());
+		info.setForum(inf.getForum());
+		info.setHelp(inf.getHelp());
+		info.setInstallationId(inf.getInstallationId());
+		info.setLicensee(inf.getLicensee());
+		info.setProduct(inf.getProduct());
+		info.setProductName(inf.getProductName());
+		info.setRelease(inf.getRelease());
+		info.setRunLevel(inf.getRunLevel());
+		info.setSupport(inf.getSupport());
+		info.setUrl(inf.getUrl());
+		info.setVendor(inf.getVendor());
+		info.setVendorAddress(inf.getVendorAddress());
+		info.setVendorCap(inf.getVendorCap());
+		info.setVendorCity(inf.getVendorCity());
+		info.setVendorCountry(inf.getVendorCountry());
+		info.setYear(inf.getYear());
+		info.setSessionHeartbeat(Integer.parseInt(config.getProperty("session.heartbeat")));
+		info.setRunLevel(config.getProperty("runlevel"));
+
+		try {
+			ArrayList<GUIValuePair> values = new ArrayList<GUIValuePair>();
+			for (Object key : config.keySet()) {
+				GUIValuePair pair = new GUIValuePair();
+				pair.setCode((String) key);
+				pair.setValue(config.getProperty((String) key));
+				values.add(pair);
+			}
+			info.setConfig(values.toArray(new GUIValuePair[0]));
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);

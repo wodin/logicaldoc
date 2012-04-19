@@ -33,11 +33,12 @@ public interface SecurityService extends RemoteService {
 	 * @param userId The user Identifier
 	 * @param oldPassword can be null
 	 * @param newPassword
+	 * @param notify If the new credentials need to be notified
 	 * @return 0 if all is ok, 1 if the password is incorrect, 2 if the new
 	 *         password cannot be notified, otherwise a positive number grater
 	 *         than 2
 	 */
-	public int changePassword(long userId, String oldPassword, String newPassword);
+	public int changePassword(long userId, String oldPassword, String newPassword, boolean notify);
 
 	/**
 	 * Logs out the current user
