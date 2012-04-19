@@ -40,8 +40,6 @@ public class SchedulingPanel extends VLayout {
 
 	private SelectItem maxDuration;
 
-	private IntegerItem cpuIdle;
-
 	private IntegerItem initialDelay;
 
 	private IntegerItem repeatInterval;
@@ -183,7 +181,7 @@ public class SchedulingPanel extends VLayout {
 		dayWeek.setHintStyle("hint");
 
 		form.setItems(simple, initialDelay, repeatInterval, seconds, minutes, hours, dayMonth, month, dayWeek,
-				maxDuration, cpuIdle);
+				maxDuration);
 
 		IButton restoreDefaults = new IButton();
 		restoreDefaults.setTitle(I18N.message("restoredefaults"));
@@ -192,7 +190,6 @@ public class SchedulingPanel extends VLayout {
 			public void onClick(ClickEvent event) {
 				if (vm.validate()) {
 					SchedulingPanel.this.maxDuration.setValue("-1");
-					SchedulingPanel.this.cpuIdle.setValue(-1);
 					SchedulingPanel.this.initialDelay.setValue(1800);
 					SchedulingPanel.this.repeatInterval.setValue(1800);
 					SchedulingPanel.this.seconds.setValue("0");
