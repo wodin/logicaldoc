@@ -124,7 +124,7 @@ public class HibernateGroupDAOTest extends AbstractCoreTCase {
 		group.setName("parentNone");
 		group.setDescription("Test group for insert method parent = none");
 
-		Assert.assertTrue(dao.insert(group, -1));
+		Assert.assertTrue(dao.insert(group, 0));
 		Assert.assertFalse(manager.getAllowedGroups(9).contains(group));
 
 		dao.inheritACLs(group.getId(), 1);
