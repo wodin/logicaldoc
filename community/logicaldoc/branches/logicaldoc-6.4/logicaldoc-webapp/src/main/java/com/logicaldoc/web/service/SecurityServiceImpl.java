@@ -388,7 +388,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			groupDao.store(grp);
 
 			if (group.getInheritGroupId() != null && group.getInheritGroupId().longValue() > 0)
-				groupDao.inheritACLs(group.getId(), group.getInheritGroupId().longValue());
+				groupDao.inheritACLs(grp.getId(), group.getInheritGroupId().longValue());
 		}
 
 		group.setId(grp.getId());
