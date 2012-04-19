@@ -372,10 +372,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		if (group.getId() != 0) {
 			grp = groupDao.findById(group.getId());
 			groupDao.initialize(grp);
-
+			
 			grp.setName(group.getName());
 			grp.setDescription(group.getDescription());
-			if (group.getInheritGroupId() == null || group.getInheritGroupId().longValue() <= 0) {
+			if (group.getInheritGroupId() == null || group.getInheritGroupId().longValue() == 0) {
 				groupDao.store(grp);
 			} else {
 				groupDao.insert(grp, group.getInheritGroupId().longValue());
@@ -387,8 +387,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			grp.setDescription(group.getDescription());
 			groupDao.store(grp);
 
-			if (group.getInheritGroupId() != null && group.getInheritGroupId().longValue() > 0)
-				groupDao.inheritACLs(group.getId(), group.getInheritGroupId().longValue());
+			if (group.getInheritGroupId() != null && group.getInheritGroupId().longValue() != 0)
+				groupDao.inheritACLs(grp.getId(), group.getInheritGroupId().longValue());
 		}
 
 		group.setId(grp.getId());
