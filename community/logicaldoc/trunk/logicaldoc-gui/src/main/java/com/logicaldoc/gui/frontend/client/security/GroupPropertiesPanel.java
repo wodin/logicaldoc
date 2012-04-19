@@ -73,6 +73,11 @@ public class GroupPropertiesPanel extends HLayout {
 		inherit.setVisible(!readonly);
 		if (!readonly)
 			inherit.addChangedHandler(changedHandler);
+		if (group.getId() == 0) {
+			// In the beginning we need to specify an inherit group
+			inherit.setRequired(true);
+			inherit.setValue("3");
+		}
 
 		form1.setItems(id, name, description, inherit);
 		addMember(form1);
