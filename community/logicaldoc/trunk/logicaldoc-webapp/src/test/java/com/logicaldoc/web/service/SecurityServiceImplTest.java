@@ -82,9 +82,9 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testChangePassword() {
-		Assert.assertEquals(0, service.changePassword(1, "admin", "test"));
-		Assert.assertEquals(0, service.changePassword(1, "test", "admin"));
-		Assert.assertNotSame(0, service.changePassword(1, "xxxxx", "test"));
+		Assert.assertEquals(0, service.changePassword(1, "admin", "test", false));
+		Assert.assertEquals(0, service.changePassword(1, "test", "admin", false));
+		Assert.assertNotSame(0, service.changePassword(1, "xxxxx", "test", false));
 	}
 
 	@Test

@@ -193,24 +193,6 @@ public class SystemInfo {
 		SystemInfo info = new SystemInfo();
 
 		/*
-		 * Collect installed features
-		 */
-		try {
-			List<String> features = new ArrayList<String>();
-			PluginRegistry registry = PluginRegistry.getInstance();
-			Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "Feature");
-			for (Extension extension : exts) {
-				// Retrieve the task name
-				String name = extension.getParameter("name").valueAsString();
-				if (!features.contains(name))
-					features.add(name);
-			}
-			info.setFeatures(features.toArray(new String[0]));
-		} catch (Throwable e) {
-			log.error(e.getMessage());
-		}
-
-		/*
 		 * Collect product identification
 		 */
 		try {
@@ -231,12 +213,31 @@ public class SystemInfo {
 
 					info = (SystemInfo) tmp;
 				} catch (Throwable e) {
-					log.error(e.getMessage());
+					log.error(e.getMessage(), e);
 				}
 			}
 		} catch (Throwable e) {
-			log.error(e.getMessage());
+			log.error(e.getMessage(), e);
 		}
+
+		/*
+		 * Collect installed features
+		 */
+		if (info.getFeatures() == null || info.getFeatures().length == 0)
+			try {
+				List<String> features = new ArrayList<String>();
+				PluginRegistry registry = PluginRegistry.getInstance();
+				Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "Feature");
+				for (Extension extension : exts) {
+					// Retrieve the task name
+					String name = extension.getParameter("name").valueAsString();
+					if (!features.contains(name))
+						features.add(name);
+				}
+				info.setFeatures(features.toArray(new String[0]));
+			} catch (Throwable e) {
+				log.error(e.getMessage());
+			}
 
 		/*
 		 * Read some informations from the context

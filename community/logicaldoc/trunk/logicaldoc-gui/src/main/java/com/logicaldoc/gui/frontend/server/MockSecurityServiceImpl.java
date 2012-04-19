@@ -105,7 +105,7 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 	}
 
 	@Override
-	public int changePassword(long userId, String oldPassword, String newPassword) {
+	public int changePassword(long userId, String oldPassword, String newPassword, boolean notify) {
 		return 0;
 	}
 

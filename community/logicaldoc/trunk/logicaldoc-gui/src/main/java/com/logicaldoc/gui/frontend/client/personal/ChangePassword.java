@@ -101,7 +101,7 @@ public class ChangePassword extends Window {
 					}
 
 					securityService.changePassword(user.getId(), vm.getValueAsString(PASSWORD),
-							vm.getValueAsString(NEWPASSWORD), new AsyncCallback<Integer>() {
+							vm.getValueAsString(NEWPASSWORD), true, new AsyncCallback<Integer>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
@@ -144,7 +144,7 @@ public class ChangePassword extends Window {
 			label.setContents(I18N.message(alertKey));
 			addItem(label);
 		}
-		
+
 		addItem(form);
 	}
 }

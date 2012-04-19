@@ -129,7 +129,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				guiUser.setQuota(user.getQuota());
 				guiUser.setQuotaCount(user.getQuotaCount());
 				guiUser.setWelcomeScreen(user.getWelcomeScreen());
-				
+
 				if (StringUtils.isNotEmpty(user.getSignatureId()))
 					guiUser.setSignatureId(user.getSignatureId());
 				if (StringUtils.isNotEmpty(user.getSignatureInfo()))
@@ -211,7 +211,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public int changePassword(long userId, String oldPassword, String newPassword) {
+	public int changePassword(long userId, String oldPassword, String newPassword, boolean notify) {
 
 		try {
 			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -223,7 +223,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			if (oldPassword != null && !CryptUtil.cryptString(oldPassword).equals(user.getPassword())) {
 				return 1;
 			}
-			
+
 			UserHistory history = null;
 			// The password was changed
 			user.setDecodedPassword(newPassword);
@@ -235,11 +235,18 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			history.setComment("");
 			user.setRepass("");
 
-			
 			boolean stored = userDao.store(user, history);
 
 			if (!stored)
 				throw new Exception("User not stored");
+
+			if (notify)
+				try {
+					notifyAccount(user, newPassword, InfoServiceImpl.getInfo());
+				} catch (Exception e) {
+					log.warn(e.getMessage(), e);
+					return 2;
+				}
 			return 0;
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
@@ -325,7 +332,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setSignatureId(user.getSignatureId());
 			usr.setSignatureInfo(user.getSignatureInfo());
 			usr.setWelcomeScreen(user.getWelcomeScreen());
-			
+
 			GUIGroup[] grps = new GUIGroup[user.getGroups().size()];
 			int i = 0;
 			for (Group group : user.getGroups()) {
@@ -372,7 +379,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		if (group.getId() != 0) {
 			grp = groupDao.findById(group.getId());
 			groupDao.initialize(grp);
-			
+
 			grp.setName(group.getName());
 			grp.setDescription(group.getDescription());
 			if (group.getInheritGroupId() == null || group.getInheritGroupId().longValue() == 0) {
@@ -431,7 +438,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setSignatureId(user.getSignatureId());
 			usr.setSignatureInfo(user.getSignatureInfo());
 			usr.setWelcomeScreen(user.getWelcomeScreen());
-			
+
 			usr.setQuota(user.getQuota());
 
 			if (createNew) {
@@ -473,6 +480,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 					try {
 						notifyAccount(usr, decodedPassword, info);
 					} catch (Throwable e) {
+						log.warn(e.getMessage(), e);
 					}
 			}
 
@@ -488,37 +496,32 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	 * 
 	 * @param user The created user
 	 * @param password The decoded password
+	 * @throws Exception
 	 */
-	private void notifyAccount(User user, String password, GUIInfo info) {
+	private void notifyAccount(User user, String password, GUIInfo info) throws Exception {
 		EMail email;
-		try {
-			email = new EMail();
-			Recipient recipient = new Recipient();
-			recipient.setAddress(user.getEmail());
-			email.addRecipient(recipient);
-			email.setFolder("outbox");
+		email = new EMail();
+		Recipient recipient = new Recipient();
+		recipient.setAddress(user.getEmail());
+		email.addRecipient(recipient);
+		email.setFolder("outbox");
 
-			Locale locale = new Locale(user.getLanguage());
+		Locale locale = new Locale(user.getLanguage());
 
-			HttpServletRequest request = this.getThreadLocalRequest();
-			String address = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-					+ request.getContextPath();
-			String text = I18N.message(
-					"emailnotifyaccount",
-					locale,
-					new Object[] { user.getFirstName() + " " + user.getName(), info.getProductName(),
-							user.getUserName(), password, address });
-			email.setMessageText(text);
-			email.setRead(1);
-			email.setSentDate(new Date());
-			email.setSubject(info.getProductName() + " " + I18N.message("emailnotifyaccountobject", locale));
-			email.setUserName(user.getUserName());
+		HttpServletRequest request = this.getThreadLocalRequest();
+		String address = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+				+ request.getContextPath();
+		String text = I18N.message("emailnotifyaccount", locale,
+				new Object[] { user.getFirstName() + " " + user.getName(), info.getProductName(), user.getUserName(),
+						password, address });
+		email.setMessageText(text);
+		email.setRead(1);
+		email.setSentDate(new Date());
+		email.setSubject(info.getProductName() + " " + I18N.message("emailnotifyaccountobject", locale));
+		email.setUserName(user.getUserName());
 
-			EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
-			sender.send(email);
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
-		}
+		EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
+		sender.send(email);
 	}
 
 	@Override
@@ -545,7 +548,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setSignatureId(user.getSignatureId());
 			usr.setSignatureInfo(user.getSignatureInfo());
 			usr.setWelcomeScreen(user.getWelcomeScreen());
-			
+
 			userDao.store(usr);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);

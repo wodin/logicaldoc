@@ -5,6 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
@@ -13,6 +14,7 @@ import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
+import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
@@ -27,6 +29,8 @@ import com.smartgwt.client.widgets.form.validator.MatchesFieldValidator;
  * @since 6.0
  */
 public class SetPassword extends Window {
+	private static final String NOTIFY = "notify";
+
 	private static final String NEWPASSWORDAGAIN = "newpasswordagain";
 
 	private static final String NEWPASSWORD = "newpassword";
@@ -57,8 +61,8 @@ public class SetPassword extends Window {
 		equalsValidator.setErrorMessage(I18N.message("passwordnotmatch"));
 
 		LengthRangeValidator sizeValidator = new LengthRangeValidator();
-		sizeValidator.setErrorMessage(I18N.message("errorfieldminlenght", Integer.toString(Session.get().getUser()
-				.getPasswordMinLenght())));
+		sizeValidator.setErrorMessage(I18N.message("errorfieldminlenght",
+				Integer.toString(Session.get().getUser().getPasswordMinLenght())));
 		sizeValidator.setMin(Session.get().getUser().getPasswordMinLenght());
 
 		PasswordItem newPass = new PasswordItem();
@@ -73,6 +77,9 @@ public class SetPassword extends Window {
 		newPassAgain.setWrapTitle(false);
 		newPassAgain.setRequired(true);
 
+		final CheckboxItem notify = ItemFactory.newCheckbox(NOTIFY, "notifycredentials");
+		notify.setValue(false);
+
 		ButtonItem apply = new ButtonItem();
 		apply.setTitle(I18N.message("apply"));
 		apply.setAutoFit(true);
@@ -80,9 +87,8 @@ public class SetPassword extends Window {
 			public void onClick(ClickEvent event) {
 				vm.validate();
 				if (!vm.hasErrors()) {
-
 					securityService.changePassword(userId, null, vm.getValueAsString(NEWPASSWORD),
-							new AsyncCallback<Integer>() {
+							notify.getValueAsBoolean(), new AsyncCallback<Integer>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
@@ -108,7 +114,7 @@ public class SetPassword extends Window {
 			}
 		});
 
-		form.setFields(newPass, newPassAgain, apply);
+		form.setFields(newPass, newPassAgain, notify, apply);
 
 		addItem(form);
 	}
