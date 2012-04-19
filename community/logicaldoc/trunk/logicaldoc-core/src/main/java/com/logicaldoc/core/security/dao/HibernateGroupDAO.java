@@ -120,7 +120,7 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 			getHibernateTemplate().saveOrUpdate(group);
 			getHibernateTemplate().flush();
 
-			if (parentGroupId > 0) {
+			if (parentGroupId != 0) {
 				// Inherit ACLs from the parent group
 				inheritACLs(group.getId(), parentGroupId);
 			}
