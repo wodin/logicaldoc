@@ -136,11 +136,6 @@ public abstract class Task implements Runnable {
 			return;
 		}
 
-		if (!getScheduling().isCpuIdle()) {
-			log.debug("CPU too busy");
-			return;
-		}
-
 		if (getStatus() != STATUS_IDLE) {
 			log.debug("Task " + getName() + " is already running");
 			return;

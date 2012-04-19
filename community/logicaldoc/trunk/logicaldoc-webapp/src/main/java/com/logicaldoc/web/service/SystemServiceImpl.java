@@ -305,7 +305,6 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				}
 
 				scheduling.setMaxLength(tsk.getScheduling().getMaxLength());
-				scheduling.setMinCpuIdle((tsk.getScheduling().getMinCpuIdle()));
 
 				task.setScheduling(scheduling);
 
@@ -383,7 +382,6 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				}
 
 				scheduling.setMaxLength(t.getScheduling().getMaxLength());
-				scheduling.setMinCpuIdle((t.getScheduling().getMinCpuIdle()));
 				scheduling.setPreviousFireTime(t.getScheduling().getPreviousFireTime());
 				scheduling.setNextFireTime(t.getScheduling().getNextFireTime());
 
@@ -439,7 +437,6 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 					task.setSchedulingLabel(tsk.getScheduling().getCronExpression());
 				}
 				tsk.getScheduling().setMaxLength(task.getScheduling().getMaxLength());
-				tsk.getScheduling().setMinCpuIdle((task.getScheduling().getMinCpuIdle()));
 
 				tsk.setSendActivityReport(task.isSendActivityReport());
 				StringBuffer sb = new StringBuffer();

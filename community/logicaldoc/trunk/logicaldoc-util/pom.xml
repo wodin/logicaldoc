@@ -89,11 +89,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.hyperic.sigar</groupId>
-			<artifactId>sigar</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>commons-httpclient</groupId>
 			<artifactId>commons-httpclient</artifactId>
 			<version>3.1</version>

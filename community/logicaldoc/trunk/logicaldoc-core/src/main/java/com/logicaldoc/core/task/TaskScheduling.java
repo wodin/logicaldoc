@@ -11,7 +11,6 @@ import org.quartz.Trigger;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
-import com.logicaldoc.util.system.CpuInfo;
 
 /**
  * Scheduling configuration for a Task
@@ -39,8 +38,6 @@ public class TaskScheduling {
 	private long delay = 1000;
 
 	private long interval = 60000;
-
-	private int minCpuIdle = 0;
 
 	private Date previousFireTime;
 
@@ -179,7 +176,6 @@ public class TaskScheduling {
 			maxLength = Long.parseLong(config.getProperty("schedule.length." + taskName));
 			interval = Long.parseLong(config.getProperty("schedule.interval." + taskName));
 			delay = Long.parseLong(config.getProperty("schedule.delay." + taskName));
-			minCpuIdle = Integer.parseInt(config.getProperty("schedule.cpuidle." + taskName));
 		} catch (Exception e) {
 		}
 	}
@@ -199,7 +195,6 @@ public class TaskScheduling {
 		config.setProperty("schedule.mode." + taskName, getMode());
 		config.setProperty("schedule.delay." + taskName, Long.toString(delay));
 		config.setProperty("schedule.interval." + taskName, Long.toString(interval));
-		config.setProperty("schedule.cpuidle." + taskName, Integer.toString(minCpuIdle));
 		config.write();
 
 		trigger.reload();
@@ -235,16 +230,6 @@ public class TaskScheduling {
 			elapsedTime = (long) elapsedTime / 1000;
 			return elapsedTime > getMaxLength();
 		}
-	}
-
-	/**
-	 * Checks if the CPU idle percentage is greater than the minimum required
-	 */
-	boolean isCpuIdle() {
-		if (minCpuIdle <= 0)
-			return true;
-		else
-			return (CpuInfo.getCpuIdle() * 100) >= minCpuIdle;
 	}
 
 	@Override
@@ -290,13 +275,5 @@ public class TaskScheduling {
 
 	public void setIntervalSeconds(long interval) {
 		this.interval = interval * 1000;
-	}
-
-	public int getMinCpuIdle() {
-		return minCpuIdle;
-	}
-
-	public void setMinCpuIdle(int minCpuIdle) {
-		this.minCpuIdle = minCpuIdle;
 	}
 }
