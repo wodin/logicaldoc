@@ -93,10 +93,14 @@
 									destfile="target/tool/lib/${project.artifactId}-${project.version}.${project.packaging}"
 									basedir="target/tool/lib/tmp" />
 								<delete dir="target/tool/lib/tmp" quiet="true" />
-								
-								<mkdir dir="target/tool/docs"/>
-								<mkdir dir="target/tool/report"/>
-								<mkdir dir="target/tool/logs"/>
+
+								<mkdir dir="target/tool/docs" />
+								<mkdir dir="target/tool/report" />
+								<mkdir dir="target/tool/logs" />
+
+								<delete>
+									<fileset dir="target/tool/lib" includes="hibernate*,lucene*,*codec*,ant*,font*,jai*,poi*,quartz*,solr*,velocity*,pdf*,icu*,servlet*" />
+								</delete>
 
 								<zip destfile="target/${project.artifactId}-${project.version}-tool.zip"
 									basedir="target/tool" />

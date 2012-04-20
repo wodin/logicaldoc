@@ -13,8 +13,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.bm.AbstractLoader;
-import com.logicaldoc.bm.ServerProxy;
 import com.logicaldoc.bm.RandomFile;
+import com.logicaldoc.bm.ServerProxy;
 import com.logicaldoc.bm.cache.EhCacheAdapter;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
@@ -53,7 +53,7 @@ public class Upload extends AbstractLoader {
 		pathCache.setCache(cache);
 	}
 
-	public Upload(String name) {
+	public Upload() {
 		super(Upload.class.getName().substring(Upload.class.getName().lastIndexOf('.') + 1));
 
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);

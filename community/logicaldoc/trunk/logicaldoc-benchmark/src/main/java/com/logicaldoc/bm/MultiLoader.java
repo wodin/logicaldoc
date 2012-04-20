@@ -49,7 +49,6 @@ public class MultiLoader {
 	private ContextProperties config;
 
 	public static void main(String[] args) {
-
 		try {
 			ApplicationContext context = new ClassPathXmlApplicationContext(new String[] { "/context.xml" });
 
@@ -194,10 +193,6 @@ public class MultiLoader {
 	 * @throws Exception
 	 */
 	public void init() throws Exception {
-		System.setProperty("org.apache.cxf.Logger", "org.apache.cxf.common.logging.Log4jLogger");
-
-		// session = MultiLoader.makeSession(username, password, url,
-		// rootFolder, sourceDir, folderProfile, language);
 		loaders = makeThreads(session);
 
 		// Log the initial summaries
