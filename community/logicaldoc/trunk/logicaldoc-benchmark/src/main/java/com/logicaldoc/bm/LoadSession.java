@@ -77,10 +77,10 @@ public class LoadSession {
 
 		// Construct output and error files
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
-		long time = System.currentTimeMillis();
 
-		File fileSummary = new File("./LoadSession-" + time + ".tsv");
-
+		File fileSummary = new File("report");
+		fileSummary.mkdir();
+		fileSummary = new File(fileSummary + "/LoadSession-" + df.format(new Date()) + ".tsv");
 		outSummary = new BufferedOutputStream(new FileOutputStream(fileSummary));
 
 		// Record the start time

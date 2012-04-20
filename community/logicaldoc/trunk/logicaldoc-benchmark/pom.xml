@@ -80,9 +80,6 @@
 								<unzip
 									src="target/${project.artifactId}-${project.version}-tool.zip"
 									dest="target/tool" />
-								<delete
-									file="target/${project.artifactId}-${project.version}-plugin.zip" />
-
 
 								<unzip
 									src="target/tool/lib/${project.artifactId}-${project.version}.${project.packaging}"
@@ -90,12 +87,16 @@
 								<delete
 									file="target/tool/lib/${project.artifactId}-${project.version}.${project.packaging}" />
 								<delete>
-									<fileset dir="target/tool/lib/tmp" includes="context.*,log4j*" />
+									<fileset dir="target/tool/lib/tmp" includes="*.properties,*.dtd,*.xml,*,txt" />
 								</delete>
 								<zip
 									destfile="target/tool/lib/${project.artifactId}-${project.version}.${project.packaging}"
 									basedir="target/tool/lib/tmp" />
 								<delete dir="target/tool/lib/tmp" quiet="true" />
+								
+								<mkdir dir="target/tool/docs"/>
+								<mkdir dir="target/tool/report"/>
+								<mkdir dir="target/tool/logs"/>
 
 								<zip destfile="target/${project.artifactId}-${project.version}-tool.zip"
 									basedir="target/tool" />

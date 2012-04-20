@@ -22,6 +22,7 @@
                 <include>*.properties</include>
                 <include>*.xml</include>
                 <include>*.dtd</include>
+                <include>*.txt</include>
             </includes>
 			<outputDirectory>conf</outputDirectory>
 		</fileSet>
@@ -31,13 +32,6 @@
                 <include>load.sh</include>
             </includes>
             <outputDirectory>/</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>src/main/java/com/logicaldoc/benchmark/</directory>
-            <includes>
-                <include>BMLoader.java</include>
-            </includes>
-            <outputDirectory>/docs</outputDirectory>
         </fileSet>
 	</fileSets>
 </assembly>
