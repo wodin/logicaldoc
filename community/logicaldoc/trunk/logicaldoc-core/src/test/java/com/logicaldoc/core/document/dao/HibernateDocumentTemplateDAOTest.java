@@ -74,9 +74,7 @@ public class HibernateDocumentTemplateDAOTest extends AbstractCoreTCase {
 		template.setValue("a1", "v1");
 		template.setValue("a2", "v2");
 		Assert.assertTrue(dao.store(template));
-		Assert.assertEquals(3, template.getId());
-		template = dao.findById(3);
-		Assert.assertEquals(3, template.getId());
+		template = dao.findById(template.getId());
 		Assert.assertEquals("test3", template.getName());
 		Assert.assertTrue(template.getAttributes().containsKey("a1"));
 		Assert.assertTrue(template.getAttributes().containsKey("a2"));

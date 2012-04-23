@@ -48,6 +48,8 @@ create table ld_foldergroup (ld_folderid bigint not null, ld_groupid bigint not 
 create table ld_feedmessage (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_guid varchar(512) null, ld_title varchar(512) null, ld_description  varchar(4000) null, ld_link varchar(512) null, ld_pubdate timestamp, ld_read int not null, primary key (ld_id));
 create table ld_rating (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_userid bigint not null, ld_vote int not null, primary key (ld_id));
 create table ld_note (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_username varchar(255), ld_userid bigint, ld_date timestamp, ld_message varchar(4000), primary key (ld_id));
+create table hibernate_unique_key (tablename varchar(40) NOT NULL, next_hi bigint DEFAULT 100);
+
 
 alter table ld_document add constraint FK75ED9C0276C86307 foreign key (ld_templateid) references ld_template(ld_id);
 alter table ld_document add constraint FK75ED9C027C565C60 foreign key (ld_folderid) references ld_folder(ld_id);
@@ -208,3 +210,24 @@ insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_securi
 values (4,4,1,1,0,0,1,1,0,0,0,0,0,1);
 insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
 values (4,-10000,1,1,0,0,1,1,0,0,0,0,0,1);
+
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_document', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_bookmark', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_generic', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_group', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_group_ext', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_history', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_link', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_menu', 5000);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_systemmessage', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_template', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_ticket', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_user', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_user_history', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_userdoc', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_version', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_folder', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_folder_history', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_feedmessage', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_rating', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_note', 100);

@@ -129,8 +129,7 @@ public class HibernateSystemMessageDAOTest extends AbstractCoreTCase {
 		message.setStatus(SystemMessage.STATUS_NEW);
 		message.setRecipients(recipients);
 		Assert.assertTrue(dao.store(message));
-		Assert.assertEquals(4, message.getId());
-		message = dao.findById(4);
+		message = dao.findById(message.getId());
 		Assert.assertNotNull(message);
 		Assert.assertEquals(2, message.getRecipients().size());
 

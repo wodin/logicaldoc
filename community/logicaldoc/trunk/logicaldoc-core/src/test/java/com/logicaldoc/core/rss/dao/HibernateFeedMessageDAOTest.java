@@ -67,9 +67,7 @@ public class HibernateFeedMessageDAOTest extends AbstractCoreTCase {
 		feedMessage.setTitle("feed4");
 		feedMessage.setDescription("feed4_guid");
 		Assert.assertTrue(dao.store(feedMessage));
-		Assert.assertEquals(4, feedMessage.getId());
-		feedMessage = dao.findById(4);
-		Assert.assertEquals(4, feedMessage.getId());
+		feedMessage = dao.findById(feedMessage.getId());
 		Assert.assertEquals("feed4", feedMessage.getTitle());
 		Assert.assertEquals("feed4_guid", feedMessage.getDescription());
 	}
