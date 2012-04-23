@@ -90,9 +90,8 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		template.setValue("a1", "v1");
 		template.setValue("a2", 23L);
 		Assert.assertTrue(templateDao.store(template));
-		Assert.assertEquals(3, template.getId());
-
-		GUIExtendedAttribute[] extAttr = service.getAttributes(session.getSid(), 3);
+	
+		GUIExtendedAttribute[] extAttr = service.getAttributes(session.getSid(), template.getId());
 		Assert.assertEquals(GUIExtendedAttribute.TYPE_STRING, extAttr[0].getType());
 		Assert.assertEquals("a1", extAttr[0].getName());
 		Assert.assertEquals("v1", extAttr[0].getValue());
@@ -211,7 +210,6 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 
 		long noteId = service.addNote(session.getSid(), 1L, "pippo");
 
-		Assert.assertEquals(5, noteId);
 		DocumentNote note = noteDao.findById(noteId);
 		Assert.assertNotNull(note);
 		Assert.assertEquals("pippo", note.getMessage());
@@ -221,22 +219,6 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		Assert.assertEquals(3, notes.size());
 	}
 
-	@Test
-	public void testMakeImmutable() throws InvalidSessionException {
-		Document doc = docDao.findById(1);
-		Assert.assertNotNull(doc);
-		Assert.assertEquals(0, doc.getImmutable());
-		doc = docDao.findById(2);
-		Assert.assertNotNull(doc);
-		Assert.assertEquals(0, doc.getImmutable());
-
-		service.makeImmutable(session.getSid(), new long[] { 1, 2 }, "comment");
-
-		doc = docDao.findById(1);
-		Assert.assertEquals(1, doc.getImmutable());
-		doc = docDao.findById(2);
-		Assert.assertEquals(1, doc.getImmutable());
-	}
 
 	@Test
 	public void testLock() throws InvalidSessionException {
@@ -296,24 +278,21 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 
 		Bookmark book = bookDao.findByUserIdAndDocId(1, 1).get(0);
 		Assert.assertNotNull(book);
-		Assert.assertEquals(1, book.getId());
 		book = bookDao.findByUserIdAndDocId(1, 2).get(0);
 		Assert.assertNotNull(book);
-		Assert.assertEquals(2, book.getId());
 
 		GUIBookmark bookmark = new GUIBookmark();
-		bookmark.setId(1);
+		bookmark.setId(book.getId());
 		bookmark.setName("bookmarkTest");
 		bookmark.setDescription("bookDescr");
 
 		service.updateBookmark(session.getSid(), bookmark);
 		book = bookDao.findById(bookmark.getId());
 		Assert.assertNotNull(book);
-		Assert.assertEquals(1, book.getId());
 		Assert.assertEquals("bookmarkTest", book.getTitle());
 		Assert.assertEquals("bookDescr", book.getDescription());
 
-		service.deleteBookmarks(session.getSid(), new long[] { 1, 2 });
+		service.deleteBookmarks(session.getSid(), new long[] { 1, bookmark.getId() });
 
 		book = bookDao.findById(1);
 		Assert.assertNull(book);

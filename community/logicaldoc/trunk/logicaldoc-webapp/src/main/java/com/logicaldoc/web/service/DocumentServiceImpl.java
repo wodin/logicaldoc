@@ -718,7 +718,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				if (doc.getImmutable() == 0) {
 					// The document of the selected documentRecord must be
 					// not locked
-					if (doc.getStatus() != Document.DOC_UNLOCKED || doc.getExportStatus() != Document.EXPORT_UNLOCKED) {
+					if (doc.getStatus() != Document.DOC_UNLOCKED) {
 						continue;
 					}
 

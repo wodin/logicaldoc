@@ -74,7 +74,6 @@ public class SecurityServiceImplTest extends AbstractWebServiceTestCase {
 
 		Long userId = securityServiceImpl.storeUser("", wsUserTest);
 		Assert.assertNotNull(userId);
-		Assert.assertEquals(new Long(6L), userId);
 
 		User createdUser = userDao.findById(userId);
 		Assert.assertNotNull(createdUser);
@@ -90,8 +89,7 @@ public class SecurityServiceImplTest extends AbstractWebServiceTestCase {
 
 		Long groupId = securityServiceImpl.storeGroup("", wsGroupTest);
 		Assert.assertNotNull(groupId);
-		Assert.assertEquals(new Long(11L), groupId);
-
+		
 		Group createdGroup = groupDao.findById(groupId);
 		Assert.assertNotNull(createdGroup);
 		Assert.assertEquals("group test", createdGroup.getName());
@@ -126,9 +124,8 @@ public class SecurityServiceImplTest extends AbstractWebServiceTestCase {
 
 		Long userId = securityServiceImpl.storeUser("", newUser);
 		Assert.assertNotNull(userId);
-		Assert.assertEquals(new Long(6L), userId);
 
-		int changeResult = securityServiceImpl.changePassword("", new Long(6L), null, "newpassword");
+		int changeResult = securityServiceImpl.changePassword("", userId, null, "newpassword");
 		Assert.assertEquals(0, changeResult);
 	}
 }
