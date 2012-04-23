@@ -121,6 +121,8 @@ public abstract class AbstractLoader extends Thread {
 	protected abstract String doLoading(ServerProxy serverProxy) throws Exception;
 
 	public boolean isFinished() {
+//		if (mustStop.get())
+//			return true;
 		return loaderCount >= iterations;
 	}
 

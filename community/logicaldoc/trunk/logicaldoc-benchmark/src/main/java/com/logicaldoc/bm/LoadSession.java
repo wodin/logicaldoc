@@ -104,23 +104,23 @@ public class LoadSession {
 			FolderClient folderClient = new FolderClient(url + "/services/Folder");
 			SystemClient systemClient = new SystemClient(url + "/services/System");
 			SearchClient searchClient = new SearchClient(url + "/services/Search");
-			log.info("Connection established");
-
-			// Authenticate
 
 			// Store the service references
-			ServerProxy lsp = new ServerProxy(url, auth, folderClient, documentClient, systemClient, searchClient);
-			remoteServer = lsp;
+			ServerProxy lsp = new ServerProxy(url, auth, folderClient, documentClient, systemClient, searchClient);			
+			
+			// Authenticate
 			lsp.login(username, password);
+			log.info("Connection established");
 			String ticket = auth.login(username, password);
 			log.info("Created SID: " + ticket);
+			remoteServer = lsp;
 		} catch (Throwable e) {
 			log.error("Unable to initialize WebServices connection", e);
 		}
 
 		// Check that there is at least one server
 		if (remoteServer == null) {
-			throw new Exception("No remote servers are available");
+			throw new Exception("Remote server " + url + " not available");
 		}
 		return remoteServer;
 	}
