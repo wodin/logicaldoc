@@ -13,6 +13,7 @@ import com.logicaldoc.webservice.system.SystemClient;
  * @since 6.5
  */
 public class ServerProxy {
+	
 	public final String url;
 
 	public String sid;

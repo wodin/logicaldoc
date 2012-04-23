@@ -88,7 +88,7 @@ public class Upload extends AbstractLoader {
 		List<String> folderPath = chooseFolderPath();
 
 		// Make sure the folder exists
-		Long folderID = makeFolders(serverProxy.sid, serverProxy, rootFolder, folderPath);
+		Long folderID = makeFolders(serverProxy.sid, serverProxy, rootFolder, folderPath);		
 
 		File file = getFile();
 		String title = formatter.format(loaderCount);
@@ -102,6 +102,7 @@ public class Upload extends AbstractLoader {
 	}
 
 	private Long createDocument(String ticket, ServerProxy serverProxy, long folderId, String title, File file) {
+		
 		String fileName = file.getName();
 
 		WSDocument doc = new WSDocument();
