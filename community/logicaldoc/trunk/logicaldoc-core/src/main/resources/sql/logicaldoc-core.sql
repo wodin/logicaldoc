@@ -48,7 +48,7 @@ create table ld_foldergroup (ld_folderid bigint not null, ld_groupid bigint not 
 create table ld_feedmessage (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_guid varchar(512) null, ld_title varchar(512) null, ld_description  varchar(4000) null, ld_link varchar(512) null, ld_pubdate timestamp, ld_read int not null, primary key (ld_id));
 create table ld_rating (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_userid bigint not null, ld_vote int not null, primary key (ld_id));
 create table ld_note (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_username varchar(255), ld_userid bigint, ld_date timestamp, ld_message varchar(4000), primary key (ld_id));
-create table hibernate_unique_key (tablename varchar(40) NOT NULL, next_hi bigint DEFAULT 100);
+create table hibernate_unique_key (tablename varchar(40) NOT NULL, next_hi bigint NOT NULL DEFAULT 100);
 
 
 alter table ld_document add constraint FK75ED9C0276C86307 foreign key (ld_templateid) references ld_template(ld_id);
