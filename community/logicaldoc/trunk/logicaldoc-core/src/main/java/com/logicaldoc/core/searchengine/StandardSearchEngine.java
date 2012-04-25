@@ -90,7 +90,19 @@ public class StandardSearchEngine implements SearchEngine {
 		doc.addField(Fields.COVERAGE.getName(), document.getCoverage());
 		doc.addField(Fields.SOURCE_AUTHOR.getName(), document.getSourceAuthor());
 		doc.addField(Fields.DOC_REF.getName(), document.getDocRef());
-		doc.addField(Fields.CONTENT.getName(), content);
+
+		int maxText = -1;
+		if (StringUtils.isNotEmpty(config.getProperty("index.maxtext"))) {
+			try {
+				maxText = config.getInt("index.maxtext");
+			} catch (Exception e) {
+			}
+		}
+
+		if (maxText > 0 && content.length() > maxText)
+			doc.addField(Fields.CONTENT.getName(), StringUtils.substring(content, 0, maxText));
+		else
+			doc.addField(Fields.CONTENT.getName(), content);
 
 		if (document.getFolder() != null) {
 			doc.addField(Fields.FOLDER_ID.getName(), document.getFolder().getId());

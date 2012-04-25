@@ -13,7 +13,6 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.parser.ParserFactory;
 import com.logicaldoc.core.searchengine.SearchEngine;
-import com.logicaldoc.core.searchengine.StandardSearchEngine;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineService;
@@ -56,6 +55,11 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 				searchEngine.setParsingTimeout(new Integer(conf.getProperty("parser.timeout")));
 			else
 				searchEngine.setParsingTimeout(0);
+
+			if (StringUtils.isNotEmpty(conf.getProperty("index.maxtext")))
+				searchEngine.setMaxText(new Integer(conf.getProperty("index.maxtext")));
+			else
+				searchEngine.setMaxText(0);
 
 			// Populate the list of supported languages
 			searchEngine.setLanguages("");
@@ -137,6 +141,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			conf.setProperty("index.includes",
 					searchEngine.getIncludePatters() != null ? searchEngine.getIncludePatters() : "");
 			conf.setProperty("index.batch", Integer.toString(searchEngine.getBatch()));
+			conf.setProperty("index.maxtext", Integer.toString(searchEngine.getMaxText()));
 			conf.setProperty("parser.timeout", Integer.toString(searchEngine.getParsingTimeout()));
 			conf.write();
 		} catch (Exception t) {
