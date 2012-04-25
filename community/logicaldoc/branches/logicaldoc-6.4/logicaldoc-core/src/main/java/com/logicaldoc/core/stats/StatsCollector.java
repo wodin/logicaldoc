@@ -17,6 +17,7 @@ import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
+import com.logicaldoc.core.security.SystemQuota;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.store.Storer;
@@ -109,6 +110,7 @@ public class StatsCollector extends Task {
 		 * Compute repository statistics
 		 */
 		long docdir = storer.getTotalSize();
+		SystemQuota.setTotalSize(docdir);
 		saveStatistic("docdir", Long.toString(docdir));
 
 		long userdir = 0;
