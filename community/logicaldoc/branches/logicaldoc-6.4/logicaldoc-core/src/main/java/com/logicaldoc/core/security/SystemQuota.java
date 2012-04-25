@@ -16,6 +16,9 @@ import com.logicaldoc.core.document.History;
  */
 public class SystemQuota implements DocumentListener {
 
+	public static void setTotalSize(long size) {
+	}
+
 	/**
 	 * Checks if the quota was exceeded.
 	 */
