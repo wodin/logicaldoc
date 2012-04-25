@@ -26,6 +26,8 @@ public class GUISearchEngine implements Serializable {
 
 	private Integer parsingTimeout;
 
+	private Integer maxText;
+
 	public String getLanguages() {
 		return languages;
 	}
@@ -80,5 +82,13 @@ public class GUISearchEngine implements Serializable {
 
 	public void setParsingTimeout(Integer parsingTimeout) {
 		this.parsingTimeout = parsingTimeout;
+	}
+
+	public Integer getMaxText() {
+		return maxText;
+	}
+
+	public void setMaxText(Integer maxText) {
+		this.maxText = maxText;
 	}
 }
