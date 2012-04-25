@@ -36,6 +36,9 @@ import com.smartgwt.client.widgets.events.ClickHandler;
  */
 public class Frontend implements EntryPoint {
 
+	// True when the user alreafy entered the main screen
+	static boolean entered = false;
+
 	private static Frontend instance;
 
 	private LoginPanel loginPanel;
@@ -121,9 +124,12 @@ public class Frontend implements EntryPoint {
 	public void showLogin() {
 		mainPanel.hide();
 		loginPanel.show();
+		entered = false;
 	}
 
 	public void showMain() {
+		if (entered)
+			return;
 		if (Session.get().getIncomingMessage() != null) {
 			mainPanel.getIncomingMessage().setMessage(Session.get().getIncomingMessage());
 			mainPanel.getIncomingMessage().setClickHandler(new ClickHandler() {
@@ -138,6 +144,7 @@ public class Frontend implements EntryPoint {
 
 		mainPanel.show();
 		loginPanel.hide();
+		entered = true;
 	}
 
 	/**
