@@ -382,6 +382,14 @@ public class Navigator extends TreeGrid implements FolderObserver {
 			}
 		});
 
+		MenuItem rename = new MenuItem();
+		rename.setTitle(I18N.message("rename"));
+		rename.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				onRename();
+			}
+		});
+
 		MenuItem createWorkspace = new MenuItem();
 		createWorkspace.setTitle(I18N.message("newworkspace"));
 		createWorkspace.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
@@ -473,6 +481,10 @@ public class Navigator extends TreeGrid implements FolderObserver {
 			create.setEnabled(false);
 		}
 
+		if (!folder.hasPermission(Constants.PERMISSION_RENAME)) {
+			rename.setEnabled(false);
+		}
+
 		if (id == Constants.WORKSPACE_DEFAULTID || !parent.hasPermission(Constants.PERMISSION_DELETE)) {
 			delete.setEnabled(false);
 			move.setEnabled(false);
@@ -494,7 +506,8 @@ public class Navigator extends TreeGrid implements FolderObserver {
 			contextMenu.setItems(reload, search, create, createWorkspace, delete, addBookmark, paste, pasteAsAlias,
 					move, exportZip);
 		} else
-			contextMenu.setItems(reload, search, create, delete, addBookmark, paste, pasteAsAlias, move, exportZip);
+			contextMenu.setItems(reload, search, create, rename, delete, addBookmark, paste, pasteAsAlias, move,
+					exportZip);
 
 		if (Feature.visible(Feature.AUDIT)) {
 			contextMenu.addItem(audit);
@@ -681,6 +694,34 @@ public class Navigator extends TreeGrid implements FolderObserver {
 								getTree().add(newNode, selectedNode);
 							}
 						});
+					}
+				});
+	}
+
+	private void onRename() {
+		final TreeNode selectedNode = (TreeNode) getSelectedRecord();
+		LD.askforValue(I18N.message("rename"), I18N.message("title"), selectedNode.getAttributeAsString("name"), "200",
+				new ValueCallback() {
+					@Override
+					public void execute(final String value) {
+						if (value == null || "".equals(value.trim()))
+							return;
+
+						service.rename(Session.get().getSid(),
+								Long.parseLong(selectedNode.getAttributeAsString("folderId")), value.trim(),
+								new AsyncCallback<Void>() {
+
+									@Override
+									public void onFailure(Throwable caught) {
+										Log.serverError(caught);
+									}
+
+									@Override
+									public void onSuccess(Void v) {
+										selectedNode.setAttribute("name", value);
+										refreshRow(getRecordIndex(selectedNode));
+									}
+								});
 					}
 				});
 	}
