@@ -65,6 +65,8 @@ public class FiltersPanel extends VLayout {
 		whitelist.setHint(I18N.message("blacklisthint"));
 		if (changedHandler != null)
 			whitelist.addChangedHandler(changedHandler);
+		if (Session.get().isDemo())
+			whitelist.setDisabled(true);
 
 		final TextAreaItem blacklist = ItemFactory.newTextAreaItem("blacklist", "blacklist", null);
 		blacklist.setHeight(120);
@@ -72,6 +74,8 @@ public class FiltersPanel extends VLayout {
 		blacklist.setHint(I18N.message("blacklisthint"));
 		if (changedHandler != null)
 			blacklist.addChangedHandler(changedHandler);
+		if (Session.get().isDemo())
+			blacklist.setDisabled(true);
 
 		form.setItems(whitelist, blacklist);
 
