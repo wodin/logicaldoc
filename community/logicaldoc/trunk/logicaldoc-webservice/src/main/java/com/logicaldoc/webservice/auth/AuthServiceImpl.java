@@ -31,7 +31,8 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
 		MessageContext ctx = context.getMessageContext();
 		HttpServletRequest request = (HttpServletRequest) ctx.get(AbstractHTTPDestination.HTTP_REQUEST);
 
-		if (authenticationChain.authenticate(username, password, request.getRemoteAddr()))
+		if (authenticationChain.authenticate(username, password,
+				new String[] { request.getRemoteAddr(), request.getRemoteHost() }))
 			return AuthenticationChain.getSessionId();
 		else
 			throw new Exception("Unable to create a new session");

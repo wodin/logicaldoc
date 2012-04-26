@@ -93,6 +93,10 @@ public class User extends PersistentObject implements Serializable {
 
 	private Integer welcomeScreen = 1500;
 
+	private String ipWhiteList;
+
+	private String ipBlackList;
+
 	public User() {
 	}
 
@@ -419,5 +423,21 @@ public class User extends PersistentObject implements Serializable {
 
 	public void setWelcomeScreen(Integer welcomeScreen) {
 		this.welcomeScreen = welcomeScreen;
+	}
+
+	public String getIpWhiteList() {
+		return ipWhiteList;
+	}
+
+	public void setIpWhiteList(String ipWhiteList) {
+		this.ipWhiteList = ipWhiteList;
+	}
+
+	public String getIpBlackList() {
+		return ipBlackList;
+	}
+
+	public void setIpBlackList(String ipBlackList) {
+		this.ipBlackList = ipBlackList;
 	}
 }

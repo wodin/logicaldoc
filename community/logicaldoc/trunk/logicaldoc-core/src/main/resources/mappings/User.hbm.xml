@@ -32,6 +32,8 @@
     	<property name="signatureId" type="string" column="ld_signatureid" length="255" />
 		<property name="signatureInfo" type="string" column="ld_signatureinfo" length="255" />
 		<property name="welcomeScreen" type="int" column="ld_welcomescreen" not-null="false" />
+		<property name="ipWhiteList" type="string" column="ld_ipwhitelist" length="4000" not-null="false" />
+		<property name="ipBlackList" type="string" column="ld_ipblacklist" length="4000" not-null="false" />
 		<set name="groups" table="ld_usergroup" lazy="false" inverse="true">
 			<key column="ld_userid" />
 			<many-to-many column="ld_groupid" class="com.logicaldoc.core.security.Group" where="ld_deleted=0" />

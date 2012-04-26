@@ -45,6 +45,8 @@ public class UserDetailsPanel extends VLayout {
 
 	private Layout historyTabPanel;
 
+	private Layout filtersTabPanel;
+
 	private UserPropertiesPanel propertiesPanel;
 
 	private HLayout savePanel;
@@ -58,6 +60,8 @@ public class UserDetailsPanel extends VLayout {
 	private UserQuotaPanel quotaPanel;
 
 	private UserHistoryPanel historyPanel;
+
+	private FiltersPanel filtersPanel;
 
 	public UserDetailsPanel(UsersPanel usersPanel) {
 		super();
@@ -147,6 +151,19 @@ public class UserDetailsPanel extends VLayout {
 			tabSet.addTab(quotaTab);
 		}
 
+		Tab filtersTab = new Tab(I18N.message("filters"));
+		if (Feature.visible(Feature.IP_FILTERS)) {
+			if (Feature.enabled(Feature.IP_FILTERS)) {
+				filtersTabPanel = new HLayout();
+				filtersTabPanel.setWidth100();
+				filtersTabPanel.setHeight100();
+			} else {
+				filtersTabPanel = new FeatureDisabled();
+			}
+			filtersTab.setPane(filtersTabPanel);
+			tabSet.addTab(filtersTab);
+		}
+
 		Tab historyTab = new Tab(I18N.message("history"));
 		historyTabPanel = new HLayout();
 		historyTabPanel.setWidth100();
@@ -202,6 +219,19 @@ public class UserDetailsPanel extends VLayout {
 		}
 
 		/*
+		 * Prepare the filters tab
+		 */
+		if (Feature.enabled(Feature.IP_FILTERS)) {
+			if (filtersPanel != null) {
+				filtersPanel.destroy();
+				if (filtersTabPanel.contains(filtersPanel))
+					filtersTabPanel.removeMember(filtersPanel);
+			}
+			filtersPanel = new FiltersPanel(user, changeHandler);
+			filtersTabPanel.addMember(filtersPanel);
+		}
+
+		/*
 		 * Prepare the history tab
 		 */
 		if (historyPanel != null) {
@@ -238,12 +268,18 @@ public class UserDetailsPanel extends VLayout {
 		boolean quotaValid = true;
 		if (quotaPanel != null)
 			quotaValid = quotaPanel.validate();
+		boolean filtersValid = true;
+		if (filtersPanel != null)
+			filtersValid = filtersPanel.validate();
 
 		if (!stdValid)
 			tabSet.selectTab(0);
 		else if (quotaPanel != null && !quotaValid)
 			tabSet.selectTab(1);
-		return stdValid && quotaValid;
+		else if (filtersPanel != null && !filtersValid)
+			tabSet.selectTab(2);
+
+		return stdValid && quotaValid && filtersValid;
 	}
 
 	public void onSave() {

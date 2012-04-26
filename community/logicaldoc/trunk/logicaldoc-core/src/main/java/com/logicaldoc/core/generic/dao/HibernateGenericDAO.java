@@ -44,7 +44,7 @@ public class HibernateGenericDAO extends HibernatePersistentObjectDAO<Generic> i
 	@Override
 	public Generic findByAlternateKey(String type, String subtype) {
 		Generic generic = null;
-		Collection<Generic> coll = findByWhere("_entity.type = '" + SqlUtil.doubleQuotes(type)
+		Collection<Generic> coll = findByWhere(" _entity.type = '" + SqlUtil.doubleQuotes(type)
 				+ "' and _entity.subtype='" + SqlUtil.doubleQuotes(subtype) + "'", null, null);
 		if (coll.size() > 0) {
 			generic = coll.iterator().next();

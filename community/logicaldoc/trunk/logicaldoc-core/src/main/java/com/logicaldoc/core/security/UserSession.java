@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserHistoryDAO;
 import com.logicaldoc.util.Context;
@@ -103,9 +105,21 @@ public class UserSession implements Comparable<UserSession> {
 		User user = userDAO.findByUserName(userName);
 		this.userId = user.getId();
 
+		/*
+		 * Store in the history comment the remote host and IP
+		 */
+		String comment = "";
+		if (userObject != null && "[Ljava.lang.String;".equals(userObject.getClass().getName())) {
+			String addr = ((String[]) userObject)[0];
+			String host = ((String[]) userObject)[1];
+			if (StringUtils.isNotEmpty(host) && !host.equals(addr))
+				comment = host + " (" + addr + ") ";
+			else
+				comment = addr;
+		}
+
 		// Add a user history entry
-		userHistoryDAO.createUserHistory(userDAO.findById(userId), UserHistory.EVENT_USER_LOGIN,
-				userObject != null ? userObject.toString() : "", id);
+		userHistoryDAO.createUserHistory(userDAO.findById(userId), UserHistory.EVENT_USER_LOGIN, comment, id);
 	}
 
 	public String getUserName() {

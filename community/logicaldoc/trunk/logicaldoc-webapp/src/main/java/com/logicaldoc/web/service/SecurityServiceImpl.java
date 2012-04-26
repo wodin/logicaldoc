@@ -87,9 +87,13 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		GUIUser guiUser = new GUIUser();
 
 		try {
-			if (authenticationChain.authenticate(username, password,
-					getThreadLocalRequest() != null ? getThreadLocalRequest().getRemoteAddr() : "")) {
+			String[] remoteAddress = new String[] { null, null };
+			if (getThreadLocalRequest() != null) {
+				remoteAddress = new String[] { getThreadLocalRequest().getRemoteAddr(),
+						getThreadLocalRequest().getRemoteHost() };
+			}
 
+			if (authenticationChain.authenticate(username, password, remoteAddress)) {
 				User user = userDao.findByUserName(username);
 				userDao.initialize(user);
 
@@ -308,51 +312,57 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	@Override
 	public GUIUser getUser(String sid, long userId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = userDao.findById(userId);
-		if (user != null) {
-			userDao.initialize(user);
+		try {
+			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			User user = userDao.findById(userId);
+			if (user != null) {
+				userDao.initialize(user);
 
-			GUIUser usr = new GUIUser();
-			usr.setId(userId);
-			usr.setAddress(user.getStreet());
-			usr.setCell(user.getTelephone2());
-			usr.setPhone(user.getTelephone());
-			usr.setCity(user.getCity());
-			usr.setCountry(user.getCountry());
-			usr.setEmail(user.getEmail());
-			usr.setEnabled(user.getEnabled() == 1);
-			usr.setFirstName(user.getFirstName());
-			usr.setLanguage(user.getLanguage());
-			usr.setName(user.getName());
-			usr.setPostalCode(user.getPostalcode());
-			usr.setState(user.getState());
-			usr.setUserName(user.getUserName());
-			usr.setPasswordExpires(user.getPasswordExpires() == 1);
-			usr.setSignatureId(user.getSignatureId());
-			usr.setSignatureInfo(user.getSignatureInfo());
-			usr.setWelcomeScreen(user.getWelcomeScreen());
+				GUIUser usr = new GUIUser();
+				usr.setId(userId);
+				usr.setAddress(user.getStreet());
+				usr.setCell(user.getTelephone2());
+				usr.setPhone(user.getTelephone());
+				usr.setCity(user.getCity());
+				usr.setCountry(user.getCountry());
+				usr.setEmail(user.getEmail());
+				usr.setEnabled(user.getEnabled() == 1);
+				usr.setFirstName(user.getFirstName());
+				usr.setLanguage(user.getLanguage());
+				usr.setName(user.getName());
+				usr.setPostalCode(user.getPostalcode());
+				usr.setState(user.getState());
+				usr.setUserName(user.getUserName());
+				usr.setPasswordExpires(user.getPasswordExpires() == 1);
+				usr.setSignatureId(user.getSignatureId());
+				usr.setSignatureInfo(user.getSignatureInfo());
+				usr.setWelcomeScreen(user.getWelcomeScreen());
+				usr.setIpWhitelist(user.getIpWhiteList());
+				usr.setIpBlacklist(user.getIpBlackList());
 
-			GUIGroup[] grps = new GUIGroup[user.getGroups().size()];
-			int i = 0;
-			for (Group group : user.getGroups()) {
-				grps[i] = new GUIGroup();
-				grps[i].setId(group.getId());
-				grps[i].setName(group.getName());
-				grps[i].setDescription(group.getDescription());
-				grps[i].setType(group.getType());
-				i++;
+				GUIGroup[] grps = new GUIGroup[user.getGroups().size()];
+				int i = 0;
+				for (Group group : user.getGroups()) {
+					grps[i] = new GUIGroup();
+					grps[i].setId(group.getId());
+					grps[i].setName(group.getName());
+					grps[i].setDescription(group.getDescription());
+					grps[i].setType(group.getType());
+					i++;
+				}
+				usr.setGroups(grps);
+
+				usr.setQuota(user.getQuota());
+				usr.setQuotaCount(user.getQuotaCount());
+
+				ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+				usr.setPasswordMinLenght(Integer.parseInt(config.getProperty("password.size")));
+
+				return usr;
 			}
-			usr.setGroups(grps);
-
-			usr.setQuota(user.getQuota());
-			usr.setQuotaCount(user.getQuotaCount());
-
-			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-			usr.setPasswordMinLenght(Integer.parseInt(config.getProperty("password.size")));
-			return usr;
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
 		}
-
 		return null;
 	}
 
@@ -438,6 +448,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setSignatureId(user.getSignatureId());
 			usr.setSignatureInfo(user.getSignatureInfo());
 			usr.setWelcomeScreen(user.getWelcomeScreen());
+			usr.setIpWhiteList(user.getIpWhitelist());
+			usr.setIpBlackList(user.getIpBlacklist());
 
 			usr.setQuota(user.getQuota());
 
