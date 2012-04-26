@@ -90,6 +90,10 @@ public class GUIUser implements Serializable {
 
 	private Set<UserObserver> observers = new HashSet<UserObserver>();
 
+	private String ipWhitelist;
+	
+	private String ipBlacklist;
+	
 	public void setUserName(String userName) {
 		this.userName = userName;
 		notifyObservers("userName");
@@ -402,5 +406,21 @@ public class GUIUser implements Serializable {
 
 	public void setWelcomeScreen(Integer welcomeScreen) {
 		this.welcomeScreen = welcomeScreen;
+	}
+
+	public String getIpWhitelist() {
+		return ipWhitelist;
+	}
+
+	public void setIpWhitelist(String ipWhitelist) {
+		this.ipWhitelist = ipWhitelist;
+	}
+
+	public String getIpBlacklist() {
+		return ipBlacklist;
+	}
+
+	public void setIpBlacklist(String ipBlacklist) {
+		this.ipBlacklist = ipBlacklist;
 	}
 }

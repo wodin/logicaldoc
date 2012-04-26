@@ -6,12 +6,14 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
@@ -55,6 +57,8 @@ public class SecuritySettingsPanel extends VLayout {
 
 	private DynamicForm notificationsForm;
 
+	private FiltersPanel filtersPanel = new FiltersPanel();
+
 	public SecuritySettingsPanel(GUISecuritySettings settings) {
 		this.settings = settings;
 		setWidth100();
@@ -67,6 +71,13 @@ public class SecuritySettingsPanel extends VLayout {
 		Tab menues = new Tab();
 		menues.setTitle(I18N.message("menues"));
 		menues.setPane(new MenuesPanel());
+
+		Tab filters = new Tab();
+		filters.setTitle(I18N.message("filters"));
+		if (Feature.enabled(Feature.IP_FILTERS))
+			filters.setPane(filtersPanel);
+		else
+			filters.setPane(new FeatureDisabled());
 
 		Tab password = new Tab();
 		password.setTitle(I18N.message("password"));
@@ -85,13 +96,13 @@ public class SecuritySettingsPanel extends VLayout {
 		pwdExp.setValue(settings.getPwdExpiration());
 		pwdExp.setWrapTitle(false);
 		pwdExp.setRequired(true);
-		
+
 		final RadioGroupItem savelogin = ItemFactory.newBooleanSelector("savelogin", I18N.message("savelogin"));
 		savelogin.setHint(I18N.message("saveloginhint"));
 		savelogin.setValue(settings.isSaveLogin() ? "yes" : "no");
 		savelogin.setWrapTitle(false);
 		savelogin.setRequired(true);
-		
+
 		pwdForm.setFields(pwdSize, pwdExp, savelogin);
 		password.setPane(pwdForm);
 
@@ -100,7 +111,10 @@ public class SecuritySettingsPanel extends VLayout {
 
 		refreshNotifications();
 
-		tabs.setTabs(password, notifications, menues);
+		if (Feature.visible(Feature.IP_FILTERS))
+			tabs.setTabs(password, notifications, menues, filters);
+		else
+			tabs.setTabs(password, notifications, menues);
 
 		IButton save = new IButton();
 		save.setTitle(I18N.message("save"));
@@ -114,7 +128,8 @@ public class SecuritySettingsPanel extends VLayout {
 				if (vm.validate()) {
 					SecuritySettingsPanel.this.settings.setPwdExpiration((Integer) values.get("pwdExp"));
 					SecuritySettingsPanel.this.settings.setPwdSize((Integer) values.get("pwdSize"));
-					SecuritySettingsPanel.this.settings.setSaveLogin(values.get("savelogin").equals("yes") ? true : false);
+					SecuritySettingsPanel.this.settings.setSaveLogin(values.get("savelogin").equals("yes") ? true
+							: false);
 
 					service.saveSettings(Session.get().getSid(), SecuritySettingsPanel.this.settings,
 							new AsyncCallback<Void>() {
@@ -131,6 +146,10 @@ public class SecuritySettingsPanel extends VLayout {
 													+ I18N.message("settingsaffectnewsessions"), null);
 								}
 							});
+				}
+
+				if (Feature.enabled(Feature.IP_FILTERS)) {
+					filtersPanel.save();
 				}
 			}
 		});
