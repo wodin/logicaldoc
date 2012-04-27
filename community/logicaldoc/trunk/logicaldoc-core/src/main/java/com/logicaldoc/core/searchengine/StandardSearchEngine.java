@@ -82,6 +82,8 @@ public class StandardSearchEngine implements SearchEngine {
 		doc.addField(Fields.SIZE.getName(), document.getFileSize());
 		doc.addField(Fields.DATE.getName(), document.getDate());
 		doc.addField(Fields.SOURCE_DATE.getName(), document.getSourceDate());
+		doc.addField(Fields.SOURCE_ID.getName(), document.getSourceId());
+		doc.addField(Fields.RECIPIENT.getName(), document.getRecipient());
 		doc.addField(Fields.CREATION.getName(), document.getCreation());
 		doc.addField(Fields.CUSTOM_ID.getName(), document.getCustomId());
 		doc.addField(Fields.SOURCE.getName(), document.getSource());
@@ -514,8 +516,7 @@ public class StandardSearchEngine implements SearchEngine {
 				FileUtil.copyResource("/index/conf/protwords.txt", protwords_txt);
 			}
 
-			CoreContainer container = new CoreContainer();
-			container.load(home.getPath(), solr_xml);
+			CoreContainer container = new CoreContainer(home.getPath(), solr_xml);
 			server = new EmbeddedSolrServer(container, "");
 			unlock();
 		} catch (Exception e) {

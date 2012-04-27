@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.frontend.client.search;
 
-import com.gargoylesoftware.htmlunit.util.Cookie;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Window;

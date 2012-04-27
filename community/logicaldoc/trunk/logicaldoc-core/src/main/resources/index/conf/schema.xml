@@ -84,6 +84,8 @@
    <field name="comment" type="text_general" indexed="true" stored="false" />
    <field name="tags" type="text_general" indexed="true" stored="false" />
    <field name="coverage" type="text_general" indexed="true" stored="false" />
+   <field name="sourceId" type="text_general" indexed="true" stored="false" />
+   <field name="recipient" type="text_general" indexed="true" stored="false" />
    <field name="sourceAuthor" type="string" indexed="true" stored="false" />
    <field name="docRef" type="long" indexed="true" stored="true" required="false" />
    <field name="content" type="text_std" indexed="true" stored="true" />

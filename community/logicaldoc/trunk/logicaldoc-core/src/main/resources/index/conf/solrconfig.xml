@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <config>
   <abortOnConfigurationError>${solr.abortOnConfigurationError:true}</abortOnConfigurationError>
-  <luceneMatchVersion>LUCENE_35</luceneMatchVersion>
+  <luceneMatchVersion>LUCENE_36</luceneMatchVersion>
   <dataDir>${solr.data.dir:}</dataDir>
   <directoryFactory name="DirectoryFactory" 
                     class="${solr.directoryFactory:solr.StandardDirectoryFactory}"/>
@@ -454,7 +454,7 @@
         <str name="terms.limit">1000</str>
         <str name="rows">500</str>
         <str name="sort">score desc</str>
-        <str name="fl">id,title,folderId,tags,templateId,folderName,creation,date,sourceDate,coverage,sourceAuthor,source,size,customId,docRef,comment,language,ext_*,score</str>
+        <str name="fl">id,title,folderId,tags,templateId,folderName,creation,date,sourceDate,coverage,sourceAuthor,source,size,customId,dourceId,recipient,docRef,comment,language,ext_*,score</str>
      </lst>
 
      <arr name="components">

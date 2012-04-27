@@ -13,8 +13,8 @@ import java.util.Set;
 public enum Fields {
 	ID("id"), TITLE("title"), FOLDER_ID("folderId"), CONTENT("content"), TAGS("tags"), TEMPLATE_ID("templateId"), FOLDER_NAME(
 			"folderName"), CREATION("creation"), DATE("date"), SOURCE_DATE("sourceDate"), COVERAGE("coverage"), SOURCE_AUTHOR(
-			"sourceAuthor"), SOURCE("source"), SIZE("size"), CUSTOM_ID("customId"), DOC_REF("docRef"), COMMENT(
-			"comment"), LANGUAGE("language");
+			"sourceAuthor"), SOURCE("source"), RECIPIENT("recipient"), SOURCE_ID("sourceId"), SIZE("size"), CUSTOM_ID(
+			"customId"), DOC_REF("docRef"), COMMENT("comment"), LANGUAGE("language");
 
 	private final String name;
 
@@ -41,6 +41,8 @@ public enum Fields {
 		fields.add(COVERAGE);
 		fields.add(SOURCE_AUTHOR);
 		fields.add(SOURCE);
+		fields.add(SOURCE_ID);
+		fields.add(RECIPIENT);
 		fields.add(CUSTOM_ID);
 		fields.add(DOC_REF);
 		fields.add(COMMENT);
@@ -53,8 +55,8 @@ public enum Fields {
 	 */
 	public static String searchList() {
 		Set<Fields> fields = all();
-		String buf=fields.toString();
-		buf=buf.substring(buf.indexOf(',')+1,buf.length()-1)+",ext_*";
+		String buf = fields.toString();
+		buf = buf.substring(buf.indexOf(',') + 1, buf.length() - 1) + ",ext_*";
 		return buf;
 	}
 
