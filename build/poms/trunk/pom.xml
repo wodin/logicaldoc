@@ -86,8 +86,8 @@
     <spring.version>3.0.7.RELEASE</spring.version>
     <hibernate.version>3.6.9.Final</hibernate.version>
     <ehcache.version>2.5.1</ehcache.version>
-    <lucene.version>3.5.0</lucene.version>
-    <solr.version>3.5.0</solr.version>
+    <lucene.version>3.6.0</lucene.version>
+    <solr.version>3.6.0</solr.version>
     <gwt.version>2.3.0</gwt.version>
     <smartgwt.version>3.0</smartgwt.version>
   </properties>
