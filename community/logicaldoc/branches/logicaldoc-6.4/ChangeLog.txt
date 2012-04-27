@@ -10,11 +10,38 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC 6.4.1
+=============== 
+Added new GUI translations: Slovenian and Korean 
+  
+
+LogicalDOC 6.4 (2012-03-26; logicaldoc-6.4)
+===============   
+3	Ability to perform searches against folders - Improvement -	User Interface
+120	Configurable document preview (viewer size) - Improvement -	User Interface
+136	Sometimes the upload doesn't work (documents do not appear) - Bug -	User Interface
+141	Ability to specify base document template and metadata for each Folder - New Feature - Core
+144	Bookmarks on Folders - Improvement -	User Interface
+169	Permanent Download Link - New Feature -	Core
+189	HTML formatting when sending documents in emails - Improvement - Core
+194	Cannot set some folders in search - Bug - User Interface
+195	Configurable default page (per user) after login  - New Feature -	User Interface             
+145	Translation of the confirmation move messages - Wish -	User Interface
+Improved loading performance by 35% - Improvement -	Core
+All the translations of the GUI are enabled by default - Improvement -	User Interface
+Improved management of notes on documents - Improvement -	Core
+Download of document on Safari produces files with '%' character in place of space - Bug - User Interface  
+
+
 LogicalDOC 6.3.5 (2012-02-15; logicaldoc-6.3.5)
 ===============      
 180 	Move folder name to beginning of tab/window title - Improvement - User Interface
 184 	Additional characters for usernames - Improvement - User Interface
-190 	Indicate effective search depth - Improvement - User Interface 
+190 	Indicate effective search depth - Improvement - User Interface
+Fixed - Document upload folder not cleaned after checkin
+Fixed - Incorrect file Uploaded
+Fixed - Export to Zip does not generate a zip 
+
 
 LogicalDOC 6.3.4 (2012-01-27; logicaldoc-6.3.4)
 ===============
