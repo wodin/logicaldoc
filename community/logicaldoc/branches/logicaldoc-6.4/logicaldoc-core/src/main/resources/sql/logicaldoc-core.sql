@@ -78,6 +78,12 @@ create unique index  AK_GENERIC on ld_generic (ld_type, ld_subtype);
 create unique index  AK_VERSION on ld_version (ld_documentid, ld_version);
 create unique index  AK_RATING on ld_rating (ld_docid, ld_userid);
 
+--Prepare some indexes
+create index LD_LOCKUSER on ld_document (ld_lockuserid);
+create index LD_HISTORY_DOCID on ld_history (ld_docid);
+create index LD_HISTORY_USERID on ld_history (ld_userid);
+create index LD_HISTORY_EVENT on ld_history (ld_event);
+create index LD_FOLDER_HISTORY_FOLDID on ld_folder_history (ld_folderid);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
