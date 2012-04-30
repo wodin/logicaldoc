@@ -69,8 +69,20 @@ public class ClusteringPanel extends HLayout {
 		TextItem context = ItemFactory.newTextItem("context", I18N.message("contextpath"), parameters[4].getValue());
 		context.setRequired(true);
 
-		StaticTextItem id = ItemFactory.newStaticTextItem("id", I18N.message("id"), parameters[5].getValue());
-		
+		IntegerItem baseport = ItemFactory.newIntegerItem("baseport", I18N.message("baseport"),
+				Integer.parseInt(parameters[5].getValue()));
+		baseport.setRequired(true);
+
+		IntegerItem portrange = ItemFactory.newIntegerItem("portrange", I18N.message("portrange"),
+				Integer.parseInt(parameters[6].getValue()));
+		portrange.setRequired(true);
+
+		TextItem hosts = ItemFactory.newTextItem("hosts", I18N.message("hosts"), parameters[7].getValue());
+		hosts.setRequired(true);
+		hosts.setWidth(400);
+
+		StaticTextItem id = ItemFactory.newStaticTextItem("id", I18N.message("id"), parameters[8].getValue());
+
 		ButtonItem save = new ButtonItem();
 		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
@@ -79,13 +91,16 @@ public class ClusteringPanel extends HLayout {
 				final Map<String, Object> values = vm.getValues();
 
 				if (vm.validate()) {
-					final GUIParameter[] settings = new GUIParameter[2];
+					final GUIParameter[] settings = new GUIParameter[8];
 					settings[0] = new GUIParameter("cluster.enabled", values.get("eenabled").equals("yes") ? "true"
 							: "false");
 					settings[1] = new GUIParameter("cluster.name", vm.getValueAsString("name"));
 					settings[2] = new GUIParameter("cluster.node.host", vm.getValueAsString("host"));
 					settings[3] = new GUIParameter("cluster.node.port", vm.getValueAsString("port"));
 					settings[4] = new GUIParameter("cluster.node.context", vm.getValueAsString("context"));
+					settings[5] = new GUIParameter("cluster.port", vm.getValueAsString("baseport"));
+					settings[6] = new GUIParameter("cluster.portrange", vm.getValueAsString("portrange"));
+					settings[7] = new GUIParameter("cluster.hosts", vm.getValueAsString("hosts"));
 
 					service.saveSettings(Session.get().getSid(), settings, new AsyncCallback<Void>() {
 						@Override
@@ -102,7 +117,7 @@ public class ClusteringPanel extends HLayout {
 			}
 		});
 
-		clusterForm.setItems(enabled, id, name, host, port, context, save);
+		clusterForm.setItems(enabled, id, name, hosts, baseport, portrange, host, port, context, save);
 		settings.setPane(clusterForm);
 
 		Tab channels = new Tab();
