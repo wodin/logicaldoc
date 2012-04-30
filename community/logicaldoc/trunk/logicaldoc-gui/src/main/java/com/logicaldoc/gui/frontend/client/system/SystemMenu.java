@@ -96,19 +96,19 @@ public class SystemMenu extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				service.loadSettingsByNames(Session.get().getSid(), new String[] { "cluster.enabled", "cluster.name",
-						"cluster.node.host", "cluster.node.port", "cluster.node.context", "cluster.nodeId" },
-						new AsyncCallback<GUIParameter[]>() {
+						"cluster.node.host", "cluster.node.port", "cluster.node.context", "cluster.port",
+						"cluster.portrange", "cluster.hosts", "cluster.nodeId" }, new AsyncCallback<GUIParameter[]>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(GUIParameter[] settings) {
-								AdminPanel.get().setContent(new ClusteringPanel(settings));
-							}
-						});
+					@Override
+					public void onSuccess(GUIParameter[] settings) {
+						AdminPanel.get().setContent(new ClusteringPanel(settings));
+					}
+				});
 			}
 		});
 	}
