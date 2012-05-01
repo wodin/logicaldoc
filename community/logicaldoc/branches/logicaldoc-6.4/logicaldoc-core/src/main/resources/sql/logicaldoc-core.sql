@@ -81,6 +81,7 @@ create unique index  AK_RATING on ld_rating (ld_docid, ld_userid);
 --Prepare some indexes
 create index LD_DOC_LUID on ld_document (ld_lockuserid);
 create index LD_DOC_FID on ld_document (ld_folderid);
+create index LD_DOC_RID on ld_document (ld_docref);
 create index LD_HIST_DOCID on ld_history (ld_docid);
 create index LD_HIST_UID on ld_history (ld_userid);
 create index LD_HIST_EVENT on ld_history (ld_event);
