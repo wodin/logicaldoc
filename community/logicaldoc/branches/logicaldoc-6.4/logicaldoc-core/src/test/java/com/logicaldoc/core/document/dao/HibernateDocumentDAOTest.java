@@ -363,7 +363,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		Collection<Long> ids = dao.findDocIdByUserIdAndTag(1, "abc");
 		Assert.assertNotNull(ids);
 		// There is also the shortcut
-		Assert.assertEquals(2, ids.size());
+		Assert.assertEquals(1, ids.size());
 		Assert.assertEquals(new Long(1), ids.iterator().next());
 
 		ids = dao.findDocIdByUserIdAndTag(1, "xxx");
@@ -380,7 +380,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		List<Document> ids = dao.findByUserIdAndTag(1, "abc", null);
 		Assert.assertNotNull(ids);
 		// There is also the shortcut
-		Assert.assertEquals(2, ids.size());
+		Assert.assertEquals(1, ids.size());
 		Assert.assertEquals(1L, ids.get(0).getId());
 
 		ids = dao.findByUserIdAndTag(4, "zzz", null);

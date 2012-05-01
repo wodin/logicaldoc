@@ -91,7 +91,7 @@ public class TagSearch extends Search {
 			query.append(" and A.ld_id in ");
 
 		DocumentDAO docDAO = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Set<Long> precoll = docDAO.findDocIdByUserIdAndTag(options.getUserId(), options.getExpression());
+		List<Long> precoll = docDAO.findDocIdByUserIdAndTag(options.getUserId(), options.getExpression());
 		String buf = precoll.toString().replace("[", "(").replace("]", ")");
 		query.append(buf);
 
