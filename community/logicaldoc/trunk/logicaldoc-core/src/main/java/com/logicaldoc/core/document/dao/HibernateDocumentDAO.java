@@ -180,11 +180,11 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	/**
 	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findDocIdByTag(java.lang.String)
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Long> findDocIdByTag(String tag) {
-		StringBuilder query = new StringBuilder();
-		query.append("'" + SqlUtil.doubleQuotes(tag) + "'");
-		query.append(" in elements(_entity.tags) ");
-		return findIdsByWhere(query.toString(), null, null);
+		StringBuilder query = new StringBuilder("select distinct(ld_docid) from ld_tag where ");
+		query.append("lower(ld_tag)='" + SqlUtil.doubleQuotes(tag).toLowerCase() + "'");
+		return (List<Long>)queryForList(query.toString(), Long.class);
 	}
 
 	public boolean store(final Document doc) {
@@ -213,6 +213,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 						dst.add(s);
 				}
 				doc.setTags(dst);
+				doc.setTgs(doc.getTagsString());
 			}
 
 			/*
@@ -393,7 +394,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 		List<Document> coll = new ArrayList<Document>();
 
-		Set<Long> ids = findDocIdByUserIdAndTag(userId, tag);
+		List<Long> ids = findDocIdByUserIdAndTag(userId, tag);
 		StringBuffer buf = new StringBuffer();
 		if (!ids.isEmpty()) {
 			boolean first = true;
@@ -414,8 +415,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<Long> findDocIdByUserIdAndTag(long userId, String tag) {
-		Set<Long> ids = new HashSet<Long>();
+	public List<Long> findDocIdByUserIdAndTag(long userId, String tag) {
+		List<Long> ids = new ArrayList<Long>();
 		try {
 			User user = userDAO.findById(userId);
 			if (user == null)
@@ -424,9 +425,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			StringBuffer query = new StringBuffer();
 
 			if (user.isInGroup("admin")) {
-				query.append("select distinct(C.ld_id) from ld_document C, ld_tag D "
-						+ " where (C.ld_id=D.ld_docid OR C.ld_docref=D.ld_docid) AND C.ld_deleted=0");
-				query.append(" AND lower(D.ld_tag)='" + SqlUtil.doubleQuotes(tag.toLowerCase()) + "'");
+				ids = findDocIdByTag(tag);
 			} else {
 
 				/*
@@ -444,15 +443,14 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				}
 
 				query.append("select distinct(C.ld_id) from ld_document C, ld_tag D "
-						+ " where (C.ld_id=D.ld_docid OR C.ld_docref=D.ld_docid) AND C.ld_deleted=0 AND C.ld_folderid in (");
+						+ " where C.ld_id=D.ld_docid AND C.ld_deleted=0 AND C.ld_folderid in (");
 				query.append(buf.toString());
 				query.append(") ");
-				query.append(" AND lower(D.ld_tag)='" + SqlUtil.doubleQuotes(tag.toLowerCase()) + "' ");
+				query.append(" AND D.ld_tag='" + SqlUtil.doubleQuotes(tag.toLowerCase()) + "' ");
+
+				List<Long> docIds = (List<Long>) queryForList(query.toString(), Long.class);
+				ids.addAll(docIds);
 			}
-
-			List<Long> docIds = (List<Long>) queryForList(query.toString(), Long.class);
-			ids.addAll(docIds);
-
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			System.err.println(e);
@@ -856,7 +854,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public void cleanExpiredTransactions() {
-		jdbcUpdate("update ld_document set ld_transactionid=null where not (ld_transactionid is null) and not exists(select B.ld_id from ld_generic B where B.ld_type='lock' and B.ld_string1=ld_transactionid)",
+		jdbcUpdate(
+				"update ld_document set ld_transactionid=null where not (ld_transactionid is null) and not exists(select B.ld_id from ld_generic B where B.ld_type='lock' and B.ld_string1=ld_transactionid)",
 				null);
 	}
 }

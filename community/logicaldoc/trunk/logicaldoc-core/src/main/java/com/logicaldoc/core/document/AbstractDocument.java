@@ -158,6 +158,8 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 
 	private String transactionAgent;
 
+	private String tgs;
+
 	public Long getDeleteUserId() {
 		return deleteUserId;
 	}
@@ -360,9 +362,9 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	}
 
 	public String getTagsString() {
-		StringBuffer sb = new StringBuffer();
+		StringBuffer sb = new StringBuffer(",");
 		if (tags == null)
-			return sb.toString();
+			return "";
 
 		Iterator<String> iter = tags.iterator();
 		boolean start = true;
@@ -371,13 +373,15 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 			String words = iter.next();
 
 			if (!start) {
-				sb.append(", ");
+				sb.append(",");
 			} else {
 				start = false;
 			}
 
 			sb.append(words);
 		}
+
+		sb.append(",");
 
 		return sb.toString();
 	}
@@ -712,5 +716,13 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	@Override
 	public void setTransactionId(String transactionId) {
 		this.transactionId = transactionId;
+	}
+
+	public String getTgs() {
+		return tgs;
+	}
+
+	public void setTgs(String tgs) {
+		this.tgs = tgs;
 	}
 }

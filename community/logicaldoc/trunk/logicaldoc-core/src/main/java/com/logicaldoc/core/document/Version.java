@@ -45,8 +45,6 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 
 	private String templateName;
 
-	private String tgs;
-
 	private String event;
 
 	private String creator;
@@ -227,14 +225,6 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 			document.setFileVersion(newVersionName);
 		}
 		return version;
-	}
-
-	public String getTgs() {
-		return tgs;
-	}
-
-	public void setTgs(String tgs) {
-		this.tgs = tgs;
 	}
 
 	public String getEvent() {

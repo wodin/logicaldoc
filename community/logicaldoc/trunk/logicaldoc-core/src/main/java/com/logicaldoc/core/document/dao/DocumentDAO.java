@@ -3,7 +3,6 @@ package com.logicaldoc.core.document.dao;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.logicaldoc.core.PersistentObjectDAO;
 import com.logicaldoc.core.document.Document;
@@ -128,7 +127,7 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * @param tag Tag of the document
 	 * @return Set of found ids.
 	 */
-	public Set<Long> findDocIdByUserIdAndTag(long userId, String tag);
+	public List<Long> findDocIdByUserIdAndTag(long userId, String tag);
 
 	/**
 	 * This method enlists documents linked to the given document.
