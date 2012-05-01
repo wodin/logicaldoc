@@ -32,9 +32,8 @@ public class TagSearchTest extends AbstractCoreTCase {
 		}
 
 		List<Hit> results = search.getHits();
-		Assert.assertEquals(2, results.size());
+		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(1, results.get(0).getId());
-		Assert.assertEquals(1, results.get(1).getId());
 		
 		opt = new SearchOptions();
 		opt.setType(1);
@@ -53,7 +52,7 @@ public class TagSearchTest extends AbstractCoreTCase {
 		}
 
 		results = search.getHits();
-		Assert.assertEquals(2, results.size());
+		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(1, results.get(0).getId());
 	}
 }
