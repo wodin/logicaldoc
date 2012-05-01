@@ -3,7 +3,6 @@ package com.logicaldoc.core.searchengine;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
@@ -78,7 +77,7 @@ public class TagSearch extends Search {
 	 * @param query
 	 */
 	private void appendWhereClause(boolean searchShortcut, StringBuffer query) {
-		query.append(" where A.ld_deleted=0 and A.ld_folderid=B.ld_id");
+		query.append(" where A.ld_deleted=0 and A.ld_folderid=B.ld_id ");
 
 		// Ids string to be used in the query
 		String ids = null;
@@ -93,20 +92,13 @@ public class TagSearch extends Search {
 		}
 
 		if (searchShortcut)
-			query.append(" and REF.ld_deleted=0 and A.ld_docref = REF.ld_id ");
+			query.append(" and A.ld_docref is not null and REF.ld_deleted=0 and A.ld_docref = REF.ld_id ");
 		else
 			query.append(" and A.ld_docref is null ");
 
-		/*
-		 * Search for all docs with specific tag
-		 */
-		if (searchShortcut)
-			query.append(" and REF.ld_id in ");
-		else
-			query.append(" and A.ld_id in ");
-
+		query.append(" and A.ld_id in ");
 		DocumentDAO docDAO = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Set<Long> precoll = docDAO.findDocIdByUserIdAndTag(options.getUserId(), options.getExpression());
+		List<Long> precoll = docDAO.findDocIdByUserIdAndTag(options.getUserId(), options.getExpression());
 		String buf = precoll.toString().replace("[", "(").replace("]", ")");
 		query.append(buf);
 

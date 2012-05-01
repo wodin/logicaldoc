@@ -9,7 +9,7 @@ create table ld_document (ld_id bigint not null, ld_lastmodified timestamp not n
                           ld_recipient varchar(1000), ld_folderid bigint, ld_templateid bigint, ld_exportstatus int not null, ld_exportid bigint,
                           ld_exportname varchar(255), ld_exportversion varchar(10), ld_docref bigint, ld_deleteuserid bigint, ld_rating int,
                           ld_comment varchar(1000), ld_workflowstatus varchar(1000), ld_published int not null, ld_startpublishing timestamp,
-                          ld_stoppublishing timestamp null, ld_transactionid varchar(255), primary key (ld_id));
+                          ld_stoppublishing timestamp null, ld_transactionid varchar(255), ld_tgs varchar(1000), primary key (ld_id));
 create table ld_document_ext (ld_docid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_docid, ld_name));
 create table ld_generic (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_type varchar(255) not null, ld_subtype varchar(255) not null, ld_string1 varchar(4000), ld_string2 varchar(4000), ld_integer1 int, ld_integer2 int, ld_double1 float, ld_double2 float, ld_date1 timestamp null, ld_date2 timestamp null, primary key (ld_id));
 create table ld_generic_ext (ld_genid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_genid, ld_name));
@@ -99,6 +99,7 @@ create unique index  AK_RATING on ld_rating (ld_docid, ld_userid);
 --Prepare some indexes
 create index LD_DOC_LUID on ld_document (ld_lockuserid);
 create index LD_DOC_FID on ld_document (ld_folderid);
+create index LD_DOC_RID on ld_document (ld_docref);
 create index LD_HIST_DOCID on ld_history (ld_docid);
 create index LD_HIST_UID on ld_history (ld_userid);
 create index LD_HIST_EVENT on ld_history (ld_event);
