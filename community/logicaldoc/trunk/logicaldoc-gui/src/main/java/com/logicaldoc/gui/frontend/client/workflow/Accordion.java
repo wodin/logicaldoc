@@ -56,6 +56,11 @@ public class Accordion extends SectionStack {
 		wfSettingsSection.setExpanded(true);
 		wfSettingsSection.setCanCollapse(true);
 		addSection(wfSettingsSection);
+
+		workflow.setTaskAssignmentSubject(I18N.message("taskassignment"));
+		workflow.setReminderSubject(I18N.message("reminder"));
+		workflow.setTaskAssignmentBody(I18N.message("assignmentbody"));
+		workflow.setReminderBody(I18N.message("reminderbody"));
 	}
 
 	public void redraw(GUIWorkflow workflow) {
@@ -64,8 +69,7 @@ public class Accordion extends SectionStack {
 			wfForm.destroy();
 			vm.clearValues();
 		}
-        this.workflow = workflow;
-		
+		this.workflow = workflow;
 
 		wfForm = new DynamicForm();
 		wfForm.setTitleOrientation(TitleOrientation.TOP);

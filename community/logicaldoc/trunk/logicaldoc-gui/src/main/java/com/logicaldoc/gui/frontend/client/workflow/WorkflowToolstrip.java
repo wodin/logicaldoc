@@ -75,6 +75,10 @@ public class WorkflowToolstrip extends ToolStrip {
 			@Override
 			public void onClick(ClickEvent event) {
 				currentWorkflow = new GUIWorkflow();
+				currentWorkflow.setTaskAssignmentSubject(I18N.message("taskassignment"));
+				currentWorkflow.setReminderSubject(I18N.message("reminder"));
+				currentWorkflow.setTaskAssignmentBody(I18N.message("assignmentbody"));
+				currentWorkflow.setReminderBody(I18N.message("reminderbody"));
 				AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
 				update();
 			}
@@ -289,7 +293,11 @@ public class WorkflowToolstrip extends ToolStrip {
 
 										@Override
 										public void onSuccess(Void result) {
-											WorkflowToolstrip.this.currentWorkflow = new GUIWorkflow();
+											currentWorkflow = new GUIWorkflow();
+											currentWorkflow.setTaskAssignmentSubject(I18N.message("taskassignment"));
+											currentWorkflow.setReminderSubject(I18N.message("reminder"));
+											currentWorkflow.setTaskAssignmentBody(I18N.message("assignmentbody"));
+											currentWorkflow.setReminderBody(I18N.message("reminderbody"));
 											AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
 											update();
 										}
@@ -308,6 +316,10 @@ public class WorkflowToolstrip extends ToolStrip {
 			public void onClick(ClickEvent event) {
 				try {
 					currentWorkflow = new GUIWorkflow();
+					currentWorkflow.setTaskAssignmentSubject(I18N.message("taskassignment"));
+					currentWorkflow.setReminderSubject(I18N.message("reminder"));
+					currentWorkflow.setTaskAssignmentBody(I18N.message("assignmentbody"));
+					currentWorkflow.setReminderBody(I18N.message("reminderbody"));
 					AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
 					update();
 				} catch (Throwable t) {
