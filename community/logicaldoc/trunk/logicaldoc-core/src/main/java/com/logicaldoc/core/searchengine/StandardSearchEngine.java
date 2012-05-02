@@ -314,7 +314,7 @@ public class StandardSearchEngine implements SearchEngine {
 			hit.setContent((String) doc.getFieldValue(Fields.CONTENT.getName()));
 			return hit;
 		} catch (SolrServerException e) {
-			log.error(e);
+			log.error(e.getMessage(), e);
 		}
 		return null;
 	}
@@ -337,7 +337,7 @@ public class StandardSearchEngine implements SearchEngine {
 			QueryResponse rsp = server.query(query);
 			hits = new Hits(rsp);
 		} catch (SolrServerException e) {
-			log.error(e);
+			log.error(e.getMessage(), e);
 		}
 		return hits;
 	}
@@ -431,7 +431,7 @@ public class StandardSearchEngine implements SearchEngine {
 			SolrDocumentList docs = rsp.getResults();
 			return docs.getNumFound();
 		} catch (SolrServerException e) {
-			log.error(e);
+			log.error(e.getMessage(), e);
 		}
 		return 0;
 	}
@@ -449,7 +449,7 @@ public class StandardSearchEngine implements SearchEngine {
 			FileUtils.deleteDirectory(getSpellcheckerDataFolder());
 			init();
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 	}
 
