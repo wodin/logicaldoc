@@ -166,9 +166,9 @@ public class FulltextSearch extends Search {
 			/*
 			 * Normal users don't see unpublished contents
 			 */
-			query.append(" and A.ld_published = 1 ");
-			query.append(" and A.ld_startpublishing <= ? ");
-			query.append(" and ( A.ld_stoppublishing is null or A.ld_stoppublishing > ? )");
+			richQuery.append(" and A.published = 1 ");
+			richQuery.append(" and A.startPublishing <= ? ");
+			richQuery.append(" and ( A.stopPublishing is null or A.stopPublishing > ? )");
 
 			Date now = new Date();
 			values = new Object[] { now, now };
