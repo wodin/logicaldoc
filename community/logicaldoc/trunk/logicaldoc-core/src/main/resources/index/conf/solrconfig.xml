@@ -5,9 +5,8 @@
   <dataDir>${solr.data.dir:}</dataDir>
   <directoryFactory name="DirectoryFactory" 
                     class="${solr.directoryFactory:solr.StandardDirectoryFactory}"/>
-  <indexDefaults>
+  <indexConfig>
     <useCompoundFile>false</useCompoundFile>
-
     <mergeFactor>10</mergeFactor>
     <!-- Sets the amount of RAM that may be used by Lucene indexing
          for buffering added documents and deletions before they are
@@ -76,17 +75,7 @@
          Default is 128 and is likely good for most everyone.
       -->
     <!-- <termIndexInterval>256</termIndexInterval> -->
-  </indexDefaults>
 
-  <!-- Main Index
-
-       Values here override the values in the <indexDefaults> section
-       for the main on disk index.
-    -->
-  <mainIndex>
-    <useCompoundFile>false</useCompoundFile>
-    <ramBufferSizeMB>32</ramBufferSizeMB>
-    <mergeFactor>10</mergeFactor>
 
     <!-- Unlock On Startup
 
@@ -143,7 +132,7 @@
       -->
      <infoStream file="INFOSTREAM.txt">false</infoStream> 
 
-  </mainIndex>
+ </indexConfig>
 
  <jmx />
 
