@@ -91,6 +91,7 @@ public class StandardSearchEngine implements SearchEngine {
 		doc.addField(Fields.TAGS.getName(), document.getTagsString());
 		doc.addField(Fields.COVERAGE.getName(), document.getCoverage());
 		doc.addField(Fields.SOURCE_AUTHOR.getName(), document.getSourceAuthor());
+		doc.addField(Fields.SOURCE_TYPE.getName(), document.getSourceType());
 		doc.addField(Fields.DOC_REF.getName(), document.getDocRef());
 
 		int maxText = -1;
