@@ -106,7 +106,7 @@ public class FulltextSearch extends Search {
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Collection<Long> accessibleFolderIds = new TreeSet<Long>();
 		if (!searchInSingleFolder) {
-			log.info("DB search");
+			log.debug("Folders search");
 			if (opt.getFolderId() == null)
 				accessibleFolderIds = fdao.findFolderIdByUserId(opt.getUserId());
 			else {
@@ -114,18 +114,10 @@ public class FulltextSearch extends Search {
 				fdao.findTreeIds(opt.getFolderId(), opt.getUserId(), opt.getDepth(),
 						(HashSet<Long>) accessibleFolderIds);
 			}
-			log.info("End of DB search");
+			log.debug("End of Folders search");
 		}
 		if (opt.getFolderId() != null && fdao.isReadEnable(opt.getFolderId(), opt.getUserId()))
 			accessibleFolderIds.add(opt.getFolderId());
-
-		/*
-		 * Prepare the list of published documents
-		 */
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-
-		// List of published documents
-		Collection<Long> publishedIds = docDao.findPublishedIds(accessibleFolderIds);
 
 		// Save here the binding between ID and Hit
 		Map<Long, Hit> hitsMap = new HashMap<Long, Hit>();
@@ -147,19 +139,17 @@ public class FulltextSearch extends Search {
 			// When user can see document with folderId then put it into
 			// result-collection.
 			if (accessibleFolderIds.contains(hit.getFolder().getId())) {
-				hit.setPublished(publishedIds.contains(hit.getId()) ? 1 : 0);
-
-				if (isRelevant(hit)) {
-					hits.add(hit);
-					hitsMap.put(hit.getId(), hit);
-				}
+				hits.add(hit);
+				hitsMap.put(hit.getId(), hit);
 			}
 		}
 
-		if(hitsMap.isEmpty())
+		if (hitsMap.isEmpty())
 			return;
-		
+
 		estimatedHitsNumber = results.getEstimatedCount();
+
+		log.debug("DB search");
 
 		String hitsIdsStr = hitsMap.keySet().toString().replace('[', '(').replace(']', ')');
 		StringBuffer richQuery = new StringBuffer();
@@ -171,7 +161,22 @@ public class FulltextSearch extends Search {
 		richQuery.append(" from Document A where A.deleted = 0 and A.id in ");
 		richQuery.append(hitsIdsStr);
 
-		List<Object> records = (List<Object>) docDao.findByQuery(richQuery.toString(), null, null);
+		Object[] values = null;
+		if (!searchUser.isInGroup("admin") && !searchUser.isInGroup("publisher")) {
+			/*
+			 * Normal users don't see unpublished contents
+			 */
+			query.append(" and A.ld_published = 1 ");
+			query.append(" and A.ld_startpublishing <= ? ");
+			query.append(" and ( A.ld_stoppublishing is null or A.ld_stoppublishing > ? )");
+
+			Date now = new Date();
+			values = new Object[] { now, now };
+		}
+
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+
+		List<Object> records = (List<Object>) docDao.findByQuery(richQuery.toString(), values, null);
 		for (Object rec : records) {
 			Object[] cols = (Object[]) rec;
 
@@ -205,7 +210,11 @@ public class FulltextSearch extends Search {
 			hit.setPublished((Integer) cols[27]);
 			hit.getFolder().setName((String) cols[28]);
 			hit.getFolder().setId((Long) cols[29]);
+
+			hit.setPublished(hit.isPublishing() ? 1 : 0);
 		}
+
+		log.debug("End of DB search");
 
 		/*
 		 * Check for suggestions
@@ -217,14 +226,5 @@ public class FulltextSearch extends Search {
 				suggestion = suggestion.replaceFirst(token, suggestions.get(token));
 			}
 		}
-	}
-
-	protected boolean isRelevant(Hit hit) {
-		boolean relevant = true;
-
-		if (hit.getPublished() != 1 && !searchUser.isInGroup("admin") && !searchUser.isInGroup("publisher"))
-			relevant = false;
-
-		return relevant;
 	}
 }
