@@ -23,7 +23,7 @@ public class GUIWorkflow implements Serializable {
 
 	private String taskAssignmentBody = "Dear ${assignee} you are asigned to task ${taskname}";
 
-	private String reminderSubject = "Task Reminder";
+	private String reminderSubject = "Reminder";
 
 	private String reminderBody = "Dear ${assignee} please complete the task ${taskname}";
 
