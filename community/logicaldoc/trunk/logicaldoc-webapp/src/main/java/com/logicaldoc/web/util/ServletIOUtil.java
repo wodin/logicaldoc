@@ -250,7 +250,8 @@ public class ServletIOUtil {
 		if (userAgent.contains("msie") || userAgent.contains("opera")) {
 			encodedFileName = URLEncoder.encode(filename, "UTF-8");
 			encodedFileName = encodedFileName.replace("+", "%20");
-		} else if (userAgent.contains("safari")) {
+		} else if (userAgent.contains("safari") && !userAgent.contains("chrome")) {
+			// Chrome User-Agent contains "safari"
 			encodedFileName = filename;
 		} else {
 			encodedFileName = "=?UTF-8?B?" + new String(Base64.encodeBase64(filename.getBytes("UTF-8")), "UTF-8")
