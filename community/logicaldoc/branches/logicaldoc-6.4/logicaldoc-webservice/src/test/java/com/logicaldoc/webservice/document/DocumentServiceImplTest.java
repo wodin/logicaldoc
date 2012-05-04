@@ -112,6 +112,7 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		docDao.initialize(newDoc);
 
 		WSDocument wsDoc = WSDocument.fromDocument(newDoc);
+		wsDoc.setComment("test");
 		Assert.assertEquals(2, wsDoc.getId());
 		wsDoc.setId(51);
 		wsDoc.setTitle("document test");
