@@ -107,9 +107,10 @@ public class StatsCollector extends Task {
 		log.debug("Collected users data");
 
 		/*
-		 * Compute repository statistics
+		 * Compute repository statistics. The docs total size is computed on DB
+		 * so it is just an estimation of the effective size.
 		 */
-		long docdir = storer.getTotalSize();
+		long docdir = documentDAO.queryForLong("select sum(ld_filesize) from ld_version where ld_version = ld_fileversion");
 		SystemQuota.setTotalSize(docdir);
 		saveStatistic("docdir", Long.toString(docdir));
 
@@ -340,7 +341,7 @@ public class StatsCollector extends Task {
 	public boolean isConcurrent() {
 		return true;
 	}
-	
+
 	public GenericDAO getGenericDAO() {
 		return genericDAO;
 	}
