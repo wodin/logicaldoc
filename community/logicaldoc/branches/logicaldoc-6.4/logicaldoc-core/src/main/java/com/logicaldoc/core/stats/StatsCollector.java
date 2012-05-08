@@ -109,7 +109,7 @@ public class StatsCollector extends Task {
 		/*
 		 * Compute repository statistics
 		 */
-		long docdir = storer.getTotalSize();
+		long docdir =  documentDAO.queryForLong("select sum(ld_filesize) from ld_version where ld_version = ld_fileversion");
 		SystemQuota.setTotalSize(docdir);
 		saveStatistic("docdir", Long.toString(docdir));
 
