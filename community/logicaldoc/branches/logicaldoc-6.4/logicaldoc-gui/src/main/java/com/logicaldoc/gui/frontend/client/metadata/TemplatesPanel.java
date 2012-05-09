@@ -87,7 +87,7 @@ public class TemplatesPanel extends VLayout {
 
 		ListGridField name = new ListGridField("name", I18N.message("name"), 200);
 		name.setCanFilter(true);
-		name.setCanSort(false);
+		name.setCanSort(true);
 
 		ListGridField description = new ListGridField("description", I18N.message("description"), 300);
 		description.setCanFilter(true);
