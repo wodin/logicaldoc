@@ -2,6 +2,7 @@ package com.logicaldoc.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,7 +26,7 @@ public abstract class ExtensibleObject extends PersistentObject {
 	}
 
 	public Object getValue(String name) {
-		if (attributes.get(name) != null)
+		if (attributes!=null && attributes.get(name) != null)
 			return attributes.get(name).getValue();
 		else
 			return null;
@@ -47,11 +48,13 @@ public abstract class ExtensibleObject extends PersistentObject {
 	}
 
 	public Set<String> getAttributeNames() {
+		if(attributes==null)
+			return new HashSet<String>();
 		return attributes.keySet();
 	}
 
 	public void removeAttribute(String name) {
-		if (attributes.containsKey(name))
+		if (attributes!=null && attributes.containsKey(name))
 			attributes.remove(name);
 	}
 
