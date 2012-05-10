@@ -156,8 +156,11 @@ public class PreviewPopup extends Window {
 		String url = GWT.getHostPageBaseURL() + "thumbnail?sid=" + Session.get().getSid() + "%26docId=" + id
 				+ "%26suffix=preview.swf";
 
-		String tmp = Util.flashPreview("flexpaperviewer.swf", (getWidth() - 26), (getHeight() - 40), getZoom(),
-				"SwfFile=" + url, printEnabled, getPreviewLanguage(language));
+		String flash = "flexpaperviewer.swf";
+		if (!printEnabled)
+			flash = "flexpaperviewer_ro.swf";
+		String tmp = Util.flashPreview(flash, (getWidth() - 26), (getHeight() - 40), getZoom(), "SwfFile=" + url,
+				printEnabled, getPreviewLanguage(language));
 		image.setContents(tmp);
 		layout.addMember(image);
 	}
