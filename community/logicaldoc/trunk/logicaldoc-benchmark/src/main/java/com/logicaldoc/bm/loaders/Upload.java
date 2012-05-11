@@ -3,8 +3,11 @@ package com.logicaldoc.bm.loaders;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -33,7 +36,8 @@ public class Upload extends AbstractLoader {
 
 	private String basePath;
 
-	private static EhCacheAdapter<String, Long> pathCache;
+	public static EhCacheAdapter<String, Long> pathCache;
+	//public static Map<String, Long> pathCache;
 
 	private long rootFolder = 4;
 
@@ -51,6 +55,10 @@ public class Upload extends AbstractLoader {
 
 		pathCache = new EhCacheAdapter<String, Long>();
 		pathCache.setCache(cache);
+		
+//		TreeMap<String, Long> unsmap = new TreeMap<String, Long>();
+//		pathCache = Collections.synchronizedMap(unsmap);
+		//pathCache = new TreeMap<String, Long>();
 	}
 
 	public Upload() {
@@ -88,7 +96,8 @@ public class Upload extends AbstractLoader {
 		List<String> folderPath = chooseFolderPath();
 
 		// Make sure the folder exists
-		Long folderID = makeFolders(serverProxy.sid, serverProxy, rootFolder, folderPath);		
+		//Long folderID = makeFolders(serverProxy.sid, serverProxy, rootFolder, folderPath);		
+		Long folderID = makeFoldersFromPath(serverProxy.sid, serverProxy, rootFolder, folderPath);	
 
 		File file = getFile();
 		String title = formatter.format(loaderCount);
@@ -179,15 +188,15 @@ public class Upload extends AbstractLoader {
 	/**
 	 * Creates or find the folders based on caching.
 	 */
-	protected Long makeFoldersFromPath(String ticket, ServerProxy serverProxy, Long rootFolder,
-			List<String> folderPath) throws Exception {
-		// Iterate down the path, checking the cache and populating it as
-		// necessary
-		String currentKey = getBasePath(serverProxy, rootFolder);
+	protected Long makeFoldersFromPath(String ticket, ServerProxy serverProxy, Long rootFolder, List<String> folderPath) throws Exception {
+		
+		// Iterate down the path, checking the cache and populating it as necessary
+		//String currentKey = getBasePath(serverProxy, rootFolder);
+		String currentKey = "";
 		for (String aFolderPath : folderPath) {
-			currentKey += ("/" + aFolderPath);
+			currentKey += "/" + aFolderPath;
 		}
-		// System.out.println("currentKey: " +currentKey);
+		//System.out.println("currentKey: " +currentKey);
 
 		Long folderID = pathCache.get(currentKey);
 
