@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans SYSTEM "spring-beans-2.0.dtd">
+<beans default-lazy-init="false" default-autowire="no" default-dependency-check="none">
+
+	<!-- This post processor ensures placeholders substitutions -->
+	<bean id="PropertyPlaceholderConfigurer" class="com.logicaldoc.util.spring.PropertiesPlaceHolder"
+		lazy-init="false" abstract="false" autowire="default"
+		dependency-check="default">
+		<property name="locations">
+			<list>
+				<value>classpath*:context.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="ContextProperties" class="com.logicaldoc.util.config.ContextProperties" />
+
+	<bean id="Context" class="com.logicaldoc.util.Context" abstract="false"
+		lazy-init="default" autowire="default" dependency-check="default" />
+
+	<bean id="RandomFile" class="com.logicaldoc.benchmark.RandomFile">
+		<property name="sourceDir" value="${load.sourcedir}" />
+	</bean>
+	
+	<bean id="Loader" class="com.logicaldoc.benchmark.WsLoader">
+		<property name="randomFile" ref="RandomFile" />
+		<property name="url" value="${connection.url}" />
+		<property name="username" value="${connection.username}" />
+		<property name="password" value="${connection.password}" />
+		<property name="folderProfile" value="${load.folderprofile}" />
+		<property name="threads" value="${load.threads}" />
+		<property name="iterations" value="${load.iterations}" />
+	</bean>
+</beans>
