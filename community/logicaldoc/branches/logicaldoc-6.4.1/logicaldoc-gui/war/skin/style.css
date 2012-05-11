@@ -1,0 +1,223 @@
+.gwt-HorizontalSplitPanel {
+	
+}
+
+.gwt-HorizontalSplitPanel .hsplitter {
+	cursor: move;
+	border: 0px;
+	background: #91c0ef url(./images/vborder.png) repeat-y;
+}
+
+.loginHeader {
+	font-family: Arial, Bitstream Vera Sans, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #AAAAAA;
+}
+
+.loginFooter {
+	font-family: Arial, Bitstream Vera Sans, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #AAAAAA;
+	margin-left: 10px;
+}
+
+.setupHeader {
+	font-family: Arial, Bitstream Vera Sans, sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	color: #AAAAAA;
+	vertical-align: center;
+}
+
+.topPanel {
+	background-color: #213150;
+	background-image: url(./brand/banner.gif);
+	background-repeat: repeat-x;
+	background-position: top left;
+	height: 45px;
+}
+
+.logo_head {
+	margin-left: 5px;
+	margin-top: 5px;
+	border: 0px solid;
+	float: left;
+	width: 205px;
+}
+
+.logo_head_oem {
+	margin-right: 5px;
+	margin-top: 5px;
+	border: 0px solid;
+	float: right;
+	width: 205px;
+}
+
+.footer {
+	height: 20px;
+	background-color: #DDDDDD;
+}
+
+.searchOptions {
+	padding-left: 5px;
+	color: white;
+	cursor: pointer;
+}
+
+.warn {
+	background-color: #FFFFA1;
+}
+
+.diff {
+	color: #FF8723;
+}
+
+.footerInfo {
+	color: #577ED0;
+}
+
+.footerError {
+	color: #EF4A4A;
+}
+
+.footerWarn {
+	color: #FFBE0F;
+}
+
+.immutable {
+	color: #888888;
+	font-style: italic;
+}
+
+.upload {
+	margin-left: 5px;
+	margin-top: 10px;
+}
+
+.infoPanel {
+	background-color: #DDDDDD;
+}
+
+.officelogout {
+	color: #536CDF;
+}
+
+.tag a {
+	margin: 0;
+	padding: 1px 2px 0 0;
+	text-decoration: none;
+	color: #777777;
+	font-family: Verdana, Arial, serif, sans-serif;
+	position: relative;
+	float: left;
+}
+
+.tag a:hover {
+	text-decoration: underline;
+}
+
+.tag a img {
+	border: none;
+}
+
+.tag1 a {
+	font-size: 0.7em;
+	font-weight: 100;
+}
+
+.tag2 a {
+	font-size: 0.8em;
+	font-weight: 200;
+}
+
+.tag3 a {
+	font-size: 0.9em;
+	font-weight: 300;
+}
+
+.tag4 a {
+	font-size: 1.0em;
+	font-weight: 400;
+}
+
+.tag5 a {
+	font-size: 1.2em;
+	font-weight: 500;
+}
+
+.tag6 a {
+	font-size: 1.3em;
+	font-weight: 600;
+}
+
+.tag7 a {
+	font-size: 1.4em;
+	font-weight: 700;
+}
+
+.tag8 a {
+	font-size: 1.5em;
+	font-weight: 800;
+}
+
+.tag9 a {
+	font-size: 1.6em;
+	font-weight: 900;
+}
+
+.tag10 a {
+	font-size: 1.7em;
+	font-weight: 900;
+}
+
+.s {
+	border-bottom: 1px solid #dddddd;
+}
+
+.deletedItem {
+	color: grey;
+	text-decoration: line-through;
+}
+
+.hint {
+	white-space: nowrap;
+	padding-left: 3px;
+	color: grey;
+}
+
+.forgotpwd {
+	text-decoration: underline;
+	color: blue;
+}
+
+.basicSearchForm {
+  font-size: 32pt;
+}
+
+.basicSearchForm .formTitle, .basicSearchForm .formTitleFocused, .basicSearchForm .formTitleDisabled, 
+.basicSearchForm .formCellError, .basicSearchForm .formTitleError, .basicSearchForm .formHint,
+.basicSearchForm .headerItem, .basicSearchForm .headerItemDisabled, .basicSearchForm .headerItemError,
+.basicSearchForm .staticTextItem, .basicSearchForm .staticTextItemDisabled, .basicSearchForm .staticTextItemError,
+.basicSearchForm .textItem,  .basicSearchForm .textItemFocused, .basicSearchForm .textItemDisabled,
+.basicSearchForm .textItemError, .basicSearchForm .textItemHint, .basicSearchForm .selectItemControl,
+.basicSearchForm .selectItemControlError, .basicSearchForm .selectItemControlFocused, .basicSearchForm .selectItemText,
+.basicSearchForm .selectItemTextError, .basicSearchForm .selectItemTextDisabled, .basicSearchForm .selectItemTextFocused,
+.basicSearchForm .pickListCell, .basicSearchForm .pickListCellSelected, .basicSearchForm .pickListCellDisabled,
+.basicSearchForm .pickListCellDark, .basicSearchForm .pickListCellSelectedDark, .basicSearchForm .tallPickListCell,
+.basicSearchForm .tallPickListCellSelected, .basicSearchForm .tallPickListCellDisabled, .basicSearchForm .tallPickListCellDark,
+.basicSearchForm .tallPickListCellSelectedDark, .basicSearchForm .labelAnchor, .basicSearchForm .labelAnchorDisabled,
+.basicSearchForm .labelAnchorError, .basicSearchForm .labelAnchorFocused, .basicSearchForm .pickListCellSelected,
+.basicSearchForm .pickListCellSelectedDark,.basicSearchForm .buttonTitle,.basicSearchForm .buttonTitleOver,
+.basicSearchForm .buttonTitleDown, .basicSearchForm .buttonTitleSelected,.basicSearchForm .buttonTitleFocused,
+.basicSearchForm .buttonTitleSelectedFocused, .basicSearchForm .buttonTitleSelectedOver, .basicSearchForm .buttonTitleFocusedOver,
+.basicSearchForm .buttonTitleSelectedFocusedOver, .basicSearchForm .buttonTitleSelectedDown, 
+.basicSearchForm .buttonTitleFocusedDown, .basicSearchForm .buttonTitleSelectedFocusedDown,
+.basicSearchForm .buttonTitleDisabled, .basicSearchForm .buttonTitleSelectedDisabled {
+  font-size: 32pt;
+}
+
+.bigtext {
+  font-size: 24pt;
+}
