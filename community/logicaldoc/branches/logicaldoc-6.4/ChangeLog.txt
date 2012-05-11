@@ -10,10 +10,17 @@
 
                      LogicalDOC Community Edition
 
-LogicalDOC 6.4.1
+LogicalDOC 6.4.1 (2012-05-11; logicaldoc-6.4.1)
 =============== 
-Added new GUI translations: Slovenian and Korean 
-  
+000 New GUI translations: Slovenian and Korean - Improvement -	User Interface 
+198 File Types in Version Pane - Improvement - User Interface
+205 Retrieve version file using webservices - Improvement - Web Services
+182 Change template's name - Improvement - User Interface
+202 Ability to add comment to document version via webservices - Improvement - Web Services
+207 Group policies not inherited - Bug - User Interface
+208 Quota computation is too slow - Bug - Core
+210 Print option available even if the user doesn't have download permission - Bug - User Interface
+
 
 LogicalDOC 6.4 (2012-03-26; logicaldoc-6.4)
 ===============   
