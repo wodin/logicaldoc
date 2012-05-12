@@ -19,17 +19,17 @@ public class RandomFile {
 
 	private String sourceDir = "docs";
 
-	private File[] sourceFiles = null;
-
 	private Random random = new Random();
+	
+	private SourceFile[] sourceFiles;
 
-	private ByteArray[] contents = null;
-
-	public Object[] getFile() throws Exception {
+	public SourceFile getSourceFile() throws Exception {
+		
 		if (sourceFiles == null)
 			init(new File(sourceDir));
+		
 		int index = random.nextInt(sourceFiles.length);
-		return new Object[] { sourceFiles[index], contents[index] };
+		return sourceFiles[index];
 	}
 
 	public String getSourceDir() {
@@ -49,19 +49,22 @@ public class RandomFile {
 			if (!sourceDir.exists()) {
 				throw new Exception("The source directory to contain upload files is missing: " + sourceDir);
 			}
-			sourceFiles = sourceDir.listFiles();
-			contents = new ByteArray[sourceFiles.length];
+			File[] sss  = sourceDir.listFiles();
+			sourceFiles = new SourceFile[sss.length];
 
 			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			boolean loadMemory = "true".equals(config.getProperty("Upload.loadinmemory"));
 
-			for (int i = 0; i < sourceFiles.length; i++) {
-				contents[i] = loadMemory ? new ByteArray(FileUtils.readFileToByteArray(sourceFiles[i]), 0,
-						(int) sourceFiles[i].length()) : null;
-			}
+			
+			for (int i = 0; i < sss.length; i++) {
+				if (loadMemory) {	
+					sourceFiles[i] = new SourceFile(sss[i], new ByteArray(FileUtils.readFileToByteArray(sss[i]), 0, (int) sss[i].length()));
+				} else {
+					sourceFiles[i] = new SourceFile(sss[i], null);
+				}
+		    }
 		} else {
-			sourceFiles = new File[0];
-			contents = new ByteArray[0];
+			sourceFiles = new SourceFile[0];
 		}
 	}
 }

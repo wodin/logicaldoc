@@ -1,6 +1,5 @@
 package com.logicaldoc.bm.loaders;
 
-import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +17,12 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.bm.AbstractLoader;
 import com.logicaldoc.bm.RandomFile;
 import com.logicaldoc.bm.ServerProxy;
+import com.logicaldoc.bm.SourceFile;
 import com.logicaldoc.bm.cache.EhCacheAdapter;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.WSFolder;
-import com.sun.mail.iap.ByteArray;
 
 /**
  * Loader thread that puts documents to the remote repository.
@@ -34,8 +33,6 @@ import com.sun.mail.iap.ByteArray;
 public class Upload extends AbstractLoader {
 
 	private static Log log = LogFactory.getLog(Upload.class);
-
-	private String basePath;
 
 	private static EhCacheAdapter<String, Long> pathCache;
 
@@ -95,22 +92,19 @@ public class Upload extends AbstractLoader {
 //		Long folderID = makeFolders(serverProxy.sid, serverProxy, rootFolder, folderPath);
 		Long folderID = makeFoldersFromPath(serverProxy.sid, serverProxy, rootFolder, folderPath);	
 		
-		Object[] buf = randomFile.getFile();
-		File file = (File) buf[0];
+		SourceFile sourceFile = randomFile.getSourceFile();
 		String title = formatter.format(loaderCount);
 
-		Long docId = createDocument(serverProxy.sid, serverProxy, folderID, title, file, (ByteArray) buf[1]);
+		Long docId = createDocument(serverProxy.sid, serverProxy, folderID, title, sourceFile);
 		if (docId == null) {
-			throw new Exception("Error creating document: " + file.getName());
+			throw new Exception("Error creating document: " + sourceFile.getFile().getName());
 		}
 
 		return null;
 	}
+		private Long createDocument(String ticket, ServerProxy serverProxy, long folderId, String title, SourceFile sfile) {		
 
-	private Long createDocument(String ticket, ServerProxy serverProxy, long folderId, String title, File file,
-			ByteArray content) {
-
-		String fileName = file.getName();
+		String fileName = sfile.getFile().getName();
 
 		WSDocument doc = new WSDocument();
 		doc.setFolderId(folderId);
@@ -118,11 +112,11 @@ public class Upload extends AbstractLoader {
 		doc.setFileName(fileName);
 		doc.setLanguage(session.getLanguage());
 		try {
-			if (content != null)
+			if (sfile.getContent() != null)
 				doc = serverProxy.documentClient.create(ticket, doc,
-						new DataHandler(new ByteArrayDataSource(content.getBytes(), "application/octet-stream")));
+						new DataHandler(new ByteArrayDataSource(sfile.getContent().getBytes(), "application/octet-stream")));
 			else
-				doc = serverProxy.documentClient.create(ticket, doc, file);
+				doc = serverProxy.documentClient.create(ticket, doc, sfile.getFile());
 
 			if (doc != null)
 				log.debug("Created document " + fileName);
@@ -153,8 +147,8 @@ public class Upload extends AbstractLoader {
 	 */
 	protected Long makeFolders(String ticket, ServerProxy serverProxy, Long rootFolder, List<String> folderPath)
 			throws Exception {
-		// Iterate down the path, checking the cache and populating it as
-		// necessary
+		
+		// Iterate down the path, checking the cache and populating it as necessary
 		Long currentParentFolderID = rootFolder;
 		String currentKey = "";
 
@@ -193,9 +187,9 @@ public class Upload extends AbstractLoader {
 	 */
 	protected Long makeFoldersFromPath(String ticket, ServerProxy serverProxy, Long rootFolder, List<String> folderPath)
 			throws Exception {
-		// Iterate down the path, checking the cache and populating it as
-		// necessary
-		String currentKey = getBasePath(serverProxy, rootFolder);
+		
+		// Iterate down the path, checking the cache and populating it as necessary
+		String currentKey = "";
 		for (String aFolderPath : folderPath) {
 			currentKey += ("/" + aFolderPath);
 		}
@@ -215,20 +209,5 @@ public class Upload extends AbstractLoader {
 
 		return folderID;
 	}
-
-	private String getBasePath(ServerProxy serverProxy, Long rootFolder) {
-		if (basePath == null) {
-			try {
-				String pathString = "";
-				WSFolder[] folders = serverProxy.folderClient.getPath(serverProxy.sid, rootFolder);
-				for (int i = 0; i < folders.length; i++) {
-					pathString += "/" + folders[i].getName();
-				}
-				basePath = pathString;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return basePath;
-	}
+	
 }
