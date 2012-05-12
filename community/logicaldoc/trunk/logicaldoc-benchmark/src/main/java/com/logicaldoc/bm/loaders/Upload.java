@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
+import javax.mail.util.ByteArrayDataSource;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -24,6 +23,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.WSFolder;
+import com.sun.mail.iap.ByteArray;
 
 /**
  * Loader thread that puts documents to the remote repository.
@@ -37,12 +37,11 @@ public class Upload extends AbstractLoader {
 
 	private String basePath;
 
-	public static EhCacheAdapter<String, Long> pathCache;
-	//public static Map<String, Long> pathCache;
+	private static EhCacheAdapter<String, Long> pathCache;
 
 	private long rootFolder = 4;
 
-	private RandomFile randomFile = new RandomFile();
+	private static RandomFile randomFile = new RandomFile();
 
 	private int[] folderProfiles;
 
@@ -56,10 +55,6 @@ public class Upload extends AbstractLoader {
 
 		pathCache = new EhCacheAdapter<String, Long>();
 		pathCache.setCache(cache);
-		
-//		TreeMap<String, Long> unsmap = new TreeMap<String, Long>();
-//		pathCache = Collections.synchronizedMap(unsmap);
-		//pathCache = new TreeMap<String, Long>();
 	}
 
 	public Upload() {
@@ -97,13 +92,14 @@ public class Upload extends AbstractLoader {
 		List<String> folderPath = chooseFolderPath();
 
 		// Make sure the folder exists
-		//Long folderID = makeFolders(serverProxy.sid, serverProxy, rootFolder, folderPath);		
+//		Long folderID = makeFolders(serverProxy.sid, serverProxy, rootFolder, folderPath);
 		Long folderID = makeFoldersFromPath(serverProxy.sid, serverProxy, rootFolder, folderPath);	
-
-		File file = getFile();
+		
+		Object[] buf = randomFile.getFile();
+		File file = (File) buf[0];
 		String title = formatter.format(loaderCount);
 
-		Long docId = createDocument(serverProxy.sid, serverProxy, folderID, title, file);
+		Long docId = createDocument(serverProxy.sid, serverProxy, folderID, title, file, (ByteArray) buf[1]);
 		if (docId == null) {
 			throw new Exception("Error creating document: " + file.getName());
 		}
@@ -111,8 +107,9 @@ public class Upload extends AbstractLoader {
 		return null;
 	}
 
-	private Long createDocument(String ticket, ServerProxy serverProxy, long folderId, String title, File file) {
-		
+	private Long createDocument(String ticket, ServerProxy serverProxy, long folderId, String title, File file,
+			ByteArray content) {
+
 		String fileName = file.getName();
 
 		WSDocument doc = new WSDocument();
@@ -121,20 +118,12 @@ public class Upload extends AbstractLoader {
 		doc.setFileName(fileName);
 		doc.setLanguage(session.getLanguage());
 		try {
-//			DataSource ds = new FileDataSource(new File("C:/tmp/DEL_01X06180519_07-01-2011.pdf"));
-//			DataHandler content = new DataHandler(ds);
-//			serverProxy.documentClient.create(ticket, doc, content);
-			
-/*
- *         Come Creare in memory Data Source
- *       
-           http://vangjee.wordpress.com/2010/11/02/how-to-create-an-in-memory-pdf-report-and-send-as-an-email-attachment-using-itext-and-java/
-           
-           import javax.mail.util.ByteArrayDataSource;
-           //construct the pdf body part
-077	            DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
-			
-*/			doc = serverProxy.documentClient.create(ticket, doc, file);
+			if (content != null)
+				doc = serverProxy.documentClient.create(ticket, doc,
+						new DataHandler(new ByteArrayDataSource(content.getBytes(), "application/octet-stream")));
+			else
+				doc = serverProxy.documentClient.create(ticket, doc, file);
+
 			if (doc != null)
 				log.debug("Created document " + fileName);
 		} catch (Throwable ex) {
@@ -202,15 +191,15 @@ public class Upload extends AbstractLoader {
 	/**
 	 * Creates or find the folders based on caching.
 	 */
-	protected Long makeFoldersFromPath(String ticket, ServerProxy serverProxy, Long rootFolder, List<String> folderPath) throws Exception {
-		
-		// Iterate down the path, checking the cache and populating it as necessary
-		//String currentKey = getBasePath(serverProxy, rootFolder);
-		String currentKey = "";
+	protected Long makeFoldersFromPath(String ticket, ServerProxy serverProxy, Long rootFolder, List<String> folderPath)
+			throws Exception {
+		// Iterate down the path, checking the cache and populating it as
+		// necessary
+		String currentKey = getBasePath(serverProxy, rootFolder);
 		for (String aFolderPath : folderPath) {
-			currentKey += "/" + aFolderPath;
+			currentKey += ("/" + aFolderPath);
 		}
-		//System.out.println("currentKey: " +currentKey);
+		// System.out.println("currentKey: " +currentKey);
 
 		Long folderID = pathCache.get(currentKey);
 
@@ -241,9 +230,5 @@ public class Upload extends AbstractLoader {
 			}
 		}
 		return basePath;
-	}
-
-	protected File getFile() throws Exception {
-		return randomFile.getFile();
 	}
 }
