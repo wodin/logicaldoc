@@ -39,11 +39,13 @@ public class ServerProxy {
 	}
 
 	public void logout() {
+		System.out.println("logout sid: " + sid);
 		authClient.logout(sid);
 	}
 
 	public String login(String username, String password) throws Exception {
 		sid = authClient.login(username, password);
+		System.out.println("login sid: " + sid);
 		return sid;
 	}
 }
