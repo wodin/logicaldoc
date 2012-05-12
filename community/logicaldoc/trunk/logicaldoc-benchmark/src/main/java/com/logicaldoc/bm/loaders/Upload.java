@@ -3,11 +3,12 @@ package com.logicaldoc.bm.loaders;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.TreeMap;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -120,7 +121,20 @@ public class Upload extends AbstractLoader {
 		doc.setFileName(fileName);
 		doc.setLanguage(session.getLanguage());
 		try {
-			doc = serverProxy.documentClient.create(ticket, doc, file);
+//			DataSource ds = new FileDataSource(new File("C:/tmp/DEL_01X06180519_07-01-2011.pdf"));
+//			DataHandler content = new DataHandler(ds);
+//			serverProxy.documentClient.create(ticket, doc, content);
+			
+/*
+ *         Come Creare in memory Data Source
+ *       
+           http://vangjee.wordpress.com/2010/11/02/how-to-create-an-in-memory-pdf-report-and-send-as-an-email-attachment-using-itext-and-java/
+           
+           import javax.mail.util.ByteArrayDataSource;
+           //construct the pdf body part
+077	            DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
+			
+*/			doc = serverProxy.documentClient.create(ticket, doc, file);
 			if (doc != null)
 				log.debug("Created document " + fileName);
 		} catch (Throwable ex) {
