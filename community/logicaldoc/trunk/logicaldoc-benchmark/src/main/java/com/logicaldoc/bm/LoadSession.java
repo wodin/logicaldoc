@@ -88,8 +88,13 @@ public class LoadSession {
 	}
 
 	public synchronized void close() {
+		System.out.println("LoadSession.close");
+		int counter = 0;
 		for (ServerProxy server : servers) {
+			counter++;
+			System.out.println("logout server: " +counter);
 			server.logout();
+			System.out.println("logout complete for server: " +counter);
 		}
 	}
 
@@ -111,8 +116,12 @@ public class LoadSession {
 			// Authenticate
 			lsp.login(username, password);
 			log.info("Connection established");
+			
 			String ticket = auth.login(username, password);
 			log.info("Created SID: " + ticket);
+			
+			// TODO: C'è un errore da correggere, vengono eseguite 2 login ed aperte 2 sessioni
+			
 			remoteServer = lsp;
 		} catch (Throwable e) {
 			log.error("Unable to initialize WebServices connection", e);
