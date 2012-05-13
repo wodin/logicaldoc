@@ -92,9 +92,9 @@ public class LoadSession {
 		int counter = 0;
 		for (ServerProxy server : servers) {
 			counter++;
-			System.out.println("logout server: " +counter);
+			System.out.println("logout server: " + counter);
 			server.logout();
-			System.out.println("logout complete for server: " +counter);
+			System.out.println("logout complete for server: " + counter);
 		}
 	}
 
@@ -111,17 +111,12 @@ public class LoadSession {
 			SearchClient searchClient = new SearchClient(url + "/services/Search");
 
 			// Store the service references
-			ServerProxy lsp = new ServerProxy(url, auth, folderClient, documentClient, systemClient, searchClient);			
-			
+			ServerProxy lsp = new ServerProxy(url, auth, folderClient, documentClient, systemClient, searchClient);
+
 			// Authenticate
-			lsp.login(username, password);
-			log.info("Connection established");
-			
-			String ticket = auth.login(username, password);
+			String ticket = lsp.login(username, password);
 			log.info("Created SID: " + ticket);
-			
-			// TODO: C'è un errore da correggere, vengono eseguite 2 login ed aperte 2 sessioni
-			
+
 			remoteServer = lsp;
 		} catch (Throwable e) {
 			log.error("Unable to initialize WebServices connection", e);
