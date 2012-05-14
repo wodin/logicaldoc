@@ -3,7 +3,9 @@ package com.logicaldoc.web;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.communication.Recipient;
@@ -37,7 +40,7 @@ public class PswRecovery extends HttpServlet {
 
 	private static final long serialVersionUID = 9088160958327454062L;
 
-	protected static Log logger = LogFactory.getLog(PswRecovery.class);
+	protected static Log log = LogFactory.getLog(PswRecovery.class);
 
 	/**
 	 * Constructor of the object.
@@ -69,7 +72,7 @@ public class PswRecovery extends HttpServlet {
 			ticketId = (String) session.getAttribute("ticketId");
 		}
 
-		logger.debug("Recover password for ticket with ticketId=" + ticketId);
+		log.debug("Recover password for ticket with ticketId=" + ticketId);
 
 		try {
 			DownloadTicketDAO ticketDao = (DownloadTicketDAO) Context.getInstance().getBean(DownloadTicketDAO.class);
@@ -104,22 +107,27 @@ public class PswRecovery extends HttpServlet {
 					if (stored) {
 						Locale locale = new Locale(user.getLanguage());
 
-						String address = request.getScheme() + "://" + request.getServerName() + ":"
-								+ request.getServerPort() + request.getContextPath();
-						String text = I18N
-								.message(
-										"emailnotifyaccount",
-										locale,
-										new Object[] { user.getFirstName() + " " + user.getName(), "",
-												user.getUserName(), password, address });
-						email.setMessageText(text);
 						email.setRead(1);
 						email.setSentDate(new Date());
-						email.setSubject(I18N.message("emailnotifyaccountobject", locale));
 						email.setUserName(user.getUserName());
+						email.setLocale(locale);
+
+						/*
+						 * Prepare the template
+						 */
+						Map<String, String> args = new HashMap<String, String>();
+						String address = request.getScheme() + "://" + request.getServerName() + ":"
+								+ request.getServerPort() + request.getContextPath();
+						args.put("_url", address);
+						args.put("_product", SystemInfo.get().getProduct());
+						args.put(
+								"_message",
+								I18N.message("emailnotifyaccount", locale, new Object[] {
+										user.getFirstName() + " " + user.getName(), "", user.getUserName(), password,
+										address }));
 
 						EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
-						sender.send(email);
+						sender.send(email, "psw.rec1", args);
 
 						response.getWriter().println("A message was sent to " + user.getEmail());
 
@@ -129,11 +137,12 @@ public class PswRecovery extends HttpServlet {
 						response.getWriter().println("Unable to recover password");
 					}
 				} catch (Throwable e) {
+					log.error(e.getMessage(), e);
 					response.getWriter().println("Request not valid");
 				}
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			log.error(e.getMessage(), e);
 		}
 	}
 

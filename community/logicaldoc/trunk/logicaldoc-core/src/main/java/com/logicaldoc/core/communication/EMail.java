@@ -43,6 +43,7 @@ public class EMail extends Message {
 
 	private boolean html = false;
 
+
 	public EMail() {
 	}
 

@@ -17,6 +17,8 @@ import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.events.DoubleClickEvent;
+import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -120,6 +122,15 @@ public class SessionsPanel extends VLayout {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
 				showContextMenu();
+				event.cancel();
+			}
+		});
+
+		list.addDoubleClickHandler(new DoubleClickHandler() {
+			@Override
+			public void onDoubleClick(DoubleClickEvent event) {
+				LD.askforValue(I18N.message("sid"), I18N.message("sid"),
+						list.getSelectedRecord().getAttributeAsString("sid"), "250", null);
 				event.cancel();
 			}
 		});

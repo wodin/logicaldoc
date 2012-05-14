@@ -342,3 +342,12 @@ values(3, '2011-04-18 00:00:00',0,4,'John',3,'2011-04-18 00:00:00','message for 
 
 insert into ld_note (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_username, ld_userid, ld_date, ld_message)
 values(4, '2011-04-18 00:00:00',1,1,'Admin',1,'2011-04-18 00:00:00','message for note 4');
+
+insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_body, ld_subject)
+values(100, '2012-04-18 00:00:00',0,'test1','en', 'body $username $xxx','subject $xxx');
+insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_body, ld_subject)
+values(101, '2012-04-18 00:00:00',0,'test2','en', 'body2 $username $xxx','subject2 $xxx');
+insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_body, ld_subject)
+values(102, '2012-04-18 00:00:00',0,'test1','it', 'corpo $username $xxx','soggetto $xxx');
+insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_body, ld_subject)
+values(103, '2012-04-18 00:00:00',1,'test5','it', 'corpo $username $xxx','soggetto $xxx');

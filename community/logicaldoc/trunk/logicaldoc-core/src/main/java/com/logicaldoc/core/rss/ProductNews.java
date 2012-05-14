@@ -13,7 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.communication.Message;
 import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
-import com.logicaldoc.core.communication.dao.SystemMessageDAO;
+import com.logicaldoc.core.communication.SystemMessageDAO;
 import com.logicaldoc.core.rss.dao.FeedMessageDAO;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.task.Task;

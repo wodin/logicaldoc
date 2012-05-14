@@ -13,11 +13,9 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.widgets.IButton;
-import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
@@ -49,11 +47,15 @@ public class EmailPanel extends VLayout {
 		setMembersMargin(10);
 		setMargin(30);
 
-		tabs.setWidth(400);
-		tabs.setHeight(250);
+		tabs.setWidth(600);
+		tabs.setHeight(390);
 
 		Tab email = new Tab();
-		email.setTitle(I18N.message("email"));
+		email.setTitle(I18N.message("smtpserver"));
+
+		Tab templates = new Tab();
+		templates.setTitle(I18N.message("messagetemplates"));
+		templates.setPane(new MessageTemplatesPanel());
 
 		DynamicForm emailForm = new DynamicForm();
 		emailForm.setValuesManager(vm);
@@ -101,17 +103,11 @@ public class EmailPanel extends VLayout {
 		TextItem senderEmail = ItemFactory.newEmailItem("senderEmail", "senderemail", false);
 		senderEmail.setValue(this.emailSettings.getSenderEmail());
 
-		emailForm.setItems(smtpServer, port, username, password, connSecurity, secureAuth, senderEmail);
-
-		email.setPane(emailForm);
-
-		tabs.setTabs(email);
-
-		IButton save = new IButton();
-		save.setTitle(I18N.message("save"));
-		save.addClickHandler(new ClickHandler() {
-			@SuppressWarnings("unchecked")
-			public void onClick(ClickEvent event) {
+		ButtonItem save = new ButtonItem("save", I18N.message("save"));
+		save.setStartRow(true);
+		save.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+			@Override
+			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
 				Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				if (vm.validate()) {
@@ -120,11 +116,12 @@ public class EmailPanel extends VLayout {
 						EmailPanel.this.emailSettings.setPort((Integer) values.get("port"));
 					else
 						EmailPanel.this.emailSettings.setPort(new Integer(values.get("port").toString()));
-						
+
 					EmailPanel.this.emailSettings.setUsername((String) values.get("username"));
 					EmailPanel.this.emailSettings.setPwd((String) values.get("password"));
 					EmailPanel.this.emailSettings.setConnSecurity((String) values.get("connSecurity"));
-					EmailPanel.this.emailSettings.setSecureAuth(values.get("secureAuth").toString().equals("true") ? true : false);
+					EmailPanel.this.emailSettings
+							.setSecureAuth(values.get("secureAuth").toString().equals("true") ? true : false);
 					EmailPanel.this.emailSettings.setSenderEmail((String) values.get("senderEmail"));
 
 					service.saveEmailSettings(Session.get().getSid(), EmailPanel.this.emailSettings,
@@ -144,6 +141,9 @@ public class EmailPanel extends VLayout {
 			}
 		});
 
-		setMembers(tabs, save);
+		emailForm.setItems(smtpServer, port, username, password, connSecurity, secureAuth, senderEmail, save);
+		email.setPane(emailForm);
+		tabs.setTabs(email, templates);
+		setMembers(tabs);
 	}
 }

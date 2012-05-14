@@ -3,8 +3,11 @@ package com.logicaldoc.i18n;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
@@ -59,5 +62,19 @@ public class I18N {
 			e.printStackTrace();
 		}
 		return locales;
+	}
+
+	public static Map<String, String> getMessages(Locale locale) {
+		Map<String, String> map = new HashMap<String, String>();
+		try {
+			ResourceBundle bundle = ResourceBundle.getBundle("i18n.messages", locale);
+			Enumeration<String> keys = bundle.getKeys();
+			while (keys.hasMoreElements()) {
+				String key = keys.nextElement();
+				map.put(key, bundle.getString(key));
+			}
+		} catch (Throwable t) {
+		}
+		return map;
 	}
 }

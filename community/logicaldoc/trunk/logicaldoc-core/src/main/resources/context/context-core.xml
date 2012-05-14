@@ -8,9 +8,7 @@
 	<!-- Storer -->
 	<bean id="Storer" class="${store}" abstract="false" lazy-init="default"
 		autowire="default" dependency-check="default">
-		<property name="config">
-			<ref bean="ContextProperties" />
-		</property>
+		<property name="config" ref="ContextProperties" />
 	</bean>
 
 	<!-- SearchEngine -->
@@ -223,7 +221,22 @@
 		dependency-check="default">
 		<property name="target">
 			<bean
-				class="com.logicaldoc.core.communication.dao.HibernateSystemMessageDAO"
+				class="com.logicaldoc.core.communication.HibernateSystemMessageDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="MessageTemplateDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.communication.HibernateMessageTemplateDAO"
 				abstract="false" lazy-init="default" autowire="default"
 				dependency-check="default">
 				<property name="sessionFactory">
@@ -414,6 +427,7 @@
 		<property name="sender" value="${smtp.sender}" />
 		<property name="authEncripted" value="${smtp.authEncripted}" />
 		<property name="connectionSecurity" value="${smtp.connectionSecurity}" />
+		<property name="templateDao" ref="MessageTemplateDAO" />
 	</bean>
 
 

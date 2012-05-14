@@ -14,7 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.core.communication.SystemMessage;
-import com.logicaldoc.core.communication.dao.SystemMessageDAO;
+import com.logicaldoc.core.communication.SystemMessageDAO;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.security.SessionManager;

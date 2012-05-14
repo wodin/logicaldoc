@@ -211,14 +211,13 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 		// Collect the directories
-		GUIParameter[] dirs = new GUIParameter[7];
+		GUIParameter[] dirs = new GUIParameter[6];
 		dirs[0] = new GUIParameter("dbdir", conf.getProperty("conf.dbdir"));
 		dirs[1] = new GUIParameter("exportdir", conf.getProperty("conf.exportdir"));
 		dirs[2] = new GUIParameter("importdir", conf.getProperty("conf.importdir"));
-		dirs[3] = new GUIParameter("indexdir", conf.getProperty("conf.indexdir"));
-		dirs[4] = new GUIParameter("logdir", conf.getProperty("conf.logdir"));
-		dirs[5] = new GUIParameter("plugindir", conf.getProperty("conf.plugindir"));
-		dirs[6] = new GUIParameter("userdir", conf.getProperty("conf.userdir"));
+		dirs[3] = new GUIParameter("logdir", conf.getProperty("conf.logdir"));
+		dirs[4] = new GUIParameter("plugindir", conf.getProperty("conf.plugindir"));
+		dirs[5] = new GUIParameter("userdir", conf.getProperty("conf.userdir"));
 
 		// Prepare the stores
 		List<GUIParameter> tmp = new ArrayList<GUIParameter>();

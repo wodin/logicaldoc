@@ -56,11 +56,6 @@ public class Accordion extends SectionStack {
 		wfSettingsSection.setExpanded(true);
 		wfSettingsSection.setCanCollapse(true);
 		addSection(wfSettingsSection);
-
-		workflow.setTaskAssignmentSubject(I18N.message("taskassignment"));
-		workflow.setReminderSubject(I18N.message("reminder"));
-		workflow.setTaskAssignmentBody(I18N.message("assignmentbody"));
-		workflow.setReminderBody(I18N.message("reminderbody"));
 	}
 
 	public void redraw(GUIWorkflow workflow) {
@@ -87,28 +82,6 @@ public class Accordion extends SectionStack {
 		if (this.workflow != null)
 			workflowDescr.setValue(this.workflow.getDescription());
 		wfForm.setFields(workflowName, workflowDescr);
-
-		StaticTextItem taskAssignment = ItemFactory.newStaticTextItem("taskAssignment", "",
-				"<b>" + I18N.message("taskassignment") + "</b>");
-		taskAssignment.setShouldSaveValue(false);
-		taskAssignment.setWrapTitle(false);
-		TextItem assignmentSubject = ItemFactory.newTextItem("assignmentSubject", "subject", null);
-		if (this.workflow != null)
-			assignmentSubject.setValue(this.workflow.getTaskAssignmentSubject());
-		TextAreaItem assignmentBody = ItemFactory.newTextAreaItem("assignmentBody", "body", null);
-		if (this.workflow != null)
-			assignmentBody.setValue(this.workflow.getTaskAssignmentBody());
-
-		StaticTextItem taskReminder = ItemFactory.newStaticTextItem("taskReminder", "",
-				"<b>" + I18N.message("reminder") + "</b>");
-		taskReminder.setShouldSaveValue(false);
-		taskReminder.setWrapTitle(false);
-		TextItem reminderSubject = ItemFactory.newTextItem("reminderSubject", "subject", null);
-		if (this.workflow != null)
-			reminderSubject.setValue(this.workflow.getReminderSubject());
-		TextAreaItem reminderBody = ItemFactory.newTextAreaItem("reminderBody", "body", null);
-		if (this.workflow != null)
-			reminderBody.setValue(this.workflow.getReminderBody());
 
 		DynamicForm separatorForm = new DynamicForm();
 		separatorForm.setTitleOrientation(TitleOrientation.TOP);
@@ -147,8 +120,7 @@ public class Accordion extends SectionStack {
 			supervisor.setValue(this.workflow.getSupervisor());
 		supervisorForm.setItems(supervisorItem, supervisor);
 
-		wfForm.setItems(workflowName, workflowDescr, taskAssignment, assignmentSubject, assignmentBody, taskReminder,
-				reminderSubject, reminderBody);
+		wfForm.setItems(workflowName, workflowDescr);
 		wfLayout.setMembers(wfForm, separatorForm, supervisorForm);
 		wfLayout.redraw();
 

@@ -20,11 +20,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
-import com.logicaldoc.core.communication.dao.SystemMessageDAO;
+import com.logicaldoc.core.communication.SystemMessageDAO;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.DownloadTicket;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -517,23 +518,29 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		recipient.setAddress(user.getEmail());
 		email.addRecipient(recipient);
 		email.setFolder("outbox");
+		email.setUserName(user.getUserName());
+		email.setRead(1);
+		email.setSentDate(new Date());
 
 		Locale locale = new Locale(user.getLanguage());
+		email.setLocale(locale);
 
+		/*
+		 * Prepare the template
+		 */
+		Map<String, String> args = new HashMap<String, String>();
 		HttpServletRequest request = this.getThreadLocalRequest();
 		String address = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 				+ request.getContextPath();
-		String text = I18N.message("emailnotifyaccount", locale,
-				new Object[] { user.getFirstName() + " " + user.getName(), info.getProductName(), user.getUserName(),
-						password, address });
-		email.setMessageText(text);
-		email.setRead(1);
-		email.setSentDate(new Date());
-		email.setSubject(info.getProductName() + " " + I18N.message("emailnotifyaccountobject", locale));
-		email.setUserName(user.getUserName());
+		args.put("_url", address);
+		args.put("_product", SystemInfo.get().getProduct());
+		args.put(
+				"_message",
+				I18N.message("emailnotifyaccount", locale, new Object[] { user.getFirstName() + " " + user.getName(),
+						"", user.getUserName(), password, address }));
 
 		EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
-		sender.send(email);
+		sender.send(email, "psw.rec1", args);
 	}
 
 	@Override
@@ -718,13 +725,13 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		User user = userDao.findByUserName(username);
 
-		if (user == null)
-			throw new Exception("User " + username + " not found");
-		else if (!user.getEmail().trim().equals(emailAddress.trim()))
-			throw new Exception("User with email" + emailAddress + " not found");
-
 		EMail email;
 		try {
+			if (user == null)
+				throw new Exception("User " + username + " not found");
+			else if (!user.getEmail().trim().equals(emailAddress.trim()))
+				throw new Exception("User with email " + emailAddress + " not found");
+
 			email = new EMail();
 			Recipient recipient = new Recipient();
 			recipient.setAddress(user.getEmail());
@@ -752,6 +759,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 			Locale locale = new Locale(user.getLanguage());
 
+			email.setLocale(locale);
 			email.setRead(1);
 			email.setSentDate(new Date());
 			email.setSubject(productName + " " + I18N.message("passwordrequest", locale));
@@ -761,11 +769,16 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 					+ request.getContextPath();
 			String address = urlPrefix + "/pswrecovery?ticketId=" + ticketid + "&userId=" + user.getId();
-			email.setMessageText(productName + " - " + I18N.message("passwordrequest", locale) + " - " + "\n"
-					+ I18N.message("clickhere", locale) + ": " + address);
+
+			/*
+			 * Prepare the template
+			 */
+			Map<String, String> args = new HashMap<String, String>();
+			args.put("_product", productName);
+			args.put("_url", address);
 
 			EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
-			sender.send(email);
+			sender.send(email, "psw.rec2", args);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}

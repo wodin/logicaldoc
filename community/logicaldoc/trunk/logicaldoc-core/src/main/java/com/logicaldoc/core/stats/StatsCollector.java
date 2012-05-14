@@ -120,7 +120,7 @@ public class StatsCollector extends Task {
 		saveStatistic("userdir", Long.toString(userdir));
 
 		long indexdir = 0;
-		File indexDir = new File(config.getPropertyWithSubstitutions("conf.indexdir"));
+		File indexDir = new File(config.getPropertyWithSubstitutions("index.dir"));
 		if (indexDir.exists())
 			indexdir = FileUtils.sizeOfDirectory(indexDir);
 		saveStatistic("indexdir", Long.toString(indexdir));

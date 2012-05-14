@@ -2,6 +2,7 @@ package com.logicaldoc.core.communication;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import com.logicaldoc.core.PersistentObject;
@@ -33,6 +34,9 @@ public abstract class Message extends PersistentObject {
 	private int type = TYPE_SYSTEM;
 
 	protected Set<Recipient> recipients = new HashSet<Recipient>();
+
+	// The locale in which the message is written
+	protected Locale locale;
 
 	public String getMessageText() {
 		return messageText;
@@ -88,5 +92,13 @@ public abstract class Message extends PersistentObject {
 
 	public void setRecipients(Set<Recipient> recipients) {
 		this.recipients = recipients;
+	}
+
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
 	}
 }
