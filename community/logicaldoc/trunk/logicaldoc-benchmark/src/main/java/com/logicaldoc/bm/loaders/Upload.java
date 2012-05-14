@@ -89,8 +89,8 @@ public class Upload extends AbstractLoader {
 		List<String> folderPath = chooseFolderPath();
 
 		// Make sure the folder exists
-//		Long folderID = makeFolders(serverProxy.sid, serverProxy, rootFolder, folderPath);
-		Long folderID = makeFoldersFromPath(serverProxy.sid, serverProxy, rootFolder, folderPath);	
+		Long folderID = makeFolders(serverProxy.sid, serverProxy, rootFolder, folderPath);
+		//Long folderID = makeFoldersFromPath(serverProxy.sid, serverProxy, rootFolder, folderPath);	
 		
 		SourceFile sourceFile = randomFile.getSourceFile();
 		String title = formatter.format(loaderCount);
@@ -177,6 +177,7 @@ public class Upload extends AbstractLoader {
 
 			// Cache the new node
 			pathCache.put(currentKey, currentParentFolderID);
+			//System.out.printf("putting in cache: %s, %d %n", currentKey, currentParentFolderID);
 		}
 		// Done
 		return currentParentFolderID;
