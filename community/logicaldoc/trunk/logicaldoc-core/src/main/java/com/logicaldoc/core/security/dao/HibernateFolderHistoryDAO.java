@@ -9,7 +9,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
+import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.security.FolderHistory;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.sql.SqlUtil;
 
 /**
@@ -19,6 +21,8 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @since 6.4
  */
 public class HibernateFolderHistoryDAO extends HibernatePersistentObjectDAO<FolderHistory> implements FolderHistoryDAO {
+
+	private ContextProperties config;
 
 	private HibernateFolderHistoryDAO() {
 		super(FolderHistory.class);
@@ -67,5 +71,23 @@ public class HibernateFolderHistoryDAO extends HibernatePersistentObjectDAO<Fold
 			query += " and lower(_entity.event) like '" + SqlUtil.doubleQuotes(event.toLowerCase()) + "'";
 
 		return findByWhere(query, null, "order by _entity.date asc", null);
+	}
+
+	@Override
+	public boolean store(FolderHistory entity) {
+		//Write only if the history is enabled
+		if (isEnabled())
+			return super.store(entity);
+		else
+			return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return "true".equals(config.getProperty("history.enabled"));
+	}
+
+	public void setConfig(ContextProperties config) {
+		this.config = config;
 	}
 }

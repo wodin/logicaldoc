@@ -184,7 +184,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public List<Long> findDocIdByTag(String tag) {
 		StringBuilder query = new StringBuilder("select distinct(ld_docid) from ld_tag where ");
 		query.append("lower(ld_tag)='" + SqlUtil.doubleQuotes(tag).toLowerCase() + "'");
-		return (List<Long>)queryForList(query.toString(), Long.class);
+		return (List<Long>) queryForList(query.toString(), Long.class);
 	}
 
 	public boolean store(final Document doc) {
@@ -720,7 +720,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	private void saveDocumentHistory(Document doc, History transaction) {
-		if (transaction == null)
+		if (transaction == null || !historyDAO.isEnabled())
 			return;
 		transaction.setDocId(doc.getId());
 		transaction.setFolderId(doc.getFolder().getId());

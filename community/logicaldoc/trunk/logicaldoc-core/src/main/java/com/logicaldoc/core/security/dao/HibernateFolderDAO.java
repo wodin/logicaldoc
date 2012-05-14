@@ -537,7 +537,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	 * @param transaction
 	 */
 	private void saveFolderHistory(Folder folder, FolderHistory transaction) {
-		if (transaction == null)
+		if (transaction == null || !historyDAO.isEnabled())
 			return;
 
 		transaction.setNotified(0);

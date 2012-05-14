@@ -62,4 +62,9 @@ public interface HistoryDAO extends PersistentObjectDAO<History> {
 	 * @return list of histories ordered by date
 	 */
 	public List<History> findByUserIdAndEvent(long userId, String event);
+
+	/**
+	 * Checks if the histories recording is enabled
+	 */
+	public boolean isEnabled();
 }
