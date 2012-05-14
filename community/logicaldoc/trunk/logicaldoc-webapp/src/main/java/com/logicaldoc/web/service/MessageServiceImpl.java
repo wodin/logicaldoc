@@ -1,16 +1,26 @@
 package com.logicaldoc.web.service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.core.communication.MessageTemplate;
+import com.logicaldoc.core.communication.MessageTemplateDAO;
 import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
-import com.logicaldoc.core.communication.dao.SystemMessageDAO;
+import com.logicaldoc.core.communication.SystemMessageDAO;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
+import com.logicaldoc.gui.common.client.beans.GUIMessageTemplate;
 import com.logicaldoc.gui.frontend.client.services.MessageService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
@@ -22,6 +32,8 @@ import com.logicaldoc.web.util.SessionUtil;
  * @since 6.0
  */
 public class MessageServiceImpl extends RemoteServiceServlet implements MessageService {
+
+	private static Log log = LogFactory.getLog(MessageServiceImpl.class);
 
 	private static final long serialVersionUID = 1L;
 
@@ -112,4 +124,84 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 		dao.store(m);
 	}
 
+	@Override
+	public GUIMessageTemplate[] loadTemplates(String sid, String language) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+		Context context = Context.getInstance();
+
+		try {
+			MessageTemplateDAO dao = (MessageTemplateDAO) context.getBean(MessageTemplateDAO.class);
+
+			List<GUIMessageTemplate> buf = new ArrayList<GUIMessageTemplate>();
+
+			List<MessageTemplate> standardTemplates = dao.findByLanguage("en");
+			Map<String, MessageTemplate> templates = new HashMap<String, MessageTemplate>();
+
+			List<MessageTemplate> tmp = dao.findByLanguage(language);
+			for (MessageTemplate m : tmp) {
+				templates.put(m.getName(), m);
+			}
+
+			for (MessageTemplate test : standardTemplates) {
+				MessageTemplate template = test;
+				if (templates.containsKey(test.getName()))
+					template = templates.get(test.getName());
+
+				GUIMessageTemplate t = new GUIMessageTemplate();
+				t.setId(template.getId());
+				t.setLanguage(language);
+				t.setName(template.getName());
+				t.setSubject(template.getSubject());
+				t.setBody(template.getBody());
+				buf.add(t);
+			}
+
+			return buf.toArray(new GUIMessageTemplate[0]);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
+	}
+
+	@Override
+	public void saveTemplates(String sid, GUIMessageTemplate[] templates) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		try {
+			Context context = Context.getInstance();
+			MessageTemplateDAO dao = (MessageTemplateDAO) context.getBean(MessageTemplateDAO.class);
+
+			for (GUIMessageTemplate t : templates) {
+				MessageTemplate template = dao.findByNameAndLanguage(t.getName(), t.getLanguage());
+				if (template == null || !template.getLanguage().equals(t.getLanguage()))
+					template = new MessageTemplate();
+				template.setName(t.getName());
+				template.setLanguage(t.getLanguage());
+				template.setSubject(t.getSubject());
+				template.setBody(t.getBody());
+				dao.store(template);
+			}
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
+	}
+
+	@Override
+	public void deleteTemplates(String sid, long[] ids) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		try {
+			Context context = Context.getInstance();
+			MessageTemplateDAO dao = (MessageTemplateDAO) context.getBean(MessageTemplateDAO.class);
+
+			for (long id : ids) {
+				if (id != 0L)
+					dao.delete(id);
+			}
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
+	}
 }

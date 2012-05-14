@@ -16,7 +16,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.communication.SystemMessage;
-import com.logicaldoc.core.communication.dao.SystemMessageDAO;
+import com.logicaldoc.core.communication.SystemMessageDAO;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;

@@ -1,4 +1,4 @@
-package com.logicaldoc.core.communication.dao;
+package com.logicaldoc.core.communication;
 
 import java.util.Collection;
 import java.util.Date;
@@ -13,6 +13,7 @@ import org.junit.Test;
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
+import com.logicaldoc.core.communication.SystemMessageDAO;
 
 /**
  * Test case for <code>HibernateSystemMessageDAO</code>

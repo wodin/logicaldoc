@@ -27,6 +27,8 @@ public class GUISearchEngine implements Serializable {
 	private Integer parsingTimeout;
 
 	private Integer maxText;
+	
+	private String dir;
 
 	public String getLanguages() {
 		return languages;
@@ -90,5 +92,13 @@ public class GUISearchEngine implements Serializable {
 
 	public void setMaxText(Integer maxText) {
 		this.maxText = maxText;
+	}
+
+	public String getDir() {
+		return dir;
+	}
+
+	public void setDir(String dir) {
+		this.dir = dir;
 	}
 }

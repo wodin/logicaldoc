@@ -19,14 +19,6 @@ public class GUIWorkflow implements Serializable {
 
 	private String description = "";
 
-	private String taskAssignmentSubject = "Task Assignment";
-
-	private String taskAssignmentBody = "Dear ${assignee} you are asigned to task ${taskname}";
-
-	private String reminderSubject = "Reminder";
-
-	private String reminderBody = "Dear ${assignee} please complete the task ${taskname}";
-
 	private String startStateId = null;
 
 	private String supervisor = "";
@@ -78,38 +70,6 @@ public class GUIWorkflow implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getTaskAssignmentSubject() {
-		return taskAssignmentSubject;
-	}
-
-	public void setTaskAssignmentSubject(String taskAssignmentSubject) {
-		this.taskAssignmentSubject = taskAssignmentSubject;
-	}
-
-	public String getTaskAssignmentBody() {
-		return taskAssignmentBody;
-	}
-
-	public void setTaskAssignmentBody(String taskAssignmentBody) {
-		this.taskAssignmentBody = taskAssignmentBody;
-	}
-
-	public String getReminderSubject() {
-		return reminderSubject;
-	}
-
-	public void setReminderSubject(String reminderSubject) {
-		this.reminderSubject = reminderSubject;
-	}
-
-	public String getReminderBody() {
-		return reminderBody;
-	}
-
-	public void setReminderBody(String reminderBody) {
-		this.reminderBody = reminderBody;
 	}
 
 	public String getSupervisor() {

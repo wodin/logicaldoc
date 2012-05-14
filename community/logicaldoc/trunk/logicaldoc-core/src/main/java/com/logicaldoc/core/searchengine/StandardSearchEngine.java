@@ -464,13 +464,13 @@ public class StandardSearchEngine implements SearchEngine {
 	}
 
 	static File getIndexDataFolder() throws IOException {
-		File indexdir = new File(config.getPropertyWithSubstitutions("conf.indexdir"));
+		File indexdir = new File(config.getPropertyWithSubstitutions("index.dir"));
 		indexdir = new File(indexdir, "data");
 		return new File(indexdir, "index");
 	}
 
 	static File getSpellcheckerDataFolder() throws IOException {
-		File indexdir = new File(config.getPropertyWithSubstitutions("conf.indexdir"));
+		File indexdir = new File(config.getPropertyWithSubstitutions("index.dir"));
 		indexdir = new File(indexdir, "data");
 		return new File(indexdir, "spellchecker");
 	}
@@ -483,7 +483,7 @@ public class StandardSearchEngine implements SearchEngine {
 	@Override
 	public void init() {
 		try {
-			File home = new File(config.getPropertyWithSubstitutions("conf.indexdir"));
+			File home = new File(config.getPropertyWithSubstitutions("index.dir"));
 			File solr_xml = new File(home, "solr.xml");
 
 			if (!home.exists()) {
@@ -494,7 +494,7 @@ public class StandardSearchEngine implements SearchEngine {
 				FileUtil.copyResource("/index/solr.xml", solr_xml);
 			}
 
-			File conf = new File(config.getPropertyWithSubstitutions("conf.indexdir"));
+			File conf = new File(config.getPropertyWithSubstitutions("index.dir"));
 			conf = new File(conf, "conf");
 			if (!conf.exists()) {
 				conf.mkdirs();

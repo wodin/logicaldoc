@@ -105,6 +105,9 @@ public class HibernateUserDAOTest extends AbstractCoreTCase {
 		// Try with unexisting username
 		user = dao.findByUserName("xxxx");
 		Assert.assertNull(user);
+		
+		user = dao.findByUserName("Admin");
+		Assert.assertNull(user);
 	}
 
 	@Test

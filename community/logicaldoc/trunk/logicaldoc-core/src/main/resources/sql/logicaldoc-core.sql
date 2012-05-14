@@ -55,6 +55,12 @@ create table ld_foldergroup (ld_folderid bigint not null, ld_groupid bigint not 
 create table ld_feedmessage (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_guid varchar(512) null, ld_title varchar(512) null, ld_description  varchar(4000) null, ld_link varchar(512) null, ld_pubdate timestamp, ld_read int not null, primary key (ld_id));
 create table ld_rating (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_userid bigint not null, ld_vote int not null, primary key (ld_id));
 create table ld_note (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_username varchar(255), ld_userid bigint, ld_date timestamp, ld_message varchar(4000), primary key (ld_id));
+create table ld_messagetemplate (ld_id bigint not null, ld_lastmodified timestamp not null, 
+                                 ld_deleted int not null, ld_name varchar(255) not null, ld_language varchar(10) not null,
+                                 ld_description varchar(1000), ld_body varchar(4000),
+                                 ld_subject varchar(1000), primary key (ld_id));
+
+
 create table hibernate_unique_key (tablename varchar(40) NOT NULL, next_hi bigint NOT NULL);
 
 
@@ -95,6 +101,8 @@ create unique index  AK_TEMPLATE on ld_template (ld_name);
 create unique index  AK_GENERIC on ld_generic (ld_type, ld_subtype);
 create unique index  AK_VERSION on ld_version (ld_documentid, ld_version);
 create unique index  AK_RATING on ld_rating (ld_docid, ld_userid);
+create unique index  AK_MSGTEMPL on ld_messagetemplate (ld_name, ld_language);
+
 
 --Prepare some indexes
 create index LD_DOC_LUID on ld_document (ld_lockuserid);
@@ -226,6 +234,25 @@ values (4,4,1,1,0,0,1,1,0,0,0,0,0,1);
 insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
 values (4,-10000,1,1,0,0,1,1,0,0,0,0,0,1);
 
+insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_subject, ld_body)
+values(1, '2012-04-18 00:00:00',0,'task.report','en', '$_task',
+'$_task
+$startedon: $_started
+$finishedon: $_ended
+-----------------------------------
+#if( $_error )
+$error: $_error
+-----------------------------------
+#end
+$_report');
+
+insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_subject, ld_body)
+values(2, '2012-04-18 00:00:00',0,'psw.rec1','en', '$_product - $emailnotifyaccountobject', '$_message');
+insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_subject, ld_body)
+values(3, '2012-04-18 00:00:00',0,'psw.rec2','en', '$_product - $passwordrequest',
+'$_product - $passwordrequest
+$clickhere: $_url');
+
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_document', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_bookmark', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_generic', 100);
@@ -246,3 +273,4 @@ insert into hibernate_unique_key(tablename, next_hi) values ('ld_folder_history'
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_feedmessage', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_rating', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_note', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_messagetemplate', 100);

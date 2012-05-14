@@ -1,9 +1,8 @@
-package com.logicaldoc.core.communication.dao;
+package com.logicaldoc.core.communication;
 
 import java.util.List;
 
 import com.logicaldoc.core.PersistentObjectDAO;
-import com.logicaldoc.core.communication.SystemMessage;
 
 /**
  * This is a DAO service for SystemMessages.

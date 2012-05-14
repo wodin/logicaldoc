@@ -151,7 +151,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		Context.refresh();
 
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		String path = conf.getPropertyWithSubstitutions("conf.indexdir");
+		String path = conf.getPropertyWithSubstitutions("index.dir");
 
 		if (!path.endsWith(File.pathSeparator)) {
 			path += "/";
@@ -204,7 +204,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		ContextProperties pbean = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		pbean.setProperty("store.1.dir", docDir);
 		pbean.setProperty("store.write", "1");
-		pbean.setProperty("conf.indexdir", indexDir);
+		pbean.setProperty("index.dir", indexDir);
 		pbean.setProperty("conf.userdir", userDir);
 		pbean.setProperty("conf.plugindir", pluginDir);
 		pbean.setProperty("conf.importdir", importDir);

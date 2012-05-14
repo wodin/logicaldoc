@@ -15,7 +15,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
-import com.logicaldoc.core.communication.dao.SystemMessageDAO;
+import com.logicaldoc.core.communication.SystemMessageDAO;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;

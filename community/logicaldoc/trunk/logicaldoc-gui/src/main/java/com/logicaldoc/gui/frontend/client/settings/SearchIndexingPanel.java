@@ -32,7 +32,6 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -418,13 +417,12 @@ public class SearchIndexingPanel extends VLayout {
 				"" + this.searchEngine.getEntries());
 
 		// Locked
-		CheckboxItem locked = new CheckboxItem();
-		locked.setName("locked");
-		locked.setTitle(I18N.message("locked"));
-		locked.setRedrawOnChange(true);
-		locked.setWidth(50);
-		locked.setDefaultValue(this.searchEngine.isLocked());
-		locked.setDisabled(true);
+		StaticTextItem status = ItemFactory.newStaticTextItem(
+				"status",
+				"status",
+				this.searchEngine.isLocked() ? ("<span style='color:red'>" + I18N.message("locked") + "</span>") : I18N
+						.message("unlocked"));
+		status.setRedrawOnChange(true);
 
 		// Include Patters
 		TextItem includePatters = ItemFactory.newTextItem("includePatters", "includepatters", null);
@@ -453,6 +451,11 @@ public class SearchIndexingPanel extends VLayout {
 		maxText.setHintStyle("hint");
 		maxText.setHint(I18N.message("chars"));
 
+		// Repository
+		TextItem repository = ItemFactory.newTextItem("repository", "repository", null);
+		repository.setValue(this.searchEngine.getDir());
+		repository.setWidth(250);
+
 		HLayout buttons = new HLayout();
 
 		IButton save = new IButton();
@@ -465,6 +468,7 @@ public class SearchIndexingPanel extends VLayout {
 				if (vm.validate()) {
 					SearchIndexingPanel.this.searchEngine.setIncludePatters((String) values.get("includePatters"));
 					SearchIndexingPanel.this.searchEngine.setExcludePatters((String) values.get("excludePatters"));
+					SearchIndexingPanel.this.searchEngine.setDir((String) values.get("repository"));
 					String btch = vm.getValueAsString("batch");
 					if (btch == null || "".equals(btch.trim()))
 						SearchIndexingPanel.this.searchEngine.setBatch(0);
@@ -600,7 +604,7 @@ public class SearchIndexingPanel extends VLayout {
 			}
 		});
 
-		searchEngineForm.setItems(entries, locked, includePatters, excludePatters, batch, timeout, maxText);
+		searchEngineForm.setItems(entries, status, repository, includePatters, excludePatters, batch, timeout, maxText);
 		buttons.setMembers(save, unlock, rescheduleAll, check);
 		buttons.setMembersMargin(5);
 		searchEngineTabPanel.setMembers(searchEngineForm, buttons);

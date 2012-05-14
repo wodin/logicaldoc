@@ -1,6 +1,7 @@
 package com.logicaldoc.core.communication;
 
 import java.net.URL;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -21,6 +22,8 @@ import net.sf.jmimemagic.Magic;
 import net.sf.jmimemagic.MagicMatch;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * SMTP E-Mail sender service
@@ -29,6 +32,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Matteo Caruso - Logical Objects
  */
 public class EMailSender {
+	protected Log log = LogFactory.getLog(EMailSender.class);
 
 	public static final int SECURITY_NONE = 0;
 
@@ -51,6 +55,8 @@ public class EMailSender {
 	private boolean authEncripted = false;
 
 	private int connectionSecurity = SECURITY_NONE;
+
+	private MessageTemplateDAO templateDao;
 
 	public EMailSender() {
 	}
@@ -93,6 +99,27 @@ public class EMailSender {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	/**
+	 * Sends an email by using a given template
+	 * 
+	 * @param email The email to send
+	 * @param templateName Name of the template to be applied
+	 * @param args The arguments to be used in the template
+	 * @throws Exception
+	 */
+	public void send(EMail email, String templateName, Map<String, String> args) throws Exception {
+		MessageTemplate template = templateDao.findByNameAndLanguage(templateName, email.getLocale().toString());
+		if (template == null) {
+			log.error("Template " + templateName + " was not found");
+			return;
+		}
+
+		email.setSubject(template.getFormattedSubject(args));
+		email.setMessageText(template.getFormattedBody(args));
+
+		send(email);
 	}
 
 	/**
@@ -233,5 +260,13 @@ public class EMailSender {
 
 	public void setConnectionSecurity(int connectionSecurity) {
 		this.connectionSecurity = connectionSecurity;
+	}
+
+	public void setTemplateDao(MessageTemplateDAO templateDao) {
+		this.templateDao = templateDao;
+	}
+
+	public MessageTemplateDAO getTemplateDao() {
+		return templateDao;
 	}
 }

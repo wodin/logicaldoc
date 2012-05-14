@@ -8,9 +8,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.UUID;
@@ -273,8 +275,7 @@ public abstract class Task implements Runnable {
 				continue;
 
 			EMail email = new EMail();
-			String taskname = I18N.message("task.name." + name, recipient.getLocale());
-			email.setSubject(taskname);
+			email.setLocale(recipient.getLocale());
 
 			// Prepare the mail recipient
 			Set<Recipient> rec = new HashSet<Recipient>();
@@ -285,31 +286,18 @@ public abstract class Task implements Runnable {
 			rec.add(r);
 			email.setRecipients(rec);
 
-			// Prepare the mail body
+			// Prepare the arguments for the template
+			Map<String, String> args = new HashMap<String, String>();
+			args.put("_task", I18N.message("task.name." + name, recipient.getLocale()));
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			StringBuffer body = new StringBuffer();
-			body.append(taskname);
-			body.append("\n");
-			body.append(I18N.message("startedon", recipient.getLocale()) + ": ");
-			body.append(df.format(scheduling.getPreviousFireTime()));
-			body.append("\n");
-			body.append(I18N.message("finishedon", recipient.getLocale()) + ": ");
-			body.append(df.format(new Date()));
-			body.append("\n-----------------------------------\n");
-			if (lastRunError != null) {
-				body.append(I18N.message("error", recipient.getLocale()) + ": ");
-				body.append(lastRunError.getMessage());
-				body.append("\n-----------------------------------\n");
-			}
-
-			String report = prepareReport(recipient.getLocale());
-			if (StringUtils.isNotEmpty(report))
-				body.append(prepareReport(recipient.getLocale()));
-			email.setMessageText(body.toString());
+			args.put("_started", df.format(scheduling.getPreviousFireTime()));
+			args.put("_ended", df.format(new Date()));
+			args.put("_error", (lastRunError != null ? lastRunError.getMessage() : null));
+			args.put("_report", prepareReport(recipient.getLocale()));
 
 			// Send the email
 			try {
-				sender.send(email);
+				sender.send(email, "task.report", args);
 				log.info("Report sent to: " + recipient.getEmail());
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);

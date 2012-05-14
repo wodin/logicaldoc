@@ -24,10 +24,6 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		workflow.setId(1);
 		workflow.setName(workflowName);
 		workflow.setDescription("Workflow di test");
-		workflow.setTaskAssignmentSubject("task assign subject");
-		workflow.setTaskAssignmentBody("This is the assignment body");
-		workflow.setReminderSubject("reminder subject");
-		workflow.setReminderBody("This is the reminder body");
 		workflow.setStartStateId("1");
 
 		GUIUser user = new GUIUser();
@@ -156,10 +152,6 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		workflow.setId(1);
 		workflow.setName("Workflow_test");
 		workflow.setDescription("Workflow di test");
-		workflow.setTaskAssignmentSubject("task assign subject");
-		workflow.setTaskAssignmentBody("This is the assignment body");
-		workflow.setReminderSubject("reminder subject");
-		workflow.setReminderBody("This is the reminder body");
 		GUIUser user = new GUIUser();
 		user.setId(9999);
 		user.setUserName("john scott");
@@ -174,10 +166,6 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		workflow.setId(2);
 		workflow.setName("Workflow_New");
 		workflow.setDescription("Workflow new");
-		workflow.setTaskAssignmentSubject("task assign subject new");
-		workflow.setTaskAssignmentBody("This is the assignment body new ");
-		workflow.setReminderSubject("reminder subject new ");
-		workflow.setReminderBody("This is the reminder body new");
 		user = new GUIUser();
 		user.setId(8888);
 		user.setUserName("alan murphy");
@@ -192,10 +180,6 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		workflow.setId(3);
 		workflow.setName("Workflow_Logical");
 		workflow.setDescription("Workflow di logical");
-		workflow.setTaskAssignmentSubject("task assign subject logical");
-		workflow.setTaskAssignmentBody("This is the assignment body logical");
-		workflow.setReminderSubject("reminder subject logical");
-		workflow.setReminderBody("This is the reminder body logical");
 		user = new GUIUser();
 		user.setId(7777);
 		user.setUserName("sam mitchell");

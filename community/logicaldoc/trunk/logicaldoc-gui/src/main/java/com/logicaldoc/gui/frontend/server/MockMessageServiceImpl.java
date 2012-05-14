@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.server;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
+import com.logicaldoc.gui.common.client.beans.GUIMessageTemplate;
 import com.logicaldoc.gui.frontend.client.services.MessageService;
 
 /**
@@ -33,5 +34,21 @@ public class MockMessageServiceImpl extends RemoteServiceServlet implements Mess
 	@Override
 	public void save(String sid, GUIMessage message) throws InvalidSessionException {
 		return;
+	}
+
+	@Override
+	public GUIMessageTemplate[] loadTemplates(String sid, String language) throws InvalidSessionException {
+		return null;
+	}
+
+	@Override
+	public void saveTemplates(String sid, GUIMessageTemplate[] templates) throws InvalidSessionException {
+
+	}
+
+	@Override
+	public void deleteTemplates(String sid, long[] ids) throws InvalidSessionException {
+		// TODO Auto-generated method stub
+		
 	}
 }

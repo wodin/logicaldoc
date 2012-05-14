@@ -1,4 +1,4 @@
-package com.logicaldoc.core.communication.dao;
+package com.logicaldoc.core.communication;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,8 +12,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
-import com.logicaldoc.core.communication.Recipient;
-import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.util.sql.SqlUtil;
 
 /**
@@ -54,7 +52,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	}
 
 	/**
-	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#findByRecipient(java.lang.String,
+	 * @see com.logicaldoc.core.communication.SystemMessageDAO#findByRecipient(java.lang.String,
 	 *      int)
 	 */
 	@SuppressWarnings("unchecked")
@@ -71,7 +69,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	}
 
 	/**
-	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#getCount(java.lang.String,
+	 * @see com.logicaldoc.core.communication.SystemMessageDAO#getCount(java.lang.String,
 	 *      int)
 	 */
 	public int getCount(String recipient, int type, Integer read) {
@@ -79,7 +77,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	}
 
 	/**
-	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#deleteExpiredMessages(java.lang.String)
+	 * @see com.logicaldoc.core.communication.SystemMessageDAO#deleteExpiredMessages(java.lang.String)
 	 */
 	public void deleteExpiredMessages(String recipient) {
 		collectGarbage(findByRecipient(recipient, SystemMessage.TYPE_SYSTEM, null), true);
@@ -122,7 +120,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	}
 
 	/**
-	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#deleteExpiredMessages(int)
+	 * @see com.logicaldoc.core.communication.SystemMessageDAO#deleteExpiredMessages(int)
 	 */
 	public void deleteExpiredMessages(int type) {
 		collectGarbage(findByType(type), true);

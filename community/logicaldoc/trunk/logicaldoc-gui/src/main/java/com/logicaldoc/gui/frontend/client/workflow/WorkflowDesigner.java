@@ -202,14 +202,6 @@ public class WorkflowDesigner extends VStack {
 		workflow.setName((String) values.get("workflowName"));
 		if (values.get("workflowDescr") != null)
 			workflow.setDescription((String) values.get("workflowDescr"));
-		if (values.get("assignmentSubject") != null)
-			workflow.setTaskAssignmentSubject((String) values.get("assignmentSubject"));
-		if (values.get("assignmentBody") != null)
-			workflow.setTaskAssignmentBody((String) values.get("assignmentBody"));
-		if (values.get("reminderSubject") != null)
-			workflow.setReminderSubject((String) values.get("reminderSubject"));
-		if (values.get("reminderBody") != null)
-			workflow.setReminderBody((String) values.get("reminderBody"));
 		if (values.get("supervisor") != null)
 			workflow.setSupervisor((String) values.get("supervisor"));
 	}
