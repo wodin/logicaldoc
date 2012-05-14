@@ -249,7 +249,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	}
 
 	private void saveUserHistory(User user, UserHistory transaction) {
-		if (transaction == null)
+		if (transaction == null || !userHistoryDAO.isEnabled())
 			return;
 
 		transaction.setUser(user);
@@ -284,11 +284,11 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 	@Override
 	public void initialize(User user) {
-		if(user==null)
+		if (user == null)
 			return;
-		
+
 		getHibernateTemplate().refresh(user);
-		
+
 		for (Group group : user.getGroups()) {
 			group.getName();
 		}

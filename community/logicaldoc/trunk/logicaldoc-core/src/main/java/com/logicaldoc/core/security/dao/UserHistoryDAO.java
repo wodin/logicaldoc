@@ -33,11 +33,17 @@ public interface UserHistoryDAO extends PersistentObjectDAO<UserHistory> {
 	public void createUserHistory(User user, String eventType, String comment, String sessionId);
 
 	/**
-	 * This method deletes all the user history entries oldest than the given days
-	 * from now. If <code>ttl</code> is 0 or -1, the cancellation is not made.
+	 * This method deletes all the user history entries oldest than the given
+	 * days from now. If <code>ttl</code> is 0 or -1, the cancellation is not
+	 * made.
 	 * 
 	 * @param ttl The maximum number of days over which the history is
 	 *        considered old
 	 */
 	public void cleanOldHistories(int ttl);
+
+	/**
+	 * Checks if the histories recording is enabled
+	 */
+	public boolean isEnabled();
 }

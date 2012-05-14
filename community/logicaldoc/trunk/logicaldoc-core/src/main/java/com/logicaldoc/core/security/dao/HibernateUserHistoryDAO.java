@@ -10,8 +10,11 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserHistory;
+import com.logicaldoc.util.config.ContextProperties;
 
 public class HibernateUserHistoryDAO extends HibernatePersistentObjectDAO<UserHistory> implements UserHistoryDAO {
+
+	private ContextProperties config;
 
 	private HibernateUserHistoryDAO() {
 		super(UserHistory.class);
@@ -31,6 +34,9 @@ public class HibernateUserHistoryDAO extends HibernatePersistentObjectDAO<UserHi
 	 */
 	@Override
 	public void createUserHistory(User user, String eventType, String comment, String sessionId) {
+		if (!isEnabled())
+			return;
+
 		UserHistory history = new UserHistory();
 
 		history.setUser(user);
@@ -59,7 +65,7 @@ public class HibernateUserHistoryDAO extends HibernatePersistentObjectDAO<UserHi
 			try {
 				int rowsUpdated = jdbcUpdate("UPDATE ld_user_history SET ld_deleted = 1, ld_lastmodified = ?"
 						+ " WHERE ld_deleted = 0 AND ld_date < ?", today, ldDate);
-				
+
 				log.info("cleanOldHistories rows updated: " + rowsUpdated);
 			} catch (Exception e) {
 				if (log.isErrorEnabled())
@@ -67,5 +73,23 @@ public class HibernateUserHistoryDAO extends HibernatePersistentObjectDAO<UserHi
 			}
 
 		}
+	}
+
+	@Override
+	public boolean store(UserHistory entity) {
+		// Write only if the history is enabled
+		if (isEnabled())
+			return super.store(entity);
+		else
+			return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return "true".equals(config.getProperty("history.enabled"));
+	}
+
+	public void setConfig(ContextProperties config) {
+		this.config = config;
 	}
 }

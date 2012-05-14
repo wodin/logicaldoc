@@ -66,9 +66,8 @@
 			<bean class="com.logicaldoc.core.security.dao.HibernateFolderHistoryDAO"
 				abstract="false" lazy-init="default" autowire="default"
 				dependency-check="default">
-				<property name="sessionFactory">
-					<ref bean="SessionFactory" />
-				</property>
+				<property name="sessionFactory" ref="SessionFactory" />
+				<property name="config" ref="ContextProperties" />
 			</bean>
 		</property>
 	</bean>
@@ -140,9 +139,8 @@
 			<bean class="com.logicaldoc.core.document.dao.HibernateHistoryDAO"
 				abstract="false" lazy-init="default" autowire="default"
 				dependency-check="default">
-				<property name="sessionFactory">
-					<ref bean="SessionFactory" />
-				</property>
+				<property name="sessionFactory" ref="SessionFactory" />
+				<property name="config" ref="ContextProperties" />
 			</bean>
 		</property>
 	</bean>
@@ -298,9 +296,8 @@
 			<bean class="com.logicaldoc.core.security.dao.HibernateUserHistoryDAO"
 				abstract="false" lazy-init="default" autowire="default"
 				dependency-check="default">
-				<property name="sessionFactory">
-					<ref bean="SessionFactory" />
-				</property>
+				<property name="sessionFactory" ref="SessionFactory" />
+				<property name="config" ref="ContextProperties" />
 			</bean>
 		</property>
 	</bean>

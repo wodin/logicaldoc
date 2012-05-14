@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.History;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.sql.SqlUtil;
 
 /**
@@ -19,6 +20,8 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @since 3.0
  */
 public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> implements HistoryDAO {
+
+	private ContextProperties config;
 
 	private HibernateHistoryDAO() {
 		super(History.class);
@@ -51,7 +54,6 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 		return findByWhere("_entity.notified = 0", null, "order by _entity.date asc", null);
 	}
 
-	
 	/**
 	 * @see com.logicaldoc.core.security.dao.UserHistoryDAO#cleanOldHistories(int)
 	 */
@@ -69,7 +71,7 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 			try {
 				int rowsUpdated = jdbcUpdate("UPDATE ld_history SET ld_deleted = 1, ld_lastmodified = ?"
 						+ " WHERE ld_deleted = 0 AND ld_date < ?", today, ldDate);
-				
+
 				log.info("cleanOldHistories rows updated: " + rowsUpdated);
 			} catch (Exception e) {
 				if (log.isErrorEnabled())
@@ -86,5 +88,23 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 			query += " and lower(_entity.event) like '" + SqlUtil.doubleQuotes(event.toLowerCase()) + "'";
 
 		return findByWhere(query, null, "order by _entity.date asc", null);
+	}
+
+	@Override
+	public boolean store(History entity) {
+		//Write only if the history is enabled
+		if (isEnabled())
+			return super.store(entity);
+		else
+			return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return "true".equals(config.getProperty("history.enabled"));
+	}
+
+	public void setConfig(ContextProperties config) {
+		this.config = config;
 	}
 }

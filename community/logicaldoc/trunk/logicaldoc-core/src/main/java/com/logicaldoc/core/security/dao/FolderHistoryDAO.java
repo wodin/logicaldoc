@@ -55,4 +55,9 @@ public interface FolderHistoryDAO extends PersistentObjectDAO<FolderHistory> {
 	 *        considered old
 	 */
 	public void cleanOldHistories(int ttl);
+	
+	/**
+	 * Checks if the histories recording is enabled
+	 */
+	public boolean isEnabled();
 }
