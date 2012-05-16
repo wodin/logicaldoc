@@ -7,7 +7,8 @@ import java.util.List;
 import com.logicaldoc.core.document.Document;
 
 /**
- * The Storer manages the repository where document files are maintained and all general resources are stored.
+ * The Storer manages the repository where document files are maintained and all
+ * general resources are stored.
  * 
  * @author Michael Scholz, Marco Meschieri
  */
@@ -21,14 +22,14 @@ public interface Storer {
 	 * @param stream Document as InputStream
 	 * @param docId The document identifier
 	 * @param resource Name of the resource to be stored
-	 * @return ResultImpl of the storing process.
+	 * @return Size of the stored resource, or < 0 if the storage was not possible
 	 */
-	public boolean store(InputStream stream, long docId, String resource);
+	public long store(InputStream stream, long docId, String resource);
 
 	/**
 	 * @see store(InputStream stream, long docId, String resource)
 	 */
-	public boolean store(File file, long docId, String resource);
+	public long store(File file, long docId, String resource);
 
 	/**
 	 * Deletes all resources of a document from the storage.

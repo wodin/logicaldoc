@@ -96,7 +96,6 @@ public interface DocumentManager {
 	 */
 	public Document create(InputStream content, Document docVO, History transaction) throws Exception;
 
-
 	/**
 	 * Reindexes an existing document in the full-text index.
 	 * 

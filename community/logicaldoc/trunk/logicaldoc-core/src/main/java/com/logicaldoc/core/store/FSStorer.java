@@ -91,13 +91,14 @@ public class FSStorer implements Storer {
 	}
 
 	@Override
-	public boolean store(InputStream stream, long docId, String resource) {
+	public long store(InputStream stream, long docId, String resource) {
+		File file = null;
 		try {
 			SystemQuota.checkOverQuota();
 
 			File dir = getContainer(docId);
 			FileUtils.forceMkdir(dir);
-			File file = new File(new StringBuilder(dir.getPath()).append("/").append(resource).toString());
+			file = new File(new StringBuilder(dir.getPath()).append("/").append(resource).toString());
 			FileUtil.writeFile(stream, file.getPath());
 
 			// Performs increment and check of the system quota, then increments
@@ -106,23 +107,23 @@ public class FSStorer implements Storer {
 			SystemQuota.incrementUserQuota(docId, file.length());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return false;
+			return -1;
 		} finally {
 			try {
 				stream.close();
 			} catch (IOException e) {
 			}
 		}
-		return true;
+		return file.length();
 	}
 
 	@Override
-	public boolean store(File file, long docId, String resource) {
+	public long store(File file, long docId, String resource) {
 		InputStream is = null;
 		try {
 			is = new BufferedInputStream(new FileInputStream(file), 2048);
 		} catch (FileNotFoundException e) {
-			return false;
+			return -1;
 		}
 		return store(is, docId, resource);
 	}

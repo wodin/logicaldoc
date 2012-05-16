@@ -1,7 +1,9 @@
 package com.logicaldoc.core.document;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -10,6 +12,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -27,6 +30,8 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
+import com.logicaldoc.util.io.FileUtil;
+import com.logicaldoc.util.sql.SqlUtil;
 
 /**
  * Basic Implementation of <code>DocumentManager</code>
@@ -72,17 +77,6 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public void checkin(long docId, File file, String filename, boolean release, History transaction) throws Exception {
-		FileInputStream is = new FileInputStream(file);
-		try {
-			checkin(docId, is, filename, release, transaction);
-		} finally {
-			is.close();
-		}
-	}
-
-	@Override
-	public void checkin(long docId, InputStream fileInputStream, String filename, boolean release, History transaction)
-			throws Exception {
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 		assert (transaction.getComment() != null);
@@ -122,6 +116,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setLockUserId(null);
 			document.setFolder(folder);
 			document.setDigest(null);
+			document.setFileSize(file.length());
 
 			// Create new version (a new version number is created)
 			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
@@ -131,11 +126,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				throw new Exception();
 
 			// store the document in the repository (on the file system)
-			store(document, fileInputStream);
-
-			// store to update file size
-			if (documentDAO.store(document, null) == false)
-				throw new Exception();
+			store(document, file);
 
 			version.setFileSize(document.getFileSize());
 			version.setDigest(null);
@@ -148,6 +139,23 @@ public class DocumentManagerImpl implements DocumentManager {
 			}
 
 			log.debug("Checked in document " + docId);
+		}
+	}
+
+	@Override
+	public void checkin(long docId, InputStream content, String filename, boolean release, History transaction)
+			throws Exception {
+		assert (transaction != null);
+		assert (transaction.getUser() != null);
+		assert (transaction.getComment() != null);
+
+		// Write content to temporary file, then delete it
+		File tmp = File.createTempFile("checkin", "");
+		try {
+			FileUtil.writeFile(content, tmp.getPath());
+			checkin(docId, tmp, filename, release, transaction);
+		} finally {
+			FileUtils.deleteQuietly(tmp);
 		}
 	}
 
@@ -176,14 +184,23 @@ public class DocumentManagerImpl implements DocumentManager {
 		log.debug("locked document " + docId);
 	}
 
-	private void store(Document doc, InputStream content) throws IOException {
-		// Get file to upload inputStream
+	private long store(Document doc, File file) throws IOException {
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 
-		// stores it in folder
-		boolean stored = storer.store(content, doc.getId(), storer.getResourceName(doc, null, null));
-		if (!stored)
+		// Prepare the inputStream
+		InputStream is = null;
+		try {
+			is = new BufferedInputStream(new FileInputStream(file), 2048);
+		} catch (FileNotFoundException e) {
+			return -1;
+		}
+
+		// stores it
+		long stored = storer.store(is, doc.getId(), storer.getResourceName(doc, null, null));
+		if (stored < 0)
 			throw new IOException("Unable to store the document");
+
+		return stored;
 	}
 
 	/**
@@ -449,20 +466,9 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public Document create(File file, Document docVO, History transaction) throws Exception {
-
-		InputStream is = new FileInputStream(file);
-		try {
-			return create(is, docVO, transaction);
-		} finally {
-			is.close();
-		}
-	}
-
-	@Override
-	public Document create(InputStream content, Document docVO, History transaction) throws Exception {
 		assert (transaction != null);
 		assert (docVO != null);
-		assert (content != null);
+		assert (file != null);
 
 		try {
 			docVO.setDate(new Date());
@@ -491,6 +497,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			docVO.setType(type);
 			docVO.setVersion(config.getProperty("document.startversion"));
 			docVO.setFileVersion(docVO.getVersion());
+			docVO.setFileSize(file.length());
 
 			if (docVO.getTemplate() == null && docVO.getTemplateId() != null)
 				docVO.setTemplate(documentTemplateDAO.findById(docVO.getTemplateId()));
@@ -510,19 +517,15 @@ public class DocumentManagerImpl implements DocumentManager {
 				}
 			}
 
-			// Modify document history entry
+			// Create the record
 			documentDAO.store(docVO, transaction);
 
 			/* store the document into filesystem */
 			try {
-				store(docVO, content);
+				store(docVO, file);
 			} catch (Exception e) {
 				documentDAO.delete(docVO.getId());
 			}
-
-			docVO.setFileSize(storer.size(docVO.getId(), storer.getResourceName(docVO, null, null)));
-
-			documentDAO.store(docVO);
 
 			// Store the initial version (default 1.0)
 			Version vers = Version.create(docVO, userDAO.findById(transaction.getUserId()), transaction.getComment(),
@@ -537,16 +540,34 @@ public class DocumentManagerImpl implements DocumentManager {
 		}
 	}
 
+	@Override
+	public Document create(InputStream content, Document docVO, History transaction) throws Exception {
+		assert (transaction != null);
+		assert (docVO != null);
+		assert (content != null);
+
+		// Write content to temporary file, then delete it
+		File tmp = File.createTempFile("create", "");
+		try {
+			FileUtil.writeFile(content, tmp.getPath());
+			return create(tmp, docVO, transaction);
+		} finally {
+			FileUtils.deleteQuietly(tmp);
+		}
+	}
+
 	/**
 	 * Avoid title duplications in the same folder
 	 */
 	private void setUniqueTitle(Document doc) {
 		int counter = 1;
 		String buf = doc.getTitle();
-		Long excludeId = null;
-		if (doc.getId() > 0)
-			excludeId = doc.getId();
-		while (documentDAO.findByTitleAndParentFolderId(doc.getFolder().getId(), doc.getTitle(), excludeId).size() > 0) {
+
+		List<String> collisions = (List<String>) documentDAO.queryForList(
+				"select lower(ld_title) from ld_document where ld_deleted=0 and ld_folderid=" + doc.getFolder().getId()
+						+ " and lower(ld_title) like'" + SqlUtil.doubleQuotes(buf.toLowerCase()) + "%' and not ld_id="
+						+ doc.getId(), String.class);
+		while (collisions.contains(doc.getTitle().toLowerCase())) {
 			doc.setTitle(buf + "(" + (counter++) + ")");
 		}
 	}
@@ -567,11 +588,11 @@ public class DocumentManagerImpl implements DocumentManager {
 			ext = doc.getFileName().substring(doc.getFileName().lastIndexOf("."));
 		}
 
-		Long excludeId = null;
-		if (doc.getId() > 0)
-			excludeId = doc.getId();
-		while (documentDAO.findByFileNameAndParentFolderId(doc.getFolder().getId(), doc.getFileName(), excludeId, null)
-				.size() > 0) {
+		List<String> collisions = (List<String>) documentDAO.queryForList(
+				"select lower(ld_filename) from ld_document where ld_deleted=0 and ld_folderid=" + doc.getFolder().getId()
+						+ " and lower(ld_filename) like'" + SqlUtil.doubleQuotes(doc.getFileName().toLowerCase())
+						+ "%' and not ld_id=" + doc.getId(), String.class);
+		while (collisions.contains(doc.getFileName().toLowerCase())) {
 			doc.setFileName(name + "(" + (counter++) + ")" + ext);
 		}
 	}

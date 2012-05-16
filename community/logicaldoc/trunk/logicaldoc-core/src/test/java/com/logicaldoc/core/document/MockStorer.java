@@ -24,8 +24,8 @@ public class MockStorer implements Storer {
 	}
 
 	@Override
-	public boolean store(InputStream stream, long docId, String filename) {
-		return true;
+	public long store(InputStream stream, long docId, String filename) {
+		return 12;
 	}
 
 	@Override
@@ -87,11 +87,11 @@ public class MockStorer implements Storer {
 	}
 
 	@Override
-	public boolean store(File file, long docId, String resource) {
+	public long store(File file, long docId, String resource) {
 		try {
 			return store(new FileInputStream(file), docId, resource);
 		} catch (FileNotFoundException e) {
-			return false;
+			return 12;
 		}
 	}
 }

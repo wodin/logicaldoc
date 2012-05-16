@@ -26,6 +26,7 @@ import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.sql.SqlUtil;
 
 /**
@@ -39,6 +40,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	private UserDAO userDAO;
 
 	private FolderHistoryDAO historyDAO;
+
+	private ContextProperties config;
 
 	protected HibernateFolderDAO() {
 		super(Folder.class);
@@ -537,7 +540,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	 * @param transaction
 	 */
 	private void saveFolderHistory(Folder folder, FolderHistory transaction) {
-		if (transaction == null || !historyDAO.isEnabled())
+		if (transaction == null || !historyDAO.isEnabled() || "bulkload".equals(config.getProperty("runlevel")))
 			return;
 
 		transaction.setNotified(0);
@@ -933,7 +936,12 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	public void setUniqueName(Folder folder) {
 		int counter = 1;
 		String folderName = folder.getName();
-		while (findByNameAndParentId(folder.getName(), folder.getParentId()).size() > 0) {
+
+		List<String> collisions = (List<String>) queryForList(
+				"select lower(ld_name) from ld_folder where ld_deleted=0 and ld_parentid=" + folder.getParentId()
+						+ " and lower(ld_name) like'" + SqlUtil.doubleQuotes(folderName.toLowerCase()) + "%'",
+				String.class);
+		while (collisions.contains(folder.getName().toLowerCase())) {
 			folder.setName(folderName + "(" + (counter++) + ")");
 		}
 	}
@@ -1103,5 +1111,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		for (String attribute : folder.getAttributes().keySet()) {
 			attribute.getBytes();
 		}
+	}
+
+	public void setConfig(ContextProperties config) {
+		this.config = config;
 	}
 }

@@ -54,19 +54,6 @@ public class FoldersDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
-			// if (parent == Constants.ROOT_FOLDERID &&
-			// dao.isReadEnable(Folder.ROOTID, session.getUserId())) {
-			// // Add the 'Documents' root
-			// writer.print("<folder>");
-			// writer.print("<folderId>" + Folder.ROOTID + "</folderId>");
-			// writer.print("<parent>" + parent + "</parent>");
-			// writer.print("<name>/</name>");
-			// writer.print("<type>1</type>");
-			// writer.print("</folder>");
-			// writer.write("</list>");
-			// return;
-			// }
-
 			/*
 			 * Get the visible children
 			 */
