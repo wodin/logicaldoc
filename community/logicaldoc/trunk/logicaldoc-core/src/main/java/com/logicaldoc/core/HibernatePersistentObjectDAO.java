@@ -11,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -37,7 +38,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		boolean result = true;
 		try {
 			T entity = findById(id);
-			if(entity==null)
+			if (entity == null)
 				return false;
 			entity.setDeleted(1);
 			store(entity);
@@ -192,6 +193,26 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 				log.error(e.getMessage(), e);
 		}
 		return list;
+	}
+
+	@Override
+	public SqlRowSet queryForRowSet(String sql, Object[] args, Integer maxRows) {
+		SqlRowSet rs = null;
+		try {
+			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+			if (maxRows != null)
+				jdbcTemplate.setMaxRows(maxRows);
+			if (args != null)
+				rs = jdbcTemplate.queryForRowSet(sql, args);
+			else
+				rs = jdbcTemplate.queryForRowSet(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+		return rs;
 	}
 
 	@SuppressWarnings("rawtypes")
