@@ -6,17 +6,22 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -355,7 +360,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				}
 
 				// Ensure unique title in folder
-				setUniqueTitle(doc);
+				setUniqueTitleAndFilename(doc);
 
 				doc.clearTags();
 				documentDAO.store(doc);
@@ -434,8 +439,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		if (doc.getImmutable() == 0 || ((doc.getImmutable() == 1 && transaction.getUser().isInGroup("admin")))) {
 			documentDAO.initialize(doc);
 			doc.setFolder(folder);
-			setUniqueTitle(doc);
-			setUniqueFilename(doc);
+			setUniqueTitleAndFilename(doc);
 
 			// The document needs to be reindexed
 			if (doc.getIndexed() == AbstractDocument.INDEX_INDEXED) {
@@ -484,8 +488,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			if (StringUtils.isEmpty(docVO.getTitle()))
 				docVO.setTitle(fallbackTitle);
 
-			setUniqueTitle(docVO);
-			setUniqueFilename(docVO);
+			setUniqueTitleAndFilename(docVO);
 
 			if (docVO.getSourceDate() == null)
 				docVO.setSourceDate(docVO.getDate());
@@ -557,30 +560,14 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	/**
-	 * Avoid title duplications in the same folder
+	 * Avoid title and file name duplications in the same folder
 	 */
-	private void setUniqueTitle(Document doc) {
-		int counter = 1;
-		String buf = doc.getTitle();
+	private void setUniqueTitleAndFilename(Document doc) {
+		String originalTitle = doc.getTitle();
+		String originalFileName = doc.getFileName();
 
-		List<String> collisions = (List<String>) documentDAO.queryForList(
-				"select lower(ld_title) from ld_document where ld_deleted=0 and ld_folderid=" + doc.getFolder().getId()
-						+ " and lower(ld_title) like'" + SqlUtil.doubleQuotes(buf.toLowerCase()) + "%' and not ld_id="
-						+ doc.getId(), String.class);
-		while (collisions.contains(doc.getTitle().toLowerCase())) {
-			doc.setTitle(buf + "(" + (counter++) + ")");
-		}
-	}
-
-	/**
-	 * Avoid Filename duplications in the same folder
-	 */
-	private void setUniqueFilename(Document doc) {
-		int counter = 1;
-
-		String name = doc.getFileName();
 		if (doc.getFileName().indexOf(".") != -1) {
-			name = doc.getFileName().substring(0, doc.getFileName().lastIndexOf("."));
+			originalFileName = doc.getFileName().substring(0, doc.getFileName().lastIndexOf("."));
 		}
 
 		String ext = "";
@@ -588,12 +575,45 @@ public class DocumentManagerImpl implements DocumentManager {
 			ext = doc.getFileName().substring(doc.getFileName().lastIndexOf("."));
 		}
 
-		List<String> collisions = (List<String>) documentDAO.queryForList(
-				"select lower(ld_filename) from ld_document where ld_deleted=0 and ld_folderid=" + doc.getFolder().getId()
-						+ " and lower(ld_filename) like'" + SqlUtil.doubleQuotes(doc.getFileName().toLowerCase())
-						+ "%' and not ld_id=" + doc.getId(), String.class);
-		while (collisions.contains(doc.getFileName().toLowerCase())) {
-			doc.setFileName(name + "(" + (counter++) + ")" + ext);
+		/*
+		 * These sets will contain the found collisions in the given folder
+		 */
+		final Set<String> titles = new HashSet<String>();
+		final Set<String> files = new HashSet<String>();
+
+		StringBuffer query = new StringBuffer(
+				"select lower(ld_title), lower(ld_filename) from ld_document where ld_deleted=0 and ld_folderid=");
+		query.append(Long.toString(doc.getFolder().getId()));
+		query.append(" and (lower(ld_title) like '");
+		query.append(SqlUtil.doubleQuotes(originalTitle.toLowerCase()));
+		query.append("%' or lower(ld_filename) like '");
+		query.append(SqlUtil.doubleQuotes(doc.getFileName().toLowerCase()));
+		query.append("%') and not ld_id=");
+		query.append(Long.toString(doc.getId()));
+
+		documentDAO.query(query.toString(), null, new RowMapper<String>() {
+			@Override
+			public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+				String title = rs.getString(1);
+				String file = rs.getString(2);
+
+				if (!titles.contains(title))
+					titles.add(title);
+				if (!files.contains(file))
+					files.add(file);
+
+				return null;
+			}
+		}, null);
+
+		int counter = 1;
+		while (titles.contains(doc.getTitle().toLowerCase())) {
+			doc.setTitle(originalTitle + "(" + (counter++) + ")");
+		}
+
+		counter = 1;
+		while (files.contains(doc.getFileName().toLowerCase())) {
+			doc.setFileName(originalFileName + "(" + (counter++) + ")" + ext);
 		}
 	}
 
@@ -677,7 +697,6 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.initialize(document);
 			if (title) {
 				document.setTitle(newName);
-				setUniqueTitle(document);
 			} else {
 				document.setFileName(newName.trim());
 				String extension = FilenameUtils.getExtension(newName.trim());
@@ -686,8 +705,9 @@ public class DocumentManagerImpl implements DocumentManager {
 				} else {
 					document.setType("unknown");
 				}
-				setUniqueFilename(document);
 			}
+
+			setUniqueTitleAndFilename(document);
 			document.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 
 			// Modify document history entry
@@ -744,8 +764,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				shortcut.setTitle(fallbackTitle);
 			}
 
-			setUniqueTitle(shortcut);
-			setUniqueFilename(shortcut);
+			setUniqueTitleAndFilename(shortcut);
 
 			if (doc.getSourceDate() != null)
 				shortcut.setSourceDate(doc.getSourceDate());
