@@ -67,7 +67,8 @@ public class LD {
 		yes.setWidth(70);
 		yes.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				callback.execute(true);
+				if (callback != null)
+					callback.execute(true);
 				dialog.destroy();
 			}
 		});
@@ -76,7 +77,8 @@ public class LD {
 		no.setWidth(70);
 		no.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				callback.execute(false);
+				if (callback != null)
+					callback.execute(false);
 				dialog.destroy();
 			}
 		});
@@ -150,7 +152,8 @@ public class LD {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getKeyName() != null && "enter".equals(event.getKeyName().toLowerCase())) {
-					callback.execute(form.getValue("value").toString());
+					if (callback != null)
+						callback.execute(form.getValue("value").toString());
 					dialog.destroy();
 				}
 			}
@@ -162,7 +165,8 @@ public class LD {
 		ok.setWidth(70);
 		ok.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				callback.execute(form.getValue("value").toString());
+				if (callback != null)
+					callback.execute(form.getValue("value").toString());
 				dialog.destroy();
 			}
 		});
@@ -171,7 +175,8 @@ public class LD {
 		cancel.setWidth(70);
 		cancel.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				callback.execute(null);
+				if (callback != null)
+					callback.execute(null);
 				dialog.destroy();
 			}
 		});

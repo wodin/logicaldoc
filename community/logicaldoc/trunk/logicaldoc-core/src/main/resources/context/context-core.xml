@@ -82,6 +82,7 @@
 				<property name="sessionFactory" ref="SessionFactory" />
 				<property name="userDAO" ref="UserDAO" />
 				<property name="historyDAO" ref="FolderHistoryDAO" />
+				<property name="config" ref="ContextProperties" />
 			</bean>
 		</property>
 	</bean>

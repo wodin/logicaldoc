@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -200,6 +201,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			if (doc.getStopPublishing() != null)
 				doc.setStopPublishing(DateUtils.truncate(doc.getStopPublishing(), Calendar.DATE));
 
+			// Check if the document must be barcoded
+			if (!FileUtil.matches(doc.getFileName(),
+					config.getProperty("barcode.includes") == null ? "" : config.getProperty("barcode.includes"),
+					config.getProperty("barcode.excludes") == null ? "" : config.getProperty("barcode.excludes")))
+				doc.setBarcoded(Document.BARCODE_SKIP);
+
 			Set<String> src = doc.getTags();
 			if (src != null && src.size() > 0) {
 				// Trim too long tags
@@ -248,6 +255,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				}
 			}
 
+			if ("bulkload".equals(config.getProperty("runlevel")) || doc.getCustomId()==null)
+				doc.setCustomId(UUID.randomUUID().toString());
+
 			Map<String, Object> dictionary = new HashMap<String, Object>();
 
 			log.debug("Invoke listeners before store");
@@ -255,22 +265,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				listener.beforeStore(doc, transaction, dictionary);
 			}
 
-			// Check if the document must be barcoded
-			if (!FileUtil.matches(doc.getFileName(),
-					config.getProperty("barcode.includes") == null ? "" : config.getProperty("barcode.includes"),
-					config.getProperty("barcode.excludes") == null ? "" : config.getProperty("barcode.excludes")))
-				doc.setBarcoded(Document.BARCODE_SKIP);
-
 			// Save the document
 			getHibernateTemplate().saveOrUpdate(doc);
-
-			// Update size
-			String resource = storer.getResourceName(doc, doc.getFileVersion(), null);
-			if (storer.exists(doc.getId(), resource)) {
-				long size = storer.size(doc.getId(), resource);
-				doc.setFileSize(size);
-				getHibernateTemplate().saveOrUpdate(doc);
-			}
 
 			log.debug("Invoke listeners after store");
 			for (DocumentListener listener : listenerManager.getListeners()) {
@@ -280,10 +276,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			if (StringUtils.isEmpty(doc.getCustomId()))
 				doc.setCustomId(Long.toString(doc.getId()));
 
-			// Perhaps some listener may have modified the document
-			getHibernateTemplate().saveOrUpdate(doc);
+			if (!"bulkload".equals(config.getProperty("runlevel"))) {
+				// Perhaps some listeners may have modified the document
+				getHibernateTemplate().saveOrUpdate(doc);
 
-			saveDocumentHistory(doc, transaction);
+				saveDocumentHistory(doc, transaction);
+			}
 		} catch (Throwable e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -640,11 +638,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public long count(boolean computeDeleted) {
-		String query = "select count(*) from ld_document where ";
+		String query = "select count(*) from ld_document";
 		if (!computeDeleted) {
-			query += " ld_deleted = 0";
-		} else {
-			query += " ld_deleted >= 0";
+			query += " where ld_deleted = 0";
 		}
 		return queryForLong(query);
 	}
@@ -720,7 +716,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	private void saveDocumentHistory(Document doc, History transaction) {
-		if (transaction == null || !historyDAO.isEnabled())
+		if (transaction == null || !historyDAO.isEnabled() || "bulkload".equals(config.getProperty("runlevel")))
 			return;
 		transaction.setDocId(doc.getId());
 		transaction.setFolderId(doc.getFolder().getId());

@@ -14,6 +14,7 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -130,7 +131,11 @@ public class SessionsPanel extends VLayout {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				LD.askforValue(I18N.message("sid"), I18N.message("sid"),
-						list.getSelectedRecord().getAttributeAsString("sid"), "250", null);
+						list.getSelectedRecord().getAttributeAsString("sid"), "250", new ValueCallback() {
+							@Override
+							public void execute(final String value) {
+							}
+						});
 				event.cancel();
 			}
 		});
