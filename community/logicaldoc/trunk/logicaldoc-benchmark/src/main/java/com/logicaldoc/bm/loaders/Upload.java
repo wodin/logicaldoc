@@ -90,8 +90,9 @@ public class Upload extends AbstractLoader {
 
 		// Make sure the folder exists
 		Long folderID = makeFolders(serverProxy.sid, serverProxy, rootFolder, folderPath);
-		//Long folderID = makeFoldersFromPath(serverProxy.sid, serverProxy, rootFolder, folderPath);	
-		
+		// Long folderID = makeFoldersFromPath(serverProxy.sid, serverProxy,
+		// rootFolder, folderPath);
+
 		SourceFile sourceFile = randomFile.getSourceFile();
 		String title = formatter.format(loaderCount);
 
@@ -102,7 +103,8 @@ public class Upload extends AbstractLoader {
 
 		return null;
 	}
-		private Long createDocument(String ticket, ServerProxy serverProxy, long folderId, String title, SourceFile sfile) {		
+
+	private Long createDocument(String ticket, ServerProxy serverProxy, long folderId, String title, SourceFile sfile) {
 
 		String fileName = sfile.getFile().getName();
 
@@ -113,8 +115,8 @@ public class Upload extends AbstractLoader {
 		doc.setLanguage(session.getLanguage());
 		try {
 			if (sfile.getContent() != null)
-				doc = serverProxy.documentClient.create(ticket, doc,
-						new DataHandler(new ByteArrayDataSource(sfile.getContent().getBytes(), "application/octet-stream")));
+				doc = serverProxy.documentClient.create(ticket, doc, new DataHandler(new ByteArrayDataSource(sfile
+						.getContent().getBytes(), "application/octet-stream")));
 			else
 				doc = serverProxy.documentClient.create(ticket, doc, sfile.getFile());
 
@@ -147,8 +149,9 @@ public class Upload extends AbstractLoader {
 	 */
 	protected Long makeFolders(String ticket, ServerProxy serverProxy, Long rootFolder, List<String> folderPath)
 			throws Exception {
-		
-		// Iterate down the path, checking the cache and populating it as necessary
+
+		// Iterate down the path, checking the cache and populating it as
+		// necessary
 		Long currentParentFolderID = rootFolder;
 		String currentKey = "";
 
@@ -177,7 +180,8 @@ public class Upload extends AbstractLoader {
 
 			// Cache the new node
 			pathCache.put(currentKey, currentParentFolderID);
-			//System.out.printf("putting in cache: %s, %d %n", currentKey, currentParentFolderID);
+			// System.out.printf("putting in cache: %s, %d %n", currentKey,
+			// currentParentFolderID);
 		}
 		// Done
 		return currentParentFolderID;
@@ -188,8 +192,9 @@ public class Upload extends AbstractLoader {
 	 */
 	protected Long makeFoldersFromPath(String ticket, ServerProxy serverProxy, Long rootFolder, List<String> folderPath)
 			throws Exception {
-		
-		// Iterate down the path, checking the cache and populating it as necessary
+
+		// Iterate down the path, checking the cache and populating it as
+		// necessary
 		String currentKey = "";
 		for (String aFolderPath : folderPath) {
 			currentKey += ("/" + aFolderPath);
@@ -210,5 +215,5 @@ public class Upload extends AbstractLoader {
 
 		return folderID;
 	}
-	
+
 }

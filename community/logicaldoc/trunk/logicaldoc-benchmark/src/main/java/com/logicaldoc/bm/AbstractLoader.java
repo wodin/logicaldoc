@@ -28,7 +28,7 @@ public abstract class AbstractLoader extends Thread {
 	protected Random random;
 
 	// Statistics
-	private int statCount = 0; // Total number of successful iterations
+	protected int statCount = 0; // Total number of successful iterations
 
 	private long statTotalMs = 0; // Total execution time
 
