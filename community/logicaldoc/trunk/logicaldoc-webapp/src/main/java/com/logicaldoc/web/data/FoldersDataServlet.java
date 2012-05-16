@@ -2,9 +2,7 @@ package com.logicaldoc.web.data;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.Collection;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,10 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 
-import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
 
@@ -50,33 +50,29 @@ public class FoldersDataServlet extends HttpServlet {
 
 			Context context = Context.getInstance();
 			FolderDAO dao = (FolderDAO) context.getBean(FolderDAO.class);
+			UserDAO udao = (UserDAO) context.getBean(UserDAO.class);
+			User user = udao.findById(session.getUserId());
+			udao.initialize(user);
 
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
-			/*
-			 * Get the visible children
-			 */
-			List<Folder> folders = dao.findChildren(parent, session.getUserId());
+			StringBuffer query = new StringBuffer(
+					"select ld_id, ld_parentid, ld_name, ld_type from ld_folder where ld_deleted=0 and not ld_id=ld_parentid and ld_parentid = ? ");
+			if (!user.isInGroup("admin")) {
+				Collection<Long> accessibleIds = dao.findFolderIdByUserId(session.getUserId());
+				String idsStr = accessibleIds.toString().replace('[', '(').replace(']', ')');
+				query.append(" and ld_id in " + idsStr);
+			}
+			query.append(" order by ld_name");
 
-			// Sort for name asc
-			Collections.sort(folders, new Comparator<Folder>() {
-				@Override
-				public int compare(Folder o1, Folder o2) {
-					return o1.getName().compareTo(o2.getName());
-				}
-
-			});
-
-			/*
-			 * Iterate over records composing the response XML document
-			 */
-			for (Folder folder : folders) {
+			SqlRowSet rs = dao.queryForRowSet(query.toString(), new Long[] { parent }, null);
+			while (rs.next()) {
 				writer.print("<folder>");
-				writer.print("<folderId>" + folder.getId() + "</folderId>");
-				writer.print("<parent>" + folder.getParentId() + "</parent>");
-				writer.print("<name><![CDATA[" + folder.getName() + "]]></name>");
-				writer.print("<type>" + folder.getType() + "</type>");
+				writer.print("<folderId>" + rs.getLong(1) + "</folderId>");
+				writer.print("<parent>" + rs.getLong(2) + "</parent>");
+				writer.print("<name><![CDATA[" + rs.getString(3) + "]]></name>");
+				writer.print("<type>" + rs.getInt(4) + "</type>");
 				writer.print("</folder>");
 			}
 
