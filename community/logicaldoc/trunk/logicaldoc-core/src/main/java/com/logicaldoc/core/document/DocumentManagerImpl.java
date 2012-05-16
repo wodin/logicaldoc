@@ -6,8 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,7 +19,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -591,20 +589,17 @@ public class DocumentManagerImpl implements DocumentManager {
 		query.append("%') and not ld_id=");
 		query.append(Long.toString(doc.getId()));
 
-		documentDAO.query(query.toString(), null, new RowMapper<String>() {
-			@Override
-			public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-				String title = rs.getString(1);
-				String file = rs.getString(2);
+		// Execute the query to populate the sets
+		SqlRowSet rs = documentDAO.queryForRowSet(query.toString(), null, null);
+		while (rs.next()) {
+			String title = rs.getString(1);
+			String file = rs.getString(2);
 
-				if (!titles.contains(title))
-					titles.add(title);
-				if (!files.contains(file))
-					files.add(file);
-
-				return null;
-			}
-		}, null);
+			if (!titles.contains(title))
+				titles.add(title);
+			if (!files.contains(file))
+				files.add(file);
+		}
 
 		int counter = 1;
 		while (titles.contains(doc.getTitle().toLowerCase())) {

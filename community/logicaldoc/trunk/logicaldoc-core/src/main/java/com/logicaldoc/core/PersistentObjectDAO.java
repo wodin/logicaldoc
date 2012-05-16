@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 /**
  * Interface for DAOs that operate on persistent objects
@@ -128,7 +129,21 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * @return the result List, containing mapped objects
 	 */
 	@SuppressWarnings("rawtypes")
-	public List query(String sql, Object[] args, RowMapper rowMapper, Integer maxRows );
+	public List query(String sql, Object[] args, RowMapper rowMapper, Integer maxRows);
+
+	/**
+	 * Query given SQL to create a prepared statement from SQL and a list of
+	 * arguments to bind to the query, returns a navigable RowSet
+	 * 
+	 * @param sql SQL query to execute
+	 * @param args arguments to bind to the query (leaving it to the
+	 *        PreparedStatement to guess the corresponding SQL type); may also
+	 *        contain SqlParameterValue objects which indicate not only the
+	 *        argument value but also the SQL type and optionally the scale
+	 * @param maxRows the new max rows limit; null means there is no limit
+	 * @return the result row set
+	 */
+	public SqlRowSet queryForRowSet(String sql, Object[] args, Integer maxRows);
 
 	/**
 	 * Query given SQL to create a prepared statement from SQL and a list of
@@ -147,18 +162,22 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 */
 	@SuppressWarnings("rawtypes")
 	public List queryForList(String sql, Object[] args, Class elementType, Integer maxRows);
-	
+
 	/**
-	 * Execute a query for a result list, given static SQL.
-	 * Uses a JDBC Statement, not a PreparedStatement. If you want to execute a static query with a PreparedStatement, use the overloaded queryForList method with null as argument array.
-	 * The results will be mapped to a List (one entry for each row) of result objects, each of them matching the specified element type. 
+	 * Execute a query for a result list, given static SQL. Uses a JDBC
+	 * Statement, not a PreparedStatement. If you want to execute a static query
+	 * with a PreparedStatement, use the overloaded queryForList method with
+	 * null as argument array. The results will be mapped to a List (one entry
+	 * for each row) of result objects, each of them matching the specified
+	 * element type.
 	 * 
 	 * @param sql SQL query to execute
-	 * @param elementType the required type of element in the result list (for example, Integer.class) 
+	 * @param elementType the required type of element in the result list (for
+	 *        example, Integer.class)
 	 * @return a List of objects that match the specified element type
 	 */
 	@SuppressWarnings("rawtypes")
-	public List queryForList(String sql, Class elementType);	
+	public List queryForList(String sql, Class elementType);
 
 	/**
 	 * Execute a query that results in an int value, given static SQL. Uses a
@@ -172,16 +191,19 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * @return the int value, or 0 in case of SQL NULL
 	 */
 	public int queryForInt(String sql);
-	
+
 	/**
-	 * Execute a query that results in an long value, given static SQL.
-	 * Uses a JDBC Statement, not a PreparedStatement. If you want to execute a static query with a PreparedStatement, use the overloaded queryForInt method with null as argument array.
-	 * This method is useful for running static SQL with a known outcome. The query is expected to be a single row/single column query that results in a long value.
+	 * Execute a query that results in an long value, given static SQL. Uses a
+	 * JDBC Statement, not a PreparedStatement. If you want to execute a static
+	 * query with a PreparedStatement, use the overloaded queryForInt method
+	 * with null as argument array. This method is useful for running static SQL
+	 * with a known outcome. The query is expected to be a single row/single
+	 * column query that results in a long value.
 	 * 
-	 * @param sql SQL query to execute 
-	 * @return the long value, or 0 in case of SQL NULL 
+	 * @param sql SQL query to execute
+	 * @return the long value, or 0 in case of SQL NULL
 	 */
-	public long queryForLong(String sql);	
+	public long queryForLong(String sql);
 
 	/**
 	 * Deletes all entries form the database
@@ -201,14 +223,18 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * Executes the given SQL update statement
 	 */
 	public int jdbcUpdate(String statement);
-	
-    /**
-     * Issue a single SQL update operation (such as an insert, update or delete statement) via a prepared statement, binding the given arguments.
-     *
-     * @param statement SQL containing bind parameters
-     * @param args arguments to bind to the query (leaving it to the PreparedStatement to guess the corresponding SQL type); may also contain SqlParameterValue objects which indicate not only the argument value but also the SQL type and optionally the scale
-     * @return the number of rows affected
-     * @since 6.2.4
-     */   
-    public int jdbcUpdate(String statement, Object... args);
+
+	/**
+	 * Issue a single SQL update operation (such as an insert, update or delete
+	 * statement) via a prepared statement, binding the given arguments.
+	 * 
+	 * @param statement SQL containing bind parameters
+	 * @param args arguments to bind to the query (leaving it to the
+	 *        PreparedStatement to guess the corresponding SQL type); may also
+	 *        contain SqlParameterValue objects which indicate not only the
+	 *        argument value but also the SQL type and optionally the scale
+	 * @return the number of rows affected
+	 * @since 6.2.4
+	 */
+	public int jdbcUpdate(String statement, Object... args);
 }
