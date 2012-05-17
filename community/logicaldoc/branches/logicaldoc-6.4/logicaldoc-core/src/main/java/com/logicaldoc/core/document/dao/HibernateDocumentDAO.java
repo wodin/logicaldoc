@@ -639,11 +639,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public long count(boolean computeDeleted) {
-		String query = "select count(*) from ld_document where ";
+		String query = "select count(*) from ld_document";
 		if (!computeDeleted) {
-			query += " ld_deleted = 0";
-		} else {
-			query += " ld_deleted >= 0";
+			query += " where ld_deleted = 0";
 		}
 		return queryForLong(query);
 	}
