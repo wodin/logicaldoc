@@ -271,6 +271,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public void reindex(long docId) throws Exception {
+try{
 		Document doc = documentDAO.findById(docId);
 
 		// If the 'doc' is a shortcut, it must not be re-indexed, because it is
@@ -280,14 +281,8 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		log.debug("Reindexing document " + docId + " - " + doc.getTitle());
 
-		documentDAO.initialize(doc);
-
-		// Extract the content from the file
+		// Extract the content from the file. This may take very long time.
 		String content = parseDocument(doc);
-
-		// The document must be re-indexed
-		doc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
-		documentDAO.store(doc);
 
 		// Check if there are some shortcuts associated to the indexing
 		// document. They must be re-indexed.
@@ -302,8 +297,14 @@ public class DocumentManagerImpl implements DocumentManager {
 		// operation)
 		String resource = storer.getResourceName(doc.getId(), null, null);
 
+		doc = documentDAO.findById(docId);
+		documentDAO.initialize(doc);
+		
+		//This may take time
 		indexer.addHit(doc, content);
+		
 		doc = documentDAO.findById(doc.getId());
+		documentDAO.initialize(doc);
 		doc.setIndexed(AbstractDocument.INDEX_INDEXED);
 		documentDAO.store(doc);
 
@@ -313,6 +314,11 @@ public class DocumentManagerImpl implements DocumentManager {
 			shortcutDoc.setIndexed(AbstractDocument.INDEX_INDEXED);
 			documentDAO.store(shortcutDoc);
 		}
+		
+}catch(Throwable q){
+	q.printStackTrace();
+	log.error(q.getMessage(), q);
+}
 	}
 
 	@Override
