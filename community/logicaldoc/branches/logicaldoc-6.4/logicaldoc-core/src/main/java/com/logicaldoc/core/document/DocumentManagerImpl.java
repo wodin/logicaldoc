@@ -262,17 +262,11 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		log.debug("Reindexing document " + docId + " - " + doc.getTitle());
 
-		documentDAO.initialize(doc);
-
 		/* get search index entry */
 		Locale locale = doc.getLocale();
 
 		// Extract the content from the file
 		String content = parseDocument(doc);
-
-		// The document must be re-indexed
-		doc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
-		documentDAO.store(doc);
 
 		// Check if there are some shortcuts associated to the indexing
 		// document. They must be re-indexed.
@@ -288,10 +282,12 @@ public class DocumentManagerImpl implements DocumentManager {
 		String resource = storer.getResourceName(doc.getId(), null, null);
 
 		indexer.addFile(doc, content, locale);
+	
 		doc = documentDAO.findById(doc.getId());
+		documentDAO.initialize(doc);
 		doc.setIndexed(AbstractDocument.INDEX_INDEXED);
 		documentDAO.store(doc);
-
+		
 		for (Long shortcutId : shortcutIds) {
 			Document shortcutDoc = documentDAO.findById(shortcutId);
 			indexer.addFile(storer.getStream(doc.getId(), resource), shortcutDoc);
