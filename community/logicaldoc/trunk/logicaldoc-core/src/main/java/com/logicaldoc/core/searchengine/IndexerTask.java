@@ -1,5 +1,6 @@
 package com.logicaldoc.core.searchengine;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -93,10 +94,21 @@ public class IndexerTask extends Task {
 			size = ids.size();
 			log.info("Found a total of " + size + " documents to be indexed");
 
-			// Mark all these documents as belonging to the current transaction
-			String idsStr = ids.toString().replace('[', '(').replace(']', ')');
-			documentDao.bulkUpdate("set ld_transactionid='" + transactionId
-					+ "' where ld_transactionid is null and ld_id in " + idsStr, null);
+			// Must take into account start and end of the transaction
+			size += 2;
+
+			if (!ids.isEmpty()) {
+				// Mark all these documents as belonging to the current
+				// transaction. This may require time
+				String idsStr = ids.toString().replace('[', '(').replace(']', ')');
+				documentDao.bulkUpdate(
+						" set ld_transactionid = ?, ld_lastmodified = ? where ld_transactionid is null and ld_id in "
+								+ idsStr, new Object[] { transactionId, new Date() });
+			}
+			log.info("Documents marked for indexing in transaction " + transactionId);
+
+			// First step done
+			next();
 
 			// Now we can release the lock
 			lockManager.release(getName(), transactionId);
@@ -120,14 +132,19 @@ public class IndexerTask extends Task {
 			log.info("Indexing finished");
 			log.info("Indexed documents: " + indexed);
 			log.info("Errors: " + errors);
-
+			
 			indexer.unlock();
 
 			// To be safer always release the lock
 			lockManager.release(getName(), transactionId);
 
 			// Remove the transaction reference
-			documentDao.bulkUpdate("set ld_transactionid=null where ld_transactionId='" + transactionId + "'", null);
+			documentDao.bulkUpdate("set ld_transactionid = null, ld_lastmodified = ? where ld_transactionId = ?",
+					new Object[] { new Date(), transactionId });
+
+			// Last step done
+			next();
+			log.info("Documents released from transaction " + transactionId);
 		}
 	}
 
