@@ -107,9 +107,11 @@ public class StatsCollector extends Task {
 		log.debug("Collected users data");
 
 		/*
-		 * Compute repository statistics
+		 * Compute repository statistics. The docs total size is computed on DB
+		 * so it is just an estimation of the effective size.
 		 */
-		long docdir =  documentDAO.queryForLong("select sum(ld_filesize) from ld_version where ld_version = ld_fileversion");
+		long docdir = documentDAO
+				.queryForLong("select sum(ld_filesize) from ld_version where ld_version = ld_fileversion");
 		SystemQuota.setTotalSize(docdir);
 		saveStatistic("docdir", Long.toString(docdir));
 
@@ -119,7 +121,7 @@ public class StatsCollector extends Task {
 		saveStatistic("userdir", Long.toString(userdir));
 
 		long indexdir = 0;
-		File indexDir = new File(config.getPropertyWithSubstitutions("conf.indexdir"));
+		File indexDir = new File(config.getPropertyWithSubstitutions("index.dir"));
 		if (indexDir.exists())
 			indexdir = FileUtils.sizeOfDirectory(indexDir);
 		saveStatistic("indexdir", Long.toString(indexdir));
@@ -166,6 +168,8 @@ public class StatsCollector extends Task {
 		saveStatistic("indexeddocs", indexeddocs);
 		int deleteddocs = documentDAO.queryForInt("SELECT COUNT(A.ld_id) FROM ld_document A where A.ld_deleted = 1 ");
 		saveStatistic("deleteddocs", deleteddocs);
+		int totaldocs = (int) documentDAO.count(false) + deleteddocs;
+		saveStatistic("totaldocs", documentDAO.count(true));
 
 		log.debug("Saved documents statistics");
 
@@ -247,7 +251,7 @@ public class StatsCollector extends Task {
 			// Sizing
 			post.setParameter("users", Integer.toString(users));
 			post.setParameter("groups", Integer.toString(groups));
-			post.setParameter("docs", Integer.toString(notindexeddocs + indexeddocs + deleteddocs));
+			post.setParameter("docs", Long.toString(totaldocs));
 			post.setParameter("folders", Integer.toString(withdocs + empty + deletedfolders));
 			post.setParameter("tags", Integer.toString(tags));
 			post.setParameter("versions", Integer.toString(versions));
@@ -326,6 +330,8 @@ public class StatsCollector extends Task {
 
 		if (val instanceof String)
 			gen.setString1((String) val);
+		else if (val instanceof Long)
+			gen.setInteger1(((Long) val).intValue());
 		else
 			gen.setInteger1((Integer) val);
 		genericDAO.store(gen);
@@ -335,6 +341,7 @@ public class StatsCollector extends Task {
 	public boolean isIndeterminate() {
 		return true;
 	}
+
 
 	public GenericDAO getGenericDAO() {
 		return genericDAO;
