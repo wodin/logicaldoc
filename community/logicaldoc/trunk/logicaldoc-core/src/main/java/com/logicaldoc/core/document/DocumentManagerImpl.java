@@ -271,7 +271,6 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public void reindex(long docId) throws Exception {
-try{
 		Document doc = documentDAO.findById(docId);
 
 		// If the 'doc' is a shortcut, it must not be re-indexed, because it is
@@ -299,10 +298,10 @@ try{
 
 		doc = documentDAO.findById(docId);
 		documentDAO.initialize(doc);
-		
-		//This may take time
+
+		// This may take time
 		indexer.addHit(doc, content);
-		
+
 		doc = documentDAO.findById(doc.getId());
 		documentDAO.initialize(doc);
 		doc.setIndexed(AbstractDocument.INDEX_INDEXED);
@@ -314,11 +313,6 @@ try{
 			shortcutDoc.setIndexed(AbstractDocument.INDEX_INDEXED);
 			documentDAO.store(shortcutDoc);
 		}
-		
-}catch(Throwable q){
-	q.printStackTrace();
-	log.error(q.getMessage(), q);
-}
 	}
 
 	@Override
