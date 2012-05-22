@@ -1,57 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%
-    String locale = request.getParameter("locale");
-	if (locale == null || "".equals(locale))
-		locale = "";
-%>
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<title></title>
-		<!--CSS for loading message at application Startup-->
-		<style type="text/css">
-body {
-	overflow: hidden
-}
+<%! static String MODULE="setup"; %>
+<%@ include file="header.jsp" %>
 
-#loading {
-	border: 1px solid #ccc;
-	position: absolute;
-	left: 45%;
-	top: 40%;
-	padding: 2px;
-	z-index: 20001;
-	height: auto;
-}
-
-#loading a {
-	color: #225588;
-}
-
-#loading .loadingIndicator {
-	background: white;
-	font: bold 13px tahoma, arial, helvetica;
-	padding: 10px;
-	margin: 0;
-	height: auto;
-	color: #444;
-}
-
-#loadingMsg {
-	font: normal 10px arial, tahoma, sans-serif;
-}
-</style>
-        <link REL="STYLESHEET" HREF="./skin/style.css" TYPE="text/css" />
-		<link rel="shortcut icon" type="image/x-icon" href='./skin/brand/favicon.ico' />
-		<script type="text/javascript">
-		   // Determine what skin file to load
-           var currentSkin = "Enterprise";
-           var isomorphicDir = "setup/sc/";
-        </script>
-	</head>
-	<body>
 		<!--add loading indicator while the app is being loaded-->
 		<div id="loadingWrapper">
 			<div id="loading">
@@ -102,7 +53,6 @@ body {
 	document.getElementById('loadingMsg').innerHTML = 'Loading messages...';
 </script>
 		
-		<!--include the nocache JS-->
-		<script type="text/javascript" src="setup/setup.nocache.js"></script>
-	</body>
-</html>
+<%@ include file="footer.jsp" %>
+
+
