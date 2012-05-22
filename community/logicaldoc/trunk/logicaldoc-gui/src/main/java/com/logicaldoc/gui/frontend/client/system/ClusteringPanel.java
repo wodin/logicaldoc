@@ -44,8 +44,8 @@ public class ClusteringPanel extends HLayout {
 
 		setMembersMargin(10);
 
-		Tab settings = new Tab();
-		settings.setTitle(I18N.message("cluster"));
+		Tab cluster = new Tab();
+		cluster.setTitle(I18N.message("cluster"));
 
 		DynamicForm clusterForm = new DynamicForm();
 		clusterForm.setWidth(300);
@@ -111,14 +111,18 @@ public class ClusteringPanel extends HLayout {
 			}
 		});
 
-		clusterForm.setItems(enabled, id, name, multicastip, baseport,  host, port, context, save);
-		settings.setPane(clusterForm);
+		clusterForm.setItems(enabled, id, name, multicastip, baseport, host, port, context, save);
+		cluster.setPane(clusterForm);
 
 		Tab channels = new Tab();
 		channels.setTitle(I18N.message("channels"));
 		channels.setPane(new ChannelsPanel());
 
-		tabs.setTabs(settings, channels);
+		Tab settings = new Tab();
+		settings.setTitle(I18N.message("settings"));
+		settings.setPane(new ScopedPropertiesPanel());
+
+		tabs.setTabs(cluster, settings, channels);
 		setMembers(tabs);
 	}
 }

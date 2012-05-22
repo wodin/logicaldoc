@@ -41,12 +41,12 @@ public class ParametersSettingsPanel extends VLayout {
 
 		setWidth100();
 		setMembersMargin(10);
-		setMargin(30);
-		setHeight(400);
+		setMargin(10);
+		setHeight(350);
 
 		TabSet tabs = new TabSet();
 		tabs.setWidth(508);
-		tabs.setHeight(395);
+		tabs.setHeight(345);
 		Tab tab = new Tab();
 		tab.setTitle(I18N.message("parameters"));
 		tabs.setTabs(tab);
