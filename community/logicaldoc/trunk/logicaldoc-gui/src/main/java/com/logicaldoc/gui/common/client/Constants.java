@@ -99,4 +99,6 @@ public final class Constants {
 	public static final String COOKIE_USER = "ldoc-user";
 	
 	public static final String COOKIE_PASSWORD = "ldoc-password";
+	
+	public static final String COOKIE_VERSION = "ldoc-version";
 }

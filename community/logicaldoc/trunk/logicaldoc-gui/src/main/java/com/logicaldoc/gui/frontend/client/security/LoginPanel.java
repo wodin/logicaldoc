@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
@@ -60,6 +61,9 @@ public class LoginPanel extends VLayout {
 	protected SelectItem language;
 
 	public LoginPanel(GUIInfo info) {
+		//Store the release information
+		Cookies.setCookie(Constants.COOKIE_VERSION, info.getRelease());
+		
 		setDefaultLayoutAlign(Alignment.CENTER);
 		setWidth100();
 		setHeight100();
