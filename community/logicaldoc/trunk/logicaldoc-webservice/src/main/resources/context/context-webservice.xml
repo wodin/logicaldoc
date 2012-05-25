@@ -1,6 +1,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	xmlns:cxf="http://cxf.apache.org/core"
+	xsi:schemaLocation="
+	                http://cxf.apache.org/core 
+	                http://cxf.apache.org/schemas/core.xsd
+	                http://www.springframework.org/schema/beans
  					http://www.springframework.org/schema/beans/spring-beans.xsd
  					http://cxf.apache.org/jaxws
  					http://cxf.apache.org/schemas/jaxws.xsd">
@@ -8,6 +12,11 @@
 	<import resource="classpath:META-INF/cxf/cxf.xml" />
 	<import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
 	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+	<bean id="GZIPInInterceptor" class="org.apache.cxf.transport.common.gzip.GZIPInInterceptor" />
+	<bean id="GZIPOutInterceptor" class="com.logicaldoc.webservice.GZIPOutInterceptor">
+		<property name="threshold" value="${webservice.gzip}" /> 
+	</bean>	
 
 	<jaxws:endpoint id="auth"
 		implementor="com.logicaldoc.webservice.auth.AuthServiceImpl" address="/Auth">
@@ -19,6 +28,12 @@
 	<jaxws:endpoint id="document"
 		implementor="com.logicaldoc.webservice.document.DocumentServiceImpl"
 		address="/Document">
+		<jaxws:inInterceptors>
+			<ref bean="GZIPInInterceptor" />
+		</jaxws:inInterceptors>
+		<jaxws:outInterceptors>
+			<ref bean="GZIPOutInterceptor" />
+		</jaxws:outInterceptors>
 		<jaxws:properties>
 			<entry key="mtom-enabled" value="${webservice.mtom}" />
 		</jaxws:properties>
@@ -27,6 +42,12 @@
 	<jaxws:endpoint id="folder"
 		implementor="com.logicaldoc.webservice.folder.FolderServiceImpl"
 		address="/Folder">
+		<jaxws:inInterceptors>
+			<ref bean="GZIPInInterceptor" />
+		</jaxws:inInterceptors>
+		<jaxws:outInterceptors>
+			<ref bean="GZIPOutInterceptor" />
+		</jaxws:outInterceptors>
 		<jaxws:properties>
 			<entry key="mtom-enabled" value="${webservice.mtom}" />
 		</jaxws:properties>
@@ -35,6 +56,12 @@
 	<jaxws:endpoint id="search"
 		implementor="com.logicaldoc.webservice.search.SearchServiceImpl"
 		address="/Search">
+		<jaxws:inInterceptors>
+			<ref bean="GZIPInInterceptor" />
+		</jaxws:inInterceptors>
+		<jaxws:outInterceptors>
+			<ref bean="GZIPOutInterceptor" />
+		</jaxws:outInterceptors>
 		<jaxws:properties>
 			<entry key="mtom-enabled" value="${webservice.mtom}" />
 		</jaxws:properties>
