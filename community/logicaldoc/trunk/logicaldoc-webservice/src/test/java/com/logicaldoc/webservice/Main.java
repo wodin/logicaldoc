@@ -1,19 +1,18 @@
 package com.logicaldoc.webservice;
 
-import com.logicaldoc.core.searchengine.FulltextSearchOptions;
-import com.logicaldoc.core.searchengine.SearchOptions;
+import org.apache.cxf.transport.common.gzip.GZIPInInterceptor;
+
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
-import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.FolderClient;
+import com.logicaldoc.webservice.folder.WSFolder;
 import com.logicaldoc.webservice.search.SearchClient;
-import com.logicaldoc.webservice.search.WSSearchResult;
 import com.logicaldoc.webservice.security.SecurityClient;
 import com.logicaldoc.webservice.system.SystemClient;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		String base = "http://localhost:9080/logicaldoc/services";
+		String base = "http://localhost:1000/logicaldoc/services";
 		AuthClient auth = new AuthClient(base + "/Auth");
 		DocumentClient documentClient = new DocumentClient(base + "/Document");
 		FolderClient folderClient = new FolderClient(base + "/Folder");
@@ -232,23 +231,23 @@ public class Main {
 			// System.out.println("++++++++++++++++++++++++++++++++");
 			// }
 
-			FulltextSearchOptions opt = new FulltextSearchOptions();
-			opt.setLanguage("en");
-			opt.setExpression("paper");
-			opt.setExpressionLanguage("en");
-			opt.setType(SearchOptions.TYPE_FULLTEXT);
-			opt.setMaxHits(10);
-			WSSearchResult result = searchClient.find(sid, opt);
-			System.out.println("---- " + result.getHits().length);
-			for (WSDocument hit : result.getHits()) {
-				System.out.println("hit customid: " + hit.getCustomId());
-				System.out.println("hit score: " + hit.getScore());
-				System.out.println("hit folderid: " + hit.getFolderId());
-				System.out.println("hit title: " + hit.getTitle());
-				System.out.println("hit creation: " + hit.getCreation());
-				System.out.println("hit summary: " + hit.getSummary());
-				System.out.println("************************");
-			}
+			// FulltextSearchOptions opt = new FulltextSearchOptions();
+			// opt.setLanguage("en");
+			// opt.setExpression("paper");
+			// opt.setExpressionLanguage("en");
+			// opt.setType(SearchOptions.TYPE_FULLTEXT);
+			// opt.setMaxHits(10);
+			// WSSearchResult result = searchClient.find(sid, opt);
+			// System.out.println("---- " + result.getHits().length);
+			// for (WSDocument hit : result.getHits()) {
+			// System.out.println("hit customid: " + hit.getCustomId());
+			// System.out.println("hit score: " + hit.getScore());
+			// System.out.println("hit folderid: " + hit.getFolderId());
+			// System.out.println("hit title: " + hit.getTitle());
+			// System.out.println("hit creation: " + hit.getCreation());
+			// System.out.println("hit summary: " + hit.getSummary());
+			// System.out.println("************************");
+			// }
 
 			// WSFolder folder = folderClient.getFolder(sid, 6);
 			// System.out.println("parent id: " + folder.getParentId());
@@ -271,14 +270,25 @@ public class Main {
 			// WSFolder wsFolder = folderClient.getFolder(sid, 14);
 			// System.out.println("folder name: " + wsFolder.getName());
 
-			// WSFolder[] folders = folderClient.listChildren(sid, 13);
-			// for (WSFolder wsFolder : folders) {
-			// System.out.println("folder id: " + wsFolder.getId());
-			// System.out.println("folder name: " + wsFolder.getName());
-			// System.out.println("folder descr: " + wsFolder.getDescription());
-			// System.out.println("**************************************");
-			// }
+			WSFolder[] folders = folderClient.listChildren(sid, 4);
+			for (WSFolder wsFolder : folders) {
+				System.out.println("folder id: " + wsFolder.getId());
+				System.out.println("folder name: " + wsFolder.getName());
+				System.out.println("folder descr: " + wsFolder.getDescription());
+				System.out.println("**************************************");
+			}
 
+			
+			folders = folderClient.listChildren(sid, 4);
+			for (WSFolder wsFolder : folders) {
+				System.out.println("folder id: " + wsFolder.getId());
+				System.out.println("folder name: " + wsFolder.getName());
+				System.out.println("folder descr: " + wsFolder.getDescription());
+				System.out.println("**************************************");
+			}
+			
+			
+			
 			// WSFolder[] folders = folderClient.getPath(sid, 14);
 			// for (WSFolder wsFolder : folders) {
 			// System.out.println("folder id: " + wsFolder.getId());

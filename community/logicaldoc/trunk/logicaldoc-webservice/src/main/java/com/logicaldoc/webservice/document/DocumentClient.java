@@ -9,6 +9,10 @@ import javax.activation.FileDataSource;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
+import org.apache.cxf.transport.common.gzip.GZIPInInterceptor;
+import org.apache.cxf.transport.common.gzip.GZIPOutInterceptor;
+
+import com.logicaldoc.webservice.folder.FolderService;
 
 /**
  * Document Web Service client.
@@ -20,11 +24,34 @@ public class DocumentClient implements DocumentService {
 
 	private DocumentService client;
 
+	
+	public DocumentClient(String endpoint, int gzipThreshold, boolean log) throws IOException {
+		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
+
+		if (log) {
+			factory.getInInterceptors().add(new LoggingInInterceptor());
+			factory.getOutInterceptors().add(new LoggingOutInterceptor());
+		}
+
+		if (gzipThreshold >= 0) {
+			factory.getInInterceptors().add(new GZIPInInterceptor());
+			factory.getOutInterceptors().add(new GZIPOutInterceptor(gzipThreshold));
+		}
+
+		factory.setServiceClass(FolderService.class);
+		factory.setAddress(endpoint);
+		client = (DocumentService) factory.create();
+	}
+	
 	public DocumentClient(String endpoint) throws IOException {
 		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
 
 		factory.getInInterceptors().add(new LoggingInInterceptor());
+		factory.getInInterceptors().add(new GZIPInInterceptor());
+
 		factory.getOutInterceptors().add(new LoggingOutInterceptor());
+		factory.getOutInterceptors().add(new GZIPOutInterceptor(4096));
+
 		factory.setServiceClass(DocumentService.class);
 		factory.setAddress(endpoint);
 		client = (DocumentService) factory.create();

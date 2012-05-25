@@ -5,6 +5,8 @@ import java.io.IOException;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
+import org.apache.cxf.transport.common.gzip.GZIPInInterceptor;
+import org.apache.cxf.transport.common.gzip.GZIPOutInterceptor;
 
 import com.logicaldoc.webservice.auth.Right;
 
@@ -18,11 +20,33 @@ public class FolderClient implements FolderService {
 
 	private FolderService client;
 
+	public FolderClient(String endpoint, int gzipThreshold, boolean log) throws IOException {
+		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
+
+		if (log) {
+			factory.getInInterceptors().add(new LoggingInInterceptor());
+			factory.getOutInterceptors().add(new LoggingOutInterceptor());
+		}
+
+		if (gzipThreshold >= 0) {
+			factory.getInInterceptors().add(new GZIPInInterceptor());
+			factory.getOutInterceptors().add(new GZIPOutInterceptor(gzipThreshold));
+		}
+
+		factory.setServiceClass(FolderService.class);
+		factory.setAddress(endpoint);
+		client = (FolderService) factory.create();
+	}
+
 	public FolderClient(String endpoint) throws IOException {
 		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
 
 		factory.getInInterceptors().add(new LoggingInInterceptor());
+		factory.getInInterceptors().add(new GZIPInInterceptor());
+
 		factory.getOutInterceptors().add(new LoggingOutInterceptor());
+		factory.getOutInterceptors().add(new GZIPOutInterceptor(4096));
+
 		factory.setServiceClass(FolderService.class);
 		factory.setAddress(endpoint);
 		client = (FolderService) factory.create();

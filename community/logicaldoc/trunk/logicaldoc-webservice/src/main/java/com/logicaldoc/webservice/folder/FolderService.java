@@ -11,6 +11,7 @@ import com.logicaldoc.webservice.auth.Right;
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
+ * 
  */
 @WebService
 public interface FolderService {
