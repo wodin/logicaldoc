@@ -36,9 +36,9 @@ public class Update extends AbstractLoader {
 
 	private int depth = 5;
 
-	private int size = 4;
+	private int tagSize = 4;
 
-	private int max = 4;
+	private int tagsNumber = 4;
 
 	public Update() {
 		super(Update.class.getName().substring(Update.class.getName().lastIndexOf('.') + 1));
@@ -46,8 +46,8 @@ public class Update extends AbstractLoader {
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		rootFolder = Long.parseLong(config.getProperty("Update.rootFolder"));
 		depth = config.getInt("Update.depth");
-		size = config.getInt("Update.tagsize");
-		max = config.getInt("Update.tags");
+		tagSize = config.getInt("Update.tagsize");
+		tagsNumber = config.getInt("Update.tags");
 	}
 
 	@Override
@@ -94,11 +94,11 @@ public class Update extends AbstractLoader {
 		/*
 		 * Add the tags
 		 */
-		if (doc.getTags() == null || doc.getTags().length < max) {
+		if (doc.getTags() == null || doc.getTags().length < tagsNumber) {
 			List<String> tgs = new ArrayList<String>();
 			for (int i = 0; i < doc.getTags().length; i++)
 				tgs.add(doc.getTags()[i]);
-			while (tgs.size() < max) {
+			while (tgs.size() < tagsNumber) {
 				String tag = chooseTag();
 				if (!tgs.contains(tag))
 					tgs.add(tag);
@@ -131,7 +131,7 @@ public class Update extends AbstractLoader {
 		StringTokenizer st = new StringTokenizer(buf, " \\\t\n\r\f\"'.;,()[]:/", false);
 		while (st.hasMoreTokens()) {
 			String token = st.nextToken();
-			if (token.length() > size)
+			if (token.length() > tagSize)
 				tags.add(token);
 		}
 	}

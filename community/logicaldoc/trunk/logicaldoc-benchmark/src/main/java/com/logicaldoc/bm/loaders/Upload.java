@@ -1,5 +1,6 @@
 package com.logicaldoc.bm.loaders;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ import com.logicaldoc.bm.ServerProxy;
 import com.logicaldoc.bm.SourceFile;
 import com.logicaldoc.bm.cache.EhCacheAdapter;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.StringUtil;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.WSFolder;
@@ -44,6 +46,12 @@ public class Upload extends AbstractLoader {
 
 	protected long depth;
 
+	private static List<String> tags = new ArrayList<String>();
+
+	private int tagSize = 4;
+
+	private int tagsNumber = 4;
+
 	static {
 		System.setProperty(CacheManager.ENABLE_SHUTDOWN_HOOK_PROPERTY, "TRUE");
 		URL url = Upload.class.getResource("/loader-cache.xml");
@@ -61,6 +69,8 @@ public class Upload extends AbstractLoader {
 		rootFolder = Long.parseLong(config.getProperty("Upload.rootFolder"));
 		randomFile.setSourceDir(config.getProperty("Upload.sourcedir"));
 		depth = config.getInt("Upload.depth");
+		tagSize = config.getInt("Upload.tagsize");
+		tagsNumber = config.getInt("Upload.tags");
 
 		StringTokenizer tokenizer = new StringTokenizer(config.getProperty("Upload.folderprofile"), ",", false);
 		ArrayList<Integer> folderProfilesList = new ArrayList<Integer>(5);
@@ -84,7 +94,12 @@ public class Upload extends AbstractLoader {
 
 	@Override
 	protected String doLoading(ServerProxy serverProxy) throws Exception {
-
+		synchronized (tags) {
+			if (tags.isEmpty()) {
+				prepareTags();
+				log.info("Prepared " + tags.size() + " tags");
+			}
+		}
 		// Get a random folder
 		List<String> folderPath = chooseFolderPath();
 
@@ -113,6 +128,22 @@ public class Upload extends AbstractLoader {
 		doc.setTitle(title);
 		doc.setFileName(fileName);
 		doc.setLanguage(session.getLanguage());
+
+		/*
+		 * Add the tags
+		 */
+		if (doc.getTags() == null || doc.getTags().length < tagsNumber) {
+			List<String> tgs = new ArrayList<String>();
+			for (int i = 0; i < doc.getTags().length; i++)
+				tgs.add(doc.getTags()[i]);
+			while (tgs.size() < tagsNumber) {
+				String tag = chooseTag();
+				if (!tgs.contains(tag))
+					tgs.add(tag);
+			}
+			doc.setTags(tgs.toArray(new String[0]));
+		}
+
 		try {
 			if (sfile.getContent() != null)
 				doc = serverProxy.documentClient.create(ticket, doc, new DataHandler(new ByteArrayDataSource(sfile
@@ -216,4 +247,20 @@ public class Upload extends AbstractLoader {
 		return folderID;
 	}
 
+	protected String chooseTag() {
+		int randomIndex = random.nextInt(tags.size());
+		return tags.get(randomIndex);
+	}
+
+	private void prepareTags() throws IOException {
+		tags.clear();
+
+		String buf = StringUtil.writeToString(this.getClass().getResourceAsStream("/tags.txt"), "UTF-8");
+		StringTokenizer st = new StringTokenizer(buf, " \\\t\n\r\f\"'.;,()[]:/", false);
+		while (st.hasMoreTokens()) {
+			String token = st.nextToken();
+			if (token.length() > tagSize)
+				tags.add(token);
+		}
+	}
 }

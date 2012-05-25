@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
 import com.logicaldoc.webservice.folder.FolderClient;
@@ -104,11 +105,16 @@ public class LoadSession {
 		ServerProxy remoteServer = null;
 
 		try {
+			ContextProperties config = new ContextProperties();
+
 			AuthClient auth = new AuthClient(url + "/services/Auth");
-			DocumentClient documentClient = new DocumentClient(url + "/services/Document");
-			FolderClient folderClient = new FolderClient(url + "/services/Folder");
+			DocumentClient documentClient = new DocumentClient(url + "/services/Document",
+					config.getInt("webservice.gzip"), false);
+			FolderClient folderClient = new FolderClient(url + "/services/Folder", config.getInt("webservice.gzip"),
+					false);
 			SystemClient systemClient = new SystemClient(url + "/services/System");
-			SearchClient searchClient = new SearchClient(url + "/services/Search");
+			SearchClient searchClient = new SearchClient(url + "/services/Search", config.getInt("webservice.gzip"),
+					false);
 
 			// Store the service references
 			ServerProxy lsp = new ServerProxy(url, auth, folderClient, documentClient, systemClient, searchClient);
