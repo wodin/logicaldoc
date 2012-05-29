@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>55</version>
+  <version>56</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -90,6 +90,8 @@
     <solr.version>3.6.0</solr.version>
     <gwt.version>2.3.0</gwt.version>
     <smartgwt.version>3.0</smartgwt.version>
+    <cxf.version>2.5.3</cxf.version>
+    <slf4j.version>1.6.4</slf4j.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -289,7 +291,7 @@
       <dependency>
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>
-        <version>1.2.15</version>
+        <version>1.2.17</version>
         <type>jar</type>
         <exclusions>
           <exclusion>
@@ -301,6 +303,11 @@
             <artifactId>jmxri</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>1</version>
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
@@ -375,17 +382,18 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.6.4</version>
+        <version>${slf4j.version}</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-log4j12</artifactId>
-        <version>1.6.4</version>
+        <version>${slf4j.version}</version>
       </dependency>
+      <!--Do we need this? Perhaps needed by some Apring artifacts.-->
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-jdk14</artifactId>
-        <version>1.6.4</version>
+        <version>${slf4j.version}</version>
       </dependency> 
       <dependency>
         <groupId>net.sf.ehcache</groupId>
@@ -579,6 +587,21 @@
         <artifactId>gwt-image-loader</artifactId>
         <version>1.1.3</version>
       </dependency>
+  		<dependency>
+  			<groupId>org.apache.cxf</groupId>
+  			<artifactId>cxf-rt-frontend-jaxws</artifactId>
+  			<version>${cxf.version}</version>
+  		</dependency>
+  		<dependency>
+  			<groupId>org.apache.cxf</groupId>
+  			<artifactId>cxf-rt-transports-http</artifactId>
+  			<version>${cxf.version}</version>
+  		</dependency>
+  		<dependency>
+  			<groupId>org.apache.cxf</groupId>
+  			<artifactId>cxf-rt-ws-addr</artifactId>
+  			<version>${cxf.version}</version>
+  		</dependency>
       <!-- Javax Media image processing -->
         <dependency>
           <groupId>javax.media</groupId>
