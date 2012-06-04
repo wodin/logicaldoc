@@ -47,6 +47,8 @@ public class GUIShare implements Serializable {
 
 	private boolean delImport = false;
 
+	private boolean importEmpty = false;
+
 	private Date startDate;
 
 	private int updatePolicy = 0;
@@ -205,5 +207,13 @@ public class GUIShare implements Serializable {
 
 	public void setUpdatePolicy(int updatePolicy) {
 		this.updatePolicy = updatePolicy;
+	}
+
+	public boolean isImportEmpty() {
+		return importEmpty;
+	}
+
+	public void setImportEmpty(boolean importEmpty) {
+		this.importEmpty = importEmpty;
 	}
 }
