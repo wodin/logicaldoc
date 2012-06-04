@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.Document;
@@ -45,7 +45,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	protected HibernateFolderDAO() {
 		super(Folder.class);
-		super.log = LogFactory.getLog(HibernateFolderDAO.class);
+		super.log = LoggerFactory.getLogger(HibernateFolderDAO.class);
 	}
 
 	public UserDAO getUserDAO() {
@@ -1049,7 +1049,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 			return notDeletableFolders;
 		} catch (Throwable e) {
-			log.error(e);
+			log.error(e.getMessage(), e);
 			return notDeletableFolders;
 		}
 	}

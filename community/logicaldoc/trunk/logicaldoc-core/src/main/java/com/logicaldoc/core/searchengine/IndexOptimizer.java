@@ -2,7 +2,7 @@ package com.logicaldoc.core.searchengine;
 
 import java.util.List;
 
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.task.Task;
@@ -22,7 +22,7 @@ public class IndexOptimizer extends Task {
 
 	public IndexOptimizer() {
 		super(NAME);
-		log = LogFactory.getLog(IndexOptimizer.class);
+		log = LoggerFactory.getLogger(IndexOptimizer.class);
 	}
 
 	public SearchEngine getIndexer() {
@@ -62,7 +62,7 @@ public class IndexOptimizer extends Task {
 	public boolean isIndeterminate() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean isConcurrent() {
 		return true;

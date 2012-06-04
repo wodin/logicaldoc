@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.security.Group;
@@ -29,7 +29,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 	protected HibernateMenuDAO() {
 		super(Menu.class);
-		super.log = LogFactory.getLog(HibernateMenuDAO.class);
+		super.log = LoggerFactory.getLogger(HibernateMenuDAO.class);
 	}
 
 	public UserDAO getUserDAO() {
@@ -242,7 +242,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				first = false;
 			}
 			query1.append(") and _entity.parentId=" + parentId);
-			query1.append(" and not(_entity.id=" + parentId+")");
+			query1.append(" and not(_entity.id=" + parentId + ")");
 
 			coll = (List<Menu>) getHibernateTemplate().find(query1.toString(), null);
 
@@ -266,7 +266,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				first = false;
 			}
 			query2.append("))");
-			query2.append(" and not(_entity.id=" + parentId+")");
+			query2.append(" and not(_entity.id=" + parentId + ")");
 
 			List<Menu> coll2 = (List<Menu>) getHibernateTemplate().find(query2.toString(), new Long[] { parentId });
 			for (Menu menu : coll2) {

@@ -8,9 +8,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.java.plugin.Plugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is the base class for LogicalDOC plugins.
@@ -28,7 +28,7 @@ import org.java.plugin.Plugin;
  */
 public abstract class LogicalDOCPlugin extends Plugin {
 
-	protected static Log log = LogFactory.getLog(LogicalDOCPlugin.class);
+	protected static Logger log = LoggerFactory.getLogger(LogicalDOCPlugin.class);
 
 	private static final String PLUGIN_PROPERTIES = "plugin.properties";
 

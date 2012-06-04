@@ -11,14 +11,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class for using xml-files.
@@ -28,7 +28,7 @@ import org.jdom.output.XMLOutputter;
  */
 public class XMLBean {
 
-	protected static Log log = LogFactory.getLog(XMLBean.class);
+	protected static Logger log = LoggerFactory.getLogger(XMLBean.class);
 
 	private Document doc;
 

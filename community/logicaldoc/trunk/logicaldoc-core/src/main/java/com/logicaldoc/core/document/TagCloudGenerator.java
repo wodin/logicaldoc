@@ -7,7 +7,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.generic.Generic;
@@ -39,7 +39,7 @@ public class TagCloudGenerator extends Task {
 
 	public TagCloudGenerator() {
 		super(NAME);
-		log = LogFactory.getLog(TagCloudGenerator.class);
+		log = LoggerFactory.getLogger(TagCloudGenerator.class);
 	}
 
 	public void setGenericDao(GenericDAO genericDao) {

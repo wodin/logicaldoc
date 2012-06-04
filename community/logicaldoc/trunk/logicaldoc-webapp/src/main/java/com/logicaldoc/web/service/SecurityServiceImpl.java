@@ -16,8 +16,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.SystemInfo;
@@ -72,7 +72,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(SecurityServiceImpl.class);
+	private static Logger log = LoggerFactory.getLogger(SecurityServiceImpl.class);
 
 	@Override
 	public GUISession login(String username, String password, String locale) {

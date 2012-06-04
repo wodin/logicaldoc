@@ -6,8 +6,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
@@ -21,7 +21,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
  */
 public class SecurityManagerImpl implements SecurityManager {
 
-	protected static Log log = LogFactory.getLog(SecurityManagerImpl.class);
+	protected static Logger log = LoggerFactory.getLogger(SecurityManagerImpl.class);
 
 	protected UserDAO userDAO;
 

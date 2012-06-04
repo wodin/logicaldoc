@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -22,7 +22,7 @@ public class HibernateRatingDAO extends HibernatePersistentObjectDAO<Rating> imp
 
 	public HibernateRatingDAO() {
 		super(Rating.class);
-		super.log = LogFactory.getLog(HibernateRatingDAO.class);
+		super.log = LoggerFactory.getLogger(HibernateRatingDAO.class);
 	}
 
 	@SuppressWarnings("unchecked")

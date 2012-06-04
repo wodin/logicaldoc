@@ -8,9 +8,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
@@ -26,7 +26,7 @@ import com.logicaldoc.util.plugin.PluginRegistry;
  */
 public class LanguageManager {
 
-	protected static Log log = LogFactory.getLog(LanguageManager.class);
+	protected static Logger log = LoggerFactory.getLogger(LanguageManager.class);
 
 	private static LanguageManager languageManager;
 

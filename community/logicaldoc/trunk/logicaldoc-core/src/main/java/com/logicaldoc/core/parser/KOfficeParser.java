@@ -8,8 +8,8 @@ import java.util.zip.ZipInputStream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -26,7 +26,7 @@ import com.logicaldoc.util.StringUtil;
  */
 public class KOfficeParser extends AbstractParser {
 
-	protected static Log log = LogFactory.getLog(KOfficeParser.class);
+	protected static Logger log = LoggerFactory.getLogger(KOfficeParser.class);
 
 	// --------------------------------------------< KOfficeContentHandler >
 

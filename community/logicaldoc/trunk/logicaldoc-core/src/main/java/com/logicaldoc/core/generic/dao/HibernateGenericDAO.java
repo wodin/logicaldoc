@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.generic.Generic;
@@ -19,7 +19,7 @@ import com.logicaldoc.util.sql.SqlUtil;
 public class HibernateGenericDAO extends HibernatePersistentObjectDAO<Generic> implements GenericDAO {
 	public HibernateGenericDAO() {
 		super(Generic.class);
-		super.log = LogFactory.getLog(HibernateGenericDAO.class);
+		super.log = LoggerFactory.getLogger(HibernateGenericDAO.class);
 	}
 
 	@Override

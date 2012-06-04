@@ -9,8 +9,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is for handling with jar-files.
@@ -20,7 +20,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class JarUtil {
 
-	protected static Log log = LogFactory.getLog(JarUtil.class);
+	protected static Logger log = LoggerFactory.getLogger(JarUtil.class);
 
 	/**
 	 * This method extracts all entries of a jar-file.

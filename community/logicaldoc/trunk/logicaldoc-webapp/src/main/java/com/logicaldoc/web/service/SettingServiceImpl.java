@@ -8,8 +8,8 @@ import java.util.TreeSet;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.communication.EMailSender;
@@ -31,7 +31,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(SettingServiceImpl.class);
+	private static Logger log = LoggerFactory.getLogger(SettingServiceImpl.class);
 
 	@Override
 	public GUIEmailSettings loadEmailSettings(String sid) throws InvalidSessionException {

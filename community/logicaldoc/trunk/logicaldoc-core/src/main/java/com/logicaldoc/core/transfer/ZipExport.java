@@ -15,8 +15,8 @@ import java.util.zip.ZipEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream.UnicodeExtraFieldPolicy;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -34,7 +34,7 @@ import com.logicaldoc.util.Context;
  */
 public class ZipExport {
 
-	protected static Log log = LogFactory.getLog(ZipExport.class);
+	protected static Logger log = LoggerFactory.getLogger(ZipExport.class);
 
 	private ZipArchiveOutputStream zos;
 

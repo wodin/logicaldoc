@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webdav.context.ExportContext;
 import com.logicaldoc.webdav.context.ImportContext;
@@ -23,7 +23,7 @@ public class IOManagerImpl implements IOManager {
 
 	private static final long serialVersionUID = 1L;
 
-	protected static Log log = LogFactory.getLog(IOManagerImpl.class);
+	protected static Logger log = LoggerFactory.getLogger(IOManagerImpl.class);
 
 	private final List<IOHandler> ioHandlers = new ArrayList<IOHandler>();
 

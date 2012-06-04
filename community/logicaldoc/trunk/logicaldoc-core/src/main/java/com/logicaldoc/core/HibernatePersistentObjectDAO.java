@@ -7,8 +7,8 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -25,7 +25,7 @@ import com.logicaldoc.util.Context;
  */
 public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> extends HibernateDaoSupport implements
 		PersistentObjectDAO<T> {
-	protected Log log = LogFactory.getLog(HibernatePersistentObjectDAO.class);
+	protected Logger log = LoggerFactory.getLogger(HibernatePersistentObjectDAO.class);
 
 	protected Class<T> entityClass;
 

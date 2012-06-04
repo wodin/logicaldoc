@@ -10,8 +10,8 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
@@ -39,7 +39,7 @@ public class ZipImport {
 
 	protected User user;
 
-	protected static Log logger = LogFactory.getLog(ZipImport.class);
+	protected static Logger logger = LoggerFactory.getLogger(ZipImport.class);
 
 	protected File zipFile;
 

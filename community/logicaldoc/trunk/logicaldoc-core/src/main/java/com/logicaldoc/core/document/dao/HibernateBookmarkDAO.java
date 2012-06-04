@@ -2,7 +2,7 @@ package com.logicaldoc.core.document.dao;
 
 import java.util.List;
 
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.Bookmark;
@@ -17,7 +17,7 @@ public class HibernateBookmarkDAO extends HibernatePersistentObjectDAO<Bookmark>
 
 	public HibernateBookmarkDAO() {
 		super(Bookmark.class);
-		super.log = LogFactory.getLog(HibernateBookmarkDAO.class);
+		super.log = LoggerFactory.getLogger(HibernateBookmarkDAO.class);
 	}
 
 	@Override

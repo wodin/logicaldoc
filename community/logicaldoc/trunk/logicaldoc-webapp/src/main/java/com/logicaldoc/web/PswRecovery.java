@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.core.communication.EMail;
@@ -40,7 +40,7 @@ public class PswRecovery extends HttpServlet {
 
 	private static final long serialVersionUID = 9088160958327454062L;
 
-	protected static Log log = LogFactory.getLog(PswRecovery.class);
+	protected static Logger log = LoggerFactory.getLogger(PswRecovery.class);
 
 	/**
 	 * Constructor of the object.

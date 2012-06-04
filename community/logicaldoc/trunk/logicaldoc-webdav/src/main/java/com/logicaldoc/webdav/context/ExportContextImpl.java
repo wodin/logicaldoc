@@ -10,12 +10,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.server.io.MimeResolver;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.io.OutputContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webdav.resource.model.Resource;
 
@@ -28,7 +28,7 @@ import com.logicaldoc.webdav.resource.model.Resource;
  */
 public class ExportContextImpl extends AbstractExportContext {
 
-	protected static Log log = LogFactory.getLog(ExportContextImpl.class);
+	protected static Logger log = LoggerFactory.getLogger(ExportContextImpl.class);
 
 	@SuppressWarnings("rawtypes")
 	private final Map properties = new HashMap();

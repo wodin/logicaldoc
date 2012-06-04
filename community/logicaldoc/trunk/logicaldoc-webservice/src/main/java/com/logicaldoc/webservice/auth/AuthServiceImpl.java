@@ -4,9 +4,9 @@ import javax.jws.WebService;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.handler.MessageContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.transport.http.AbstractHTTPDestination;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
@@ -22,7 +22,7 @@ import com.logicaldoc.webservice.AbstractService;
 @WebService(endpointInterface = "com.logicaldoc.webservice.auth.AuthService", serviceName = "AuthService")
 public class AuthServiceImpl extends AbstractService implements AuthService {
 
-	protected static Log log = LogFactory.getLog(AuthServiceImpl.class);
+	protected static Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
 
 	@Override
 	public String login(String username, String password) throws Exception {

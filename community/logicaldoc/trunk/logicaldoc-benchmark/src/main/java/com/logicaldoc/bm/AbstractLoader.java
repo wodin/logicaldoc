@@ -5,15 +5,15 @@ import java.text.NumberFormat;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base class for all loaders.
  */
 public abstract class AbstractLoader extends Thread {
 
-	private static Log log = LogFactory.getLog(AbstractLoader.class);
+	private static Logger log = LoggerFactory.getLogger(AbstractLoader.class);
 
 	protected NumberFormat formatter = new DecimalFormat("Loader_00000000000");
 

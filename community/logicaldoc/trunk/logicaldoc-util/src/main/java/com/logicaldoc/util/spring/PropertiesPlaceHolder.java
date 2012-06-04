@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
 import com.logicaldoc.util.config.ContextProperties;
@@ -21,7 +21,7 @@ import com.logicaldoc.util.config.ContextProperties;
  * @since 1.0
  */
 public class PropertiesPlaceHolder extends PropertyPlaceholderConfigurer {
-	private static Log log = LogFactory.getLog(PropertiesPlaceHolder.class);
+	private static Logger log = LoggerFactory.getLogger(PropertiesPlaceHolder.class);
 
 	@Override
 	public Properties mergeProperties() throws IOException {
@@ -40,7 +40,7 @@ public class PropertiesPlaceHolder extends PropertyPlaceholderConfigurer {
 	}
 
 	/**
-	 * Tries to the trieve a property by using a direct JDBC query against the
+	 * Tries to retrieve a property by using a direct JDBC query against the
 	 * DB
 	 * 
 	 * @param property The property name
@@ -71,7 +71,7 @@ public class PropertiesPlaceHolder extends PropertyPlaceholderConfigurer {
 			// Loop through the result set
 			while (rs.next())
 				return rs.getString(1);
-			
+
 			return null;
 		} catch (Throwable se) {
 			log.error(se.getMessage());

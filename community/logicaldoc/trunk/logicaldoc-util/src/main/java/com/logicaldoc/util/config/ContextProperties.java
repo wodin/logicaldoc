@@ -10,8 +10,8 @@ import java.net.URLDecoder;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A configuration utility used to retrieve and alter context properties
@@ -26,7 +26,7 @@ public class ContextProperties extends OrderedProperties {
 	/** this points to an ordinary file */
 	private String docPath;
 
-	protected static Log log = LogFactory.getLog(ContextProperties.class);
+	protected static Logger log = LoggerFactory.getLogger(ContextProperties.class);
 
 	public ContextProperties() throws IOException {
 		try {

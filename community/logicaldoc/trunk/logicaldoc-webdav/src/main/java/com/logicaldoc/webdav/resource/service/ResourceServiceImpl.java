@@ -8,10 +8,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
@@ -41,7 +41,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 	private static final long serialVersionUID = 1L;
 
-	protected static Log log = LogFactory.getLog(ResourceServiceImpl.class);
+	protected static Logger log = LoggerFactory.getLogger(ResourceServiceImpl.class);
 
 	private DocumentDAO documentDAO;
 
@@ -299,7 +299,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 				documentManager.create(is, doc, transaction);
 			} catch (Exception e) {
-				log.error(e);
+				log.error(e.getMessage(), e);
 			} finally {
 				is.close();
 			}
@@ -723,7 +723,7 @@ public class ResourceServiceImpl implements ResourceService {
 			resource.setIsCheckedOut(false);
 
 		} catch (Exception e) {
-			log.error(e);
+			log.error(e.getMessage(), e);
 			throw new RuntimeException(e);
 		}
 	}

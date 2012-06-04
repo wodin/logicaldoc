@@ -4,10 +4,10 @@ import java.util.Collection;
 
 import junit.framework.Assert;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.security.Group;
@@ -20,7 +20,7 @@ import com.logicaldoc.core.security.Group;
  */
 public class HibernateGroupDAOTest extends AbstractCoreTCase {
 
-	protected static Log log = LogFactory.getLog(HibernateGroupDAOTest.class);
+	protected static Logger log = LoggerFactory.getLogger(HibernateGroupDAOTest.class);
 
 	// Instance under test
 	private GroupDAO dao;

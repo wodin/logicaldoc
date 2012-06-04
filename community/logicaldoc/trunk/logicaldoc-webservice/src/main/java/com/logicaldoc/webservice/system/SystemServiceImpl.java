@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.core.generic.Generic;
@@ -27,7 +27,7 @@ import com.logicaldoc.webservice.WSParameter;
  */
 public class SystemServiceImpl extends AbstractService implements SystemService {
 
-	public static Log log = LogFactory.getLog(SystemServiceImpl.class);
+	protected static Logger log = LoggerFactory.getLogger(SystemServiceImpl.class);
 
 	@Override
 	public WSParameter[] getStatistics(String sid) throws Exception {

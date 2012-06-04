@@ -11,8 +11,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.AbstractDocument;
@@ -35,7 +35,7 @@ import com.logicaldoc.webservice.WSAttribute;
  */
 public class WSDocument {
 
-	protected static Log log = LogFactory.getLog(WSDocument.class);
+	protected static Logger log = LoggerFactory.getLogger(WSDocument.class);
 
 	public static final int DOC_UNLOCKED = 0;
 

@@ -7,10 +7,10 @@ import java.util.Enumeration;
 import java.util.zip.ZipException;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
@@ -33,7 +33,7 @@ import com.logicaldoc.util.Context;
  */
 public class InMemoryZipImport extends ZipImport {
 
-	protected static Log logger = LogFactory.getLog(InMemoryZipImport.class);
+	protected static Logger logger = LoggerFactory.getLogger(InMemoryZipImport.class);
 
 	public InMemoryZipImport(Document docVo) {
 		super(docVo);

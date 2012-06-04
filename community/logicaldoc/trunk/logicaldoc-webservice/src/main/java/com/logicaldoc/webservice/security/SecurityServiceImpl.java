@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.SecurityManager;
@@ -25,7 +25,7 @@ import com.logicaldoc.webservice.AbstractService;
  * @since 6.1
  */
 public class SecurityServiceImpl extends AbstractService implements SecurityService {
-	protected static Log log = LogFactory.getLog(SecurityServiceImpl.class);
+	protected static Logger log = LoggerFactory.getLogger(SecurityServiceImpl.class);
 
 	@Override
 	public WSUser[] listUsers(String sid) throws Exception {

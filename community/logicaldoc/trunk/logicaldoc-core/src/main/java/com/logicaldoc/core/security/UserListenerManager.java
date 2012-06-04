@@ -6,9 +6,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.plugin.PluginRegistry;
 
@@ -20,7 +20,7 @@ import com.logicaldoc.util.plugin.PluginRegistry;
  * @since 5.1
  */
 public class UserListenerManager {
-	protected static Log log = LogFactory.getLog(UserListenerManager.class);
+	protected static Logger log = LoggerFactory.getLogger(UserListenerManager.class);
 
 	private List<UserListener> listeners = null;
 

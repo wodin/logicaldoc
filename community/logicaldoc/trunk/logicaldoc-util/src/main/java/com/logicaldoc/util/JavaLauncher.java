@@ -6,14 +6,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * JavaLauncher Provides an easy way to launch java applications.
  */
 public class JavaLauncher {
-	protected static Log log = LogFactory.getLog(JavaLauncher.class);
+	protected static Logger log = LoggerFactory.getLogger(JavaLauncher.class);
 
 	private static boolean debug = false;
 

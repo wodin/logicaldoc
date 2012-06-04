@@ -9,8 +9,8 @@ import java.nio.charset.Charset;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
@@ -30,7 +30,7 @@ import com.logicaldoc.util.StringUtil;
  */
 public class XMLParser extends AbstractParser {
 
-	protected static Log log = LogFactory.getLog(XMLParser.class);
+	protected static Logger log = LoggerFactory.getLogger(XMLParser.class);
 
 	@Override
 	public void internalParse(InputStream input) {

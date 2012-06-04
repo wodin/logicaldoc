@@ -19,8 +19,8 @@ import net.sf.jmimemagic.Magic;
 import net.sf.jmimemagic.MagicMatch;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.EMailAttachment;
@@ -49,7 +49,7 @@ import com.logicaldoc.webservice.AbstractService;
  */
 public class DocumentServiceImpl extends AbstractService implements DocumentService {
 
-	public static Log log = LogFactory.getLog(DocumentServiceImpl.class);
+	protected static Logger log = LoggerFactory.getLogger(DocumentServiceImpl.class);
 
 	@Override
 	public WSDocument create(String sid, WSDocument document, DataHandler content) throws Exception {

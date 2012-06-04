@@ -9,11 +9,11 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
 import org.apache.lucene.util.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Instances of this class represent a language supported by the LogicalDOC DMS
@@ -23,7 +23,7 @@ import org.apache.lucene.util.Version;
  */
 public class Language {
 
-	protected static Log log = LogFactory.getLog(Language.class);
+	protected static Logger log = LoggerFactory.getLogger(Language.class);
 
 	private Locale locale;
 

@@ -11,8 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.pdfbox.exceptions.InvalidPasswordException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
@@ -21,6 +19,8 @@ import org.apache.pdfbox.pdmodel.common.COSObjectable;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.apache.pdfbox.util.PDFTextStripper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Text extractor for Portable Document Format (PDF). For parsing uses an
@@ -40,7 +40,7 @@ public class PDFParser extends AbstractParser {
 
 	private String tags;
 
-	protected static Log log = LogFactory.getLog(PDFParser.class);
+	protected static Logger log = LoggerFactory.getLogger(PDFParser.class);
 
 	private static int count = Integer.MAX_VALUE;
 

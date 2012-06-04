@@ -2,7 +2,7 @@ package com.logicaldoc.core.document.dao;
 
 import java.util.List;
 
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.DocumentNote;
@@ -17,7 +17,7 @@ public class HibernateDocumentNoteDAO extends HibernatePersistentObjectDAO<Docum
 
 	public HibernateDocumentNoteDAO() {
 		super(DocumentNote.class);
-		super.log = LogFactory.getLog(HibernateDocumentNoteDAO.class);
+		super.log = LoggerFactory.getLogger(HibernateDocumentNoteDAO.class);
 	}
 
 	@Override

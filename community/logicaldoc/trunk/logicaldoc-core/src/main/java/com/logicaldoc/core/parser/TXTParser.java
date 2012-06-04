@@ -9,8 +9,8 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.StringUtil;
 import com.logicaldoc.util.charset.CharsetDetector;
@@ -25,7 +25,7 @@ import com.logicaldoc.util.charset.CharsetMatch;
  */
 public class TXTParser extends AbstractParser {
 
-	protected static Log log = LogFactory.getLog(TXTParser.class);
+	protected static Logger log = LoggerFactory.getLogger(TXTParser.class);
 
 	@Override
 	public void parse(File file) {

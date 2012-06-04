@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Text extractor for AbiWord compressed documents.
@@ -17,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ZABWParser extends AbstractParser {
 
-	protected static Log log = LogFactory.getLog(ZABWParser.class);
+	protected static Logger log = LoggerFactory.getLogger(ZABWParser.class);
 
 	@Override
 	public void parse(File file) {

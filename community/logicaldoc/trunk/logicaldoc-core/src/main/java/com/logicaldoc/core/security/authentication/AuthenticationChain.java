@@ -6,9 +6,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.util.Context;
@@ -22,7 +22,7 @@ import com.logicaldoc.util.plugin.PluginRegistry;
  * @since 4.5
  */
 public class AuthenticationChain implements AuthenticationProvider {
-	protected Log log = LogFactory.getLog(AuthenticationChain.class);
+	private static Logger log = LoggerFactory.getLogger(AuthenticationChain.class);
 
 	private List<AuthenticationProvider> providers = new ArrayList<AuthenticationProvider>();
 

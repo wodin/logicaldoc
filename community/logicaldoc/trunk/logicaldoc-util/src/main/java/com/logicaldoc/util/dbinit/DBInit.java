@@ -9,10 +9,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hsqldb.cmdline.SqlFile;
 import org.hsqldb.cmdline.SqlToolError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.logicaldoc.util.io.FileUtil;
 
 /**
@@ -23,7 +24,7 @@ import com.logicaldoc.util.io.FileUtil;
  */
 public class DBInit {
 
-	protected static Log log = LogFactory.getLog(DBInit.class);
+	protected static Logger log = LoggerFactory.getLogger(DBInit.class);
 
 	private String dbms = "";
 

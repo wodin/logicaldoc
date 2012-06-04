@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.Version;
@@ -30,7 +30,7 @@ public class HibernateVersionDAO extends HibernatePersistentObjectDAO<Version> i
 
 	private HibernateVersionDAO() {
 		super(Version.class);
-		super.log = LogFactory.getLog(HibernateVersionDAO.class);
+		super.log = LoggerFactory.getLogger(HibernateVersionDAO.class);
 	}
 
 	@Override

@@ -3,9 +3,9 @@ package com.logicaldoc.core.parser;
 import java.io.InputStream;
 import java.io.StringReader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hslf.extractor.PowerPointExtractor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.StringUtil;
 
@@ -18,7 +18,7 @@ import com.logicaldoc.util.StringUtil;
  */
 public class PPTParser extends AbstractParser {
 
-	protected static Log log = LogFactory.getLog(PPTParser.class);
+	protected static Logger log = LoggerFactory.getLogger(PPTParser.class);
 
 	@Override
 	public void internalParse(InputStream input) {

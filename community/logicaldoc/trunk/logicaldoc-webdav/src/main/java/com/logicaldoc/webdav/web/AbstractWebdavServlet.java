@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavLocatorFactory;
@@ -40,6 +38,8 @@ import org.apache.jackrabbit.webdav.version.VersionControlledResource;
 import org.apache.jackrabbit.webdav.version.VersionableResource;
 import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
@@ -59,7 +59,7 @@ import com.logicaldoc.webdav.session.DavSessionImpl;
  */
 abstract public class AbstractWebdavServlet extends HttpServlet implements DavConstants {
 
-	protected static Log log = LogFactory.getLog(AbstractWebdavServlet.class);
+	protected static Logger log = LoggerFactory.getLogger(AbstractWebdavServlet.class);
 
 	private static final long serialVersionUID = -8726695805361483901L;
 

@@ -16,9 +16,9 @@ import net.sf.jmimemagic.MagicMatch;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.parser.wordperfect.WordPerfectParser;
 import com.logicaldoc.util.Context;
@@ -35,7 +35,7 @@ public class ParserFactory {
 
 	private static final String PARSER_ALIAS = "parser.alias.";
 
-	protected static Log log = LogFactory.getLog(ParserFactory.class);
+	protected static Logger log = LoggerFactory.getLogger(ParserFactory.class);
 
 	/**
 	 * This is the map of registered parsers: key is the file extension, value

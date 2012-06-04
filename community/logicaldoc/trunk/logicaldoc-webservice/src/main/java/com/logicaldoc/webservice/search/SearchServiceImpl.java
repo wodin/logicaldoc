@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.TagCloud;
@@ -31,7 +31,7 @@ import com.logicaldoc.webservice.folder.WSFolder;
  */
 public class SearchServiceImpl extends AbstractService implements SearchService {
 
-	protected static Log log = LogFactory.getLog(SearchServiceImpl.class);
+	protected static Logger log = LoggerFactory.getLogger(SearchServiceImpl.class);
 
 	@Override
 	public WSSearchResult find(String sid, FulltextSearchOptions options) throws Exception {

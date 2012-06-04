@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.communication.Message;
 import com.logicaldoc.core.communication.Recipient;
@@ -40,7 +40,7 @@ public class ProductNews extends Task {
 
 	public ProductNews() {
 		super(NAME);
-		log = LogFactory.getLog(ProductNews.class);
+		log = LoggerFactory.getLogger(ProductNews.class);
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class ProductNews extends Task {
 	public boolean isConcurrent() {
 		return true;
 	}
-	
+
 	@Override
 	protected void runTask() throws Exception {
 		log.info("Start retrieving news");

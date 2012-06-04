@@ -8,8 +8,8 @@ import java.io.InputStreamReader;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
@@ -21,7 +21,7 @@ import com.logicaldoc.util.config.ContextProperties;
  * @since 4.5
  */
 public class PdfThumbnailBuilder extends ImageThumbnailBuilder {
-	protected static Log log = LogFactory.getLog(PdfThumbnailBuilder.class);
+	protected static Logger log = LoggerFactory.getLogger(PdfThumbnailBuilder.class);
 
 	@Override
 	public synchronized void build(File src, String srcFileName, int size, File dest, int compression)
