@@ -82,6 +82,14 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 		delImport.setValue(share.isDelImport());
 		delImport.addChangedHandler(changedHandler);
 
+		CheckboxItem importEmpty = new CheckboxItem();
+		importEmpty.setName("importEmpty");
+		importEmpty.setTitle(I18N.message("importemptyfolders"));
+		importEmpty.setRedrawOnChange(true);
+		importEmpty.setWidth(50);
+		importEmpty.setValue(share.isImportEmpty());
+		importEmpty.addChangedHandler(changedHandler);
+
 		TextItem tags = ItemFactory.newTextItem("tags", "tags", share.getTags());
 		tags.addChangedHandler(changedHandler);
 
@@ -113,8 +121,7 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 		updatePolicy.setValueMap(map);
 		updatePolicy.setValue(Integer.toString(share.getUpdatePolicy()));
 
-		
-		form.setItems(depth, size, include, exclude, startDate, template, tags, updatePolicy, delImport);
+		form.setItems(depth, size, include, exclude, startDate, template, tags, updatePolicy, importEmpty, delImport);
 
 		formsContainer.addMember(form);
 
@@ -141,13 +148,13 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 			else
 				share.setTemplateId(Long.parseLong((String) values.get("template")));
 			share.setDelImport((Boolean) values.get("delImport"));
+			share.setImportEmpty((Boolean) values.get("importEmpty"));
 			if (values.get("tags") != null || !"".equals((String) values.get("tags")))
 				share.setTags((String) values.get("tags"));
 			else
 				share.setTags(null);
 			share.setStartDate((Date) values.get("startdate"));
-			
-		
+
 		}
 		return !form.hasErrors();
 	}
