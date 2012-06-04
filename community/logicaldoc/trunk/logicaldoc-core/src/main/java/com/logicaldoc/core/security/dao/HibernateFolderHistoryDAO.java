@@ -6,10 +6,9 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
-import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.sql.SqlUtil;
@@ -26,7 +25,7 @@ public class HibernateFolderHistoryDAO extends HibernatePersistentObjectDAO<Fold
 
 	private HibernateFolderHistoryDAO() {
 		super(FolderHistory.class);
-		super.log = LogFactory.getLog(HibernateFolderHistoryDAO.class);
+		super.log = LoggerFactory.getLogger(HibernateFolderHistoryDAO.class);
 	}
 
 	@Override
@@ -75,7 +74,7 @@ public class HibernateFolderHistoryDAO extends HibernatePersistentObjectDAO<Fold
 
 	@Override
 	public boolean store(FolderHistory entity) {
-		//Write only if the history is enabled
+		// Write only if the history is enabled
 		if (isEnabled())
 			return super.store(entity);
 		else

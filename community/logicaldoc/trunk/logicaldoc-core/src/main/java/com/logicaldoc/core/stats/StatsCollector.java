@@ -11,7 +11,7 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -58,7 +58,7 @@ public class StatsCollector extends Task {
 
 	public StatsCollector() {
 		super(NAME);
-		log = LogFactory.getLog(StatsCollector.class);
+		log = LoggerFactory.getLogger(StatsCollector.class);
 	}
 
 	@Override

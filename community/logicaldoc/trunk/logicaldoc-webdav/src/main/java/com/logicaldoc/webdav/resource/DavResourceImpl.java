@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.util.Text;
 import org.apache.jackrabbit.webdav.DavException;
@@ -31,6 +29,8 @@ import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.property.DefaultDavProperty;
 import org.apache.jackrabbit.webdav.property.ResourceType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webdav.context.ExportContext;
@@ -53,7 +53,7 @@ public class DavResourceImpl implements DavResource, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	protected static Log log = LogFactory.getLog(DavResourceImpl.class);
+	protected static Logger log = LoggerFactory.getLogger(DavResourceImpl.class);
 
 	protected DavResourceFactory factory;
 

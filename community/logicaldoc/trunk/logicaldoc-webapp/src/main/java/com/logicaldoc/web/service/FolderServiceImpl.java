@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.ExtendedAttribute;
@@ -47,7 +47,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(FolderServiceImpl.class);
+	private static Logger log = LoggerFactory.getLogger(FolderServiceImpl.class);
 
 	@Override
 	public void applyRights(String sid, GUIFolder folder, boolean subtree) throws InvalidSessionException {
@@ -64,7 +64,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				history.setUser(SessionUtil.getSessionUser(sid));
 				history.setEvent(FolderHistory.EVENT_FOLDER_PERMISSION);
 				history.setSessionId(sid);
-				
+
 				mdao.applyRithtToTree(folder.getId(), history);
 			}
 		} catch (Throwable t) {
@@ -76,7 +76,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	@Override
 	public void delete(String sid, long folderId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
-		
+
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		try {
 			// Add a folder history entry
@@ -325,7 +325,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			}
 
 			updateExtendedAttributes(f, folder);
-			
+
 			folderDao.store(f, transaction);
 
 			folder.setId(f.getId());
@@ -697,7 +697,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			}
 			return attributes;
 		} catch (Throwable t) {
-			log.error(t);
+			log.error(t.getMessage(), t);
 			return null;
 		}
 	}

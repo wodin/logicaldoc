@@ -1,10 +1,10 @@
 package com.logicaldoc.webdav.context;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.io.IOListener;
 import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.server.io.MimeResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webdav.resource.model.Resource;
 
@@ -17,7 +17,7 @@ import com.logicaldoc.webdav.resource.model.Resource;
  */
 public abstract class AbstractExportContext implements ExportContext {
 
-	protected static Log log = LogFactory.getLog(AbstractExportContext.class);
+	protected static Logger log = LoggerFactory.getLogger(AbstractExportContext.class);
 
 	private final Resource resource;
 	private final boolean hasStream;

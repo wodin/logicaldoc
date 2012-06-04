@@ -18,8 +18,8 @@ import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.rtf.RTFEditorKit;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.StringUtil;
 
@@ -30,7 +30,7 @@ import com.logicaldoc.util.StringUtil;
  */
 public class RTFParser extends AbstractParser {
 
-	protected static Log log = LogFactory.getLog(RTFParser.class);
+	protected static Logger log = LoggerFactory.getLogger(RTFParser.class);
 
 	@Override
 	public void internalParse(InputStream input) {

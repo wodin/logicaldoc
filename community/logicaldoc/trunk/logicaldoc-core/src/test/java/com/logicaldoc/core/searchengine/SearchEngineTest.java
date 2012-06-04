@@ -4,11 +4,11 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.Document;
@@ -16,7 +16,7 @@ import com.logicaldoc.core.security.Folder;
 
 public class SearchEngineTest extends AbstractCoreTCase {
 
-	protected static Log log = LogFactory.getLog(SearchEngineTest.class);
+	protected static Logger log = LoggerFactory.getLogger(SearchEngineTest.class);
 
 	protected SearchEngine engine;
 

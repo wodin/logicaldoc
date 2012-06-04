@@ -7,13 +7,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.dbinit.DBInit;
 import com.logicaldoc.util.plugin.PluginRegistry;
-
 
 /**
  * Database initialization manager
@@ -23,7 +22,7 @@ import com.logicaldoc.util.plugin.PluginRegistry;
  */
 public class PluginDbInit extends DBInit {
 
-	protected static Log log = LogFactory.getLog(PluginDbInit.class);
+	protected static Logger log = LoggerFactory.getLogger(PluginDbInit.class);
 
 	/**
 	 * Intitialises the database using 'DbInit' extension point.
@@ -62,7 +61,7 @@ public class PluginDbInit extends DBInit {
 			getSqlList().clear();
 
 			List<String> idSet = new ArrayList<String>();
-			if (ids != null) 
+			if (ids != null)
 				idSet = (List<String>) Arrays.asList(ids);
 
 			// Acquire the ordered list of sql files
@@ -79,7 +78,7 @@ public class PluginDbInit extends DBInit {
 			}
 			execute();
 		} catch (Throwable e) {
-			log.error(e);
+			log.error(e.getMessage(), e);
 			throw new RuntimeException(e.getMessage());
 		}
 	}

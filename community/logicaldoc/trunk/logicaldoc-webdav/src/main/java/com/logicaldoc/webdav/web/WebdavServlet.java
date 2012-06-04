@@ -7,8 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.BasicCredentialsProvider;
 import org.apache.jackrabbit.server.CredentialsProvider;
 import org.apache.jackrabbit.server.SessionProvider;
@@ -19,6 +17,8 @@ import org.apache.jackrabbit.webdav.WebdavRequest;
 import org.apache.jackrabbit.webdav.lock.LockManager;
 import org.apache.jackrabbit.webdav.lock.SimpleLockManager;
 import org.apache.jackrabbit.webdav.simple.LocatorFactoryImplEx;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
@@ -36,7 +36,7 @@ import com.logicaldoc.webdav.resource.ResourceConfig;
 @SuppressWarnings("serial")
 public class WebdavServlet extends AbstractWebdavServlet {
 
-	protected static Log log = LogFactory.getLog(WebdavServlet.class);
+	protected static Logger log = LoggerFactory.getLogger(WebdavServlet.class);
 
 	public static final String INIT_PARAM_RESOURCE_PATH_PREFIX = "resource-path-prefix";
 

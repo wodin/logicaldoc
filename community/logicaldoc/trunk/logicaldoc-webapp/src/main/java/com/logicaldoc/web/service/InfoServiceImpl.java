@@ -8,8 +8,8 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.SystemInfo;
@@ -39,7 +39,7 @@ import com.logicaldoc.web.ApplicationInitializer;
  */
 public class InfoServiceImpl extends RemoteServiceServlet implements InfoService {
 
-	private static Log log = LogFactory.getLog(InfoServiceImpl.class);
+	private static Logger log = LoggerFactory.getLogger(InfoServiceImpl.class);
 
 	private static final long serialVersionUID = 1L;
 

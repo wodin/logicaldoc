@@ -3,8 +3,8 @@ package com.logicaldoc.core;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.task.TaskManager;
 import com.logicaldoc.util.config.ContextProperties;
@@ -18,7 +18,7 @@ import com.logicaldoc.util.plugin.LogicalDOCPlugin;
  */
 public class CorePlugin extends LogicalDOCPlugin {
 
-	protected static Log log = LogFactory.getLog(CorePlugin.class);
+	protected static Logger log = LoggerFactory.getLogger(CorePlugin.class);
 
 	@Override
 	protected void doStart() throws Exception {

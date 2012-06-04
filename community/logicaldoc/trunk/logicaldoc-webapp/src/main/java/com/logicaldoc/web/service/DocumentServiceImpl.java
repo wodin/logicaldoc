@@ -20,8 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.ExtendedAttribute;
@@ -86,7 +86,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(DocumentServiceImpl.class);
+	private static Logger log = LoggerFactory.getLogger(DocumentServiceImpl.class);
 
 	@Override
 	public void addBookmarks(String sid, long[] ids, int type) throws InvalidSessionException {
@@ -422,7 +422,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			}
 			return attributes;
 		} catch (Throwable t) {
-			log.error(t);
+			log.error(t.getMessage(), t);
 			return null;
 		}
 	}

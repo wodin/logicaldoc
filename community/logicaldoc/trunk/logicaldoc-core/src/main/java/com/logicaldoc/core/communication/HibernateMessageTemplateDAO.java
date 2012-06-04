@@ -3,7 +3,7 @@ package com.logicaldoc.core.communication;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 
@@ -18,7 +18,7 @@ public class HibernateMessageTemplateDAO extends HibernatePersistentObjectDAO<Me
 
 	public HibernateMessageTemplateDAO() {
 		super(MessageTemplate.class);
-		super.log = LogFactory.getLog(HibernateMessageTemplateDAO.class);
+		super.log = LoggerFactory.getLogger(HibernateMessageTemplateDAO.class);
 	}
 
 	@Override

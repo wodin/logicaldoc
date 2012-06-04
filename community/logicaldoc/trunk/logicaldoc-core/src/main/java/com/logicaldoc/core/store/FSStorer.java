@@ -16,8 +16,8 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -39,7 +39,7 @@ import com.logicaldoc.util.io.FileUtil;
  * @since 4.5
  */
 public class FSStorer implements Storer {
-	protected static Log log = LogFactory.getLog(FSStorer.class);
+	protected static Logger log = LoggerFactory.getLogger(FSStorer.class);
 
 	protected ContextProperties config;
 

@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
@@ -20,7 +20,7 @@ import com.logicaldoc.util.plugin.PluginRegistry;
  * @author Michael Scholz
  */
 public abstract class Search {
-	protected static Log log = LogFactory.getLog(Search.class);
+	protected static Logger log = LoggerFactory.getLogger(Search.class);
 
 	protected boolean moreHitsPresent = false;
 

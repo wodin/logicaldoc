@@ -11,9 +11,9 @@ import net.sf.jmimemagic.MagicMatch;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.store.Storer;
@@ -27,7 +27,7 @@ import com.logicaldoc.util.plugin.PluginRegistry;
  * @since 4.5
  */
 public class ThumbnailManager {
-	protected static Log log = LogFactory.getLog(ThumbnailManager.class);
+	protected static Logger log = LoggerFactory.getLogger(ThumbnailManager.class);
 
 	private Storer storer;
 

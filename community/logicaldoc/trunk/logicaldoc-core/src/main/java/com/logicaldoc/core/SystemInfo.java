@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
 public class SystemInfo {
-	protected static Log log = LogFactory.getLog(SystemInfo.class);
+	protected static Logger log = LoggerFactory.getLogger(SystemInfo.class);
 
 	protected static final long serialVersionUID = 1L;
 

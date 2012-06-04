@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.rss.FeedMessage;
@@ -19,7 +19,7 @@ import com.logicaldoc.util.sql.SqlUtil;
 public class HibernateFeedMessageDAO extends HibernatePersistentObjectDAO<FeedMessage> implements FeedMessageDAO {
 	public HibernateFeedMessageDAO() {
 		super(FeedMessage.class);
-		super.log = LogFactory.getLog(HibernateFeedMessageDAO.class);
+		super.log = LoggerFactory.getLogger(HibernateFeedMessageDAO.class);
 	}
 
 	@Override

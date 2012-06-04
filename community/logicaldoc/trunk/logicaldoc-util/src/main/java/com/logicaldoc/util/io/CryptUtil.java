@@ -3,8 +3,8 @@ package com.logicaldoc.util.io;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class contains methods to decode and encode string.
@@ -37,7 +37,7 @@ public class CryptUtil {
 	}
 
 	private static void logError(String message) {
-		Log logger = LogFactory.getLog(CryptUtil.class);
+		Logger logger = LoggerFactory.getLogger(CryptUtil.class);
 		logger.error(message);
 	}
 }

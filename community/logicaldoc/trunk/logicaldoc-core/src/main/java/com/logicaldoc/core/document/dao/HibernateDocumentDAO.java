@@ -16,7 +16,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -69,7 +69,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	private HibernateDocumentDAO() {
 		super(Document.class);
-		super.log = LogFactory.getLog(HibernateDocumentDAO.class);
+		super.log = LoggerFactory.getLogger(HibernateDocumentDAO.class);
 	}
 
 	public void setListenerManager(DocumentListenerManager listenerManager) {
@@ -255,7 +255,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				}
 			}
 
-			if ("bulkload".equals(config.getProperty("runlevel")) || doc.getCustomId()==null)
+			if ("bulkload".equals(config.getProperty("runlevel")) || doc.getCustomId() == null)
 				doc.setCustomId(UUID.randomUUID().toString());
 
 			Map<String, Object> dictionary = new HashMap<String, Object>();

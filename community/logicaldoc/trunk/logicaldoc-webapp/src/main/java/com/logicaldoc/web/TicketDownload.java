@@ -16,8 +16,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DownloadTicket;
@@ -37,7 +37,7 @@ public class TicketDownload extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 9088160958327454062L;
 
-	protected static Log logger = LogFactory.getLog(TicketDownload.class);
+	protected static Logger logger = LoggerFactory.getLogger(TicketDownload.class);
 
 	/**
 	 * Constructor of the object.

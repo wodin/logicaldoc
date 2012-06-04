@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.DownloadTicket;
@@ -23,7 +23,7 @@ public class HibernateDownloadTicketDAO extends HibernatePersistentObjectDAO<Dow
 
 	public HibernateDownloadTicketDAO() {
 		super(DownloadTicket.class);
-		super.log = LogFactory.getLog(HibernateDownloadTicketDAO.class);
+		super.log = LoggerFactory.getLogger(HibernateDownloadTicketDAO.class);
 	}
 
 	@Override

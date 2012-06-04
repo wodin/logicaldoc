@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
@@ -48,7 +48,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 
 	public HibernateSystemMessageDAO() {
 		super(SystemMessage.class);
-		super.log = LogFactory.getLog(HibernateSystemMessageDAO.class);
+		super.log = LoggerFactory.getLogger(HibernateSystemMessageDAO.class);
 	}
 
 	/**

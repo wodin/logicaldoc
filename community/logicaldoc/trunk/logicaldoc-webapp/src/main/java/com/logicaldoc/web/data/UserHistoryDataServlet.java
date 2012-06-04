@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.UserHistory;
 import com.logicaldoc.core.security.dao.UserHistoryDAO;
@@ -30,7 +30,7 @@ public class UserHistoryDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(UserHistoryDataServlet.class);
+	private static Logger log = LoggerFactory.getLogger(UserHistoryDataServlet.class);
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,

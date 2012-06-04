@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.DocumentManager;
@@ -35,7 +35,7 @@ public class IndexerTask extends Task {
 
 	public IndexerTask() {
 		super(NAME);
-		log = LogFactory.getLog(IndexerTask.class);
+		log = LoggerFactory.getLogger(IndexerTask.class);
 	}
 
 	public void setDocumentManager(DocumentManager documentManager) {

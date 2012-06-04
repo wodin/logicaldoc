@@ -17,8 +17,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -52,7 +52,7 @@ public class DocumentPreview extends HttpServlet {
 
 	private static final long serialVersionUID = -6956612970433309888L;
 
-	protected static Log log = LogFactory.getLog(DocumentPreview.class);
+	protected static Logger log = LoggerFactory.getLogger(DocumentPreview.class);
 
 	protected static String SWFTOOLSPATH = "swftools.path";
 

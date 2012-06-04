@@ -1,7 +1,7 @@
 package com.logicaldoc.webdav.io.manager;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * For more informations, please visit
@@ -14,7 +14,7 @@ public class DefaultIOManager extends IOManagerImpl {
 
 	private static final long serialVersionUID = 1L;
 
-	protected static Log log = LogFactory.getLog(DefaultIOManager.class);
+	protected static Logger log = LoggerFactory.getLogger(DefaultIOManager.class);
 
 	public DefaultIOManager() {
 		init();

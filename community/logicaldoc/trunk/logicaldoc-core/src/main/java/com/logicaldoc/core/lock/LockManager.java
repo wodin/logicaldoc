@@ -4,8 +4,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
@@ -20,7 +20,7 @@ import com.logicaldoc.util.config.ContextProperties;
 public class LockManager {
 	private static final String LOCK = "lock";
 
-	Log log = LogFactory.getLog(LockManager.class);
+	protected Logger log = LoggerFactory.getLogger(LockManager.class);
 
 	private GenericDAO genericDao;
 

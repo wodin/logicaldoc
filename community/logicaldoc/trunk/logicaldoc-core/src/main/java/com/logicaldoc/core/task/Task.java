@@ -18,8 +18,8 @@ import java.util.StringTokenizer;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.EMailSender;
@@ -38,7 +38,7 @@ import com.logicaldoc.util.config.ContextProperties;
  * @since 3.5.0
  */
 public abstract class Task implements Runnable {
-	protected Log log = LogFactory.getLog(Task.class);
+	protected Logger log = LoggerFactory.getLogger(Task.class);
 
 	public final static int STATUS_IDLE = 0;
 

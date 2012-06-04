@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.security.User;
@@ -18,7 +18,7 @@ public class HibernateUserHistoryDAO extends HibernatePersistentObjectDAO<UserHi
 
 	private HibernateUserHistoryDAO() {
 		super(UserHistory.class);
-		super.log = LogFactory.getLog(HibernateUserHistoryDAO.class);
+		super.log = LoggerFactory.getLogger(HibernateUserHistoryDAO.class);
 	}
 
 	/**

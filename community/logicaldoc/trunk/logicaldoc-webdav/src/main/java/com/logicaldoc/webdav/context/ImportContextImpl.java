@@ -6,12 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.io.IOListener;
 import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.server.io.MimeResolver;
 import org.apache.jackrabbit.webdav.io.InputContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webdav.resource.model.Resource;
 
@@ -24,7 +24,7 @@ import com.logicaldoc.webdav.resource.model.Resource;
  */
 public class ImportContextImpl implements ImportContext {
 
-	protected static Log log = LogFactory.getLog(ImportContextImpl.class);
+	protected static Logger log = LoggerFactory.getLogger(ImportContextImpl.class);
 
 	private final Resource resource;
 	private final String systemId;

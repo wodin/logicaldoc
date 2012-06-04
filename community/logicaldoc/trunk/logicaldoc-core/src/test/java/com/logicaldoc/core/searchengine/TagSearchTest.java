@@ -4,15 +4,15 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.AbstractCoreTCase;
 
 public class TagSearchTest extends AbstractCoreTCase {
 
-	protected static Log log = LogFactory.getLog(TagSearchTest.class);
+	protected static Logger log = LoggerFactory.getLogger(TagSearchTest.class);
 
 	@Test
 	public void testSearch() {

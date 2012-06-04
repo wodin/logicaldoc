@@ -14,8 +14,6 @@ import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.index.CheckIndex;
 import org.apache.lucene.index.CheckIndex.Status;
 import org.apache.lucene.store.Directory;
@@ -29,6 +27,8 @@ import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.update.SolrIndexWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.Document;
@@ -46,7 +46,7 @@ import com.logicaldoc.util.io.FileUtil;
  */
 public class StandardSearchEngine implements SearchEngine {
 
-	protected static Log log = LogFactory.getLog(StandardSearchEngine.class);
+	protected static Logger log = LoggerFactory.getLogger(StandardSearchEngine.class);
 
 	private static ContextProperties config;
 

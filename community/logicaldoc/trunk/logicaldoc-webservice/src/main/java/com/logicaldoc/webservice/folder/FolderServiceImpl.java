@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderGroup;
@@ -29,7 +29,7 @@ import com.logicaldoc.webservice.auth.Right;
  */
 public class FolderServiceImpl extends AbstractService implements FolderService {
 
-	public static Log log = LogFactory.getLog(FolderServiceImpl.class);
+	protected static Logger log = LoggerFactory.getLogger(FolderServiceImpl.class);
 
 	@Override
 	public WSFolder create(String sid, WSFolder folder) throws Exception {

@@ -3,7 +3,7 @@ package com.logicaldoc.core.document;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.task.Task;
@@ -26,7 +26,7 @@ public class DigestProcessor extends Task {
 
 	public DigestProcessor() {
 		super(NAME);
-		log = LogFactory.getLog(DigestProcessor.class);
+		log = LoggerFactory.getLogger(DigestProcessor.class);
 	}
 
 	public void setDocumentDao(DocumentDAO documentDao) {
@@ -37,7 +37,7 @@ public class DigestProcessor extends Task {
 	public boolean isIndeterminate() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean isConcurrent() {
 		return true;

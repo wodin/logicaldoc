@@ -3,10 +3,10 @@ package com.logicaldoc.core.parser;
 import java.io.InputStream;
 import java.io.StringReader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.extractor.ExcelExtractor;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.StringUtil;
 
@@ -19,7 +19,7 @@ import com.logicaldoc.util.StringUtil;
  */
 public class XLSParser extends AbstractParser {
 
-	protected static Log log = LogFactory.getLog(XLSParser.class);
+	protected static Logger log = LoggerFactory.getLogger(XLSParser.class);
 
 	@Override
 	public void internalParse(InputStream input) {

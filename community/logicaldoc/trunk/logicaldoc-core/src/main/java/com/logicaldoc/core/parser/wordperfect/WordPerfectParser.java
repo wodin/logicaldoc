@@ -3,8 +3,8 @@ package com.logicaldoc.core.parser.wordperfect;
 import java.io.InputStream;
 import java.io.StringReader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.parser.AbstractParser;
 import com.logicaldoc.util.StringUtil;
@@ -15,7 +15,7 @@ import com.logicaldoc.util.StringUtil;
  */
 public class WordPerfectParser extends AbstractParser {
 
-	protected static Log log = LogFactory.getLog(WordPerfectParser.class);
+	protected static Logger log = LoggerFactory.getLogger(WordPerfectParser.class);
 
 	@Override
 	public void internalParse(InputStream input) {

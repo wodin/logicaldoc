@@ -8,10 +8,10 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.Document;
@@ -19,7 +19,7 @@ import com.logicaldoc.core.security.Folder;
 
 public class FulltextSearchTest extends AbstractCoreTCase {
 
-	protected static Log log = LogFactory.getLog(FulltextSearchTest.class);
+	protected static Logger log = LoggerFactory.getLogger(FulltextSearchTest.class);
 
 	protected SearchEngine engine;
 

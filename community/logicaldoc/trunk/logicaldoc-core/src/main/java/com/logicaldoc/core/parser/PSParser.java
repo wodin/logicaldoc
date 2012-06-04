@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.StringUtil;
 
@@ -18,7 +18,7 @@ import com.logicaldoc.util.StringUtil;
  */
 public class PSParser extends AbstractParser {
 
-	protected static Log log = LogFactory.getLog(PSParser.class);
+	protected static Logger log = LoggerFactory.getLogger(PSParser.class);
 
 	private String parse_v2(BufferedReader reader) throws IOException {
 		boolean isComment = false;

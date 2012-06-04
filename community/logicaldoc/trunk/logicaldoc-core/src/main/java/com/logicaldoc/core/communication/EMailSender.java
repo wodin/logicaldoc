@@ -22,8 +22,8 @@ import net.sf.jmimemagic.Magic;
 import net.sf.jmimemagic.MagicMatch;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SMTP E-Mail sender service
@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Matteo Caruso - Logical Objects
  */
 public class EMailSender {
-	protected Log log = LogFactory.getLog(EMailSender.class);
+	private static Logger log = LoggerFactory.getLogger(EMailSender.class);
 
 	public static final int SECURITY_NONE = 0;
 

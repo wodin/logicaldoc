@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.TagCloudGenerator;
 import com.logicaldoc.core.searchengine.IndexOptimizer;
@@ -25,7 +25,7 @@ import com.logicaldoc.util.plugin.PluginRegistry;
  * @since 3.5.0
  */
 public class TaskManager {
-	protected static Log log = LogFactory.getLog(TaskManager.class);
+	protected static Logger log = LoggerFactory.getLogger(TaskManager.class);
 
 	public void registerTasks() {
 		// Acquire the 'Task' extensions of the core plugin and add defined

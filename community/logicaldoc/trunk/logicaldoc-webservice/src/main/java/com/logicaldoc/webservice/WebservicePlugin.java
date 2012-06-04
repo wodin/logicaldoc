@@ -2,8 +2,8 @@ package com.logicaldoc.webservice;
 
 import java.io.File;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.config.WebConfigurator;
@@ -17,7 +17,7 @@ import com.logicaldoc.util.plugin.LogicalDOCPlugin;
  * 
  */
 public class WebservicePlugin extends LogicalDOCPlugin {
-	protected static Log log = LogFactory.getLog(WebservicePlugin.class);
+	protected static Logger log = LoggerFactory.getLogger(WebservicePlugin.class);
 
 	@Override
 	protected void install() throws Exception {

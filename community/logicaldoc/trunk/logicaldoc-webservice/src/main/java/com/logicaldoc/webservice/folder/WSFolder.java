@@ -3,12 +3,10 @@ package com.logicaldoc.webservice.folder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.DocumentTemplate;
@@ -26,7 +24,7 @@ import com.logicaldoc.webservice.WSAttribute;
  */
 public class WSFolder {
 
-	protected static Log log = LogFactory.getLog(WSFolder.class);
+	protected static Logger log = LoggerFactory.getLogger(WSFolder.class);
 
 	private long id = 0;
 

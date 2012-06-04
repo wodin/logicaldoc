@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.PluginDescriptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -59,7 +59,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 	private static int progress = 0;
 
-	private static Log log = LogFactory.getLog(SystemServiceImpl.class);
+	private static Logger log = LoggerFactory.getLogger(SystemServiceImpl.class);
 
 	@Override
 	public boolean disableTask(String sid, String taskName) throws InvalidSessionException {

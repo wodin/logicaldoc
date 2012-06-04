@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.i18n.I18N;
@@ -25,7 +25,7 @@ public class FolderHistoryDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(FolderHistoryDataServlet.class);
+	private static Logger log = LoggerFactory.getLogger(FolderHistoryDataServlet.class);
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,

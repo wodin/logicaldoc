@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -30,7 +30,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(SearchEngineServiceImpl.class);
+	private static Logger log = LoggerFactory.getLogger(SearchEngineServiceImpl.class);
 
 	@Override
 	public GUISearchEngine getInfo(String sid) throws InvalidSessionException {

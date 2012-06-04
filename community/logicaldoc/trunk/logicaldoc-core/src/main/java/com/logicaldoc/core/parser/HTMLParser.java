@@ -15,12 +15,12 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.SAXSource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.xerces.xni.parser.XMLDocumentFilter;
 import org.apache.xerces.xni.parser.XMLParserConfiguration;
 import org.cyberneko.html.HTMLConfiguration;
 import org.cyberneko.html.filters.ElementRemover;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -38,7 +38,7 @@ public class HTMLParser extends AbstractParser {
 	/**
 	 * Logger instance.
 	 */
-	protected static Log log = LogFactory.getLog(HTMLParser.class);
+	protected static Logger log = LoggerFactory.getLogger(HTMLParser.class);
 
 	public void parse(File file) {
 		FileInputStream fis = null;

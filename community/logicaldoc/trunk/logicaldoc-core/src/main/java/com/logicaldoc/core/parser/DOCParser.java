@@ -4,9 +4,9 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.io.StringReader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hwpf.extractor.WordExtractor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.StringUtil;
 
@@ -25,7 +25,7 @@ import com.logicaldoc.util.StringUtil;
  */
 public class DOCParser extends RTFParser {
 
-	protected static Log log = LogFactory.getLog(DOCParser.class);
+	protected static Logger log = LoggerFactory.getLogger(DOCParser.class);
 
 	@Override
 	public void parse(InputStream input) {

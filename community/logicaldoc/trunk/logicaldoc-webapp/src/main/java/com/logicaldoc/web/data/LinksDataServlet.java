@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.util.IconSelector;
@@ -23,7 +23,7 @@ public class LinksDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(LinksDataServlet.class);
+	private static Logger log = LoggerFactory.getLogger(LinksDataServlet.class);
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,

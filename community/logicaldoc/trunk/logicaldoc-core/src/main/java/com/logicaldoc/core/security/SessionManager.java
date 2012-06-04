@@ -7,8 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.config.ContextProperties;
 
@@ -20,7 +20,7 @@ import com.logicaldoc.util.config.ContextProperties;
  */
 public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 
-	protected Log log = LogFactory.getLog(SessionManager.class);
+	private static Logger log = LoggerFactory.getLogger(SessionManager.class);
 
 	private static final long serialVersionUID = 1L;
 

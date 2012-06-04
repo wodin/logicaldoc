@@ -11,10 +11,10 @@ import java.util.Enumeration;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is for handling with zip-files.
@@ -159,7 +159,7 @@ public class ZipUtil {
 	}
 
 	private static void logError(String message) {
-		Log logger = LogFactory.getLog(ZipUtil.class);
+		Logger logger = LoggerFactory.getLogger(ZipUtil.class);
 		logger.error(message);
 	}
 

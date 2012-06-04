@@ -12,8 +12,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
@@ -26,7 +26,7 @@ import com.logicaldoc.util.config.ContextProperties;
  */
 public abstract class AbstractParser implements Parser {
 
-	protected static Log log = LogFactory.getLog(AbstractParser.class);
+	protected static Logger log = LoggerFactory.getLogger(AbstractParser.class);
 
 	protected StringBuffer content = new StringBuffer();
 
@@ -129,7 +129,7 @@ public abstract class AbstractParser implements Parser {
 			try {
 				internalParse(input);
 			} catch (Throwable e) {
-				log.error(e);
+				log.error(e.getMessage(), e);
 			}
 		else {
 			// Invoke in a separate thread

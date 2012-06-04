@@ -2,8 +2,8 @@ package com.logicaldoc.core.sequence;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import com.logicaldoc.core.generic.Generic;
@@ -21,7 +21,7 @@ import com.logicaldoc.util.sql.SqlUtil;
 public class HibernateSequenceDAO extends HibernateDaoSupport implements SequenceDAO {
 	public final String TYPE = "sequence";
 
-	protected static Log log = LogFactory.getLog(HibernateSequenceDAO.class);
+	protected static Logger log = LoggerFactory.getLogger(HibernateSequenceDAO.class);
 
 	private GenericDAO genericDao;
 

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.security.Group;
@@ -39,7 +39,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 	private HibernateUserDAO() {
 		super(User.class);
-		super.log = LogFactory.getLog(HibernateUserDAO.class);
+		super.log = LoggerFactory.getLogger(HibernateUserDAO.class);
 	}
 
 	/**

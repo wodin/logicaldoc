@@ -21,8 +21,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
@@ -43,7 +43,7 @@ public class UploadServlet extends UploadAction {
 
 	public static String RECEIVEDFILENAMES = "receivedFileNames";
 
-	protected static Log log = LogFactory.getLog(UploadServlet.class);
+	protected static Logger log = LoggerFactory.getLogger(UploadServlet.class);
 
 	/**
 	 * Override executeAction to save the received files in a custom place and

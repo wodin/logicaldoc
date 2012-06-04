@@ -7,8 +7,6 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavMethods;
 import org.apache.jackrabbit.webdav.DavResource;
@@ -16,6 +14,8 @@ import org.apache.jackrabbit.webdav.DavResourceLocator;
 import org.apache.jackrabbit.webdav.DavServletRequest;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.lock.LockManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
@@ -32,7 +32,7 @@ import com.logicaldoc.webdav.session.DavSession;
  */
 public class DavResourceFactoryImpl implements DavResourceFactory {
 
-	protected static Log log = LogFactory.getLog(DavResourceFactoryImpl.class);
+	protected static Logger log = LoggerFactory.getLogger(DavResourceFactoryImpl.class);
 
 	private static final Pattern versionRequestPattern = Pattern.compile("/vstore/([0-9].[0-9])/(.*)");
 

@@ -6,7 +6,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.History;
@@ -25,7 +25,7 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 
 	private HibernateHistoryDAO() {
 		super(History.class);
-		super.log = LogFactory.getLog(HibernateHistoryDAO.class);
+		super.log = LoggerFactory.getLogger(HibernateHistoryDAO.class);
 	}
 
 	/**

@@ -23,6 +23,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class manages I/O operations with files.
@@ -35,7 +37,7 @@ public class FileUtil {
 
 	static final byte[] buffer = new byte[BUFF_SIZE];
 
-	protected static Log log = LogFactory.getLog(FileUtil.class);
+	protected static Logger log = LoggerFactory.getLogger(FileUtil.class);
 
 	public static void writeFile(InputStream in, String filepath) throws Exception {
 		OutputStream os = null;

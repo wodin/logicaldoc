@@ -3,7 +3,7 @@ package com.logicaldoc.core.security.dao;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.security.Group;
@@ -20,7 +20,7 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 
 	private HibernateGroupDAO() {
 		super(Group.class);
-		super.log = LogFactory.getLog(HibernateGroupDAO.class);
+		super.log = LoggerFactory.getLogger(HibernateGroupDAO.class);
 	}
 
 	public MenuDAO getMenuDAO() {
@@ -195,7 +195,7 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 		String query = "select count(*) from ld_group where ld_deleted=0";
 		return queryForInt(query);
 	}
-	
+
 	@Override
 	public void initialize(Group group) {
 		getHibernateTemplate().refresh(group);

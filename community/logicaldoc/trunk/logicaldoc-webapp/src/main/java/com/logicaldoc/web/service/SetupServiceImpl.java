@@ -9,9 +9,9 @@ import java.util.Collection;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.PluginDescriptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Log4jConfigurer;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -35,7 +35,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 
 	private static final long serialVersionUID = 1L;
 
-	protected static Log log = LogFactory.getLog(SetupServiceImpl.class);
+	protected static Logger log = LoggerFactory.getLogger(SetupServiceImpl.class);
 
 	@Override
 	public void setup(SetupInfo data) {

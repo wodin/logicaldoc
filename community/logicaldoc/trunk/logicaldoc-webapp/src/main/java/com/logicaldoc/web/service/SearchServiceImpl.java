@@ -10,8 +10,8 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.i18n.Language;
@@ -42,7 +42,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 
 	private static final long serialVersionUID = 1L;
 
-	protected static Log log = LogFactory.getLog(SearchServiceImpl.class);
+	protected static Logger log = LoggerFactory.getLogger(SearchServiceImpl.class);
 
 	@Override
 	public GUIResult search(String sid, GUISearchOptions options) throws InvalidSessionException {

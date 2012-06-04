@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.ExtendedAttribute;
@@ -32,7 +32,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(TemplateServiceImpl.class);
+	private static Logger log = LoggerFactory.getLogger(TemplateServiceImpl.class);
 
 	@Override
 	public void delete(String sid, long templateId) throws InvalidSessionException {

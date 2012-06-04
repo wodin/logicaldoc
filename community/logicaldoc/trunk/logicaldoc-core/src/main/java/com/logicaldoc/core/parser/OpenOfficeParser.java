@@ -8,8 +8,8 @@ import java.util.zip.ZipInputStream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -30,7 +30,7 @@ import com.logicaldoc.util.StringUtil;
  */
 public class OpenOfficeParser extends AbstractParser {
 
-	protected static Log log = LogFactory.getLog(OpenOfficeParser.class);
+	protected static Logger log = LoggerFactory.getLogger(OpenOfficeParser.class);
 
 	private class OpenOfficeContentHandler extends DefaultHandler {
 
@@ -72,12 +72,12 @@ public class OpenOfficeParser extends AbstractParser {
 	@Override
 	public void internalParse(InputStream input) {
 		try {
-			try{
-			Thread.sleep(4000);
-			}catch(Throwable t){
-				
+			try {
+				Thread.sleep(4000);
+			} catch (Throwable t) {
+
 			}
-			
+
 			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 			saxParserFactory.setValidating(false);
 			SAXParser saxParser = saxParserFactory.newSAXParser();

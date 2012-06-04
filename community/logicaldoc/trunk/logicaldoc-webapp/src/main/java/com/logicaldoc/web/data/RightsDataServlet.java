@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderGroup;
@@ -35,7 +35,7 @@ public class RightsDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(RightsDataServlet.class);
+	private static Logger log = LoggerFactory.getLogger(RightsDataServlet.class);
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
