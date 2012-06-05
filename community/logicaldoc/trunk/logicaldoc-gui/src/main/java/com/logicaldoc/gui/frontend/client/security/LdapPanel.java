@@ -54,11 +54,11 @@ public class LdapPanel extends VLayout {
 		this.ldapSettings = settings;
 
 		setWidth100();
-		setMembersMargin(10);
-		setMargin(30);
+		setMembersMargin(5);
+		setMargin(20);
 
 		tabs.setWidth(500);
-		tabs.setHeight(450);
+		tabs.setHeight(390);
 
 		Tab ldapTab = new Tab();
 		ldapTab.setTitle(I18N.message("ldap"));

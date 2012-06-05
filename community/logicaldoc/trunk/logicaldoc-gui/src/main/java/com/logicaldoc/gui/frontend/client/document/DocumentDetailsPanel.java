@@ -167,6 +167,9 @@ public class DocumentDetailsPanel extends VLayout {
 
 		prepareTabs();
 		prepareTabset();
+
+		if ("thumbnail".equals(Session.get().getInfo().getConfig("gui.document.tab")))
+			tabSet.selectTab(thumbnailTab);
 	}
 
 	protected void prepareTabs() {
