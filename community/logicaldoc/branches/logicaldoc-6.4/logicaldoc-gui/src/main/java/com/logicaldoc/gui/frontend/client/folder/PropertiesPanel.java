@@ -53,7 +53,8 @@ public class PropertiesPanel extends FolderDetailTab {
 		validator.setSubstring("/");
 		validator.setErrorMessage(I18N.message("invalidchar"));
 		name.setValidators(validator);
-		name.addChangedHandler(changedHandler);
+		if (folder.hasPermission(Constants.PERMISSION_RENAME))
+			name.addChangedHandler(changedHandler);
 		name.setRequired(true);
 
 		TextItem description = ItemFactory.newTextItem("description", "description", folder.getDescription());
@@ -68,18 +69,14 @@ public class PropertiesPanel extends FolderDetailTab {
 		LinkItem pathItem = ItemFactory.newLinkItem("path", folder.getPathExtended());
 		pathItem.setTitle(I18N.message("path"));
 		pathItem.setValue(Util.contextPath() + "?folderId=" + folder.getId());
-		pathItem.addChangedHandler(changedHandler);
+		if (folder.hasPermission(Constants.PERMISSION_RENAME))
+			pathItem.addChangedHandler(changedHandler);
 		pathItem.setWidth(400);
 
 		StaticTextItem documents = ItemFactory.newStaticTextItem("documents", "documents",
 				"" + folder.getDocumentCount());
 		StaticTextItem subfolders = ItemFactory
 				.newStaticTextItem("folders", "folders", "" + folder.getSubfolderCount());
-
-		if (!folder.hasPermission(Constants.PERMISSION_RENAME)) {
-			name.setDisabled(true);
-			description.setDisabled(true);
-		}
 
 		if (folder.getId() == Constants.WORKSPACE_DEFAULTID)
 			form.setItems(idItem, pathItem, creation, creator, documents, subfolders);
