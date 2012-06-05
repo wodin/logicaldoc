@@ -20,6 +20,7 @@ import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.frontend.client.document.DocumentContextMenu;
 import com.logicaldoc.gui.frontend.client.document.DocumentObserver;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.document.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
@@ -266,7 +267,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				if (Search.get().getOptions().getType() != GUISearchOptions.TYPE_FOLDERS) {
-					final String id = list.getSelectedRecord().getAttribute("id");
+					final long id = Long.parseLong(list.getSelectedRecord().getAttribute("id"));
 					folderService.getFolder(Session.get().getSid(),
 							Long.parseLong(list.getSelectedRecord().getAttributeAsString("folderId")), false,
 							new AsyncCallback<GUIFolder>() {
@@ -278,9 +279,20 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 								@Override
 								public void onSuccess(GUIFolder folder) {
-									if (folder.isDownload())
+									if (folder.isDownload()
+											&& "download".equals(Session.get().getInfo().getConfig("gui.doubleclick")))
 										Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
 												+ "&docId=" + id + "&open=true", "_blank", "");
+									else {
+										String filename = list.getSelectedRecord().getAttribute("filename");
+										String version = list.getSelectedRecord().getAttribute("version");
+
+										if (filename == null)
+											filename = list.getSelectedRecord().getAttribute("title") + "."
+													+ list.getSelectedRecord().getAttribute("type");
+										PreviewPopup iv = new PreviewPopup(id, version, filename);
+										iv.show();
+									}
 								}
 							});
 				}

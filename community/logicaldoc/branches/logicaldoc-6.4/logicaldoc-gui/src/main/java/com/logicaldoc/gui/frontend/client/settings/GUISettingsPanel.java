@@ -44,12 +44,12 @@ public class GUISettingsPanel extends VLayout {
 
 	public GUISettingsPanel(GUIParameter[] settings) {
 		setWidth100();
-		setHeight(370);
+		setHeight(490);
 		setMembersMargin(10);
-		setMargin(30);
+		setMargin(25);
 
-		tabs.setWidth(450);
-		tabs.setHeight(400);
+		tabs.setWidth(500);
+		tabs.setHeight(490);
 
 		Tab parameters = new Tab();
 		parameters.setTitle(I18N.message("parameters"));
@@ -87,19 +87,19 @@ public class GUISettingsPanel extends VLayout {
 
 		TextItem previewPages = ItemFactory.newIntegerItem("previewpages", I18N.message("previewpages"), null);
 		previewPages.setRequired(true);
-		
+
 		TextItem previewSize = ItemFactory.newIntegerItem("previewsize", I18N.message("previewwindow"), null);
 		previewSize.setHint("%");
 		previewSize.setRequired(true);
-		
+
 		TextItem previewZoom = ItemFactory.newIntegerItem("previewzoom", I18N.message("previewzoom"), null);
 		previewZoom.setHint("%");
 		previewZoom.setRequired(true);
-		
+
 		TextItem thumbSize = ItemFactory.newIntegerItem("thumbsize", I18N.message("thumbsize"), null);
 		thumbSize.setHint("pixels");
 		thumbSize.setRequired(true);
-		
+
 		TextItem thumbQuality = ItemFactory.newIntegerItem("thumbquality", I18N.message("thumbquality"), null);
 		thumbQuality.setHint("%");
 		thumbQuality.setRequired(true);
@@ -109,17 +109,20 @@ public class GUISettingsPanel extends VLayout {
 		uploadmax.setHint("MB");
 		uploadmax.setRequired(true);
 		uploadmax.setWrapTitle(false);
-		
+
 		TextItem searchhits = ItemFactory.newIntegerItem("searchhits", I18N.message("searchhits"), null);
 		searchhits.setRequired(true);
 		searchhits.setWrapTitle(false);
-		
+
 		TextItem searchdepth = ItemFactory.newIntegerItem("searchdepth", I18N.message("searchdepth"), null);
 		searchdepth.setRequired(true);
 		searchdepth.setWrapTitle(false);
-		
+
+		RadioGroupItem ondoubleclick = ItemFactory.newBooleanSelector("ondoubleclick", "ondoubleclick");
+		ondoubleclick.setValueMap("download", "preview");
+
 		parametersForm.setItems(welcome, dropspot, previewPages, previewSize, previewZoom, thumbSize, thumbQuality,
-				uploadmax, searchhits, searchdepth, savelogin);
+				uploadmax, ondoubleclick, searchhits, searchdepth, savelogin);
 
 		for (GUIParameter p : settings) {
 			if (p.getName().equals("gui.welcome"))
@@ -138,6 +141,8 @@ public class GUISettingsPanel extends VLayout {
 				thumbSize.setValue(Integer.parseInt(p.getValue()));
 			if (p.getName().equals("gui.thumbnail.quality"))
 				thumbQuality.setValue(Integer.parseInt(p.getValue()));
+			if (p.getName().equals("gui.doubleclick"))
+				ondoubleclick.setValue(p.getValue());
 			if (p.getName().equals("upload.maxsize"))
 				uploadmax.setValue(Integer.parseInt(p.getValue()));
 			if (p.getName().equals("search.hits"))
@@ -164,15 +169,16 @@ public class GUISettingsPanel extends VLayout {
 					params.add(new GUIParameter("gui.preview.zoom", values.get("previewzoom").toString()));
 					params.add(new GUIParameter("gui.thumbnail.size", values.get("thumbsize").toString()));
 					params.add(new GUIParameter("gui.thumbnail.quality", values.get("thumbquality").toString()));
+					params.add(new GUIParameter("gui.doubleclick", values.get("ondoubleclick").toString()));
 					params.add(new GUIParameter("upload.maxsize", values.get("uploadmax").toString()));
 					params.add(new GUIParameter("search.hits", values.get("searchhits").toString()));
 					params.add(new GUIParameter("search.depth", values.get("searchdepth").toString()));
 
-					//Update the current session parameters.
+					// Update the current session parameters.
 					for (GUIParameter p : params) {
 						Session.get().getInfo().setConfig(p.getName(), p.getValue());
 					}
-					
+
 					service.saveSettings(Session.get().getSid(), params.toArray(new GUIParameter[0]),
 							new AsyncCallback<Void>() {
 
