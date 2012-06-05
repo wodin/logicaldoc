@@ -49,15 +49,19 @@ public class PropertiesPanel extends FolderDetailTab {
 		StaticTextItem idItem = ItemFactory.newStaticTextItem("id", "id", Long.toString(folder.getId()));
 
 		TextItem name = ItemFactory.newTextItem("name", "name", folder.getName());
+		name.setWidth(200);
 		DoesntContainValidator validator = new DoesntContainValidator();
 		validator.setSubstring("/");
 		validator.setErrorMessage(I18N.message("invalidchar"));
 		name.setValidators(validator);
-		name.addChangedHandler(changedHandler);
+		if (folder.hasPermission(Constants.PERMISSION_RENAME))
+			name.addChangedHandler(changedHandler);
 		name.setRequired(true);
 
 		TextItem description = ItemFactory.newTextItem("description", "description", folder.getDescription());
-		description.addChangedHandler(changedHandler);
+		description.setWidth(200);
+		if (folder.hasPermission(Constants.PERMISSION_RENAME))
+			description.addChangedHandler(changedHandler);
 
 		DateTimeFormat formatter = DateTimeFormat.getFormat(I18N.message("format_date"));
 		StaticTextItem creation = ItemFactory.newStaticTextItem("creation", "createdon",
@@ -75,11 +79,6 @@ public class PropertiesPanel extends FolderDetailTab {
 				"" + folder.getDocumentCount());
 		StaticTextItem subfolders = ItemFactory
 				.newStaticTextItem("folders", "folders", "" + folder.getSubfolderCount());
-
-		if (!folder.hasPermission(Constants.PERMISSION_RENAME)) {
-			name.setDisabled(true);
-			description.setDisabled(true);
-		}
 
 		if (folder.getId() == Constants.WORKSPACE_DEFAULTID)
 			form.setItems(idItem, pathItem, creation, creator, documents, subfolders);
