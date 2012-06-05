@@ -44,12 +44,11 @@ public class GUISettingsPanel extends VLayout {
 
 	public GUISettingsPanel(GUIParameter[] settings) {
 		setWidth100();
-		setHeight(490);
 		setMembersMargin(10);
 		setMargin(25);
 
 		tabs.setWidth(500);
-		tabs.setHeight(490);
+		tabs.setHeight(400);
 
 		Tab parameters = new Tab();
 		parameters.setTitle(I18N.message("parameters"));
@@ -121,8 +120,11 @@ public class GUISettingsPanel extends VLayout {
 		RadioGroupItem ondoubleclick = ItemFactory.newBooleanSelector("ondoubleclick", "ondoubleclick");
 		ondoubleclick.setValueMap("download", "preview");
 
+		RadioGroupItem doctab = ItemFactory.newBooleanSelector("doctab", "doctab");
+		doctab.setValueMap("properties", "thumbnail");
+
 		parametersForm.setItems(welcome, dropspot, previewPages, previewSize, previewZoom, thumbSize, thumbQuality,
-				uploadmax, ondoubleclick, searchhits, searchdepth, savelogin);
+				uploadmax, ondoubleclick, doctab, searchhits, searchdepth, savelogin);
 
 		for (GUIParameter p : settings) {
 			if (p.getName().equals("gui.welcome"))
@@ -143,6 +145,8 @@ public class GUISettingsPanel extends VLayout {
 				thumbQuality.setValue(Integer.parseInt(p.getValue()));
 			if (p.getName().equals("gui.doubleclick"))
 				ondoubleclick.setValue(p.getValue());
+			if (p.getName().equals("gui.document.tab"))
+				doctab.setValue(p.getValue());
 			if (p.getName().equals("upload.maxsize"))
 				uploadmax.setValue(Integer.parseInt(p.getValue()));
 			if (p.getName().equals("search.hits"))
@@ -170,6 +174,7 @@ public class GUISettingsPanel extends VLayout {
 					params.add(new GUIParameter("gui.thumbnail.size", values.get("thumbsize").toString()));
 					params.add(new GUIParameter("gui.thumbnail.quality", values.get("thumbquality").toString()));
 					params.add(new GUIParameter("gui.doubleclick", values.get("ondoubleclick").toString()));
+					params.add(new GUIParameter("gui.document.tab", values.get("doctab").toString()));
 					params.add(new GUIParameter("upload.maxsize", values.get("uploadmax").toString()));
 					params.add(new GUIParameter("search.hits", values.get("searchhits").toString()));
 					params.add(new GUIParameter("search.depth", values.get("searchdepth").toString()));
