@@ -20,6 +20,7 @@ import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.frontend.client.document.DocumentContextMenu;
 import com.logicaldoc.gui.frontend.client.document.DocumentObserver;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.document.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
@@ -92,19 +93,6 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		grid.setShowRecordComponents(true);
 		grid.setShowRecordComponentsByCell(true);
 
-		// if (options.getType() == GUISearchOptions.TYPE_FULLTEXT) {
-		// list.setFields(id, folderId, icon, title, type, size, published,
-		// creation, sourceDate, score, customId,
-		// folder, comment, publishedStatus);
-		// } else if (options.getType() == GUISearchOptions.TYPE_FOLDERS) {
-		// list.setFields(id, folderId, icon, title, creation, comment);
-		// comment.setHidden(false);
-		// } else {
-		// list.setFields(id, folderId, icon, title, type, size, published,
-		// creation, sourceDate, customId, folder,
-		// comment, publishedStatus);
-		// }
-
 		grid.addSelectionChangedHandler(new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChanged(SelectionEvent event) {
@@ -142,7 +130,8 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				if (Search.get().getOptions().getType() != GUISearchOptions.TYPE_FOLDERS) {
-					final String id = grid.getSelectedRecord().getAttribute("id");
+					final long id = Long.parseLong(grid.getSelectedRecord().getAttribute("id"));
+
 					folderService.getFolder(Session.get().getSid(),
 							Long.parseLong(grid.getSelectedRecord().getAttributeAsString("folderId")), false,
 							new AsyncCallback<GUIFolder>() {
@@ -154,9 +143,20 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 								@Override
 								public void onSuccess(GUIFolder folder) {
-									if (folder.isDownload())
+									if (folder.isDownload()
+											&& "download".equals(Session.get().getInfo().getConfig("gui.doubleclick")))
 										Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
 												+ "&docId=" + id + "&open=true", "_blank", "");
+									else {
+										String filename = grid.getSelectedRecord().getAttribute("filename");
+										String version = grid.getSelectedRecord().getAttribute("version");
+
+										if (filename == null)
+											filename = grid.getSelectedRecord().getAttribute("title") + "."
+													+ grid.getSelectedRecord().getAttribute("type");
+										PreviewPopup iv = new PreviewPopup(id, version, filename);
+										iv.show();
+									}
 								}
 							});
 				}

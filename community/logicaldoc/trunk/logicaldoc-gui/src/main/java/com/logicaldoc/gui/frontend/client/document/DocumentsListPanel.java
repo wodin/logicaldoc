@@ -57,14 +57,27 @@ public class DocumentsListPanel extends VLayout {
 		grid.addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
-				String id = grid.getSelectedRecord().getAttribute("id");
-				if (Session.get().getCurrentFolder().isDownload())
+				long id = Long.parseLong(grid.getSelectedRecord().getAttribute("id"));
+				String filename = grid.getSelectedRecord().getAttribute("filename");
+				String version = grid.getSelectedRecord().getAttribute("version");
+
+				if (filename == null)
+					filename = grid.getSelectedRecord().getAttribute("title") + "."
+							+ grid.getSelectedRecord().getAttribute("type");
+
+				if (Session.get().getCurrentFolder().isDownload()
+						&& "download".equals(Session.get().getInfo().getConfig("gui.doubleclick")))
 					try {
 						WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
 								+ "&docId=" + id + "&open=true");
 					} catch (Throwable t) {
 
 					}
+				else {
+					PreviewPopup iv = new PreviewPopup(id, version, filename);
+					iv.show();
+				}
+
 				event.cancel();
 			}
 		});
