@@ -106,6 +106,7 @@ public class ParametricForm extends VLayout {
 		folder = new FolderSelector(null, true);
 		folder.setColSpan(2);
 		folder.setEndRow(true);
+		folder.setWidth(200);
 
 		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders2"));
 		subfolders.setColSpan(2);
