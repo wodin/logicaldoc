@@ -7,13 +7,13 @@ import java.util.Date;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.FoldersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.form.fields.PickerIcon;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
-import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.ItemClickEvent;
@@ -41,11 +41,11 @@ public class FolderSelector extends TextItem {
 		setTitle(I18N.message("folder"));
 		setWrapTitle(false);
 		setValue("");
-		setRedrawOnChange(true);
 		setValueField("folderId");
 		setDisplayField("name");
-
-		menu.setCanSelectParentItems(true);
+		setHintStyle("hint");
+		
+        menu.setCanSelectParentItems(true);
 		Date date = new Date();
 		menu.setDataSource(new FoldersDS("folderselector" + date.getTime()));
 		menu.setWidth(130);
@@ -59,28 +59,35 @@ public class FolderSelector extends TextItem {
 		PickerIcon search = new PickerIcon(PickerIcon.SEARCH, new FormItemClickHandler() {
 			@Override
 			public void onFormItemClick(FormItemIconClickEvent event) {
+				FolderSearchDialog dialog = new FolderSearchDialog(FolderSelector.this);
+				dialog.show();
+			}
+		});
+
+		PickerIcon pick = new PickerIcon(PickerIcon.COMBO_BOX, new FormItemClickHandler() {
+			@Override
+			public void onFormItemClick(FormItemIconClickEvent event) {
 				menu.showContextMenu();
 			}
 		});
 
-		addKeyPressHandler(new KeyPressHandler() {
+		PickerIcon clear = new PickerIcon(PickerIcon.CLEAR, new FormItemClickHandler() {
 			@Override
-			public void onKeyPress(KeyPressEvent event) {
-				if ("backspace".equals(event.getKeyName().toLowerCase())
-						|| "delete".equals(event.getKeyName().toLowerCase())) {
-					clearValue();
-					setValue("");
-					folderId=null;
-				} else {
-					SC.warn(I18N.message("pressdel"));
-				}
-				for (FolderChangeListener listener : listeners) {
-					listener.onChanged(null);
-				}
+			public void onFormItemClick(FormItemIconClickEvent event) {
+				clearValue();
+				setFolder(null, null);
 			}
 		});
 
-		setIcons(search);
+		setIcons(pick, search, clear);
+
+		addChangedHandler(new ChangedHandler() {
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ListGridRecord selection = getSelectedRecord();
+				setFolder(Long.parseLong(selection.getAttribute("folderId")), selection.getAttribute("name"));
+			}
+		});
 	}
 
 	public void setFolder(Long folderId, String name) {
@@ -88,7 +95,10 @@ public class FolderSelector extends TextItem {
 
 		if (name != null && !(name.endsWith(" ") || name.endsWith("&nbsp;"))) {
 			setValue(name);
+		} else {
+			setValue("");
 		}
+
 		for (FolderChangeListener listener : listeners) {
 			listener.onChanged(getFolder());
 		}
