@@ -162,7 +162,8 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 		folder = new FolderSelector(null, true);
 		folder.setColSpan(3);
-
+		folder.setWidth(200);
+		
 		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders", Session.get()
 				.getInfo().getConfig("search.depth")));
 		subfolders.setColSpan(3);
