@@ -181,7 +181,6 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 		ListGridField folder = new ListGridField("folder", I18N.message("folder"), 200);
 		folder.setWidth(200);
-		folder.setHidden(true);
 
 		ListGridField comment = new ListGridField("comment", I18N.message("comment"), 300);
 		comment.setWidth(300);
