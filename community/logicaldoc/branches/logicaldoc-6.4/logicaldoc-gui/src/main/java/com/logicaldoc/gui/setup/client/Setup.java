@@ -302,8 +302,7 @@ public class Setup implements EntryPoint {
 		SelectItem languageItem = ItemFactory.newLanguageSelector(LANGUAGE, false, true);
 		languageItem.setTitle(I18N.message("defaultlang"));
 		languageItem.setRequired(true);
-		languageItem.setValue(I18N.getLocale());
-
+		
 		final DynamicForm languageForm = new DynamicForm();
 		languageForm.setID("languageForm");
 		languageForm.setValuesManager(vm);
