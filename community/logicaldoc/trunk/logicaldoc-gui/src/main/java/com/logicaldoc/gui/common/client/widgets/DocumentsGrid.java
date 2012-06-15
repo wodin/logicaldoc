@@ -228,7 +228,6 @@ public class DocumentsGrid extends ListGrid {
 
 			ListGridField folder = new ListGridField("folder", I18N.message("folder"), 200);
 			folder.setWidth(200);
-			folder.setHidden(true);
 
 			ListGridField summary = new ListGridField("summary", I18N.message("summary"));
 			summary.setWidth(300);
