@@ -35,6 +35,7 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 		setMembers(formsContainer);
 		targetSelector = new FolderSelector("target", false);
 		targetSelector.setRequired(true);
+		targetSelector.setWidth(200);
 		targetSelector.setTitle(I18N.message("target"));
 		if (share.getTarget() != null)
 			targetSelector.setFolder(share.getTarget());
