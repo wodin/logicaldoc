@@ -61,7 +61,8 @@ public class IncrementalSettingsPanel extends VLayout {
 		folderSelector.setFolder(incremental.getFolder());
 		folderSelector.setRequired(true);
 		folderSelector.addFolderChangeListener(folderListener);
-
+		folderSelector.setWidth(200);
+		
 		templates = ItemFactory.newTemplateSelector(true, null);
 		templates.addChangedHandler(changedHandler);
 		templates.setValues(incremental.getTemplateIds());
