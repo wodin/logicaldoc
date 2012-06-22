@@ -177,6 +177,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		form2.setTitleOrientation(TitleOrientation.TOP);
 		form2.clearValues();
 		form2.clear();
+		form2.setWidth100();
 		addMember(form2);
 
 		if (templateId == null)
