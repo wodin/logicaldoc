@@ -10,6 +10,14 @@
 
                      LogicalDOC Community Edition
 
+
+LogicalDOC 6.4.2 (2012-06-25; logicaldoc-6.4.2)
+=============== 
+218 Configurable action on document's double click - Improvement - User Interface
+221 Option to select a folder with code completion - Improvement - User Interface
+220 Default document's detail tab - Improvement - User Interface
+
+
 LogicalDOC 6.4.1 (2012-05-11; logicaldoc-6.4.1)
 =============== 
 000 New GUI translations: Slovenian and Korean - Improvement -	User Interface 
