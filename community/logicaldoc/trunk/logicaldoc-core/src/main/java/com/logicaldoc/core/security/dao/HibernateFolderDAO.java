@@ -749,7 +749,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 			// The administrators have all permissions on all folders
 			if (user.isInGroup("admin"))
-				return findAllIds();
+				return queryForList("select ld_id from ld_folder where ld_deleted=0", Long.class);
 
 			Set<Group> precoll = user.getGroups();
 
