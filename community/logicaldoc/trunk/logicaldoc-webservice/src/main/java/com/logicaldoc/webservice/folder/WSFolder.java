@@ -40,6 +40,10 @@ public class WSFolder {
 
 	private Long templateId;
 
+	private String creation;
+	
+	private String creator;
+	
 	private WSAttribute[] extendedAttributes = new WSAttribute[0];
 
 	public void addExtendedAttribute(WSAttribute att) {
@@ -72,6 +76,9 @@ public class WSFolder {
 		wsFolder.setDescription(folder.getDescription());
 		wsFolder.setParentId(folder.getParentId());
 		wsFolder.setLastModified(AbstractService.convertDateToString(folder.getLastModified()));
+		wsFolder.setCreation(AbstractService.convertDateToString(folder.getCreation()));
+		wsFolder.setCreator(folder.getCreator());
+		
 
 		if (folder.getTemplate() != null) {
 			wsFolder.setTemplateId(folder.getTemplate().getId());
@@ -184,5 +191,21 @@ public class WSFolder {
 
 	public void setExtendedAttributes(WSAttribute[] extendedAttributes) {
 		this.extendedAttributes = extendedAttributes;
+	}
+
+	public String getCreation() {
+		return creation;
+	}
+
+	public void setCreation(String creation) {
+		this.creation = creation;
+	}
+
+	public String getCreator() {
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
 	}
 }
