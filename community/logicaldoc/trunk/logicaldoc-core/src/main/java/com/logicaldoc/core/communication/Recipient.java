@@ -27,6 +27,8 @@ public class Recipient {
 	// The recipient type (i.e. system, user, group, email)
 	private int type = TYPE_SYSTEM;
 
+	private int read = 0;
+	
 	public Recipient() {
 	}
 
@@ -73,5 +75,13 @@ public class Recipient {
 
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	public int getRead() {
+		return read;
+	}
+
+	public void setRead(int read) {
+		this.read = read;
 	}
 }

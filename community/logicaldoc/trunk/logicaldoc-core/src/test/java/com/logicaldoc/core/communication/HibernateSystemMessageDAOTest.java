@@ -123,7 +123,6 @@ public class HibernateSystemMessageDAOTest extends AbstractCoreTCase {
 
 		SystemMessage message = new SystemMessage();
 		message.setAuthor("admin");
-		message.setRead(0);
 		message.setMessageText("text");
 		message.setLastNotified(new Date());
 		message.setType(SystemMessage.TYPE_SYSTEM);

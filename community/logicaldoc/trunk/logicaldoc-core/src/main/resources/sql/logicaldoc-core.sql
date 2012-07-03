@@ -20,8 +20,11 @@ create table ld_tag (ld_docid bigint, ld_tag varchar(255));
 create table ld_link (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_type varchar(255) not null, ld_docid1 bigint, ld_docid2 bigint, primary key (ld_id));
 create table ld_menu (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_text varchar(255), ld_parentid bigint not null, ld_securityref bigint, ld_icon varchar(255), ld_type int not null, ld_description varchar(4000), primary key (ld_id));
 create table ld_menugroup (ld_menuid bigint not null, ld_groupid bigint not null, ld_write int not null, primary key (ld_menuid, ld_groupid, ld_write));
-create table ld_recipient (ld_messageid bigint not null, ld_name varchar(255) not null, ld_address varchar(255) not null, ld_mode varchar(255) not null, ld_type int not null);
-create table ld_systemmessage (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_author varchar(255), ld_messagetext varchar(2000), ld_subject varchar(255), ld_sentdate timestamp not null, ld_datescope int, ld_prio int, ld_confirmation int, ld_red int not null, ld_lastnotified timestamp, ld_status int not null, ld_trials int, ld_type int not null, primary key (ld_id));
+create table ld_recipient (ld_messageid bigint not null, ld_name varchar(255) not null, ld_address varchar(255) not null, ld_mode varchar(255) not null, ld_type int not null, ld_read int not null);
+create table ld_systemmessage (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, 
+                               ld_author varchar(255), ld_messagetext varchar(2000), ld_subject varchar(255), 
+                               ld_sentdate timestamp not null, ld_datescope int, ld_prio int, ld_confirmation int, 
+                               ld_lastnotified timestamp, ld_status int not null, ld_trials int, ld_type int not null, primary key (ld_id));
 create table ld_template (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_name varchar(255) not null, ld_description varchar(2000), ld_readonly int not null, ld_type int not null, ld_category int not null, ld_signrequired int not null, ld_retentiondays int null, primary key (ld_id));
 create table ld_template_ext (ld_templateid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_templateid, ld_name));
 create table ld_ticket (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_ticketid varchar(255) not null, ld_docid bigint not null, ld_userid bigint not null, ld_type int not null, ld_creation timestamp not null, ld_expired timestamp, ld_count int not null, primary key (ld_id));
@@ -192,7 +195,7 @@ values     (-10000,CURRENT_TIMESTAMP,0,'publisher','Group of publishers',0);
 
 insert into ld_user
            (ld_id,ld_lastmodified,ld_deleted,ld_enabled,ld_username,ld_password,ld_name,ld_firstname,ld_street,ld_postalcode,ld_city,ld_country,ld_language,ld_email,ld_telephone,ld_telephone2,ld_type,ld_passwordchanged,ld_passwordexpires,ld_source,ld_quota,ld_quotacount,ld_welcomescreen)
-values     (1,CURRENT_TIMESTAMP,0,1,'admin','d033e22ae348aeb566fc214aec3585c4da997','Admin','Admin','','','','','en','admin@admin.net','','',0,null,0,0,-1,0,1500);
+values     (1,CURRENT_TIMESTAMP,0,1,'admin','d033e22ae348aeb566fc214aec3585c4da997','Admin','Admin','','','','','en','admin@admin.net','','',0,null,0,0,-1,0,1520);
 insert into ld_group
 values     (-1,CURRENT_TIMESTAMP,0,'_user_1','',1);
 insert into ld_usergroup

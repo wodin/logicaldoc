@@ -49,11 +49,13 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 
 	@Override
 	public GUIMessage getMessage(String sid, long messageId, boolean markAsRead) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession user = SessionUtil.validateSession(sid);
 
 		Context context = Context.getInstance();
 		SystemMessageDAO dao = (SystemMessageDAO) context.getBean(SystemMessageDAO.class);
 		SystemMessage message = dao.findById(messageId);
+		dao.initialize(message);
+		
 		GUIMessage m = new GUIMessage();
 		m.setId(message.getId());
 		m.setSubject(message.getSubject());
@@ -62,8 +64,9 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 		m.setValidity(message.getDateScope());
 
 		// If the case mark the message as read
-		if (message.getRead() == 0) {
-			message.setRead(1);
+		if (!message.wasReadBy(user.getUserName())) {
+			Recipient rec=message.getRecipient(user.getUserName());
+			rec.setRead(1);
 			dao.store(message);
 
 			// If required a notification message must be sent to the sender
@@ -73,6 +76,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 				recipient.setName(message.getAuthor());
 				recipient.setAddress(message.getAuthor());
 				recipient.setType(Recipient.TYPE_SYSTEM);
+				recipient.setRead(0);
 				recipient.setMode("");
 				Set<Recipient> recipients = new HashSet<Recipient>();
 				recipients.add(recipient);
@@ -82,7 +86,6 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 				sysmess.setSubject("Confirmation");
 				sysmess.setMessageText("To: " + recipient.getName() + "\nMessage: " + message.getMessageText());
 				sysmess.setSentDate(date);
-				sysmess.setRead(0);
 				sysmess.setConfirmation(0);
 				sysmess.setPrio(message.getPrio());
 				sysmess.setDateScope(message.getDateScope());

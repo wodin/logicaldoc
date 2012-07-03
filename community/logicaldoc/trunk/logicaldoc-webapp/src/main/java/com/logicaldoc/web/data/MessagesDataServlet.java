@@ -54,8 +54,6 @@ public class MessagesDataServlet extends HttpServlet {
 			SystemMessageDAO dao = (SystemMessageDAO) context.getBean(SystemMessageDAO.class);
 			dao.deleteExpiredMessages(session.getUserName());
 
-			List<SystemMessage> records = dao.findByRecipient(session.getUserName(), SystemMessage.TYPE_SYSTEM, null);
-
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
@@ -65,14 +63,28 @@ public class MessagesDataServlet extends HttpServlet {
 			/*
 			 * Iterate over records composing the response XML document
 			 */
-			for (SystemMessage record : records) {
+			List<SystemMessage> unread = dao.findByRecipient(session.getUserName(), SystemMessage.TYPE_SYSTEM, 0);
+			for (SystemMessage record : unread) {
 				writer.print("<message>");
 				writer.print("<id>" + record.getId() + "</id>");
 				writer.print("<subject><![CDATA[" + record.getSubject() + "]]></subject>");
 				writer.print("<priority>" + record.getPrio() + "</priority>");
 				writer.print("<from><![CDATA[" + record.getAuthor() + "]]></from>");
 				writer.print("<sent>" + df.format(record.getSentDate()) + "</sent>");
-				writer.print("<read>" + (record.getRead() == 1) + "</read>");
+				writer.print("<read>false</read>");
+				writer.print("<text><![CDATA[" + record.getMessageText() + "]]></text>");
+				writer.print("</message>");
+			}
+
+			List<SystemMessage> read = dao.findByRecipient(session.getUserName(), SystemMessage.TYPE_SYSTEM, 1);
+			for (SystemMessage record : read) {
+				writer.print("<message>");
+				writer.print("<id>" + record.getId() + "</id>");
+				writer.print("<subject><![CDATA[" + record.getSubject() + "]]></subject>");
+				writer.print("<priority>" + record.getPrio() + "</priority>");
+				writer.print("<from><![CDATA[" + record.getAuthor() + "]]></from>");
+				writer.print("<sent>" + df.format(record.getSentDate()) + "</sent>");
+				writer.print("<read>true</read>");
 				writer.print("<text><![CDATA[" + record.getMessageText() + "]]></text>");
 				writer.print("</message>");
 			}

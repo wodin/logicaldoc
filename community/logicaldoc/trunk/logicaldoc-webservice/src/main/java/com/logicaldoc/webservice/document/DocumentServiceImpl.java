@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.EMailAttachment;
 import com.logicaldoc.core.communication.EMailSender;
+import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
@@ -505,9 +506,11 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			mail.setAuthor(user.getUserName());
 			mail.setAuthorAddress(user.getEmail());
 			mail.parseRecipients(recipients);
+			for (Recipient recipient : mail.getRecipients()) {
+				recipient.setRead(1);
+			}
 			mail.setFolder("outbox");
 			mail.setMessageText(message);
-			mail.setRead(1);
 			mail.setSentDate(new Date());
 			mail.setSubject(subject);
 			mail.setUserName(user.getUserName());

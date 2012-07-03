@@ -91,7 +91,7 @@ public class User extends PersistentObject implements Serializable {
 
 	private String signatureInfo = "";
 
-	private Integer welcomeScreen = 1500;
+	private Integer welcomeScreen = 1520;
 
 	private String ipWhiteList;
 
