@@ -29,8 +29,6 @@ public abstract class Message extends PersistentObject {
 	// The message creation date
 	private Date sentDate = new Date();
 
-	private int read = 0; // 0 - false; 1 - true
-
 	private int type = TYPE_SYSTEM;
 
 	protected Set<Recipient> recipients = new HashSet<Recipient>();
@@ -50,10 +48,6 @@ public abstract class Message extends PersistentObject {
 		return subject;
 	}
 
-	public int getRead() {
-		return read;
-	}
-
 	public void setMessageText(String mess) {
 		messageText = mess;
 	}
@@ -64,10 +58,6 @@ public abstract class Message extends PersistentObject {
 
 	public void setSubject(String subj) {
 		subject = subj;
-	}
-
-	public void setRead(int rd) {
-		read = rd;
 	}
 
 	public Date getSentDate() {
@@ -84,6 +74,22 @@ public abstract class Message extends PersistentObject {
 
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	public Recipient getRecipient(String name) {
+		for (Recipient recipient : recipients) {
+			if (name.equals(recipient.getName()))
+				return recipient;
+		}
+		return null;
+	}
+
+	public boolean wasReadBy(String name) {
+		Recipient rec = getRecipient(name);
+		if (rec != null)
+			return rec.getRead() == 1;
+		else
+			return false;
 	}
 
 	public Set<Recipient> getRecipients() {

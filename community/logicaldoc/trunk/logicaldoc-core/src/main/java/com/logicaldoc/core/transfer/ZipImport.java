@@ -166,7 +166,6 @@ public class ZipImport {
 		String body = MessageFormat.format(message, new Object[] { zipFile.getName() });
 		sysmess.setMessageText(body);
 		sysmess.setSentDate(now);
-		sysmess.setRead(0);
 		sysmess.setConfirmation(0);
 		sysmess.setPrio(0);
 		sysmess.setDateScope(1);

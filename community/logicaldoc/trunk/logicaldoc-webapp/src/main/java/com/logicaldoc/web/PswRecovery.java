@@ -92,6 +92,7 @@ public class PswRecovery extends HttpServlet {
 				try {
 					email = new EMail();
 					Recipient recipient = new Recipient();
+					recipient.setRead(1);
 					recipient.setAddress(user.getEmail());
 					email.addRecipient(recipient);
 					email.setFolder("outbox");
@@ -107,7 +108,6 @@ public class PswRecovery extends HttpServlet {
 					if (stored) {
 						Locale locale = new Locale(user.getLanguage());
 
-						email.setRead(1);
 						email.setSentDate(new Date());
 						email.setUserName(user.getUserName());
 						email.setLocale(locale);

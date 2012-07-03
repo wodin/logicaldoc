@@ -135,6 +135,8 @@ public class ProductNews extends Task {
 					recipient.setAddress(user.getUserName());
 					recipient.setType(Recipient.TYPE_SYSTEM);
 					recipient.setMode(Recipient.MODE_EMAIL_TO);
+					recipient.setRead(1);
+					
 					// Add the recipient to the recipients list according to the
 					// user Locale
 					if (recipientsLocalesMap.containsKey(user.getLocale())) {
@@ -151,7 +153,6 @@ public class ProductNews extends Task {
 				SystemMessage message = new SystemMessage();
 				message.setType(Message.TYPE_NOTIFICATION);
 				message.setAuthor("SYSTEM");
-				message.setRead(0);
 				message.setSentDate(new Date());
 				message.setRecipients(recipientsLocalesMap.get(locale));
 				message.setSubject(I18N.message("feednewsfound", locale, new Object[] { saved }));

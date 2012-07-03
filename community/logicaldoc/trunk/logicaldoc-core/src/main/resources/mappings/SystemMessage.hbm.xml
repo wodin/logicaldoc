@@ -16,7 +16,6 @@
 		<property name="dateScope" type="int" column="ld_datescope" />
 		<property name="prio" type="int" column="ld_prio" />
 		<property name="confirmation" type="int" column="ld_confirmation" />
-        <property name="read" type="int" column="ld_red" not-null="true"/>
         <property name="lastNotified" type="timestamp" column="ld_lastnotified" />
         <property name="status" type="int" column="ld_status" not-null="true" />
         <property name="trials" type="int" column="ld_trials" />
@@ -28,6 +27,7 @@
                  <property name="address" type="string" column="ld_address" not-null="true"/>
                  <property name="mode" type="string" column="ld_mode" not-null="true"/>
                  <property name="type" type="int" column="ld_type" not-null="true"/>
+                 <property name="read" type="int" column="ld_read" not-null="true"/>
             </composite-element>
         </set>
 	</class>

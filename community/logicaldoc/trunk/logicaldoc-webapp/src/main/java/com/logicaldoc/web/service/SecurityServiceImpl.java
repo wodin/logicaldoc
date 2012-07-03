@@ -516,10 +516,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		email = new EMail();
 		Recipient recipient = new Recipient();
 		recipient.setAddress(user.getEmail());
+		recipient.setRead(1);
 		email.addRecipient(recipient);
 		email.setFolder("outbox");
 		email.setUserName(user.getUserName());
-		email.setRead(1);
 		email.setSentDate(new Date());
 
 		Locale locale = new Locale(user.getLanguage());
@@ -735,6 +735,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			email = new EMail();
 			Recipient recipient = new Recipient();
 			recipient.setAddress(user.getEmail());
+			recipient.setRead(1);
 			email.addRecipient(recipient);
 			email.setFolder("outbox");
 
@@ -760,7 +761,6 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			Locale locale = new Locale(user.getLanguage());
 
 			email.setLocale(locale);
-			email.setRead(1);
 			email.setSentDate(new Date());
 			email.setSubject(productName + " " + I18N.message("passwordrequest", locale));
 			email.setUserName(user.getUserName());
