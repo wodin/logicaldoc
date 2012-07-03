@@ -95,9 +95,14 @@ public class MainPanel extends VLayout implements SessionObserver {
 	public void onUserLoggedIn(final GUIUser user) {
 		initGUI();
 
-		int welcomeScreen = 1500;
+		int welcomeScreen = 1520;
 		if (user.getWelcomeScreen() != null)
 			welcomeScreen = user.getWelcomeScreen().intValue();
+
+		if (Menu.enabled(Menu.DASHBOARD)) {
+			dashboardTab.setPane(DashboardPanel.get());
+			tabSet.addTab(dashboardTab);
+		}
 
 		if (Menu.enabled(Menu.DOCUMENTS)) {
 			documentsTab.setPane(DocumentsPanel.get());
@@ -109,16 +114,11 @@ public class MainPanel extends VLayout implements SessionObserver {
 			tabSet.addTab(searchTab);
 		}
 
-		if (Menu.enabled(Menu.DASHBOARD)) {
-			dashboardTab.setPane(DashboardPanel.get());
-			tabSet.addTab(dashboardTab);
-		}
-
 		if (Menu.enabled(Menu.ADMINISTRATION)) {
 			administrationTab.setPane(AdminPanel.get());
 			tabSet.addTab(administrationTab);
 		}
-		
+
 		if (welcomeScreen == Menu.DOCUMENTS && Menu.enabled(Menu.DOCUMENTS))
 			tabSet.selectTab(documentsTab);
 		else if (welcomeScreen == Menu.SEARCH && Menu.enabled(Menu.SEARCH))
