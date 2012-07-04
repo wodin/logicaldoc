@@ -56,11 +56,11 @@ public class HibernateSystemMessageDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testFindByRecipient() {
 		Collection<SystemMessage> coll = dao.findByRecipient("sebastian", SystemMessage.TYPE_SYSTEM, null);
-		Assert.assertEquals(2, coll.size());
+		Assert.assertEquals(1, coll.size());
 		coll = dao.findByRecipient("marco", 1, null);
 		Assert.assertEquals(2, coll.size());
 		coll = dao.findByRecipient("paperino", 2, null);
-		Assert.assertEquals(1, coll.size());
+		Assert.assertEquals(0, coll.size());
 		coll = dao.findByRecipient("xxxx", SystemMessage.TYPE_SYSTEM, null);
 		Assert.assertEquals(0, coll.size());
 	}
@@ -76,7 +76,7 @@ public class HibernateSystemMessageDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testGetCount() {
-		Assert.assertEquals(2, dao.getCount("sebastian", SystemMessage.TYPE_SYSTEM, null));
+		Assert.assertEquals(1, dao.getCount("sebastian", SystemMessage.TYPE_SYSTEM, null));
 		Assert.assertEquals(2, dao.getCount("marco", 1, null));
 		Assert.assertEquals(0, dao.getCount("admin", SystemMessage.TYPE_SYSTEM, null));
 	}
