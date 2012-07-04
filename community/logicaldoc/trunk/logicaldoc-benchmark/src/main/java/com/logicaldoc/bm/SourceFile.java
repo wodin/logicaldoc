@@ -6,9 +6,10 @@ import com.sun.mail.iap.ByteArray;
 
 public class SourceFile {
 
-	File file;
-	ByteArray content;
-	
+	private File file;
+
+	private ByteArray content;
+
 	public File getFile() {
 		return file;
 	}
