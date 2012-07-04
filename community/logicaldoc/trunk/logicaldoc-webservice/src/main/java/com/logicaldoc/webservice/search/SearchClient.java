@@ -37,9 +37,9 @@ public class SearchClient implements SearchService {
 			factory.getOutInterceptors().add(new GZIPOutInterceptor(gzipThreshold));
 		}
 
-		factory.setServiceClass(FolderService.class);
+		factory.setServiceClass(SearchService.class);
 		factory.setAddress(endpoint);
-		client = (SearchClient) factory.create();
+		client = (SearchService) factory.create();
 	}
 
 	public SearchClient(String endpoint) throws IOException {
