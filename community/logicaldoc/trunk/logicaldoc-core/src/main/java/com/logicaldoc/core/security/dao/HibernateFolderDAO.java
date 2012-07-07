@@ -16,6 +16,7 @@ import java.util.StringTokenizer;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -870,6 +871,49 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			result = false;
 		}
 
+		return result;
+	}
+
+	@Override
+	public boolean applyMetadataToTree(long id, FolderHistory transaction) {
+		boolean result = true;
+
+		Folder parent = findById(id);
+		if (parent == null)
+			return result;
+
+		try {
+			initialize(parent);
+			transaction.setEvent(FolderHistory.EVENT_FOLDER_CHANGED);
+
+			// Iterate over all children setting the template and field values
+			List<Folder> children = findChildren(id, null);
+			for (Folder folder : children) {
+				initialize(folder);
+
+				FolderHistory tr = (FolderHistory) transaction.clone();
+				tr.setFolderId(folder.getId());
+
+				folder.setTemplate(parent.getTemplate());
+				for (String name : parent.getAttributeNames()) {
+					ExtendedAttribute ext = parent.getAttributes().get(name);
+					ExtendedAttribute att = new ExtendedAttribute();
+					att.setValue(ext.getValue());
+					att.setType(ext.getType());
+					folder.getAttributes().put(name, att);
+				}
+
+				store(folder, tr);
+				getHibernateTemplate().flush();
+
+				if (!applyMetadataToTree(folder.getId(), transaction))
+					return false;
+			}
+		} catch (Throwable e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+			result = false;
+		}
 		return result;
 	}
 

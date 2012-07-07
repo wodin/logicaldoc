@@ -311,6 +311,11 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	public boolean applyRithtToTree(long id, FolderHistory transaction);
 
 	/**
+	 * Propagates the template metadata a node to the whole subree
+	 */
+	public boolean applyMetadataToTree(long id, FolderHistory transaction);
+
+	/**
 	 * Counts the number of folders
 	 */
 	public int count(boolean computeDeleted);

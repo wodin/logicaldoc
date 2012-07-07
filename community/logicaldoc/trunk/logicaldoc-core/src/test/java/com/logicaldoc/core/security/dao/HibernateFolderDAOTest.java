@@ -13,7 +13,9 @@ import org.junit.Test;
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.Permission;
@@ -36,6 +38,8 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 	private FolderHistoryDAO historyDao;
 
+	private DocumentTemplateDAO templateDao;
+
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
@@ -46,6 +50,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		userDao = (UserDAO) context.getBean("UserDAO");
 		docDao = (DocumentDAO) context.getBean("DocumentDAO");
 		historyDao = (FolderHistoryDAO) context.getBean("FolderHistoryDAO");
+		templateDao = (DocumentTemplateDAO) context.getBean("DocumentTemplateDAO");
 	}
 
 	@Test
@@ -597,6 +602,61 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(5L, folder.getSecurityRef().longValue());
 		folder = dao.findById(1202);
 		Assert.assertEquals(5L, folder.getSecurityRef().longValue());
+	}
+
+	@Test
+	public void testMetadataToTree() {
+		FolderHistory transaction = new FolderHistory();
+		User user = new User();
+		user.setId(4);
+		transaction.setUser(user);
+		transaction.setNotified(0);
+
+		Folder folder = dao.findById(1200);
+		Assert.assertNull(folder.getTemplate());
+		folder = dao.findById(1201);
+		Assert.assertNull(folder.getTemplate());
+		folder = dao.findById(1202);
+		Assert.assertNotNull(folder.getTemplate());
+
+		folder = dao.findById(1200);
+		dao.initialize(folder);
+
+		DocumentTemplate template = templateDao.findById(1L);
+		folder.setTemplate(template);
+		folder.setValue("attr1", "test");
+
+		dao.store(folder);
+
+		Assert.assertTrue(dao.applyMetadataToTree(1200, transaction));
+		folder = dao.findById(1200);
+		dao.initialize(folder);
+		Assert.assertEquals("test1", folder.getTemplate().getName());
+		Assert.assertEquals("test", folder.getValue("attr1"));
+		
+		folder = dao.findById(1201);
+		dao.initialize(folder);
+		Assert.assertEquals("test1", folder.getTemplate().getName());
+		Assert.assertEquals("test", folder.getValue("attr1"));
+		
+		folder = dao.findById(1202);
+		dao.initialize(folder);
+		Assert.assertEquals("test1", folder.getTemplate().getName());
+		Assert.assertEquals("test", folder.getValue("attr1"));
+
+		folder = dao.findById(1200);
+		dao.initialize(folder);
+		folder.getAttributes().clear();
+		folder.setTemplate(null);
+		dao.store(folder);
+
+		Assert.assertTrue(dao.applyMetadataToTree(1200, transaction));
+		folder = dao.findById(1201);
+		dao.initialize(folder);
+		Assert.assertEquals(null, folder.getTemplate());
+		folder = dao.findById(1202);
+		dao.initialize(folder);
+		Assert.assertEquals(null, folder.getTemplate());
 	}
 
 	@Test
