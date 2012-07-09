@@ -54,8 +54,8 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		UserSession session = SessionUtil.validateSession(sid);
 
 		try {
-			FolderDAO mdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-			saveRules(sid, mdao.findById(folder.getId()), session.getUserId(), folder.getRights());
+			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			saveRules(sid, fdao.findById(folder.getId()), session.getUserId(), folder.getRights());
 			if (subtree) {
 				/*
 				 * Just apply the current security settings to the whole subtree
@@ -65,8 +65,24 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				history.setEvent(FolderHistory.EVENT_FOLDER_PERMISSION);
 				history.setSessionId(sid);
 
-				mdao.applyRithtToTree(folder.getId(), history);
+				fdao.applyRithtToTree(folder.getId(), history);
 			}
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
+	}
+
+	@Override
+	public void applyMetadata(String sid, long parentId) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		try {
+			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			FolderHistory transaction = new FolderHistory();
+			transaction.setUser(SessionUtil.getSessionUser(sid));
+			transaction.setSessionId(sid);
+			fdao.applyMetadataToTree(parentId, transaction);
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
@@ -317,14 +333,15 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					f.setName(folderName.trim());
 					transaction.setEvent(FolderHistory.EVENT_FOLDER_RENAMED);
 				}
+
+				updateExtendedAttributes(f, folder);
 			} else {
+				transaction.setEvent(FolderHistory.EVENT_FOLDER_CREATED);
+
 				f = folderDao.create(folderDao.findById(folder.getParentId()), folderName, transaction);
 				f.setDescription(folder.getDescription());
 				f.setType(folder.getType());
-				transaction.setEvent(FolderHistory.EVENT_FOLDER_CREATED);
 			}
-
-			updateExtendedAttributes(f, folder);
 
 			folderDao.store(f, transaction);
 

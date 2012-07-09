@@ -320,6 +320,19 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	}
 
 	@Test
+	public void testCreate() {
+		Folder parent = dao.findById(1202L);
+
+		Folder folder = dao.create(parent, "xxxx", null);
+		Assert.assertNotNull(folder);
+
+		folder = dao.findById(folder.getId());
+		dao.initialize(folder);
+		Assert.assertEquals("test1", folder.getTemplate().getName());
+		Assert.assertEquals("test_val_1", folder.getValue("val1"));
+	}
+
+	@Test
 	public void testDelete() {
 		Assert.assertTrue(dao.delete(1202));
 		Folder folder = dao.findById(12012);
@@ -633,12 +646,12 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		dao.initialize(folder);
 		Assert.assertEquals("test1", folder.getTemplate().getName());
 		Assert.assertEquals("test", folder.getValue("attr1"));
-		
+
 		folder = dao.findById(1201);
 		dao.initialize(folder);
 		Assert.assertEquals("test1", folder.getTemplate().getName());
 		Assert.assertEquals("test", folder.getValue("attr1"));
-		
+
 		folder = dao.findById(1202);
 		dao.initialize(folder);
 		Assert.assertEquals("test1", folder.getTemplate().getName());

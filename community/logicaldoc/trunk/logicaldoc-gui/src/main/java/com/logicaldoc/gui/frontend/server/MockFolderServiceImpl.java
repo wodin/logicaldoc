@@ -85,4 +85,9 @@ public class MockFolderServiceImpl extends RemoteServiceServlet implements Folde
 	public void applyTemplate(String sid, long folderId, long templateId) throws InvalidSessionException {
 
 	}
+
+	@Override
+	public void applyMetadata(String sid, long parentId) throws InvalidSessionException {
+
+	}
 }

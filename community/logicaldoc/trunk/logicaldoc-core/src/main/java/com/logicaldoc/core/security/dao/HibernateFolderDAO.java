@@ -76,6 +76,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				if (folder.getId() == 0 && transaction.getEvent() == null)
 					transaction.setEvent(FolderHistory.EVENT_FOLDER_CREATED);
 			}
+
 			getHibernateTemplate().saveOrUpdate(folder);
 			saveFolderHistory(folder, transaction);
 		} catch (Exception e) {
@@ -896,11 +897,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 				folder.setTemplate(parent.getTemplate());
 				for (String name : parent.getAttributeNames()) {
-					ExtendedAttribute ext = parent.getAttributes().get(name);
-					ExtendedAttribute att = new ExtendedAttribute();
-					att.setValue(ext.getValue());
-					att.setType(ext.getType());
-					folder.getAttributes().put(name, att);
+					ExtendedAttribute ext = (ExtendedAttribute) parent.getAttributes().get(name).clone();
+					folder.getAttributes().put(name, ext);
 				}
 
 				store(folder, tr);
@@ -931,6 +929,24 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		setUniqueName(folder);
 		if (transaction != null)
 			transaction.setEvent(FolderHistory.EVENT_FOLDER_CREATED);
+
+		/*
+		 * Replicate the parent's metadata
+		 */
+		if (parent.getTemplate() != null) {
+			initialize(parent);
+			folder.setTemplate(parent.getTemplate());
+			for (String att : parent.getAttributeNames()) {
+				ExtendedAttribute ext = null;
+				try {
+					ext = (ExtendedAttribute) parent.getAttributes().get(att).clone();
+				} catch (CloneNotSupportedException e) {
+
+				}
+				folder.getAttributes().put(att, ext);
+			}
+		}
+
 		if (store(folder, transaction) == false)
 			return null;
 		return folder;

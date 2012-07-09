@@ -112,7 +112,7 @@ public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 			setStringValue((String) value);
 		} else if (value instanceof Integer) {
 			this.type = TYPE_INT;
-			setIntValue(new Long((Integer)value));
+			setIntValue(new Long((Integer) value));
 		} else if (value instanceof Long) {
 			this.type = TYPE_INT;
 			setIntValue((Long) value);
@@ -171,5 +171,20 @@ public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 
 	public void setEditor(int editor) {
 		this.editor = editor;
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		ExtendedAttribute clone = new ExtendedAttribute();
+		clone.setDateValue(dateValue);
+		clone.setDoubleValue(doubleValue);
+		clone.setEditor(editor);
+		clone.setIntValue(intValue);
+		clone.setLabel(label);
+		clone.setMandatory(mandatory);
+		clone.setPosition(position);
+		clone.setType(type);
+		clone.setStringValue(stringValue);
+		return clone;
 	}
 }
