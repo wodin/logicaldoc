@@ -12,6 +12,7 @@ import javax.mail.util.ByteArrayDataSource;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -259,7 +260,7 @@ public class Upload extends AbstractLoader {
 		StringTokenizer st = new StringTokenizer(buf, " \\\t\n\r\f\"'.;,()[]:/", false);
 		while (st.hasMoreTokens()) {
 			String token = st.nextToken();
-			if (token.length() > tagSize)
+			if (StringUtils.isNotEmpty(token) && token.length() > tagSize)
 				tags.add(token);
 		}
 	}
