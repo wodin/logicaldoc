@@ -12,6 +12,8 @@ import org.java.plugin.Plugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.util.config.ContextProperties;
+
 /**
  * This is the base class for LogicalDOC plugins.
  * 
@@ -65,7 +67,13 @@ public abstract class LogicalDOCPlugin extends Plugin {
 	 * the plug-in's data folder
 	 */
 	private File getInstallMark() {
-		return new File(resolveDataPath("install").toString());
+		String id = null;
+		try {
+			ContextProperties conf = new ContextProperties();
+			id = conf.getProperty("id");
+		} catch (IOException e) {
+		}
+		return new File(resolveDataPath("install-" + id).toString());
 	}
 
 	/**
@@ -129,8 +137,12 @@ public abstract class LogicalDOCPlugin extends Plugin {
 	 * {conf.plugindir}/{pluginName}. It will be created in not existing.
 	 */
 	public File getDataDirectory() {
-		String pluginName = getDescriptor().getUniqueId().substring(0, getDescriptor().getUniqueId().lastIndexOf('@'));
+		String pluginName = getPluginName();
 		return PluginRegistry.getPluginHome(pluginName);
+	}
+
+	protected String getPluginName() {
+		return getDescriptor().getUniqueId().substring(0, getDescriptor().getUniqueId().lastIndexOf('@'));
 	}
 
 	/**
