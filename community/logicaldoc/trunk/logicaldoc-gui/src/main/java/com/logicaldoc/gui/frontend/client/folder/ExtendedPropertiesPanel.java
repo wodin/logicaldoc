@@ -15,11 +15,15 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.FolderService;
+import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.FloatItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
@@ -27,6 +31,8 @@ import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
+import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 
@@ -47,8 +53,10 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	private boolean update=false;
-	
+	private FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
+
+	private boolean update = false;
+
 	public ExtendedPropertiesPanel(GUIFolder folder, ChangedHandler changedHandler) {
 		super(folder, changedHandler);
 		setWidth100();
@@ -70,6 +78,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 		form1 = new DynamicForm();
 		form1.setValuesManager(vm);
 		form1.setTitleOrientation(TitleOrientation.TOP);
+		form1.setWidth("1%");
 		List<FormItem> items = new ArrayList<FormItem>();
 
 		SelectItem templateItem = ItemFactory.newTemplateSelector(false, null);
@@ -93,8 +102,34 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 			}
 		});
 
+		ButtonItem applyMetadata = new ButtonItem(I18N.message("applytosubfolders"));
+		applyMetadata.setAutoFit(true);
+		applyMetadata.setEndRow(true);
+		applyMetadata.setDisabled(!update);
+		applyMetadata.setColSpan(1);
+		applyMetadata.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				ContactingServer.get().show();
+				folderService.applyMetadata(Session.get().getSid(), folder.getId(), new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						ContactingServer.get().hide();
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void v) {
+						ContactingServer.get().hide();
+					}
+				});
+			}
+		});
+
 		if (Feature.visible(Feature.TEMPLATE)) {
 			items.add(templateItem);
+			items.add(applyMetadata);
 			if (!Feature.enabled(Feature.TEMPLATE)) {
 				templateItem.setDisabled(true);
 				templateItem.setTooltip(I18N.message("featuredisabled"));
@@ -121,6 +156,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 		form2.setTitleOrientation(TitleOrientation.TOP);
 		form2.clearValues();
 		form2.clear();
+		form2.setWidth100();
 		addMember(form2);
 
 		if (templateId == null)
@@ -195,7 +231,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 		Map<String, Object> values = (Map<String, Object>) vm.getValues();
 		vm.validate();
 		if (!vm.hasErrors()) {
-			
+
 			if (Feature.enabled(Feature.TEMPLATE)) {
 				if (values.get("template") == null || "".equals(values.get("template").toString()))
 					folder.setTemplateId(null);

@@ -39,6 +39,14 @@ public interface FolderService extends RemoteService {
 	public void applyRights(String sid, GUIFolder folder, boolean subfolders) throws InvalidSessionException;
 
 	/**
+	 * Applies all extendedAttributes to a sub-tree
+	 * 
+	 * @param sid The session ID
+	 * @param parentId The parent folder containing the metadata
+	 */
+	public void applyMetadata(String sid, long parentId) throws InvalidSessionException;
+
+	/**
 	 * Gets the Folder initializing the permissions.
 	 * 
 	 * @param folderId The folder identifier

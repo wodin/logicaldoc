@@ -27,4 +27,6 @@ public interface FolderServiceAsync {
 	void saveTemplates(String sid, GUIValuePair[] templates, AsyncCallback<Void> callback);
 
 	void applyTemplate(String sid, long folderId, long templateId, AsyncCallback<Void> callback);
+
+	void applyMetadata(String sid, long parentId, AsyncCallback<Void> callback);
 }
