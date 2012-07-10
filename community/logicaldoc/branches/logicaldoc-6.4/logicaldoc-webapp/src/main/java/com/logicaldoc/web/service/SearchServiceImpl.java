@@ -97,6 +97,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 					// This settings are necessary for the 'open in folder'
 					// feature.
 					Document shortcutDoc = docDAO.findById(hit.getDocId());
+					if(shortcutDoc==null)
+						continue;
 					h.setId(shortcutDoc.getDocRef());
 					h.setFolderId(shortcutDoc.getFolder().getId());
 				} else {
