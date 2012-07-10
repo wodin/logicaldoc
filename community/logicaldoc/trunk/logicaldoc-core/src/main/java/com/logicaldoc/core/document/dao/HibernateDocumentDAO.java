@@ -255,7 +255,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				}
 			}
 
-			if ("bulkload".equals(config.getProperty("runlevel")) || doc.getCustomId() == null)
+			if ("bulkload".equals(config.getProperty("runlevel")))
 				doc.setCustomId(UUID.randomUUID().toString());
 
 			Map<String, Object> dictionary = new HashMap<String, Object>();
@@ -263,6 +263,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			log.debug("Invoke listeners before store");
 			for (DocumentListener listener : listenerManager.getListeners()) {
 				listener.beforeStore(doc, transaction, dictionary);
+			}
+
+			if (doc.getCustomId() == null) {
+				doc.setCustomId(UUID.randomUUID().toString());
 			}
 
 			// Save the document
