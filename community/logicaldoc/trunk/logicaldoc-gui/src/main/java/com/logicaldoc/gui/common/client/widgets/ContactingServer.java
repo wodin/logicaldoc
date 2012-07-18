@@ -2,6 +2,7 @@ package com.logicaldoc.gui.common.client.widgets;
 
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 
@@ -34,9 +35,11 @@ public class ContactingServer extends Window {
 
 		Label message = new Label(I18N.message("contactingserver") + "...");
 		message.setWidth100();
-		message.setHeight(20);
+		message.setHeight100();
 		message.setAlign(Alignment.CENTER);
-
+		message.setOverflow(Overflow.HIDDEN);
+		setOverflow(Overflow.HIDDEN);
+		
 		addItem(message);
 	}
 }
