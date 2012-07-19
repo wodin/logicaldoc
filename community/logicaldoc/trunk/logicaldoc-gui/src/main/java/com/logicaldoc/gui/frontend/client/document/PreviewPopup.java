@@ -38,11 +38,13 @@ public class PreviewPopup extends Window {
 
 	private String fileName;
 
+	private String fileVersion;
+
 	private boolean printEnabled = false;
 
 	private String language;
 
-	public PreviewPopup(long docId, String version, String filename) {
+	public PreviewPopup(long docId, String fileVersion, String filename) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("preview"));
 
@@ -65,6 +67,7 @@ public class PreviewPopup extends Window {
 
 		this.id = docId;
 		this.fileName = filename;
+		this.fileVersion = fileVersion;
 
 		layout = new VLayout(5);
 		layout.setTop(20);
@@ -122,7 +125,7 @@ public class PreviewPopup extends Window {
 
 		media = new HTMLFlow();
 		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "%26docId=" + id
-				+ "%26filename=" + fileName;
+				+ "%26filename=" + fileName + "%26fileVersion=" + fileVersion;
 		String tmp = Util.flashPreviewAudioVideo("player.swf", url, mediaProvider, (getWidth() - 26),
 				(getHeight() - 40));
 		media.setContents(tmp);
@@ -134,7 +137,8 @@ public class PreviewPopup extends Window {
 	 */
 	private void reloadCAD(boolean printEnabled) {
 		cad = new HTMLFlow();
-		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id;
+		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id
+				+ "%26fileVersion=" + fileVersion;
 		String tmp = "<applet name=\"CAD Applet\" archive=\"" + Util.contextPath()
 				+ "applet/dxf-applet.jar\"  code=\"de.caff.dxf.applet.DxfApplet\" width=\"" + (getWidth() - 26)
 				+ "\" height=\"" + (getHeight() - 40) + "\">";
@@ -153,8 +157,8 @@ public class PreviewPopup extends Window {
 	 */
 	private void reloadImage(boolean printEnabled, String language) {
 		image = new HTMLFlow();
-		String url = GWT.getHostPageBaseURL() + "thumbnail?sid=" + Session.get().getSid() + "%26docId=" + id
-				+ "%26suffix=preview.swf";
+		String url = GWT.getHostPageBaseURL() + "preview?sid=" + Session.get().getSid() + "%26docId=" + id
+				+ "%26fileVersion=" + fileVersion + "%26suffix=preview.swf";
 
 		String flash = "flexpaperviewer.swf";
 		if (!printEnabled)

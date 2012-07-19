@@ -240,7 +240,7 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>Thumbnail</servlet-name>
+		<servlet-name>Preview</servlet-name>
 		<servlet-class>com.logicaldoc.web.DocumentPreview</servlet-class>
 	</servlet>
 
@@ -519,8 +519,8 @@
     </servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>Thumbnail</servlet-name>
-		<url-pattern>/thumbnail</url-pattern>
+		<servlet-name>Preview</servlet-name>
+		<url-pattern>/preview</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
