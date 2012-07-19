@@ -46,7 +46,7 @@ public class ImageViewer extends VLayout {
 	 */
 	public ImageViewer(GUIDocument document) {
 		this.document = document;
-		this.url = Util.contextPath() + "/thumbnail?docId=" + document.getId() + "&sid=" + Session.get().getSid();
+		this.url = Util.contextPath() + "/preview?docId=" + document.getId() + "&sid=" + Session.get().getSid();
 
 		setWidth100();
 		setHeight100();

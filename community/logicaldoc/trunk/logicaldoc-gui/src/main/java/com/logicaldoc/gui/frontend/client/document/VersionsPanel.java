@@ -57,11 +57,11 @@ public class VersionsPanel extends DocumentDetailTab {
 		date.setCellFormatter(new DateCellFormatter(false));
 		date.setCanFilter(false);
 		ListGridField comment = new ListGridField("comment", I18N.message("comment"));
-		
+
 		ListGridField type = new ListGridField("type", I18N.message("type"), 55);
 		type.setType(ListGridFieldType.TEXT);
 		type.setAlign(Alignment.CENTER);
-		
+
 		listGrid = new ListGrid();
 		listGrid.setEmptyMessage(I18N.message("notitemstoshow"));
 		listGrid.setCanFreezeFields(true);
@@ -77,7 +77,11 @@ public class VersionsPanel extends DocumentDetailTab {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				ListGridRecord record = event.getRecord();
-				onDownload(document, record);
+				if (Session.get().getCurrentFolder().isDownload()
+						&& "download".equals(Session.get().getInfo().getConfig("gui.doubleclick")))
+					onDownload(document, record);
+				else
+					onPreview(document, record);
 			}
 		});
 
@@ -97,14 +101,26 @@ public class VersionsPanel extends DocumentDetailTab {
 							+ "&versionId=" + record.getAttribute("id") + "&open=true", "_blank", "");
 	}
 
+	protected void onPreview(final GUIDocument document, ListGridRecord record) {
+		long id = document.getId();
+		String filename = document.getFileName();
+		String fileVersion = record.getAttribute("fileVersion");
+
+		if (filename == null)
+			filename = record.getAttribute("title") + "." + record.getAttribute("type");
+
+		PreviewPopup iv = new PreviewPopup(id, fileVersion, filename);
+		iv.show();
+	}
+
 	/**
 	 * Prepares the context menu.
 	 */
 	private void setupContextMenu() {
 		contextMenu = new Menu();
-		MenuItem compareItem = new MenuItem();
-		compareItem.setTitle(I18N.message("compare"));
-		compareItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem compare = new MenuItem();
+		compare.setTitle(I18N.message("compare"));
+		compare.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				// Detect the two selected records
 				ListGridRecord[] selection = listGrid.getSelectedRecords();
@@ -130,9 +146,9 @@ public class VersionsPanel extends DocumentDetailTab {
 			}
 		});
 
-		MenuItem downloadItem = new MenuItem();
-		downloadItem.setTitle(I18N.message("download"));
-		downloadItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem download = new MenuItem();
+		download.setTitle(I18N.message("download"));
+		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				// Detect the two selected records
 				ListGridRecord[] selection = listGrid.getSelectedRecords();
@@ -142,9 +158,22 @@ public class VersionsPanel extends DocumentDetailTab {
 				onDownload(document, selection[0]);
 			}
 		});
-		downloadItem.setEnabled(document.getFolder().isDownload());
+		download.setEnabled(document.getFolder().isDownload());
 
-		contextMenu.setItems(downloadItem, compareItem);
+		MenuItem preview = new MenuItem();
+		preview.setTitle(I18N.message("preview"));
+		preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				// Detect the two selected records
+				ListGridRecord[] selection = listGrid.getSelectedRecords();
+				if (selection == null || selection.length < 1) {
+					return;
+				}
+				onPreview(document, selection[0]);
+			}
+		});
+
+		contextMenu.setItems(preview, download, compare);
 	}
 
 	@Override

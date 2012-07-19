@@ -610,14 +610,14 @@ public class DocumentContextMenu extends Menu {
 			public void onClick(MenuItemClickEvent event) {
 				long id = Long.parseLong(list.getSelectedRecord().getAttribute("id"));
 				String filename = list.getSelectedRecord().getAttribute("filename");
-				String version = list.getSelectedRecord().getAttribute("version");
+				String fileVersion = list.getSelectedRecord().getAttribute("fileVersion");
 
 				// In the search hitlist we don't have the filename
 				if (filename == null)
 					filename = list.getSelectedRecord().getAttribute("title") + "."
 							+ list.getSelectedRecord().getAttribute("type");
 
-				PreviewPopup iv = new PreviewPopup(id, version, filename);
+				PreviewPopup iv = new PreviewPopup(id, fileVersion, filename);
 				iv.show();
 			}
 		});
