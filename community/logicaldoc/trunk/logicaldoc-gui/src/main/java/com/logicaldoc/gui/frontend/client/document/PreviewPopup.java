@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -44,7 +43,7 @@ public class PreviewPopup extends Window {
 
 	private String language;
 
-	public PreviewPopup(long docId, String fileVersion, String filename) {
+	public PreviewPopup(long docId, String fileVersion, String filename, boolean printEnabled) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("preview"));
 
@@ -68,6 +67,7 @@ public class PreviewPopup extends Window {
 		this.id = docId;
 		this.fileName = filename;
 		this.fileVersion = fileVersion;
+		this.printEnabled = printEnabled;
 
 		layout = new VLayout(5);
 		layout.setTop(20);
@@ -78,9 +78,9 @@ public class PreviewPopup extends Window {
 		if (Util.isMediaFile(filename.toLowerCase())) {
 			reloadMedia();
 		} else if (filename.toLowerCase().endsWith(".dxf")) {
-			reloadCAD(printEnabled);
+			reloadCAD();
 		} else {
-			reloadImage(printEnabled, language);
+			reloadImage(language);
 		}
 
 		addCloseClickHandler(new CloseClickHandler() {
@@ -96,13 +96,13 @@ public class PreviewPopup extends Window {
 			public void onResized(ResizedEvent event) {
 				if (image != null) {
 					layout.removeMember(image);
-					reloadImage(printEnabled, language);
+					reloadImage(language);
 				} else if (media != null) {
 					layout.removeMember(media);
 					reloadMedia();
 				} else if (cad != null) {
 					layout.removeMember(cad);
-					reloadCAD(printEnabled);
+					reloadCAD();
 				}
 			}
 		});
@@ -135,7 +135,7 @@ public class PreviewPopup extends Window {
 	/**
 	 * Reloads a CAD preview.
 	 */
-	private void reloadCAD(boolean printEnabled) {
+	private void reloadCAD() {
 		cad = new HTMLFlow();
 		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id
 				+ "%26fileVersion=" + fileVersion;
@@ -155,7 +155,7 @@ public class PreviewPopup extends Window {
 	/**
 	 * Reloads an image preview.
 	 */
-	private void reloadImage(boolean printEnabled, String language) {
+	private void reloadImage(String language) {
 		image = new HTMLFlow();
 		String url = GWT.getHostPageBaseURL() + "preview?sid=" + Session.get().getSid() + "%26docId=" + id
 				+ "%26fileVersion=" + fileVersion + "%26suffix=preview.swf";
@@ -174,8 +174,6 @@ public class PreviewPopup extends Window {
 	 * user language.
 	 */
 	private void retrieveUserInfo() {
-		GUIFolder folder = Session.get().getCurrentFolder();
-		printEnabled = folder != null && folder.isDownload();
 		GUIUser user = Session.get().getUser();
 		language = user.getLanguage();
 	}

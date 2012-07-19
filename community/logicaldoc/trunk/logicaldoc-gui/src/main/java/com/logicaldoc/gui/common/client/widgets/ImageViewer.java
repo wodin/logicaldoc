@@ -2,6 +2,7 @@ package com.logicaldoc.gui.common.client.widgets;
 
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.document.PreviewPopup;
@@ -139,7 +140,9 @@ public class ImageViewer extends VLayout {
 			if (filename == null)
 				filename = document.getTitle() + "." + document.getType();
 
-			PreviewPopup iv = new PreviewPopup(document.getId(), version, filename);
+			GUIFolder folder = document.getFolder();
+			PreviewPopup iv = new PreviewPopup(document.getId(), version, filename, folder != null
+					&& folder.isDownload());
 			iv.show();
 		} catch (Throwable t) {
 

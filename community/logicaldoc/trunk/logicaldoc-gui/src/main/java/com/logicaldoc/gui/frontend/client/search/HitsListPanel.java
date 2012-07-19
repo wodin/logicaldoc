@@ -154,7 +154,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 										if (filename == null)
 											filename = grid.getSelectedRecord().getAttribute("title") + "."
 													+ grid.getSelectedRecord().getAttribute("type");
-										PreviewPopup iv = new PreviewPopup(id, version, filename);
+										PreviewPopup iv = new PreviewPopup(id, version, filename,folder != null && folder.isDownload());
 										iv.show();
 									}
 								}
