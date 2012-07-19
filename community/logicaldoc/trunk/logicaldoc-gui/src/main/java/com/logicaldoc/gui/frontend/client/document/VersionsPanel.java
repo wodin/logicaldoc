@@ -5,6 +5,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 import com.logicaldoc.gui.common.client.data.VersionsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
@@ -109,7 +110,8 @@ public class VersionsPanel extends DocumentDetailTab {
 		if (filename == null)
 			filename = record.getAttribute("title") + "." + record.getAttribute("type");
 
-		PreviewPopup iv = new PreviewPopup(id, fileVersion, filename);
+		GUIFolder folder = document.getFolder();
+		PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, folder != null && folder.isDownload());
 		iv.show();
 	}
 

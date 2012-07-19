@@ -617,7 +617,8 @@ public class DocumentContextMenu extends Menu {
 					filename = list.getSelectedRecord().getAttribute("title") + "."
 							+ list.getSelectedRecord().getAttribute("type");
 
-				PreviewPopup iv = new PreviewPopup(id, fileVersion, filename);
+				GUIFolder folder = Session.get().getCurrentFolder();
+				PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, folder != null && folder.isDownload());
 				iv.show();
 			}
 		});
