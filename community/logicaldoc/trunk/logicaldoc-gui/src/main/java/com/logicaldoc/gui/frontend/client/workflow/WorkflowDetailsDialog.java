@@ -17,6 +17,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.dashboard.WorkflowDashboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.document.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
@@ -31,8 +32,8 @@ import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Window;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClickEvent;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
@@ -48,10 +49,14 @@ import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.menu.Menu;
+import com.smartgwt.client.widgets.menu.MenuItem;
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
@@ -67,7 +72,7 @@ public class WorkflowDetailsDialog extends Window {
 
 	private GUIWorkflow workflow = null;
 
-	private ListGrid docsAppendedList;
+	private ListGrid appendedDocs;
 
 	private SelectItem user = null;
 
@@ -259,7 +264,8 @@ public class WorkflowDetailsDialog extends Window {
 		sxLayout.addMember(taskForm);
 
 		// Appended documents section
-		ListGridField docTitle = new ListGridField("title", I18N.message("name"), 150);
+		ListGridField docTitle = new ListGridField("title", I18N.message("name"));
+		docTitle.setWidth("*");
 		ListGridField docLastModified = new ListGridField("lastModified", I18N.message("lastmodified"), 150);
 		docLastModified.setAlign(Alignment.CENTER);
 		docLastModified.setType(ListGridFieldType.DATE);
@@ -274,20 +280,20 @@ public class WorkflowDetailsDialog extends Window {
 		icon.setImageURLSuffix(".png");
 		icon.setCanFilter(false);
 
-		docsAppendedList = new ListGrid();
-		docsAppendedList.setEmptyMessage(I18N.message("notitemstoshow"));
-		docsAppendedList.setWidth(350);
-		docsAppendedList.setHeight(200);
-		docsAppendedList.setCanFreezeFields(true);
-		docsAppendedList.setAutoFetchData(true);
-		docsAppendedList.setShowHeader(true);
-		docsAppendedList.setCanSelectAll(false);
-		docsAppendedList.setSelectionType(SelectionStyle.NONE);
-		docsAppendedList.setBorder("1px solid #E1E1E1");
-		docsAppendedList.setDataSource(new DocumentsDS(workflow.getAppendedDocIds()));
-		docsAppendedList.setFields(icon, docTitle, docLastModified);
+		appendedDocs = new ListGrid();
+		appendedDocs.setEmptyMessage(I18N.message("notitemstoshow"));
+		appendedDocs.setWidth100();
+		appendedDocs.setHeight100();
+		appendedDocs.setCanFreezeFields(true);
+		appendedDocs.setAutoFetchData(true);
+		appendedDocs.setShowHeader(true);
+		appendedDocs.setCanSelectAll(false);
+		appendedDocs.setSelectionType(SelectionStyle.SINGLE);
+		appendedDocs.setBorder("1px solid #E1E1E1");
+		appendedDocs.setDataSource(new DocumentsDS(workflow.getAppendedDocIds()));
+		appendedDocs.setFields(icon, docTitle, docLastModified);
 
-		docsAppendedList.addCellDoubleClickHandler(new CellDoubleClickHandler() {
+		appendedDocs.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				destroy();
@@ -296,6 +302,8 @@ public class WorkflowDetailsDialog extends Window {
 						Long.parseLong(record.getAttributeAsString("id")));
 			}
 		});
+
+		appendedDocs.setContextMenu(setupContextMenu());
 
 		Button appendDocsButton = new Button(I18N.message("appenddocuments"));
 		appendDocsButton.setAutoFit(true);
@@ -318,7 +326,7 @@ public class WorkflowDetailsDialog extends Window {
 			}
 		});
 
-		appendedDocsLayout.addMember(docsAppendedList);
+		appendedDocsLayout.addMember(appendedDocs);
 		if (workflow.getSelectedTask().getEndDate() == null) {
 			appendedDocsLayout.addMember(appendDocsButton);
 		}
@@ -791,5 +799,35 @@ public class WorkflowDetailsDialog extends Window {
 
 	public TabSet getTabs() {
 		return tabs;
+	}
+
+	/**
+	 * Prepares the context menu for the documents grid.
+	 */
+	private Menu setupContextMenu() {
+		Menu contextMenu = new Menu();
+
+		MenuItem preview = new MenuItem();
+		preview.setTitle(I18N.message("preview"));
+		preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				// Detect the two selected records
+				ListGridRecord selection = appendedDocs.getSelectedRecord();
+
+				long id = Long.parseLong(selection.getAttribute("id"));
+				String filename = selection.getAttribute("filename");
+				String fileVersion = selection.getAttribute("fileVersion");
+
+				if (filename == null)
+					filename = selection.getAttribute("title") + "." + selection.getAttribute("type");
+
+				PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, false);
+				iv.show();
+			}
+		});
+
+		contextMenu.setItems(preview);
+
+		return contextMenu;
 	}
 }
