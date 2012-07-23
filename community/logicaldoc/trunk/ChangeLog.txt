@@ -11,6 +11,21 @@
                      LogicalDOC Community Edition
 
 
+LogicalDOC 6.5.0 (2012-08-xx; logicaldoc-6.5)
+=============== 
+75  - Extended properties to display in search result - Improvement - User Interface
+224 - Subscriptions and Notifications support - New Feature - Android App
+188 - Black/White lists of IPs - New Feature - Core 	
+197 - Search suggestions - Improvement - Search Engine
+206 - Find a folder by path via WebServices - Improvement - Web Services
+209 - Webservices maximum hits limited to 1000 - Bug - Web Services
+211 - Templates for email messages - New Feature - Auditing
+212 - Upgrade CXF to the latest 2.5.x - Task - Web Services 	
+215 - replace commons logging with slf4j - Wish - Core
+227 - Upgrade MSSQL driver jTDS - Task - Core 	
+228 - Preview in Versions history - Improvement - User Interface
+
+
 LogicalDOC 6.4.2 (2012-06-25; logicaldoc-6.4.2)
 =============== 
 218 Configurable action on document's double click - Improvement - User Interface
