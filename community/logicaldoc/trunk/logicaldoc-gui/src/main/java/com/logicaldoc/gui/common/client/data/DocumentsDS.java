@@ -89,13 +89,17 @@ public class DocumentsDS extends DataSource {
 		setRecordXPath("/list/document");
 		DataSourceTextField title = new DataSourceTextField("title");
 		DataSourceTextField id = new DataSourceTextField("id");
+		DataSourceTextField filename = new DataSourceTextField("filename");
+		DataSourceTextField fileVersion = new DataSourceTextField("fileVersion");
+		DataSourceTextField version = new DataSourceTextField("version");
+
 		id.setPrimaryKey(true);
 		id.setRequired(true);
 		DataSourceDateTimeField lastModified = new DataSourceDateTimeField("lastModified");
 		DataSourceImageField icon = new DataSourceImageField("icon");
 		DataSourceTextField folderId = new DataSourceTextField("folderId");
 
-		setFields(id, icon, title, lastModified, folderId);
+		setFields(id, icon, title, lastModified, folderId, version, fileVersion, filename);
 		setClientOnly(true);
 		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&docIds=" + docIds);
 	}
@@ -111,8 +115,10 @@ public class DocumentsDS extends DataSource {
 		DataSourceImageField icon = new DataSourceImageField("icon");
 		DataSourceTextField folderId = new DataSourceTextField("folderId");
 		DataSourceTextField version = new DataSourceTextField("version");
+		DataSourceTextField filename = new DataSourceTextField("filename");
+		DataSourceTextField fileVersion = new DataSourceTextField("fileVersion");
 
-		setFields(id, icon, title, lastModified, folderId, version);
+		setFields(id, icon, title, lastModified, folderId, version, fileVersion, filename);
 		setClientOnly(true);
 		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&status=" + status + "&max=" + max);
 	}

@@ -85,6 +85,8 @@ public class DocumentsDataServlet extends HttpServlet {
 					writer.print("<lastModified>" + df.format(doc.getLastModified()) + "</lastModified>");
 					writer.print("<folderId>" + doc.getFolder().getId() + "</folderId>");
 					writer.print("<version>" + doc.getVersion() + "</version>");
+					writer.print("<filename>" + doc.getFileName() + "</filename>");
+					writer.print("<fileVersion>" + doc.getFileVersion() + "</fileVersion>");
 					writer.print("</document>");
 					i++;
 				}
@@ -99,6 +101,9 @@ public class DocumentsDataServlet extends HttpServlet {
 					writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
 					writer.print("<lastModified>" + df.format(doc.getLastModified()) + "</lastModified>");
 					writer.print("<folderId>" + doc.getFolder().getId() + "</folderId>");
+					writer.print("<version>" + doc.getVersion() + "</version>");
+					writer.print("<filename>" + doc.getFileName() + "</filename>");
+					writer.print("<fileVersion>" + doc.getFileVersion() + "</fileVersion>");
 					writer.print("</document>");
 				}
 			} else {
