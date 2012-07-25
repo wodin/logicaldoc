@@ -78,11 +78,11 @@ public class WorkflowDetailsDialog extends Window {
 
 	private ValuesManager vm = new ValuesManager();
 
+	private HLayout mainPanel = null;
+	
 	private HLayout form = null;
 
 	private VLayout sxLayout = null;
-
-	private VLayout dxLayout = null;
 
 	private DynamicForm workflowForm = null;
 
@@ -92,11 +92,13 @@ public class WorkflowDetailsDialog extends Window {
 
 	private TabSet tabs = new TabSet();
 
+	private VLayout buttonsPanel = null;
+	
 	private Tab docsTab = null;
 
 	private Tab workflowTab = null;
 
-	private HLayout appendedDocsLayout = null;
+	private VLayout appendedDocsPanel = null;
 
 	private StaticTextItem taskStartDate = null;
 
@@ -114,7 +116,7 @@ public class WorkflowDetailsDialog extends Window {
 
 		setTitle(I18N.message("workflow"));
 		setWidth(580);
-		setHeight(460);
+		setHeight(440);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -129,27 +131,35 @@ public class WorkflowDetailsDialog extends Window {
 		});
 
 		tabs = new TabSet();
-		tabs.setTop(30);
-		tabs.setLeft(5);
-		tabs.setWidth(540);
-		tabs.setHeight(400);
-
+		tabs.setWidth100();
+		tabs.setHeight100();
+		
 		workflowTab = new Tab(I18N.message("workflow"));
 		tabs.addTab(workflowTab, 0);
 		docsTab = new Tab(I18N.message("appendeddocuments"));
 		tabs.addTab(docsTab, 1);
 		tabs.setSelectedTab(0);
-		addChild(tabs);
 
-		form = new HLayout(35);
+		buttonsPanel=new VLayout(10);
+		
+		mainPanel=new HLayout(10);
+		mainPanel.setTop(30);
+		mainPanel.setLeft(5);
+		mainPanel.setWidth(540);
+		mainPanel.setHeight(400);
+		mainPanel.setMembers(tabs, buttonsPanel);
+		
+		
+		addChild(mainPanel);
+
+		form = new HLayout(25);
 		form.setMargin(20);
-		form.setWidth(500);
-		form.setHeight(360);
+		form.setWidth100();
+		form.setHeight100();
 
 		sxLayout = new VLayout(10);
-		dxLayout = new VLayout(10);
-		appendedDocsLayout = new HLayout(15);
-		appendedDocsLayout.setMargin(20);
+		appendedDocsPanel = new VLayout(15);
+		appendedDocsPanel.setMargin(20);
 
 		reload(wfl);
 	}
@@ -162,9 +172,9 @@ public class WorkflowDetailsDialog extends Window {
 			sxLayout.removeMember(canvas);
 		}
 
-		members = dxLayout.getMembers();
+		members = buttonsPanel.getMembers();
 		for (Canvas canvas : members) {
-			dxLayout.removeMember(canvas);
+			buttonsPanel.removeMember(canvas);
 		}
 
 		members = form.getMembers();
@@ -172,9 +182,9 @@ public class WorkflowDetailsDialog extends Window {
 			form.removeMember(canvas);
 		}
 
-		members = appendedDocsLayout.getMembers();
+		members = appendedDocsPanel.getMembers();
 		for (Canvas canvas : members) {
-			appendedDocsLayout.removeMember(canvas);
+			appendedDocsPanel.removeMember(canvas);
 		}
 
 		// Workflow section
@@ -326,9 +336,9 @@ public class WorkflowDetailsDialog extends Window {
 			}
 		});
 
-		appendedDocsLayout.addMember(appendedDocs);
+		appendedDocsPanel.addMember(appendedDocs);
 		if (workflow.getSelectedTask().getEndDate() == null) {
-			appendedDocsLayout.addMember(appendDocsButton);
+			appendedDocsPanel.addMember(appendDocsButton);
 		}
 
 		Button reassignButton = new Button(I18N.message("workflowtaskreassign"));
@@ -705,13 +715,13 @@ public class WorkflowDetailsDialog extends Window {
 		});
 
 		if (workflow.getSelectedTask().getEndDate() == null) {
-			dxLayout.addMember(reassignButton);
-			dxLayout.addMember(startButton);
-			dxLayout.addMember(suspendButton);
-			dxLayout.addMember(resumeButton);
-			dxLayout.addMember(saveTaskStateButton);
-			dxLayout.addMember(takeButton);
-			dxLayout.addMember(turnBackButton);
+			buttonsPanel.addMember(reassignButton);
+			buttonsPanel.addMember(startButton);
+			buttonsPanel.addMember(suspendButton);
+			buttonsPanel.addMember(resumeButton);
+			buttonsPanel.addMember(saveTaskStateButton);
+			buttonsPanel.addMember(takeButton);
+			buttonsPanel.addMember(turnBackButton);
 
 			if (workflow.getSelectedTask().getTaskState().equals("started")) {
 				// Add Transitions buttons
@@ -765,7 +775,7 @@ public class WorkflowDetailsDialog extends Window {
 									});
 						}
 					});
-					dxLayout.addMember(transitionButton);
+					buttonsPanel.addMember(transitionButton);
 				}
 			}
 		} else {
@@ -779,14 +789,14 @@ public class WorkflowDetailsDialog extends Window {
 			taskEndedTitle.setWrapTitle(false);
 
 			taskEndedForm.setItems(taskEndedTitle);
-			dxLayout.addMember(taskEndedForm);
+			buttonsPanel.addMember(taskEndedForm);
 		}
 
 		form.addMember(sxLayout);
-		form.addMember(dxLayout);
+		//form.addMember(dxLayout);
 
 		workflowTab.setPane(form);
-		docsTab.setPane(appendedDocsLayout);
+		docsTab.setPane(appendedDocsPanel);
 	}
 
 	public GUIWorkflow getWorkflow() {
