@@ -34,7 +34,7 @@ import com.smartgwt.client.widgets.tab.TabSet;
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
  */
-public class ClientAndExternalAppsPanel extends VLayout {
+public class ExternalAppsPanel extends VLayout {
 	private SettingServiceAsync service = (SettingServiceAsync) GWT.create(SettingService.class);
 
 	private ValuesManager vm = new ValuesManager();
@@ -57,7 +57,7 @@ public class ClientAndExternalAppsPanel extends VLayout {
 
 	private GUIParameter swftoolsPath = null;
 
-	public ClientAndExternalAppsPanel(GUIParameter[] settings) {
+	public ExternalAppsPanel(GUIParameter[] settings) {
 		for (GUIParameter parameter : settings) {
 			if (parameter.getName().startsWith("webservice"))
 				wsSettings = parameter;
@@ -156,6 +156,8 @@ public class ClientAndExternalAppsPanel extends VLayout {
 		extAppForm.setItems(convertCommand, ghostCommand, tesseractCommand, swftools, openOffice);
 		extApps.setPane(extAppForm);
 
+		tabs.addTab(extApps);
+		
 		if (Feature.visible(Feature.WEBSERVICE)) {
 			tabs.addTab(webService);
 			if (!Feature.enabled(Feature.WEBSERVICE))
@@ -168,7 +170,6 @@ public class ClientAndExternalAppsPanel extends VLayout {
 				webDav.setPane(new FeatureDisabled());
 		}
 
-		tabs.addTab(extApps);
 
 		IButton save = new IButton();
 		save.setTitle(I18N.message("save"));
@@ -178,29 +179,29 @@ public class ClientAndExternalAppsPanel extends VLayout {
 				Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				if (vm.validate()) {
-					ClientAndExternalAppsPanel.this.wsSettings.setValue(values.get("wsEnabled").equals("yes") ? "true"
+					ExternalAppsPanel.this.wsSettings.setValue(values.get("wsEnabled").equals("yes") ? "true"
 							: "false");
 
-					ClientAndExternalAppsPanel.this.wdSettings.setValue(values.get("wdEnabled").equals("yes") ? "true"
+					ExternalAppsPanel.this.wdSettings.setValue(values.get("wdEnabled").equals("yes") ? "true"
 							: "false");
 
-					ClientAndExternalAppsPanel.this.wdCache.setValue(values.get("wdCache").equals("yes") ? "true"
+					ExternalAppsPanel.this.wdCache.setValue(values.get("wdCache").equals("yes") ? "true"
 							: "false");
-					ClientAndExternalAppsPanel.this.convert.setValue(values.get("convertCommand").toString());
-					ClientAndExternalAppsPanel.this.ghost.setValue(values.get("ghostCommand").toString());
-					ClientAndExternalAppsPanel.this.tesseract.setValue(values.get("tesseractCommand").toString());
-					ClientAndExternalAppsPanel.this.swftoolsPath.setValue(values.get("swftools").toString());
-					ClientAndExternalAppsPanel.this.openofficePath.setValue(values.get("openOffice").toString());
+					ExternalAppsPanel.this.convert.setValue(values.get("convertCommand").toString());
+					ExternalAppsPanel.this.ghost.setValue(values.get("ghostCommand").toString());
+					ExternalAppsPanel.this.tesseract.setValue(values.get("tesseractCommand").toString());
+					ExternalAppsPanel.this.swftoolsPath.setValue(values.get("swftools").toString());
+					ExternalAppsPanel.this.openofficePath.setValue(values.get("openOffice").toString());
 
 					GUIParameter[] params = new GUIParameter[7];
-					params[0] = ClientAndExternalAppsPanel.this.wsSettings;
-					params[1] = ClientAndExternalAppsPanel.this.wdSettings;
-					params[2] = ClientAndExternalAppsPanel.this.wdCache;
-					params[3] = ClientAndExternalAppsPanel.this.convert;
-					params[4] = ClientAndExternalAppsPanel.this.swftoolsPath;
-					params[5] = ClientAndExternalAppsPanel.this.ghost;
-					params[6] = ClientAndExternalAppsPanel.this.tesseract;
-					params[7] = ClientAndExternalAppsPanel.this.openofficePath;
+					params[0] = ExternalAppsPanel.this.wsSettings;
+					params[1] = ExternalAppsPanel.this.wdSettings;
+					params[2] = ExternalAppsPanel.this.wdCache;
+					params[3] = ExternalAppsPanel.this.convert;
+					params[4] = ExternalAppsPanel.this.swftoolsPath;
+					params[5] = ExternalAppsPanel.this.ghost;
+					params[6] = ExternalAppsPanel.this.tesseract;
+					params[7] = ExternalAppsPanel.this.openofficePath;
 
 					service.saveClientSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
 

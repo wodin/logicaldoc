@@ -109,7 +109,7 @@ public class SettingsMenu extends VLayout {
 
 					@Override
 					public void onSuccess(GUIParameter[] settings) {
-						AdminPanel.get().setContent(new ClientAndExternalAppsPanel(settings));
+						AdminPanel.get().setContent(new ExternalAppsPanel(settings));
 					}
 
 				});
