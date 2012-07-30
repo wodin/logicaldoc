@@ -125,7 +125,9 @@ public class PreviewPopup extends Window {
 
 		media = new HTMLFlow();
 		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "%26docId=" + id
-				+ "%26filename=" + fileName + "%26fileVersion=" + fileVersion;
+				+ "%26filename=" + fileName;
+		if (fileVersion != null)
+			url += "%26fileVersion=" + fileVersion;
 		String tmp = Util.flashPreviewAudioVideo("player.swf", url, mediaProvider, (getWidth() - 26),
 				(getHeight() - 40));
 		media.setContents(tmp);
@@ -137,8 +139,10 @@ public class PreviewPopup extends Window {
 	 */
 	private void reloadCAD() {
 		cad = new HTMLFlow();
-		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id
-				+ "%26fileVersion=" + fileVersion;
+		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id;
+		if (fileVersion != null)
+			url += "%26fileVersion=" + fileVersion;
+
 		String tmp = "<applet name=\"CAD Applet\" archive=\"" + Util.contextPath()
 				+ "applet/dxf-applet.jar\"  code=\"de.caff.dxf.applet.DxfApplet\" width=\"" + (getWidth() - 26)
 				+ "\" height=\"" + (getHeight() - 40) + "\">";
@@ -158,7 +162,9 @@ public class PreviewPopup extends Window {
 	private void reloadImage(String language) {
 		image = new HTMLFlow();
 		String url = GWT.getHostPageBaseURL() + "preview?sid=" + Session.get().getSid() + "%26docId=" + id
-				+ "%26fileVersion=" + fileVersion + "%26suffix=preview.swf";
+				+ "%26suffix=preview.swf";
+		if (fileVersion != null)
+			url += "%26fileVersion=" + fileVersion;
 
 		String flash = "flexpaperviewer.swf";
 		if (!printEnabled)

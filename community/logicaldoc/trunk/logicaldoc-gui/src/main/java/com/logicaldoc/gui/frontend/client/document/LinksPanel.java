@@ -25,6 +25,8 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
+import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
+import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
 import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
 import com.smartgwt.client.widgets.menu.Menu;
@@ -112,11 +114,12 @@ public class LinksPanel extends DocumentDetailTab {
 				@Override
 				public void onCellContextClick(CellContextClickEvent event) {
 					Menu contextMenu = new Menu();
-					MenuItem deleteItem = new MenuItem();
-					deleteItem.setTitle(I18N.message("ddelete"));
-					deleteItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+					MenuItem delete = new MenuItem();
+					delete.setTitle(I18N.message("ddelete"));
+					delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 						public void onClick(MenuItemClickEvent event) {
-							ListGridRecord[] selection = listGrid.getSelection();
+							ListGridRecord[] selection = listGrid.getSelectedRecords();
 							if (selection == null || selection.length == 0)
 								return;
 							final long[] ids = new long[selection.length];
@@ -145,8 +148,24 @@ public class LinksPanel extends DocumentDetailTab {
 							});
 						}
 					});
-					contextMenu.setItems(deleteItem);
 
+					MenuItem preview = new MenuItem();
+					preview.setTitle(I18N.message("preview"));
+					preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+						public void onClick(MenuItemClickEvent event) {
+							onPreview(listGrid.getSelectedRecord());
+						}
+					});
+
+					MenuItem download = new MenuItem();
+					download.setTitle(I18N.message("download"));
+					download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+						public void onClick(MenuItemClickEvent event) {
+							onDownload(listGrid.getSelectedRecord());
+						}
+					});
+
+					contextMenu.setItems(preview, download, delete);
 					contextMenu.showContextMenu();
 					event.cancel();
 				}
@@ -156,9 +175,17 @@ public class LinksPanel extends DocumentDetailTab {
 		listGrid.addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
-				String documentId = listGrid.getSelectedRecord().getAttribute("documentId");
-				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-						+ documentId + "&open=true", "_blank", "");
+				listGrid.addCellDoubleClickHandler(new CellDoubleClickHandler() {
+					@Override
+					public void onCellDoubleClick(CellDoubleClickEvent event) {
+						ListGridRecord record = event.getRecord();
+						if (Session.get().getCurrentFolder().isDownload()
+								&& "download".equals(Session.get().getInfo().getConfig("gui.doubleclick")))
+							onDownload(record);
+						else
+							onPreview(record);
+					}
+				});
 			}
 		});
 	}
@@ -168,5 +195,21 @@ public class LinksPanel extends DocumentDetailTab {
 		super.destroy();
 		if (dataSource != null)
 			dataSource.destroy();
+	}
+
+	protected void onDownload(ListGridRecord record) {
+		if (document.getFolder().isDownload())
+			Window.open(
+					GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+							+ record.getAttribute("documentId") + "&open=true", "_blank", "");
+	}
+
+	protected void onPreview(ListGridRecord record) {
+		long id = Long.parseLong(record.getAttribute("documentId"));
+		String filename = record.getAttribute("title") + "." + record.getAttribute("type");
+
+		GUIFolder folder = document.getFolder();
+		PreviewPopup iv = new PreviewPopup(id, null, filename, folder != null && folder.isDownload());
+		iv.show();
 	}
 }
