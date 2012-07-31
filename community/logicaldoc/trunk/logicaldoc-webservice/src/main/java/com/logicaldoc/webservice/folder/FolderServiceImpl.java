@@ -272,7 +272,9 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 				path.add(wsFolder);
 			}
 			// Insert the target folder itself
-			WSFolder wsFolder = WSFolder.fromFolder(folderDao.findById(folderId));
+			Folder f=folderDao.findById(folderId);
+			folderDao.initialize(f);
+			WSFolder wsFolder = WSFolder.fromFolder(f);
 			path.add(wsFolder);
 		}
 
