@@ -11,7 +11,7 @@
                      LogicalDOC Community Edition
 
 
-LogicalDOC 6.5.0 (2012-08-xx; logicaldoc-6.5)
+LogicalDOC 6.5.0 (2012-08-01; logicaldoc-6.5)
 =============== 
 75  - Extended properties to display in search result - Improvement - User Interface
 224 - Subscriptions and Notifications support - New Feature - Android App
