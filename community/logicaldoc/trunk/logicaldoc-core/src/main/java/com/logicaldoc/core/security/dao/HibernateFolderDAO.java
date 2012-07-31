@@ -1169,7 +1169,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		}
 
 		for (String attribute : folder.getAttributes().keySet()) {
-			attribute.getBytes();
+			folder.getAttributes().get(attribute).getValue();
 		}
 	}
 
