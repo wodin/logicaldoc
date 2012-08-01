@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans SYSTEM "spring-beans-2.0.dtd">
+<beans default-lazy-init="false" default-autowire="no"
+	default-dependency-check="none">
+
+	<!-- This post processor ensures placeholders substitutions -->
+	<bean id="PropertyPlaceholderConfigurer" class="com.logicaldoc.util.spring.PropertiesPlaceHolder"
+		lazy-init="false" abstract="false" autowire="default"
+		dependency-check="default">
+		<property name="locations">
+			<list>
+				<value>classpath*:context.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="ContextProperties" class="com.logicaldoc.util.config.ContextProperties" />
+
+	<bean id="Context" class="com.logicaldoc.util.Context" abstract="false"
+		lazy-init="default" autowire="default" dependency-check="default" />
+
+	<bean id="LoadSession" class="com.logicaldoc.bm.LoadSession"
+		init-method="connect" destroy-method="close">
+		<property name="url" value="${session.url}" />
+		<property name="username" value="${session.username}" />
+		<property name="password" value="${session.password}" />
+		<property name="language" value="${session.language}" />
+	</bean>
+
+	<bean id="MultiLoader" class="com.logicaldoc.bm.MultiLoader"
+		init-method="init">
+		<property name="session" ref="LoadSession" />
+		<property name="config" ref="ContextProperties" />
+	</bean>
+</beans>
