@@ -327,8 +327,8 @@ public class Setup implements EntryPoint {
 				"jdbc:oracle:thin:@<server>[<:1521>]:<sid>", "org.hibernate.dialect.Oracle10gDialect",
 				"SELECT 1 FROM DUAL" });
 		engines.put(SQLSERVER, new String[] { "SQL Server 2005/2008", "net.sourceforge.jtds.jdbc.Driver",
-				"jdbc:jtds:sqlserver://<server>[:<1433>]/<database>;instance=<instance>", "org.hibernate.dialect.SQLServerDialect",
-				"SELECT 1" });
+				"jdbc:jtds:sqlserver://<server>[:<1433>]/<database>;instance=<instance>",
+				"org.hibernate.dialect.SQLServerDialect", "SELECT 1" });
 
 		Tab databaseTab = new Tab();
 		databaseTab.setTitle(I18N.message("database"));
@@ -462,82 +462,89 @@ public class Setup implements EntryPoint {
 	}
 
 	private void onSubmit(final GUIInfo info) {
-		vm.validate();
-		Tab tab = tabs.getSelectedTab();
-		int tabIndex = tabs.getSelectedTabNumber();
-		DynamicForm form = (DynamicForm) tab.getPane();
-		if (form.hasErrors()) {
+		try {
+			vm.validate();
+			Tab tab = tabs.getSelectedTab();
+			int tabIndex = tabs.getSelectedTabNumber();
+			DynamicForm form = (DynamicForm) tab.getPane();
+			if (form.hasErrors()) {
 
-		} else {
-			if (step == 4) {
-				if (!vm.validate())
-					SC.warn("invalidfields");
-
-				SetupInfo data = new SetupInfo();
-				data.setDbDriver(vm.getValueAsString(DB_DRIVER));
-				data.setDbUrl(vm.getValueAsString(DB_URL));
-				data.setDbUsername(vm.getValueAsString(DB_USERNAME));
-				data.setDbPassword(vm.getValueAsString(DB_PASSWORD));
-				data.setDbEngine(vm.getValueAsString(DB_ENGINE));
-				data.setDbType(vm.getValueAsString(DB_TYPE));
-				data.setLanguage(vm.getValueAsString(LANGUAGE));
-				data.setSmtpHost(vm.getValueAsString(SMTP_HOST));
-				data.setSmtpPort((Integer) vm.getValues().get(SMTP_PORT));
-				data.setSmtpUsername(vm.getValueAsString(SMTP_USERNAME));
-				data.setSmtpPassword(vm.getValueAsString(SMTP_PASSWORD));
-				data.setSmtpSender(vm.getValueAsString(SMTP_SENDER));
-				data.setSmtpSecureAuth((Boolean) vm.getValues().get(SMTP_SECURE_AUTH));
-				data.setSmtpSecuryConntection(vm.getValueAsString(SMTP_SECURITY_CONNECTION));
-				data.setRepositoryFolder(vm.getValueAsString(REPOSITORY_FOLDER));
-				data.setDbDialect(engines.get(data.getDbEngine())[3]);
-				data.setDbValidationQuery(engines.get(data.getDbEngine())[4]);
-				data.setRegEmail(vm.getValueAsString(REG_EMAIL));
-				data.setRegName(vm.getValueAsString(REG_NAME));
-				data.setRegOrganization(vm.getValueAsString(REG_ORGANIZATION));
-				data.setRegWebsite(vm.getValueAsString(REG_WEBSITE));
-				if (data.getDbType().equals(I18N.message(INTERNAL))) {
-					data.setDbEngine("Hsqldb");
-					data.setDbDriver("org.hsqldb.jdbcDriver");
-					data.setDbUrl(("jdbc:hsqldb:" + data.getRepositoryFolder() + "/db/").replaceAll("//", "/"));
-					data.setDbUsername("sa");
-					data.setDbPassword("");
-					data.setDbValidationQuery("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS");
-					data.setDbDialect("org.hibernate.dialect.HSQLDialect");
-				}
-
-				SetupServiceAsync setupService = (SetupServiceAsync) GWT.create(SetupService.class);
-				setupService.setup(data, new AsyncCallback<Void>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						SC.warn(caught.getMessage());
-						submit.setDisabled(false);
-					}
-
-					@Override
-					public void onSuccess(Void arg) {
-						SC.say(I18N.message("installationperformed"),
-								I18N.message("installationend", info.getProductName()), new BooleanCallback() {
-									@Override
-									public void execute(Boolean value) {
-										Util.redirect(Util.contextPath() + "frontend.jsp");
-									}
-								});
-						submit.setDisabled(false);
-					}
-				});
-				submit.setDisabled(true);
-
-				// Clear an eventually saved documents list grid settings.
-				Offline.put(Constants.COOKIE_DOCSLIST, "");
 			} else {
-				// Go to the next tab and enable the contained panel
-				tabs.selectTab(tabIndex + 1);
-				tabs.getSelectedTab().getPane().setDisabled(false);
-				if (step < tabs.getSelectedTabNumber())
-					step++;
-				if (step == 4)
-					submit.setTitle(I18N.message("setup"));
+				if (step == 4) {
+					if (!vm.validate())
+						SC.warn("invalidfields");
+
+					SetupInfo data = new SetupInfo();
+					data.setDbDriver(vm.getValueAsString(DB_DRIVER));
+					data.setDbUrl(vm.getValueAsString(DB_URL));
+					data.setDbUsername(vm.getValueAsString(DB_USERNAME));
+					data.setDbPassword(vm.getValueAsString(DB_PASSWORD));
+					data.setDbEngine(vm.getValueAsString(DB_ENGINE));
+					data.setDbType(vm.getValueAsString(DB_TYPE));
+					data.setLanguage(vm.getValueAsString(LANGUAGE));
+					data.setSmtpHost(vm.getValueAsString(SMTP_HOST));
+					data.setSmtpPort((Integer) vm.getValues().get(SMTP_PORT));
+					data.setSmtpUsername(vm.getValueAsString(SMTP_USERNAME));
+					data.setSmtpPassword(vm.getValueAsString(SMTP_PASSWORD));
+					data.setSmtpSender(vm.getValueAsString(SMTP_SENDER));
+					data.setSmtpSecureAuth((Boolean) vm.getValues().get(SMTP_SECURE_AUTH));
+					data.setSmtpSecuryConntection(vm.getValueAsString(SMTP_SECURITY_CONNECTION));
+					data.setRepositoryFolder(vm.getValueAsString(REPOSITORY_FOLDER));
+					data.setRegEmail(vm.getValueAsString(REG_EMAIL));
+					data.setRegName(vm.getValueAsString(REG_NAME));
+					data.setRegOrganization(vm.getValueAsString(REG_ORGANIZATION));
+					data.setRegWebsite(vm.getValueAsString(REG_WEBSITE));
+					
+					if (I18N.message(INTERNAL).equals(data.getDbType())) {
+						data.setDbEngine("Hsqldb");
+						data.setDbDriver("org.hsqldb.jdbcDriver");
+						data.setDbUrl(("jdbc:hsqldb:" + data.getRepositoryFolder() + "/db/").replaceAll("//", "/"));
+						data.setDbUsername("sa");
+						data.setDbPassword("");
+						data.setDbDialect("org.hibernate.dialect.HSQLDialect");
+						data.setDbValidationQuery("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS");
+					}else{
+						data.setDbDialect(engines.get(data.getDbEngine())[3]);
+						data.setDbValidationQuery(engines.get(data.getDbEngine())[4]);
+					}
+					
+					SetupServiceAsync setupService = (SetupServiceAsync) GWT.create(SetupService.class);
+
+					setupService.setup(data, new AsyncCallback<Void>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							SC.warn(caught.getMessage());
+							submit.setDisabled(false);
+						}
+
+						@Override
+						public void onSuccess(Void arg) {
+							SC.say(I18N.message("installationperformed"),
+									I18N.message("installationend", info.getProductName()), new BooleanCallback() {
+										@Override
+										public void execute(Boolean value) {
+											Util.redirect(Util.contextPath() + "frontend.jsp");
+										}
+									});
+							submit.setDisabled(false);
+						}
+					});
+					submit.setDisabled(true);
+
+					// Clear an eventually saved documents list grid settings.
+					Offline.put(Constants.COOKIE_DOCSLIST, "");
+				} else {
+					// Go to the next tab and enable the contained panel
+					tabs.selectTab(tabIndex + 1);
+					tabs.getSelectedTab().getPane().setDisabled(false);
+					if (step < tabs.getSelectedTabNumber())
+						step++;
+					if (step == 4)
+						submit.setTitle(I18N.message("setup"));
+				}
 			}
+		} catch (Throwable e) {
+			SC.warn("Error: " + e.getMessage());
 		}
 	}
 
