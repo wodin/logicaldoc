@@ -63,6 +63,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			Context.refresh();
 
 		} catch (Throwable caught) {
+			caught.printStackTrace();
 			log.error(caught.getMessage(), caught);
 			throw new RuntimeException(caught.getMessage(), caught);
 		}
@@ -98,6 +99,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 
 			log.info("SMTP configuration data written successfully.");
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.error("Exception writing context file: " + e.getMessage(), e);
 			throw e;
 		}
@@ -123,6 +125,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			pbean.write();
 			log.info("configuration data written successfully.");
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.error("Exception writing db config on context file: " + e.getMessage(), e);
 			throw e;
 		}
@@ -138,6 +141,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			pbean.write();
 			log.info("configuration data written successfully.");
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.error("Exception writing registration config on context file: " + e.getMessage(), e);
 			throw e;
 		}
