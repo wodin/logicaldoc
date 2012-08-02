@@ -2,6 +2,7 @@ package com.logicaldoc.web;
 
 import gwtupload.server.UploadAction;
 import gwtupload.server.exceptions.UploadActionException;
+import gwtupload.shared.UConsts;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -161,28 +162,33 @@ public class UploadServlet extends UploadAction {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void getUploadedFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String fieldName = request.getParameter(PARAM_SHOW);
+		String fieldName = request.getParameter(UConsts.PARAM_SHOW);
 
 		HttpSession session = SessionFilter.getServletSession(request.getParameter("sid"));
 
 		if (session == null)
 			session = request.getSession();
 
-		Map<String, File> receivedFiles = (Map<String, File>) session.getAttribute(RECEIVEDFILES);
+		for (FileItem item : getSessionFileItems(request)) {
+			if (false == item.isFormField()) {
+				Map<String, File> receivedFiles = (Map<String, File>) session.getAttribute(RECEIVEDFILES);
 
-		if (receivedFiles == null || !receivedFiles.containsKey(fieldName))
-			return;
+				if (receivedFiles == null || !receivedFiles.containsKey(fieldName))
+					return;
 
-		File f = receivedFiles.get(fieldName);
-		if (f != null) {
-			Map<String, String> receivedContentTypes = (Map<String, String>) session.getAttribute(RECEIVEDCONTENTTYPES);
+				File f = receivedFiles.get(fieldName);
+				if (f != null) {
+					Map<String, String> receivedContentTypes = (Map<String, String>) session
+							.getAttribute(RECEIVEDCONTENTTYPES);
 
-			if (receivedContentTypes != null && receivedContentTypes.containsKey(fieldName))
-				response.setContentType(receivedContentTypes.get(fieldName));
-			FileInputStream is = new FileInputStream(f);
-			copyFromInputStreamToOutputStream(is, response.getOutputStream());
-		} else {
-			renderXmlResponse(request, response, ERROR_ITEM_NOT_FOUND);
+					if (receivedContentTypes != null && receivedContentTypes.containsKey(fieldName))
+						response.setContentType(receivedContentTypes.get(fieldName));
+					FileInputStream is = new FileInputStream(f);
+					copyFromInputStreamToOutputStream(is, response.getOutputStream());
+				} else {
+					renderXmlResponse(request, response, XML_ERROR_ITEM_NOT_FOUND);
+				}
+			}
 		}
 	}
 

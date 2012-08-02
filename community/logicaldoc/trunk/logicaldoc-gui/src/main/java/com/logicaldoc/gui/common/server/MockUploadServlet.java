@@ -108,14 +108,14 @@ public class MockUploadServlet extends UploadAction {
 	@Override
 	public void getUploadedFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		super.getUploadedFile(request, response);
-		String fieldName = request.getParameter(PARAM_SHOW);
-		File f = receivedFiles.get(fieldName);
-		if (f != null) {
-			response.setContentType(receivedContentTypes.get(fieldName));
-			FileInputStream is = new FileInputStream(f);
-			copyFromInputStreamToOutputStream(is, response.getOutputStream());
-		} else {
-			renderXmlResponse(request, response, ERROR_ITEM_NOT_FOUND);
-		}
+//		String fieldName = request.getParameter(PARAM_SHOW);
+//		File f = receivedFiles.get(fieldName);
+//		if (f != null) {
+//			response.setContentType(receivedContentTypes.get(fieldName));
+//			FileInputStream is = new FileInputStream(f);
+//			copyFromInputStreamToOutputStream(is, response.getOutputStream());
+//		} else {
+//			renderXmlResponse(request, response, ERROR_ITEM_NOT_FOUND);
+//		}
 	}
 }
