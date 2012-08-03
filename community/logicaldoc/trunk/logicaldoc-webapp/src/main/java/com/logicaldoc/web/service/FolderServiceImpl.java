@@ -159,25 +159,26 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 			int i = 0;
 			GUIRight[] rights = new GUIRight[ref.getFolderGroups().size()];
-			for (FolderGroup fg : ref.getFolderGroups()) {
-				GUIRight right = new GUIRight();
-				right.setEntityId(fg.getGroupId());
-				right.setAdd(fg.getAdd() == 1 ? true : false);
-				right.setWrite(fg.getWrite() == 1 ? true : false);
-				right.setSecurity(fg.getSecurity() == 1 ? true : false);
-				right.setImmutable(fg.getImmutable() == 1 ? true : false);
-				right.setDelete(fg.getDelete() == 1 ? true : false);
-				right.setRename(fg.getRename() == 1 ? true : false);
-				right.setImport(fg.getImport() == 1 ? true : false);
-				right.setExport(fg.getExport() == 1 ? true : false);
-				right.setSign(fg.getSign() == 1 ? true : false);
-				right.setArchive(fg.getArchive() == 1 ? true : false);
-				right.setWorkflow(fg.getWorkflow() == 1 ? true : false);
-				right.setDownload(fg.getDownload() == 1 ? true : false);
+			if (ref != null && ref.getFolderGroups() != null)
+				for (FolderGroup fg : ref.getFolderGroups()) {
+					GUIRight right = new GUIRight();
+					right.setEntityId(fg.getGroupId());
+					right.setAdd(fg.getAdd() == 1 ? true : false);
+					right.setWrite(fg.getWrite() == 1 ? true : false);
+					right.setSecurity(fg.getSecurity() == 1 ? true : false);
+					right.setImmutable(fg.getImmutable() == 1 ? true : false);
+					right.setDelete(fg.getDelete() == 1 ? true : false);
+					right.setRename(fg.getRename() == 1 ? true : false);
+					right.setImport(fg.getImport() == 1 ? true : false);
+					right.setExport(fg.getExport() == 1 ? true : false);
+					right.setSign(fg.getSign() == 1 ? true : false);
+					right.setArchive(fg.getArchive() == 1 ? true : false);
+					right.setWorkflow(fg.getWorkflow() == 1 ? true : false);
+					right.setDownload(fg.getDownload() == 1 ? true : false);
 
-				rights[i] = right;
-				i++;
-			}
+					rights[i] = right;
+					i++;
+				}
 			f.setRights(rights);
 
 			return f;
