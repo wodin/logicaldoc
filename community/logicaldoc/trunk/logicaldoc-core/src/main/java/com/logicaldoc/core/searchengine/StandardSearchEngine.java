@@ -268,8 +268,8 @@ public class StandardSearchEngine implements SearchEngine {
 		try {
 			server.deleteById(Long.toString(id));
 			server.commit();
-		} catch (Exception e) {
-			log.warn("Unable to delete hit " + id, e);
+		} catch (Throwable e) {
+			log.debug("Unable to delete hit " + id, e);
 		}
 	}
 
