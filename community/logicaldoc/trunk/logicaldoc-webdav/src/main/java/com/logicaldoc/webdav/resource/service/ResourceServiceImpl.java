@@ -517,7 +517,7 @@ public class ResourceServiceImpl implements ResourceService {
 		transaction.setUser(user);
 
 		try {
-			if (folder.getType() == Folder.TYPE_WORKSPACE) {
+			if (resource.isFolder() && folder != null && (folder.getType() == Folder.TYPE_WORKSPACE)) {
 				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Cannot delete a workspace.");
 			} else if (resource.isFolder()) {
 				if (!resource.isDeleteEnabled())
