@@ -153,17 +153,29 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 						return;
 					}
 
-					for (UserSession session : SessionManager.getInstance().getSessionsByUserObject(combinedUserId)) {
-						if (SessionManager.getInstance().isValid(session.getId())) {
-							SessionManager.getInstance().renew(session.getId());
-							sid = session.getId();
-							break;
+					for (UserSession session : SessionManager.getInstance().getSessions()) {
+						try {
+							String[] userObject = (String[]) session.getUserObject();
+							if (userObject[2].equals(combinedUserId)
+									&& SessionManager.getInstance().isValid(session.getId())) {
+								SessionManager.getInstance().renew(session.getId());
+								sid = session.getId();
+								break;
+							}
+						} catch (Throwable t) {
+							// Nothing to do. perhaps this session was not
+							// created by WebDAV
 						}
 					}
 					// No active session found, new login required
 					if (sid == null) {
+						String[] userObject = new String[3];
+						userObject[0] = request.getRemoteAddr();
+						userObject[1] = request.getRemoteHost();
+						userObject[2] = combinedUserId;
+
 						boolean isLoggedOn = authenticationChain.authenticate(credentials.getUserName(),
-								credentials.getPassword(), combinedUserId);
+								credentials.getPassword(), userObject);
 						if (isLoggedOn == false) {
 							AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
 							return;
@@ -208,8 +220,12 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 					webdavResponse.sendError(e);
 				}
 			} catch (Throwable e) {
-				log.error(e.getMessage(), e);
-				throw new RuntimeException(e);
+				if (e instanceof UnsupportedOperationException) {
+					log.warn(e.getMessage());
+				} else {
+					log.error(e.getMessage(), e);
+					throw new RuntimeException(e);
+				}
 			} finally {
 
 			}
@@ -525,6 +541,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	 */
 	protected void doDelete(WebdavRequest request, WebdavResponse response, DavResource resource) throws IOException,
 			DavException {
+
 		log.debug("doDelete");
 		try {
 			if (log.isDebugEnabled())
@@ -539,6 +556,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 				response.sendError(DavServletResponse.SC_FORBIDDEN, "Cannot remove the root resource.");
 			}
 		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 		}
 	}
 
