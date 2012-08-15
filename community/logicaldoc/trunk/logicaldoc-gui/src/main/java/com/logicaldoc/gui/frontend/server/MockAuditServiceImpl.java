@@ -15,17 +15,23 @@ public class MockAuditServiceImpl extends RemoteServiceServlet implements AuditS
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public void subscribeFolder(String sid, long folderId, boolean currentOnly) throws InvalidSessionException {
+	public void subscribeFolder(String sid, long folderId, boolean currentOnly, String[] events)
+			throws InvalidSessionException {
 
 	}
 
 	@Override
-	public void subscribeDocuments(String sid, long[] docIds) throws InvalidSessionException {
+	public void subscribeDocuments(String sid, long[] docIds, String[] events) throws InvalidSessionException {
 
 	}
 
 	@Override
 	public void deleteSubscriptions(String sid, long[] ids) throws InvalidSessionException {
+
+	}
+
+	@Override
+	public void update(String sid, long id, String[] events) throws InvalidSessionException {
 
 	}
 }

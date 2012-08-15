@@ -20,6 +20,7 @@ import com.ibm.icu.util.Calendar;
 import com.ibm.icu.util.GregorianCalendar;
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.lock.LockManager;
 import com.logicaldoc.core.security.Folder;
@@ -57,7 +58,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId("123");
-		transaction.setEvent(History.EVENT_DELETED);
+		transaction.setEvent(DocumentEvent.DELETED.toString());
 		transaction.setComment("");
 		transaction.setUser(new User());
 

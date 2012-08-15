@@ -17,6 +17,7 @@ import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.FolderEvent;
 import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
@@ -201,7 +202,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 		boolean eventPresent = false;
 		for (FolderHistory history : folderFolderHistory) {
-			if (history.getEvent().equals(FolderHistory.EVENT_FOLDER_MOVED))
+			if (history.getEvent().equals(FolderEvent.MOVED.toString()))
 				eventPresent = true;
 		}
 		Assert.assertTrue(eventPresent);
@@ -272,7 +273,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 		FolderHistory transaction = new FolderHistory();
 		transaction.setFolderId(folder.getId());
-		transaction.setEvent(FolderHistory.EVENT_FOLDER_RENAMED);
+		transaction.setEvent(FolderEvent.RENAMED.toString());
 		transaction.setUser(userDao.findById(1));
 		transaction.setNotified(0);
 		dao.store(folder, transaction);
@@ -284,7 +285,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		folder.setName("xxxx");
 		transaction = new FolderHistory();
 		transaction.setFolderId(folder.getId());
-		transaction.setEvent(FolderHistory.EVENT_FOLDER_RENAMED);
+		transaction.setEvent(FolderEvent.RENAMED.toString());
 		transaction.setUser(userDao.findById(1));
 		transaction.setNotified(0);
 		dao.store(folder, transaction);

@@ -13,10 +13,10 @@ import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.dashboard.WorkflowDashboard;
+import com.logicaldoc.gui.frontend.client.folder.SubscriptionDialog;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.AuditService;
 import com.logicaldoc.gui.frontend.client.services.AuditServiceAsync;
@@ -24,7 +24,6 @@ import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.logicaldoc.gui.frontend.client.workflow.WorkflowDetailsDialog;
 import com.smartgwt.client.types.SelectionType;
-import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
@@ -144,26 +143,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				LD.ask(I18N.message("question"), I18N.message("confirmsubscribe"), new BooleanCallback() {
-					@Override
-					public void execute(Boolean value) {
-						if (value) {
-							audit.subscribeDocuments(Session.get().getSid(), ids, new AsyncCallback<Void>() {
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
-
-								@Override
-								public void onSuccess(Void result) {
-									Log.info(I18N.message("documentssubscribed"), null);
-									Session.get().getUser()
-											.setSubscriptions(Session.get().getUser().getSubscriptions() + 1);
-								}
-							});
-						}
-					}
-				});
+				SubscriptionDialog dialog = new SubscriptionDialog(null, ids);
+				dialog.show();
 			}
 		});
 

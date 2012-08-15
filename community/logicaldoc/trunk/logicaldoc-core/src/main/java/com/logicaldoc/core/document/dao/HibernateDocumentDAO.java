@@ -24,6 +24,7 @@ import com.ibm.icu.util.Calendar;
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentLink;
 import com.logicaldoc.core.document.DocumentListener;
 import com.logicaldoc.core.document.DocumentListenerManager;
@@ -701,7 +702,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		for (Document document : documents) {
 			try {
 				History deleteHistory = (History) transaction.clone();
-				deleteHistory.setEvent(History.EVENT_DELETED);
+				deleteHistory.setEvent(DocumentEvent.DELETED.toString());
 				delete(document.getId(), deleteHistory);
 			} catch (CloneNotSupportedException e) {
 				if (log.isErrorEnabled())

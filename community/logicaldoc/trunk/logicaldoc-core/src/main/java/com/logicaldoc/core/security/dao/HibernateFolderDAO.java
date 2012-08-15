@@ -21,6 +21,7 @@ import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.FolderEvent;
 import com.logicaldoc.core.security.FolderGroup;
 import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.Group;
@@ -74,7 +75,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				folder.setCreator(transaction.getUser().getFullName());
 				folder.setCreatorId(transaction.getUserId());
 				if (folder.getId() == 0 && transaction.getEvent() == null)
-					transaction.setEvent(FolderHistory.EVENT_FOLDER_CREATED);
+					transaction.setEvent(FolderEvent.CREATED.toString());
 			}
 
 			getHibernateTemplate().saveOrUpdate(folder);
@@ -574,15 +575,15 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 					parentHistory.setPath(computePathExtended(folder.getId()));
 
 				parentHistory.setUser(transaction.getUser());
-				if (transaction.getEvent().equals(FolderHistory.EVENT_FOLDER_CREATED)
-						|| transaction.getEvent().equals(FolderHistory.EVENT_FOLDER_MOVED)) {
-					parentHistory.setEvent(FolderHistory.EVENT_FOLDER_SUBFOLDER_CREATED);
-				} else if (transaction.getEvent().equals(FolderHistory.EVENT_FOLDER_RENAMED)) {
-					parentHistory.setEvent(FolderHistory.EVENT_FOLDER_SUBFOLDER_RENAMED);
-				} else if (transaction.getEvent().equals(FolderHistory.EVENT_FOLDER_PERMISSION)) {
-					parentHistory.setEvent(FolderHistory.EVENT_FOLDER_SUBFOLDER_PERMISSION);
-				} else if (transaction.getEvent().equals(FolderHistory.EVENT_FOLDER_DELETED)) {
-					parentHistory.setEvent(FolderHistory.EVENT_FOLDER_SUBFOLDER_DELETED);
+				if (transaction.getEvent().equals(FolderEvent.CREATED.toString())
+						|| transaction.getEvent().equals(FolderEvent.MOVED.toString())) {
+					parentHistory.setEvent(FolderEvent.SUBFOLDER_CREATED.toString());
+				} else if (transaction.getEvent().equals(FolderEvent.RENAMED.toString())) {
+					parentHistory.setEvent(FolderEvent.SUBFOLDER_RENAMED.toString());
+				} else if (transaction.getEvent().equals(FolderEvent.PERMISSION.toString())) {
+					parentHistory.setEvent(FolderEvent.SUBFOLDER_PERMISSION.toString());
+				} else if (transaction.getEvent().equals(FolderEvent.DELETED.toString())) {
+					parentHistory.setEvent(FolderEvent.SUBFOLDER_DELETED.toString());
 				}
 				parentHistory.setComment("");
 				parentHistory.setSessionId(transaction.getSessionId());
@@ -812,7 +813,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		for (Folder folder : folders) {
 			try {
 				FolderHistory deleteHistory = (FolderHistory) transaction.clone();
-				deleteHistory.setEvent(FolderHistory.EVENT_FOLDER_DELETED);
+				deleteHistory.setEvent(FolderEvent.DELETED.toString());
 				deleteHistory.setFolderId(folder.getId());
 				deleteHistory.setPath(computePathExtended(folder.getId()));
 				delete(folder.getId(), deleteHistory);
@@ -832,7 +833,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		try {
 			Folder folder = (Folder) getHibernateTemplate().get(Folder.class, folderId);
 			folder.setDeleted(1);
-			transaction.setEvent(FolderHistory.EVENT_FOLDER_DELETED);
+			transaction.setEvent(FolderEvent.DELETED.toString());
 			transaction.setFolderId(folderId);
 			store(folder, transaction);
 		} catch (Throwable e) {
@@ -848,7 +849,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	public boolean applyRithtToTree(long id, FolderHistory transaction) {
 		boolean result = true;
 		try {
-			transaction.setEvent(FolderHistory.EVENT_FOLDER_PERMISSION);
+			transaction.setEvent(FolderEvent.PERMISSION.toString());
 			Folder parent = findById(id);
 			Long securityRef = id;
 			if (parent.getSecurityRef() != null)
@@ -885,7 +886,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 		try {
 			initialize(parent);
-			transaction.setEvent(FolderHistory.EVENT_FOLDER_CHANGED);
+			transaction.setEvent(FolderEvent.CHANGED.toString());
 
 			// Iterate over all children setting the template and field values
 			List<Folder> children = findChildren(id, null);
@@ -928,7 +929,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 		setUniqueName(folder);
 		if (transaction != null)
-			transaction.setEvent(FolderHistory.EVENT_FOLDER_CREATED);
+			transaction.setEvent(FolderEvent.CREATED.toString());
 
 		/*
 		 * Replicate the parent's metadata
@@ -1025,7 +1026,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		setUniqueName(source);
 
 		// Modify folder history entry
-		transaction.setEvent(FolderHistory.EVENT_FOLDER_MOVED);
+		transaction.setEvent(FolderEvent.MOVED.toString());
 
 		store(source, transaction);
 	}

@@ -14,12 +14,14 @@ import org.slf4j.LoggerFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.FolderEvent;
 import com.logicaldoc.core.security.FolderGroup;
 import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.Permission;
@@ -62,7 +64,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				 */
 				FolderHistory history = new FolderHistory();
 				history.setUser(SessionUtil.getSessionUser(sid));
-				history.setEvent(FolderHistory.EVENT_FOLDER_PERMISSION);
+				history.setEvent(FolderEvent.PERMISSION.toString());
 				history.setSessionId(sid);
 
 				fdao.applyRithtToTree(folder.getId(), history);
@@ -98,7 +100,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			// Add a folder history entry
 			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(SessionUtil.getSessionUser(sid));
-			transaction.setEvent(FolderHistory.EVENT_FOLDER_DELETED);
+			transaction.setEvent(FolderEvent.DELETED.toString());
 			transaction.setSessionId(sid);
 			dao.deleteTree(folderId, transaction);
 		} catch (Throwable t) {
@@ -299,7 +301,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			// Add a folder history entry
 			FolderHistory history = new FolderHistory();
 			history.setUser(SessionUtil.getSessionUser(sid));
-			history.setEvent(FolderHistory.EVENT_FOLDER_RENAMED);
+			history.setEvent(FolderEvent.RENAMED.toString());
 			history.setSessionId(sid);
 
 			dao.store(folder, history);
@@ -329,15 +331,15 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				f.setType(folder.getType());
 				if (f.getName().trim().equals(folderName)) {
 					f.setName(folderName.trim());
-					transaction.setEvent(FolderHistory.EVENT_FOLDER_CHANGED);
+					transaction.setEvent(FolderEvent.CHANGED.toString());
 				} else {
 					f.setName(folderName.trim());
-					transaction.setEvent(FolderHistory.EVENT_FOLDER_RENAMED);
+					transaction.setEvent(FolderEvent.RENAMED.toString());
 				}
 
 				updateExtendedAttributes(f, folder);
 			} else {
-				transaction.setEvent(FolderHistory.EVENT_FOLDER_CREATED);
+				transaction.setEvent(FolderEvent.CREATED.toString());
 
 				f = folderDao.create(folderDao.findById(folder.getParentId()), folderName, transaction);
 				f.setDescription(folder.getDescription());
@@ -445,7 +447,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			// Add a folder history entry
 			FolderHistory history = new FolderHistory();
 			history.setUser(SessionUtil.getSessionUser(sid));
-			history.setEvent(FolderHistory.EVENT_FOLDER_PERMISSION);
+			history.setEvent(FolderEvent.PERMISSION.toString());
 			history.setSessionId(sid);
 			fdao.store(folder, history);
 		} catch (Throwable t) {
@@ -481,7 +483,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				// Check if the selected document is a shortcut
 				if (doc.getDocRef() != null) {
 					if (doc.getFolder().getId() != selectedFolderFolder.getId()) {
-						transaction.setEvent(History.EVENT_SHORTCUT_MOVED);
+						transaction.setEvent(DocumentEvent.SHORTCUT_MOVED.toString());
 						docManager.moveToFolder(doc, selectedFolderFolder, transaction);
 					} else
 						continue;
@@ -521,7 +523,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				// Create the document history event
 				History transaction = new History();
 				transaction.setSessionId(sid);
-				transaction.setEvent(History.EVENT_STORED);
+				transaction.setEvent(DocumentEvent.STORED.toString());
 				transaction.setComment("");
 				transaction.setUser(SessionUtil.getSessionUser(sid));
 
@@ -529,7 +531,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					docManager.copyToFolder(doc, selectedFolderFolder, transaction);
 				} else {
 					if (doc.getFolder().getId() != selectedFolderFolder.getId()) {
-						transaction.setEvent(History.EVENT_SHORTCUT_STORED);
+						transaction.setEvent(DocumentEvent.SHORTCUT_STORED.toString());
 						docManager.copyToFolder(doc, selectedFolderFolder, transaction);
 					}
 				}
@@ -557,7 +559,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				// Create the document history event
 				History transaction = new History();
 				transaction.setSessionId(sid);
-				transaction.setEvent(History.EVENT_SHORTCUT_STORED);
+				transaction.setEvent(DocumentEvent.SHORTCUT_STORED.toString());
 				transaction.setComment("");
 				transaction.setUser(SessionUtil.getSessionUser(sid));
 

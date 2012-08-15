@@ -326,7 +326,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				History renameTransaction = null;
 				if (!doc.getTitle().equals(docVO.getTitle()) && docVO.getTitle() != null) {
 					renameTransaction = (History) transaction.clone();
-					renameTransaction.setEvent(History.EVENT_RENAMED);
+					renameTransaction.setEvent(DocumentEvent.RENAMED.toString());
 				}
 
 				if (StringUtils.isNotEmpty(docVO.getFileName()))
@@ -455,7 +455,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			// Modify document history entry
 			if (transaction.getEvent().trim().isEmpty())
-				transaction.setEvent(History.EVENT_MOVED);
+				transaction.setEvent(DocumentEvent.MOVED.toString());
 			documentDAO.store(doc, transaction);
 
 			Version version = Version.create(doc, transaction.getUser(), transaction.getComment(), Version.EVENT_MOVED,
@@ -653,7 +653,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		}
 
 		// Modify document history entry
-		transaction.setEvent(History.EVENT_UNLOCKED);
+		transaction.setEvent(DocumentEvent.UNLOCKED.toString());
 		documentDAO.store(document, transaction);
 
 		log.debug("Unlocked document " + docId);
@@ -667,7 +667,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		Document document = documentDAO.findById(docId);
 		if (document.getImmutable() == 0) {
 			// Modify document history entry
-			transaction.setEvent(History.EVENT_IMMUTABLE);
+			transaction.setEvent(DocumentEvent.IMMUTABLE.toString());
 			documentDAO.makeImmutable(docId, transaction);
 
 			log.debug("The document " + docId + " has been marked as immutable ");
@@ -706,7 +706,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 
 			// Modify document history entry
-			transaction.setEvent(History.EVENT_RENAMED);
+			transaction.setEvent(DocumentEvent.RENAMED.toString());
 			documentDAO.store(document, transaction);
 
 			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
@@ -790,7 +790,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			}
 
 			// Modify document history entry
-			transaction.setEvent(History.EVENT_SHORTCUT_STORED);
+			transaction.setEvent(DocumentEvent.SHORTCUT_STORED.toString());
 
 			documentDAO.store(shortcut, transaction);
 

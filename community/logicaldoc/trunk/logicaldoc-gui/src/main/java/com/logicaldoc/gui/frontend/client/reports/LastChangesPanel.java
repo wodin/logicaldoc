@@ -158,7 +158,7 @@ public class LastChangesPanel extends VLayout {
 		eventForm.setColWidths(1, "*");
 
 		// Event
-		SelectItem event = ItemFactory.newEventsSelector("event", I18N.message("event"));
+		SelectItem event = ItemFactory.newEventsSelector("event", I18N.message("event"), true, true, true);
 		event.setColSpan(2);
 		event.setEndRow(true);
 

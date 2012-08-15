@@ -27,6 +27,7 @@ import com.logicaldoc.core.communication.EMailAttachment;
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
@@ -72,7 +73,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
-		transaction.setEvent(History.EVENT_STORED);
+		transaction.setEvent(DocumentEvent.STORED.toString());
 		transaction.setComment(document.getComment());
 		transaction.setUserId(user.getId());
 		transaction.setUserName(user.getFullName());
@@ -108,7 +109,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 				// Create the document history event
 				History transaction = new History();
 				transaction.setSessionId(sid);
-				transaction.setEvent(History.EVENT_CHECKEDIN);
+				transaction.setEvent(DocumentEvent.CHECKEDIN.toString());
 				transaction.setUser(user);
 				transaction.setComment(comment);
 
@@ -143,7 +144,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
-		transaction.setEvent(History.EVENT_CHECKEDOUT);
+		transaction.setEvent(DocumentEvent.CHECKEDOUT.toString());
 		transaction.setComment("");
 		transaction.setUser(user);
 
@@ -163,7 +164,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
-		transaction.setEvent(History.EVENT_DELETED);
+		transaction.setEvent(DocumentEvent.DELETED.toString());
 		transaction.setComment("");
 		transaction.setUser(user);
 
@@ -265,7 +266,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
-		transaction.setEvent(History.EVENT_LOCKED);
+		transaction.setEvent(DocumentEvent.LOCKED.toString());
 		transaction.setComment("");
 		transaction.setUser(user);
 
@@ -294,7 +295,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
-		transaction.setEvent(History.EVENT_MOVED);
+		transaction.setEvent(DocumentEvent.MOVED.toString());
 		transaction.setComment("");
 		transaction.setUser(user);
 
@@ -350,7 +351,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
-		transaction.setEvent(History.EVENT_UNLOCKED);
+		transaction.setEvent(DocumentEvent.UNLOCKED.toString());
 		transaction.setComment("");
 		transaction.setUser(user);
 
@@ -382,7 +383,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
-		transaction.setEvent(History.EVENT_CHANGED);
+		transaction.setEvent(DocumentEvent.CHANGED.toString());
 		transaction.setComment(document.getComment());
 		transaction.setUser(user);
 
@@ -551,7 +552,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 				History history = new History();
 				history.setSessionId(sid);
 				history.setDocId(doc.getId());
-				history.setEvent(History.EVENT_SENT);
+				history.setEvent(DocumentEvent.SENT.toString());
 				history.setUser(user);
 				history.setComment(StringUtils.abbreviate(recipients, 4000));
 				history.setTitle(doc.getTitle());
@@ -603,7 +604,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
-		transaction.setEvent(History.EVENT_SHORTCUT_STORED);
+		transaction.setEvent(DocumentEvent.SHORTCUT_STORED.toString());
 		transaction.setComment("");
 		transaction.setUser(user);
 

@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DownloadTicket;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -167,7 +168,7 @@ public class TicketDownload extends HttpServlet {
 
 			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			history.setPath(fdao.computePathExtended(doc.getFolder().getId()));
-			history.setEvent(History.EVENT_DOWNLOADED);
+			history.setEvent(DocumentEvent.DOWNLOADED.toString());
 			history.setFilename(doc.getFileName());
 			history.setFolderId(doc.getFolder().getId());
 			history.setUser(user);

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.FolderEvent;
 import com.logicaldoc.core.security.FolderGroup;
 import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.Group;
@@ -76,7 +77,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		// Add a folder history entry
 		FolderHistory transaction = new FolderHistory();
 		transaction.setUser(user);
-		transaction.setEvent(FolderHistory.EVENT_FOLDER_DELETED);
+		transaction.setEvent(FolderEvent.DELETED.toString());
 		transaction.setSessionId(sid);
 		List<Folder> notDeletedFolder = folderDao.deleteTree(folder, transaction);
 		if (notDeletedFolder.contains(folder)) {
@@ -224,7 +225,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			// Add a folder history entry
 			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(user);
-			transaction.setEvent(FolderHistory.EVENT_FOLDER_RENAMED);
+			transaction.setEvent(FolderEvent.RENAMED.toString());
 			transaction.setSessionId(sid);
 			folderDao.store(folder, transaction);
 		}
@@ -405,7 +406,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			// Add a folder history entry
 			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(user);
-			transaction.setEvent(FolderHistory.EVENT_FOLDER_RENAMED);
+			transaction.setEvent(FolderEvent.RENAMED.toString());
 			transaction.setSessionId(sid);
 			folderDao.store(flder, transaction);
 		}
@@ -421,7 +422,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 
 		FolderHistory transaction = new FolderHistory();
 		transaction.setUser(user);
-		transaction.setEvent(FolderHistory.EVENT_FOLDER_CREATED);
+		transaction.setEvent(FolderEvent.CREATED.toString());
 		transaction.setSessionId(sid);
 
 		if (path.startsWith("/"))
