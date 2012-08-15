@@ -17,6 +17,7 @@ import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.core.communication.SystemMessageDAO;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.security.Folder;
@@ -127,7 +128,7 @@ public class ZipImport {
 			DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 			try {
 				History history = new History();
-				history.setEvent(History.EVENT_STORED);
+				history.setEvent(DocumentEvent.STORED.toString());
 				history.setComment("");
 				history.setUser(user);
 				history.setSessionId(sessionId);

@@ -189,6 +189,11 @@
 		<servlet-class>com.logicaldoc.gui.common.server.MockPostsDataServlet</servlet-class>
 	</servlet>
 
+    <servlet>
+		<servlet-name>EventsData</servlet-name>
+		<servlet-class>com.logicaldoc.gui.common.server.MockEventsDataServlet</servlet-class>
+	</servlet>
+	
 	<servlet>
 		<servlet-name>VersionsData</servlet-name>
 		<servlet-class>com.logicaldoc.gui.common.server.MockVersionsDataServlet</servlet-class>
@@ -514,6 +519,11 @@
 		<url-pattern>/data/posts.xml</url-pattern>
 	</servlet-mapping>
 
+	<servlet-mapping>
+		<servlet-name>EventsData</servlet-name>
+		<url-pattern>/data/events.xml</url-pattern>
+	</servlet-mapping>
+	
 	<servlet-mapping>
 		<servlet-name>VersionsData</servlet-name>
 		<url-pattern>/data/versions.xml</url-pattern>

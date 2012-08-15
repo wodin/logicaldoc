@@ -8,29 +8,7 @@ import com.logicaldoc.core.document.AbstractHistory;
  * @author Marco Meschieri - Logical Objects
  * @since 6.4
  */
-public class FolderHistory extends AbstractHistory {
-
-	// Events on folders
-	public final static String EVENT_FOLDER_CREATED = "event.folder.created";
-
-	public final static String EVENT_FOLDER_RENAMED = "event.folder.renamed";
-
-	public final static String EVENT_FOLDER_PERMISSION = "event.folder.permission";
-
-	public final static String EVENT_FOLDER_DELETED = "event.folder.deleted";
-
-	public final static String EVENT_FOLDER_MOVED = "event.folder.moved";
-
-	public final static String EVENT_FOLDER_CHANGED = "event.folder.changed";
-
-	// Events on sub-folders
-	public final static String EVENT_FOLDER_SUBFOLDER_CREATED = "event.folder.subfolder.created";
-
-	public final static String EVENT_FOLDER_SUBFOLDER_RENAMED = "event.folder.subfolder.renamed";
-
-	public final static String EVENT_FOLDER_SUBFOLDER_PERMISSION = "event.folder.subfolder.permission";
-
-	public final static String EVENT_FOLDER_SUBFOLDER_DELETED = "event.folder.subfolder.deleted";
+public class FolderHistory extends AbstractHistory {	
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {

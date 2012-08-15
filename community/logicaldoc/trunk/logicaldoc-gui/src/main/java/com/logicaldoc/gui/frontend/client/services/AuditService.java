@@ -17,13 +17,19 @@ public interface AuditService extends RemoteService {
 	/**
 	 * Subscribes a folder
 	 */
-	public void subscribeFolder(String sid, long folderId, boolean currentOnly) throws InvalidSessionException;
+	public void subscribeFolder(String sid, long folderId, boolean currentOnly, String[] events) throws InvalidSessionException;
 
 	/**
 	 * Subscribes a selection of documents
 	 */
-	public void subscribeDocuments(String sid, long[] docIds) throws InvalidSessionException;
+	public void subscribeDocuments(String sid, long[] docIds, String[] events) throws InvalidSessionException;
 
+	
+	/**
+	 * Changes the assigned events
+	 */
+	public void update(String sid, long id, String[] events) throws InvalidSessionException;
+	
 	/**
 	 * Deletes a list of Subscriptions
 	 */

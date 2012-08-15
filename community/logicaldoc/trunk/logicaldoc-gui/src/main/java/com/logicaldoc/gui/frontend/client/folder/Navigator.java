@@ -464,7 +464,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 		audit.setTitle(I18N.message("subscribe"));
 		audit.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				SubscriptionDialog dialog = new SubscriptionDialog(id);
+				SubscriptionDialog dialog = new SubscriptionDialog(id, null);
 				dialog.show();
 			}
 		});

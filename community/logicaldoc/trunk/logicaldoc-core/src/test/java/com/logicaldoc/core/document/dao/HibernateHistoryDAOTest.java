@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTCase;
+import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.i18n.DateBean;
 
@@ -101,7 +102,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 		history.setDate(new Date());
 		history.setUserId(1);
 		history.setUserName("mario");
-		history.setEvent(History.EVENT_STORED);
+		history.setEvent(DocumentEvent.STORED.toString());
 		history.setComment("The document has been created.");
 
 		dao.store(history);

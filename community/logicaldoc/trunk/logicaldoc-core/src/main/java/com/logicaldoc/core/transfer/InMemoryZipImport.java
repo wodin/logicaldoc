@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.security.Folder;
@@ -132,7 +133,7 @@ public class InMemoryZipImport extends ZipImport {
 
 	
 				History history = new History();
-				history.setEvent(History.EVENT_STORED);
+				history.setEvent(DocumentEvent.STORED.toString());
 				history.setComment("");
 				history.setUser(user);
 				transaction.setSessionId(sessionId);

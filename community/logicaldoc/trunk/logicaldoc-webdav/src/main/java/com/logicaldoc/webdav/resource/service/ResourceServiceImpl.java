@@ -14,12 +14,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.FolderEvent;
 import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
@@ -288,7 +290,7 @@ public class ResourceServiceImpl implements ResourceService {
 				// Create the document history event
 				History transaction = new History();
 				transaction.setSessionId(sid);
-				transaction.setEvent(History.EVENT_STORED);
+				transaction.setEvent(DocumentEvent.STORED.toString());
 				transaction.setComment("");
 				transaction.setUser(user);
 
@@ -430,7 +432,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 			try {
 				if (document.getDocRef() != null)
-					transaction.setEvent(History.EVENT_SHORTCUT_MOVED);
+					transaction.setEvent(DocumentEvent.SHORTCUT_MOVED.toString());
 				documentManager.moveToFolder(document, folder, transaction);
 			} catch (Exception e) {
 				log.warn(e.getMessage(), e);
@@ -493,7 +495,7 @@ public class ResourceServiceImpl implements ResourceService {
 			// Add a folder history entry
 			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(user);
-			transaction.setEvent(FolderHistory.EVENT_FOLDER_RENAMED);
+			transaction.setEvent(FolderEvent.RENAMED.toString());
 			transaction.setSessionId(sid);
 			folderDAO.store(currentFolder, transaction);
 
@@ -523,7 +525,7 @@ public class ResourceServiceImpl implements ResourceService {
 				if (!resource.isDeleteEnabled())
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
 
-				transaction.setEvent(FolderHistory.EVENT_FOLDER_DELETED);
+				transaction.setEvent(FolderEvent.DELETED.toString());
 				List<Folder> notDeletableFolders = folderDAO.deleteTree(folder, transaction);
 
 				if (notDeletableFolders.size() > 0) {
@@ -534,7 +536,7 @@ public class ResourceServiceImpl implements ResourceService {
 				Resource parent = getParentResource(resource);
 				if (!parent.isDeleteEnabled())
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete on parent resource.");
-				transaction.setEvent(History.EVENT_DELETED);
+				transaction.setEvent(DocumentEvent.DELETED.toString());
 
 				if (documentDAO.findById(Long.parseLong(resource.getID())).getImmutable() == 1
 						&& !user.isInGroup("admin"))
@@ -583,7 +585,7 @@ public class ResourceServiceImpl implements ResourceService {
 				// Create the document history event
 				History transaction = new History();
 				transaction.setSessionId(sid);
-				transaction.setEvent(History.EVENT_STORED);
+				transaction.setEvent(DocumentEvent.STORED.toString());
 				transaction.setComment("");
 				transaction.setUser(user);
 
@@ -658,7 +660,7 @@ public class ResourceServiceImpl implements ResourceService {
 			// Create the document history event
 			History transaction = new History();
 			transaction.setSessionId(sid);
-			transaction.setEvent(History.EVENT_CHECKEDOUT);
+			transaction.setEvent(DocumentEvent.CHECKEDOUT.toString());
 			transaction.setComment("");
 			transaction.setUser(user);
 

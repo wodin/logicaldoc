@@ -12,6 +12,7 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.folder.SubscriptionDialog;
 import com.logicaldoc.gui.frontend.client.services.AuditService;
 import com.logicaldoc.gui.frontend.client.services.AuditServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -21,6 +22,7 @@ import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.SortDirection;
 import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
@@ -158,7 +160,7 @@ public class SubscriptionsPanel extends VLayout {
 	private void showContextMenu() {
 		Menu contextMenu = new Menu();
 
-		ListGridRecord[] selection = list.getSelection();
+		final ListGridRecord[] selection = list.getSelectedRecords();
 		if (selection == null || selection.length == 0)
 			return;
 		final long[] ids = new long[selection.length];
@@ -192,6 +194,15 @@ public class SubscriptionsPanel extends VLayout {
 			}
 		});
 
+		MenuItem edit = new MenuItem();
+		edit.setTitle(I18N.message("edit"));
+		edit.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				SubscriptionDialog dialog = new SubscriptionDialog(selection[0]);
+				dialog.show();
+			}
+		});
+
 		MenuItem openInFolder = new MenuItem();
 		openInFolder.setTitle(I18N.message("openinfolder"));
 		openInFolder.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
@@ -218,7 +229,7 @@ public class SubscriptionsPanel extends VLayout {
 			}
 		});
 
-		contextMenu.setItems(openInFolder, delete);
+		contextMenu.setItems(openInFolder, edit, delete);
 		contextMenu.showContextMenu();
 	}
 }

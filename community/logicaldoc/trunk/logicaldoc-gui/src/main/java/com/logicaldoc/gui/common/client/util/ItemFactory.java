@@ -4,9 +4,11 @@ import java.util.LinkedHashMap;
 
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
+import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
+import com.logicaldoc.gui.common.client.data.EventsDS;
 import com.logicaldoc.gui.common.client.data.FolderTemplatesDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
@@ -289,55 +291,15 @@ public class ItemFactory {
 		return select;
 	}
 
-	public static SelectItem newEventsSelector(String name, String title) {
+	public static SelectItem newEventsSelector(String name, String title, boolean folder, boolean workflow, boolean user) {
 		SelectItem select = newMultipleSelector(name, title);
 		select.setWidth(300);
 		select.setHeight(200);
 		select.setMultipleAppearance(MultipleAppearance.GRID);
-
-		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		// Document and folder events
-		map.put("event.archived", I18N.message("event.archived"));
-		map.put("event.changed", I18N.message("event.changed"));
-		map.put("event.checkedin", I18N.message("event.checkedin"));
-		map.put("event.checkedout", I18N.message("event.checkedout"));
-		map.put("event.deleted", I18N.message("event.deleted"));
-		map.put("event.downloaded", I18N.message("event.downloaded"));
-		map.put("event.folder.created", I18N.message("event.folder.created"));
-		map.put("event.folder.changed", I18N.message("event.folder.changed"));
-		map.put("event.folder.deleted", I18N.message("event.folder.deleted"));
-		map.put("event.folder.permission", I18N.message("event.folder.permission"));
-		map.put("event.folder.renamed", I18N.message("event.folder.renamed"));
-		map.put("event.folder.subfolder.created", I18N.message("event.folder.subfolder.created"));
-		map.put("event.folder.subfolder.deleted", I18N.message("event.folder.subfolder.deleted"));
-		map.put("event.folder.subfolder.permission", I18N.message("event.folder.subfolder.permission"));
-		map.put("event.folder.subfolder.renamed", I18N.message("event.folder.subfolder.renamed"));
-		map.put("event.makeimmutable", I18N.message("event.makeimmutable"));
-		map.put("event.locked", I18N.message("event.locked"));
-		map.put("event.moved", I18N.message("event.moved"));
-		map.put("event.renamed", I18N.message("event.renamed"));
-		map.put("event.stored", I18N.message("event.stored"));
-		map.put("event.unlocked", I18N.message("event.unlocked"));
-		map.put("event.sent", I18N.message("event.sent"));
-		map.put("event.barcoded", I18N.message("event.barcoded"));
-		map.put("event.workflowstatus", I18N.message("event.workflowstatus"));
-
-		// User events
-		map.put("event.user.deleted", I18N.message("event.user.deleted"));
-		map.put("event.user.login", I18N.message("event.user.login"));
-		map.put("event.user.logout", I18N.message("event.user.logout"));
-		map.put("event.user.passwordchanged", I18N.message("event.user.passwordchanged"));
-		// Workflow events
-		map.put("event.workflow.start", I18N.message("event.workflow.start"));
-		map.put("event.workflow.end", I18N.message("event.workflow.end"));
-		map.put("event.workflow.task.start", I18N.message("event.workflow.task.start"));
-		map.put("event.workflow.task.end", I18N.message("event.workflow.task.end"));
-		map.put("event.workflow.task.suspended", I18N.message("event.workflow.task.suspended"));
-		map.put("event.workflow.task.resumed", I18N.message("event.workflow.task.resumed"));
-		map.put("event.workflow.task.reassigned", I18N.message("event.workflow.task.reassigned"));
-		map.put("event.workflow.docappended", I18N.message("event.workflow.docappended"));
-
-		select.setValueMap(map);
+		select.setMultiple(true);
+		select.setOptionDataSource(new EventsDS(Session.get().getUser().getLanguage(), folder, workflow, user));
+		select.setValueField("code");
+		select.setDisplayField("label");
 		select.setHintStyle("hint");
 		return select;
 	}

@@ -31,6 +31,7 @@ import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Bookmark;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentLink;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DocumentNote;
@@ -204,7 +205,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					// Create the document history event
 					History transaction = new History();
 					transaction.setSessionId(sid);
-					transaction.setEvent(History.EVENT_STORED);
+					transaction.setEvent(DocumentEvent.STORED.toString());
 					transaction.setUser(SessionUtil.getSessionUser(sid));
 					transaction.setComment(metadata.getComment());
 
@@ -262,7 +263,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				// Create the document history event
 				History transaction = new History();
 				transaction.setSessionId(sid);
-				transaction.setEvent(History.EVENT_CHECKEDIN);
+				transaction.setEvent(DocumentEvent.CHECKEDIN.toString());
 				transaction.setUser(SessionUtil.getSessionUser(sid));
 				transaction.setComment(comment);
 
@@ -288,7 +289,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
-		transaction.setEvent(History.EVENT_CHECKEDOUT);
+		transaction.setEvent(DocumentEvent.CHECKEDOUT.toString());
 		transaction.setComment("");
 		transaction.setUser(SessionUtil.getSessionUser(sid));
 
@@ -314,13 +315,13 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					// Create the document history event
 					History transaction = new History();
 					transaction.setSessionId(sid);
-					transaction.setEvent(History.EVENT_DELETED);
+					transaction.setEvent(DocumentEvent.DELETED.toString());
 					transaction.setComment("");
 					transaction.setUser(SessionUtil.getSessionUser(sid));
 
 					// If it is a shortcut, we delete only the shortcut
 					if (doc.getDocRef() != null) {
-						transaction.setEvent(History.EVENT_SHORTCUT_DELETED);
+						transaction.setEvent(DocumentEvent.SHORTCUT_DELETED.toString());
 						dao.delete(doc.getId(), transaction);
 						continue;
 					}
@@ -693,7 +694,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			// Create the document history event
 			History transaction = new History();
 			transaction.setSessionId(sid);
-			transaction.setEvent(History.EVENT_LOCKED);
+			transaction.setEvent(DocumentEvent.LOCKED.toString());
 			transaction.setUser(SessionUtil.getSessionUser(sid));
 			transaction.setComment(comment);
 			for (long id : docIds) {
@@ -812,7 +813,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					// Create the document history event
 					History transaction = new History();
 					transaction.setSessionId(sid);
-					transaction.setEvent(History.EVENT_CHANGED);
+					transaction.setEvent(DocumentEvent.CHANGED.toString());
 					transaction.setComment(document.getComment());
 					transaction.setUser(SessionUtil.getSessionUser(sid));
 
@@ -1077,7 +1078,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					History history = new History();
 					history.setSessionId(sid);
 					history.setDocId(id);
-					history.setEvent(History.EVENT_SENT);
+					history.setEvent(DocumentEvent.SENT.toString());
 					history.setUser(SessionUtil.getSessionUser(sid));
 					history.setComment(StringUtils.abbreviate(email.getRecipients(), 4000));
 					history.setTitle(doc.getTitle());

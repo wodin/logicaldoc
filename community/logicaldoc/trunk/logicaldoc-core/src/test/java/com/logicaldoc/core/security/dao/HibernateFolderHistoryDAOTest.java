@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.i18n.DateBean;
+import com.logicaldoc.core.security.FolderEvent;
 import com.logicaldoc.core.security.FolderHistory;
 
 /**
@@ -88,7 +89,7 @@ public class HibernateFolderHistoryDAOTest extends AbstractCoreTCase {
 		history.setDate(new Date());
 		history.setUserId(1);
 		history.setUserName("mario");
-		history.setEvent(FolderHistory.EVENT_FOLDER_CREATED);
+		history.setEvent(FolderEvent.CREATED.toString());
 		history.setComment("The folder has been created.");
 
 		dao.store(history);
