@@ -48,6 +48,11 @@ public class DocumentsListPanel extends VLayout {
 		dataSource = new DocumentsDS(folder.getId(), null, max, null, null);
 		grid = new DocumentsGrid(dataSource);
 
+		if (folder.isDownload()) {
+			grid.setCanDrag(true);
+			grid.setCanDragRecordsOut(true);
+		}
+		
 		// Prepare a panel containing a title and the documents list
 		infoPanel = new InfoPanel("");
 
