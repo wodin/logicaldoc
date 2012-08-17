@@ -134,6 +134,11 @@ public class Search {
 							record.setAttribute("locked", "page_edit");
 						else
 							record.setAttribute("locked", "blank");
+
+						String[] extNames = Session.get().getInfo().getConfig("search.extattr").split(",");
+						for (String name : extNames) {
+							record.setAttribute("ext_" + name, hit.getValue(name));
+						}
 					}
 
 					for (SearchObserver observer : observers) {
