@@ -122,7 +122,8 @@
 		<module>logicaldoc-core</module>
 		<module>logicaldoc-webservice</module>
 		<module>logicaldoc-webdav</module>
-		<module>logicaldoc-i18n</module>
+		<module>logicaldoc-cmis</module>
+    <module>logicaldoc-i18n</module>
     <module>logicaldoc-gui</module>
     <module>logicaldoc-webapp</module>
     <!--
