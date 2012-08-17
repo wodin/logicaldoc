@@ -123,8 +123,12 @@ public class GUISettingsPanel extends VLayout {
 		RadioGroupItem doctab = ItemFactory.newBooleanSelector("doctab", "doctab");
 		doctab.setValueMap("properties", "thumbnail");
 
+		TextItem extattr = ItemFactory.newTextItem("extattr", I18N.message("extendedattrs"), null);
+		extattr.setHint(I18N.message("separatedcomma"));
+		extattr.setWidth(150);
+		
 		parametersForm.setItems(welcome, dropspot, previewPages, previewSize, previewZoom, thumbSize, thumbQuality,
-				uploadmax, ondoubleclick, doctab, searchhits, searchdepth, savelogin);
+				uploadmax, ondoubleclick, doctab, searchhits, searchdepth, extattr, savelogin);
 
 		for (GUIParameter p : settings) {
 			if (p.getName().equals("gui.welcome"))
@@ -153,6 +157,8 @@ public class GUISettingsPanel extends VLayout {
 				searchhits.setValue(Integer.parseInt(p.getValue()));
 			if (p.getName().equals("search.depth"))
 				searchdepth.setValue(Integer.parseInt(p.getValue()));
+			if (p.getName().equals("search.extattr"))
+				extattr.setValue(p.getValue());
 		}
 
 		IButton save = new IButton();
@@ -178,6 +184,7 @@ public class GUISettingsPanel extends VLayout {
 					params.add(new GUIParameter("upload.maxsize", values.get("uploadmax").toString()));
 					params.add(new GUIParameter("search.hits", values.get("searchhits").toString()));
 					params.add(new GUIParameter("search.depth", values.get("searchdepth").toString()));
+					params.add(new GUIParameter("search.extattr", values.get("extattr").toString()));
 
 					// Update the current session parameters.
 					for (GUIParameter p : params) {

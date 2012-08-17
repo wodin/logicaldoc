@@ -2,11 +2,17 @@ package com.logicaldoc.web.data;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 import javax.servlet.ServletException;
@@ -18,7 +24,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.RowMapper;
 
+import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.User;
@@ -26,7 +34,10 @@ import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.LocaleUtil;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
@@ -47,9 +58,14 @@ public class DocumentsDataServlet extends HttpServlet {
 		try {
 			Context context = Context.getInstance();
 			UserSession session = SessionUtil.validateSession(request);
+			ContextProperties config = (ContextProperties) context.getBean(ContextProperties.class);
 			UserDAO udao = (UserDAO) context.getBean(UserDAO.class);
 			User user = udao.findById(session.getUserId());
 			udao.initialize(user);
+
+			String locale = request.getParameter("locale");
+			if (StringUtils.isEmpty(locale))
+				locale = user.getLanguage();
 
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
@@ -119,13 +135,68 @@ public class DocumentsDataServlet extends HttpServlet {
 					filename = request.getParameter("filename");
 
 				/*
+				 * Retrieve the names of the extended attributes to show
+				 */
+				String extattrs = config.getProperty("search.extattr");
+
+				/*
+				 * Contains the extended attributes of the documents inside the
+				 * current folder. The key is documentId-atttributeName, the
+				 * value is the attribute value
+				 */
+				final Map<String, String> extValues = new HashMap<String, String>();
+
+				List<String> attrs = new ArrayList<String>();
+				if (StringUtils.isNotEmpty(extattrs)) {
+					log.debug("Search for extended attributes " + extattrs);
+
+					attrs = Arrays.asList(extattrs.trim().split(","));
+
+					StringBuffer query = new StringBuffer(
+							"select ld_docid, ld_name, ld_type, ld_stringvalue, ld_intvalue, ld_doublevalue, ld_datevalue ");
+					query.append(" from ld_document_ext where ld_docid in (");
+					query.append("select D.ld_id from ld_document D where D.ld_deleted=0 and D.ld_folderid=");
+					query.append(Long.toString(folderId));
+					query.append(") and ld_name in ");
+					query.append(attrs.toString().replaceAll("\\[", "('").replaceAll("\\]", "')")
+							.replaceAll(",", "','").replaceAll(" ", ""));
+
+					Locale l = LocaleUtil.toLocale(locale);
+					final SimpleDateFormat edf = new SimpleDateFormat(I18N.message("format_dateshort", l));
+
+					dao.query(query.toString(), null, new RowMapper<Long>() {
+						@Override
+						public Long mapRow(ResultSet rs, int row) throws SQLException {
+							Long docId = rs.getLong(1);
+							String name = rs.getString(2);
+							int type = rs.getInt(3);
+
+							String key = docId + "-" + name;
+
+							if (type == ExtendedAttribute.TYPE_STRING) {
+								extValues.put(key, rs.getString(4));
+							} else if (type == ExtendedAttribute.TYPE_INT) {
+								extValues.put(key, Long.toString(rs.getLong(5)));
+							} else if (type == ExtendedAttribute.TYPE_DOUBLE) {
+								extValues.put(key, Double.toString(rs.getDouble(6)));
+							} else if (type == ExtendedAttribute.TYPE_DATE) {
+								extValues.put(key, rs.getDate(7) != null ? edf.format(rs.getDate(7)) : "");
+							}
+
+							return null;
+						}
+					}, null);
+				}
+
+				/*
 				 * Execute the Query
 				 */
 				StringBuffer query = new StringBuffer(
 						"select A.id, A.customId, A.docRef, A.type, A.title, A.version, A.lastModified, A.date, A.publisher,"
 								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status,"
 								+ " A.signed, A.type, A.sourceDate, A.sourceAuthor, A.rating, A.fileVersion, A.comment, A.workflowStatus, A.startPublishing, A.stopPublishing, A.published "
-								+ " from Document A where A.deleted = 0 ");
+								+ " from Document A ");
+				query.append(" where A.deleted = 0 ");
 				if (folderId != null)
 					query.append(" and A.folder.id=" + folderId);
 				if (StringUtils.isNotEmpty(request.getParameter("indexed")))
@@ -239,6 +310,13 @@ public class DocumentsDataServlet extends HttpServlet {
 						writer.print("<stopPublishing></stopPublishing>");
 					writer.print("<publishedStatus>" + (published ? "yes" : "no") + "</publishedStatus>");
 
+					if (!extValues.isEmpty())
+						for (String name : attrs) {
+							String val = extValues.get(cols[0] + "-" + name);
+							if (val != null)
+								writer.print("<ext_" + name + "><![CDATA[" + val + "]]></ext_" + name + ">");
+						}
+
 					writer.print("</document>");
 				}
 
@@ -320,6 +398,13 @@ public class DocumentsDataServlet extends HttpServlet {
 					else
 						writer.print("<stopPublishing></stopPublishing>");
 					writer.print("<publishedStatus>" + (doc.isPublishing() ? "yes" : "no") + "</publishedStatus>");
+
+					if (!extValues.isEmpty())
+						for (String name : attrs) {
+							String val = extValues.get(doc.getId() + "-" + name);
+							if (val != null)
+								writer.print("<ext_" + name + "><![CDATA[" + val + "]]></ext_" + name + ">");
+						}
 
 					writer.print("</document>");
 				}

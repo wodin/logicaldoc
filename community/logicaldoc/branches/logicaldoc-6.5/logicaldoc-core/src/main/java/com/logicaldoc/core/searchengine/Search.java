@@ -1,17 +1,27 @@
 package com.logicaldoc.core.searchengine;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.java.plugin.registry.Extension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.RowMapper;
 
+import com.logicaldoc.core.ExtendedAttribute;
+import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
@@ -127,6 +137,54 @@ public abstract class Search {
 			internalSearch();
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
+		}
+
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		String extattrs = config.getProperty("search.extattr");
+
+		if (StringUtils.isNotEmpty(extattrs) && !hits.isEmpty()) {
+			// the names of the extended attributes to show
+			List<String> attrs = Arrays.asList(extattrs.trim().split(","));
+
+			log.debug("Start searching for extended attributes: " + attrs);
+
+			// populate a map of id-Hit
+			final Map<Long, Hit> map = new HashMap<Long, Hit>();
+			for (Hit h : hits) {
+				map.put(h.getId(), h);
+			}
+
+			DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			StringBuffer query = new StringBuffer(
+					"select ld_docid, ld_name, ld_type, ld_stringvalue, ld_intvalue, ld_doublevalue, ld_datevalue ");
+			query.append(" from ld_document_ext where ld_docid in ");
+			query.append(map.keySet().toString().replace('[', '(').replace(']', ')'));
+			query.append(" and ld_name in ");
+			query.append(attrs.toString().replaceAll("\\[", "('").replaceAll("\\]", "')").replaceAll(",", "','").replaceAll(" ", ""));
+
+			ddao.query(query.toString(), null, new RowMapper<Long>() {
+				@Override
+				public Long mapRow(ResultSet rs, int row) throws SQLException {
+					Long docId = rs.getLong(1);
+					String name = rs.getString(2);
+
+					Hit hit = map.get(docId);
+					if (hit == null)
+						return null;
+
+					ExtendedAttribute ext = new ExtendedAttribute();
+					ext.setType(rs.getInt(3));
+					ext.setStringValue(rs.getString(4));
+					ext.setIntValue(rs.getLong(5));
+					ext.setDoubleValue(rs.getDouble(6));
+					ext.setDateValue(rs.getDate(7));
+					hit.getAttributes().put(name, ext);
+
+					return null;
+				}
+			}, null);
+
+			log.debug("End searching for extended attributes");
 		}
 
 		Date finish = new Date();
