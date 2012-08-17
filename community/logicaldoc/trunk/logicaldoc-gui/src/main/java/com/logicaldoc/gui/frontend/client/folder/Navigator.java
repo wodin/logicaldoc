@@ -17,6 +17,7 @@ import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.RequestInfo;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
+import com.logicaldoc.gui.common.client.widgets.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
@@ -146,7 +147,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 										}
 									}
 								});
-					} else if (EventHandler.getDragTarget() instanceof ListGrid) {
+					} else if (EventHandler.getDragTarget() instanceof DocumentsGrid) {
 						/*
 						 * In this case we are moving a document
 						 */
