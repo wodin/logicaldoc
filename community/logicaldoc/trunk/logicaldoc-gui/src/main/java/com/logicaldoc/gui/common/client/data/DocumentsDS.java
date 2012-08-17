@@ -1,7 +1,11 @@
 package com.logicaldoc.gui.common.client.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.DataSourceField;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
 import com.smartgwt.client.data.fields.DataSourceFloatField;
 import com.smartgwt.client.data.fields.DataSourceImageField;
@@ -71,15 +75,52 @@ public class DocumentsDS extends DataSource {
 		DataSourceDateTimeField startPublishing = new DataSourceDateTimeField("startPublishing");
 		DataSourceDateTimeField stopPublishing = new DataSourceDateTimeField("stopPublishing");
 
-		setFields(id, title, type, size, publisher, version, docref, lastModified, published, created, creator,
-				sourceDate, sourceAuthor, customId, icon, immutable, iindexed, signed, locked, lockUserId, filename,
-				status, rating, fileVersion, comment, wfStatus, publishedStatus, startPublishing, stopPublishing);
+		List<DataSourceField> fields = new ArrayList<DataSourceField>();
+		fields.add(title);
+		fields.add(type);
+		fields.add(size);
+		fields.add(publisher);
+		fields.add(version);
+		fields.add(docref);
+		fields.add(lastModified);
+		fields.add(published);
+		fields.add(created);
+		fields.add(creator);
+		fields.add(sourceDate);
+		fields.add(sourceAuthor);
+		fields.add(customId);
+		fields.add(icon);
+		fields.add(immutable);
+		fields.add(iindexed);
+		fields.add(signed);
+		fields.add(locked);
+		fields.add(lockUserId);
+		fields.add(filename);
+		fields.add(status);
+		fields.add(rating);
+		fields.add(fileVersion);
+		fields.add(comment);
+		fields.add(wfStatus);
+		fields.add(publishedStatus);
+		fields.add(startPublishing);
+		fields.add(stopPublishing);
+
+		String[] extNames = Session.get().getInfo().getConfig("search.extattr").split(",");
+		for (String name : extNames) {
+			DataSourceTextField ext = new DataSourceTextField("ext_" + name, name);
+			ext.setHidden(true);
+			ext.setCanFilter(true);
+			fields.add(ext);
+		}
+
+		setFields(fields.toArray(new DataSourceField[0]));
 		setClientOnly(true);
 
 		if (barcoded == null)
-			setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&folderId="
-					+ (folderId != null ? folderId : "") + "&filename=" + (fileFilter != null ? fileFilter : "")
-					+ "&max=" + (max != null ? max : MAX) + "&indexed=" + (indexed != null ? indexed.toString() : ""));
+			setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&locale="
+					+ Session.get().getUser().getLanguage() + "&folderId=" + (folderId != null ? folderId : "")
+					+ "&filename=" + (fileFilter != null ? fileFilter : "") + "&max=" + (max != null ? max : MAX)
+					+ "&indexed=" + (indexed != null ? indexed.toString() : ""));
 		else
 			setDataURL("data/tobarcode.xml?sid=" + Session.get().getSid() + "&max=" + (max != null ? max : MAX));
 	}

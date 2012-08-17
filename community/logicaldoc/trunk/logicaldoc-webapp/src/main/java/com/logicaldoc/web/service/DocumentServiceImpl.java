@@ -387,41 +387,57 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 	private static GUIExtendedAttribute[] prepareGUIAttributes(DocumentTemplate template, Document doc) {
 		try {
-			GUIExtendedAttribute[] attributes = new GUIExtendedAttribute[template.getAttributeNames().size()];
-			int i = 0;
-			for (String attrName : template.getAttributeNames()) {
-				ExtendedAttribute extAttr = template.getAttributes().get(attrName);
-				GUIExtendedAttribute att = new GUIExtendedAttribute();
-				att.setName(attrName);
-				att.setPosition(extAttr.getPosition());
-				att.setLabel(extAttr.getLabel());
-				att.setMandatory(extAttr.getMandatory() == 1);
-				att.setEditor(extAttr.getEditor());
+			if (template != null) {
+				GUIExtendedAttribute[] attributes = new GUIExtendedAttribute[template.getAttributeNames().size()];
+				int i = 0;
+				for (String attrName : template.getAttributeNames()) {
+					ExtendedAttribute extAttr = template.getAttributes().get(attrName);
+					GUIExtendedAttribute att = new GUIExtendedAttribute();
+					att.setName(attrName);
+					att.setPosition(extAttr.getPosition());
+					att.setLabel(extAttr.getLabel());
+					att.setMandatory(extAttr.getMandatory() == 1);
+					att.setEditor(extAttr.getEditor());
 
-				// If the case, populate the options
-				if (att.getEditor() == ExtendedAttribute.EDITOR_LISTBOX) {
-					String buf = (String) extAttr.getStringValue();
-					List<String> list = new ArrayList<String>();
-					StringTokenizer st = new StringTokenizer(buf, ",");
-					while (st.hasMoreElements()) {
-						String val = (String) st.nextElement();
-						if (!list.contains(val))
-							list.add(val);
+					// If the case, populate the options
+					if (att.getEditor() == ExtendedAttribute.EDITOR_LISTBOX) {
+						String buf = (String) extAttr.getStringValue();
+						List<String> list = new ArrayList<String>();
+						StringTokenizer st = new StringTokenizer(buf, ",");
+						while (st.hasMoreElements()) {
+							String val = (String) st.nextElement();
+							if (!list.contains(val))
+								list.add(val);
+						}
+						att.setOptions(list.toArray(new String[0]));
 					}
-					att.setOptions(list.toArray(new String[0]));
+
+					if (doc != null) {
+						if (doc.getValue(attrName) != null)
+							att.setValue(doc.getValue(attrName));
+					} else
+						att.setValue(extAttr.getValue());
+					att.setType(extAttr.getType());
+
+					attributes[i] = att;
+					i++;
 				}
-
-				if (doc != null) {
-					if (doc.getValue(attrName) != null)
-						att.setValue(doc.getValue(attrName));
-				} else
-					att.setValue(extAttr.getValue());
-				att.setType(extAttr.getType());
-
-				attributes[i] = att;
-				i++;
+				return attributes;
+			} else {
+				List<GUIExtendedAttribute> list = new ArrayList<GUIExtendedAttribute>();
+				for (String name : doc.getAttributeNames()) {
+					ExtendedAttribute e = doc.getAttributes().get(name);
+					GUIExtendedAttribute ext = new GUIExtendedAttribute();
+					ext.setName(name);
+					ext.setDateValue(e.getDateValue());
+					ext.setStringValue(e.getStringValue());
+					ext.setIntValue(e.getIntValue());
+					ext.setDoubleValue(e.getDoubleValue());
+					ext.setType(e.getType());
+					list.add(ext);
+				}
+				return list.toArray(new GUIExtendedAttribute[0]);
 			}
-			return attributes;
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			return null;
@@ -515,6 +531,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		if (doc.getTemplate() != null) {
 			document.setTemplate(doc.getTemplate().getName());
 			document.setTemplateId(doc.getTemplate().getId());
+		}
+
+		if (doc.getAttributes() != null && !doc.getAttributes().isEmpty()) {
 			GUIExtendedAttribute[] attributes = prepareGUIAttributes(doc.getTemplate(), doc);
 			document.setAttributes(attributes);
 		}

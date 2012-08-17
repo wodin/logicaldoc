@@ -1,5 +1,8 @@
 package com.logicaldoc.gui.common.client.widgets;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
@@ -209,6 +212,8 @@ public class DocumentsGrid extends ListGrid {
 		setFilterOnKeypress(true);
 		setWrapCells(false);
 
+		List<ListGridField> fields = new ArrayList<ListGridField>();
+
 		if (ds != null) {
 			/*
 			 * We are browsing
@@ -216,9 +221,31 @@ public class DocumentsGrid extends ListGrid {
 			setSelectionType(SelectionStyle.MULTIPLE);
 
 			setDataSource(ds);
-			setFields(indexed, locked, immutable, signed, icon, filename, title, lastModified, type, size, fileVersion,
-					version, publisher, published, creator, created, sourceDate, sourceAuthor, customId, rating,
-					comment, wfStatus, startPublishing, stopPublishing);
+
+			fields.add(indexed);
+			fields.add(locked);
+			fields.add(immutable);
+			fields.add(signed);
+			fields.add(icon);
+			fields.add(filename);
+			fields.add(title);
+			fields.add(lastModified);
+			fields.add(type);
+			fields.add(size);
+			fields.add(fileVersion);
+			fields.add(version);
+			fields.add(publisher);
+			fields.add(published);
+			fields.add(creator);
+			fields.add(created);
+			fields.add(sourceDate);
+			fields.add(sourceAuthor);
+			fields.add(customId);
+			fields.add(rating);
+			fields.add(comment);
+			fields.add(wfStatus);
+			fields.add(startPublishing);
+			fields.add(stopPublishing);
 		} else {
 			/*
 			 * We are searching
@@ -252,10 +279,44 @@ public class DocumentsGrid extends ListGrid {
 
 			type.setHidden(true);
 			customId.setHidden(true);
-			setFields(indexed, locked, immutable, signed, icon, filename, title, score, lastModified, type, size,
-					fileVersion, version, publisher, published, creator, created, sourceDate, sourceAuthor, customId,
-					folder, rating, comment, wfStatus, startPublishing, stopPublishing);
+
+			fields.add(indexed);
+			fields.add(locked);
+			fields.add(immutable);
+			fields.add(signed);
+			fields.add(icon);
+			fields.add(filename);
+			fields.add(title);
+			fields.add(score);
+			fields.add(lastModified);
+			fields.add(type);
+			fields.add(size);
+			fields.add(fileVersion);
+			fields.add(version);
+			fields.add(publisher);
+			fields.add(published);
+			fields.add(creator);
+			fields.add(created);
+			fields.add(sourceDate);
+			fields.add(sourceAuthor);
+			fields.add(customId);
+			fields.add(folder);
+			fields.add(rating);
+			fields.add(comment);
+			fields.add(wfStatus);
+			fields.add(startPublishing);
+			fields.add(stopPublishing);
 		}
+
+		String[] extNames = Session.get().getInfo().getConfig("search.extattr").split(",");
+		for (String name : extNames) {
+			ListGridField ext = new ListGridField("ext_" + name, name, 100);
+			ext.setHidden(true);
+			ext.setCanFilter(true);
+			fields.add(ext);
+		}
+
+		setFields(fields.toArray(new ListGridField[0]));
 
 		addCellClickHandler(new CellClickHandler() {
 			@Override
@@ -356,7 +417,7 @@ public class DocumentsGrid extends ListGrid {
 			selectedRecord.setAttribute("published", document.getDate());
 			selectedRecord.setAttribute("creator", document.getCreator());
 			selectedRecord.setAttribute("created", document.getCreation());
-			selectedRecord.setAttribute("rating", "rating"+document.getRating());
+			selectedRecord.setAttribute("rating", "rating" + document.getRating());
 			updateData(selectedRecord);
 		}
 	}
