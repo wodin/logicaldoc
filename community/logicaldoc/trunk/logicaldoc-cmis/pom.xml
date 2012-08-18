@@ -3,11 +3,11 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-	  <parent>
-		  <groupId>com.logicaldoc</groupId>
-		  <artifactId>logicaldoc</artifactId>
-		  <version>6.6</version>
-	  </parent>
+	<parent>
+	  <groupId>com.logicaldoc</groupId>
+	  <artifactId>logicaldoc</artifactId>
+	  <version>6.6.0</version>
+	</parent>
 
     <artifactId>logicaldoc-cmis</artifactId>
     <name>LogicalDOC CMIS Connector</name>
@@ -26,15 +26,44 @@
         </dependency>
         <dependency>
             <groupId>org.apache.chemistry.opencmis</groupId>
-            <artifactId>chemistry-opencmis-server-bindings</artifactId>
-            <version>0.7.0</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.chemistry.opencmis</groupId>
             <artifactId>chemistry-opencmis-server-support</artifactId>
             <version>0.7.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.chemistry.opencmis</groupId>
+            <artifactId>chemistry-opencmis-server-bindings</artifactId>
+            <version>0.7.0</version>
+            <classifier>classes</classifier>
+        </dependency>
+        <dependency>
+			<groupId>net.sf.jpf</groupId>
+			<artifactId>jpf-boot</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jpf</groupId>
+			<artifactId>jpf</artifactId>
+			<scope>provided</scope>
+		</dependency>
+        <dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.logicaldoc</groupId>
+			<artifactId>logicaldoc-util</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.logicaldoc</groupId>
+			<artifactId>logicaldoc-core</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
     </dependencies>
     
     <build>
@@ -81,7 +110,7 @@
 									dir="target/${project.artifactId}-${project.version}-plugin.zip" />
 								<delete>
 									<fileset dir="target/plugin/WEB-INF/lib"
-										includes="*logicaldoc*,*spring*,*commons*,*velocity*,*geronimo*,*aopalliance*,*saaj*,ant*,hibernate*,ehcache*" />
+										includes="junit*,jax*,stax*,activation*,*logicaldoc*,*spring*,commons*,*velocity*,*geronimo*,*aopalliance*,*saaj*,ant*,hibernate*,ehcache*" />
 								</delete>
 
 								<copy
