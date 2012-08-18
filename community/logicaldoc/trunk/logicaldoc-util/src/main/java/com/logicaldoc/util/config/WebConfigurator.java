@@ -115,7 +115,7 @@ public class WebConfigurator extends XMLBean {
 	/**
 	 * Adds a init parameter to the servlet
 	 * 
-	 * @param clazz The classname
+	 * @param servletName The name of the servlet
 	 * @param name Name of the Parameter
 	 * @param value Value of the Parameter
 	 * @param description Description
@@ -181,6 +181,57 @@ public class WebConfigurator extends XMLBean {
 		} else
 			servlet.getChildren().add(paramElement);
 
+	}
+
+	/**
+	 * Adds a init parameter to the listener
+	 * 
+	 * @param listenerClazz The class of the listener
+	 * @param name Name of the Parameter
+	 * @param value Value of the Parameter
+	 * @param append if the param exist, should the new value appended? possible
+	 *        values are represented in {@link WebConfigurator.INIT_PARAM}
+	 */
+	public void addListenerInitParam(String listenerClazz, String param_name, String param_value, INIT_PARAM append) {
+		List listeners = getRootElement().getChildren("listener", getRootElement().getNamespace());
+		Element listener = this.elementLookUp(listeners, "listener-class", listenerClazz);
+
+		if (listener == null)
+			throw new IllegalStateException("The listener " + listenerClazz
+					+ " has not been found. Have you already written the listener?");
+
+		Element initParam = this.elementLookUp(listener.getChildren(), "param-name", param_name);
+
+		if (initParam != null && append.equals(INIT_PARAM.PARAM_STOP))
+			return;
+
+		if (initParam != null && append.equals(INIT_PARAM.PARAM_APPEND)) {
+			Element paramValue = ((Element) initParam.getParent()).getChild("param-value");
+			paramValue.setText(paramValue.getText() + "," + param_value);
+			writeXMLDoc();
+			return;
+		}
+
+		if (initParam != null && append.equals(INIT_PARAM.PARAM_OVERWRITE)) {
+			Element paramValue = ((Element) initParam.getParent()).getChild("param-value");
+			paramValue.setText(param_value);
+			writeXMLDoc();
+			return;
+		}
+
+		Element paramElement = new Element("init-param", getRootElement().getNamespace());
+
+		// the name
+		Element param = new Element("param-name", getRootElement().getNamespace());
+		param.setText(param_name);
+		// paramElement.addContent("\n ");
+		paramElement.getChildren().add(param);
+
+		param = new Element("param-value", getRootElement().getNamespace());
+		param.setText(param_value);
+		// paramElement.addContent("\n ");
+		paramElement.getChildren().add(param);
+		listener.getChildren().add(paramElement);
 	}
 
 	/**
@@ -301,6 +352,46 @@ public class WebConfigurator extends XMLBean {
 			// Add the new element to the next index along.
 			// This does cover the case where indexOf returned -1.
 			children.add(index + 1, filter);
+		}
+
+		writeXMLDoc();
+	}
+
+	/**
+	 * Adds a new listener to the deployment descriptor. If the listener already
+	 * exists no modifications are committed. e
+	 * 
+	 * @param clazz The filter class fully qualified name
+	 */
+	@SuppressWarnings("unchecked")
+	public void addListener(String clazz) {
+		Element listener = null;
+		Element listenerClass = null;
+
+		// Search for the specified filter
+		List listeners = getRootElement().getChildren("listener", getRootElement().getNamespace());
+		listener = this.elementLookUp(listeners, "listener-class", clazz);
+		if (listener == null) {
+			// The listener doesn't exist, so create it
+			// Retrieve the last <listener> element
+			Element lastListener = (Element) listeners.get(listeners.size() - 1);
+
+			List children = getRootElement().getChildren();
+
+			// Find the index of the element to add the new element after.
+			int index = children.indexOf(lastListener);
+
+			// Prepare the new mapping
+			listener = new Element("listener", getRootElement().getNamespace());
+			listenerClass = new Element("listener-class", getRootElement().getNamespace());
+			listenerClass.setText(clazz);
+			listener.addContent("\n ");
+			listener.addContent(listenerClass);
+			listener.addContent("\n ");
+
+			// Add the new element to the next index along.
+			// This does cover the case where indexOf returned -1.
+			children.add(index + 1, listener);
 		}
 
 		writeXMLDoc();
