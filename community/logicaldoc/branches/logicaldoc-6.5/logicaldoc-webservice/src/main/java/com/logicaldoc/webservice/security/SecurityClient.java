@@ -2,9 +2,7 @@ package com.logicaldoc.webservice.security;
 
 import java.io.IOException;
 
-import org.apache.cxf.interceptor.LoggingInInterceptor;
-import org.apache.cxf.interceptor.LoggingOutInterceptor;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
+import com.logicaldoc.webservice.AbstractClient;
 
 /**
  * Security Web Service client.
@@ -12,18 +10,10 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
  * @author Matteo Caruso - Logical Objects
  * @since 6.1
  */
-public class SecurityClient implements SecurityService {
-
-	private SecurityService client;
+public class SecurityClient extends AbstractClient<SecurityService> implements SecurityService {
 
 	public SecurityClient(String endpoint) throws IOException {
-		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
-
-		factory.getInInterceptors().add(new LoggingInInterceptor());
-		factory.getOutInterceptors().add(new LoggingOutInterceptor());
-		factory.setServiceClass(SecurityService.class);
-		factory.setAddress(endpoint);
-		client = (SecurityService) factory.create();
+		super(endpoint, SecurityService.class, -1, true);
 	}
 
 	@Override
