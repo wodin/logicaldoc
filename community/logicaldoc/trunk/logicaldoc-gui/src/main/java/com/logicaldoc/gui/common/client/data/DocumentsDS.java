@@ -76,6 +76,7 @@ public class DocumentsDS extends DataSource {
 		DataSourceDateTimeField stopPublishing = new DataSourceDateTimeField("stopPublishing");
 
 		List<DataSourceField> fields = new ArrayList<DataSourceField>();
+		fields.add(id);
 		fields.add(title);
 		fields.add(type);
 		fields.add(size);
