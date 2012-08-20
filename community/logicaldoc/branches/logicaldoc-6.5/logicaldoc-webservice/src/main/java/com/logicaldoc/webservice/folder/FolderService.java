@@ -126,21 +126,6 @@ public interface FolderService {
 			throws Exception;
 
 	/**
-	 * Lists all the folders(direct and indirect) of a parent folder.<br>
-	 * Attention: if the current user can read the folderId, all sub-folders are
-	 * returned without regards to read permission.
-	 * 
-	 * @param sid Session identifier
-	 * @param folderId The folder id
-	 * @return Array of folders contained in the folder
-	 * @throws Exception
-	 */
-	@WebResult(name = "folder")
-	@Deprecated
-	public WSFolder[] list(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
-			throws Exception;
-
-	/**
 	 * Lists all direct folders of a parent folder.<br>
 	 * Attention: readable only sub-folders are returned.
 	 * 

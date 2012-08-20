@@ -6,11 +6,7 @@ import java.io.IOException;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
-import org.apache.cxf.interceptor.LoggingInInterceptor;
-import org.apache.cxf.interceptor.LoggingOutInterceptor;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.cxf.transport.common.gzip.GZIPInInterceptor;
-import org.apache.cxf.transport.common.gzip.GZIPOutInterceptor;
+import com.logicaldoc.webservice.AbstractClient;
 
 /**
  * Document Web Service client.
@@ -18,40 +14,14 @@ import org.apache.cxf.transport.common.gzip.GZIPOutInterceptor;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-public class DocumentClient implements DocumentService {
-
-	private DocumentService client;
+public class DocumentClient extends AbstractClient<DocumentService> implements DocumentService {
 
 	public DocumentClient(String endpoint, int gzipThreshold, boolean log) throws IOException {
-		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
-
-		if (log) {
-			factory.getInInterceptors().add(new LoggingInInterceptor());
-			factory.getOutInterceptors().add(new LoggingOutInterceptor());
-		}
-
-		if (gzipThreshold >= 0) {
-			factory.getInInterceptors().add(new GZIPInInterceptor());
-			factory.getOutInterceptors().add(new GZIPOutInterceptor(gzipThreshold));
-		}
-
-		factory.setServiceClass(DocumentService.class);
-		factory.setAddress(endpoint);
-		client = (DocumentService) factory.create();
+		super(endpoint, DocumentService.class, gzipThreshold, log);
 	}
 
 	public DocumentClient(String endpoint) throws IOException {
-		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
-
-		factory.getInInterceptors().add(new LoggingInInterceptor());
-		factory.getInInterceptors().add(new GZIPInInterceptor());
-
-		factory.getOutInterceptors().add(new LoggingOutInterceptor());
-		factory.getOutInterceptors().add(new GZIPOutInterceptor(4096));
-
-		factory.setServiceClass(DocumentService.class);
-		factory.setAddress(endpoint);
-		client = (DocumentService) factory.create();
+		super(endpoint, DocumentService.class, -1, true);
 	}
 
 	@Override

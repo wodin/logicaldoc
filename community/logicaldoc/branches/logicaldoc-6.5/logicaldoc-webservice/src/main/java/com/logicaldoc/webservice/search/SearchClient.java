@@ -2,16 +2,10 @@ package com.logicaldoc.webservice.search;
 
 import java.io.IOException;
 
-import org.apache.cxf.interceptor.LoggingInInterceptor;
-import org.apache.cxf.interceptor.LoggingOutInterceptor;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.cxf.transport.common.gzip.GZIPInInterceptor;
-import org.apache.cxf.transport.common.gzip.GZIPOutInterceptor;
-
 import com.logicaldoc.core.document.TagCloud;
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
+import com.logicaldoc.webservice.AbstractClient;
 import com.logicaldoc.webservice.document.WSDocument;
-import com.logicaldoc.webservice.folder.FolderService;
 import com.logicaldoc.webservice.folder.WSFolder;
 
 /**
@@ -20,40 +14,14 @@ import com.logicaldoc.webservice.folder.WSFolder;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-public class SearchClient implements SearchService {
-
-	private SearchService client;
+public class SearchClient extends AbstractClient<SearchService> implements SearchService {
 
 	public SearchClient(String endpoint, int gzipThreshold, boolean log) throws IOException {
-		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
-
-		if (log) {
-			factory.getInInterceptors().add(new LoggingInInterceptor());
-			factory.getOutInterceptors().add(new LoggingOutInterceptor());
-		}
-
-		if (gzipThreshold >= 0) {
-			factory.getInInterceptors().add(new GZIPInInterceptor());
-			factory.getOutInterceptors().add(new GZIPOutInterceptor(gzipThreshold));
-		}
-
-		factory.setServiceClass(SearchService.class);
-		factory.setAddress(endpoint);
-		client = (SearchService) factory.create();
+		super(endpoint, SearchService.class, gzipThreshold, log);
 	}
 
 	public SearchClient(String endpoint) throws IOException {
-		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
-
-		factory.getInInterceptors().add(new LoggingInInterceptor());
-		factory.getInInterceptors().add(new GZIPInInterceptor());
-
-		factory.getOutInterceptors().add(new LoggingOutInterceptor());
-		factory.getOutInterceptors().add(new GZIPOutInterceptor(4096));
-
-		factory.setServiceClass(SearchService.class);
-		factory.setAddress(endpoint);
-		client = (SearchService) factory.create();
+		super(endpoint, SearchService.class, -1, true);
 	}
 
 	@Override
@@ -85,5 +53,4 @@ public class SearchClient implements SearchService {
 	public String[] getTags(String sid) throws Exception {
 		return client.getTags(sid);
 	}
-
 }

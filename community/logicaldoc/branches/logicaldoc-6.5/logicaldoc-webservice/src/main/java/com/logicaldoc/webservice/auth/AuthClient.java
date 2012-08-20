@@ -2,9 +2,7 @@ package com.logicaldoc.webservice.auth;
 
 import java.io.IOException;
 
-import org.apache.cxf.interceptor.LoggingInInterceptor;
-import org.apache.cxf.interceptor.LoggingOutInterceptor;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
+import com.logicaldoc.webservice.AbstractClient;
 
 /**
  * Auth Web Service client.
@@ -12,18 +10,10 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-public class AuthClient implements AuthService {
-
-	private AuthService client;
+public class AuthClient extends AbstractClient<AuthService> implements AuthService {
 
 	public AuthClient(String endpoint) throws IOException {
-		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
-
-		factory.getInInterceptors().add(new LoggingInInterceptor());
-		factory.getOutInterceptors().add(new LoggingOutInterceptor());
-		factory.setServiceClass(AuthService.class);
-		factory.setAddress(endpoint);
-		client = (AuthService) factory.create();
+		super(endpoint, AuthService.class, -1, true);
 	}
 
 	@Override
