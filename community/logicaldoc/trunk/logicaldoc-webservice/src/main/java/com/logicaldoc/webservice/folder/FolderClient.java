@@ -2,12 +2,7 @@ package com.logicaldoc.webservice.folder;
 
 import java.io.IOException;
 
-import org.apache.cxf.interceptor.LoggingInInterceptor;
-import org.apache.cxf.interceptor.LoggingOutInterceptor;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.cxf.transport.common.gzip.GZIPInInterceptor;
-import org.apache.cxf.transport.common.gzip.GZIPOutInterceptor;
-
+import com.logicaldoc.webservice.AbstractClient;
 import com.logicaldoc.webservice.auth.Right;
 
 /**
@@ -16,40 +11,14 @@ import com.logicaldoc.webservice.auth.Right;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-public class FolderClient implements FolderService {
-
-	private FolderService client;
+public class FolderClient extends AbstractClient<FolderService> implements FolderService {
 
 	public FolderClient(String endpoint, int gzipThreshold, boolean log) throws IOException {
-		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
-
-		if (log) {
-			factory.getInInterceptors().add(new LoggingInInterceptor());
-			factory.getOutInterceptors().add(new LoggingOutInterceptor());
-		}
-
-		if (gzipThreshold >= 0) {
-			factory.getInInterceptors().add(new GZIPInInterceptor());
-			factory.getOutInterceptors().add(new GZIPOutInterceptor(gzipThreshold));
-		}
-
-		factory.setServiceClass(FolderService.class);
-		factory.setAddress(endpoint);
-		client = (FolderService) factory.create();
+		super(endpoint, FolderService.class, gzipThreshold, log);
 	}
 
 	public FolderClient(String endpoint) throws IOException {
-		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
-
-		factory.getInInterceptors().add(new LoggingInInterceptor());
-		factory.getInInterceptors().add(new GZIPInInterceptor());
-
-		factory.getOutInterceptors().add(new LoggingOutInterceptor());
-		factory.getOutInterceptors().add(new GZIPOutInterceptor(4096));
-
-		factory.setServiceClass(FolderService.class);
-		factory.setAddress(endpoint);
-		client = (FolderService) factory.create();
+		super(endpoint, FolderService.class, -1, true);
 	}
 
 	@Override
@@ -70,11 +39,6 @@ public class FolderClient implements FolderService {
 	@Override
 	public boolean isReadable(String sid, long folderId) throws Exception {
 		return client.isReadable(sid, folderId);
-	}
-
-	@Override
-	public WSFolder[] list(String sid, long folderId) throws Exception {
-		return client.list(sid, folderId);
 	}
 
 	@Override

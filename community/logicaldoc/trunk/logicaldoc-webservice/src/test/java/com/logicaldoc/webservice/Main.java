@@ -12,7 +12,7 @@ import com.logicaldoc.webservice.system.SystemClient;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		String base = "http://localhost:1000/logicaldoc/services";
+		String base = "https://localhost:9443/logicaldoc/services";
 		AuthClient auth = new AuthClient(base + "/Auth");
 		DocumentClient documentClient = new DocumentClient(base + "/Document");
 		FolderClient folderClient = new FolderClient(base + "/Folder");

@@ -123,22 +123,6 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	}
 
 	@Override
-	public WSFolder[] list(String sid, long folderId) throws Exception {
-		User user = validateSession(sid);
-		checkReadEnable(user, folderId);
-
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		List<Folder> folders = folderDao.findByParentId(folderId);
-		WSFolder[] wsFolders = new WSFolder[folders.size()];
-		for (int i = 0; i < folders.size(); i++) {
-			folderDao.initialize(folders.get(i));
-			wsFolders[i] = WSFolder.fromFolder(folders.get(i));
-		}
-
-		return wsFolders;
-	}
-
-	@Override
 	public WSFolder[] listChildren(String sid, long folderId) throws Exception {
 		User user = validateSession(sid);
 		checkReadEnable(user, folderId);
@@ -273,7 +257,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 				path.add(wsFolder);
 			}
 			// Insert the target folder itself
-			Folder f=folderDao.findById(folderId);
+			Folder f = folderDao.findById(folderId);
 			folderDao.initialize(f);
 			WSFolder wsFolder = WSFolder.fromFolder(f);
 			path.add(wsFolder);
