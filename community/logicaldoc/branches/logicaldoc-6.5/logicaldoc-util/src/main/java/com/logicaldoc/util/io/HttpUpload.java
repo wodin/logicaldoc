@@ -1,17 +1,31 @@
 package com.logicaldoc.util.io;
 
 import java.io.File;
+import java.net.URL;
 import java.net.URLEncoder;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Date;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.httpclient.protocol.Protocol;
 
 /**
  * 
@@ -35,18 +49,18 @@ public class HttpUpload {
 	}
 
 	public static void main(String[] args) throws Exception {
-		File f = new File("C:/tmp/weblicense.sql");
+		File f = new File("C:/tmp/buf.txt");
 		HttpUpload upload = new HttpUpload();
 		upload.setFile(f);
-		upload.setFileName("weblicense.sql");
-		upload.setURL("http://localhost:9080/logicaldoc/upload?sid=test");
+		upload.setFileName("buf.txt");
+		upload.setURL("https://localhost:9443/logicaldoc/servlet.gupld?new_session=true&sid=39d38a5f-4a2f-4738-b8ee-7dd07b793a00");
 		upload.setListener(new CountingRequestEntity.ProgressListener() {
-					@Override
-					public void transferred(long total, long increment) {
-						System.out.println("Transfered " + increment);
-						System.out.println("Total " + total);
-					}
-				});
+			@Override
+			public void transferred(long total, long increment) {
+				System.out.println("Transfered " + increment);
+				System.out.println("Total " + total);
+			}
+		});
 		upload.upload();
 	}
 
@@ -81,6 +95,11 @@ public class HttpUpload {
 
 			filePost.setRequestEntity(request);
 
+			if (url.toLowerCase().startsWith("https")) {
+				URL _url = new URL(url);
+				Protocol.registerProtocol("https", new Protocol("https", new EasySSLProtocolSocketFactory(), _url.getPort()));
+			}
+
 			HttpClient client = new HttpClient();
 
 			client.getHttpConnectionManager().getParams().setConnectionTimeout(TIMEOUT);
@@ -94,6 +113,7 @@ public class HttpUpload {
 				System.out.println(message);
 				throw new Exception(message);
 			}
+
 		} finally {
 			filePost.releaseConnection();
 		}
