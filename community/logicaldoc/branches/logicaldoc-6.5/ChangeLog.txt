@@ -5,10 +5,20 @@
 /_____/\____/\__, /_/\___/\__,_/_/   \____/_.___/_/ /\___/\___/\__/____/
             /____/                             /___/
 
-                    http://www.logicalobjects.it
+                    http://www.logicalobjects.com
                       http://www.logicaldoc.com                    
 
                      LogicalDOC Community Edition
+
+LogicalDOC 6.5.1 (2012-08-31; logicaldoc-6.5.1)
+===============
+230 - Web setup broken at the final step - Bug - Setup
+233 - Barcode processor exits with errors - Bug - Barcode
+235 - Connection through WebDAV shows empty folder - Bug - WebDAV
+242 - HTTPS support in DropSpot and ScanApplet - Improvement - Core
+232 - IndexOptimixer generates exceptions on the log - Bug - Search Engine
+239 - Extended attributes in documents grid - Improvement - User Interface
+240 - Restore of documents drag&drop - Improvement - User Interface
 
 
 LogicalDOC 6.5.0 (2012-08-01; logicaldoc-6.5)
