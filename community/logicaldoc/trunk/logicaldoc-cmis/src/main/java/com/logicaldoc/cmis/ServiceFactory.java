@@ -11,6 +11,8 @@ import org.apache.chemistry.opencmis.server.support.CmisServiceWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.util.Context;
 
@@ -40,12 +42,12 @@ public class ServiceFactory extends AbstractServiceFactory {
 
 	@Override
 	public CmisService getService(CallContext context) {
-		String sid = authenticate(context);
-
-		log.debug("Created session " + sid + " for user " + context.getUsername());
 
 		CmisServiceWrapper<LDCmisService> wrapperService = threadLocalService.get();
 		if (wrapperService == null) {
+
+			String sid = authenticate(context);
+			log.debug("Created session " + sid + " for user " + context.getUsername());
 			wrapperService = new CmisServiceWrapper<LDCmisService>(new LDCmisService(context, sid),
 					DEFAULT_MAX_ITEMS_TYPES, DEFAULT_DEPTH_TYPES, DEFAULT_MAX_ITEMS_OBJECTS, DEFAULT_DEPTH_OBJECTS);
 			threadLocalService.set(wrapperService);
@@ -64,11 +66,28 @@ public class ServiceFactory extends AbstractServiceFactory {
 	}
 
 	private String authenticate(CallContext context) {
-		System.out.println("***authenticate");
 
-		//TODO How to retrieve the remote host and IP?		
+		// Create a pseudo session identifier
+		String combinedUserId = context.getUsername() + "-" + CmisServlet.remoteAddress.get()[0];
+
+		// Check if the session already exists
+		for (UserSession session : SessionManager.getInstance().getSessions()) {
+			try {
+				String[] userObject = (String[]) session.getUserObject();
+				if (userObject.length > 2 && userObject[2].equals(combinedUserId))
+					if (SessionManager.getInstance().isValid(session.getId())) {
+						SessionManager.getInstance().renew(session.getId());
+						return session.getId();
+					}
+			} catch (Throwable t) {
+
+			}
+		}
+
+		// We need to authenticate the user
 		AuthenticationChain chain = (AuthenticationChain) Context.getInstance().getBean(AuthenticationChain.class);
-		boolean authenticated = chain.authenticate(context.getUsername(), context.getPassword());
+		boolean authenticated = chain.authenticate(context.getUsername(), context.getPassword(), new String[] {
+				CmisServlet.remoteAddress.get()[0], CmisServlet.remoteAddress.get()[1], combinedUserId });
 		String sid = null;
 		if (authenticated)
 			sid = AuthenticationChain.getSessionId();
