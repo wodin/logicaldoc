@@ -21,10 +21,16 @@ public class CmisServlet extends CmisAtomPubServlet {
 
 	private static final long serialVersionUID = 1L;
 
+	public static ThreadLocal<String[]> remoteAddress = new ThreadLocal<String[]>();
+
 	@Override
 	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ContextProperties settings = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
+		// Save the remote identification as thread local variable
+		String[] addr = new String[] { request.getRemoteAddr(), request.getRemoteHost() };
+		remoteAddress.set(addr);
+		
 		// Check if the service is enabled
 		if ("true".equals(settings.get("cmis.enabled")))
 			super.service(request, response);
