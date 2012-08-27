@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.common.client.widgets;
+package com.logicaldoc.gui.frontend.client.folder;
 
 import java.util.ArrayList;
 import java.util.Date;

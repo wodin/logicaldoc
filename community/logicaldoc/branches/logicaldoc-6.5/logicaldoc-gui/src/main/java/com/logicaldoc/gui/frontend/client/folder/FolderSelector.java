@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.common.client.widgets;
+package com.logicaldoc.gui.frontend.client.folder;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,6 +7,7 @@ import java.util.Date;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.FoldersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.widgets.FolderChangeListener;
 import com.smartgwt.client.widgets.form.fields.PickerIcon;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
