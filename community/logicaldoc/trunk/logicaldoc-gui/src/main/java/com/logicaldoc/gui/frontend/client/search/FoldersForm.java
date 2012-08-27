@@ -1,7 +1,7 @@
 package com.logicaldoc.gui.frontend.client.search;
 
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
-import com.logicaldoc.gui.common.client.widgets.FolderSearchForm;
+import com.logicaldoc.gui.frontend.client.folder.FolderSearchForm;
 
 /**
  * Shows a folders search form
