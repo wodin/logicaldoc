@@ -308,10 +308,12 @@ public class DocumentsGrid extends ListGrid {
 
 		String[] extNames = Session.get().getInfo().getConfig("search.extattr").split(",");
 		for (String name : extNames) {
-			ListGridField ext = new ListGridField("ext_" + name, name, 100);
-			ext.setHidden(true);
-			ext.setCanFilter(true);
-			fields.add(ext);
+			if (name != null && !"".equals(name)) {
+				ListGridField ext = new ListGridField("ext_" + name, name, 100);
+				ext.setHidden(true);
+				ext.setCanFilter(true);
+				fields.add(ext);
+			}
 		}
 
 		setFields(fields.toArray(new ListGridField[0]));
