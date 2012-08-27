@@ -659,6 +659,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 	private void onReload() {
 		TreeNode selectedNode = (TreeNode) getSelectedRecord();
 		getTree().reloadChildren(selectedNode);
+		selectFolder(Long.parseLong(selectedNode.getAttributeAsString("folderId")));
 	}
 
 	private void onCreate() {
