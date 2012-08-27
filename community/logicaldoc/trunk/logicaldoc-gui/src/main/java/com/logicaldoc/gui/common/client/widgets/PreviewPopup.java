@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.document;
+package com.logicaldoc.gui.common.client.widgets;
 
 import java.util.HashMap;
 import java.util.Map;
