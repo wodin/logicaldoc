@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.common.client.widgets;
+package com.logicaldoc.gui.frontend.client.document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +15,6 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
-import com.logicaldoc.gui.frontend.client.document.RatingDialog;
-import com.logicaldoc.gui.frontend.client.document.SignVerifyDialog;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SignService;
