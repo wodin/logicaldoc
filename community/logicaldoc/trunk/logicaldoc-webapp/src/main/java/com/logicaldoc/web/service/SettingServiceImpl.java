@@ -107,11 +107,11 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 			} else if (name.startsWith("product") || name.startsWith("skin") || name.startsWith("conf")
 					|| name.startsWith("ldap") || name.startsWith("schedule") || name.startsWith("smtp")
 					|| name.startsWith("password") || name.startsWith("ad") || name.startsWith("webservice")
-					|| name.startsWith("webdav") || name.startsWith("runlevel") || name.startsWith("stat")
-					|| name.startsWith("index") || name.equals("id") || name.startsWith("lang")
-					|| name.startsWith("reg.") || name.startsWith("ocr.") || name.startsWith("barcode.")
-					|| name.startsWith("task.") || name.startsWith("quota") || name.startsWith("store")
-					|| name.startsWith("flexpaperviewer") || name.startsWith("omnipage.")
+					|| name.startsWith("webdav") || name.startsWith("cmis") || name.startsWith("runlevel")
+					|| name.startsWith("stat") || name.startsWith("index") || name.equals("id")
+					|| name.startsWith("lang") || name.startsWith("reg.") || name.startsWith("ocr.")
+					|| name.startsWith("barcode.") || name.startsWith("task.") || name.startsWith("quota")
+					|| name.startsWith("store") || name.startsWith("flexpaperviewer") || name.startsWith("omnipage.")
 					|| name.startsWith("command.") || name.startsWith("gui.") || name.startsWith("upload.")
 					|| name.equals("userno") || name.startsWith("search.") || name.startsWith("swftools.")
 					|| name.contains("password") || name.startsWith("audit.") || name.startsWith("openoffice.path")
@@ -141,8 +141,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		List<GUIParameter> params = new ArrayList<GUIParameter>();
 		for (Object key : conf.keySet()) {
 			if (key.toString().equals("webservice.enabled") || key.toString().startsWith("webdav")
-					|| key.toString().startsWith("command.") || key.toString().startsWith("openoffice")
-					|| key.toString().startsWith("swftools.")) {
+					|| key.toString().startsWith("cmis") || key.toString().startsWith("command.")
+					|| key.toString().startsWith("openoffice") || key.toString().startsWith("swftools.")) {
 				GUIParameter p = new GUIParameter(key.toString(), conf.getProperty(key.toString()));
 				params.add(p);
 			}
