@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1476,19 +1477,28 @@ public class LDRepository {
 			addPropertyString(result, typeId, filter, PropertyIds.NAME, name);
 			objectInfo.setName(name);
 
-			// created and modified by
-			addPropertyString(result, typeId, filter, PropertyIds.CREATED_BY, USER_UNKNOWN);
-			addPropertyString(result, typeId, filter, PropertyIds.LAST_MODIFIED_BY, USER_UNKNOWN);
-			objectInfo.setCreatedBy(USER_UNKNOWN);
-
 			// creation and modification date
 			GregorianCalendar lastModified = millisToCalendar(object.getLastModified().getTime());
 
 			GregorianCalendar creation;
-			if (object instanceof Folder)
-				creation = millisToCalendar(((Folder) object).getCreation().getTime());
-			else
-				creation = millisToCalendar(((Document) object).getCreation().getTime());
+			if (object instanceof Folder) {
+				Folder f = ((Folder) object);
+				creation = millisToCalendar(f.getCreation().getTime());
+
+				// created and modified by
+				addPropertyString(result, typeId, filter, PropertyIds.CREATED_BY, f.getCreator());
+				addPropertyString(result, typeId, filter, PropertyIds.LAST_MODIFIED_BY, USER_UNKNOWN);
+				objectInfo.setCreatedBy(f.getCreator());
+
+			} else {
+				Document d = ((Document) object);
+				creation = millisToCalendar(d.getCreation().getTime());
+
+				// created and modified by
+				addPropertyString(result, typeId, filter, PropertyIds.CREATED_BY, d.getCreator());
+				addPropertyString(result, typeId, filter, PropertyIds.LAST_MODIFIED_BY, d.getPublisher());
+				objectInfo.setCreatedBy(d.getPublisher());
+			}
 
 			addPropertyDateTime(result, typeId, filter, PropertyIds.CREATION_DATE, creation);
 			addPropertyDateTime(result, typeId, filter, PropertyIds.LAST_MODIFICATION_DATE, lastModified);
@@ -1557,6 +1567,19 @@ public class LDRepository {
 				}
 
 				addPropertyId(result, typeId, filter, PropertyIds.CONTENT_STREAM_ID, null);
+
+				addPropertyString(result, typeId, filter, TypeManager.PROP_LANGUAGE, doc.getLanguage());
+				addPropertyString(result, typeId, filter, TypeManager.PROP_SOURCE, doc.getSource());
+				addPropertyString(result, typeId, filter, TypeManager.PROP_SOURCE_AUTHOR, doc.getSourceAuthor());
+				addPropertyDateTime(result, typeId, filter, TypeManager.PROP_SOURCE_DATE, doc.getSourceDate());
+				addPropertyString(result, typeId, filter, TypeManager.PROP_SOURCE_TYPE, doc.getSourceType());
+				addPropertyString(result, typeId, filter, TypeManager.PROP_SOURCE_ID, doc.getSourceId());
+				addPropertyString(result, typeId, filter, TypeManager.PROP_RECIPIENT, doc.getRecipient());
+				addPropertyString(result, typeId, filter, TypeManager.PROP_COVERAGE, doc.getCoverage());
+				addPropertyString(result, typeId, filter, TypeManager.PROP_CUSTOMID, doc.getCustomId());
+				addPropertyString(result, typeId, filter, TypeManager.PROP_OBJECT, doc.getObject());
+				addPropertyInteger(result, typeId, filter, TypeManager.PROP_RATING, doc.getRating()!=null ? doc.getRating() : 0);
+				addPropertyString(result, typeId, filter, TypeManager.PROP_TAGS, doc.getTgs());
 			}
 
 			// read custom properties
@@ -1855,6 +1878,12 @@ public class LDRepository {
 		}
 
 		props.addProperty(new PropertyBooleanImpl(id, value));
+	}
+
+	private void addPropertyDateTime(PropertiesImpl props, String typeId, Set<String> filter, String id, Date value) {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(value);
+		addPropertyDateTime(props, typeId, filter, id, gc);
 	}
 
 	private void addPropertyDateTime(PropertiesImpl props, String typeId, Set<String> filter, String id,
@@ -2193,10 +2222,6 @@ public class LDRepository {
 
 	public String getId() {
 		return id;
-	}
-
-	public TypeManager getTypes() {
-		return types;
 	}
 
 	/**
