@@ -19,7 +19,6 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.LinkItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -43,6 +42,8 @@ public class ExternalAppsPanel extends VLayout {
 
 	private GUIParameter wsSettings = null;
 
+	private GUIParameter cmisSettings = null;
+
 	private GUIParameter wdSettings = null;
 
 	private GUIParameter wdCache = null;
@@ -61,6 +62,8 @@ public class ExternalAppsPanel extends VLayout {
 		for (GUIParameter parameter : settings) {
 			if (parameter.getName().startsWith("webservice"))
 				wsSettings = parameter;
+			else if (parameter.getName().startsWith("cmis"))
+				cmisSettings = parameter;
 			else if (parameter.getName().equals("webdav.enabled"))
 				wdSettings = parameter;
 			else if (parameter.getName().equals("webdav.usecache"))
@@ -96,10 +99,8 @@ public class ExternalAppsPanel extends VLayout {
 		webServiceForm.setPadding(5);
 
 		// Url
-		LinkItem url = new LinkItem(I18N.message("url"));
-		url.setRequired(true);
-		url.setLinkTitle(GWT.getHostPageBaseURL() + "services");
-		url.setValue(GWT.getHostPageBaseURL() + "services");
+		StaticTextItem url = ItemFactory.newStaticTextItem("wsUrl", I18N.message("url"), GWT.getHostPageBaseURL()
+				+ "services");
 
 		// Web Service Enabled
 		RadioGroupItem wsEnabled = ItemFactory.newBooleanSelector("wsEnabled", "enabled");
@@ -109,6 +110,29 @@ public class ExternalAppsPanel extends VLayout {
 
 		webServiceForm.setItems(url, wsEnabled);
 		webService.setPane(webServiceForm);
+
+		Tab cmis = new Tab();
+		cmis.setTitle("CMIS");
+
+		DynamicForm cmisForm = new DynamicForm();
+		cmisForm.setValuesManager(vm);
+		cmisForm.setTitleOrientation(TitleOrientation.LEFT);
+		cmisForm.setNumCols(2);
+		cmisForm.setColWidths(1, "*");
+		cmisForm.setPadding(5);
+
+		// Url
+		StaticTextItem cmisUrl = ItemFactory.newStaticTextItem("cmisUrl", I18N.message("url"), GWT.getHostPageBaseURL()
+				+ "cmis");
+
+		// Web Service Enabled
+		RadioGroupItem cmisEnabled = ItemFactory.newBooleanSelector("cmisEnabled", "enabled");
+		cmisEnabled.setName("cmisEnabled");
+		cmisEnabled.setRequired(true);
+		cmisEnabled.setValue(cmisSettings.getValue().equals("true") ? "yes" : "no");
+
+		cmisForm.setItems(cmisUrl, cmisEnabled);
+		cmis.setPane(cmisForm);
 
 		Tab webDav = new Tab();
 		webDav.setTitle(I18N.message("webdav"));
@@ -157,11 +181,17 @@ public class ExternalAppsPanel extends VLayout {
 		extApps.setPane(extAppForm);
 
 		tabs.addTab(extApps);
-		
+
 		if (Feature.visible(Feature.WEBSERVICE)) {
 			tabs.addTab(webService);
 			if (!Feature.enabled(Feature.WEBSERVICE))
 				webService.setPane(new FeatureDisabled());
+		}
+
+		if (Feature.visible(Feature.CMIS)) {
+			tabs.addTab(cmis);
+			if (!Feature.enabled(Feature.CMIS))
+				cmis.setPane(new FeatureDisabled());
 		}
 
 		if (Feature.visible(Feature.WEBDAV)) {
@@ -169,7 +199,6 @@ public class ExternalAppsPanel extends VLayout {
 			if (!Feature.enabled(Feature.WEBDAV))
 				webDav.setPane(new FeatureDisabled());
 		}
-
 
 		IButton save = new IButton();
 		save.setTitle(I18N.message("save"));
@@ -179,21 +208,23 @@ public class ExternalAppsPanel extends VLayout {
 				Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				if (vm.validate()) {
-					ExternalAppsPanel.this.wsSettings.setValue(values.get("wsEnabled").equals("yes") ? "true"
+					ExternalAppsPanel.this.wsSettings
+							.setValue(values.get("wsEnabled").equals("yes") ? "true" : "false");
+
+					ExternalAppsPanel.this.cmisSettings.setValue(values.get("cmisEnabled").equals("yes") ? "true"
 							: "false");
 
-					ExternalAppsPanel.this.wdSettings.setValue(values.get("wdEnabled").equals("yes") ? "true"
-							: "false");
+					ExternalAppsPanel.this.wdSettings
+							.setValue(values.get("wdEnabled").equals("yes") ? "true" : "false");
 
-					ExternalAppsPanel.this.wdCache.setValue(values.get("wdCache").equals("yes") ? "true"
-							: "false");
+					ExternalAppsPanel.this.wdCache.setValue(values.get("wdCache").equals("yes") ? "true" : "false");
 					ExternalAppsPanel.this.convert.setValue(values.get("convertCommand").toString());
 					ExternalAppsPanel.this.ghost.setValue(values.get("ghostCommand").toString());
 					ExternalAppsPanel.this.tesseract.setValue(values.get("tesseractCommand").toString());
 					ExternalAppsPanel.this.swftoolsPath.setValue(values.get("swftools").toString());
 					ExternalAppsPanel.this.openofficePath.setValue(values.get("openOffice").toString());
 
-					GUIParameter[] params = new GUIParameter[7];
+					GUIParameter[] params = new GUIParameter[9];
 					params[0] = ExternalAppsPanel.this.wsSettings;
 					params[1] = ExternalAppsPanel.this.wdSettings;
 					params[2] = ExternalAppsPanel.this.wdCache;
@@ -202,6 +233,7 @@ public class ExternalAppsPanel extends VLayout {
 					params[5] = ExternalAppsPanel.this.ghost;
 					params[6] = ExternalAppsPanel.this.tesseract;
 					params[7] = ExternalAppsPanel.this.openofficePath;
+					params[8] = ExternalAppsPanel.this.cmisSettings;
 
 					service.saveClientSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
 

@@ -65,6 +65,8 @@ public class Feature {
 	
 	public static final int BULK_UPDATE = 28;
 	
+	public static final int CMIS = 29;
+	
 	public static final int SHOW_LICENSEE = 40;
 
 	public static final int SHOW_USERS_WARNING = 41;
