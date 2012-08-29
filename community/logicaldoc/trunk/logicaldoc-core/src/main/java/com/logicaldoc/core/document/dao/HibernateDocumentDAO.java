@@ -162,6 +162,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	/**
 	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findLockedByUserId(java.lang.String)
 	 */
+	@Deprecated
 	public List<Document> findLockedByUserId(long userId) {
 		return findByWhere("_entity.lockUserId = " + userId + " and not(_entity.status=" + Document.DOC_UNLOCKED + ")",
 				null, null);

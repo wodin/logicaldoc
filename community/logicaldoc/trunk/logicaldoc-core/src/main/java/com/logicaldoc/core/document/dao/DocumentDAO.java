@@ -54,6 +54,7 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * @param userId Id of the user.
 	 * @return Collection of all Documents locked by the specified user.
 	 */
+	@Deprecated
 	public List<Document> findLockedByUserId(long userId);
 
 	/**
