@@ -26,11 +26,11 @@ import org.apache.chemistry.opencmis.commons.data.ObjectData;
 import org.apache.chemistry.opencmis.commons.data.ObjectInFolderContainer;
 import org.apache.chemistry.opencmis.commons.data.ObjectInFolderData;
 import org.apache.chemistry.opencmis.commons.data.ObjectInFolderList;
+import org.apache.chemistry.opencmis.commons.data.ObjectList;
 import org.apache.chemistry.opencmis.commons.data.ObjectParentData;
 import org.apache.chemistry.opencmis.commons.data.PermissionMapping;
 import org.apache.chemistry.opencmis.commons.data.Properties;
 import org.apache.chemistry.opencmis.commons.data.PropertyData;
-import org.apache.chemistry.opencmis.commons.data.PropertyDateTime;
 import org.apache.chemistry.opencmis.commons.data.PropertyId;
 import org.apache.chemistry.opencmis.commons.data.PropertyString;
 import org.apache.chemistry.opencmis.commons.data.RepositoryInfo;
@@ -71,6 +71,7 @@ import org.apache.chemistry.opencmis.commons.impl.dataobjects.FailedToDeleteData
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.ObjectDataImpl;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.ObjectInFolderDataImpl;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.ObjectInFolderListImpl;
+import org.apache.chemistry.opencmis.commons.impl.dataobjects.ObjectListImpl;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.ObjectParentDataImpl;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.PermissionDefinitionDataImpl;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.PermissionMappingDataImpl;
@@ -103,6 +104,9 @@ import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
+import com.logicaldoc.core.searchengine.FulltextSearchOptions;
+import com.logicaldoc.core.searchengine.Hit;
+import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderEvent;
 import com.logicaldoc.core.security.FolderHistory;
@@ -140,6 +144,8 @@ public class LDRepository {
 	private static final int BUFFER_SIZE = 4 * 1024;
 
 	private static final Logger log = LoggerFactory.getLogger(LDRepository.class);
+
+	private static final int DEFAULT_QUERY_SIZE = 40;
 
 	/** Repository id */
 	private final String id;
@@ -218,7 +224,7 @@ public class LDRepository {
 		capabilities.setSupportsVersionSpecificFiling(false);
 		capabilities.setIsPwcSearchable(false);
 		capabilities.setIsPwcUpdatable(false);
-		capabilities.setCapabilityQuery(CapabilityQuery.NONE);
+		capabilities.setCapabilityQuery(CapabilityQuery.FULLTEXTONLY);
 		capabilities.setCapabilityChanges(CapabilityChanges.NONE);
 		capabilities.setCapabilityContentStreamUpdates(CapabilityContentStreamUpdates.ANYTIME);
 		capabilities.setSupportsGetDescendants(true);
@@ -299,7 +305,7 @@ public class LDRepository {
 	 */
 	public RepositoryInfo getRepositoryInfo(CallContext context) {
 		debug("getRepositoryInfo");
-		checkPermission(context.getRepositoryId(), context, null);
+		validatePermission(context.getRepositoryId(), context, null);
 
 		return repositoryInfo;
 	}
@@ -310,7 +316,7 @@ public class LDRepository {
 	public TypeDefinitionList getTypesChildren(CallContext context, String typeId, boolean includePropertyDefinitions,
 			BigInteger maxItems, BigInteger skipCount) {
 		debug("getTypesChildren");
-		checkPermission(context.getRepositoryId(), context, null);
+		validatePermission(context.getRepositoryId(), context, null);
 		return types.getTypesChildren(context, typeId, includePropertyDefinitions, maxItems, skipCount);
 	}
 
@@ -319,7 +325,7 @@ public class LDRepository {
 	 */
 	public TypeDefinition getTypeDefinition(CallContext context, String typeId) {
 		debug("getTypeDefinition");
-		checkPermission(context.getRepositoryId(), context, null);
+		validatePermission(context.getRepositoryId(), context, null);
 
 		return types.getTypeDefinition(context, typeId);
 	}
@@ -330,7 +336,7 @@ public class LDRepository {
 	public List<TypeDefinitionContainer> getTypesDescendants(CallContext context, String typeId, BigInteger depth,
 			Boolean includePropertyDefinitions) {
 		debug("getTypesDescendants");
-		checkPermission(context.getRepositoryId(), context, null);
+		validatePermission(context.getRepositoryId(), context, null);
 		return types.getTypesDescendants(context, typeId, depth, includePropertyDefinitions);
 	}
 
@@ -340,7 +346,7 @@ public class LDRepository {
 	public ObjectData create(CallContext context, Properties properties, String folderId, ContentStream contentStream,
 			VersioningState versioningState, ObjectInfoHandler objectInfos) {
 		debug("create");
-		boolean userReadOnly = checkPermission(folderId, context, Permission.WRITE);
+		validatePermission(folderId, context, Permission.WRITE);
 
 		String typeId = getTypeId(properties);
 
@@ -367,7 +373,7 @@ public class LDRepository {
 	public String createDocument(CallContext context, Properties properties, String folderId,
 			ContentStream contentStream, VersioningState versioningState) {
 		debug("createDocument");
-		checkPermission(folderId, context, Permission.WRITE);
+		validatePermission(folderId, context, Permission.WRITE);
 
 		// check properties
 		if ((properties == null) || (properties.getProperties() == null)) {
@@ -592,7 +598,7 @@ public class LDRepository {
 	 */
 	public String createFolder(CallContext context, Properties properties, String folderId) {
 		debug("createFolder");
-		checkPermission(folderId, context, Permission.WRITE);
+		validatePermission(folderId, context, Permission.WRITE);
 
 		// check properties
 		if ((properties == null) || (properties.getProperties() == null)) {
@@ -653,10 +659,8 @@ public class LDRepository {
 			throw new CmisInvalidArgumentException("Id is not valid!");
 		}
 
-		if (!checkPermission(targetFolderId, context, Permission.WRITE)
-				|| !checkPermission(objectId.getValue(), context, Permission.DOWNLOAD)) {
-			throw new CmisPermissionDeniedException("Permission denied!");
-		}
+		validatePermission(targetFolderId, context, Permission.WRITE);
+		validatePermission(objectId.getValue(), context, Permission.DOWNLOAD);
 
 		Folder target = getFolder(targetFolderId);
 		if (target == null) {
@@ -710,7 +714,7 @@ public class LDRepository {
 
 		Document doc = getDocument(objectId.getValue());
 
-		checkPermission("" + doc.getFolder().getId(), context, Permission.WRITE);
+		validatePermission("" + doc.getFolder().getId(), context, Permission.WRITE);
 
 		// TODO Implement
 
@@ -785,7 +789,7 @@ public class LDRepository {
 	 */
 	public void deleteObject(CallContext context, String objectId) {
 		debug("deleteObject");
-		checkPermission(objectId, context, Permission.WRITE);
+		validatePermission(objectId, context, Permission.WRITE);
 
 		// get the file or folder
 		PersistentObject object = getObject(objectId);
@@ -813,7 +817,7 @@ public class LDRepository {
 	 */
 	public FailedToDeleteData deleteTree(CallContext context, String folderId, Boolean continueOnFailure) {
 		debug("deleteTree");
-		checkPermission(folderId, context, Permission.WRITE);
+		validatePermission(folderId, context, Permission.WRITE);
 
 		boolean cof = (continueOnFailure == null ? false : continueOnFailure.booleanValue());
 
@@ -869,9 +873,7 @@ public class LDRepository {
 			throw new CmisInvalidArgumentException("Id is not valid!");
 		}
 
-		if (!checkPermission(objectId.getValue(), context, Permission.WRITE)) {
-			throw new CmisInvalidArgumentException("Access denied!");
-		}
+		validatePermission(objectId.getValue(), context, Permission.WRITE);
 
 		// get the document or folder
 		PersistentObject object = getObject(objectId.getValue());
@@ -889,7 +891,7 @@ public class LDRepository {
 	public ObjectData getObject(CallContext context, String objectId, String versionServicesId, String filter,
 			Boolean includeAllowableActions, Boolean includeAcl, ObjectInfoHandler objectInfos) {
 		debug("getObject");
-		boolean userReadOnly = checkPermission(objectId, context, null);
+		validatePermission(objectId, context, null);
 
 		// check id
 		if ((objectId == null) && (versionServicesId == null)) {
@@ -928,7 +930,7 @@ public class LDRepository {
 	 */
 	public Acl getAcl(CallContext context, String objectId) {
 		debug("getAcl");
-		checkPermission(objectId, context, null);
+		validatePermission(objectId, context, null);
 
 		return compileAcl(getObject(objectId));
 	}
@@ -938,7 +940,7 @@ public class LDRepository {
 	 */
 	public ContentStream getContentStream(CallContext context, String objectId, BigInteger offset, BigInteger length) {
 		debug("getContentStream");
-		checkPermission(objectId, context, null);
+		validatePermission(objectId, context, null);
 
 		if ((offset != null) || (length != null)) {
 			throw new CmisInvalidArgumentException("Offset and Length are not supported!");
@@ -977,7 +979,7 @@ public class LDRepository {
 			Boolean includeAllowableActions, Boolean includePathSegment, BigInteger maxItems, BigInteger skipCount,
 			ObjectInfoHandler objectInfos) {
 		debug("getChildren");
-		boolean userReadOnly = checkPermission(folderId, context, null);
+		validatePermission(folderId, context, null);
 
 		// split filter
 		Set<String> filterCollection = splitFilter(filter);
@@ -1087,7 +1089,7 @@ public class LDRepository {
 			String filter, Boolean includeAllowableActions, Boolean includePathSegment, ObjectInfoHandler objectInfos,
 			boolean foldersOnly) {
 		debug("getDescendants or getFolderTree");
-		boolean userReadOnly = checkPermission(folderId, context, null);
+		validatePermission(folderId, context, null);
 
 		// check depth
 		int d = (depth == null ? 2 : depth.intValue());
@@ -1116,8 +1118,7 @@ public class LDRepository {
 
 		// get the tree
 		List<ObjectInFolderContainer> result = new ArrayList<ObjectInFolderContainer>();
-		gatherDescendants(context, folder, result, foldersOnly, d, filterCollection, iaa, ips, userReadOnly,
-				objectInfos);
+		gatherDescendants(context, folder, result, foldersOnly, d, filterCollection, iaa, ips, objectInfos);
 
 		return result;
 	}
@@ -1141,7 +1142,7 @@ public class LDRepository {
 	public List<ObjectParentData> getObjectParents(CallContext context, String objectId, String filter,
 			Boolean includeAllowableActions, Boolean includeRelativePathSegment, ObjectInfoHandler objectInfos) {
 		debug("getObjectParents");
-		boolean userReadOnly = checkPermission(objectId, context, null);
+		validatePermission(objectId, context, null);
 
 		// split filter
 		Set<String> filterCollection = splitFilter(filter);
@@ -1196,7 +1197,7 @@ public class LDRepository {
 		// boolean userReadOnly = checkUser(context, false);
 
 		// split filter
-		Set<String> filterCollection = splitFilter(filter);
+//		Set<String> filterCollection = splitFilter(filter);
 
 		// check path
 		if ((folderPath == null) || (!folderPath.startsWith("/"))) {
@@ -1225,6 +1226,42 @@ public class LDRepository {
 		return null;
 	}
 
+	public ObjectList query(String statement, Integer maxItems) {
+		int max = DEFAULT_QUERY_SIZE;
+		if (maxItems != null)
+			max = maxItems;
+
+		// Prepare the search options
+		FulltextSearchOptions opt = new FulltextSearchOptions();
+		opt.setMaxHits(max);
+
+		User user = getSessionUser();
+		opt.setUserId(user.getId());
+		opt.setExpressionLanguage(user.getLanguage());
+
+		//As expression we will use the WHERE clause as is
+		String expr=statement.substring(statement.toLowerCase().lastIndexOf("where")+5);
+		System.out.println("----- epr="+expr);
+		opt.setExpression(expr);
+		
+		// Execute the search
+		Search search = Search.get(opt);
+		List<Hit> hits = search.search();
+
+		// Populate CMIS data structure
+		List<ObjectData> list = new ArrayList<ObjectData>();
+		for (Hit hit : hits) {
+			ObjectData result = compileObjectType(null, hit, null, false, false, null);
+			list.add(result);
+		}
+
+		ObjectListImpl objList = new ObjectListImpl();
+		objList.setObjects(list);
+		objList.setNumItems(BigInteger.valueOf(list.size()));
+		objList.setHasMoreItems(search.getEstimatedHitsNumber() > list.size());
+		return objList;
+	}
+
 	// --- helper methods ---
 
 	/**
@@ -1232,7 +1269,7 @@ public class LDRepository {
 	 */
 	private void gatherDescendants(CallContext context, Folder folder, List<ObjectInFolderContainer> list,
 			boolean foldersOnly, int depth, Set<String> filter, boolean includeAllowableActions,
-			boolean includePathSegments, boolean userReadOnly, ObjectInfoHandler objectInfos) {
+			boolean includePathSegments, ObjectInfoHandler objectInfos) {
 
 		// TODO implement
 
@@ -1344,8 +1381,9 @@ public class LDRepository {
 			result.setIsExactAcl(true);
 		}
 
-		if (context.isObjectInfoRequired()) {
-			objectInfo.setObject(result);
+		objectInfo.setObject(result);
+
+		if (objectInfos != null && context != null && context.isObjectInfoRequired()) {
 			objectInfos.addObjectInfo(objectInfo);
 		}
 
@@ -1516,6 +1554,7 @@ public class LDRepository {
 				}
 
 				addPropertyId(result, typeId, filter, PropertyIds.CONTENT_STREAM_ID, null);
+				addPropertyBoolean(result, typeId, filter, PropertyIds.IS_IMMUTABLE, doc.getImmutable() != 0);
 
 				addPropertyString(result, typeId, filter, TypeManager.PROP_TITLE, doc.getTitle());
 				addPropertyString(result, typeId, filter, TypeManager.PROP_LANGUAGE, doc.getLanguage());
@@ -1554,7 +1593,6 @@ public class LDRepository {
 	/**
 	 * Reads and adds properties.
 	 */
-	@SuppressWarnings("unchecked")
 	private void readCustomProperties(PersistentObject object, PropertiesImpl properties, Set<String> filter,
 			ObjectInfoImpl objectInfo) {
 
@@ -1842,84 +1880,6 @@ public class LDRepository {
 		return result;
 	}
 
-	// /**
-	// * Checks and updates a property set that can be written to disc.
-	// */
-	// private Properties updateProperties(String typeId, String creator,
-	// GregorianCalendar creationDate, String modifier,
-	// Properties oldProperties, Properties properties) {
-	// PropertiesImpl result = new PropertiesImpl();
-	//
-	// if (properties == null) {
-	// throw new CmisConstraintException("No properties!");
-	// }
-	//
-	// // get the property definitions
-	// TypeDefinition type = types.getType(typeId);
-	// if (type == null) {
-	// throw new CmisObjectNotFoundException("Type '" + typeId +
-	// "' is unknown!");
-	// }
-	//
-	// // copy old properties
-	// for (PropertyData<?> prop : oldProperties.getProperties().values()) {
-	// PropertyDefinition<?> propType =
-	// type.getPropertyDefinitions().get(prop.getId());
-	//
-	// // do we know that property?
-	// if (propType == null) {
-	// throw new CmisConstraintException("Property '" + prop.getId() +
-	// "' is unknown!");
-	// }
-	//
-	// // only add read/write properties
-	// if ((propType.getUpdatability() != Updatability.READWRITE)) {
-	// continue;
-	// }
-	//
-	// result.addProperty(prop);
-	// }
-	//
-	// // update properties
-	// for (PropertyData<?> prop : properties.getProperties().values()) {
-	// PropertyDefinition<?> propType =
-	// type.getPropertyDefinitions().get(prop.getId());
-	//
-	// // do we know that property?
-	// if (propType == null) {
-	// throw new CmisConstraintException("Property '" + prop.getId() +
-	// "' is unknown!");
-	// }
-	//
-	// // can it be set?
-	// if ((propType.getUpdatability() == Updatability.READONLY)) {
-	// throw new CmisConstraintException("Property '" + prop.getId() +
-	// "' is readonly!");
-	// }
-	//
-	// if ((propType.getUpdatability() == Updatability.ONCREATE)) {
-	// throw new CmisConstraintException("Property '" + prop.getId() +
-	// "' can only be set on create!");
-	// }
-	//
-	// // default or value
-	// if (isEmptyProperty(prop)) {
-	// addPropertyDefault(result, propType);
-	// } else {
-	// result.addProperty(prop);
-	// }
-	// }
-	//
-	// addPropertyId(result, typeId, null, PropertyIds.OBJECT_TYPE_ID, typeId);
-	// addPropertyString(result, typeId, null, PropertyIds.CREATED_BY, creator);
-	// addPropertyDateTime(result, typeId, null, PropertyIds.CREATION_DATE,
-	// creationDate);
-	// addPropertyString(result, typeId, null, PropertyIds.LAST_MODIFIED_BY,
-	// modifier);
-	//
-	// return result;
-	// }
-
 	private static boolean isEmptyProperty(PropertyData<?> prop) {
 		if ((prop == null) || (prop.getValues() == null)) {
 			return true;
@@ -1933,7 +1893,9 @@ public class LDRepository {
 			return;
 		}
 
-		props.addProperty(new PropertyIdImpl(id, value));
+		PropertyIdImpl p = new PropertyIdImpl(id, value);
+		p.setQueryName(id);
+		props.addProperty(p);
 	}
 
 	private void addPropertyIdList(PropertiesImpl props, String typeId, Set<String> filter, String id,
@@ -1942,15 +1904,18 @@ public class LDRepository {
 			return;
 		}
 
-		props.addProperty(new PropertyIdImpl(id, value));
+		PropertyIdImpl p = new PropertyIdImpl(id, value);
+		p.setQueryName(id);
+		props.addProperty(p);
 	}
 
 	private void addPropertyString(PropertiesImpl props, String typeId, Set<String> filter, String id, String value) {
 		if (!checkAddProperty(props, typeId, filter, id)) {
 			return;
 		}
-
-		props.addProperty(new PropertyStringImpl(id, value));
+		PropertyStringImpl p = new PropertyStringImpl(id, value);
+		p.setQueryName(id);
+		props.addProperty(p);
 	}
 
 	private void addPropertyInteger(PropertiesImpl props, String typeId, Set<String> filter, String id, long value) {
@@ -1963,7 +1928,9 @@ public class LDRepository {
 			return;
 		}
 
-		props.addProperty(new PropertyIntegerImpl(id, value));
+		PropertyIntegerImpl p = new PropertyIntegerImpl(id, value);
+		p.setQueryName(id);
+		props.addProperty(p);
 	}
 
 	private void addPropertyBoolean(PropertiesImpl props, String typeId, Set<String> filter, String id, boolean value) {
@@ -1971,7 +1938,9 @@ public class LDRepository {
 			return;
 		}
 
-		props.addProperty(new PropertyBooleanImpl(id, value));
+		PropertyBooleanImpl p = new PropertyBooleanImpl(id, value);
+		p.setQueryName(id);
+		props.addProperty(p);
 	}
 
 	private void addPropertyDateTime(PropertiesImpl props, String typeId, Set<String> filter, String id, Date value) {
@@ -1989,7 +1958,9 @@ public class LDRepository {
 			return;
 		}
 
-		props.addProperty(new PropertyDateTimeImpl(id, value));
+		PropertyDateTimeImpl p = new PropertyDateTimeImpl(id, value);
+		p.setQueryName(id);
+		props.addProperty(p);
 	}
 
 	private boolean checkAddProperty(Properties properties, String typeId, Set<String> filter, String id) {
@@ -2000,26 +1971,6 @@ public class LDRepository {
 		if (id == null) {
 			throw new IllegalArgumentException("Id must not be null!");
 		}
-
-		// TODO implement
-		// TypeDefinition type = types.getType(typeId);
-		// if (type == null) {
-		// throw new IllegalArgumentException("Unknown type: " + typeId);
-		// }
-		// if (!type.getPropertyDefinitions().containsKey(id)) {
-		// throw new IllegalArgumentException("Unknown property: " + id);
-		// }
-		//
-		// String queryName =
-		// type.getPropertyDefinitions().get(id).getQueryName();
-		//
-		// if ((queryName != null) && (filter != null)) {
-		// if (!filter.contains(queryName)) {
-		// return false;
-		// } else {
-		// filter.remove(queryName);
-		// }
-		// }
 
 		return true;
 	}
@@ -2041,28 +1992,45 @@ public class LDRepository {
 		if ((defaultValue != null) && (!defaultValue.isEmpty())) {
 			switch (propDef.getPropertyType()) {
 			case BOOLEAN:
-				props.addProperty(new PropertyBooleanImpl(propDef.getId(), (List<Boolean>) defaultValue));
+				PropertyBooleanImpl p = new PropertyBooleanImpl(propDef.getId(), (List<Boolean>) defaultValue);
+				p.setQueryName(propDef.getId());
+				props.addProperty(p);
 				break;
 			case DATETIME:
-				props.addProperty(new PropertyDateTimeImpl(propDef.getId(), (List<GregorianCalendar>) defaultValue));
+				PropertyDateTimeImpl p1 = new PropertyDateTimeImpl(propDef.getId(),
+						(List<GregorianCalendar>) defaultValue);
+				p1.setQueryName(propDef.getId());
+				props.addProperty(p1);
 				break;
 			case DECIMAL:
-				props.addProperty(new PropertyDecimalImpl(propDef.getId(), (List<BigDecimal>) defaultValue));
+				PropertyDecimalImpl p3 = new PropertyDecimalImpl(propDef.getId(), (List<BigDecimal>) defaultValue);
+				p3.setQueryName(propDef.getId());
+				props.addProperty(p3);
 				break;
 			case HTML:
-				props.addProperty(new PropertyHtmlImpl(propDef.getId(), (List<String>) defaultValue));
+				PropertyHtmlImpl p4 = new PropertyHtmlImpl(propDef.getId(), (List<String>) defaultValue);
+				p4.setQueryName(propDef.getId());
+				props.addProperty(p4);
 				break;
 			case ID:
-				props.addProperty(new PropertyIdImpl(propDef.getId(), (List<String>) defaultValue));
+				PropertyIdImpl p5 = new PropertyIdImpl(propDef.getId(), (List<String>) defaultValue);
+				p5.setQueryName(propDef.getId());
+				props.addProperty(p5);
 				break;
 			case INTEGER:
-				props.addProperty(new PropertyIntegerImpl(propDef.getId(), (List<BigInteger>) defaultValue));
+				PropertyIntegerImpl p6 = new PropertyIntegerImpl(propDef.getId(), (List<BigInteger>) defaultValue);
+				p6.setQueryName(propDef.getId());
+				props.addProperty(p6);
 				break;
 			case STRING:
-				props.addProperty(new PropertyStringImpl(propDef.getId(), (List<String>) defaultValue));
+				PropertyStringImpl p7 = new PropertyStringImpl(propDef.getId(), (List<String>) defaultValue);
+				p7.setQueryName(propDef.getId());
+				props.addProperty(p7);
 				break;
 			case URI:
-				props.addProperty(new PropertyUriImpl(propDef.getId(), (List<String>) defaultValue));
+				PropertyUriImpl p8 = new PropertyUriImpl(propDef.getId(), (List<String>) defaultValue);
+				p8.setQueryName(propDef.getId());
+				props.addProperty(p8);
 				break;
 			default:
 				throw new RuntimeException("Unknown datatype! Spec change?");
@@ -2242,18 +2210,6 @@ public class LDRepository {
 	}
 
 	/**
-	 * Returns the first value of an datetime property.
-	 */
-	private static GregorianCalendar getDateTimeProperty(Properties properties, String name) {
-		PropertyData<?> property = properties.getProperties().get(name);
-		if (!(property instanceof PropertyDateTime)) {
-			return null;
-		}
-
-		return ((PropertyDateTime) property).getFirstValue();
-	}
-
-	/**
 	 * Gets the user associated to the current session.
 	 */
 	private User getSessionUser() {
@@ -2268,7 +2224,6 @@ public class LDRepository {
 	}
 
 	private boolean checkPermission(PersistentObject object, CallContext context, Permission permission) {
-
 		long id = root.getId();
 		if (object != null)
 			if (object instanceof Folder) {
@@ -2296,16 +2251,12 @@ public class LDRepository {
 		return enabled;
 	}
 
-	/**
-	 * Checks if the user in the given context is valid for this repository and
-	 * if the user has the required permissions.
-	 */
-	private boolean checkPermission(String objectId, CallContext context, Permission permission) {
-		return checkPermission(objectId != null ? getObject(objectId) : null, context, permission);
-	}
 
-	private void warn(String msg, Throwable t) {
-		log.warn("<" + id + "> " + msg, t);
+	private void validatePermission(String objectId, CallContext context, Permission permission)
+			throws CmisPermissionDeniedException {
+		if (!checkPermission(objectId != null ? getObject(objectId) : null, context, permission))
+			throw new CmisPermissionDeniedException("Permission " + (permission != null ? permission.getName() : "")
+					+ " not granted on " + objectId);
 	}
 
 	private void debug(String msg) {

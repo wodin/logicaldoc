@@ -14,6 +14,7 @@ import org.apache.chemistry.opencmis.commons.data.ExtensionsData;
 import org.apache.chemistry.opencmis.commons.data.FailedToDeleteData;
 import org.apache.chemistry.opencmis.commons.data.ObjectData;
 import org.apache.chemistry.opencmis.commons.data.ObjectInFolderList;
+import org.apache.chemistry.opencmis.commons.data.ObjectList;
 import org.apache.chemistry.opencmis.commons.data.ObjectParentData;
 import org.apache.chemistry.opencmis.commons.data.Properties;
 import org.apache.chemistry.opencmis.commons.data.RenditionData;
@@ -292,7 +293,15 @@ public class LDCmisService extends AbstractCmisService {
 		validateSession();
 		return getRepository().getAcl(getCallContext(), objectId);
 	}
-	
+
+	@Override
+	public ObjectList query(String repositoryId, String statement, Boolean searchAllVersions,
+			Boolean includeAllowableActions, IncludeRelationships includeRelationships, String renditionFilter,
+			BigInteger maxItems, BigInteger skipCount, ExtensionsData extension) {
+		validateSession();
+		return getRepository().query(statement, maxItems != null ? maxItems.intValue() : null);
+	}
+
 	public String getSessionId() {
 		return sessionId;
 	}
