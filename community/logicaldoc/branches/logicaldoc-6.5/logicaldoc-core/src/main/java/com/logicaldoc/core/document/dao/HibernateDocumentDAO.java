@@ -166,16 +166,35 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				null, null);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findByLockUserAndStatus(Long userId, Integer status) {
-		StringBuffer sb = new StringBuffer();
+		StringBuffer sb = new StringBuffer(
+				"select ld_id, ld_folderid, ld_version, ld_fileversion, ld_lastmodified, ld_filename, ld_title from ld_document where ld_deleted = 0 ");
 		if (userId != null)
-			sb.append(" _entity.lockUserId =" + userId);
-		else
-			sb.append(" 1=1 ");
+			sb.append(" and ld_lockuserid=" + userId);
+
 		if (status != null)
-			sb.append(" and _entity.status=" + status);
-		return findByWhere(sb.toString(), "order by _entity.lastModified desc", null);
+			sb.append(" and ld_status=" + status);
+
+		return (List<Document>) query(sb.toString(), null, new RowMapper<Document>() {
+
+			@Override
+			public Document mapRow(ResultSet rs, int col) throws SQLException {
+				Document doc = new Document();
+				doc.setId(rs.getLong(1));
+				Folder folder = new Folder();
+				folder.setId(rs.getLong(2));
+				doc.setFolder(folder);
+				doc.setVersion(rs.getString(3));
+				doc.setFileVersion(rs.getString(4));
+				doc.setLastModified(rs.getDate(5));
+				doc.setFileName(rs.getString(6));
+				doc.setTitle(rs.getString(7));
+				return doc;
+			}
+
+		}, null);
 	}
 
 	/**

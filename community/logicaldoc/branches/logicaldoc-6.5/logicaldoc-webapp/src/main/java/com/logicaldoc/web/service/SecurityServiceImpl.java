@@ -125,11 +125,11 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				guiUser.setUserName(username);
 				guiUser.setExpired(false);
 
-				guiUser.setLockedDocs(documentDao.findByLockUserAndStatus(user.getId(), AbstractDocument.DOC_LOCKED)
-						.size());
-				guiUser.setCheckedOutDocs(documentDao.findByLockUserAndStatus(user.getId(),
-						AbstractDocument.DOC_CHECKED_OUT).size());
-				guiUser.setUnreadMessages(messageDao.getCount(username, SystemMessage.TYPE_SYSTEM, 0));
+//				guiUser.setLockedDocs(documentDao.findByLockUserAndStatus(user.getId(), AbstractDocument.DOC_LOCKED)
+//						.size());
+//				guiUser.setCheckedOutDocs(documentDao.findByLockUserAndStatus(user.getId(),
+//						AbstractDocument.DOC_CHECKED_OUT).size());
+//				guiUser.setUnreadMessages(messageDao.getCount(username, SystemMessage.TYPE_SYSTEM, 0));
 
 				guiUser.setQuota(user.getQuota());
 				guiUser.setQuotaCount(user.getQuotaCount());
