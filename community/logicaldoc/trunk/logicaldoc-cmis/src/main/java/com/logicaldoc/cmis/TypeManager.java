@@ -113,7 +113,7 @@ public class TypeManager {
 		folderType.setIsIncludedInSupertypeQuery(true);
 		folderType.setLocalName("Folder");
 		folderType.setLocalNamespace(NAMESPACE);
-		folderType.setIsQueryable(false);
+		folderType.setIsQueryable(true);
 		folderType.setQueryName("cmis:folder");
 		folderType.setId(FOLDER_TYPE_ID);
 
@@ -135,7 +135,7 @@ public class TypeManager {
 		documentType.setIsIncludedInSupertypeQuery(true);
 		documentType.setLocalName("Document");
 		documentType.setLocalNamespace(NAMESPACE);
-		documentType.setIsQueryable(false);
+		documentType.setIsQueryable(true);
 		documentType.setQueryName("cmis:document");
 		documentType.setId(DOCUMENT_TYPE_ID);
 
@@ -230,12 +230,12 @@ public class TypeManager {
 
 		type.addPropertyDefinition(createPropDef(PropertyIds.PATH, "Path", "Path", PropertyType.STRING,
 				Cardinality.SINGLE, Updatability.READONLY, false, false));
-		
+
 		/*
 		 * Properties of the LogicalDOC folder
 		 */
-		type.addPropertyDefinition(createPropDef(PROP_DESCRIPTION, "Description", "Description",
-				PropertyType.STRING, Cardinality.SINGLE, Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_DESCRIPTION, "Description", "Description", PropertyType.STRING,
+				Cardinality.SINGLE, Updatability.READWRITE, false, false));
 	}
 
 	private static void addDocumentPropertyDefinitions(DocumentTypeDefinitionImpl type) {
