@@ -177,9 +177,6 @@ public class LDCmisService extends AbstractCmisService {
 	public String createFolder(String repositoryId, Properties properties, String folderId, List<String> policies,
 			Acl addAces, Acl removeAces, ExtensionsData extension) {
 		validateSession();
-
-		System.out.println("***createFolder " + properties);
-
 		return getRepository().createFolder(getCallContext(), properties, folderId);
 	}
 
@@ -295,7 +292,7 @@ public class LDCmisService extends AbstractCmisService {
 		validateSession();
 		return getRepository().getAcl(getCallContext(), objectId);
 	}
-
+	
 	public String getSessionId() {
 		return sessionId;
 	}
@@ -306,7 +303,7 @@ public class LDCmisService extends AbstractCmisService {
 
 		UserSession session = SessionManager.getInstance().get(getSessionId());
 		if (session == null)
-			throw new CmisPermissionDeniedException("Invalid session !");
+			throw new CmisPermissionDeniedException("Invalid session!");
 		if (session.getStatus() != UserSession.STATUS_OPEN)
 			throw new CmisPermissionDeniedException("Invalid or Expired Session");
 		session.renew();
@@ -316,7 +313,7 @@ public class LDCmisService extends AbstractCmisService {
 	public LDRepository getRepository() {
 		LDRepository repo = repositories.get(getCallContext().getRepositoryId());
 		if (repo == null)
-			throw new CmisPermissionDeniedException("Repository not found !");
+			throw new CmisPermissionDeniedException("Repository " + getCallContext().getRepositoryId() + " not found !");
 		return repo;
 	}
 }
