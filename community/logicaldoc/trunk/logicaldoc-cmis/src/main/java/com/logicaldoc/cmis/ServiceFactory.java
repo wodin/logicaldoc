@@ -91,8 +91,10 @@ public class ServiceFactory extends AbstractServiceFactory {
 		String sid = null;
 		if (authenticated)
 			sid = AuthenticationChain.getSessionId();
-		else
+		else{
+			System.out.println("** access denied for "+context.getUsername()+" "+context.getPassword());
 			throw new CmisPermissionDeniedException();
+		}
 		return sid;
 	}
 }

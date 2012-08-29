@@ -68,25 +68,27 @@ public class TypeManager {
 	public static final String PROP_SOURCE_DATE = "ldoc:sourceDate";
 
 	public static final String PROP_SOURCE_ID = "ldoc:sourceId";
-	
+
 	public static final String PROP_SOURCE_TYPE = "ldoc:sourceType";
 
 	public static final String PROP_OBJECT = "ldoc:object";
 
 	public static final String PROP_RATING = "ldoc:rating";
-		
+
 	public static final String PROP_WORKFLOW_STATUS = "ldoc:workflowStatus";
-	
+
 	public static final String PROP_CUSTOMID = "ldoc:customId";
-	
+
 	public static final String PROP_COVERAGE = "ldoc:coverage";
-	
+
 	public static final String PROP_RECIPIENT = "ldoc:recipient";
-	
+
 	public static final String PROP_TAGS = "ldoc:tags";
-	
-	
-	
+
+	public static final String PROP_TITLE = "ldoc:title";
+
+	public static final String PROP_DESCRIPTION = "ldoc:description";
+
 	public TypeManager() {
 		setup();
 	}
@@ -228,6 +230,12 @@ public class TypeManager {
 
 		type.addPropertyDefinition(createPropDef(PropertyIds.PATH, "Path", "Path", PropertyType.STRING,
 				Cardinality.SINGLE, Updatability.READONLY, false, false));
+		
+		/*
+		 * Properties of the LogicalDOC folder
+		 */
+		type.addPropertyDefinition(createPropDef(PROP_DESCRIPTION, "Description", "Description",
+				PropertyType.STRING, Cardinality.SINGLE, Updatability.READWRITE, false, false));
 	}
 
 	private static void addDocumentPropertyDefinitions(DocumentTypeDefinitionImpl type) {
@@ -288,12 +296,12 @@ public class TypeManager {
 				PropertyType.STRING, Cardinality.SINGLE, Updatability.READWRITE, false, false));
 		type.addPropertyDefinition(createPropDef(PROP_SOURCE_DATE, "Source Date", "Source Date", PropertyType.DATETIME,
 				Cardinality.SINGLE, Updatability.READWRITE, false, false));
-		type.addPropertyDefinition(createPropDef(PROP_SOURCE_ID, "Source ID", "Original Identifier", PropertyType.STRING,
-				Cardinality.SINGLE, Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_SOURCE_ID, "Source ID", "Original Identifier",
+				PropertyType.STRING, Cardinality.SINGLE, Updatability.READWRITE, false, false));
 		type.addPropertyDefinition(createPropDef(PROP_SOURCE_TYPE, "Source Type", "Source Type", PropertyType.STRING,
 				Cardinality.SINGLE, Updatability.READWRITE, false, false));
-		type.addPropertyDefinition(createPropDef(PROP_WORKFLOW_STATUS, "Workflow Status", "Workflow Status", PropertyType.STRING,
-				Cardinality.SINGLE, Updatability.READONLY, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_WORKFLOW_STATUS, "Workflow Status", "Workflow Status",
+				PropertyType.STRING, Cardinality.SINGLE, Updatability.READONLY, false, false));
 		type.addPropertyDefinition(createPropDef(PROP_COVERAGE, "Coverage", "Coverage", PropertyType.STRING,
 				Cardinality.SINGLE, Updatability.READWRITE, false, false));
 		type.addPropertyDefinition(createPropDef(PROP_CUSTOMID, "Custom ID", "Custom Identifier", PropertyType.STRING,
@@ -304,8 +312,12 @@ public class TypeManager {
 				Cardinality.SINGLE, Updatability.READONLY, false, false));
 		type.addPropertyDefinition(createPropDef(PROP_RECIPIENT, "Recipient", "Recipient", PropertyType.STRING,
 				Cardinality.SINGLE, Updatability.READWRITE, false, false));
-		type.addPropertyDefinition(createPropDef(PROP_TAGS, "Tags", "Tags", PropertyType.STRING,
-				Cardinality.SINGLE, Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_TAGS, "Tags", "Tags", PropertyType.STRING, Cardinality.SINGLE,
+				Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_TITLE, "Title", "Title", PropertyType.STRING, Cardinality.SINGLE,
+				Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_TITLE, "Title", "Title", PropertyType.STRING, Cardinality.SINGLE,
+				Updatability.READWRITE, false, false));
 	}
 
 	/**
