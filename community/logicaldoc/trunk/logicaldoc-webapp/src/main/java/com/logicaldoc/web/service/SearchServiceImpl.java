@@ -277,6 +277,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		searchOptions.setMaxHits(options.getMaxHits());
 		searchOptions.setName(options.getName());
 		searchOptions.setUserId(options.getUserId());
+		searchOptions.setCaseSensitive(options.getCaseSensitive());
+		searchOptions.setRetrieveAliases(options.getRetrieveAliases());
 
 		if (options.getType() == SearchOptions.TYPE_FULLTEXT) {
 			((FulltextSearchOptions) searchOptions).setTemplate(options.getTemplate());
