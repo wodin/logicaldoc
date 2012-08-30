@@ -17,7 +17,7 @@ public class GUISearchOptions implements Serializable {
 	public static final int TYPE_TAGS = 1;
 
 	public static final int TYPE_PARAMETRIC = 2;
-	
+
 	public static final int TYPE_FOLDERS = 3;
 
 	private int maxHits = 40;
@@ -44,7 +44,7 @@ public class GUISearchOptions implements Serializable {
 
 	private Long folder = null;
 
-	private String[] fields = new String[]{"title","content","tags"};
+	private String[] fields = new String[] { "title", "content", "tags" };
 
 	private String language = null;
 
@@ -73,6 +73,10 @@ public class GUISearchOptions implements Serializable {
 	private String topOperator;
 
 	private Long[] filterIds;
+
+	private int caseSensitive = 1;
+
+	private int retrieveAliases = 0;
 
 	/** Creates a new instance of SearchOptions */
 	public GUISearchOptions() {
@@ -294,5 +298,21 @@ public class GUISearchOptions implements Serializable {
 
 	public void setDepth(int depth) {
 		this.depth = depth;
+	}
+
+	public int getCaseSensitive() {
+		return caseSensitive;
+	}
+
+	public void setCaseSensitive(int caseSensitive) {
+		this.caseSensitive = caseSensitive;
+	}
+
+	public int getRetrieveAliases() {
+		return retrieveAliases;
+	}
+
+	public void setRetrieveAliases(int retrieveAliases) {
+		this.retrieveAliases = retrieveAliases;
 	}
 }

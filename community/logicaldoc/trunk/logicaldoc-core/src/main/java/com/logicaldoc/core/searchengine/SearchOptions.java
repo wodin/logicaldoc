@@ -28,7 +28,7 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 	public static final int TYPE_PARAMETRIC = 2;
 
 	public static final int TYPE_FOLDERS = 3;
-	
+
 	protected int maxHits = 40;
 
 	private int type = TYPE_FULLTEXT;
@@ -44,6 +44,10 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 	private long userId = -1;
 
 	private String topOperator;
+
+	private int caseSensitive = 1;
+
+	private int retrieveAliases = 0;
 
 	/**
 	 * Optional set of document ids. If specified only documents inside this set
@@ -163,5 +167,21 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 
 	public void setFilterIds(Set<Long> filterIds) {
 		this.filterIds = filterIds;
+	}
+
+	public int getCaseSensitive() {
+		return caseSensitive;
+	}
+
+	public void setCaseSensitive(int caseSensitive) {
+		this.caseSensitive = caseSensitive;
+	}
+
+	public int getRetrieveAliases() {
+		return retrieveAliases;
+	}
+
+	public void setRetrieveAliases(int retrieveAliases) {
+		this.retrieveAliases = retrieveAliases;
 	}
 }
