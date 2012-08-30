@@ -108,6 +108,10 @@ public class ParametricForm extends VLayout {
 		folder.setEndRow(true);
 		folder.setWidth(200);
 
+		CheckboxItem casesensitive = new CheckboxItem("casesensitive", I18N.message("casesensitive"));
+		casesensitive.setValue(true);
+		CheckboxItem aliases = new CheckboxItem("aliases", I18N.message("retrievealiases"));
+
 		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders2"));
 		subfolders.setColSpan(2);
 		subfolders.setEndRow(true);
@@ -118,7 +122,6 @@ public class ParametricForm extends VLayout {
 		});
 
 		CheckboxItem searchinhits = new CheckboxItem(SEARCHINHITS, I18N.message(SEARCHINHITS));
-		searchinhits.setColSpan(3);
 
 		LinkedHashMap<String, String> matchMap = new LinkedHashMap<String, String>();
 		matchMap.put("and", I18N.message("matchall"));
@@ -131,12 +134,11 @@ public class ParametricForm extends VLayout {
 		match.setVertical(false);
 		match.setWrap(false);
 		match.setWrapTitle(false);
-		match.setWidth(300);
+		match.setColSpan(4);
 
 		if (Feature.visible(Feature.TEMPLATE)) {
 			SelectItem template = ItemFactory.newTemplateSelector(false, null);
 			template.setMultiple(false);
-			template.setColSpan(2);
 			template.setEndRow(true);
 			template.addChangedHandler(new ChangedHandler() {
 				@Override
@@ -162,9 +164,9 @@ public class ParametricForm extends VLayout {
 				}
 			});
 
-			form.setItems(folder, subfolders, searchinhits, template, match);
+			form.setItems(folder, casesensitive, aliases, subfolders, template, searchinhits, match);
 		} else {
-			form.setItems(folder, subfolders, searchinhits, match);
+			form.setItems(folder, casesensitive, aliases, subfolders, searchinhits, match);
 		}
 
 		addMember(form);
@@ -261,7 +263,10 @@ public class ParametricForm extends VLayout {
 		String depth = Session.get().getInfo().getConfig("search.depth");
 		if (depth != null)
 			options.setDepth(Integer.parseInt(depth));
-
+		
+		options.setRetrieveAliases(new Boolean(vm.getValueAsString("aliases")).booleanValue() ? 1 : 0);
+		options.setCaseSensitive(new Boolean(vm.getValueAsString("casesensitive")).booleanValue() ? 1 : 0);
+		
 		options.setType(GUISearchOptions.TYPE_PARAMETRIC);
 
 		if (NO_LANGUAGE.equals(vm.getValueAsString("language")))
