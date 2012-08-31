@@ -57,8 +57,8 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		User user = validateSession(sid);
 		checkWriteEnable(user, document.getFolderId());
 
-		FolderDAO mdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Folder folder = mdao.findById(document.getFolderId());
+		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		Folder folder = fdao.findById(document.getFolderId());
 		if (folder == null) {
 			log.error("Folder " + document.getFolderId() + " not found");
 			throw new Exception("error - folder not found");
@@ -66,6 +66,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			log.error("Cannot add documents in the root");
 			throw new Exception("Cannot add documents in the root");
 		}
+		fdao.initialize(folder);
 
 		Document doc = document.toDocument();
 
