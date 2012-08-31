@@ -486,6 +486,10 @@ public class Navigator extends TreeGrid implements FolderObserver {
 			rename.setEnabled(false);
 		}
 
+		if (!folder.hasPermission(Constants.PERMISSION_EXPORT) || !folder.hasPermission(Constants.PERMISSION_DOWNLOAD)) {
+			exportZip.setEnabled(false);
+		}
+
 		if (id == Constants.WORKSPACE_DEFAULTID || !parent.hasPermission(Constants.PERMISSION_DELETE)) {
 			delete.setEnabled(false);
 			move.setEnabled(false);
