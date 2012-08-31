@@ -26,7 +26,6 @@ import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.webservice.AbstractService;
 import com.logicaldoc.webservice.WSAttribute;
 
-
 /**
  * Web Service Document. Useful class to create repository Documents.
  * 
@@ -268,12 +267,13 @@ public class WSDocument {
 	}
 
 	public Document toDocument() throws Exception {
-		FolderDAO mdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Folder folder = mdao.findById(folderId);
+		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		Folder folder = fdao.findById(folderId);
 		if (folder == null) {
 			log.error("Folder " + folder + " not found");
 			throw new Exception("error - folder not found");
 		}
+		fdao.initialize(folder);
 
 		Set<String> setTags = new TreeSet<String>();
 		if (getTags() != null) {
@@ -283,14 +283,13 @@ public class WSDocument {
 		}
 
 		DocumentTemplate template = null;
-		Map<String, ExtendedAttribute> attributes = null;
+		Map<String, ExtendedAttribute> attributes = new HashMap<String, ExtendedAttribute>();
 		if (templateId != null) {
 			DocumentTemplateDAO templDao = (DocumentTemplateDAO) Context.getInstance().getBean(
 					DocumentTemplateDAO.class);
 			template = templDao.findById(templateId);
 			if (template != null) {
 				if (extendedAttributes != null && extendedAttributes.length > 0) {
-					attributes = new HashMap<String, ExtendedAttribute>();
 					for (int i = 0; i < extendedAttributes.length; i++) {
 						ExtendedAttribute extAttribute = new ExtendedAttribute();
 						extAttribute.setMandatory(extendedAttributes[i].getMandatory());
