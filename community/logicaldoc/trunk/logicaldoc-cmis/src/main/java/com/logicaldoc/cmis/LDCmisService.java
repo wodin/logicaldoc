@@ -29,6 +29,7 @@ import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundExcept
 import org.apache.chemistry.opencmis.commons.exceptions.CmisPermissionDeniedException;
 import org.apache.chemistry.opencmis.commons.impl.server.AbstractCmisService;
 import org.apache.chemistry.opencmis.commons.server.CallContext;
+import org.apache.chemistry.opencmis.commons.server.ObjectInfo;
 import org.apache.chemistry.opencmis.commons.spi.Holder;
 
 import com.logicaldoc.core.security.Folder;
@@ -142,6 +143,12 @@ public class LDCmisService extends AbstractCmisService {
 		validateSession();
 		return getRepository().getObject(getCallContext(), objectId, null, filter, includeAllowableActions, includeAcl,
 				this);
+	}
+	
+	@Override
+	public ObjectInfo getObjectInfo(String repositoryId, String objectId) {
+		validateSession();
+		return getRepository().getObjectInfo(objectId);
 	}
 
 	@Override
@@ -263,10 +270,7 @@ public class LDCmisService extends AbstractCmisService {
 	public List<ObjectData> getAllVersions(String repositoryId, String objectId, String versionSeriesId, String filter,
 			Boolean includeAllowableActions, ExtensionsData extension) {
 		validateSession();
-		ObjectData theVersion = getRepository().getObject(getCallContext(), objectId, versionSeriesId, filter,
-				includeAllowableActions, false, this);
-
-		return Collections.singletonList(theVersion);
+		return getRepository().getAllVersions(objectId);
 	}
 
 	@Override
@@ -302,6 +306,8 @@ public class LDCmisService extends AbstractCmisService {
 		return getRepository().query(statement, maxItems != null ? maxItems.intValue() : null);
 	}
 
+	
+	
 	public String getSessionId() {
 		return sessionId;
 	}

@@ -32,12 +32,16 @@ public class CmisServlet extends CmisAtomPubServlet {
 		String[] addr = new String[] { request.getRemoteAddr(), request.getRemoteHost() };
 		remoteAddress.set(addr);
 
-		//System.out.println("[" + new Date() + "] " + request.getRequestURI());
+		System.out.println("[" + new Date() + "] " + request.getRequestURI());
 
 		// Check if the service is enabled
-		if ("true".equals(settings.get("cmis.enabled")))
-			super.service(request, response);
-		else
+		if ("true".equals(settings.get("cmis.enabled"))) {
+			if (request.getHeader("Authorization") == null) {
+				response.setHeader("WWW-Authenticate", "Basic realm=\"CMIS\"");
+				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization Required");
+			} else
+				super.service(request, response);
+		} else
 			response.sendError(HttpServletResponse.SC_MOVED_TEMPORARILY);
 	}
 }

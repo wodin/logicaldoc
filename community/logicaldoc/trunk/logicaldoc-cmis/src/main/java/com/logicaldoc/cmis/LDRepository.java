@@ -89,6 +89,7 @@ import org.apache.chemistry.opencmis.commons.impl.dataobjects.RepositoryInfoImpl
 import org.apache.chemistry.opencmis.commons.impl.jaxb.CmisObjectType;
 import org.apache.chemistry.opencmis.commons.impl.server.ObjectInfoImpl;
 import org.apache.chemistry.opencmis.commons.server.CallContext;
+import org.apache.chemistry.opencmis.commons.server.ObjectInfo;
 import org.apache.chemistry.opencmis.commons.server.ObjectInfoHandler;
 import org.apache.chemistry.opencmis.commons.spi.Holder;
 import org.apache.commons.io.FilenameUtils;
@@ -98,10 +99,13 @@ import org.slf4j.LoggerFactory;
 
 import com.ibm.icu.util.StringTokenizer;
 import com.logicaldoc.core.PersistentObject;
+import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
@@ -132,6 +136,8 @@ public class LDRepository {
 	private static final String ID_PREFIX_DOC = "doc.";
 
 	private static final String ID_PREFIX_FLD = "fld.";
+
+	private static final String ID_PREFIX_VER = "ver.";
 
 	private static final String USER_UNKNOWN = "<unknown>";
 
@@ -167,6 +173,8 @@ public class LDRepository {
 
 	private DocumentDAO documentDao;
 
+	private VersionDAO versionDao;
+
 	private DocumentManager documentManager;
 
 	private String sid;
@@ -188,6 +196,7 @@ public class LDRepository {
 		folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		documentDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		versionDao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
 
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
@@ -222,15 +231,14 @@ public class LDRepository {
 		capabilities.setSupportsMultifiling(false);
 		capabilities.setSupportsUnfiling(false);
 		capabilities.setSupportsVersionSpecificFiling(false);
-		capabilities.setIsPwcSearchable(false);
-		capabilities.setIsPwcUpdatable(false);
+		capabilities.setIsPwcSearchable(Boolean.TRUE);
+		capabilities.setIsPwcUpdatable(Boolean.TRUE);
 		capabilities.setCapabilityQuery(CapabilityQuery.FULLTEXTONLY);
 		capabilities.setCapabilityChanges(CapabilityChanges.NONE);
-		capabilities.setCapabilityContentStreamUpdates(CapabilityContentStreamUpdates.ANYTIME);
+		capabilities.setCapabilityContentStreamUpdates(CapabilityContentStreamUpdates.PWCONLY);
 		capabilities.setSupportsGetDescendants(true);
 		capabilities.setSupportsGetFolderTree(true);
-		capabilities.setCapabilityRendition(CapabilityRenditions.NONE);
-
+		capabilities.setCapabilityRendition(CapabilityRenditions.READ);
 		repositoryInfo.setCapabilities(capabilities);
 
 		AclCapabilitiesDataImpl aclCapability = new AclCapabilitiesDataImpl();
@@ -264,6 +272,8 @@ public class LDRepository {
 		list.add(createMapping(PermissionMapping.CAN_SET_CONTENT_DOCUMENT, CMIS_WRITE));
 		list.add(createMapping(PermissionMapping.CAN_UPDATE_PROPERTIES_OBJECT, CMIS_WRITE));
 		list.add(createMapping(PermissionMapping.CAN_VIEW_CONTENT_OBJECT, CMIS_READ));
+		list.add(createMapping(PermissionMapping.CAN_GET_ALL_VERSIONS_VERSION_SERIES, CMIS_READ));
+
 		Map<String, PermissionMapping> map = new LinkedHashMap<String, PermissionMapping>();
 		for (PermissionMapping pm : list) {
 			map.put(pm.getKey(), pm);
@@ -682,7 +692,7 @@ public class LDRepository {
 				throw new CmisStorageException("Error moving the document!", e);
 			}
 
-			Document doc = getDocument(objectId.getValue());
+			AbstractDocument doc = getDocument(objectId.getValue());
 			return compileObjectType(context, doc, null, false, false, objectInfos);
 		} else {
 			FolderHistory transaction = new FolderHistory();
@@ -712,7 +722,7 @@ public class LDRepository {
 			throw new CmisInvalidArgumentException("Id is not valid!");
 		}
 
-		Document doc = getDocument(objectId.getValue());
+		AbstractDocument doc = getDocument(objectId.getValue());
 
 		validatePermission("" + doc.getFolder().getId(), context, Permission.WRITE);
 
@@ -885,6 +895,21 @@ public class LDRepository {
 		return compileObjectType(context, object, null, false, false, objectInfos);
 	}
 
+	public ObjectInfo getObjectInfo(String objectId) {
+		validatePermission(objectId, null, null);
+
+		// check id
+		if ((objectId == null)) {
+			throw new CmisInvalidArgumentException("Object Id must be set.");
+		}
+
+		ObjectInfoImpl info = new ObjectInfoImpl();
+		// gather properties
+		compileProperties(getObject(objectId), null, info);
+
+		return info;
+	}
+
 	/**
 	 * CMIS getObject.
 	 */
@@ -892,11 +917,6 @@ public class LDRepository {
 			Boolean includeAllowableActions, Boolean includeAcl, ObjectInfoHandler objectInfos) {
 		debug("getObject");
 		validatePermission(objectId, context, null);
-
-		// check id
-		if ((objectId == null) && (versionServicesId == null)) {
-			throw new CmisInvalidArgumentException("Object Id must be set.");
-		}
 
 		if (objectId == null) {
 			// this works only because there are no versions in a file system
@@ -946,7 +966,7 @@ public class LDRepository {
 			throw new CmisInvalidArgumentException("Offset and Length are not supported!");
 		}
 
-		Document doc = getDocument(objectId);
+		AbstractDocument doc = getDocument(objectId);
 
 		if (doc.getFileSize() == 0) {
 			throw new CmisConstraintException("Document has no content!");
@@ -955,7 +975,13 @@ public class LDRepository {
 		InputStream stream = null;
 		try {
 			Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
-			InputStream is = storer.getStream(doc.getId(), storer.getResourceName(doc, null, null));
+			InputStream is = null;
+			if (doc instanceof Document) {
+				is = storer.getStream(doc.getId(), storer.getResourceName((Document) doc, null, null));
+			} else {
+				Version v = (Version) doc;
+				is = storer.getStream(doc.getId(), storer.getResourceName(v.getDocId(), v.getVersion(), null));
+			}
 			stream = new BufferedInputStream(is, BUFFER_SIZE);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
@@ -1074,12 +1100,20 @@ public class LDRepository {
 		return (Folder) object;
 	}
 
-	private Document getDocument(String documentId) {
+	private AbstractDocument getDocument(String documentId) {
 		PersistentObject object = getObject(documentId);
-		if (!(object instanceof Document)) {
+		if (!(object instanceof AbstractDocument)) {
 			throw new CmisObjectNotFoundException("Not a document!");
 		}
-		return (Document) object;
+		return (AbstractDocument) object;
+	}
+
+	private Version getVersion(String documentId) {
+		PersistentObject object = getObject(documentId);
+		if (!(object instanceof Version)) {
+			throw new CmisObjectNotFoundException("Not a version!");
+		}
+		return (Version) object;
 	}
 
 	/**
@@ -1197,7 +1231,7 @@ public class LDRepository {
 		// boolean userReadOnly = checkUser(context, false);
 
 		// split filter
-//		Set<String> filterCollection = splitFilter(filter);
+		// Set<String> filterCollection = splitFilter(filter);
 
 		// check path
 		if ((folderPath == null) || (!folderPath.startsWith("/"))) {
@@ -1239,11 +1273,11 @@ public class LDRepository {
 		opt.setUserId(user.getId());
 		opt.setExpressionLanguage(user.getLanguage());
 
-		//As expression we will use the WHERE clause as is
-		String expr=statement.substring(statement.toLowerCase().lastIndexOf("where")+5);
-		System.out.println("----- epr="+expr);
+		// As expression we will use the WHERE clause as is
+		String expr = statement.substring(statement.toLowerCase().lastIndexOf("where") + 5);
+		System.out.println("----- epr=" + expr);
 		opt.setExpression(expr);
-		
+
 		// Execute the search
 		Search search = Search.get(opt);
 		List<Hit> hits = search.search();
@@ -1387,6 +1421,8 @@ public class LDRepository {
 			objectInfos.addObjectInfo(objectInfo);
 		}
 
+		objectInfo.setVersionSeriesId(getId(object));
+
 		return result;
 	}
 
@@ -1430,7 +1466,7 @@ public class LDRepository {
 			objectInfo.setHasAcl(true);
 			objectInfo.setHasContent(true);
 			objectInfo.setHasParent(true);
-			objectInfo.setVersionSeriesId(null);
+			objectInfo.setVersionSeriesId(getId(object));
 			objectInfo.setIsCurrentVersion(true);
 			objectInfo.setRelationshipSourceIds(null);
 			objectInfo.setRelationshipTargetIds(null);
@@ -1458,7 +1494,7 @@ public class LDRepository {
 			if (object instanceof Folder)
 				name = ((Folder) object).getName();
 			else
-				name = ((Document) object).getFileName();
+				name = ((AbstractDocument) object).getFileName();
 
 			addPropertyString(result, typeId, filter, PropertyIds.NAME, name);
 			objectInfo.setName(name);
@@ -1477,7 +1513,7 @@ public class LDRepository {
 				objectInfo.setCreatedBy(f.getCreator());
 
 			} else {
-				Document d = ((Document) object);
+				AbstractDocument d = ((AbstractDocument) object);
 				creation = millisToCalendar(d.getCreation().getTime());
 
 				// created and modified by
@@ -1516,7 +1552,7 @@ public class LDRepository {
 				addPropertyString(result, typeId, filter, TypeManager.PROP_DESCRIPTION,
 						((Folder) object).getDescription());
 			} else {
-				Document doc = (Document) object;
+				AbstractDocument doc = (AbstractDocument) object;
 
 				// base type and type name
 				addPropertyId(result, typeId, filter, PropertyIds.BASE_TYPE_ID, BaseTypeId.CMIS_DOCUMENT.value());
@@ -1524,15 +1560,36 @@ public class LDRepository {
 
 				// file properties
 				addPropertyBoolean(result, typeId, filter, PropertyIds.IS_IMMUTABLE, false);
-				addPropertyBoolean(result, typeId, filter, PropertyIds.IS_LATEST_VERSION, true);
-				addPropertyBoolean(result, typeId, filter, PropertyIds.IS_MAJOR_VERSION, true);
-				addPropertyBoolean(result, typeId, filter, PropertyIds.IS_LATEST_MAJOR_VERSION, true);
+				if (doc instanceof Document) {
+					addPropertyBoolean(result, typeId, filter, PropertyIds.IS_LATEST_VERSION, true);
+					addPropertyBoolean(result, typeId, filter, PropertyIds.IS_MAJOR_VERSION, true);
+					addPropertyBoolean(result, typeId, filter, PropertyIds.IS_LATEST_MAJOR_VERSION, true);
+				} else {
+					Version ver = (Version) doc;
+					AbstractDocument d = getDocument(ID_PREFIX_DOC + ver.getDocId());
+
+					addPropertyBoolean(result, typeId, filter, PropertyIds.IS_LATEST_VERSION,
+							d.getVersion().equals(ver.getVersion()));
+					addPropertyBoolean(result, typeId, filter, PropertyIds.IS_MAJOR_VERSION, true);
+					addPropertyBoolean(result, typeId, filter, PropertyIds.IS_LATEST_MAJOR_VERSION, d.getVersion()
+							.equals(ver.getVersion()));
+				}
 				addPropertyString(result, typeId, filter, PropertyIds.VERSION_LABEL, doc.getTitle());
 				addPropertyId(result, typeId, filter, PropertyIds.VERSION_SERIES_ID, getId(doc));
-				addPropertyBoolean(result, typeId, filter, PropertyIds.IS_VERSION_SERIES_CHECKED_OUT, false);
-				addPropertyString(result, typeId, filter, PropertyIds.VERSION_SERIES_CHECKED_OUT_BY, null);
-				addPropertyString(result, typeId, filter, PropertyIds.VERSION_SERIES_CHECKED_OUT_ID, null);
-				addPropertyString(result, typeId, filter, PropertyIds.CHECKIN_COMMENT, "");
+				if (doc.getStatus() != Document.DOC_CHECKED_OUT) {
+					addPropertyBoolean(result, typeId, filter, PropertyIds.IS_VERSION_SERIES_CHECKED_OUT, false);
+					addPropertyString(result, typeId, filter, PropertyIds.VERSION_SERIES_CHECKED_OUT_BY, null);
+					addPropertyString(result, typeId, filter, PropertyIds.VERSION_SERIES_CHECKED_OUT_ID, null);
+				} else {
+					User checkoutUser = null;
+					if (doc.getLockUserId() != null)
+						checkoutUser = userDao.findById(doc.getLockUserId());
+					addPropertyBoolean(result, typeId, filter, PropertyIds.IS_VERSION_SERIES_CHECKED_OUT, true);
+					addPropertyString(result, typeId, filter, PropertyIds.VERSION_SERIES_CHECKED_OUT_BY,
+							checkoutUser != null ? checkoutUser.getFullName() : null);
+					addPropertyString(result, typeId, filter, PropertyIds.VERSION_SERIES_CHECKED_OUT_ID, getId(doc));
+				}
+				addPropertyString(result, typeId, filter, PropertyIds.CHECKIN_COMMENT, doc.getComment());
 
 				if (doc.getFileSize() == 0) {
 					addPropertyBigInteger(result, typeId, filter, PropertyIds.CONTENT_STREAM_LENGTH, null);
@@ -1569,7 +1626,8 @@ public class LDRepository {
 				addPropertyString(result, typeId, filter, TypeManager.PROP_OBJECT, doc.getObject());
 				addPropertyInteger(result, typeId, filter, TypeManager.PROP_RATING,
 						doc.getRating() != null ? doc.getRating() : 0);
-				addPropertyString(result, typeId, filter, TypeManager.PROP_TAGS, doc.getTgs());
+				addPropertyString(result, typeId, filter, TypeManager.PROP_FILEVERSION, doc.getFileVersion());
+				addPropertyString(result, typeId, filter, TypeManager.PROP_VERSION, doc.getVersion());
 			}
 
 			// read custom properties
@@ -1588,6 +1646,27 @@ public class LDRepository {
 			}
 			throw new CmisRuntimeException(e.getMessage(), e);
 		}
+	}
+
+	public List<ObjectData> getAllVersions(String objectId) {
+		validatePermission(objectId, null, null);
+
+		List<ObjectData> versions = new ArrayList<ObjectData>();
+
+		AbstractDocument doc = getDocument(objectId);
+
+		List<Version> buf = versionDao.findByDocId(doc.getId());
+
+		if (doc instanceof Document) {
+			for (Version version : buf) {
+				ObjectData data = compileObjectType(null, version, null, true, false, null);
+				versions.add(data);
+			}
+		} else {
+			versions.add(compileObjectType(null, doc, null, true, false, null));
+		}
+
+		return versions;
 	}
 
 	/**
@@ -2228,6 +2307,10 @@ public class LDRepository {
 		if (object != null)
 			if (object instanceof Folder) {
 				id = object.getId();
+			} else if (object instanceof Version) {
+				id = ((Version) object).getDocId();
+				Document doc = documentDao.findById(id);
+				id = doc.getFolder().getId();
 			} else {
 				id = ((Document) object).getFolder().getId();
 			}
@@ -2250,7 +2333,6 @@ public class LDRepository {
 
 		return enabled;
 	}
-
 
 	private void validatePermission(String objectId, CallContext context, Permission permission)
 			throws CmisPermissionDeniedException {
@@ -2283,6 +2365,8 @@ public class LDRepository {
 
 		if (object instanceof Document)
 			return ID_PREFIX_DOC + object.getId();
+		else if (object instanceof Version)
+			return ID_PREFIX_VER + object.getId();
 		else
 			return ID_PREFIX_FLD + object.getId();
 	}
@@ -2301,6 +2385,11 @@ public class LDRepository {
 			Folder f = folderDao.findById(id);
 			folderDao.initialize(f);
 			return f;
+		} else if (objectId.startsWith(ID_PREFIX_VER)) {
+			Long id = Long.parseLong(objectId.substring(4));
+			Version v = versionDao.findById(id);
+			versionDao.initialize(v);
+			return v;
 		} else {
 			Long id = Long.parseLong(objectId);
 			Folder f = folderDao.findById(id);
