@@ -89,6 +89,10 @@ public class TypeManager {
 
 	public static final String PROP_DESCRIPTION = "ldoc:description";
 
+	public static final String PROP_FILEVERSION = "ldoc:fileVersion";
+
+	public static final String PROP_VERSION = "ldoc:version";
+
 	public TypeManager() {
 		setup();
 	}
@@ -138,8 +142,7 @@ public class TypeManager {
 		documentType.setIsQueryable(true);
 		documentType.setQueryName("cmis:document");
 		documentType.setId(DOCUMENT_TYPE_ID);
-
-		documentType.setIsVersionable(false);
+		documentType.setIsVersionable(true);
 		documentType.setContentStreamAllowed(ContentStreamAllowed.ALLOWED);
 
 		addBasePropertyDefinitions(documentType);
@@ -318,6 +321,10 @@ public class TypeManager {
 				Updatability.READWRITE, false, false));
 		type.addPropertyDefinition(createPropDef(PROP_TITLE, "Title", "Title", PropertyType.STRING, Cardinality.SINGLE,
 				Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_FILEVERSION, "File Version", "File Version", PropertyType.STRING,
+				Cardinality.SINGLE, Updatability.READONLY, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_VERSION, "Version", "Version", PropertyType.STRING,
+				Cardinality.SINGLE, Updatability.READONLY, false, false));
 	}
 
 	/**
