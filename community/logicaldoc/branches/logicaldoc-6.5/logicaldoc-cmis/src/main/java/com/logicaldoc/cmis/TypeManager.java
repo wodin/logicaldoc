@@ -59,6 +59,40 @@ public class TypeManager {
 
 	private List<TypeDefinitionContainer> typesList;
 
+	public static final String PROP_LANGUAGE = "ldoc:language";
+
+	public static final String PROP_SOURCE = "ldoc:source";
+
+	public static final String PROP_SOURCE_AUTHOR = "ldoc:sourceAuthor";
+
+	public static final String PROP_SOURCE_DATE = "ldoc:sourceDate";
+
+	public static final String PROP_SOURCE_ID = "ldoc:sourceId";
+
+	public static final String PROP_SOURCE_TYPE = "ldoc:sourceType";
+
+	public static final String PROP_OBJECT = "ldoc:object";
+
+	public static final String PROP_RATING = "ldoc:rating";
+
+	public static final String PROP_WORKFLOW_STATUS = "ldoc:workflowStatus";
+
+	public static final String PROP_CUSTOMID = "ldoc:customId";
+
+	public static final String PROP_COVERAGE = "ldoc:coverage";
+
+	public static final String PROP_RECIPIENT = "ldoc:recipient";
+
+	public static final String PROP_TAGS = "ldoc:tags";
+
+	public static final String PROP_TITLE = "ldoc:title";
+
+	public static final String PROP_DESCRIPTION = "ldoc:description";
+
+	public static final String PROP_FILEVERSION = "ldoc:fileVersion";
+
+	public static final String PROP_VERSION = "ldoc:version";
+
 	public TypeManager() {
 		setup();
 	}
@@ -83,7 +117,7 @@ public class TypeManager {
 		folderType.setIsIncludedInSupertypeQuery(true);
 		folderType.setLocalName("Folder");
 		folderType.setLocalNamespace(NAMESPACE);
-		folderType.setIsQueryable(false);
+		folderType.setIsQueryable(true);
 		folderType.setQueryName("cmis:folder");
 		folderType.setId(FOLDER_TYPE_ID);
 
@@ -105,11 +139,10 @@ public class TypeManager {
 		documentType.setIsIncludedInSupertypeQuery(true);
 		documentType.setLocalName("Document");
 		documentType.setLocalNamespace(NAMESPACE);
-		documentType.setIsQueryable(false);
+		documentType.setIsQueryable(true);
 		documentType.setQueryName("cmis:document");
 		documentType.setId(DOCUMENT_TYPE_ID);
-
-		documentType.setIsVersionable(false);
+		documentType.setIsVersionable(true);
 		documentType.setContentStreamAllowed(ContentStreamAllowed.ALLOWED);
 
 		addBasePropertyDefinitions(documentType);
@@ -200,6 +233,12 @@ public class TypeManager {
 
 		type.addPropertyDefinition(createPropDef(PropertyIds.PATH, "Path", "Path", PropertyType.STRING,
 				Cardinality.SINGLE, Updatability.READONLY, false, false));
+
+		/*
+		 * Properties of the LogicalDOC folder
+		 */
+		type.addPropertyDefinition(createPropDef(PROP_DESCRIPTION, "Description", "Description", PropertyType.STRING,
+				Cardinality.SINGLE, Updatability.READWRITE, false, false));
 	}
 
 	private static void addDocumentPropertyDefinitions(DocumentTypeDefinitionImpl type) {
@@ -248,6 +287,44 @@ public class TypeManager {
 
 		type.addPropertyDefinition(createPropDef(PropertyIds.CONTENT_STREAM_ID, "Content Stream Id",
 				"Content Stream Id", PropertyType.ID, Cardinality.SINGLE, Updatability.READONLY, false, false));
+
+		/*
+		 * Properties of the LogicalDOC document
+		 */
+		type.addPropertyDefinition(createPropDef(PROP_LANGUAGE, "Language", "Language", PropertyType.STRING,
+				Cardinality.SINGLE, Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_SOURCE, "Source", "Source", PropertyType.STRING,
+				Cardinality.SINGLE, Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_SOURCE_AUTHOR, "Source Author", "Original Author",
+				PropertyType.STRING, Cardinality.SINGLE, Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_SOURCE_DATE, "Source Date", "Source Date", PropertyType.DATETIME,
+				Cardinality.SINGLE, Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_SOURCE_ID, "Source ID", "Original Identifier",
+				PropertyType.STRING, Cardinality.SINGLE, Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_SOURCE_TYPE, "Source Type", "Source Type", PropertyType.STRING,
+				Cardinality.SINGLE, Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_WORKFLOW_STATUS, "Workflow Status", "Workflow Status",
+				PropertyType.STRING, Cardinality.SINGLE, Updatability.READONLY, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_COVERAGE, "Coverage", "Coverage", PropertyType.STRING,
+				Cardinality.SINGLE, Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_CUSTOMID, "Custom ID", "Custom Identifier", PropertyType.STRING,
+				Cardinality.SINGLE, Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_OBJECT, "Object", "Object", PropertyType.STRING,
+				Cardinality.SINGLE, Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_RATING, "Rating", "Rating", PropertyType.INTEGER,
+				Cardinality.SINGLE, Updatability.READONLY, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_RECIPIENT, "Recipient", "Recipient", PropertyType.STRING,
+				Cardinality.SINGLE, Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_TAGS, "Tags", "Tags", PropertyType.STRING, Cardinality.SINGLE,
+				Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_TITLE, "Title", "Title", PropertyType.STRING, Cardinality.SINGLE,
+				Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_TITLE, "Title", "Title", PropertyType.STRING, Cardinality.SINGLE,
+				Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_FILEVERSION, "File Version", "File Version", PropertyType.STRING,
+				Cardinality.SINGLE, Updatability.READONLY, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_VERSION, "Version", "Version", PropertyType.STRING,
+				Cardinality.SINGLE, Updatability.READONLY, false, false));
 	}
 
 	/**
