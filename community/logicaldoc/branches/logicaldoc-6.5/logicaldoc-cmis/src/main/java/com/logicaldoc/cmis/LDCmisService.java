@@ -14,6 +14,7 @@ import org.apache.chemistry.opencmis.commons.data.ExtensionsData;
 import org.apache.chemistry.opencmis.commons.data.FailedToDeleteData;
 import org.apache.chemistry.opencmis.commons.data.ObjectData;
 import org.apache.chemistry.opencmis.commons.data.ObjectInFolderList;
+import org.apache.chemistry.opencmis.commons.data.ObjectList;
 import org.apache.chemistry.opencmis.commons.data.ObjectParentData;
 import org.apache.chemistry.opencmis.commons.data.Properties;
 import org.apache.chemistry.opencmis.commons.data.RenditionData;
@@ -28,6 +29,7 @@ import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundExcept
 import org.apache.chemistry.opencmis.commons.exceptions.CmisPermissionDeniedException;
 import org.apache.chemistry.opencmis.commons.impl.server.AbstractCmisService;
 import org.apache.chemistry.opencmis.commons.server.CallContext;
+import org.apache.chemistry.opencmis.commons.server.ObjectInfo;
 import org.apache.chemistry.opencmis.commons.spi.Holder;
 
 import com.logicaldoc.core.security.Folder;
@@ -144,6 +146,12 @@ public class LDCmisService extends AbstractCmisService {
 	}
 
 	@Override
+	public ObjectInfo getObjectInfo(String repositoryId, String objectId) {
+		validateSession();
+		return getRepository().getObjectInfo(objectId, this);
+	}
+
+	@Override
 	public String create(String repositoryId, Properties properties, String folderId, ContentStream contentStream,
 			VersioningState versioningState, List<String> policies, ExtensionsData extension) {
 		validateSession();
@@ -162,39 +170,17 @@ public class LDCmisService extends AbstractCmisService {
 	}
 
 	@Override
-	public String createDocumentFromSource(String repositoryId, String sourceId, Properties properties,
-			String folderId, VersioningState versioningState, List<String> policies, Acl addAces, Acl removeAces,
-			ExtensionsData extension) {
-		validateSession();
-
-		System.out.println("***createDocumentFromSource " + properties);
-
-		return getRepository().createDocumentFromSource(getCallContext(), sourceId, properties, folderId,
-				versioningState);
-	}
-
-	@Override
 	public String createFolder(String repositoryId, Properties properties, String folderId, List<String> policies,
 			Acl addAces, Acl removeAces, ExtensionsData extension) {
 		validateSession();
-
-		System.out.println("***createFolder " + properties);
-
 		return getRepository().createFolder(getCallContext(), properties, folderId);
-	}
-
-	@Override
-	public void deleteContentStream(String repositoryId, Holder<String> objectId, Holder<String> changeToken,
-			ExtensionsData extension) {
-		validateSession();
-		getRepository().setContentStream(getCallContext(), objectId, true, null);
 	}
 
 	@Override
 	public void deleteObjectOrCancelCheckOut(String repositoryId, String objectId, Boolean allVersions,
 			ExtensionsData extension) {
 		validateSession();
-		getRepository().deleteObject(getCallContext(), objectId);
+		getRepository().deleteObjectOrCancelCheckOut(getCallContext(), objectId);
 	}
 
 	@Override
@@ -215,15 +201,6 @@ public class LDCmisService extends AbstractCmisService {
 			BigInteger length, ExtensionsData extension) {
 		validateSession();
 		return getRepository().getContentStream(getCallContext(), objectId, offset, length);
-	}
-
-	@Override
-	public ObjectData getObjectByPath(String repositoryId, String path, String filter, Boolean includeAllowableActions,
-			IncludeRelationships includeRelationships, String renditionFilter, Boolean includePolicyIds,
-			Boolean includeAcl, ExtensionsData extension) {
-		validateSession();
-		return getRepository().getObjectByPath(getCallContext(), path, filter, includeAllowableActions, includeAcl,
-				this);
 	}
 
 	@Override
@@ -248,13 +225,6 @@ public class LDCmisService extends AbstractCmisService {
 	}
 
 	@Override
-	public void setContentStream(String repositoryId, Holder<String> objectId, Boolean overwriteFlag,
-			Holder<String> changeToken, ContentStream contentStream, ExtensionsData extension) {
-		validateSession();
-		getRepository().setContentStream(getCallContext(), objectId, overwriteFlag, contentStream);
-	}
-
-	@Override
 	public void updateProperties(String repositoryId, Holder<String> objectId, Holder<String> changeToken,
 			Properties properties, ExtensionsData extension) {
 		validateSession();
@@ -265,10 +235,7 @@ public class LDCmisService extends AbstractCmisService {
 	public List<ObjectData> getAllVersions(String repositoryId, String objectId, String versionSeriesId, String filter,
 			Boolean includeAllowableActions, ExtensionsData extension) {
 		validateSession();
-		ObjectData theVersion = getRepository().getObject(getCallContext(), objectId, versionSeriesId, filter,
-				includeAllowableActions, false, this);
-
-		return Collections.singletonList(theVersion);
+		return getRepository().getAllVersions(objectId);
 	}
 
 	@Override
@@ -296,6 +263,35 @@ public class LDCmisService extends AbstractCmisService {
 		return getRepository().getAcl(getCallContext(), objectId);
 	}
 
+	@Override
+	public ObjectList query(String repositoryId, String statement, Boolean searchAllVersions,
+			Boolean includeAllowableActions, IncludeRelationships includeRelationships, String renditionFilter,
+			BigInteger maxItems, BigInteger skipCount, ExtensionsData extension) {
+		validateSession();
+		return getRepository().query(statement, maxItems != null ? maxItems.intValue() : null);
+	}
+
+	@Override
+	public void cancelCheckOut(String repositoryId, String objectId, ExtensionsData extension) {
+		validateSession();
+		getRepository().cancelCheckOut(objectId);
+	}
+
+	@Override
+	public void checkIn(String repositoryId, Holder<String> objectId, Boolean major, Properties properties,
+			ContentStream contentStream, String checkinComment, List<String> policies, Acl addAces, Acl removeAces,
+			ExtensionsData extension) {
+		validateSession();
+		getRepository().checkIn(objectId, major, properties, contentStream, checkinComment);
+	}
+
+	@Override
+	public void checkOut(String repositoryId, Holder<String> objectId, ExtensionsData extension,
+			Holder<Boolean> contentCopied) {
+		validateSession();
+		getRepository().checkOut(objectId, contentCopied);
+	}
+
 	public String getSessionId() {
 		return sessionId;
 	}
@@ -306,7 +302,7 @@ public class LDCmisService extends AbstractCmisService {
 
 		UserSession session = SessionManager.getInstance().get(getSessionId());
 		if (session == null)
-			throw new CmisPermissionDeniedException("Invalid session !");
+			throw new CmisPermissionDeniedException("Invalid session!");
 		if (session.getStatus() != UserSession.STATUS_OPEN)
 			throw new CmisPermissionDeniedException("Invalid or Expired Session");
 		session.renew();
@@ -316,7 +312,7 @@ public class LDCmisService extends AbstractCmisService {
 	public LDRepository getRepository() {
 		LDRepository repo = repositories.get(getCallContext().getRepositoryId());
 		if (repo == null)
-			throw new CmisPermissionDeniedException("Repository not found !");
+			throw new CmisPermissionDeniedException("Repository " + getCallContext().getRepositoryId() + " not found !");
 		return repo;
 	}
 }
