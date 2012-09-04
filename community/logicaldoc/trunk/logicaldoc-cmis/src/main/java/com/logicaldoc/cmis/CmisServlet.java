@@ -1,7 +1,6 @@
 package com.logicaldoc.cmis;
 
 import java.io.IOException;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +31,8 @@ public class CmisServlet extends CmisAtomPubServlet {
 		String[] addr = new String[] { request.getRemoteAddr(), request.getRemoteHost() };
 		remoteAddress.set(addr);
 
-		System.out.println("[" + new Date() + "] " + request.getRequestURI());
+		// System.out.println("[" + new Date() + "] " + request.getRequestURI()
+		// + "?" + request.getQueryString());
 
 		// Check if the service is enabled
 		if ("true".equals(settings.get("cmis.enabled"))) {

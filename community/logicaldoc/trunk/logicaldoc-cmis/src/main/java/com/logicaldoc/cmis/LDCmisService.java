@@ -144,11 +144,11 @@ public class LDCmisService extends AbstractCmisService {
 		return getRepository().getObject(getCallContext(), objectId, null, filter, includeAllowableActions, includeAcl,
 				this);
 	}
-	
+
 	@Override
 	public ObjectInfo getObjectInfo(String repositoryId, String objectId) {
 		validateSession();
-		return getRepository().getObjectInfo(objectId);
+		return getRepository().getObjectInfo(objectId, this);
 	}
 
 	@Override
@@ -170,18 +170,6 @@ public class LDCmisService extends AbstractCmisService {
 	}
 
 	@Override
-	public String createDocumentFromSource(String repositoryId, String sourceId, Properties properties,
-			String folderId, VersioningState versioningState, List<String> policies, Acl addAces, Acl removeAces,
-			ExtensionsData extension) {
-		validateSession();
-
-		System.out.println("***createDocumentFromSource " + properties);
-
-		return getRepository().createDocumentFromSource(getCallContext(), sourceId, properties, folderId,
-				versioningState);
-	}
-
-	@Override
 	public String createFolder(String repositoryId, Properties properties, String folderId, List<String> policies,
 			Acl addAces, Acl removeAces, ExtensionsData extension) {
 		validateSession();
@@ -189,17 +177,10 @@ public class LDCmisService extends AbstractCmisService {
 	}
 
 	@Override
-	public void deleteContentStream(String repositoryId, Holder<String> objectId, Holder<String> changeToken,
-			ExtensionsData extension) {
-		validateSession();
-		getRepository().setContentStream(getCallContext(), objectId, true, null);
-	}
-
-	@Override
 	public void deleteObjectOrCancelCheckOut(String repositoryId, String objectId, Boolean allVersions,
 			ExtensionsData extension) {
 		validateSession();
-		getRepository().deleteObject(getCallContext(), objectId);
+		getRepository().deleteObjectOrCancelCheckOut(getCallContext(), objectId);
 	}
 
 	@Override
@@ -223,15 +204,6 @@ public class LDCmisService extends AbstractCmisService {
 	}
 
 	@Override
-	public ObjectData getObjectByPath(String repositoryId, String path, String filter, Boolean includeAllowableActions,
-			IncludeRelationships includeRelationships, String renditionFilter, Boolean includePolicyIds,
-			Boolean includeAcl, ExtensionsData extension) {
-		validateSession();
-		return getRepository().getObjectByPath(getCallContext(), path, filter, includeAllowableActions, includeAcl,
-				this);
-	}
-
-	@Override
 	public Properties getProperties(String repositoryId, String objectId, String filter, ExtensionsData extension) {
 		validateSession();
 		ObjectData object = getRepository().getObject(getCallContext(), objectId, null, filter, false, false, this);
@@ -250,13 +222,6 @@ public class LDCmisService extends AbstractCmisService {
 			ExtensionsData extension) {
 		validateSession();
 		getRepository().moveObject(getCallContext(), objectId, targetFolderId, this);
-	}
-
-	@Override
-	public void setContentStream(String repositoryId, Holder<String> objectId, Boolean overwriteFlag,
-			Holder<String> changeToken, ContentStream contentStream, ExtensionsData extension) {
-		validateSession();
-		getRepository().setContentStream(getCallContext(), objectId, overwriteFlag, contentStream);
 	}
 
 	@Override
@@ -306,8 +271,27 @@ public class LDCmisService extends AbstractCmisService {
 		return getRepository().query(statement, maxItems != null ? maxItems.intValue() : null);
 	}
 
-	
-	
+	@Override
+	public void cancelCheckOut(String repositoryId, String objectId, ExtensionsData extension) {
+		validateSession();
+		getRepository().cancelCheckOut(objectId);
+	}
+
+	@Override
+	public void checkIn(String repositoryId, Holder<String> objectId, Boolean major, Properties properties,
+			ContentStream contentStream, String checkinComment, List<String> policies, Acl addAces, Acl removeAces,
+			ExtensionsData extension) {
+		validateSession();
+		getRepository().checkIn(objectId, major, properties, contentStream, checkinComment);
+	}
+
+	@Override
+	public void checkOut(String repositoryId, Holder<String> objectId, ExtensionsData extension,
+			Holder<Boolean> contentCopied) {
+		validateSession();
+		getRepository().checkOut(objectId, contentCopied);
+	}
+
 	public String getSessionId() {
 		return sessionId;
 	}
