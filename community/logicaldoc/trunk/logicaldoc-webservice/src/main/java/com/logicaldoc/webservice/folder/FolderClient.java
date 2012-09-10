@@ -13,12 +13,12 @@ import com.logicaldoc.webservice.auth.Right;
  */
 public class FolderClient extends AbstractClient<FolderService> implements FolderService {
 
-	public FolderClient(String endpoint, int gzipThreshold, boolean log) throws IOException {
-		super(endpoint, FolderService.class, gzipThreshold, log);
+	public FolderClient(String endpoint, int gzipThreshold, boolean log, int timeout) throws IOException {
+		super(endpoint, FolderService.class, gzipThreshold, log, timeout);
 	}
 
 	public FolderClient(String endpoint) throws IOException {
-		super(endpoint, FolderService.class, -1, true);
+		super(endpoint, FolderService.class, -1, true, -1);
 	}
 
 	@Override

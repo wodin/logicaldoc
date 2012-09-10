@@ -16,12 +16,12 @@ import com.logicaldoc.webservice.folder.WSFolder;
  */
 public class SearchClient extends AbstractClient<SearchService> implements SearchService {
 
-	public SearchClient(String endpoint, int gzipThreshold, boolean log) throws IOException {
-		super(endpoint, SearchService.class, gzipThreshold, log);
+	public SearchClient(String endpoint, int gzipThreshold, boolean log, int timeout) throws IOException {
+		super(endpoint, SearchService.class, gzipThreshold, log, timeout);
 	}
 
 	public SearchClient(String endpoint) throws IOException {
-		super(endpoint, SearchService.class, -1, true);
+		super(endpoint, SearchService.class, -1, true, -1);
 	}
 
 	@Override

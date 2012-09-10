@@ -10,6 +10,7 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.common.gzip.GZIPInInterceptor;
 import org.apache.cxf.transport.common.gzip.GZIPOutInterceptor;
 import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
 import com.logicaldoc.util.io.EasySSLProtocolSocketFactory;
 
@@ -33,12 +34,17 @@ public abstract class AbstractClient<T> {
 	 * @param gzipThreshold threshold in KB, all packets greater than this one
 	 *        will be gzipped(use -1 to disable in any case)
 	 * @param log True if you want the requests to be logged
+	 * @param timeout Timeout for the SOAP requests (in seconds, default 60)
 	 */
-	public AbstractClient(String endpoint, Class<T> serviceClass, int gzipThreshold, boolean log) {
+	public AbstractClient(String endpoint, Class<T> serviceClass, int gzipThreshold, boolean log, int timeout) {
 		this.endpoint = endpoint;
 		initClient(serviceClass, gzipThreshold, log);
+		
 		if (endpoint.toLowerCase().startsWith("https"))
 			configureSSL();
+
+		if (timeout > 0)
+			configureTimeout(timeout);
 	}
 
 	/**
@@ -75,5 +81,18 @@ public abstract class AbstractClient<T> {
 		org.apache.cxf.endpoint.Client cl = ClientProxy.getClient(client);
 		HTTPConduit httpConduit = (HTTPConduit) cl.getConduit();
 		httpConduit.setTlsClientParameters(tlsParams);
+	}
+
+	/**
+	 * Configures the timeout (in seconds)
+	 */
+	protected void configureTimeout(int timeout) {
+		HTTPClientPolicy policy = new HTTPClientPolicy();
+		policy.setConnectionTimeout(timeout * 1000);
+		policy.setReceiveTimeout(timeout * 1000);
+
+		org.apache.cxf.endpoint.Client cl = ClientProxy.getClient(client);
+		HTTPConduit httpConduit = (HTTPConduit) cl.getConduit();
+		httpConduit.setClient(policy);
 	}
 }

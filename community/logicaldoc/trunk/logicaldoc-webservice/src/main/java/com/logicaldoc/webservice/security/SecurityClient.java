@@ -13,7 +13,7 @@ import com.logicaldoc.webservice.AbstractClient;
 public class SecurityClient extends AbstractClient<SecurityService> implements SecurityService {
 
 	public SecurityClient(String endpoint) throws IOException {
-		super(endpoint, SecurityService.class, -1, true);
+		super(endpoint, SecurityService.class, -1, true, -1);
 	}
 
 	@Override
