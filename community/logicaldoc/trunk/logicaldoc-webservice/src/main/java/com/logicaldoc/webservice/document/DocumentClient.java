@@ -16,12 +16,12 @@ import com.logicaldoc.webservice.AbstractClient;
  */
 public class DocumentClient extends AbstractClient<DocumentService> implements DocumentService {
 
-	public DocumentClient(String endpoint, int gzipThreshold, boolean log) throws IOException {
-		super(endpoint, DocumentService.class, gzipThreshold, log);
+	public DocumentClient(String endpoint, int gzipThreshold, boolean log, int timeout) throws IOException {
+		super(endpoint, DocumentService.class, gzipThreshold, log, timeout);
 	}
 
 	public DocumentClient(String endpoint) throws IOException {
-		super(endpoint, DocumentService.class, -1, true);
+		super(endpoint, DocumentService.class, -1, true, -1);
 	}
 
 	@Override

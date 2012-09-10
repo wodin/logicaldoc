@@ -15,7 +15,7 @@ import com.logicaldoc.webservice.WSParameter;
 public class SystemClient extends AbstractClient<SystemService> implements SystemService {
 
 	public SystemClient(String endpoint) throws IOException {
-		super(endpoint, SystemService.class, -1, true);
+		super(endpoint, SystemService.class, -1, true, -1);
 	}
 
 	@Override

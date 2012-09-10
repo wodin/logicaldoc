@@ -1,7 +1,5 @@
 package com.logicaldoc.webservice;
 
-import org.apache.cxf.transport.common.gzip.GZIPInInterceptor;
-
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
 import com.logicaldoc.webservice.folder.FolderClient;
@@ -12,10 +10,10 @@ import com.logicaldoc.webservice.system.SystemClient;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		String base = "https://localhost:9443/logicaldoc/services";
+		String base = "http://localhost:9080/logicaldoc/services";
 		AuthClient auth = new AuthClient(base + "/Auth");
 		DocumentClient documentClient = new DocumentClient(base + "/Document");
-		FolderClient folderClient = new FolderClient(base + "/Folder");
+		FolderClient folderClient = new FolderClient(base + "/Folder", 1, false, 50);
 		SearchClient searchClient = new SearchClient(base + "/Search");
 		SystemClient systemClient = new SystemClient(base + "/System");
 		SecurityClient securityClient = new SecurityClient(base + "/Security");
@@ -278,17 +276,7 @@ public class Main {
 				System.out.println("**************************************");
 			}
 
-			
-			folders = folderClient.listChildren(sid, 4);
-			for (WSFolder wsFolder : folders) {
-				System.out.println("folder id: " + wsFolder.getId());
-				System.out.println("folder name: " + wsFolder.getName());
-				System.out.println("folder descr: " + wsFolder.getDescription());
-				System.out.println("**************************************");
-			}
-			
-			
-			
+
 			// WSFolder[] folders = folderClient.getPath(sid, 14);
 			// for (WSFolder wsFolder : folders) {
 			// System.out.println("folder id: " + wsFolder.getId());

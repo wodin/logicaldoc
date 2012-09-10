@@ -13,7 +13,7 @@ import com.logicaldoc.webservice.AbstractClient;
 public class AuthClient extends AbstractClient<AuthService> implements AuthService {
 
 	public AuthClient(String endpoint) throws IOException {
-		super(endpoint, AuthService.class, -1, true);
+		super(endpoint, AuthService.class, -1, true, -1);
 	}
 
 	@Override
