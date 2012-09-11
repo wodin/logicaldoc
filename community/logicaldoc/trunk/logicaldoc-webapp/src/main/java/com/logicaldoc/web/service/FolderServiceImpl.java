@@ -1,10 +1,12 @@
 package com.logicaldoc.web.service;
 
 import java.security.AccessControlException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -13,6 +15,9 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.ExtendedAttribute;
+import com.logicaldoc.core.communication.Recipient;
+import com.logicaldoc.core.communication.SystemMessage;
+import com.logicaldoc.core.communication.SystemMessageDAO;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentManager;
@@ -92,20 +97,54 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	@Override
-	public void delete(String sid, long folderId) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public void delete(final String sid, final long folderId) throws InvalidSessionException {
+		final User user =  SessionUtil.getSessionUser(sid);
+		
+		/*
+		 * Execute the deletion in another thread
+		 */
+		Thread deleteThread = new Thread() {
+			@Override
+			public void run() {
+				FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+				Folder folder = dao.findById(folderId);
+				try {
+					// Add a folder history entry
+					FolderHistory transaction = new FolderHistory();
+					transaction.setUser(SessionUtil.getSessionUser(sid));
+					transaction.setEvent(FolderEvent.DELETED.toString());
+					transaction.setSessionId(sid);
+					dao.deleteTree(folderId, transaction);
 
-		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		try {
-			// Add a folder history entry
-			FolderHistory transaction = new FolderHistory();
-			transaction.setUser(SessionUtil.getSessionUser(sid));
-			transaction.setEvent(FolderEvent.DELETED.toString());
-			transaction.setSessionId(sid);
-			dao.deleteTree(folderId, transaction);
-		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-		}
+					SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
+					Date now = new Date();
+					Recipient recipient = new Recipient();
+					recipient.setName(user.getUserName());
+					recipient.setAddress(user.getUserName());
+					recipient.setType(Recipient.TYPE_SYSTEM);
+					recipient.setMode("message");
+					Set<Recipient> recipients = new HashSet<Recipient>();
+					recipients.add(recipient);
+					SystemMessage sysmess = new SystemMessage();
+					sysmess.setAuthor("SYSTEM");
+					sysmess.setRecipients(recipients);
+					ResourceBundle bundle = ResourceBundle.getBundle("i18n.messages", user.getLocale());
+					sysmess.setSubject(bundle.getString("folder.delete.subject"));
+					String message = bundle.getString("folder.delete.body");
+					String body = MessageFormat.format(message, new Object[] { folder.getName() });
+					sysmess.setMessageText(body);
+					sysmess.setSentDate(now);
+					sysmess.setConfirmation(0);
+					sysmess.setPrio(0);
+					sysmess.setDateScope(1);
+					smdao.store(sysmess);
+				} catch (Throwable t) {
+					log.error(t.getMessage(), t);
+				}
+			}
+		};
+
+		deleteThread.start();
 	}
 
 	public static GUIFolder getFolder(String sid, long folderId) throws InvalidSessionException {
