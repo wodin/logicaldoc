@@ -6,6 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -93,9 +96,9 @@ public class DocumentPreview extends HttpServlet {
 				suffix = "thumb.jpg";
 			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 			Document doc = docDao.findById(docId);
-			if(doc.getDocRef()!=null){
-				doc=docDao.findById(doc.getDocRef());
-				docId=doc.getId();
+			if (doc.getDocRef() != null) {
+				doc = docDao.findById(doc.getDocRef());
+				docId = doc.getId();
 			}
 			if (StringUtils.isEmpty(fileVersion))
 				fileVersion = doc.getFileVersion();
@@ -286,6 +289,8 @@ public class DocumentPreview extends HttpServlet {
 			}
 
 			command = new File(command).getPath();
+			List<String> commandLine = new ArrayList<String>();
+			commandLine.add(command);
 
 			if (extension.equalsIgnoreCase("pdf") || extension.equalsIgnoreCase("tiff")
 					|| extension.equalsIgnoreCase("tif")) {
@@ -296,19 +301,31 @@ public class DocumentPreview extends HttpServlet {
 
 				}
 
-				command += " -T 9 " + (pages > 0 ? " -p 1-" + pages : "") + " -f -t -G -s storeallcharacters";
+				commandLine.add("-T 9");
+				if (pages > 0)
+					commandLine.add("-p 1-" + pages);
+				commandLine.add("-f");
+				commandLine.add("-t");
+				commandLine.add("-G");
+				commandLine.add("-s storeallcharacters");
 			} else if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg")
 					|| extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("tif")
 					|| extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("bmp")
 					|| extension.equalsIgnoreCase("gif")) {
-				command += " -T 9 ";
+				commandLine.add("-T 9");
 			}
 
-			command += " " + tmp.getPath() + " -o " + swf.getPath();
+			commandLine.add(tmp.getPath());
+			commandLine.add(swf.getPath());
 
-			log.debug("Executing command: " + command);
+			log.debug("Executing command: " + commandLine.toString());
 
-			Exec.exec(command, null, null, 10);
+			int timeout = 20;
+			try {
+				timeout = Integer.parseInt(conf.getProperty("gui.preview.timeout"));
+			} catch (Throwable t) {
+			}
+			Exec.exec(commandLine, null, null, timeout);
 		} catch (Throwable e) {
 			FileUtils.deleteQuietly(swf);
 			log.error("Error in document to SWF conversion", e);
