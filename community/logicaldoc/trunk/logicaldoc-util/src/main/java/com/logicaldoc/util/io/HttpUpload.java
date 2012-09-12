@@ -85,7 +85,12 @@ public class HttpUpload {
 
 			if (url.toLowerCase().startsWith("https")) {
 				URL _url = new URL(url);
-				Protocol.registerProtocol("https", new Protocol("https", new EasySSLProtocolSocketFactory(), _url.getPort()));
+				int port = _url.getPort();
+				if (_url.getPort() <= 0)
+					port = 443;
+
+				Protocol.registerProtocol("https",
+						new Protocol("https", new EasySSLProtocolSocketFactory(), port));
 			}
 
 			HttpClient client = new HttpClient();
