@@ -169,7 +169,10 @@ public class ZipExport {
 		Collection<Document> docs = ddao.findByFolder(folder.getId(), null);
 
 		for (Document document : docs) {
-			addDocument(getZipEntryPath(folder), document);
+			Document doc = document;
+			if (doc.getDocRef() != null)
+				doc = ddao.findById(doc.getDocRef());
+			addDocument(getZipEntryPath(folder), doc);
 		}
 	}
 
