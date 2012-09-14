@@ -58,6 +58,7 @@ public class BulkUpdatePanel extends VLayout {
 		else {
 			document.setStartPublishing(null);
 			document.setPublished(-1);
+			document.setFolder(Session.get().getCurrentFolder());
 		}
 
 		setHeight100();
