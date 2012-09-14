@@ -108,20 +108,6 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testDelete() throws InvalidSessionException {
-		service.delete(session.getSid(), 1202);
-		Folder folder = folderDao.findById(1202);
-		Assert.assertNull(folder);
-
-		DocumentDAO docDao = (DocumentDAO) context.getBean("DocumentDAO");
-		docDao.delete(6);
-
-		service.delete(session.getSid(), 1201);
-		folder = folderDao.findById(1201);
-		Assert.assertNull(folder);
-	}
-
-	@Test
 	public void testMoveFolder_Simple() throws Exception {
 		Folder docsFolder = folderDao.findById(Folder.ROOTID);
 		Folder folderA = folderDao.create(docsFolder, "folderA", null);
