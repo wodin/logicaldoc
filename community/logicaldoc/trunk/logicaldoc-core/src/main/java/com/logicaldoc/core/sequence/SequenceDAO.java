@@ -21,7 +21,7 @@ public interface SequenceDAO {
 	 * @param sequence The sequence name
 	 * @return The next value
 	 */
-	public int next(String sequence);
+	public long next(String sequence);
 
 	/**
 	 * Initializes the sequence value
@@ -29,9 +29,8 @@ public interface SequenceDAO {
 	 * @param sequence The sequence name
 	 * @param value The initial value
 	 */
-	public void reset(String sequence, int value);
-	
-	
+	public void reset(String sequence, long value);
+
 	/**
 	 * Finds all sequences whose name starts with the passed name
 	 */
@@ -40,5 +39,5 @@ public interface SequenceDAO {
 	/**
 	 * Gets the current value
 	 */
-	int getCurrentValue(String sequence);
+	long getCurrentValue(String sequence);
 }

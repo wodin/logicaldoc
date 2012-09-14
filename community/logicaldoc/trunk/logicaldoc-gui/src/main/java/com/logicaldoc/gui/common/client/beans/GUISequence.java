@@ -12,7 +12,7 @@ public class GUISequence implements Serializable {
 
 	private String template = "";
 
-	private int value;
+	private long value;
 
 	// If the current sequence year is = 0, it is not a year sequence.
 	private int year = 0;
@@ -36,11 +36,11 @@ public class GUISequence implements Serializable {
 		this.template = template;
 	}
 
-	public int getValue() {
+	public long getValue() {
 		return value;
 	}
 
-	public void setValue(int value) {
+	public void setValue(long value) {
 		this.value = value;
 	}
 

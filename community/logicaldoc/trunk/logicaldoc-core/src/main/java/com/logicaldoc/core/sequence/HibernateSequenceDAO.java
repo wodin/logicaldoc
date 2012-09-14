@@ -34,7 +34,7 @@ public class HibernateSequenceDAO extends HibernateDaoSupport implements Sequenc
 	}
 
 	@Override
-	public synchronized void reset(String sequence, int value) {
+	public synchronized void reset(String sequence, long value) {
 		synchronized (SequenceDAO.class) {
 			Generic generic = genericDao.findByAlternateKey(TYPE, sequence);
 			if (generic == null) {
@@ -47,24 +47,24 @@ public class HibernateSequenceDAO extends HibernateDaoSupport implements Sequenc
 	}
 
 	@Override
-	public synchronized int next(String sequence) {
+	public synchronized long next(String sequence) {
 		synchronized (SequenceDAO.class) {
 			Generic generic = genericDao.findByAlternateKey(TYPE, sequence);
 			if (generic == null) {
 				generic = new Generic(TYPE, sequence);
-				generic.setInteger1(0);
+				generic.setInteger1(0L);
 			}
-			generic.setInteger1(generic.getInteger1().intValue() + 1);
+			generic.setInteger1(generic.getInteger1().longValue() + 1);
 			genericDao.store(generic);
 			return generic.getInteger1();
 		}
 	}
 
 	@Override
-	public int getCurrentValue(String sequence) {
+	public long getCurrentValue(String sequence) {
 		Generic generic = genericDao.findByAlternateKey(TYPE, sequence);
 		if (generic == null)
-			return 0;
+			return 0L;
 		else
 			return generic.getInteger1();
 	}

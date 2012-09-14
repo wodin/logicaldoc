@@ -24,9 +24,9 @@ public class Generic extends ExtensibleObject implements Comparable<Generic> {
 
 	private String string2;
 
-	private Integer integer1;
+	private Long integer1;
 
-	private Integer integer2;
+	private Long integer2;
 
 	private Double double1;
 
@@ -78,19 +78,19 @@ public class Generic extends ExtensibleObject implements Comparable<Generic> {
 		this.string2 = string2;
 	}
 
-	public Integer getInteger1() {
+	public Long getInteger1() {
 		return integer1;
 	}
 
-	public void setInteger1(Integer integer1) {
+	public void setInteger1(Long integer1) {
 		this.integer1 = integer1;
 	}
 
-	public Integer getInteger2() {
+	public Long getInteger2() {
 		return integer2;
 	}
 
-	public void setInteger2(Integer integer2) {
+	public void setInteger2(Long integer2) {
 		this.integer2 = integer2;
 	}
 

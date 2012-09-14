@@ -200,20 +200,20 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			gen = genDao.findByAlternateKey(StatsCollector.STAT, "notindexeddocs");
 			GUIParameter notIndexed = new GUIParameter();
 			notIndexed.setName("notindexed");
-			notIndexed.setValue(gen != null ? Integer.toString(gen.getInteger1()) : "0");
+			notIndexed.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[1][0] = notIndexed;
 
 			gen = genDao.findByAlternateKey(StatsCollector.STAT, "indexeddocs");
 			GUIParameter indexed = new GUIParameter();
 			indexed.setName("indexed");
-			indexed.setValue(gen != null ? Integer.toString(gen.getInteger1()) : "0");
+			indexed.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[1][1] = indexed;
 
 			gen = genDao.findByAlternateKey(StatsCollector.STAT, "deleteddocs");
 			GUIParameter deletedDocs = new GUIParameter();
 			deletedDocs.setName("docstrash");
 			deletedDocs.setLabel("trash");
-			deletedDocs.setValue(gen != null ? Integer.toString(gen.getInteger1()) : "0");
+			deletedDocs.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[1][2] = deletedDocs;
 
 			/*
@@ -222,20 +222,20 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			gen = genDao.findByAlternateKey(StatsCollector.STAT, "withdocs");
 			GUIParameter notEmptyFolders = new GUIParameter();
 			notEmptyFolders.setName("withdocs");
-			notEmptyFolders.setValue(gen != null ? Integer.toString(gen.getInteger1()) : "0");
+			notEmptyFolders.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[2][0] = notEmptyFolders;
 
 			gen = genDao.findByAlternateKey(StatsCollector.STAT, "empty");
 			GUIParameter emptyFolders = new GUIParameter();
 			emptyFolders.setName("empty");
-			emptyFolders.setValue(gen != null ? Integer.toString(gen.getInteger1()) : "0");
+			emptyFolders.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[2][1] = emptyFolders;
 
 			gen = genDao.findByAlternateKey(StatsCollector.STAT, "deletedfolders");
 			GUIParameter deletedFolders = new GUIParameter();
 			deletedFolders.setName("folderstrash");
 			deletedFolders.setLabel("trash");
-			deletedFolders.setValue(gen != null ? Integer.toString(gen.getInteger1()) : "0");
+			deletedFolders.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[2][2] = deletedFolders;
 
 			/*
