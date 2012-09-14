@@ -1357,43 +1357,50 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	@Override
 	public void bulkUpdate(String sid, long[] ids, GUIDocument vo) throws InvalidSessionException {
 		for (long id : ids) {
-			GUIDocument buf = getById(sid, id);
+			try {
+				GUIDocument buf = getById(sid, id);
 
-			buf.setComment(vo.getComment() != null ? vo.getComment() : "");
-			if (StringUtils.isNotEmpty(vo.getLanguage()))
-				buf.setLanguage(vo.getLanguage());
-			if (vo.getTags() != null && vo.getTags().length > 0)
-				buf.setTags(vo.getTags());
-			if (StringUtils.isNotEmpty(vo.getCoverage()))
-				buf.setCoverage(vo.getCoverage());
-			if (StringUtils.isNotEmpty(vo.getObject()))
-				buf.setObject(vo.getObject());
-			if (StringUtils.isNotEmpty(vo.getRecipient()))
-				buf.setRecipient(vo.getRecipient());
-			if (StringUtils.isNotEmpty(vo.getSource()))
-				buf.setSource(vo.getSource());
-			if (StringUtils.isNotEmpty(vo.getSourceAuthor()))
-				buf.setSourceAuthor(vo.getSourceAuthor());
-			if (StringUtils.isNotEmpty(vo.getSourceId()))
-				buf.setSourceId(vo.getSourceId());
-			if (StringUtils.isNotEmpty(vo.getSourceType()))
-				buf.setSourceType(vo.getSourceType());
-			if (vo.getTemplateId() != null)
-				buf.setTemplateId(vo.getTemplateId());
-			if (vo.getAttributes() != null && vo.getAttributes().length > 0)
-				buf.setAttributes(vo.getAttributes());
-			if (vo.getSourceDate() != null)
-				buf.setSourceDate(vo.getSourceDate());
-			if (StringUtils.isNotEmpty(vo.getWorkflowStatus()))
-				buf.setSource(vo.getWorkflowStatus());
-			if (vo.getPublished() > -1)
-				buf.setPublished(vo.getPublished());
-			if (vo.getStartPublishing() != null)
-				buf.setStartPublishing(vo.getStartPublishing());
-			if (vo.getStopPublishing() != null)
-				buf.setStopPublishing(vo.getStopPublishing());
-			save(sid, buf);
+				buf.setComment(vo.getComment() != null ? vo.getComment() : "");
+				if (StringUtils.isNotEmpty(vo.getLanguage()))
+					buf.setLanguage(vo.getLanguage());
+				if (vo.getTags() != null && vo.getTags().length > 0)
+					buf.setTags(vo.getTags());
+				if (StringUtils.isNotEmpty(vo.getCoverage()))
+					buf.setCoverage(vo.getCoverage());
+				if (StringUtils.isNotEmpty(vo.getObject()))
+					buf.setObject(vo.getObject());
+				if (StringUtils.isNotEmpty(vo.getRecipient()))
+					buf.setRecipient(vo.getRecipient());
+				if (StringUtils.isNotEmpty(vo.getSource()))
+					buf.setSource(vo.getSource());
+				if (StringUtils.isNotEmpty(vo.getSourceAuthor()))
+					buf.setSourceAuthor(vo.getSourceAuthor());
+				if (StringUtils.isNotEmpty(vo.getSourceId()))
+					buf.setSourceId(vo.getSourceId());
+				if (StringUtils.isNotEmpty(vo.getSourceType()))
+					buf.setSourceType(vo.getSourceType());
+				if (vo.getTemplateId() != null)
+					buf.setTemplateId(vo.getTemplateId());
+				if (vo.getAttributes() != null && vo.getAttributes().length > 0)
+					buf.setAttributes(vo.getAttributes());
+				if (vo.getSourceDate() != null)
+					buf.setSourceDate(vo.getSourceDate());
+				if (StringUtils.isNotEmpty(vo.getWorkflowStatus()))
+					buf.setSource(vo.getWorkflowStatus());
+				if (vo.getPublished() > -1)
+					buf.setPublished(vo.getPublished());
+				if (vo.getStartPublishing() != null)
+					buf.setStartPublishing(vo.getStartPublishing());
+				if (vo.getStopPublishing() != null)
+					buf.setStopPublishing(vo.getStopPublishing());
+				
+				save(sid, buf);
+			} catch (Throwable e) {
+				e.printStackTrace();
+				log.error(e.getMessage(), e);
+			}
 		}
+
 	}
 
 	protected void checkPublished(User user, Document doc) throws Exception {
