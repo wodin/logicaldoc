@@ -331,9 +331,9 @@ public class StatsCollector extends Task {
 		if (val instanceof String)
 			gen.setString1((String) val);
 		else if (val instanceof Long)
-			gen.setInteger1(((Long) val).intValue());
+			gen.setInteger1((Long) val);
 		else
-			gen.setInteger1((Integer) val);
+			gen.setInteger1(((Integer) val).longValue());
 		genericDAO.store(gen);
 	}
 

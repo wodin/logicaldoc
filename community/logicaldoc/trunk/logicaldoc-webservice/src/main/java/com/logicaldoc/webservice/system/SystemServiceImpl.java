@@ -121,19 +121,19 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 			gen = genDao.findByAlternateKey(StatsCollector.STAT, "notindexeddocs");
 			WSParameter notIndexed = new WSParameter();
 			notIndexed.setName("docs_notindexed");
-			notIndexed.setValue(gen != null ? Integer.toString(gen.getInteger1()) : "0");
+			notIndexed.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[8] = notIndexed;
 
 			gen = genDao.findByAlternateKey(StatsCollector.STAT, "indexeddocs");
 			WSParameter indexed = new WSParameter();
 			indexed.setName("docs_indexed");
-			indexed.setValue(gen != null ? Integer.toString(gen.getInteger1()) : "0");
+			indexed.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[9] = indexed;
 
 			gen = genDao.findByAlternateKey(StatsCollector.STAT, "deleteddocs");
 			WSParameter deletedDocs = new WSParameter();
 			deletedDocs.setName("docs_trash");
-			deletedDocs.setValue(gen != null ? Integer.toString(gen.getInteger1()) : "0");
+			deletedDocs.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[10] = deletedDocs;
 
 			/*
@@ -142,19 +142,19 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 			gen = genDao.findByAlternateKey(StatsCollector.STAT, "withdocs");
 			WSParameter notEmptyFolders = new WSParameter();
 			notEmptyFolders.setName("folder_withdocs");
-			notEmptyFolders.setValue(gen != null ? Integer.toString(gen.getInteger1()) : "0");
+			notEmptyFolders.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[11] = notEmptyFolders;
 
 			gen = genDao.findByAlternateKey(StatsCollector.STAT, "empty");
 			WSParameter emptyFolders = new WSParameter();
 			emptyFolders.setName("folder_empty");
-			emptyFolders.setValue(gen != null ? Integer.toString(gen.getInteger1()) : "0");
+			emptyFolders.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[12] = emptyFolders;
 
 			gen = genDao.findByAlternateKey(StatsCollector.STAT, "deletedfolders");
 			WSParameter deletedFolders = new WSParameter();
 			deletedFolders.setName("folder_trash");
-			deletedFolders.setValue(gen != null ? Integer.toString(gen.getInteger1()) : "0");
+			deletedFolders.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[13] = deletedFolders;
 
 			/*

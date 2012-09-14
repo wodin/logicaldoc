@@ -35,7 +35,7 @@ public interface CustomIdService extends RemoteService {
 	/**
 	 * Reset the numbering of a given sequence
 	 */
-	public void resetSequence(String sid, long sequenceId, int value) throws InvalidSessionException;
+	public void resetSequence(String sid, long sequenceId, long value) throws InvalidSessionException;
 
 	/**
 	 * Loads the list of sequences

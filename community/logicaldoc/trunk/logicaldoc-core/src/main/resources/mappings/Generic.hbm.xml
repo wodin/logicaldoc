@@ -13,8 +13,8 @@
 		<property name="subtype" type="string" column="ld_subtype" length="255" not-null="true"/>
 		<property name="string1" type="string" column="ld_string1" length="4000" />
 		<property name="string2" type="string" column="ld_string2" length="4000" />
-		<property name="integer1" type="integer" column="ld_integer1" />
-		<property name="integer2" type="integer" column="ld_integer2" />
+		<property name="integer1" type="long" column="ld_integer1" />
+		<property name="integer2" type="long" column="ld_integer2" />
 		<property name="double1" type="double" column="ld_double1" />
 		<property name="double2" type="double" column="ld_double2" />
 		<property name="date1" type="timestamp" column="ld_date1" />

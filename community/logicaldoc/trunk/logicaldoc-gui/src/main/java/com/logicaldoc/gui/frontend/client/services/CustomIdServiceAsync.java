@@ -14,7 +14,7 @@ public interface CustomIdServiceAsync {
 
 	void save(String sid, GUICustomId customid, AsyncCallback<Void> callback);
 
-	void resetSequence(String sid, long sequenceId, int value, AsyncCallback<Void> callback);
+	void resetSequence(String sid, long sequenceId, long value, AsyncCallback<Void> callback);
 
 	void loadSequences(String sid, AsyncCallback<GUISequence[]> callback);
 

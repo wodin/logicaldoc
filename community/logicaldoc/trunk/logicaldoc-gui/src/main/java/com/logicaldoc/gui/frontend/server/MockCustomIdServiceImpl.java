@@ -50,7 +50,7 @@ public class MockCustomIdServiceImpl extends RemoteServiceServlet implements Cus
 	}
 
 	@Override
-	public void resetSequence(String sid, long sequenceId, int value) throws InvalidSessionException {
+	public void resetSequence(String sid, long sequenceId, long value) throws InvalidSessionException {
 
 	}
 
