@@ -119,7 +119,7 @@ public class VersionsDiff extends Window {
 			GUIExtendedAttribute att = version1.getExtendedAttribute(name);
 			String val1 = "";
 			if (att != null)
-				if (att.getType() == GUIExtendedAttribute.TYPE_STRING && att.getValue() != null) {
+				if ((att.getType() == GUIExtendedAttribute.TYPE_STRING || att.getType() == GUIExtendedAttribute.TYPE_USER) && att.getStringValue() != null) {
 					val1 = att.getStringValue();
 				} else if (att.getType() == GUIExtendedAttribute.TYPE_INT && att.getValue() != null) {
 					val1 = Long.toString(att.getIntValue());
@@ -132,7 +132,7 @@ public class VersionsDiff extends Window {
 			att = version2.getExtendedAttribute(name);
 			String val2 = "";
 			if (att != null)
-				if (att.getType() == GUIExtendedAttribute.TYPE_STRING && att.getValue() != null) {
+				if ((att.getType() == GUIExtendedAttribute.TYPE_STRING || att.getType() == GUIExtendedAttribute.TYPE_USER) && att.getStringValue() != null) {
 					val2 = att.getStringValue();
 				} else if (att.getType() == GUIExtendedAttribute.TYPE_INT && att.getValue() != null) {
 					val2 = Long.toString(att.getIntValue());
