@@ -844,7 +844,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					document.setLastModified(new Date());
 					document.setVersion(doc.getVersion());
 				} catch (Throwable t) {
-					t.printStackTrace();
 					log.error(t.getMessage(), t);
 					throw new RuntimeException(t.getMessage(), t);
 				}
@@ -934,6 +933,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 							extAttr.setValue(Double.parseDouble(attr.getValue().toString()));
 						} else if (templateType == GUIExtendedAttribute.TYPE_INT) {
 							extAttr.setValue(Long.parseLong(attr.getValue().toString()));
+						} else if (templateType == GUIExtendedAttribute.TYPE_USER) {
+							extAttr.setIntValue(attr.getIntValue());
+							extAttr.setStringValue(attr.getStringValue());
+							extAttr.setType(templateType);
 						}
 					} else {
 						if (templateType == ExtendedAttribute.TYPE_INT) {
@@ -956,6 +959,15 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 								extAttr.setStringValue((String) attr.getValue());
 							else
 								extAttr.setStringValue(null);
+						} else if (templateType == ExtendedAttribute.TYPE_USER) {
+							if (attr.getValue() != null) {
+								extAttr.setIntValue(attr.getIntValue());
+								extAttr.setStringValue(attr.getStringValue());
+							} else {
+								extAttr.setIntValue(null);
+								extAttr.setStringValue(null);
+							}
+							extAttr.setType(templateType);
 						}
 					}
 
@@ -1393,7 +1405,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					buf.setStartPublishing(vo.getStartPublishing());
 				if (vo.getStopPublishing() != null)
 					buf.setStopPublishing(vo.getStopPublishing());
-				
+
 				save(sid, buf);
 			} catch (Throwable e) {
 				e.printStackTrace();

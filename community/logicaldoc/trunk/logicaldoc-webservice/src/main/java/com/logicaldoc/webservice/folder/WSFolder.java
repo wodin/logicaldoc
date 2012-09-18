@@ -41,9 +41,9 @@ public class WSFolder {
 	private Long templateId;
 
 	private String creation;
-	
+
 	private String creator;
-	
+
 	private WSAttribute[] extendedAttributes = new WSAttribute[0];
 
 	public void addExtendedAttribute(WSAttribute att) {
@@ -78,7 +78,6 @@ public class WSFolder {
 		wsFolder.setLastModified(AbstractService.convertDateToString(folder.getLastModified()));
 		wsFolder.setCreation(AbstractService.convertDateToString(folder.getCreation()));
 		wsFolder.setCreator(folder.getCreator());
-		
 
 		if (folder.getTemplate() != null) {
 			wsFolder.setTemplateId(folder.getTemplate().getId());
@@ -86,7 +85,7 @@ public class WSFolder {
 
 		// Populate extended attributes
 		WSAttribute[] attributes = new WSAttribute[0];
-		if (folder.getTemplate()!=null && folder.getAttributes() != null && folder.getAttributes().size() > 0) {
+		if (folder.getTemplate() != null && folder.getAttributes() != null && folder.getAttributes().size() > 0) {
 			attributes = new WSAttribute[folder.getAttributeNames().size()];
 			int i = 0;
 			for (String name : folder.getAttributeNames()) {
@@ -95,8 +94,14 @@ public class WSFolder {
 				attribute.setName(name);
 				attribute.setMandatory(attr.getMandatory());
 				attribute.setPosition(attr.getPosition());
-				attribute.setType(attr.getType());
 				attribute.setValue(attr.getValue());
+
+				if (attr.getType() == ExtendedAttribute.TYPE_USER) {
+					attribute.setIntValue(attr.getIntValue());
+					attribute.setStringValue(attr.getStringValue());
+				}
+
+				attribute.setType(attr.getType());
 				attributes[i++] = attribute;
 			}
 		}
@@ -118,8 +123,11 @@ public class WSFolder {
 						ExtendedAttribute extAttribute = new ExtendedAttribute();
 						extAttribute.setMandatory(extendedAttributes[i].getMandatory());
 						extAttribute.setPosition(extendedAttributes[i].getPosition());
+						extAttribute.setIntValue(extendedAttributes[i].getIntValue());
+						extAttribute.setStringValue(extendedAttributes[i].getStringValue());
+						extAttribute.setDoubleValue(extendedAttributes[i].getDoubleValue());
+						extAttribute.setDateValue(AbstractService.convertStringToDate(extendedAttributes[i].getDateValue()));
 						extAttribute.setType(extendedAttributes[i].getType());
-						extAttribute.setValue(extendedAttributes[i].getValue());
 						folder.getAttributes().put(extendedAttributes[i].getName(), extAttribute);
 					}
 				}

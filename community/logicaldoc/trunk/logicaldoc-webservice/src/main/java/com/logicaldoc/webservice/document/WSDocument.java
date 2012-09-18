@@ -221,12 +221,20 @@ public class WSDocument {
 				int i = 0;
 				for (String name : document.getAttributeNames()) {
 					ExtendedAttribute attr = document.getExtendedAttribute(name);
+									
 					WSAttribute attribute = new WSAttribute();
 					attribute.setName(name);
 					attribute.setMandatory(attr.getMandatory());
 					attribute.setPosition(attr.getPosition());
 					attribute.setType(attr.getType());
 					attribute.setValue(attr.getValue());
+					
+					if (attr.getType() == ExtendedAttribute.TYPE_USER) {
+						attribute.setIntValue(attr.getIntValue());
+						attribute.setStringValue(attr.getStringValue());
+					}
+					
+					attribute.setType(attr.getType());
 					attributes[i++] = attribute;
 				}
 			}
@@ -294,9 +302,12 @@ public class WSDocument {
 						ExtendedAttribute extAttribute = new ExtendedAttribute();
 						extAttribute.setMandatory(extendedAttributes[i].getMandatory());
 						extAttribute.setPosition(extendedAttributes[i].getPosition());
+						extAttribute.setIntValue(extendedAttributes[i].getIntValue());
+						extAttribute.setStringValue(extendedAttributes[i].getStringValue());
+						extAttribute.setDoubleValue(extendedAttributes[i].getDoubleValue());
+						extAttribute.setDateValue(AbstractService.convertStringToDate(extendedAttributes[i].getDateValue()));
 						extAttribute.setType(extendedAttributes[i].getType());
-						extAttribute.setValue(extendedAttributes[i].getValue());
-						extAttribute.setEditor(extendedAttributes[i].getEditor());
+						
 						attributes.put(extendedAttributes[i].getName(), extAttribute);
 					}
 				}

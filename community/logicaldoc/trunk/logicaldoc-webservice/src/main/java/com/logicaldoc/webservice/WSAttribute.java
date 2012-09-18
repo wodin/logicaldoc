@@ -5,6 +5,8 @@ import java.util.GregorianCalendar;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import com.logicaldoc.webservice.security.WSUser;
+
 /**
  * Extended attribute of a document
  * 
@@ -20,6 +22,8 @@ public class WSAttribute {
 	public static final int TYPE_DOUBLE = 2;
 
 	public static final int TYPE_DATE = 3;
+
+	public static final int TYPE_USER = 4;
 
 	private String name;
 
@@ -54,7 +58,7 @@ public class WSAttribute {
 
 	@Override
 	public String toString() {
-		return getName() + " - " + getStringValue();
+		return getName() + (getValue() != null ? (" - " + getValue().toString()) : "");
 	}
 
 	public String getStringValue() {
@@ -136,6 +140,8 @@ public class WSAttribute {
 			return getDoubleValue();
 		case TYPE_DATE:
 			return AbstractService.convertStringToDate(getDateValue());
+		case TYPE_USER:
+			return getIntValue();
 		}
 		return null;
 	}
@@ -146,18 +152,38 @@ public class WSAttribute {
 	 * @param value The attribute value.
 	 */
 	public void setValue(Object value) {
+		if (getType() == WSAttribute.TYPE_USER && !(value instanceof WSUser)) {
+			/*
+			 * Needed to fix JAXB logic that will invoke getValue(that returns a
+			 * Long) and setValue
+			 */
+			if (value instanceof Long)
+				this.intValue = (Long) value;
+			else if (value instanceof String)
+				this.stringValue = (String) value;
+			return;
+		}
+
 		if (value instanceof String) {
 			this.type = TYPE_STRING;
 			setStringValue((String) value);
 		} else if (value instanceof Long) {
 			this.type = TYPE_INT;
 			setIntValue((Long) value);
+		} else if (value instanceof Integer) {
+			this.type = TYPE_INT;
+			if (value != null)
+				setIntValue(((Integer) value).longValue());
 		} else if (value instanceof Double) {
 			this.type = TYPE_DOUBLE;
 			setDoubleValue((Double) value);
 		} else if (value instanceof Date) {
 			this.type = TYPE_DATE;
 			setDateValue(AbstractService.convertDateToString((Date) value));
+		} else if (value instanceof WSUser) {
+			this.stringValue = ((WSUser) value).getFullName();
+			this.intValue = ((WSUser) value).getId();
+			this.type = TYPE_USER;
 		} else {
 			this.type = TYPE_DATE;
 			if (value != null) {

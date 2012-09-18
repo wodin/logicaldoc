@@ -345,6 +345,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		types.put("" + GUIExtendedAttribute.TYPE_INT, I18N.message("integer"));
 		types.put("" + GUIExtendedAttribute.TYPE_DOUBLE, I18N.message("decimal"));
 		types.put("" + GUIExtendedAttribute.TYPE_DATE, I18N.message("date"));
+		types.put("" + GUIExtendedAttribute.TYPE_USER, I18N.message("user"));
 		type.setValueMap(types);
 		type.setWrapTitle(false);
 		type.setDefaultValue("" + GUIExtendedAttribute.TYPE_STRING);

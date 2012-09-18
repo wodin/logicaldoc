@@ -68,7 +68,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			throw new Exception("Cannot add documents in the root");
 		}
 		fdao.initialize(folder);
-		
+
 		Document doc = document.toDocument();
 
 		// Create the document history event

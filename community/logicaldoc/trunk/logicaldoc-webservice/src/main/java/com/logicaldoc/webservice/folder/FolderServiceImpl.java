@@ -372,27 +372,27 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		if (folderId == Folder.ROOTID)
 			throw new Exception("cannot update the root folder");
 
-		Folder flder = folderDao.findById(folderId);
-		if (flder == null)
+		Folder fld = folderDao.findById(folderId);
+		if (fld == null)
 			throw new Exception("cannot find folder " + folderId);
 
-		List<Folder> folders = folderDao.findByNameAndParentId(name, flder.getParentId());
-		if (folders.size() > 0 && folders.get(0).getId() != flder.getId()) {
+		List<Folder> folders = folderDao.findByNameAndParentId(name, fld.getParentId());
+		if (folders.size() > 0 && folders.get(0).getId() != fld.getId()) {
 			throw new Exception("duplicate folder name " + name);
 		} else {
-			folderDao.initialize(flder);
+			folderDao.initialize(fld);
 
-			flder.setName(name);
-			flder.setDescription(folder.getDescription());
+			fld.setName(name);
+			fld.setDescription(folder.getDescription());
 
-			folder.updateExtendedAttributes(flder);
+			folder.updateExtendedAttributes(fld);
 
 			// Add a folder history entry
 			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(user);
 			transaction.setEvent(FolderEvent.RENAMED.toString());
 			transaction.setSessionId(sid);
-			folderDao.store(flder, transaction);
+			folderDao.store(fld, transaction);
 		}
 	}
 

@@ -118,7 +118,9 @@ public class StandardSearchEngine implements SearchEngine {
 			for (String attribute : document.getAttributeNames()) {
 				ExtendedAttribute ext = document.getExtendedAttribute(attribute);
 				// Skip all non-string attributes
-				if (ext.getType() == ExtendedAttribute.TYPE_STRING && StringUtils.isNotEmpty(ext.getStringValue())) {
+				if ((ext.getType() == ExtendedAttribute.TYPE_STRING || ext.getType() == ExtendedAttribute.TYPE_USER)
+						&& StringUtils.isNotEmpty(ext.getStringValue())) {
+					
 					// Prefix all extended attributes with 'ext_' in order to
 					// avoid collisions with standard fields
 					doc.addField("ext_" + attribute, ext.getStringValue());
