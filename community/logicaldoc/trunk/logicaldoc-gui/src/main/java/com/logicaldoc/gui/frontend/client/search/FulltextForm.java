@@ -163,7 +163,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		folder = new FolderSelector(null, true);
 		folder.setColSpan(3);
 		folder.setWidth(200);
-		
+
 		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders", Session.get()
 				.getInfo().getConfig("search.depth")));
 		subfolders.setColSpan(3);
@@ -345,7 +345,8 @@ public class FulltextForm extends VLayout implements SearchObserver {
 				for (GUIExtendedAttribute att : result) {
 					// We cannot use spaces in items name
 					String itemName = "_" + att.getName().replaceAll(" ", Constants.BLANK_PLACEHOLDER);
-					if (att.getType() == GUIExtendedAttribute.TYPE_STRING) {
+					if (att.getType() == GUIExtendedAttribute.TYPE_STRING
+							|| att.getType() == GUIExtendedAttribute.TYPE_USER) {
 						CheckboxItem item = new CheckboxItem(itemName, att.getLabel());
 						items.add(item);
 					}

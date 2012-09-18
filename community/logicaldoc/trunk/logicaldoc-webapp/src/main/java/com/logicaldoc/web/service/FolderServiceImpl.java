@@ -98,8 +98,8 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public void delete(final String sid, final long folderId) throws InvalidSessionException {
-		final User user =  SessionUtil.getSessionUser(sid);
-		
+		final User user = SessionUtil.getSessionUser(sid);
+
 		/*
 		 * Execute the deletion in another thread
 		 */
@@ -679,6 +679,9 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 							extAttr.setValue(Double.parseDouble(attr.getValue().toString()));
 						} else if (templateType == GUIExtendedAttribute.TYPE_INT) {
 							extAttr.setValue(Long.parseLong(attr.getValue().toString()));
+						} else if (templateType == GUIExtendedAttribute.TYPE_USER) {
+							extAttr.setIntValue(attr.getIntValue());
+							extAttr.setStringValue(attr.getStringValue());
 						}
 					} else {
 						if (templateType == ExtendedAttribute.TYPE_INT) {
@@ -701,6 +704,14 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 								extAttr.setStringValue((String) attr.getValue());
 							else
 								extAttr.setStringValue(null);
+						} else if (templateType == ExtendedAttribute.TYPE_USER) {
+							if (attr.getValue() != null) {
+								extAttr.setStringValue((String) attr.getStringValue());
+								extAttr.setIntValue((Long) attr.getIntValue());
+							} else {
+								extAttr.setStringValue(null);
+								extAttr.setIntValue(null);
+							}
 						}
 					}
 

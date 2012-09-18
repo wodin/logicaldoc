@@ -40,7 +40,7 @@ public class HibernateGenericDAOTest extends AbstractCoreTCase {
 	public void testFindByAlternateKey() {
 		Generic generic = dao.findByAlternateKey("a", "a1");
 		Assert.assertNotNull(generic);
-		Assert.assertEquals(new Integer(0), generic.getInteger1());
+		Assert.assertEquals(new Long(0), generic.getInteger1());
 		generic = dao.findByAlternateKey("a", "xxx");
 		Assert.assertNull(generic);
 	}
@@ -49,7 +49,7 @@ public class HibernateGenericDAOTest extends AbstractCoreTCase {
 	public void testFindById() {
 		Generic generic = dao.findById(1L);
 		Assert.assertNotNull(generic);
-		Assert.assertEquals(new Integer(0), generic.getInteger1());
+		Assert.assertEquals(new Long(0), generic.getInteger1());
 	}
 
 	@Test
@@ -69,7 +69,7 @@ public class HibernateGenericDAOTest extends AbstractCoreTCase {
 		generic = dao.findById(generic.getId());
 		Assert.assertEquals("xx", generic.getType());
 		Assert.assertEquals("xxx", generic.getSubtype());
-		Assert.assertEquals(new Integer(22), generic.getInteger1());
+		Assert.assertEquals(new Long(22), generic.getInteger1());
 		Assert.assertEquals("aaa", generic.getString1());
 	}
 
@@ -77,7 +77,7 @@ public class HibernateGenericDAOTest extends AbstractCoreTCase {
 	public void testInitialize() {
 		Generic generic = dao.findById(1);
 		Assert.assertNotNull(generic);
-		Assert.assertEquals(new Integer(0), generic.getInteger1());
+		Assert.assertEquals(new Long(0), generic.getInteger1());
 		dao.initialize(generic);
 		Assert.assertEquals(1, generic.getAttributes().size());
 		Assert.assertEquals("val1", generic.getValue("att1"));

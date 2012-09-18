@@ -23,6 +23,8 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 
 	public static final int TYPE_DATE = 3;
 
+	public static final int TYPE_USER = 4;
+
 	public static final int EDITOR_DEFAULT = 0;
 
 	public static final int EDITOR_LISTBOX = 1;
@@ -105,6 +107,8 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 			return getDoubleValue();
 		case TYPE_DATE:
 			return getDateValue();
+		case TYPE_USER:
+			return getIntValue();
 		}
 		return null;
 	}
@@ -130,6 +134,10 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 		} else if (value instanceof Date) {
 			this.type = TYPE_DATE;
 			setDateValue((Date) value);
+		} else if (value instanceof GUIUser) {
+			this.type = TYPE_USER;
+			setIntValue(((GUIUser) value).getId());
+			setStringValue(((GUIUser) value).getFullName());
 		} else if (value == null) {
 			setStringValue(null);
 			setDoubleValue(null);

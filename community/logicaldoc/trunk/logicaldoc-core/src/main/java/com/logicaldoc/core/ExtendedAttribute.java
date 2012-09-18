@@ -2,6 +2,8 @@ package com.logicaldoc.core;
 
 import java.util.Date;
 
+import com.logicaldoc.core.security.User;
+
 /**
  * This class defines the value of an attribute associated to an extensible
  * object. For each value, is possible to define the type and if it is mandatory
@@ -19,6 +21,8 @@ public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 	public static final int TYPE_DOUBLE = 2;
 
 	public static final int TYPE_DATE = 3;
+
+	public static final int TYPE_USER = 4;
 
 	public static final int EDITOR_DEFAULT = 0;
 
@@ -97,6 +101,8 @@ public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 			return getDoubleValue();
 		case TYPE_DATE:
 			return getDateValue();
+		case TYPE_USER:
+			return getIntValue();
 		}
 		return null;
 	}
@@ -122,8 +128,12 @@ public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 		} else if (value instanceof Date) {
 			this.type = TYPE_DATE;
 			setDateValue((Date) value);
+		} else if (value instanceof User) {
+			this.type = TYPE_USER;
+			this.intValue = ((User) value).getId();
+			this.stringValue = ((User) value).getFullName();
 		} else {
-			throw new IllegalArgumentException("No a String, Long, Double or Date value");
+			throw new IllegalArgumentException("No a String, Long, Double, Date or User value");
 		}
 	}
 
