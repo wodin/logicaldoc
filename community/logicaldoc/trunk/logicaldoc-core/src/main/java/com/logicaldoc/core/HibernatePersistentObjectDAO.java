@@ -16,6 +16,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * Hibernate implementation of <code>PersistentObjectDAO</code>
@@ -301,4 +302,24 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		return 0;
 	}
 
+	protected String getDbms() {
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		return config.getProperty("jdbc.dbms").toLowerCase();
+	}
+
+	protected boolean isHsql() {
+		return "hsqldb".equals(getDbms());
+	}
+
+	protected boolean isMySQL() {
+		return "mysql".equals(getDbms());
+	}
+
+	protected boolean isOracle() {
+		return "oracle".equals(getDbms());
+	}
+
+	protected boolean isSqlServer() {
+		return "mssql".equals(getDbms());
+	}
 }

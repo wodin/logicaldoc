@@ -69,6 +69,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 */
 	public List<Folder> findByParentId(long parentId);
 
+
 	/**
 	 * Finds direct children of a folder
 	 * 
@@ -308,7 +309,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	/**
 	 * Propagates the security policies of a node to the whole subree
 	 */
-	public boolean applyRithtToTree(long id, FolderHistory transaction);
+	public boolean applyRithtToTree(long rootId, FolderHistory transaction);
 
 	/**
 	 * Propagates the template metadata a node to the whole subree
