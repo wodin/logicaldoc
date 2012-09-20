@@ -97,7 +97,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		user.setId(1);
 		FolderHistory history = new FolderHistory();
 		history.setUser(user);
-		dao.deleteTree(dao.findById(1200), history);
+		dao.deleteTree(1200L, history);
 		Assert.assertNull(dao.findById(1200));
 		Assert.assertNull(dao.findById(1202));
 		Assert.assertFalse(dao.delete(1200));
@@ -606,11 +606,19 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		transaction.setUser(user);
 		transaction.setNotified(0);
 
+		// The root defines it's own policies
 		Folder folder = dao.findById(1200);
 		Assert.assertNull(folder.getSecurityRef());
+		Assert.assertTrue(dao.applyRithtToTree(1200, transaction));
+		folder = dao.findById(1201);
+		Assert.assertEquals(1200L, folder.getSecurityRef().longValue());
+		folder = dao.findById(1202);
+		Assert.assertEquals(1200L, folder.getSecurityRef().longValue());
+		
+		// The root refers to another folder's policies
+		folder = dao.findById(1200);
 		folder.setSecurityRef(5L);
 		dao.store(folder);
-
 		Assert.assertTrue(dao.applyRithtToTree(1200, transaction));
 		folder = dao.findById(1201);
 		Assert.assertEquals(5L, folder.getSecurityRef().longValue());
