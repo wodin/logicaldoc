@@ -80,8 +80,6 @@ public class ServiceFactory extends AbstractServiceFactory {
 		// Create a pseudo session identifier
 		String combinedUserId = context.getUsername() + "-" + CmisServlet.remoteAddress.get()[0];
 		
-		System.out.println(combinedUserId);
-		
 		// Check if the session already exists
 		for (UserSession session : SessionManager.getInstance().getSessions()) {
 			try {
@@ -99,7 +97,7 @@ public class ServiceFactory extends AbstractServiceFactory {
 		// We need to authenticate the user
 		AuthenticationChain chain = (AuthenticationChain) Context.getInstance().getBean(AuthenticationChain.class);
 		boolean authenticated = chain.authenticate(username, password, new String[] {
-				CmisServlet.remoteAddress.get()[0], CmisServlet.remoteAddress.get()[1], combinedUserId });
+				CmisServlet.remoteAddress.get()[0], CmisServlet.remoteAddress.get()[1], combinedUserId, context.getRepositoryId() });
 		String sid = null;
 		if (authenticated)
 			sid = AuthenticationChain.getSessionId();
