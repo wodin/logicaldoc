@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -107,17 +106,9 @@ public class FulltextSearch extends Search {
 		Collection<Long> accessibleFolderIds = new TreeSet<Long>();
 		if (!searchInSingleFolder) {
 			log.debug("Folders search");
-			if (opt.getFolderId() == null)
-				accessibleFolderIds = fdao.findFolderIdByUserId(opt.getUserId());
-			else {
-				accessibleFolderIds = new HashSet<Long>();
-				fdao.findTreeIds(opt.getFolderId(), opt.getUserId(), opt.getDepth(),
-						(HashSet<Long>) accessibleFolderIds);
-			}
+			accessibleFolderIds = fdao.findFolderIdByUserId(opt.getUserId(), opt.getFolderId(), true);
 			log.debug("End of Folders search");
 		}
-		if (opt.getFolderId() != null && fdao.isReadEnable(opt.getFolderId(), opt.getUserId()))
-			accessibleFolderIds.add(opt.getFolderId());
 
 		// Save here the binding between ID and Hit
 		Map<Long, Hit> hitsMap = new HashMap<Long, Hit>();
@@ -138,7 +129,7 @@ public class FulltextSearch extends Search {
 
 			// When user can see document with folderId then put it into
 			// result-collection.
-			if (accessibleFolderIds.contains(hit.getFolder().getId())) {
+			if (searchUser.isInGroup("admin") || accessibleFolderIds.contains(hit.getFolder().getId())) {
 				hits.add(hit);
 				hitsMap.put(hit.getId(), hit);
 			}

@@ -164,8 +164,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		folder.setColSpan(3);
 		folder.setWidth(200);
 
-		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders", Session.get()
-				.getInfo().getConfig("search.depth")));
+		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders"));
 		subfolders.setColSpan(3);
 		subfolders.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
@@ -194,10 +193,6 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		String hits = Session.get().getInfo().getConfig("search.hits");
 		if (hits != null)
 			options.setMaxHits(Integer.parseInt(hits));
-
-		String depth = Session.get().getInfo().getConfig("search.depth");
-		if (depth != null)
-			options.setDepth(Integer.parseInt(depth));
 
 		options.setType(GUISearchOptions.TYPE_FULLTEXT);
 		options.setExpression(vm.getValueAsString("expression"));

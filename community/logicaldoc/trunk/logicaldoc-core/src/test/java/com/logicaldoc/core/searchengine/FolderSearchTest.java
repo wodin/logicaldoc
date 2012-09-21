@@ -19,7 +19,7 @@ public class FolderSearchTest extends AbstractCoreTCase {
 	public void testSearch() {
 		FolderSearchOptions opt = new FolderSearchOptions();
 		opt.setUserId(1);
-		opt.setFolderName("AbC");
+		opt.setFolderName("ABC");
 
 		FolderSearch search = new FolderSearch();
 		search.setOptions(opt);
@@ -51,8 +51,7 @@ public class FolderSearchTest extends AbstractCoreTCase {
 		opt.setUserId(1);
 		opt.setFolderId(8L);
 		opt.setSearchInSubPath(true);
-		opt.setDepth(5);
-		opt.setFolderName("AbC");
+		opt.setFolderName("ABC");
 		search = new FolderSearch();
 		search.setOptions(opt);
 		search.search();
@@ -80,7 +79,7 @@ public class FolderSearchTest extends AbstractCoreTCase {
 		search.search();
 		Assert.assertEquals(0, results.size());
 
-		opt.setFolderDescription("EsT");
+		opt.setFolderDescription("est");
 		search.search();
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(1201, results.get(0).getId());

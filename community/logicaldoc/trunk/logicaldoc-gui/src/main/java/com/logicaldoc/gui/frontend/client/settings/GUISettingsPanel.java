@@ -155,8 +155,6 @@ public class GUISettingsPanel extends VLayout {
 				uploadmax.setValue(Integer.parseInt(p.getValue()));
 			if (p.getName().equals("search.hits"))
 				searchhits.setValue(Integer.parseInt(p.getValue()));
-			if (p.getName().equals("search.depth"))
-				searchdepth.setValue(Integer.parseInt(p.getValue()));
 			if (p.getName().equals("search.extattr"))
 				extattr.setValue(p.getValue());
 		}
@@ -183,7 +181,6 @@ public class GUISettingsPanel extends VLayout {
 					params.add(new GUIParameter("gui.document.tab", values.get("doctab").toString()));
 					params.add(new GUIParameter("upload.maxsize", values.get("uploadmax").toString()));
 					params.add(new GUIParameter("search.hits", values.get("searchhits").toString()));
-					params.add(new GUIParameter("search.depth", values.get("searchdepth").toString()));
 					params.add(new GUIParameter("search.extattr", values.get("extattr").toString()));
 
 					// Update the current session parameters.

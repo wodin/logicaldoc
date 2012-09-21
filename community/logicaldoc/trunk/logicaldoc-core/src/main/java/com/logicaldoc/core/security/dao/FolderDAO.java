@@ -49,9 +49,34 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * 
 	 * @param userId The user identifier
 	 * @param permission The permission to check
+	 * @param parentId The id of the parent folder to inspect (optional)
+	 * @param tree If true, the parentId will be interpreted as the root of a
+	 *        tree
+	 * @return List of selected folder ID's.
+	 */
+	public Collection<Long> findFolderIdByUserIdAndPermission(long userId, Permission permission, Long parentId,
+			boolean tree);
+
+	/**
+	 * This method selects only the folder ID from the folders for which a user
+	 * is authorized.
+	 * 
+	 * @param userId ID of the user.
+	 * @param parentId The id of the parent folder to inspect (optional)
+	 * @param tree If true, the parentId will be interpreted as the root of a
+	 *        tree
+	 * @return List of selected folder ID's.
+	 */
+	public Collection<Long> findFolderIdByUserId(long userId, Long parentId, boolean tree);
+
+	/**
+	 * Retrieve all the ids of the folder in a given tree
+	 * 
+	 * @param rootId Root of the folder
+	 * @param includeDeleted True if the deleted records need to be loaded
 	 * @return
 	 */
-	public Collection<Long> findFolderIdByUserIdAndPermission(long userId, Permission permission);
+	public Collection<Long> findFolderIdInTree(long rootId, boolean includeDeleted);
 
 	/**
 	 * Finds direct children of a folder.
@@ -68,7 +93,6 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * @return
 	 */
 	public List<Folder> findByParentId(long parentId);
-
 
 	/**
 	 * Finds direct children of a folder
@@ -117,15 +141,6 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * @return Collection of enabled permissions
 	 */
 	public Set<Permission> getEnabledPermissions(long id, long userId);
-
-	/**
-	 * This method selects only the folder ID from the folders for which a user
-	 * is authorized.
-	 * 
-	 * @param userId ID of the user.
-	 * @return List of selected folder ID's.
-	 */
-	public Collection<Long> findFolderIdByUserId(long userId);
 
 	/**
 	 * This method selects only the folder ID from the folders for which a user
@@ -326,17 +341,6 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * folders of type 1.
 	 */
 	public List<Folder> findWorkspaces();
-
-	/**
-	 * Finds all the accessible ids of the folders contained in a specific tree.
-	 * The method is recursive so use it carefully.
-	 * 
-	 * @param parentId The parent folder id
-	 * @param userId The user who is requesting the operation
-	 * @param depth The maximum nesting level (controls the recursivity)
-	 * @param ids The set in which all ids will be stored
-	 */
-	public void findTreeIds(long parentId, long userId, Integer depth, Collection<Long> ids);
 
 	/**
 	 * Initializes lazy loaded collections

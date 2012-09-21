@@ -60,7 +60,7 @@ public class FoldersDataServlet extends HttpServlet {
 			StringBuffer query = new StringBuffer(
 					"select ld_id, ld_parentid, ld_name, ld_type from ld_folder where ld_deleted=0 and not ld_id=ld_parentid and ld_parentid = ? ");
 			if (!user.isInGroup("admin")) {
-				Collection<Long> accessibleIds = dao.findFolderIdByUserId(session.getUserId());
+				Collection<Long> accessibleIds = dao.findFolderIdByUserId(session.getUserId(), parent, false);
 				String idsStr = accessibleIds.toString().replace('[', '(').replace(']', ')');
 				query.append(" and ld_id in " + idsStr);
 			}

@@ -23,12 +23,6 @@ public class FulltextSearchOptions extends SearchOptions {
 
 	private String format = "";
 
-	private boolean searchInSubPath = false;
-
-	private int depth = 1;
-
-	private Long folderId = null;
-
 	private String[] fields = null;
 
 	private String language = null;
@@ -119,14 +113,6 @@ public class FulltextSearchOptions extends SearchOptions {
 		this.sourceDateTo = sourceDateTo;
 	}
 
-	public boolean isSearchInSubPath() {
-		return searchInSubPath;
-	}
-
-	public void setSearchInSubPath(boolean searchInSubPath) {
-		this.searchInSubPath = searchInSubPath;
-	}
-
 	public Date getCreationTo() {
 		return creationTo;
 	}
@@ -151,14 +137,6 @@ public class FulltextSearchOptions extends SearchOptions {
 		this.dateFrom = dateFrom;
 	}
 
-	public Long getFolderId() {
-		return folderId;
-	}
-
-	public void setFolderId(Long folderId) {
-		this.folderId = folderId;
-	}
-
 	public String getLanguage() {
 		return language;
 	}
@@ -173,13 +151,5 @@ public class FulltextSearchOptions extends SearchOptions {
 
 	public void setExpressionLanguage(String expressionLanguage) {
 		this.expressionLanguage = expressionLanguage;
-	}
-
-	public int getDepth() {
-		return depth;
-	}
-
-	public void setDepth(int depth) {
-		this.depth = depth;
 	}
 }

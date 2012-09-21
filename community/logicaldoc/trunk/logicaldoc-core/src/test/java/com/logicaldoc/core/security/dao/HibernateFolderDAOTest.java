@@ -99,8 +99,6 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		history.setUser(user);
 		dao.deleteTree(1200L, history);
 		Assert.assertNull(dao.findById(1200));
-		Assert.assertNull(dao.findById(1202));
-		Assert.assertFalse(dao.delete(1200));
 	}
 
 	@Test
@@ -466,12 +464,12 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindFolderIdByUserId() {
-		Collection<Long> ids = dao.findFolderIdByUserId(3);
+		Collection<Long> ids = dao.findFolderIdByUserId(3, null, true);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(8, ids.size());
 
 		// Try with unexisting user
-		ids = dao.findFolderIdByUserId(99);
+		ids = dao.findFolderIdByUserId(99, null, true);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(0, ids.size());
 	}
@@ -546,11 +544,11 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindFolderIdByUserIdAndPermission() {
-		Collection<Long> ids = dao.findFolderIdByUserIdAndPermission(5, Permission.WRITE);
+		Collection<Long> ids = dao.findFolderIdByUserIdAndPermission(5, Permission.WRITE, null, true);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(1, ids.size());
 
-		ids = dao.findFolderIdByUserIdAndPermission(3, Permission.WRITE);
+		ids = dao.findFolderIdByUserIdAndPermission(3, Permission.WRITE, null, true);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(8, ids.size());
 	}
@@ -573,32 +571,6 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	}
 
 	@Test
-	public void testFindTreeIds() {
-		HashSet<Long> ids = new HashSet<Long>();
-		dao.findTreeIds(1200L, 1L, 5, ids);
-		Assert.assertEquals(2, ids.size());
-		Assert.assertTrue(ids.contains(1202L));
-		Assert.assertTrue(ids.contains(1201L));
-
-		ids.clear();
-		dao.findTreeIds(5L, 3L, null, ids);
-		Assert.assertEquals(5, ids.size());
-		Assert.assertTrue(ids.contains(1200L));
-		Assert.assertTrue(ids.contains(6L));
-
-		ids.clear();
-		dao.findTreeIds(1200L, 3L, 1, ids);
-		Assert.assertEquals(1, ids.size());
-		Assert.assertTrue(ids.contains(1201L));
-
-		ids.clear();
-		dao.findTreeIds(1200L, 3L, 2, ids);
-		Assert.assertEquals(2, ids.size());
-		Assert.assertTrue(ids.contains(1201L));
-		Assert.assertTrue(ids.contains(1202L));
-	}
-
-	@Test
 	public void testApplyRightsToTree() {
 		FolderHistory transaction = new FolderHistory();
 		User user = new User();
@@ -614,7 +586,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(1200L, folder.getSecurityRef().longValue());
 		folder = dao.findById(1202);
 		Assert.assertEquals(1200L, folder.getSecurityRef().longValue());
-		
+
 		// The root refers to another folder's policies
 		folder = dao.findById(1200);
 		folder.setSecurityRef(5L);
@@ -689,4 +661,25 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals("Default", dirs.get(0).getName());
 	}
 
+	@Test
+	public void testFindFolderIdInTree() {
+		Collection<Long> ids = dao.findFolderIdInTree(1200L, false);
+		System.out.println("ids="+ids);
+		Assert.assertEquals(3, ids.size());
+		Assert.assertTrue(ids.contains(1202L));
+		Assert.assertTrue(ids.contains(1201L));
+		Assert.assertTrue(ids.contains(1200L));
+
+		ids.clear();
+		ids = dao.findFolderIdInTree(5L, false);
+		Assert.assertEquals(8, ids.size());
+		Assert.assertTrue(ids.contains(1200L));
+		Assert.assertTrue(ids.contains(6L));
+		Assert.assertTrue(ids.contains(3000L));
+
+		ids.clear();
+		ids = dao.findFolderIdInTree(1200L, false);
+		Assert.assertEquals(3, ids.size());
+		Assert.assertTrue(ids.contains(1201L));
+	}
 }
