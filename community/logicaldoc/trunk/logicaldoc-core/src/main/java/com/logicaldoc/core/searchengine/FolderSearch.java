@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -62,14 +61,14 @@ public class FolderSearch extends Search {
 		FolderSearchOptions fso = (FolderSearchOptions) getOptions();
 
 		if (StringUtils.isNotEmpty(fso.getFolderName())) {
-			query.append(" and lower(ld_name) like '%");
-			query.append(fso.getFolderName().toLowerCase().trim());
+			query.append(" and ld_name like '%");
+			query.append(fso.getFolderName().trim());
 			query.append("%' ");
 		}
 
 		if (StringUtils.isNotEmpty(fso.getFolderDescription())) {
-			query.append(" and lower(ld_description) like '%");
-			query.append(fso.getFolderDescription().toLowerCase().trim());
+			query.append(" and ld_description like '%");
+			query.append(fso.getFolderDescription().trim());
 			query.append("%' ");
 		}
 
@@ -81,11 +80,19 @@ public class FolderSearch extends Search {
 			query.append(" and ld_creation < ? ");
 		}
 
-		Collection<Long> accessibleIds = getAccessibleFolderIds();
-		if (!accessibleIds.isEmpty()) {
-			query.append(" and ld_id in (");
-			query.append(accessibleIds.toString().replace('[', ' ').replace(']', ' '));
-			query.append(") ");
+		boolean searchInSingleFolder = (options.getFolderId() != null && !options.isSearchInSubPath());
+
+		FolderDAO folderDAO = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+
+		if (!searchInSingleFolder) {
+			if (!(options.getFolderId() == null && searchUser.isInGroup("admin"))) {
+				Collection<Long> accessibleIds = folderDAO.findFolderIdByUserId(options.getUserId(),
+						options.getFolderId(), true);
+				query.append(" and ld_id in ");
+				query.append(accessibleIds.toString().replace('[', '(').replace(']', ')'));
+			}
+		} else if (folderDAO.isReadEnable(options.getFolderId(), options.getUserId())) {
+			query.append(" and ld_id = " + options.getFolderId());
 		}
 
 		log.info("executing folder search query=" + query.toString());
@@ -114,29 +121,4 @@ public class FolderSearch extends Search {
 			return hit;
 		}
 	};
-
-	private Collection<Long> getAccessibleFolderIds() {
-		Collection<Long> ids = new HashSet<Long>();
-		FolderDAO folderDAO = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-
-		// Check if there is a folder specification in the criteria
-		if (((FolderSearchOptions) options).getFolderId() != null) {
-			if (folderDAO.isReadEnable(((FolderSearchOptions) options).getFolderId(), searchUser.getId()))
-				ids.add(((FolderSearchOptions) options).getFolderId());
-
-			if (((FolderSearchOptions) options).isSearchInSubPath()) {
-				folderDAO.findTreeIds(((FolderSearchOptions) options).getFolderId(), searchUser.getId(),
-						((FolderSearchOptions) options).getDepth(), ids);
-			}
-		}
-
-		/*
-		 * In case of normal user and without a folder criterion, we have to
-		 * collect all accessible folders.
-		 */
-		if (ids.isEmpty() && !searchUser.isInGroup("admin"))
-			ids = folderDAO.findFolderIdByUserId(options.getUserId());
-
-		return ids;
-	}
 }

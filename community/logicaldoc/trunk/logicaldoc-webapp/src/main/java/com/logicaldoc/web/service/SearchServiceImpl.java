@@ -220,6 +220,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		op.setName(searchOptions.getName());
 		op.setUserId(searchOptions.getUserId());
 		op.setTopOperator(searchOptions.getTopOperator());
+		op.setFolder(searchOptions.getFolderId());
+		op.setSearchInSubPath(searchOptions.isSearchInSubPath());
 
 		if (searchOptions.getType() == SearchOptions.TYPE_FULLTEXT) {
 			op.setTemplate(((FulltextSearchOptions) searchOptions).getTemplate());
@@ -231,11 +233,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			op.setCreationTo(((FulltextSearchOptions) searchOptions).getCreationTo());
 			op.setExpressionLanguage(((FulltextSearchOptions) searchOptions).getExpressionLanguage());
 			op.setFields(((FulltextSearchOptions) searchOptions).getFields());
-			op.setFolder(((FulltextSearchOptions) searchOptions).getFolderId());
 			op.setFormat(((FulltextSearchOptions) searchOptions).getFormat());
 			op.setLanguage(((FulltextSearchOptions) searchOptions).getLanguage());
-			op.setSearchInSubPath(((FulltextSearchOptions) searchOptions).isSearchInSubPath());
-			op.setDepth(((FulltextSearchOptions) searchOptions).getDepth());
 			op.setSizeMax(((FulltextSearchOptions) searchOptions).getSizeMax());
 			op.setSizeMin(((FulltextSearchOptions) searchOptions).getSizeMin());
 		} else if (searchOptions.getType() == SearchOptions.TYPE_FOLDERS) {
@@ -257,9 +256,6 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			op.setCriteria(criteria.toArray(new GUICriterion[0]));
 			op.setCreationFrom(((FolderSearchOptions) searchOptions).getCreationFrom());
 			op.setCreationTo(((FolderSearchOptions) searchOptions).getCreationTo());
-			op.setDepth(((FolderSearchOptions) searchOptions).getDepth());
-			op.setFolder(((FolderSearchOptions) searchOptions).getFolderId());
-			op.setSearchInSubPath(((FolderSearchOptions) searchOptions).isSearchInSubPath());
 		}
 
 		if (!searchOptions.getFilterIds().isEmpty()) {
@@ -279,6 +275,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		searchOptions.setUserId(options.getUserId());
 		searchOptions.setCaseSensitive(options.getCaseSensitive());
 		searchOptions.setRetrieveAliases(options.getRetrieveAliases());
+		searchOptions.setFolderId(options.getFolder());
+		searchOptions.setSearchInSubPath(options.isSearchInSubPath());
 
 		if (options.getType() == SearchOptions.TYPE_FULLTEXT) {
 			((FulltextSearchOptions) searchOptions).setTemplate(options.getTemplate());
@@ -290,11 +288,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			((FulltextSearchOptions) searchOptions).setCreationTo(options.getCreationTo());
 			((FulltextSearchOptions) searchOptions).setExpressionLanguage(options.getExpressionLanguage());
 			((FulltextSearchOptions) searchOptions).setFields(options.getFields());
-			((FulltextSearchOptions) searchOptions).setFolderId(options.getFolder());
 			((FulltextSearchOptions) searchOptions).setFormat(options.getFormat());
 			((FulltextSearchOptions) searchOptions).setLanguage(options.getLanguage());
-			((FulltextSearchOptions) searchOptions).setSearchInSubPath(options.isSearchInSubPath());
-			((FulltextSearchOptions) searchOptions).setDepth(options.getDepth());
 			((FulltextSearchOptions) searchOptions).setSizeMax(options.getSizeMax());
 			((FulltextSearchOptions) searchOptions).setSizeMin(options.getSizeMin());
 		} else if (options.getType() == SearchOptions.TYPE_FOLDERS) {
@@ -306,12 +301,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 					((FolderSearchOptions) searchOptions).setFolderDescription(criterion.getStringValue());
 				}
 			}
-
-			((FolderSearchOptions) searchOptions).setFolderId(options.getFolder());
-			((FolderSearchOptions) searchOptions).setSearchInSubPath(options.isSearchInSubPath());
 			((FolderSearchOptions) searchOptions).setCreationFrom(options.getCreationFrom());
 			((FolderSearchOptions) searchOptions).setCreationTo(options.getCreationTo());
-			((FolderSearchOptions) searchOptions).setDepth(options.getDepth());
 		}
 
 		if (options.getFilterIds() != null && options.getFilterIds().length > 0) {

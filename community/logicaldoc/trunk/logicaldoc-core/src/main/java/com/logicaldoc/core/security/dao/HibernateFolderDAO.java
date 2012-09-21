@@ -383,8 +383,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public Collection<Long> findFolderIdByUserId(long userId) {
-		return findFolderIdByUserIdAndPermission(userId, Permission.READ);
+	public Collection<Long> findFolderIdByUserId(long userId, Long parentId, boolean tree) {
+		return findFolderIdByUserIdAndPermission(userId, Permission.READ, parentId, tree);
 	}
 
 	@Override
@@ -740,7 +740,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<Long> findFolderIdByUserIdAndPermission(long userId, Permission permission) {
+	public Collection<Long> findFolderIdByUserIdAndPermission(long userId, Permission permission, Long parentId,
+			boolean tree) {
 		/*
 		 * Important: use an HashSet because of extremely quick in existence
 		 * checks.
@@ -752,22 +753,37 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				return ids;
 
 			// The administrators have all permissions on all folders
-			if (user.isInGroup("admin"))
-				return queryForList("select ld_id from ld_folder where ld_deleted=0", Long.class);
+			if (user.isInGroup("admin")) {
+
+				StringBuffer query = new StringBuffer("select ld_id from ld_folder where ld_deleted=0 ");
+				if (parentId != null) {
+					if (tree) {
+						query.append(" and ld_id in "
+								+ findFolderIdInTree(parentId, false).toString().replace('[', '(').replace(']', ')'));
+					} else {
+						query.append(" and (ld_id=" + parentId);
+						query.append(" or ld_parentid=" + parentId);
+						query.append(" ) ");
+					}
+				}
+
+				return queryForList(query.toString(), Long.class);
+			}
 
 			Set<Group> precoll = user.getGroups();
 
 			if (!precoll.isEmpty()) {
+
 				/*
-				 * Check folders that specify its own permissions
+				 * Check folders that specify its own permissions. Here we
+				 * cannot restrict to the tree since a folder in the tree can
+				 * reference another folder outside.
 				 */
 				StringBuffer query1 = new StringBuffer(
-						"select distinct(A.ld_folderid) from ld_foldergroup A, ld_folder B "
-								+ " where A.ld_folderid=B.ld_id and B.ld_deleted=0 ");
+						"select distinct(A.ld_folderid) from ld_foldergroup A where 1=1 ");
 				if (permission != Permission.READ)
 					query1.append(" and A.ld_" + permission.getName() + "=1 ");
 				query1.append(" and A.ld_groupid in (");
-
 				Iterator<Group> iter = precoll.iterator();
 				boolean first = true;
 				while (iter.hasNext()) {
@@ -777,22 +793,29 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 					query1.append(Long.toString(ug.getId()));
 					first = false;
 				}
-				query1.append(")");
+				query1.append(") ");
 
-				ids.addAll((List<Long>) queryForList(query1.toString(), Long.class));
+				List<Long> masterIds = (List<Long>) queryForList(query1.toString(), Long.class);
+				String masterIdsString = masterIds.toString().replace('[', '(').replace(']', ')');
 
 				/*
-				 * Now search for those folderes that references the previously
-				 * found ones
+				 * Now search for those folders that are or reference the
+				 * masterIds
 				 */
 				StringBuffer query2 = new StringBuffer("select B.ld_id from ld_folder B where B.ld_deleted=0 ");
-				query2.append(" and B.ld_securityref in (" + query1.toString() + ")");
+				query2.append(" and ( B.ld_id in " + masterIdsString);
+				query2.append(" or B.ld_securityref in " + masterIdsString + ") ");
 
-				List<Long> frefs = (List<Long>) queryForList(query2.toString(), Long.class);
-				for (Long folderId : frefs) {
-					if (!ids.contains(folderId))
-						ids.add(folderId);
+				if (parentId != null) {
+					if (tree) {
+						query2.append(" and B.ld_id in "
+								+ findFolderIdInTree(parentId, false).toString().replace('[', '(').replace(']', ')'));
+					} else {
+						query2.append(" and (B.ld_id=" + parentId + " or B.ld_parentId=" + parentId + ") ");
+					}
 				}
+
+				ids.addAll((List<Long>) queryForList(query2.toString(), Long.class));
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -848,6 +871,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public boolean applyRithtToTree(long rootId, FolderHistory transaction) {
+		assert (transaction != null);
+		assert (transaction.getSessionId() != null);
+
 		boolean result = true;
 
 		Folder folder = findById(rootId);
@@ -858,34 +884,19 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		if (folder.getSecurityRef() != null && folder.getId() != folder.getSecurityRef())
 			securityRef = folder.getSecurityRef();
 
-		String lockName = "righttree";
-		String transactionID = lockName + "-" + transaction.getSessionId();
+		Collection<Long> treeIds = findFolderIdInTree(folder.getId(), true);
+		String treeIdsString = treeIds.toString().replace('[', '(').replace(']', ')');
 
-		boolean lockAcquired = lockManager.get(lockName, transactionID);
-		if (!lockAcquired) {
-			log.warn("Unable to acquire lock " + lockName + " retry later");
-			return false;
-		}
-		Date currentTimestamp = new Date();
 		int records = 0;
 
 		try {
 
-			// Populate the buffer with the ids of the tree
-			collectTreeIds(rootId, transactionID);
-
 			/*
 			 * Apply the securityRef
 			 */
-			if (isMySQL() || isOracle())
-				records = jdbcUpdate("update ld_folder A, ld_buf B set A.ld_securityref = ?, A.ld_lastmodified = ? "
-						+ " where A.ld_id = B.ld_int1 and not A.ld_id = ? and B.ld_transactionid = ? ", securityRef,
-						currentTimestamp, rootId, transactionID);
-			else
-				records = jdbcUpdate(
-						"update ld_folder A set A.ld_securityref = ?, A.ld_lastmodified = ? where not A.ld_id = ? "
-								+ " and exists (select B.ld_int1 from ld_buf B where B.ld_int1=A.ld_id and B.ld_transactionid = ?)",
-						securityRef, currentTimestamp, rootId, transactionID);
+			records = jdbcUpdate(
+					"update ld_folder A set A.ld_securityref = ?, A.ld_lastmodified = ? where not A.ld_id = ? "
+							+ " and A.ld_id in " + treeIdsString, securityRef, new Date(), rootId);
 
 			log.warn("Applied rights to " + records + " folders in tree " + rootId);
 
@@ -893,10 +904,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			 * Delete all the specific rights associated to the folders in the
 			 * tree
 			 */
-			jdbcUpdate(
-					"delete from ld_foldergroup A where not A.ld_folderid = ? "
-							+ " and exists (select B.ld_int1 from ld_buf B where B.ld_int1=A.ld_folderid and B.ld_transactionid = ?)",
-					rootId, transactionID);
+			jdbcUpdate("delete from ld_foldergroup A where not A.ld_folderid = ? " + " and A.ld_folderid in "
+					+ treeIdsString, rootId);
 			log.warn("Removed " + records + " specific rights in tree " + rootId);
 
 			if (getSessionFactory().getCache() != null)
@@ -905,8 +914,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		} catch (Throwable e) {
 			result = false;
 			log.error(e.getMessage(), e);
-		} finally {
-			cleanBuffer(lockName, transactionID);
 		}
 
 		return result;
@@ -1079,94 +1086,63 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		assert (folder != null);
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
+
 		List<Folder> notDeletableFolders = new ArrayList<Folder>();
 
-		String lockName = "deltree";
-		String transactionID = lockName + "-" + transaction.getSessionId();
+		Collection<Long> treeIds = findFolderIdInTree(folder.getId(), true);
+		String treeIdsString = treeIds.toString().replace('[', '(').replace(']', ')');
 
-		boolean lockAcquired = lockManager.get(lockName, transactionID);
-		if (!lockAcquired) {
-			log.warn("Unable to acquire lock " + lockName + " retry later");
+		/*
+		 * Check if in the folders to be deleted there is at least one immutable
+		 * document
+		 */
+		@SuppressWarnings("unchecked")
+		List<Long> ids = (List<Long>) queryForList("select A.ld_folderid from ld_document A "
+				+ " where A.ld_deleted=0 and A.ld_immutable=1 and A.ld_folderid in " + treeIdsString, Long.class);
+		if (ids != null && !ids.isEmpty()) {
+			log.warn("Found undeletable documents in tree " + folder.getName() + " - " + folder.getId());
+			for (Long id : ids)
+				notDeletableFolders.add(findById(id));
 			return notDeletableFolders;
 		}
-		Date currentTimestamp = new Date();
-		int records = 0;
 
-		try {
-			delete(folder.getId(), transaction);
+		delete(folder.getId(), transaction);
 
-			// Populate the buffer with the ids of the tree
-			collectTreeIds(folder.getId(), transactionID);
+		/*
+		 * Mark as deleted all the folders
+		 */
+		int records = jdbcUpdate("update ld_folder A set A.ld_deleted=1, A.ld_lastmodified = ? where not A.ld_id in "
+				+ treeIdsString, new Date());
 
-			/*
-			 * Check if in the folders to be deleted there is at least one
-			 * immutable document
-			 */
-			@SuppressWarnings("unchecked")
-			List<Long> ids = (List<Long>) queryForList("select ld_int1 from ld_document A, ld_buf B "
-					+ " where A.ld_folderid = B.ld_int1 and A.ld_deleted=0 and A.ld_immutable=1", Long.class);
-			if (ids != null && !ids.isEmpty()) {
-				log.warn("Found undeletable documents in tree " + folder.getName() + " - " + folder.getId());
-				for (Long id : ids)
-					notDeletableFolders.add(findById(id));
-				return notDeletableFolders;
-			}
+		if (getSessionFactory().getCache() != null)
+			getSessionFactory().getCache().evictEntityRegions();
+		getSessionFactory().getCache().evictCollectionRegions();
 
-			/*
-			 * Mark as deleted all the folders
-			 */
-			if (isMySQL() || isOracle())
-				records = jdbcUpdate("update ld_folder A, ld_buf B set ld_deleted=1, ld_lastmodified = ? "
-						+ " where A.ld_id = B.ld_int1 and not A.ld_id = ? and B.ld_transactionid = ? ",
-						currentTimestamp, folder.getId(), transactionID);
-			else
-				records = jdbcUpdate(
-						"update ld_folder A set A.ld_deleted=1, A.ld_lastmodified = ? where not A.ld_id = ? "
-								+ " and exists (select B.ld_int1 from ld_buf B where B.ld_int1=A.ld_id and B.ld_transactionid = ?)",
-						currentTimestamp, folder.getId(), transactionID);
-
-			if (getSessionFactory().getCache() != null)
-				getSessionFactory().getCache().evictEntityRegions();
-
-			log.warn("Deleted " + records + " folders in tree " + folder.getName() + " - " + folder.getId());
-		} finally {
-			cleanBuffer(lockName, transactionID);
-		}
+		log.warn("Deleted " + records + " folders in tree " + folder.getName() + " - " + folder.getId());
 
 		return notDeletableFolders;
 	}
 
-	protected void cleanBuffer(String lockName, String transactionID) {
-		try {
-			jdbcUpdate("delete from ld_buf where ld_transactionid='" + transactionID + "'");
-		} finally {
-			if (lockName != null)
-				lockManager.release(lockName, transactionID);
+	@SuppressWarnings("unchecked")
+	@Override
+	public Set<Long> findFolderIdInTree(long rootId, boolean includeDeleted) {
+		Set<Long> ids = new HashSet<Long>();
+		ids.add(rootId);
+
+		List<Long> lastIds = new ArrayList<Long>();
+		lastIds.add(rootId);
+		while (!lastIds.isEmpty()) {
+			String idsString = ids.toString().replace('[', '(').replace(']', ')');
+
+			lastIds.clear();
+			lastIds = queryForList("select A.ld_id from ld_folder A where "
+					+ (includeDeleted ? "" : " A.ld_deleted=0 and ") + " A.ld_id not in " + idsString
+					+ " and A.ld_parentid in " + idsString, Long.class);
+			if (!lastIds.isEmpty())
+				ids.addAll(lastIds);
 		}
-	}
 
-	/**
-	 * Populate the buffer table with the ids of all the folders in the tree
-	 * 
-	 * @param rootId The root folder
-	 * @param transactionID The id of the actual transaction
-	 */
-	protected void collectTreeIds(long rootId, String transactionID) {
-		Date currentTimestamp = new Date();
-
-		jdbcUpdate("insert into ld_buf(ld_int1, ld_lastmodified, ld_transactionid) values (?, ?, ?)", rootId,
-				currentTimestamp, transactionID);
-
-		int records = 1;
-		while (records > 0) {
-			records = jdbcUpdate(
-					"insert into ld_buf(ld_int1, ld_lastmodified, ld_transactionid) "
-							+ " select A.ld_id, ?, ? "
-							+ " from ld_folder A, ld_buf B "
-							+ " where A.ld_parentid = B.ld_int1 and B.ld_transactionid = ? "
-							+ " and not exists ( select C.ld_int1 from ld_buf C where C.ld_int1 = A.ld_id and C.ld_transactionid = ? ) ",
-					currentTimestamp, transactionID, transactionID, transactionID);
-		}
+		return ids;
 	}
 
 	@Override
@@ -1193,26 +1169,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	public List<Folder> findWorkspaces() {
 		return findByWhere(" (not _entity.id=" + Folder.ROOTID + ") and _entity.parentId=" + Folder.ROOTID
 				+ " and _entity.type=" + Folder.TYPE_WORKSPACE, "order by lower(_entity.name)", null);
-	}
-
-	@Override
-	public void findTreeIds(long parentId, long userId, Integer depth, Collection<Long> ids) {
-		if (depth != null && depth.intValue() < 1)
-			return;
-
-		List<Folder> children = findChildren(parentId, userId);
-		for (Folder folder : children) {
-			if (!ids.contains(folder.getId()))
-				ids.add(folder.getId());
-		}
-
-		int d = -1;
-		if (depth != null)
-			d = depth - 1;
-
-		for (Folder folder : children) {
-			findTreeIds(folder.getId(), userId, d, ids);
-		}
 	}
 
 	@Override

@@ -423,7 +423,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 	public WSDocument[] getDocuments(String sid, Long[] docIds) throws Exception {
 		User user = validateSession(sid);
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Collection<Long> folderIds = fdao.findFolderIdByUserId(user.getId());
+		Collection<Long> folderIds = fdao.findFolderIdByUserId(user.getId(), null, true);
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		List<Document> docs = docDao.findByIds(docIds, null);

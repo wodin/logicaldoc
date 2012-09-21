@@ -454,21 +454,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				/*
 				 * Search for all accessible folders
 				 */
-				Collection<Long> precoll = folderDAO.findFolderIdByUserId(userId);
-
-				StringBuffer buf = new StringBuffer();
-				boolean first = true;
-				for (Long id : precoll) {
-					if (!first)
-						buf.append(",");
-					buf.append(id);
-					first = false;
-				}
+				Collection<Long> precoll = folderDAO.findFolderIdByUserId(userId, null, true);
+				String precollString = precoll.toString().replace('[', '(').replace(']', ')');
 
 				query.append("select distinct(C.ld_id) from ld_document C, ld_tag D "
-						+ " where C.ld_id=D.ld_docid AND C.ld_deleted=0 AND C.ld_folderid in (");
-				query.append(buf.toString());
-				query.append(") ");
+						+ " where C.ld_id=D.ld_docid AND C.ld_deleted=0 AND C.ld_folderid in ");
+				query.append(precollString);
 				query.append(" AND D.ld_tag='" + SqlUtil.doubleQuotes(tag.toLowerCase()) + "' ");
 
 				List<Long> docIds = (List<Long>) queryForList(query.toString(), Long.class);

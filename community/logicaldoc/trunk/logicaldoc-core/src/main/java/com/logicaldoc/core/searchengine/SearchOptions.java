@@ -55,6 +55,10 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 	 */
 	protected Set<Long> filterIds = new HashSet<Long>();
 
+	private Long folderId = null;
+
+	private boolean searchInSubPath = false;
+
 	public Object[] getParameters() {
 		return parameters;
 	}
@@ -183,5 +187,21 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 
 	public void setRetrieveAliases(int retrieveAliases) {
 		this.retrieveAliases = retrieveAliases;
+	}
+
+	public Long getFolderId() {
+		return folderId;
+	}
+
+	public void setFolderId(Long folderId) {
+		this.folderId = folderId;
+	}
+
+	public boolean isSearchInSubPath() {
+		return searchInSubPath;
+	}
+
+	public void setSearchInSubPath(boolean searchInSubPath) {
+		this.searchInSubPath = searchInSubPath;
 	}
 }

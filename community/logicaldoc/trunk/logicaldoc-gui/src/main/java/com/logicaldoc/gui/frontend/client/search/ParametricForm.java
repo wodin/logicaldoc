@@ -259,10 +259,6 @@ public class ParametricForm extends VLayout {
 		String hits = Session.get().getInfo().getConfig("search.hits");
 		if (hits != null)
 			options.setMaxHits(Integer.parseInt(hits));
-
-		String depth = Session.get().getInfo().getConfig("search.depth");
-		if (depth != null)
-			options.setDepth(Integer.parseInt(depth));
 		
 		options.setRetrieveAliases(new Boolean(vm.getValueAsString("aliases")).booleanValue() ? 1 : 0);
 		options.setCaseSensitive(new Boolean(vm.getValueAsString("casesensitive")).booleanValue() ? 1 : 0);

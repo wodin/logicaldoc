@@ -290,7 +290,10 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 
 			if (recursive) {
 				folderDao.initialize(folder);
-				folderDao.applyRithtToTree(folder.getId(), null);
+				FolderHistory transaction = new FolderHistory();
+				transaction.setUser(sessionUser);
+				transaction.setSessionId(sid);
+				folderDao.applyRithtToTree(folder.getId(), transaction);
 			}
 		} catch (Exception e) {
 			log.error("Some errors occurred", e);
