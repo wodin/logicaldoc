@@ -1338,7 +1338,7 @@ public class LDRepository {
 				if (doc instanceof Document) {
 					addPropertyBoolean(result, typeId, filter, PropertyIds.IS_LATEST_VERSION, true);
 					addPropertyBoolean(result, typeId, filter, PropertyIds.IS_MAJOR_VERSION,
-							doc.getVersion().endsWith(".0"));
+							doc.getVersion() != null ? doc.getVersion().endsWith(".0") : true);
 					// addPropertyBoolean(result, typeId, filter,
 					// PropertyIds.IS_LATEST_MAJOR_VERSION,
 					// doc.getVersion().endsWith(".0"));
