@@ -168,7 +168,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 
 	/**
 	 * Returns a List of folders being a parent of the given folder. The list is
-	 * ordered starting from the root of folders
+	 * ordered starting from the root of folders. The list doesn't include the given folder.
 	 * 
 	 * @param id
 	 */
