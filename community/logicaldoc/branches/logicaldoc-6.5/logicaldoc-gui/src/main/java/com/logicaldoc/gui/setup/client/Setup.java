@@ -360,6 +360,7 @@ public class Setup implements EntryPoint {
 			valueMap.put(engine, engines.get(engine)[0]);
 		}
 		dbEngine.setValueMap(valueMap);
+		dbEngine.setValue(MYSQL);
 		dbEngine.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
 				return !I18N.message(INTERNAL).equals(databaseForm.getValue(DB_TYPE));
@@ -379,7 +380,6 @@ public class Setup implements EntryPoint {
 				databaseForm.getField(DB_URL).setValue(engines.get(selectedItem)[2]);
 			}
 		});
-		dbEngine.setValue("MySQL 5.x");
 
 		// The driver for the external DB
 		TextItem dbDriver = ItemFactory.newTextItem(DB_DRIVER, "driverclass", null);
@@ -494,7 +494,7 @@ public class Setup implements EntryPoint {
 					data.setRegName(vm.getValueAsString(REG_NAME));
 					data.setRegOrganization(vm.getValueAsString(REG_ORGANIZATION));
 					data.setRegWebsite(vm.getValueAsString(REG_WEBSITE));
-					
+
 					if (I18N.message(INTERNAL).equals(data.getDbType())) {
 						data.setDbEngine("Hsqldb");
 						data.setDbDriver("org.hsqldb.jdbcDriver");
@@ -503,11 +503,11 @@ public class Setup implements EntryPoint {
 						data.setDbPassword("");
 						data.setDbDialect("org.hibernate.dialect.HSQLDialect");
 						data.setDbValidationQuery("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS");
-					}else{
+					} else {
 						data.setDbDialect(engines.get(data.getDbEngine())[3]);
 						data.setDbValidationQuery(engines.get(data.getDbEngine())[4]);
 					}
-					
+
 					SetupServiceAsync setupService = (SetupServiceAsync) GWT.create(SetupService.class);
 
 					setupService.setup(data, new AsyncCallback<Void>() {
@@ -549,6 +549,6 @@ public class Setup implements EntryPoint {
 	}
 
 	public static native String getDefaultFolder() /*-{
-		return $wnd.defaultFolder;
-	}-*/;
+													return $wnd.defaultFolder;
+													}-*/;
 }
