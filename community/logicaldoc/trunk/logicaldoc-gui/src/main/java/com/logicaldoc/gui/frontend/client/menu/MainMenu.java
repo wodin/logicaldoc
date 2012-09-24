@@ -1,5 +1,8 @@
 package com.logicaldoc.gui.frontend.client.menu;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -282,10 +285,30 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 			}
 		});
 
+		MenuItem subscriptions = new MenuItem(I18N.message("subscriptions"));
+		subscriptions.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				Subscriptions s = new Subscriptions();
+				s.show();
+			}
+		});
+
+		List<MenuItem> items = new ArrayList<MenuItem>();
+		items.add(profile);
+		items.add(changePswd);
+
 		if (Feature.enabled(Feature.DIGITAL_SIGN))
-			menu.setItems(profile, changePswd, mySignature, removeCookies);
+			items.add(mySignature);
 		else
 			menu.setItems(profile, changePswd, removeCookies);
+
+		if (Feature.enabled(Feature.AUDIT)
+				&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.SUBSCRIPTIONS))
+			items.add(subscriptions);
+
+		items.add(removeCookies);
+		menu.setItems(items.toArray(new MenuItem[0]));
 
 		ToolStripMenuButton menuButton = new ToolStripMenuButton(I18N.message("personal"), menu);
 		menuButton.setWidth(100);

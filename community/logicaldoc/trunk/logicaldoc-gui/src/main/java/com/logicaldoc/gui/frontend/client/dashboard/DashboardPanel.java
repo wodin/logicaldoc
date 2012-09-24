@@ -23,8 +23,6 @@ public class DashboardPanel extends VLayout {
 
 	private Tab messagesTab = null;
 
-	private Tab subscriptionsTab = null;
-
 	private Tab userTab = null;
 
 	private Tab tagsTab = null;
@@ -42,10 +40,6 @@ public class DashboardPanel extends VLayout {
 		messagesTab.setID("messages");
 		messagesTab.setPane(new MessagesPanel());
 
-		subscriptionsTab = new Tab(I18N.message("subscriptions"));
-		subscriptionsTab.setID("subscriptions");
-		subscriptionsTab.setPane(new SubscriptionsPanel());
-
 		workflowTab = new Tab(I18N.message("workflow"));
 		workflowTab.setID("workflow");
 		workflowTab.setPane(new WorkflowDashboard());
@@ -62,12 +56,6 @@ public class DashboardPanel extends VLayout {
 			tabSet.addTab(messagesTab);
 			if (!Feature.enabled(Feature.MESSAGES))
 				messagesTab.setPane(new FeatureDisabled());
-		}
-
-		if (Feature.visible(Feature.AUDIT)) {
-			tabSet.addTab(subscriptionsTab);
-			if (!Feature.enabled(Feature.AUDIT))
-				subscriptionsTab.setPane(new FeatureDisabled());
 		}
 
 		if (Feature.visible(Feature.WORKFLOW)) {
@@ -101,10 +89,6 @@ public class DashboardPanel extends VLayout {
 		return userTab;
 	}
 
-	public Tab getSubscriptionsTab() {
-		return subscriptionsTab;
-	}
-
 	public void updateUserTab() {
 		tabSet.setTabPane("user", new UserDashboard());
 		tabSet.selectTab("user");
@@ -118,11 +102,6 @@ public class DashboardPanel extends VLayout {
 	public void updateMessageTab() {
 		tabSet.setTabPane("messages", new MessagesPanel());
 		tabSet.selectTab("messages");
-	}
-
-	public void updateSubscriptionsTab() {
-		tabSet.setTabPane("subscriptions", new SubscriptionsPanel());
-		tabSet.selectTab("subscriptions");
 	}
 
 	public void updateWorkflowTab() {
