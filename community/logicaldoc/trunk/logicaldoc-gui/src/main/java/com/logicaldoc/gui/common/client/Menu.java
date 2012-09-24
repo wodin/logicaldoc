@@ -43,6 +43,8 @@ public class Menu {
 	public static final long AOS = -20;
 	
 	public static final long CLUSTERING = -1110;
+	
+	public static final long SUBSCRIPTIONS = -1120;
 
 	private static Set<Long> menues = new HashSet<Long>();
 

@@ -360,6 +360,7 @@ public class Setup implements EntryPoint {
 			valueMap.put(engine, engines.get(engine)[0]);
 		}
 		dbEngine.setValueMap(valueMap);
+		dbEngine.setValue(MYSQL);
 		dbEngine.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
 				return !I18N.message(INTERNAL).equals(databaseForm.getValue(DB_TYPE));
@@ -379,7 +380,6 @@ public class Setup implements EntryPoint {
 				databaseForm.getField(DB_URL).setValue(engines.get(selectedItem)[2]);
 			}
 		});
-		dbEngine.setValue("MySQL 5.x");
 
 		// The driver for the external DB
 		TextItem dbDriver = ItemFactory.newTextItem(DB_DRIVER, "driverclass", null);

@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.dashboard;
+package com.logicaldoc.gui.frontend.client.menu;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -18,11 +18,11 @@ import com.logicaldoc.gui.frontend.client.services.AuditServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.SortDirection;
 import com.smartgwt.client.util.BooleanCallback;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
@@ -36,6 +36,7 @@ import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
 import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.layout.VStack;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
@@ -48,7 +49,7 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class SubscriptionsPanel extends VLayout {
+public class Subscriptions extends com.smartgwt.client.widgets.Window {
 	private AuditServiceAsync service = (AuditServiceAsync) GWT.create(AuditService.class);
 
 	private DocumentServiceAsync docService = (DocumentServiceAsync) GWT.create(DocumentService.class);
@@ -57,12 +58,24 @@ public class SubscriptionsPanel extends VLayout {
 
 	private Layout listing = new VLayout();
 
-	public SubscriptionsPanel() {
-		setWidth100();
+	public Subscriptions() {
+		super();
+
+		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
+		setTitle(I18N.message("subscriptions"));
+		setWidth(400);
+		setHeight(350);
+		setIsModal(true);
+		setShowModalMask(true);
+		setCanDragResize(true);
+		centerInPage();
+		setMembersMargin(5);
+		setAutoSize(true);
 
 		// Initialize the listing panel as placeholder
 		listing.setAlign(Alignment.CENTER);
 		listing.setHeight100();
+		listing.setWidth100();
 		initListGrid();
 
 		ToolStrip toolStrip = new ToolStrip();
@@ -81,7 +94,18 @@ public class SubscriptionsPanel extends VLayout {
 		});
 		toolStrip.addFill();
 
-		setMembers(toolStrip, listing);
+		VStack content = new VStack();
+		content.setWidth100();
+		content.setHeight100();
+		content.setMembersMargin(5);
+		content.setTop(20);
+		content.setMargin(4);
+		content.setAlign(Alignment.CENTER);
+		content.setDefaultLayoutAlign(Alignment.CENTER);
+		content.setBackgroundColor("#ffffff");
+		content.setMembers(toolStrip, listing);
+
+		addChild(content);
 	}
 
 	private void initListGrid() {
@@ -102,7 +126,8 @@ public class SubscriptionsPanel extends VLayout {
 		icon.setImageURLSuffix(".png");
 		icon.setCanFilter(false);
 
-		ListGridField name = new ListGridField("name", I18N.message("name"), 250);
+		ListGridField name = new ListGridField("name", I18N.message("name"));
+		name.setWidth("*");
 		name.setCanFilter(true);
 
 		ListGridField created = new ListGridField("created", I18N.message("date"), 120);
@@ -110,6 +135,7 @@ public class SubscriptionsPanel extends VLayout {
 		created.setType(ListGridFieldType.DATE);
 		created.setCellFormatter(new DateCellFormatter(false));
 		created.setCanFilter(false);
+		created.setHidden(true);
 
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
@@ -121,7 +147,7 @@ public class SubscriptionsPanel extends VLayout {
 		list.setFilterOnKeypress(true);
 		list.setShowFilterEditor(false);
 		list.setDataSource(new SubscriptionsDS());
-		list.setFields(id, created, icon, name);
+		list.setFields(id, icon, name, created);
 
 		list.sort(1, SortDirection.DESCENDING);
 		listing.addMember(list);
