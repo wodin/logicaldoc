@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
-import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1087,7 +1086,7 @@ public class LDRepository {
 	}
 
 	public ObjectList query(String statement, Integer maxItems) {
-	
+
 		int max = DEFAULT_QUERY_SIZE;
 		if (maxItems != null)
 			max = maxItems;
@@ -1103,19 +1102,24 @@ public class LDRepository {
 		// As expression we will use the WHERE clause as is
 		String expr = statement.substring(statement.toLowerCase().lastIndexOf("where") + 5);
 		System.out.println("----- epr=" + expr);
-		
-		// SELECT cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType FROM cmis:document  WHERE CONTAINS('~cmis:name:\'*wiki*\'')
+
+		/**
+		 * Try to detect if the request comes from LogicalDOC Mobile
+		 */
+		// statement.toString() -> SELECT
+		// cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType
+		// FROM cmis:document WHERE CONTAINS('~cmis:name:\'*wiki*\'')
 		boolean LDMobileRequest = false;
 		if (statement.indexOf("SELECT cmis:objectId,cmis:name,cmis:lastModifiedBy") != -1) {
 			LDMobileRequest = true;
 			String cmisNameVal = findCmisNameVal(statement);
 			if (cmisNameVal.startsWith("*")) {
-				cmisNameVal = cmisNameVal.substring(1, cmisNameVal.length()-1);
+				cmisNameVal = cmisNameVal.substring(1, cmisNameVal.length() - 1);
 				System.out.println("----- cmisNameVal=" + cmisNameVal);
 				expr = cmisNameVal;
-			}			
+			}
 		}
-		
+
 		opt.setExpression(expr);
 
 		// Execute the search
@@ -1129,22 +1133,25 @@ public class LDRepository {
 		List<ObjectData> list = new ArrayList<ObjectData>();
 		for (Hit hit : hits) {
 			ObjectData result = null;
-			if (LDMobileRequest) {
-				//SELECT cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType FROM cmis:document  WHERE CONTAINS('~cmis:name:\'*wiki*\'')
-				Set<String> filter = new TreeSet<String>();
-				filter.add(PropertyIds.OBJECT_ID);
-				filter.add(PropertyIds.NAME);
-				filter.add(PropertyIds.LAST_MODIFIED_BY);
-				filter.add(PropertyIds.LAST_MODIFICATION_DATE);
-				filter.add(PropertyIds.BASE_TYPE_ID);
-				filter.add(PropertyIds.CONTENT_STREAM_LENGTH);
-				filter.add(PropertyIds.VERSION_SERIES_ID);
-				filter.add(PropertyIds.CONTENT_STREAM_MIME_TYPE);
-				result = compileObjectType(null, hit, filter, false, false, null);
-			} else {
-				result = compileObjectType(null, hit, null, false, false, null);
+			Set<String> filter = null;
+
+			// Parse the select list and compile a filter
+			String query = statement.toString();
+			if (query.toLowerCase().startsWith("select")) {
+				query = query.substring(6).trim();
+				int whereIndex = query.toLowerCase().indexOf("from", 0);
+				if (whereIndex > 0) {
+					query = query.substring(0, whereIndex).trim();
+				}
+				if (!StringUtils.isEmpty(query) && !"*".equals(query)) {
+					filter = new HashSet<String>();
+					StringTokenizer st = new StringTokenizer(query, ",", false);
+					while (st.hasMoreTokens())
+						filter.add(st.nextToken());
+				}
 			}
-			
+
+			result = compileObjectType(null, hit, filter, false, false, null);
 			list.add(result);
 		}
 
@@ -1152,26 +1159,27 @@ public class LDRepository {
 		objList.setObjects(list);
 		objList.setNumItems(BigInteger.valueOf(list.size()));
 		objList.setHasMoreItems(search.getEstimatedHitsNumber() > list.size());
-		
+
 		return objList;
 	}
 
 	// --- helper methods ---
 
 	private String findCmisNameVal(String statement) {
-	
+
 		String patternText = "\\*.*\\*";
-		//String targetText = "SELECT cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType FROM cmis:document  WHERE CONTAINS('~cmis:name:\'*wiki*\'')";
+		// String targetText =
+		// "SELECT cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType FROM cmis:document  WHERE CONTAINS('~cmis:name:\'*wiki*\'')";
 
 		Pattern pattern = Pattern.compile(patternText);
 		Matcher matcher = pattern.matcher(statement);
 
 		boolean success = matcher.find();
 		System.out.println("success: " + success);
-		
+
 		String group = matcher.group();
 		System.out.println("group: " + group);
-		
+
 		return group;
 	}
 
@@ -1230,11 +1238,11 @@ public class LDRepository {
 	 */
 	private ObjectData compileObjectType(CallContext context, PersistentObject object, Set<String> filter,
 			boolean includeAllowableActions, boolean includeAcl, ObjectInfoHandler objectInfos) {
-		
+
 		ObjectDataImpl result = new ObjectDataImpl();
 		ObjectInfoImpl objectInfo = new ObjectInfoImpl();
 
-		//System.out.println("filter: " +filter);
+		// System.out.println("filter: " +filter);
 		result.setProperties(compileProperties(object, filter, objectInfo));
 
 		if (includeAllowableActions) {
@@ -1390,7 +1398,8 @@ public class LDRepository {
 				addPropertyId(result, typeId, filter, PropertyIds.OBJECT_TYPE_ID, TypeManager.DOCUMENT_TYPE_ID);
 
 				// file properties
-				//addPropertyBoolean(result, typeId, filter, PropertyIds.IS_IMMUTABLE, false);
+				// addPropertyBoolean(result, typeId, filter,
+				// PropertyIds.IS_IMMUTABLE, false);
 				if (doc instanceof Document) {
 					addPropertyBoolean(result, typeId, filter, PropertyIds.IS_LATEST_VERSION, true);
 					addPropertyBoolean(result, typeId, filter, PropertyIds.IS_MAJOR_VERSION,
@@ -1808,9 +1817,9 @@ public class LDRepository {
 			return;
 		}
 
-//		PropertyIdImpl p = new PropertyIdImpl(id, value);
-//		p.setQueryName(id);
-//		props.addProperty(p);
+		// PropertyIdImpl p = new PropertyIdImpl(id, value);
+		// p.setQueryName(id);
+		// props.addProperty(p);
 		props.addProperty(new PropertyIdImpl(id, value));
 	}
 
@@ -1820,9 +1829,9 @@ public class LDRepository {
 			return;
 		}
 
-//		PropertyIdImpl p = new PropertyIdImpl(id, value);
-//		p.setQueryName(id);
-//		props.addProperty(p);
+		// PropertyIdImpl p = new PropertyIdImpl(id, value);
+		// p.setQueryName(id);
+		// props.addProperty(p);
 		props.addProperty(new PropertyIdImpl(id, value));
 	}
 
@@ -1830,10 +1839,9 @@ public class LDRepository {
 		if (!checkAddProperty(props, typeId, filter, id)) {
 			return;
 		}
-//		PropertyStringImpl p = new PropertyStringImpl(id, value);
-//		p.setQueryName(id);
-//		props.addProperty(p);
-		props.addProperty(new PropertyStringImpl(id, value));
+		PropertyStringImpl p = new PropertyStringImpl(id, value);
+		p.setQueryName(id);
+		props.addProperty(p);
 	}
 
 	private void addPropertyInteger(PropertiesImpl props, String typeId, Set<String> filter, String id, long value) {
@@ -1846,11 +1854,9 @@ public class LDRepository {
 			return;
 		}
 
-//		PropertyIntegerImpl p = new PropertyIntegerImpl(id, value);
-//		p.setQueryName(id);
-//		props.addProperty(p);	
-		
-		props.addProperty(new PropertyIntegerImpl(id, value));		
+		PropertyIntegerImpl p = new PropertyIntegerImpl(id, value);
+		p.setQueryName(id);
+		props.addProperty(p);
 	}
 
 	private void addPropertyBoolean(PropertiesImpl props, String typeId, Set<String> filter, String id, boolean value) {
@@ -1858,11 +1864,9 @@ public class LDRepository {
 			return;
 		}
 
-//		PropertyBooleanImpl p = new PropertyBooleanImpl(id, value);
-//		p.setQueryName(id);
-//		props.addProperty(p);
-		
-		props.addProperty(new PropertyBooleanImpl(id, value));
+		PropertyBooleanImpl p = new PropertyBooleanImpl(id, value);
+		p.setQueryName(id);
+		props.addProperty(p);
 	}
 
 	private void addPropertyDateTime(PropertiesImpl props, String typeId, Set<String> filter, String id, Date value) {
@@ -1876,20 +1880,18 @@ public class LDRepository {
 
 	private void addPropertyDateTime(PropertiesImpl props, String typeId, Set<String> filter, String id,
 			GregorianCalendar value) {
-		
+
 		if (!checkAddProperty(props, typeId, filter, id)) {
 			return;
 		}
 
-//		PropertyDateTimeImpl p = new PropertyDateTimeImpl(id, value);
-//		p.setQueryName(id);
-//		props.addProperty(p);
-		
-		props.addProperty(new PropertyDateTimeImpl(id, value));
+		PropertyDateTimeImpl p = new PropertyDateTimeImpl(id, value);
+		p.setQueryName(id);
+		props.addProperty(p);
 	}
 
 	private boolean checkAddProperty(Properties properties, String typeId, Set<String> filter, String id) {
-				
+
 		if ((properties == null) || (properties.getProperties() == null)) {
 			throw new IllegalArgumentException("Properties must not be null!");
 		}
@@ -1898,24 +1900,24 @@ public class LDRepository {
 			throw new IllegalArgumentException("Id must not be null!");
 		}
 
-        TypeDefinition type = types.getType(typeId);
-        if (type == null) {
-            throw new IllegalArgumentException("Unknown type: " + typeId);
-        }
+		TypeDefinition type = types.getType(typeId);
+		if (type == null) {
+			throw new IllegalArgumentException("Unknown type: " + typeId);
+		}
 
-        if (!type.getPropertyDefinitions().containsKey(id)) {
-            throw new IllegalArgumentException("Unknown property: " + id);
-        }
+		if (!type.getPropertyDefinitions().containsKey(id)) {
+			throw new IllegalArgumentException("Unknown property: " + id);
+		}
 
-        String queryName = type.getPropertyDefinitions().get(id).getQueryName();
+		String queryName = type.getPropertyDefinitions().get(id).getQueryName();
 
-        if ((queryName != null) && (filter != null)) {
-            if (!filter.contains(queryName)) {
-                return false;
-            } else {
-                filter.remove(queryName);
-            }
-        }		
+		if ((queryName != null) && (filter != null)) {
+			if (!filter.contains(queryName)) {
+				return false;
+			} else {
+				filter.remove(queryName);
+			}
+		}
 
 		return true;
 	}
@@ -1925,7 +1927,7 @@ public class LDRepository {
 	 */
 	@SuppressWarnings("unchecked")
 	private static boolean addPropertyDefault(PropertiesImpl props, PropertyDefinition<?> propDef) {
-		
+
 		if ((props == null) || (props.getProperties() == null)) {
 			throw new IllegalArgumentException("Props must not be null!");
 		}
@@ -1937,70 +1939,47 @@ public class LDRepository {
 		List<?> defaultValue = propDef.getDefaultValue();
 		if ((defaultValue != null) && (!defaultValue.isEmpty())) {
 			switch (propDef.getPropertyType()) {
-//			case BOOLEAN:
-//				PropertyBooleanImpl p = new PropertyBooleanImpl(propDef.getId(), (List<Boolean>) defaultValue);
-//				p.setQueryName(propDef.getId());
-//				props.addProperty(p);
-//				break;
-//			case DATETIME:
-//				PropertyDateTimeImpl p1 = new PropertyDateTimeImpl(propDef.getId(), (List<GregorianCalendar>) defaultValue);
-//				p1.setQueryName(propDef.getId());
-//				props.addProperty(p1);
-//				break;
-//			case DECIMAL:
-//				PropertyDecimalImpl p3 = new PropertyDecimalImpl(propDef.getId(), (List<BigDecimal>) defaultValue);
-//				p3.setQueryName(propDef.getId());
-//				props.addProperty(p3);
-//				break;
-//			case HTML:
-//				PropertyHtmlImpl p4 = new PropertyHtmlImpl(propDef.getId(), (List<String>) defaultValue);
-//				p4.setQueryName(propDef.getId());
-//				props.addProperty(p4);
-//				break;
-//			case ID:
-//				PropertyIdImpl p5 = new PropertyIdImpl(propDef.getId(), (List<String>) defaultValue);
-//				p5.setQueryName(propDef.getId());
-//				props.addProperty(p5);
-//				break;
-//			case INTEGER:
-//				PropertyIntegerImpl p6 = new PropertyIntegerImpl(propDef.getId(), (List<BigInteger>) defaultValue);
-//				p6.setQueryName(propDef.getId());
-//				props.addProperty(p6);
-//				break;
-//			case STRING:
-//				PropertyStringImpl p7 = new PropertyStringImpl(propDef.getId(), (List<String>) defaultValue);
-//				p7.setQueryName(propDef.getId());
-//				props.addProperty(p7);
-//				break;
-//			case URI:
-//				PropertyUriImpl p8 = new PropertyUriImpl(propDef.getId(), (List<String>) defaultValue);
-//				p8.setQueryName(propDef.getId());
-//				props.addProperty(p8);
-//				break;
-            case BOOLEAN:
-                props.addProperty(new PropertyBooleanImpl(propDef.getId(), (List<Boolean>) defaultValue));
-                break;
-            case DATETIME:
-                props.addProperty(new PropertyDateTimeImpl(propDef.getId(), (List<GregorianCalendar>) defaultValue));
-                break;
-            case DECIMAL:
-                props.addProperty(new PropertyDecimalImpl(propDef.getId(), (List<BigDecimal>) defaultValue));
-                break;
-            case HTML:
-                props.addProperty(new PropertyHtmlImpl(propDef.getId(), (List<String>) defaultValue));
-                break;
-            case ID:
-                props.addProperty(new PropertyIdImpl(propDef.getId(), (List<String>) defaultValue));
-                break;
-            case INTEGER:
-                props.addProperty(new PropertyIntegerImpl(propDef.getId(), (List<BigInteger>) defaultValue));
-                break;
-            case STRING:
-                props.addProperty(new PropertyStringImpl(propDef.getId(), (List<String>) defaultValue));
-                break;
-            case URI:
-                props.addProperty(new PropertyUriImpl(propDef.getId(), (List<String>) defaultValue));
-                break;			
+			case BOOLEAN:
+				PropertyBooleanImpl p = new PropertyBooleanImpl(propDef.getId(), (List<Boolean>) defaultValue);
+				p.setQueryName(propDef.getId());
+				props.addProperty(p);
+				break;
+			case DATETIME:
+				PropertyDateTimeImpl p1 = new PropertyDateTimeImpl(propDef.getId(),
+						(List<GregorianCalendar>) defaultValue);
+				p1.setQueryName(propDef.getId());
+				props.addProperty(p1);
+				break;
+			case DECIMAL:
+				PropertyDecimalImpl p3 = new PropertyDecimalImpl(propDef.getId(), (List<BigDecimal>) defaultValue);
+				p3.setQueryName(propDef.getId());
+				props.addProperty(p3);
+				break;
+			case HTML:
+				PropertyHtmlImpl p4 = new PropertyHtmlImpl(propDef.getId(), (List<String>) defaultValue);
+				p4.setQueryName(propDef.getId());
+				props.addProperty(p4);
+				break;
+			case ID:
+				PropertyIdImpl p5 = new PropertyIdImpl(propDef.getId(), (List<String>) defaultValue);
+				p5.setQueryName(propDef.getId());
+				props.addProperty(p5);
+				break;
+			case INTEGER:
+				PropertyIntegerImpl p6 = new PropertyIntegerImpl(propDef.getId(), (List<BigInteger>) defaultValue);
+				p6.setQueryName(propDef.getId());
+				props.addProperty(p6);
+				break;
+			case STRING:
+				PropertyStringImpl p7 = new PropertyStringImpl(propDef.getId(), (List<String>) defaultValue);
+				p7.setQueryName(propDef.getId());
+				props.addProperty(p7);
+				break;
+			case URI:
+				PropertyUriImpl p8 = new PropertyUriImpl(propDef.getId(), (List<String>) defaultValue);
+				p8.setQueryName(propDef.getId());
+				props.addProperty(p8);
+				break;
 			default:
 				throw new RuntimeException("Unknown datatype! Spec change?");
 			}
@@ -2167,7 +2146,7 @@ public class LDRepository {
 	 * Returns the first value of an id property.
 	 */
 	private static String getIdProperty(Properties properties, String name) {
-		
+
 		PropertyData<?> property = properties.getProperties().get(name);
 		if (!(property instanceof PropertyId)) {
 			return null;
