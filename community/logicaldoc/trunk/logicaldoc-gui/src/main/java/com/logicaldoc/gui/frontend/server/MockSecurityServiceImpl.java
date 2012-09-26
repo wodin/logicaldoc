@@ -15,8 +15,8 @@ import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.beans.GUIValuePair;
+import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.gui.common.server.MockInfoServiceImpl;
-import com.logicaldoc.gui.frontend.client.services.SecurityService;
 
 /**
  * Implementation of the SecurityService
@@ -210,5 +210,10 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 
 	@Override
 	public void resetPassword(String username, String emailAddress, String productName) throws Exception {
+	}
+
+	@Override
+	public GUIUser[] searchUsers(String sid, String username, String groupId) throws InvalidSessionException {
+		return new GUIUser[0];
 	}
 }
