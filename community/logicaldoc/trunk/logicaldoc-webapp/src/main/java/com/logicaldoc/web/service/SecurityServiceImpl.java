@@ -1,5 +1,7 @@
 package com.logicaldoc.web.service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +20,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.RowMapper;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.SystemInfo;
@@ -53,7 +56,7 @@ import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
-import com.logicaldoc.gui.frontend.client.services.SecurityService;
+import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
@@ -781,6 +784,44 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			sender.send(email, "psw.rec2", args);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public GUIUser[] searchUsers(String sid, String username, String groupId) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		try {
+			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+
+			StringBuffer query = new StringBuffer(
+					"select A.ld_id, A.ld_username, A.ld_name, A.ld_firstname from ld_user A ");
+			if (StringUtils.isNotEmpty(groupId))
+				query.append(", ld_usergroup B");
+			query.append(" where A.ld_deleted=0 and A.ld_type=" + User.TYPE_DEFAULT);
+			if (StringUtils.isNotEmpty(username))
+				query.append(" and A.ld_username like '%" + username + "%'");
+			if (StringUtils.isNotEmpty(groupId))
+				query.append(" and A.ld_id=B.ld_userid and B.ld_groupid=" + groupId);
+			
+			@SuppressWarnings("unchecked")
+			List<GUIUser> users = (List<GUIUser>) userDao.query(query.toString(), null, new RowMapper<GUIUser>() {
+
+				@Override
+				public GUIUser mapRow(ResultSet rs, int row) throws SQLException {
+					GUIUser user = new GUIUser();
+					user.setId(rs.getLong(1));
+					user.setUserName(rs.getString(2));
+					user.setName(rs.getString(3));
+					user.setFirstName(rs.getString(4));
+					return user;
+				}
+			}, null);
+
+			return users.toArray(new GUIUser[0]);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+			return new GUIUser[0];
 		}
 	}
 }

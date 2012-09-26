@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.services;
+package com.logicaldoc.gui.common.client.services;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -118,9 +118,21 @@ public interface SecurityService extends RemoteService {
 	/**
 	 * Reset the password for the given email.
 	 * 
-	 *  @param emailAddress the username for which reset password
+	 * @param emailAddress the username for which reset password
 	 * @param emailAddress the email for which reset password
 	 * @param productName the application product name
 	 */
 	public void resetPassword(String username, String emailAddress, String productName) throws Exception;
+
+	/**
+	 * Searches for users
+	 * 
+	 * @param sid The current session ID
+	 * @param username The username used in the like operator (optional)
+	 * @param groupId The group ID (optional)
+	 * 
+	 * @return Array of found users
+	 * @throws InvalidSessionException
+	 */
+	public GUIUser[] searchUsers(String sid, String username, String groupId) throws InvalidSessionException;
 }

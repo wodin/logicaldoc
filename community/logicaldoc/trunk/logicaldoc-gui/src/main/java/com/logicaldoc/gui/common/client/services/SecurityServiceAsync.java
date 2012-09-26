@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.services;
+package com.logicaldoc.gui.common.client.services;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
@@ -45,4 +45,6 @@ public interface SecurityServiceAsync {
 	void getMenu(String sid, long id, AsyncCallback<GUIMenu> callback);
 
 	void resetPassword(String username, String emailAddress, String productName, AsyncCallback<Void> callback);
+
+	void searchUsers(String sid, String username, String groupId, AsyncCallback<GUIUser[]> callback);
 }
