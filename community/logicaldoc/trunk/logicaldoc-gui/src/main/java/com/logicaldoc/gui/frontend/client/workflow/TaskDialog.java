@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -55,7 +56,7 @@ public class TaskDialog extends Window {
 
 	private DynamicForm participantsForm;
 
-	private Button removeUser = null;
+	private Button removeParticipant = null;
 
 	private DynamicForm buttonForm;
 
@@ -64,11 +65,12 @@ public class TaskDialog extends Window {
 	public TaskDialog(StateWidget widget) {
 		this.task = widget.getWfState();
 		this.widget = widget;
+		participants.clear();
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("editworkflowstate", I18N.message("task")));
-		setWidth(340);
-		setHeight(410);
+		setWidth(350);
+		setHeight(450);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -148,14 +150,13 @@ public class TaskDialog extends Window {
 		participantsItemForm.setItems(participantsItem);
 		addItem(participantsItemForm);
 
-		HLayout userSelection = new HLayout();
-		userSelection.setHeight(25);
-		userSelection.setMargin(3);
+		HLayout usergroupSelection = new HLayout();
+		usergroupSelection.setHeight(25);
+		usergroupSelection.setMargin(3);
 
 		// Prepare the combo and button for adding a new user
-		final DynamicForm userForm = new DynamicForm();
+		final DynamicForm usergroupForm = new DynamicForm();
 		final SelectItem user = ItemFactory.newUserSelector("user", "user");
-		userForm.setItems(user);
 		user.setRequired(true);
 		user.addChangedHandler(new ChangedHandler() {
 			@Override
@@ -173,14 +174,43 @@ public class TaskDialog extends Window {
 						}
 					}
 
-					refreshParticipants(selectedRecord.getAttribute("username"), 1);
+					if (participants.get(selectedRecord.getAttribute("username")) == null)
+						refreshParticipants(selectedRecord.getAttribute("username"),
+								selectedRecord.getAttribute("label"), 1);
 					user.clearValue();
 				}
-
 			}
 		});
-		userSelection.addMember(userForm);
-		addItem(userSelection);
+
+		final SelectItem group = ItemFactory.newGroupSelector("group", "group");
+		group.setRequired(true);
+		group.addChangedHandler(new ChangedHandler() {
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if (event.getValue() != null && !"".equals((String) event.getValue())) {
+					final ListGridRecord selectedRecord = group.getSelectedRecord();
+					if (selectedRecord == null)
+						return;
+
+					// Check if the selected user is already present in the
+					// rights table
+					for (String participant : participantsList.getValues()) {
+						if (participant.equals("g." + selectedRecord.getAttribute("name"))) {
+							return;
+						}
+					}
+
+					if (participants.get("g." + selectedRecord.getAttribute("name")) == null)
+						refreshParticipants("g." + selectedRecord.getAttribute("name"),
+								selectedRecord.getAttribute("name"), 1);
+					user.clearValue();
+				}
+			}
+		});
+
+		usergroupForm.setItems(user, group);
+		usergroupSelection.addMember(usergroupForm);
+		addItem(usergroupSelection);
 
 		participantsLayout = new HLayout();
 		participantsLayout.setHeight(70);
@@ -189,11 +219,13 @@ public class TaskDialog extends Window {
 
 		// Initialize the participants list
 		if (this.task.getParticipants() != null)
-			for (String usr : this.task.getParticipants()) {
-				participants.put(usr, usr);
+			for (GUIValuePair part : this.task.getParticipants()) {
+				String prefix = (part.getCode().startsWith("g.") ? I18N.message("group") : I18N.message("user")) + ": ";
+				participants.put(part.getCode(),
+						part.getValue().startsWith(prefix) ? part.getValue() : prefix + part.getValue());
 			}
 
-		refreshParticipants(null, 0);
+		refreshParticipants(null, null, 0);
 	}
 
 	/**
@@ -202,11 +234,11 @@ public class TaskDialog extends Window {
 	 * username will be added to the list. If <code>operation</code> is 2, the
 	 * username will be removed from the list.
 	 */
-	private void refreshParticipants(String username, int operation) {
+	private void refreshParticipants(String entityCode, String entityLabel, int operation) {
 		if (participantsForm != null)
 			participantsLayout.removeMember(participantsForm);
-		if (removeUser != null)
-			participantsLayout.removeMember(removeUser);
+		if (removeParticipant != null)
+			participantsLayout.removeMember(removeParticipant);
 		if (buttonForm != null) {
 			removeMember(buttonForm);
 			buttonForm.destroy();
@@ -225,25 +257,28 @@ public class TaskDialog extends Window {
 		participantsList.setHeight(70);
 		participantsList.setEndRow(true);
 
-		if (username != null && (operation == 1)) {
-			participants.put(username, username);
-		} else if (username != null && (operation == 2)) {
-			participants.remove(username);
+		if (entityCode != null && (operation == 1)) {
+			String prefix = (entityCode.startsWith("g.") ? I18N.message("group") : I18N.message("user")) + ": ";
+			participants.put(entityCode, entityLabel.startsWith(prefix) ? entityLabel : prefix + entityLabel);
+		} else if (entityCode != null && (operation == 2)) {
+			participants.remove(entityCode);
 		}
+
 		participantsList.setValueMap(participants);
 		participantsForm.setItems(participantsList);
 
-		removeUser = new Button(I18N.message("removeuser"));
-		removeUser.setAutoFit(true);
-		removeUser.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+		removeParticipant = new Button(I18N.message("remove"));
+		removeParticipant.setAutoFit(true);
+		removeParticipant.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
 				if (participantsList.getValue() != null)
-					refreshParticipants(participantsList.getValue().toString(), 2);
+					refreshParticipants(participantsList.getValue().toString(),
+							participantsList.getDisplayValue(participantsList.getValue().toString()), 2);
 			}
 		});
 
-		participantsLayout.setMembers(participantsForm, removeUser);
+		participantsLayout.setMembers(participantsForm, removeParticipant);
 
 		buttonForm = new DynamicForm();
 		ButtonItem saveItem = new ButtonItem("save", I18N.message("save"));
@@ -260,7 +295,12 @@ public class TaskDialog extends Window {
 					TaskDialog.this.task.setDueDateUnit((String) values.get("duedateTime"));
 					TaskDialog.this.task.setReminderNumber((Integer) values.get("remindtimeNumber"));
 					TaskDialog.this.task.setReminderUnit((String) values.get("remindTime"));
-					TaskDialog.this.task.setParticipants(participants.keySet().toArray(new String[0]));
+
+					GUIValuePair[] b = new GUIValuePair[participants.size()];
+					int i = 0;
+					for (String key : participants.keySet())
+						b[i++] = new GUIValuePair(key, participants.get(key));
+					TaskDialog.this.task.setParticipants(b);
 
 					if (TaskDialog.this.task.getParticipants() == null
 							|| TaskDialog.this.task.getParticipants().length == 0) {
