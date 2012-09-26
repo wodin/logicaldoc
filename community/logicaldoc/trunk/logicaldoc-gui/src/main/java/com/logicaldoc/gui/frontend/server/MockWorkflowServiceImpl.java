@@ -4,6 +4,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUITransition;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
+import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
@@ -57,9 +58,9 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		task.setDueDateUnit(GUIWFState.TIME_BUSINESS_DAY);
 		task.setReminderNumber(13);
 		task.setReminderUnit(GUIWFState.TIME_BUSINESS_WEEK);
-		String[] participants = new String[2];
-		participants[0] = user1.getUserName();
-		participants[1] = user2.getUserName();
+		GUIValuePair[] participants = new GUIValuePair[2];
+		participants[0] = new GUIValuePair("" + user1.getId(), user1.getUserName());
+		participants[1] = new GUIValuePair("" + user2.getId(), user2.getUserName());
 		task.setParticipants(participants);
 
 		GUIWFState task1 = new GUIWFState();

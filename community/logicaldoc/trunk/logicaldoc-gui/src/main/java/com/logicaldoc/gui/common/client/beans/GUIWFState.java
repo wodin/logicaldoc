@@ -55,7 +55,7 @@ public class GUIWFState implements Serializable {
 
 	private String reminderUnit = TIME_MINUTE;
 
-	private String[] participants;
+	private GUIValuePair[] participants;
 
 	private GUITransition[] transitions;
 
@@ -112,11 +112,11 @@ public class GUIWFState implements Serializable {
 		this.description = description;
 	}
 
-	public String[] getParticipants() {
+	public GUIValuePair[] getParticipants() {
 		return participants;
 	}
 
-	public void setParticipants(String[] participants) {
+	public void setParticipants(GUIValuePair[] participants) {
 		this.participants = participants;
 	}
 

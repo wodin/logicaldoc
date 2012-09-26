@@ -12,9 +12,19 @@ public class GUIValuePair implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String code;
-
+	
 	private String value;
 
+	public GUIValuePair() {
+
+	}
+
+	public GUIValuePair(String code, String value) {
+		super();
+		this.code = code;
+		this.value = value;
+	}
+	
 	public String getCode() {
 		return code;
 	}
