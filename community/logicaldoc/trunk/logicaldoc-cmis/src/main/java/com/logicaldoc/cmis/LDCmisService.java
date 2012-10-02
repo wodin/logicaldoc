@@ -159,13 +159,8 @@ public class LDCmisService extends AbstractCmisService {
 	public String create(String repositoryId, Properties properties, String folderId, ContentStream contentStream,
 			VersioningState versioningState, List<String> policies, ExtensionsData extension) {
 		validateSession();
-		System.out.println("LDCmisService.create");
 		ObjectData object = getRepository().create(getCallContext(), properties, folderId, contentStream,
 				versioningState, this);
-		System.out.println("object: " +object);
-		
-		System.out.println("object.getId(): " +object.getId());
-
 		return object.getId();
 	}
 
