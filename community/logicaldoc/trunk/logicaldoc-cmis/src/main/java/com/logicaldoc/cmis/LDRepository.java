@@ -213,8 +213,13 @@ public class LDRepository {
 		repositoryInfo = new RepositoryInfoImpl();
 
 		repositoryInfo.setId(id);
-		repositoryInfo.setName(root.getName());
-		repositoryInfo.setDescription(root.getDescription());
+		if (root.getId() == Folder.ROOTID) {
+			repositoryInfo.setName("Default");
+			repositoryInfo.setDescription("Default repository");
+		} else {
+			repositoryInfo.setName(root.getName());
+			repositoryInfo.setDescription(root.getDescription());
+		}
 
 		repositoryInfo.setCmisVersionSupported("1.0");
 
@@ -1109,13 +1114,10 @@ public class LDRepository {
 		// statement.toString() -> SELECT
 		// cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType
 		// FROM cmis:document WHERE cmis:name LIKE '%flexspaces%'
-		boolean LDMobileRequest = false;
 		if (statement.indexOf("SELECT cmis:objectId,cmis:name,cmis:lastModifiedBy") != -1) {
-			LDMobileRequest = true;
 			String cmisNameVal = findCmisNameVal(statement);
 			if (cmisNameVal.startsWith("%")) {
 				cmisNameVal = cmisNameVal.substring(1, cmisNameVal.length() - 1);
-				System.out.println("----- cmisNameVal=" + cmisNameVal);
 				expr = cmisNameVal;
 			}
 		}
@@ -1125,9 +1127,6 @@ public class LDRepository {
 		// Execute the search
 		Search search = Search.get(opt);
 		List<Hit> hits = search.search();
-		if (hits != null) {
-			System.out.println("----- hits=" + hits.size());
-		}
 
 		// Populate CMIS data structure
 		List<ObjectData> list = new ArrayList<ObjectData>();
@@ -1246,7 +1245,6 @@ public class LDRepository {
 		ObjectDataImpl result = new ObjectDataImpl();
 		ObjectInfoImpl objectInfo = new ObjectInfoImpl();
 
-		// System.out.println("filter: " +filter);
 		result.setProperties(compileProperties(object, filter, objectInfo));
 
 		if (includeAllowableActions) {
@@ -1394,6 +1392,7 @@ public class LDRepository {
 				addPropertyIdList(result, typeId, filter, PropertyIds.ALLOWED_CHILD_OBJECT_TYPE_IDS, null);
 				addPropertyString(result, typeId, filter, TypeManager.PROP_DESCRIPTION,
 						((Folder) object).getDescription());
+				addPropertyInteger(result, typeId, filter, TypeManager.PROP_TYPE, ((Folder) object).getType());
 			} else {
 				AbstractDocument doc = (AbstractDocument) object;
 
@@ -1479,9 +1478,6 @@ public class LDRepository {
 				addPropertyString(result, typeId, filter, TypeManager.PROP_VERSION, doc.getVersion());
 			}
 
-			// read custom properties
-			readCustomProperties(object, result, filter, objectInfo);
-
 			if (filter != null) {
 				if (!filter.isEmpty()) {
 					debug("Unknown filter properties: " + filter.toString(), null);
@@ -1516,96 +1512,6 @@ public class LDRepository {
 		}
 
 		return versions;
-	}
-
-	/**
-	 * Reads and adds properties.
-	 */
-	private void readCustomProperties(PersistentObject object, PropertiesImpl properties, Set<String> filter,
-			ObjectInfoImpl objectInfo) {
-
-		if (object instanceof Folder) {
-
-		} else {
-
-		}
-
-		// File propFile = getPropertiesFile(file);
-		//
-		// // if it doesn't exists, ignore it
-		// if (!propFile.exists()) {
-		// return;
-		// }
-		//
-		// // parse it
-		// JAXBElement<CmisObjectType> obj = null;
-		// try {
-		// Unmarshaller u = JaxBHelper.createUnmarshaller();
-		// obj = (JAXBElement<CmisObjectType>) u.unmarshal(propFile);
-		// } catch (Exception e) {
-		// warn("Unvalid CMIS properties: " + propFile.getAbsolutePath(), e);
-		// }
-		//
-		// if ((obj == null) || (obj.getValue() == null) ||
-		// (obj.getValue().getProperties() == null)) {
-		// return;
-		// }
-		//
-		// // add it to properties
-		// for (CmisProperty cmisProp :
-		// obj.getValue().getProperties().getProperty()) {
-		// PropertyData<?> prop = Converter.convert(cmisProp);
-		//
-		// // overwrite object info
-		// if (prop instanceof PropertyString) {
-		// String firstValueStr = ((PropertyString) prop).getFirstValue();
-		// if (PropertyIds.NAME.equals(prop.getId())) {
-		// objectInfo.setName(firstValueStr);
-		// } else if (PropertyIds.OBJECT_TYPE_ID.equals(prop.getId())) {
-		// objectInfo.setTypeId(firstValueStr);
-		// } else if (PropertyIds.CREATED_BY.equals(prop.getId())) {
-		// objectInfo.setCreatedBy(firstValueStr);
-		// } else if (PropertyIds.CONTENT_STREAM_MIME_TYPE.equals(prop.getId()))
-		// {
-		// objectInfo.setContentType(firstValueStr);
-		// } else if (PropertyIds.CONTENT_STREAM_FILE_NAME.equals(prop.getId()))
-		// {
-		// objectInfo.setFileName(firstValueStr);
-		// }
-		// }
-		//
-		// if (prop instanceof PropertyDateTime) {
-		// GregorianCalendar firstValueCal = ((PropertyDateTime)
-		// prop).getFirstValue();
-		// if (PropertyIds.CREATION_DATE.equals(prop.getId())) {
-		// objectInfo.setCreationDate(firstValueCal);
-		// } else if (PropertyIds.LAST_MODIFICATION_DATE.equals(prop.getId())) {
-		// objectInfo.setLastModificationDate(firstValueCal);
-		// }
-		// }
-		//
-		// // check filter
-		// if (filter != null) {
-		// if (!filter.contains(prop.getId())) {
-		// continue;
-		// } else {
-		// filter.remove(prop.getId());
-		// }
-		// }
-		//
-		// // don't overwrite id
-		// if (PropertyIds.OBJECT_ID.equals(prop.getId())) {
-		// continue;
-		// }
-		//
-		// // don't overwrite base type
-		// if (PropertyIds.BASE_TYPE_ID.equals(prop.getId())) {
-		// continue;
-		// }
-		//
-		// // add it
-		// properties.addProperty(prop);
-		// }
 	}
 
 	/**
@@ -2011,15 +1917,13 @@ public class LDRepository {
 		boolean download = checkPermission(object, null, Permission.DOWNLOAD);
 
 		boolean isFolder = object instanceof Folder;
+		boolean isWorkspace = isFolder && ((Folder) object).getType() == Folder.TYPE_WORKSPACE;
 		boolean isRoot = root.equals(object);
 
 		Set<Action> aas = new HashSet<Action>();
 
 		addAction(aas, Action.CAN_GET_OBJECT_PARENTS, !isRoot);
 		addAction(aas, Action.CAN_GET_PROPERTIES, true);
-		addAction(aas, Action.CAN_UPDATE_PROPERTIES, write);
-		addAction(aas, Action.CAN_MOVE_OBJECT, write && download);
-		addAction(aas, Action.CAN_DELETE_OBJECT, write);
 		addAction(aas, Action.CAN_GET_ACL, true);
 
 		if (isFolder) {
@@ -2029,10 +1933,17 @@ public class LDRepository {
 			addAction(aas, Action.CAN_GET_FOLDER_TREE, true);
 			addAction(aas, Action.CAN_CREATE_DOCUMENT, write);
 			addAction(aas, Action.CAN_CREATE_FOLDER, write);
-			addAction(aas, Action.CAN_DELETE_TREE, write);
+
+			addAction(aas, Action.CAN_UPDATE_PROPERTIES, write && !isWorkspace);
+			addAction(aas, Action.CAN_MOVE_OBJECT, write && download && !isWorkspace);
+			addAction(aas, Action.CAN_DELETE_OBJECT, write && !isWorkspace);
+			addAction(aas, Action.CAN_DELETE_TREE, write && !isWorkspace);
 		} else if (object instanceof Document) {
 			Document doc = (Document) object;
 
+			addAction(aas, Action.CAN_UPDATE_PROPERTIES, write);
+			addAction(aas, Action.CAN_MOVE_OBJECT, write && download);
+			addAction(aas, Action.CAN_DELETE_OBJECT, write);
 			addAction(aas, Action.CAN_GET_CONTENT_STREAM, true);
 			addAction(aas, Action.CAN_GET_ALL_VERSIONS, true);
 			addAction(aas, Action.CAN_CHECK_OUT, doc.getStatus() == Document.DOC_UNLOCKED && write);
@@ -2076,7 +1987,11 @@ public class LDRepository {
 			entry.setPermissions(new ArrayList<String>());
 			entry.getPermissions().add(CMIS_READ);
 
-			if (!ue.getValue().booleanValue() && checkPermission(object, null, Permission.WRITE)) {
+			System.out.println("---- " + object.getId());
+			if (!ue.getValue().booleanValue() && checkPermission(object, null, Permission.WRITE)
+					&& !(object instanceof Folder && ((Folder) object).getType() == Folder.TYPE_WORKSPACE)) {
+
+				System.out.println("++++ " + object.getId());
 				entry.getPermissions().add(CMIS_WRITE);
 				entry.getPermissions().add(CMIS_ALL);
 			}
@@ -2149,19 +2064,6 @@ public class LDRepository {
 		}
 
 		return typeId;
-	}
-
-	/**
-	 * Returns the first value of an id property.
-	 */
-	private static String getIdProperty(Properties properties, String name) {
-
-		PropertyData<?> property = properties.getProperties().get(name);
-		if (!(property instanceof PropertyId)) {
-			return null;
-		}
-
-		return ((PropertyId) property).getFirstValue();
 	}
 
 	/**
