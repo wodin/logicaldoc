@@ -607,8 +607,10 @@ public class LDRepository {
 	}
 
 	public void deleteObjectOrCancelCheckOut(CallContext context, String objectId) {
+		System.out.println("LDRepository.deleteObjectOrCancelCheckOut");
 		// get the file or folder
 		PersistentObject object = getObject(objectId);
+		System.out.println("object: " +object);
 		if (object == null) {
 			throw new CmisObjectNotFoundException("Object not found!");
 		}
