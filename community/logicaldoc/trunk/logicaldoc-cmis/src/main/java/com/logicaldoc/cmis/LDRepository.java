@@ -60,7 +60,6 @@ import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundExcept
 import org.apache.chemistry.opencmis.commons.exceptions.CmisPermissionDeniedException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisRuntimeException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisStorageException;
-import org.apache.chemistry.opencmis.commons.impl.Converter;
 import org.apache.chemistry.opencmis.commons.impl.MimeTypes;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.AccessControlEntryImpl;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.AccessControlListImpl;
@@ -87,7 +86,6 @@ import org.apache.chemistry.opencmis.commons.impl.dataobjects.PropertyStringImpl
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.PropertyUriImpl;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.RepositoryCapabilitiesImpl;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.RepositoryInfoImpl;
-import org.apache.chemistry.opencmis.commons.impl.jaxb.CmisObjectType;
 import org.apache.chemistry.opencmis.commons.impl.server.ObjectInfoImpl;
 import org.apache.chemistry.opencmis.commons.server.CallContext;
 import org.apache.chemistry.opencmis.commons.server.ObjectInfo;
@@ -378,7 +376,10 @@ public class LDRepository {
 			return compileObjectType(context, getDocument(objectId), null, false, false, objectInfos);
 		} else if (type.getBaseTypeId() == BaseTypeId.CMIS_FOLDER) {
 			objectId = createFolder(context, properties, folderId);
-			return compileObjectType(context, getFolder(objectId), null, false, false, objectInfos);
+			System.out.println("Folder created with objectId: " +objectId);
+			ObjectData xxx = compileObjectType(context, getFolder(objectId), null, false, false, objectInfos);
+			System.out.println(xxx);
+			return xxx;
 		} else {
 			throw new CmisObjectNotFoundException("Cannot create object of type '" + typeId + "'!");
 		}
@@ -389,6 +390,7 @@ public class LDRepository {
 	 */
 	public String createDocument(CallContext context, Properties properties, String folderId,
 			ContentStream contentStream, VersioningState versioningState) {
+		
 		debug("createDocument");
 		validatePermission(folderId, context, Permission.WRITE);
 
@@ -412,8 +414,8 @@ public class LDRepository {
 		User user = getSessionUser();
 
 		// compile the properties
-		Properties props = compileProperties(typeId, user, millisToCalendar(System.currentTimeMillis()), user,
-				properties);
+//		Properties props = compileProperties(typeId, user, millisToCalendar(System.currentTimeMillis()), user,
+//				properties);
 
 		// check the name
 		String name = getStringProperty(properties, PropertyIds.NAME);
@@ -457,8 +459,8 @@ public class LDRepository {
 		}
 
 		// create object
-		CmisObjectType object = new CmisObjectType();
-		object.setProperties(Converter.convert(props));
+//		CmisObjectType object = new CmisObjectType();
+//		object.setProperties(Converter.convert(props));
 
 		return getId(document);
 	}
@@ -467,7 +469,9 @@ public class LDRepository {
 	 * CMIS createFolder.
 	 */
 	public String createFolder(CallContext context, Properties properties, String folderId) {
+		
 		debug("createFolder");
+		System.out.println("LDRepository.createFolder");
 		validatePermission(folderId, context, Permission.WRITE);
 
 		// check properties
@@ -476,17 +480,22 @@ public class LDRepository {
 		}
 
 		// check type
+		System.out.println("properties: " +properties);
 		String typeId = getTypeId(properties);
+		System.out.println("typeId: " +typeId);
 		TypeDefinition type = types.getType(typeId);
+		System.out.println("type: " +type);
 		if (type == null) {
 			throw new CmisObjectNotFoundException("Type '" + typeId + "' is unknown!");
 		}
 
 		User user = getSessionUser();
+		System.out.println("user: " +user);
 
 		// compile the properties
-		Properties props = compileProperties(typeId, user, millisToCalendar(System.currentTimeMillis()), user,
-				properties);
+//		Properties props = compileProperties(typeId, user, millisToCalendar(System.currentTimeMillis()), user,
+//				properties);
+//		System.out.println("props: " +props);
 
 		// check the name
 		String name = getStringProperty(properties, PropertyIds.NAME);
@@ -510,12 +519,17 @@ public class LDRepository {
 		} catch (Throwable e) {
 			throw new CmisStorageException("Could not create document: " + e.getMessage(), e);
 		}
+		System.out.println("folder created: " +folder);
 
 		// create object
-		CmisObjectType object = new CmisObjectType();
-		object.setProperties(Converter.convert(props));
+//		CmisObjectType object = new CmisObjectType();
+//		object.setProperties(Converter.convert(props));
+//		System.out.println("CmisObjectType created: " +object);
 
-		return getId(folder);
+		String xxx = getId(folder);
+		System.out.println("xxx: " +xxx);
+		
+		return xxx;
 	}
 
 	/**
@@ -719,6 +733,8 @@ public class LDRepository {
 	}
 
 	public ObjectInfo getObjectInfo(String objectId, ObjectInfoHandler handler) {
+//		System.out.println("getObjectInfo");
+//		System.out.println("objectId: " +objectId);
 		validatePermission(objectId, null, null);
 
 		// check id
@@ -728,7 +744,7 @@ public class LDRepository {
 
 		ObjectInfoImpl info = new ObjectInfoImpl();
 		PersistentObject object = getObject(objectId);
-		compileProperties(getObject(objectId), null, info);
+		compileProperties(object, null, info);
 		if (object instanceof AbstractDocument) {
 			ObjectData data = compileObjectType(null, object, null, true, true, handler);
 			info.setObject(data);
@@ -1255,14 +1271,12 @@ public class LDRepository {
 			result.setAcl(compileAcl(object));
 			result.setIsExactAcl(true);
 		}
-		
-		objectInfo.setObject(result);
 				
 		if ((context != null) && context.isObjectInfoRequired() && (objectInfos != null)) {
+			objectInfo.setObject(result);
+			//objectInfo.setVersionSeriesId(getId(object));			
 			objectInfos.addObjectInfo(objectInfo);
 		}
-
-		objectInfo.setVersionSeriesId(getId(object));
 
 		return result;
 	}
@@ -1519,6 +1533,7 @@ public class LDRepository {
 	 */
 	private Properties compileProperties(String typeId, User creator, GregorianCalendar creationDate, User modifier,
 			Properties properties) {
+		
 		PropertiesImpl result = new PropertiesImpl();
 		Set<String> addedProps = new HashSet<String>();
 
@@ -1838,7 +1853,7 @@ public class LDRepository {
 	@SuppressWarnings("unchecked")
 	private static boolean addPropertyDefault(PropertiesImpl props, PropertyDefinition<?> propDef) {
 
-		System.out.println("addPropertyDefault");
+		//System.out.println("addPropertyDefault");
 		if ((props == null) || (props.getProperties() == null)) {
 			throw new IllegalArgumentException("Props must not be null!");
 		}
@@ -1888,9 +1903,9 @@ public class LDRepository {
 				props.addProperty(p7);
 				break;
 			case URI:
-				System.out.println("propDef.getPropertyType() case URL");
-				System.out.println("propDef.getId(): " +propDef.getId());
-				System.out.println("(List<String>) defaultValue: " +(List<String>) defaultValue);
+//				System.out.println("propDef.getPropertyType() case URL");
+//				System.out.println("propDef.getId(): " +propDef.getId());
+//				System.out.println("(List<String>) defaultValue: " +(List<String>) defaultValue);
 				PropertyUriImpl p8 = new PropertyUriImpl(propDef.getId(), (List<String>) defaultValue);
 				p8.setQueryName(propDef.getId());
 				props.addProperty(p8);
@@ -2165,6 +2180,8 @@ public class LDRepository {
 	 * Retrieves the instance by the given objectId
 	 */
 	private PersistentObject getObject(String objectId) {
+		System.out.println("getObject(); objectId: " + objectId);
+		
 		if (objectId.startsWith(ID_PREFIX_DOC)) {
 			Long id = Long.parseLong(objectId.substring(4));
 			Document doc = documentDao.findById(id);
