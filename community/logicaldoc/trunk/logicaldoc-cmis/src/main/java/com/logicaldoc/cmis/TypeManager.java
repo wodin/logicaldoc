@@ -93,6 +93,8 @@ public class TypeManager {
 
 	public static final String PROP_VERSION = "ldoc:version";
 
+	public static final String PROP_TYPE = "ldoc:type";
+
 	public TypeManager() {
 		setup();
 	}
@@ -234,11 +236,14 @@ public class TypeManager {
 		type.addPropertyDefinition(createPropDef(PropertyIds.PATH, "Path", "Path", PropertyType.STRING,
 				Cardinality.SINGLE, Updatability.READONLY, false, false));
 
+
 		/*
 		 * Properties of the LogicalDOC folder
 		 */
 		type.addPropertyDefinition(createPropDef(PROP_DESCRIPTION, "Description", "Description", PropertyType.STRING,
 				Cardinality.SINGLE, Updatability.READWRITE, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_TYPE, "Type", "Type", PropertyType.INTEGER, Cardinality.SINGLE,
+				Updatability.READONLY, false, false));
 	}
 
 	private static void addDocumentPropertyDefinitions(DocumentTypeDefinitionImpl type) {

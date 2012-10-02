@@ -64,10 +64,13 @@ public class LDCmisService extends AbstractCmisService {
 		this.sessionId = sessionId;
 
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		List<Folder> workspaces = fdao.findWorkspaces();
-		for (Folder workspace : workspaces) {
-			repositories.put(Long.toString(workspace.getId()), new LDRepository(workspace, sessionId));
-		}
+		Folder root=fdao.findById(Folder.ROOTID);
+		repositories.put(Long.toString(Folder.ROOTID), new LDRepository(root, sessionId));
+		
+//		List<Folder> workspaces = fdao.findWorkspaces();
+//		for (Folder workspace : workspaces) {
+//			repositories.put(Long.toString(workspace.getId()), new LDRepository(workspace, sessionId));
+//		}
 	}
 
 	public CallContext getCallContext() {
@@ -269,15 +272,6 @@ public class LDCmisService extends AbstractCmisService {
 			Boolean includeAllowableActions, IncludeRelationships includeRelationships, String renditionFilter,
 			BigInteger maxItems, BigInteger skipCount, ExtensionsData extension) {
 		validateSession();
-		
-		System.out.println("repositoryId: " +repositoryId);
-		System.out.println("statement: " +statement);
-		System.out.println("searchAllVersions: " +searchAllVersions);
-		System.out.println("includeAllowableActions: " +includeAllowableActions);
-		System.out.println("includeRelationships: " +includeRelationships);
-		System.out.println("renditionFilter: " +renditionFilter);
-		System.out.println("extension: " +extension);
-		
 		return getRepository().query(statement, maxItems != null ? maxItems.intValue() : null);
 	}
 
