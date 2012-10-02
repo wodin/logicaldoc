@@ -376,10 +376,8 @@ public class LDRepository {
 			return compileObjectType(context, getDocument(objectId), null, false, false, objectInfos);
 		} else if (type.getBaseTypeId() == BaseTypeId.CMIS_FOLDER) {
 			objectId = createFolder(context, properties, folderId);
-			System.out.println("Folder created with objectId: " +objectId);
-			ObjectData xxx = compileObjectType(context, getFolder(objectId), null, false, false, objectInfos);
-			System.out.println(xxx);
-			return xxx;
+			System.out.println("Folder created with objectId: " + objectId);
+			return compileObjectType(context, getFolder(objectId), null, false, false, objectInfos);
 		} else {
 			throw new CmisObjectNotFoundException("Cannot create object of type '" + typeId + "'!");
 		}
@@ -390,7 +388,7 @@ public class LDRepository {
 	 */
 	public String createDocument(CallContext context, Properties properties, String folderId,
 			ContentStream contentStream, VersioningState versioningState) {
-		
+
 		debug("createDocument");
 		validatePermission(folderId, context, Permission.WRITE);
 
@@ -414,8 +412,9 @@ public class LDRepository {
 		User user = getSessionUser();
 
 		// compile the properties
-//		Properties props = compileProperties(typeId, user, millisToCalendar(System.currentTimeMillis()), user,
-//				properties);
+		// Properties props = compileProperties(typeId, user,
+		// millisToCalendar(System.currentTimeMillis()), user,
+		// properties);
 
 		// check the name
 		String name = getStringProperty(properties, PropertyIds.NAME);
@@ -459,8 +458,8 @@ public class LDRepository {
 		}
 
 		// create object
-//		CmisObjectType object = new CmisObjectType();
-//		object.setProperties(Converter.convert(props));
+		// CmisObjectType object = new CmisObjectType();
+		// object.setProperties(Converter.convert(props));
 
 		return getId(document);
 	}
@@ -469,9 +468,10 @@ public class LDRepository {
 	 * CMIS createFolder.
 	 */
 	public String createFolder(CallContext context, Properties properties, String folderId) {
-		
 		debug("createFolder");
-		System.out.println("LDRepository.createFolder");
+
+		System.out.println("++createFolder() " + new Date() + " " + folderId);
+
 		validatePermission(folderId, context, Permission.WRITE);
 
 		// check properties
@@ -480,22 +480,17 @@ public class LDRepository {
 		}
 
 		// check type
-		System.out.println("properties: " +properties);
 		String typeId = getTypeId(properties);
-		System.out.println("typeId: " +typeId);
 		TypeDefinition type = types.getType(typeId);
-		System.out.println("type: " +type);
 		if (type == null) {
 			throw new CmisObjectNotFoundException("Type '" + typeId + "' is unknown!");
 		}
 
-		User user = getSessionUser();
-		System.out.println("user: " +user);
-
 		// compile the properties
-//		Properties props = compileProperties(typeId, user, millisToCalendar(System.currentTimeMillis()), user,
-//				properties);
-//		System.out.println("props: " +props);
+		// Properties props = compileProperties(typeId, user,
+		// millisToCalendar(System.currentTimeMillis()), user,
+		// properties);
+		// System.out.println("props: " +props);
 
 		// check the name
 		String name = getStringProperty(properties, PropertyIds.NAME);
@@ -519,17 +514,13 @@ public class LDRepository {
 		} catch (Throwable e) {
 			throw new CmisStorageException("Could not create document: " + e.getMessage(), e);
 		}
-		System.out.println("folder created: " +folder);
 
 		// create object
-//		CmisObjectType object = new CmisObjectType();
-//		object.setProperties(Converter.convert(props));
-//		System.out.println("CmisObjectType created: " +object);
+		// CmisObjectType object = new CmisObjectType();
+		// object.setProperties(Converter.convert(props));
+		// System.out.println("CmisObjectType created: " +object);
 
-		String xxx = getId(folder);
-		System.out.println("xxx: " +xxx);
-		
-		return xxx;
+		return getId(folder);
 	}
 
 	/**
@@ -733,8 +724,6 @@ public class LDRepository {
 	}
 
 	public ObjectInfo getObjectInfo(String objectId, ObjectInfoHandler handler) {
-//		System.out.println("getObjectInfo");
-//		System.out.println("objectId: " +objectId);
 		validatePermission(objectId, null, null);
 
 		// check id
@@ -745,10 +734,8 @@ public class LDRepository {
 		ObjectInfoImpl info = new ObjectInfoImpl();
 		PersistentObject object = getObject(objectId);
 		compileProperties(object, null, info);
-		if (object instanceof AbstractDocument) {
-			ObjectData data = compileObjectType(null, object, null, true, true, handler);
-			info.setObject(data);
-		}
+		ObjectData data = compileObjectType(null, object, null, true, true, handler);
+		info.setObject(data);
 		return info;
 	}
 
@@ -940,6 +927,7 @@ public class LDRepository {
 			Boolean includeAllowableActions, Boolean includePathSegment, BigInteger maxItems, BigInteger skipCount,
 			ObjectInfoHandler objectInfos) {
 		debug("getChildren");
+		System.out.println("++getChildren() " + new Date() + " " + folderId);
 		validatePermission(folderId, context, null);
 
 		// split filter
@@ -1122,7 +1110,6 @@ public class LDRepository {
 
 		// As expression we will use the WHERE clause as is
 		String expr = statement.substring(statement.toLowerCase().lastIndexOf("where") + 5);
-		System.out.println("----- epr=" + expr);
 
 		/**
 		 * Try to detect if the request comes from LogicalDOC Mobile
@@ -1165,10 +1152,10 @@ public class LDRepository {
 						filter.add(st.nextToken());
 				}
 			}
-			
+
 			// filtro i risultati
 			result = compileObjectType(null, hit, filter, false, false, null);
-									
+
 			list.add(result);
 		}
 
@@ -1185,21 +1172,19 @@ public class LDRepository {
 	private String findCmisNameVal(String statement) {
 
 		// String targetText =
-		// "SELECT cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType FROM cmis:document  WHERE CONTAINS('~cmis:name:\'*wiki*\'')";		
-		//String patternText = "\\*.*\\*";
-		//SELECT cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType FROM cmis:document  WHERE cmis:name LIKE '%flexspaces%'"		
+		// "SELECT cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType FROM cmis:document  WHERE CONTAINS('~cmis:name:\'*wiki*\'')";
+		// String patternText = "\\*.*\\*";
+		// SELECT
+		// cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType
+		// FROM cmis:document WHERE cmis:name LIKE '%flexspaces%'"
 		String patternText = "%.*%";
 
 		Pattern pattern = Pattern.compile(patternText);
 		Matcher matcher = pattern.matcher(statement);
 
-		boolean success = matcher.find();
-		System.out.println("success: " + success);
+		matcher.find();
 
-		String group = matcher.group();
-		System.out.println("group: " + group);
-
-		return group;
+		return matcher.group();
 	}
 
 	/**
@@ -1271,10 +1256,10 @@ public class LDRepository {
 			result.setAcl(compileAcl(object));
 			result.setIsExactAcl(true);
 		}
-				
+
 		if ((context != null) && context.isObjectInfoRequired() && (objectInfos != null)) {
 			objectInfo.setObject(result);
-			//objectInfo.setVersionSeriesId(getId(object));			
+			// objectInfo.setVersionSeriesId(getId(object));
 			objectInfos.addObjectInfo(objectInfo);
 		}
 
@@ -1533,7 +1518,7 @@ public class LDRepository {
 	 */
 	private Properties compileProperties(String typeId, User creator, GregorianCalendar creationDate, User modifier,
 			Properties properties) {
-		
+
 		PropertiesImpl result = new PropertiesImpl();
 		Set<String> addedProps = new HashSet<String>();
 
@@ -1745,7 +1730,7 @@ public class LDRepository {
 		PropertyIdImpl p = new PropertyIdImpl(id, value);
 		p.setQueryName(id);
 		props.addProperty(p);
-		//props.addProperty(new PropertyIdImpl(id, value));
+		// props.addProperty(new PropertyIdImpl(id, value));
 	}
 
 	private void addPropertyIdList(PropertiesImpl props, String typeId, Set<String> filter, String id,
@@ -1757,7 +1742,7 @@ public class LDRepository {
 		PropertyIdImpl p = new PropertyIdImpl(id, value);
 		p.setQueryName(id);
 		props.addProperty(p);
-		//props.addProperty(new PropertyIdImpl(id, value));
+		// props.addProperty(new PropertyIdImpl(id, value));
 	}
 
 	private void addPropertyString(PropertiesImpl props, String typeId, Set<String> filter, String id, String value) {
@@ -1852,8 +1837,6 @@ public class LDRepository {
 	 */
 	@SuppressWarnings("unchecked")
 	private static boolean addPropertyDefault(PropertiesImpl props, PropertyDefinition<?> propDef) {
-
-		//System.out.println("addPropertyDefault");
 		if ((props == null) || (props.getProperties() == null)) {
 			throw new IllegalArgumentException("Props must not be null!");
 		}
@@ -1864,7 +1847,6 @@ public class LDRepository {
 
 		List<?> defaultValue = propDef.getDefaultValue();
 		if ((defaultValue != null) && (!defaultValue.isEmpty())) {
-			System.out.println("propDef.getPropertyType(): " +propDef.getPropertyType());
 			switch (propDef.getPropertyType()) {
 			case BOOLEAN:
 				PropertyBooleanImpl p = new PropertyBooleanImpl(propDef.getId(), (List<Boolean>) defaultValue);
@@ -1903,9 +1885,6 @@ public class LDRepository {
 				props.addProperty(p7);
 				break;
 			case URI:
-//				System.out.println("propDef.getPropertyType() case URL");
-//				System.out.println("propDef.getId(): " +propDef.getId());
-//				System.out.println("(List<String>) defaultValue: " +(List<String>) defaultValue);
 				PropertyUriImpl p8 = new PropertyUriImpl(propDef.getId(), (List<String>) defaultValue);
 				p8.setQueryName(propDef.getId());
 				props.addProperty(p8);
@@ -2002,11 +1981,9 @@ public class LDRepository {
 			entry.setPermissions(new ArrayList<String>());
 			entry.getPermissions().add(CMIS_READ);
 
-			System.out.println("---- " + object.getId());
 			if (!ue.getValue().booleanValue() && checkPermission(object, null, Permission.WRITE)
 					&& !(object instanceof Folder && ((Folder) object).getType() == Folder.TYPE_WORKSPACE)) {
 
-				System.out.println("++++ " + object.getId());
 				entry.getPermissions().add(CMIS_WRITE);
 				entry.getPermissions().add(CMIS_ALL);
 			}
@@ -2180,8 +2157,6 @@ public class LDRepository {
 	 * Retrieves the instance by the given objectId
 	 */
 	private PersistentObject getObject(String objectId) {
-		System.out.println("getObject(); objectId: " + objectId);
-		
 		if (objectId.startsWith(ID_PREFIX_DOC)) {
 			Long id = Long.parseLong(objectId.substring(4));
 			Document doc = documentDao.findById(id);
