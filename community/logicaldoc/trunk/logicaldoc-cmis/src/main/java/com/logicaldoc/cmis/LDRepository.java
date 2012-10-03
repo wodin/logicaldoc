@@ -909,7 +909,7 @@ public class LDRepository {
 			} else {
 				Version v = (Version) doc;
 				System.out.println("***this is a version "+v.getDocId()+","+v.getFileVersion());
-				is = storer.getStream(doc.getId(), storer.getResourceName(v.getDocId(), v.getFileVersion(), null));
+				is = storer.getStream(v.getDocId(), storer.getResourceName(v.getDocId(), v.getFileVersion(), null));
 			}
 			stream = new BufferedInputStream(is, BUFFER_SIZE);
 		} catch (Throwable e) {
