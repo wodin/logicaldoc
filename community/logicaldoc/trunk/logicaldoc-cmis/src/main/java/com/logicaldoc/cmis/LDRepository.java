@@ -885,8 +885,6 @@ public class LDRepository {
 	public ContentStream getContentStream(CallContext context, String objectId, BigInteger offset, BigInteger length) {
 		debug("getContentStream");
 		
-		System.out.println("***getContentStream "+objectId);
-		
 		validatePermission(objectId, context, null);
 
 		if ((offset != null) || (length != null)) {
@@ -904,11 +902,9 @@ public class LDRepository {
 			Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 			InputStream is = null;
 			if (doc instanceof Document) {
-				System.out.println("***this is a doc "+doc.getId());
 				is = storer.getStream(doc.getId(), storer.getResourceName((Document) doc, null, null));
 			} else {
 				Version v = (Version) doc;
-				System.out.println("***this is a version "+v.getDocId()+","+v.getFileVersion());
 				is = storer.getStream(v.getDocId(), storer.getResourceName(v.getDocId(), v.getFileVersion(), null));
 			}
 			stream = new BufferedInputStream(is, BUFFER_SIZE);
