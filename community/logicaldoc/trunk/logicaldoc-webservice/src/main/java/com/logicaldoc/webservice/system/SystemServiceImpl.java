@@ -40,7 +40,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 			/*
 			 * Repository statistics
 			 */
-			Generic gen = genDao.findByAlternateKey(StatsCollector.STAT, "docdir");
+			Generic gen = genDao.findByAlternateKey(StatsCollector.STAT, "docdir", null);
 			WSParameter docDirSize = new WSParameter();
 			docDirSize.setName("repo_docs");
 			if (gen != null)
@@ -49,7 +49,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 				docDirSize.setValue("0");
 			parameters[0] = docDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "userdir");
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "userdir", null);
 			WSParameter userDirSize = new WSParameter();
 			userDirSize.setName("repo_users");
 			if (gen != null)
@@ -58,7 +58,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 				userDirSize.setValue("0");
 			parameters[1] = userDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "indexdir");
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "indexdir", null);
 			WSParameter indexDirSize = new WSParameter();
 			indexDirSize.setName("repo_fulltextindex");
 			if (gen != null)
@@ -68,7 +68,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 
 			parameters[2] = indexDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "importdir");
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "importdir", null);
 			WSParameter importDirSize = new WSParameter();
 			importDirSize.setName("repo_import");
 			if (gen != null)
@@ -77,7 +77,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 				importDirSize.setValue("0");
 			parameters[3] = importDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "exportdir");
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "exportdir", null);
 			WSParameter exportDirSize = new WSParameter();
 			exportDirSize.setName("repo_export");
 			if (gen != null)
@@ -86,7 +86,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 				exportDirSize.setValue("0");
 			parameters[4] = exportDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "plugindir");
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "plugindir", null);
 			WSParameter pluginsDirSize = new WSParameter();
 			pluginsDirSize.setName("repo_plugins");
 			if (gen != null)
@@ -95,7 +95,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 				pluginsDirSize.setValue("0");
 			parameters[5] = pluginsDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "dbdir");
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "dbdir", null);
 			WSParameter dbDirSize = new WSParameter();
 			dbDirSize.setName("repo_database");
 			if (gen != null)
@@ -105,7 +105,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 
 			parameters[6] = dbDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "logdir");
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "logdir", null);
 			WSParameter logsDirSize = new WSParameter();
 			logsDirSize.setName("repo_logs");
 			if (gen != null)
@@ -118,19 +118,19 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 			/*
 			 * Document statistics
 			 */
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "notindexeddocs");
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "notindexeddocs", null);
 			WSParameter notIndexed = new WSParameter();
 			notIndexed.setName("docs_notindexed");
 			notIndexed.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[8] = notIndexed;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "indexeddocs");
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "indexeddocs", null);
 			WSParameter indexed = new WSParameter();
 			indexed.setName("docs_indexed");
 			indexed.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[9] = indexed;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "deleteddocs");
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "deleteddocs", null);
 			WSParameter deletedDocs = new WSParameter();
 			deletedDocs.setName("docs_trash");
 			deletedDocs.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
@@ -139,19 +139,19 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 			/*
 			 * Folders statistics
 			 */
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "withdocs");
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "withdocs", null);
 			WSParameter notEmptyFolders = new WSParameter();
 			notEmptyFolders.setName("folder_withdocs");
 			notEmptyFolders.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[11] = notEmptyFolders;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "empty");
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "empty", null);
 			WSParameter emptyFolders = new WSParameter();
 			emptyFolders.setName("folder_empty");
 			emptyFolders.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[12] = emptyFolders;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "deletedfolders");
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "deletedfolders", null);
 			WSParameter deletedFolders = new WSParameter();
 			deletedFolders.setName("folder_trash");
 			deletedFolders.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
@@ -160,7 +160,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 			/*
 			 * Last run
 			 */
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "lastrun");
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "lastrun", null);
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = gen != null ? df.parse(gen.getString1()) : null;
 			WSParameter lastrun = new WSParameter();

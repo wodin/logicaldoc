@@ -8,7 +8,8 @@ import com.logicaldoc.core.ExtensibleObject;
 
 /**
  * Instances of this class represents generic informations in the database. Use
- * this Business entity to store configurations or stuffs like this.<p/>
+ * this Business entity to store configurations or stuffs like this.
+ * <p/>
  * 
  * Each Generic is identified by a type and subtype
  * 
@@ -20,13 +21,19 @@ public class Generic extends ExtensibleObject implements Comparable<Generic> {
 
 	private String subtype;
 
+	private Long qualifier;
+
 	private String string1;
 
 	private String string2;
 
+	private String string3;
+
 	private Long integer1;
 
 	private Long integer2;
+
+	private Long integer3;
 
 	private Double double1;
 
@@ -44,6 +51,13 @@ public class Generic extends ExtensibleObject implements Comparable<Generic> {
 		super();
 		this.type = type;
 		this.subtype = subtype;
+	}
+
+	public Generic(String type, String subtype, Long qualifier) {
+		super();
+		this.type = type;
+		this.subtype = subtype;
+		this.qualifier = qualifier;
 	}
 
 	public String getType() {
@@ -133,8 +147,32 @@ public class Generic extends ExtensibleObject implements Comparable<Generic> {
 		else
 			return getSubtype().compareTo(o.getSubtype());
 	}
-	
-	public String getDisplayString1(){
+
+	public String getDisplayString1() {
 		return StringUtils.abbreviate(getString1(), 65);
+	}
+
+	public String getString3() {
+		return string3;
+	}
+
+	public void setString3(String string3) {
+		this.string3 = string3;
+	}
+
+	public Long getInteger3() {
+		return integer3;
+	}
+
+	public void setInteger3(Long integer3) {
+		this.integer3 = integer3;
+	}
+
+	public Long getQualifier() {
+		return qualifier;
+	}
+
+	public void setQualifier(Long qualifier) {
+		this.qualifier = qualifier;
 	}
 }

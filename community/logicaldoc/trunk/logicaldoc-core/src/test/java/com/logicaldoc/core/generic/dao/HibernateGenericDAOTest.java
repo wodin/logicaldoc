@@ -38,10 +38,10 @@ public class HibernateGenericDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindByAlternateKey() {
-		Generic generic = dao.findByAlternateKey("a", "a1");
+		Generic generic = dao.findByAlternateKey("a", "a1", null);
 		Assert.assertNotNull(generic);
 		Assert.assertEquals(new Long(0), generic.getInteger1());
-		generic = dao.findByAlternateKey("a", "xxx");
+		generic = dao.findByAlternateKey("a", "xxx", null);
 		Assert.assertNull(generic);
 	}
 
@@ -54,7 +54,7 @@ public class HibernateGenericDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindByTypeAndSubtype() {
-		List<Generic> generics = dao.findByTypeAndSubtype("a", "a%");
+		List<Generic> generics = dao.findByTypeAndSubtype("a", "a%", null);
 		Assert.assertEquals(2, generics.size());
 	}
 

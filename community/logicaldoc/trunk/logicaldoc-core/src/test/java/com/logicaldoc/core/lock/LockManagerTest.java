@@ -41,7 +41,7 @@ public class LockManagerTest extends AbstractCoreTCase {
 		Assert.assertTrue(manager.get("test", "t2"));
 		manager.release("test", "t2");
 
-		Generic lock = dao.findByAlternateKey("lock", "test");
+		Generic lock = dao.findByAlternateKey("lock", "test", null);
 		Assert.assertNotNull(lock);
 		Assert.assertNull(lock.getString1());
 		Assert.assertNull(lock.getDate1());	

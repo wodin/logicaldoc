@@ -101,4 +101,18 @@ public final class Constants {
 	public static final String COOKIE_PASSWORD = "ldoc-password";
 	
 	public static final String COOKIE_VERSION = "ldoc-version";
+	
+	public final static int DASHLET_CHECKOUT = 1;
+
+	public final static int DASHLET_CHECKIN = 2;
+
+	public final static int DASHLET_LOCKED = 3;
+	
+	public final static int DASHLET_DOWNLOADED = 4;
+
+	public final static int DASHLET_CHANGED = 5;
+	
+	public final static int DASHLET_POSTS = 6;
+	
+	public final static int DASHLET_TAGCLOUD = 7;
 }

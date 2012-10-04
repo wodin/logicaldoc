@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.dashboard;
 
+import com.logicaldoc.gui.frontend.client.dashboard.dashlet.TagCloudDashlet;
 import com.smartgwt.client.widgets.events.ResizedEvent;
 import com.smartgwt.client.widgets.events.ResizedHandler;
 import com.smartgwt.client.widgets.layout.PortalLayout;
@@ -12,10 +13,10 @@ import com.smartgwt.client.widgets.layout.PortalLayout;
  */
 public class TagsDashboard extends PortalLayout {
 
-	private TagCloudPortlet cloud = null;
+	private TagCloudDashlet cloud = null;
 
 	private MostUsedTagsPortlet mostUsed = null;
-	
+
 	private TagsPortlet tags = null;
 
 	public TagsDashboard() {
@@ -44,7 +45,7 @@ public class TagsDashboard extends PortalLayout {
 
 		if (mostUsed != null)
 			removePortlet(mostUsed);
-		
+
 		if (tags != null)
 			removePortlet(tags);
 
@@ -54,8 +55,8 @@ public class TagsDashboard extends PortalLayout {
 
 		tags = new TagsPortlet();
 		addPortlet(tags, 0, 1);
-		
-		cloud = new TagCloudPortlet();
+
+		cloud = new TagCloudDashlet(0);
 		addPortlet(cloud, 1, 0);
 
 		cloud.refresh();

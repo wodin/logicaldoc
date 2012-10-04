@@ -1,14 +1,16 @@
-package com.logicaldoc.gui.frontend.client.dashboard;
+package com.logicaldoc.gui.frontend.client.dashboard.dashlet;
 
+import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.PostsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.DragAppearance;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
@@ -20,7 +22,6 @@ import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
-import com.smartgwt.client.widgets.layout.Portlet;
 
 /**
  * Portlet specialized in listing the most recent comments of the current user.
@@ -28,18 +29,25 @@ import com.smartgwt.client.widgets.layout.Portlet;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class PostsPortlet extends Portlet {
+public class PostsDashlet extends Dashlet {
 
 	private PostsDS dataSource;
 
 	private ListGrid list;
 
-	public PostsPortlet() {
-		refresh();
+	public PostsDashlet() {
+		super(Constants.DASHLET_POSTS);
+
+		setTitle(I18N.message("lastposts"));
+
+		if (Feature.enabled(Feature.NOTES)) {
+			refresh();
+		} else {
+			addItem(new FeatureDisabled());
+		}
 	}
 
 	private void refresh() {
-		setTitle(I18N.message("lastposts"));
 
 		if (list != null) {
 			removeItem(list);
@@ -75,10 +83,6 @@ public class PostsPortlet extends Portlet {
 			}
 		});
 
-		setDragAppearance(DragAppearance.OUTLINE);
-		setDragOpacity(30);
-		setCanDrag(false);
-		setCanDrop(false);
 		HeaderControl refresh = new HeaderControl(HeaderControl.REFRESH, new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -90,7 +94,8 @@ public class PostsPortlet extends Portlet {
 		HeaderControl hcicon = new HeaderControl(portletIcon);
 		hcicon.setSize(16);
 
-		setHeaderControls(hcicon, HeaderControls.HEADER_LABEL, refresh);
+		setHeaderControls(hcicon, HeaderControls.HEADER_LABEL, refresh, HeaderControls.MAXIMIZE_BUTTON,
+				HeaderControls.CLOSE_BUTTON);
 
 		addItem(list);
 	}

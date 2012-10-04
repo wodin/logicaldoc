@@ -2,6 +2,7 @@ package com.logicaldoc.web.service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.DownloadTicket;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DownloadTicketDAO;
+import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.rss.dao.FeedMessageDAO;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
@@ -49,6 +51,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.beans.GUIDashlet;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMenu;
@@ -150,6 +153,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 				List<Long> menues = mdao.findMenuIdByUserId(user.getId());
 				guiUser.setMenues((Long[]) menues.toArray(new Long[0]));
+
+				loadDashlets(guiUser);
 
 				/*
 				 * Prepare an incoming message, if any
@@ -362,12 +367,31 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 				usr.setPasswordMinLenght(Integer.parseInt(config.getProperty("password.size")));
 
+				loadDashlets(usr);
+
 				return usr;
 			}
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 		}
 		return null;
+	}
+
+	/**
+	 * Retrieves the dashlets configuration
+	 */
+	protected void loadDashlets(GUIUser usr) {
+		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		List<GUIDashlet> dashlets = new ArrayList<GUIDashlet>();
+		Map<String, Generic> map = userDao.findUserSettings(usr.getId(), "dashlet");
+		for (Generic generic : map.values()) {
+			dashlets.add(new GUIDashlet(generic.getInteger1().intValue(), generic.getInteger2().intValue(), generic
+					.getInteger3().intValue()));
+		}
+		
+		System.out.println("**dashlets "+dashlets);
+		
+		usr.setDashlets(dashlets.toArray(new GUIDashlet[0]));
 	}
 
 	@Override
@@ -803,7 +827,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				query.append(" and A.ld_username like '%" + username + "%'");
 			if (StringUtils.isNotEmpty(groupId))
 				query.append(" and A.ld_id=B.ld_userid and B.ld_groupid=" + groupId);
-			
+
 			@SuppressWarnings("unchecked")
 			List<GUIUser> users = (List<GUIUser>) userDao.query(query.toString(), null, new RowMapper<GUIUser>() {
 

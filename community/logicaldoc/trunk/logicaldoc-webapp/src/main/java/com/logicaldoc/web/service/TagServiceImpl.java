@@ -39,7 +39,7 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService {
 			ArrayList<GUITag> ret = new ArrayList<GUITag>();
 			List<TagCloud> list = new ArrayList<TagCloud>();
 			GenericDAO gendao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
-			Generic generic = gendao.findByAlternateKey("tagcloud", "-");
+			Generic generic = gendao.findByAlternateKey("tagcloud", "-", null);
 			if (generic == null)
 				return new GUITag[0];
 			else

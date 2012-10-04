@@ -7,9 +7,11 @@ import org.junit.Test;
 
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.beans.GUIDashlet;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUISession;
+import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.web.AbstractWebappTCase;
 
 public class SettingServiceImplTest extends AbstractWebappTCase {
@@ -70,5 +72,15 @@ public class SettingServiceImplTest extends AbstractWebappTCase {
 		settings[1] = wdSettings;
 
 		service.saveClientSettings(session.getSid(), settings);
+	}
+	
+	@Test
+	public void testSaveDashlets() throws InvalidSessionException {
+		GUIDashlet[] dashlets = new GUIDashlet[] { new GUIDashlet(1, 0, 1), new GUIDashlet(1, 0, 2) };
+		service.saveDashlets(session.getSid(), dashlets);
+
+		SecurityServiceImpl secserver = new SecurityServiceImpl();
+		GUIUser user = secserver.getUser(session.getSid(), 1);
+		Assert.assertTrue(user.getDashlets().length == 2);
 	}
 }
