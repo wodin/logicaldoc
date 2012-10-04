@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 
 import org.apache.commons.io.FileUtils;
@@ -13,7 +14,12 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.communication.EMailSender;
+import com.logicaldoc.core.generic.Generic;
+import com.logicaldoc.core.generic.dao.GenericDAO;
+import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.beans.GUIDashlet;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
@@ -349,5 +355,35 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		params.add(new GUIParameter("search.extattr", conf.getProperty("search.extattr")));
 
 		return params.toArray(new GUIParameter[0]);
+	}
+
+	@Override
+	public void saveDashlets(String sid, GUIDashlet[] dashlets) throws InvalidSessionException {
+		UserSession session = SessionUtil.validateSession(sid);
+		GenericDAO gDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
+		UserDAO uDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+
+		try {
+			/*
+			 * Delete the actual dashlets for this user
+			 */
+			Map<String, Generic> settings = uDao.findUserSettings(session.getUserId(), "dashlet");
+			for (Generic setting : settings.values()) {
+				gDao.delete(setting.getId());
+			}
+
+			/*
+			 * Now save the new dashlets
+			 */
+			for (GUIDashlet dashlet : dashlets) {
+				Generic generic = new Generic("usersetting", "dashlet-" + dashlet.getId(), session.getUserId());
+				generic.setInteger1((long) dashlet.getId());
+				generic.setInteger2((long) dashlet.getColumn());
+				generic.setInteger3((long) dashlet.getRow());
+				gDao.store(generic);
+			}
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+		}
 	}
 }

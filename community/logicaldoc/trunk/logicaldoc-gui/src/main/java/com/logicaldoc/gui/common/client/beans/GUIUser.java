@@ -91,9 +91,11 @@ public class GUIUser implements Serializable {
 	private Set<UserObserver> observers = new HashSet<UserObserver>();
 
 	private String ipWhitelist;
-	
+
 	private String ipBlacklist;
-	
+
+	private GUIDashlet[] dashlets = new GUIDashlet[0];
+
 	public void setUserName(String userName) {
 		this.userName = userName;
 		notifyObservers("userName");
@@ -269,6 +271,15 @@ public class GUIUser implements Serializable {
 		}
 	}
 
+	public void addDashlet(GUIDashlet dashlet) {
+		GUIDashlet[] tmp = new GUIDashlet[dashlets.length + 1];
+		for (int i = 0; i < dashlets.length; i++) {
+			tmp[i] = dashlets[i];
+		}
+		tmp[groups.length] = dashlet;
+		dashlets = tmp;
+	}
+
 	public void removeGroup(String groupName) {
 		if (groups.length == 0)
 			return;
@@ -282,6 +293,20 @@ public class GUIUser implements Serializable {
 			}
 			groups = tmp;
 		}
+	}
+
+	public void removeDashlet(int id) {
+		if (dashlets.length == 0)
+			return;
+
+		GUIDashlet[] tmp = new GUIDashlet[dashlets.length - 1];
+		int i = 0;
+		for (GUIDashlet g : dashlets) {
+			if (g.getId() != id)
+				tmp[i++] = g;
+		}
+		dashlets = tmp;
+
 	}
 
 	public int getCheckedOutDocs() {
@@ -422,5 +447,13 @@ public class GUIUser implements Serializable {
 
 	public void setIpBlacklist(String ipBlacklist) {
 		this.ipBlacklist = ipBlacklist;
+	}
+
+	public GUIDashlet[] getDashlets() {
+		return dashlets;
+	}
+
+	public void setDashlets(GUIDashlet[] dashlets) {
+		this.dashlets = dashlets;
 	}
 }

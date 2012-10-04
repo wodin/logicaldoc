@@ -21,12 +21,15 @@ public class GUIEmail implements Serializable {
 	private boolean sendAsTicket = false;
 
 	private boolean zipCompression = false;
-	
+
 	private String message;
 
 	private GUIUser user;
 
 	private long[] docIds;
+
+	public GUIEmail() {
+	}
 
 	public String getRecipients() {
 		return recipients;

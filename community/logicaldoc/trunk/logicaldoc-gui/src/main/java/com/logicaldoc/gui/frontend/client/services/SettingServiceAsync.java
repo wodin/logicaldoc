@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.beans.GUIDashlet;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 
@@ -33,4 +34,6 @@ public interface SettingServiceAsync {
 	void loadSettingsByNames(String sid, String[] names, AsyncCallback<GUIParameter[]> callback);
 
 	void loadSettings(String sid, AsyncCallback<GUIParameter[]> callback);
+
+	void saveDashlets(String sid, GUIDashlet[] dashlets, AsyncCallback<Void> callback);
 }

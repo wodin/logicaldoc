@@ -48,7 +48,7 @@ public class TemplatesDataServlet extends HttpServlet {
 			if (StringUtils.isNotEmpty(folderId)) {
 				GenericDAO genericDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
 				// Get all the 'wf-trigger' generics on this folder
-				List<Generic> triggerGenerics = genericDao.findByTypeAndSubtype("wf-trigger", folderId + "-%");
+				List<Generic> triggerGenerics = genericDao.findByTypeAndSubtype("wf-trigger", folderId + "-%", null);
 				// Retrieve all the ids of the templates associated to a
 				// workflow
 				// already associated on the given folder

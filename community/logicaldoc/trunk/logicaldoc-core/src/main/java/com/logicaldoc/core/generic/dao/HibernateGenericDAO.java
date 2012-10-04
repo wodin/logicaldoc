@@ -42,10 +42,15 @@ public class HibernateGenericDAO extends HibernatePersistentObjectDAO<Generic> i
 	}
 
 	@Override
-	public Generic findByAlternateKey(String type, String subtype) {
+	public Generic findByAlternateKey(String type, String subtype, Long qualifier) {
 		Generic generic = null;
-		Collection<Generic> coll = findByWhere(" _entity.type = '" + SqlUtil.doubleQuotes(type)
-				+ "' and _entity.subtype='" + SqlUtil.doubleQuotes(subtype) + "'", null, null);
+		StringBuffer sb = new StringBuffer(" _entity.type = '" + SqlUtil.doubleQuotes(type) + "' and _entity.subtype='"
+				+ SqlUtil.doubleQuotes(subtype) + "' ");
+		if (qualifier != null)
+			sb.append(" and _entity.qualifier=" + qualifier);
+		else
+			sb.append(" and _entity.qualifier is null");
+		Collection<Generic> coll = findByWhere(sb.toString(), null, null);
 		if (coll.size() > 0) {
 			generic = coll.iterator().next();
 		}
@@ -53,12 +58,14 @@ public class HibernateGenericDAO extends HibernatePersistentObjectDAO<Generic> i
 	}
 
 	@Override
-	public List<Generic> findByTypeAndSubtype(String type, String subtype) {
+	public List<Generic> findByTypeAndSubtype(String type, String subtype, Long qualifier) {
 		String query = " 1=1 ";
 		if (StringUtils.isNotEmpty(type))
 			query += " and _entity.type like '" + SqlUtil.doubleQuotes(type) + "' ";
 		if (StringUtils.isNotEmpty(subtype))
 			query += " and _entity.subtype like '" + SqlUtil.doubleQuotes(subtype) + "' ";
+		if (qualifier != null)
+			query += " and _entity.qualifier =" + qualifier;
 		return findByWhere(query, null, null);
 	}
 

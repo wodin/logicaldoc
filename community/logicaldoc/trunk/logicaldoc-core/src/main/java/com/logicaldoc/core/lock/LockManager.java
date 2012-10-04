@@ -63,7 +63,7 @@ public class LockManager {
 		if (lockName == null || transactionId == null)
 			return;
 		
-		Generic lock = genericDao.findByAlternateKey(LOCK, lockName);
+		Generic lock = genericDao.findByAlternateKey(LOCK, lockName, null);
 		if (lock != null && transactionId.equals(lock.getString1())) {
 			lock.setDate1(null);
 			lock.setString1(null);
@@ -73,7 +73,7 @@ public class LockManager {
 
 	protected boolean getInternal(String lockName, String transactionId) {
 		Date today = new Date();
-		Generic lock = genericDao.findByAlternateKey(LOCK, lockName);
+		Generic lock = genericDao.findByAlternateKey(LOCK, lockName, null);
 		if (lock == null) {
 			log.debug("Lock " + lockName + " not found");
 			lock = new Generic(LOCK, lockName);

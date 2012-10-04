@@ -128,7 +128,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 	@Override
 	public TagCloud[] getTagCloud(String sid) throws Exception {
 		GenericDAO genericDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
-		Generic generic = genericDao.findByAlternateKey("tagcloud", "-");
+		Generic generic = genericDao.findByAlternateKey("tagcloud", "-", null);
 		if (generic == null)
 			return null;
 

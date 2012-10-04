@@ -320,7 +320,7 @@ public class StatsCollector extends Task {
 	 * Convenience method for saving statistical data in the DB as Generics
 	 */
 	private void saveStatistic(String parameter, Object val) {
-		Generic gen = genericDAO.findByAlternateKey(STAT, parameter);
+		Generic gen = genericDAO.findByAlternateKey(STAT, parameter, null);
 		if (gen == null) {
 			gen = new Generic();
 			gen.setType(STAT);

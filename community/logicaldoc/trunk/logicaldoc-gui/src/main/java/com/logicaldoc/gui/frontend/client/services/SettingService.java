@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.services;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.beans.GUIDashlet;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 
@@ -97,4 +98,9 @@ public interface SettingService extends RemoteService {
 	 * @param sid The current user session
 	 */
 	public GUIParameter[] computeStoragesSize(String sid) throws InvalidSessionException;
+
+	/**
+	 * Saves the dashlets configuration for the current user
+	 */
+	public void saveDashlets(String sid, GUIDashlet[] dashlets) throws InvalidSessionException;
 }

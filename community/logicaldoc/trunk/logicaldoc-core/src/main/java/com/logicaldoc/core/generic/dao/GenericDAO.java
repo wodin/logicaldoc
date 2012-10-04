@@ -17,9 +17,11 @@ public interface GenericDAO extends PersistentObjectDAO<Generic>{
 	 * 
 	 * @param type The exact type
 	 * @param subtype The exact subtype
+	 * @param subtype The qualifier (optional)
+	 * 
 	 * @return Wanted generic or null.
 	 */
-	public Generic findByAlternateKey(String type, String subtype);
+	public Generic findByAlternateKey(String type, String subtype, Long qualifier);
 
 	/**
 	 * Finds a Generic by it's alternate key. The search uses the like operator
@@ -27,7 +29,9 @@ public interface GenericDAO extends PersistentObjectDAO<Generic>{
 	 * 
 	 * @param type The type(you can use like jollies and can be null)
 	 * @param subtype The subtype(you can use like jollies and can be null)
+	 * @param subtype The qualifier (optional)
+	 * 
 	 * @return The collection of fount Generics
 	 */
-	public List<Generic> findByTypeAndSubtype(String type, String subtype);
+	public List<Generic> findByTypeAndSubtype(String type, String subtype, Long qualifier);
 }

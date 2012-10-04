@@ -11,7 +11,7 @@ create table ld_document (ld_id bigint not null, ld_lastmodified timestamp not n
                           ld_comment varchar(1000), ld_workflowstatus varchar(1000), ld_published int not null, ld_startpublishing timestamp,
                           ld_stoppublishing timestamp null, ld_transactionid varchar(255), ld_tgs varchar(1000), primary key (ld_id));
 create table ld_document_ext (ld_docid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_docid, ld_name));
-create table ld_generic (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_type varchar(255) not null, ld_subtype varchar(255) not null, ld_string1 varchar(4000), ld_string2 varchar(4000), ld_integer1 bigint null, ld_integer2 bigint null, ld_double1 float, ld_double2 float, ld_date1 timestamp null, ld_date2 timestamp null, primary key (ld_id));
+create table ld_generic (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_type varchar(255) not null, ld_subtype varchar(255) not null, ld_qualifier bigint null, ld_string1 varchar(4000), ld_string2 varchar(4000), ld_string3 varchar(4000), ld_integer1 bigint null, ld_integer2 bigint null, ld_integer3 bigint null, ld_double1 float, ld_double2 float, ld_date1 timestamp null, ld_date2 timestamp null, primary key (ld_id));
 create table ld_generic_ext (ld_genid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_genid, ld_name));
 create table ld_group (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_name varchar(255) not null, ld_description varchar(255), ld_type int not null, primary key (ld_id));
 create table ld_group_ext (ld_groupid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_groupid, ld_name));
@@ -100,7 +100,7 @@ create unique index  AK_GROUP on ld_group (ld_name);
 create unique index  AK_TICKET on ld_ticket (ld_ticketid);
 create unique index  AK_LINK on ld_link (ld_docid1, ld_docid2, ld_type);
 create unique index  AK_TEMPLATE on ld_template (ld_name);
-create unique index  AK_GENERIC on ld_generic (ld_type, ld_subtype);
+create unique index  AK_GENERIC on ld_generic (ld_type, ld_subtype, ld_qualifier);
 create unique index  AK_VERSION on ld_version (ld_documentid, ld_version);
 create unique index  AK_RATING on ld_rating (ld_docid, ld_userid);
 create unique index  AK_MSGTEMPL on ld_messagetemplate (ld_name, ld_language);

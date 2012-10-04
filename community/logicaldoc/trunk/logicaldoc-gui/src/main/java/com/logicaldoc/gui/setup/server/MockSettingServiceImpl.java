@@ -2,6 +2,7 @@ package com.logicaldoc.gui.setup.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.beans.GUIDashlet;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
@@ -142,5 +143,11 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 	@Override
 	public GUIParameter[] loadSettingsByNames(String sid, String[] names) throws InvalidSessionException {
 		return loadSettings(sid);
+	}
+
+	@Override
+	public void saveDashlets(String sid, GUIDashlet[] dashlets) throws InvalidSessionException {
+		// TODO Auto-generated method stub
+		
 	}
 }

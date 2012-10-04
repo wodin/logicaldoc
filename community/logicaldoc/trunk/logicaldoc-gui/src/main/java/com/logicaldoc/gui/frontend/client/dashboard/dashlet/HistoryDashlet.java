@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.dashboard;
+package com.logicaldoc.gui.frontend.client.dashboard.dashlet;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -16,7 +16,6 @@ import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.DragAppearance;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
@@ -31,15 +30,14 @@ import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
 import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
-import com.smartgwt.client.widgets.layout.Portlet;
 
 /**
- * Portlet specialized in listing history records
+ * Dashlet specialized in listing history records
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class HistoryPortlet extends Portlet {
+public class HistoryDashlet extends Dashlet {
 
 	private DocumentHistoryDS dataSource;
 
@@ -49,7 +47,8 @@ public class HistoryPortlet extends Portlet {
 
 	private String event = "";
 
-	public HistoryPortlet(final String eventCode) {
+	public HistoryDashlet(int id, final String eventCode) {
+		super(id);
 		this.event = eventCode;
 		refresh();
 	}
@@ -112,11 +111,6 @@ public class HistoryPortlet extends Portlet {
 			}
 		});
 
-		setDragAppearance(DragAppearance.OUTLINE);
-		setDragOpacity(30);
-		setCanDrag(false);
-		setCanDrop(false);
-
 		HeaderControl markAsRead = new HeaderControl(HeaderControl.TRASH, new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent e) {
@@ -163,7 +157,8 @@ public class HistoryPortlet extends Portlet {
 		HeaderControl hcicon = new HeaderControl(portletIcon);
 		hcicon.setSize(16);
 
-		setHeaderControls(hcicon, HeaderControls.HEADER_LABEL, markAsRead, refresh);
+		setHeaderControls(hcicon, HeaderControls.HEADER_LABEL, markAsRead, refresh, HeaderControls.MINIMIZE_BUTTON,
+				HeaderControls.CLOSE_BUTTON);
 
 		// Count the total of events and the total of unchecked events
 		list.addDataArrivedHandler(new DataArrivedHandler() {

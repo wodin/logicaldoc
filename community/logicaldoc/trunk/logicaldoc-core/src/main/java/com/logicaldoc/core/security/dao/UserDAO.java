@@ -1,8 +1,10 @@
 package com.logicaldoc.core.security.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.logicaldoc.core.PersistentObjectDAO;
+import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserHistory;
 
@@ -91,4 +93,15 @@ public interface UserDAO extends PersistentObjectDAO<User> {
 	 * @return True if successfully stored in a database.
 	 */
 	public boolean store(final User user, final UserHistory transaction);
+
+	/**
+	 * Retrieves the settings for a user. The settings are stored as Generics of
+	 * type usersetting.
+	 * 
+	 * @param userId Identifier of the user
+	 * @param namePrefix Name prefix of the property (optional)
+	 * 
+	 * @return The map setting_name-generic
+	 */
+	public Map<String, Generic> findUserSettings(long userId, String namePrefix);
 }

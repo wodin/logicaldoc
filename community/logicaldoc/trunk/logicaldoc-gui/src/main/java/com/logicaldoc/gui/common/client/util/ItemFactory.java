@@ -284,7 +284,7 @@ public class ItemFactory {
 	}
 
 	public static SelectItem newWelcomeScreenSelector(String name, Integer value) {
-		SelectItem select = new SelectItem("welcomescreen", I18N.message("welcomescreen"));
+		SelectItem select = new SelectItem(name, I18N.message("welcomescreen"));
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("1500", I18N.message("documents"));
 		map.put("1510", I18N.message("search"));
@@ -294,6 +294,24 @@ public class ItemFactory {
 			select.setValue(value.toString());
 		else
 			select.setValue("1500");
+		return select;
+	}
+
+	public static SelectItem newDashletSelector(String name, String title) {
+		SelectItem select = new SelectItem(name, title);
+		select.setAllowEmptyValue(false);
+		
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		map.put("" + Constants.DASHLET_CHECKOUT, I18N.message(Constants.EVENT_CHECKEDOUT + "docs"));
+		map.put("" + Constants.DASHLET_CHECKIN, I18N.message(Constants.EVENT_CHECKEDIN + "docs"));
+		map.put("" + Constants.DASHLET_LOCKED, I18N.message(Constants.EVENT_LOCKED + "docs"));
+		map.put("" + Constants.DASHLET_CHANGED, I18N.message(Constants.EVENT_CHANGED + "docs"));
+		map.put("" + Constants.DASHLET_DOWNLOADED, I18N.message(Constants.EVENT_DOWNLOADED + "docs"));
+		map.put("" + Constants.DASHLET_POSTS, I18N.message("lastposts"));
+		map.put("" + Constants.DASHLET_TAGCLOUD, I18N.message("tagcloud"));
+
+		select.setValueMap(map);
+		select.setValue(map.keySet().iterator().next());
 		return select;
 	}
 

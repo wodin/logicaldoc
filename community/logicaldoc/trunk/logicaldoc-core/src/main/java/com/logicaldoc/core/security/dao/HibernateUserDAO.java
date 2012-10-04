@@ -12,6 +12,8 @@ import java.util.Set;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
+import com.logicaldoc.core.generic.Generic;
+import com.logicaldoc.core.generic.dao.GenericDAO;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserHistory;
@@ -29,6 +31,8 @@ import com.logicaldoc.util.io.CryptUtil;
 public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> implements UserDAO {
 
 	private UserDocDAO userDocDAO;
+
+	private GenericDAO genericDAO;
 
 	private UserHistoryDAO userHistoryDAO;
 
@@ -292,5 +296,19 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 		for (Group group : user.getGroups()) {
 			group.getName();
 		}
+	}
+
+	@Override
+	public Map<String, Generic> findUserSettings(long userId, String namePrefix) {
+		List<Generic> generics = genericDAO.findByTypeAndSubtype("usersetting", namePrefix + "%", userId);
+		Map<String, Generic> map = new HashMap<String, Generic>();
+		for (Generic generic : generics) {
+			map.put(generic.getSubtype(), generic);
+		}
+		return map;
+	}
+
+	public void setGenericDAO(GenericDAO genericDAO) {
+		this.genericDAO = genericDAO;
 	}
 }

@@ -56,7 +56,7 @@ public class TagsDataServlet extends HttpServlet {
 			if ("preset".equals(firstLetter)) {
 				// We have to return the preset only
 				GenericDAO gDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
-				List<Generic> buf = gDao.findByTypeAndSubtype("tag", null);
+				List<Generic> buf = gDao.findByTypeAndSubtype("tag", null, null);
 				for (Generic generic : buf) {
 					tgs.put(generic.getSubtype(), 0);
 				}

@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.dashboard;
+package com.logicaldoc.gui.frontend.client.dashboard.dashlet;
 
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
@@ -21,17 +21,15 @@ import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
 import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
-import com.smartgwt.client.widgets.layout.Portlet;
 
-public class StatusPortlet extends Portlet {
+public class StatusDashlet extends Dashlet {
 
 	private DocumentsDS dataSource;
 
 	private ListGrid list;
 
-	public StatusPortlet(final String eventCode) {
-		setCanDrag(false);
-		setCanDrop(false);
+	public StatusDashlet(int id, final String eventCode) {
+		super(id);
 
 		int max = 10;
 		int status = 0;
@@ -46,7 +44,8 @@ public class StatusPortlet extends Portlet {
 		HeaderIcon portletIcon = ItemFactory.newHeaderIcon(icn);
 		HeaderControl hcicon = new HeaderControl(portletIcon);
 		hcicon.setSize(16);
-		setHeaderControls(hcicon, HeaderControls.HEADER_LABEL);
+		setHeaderControls(hcicon, HeaderControls.HEADER_LABEL, HeaderControls.MAXIMIZE_BUTTON,
+				HeaderControls.CLOSE_BUTTON);
 
 		ListGridField version = new ListGridField("version", I18N.message("version"), 70);
 		ListGridField lastModified = new ListGridField("lastModified", I18N.message("date"), 110);
