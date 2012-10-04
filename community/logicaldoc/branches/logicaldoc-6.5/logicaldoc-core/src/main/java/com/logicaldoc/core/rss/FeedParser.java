@@ -99,7 +99,10 @@ public class FeedParser {
 					}
 					if (event.asStartElement().getName().getLocalPart() == (DESCRIPTION)) {
 						event = eventReader.nextEvent();
-						description = event.asCharacters().getData();
+						try {
+							description = event.asCharacters().getData();
+						} catch (Throwable t) {
+						}
 						continue;
 					}
 
