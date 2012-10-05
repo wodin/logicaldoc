@@ -3,6 +3,8 @@
 <module rename-to="frontend">
   <inherits name="com.logicaldoc.gui.common.Common" />
   <inherits name="com.smartclient.theme.enterprise.EnterpriseResources" />
+  <!-- inherits name='com.google.gwt.visualization.Visualization'/-->
+  
   <inherits name="com.rednels.ofcgwt.OFCGWT" />
   <inherits name="com.bramosystems.oss.player.core.Core" />
   
