@@ -212,8 +212,8 @@ public class LDRepository {
 
 		repositoryInfo.setId(id);
 		if (root.getId() == Folder.ROOTID) {
-			repositoryInfo.setName("Default");
-			repositoryInfo.setDescription("Default repository");
+			repositoryInfo.setName("Main Repository");
+			repositoryInfo.setDescription(id);
 		} else {
 			repositoryInfo.setName(root.getName());
 			repositoryInfo.setDescription(root.getDescription());
@@ -610,7 +610,7 @@ public class LDRepository {
 		System.out.println("LDRepository.deleteObjectOrCancelCheckOut");
 		// get the file or folder
 		PersistentObject object = getObject(objectId);
-		System.out.println("object: " +object);
+		System.out.println("object: " + object);
 		if (object == null) {
 			throw new CmisObjectNotFoundException("Object not found!");
 		}
@@ -884,7 +884,7 @@ public class LDRepository {
 	 */
 	public ContentStream getContentStream(CallContext context, String objectId, BigInteger offset, BigInteger length) {
 		debug("getContentStream");
-		
+
 		validatePermission(objectId, context, null);
 
 		if ((offset != null) || (length != null)) {
