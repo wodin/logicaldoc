@@ -1424,7 +1424,7 @@ public class LDRepository {
 					// PropertyIds.IS_LATEST_MAJOR_VERSION,
 					// doc.getVersion().endsWith(".0"));
 				}
-				addPropertyString(result, typeId, filter, PropertyIds.VERSION_LABEL, doc.getTitle());
+				addPropertyString(result, typeId, filter, PropertyIds.VERSION_LABEL, doc.getVersion());
 				addPropertyId(result, typeId, filter, PropertyIds.VERSION_SERIES_ID, getId(doc));
 				if (doc.getStatus() != Document.DOC_CHECKED_OUT) {
 					addPropertyBoolean(result, typeId, filter, PropertyIds.IS_VERSION_SERIES_CHECKED_OUT, false);
