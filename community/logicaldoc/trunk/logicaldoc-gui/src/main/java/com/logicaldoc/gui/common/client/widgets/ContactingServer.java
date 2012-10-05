@@ -1,14 +1,11 @@
 package com.logicaldoc.gui.common.client.widgets;
 
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.Dialog;
-import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.layout.HLayout;
 
 /**
  * This is the window that must be showed to the user during a long LogicalDOC
@@ -37,7 +34,6 @@ public class ContactingServer extends Dialog {
 		setVertical(true);
 		setAlign(Alignment.CENTER);
 		
-
 		Label message = new Label(I18N.message("contactingserver") + "...");
 		message.setAlign(Alignment.CENTER);
 		message.setIcon(Util.imageUrl("loading32.gif"));

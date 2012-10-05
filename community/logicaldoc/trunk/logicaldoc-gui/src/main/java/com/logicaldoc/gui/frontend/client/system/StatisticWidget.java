@@ -1,9 +1,11 @@
 package com.logicaldoc.gui.frontend.client.system;
 
+import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
+import com.google.gwt.visualization.client.DataTable;
+import com.google.gwt.visualization.client.visualizations.PieChart;
+import com.google.gwt.visualization.client.visualizations.PieChart.Options;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
-import com.rednels.ofcgwt.client.ChartWidget;
-import com.rednels.ofcgwt.client.model.ChartData;
-import com.rednels.ofcgwt.client.model.elements.PieChart;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
  * Visualizes some statistics as a pie chart
@@ -11,36 +13,44 @@ import com.rednels.ofcgwt.client.model.elements.PieChart;
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
  */
-public class StatisticWidget extends ChartWidget {
+public class StatisticWidget extends VLayout {
 	public StatisticWidget(String title, GUIParameter[] parameters) {
 		super();
-		ChartData cd = new ChartData(title, "font-size:14px; font-family:Verdana; text-align:center;");
-		cd.setBackgroundColour("#ffffff");
 
-		PieChart pie = new PieChart();
-		pie.setAlpha(0.3f);
-		pie.setNoLabels(true);
-		pie.setTooltip("#label# <br>#percent#");
-		pie.setGradientFill(true);
-		pie.setColours("#ff0000", "#00ff00", "#0000ff", "#ff9900", "#ff00ff");
+		setAutoWidth();
+		setAutoHeight();
 
-		boolean showEmptyChart = true;
-		for (GUIParameter parameter : parameters) {
+		// Defining the options
+		Options options = Options.create();
+		options.setWidth(300);
+		options.setHeight(200);
+		options.set3D(true);
+		options.setTitle(title);
+
+		// Setup the table with data
+		DataTable data = DataTable.create();
+		data.addColumn(ColumnType.STRING, "Title");
+		data.addColumn(ColumnType.NUMBER, "Number");
+		data.addColumn(ColumnType.STRING, "Label");
+
+		int rowCount = 0;
+		for (int i = 0; i < parameters.length; i++)
+			if (parameters[i] != null)
+				rowCount++;
+		data.addRows(rowCount);
+
+		int row = 0;
+		for (int i = 0; i < parameters.length; i++) {
+			GUIParameter parameter = parameters[i];
 			if (parameter == null)
-				break;
-			if (Long.parseLong(parameter.getValue()) > 0)
-				showEmptyChart = false;
-			pie.addSlices(new PieChart.Slice(Long.parseLong(parameter.getValue()), parameter.toString()));
+				continue;
+			data.setValue(row, 0, parameter.toString());
+			data.setValue(row, 1, new Integer(parameter.getValue()));
+			row++;
 		}
 
-		// Maybe all parameters have value = 0, so is visualised a full chart
-		if (showEmptyChart)
-			pie.addSlices(new PieChart.Slice(100, ""));
-
-		cd.addElements(pie);
-
-		setSize("200", "200");
-
-		setJsonData(cd.toString());
+		// Create a pie chart visualization.
+		PieChart pie = new PieChart(data, options);
+		addMember(pie);
 	}
 }

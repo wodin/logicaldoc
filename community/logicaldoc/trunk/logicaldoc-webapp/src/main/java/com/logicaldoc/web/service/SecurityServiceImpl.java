@@ -388,9 +388,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			dashlets.add(new GUIDashlet(generic.getInteger1().intValue(), generic.getInteger2().intValue(), generic
 					.getInteger3().intValue()));
 		}
-		
-		System.out.println("**dashlets "+dashlets);
-		
+
 		usr.setDashlets(dashlets.toArray(new GUIDashlet[0]));
 	}
 
