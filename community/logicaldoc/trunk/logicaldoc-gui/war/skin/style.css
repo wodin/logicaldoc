@@ -221,3 +221,10 @@
 .bigtext {
   font-size: 24pt;
 }
+
+.contactingserver {
+  font-family: Arial, Bitstream Vera Sans, sans-serif; 
+  font-size: 16pt;
+  font-weight: bold;
+  white-space: nowrap;
+}
