@@ -109,12 +109,12 @@ public class LoadSession {
 
 			AuthClient auth = new AuthClient(url + "/services/Auth");
 			DocumentClient documentClient = new DocumentClient(url + "/services/Document",
-					config.getInt("webservice.gzip"), false);
+					config.getInt("webservice.gzip"), false, 40);
 			FolderClient folderClient = new FolderClient(url + "/services/Folder", config.getInt("webservice.gzip"),
-					false);
+					false, 40);
 			SystemClient systemClient = new SystemClient(url + "/services/System");
 			SearchClient searchClient = new SearchClient(url + "/services/Search", config.getInt("webservice.gzip"),
-					false);
+					false, 40);
 
 			// Store the service references
 			ServerProxy lsp = new ServerProxy(url, auth, folderClient, documentClient, systemClient, searchClient);
