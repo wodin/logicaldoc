@@ -60,11 +60,12 @@ public class LDCmisService extends AbstractCmisService {
 	 * Constructor.
 	 */
 	public LDCmisService(CallContext context, String sessionId) {
+		
 		this.context = context;
 		this.sessionId = sessionId;
 
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Folder root=fdao.findById(Folder.ROOTID);
+		Folder root = fdao.findById(Folder.ROOTID);
 		repositories.put(Long.toString(Folder.ROOTID), new LDRepository(root, sessionId));
 		
 //		List<Folder> workspaces = fdao.findWorkspaces();
@@ -182,8 +183,6 @@ public class LDCmisService extends AbstractCmisService {
 	@Override
 	public void deleteObjectOrCancelCheckOut(String repositoryId, String objectId, Boolean allVersions,
 			ExtensionsData extension) {
-		System.out.println("LDCmisService.deleteObjectOrCancelCheckOut");
-		System.out.println("objectId: " +objectId);
 		validateSession();
 		getRepository().deleteObjectOrCancelCheckOut(getCallContext(), objectId);
 	}
@@ -191,8 +190,6 @@ public class LDCmisService extends AbstractCmisService {
 	@Override
 	public FailedToDeleteData deleteTree(String repositoryId, String folderId, Boolean allVersions,
 			UnfileObject unfileObjects, Boolean continueOnFailure, ExtensionsData extension) {
-		System.out.println("LDCmisService.deleteTree");
-		System.out.println("folderId: " +folderId);		
 		validateSession();
 		return getRepository().deleteTree(getCallContext(), folderId, continueOnFailure);
 	}
