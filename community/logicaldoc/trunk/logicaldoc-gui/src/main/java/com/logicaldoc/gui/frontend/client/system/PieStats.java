@@ -92,6 +92,8 @@ public class PieStats extends HLayout {
 
 			item.setRequired(true);
 			item.setShouldSaveValue(false);
+			item.setWrap(false);
+			item.setWrapTitle(false);
 			items[i] = item;
 			i++;
 		}

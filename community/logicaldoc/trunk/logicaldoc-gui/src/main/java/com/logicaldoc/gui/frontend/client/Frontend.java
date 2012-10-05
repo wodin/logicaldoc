@@ -6,6 +6,8 @@ import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.visualization.client.VisualizationUtils;
+import com.google.gwt.visualization.client.visualizations.PieChart;
 import com.logicaldoc.gui.common.client.Config;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
@@ -119,6 +121,9 @@ public class Frontend implements EntryPoint {
 				setUploadTrigger(Frontend.this);
 			}
 		});
+		
+	    // Load the visualization api
+	    VisualizationUtils.loadVisualizationApi(null, PieChart.PACKAGE);
 	}
 
 	public void showLogin() {
