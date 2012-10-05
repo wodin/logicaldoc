@@ -50,6 +50,8 @@ public class TypeManager {
 	public static final String RELATIONSHIP_TYPE_ID = BaseTypeId.CMIS_RELATIONSHIP.value();
 
 	public static final String POLICY_TYPE_ID = BaseTypeId.CMIS_POLICY.value();
+	
+	public static final String WORKSPACE_TYPE_ID = "Workspace";
 
 	private static final String NAMESPACE = "http://logicaldoc.com/cmis";
 
@@ -127,6 +129,31 @@ public class TypeManager {
 		addFolderPropertyDefinitions(folderType);
 
 		addTypeInteral(folderType);
+		
+		
+		// Workspace type
+		FolderTypeDefinitionImpl workspaceType = new FolderTypeDefinitionImpl();
+		workspaceType.setBaseTypeId(BaseTypeId.CMIS_FOLDER);
+		workspaceType.setIsControllableAcl(false);
+		workspaceType.setIsControllablePolicy(false);
+		workspaceType.setIsCreatable(false);
+		workspaceType.setDescription("Workspace");
+		workspaceType.setDisplayName("Workspace");
+		workspaceType.setIsFileable(true);
+		workspaceType.setIsFulltextIndexed(false);
+		workspaceType.setIsIncludedInSupertypeQuery(true);
+		workspaceType.setLocalName("Workspace");
+		workspaceType.setLocalNamespace(NAMESPACE);
+		workspaceType.setIsQueryable(true);
+		workspaceType.setQueryName("Workspace");
+		workspaceType.setId(WORKSPACE_TYPE_ID);
+
+		addBasePropertyDefinitions(workspaceType);
+		addFolderPropertyDefinitions(workspaceType);
+
+		addTypeInteral(workspaceType);		
+		
+		
 
 		// document type
 		DocumentTypeDefinitionImpl documentType = new DocumentTypeDefinitionImpl();

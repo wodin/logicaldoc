@@ -930,7 +930,7 @@ public class LDRepository {
 			Boolean includeAllowableActions, Boolean includePathSegment, BigInteger maxItems, BigInteger skipCount,
 			ObjectInfoHandler objectInfos) {
 		debug("getChildren");
-		System.out.println("++getChildren() " + new Date() + " " + folderId);
+		//System.out.println("++getChildren() " + new Date() + " " + folderId);
 		validatePermission(folderId, context, null);
 
 		// split filter
@@ -1285,8 +1285,12 @@ public class LDRepository {
 
 		if (object instanceof Folder) {
 			typeId = TypeManager.FOLDER_TYPE_ID;
-			objectInfo.setBaseType(BaseTypeId.CMIS_FOLDER);
 			objectInfo.setTypeId(typeId);
+			if (((Folder) object).getType() == 1) {
+				typeId = TypeManager.WORKSPACE_TYPE_ID;
+				objectInfo.setTypeId(typeId);				
+			}
+			objectInfo.setBaseType(BaseTypeId.CMIS_FOLDER);			
 			objectInfo.setContentType(null);
 			objectInfo.setFileName(null);
 			objectInfo.setHasAcl(true);
@@ -1304,8 +1308,8 @@ public class LDRepository {
 			objectInfo.setWorkingCopyOriginalId(null);
 		} else {
 			typeId = TypeManager.DOCUMENT_TYPE_ID;
-			objectInfo.setBaseType(BaseTypeId.CMIS_DOCUMENT);
 			objectInfo.setTypeId(typeId);
+			objectInfo.setBaseType(BaseTypeId.CMIS_DOCUMENT);			
 			objectInfo.setHasAcl(true);
 			objectInfo.setHasContent(true);
 			objectInfo.setHasParent(true);
@@ -1377,23 +1381,27 @@ public class LDRepository {
 			if (object instanceof Folder) {
 				// base type and type name
 				addPropertyId(result, typeId, filter, PropertyIds.BASE_TYPE_ID, BaseTypeId.CMIS_FOLDER.value());
-				addPropertyId(result, typeId, filter, PropertyIds.OBJECT_TYPE_ID, TypeManager.FOLDER_TYPE_ID);
+				if (((Folder) object).getType() == 1) {
+					addPropertyId(result, typeId, filter, PropertyIds.OBJECT_TYPE_ID, TypeManager.WORKSPACE_TYPE_ID);
+				} else {
+					addPropertyId(result, typeId, filter, PropertyIds.OBJECT_TYPE_ID, TypeManager.FOLDER_TYPE_ID);
+				}
 
 				String path = folderDao.computePathExtended(object.getId());
 				addPropertyString(result, typeId, filter, PropertyIds.PATH, (path.length() == 0 ? "/" : path));
 
 				// folder properties
 				if (!root.equals(object)) {
-					addPropertyId(result, typeId, filter, PropertyIds.PARENT_ID,
-							ID_PREFIX_FLD + ((Folder) object).getParentId());
+					addPropertyId(result, typeId, filter, PropertyIds.PARENT_ID, ID_PREFIX_FLD + ((Folder) object).getParentId());
 					objectInfo.setHasParent(true);
 				} else {
 					addPropertyId(result, typeId, filter, PropertyIds.PARENT_ID, null);
 					objectInfo.setHasParent(false);
 				}
 				addPropertyIdList(result, typeId, filter, PropertyIds.ALLOWED_CHILD_OBJECT_TYPE_IDS, null);
-				addPropertyString(result, typeId, filter, TypeManager.PROP_DESCRIPTION,
-						((Folder) object).getDescription());
+				addPropertyString(result, typeId, filter, TypeManager.PROP_DESCRIPTION, ((Folder) object).getDescription());
+				
+				// Identifica il tipo della cartella: workspace o normale
 				addPropertyInteger(result, typeId, filter, TypeManager.PROP_TYPE, ((Folder) object).getType());
 			} else {
 				AbstractDocument doc = (AbstractDocument) object;
