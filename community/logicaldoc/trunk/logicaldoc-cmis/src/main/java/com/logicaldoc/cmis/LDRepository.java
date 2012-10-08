@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -930,11 +931,13 @@ public class LDRepository {
 			Boolean includeAllowableActions, Boolean includePathSegment, BigInteger maxItems, BigInteger skipCount,
 			ObjectInfoHandler objectInfos) {
 		debug("getChildren");
-		// System.out.println("++getChildren() " + new Date() + " " + folderId);
 		validatePermission(folderId, context, null);
 
 		// split filter
 		Set<String> filterCollection = splitFilter(filter);
+		filterCollection.clear();
+		filterCollection.addAll(Arrays.asList(new String[] { PropertyIds.OBJECT_ID, PropertyIds.OBJECT_ID,
+				PropertyIds.NAME }));
 
 		// set defaults if values not set
 		boolean iaa = (includeAllowableActions == null ? false : includeAllowableActions.booleanValue());
@@ -1743,7 +1746,6 @@ public class LDRepository {
 		PropertyIdImpl p = new PropertyIdImpl(id, value);
 		p.setQueryName(id);
 		props.addProperty(p);
-		// props.addProperty(new PropertyIdImpl(id, value));
 	}
 
 	private void addPropertyIdList(PropertiesImpl props, String typeId, Set<String> filter, String id,
@@ -1755,7 +1757,6 @@ public class LDRepository {
 		PropertyIdImpl p = new PropertyIdImpl(id, value);
 		p.setQueryName(id);
 		props.addProperty(p);
-		// props.addProperty(new PropertyIdImpl(id, value));
 	}
 
 	private void addPropertyString(PropertiesImpl props, String typeId, Set<String> filter, String id, String value) {
