@@ -377,7 +377,6 @@ public class LDRepository {
 			return compileObjectType(context, getDocument(objectId), null, false, false, objectInfos);
 		} else if (type.getBaseTypeId() == BaseTypeId.CMIS_FOLDER) {
 			objectId = createFolder(context, properties, folderId);
-			System.out.println("Folder created with objectId: " + objectId);
 			return compileObjectType(context, getFolder(objectId), null, false, false, objectInfos);
 		} else {
 			throw new CmisObjectNotFoundException("Cannot create object of type '" + typeId + "'!");
@@ -471,8 +470,6 @@ public class LDRepository {
 	public String createFolder(CallContext context, Properties properties, String folderId) {
 		debug("createFolder");
 
-		System.out.println("++createFolder() " + new Date() + " " + folderId);
-
 		validatePermission(folderId, context, Permission.WRITE);
 
 		// check properties
@@ -486,12 +483,6 @@ public class LDRepository {
 		if (type == null) {
 			throw new CmisObjectNotFoundException("Type '" + typeId + "' is unknown!");
 		}
-
-		// compile the properties
-		// Properties props = compileProperties(typeId, user,
-		// millisToCalendar(System.currentTimeMillis()), user,
-		// properties);
-		// System.out.println("props: " +props);
 
 		// check the name
 		String name = getStringProperty(properties, PropertyIds.NAME);
@@ -515,11 +506,6 @@ public class LDRepository {
 		} catch (Throwable e) {
 			throw new CmisStorageException("Could not create document: " + e.getMessage(), e);
 		}
-
-		// create object
-		// CmisObjectType object = new CmisObjectType();
-		// object.setProperties(Converter.convert(props));
-		// System.out.println("CmisObjectType created: " +object);
 
 		return getId(folder);
 	}
@@ -608,10 +594,8 @@ public class LDRepository {
 	}
 
 	public void deleteObjectOrCancelCheckOut(CallContext context, String objectId) {
-		System.out.println("LDRepository.deleteObjectOrCancelCheckOut");
 		// get the file or folder
 		PersistentObject object = getObject(objectId);
-		System.out.println("object: " + object);
 		if (object == null) {
 			throw new CmisObjectNotFoundException("Object not found!");
 		}
@@ -2143,7 +2127,6 @@ public class LDRepository {
 	}
 
 	private void debug(String msg) {
-		// System.out.println("debug - " + msg);
 		debug(msg, null);
 	}
 
