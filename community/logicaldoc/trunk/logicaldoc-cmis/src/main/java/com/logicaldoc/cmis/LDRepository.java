@@ -213,7 +213,7 @@ public class LDRepository {
 		repositoryInfo.setId(id);
 		if (root.getId() == Folder.ROOTID) {
 			repositoryInfo.setName("Main Repository");
-			repositoryInfo.setDescription(id);
+			repositoryInfo.setDescription("Main Repository");
 		} else {
 			repositoryInfo.setName(root.getName());
 			repositoryInfo.setDescription(root.getDescription());
