@@ -3,9 +3,7 @@ package com.logicaldoc.gui.frontend.client.dashboard;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.http.client.URL;
 import com.logicaldoc.gui.common.client.beans.GUITag;
-import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -17,13 +15,11 @@ import com.smartgwt.client.widgets.layout.VLayout;
  */
 public class TagCloud extends VLayout {
 
-	private VLayout container;
-
 	private List<GUITag> tags;
 
 	private int maxNumberOfTags;// the number of tags shown in the cloud.
 
-	private HTMLFlow html = null;
+	private HTMLFlow container = null;
 
 	public TagCloud() {
 		tags = new ArrayList<GUITag>();
@@ -75,24 +71,20 @@ public class TagCloud extends VLayout {
 	 * deletion of word.
 	 */
 	public void refresh() {
-		String tcloud = "<tags>";
-		for (GUITag w : tags) {
-			tcloud += "<a href='" + URL.encode(w.getLink()) + "' style='" + (w.getScale() + 4)
-					+ "' color='0x000000' hicolor='0x314976'>" + w.getTag() + "</a>";
-			;
-		}
-		tcloud += "</tags>";
-		tcloud = "tcolor=0x111111&tcolor2=0x336699&hicolor=0x&tspeed=100&distr=true&mode=both&tagcloud=" + tcloud;
 
 		if (container != null)
 			removeMember(container);
-		container = new VLayout();
-		container.setWidth("95%");
-		container.setHeight(getHeight() - 20);
-		addMember(container);
 
-		html = new HTMLFlow(Util.flashHTML("tagcloud.swf", getWidth() - 40, getHeight() - 40, tcloud));
-		container.addMember(html);
+		container = new HTMLFlow() {
+
+			@Override
+			public String getInnerHTML() {
+				return "<iframe src='tagcloud/cloud.jsp' style='border: 0px solid white; width:100%; height:"+TagCloud.this.getHeight()+";' height='"+TagCloud.this.getHeight()+"' scrolling='no'>";
+			}
+
+		};
+
+		addMember(container);
 	}
 
 	public int getMaxNumberOfWords() {
