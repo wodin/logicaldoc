@@ -121,9 +121,9 @@ public class Frontend implements EntryPoint {
 				setUploadTrigger(Frontend.this);
 			}
 		});
-		
-	    // Load the visualization api
-	    VisualizationUtils.loadVisualizationApi(null, PieChart.PACKAGE);
+
+		// Load the visualization api
+		VisualizationUtils.loadVisualizationApi(null, PieChart.PACKAGE);
 	}
 
 	public void showLogin() {
@@ -173,6 +173,10 @@ public class Frontend implements EntryPoint {
 	}
 
 	public void searchTag(String tag) {
+		TagsForm.searchTag(tag, false);
+	}
+
+	public void addTagInCloud(String tag, String weight, String link) {
 		TagsForm.searchTag(tag, false);
 	}
 

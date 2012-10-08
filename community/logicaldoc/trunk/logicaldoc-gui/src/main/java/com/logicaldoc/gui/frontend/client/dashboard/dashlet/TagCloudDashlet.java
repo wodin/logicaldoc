@@ -37,17 +37,42 @@ public class TagCloudDashlet extends Dashlet {
 	public TagCloudDashlet(int id) {
 		super(id);
 		if (Feature.enabled(Feature.TAGS)) {
-			setMinHeight(250);
+			setMinHeight(200);
+
+			HeaderControl refresh = new HeaderControl(HeaderControl.REFRESH, new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					refresh();
+				}
+			});
+
+			setTitle(I18N.message("tagcloud"));
+
+			HeaderIcon portletIcon = ItemFactory.newHeaderIcon("tag_blue.png");
+			HeaderControl hcicon = new HeaderControl(portletIcon);
+			hcicon.setSize(16);
+
+			if (getId() == Constants.DASHLET_TAGCLOUD) {
+				setHeaderControls(hcicon, HeaderControls.HEADER_LABEL, refresh, HeaderControls.MAXIMIZE_BUTTON,
+						HeaderControls.CLOSE_BUTTON);
+				setCanDrag(true);
+				setCanDrop(true);
+			} else
+				setHeaderControls(hcicon, HeaderControls.HEADER_LABEL, refresh);
+
+			setDragAppearance(DragAppearance.OUTLINE);
+			setDragOpacity(30);
+
 			refresh();
-			
+
 			addResizedHandler(new ResizedHandler() {
-				
+
 				@Override
 				public void onResized(ResizedEvent event) {
 					refresh();
 				}
 			});
-			
+
 		} else
 			addItem(new FeatureDisabled());
 	}
@@ -60,35 +85,11 @@ public class TagCloudDashlet extends Dashlet {
 		if (container != null)
 			removeChild(container);
 
-		HeaderControl refresh = new HeaderControl(HeaderControl.REFRESH, new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				refresh();
-			}
-		});
-
-		setTitle(I18N.message("tagcloud"));
-
-		HeaderIcon portletIcon = ItemFactory.newHeaderIcon("tag_blue.png");
-		HeaderControl hcicon = new HeaderControl(portletIcon);
-		hcicon.setSize(16);
-
-		if (getId() == Constants.DASHLET_TAGCLOUD)
-			setHeaderControls(hcicon, HeaderControls.HEADER_LABEL, refresh, HeaderControls.MAXIMIZE_BUTTON,
-					HeaderControls.CLOSE_BUTTON);
-		else
-			setHeaderControls(hcicon, HeaderControls.HEADER_LABEL, refresh);
-
-		setCanDrag(false);
-		setCanDrop(false);
-		setDragAppearance(DragAppearance.OUTLINE);
-		setDragOpacity(30);
-
 		container = new HLayout();
 		container.setWidth100();
 		container.setHeight100();
 		container.setAlign(Alignment.CENTER);
-		container.setMargin(25);
+		container.setMargin(10);
 
 		addChild(container);
 
