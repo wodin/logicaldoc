@@ -31,9 +31,6 @@ public class CmisServlet extends CmisAtomPubServlet {
 		String[] addr = new String[] { request.getRemoteAddr(), request.getRemoteHost() };
 		remoteAddress.set(addr);
 
-		// System.out.println("[" + new Date() + "] " + request.getRequestURI()
-		// + "?" + request.getQueryString());
-
 		// Check if the service is enabled
 		if ("true".equals(settings.get("cmis.enabled"))) {
 			if (request.getHeader("Authorization") == null) {
