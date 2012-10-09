@@ -380,6 +380,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 				generic.setInteger1((long) dashlet.getId());
 				generic.setInteger2((long) dashlet.getColumn());
 				generic.setInteger3((long) dashlet.getRow());
+				generic.setString1(Long.toString(dashlet.getIndex()));
 				gDao.store(generic);
 			}
 		} catch (Throwable e) {

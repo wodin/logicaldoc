@@ -386,7 +386,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		Map<String, Generic> map = userDao.findUserSettings(usr.getId(), "dashlet");
 		for (Generic generic : map.values()) {
 			dashlets.add(new GUIDashlet(generic.getInteger1().intValue(), generic.getInteger2().intValue(), generic
-					.getInteger3().intValue()));
+					.getInteger3().intValue(), generic.getString1() != null ? Integer.parseInt(generic.getString1())
+					: 0));
 		}
 
 		usr.setDashlets(dashlets.toArray(new GUIDashlet[0]));

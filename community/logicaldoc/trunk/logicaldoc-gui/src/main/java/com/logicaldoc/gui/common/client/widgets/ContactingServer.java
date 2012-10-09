@@ -33,6 +33,8 @@ public class ContactingServer extends Dialog {
 		setHeight(150);
 		setVertical(true);
 		setAlign(Alignment.CENTER);
+		setBackgroundColor("#777777");
+		
 		
 		Label message = new Label(I18N.message("contactingserver") + "...");
 		message.setAlign(Alignment.CENTER);

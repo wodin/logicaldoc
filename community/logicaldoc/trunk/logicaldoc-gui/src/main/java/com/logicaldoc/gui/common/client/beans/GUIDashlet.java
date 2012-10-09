@@ -18,14 +18,17 @@ public class GUIDashlet implements Serializable {
 
 	private int row;
 
+	private int index;
+
 	public GUIDashlet() {
 	}
 
-	public GUIDashlet(int id, int column, int row) {
+	public GUIDashlet(int id, int column, int row, int index) {
 		super();
 		this.id = id;
 		this.column = column;
 		this.row = row;
+		this.index = index;
 	}
 
 	public int getId() {
@@ -50,5 +53,13 @@ public class GUIDashlet implements Serializable {
 
 	public void setRow(int row) {
 		this.row = row;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 }

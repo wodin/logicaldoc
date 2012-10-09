@@ -28,7 +28,9 @@ function init() {
     window.clouder = new Clouder({
         container: clouder,
         callback: parent.searchTag,
-        tags: createTags()
+        tags: createTags(),
+        interval: 2,
+        stepAngle: 0.18
     });
     
 } // init

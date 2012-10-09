@@ -20,6 +20,7 @@ public class Dashlet extends Portlet {
 		this.id = id;
 
 		setMinHeight(150);
+		setMinWidth(100);
 
 		// enable predefined component animation
 		setAnimateMinimize(true);
@@ -58,8 +59,8 @@ public class Dashlet extends Portlet {
 		case Constants.DASHLET_CHANGED:
 			dashlet = new HistoryDashlet(Constants.DASHLET_CHANGED, Constants.EVENT_CHANGED);
 			break;
-		case Constants.DASHLET_POSTS:
-			dashlet = new PostsDashlet();
+		case Constants.DASHLET_LAST_NOTES:
+			dashlet = new LastNotesDashlet();
 			break;
 		case Constants.DASHLET_TAGCLOUD:
 			dashlet = new TagCloudDashlet();
