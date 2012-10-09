@@ -919,9 +919,6 @@ public class LDRepository {
 
 		// split filter
 		Set<String> filterCollection = splitFilter(filter);
-		filterCollection.clear();
-		filterCollection.addAll(Arrays.asList(new String[] { PropertyIds.OBJECT_ID, PropertyIds.OBJECT_ID,
-				PropertyIds.NAME }));
 
 		// set defaults if values not set
 		boolean iaa = (includeAllowableActions == null ? false : includeAllowableActions.booleanValue());
