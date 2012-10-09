@@ -112,7 +112,7 @@ public final class Constants {
 
 	public final static int DASHLET_CHANGED = 5;
 	
-	public final static int DASHLET_POSTS = 6;
+	public final static int DASHLET_LAST_NOTES = 6;
 	
 	public final static int DASHLET_TAGCLOUD = 7;
 }

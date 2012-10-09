@@ -86,7 +86,7 @@ public class UserDashboard extends VLayout {
 
 		for (GUIDashlet gd : Session.get().getUser().getDashlets()) {
 			Dashlet dashlet = Dashlet.getDashlet(gd.getId());
-			portal.addPortlet(dashlet, gd.getColumn(), gd.getRow());
+			portal.addPortlet(dashlet, gd.getColumn(), gd.getRow(), gd.getIndex());
 		}
 	}
 
@@ -109,7 +109,7 @@ public class UserDashboard extends VLayout {
 			for (int row = 0; row < portlets[column].length; row++)
 				for (int i = 0; i < portlets[column][row].length; i++) {
 					Dashlet dashlet = (Dashlet) portlets[column][row][i];
-					dashlets[q++] = new GUIDashlet(dashlet.getId(), column, row);
+					dashlets[q++] = new GUIDashlet(dashlet.getId(), column, row, i);
 				}
 
 		Session.get().getUser().setDashlets(dashlets);

@@ -307,7 +307,7 @@ public class ItemFactory {
 		map.put("" + Constants.DASHLET_LOCKED, I18N.message(Constants.EVENT_LOCKED + "docs"));
 		map.put("" + Constants.DASHLET_CHANGED, I18N.message(Constants.EVENT_CHANGED + "docs"));
 		map.put("" + Constants.DASHLET_DOWNLOADED, I18N.message(Constants.EVENT_DOWNLOADED + "docs"));
-		map.put("" + Constants.DASHLET_POSTS, I18N.message("lastposts"));
+		map.put("" + Constants.DASHLET_LAST_NOTES, I18N.message("lastposts"));
 		map.put("" + Constants.DASHLET_TAGCLOUD, I18N.message("tagcloud"));
 
 		select.setValueMap(map);

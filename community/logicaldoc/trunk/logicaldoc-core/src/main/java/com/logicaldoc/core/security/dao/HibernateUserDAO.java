@@ -98,6 +98,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	@Override
 	public boolean store(User user, UserHistory transaction) {
 		boolean result = true;
+		boolean newUser = user.getId() == 0;
 
 		try {
 			Map<String, Object> dictionary = new HashMap<String, Object>();
@@ -123,6 +124,28 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 				groupDAO.store(grp);
 
 				saveUserHistory(user, transaction);
+			}
+
+			if (newUser) {
+				// Save default dashlets
+				Generic dash = new Generic("usersetting", "dashlet-1", user.getId());
+				dash.setInteger1(1L);
+				dash.setInteger2(0L);
+				dash.setInteger3(0L);
+				dash.setString1("0");
+				genericDAO.store(dash);
+				dash = new Generic("usersetting", "dashlet-3", user.getId());
+				dash.setInteger1(3L);
+				dash.setInteger2(0L);
+				dash.setInteger3(1L);
+				dash.setString1("0");
+				genericDAO.store(dash);
+				dash = new Generic("usersetting", "dashlet-6", user.getId());
+				dash.setInteger1(6L);
+				dash.setInteger2(1L);
+				dash.setInteger3(0L);
+				dash.setString1("0");
+				genericDAO.store(dash);
 			}
 
 			log.debug("Invoke listeners after store");

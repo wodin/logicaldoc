@@ -89,7 +89,7 @@ public class TagCloudDashlet extends Dashlet {
 		container.setWidth100();
 		container.setHeight100();
 		container.setAlign(Alignment.CENTER);
-		container.setMargin(10);
+		container.setMargin(25);
 
 		addChild(container);
 

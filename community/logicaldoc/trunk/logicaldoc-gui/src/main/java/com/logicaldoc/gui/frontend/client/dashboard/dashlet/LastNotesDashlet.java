@@ -29,16 +29,16 @@ import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class PostsDashlet extends Dashlet {
+public class LastNotesDashlet extends Dashlet {
 
 	private PostsDS dataSource;
 
 	private ListGrid list;
 
-	public PostsDashlet() {
-		super(Constants.DASHLET_POSTS);
+	public LastNotesDashlet() {
+		super(Constants.DASHLET_LAST_NOTES);
 
-		setTitle(I18N.message("lastposts"));
+		setTitle(I18N.message("lastnotes"));
 
 		if (Feature.enabled(Feature.NOTES)) {
 			refresh();
