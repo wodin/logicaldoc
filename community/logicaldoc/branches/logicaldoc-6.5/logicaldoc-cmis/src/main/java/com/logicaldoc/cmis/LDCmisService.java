@@ -31,6 +31,7 @@ import org.apache.chemistry.opencmis.commons.impl.server.AbstractCmisService;
 import org.apache.chemistry.opencmis.commons.server.CallContext;
 import org.apache.chemistry.opencmis.commons.server.ObjectInfo;
 import org.apache.chemistry.opencmis.commons.spi.Holder;
+import org.apache.commons.lang.StringUtils;
 
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.SessionManager;
@@ -59,14 +60,18 @@ public class LDCmisService extends AbstractCmisService {
 	 * Constructor.
 	 */
 	public LDCmisService(CallContext context, String sessionId) {
+		
 		this.context = context;
 		this.sessionId = sessionId;
 
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		List<Folder> workspaces = fdao.findWorkspaces();
-		for (Folder workspace : workspaces) {
-			repositories.put(Long.toString(workspace.getId()), new LDRepository(workspace, sessionId));
-		}
+		Folder root = fdao.findById(Folder.ROOTID);
+		repositories.put(Long.toString(Folder.ROOTID), new LDRepository(root, sessionId));
+		
+//		List<Folder> workspaces = fdao.findWorkspaces();
+//		for (Folder workspace : workspaces) {
+//			repositories.put(Long.toString(workspace.getId()), new LDRepository(workspace, sessionId));
+//		}
 	}
 
 	public CallContext getCallContext() {
@@ -157,7 +162,6 @@ public class LDCmisService extends AbstractCmisService {
 		validateSession();
 		ObjectData object = getRepository().create(getCallContext(), properties, folderId, contentStream,
 				versioningState, this);
-
 		return object.getId();
 	}
 
@@ -310,9 +314,24 @@ public class LDCmisService extends AbstractCmisService {
 	}
 
 	public LDRepository getRepository() {
-		LDRepository repo = repositories.get(getCallContext().getRepositoryId());
+		LDRepository repo = null;
+		UserSession session = validateSession();
+		String[] sessionObj = (String[]) session.getUserObject();
+
+		if (StringUtils.isEmpty(getCallContext().getRepositoryId())) {
+			/*
+			 * The information is not in the request, so fallback to the session
+			 */
+			repo = repositories.get(sessionObj[3]);
+		} else {
+			// Update the last accessed repository
+			repo = repositories.get(getCallContext().getRepositoryId());
+			sessionObj[3] = repo.getId();
+		}
+
 		if (repo == null)
 			throw new CmisPermissionDeniedException("Repository " + getCallContext().getRepositoryId() + " not found !");
+
 		return repo;
 	}
 }
