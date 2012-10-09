@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -96,7 +97,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ibm.icu.util.StringTokenizer;
+//import com.ibm.icu.util.StringTokenizer;
 import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
@@ -123,7 +124,6 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
-import com.logicaldoc.util.StringUtil;
 import com.logicaldoc.util.TagUtil;
 import com.logicaldoc.util.config.ContextProperties;
 
@@ -184,9 +184,12 @@ public class LDRepository {
 	/**
 	 * Constructor.
 	 * 
-	 * @param id CMIS repository id
-	 * @param root root folder
-	 * @param types type manager object
+	 * @param id
+	 *            CMIS repository id
+	 * @param root
+	 *            root folder
+	 * @param types
+	 *            type manager object
 	 */
 	public LDRepository(Folder root, String sid) {
 		// check root folder
@@ -391,6 +394,7 @@ public class LDRepository {
 			ContentStream contentStream, VersioningState versioningState) {
 
 		debug("createDocument");
+
 		validatePermission(folderId, context, Permission.WRITE);
 
 		// check properties
@@ -447,8 +451,25 @@ public class LDRepository {
 		document.setLanguage(user.getLanguage());
 
 		String tagsString = getStringProperty(properties, TypeManager.PROP_TAGS);
-		if(StringUtils.isNotEmpty(tagsString))
-			document.setTags(TagUtil.extractTags(tagsString));
+		System.out.println("tagsString: " +tagsString);
+		if (StringUtils.isNotEmpty(tagsString)) {
+			//System.out.println("TagUtil.extractTags(tagsString): " +TagUtil.extractTags(tagsString));
+			//document.setTags(TagUtil.extractTags(tagsString));
+			
+			Set<String> sss = new HashSet<String>();
+			StringTokenizer st = new StringTokenizer(tagsString, ",", false);
+			while (st.hasMoreTokens()) {
+				String tg = st.nextToken();
+				if (StringUtils.isEmpty(tg)) {
+					System.out.println("alert token empty");
+				} else {
+					sss.add(tg);
+				}
+			}			
+			
+			document.setTags(sss);
+			System.out.println("document.getTags(): " +document.getTags());
+		}
 
 		try {
 			document = documentManager.create(new BufferedInputStream(contentStream.getStream(), BUFFER_SIZE),
@@ -456,7 +477,7 @@ public class LDRepository {
 		} catch (Throwable e) {
 			throw new CmisStorageException("Could not create document: " + e.getMessage(), e);
 		}
-		
+
 		return getId(document);
 	}
 
@@ -1207,7 +1228,8 @@ public class LDRepository {
 	/**
 	 * Checks if the given name is valid for a file system.
 	 * 
-	 * @param name the name to check
+	 * @param name
+	 *            the name to check
 	 * 
 	 * @return <code>true</code> if the name is valid, <code>false</code>
 	 *         otherwise
@@ -1386,6 +1408,7 @@ public class LDRepository {
 				// Identifica il tipo della cartella: workspace o normale
 				addPropertyInteger(result, typeId, filter, TypeManager.PROP_TYPE, ((Folder) object).getType());
 			} else {
+				// Object is a Document
 				AbstractDocument doc = (AbstractDocument) object;
 
 				// base type and type name
@@ -1468,6 +1491,13 @@ public class LDRepository {
 						doc.getRating() != null ? doc.getRating() : 0);
 				addPropertyString(result, typeId, filter, TypeManager.PROP_FILEVERSION, doc.getFileVersion());
 				addPropertyString(result, typeId, filter, TypeManager.PROP_VERSION, doc.getVersion());
+				try {
+					addPropertyString(result, typeId, filter, TypeManager.PROP_TAGS, doc.getTgs());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					log.error(e.getMessage(), e);
+				}
 			}
 
 			if (filter != null) {
@@ -2053,7 +2083,15 @@ public class LDRepository {
 	 * Returns the first value of an string property.
 	 */
 	private static String getStringProperty(Properties properties, String name) {
+		
 		PropertyData<?> property = properties.getProperties().get(name);
+		
+		if (property == null) {
+			return null;
+		}
+		if (property instanceof PropertyId) {
+			return ((PropertyId) property).getFirstValue();
+		}
 		if (!(property instanceof PropertyString)) {
 			return null;
 		}
