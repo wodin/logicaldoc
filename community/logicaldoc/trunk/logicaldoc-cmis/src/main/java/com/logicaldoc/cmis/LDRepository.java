@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -124,6 +123,8 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
+import com.logicaldoc.util.StringUtil;
+import com.logicaldoc.util.TagUtil;
 import com.logicaldoc.util.config.ContextProperties;
 
 /**
@@ -411,11 +412,6 @@ public class LDRepository {
 
 		User user = getSessionUser();
 
-		// compile the properties
-		// Properties props = compileProperties(typeId, user,
-		// millisToCalendar(System.currentTimeMillis()), user,
-		// properties);
-
 		// check the name
 		String name = getStringProperty(properties, PropertyIds.NAME);
 		if (name == null) {
@@ -450,17 +446,17 @@ public class LDRepository {
 		document.setFolder(getFolder(folderId));
 		document.setLanguage(user.getLanguage());
 
+		String tagsString = getStringProperty(properties, TypeManager.PROP_TAGS);
+		if(StringUtils.isNotEmpty(tagsString))
+			document.setTags(TagUtil.extractTags(tagsString));
+
 		try {
 			document = documentManager.create(new BufferedInputStream(contentStream.getStream(), BUFFER_SIZE),
 					document, transaction);
 		} catch (Throwable e) {
 			throw new CmisStorageException("Could not create document: " + e.getMessage(), e);
 		}
-
-		// create object
-		// CmisObjectType object = new CmisObjectType();
-		// object.setProperties(Converter.convert(props));
-
+		
 		return getId(document);
 	}
 
