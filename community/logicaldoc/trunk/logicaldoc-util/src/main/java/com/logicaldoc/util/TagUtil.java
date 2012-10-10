@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.text.BreakIterator;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.StringTokenizer;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.logicaldoc.util.config.ContextProperties;
 
@@ -34,15 +37,17 @@ public class TagUtil {
 			BreakIterator boundary = BreakIterator.getWordInstance();
 			boundary.setText(words);
 
-			int start = boundary.first();
-
-			for (int end = boundary.next(); end != BreakIterator.DONE; start = end, end = boundary.next()) {
-				String word = words.substring(start, end).toLowerCase().trim();
-				if (word.length() >= conf.getInt("tag.minsize")) {
-					if (word.length() > conf.getInt("tag.maxsize"))
-						coll.add(word.substring(0, conf.getInt("tag.maxsize")));
-					else
-						coll.add(word);
+			StringTokenizer st = new StringTokenizer(words, ",", false);
+			while (st.hasMoreTokens()) {
+				String word = st.nextToken();
+				if (StringUtils.isNotEmpty(word)) {
+					word = word.trim();
+					if (word.length() >= conf.getInt("tag.minsize")) {
+						if (word.length() > conf.getInt("tag.maxsize"))
+							coll.add(word.substring(0, conf.getInt("tag.maxsize")));
+						else
+							coll.add(word);
+					}
 				}
 			}
 
