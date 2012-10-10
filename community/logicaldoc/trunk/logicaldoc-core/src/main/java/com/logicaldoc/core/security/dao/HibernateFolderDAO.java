@@ -1107,12 +1107,12 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		}
 
 		delete(folder.getId(), transaction);
-
+		
 		/*
 		 * Mark as deleted all the folders
 		 */
-		int records = jdbcUpdate("update ld_folder A set A.ld_deleted=1, A.ld_lastmodified = ? where not A.ld_id in "
-				+ treeIdsString, new Date());
+		int records = jdbcUpdate("update ld_folder A set A.ld_deleted=1, A.ld_lastmodified = ? where not A.ld_id = ? and A.ld_id in "
+				+ treeIdsString, folder.getId(), new Date());
 
 		if (getSessionFactory().getCache() != null)
 			getSessionFactory().getCache().evictEntityRegions();
