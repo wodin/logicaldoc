@@ -1114,15 +1114,23 @@ public class LDRepository {
 		/**
 		 * Try to detect if the request comes from LogicalDOC Mobile
 		 */
-		// statement.toString() -> SELECT
+		// Pattern 1)
+		// statement.toString() ->
+		// SELECT
 		// cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType
 		// FROM cmis:document WHERE cmis:name LIKE '%flexspaces%'
+		//
+		// Pattern 2)
+		// statement.toString() ->
+		// SELECT
+		// cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType
+		// FROM cmis:document WHERE CONTAINS('flexspaces')
+
 		if (statement.indexOf("SELECT cmis:objectId,cmis:name,cmis:lastModifiedBy") != -1) {
-			String cmisNameVal = findCmisNameVal(statement);
-			if (cmisNameVal.startsWith("%")) {
-				cmisNameVal = cmisNameVal.substring(1, cmisNameVal.length() - 1);
-				expr = cmisNameVal;
-			}
+			String pattern = "%.*%";
+			if (statement.toLowerCase().contains("contains"))
+				pattern = "\'.*\'";
+			expr = findExprInQuery(statement, pattern);
 		}
 
 		opt.setExpression(expr);
@@ -1169,22 +1177,13 @@ public class LDRepository {
 
 	// --- helper methods ---
 
-	private String findCmisNameVal(String statement) {
-
-		// String targetText =
-		// "SELECT cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType FROM cmis:document  WHERE CONTAINS('~cmis:name:\'*wiki*\'')";
-		// String patternText = "\\*.*\\*";
-		// SELECT
-		// cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType
-		// FROM cmis:document WHERE cmis:name LIKE '%flexspaces%'"
-		String patternText = "%.*%";
-
+	private String findExprInQuery(String statement, String patternText) {
 		Pattern pattern = Pattern.compile(patternText);
 		Matcher matcher = pattern.matcher(statement);
-
 		matcher.find();
-
-		return matcher.group();
+		String match = matcher.group();
+		// remove the first and last char: they are % or '
+		return match.substring(1, match.length() - 1);
 	}
 
 	/**
