@@ -25,24 +25,24 @@ public class ContactingServer extends Dialog {
 	}
 
 	private ContactingServer() {
-		setOpacity(70);
 		setShowEdges(false);
 		setShowHeader(false);
 		centerInPage();
 		setIsModal(true);
-		setHeight(150);
 		setVertical(true);
 		setAlign(Alignment.CENTER);
-		setBackgroundColor("#777777");
-		
-		
+		setMargin(2);
+		setBackgroundColor("white");
+		setBorder("1px solid DarkBlue");
+		setOverflow(Overflow.HIDDEN);
+
 		Label message = new Label(I18N.message("contactingserver") + "...");
+		message.setWrap(false);
 		message.setAlign(Alignment.CENTER);
 		message.setIcon(Util.imageUrl("loading32.gif"));
 		message.setIconSize(32);
-		message.setOverflow(Overflow.HIDDEN);
 		message.setStyleName("contactingserver");
 		
-		addItem(message);
+		addChild(message);
 	}
 }
