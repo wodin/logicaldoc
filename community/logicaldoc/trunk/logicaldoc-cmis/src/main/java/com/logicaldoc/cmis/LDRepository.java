@@ -97,7 +97,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//import com.ibm.icu.util.StringTokenizer;
 import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
@@ -124,7 +123,6 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
-import com.logicaldoc.util.TagUtil;
 import com.logicaldoc.util.config.ContextProperties;
 
 /**
@@ -184,12 +182,9 @@ public class LDRepository {
 	/**
 	 * Constructor.
 	 * 
-	 * @param id
-	 *            CMIS repository id
-	 * @param root
-	 *            root folder
-	 * @param types
-	 *            type manager object
+	 * @param id CMIS repository id
+	 * @param root root folder
+	 * @param types type manager object
 	 */
 	public LDRepository(Folder root, String sid) {
 		// check root folder
@@ -451,11 +446,12 @@ public class LDRepository {
 		document.setLanguage(user.getLanguage());
 
 		String tagsString = getStringProperty(properties, TypeManager.PROP_TAGS);
-		System.out.println("tagsString: " +tagsString);
+		System.out.println("tagsString: " + tagsString);
 		if (StringUtils.isNotEmpty(tagsString)) {
-			//System.out.println("TagUtil.extractTags(tagsString): " +TagUtil.extractTags(tagsString));
-			//document.setTags(TagUtil.extractTags(tagsString));
-			
+			// System.out.println("TagUtil.extractTags(tagsString): "
+			// +TagUtil.extractTags(tagsString));
+			// document.setTags(TagUtil.extractTags(tagsString));
+
 			Set<String> sss = new HashSet<String>();
 			StringTokenizer st = new StringTokenizer(tagsString, ",", false);
 			while (st.hasMoreTokens()) {
@@ -465,10 +461,10 @@ public class LDRepository {
 				} else {
 					sss.add(tg);
 				}
-			}			
-			
+			}
+
 			document.setTags(sss);
-			System.out.println("document.getTags(): " +document.getTags());
+			System.out.println("document.getTags(): " + document.getTags());
 		}
 
 		try {
@@ -1228,8 +1224,7 @@ public class LDRepository {
 	/**
 	 * Checks if the given name is valid for a file system.
 	 * 
-	 * @param name
-	 *            the name to check
+	 * @param name the name to check
 	 * 
 	 * @return <code>true</code> if the name is valid, <code>false</code>
 	 *         otherwise
@@ -1494,8 +1489,6 @@ public class LDRepository {
 				try {
 					addPropertyString(result, typeId, filter, TypeManager.PROP_TAGS, doc.getTgs());
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 					log.error(e.getMessage(), e);
 				}
 			}
@@ -1534,66 +1527,6 @@ public class LDRepository {
 		}
 
 		return versions;
-	}
-
-	/**
-	 * Checks and compiles a property set that can be stored.
-	 */
-	private Properties compileProperties(String typeId, User creator, GregorianCalendar creationDate, User modifier,
-			Properties properties) {
-
-		PropertiesImpl result = new PropertiesImpl();
-		Set<String> addedProps = new HashSet<String>();
-
-		if ((properties == null) || (properties.getProperties() == null)) {
-			throw new CmisConstraintException("No properties!");
-		}
-
-		// get the property definitions
-		TypeDefinition type = types.getType(typeId);
-		if (type == null) {
-			throw new CmisObjectNotFoundException("Type '" + typeId + "' is unknown!");
-		}
-
-		// check if all required properties are there
-		for (PropertyData<?> prop : properties.getProperties().values()) {
-			PropertyDefinition<?> propType = type.getPropertyDefinitions().get(prop.getId());
-
-			// do we know that property?
-			if (propType == null) {
-				throw new CmisConstraintException("Property '" + prop.getId() + "' is unknown!");
-			}
-
-			// can it be set?
-			if ((propType.getUpdatability() == Updatability.READONLY)) {
-				throw new CmisConstraintException("Property '" + prop.getId() + "' is readonly!");
-			}
-
-			// empty properties are invalid
-			if (isEmptyProperty(prop)) {
-				throw new CmisConstraintException("Property '" + prop.getId() + "' must not be empty!");
-			}
-
-			// add it
-			result.addProperty(prop);
-			addedProps.add(prop.getId());
-		}
-
-		// check if required properties are missing
-		for (PropertyDefinition<?> propDef : type.getPropertyDefinitions().values()) {
-			if (!addedProps.contains(propDef.getId()) && (propDef.getUpdatability() != Updatability.READONLY)) {
-				if (!addPropertyDefault(result, propDef) && propDef.isRequired()) {
-					throw new CmisConstraintException("Property '" + propDef.getId() + "' is required!");
-				}
-			}
-		}
-
-		addPropertyId(result, typeId, null, PropertyIds.OBJECT_TYPE_ID, typeId);
-		addPropertyString(result, typeId, null, PropertyIds.CREATED_BY, creator.getFullName());
-		addPropertyDateTime(result, typeId, null, PropertyIds.CREATION_DATE, creationDate);
-		addPropertyString(result, typeId, null, PropertyIds.LAST_MODIFIED_BY, modifier.getFullName());
-
-		return result;
 	}
 
 	/**
@@ -2083,9 +2016,9 @@ public class LDRepository {
 	 * Returns the first value of an string property.
 	 */
 	private static String getStringProperty(Properties properties, String name) {
-		
+
 		PropertyData<?> property = properties.getProperties().get(name);
-		
+
 		if (property == null) {
 			return null;
 		}
