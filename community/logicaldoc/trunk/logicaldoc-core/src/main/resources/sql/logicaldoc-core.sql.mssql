@@ -227,13 +227,13 @@ insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1520,4,0);
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_creation)
 values (5,CURRENT_TIMESTAMP,0,'/',5,1,CURRENT_TIMESTAMP);
 insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
-values (5,2,1,1,0,0,1,1,0,0,0,0,0,1);
+values (5,2,0,0,0,0,0,0,0,0,0,0,0,0);
 insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
-values (5,3,1,1,0,0,1,1,0,0,0,0,0,1);
+values (5,3,0,0,0,0,0,0,0,0,0,0,0,0);
 insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
-values (5,4,1,1,0,0,1,1,0,0,0,0,0,1);
+values (5,4,0,0,0,0,0,0,0,0,0,0,0,0);
 insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
-values (5,-10000,1,1,0,0,1,1,0,0,0,0,0,1);
+values (5,-10000,0,0,0,0,0,0,0,0,0,0,0,0);
 
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_creation)
 values (4,CURRENT_TIMESTAMP,0,'Default',5,1,CURRENT_TIMESTAMP);
