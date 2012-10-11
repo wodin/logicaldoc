@@ -956,6 +956,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	public Folder createPath(Folder parent, String path, FolderHistory transaction) {
 		StringTokenizer st = new StringTokenizer(path, "/", false);
 
+		initialize(parent);
+		
 		Folder folder = parent;
 		while (st.hasMoreTokens()) {
 			String name = st.nextToken();
@@ -968,6 +970,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				}
 			else {
 				dir = childs.iterator().next();
+				initialize(dir);
 			}
 			folder = dir;
 		}
