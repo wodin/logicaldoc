@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -15,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -97,7 +97,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ibm.icu.util.StringTokenizer;
 import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
@@ -388,6 +387,7 @@ public class LDRepository {
 			ContentStream contentStream, VersioningState versioningState) {
 
 		debug("createDocument");
+
 		validatePermission(folderId, context, Permission.WRITE);
 
 		// check properties
@@ -408,11 +408,6 @@ public class LDRepository {
 		}
 
 		User user = getSessionUser();
-
-		// compile the properties
-		// Properties props = compileProperties(typeId, user,
-		// millisToCalendar(System.currentTimeMillis()), user,
-		// properties);
 
 		// check the name
 		String name = getStringProperty(properties, PropertyIds.NAME);
@@ -448,16 +443,34 @@ public class LDRepository {
 		document.setFolder(getFolder(folderId));
 		document.setLanguage(user.getLanguage());
 
+		String tagsString = getStringProperty(properties, TypeManager.PROP_TAGS);
+		System.out.println("tagsString: " + tagsString);
+		if (StringUtils.isNotEmpty(tagsString)) {
+			// System.out.println("TagUtil.extractTags(tagsString): "
+			// +TagUtil.extractTags(tagsString));
+			// document.setTags(TagUtil.extractTags(tagsString));
+
+			Set<String> sss = new HashSet<String>();
+			StringTokenizer st = new StringTokenizer(tagsString, ",", false);
+			while (st.hasMoreTokens()) {
+				String tg = st.nextToken();
+				if (StringUtils.isEmpty(tg)) {
+					System.out.println("alert token empty");
+				} else {
+					sss.add(tg);
+				}
+			}
+
+			document.setTags(sss);
+			System.out.println("document.getTags(): " + document.getTags());
+		}
+
 		try {
 			document = documentManager.create(new BufferedInputStream(contentStream.getStream(), BUFFER_SIZE),
 					document, transaction);
 		} catch (Throwable e) {
 			throw new CmisStorageException("Could not create document: " + e.getMessage(), e);
 		}
-
-		// create object
-		// CmisObjectType object = new CmisObjectType();
-		// object.setProperties(Converter.convert(props));
 
 		return getId(document);
 	}
@@ -568,7 +581,7 @@ public class LDRepository {
 				Folder folder = (Folder) object;
 				FolderHistory transaction = new FolderHistory();
 				transaction.setUser(user);
-				transaction.setEvent(FolderHistory.EVENT_FOLDER_CHANGED);
+				transaction.setEvent(FolderHistory.EVENT_FOLDER_DELETED.toString());
 				transaction.setSessionId(sid);
 
 				if (!folderDao.delete(folder.getId(), transaction))
@@ -577,7 +590,7 @@ public class LDRepository {
 				Document doc = (Document) object;
 				History transaction = new History();
 				transaction.setUser(user);
-				transaction.setEvent(FolderHistory.EVENT_FOLDER_DELETED);
+				transaction.setEvent(FolderHistory.EVENT_FOLDER_DELETED.toString());
 				transaction.setSessionId(sid);
 
 				if (!documentDao.delete(doc.getId(), transaction))
@@ -672,7 +685,7 @@ public class LDRepository {
 				Document doc = (Document) object;
 				History transaction = new History();
 				transaction.setUser(getSessionUser());
-				transaction.setEvent(FolderHistory.EVENT_FOLDER_DELETED);
+				transaction.setEvent(FolderHistory.EVENT_FOLDER_DELETED.toString());
 				transaction.setSessionId(sid);
 
 				if (!documentDao.delete(doc.getId(), transaction))
@@ -739,7 +752,7 @@ public class LDRepository {
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
-		transaction.setEvent(History.EVENT_CHECKEDOUT);
+		transaction.setEvent(History.EVENT_CHECKEDOUT.toString());
 		transaction.setComment("");
 		transaction.setUser(getSessionUser());
 
@@ -770,7 +783,7 @@ public class LDRepository {
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
-		transaction.setEvent(History.EVENT_UNLOCKED);
+		transaction.setEvent(History.EVENT_UNLOCKED.toString());
 		transaction.setComment("");
 		transaction.setUser(getSessionUser());
 
@@ -805,7 +818,7 @@ public class LDRepository {
 
 		History transaction = new History();
 		transaction.setSessionId(sid);
-		transaction.setEvent(History.EVENT_CHECKEDIN);
+		transaction.setEvent(History.EVENT_CHECKEDIN.toString());
 		transaction.setUser(getSessionUser());
 		transaction.setComment(checkinComment);
 
@@ -1099,15 +1112,23 @@ public class LDRepository {
 		/**
 		 * Try to detect if the request comes from LogicalDOC Mobile
 		 */
-		// statement.toString() -> SELECT
+		// Pattern 1)
+		// statement.toString() ->
+		// SELECT
 		// cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType
 		// FROM cmis:document WHERE cmis:name LIKE '%flexspaces%'
+		//
+		// Pattern 2)
+		// statement.toString() ->
+		// SELECT
+		// cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType
+		// FROM cmis:document WHERE CONTAINS('flexspaces')
+
 		if (statement.indexOf("SELECT cmis:objectId,cmis:name,cmis:lastModifiedBy") != -1) {
-			String cmisNameVal = findCmisNameVal(statement);
-			if (cmisNameVal.startsWith("%")) {
-				cmisNameVal = cmisNameVal.substring(1, cmisNameVal.length() - 1);
-				expr = cmisNameVal;
-			}
+			String pattern = "%.*%";
+			if (statement.toLowerCase().contains("contains"))
+				pattern = "\'.*\'";
+			expr = findExprInQuery(statement, pattern);
 		}
 
 		opt.setExpression(expr);
@@ -1154,22 +1175,13 @@ public class LDRepository {
 
 	// --- helper methods ---
 
-	private String findCmisNameVal(String statement) {
-
-		// String targetText =
-		// "SELECT cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType FROM cmis:document  WHERE CONTAINS('~cmis:name:\'*wiki*\'')";
-		// String patternText = "\\*.*\\*";
-		// SELECT
-		// cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType
-		// FROM cmis:document WHERE cmis:name LIKE '%flexspaces%'"
-		String patternText = "%.*%";
-
+	private String findExprInQuery(String statement, String patternText) {
 		Pattern pattern = Pattern.compile(patternText);
 		Matcher matcher = pattern.matcher(statement);
-
 		matcher.find();
-
-		return matcher.group();
+		String match = matcher.group();
+		// remove the first and last char: they are % or '
+		return match.substring(1, match.length() - 1);
 	}
 
 	/**
@@ -1388,6 +1400,7 @@ public class LDRepository {
 				// Identifica il tipo della cartella: workspace o normale
 				addPropertyInteger(result, typeId, filter, TypeManager.PROP_TYPE, ((Folder) object).getType());
 			} else {
+				// Object is a Document
 				AbstractDocument doc = (AbstractDocument) object;
 
 				// base type and type name
@@ -1470,6 +1483,11 @@ public class LDRepository {
 						doc.getRating() != null ? doc.getRating() : 0);
 				addPropertyString(result, typeId, filter, TypeManager.PROP_FILEVERSION, doc.getFileVersion());
 				addPropertyString(result, typeId, filter, TypeManager.PROP_VERSION, doc.getVersion());
+				try {
+					addPropertyString(result, typeId, filter, TypeManager.PROP_TAGS, doc.getTgs());
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+				}
 			}
 
 			if (filter != null) {
@@ -1506,66 +1524,6 @@ public class LDRepository {
 		}
 
 		return versions;
-	}
-
-	/**
-	 * Checks and compiles a property set that can be stored.
-	 */
-	private Properties compileProperties(String typeId, User creator, GregorianCalendar creationDate, User modifier,
-			Properties properties) {
-
-		PropertiesImpl result = new PropertiesImpl();
-		Set<String> addedProps = new HashSet<String>();
-
-		if ((properties == null) || (properties.getProperties() == null)) {
-			throw new CmisConstraintException("No properties!");
-		}
-
-		// get the property definitions
-		TypeDefinition type = types.getType(typeId);
-		if (type == null) {
-			throw new CmisObjectNotFoundException("Type '" + typeId + "' is unknown!");
-		}
-
-		// check if all required properties are there
-		for (PropertyData<?> prop : properties.getProperties().values()) {
-			PropertyDefinition<?> propType = type.getPropertyDefinitions().get(prop.getId());
-
-			// do we know that property?
-			if (propType == null) {
-				throw new CmisConstraintException("Property '" + prop.getId() + "' is unknown!");
-			}
-
-			// can it be set?
-			if ((propType.getUpdatability() == Updatability.READONLY)) {
-				throw new CmisConstraintException("Property '" + prop.getId() + "' is readonly!");
-			}
-
-			// empty properties are invalid
-			if (isEmptyProperty(prop)) {
-				throw new CmisConstraintException("Property '" + prop.getId() + "' must not be empty!");
-			}
-
-			// add it
-			result.addProperty(prop);
-			addedProps.add(prop.getId());
-		}
-
-		// check if required properties are missing
-		for (PropertyDefinition<?> propDef : type.getPropertyDefinitions().values()) {
-			if (!addedProps.contains(propDef.getId()) && (propDef.getUpdatability() != Updatability.READONLY)) {
-				if (!addPropertyDefault(result, propDef) && propDef.isRequired()) {
-					throw new CmisConstraintException("Property '" + propDef.getId() + "' is required!");
-				}
-			}
-		}
-
-		addPropertyId(result, typeId, null, PropertyIds.OBJECT_TYPE_ID, typeId);
-		addPropertyString(result, typeId, null, PropertyIds.CREATED_BY, creator.getFullName());
-		addPropertyDateTime(result, typeId, null, PropertyIds.CREATION_DATE, creationDate);
-		addPropertyString(result, typeId, null, PropertyIds.LAST_MODIFIED_BY, modifier.getFullName());
-
-		return result;
 	}
 
 	/**
@@ -2055,7 +2013,15 @@ public class LDRepository {
 	 * Returns the first value of an string property.
 	 */
 	private static String getStringProperty(Properties properties, String name) {
+
 		PropertyData<?> property = properties.getProperties().get(name);
+
+		if (property == null) {
+			return null;
+		}
+		if (property instanceof PropertyId) {
+			return ((PropertyId) property).getFirstValue();
+		}
 		if (!(property instanceof PropertyString)) {
 			return null;
 		}
