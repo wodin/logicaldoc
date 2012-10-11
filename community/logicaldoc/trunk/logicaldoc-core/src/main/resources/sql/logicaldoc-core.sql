@@ -201,6 +201,12 @@ insert into ld_usergroup
 values (1,1);
 insert into ld_usergroup
 values (-1,1);
+insert into ld_generic (ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_qualifier, ld_string1, ld_integer1, ld_integer2, ld_integer3)
+values (-50, CURRENT_TIMESTAMP, 0, 'usersetting', 'dashlet-1', 1, 0, 1, 0, 0);
+insert into ld_generic (ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_qualifier, ld_string1, ld_integer1, ld_integer2, ld_integer3)
+values (-51, CURRENT_TIMESTAMP, 0, 'usersetting', 'dashlet-3', 1, 0, 3, 0, 1);
+insert into ld_generic (ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_qualifier, ld_string1, ld_integer1, ld_integer2, ld_integer3)
+values (-52, CURRENT_TIMESTAMP, 0, 'usersetting', 'dashlet-6', 1, 0, 6, 1, 0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (2,4,0);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (14,4,0);
@@ -209,18 +215,22 @@ insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (25,4,0);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (5,2,0);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (5,3,0);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (5,4,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (5,-10000,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1500,2,0);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1500,3,0);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1500,4,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1500,-10000,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1510,2,0);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1510,3,0);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1510,4,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1510,-10000,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1520,2,0);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1520,3,0);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1520,4,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1520,-10000,0);
 
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_creation)
 values (5,CURRENT_TIMESTAMP,0,'/',5,1,CURRENT_TIMESTAMP);
