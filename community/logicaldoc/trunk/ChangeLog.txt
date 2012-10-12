@@ -10,6 +10,19 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC 6.5.2 (2012-10-15; logicaldoc-6.5.2)
+===============
+237 -	Implementation of the CMIS 1.0 AtomPub protocol - New Feature - CMIS
+250 - Export to zip issue - Bug - Import / Export
+262 - Non-admin users have problems accessing to webdav - Bug - Core
+247 - Options 'case sensitive' and 'search for aliases' in parametric search - Bug - Core
+248 - Wrong error message when changing password - Bug - User Interface
+251 - Error creating a document into a folder with Metadata - Bug - Web Services
+256 - Workflow trigger not fired - Bug - Workflow
+259 - Error when opening a document alias - Bug - Office Addin
+254 - Asynchronous folder's deletion
+
+
 LogicalDOC 6.5.1 (2012-08-31; logicaldoc-6.5.1)
 ===============
 230 - Web setup broken at the final step - Bug - Setup
