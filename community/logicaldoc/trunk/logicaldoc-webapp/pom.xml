@@ -448,6 +448,9 @@
 									<fileset dir="target/war/WEB-INF/lib" includes="gwt-user*,smartgwt*,logicaldoc-webapp*" />
 								</delete>
                                 
+								<copy file="src/main/resources/context.properties"
+									  tofile="target/war/WEB-INF/classes/context.properties" overwrite="true" />
+								
 								<unzip dest="target/war">
 									<fileset dir="target/war">
 										<include name="*-plugin.zip" />
