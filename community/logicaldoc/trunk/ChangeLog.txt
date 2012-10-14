@@ -18,9 +18,7 @@ LogicalDOC 6.5.2 (2012-10-15; logicaldoc-6.5.2)
 247 - Options 'case sensitive' and 'search for aliases' in parametric search - Bug - Core
 248 - Wrong error message when changing password - Bug - User Interface
 251 - Error creating a document into a folder with Metadata - Bug - Web Services
-256 - Workflow trigger not fired - Bug - Workflow
-259 - Error when opening a document alias - Bug - Office Addin
-254 - Asynchronous folder's deletion
+254 - Asynchronous folder's deletion - Improvement - Core
 
 
 LogicalDOC 6.5.1 (2012-08-31; logicaldoc-6.5.1)
