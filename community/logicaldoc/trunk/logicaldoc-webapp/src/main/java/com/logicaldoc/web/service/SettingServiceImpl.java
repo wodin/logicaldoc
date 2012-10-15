@@ -120,7 +120,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.startsWith("store") || name.startsWith("flexpaperviewer") || name.startsWith("omnipage.")
 					|| name.startsWith("command.") || name.startsWith("gui.") || name.startsWith("upload.")
 					|| name.equals("userno") || name.startsWith("search.") || name.startsWith("swftools.")
-					|| name.contains("password") || name.startsWith("audit.") || name.startsWith("openoffice.path")
+					|| name.contains("password") || name.startsWith("audit.user") || name.startsWith("openoffice.path")
 					|| name.startsWith("tag.") || name.startsWith("jdbc.") || name.startsWith("cluster")
 					|| name.startsWith("ip."))
 				continue;
