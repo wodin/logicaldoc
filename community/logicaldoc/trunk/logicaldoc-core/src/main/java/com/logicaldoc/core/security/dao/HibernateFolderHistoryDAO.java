@@ -39,8 +39,8 @@ public class HibernateFolderHistoryDAO extends HibernatePersistentObjectDAO<Fold
 	}
 
 	@Override
-	public List<FolderHistory> findNotNotified() {
-		return findByWhere("_entity.notified = 0", null, "order by _entity.date asc", null);
+	public List<FolderHistory> findNotNotified(Integer max) {
+		return findByWhere("_entity.notified = 0", null, "order by _entity.date asc", max);
 	}
 
 	@Override

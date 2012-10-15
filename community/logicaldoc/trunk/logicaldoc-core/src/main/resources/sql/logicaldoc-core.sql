@@ -112,8 +112,11 @@ create index LD_DOC_FID on ld_document (ld_folderid);
 create index LD_DOC_RID on ld_document (ld_docref);
 create index LD_HIST_DOCID on ld_history (ld_docid);
 create index LD_HIST_UID on ld_history (ld_userid);
+create index LD_HIST_NOT on ld_history (ld_notified);
 create index LD_HIST_EVENT on ld_history (ld_event);
 create index LD_FHIST_FID on ld_folder_history (ld_folderid);
+create index LD_FHIST_NOT on ld_folder_history (ld_notified);
+
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)

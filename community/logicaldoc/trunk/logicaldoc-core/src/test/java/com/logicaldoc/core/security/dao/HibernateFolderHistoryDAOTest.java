@@ -143,7 +143,7 @@ public class HibernateFolderHistoryDAOTest extends AbstractCoreTCase {
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void testFindNotNotified() {
-		Collection histories = dao.findNotNotified();
+		Collection histories = dao.findNotNotified(null);
 		Assert.assertNotNull(histories);
 		Assert.assertEquals(2, histories.size());
 
@@ -152,7 +152,7 @@ public class HibernateFolderHistoryDAOTest extends AbstractCoreTCase {
 		history.setNotified(1);
 		dao.store(history);
 
-		histories = dao.findNotNotified();
+		histories = dao.findNotNotified(null);
 		Assert.assertNotNull(histories);
 		Assert.assertEquals(1, histories.size());
 	}

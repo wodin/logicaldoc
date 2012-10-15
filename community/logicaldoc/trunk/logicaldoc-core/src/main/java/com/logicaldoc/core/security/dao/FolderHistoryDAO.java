@@ -32,9 +32,10 @@ public interface FolderHistoryDAO extends PersistentObjectDAO<FolderHistory> {
 	/**
 	 * This method selects all histories not notified yet.
 	 * 
+	 * @return max Optional maximum number of records
 	 * @return list of histories ordered by date
 	 */
-	public List<FolderHistory> findNotNotified();
+	public List<FolderHistory> findNotNotified(Integer max);
 
 	/**
 	 * This method selects all histories of a given user and related to the

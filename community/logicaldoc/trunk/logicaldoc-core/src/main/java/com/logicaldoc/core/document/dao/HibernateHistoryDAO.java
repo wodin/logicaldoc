@@ -50,8 +50,8 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 	}
 
 	@Override
-	public List<History> findNotNotified() {
-		return findByWhere("_entity.notified = 0", null, "order by _entity.date asc", null);
+	public List<History> findNotNotified(Integer max) {
+		return findByWhere("_entity.notified = 0", null, "order by _entity.date asc", max);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 
 	@Override
 	public boolean store(History entity) {
-		//Write only if the history is enabled
+		// Write only if the history is enabled
 		if (isEnabled())
 			return super.store(entity);
 		else
