@@ -39,9 +39,10 @@ public interface HistoryDAO extends PersistentObjectDAO<History> {
 	/**
 	 * This method selects all histories not notified yet.
 	 * 
+	 * @return max Optional maximum number of records
 	 * @return list of histories ordered by date
 	 */
-	public List<History> findNotNotified();
+	public List<History> findNotNotified(Integer max);
 
 	/**
 	 * This method deletes all the document history entries oldest than the
