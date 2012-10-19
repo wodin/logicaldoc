@@ -34,7 +34,8 @@ public class ServiceFactory extends AbstractServiceFactory {
 
 	private static final Logger log = LoggerFactory.getLogger(CmisService.class);
 
-	//private ThreadLocal<CmisServiceWrapper<LDCmisService>> threadLocalService = new ThreadLocal<CmisServiceWrapper<LDCmisService>>();
+	// private ThreadLocal<CmisServiceWrapper<LDCmisService>> threadLocalService
+	// = new ThreadLocal<CmisServiceWrapper<LDCmisService>>();
 
 	public ServiceFactory() {
 		super();
@@ -42,30 +43,13 @@ public class ServiceFactory extends AbstractServiceFactory {
 
 	@Override
 	public CmisService getService(CallContext context) {
-//		CmisServiceWrapper<LDCmisService> wrapperService = threadLocalService.get();
-//		if (wrapperService == null) {
+		String sid = authenticate(context);
+		if (sid == null)
+			return null;
 
-			String sid = authenticate(context);
-			if (sid == null)
-				return null;
-
-			log.debug("Created session " + sid + " for user " + context.getUsername());
-			CmisService wrapperService = new CmisServiceWrapper<LDCmisService>(new LDCmisService(context, sid),
-					DEFAULT_MAX_ITEMS_TYPES, DEFAULT_DEPTH_TYPES, DEFAULT_MAX_ITEMS_OBJECTS, DEFAULT_DEPTH_OBJECTS);
-//			threadLocalService.set(wrapperService);
-//		} else {
-//			LDCmisService service = wrapperService.getWrappedService();
-//			UserSession session = SessionManager.getInstance().get(service.getSessionId());
-//			System.out.println("*** found session "+service.getSessionId());
-//			if (session == null)
-//				throw new CmisPermissionDeniedException("Invalid session!");
-//			if (session.getStatus() != UserSession.STATUS_OPEN){
-//				System.out.println("*** invalid session "+service.getSessionId()+" - "+session.getStatus());
-//				
-//				throw new CmisPermissionDeniedException("Invalid or Expired Session");
-//			}
-//			session.renew();
-//		}
+		log.debug("Using session " + sid + " for user " + context.getUsername());
+		CmisService wrapperService = new CmisServiceWrapper<LDCmisService>(new LDCmisService(context, sid),
+				DEFAULT_MAX_ITEMS_TYPES, DEFAULT_DEPTH_TYPES, DEFAULT_MAX_ITEMS_OBJECTS, DEFAULT_DEPTH_OBJECTS);
 
 		return wrapperService;
 	}
@@ -76,7 +60,7 @@ public class ServiceFactory extends AbstractServiceFactory {
 
 	@Override
 	public void destroy() {
-//		threadLocalService = null;
+		// threadLocalService = null;
 	}
 
 	private String authenticate(CallContext context) {
