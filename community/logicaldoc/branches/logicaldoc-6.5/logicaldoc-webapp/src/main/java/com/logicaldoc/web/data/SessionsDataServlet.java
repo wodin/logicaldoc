@@ -51,6 +51,9 @@ public class SessionsDataServlet extends HttpServlet {
 			writer.print("<list>");
 
 			for (UserSession session : sessions) {
+				//Just to update the session status
+				SessionManager.getInstance().get(session.getId());
+				
 				writer.print("<session>");
 				writer.print("<sid><![CDATA[" + session.getId() + "]]></sid>");
 				writer.print("<status>" + session.getStatus() + "</status>");
