@@ -54,6 +54,14 @@ public class ServiceFactory extends AbstractServiceFactory {
 			wrapperService = new CmisServiceWrapper<LDCmisService>(new LDCmisService(context, sid),
 					DEFAULT_MAX_ITEMS_TYPES, DEFAULT_DEPTH_TYPES, DEFAULT_MAX_ITEMS_OBJECTS, DEFAULT_DEPTH_OBJECTS);
 			threadLocalService.set(wrapperService);
+		}else{
+			LDCmisService service = wrapperService.getWrappedService();
+			UserSession session = SessionManager.getInstance().get(service.getSessionId());
+			if (session == null)
+				throw new CmisPermissionDeniedException("Invalid session!");
+			if (session.getStatus() != UserSession.STATUS_OPEN)
+				throw new CmisPermissionDeniedException("Invalid or Expired Session");
+			session.renew();
 		}
 
 		return wrapperService;
@@ -72,11 +80,7 @@ public class ServiceFactory extends AbstractServiceFactory {
 		String username = context.getUsername();
 		String password = context.getPassword();
 
-		if(username==null){
-			username="admin";
-			password="12345678";
-		}
-		
+
 		// Create a pseudo session identifier
 		String combinedUserId = context.getUsername() + "-" + CmisServlet.remoteAddress.get()[0];
 		

@@ -2063,6 +2063,8 @@ public class LDRepository {
 			UserSession session = SessionManager.getInstance().get(sid);
 			if (session.getStatus() != UserSession.STATUS_OPEN)
 				return false;
+			else
+				session.renew();
 			userId = session.getUserId();
 		} else {
 			User user = userDao.findByUserName(context.getUsername());
