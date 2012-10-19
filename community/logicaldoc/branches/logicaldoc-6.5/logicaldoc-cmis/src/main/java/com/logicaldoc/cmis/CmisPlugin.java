@@ -36,7 +36,6 @@ public class CmisPlugin extends LogicalDOCPlugin {
 
 		config.addInitParam(SERVLET_NAME, "callContextHandler", BasicAuthCallContextHandler.class.getName(), null);
 
-		//config.addServletMapping(SERVLET_NAME, "/cmis/*");
 		config.addServletMapping(SERVLET_NAME, "/service/cmis/*");
 		config.writeXMLDoc();
 

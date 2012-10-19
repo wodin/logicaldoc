@@ -34,7 +34,8 @@ public class ServiceFactory extends AbstractServiceFactory {
 
 	private static final Logger log = LoggerFactory.getLogger(CmisService.class);
 
-	private ThreadLocal<CmisServiceWrapper<LDCmisService>> threadLocalService = new ThreadLocal<CmisServiceWrapper<LDCmisService>>();
+	// private ThreadLocal<CmisServiceWrapper<LDCmisService>> threadLocalService
+	// = new ThreadLocal<CmisServiceWrapper<LDCmisService>>();
 
 	public ServiceFactory() {
 		super();
@@ -42,19 +43,13 @@ public class ServiceFactory extends AbstractServiceFactory {
 
 	@Override
 	public CmisService getService(CallContext context) {
+		String sid = authenticate(context);
+		if (sid == null)
+			return null;
 
-		CmisServiceWrapper<LDCmisService> wrapperService = threadLocalService.get();
-		if (wrapperService == null) {
-
-			String sid = authenticate(context);
-			if(sid==null)
-				return null;
-			
-			log.debug("Created session " + sid + " for user " + context.getUsername());
-			wrapperService = new CmisServiceWrapper<LDCmisService>(new LDCmisService(context, sid),
-					DEFAULT_MAX_ITEMS_TYPES, DEFAULT_DEPTH_TYPES, DEFAULT_MAX_ITEMS_OBJECTS, DEFAULT_DEPTH_OBJECTS);
-			threadLocalService.set(wrapperService);
-		}
+		log.debug("Using session " + sid + " for user " + context.getUsername());
+		CmisService wrapperService = new CmisServiceWrapper<LDCmisService>(new LDCmisService(context, sid),
+				DEFAULT_MAX_ITEMS_TYPES, DEFAULT_DEPTH_TYPES, DEFAULT_MAX_ITEMS_OBJECTS, DEFAULT_DEPTH_OBJECTS);
 
 		return wrapperService;
 	}
@@ -65,21 +60,16 @@ public class ServiceFactory extends AbstractServiceFactory {
 
 	@Override
 	public void destroy() {
-		threadLocalService = null;
+		// threadLocalService = null;
 	}
 
 	private String authenticate(CallContext context) {
 		String username = context.getUsername();
 		String password = context.getPassword();
 
-		if(username==null){
-			username="admin";
-			password="12345678";
-		}
-		
 		// Create a pseudo session identifier
 		String combinedUserId = context.getUsername() + "-" + CmisServlet.remoteAddress.get()[0];
-		
+
 		// Check if the session already exists
 		for (UserSession session : SessionManager.getInstance().getSessions()) {
 			try {
@@ -96,8 +86,9 @@ public class ServiceFactory extends AbstractServiceFactory {
 
 		// We need to authenticate the user
 		AuthenticationChain chain = (AuthenticationChain) Context.getInstance().getBean(AuthenticationChain.class);
-		boolean authenticated = chain.authenticate(username, password, new String[] {
-				CmisServlet.remoteAddress.get()[0], CmisServlet.remoteAddress.get()[1], combinedUserId, context.getRepositoryId() });
+		boolean authenticated = chain.authenticate(username, password,
+				new String[] { CmisServlet.remoteAddress.get()[0], CmisServlet.remoteAddress.get()[1], combinedUserId,
+						context.getRepositoryId() });
 		String sid = null;
 		if (authenticated)
 			sid = AuthenticationChain.getSessionId();

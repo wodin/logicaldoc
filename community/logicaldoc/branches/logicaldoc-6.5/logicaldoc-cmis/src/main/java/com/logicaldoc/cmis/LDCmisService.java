@@ -59,8 +59,7 @@ public class LDCmisService extends AbstractCmisService {
 	/**
 	 * Constructor.
 	 */
-	public LDCmisService(CallContext context, String sessionId) {
-		
+	public LDCmisService(CallContext context, String sessionId) {	
 		this.context = context;
 		this.sessionId = sessionId;
 

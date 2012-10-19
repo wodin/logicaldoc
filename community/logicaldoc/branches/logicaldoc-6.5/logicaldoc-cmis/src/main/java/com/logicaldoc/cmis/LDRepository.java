@@ -444,25 +444,18 @@ public class LDRepository {
 		document.setLanguage(user.getLanguage());
 
 		String tagsString = getStringProperty(properties, TypeManager.PROP_TAGS);
-		System.out.println("tagsString: " + tagsString);
 		if (StringUtils.isNotEmpty(tagsString)) {
-			// System.out.println("TagUtil.extractTags(tagsString): "
-			// +TagUtil.extractTags(tagsString));
-			// document.setTags(TagUtil.extractTags(tagsString));
-
 			Set<String> sss = new HashSet<String>();
 			StringTokenizer st = new StringTokenizer(tagsString, ",", false);
 			while (st.hasMoreTokens()) {
 				String tg = st.nextToken();
 				if (StringUtils.isEmpty(tg)) {
-					System.out.println("alert token empty");
 				} else {
 					sss.add(tg);
 				}
 			}
 
 			document.setTags(sss);
-			System.out.println("document.getTags(): " + document.getTags());
 		}
 
 		try {
@@ -581,7 +574,7 @@ public class LDRepository {
 				Folder folder = (Folder) object;
 				FolderHistory transaction = new FolderHistory();
 				transaction.setUser(user);
-				transaction.setEvent(FolderHistory.EVENT_FOLDER_DELETED.toString());
+				transaction.setEvent(FolderHistory.EVENT_FOLDER_DELETED);
 				transaction.setSessionId(sid);
 
 				if (!folderDao.delete(folder.getId(), transaction))
@@ -590,7 +583,7 @@ public class LDRepository {
 				Document doc = (Document) object;
 				History transaction = new History();
 				transaction.setUser(user);
-				transaction.setEvent(FolderHistory.EVENT_FOLDER_DELETED.toString());
+				transaction.setEvent(FolderHistory.EVENT_FOLDER_DELETED);
 				transaction.setSessionId(sid);
 
 				if (!documentDao.delete(doc.getId(), transaction))
@@ -685,7 +678,7 @@ public class LDRepository {
 				Document doc = (Document) object;
 				History transaction = new History();
 				transaction.setUser(getSessionUser());
-				transaction.setEvent(FolderHistory.EVENT_FOLDER_DELETED.toString());
+				transaction.setEvent(FolderHistory.EVENT_FOLDER_DELETED);
 				transaction.setSessionId(sid);
 
 				if (!documentDao.delete(doc.getId(), transaction))
@@ -752,7 +745,7 @@ public class LDRepository {
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
-		transaction.setEvent(History.EVENT_CHECKEDOUT.toString());
+		transaction.setEvent(History.EVENT_CHECKEDOUT);
 		transaction.setComment("");
 		transaction.setUser(getSessionUser());
 
@@ -783,7 +776,7 @@ public class LDRepository {
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
-		transaction.setEvent(History.EVENT_UNLOCKED.toString());
+		transaction.setEvent(History.EVENT_UNLOCKED);
 		transaction.setComment("");
 		transaction.setUser(getSessionUser());
 
@@ -818,7 +811,7 @@ public class LDRepository {
 
 		History transaction = new History();
 		transaction.setSessionId(sid);
-		transaction.setEvent(History.EVENT_CHECKEDIN.toString());
+		transaction.setEvent(History.EVENT_CHECKEDIN);
 		transaction.setUser(getSessionUser());
 		transaction.setComment(checkinComment);
 
@@ -2061,6 +2054,8 @@ public class LDRepository {
 			UserSession session = SessionManager.getInstance().get(sid);
 			if (session.getStatus() != UserSession.STATUS_OPEN)
 				return false;
+			else
+				session.renew();
 			userId = session.getUserId();
 		} else {
 			User user = userDao.findByUserName(context.getUsername());
