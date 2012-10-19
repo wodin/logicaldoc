@@ -446,25 +446,18 @@ public class LDRepository {
 		document.setLanguage(user.getLanguage());
 
 		String tagsString = getStringProperty(properties, TypeManager.PROP_TAGS);
-		System.out.println("tagsString: " + tagsString);
 		if (StringUtils.isNotEmpty(tagsString)) {
-			// System.out.println("TagUtil.extractTags(tagsString): "
-			// +TagUtil.extractTags(tagsString));
-			// document.setTags(TagUtil.extractTags(tagsString));
-
 			Set<String> sss = new HashSet<String>();
 			StringTokenizer st = new StringTokenizer(tagsString, ",", false);
 			while (st.hasMoreTokens()) {
 				String tg = st.nextToken();
 				if (StringUtils.isEmpty(tg)) {
-					System.out.println("alert token empty");
 				} else {
 					sss.add(tg);
 				}
 			}
 
 			document.setTags(sss);
-			System.out.println("document.getTags(): " + document.getTags());
 		}
 
 		try {
