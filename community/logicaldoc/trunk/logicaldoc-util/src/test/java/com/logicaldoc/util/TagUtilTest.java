@@ -22,13 +22,13 @@ public class TagUtilTest {
 	public void testExtractTags() {
 		Collection<String> coll = TagUtil.extractTags("my name is tom");
 		assertNotNull(coll);
-		assertEquals(2, coll.size());
+		assertEquals(1, coll.size());
 
-		coll = TagUtil.extractTags("il mio nome e' tom");
+		coll = TagUtil.extractTags("il mio,nome, e' tom");
 		assertNotNull(coll);
 		assertEquals(3, coll.size());
 
-		coll = TagUtil.extractTags("il mio nome e' 123456789123456789123456789");
+		coll = TagUtil.extractTags("il mio, nome e' ,123456789123456789123456789");
 		assertNotNull(coll);
 		assertEquals(3, coll.size());
 		assertFalse(coll.contains("123456789123456789123456789"));

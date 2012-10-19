@@ -293,7 +293,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(2, folder.getFolderGroups().size());
 		Assert.assertTrue(dao.store(folder));
 		folder = dao.findById(Folder.ROOTID);
-		Assert.assertEquals(0, folder.getFolderGroups().size());
+		Assert.assertEquals(4, folder.getFolderGroups().size());
 
 		folder = dao.findById(1200);
 		folder.setName("pippo");
@@ -353,7 +353,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertNotNull(folder);
 		Assert.assertEquals(Folder.ROOTID, folder.getId());
 		Assert.assertEquals("/", folder.getName());
-		Assert.assertEquals(0, folder.getFolderGroups().size());
+		Assert.assertEquals(4, folder.getFolderGroups().size());
 
 		// Try with unexisting id
 		folder = dao.findById(99999);
