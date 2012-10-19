@@ -76,7 +76,7 @@ public class SettingServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testSaveDashlets() throws InvalidSessionException {
-		GUIDashlet[] dashlets = new GUIDashlet[] { new GUIDashlet(1, 0, 1, 0), new GUIDashlet(1, 0, 2, 0) };
+		GUIDashlet[] dashlets = new GUIDashlet[] { new GUIDashlet(100, 0, 1, 0), new GUIDashlet(101, 0, 2, 0) };
 		service.saveDashlets(session.getSid(), dashlets);
 
 		SecurityServiceImpl secserver = new SecurityServiceImpl();
