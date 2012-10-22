@@ -67,6 +67,8 @@ public class Feature {
 	
 	public static final int CMIS = 29;
 	
+	public static final int MOBILE_APPS = 30;
+	
 	public static final int SHOW_LICENSEE = 40;
 
 	public static final int SHOW_USERS_WARNING = 41;
