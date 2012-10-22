@@ -10,7 +10,7 @@
 	</parent>
 
     <artifactId>logicaldoc-cmis</artifactId>
-    <name>LogicalDOC CMIS Connector</name>
+    <name>logicaldoc-cmis</name>
     <packaging>jar</packaging>
 
     <dependencies>
