@@ -12,7 +12,7 @@ public class GUIInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String productName = "LogicalDOC Community";
+	private String productName = "LogicalDOC Community (free)";
 
 	private String product = "LogicalDOC";
 
