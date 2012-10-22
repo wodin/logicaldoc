@@ -30,7 +30,7 @@ public class GUIInfo implements Serializable {
 
 	private String vendor = "Logical Objects Srl";
 
-	private String vendorAddress = "via Carlo Marx 131/2";
+	private String vendorAddress = "via Aldo Moro interna, 3";
 
 	private String vendorCap = "41012";
 
