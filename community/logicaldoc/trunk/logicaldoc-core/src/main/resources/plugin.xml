@@ -207,9 +207,6 @@
   <extension plugin-id="logicaldoc-core" point-id="Feature" id="f27">
 	<parameter id="name" value="Feature_27" />
   </extension>
-  <extension plugin-id="logicaldoc-core" point-id="Feature" id="f29">
-	<parameter id="name" value="Feature_29" />
-  </extension>
   <extension plugin-id="logicaldoc-core" point-id="Feature" id="f13">
 	<parameter id="name" value="Feature_13" />
   </extension>
@@ -218,6 +215,9 @@
   </extension>
   <extension plugin-id="logicaldoc-core" point-id="Feature" id="f7">
 	<parameter id="name" value="Feature_7" />
+  </extension>
+  <extension plugin-id="logicaldoc-core" point-id="Feature" id="fwd57">
+	    <parameter id="name" value="Feature_57" />
   </extension>
   
   <extension plugin-id="logicaldoc-core" point-id="Task" id="taskStatsCollector">
