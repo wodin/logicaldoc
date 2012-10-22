@@ -258,23 +258,22 @@ insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_securi
 values (4,-10000,1,1,0,0,1,1,0,0,0,0,0,1);
 
 insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_subject, ld_body)
-values(1, '2012-04-18 00:00:00',0,'task.report','en', '$_task',
-'$_task
-$startedon: $_started
-$finishedon: $_ended
------------------------------------
-#if( $_error )
-$error: $_error
------------------------------------
-#end
+values(1, CURRENT_TIMESTAMP,0,'task.report','en', '$_task',
+'$_task \n
+$startedon: $_started \n
+$finishedon: $_ended \n
+----------------------------------- \n
+#if( $_error ) \n
+$error: $_error \n
+----------------------------------- \n
+#end \n
 $_report');
 
 insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_subject, ld_body)
-values(2, '2012-04-18 00:00:00',0,'psw.rec1','en', '$_product - $emailnotifyaccountobject', '$_message');
+values(2, CURRENT_TIMESTAMP,0,'psw.rec1','en', '$_product - $emailnotifyaccountobject', '$_message');
 insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_subject, ld_body)
-values(3, '2012-04-18 00:00:00',0,'psw.rec2','en', '$_product - $passwordrequest',
-'$_product - $passwordrequest
-$clickhere: $_url');
+values(3, CURRENT_TIMESTAMP,0,'psw.rec2','en', '$_product - $passwordrequest',
+'$_product - $passwordrequest \n $clickhere: $_url');
 
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_document', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_bookmark', 100);
