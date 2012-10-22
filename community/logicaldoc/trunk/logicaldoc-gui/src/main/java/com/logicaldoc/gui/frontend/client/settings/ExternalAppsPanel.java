@@ -123,7 +123,7 @@ public class ExternalAppsPanel extends VLayout {
 
 		// Url
 		StaticTextItem cmisUrl = ItemFactory.newStaticTextItem("cmisUrl", I18N.message("url"), GWT.getHostPageBaseURL()
-				+ "cmis");
+				+ "service/cmis");
 
 		// Web Service Enabled
 		RadioGroupItem cmisEnabled = ItemFactory.newBooleanSelector("cmisEnabled", "enabled");

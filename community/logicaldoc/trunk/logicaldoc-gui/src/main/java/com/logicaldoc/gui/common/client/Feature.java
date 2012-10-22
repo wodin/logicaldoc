@@ -121,6 +121,7 @@ public class Feature {
 	
 	public static final int IP_FILTERS = 73;
 	
+	
 	private static Set<String> features = new HashSet<String>();
 
 	static public void init(GUIInfo info) {
