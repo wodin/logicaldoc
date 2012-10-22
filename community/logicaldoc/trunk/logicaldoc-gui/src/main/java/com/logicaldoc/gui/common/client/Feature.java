@@ -95,8 +95,6 @@ public class Feature {
 
 	public static final int WEBDAV = 59;
 
-	public static final int SHARE_DISCOVERY = 60;
-
 	public static final int IMPORT_LOCAL_FOLDERS = 61;
 
 	public static final int PARAMETRIC_SEARCHES = 62;
