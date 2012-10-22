@@ -21,7 +21,7 @@ public class SystemInfo {
 
 	protected String product = "LogicalDOC";
 
-	protected String release = "6.5";
+	protected String release = "6.6";
 
 	protected String year = "2012";
 
@@ -35,7 +35,7 @@ public class SystemInfo {
 
 	protected String vendor = "Logical Objects Srl";
 
-	protected String vendorAddress = "via Carlo Marx 131/2";
+	protected String vendorAddress = "via Aldo Moro interna, 3";
 
 	protected String vendorCap = "41012";
 
