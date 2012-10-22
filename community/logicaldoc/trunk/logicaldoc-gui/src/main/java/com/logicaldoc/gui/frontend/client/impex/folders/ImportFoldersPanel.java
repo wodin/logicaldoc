@@ -4,7 +4,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIShare;
 import com.logicaldoc.gui.common.client.data.ImportFoldersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -172,35 +171,6 @@ public class ImportFoldersPanel extends VLayout {
 			if (!Feature.enabled(Feature.IMPORT_REMOTE_FOLDERS)) {
 				addRemote.setDisabled(true);
 				addRemote.setTooltip(I18N.message("featuredisabled"));
-			}
-		}
-
-		ToolStripButton discovery = new ToolStripButton();
-		discovery.setTitle(I18N.message("automaticdiscovery"));
-		discovery.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				settingService.loadSettingsByNames(Session.get().getSid(), new String[] { "smb.username",
-						"smb.password", "smb.lang" }, new AsyncCallback<GUIParameter[]>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(GUIParameter[] reg) {
-						DiscoveryDialog discovery = new DiscoveryDialog(reg[0].getValue(), reg[1].getValue(), reg[2]
-								.getValue());
-						discovery.show();
-					}
-				});
-			}
-		});
-		if (Feature.visible(Feature.SHARE_DISCOVERY)) {
-			toolStrip.addButton(discovery);
-			if (!Feature.enabled(Feature.SHARE_DISCOVERY)) {
-				discovery.setDisabled(true);
-				discovery.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
 

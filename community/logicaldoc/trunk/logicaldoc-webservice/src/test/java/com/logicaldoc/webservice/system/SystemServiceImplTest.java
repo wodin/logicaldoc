@@ -30,7 +30,7 @@ public class SystemServiceImplTest extends AbstractWebServiceTestCase {
 	@Test
 	public void testGetInfo() throws Exception {
 		SystemInfo info = systemServiceImpl.getInfo(null);
-		Assert.assertEquals("via Carlo Marx 131/2", info.getVendorAddress());
+		Assert.assertEquals("via Aldo Moro interna, 3", info.getVendorAddress());
 		Assert.assertEquals("1234567890", info.getInstallationId());
 		Assert.assertEquals("6.1 Beta2", info.getRelease());
 		Assert.assertEquals("2011", info.getYear());
