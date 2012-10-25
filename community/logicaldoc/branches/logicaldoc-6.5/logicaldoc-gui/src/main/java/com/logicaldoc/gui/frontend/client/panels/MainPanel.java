@@ -11,6 +11,8 @@ import com.logicaldoc.gui.common.client.SessionObserver;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.RequestInfo;
+import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.IncomingMessage;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.dashboard.DashboardPanel;
@@ -119,12 +121,22 @@ public class MainPanel extends VLayout implements SessionObserver {
 			tabSet.addTab(administrationTab);
 		}
 
-		if (welcomeScreen == Menu.DOCUMENTS && Menu.enabled(Menu.DOCUMENTS))
+		RequestInfo loc = WindowUtils.getRequestInfo();
+		if ((loc.getParameter("folderId") != null || loc.getParameter("docId") != null) && Menu.enabled(Menu.DOCUMENTS)) {
+			/*
+			 * The user clicked on a permanent link so we have to open the
+			 * Documents tab
+			 */
 			tabSet.selectTab(documentsTab);
-		else if (welcomeScreen == Menu.SEARCH && Menu.enabled(Menu.SEARCH))
-			tabSet.selectTab(searchTab);
-		else if (welcomeScreen == Menu.DASHBOARD && Menu.enabled(Menu.DASHBOARD))
-			tabSet.selectTab(dashboardTab);
+		} else {
+
+			if (welcomeScreen == Menu.DOCUMENTS && Menu.enabled(Menu.DOCUMENTS))
+				tabSet.selectTab(documentsTab);
+			else if (welcomeScreen == Menu.SEARCH && Menu.enabled(Menu.SEARCH))
+				tabSet.selectTab(searchTab);
+			else if (welcomeScreen == Menu.DASHBOARD && Menu.enabled(Menu.DASHBOARD))
+				tabSet.selectTab(dashboardTab);
+		}
 
 		WorkflowServiceAsync service = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
 		service.countActiveUserTasks(Session.get().getSid(), user.getUserName(), new AsyncCallback<Integer>() {
