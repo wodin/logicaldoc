@@ -126,6 +126,7 @@
 		<module>logicaldoc-i18n</module>
     <module>logicaldoc-gui</module>
     <module>logicaldoc-webapp</module>
+    <module>logicaldoc-benchmark</module>
     <!--
 		<module>logicaldoc-testbench</module>
 		-->
