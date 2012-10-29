@@ -10,6 +10,19 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC 6.6 (2012-11-15; logicaldoc-6.6)
+===============
+154 -	Workflow, assign task to user groups -	Improvement -	Workflow
+234 -	Profiled event notification -	New Feature -	Auditing
+255 -	Customizable User Dashboard -	New Feature -	User Interface
+257 -	User data type for extended attribute -	Improvement -	Core
+261 -	Email subscriptions to all folder's tree -	Improvement -	Core
+229 -	Upgrade POI to the latest version -	Task -	Core
+231 -	Upgrade GTW-upload to latest 0.6.4 -	Task -	User Interface
+260 -	Improved performance of massive folders deletions -	Improvement -	Core
+253 -	Configurable timeout for webservice clients -	Improvement -	Web Services 
+
+
 LogicalDOC 6.5.2 (2012-10-15; logicaldoc-6.5.2)
 ===============
 237 -	Implementation of the CMIS 1.0 AtomPub protocol - New Feature - CMIS
