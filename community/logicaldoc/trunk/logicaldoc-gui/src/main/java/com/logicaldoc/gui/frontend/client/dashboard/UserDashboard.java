@@ -82,12 +82,31 @@ public class UserDashboard extends VLayout {
 		portal.setColumnBorder("0px");
 		portal.setColumnOverflow(Overflow.AUTO);
 		portal.setOverflow(Overflow.VISIBLE);
-		addMember(portal, 1);
+
+		int maxCol = 0;
+		int maxRow = 0;
+		int maxIndex = 0;
 
 		for (GUIDashlet gd : Session.get().getUser().getDashlets()) {
-			Dashlet dashlet = Dashlet.getDashlet(gd.getId());
-			portal.addPortlet(dashlet, gd.getColumn(), gd.getRow(), gd.getIndex());
+			if (maxCol < gd.getColumn())
+				maxCol = gd.getColumn();
+			if (maxRow < gd.getRow())
+				maxRow = gd.getRow();
+			if (maxIndex < gd.getIndex())
+				maxIndex = gd.getIndex();
 		}
+
+		Dashlet[][][] portlets = new Dashlet[maxCol + 1][maxRow + 1][maxIndex + 1];
+		for (GUIDashlet gd : Session.get().getUser().getDashlets())
+			portlets[gd.getColumn()][gd.getRow()][gd.getIndex()] = Dashlet.getDashlet(gd.getId());
+
+		for (int col = 0; col <= maxCol; col++)
+			for (int row = 0; row <= maxRow; row++)
+				for (int index = 0; index <= maxIndex; index++)
+					if (portlets[col][row][index] != null)
+						portal.addPortlet(portlets[col][row][index], col, row, index);
+
+		addMember(portal, 1);
 	}
 
 	public static UserDashboard get() {
