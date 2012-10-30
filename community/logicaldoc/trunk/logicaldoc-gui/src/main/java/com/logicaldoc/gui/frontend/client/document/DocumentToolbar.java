@@ -24,6 +24,7 @@ import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.logicaldoc.gui.frontend.client.workflow.WorkflowDetailsDialog;
 import com.smartgwt.client.types.SelectionType;
+import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
@@ -318,7 +319,12 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		max.setHint(I18N.message("elements"));
 		max.setHintStyle("hint");
 		max.setShowTitle(false);
-		max.setDefaultValue(100);
+
+		String mx = "100";
+		if (Offline.get(Constants.COOKIE_DOCSLIST_MAX) != null
+				&& !Offline.get(Constants.COOKIE_DOCSLIST_MAX).equals(""))
+			mx = (String) Offline.get(Constants.COOKIE_DOCSLIST_MAX);
+		max.setDefaultValue(Integer.parseInt(mx));
 		max.setWidth(40);
 
 		bulkUpdate.setIcon(ItemFactory.newImgIcon("application_form_edit.png").getSrc());
@@ -423,6 +429,12 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		saveGrid.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				DocumentsPanel.get().saveGrid();
+				try{
+					int m=Integer.parseInt(max.getValue().toString());
+					Offline.put(Constants.COOKIE_DOCSLIST_MAX, Integer.toString(m));
+				}catch(Throwable t){
+					
+				}
 			}
 		});
 

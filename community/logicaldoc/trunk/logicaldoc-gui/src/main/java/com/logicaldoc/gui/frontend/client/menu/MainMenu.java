@@ -274,13 +274,44 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 		removeCookies.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				Offline.remove(Constants.COOKIE_HITSLIST);
-				Offline.remove(Constants.COOKIE_DOCSLIST);
-				Offline.remove(Constants.COOKIE_DOCSMENU_W);
-				Offline.remove(Constants.COOKIE_PASSWORD);
-				Offline.remove(Constants.COOKIE_SAVELOGIN);
-				Offline.remove(Constants.COOKIE_USER);
+				try {
+					Offline.remove(Constants.COOKIE_HITSLIST);
+				} catch (Throwable t) {
 
+				}
+
+				try {
+					Offline.remove(Constants.COOKIE_DOCSLIST);
+				} catch (Throwable t) {
+
+				}
+
+				try {
+					Offline.remove(Constants.COOKIE_DOCSLIST_MAX);
+				} catch (Throwable t) {
+
+				}
+
+				try {
+					Offline.remove(Constants.COOKIE_DOCSMENU_W);
+				} catch (Throwable t) {
+
+				}
+				try {
+					Offline.remove(Constants.COOKIE_PASSWORD);
+				} catch (Throwable t) {
+
+				}
+				try {
+					Offline.remove(Constants.COOKIE_SAVELOGIN);
+				} catch (Throwable t) {
+
+				}
+				try {
+					Offline.remove(Constants.COOKIE_USER);
+				} catch (Throwable t) {
+
+				}
 				Log.info(I18N.message("cookiesremoved"), null);
 			}
 		});
@@ -308,6 +339,7 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 			items.add(subscriptions);
 
 		items.add(removeCookies);
+
 		menu.setItems(items.toArray(new MenuItem[0]));
 
 		ToolStripMenuButton menuButton = new ToolStripMenuButton(I18N.message("personal"), menu);
