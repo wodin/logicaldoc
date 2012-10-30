@@ -18,6 +18,7 @@ import com.smartgwt.client.widgets.grid.ListGridField;
  */
 public class UserSelector extends SelectItem {
 	public UserSelector(String name, String title) {
+		setName(name);
 		setTitle(I18N.message(title));
 		setWrapTitle(false);
 		ListGridField username = new ListGridField("username", I18N.message("username"));
@@ -45,7 +46,7 @@ public class UserSelector extends SelectItem {
 				dialog.show();
 			}
 		});
-
+		
 		setIcons(clear, search);
 	}
 }
