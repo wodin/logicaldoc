@@ -111,8 +111,16 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	}
 
 	public static DocumentsPanel get() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new DocumentsPanel();
+
+			// Setup the default elements number
+			String mx = "100";
+			if (Offline.get(Constants.COOKIE_DOCSLIST_MAX) != null
+					&& !Offline.get(Constants.COOKIE_DOCSLIST_MAX).equals(""))
+				mx = (String) Offline.get(Constants.COOKIE_DOCSLIST_MAX);
+			instance.setMax(Integer.parseInt(mx));
+		}
 		return instance;
 	}
 
@@ -289,5 +297,13 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	@Override
 	public void onFolderSaved(GUIFolder folder) {
 		// Nothing to do
+	}
+
+	public Integer getMax() {
+		return max;
+	}
+
+	public void setMax(Integer max) {
+		this.max = max;
 	}
 }

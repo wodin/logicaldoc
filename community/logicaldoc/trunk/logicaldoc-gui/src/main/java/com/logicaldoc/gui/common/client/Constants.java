@@ -92,6 +92,8 @@ public final class Constants {
 	
 	public static final String COOKIE_DOCSLIST = "ldoc-docslist";
 	
+	public static final String COOKIE_DOCSLIST_MAX = "ldoc-docslist-max";
+	
 	public static final String COOKIE_DOCSMENU_W = "ldoc-docsmenu-w";
 	
 	public static final String COOKIE_SAVELOGIN = "ldoc-savelogin";
