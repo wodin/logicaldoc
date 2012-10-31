@@ -83,6 +83,10 @@
 	<parameter id="locale" value="nl" />
 	<parameter id="analyzer" value="-" />
   </extension>
+  <extension plugin-id="logicaldoc-core" point-id="Language" id="svLanguage">
+	<parameter id="locale" value="sv" />
+	<parameter id="analyzer" value="org.apache.lucene.analysis.sv.SwedishAnalyzer" />
+  </extension>
   <extension plugin-id="logicaldoc-core" point-id="Language" id="elLanguage">
 	<parameter id="locale" value="el" />
 	<parameter id="analyzer" value="org.apache.lucene.analysis.el.GreekAnalyzer" />
