@@ -259,7 +259,7 @@ values (4,-10000,1,1,0,0,1,1,0,0,0,0,0,1);
 
 insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_subject, ld_body)
 values(1, CURRENT_TIMESTAMP,0,'task.report','en', '$_task',
-'$_task \n
+' $_task \n
 $startedon: $_started \n
 $finishedon: $_ended \n
 ----------------------------------- \n
