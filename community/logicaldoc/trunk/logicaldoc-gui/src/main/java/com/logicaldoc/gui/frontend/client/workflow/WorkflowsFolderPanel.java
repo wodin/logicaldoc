@@ -87,7 +87,7 @@ public class WorkflowsFolderPanel extends VLayout {
 				workflowForm.setNumCols(2);
 				workflowForm.setColWidths(110, "*");
 
-				workflows = ItemFactory.newWorkflowSelector(getFolder().getId());
+				workflows = ItemFactory.newWorkflowSelector();
 				workflows.setColSpan(2);
 				workflows.setEndRow(true);
 				workflows.setRequired(true);

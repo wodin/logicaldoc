@@ -113,10 +113,6 @@ public class GUISettingsPanel extends VLayout {
 		searchhits.setRequired(true);
 		searchhits.setWrapTitle(false);
 
-		TextItem searchdepth = ItemFactory.newIntegerItem("searchdepth", I18N.message("searchdepth"), null);
-		searchdepth.setRequired(true);
-		searchdepth.setWrapTitle(false);
-
 		RadioGroupItem ondoubleclick = ItemFactory.newBooleanSelector("ondoubleclick", "ondoubleclick");
 		ondoubleclick.setValueMap("download", "preview");
 
@@ -128,7 +124,7 @@ public class GUISettingsPanel extends VLayout {
 		extattr.setWidth(150);
 		
 		parametersForm.setItems(welcome, dropspot, previewPages, previewSize, previewZoom, thumbSize, thumbQuality,
-				uploadmax, ondoubleclick, doctab, searchhits, searchdepth, extattr, savelogin);
+				uploadmax, ondoubleclick, doctab, searchhits, extattr, savelogin);
 
 		for (GUIParameter p : settings) {
 			if (p.getName().equals("gui.welcome"))
