@@ -682,7 +682,7 @@ public class ItemFactory {
 		return item;
 	}
 
-	public static SelectItem newWorkflowSelector(Long folderId) {
+	public static SelectItem newWorkflowSelector() {
 		SelectItem workflowItem = new SelectItem("workflow", I18N.message("workflow"));
 		workflowItem.setWidth(250);
 		workflowItem.setHeight(200);
@@ -690,7 +690,7 @@ public class ItemFactory {
 		workflowItem.setValueField("id");
 		workflowItem.setMultiple(true);
 		workflowItem.setMultipleAppearance(MultipleAppearance.GRID);
-		workflowItem.setOptionDataSource(new WorkflowsDS(folderId, false, false));
+		workflowItem.setOptionDataSource(new WorkflowsDS(false, false));
 		if (!Feature.enabled(Feature.WORKFLOW))
 			workflowItem.setDisabled(true);
 		workflowItem.setHintStyle("hint");

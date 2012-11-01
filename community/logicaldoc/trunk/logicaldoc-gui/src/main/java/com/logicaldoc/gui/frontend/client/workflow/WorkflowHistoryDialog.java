@@ -99,7 +99,7 @@ public class WorkflowHistoryDialog extends Window {
 		workflow.setValueField("id");
 		workflow.setDisplayField("name");
 		workflow.setPickListFields(name);
-		workflow.setOptionDataSource(new WorkflowsDS(null, false, true));
+		workflow.setOptionDataSource(new WorkflowsDS(false, true));
 		if (selectedWorkflow != null)
 			workflow.setValue(selectedWorkflow.getName());
 
