@@ -450,7 +450,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				try {
 					tsk.save();
 				} catch (IOException e) {
-					return null;
+					log.error(e.getMessage(), e);
 				}
 			}
 
