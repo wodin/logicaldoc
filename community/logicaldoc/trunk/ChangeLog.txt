@@ -17,7 +17,8 @@ LogicalDOC 6.6 (2012-11-15; logicaldoc-6.6)
 229 -	Upgrade POI to the latest version -	Task -	Core
 231 -	Upgrade GTW-upload to latest 0.6.4 -	Task -	User Interface
 260 -	Improved performance of massive folders deletions -	Improvement -	Core
-253 -	Configurable timeout for webservice clients -	Improvement -	Web Services  
+253 -	Configurable timeout for webservice clients -	Improvement -	Web Services
+264 - Support for sweden language - Improvement - Core  
 
 
 LogicalDOC 6.5.2 (2012-10-15; logicaldoc-6.5.2)
