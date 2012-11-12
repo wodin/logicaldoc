@@ -29,6 +29,13 @@ public interface SecurityService extends RemoteService {
 	public GUISession login(String username, String password, String locale);
 
 	/**
+	 * Logs-in a user by an existing session ID (session reuse)
+	 *
+	 */
+	public GUISession login(String sid);
+
+	
+	/**
 	 * Changes the password of a user
 	 * 
 	 * @param userId The user Identifier

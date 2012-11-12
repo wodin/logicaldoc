@@ -3,11 +3,11 @@ package com.logicaldoc.web;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -121,8 +121,13 @@ public class DocumentPreview extends HttpServlet {
 			stream = storer.getStream(docId, resource);
 
 			if (stream == null) {
-				log.debug("Preview resource not available");
-				forwardPreviewNotAvailable(request, response, suffix);
+				if (resource.contains("preview") && !resource.endsWith("preview-1.swf")) {
+					log.debug("Empty page");
+					forwardEmptyPage(request, response, suffix);
+				} else {
+					log.debug("Preview resource not available");
+					forwardPreviewNotAvailable(request, response, suffix);
+				}
 				return;
 			}
 
@@ -155,41 +160,51 @@ public class DocumentPreview extends HttpServlet {
 				log.error(t.getMessage(), t);
 			}
 		}
-
+		
 		if (resource.endsWith(".jpg"))
 			return;
 
 		/*
 		 * We need to produce the SWF conversion
 		 */
-		if (!storer.exists(doc.getId(), resource)) {
+		if (!storer.exists(doc.getId(), resource) && resource.endsWith("preview-1.swf")) {
 			InputStream is = null;
-			File tmp = null;
+			File pagesRoot = null;
+			File[] pages = null;
+
 			try {
-				tmp = File.createTempFile("preview", "");
+				pagesRoot = File.createTempFile("preview", "");
+				pagesRoot.delete();
+				pagesRoot.mkdir();
 
 				String docExtension = FilenameUtils.getExtension(doc.getFileName()).toLowerCase();
 				if (SWF_DIRECT_CONVERSION_EXTS.contains(docExtension)) {
 					// Perform a direct conversion using the document's file
 					is = storer.getStream(doc.getId(), storer.getResourceName(doc, fileVersion, null));
-					document2swf(is, docExtension, tmp);
+					pages = document2swf(is, docExtension, pagesRoot);
 				} else {
 					// Retrieve the previously computed thumbnail
 					is = storer.getStream(doc.getId(), thumbResource);
 
 					// Convert the thumbnail to SWF
-					document2swf(is, "jpg", tmp);
+					pages = document2swf(is, "jpg", pagesRoot);
 				}
 
-				if (tmp.length() > 0) {
-					storer.store(tmp, doc.getId(), resource);
-					log.debug("Created preview " + resource);
+				String resourceBase = resource.substring(0, resource.lastIndexOf('-'));
+
+				if (pages.length > 0) {
+					for (int i = 0; i < pages.length; i++) {
+						storer.store(pages[i], doc.getId(), resourceBase + "-" + (i + 1) + ".swf");
+						log.debug("Stored page " + pages[i].getName());
+					}
 				}
+
+				log.debug("Created preview " + resource);
 			} catch (Throwable e) {
 				log.error(e.getMessage(), e);
 			} finally {
-				if (tmp != null)
-					FileUtils.deleteQuietly(tmp);
+				if (pagesRoot != null)
+					FileUtils.deleteQuietly(pagesRoot);
 				if (is != null)
 					try {
 						is.close();
@@ -208,8 +223,17 @@ public class DocumentPreview extends HttpServlet {
 				rd = request.getRequestDispatcher("/skin/images/preview_na.gif");
 
 			rd.forward(request, response);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+
+	protected void forwardEmptyPage(HttpServletRequest request, HttpServletResponse response, String suffix) {
+		try {
+			RequestDispatcher rd = request.getRequestDispatcher("/flash/empty.swf");
+			rd.forward(request, response);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 		}
 	}
 
@@ -247,7 +271,7 @@ public class DocumentPreview extends HttpServlet {
 	 * Convert a generic document(image or PDF) to SWF (for document preview
 	 * feature).
 	 */
-	protected void document2swf(InputStream is, String extension, File swf) throws IOException {
+	protected File[] document2swf(InputStream is, String extension, File root) throws IOException {
 		File tmp = File.createTempFile("preview", "." + extension.toLowerCase());
 		FileOutputStream fos = null;
 
@@ -309,30 +333,61 @@ public class DocumentPreview extends HttpServlet {
 				commandLine.add("-G");
 				commandLine.add("-s storeallcharacters");
 			} else if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg")
-					|| extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("tif")
-					|| extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("bmp")
+					|| extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("bmp")
 					|| extension.equalsIgnoreCase("gif")) {
 				commandLine.add("-T 9");
 			}
 
-			commandLine.add(tmp.getPath());
-			commandLine.add(swf.getPath());
-
+			
+			if(command.contains("pdf2swf")){
+				/*
+				 * Save the preview as multiple SWFs, this will allow for handling
+				 * huge documents composed by several pages.
+				 */
+				commandLine.add(tmp.getPath());
+				commandLine.add(root.getAbsolutePath() + File.separator + "page-%");	
+			}else{
+				commandLine.add("-o "+root.getAbsolutePath() + File.separator + "page-1");
+				commandLine.add(tmp.getPath());
+			}
+			
 			log.debug("Executing command: " + commandLine.toString());
-
+			
 			int timeout = 20;
 			try {
 				timeout = Integer.parseInt(conf.getProperty("gui.preview.timeout"));
 			} catch (Throwable t) {
 			}
-			Exec.exec(commandLine, null, null, timeout);
+			
+			if(command.contains("pdf2swf"))
+				Exec.exec(commandLine, null, null, timeout);
+			else{
+				//Seems that commands like jpeg2swf need to be executed as a single line command
+				StringBuffer sb=new StringBuffer();
+				for (String cmd : commandLine) {
+					sb.append(cmd);
+					sb.append(" ");
+				}
+				Exec.exec(sb.toString(), null, null, timeout);
+			}
+				
 		} catch (Throwable e) {
-			FileUtils.deleteQuietly(swf);
+			FileUtils.deleteQuietly(root);
 			log.error("Error in document to SWF conversion", e);
 		} finally {
 			IOUtils.closeQuietly(is);
 			IOUtils.closeQuietly(fos);
 			FileUtils.deleteQuietly(tmp);
 		}
+
+		if (root.exists())
+			return root.listFiles(new FilenameFilter() {
+				@Override
+				public boolean accept(File dir, String name) {
+					return name.startsWith("page-");
+				}
+			});
+		else
+			return new File[0];
 	}
 }

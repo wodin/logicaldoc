@@ -104,6 +104,8 @@ public final class Constants {
 	
 	public static final String COOKIE_VERSION = "ldoc-version";
 	
+	public static final String COOKIE_SID = "ldoc-sid";
+	
 	public final static int DASHLET_CHECKOUT = 1;
 
 	public final static int DASHLET_CHECKIN = 2;

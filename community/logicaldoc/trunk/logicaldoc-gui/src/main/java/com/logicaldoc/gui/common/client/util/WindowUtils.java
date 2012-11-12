@@ -76,15 +76,6 @@ public class WindowUtils {
 		WindowUtils.setTitle(buf);
 	}
 
-	public static native void setSid(String sid, String exitMessage)/*-{
-		$wnd.sessionId = sid;
-		$wnd.exitMessage = exitMessage;
-		if ($wnd.parent) {
-			$wnd.parent.sessionId = sid;
-			$wnd.parent.exitMessage = exitMessage;
-		}
-	}-*/;
-
 	public static native void openUrl(String url)/*-{
 		$wnd.location = url;
 	}-*/;

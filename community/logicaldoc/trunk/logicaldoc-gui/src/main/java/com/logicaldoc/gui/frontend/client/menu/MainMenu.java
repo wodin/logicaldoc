@@ -140,7 +140,12 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 
 								@Override
 								public void onSuccess(Void result) {
-									WindowUtils.setSid(null, I18N.message("leavingpage"));
+									try {
+										Offline.remove(Constants.COOKIE_SID);
+									} catch (Throwable t) {
+
+									}
+									
 									Session.get().close();
 									String base = GWT.getHostPageBaseURL();
 									Util.redirect(base
@@ -309,6 +314,11 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 				}
 				try {
 					Offline.remove(Constants.COOKIE_USER);
+				} catch (Throwable t) {
+
+				}
+				try {
+					Offline.remove(Constants.COOKIE_SID);
 				} catch (Throwable t) {
 
 				}

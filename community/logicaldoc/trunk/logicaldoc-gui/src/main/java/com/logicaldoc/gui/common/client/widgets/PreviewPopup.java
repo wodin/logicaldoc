@@ -25,7 +25,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  */
 public class PreviewPopup extends Window {
 
-	private HTMLFlow image = null;
+	private HTMLFlow html = null;
 
 	private HTMLFlow media = null;
 
@@ -80,7 +80,7 @@ public class PreviewPopup extends Window {
 		} else if (filename.toLowerCase().endsWith(".dxf")) {
 			reloadCAD();
 		} else {
-			reloadImage(language);
+			reloadPreview(language);
 		}
 
 		addCloseClickHandler(new CloseClickHandler() {
@@ -94,9 +94,9 @@ public class PreviewPopup extends Window {
 
 			@Override
 			public void onResized(ResizedEvent event) {
-				if (image != null) {
-					layout.removeMember(image);
-					reloadImage(language);
+				if (html != null) {
+					layout.removeMember(html);
+					reloadPreview(language);
 				} else if (media != null) {
 					layout.removeMember(media);
 					reloadMedia();
@@ -157,22 +157,32 @@ public class PreviewPopup extends Window {
 	}
 
 	/**
-	 * Reloads an image preview.
+	 * Reloads a preview.
 	 */
-	private void reloadImage(String language) {
-		image = new HTMLFlow();
-		String url = GWT.getHostPageBaseURL() + "preview?sid=" + Session.get().getSid() + "%26docId=" + id
-				+ "%26suffix=preview.swf";
+	private void reloadPreview(String language) {
+		int previewPages = 1;
+		try {
+			previewPages = Integer.parseInt(Session.get().getInfo().getConfig("gui.preview.pages"));
+			if (previewPages < 1)
+				previewPages = 1;
+		} catch (Throwable t) {
+
+		}
+
+		html = new HTMLFlow();
+		String url = "{" + GWT.getHostPageBaseURL() + "preview?sid=" + Session.get().getSid() + "%26docId=" + id
+				+ "%26suffix=preview-[*,0].swf";
 		if (fileVersion != null)
 			url += "%26fileVersion=" + fileVersion;
+		url += "," + Session.get().getInfo().getConfig("gui.preview.pages") + "}";
 
 		String flash = "flexpaperviewer.swf";
 		if (!printEnabled)
 			flash = "flexpaperviewer_ro.swf";
 		String tmp = Util.flashPreview(flash, (getWidth() - 26), (getHeight() - 40), getZoom(), "SwfFile=" + url,
 				printEnabled, getPreviewLanguage(language));
-		image.setContents(tmp);
-		layout.addMember(image);
+		html.setContents(tmp);
+		layout.addMember(html);
 	}
 
 	/**
