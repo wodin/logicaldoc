@@ -47,4 +47,6 @@ public interface SecurityServiceAsync {
 	void resetPassword(String username, String emailAddress, String productName, AsyncCallback<Void> callback);
 
 	void searchUsers(String sid, String username, String groupId, AsyncCallback<GUIUser[]> callback);
+
+	void login(String sid, AsyncCallback<GUISession> callback);
 }

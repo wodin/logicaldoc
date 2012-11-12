@@ -62,7 +62,7 @@ public class Util {
 	}
 
 	/**
-	 * Generates Flash code for Image Preview
+	 * Generates Flash code for Preview
 	 */
 	public static String flashPreview(String flashName, int width, int height, int zoom, String flashvars,
 			boolean printEnabled, String language) {

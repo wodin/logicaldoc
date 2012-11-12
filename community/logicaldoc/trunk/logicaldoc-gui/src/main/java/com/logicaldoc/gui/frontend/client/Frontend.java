@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -13,10 +14,13 @@ import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
+import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.services.InfoService;
 import com.logicaldoc.gui.common.client.services.InfoServiceAsync;
+import com.logicaldoc.gui.common.client.services.SecurityService;
+import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.common.client.util.RequestInfo;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
@@ -26,6 +30,7 @@ import com.logicaldoc.gui.frontend.client.search.TagsForm;
 import com.logicaldoc.gui.frontend.client.security.LoginPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -48,6 +53,8 @@ public class Frontend implements EntryPoint {
 	private MainPanel mainPanel;
 
 	protected InfoServiceAsync infoService = (InfoServiceAsync) GWT.create(InfoService.class);
+
+	protected SecurityServiceAsync securityService = (SecurityServiceAsync) GWT.create(SecurityService.class);
 
 	/**
 	 * @return singleton Main instance
@@ -103,7 +110,10 @@ public class Frontend implements EntryPoint {
 			}
 
 			@Override
-			public void onSuccess(GUIInfo info) {
+			public void onSuccess(final GUIInfo info) {
+				// Store the release information
+				Cookies.setCookie(Constants.COOKIE_VERSION, info.getRelease());
+
 				Config.init(info);
 				I18N.init(info);
 
@@ -112,13 +122,40 @@ public class Frontend implements EntryPoint {
 				Feature.init(info);
 				Session.get().setInfo(info);
 
+				String savedSid = null;
+				try {
+					savedSid = Offline.get(Constants.COOKIE_SID).toString();
+				} catch (Throwable t) {
+					
+				}
+
 				loginPanel = new LoginPanel(info);
-				RootPanel.get().add(loginPanel);
 
-				// Remove the loading frame
-				RootPanel.getBodyElement().removeChild(RootPanel.get("loadingWrapper").getElement());
+				if (savedSid == null || "".equals(savedSid)) {
+					Frontend.this.showInitialLogin();
+				} else {
+					securityService.login(savedSid, new AsyncCallback<GUISession>() {
 
-				setUploadTrigger(Frontend.this);
+						@Override
+						public void onFailure(Throwable caught) {
+							Frontend.this.showInitialLogin();
+						}
+
+						@Override
+						public void onSuccess(GUISession session) {
+							if (session == null || !session.isLoggedIn()) {
+								Frontend.this.showInitialLogin();
+							} else {
+								MainPanel.get();
+								loginPanel.onLoggedIn(session);
+								
+								// Remove the loading frame
+								RootPanel.getBodyElement().removeChild(RootPanel.get("loadingWrapper").getElement());
+								setUploadTrigger(Frontend.this);
+							}
+						}
+					});
+				}
 			}
 		});
 
@@ -126,10 +163,22 @@ public class Frontend implements EntryPoint {
 		VisualizationUtils.loadVisualizationApi(null, PieChart.PACKAGE);
 	}
 
+	// Switch to the login panel
 	public void showLogin() {
 		mainPanel.hide();
 		loginPanel.show();
 		entered = false;
+	}
+
+	// Setup the initial visualization of the login panel
+	private void showInitialLogin() {
+		RootPanel.get().add(loginPanel);
+
+		// Remove the loading frame
+		RootPanel.getBodyElement().removeChild(RootPanel.get("loadingWrapper").getElement());
+		setUploadTrigger(Frontend.this);
+
+		showLogin();
 	}
 
 	public void showMain() {

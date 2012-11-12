@@ -8,7 +8,6 @@ import org.apache.commons.lang.StringUtils;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
-import com.logicaldoc.gui.common.client.beans.GUIDashlet;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMenu;
@@ -83,9 +82,12 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 		}
 	}
 
-	public GUIValuePair[] getBundle(String locale) {
-		System.out.println("** locale=" + locale);
+	@Override
+	public GUISession login(String sid) {
+		return login(null, null, null);
+	}
 
+	public GUIValuePair[] getBundle(String locale) {
 		// In production, use our LocaleUtil to instantiate the locale
 		Locale l = new Locale(locale);
 		ResourceBundle rb = ResourceBundle.getBundle("i18n.messages", l);

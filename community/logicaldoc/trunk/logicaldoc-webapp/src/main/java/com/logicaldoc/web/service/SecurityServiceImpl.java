@@ -83,14 +83,11 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	@Override
 	public GUISession login(String username, String password, String locale) {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		DocumentDAO documentDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		SystemMessageDAO messageDao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
 
 		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
 				AuthenticationChain.class);
 
 		GUISession session = new GUISession();
-
 		GUIUser guiUser = new GUIUser();
 
 		try {
@@ -103,86 +100,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			if (authenticationChain.authenticate(username, password, remoteAddress)) {
 				User user = userDao.findByUserName(username);
 				userDao.initialize(user);
-
-				guiUser.setFirstName(user.getFirstName());
-				guiUser.setId(user.getId());
-				if (StringUtils.isEmpty(locale)) {
-					guiUser.setLanguage(user.getLanguage());
-				} else {
-					guiUser.setLanguage(locale);
-				}
-
-				GUIInfo info = new InfoServiceImpl().getInfo(guiUser.getLanguage());
-				session.setInfo(info);
-
-				guiUser.setName(user.getName());
-
-				GUIGroup[] groups = new GUIGroup[user.getGroups().size()];
-				int i = 0;
-				for (Group g : user.getGroups()) {
-					groups[i] = new GUIGroup();
-					groups[i].setId(g.getId());
-					groups[i].setName(g.getName());
-					groups[i].setDescription(g.getDescription());
-					i++;
-				}
-				guiUser.setGroups(groups);
-
-				guiUser.setUserName(username);
-				guiUser.setExpired(false);
-
-				guiUser.setLockedDocs(documentDao.findByLockUserAndStatus(user.getId(), AbstractDocument.DOC_LOCKED)
-						.size());
-				guiUser.setCheckedOutDocs(documentDao.findByLockUserAndStatus(user.getId(),
-						AbstractDocument.DOC_CHECKED_OUT).size());
-				guiUser.setUnreadMessages(messageDao.getCount(username, SystemMessage.TYPE_SYSTEM, 0));
-
-				guiUser.setQuota(user.getQuota());
-				guiUser.setQuotaCount(user.getQuotaCount());
-				guiUser.setWelcomeScreen(user.getWelcomeScreen());
-
-				if (StringUtils.isNotEmpty(user.getSignatureId()))
-					guiUser.setSignatureId(user.getSignatureId());
-				if (StringUtils.isNotEmpty(user.getSignatureInfo()))
-					guiUser.setSignatureInfo(user.getSignatureInfo());
-
-				session.setSid(AuthenticationChain.getSessionId());
-				session.setUser(guiUser);
-				session.setLoggedIn(true);
-
-				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-				List<Long> menues = mdao.findMenuIdByUserId(user.getId());
-				guiUser.setMenues((Long[]) menues.toArray(new Long[0]));
-
-				loadDashlets(guiUser);
-
-				/*
-				 * Prepare an incoming message, if any
-				 */
-				ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-				String incomingMessage = config.getProperty("gui.welcome");
-				if (StringUtils.isNotEmpty(incomingMessage)) {
-					Map<String, String> map = new HashMap<String, String>();
-					map.put("user", user.getFullName());
-					incomingMessage = StrSubstitutor.replace(incomingMessage, map);
-				}
-
-				// In case of news overwrite the incoming message
-				if (guiUser.isMemberOf(Constants.GROUP_ADMIN) && info.isEnabled("Feature_27")) {
-					// Check if there are incoming messages not already read
-					FeedMessageDAO feedMessageDao = (FeedMessageDAO) Context.getInstance()
-							.getBean(FeedMessageDAO.class);
-					if (feedMessageDao.checkNotRead())
-						incomingMessage = I18N.message("productnewsmessage", locale);
-				}
-
-				if (StringUtils.isNotEmpty(incomingMessage))
-					session.setIncomingMessage(incomingMessage);
-
-				// Define the current locale
-				UserSession userSession = SessionManager.getInstance().get(session.getSid());
-				userSession.getDictionary().put(SessionUtil.LOCALE, user.getLocale());
-				userSession.getDictionary().put(SessionUtil.USER, user);
+				session = internalLogin(AuthenticationChain.getSessionId(), user, locale);
+				guiUser = session.getUser();
 			} else if (userDao.isPasswordExpired(username)) {
 				User user = userDao.findByUserName(username);
 				guiUser.setId(user.getId());
@@ -205,6 +124,116 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 			throw new RuntimeException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Used internally by login procedures, instantiates a new GUISession by a
+	 * given authenticated user.
+	 */
+	protected GUISession internalLogin(String sid, User user, String locale) {
+		GUIUser guiUser = new GUIUser();
+		GUISession session = new GUISession();
+		session.setSid(sid);
+
+		DocumentDAO documentDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		SystemMessageDAO messageDao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
+
+		guiUser.setFirstName(user.getFirstName());
+		guiUser.setId(user.getId());
+		if (StringUtils.isEmpty(locale)) {
+			guiUser.setLanguage(user.getLanguage());
+		} else {
+			guiUser.setLanguage(locale);
+		}
+
+		GUIInfo info = new InfoServiceImpl().getInfo(guiUser.getLanguage());
+		session.setInfo(info);
+
+		guiUser.setName(user.getName());
+
+		GUIGroup[] groups = new GUIGroup[user.getGroups().size()];
+		int i = 0;
+		for (Group g : user.getGroups()) {
+			groups[i] = new GUIGroup();
+			groups[i].setId(g.getId());
+			groups[i].setName(g.getName());
+			groups[i].setDescription(g.getDescription());
+			i++;
+		}
+		guiUser.setGroups(groups);
+
+		guiUser.setUserName(user.getUserName());
+		guiUser.setExpired(false);
+
+		guiUser.setLockedDocs(documentDao.findByLockUserAndStatus(user.getId(), AbstractDocument.DOC_LOCKED).size());
+		guiUser.setCheckedOutDocs(documentDao.findByLockUserAndStatus(user.getId(), AbstractDocument.DOC_CHECKED_OUT)
+				.size());
+		guiUser.setUnreadMessages(messageDao.getCount(user.getUserName(), SystemMessage.TYPE_SYSTEM, 0));
+
+		guiUser.setQuota(user.getQuota());
+		guiUser.setQuotaCount(user.getQuotaCount());
+		guiUser.setWelcomeScreen(user.getWelcomeScreen());
+
+		if (StringUtils.isNotEmpty(user.getSignatureId()))
+			guiUser.setSignatureId(user.getSignatureId());
+		if (StringUtils.isNotEmpty(user.getSignatureInfo()))
+			guiUser.setSignatureInfo(user.getSignatureInfo());
+
+		session.setSid(sid);
+		session.setUser(guiUser);
+		session.setLoggedIn(true);
+
+		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		List<Long> menues = mdao.findMenuIdByUserId(user.getId());
+		guiUser.setMenues((Long[]) menues.toArray(new Long[0]));
+
+		loadDashlets(guiUser);
+
+		/*
+		 * Prepare an incoming message, if any
+		 */
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		String incomingMessage = config.getProperty("gui.welcome");
+		if (StringUtils.isNotEmpty(incomingMessage)) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("user", user.getFullName());
+			incomingMessage = StrSubstitutor.replace(incomingMessage, map);
+		}
+
+		// In case of news overwrite the incoming message
+		if (guiUser.isMemberOf(Constants.GROUP_ADMIN) && info.isEnabled("Feature_27")) {
+			// Check if there are incoming messages not already read
+			FeedMessageDAO feedMessageDao = (FeedMessageDAO) Context.getInstance().getBean(FeedMessageDAO.class);
+			if (feedMessageDao.checkNotRead())
+				incomingMessage = I18N.message("productnewsmessage", locale);
+		}
+
+		if (StringUtils.isNotEmpty(incomingMessage))
+			session.setIncomingMessage(incomingMessage);
+
+		// Define the current locale
+		UserSession userSession = SessionManager.getInstance().get(sid);
+		userSession.getDictionary().put(SessionUtil.LOCALE, user.getLocale());
+		userSession.getDictionary().put(SessionUtil.USER, user);
+
+		guiUser.setPasswordMinLenght(Integer.parseInt(config.getProperty("password.size")));
+
+		return session;
+	}
+
+	@Override
+	public GUISession login(String sid) {
+		try {
+			UserSession userSession = SessionUtil.validateSession(sid);
+			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			User user = userDao.findById(userSession.getUserId());
+			userDao.initialize(user);
+			GUISession session = internalLogin(sid, user, null);
+			return session;
+		} catch (Throwable e) {
+			log.debug(e.getMessage());
+			return null;
 		}
 	}
 

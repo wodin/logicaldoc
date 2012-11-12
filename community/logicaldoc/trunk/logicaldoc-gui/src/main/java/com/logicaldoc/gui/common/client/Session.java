@@ -86,7 +86,6 @@ public class Session {
 		try {
 			this.session = session;
 			I18N.init(session);
-			WindowUtils.setSid(session.getSid(), I18N.message("leavingpage"));
 			Menu.init(session.getUser());
 			if (session.isLoggedIn()) {
 				for (SessionObserver listener : sessionObservers) {
