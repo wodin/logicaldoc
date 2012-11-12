@@ -112,9 +112,6 @@ body {
 	// Determine what skin file to load
   var currentSkin = "Enterprise";
   var isomorphicDir = "<%=MODULE%>/sc/";
-
-  var sessionId=null;
-  var exitMessage="You are trying to leave the application without closing the current session. Please use the 'exit' menu.";
 </script>
 </head>
 
