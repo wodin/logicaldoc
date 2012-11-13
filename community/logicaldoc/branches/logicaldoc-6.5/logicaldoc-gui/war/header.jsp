@@ -115,10 +115,6 @@ body {
 
   var sessionId=null;
   var exitMessage="You are trying to leave the application without closing the current session. Please use the 'exit' menu.";
-            
-  isc.Canvas.addProperties({
-	   showCustomScrollbars:<%=dir.equals("rtl") ? "false":"true"%>
-  });
 </script>
 </head>
 
