@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
@@ -220,6 +221,8 @@ public class TaskDialog extends Window {
 		// Initialize the participants list
 		if (this.task.getParticipants() != null)
 			for (GUIValuePair part : this.task.getParticipants()) {
+				if(part.getCode()==null || part.getValue()==null)
+					continue;
 				String prefix = (part.getCode().startsWith("g.") ? I18N.message("group") : I18N.message("user")) + ": ";
 				participants.put(part.getCode(),
 						part.getValue().startsWith(prefix) ? part.getValue() : prefix + part.getValue());
