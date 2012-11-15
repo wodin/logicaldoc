@@ -7,7 +7,6 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.SessionManager;
