@@ -230,7 +230,7 @@ public class DocumentPreview extends HttpServlet {
 
 	protected void forwardEmptyPage(HttpServletRequest request, HttpServletResponse response, String suffix) {
 		try {
-			RequestDispatcher rd = request.getRequestDispatcher("/flash/empty.swf");
+			RequestDispatcher rd = request.getRequestDispatcher("/flash/end.swf");
 			rd.forward(request, response);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
