@@ -1,29 +1,31 @@
-The LogicalDOC development team is happy to announce the immediate availability of LogicalDOC CE 6.3.2
+The LogicalDOC development team is proud to announce the immediate availability of LogicalDOC CE 6.6
 
 You can get this distribution in tomcat-bundle archive from SourceForge: 
-http://sourceforge.net/projects/logicaldoc/files/distribution/LogicalDOC%20CE%206.3/logicaldoc-6.3.2-tomcat-bundle.zip/download
+http://sourceforge.net/projects/logicaldoc/files/distribution/LogicalDOC%20CE%206.6/logicaldoc-6.6-tomcat-bundle.zip/download
 
-LogicalDOC is a Web-based Document Management System (DMS) based on open 
-source technology (GWT +Spring +Hibernate). Thanks to its intuitive interface, 
-LogicalDOC transforms complex operations into easy tasks. It allows the 
-storage, organization, versioning and use of all kind of files and documents 
-within an user friendly interface.
+LogicalDOC is a Web-based Document Management System (DMS) based on open source technology (GWT +Spring +Hibernate +Lucene). 
+Thanks to its intuitive interface, LogicalDOC transforms complex operations into easy tasks. 
+It allows the storage, organization, versioning and use of all kind of files and documents within an user friendly interface.
 
-Changes:
-Improved support to preview documents
-Fixed support for Locales with language variants (Portuguese-brazilian)
-Completed the GUI translation in German language
-Introduced support for the Norwegian language (Big thanks to Magnus Ottosen - Datawaves.no)
-Improvements in the advanced search
-Fixed problems on web-services
-WebDAV Permission fixes on renaming, moving and deleting folder and file.
-Improved parser for PDF documents
-New Webservice method to collect the metadata of a list of documents
+New Features
+Customizable User Dashboard
 
+Improvements
+Improved performance of massive folders deletions
+Support for the Swedish language
+Improved performance of the preview on multi-page documents
+Replaced the Flash used to display the Repository Statistics with a JavaScript component
+Replaced the Flash used to display the Tag Cloud with a JavaScript component
 
-You can use our dedicated Bug tracker http://bugs.logicaldoc.com to report errors or feature requests.
+ 
+Any change worth of note is listed in ChangeLog.txt
+
+You can use the dedicated Issue tracker http://issues.logicaldoc.com to report errors or feature requests.
 
 Please contribute to the internationalization of LogicalDOC by using the translation platform described in the Wiki
 http://wiki.logicaldoc.com/wiki/Translate_LogicalDOC
 
-The LogicalDOC development Team 
+If you want you can also start discussions on http://forums.logicaldoc.com
+
+
+The LogicalDOC development Team  
