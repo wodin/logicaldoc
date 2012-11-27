@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.0.0//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.0.0/distro-source/core/src/gwt-module.dtd">
+<module rename-to="frontend">
+  <inherits name="com.logicaldoc.gui.common.Common" />
+  <inherits name="com.smartclient.theme.enterprise.EnterpriseResources" />
+  <inherits name='com.google.gwt.visualization.Visualization'/>
+
+  <inherits name="com.bramosystems.oss.player.core.Core" />
+  
+  <inherits name='com.orange.links.Links' />
+  <inherits name='com.google.gwt.widgetideas.GWTCanvas'/>
+  <inherits name='com.google.gwt.widgetideas.WidgetIdeas' />   
+  <inherits name='com.google.gwt.libideas.LibIdeas' /> 
+  
+  <entry-point class="com.logicaldoc.gui.frontend.client.Frontend" />
+</module>
