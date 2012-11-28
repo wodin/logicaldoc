@@ -196,7 +196,7 @@ public class UsersPanel extends VLayout {
 
 		if (record.getAttributeAsString("id") != null
 				&& (user.getId() == Long.parseLong(record.getAttributeAsString("id")))) {
-			list.updateData(record);
+			list.refreshRow(list.getRecordIndex(record));
 		} else {
 			// Append a new record
 			record.setAttribute("id", user.getId());

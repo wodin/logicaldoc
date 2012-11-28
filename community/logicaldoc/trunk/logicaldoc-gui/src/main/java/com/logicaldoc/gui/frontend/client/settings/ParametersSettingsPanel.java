@@ -78,7 +78,7 @@ public class ParametersSettingsPanel extends VLayout {
 
 				if (vm.validate()) {
 					for (GUIParameter param : ParametersSettingsPanel.this.settings) {
-						param.setValue((String) values.get(param.getName()));
+						param.setValue((String) values.get(ItemFactory.filterItemName(param.getName())));
 						Session.get().getInfo().setConfig(param.getName(), param.getValue());
 					}
 

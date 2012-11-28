@@ -47,7 +47,6 @@ public class ChangePassword extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("changepassword"));
 		setWidth(300);
-		setHeight(180);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();

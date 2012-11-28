@@ -139,7 +139,7 @@ public class RatingDialog extends Window {
 										ListGridRecord selectedRecord = DocumentsPanel.get().getList()
 												.getSelectedRecord();
 										selectedRecord.setAttribute("rating", "rating" + rating);
-										DocumentsPanel.get().getList().updateData(selectedRecord);
+										DocumentsPanel.get().getList().refreshRow(DocumentsPanel.get().getList().getRecordIndex(selectedRecord));
 										DocumentsPanel.get().onSelectedDocument(
 												Long.parseLong(selectedRecord.getAttribute("id")), false);
 									}
@@ -147,7 +147,7 @@ public class RatingDialog extends Window {
 									else if (RatingDialog.this.observer instanceof HitsListPanel) {
 										ListGridRecord selectedRecord = SearchPanel.get().getList().getSelectedRecord();
 										selectedRecord.setAttribute("rating", "rating" + rating);
-										SearchPanel.get().getList().updateData(selectedRecord);
+										SearchPanel.get().getList().refreshRow(DocumentsPanel.get().getList().getRecordIndex(selectedRecord));
 										SearchPanel.get().onSelectedDocumentHit(
 												Long.parseLong(selectedRecord.getAttribute("id")));
 									}

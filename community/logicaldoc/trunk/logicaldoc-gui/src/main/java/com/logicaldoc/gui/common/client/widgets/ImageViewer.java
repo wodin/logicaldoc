@@ -133,7 +133,7 @@ public class ImageViewer extends VLayout {
 	protected void onPreview() {
 		try {
 			String filename = document.getFileName();
-			String version = document.getVersion();
+			String version = document.getFileVersion();
 
 			// In the search hitlist we don't have the filename
 			if (filename == null)

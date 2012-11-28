@@ -287,7 +287,7 @@ public class ImportFoldersPanel extends VLayout {
 							@Override
 							public void onSuccess(Void result) {
 								record.setAttribute("eenabled", "0");
-								list.updateData(record);
+								list.refreshRow(list.getRecordIndex(record));
 							}
 						});
 			}
@@ -308,7 +308,7 @@ public class ImportFoldersPanel extends VLayout {
 							@Override
 							public void onSuccess(Void result) {
 								record.setAttribute("eenabled", "2");
-								list.updateData(record);
+								list.refreshRow(list.getRecordIndex(record));
 							}
 						});
 			}
@@ -373,7 +373,7 @@ public class ImportFoldersPanel extends VLayout {
 
 		if (record.getAttributeAsString("id") != null
 				&& (share.getId() == Long.parseLong(record.getAttributeAsString("id")))) {
-			list.updateData(record);
+			list.refreshRow(list.getRecordIndex(record));
 		} else {
 			// Append a new record
 			record.setAttribute("id", share.getId());

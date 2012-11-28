@@ -235,7 +235,7 @@ public class CustomIdPanel extends VLayout {
 										public void onSuccess(Void ret) {
 											schemes.getSelectedRecord().setAttribute("scheme", (String) null);
 											schemes.getSelectedRecord().setAttribute("regenerate", false);
-											schemes.updateData(record);
+											schemes.refreshRow(schemes.getRecordIndex(record));
 											schemes.refreshRow(schemes.getRecordIndex(record));
 										}
 									});

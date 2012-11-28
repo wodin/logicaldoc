@@ -32,7 +32,6 @@ public class PasswordReset extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("passwordreset"));
 		setWidth(340);
-		setHeight(250);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
