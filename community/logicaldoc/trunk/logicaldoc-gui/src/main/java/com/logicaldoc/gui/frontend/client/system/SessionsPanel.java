@@ -165,7 +165,7 @@ public class SessionsPanel extends VLayout {
 								public void onSuccess(Void result) {
 									list.getSelectedRecord().setAttribute("statusLabel", "Closed");
 									list.getSelectedRecord().setAttribute("status", "1");
-									list.updateData(list.getSelectedRecord());
+									list.refreshRow(list.getRecordIndex(list.getSelectedRecord()));
 								}
 							});
 						}

@@ -204,7 +204,7 @@ public class NotesPanel extends DocumentDetailTab {
 		record.setAttribute("username", Session.get().getUser().getFullName());
 		record.setAttribute("date", new Date());
 		record.setAttribute("message", message);
-		listGrid.updateData(record);
+		listGrid.refreshRow(listGrid.getRecordIndex(record));
 	}
 
 	@Override

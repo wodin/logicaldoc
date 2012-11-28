@@ -34,6 +34,7 @@ public class ContactingServer extends Dialog {
 		setAlign(Alignment.CENTER);
 		setMargin(2);
 		setMembersMargin(0);
+		setBodyColor("white");
 		setBackgroundColor("white");
 		setBorder("1px solid DarkBlue");
 		setOverflow(Overflow.HIDDEN);
@@ -48,6 +49,7 @@ public class ContactingServer extends Dialog {
 		message.setLayoutAlign(Alignment.CENTER);
 		message.setLayoutAlign(VerticalAlignment.TOP);
 		message.setHeight(50);
+		message.setBackgroundColor("white");
 		
 		addMember(message);
 	}

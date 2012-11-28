@@ -39,7 +39,7 @@ public class TaskDetailPanel extends VLayout {
 
 	private SystemServiceAsync service = (SystemServiceAsync) GWT.create(SystemService.class);
 
-	TabSet tabSet = new TabSet();
+	private TabSet tabSet = new TabSet();
 
 	private Layout schedulingTabPanel;
 

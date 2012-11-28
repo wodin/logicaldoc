@@ -59,6 +59,9 @@ public class LoginPanel extends VLayout {
 
 	protected SelectItem language;
 
+	// Flag used to handle double clicks on the login button
+	protected static boolean loggingIn = false;
+
 	public LoginPanel(GUIInfo info) {
 		setDefaultLayoutAlign(Alignment.CENTER);
 		setWidth100();
@@ -217,15 +220,22 @@ public class LoginPanel extends VLayout {
 	}
 
 	protected void onLogin() {
+		if (loggingIn == true)
+			return;
+		else
+			loggingIn = true;
+
 		securityService.login((String) username.getValue(), (String) password.getValue(), (String) language.getValue(),
 				new AsyncCallback<GUISession>() {
 					public void onFailure(Throwable caught) {
+						loggingIn = false;
 						Log.serverError(caught);
 						SC.warn(I18N.message("accesdenied"));
 					}
 
 					@Override
 					public void onSuccess(GUISession session) {
+						loggingIn = false;
 						if (session.isLoggedIn()) {
 							onLoggedIn(session);
 						} else if (session.getUser() != null && session.getUser().isExpired()) {
@@ -263,7 +273,7 @@ public class LoginPanel extends VLayout {
 
 		// In any case save the SID in the browser
 		Offline.put(Constants.COOKIE_SID, session.getSid());
-		
+
 		GUIUser user = session.getUser();
 		if (user.getQuotaCount() >= user.getQuota() && user.getQuota() >= 0)
 			Log.warn(I18N.message("quotadocsexceeded"), null);

@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
+import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.services.EmailAccountService;
 import com.logicaldoc.gui.frontend.client.services.EmailAccountServiceAsync;
 import com.smartgwt.client.data.Record;
@@ -253,7 +254,7 @@ public class AccountsPanel extends VLayout {
 							@Override
 							public void onSuccess(Void result) {
 								record.setAttribute("eenabled", "0");
-								list.updateData(record);
+								list.refreshRow(list.getRecordIndex(record));
 							}
 						});
 			}
@@ -274,7 +275,7 @@ public class AccountsPanel extends VLayout {
 							@Override
 							public void onSuccess(Void result) {
 								record.setAttribute("eenabled", "2");
-								list.updateData(record);
+								list.refreshRow(list.getRecordIndex(record));
 							}
 						});
 			}
@@ -338,7 +339,7 @@ public class AccountsPanel extends VLayout {
 
 		if (record.getAttributeAsString("id") != null
 				&& (share.getId() == Long.parseLong(record.getAttributeAsString("id")))) {
-			list.updateData(record);
+			list.refreshRow(list.getRecordIndex(record));
 		} else {
 			// Append a new record
 			record.setAttribute("id", share.getId());

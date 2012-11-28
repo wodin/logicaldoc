@@ -42,7 +42,7 @@ public class TasksDS extends DataSource {
 
 		setFields(name, label, enabledIcon, enabled, status, scheduling, progress, progressbar, completion, size,
 				lastStart, nextStart, indeterminate, runningIcon);
-		setClientOnly(true);
+		setClientOnly(false);
 		setDataURL("data/tasks.xml?sid=" + Session.get().getSid() + "&locale=" + I18N.getLocale());
 	}
 }
