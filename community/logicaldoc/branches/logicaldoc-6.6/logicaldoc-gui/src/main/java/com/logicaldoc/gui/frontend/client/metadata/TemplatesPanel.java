@@ -251,7 +251,7 @@ public class TemplatesPanel extends VLayout {
 
 		if (record.getAttributeAsString("id") != null
 				&& (template.getId() == Long.parseLong(record.getAttributeAsString("id")))) {
-			list.updateData(record);
+			list.refreshRow(list.getRecordIndex(record));
 		} else {
 			// Append a new record
 			record.setAttribute("id", template.getId());

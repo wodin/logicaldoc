@@ -90,7 +90,7 @@ public class TrashPanel extends VLayout {
 		list.setFilterOnKeypress(true);
 		addMember(list);
 
-		if (Session.get().getCurrentFolder()!=null && Session.get().getCurrentFolder().isWrite())
+		if (Session.get().getCurrentFolder() != null && Session.get().getCurrentFolder().isWrite())
 			list.addCellContextClickHandler(new CellContextClickHandler() {
 				@Override
 				public void onCellContextClick(CellContextClickEvent event) {
@@ -135,10 +135,5 @@ public class TrashPanel extends VLayout {
 
 		contextMenu.setItems(execute);
 		contextMenu.showContextMenu();
-	}
-
-	public void appendRecord(ListGridRecord record) {
-		record.setAttribute("folderId", Long.toString(Session.get().getCurrentFolder().getId()));
-		list.addData(record);
 	}
 }

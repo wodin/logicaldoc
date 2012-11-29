@@ -144,7 +144,7 @@ public class ScopedPropertiesPanel extends VLayout {
 									ListGridRecord[] selection = list.getSelectedRecords();
 									for (int i = 0; i < ids.length; i++) {
 										selection[i].setAttribute("scope", "global");
-										list.updateData(selection[i]);
+										list.refreshRow(list.getRecordIndex(selection[i]));
 									}
 								}
 							});
@@ -173,7 +173,7 @@ public class ScopedPropertiesPanel extends VLayout {
 									ListGridRecord[] selection = list.getSelectedRecords();
 									for (int i = 0; i < ids.length; i++) {
 										selection[i].setAttribute("scope", "local");
-										list.updateData(selection[i]);
+										list.refreshRow(list.getRecordIndex(selection[i]));
 									}
 								}
 							});

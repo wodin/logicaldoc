@@ -139,7 +139,7 @@ public class SubscriptionDialog extends Window {
 			setTitle(I18N.message("documentsubscription"));
 
 		setWidth(290);
-		setHeight(380);
+		setHeight(360);
 		setMembersMargin(6);
 		setCanDragResize(true);
 		setIsModal(true);

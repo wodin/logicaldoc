@@ -253,11 +253,11 @@ public class IncrementalArchivesList extends VLayout {
 
 		if (record.getAttributeAsString("id") != null
 				&& (incremental.getId() == Long.parseLong(record.getAttributeAsString("id")))) {
-			list.updateData(record);
+			list.refreshRow(list.getRecordIndex(record));
 		} else {
 			// Append a new record
 			record.setAttribute("id", incremental.getId());
-			list.addData(record);
+			list.refreshRow(list.getRecordIndex(record));
 			list.selectRecord(record);
 		}
 	}

@@ -126,6 +126,15 @@ public class Util {
 		return tmp;
 	}
 	
+	public static String fullPreviewUrl(String sid, long docId, String fileVersion){
+		String url = "{" + GWT.getHostPageBaseURL() + "preview?sid=" + Session.get().getSid() + "%26docId=" + docId
+				+ "%26suffix=preview-[*,0].swf";
+		if (fileVersion != null)
+			url += "%26fileVersion=" + fileVersion;
+		url += "," + Session.get().getInfo().getConfig("gui.preview.pages") + "}";
+		return url;
+	}
+	
 	public static String imageUrl(String imageName) {
 		return imagePrefix() + imageName;
 	}

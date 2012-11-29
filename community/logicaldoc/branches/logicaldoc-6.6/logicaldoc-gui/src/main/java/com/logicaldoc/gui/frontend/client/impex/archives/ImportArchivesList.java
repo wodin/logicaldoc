@@ -243,6 +243,6 @@ public class ImportArchivesList extends VLayout {
 	public void updateRecord(GUIArchive result) {
 		ListGridRecord record = list.getSelectedRecord();
 		record.setAttribute("description", result.getDescription());
-		list.updateData(record);
+		list.refreshRow(list.getRecordIndex(record));
 	}
 }
