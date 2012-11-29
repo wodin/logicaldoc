@@ -177,7 +177,7 @@ public class MessagesPanel extends VLayout {
 								@Override
 								public void onSuccess(GUIMessage message) {
 									record.setAttribute("read", "true");
-									list.updateData(record);
+									list.refreshRow(list.getRecordIndex(record));
 								}
 							});
 			}
@@ -220,7 +220,7 @@ public class MessagesPanel extends VLayout {
 								@Override
 								public void onSuccess(Void result) {
 									list.removeSelectedData();
-									list.deselectAllRecords();
+									//list.deselectAllRecords();
 								}
 							});
 						}

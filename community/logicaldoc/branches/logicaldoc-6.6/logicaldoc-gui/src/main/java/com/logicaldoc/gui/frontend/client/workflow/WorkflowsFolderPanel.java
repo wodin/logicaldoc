@@ -63,7 +63,7 @@ public class WorkflowsFolderPanel extends VLayout {
 		Button addTrigger = new Button(I18N.message("workflowtriggeradd"));
 		addTrigger.setAutoFit(true);
 		buttons.addMember(addTrigger);
-		buttons.setMembersMargin(4);
+		buttons.setMembersMargin(3);
 		buttons.setWidth100();
 		buttons.setHeight(15);
 		addTrigger.addClickHandler(new ClickHandler() {
@@ -72,13 +72,13 @@ public class WorkflowsFolderPanel extends VLayout {
 				final Window window = new Window();
 				window.setTitle(I18N.message("workflowtriggertext"));
 				window.setWidth(400);
-				window.setHeight(600);
+				window.setHeight(400);
 				window.setCanDragResize(true);
 				window.setIsModal(true);
 				window.setShowModalMask(true);
 				window.centerInPage();
 
-				VStack layout = new VStack(50);
+				VStack layout = new VStack(10);
 
 				// Workflows list
 				DynamicForm workflowForm = new DynamicForm();
@@ -91,6 +91,7 @@ public class WorkflowsFolderPanel extends VLayout {
 				workflows.setColSpan(2);
 				workflows.setEndRow(true);
 				workflows.setRequired(true);
+				workflows.setHeight(150);
 				workflowForm.setItems(workflows);
 
 				// Templates list
@@ -105,7 +106,7 @@ public class WorkflowsFolderPanel extends VLayout {
 				templates.setColSpan(2);
 				templates.setEndRow(true);
 				templates.setWidth(250);
-				templates.setHeight(200);
+				templates.setHeight(150);
 				templates.setMultipleAppearance(MultipleAppearance.GRID);
 				templateForm.setItems(templates);
 

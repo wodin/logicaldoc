@@ -170,11 +170,7 @@ public class PreviewPopup extends Window {
 		}
 
 		html = new HTMLFlow();
-		String url = "{" + GWT.getHostPageBaseURL() + "preview?sid=" + Session.get().getSid() + "%26docId=" + id
-				+ "%26suffix=preview-[*,0].swf";
-		if (fileVersion != null)
-			url += "%26fileVersion=" + fileVersion;
-		url += "," + Session.get().getInfo().getConfig("gui.preview.pages") + "}";
+		String url = Util.fullPreviewUrl(Session.get().getSid(), id, fileVersion);
 
 		String flash = "flexpaperviewer.swf";
 		if (!printEnabled)

@@ -38,7 +38,6 @@ public class AboutDialog extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("about") + " " + Session.get().getInfo().getProductName());
 		setWidth(400);
-		setHeight(280);
 		setPadding(5);
 		setAutoSize(true);
 		setIsModal(true);
@@ -105,6 +104,7 @@ public class AboutDialog extends Window {
 
 		Button button = new Button("OK");
 		button.setAutoFit(true);
+		button.setMinWidth(50);
 		button.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

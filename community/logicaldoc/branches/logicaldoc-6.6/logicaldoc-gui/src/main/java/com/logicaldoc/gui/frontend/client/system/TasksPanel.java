@@ -94,7 +94,7 @@ public class TasksPanel extends VLayout {
 										record.setAttribute("lastStart", now);
 										record.setAttribute("nextStart", new Date(now.getTime()
 												+ (currentTask.getScheduling().getInterval() * 1000)));
-										list.updateData(record);
+										list.refreshRow(list.getRecordIndex(record));
 									}
 								});
 							}
@@ -119,7 +119,7 @@ public class TasksPanel extends VLayout {
 					@Override
 					public void onSuccess(Boolean result) {
 						list.getSelectedRecord().setAttribute("status", GUITask.STATUS_STOPPING);
-						list.updateData(list.getSelectedRecord());
+						list.refreshRow(list.getRecordIndex(list.getSelectedRecord()));
 					}
 				});
 
@@ -146,7 +146,7 @@ public class TasksPanel extends VLayout {
 								list.getSelectedRecord().setAttribute("enabledIcon", "bullet_green");
 								list.getSelectedRecord().setAttribute("eenabled", true);
 								list.getSelectedRecord().setAttribute("runningIcon", "idle_task");
-								list.updateData(list.getSelectedRecord());
+								list.refreshRow(list.getRecordIndex(list.getSelectedRecord()));
 							}
 						});
 
@@ -172,7 +172,7 @@ public class TasksPanel extends VLayout {
 								list.getSelectedRecord().setAttribute("enabledIcon", "bullet_red");
 								list.getSelectedRecord().setAttribute("eenabled", false);
 								list.getSelectedRecord().setAttribute("runningIcon", "idle_task");
-								list.updateData(list.getSelectedRecord());
+								list.refreshRow(list.getRecordIndex(list.getSelectedRecord()));
 							}
 						});
 
@@ -218,29 +218,30 @@ public class TasksPanel extends VLayout {
 							if (p == null)
 								continue;
 
-							for (ListGridRecord record : list.getRecords()) {
-								if (record.getAttribute("name").equals(guiTask.getName())
-										&& guiTask.getStatus() != GUITask.STATUS_IDLE) {
-									record.setAttribute("runningIcon", "running_task");
-									record.setAttribute("completion", guiTask.getCompletionPercentage());
-									list.updateData(record);
-									break;
-								} else if (record.getAttribute("name").equals(guiTask.getName())
-										&& guiTask.getStatus() == GUITask.STATUS_IDLE) {
-									record.setAttribute("runningIcon", "idle_task");
-									record.setAttribute("completion", guiTask.getCompletionPercentage());
-									list.updateData(record);
-									break;
-								}
-							}
-
 							if (guiTask.isIndeterminate()) {
 								p.setPercentDone(0);
 							} else {
 								p.setPercentDone(guiTask.getCompletionPercentage());
 							}
+							p.redraw();
+							
+							for (ListGridRecord record : list.getRecords()) {
+								if (record.getAttribute("name").equals(guiTask.getName())
+										&& guiTask.getStatus() != GUITask.STATUS_IDLE) {
+									record.setAttribute("runningIcon", "running_task");
+									record.setAttribute("completion", guiTask.getCompletionPercentage());
+									list.refreshRow(list.getRecordIndex(record));
+									break;
+								} else if (record.getAttribute("name").equals(guiTask.getName())
+										&& guiTask.getStatus() == GUITask.STATUS_IDLE) {
+									record.setAttribute("runningIcon", "idle_task");
+									record.setAttribute("completion", guiTask.getCompletionPercentage());
+									list.refreshRow(list.getRecordIndex(record));
+									break;
+								}
+							}
 						}
-						list.redraw();
+//						list.redraw();
 					}
 				});
 			}
@@ -375,7 +376,7 @@ public class TasksPanel extends VLayout {
 									} else {
 										record.setAttribute("runningIcon", "idle_task");
 									}
-									list.updateData(record);
+									list.refreshRow(list.getRecordIndex(record));
 									showContextMenu();
 								}
 							});
@@ -433,6 +434,6 @@ public class TasksPanel extends VLayout {
 	 */
 	public void updateSelectedRecord(GUITask task) {
 		list.getSelectedRecord().setAttribute("scheduling", task.getSchedulingLabel());
-		list.updateData(list.getSelectedRecord());
+		list.refreshRow(list.getRecordIndex(list.getSelectedRecord()));
 	}
 }

@@ -311,7 +311,7 @@ public class ExportArchivesList extends VLayout {
 					public void onSuccess(Void result) {
 						record.setAttribute("status", "1");
 						record.setAttribute("statusicon", "lock");
-						list.updateData(record);
+						list.refreshRow(list.getRecordIndex(record));
 						showDetails(Long.parseLong(record.getAttributeAsString("id")), true);
 					}
 				});
@@ -350,7 +350,7 @@ public class ExportArchivesList extends VLayout {
 					public void onSuccess(Void result) {
 						record.setAttribute("status", "0");
 						record.setAttribute("statusicon", "lock_open");
-						list.updateData(record);
+						list.refreshRow(list.getRecordIndex(record));
 						showDetails(Long.parseLong(record.getAttributeAsString("id")), true);
 					}
 				});

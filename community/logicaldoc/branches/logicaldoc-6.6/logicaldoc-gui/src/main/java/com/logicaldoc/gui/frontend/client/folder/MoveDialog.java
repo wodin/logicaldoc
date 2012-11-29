@@ -24,15 +24,15 @@ public class MoveDialog extends Dialog {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("move"));
 		setWidth(250);
-		setHeight(280);
+		setHeight(270);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
-		setPadding(5);
+		setPadding(3);
 
 		VLayout content = new VLayout();
-		content.setTop(20);
+		content.setTop(10);
 		content.setWidth100();
 		content.setHeight100();
 		content.setMembersMargin(3);
@@ -43,7 +43,7 @@ public class MoveDialog extends Dialog {
 
 		VLayout buttons = new VLayout();
 		buttons.setWidth100();
-		buttons.setHeight(50);
+		buttons.setHeight(30);
 
 		Button move = new Button(I18N.message("move"));
 		move.setAutoFit(true);
@@ -71,6 +71,6 @@ public class MoveDialog extends Dialog {
 		buttons.setMembers(move);
 
 		content.setMembers(folders, buttons);
-		addChild(content);
+		addItem(content);
 	}
 }

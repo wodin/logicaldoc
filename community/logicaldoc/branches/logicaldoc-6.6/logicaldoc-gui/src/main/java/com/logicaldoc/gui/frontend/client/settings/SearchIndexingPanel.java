@@ -673,7 +673,7 @@ public class SearchIndexingPanel extends VLayout {
 							@Override
 							public void onSuccess(Void result) {
 								record.setAttribute("eenabled", "0");
-								langsList.updateData(record);
+								langsList.refreshRow(langsList.getRecordIndex(record));
 								Log.info(I18N.message("settingsaffectnewsessions"), null);
 							}
 						});
@@ -695,7 +695,7 @@ public class SearchIndexingPanel extends VLayout {
 							@Override
 							public void onSuccess(Void result) {
 								record.setAttribute("eenabled", "2");
-								langsList.updateData(record);
+								langsList.refreshRow(langsList.getRecordIndex(record));
 								Log.info(I18N.message("settingsaffectnewsessions"), null);
 							}
 						});

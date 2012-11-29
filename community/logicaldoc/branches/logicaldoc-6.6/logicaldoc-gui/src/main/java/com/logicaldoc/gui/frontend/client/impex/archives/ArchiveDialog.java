@@ -48,7 +48,6 @@ public class ArchiveDialog extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("addarchive"));
 		setWidth(280);
-		setHeight(220);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);

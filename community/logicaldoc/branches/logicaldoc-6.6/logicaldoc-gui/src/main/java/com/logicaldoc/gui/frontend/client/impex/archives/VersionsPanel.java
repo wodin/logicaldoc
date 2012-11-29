@@ -193,7 +193,7 @@ public class VersionsPanel extends VLayout {
 											ListGridRecord selectedRecord = archivesList.getList().getSelectedRecord();
 											if (selectedRecord != null) {
 												selectedRecord.setAttribute("size", archive.getSize());
-												archivesList.getList().updateData(selectedRecord);
+												archivesList.getList().refreshRow(archivesList.getList().getRecordIndex(selectedRecord));
 											}
 										}
 									});
