@@ -136,12 +136,4 @@ public class TrashPanel extends VLayout {
 		contextMenu.setItems(execute);
 		contextMenu.showContextMenu();
 	}
-
-	public void appendRecord(ListGridRecord record) {
-		try {
-			record.setAttribute("folderId", Long.toString(Session.get().getCurrentFolder().getId()));
-			list.addData(record);
-		} catch (Throwable t) {
-		}
-	}
 }

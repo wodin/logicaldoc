@@ -177,10 +177,6 @@ public class DocumentContextMenu extends Menu {
 
 								@Override
 								public void onSuccess(Void result) {
-									for (ListGridRecord record : selection) {
-										TrashPanel.get().appendRecord(record);
-									}
-
 									list.removeSelectedData();
 																		
 									DocumentsPanel.get().showFolderDetails();

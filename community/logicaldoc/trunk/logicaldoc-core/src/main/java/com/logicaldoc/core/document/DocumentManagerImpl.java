@@ -302,16 +302,23 @@ public class DocumentManagerImpl implements DocumentManager {
 		// This may take time
 		indexer.addHit(doc, content);
 
-		doc = documentDAO.findById(doc.getId());
-		documentDAO.initialize(doc);
-		doc.setIndexed(AbstractDocument.INDEX_INDEXED);
-		documentDAO.store(doc);
+		// For additional security update the DB directly
+		documentDAO.jdbcUpdate("update ld_document set ld_indexed=" + AbstractDocument.INDEX_INDEXED + " where ld_id="
+				+ docId);
+		doc = documentDAO.findById(docId);
 
 		for (Long shortcutId : shortcutIds) {
-			Document shortcutDoc = documentDAO.findById(shortcutId);
-			indexer.addHit(shortcutDoc, storer.getStream(doc.getId(), resource));
-			shortcutDoc.setIndexed(AbstractDocument.INDEX_INDEXED);
-			documentDAO.store(shortcutDoc);
+			try {
+				Document shortcutDoc = documentDAO.findById(shortcutId);
+				indexer.addHit(shortcutDoc, storer.getStream(doc.getId(), resource));
+
+				// For additional security update the DB directly
+				documentDAO.jdbcUpdate("update ld_document set ld_indexed=" + AbstractDocument.INDEX_INDEXED
+						+ " where ld_id=" + shortcutId);
+				shortcutDoc = documentDAO.findById(shortcutId);
+			} catch (Throwable t) {
+
+			}
 		}
 	}
 
