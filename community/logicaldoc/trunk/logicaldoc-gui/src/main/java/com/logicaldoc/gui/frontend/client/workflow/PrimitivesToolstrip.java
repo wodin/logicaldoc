@@ -14,19 +14,19 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
- * A States toolbar.
+ * Toolbar with the primitives of the Workflow.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class StateToolstrip extends ToolStrip {
+public class PrimitivesToolstrip extends ToolStrip {
 	protected SystemServiceAsync systemService = (SystemServiceAsync) GWT.create(SystemService.class);
 
 	protected WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
 
 	private WorkflowDesigner workflowDesigner = null;
 
-	public StateToolstrip(WorkflowDesigner designer) {
+	public PrimitivesToolstrip(WorkflowDesigner designer) {
 		super();
 
 		this.workflowDesigner = designer;
