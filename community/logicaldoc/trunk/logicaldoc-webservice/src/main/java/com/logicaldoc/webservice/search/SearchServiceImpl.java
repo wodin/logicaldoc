@@ -12,6 +12,7 @@ import com.logicaldoc.core.document.TagCloud;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
+import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.Hit;
 import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
@@ -34,7 +35,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 	protected static Logger log = LoggerFactory.getLogger(SearchServiceImpl.class);
 
 	@Override
-	public WSSearchResult find(String sid, SearchOptions options) throws Exception {
+	public WSSearchResult find(String sid, FulltextSearchOptions options) throws Exception {
 		User user = validateSession(sid);
 		options.setUserId(user.getId());
 
