@@ -1,5 +1,6 @@
 package com.logicaldoc.web.util;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -236,6 +237,60 @@ public class ServletIOUtil {
 				history.setSessionId(sid);
 			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 			hdao.store(history);
+		}
+	}
+
+	/**
+	 * Sends the specified file to the response object; the client will receive
+	 * it as a download
+	 * 
+	 * @param request the current request
+	 * @param response the file is written to this object
+	 * @throws ServletException
+	 */
+	public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file, String fileName)
+			throws FileNotFoundException, IOException, ServletException {
+
+		String filename = fileName;
+		if (filename == null)
+			filename = file.getName();
+
+		// get the mimetype
+		String mimetype = MimeType.getByFilename(filename);
+		// it seems everything is fine, so we can now start writing to the
+		// response object
+		response.setContentType(mimetype);
+		setContentDisposition(request, response, filename);
+
+		// Add this header for compatibility with internal .NET browsers
+		response.setHeader("Content-Length", Long.toString(file.length()));
+
+		InputStream is = null;
+		OutputStream os = null;
+
+		try {
+			is = new BufferedInputStream(new FileInputStream(file), 128 * 1024);
+			os = response.getOutputStream();
+
+			int letter = 0;
+
+			byte[] buffer = new byte[128 * 1024];
+			while ((letter = is.read(buffer)) != -1) {
+				os.write(buffer, 0, letter);
+			}
+		} finally {
+			try {
+				if (os != null) {
+					os.flush();
+					os.close();
+				}
+			} catch (Throwable t) {
+			}
+			try {
+				if (is != null)
+					is.close();
+			} catch (Throwable t) {
+			}
 		}
 	}
 
