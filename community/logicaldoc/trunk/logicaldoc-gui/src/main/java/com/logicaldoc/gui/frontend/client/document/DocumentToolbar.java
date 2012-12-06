@@ -90,10 +90,23 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		download.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (document == null)
+				ListGrid list = DocumentsPanel.get().getList();
+				ListGridRecord[] selection = list.getSelectedRecords();
+				if (selection == null || selection.length == 0)
 					return;
-				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-						+ document.getId());
+
+				if (selection.length == 1) {
+					String id = list.getSelectedRecord().getAttribute("id");
+					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+							+ id);
+				} else {
+					String url = GWT.getHostPageBaseURL() + "zip-export?sid=" + Session.get().getSid() + "&folderId="
+							+ Session.get().getCurrentFolder().getId();
+					for (ListGridRecord record : selection) {
+						url += "&docId=" + record.getAttributeAsString("id");
+					}
+					WindowUtils.openUrl(url);
+				}
 			}
 		});
 
@@ -113,8 +126,21 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		pdf.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid() + "&docId="
-						+ document.getId() + "&version=" + document.getVersion());
+				ListGrid list = DocumentsPanel.get().getList();
+				ListGridRecord[] selection = list.getSelectedRecords();
+				if (selection == null || selection.length == 0)
+					return;
+
+				if (selection.length == 1) {
+					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid()
+							+ "&docId=" + document.getId() + "&version=" + document.getVersion());
+				} else {
+					String url = GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid();
+					for (ListGridRecord record : selection) {
+						url += "&docId=" + record.getAttributeAsString("id");
+					}
+					WindowUtils.openUrl(url);
+				}
 			}
 		});
 
@@ -429,11 +455,11 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		saveGrid.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				DocumentsPanel.get().saveGrid();
-				try{
-					int m=Integer.parseInt(max.getValue().toString());
+				try {
+					int m = Integer.parseInt(max.getValue().toString());
 					Offline.put(Constants.COOKIE_DOCSLIST_MAX, Integer.toString(m));
-				}catch(Throwable t){
-					
+				} catch (Throwable t) {
+
 				}
 			}
 		});
