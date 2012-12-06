@@ -166,8 +166,6 @@ public class DiagramController implements HasNewFunctionHandlers, HasTieLinkHand
 	 * 		RootPanel.get().add(controller.getView());
 	 * </code> <br/>
 	 * 
-	 * @param canvas the implementation of the canvas where connections and
-	 *        widgets will be drawn
 	 */
 	public DiagramController(int canvasWidth, int canvasHeight) {
 		this.canvasWidth = canvasWidth;
@@ -189,12 +187,6 @@ public class DiagramController implements HasNewFunctionHandlers, HasTieLinkHand
 		ContextMenu.disableBrowserContextMenu(topCanvas.asWidget().getElement());
 	}
 
-	public DiagramController(int canvasWidth, int canvasHeight, int frameWidth, int frameHeight) {
-		this(canvasWidth, canvasHeight);
-		scrollPanel = new ScrollPanel(getView());
-		scrollPanel.setWidth(frameWidth + "px");
-		scrollPanel.setHeight(frameHeight + "px");
-	}
 
 	protected void initMouseHandlers(final DiagramCanvas canvas) {
 		canvas.addDomHandler(new MouseMoveHandler() {

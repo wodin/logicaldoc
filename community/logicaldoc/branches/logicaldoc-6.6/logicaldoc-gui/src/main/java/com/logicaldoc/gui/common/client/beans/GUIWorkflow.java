@@ -23,7 +23,7 @@ public class GUIWorkflow implements Serializable {
 
 	private String supervisor = "";
 
-	private GUIWFState[] states;
+	private GUIWFState[] states = new GUIWFState[0];
 
 	private GUIWFState selectedTask = null;
 

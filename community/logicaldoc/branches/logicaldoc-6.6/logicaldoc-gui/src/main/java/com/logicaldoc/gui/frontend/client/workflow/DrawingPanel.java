@@ -32,10 +32,10 @@ public class DrawingPanel extends VStack {
 
 	public DrawingPanel(WorkflowDesigner designer) {
 		super();
-		setHeight(500);
 		setMembersMargin(5);
-		setShowCustomScrollbars(true);
 		setOverflow(Overflow.SCROLL);
+		setWidth100();
+		setHeight100();
 		this.workflowDesigner = designer;
 
 		controller = new DiagramController(2000, 2000);
@@ -43,10 +43,10 @@ public class DrawingPanel extends VStack {
 		addMember(controller.getView());
 
 		addScrolledHandler(new ScrolledHandler() {
-			
+
 			@Override
 			public void onScrolled(ScrolledEvent event) {
-				//This will avoid connection explosions when scrolling
+				// This will avoid connection explosions when scrolling
 				controller.unsynchronizedShapes();
 			}
 		});
@@ -72,15 +72,13 @@ public class DrawingPanel extends VStack {
 			widgets.clear();
 			for (GUIWFState state : workflow.getStates()) {
 				StateWidget widget = new StateWidget(this, state);
-				widget.setReadonly(workflowDesigner.isReadOnly());
 				controller.addWidget(widget, state.getLeft(), state.getTop());
 				widgets.put(state.getId(), widget);
 			}
 
-			if (!workflowDesigner.isReadOnly())
-				for (StateWidget widget : widgets.values()) {
-					controller.makeDraggable(widget);
-				}
+			for (StateWidget widget : widgets.values()) {
+				controller.makeDraggable(widget);
+			}
 
 			// Draw the transitions
 			for (GUIWFState state : workflow.getStates()) {

@@ -19,6 +19,7 @@ import com.orange.links.client.connection.Connection;
 import com.orange.links.client.shapes.FunctionShape;
 import com.orange.links.client.shapes.Point;
 import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.layout.VStack;
 
 /**
@@ -42,37 +43,43 @@ public class WorkflowDesigner extends VStack {
 	// HStack or HLayout with Accordion e Drawing Panel
 	private HLayout layout = new HLayout();
 
+	private VLayout drawingPanelLayout = new VLayout();
+
 	private Accordion accordion = null;
 
 	private GUIWorkflow workflow = null;
 
 	private DrawingPanel drawingPanel = null;
 
-	private boolean readOnly = false;
-
 	private WorkflowToolstrip workflowToolstrip;
 
-	public WorkflowDesigner(GUIWorkflow workflow, boolean readOnly) {
+	public WorkflowDesigner(GUIWorkflow workflow) {
 		this.workflow = workflow;
-		this.readOnly = readOnly;
 
-		setMembersMargin(5);
-
-		if (!readOnly) {
-			workflowToolstrip = new WorkflowToolstrip(this);
-			addMember(workflowToolstrip);
-			addMember(new StateToolstrip(this));
-		}
-
+		setMembersMargin(3);
+		
 		if (this.workflow != null) {
 			accordion = new Accordion();
 			accordion.redraw(workflow);
 			layout.addMember(accordion);
 		}
 
+		drawingPanelLayout.setWidth100();
+		drawingPanelLayout.setHeight100();
+		workflowToolstrip = new WorkflowToolstrip(this);
+		
+		drawingPanelLayout.addMember(workflowToolstrip);
+		drawingPanelLayout.addMember(new PrimitivesToolstrip(this));
+		
 		drawingPanel = new DrawingPanel(this);
-		layout.addMember(drawingPanel);
+		drawingPanelLayout.addMember(drawingPanel);
+
+		layout.addMember(drawingPanelLayout);
+		layout.setHeight100();
+		layout.setWidth100();
+
 		addMember(layout);
+		setHeight100();
 
 		if (workflow != null)
 			redraw(workflow);
@@ -84,7 +91,7 @@ public class WorkflowDesigner extends VStack {
 
 	public void redraw(GUIWorkflow workflow) {
 		this.workflow = workflow;
-		if (accordion != null && !isReadOnly())
+		if (accordion != null)
 			accordion.redraw(workflow);
 		drawingPanel.redraw();
 	}
@@ -125,7 +132,10 @@ public class WorkflowDesigner extends VStack {
 			getWorkflow().setStartStateId(state.getId());
 
 		StateWidget sw = new StateWidget(drawingPanel, state);
-		drawingPanel.getDiagramController().addWidget(sw, 10, 10);
+
+		int x = (drawingPanel.getRect().getWidth() - sw.getWidth()) / 2 + drawingPanel.getScrollLeft();
+		int y = (drawingPanel.getRect().getHeight() - sw.getHeight()) / 2 + drawingPanel.getScrollTop();
+		drawingPanel.getDiagramController().addWidget(sw, x, y);
 		drawingPanel.getDiagramController().makeDraggable(sw);
 
 		try {
@@ -133,19 +143,17 @@ public class WorkflowDesigner extends VStack {
 		} catch (Throwable t) {
 		}
 	}
-
-	public boolean isReadOnly() {
-		return readOnly;
-	}
-
+	
 	public DrawingPanel getDrawingPanel() {
 		return drawingPanel;
 	}
 
 	/**
 	 * Saves the current diagram into the object model.
+	 * 
+	 * @return true if the model is valid
 	 */
-	public void saveModel() {
+	public boolean saveModel() {
 		// Collect all the states as drawn in the designer.
 		List<GUIWFState> states = new ArrayList<GUIWFState>();
 		Iterator<FunctionShape> iter = getDrawingPanel().getDiagramController().getShapes().iterator();
@@ -198,11 +206,14 @@ public class WorkflowDesigner extends VStack {
 
 		final Map<String, Object> values = getAccordion().getValues();
 		if (values == null || ((String) values.get("workflowName")).trim().isEmpty())
-			return;
+			return false;
+
 		workflow.setName((String) values.get("workflowName"));
 		if (values.get("workflowDescr") != null)
 			workflow.setDescription((String) values.get("workflowDescr"));
 		if (values.get("supervisor") != null)
 			workflow.setSupervisor((String) values.get("supervisor"));
+
+		return true;
 	}
 }

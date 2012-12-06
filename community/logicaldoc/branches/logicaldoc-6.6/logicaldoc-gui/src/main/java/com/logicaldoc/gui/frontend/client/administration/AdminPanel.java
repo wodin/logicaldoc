@@ -15,7 +15,7 @@ public class AdminPanel extends HLayout {
 
 	private static AdminPanel instance;
 
-	private VLayout right = new VLayout();
+	private VLayout rightPanel = new VLayout();
 
 	private Canvas content;
 
@@ -28,19 +28,19 @@ public class AdminPanel extends HLayout {
 		leftMenu.setShowResizeBar(true);
 
 		addMember(leftMenu);
-		addMember(right);
+		addMember(rightPanel);
 
 		setContent(new GeneralPanel());
 	}
 
 	public void setContent(Canvas content) {
 		if (this.content != null) {
-			if (right.contains(this.content))
-				right.removeChild(this.content);
+			if (rightPanel.contains(this.content))
+				rightPanel.removeChild(this.content);
 			this.content.destroy();
 		}
 		this.content = content;
-		right.addMember(this.content);
+		rightPanel.addMember(this.content);
 	}
 
 	public static AdminPanel get() {
@@ -51,5 +51,9 @@ public class AdminPanel extends HLayout {
 
 	public Canvas getContent() {
 		return content;
+	}
+
+	public VLayout getRightPanel() {
+		return rightPanel;
 	}
 }

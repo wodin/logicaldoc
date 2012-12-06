@@ -155,7 +155,7 @@ public class MetadataMenu extends VLayout {
 		workflow.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				AdminPanel.get().setContent(new WorkflowDesigner(new GUIWorkflow(), false));
+				AdminPanel.get().setContent(new WorkflowDesigner(new GUIWorkflow()));
 			}
 		});
 
