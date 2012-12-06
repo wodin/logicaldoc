@@ -48,13 +48,11 @@ public class Accordion extends SectionStack {
 
 	public Accordion() {
 		setVisibilityMode(VisibilityMode.MUTEX);
-		setWidth(250);
-		setHeight(557);
-		setMargin(5);
+		setWidth(205);
 
 		wfSettingsSection = new SectionStackSection(I18N.message("workflowsettings"));
 		wfSettingsSection.setExpanded(true);
-		wfSettingsSection.setCanCollapse(true);
+		wfSettingsSection.setCanCollapse(false);
 		addSection(wfSettingsSection);
 	}
 

@@ -75,7 +75,7 @@ public class WorkflowToolstrip extends ToolStrip {
 			@Override
 			public void onClick(ClickEvent event) {
 				currentWorkflow = new GUIWorkflow();
-				AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
+				AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
 				update();
 			}
 		});
@@ -140,7 +140,6 @@ public class WorkflowToolstrip extends ToolStrip {
 			}
 		});
 		addButton(load);
-		addSeparator();
 
 		save = new ToolStripButton(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
@@ -150,54 +149,7 @@ public class WorkflowToolstrip extends ToolStrip {
 			}
 		});
 		addButton(save);
-		addSeparator();
-
-		clone = new ToolStripButton(I18N.message("clone"));
-		clone.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				// Ask for new name
-				LD.askforValue(I18N.message("clone"), I18N.message("newname"), "", "200", new ValueCallback() {
-					@Override
-					public void execute(String value) {
-						if (value == null || "".equals(value.trim()))
-							return;
-						// Set the new name in the designer, then
-						// request a save
-						currentWorkflow.setId(0);
-						currentWorkflow.setName(value.trim());
-						WorkflowToolstrip.this.designer.getAccordion().setWorkflowName(value.trim());
-						save();
-					}
-				});
-			}
-		});
-		addButton(clone);
-		addSeparator();
-
-		export = new ToolStripButton(I18N.message("eexport"));
-		export.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
-						+ "&pluginId=logicaldoc-workflow&resourcePath=templates/" + currentWorkflow.getId() + ".jbpm");
-			}
-		});
-		addButton(export);
-		addSeparator();
-
-		_import = new ToolStripButton(I18N.message("iimport"));
-		_import.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				WorkflowUploader uploader = new WorkflowUploader(WorkflowToolstrip.this.designer);
-				uploader.show();
-				update();
-			}
-		});
-		addButton(_import);
-		addSeparator();
-
+		
 		deploy = new ToolStripButton(I18N.message("deploy"));
 		deploy.addClickHandler(new ClickHandler() {
 			@Override
@@ -270,8 +222,7 @@ public class WorkflowToolstrip extends ToolStrip {
 			}
 		});
 		addButton(deploy);
-		addSeparator();
-
+		
 		delete = new ToolStripButton(I18N.message("ddelete"));
 		delete.addClickHandler(new ClickHandler() {
 			@Override
@@ -290,7 +241,7 @@ public class WorkflowToolstrip extends ToolStrip {
 										@Override
 										public void onSuccess(Void result) {
 											currentWorkflow = new GUIWorkflow();
-											AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
+											AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
 											update();
 										}
 									});
@@ -302,13 +253,59 @@ public class WorkflowToolstrip extends ToolStrip {
 		addButton(delete);
 		addSeparator();
 
+		clone = new ToolStripButton(I18N.message("clone"));
+		clone.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				// Ask for new name
+				LD.askforValue(I18N.message("clone"), I18N.message("newname"), "", "200", new ValueCallback() {
+					@Override
+					public void execute(String value) {
+						if (value == null || "".equals(value.trim()))
+							return;
+						// Set the new name in the designer, then
+						// request a save
+						currentWorkflow.setId(0);
+						currentWorkflow.setName(value.trim());
+						WorkflowToolstrip.this.designer.getAccordion().setWorkflowName(value.trim());
+						save();
+					}
+				});
+			}
+		});
+		addButton(clone);
+
+		_import = new ToolStripButton(I18N.message("iimport"));
+		_import.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				WorkflowUploader uploader = new WorkflowUploader(WorkflowToolstrip.this.designer);
+				uploader.show();
+				update();
+			}
+		});
+		addButton(_import);
+		
+		export = new ToolStripButton(I18N.message("eexport"));
+		export.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
+						+ "&pluginId=logicaldoc-workflow&resourcePath=templates/" + currentWorkflow.getId() + ".jbpm");
+			}
+		});
+		addButton(export);
+		addSeparator();
+
+
+
 		close = new ToolStripButton(I18N.message("close"));
 		close.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				try {
 					currentWorkflow = new GUIWorkflow();
-					AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow, false));
+					AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
 					update();
 				} catch (Throwable t) {
 
@@ -345,7 +342,8 @@ public class WorkflowToolstrip extends ToolStrip {
 
 	private void save() {
 		try {
-			designer.saveModel();
+			if(!designer.saveModel())
+				return;
 		} catch (Throwable t) {
 		}
 
