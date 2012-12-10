@@ -12,7 +12,6 @@ import com.logicaldoc.core.document.TagCloud;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
-import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.Hit;
 import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
@@ -35,8 +34,11 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 	protected static Logger log = LoggerFactory.getLogger(SearchServiceImpl.class);
 
 	@Override
-	public WSSearchResult find(String sid, FulltextSearchOptions options) throws Exception {
+	public WSSearchResult find(String sid, WSSearchOptions opt) throws Exception {
 		User user = validateSession(sid);
+
+		SearchOptions options = opt.toSearchOptions();
+
 		options.setUserId(user.getId());
 
 		WSSearchResult searchResult = new WSSearchResult();
@@ -127,21 +129,21 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 	}
 
 	@Override
-	public TagCloud[] getTagCloud(String sid) throws Exception {
+	public WSTagCloud[] getTagCloud(String sid) throws Exception {
 		GenericDAO genericDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
 		Generic generic = genericDao.findByAlternateKey("tagcloud", "-", null);
 		if (generic == null)
 			return null;
 
 		genericDao.initialize(generic);
-		TagCloud[] tagClouds = new TagCloud[generic.getAttributeNames().size()];
+		WSTagCloud[] tagClouds = new WSTagCloud[generic.getAttributeNames().size()];
 		int i = 0;
 		for (String tag : generic.getAttributeNames()) {
 			TagCloud tc = new TagCloud(tag);
 			StringTokenizer st = new StringTokenizer(generic.getValue(tag).toString(), "|", false);
 			tc.setCount(Integer.parseInt(st.nextToken()));
 			tc.setScale(Integer.parseInt(st.nextToken()));
-			tagClouds[i] = tc;
+			tagClouds[i] = WSTagCloud.fromTagCloud(tc);
 			i++;
 		}
 

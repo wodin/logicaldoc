@@ -4,8 +4,6 @@ import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 
-import com.logicaldoc.core.document.TagCloud;
-import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.WSFolder;
 
@@ -25,8 +23,8 @@ public interface SearchService {
 	 * @return The search result
 	 */
 	@WebResult(name = "searchResult")
-	public WSSearchResult find(@WebParam(name = "sid") String sid,
-			@WebParam(name = "options") FulltextSearchOptions options) throws Exception;
+	public WSSearchResult find(@WebParam(name = "sid") String sid, @WebParam(name = "options") WSSearchOptions options)
+			throws Exception;
 
 	/**
 	 * Retrieves all tags in the repository.
@@ -43,7 +41,7 @@ public interface SearchService {
 	 * @return The tags in the repository
 	 */
 	@WebResult(name = "tagCloud")
-	public TagCloud[] getTagCloud(@WebParam(name = "sid") String sid) throws Exception;
+	public WSTagCloud[] getTagCloud(@WebParam(name = "sid") String sid) throws Exception;
 
 	/**
 	 * Finds authorized documents for the current user having a specified tag.
