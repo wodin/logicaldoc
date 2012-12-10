@@ -13,8 +13,8 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.bm.AbstractLoader;
 import com.logicaldoc.bm.ServerProxy;
-import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.webservice.document.WSDocument;
+import com.logicaldoc.webservice.search.WSSearchOptions;
 import com.logicaldoc.webservice.search.WSSearchResult;
 
 /**
@@ -62,7 +62,7 @@ public class Search extends AbstractLoader {
 	private int performFullTextSearch(ServerProxy serverProxy, String query) throws Exception {
 		int results = 0;
 
-		FulltextSearchOptions options = new FulltextSearchOptions();
+		WSSearchOptions options = new WSSearchOptions();
 
 		String lang = session.getLanguage();
 		if (StringUtils.isEmpty(lang))

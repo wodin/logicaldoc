@@ -3,7 +3,6 @@ package com.logicaldoc.webservice.search;
 import java.io.IOException;
 
 import com.logicaldoc.core.document.TagCloud;
-import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.webservice.AbstractClient;
 import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.WSFolder;
@@ -25,7 +24,7 @@ public class SearchClient extends AbstractClient<SearchService> implements Searc
 	}
 
 	@Override
-	public WSSearchResult find(String sid, FulltextSearchOptions options) throws Exception {
+	public WSSearchResult find(String sid, WSSearchOptions options) throws Exception {
 		return client.find(sid, options);
 	}
 
@@ -45,7 +44,7 @@ public class SearchClient extends AbstractClient<SearchService> implements Searc
 	}
 
 	@Override
-	public TagCloud[] getTagCloud(String sid) throws Exception {
+	public WSTagCloud[] getTagCloud(String sid) throws Exception {
 		return client.getTagCloud(sid);
 	}
 

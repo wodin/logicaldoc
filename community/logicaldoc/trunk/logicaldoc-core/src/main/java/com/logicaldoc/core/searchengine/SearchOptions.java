@@ -45,7 +45,7 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 
 	private String topOperator;
 
-	private int caseSensitive = 1;
+	private boolean caseSensitive = true;
 
 	private int retrieveAliases = 0;
 
@@ -173,11 +173,11 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 		this.filterIds = filterIds;
 	}
 
-	public int getCaseSensitive() {
+	public boolean isCaseSensitive() {
 		return caseSensitive;
 	}
 
-	public void setCaseSensitive(int caseSensitive) {
+	public void setCaseSensitive(boolean caseSensitive) {
 		this.caseSensitive = caseSensitive;
 	}
 

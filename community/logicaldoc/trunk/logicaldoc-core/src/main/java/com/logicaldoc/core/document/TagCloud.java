@@ -23,7 +23,6 @@ public class TagCloud {
 		this.count = count;
 	}
 
-	/** Necessary constructor for the Search Web Service */
 	public TagCloud() {
 	}
 
