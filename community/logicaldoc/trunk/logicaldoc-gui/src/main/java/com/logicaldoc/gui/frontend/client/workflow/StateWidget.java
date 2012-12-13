@@ -165,10 +165,10 @@ public class StateWidget extends Label {
 	}
 
 	public void edit() {
-		if (isTask()) {
+		if (isTask() || isEnd()) {
 			TaskDialog dialog = new TaskDialog(StateWidget.this);
 			dialog.show();
-		} else if (isJoin() || isEnd() || isFork()) {
+		} else if (isJoin() || isFork()) {
 			StatusDialog dialog = new StatusDialog(StateWidget.this);
 			dialog.show();
 		} else {
