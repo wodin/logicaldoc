@@ -22,6 +22,7 @@ import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
+import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.SpinnerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
@@ -31,6 +32,8 @@ import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
 
@@ -71,7 +74,7 @@ public class TaskDialog extends Window {
 		setTitle(I18N.message("editworkflowstate", state.getType() == GUIWFState.TYPE_TASK ? I18N.message("task")
 				: I18N.message("endstate")));
 		setWidth(350);
-		setHeight(state.getType() == GUIWFState.TYPE_TASK ? 440 : 350);
+		setHeight(state.getType() == GUIWFState.TYPE_TASK ? 460 : 370);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -136,9 +139,8 @@ public class TaskDialog extends Window {
 		}
 
 		HTMLPane spacer = new HTMLPane();
-		spacer.setContents("<div>&nbsp;</div>");
-		spacer.setHeight(10);
-		spacer.setMargin(10);
+		spacer.setHeight(2);
+		spacer.setMargin(2);
 		spacer.setOverflow(Overflow.HIDDEN);
 		addItem(spacer);
 
@@ -196,7 +198,7 @@ public class TaskDialog extends Window {
 						return;
 
 					// Check if the selected user is already present in the
-					// rights table
+					// participants list
 					for (String participant : participantsList.getValues()) {
 						if (participant.equals("g." + selectedRecord.getAttribute("name"))) {
 							return;
@@ -211,7 +213,33 @@ public class TaskDialog extends Window {
 			}
 		});
 
-		usergroupForm.setItems(user, group);
+		// Prepare dynamic user participant
+		final TextItem attr = ItemFactory.newTextItem("attribute", "attribute", null);
+		FormItemIcon addIcon = ItemFactory.newItemIcon("add.png");
+		addIcon.addFormItemClickHandler(new FormItemClickHandler() {
+			public void onFormItemClick(FormItemIconClickEvent event) {
+				String val = attr.getValueAsString();
+				if (val != null)
+					val = val.trim();
+				if (val == null || "".equals(val))
+					return;
+
+				// Check if the digited attribute user is already present in the
+				// participants list
+				for (String participant : participantsList.getValues()) {
+					if (participant.equals("att." + val)) {
+						return;
+					}
+				}
+
+				if (participants.get("att." + val) == null)
+					refreshParticipants("att." + val, val, 1);
+				attr.clearValue();
+			}
+		});
+		attr.setIcons(addIcon);
+
+		usergroupForm.setItems(user, group, attr);
 		usergroupSelection.addMember(usergroupForm);
 		addItem(usergroupSelection);
 
@@ -225,7 +253,13 @@ public class TaskDialog extends Window {
 			for (GUIValuePair part : this.state.getParticipants()) {
 				if (part.getCode() == null || part.getValue() == null)
 					continue;
-				String prefix = (part.getCode().startsWith("g.") ? I18N.message("group") : I18N.message("user")) + ": ";
+				String prefix = I18N.message("user");
+				if (part.getCode().startsWith("g."))
+					prefix = I18N.message("group");
+				else if (part.getCode().startsWith("att."))
+					prefix = I18N.message("attribute");
+				prefix += ": ";
+
 				participants.put(part.getCode(),
 						part.getValue().startsWith(prefix) ? part.getValue() : prefix + part.getValue());
 			}
@@ -263,7 +297,12 @@ public class TaskDialog extends Window {
 		participantsList.setEndRow(true);
 
 		if (entityCode != null && (operation == 1)) {
-			String prefix = (entityCode.startsWith("g.") ? I18N.message("group") : I18N.message("user")) + ": ";
+			String prefix = I18N.message("user");
+			if (entityCode.startsWith("g."))
+				prefix = I18N.message("group");
+			else if (entityCode.startsWith("att."))
+				prefix = I18N.message("attribute");
+			prefix += ": ";
 			participants.put(entityCode, entityLabel.startsWith(prefix) ? entityLabel : prefix + entityLabel);
 		} else if (entityCode != null && (operation == 2)) {
 			participants.remove(entityCode);
