@@ -18,7 +18,7 @@ import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 
 /**
- * This is the form used for the workflow joins, forks and end statuses
+ * This is the form used for the workflow joins and forks.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.4
@@ -38,7 +38,7 @@ public class StatusDialog extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("editworkflowstate", I18N.message("task")));
 		setWidth(250);
-		setHeight(100);
+		setAutoHeight();
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
