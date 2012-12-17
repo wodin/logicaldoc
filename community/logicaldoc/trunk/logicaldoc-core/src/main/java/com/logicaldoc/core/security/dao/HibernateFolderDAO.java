@@ -82,7 +82,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			getHibernateTemplate().saveOrUpdate(folder);
 			saveFolderHistory(folder, transaction);
 		} catch (Exception e) {
-			e.printStackTrace();
 			log.error(e.getMessage(), e);
 			result = false;
 		}
@@ -585,7 +584,10 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 					parentHistory.setEvent(FolderEvent.SUBFOLDER_PERMISSION.toString());
 				} else if (transaction.getEvent().equals(FolderEvent.DELETED.toString())) {
 					parentHistory.setEvent(FolderEvent.SUBFOLDER_DELETED.toString());
+				} else if (transaction.getEvent().equals(FolderEvent.CHANGED.toString())) {
+					parentHistory.setEvent(FolderEvent.SUBFOLDER_CHANGED.toString());
 				}
+				
 				parentHistory.setComment("");
 				parentHistory.setSessionId(transaction.getSessionId());
 				parentHistory.setComment(transaction.getComment());
