@@ -38,7 +38,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
 
 /**
- * This is the form used for the workflow task setting.
+ * This is the form used for the workflow task and end nodes settings.
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
@@ -48,6 +48,8 @@ public class TaskDialog extends Window {
 	protected WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
 
 	private ValuesManager vm = new ValuesManager();
+
+	private GUIWFState state;
 
 	private SelectItem participantsList;
 
@@ -62,8 +64,6 @@ public class TaskDialog extends Window {
 	private DynamicForm buttonForm;
 
 	private StateWidget widget;
-	
-	private GUIWFState state;
 
 	public TaskDialog(StateWidget widget) {
 		this.state = widget.getWfState();
@@ -71,7 +71,8 @@ public class TaskDialog extends Window {
 		participants.clear();
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		setTitle(I18N.message("editworkflowstate", I18N.message("task")));
+		setTitle(I18N.message("editworkflowstate", state.getType() == GUIWFState.TYPE_TASK ? I18N.message("task")
+				: I18N.message("endstate")));
 		setWidth(350);
 		setHeight(state.getType() == GUIWFState.TYPE_TASK ? 460 : 370);
 		setCanDragResize(true);
@@ -79,7 +80,6 @@ public class TaskDialog extends Window {
 		setShowModalMask(true);
 		centerInPage();
 		setPadding(5);
-		setAutoSize(true);
 
 		DynamicForm taskForm = new DynamicForm();
 		taskForm.setTitleOrientation(TitleOrientation.TOP);
@@ -92,48 +92,51 @@ public class TaskDialog extends Window {
 		taskForm.setFields(taskName, taskDescr);
 		addItem(taskForm);
 
-		DynamicForm escalationFormItem = new DynamicForm();
-		escalationFormItem.setTitleOrientation(TitleOrientation.TOP);
-		StaticTextItem escalation = ItemFactory.newStaticTextItem("escalationManagement", "",
-				"<b>" + I18N.message("escalationmanagement") + "</b>");
-		escalation.setShouldSaveValue(false);
-		escalation.setWrapTitle(false);
-		escalation.setWrap(false);
-		escalationFormItem.setItems(escalation);
-		addItem(escalationFormItem);
+		if (state.getType() == GUIWFState.TYPE_TASK) {
+			DynamicForm escalationFormItem = new DynamicForm();
+			escalationFormItem.setTitleOrientation(TitleOrientation.TOP);
+			StaticTextItem escalation = ItemFactory.newStaticTextItem("escalationManagement", "",
+					"<b>" + I18N.message("escalationmanagement") + "</b>");
+			escalation.setShouldSaveValue(false);
+			escalation.setWrapTitle(false);
+			escalation.setWrap(false);
+			escalationFormItem.setItems(escalation);
+			addItem(escalationFormItem);
 
-		DynamicForm escalationForm = new DynamicForm();
-		escalationForm.setTitleOrientation(TitleOrientation.LEFT);
-		escalationForm.setNumCols(4);
-		escalationForm.setColWidths("35", "35", "50", "130");
-		escalationForm.setValuesManager(vm);
-		SpinnerItem duedateTimeItem = new SpinnerItem("duedateNumber");
-		duedateTimeItem.setTitle(I18N.message("duedate"));
-		duedateTimeItem.setDefaultValue(0);
-		duedateTimeItem.setMin(0);
-		duedateTimeItem.setStep(1);
-		duedateTimeItem.setWidth(50);
-		duedateTimeItem.setValue(this.state.getDueDateNumber());
-		SelectItem duedateTime = ItemFactory.newTimeSelector("duedateTime", "");
-		duedateTime.setValue(this.state.getDueDateUnit());
+			DynamicForm escalationForm = new DynamicForm();
+			escalationForm.setTitleOrientation(TitleOrientation.LEFT);
+			escalationForm.setNumCols(4);
+			escalationForm.setColWidths("35", "35", "50", "130");
+			escalationForm.setValuesManager(vm);
+			SpinnerItem duedateTimeItem = new SpinnerItem("duedateNumber");
+			duedateTimeItem.setTitle(I18N.message("duedate"));
+			duedateTimeItem.setDefaultValue(0);
+			duedateTimeItem.setMin(0);
+			duedateTimeItem.setStep(1);
+			duedateTimeItem.setWidth(50);
+			duedateTimeItem.setValue(this.state.getDueDateNumber());
+			SelectItem duedateTime = ItemFactory.newTimeSelector("duedateTime", "");
+			duedateTime.setValue(this.state.getDueDateUnit());
 
-		SpinnerItem remindTimeItem = new SpinnerItem("remindtimeNumber");
-		remindTimeItem.setTitle(I18N.message("remindtime"));
-		remindTimeItem.setDefaultValue(0);
-		remindTimeItem.setMin(0);
-		remindTimeItem.setStep(1);
-		remindTimeItem.setWidth(50);
-		remindTimeItem.setValue(this.state.getReminderNumber());
-		SelectItem remindTime = ItemFactory.newTimeSelector("remindTime", "");
-		remindTime.setValue(this.state.getReminderUnit());
-		if (Session.get().isDemo()) {
-			// In demo mode disable the remind setting because of this may send
-			// massive emails
-			remindTimeItem.setDisabled(true);
-			remindTime.setDisabled(true);
+			SpinnerItem remindTimeItem = new SpinnerItem("remindtimeNumber");
+			remindTimeItem.setTitle(I18N.message("remindtime"));
+			remindTimeItem.setDefaultValue(0);
+			remindTimeItem.setMin(0);
+			remindTimeItem.setStep(1);
+			remindTimeItem.setWidth(50);
+			remindTimeItem.setValue(this.state.getReminderNumber());
+			SelectItem remindTime = ItemFactory.newTimeSelector("remindTime", "");
+			remindTime.setValue(this.state.getReminderUnit());
+			if (Session.get().isDemo()) {
+				// In demo mode disable the remind setting because of this may
+				// send
+				// massive emails
+				remindTimeItem.setDisabled(true);
+				remindTime.setDisabled(true);
+			}
+			escalationForm.setFields(duedateTimeItem, duedateTime, remindTimeItem, remindTime);
+			addItem(escalationForm);
 		}
-		escalationForm.setFields(duedateTimeItem, duedateTime, remindTimeItem, remindTime);
-		addItem(escalationForm);
 
 		HTMLPane spacer = new HTMLPane();
 		spacer.setHeight(2);
@@ -248,7 +251,7 @@ public class TaskDialog extends Window {
 		// Initialize the participants list
 		if (this.state.getParticipants() != null)
 			for (GUIValuePair part : this.state.getParticipants()) {
-				if(part.getCode()==null || part.getValue()==null)
+				if (part.getCode() == null || part.getValue() == null)
 					continue;
 				String prefix = I18N.message("user");
 				if (part.getCode().startsWith("g."))
@@ -332,10 +335,13 @@ public class TaskDialog extends Window {
 				if (vm.validate()) {
 					TaskDialog.this.state.setName((String) values.get("taskName"));
 					TaskDialog.this.state.setDescription((String) values.get("taskDescr"));
-					TaskDialog.this.state.setDueDateNumber((Integer) values.get("duedateNumber"));
-					TaskDialog.this.state.setDueDateUnit((String) values.get("duedateTime"));
-					TaskDialog.this.state.setReminderNumber((Integer) values.get("remindtimeNumber"));
-					TaskDialog.this.state.setReminderUnit((String) values.get("remindTime"));
+
+					if (state.getType() == GUIWFState.TYPE_TASK) {
+						TaskDialog.this.state.setDueDateNumber((Integer) values.get("duedateNumber"));
+						TaskDialog.this.state.setDueDateUnit((String) values.get("duedateTime"));
+						TaskDialog.this.state.setReminderNumber((Integer) values.get("remindtimeNumber"));
+						TaskDialog.this.state.setReminderUnit((String) values.get("remindTime"));
+					}
 
 					GUIValuePair[] b = new GUIValuePair[participants.size()];
 					int i = 0;

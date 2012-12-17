@@ -220,6 +220,15 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!update);
 						items.add(item);
+					} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+						SelectItem item = ItemFactory.newBooleanSelectorForExtendedAttribute(att.getName(),
+								att.getLabel(), !att.isMandatory());
+						if (document.getValue(att.getName()) != null)
+							item.setValue(((Boolean) document.getValue(att.getName())).booleanValue() ? "1" : "0");
+						item.setRequired(att.isMandatory());
+						item.addChangedHandler(changedHandler);
+						item.setDisabled(!update);
+						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
 						FloatItem item = ItemFactory.newFloatItemForExtendedAttribute(att.getName(), att.getLabel(),
 								null);
@@ -298,7 +307,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 								SelectItem userItem = (SelectItem) form2.getItem(name);
 								if (userItem.getValue() != null && !"".equals(userItem.getValue())) {
 									ListGridRecord sel = userItem.getSelectedRecord();
-									
+
 									// Prepare a dummy user to set as attribute
 									// value
 									GUIUser dummy = new GUIUser();
@@ -306,18 +315,28 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 									dummy.setFirstName(sel.getAttributeAsString("firstName"));
 									dummy.setName(sel.getAttributeAsString("name"));
 									document.setValue(nm, dummy);
-								}else{
+								} else {
 									GUIExtendedAttribute at = document.getExtendedAttribute(nm);
 									at.setIntValue(null);
 									at.setStringValue(null);
 									at.setType(GUIExtendedAttribute.TYPE_USER);
 								}
+							} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+								if (val == null || "".equals(val.toString().trim()))
+									document.getExtendedAttribute(nm).setBooleanValue(null);
+								else
+									document.setValue(nm, val.equals("1") ? true : false);
+								
+								Log.info("val="+val, null);
 							} else
 								document.setValue(nm, val);
 						} else {
 							if (att != null) {
 								if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
 									document.getExtendedAttribute(nm).setIntValue(null);
+									break;
+								} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+									document.getExtendedAttribute(nm).setBooleanValue(null);
 									break;
 								} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
 									document.getExtendedAttribute(nm).setDoubleValue(null);
@@ -326,7 +345,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 									document.getExtendedAttribute(nm).setDateValue(null);
 									break;
 								} else if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
-									GUIExtendedAttribute at=document.getExtendedAttribute(nm);
+									GUIExtendedAttribute at = document.getExtendedAttribute(nm);
 									at.setIntValue(null);
 									at.setStringValue(null);
 									at.setType(GUIExtendedAttribute.TYPE_USER);

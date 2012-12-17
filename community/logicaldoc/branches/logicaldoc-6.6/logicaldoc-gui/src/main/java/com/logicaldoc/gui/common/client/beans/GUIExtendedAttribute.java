@@ -25,6 +25,8 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 
 	public static final int TYPE_USER = 4;
 
+	public static final int TYPE_BOOLEAN = 5;
+
 	public static final int EDITOR_DEFAULT = 0;
 
 	public static final int EDITOR_LISTBOX = 1;
@@ -38,6 +40,8 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 	private Double doubleValue;
 
 	private Date dateValue;
+
+	private Boolean booleanValue;
 
 	private int type = TYPE_STRING;
 
@@ -107,6 +111,8 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 			return getDoubleValue();
 		case TYPE_DATE:
 			return getDateValue();
+		case TYPE_BOOLEAN:
+			return getBooleanValue();
 		case TYPE_USER:
 			return getIntValue();
 		}
@@ -128,6 +134,9 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 		} else if (value instanceof Integer) {
 			this.type = TYPE_INT;
 			setIntValue(new Long(((Integer) value).intValue()));
+		} else if (value instanceof Boolean) {
+			this.type = TYPE_BOOLEAN;
+			setBooleanValue((Boolean)value);
 		} else if (value instanceof Double) {
 			this.type = TYPE_DOUBLE;
 			setDoubleValue((Double) value);
@@ -143,8 +152,9 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 			setDoubleValue(null);
 			setIntValue(null);
 			setDateValue(null);
+			setBooleanValue(null);
 		} else {
-			throw new IllegalArgumentException("Not a String, Long, Double or Date value: "
+			throw new IllegalArgumentException("Not a String, Long, Double, Boolean, Date or User value: "
 					+ value.getClass().getName());
 		}
 	}
@@ -203,5 +213,13 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 
 	public void setOptions(String[] options) {
 		this.options = options;
+	}
+
+	public Boolean getBooleanValue() {
+		return booleanValue;
+	}
+
+	public void setBooleanValue(Boolean booleanValue) {
+		this.booleanValue = booleanValue;
 	}
 }

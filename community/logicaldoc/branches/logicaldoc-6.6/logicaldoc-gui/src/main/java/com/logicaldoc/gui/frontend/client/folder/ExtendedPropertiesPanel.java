@@ -192,6 +192,15 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!update);
 						items.add(item);
+					} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+						SelectItem item = ItemFactory.newBooleanSelectorForExtendedAttribute(att.getName(),
+								att.getLabel(), !att.isMandatory());
+						if (folder.getValue(att.getName()) != null)
+							item.setValue(((Boolean) folder.getValue(att.getName())).booleanValue() ? "1" : "0");
+						item.setRequired(att.isMandatory());
+						item.addChangedHandler(changedHandler);
+						item.setDisabled(!update);
+						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
 						FloatItem item = ItemFactory.newFloatItemForExtendedAttribute(att.getName(), att.getLabel(),
 								null);
@@ -271,7 +280,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 
 								if (userItem.getValue() != null && !"".equals(userItem.getValue())) {
 									ListGridRecord sel = userItem.getSelectedRecord();
-									
+
 									// Prepare a dummy user to set as attribute
 									// value
 									GUIUser dummy = new GUIUser();
@@ -279,18 +288,26 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 									dummy.setFirstName(sel.getAttributeAsString("firstName"));
 									dummy.setName(sel.getAttributeAsString("name"));
 									folder.setValue(nm, dummy);
-								}else{
+								} else {
 									GUIExtendedAttribute at = folder.getExtendedAttribute(nm);
 									at.setIntValue(null);
 									at.setStringValue(null);
 									at.setType(GUIExtendedAttribute.TYPE_USER);
 								}
+							} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+								if (val == null || "".equals(val.toString().trim()))
+									folder.getExtendedAttribute(nm).setBooleanValue(null);
+								else
+									folder.setValue(nm, val.equals("1") ? true : false);
 							} else
 								folder.setValue(nm, val);
 						} else {
 							if (att != null) {
 								if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
 									folder.getExtendedAttribute(nm).setIntValue(null);
+									break;
+								} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+									folder.getExtendedAttribute(nm).setBooleanValue(null);
 									break;
 								} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
 									folder.getExtendedAttribute(nm).setDoubleValue(null);
