@@ -95,9 +95,9 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	public void delete(final String sid, final long folderId) throws InvalidSessionException {
 		UserSession session = SessionUtil.validateSession(sid);
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		if(!dao.isPermissionEnabled(Permission.DELETE, folderId, session.getUserId()))
+		if (!dao.isPermissionEnabled(Permission.DELETE, folderId, session.getUserId()))
 			throw new InvalidSessionException("Permission DELETE not granted");
-		
+
 		try {
 			// Add a folder history entry
 			FolderHistory transaction = new FolderHistory();
@@ -122,6 +122,8 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			Folder folder = dao.findById(folderId);
 			if (folder == null)
 				return null;
+			
+			dao.initialize(folder);
 
 			GUIFolder f = new GUIFolder();
 			f.setId(folderId);
@@ -358,7 +360,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			throw new RuntimeException(t.getMessage(), t);
 		}
 
-		return folder;
+		return getFolder(sid, folder.getId());
 	}
 
 	private boolean saveRules(String sid, Folder folder, long userId, GUIRight[] rights) throws Exception {
@@ -632,7 +634,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 						// attributes keys that remains on the form
 						// value manager
 						if (attr.getValue().toString().trim().isEmpty() && templateType != 0) {
-							if (templateType == ExtendedAttribute.TYPE_INT) {
+							if (templateType == ExtendedAttribute.TYPE_INT || templateType == ExtendedAttribute.TYPE_BOOLEAN) {
 								extAttr.setIntValue(null);
 							} else if (templateType == ExtendedAttribute.TYPE_DOUBLE) {
 								extAttr.setDoubleValue(null);
@@ -643,6 +645,9 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 							extAttr.setValue(Double.parseDouble(attr.getValue().toString()));
 						} else if (templateType == GUIExtendedAttribute.TYPE_INT) {
 							extAttr.setValue(Long.parseLong(attr.getValue().toString()));
+						} else if (templateType == GUIExtendedAttribute.TYPE_BOOLEAN) {
+							extAttr.setValue(attr.getBooleanValue());
+							extAttr.setType(ExtendedAttribute.TYPE_BOOLEAN);
 						} else if (templateType == GUIExtendedAttribute.TYPE_USER) {
 							extAttr.setIntValue(attr.getIntValue());
 							extAttr.setStringValue(attr.getStringValue());
@@ -653,6 +658,11 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 								extAttr.setIntValue((Long) attr.getValue());
 							else
 								extAttr.setIntValue(null);
+						} else if (templateType == ExtendedAttribute.TYPE_BOOLEAN) {
+							if (attr.getBooleanValue()!= null)
+								extAttr.setValue(attr.getBooleanValue());
+							else
+								extAttr.setBooleanValue(null);
 						} else if (templateType == ExtendedAttribute.TYPE_DOUBLE) {
 							if (attr.getValue() != null)
 								extAttr.setDoubleValue((Double) attr.getValue());
