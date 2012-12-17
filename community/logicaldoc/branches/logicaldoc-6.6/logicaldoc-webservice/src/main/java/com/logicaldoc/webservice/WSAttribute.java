@@ -25,6 +25,8 @@ public class WSAttribute {
 
 	public static final int TYPE_USER = 4;
 
+	public static final int TYPE_BOOLEAN = 5;
+
 	private String name;
 
 	private String stringValue;
@@ -136,6 +138,8 @@ public class WSAttribute {
 			return getStringValue();
 		case TYPE_INT:
 			return getIntValue();
+		case TYPE_BOOLEAN:
+			return getIntValue();
 		case TYPE_DOUBLE:
 			return getDoubleValue();
 		case TYPE_DATE:
@@ -174,6 +178,9 @@ public class WSAttribute {
 			this.type = TYPE_INT;
 			if (value != null)
 				setIntValue(((Integer) value).longValue());
+		} else if (value instanceof Boolean) {
+			setIntValue(((Boolean) value).booleanValue() ? 1L : 0L);
+			this.type = TYPE_BOOLEAN;
 		} else if (value instanceof Double) {
 			this.type = TYPE_DOUBLE;
 			setDoubleValue((Double) value);

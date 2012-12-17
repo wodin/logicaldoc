@@ -126,6 +126,8 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 							att.setDoubleValue(attribute.getDoubleValue());
 						else if (attribute.getValue() instanceof Date)
 							att.setDateValue(attribute.getDateValue());
+						else if (attribute.getValue() instanceof Boolean)
+							att.setBooleanValue(attribute.getBooleanValue());
 						attrs.put(attribute.getName(), att);
 					}
 				}
@@ -185,6 +187,8 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 					att.setDoubleValue(extAttr.getDoubleValue());
 				else if (extAttr.getValue() instanceof Date)
 					att.setDateValue(extAttr.getDateValue());
+				else if (extAttr.getValue() instanceof Boolean)
+					att.setBooleanValue(extAttr.getBooleanValue());
 
 				att.setEditor(extAttr.getEditor());
 				if (extAttr.getEditor() == ExtendedAttribute.EDITOR_LISTBOX) {

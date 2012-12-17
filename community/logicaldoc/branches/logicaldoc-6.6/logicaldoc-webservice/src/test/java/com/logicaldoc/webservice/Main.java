@@ -223,30 +223,30 @@ public class Main {
 			// System.out.println("++++++++++++++++++++++++++++++++");
 			// }
 
-			// for (TagCloud tag : searchClient.getTagCloud(sid)) {
-			// System.out.println("tag: " + tag.getTag());
-			// System.out.println("tag count: " + tag.getCount());
-			// System.out.println("tag scale: " + tag.getScale());
-			// System.out.println("++++++++++++++++++++++++++++++++");
-			// }
-
-			// FulltextSearchOptions opt = new FulltextSearchOptions();
-			// opt.setLanguage("en");
-			// opt.setExpression("paper");
-			// opt.setExpressionLanguage("en");
-			// opt.setType(SearchOptions.TYPE_FULLTEXT);
-			// opt.setMaxHits(10);
-			// WSSearchResult result = searchClient.find(sid, opt);
-			// System.out.println("---- " + result.getHits().length);
-			// for (WSDocument hit : result.getHits()) {
-			// System.out.println("hit customid: " + hit.getCustomId());
-			// System.out.println("hit score: " + hit.getScore());
-			// System.out.println("hit folderid: " + hit.getFolderId());
-			// System.out.println("hit title: " + hit.getTitle());
-			// System.out.println("hit creation: " + hit.getCreation());
-			// System.out.println("hit summary: " + hit.getSummary());
-			// System.out.println("************************");
-			// }
+//			for (WSTagCloud tag : searchClient.getTagCloud(sid)) {
+//				System.out.println("tag: " + tag.getTag());
+//				System.out.println("tag count: " + tag.getCount());
+//				System.out.println("tag scale: " + tag.getScale());
+//				System.out.println("++++++++++++++++++++++++++++++++");
+//			}
+//
+//			WSSearchOptions opt = new WSSearchOptions();
+//			opt.setLanguage("en");
+//			opt.setExpression("paper");
+//			opt.setExpressionLanguage("en");
+//			opt.setType(SearchOptions.TYPE_FULLTEXT);
+//			opt.setMaxHits(10);
+//			WSSearchResult result = searchClient.find(sid, opt);
+//			System.out.println("---- " + result.getHits().length);
+//			for (WSDocument hit : result.getHits()) {
+//				System.out.println("hit customid: " + hit.getCustomId());
+//				System.out.println("hit score: " + hit.getScore());
+//				System.out.println("hit folderid: " + hit.getFolderId());
+//				System.out.println("hit title: " + hit.getTitle());
+//				System.out.println("hit creation: " + hit.getCreation());
+//				System.out.println("hit summary: " + hit.getSummary());
+//				System.out.println("************************");
+//			}
 
 			// WSFolder folder = folderClient.getFolder(sid, 6);
 			// System.out.println("parent id: " + folder.getParentId());
