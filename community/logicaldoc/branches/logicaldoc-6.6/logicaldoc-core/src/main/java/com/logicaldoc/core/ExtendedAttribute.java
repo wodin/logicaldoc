@@ -24,6 +24,8 @@ public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 
 	public static final int TYPE_USER = 4;
 
+	public static final int TYPE_BOOLEAN = 5;
+
 	public static final int EDITOR_DEFAULT = 0;
 
 	public static final int EDITOR_LISTBOX = 1;
@@ -78,6 +80,21 @@ public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 		this.dateValue = dateValue;
 	}
 
+	public Boolean getBooleanValue() {
+		if (intValue != null)
+			return intValue.intValue() == 1;
+		else
+			return null;
+	}
+
+	public void setBooleanValue(Boolean booleanValue) {
+		this.type = TYPE_BOOLEAN;
+		if (booleanValue != null)
+			this.intValue = booleanValue.booleanValue() ? 1L : 0L;
+		else
+			this.intValue = null;
+	}
+
 	public int getType() {
 		return type;
 	}
@@ -103,6 +120,11 @@ public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 			return getDateValue();
 		case TYPE_USER:
 			return getIntValue();
+		case TYPE_BOOLEAN:
+			if (getIntValue() == null)
+				return null;
+			else
+				return getIntValue().intValue() == 1;
 		}
 		return null;
 	}
@@ -132,8 +154,11 @@ public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 			this.type = TYPE_USER;
 			this.intValue = ((User) value).getId();
 			this.stringValue = ((User) value).getFullName();
+		} else if (value instanceof Boolean) {
+			this.type = TYPE_BOOLEAN;
+			this.intValue = ((Boolean) value).booleanValue() ? 1L : 0L;
 		} else {
-			throw new IllegalArgumentException("No a String, Long, Double, Date or User value");
+			throw new IllegalArgumentException("No a String, Long, Double, Date, Boolean or User value");
 		}
 	}
 
