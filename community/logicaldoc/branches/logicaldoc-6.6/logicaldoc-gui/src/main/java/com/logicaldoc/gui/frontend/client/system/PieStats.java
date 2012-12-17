@@ -35,15 +35,37 @@ public class PieStats extends HLayout {
 		setAlign(VerticalAlignment.TOP);
 
 		VLayout repository = new VLayout();
-		repository.addMember(new StatisticWidget(I18N.message("repository"), parameters[0]));
+		try {
+			// Convert all in MBytes
+			GUIParameter[] params = new GUIParameter[parameters[0].length];
+			for (int i = 0; i < params.length; i++) {
+				params[i] = new GUIParameter();
+				params[i].setName(parameters[0][i].getName());
+				long val = Long.parseLong(parameters[0][i].getValue()) / 1024 / 1024;
+				params[i].setValue(Long.toString(val));
+			}
+			repository.addMember(new StatisticWidget(I18N.message("repository"), params));
+		} catch (Throwable t) {
+
+		}
 		repository.addMember(prepareLegend(parameters[0], STATS_REPOSITORY));
 		addMember(repository);
+
 		VLayout documents = new VLayout();
-		documents.addMember(new StatisticWidget(I18N.message("documents"), parameters[1]));
+		try {
+			documents.addMember(new StatisticWidget(I18N.message("documents"), parameters[1]));
+		} catch (Throwable t) {
+
+		}
 		documents.addMember(prepareLegend(parameters[1], STATS_DOCUMENTS));
 		addMember(documents);
+
 		VLayout folders = new VLayout();
-		folders.addMember(new StatisticWidget(I18N.message("folders"), parameters[2]));
+		try {
+			folders.addMember(new StatisticWidget(I18N.message("folders"), parameters[2]));
+		} catch (Throwable t) {
+
+		}
 		folders.addMember(prepareLegend(parameters[2], STATS_FOLDERS));
 		addMember(folders);
 	}
