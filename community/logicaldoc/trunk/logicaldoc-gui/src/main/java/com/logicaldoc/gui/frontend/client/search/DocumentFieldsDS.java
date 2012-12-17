@@ -180,6 +180,10 @@ public class DocumentFieldsDS extends DataSource {
 					field.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN, OperatorId.EQUALS,
 							OperatorId.NOT_EQUAL);
 					name = name + Constants.BLANK_PLACEHOLDER + "type:" + GUIExtendedAttribute.TYPE_INT;
+				} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+					field = new DataSourceIntegerField();
+					field.setValidOperators(OperatorId.EQUALS);
+					name = name + Constants.BLANK_PLACEHOLDER + "type:" + GUIExtendedAttribute.TYPE_BOOLEAN;
 				} else {
 					field = new DataSourceTextField();
 					field.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,

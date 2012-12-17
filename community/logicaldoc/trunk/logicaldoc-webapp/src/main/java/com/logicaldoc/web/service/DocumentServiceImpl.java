@@ -412,13 +412,14 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						att.setOptions(list.toArray(new String[0]));
 					}
 
+					
 					if (doc != null) {
 						if (doc.getValue(attrName) != null)
 							att.setValue(doc.getValue(attrName));
 					} else
 						att.setValue(extAttr.getValue());
 					att.setType(extAttr.getType());
-
+					
 					attributes[i] = att;
 					i++;
 				}
@@ -433,6 +434,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					ext.setStringValue(e.getStringValue());
 					ext.setIntValue(e.getIntValue());
 					ext.setDoubleValue(e.getDoubleValue());
+					ext.setBooleanValue(e.getBooleanValue());
 					ext.setType(e.getType());
 					list.add(ext);
 				}
@@ -776,10 +778,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		try {
 			DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-			int indexableCount = 0;
 			for (long id : docIds) {
 				manager.changeIndexingStatus(docDao.findById(id), AbstractDocument.INDEX_TO_INDEX);
-				indexableCount++;
 			}
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
@@ -794,10 +794,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		try {
 			DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-			int unindexableCount = 0;
 			for (long id : docIds) {
 				manager.changeIndexingStatus(docDao.findById(id), AbstractDocument.INDEX_SKIP);
-				unindexableCount++;
 			}
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
@@ -922,7 +920,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						// attributes keys that remains on the form
 						// value manager
 						if (attr.getValue().toString().trim().isEmpty() && templateType != 0) {
-							if (templateType == ExtendedAttribute.TYPE_INT) {
+							if (templateType == ExtendedAttribute.TYPE_INT || templateType == ExtendedAttribute.TYPE_BOOLEAN) {
 								extAttr.setIntValue(null);
 							} else if (templateType == ExtendedAttribute.TYPE_DOUBLE) {
 								extAttr.setDoubleValue(null);
@@ -933,6 +931,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 							extAttr.setValue(Double.parseDouble(attr.getValue().toString()));
 						} else if (templateType == GUIExtendedAttribute.TYPE_INT) {
 							extAttr.setValue(Long.parseLong(attr.getValue().toString()));
+						} else if (templateType == GUIExtendedAttribute.TYPE_BOOLEAN) {
+							extAttr.setValue(attr.getBooleanValue());
+							extAttr.setType(ExtendedAttribute.TYPE_BOOLEAN);
 						} else if (templateType == GUIExtendedAttribute.TYPE_USER) {
 							extAttr.setIntValue(attr.getIntValue());
 							extAttr.setStringValue(attr.getStringValue());
@@ -944,6 +945,11 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 								extAttr.setIntValue((Long) attr.getValue());
 							else
 								extAttr.setIntValue(null);
+						} else if (templateType == ExtendedAttribute.TYPE_BOOLEAN) {
+							if (attr.getBooleanValue()!= null)
+								extAttr.setValue(attr.getBooleanValue());
+							else
+								extAttr.setBooleanValue(null);
 						} else if (templateType == ExtendedAttribute.TYPE_DOUBLE) {
 							if (attr.getValue() != null)
 								extAttr.setDoubleValue((Double) attr.getValue());

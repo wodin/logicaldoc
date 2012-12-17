@@ -259,10 +259,10 @@ public class ParametricForm extends VLayout {
 		String hits = Session.get().getInfo().getConfig("search.hits");
 		if (hits != null)
 			options.setMaxHits(Integer.parseInt(hits));
-		
+
 		options.setRetrieveAliases(new Boolean(vm.getValueAsString("aliases")).booleanValue() ? 1 : 0);
 		options.setCaseSensitive(new Boolean(vm.getValueAsString("casesensitive")).booleanValue() ? 1 : 0);
-		
+
 		options.setType(GUISearchOptions.TYPE_PARAMETRIC);
 
 		if (NO_LANGUAGE.equals(vm.getValueAsString("language")))
@@ -294,7 +294,7 @@ public class ParametricForm extends VLayout {
 			// This lines are necessary to avoid error for GWT values type.
 			if (row.getValueFieldsItem() instanceof IntegerItem)
 				fieldValue = Long.parseLong(fieldValue.toString());
-			if (fieldName.endsWith("type:1") || fieldName.endsWith("type:2"))
+			if (fieldName.endsWith("type:1") || fieldName.endsWith("type:2") || fieldName.endsWith("type:5"))
 				fieldValue = Long.parseLong(fieldValue.toString());
 			else if (fieldName.endsWith("type:3"))
 				fieldValue = (Date) fieldValue;

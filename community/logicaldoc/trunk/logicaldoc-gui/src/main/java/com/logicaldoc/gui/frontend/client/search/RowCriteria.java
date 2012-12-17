@@ -4,7 +4,6 @@ import java.util.LinkedHashMap;
 
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.DataSourceField;
@@ -151,19 +150,21 @@ public class RowCriteria extends HLayout {
 		if (criteriaField == null)
 			return map;
 
-		if (criteriaField.equals("id") || criteriaField.equals("fileSize") 
-				|| criteriaField.equals("rating") || criteriaField.equals("published")
-				|| criteriaField.endsWith("type:1") || criteriaField.endsWith("type:2")) {
+		if (criteriaField.equals("id") || criteriaField.equals("fileSize") || criteriaField.equals("rating")
+				|| criteriaField.equals("published") || criteriaField.endsWith("type:1")
+				|| criteriaField.endsWith("type:2")) {
 			map.put("greaterthan", I18N.message("greaterthan"));
 			map.put("lessthan", I18N.message("lessthan"));
 			map.put("equals", I18N.message("equals"));
 			map.put("notequal", I18N.message("notequal"));
 		} else if (criteriaField.equals("sourceDate") || criteriaField.equals("lastModified")
-				|| criteriaField.equals("date") || criteriaField.equals("creation") 
+				|| criteriaField.equals("date") || criteriaField.equals("creation")
 				|| criteriaField.equals("startPublishing") || criteriaField.equals("stopPublishing")
 				|| criteriaField.endsWith("type:3")) {
 			map.put("greaterthan", I18N.message("greaterthan"));
 			map.put("lessthan", I18N.message("lessthan"));
+		} else if (criteriaField.endsWith("type:5")) {
+			map.put("equals", I18N.message("equals"));
 		} else {
 			map.put("contains", I18N.message("contains"));
 			map.put("notcontains", I18N.message("notcontains"));
@@ -179,8 +180,8 @@ public class RowCriteria extends HLayout {
 				|| criteriaField.endsWith("type:1") || criteriaField.endsWith("type:2")) {
 			return ItemFactory.newIntegerItem("value", "integer", null);
 		} else if (criteriaField.equals("sourceDate") || criteriaField.equals("lastModified")
-				|| criteriaField.equals("date") || criteriaField.equals("creation") 
-				|| criteriaField.equals("startPublishing") || criteriaField.equals("stopPublishing") 
+				|| criteriaField.equals("date") || criteriaField.equals("creation")
+				|| criteriaField.equals("startPublishing") || criteriaField.equals("stopPublishing")
 				|| criteriaField.endsWith("type:3")) {
 			return ItemFactory.newDateItem("value", "date");
 		} else {

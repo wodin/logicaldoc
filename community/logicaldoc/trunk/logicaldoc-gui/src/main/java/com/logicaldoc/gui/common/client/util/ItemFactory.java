@@ -245,7 +245,7 @@ public class ItemFactory {
 		map.put("yes", I18N.message("yes"));
 		map.put("no", I18N.message("no"));
 		radioGroupItem.setValueMap(map);
-		//radioGroupItem.setRedrawOnChange(true);
+		// radioGroupItem.setRedrawOnChange(true);
 		radioGroupItem.setTitle(I18N.message(title));
 		radioGroupItem.setWidth(80);
 		radioGroupItem.setHintStyle("hint");
@@ -299,7 +299,7 @@ public class ItemFactory {
 	public static SelectItem newDashletSelector(String name, String title) {
 		SelectItem select = new SelectItem(filterItemName(name), title);
 		select.setAllowEmptyValue(false);
-		
+
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("" + Constants.DASHLET_CHECKOUT, I18N.message(Constants.EVENT_CHECKEDOUT + "docs"));
 		map.put("" + Constants.DASHLET_CHECKIN, I18N.message(Constants.EVENT_CHECKEDIN + "docs"));
@@ -328,7 +328,8 @@ public class ItemFactory {
 	}
 
 	public static SelectItem newSelectItem(String name, String title) {
-		SelectItem select = newMultipleSelector(filterItemName(name), title != null ? I18N.message(title) : I18N.message(name));
+		SelectItem select = newMultipleSelector(filterItemName(name),
+				title != null ? I18N.message(title) : I18N.message(name));
 		select.setMultiple(false);
 		select.setWrapTitle(false);
 		select.setHintStyle("hint");
@@ -405,7 +406,7 @@ public class ItemFactory {
 				}
 			select.setValueMap(map);
 		}
-		
+
 		item.setName(itemName);
 		item.setTitle(att.getLabel());
 		item.setWrapTitle(false);
@@ -494,6 +495,28 @@ public class ItemFactory {
 		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		IntegerItem item = newIntegerItem(itemName, label, value);
 		return item;
+	}
+
+	/**
+	 * Simple boolean selector for Extended Attribute
+	 */
+	public static SelectItem newBooleanSelectorForExtendedAttribute(String name, String title, boolean allowEmpty) {
+		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
+		SelectItem select = new SelectItem();
+		select.setName(itemName);
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		if (allowEmpty)
+			map.put("", " ");
+
+		map.put("1", I18N.message("yes"));
+		map.put("0", I18N.message("no"));
+		select.setValueMap(map);
+		select.setTitle(I18N.message(title));
+		select.setWidth(80);
+		select.setHintStyle("hint");
+		select.setValue("");
+
+		return select;
 	}
 
 	/**
@@ -786,18 +809,18 @@ public class ItemFactory {
 		item.setHintStyle("hint");
 		return item;
 	}
-	
+
 	/**
 	 * Filter the name from problematic chars
 	 */
-	public static String filterItemName(String name){
+	public static String filterItemName(String name) {
 		return name.replaceAll("\\.", "_");
 	}
-	
+
 	/**
 	 * Obtain the original item name
 	 */
-	public static String originalItemName(String name){
+	public static String originalItemName(String name) {
 		return name.replaceAll("_", "\\.");
 	}
 }
