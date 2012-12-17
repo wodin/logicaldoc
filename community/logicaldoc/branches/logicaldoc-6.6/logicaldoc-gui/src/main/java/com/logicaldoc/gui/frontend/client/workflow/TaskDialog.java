@@ -22,6 +22,7 @@ import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
+import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.SpinnerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
@@ -31,6 +32,8 @@ import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
 
@@ -46,8 +49,6 @@ public class TaskDialog extends Window {
 
 	private ValuesManager vm = new ValuesManager();
 
-	private GUIWFState task;
-
 	private SelectItem participantsList;
 
 	private LinkedHashMap<String, String> participants = new LinkedHashMap<String, String>();
@@ -61,16 +62,18 @@ public class TaskDialog extends Window {
 	private DynamicForm buttonForm;
 
 	private StateWidget widget;
+	
+	private GUIWFState state;
 
 	public TaskDialog(StateWidget widget) {
-		this.task = widget.getWfState();
+		this.state = widget.getWfState();
 		this.widget = widget;
 		participants.clear();
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("editworkflowstate", I18N.message("task")));
 		setWidth(350);
-		setHeight(450);
+		setHeight(state.getType() == GUIWFState.TYPE_TASK ? 460 : 370);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -82,9 +85,9 @@ public class TaskDialog extends Window {
 		taskForm.setTitleOrientation(TitleOrientation.TOP);
 		taskForm.setNumCols(1);
 		taskForm.setValuesManager(vm);
-		TextItem taskName = ItemFactory.newTextItem("taskName", "name", this.task.getName());
+		TextItem taskName = ItemFactory.newTextItem("taskName", "name", this.state.getName());
 		taskName.setRequired(true);
-		TextAreaItem taskDescr = ItemFactory.newTextAreaItem("taskDescr", "description", this.task.getDescription());
+		TextAreaItem taskDescr = ItemFactory.newTextAreaItem("taskDescr", "description", this.state.getDescription());
 		taskDescr.setWrapTitle(false);
 		taskForm.setFields(taskName, taskDescr);
 		addItem(taskForm);
@@ -110,9 +113,9 @@ public class TaskDialog extends Window {
 		duedateTimeItem.setMin(0);
 		duedateTimeItem.setStep(1);
 		duedateTimeItem.setWidth(50);
-		duedateTimeItem.setValue(this.task.getDueDateNumber());
+		duedateTimeItem.setValue(this.state.getDueDateNumber());
 		SelectItem duedateTime = ItemFactory.newTimeSelector("duedateTime", "");
-		duedateTime.setValue(this.task.getDueDateUnit());
+		duedateTime.setValue(this.state.getDueDateUnit());
 
 		SpinnerItem remindTimeItem = new SpinnerItem("remindtimeNumber");
 		remindTimeItem.setTitle(I18N.message("remindtime"));
@@ -120,9 +123,9 @@ public class TaskDialog extends Window {
 		remindTimeItem.setMin(0);
 		remindTimeItem.setStep(1);
 		remindTimeItem.setWidth(50);
-		remindTimeItem.setValue(this.task.getReminderNumber());
+		remindTimeItem.setValue(this.state.getReminderNumber());
 		SelectItem remindTime = ItemFactory.newTimeSelector("remindTime", "");
-		remindTime.setValue(this.task.getReminderUnit());
+		remindTime.setValue(this.state.getReminderUnit());
 		if (Session.get().isDemo()) {
 			// In demo mode disable the remind setting because of this may send
 			// massive emails
@@ -133,9 +136,8 @@ public class TaskDialog extends Window {
 		addItem(escalationForm);
 
 		HTMLPane spacer = new HTMLPane();
-		spacer.setContents("<div>&nbsp;</div>");
-		spacer.setHeight(10);
-		spacer.setMargin(10);
+		spacer.setHeight(2);
+		spacer.setMargin(2);
 		spacer.setOverflow(Overflow.HIDDEN);
 		addItem(spacer);
 
@@ -193,7 +195,7 @@ public class TaskDialog extends Window {
 						return;
 
 					// Check if the selected user is already present in the
-					// rights table
+					// participants list
 					for (String participant : participantsList.getValues()) {
 						if (participant.equals("g." + selectedRecord.getAttribute("name"))) {
 							return;
@@ -208,7 +210,33 @@ public class TaskDialog extends Window {
 			}
 		});
 
-		usergroupForm.setItems(user, group);
+		// Prepare dynamic user participant
+		final TextItem attr = ItemFactory.newTextItem("attribute", "attribute", null);
+		FormItemIcon addIcon = ItemFactory.newItemIcon("add.png");
+		addIcon.addFormItemClickHandler(new FormItemClickHandler() {
+			public void onFormItemClick(FormItemIconClickEvent event) {
+				String val = attr.getValueAsString();
+				if (val != null)
+					val = val.trim();
+				if (val == null || "".equals(val))
+					return;
+
+				// Check if the digited attribute user is already present in the
+				// participants list
+				for (String participant : participantsList.getValues()) {
+					if (participant.equals("att." + val)) {
+						return;
+					}
+				}
+
+				if (participants.get("att." + val) == null)
+					refreshParticipants("att." + val, val, 1);
+				attr.clearValue();
+			}
+		});
+		attr.setIcons(addIcon);
+
+		usergroupForm.setItems(user, group, attr);
 		usergroupSelection.addMember(usergroupForm);
 		addItem(usergroupSelection);
 
@@ -218,11 +246,17 @@ public class TaskDialog extends Window {
 		addItem(participantsLayout);
 
 		// Initialize the participants list
-		if (this.task.getParticipants() != null)
-			for (GUIValuePair part : this.task.getParticipants()) {
+		if (this.state.getParticipants() != null)
+			for (GUIValuePair part : this.state.getParticipants()) {
 				if(part.getCode()==null || part.getValue()==null)
 					continue;
-				String prefix = (part.getCode().startsWith("g.") ? I18N.message("group") : I18N.message("user")) + ": ";
+				String prefix = I18N.message("user");
+				if (part.getCode().startsWith("g."))
+					prefix = I18N.message("group");
+				else if (part.getCode().startsWith("att."))
+					prefix = I18N.message("attribute");
+				prefix += ": ";
+
 				participants.put(part.getCode(),
 						part.getValue().startsWith(prefix) ? part.getValue() : prefix + part.getValue());
 			}
@@ -260,7 +294,12 @@ public class TaskDialog extends Window {
 		participantsList.setEndRow(true);
 
 		if (entityCode != null && (operation == 1)) {
-			String prefix = (entityCode.startsWith("g.") ? I18N.message("group") : I18N.message("user")) + ": ";
+			String prefix = I18N.message("user");
+			if (entityCode.startsWith("g."))
+				prefix = I18N.message("group");
+			else if (entityCode.startsWith("att."))
+				prefix = I18N.message("attribute");
+			prefix += ": ";
 			participants.put(entityCode, entityLabel.startsWith(prefix) ? entityLabel : prefix + entityLabel);
 		} else if (entityCode != null && (operation == 2)) {
 			participants.remove(entityCode);
@@ -291,26 +330,26 @@ public class TaskDialog extends Window {
 				Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				if (vm.validate()) {
-					TaskDialog.this.task.setName((String) values.get("taskName"));
-					TaskDialog.this.task.setDescription((String) values.get("taskDescr"));
-					TaskDialog.this.task.setDueDateNumber((Integer) values.get("duedateNumber"));
-					TaskDialog.this.task.setDueDateUnit((String) values.get("duedateTime"));
-					TaskDialog.this.task.setReminderNumber((Integer) values.get("remindtimeNumber"));
-					TaskDialog.this.task.setReminderUnit((String) values.get("remindTime"));
+					TaskDialog.this.state.setName((String) values.get("taskName"));
+					TaskDialog.this.state.setDescription((String) values.get("taskDescr"));
+					TaskDialog.this.state.setDueDateNumber((Integer) values.get("duedateNumber"));
+					TaskDialog.this.state.setDueDateUnit((String) values.get("duedateTime"));
+					TaskDialog.this.state.setReminderNumber((Integer) values.get("remindtimeNumber"));
+					TaskDialog.this.state.setReminderUnit((String) values.get("remindTime"));
 
 					GUIValuePair[] b = new GUIValuePair[participants.size()];
 					int i = 0;
 					for (String key : participants.keySet())
 						b[i++] = new GUIValuePair(key, participants.get(key));
-					TaskDialog.this.task.setParticipants(b);
+					TaskDialog.this.state.setParticipants(b);
 
-					if (TaskDialog.this.task.getParticipants() == null
-							|| TaskDialog.this.task.getParticipants().length == 0) {
+					if (TaskDialog.this.state.getParticipants() == null
+							|| TaskDialog.this.state.getParticipants().length == 0) {
 						SC.warn(I18N.message("workflowtaskparticipantatleast"));
 						return;
 					}
 
-					widget.setContents("<b>" + task.getName() + "</b>");
+					widget.setContents("<b>" + state.getName() + "</b>");
 					widget.getDrawingPanel().getDiagramController().update();
 
 					destroy();
