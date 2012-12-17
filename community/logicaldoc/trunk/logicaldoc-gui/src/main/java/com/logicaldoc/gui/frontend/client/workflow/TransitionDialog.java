@@ -51,7 +51,6 @@ public class TransitionDialog extends Window {
 		centerInPage();
 		setPadding(5);
 		setMargin(3);
-		setAutoSize(true);
 
 		form = new DynamicForm();
 		form.setTitleOrientation(TitleOrientation.TOP);
