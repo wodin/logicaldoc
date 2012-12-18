@@ -307,6 +307,11 @@ public class FolderDetailsPanel extends VLayout {
 					setFolder(folder);
 	
 					savePanel.setVisible(false);
+					
+					GUIFolder current=Session.get().getCurrentFolder();
+					current.setTemplate(folder.getTemplate());
+					current.setTemplateId(folder.getTemplateId());
+					current.setAttributes(folder.getAttributes());					
 				}
 			});
 		}
