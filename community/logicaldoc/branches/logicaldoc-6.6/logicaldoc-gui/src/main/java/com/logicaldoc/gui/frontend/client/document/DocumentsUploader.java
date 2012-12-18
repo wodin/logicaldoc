@@ -8,6 +8,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -16,8 +17,8 @@ import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Window;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClickEvent;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
@@ -159,9 +160,13 @@ public class DocumentsUploader extends Window {
 		if (!vm.validate())
 			return;
 
+		GUIFolder folder=Session.get().getCurrentFolder();
 		GUIDocument metadata = new GUIDocument();
 		metadata.setFolder(Session.get().getCurrentFolder());
 		metadata.setLanguage(I18N.getDefaultLocaleForDoc());
+		metadata.setTemplateId(folder.getTemplateId());
+		metadata.setTemplate(folder.getTemplate());
+		metadata.setAttributes(folder.getAttributes());
 
 		BulkUpdateDialog bulk = new BulkUpdateDialog(null, metadata);
 		bulk.setZip(getImportZip());
