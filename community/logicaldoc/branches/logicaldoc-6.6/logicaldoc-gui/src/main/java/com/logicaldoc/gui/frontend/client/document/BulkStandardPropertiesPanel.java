@@ -10,6 +10,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
@@ -18,6 +19,8 @@ import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.FocusEvent;
 import com.smartgwt.client.widgets.form.fields.events.FocusHandler;
 import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
@@ -124,6 +127,21 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 					}
 				}
 			});
+			
+			if ("preset".equals(mode))
+				tagItem.addChangedHandler(new ChangedHandler() {
+					@Override
+					public void onChanged(ChangedEvent event) {
+						// In the preset mode at each selection immediately add
+						// the tag
+						Log.info("*"+tagItem.getValue(), null);
+						if (tagItem.getValue()!=null) {
+							document.addTag(tagItem.getValue().toString().trim());
+							tagItem.clearValue();
+							refresh();
+						}
+					}
+				});
 
 			items.add(tagItem);
 			FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
