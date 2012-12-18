@@ -295,10 +295,13 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 									at.setType(GUIExtendedAttribute.TYPE_USER);
 								}
 							} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
-								if (val == null || "".equals(val.toString().trim()))
-									folder.getExtendedAttribute(nm).setBooleanValue(null);
-								else
-									folder.setValue(nm, val.equals("1") ? true : false);
+								if (!(val == null || "".equals(val.toString().trim())))
+									folder.setValue(nm, "1".equals(val.toString().trim()) ? true : false);
+								else if(folder.getExtendedAttribute(nm)!=null){
+									GUIExtendedAttribute at = folder.getExtendedAttribute(nm);
+									at.setBooleanValue(null);
+									at.setType(GUIExtendedAttribute.TYPE_BOOLEAN);
+								}
 							} else
 								folder.setValue(nm, val);
 						} else {
