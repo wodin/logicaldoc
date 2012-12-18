@@ -188,7 +188,6 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 								att.getLabel(), null);
 						if (folder.getValue(att.getName()) != null)
 							item.setValue((Long) folder.getValue(att.getName()));
-						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!update);
 						items.add(item);
@@ -197,7 +196,6 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 								att.getLabel(), !att.isMandatory());
 						if (folder.getValue(att.getName()) != null)
 							item.setValue(((Boolean) folder.getValue(att.getName())).booleanValue() ? "1" : "0");
-						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!update);
 						items.add(item);
@@ -206,7 +204,6 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 								null);
 						if (folder.getValue(att.getName()) != null)
 							item.setValue((Double) folder.getValue(att.getName()));
-						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!update);
 						items.add(item);
@@ -214,7 +211,6 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 						final DateItem item = ItemFactory.newDateItemForExtendedAttribute(att.getName(), att.getLabel());
 						if (folder.getValue(att.getName()) != null)
 							item.setValue((Date) folder.getValue(att.getName()));
-						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
 						item.addKeyPressHandler(new KeyPressHandler() {
 							@Override
@@ -235,7 +231,6 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 						SelectItem item = ItemFactory.newUserSelectorForExtendedAttribute(att.getName(), att.getLabel());
 						if (folder.getValue(att.getName()) != null)
 							item.setValue((folder.getValue(att.getName()).toString()));
-						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!update);
 						items.add(item);
