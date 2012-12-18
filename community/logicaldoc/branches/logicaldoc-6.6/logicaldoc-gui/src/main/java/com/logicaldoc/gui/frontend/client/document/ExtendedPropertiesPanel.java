@@ -20,6 +20,7 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.DateItem;
@@ -288,76 +289,82 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 			document.setObject((String) values.get("object"));
 			document.setCoverage((String) values.get("coverage"));
 
-			if (Feature.enabled(Feature.TEMPLATE)) {
-				if (values.get("template") == null || "".equals(values.get("template").toString()))
-					document.setTemplateId(null);
-				else {
-					document.setTemplateId(Long.parseLong(values.get("template").toString()));
-				}
-				for (String name : values.keySet()) {
-					if (name.startsWith("_")) {
-						Object val = values.get(name);
-						String nm = name.substring(1).replaceAll(Constants.BLANK_PLACEHOLDER, " ");
-						GUIExtendedAttribute att = getExtendedAttribute(nm);
-						if (att == null)
-							continue;
+			try {
+				if (Feature.enabled(Feature.TEMPLATE)) {
+					if (values.get("template") == null || "".equals(values.get("template").toString()))
+						document.setTemplateId(null);
+					else {
+						document.setTemplateId(Long.parseLong(values.get("template").toString()));
+					}
+					for (String name : values.keySet()) {
+						if (name.startsWith("_")) {
+							Object val = values.get(name);
+							String nm = name.substring(1).replaceAll(Constants.BLANK_PLACEHOLDER, " ");
+							GUIExtendedAttribute att = getExtendedAttribute(nm);
+							if (att == null)
+								continue;
 
-						if (val != null) {
-							if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
-								SelectItem userItem = (SelectItem) form2.getItem(name);
-								if (userItem.getValue() != null && !"".equals(userItem.getValue())) {
-									ListGridRecord sel = userItem.getSelectedRecord();
+							if (val != null) {
+								if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
+									SelectItem userItem = (SelectItem) form2.getItem(name);
+									if (userItem.getValue() != null && !"".equals(userItem.getValue())) {
+										ListGridRecord sel = userItem.getSelectedRecord();
 
-									// Prepare a dummy user to set as attribute
-									// value
-									GUIUser dummy = new GUIUser();
-									dummy.setId(Long.parseLong(val.toString()));
-									dummy.setFirstName(sel.getAttributeAsString("firstName"));
-									dummy.setName(sel.getAttributeAsString("name"));
-									document.setValue(nm, dummy);
-								} else {
-									GUIExtendedAttribute at = document.getExtendedAttribute(nm);
-									at.setIntValue(null);
-									at.setStringValue(null);
-									at.setType(GUIExtendedAttribute.TYPE_USER);
-								}
-							} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
-								if (val == null || "".equals(val.toString().trim()))
-									document.getExtendedAttribute(nm).setBooleanValue(null);
-								else
-									document.setValue(nm, val.equals("1") ? true : false);
-								
-								Log.info("val="+val, null);
-							} else
-								document.setValue(nm, val);
-						} else {
-							if (att != null) {
-								if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
-									document.getExtendedAttribute(nm).setIntValue(null);
-									break;
+										// Prepare a dummy user to set as
+										// attribute
+										// value
+										GUIUser dummy = new GUIUser();
+										dummy.setId(Long.parseLong(val.toString()));
+										dummy.setFirstName(sel.getAttributeAsString("firstName"));
+										dummy.setName(sel.getAttributeAsString("name"));
+										document.setValue(nm, dummy);
+									} else {
+										GUIExtendedAttribute at = document.getExtendedAttribute(nm);
+										at.setIntValue(null);
+										at.setStringValue(null);
+										at.setType(GUIExtendedAttribute.TYPE_USER);
+									}
 								} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
-									document.getExtendedAttribute(nm).setBooleanValue(null);
-									break;
-								} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
-									document.getExtendedAttribute(nm).setDoubleValue(null);
-									break;
-								} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
-									document.getExtendedAttribute(nm).setDateValue(null);
-									break;
-								} else if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
-									GUIExtendedAttribute at = document.getExtendedAttribute(nm);
-									at.setIntValue(null);
-									at.setStringValue(null);
-									at.setType(GUIExtendedAttribute.TYPE_USER);
-									break;
-								} else {
-									document.setValue(nm, "");
-									break;
+									if (!(val == null || "".equals(val.toString().trim())))
+										document.setValue(nm, "1".equals(val.toString().trim()) ? true : false);
+									else if (document.getExtendedAttribute(nm) != null) {
+										GUIExtendedAttribute at = document.getExtendedAttribute(nm);
+										at.setBooleanValue(null);
+										at.setType(GUIExtendedAttribute.TYPE_BOOLEAN);
+									}
+								} else
+									document.setValue(nm, val);
+							} else {
+								if (att != null) {
+									if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
+										document.getExtendedAttribute(nm).setIntValue(null);
+										break;
+									} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+										document.getExtendedAttribute(nm).setBooleanValue(null);
+										break;
+									} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
+										document.getExtendedAttribute(nm).setDoubleValue(null);
+										break;
+									} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
+										document.getExtendedAttribute(nm).setDateValue(null);
+										break;
+									} else if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
+										GUIExtendedAttribute at = document.getExtendedAttribute(nm);
+										at.setIntValue(null);
+										at.setStringValue(null);
+										at.setType(GUIExtendedAttribute.TYPE_USER);
+										break;
+									} else {
+										document.setValue(nm, "");
+										break;
+									}
 								}
 							}
 						}
 					}
 				}
+			} catch (Throwable t) {
+				SC.warn(t.getMessage());
 			}
 		}
 		return !vm.hasErrors();
