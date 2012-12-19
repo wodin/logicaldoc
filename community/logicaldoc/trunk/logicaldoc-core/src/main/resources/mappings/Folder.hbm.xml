@@ -17,6 +17,7 @@
     <property name="creation" type="timestamp" column="ld_creation" />
     <property name="creator" type="string" column="ld_creator" length="255" />
 	<property name="creatorId" type="long" column="ld_creatorid" />
+	<property name="templateLocked" type="int" column="ld_templocked" not-null="true" />
 		
     <set name="folderGroups" table="ld_foldergroup" cascade="all">
       <key column="ld_folderid" />

@@ -29,6 +29,7 @@ import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.FloatItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
+import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -87,9 +88,9 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 		templateItem.addChangedHandler(changedHandler);
 		templateItem.setMultiple(false);
 		templateItem.setDisabled(!update);
+		templateItem.setEndRow(true);
 		if (folder.getTemplateId() != null)
 			templateItem.setValue(folder.getTemplateId().toString());
-
 		templateItem.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
@@ -99,10 +100,14 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 				} else {
 					folder.setAttributes(new GUIExtendedAttribute[0]);
 					prepareExtendedAttributes(null);
-
 				}
 			}
 		});
+
+		RadioGroupItem locked = ItemFactory.newBooleanSelector("locked", "templatelocked");
+		locked.setValue(folder.getTemplateLocked() == 1 ? "yes" : "no");
+		locked.addChangedHandler(changedHandler);
+		locked.setEndRow(true);
 
 		ButtonItem applyMetadata = new ButtonItem(I18N.message("applytosubfolders"));
 		applyMetadata.setAutoFit(true);
@@ -131,6 +136,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 
 		if (Feature.visible(Feature.TEMPLATE)) {
 			items.add(templateItem);
+			items.add(locked);
 			items.add(applyMetadata);
 			if (!Feature.enabled(Feature.TEMPLATE)) {
 				templateItem.setDisabled(true);
@@ -256,10 +262,12 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 		if (!vm.hasErrors()) {
 
 			if (Feature.enabled(Feature.TEMPLATE)) {
-				if (values.get("template") == null || "".equals(values.get("template").toString()))
+				if (values.get("template") == null || "".equals(values.get("template").toString())) {
 					folder.setTemplateId(null);
-				else {
+					folder.setTemplateLocked(0);
+				} else {
 					folder.setTemplateId(Long.parseLong(values.get("template").toString()));
+					folder.setTemplateLocked("yes".equals(values.get("locked")) ? 1 : 0);
 				}
 				for (String name : values.keySet()) {
 					if (name.startsWith("_")) {
@@ -292,7 +300,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 							} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
 								if (!(val == null || "".equals(val.toString().trim())))
 									folder.setValue(nm, "1".equals(val.toString().trim()) ? true : false);
-								else if(folder.getExtendedAttribute(nm)!=null){
+								else if (folder.getExtendedAttribute(nm) != null) {
 									GUIExtendedAttribute at = folder.getExtendedAttribute(nm);
 									at.setBooleanValue(null);
 									at.setType(GUIExtendedAttribute.TYPE_BOOLEAN);
