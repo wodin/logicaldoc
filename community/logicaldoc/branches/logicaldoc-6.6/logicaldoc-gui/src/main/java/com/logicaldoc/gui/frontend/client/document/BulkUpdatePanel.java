@@ -5,6 +5,7 @@ import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
@@ -58,7 +59,15 @@ public class BulkUpdatePanel extends VLayout {
 		else {
 			document.setStartPublishing(null);
 			document.setPublished(-1);
-			document.setFolder(Session.get().getCurrentFolder());
+
+			GUIFolder currentFolder = Session.get().getCurrentFolder();
+			document.setFolder(currentFolder);
+
+			if (currentFolder.getTemplateLocked()==1){
+				document.setTemplateId(currentFolder.getTemplateId());
+				document.setTemplate(currentFolder.getTemplate());
+				document.setAttributes(currentFolder.getAttributes());
+			}
 		}
 
 		setHeight100();

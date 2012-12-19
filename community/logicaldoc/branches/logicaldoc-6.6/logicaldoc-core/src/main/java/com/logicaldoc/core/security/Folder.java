@@ -49,7 +49,15 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 
 	protected Set<FolderGroup> folderGroups = new HashSet<FolderGroup>();
 
+	/**
+	 * Optional default template for this folder
+	 */
 	private DocumentTemplate template;
+
+	/**
+	 * If 1, the users cannot change the template of the contained documents
+	 */
+	private int templateLocked = 0;
 
 	public Folder() {
 	}
@@ -197,4 +205,13 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 	public void setTemplate(DocumentTemplate template) {
 		this.template = template;
 	}
+
+	public int getTemplateLocked() {
+		return templateLocked;
+	}
+
+	public void setTemplateLocked(int templateLocked) {
+		this.templateLocked = templateLocked;
+	}
+
 }
