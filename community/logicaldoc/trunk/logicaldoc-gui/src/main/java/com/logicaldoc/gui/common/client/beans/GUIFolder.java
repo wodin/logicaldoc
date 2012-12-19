@@ -43,6 +43,8 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 
 	private int type;
 
+	private int templateLocked = 0;
+
 	public GUIFolder() {
 
 	}
@@ -196,5 +198,13 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	public int getTemplateLocked() {
+		return templateLocked;
+	}
+
+	public void setTemplateLocked(int templateLocked) {
+		this.templateLocked = templateLocked;
 	}
 }

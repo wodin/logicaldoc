@@ -139,6 +139,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				dao.initialize(folder);
 				f.setTemplateId(folder.getTemplate().getId());
 				f.setTemplate(folder.getTemplate().getName());
+				f.setTemplateLocked(folder.getTemplateLocked());
 				GUIExtendedAttribute[] attributes = prepareGUIAttributes(folder.getTemplate(), folder);
 				f.setAttributes(attributes);
 			}
@@ -319,7 +320,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	@Override
 	public GUIFolder save(String sid, GUIFolder folder) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
-
+		
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		try {
 			Folder f;
@@ -334,6 +335,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				folderDao.initialize(f);
 				f.setDescription(folder.getDescription());
 				f.setType(folder.getType());
+				f.setTemplateLocked(folder.getTemplateLocked());
 				if (f.getName().trim().equals(folderName)) {
 					f.setName(folderName.trim());
 					transaction.setEvent(FolderEvent.CHANGED.toString());
@@ -609,6 +611,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					DocumentTemplateDAO.class);
 			DocumentTemplate template = templateDao.findById(f.getTemplateId());
 			folder.setTemplate(template);
+			folder.setTemplateLocked(f.getTemplateLocked());
 			folder.getAttributes().clear();
 
 			if (f.getAttributes().length > 0) {

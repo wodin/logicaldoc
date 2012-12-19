@@ -31,47 +31,47 @@ insert into ld_usergroup
 values (-5,5);
 
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values     (99,'2008-10-22 00:00:00',0,'menu.admin',5,5);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked)
+values     (99,'2008-10-22 00:00:00',0,'menu.admin',5,5,0);
 
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values     (100,'2008-10-22 00:00:00',0,'menu.adminxxx',5,3);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked)
+values     (100,'2008-10-22 00:00:00',0,'menu.adminxxx',5,3,0);
 
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values     (101,'2008-10-22 00:00:00',0,'text',100,3);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked)
+values     (101,'2008-10-22 00:00:00',0,'text',100,3,0);
 
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values     (102,'2008-10-22 00:00:00',0,'menu.admin',101,5);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked)
+values     (102,'2008-10-22 00:00:00',0,'menu.admin',101,5,0);
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_description)
-values     (103,'2008-10-22 00:00:00',0,'menu.admin',101,3,'description');
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_description,ld_templocked)
+values     (103,'2008-10-22 00:00:00',0,'menu.admin',101,3,'description',0);
 
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values     (1000,'2008-10-22 00:00:00',1,'menu.admin.1000',5,5);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked)
+values     (1000,'2008-10-22 00:00:00',1,'menu.admin.1000',5,5,0);
 
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values     (1100,'2008-10-22 00:00:00',1,'menu.admin.1100',1000,5);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked)
+values     (1100,'2008-10-22 00:00:00',1,'menu.admin.1100',1000,5,0);
 
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values     (1200,'2009-10-19 00:00:00',0,'test',5,3);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked)
+values     (1200,'2009-10-19 00:00:00',0,'test',5,3,0);
 
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values     (1201,'2009-10-19 00:00:00',0,'abc',1200,3);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked)
+values     (1201,'2009-10-19 00:00:00',0,'abc',1200,3,0);
 
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values     (1202,'2009-10-19 00:00:00',0,'xyz',1201,3);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked)
+values     (1202,'2009-10-19 00:00:00',0,'xyz',1201,3,0);
 
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type)
-values     (1203,'2009-10-19 00:00:00',0,'qqqq',1201,3);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked)
+values     (1203,'2009-10-19 00:00:00',0,'qqqq',1201,3,0);
 
 insert into ld_foldergroup
 			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)

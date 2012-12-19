@@ -245,7 +245,6 @@ public class ItemFactory {
 		map.put("yes", I18N.message("yes"));
 		map.put("no", I18N.message("no"));
 		radioGroupItem.setValueMap(map);
-		// radioGroupItem.setRedrawOnChange(true);
 		radioGroupItem.setTitle(I18N.message(title));
 		radioGroupItem.setWidth(80);
 		radioGroupItem.setHintStyle("hint");
