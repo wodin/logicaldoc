@@ -261,7 +261,9 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.setDisabled(!update);
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
-						SelectItem item = ItemFactory.newUserSelectorForExtendedAttribute(att.getName(), att.getLabel());
+						SelectItem item = ItemFactory.newUserSelectorForExtendedAttribute(att.getName(),
+								att.getLabel(),
+								(att.getOptions() != null && att.getOptions().length > 0) ? att.getOptions()[0] : null);
 						if (document.getValue(att.getName()) != null)
 							item.setValue((document.getValue(att.getName()).toString()));
 						item.setRequired(att.isMandatory());

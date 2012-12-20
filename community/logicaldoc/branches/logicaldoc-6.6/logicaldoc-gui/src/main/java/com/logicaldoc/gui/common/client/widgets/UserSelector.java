@@ -17,7 +17,7 @@ import com.smartgwt.client.widgets.grid.ListGridField;
  * @since 6.6
  */
 public class UserSelector extends SelectItem {
-	public UserSelector(String name, String title) {
+	public UserSelector(String name, String title, String groupIdOrName) {
 		setName(name);
 		setTitle(I18N.message(title));
 		setWrapTitle(false);
@@ -27,7 +27,7 @@ public class UserSelector extends SelectItem {
 		setDisplayField("username");
 		setPickListWidth(300);
 		setPickListFields(username, label);
-		setOptionDataSource(new UsersDS(null));
+		setOptionDataSource(new UsersDS(groupIdOrName));
 		setHintStyle("hint");
 
 		PickerIcon clear = new PickerIcon(PickerIcon.CLEAR, new FormItemClickHandler() {
@@ -46,7 +46,10 @@ public class UserSelector extends SelectItem {
 				dialog.show();
 			}
 		});
-		
-		setIcons(clear, search);
+
+		if (groupIdOrName != null && !"".equals(groupIdOrName))
+			setIcons(clear);
+		else
+			setIcons(clear, search);
 	}
 }

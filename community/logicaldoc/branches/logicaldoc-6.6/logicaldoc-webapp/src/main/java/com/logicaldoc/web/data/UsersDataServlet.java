@@ -40,7 +40,7 @@ public class UsersDataServlet extends HttpServlet {
 		try {
 			SessionUtil.validateSession(request);
 
-			String groupId = request.getParameter("groupId");
+			String groupIdOrName = request.getParameter("groupId");
 
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
@@ -53,9 +53,15 @@ public class UsersDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.print("<list>");
 
-			if (groupId != null && !groupId.trim().isEmpty()) {
+			if (groupIdOrName != null && !groupIdOrName.trim().isEmpty()) {
 				GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
-				Group group = groupDao.findById(Long.parseLong(groupId));
+				Group group = null;
+				try {
+					group = groupDao.findById(Long.parseLong(groupIdOrName));
+				} catch (Throwable t) {
+				}
+				if (group == null)
+					group = groupDao.findByName(groupIdOrName);
 				groupDao.initialize(group);
 
 				/*
@@ -75,12 +81,17 @@ public class UsersDataServlet extends HttpServlet {
 					writer.print("<name><![CDATA[" + (user.getName() == null ? "" : user.getName()) + "]]></name>");
 					writer.print("<firstName><![CDATA[" + (user.getFirstName() == null ? "" : user.getFirstName())
 							+ "]]></firstName>");
-					writer.print("<label><![CDATA[" + (user.getFullName() == null ? "" : user.getFullName()) + "]]></label>");
+					writer.print("<label><![CDATA[" + (user.getFullName() == null ? "" : user.getFullName())
+							+ "]]></label>");
 					writer.print("<email><![CDATA[" + (user.getEmail() == null ? "" : user.getEmail()) + "]]></email>");
-					writer.print("<phone><![CDATA[" + (user.getTelephone() == null ? "" : user.getTelephone()) + "]]></phone>");
-					writer.print("<cell><![CDATA[" + (user.getTelephone2() == null ? "" : user.getTelephone2()) + "]]></cell>");
-					writer.print("<signatureid><![CDATA[" + (user.getSignatureId() == null ? "" : user.getSignatureId()) + "]]></signatureid>");
-					writer.print("<signatureinfo><![CDATA[" + (user.getSignatureInfo() == null ? "" : user.getSignatureInfo()) + "]]></signatureinfo>");
+					writer.print("<phone><![CDATA[" + (user.getTelephone() == null ? "" : user.getTelephone())
+							+ "]]></phone>");
+					writer.print("<cell><![CDATA[" + (user.getTelephone2() == null ? "" : user.getTelephone2())
+							+ "]]></cell>");
+					writer.print("<signatureid><![CDATA["
+							+ (user.getSignatureId() == null ? "" : user.getSignatureId()) + "]]></signatureid>");
+					writer.print("<signatureinfo><![CDATA["
+							+ (user.getSignatureInfo() == null ? "" : user.getSignatureInfo()) + "]]></signatureinfo>");
 					writer.print("<usergroup>" + user.getUserGroup().getId() + "</usergroup>");
 					writer.print("</user>");
 				}
@@ -128,12 +139,18 @@ public class UsersDataServlet extends HttpServlet {
 					writer.print("<name><![CDATA[" + (user.getName() == null ? "" : user.getName()) + "]]></name>");
 					writer.print("<firstName><![CDATA[" + (user.getFirstName() == null ? "" : user.getFirstName())
 							+ "]]></firstName>");
-					writer.print("<label><![CDATA[" + (user.getFullName() == null ? "" : user.getFullName()) + "]]></label>");
+					writer.print("<label><![CDATA[" + (user.getFullName() == null ? "" : user.getFullName())
+							+ "]]></label>");
 					writer.print("<email><![CDATA[" + (user.getEmail() == null ? "" : user.getEmail()) + "]]></email>");
-					writer.print("<phone><![CDATA[" + (user.getTelephone() == null ? "" : user.getTelephone()) + "]]></phone>");
-					writer.print("<cell><![CDATA[" + (user.getTelephone2() == null ? "" : user.getTelephone2()) + "]]></cell>");
-					writer.print("<signatureid><![CDATA[" + (user.getSignatureId() == null ? "" : user.getSignatureId()) + "]]></signatureid>");
-					writer.print("<signatureinfo><![CDATA[" + (user.getSignatureInfo() == null ? "" : user.getSignatureInfo()) + "]]></signatureinfo>");					writer.print("<usergroup>" + user.getGroups().iterator().next().getId() + "</usergroup>");
+					writer.print("<phone><![CDATA[" + (user.getTelephone() == null ? "" : user.getTelephone())
+							+ "]]></phone>");
+					writer.print("<cell><![CDATA[" + (user.getTelephone2() == null ? "" : user.getTelephone2())
+							+ "]]></cell>");
+					writer.print("<signatureid><![CDATA["
+							+ (user.getSignatureId() == null ? "" : user.getSignatureId()) + "]]></signatureid>");
+					writer.print("<signatureinfo><![CDATA["
+							+ (user.getSignatureInfo() == null ? "" : user.getSignatureInfo()) + "]]></signatureinfo>");
+					writer.print("<usergroup>" + user.getGroups().iterator().next().getId() + "</usergroup>");
 					writer.print("</user>");
 				}
 			}

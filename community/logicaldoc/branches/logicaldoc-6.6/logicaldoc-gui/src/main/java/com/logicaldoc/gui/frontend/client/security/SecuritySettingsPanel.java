@@ -167,7 +167,7 @@ public class SecuritySettingsPanel extends VLayout {
 		notificationsForm.setColWidths(1, "*");
 		notificationsForm.setMargin(3);
 
-		final SelectItem user = ItemFactory.newUserSelector("notificationUsers", "user");
+		final SelectItem user = ItemFactory.newUserSelector("notificationUsers", "user", null);
 		List<FormItem> items = new ArrayList<FormItem>();
 		user.setHint(I18N.message("usernotification"));
 		user.setHintStyle("hint");

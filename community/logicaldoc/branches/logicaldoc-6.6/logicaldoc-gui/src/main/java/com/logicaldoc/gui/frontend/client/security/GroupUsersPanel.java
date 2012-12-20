@@ -103,7 +103,7 @@ public class GroupUsersPanel extends VLayout {
 
 		// Prepare the list for adding a new user
 		final DynamicForm userForm = new DynamicForm();
-		final SelectItem user = ItemFactory.newUserSelector("user", "adduser");
+		final SelectItem user = ItemFactory.newUserSelector("user", "adduser", null);
 		user.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {

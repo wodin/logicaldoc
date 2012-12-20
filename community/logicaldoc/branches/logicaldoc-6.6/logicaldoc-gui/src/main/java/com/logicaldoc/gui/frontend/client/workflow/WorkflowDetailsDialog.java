@@ -360,7 +360,7 @@ public class WorkflowDetailsDialog extends Window {
 				reassignUserForm.setTitleOrientation(TitleOrientation.TOP);
 				reassignUserForm.setNumCols(1);
 				reassignUserForm.setValuesManager(vm);
-				user = ItemFactory.newUserSelector("user", I18N.message("user"));
+				user = ItemFactory.newUserSelector("user", I18N.message("user"), null);
 				user.setShowTitle(true);
 				user.setDisplayField("username");
 				user.addChangedHandler(new ChangedHandler() {
