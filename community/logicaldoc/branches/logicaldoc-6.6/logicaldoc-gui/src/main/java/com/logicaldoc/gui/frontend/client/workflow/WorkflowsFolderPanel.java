@@ -22,6 +22,7 @@ import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.SubmitItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -72,7 +73,7 @@ public class WorkflowsFolderPanel extends VLayout {
 				final Window window = new Window();
 				window.setTitle(I18N.message("workflowtriggertext"));
 				window.setWidth(400);
-				window.setHeight(400);
+				window.setHeight(420);
 				window.setCanDragResize(true);
 				window.setIsModal(true);
 				window.setShowModalMask(true);
@@ -110,9 +111,12 @@ public class WorkflowsFolderPanel extends VLayout {
 				templates.setMultipleAppearance(MultipleAppearance.GRID);
 				templateForm.setItems(templates);
 
+				final RadioGroupItem checkin = ItemFactory.newBooleanSelector("checkin", I18N.message("triggerateverycheckin"));
+				checkin.setValue("no");
+				checkin.setWrapTitle(false);
+
 				DynamicForm form = new DynamicForm();
-				form.setTitleOrientation(TitleOrientation.TOP);
-				form.setNumCols(1);
+				form.setTitleOrientation(TitleOrientation.LEFT);
 
 				SubmitItem saveButton = new SubmitItem("save", I18N.message("save"));
 				saveButton.setAlign(Alignment.LEFT);
@@ -129,7 +133,8 @@ public class WorkflowsFolderPanel extends VLayout {
 							}
 
 							service.saveTrigger(Session.get().getSid(), Long.toString(getFolder().getId()),
-									workflowSelectedId, templateSelectedId, new AsyncCallback<Void>() {
+									workflowSelectedId, templateSelectedId,
+									"yes".equals(checkin.getValueAsString()) ? 1 : 0, new AsyncCallback<Void>() {
 										@Override
 										public void onFailure(Throwable caught) {
 											Log.serverError(caught);
@@ -148,7 +153,7 @@ public class WorkflowsFolderPanel extends VLayout {
 					}
 				});
 
-				form.setFields(saveButton);
+				form.setFields(checkin, saveButton);
 
 				layout.addMember(workflowForm);
 				layout.addMember(templateForm);
@@ -169,6 +174,11 @@ public class WorkflowsFolderPanel extends VLayout {
 
 		ListGridField template = new ListGridField("template", I18N.message("template"), 200);
 		template.setCanFilter(true);
+		
+		ListGridField checkin = new ListGridField("triggerAtCheckin", I18N.message("triggeratcheckin"));
+		checkin.setCanFilter(false);
+		checkin.setAlign(Alignment.LEFT);
+		checkin.setWidth("*");
 
 		list = new ListGrid() {
 			@Override
@@ -184,10 +194,10 @@ public class WorkflowsFolderPanel extends VLayout {
 		list.setAutoFetchData(true);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setFilterOnKeypress(true);
-		list.setShowFilterEditor(true);
+		list.setShowFilterEditor(false);
 		list.setDataSource(new WorkflowTriggersDS("" + folder.getId()));
 		list.invalidateCache();
-		list.setFields(workflow, template);
+		list.setFields(workflow, template, checkin);
 
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
