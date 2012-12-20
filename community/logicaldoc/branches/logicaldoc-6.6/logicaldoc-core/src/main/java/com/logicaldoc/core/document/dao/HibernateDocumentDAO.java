@@ -292,7 +292,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 			// Save the document
 			getHibernateTemplate().saveOrUpdate(doc);
-
+			getHibernateTemplate().flush();
+			
 			log.debug("Invoke listeners after store");
 			for (DocumentListener listener : listenerManager.getListeners()) {
 				listener.afterStore(doc, transaction, dictionary);
@@ -304,6 +305,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			if (!"bulkload".equals(config.getProperty("runlevel"))) {
 				// Perhaps some listeners may have modified the document
 				getHibernateTemplate().saveOrUpdate(doc);
+				getHibernateTemplate().flush();
 
 				saveDocumentHistory(doc, transaction);
 			}
