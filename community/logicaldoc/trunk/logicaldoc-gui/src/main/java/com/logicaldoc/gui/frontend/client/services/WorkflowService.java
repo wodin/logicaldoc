@@ -55,7 +55,7 @@ public interface WorkflowService extends RemoteService {
 	 * Save a new workflow trigger on the given folder with the given workflowId
 	 * and templateId.
 	 */
-	public void saveTrigger(String sid, String folderId, String workflowId, String templateId)
+	public void saveTrigger(String sid, String folderId, String workflowId, String templateId, int startAtCheckin)
 			throws InvalidSessionException;
 
 	/**

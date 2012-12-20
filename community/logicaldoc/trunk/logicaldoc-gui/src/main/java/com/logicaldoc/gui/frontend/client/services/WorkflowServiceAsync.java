@@ -19,7 +19,7 @@ public interface WorkflowServiceAsync {
 
 	void deleteTrigger(String sid, String subtype, AsyncCallback<Void> callback);
 
-	void saveTrigger(String sid, String folderId, String workflowId, String templateId, AsyncCallback<Void> callback);
+	void saveTrigger(String sid, String folderId, String workflowId, String templateId, int startAtCheckin, AsyncCallback<Void> callback);
 
 	void startWorkflow(String sid, String workflowName, String workflowDescription, String docIds,
 			AsyncCallback<Void> callback);
