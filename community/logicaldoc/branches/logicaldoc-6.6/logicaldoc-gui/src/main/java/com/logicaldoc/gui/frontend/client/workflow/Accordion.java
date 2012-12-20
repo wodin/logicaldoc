@@ -93,7 +93,7 @@ public class Accordion extends SectionStack {
 				"<b>" + I18N.message("supervisor") + "</b>");
 		supervisorItem.setShouldSaveValue(false);
 		supervisorItem.setWrapTitle(false);
-		supervisor = ItemFactory.newUserSelector("supervisor", " ");
+		supervisor = ItemFactory.newUserSelector("supervisor", " ", null);
 		supervisor.setShowTitle(false);
 		supervisor.setDisplayField("username");
 		supervisor.addChangedHandler(new ChangedHandler() {

@@ -138,7 +138,7 @@ public class MenuRightsPanel extends VLayout {
 		});
 
 		final DynamicForm userForm = new DynamicForm();
-		final SelectItem user = ItemFactory.newUserSelector("user", "adduser");
+		final SelectItem user = ItemFactory.newUserSelector("user", "adduser", null);
 		userForm.setItems(user);
 
 		user.addChangedHandler(new ChangedHandler() {

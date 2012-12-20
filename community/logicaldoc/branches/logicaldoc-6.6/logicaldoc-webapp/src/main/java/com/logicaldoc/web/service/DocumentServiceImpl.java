@@ -398,6 +398,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					att.setLabel(extAttr.getLabel());
 					att.setMandatory(extAttr.getMandatory() == 1);
 					att.setEditor(extAttr.getEditor());
+					att.setStringValue(extAttr.getStringValue());
 
 					// If the case, populate the options
 					if (att.getEditor() == ExtendedAttribute.EDITOR_LISTBOX) {
@@ -410,16 +411,17 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 								list.add(val);
 						}
 						att.setOptions(list.toArray(new String[0]));
+					} else {
+						att.setOptions(new String[] { extAttr.getStringValue() });
 					}
 
-					
 					if (doc != null) {
 						if (doc.getValue(attrName) != null)
 							att.setValue(doc.getValue(attrName));
 					} else
 						att.setValue(extAttr.getValue());
 					att.setType(extAttr.getType());
-					
+
 					attributes[i] = att;
 					i++;
 				}
@@ -920,7 +922,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						// attributes keys that remains on the form
 						// value manager
 						if (attr.getValue().toString().trim().isEmpty() && templateType != 0) {
-							if (templateType == ExtendedAttribute.TYPE_INT || templateType == ExtendedAttribute.TYPE_BOOLEAN) {
+							if (templateType == ExtendedAttribute.TYPE_INT
+									|| templateType == ExtendedAttribute.TYPE_BOOLEAN) {
 								extAttr.setIntValue(null);
 							} else if (templateType == ExtendedAttribute.TYPE_DOUBLE) {
 								extAttr.setDoubleValue(null);
@@ -946,7 +949,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 							else
 								extAttr.setIntValue(null);
 						} else if (templateType == ExtendedAttribute.TYPE_BOOLEAN) {
-							if (attr.getBooleanValue()!= null)
+							if (attr.getBooleanValue() != null)
 								extAttr.setValue(attr.getBooleanValue());
 							else
 								extAttr.setBooleanValue(null);
