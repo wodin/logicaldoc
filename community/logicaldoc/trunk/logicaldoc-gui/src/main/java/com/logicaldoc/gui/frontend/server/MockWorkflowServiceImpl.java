@@ -199,7 +199,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	}
 
 	@Override
-	public void saveTrigger(String sid, String folderId, String workflowId, String templateId)
+	public void saveTrigger(String sid, String folderId, String workflowId, String templateId, int startAtCheckin)
 			throws InvalidSessionException {
 	}
 
