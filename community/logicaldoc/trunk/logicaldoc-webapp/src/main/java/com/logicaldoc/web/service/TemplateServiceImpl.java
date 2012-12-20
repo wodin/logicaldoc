@@ -191,15 +191,22 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 					att.setBooleanValue(extAttr.getBooleanValue());
 
 				att.setEditor(extAttr.getEditor());
-				if (extAttr.getEditor() == ExtendedAttribute.EDITOR_LISTBOX) {
+				if (extAttr.getType() == ExtendedAttribute.TYPE_USER
+						|| extAttr.getEditor() == ExtendedAttribute.EDITOR_LISTBOX) {
 					String buf = (String) extAttr.getStringValue();
 					List<String> list = new ArrayList<String>();
-					StringTokenizer st = new StringTokenizer(buf, ",");
-					while (st.hasMoreElements()) {
-						String val = (String) st.nextElement();
-						if (!list.contains(val))
-							list.add(val);
-					}
+					if (buf != null) {
+						if (buf.contains(",")) {
+							StringTokenizer st = new StringTokenizer(buf, ",");
+							while (st.hasMoreElements()) {
+								String val = (String) st.nextElement();
+								if (!list.contains(val))
+									list.add(val);
+							}
+						} else
+							list.add(buf.trim());
+						att.setStringValue(buf);
+					}					
 					att.setOptions(list.toArray(new String[0]));
 				}
 				attributes[i] = att;

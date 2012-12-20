@@ -234,7 +234,9 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 						item.setDisabled(!update);
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
-						SelectItem item = ItemFactory.newUserSelectorForExtendedAttribute(att.getName(), att.getLabel());
+						SelectItem item = ItemFactory.newUserSelectorForExtendedAttribute(att.getName(),
+								att.getLabel(),
+								(att.getOptions() != null && att.getOptions().length > 0) ? att.getOptions()[0] : null);
 						if (folder.getValue(att.getName()) != null)
 							item.setValue((folder.getValue(att.getName()).toString()));
 						item.addChangedHandler(changedHandler);
