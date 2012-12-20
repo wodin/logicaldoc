@@ -92,8 +92,8 @@ public class ItemFactory {
 		return date;
 	}
 
-	public static SelectItem newUserSelectorForExtendedAttribute(String name, String title) {
-		final SelectItem item = new UserSelector("_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER), title);
+	public static SelectItem newUserSelectorForExtendedAttribute(String name, String title, String groupIdOrName) {
+		final SelectItem item = new UserSelector("_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER), title, groupIdOrName);
 		return item;
 	}
 
@@ -222,7 +222,7 @@ public class ItemFactory {
 		return group;
 	}
 
-	public static SelectItem newUserSelector(String name, String title) {
+	public static SelectItem newUserSelector(String name, String title, String groupIdOrName) {
 		SelectItem user = new SelectItem(filterItemName(name));
 		user.setTitle(I18N.message(title));
 		user.setWrapTitle(false);
@@ -232,7 +232,7 @@ public class ItemFactory {
 		user.setDisplayField("username");
 		user.setPickListWidth(300);
 		user.setPickListFields(username, label);
-		user.setOptionDataSource(new UsersDS(null));
+		user.setOptionDataSource(new UsersDS(groupIdOrName));
 		user.setHintStyle("hint");
 		return user;
 	}

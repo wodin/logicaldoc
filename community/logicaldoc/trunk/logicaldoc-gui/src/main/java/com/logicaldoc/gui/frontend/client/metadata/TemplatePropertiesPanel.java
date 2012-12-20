@@ -150,7 +150,7 @@ public class TemplatePropertiesPanel extends HLayout {
 	protected void fillAttributesList(long templateId) {
 		// Get the template attributes
 		templateService.getTemplate(Session.get().getSid(), templateId, new AsyncCallback<GUITemplate>() {
-			
+
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);
@@ -301,6 +301,7 @@ public class TemplatePropertiesPanel extends HLayout {
 				form2.getField("type").setDisabled(false);
 				form2.getField("editor").setDisabled(false);
 				form2.getField("values").setDisabled(true);
+				refreshFieldForm();
 			}
 		});
 		if (!template.isReadonly()) {
@@ -361,7 +362,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		// Values (for preset editor)
 		values = ItemFactory.newTextItem("values", "values", null);
 		values.setHint(I18N.message("separatedcomma"));
-		values.setDisabled(true);
+		values.setDisabled(template.isReadonly());
 
 		ButtonItem addUpdate = new ButtonItem();
 		addUpdate.setTitle(I18N.message("addupdate"));
@@ -380,8 +381,10 @@ public class TemplatePropertiesPanel extends HLayout {
 						att.setMandatory((Boolean) mandatory.getValue());
 						att.setType(Integer.parseInt((String) type.getValue()));
 						att.setEditor(Integer.parseInt((String) editor.getValue()));
-						if (att.getEditor() == GUIExtendedAttribute.EDITOR_LISTBOX)
+						if (att.getType() == GUIExtendedAttribute.TYPE_USER
+								|| (att.getType() == GUIExtendedAttribute.TYPE_STRING && att.getEditor() == GUIExtendedAttribute.EDITOR_LISTBOX))
 							att.setStringValue(values.getValueAsString());
+
 						if (form2.validate()) {
 							changedHandler.onChanged(null);
 							addAttribute(att);
@@ -396,7 +399,8 @@ public class TemplatePropertiesPanel extends HLayout {
 							att.setType(Integer.parseInt(type.getValueAsString()));
 							att.setEditor(Integer.parseInt((String) editor.getValueAsString()));
 
-							if (att.getEditor() == GUIExtendedAttribute.EDITOR_LISTBOX)
+							if (att.getType() == GUIExtendedAttribute.TYPE_USER
+									|| (att.getType() == GUIExtendedAttribute.TYPE_STRING && att.getEditor() == GUIExtendedAttribute.EDITOR_LISTBOX))
 								att.setStringValue(values.getValueAsString());
 							else
 								att.setStringValue(null);
@@ -420,6 +424,8 @@ public class TemplatePropertiesPanel extends HLayout {
 		attributesLayout.setMembersMargin(15);
 		attributesLayout.setWidth(250);
 		addMember(attributesLayout);
+
+		refreshFieldForm();
 	}
 
 	protected void addTemplateMetadata(boolean readonly) {
@@ -528,7 +534,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				final ListGridRecord[] selection = attributesList.getSelection();
+				final ListGridRecord[] selection = attributesList.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
 				final String[] names = new String[selection.length];
@@ -572,18 +578,26 @@ public class TemplatePropertiesPanel extends HLayout {
 	}
 
 	public void refreshFieldForm() {
-		if (form2.getValueAsString("type").equals("" + GUIExtendedAttribute.TYPE_STRING)) {
-			editor.setDisabled(false);
+		if (type.getValueAsString().equals("" + GUIExtendedAttribute.TYPE_STRING)) {
+			editor.setVisible(true);
+			values.setTitle(I18N.message("values"));
+			values.setHint(I18N.message("separatedcomma"));
 
-			if (form2.getValueAsString("editor").equals("" + GUIExtendedAttribute.EDITOR_LISTBOX)) {
-				values.setDisabled(false);
-			} else {
-				values.setDisabled(true);
-			}
+			if (editor.getValueAsString().equals("" + GUIExtendedAttribute.EDITOR_LISTBOX)) {
+				values.setVisible(true);
+			} else
+				values.setVisible(false);
+		} else if (type.getValueAsString().equals("" + GUIExtendedAttribute.TYPE_USER)) {
+			editor.setVisible(false);
+			values.setVisible(true);
+			values.setTitle(I18N.message("group"));
+			values.setHint(I18N.message("groupname"));
 		} else {
-			editor.setDisabled(true);
-			values.setDisabled(true);
+			editor.setVisible(false);
+			values.setVisible(false);
 		}
+
+		form2.redraw();
 	}
 
 	protected void onContextMenuCreation(int category, String attributeName) {

@@ -74,7 +74,7 @@ public class TaskNotificationPanel extends VLayout {
 
 		items.add(sendReport);
 
-		final SelectItem user = ItemFactory.newUserSelector("notificationUsers", "user");
+		final SelectItem user = ItemFactory.newUserSelector("notificationUsers", "user", null);
 		user.setHintStyle("hint");
 		user.addChangedHandler(new ChangedHandler() {
 			@Override

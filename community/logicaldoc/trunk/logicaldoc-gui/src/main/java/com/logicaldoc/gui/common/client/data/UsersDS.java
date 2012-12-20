@@ -12,7 +12,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class UsersDS extends DataSource {
-	public UsersDS(Long grpId) {
+	public UsersDS(String groupIdOrName) {
 		setTitleField("label");
 		setRecordXPath("/list/user");
 
@@ -30,11 +30,11 @@ public class UsersDS extends DataSource {
 		DataSourceTextField usergroup = new DataSourceTextField("usergroup");
 
 		setFields(id, username, label, enabled, name, firstName, email, phone, cell, usergroup);
-		setDataURL("data/users.xml?sid=" + Session.get().getSid() + (grpId != null ? "&groupId=" + grpId : ""));
+		setDataURL("data/users.xml?sid=" + Session.get().getSid() + (groupIdOrName != null ? "&groupId=" + groupIdOrName : ""));
 		setClientOnly(true);
 	}
 
 	public static UsersDS get(long groupId) {
-		return new UsersDS(groupId);
+		return new UsersDS(Long.toString(groupId));
 	}
 }
