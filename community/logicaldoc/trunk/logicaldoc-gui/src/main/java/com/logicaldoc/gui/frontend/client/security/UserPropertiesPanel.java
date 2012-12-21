@@ -88,6 +88,7 @@ public class UserPropertiesPanel extends HLayout {
 		form1.setValuesManager(vm);
 		form1.setWrapItemTitles(false);
 		form1.setTitleOrientation(TitleOrientation.TOP);
+		form1.setNumCols(3);
 
 		layout.addMember(form1, 1);
 
@@ -104,6 +105,14 @@ public class UserPropertiesPanel extends HLayout {
 		} else {
 			enabled.addChangedHandler(changedHandler);
 		}
+
+		CheckboxItem changeAtLogin = new CheckboxItem("changeAtLogin", I18N.message("changeatfirstlogin"));
+		changeAtLogin.setValue(false);
+		changeAtLogin.setVisible(user.getId() == 0);
+
+		CheckboxItem notifyCredentials = new CheckboxItem("notifyCredentials", I18N.message("notifycredentials"));
+		notifyCredentials.setValue(true);
+		notifyCredentials.setVisible(user.getId() == 0);
 
 		TextItem username = ItemFactory.newTextItem("username", "username", user.getUserName());
 		username.setRequired(true);
@@ -172,8 +181,12 @@ public class UserPropertiesPanel extends HLayout {
 		if (!readonly)
 			email.addChangedHandler(changedHandler);
 
-		form1.setItems(enabled, expires, username, email, firstname, name, language, address, postalcode, city,
-				country, state, phone, cell);
+		if (user.getId() == 0L)
+			form1.setItems(changeAtLogin, notifyCredentials, enabled, expires, username, email, language, firstname,
+					name, address, postalcode, city, country, state, phone, cell);
+		else
+			form1.setItems(username, changeAtLogin, notifyCredentials, enabled, expires, email, firstname, name,
+					language, address, postalcode, city, country, state, phone, cell);
 		addMember(layout);
 
 		refreshAddingGroup();
@@ -271,6 +284,11 @@ public class UserPropertiesPanel extends HLayout {
 			user.setPhone((String) values.get("phone"));
 			user.setCell((String) values.get("cell"));
 			user.setEmail((String) values.get("email"));
+
+			if (user.getId() == 0L) {
+				user.setNotifyCredentials(new Boolean(values.get("notifyCredentials").toString()));
+				user.setPasswordExpired(new Boolean(values.get("changeAtLogin").toString()));
+			}
 		}
 
 		// The user must have at least one group (of standard type)

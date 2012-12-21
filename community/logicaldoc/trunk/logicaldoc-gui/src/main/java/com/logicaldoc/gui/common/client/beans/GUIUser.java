@@ -40,7 +40,9 @@ public class GUIUser implements Serializable {
 
 	private String language = "en";
 
-	private boolean expired = true;
+	private boolean notifyCredentials = true;
+
+	private boolean passwordExpired = true;
 
 	private int passwordMinLenght = 0;
 
@@ -154,14 +156,6 @@ public class GUIUser implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public boolean isExpired() {
-		return expired;
-	}
-
-	public void setExpired(boolean expired) {
-		this.expired = expired;
 	}
 
 	public int getPasswordMinLenght() {
@@ -455,5 +449,21 @@ public class GUIUser implements Serializable {
 
 	public void setDashlets(GUIDashlet[] dashlets) {
 		this.dashlets = dashlets;
+	}
+
+	public boolean isNotifyCredentials() {
+		return notifyCredentials;
+	}
+
+	public void setNotifyCredentials(boolean notifyCredentials) {
+		this.notifyCredentials = notifyCredentials;
+	}
+
+	public boolean isPasswordExpired() {
+		return passwordExpired;
+	}
+
+	public void setPasswordExpired(boolean passwordExpired) {
+		this.passwordExpired = passwordExpired;
 	}
 }
