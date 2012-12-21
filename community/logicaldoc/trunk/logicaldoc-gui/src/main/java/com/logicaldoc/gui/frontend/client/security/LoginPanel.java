@@ -238,7 +238,7 @@ public class LoginPanel extends VLayout {
 						loggingIn = false;
 						if (session.isLoggedIn()) {
 							onLoggedIn(session);
-						} else if (session.getUser() != null && session.getUser().isExpired()) {
+						} else if (session.getUser() != null && session.getUser().isPasswordExpired()) {
 							new ChangePassword(session.getUser(), "needtochangepassword").show();
 						} else {
 							SC.warn(I18N.message("accesdenied"));

@@ -35,7 +35,7 @@ create table ld_user (ld_id bigint not null, ld_lastmodified timestamp not null,
                       ld_telephone2 varchar(255), ld_type int not null, ld_passwordchanged timestamp, ld_passwordexpires int not null,
                       ld_source int not null, ld_quota bigint not null, ld_quotacount bigint not null, ld_signatureid varchar(255), 
                       ld_signatureinfo varchar(255), ld_welcomescreen int null, ld_ipwhitelist varchar(4000), 
-                      ld_ipblacklist varchar(4000),  primary key (ld_id));
+                      ld_ipblacklist varchar(4000), ld_passwordexpired int not null,  primary key (ld_id));
 create table ld_user_history (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_userid bigint, ld_date timestamp, ld_username varchar(255), ld_event varchar(255), ld_comment varchar(4000), ld_notified int not null, ld_sessionid varchar(255), ld_new int, ld_filename varchar(255), primary key (ld_id));
 create table ld_userdoc (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_userid bigint not null, ld_date timestamp, primary key (ld_id));
 create table ld_usergroup (ld_groupid bigint not null, ld_userid bigint not null, primary key (ld_groupid, ld_userid));
@@ -196,8 +196,8 @@ values     (-10000,CURRENT_TIMESTAMP,0,'publisher','Group of publishers',0);
 
 
 insert into ld_user
-           (ld_id,ld_lastmodified,ld_deleted,ld_enabled,ld_username,ld_password,ld_name,ld_firstname,ld_street,ld_postalcode,ld_city,ld_country,ld_language,ld_email,ld_telephone,ld_telephone2,ld_type,ld_passwordchanged,ld_passwordexpires,ld_source,ld_quota,ld_quotacount,ld_welcomescreen)
-values     (1,CURRENT_TIMESTAMP,0,1,'admin','d033e22ae348aeb566fc214aec3585c4da997','Admin','Admin','','','','','en','admin@admin.net','','',0,null,0,0,-1,0,1520);
+           (ld_id,ld_lastmodified,ld_deleted,ld_enabled,ld_username,ld_password,ld_name,ld_firstname,ld_street,ld_postalcode,ld_city,ld_country,ld_language,ld_email,ld_telephone,ld_telephone2,ld_type,ld_passwordchanged,ld_passwordexpires,ld_source,ld_quota,ld_quotacount,ld_welcomescreen,ld_passwordexpired)
+values     (1,CURRENT_TIMESTAMP,0,1,'admin','d033e22ae348aeb566fc214aec3585c4da997','Admin','Admin','','','','','en','admin@admin.net','','',0,null,0,0,-1,0,1520,0);
 insert into ld_group
 values     (-1,CURRENT_TIMESTAMP,0,'_user_1','',1);
 insert into ld_usergroup

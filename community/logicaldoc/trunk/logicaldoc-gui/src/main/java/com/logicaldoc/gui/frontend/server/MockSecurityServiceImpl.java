@@ -54,7 +54,7 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 			user.setFirstName("Marco");
 			user.setName("Meschieri");
 			user.setEmail("m.mesdchieri@logicalobjects.it");
-			user.setExpired(false);
+			user.setPasswordExpired(false);
 			user.setPasswordMinLenght(8);
 			user.setLockedDocs(5);
 			user.setCheckedOutDocs(1);
@@ -70,7 +70,7 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 		} else if ("author".equals(username)) {
 			GUIUser user = new GUIUser();
 			user.setId(100);
-			user.setExpired(true);
+			user.setPasswordExpired(true);
 			user.setPasswordMinLenght(8);
 			user.setLanguage(loc);
 			session.setUser(user);
