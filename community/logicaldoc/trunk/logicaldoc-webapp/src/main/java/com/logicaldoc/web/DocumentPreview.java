@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -160,7 +162,7 @@ public class DocumentPreview extends HttpServlet {
 				log.error(t.getMessage(), t);
 			}
 		}
-		
+
 		if (resource.endsWith(".jpg"))
 			return;
 
@@ -269,7 +271,7 @@ public class DocumentPreview extends HttpServlet {
 
 	/**
 	 * Convert a generic document(image or PDF) to SWF (for document preview
-	 * feature).
+	 * feature). The page files are ordered.
 	 */
 	protected File[] document2swf(InputStream is, String extension, File root) throws IOException {
 		File tmp = File.createTempFile("preview", "." + extension.toLowerCase());
@@ -338,39 +340,39 @@ public class DocumentPreview extends HttpServlet {
 				commandLine.add("-T 9");
 			}
 
-			
-			if(command.contains("pdf2swf")){
+			if (command.contains("pdf2swf")) {
 				/*
-				 * Save the preview as multiple SWFs, this will allow for handling
-				 * huge documents composed by several pages.
+				 * Save the preview as multiple SWFs, this will allow for
+				 * handling huge documents composed by several pages.
 				 */
 				commandLine.add(tmp.getPath());
-				commandLine.add(root.getAbsolutePath() + File.separator + "page-%");	
-			}else{
-				commandLine.add("-o "+root.getAbsolutePath() + File.separator + "page-1");
+				commandLine.add(root.getAbsolutePath() + File.separator + "page-%");
+			} else {
+				commandLine.add("-o " + root.getAbsolutePath() + File.separator + "page-1");
 				commandLine.add(tmp.getPath());
 			}
-			
+
 			log.debug("Executing command: " + commandLine.toString());
-			
+
 			int timeout = 20;
 			try {
 				timeout = Integer.parseInt(conf.getProperty("gui.preview.timeout"));
 			} catch (Throwable t) {
 			}
-			
-			if(command.contains("pdf2swf"))
+
+			if (command.contains("pdf2swf"))
 				Exec.exec(commandLine, null, null, timeout);
-			else{
-				//Seems that commands like jpeg2swf need to be executed as a single line command
-				StringBuffer sb=new StringBuffer();
+			else {
+				// Seems that commands like jpeg2swf need to be executed as a
+				// single line command
+				StringBuffer sb = new StringBuffer();
 				for (String cmd : commandLine) {
 					sb.append(cmd);
 					sb.append(" ");
 				}
 				Exec.exec(sb.toString(), null, null, timeout);
 			}
-				
+
 		} catch (Throwable e) {
 			FileUtils.deleteQuietly(root);
 			log.error("Error in document to SWF conversion", e);
@@ -380,14 +382,27 @@ public class DocumentPreview extends HttpServlet {
 			FileUtils.deleteQuietly(tmp);
 		}
 
-		if (root.exists())
-			return root.listFiles(new FilenameFilter() {
+		if (root.exists()) {
+			File[] pages = root.listFiles(new FilenameFilter() {
 				@Override
 				public boolean accept(File dir, String name) {
 					return name.startsWith("page-");
 				}
 			});
-		else
+
+			Arrays.sort(pages, new Comparator<File>() {
+				@Override
+				public int compare(File f1, File f2) {
+					String name1=f1.getName();
+					String name2=f2.getName();
+					Integer n1=new Integer(name1.substring(5));
+					Integer n2=new Integer(name2.substring(5));
+					return n1.compareTo(n2);
+				}
+			});
+	
+			return pages;
+		} else
 			return new File[0];
 	}
 }
