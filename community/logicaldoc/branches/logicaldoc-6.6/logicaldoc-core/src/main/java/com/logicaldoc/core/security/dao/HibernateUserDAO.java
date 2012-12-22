@@ -199,12 +199,15 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 	@Override
 	public boolean isPasswordExpired(String username) {
-		if (getPasswordTtl() <= 0)
-			return false;
-
 		try {
 			User user = findByUserName(username);
 			if (user == null)
+				return false;
+
+			if (user.getPasswordExpired() == 1)
+				return true;
+
+			if (getPasswordTtl() <= 0)
 				return false;
 
 			// Check if the password is expired

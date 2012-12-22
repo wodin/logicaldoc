@@ -294,7 +294,7 @@ public class UserDetailsPanel extends VLayout {
 				@Override
 				public void onSuccess(GUIUser user) {
 					savePanel.setVisible(false);
-					if (createNew)
+					if (createNew && user.isNotifyCredentials())
 						Log.info(I18N.message("emailnotifyaccountsent"), I18N.message("emailnotifyaccountsent"));
 					if (user != null) {
 						usersPanel.updateRecord(user);

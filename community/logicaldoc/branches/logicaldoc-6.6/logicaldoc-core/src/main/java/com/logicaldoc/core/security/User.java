@@ -77,6 +77,9 @@ public class User extends PersistentObject implements Serializable {
 
 	// If the password expires or not
 	private int passwordExpires = 0;
+	
+	// If the password already expired
+	private int passwordExpired = 0;
 
 	// Only for GUI
 	private String repass;
@@ -439,5 +442,13 @@ public class User extends PersistentObject implements Serializable {
 
 	public void setIpBlackList(String ipBlackList) {
 		this.ipBlackList = ipBlackList;
+	}
+
+	public int getPasswordExpired() {
+		return passwordExpired;
+	}
+
+	public void setPasswordExpired(int passwordExpired) {
+		this.passwordExpired = passwordExpired;
 	}
 }
