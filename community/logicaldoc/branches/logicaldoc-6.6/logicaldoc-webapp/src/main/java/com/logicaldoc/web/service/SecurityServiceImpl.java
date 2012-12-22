@@ -105,7 +105,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			} else if (userDao.isPasswordExpired(username)) {
 				User user = userDao.findByUserName(username);
 				guiUser.setId(user.getId());
-				guiUser.setExpired(true);
+				guiUser.setPasswordExpired(true);
 				guiUser.setLanguage(user.getLanguage());
 				session.setUser(guiUser);
 				session.setLoggedIn(false);
@@ -164,7 +164,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		guiUser.setGroups(groups);
 
 		guiUser.setUserName(user.getUserName());
-		guiUser.setExpired(false);
+		guiUser.setPasswordExpired(false);
 
 		guiUser.setLockedDocs(documentDao.findByLockUserAndStatus(user.getId(), AbstractDocument.DOC_LOCKED).size());
 		guiUser.setCheckedOutDocs(documentDao.findByLockUserAndStatus(user.getId(), AbstractDocument.DOC_CHECKED_OUT)
@@ -270,6 +270,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			// The password was changed
 			user.setDecodedPassword(newPassword);
 			user.setPasswordChanged(new Date());
+			user.setPasswordExpired(0);
+
 			// Add a user history entry
 			history = new UserHistory();
 			history.setUser(user);
@@ -372,6 +374,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				usr.setState(user.getState());
 				usr.setUserName(user.getUserName());
 				usr.setPasswordExpires(user.getPasswordExpires() == 1);
+				usr.setPasswordExpired(user.getPasswordExpired() == 1);
 				usr.setSignatureId(user.getSignatureId());
 				usr.setSignatureInfo(user.getSignatureInfo());
 				usr.setWelcomeScreen(user.getWelcomeScreen());
@@ -514,7 +517,16 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				ContextProperties pbean = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 				decodedPassword = new PasswordGenerator().generate(pbean.getInt("password.size"));
 				usr.setDecodedPassword(decodedPassword);
-				usr.setPasswordChanged(new Date());
+
+				if (user.isPasswordExpired()) {
+					/*
+					 * We want the user to change his password at the first
+					 * login
+					 */
+					usr.setPasswordChanged(new Date(10000));
+					usr.setPasswordExpired(1);
+				} else
+					usr.setPasswordChanged(new Date());
 			}
 
 			boolean stored = userDao.store(usr);
@@ -534,7 +546,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			Group adminGroup = groupDao.findByName("admin");
 			groupDao.initialize(adminGroup);
 
-			// The admin user must always member of admin group
+			// The admin user must be always member of admin group
 			if ("admin".equals(user.getUserName()) && !user.isMemberOf("admin")) {
 				manager.assignUserToGroup(usr, adminGroup);
 			}
@@ -544,7 +556,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				throw new Exception("User not stored");
 			else {
 				// Notify the user by email
-				if (createNew)
+				if (createNew && user.isNotifyCredentials())
 					try {
 						notifyAccount(usr, decodedPassword, info);
 					} catch (Throwable e) {

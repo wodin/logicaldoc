@@ -14,6 +14,7 @@
 		<property name="password" type="string" column="ld_password" length="255" />
 		<property name="passwordChanged" type="timestamp" column="ld_passwordchanged"  />
 		<property name="passwordExpires" type="int" column="ld_passwordexpires" not-null="true"/>
+		<property name="passwordExpired" type="int" column="ld_passwordexpired" not-null="true"/>
 		<property name="name" type="string" column="ld_name" length="255" />
 		<property name="firstName" type="string" column="ld_firstname" length="255" />
 		<property name="street" type="string" column="ld_street" length="255" />
