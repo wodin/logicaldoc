@@ -204,7 +204,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	}
 
 	@Override
-	public void startWorkflow(String sid, String workflowName, String workflowDescription, String docIds)
+	public void startWorkflow(String sid, String workflowName, String workflowDescription, long[] docIds)
 			throws InvalidSessionException {
 	}
 
@@ -253,7 +253,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	}
 
 	@Override
-	public void appendDocuments(String sid, String taskId, String docIds) throws InvalidSessionException {
+	public void appendDocuments(String sid, String taskId, long[] docIds) throws InvalidSessionException {
 	}
 
 	@Override
