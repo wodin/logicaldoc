@@ -20,6 +20,7 @@ import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.document.SendToArchiveDialog;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.search.Search;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -478,6 +479,22 @@ public class Navigator extends TreeGrid implements FolderObserver {
 			}
 		});
 
+		MenuItem archive = new MenuItem();
+		archive.setTitle(I18N.message("sendtoarchive"));
+		archive.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				LD.ask(I18N.message("question"), I18N.message("confirmarchive"), new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							SendToArchiveDialog archiveDialog = new SendToArchiveDialog(new long[] { id }, false);
+							archiveDialog.show();
+						}
+					}
+				});
+			}
+		});
+
 		if (!folder.hasPermission(Constants.PERMISSION_ADD)) {
 			create.setEnabled(false);
 		}
@@ -527,6 +544,13 @@ public class Navigator extends TreeGrid implements FolderObserver {
 		if (Feature.visible(Feature.FOLDER_TEMPLATE)) {
 			contextMenu.addItem(applyItem);
 			applyItem.setEnabled(Feature.enabled(Feature.FOLDER_TEMPLATE));
+		}
+
+		if (Feature.visible(Feature.ARCHIVES)) {
+			contextMenu.addItem(archive);
+			if (!Feature.enabled(Feature.ARCHIVES) || !folder.hasPermission(Constants.PERMISSION_EXPORT)
+					|| !folder.hasPermission(Constants.PERMISSION_DOWNLOAD))
+				archive.setEnabled(false);
 		}
 
 		return contextMenu;

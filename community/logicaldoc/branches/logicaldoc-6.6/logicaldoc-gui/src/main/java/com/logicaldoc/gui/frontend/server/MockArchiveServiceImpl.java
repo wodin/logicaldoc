@@ -117,4 +117,9 @@ public class MockArchiveServiceImpl extends RemoteServiceServlet implements Arch
 		versions[1] = version;
 		return versions;
 	}
+
+	@Override
+	public void addFolder(String sid, long archiveId, long rootId) throws InvalidSessionException {
+			
+	}
 }

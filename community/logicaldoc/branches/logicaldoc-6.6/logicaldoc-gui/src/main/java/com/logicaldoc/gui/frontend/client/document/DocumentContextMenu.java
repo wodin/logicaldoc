@@ -513,7 +513,7 @@ public class DocumentContextMenu extends Menu {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				SendDocsToArchiveDialog archiveDialog = new SendDocsToArchiveDialog(ids);
+				SendToArchiveDialog archiveDialog = new SendToArchiveDialog(ids, true);
 				archiveDialog.show();
 			}
 		});
