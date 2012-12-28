@@ -223,12 +223,10 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				if (selection == null || selection.length == 0)
 					return;
 
-				String ids = "";
+				final long[] ids = new long[selection.length];
 				for (int i = 0; i < selection.length; i++) {
-					ids += "," + selection[i].getAttribute("id");
+					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
-				if (ids.startsWith(","))
-					ids = ids.substring(1);
 
 				WorkflowDialog workflowDialog = new WorkflowDialog(ids);
 				workflowDialog.show();
@@ -245,12 +243,10 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				if (selection == null || selection.length == 0)
 					return;
 
-				String ids = "";
+				final long[] ids = new long[selection.length];
 				for (int i = 0; i < selection.length; i++) {
-					ids += "," + selection[i].getAttribute("id");
+					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
-				if (ids.startsWith(","))
-					ids = ids.substring(1);
 
 				workflowService.appendDocuments(Session.get().getSid(), Session.get().getCurrentWorkflow()
 						.getSelectedTask().getId(), ids, new AsyncCallback<Void>() {
