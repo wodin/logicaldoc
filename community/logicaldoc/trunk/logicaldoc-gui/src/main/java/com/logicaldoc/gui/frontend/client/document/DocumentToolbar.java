@@ -208,7 +208,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				SendDocsToArchiveDialog archiveDialog = new SendDocsToArchiveDialog(ids);
+				SendToArchiveDialog archiveDialog = new SendToArchiveDialog(ids, true);
 				archiveDialog.show();
 			}
 		});

@@ -19,18 +19,25 @@ import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
- * This popup window is used to send documents to an archive.
+ * This popup window is used to send documents or folders to an archive.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class SendDocsToArchiveDialog extends Window {
+public class SendToArchiveDialog extends Window {
 
 	private ArchiveServiceAsync service = (ArchiveServiceAsync) GWT.create(ArchiveService.class);
 
 	private DynamicForm form = new DynamicForm();
 
-	public SendDocsToArchiveDialog(final long[] ids) {
+	/**
+	 * Constructor
+	 * 
+	 * @param ids Identifiers of the elements that have to be archived
+	 * @param document True if the ids refers to documents, False in case of
+	 *        folders
+	 */
+	public SendToArchiveDialog(final long[] ids, final boolean document) {
 		VLayout layout = new VLayout();
 		layout.setMargin(25);
 
@@ -58,7 +65,7 @@ public class SendDocsToArchiveDialog extends Window {
 		send.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				onSend(ids);
+				onSend(ids, document);
 			}
 		});
 
@@ -66,23 +73,39 @@ public class SendDocsToArchiveDialog extends Window {
 		addChild(layout);
 	}
 
-	public void onSend(long[] ids) {
+	public void onSend(long[] ids, boolean document) {
 		if (!form.validate())
 			return;
 
-		service.addDocuments(Session.get().getSid(), Long.parseLong(form.getValueAsString("archive")), ids,
-				new AsyncCallback<Void>() {
+		if (document)
+			service.addDocuments(Session.get().getSid(), Long.parseLong(form.getValueAsString("archive")), ids,
+					new AsyncCallback<Void>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
 
-					@Override
-					public void onSuccess(Void result) {
-						Log.info(I18N.message("documentsaddedtoarchive"), null);
-						destroy();
-					}
-				});
+						@Override
+						public void onSuccess(Void result) {
+							Log.info(I18N.message("documentsaddedtoarchive"), null);
+							destroy();
+						}
+					});
+		else
+			service.addFolder(Session.get().getSid(), Long.parseLong(form.getValueAsString("archive")), ids[0],
+					new AsyncCallback<Void>() {
+
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
+
+						@Override
+						public void onSuccess(Void result) {
+							Log.info(I18N.message("documentsaddedtoarchive"), null);
+							destroy();
+						}
+					});
 	}
 }

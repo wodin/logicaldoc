@@ -47,6 +47,11 @@ public interface ArchiveService extends RemoteService {
 	public void addDocuments(String sid, long archiveId, long[] documentIds) throws InvalidSessionException;
 
 	/**
+	 * Adds a a folder(the current version of the contained documents at any level).
+	 */
+	public void addFolder(String sid, long archiveId, long rootId) throws InvalidSessionException;
+	
+	/**
 	 * Deletes a given incremental configuration
 	 */
 	public void deleteIncremental(String sid, long id) throws InvalidSessionException;
