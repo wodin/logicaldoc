@@ -22,6 +22,8 @@ public interface ArchiveServiceAsync {
 	void saveIncremental(String sid, GUIIncrementalArchive incremental, AsyncCallback<GUIIncrementalArchive> callback);
 
 	void addDocuments(String sid, long archiveId, long[] documentIds, AsyncCallback<Void> callback);
+	
+	void addFolder(String sid, long archiveId, long rootId, AsyncCallback<Void> callback);
 
 	void deleteFolder(String sid, String folderName, AsyncCallback<Void> callback);
 
