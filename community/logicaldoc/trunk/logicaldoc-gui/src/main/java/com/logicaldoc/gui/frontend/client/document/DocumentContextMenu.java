@@ -540,13 +540,11 @@ public class DocumentContextMenu extends Menu {
 				if (selection == null || selection.length == 0)
 					return;
 
-				String ids = "";
-				for (ListGridRecord rec : selection) {
-					ids += "," + rec.getAttributeAsString("id");
+				final long[] ids = new long[selection.length];
+				for (int j = 0; j < selection.length; j++) {
+					ids[j] = Long.parseLong(selection[j].getAttribute("id"));
 				}
-				if (ids.startsWith(","))
-					ids = ids.substring(1);
-
+				
 				WorkflowDialog workflowDialog = new WorkflowDialog(ids);
 				workflowDialog.show();
 			}
@@ -561,12 +559,10 @@ public class DocumentContextMenu extends Menu {
 				if (selection == null || selection.length == 0)
 					return;
 
-				String ids = "";
-				for (ListGridRecord rec : selection) {
-					ids += "," + rec.getAttributeAsString("id");
+				final long[] ids = new long[selection.length];
+				for (int j = 0; j < selection.length; j++) {
+					ids[j] = Long.parseLong(selection[j].getAttribute("id"));
 				}
-				if (ids.startsWith(","))
-					ids = ids.substring(1);
 
 				workflowService.appendDocuments(Session.get().getSid(), Session.get().getCurrentWorkflow()
 						.getSelectedTask().getId(), ids, new AsyncCallback<Void>() {

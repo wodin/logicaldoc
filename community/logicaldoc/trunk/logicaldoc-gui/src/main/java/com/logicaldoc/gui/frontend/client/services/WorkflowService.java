@@ -62,7 +62,7 @@ public interface WorkflowService extends RemoteService {
 	 * Start a workflow with the given name and associated to the documents with
 	 * the given doc ids.
 	 */
-	public void startWorkflow(String sid, String workflowName, String workflowDescription, String docIds)
+	public void startWorkflow(String sid, String workflowName, String workflowDescription, long[] docIds)
 			throws InvalidSessionException;
 
 	/**
@@ -121,5 +121,5 @@ public interface WorkflowService extends RemoteService {
 	 * Appends to the workflow of the given taskId the documents with the given
 	 * doc ids.
 	 */
-	public void appendDocuments(String sid, String taskId, String docIds) throws InvalidSessionException;
+	public void appendDocuments(String sid, String taskId, long[] docIds) throws InvalidSessionException;
 }

@@ -704,18 +704,19 @@ public class ItemFactory {
 	}
 
 	public static SelectItem newWorkflowSelector() {
-		SelectItem workflowItem = new SelectItem("workflow", I18N.message("workflow"));
-		workflowItem.setWidth(250);
-		workflowItem.setHeight(200);
-		workflowItem.setDisplayField("name");
-		workflowItem.setValueField("id");
-		workflowItem.setMultiple(true);
-		workflowItem.setMultipleAppearance(MultipleAppearance.GRID);
-		workflowItem.setOptionDataSource(new WorkflowsDS(false, false));
+		SelectItem item = new SelectItem("workflow", I18N.message("workflow"));
+		item.setRequiredMessage(I18N.message("fieldrequired"));
+		ListGridField name = new ListGridField("name", I18N.message("name"));
+		ListGridField description = new ListGridField("description", I18N.message("description"));
+		item.setPickListWidth(300);
+		item.setPickListFields(name, description);
+		item.setDisplayField("name");
+		item.setValueField("id");
+		item.setOptionDataSource(new WorkflowsDS(false, false));
 		if (!Feature.enabled(Feature.WORKFLOW))
-			workflowItem.setDisabled(true);
-		workflowItem.setHintStyle("hint");
-		return workflowItem;
+			item.setDisabled(true);
+		item.setHintStyle("hint");
+		return item;
 	}
 
 	public static Label newLinkLabel(String title) {
