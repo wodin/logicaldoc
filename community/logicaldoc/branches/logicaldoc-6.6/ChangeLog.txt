@@ -8,6 +8,17 @@
                       http://www.logicaldoc.com                    
 
                      LogicalDOC Community Edition
+                     
+LogicalDOC 6.6.1 (2013-01-10; logicaldoc-6.6.1)
+===============                    
+270 -	Print a selection of documents into a single PDF - New Feature - Core
+267 -	Upgrade to the latest User Interface technologies -	Improvement - User Interface
+274 -	New extended attribute type: Boolean - Improvement - Core
+269 -	Fulltext search broken - Bug -	Web Services
+273 -	Statistical Graphs not coming due to error - Bug - User Interface
+275 -	[Bulk update] add tag is not working - Bug - User Interface
+278 -	Wrong pages order in preview - Bug -	Core
+                     
 
 LogicalDOC 6.6 (2012-11-22; logicaldoc-6.6)
 ===============
