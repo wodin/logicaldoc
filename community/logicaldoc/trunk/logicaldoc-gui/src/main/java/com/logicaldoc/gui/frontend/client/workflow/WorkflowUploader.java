@@ -9,6 +9,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.frontend.client.services.DocumentService;
+import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -36,6 +38,8 @@ public class WorkflowUploader extends Window {
 	private ValuesManager vm;
 
 	private WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
+
+	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private DynamicForm form;
 
@@ -133,7 +137,20 @@ public class WorkflowUploader extends Window {
 					result.setName(designer.getWorkflow().getName());
 					designer.redraw(result);
 					designer.saveModel();
-					destroy();
+					
+					//Cleanup the upload folder
+					documentService.cleanUploadedFileFolder(Session.get().getSid(), new AsyncCallback<Void>() {
+
+						@Override
+						public void onFailure(Throwable caught) {
+							destroy();
+						}
+
+						@Override
+						public void onSuccess(Void result) {
+							destroy();
+						}
+					});
 				}
 			}
 

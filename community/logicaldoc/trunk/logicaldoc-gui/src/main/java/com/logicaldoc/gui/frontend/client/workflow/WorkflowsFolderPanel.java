@@ -72,8 +72,8 @@ public class WorkflowsFolderPanel extends VLayout {
 			public void onClick(ClickEvent event) {
 				final Window window = new Window();
 				window.setTitle(I18N.message("workflowtriggertext"));
-				window.setWidth(400);
-				window.setHeight(420);
+				window.setWidth(380);
+				window.setHeight(290);
 				window.setCanDragResize(true);
 				window.setIsModal(true);
 				window.setShowModalMask(true);
@@ -92,7 +92,6 @@ public class WorkflowsFolderPanel extends VLayout {
 				workflows.setColSpan(2);
 				workflows.setEndRow(true);
 				workflows.setRequired(true);
-				workflows.setHeight(150);
 				workflowForm.setItems(workflows);
 
 				// Templates list
