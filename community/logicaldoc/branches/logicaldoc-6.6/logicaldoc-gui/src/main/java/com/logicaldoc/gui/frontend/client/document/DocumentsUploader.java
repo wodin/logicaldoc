@@ -62,8 +62,6 @@ public class DocumentsUploader extends Window {
 		setShowModalMask(true);
 		centerInPage();
 
-		reloadForm();
-
 		// Create a new uploader panel and attach it to the window
 		multiUploader = new MultiUploader();
 
@@ -99,6 +97,21 @@ public class DocumentsUploader extends Window {
 		});
 
 		addChild(layout);
+		
+		//Celanup the upload folder and finalize the GUI setup
+		documentService.cleanUploadedFileFolder(Session.get().getSid(), new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				reloadForm();
+			}
+		});
+		
 	}
 
 	private void reloadForm() {
