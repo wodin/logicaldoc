@@ -20,6 +20,7 @@ import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.SystemQuota;
 import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
@@ -102,23 +103,41 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 						setupReminder.setUrl(urlPrefix + "/setup");
 					}
 					messages.add(setupReminder);
+				} else {
+					// Check if the database is connected
+					UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+					int test = -1;
+					try {
+						test = dao.queryForInt("select count(*) from ld_user;");
+					} catch (Throwable t) {
+						test = -1;
+					}
+					if (test < 1) {
+						info.setDatabaseConnected(false);
+						GUIMessage m = new GUIMessage();
+						m.setMessage(I18N.message("databasenotconnected", locale));
+						messages.add(m);
+					}
 				}
 			}
 
-			// Checks if the system quota or the quota threshold is exceeded.
-			boolean quotaExcedeed = false;
-			try {
-				SystemQuota.checkOverQuota();
-			} catch (Throwable e) {
-				quotaExcedeed = true;
-				GUIMessage m = new GUIMessage();
-				m.setMessage(I18N.message("quotaexceeded", locale));
-				messages.add(m);
-			}
-			if (SystemQuota.checkOverThreshold() && !quotaExcedeed) {
-				GUIMessage m = new GUIMessage();
-				m.setMessage(I18N.message("quotathresholdexceeded", locale));
-				messages.add(m);
+			if (info.isDatabaseConnected()) {
+				// Checks if the system quota or the quota threshold is
+				// exceeded.
+				boolean quotaExcedeed = false;
+				try {
+					SystemQuota.checkOverQuota();
+				} catch (Throwable e) {
+					quotaExcedeed = true;
+					GUIMessage m = new GUIMessage();
+					m.setMessage(I18N.message("quotaexceeded", locale));
+					messages.add(m);
+				}
+				if (SystemQuota.checkOverThreshold() && !quotaExcedeed) {
+					GUIMessage m = new GUIMessage();
+					m.setMessage(I18N.message("quotathresholdexceeded", locale));
+					messages.add(m);
+				}
 			}
 
 			info.setMessages(messages.toArray(new GUIMessage[0]));
