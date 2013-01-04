@@ -61,6 +61,8 @@ public class GUIInfo implements Serializable {
 
 	private String[] features = new String[0];
 
+	private boolean databaseConnected = true;
+
 	public String getProductName() {
 		return productName;
 	}
@@ -244,10 +246,10 @@ public class GUIInfo implements Serializable {
 		}
 		return null;
 	}
-	
+
 	public void setConfig(String name, String value) {
 		for (GUIValuePair val : getConfig()) {
-			if (name.equals(val.getCode())){
+			if (name.equals(val.getCode())) {
 				val.setValue(value);
 				return;
 			}
@@ -280,5 +282,13 @@ public class GUIInfo implements Serializable {
 
 	public void setRunLevel(String runLevel) {
 		this.runLevel = runLevel;
+	}
+
+	public boolean isDatabaseConnected() {
+		return databaseConnected;
+	}
+
+	public void setDatabaseConnected(boolean databaseConnected) {
+		this.databaseConnected = databaseConnected;
 	}
 }
