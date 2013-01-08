@@ -1,7 +1,9 @@
 package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -11,6 +13,7 @@ import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
+import com.smartgwt.client.rpc.RPCManager;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.types.Overflow;
@@ -62,6 +65,8 @@ public class UserDetailsPanel extends VLayout {
 	private UserHistoryPanel historyPanel;
 
 	private FiltersPanel filtersPanel;
+	
+	private Button saveButton;
 
 	public UserDetailsPanel(UsersPanel usersPanel) {
 		super();
@@ -76,7 +81,7 @@ public class UserDetailsPanel extends VLayout {
 		savePanel.setVisible(false);
 		savePanel.setStyleName("warn");
 		savePanel.setWidth100();
-		Button saveButton = new Button(I18N.message("save"));
+		saveButton = new Button(I18N.message("save"));
 		saveButton.setAutoFit(true);
 		saveButton.setMargin(2);
 		saveButton.addClickHandler(new ClickHandler() {
@@ -285,14 +290,18 @@ public class UserDetailsPanel extends VLayout {
 	public void onSave() {
 		if (validate()) {
 			final boolean createNew = user.getId() == 0;
+			saveButton.setDisabled(true);
+
 			service.saveUser(Session.get().getSid(), user, Session.get().getInfo(), new AsyncCallback<GUIUser>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					Log.serverError(caught);
+					saveButton.setDisabled(false);
 				}
 
 				@Override
 				public void onSuccess(GUIUser user) {
+					saveButton.setDisabled(false);
 					savePanel.setVisible(false);
 					if (createNew && user.isNotifyCredentials())
 						Log.info(I18N.message("emailnotifyaccountsent"), I18N.message("emailnotifyaccountsent"));
