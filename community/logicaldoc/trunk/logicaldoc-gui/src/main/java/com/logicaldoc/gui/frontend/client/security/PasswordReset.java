@@ -55,7 +55,7 @@ public class PasswordReset extends Window {
 		pwdResetMsg.setMargin(5);
 		addItem(pwdResetMsg);
 
-		DynamicForm buttonForm = new DynamicForm();
+		final DynamicForm buttonForm = new DynamicForm();
 		buttonForm.setMargin(5);
 		ButtonItem resetButton = new ButtonItem("reset", I18N.message("reset"));
 		resetButton.setAutoFit(true);
@@ -67,16 +67,18 @@ public class PasswordReset extends Window {
 				if (vm.validate()) {
 					final String userName = (String) values.get("username");
 					final String emailAddress = (String) values.get("email");
-
+					buttonForm.setDisabled(true);
 					securityService.resetPassword(userName, emailAddress, productName, new AsyncCallback<Void>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);
+							buttonForm.setDisabled(false);
 						}
 
 						@Override
 						public void onSuccess(Void result) {
+							buttonForm.setDisabled(false);
 							destroy();
 						}
 					});
