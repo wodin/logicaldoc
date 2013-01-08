@@ -80,23 +80,26 @@ public class SetPassword extends Window {
 		final CheckboxItem notify = ItemFactory.newCheckbox(NOTIFY, "notifycredentials");
 		notify.setValue(false);
 
-		ButtonItem apply = new ButtonItem();
+		final ButtonItem apply = new ButtonItem();
 		apply.setTitle(I18N.message("apply"));
 		apply.setAutoFit(true);
 		apply.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				vm.validate();
 				if (!vm.hasErrors()) {
+					apply.setDisabled(true);
 					securityService.changePassword(userId, null, vm.getValueAsString(NEWPASSWORD),
 							notify.getValueAsBoolean(), new AsyncCallback<Integer>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
 									SC.warn(caught.getMessage());
+									apply.setDisabled(false);
 								}
 
 								@Override
 								public void onSuccess(Integer ret) {
+									apply.setDisabled(false);
 									if (ret.intValue() > 0) {
 										// Alert the user and maintain the popup
 										// opened
