@@ -1,17 +1,20 @@
 package com.logicaldoc.webservice;
 
+import com.logicaldoc.core.searchengine.FulltextSearchOptions;
+import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
 import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.FolderClient;
 import com.logicaldoc.webservice.search.SearchClient;
+import com.logicaldoc.webservice.search.WSSearchResult;
 import com.logicaldoc.webservice.security.SecurityClient;
 import com.logicaldoc.webservice.security.WSUser;
 import com.logicaldoc.webservice.system.SystemClient;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		String base = "http://localhost:9080/logicaldoc/services";
+		String base = "http://eva01:8080/services";
 		AuthClient auth = new AuthClient(base + "/Auth");
 		DocumentClient documentClient = new DocumentClient(base + "/Document");
 		FolderClient folderClient = new FolderClient(base + "/Folder", 1, false, 50);
@@ -20,7 +23,7 @@ public class Main {
 		SecurityClient securityClient = new SecurityClient(base + "/Security");
 
 		// Open a session
-		String sid = auth.login("admin", "12345678");
+		String sid = auth.login("admin", "los171QT");
 		System.out.println("sid: " + sid);
 
 		try {
@@ -223,30 +226,30 @@ public class Main {
 			// System.out.println("++++++++++++++++++++++++++++++++");
 			// }
 
-//			for (WSTagCloud tag : searchClient.getTagCloud(sid)) {
-//				System.out.println("tag: " + tag.getTag());
-//				System.out.println("tag count: " + tag.getCount());
-//				System.out.println("tag scale: " + tag.getScale());
-//				System.out.println("++++++++++++++++++++++++++++++++");
-//			}
-//
-//			WSSearchOptions opt = new WSSearchOptions();
-//			opt.setLanguage("en");
-//			opt.setExpression("paper");
-//			opt.setExpressionLanguage("en");
-//			opt.setType(SearchOptions.TYPE_FULLTEXT);
-//			opt.setMaxHits(10);
-//			WSSearchResult result = searchClient.find(sid, opt);
-//			System.out.println("---- " + result.getHits().length);
-//			for (WSDocument hit : result.getHits()) {
-//				System.out.println("hit customid: " + hit.getCustomId());
-//				System.out.println("hit score: " + hit.getScore());
-//				System.out.println("hit folderid: " + hit.getFolderId());
-//				System.out.println("hit title: " + hit.getTitle());
-//				System.out.println("hit creation: " + hit.getCreation());
-//				System.out.println("hit summary: " + hit.getSummary());
-//				System.out.println("************************");
-//			}
+			// for (WSTagCloud tag : searchClient.getTagCloud(sid)) {
+			// System.out.println("tag: " + tag.getTag());
+			// System.out.println("tag count: " + tag.getCount());
+			// System.out.println("tag scale: " + tag.getScale());
+			// System.out.println("++++++++++++++++++++++++++++++++");
+			// }
+			//
+			FulltextSearchOptions opt = new FulltextSearchOptions();
+			opt.setLanguage("en");
+			opt.setExpression("paper");
+			opt.setExpressionLanguage("en");
+			opt.setType(SearchOptions.TYPE_FULLTEXT);
+			opt.setMaxHits(10);
+			WSSearchResult result = searchClient.find(sid, opt);
+			System.out.println("---- " + result.getHits().length);
+			for (WSDocument hit : result.getHits()) {
+				System.out.println("hit customid: " + hit.getCustomId());
+				System.out.println("hit score: " + hit.getScore());
+				System.out.println("hit folderid: " + hit.getFolderId());
+				System.out.println("hit title: " + hit.getTitle());
+				System.out.println("hit creation: " + hit.getCreation());
+				System.out.println("hit summary: " + hit.getSummary());
+				System.out.println("************************");
+			}
 
 			// WSFolder folder = folderClient.getFolder(sid, 6);
 			// System.out.println("parent id: " + folder.getParentId());
@@ -424,23 +427,23 @@ public class Main {
 			// "/Default/scomar/folder1x3z/folder6");
 			// System.out.println(f.getId() + " - " + f.getName());
 
-			WSDocument doc = documentClient.getDocument(sid, 535494657L);
-			for (WSAttribute att : doc.getExtendedAttributes()) {
-				if(att.getName().equals("utente")){
-					WSUser user=new WSUser();
-					user.setId(51L);
-					user.setName("Meschieri");
-					user.setFirstName("Marco");
-					att.setValue(user);
-				}
-			}
-
-			documentClient.update(sid, doc);
-			
-			for (WSAttribute att : doc.getExtendedAttributes()) {
-				System.out.println(att.getName() + "(" + att.getType() + ")=" + att.getValue()
-						+ (att.getType() == WSAttribute.TYPE_USER ? " " + att.getStringValue() : ""));
-			}
+//			WSDocument doc = documentClient.getDocument(sid, 535494657L);
+//			for (WSAttribute att : doc.getExtendedAttributes()) {
+//				if (att.getName().equals("utente")) {
+//					WSUser user = new WSUser();
+//					user.setId(51L);
+//					user.setName("Meschieri");
+//					user.setFirstName("Marco");
+//					att.setValue(user);
+//				}
+//			}
+//
+//			documentClient.update(sid, doc);
+//
+//			for (WSAttribute att : doc.getExtendedAttributes()) {
+//				System.out.println(att.getName() + "(" + att.getType() + ")=" + att.getValue()
+//						+ (att.getType() == WSAttribute.TYPE_USER ? " " + att.getStringValue() : ""));
+//			}
 		} finally {
 			auth.logout(sid);
 		}
