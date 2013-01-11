@@ -153,9 +153,6 @@ public class SecurityPanel extends FolderDetailTab {
 		container.addMember(list);
 
 		if (folder != null && folder.hasPermission(Constants.PERMISSION_SECURITY)) {
-			list.setCanEdit(true);
-			list.setEditEvent(ListGridEditEvent.CLICK);
-			list.setModalEditing(true);
 			list.addCellContextClickHandler(new CellContextClickHandler() {
 				@Override
 				public void onCellContextClick(CellContextClickEvent event) {
