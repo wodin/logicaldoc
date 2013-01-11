@@ -434,6 +434,11 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 					tsk.getScheduling().setMonth(task.getScheduling().getMonth());
 					tsk.getScheduling().setDayOfMonth(task.getScheduling().getDayOfMonth());
 					tsk.getScheduling().setDayOfWeek((task.getScheduling().getDayOfWeek()));
+
+					// To avoid a common incongruence a lot of users do
+					if (!"?".equals(tsk.getScheduling().getDayOfWeek()))
+						tsk.getScheduling().setDayOfMonth("?");
+
 					task.setSchedulingLabel(tsk.getScheduling().getCronExpression());
 				}
 				tsk.getScheduling().setMaxLength(task.getScheduling().getMaxLength());
