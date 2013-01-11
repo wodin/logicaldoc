@@ -17,7 +17,6 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
-import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
@@ -153,9 +152,6 @@ public class SecurityPanel extends FolderDetailTab {
 		container.addMember(list);
 
 		if (folder != null && folder.hasPermission(Constants.PERMISSION_SECURITY)) {
-			list.setCanEdit(true);
-			list.setEditEvent(ListGridEditEvent.CLICK);
-			list.setModalEditing(true);
 			list.addCellContextClickHandler(new CellContextClickHandler() {
 				@Override
 				public void onCellContextClick(CellContextClickEvent event) {
@@ -314,7 +310,7 @@ public class SecurityPanel extends FolderDetailTab {
 		deleteItem.setTitle(I18N.message("ddelete"));
 		deleteItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord[] selection = list.getSelection();
+				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
 
