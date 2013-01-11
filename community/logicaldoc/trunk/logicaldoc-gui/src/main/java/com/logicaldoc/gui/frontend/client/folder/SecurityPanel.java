@@ -314,7 +314,7 @@ public class SecurityPanel extends FolderDetailTab {
 		deleteItem.setTitle(I18N.message("ddelete"));
 		deleteItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord[] selection = list.getSelection();
+				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
 
