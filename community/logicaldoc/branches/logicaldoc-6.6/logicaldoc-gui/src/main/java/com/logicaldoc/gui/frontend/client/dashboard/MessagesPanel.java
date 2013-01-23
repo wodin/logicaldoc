@@ -14,12 +14,15 @@ import com.logicaldoc.gui.frontend.client.services.MessageService;
 import com.logicaldoc.gui.frontend.client.services.MessageServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.ExpansionMode;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.types.SortDirection;
+import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -46,17 +49,127 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 public class MessagesPanel extends VLayout {
 	private MessageServiceAsync service = (MessageServiceAsync) GWT.create(MessageService.class);
 
-	private ListGrid list;
+	private ListGrid grid;
 
-	private Layout listing = new VLayout();
+	private Layout listing;
+
+	private DynamicForm messagePreview = new DynamicForm();
 
 	public MessagesPanel() {
 		setWidth100();
+		setHeight100();
 
 		// Initialize the listing panel as placeholder
-		listing.setAlign(Alignment.CENTER);
-		listing.setHeight100();
-		initListGrid();
+		refresh();
+	}
+
+	private void refresh() {
+		if (grid != null) {
+			listing.removeMember(grid);
+			grid.destroy();
+		}
+
+		listing = new VLayout();
+		listing.setHeight("90%");
+		listing.setShowResizeBar(true);
+
+		ListGridField id = new ListGridField("id", 50);
+		id.setHidden(true);
+
+		ListGridField priority = new ListGridField("priority", I18N.message("priority"), 50);
+		priority.setType(ListGridFieldType.IMAGE);
+		priority.setCanSort(false);
+		priority.setAlign(Alignment.CENTER);
+		priority.setShowDefaultContextMenu(false);
+		priority.setImageURLPrefix(Util.imagePrefix());
+		priority.setImageURLSuffix(".gif");
+		priority.setCanFilter(false);
+
+		ListGridField subject = new ListGridField("subject", I18N.message("subject"));
+		subject.setCanFilter(true);
+
+		ListGridField from = new ListGridField("from", I18N.message("from"), 150);
+		from.setCanFilter(true);
+
+		ListGridField sent = new ListGridField("sent", I18N.message("sent"), 110);
+		sent.setAlign(Alignment.CENTER);
+		sent.setType(ListGridFieldType.DATE);
+		sent.setCellFormatter(new DateCellFormatter(false));
+		sent.setCanFilter(false);
+
+		grid = new ListGrid() {
+			@Override
+			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
+				if (getFieldName(colNum).equals("subject")) {
+					if ("false".equals(record.getAttributeAsString("read"))) {
+						return "font-weight:bold;";
+					} else {
+						return super.getCellCSSText(record, rowNum, colNum);
+					}
+				} else {
+					return super.getCellCSSText(record, rowNum, colNum);
+				}
+			}
+		};
+		grid.setEmptyMessage(I18N.message("notitemstoshow"));
+		grid.setShowRecordComponents(true);
+		grid.setShowRecordComponentsByCell(true);
+		grid.setCanFreezeFields(true);
+		grid.setAutoFetchData(true);
+		grid.setSelectionType(SelectionStyle.MULTIPLE);
+		grid.setFilterOnKeypress(true);
+		grid.setShowFilterEditor(false);
+		grid.setDataSource(new MessagesDS());
+		grid.setFields(id, priority, subject, from, sent);
+		grid.sort("sent", SortDirection.DESCENDING);
+
+		listing.addMember(grid);
+
+		// Count the total unread messages
+		grid.addDataArrivedHandler(new DataArrivedHandler() {
+			@Override
+			public void onDataArrived(DataArrivedEvent event) {
+				Record[] records = grid.getRecordList().toArray();
+				int unread = 0;
+				for (Record record : records) {
+					if ("false".equals(record.getAttributeAsString("read")))
+						unread++;
+				}
+
+				Session.get().getUser().setUnreadMessages(unread);
+			}
+		});
+
+		grid.addSelectionChangedHandler(new SelectionChangedHandler() {
+			@Override
+			public void onSelectionChanged(SelectionEvent event) {
+				final Record record = grid.getSelectedRecord();
+				if (record != null)
+					service.getMessage(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")), true,
+							new AsyncCallback<GUIMessage>() {
+
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(GUIMessage message) {
+									record.setAttribute("read", "true");
+									grid.refreshRow(grid.getRecordIndex(record));
+									messagePreview.setValue("message", record.getAttributeAsString("text"));
+								}
+							});
+			}
+		});
+
+		grid.addCellContextClickHandler(new CellContextClickHandler() {
+			@Override
+			public void onCellContextClick(CellContextClickEvent event) {
+				showContextMenu();
+				event.cancel();
+			}
+		});
 
 		ToolStrip toolStrip = new ToolStrip();
 		toolStrip.setHeight(20);
@@ -78,124 +191,37 @@ public class MessagesPanel extends VLayout {
 		refresh.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				initListGrid();
+				refresh();
 			}
 		});
 		toolStrip.addFill();
 
-		setMembers(toolStrip, listing);
-	}
+		listing.setMembers(toolStrip, grid);
 
-	private void initListGrid() {
-		if (list != null) {
-			listing.removeMember(list);
-			list.destroy();
-		}
+		messagePreview = new DynamicForm();
+		messagePreview.setID("emailform");
+		messagePreview.setWidth100();
+		messagePreview.setHeight100();
+		messagePreview.setMargin(5);
+		messagePreview.setTitleOrientation(TitleOrientation.TOP);
+		messagePreview.setNumCols(1);
 
-		ListGridField id = new ListGridField("id", 50);
-		id.setHidden(true);
+		TextAreaItem message = new TextAreaItem();
+		message.setCanEdit(false);
+		message.setName("message");
+		message.setShowTitle(false);
+		message.setValue("");
+		message.setWidth("100%");
+		message.setHeight("100%");
+		messagePreview.setFields(message);
 
-		ListGridField priority = new ListGridField("priority", I18N.message("priority"), 50);
-		priority.setType(ListGridFieldType.IMAGE);
-		priority.setCanSort(false);
-		priority.setAlign(Alignment.CENTER);
-		priority.setShowDefaultContextMenu(false);
-		priority.setImageURLPrefix(Util.imagePrefix());
-		priority.setImageURLSuffix(".gif");
-		priority.setCanFilter(false);
-
-		ListGridField username = new ListGridField("subject", I18N.message("subject"), 250);
-		username.setCanFilter(true);
-
-		ListGridField from = new ListGridField("from", I18N.message("from"), 150);
-		from.setCanFilter(true);
-
-		ListGridField sent = new ListGridField("sent", I18N.message("sent"), 110);
-		sent.setAlign(Alignment.CENTER);
-		sent.setType(ListGridFieldType.DATE);
-		sent.setCellFormatter(new DateCellFormatter(false));
-		sent.setCanFilter(false);
-
-		list = new ListGrid() {
-			@Override
-			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
-				if (getFieldName(colNum).equals("subject")) {
-					if ("false".equals(record.getAttributeAsString("read"))) {
-						return "font-weight:bold;";
-					} else {
-						return super.getCellCSSText(record, rowNum, colNum);
-					}
-				} else {
-					return super.getCellCSSText(record, rowNum, colNum);
-				}
-			}
-		};
-		list.setEmptyMessage(I18N.message("notitemstoshow"));
-		list.setCanExpandRecords(true);
-		list.setExpansionMode(ExpansionMode.DETAIL_FIELD);
-		list.setDetailField("text");
-		list.setShowRecordComponents(true);
-		list.setShowRecordComponentsByCell(true);
-		list.setCanFreezeFields(true);
-		list.setAutoFetchData(true);
-		list.setSelectionType(SelectionStyle.MULTIPLE);
-		list.setFilterOnKeypress(true);
-		list.setShowFilterEditor(false);
-		list.setDataSource(new MessagesDS());
-		list.setFields(id, priority, username, from, sent);
-
-		listing.addMember(list);
-
-		// Count the total unread messages
-		list.addDataArrivedHandler(new DataArrivedHandler() {
-			@Override
-			public void onDataArrived(DataArrivedEvent event) {
-				Record[] records = list.getRecordList().toArray();
-				int unread = 0;
-				for (Record record : records) {
-					if ("false".equals(record.getAttributeAsString("read")))
-						unread++;
-				}
-
-				Session.get().getUser().setUnreadMessages(unread);
-			}
-		});
-
-		list.addSelectionChangedHandler(new SelectionChangedHandler() {
-			@Override
-			public void onSelectionChanged(SelectionEvent event) {
-				final Record record = list.getSelectedRecord();
-				if (record != null)
-					service.getMessage(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")), true,
-							new AsyncCallback<GUIMessage>() {
-
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
-
-								@Override
-								public void onSuccess(GUIMessage message) {
-									record.setAttribute("read", "true");
-									list.refreshRow(list.getRecordIndex(record));
-								}
-							});
-			}
-		});
-
-		list.addCellContextClickHandler(new CellContextClickHandler() {
-			@Override
-			public void onCellContextClick(CellContextClickEvent event) {
-				showContextMenu();
-				event.cancel();
-			}
-		});
+		setMembers(listing, messagePreview);
 	}
 
 	private void showContextMenu() {
 		Menu contextMenu = new Menu();
 
-		ListGridRecord[] selection = list.getSelectedRecords();
+		ListGridRecord[] selection = grid.getSelectedRecords();
 		if (selection == null || selection.length == 0)
 			return;
 		final long[] ids = new long[selection.length];
@@ -219,8 +245,8 @@ public class MessagesPanel extends VLayout {
 
 								@Override
 								public void onSuccess(Void result) {
-									list.removeSelectedData();
-									//list.deselectAllRecords();
+									grid.removeSelectedData();
+									// list.deselectAllRecords();
 								}
 							});
 						}
