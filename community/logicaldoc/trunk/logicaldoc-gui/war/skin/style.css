@@ -228,3 +228,8 @@
   font-weight: bold;
   white-space: nowrap;
 }
+
+.row {
+  border-top: 1px solid #cccccc;
+  margin-top: 4px;
+}

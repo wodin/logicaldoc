@@ -115,6 +115,8 @@ public class Session {
 											user.setMessages(Integer.parseInt(parameter.getValue()));
 										else if (parameter.getName().equals("workflows"))
 											user.setActiveTasks(Integer.parseInt(parameter.getValue()));
+										else if (parameter.getName().equals("events"))
+											user.setUpcomingEvents(Integer.parseInt(parameter.getValue()));
 									}
 								}
 							}

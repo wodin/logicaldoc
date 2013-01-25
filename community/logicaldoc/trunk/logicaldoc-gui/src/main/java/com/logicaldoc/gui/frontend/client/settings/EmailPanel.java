@@ -44,11 +44,12 @@ public class EmailPanel extends VLayout {
 		this.emailSettings = settings;
 
 		setWidth100();
-		setMembersMargin(10);
-		setMargin(30);
+		setHeight100();
+		setMembersMargin(5);
+		setMargin(5);
 
-		tabs.setWidth(600);
-		tabs.setHeight(390);
+		tabs.setWidth100();
+		tabs.setHeight100();
 
 		Tab email = new Tab();
 		email.setTitle(I18N.message("smtpserver"));
@@ -59,9 +60,7 @@ public class EmailPanel extends VLayout {
 
 		DynamicForm emailForm = new DynamicForm();
 		emailForm.setValuesManager(vm);
-		emailForm.setTitleOrientation(TitleOrientation.TOP);
-		emailForm.setNumCols(2);
-		emailForm.setColWidths(100, 100);
+		emailForm.setTitleOrientation(TitleOrientation.LEFT);
 
 		// SMTP Server
 		TextItem smtpServer = ItemFactory.newTextItem("smtpServer", "smtpserver", this.emailSettings.getSmtpServer());

@@ -34,6 +34,8 @@ public class StatusBarIcons extends HLayout implements ClipboardObserver, UserOb
 
 	private HTMLFlow messagesCount = new HTMLFlow("0");
 
+	private HTMLFlow eventsCount = new HTMLFlow("0");
+	
 	private HTMLFlow workflowsCount = new HTMLFlow("0");
 
 	private StatusBarIcons() {
@@ -87,17 +89,29 @@ public class StatusBarIcons extends HLayout implements ClipboardObserver, UserOb
 		workflowImage.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				MainPanel.get().selectWorkflowTab();
+				MainPanel.get().selectCalendarTab();
 			}
 		});
 		workflowImage.setCursor(Cursor.HAND);
 		workflowImage.setTooltip(I18N.message("workflowtasksassigned"));
+		
+		Img eventsImage = ItemFactory.newImgIcon("calendar.png");
+		eventsImage.setHeight("16px");
+		eventsImage.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				MainPanel.get().selectCalendarTab();
+			}
+		});
+		eventsImage.setCursor(Cursor.HAND);
+		eventsImage.setTooltip(I18N.message("upcomingevents"));
 
 		clipboardSize.setWidth("20px");
 		lockedCount.setWidth("20px");
 		checkoutCount.setWidth("20px");
 		messagesCount.setWidth("20px");
 		workflowsCount.setWidth("20px");
+		eventsCount.setWidth("20px");
 
 		addMember(clipboardImage);
 		addMember(clipboardSize);
@@ -111,11 +125,16 @@ public class StatusBarIcons extends HLayout implements ClipboardObserver, UserOb
 			addMember(messagesCount);
 		}
 
+		if (Feature.enabled(Feature.CALENDAR)) {
+			addMember(eventsImage);
+			addMember(eventsCount);
+		}
+		
 		if (Feature.enabled(Feature.WORKFLOW)) {
 			addMember(workflowImage);
 			addMember(workflowsCount);
 		}
-
+		
 		Clipboard.getInstance().addObserver(this);
 		Session.get().getUser().addObserver(this);
 		onUserChanged(Session.get().getUser(), null);
@@ -143,5 +162,6 @@ public class StatusBarIcons extends HLayout implements ClipboardObserver, UserOb
 		lockedCount.setContents(Integer.toString(user.getLockedDocs()));
 		messagesCount.setContents(Integer.toString(user.getUnreadMessages()));
 		workflowsCount.setContents(Integer.toString(user.getActiveTasks()));
+		eventsCount.setContents(Integer.toString(user.getUpcomingEvents()));
 	}
 }

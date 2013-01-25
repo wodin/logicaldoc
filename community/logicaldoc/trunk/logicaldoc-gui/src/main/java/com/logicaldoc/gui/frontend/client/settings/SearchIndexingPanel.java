@@ -68,7 +68,7 @@ public class SearchIndexingPanel extends VLayout {
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	private TabSet tabSet = new TabSet();
+	private TabSet tabs = new TabSet();
 
 	private Layout searchEngineTabPanel;
 
@@ -94,6 +94,11 @@ public class SearchIndexingPanel extends VLayout {
 
 	public SearchIndexingPanel(GUISearchEngine searchEngine) {
 		setWidth100();
+		setHeight100();
+		setMembersMargin(5);
+		setMargin(5);
+		tabs.setWidth100();
+		tabs.setHeight100();
 
 		this.searchEngine = searchEngine;
 
@@ -103,9 +108,9 @@ public class SearchIndexingPanel extends VLayout {
 
 		indexingQueueTab = fillIndexingQueueTab(100);
 
-		tabSet.setTabs(searchEngineTab, fillLanguagesTab(), parsersInfoTab, indexingQueueTab);
+		tabs.setTabs(searchEngineTab, fillLanguagesTab(), parsersInfoTab, indexingQueueTab);
 
-		setMembers(tabSet);
+		setMembers(tabs);
 	}
 
 	private Tab fillIndexingQueueTab(int maxValue) {
@@ -616,7 +621,7 @@ public class SearchIndexingPanel extends VLayout {
 
 	private void refresh(Integer max) {
 		fillIndexingQueueTab(max);
-		tabSet.setTabPane(3, indexingQueueTabPanel);
+		tabs.setTabPane(3, indexingQueueTabPanel);
 	}
 
 	private void showIndexQueueMenu() {

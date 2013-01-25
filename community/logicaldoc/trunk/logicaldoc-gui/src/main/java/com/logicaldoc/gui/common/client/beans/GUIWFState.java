@@ -3,6 +3,7 @@ package com.logicaldoc.gui.common.client.beans;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.util.Util;
 
 /**
@@ -25,20 +26,6 @@ public class GUIWFState implements Serializable {
 
 	public final static int TYPE_FORK = 3;
 
-	public final static String TIME_MINUTE = "minute";
-
-	public final static String TIME_HOUR = "hour";
-
-	public final static String TIME_BUSINESS_HOUR = "businesshour";
-
-	public final static String TIME_DAY = "day";
-
-	public final static String TIME_BUSINESS_DAY = "businessday";
-
-	public final static String TIME_WEEK = "week";
-
-	public final static String TIME_BUSINESS_WEEK = "businessweek";
-
 	private int type = TYPE_TASK;
 
 	private String id;
@@ -49,11 +36,11 @@ public class GUIWFState implements Serializable {
 
 	private int dueDateNumber = 0;
 
-	private String dueDateUnit = TIME_MINUTE;
+	private String dueDateUnit = Constants.TIME_MINUTE;
 
 	private int reminderNumber = 0;
 
-	private String reminderUnit = TIME_MINUTE;
+	private String reminderUnit = Constants.TIME_MINUTE;
 
 	private GUIValuePair[] participants;
 

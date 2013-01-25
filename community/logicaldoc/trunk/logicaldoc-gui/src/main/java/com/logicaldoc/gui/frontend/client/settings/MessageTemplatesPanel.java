@@ -48,6 +48,7 @@ public class MessageTemplatesPanel extends VLayout {
 		setWidth100();
 		setHeight100();
 		setMembersMargin(5);
+		setMargin(5);
 
 		HTMLFlow hint = new HTMLFlow(I18N.message("messagetemplatehint"));
 		hint.setMargin(3);

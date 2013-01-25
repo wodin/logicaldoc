@@ -155,8 +155,9 @@ public class DocumentsDataServlet extends HttpServlet {
 					StringBuffer query = new StringBuffer(
 							"select ld_docid, ld_name, ld_type, ld_stringvalue, ld_intvalue, ld_doublevalue, ld_datevalue ");
 					query.append(" from ld_document_ext where ld_docid in (");
-					query.append("select D.ld_id from ld_document D where D.ld_deleted=0 and D.ld_folderid=");
-					query.append(Long.toString(folderId));
+					query.append("select D.ld_id from ld_document D where D.ld_deleted=0 ");
+					if (folderId != null)
+						query.append(" and D.ld_folderid=" + Long.toString(folderId));
 					query.append(") and ld_name in ");
 					query.append(attrs.toString().replaceAll("\\[", "('").replaceAll("\\]", "')")
 							.replaceAll(",", "','").replaceAll(" ", ""));

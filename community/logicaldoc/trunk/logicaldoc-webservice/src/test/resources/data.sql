@@ -74,48 +74,48 @@ insert into ld_folder
 values     (1203,'2009-10-19 00:00:00',0,'qqqq',1201,3,0);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
-values     (100,1,1,0,0,0,0,0,0,0,0,0,0,1);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
+values     (100,1,1,0,0,0,0,0,0,0,0,0,0,1,0);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
-values     (100,3,1,1,0,0,0,0,0,0,0,0,0,1);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
+values     (100,3,1,1,0,0,0,0,0,0,0,0,0,1,0);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
-values     (100,-3,1,1,0,0,0,0,0,0,0,0,0,1);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
+values     (100,-3,1,1,0,0,0,0,0,0,0,0,0,1,0);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
-values     (100,-4,1,1,0,0,0,0,0,0,0,0,0,1);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
+values     (100,-4,1,1,0,0,0,0,0,0,0,0,0,1,0);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
-values     (103,1,1,1,0,0,1,1,0,0,0,0,0,1);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
+values     (103,1,1,1,0,0,1,1,0,0,0,0,0,1,0);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
-values     (103,2,1,0,0,0,0,0,0,0,0,0,0,1);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
+values     (103,2,1,0,0,0,0,0,0,0,0,0,0,1,0);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
-values     (99,1,0,0,0,0,0,0,0,0,0,0,0,1);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
+values     (99,1,0,0,0,0,0,0,0,0,0,0,0,1,0);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
-values     (1200,1,1,1,1,1,1,1,1,1,1,1,1,1);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
+values     (1200,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
-values     (1201,1,1,1,1,1,1,1,1,1,1,1,1,1);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
+values     (1201,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
-values     (1202,1,1,1,1,1,1,1,1,1,1,1,1,1);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
+values     (1202,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download)
-values     (1203,1,1,1,1,1,1,1,1,1,1,1,1,1);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
+values     (1203,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 
 insert into ld_usergroup
            (ld_userid,ld_groupid)

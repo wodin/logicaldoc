@@ -115,7 +115,7 @@ public class TaskDialog extends Window {
 			duedateTimeItem.setStep(1);
 			duedateTimeItem.setWidth(50);
 			duedateTimeItem.setValue(this.state.getDueDateNumber());
-			SelectItem duedateTime = ItemFactory.newTimeSelector("duedateTime", "");
+			SelectItem duedateTime = ItemFactory.newDueTimeSelector("duedateTime", "");
 			duedateTime.setValue(this.state.getDueDateUnit());
 
 			SpinnerItem remindTimeItem = new SpinnerItem("remindtimeNumber");
@@ -125,12 +125,11 @@ public class TaskDialog extends Window {
 			remindTimeItem.setStep(1);
 			remindTimeItem.setWidth(50);
 			remindTimeItem.setValue(this.state.getReminderNumber());
-			SelectItem remindTime = ItemFactory.newTimeSelector("remindTime", "");
+			SelectItem remindTime = ItemFactory.newDueTimeSelector("remindTime", "");
 			remindTime.setValue(this.state.getReminderUnit());
 			if (Session.get().isDemo()) {
 				// In demo mode disable the remind setting because of this may
-				// send
-				// massive emails
+				// send  massive emails
 				remindTimeItem.setDisabled(true);
 				remindTime.setDisabled(true);
 			}

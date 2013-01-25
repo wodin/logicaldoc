@@ -17,7 +17,6 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
-import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
@@ -120,6 +119,10 @@ public class SecurityPanel extends FolderDetailTab {
 		workflow.setType(ListGridFieldType.BOOLEAN);
 		workflow.setCanEdit(true);
 
+		ListGridField calendar = new ListGridField("calendar", I18N.message("calendar"), 60);
+		calendar.setType(ListGridFieldType.BOOLEAN);
+		calendar.setCanEdit(true);
+		
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setCanFreezeFields(true);
@@ -147,6 +150,8 @@ public class SecurityPanel extends FolderDetailTab {
 			fields.add(archive);
 		if (Feature.enabled(Feature.WORKFLOW))
 			fields.add(workflow);
+		if (Feature.enabled(Feature.CALENDAR))
+			fields.add(calendar);
 
 		list.setFields(fields.toArray(new ListGridField[0]));
 
@@ -286,7 +291,8 @@ public class SecurityPanel extends FolderDetailTab {
 			right.setSecurity(record.getAttributeAsBoolean("security"));
 			right.setArchive(record.getAttributeAsBoolean("archive"));
 			right.setDownload(record.getAttributeAsBoolean("download"));
-
+			right.setCalendar(record.getAttributeAsBoolean("calendar"));
+			
 			tmp[i] = right;
 			i++;
 		}

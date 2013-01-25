@@ -107,6 +107,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				guiUser.setId(user.getId());
 				guiUser.setPasswordExpired(true);
 				guiUser.setLanguage(user.getLanguage());
+				guiUser.setName(user.getName());
+				guiUser.setFirstName(user.getFirstName());
 				session.setUser(guiUser);
 				session.setLoggedIn(false);
 				log.info("User " + username + " password expired");
@@ -140,6 +142,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		SystemMessageDAO messageDao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
 
 		guiUser.setFirstName(user.getFirstName());
+		guiUser.setName(user.getName());
 		guiUser.setId(user.getId());
 		if (StringUtils.isEmpty(locale)) {
 			guiUser.setLanguage(user.getLanguage());

@@ -59,6 +59,13 @@ public class ExternalAppsPanel extends VLayout {
 	private GUIParameter swftoolsPath = null;
 
 	public ExternalAppsPanel(GUIParameter[] settings) {
+		setWidth100();
+		setHeight100();
+		setMembersMargin(5);
+		setMargin(5);
+		tabs.setWidth100();
+		tabs.setHeight100();
+		
 		for (GUIParameter parameter : settings) {
 			if (parameter.getName().startsWith("webservice"))
 				wsSettings = parameter;
@@ -79,14 +86,6 @@ public class ExternalAppsPanel extends VLayout {
 			else if (parameter.getName().equals("swftools.path"))
 				swftoolsPath = parameter;
 		}
-
-		setWidth100();
-		setHeight(250);
-		setMembersMargin(10);
-		setMargin(30);
-
-		tabs.setWidth(450);
-		tabs.setHeight(240);
 
 		Tab webService = new Tab();
 		webService.setTitle(I18N.message("webservice"));

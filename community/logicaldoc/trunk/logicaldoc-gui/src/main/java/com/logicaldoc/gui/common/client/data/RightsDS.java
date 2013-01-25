@@ -32,10 +32,11 @@ public class RightsDS extends DataSource {
 		DataSourceBooleanField security = new DataSourceBooleanField("security");
 		DataSourceBooleanField archive = new DataSourceBooleanField("archive");
 		DataSourceBooleanField download = new DataSourceBooleanField("download");
+		DataSourceBooleanField calendar = new DataSourceBooleanField("calendar");
 		DataSourceTextField type = new DataSourceTextField("type");
 
 		setFields(entityId, entity, read, write, delete, add, workflow, sign, _import, export, immutable, rename,
-				security, archive, type, download);
+				security, archive, type, download, calendar);
 		setClientOnly(true);
 		setDataURL("data/rights.xml?sid=" + Session.get().getSid() + "&" + (folder ? "folderId" : "menuId") + "=" + id
 				+ "&locale=" + I18N.getLocale());

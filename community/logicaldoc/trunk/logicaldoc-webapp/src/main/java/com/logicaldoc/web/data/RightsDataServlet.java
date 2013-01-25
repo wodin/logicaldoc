@@ -124,6 +124,7 @@ public class RightsDataServlet extends HttpServlet {
 					writer.print("<archive>" + (folderGroup.getArchive() == 1 ? true : false) + "</archive>");
 					writer.print("<workflow>" + (folderGroup.getWorkflow() == 1 ? true : false) + "</workflow>");
 					writer.print("<download>" + (folderGroup.getDownload() == 1 ? true : false) + "</download>");
+					writer.print("<calendar>" + (folderGroup.getCalendar() == 1 ? true : false) + "</calendar>");
 					writer.print("<type>" + group.getType() + "</type>");
 					writer.print("</right>");
 				}
