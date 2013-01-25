@@ -136,8 +136,9 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 							+ "&docId=" + document.getId() + "&version=" + document.getVersion());
 				} else {
 					String url = GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid();
+					url += "&docId=";
 					for (ListGridRecord record : selection) {
-						url += "&docId=" + record.getAttributeAsString("id");
+						url += record.getAttributeAsString("id")+"|";
 					}
 					WindowUtils.openUrl(url);
 				}
