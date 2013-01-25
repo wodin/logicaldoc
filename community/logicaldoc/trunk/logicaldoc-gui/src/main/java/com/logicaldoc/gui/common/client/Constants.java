@@ -23,6 +23,20 @@ public final class Constants {
 
 	public static final long WORKSPACE_DEFAULTID = 4;
 	
+	public final static String TIME_MINUTE = "minute";
+
+	public final static String TIME_HOUR = "hour";
+
+	public final static String TIME_BUSINESS_HOUR = "businesshour";
+
+	public final static String TIME_DAY = "day";
+
+	public final static String TIME_BUSINESS_DAY = "businessday";
+
+	public final static String TIME_WEEK = "week";
+
+	public final static String TIME_BUSINESS_WEEK = "businessweek";
+	
 	public static final String PERMISSION_DELETE = "delete";
 
 	public static final String PERMISSION_IMMUTABLE = "immutable";
@@ -46,6 +60,8 @@ public final class Constants {
 	public static final String PERMISSION_WORKFLOW = "workflow";
 
 	public static final String PERMISSION_DOWNLOAD = "download";
+
+	public static final String PERMISSION_CALENDAR = "calendar";
 	
 	public static final int DOC_UNLOCKED = 0;
 

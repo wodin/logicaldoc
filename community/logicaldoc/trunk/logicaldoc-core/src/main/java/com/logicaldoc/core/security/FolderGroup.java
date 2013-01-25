@@ -35,6 +35,8 @@ public class FolderGroup {
 
 	private int workflow = 0;
 
+	private int calendar = 0;
+
 	private long groupId;
 
 	public FolderGroup(long groupId) {
@@ -60,6 +62,7 @@ public class FolderGroup {
 		mg.setArchive(archive);
 		mg.setWorkflow(workflow);
 		mg.setDownload(download);
+		mg.setCalendar(calendar);
 		return mg;
 	}
 
@@ -87,6 +90,7 @@ public class FolderGroup {
 		 * the same mask order.
 		 */
 		StringBuffer sb = new StringBuffer();
+		sb.append(getCalendar() == 1 ? "1" : "0");
 		sb.append(getDownload() == 1 ? "1" : "0");
 		sb.append(getWorkflow() == 1 ? "1" : "0");
 		sb.append(getArchive() == 1 ? "1" : "0");
@@ -107,8 +111,8 @@ public class FolderGroup {
 	/**
 	 * Set each permission evaluating the given integer representation.
 	 * 
-	 * @param permissions mask(the last slot is for the 'read'
-	 *        permission and it is not evaluated)
+	 * @param permissions mask(the last slot is for the 'read' permission and it
+	 *        is not evaluated)
 	 */
 	public void setPermissions(int permissions) {
 		setRead(Permission.READ.match(permissions) ? 1 : 0);
@@ -124,6 +128,7 @@ public class FolderGroup {
 		setArchive(Permission.ARCHIVE.match(permissions) ? 1 : 0);
 		setWorkflow(Permission.WORKFLOW.match(permissions) ? 1 : 0);
 		setDownload(Permission.DOWNLOAD.match(permissions) ? 1 : 0);
+		setCalendar(Permission.CALENDAR.match(permissions) ? 1 : 0);
 	}
 
 	public int getRead() {
@@ -236,5 +241,13 @@ public class FolderGroup {
 
 	public void setDownload(int download) {
 		this.download = download;
+	}
+
+	public int getCalendar() {
+		return calendar;
+	}
+
+	public void setCalendar(int calendar) {
+		this.calendar = calendar;
 	}
 }

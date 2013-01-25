@@ -39,13 +39,13 @@ public class SystemQuotaPanel extends VLayout {
 	public SystemQuotaPanel(GUIParameter[] params) {
 		this.settings = params;
 		setWidth100();
-		setMembersMargin(10);
-		setMargin(30);
-		setHeight(400);
+		setHeight100();
+		setMembersMargin(5);
+		setMargin(5);
 
 		TabSet tabs = new TabSet();
-		tabs.setWidth(380);
-		tabs.setHeight(270);
+		tabs.setWidth100();
+		tabs.setHeight100();
 		Tab systemQuota = new Tab();
 		systemQuota.setTitle(I18N.message("docsquota"));
 

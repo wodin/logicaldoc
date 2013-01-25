@@ -450,7 +450,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testGetEnabledPermissions() {
 		Set<Permission> permissions = dao.getEnabledPermissions(Folder.ROOTID, 1);
-		Assert.assertEquals(13, permissions.size());
+		Assert.assertEquals(14, permissions.size());
 		Assert.assertTrue(permissions.contains(Permission.READ));
 		Assert.assertTrue(permissions.contains(Permission.SECURITY));
 		Assert.assertTrue(permissions.contains(Permission.SIGN));
@@ -459,7 +459,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertTrue(permissions.contains(Permission.READ));
 		Assert.assertTrue(permissions.contains(Permission.WRITE));
 		permissions = dao.getEnabledPermissions(999, 1);
-		Assert.assertEquals(13, permissions.size());
+		Assert.assertEquals(14, permissions.size());
 	}
 
 	@Test

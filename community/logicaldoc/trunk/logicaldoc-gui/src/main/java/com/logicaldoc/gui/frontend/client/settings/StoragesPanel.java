@@ -74,8 +74,11 @@ public class StoragesPanel extends VLayout {
 		this.parameters = params;
 		this.vm = valueManager;
 
+		setWidth100();
+		setHeight100();
 		setMembersMargin(5);
-		setMargin(10);
+		setMargin(5);
+
 
 		for (GUIParameter param : this.parameters) {
 			if (param == null)

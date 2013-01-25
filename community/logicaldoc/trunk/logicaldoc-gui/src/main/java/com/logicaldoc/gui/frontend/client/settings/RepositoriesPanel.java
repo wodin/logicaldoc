@@ -52,13 +52,14 @@ public class RepositoriesPanel extends VLayout {
 		this.storagesParameter = repos[1];
 
 		setWidth100();
-		setMembersMargin(10);
-		setMargin(30);
-		setHeight(400);
+		setHeight100();
+		setMembersMargin(5);
+		setMargin(5);
+
 
 		tabs = new TabSet();
-		tabs.setWidth(500);
-		tabs.setHeight(270);
+		tabs.setWidth100();
+		tabs.setHeight100();
 
 		// The Folders Tab
 		tab1 = new Tab();

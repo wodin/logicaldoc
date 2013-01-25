@@ -17,7 +17,6 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
@@ -40,13 +39,13 @@ public class ParametersSettingsPanel extends VLayout {
 		this.settings = settings;
 
 		setWidth100();
-		setMembersMargin(10);
-		setMargin(10);
-		setHeight(350);
+		setHeight100();
+		setMembersMargin(5);
+		setMargin(5);
 
 		TabSet tabs = new TabSet();
-		tabs.setWidth(508);
-		tabs.setHeight(345);
+		tabs.setWidth100();
+		tabs.setHeight100();
 		Tab tab = new Tab();
 		tab.setTitle(I18N.message("parameters"));
 		tabs.setTabs(tab);
@@ -54,9 +53,8 @@ public class ParametersSettingsPanel extends VLayout {
 		DynamicForm form = new DynamicForm();
 		form.setValuesManager(vm);
 		form.setTitleOrientation(TitleOrientation.TOP);
-		form.setNumCols(3);
-		form.setColWidths(100, 100, 100);
-		form.setWidth(480);
+		form.setNumCols(4);
+		form.setColWidths(100, 100, 100, 100);
 
 		TextItem[] items = new TextItem[settings.length];
 

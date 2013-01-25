@@ -7,21 +7,24 @@ import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.FolderObserver;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUICalendarEvent;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
-import com.logicaldoc.gui.frontend.client.dashboard.WorkflowDashboard;
+import com.logicaldoc.gui.frontend.client.calendar.CalendarEventDialog;
 import com.logicaldoc.gui.frontend.client.folder.SubscriptionDialog;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.AuditService;
 import com.logicaldoc.gui.frontend.client.services.AuditServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
+import com.logicaldoc.gui.frontend.client.workflow.WorkflowDashboard;
 import com.logicaldoc.gui.frontend.client.workflow.WorkflowDetailsDialog;
 import com.smartgwt.client.types.SelectionType;
 import com.smartgwt.client.util.Offline;
@@ -61,6 +64,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	protected ToolStripButton startWorkflow = new ToolStripButton();
 
 	protected ToolStripButton addToWorkflow = new ToolStripButton();
+
+	protected ToolStripButton addCalendarEvent = new ToolStripButton();
 
 	protected ToolStripButton office = new ToolStripButton();
 
@@ -136,8 +141,9 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 							+ "&docId=" + document.getId() + "&version=" + document.getVersion());
 				} else {
 					String url = GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid();
+					url += "&docId=";
 					for (ListGridRecord record : selection) {
-						url += "&docId=" + record.getAttributeAsString("id");
+						url += record.getAttributeAsString("id")+"|";
 					}
 					WindowUtils.openUrl(url);
 				}
@@ -283,6 +289,40 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
+		addCalendarEvent.setIcon(ItemFactory.newImgIcon("calendar_add.png").getSrc());
+		addCalendarEvent.setTooltip(I18N.message("newcalendarevent"));
+		addCalendarEvent.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				ListGrid list = DocumentsPanel.get().getList();
+				ListGridRecord[] selection = list.getSelectedRecords();
+				if (selection == null || selection.length == 0)
+					return;
+
+				final GUIDocument[] docs = new GUIDocument[selection.length];
+				for (int i = 0; i < selection.length; i++) {
+					docs[i] = new GUIDocument();
+					docs[i].setId(Long.parseLong(selection[i].getAttribute("id")));
+					docs[i].setTitle(selection[i].getAttribute("title"));
+					docs[i].setFileName(selection[i].getAttribute("filename"));
+					docs[i].setIcon(selection[i].getAttribute("icon"));
+					docs[i].setVersion(selection[i].getAttribute("version"));
+					docs[i].setFileVersion(selection[i].getAttribute("fileVersion"));
+					docs[i].setLastModified(selection[i].getAttributeAsDate("lastModified"));
+				}
+
+				GUICalendarEvent calEvent = new GUICalendarEvent();
+				calEvent.setCreator(Session.get().getUser().getFullName());
+				calEvent.setCreatorId(Session.get().getUser().getId());
+				calEvent.setParticipants(new GUIValuePair[] { new GUIValuePair(Long.toString(Session.get().getUser()
+						.getId()), Session.get().getUser().getFullName()) });
+				calEvent.setDocuments(docs);
+				calEvent.setTitle(docs[0].getTitle());
+				CalendarEventDialog eventDialog = new CalendarEventDialog(calEvent);
+				eventDialog.show();
+			}
+		});
+
 		setHeight(27);
 		addButton(download);
 
@@ -415,6 +455,15 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		}
 
+		if (Feature.visible(Feature.CALENDAR)) {
+			addSeparator();
+			addButton(addCalendarEvent);
+			if (!Feature.enabled(Feature.CALENDAR)) {
+				addCalendarEvent.setDisabled(true);
+				addCalendarEvent.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+
 		addSeparator();
 		ToolStripButton display = new ToolStripButton();
 		display.setTitle(I18N.message("display"));
@@ -501,12 +550,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 			this.document = document;
 
-			if (document == null) {
-				download.setDisabled(true);
-			} else {
-				download.setDisabled(false);
-			}
-
 			if (document != null) {
 				download.setDisabled(!downloadEnabled);
 				rss.setDisabled(!Feature.enabled(Feature.RSS) || !downloadEnabled);
@@ -532,6 +575,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 				if (!office.isDisabled())
 					office.setTooltip(I18N.message("editwithoffice"));
+
+				addCalendarEvent.setDisabled(!Feature.enabled(Feature.CALENDAR));
 			} else {
 				download.setDisabled(true);
 				rss.setDisabled(true);
@@ -540,6 +585,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				archive.setDisabled(true);
 				startWorkflow.setDisabled(true);
 				addToWorkflow.setDisabled(true);
+				addCalendarEvent.setDisabled(true);
 				bulkUpdate.setDisabled(true);
 			}
 
@@ -556,14 +602,18 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 						|| !Feature.enabled(Feature.WORKFLOW) || Session.get().getCurrentWorkflow() == null);
 				addToWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WRITE)
 						|| !folder.hasPermission(Constants.PERMISSION_IMPORT) || !Feature.enabled(Feature.BULK_UPDATE));
+				addCalendarEvent.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_CALENDAR)
+						|| !Feature.enabled(Feature.CALENDAR));
 			} else {
 				add.setDisabled(true);
 				scan.setDisabled(true);
 				archive.setDisabled(true);
 				startWorkflow.setDisabled(true);
 				addToWorkflow.setDisabled(true);
+				addToWorkflow.setDisabled(true);
 				bulkUpdate.setDisabled(true);
 				dropSpot.setDisabled(true);
+				addCalendarEvent.setDisabled(true);
 			}
 		} catch (Throwable t) {
 

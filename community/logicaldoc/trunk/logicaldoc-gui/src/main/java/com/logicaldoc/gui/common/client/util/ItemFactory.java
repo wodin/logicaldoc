@@ -34,10 +34,12 @@ import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.LinkItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
+import com.smartgwt.client.widgets.form.fields.RowSpacerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.TimeItem;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.form.validator.IsFloatValidator;
 import com.smartgwt.client.widgets.form.validator.IsIntegerValidator;
@@ -66,7 +68,6 @@ public class ItemFactory {
 		date.setUseTextField(true);
 		date.setUseMask(true);
 		date.setShowPickerIcon(true);
-		date.setWidth(90);
 		date.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
 		date.setHintStyle("hint");
 		return date;
@@ -93,7 +94,8 @@ public class ItemFactory {
 	}
 
 	public static SelectItem newUserSelectorForExtendedAttribute(String name, String title, String groupIdOrName) {
-		final SelectItem item = new UserSelector("_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER), title, groupIdOrName);
+		final SelectItem item = new UserSelector("_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER), title,
+				groupIdOrName);
 		return item;
 	}
 
@@ -226,12 +228,14 @@ public class ItemFactory {
 		SelectItem user = new SelectItem(filterItemName(name));
 		user.setTitle(I18N.message(title));
 		user.setWrapTitle(false);
+		ListGridField id = new ListGridField("id", I18N.message("id"));
+		id.setHidden(true);
 		ListGridField username = new ListGridField("username", I18N.message("username"));
 		ListGridField label = new ListGridField("label", I18N.message("name"));
 		user.setValueField("id");
 		user.setDisplayField("username");
 		user.setPickListWidth(300);
-		user.setPickListFields(username, label);
+		user.setPickListFields(id, username, label);
 		user.setOptionDataSource(new UsersDS(groupIdOrName));
 		user.setHintStyle("hint");
 		return user;
@@ -381,6 +385,13 @@ public class ItemFactory {
 		item.setRequiredMessage(I18N.message("fieldrequired"));
 		item.setHintStyle("hint");
 		return item;
+	}
+
+	public static RowSpacerItem newRowSpacer(){
+	   RowSpacerItem item = new RowSpacerItem();
+	   item.setCellStyle("row");
+	   item.setHeight(5);
+	   return item;
 	}
 
 	/**
@@ -570,8 +581,8 @@ public class ItemFactory {
 		TextAreaItem item = new TextAreaItem();
 		item.setName(filterItemName(name));
 		item.setTitle(I18N.message(title));
-		item.setWidth(200);
 		item.setHeight(50);
+		item.setWidth("100%");
 		if (value != null)
 			item.setValue(value);
 		else
@@ -580,7 +591,7 @@ public class ItemFactory {
 		return item;
 	}
 
-	public static SelectItem newTimeSelector(String name, String title) {
+	public static SelectItem newDueTimeSelector(String name, String title) {
 		SelectItem select = new SelectItem(filterItemName(name), I18N.message(title));
 		select.setWidth(110);
 
@@ -593,6 +604,13 @@ public class ItemFactory {
 		select.setValue("minute");
 		select.setHintStyle("hint");
 		return select;
+	}
+
+	public static TimeItem newTimeItem(String name, String title) {
+		TimeItem item = new TimeItem(name, I18N.message("title"));
+		item.setHintStyle("hint");
+		item.setShowTitle(false);
+		return item;
 	}
 
 	public static SelectItem newTemplateSelector(boolean multipleSelection, Long templateId) {
@@ -612,6 +630,23 @@ public class ItemFactory {
 		return templateItem;
 	}
 
+	public static SelectItem newRecurrencySelector(String name, String title) {
+		SelectItem select = new SelectItem(filterItemName(name), I18N.message(title));
+
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		map.put("0", "");
+		map.put("1", I18N.message("daily"));
+		map.put("7", I18N.message("weekly"));
+		map.put("15 ", I18N.message("biweekly"));
+		map.put("30", I18N.message("monthly"));
+		map.put("180", I18N.message("sixmonthly"));
+		map.put("365", I18N.message("yearly"));
+		
+		select.setValueMap(map);
+		select.setHintStyle("hint");
+		return select;
+	}
+	
 	public static SelectItem newEmailProtocolSelector(String name, String title) {
 		SelectItem select = new SelectItem(filterItemName(name), I18N.message(title));
 		select.setWidth(110);

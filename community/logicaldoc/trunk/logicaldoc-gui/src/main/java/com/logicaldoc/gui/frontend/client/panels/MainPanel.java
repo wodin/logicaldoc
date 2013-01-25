@@ -190,6 +190,13 @@ public class MainPanel extends VLayout implements SessionObserver {
 		tabSet.selectTab(dashboardTab);
 	}
 
+	public void selectCalendarTab() {
+		DashboardPanel dp = DashboardPanel.get();
+		dp.getTabSet().selectTab(DashboardPanel.get().getCalendarTab());
+		dashboardTab.setPane(dp);
+		tabSet.selectTab(dashboardTab);
+	}
+	
 	public IncomingMessage getIncomingMessage() {
 		return incomingMessage;
 	}

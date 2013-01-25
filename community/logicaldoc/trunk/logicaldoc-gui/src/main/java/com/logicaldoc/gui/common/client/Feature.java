@@ -121,6 +121,7 @@ public class Feature {
 	
 	public static final int IP_FILTERS = 73;
 	
+	public static final int CALENDAR = 74;
 	
 	private static Set<String> features = new HashSet<String>();
 

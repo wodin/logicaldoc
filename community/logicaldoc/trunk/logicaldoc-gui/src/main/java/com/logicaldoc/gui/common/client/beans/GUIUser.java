@@ -15,6 +15,8 @@ import com.logicaldoc.gui.common.client.UserObserver;
 public class GUIUser implements Serializable {
 
 	public static final String ALL_TASKS = "tasks";
+	
+	public static final String EVENTS = "events";
 
 	public static final String UNREAD_MESSAGES = "unreadMessages";
 
@@ -77,6 +79,8 @@ public class GUIUser implements Serializable {
 	private int messages = 0;
 
 	private int subscriptions = 0;
+	
+	private int upcomingEvents = 0;
 
 	private Long[] menues = new Long[0];
 
@@ -465,5 +469,16 @@ public class GUIUser implements Serializable {
 
 	public void setPasswordExpired(boolean passwordExpired) {
 		this.passwordExpired = passwordExpired;
+	}
+
+	public int getUpcomingEvents() {
+		return upcomingEvents;
+	}
+
+	public void setUpcomingEvents(int events) {
+		if (this.upcomingEvents != events) {
+			this.upcomingEvents = events;
+			notifyObservers(EVENTS);
+		}
 	}
 }

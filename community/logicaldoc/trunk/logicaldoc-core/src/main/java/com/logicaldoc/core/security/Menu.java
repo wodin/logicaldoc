@@ -19,7 +19,7 @@ import com.logicaldoc.core.PersistentObject;
 public class Menu extends PersistentObject implements Comparable<Menu> {
 
 	public static int DOCUMENTS = 1500;
-	
+
 	private long id = 0;
 
 	private String text = "";
@@ -35,7 +35,7 @@ public class Menu extends PersistentObject implements Comparable<Menu> {
 	private String description = "";
 
 	protected Set<MenuGroup> menuGroups = new HashSet<MenuGroup>();
-	
+
 	public Menu() {
 	}
 
@@ -113,7 +113,6 @@ public class Menu extends PersistentObject implements Comparable<Menu> {
 			MenuGroup mg = new MenuGroup();
 			mg.setGroupId(groups[i]);
 			mg.setWrite(1);
-			mg.setAddChild(1);
 			mg.setManageSecurity(1);
 			mg.setDelete(1);
 			mg.setRename(1);

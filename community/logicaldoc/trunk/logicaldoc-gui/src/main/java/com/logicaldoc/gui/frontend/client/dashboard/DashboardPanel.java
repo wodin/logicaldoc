@@ -3,6 +3,8 @@ package com.logicaldoc.gui.frontend.client.dashboard;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
+import com.logicaldoc.gui.frontend.client.calendar.CalendarDashboard;
+import com.logicaldoc.gui.frontend.client.workflow.WorkflowDashboard;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
@@ -18,6 +20,8 @@ public class DashboardPanel extends VLayout {
 	private static DashboardPanel instance;
 
 	private TabSet tabSet = new TabSet();
+
+	private Tab calendarTab = null;
 
 	private Tab workflowTab = null;
 
@@ -44,6 +48,10 @@ public class DashboardPanel extends VLayout {
 		workflowTab.setID("workflow");
 		workflowTab.setPane(new WorkflowDashboard());
 
+		calendarTab = new Tab(I18N.message("calendar"));
+		calendarTab.setID("calendar");
+		calendarTab.setPane(CalendarDashboard.get());
+
 		tabSet.addTab(userTab);
 
 		if (Feature.visible(Feature.TAGS)) {
@@ -56,6 +64,12 @@ public class DashboardPanel extends VLayout {
 			tabSet.addTab(messagesTab);
 			if (!Feature.enabled(Feature.MESSAGES))
 				messagesTab.setPane(new FeatureDisabled());
+		}
+
+		if (Feature.visible(Feature.CALENDAR)) {
+			tabSet.addTab(calendarTab);
+			if (!Feature.enabled(Feature.CALENDAR))
+				workflowTab.setPane(new FeatureDisabled());
 		}
 
 		if (Feature.visible(Feature.WORKFLOW)) {
@@ -81,6 +95,10 @@ public class DashboardPanel extends VLayout {
 		return workflowTab;
 	}
 
+	public Tab getCalendarTab() {
+		return calendarTab;
+	}
+	
 	public Tab getMessagesTab() {
 		return messagesTab;
 	}

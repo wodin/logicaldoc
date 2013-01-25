@@ -18,6 +18,7 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.types.SortDirection;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Window;
@@ -171,6 +172,7 @@ public class WorkflowHistoryDialog extends Window {
 		instancesList.setSelectionType(SelectionStyle.SINGLE);
 		instancesList.setHeight(140);
 		instancesList.setBorder("1px solid #E1E1E1");
+		instancesList.sort("startdate", SortDirection.DESCENDING);
 		if (selectedWorkflow != null) {
 			instancesDataSource = new WorkflowHistoriesDS(selectedWorkflow.getId(), null);
 			instancesList.setDataSource(instancesDataSource);
@@ -207,8 +209,11 @@ public class WorkflowHistoryDialog extends Window {
 		historyDate.setCellFormatter(new DateCellFormatter(false));
 		historyDate.setCanFilter(false);
 		ListGridField historyUser = new ListGridField("user", I18N.message("user"), 120);
+		ListGridField historyComment = new ListGridField("comment", I18N.message("comment"));
+		historyComment.setWidth("*");
 		ListGridField historyDoc = new ListGridField("document", I18N.message("document"), 180);
 		ListGridField historySid = new ListGridField("sessionid", I18N.message("sid"), 240);
+		historySid.setHidden(true);
 
 		historiesList = new ListGrid();
 		historiesList.setEmptyMessage(I18N.message("notitemstoshow"));
@@ -218,13 +223,14 @@ public class WorkflowHistoryDialog extends Window {
 		historiesList.setCanSelectAll(false);
 		historiesList.setSelectionType(SelectionStyle.SINGLE);
 		historiesList.setHeight(200);
+		historiesList.sort("date", SortDirection.ASCENDING);
 		historiesList.setBorder("1px solid #E1E1E1");
 		if (selectedWorkflowInstance != null) {
 			historiesDataSource = new WorkflowHistoriesDS(selectedWorkflow.getId(), selectedWorkflowInstance);
 			historiesList.setDataSource(historiesDataSource);
 		}
 
-		historiesList.setFields(historyEvent, historyDate, historyUser, historyDoc, historySid);
+		historiesList.setFields(historyEvent, historyDate, historyUser, historyComment, historyDoc, historySid);
 		workflowHistoriesLayout.addMember(historiesList);
 
 		form.addMember(workflowHistoriesLayout);
@@ -255,20 +261,21 @@ public class WorkflowHistoryDialog extends Window {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.deleteInstance(Session.get().getSid(), selection.getAttributeAsLong("id"), new AsyncCallback<Void>() {
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+							service.deleteInstance(Session.get().getSid(), selection.getAttributeAsLong("id"),
+									new AsyncCallback<Void>() {
+										@Override
+										public void onFailure(Throwable caught) {
+											Log.serverError(caught);
+										}
 
-								@Override
-								public void onSuccess(Void result) {
-									instancesList.removeSelectedData();
-									instancesList.deselectAllRecords();
-									historiesList.removeSelectedData();
-									historiesList.deselectAllRecords();
-								}
-							});
+										@Override
+										public void onSuccess(Void result) {
+											instancesList.removeSelectedData();
+											instancesList.deselectAllRecords();
+											historiesList.removeSelectedData();
+											historiesList.deselectAllRecords();
+										}
+									});
 						}
 					}
 				});

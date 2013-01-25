@@ -17,16 +17,19 @@ public class SearchIndexCheckStatus extends Window {
 
 	public SearchIndexCheckStatus(String result) {
 		super();
+		
+		setWidth100();
+		setHeight100();
+		setMembersMargin(5);
+		setMargin(5);
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("checkfulltextindex"));
-		setWidth(450);
-		setHeight(500);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
-		setMembersMargin(5);
 		setAutoSize(true);
+	
 
 		final DynamicForm form = new DynamicForm();
 		form.setHeight100();

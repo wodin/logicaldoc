@@ -40,12 +40,12 @@ public class OCRSettingsPanel extends VLayout {
 
 	public OCRSettingsPanel(GUIParameter[] settings) {
 		setWidth100();
-		setHeight(400);
-		setMembersMargin(10);
-		setMargin(30);
+		setHeight100();
+		setMembersMargin(5);
+		setMargin(5);
 
-		tabs.setWidth(450);
-		tabs.setHeight(380);
+		tabs.setWidth100();
+		tabs.setHeight100();
 
 		DynamicForm form = new DynamicForm();
 		form.setValuesManager(vm);
