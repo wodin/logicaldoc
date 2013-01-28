@@ -117,12 +117,12 @@ public class DocumentContextMenu extends Menu {
 		});
 
 		MenuItem rename = new MenuItem();
-		rename.setTitle(I18N.message("rename"));
+		rename.setTitle(I18N.message("renamefile"));
 		rename.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				final ListGridRecord selection = list.getSelectedRecord();
 
-				LD.askforValue(I18N.message("rename"), I18N.message("title"), selection.getAttribute("title"), "200",
+				LD.askforValue(I18N.message("rename"), I18N.message("filename"), selection.getAttribute("filename"), "250",
 						new ValueCallback() {
 							@Override
 							public void execute(final String value) {
@@ -138,7 +138,7 @@ public class DocumentContextMenu extends Menu {
 
 											@Override
 											public void onSuccess(Void result) {
-												selection.setAttribute("title", value);
+												selection.setAttribute("filename", value);
 												selection.setAttribute("indexed", "blank");
 												list.refreshRow(list.getRecordIndex(selection));
 												DocumentsPanel.get().showFolderDetails();

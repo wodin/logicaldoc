@@ -149,8 +149,21 @@ public class MainPanel extends VLayout implements SessionObserver {
 
 			@Override
 			public void onSuccess(Integer result) {
-				int tasks = result;
-				user.setActiveTasks(tasks);
+				user.setActiveTasks(result);
+			}
+		});
+		
+		service.countActiveUserTasks(Session.get().getSid(), user.getUserName(), new AsyncCallback<Integer>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				if (Session.get().isDevel())
+					Log.serverError(caught);
+			}
+
+			@Override
+			public void onSuccess(Integer result) {
+				user.setUpcomingEvents(result);
 			}
 		});
 	}

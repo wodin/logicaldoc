@@ -1220,7 +1220,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public void rename(String sid, long docId, String title) throws Exception {
+	public void rename(String sid, long docId, String fileName) throws Exception {
 		SessionUtil.validateSession(sid);
 		User user = SessionUtil.getSessionUser(sid);
 
@@ -1237,7 +1237,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		History transaction = new History();
 		transaction.setSessionId(sid);
 		transaction.setUser(user);
-		manager.rename(doc, title, true, transaction);
+		manager.rename(doc, fileName, false, transaction);
 	}
 
 	@Override
