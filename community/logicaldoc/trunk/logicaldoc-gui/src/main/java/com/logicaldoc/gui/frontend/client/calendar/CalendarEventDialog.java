@@ -132,7 +132,7 @@ public class CalendarEventDialog extends Window {
 
 					if (calendarEvent.getExpirationDate() != null
 							&& calendarEvent.getExpirationDate().before(calendarEvent.getStartDate())) {
-						SC.warn(I18N.message("startbeforend"));
+						SC.warn(I18N.message("endbeforestart"));
 						return;
 					}
 
