@@ -52,26 +52,24 @@ public class CustomIdPanel extends VLayout {
 		setMembersMargin(5);
 
 		TabSet tabs = new TabSet();
-		
+
 		Tab schemesTab = new Tab();
 		schemesTab.setTitle(I18N.message("customid"));
 		Tab sequencesTab = new Tab();
 		sequencesTab.setTitle(I18N.message("sequences"));
-		
 
 		setupSchemesPanel(schemesData);
 		setupSequencesPanel(sequencesData);
 
-		VLayout sc=new VLayout();
-		HTMLFlow hint=new HTMLFlow(I18N.message("customidhint"));
+		VLayout sc = new VLayout();
+		HTMLFlow hint = new HTMLFlow(I18N.message("customidhint"));
 		hint.setMargin(3);
 		sc.addMember(hint);
 		sc.addMember(schemes);
-		
-		
+
 		schemesTab.setPane(sc);
 		sequencesTab.setPane(sequences);
-		
+
 		tabs.setTabs(schemesTab, sequencesTab);
 		addMember(tabs);
 	}
@@ -153,6 +151,12 @@ public class CustomIdPanel extends VLayout {
 	}
 
 	private void setupSequencesPanel(GUISequence[] data) {
+		ListGridField id = new ListGridField("id", I18N.message("id"));
+		id.setWidth(60);
+		id.setCanEdit(false);
+		id.setHidden(true);
+		
+		
 		ListGridField frequency = new ListGridField("frequency", I18N.message("frequency"));
 		frequency.setWidth(80);
 		frequency.setCanEdit(false);
@@ -160,6 +164,10 @@ public class CustomIdPanel extends VLayout {
 		ListGridField template = new ListGridField("template", I18N.message("template"));
 		template.setWidth(200);
 		template.setCanEdit(false);
+
+		ListGridField folder = new ListGridField("folder", I18N.message("folder"));
+		folder.setWidth(200);
+		folder.setCanEdit(false);
 
 		final ListGridField value = new ListGridField("value", I18N.message("value"));
 		value.setWidth(80);
@@ -183,13 +191,14 @@ public class CustomIdPanel extends VLayout {
 				record.setAttribute("frequency", I18N.message(cid.getFrequency()));
 				record.setAttribute("year", cid.getYear());
 				record.setAttribute("month", cid.getMonth());
+				record.setAttribute("folder", cid.getFolder());
 				record.setAttribute("id", cid.getId());
 				record.setAttribute("value", cid.getValue());
 				records.add(record);
 			}
 		sequences.setData(records.toArray(new ListGridRecord[0]));
 
-		sequences.setFields(frequency, template, value);
+		sequences.setFields(id, frequency, template, folder, value);
 
 		sequences.addEditCompleteHandler(new EditCompleteHandler() {
 			@Override
