@@ -942,6 +942,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				tr.setFolderId(folder.getId());
 
 				folder.setTemplate(parent.getTemplate());
+				folder.setTemplateLocked(parent.getTemplateLocked());
 				for (String name : parent.getAttributeNames()) {
 					ExtendedAttribute ext = (ExtendedAttribute) parent.getAttributes().get(name).clone();
 					folder.getAttributes().put(name, ext);
