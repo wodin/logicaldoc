@@ -11,6 +11,8 @@ public class GUISequence implements Serializable {
 	private String frequency = "";
 
 	private String template = "";
+	
+	private String folder = "";
 
 	private long value;
 
@@ -66,5 +68,13 @@ public class GUISequence implements Serializable {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public String getFolder() {
+		return folder;
+	}
+
+	public void setFolder(String folder) {
+		this.folder = folder;
 	}
 }
