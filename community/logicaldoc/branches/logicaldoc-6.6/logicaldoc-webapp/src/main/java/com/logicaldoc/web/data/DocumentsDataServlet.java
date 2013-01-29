@@ -155,13 +155,14 @@ public class DocumentsDataServlet extends HttpServlet {
 					StringBuffer query = new StringBuffer(
 							"select ld_docid, ld_name, ld_type, ld_stringvalue, ld_intvalue, ld_doublevalue, ld_datevalue ");
 					query.append(" from ld_document_ext where ld_docid in (");
-					query.append("select D.ld_id from ld_document D where D.ld_deleted=0 and D.ld_folderid=");
-					query.append(Long.toString(folderId));
+					query.append("select D.ld_id from ld_document D where D.ld_deleted=0 ");
+					if (folderId != null)
+						query.append(" and D.ld_folderid=" + Long.toString(folderId));
 					query.append(") and ld_name in ");
 					query.append(attrs.toString().replaceAll("\\[", "('").replaceAll("\\]", "')")
 							.replaceAll(",", "','").replaceAll(" ", ""));
 
-					Locale l = LocaleUtil.toLocale(locale);
+					final Locale l = LocaleUtil.toLocale(locale);
 					final SimpleDateFormat edf = new SimpleDateFormat(I18N.message("format_dateshort", l));
 
 					dao.query(query.toString(), null, new RowMapper<Long>() {
@@ -181,6 +182,10 @@ public class DocumentsDataServlet extends HttpServlet {
 								extValues.put(key, Double.toString(rs.getDouble(6)));
 							} else if (type == ExtendedAttribute.TYPE_DATE) {
 								extValues.put(key, rs.getDate(7) != null ? edf.format(rs.getDate(7)) : "");
+							} else if(type == ExtendedAttribute.TYPE_USER){
+								extValues.put(key, rs.getString(4));
+							} else if(type == ExtendedAttribute.TYPE_BOOLEAN){
+								extValues.put(key, rs.getLong(5) == 1L ? I18N.message("true", l):I18N.message("false", l));
 							}
 
 							return null;
