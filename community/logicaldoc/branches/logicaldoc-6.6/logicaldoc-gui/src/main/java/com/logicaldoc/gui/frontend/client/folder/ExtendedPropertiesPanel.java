@@ -264,7 +264,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 		if (!vm.hasErrors()) {
 
 			if (Feature.enabled(Feature.TEMPLATE)) {
-				if (values.get("template") == null || "".equals(values.get("template").toString())) {
+				if (values.get("template") == null || "".equals(values.get("template"))) {
 					folder.setTemplateId(null);
 					folder.setTemplateLocked(0);
 				} else {
