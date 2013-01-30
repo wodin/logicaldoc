@@ -110,6 +110,8 @@ public class DocumentsDataServlet extends HttpServlet {
 				String[] idsArray = request.getParameter("docIds").split(",");
 				for (String id : idsArray) {
 					Document doc = dao.findById(Long.parseLong(id));
+					if (doc == null || doc.getDeleted() == 1)
+						continue;
 					writer.print("<document>");
 					writer.print("<id>" + doc.getId() + "</id>");
 					writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getFileExtension()))
@@ -182,10 +184,11 @@ public class DocumentsDataServlet extends HttpServlet {
 								extValues.put(key, Double.toString(rs.getDouble(6)));
 							} else if (type == ExtendedAttribute.TYPE_DATE) {
 								extValues.put(key, rs.getDate(7) != null ? edf.format(rs.getDate(7)) : "");
-							} else if(type == ExtendedAttribute.TYPE_USER){
+							} else if (type == ExtendedAttribute.TYPE_USER) {
 								extValues.put(key, rs.getString(4));
-							} else if(type == ExtendedAttribute.TYPE_BOOLEAN){
-								extValues.put(key, rs.getLong(5) == 1L ? I18N.message("true", l):I18N.message("false", l));
+							} else if (type == ExtendedAttribute.TYPE_BOOLEAN) {
+								extValues.put(key,
+										rs.getLong(5) == 1L ? I18N.message("true", l) : I18N.message("false", l));
 							}
 
 							return null;

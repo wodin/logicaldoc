@@ -482,7 +482,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			if (userName != null && StringUtils.isNotEmpty(userName))
 				query.append(" and lower(A.ld_username) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");
 			if (historySid != null && StringUtils.isNotEmpty(historySid))
-				query.append(" and A.sessionId=" + historySid);
+				query.append(" and A.ld_sessionid=" + historySid);
 			if (from != null) {
 				query.append(" and A.ld_date > '" + new Timestamp(from.getTime()) + "'");
 			}
