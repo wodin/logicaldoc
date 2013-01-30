@@ -923,6 +923,10 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		return result;
 	}
 
+	public boolean applyWfTriggersToTree(long rootId) {
+		return true;
+	}
+	
 	@Override
 	public boolean applyMetadataToTree(long id, FolderHistory transaction) {
 		boolean result = true;
