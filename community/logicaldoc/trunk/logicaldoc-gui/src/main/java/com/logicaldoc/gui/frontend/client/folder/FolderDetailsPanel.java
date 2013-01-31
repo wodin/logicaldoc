@@ -13,7 +13,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
-import com.logicaldoc.gui.frontend.client.workflow.WorkflowsFolderPanel;
+import com.logicaldoc.gui.frontend.client.workflow.WorkflowTriggersPanel;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.types.Overflow;
@@ -60,7 +60,7 @@ public class FolderDetailsPanel extends VLayout {
 
 	private HistoryPanel historyPanel;
 
-	private WorkflowsFolderPanel workflowsPanel;
+	private WorkflowTriggersPanel workflowsPanel;
 
 	private HLayout savePanel;
 
@@ -251,7 +251,7 @@ public class FolderDetailsPanel extends VLayout {
 					workflowsTabPanel.removeMember(workflowsPanel);
 				}
 
-				workflowsPanel = new WorkflowsFolderPanel(folder);
+				workflowsPanel = new WorkflowTriggersPanel(folder);
 				workflowsTabPanel.addMember(workflowsPanel);
 			}
 		} catch (Throwable r) {

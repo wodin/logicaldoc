@@ -17,7 +17,7 @@ public interface WorkflowServiceAsync {
 
 	void save(String sid, GUIWorkflow workflow, AsyncCallback<GUIWorkflow> callback);
 
-	void deleteTrigger(String sid, String subtype, AsyncCallback<Void> callback);
+	void deleteTrigger(String sid, long id, AsyncCallback<Void> callback);
 
 	void saveTrigger(String sid, String folderId, String workflowId, String templateId, int startAtCheckin,
 			AsyncCallback<Void> callback);
@@ -48,5 +48,7 @@ public interface WorkflowServiceAsync {
 	void appendDocuments(String sid, String taskId, long[] docIds, AsyncCallback<Void> callback);
 
 	void importSchema(String sid, AsyncCallback<GUIWorkflow> callback);
+
+	void applyTriggersToTree(String sid, long rootId, AsyncCallback<Void> callback);
 
 }
