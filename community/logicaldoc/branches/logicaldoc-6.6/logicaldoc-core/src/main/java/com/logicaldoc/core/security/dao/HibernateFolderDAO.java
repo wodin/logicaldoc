@@ -587,7 +587,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				} else if (transaction.getEvent().equals(FolderEvent.CHANGED.toString())) {
 					parentHistory.setEvent(FolderEvent.SUBFOLDER_CHANGED.toString());
 				}
-				
+
 				parentHistory.setComment("");
 				parentHistory.setSessionId(transaction.getSessionId());
 				parentHistory.setComment(transaction.getComment());
@@ -906,8 +906,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			 * Delete all the specific rights associated to the folders in the
 			 * tree
 			 */
-			jdbcUpdate("delete from ld_foldergroup A where not A.ld_folderid = ? " + " and A.ld_folderid in "
-					+ treeIdsString, rootId);
+			jdbcUpdate(
+					"delete from ld_foldergroup where not ld_folderid = ? " + " and ld_folderid in " + treeIdsString,
+					rootId);
 			log.warn("Removed " + records + " specific rights in tree " + rootId);
 
 			if (getSessionFactory().getCache() != null)
@@ -1004,7 +1005,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		StringTokenizer st = new StringTokenizer(path, "/", false);
 
 		initialize(parent);
-		
+
 		Folder folder = parent;
 		while (st.hasMoreTokens()) {
 			String name = st.nextToken();
@@ -1113,12 +1114,13 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		}
 
 		delete(folder.getId(), transaction);
-		
+
 		/*
 		 * Mark as deleted all the folders
 		 */
-		int records = jdbcUpdate("update ld_folder A set A.ld_deleted=1, A.ld_lastmodified = ? where not A.ld_id = ? and A.ld_id in "
-				+ treeIdsString, folder.getId(), new Date());
+		int records = jdbcUpdate(
+				"update ld_folder A set A.ld_deleted=1, A.ld_lastmodified = ? where not A.ld_id = ? and A.ld_id in "
+						+ treeIdsString, folder.getId(), new Date());
 
 		if (getSessionFactory().getCache() != null)
 			getSessionFactory().getCache().evictEntityRegions();
