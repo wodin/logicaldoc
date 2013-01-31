@@ -55,9 +55,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		task.setName("Task logical");
 		task.setDescription("Task logical description");
 		task.setDueDateNumber(11);
-		task.setDueDateUnit(GUIWFState.TIME_BUSINESS_DAY);
 		task.setReminderNumber(13);
-		task.setReminderUnit(GUIWFState.TIME_BUSINESS_WEEK);
 		GUIValuePair[] participants = new GUIValuePair[2];
 		participants[0] = new GUIValuePair("" + user1.getId(), user1.getUserName());
 		participants[1] = new GUIValuePair("" + user2.getId(), user2.getUserName());
@@ -69,9 +67,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		task1.setName("Task test");
 		task1.setDescription("Task test description");
 		task1.setDueDateNumber(3);
-		task1.setDueDateUnit(GUIWFState.TIME_HOUR);
 		task1.setReminderNumber(43);
-		task1.setReminderUnit(GUIWFState.TIME_MINUTE);
 
 		GUIWFState task2 = new GUIWFState();
 		task2.setId("3");
@@ -79,9 +75,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		task2.setName("Task doc");
 		task2.setDescription("Task doc description");
 		task2.setDueDateNumber(2);
-		task2.setDueDateUnit(GUIWFState.TIME_WEEK);
 		task2.setReminderNumber(5);
-		task2.setReminderUnit(GUIWFState.TIME_BUSINESS_HOUR);
 
 		GUIWFState fork = new GUIWFState();
 		fork.setId("4");
@@ -195,7 +189,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	}
 
 	@Override
-	public void deleteTrigger(String sid, String subtype) throws InvalidSessionException {
+	public void deleteTrigger(String sid, long id) throws InvalidSessionException {
 	}
 
 	@Override
@@ -263,6 +257,12 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 
 	@Override
 	public void deleteInstance(String sid, long id) throws InvalidSessionException {
+
+	}
+
+	@Override
+	public void applyTriggersToTree(String sid, long rootId) throws InvalidSessionException {
+		// TODO Auto-generated method stub
 
 	}
 }
