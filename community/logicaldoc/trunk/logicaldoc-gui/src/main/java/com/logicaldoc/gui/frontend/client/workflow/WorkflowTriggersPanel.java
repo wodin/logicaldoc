@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
+import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -38,12 +39,12 @@ import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 /**
- * Displays the list of all workflows over a folder.
+ * Displays the list of all workflow triggers on a folder.
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
  */
-public class WorkflowsFolderPanel extends VLayout {
+public class WorkflowTriggersPanel extends VLayout {
 
 	private WorkflowServiceAsync service = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
 
@@ -55,15 +56,38 @@ public class WorkflowsFolderPanel extends VLayout {
 
 	private SelectItem templates = null;
 
-	public WorkflowsFolderPanel(GUIFolder folder) {
+	public WorkflowTriggersPanel(final GUIFolder folder) {
 		this.folder = folder;
 
 		refresh();
 
-		HLayout buttons = new HLayout();
 		Button addTrigger = new Button(I18N.message("workflowtriggeradd"));
 		addTrigger.setAutoFit(true);
-		buttons.addMember(addTrigger);
+		
+		Button applyTriggersToSubfolders = new Button(I18N.message("applytosubfolders"));
+		applyTriggersToSubfolders.setAutoFit(true);
+		applyTriggersToSubfolders.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				ContactingServer.get().show();
+				service.applyTriggersToTree(Session.get().getSid(), folder.getId(), new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						ContactingServer.get().hide();
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void v) {
+						ContactingServer.get().hide();
+					}
+				});
+			}
+		});
+
+		HLayout buttons = new HLayout();
+		buttons.setMembers(addTrigger, applyTriggersToSubfolders);
 		buttons.setMembersMargin(3);
 		buttons.setWidth100();
 		buttons.setHeight(15);
@@ -110,7 +134,8 @@ public class WorkflowsFolderPanel extends VLayout {
 				templates.setMultipleAppearance(MultipleAppearance.GRID);
 				templateForm.setItems(templates);
 
-				final RadioGroupItem checkin = ItemFactory.newBooleanSelector("checkin", I18N.message("triggerateverycheckin"));
+				final RadioGroupItem checkin = ItemFactory.newBooleanSelector("checkin",
+						I18N.message("triggerateverycheckin"));
 				checkin.setValue("no");
 				checkin.setWrapTitle(false);
 
@@ -173,7 +198,7 @@ public class WorkflowsFolderPanel extends VLayout {
 
 		ListGridField template = new ListGridField("template", I18N.message("template"), 200);
 		template.setCanFilter(true);
-		
+
 		ListGridField checkin = new ListGridField("triggerAtCheckin", I18N.message("triggeratcheckin"));
 		checkin.setCanFilter(false);
 		checkin.setAlign(Alignment.LEFT);
@@ -221,19 +246,19 @@ public class WorkflowsFolderPanel extends VLayout {
 					public void execute(Boolean value) {
 						if (value) {
 							ListGridRecord record = list.getSelectedRecord();
-							String subtype = folder.getId() + "-" + record.getAttributeAsString("templateId");
-							service.deleteTrigger(Session.get().getSid(), subtype, new AsyncCallback<Void>() {
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+							service.deleteTrigger(Session.get().getSid(),
+									Long.parseLong(record.getAttributeAsString("id")), new AsyncCallback<Void>() {
+										@Override
+										public void onFailure(Throwable caught) {
+											Log.serverError(caught);
+										}
 
-								@Override
-								public void onSuccess(Void result) {
-									removeMember(list);
-									refresh();
-								}
-							});
+										@Override
+										public void onSuccess(Void result) {
+											removeMember(list);
+											refresh();
+										}
+									});
 						}
 					}
 				});

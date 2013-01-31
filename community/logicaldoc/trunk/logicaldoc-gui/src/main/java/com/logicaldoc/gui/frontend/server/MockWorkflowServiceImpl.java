@@ -196,7 +196,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	}
 
 	@Override
-	public void deleteTrigger(String sid, String subtype) throws InvalidSessionException {
+	public void deleteTrigger(String sid, long id) throws InvalidSessionException {
 	}
 
 	@Override
@@ -265,5 +265,11 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	@Override
 	public void deleteInstance(String sid, long id) throws InvalidSessionException {
 
+	}
+
+	@Override
+	public void applyTriggersToTree(String sid, long rootId) throws InvalidSessionException {
+		// TODO Auto-generated method stub
+		
 	}
 }
