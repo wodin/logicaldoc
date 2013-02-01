@@ -28,7 +28,7 @@ public class GUICalendarEvent implements Serializable {
 
 	private Date expirationDate = null;
 
-	private GUIValuePair[] participants = new GUIValuePair[0];
+	private GUIUser[] participants = new GUIUser[0];
 
 	private GUIDocument[] documents = new GUIDocument[0];
 
@@ -40,9 +40,9 @@ public class GUICalendarEvent implements Serializable {
 	private int remindTime = 1;
 
 	private String remindUnit = Constants.TIME_HOUR;
-	
+
 	private long creatorId;
-	
+
 	private String creator;
 
 	public GUICalendarEvent() {
@@ -117,42 +117,33 @@ public class GUICalendarEvent implements Serializable {
 		this.recurrency = recurrency;
 	}
 
-
-	public GUIValuePair[] getParticipants() {
-		return participants;
-	}
-
-	public void setParticipants(GUIValuePair[] participants) {
-		this.participants = participants;
-	}
-	
-	public void addParticipant(GUIValuePair newPart){
-		GUIValuePair[] newParts=new GUIValuePair[participants.length+1];
+	public void addParticipant(GUIUser newPart) {
+		GUIUser[] newParts = new GUIUser[participants.length + 1];
 		for (int i = 0; i < participants.length; i++) {
-			newParts[i]=participants[i];
+			newParts[i] = participants[i];
 		}
-		newParts[participants.length]=newPart;
-		participants=newParts;
+		newParts[participants.length] = newPart;
+		participants = newParts;
 	}
-	
-	public void removeParticipant(String code){
-		GUIValuePair[] newParts=new GUIValuePair[participants.length-1];
-		int j=0;
+
+	public void removeParticipant(long id) {
+		GUIUser[] newParts = new GUIUser[participants.length - 1];
+		int j = 0;
 		for (int i = 0; i < participants.length; i++) {
-			if(code.equals(participants[i].getCode()))
+			if (id == participants[i].getId())
 				continue;
-			newParts[j++]=participants[i];
+			newParts[j++] = participants[i];
 		}
-		participants=newParts;
+		participants = newParts;
 	}
-	
-	public void removeDocument(long docId){
-		GUIDocument[] newDocs=new GUIDocument[documents.length-1];
-		int j=0;
+
+	public void removeDocument(long docId) {
+		GUIDocument[] newDocs = new GUIDocument[documents.length - 1];
+		int j = 0;
 		for (int i = 0; i < documents.length; i++) {
-			if(docId==documents[i].getId())
+			if (docId == documents[i].getId())
 				continue;
-			newDocs[j++]=documents[i];
+			newDocs[j++] = documents[i];
 		}
 		documents = newDocs;
 	}
@@ -187,5 +178,13 @@ public class GUICalendarEvent implements Serializable {
 
 	public void setCreator(String creator) {
 		this.creator = creator;
+	}
+
+	public GUIUser[] getParticipants() {
+		return participants;
+	}
+
+	public void setParticipants(GUIUser[] participants) {
+		this.participants = participants;
 	}
 }

@@ -908,8 +908,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			 * Delete all the specific rights associated to the folders in the
 			 * tree
 			 */
-			jdbcUpdate(
-					"delete from ld_foldergroup A where not A.ld_folderid = ? and A.ld_folderid in " + treeIdsString,
+			jdbcUpdate("delete from ld_foldergroup where not ld_folderid = ? and ld_folderid in " + treeIdsString,
 					rootId);
 			log.warn("Removed " + records + " specific rights in tree " + rootId);
 
