@@ -6,6 +6,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUICalendarEvent;
+import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.data.CalendarEventsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -78,7 +79,6 @@ public class CalendarDashboard extends VLayout {
 		calendar.setCanDragScroll(false);
 		calendar.setCanEditLane(false);
 		calendar.setCanEditEvents(false);
-
 		calendar.setChosenDate(lastChosenDate);
 
 		calendar.addDateChangedHandler(new DateChangedHandler() {
@@ -92,6 +92,12 @@ public class CalendarDashboard extends VLayout {
 			@Override
 			public void onEventRemoveClick(final CalendarEventRemoveClick event) {
 				event.cancel();
+				long creatorId = Long.parseLong(event.getEvent().getAttribute("creatorId"));
+				GUIUser currentUser = Session.get().getUser();
+				if (currentUser.getId() != creatorId && !currentUser.isMemberOf("admin")) {
+					return;
+				}
+
 				LD.ask(I18N.message("delevent"), I18N.message("deleventconfirm"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
@@ -151,7 +157,11 @@ public class CalendarDashboard extends VLayout {
 
 							@Override
 							public void onSuccess(final GUICalendarEvent ev) {
-								if (ev.getParentId() != null)
+								long creatorId = Long.parseLong(event.getEvent().getAttribute("creatorId"));
+								GUIUser currentUser = Session.get().getUser();
+
+								if (ev.getParentId() != null
+										&& (currentUser.getId() == creatorId || currentUser.isMemberOf("admin"))) {
 									LD.ask(I18N.message("editevent"), I18N.message("douwantmodifyalloccurrences"),
 											new BooleanCallback() {
 												@Override
@@ -177,7 +187,7 @@ public class CalendarDashboard extends VLayout {
 													}
 												}
 											});
-								else {
+								} else {
 									CalendarEventDialog eventDialog = new CalendarEventDialog(ev);
 									eventDialog.show();
 								}

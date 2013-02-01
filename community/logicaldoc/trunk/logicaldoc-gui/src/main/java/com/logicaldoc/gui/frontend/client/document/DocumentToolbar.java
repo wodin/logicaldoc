@@ -10,7 +10,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUICalendarEvent;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
-import com.logicaldoc.gui.common.client.beans.GUIValuePair;
+import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -143,7 +143,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					String url = GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid();
 					url += "&docId=";
 					for (ListGridRecord record : selection) {
-						url += record.getAttributeAsString("id")+"|";
+						url += record.getAttributeAsString("id") + "|";
 					}
 					WindowUtils.openUrl(url);
 				}
@@ -314,8 +314,12 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				GUICalendarEvent calEvent = new GUICalendarEvent();
 				calEvent.setCreator(Session.get().getUser().getFullName());
 				calEvent.setCreatorId(Session.get().getUser().getId());
-				calEvent.setParticipants(new GUIValuePair[] { new GUIValuePair(Long.toString(Session.get().getUser()
-						.getId()), Session.get().getUser().getFullName()) });
+				GUIUser user = new GUIUser();
+				user.setId(Session.get().getUser().getId());
+				user.setUserName(Session.get().getUser().getUserName());
+				user.setFirstName(Session.get().getUser().getFirstName());
+				user.setName(Session.get().getUser().getName());
+				calEvent.addParticipant(user);
 				calEvent.setDocuments(docs);
 				calEvent.setTitle(docs[0].getTitle());
 				CalendarEventDialog eventDialog = new CalendarEventDialog(calEvent);
