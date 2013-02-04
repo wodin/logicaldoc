@@ -83,7 +83,7 @@ public class HibernateFeedMessageDAOTest extends AbstractCoreTCase {
 
 		feedMessages = dao.findAll();
 		System.err.println("feedMessages.size(): " +feedMessages.size());
-		Assert.assertEquals(2, feedMessages.size());
+		Assert.assertEquals(1, feedMessages.size());
 		Assert.assertFalse(feedMessages.contains(dao.findById(3)));
 	}
 }
