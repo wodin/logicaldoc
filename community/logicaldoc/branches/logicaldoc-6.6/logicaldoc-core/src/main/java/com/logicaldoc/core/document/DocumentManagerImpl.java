@@ -480,8 +480,6 @@ public class DocumentManagerImpl implements DocumentManager {
 		assert (file != null);
 
 		try {
-			docVO.setDate(new Date());
-
 			String fallbackTitle = docVO.getFileName();
 			String type = "unknown";
 			int lastDotIndex = docVO.getFileName().lastIndexOf(".");
@@ -495,8 +493,15 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			setUniqueTitleAndFilename(docVO);
 
+			if (docVO.getDate() == null)
+				docVO.setDate(new Date());
+
 			if (docVO.getSourceDate() == null)
 				docVO.setSourceDate(docVO.getDate());
+			
+			if (docVO.getCreation() == null)
+				docVO.setCreation(docVO.getDate());
+			
 			docVO.setPublisher(transaction.getUserName());
 			docVO.setPublisherId(transaction.getUserId());
 			docVO.setCreator(transaction.getUserName());
