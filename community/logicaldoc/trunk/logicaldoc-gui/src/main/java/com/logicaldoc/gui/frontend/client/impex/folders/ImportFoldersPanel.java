@@ -14,8 +14,6 @@ import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.frontend.client.services.ImportFoldersService;
 import com.logicaldoc.gui.frontend.client.services.ImportFoldersServiceAsync;
-import com.logicaldoc.gui.frontend.client.services.SettingService;
-import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -50,8 +48,6 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  */
 public class ImportFoldersPanel extends VLayout {
 	private ImportFoldersServiceAsync service = (ImportFoldersServiceAsync) GWT.create(ImportFoldersService.class);
-
-	private SettingServiceAsync settingService = (SettingServiceAsync) GWT.create(SettingService.class);
 
 	private Layout listing = new VLayout();
 
@@ -116,7 +112,7 @@ public class ImportFoldersPanel extends VLayout {
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
 		list.setFilterOnKeypress(true);
-		list.setDataSource(ImportFoldersDS.get());
+		list.setDataSource(new ImportFoldersDS(false));
 
 		listing.addMember(infoPanel);
 		listing.addMember(list);

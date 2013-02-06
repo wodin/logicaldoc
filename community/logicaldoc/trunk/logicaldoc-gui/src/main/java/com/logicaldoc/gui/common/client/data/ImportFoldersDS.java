@@ -13,9 +13,8 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class ImportFoldersDS extends DataSource {
-	private static ImportFoldersDS instance;
 
-	private ImportFoldersDS(boolean withEmpty) {
+	public ImportFoldersDS(boolean withEmpty) {
 		setTitleField("template");
 		setRecordXPath("/list/folder");
 		DataSourceTextField id = new DataSourceTextField("id");
@@ -28,11 +27,5 @@ public class ImportFoldersDS extends DataSource {
 		setFields(id, src, type, provider, enabled);
 		setDataURL("data/importfolders.xml?sid=" + Session.get().getSid() + "&locale=" + I18N.getLocale());
 		setClientOnly(true);
-	}
-
-	public static ImportFoldersDS get() {
-		if (instance == null)
-			instance = new ImportFoldersDS(false);
-		return instance;
 	}
 }
