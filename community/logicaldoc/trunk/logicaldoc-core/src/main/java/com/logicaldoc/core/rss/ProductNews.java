@@ -67,7 +67,7 @@ public class ProductNews extends Task {
 			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			String url = config.getProperty("news.url");
 			if (StringUtils.isEmpty(url))
-				url = "http://www.logicaldoc.com/company/news.feed?type=rss";
+				url = "http://www.logicaldoc.com/news/rss.html";
 			else if ("-".equals(url))
 				return;
 
