@@ -10,6 +10,11 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC 6.6.2 (2013-02-15; logicaldoc-6.6.2)
+===============               
+269 -	Fulltext search broken in WebService -	Bug -	Web Services
+281 -	Avoid inconsistencies between day-of-week and day-of-month -	Improvement -	Core
+
 LogicalDOC 6.6.1 (2013-01-10; logicaldoc-6.6.1)
 ===============                    
 270 -	Print a selection of documents into a single PDF - New Feature - Core
