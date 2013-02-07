@@ -5,10 +5,16 @@
 /_____/\____/\__, /_/\___/\__,_/_/   \____/_.___/_/ /\___/\___/\__/____/
             /____/                             /___/
 
+                    http://www.logicalobjects.com
                       http://www.logicaldoc.com                    
 
                      LogicalDOC Community Edition
-                     
+
+LogicalDOC 6.6.2 (2013-02-15; logicaldoc-6.6.2)
+===============               
+269 -	Fulltext search broken in WebService -	Bug -	Web Services
+281 -	Avoid inconsistencies between day-of-week and day-of-month -	Improvement -	Core
+
 LogicalDOC 6.6.1 (2013-01-10; logicaldoc-6.6.1)
 ===============                    
 270 -	Print a selection of documents into a single PDF - New Feature - Core
@@ -18,21 +24,17 @@ LogicalDOC 6.6.1 (2013-01-10; logicaldoc-6.6.1)
 273 -	Statistical Graphs not coming due to error - Bug - User Interface
 275 -	[Bulk update] add tag is not working - Bug - User Interface
 278 -	Wrong pages order in preview - Bug -	Core
-                     
 
-LogicalDOC 6.6 (2012-11-22; logicaldoc-6.6)
+
+LogicalDOC 6.6 (2012-11-15; logicaldoc-6.6)
 ===============
 255 -	Customizable User Dashboard -	New Feature -	User Interface
 257 -	User data type for extended attribute -	Improvement -	Core
-229 -	Upgrade POI to the latest version 3.8 -	Task -	Core
+229 -	Upgrade POI to the latest version -	Task -	Core
 231 -	Upgrade GTW-upload to latest 0.6.4 -	Task -	User Interface
 260 -	Improved performance of massive folders deletions -	Improvement -	Core
 253 -	Configurable timeout for webservice clients -	Improvement -	Web Services
-264 - Support for Swedish language - Improvement - Core
-Improved performance of the preview on multi-page documents
-Replaced the Flash used to display the Repository Statistics with a JavaScript component
-Replaced the Flash used to display the Tag Cloud with a JavaScript component
-Upgraded FlexPaper component (used to display document preview) to the latest version 1.5.8
+264 - Support for sweden language - Improvement - Core  
 
 
 LogicalDOC 6.5.2 (2012-10-15; logicaldoc-6.5.2)
