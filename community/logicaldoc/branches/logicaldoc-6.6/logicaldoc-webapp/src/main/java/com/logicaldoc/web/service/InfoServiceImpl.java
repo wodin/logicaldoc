@@ -108,7 +108,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 					UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 					int test = -1;
 					try {
-						test = dao.queryForInt("select count(*) from ld_user;");
+						test = dao.queryForInt("select count(*) from ld_user");
 					} catch (Throwable t) {
 						test = -1;
 					}
