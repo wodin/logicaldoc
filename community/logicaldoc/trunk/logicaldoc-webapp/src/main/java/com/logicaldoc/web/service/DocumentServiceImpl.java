@@ -267,6 +267,11 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				transaction.setUser(SessionUtil.getSessionUser(sid));
 				transaction.setComment(comment);
 
+				DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+				Document doc = dao.findById(docId);
+				if (doc.getDocRef() != null)
+					docId = doc.getDocRef().longValue();
+
 				// checkin the document; throws an exception if
 				// something goes wrong
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()
@@ -293,6 +298,11 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		transaction.setComment("");
 		transaction.setUser(SessionUtil.getSessionUser(sid));
 
+		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Document doc = dao.findById(docId);
+		if (doc.getDocRef() != null)
+			docId = doc.getDocRef().longValue();
+		
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		try {
 			documentManager.checkout(docId, transaction);
