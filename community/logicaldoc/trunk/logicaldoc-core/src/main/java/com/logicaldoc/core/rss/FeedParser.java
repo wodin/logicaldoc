@@ -108,7 +108,11 @@ public class FeedParser {
 
 					if (event.asStartElement().getName().getLocalPart() == (LINK)) {
 						event = eventReader.nextEvent();
-						link = event.asCharacters().getData();
+						try {
+							link = event.asCharacters().getData();
+						} catch (Throwable t) {
+
+						}
 						continue;
 					}
 
