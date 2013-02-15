@@ -333,6 +333,8 @@ public class DocumentsDataServlet extends HttpServlet {
 				for (Long id : docRefIds) {
 					Document aliasDoc = dao.findById(id);
 					Document doc = dao.findById(aliasDoc.getDocRef());
+					if (doc == null)
+						continue;
 
 					boolean published = isPublished(doc.getPublished(), doc.getStartPublishing(),
 							doc.getStopPublishing());
