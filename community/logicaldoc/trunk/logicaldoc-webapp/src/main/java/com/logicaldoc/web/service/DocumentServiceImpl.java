@@ -321,7 +321,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			for (long id : ids) {
 				try {
 					Document doc = dao.findById(id);
-
+					
 					// Create the document history event
 					History transaction = new History();
 					transaction.setSessionId(sid);
@@ -343,7 +343,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					}
 
 					// The document must be not locked
-					if (doc.getStatus() != Document.DOC_UNLOCKED || doc.getExportStatus() != Document.EXPORT_UNLOCKED) {
+					if (doc.getStatus() != Document.DOC_UNLOCKED) {
 						continue;
 					}
 					// Check if there are some shortcuts associated to the
