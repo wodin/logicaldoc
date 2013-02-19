@@ -30,15 +30,30 @@ public class ReportsMenu extends VLayout {
 		lastChanges.setHeight(25);
 		if (Menu.enabled(Menu.LAST_CHANGES))
 			addMember(lastChanges);
-
-		Button duplicates = new Button(I18N.message("searchduplicates"));
-		duplicates.setWidth100();
-		duplicates.setHeight(25);
-
 		lastChanges.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				AdminPanel.get().setContent(new LastChangesPanel());
+			}
+		});
+
+		Button duplicates = new Button(I18N.message("searchduplicates"));
+		duplicates.setWidth100();
+		duplicates.setHeight(25);
+		duplicates.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new DuplicatesPanel());
+			}
+		});
+
+		Button calendar = new Button(I18N.message("calendar"));
+		calendar.setWidth100();
+		calendar.setHeight(25);
+		calendar.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new CalendarReport());
 			}
 		});
 
@@ -50,11 +65,12 @@ public class ReportsMenu extends VLayout {
 			}
 		}
 
-		duplicates.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				AdminPanel.get().setContent(new DuplicatesPanel());
+		if (Feature.visible(Feature.CALENDAR)) {
+			addMember(calendar);
+			if (!Feature.enabled(Feature.CALENDAR) || !Menu.enabled(Menu.CALENDAR_REPORT)) {
+				calendar.setDisabled(true);
+				calendar.setTooltip(I18N.message("featuredisabled"));
 			}
-		});
+		}
 	}
 }

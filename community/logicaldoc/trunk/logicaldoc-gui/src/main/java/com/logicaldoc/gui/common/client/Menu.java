@@ -21,7 +21,7 @@ public class Menu {
 	public static final int SEARCH = 1510;
 
 	public static final int DASHBOARD = 1520;
-	
+
 	public static final int SECURITY = 9;
 
 	public static final int CLIENTS = 3;
@@ -41,10 +41,12 @@ public class Menu {
 	public static final long REPORTS = 16;
 
 	public static final long AOS = -20;
-	
+
 	public static final long CLUSTERING = -1110;
-	
+
 	public static final long SUBSCRIPTIONS = -1120;
+
+	public static final long CALENDAR_REPORT = -2060;
 
 	private static Set<Long> menues = new HashSet<Long>();
 

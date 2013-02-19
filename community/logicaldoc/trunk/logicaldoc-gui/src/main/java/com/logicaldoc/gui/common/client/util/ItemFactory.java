@@ -630,7 +630,7 @@ public class ItemFactory {
 		return templateItem;
 	}
 
-	public static SelectItem newRecurrencySelector(String name, String title) {
+	public static SelectItem newFrequencySelector(String name, String title) {
 		SelectItem select = new SelectItem(filterItemName(name), I18N.message(title));
 
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
