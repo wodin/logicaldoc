@@ -109,8 +109,8 @@ public class CalendarEventDialog extends Window {
 					calendarEvent.setRemindTime(Integer.parseInt(vm.getValueAsString("remindTime")));
 					calendarEvent.setRemindUnit(vm.getValueAsString("remindUnit"));
 
-					if (vm.getValue("recurrency") != null)
-						calendarEvent.setRecurrency(Integer.parseInt(vm.getValueAsString("recurrency")));
+					if (vm.getValue("frequency") != null)
+						calendarEvent.setFrequency(Integer.parseInt(vm.getValueAsString("frequency")));
 
 					DateTimeFormat dfDate = DateTimeFormat.getFormat("yyyy-MM-dd");
 					DateTimeFormat dfTime = DateTimeFormat.getFormat("HH:mm");
@@ -383,12 +383,12 @@ public class CalendarEventDialog extends Window {
 		if (event.getExpirationDate() != null)
 			expirationTime.setValue(df.format(event.getExpirationDate()));
 
-		SelectItem recurrency = ItemFactory.newRecurrencySelector("recurrency", "recurrency");
-		recurrency.setEndRow(true);
-		recurrency.setTitleOrientation(TitleOrientation.LEFT);
-		recurrency.setValue(Integer.toString(event.getRecurrency()));
-		recurrency.setColSpan(5);
-		recurrency.setCanEdit(!readOnly);
+		SelectItem frequency = ItemFactory.newFrequencySelector("frequency", "frequency");
+		frequency.setEndRow(true);
+		frequency.setTitleOrientation(TitleOrientation.LEFT);
+		frequency.setValue(Integer.toString(event.getFrequency()));
+		frequency.setColSpan(5);
+		frequency.setCanEdit(!readOnly);
 
 		SpinnerItem remindTimeNumber = new SpinnerItem("remindTime");
 		remindTimeNumber.setTitle(I18N.message("remindtime"));
@@ -417,7 +417,7 @@ public class CalendarEventDialog extends Window {
 		description.setCanEdit(!readOnly);
 
 		detailsForm.setFields(title, ItemFactory.newRowSpacer(), startDate, startTime, expirationDate, expirationTime,
-				ItemFactory.newRowSpacer(), recurrency, ItemFactory.newRowSpacer(), remindTimeNumber, remindTimeUnit,
+				ItemFactory.newRowSpacer(), frequency, ItemFactory.newRowSpacer(), remindTimeNumber, remindTimeUnit,
 				ItemFactory.newRowSpacer(), description);
 		details.setPane(detailsForm);
 		return details;

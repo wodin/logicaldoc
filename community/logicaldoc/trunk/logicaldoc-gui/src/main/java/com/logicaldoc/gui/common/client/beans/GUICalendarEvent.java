@@ -32,10 +32,7 @@ public class GUICalendarEvent implements Serializable {
 
 	private GUIDocument[] documents = new GUIDocument[0];
 
-	/**
-	 * The recurrency of this event, expressed in days
-	 */
-	private int recurrency = 0;
+	private int frequency = 0;
 
 	private int remindTime = 1;
 
@@ -109,12 +106,12 @@ public class GUICalendarEvent implements Serializable {
 		this.documents = documents;
 	}
 
-	public int getRecurrency() {
-		return recurrency;
+	public int getFrequency() {
+		return frequency;
 	}
 
-	public void setRecurrency(int recurrency) {
-		this.recurrency = recurrency;
+	public void setFrequency(int frequency) {
+		this.frequency = frequency;
 	}
 
 	public void addParticipant(GUIUser newPart) {

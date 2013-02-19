@@ -28,6 +28,19 @@ public interface CalendarService extends RemoteService {
 	public GUICalendarEvent getEvent(String sid, long eventId) throws InvalidSessionException;
 
 	/**
+	 * Searches for events.
+	 * 
+	 * @param startDate Start date (optional)
+	 * @param endDate End date (optional)
+	 * @param frequency The frequency of the event (1,15, 30 ... optional)
+	 * @param title The title (used with like operator, optional)
+	 * @param title Maximum number of records (optional)
+	 * @return The list of events ordered by ascending date
+	 */
+	public GUICalendarEvent[] find(String sid, Date startDate, Date endDate, Integer frequency, String title,
+			Integer maxRecords) throws InvalidSessionException;
+
+	/**
 	 * Deletes an event. If the event is a master, in any case all the
 	 * occurrences will be deleted too.
 	 */
