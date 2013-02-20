@@ -256,7 +256,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 			for (GUIParameter f : repos[1]) {
 				if (f == null || f.getValue().trim().isEmpty())
 					continue;
-				conf.setProperty(f.getName(), f.getValue());
+				conf.setProperty(f.getName().replaceAll("_", "."), f.getValue());
 			}
 			conf.write();
 		} catch (IOException e) {
