@@ -579,25 +579,30 @@ public class TemplatePropertiesPanel extends HLayout {
 
 	public void refreshFieldForm() {
 		if (type.getValueAsString().equals("" + GUIExtendedAttribute.TYPE_STRING)) {
-			editor.setVisible(true);
+			editor.setDisabled(false);
 			values.setTitle(I18N.message("values"));
 			values.setHint(I18N.message("separatedcomma"));
 
 			if (editor.getValueAsString().equals("" + GUIExtendedAttribute.EDITOR_LISTBOX)) {
-				values.setVisible(true);
-			} else
-				values.setVisible(false);
+				values.setDisabled(false);
+			} else{
+				values.setDisabled(true);
+				values.setValue("");
+			}
 		} else if (type.getValueAsString().equals("" + GUIExtendedAttribute.TYPE_USER)) {
-			editor.setVisible(false);
-			values.setVisible(true);
+			editor.setDisabled(true);
+			values.setDisabled(false);
 			values.setTitle(I18N.message("group"));
 			values.setHint(I18N.message("groupname"));
 		} else {
-			editor.setVisible(false);
-			values.setVisible(false);
+			editor.setDisabled(true);
+			values.setDisabled(true);
+			values.setValue("");
+			values.setTitle(" ");
+			values.setHint(" ");
 		}
 
-		form2.redraw();
+		form2.markForRedraw();
 	}
 
 	protected void onContextMenuCreation(int category, String attributeName) {
