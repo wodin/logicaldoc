@@ -160,13 +160,13 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	@Override
 	public void saveSettings(String sid, GUIParameter[] settings) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
-		
+
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			for (int i = 0; i < settings.length; i++) {
 				conf.setProperty(settings[i].getName(), settings[i].getValue() != null ? settings[i].getValue() : "");
 			}
-			
+
 			conf.write();
 
 			log.info("Parameters settings data written successfully.");
@@ -256,7 +256,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 			for (GUIParameter f : repos[1]) {
 				if (f == null || f.getValue().trim().isEmpty())
 					continue;
-				conf.setProperty(f.getName(), f.getValue());
+				conf.setProperty(f.getName().replaceAll("_", "."), f.getValue());
 			}
 			conf.write();
 		} catch (IOException e) {
