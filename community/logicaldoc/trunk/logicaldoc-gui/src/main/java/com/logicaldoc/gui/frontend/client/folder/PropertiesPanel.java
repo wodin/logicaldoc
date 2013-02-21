@@ -88,11 +88,12 @@ public class PropertiesPanel extends FolderDetailTab {
 	}
 
 	boolean validate() {
-		vm.validate();
-		if (folder.getId() != Constants.DOCUMENTS_FOLDERID) {
+		if (folder.getId() != Constants.DOCUMENTS_FOLDERID && folder.getId() != Constants.WORKSPACE_DEFAULTID) {
+			vm.validate();
 			folder.setName(vm.getValueAsString("name").replaceAll("/", ""));
 			folder.setDescription(vm.getValueAsString("description"));
-		}
-		return !vm.hasErrors();
+			return !vm.hasErrors();
+		} else
+			return true;
 	}
 }
