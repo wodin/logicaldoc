@@ -22,9 +22,10 @@ public class CalendarEventsDS extends DataSource {
 		DataSourceTextField description = new DataSourceTextField("description");
 		DataSourceDateTimeField start = new DataSourceDateTimeField("startDate");
 		DataSourceDateTimeField end = new DataSourceDateTimeField("endDate");
+		DataSourceDateTimeField eventWindowStyle = new DataSourceDateTimeField("eventWindowStyle");
 		DataSourceTextField parentId = new DataSourceTextField("parentId");
-		
-		setFields(id, title, description, start, end, parentId);
+
+		setFields(id, title, description, start, end, eventWindowStyle, parentId);
 		setClientOnly(true);
 		setDataURL("data/calendarevents.xml?sid=" + Session.get().getSid());
 	}
