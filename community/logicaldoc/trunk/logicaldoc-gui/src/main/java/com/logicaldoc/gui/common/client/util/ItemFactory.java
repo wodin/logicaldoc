@@ -70,6 +70,7 @@ public class ItemFactory {
 		date.setShowPickerIcon(true);
 		date.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
 		date.setHintStyle("hint");
+		date.setWidth(90);
 		return date;
 	}
 
@@ -387,11 +388,11 @@ public class ItemFactory {
 		return item;
 	}
 
-	public static RowSpacerItem newRowSpacer(){
-	   RowSpacerItem item = new RowSpacerItem();
-	   item.setCellStyle("row");
-	   item.setHeight(5);
-	   return item;
+	public static RowSpacerItem newRowSpacer() {
+		RowSpacerItem item = new RowSpacerItem();
+		item.setCellStyle("row");
+		item.setHeight(5);
+		return item;
 	}
 
 	/**
@@ -607,9 +608,9 @@ public class ItemFactory {
 	}
 
 	public static TimeItem newTimeItem(String name, String title) {
-		TimeItem item = new TimeItem(name, I18N.message("title"));
+		TimeItem item = new TimeItem(name, I18N.message(title));
 		item.setHintStyle("hint");
-		item.setShowTitle(false);
+		item.setWidth(40);
 		return item;
 	}
 
@@ -641,12 +642,28 @@ public class ItemFactory {
 		map.put("30", I18N.message("monthly"));
 		map.put("180", I18N.message("sixmonthly"));
 		map.put("365", I18N.message("yearly"));
-		
+
 		select.setValueMap(map);
 		select.setHintStyle("hint");
+		select.setWidth(100);
 		return select;
 	}
-	
+
+	public static SelectItem newEventStatusSelector(String name, String title) {
+		SelectItem select = new SelectItem(filterItemName(name), I18N.message(title));
+
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		map.put("0", "");
+		map.put("1", I18N.message("working"));
+		map.put("2", I18N.message("completed"));
+		map.put("3", I18N.message("canceled"));
+
+		select.setValueMap(map);
+		select.setHintStyle("hint");
+		select.setWidth(90);
+		return select;
+	}
+
 	public static SelectItem newEmailProtocolSelector(String name, String title) {
 		SelectItem select = new SelectItem(filterItemName(name), I18N.message(title));
 		select.setWidth(110);

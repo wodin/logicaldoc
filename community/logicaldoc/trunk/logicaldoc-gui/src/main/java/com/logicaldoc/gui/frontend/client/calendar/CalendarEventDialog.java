@@ -81,7 +81,7 @@ public class CalendarEventDialog extends Window {
 			setTitle(I18N.message("editevent") + " - " + calEvent.getTitle());
 		else
 			setTitle(I18N.message("newevent"));
-		setWidth(450);
+		setWidth(490);
 		setHeight(440);
 		setCanDragResize(true);
 		setIsModal(true);
@@ -103,56 +103,7 @@ public class CalendarEventDialog extends Window {
 		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				if (vm.validate()) {
-					calendarEvent.setTitle(vm.getValueAsString("title"));
-					calendarEvent.setDescription(vm.getValueAsString("description"));
-					calendarEvent.setRemindTime(Integer.parseInt(vm.getValueAsString("remindTime")));
-					calendarEvent.setRemindUnit(vm.getValueAsString("remindUnit"));
-
-					if (vm.getValue("frequency") != null)
-						calendarEvent.setFrequency(Integer.parseInt(vm.getValueAsString("frequency")));
-
-					DateTimeFormat dfDate = DateTimeFormat.getFormat("yyyy-MM-dd");
-					DateTimeFormat dfTime = DateTimeFormat.getFormat("HH:mm");
-					DateTimeFormat df = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm");
-
-					String str = dfDate.format((Date) vm.getValue("startDate"));
-					if (vm.getValue("startTime") != null)
-						try {
-							str = str + " " + dfTime.format((Date) vm.getValue("startTime"));
-						} catch (Throwable t) {
-						}
-					calendarEvent.setStartDate(df.parse(str));
-
-					if (vm.getValue("expirationDate") != null) {
-						str = dfDate.format((Date) vm.getValue("expirationDate"));
-						if (vm.getValue("expirationTime") != null)
-							try {
-								str = str + " " + dfTime.format((Date) vm.getValue("expirationTime"));
-							} catch (Throwable t) {
-							}
-						calendarEvent.setExpirationDate(df.parse(str));
-					}
-
-					if (calendarEvent.getExpirationDate() != null
-							&& calendarEvent.getExpirationDate().before(calendarEvent.getStartDate())) {
-						SC.warn(I18N.message("endbeforestart"));
-						return;
-					}
-
-					service.saveEvent(Session.get().getSid(), calendarEvent, new AsyncCallback<Void>() {
-						@Override
-						public void onFailure(Throwable caught) {
-							Log.serverError(caught);
-						}
-
-						@Override
-						public void onSuccess(Void arg) {
-							destroy();
-							CalendarDashboard.get().refresh();
-						}
-					});
-				}
+				onSave();
 			}
 		});
 		if (!readOnly)
@@ -344,7 +295,7 @@ public class CalendarEventDialog extends Window {
 
 		detailsForm.setHeight100();
 		detailsForm.setTitleOrientation(TitleOrientation.TOP);
-		detailsForm.setNumCols(5);
+		detailsForm.setNumCols(6);
 		detailsForm.setValuesManager(vm);
 
 		TextItem title = ItemFactory.newTextItem("title", "title", event.getTitle());
@@ -359,36 +310,56 @@ public class CalendarEventDialog extends Window {
 		DateItem startDate = ItemFactory.newDateItem("startDate", "begin");
 		startDate.setRequired(true);
 		startDate.setTitleOrientation(TitleOrientation.LEFT);
+		startDate.setWrapTitle(false);
 		startDate.setValue(event.getStartDate());
 		startDate.setCanEdit(!readOnly);
-		TimeItem startTime = ItemFactory.newTimeItem("startTime", "");
+		TimeItem startTime = ItemFactory.newTimeItem("startTime", "   ");
 		DateTimeFormat df = DateTimeFormat.getFormat("HH:mm");
 		startTime.setValue(df.format(event.getStartDate()));
 		startTime.setRequired(true);
+		startTime.setShowTitle(false);
 		startTime.setTitleOrientation(TitleOrientation.LEFT);
 		startTime.setEndRow(true);
 		startTime.setCanEdit(!readOnly);
+		startTime.setTitleColSpan(1);
 
 		DateItem expirationDate = ItemFactory.newDateItem("expirationDate", "expirationdate");
 		expirationDate.setRequired(false);
 		expirationDate.setTitleOrientation(TitleOrientation.LEFT);
+		expirationDate.setWrapTitle(false);
 		expirationDate.setCanEdit(!readOnly);
 		if (event.getExpirationDate() != null)
 			expirationDate.setValue(event.getExpirationDate());
-
-		TimeItem expirationTime = ItemFactory.newTimeItem("expirationTime", "");
+		TimeItem expirationTime = ItemFactory.newTimeItem("expirationTime", "   ");
 		expirationTime.setTitleOrientation(TitleOrientation.LEFT);
+		expirationTime.setShowTitle(false);
 		expirationTime.setEndRow(true);
 		expirationTime.setCanEdit(!readOnly);
+		expirationTime.setTitleColSpan(1);
 		if (event.getExpirationDate() != null)
 			expirationTime.setValue(df.format(event.getExpirationDate()));
 
-		SelectItem frequency = ItemFactory.newFrequencySelector("frequency", "frequency");
-		frequency.setEndRow(true);
+		final DateItem deadline = ItemFactory.newDateItem("deadline", "until");
+		deadline.setRequired(false);
+		deadline.setShowTitle(true);
+		deadline.setTitleOrientation(TitleOrientation.LEFT);
+		deadline.setCanEdit(!readOnly);
+		if (event.getDeadline() != null)
+			deadline.setValue(event.getDeadline());
+
+		final SelectItem frequency = ItemFactory.newFrequencySelector("frequency", "frequency");
 		frequency.setTitleOrientation(TitleOrientation.LEFT);
 		frequency.setValue(Integer.toString(event.getFrequency()));
-		frequency.setColSpan(5);
 		frequency.setCanEdit(!readOnly);
+		frequency.addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+				deadline.setDisabled("0".equals(event.getValue()));
+				if ("0".equals(event.getValue()))
+					deadline.setValue((Date) null);
+			}
+		});
 
 		SpinnerItem remindTimeNumber = new SpinnerItem("remindTime");
 		remindTimeNumber.setTitle(I18N.message("remindtime"));
@@ -411,15 +382,112 @@ public class CalendarEventDialog extends Window {
 		remindTimeUnit.setAlign(Alignment.LEFT);
 		remindTimeUnit.setCanEdit(!readOnly);
 
+		final DateItem completionDate = ItemFactory.newDateItem("completionDate", "completedon");
+		completionDate.setRequired(false);
+		completionDate.setShowTitle(false);
+		completionDate.setTitleOrientation(TitleOrientation.LEFT);
+		completionDate.setCanEdit(!readOnly);
+		completionDate.setDisabled(event.getStatus() != GUICalendarEvent.STATUS_COMPLETED);
+		if (event.getCompletionDate() != null)
+			completionDate.setValue(event.getCompletionDate());
+
+		SelectItem status = ItemFactory.newEventStatusSelector("status", "status");
+		status.setTitleOrientation(TitleOrientation.LEFT);
+		status.setValue(Integer.toString(event.getStatus()));
+		status.setCanEdit(!readOnly);
+		status.addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+				completionDate.setDisabled(!"2".equals(event.getValue()));
+				if ("2".equals(event.getValue()))
+					completionDate.setValue(new Date());
+				else
+					completionDate.setValue((Date) null);
+			}
+		});
+
 		TextAreaItem description = ItemFactory.newTextAreaItem("description", "description", event.getDescription());
 		description.setHeight("90%");
 		description.setColSpan(5);
 		description.setCanEdit(!readOnly);
 
 		detailsForm.setFields(title, ItemFactory.newRowSpacer(), startDate, startTime, expirationDate, expirationTime,
-				ItemFactory.newRowSpacer(), frequency, ItemFactory.newRowSpacer(), remindTimeNumber, remindTimeUnit,
-				ItemFactory.newRowSpacer(), description);
+				ItemFactory.newRowSpacer(), frequency, deadline, ItemFactory.newRowSpacer(), remindTimeNumber,
+				remindTimeUnit, ItemFactory.newRowSpacer(), status, completionDate, ItemFactory.newRowSpacer(),
+				description);
 		details.setPane(detailsForm);
 		return details;
+	}
+
+	/**
+	 * Save button handler
+	 */
+	private void onSave() {
+		if (vm.validate()) {
+			calendarEvent.setTitle(vm.getValueAsString("title"));
+			calendarEvent.setDescription(vm.getValueAsString("description"));
+			calendarEvent.setRemindTime(Integer.parseInt(vm.getValueAsString("remindTime")));
+			calendarEvent.setRemindUnit(vm.getValueAsString("remindUnit"));
+
+			if (vm.getValue("frequency") != null)
+				calendarEvent.setFrequency(Integer.parseInt(vm.getValueAsString("frequency")));
+
+			DateTimeFormat dfDate = DateTimeFormat.getFormat("yyyy-MM-dd");
+			DateTimeFormat dfTime = DateTimeFormat.getFormat("HH:mm");
+			DateTimeFormat df = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm");
+
+			String str = dfDate.format((Date) vm.getValue("startDate"));
+			if (vm.getValue("startTime") != null)
+				try {
+					str = str + " " + dfTime.format((Date) vm.getValue("startTime"));
+				} catch (Throwable t) {
+				}
+			calendarEvent.setStartDate(df.parse(str));
+
+			if (vm.getValue("expirationDate") != null) {
+				str = dfDate.format((Date) vm.getValue("expirationDate"));
+				if (vm.getValue("expirationTime") != null)
+					try {
+						str = str + " " + dfTime.format((Date) vm.getValue("expirationTime"));
+					} catch (Throwable t) {
+					}
+				calendarEvent.setExpirationDate(df.parse(str));
+			}
+
+			if (calendarEvent.getExpirationDate() != null
+					&& calendarEvent.getExpirationDate().before(calendarEvent.getStartDate())) {
+				SC.warn(I18N.message("endbeforestart"));
+				return;
+			}
+
+			if (vm.getValue("completionDate") != null)
+				calendarEvent.setCompletionDate((Date) vm.getValue("completionDate"));
+			else
+				calendarEvent.setCompletionDate(null);
+			calendarEvent.setStatus(Integer.parseInt(vm.getValue("status").toString()));
+			if (calendarEvent.getCompletionDate() != null
+					&& calendarEvent.getCompletionDate().before(calendarEvent.getStartDate())) {
+				SC.warn(I18N.message("compbeforestart"));
+				return;
+			}
+			if (vm.getValue("deadline") != null)
+				calendarEvent.setDeadline((Date) vm.getValue("deadline"));
+			else
+				calendarEvent.setDeadline(null);
+
+			service.saveEvent(Session.get().getSid(), calendarEvent, new AsyncCallback<Void>() {
+				@Override
+				public void onFailure(Throwable caught) {
+					Log.serverError(caught);
+				}
+
+				@Override
+				public void onSuccess(Void arg) {
+					destroy();
+					CalendarDashboard.get().refresh();
+				}
+			});
+		}
 	}
 }

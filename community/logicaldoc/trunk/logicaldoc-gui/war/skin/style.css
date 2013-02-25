@@ -233,3 +233,55 @@
   border-top: 1px solid #cccccc;
   margin-top: 4px;
 }
+
+
+/*calendar styles*/
+.calendarevent2 {
+   font-size:9px;
+   background-color: #7BDE7B;
+   border: 1px solid 	#008A00;
+   font-family: Arial, Verdana, sans-serif;
+}
+
+.calendarevent2Header {
+    font-size:9px; color: white;
+    background-color:	#005C00;
+}
+
+.calendarevent2Body {
+    font-size: 9px;
+    background-color: #7BDE7B;
+    padding: 3px;
+    font-family: Arial, Verdana, sans-serif;
+    color: black;
+}
+
+.calendarevent2Resizer{
+    border-top:1px solid white;
+    border-bottom: 1px solid white;
+}
+
+.calendarevent3 {
+   font-size:9px;
+   background-color:#FA8072;
+   border: 1px solid #004D99;
+   font-family: Arial, Verdana, sans-serif;
+}
+
+.calendarevent3Header {
+    font-size:9px; color: white;
+    background-color:#B22222;
+}
+
+.calendarevent3Body {
+    font-size: 9px;
+    background-color: #FA8072;
+    padding: 3px;
+    font-family: Arial, Verdana, sans-serif;
+    color: black;
+}
+
+.calendarevent3Resizer{
+    border-top:1px solid white;
+    border-bottom: 1px solid white;
+}

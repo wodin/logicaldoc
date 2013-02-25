@@ -16,6 +16,14 @@ public class GUICalendarEvent implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	public final static int STATUS_NONE = 0;
+
+	public final static int STATUS_WORKING = 1;
+
+	public final static int STATUS_COMPLETED = 2;
+
+	public final static int STATUS_CANCELED = 3;
+
 	private long id = 0;
 
 	private Long parentId = null;
@@ -41,6 +49,12 @@ public class GUICalendarEvent implements Serializable {
 	private long creatorId;
 
 	private String creator;
+
+	private int status = 0;
+
+	private Date completionDate;
+
+	private Date deadline;
 
 	public GUICalendarEvent() {
 	}
@@ -183,5 +197,29 @@ public class GUICalendarEvent implements Serializable {
 
 	public void setParticipants(GUIUser[] participants) {
 		this.participants = participants;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public Date getCompletionDate() {
+		return completionDate;
+	}
+
+	public void setCompletionDate(Date completionDate) {
+		this.completionDate = completionDate;
+	}
+
+	public Date getDeadline() {
+		return deadline;
+	}
+
+	public void setDeadline(Date deadline) {
+		this.deadline = deadline;
 	}
 }
