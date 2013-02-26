@@ -795,6 +795,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				query1.append(") ");
 
 				List<Long> masterIds = (List<Long>) queryForList(query1.toString(), Long.class);
+				if (masterIds.isEmpty())
+					return ids;
 				String masterIdsString = masterIds.toString().replace('[', '(').replace(']', ')');
 
 				/*
