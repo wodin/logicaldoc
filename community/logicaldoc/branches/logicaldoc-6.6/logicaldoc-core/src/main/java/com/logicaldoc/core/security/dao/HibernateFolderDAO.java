@@ -756,20 +756,17 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 			// The administrators have all permissions on all folders
 			if (user.isInGroup("admin")) {
-
-				StringBuffer query = new StringBuffer("select ld_id from ld_folder where ld_deleted=0 ");
 				if (parentId != null) {
 					if (tree) {
-						query.append(" and ld_id in "
-								+ findFolderIdInTree(parentId, false).toString().replace('[', '(').replace(']', ')'));
+						return findFolderIdInTree(parentId, false);
 					} else {
+						StringBuffer query = new StringBuffer("select ld_id from ld_folder where ld_deleted=0 ");
 						query.append(" and (ld_id=" + parentId);
 						query.append(" or ld_parentid=" + parentId);
 						query.append(" ) ");
+						return queryForList(query.toString(), Long.class);
 					}
 				}
-
-				return queryForList(query.toString(), Long.class);
 			}
 
 			Set<Group> precoll = user.getGroups();

@@ -466,7 +466,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	public void testFindFolderIdByUserId() {
 		Collection<Long> ids = dao.findFolderIdByUserId(3, null, true);
 		Assert.assertNotNull(ids);
-		Assert.assertEquals(8, ids.size());
+		Assert.assertEquals(3, ids.size());
 
 		// Try with unexisting user
 		ids = dao.findFolderIdByUserId(99, null, true);
@@ -550,7 +550,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 		ids = dao.findFolderIdByUserIdAndPermission(3, Permission.WRITE, null, true);
 		Assert.assertNotNull(ids);
-		Assert.assertEquals(8, ids.size());
+		Assert.assertEquals(2, ids.size());
 	}
 
 	@Test
