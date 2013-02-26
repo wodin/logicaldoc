@@ -109,6 +109,9 @@ public class FulltextSearch extends Search {
 			accessibleFolderIds = fdao.findFolderIdByUserId(opt.getUserId(), opt.getFolderId(), true);
 			log.debug("End of Folders search");
 		}
+		if (opt.getFolderId() != null && !accessibleFolderIds.contains(opt.getFolderId())
+				&& fdao.isReadEnable(opt.getFolderId().longValue(), opt.getUserId()))
+			accessibleFolderIds.add(opt.getFolderId());
 
 		// Save here the binding between ID and Hit
 		Map<Long, Hit> hitsMap = new HashMap<Long, Hit>();
@@ -129,7 +132,8 @@ public class FulltextSearch extends Search {
 
 			// When user can see document with folderId then put it into
 			// result-collection.
-			if (searchUser.isInGroup("admin") || accessibleFolderIds.contains(hit.getFolder().getId())) {
+			if ((accessibleFolderIds.isEmpty() && searchUser.isInGroup("admin"))
+					|| accessibleFolderIds.contains(hit.getFolder().getId())) {
 				hits.add(hit);
 				hitsMap.put(hit.getId(), hit);
 			}
