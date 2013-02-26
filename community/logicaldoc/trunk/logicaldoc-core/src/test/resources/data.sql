@@ -118,8 +118,8 @@ insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_t
 values (3000,CURRENT_TIMESTAMP,0,'Workspace X',5,1,0);
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked)
 values (6,CURRENT_TIMESTAMP,0,'folder6',5,0,0);
-insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked)
-values (7,CURRENT_TIMESTAMP,0,'folder7',5,0,0);
+insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_securityref)
+values (7,CURRENT_TIMESTAMP,0,'folder7',5,0,0,6);
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked)
 values (8,CURRENT_TIMESTAMP,1,'folder8',7,0,0);
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked)
