@@ -207,7 +207,7 @@ public class CalendarEventDialog extends Window {
 
 	private Tab prepareDocuments(GUICalendarEvent event) {
 		ListGridField title = new ListGridField("title", I18N.message("name"));
-		title.setWidth("*");
+		title.setWidth("90%");
 		title.setCanEdit(!readOnly);
 
 		ListGridField lastModified = new ListGridField("lastModified", I18N.message("lastmodified"), 150);
@@ -408,7 +408,7 @@ public class CalendarEventDialog extends Window {
 		});
 
 		TextAreaItem description = ItemFactory.newTextAreaItem("description", "description", event.getDescription());
-		description.setHeight("90%");
+		description.setHeight("95%");
 		description.setColSpan(5);
 		description.setCanEdit(!readOnly);
 

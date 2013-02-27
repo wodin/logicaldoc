@@ -82,6 +82,7 @@ public class CalendarReport extends VLayout {
 
 		TextItem title = ItemFactory.newTextItem("title", "title", null);
 
+		SelectItem statusSelector = ItemFactory.newEventStatusSelector("status", "status");
 
 		// Max results
 		TextItem displayMax = ItemFactory.newTextItem("displayMax", "displaymax", null);
@@ -102,7 +103,7 @@ public class CalendarReport extends VLayout {
 			}
 		});
 
-		form.setItems(fromDate, toDate, title, frequencySelector, displayMax, searchButton);
+		form.setItems(fromDate, toDate, title, frequencySelector, statusSelector, displayMax, searchButton);
 
 		formsLayout.addMember(form);
 		formsLayout.setMembersMargin(80);
@@ -152,6 +153,28 @@ public class CalendarReport extends VLayout {
 			}
 		});
 
+		ListGridField status = new ListGridField("status", I18N.message("status"), 90);
+		status.setType(ListGridFieldType.INTEGER);
+		status.setAlign(Alignment.CENTER);
+		status.setCanFilter(false);
+		status.setCellFormatter(new CellFormatter() {
+
+			@Override
+			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
+				String v = value.toString();
+
+				if ("1".equals(v)) {
+					return I18N.message("working");
+				} else if ("2".equals(v)) {
+					return I18N.message("completed");
+				} else if ("3".equals(v)) {
+					return I18N.message("canceled");
+				}
+
+				return null;
+			}
+		});
+
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setWidth100();
@@ -162,7 +185,7 @@ public class CalendarReport extends VLayout {
 		list.setCanFreezeFields(true);
 		list.setFilterOnKeypress(true);
 		list.setAutoFetchData(true);
-		list.setFields(date, titleCol, frequency);
+		list.setFields(date, titleCol, status, frequency);
 
 		results.addMember(list);
 		layout.addMember(search, 0);
@@ -232,6 +255,10 @@ public class CalendarReport extends VLayout {
 			if (values.get("frequency") != null)
 				frequencyValue = Integer.parseInt(values.get("frequency").toString());
 
+			Integer statusValue = null;
+			if (values.get("status") != null)
+				statusValue = Integer.parseInt(values.get("status").toString());
+
 			String titleValue = values.get("title") != null ? values.get("title").toString() : null;
 
 			int maxRecords = 0;
@@ -246,8 +273,8 @@ public class CalendarReport extends VLayout {
 
 			}
 
-			service.find(Session.get().getSid(), fromValue, toValue, frequencyValue, titleValue, maxRecords,
-					new AsyncCallback<GUICalendarEvent[]>() {
+			service.find(Session.get().getSid(), fromValue, toValue, frequencyValue, titleValue, statusValue,
+					maxRecords, new AsyncCallback<GUICalendarEvent[]>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
@@ -263,6 +290,7 @@ public class CalendarReport extends VLayout {
 									record.setAttribute("date", result[i].getStartDate());
 									record.setAttribute("title", result[i].getTitle());
 									record.setAttribute("frequency", result[i].getFrequency());
+									record.setAttribute("status", result[i].getStatus());
 									records[i] = record;
 								}
 								list.setData(records);

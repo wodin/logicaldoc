@@ -14,6 +14,6 @@ public interface CalendarServiceAsync {
 
 	void countUserEvents(String sid, Date end, AsyncCallback<Integer> callback);
 
-	void find(String sid, Date startDate, Date endDate, Integer frequency, String title, Integer maxRecords,
+	void find(String sid, Date startDate, Date endDate, Integer frequency, String title, Integer status, Integer maxRecords,
 			AsyncCallback<GUICalendarEvent[]> callback);
 }
