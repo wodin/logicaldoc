@@ -797,6 +797,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				query1.append(") ");
 
 				List<Long> masterIds = (List<Long>) queryForList(query1.toString(), Long.class);
+				if (masterIds.isEmpty())
+					return ids;
+
 				String masterIdsString = masterIds.toString().replace('[', '(').replace(']', ')');
 
 				/*
@@ -818,7 +821,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 				ids.addAll((List<Long>) queryForList(query2.toString(), Long.class));
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
 
