@@ -19,8 +19,6 @@ import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.calendar.Calendar;
 import com.smartgwt.client.widgets.calendar.events.CalendarEventClick;
 import com.smartgwt.client.widgets.calendar.events.CalendarEventRemoveClick;
-import com.smartgwt.client.widgets.calendar.events.DateChangedEvent;
-import com.smartgwt.client.widgets.calendar.events.DateChangedHandler;
 import com.smartgwt.client.widgets.calendar.events.EventClickHandler;
 import com.smartgwt.client.widgets.calendar.events.EventRemoveClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -39,8 +37,6 @@ public class CalendarDashboard extends VLayout {
 
 	private static CalendarDashboard instance;
 
-	private Date lastChosenDate = new Date();
-
 	public static CalendarDashboard get() {
 		if (instance == null)
 			instance = new CalendarDashboard();
@@ -56,7 +52,7 @@ public class CalendarDashboard extends VLayout {
 	@SuppressWarnings("deprecation")
 	private void initGUI() {
 		calendar = new Calendar();
-		calendar.setDataSource(new CalendarEventsDS());
+		calendar.setDataSource(new CalendarEventsDS(null));
 		calendar.setAutoFetchData(true);
 		calendar.setDayViewTitle(I18N.message("day"));
 		calendar.setWeekViewTitle(I18N.message("week"));
@@ -79,14 +75,7 @@ public class CalendarDashboard extends VLayout {
 		calendar.setCanDragScroll(false);
 		calendar.setCanEditLane(false);
 		calendar.setCanEditEvents(false);
-		calendar.setChosenDate(lastChosenDate);
-
-		calendar.addDateChangedHandler(new DateChangedHandler() {
-			@Override
-			public void onDateChanged(DateChangedEvent event) {
-				lastChosenDate = calendar.getChosenDate();
-			}
-		});
+		calendar.setChosenDate(new Date());
 
 		calendar.addEventRemoveClickHandler(new EventRemoveClickHandler() {
 			@Override

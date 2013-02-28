@@ -40,6 +40,11 @@ public class Util {
 				+ Util.imageUrl(imageName) + "' />";
 	}
 
+	public static String imageHTML(String imageName, int width, int height, String style) {
+		return "<img border='0' alt='' title='' src='" + Util.imageUrl(imageName) + "' width='"
+				+ width + "px' height='" + height + "px'" + (style != null ? " style='" + style + "'" : "") + " />";
+	}
+
 	/**
 	 * Generates Flash code
 	 */
@@ -76,10 +81,10 @@ public class Util {
 
 		}
 
-		String vars = flashvars + "&Scale=" + (zoom > 0 ? fzoom.toString() : "1.0") + "&FitPageOnLoad=false&FitWidthOnLoad="
-				+ (zoom <= 0 ? "true" : "false") + "&PrintEnabled=" + printEnabled + "&ProgressiveLoading=true"
-				+ "&ViewModeToolsVisible=true" + "&ZoomToolsVisible=true" + "&NavToolsVisible=true"
-				+ "&CursorToolsVisible=true" + "&SearchToolsVisible=true";
+		String vars = flashvars + "&Scale=" + (zoom > 0 ? fzoom.toString() : "1.0")
+				+ "&FitPageOnLoad=false&FitWidthOnLoad=" + (zoom <= 0 ? "true" : "false") + "&PrintEnabled="
+				+ printEnabled + "&ProgressiveLoading=true" + "&ViewModeToolsVisible=true" + "&ZoomToolsVisible=true"
+				+ "&NavToolsVisible=true" + "&CursorToolsVisible=true" + "&SearchToolsVisible=true";
 
 		if (key != null) {
 			vars += "&key=" + key;
@@ -125,8 +130,8 @@ public class Util {
 		tmp += "</object></div>\n";
 		return tmp;
 	}
-	
-	public static String fullPreviewUrl(String sid, long docId, String fileVersion){
+
+	public static String fullPreviewUrl(String sid, long docId, String fileVersion) {
 		String url = "{" + GWT.getHostPageBaseURL() + "preview?sid=" + Session.get().getSid() + "%26docId=" + docId
 				+ "%26suffix=preview-[*,0].swf";
 		if (fileVersion != null)
@@ -134,7 +139,7 @@ public class Util {
 		url += "," + Session.get().getInfo().getConfig("gui.preview.pages") + "}";
 		return url;
 	}
-	
+
 	public static String imageUrl(String imageName) {
 		return imagePrefix() + imageName;
 	}

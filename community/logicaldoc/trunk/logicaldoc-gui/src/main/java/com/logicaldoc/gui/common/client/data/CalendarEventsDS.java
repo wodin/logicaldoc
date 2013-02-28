@@ -13,7 +13,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.7
  */
 public class CalendarEventsDS extends DataSource {
-	public CalendarEventsDS() {
+	public CalendarEventsDS(Long docId) {
 		setRecordXPath("/list/event");
 		DataSourceSequenceField id = new DataSourceSequenceField("eventId");
 		id.setPrimaryKey(true);
@@ -27,6 +27,6 @@ public class CalendarEventsDS extends DataSource {
 
 		setFields(id, title, description, start, end, eventWindowStyle, parentId);
 		setClientOnly(true);
-		setDataURL("data/calendarevents.xml?sid=" + Session.get().getSid());
+		setDataURL("data/calendarevents.xml?sid=" + Session.get().getSid() + (docId != null ? "&docId=" + docId : ""));
 	}
 }
