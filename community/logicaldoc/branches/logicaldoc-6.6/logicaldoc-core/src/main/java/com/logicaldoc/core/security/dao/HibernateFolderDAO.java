@@ -347,6 +347,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 			long id = folderId;
 			Folder folder = findById(folderId);
+			if (folder == null)
+				return false;
 			if (folder.getSecurityRef() != null)
 				id = folder.getSecurityRef().longValue();
 
