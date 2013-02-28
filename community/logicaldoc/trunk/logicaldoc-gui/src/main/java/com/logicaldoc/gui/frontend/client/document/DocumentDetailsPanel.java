@@ -61,6 +61,8 @@ public class DocumentDetailsPanel extends VLayout {
 
 	protected Layout retentionPoliciesTabPanel;
 
+	protected Layout calendarTabPanel;
+
 	protected StandardPropertiesPanel propertiesPanel;
 
 	protected ExtendedPropertiesPanel extendedPropertiesPanel;
@@ -74,6 +76,8 @@ public class DocumentDetailsPanel extends VLayout {
 	protected NotesPanel notesPanel;
 
 	protected ThumbnailPanel thumbnailPanel;
+
+	protected DocumentCalendarPanel calendarPanel;
 
 	protected RetentionPoliciesPanel retentionPoliciesPanel;
 
@@ -102,6 +106,8 @@ public class DocumentDetailsPanel extends VLayout {
 	protected Tab thumbnailTab;
 
 	protected Tab retentionPoliciesTab;
+
+	protected Tab calendarTab;
 
 	public DocumentDetailsPanel(DocumentObserver observer) {
 		super();
@@ -220,6 +226,12 @@ public class DocumentDetailsPanel extends VLayout {
 		retentionPoliciesTabPanel.setWidth100();
 		retentionPoliciesTabPanel.setHeight100();
 		retentionPoliciesTab.setPane(retentionPoliciesTabPanel);
+
+		calendarTab = new Tab(I18N.message("calendar"));
+		calendarTabPanel = new HLayout();
+		calendarTabPanel.setWidth100();
+		calendarTabPanel.setHeight100();
+		calendarTab.setPane(calendarTabPanel);
 	}
 
 	protected void prepareTabset() {
@@ -289,6 +301,16 @@ public class DocumentDetailsPanel extends VLayout {
 				historyPanel.onTabSelected();
 			}
 		});
+
+		if (Feature.visible(Feature.CALENDAR)) {
+			tabSet.addTab(calendarTab);
+			calendarTab.addTabSelectedHandler(new TabSelectedHandler() {
+				@Override
+				public void onTabSelected(TabSelectedEvent event) {
+					calendarPanel.onTabSelected();
+				}
+			});
+		}
 
 		tabSet.addTab(thumbnailTab);
 		thumbnailTab.addTabSelectedHandler(new TabSelectedHandler() {
@@ -402,6 +424,17 @@ public class DocumentDetailsPanel extends VLayout {
 		}
 		thumbnailPanel = new ThumbnailPanel(document);
 		thumbnailTabPanel.addMember(thumbnailPanel);
+
+		/*
+		 * Prepare the calendar tab
+		 */
+		if (calendarPanel != null) {
+			calendarPanel.destroy();
+			if (calendarTabPanel.contains(calendarPanel))
+				calendarTabPanel.removeMember(calendarPanel);
+		}
+		calendarPanel = new DocumentCalendarPanel(document);
+		calendarTabPanel.addMember(calendarPanel);
 
 		if (tabSet != null && tabSet.getSelectedTab() != null) {
 			Tab selectedTab = tabSet.getSelectedTab();
