@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.ibm.icu.util.StringTokenizer;
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -152,7 +152,9 @@ public class DocumentsDataServlet extends HttpServlet {
 				if (StringUtils.isNotEmpty(extattrs)) {
 					log.debug("Search for extended attributes " + extattrs);
 
-					attrs = Arrays.asList(extattrs.trim().split(","));
+					StringTokenizer st = new StringTokenizer(extattrs.trim(), ",;");
+					while (st.hasMoreElements())
+						attrs.add(st.nextToken().trim());
 
 					StringBuffer query = new StringBuffer(
 							"select ld_docid, ld_name, ld_type, ld_stringvalue, ld_intvalue, ld_doublevalue, ld_datevalue ");

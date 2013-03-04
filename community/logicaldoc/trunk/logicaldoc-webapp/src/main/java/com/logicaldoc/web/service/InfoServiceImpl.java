@@ -91,7 +91,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			}
 
 			if (!ApplicationInitializer.needRestart) {
-				// Checks if LogicalDOC has been initialised
+				// Checks if LogicalDOC has been initialized
 				String jdbcUrl = config.getProperty("jdbc.url");
 				if (jdbcUrl.startsWith("jdbc:hsqldb:mem:")) {
 					GUIMessage setupReminder = new GUIMessage();

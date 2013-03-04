@@ -33,7 +33,7 @@ public class PluginDbInit extends DBInit {
 
 	public void init(String[] ids) {
 		log.info("Start database initialization");
-		log.info("Database is " + getDbms());
+		log.info("Database engine is " + getDbms());
 
 		try {
 			// Acquire the 'DbInit' extensions of the core plugin

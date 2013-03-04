@@ -49,7 +49,7 @@ public class AboutDialog extends Window {
 		vspacer1.setPixelSize(100, 5);
 		vspacer1.setOverflow(Overflow.HIDDEN);
 
-		Img logoImage = ItemFactory.newBrandImg("logo.png");
+		Img logoImage = ItemFactory.newBrandImg("logo.png", Session.get().getInfo());
 		logoImage.setWidth(205);
 		logoImage.setHeight(40);
 
