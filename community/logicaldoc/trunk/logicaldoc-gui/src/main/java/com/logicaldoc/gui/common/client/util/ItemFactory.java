@@ -7,6 +7,7 @@ import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
 import com.logicaldoc.gui.common.client.data.EventsDS;
 import com.logicaldoc.gui.common.client.data.FolderTemplatesDS;
@@ -351,8 +352,15 @@ public class ItemFactory {
 		return img;
 	}
 
-	public static Img newBrandImg(String name) {
-		Img img = new Img(Util.brandUrl(name));
+	public static Img newBrandImg(String name, GUIInfo info) {
+		Img img = null;
+
+		if (name.equals("logo.png"))
+			img = new Img(info.getLogoSrc());
+		else if (name.equals("logo_head.png"))
+			img = new Img(info.getLogoHeadSrc());
+		else
+			img = new Img(Util.brandUrl(name));
 		return img;
 	}
 

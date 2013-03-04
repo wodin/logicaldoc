@@ -55,7 +55,7 @@ import com.smartgwt.client.widgets.tab.TabSet;
  */
 public class Setup implements EntryPoint {
 
-	private static final String INTERNAL = "internal";
+	private static final String EMBEDDED = "embedded";
 
 	private static final String REG_EMAIL = "regEmail";
 
@@ -184,7 +184,7 @@ public class Setup implements EntryPoint {
 		// Prepare the logo image to be shown inside the login form
 		Label header = new Label(I18N.message("setup"));
 		header.setStyleName("setupHeader");
-		header.setIcon(Util.brandUrl("logo.png"));
+		header.setIcon(info.getLogoSrc());
 		header.setIconWidth(205);
 		header.setIconHeight(40);
 		header.setHeight(45);
@@ -317,16 +317,16 @@ public class Setup implements EntryPoint {
 	 */
 	private Tab setupDatabase(final ValuesManager vm) {
 		// Prepare the map with all database engines
-		engines.put(MYSQL, new String[] { "MySQL 5.x", "com.mysql.jdbc.Driver",
+		engines.put(MYSQL, new String[] { "MySQL", "com.mysql.jdbc.Driver",
 				"jdbc:mysql://<server>[,<failoverhost>][<:3306>]/<database>", "org.hibernate.dialect.MySQLDialect",
 				"SELECT 1" });
-		engines.put("PostgreSQL", new String[] { "PostgreSQL 9.x", "org.postgresql.Driver",
+		engines.put("PostgreSQL", new String[] { "PostgreSQL", "org.postgresql.Driver",
 				"jdbc:postgresql:[<//server>[<:5432>/]]<database>", "org.hibernate.dialect.PostgreSQLDialect",
 				"SELECT 1" });
-		engines.put(ORACLE, new String[] { "Oracle 10g/11g", "oracle.jdbc.driver.OracleDriver",
+		engines.put(ORACLE, new String[] { "Oracle", "oracle.jdbc.driver.OracleDriver",
 				"jdbc:oracle:thin:@<server>[<:1521>]:<sid>", "org.hibernate.dialect.Oracle10gDialect",
 				"SELECT 1 FROM DUAL" });
-		engines.put(SQLSERVER, new String[] { "SQL Server 2005/2008", "net.sourceforge.jtds.jdbc.Driver",
+		engines.put(SQLSERVER, new String[] { "SQL Server", "net.sourceforge.jtds.jdbc.Driver",
 				"jdbc:jtds:sqlserver://<server>[:<1433>]/<database>;instance=<instance>",
 				"org.hibernate.dialect.SQLServerDialect", "SELECT 1" });
 
@@ -344,8 +344,8 @@ public class Setup implements EntryPoint {
 		dbType.setWrapTitle(false);
 		dbType.setRequired(true);
 		dbType.setVertical(false);
-		dbType.setValueMap(I18N.message(INTERNAL), I18N.message("external"));
-		dbType.setValue(I18N.message(INTERNAL));
+		dbType.setValueMap(I18N.message(EMBEDDED), I18N.message("external"));
+		dbType.setValue(I18N.message(EMBEDDED));
 		dbType.setRedrawOnChange(true);
 		dbType.setTitle(I18N.message("dbtype"));
 
@@ -363,13 +363,13 @@ public class Setup implements EntryPoint {
 		dbEngine.setValue(MYSQL);
 		dbEngine.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
-				return !I18N.message(INTERNAL).equals(databaseForm.getValue(DB_TYPE));
+				return !I18N.message(EMBEDDED).equals(databaseForm.getValue(DB_TYPE));
 			}
 		});
 		RequiredIfValidator ifValidator = new RequiredIfValidator();
 		ifValidator.setExpression(new RequiredIfFunction() {
 			public boolean execute(FormItem formItem, Object value) {
-				return !I18N.message(INTERNAL).equals(databaseForm.getValue(DB_TYPE));
+				return !I18N.message(EMBEDDED).equals(databaseForm.getValue(DB_TYPE));
 			}
 		});
 		dbEngine.setValidators(ifValidator);
@@ -387,7 +387,7 @@ public class Setup implements EntryPoint {
 		dbDriver.setWrapTitle(false);
 		dbDriver.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
-				return !I18N.message(INTERNAL).equals(databaseForm.getValue(DB_TYPE));
+				return !I18N.message(EMBEDDED).equals(databaseForm.getValue(DB_TYPE));
 			}
 		});
 		dbDriver.setValidators(ifValidator);
@@ -400,7 +400,7 @@ public class Setup implements EntryPoint {
 		dbUrl.setWrapTitle(false);
 		dbUrl.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
-				return !I18N.message(INTERNAL).equals(databaseForm.getValue(DB_TYPE));
+				return !I18N.message(EMBEDDED).equals(databaseForm.getValue(DB_TYPE));
 			}
 		});
 		dbUrl.setValidators(ifValidator);
@@ -412,7 +412,7 @@ public class Setup implements EntryPoint {
 		dbUsername.setWrapTitle(false);
 		dbUsername.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
-				return !I18N.message(INTERNAL).equals(databaseForm.getValue(DB_TYPE));
+				return !I18N.message(EMBEDDED).equals(databaseForm.getValue(DB_TYPE));
 			}
 		});
 
@@ -424,7 +424,7 @@ public class Setup implements EntryPoint {
 		dbPassword.setWrapTitle(false);
 		dbPassword.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
-				return !I18N.message(INTERNAL).equals(databaseForm.getValue(DB_TYPE));
+				return !I18N.message(EMBEDDED).equals(databaseForm.getValue(DB_TYPE));
 			}
 		});
 
@@ -495,7 +495,7 @@ public class Setup implements EntryPoint {
 					data.setRegOrganization(vm.getValueAsString(REG_ORGANIZATION));
 					data.setRegWebsite(vm.getValueAsString(REG_WEBSITE));
 					
-					if (I18N.message(INTERNAL).equals(data.getDbType())) {
+					if (I18N.message(EMBEDDED).equals(data.getDbType())) {
 						data.setDbEngine("Hsqldb");
 						data.setDbDriver("org.hsqldb.jdbcDriver");
 						data.setDbUrl(("jdbc:hsqldb:" + data.getRepositoryFolder() + "/db/").replaceAll("//", "/"));
