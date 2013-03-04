@@ -7,12 +7,12 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.TimeZone;
 
 import javax.servlet.ServletException;
@@ -150,7 +150,9 @@ public class DocumentsDataServlet extends HttpServlet {
 				if (StringUtils.isNotEmpty(extattrs)) {
 					log.debug("Search for extended attributes " + extattrs);
 
-					attrs = Arrays.asList(extattrs.trim().split(","));
+					StringTokenizer st = new StringTokenizer(extattrs.trim(), ",;");
+					while (st.hasMoreElements())
+						attrs.add(st.nextToken().trim());
 
 					StringBuffer query = new StringBuffer(
 							"select ld_docid, ld_name, ld_type, ld_stringvalue, ld_intvalue, ld_doublevalue, ld_datevalue ");
@@ -182,10 +184,11 @@ public class DocumentsDataServlet extends HttpServlet {
 								extValues.put(key, Double.toString(rs.getDouble(6)));
 							} else if (type == ExtendedAttribute.TYPE_DATE) {
 								extValues.put(key, rs.getDate(7) != null ? edf.format(rs.getDate(7)) : "");
-							} else if(type == ExtendedAttribute.TYPE_USER){
+							} else if (type == ExtendedAttribute.TYPE_USER) {
 								extValues.put(key, rs.getString(4));
-							} else if(type == ExtendedAttribute.TYPE_BOOLEAN){
-								extValues.put(key, rs.getLong(5) == 1L ? I18N.message("true", l):I18N.message("false", l));
+							} else if (type == ExtendedAttribute.TYPE_BOOLEAN) {
+								extValues.put(key,
+										rs.getLong(5) == 1L ? I18N.message("true", l) : I18N.message("false", l));
 							}
 
 							return null;
