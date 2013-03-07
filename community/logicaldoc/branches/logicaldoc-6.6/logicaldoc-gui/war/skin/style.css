@@ -31,13 +31,6 @@
 	vertical-align: center;
 }
 
-.topPanel {
-	background-color: #213150;
-	background-image: url(./brand/banner.gif);
-	background-repeat: repeat-x;
-	background-position: top left;
-	height: 45px;
-}
 
 .logo_head {
 	margin-left: 5px;
