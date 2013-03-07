@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.panels;
 
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.smartgwt.client.types.BackgroundRepeat;
 import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.layout.HLayout;
 
@@ -13,7 +14,9 @@ import com.smartgwt.client.widgets.layout.HLayout;
  */
 public class TopPanel extends HLayout {
 	public TopPanel() {
-		setStyleName("topPanel");
+		setBackgroundImage(Session.get().getInfo().getBannerSrc());
+		setBackgroundRepeat(BackgroundRepeat.REPEAT_X);
+		setBackgroundPosition("top left");
 		setWidth100();
 		setHeight(45);
 

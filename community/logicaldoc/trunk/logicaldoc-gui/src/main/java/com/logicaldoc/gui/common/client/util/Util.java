@@ -148,10 +148,6 @@ public class Util {
 		return flashPrefix() + flashName;
 	}
 
-	public static String brandUrl(String imageName) {
-		return brandPrefix() + imageName;
-	}
-
 	public static String strip(String src) {
 		if (src == null)
 			return null;
@@ -169,10 +165,6 @@ public class Util {
 
 	public static String imagePrefix() {
 		return contextPath() + "skin/images/";
-	}
-
-	public static String brandPrefix() {
-		return contextPath() + "skin/brand/";
 	}
 
 	public static String flashPrefix() {
