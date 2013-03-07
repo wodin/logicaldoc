@@ -45,11 +45,6 @@
       <artifactId>gwtchismes</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.google.gwt.google-apis</groupId>
-	  <artifactId>gwt-visualization</artifactId>
-	  <version>1.0.2</version>
-    </dependency>
-    <dependency>
       <groupId>com.smartgwt</groupId>
       <artifactId>smartgwt</artifactId>
       <scope>compile</scope>
@@ -75,6 +70,11 @@
       <groupId>com.reveregroup.gwt</groupId>
       <artifactId>gwt-image-loader</artifactId>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>ofcgwt</groupId>
+      <artifactId>ofcgwt</artifactId>
+      <version>1.3.0</version>
     </dependency>
     <dependency>
 	  <groupId>org.slf4j</groupId>

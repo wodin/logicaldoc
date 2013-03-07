@@ -5,9 +5,13 @@ import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.rednels.ofcgwt.client.ChartWidget;
+import com.rednels.ofcgwt.client.model.ChartData;
+import com.rednels.ofcgwt.client.model.elements.PieChart;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VerticalAlignment;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -30,7 +34,7 @@ public class PieStats extends HLayout {
 	public PieStats(GUIParameter[][] parameters) {
 		super();
 		setWidth100();
-		setHeight(350);
+		setHeight100();
 
 		setAlign(VerticalAlignment.TOP);
 
@@ -44,7 +48,7 @@ public class PieStats extends HLayout {
 				long val = Long.parseLong(parameters[0][i].getValue()) / 1024 / 1024;
 				params[i].setValue(Long.toString(val));
 			}
-			repository.addMember(new StatisticWidget(I18N.message("repository"), params));
+			repository.addMember(createPie(I18N.message("repository"), params));
 		} catch (Throwable t) {
 
 		}
@@ -53,7 +57,7 @@ public class PieStats extends HLayout {
 
 		VLayout documents = new VLayout();
 		try {
-			documents.addMember(new StatisticWidget(I18N.message("documents"), parameters[1]));
+			documents.addMember(createPie(I18N.message("documents"), parameters[1]));
 		} catch (Throwable t) {
 
 		}
@@ -62,12 +66,60 @@ public class PieStats extends HLayout {
 
 		VLayout folders = new VLayout();
 		try {
-			folders.addMember(new StatisticWidget(I18N.message("folders"), parameters[2]));
+			folders.addMember(createPie(I18N.message("folders"), parameters[2]));
 		} catch (Throwable t) {
 
 		}
 		folders.addMember(prepareLegend(parameters[2], STATS_FOLDERS));
 		addMember(folders);
+	}
+
+	private ChartWidget createPie(String title, GUIParameter[] parameters) {
+		try {
+			ChartWidget chart = new ChartWidget();
+			ChartData cd = new ChartData(title, "font-size: 12px; font-family: Verdana; text-align: center;");
+			cd.setBackgroundColour("#ffffff");
+			PieChart pie = new PieChart();
+			pie.setAlpha(0.5f);
+			pie.setNoLabels(true);
+			pie.setTooltip("#label# <br>#percent#");
+			pie.setAnimate(false);
+			pie.setGradientFill(true);
+			pie.setRadius(60);
+
+			pie.setColours("#ff0000", "#00ff00", "#0000ff", "#ff9900", "#E6E600", "#669900", "#CC6699", "#999966");
+
+			boolean showEmptyChart = true;
+			for (GUIParameter param : parameters) {
+				if (param == null)
+					break;
+				if (Long.parseLong(param.getValue()) > 0)
+					showEmptyChart = false;
+				Integer val = new Integer(0);
+				try {
+					val = new Integer(param.getValue());
+				} catch (Throwable t) {
+
+				}
+				pie.addSlices(new PieChart.Slice(val, param.toString()));
+			}
+
+			// Maybe all parameters have value = 0, so is visualized a full
+			// chart
+			if (showEmptyChart)
+				pie.addSlices(new PieChart.Slice(100, ""));
+
+			cd.addElements(pie);
+
+			chart.setSize("180", "180");
+			chart.setJsonData(cd.toString());
+			chart.setHeight("190");
+
+			return chart;
+		} catch (Throwable t) {
+			SC.warn(t.getMessage());
+			return null;
+		}
 	}
 
 	private DynamicForm prepareLegend(GUIParameter[] parameters, int type) {

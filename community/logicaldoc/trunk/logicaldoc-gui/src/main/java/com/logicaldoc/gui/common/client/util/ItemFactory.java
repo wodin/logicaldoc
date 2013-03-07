@@ -359,8 +359,12 @@ public class ItemFactory {
 			img = new Img(info.getLogoSrc());
 		else if (name.equals("logo_head.png"))
 			img = new Img(info.getLogoHeadSrc());
-		else
-			img = new Img(Util.brandUrl(name));
+		else if (name.equals("logo_oem.png"))
+		    img = new Img(info.getLogoOemSrc());
+		else if (name.equals("logo_head_oem.png"))
+			img = new Img(info.getLogoHeadOemSrc());
+		else if (name.equals("banner.gif"))
+			img = new Img(info.getBannerSrc());
 		return img;
 	}
 
