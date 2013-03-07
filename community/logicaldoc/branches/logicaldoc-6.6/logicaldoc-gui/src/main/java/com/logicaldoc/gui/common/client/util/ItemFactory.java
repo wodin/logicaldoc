@@ -7,6 +7,7 @@ import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
 import com.logicaldoc.gui.common.client.data.EventsDS;
 import com.logicaldoc.gui.common.client.data.FolderTemplatesDS;
@@ -93,7 +94,8 @@ public class ItemFactory {
 	}
 
 	public static SelectItem newUserSelectorForExtendedAttribute(String name, String title, String groupIdOrName) {
-		final SelectItem item = new UserSelector("_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER), title, groupIdOrName);
+		final SelectItem item = new UserSelector("_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER), title,
+				groupIdOrName);
 		return item;
 	}
 
@@ -343,11 +345,6 @@ public class ItemFactory {
 
 	public static Img newImg(String name) {
 		Img img = new Img(Util.imageUrl(name));
-		return img;
-	}
-
-	public static Img newBrandImg(String name) {
-		Img img = new Img(Util.brandUrl(name));
 		return img;
 	}
 
@@ -822,5 +819,21 @@ public class ItemFactory {
 	 */
 	public static String originalItemName(String name) {
 		return name.replaceAll("_", "\\.");
+	}
+
+	public static Img newBrandImg(String name, GUIInfo info) {
+		Img img = null;
+
+		if (name.equals("logo.png"))
+			img = new Img(info.getLogoSrc());
+		else if (name.equals("logo_head.png"))
+			img = new Img(info.getLogoHeadSrc());
+		else if (name.equals("logo_oem.png"))
+			img = new Img(info.getLogoOemSrc());
+		else if (name.equals("logo_head_oem.png"))
+			img = new Img(info.getLogoHeadOemSrc());
+		else if (name.equals("banner.gif"))
+			img = new Img(info.getBannerSrc());
+		return img;
 	}
 }

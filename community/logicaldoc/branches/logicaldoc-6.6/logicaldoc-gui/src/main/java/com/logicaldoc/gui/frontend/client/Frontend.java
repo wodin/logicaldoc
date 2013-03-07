@@ -7,8 +7,6 @@ import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.visualization.client.VisualizationUtils;
-import com.google.gwt.visualization.client.visualizations.PieChart;
 import com.logicaldoc.gui.common.client.Config;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
@@ -126,7 +124,7 @@ public class Frontend implements EntryPoint {
 				try {
 					savedSid = Offline.get(Constants.COOKIE_SID).toString();
 				} catch (Throwable t) {
-					
+
 				}
 
 				loginPanel = new LoginPanel(info);
@@ -148,7 +146,7 @@ public class Frontend implements EntryPoint {
 							} else {
 								MainPanel.get();
 								loginPanel.onLoggedIn(session);
-								
+
 								// Remove the loading frame
 								RootPanel.getBodyElement().removeChild(RootPanel.get("loadingWrapper").getElement());
 								setUploadTrigger(Frontend.this);
@@ -158,9 +156,6 @@ public class Frontend implements EntryPoint {
 				}
 			}
 		});
-
-		// Load the visualization api
-		VisualizationUtils.loadVisualizationApi(null, PieChart.PACKAGE);
 	}
 
 	// Switch to the login panel

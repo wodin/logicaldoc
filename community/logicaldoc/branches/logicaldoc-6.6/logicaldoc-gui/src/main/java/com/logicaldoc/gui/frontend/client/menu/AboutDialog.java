@@ -13,8 +13,8 @@ import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClickEvent;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.layout.VStack;
 
 /**
@@ -49,7 +49,7 @@ public class AboutDialog extends Window {
 		vspacer1.setPixelSize(100, 5);
 		vspacer1.setOverflow(Overflow.HIDDEN);
 
-		Img logoImage = ItemFactory.newBrandImg("logo.png");
+		Img logoImage = ItemFactory.newBrandImg("logo.png", Session.get().getInfo());
 		logoImage.setWidth(205);
 		logoImage.setHeight(40);
 

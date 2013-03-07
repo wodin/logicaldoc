@@ -13,7 +13,7 @@ import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
- * General adnministration panel with statistics
+ * General administration panel with statistics
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
