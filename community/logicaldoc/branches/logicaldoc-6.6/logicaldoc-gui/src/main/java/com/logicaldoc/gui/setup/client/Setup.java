@@ -184,7 +184,7 @@ public class Setup implements EntryPoint {
 		// Prepare the logo image to be shown inside the login form
 		Label header = new Label(I18N.message("setup"));
 		header.setStyleName("setupHeader");
-		header.setIcon(Util.brandUrl("logo.png"));
+		header.setIcon(info.getLogoSrc());
 		header.setIconWidth(205);
 		header.setIconHeight(40);
 		header.setHeight(45);

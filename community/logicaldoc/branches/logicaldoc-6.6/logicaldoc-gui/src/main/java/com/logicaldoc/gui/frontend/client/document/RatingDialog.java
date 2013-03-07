@@ -184,6 +184,6 @@ public class RatingDialog extends Window {
 		if (this.rating.getUserId() > 0)
 			layout.addMember(alreadyVotedForm);
 
-		addChild(layout);
+		addItem(layout);
 	}
 }
