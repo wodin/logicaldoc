@@ -88,11 +88,6 @@ public class LoginPanel extends VLayout {
 		header.setStyleName("loginHeader");
 		header.setHeight("12px");
 
-		// Prepare the logo image to be shown inside the login form
-		Img logoImage = ItemFactory.newBrandImg("logo.png", Session.get().getInfo());
-		logoImage.setHeight("40px");
-		logoImage.setWidth("205px");
-
 		// Prepare the form footer that contains copyright and website link
 		String htmlString = "\u00A9 " + info.getYear() + " " + info.getVendor();
 		if (info.getUrl() != null && !"-".equals(info.getUrl()))
@@ -173,6 +168,18 @@ public class LoginPanel extends VLayout {
 			}
 		});
 
+		// Prepare the logo images to be shown inside the login form
+		Img logoImage = ItemFactory.newBrandImg("logo.png", info);
+		logoImage.setHeight(40);
+		logoImage.setWidth(205);
+		Img logoOemImage = ItemFactory.newBrandImg("logo_oem.png", info);
+		logoOemImage.setHeight(40);
+		logoOemImage.setWidth(205);
+
+		HLayout logos = new HLayout();
+		logos.setMembersMargin(10);
+		logos.setMembers(logoImage, logoOemImage);
+		
 		Layout inner = new VLayout();
 		inner.setShowEdges(true);
 		inner.addMember(logoImage);
