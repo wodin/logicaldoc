@@ -163,7 +163,9 @@ public interface FolderService {
 	 *        applied also to the subfolders.
 	 * @throws Exception
 	 */
-	public void grantUser(String sid, long folderId, long userId, int permissions, boolean recursive) throws Exception;
+	public void grantUser(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId,
+			@WebParam(name = "userId") long userId, @WebParam(name = "permissions") int permissions,
+			@WebParam(name = "recursive") boolean recursive) throws Exception;
 
 	/**
 	 * Grant group permission to the folder.
@@ -177,8 +179,9 @@ public interface FolderService {
 	 *        applied also to the subfolders.
 	 * @throws Exception
 	 */
-	public void grantGroup(String sid, long folderId, long groupId, int permissions, boolean recursive)
-			throws Exception;
+	public void grantGroup(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId,
+			@WebParam(name = "groupId") long groupId, @WebParam(name = "permissions") int permissions,
+			@WebParam(name = "recursive") boolean recursive) throws Exception;
 
 	/**
 	 * Retrieves the list of granted users for the given folder.
@@ -188,7 +191,8 @@ public interface FolderService {
 	 * @return 'error' if error occurred, the right objects collection.
 	 * @throws Exception
 	 */
-	public Right[] getGrantedUsers(String sid, long folderId) throws Exception;
+	public Right[] getGrantedUsers(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
+			throws Exception;
 
 	/**
 	 * Retrieves the list of granted groups for the given folder.
@@ -198,7 +202,8 @@ public interface FolderService {
 	 * @return 'error' if error occurred, the right objects collection.
 	 * @throws Exception
 	 */
-	public Right[] getGrantedGroups(String sid, long folderId) throws Exception;
+	public Right[] getGrantedGroups(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
+			throws Exception;
 
 	/**
 	 * Creates the folder for the specified path. All unexisting nodes specified
@@ -210,7 +215,8 @@ public interface FolderService {
 	 * 
 	 * @return The created folder
 	 */
-	public WSFolder createPath(String sid, long parentId, String path) throws Exception;
+	@WebResult(name = "folder")
+	public WSFolder createPath(@WebParam(name = "sid")String sid, @WebParam(name = "parentId")long parentId, @WebParam(name = "path")String path) throws Exception;
 
 	/**
 	 * Finds the folder at the specified path
@@ -220,7 +226,9 @@ public interface FolderService {
 	 * 
 	 * @return The created folder
 	 */
-	public WSFolder findByPath(String sid, String path) throws Exception;
+	@WebResult(name = "folder")
+	public WSFolder findByPath(@WebParam(name = "sid") String sid, @WebParam(name = "path") String path)
+			throws Exception;
 
 	/**
 	 * Retrieves the list of all workspaces.
@@ -229,5 +237,6 @@ public interface FolderService {
 	 * 
 	 * @return the list of all workspaces
 	 */
-	public WSFolder[] listWorkspaces(String sid) throws Exception;
+	@WebResult(name = "workspaces")
+	public WSFolder[] listWorkspaces(@WebParam(name = "sid") String sid) throws Exception;
 }
