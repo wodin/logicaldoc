@@ -55,7 +55,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 		SystemMessageDAO dao = (SystemMessageDAO) context.getBean(SystemMessageDAO.class);
 		SystemMessage message = dao.findById(messageId);
 		dao.initialize(message);
-		
+
 		GUIMessage m = new GUIMessage();
 		m.setId(message.getId());
 		m.setSubject(message.getSubject());
@@ -65,7 +65,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 
 		// If the case mark the message as read
 		if (!message.wasReadBy(user.getUserName())) {
-			Recipient rec=message.getRecipient(user.getUserName());
+			Recipient rec = message.getRecipient(user.getUserName());
 			rec.setRead(1);
 			dao.store(message);
 
@@ -199,8 +199,10 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 			MessageTemplateDAO dao = (MessageTemplateDAO) context.getBean(MessageTemplateDAO.class);
 
 			for (long id : ids) {
-				if (id != 0L)
+				MessageTemplate template = dao.findById(id);
+				if (template != null && !"en".equals(template.getLanguage())) {
 					dao.delete(id);
+				}
 			}
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
