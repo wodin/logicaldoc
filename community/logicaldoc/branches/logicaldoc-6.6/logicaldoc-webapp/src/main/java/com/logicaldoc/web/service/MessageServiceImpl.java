@@ -199,8 +199,10 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 			MessageTemplateDAO dao = (MessageTemplateDAO) context.getBean(MessageTemplateDAO.class);
 
 			for (long id : ids) {
-				if (id != 0L)
+				MessageTemplate template = dao.findById(id);
+				if (template != null && !"en".equals(template.getLanguage())) {
 					dao.delete(id);
+				}
 			}
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
