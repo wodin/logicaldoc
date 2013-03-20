@@ -166,7 +166,10 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 		String sql = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_status <> "
 				+ SystemMessage.STATUS_DELIVERED
-				+ " and ld_type = " + type + " and ld_trials < " + maxTrial + " order by ld_sentdate desc";
+				+ " and ld_type = " + type;
+		if (maxTrial > 0)
+			sql = sql + " and ld_trials < " + maxTrial;
+		sql = sql + " order by ld_sentdate desc";
 
 		List<SystemMessage> messages = (List<SystemMessage>) query(sql, null, new SystemMessageMapper(), null);
 		return messages;

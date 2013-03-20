@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.document;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.DocumentObserver;
 import com.logicaldoc.gui.common.client.FolderObserver;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
@@ -21,7 +22,6 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -68,6 +68,9 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	protected DocumentsPanel() {
 		// Register to folders events
 		Session.get().addFolderObserver(this);
+
+		// Register to documents events
+		Session.get().addDocumentObserver(this);
 
 		setWidth100();
 
@@ -126,7 +129,12 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 
 	public void onDocumentSaved(GUIDocument document) {
 		if (listingPanel != null && listingPanel instanceof DocumentsListPanel)
-			((DocumentsListPanel) listingPanel).updateSelectedRecord(document);
+			((DocumentsListPanel) listingPanel).getGrid().updateSelectedRecord(document);
+	}
+
+	@Override
+	public void onDocumentSelected(GUIDocument document) {
+		onSelectedDocument(document.getId(), false);
 	}
 
 	public void openInFolder(long folderId, Long docId) {
@@ -195,7 +203,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 				}
 
 				if (clearSelection)
-					((DocumentsListPanel) listingPanel).getList().deselectAllRecords();
+					((DocumentsListPanel) listingPanel).getGrid().deselectAllRecords();
 			}
 		});
 	}
@@ -272,7 +280,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 
 	public void saveGrid() {
 		if (listingPanel instanceof DocumentsListPanel) {
-			String viewState = ((DocumentsListPanel) listingPanel).getList().getViewState();
+			String viewState = ((DocumentsListPanel) listingPanel).getGrid().getViewState();
 			Offline.put(Constants.COOKIE_DOCSLIST, viewState);
 			Log.info(I18N.message("settingssaved"), null);
 		}
@@ -280,18 +288,25 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 
 	public void printPreview() {
 		if (listingPanel instanceof DocumentsListPanel) {
-			Canvas.printComponents(new Object[] { ((DocumentsListPanel) listingPanel).getList() });
+			Canvas.printComponents(new Object[] { ((DocumentsListPanel) listingPanel).getGrid() });
 		}
 	}
 
 	public void export() {
 		if (listingPanel instanceof DocumentsListPanel) {
-			Util.exportCSV(((DocumentsListPanel) listingPanel).getList());
+			Util.exportCSV(((DocumentsListPanel) listingPanel).getGrid(), false);
 		}
 	}
 
-	public ListGrid getList() {
-		return ((DocumentsListPanel) listingPanel).getList();
+	public GUIDocument getSelectedDocument() {
+		if (listingPanel instanceof DocumentsListPanel)
+			return ((DocumentsListPanel) listingPanel).getGrid().getSelectedDocument();
+		else
+			return null;
+	}
+
+	public DocumentsGrid getDocumentsGrid() {
+		return ((DocumentsListPanel) listingPanel).getGrid();
 	}
 
 	@Override

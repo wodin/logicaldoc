@@ -95,7 +95,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		download.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getList();
+				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
 				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
@@ -131,7 +131,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		pdf.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getList();
+				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
 				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
@@ -167,7 +167,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		subscribe.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getList();
+				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
 				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
@@ -205,7 +205,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		archive.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getList();
+				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
 				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
@@ -224,7 +224,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		startWorkflow.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getList();
+				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
 				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
@@ -244,7 +244,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		addToWorkflow.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getList();
+				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
 				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
@@ -294,7 +294,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		addCalendarEvent.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getList();
+				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
 				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
@@ -398,7 +398,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		bulkUpdate.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getList();
+				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
 				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;

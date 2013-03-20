@@ -47,16 +47,16 @@ public class DocumentContextMenu extends Menu {
 
 	protected WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
 
-	public DocumentContextMenu(final GUIFolder folder, final ListGrid list) {
-		final ListGridRecord[] selection = list.getSelectedRecords();
+	public DocumentContextMenu(final GUIFolder folder, final DocumentsGrid grid) {
+		final ListGridRecord[] selection = grid.getSelectedRecords();
 
 		MenuItem download = new MenuItem();
 		download.setTitle(I18N.message("download"));
 		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord[] selection = list.getSelectedRecords();
+				ListGridRecord[] selection = grid.getSelectedRecords();
 				if (selection.length == 1) {
-					String id = list.getSelectedRecord().getAttribute("id");
+					String id = grid.getSelectedRecord().getAttribute("id");
 					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
 							+ id);
 				} else {
@@ -120,10 +120,10 @@ public class DocumentContextMenu extends Menu {
 		rename.setTitle(I18N.message("renamefile"));
 		rename.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				final ListGridRecord selection = list.getSelectedRecord();
+				final ListGridRecord selection = grid.getSelectedRecord();
 
-				LD.askforValue(I18N.message("rename"), I18N.message("filename"), selection.getAttribute("filename"), "250",
-						new ValueCallback() {
+				LD.askforValue(I18N.message("rename"), I18N.message("filename"), selection.getAttribute("filename"),
+						"250", new ValueCallback() {
 							@Override
 							public void execute(final String value) {
 								if (value == null || value.isEmpty())
@@ -140,7 +140,7 @@ public class DocumentContextMenu extends Menu {
 											public void onSuccess(Void result) {
 												selection.setAttribute("filename", value);
 												selection.setAttribute("indexed", "blank");
-												list.refreshRow(list.getRecordIndex(selection));
+												grid.refreshRow(grid.getRecordIndex(selection));
 												DocumentsPanel.get().showFolderDetails();
 												DocumentsPanel.get().onSelectedDocument(
 														Long.parseLong(selection.getAttribute("id")), false);
@@ -177,8 +177,8 @@ public class DocumentContextMenu extends Menu {
 
 								@Override
 								public void onSuccess(Void result) {
-									list.removeSelectedData();
-																		
+									grid.removeSelectedData();
+
 									DocumentsPanel.get().showFolderDetails();
 									DocumentsPanel.get().getDocumentsMenu().refresh("trash");
 								}
@@ -193,7 +193,7 @@ public class DocumentContextMenu extends Menu {
 		sendMail.setTitle(I18N.message("sendmail"));
 		sendMail.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord[] selection = list.getSelectedRecords();
+				ListGridRecord[] selection = grid.getSelectedRecords();
 				if (selection == null || selection.length < 1)
 					return;
 
@@ -273,8 +273,11 @@ public class DocumentContextMenu extends Menu {
 												public void onSuccess(Void result) {
 													for (ListGridRecord record : selection) {
 														record.setAttribute("immutable", "stop");
-														list.refreshRow(list.getRecordIndex(record));
+														grid.refreshRow(grid.getRecordIndex(record));
 													}
+
+													GUIDocument doc = grid.getSelectedDocument();
+													Session.get().setCurrentDocument(doc);
 												}
 											});
 							}
@@ -310,10 +313,12 @@ public class DocumentContextMenu extends Menu {
 									for (ListGridRecord record : selection) {
 										record.setAttribute("locked", "lock");
 										record.setAttribute("lockUserId", Session.get().getUser().getId());
-										list.refreshRow(list.getRecordIndex(record));
+										grid.refreshRow(grid.getRecordIndex(record));
 									}
 									Session.get().getUser()
 											.setLockedDocs(Session.get().getUser().getLockedDocs() + ids.length);
+									GUIDocument doc = grid.getSelectedDocument();
+									Session.get().setCurrentDocument(doc);
 								}
 							});
 					}
@@ -347,9 +352,12 @@ public class DocumentContextMenu extends Menu {
 							if (Session.get().getUser().isMemberOf("admin")) {
 								record.setAttribute("immutable", "blank");
 							}
-							list.refreshRow(list.getRecordIndex(record));
+							grid.refreshRow(grid.getRecordIndex(record));
 						}
 						Session.get().getUser().setLockedDocs(Session.get().getUser().getLockedDocs() - ids.length);
+						GUIDocument doc = grid.getSelectedDocument();
+						if (doc != null)
+							Session.get().setCurrentDocument(doc);
 					}
 				});
 			}
@@ -359,11 +367,8 @@ public class DocumentContextMenu extends Menu {
 		checkout.setTitle(I18N.message("checkout"));
 		checkout.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord record = list.getSelectedRecord();
-				if (record == null)
-					return;
-				final long id = Long.parseLong(record.getAttribute("id"));
-				documentService.checkout(Session.get().getSid(), id, new AsyncCallback<Void>() {
+				GUIDocument record = grid.getSelectedDocument();
+				documentService.checkout(Session.get().getSid(), record.getId(), new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -371,15 +376,11 @@ public class DocumentContextMenu extends Menu {
 
 					@Override
 					public void onSuccess(Void result) {
-						ListGridRecord record = list.getSelectedRecord();
-						record.setAttribute("locked", "page_edit");
-						record.setAttribute("lockUserId", Session.get().getUser().getId());
-						record.setAttribute("status", Constants.DOC_CHECKED_OUT);
-						list.refreshRow(list.getRecordIndex(record));
+						GUIDocument doc = grid.markSelectedAsCheckedOut();
+						Session.get().setCurrentDocument(doc);
 						Session.get().getUser().setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() + 1);
 						Log.info(I18N.message("documentcheckedout"), null);
 
-						String id = list.getSelectedRecord().getAttribute("id");
 						WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
 								+ "&docId=" + id);
 					}
@@ -391,12 +392,12 @@ public class DocumentContextMenu extends Menu {
 		checkin.setTitle(I18N.message("checkin"));
 		checkin.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord selection = list.getSelectedRecord();
+				ListGridRecord selection = grid.getSelectedRecord();
 				if (selection == null)
 					return;
 				long id = Long.parseLong(selection.getAttribute("id"));
 				String filename = selection.getAttributeAsString("filename");
-				DocumentCheckin checkin = new DocumentCheckin(id, filename, list);
+				DocumentCheckin checkin = new DocumentCheckin(id, filename, grid);
 				checkin.show();
 			}
 		});
@@ -405,7 +406,7 @@ public class DocumentContextMenu extends Menu {
 		bookmark.setTitle(I18N.message("addbookmark"));
 		bookmark.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord[] selection = list.getSelectedRecords();
+				ListGridRecord[] selection = grid.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
 				long[] ids = new long[selection.length];
@@ -447,7 +448,7 @@ public class DocumentContextMenu extends Menu {
 					public void onSuccess(Void result) {
 						for (ListGridRecord record : selection) {
 							record.setAttribute("indexed", "unindexable");
-							list.refreshRow(list.getRecordIndex(record));
+							grid.refreshRow(grid.getRecordIndex(record));
 						}
 					}
 				});
@@ -477,7 +478,7 @@ public class DocumentContextMenu extends Menu {
 							if ("indexed".equals(record.getAttribute("indexed")))
 								continue;
 							record.setAttribute("indexed", "blank");
-							list.refreshRow(list.getRecordIndex(record));
+							grid.refreshRow(grid.getRecordIndex(record));
 						}
 					}
 				});
@@ -488,7 +489,7 @@ public class DocumentContextMenu extends Menu {
 		sign.setTitle(I18N.message("sign"));
 		sign.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord selection = list.getSelectedRecord();
+				ListGridRecord selection = grid.getSelectedRecord();
 				if (selection == null)
 					return;
 
@@ -504,7 +505,7 @@ public class DocumentContextMenu extends Menu {
 		archive.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getList();
+				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
 				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
@@ -522,7 +523,7 @@ public class DocumentContextMenu extends Menu {
 		edit.setTitle(I18N.message("editwithoffice"));
 		edit.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord selection = list.getSelectedRecord();
+				ListGridRecord selection = grid.getSelectedRecord();
 				if (selection == null)
 					return;
 				long id = Long.parseLong(selection.getAttribute("id"));
@@ -535,7 +536,7 @@ public class DocumentContextMenu extends Menu {
 		startWorkflow.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getList();
+				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
 				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
@@ -544,7 +545,7 @@ public class DocumentContextMenu extends Menu {
 				for (int j = 0; j < selection.length; j++) {
 					ids[j] = Long.parseLong(selection[j].getAttribute("id"));
 				}
-				
+
 				WorkflowDialog workflowDialog = new WorkflowDialog(ids);
 				workflowDialog.show();
 			}
@@ -554,7 +555,7 @@ public class DocumentContextMenu extends Menu {
 		addToWorkflow.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getList();
+				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
 				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
@@ -603,14 +604,14 @@ public class DocumentContextMenu extends Menu {
 		preview.setTitle(I18N.message("preview"));
 		preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				long id = Long.parseLong(list.getSelectedRecord().getAttribute("id"));
-				String filename = list.getSelectedRecord().getAttribute("filename");
-				String fileVersion = list.getSelectedRecord().getAttribute("fileVersion");
+				long id = Long.parseLong(grid.getSelectedRecord().getAttribute("id"));
+				String filename = grid.getSelectedRecord().getAttribute("filename");
+				String fileVersion = grid.getSelectedRecord().getAttribute("fileVersion");
 
 				// In the search hitlist we don't have the filename
 				if (filename == null)
-					filename = list.getSelectedRecord().getAttribute("title") + "."
-							+ list.getSelectedRecord().getAttribute("type");
+					filename = grid.getSelectedRecord().getAttribute("title") + "."
+							+ grid.getSelectedRecord().getAttribute("type");
 
 				GUIFolder folder = Session.get().getCurrentFolder();
 				PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, folder != null && folder.isDownload());
@@ -667,7 +668,7 @@ public class DocumentContextMenu extends Menu {
 			}
 		}
 
-		if (list.getSelectedRecords().length != 1) {
+		if (grid.getSelectedRecords().length != 1) {
 			rename.setEnabled(false);
 		}
 

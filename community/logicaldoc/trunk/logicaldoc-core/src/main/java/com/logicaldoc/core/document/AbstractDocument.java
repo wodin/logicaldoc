@@ -158,6 +158,11 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 
 	private String transactionAgent;
 
+	/*
+	 * Used for saving the external resource ID when editing online
+	 */
+	private String extResId;
+
 	private String tgs;
 
 	public Long getDeleteUserId() {
@@ -724,5 +729,13 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 
 	public void setTgs(String tgs) {
 		this.tgs = tgs;
+	}
+
+	public String getExtResId() {
+		return extResId;
+	}
+
+	public void setExtResId(String extResId) {
+		this.extResId = extResId;
 	}
 }

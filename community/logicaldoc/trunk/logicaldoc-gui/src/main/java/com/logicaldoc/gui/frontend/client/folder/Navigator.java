@@ -400,9 +400,9 @@ public class Navigator extends TreeGrid implements FolderObserver {
 			}
 		});
 
-		MenuItem applyItem = new MenuItem();
-		applyItem.setTitle(I18N.message("applytemplate"));
-		applyItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem applyTemplate = new MenuItem();
+		applyTemplate.setTitle(I18N.message("applytemplate"));
+		applyTemplate.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				onApplyTemplate();
 			}
@@ -542,8 +542,8 @@ public class Navigator extends TreeGrid implements FolderObserver {
 		}
 
 		if (Feature.visible(Feature.FOLDER_TEMPLATE)) {
-			contextMenu.addItem(applyItem);
-			applyItem.setEnabled(Feature.enabled(Feature.FOLDER_TEMPLATE));
+			contextMenu.addItem(applyTemplate);
+			applyTemplate.setEnabled(Feature.enabled(Feature.FOLDER_TEMPLATE));
 		}
 
 		if (Feature.visible(Feature.ARCHIVES)) {

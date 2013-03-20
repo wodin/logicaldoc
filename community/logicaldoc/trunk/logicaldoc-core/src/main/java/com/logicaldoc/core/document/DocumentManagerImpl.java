@@ -120,6 +120,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setFolder(folder);
 			document.setDigest(null);
 			document.setFileSize(file.length());
+			document.setExtResId(null);
 
 			// Create new version (a new version number is created)
 			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
@@ -498,10 +499,10 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			if (docVO.getSourceDate() == null)
 				docVO.setSourceDate(docVO.getDate());
-			
+
 			if (docVO.getCreation() == null)
 				docVO.setCreation(docVO.getDate());
-			
+
 			docVO.setPublisher(transaction.getUserName());
 			docVO.setPublisherId(transaction.getUserId());
 			docVO.setCreator(transaction.getUserName());
@@ -659,6 +660,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		Document document = documentDAO.findById(docId);
 		documentDAO.initialize(document);
 		document.setLockUserId(null);
+		document.setExtResId(null);
 		document.setStatus(Document.DOC_UNLOCKED);
 		if (transaction.getUser().isInGroup("admin")) {
 			document.setImmutable(0);

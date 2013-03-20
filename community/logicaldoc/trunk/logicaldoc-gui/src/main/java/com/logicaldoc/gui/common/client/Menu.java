@@ -47,6 +47,8 @@ public class Menu {
 	public static final long SUBSCRIPTIONS = -1120;
 
 	public static final long CALENDAR_REPORT = -2060;
+	
+	public static final long GDOCS = -2080;
 
 	private static Set<Long> menues = new HashSet<Long>();
 

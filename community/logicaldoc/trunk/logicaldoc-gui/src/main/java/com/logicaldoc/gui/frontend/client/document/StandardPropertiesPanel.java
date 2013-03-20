@@ -9,6 +9,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.DocumentObserver;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
@@ -137,8 +138,8 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		StaticTextItem wfStatus = ItemFactory.newStaticTextItem("wfStatus", "workflowstatus",
 				document.getWorkflowStatus());
 
-		StaticTextItem version = ItemFactory.newStaticTextItem("version", "fileversion", document.getFileVersion() + " ("
-				+ document.getVersion() + ")");
+		StaticTextItem version = ItemFactory.newStaticTextItem("version", "fileversion", document.getFileVersion()
+				+ " (" + document.getVersion() + ")");
 
 		String comment = document.getComment();
 		if (comment != null && !"".equals(comment)) {

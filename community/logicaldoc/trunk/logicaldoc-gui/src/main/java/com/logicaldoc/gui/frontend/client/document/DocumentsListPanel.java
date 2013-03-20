@@ -17,8 +17,6 @@ import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.events.DrawEvent;
 import com.smartgwt.client.widgets.events.DrawHandler;
-import com.smartgwt.client.widgets.grid.ListGrid;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
@@ -52,7 +50,7 @@ public class DocumentsListPanel extends VLayout {
 			grid.setCanDrag(true);
 			grid.setCanDragRecordsOut(true);
 		}
-		
+
 		// Prepare a panel containing a title and the documents list
 		infoPanel = new InfoPanel("");
 
@@ -141,7 +139,7 @@ public class DocumentsListPanel extends VLayout {
 		}
 	}
 
-	public ListGrid getList() {
+	public DocumentsGrid getGrid() {
 		return grid;
 	}
 
@@ -155,12 +153,6 @@ public class DocumentsListPanel extends VLayout {
 		if (grid.getSelectedRecords() != null && grid.getSelectedRecords().length > 1)
 			return;
 
-		ListGridRecord record = grid.getSelectedRecord();
-		if (record != null)
-			DocumentsPanel.get().onSelectedDocument(Long.parseLong(record.getAttribute("id")), false);
-	}
-
-	public void updateSelectedRecord(GUIDocument document) {
-		grid.updateSelectedRecord(document);
+		Session.get().setCurrentDocument(grid.getSelectedDocument());
 	}
 }

@@ -94,6 +94,8 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 
 	private int score;
 
+	private String extResId;
+	
 	public long getId() {
 		return id;
 	}
@@ -474,5 +476,13 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 
 	public void setDocRef(Long docRef) {
 		this.docRef = docRef;
+	}
+
+	public String getExtResId() {
+		return extResId;
+	}
+
+	public void setExtResId(String extResId) {
+		this.extResId = extResId;
 	}
 }

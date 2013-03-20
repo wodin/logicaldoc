@@ -5,6 +5,7 @@ import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.DocumentObserver;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.FolderObserver;
 import com.logicaldoc.gui.common.client.Session;
@@ -18,7 +19,6 @@ import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.document.DocumentContextMenu;
-import com.logicaldoc.gui.frontend.client.document.DocumentObserver;
 import com.logicaldoc.gui.frontend.client.document.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
@@ -154,7 +154,8 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 										if (filename == null)
 											filename = grid.getSelectedRecord().getAttribute("title") + "."
 													+ grid.getSelectedRecord().getAttribute("type");
-										PreviewPopup iv = new PreviewPopup(id, version, filename,folder != null && folder.isDownload());
+										PreviewPopup iv = new PreviewPopup(id, version, filename, folder != null
+												&& folder.isDownload());
 										iv.show();
 									}
 								}
@@ -314,7 +315,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			export.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					Util.exportCSV(grid);
+					Util.exportCSV(grid, false);
 				}
 			});
 			if (!Feature.enabled(Feature.EXPORT_CSV)) {
@@ -443,5 +444,10 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			selectedRecord.setAttribute("comment", folder.getDescription());
 			grid.refreshRow(grid.getRecordIndex(selectedRecord));
 		}
+	}
+
+	@Override
+	public void onDocumentSelected(GUIDocument document) {
+		// Nothing to do
 	}
 }

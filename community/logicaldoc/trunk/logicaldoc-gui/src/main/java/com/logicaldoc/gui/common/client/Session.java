@@ -6,6 +6,7 @@ import java.util.Set;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
@@ -40,6 +41,8 @@ public class Session {
 	private Set<SessionObserver> sessionObservers = new HashSet<SessionObserver>();
 
 	private Set<FolderObserver> folderObservers = new HashSet<FolderObserver>();
+
+	private Set<DocumentObserver> documentObservers = new HashSet<DocumentObserver>();
 
 	private Timer timer;
 
@@ -139,6 +142,10 @@ public class Session {
 		folderObservers.add(observer);
 	}
 
+	public void addDocumentObserver(DocumentObserver observer) {
+		documentObservers.add(observer);
+	}
+
 	public GUIFolder getCurrentFolder() {
 		return currentFolder;
 	}
@@ -150,6 +157,12 @@ public class Session {
 			listener.onFolderSelected(folder);
 		}
 	}
+	
+	public void setCurrentDocument(GUIDocument document) {
+		for (DocumentObserver listener : documentObservers) {
+			listener.onDocumentSelected(document);
+		}
+	}	
 
 	public GUIInfo getInfo() {
 		return info;

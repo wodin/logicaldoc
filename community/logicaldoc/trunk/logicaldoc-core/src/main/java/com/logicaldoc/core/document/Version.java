@@ -206,11 +206,11 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 		version.setFolderName(document.getFolder().getName());
 		version.setTgs(document.getTagsString());
 		version.setDocId(document.getId());
-		
+
 		version.setPublished(document.getPublished());
 		version.setStartPublishing(document.getStartPublishing());
 		version.setStopPublishing(document.getStopPublishing());
-		
+
 		String newVersionName = document.getVersion();
 		if (!event.equals(Version.EVENT_STORED)) {
 			newVersionName = version.getNewVersionName(document.getVersion(), release);
@@ -224,6 +224,9 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 			version.setFileVersion(newVersionName);
 			document.setFileVersion(newVersionName);
 		}
+
+		version.setExtResId(document.getExtResId());
+
 		return version;
 	}
 

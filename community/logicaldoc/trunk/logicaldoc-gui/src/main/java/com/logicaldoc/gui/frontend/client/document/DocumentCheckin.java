@@ -6,7 +6,6 @@ import gwtupload.client.MultiUploader;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -28,8 +27,6 @@ import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
-import com.smartgwt.client.widgets.grid.ListGrid;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 /**
  * This popup window is used to upload a checked-out document to the server.
@@ -50,9 +47,9 @@ public class DocumentCheckin extends Window {
 
 	private String fileName;
 
-	private ListGrid documentsGrid;
+	private DocumentsGrid documentsGrid;
 
-	public DocumentCheckin(long docId, String filename, ListGrid documentsGrid) {
+	public DocumentCheckin(long docId, String filename, DocumentsGrid documentsGrid) {
 		this.docId = docId;
 		this.fileName = filename;
 		this.documentsGrid = documentsGrid;
@@ -171,14 +168,7 @@ public class DocumentCheckin extends Window {
 							@Override
 							public void onSuccess(GUIDocument document) {
 								DocumentsPanel.get().onDocumentSaved(document);
-								ListGridRecord selection = documentsGrid.getSelectedRecord();
-								if (selection == null)
-									return;
-								selection.setAttribute("locked", "blank");
-								selection.setAttribute("status", Constants.DOC_UNLOCKED);
-								selection.setAttribute("indexed", Constants.INDEX_TO_INDEX);
-								selection.setAttribute("signed", "blank");
-								documentsGrid.refreshRow(documentsGrid.getRecordIndex(selection));
+								documentsGrid.markSelectedAsCheckedIn();
 								Session.get().getUser()
 										.setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() - 1);
 								DocumentsPanel.get().onSelectedDocument(document.getId(), false);
