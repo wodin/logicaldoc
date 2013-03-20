@@ -135,7 +135,7 @@ public class LastChangesPanel extends VLayout {
 		export.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				Util.exportCSV(histories);
+				Util.exportCSV(histories, false);
 			}
 		});
 		if (!Feature.enabled(Feature.EXPORT_CSV)) {

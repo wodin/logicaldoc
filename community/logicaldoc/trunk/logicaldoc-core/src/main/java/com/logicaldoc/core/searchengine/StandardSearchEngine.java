@@ -520,7 +520,7 @@ public class StandardSearchEngine implements SearchEngine {
 			}
 
 			CoreContainer container = new CoreContainer(home.getPath(), solr_xml);
-			server = new EmbeddedSolrServer(container, "");
+			server = new EmbeddedSolrServer(container, "logicaldoc");
 			unlock();
 		} catch (Exception e) {
 			log.error("Unable to initialize the Full-text search engine", e);

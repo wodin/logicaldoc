@@ -53,7 +53,7 @@ public class SearchBox extends TextItem {
 		});
 	}
 
-	private void search() {
+	protected void search() {
 		GUISearchOptions options = Search.get().getOptions();
 		options.setType(GUISearchOptions.TYPE_FULLTEXT);
 		options.setExpression((String) getValue());

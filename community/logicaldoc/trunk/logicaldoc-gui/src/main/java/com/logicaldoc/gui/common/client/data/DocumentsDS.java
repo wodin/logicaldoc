@@ -74,6 +74,7 @@ public class DocumentsDS extends DataSource {
 		publishedStatus.setHidden(true);
 		DataSourceDateTimeField startPublishing = new DataSourceDateTimeField("startPublishing");
 		DataSourceDateTimeField stopPublishing = new DataSourceDateTimeField("stopPublishing");
+		DataSourceTextField extResId = new DataSourceTextField("extResId");
 
 		List<DataSourceField> fields = new ArrayList<DataSourceField>();
 		fields.add(id);
@@ -105,7 +106,8 @@ public class DocumentsDS extends DataSource {
 		fields.add(publishedStatus);
 		fields.add(startPublishing);
 		fields.add(stopPublishing);
-
+		fields.add(extResId);
+		
 		String[] extNames = Session.get().getInfo().getConfig("search.extattr").split(",");
 		for (String name : extNames) {
 			DataSourceTextField ext = new DataSourceTextField("ext_" + name, name);

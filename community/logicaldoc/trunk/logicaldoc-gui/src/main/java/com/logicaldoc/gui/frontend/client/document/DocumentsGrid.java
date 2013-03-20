@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
@@ -254,8 +255,6 @@ public class DocumentsGrid extends ListGrid {
 			ListGridField folder = new ListGridField("folder", I18N.message("folder"), 200);
 			folder.setWidth(200);
 
-			ListGridField summary = new ListGridField("summary", I18N.message("summary"));
-			summary.setWidth(300);
 
 			ListGridField score = new ListGridField("score", I18N.message("score"), 120);
 			score.setCanFilter(false);
@@ -418,7 +417,58 @@ public class DocumentsGrid extends ListGrid {
 			selectedRecord.setAttribute("creator", document.getCreator());
 			selectedRecord.setAttribute("created", document.getCreation());
 			selectedRecord.setAttribute("rating", "rating" + document.getRating());
+			selectedRecord.setAttribute("extResId", document.getExtResId());
 			refreshRow(getRecordIndex(selectedRecord));
 		}
+	}
+
+	/**
+	 * Renders the selected row as checked-out
+	 */
+	public GUIDocument markSelectedAsCheckedOut() {
+		ListGridRecord record = getSelectedRecord();
+		if (record == null)
+			return null;
+		record.setAttribute("locked", "page_edit");
+		record.setAttribute("lockUserId", Session.get().getUser().getId());
+		record.setAttribute("status", Constants.DOC_CHECKED_OUT);
+		refreshRow(getRecordIndex(record));
+		return getSelectedDocument();
+	}
+
+	public GUIDocument markSelectedAsCheckedIn() {
+		ListGridRecord record = getSelectedRecord();
+		if (record == null)
+			return null;
+		record.setAttribute("locked", "blank");
+		record.setAttribute("status", Constants.DOC_UNLOCKED);
+		record.setAttribute("indexed", Constants.INDEX_TO_INDEX);
+		record.setAttribute("signed", "blank");
+		record.setAttribute("extResId", (String) null);
+		refreshRow(getRecordIndex(record));
+		return getSelectedDocument();
+	}
+	
+	
+	/**
+	 * Gets a bean representation of the currently selected item (not all
+	 * properties are populated).
+	 */
+	public GUIDocument getSelectedDocument() {
+		ListGridRecord record = getSelectedRecord();
+		if (record == null)
+			return null;
+
+		GUIDocument document = null;
+		if (record != null) {
+			document = new GUIDocument();
+			document.setId(Long.parseLong(record.getAttribute("id")));
+			document.setExtResId(record.getAttributeAsString("extResId"));
+			document.setTitle(record.getAttribute("title"));
+			document.setFileName(record.getAttribute("filename"));
+			document.setImmutable("blank".equals(record.getAttributeAsString("immutable")) ? 0 : 1);
+			document.setStatus(Integer.parseInt(record.getAttributeAsString("status")));
+		}
+		return document;
 	}
 }

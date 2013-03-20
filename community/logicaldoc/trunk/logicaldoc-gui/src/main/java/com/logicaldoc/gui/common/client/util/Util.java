@@ -27,7 +27,7 @@ public class Util {
 
 	public static String[] MEDIA_EXTS = new String[] { ".mp3", ".mp4", ".wav", ".avi", ".mpg", ".wmv", ".wma", ".asf",
 			".mov", ".rm", ".flv", ".aac", ".vlc", ".ogg", ".webm", ".swf", ".mpeg", ".swf" };
-	
+
 	/**
 	 * Generates HTML image code with style.
 	 * 
@@ -41,8 +41,8 @@ public class Util {
 	}
 
 	public static String imageHTML(String imageName, int width, int height, String style) {
-		return "<img border='0' alt='' title='' src='" + Util.imageUrl(imageName) + "' width='"
-				+ width + "px' height='" + height + "px'" + (style != null ? " style='" + style + "'" : "") + " />";
+		return "<img border='0' alt='' title='' src='" + Util.imageUrl(imageName) + "' width='" + width
+				+ "px' height='" + height + "px'" + (style != null ? " style='" + style + "'" : "") + " />";
 	}
 
 	/**
@@ -416,19 +416,25 @@ public class Util {
 	 * Exports into the CSV format the content of a ListGrid.
 	 * 
 	 * @param listGrid Grid containing the data
-	 * @return The CSV document as tring
+	 * @param allFields True if all the fields(even if hidden) have to be
+	 *        extracted
+	 * 
+	 * @return The CSV document as trying
 	 */
-	public static void exportCSV(ListGrid listGrid) {
+	public static void exportCSV(ListGrid listGrid, boolean allFields) {
 		StringBuilder stringBuilder = new StringBuilder(); // csv data in here
 
 		// column names
 		ListGridField[] fields = listGrid.getFields();
+		if (allFields)
+			fields = listGrid.getAllFields();
 		for (int i = 0; i < fields.length; i++) {
 			ListGridField listGridField = fields[i];
 			if (listGridField.getType().equals(ListGridFieldType.ICON)
 					|| listGridField.getType().equals(ListGridFieldType.IMAGE)
 					|| listGridField.getType().equals(ListGridFieldType.IMAGEFILE)
-					|| listGridField.getType().equals(ListGridFieldType.BINARY))
+					|| listGridField.getType().equals(ListGridFieldType.BINARY) || "".equals(listGridField.getTitle())
+					|| "&nbsp;".equals(listGridField.getTitle()))
 				continue;
 
 			stringBuilder.append("\"");
@@ -462,15 +468,15 @@ public class Util {
 		DateTimeFormat formatter = DateTimeFormat.getFormat(I18N.message("format_dateshort"));
 		for (int i = 0; i < records.length; i++) {
 			Record record = records[i];
-			ListGridField[] listGridFields = listGrid.getFields();
 
-			for (int j = 0; j < listGridFields.length; j++) {
+			for (int j = 0; j < fields.length; j++) {
 				try {
-					ListGridField listGridField = listGridFields[j];
+					ListGridField listGridField = fields[j];
 					if (listGridField.getType().equals(ListGridFieldType.ICON)
 							|| listGridField.getType().equals(ListGridFieldType.IMAGE)
 							|| listGridField.getType().equals(ListGridFieldType.IMAGEFILE)
-							|| listGridField.getType().equals(ListGridFieldType.BINARY))
+							|| listGridField.getType().equals(ListGridFieldType.BINARY)
+							|| "".equals(listGridField.getTitle()) || "&nbsp;".equals(listGridField.getTitle()))
 						continue;
 
 					stringBuilder.append("\"");

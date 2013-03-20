@@ -302,7 +302,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		Document doc = dao.findById(docId);
 		if (doc.getDocRef() != null)
 			docId = doc.getDocRef().longValue();
-		
+
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		try {
 			documentManager.checkout(docId, transaction);
@@ -321,7 +321,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			for (long id : ids) {
 				try {
 					Document doc = dao.findById(id);
-					
+
 					// Create the document history event
 					History transaction = new History();
 					transaction.setSessionId(sid);
@@ -533,6 +533,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		document.setSigned(doc.getSigned());
 		document.setBarcoded(doc.getBarcoded());
 		document.setIndexed(doc.getIndexed());
+		document.setExtResId(doc.getExtResId());
 
 		if (doc.getRating() != null)
 			document.setRating(doc.getRating());
@@ -902,6 +903,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		docVO.setStopPublishing(document.getStopPublishing());
 		docVO.setPublished(document.getPublished());
 		docVO.setBarcoded(document.getBarcoded());
+		docVO.setExtResId(document.getExtResId());
 
 		if (document.getTemplateId() != null) {
 			docVO.setTemplateId(document.getTemplateId());

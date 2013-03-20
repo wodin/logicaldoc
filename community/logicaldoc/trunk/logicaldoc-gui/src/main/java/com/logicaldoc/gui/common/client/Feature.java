@@ -75,6 +75,8 @@ public class Feature {
 
 	public static final int FOLDER_TEMPLATE = 42;
 	
+	public static final int GDOCS = 43;
+	
 	public static final int SHOW_DISABLED = 50;
 
 	public static final int PREVIEW = 51;

@@ -51,6 +51,7 @@
         <property name="startPublishing" type="timestamp" column="ld_startpublishing" />
         <property name="stopPublishing" type="timestamp" column="ld_stoppublishing" />
         <property name="transactionId" type="string" column="ld_transactionid" length="255" />
+        <property name="extResId" type="string" column="ld_extresid" length="255" />
         <property name="tgs" type="string" column="ld_tgs" length="1000" />
 
 		<many-to-one name="folder" class="com.logicaldoc.core.security.Folder" column="ld_folderid" />

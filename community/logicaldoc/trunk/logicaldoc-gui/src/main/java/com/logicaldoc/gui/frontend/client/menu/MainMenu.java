@@ -7,9 +7,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.DocumentObserver;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.FolderObserver;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -19,10 +21,19 @@ import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
-import com.logicaldoc.gui.common.client.util.WindowUtils;
+import com.logicaldoc.gui.common.client.widgets.ContactingServer;
+import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.gdocs.GDocsCreate;
+import com.logicaldoc.gui.frontend.client.gdocs.GDocsEditor;
+import com.logicaldoc.gui.frontend.client.gdocs.GDocsImport;
+import com.logicaldoc.gui.frontend.client.gdocs.GDocsSettings;
 import com.logicaldoc.gui.frontend.client.personal.ChangePassword;
 import com.logicaldoc.gui.frontend.client.personal.MySignature;
 import com.logicaldoc.gui.frontend.client.personal.Profile;
+import com.logicaldoc.gui.frontend.client.services.DocumentService;
+import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.GDocsService;
+import com.logicaldoc.gui.frontend.client.services.GDocsServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
@@ -33,6 +44,7 @@ import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.ClickHandler;
@@ -46,12 +58,16 @@ import com.smartgwt.client.widgets.toolbar.ToolStripMenuButton;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class MainMenu extends ToolStrip implements FolderObserver {
+public class MainMenu extends ToolStrip implements FolderObserver, DocumentObserver {
 	protected SystemServiceAsync systemService = (SystemServiceAsync) GWT.create(SystemService.class);
 
 	protected SecurityServiceAsync securityService = (SecurityServiceAsync) GWT.create(SecurityService.class);
 
 	private SettingServiceAsync settingService = (SettingServiceAsync) GWT.create(SettingService.class);
+
+	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+
+	protected GDocsServiceAsync gdocsService = (GDocsServiceAsync) GWT.create(GDocsService.class);
 
 	private boolean quickSearch = true;
 
@@ -60,6 +76,8 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 	private HTMLFlow dropArea = new HTMLFlow();
 
 	private static final String EMPTY_DIV = "<div style=\"margin-top:3px; width=\"80\"; height=\"20\"\" />";
+
+	private ToolStripMenuButton tools;
 
 	public MainMenu(boolean quickSearch) {
 		this(quickSearch, false);
@@ -78,10 +96,8 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 
 		addMenuButton(getPersonalMenu());
 
-		if (Session.get().getUser().isMemberOf("admin")) {
-			menu = getToolsMenu();
-			addMenuButton(menu);
-		}
+		tools = getToolsMenu(Session.get().getCurrentFolder(), null);
+		addMenuButton(tools);
 
 		addMenuButton(getHelpMenu());
 		addFill();
@@ -108,6 +124,8 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 			addFormItem(new SearchBox());
 
 		Session.get().addFolderObserver(this);
+		Session.get().addDocumentObserver(this);
+
 		onFolderSelected(Session.get().getCurrentFolder());
 	}
 
@@ -145,7 +163,7 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 									} catch (Throwable t) {
 
 									}
-									
+
 									Session.get().close();
 									String base = GWT.getHostPageBaseURL();
 									Util.redirect(base
@@ -170,7 +188,145 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 		return menuButton;
 	}
 
-	private ToolStripMenuButton getToolsMenu() {
+	private MenuItem getGDocsMenuItem(GUIFolder folder, final GUIDocument document) {
+		Menu menu = new Menu();
+		menu.setShowShadow(true);
+		menu.setShadowDepth(3);
+
+		final MenuItem edit = new MenuItem(I18N.message("editingdocs"));
+		edit.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				if (document == null)
+					return;
+
+				if (document.getStatus() == 0) {
+					// Need to checkout first
+					documentService.checkout(Session.get().getSid(), document.getId(), new AsyncCallback<Void>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
+
+						@Override
+						public void onSuccess(Void result) {
+							DocumentsPanel panel = DocumentsPanel.get();
+							panel.getDocumentsGrid().markSelectedAsCheckedOut();
+							Session.get().getUser().setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() + 1);
+							Log.info(I18N.message("documentcheckedout"), null);
+
+							ContactingServer.get().show();
+							gdocsService.upload(Session.get().getSid(), document.getId(), new AsyncCallback<String>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									ContactingServer.get().hide();
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(String resourceId) {
+									ContactingServer.get().hide();
+									if (resourceId == null) {
+										Log.error(I18N.message("gdocserror"), null, null);
+										return;
+									}
+
+									document.setExtResId(resourceId);
+									DocumentsPanel.get().getDocumentsGrid().getSelectedRecord()
+											.setAttribute("extResId", resourceId);
+									GDocsEditor popup = new GDocsEditor(document);
+									popup.show();
+								}
+							});
+						}
+					});
+				} else {
+					if (document.getStatus() == 1 && document.getExtResId() != null) {
+						GDocsEditor popup = new GDocsEditor(document);
+						popup.show();
+					} else {
+						SC.warn(I18N.message("event.locked"));
+					}
+				}
+			}
+		});
+
+		final MenuItem create = new MenuItem(I18N.message("createdoc"));
+		create.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				GDocsCreate popup = new GDocsCreate();
+				popup.show();
+			}
+		});
+		final MenuItem importDocs = new MenuItem(I18N.message("importfromgdocs"));
+		importDocs.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				GDocsImport popup = new GDocsImport();
+				popup.show();
+			}
+		});
+		final MenuItem exportDocs = new MenuItem(I18N.message("exporttogdocs"));
+		exportDocs.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				ListGridRecord[] records = DocumentsPanel.get().getDocumentsGrid().getSelectedRecords();
+				long[] ids = new long[records.length];
+				for (int i = 0; i < records.length; i++)
+					ids[i] = Long.parseLong(records[i].getAttributeAsString("id"));
+
+				ContactingServer.get().show();
+				gdocsService.exportDocuments(Session.get().getSid(), ids, new AsyncCallback<String[]>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+						ContactingServer.get().hide();
+					}
+
+					@Override
+					public void onSuccess(String[] settings) {
+						ContactingServer.get().hide();
+					}
+				});
+			}
+		});
+		final MenuItem account = new MenuItem(I18N.message("googleaccount"));
+		account.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				gdocsService.loadSettings(Session.get().getSid(), new AsyncCallback<String[]>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(String[] settings) {
+						GDocsSettings dialog = new GDocsSettings(settings);
+						dialog.show();
+					}
+				});
+			}
+		});
+
+		menu.setItems(edit, create, importDocs, exportDocs, account);
+
+		edit.setEnabled(document != null && document.getImmutable() == 0 && folder != null && folder.isDownload()
+				&& folder.isWrite() && Feature.enabled(Feature.GDOCS));
+		create.setEnabled(folder != null && folder.isWrite() && Feature.enabled(Feature.GDOCS));
+		importDocs.setEnabled(folder != null && folder.isDownload() && folder.isWrite()
+				&& Feature.enabled(Feature.GDOCS));
+		exportDocs.setEnabled(folder != null && folder.isDownload() && Feature.enabled(Feature.GDOCS));
+		account.setEnabled(Feature.enabled(Feature.GDOCS));
+
+		MenuItem gdocsItem = new MenuItem(I18N.message("googledocs"));
+		gdocsItem.setSubmenu(menu);
+
+		return gdocsItem;
+	}
+
+	private ToolStripMenuButton getToolsMenu(GUIFolder folder, GUIDocument document) {
 		Menu menu = new Menu();
 		menu.setShowShadow(true);
 		menu.setShadowDepth(3);
@@ -208,10 +364,14 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		if (Session.get().isDevel())
-			menu.setItems(develConsole, registration);
-		else
-			menu.setItems(registration);
+		if (com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.GDOCS))
+			menu.addItem(getGDocsMenuItem(folder, document));
+		if (Session.get().getUser().isMemberOf("admin")) {
+			if (Session.get().isDevel()) {
+				menu.addItem(develConsole);
+			}
+			menu.addItem(registration);
+		}
 
 		ToolStripMenuButton menuButton = new ToolStripMenuButton(I18N.message("tools"), menu);
 		menuButton.setWidth(100);
@@ -358,7 +518,6 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 	}
 
 	private ToolStripMenuButton getHelpMenu() {
-
 		Menu menu = new Menu();
 		menu.setShowShadow(true);
 		menu.setShadowDepth(3);
@@ -431,10 +590,30 @@ public class MainMenu extends ToolStrip implements FolderObserver {
 		} else {
 			dropArea.setContents(EMPTY_DIV);
 		}
+
+		if (tools != null)
+			removeMember(tools);
+
+		tools = getToolsMenu(folder, null);
+		addMember(tools, 2);
+	}
+
+	@Override
+	public void onDocumentSelected(GUIDocument document) {
+		if (tools != null)
+			removeMember(tools);
+
+		tools = getToolsMenu(Session.get().getCurrentFolder(), document);
+		addMember(tools, 2);
 	}
 
 	@Override
 	public void onFolderSaved(GUIFolder folder) {
+		// Do nothing
+	}
+
+	@Override
+	public void onDocumentSaved(GUIDocument document) {
 		// Do nothing
 	}
 }

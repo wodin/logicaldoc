@@ -204,7 +204,8 @@ public class DocumentsDataServlet extends HttpServlet {
 				StringBuffer query = new StringBuffer(
 						"select A.id, A.customId, A.docRef, A.type, A.title, A.version, A.lastModified, A.date, A.publisher,"
 								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status,"
-								+ " A.signed, A.type, A.sourceDate, A.sourceAuthor, A.rating, A.fileVersion, A.comment, A.workflowStatus, A.startPublishing, A.stopPublishing, A.published "
+								+ " A.signed, A.type, A.sourceDate, A.sourceAuthor, A.rating, A.fileVersion, A.comment, A.workflowStatus,"
+								+ " A.startPublishing, A.stopPublishing, A.published, A.extResId "
 								+ " from Document A ");
 				query.append(" where A.deleted = 0 ");
 				if (folderId != null)
@@ -320,6 +321,9 @@ public class DocumentsDataServlet extends HttpServlet {
 						writer.print("<stopPublishing></stopPublishing>");
 					writer.print("<publishedStatus>" + (published ? "yes" : "no") + "</publishedStatus>");
 
+					if (cols[28] != null)
+						writer.print("<extResId><![CDATA[" + cols[28] + "]]></extResId>");
+
 					if (!extValues.isEmpty())
 						for (String name : attrs) {
 							String val = extValues.get(cols[0] + "-" + name);
@@ -410,6 +414,9 @@ public class DocumentsDataServlet extends HttpServlet {
 					else
 						writer.print("<stopPublishing></stopPublishing>");
 					writer.print("<publishedStatus>" + (doc.isPublishing() ? "yes" : "no") + "</publishedStatus>");
+
+					if (doc.getExtResId() != null)
+						writer.print("<extResId><![CDATA[" + doc.getExtResId() + "]]></extResId>");
 
 					if (!extValues.isEmpty())
 						for (String name : attrs) {

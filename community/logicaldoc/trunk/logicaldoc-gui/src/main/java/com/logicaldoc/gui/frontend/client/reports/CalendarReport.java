@@ -8,6 +8,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUICalendarEvent;
+import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -17,6 +18,7 @@ import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.frontend.client.services.CalendarService;
 import com.logicaldoc.gui.frontend.client.services.CalendarServiceAsync;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.ExpansionMode;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TitleOrientation;
@@ -125,6 +127,12 @@ public class CalendarReport extends VLayout {
 		date.setAlign(Alignment.CENTER);
 		date.setCanFilter(false);
 
+		ListGridField expiration = new ListGridField("expiration", I18N.message("expiration"), 110);
+		expiration.setType(ListGridFieldType.DATE);
+		expiration.setCellFormatter(new DateCellFormatter(false));
+		expiration.setAlign(Alignment.CENTER);
+		expiration.setCanFilter(false);
+
 		ListGridField frequency = new ListGridField("frequency", I18N.message("frequency"), 90);
 		frequency.setType(ListGridFieldType.INTEGER);
 		frequency.setAlign(Alignment.CENTER);
@@ -175,6 +183,13 @@ public class CalendarReport extends VLayout {
 			}
 		});
 
+		ListGridField description = new ListGridField("description", I18N.message("description"));
+		description.setWidth(400);
+		description.setHidden(true);
+
+		ListGridField participants = new ListGridField("participants", I18N.message("participants"));
+		participants.setWidth(300);
+
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setWidth100();
@@ -185,7 +200,10 @@ public class CalendarReport extends VLayout {
 		list.setCanFreezeFields(true);
 		list.setFilterOnKeypress(true);
 		list.setAutoFetchData(true);
-		list.setFields(date, titleCol, status, frequency);
+		list.setFields(date, expiration, titleCol, status, frequency, participants, description);
+		list.setDetailField("description");
+		list.setCanExpandRecords(true);
+		list.setExpansionMode(ExpansionMode.DETAIL_FIELD);
 
 		results.addMember(list);
 		layout.addMember(search, 0);
@@ -216,7 +234,7 @@ public class CalendarReport extends VLayout {
 			export.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-					Util.exportCSV(list);
+					Util.exportCSV(list, true);
 				}
 			});
 			if (!Feature.enabled(Feature.EXPORT_CSV)) {
@@ -291,6 +309,18 @@ public class CalendarReport extends VLayout {
 									record.setAttribute("title", result[i].getTitle());
 									record.setAttribute("frequency", result[i].getFrequency());
 									record.setAttribute("status", result[i].getStatus());
+									record.setAttribute("description", result[i].getDescription());
+									record.setAttribute("expiration", result[i].getExpirationDate());
+
+									StringBuffer participants = new StringBuffer();
+									GUIUser[] users = result[i].getParticipants();
+									for (GUIUser user : users) {
+										if (participants.length() > 0)
+											participants.append(", ");
+										participants.append(user.toString());
+									}
+									record.setAttribute("participants", participants.toString());
+
 									records[i] = record;
 								}
 								list.setData(records);
