@@ -302,7 +302,8 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		return 0;
 	}
 
-	protected String getDbms() {
+	@Override
+	public String getDbms() {
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		return config.getProperty("jdbc.dbms").toLowerCase();
 	}

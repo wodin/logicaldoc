@@ -6,6 +6,9 @@ import java.util.List;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
+import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
+
 /**
  * Interface for DAOs that operate on persistent objects
  * 
@@ -237,4 +240,9 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * @since 6.2.4
 	 */
 	public int jdbcUpdate(String statement, Object... args);
+	
+	/**
+	 * Get the DBMS currently connected( possible values are: mysql, hsqldb, oracle, mssql)
+	 */
+	public String getDbms();
 }
