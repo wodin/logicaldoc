@@ -144,9 +144,31 @@ public class StatsCollector extends Task {
 		saveStatistic("plugindir", Long.toString(plugindir));
 
 		long dbdir = 0;
-		File dbDir = new File(config.getPropertyWithSubstitutions("conf.dbdir"));
-		if (dbDir.exists())
-			dbdir = FileUtils.sizeOfDirectory(dbDir);
+
+		/*
+		 * Try to determine the database size by using proprietary queries
+		 */
+		try {
+			if ("mysql".equals(documentDAO.getDbms()))
+				dbdir = documentDAO
+						.queryForLong("select sum(data_length + index_length) from information_schema.partitions where table_schema=database()");
+			else if ("oracle".equals(documentDAO.getDbms()))
+				dbdir = documentDAO.queryForLong("SELECT sum(bytes) FROM user_segments");
+			else if ("postgresql".equals(documentDAO.getDbms()))
+				dbdir = documentDAO.queryForLong("select pg_database_size(current_database())");
+		} catch (Throwable t) {
+
+		}
+
+		/*
+		 * Fall back to the database dir
+		 */
+		if (dbdir == 0) {
+			File dbDir = new File(config.getPropertyWithSubstitutions("conf.dbdir"));
+			if (dbDir.exists())
+				dbdir = FileUtils.sizeOfDirectory(dbDir);
+		}
+
 		saveStatistic("dbdir", Long.toString(dbdir));
 
 		long logdir = 0;
