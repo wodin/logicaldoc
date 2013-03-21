@@ -129,7 +129,7 @@ public class TaskDialog extends Window {
 			remindTime.setValue(this.state.getReminderUnit());
 			if (Session.get().isDemo()) {
 				// In demo mode disable the remind setting because of this may
-				// send  massive emails
+				// send massive emails
 				remindTimeItem.setDisabled(true);
 				remindTime.setDisabled(true);
 			}
@@ -348,8 +348,9 @@ public class TaskDialog extends Window {
 						b[i++] = new GUIValuePair(key, participants.get(key));
 					TaskDialog.this.state.setParticipants(b);
 
-					if (TaskDialog.this.state.getParticipants() == null
-							|| TaskDialog.this.state.getParticipants().length == 0) {
+					if (state.getType() == GUIWFState.TYPE_TASK
+							&& (TaskDialog.this.state.getParticipants() == null || TaskDialog.this.state
+									.getParticipants().length == 0)) {
 						SC.warn(I18N.message("workflowtaskparticipantatleast"));
 						return;
 					}
