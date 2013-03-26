@@ -9,8 +9,6 @@ public interface SettingServiceAsync {
 
 	void loadClientSettings(String sid, AsyncCallback<GUIParameter[]> callback);
 
-	void saveClientSettings(String sid, GUIParameter[] settings, AsyncCallback<Void> callback);
-
 	void saveSettings(String sid, GUIParameter[] settings, AsyncCallback<Void> callback);
 
 	void loadEmailSettings(String sid, AsyncCallback<GUIEmailSettings> callback);

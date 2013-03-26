@@ -52,6 +52,7 @@ import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIDashlet;
+import com.logicaldoc.gui.common.client.beans.GUIExternalCall;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMenu;
@@ -221,6 +222,19 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		userSession.getDictionary().put(SessionUtil.USER, user);
 
 		guiUser.setPasswordMinLenght(Integer.parseInt(config.getProperty("password.size")));
+
+		/*
+		 * Prepare the external command
+		 */
+		if (info.isEnabled("Feature_31") && "true".equals(config.getProperty("extcall.enabled"))) {
+			GUIExternalCall externalCall = new GUIExternalCall();
+			externalCall.setName(config.getProperty("extcall.name"));
+			externalCall.setBaseUrl(config.getProperty("extcall.baseurl"));
+			externalCall.setSuffix(config.getProperty("extcall.suffix"));
+			externalCall.setTargetWindow(config.getProperty("extcall.window"));
+			externalCall.setParametersStr(config.getProperty("extcall.params"));
+			session.setExternalCall(externalCall);
+		}
 
 		return session;
 	}

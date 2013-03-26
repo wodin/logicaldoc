@@ -71,7 +71,7 @@ public class SettingServiceImplTest extends AbstractWebappTCase {
 		settings[0] = wsSettings;
 		settings[1] = wdSettings;
 
-		service.saveClientSettings(session.getSid(), settings);
+		service.saveSettings(session.getSid(), settings);
 	}
 
 	@Test

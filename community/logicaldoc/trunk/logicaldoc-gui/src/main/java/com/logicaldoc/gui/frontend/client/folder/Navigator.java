@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.FolderObserver;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.beans.GUIExternalCall;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.FoldersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -495,6 +496,19 @@ public class Navigator extends TreeGrid implements FolderObserver {
 			}
 		});
 
+		MenuItem externalCall = null;
+		final GUIExternalCall extCall = Session.get().getSession().getExternalCall();
+		if (Feature.enabled(Feature.EXTERNAL_CALL) && extCall != null) {
+			externalCall = new MenuItem();
+			externalCall.setTitle(extCall.getName());
+			externalCall.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+				public void onClick(MenuItemClickEvent event) {
+					WindowUtils.openUrl(extCall.getUrl(false, new Long[] { id }, new String[] { name }),
+							extCall.getTargetWindow() != null ? extCall.getTargetWindow() : "_blank");
+				}
+			});
+		}
+
 		if (!folder.hasPermission(Constants.PERMISSION_ADD)) {
 			create.setEnabled(false);
 		}
@@ -527,9 +541,10 @@ public class Navigator extends TreeGrid implements FolderObserver {
 			createWorkspace.setEnabled(Feature.enabled(Feature.MULTI_WORKSPACE));
 			contextMenu.setItems(reload, search, create, createWorkspace, delete, addBookmark, paste, pasteAsAlias,
 					move, exportZip);
-		} else
+		} else {
 			contextMenu.setItems(reload, search, create, rename, delete, addBookmark, paste, pasteAsAlias, move,
 					exportZip);
+		}
 
 		if (Feature.visible(Feature.AUDIT)) {
 			contextMenu.addItem(audit);
@@ -552,6 +567,9 @@ public class Navigator extends TreeGrid implements FolderObserver {
 					|| !folder.hasPermission(Constants.PERMISSION_DOWNLOAD))
 				archive.setEnabled(false);
 		}
+
+		if (externalCall != null)
+			contextMenu.addItem(externalCall);
 
 		return contextMenu;
 	}

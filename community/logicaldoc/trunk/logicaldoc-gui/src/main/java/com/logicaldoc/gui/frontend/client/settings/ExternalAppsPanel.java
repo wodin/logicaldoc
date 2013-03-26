@@ -1,11 +1,13 @@
 package com.logicaldoc.gui.frontend.client.settings;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIExternalCall;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -14,14 +16,19 @@ import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.validator.RequiredIfFunction;
+import com.smartgwt.client.widgets.form.validator.RequiredIfValidator;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
@@ -65,7 +72,7 @@ public class ExternalAppsPanel extends VLayout {
 		setMargin(5);
 		tabs.setWidth100();
 		tabs.setHeight100();
-		
+
 		for (GUIParameter parameter : settings) {
 			if (parameter.getName().startsWith("webservice"))
 				wsSettings = parameter;
@@ -171,15 +178,23 @@ public class ExternalAppsPanel extends VLayout {
 		extAppForm.setPadding(5);
 
 		TextItem convertCommand = ItemFactory.newTextItem("convertCommand", "Convert", convert.getValue());
+		convertCommand.setWidth(300);
 		TextItem ghostCommand = ItemFactory.newTextItem("ghostCommand", "Ghostscript", ghost.getValue());
+		ghostCommand.setWidth(300);
 		TextItem tesseractCommand = ItemFactory.newTextItem("tesseractCommand", "Tesseract", tesseract.getValue());
+		tesseractCommand.setWidth(300);
 		TextItem openOffice = ItemFactory.newTextItem("openOffice", "OpenOffice path", openofficePath.getValue());
+		openOffice.setWidth(300);
 		TextItem swftools = ItemFactory.newTextItem("swftools", "SWFTools path", swftoolsPath.getValue());
+		swftools.setWidth(300);
 
 		extAppForm.setItems(convertCommand, ghostCommand, tesseractCommand, swftools, openOffice);
 		extApps.setPane(extAppForm);
 
 		tabs.addTab(extApps);
+
+		// External Call
+		Tab extCall = prepareExternalCall(settings);
 
 		if (Feature.visible(Feature.WEBSERVICE)) {
 			tabs.addTab(webService);
@@ -197,6 +212,12 @@ public class ExternalAppsPanel extends VLayout {
 			tabs.addTab(webDav);
 			if (!Feature.enabled(Feature.WEBDAV))
 				webDav.setPane(new FeatureDisabled());
+		}
+
+		if (Feature.visible(Feature.EXTERNAL_CALL)) {
+			tabs.addTab(extCall);
+			if (!Feature.enabled(Feature.EXTERNAL_CALL))
+				extCall.setPane(new FeatureDisabled());
 		}
 
 		IButton save = new IButton();
@@ -223,7 +244,7 @@ public class ExternalAppsPanel extends VLayout {
 					ExternalAppsPanel.this.swftoolsPath.setValue(values.get("swftools").toString());
 					ExternalAppsPanel.this.openofficePath.setValue(values.get("openOffice").toString());
 
-					GUIParameter[] params = new GUIParameter[9];
+					GUIParameter[] params = new GUIParameter[15];
 					params[0] = ExternalAppsPanel.this.wsSettings;
 					params[1] = ExternalAppsPanel.this.wdSettings;
 					params[2] = ExternalAppsPanel.this.wdCache;
@@ -234,8 +255,35 @@ public class ExternalAppsPanel extends VLayout {
 					params[7] = ExternalAppsPanel.this.openofficePath;
 					params[8] = ExternalAppsPanel.this.cmisSettings;
 
-					service.saveClientSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
+					// External Call
+					GUIExternalCall extCall = new GUIExternalCall();
+					extCall.setName(values.get("extCallName") == null ? "" : values.get("extCallName").toString());
+					extCall.setBaseUrl(values.get("extCallBaseUrl") == null ? "" : values.get("extCallBaseUrl")
+							.toString());
+					extCall.setSuffix(values.get("extCallSuffix") == null ? "" : values.get("extCallSuffix").toString());
+					extCall.setTargetWindow(values.get("extCallWindow") == null ? "" : values.get("extCallWindow")
+							.toString());
+					if ("yes".equals(values.get("extCallEnabled")))
+						Session.get().getSession().setExternalCall(extCall);
+					else
+						Session.get().getSession().setExternalCall(null);
 
+					params[9] = new GUIParameter("extcall.enabled", "yes".equals(values.get("extCallEnabled")) ? "true"
+							: "false");
+					params[10] = new GUIParameter("extcall.name", extCall.getName());
+					params[11] = new GUIParameter("extcall.baseurl", extCall.getBaseUrl());
+					params[12] = new GUIParameter("extcall.suffix", extCall.getSuffix());
+					params[13] = new GUIParameter("extcall.window", extCall.getTargetWindow());
+					ArrayList<String> buf = new ArrayList<String>();
+					if ("true".equals(values.get("extCallParamUser").toString()))
+						buf.add("user");
+					if ("true".equals(values.get("extCallParamTitle").toString()))
+						buf.add("title");
+					String paramsStr = buf.toString().substring(1, buf.toString().length() - 1);
+					extCall.setParametersStr(paramsStr);
+					params[14] = new GUIParameter("extcall.params", buf.isEmpty() ? "" : paramsStr);
+
+					service.saveSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);
@@ -246,6 +294,8 @@ public class ExternalAppsPanel extends VLayout {
 							Log.info(I18N.message("settingssaved"), null);
 						}
 					});
+				} else {
+					SC.warn(I18N.message("invalidsettings"));
 				}
 			}
 		});
@@ -254,8 +304,83 @@ public class ExternalAppsPanel extends VLayout {
 		addMember(save);
 
 		if (Session.get().isDemo()) {
-			// In demo mode you cannot alter the client configurationss
+			// In demo mode you cannot alter the client configurations
 			save.setDisabled(true);
 		}
+	}
+
+	private Tab prepareExternalCall(GUIParameter[] settings) {
+		VLayout pane = new VLayout();
+
+		Tab extCall = new Tab();
+		extCall.setTitle(I18N.message("externalcall"));
+		DynamicForm extCallForm = new DynamicForm();
+		extCallForm.setWidth(400);
+		extCallForm.setIsGroup(true);
+		extCallForm.setNumCols(2);
+		extCallForm.setPadding(2);
+		extCallForm.setGroupTitle(I18N.message("externalcall"));
+		extCallForm.setValuesManager(vm);
+		extCallForm.setTitleOrientation(TitleOrientation.LEFT);
+		final RadioGroupItem extCallEnabled = ItemFactory.newBooleanSelector("extCallEnabled", "enabled");
+		extCallEnabled.setRequired(true);
+		extCallEnabled.setRedrawOnChange(true);
+		extCallEnabled.setValue("no");
+
+		RequiredIfValidator extCallEnabledValidator = new RequiredIfValidator();
+		extCallEnabledValidator.setExpression(new RequiredIfFunction() {
+			public boolean execute(FormItem formItem, Object value) {
+				return "yes".equals(extCallEnabled.getValueAsString().toLowerCase());
+			}
+		});
+		TextItem extCallName = ItemFactory.newTextItem("extCallName", I18N.message("name"), null);
+		extCallName.setValidators(extCallEnabledValidator);
+		TextItem extCallBaseUrl = ItemFactory.newTextItem("extCallBaseUrl", I18N.message("baseurl"), null);
+		extCallBaseUrl.setValidators(extCallEnabledValidator);
+		extCallBaseUrl.setWidth(300);
+		TextItem extCallSuffix = ItemFactory.newTextItem("extCallSuffix", I18N.message("suffix"), null);
+		extCallSuffix.setWidth(300);
+		TextItem extCallWindow = ItemFactory.newTextItem("extCallWindow", I18N.message("targetwindow"), "_blank");
+
+		extCallForm.setItems(extCallEnabled, extCallName, extCallBaseUrl, extCallSuffix, extCallWindow);
+
+		// Use a second form to group the parameters section
+		DynamicForm parametersForm = new DynamicForm();
+		parametersForm.setWidth(400);
+		parametersForm.setIsGroup(true);
+		parametersForm.setGroupTitle(I18N.message("parameters"));
+		parametersForm.setNumCols(4);
+		extCallForm.setPadding(2);
+		parametersForm.setValuesManager(vm);
+		CheckboxItem extCallParamUser = ItemFactory.newCheckbox("extCallParamUser", "user");
+		CheckboxItem extCallParamTitle = ItemFactory.newCheckbox("extCallParamTitle", "title");
+		parametersForm.setItems(extCallParamUser, extCallParamTitle);
+
+		pane.setMembers(extCallForm, parametersForm);
+		extCall.setPane(pane);
+
+		for (GUIParameter s : settings) {
+			if ("extcall.enabled".equals(s.getName()))
+				extCallEnabled.setValue("true".equals(s.getValue()) ? "yes" : "no");
+			else if ("extcall.name".equals(s.getName()))
+				extCallName.setValue(s.getValue());
+			else if ("extcall.baseurl".equals(s.getName()))
+				extCallBaseUrl.setValue(s.getValue());
+			else if ("extcall.suffix".equals(s.getName()))
+				extCallSuffix.setValue(s.getValue());
+			else if ("extcall.window".equals(s.getName()))
+				extCallWindow.setValue(s.getValue());
+			else if ("extcall.params".equals(s.getName())) {
+				String[] tokens = s.getValue().split(",");
+				for (String param : tokens) {
+					if ("user".equals(param.trim()))
+						extCallParamUser.setValue("true");
+					else if ("title".equals(param.trim()))
+						extCallParamTitle.setValue("true");
+				}
+			}
+		}
+
+		return extCall;
 	}
 }

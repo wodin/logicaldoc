@@ -122,7 +122,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.equals("userno") || name.startsWith("search.") || name.startsWith("swftools.")
 					|| name.contains("password") || name.startsWith("audit.user") || name.startsWith("openoffice.path")
 					|| name.startsWith("tag.") || name.startsWith("jdbc.") || name.startsWith("cluster")
-					|| name.startsWith("ip."))
+					|| name.startsWith("ip.")|| name.startsWith("extcall."))
 				continue;
 
 			sortedSet.add(key.toString());
@@ -148,7 +148,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		for (Object key : conf.keySet()) {
 			if (key.toString().equals("webservice.enabled") || key.toString().startsWith("webdav")
 					|| key.toString().startsWith("cmis") || key.toString().startsWith("command.")
-					|| key.toString().startsWith("openoffice") || key.toString().startsWith("swftools.")) {
+					|| key.toString().startsWith("openoffice") || key.toString().startsWith("swftools.")
+					|| key.toString().startsWith("extcall.")) {
 				GUIParameter p = new GUIParameter(key.toString(), conf.getProperty(key.toString()));
 				params.add(p);
 			}
@@ -173,23 +174,6 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		} catch (Exception e) {
 			log.error("Exception writing Parameters settings data: " + e.getMessage(), e);
 			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void saveClientSettings(String sid, GUIParameter[] settings) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
-
-		try {
-			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-			for (GUIParameter setting : settings) {
-				conf.setProperty(setting.getName(), setting.getValue());
-			}
-			conf.write();
-
-			log.info("Client Tools settings data written successfully.");
-		} catch (Exception e) {
-			log.error("Exception writing Client Tools settings data: " + e.getMessage(), e);
 		}
 	}
 

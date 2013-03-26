@@ -1,11 +1,15 @@
 package com.logicaldoc.gui.frontend.client.document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.beans.GUIExternalCall;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -622,6 +626,9 @@ public class DocumentContextMenu extends Menu {
 
 		MenuItem more = new MenuItem(I18N.message("more"));
 
+		MenuItem externalCall = new MenuItem();
+		externalCall.setEnabled(selection.length > 0);
+
 		boolean enableLock = false;
 		boolean enableUnlock = false;
 		boolean enableImmutable = false;
@@ -743,8 +750,27 @@ public class DocumentContextMenu extends Menu {
 
 		rename.setEnabled(enableRename);
 
-		setItems(download, preview, cut, copy, rename, delete, bookmark, sendMail, links, checkout, checkin, lock,
-				unlockItem, more);
+		final GUIExternalCall extCall = Session.get().getSession().getExternalCall();
+		if (Feature.enabled(Feature.EXTERNAL_CALL) && extCall != null) {
+			externalCall.setTitle(extCall.getName());
+			externalCall.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+				public void onClick(MenuItemClickEvent event) {
+					List<Long> ids = new ArrayList<Long>();
+					List<String> titles = new ArrayList<String>();
+					for (ListGridRecord record : selection) {
+						ids.add(Long.parseLong(record.getAttributeAsString("id")));
+						titles.add(record.getAttributeAsString("title"));
+					}
+
+					WindowUtils.openUrl(extCall.getUrl(true, ids.toArray(new Long[0]), titles.toArray(new String[0])),
+							extCall.getTargetWindow() != null ? extCall.getTargetWindow() : "_blank");
+				}
+			});
+			setItems(download, preview, cut, copy, rename, delete, bookmark, sendMail, links, checkout, checkin, lock,
+					unlockItem, more, externalCall);
+		} else
+			setItems(download, preview, cut, copy, rename, delete, bookmark, sendMail, links, checkout, checkin, lock,
+					unlockItem, more);
 
 		Menu moreMenu = new Menu();
 		moreMenu.setItems(immutable, markIndexable, markUnindexable);

@@ -36,11 +36,6 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 	}
 
 	@Override
-	public void saveClientSettings(String sid, GUIParameter[] settings) {
-
-	}
-
-	@Override
 	public GUIParameter[] loadSettings(String sid) {
 		GUIParameter[] params = new GUIParameter[50];
 		for (int i = 0; i < params.length; i++) {
@@ -148,6 +143,6 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 	@Override
 	public void saveDashlets(String sid, GUIDashlet[] dashlets) throws InvalidSessionException {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
