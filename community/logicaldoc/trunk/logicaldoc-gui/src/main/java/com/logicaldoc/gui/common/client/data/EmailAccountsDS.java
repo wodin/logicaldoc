@@ -14,7 +14,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 public class EmailAccountsDS extends DataSource {
 	private static EmailAccountsDS instance;
 	
-	private EmailAccountsDS(boolean withEmpty) {
+	public EmailAccountsDS(boolean withEmpty) {
 		setTitleField("email");
 		setRecordXPath("/list/account");
 		DataSourceTextField id = new DataSourceTextField("id");
@@ -25,11 +25,5 @@ public class EmailAccountsDS extends DataSource {
 		setFields(id, email, enabled);
 		setDataURL("data/emailaccounts.xml?sid=" + Session.get().getSid());
 		setClientOnly(true);
-	}
-
-	public static EmailAccountsDS get() {
-		if (instance == null)
-			instance = new EmailAccountsDS(false);
-		return instance;
 	}
 }
