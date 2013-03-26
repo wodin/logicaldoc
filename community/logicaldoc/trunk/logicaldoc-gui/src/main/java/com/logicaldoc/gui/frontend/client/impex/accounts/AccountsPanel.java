@@ -11,7 +11,6 @@ import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
-import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.services.EmailAccountService;
 import com.logicaldoc.gui.frontend.client.services.EmailAccountServiceAsync;
 import com.smartgwt.client.data.Record;
@@ -109,7 +108,7 @@ public class AccountsPanel extends VLayout {
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
 		list.setFilterOnKeypress(true);
-		list.setDataSource(EmailAccountsDS.get());
+		list.setDataSource(new EmailAccountsDS(false));
 
 		listing.addMember(infoPanel);
 		listing.addMember(list);

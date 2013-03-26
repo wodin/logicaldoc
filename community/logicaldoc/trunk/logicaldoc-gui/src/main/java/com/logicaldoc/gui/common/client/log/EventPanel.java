@@ -1,5 +1,7 @@
 package com.logicaldoc.gui.common.client.log;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.logicaldoc.gui.common.client.beans.GUIEvent;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -78,6 +80,15 @@ public class EventPanel extends HLayout {
 				statusLabel.setContents("");
 			}
 		});
+
+		Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
+
+			@Override
+			public boolean execute() {
+				statusLabel.setContents("");
+				return false;
+			}
+		}, 15000);
 	}
 
 	public void error(String message, String detail) {
