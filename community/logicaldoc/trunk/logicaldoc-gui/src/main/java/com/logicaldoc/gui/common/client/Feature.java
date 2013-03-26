@@ -69,6 +69,8 @@ public class Feature {
 	
 	public static final int MOBILE_APPS = 30;
 	
+	public static final int EXTERNAL_CALL = 31;
+	
 	public static final int SHOW_LICENSEE = 40;
 
 	public static final int SHOW_USERS_WARNING = 41;

@@ -179,4 +179,12 @@ public class Session {
 	public void setCurrentWorkflow(GUIWorkflow currentWorkflow) {
 		this.currentWorkflow = currentWorkflow;
 	}
+
+	public GUISession getSession() {
+		return session;
+	}
+
+	public void setSession(GUISession session) {
+		this.session = session;
+	}
 }

@@ -20,6 +20,8 @@ public class GUISession implements Serializable {
 
 	private GUIInfo info;
 	
+	private GUIExternalCall externalCall;
+	
 	private String incomingMessage;
 
 	public GUIUser getUser() {
@@ -60,5 +62,13 @@ public class GUISession implements Serializable {
 
 	public void setIncomingMessage(String incomingMessage) {
 		this.incomingMessage = incomingMessage;
+	}
+
+	public GUIExternalCall getExternalCall() {
+		return externalCall;
+	}
+
+	public void setExternalCall(GUIExternalCall externalCall) {
+		this.externalCall = externalCall;
 	}
 }

@@ -16,13 +16,9 @@ import com.logicaldoc.gui.common.client.beans.GUIParameter;
  */
 @RemoteServiceRelativePath("setting")
 public interface SettingService extends RemoteService {
-	/**
-	 * Saves web services and webDav settings
-	 */
-	public void saveClientSettings(String sid, GUIParameter[] settings) throws InvalidSessionException;
 
 	/**
-	 * Loads web services and webDav settings
+	 * Loads web services, webDav and other client-related settings
 	 */
 	public GUIParameter[] loadClientSettings(String sid) throws InvalidSessionException;
 
