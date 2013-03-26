@@ -1232,27 +1232,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public void rename(String sid, long docId, String fileName) throws Exception {
-		SessionUtil.validateSession(sid);
-		User user = SessionUtil.getSessionUser(sid);
-
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc = docDao.findById(docId);
-
-		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		if (!fdao.isWriteEnable(doc.getFolder().getId(), user.getId())) {
-			throw new RuntimeException("The user doesn't have the rename permission on the current folder");
-		}
-
-		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-
-		History transaction = new History();
-		transaction.setSessionId(sid);
-		transaction.setUser(user);
-		manager.rename(doc, fileName, false, transaction);
-	}
-
-	@Override
 	public void updateBookmark(String sid, GUIBookmark bookmark) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 

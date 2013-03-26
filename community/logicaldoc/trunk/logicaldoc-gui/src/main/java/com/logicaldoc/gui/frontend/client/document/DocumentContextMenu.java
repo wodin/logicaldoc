@@ -120,41 +120,6 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
-		MenuItem rename = new MenuItem();
-		rename.setTitle(I18N.message("renamefile"));
-		rename.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			public void onClick(MenuItemClickEvent event) {
-				final ListGridRecord selection = grid.getSelectedRecord();
-
-				LD.askforValue(I18N.message("rename"), I18N.message("filename"), selection.getAttribute("filename"),
-						"250", new ValueCallback() {
-							@Override
-							public void execute(final String value) {
-								if (value == null || value.isEmpty())
-									return;
-
-								documentService.rename(Session.get().getSid(),
-										Long.parseLong(selection.getAttribute("id")), value, new AsyncCallback<Void>() {
-											@Override
-											public void onFailure(Throwable caught) {
-												Log.serverError(caught);
-											}
-
-											@Override
-											public void onSuccess(Void result) {
-												selection.setAttribute("filename", value);
-												selection.setAttribute("indexed", "blank");
-												grid.refreshRow(grid.getRecordIndex(selection));
-												DocumentsPanel.get().showFolderDetails();
-												DocumentsPanel.get().onSelectedDocument(
-														Long.parseLong(selection.getAttribute("id")), false);
-											}
-										});
-							}
-						});
-			}
-		});
-
 		MenuItem delete = new MenuItem();
 		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
@@ -675,10 +640,6 @@ public class DocumentContextMenu extends Menu {
 			}
 		}
 
-		if (grid.getSelectedRecords().length != 1) {
-			rename.setEnabled(false);
-		}
-
 		if (Clipboard.getInstance().isEmpty()) {
 			links.setEnabled(false);
 		}
@@ -748,8 +709,6 @@ public class DocumentContextMenu extends Menu {
 			enableSign = false;
 		}
 
-		rename.setEnabled(enableRename);
-
 		final GUIExternalCall extCall = Session.get().getSession().getExternalCall();
 		if (Feature.enabled(Feature.EXTERNAL_CALL) && extCall != null) {
 			externalCall.setTitle(extCall.getName());
@@ -766,10 +725,10 @@ public class DocumentContextMenu extends Menu {
 							extCall.getTargetWindow() != null ? extCall.getTargetWindow() : "_blank");
 				}
 			});
-			setItems(download, preview, cut, copy, rename, delete, bookmark, sendMail, links, checkout, checkin, lock,
+			setItems(download, preview, cut, copy, delete, bookmark, sendMail, links, checkout, checkin, lock,
 					unlockItem, more, externalCall);
 		} else
-			setItems(download, preview, cut, copy, rename, delete, bookmark, sendMail, links, checkout, checkin, lock,
+			setItems(download, preview, cut, copy, delete, bookmark, sendMail, links, checkout, checkin, lock,
 					unlockItem, more);
 
 		Menu moreMenu = new Menu();

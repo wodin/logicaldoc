@@ -204,9 +204,4 @@ public interface DocumentService extends RemoteService {
 	 * Applies to a selection of documents all the given data.
 	 */
 	public void bulkUpdate(String sid, long[] ids, GUIDocument vo) throws InvalidSessionException;
-
-	/**
-	 * Renames the specified document's file
-	 */
-	public void rename(String sid, long docId, String name) throws Exception;
 }

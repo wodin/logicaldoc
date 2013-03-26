@@ -473,6 +473,12 @@ public class DocumentDetailsPanel extends VLayout {
 	public void onSave() {
 		if (validate()) {
 			document.setComment(saveForm.getValueAsString("versionComment"));
+			String ext = null;
+			if (document.getFileName().lastIndexOf('.') != -1) {
+				ext = document.getFileName().substring(document.getFileName().lastIndexOf('.'));
+				document.setFileName(document.getTitle() + ext);
+			}
+
 			documentService.save(Session.get().getSid(), document, new AsyncCallback<GUIDocument>() {
 				@Override
 				public void onFailure(Throwable caught) {
