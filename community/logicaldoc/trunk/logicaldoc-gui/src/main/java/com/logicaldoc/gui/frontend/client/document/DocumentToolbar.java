@@ -604,8 +604,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 						|| !Feature.enabled(Feature.WORKFLOW));
 				addToWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)
 						|| !Feature.enabled(Feature.WORKFLOW) || Session.get().getCurrentWorkflow() == null);
-				addToWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WRITE)
-						|| !folder.hasPermission(Constants.PERMISSION_IMPORT) || !Feature.enabled(Feature.BULK_UPDATE));
 				addCalendarEvent.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_CALENDAR)
 						|| !Feature.enabled(Feature.CALENDAR));
 			} else {
@@ -613,7 +611,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				scan.setDisabled(true);
 				archive.setDisabled(true);
 				startWorkflow.setDisabled(true);
-				addToWorkflow.setDisabled(true);
 				addToWorkflow.setDisabled(true);
 				bulkUpdate.setDisabled(true);
 				dropSpot.setDisabled(true);

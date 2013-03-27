@@ -65,6 +65,7 @@ public class TransitionDialog extends Window {
 
 		final FolderSelector target = new FolderSelector("target", false);
 		target.setRequired(false);
+		target.setWidth(200);
 		target.setTitle(I18N.message("target"));
 		if (widget.getTransition().getTargetFolder() != null)
 			target.setFolder(widget.getTransition().getTargetFolder(), "");

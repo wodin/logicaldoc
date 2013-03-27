@@ -6,6 +6,7 @@ import gwtupload.client.MultiUploader;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
@@ -128,6 +129,11 @@ public class DocumentsUploader extends Window {
 		zipItem.setName("zip");
 		zipItem.setTitle(I18N.message("importfromzip"));
 		zipItem.setValue(!zipImport);
+		
+		if(!Session.get().getCurrentFolder().hasPermission(Constants.PERMISSION_EXPORT)){
+			zipItem.setDisabled(true);
+			zipItem.setValue(false);
+		}
 
 		SelectItem encodingItem = ItemFactory.newEncodingSelector("encoding");
 		encodingItem.setDisabled(zipImport);
