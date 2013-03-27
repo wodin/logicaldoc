@@ -43,6 +43,7 @@ public class EMail extends Message {
 
 	private boolean html = false;
 
+	private int attachmentsCount = 0;
 
 	public EMail() {
 	}
@@ -129,8 +130,11 @@ public class EMail extends Message {
 		return recs;
 	}
 
-	public int getAttachmentCount() {
-		return attachments.size();
+	public int getAttachmentsCount() {
+		if(attachments.isEmpty())
+			return attachmentsCount;
+		else
+			return attachments.size();
 	}
 
 	public void setAttachments(Map<Integer, EMailAttachment> attachments) {
@@ -192,5 +196,9 @@ public class EMail extends Message {
 
 	public void setImages(Set<String> images) {
 		this.images = images;
+	}
+
+	public void setAttachmentsCount(int attachmentCount) {
+		this.attachmentsCount = attachmentCount;
 	}
 }
