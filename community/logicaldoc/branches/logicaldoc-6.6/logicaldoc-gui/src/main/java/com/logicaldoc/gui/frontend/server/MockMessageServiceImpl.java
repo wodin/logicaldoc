@@ -48,7 +48,5 @@ public class MockMessageServiceImpl extends RemoteServiceServlet implements Mess
 
 	@Override
 	public void deleteTemplates(String sid, long[] ids) throws InvalidSessionException {
-		// TODO Auto-generated method stub
-		
 	}
 }
