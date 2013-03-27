@@ -228,7 +228,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 
 							@Override
 							public void onSuccess(GUIFolder folder) {
-								Menu contextMenu = setupContextMenu(folder);
+								Menu contextMenu = prepateContextMenu(folder);
 								contextMenu.showContextMenu();
 							}
 						});
@@ -320,7 +320,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 	/**
 	 * Prepares the context menu.
 	 */
-	private Menu setupContextMenu(GUIFolder folder) {
+	private Menu prepateContextMenu(GUIFolder folder) {
 		final TreeNode selectedNode = (TreeNode) getSelectedRecord();
 		final long id = Long.parseLong(selectedNode.getAttribute("folderId"));
 		final String name = selectedNode.getAttribute("name");
