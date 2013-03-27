@@ -262,7 +262,5 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 
 	@Override
 	public void applyTriggersToTree(String sid, long rootId) throws InvalidSessionException {
-		// TODO Auto-generated method stub
-
 	}
 }

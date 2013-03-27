@@ -147,7 +147,5 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 
 	@Override
 	public void saveDashlets(String sid, GUIDashlet[] dashlets) throws InvalidSessionException {
-		// TODO Auto-generated method stub
-		
 	}
 }

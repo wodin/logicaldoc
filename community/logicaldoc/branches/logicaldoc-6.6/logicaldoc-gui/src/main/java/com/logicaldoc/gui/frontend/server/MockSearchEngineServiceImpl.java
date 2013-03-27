@@ -51,7 +51,5 @@ public class MockSearchEngineServiceImpl extends RemoteServiceServlet implements
 	
 	@Override
 	public void setAliases(String sid, String extension, String aliases) throws InvalidSessionException {
-		// TODO Auto-generated method stub
-		
 	}
 }
