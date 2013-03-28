@@ -109,19 +109,28 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 					id = Long.parseLong(grid.getSelectedRecord().getAttributeAsString("id"));
 				}
 
-				folderService.getFolder(Session.get().getSid(), id, false, new AsyncCallback<GUIFolder>() {
+				if ("document".equals(type) && Session.get().getCurrentDocument() != null
+						&& Session.get().getCurrentDocument().getId() == id) {
+					Menu contextMenu = prepareContextMenu(Session.get().getCurrentDocument().getFolder(), true);
+					contextMenu.showContextMenu();
+				} else {
+					/*
+					 * We need to retrieve the folder from the server
+					 */
+					folderService.getFolder(Session.get().getSid(), id, false, new AsyncCallback<GUIFolder>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
 
-					@Override
-					public void onSuccess(GUIFolder folder) {
-						Menu contextMenu = prepareContextMenu(folder, !"folder".equals(type));
-						contextMenu.showContextMenu();
-					}
-				});
+						@Override
+						public void onSuccess(GUIFolder folder) {
+							Menu contextMenu = prepareContextMenu(folder, !"folder".equals(type));
+							contextMenu.showContextMenu();
+						}
+					});
+				}
 				event.cancel();
 			}
 		});

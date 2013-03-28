@@ -10,6 +10,7 @@ import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.DocumentObserver;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.FolderObserver;
+import com.logicaldoc.gui.common.client.PanelObserver;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
@@ -21,15 +22,19 @@ import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
+import com.logicaldoc.gui.frontend.client.document.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.gdocs.GDocsCreate;
 import com.logicaldoc.gui.frontend.client.gdocs.GDocsEditor;
 import com.logicaldoc.gui.frontend.client.gdocs.GDocsImport;
 import com.logicaldoc.gui.frontend.client.gdocs.GDocsSettings;
+import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.personal.ChangePassword;
 import com.logicaldoc.gui.frontend.client.personal.MySignature;
 import com.logicaldoc.gui.frontend.client.personal.Profile;
+import com.logicaldoc.gui.frontend.client.search.SearchPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.GDocsService;
@@ -58,7 +63,7 @@ import com.smartgwt.client.widgets.toolbar.ToolStripMenuButton;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class MainMenu extends ToolStrip implements FolderObserver, DocumentObserver {
+public class MainMenu extends ToolStrip implements FolderObserver, DocumentObserver, PanelObserver {
 	protected SystemServiceAsync systemService = (SystemServiceAsync) GWT.create(SystemService.class);
 
 	protected SecurityServiceAsync securityService = (SecurityServiceAsync) GWT.create(SecurityService.class);
@@ -200,6 +205,12 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 				if (document == null)
 					return;
 
+				final DocumentsGrid grid;
+				if (MainPanel.get().isOnSearchTab())
+					grid = SearchPanel.get().getDocumentsGrid();
+				else
+					grid = DocumentsPanel.get().getDocumentsGrid();
+
 				if (document.getStatus() == 0) {
 					// Need to checkout first
 					documentService.checkout(Session.get().getSid(), document.getId(), new AsyncCallback<Void>() {
@@ -210,8 +221,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 
 						@Override
 						public void onSuccess(Void result) {
-							DocumentsPanel panel = DocumentsPanel.get();
-							panel.getDocumentsGrid().markSelectedAsCheckedOut();
+							grid.markSelectedAsCheckedOut();
 							Session.get().getUser().setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() + 1);
 							Log.info(I18N.message("documentcheckedout"), null);
 
@@ -230,11 +240,9 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 										Log.error(I18N.message("gdocserror"), null, null);
 										return;
 									}
-
 									document.setExtResId(resourceId);
-									DocumentsPanel.get().getDocumentsGrid().getSelectedRecord()
-											.setAttribute("extResId", resourceId);
-									GDocsEditor popup = new GDocsEditor(document);
+									grid.getSelectedRecord().setAttribute("extResId", resourceId);
+									GDocsEditor popup = new GDocsEditor(document, grid);
 									popup.show();
 								}
 							});
@@ -242,7 +250,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 					});
 				} else {
 					if (document.getStatus() == 1 && document.getExtResId() != null) {
-						GDocsEditor popup = new GDocsEditor(document);
+						GDocsEditor popup = new GDocsEditor(document, grid);
 						popup.show();
 					} else {
 						SC.warn(I18N.message("event.locked"));
@@ -314,9 +322,10 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 
 		edit.setEnabled(document != null && document.getImmutable() == 0 && folder != null && folder.isDownload()
 				&& folder.isWrite() && Feature.enabled(Feature.GDOCS));
-		create.setEnabled(folder != null && folder.isWrite() && Feature.enabled(Feature.GDOCS));
+		create.setEnabled(folder != null && folder.isWrite() && Feature.enabled(Feature.GDOCS)
+				&& MainPanel.get().isOnDocumentsTab());
 		importDocs.setEnabled(folder != null && folder.isDownload() && folder.isWrite()
-				&& Feature.enabled(Feature.GDOCS));
+				&& Feature.enabled(Feature.GDOCS) && MainPanel.get().isOnDocumentsTab());
 		exportDocs.setEnabled(folder != null && folder.isDownload() && Feature.enabled(Feature.GDOCS));
 		account.setEnabled(Feature.enabled(Feature.GDOCS));
 
@@ -326,10 +335,42 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		return gdocsItem;
 	}
 
+	private MenuItem getOfficeMenuItem(final GUIDocument document) {
+		Menu menu = new Menu();
+		menu.setShowShadow(true);
+		menu.setShadowDepth(3);
+
+		final MenuItem edit = new MenuItem(I18N.message("editwithoffice"));
+		edit.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				if (document == null)
+					return;
+
+				WindowUtils.openUrl("ldedit:" + GWT.getHostPageBaseURL() + "ldedit?action=edit&sid="
+						+ Session.get().getSid() + "&docId=" + document.getId());
+			}
+		});
+
+		menu.setItems(edit);
+
+		edit.setEnabled(document != null && document.getImmutable() == 0 && document.getFolder() != null
+				&& document.getFolder().isDownload() && document.getFolder().isWrite()
+				&& Feature.enabled(Feature.OFFICE) && Util.isOfficeFile(document.getFileName()));
+
+		MenuItem officeItem = new MenuItem(I18N.message("microsoftoffice"));
+		officeItem.setSubmenu(menu);
+
+		return officeItem;
+	}
+
 	private ToolStripMenuButton getToolsMenu(GUIFolder folder, GUIDocument document) {
 		Menu menu = new Menu();
 		menu.setShowShadow(true);
 		menu.setShadowDepth(3);
+
+		if (folder == null && document != null)
+			folder = document.getFolder();
 
 		MenuItem develConsole = new MenuItem(I18N.message("develconsole"));
 		develConsole.addClickHandler(new ClickHandler() {
@@ -364,8 +405,15 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 			}
 		});
 
-		if (com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.GDOCS))
-			menu.addItem(getGDocsMenuItem(folder, document));
+		if (document != null || folder != null) {
+			if (Feature.enabled(Feature.GDOCS)
+					&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.GDOCS))
+				menu.addItem(getGDocsMenuItem(folder, document));
+			if (Feature.enabled(Feature.OFFICE)
+					&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.OFFICE))
+				menu.addItem(getOfficeMenuItem(document));
+		}
+
 		if (Session.get().getUser().isMemberOf("admin")) {
 			if (Session.get().isDevel()) {
 				menu.addItem(develConsole);
@@ -603,7 +651,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		if (tools != null)
 			removeMember(tools);
 
-		tools = getToolsMenu(Session.get().getCurrentFolder(), document);
+		tools = getToolsMenu(document.getFolder(), document);
 		addMember(tools, 2);
 	}
 
@@ -615,5 +663,18 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 	@Override
 	public void onDocumentSaved(GUIDocument document) {
 		// Do nothing
+	}
+
+	@Override
+	public void onTabSeleted(String panel) {
+		if ("documents".equals(panel)) {
+			onFolderSelected(Session.get().getCurrentFolder());
+		} else {
+			if (tools != null)
+				removeMember(tools);
+
+			tools = getToolsMenu(null, null);
+			addMember(tools, 2);
+		}
 	}
 }

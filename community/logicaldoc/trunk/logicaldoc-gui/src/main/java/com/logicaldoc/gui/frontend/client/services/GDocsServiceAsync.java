@@ -5,7 +5,7 @@ import com.logicaldoc.gui.common.client.beans.GUIDocument;
 
 public interface GDocsServiceAsync {
 
-	void checkin(String sid, long docId, String comment, boolean major, AsyncCallback<Void> callback);
+	void checkin(String sid, long docId, String comment, boolean major, AsyncCallback<GUIDocument> callback);
 
 	void upload(String sid, long docId, AsyncCallback<String> callback);
 

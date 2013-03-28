@@ -145,16 +145,16 @@ public class RatingDialog extends Window {
 												.getDocumentsGrid()
 												.refreshRow(
 														DocumentsPanel.get().getDocumentsGrid().getRecordIndex(selectedRecord));
-										DocumentsPanel.get().onSelectedDocument(
+										DocumentsPanel.get().selectDocument(
 												Long.parseLong(selectedRecord.getAttribute("id")), false);
 									}
 
 									else if (RatingDialog.this.observer instanceof HitsListPanel) {
-										ListGridRecord selectedRecord = SearchPanel.get().getList().getSelectedRecord();
+										ListGridRecord selectedRecord = SearchPanel.get().getGrid().getSelectedRecord();
 										selectedRecord.setAttribute("rating", "rating" + rating);
 										SearchPanel
 												.get()
-												.getList()
+												.getGrid()
 												.refreshRow(
 														DocumentsPanel.get().getDocumentsGrid().getRecordIndex(selectedRecord));
 										SearchPanel.get().onSelectedDocumentHit(

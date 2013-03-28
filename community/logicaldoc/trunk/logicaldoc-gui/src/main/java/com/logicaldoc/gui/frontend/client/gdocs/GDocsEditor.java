@@ -7,6 +7,7 @@ import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
+import com.logicaldoc.gui.frontend.client.document.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
@@ -44,7 +45,9 @@ public class GDocsEditor extends Window {
 
 	private GUIDocument document;
 
-	public GDocsEditor(final GUIDocument document) {
+	private DocumentsGrid grid;
+
+	public GDocsEditor(final GUIDocument document, final DocumentsGrid grid) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		if (document.getId() > 0)
 			setTitle(I18N.message("editdoc") + ": " + document.getTitle());
@@ -52,6 +55,7 @@ public class GDocsEditor extends Window {
 			setTitle(I18N.message("createdoc") + ": " + document.getTitle());
 
 		this.document = document;
+		this.grid = grid;
 
 		setWidth(com.google.gwt.user.client.Window.getClientWidth());
 		setHeight(com.google.gwt.user.client.Window.getClientHeight());
@@ -164,7 +168,7 @@ public class GDocsEditor extends Window {
 
 							@Override
 							public void onSuccess(Void result) {
-								DocumentsPanel.get().getDocumentsGrid().markSelectedAsCheckedIn();
+								grid.markSelectedAsCheckedIn();
 								Session.get().setCurrentDocument(document);
 								ContactingServer.get().show();
 								gdocsService.delete(Session.get().getSid(), GDocsEditor.this.document.getExtResId(),
@@ -194,7 +198,7 @@ public class GDocsEditor extends Window {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (document.getId() != 0) {
-					GDocsCheckin checkin = new GDocsCheckin(document, GDocsEditor.this);
+					GDocsCheckin checkin = new GDocsCheckin(document, GDocsEditor.this, grid);
 					checkin.show();
 				} else {
 					ContactingServer.get().show();
@@ -210,7 +214,7 @@ public class GDocsEditor extends Window {
 								@Override
 								public void onSuccess(Void result) {
 									DocumentsPanel.get().refresh();
-									
+
 									// Delete the temporary resource in GDocs
 									gdocsService.delete(Session.get().getSid(), document.getExtResId(),
 											new AsyncCallback<Void>() {

@@ -15,7 +15,6 @@ import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
-import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
@@ -488,19 +487,6 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
-		MenuItem edit = new MenuItem();
-		edit.setTitle(I18N.message("editwithoffice"));
-		edit.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord selection = grid.getSelectedRecord();
-				if (selection == null)
-					return;
-				long id = Long.parseLong(selection.getAttribute("id"));
-				WindowUtils.openUrl("ldedit:" + GWT.getHostPageBaseURL() + "ldedit?action=edit&sid="
-						+ Session.get().getSid() + "&docId=" + id);
-			}
-		});
-
 		MenuItem startWorkflow = new MenuItem(I18N.message("startworkflow"));
 		startWorkflow.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			@Override
@@ -599,13 +585,6 @@ public class DocumentContextMenu extends Menu {
 		boolean enableImmutable = false;
 		boolean enableDelete = true;
 		boolean enableSign = selection != null && selection.length > 0;
-		boolean enableRename = selection != null && selection.length == 1 && folder.isRename();
-
-		boolean isOfficeFile = false;
-		if (selection[0].getAttribute("filename") != null)
-			isOfficeFile = Util.isOfficeFile(selection[0].getAttribute("filename"));
-		else if (selection[0].getAttribute("type") != null)
-			isOfficeFile = Util.isOfficeFileType(selection[0].getAttribute("type"));
 
 		if (selection != null && selection.length == 1) {
 			ListGridRecord record = selection[0];
@@ -621,13 +600,9 @@ public class DocumentContextMenu extends Menu {
 			}
 		}
 
-		boolean enableOffice = (enableUnlock || enableLock)
-				&& (selection != null && selection.length == 1 && isOfficeFile);
-
 		for (ListGridRecord record : selection)
 			if (!"blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable"))) {
 				cut.setEnabled(false);
-				enableRename = false;
 				break;
 			}
 
@@ -733,14 +708,6 @@ public class DocumentContextMenu extends Menu {
 
 		Menu moreMenu = new Menu();
 		moreMenu.setItems(immutable, markIndexable, markUnindexable);
-
-		if (Feature.visible(Feature.OFFICE)) {
-			moreMenu.addItem(edit);
-			if (!Feature.enabled(Feature.OFFICE))
-				edit.setEnabled(false);
-			else
-				edit.setEnabled(enableOffice);
-		}
 
 		if (enableSign && Feature.visible(Feature.DIGITAL_SIGN)) {
 			moreMenu.addItem(sign);

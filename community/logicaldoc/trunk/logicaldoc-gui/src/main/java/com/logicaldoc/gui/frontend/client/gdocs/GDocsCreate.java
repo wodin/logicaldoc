@@ -10,6 +10,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
+import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.services.GDocsService;
 import com.logicaldoc.gui.frontend.client.services.GDocsServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -113,7 +114,7 @@ public class GDocsCreate extends Window {
 						document.setFileName(vm.getValueAsString("title") + "." + vm.getValueAsString("type"));
 						document.setType(vm.getValueAsString("type"));
 						document.setExtResId(resId);
-						GDocsEditor editor = new GDocsEditor(document);
+						GDocsEditor editor = new GDocsEditor(document, DocumentsPanel.get().getDocumentsGrid());
 						editor.show();
 						destroy();
 					}

@@ -1,11 +1,15 @@
 package com.logicaldoc.gui.frontend.client.panels;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Menu;
+import com.logicaldoc.gui.common.client.PanelObserver;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.SessionObserver;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -28,6 +32,8 @@ import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
+import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
+import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 /**
  * This is the main panel that collects all other GUI panels
@@ -51,6 +57,8 @@ public class MainPanel extends VLayout implements SessionObserver {
 
 	private IncomingMessage incomingMessage = null;
 
+	private List<PanelObserver> observers = new ArrayList<PanelObserver>();
+
 	public static MainPanel get() {
 		if (instance == null)
 			instance = new MainPanel();
@@ -64,6 +72,10 @@ public class MainPanel extends VLayout implements SessionObserver {
 		Session.get().addSessionObserver(this);
 	}
 
+	public void addObjserver(PanelObserver observer) {
+		observers.add(observer);
+	}
+
 	private void initGUI() {
 		Layout topPanel = new TopPanel();
 
@@ -72,14 +84,21 @@ public class MainPanel extends VLayout implements SessionObserver {
 		tabSet.setWidth100();
 		tabSet.setHeight("*");
 		documentsTab = new Tab(I18N.message("documents"));
+		documentsTab.setName("documents");
 		searchTab = new Tab(I18N.message("search"));
+		searchTab.setName("search");
 		dashboardTab = new Tab(I18N.message("dashboard"));
+		dashboardTab.setName("dashboard");
 		administrationTab = new Tab(I18N.message("administration"));
+		administrationTab.setName("administration");
 
 		addMember(topPanel);
 		incomingMessage = new IncomingMessage("", null);
 		addMember(incomingMessage);
-		addMember(new MainMenu(true, "embedded".equals(Session.get().getInfo().getConfig("gui.dropspot.mode"))));
+		MainMenu mainMenu = new MainMenu(true,
+				"embedded".equals(Session.get().getInfo().getConfig("gui.dropspot.mode")));
+		addObjserver(mainMenu);
+		addMember(mainMenu);
 		addMember(tabSet);
 		addMember(new StatusBar(true));
 
@@ -91,6 +110,23 @@ public class MainPanel extends VLayout implements SessionObserver {
 				redraw();
 			}
 		});
+
+		/*
+		 * Setup notification logic
+		 */
+		TabSelectedHandler selectionHandler = new TabSelectedHandler() {
+
+			@Override
+			public void onTabSelected(TabSelectedEvent event) {
+				for (PanelObserver observer : observers) {
+					observer.onTabSeleted(event.getTab().getName());
+				}
+			}
+		};
+		documentsTab.addTabSelectedHandler(selectionHandler);
+		searchTab.addTabSelectedHandler(selectionHandler);
+		dashboardTab.addTabSelectedHandler(selectionHandler);
+		administrationTab.addTabSelectedHandler(selectionHandler);
 	}
 
 	@Override
@@ -137,7 +173,7 @@ public class MainPanel extends VLayout implements SessionObserver {
 			else if (welcomeScreen == Menu.DASHBOARD && Menu.enabled(Menu.DASHBOARD))
 				tabSet.selectTab(dashboardTab);
 		}
-		
+
 		WorkflowServiceAsync service = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
 		service.countActiveUserTasks(Session.get().getSid(), user.getUserName(), new AsyncCallback<Integer>() {
 
@@ -152,7 +188,7 @@ public class MainPanel extends VLayout implements SessionObserver {
 				user.setActiveTasks(result);
 			}
 		});
-		
+
 		service.countActiveUserTasks(Session.get().getSid(), user.getUserName(), new AsyncCallback<Integer>() {
 
 			@Override
@@ -208,6 +244,14 @@ public class MainPanel extends VLayout implements SessionObserver {
 		dp.getTabSet().selectTab(DashboardPanel.get().getCalendarTab());
 		dashboardTab.setPane(dp);
 		tabSet.selectTab(dashboardTab);
+	}
+
+	public boolean isOnDocumentsTab() {
+		return "documents".equals(tabSet.getSelectedTab().getName());
+	}
+
+	public boolean isOnSearchTab() {
+		return "search".equals(tabSet.getSelectedTab().getName());
 	}
 	
 	public IncomingMessage getIncomingMessage() {

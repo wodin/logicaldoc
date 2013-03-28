@@ -8,7 +8,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
-import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.document.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.services.GDocsService;
 import com.logicaldoc.gui.frontend.client.services.GDocsServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -36,7 +36,7 @@ public class GDocsCheckin extends Window {
 
 	protected GDocsServiceAsync gdocsService = (GDocsServiceAsync) GWT.create(GDocsService.class);
 
-	public GDocsCheckin(final GUIDocument document, final GDocsEditor parentDialog) {
+	public GDocsCheckin(final GUIDocument document, final GDocsEditor parentDialog, final DocumentsGrid grid) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("checkin"));
 		setWidth(350);
@@ -66,21 +66,21 @@ public class GDocsCheckin extends Window {
 		checkin.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				onCheckin(document, parentDialog);
+				onCheckin(document, parentDialog, grid);
 			}
 		});
 
 		form.setItems(versionItem, commentItem, checkin);
-		
+
 		addItem(form);
 	}
 
-	public void onCheckin(GUIDocument document, final GDocsEditor parentDialog) {
+	public void onCheckin(GUIDocument document, final GDocsEditor parentDialog, final DocumentsGrid grid) {
 		if (!vm.validate())
 			return;
 		ContactingServer.get().show();
 		gdocsService.checkin(Session.get().getSid(), document.getId(), vm.getValueAsString("comment"),
-				"true".equals(vm.getValueAsString("majorversion")), new AsyncCallback<Void>() {
+				"true".equals(vm.getValueAsString("majorversion")), new AsyncCallback<GUIDocument>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						ContactingServer.get().hide();
@@ -89,11 +89,12 @@ public class GDocsCheckin extends Window {
 					}
 
 					@Override
-					public void onSuccess(Void result) {
+					public void onSuccess(GUIDocument result) {
 						ContactingServer.get().hide();
 						destroy();
 						parentDialog.destroy();
-						DocumentsPanel.get().refresh();
+						grid.updateSelectedRecord(result);
+						Session.get().setCurrentDocument(result);
 					}
 				});
 	}
