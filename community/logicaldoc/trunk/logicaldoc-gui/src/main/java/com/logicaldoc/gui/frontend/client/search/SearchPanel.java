@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.search;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.DocumentObserver;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
@@ -9,7 +10,9 @@ import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.document.DocumentDetailsPanel;
+import com.logicaldoc.gui.frontend.client.document.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.folder.FolderDetailsPanel;
+import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
@@ -28,7 +31,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class SearchPanel extends HLayout implements SearchObserver {
+public class SearchPanel extends HLayout implements SearchObserver, DocumentObserver {
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
@@ -75,6 +78,7 @@ public class SearchPanel extends HLayout implements SearchObserver {
 		setShowEdges(true);
 
 		Search.get().addObserver(this);
+		Session.get().addDocumentObserver(this);
 	}
 
 	public static SearchPanel get() {
@@ -84,17 +88,7 @@ public class SearchPanel extends HLayout implements SearchObserver {
 	}
 
 	public void onSelectedDocumentHit(long id) {
-		if (details.contains(detailPanel))
-			details.removeMember(detailPanel);
-		detailPanel.destroy();
-		if (id > 0)
-			detailPanel = new DocumentDetailsPanel(listingPanel);
-		else
-			detailPanel = new Label("&nbsp;" + I18N.message("selectahit"));
-
-		details.addMember(detailPanel);
-
-		if (id > 0 && (detailPanel instanceof DocumentDetailsPanel))
+		if (id > 0) {
 			documentService.getById(Session.get().getSid(), id, new AsyncCallback<GUIDocument>() {
 				@Override
 				public void onFailure(Throwable caught) {
@@ -103,12 +97,11 @@ public class SearchPanel extends HLayout implements SearchObserver {
 
 				@Override
 				public void onSuccess(GUIDocument result) {
-					if (detailPanel instanceof DocumentDetailsPanel) {
-						((DocumentDetailsPanel) detailPanel).setDocument(result);
-						details.redraw();
-					}
+					Session.get().setCurrentDocument(result);
 				}
 			});
+		} else
+			onDocumentSelected(null);
 	}
 
 	public void onSelectedFolderHit(long id) {
@@ -156,7 +149,47 @@ public class SearchPanel extends HLayout implements SearchObserver {
 			SearchMenu.get().setWidth(350);
 	}
 
-	public ListGrid getList() {
+	public ListGrid getGrid() {
 		return ((HitsListPanel) listingPanel).getList();
+	}
+
+	public DocumentsGrid getDocumentsGrid() {
+		ListGrid grid = getGrid();
+		if (grid instanceof DocumentsGrid)
+			return (DocumentsGrid) grid;
+		else
+			return null;
+	}
+
+	@Override
+	public void onDocumentSelected(GUIDocument document) {
+		if (!MainPanel.get().isOnSearchTab())
+			return;
+
+		if (document == null || document.getId() < 1 || !(detailPanel instanceof DocumentDetailsPanel)) {
+			if (details.contains(detailPanel))
+				details.removeMember(detailPanel);
+			detailPanel.destroy();
+			if (document == null || document.getId() < 1) {
+				detailPanel = new Label("&nbsp;" + I18N.message("selectahit"));
+				details.addMember(detailPanel);
+				return;
+			}
+		}
+
+		if (detailPanel instanceof DocumentDetailsPanel) {
+			((DocumentDetailsPanel) detailPanel).setDocument(document);
+
+		} else {
+			detailPanel = new DocumentDetailsPanel(listingPanel);
+			((DocumentDetailsPanel) detailPanel).setDocument(document);
+			details.addMember(detailPanel);
+		}
+		details.redraw();
+	}
+
+	@Override
+	public void onDocumentSaved(GUIDocument document) {
+		// Nothing to do
 	}
 }

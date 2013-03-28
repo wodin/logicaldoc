@@ -142,7 +142,7 @@ public class DocumentDetailsPanel extends VLayout {
 				// has been selected into the Documents list panel or into the
 				// Search list panel.
 				if (getObserver() instanceof DocumentsPanel)
-					DocumentsPanel.get().onSelectedDocument(document.getId(), false);
+					DocumentsPanel.get().selectDocument(document.getId(), false);
 				else if (getObserver() instanceof HitsListPanel)
 					SearchPanel.get().onSelectedDocumentHit(document.getId());
 				savePanel.setVisible(false);
@@ -491,7 +491,7 @@ public class DocumentDetailsPanel extends VLayout {
 					if (observer != null) {
 						observer.onDocumentSaved(result);
 						if (result != null)
-							DocumentsPanel.get().onSelectedDocument(result.getId(), false);
+							DocumentsPanel.get().selectDocument(result.getId(), false);
 						savePanel.setVisible(false);
 						saveForm.setValue("versionComment", "");
 					}

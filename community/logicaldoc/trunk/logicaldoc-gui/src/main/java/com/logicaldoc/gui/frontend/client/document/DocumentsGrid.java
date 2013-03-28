@@ -255,7 +255,6 @@ public class DocumentsGrid extends ListGrid {
 			ListGridField folder = new ListGridField("folder", I18N.message("folder"), 200);
 			folder.setWidth(200);
 
-
 			ListGridField score = new ListGridField("score", I18N.message("score"), 120);
 			score.setCanFilter(false);
 			score.setCellFormatter(new CellFormatter() {
@@ -405,7 +404,19 @@ public class DocumentsGrid extends ListGrid {
 	public void updateSelectedRecord(GUIDocument document) {
 		ListGridRecord selectedRecord = getSelectedRecord();
 		if (selectedRecord != null) {
-			selectedRecord.setAttribute("indexed", "blank");
+			if (document.getIndexed() == 0)
+				selectedRecord.setAttribute("indexed", "blank");
+			else if (document.getIndexed() == 1)
+				selectedRecord.setAttribute("indexed", "indexed");
+
+			if(document.getStatus()==2)
+				selectedRecord.setAttribute("locked", "lock");
+			else if(document.getStatus()==1)
+				selectedRecord.setAttribute("locked", "page_edit");
+			else
+				selectedRecord.setAttribute("locked", "blank");
+			selectedRecord.setAttribute("status", document.getStatus());
+			
 			selectedRecord.setAttribute("title", document.getTitle());
 			selectedRecord.setAttribute("customId", document.getCustomId());
 			selectedRecord.setAttribute("version", document.getVersion());
@@ -448,8 +459,7 @@ public class DocumentsGrid extends ListGrid {
 		refreshRow(getRecordIndex(record));
 		return getSelectedDocument();
 	}
-	
-	
+
 	/**
 	 * Gets a bean representation of the currently selected item (not all
 	 * properties are populated).

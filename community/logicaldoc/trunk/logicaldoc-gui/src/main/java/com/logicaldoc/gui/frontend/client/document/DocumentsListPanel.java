@@ -1,15 +1,19 @@
 package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.DocumentsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
+import com.logicaldoc.gui.frontend.client.services.DocumentService;
+import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.util.Offline;
@@ -33,6 +37,7 @@ import com.smartgwt.client.widgets.menu.Menu;
  * @since 6.0
  */
 public class DocumentsListPanel extends VLayout {
+	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private DocumentsDS dataSource;
 
@@ -153,6 +158,21 @@ public class DocumentsListPanel extends VLayout {
 		if (grid.getSelectedRecords() != null && grid.getSelectedRecords().length > 1)
 			return;
 
-		Session.get().setCurrentDocument(grid.getSelectedDocument());
+		documentService.getById(Session.get().getSid(), grid.getSelectedDocument().getId(),
+				new AsyncCallback<GUIDocument>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						/*
+						 * Sometimes we can have spurious errors using Firefox.
+						 */
+						if (Session.get().isDevel())
+							Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUIDocument result) {
+						Session.get().setCurrentDocument(result);
+					}
+				});
 	}
 }

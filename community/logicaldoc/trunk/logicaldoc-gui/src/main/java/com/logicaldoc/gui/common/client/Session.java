@@ -36,6 +36,8 @@ public class Session {
 
 	private GUIFolder currentFolder;
 
+	private GUIDocument currentDocument;
+
 	private GUIWorkflow currentWorkflow = null;
 
 	private Set<SessionObserver> sessionObservers = new HashSet<SessionObserver>();
@@ -157,12 +159,13 @@ public class Session {
 			listener.onFolderSelected(folder);
 		}
 	}
-	
+
 	public void setCurrentDocument(GUIDocument document) {
+		this.currentDocument = document;
 		for (DocumentObserver listener : documentObservers) {
 			listener.onDocumentSelected(document);
 		}
-	}	
+	}
 
 	public GUIInfo getInfo() {
 		return info;
@@ -186,5 +189,9 @@ public class Session {
 
 	public void setSession(GUISession session) {
 		this.session = session;
+	}
+
+	public GUIDocument getCurrentDocument() {
+		return currentDocument;
 	}
 }

@@ -41,6 +41,8 @@ public class Menu {
 	public static final long REPORTS = 16;
 
 	public static final long AOS = -20;
+	
+	public static final long OFFICE = -1090;
 
 	public static final long CLUSTERING = -1110;
 

@@ -134,7 +134,21 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 
 	@Override
 	public void onDocumentSelected(GUIDocument document) {
-		onSelectedDocument(document.getId(), false);
+		if (!MainPanel.get().isOnDocumentsTab())
+			return;
+
+		if (!(detailPanel instanceof DocumentDetailsPanel)) {
+			details.removeMember(detailPanel);
+			detailPanel.destroy();
+			detailPanel = new DocumentDetailsPanel(DocumentsPanel.this);
+			details.addMember(detailPanel);
+		}
+
+		toolbar.update(document);
+		if (detailPanel instanceof DocumentDetailsPanel) {
+			((DocumentDetailsPanel) detailPanel).setDocument(document);
+			details.redraw();
+		}
 	}
 
 	public void openInFolder(long folderId, Long docId) {
@@ -170,13 +184,14 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	}
 
 	/**
-	 * Shows the document details
+	 * Shows the document details of a selected document. The documents details
+	 * are retrieved from the server.
 	 * 
-	 * @param docId
-	 * @param clearSelection true if you want to deselect all records in the
+	 * @param docId Id of the documents that needs to be selected
+	 * @param clearSelection true if you want to de-select all records in the
 	 *        list
 	 */
-	public void onSelectedDocument(long docId, final boolean clearSelection) {
+	public void selectDocument(long docId, final boolean clearSelection) {
 		documentService.getById(Session.get().getSid(), docId, new AsyncCallback<GUIDocument>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -263,7 +278,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	 */
 	public void showFolderDetails() {
 		if (hiliteDocId != null)
-			onSelectedDocument(hiliteDocId, false);
+			selectDocument(hiliteDocId, false);
 		else {
 			detailPanel.destroy();
 			detailPanel = new FolderDetailsPanel(folder, Navigator.get());

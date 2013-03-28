@@ -171,7 +171,7 @@ public class DocumentCheckin extends Window {
 								documentsGrid.markSelectedAsCheckedIn();
 								Session.get().getUser()
 										.setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() - 1);
-								DocumentsPanel.get().onSelectedDocument(document.getId(), false);
+								DocumentsPanel.get().selectDocument(document.getId(), false);
 								destroy();
 							}
 						});

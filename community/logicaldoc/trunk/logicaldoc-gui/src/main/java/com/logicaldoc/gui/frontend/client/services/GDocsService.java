@@ -38,8 +38,10 @@ public interface GDocsService extends RemoteService {
 	 * @param docId ID of the document to update
 	 * @param comment The comment left for the checkin
 	 * @param major If this is a major or minor release
+	 * 
+	 * @return The checked-in document
 	 */
-	public void checkin(String sid, long docId, String comment, boolean major) throws InvalidSessionException;
+	public GUIDocument checkin(String sid, long docId, String comment, boolean major) throws InvalidSessionException;
 
 	/**
 	 * Performs the creation of a new Google Docs's document.
@@ -71,8 +73,8 @@ public interface GDocsService extends RemoteService {
 	 * @return The list of the imported documents into Google Docs
 	 * @throws InvalidSessionException
 	 */
-	public String[] exportDocuments(String sid, long[] ids)	throws InvalidSessionException;
-	
+	public String[] exportDocuments(String sid, long[] ids) throws InvalidSessionException;
+
 	/**
 	 * Save the settings used by the Google Docs module
 	 * 
@@ -87,12 +89,11 @@ public interface GDocsService extends RemoteService {
 	 * Retrieve the settings saved for connecting to Google Docs.
 	 */
 	public String[] loadSettings(String sid) throws InvalidSessionException;
-	
-	
+
 	/**
 	 * Search in documents into Google Docs
 	 * 
-	 * @param sid 
+	 * @param sid
 	 * @param expression
 	 * @throws InvalidSessionException
 	 */
