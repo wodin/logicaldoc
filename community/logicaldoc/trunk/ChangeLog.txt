@@ -10,6 +10,12 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC 6.7 (2013-04-10; logicaldoc-6.7)
+===============
+271 -	Decouple core API from WebServices API - Task -	Core
+268 -	Decouple WebServices from the Core API - Task -	Web Services
+294 -	Search in folder broken for admin account - Bug - Core
+
 LogicalDOC 6.6.2 (2013-02-15; logicaldoc-6.6.2)
 ===============               
 269 -	Fulltext search broken in WebService -	Bug -	Web Services
