@@ -233,8 +233,10 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		// write the configuration for the db on the general context
 		writeDBConfig(info);
 
-		// Try to create the database schema (in Oracle is not possible)
-		if (!info.getDbEngine().toLowerCase().contains("oracle")) {
+		// Try to create the database schema (in Oracle is not possible and in
+		// HSQLDB is not necessary)
+		if (!info.getDbEngine().toLowerCase().contains("oracle")
+				&& !info.getDbEngine().toLowerCase().contains("hsqldb")) {
 			String dbName = info.getDbUrl().substring(info.getDbUrl().lastIndexOf('/') + 1);
 			String adminjdbcUrl = info.getDbUrl().substring(0, info.getDbUrl().lastIndexOf('/'));
 			if (StringUtils.isNotEmpty(dbName))
