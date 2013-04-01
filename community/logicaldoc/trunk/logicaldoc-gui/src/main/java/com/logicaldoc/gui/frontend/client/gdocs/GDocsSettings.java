@@ -83,7 +83,6 @@ public class GDocsSettings extends Window {
 					public void onFailure(Throwable caught) {
 						ContactingServer.get().hide();
 						SC.warn(I18N.message("connectionfailed"));
-						destroy();
 					}
 
 					@Override
