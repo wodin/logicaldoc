@@ -21,9 +21,7 @@ import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.setup.client.services.SetupService;
 import com.logicaldoc.gui.setup.client.services.SetupServiceAsync;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.BooleanCallback;
-import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
@@ -32,9 +30,7 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.BooleanItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
-import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -72,20 +68,6 @@ public class Setup implements EntryPoint {
 	private static final String SQLSERVER = "MSSQL";
 
 	private static final String REPOSITORY_FOLDER = "repositoryFolder";
-
-	private static final String SMTP_SECURITY_CONNECTION = "smtpSecurityConnection";
-
-	private static final String SMTP_SENDER = "smtpSender";
-
-	private static final String SMTP_PASSWORD = "smtpPassword";
-
-	private static final String SMTP_SECURE_AUTH = "smtpSecureAuth";
-
-	private static final String SMTP_USERNAME = "smtpUsername";
-
-	private static final String SMTP_PORT = "smtpPort";
-
-	private static final String SMTP_HOST = "smtpHost";
 
 	private static final String LANGUAGE = "language";
 
@@ -167,9 +149,7 @@ public class Setup implements EntryPoint {
 		Tab registrationTab = setupRegistration(vm);
 		Tab repositoryTab = setupRepository(vm);
 		Tab databaseTab = setupDatabase(vm);
-		Tab languageTab = setupLanguage(vm);
-		Tab smtpTab = setupSmtp(vm);
-		tabs.setTabs(registrationTab, repositoryTab, databaseTab, languageTab, smtpTab);
+		tabs.setTabs(registrationTab, repositoryTab, databaseTab);
 
 		// This is the button used to confirm each step
 		submit = new IButton();
@@ -233,83 +213,6 @@ public class Setup implements EntryPoint {
 
 		repositoryTab.setPane(repositoryForm);
 		return repositoryTab;
-	}
-
-	/**
-	 * Prepares the SMTP form
-	 */
-	private Tab setupSmtp(final ValuesManager vm) {
-		// Prepare the SMTP connection tab
-		Tab smtpTab = new Tab();
-		smtpTab.setTitle(I18N.message("smtpserver"));
-		final DynamicForm smtpForm = new DynamicForm();
-		smtpForm.setDisabled(true);
-		smtpForm.setID("smtpForm");
-		smtpForm.setTitleOrientation(TitleOrientation.TOP);
-		smtpForm.setValuesManager(vm);
-		smtpTab.setPane(smtpForm);
-
-		TextItem smtpHost = ItemFactory.newTextItem(SMTP_HOST, "host", null);
-		smtpHost.setValue("localhost");
-		smtpHost.setWrapTitle(false);
-
-		IntegerItem smtpPort = ItemFactory.newIntegerItem(SMTP_PORT, "port", null);
-		smtpPort.setValue(25);
-		smtpPort.setWrapTitle(false);
-
-		TextItem smtpUsername = ItemFactory.newTextItem(SMTP_USERNAME, "username", null);
-		smtpUsername.setWrapTitle(false);
-
-		PasswordItem smtpPassword = new PasswordItem();
-		smtpPassword.setTitle(I18N.message("password"));
-		smtpPassword.setName(SMTP_PASSWORD);
-		smtpPassword.setWrapTitle(false);
-
-		BooleanItem smtpSecureAuth = new BooleanItem();
-		smtpSecureAuth.setTitle(I18N.message("secureauth"));
-		smtpSecureAuth.setName(SMTP_SECURE_AUTH);
-		smtpSecureAuth.setWrapTitle(false);
-		smtpSecureAuth.setDefaultValue(false);
-
-		SelectItem smtpConnectionSecurity = new SelectItem();
-		smtpConnectionSecurity.setTitle(I18N.message("connectionsecurity"));
-		smtpConnectionSecurity.setName("smtpConnectionSecurity");
-		smtpConnectionSecurity.setDefaultValue(Constants.SMTP_SECURITY_NONE);
-		smtpConnectionSecurity.setWrapTitle(false);
-		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-		valueMap.put(Constants.SMTP_SECURITY_NONE, I18N.message("none"));
-		valueMap.put(Constants.SMTP_SECURITY_SSL, I18N.message("ssl"));
-		valueMap.put(Constants.SMTP_SECURITY_TLS, I18N.message("tls"));
-		valueMap.put(Constants.SMTP_SECURITY_TLS_IF_AVAILABLE, I18N.message("tlsavailable"));
-		smtpConnectionSecurity.setValueMap(valueMap);
-
-		TextItem smtpSender = ItemFactory.newEmailItem(SMTP_SENDER, "sender", false);
-		smtpSender.setWrapTitle(false);
-		smtpSender.setValue("logicaldoc@acme.com");
-
-		smtpForm.setFields(smtpHost, smtpPort, smtpUsername, smtpPassword, smtpSender, smtpConnectionSecurity,
-				smtpSecureAuth);
-		return smtpTab;
-	}
-
-	/**
-	 * Prepares the language form
-	 */
-	private Tab setupLanguage(final ValuesManager vm) {
-		Tab languageTab = new Tab();
-		languageTab.setTitle(I18N.message(LANGUAGE));
-
-		SelectItem languageItem = ItemFactory.newLanguageSelector(LANGUAGE, false, true);
-		languageItem.setTitle(I18N.message("defaultlang"));
-		languageItem.setRequired(true);
-
-		final DynamicForm languageForm = new DynamicForm();
-		languageForm.setID("languageForm");
-		languageForm.setValuesManager(vm);
-		languageForm.setFields(languageItem);
-		languageForm.setDisabled(true);
-		languageTab.setPane(languageForm);
-		return languageTab;
 	}
 
 	/**
@@ -452,10 +355,14 @@ public class Setup implements EntryPoint {
 		TextItem regEmail = ItemFactory.newEmailItem(REG_EMAIL, "email", false);
 		regEmail.setWrapTitle(false);
 
+		SelectItem languageItem = ItemFactory.newLanguageSelector(LANGUAGE, false, true);
+		languageItem.setTitle(I18N.message("language"));
+		languageItem.setRequired(true);
+
 		final DynamicForm regForm = new DynamicForm();
 		regForm.setID("regForm");
 		regForm.setValuesManager(vm);
-		regForm.setFields(regName, regEmail, regOrganization, regWebsite);
+		regForm.setFields(languageItem, regName, regEmail, regOrganization, regWebsite);
 
 		registrationTab.setPane(regForm);
 		return registrationTab;
@@ -470,7 +377,7 @@ public class Setup implements EntryPoint {
 			if (form.hasErrors()) {
 
 			} else {
-				if (step == 4) {
+				if (step == tabs.getTabs().length - 1) {
 					if (!vm.validate())
 						SC.warn("invalidfields");
 
@@ -482,19 +389,12 @@ public class Setup implements EntryPoint {
 					data.setDbEngine(vm.getValueAsString(DB_ENGINE));
 					data.setDbType(vm.getValueAsString(DB_TYPE));
 					data.setLanguage(vm.getValueAsString(LANGUAGE));
-					data.setSmtpHost(vm.getValueAsString(SMTP_HOST));
-					data.setSmtpPort((Integer) vm.getValues().get(SMTP_PORT));
-					data.setSmtpUsername(vm.getValueAsString(SMTP_USERNAME));
-					data.setSmtpPassword(vm.getValueAsString(SMTP_PASSWORD));
-					data.setSmtpSender(vm.getValueAsString(SMTP_SENDER));
-					data.setSmtpSecureAuth((Boolean) vm.getValues().get(SMTP_SECURE_AUTH));
-					data.setSmtpSecuryConntection(vm.getValueAsString(SMTP_SECURITY_CONNECTION));
 					data.setRepositoryFolder(vm.getValueAsString(REPOSITORY_FOLDER));
 					data.setRegEmail(vm.getValueAsString(REG_EMAIL));
 					data.setRegName(vm.getValueAsString(REG_NAME));
 					data.setRegOrganization(vm.getValueAsString(REG_ORGANIZATION));
 					data.setRegWebsite(vm.getValueAsString(REG_WEBSITE));
-					
+
 					if (I18N.message(EMBEDDED).equals(data.getDbType())) {
 						data.setDbEngine("Hsqldb");
 						data.setDbDriver("org.hsqldb.jdbcDriver");
@@ -503,11 +403,11 @@ public class Setup implements EntryPoint {
 						data.setDbPassword("");
 						data.setDbDialect("org.hibernate.dialect.HSQLDialect");
 						data.setDbValidationQuery("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS");
-					}else{
+					} else {
 						data.setDbDialect(engines.get(data.getDbEngine())[3]);
 						data.setDbValidationQuery(engines.get(data.getDbEngine())[4]);
 					}
-					
+
 					SetupServiceAsync setupService = (SetupServiceAsync) GWT.create(SetupService.class);
 
 					setupService.setup(data, new AsyncCallback<Void>() {
@@ -530,16 +430,13 @@ public class Setup implements EntryPoint {
 						}
 					});
 					submit.setDisabled(true);
-
-					// Clear an eventually saved documents list grid settings.
-					Offline.put(Constants.COOKIE_DOCSLIST, "");
 				} else {
 					// Go to the next tab and enable the contained panel
 					tabs.selectTab(tabIndex + 1);
 					tabs.getSelectedTab().getPane().setDisabled(false);
 					if (step < tabs.getSelectedTabNumber())
 						step++;
-					if (step == 4)
+					if (step == tabs.getTabs().length - 1)
 						submit.setTitle(I18N.message("setup"));
 				}
 			}
