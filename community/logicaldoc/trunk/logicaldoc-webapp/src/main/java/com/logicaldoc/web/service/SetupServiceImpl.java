@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Log4jConfigurer;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.dbinit.PluginDbInit;
 import com.logicaldoc.core.searchengine.SearchEngine;
 import com.logicaldoc.gui.setup.client.SetupInfo;
@@ -44,7 +43,6 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		try {
 			makeWorkingDir(repoFolder);
 			createDB(data);
-			writeSmtpConfig(data);
 			writeRegConfig(data);
 
 			// Setup the correct logs folder
@@ -66,42 +64,6 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			caught.printStackTrace();
 			log.error(caught.getMessage(), caught);
 			throw new RuntimeException(caught.getMessage(), caught);
-		}
-	}
-
-	public void writeSmtpConfig(SetupInfo data) throws Exception {
-		try {
-			ContextProperties pbean = new ContextProperties();
-			pbean.setProperty("smtp.host", data.getSmtpHost() != null ? data.getSmtpHost() : "");
-			pbean.getProperty("smtp.port", data.getSmtpPort() != null ? Integer.toString(data.getSmtpPort()) : "");
-			pbean.setProperty("smtp.username", data.getSmtpUsername() != null ? data.getSmtpUsername() : "");
-			pbean.setProperty("smtp.password", data.getSmtpPassword() != null ? data.getSmtpPassword() : "");
-			pbean.setProperty("smtp.sender", data.getSmtpSender() != null ? data.getSmtpSender() : "");
-			pbean.setProperty("smtp.authEncripted", Boolean.toString(data.isSmtpSecureAuth()));
-			pbean.setProperty("smtp.connectionSecurity",
-					data.getSmtpConnectionSecurity() != null ? data.getSmtpConnectionSecurity() : "0");
-			pbean.write();
-
-			EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
-			if (data.getSmtpHost() != null)
-				sender.setHost(data.getSmtpHost());
-			if (data.getSmtpPort() != null)
-				sender.setPort(data.getSmtpPort());
-			if (data.getSmtpUsername() != null)
-				sender.setUsername(data.getSmtpUsername());
-			if (data.getSmtpPassword() != null)
-				sender.setPassword(data.getSmtpPassword());
-			if (data.getSmtpSender() != null)
-				sender.setSender(data.getSmtpSender());
-			sender.setAuthEncripted(data.isSmtpSecureAuth());
-			if (data.getSmtpConnectionSecurity() != null)
-				sender.setConnectionSecurity(Integer.parseInt(data.getSmtpConnectionSecurity()));
-
-			log.info("SMTP configuration data written successfully.");
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.error("Exception writing context file: " + e.getMessage(), e);
-			throw e;
 		}
 	}
 
