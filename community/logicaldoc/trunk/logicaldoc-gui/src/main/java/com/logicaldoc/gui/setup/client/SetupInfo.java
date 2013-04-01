@@ -16,20 +16,6 @@ public class SetupInfo implements Serializable {
 
 	private String dbType;
 
-	private String smtpHost;
-
-	private Integer smtpPort = 25;
-
-	private String smtpUsername;
-
-	private String smtpPassword;
-
-	private String smtpSender = "logicaldoc@acme.com";
-
-	private boolean smtpSecureAuth = false;
-
-	private String smtpSecuryConntection;
-
 	private String language;
 
 	private String dbEngine;
@@ -68,46 +54,6 @@ public class SetupInfo implements Serializable {
 
 	public void setDbType(String dbType) {
 		this.dbType = dbType;
-	}
-
-	public String getSmtpHost() {
-		return smtpHost;
-	}
-
-	public void setSmtpHost(String smtpHost) {
-		this.smtpHost = smtpHost;
-	}
-
-	public String getSmtpUsername() {
-		return smtpUsername;
-	}
-
-	public void setSmtpUsername(String smtpUsername) {
-		this.smtpUsername = smtpUsername;
-	}
-
-	public String getSmtpPassword() {
-		return smtpPassword;
-	}
-
-	public void setSmtpPassword(String smtpPassword) {
-		this.smtpPassword = smtpPassword;
-	}
-
-	public String getSmtpSender() {
-		return smtpSender;
-	}
-
-	public void setSmtpSender(String smtpSender) {
-		this.smtpSender = smtpSender;
-	}
-
-	public String getSmtpConnectionSecurity() {
-		return smtpSecuryConntection;
-	}
-
-	public void setSmtpSecuryConntection(String smtpSecuryConntection) {
-		this.smtpSecuryConntection = smtpSecuryConntection;
 	}
 
 	public String getLanguage() {
@@ -172,26 +118,6 @@ public class SetupInfo implements Serializable {
 
 	public void setDbDialect(String dbDialect) {
 		this.dbDialect = dbDialect;
-	}
-
-	public boolean isSmtpSecureAuth() {
-		return smtpSecureAuth;
-	}
-
-	public void setSmtpSecureAuth(boolean smtpSecureAuth) {
-		this.smtpSecureAuth = smtpSecureAuth;
-	}
-
-	public Integer getSmtpPort() {
-		return smtpPort;
-	}
-
-	public void setSmtpPort(Integer smtpPort) {
-		this.smtpPort = smtpPort;
-	}
-
-	public String getSmtpSecuryConntection() {
-		return smtpSecuryConntection;
 	}
 
 	public String getRegName() {
