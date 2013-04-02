@@ -151,7 +151,7 @@ public class StatsCollector extends Task {
 		try {
 			if ("mysql".equals(documentDAO.getDbms()))
 				dbdir = documentDAO
-						.queryForLong("select sum(data_length + index_length) from information_schema.partitions where table_schema=database()");
+						.queryForLong("select sum(data_length+index_length) from information_schema.tables where table_schema=database();");
 			else if ("oracle".equals(documentDAO.getDbms()))
 				dbdir = documentDAO.queryForLong("SELECT sum(bytes) FROM user_segments");
 			else if ("postgresql".equals(documentDAO.getDbms()))
