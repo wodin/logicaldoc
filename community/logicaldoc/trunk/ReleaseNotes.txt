@@ -1,7 +1,7 @@
-The LogicalDOC development team is happy to announce the immediate availability of LogicalDOC CE 6.3.2
+The LogicalDOC development team is happy to announce the immediate availability of LogicalDOC CE 6.7
 
 You can get this distribution in tomcat-bundle archive from SourceForge: 
-http://sourceforge.net/projects/logicaldoc/files/distribution/LogicalDOC%20CE%206.3/logicaldoc-6.3.2-tomcat-bundle.zip/download
+http://sourceforge.net/projects/logicaldoc/files/distribution/LogicalDOC%20CE%206.3/logicaldoc-6.7-tomcat-bundle.zip/download
 
 LogicalDOC is a Web-based Document Management System (DMS) based on open 
 source technology (GWT +Spring +Hibernate). Thanks to its intuitive interface, 
