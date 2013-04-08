@@ -67,17 +67,17 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 	protected ToolStripButton addCalendarEvent = new ToolStripButton();
 
-	protected ToolStripButton office = new ToolStripButton();
-
 	protected ToolStripButton print = new ToolStripButton();
 
 	protected ToolStripButton export = new ToolStripButton();
 
 	protected GUIDocument document;
 
-	protected AuditServiceAsync audit = (AuditServiceAsync) GWT.create(AuditService.class);
+	protected AuditServiceAsync audit = (AuditServiceAsync) GWT
+			.create(AuditService.class);
 
-	protected WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
+	protected WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT
+			.create(WorkflowService.class);
 
 	public DocumentToolbar() {
 		GUIFolder folder = Session.get().getCurrentFolder();
@@ -102,10 +102,12 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 				if (selection.length == 1) {
 					String id = list.getSelectedRecord().getAttribute("id");
-					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-							+ id);
+					WindowUtils.openUrl(GWT.getHostPageBaseURL()
+							+ "download?sid=" + Session.get().getSid()
+							+ "&docId=" + id);
 				} else {
-					String url = GWT.getHostPageBaseURL() + "zip-export?sid=" + Session.get().getSid() + "&folderId="
+					String url = GWT.getHostPageBaseURL() + "zip-export?sid="
+							+ Session.get().getSid() + "&folderId="
 							+ Session.get().getCurrentFolder().getId();
 					for (ListGridRecord record : selection) {
 						url += "&docId=" + record.getAttributeAsString("id");
@@ -120,9 +122,9 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		rss.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				Window.open(
-						GWT.getHostPageBaseURL() + "doc_rss?sid=" + Session.get().getSid() + "&docId="
-								+ document.getId() + "&locale=" + I18N.getLocale(), "_blank", "");
+				Window.open(GWT.getHostPageBaseURL() + "doc_rss?sid="
+						+ Session.get().getSid() + "&docId=" + document.getId()
+						+ "&locale=" + I18N.getLocale(), "_blank", "");
 			}
 		});
 
@@ -137,10 +139,13 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					return;
 
 				if (selection.length == 1) {
-					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid()
-							+ "&docId=" + document.getId() + "&version=" + document.getVersion());
+					WindowUtils.openUrl(GWT.getHostPageBaseURL()
+							+ "convertpdf?sid=" + Session.get().getSid()
+							+ "&docId=" + document.getId() + "&version="
+							+ document.getVersion());
 				} else {
-					String url = GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid();
+					String url = GWT.getHostPageBaseURL() + "convertpdf?sid="
+							+ Session.get().getSid();
 					url += "&docId=";
 					for (ListGridRecord record : selection) {
 						url += record.getAttributeAsString("id") + "|";
@@ -161,7 +166,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		subscribe.setIcon(ItemFactory.newImgIcon("subscription_add.png").getSrc());
+		subscribe.setIcon(ItemFactory.newImgIcon("subscription_add.png")
+				.getSrc());
 		subscribe.setTooltip(I18N.message("subscribe"));
 		subscribe.setDisabled(true);
 		subscribe.addClickHandler(new ClickHandler() {
@@ -214,7 +220,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				SendToArchiveDialog archiveDialog = new SendToArchiveDialog(ids, true);
+				SendToArchiveDialog archiveDialog = new SendToArchiveDialog(
+						ids, true);
 				archiveDialog.show();
 			}
 		});
@@ -254,19 +261,9 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				workflowService.appendDocuments(Session.get().getSid(), Session.get().getCurrentWorkflow()
-						.getSelectedTask().getId(), ids, new AsyncCallback<Void>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(Void ret) {
-						MainPanel.get().selectWorkflowTab();
-						workflowService.getWorkflowDetailsByTask(Session.get().getSid(), Session.get()
-								.getCurrentWorkflow().getSelectedTask().getId(), new AsyncCallback<GUIWorkflow>() {
+				workflowService.appendDocuments(Session.get().getSid(), Session
+						.get().getCurrentWorkflow().getSelectedTask().getId(),
+						ids, new AsyncCallback<Void>() {
 
 							@Override
 							public void onFailure(Throwable caught) {
@@ -274,22 +271,46 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 							}
 
 							@Override
-							public void onSuccess(GUIWorkflow result) {
-								if (result != null) {
-									WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(
-											WorkflowDashboard.get(), result);
-									workflowDetailsDialog.getTabs().setSelectedTab(1);
-									workflowDetailsDialog.show();
-									Session.get().setCurrentWorkflow(null);
-								}
+							public void onSuccess(Void ret) {
+								MainPanel.get().selectWorkflowTab();
+								workflowService.getWorkflowDetailsByTask(
+										Session.get().getSid(), Session.get()
+												.getCurrentWorkflow()
+												.getSelectedTask().getId(),
+										new AsyncCallback<GUIWorkflow>() {
+
+											@Override
+											public void onFailure(
+													Throwable caught) {
+												Log.serverError(caught);
+											}
+
+											@Override
+											public void onSuccess(
+													GUIWorkflow result) {
+												if (result != null) {
+													WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(
+															WorkflowDashboard
+																	.get(),
+															result);
+													workflowDetailsDialog
+															.getTabs()
+															.setSelectedTab(1);
+													workflowDetailsDialog
+															.show();
+													Session.get()
+															.setCurrentWorkflow(
+																	null);
+												}
+											}
+										});
 							}
 						});
-					}
-				});
 			}
 		});
 
-		addCalendarEvent.setIcon(ItemFactory.newImgIcon("calendar_add.png").getSrc());
+		addCalendarEvent.setIcon(ItemFactory.newImgIcon("calendar_add.png")
+				.getSrc());
 		addCalendarEvent.setTooltip(I18N.message("newcalendarevent"));
 		addCalendarEvent.addClickHandler(new ClickHandler() {
 			@Override
@@ -302,13 +323,16 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				final GUIDocument[] docs = new GUIDocument[selection.length];
 				for (int i = 0; i < selection.length; i++) {
 					docs[i] = new GUIDocument();
-					docs[i].setId(Long.parseLong(selection[i].getAttribute("id")));
+					docs[i].setId(Long.parseLong(selection[i]
+							.getAttribute("id")));
 					docs[i].setTitle(selection[i].getAttribute("title"));
 					docs[i].setFileName(selection[i].getAttribute("filename"));
 					docs[i].setIcon(selection[i].getAttribute("icon"));
 					docs[i].setVersion(selection[i].getAttribute("version"));
-					docs[i].setFileVersion(selection[i].getAttribute("fileVersion"));
-					docs[i].setLastModified(selection[i].getAttributeAsDate("lastModified"));
+					docs[i].setFileVersion(selection[i]
+							.getAttribute("fileVersion"));
+					docs[i].setLastModified(selection[i]
+							.getAttributeAsDate("lastModified"));
 				}
 
 				GUICalendarEvent calEvent = new GUICalendarEvent();
@@ -322,7 +346,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				calEvent.addParticipant(user);
 				calEvent.setDocuments(docs);
 				calEvent.setTitle(docs[0].getTitle());
-				CalendarEventDialog eventDialog = new CalendarEventDialog(calEvent);
+				CalendarEventDialog eventDialog = new CalendarEventDialog(
+						calEvent);
 				eventDialog.show();
 			}
 		});
@@ -338,21 +363,12 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		}
 
-		if (Feature.visible(Feature.OFFICE)) {
-			addButton(office);
-			if (!Feature.enabled(Feature.OFFICE) || (document != null && !Util.isOfficeFile(document.getFileName()))
-					|| !downloadEnabled) {
-				office.setDisabled(true);
-			}
-			if (!Feature.enabled(Feature.OFFICE))
-				office.setTooltip(I18N.message("featuredisabled"));
-		}
-
 		addSeparator();
 		addButton(add);
 
 		if (Feature.visible(Feature.DROP_SPOT)
-				&& !"embedded".equals(Session.get().getInfo().getConfig("gui.dropspot.mode"))) {
+				&& !"embedded".equals(Session.get().getInfo()
+						.getConfig("gui.dropspot.mode"))) {
 			addButton(dropSpot);
 			if (!Feature.enabled(Feature.DROP_SPOT)) {
 				dropSpot.setDisabled(true);
@@ -368,20 +384,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		}
 
-		office.setTooltip(I18N.message("editwithoffice"));
-		office.setIcon(ItemFactory.newImgIcon("page_white_office.png").getSrc());
-		office.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if (document == null)
-					return;
-
-				WindowUtils.openUrl("ldedit:" + GWT.getHostPageBaseURL() + "ldedit?action=edit&sid="
-						+ Session.get().getSid() + "&docId=" + document.getId());
-			}
-		});
-
-		final IntegerItem max = ItemFactory.newValidateIntegerItem("max", "", null, 1, null);
+		final IntegerItem max = ItemFactory.newValidateIntegerItem("max", "",
+				null, 1, null);
 		max.setHint(I18N.message("elements"));
 		max.setHintStyle("hint");
 		max.setShowTitle(false);
@@ -393,7 +397,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		max.setDefaultValue(Integer.parseInt(mx));
 		max.setWidth(40);
 
-		bulkUpdate.setIcon(ItemFactory.newImgIcon("application_form_edit.png").getSrc());
+		bulkUpdate.setIcon(ItemFactory.newImgIcon("application_form_edit.png")
+				.getSrc());
 		bulkUpdate.setTooltip(I18N.message("bulkupdate"));
 		bulkUpdate.addClickHandler(new ClickHandler() {
 			@Override
@@ -506,7 +511,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				DocumentsPanel.get().saveGrid();
 				try {
 					int m = Integer.parseInt(max.getValue().toString());
-					Offline.put(Constants.COOKIE_DOCSLIST_MAX, Integer.toString(m));
+					Offline.put(Constants.COOKIE_DOCSLIST_MAX,
+							Integer.toString(m));
 				} catch (Throwable t) {
 
 				}
@@ -527,7 +533,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		if (Feature.visible(Feature.EXPORT_CSV)) {
 			addSeparator();
-			export.setIcon(ItemFactory.newImgIcon("table_row_insert.png").getSrc());
+			export.setIcon(ItemFactory.newImgIcon("table_row_insert.png")
+					.getSrc());
 			export.setTooltip(I18N.message("export"));
 			export.setAutoFit(true);
 			addButton(export);
@@ -556,31 +563,17 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 			if (document != null) {
 				download.setDisabled(!downloadEnabled);
-				rss.setDisabled(!Feature.enabled(Feature.RSS) || !downloadEnabled);
-				pdf.setDisabled(!Feature.enabled(Feature.PDF) || !downloadEnabled);
+				rss.setDisabled(!Feature.enabled(Feature.RSS)
+						|| !downloadEnabled);
+				pdf.setDisabled(!Feature.enabled(Feature.PDF)
+						|| !downloadEnabled);
 				if (!pdf.isDisabled())
 					pdf.setTooltip(I18N.message("exportpdf"));
 				subscribe.setDisabled(!Feature.enabled(Feature.AUDIT));
 				bulkUpdate.setDisabled(!Feature.enabled(Feature.BULK_UPDATE));
 
-				boolean isOfficeFile = false;
-				if (document.getFileName() != null)
-					isOfficeFile = Util.isOfficeFile(document.getFileName());
-				else if (document.getType() != null)
-					isOfficeFile = Util.isOfficeFileType(document.getType());
-
-				office.setDisabled(!Feature.enabled(Feature.OFFICE) || !isOfficeFile || !downloadEnabled);
-				if (document.getStatus() != Constants.DOC_UNLOCKED
-						&& !Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN)) {
-					if (document.getLockUserId() != null
-							&& Session.get().getUser().getId() != document.getLockUserId().longValue())
-						office.setDisabled(true);
-				}
-
-				if (!office.isDisabled())
-					office.setTooltip(I18N.message("editwithoffice"));
-
-				addCalendarEvent.setDisabled(!Feature.enabled(Feature.CALENDAR));
+				addCalendarEvent
+						.setDisabled(!Feature.enabled(Feature.CALENDAR));
 			} else {
 				download.setDisabled(true);
 				rss.setDisabled(true);
@@ -594,17 +587,26 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 
 			if (folder != null) {
-				add.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));
-				dropSpot.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE)
+				add.setDisabled(!folder
+						.hasPermission(Constants.PERMISSION_WRITE));
+				dropSpot.setDisabled(!folder
+						.hasPermission(Constants.PERMISSION_WRITE)
 						|| !Feature.enabled(Feature.DROP_SPOT));
-				scan.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE) || !Feature.enabled(Feature.SCAN));
-				archive.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_ARCHIVE)
+				scan.setDisabled(!folder
+						.hasPermission(Constants.PERMISSION_WRITE)
+						|| !Feature.enabled(Feature.SCAN));
+				archive.setDisabled(document == null
+						|| !folder.hasPermission(Constants.PERMISSION_ARCHIVE)
 						|| !Feature.enabled(Feature.ARCHIVES));
-				startWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)
+				startWorkflow.setDisabled(document == null
+						|| !folder.hasPermission(Constants.PERMISSION_WORKFLOW)
 						|| !Feature.enabled(Feature.WORKFLOW));
-				addToWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)
-						|| !Feature.enabled(Feature.WORKFLOW) || Session.get().getCurrentWorkflow() == null);
-				addCalendarEvent.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_CALENDAR)
+				addToWorkflow.setDisabled(document == null
+						|| !folder.hasPermission(Constants.PERMISSION_WORKFLOW)
+						|| !Feature.enabled(Feature.WORKFLOW)
+						|| Session.get().getCurrentWorkflow() == null);
+				addCalendarEvent.setDisabled(document == null
+						|| !folder.hasPermission(Constants.PERMISSION_CALENDAR)
 						|| !Feature.enabled(Feature.CALENDAR));
 			} else {
 				add.setDisabled(true);
