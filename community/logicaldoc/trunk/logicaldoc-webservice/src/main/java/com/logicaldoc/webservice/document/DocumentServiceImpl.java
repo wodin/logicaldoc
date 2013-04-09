@@ -41,6 +41,7 @@ import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
+import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.webservice.AbstractService;
 
 /**
@@ -392,7 +393,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 	}
 
 	@Override
-	public WSDocument[] list(String sid, long folderId) throws Exception {
+	public WSDocument[] listDocuments(String sid, long folderId, String fileName) throws Exception {
 		User user = validateSession(sid);
 		checkReadEnable(user, folderId);
 
@@ -405,18 +406,28 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 					return o1.getTitle().compareTo(o2.getTitle());
 				}
 			});
-		WSDocument[] wsDocs = new WSDocument[docs.size()];
-		for (int i = 0; i < docs.size(); i++) {
+
+		List<WSDocument> wsDocs = new ArrayList<WSDocument>();
+		for (Document doc : docs) {
 			try {
-				checkPublished(user, docs.get(i));
+				checkPublished(user, doc);
 			} catch (Throwable t) {
 				continue;
 			}
-			docDao.initialize(docs.get(i));
-			wsDocs[i] = WSDocument.fromDocument(docs.get(i));
+
+			if (!FileUtil.matches(doc.getFileName(), fileName, null))
+				continue;
+			
+			docDao.initialize(doc);
+			wsDocs.add(WSDocument.fromDocument(doc));
 		}
 
-		return wsDocs;
+		return wsDocs.toArray(new WSDocument[0]);
+	}
+
+	@Override
+	public WSDocument[] list(String sid, long folderId) throws Exception {
+		return listDocuments(sid, folderId, null);
 	}
 
 	@Override
