@@ -226,6 +226,19 @@ public interface DocumentService {
 			throws Exception;
 
 	/**
+	 * Gets a document in a specific folder
+	 * 
+	 * @param sid Session identifier
+	 * @param folderId The folder id
+	 * @param fileName Optional file name filter
+	 * @return A value object containing the document's metadata.
+	 * @throws Exception
+	 */
+	@WebResult(name = "document")
+	public WSDocument[] listDocuments(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId,
+			@WebParam(name = "fileName") String fileName) throws Exception;
+
+	/**
 	 * Lists of last modified documents of the current session's user.
 	 * 
 	 * @param sid Session identifier
