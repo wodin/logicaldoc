@@ -6,9 +6,6 @@ import java.util.List;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
-import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.ContextProperties;
-
 /**
  * Interface for DAOs that operate on persistent objects
  * 
