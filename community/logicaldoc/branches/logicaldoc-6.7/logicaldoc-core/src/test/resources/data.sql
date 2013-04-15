@@ -207,20 +207,20 @@ insert into ld_tag
 values     (3,'zzz');
 
 insert into ld_history 
-				(ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version, ld_notified, ld_new)
-values     (1,'2008-10-22 00:00:00',0,1,5,1,'2006-12-20 00:00:00','author','data test 01','reason test 01','1.0',0,1);
+				(ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version, ld_notified, ld_new, ld_path)
+values     (1,'2008-10-22 00:00:00',0,1,5,1,'2006-12-20 00:00:00','author','data test 01','reason test 01','1.0',0,1,'/Default/pippo');
 
 insert into ld_history 
-			    (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version, ld_notified, ld_new)
-values     (2,'2008-10-22 00:00:00',0,2,5,1,'2006-12-25 00:00:00','author','data test 02','reason test 02','1.0',0,1);
+			    (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version, ld_notified, ld_new, ld_path)
+values     (2,'2008-10-22 00:00:00',0,2,5,1,'2006-12-25 00:00:00','author','data test 02','reason test 02','1.0',0,1,'/Default/pippo/1');
 
 insert into ld_folder_history 
-			   (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version, ld_notified, ld_new)
-values     (3,'2008-10-22 00:00:00',0,null,5,1,'2006-12-27 00:00:00','sebastian','data test 03','reason test 03','1.0',0,1);
+			   (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version, ld_notified, ld_new, ld_path)
+values     (3,'2008-10-22 00:00:00',0,null,5,1,'2006-12-27 00:00:00','sebastian','data test 03','reason test 03','1.0',0,1,'/Default/pippo');
 
 insert into ld_folder_history 
-			   (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version, ld_notified, ld_new)
-values     (4,'2008-10-22 00:00:00',0,null,5,1,'2006-12-27 00:00:00','sebastian','data test 04','reason test 04','1.0',0,1);
+			   (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version, ld_notified, ld_new, ld_path)
+values     (4,'2008-10-22 00:00:00',0,null,5,1,'2006-12-30 00:00:00','sebastian','data test 04','reason test 04','1.0',0,1,'/Default/pippo/1');
 
 
 insert into ld_systemmessage

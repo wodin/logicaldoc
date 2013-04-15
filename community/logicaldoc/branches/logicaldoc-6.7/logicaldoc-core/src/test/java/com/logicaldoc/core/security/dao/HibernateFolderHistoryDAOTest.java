@@ -1,7 +1,9 @@
 package com.logicaldoc.core.security.dao;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -9,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTCase;
+import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.i18n.DateBean;
 import com.logicaldoc.core.security.FolderEvent;
 import com.logicaldoc.core.security.FolderHistory;
@@ -186,6 +189,24 @@ public class HibernateFolderHistoryDAOTest extends AbstractCoreTCase {
 		// Try with unexisting user
 		histories = dao.findByUserIdAndEvent(99, "data test 04");
 		Assert.assertNotNull(histories);
+		Assert.assertEquals(0, histories.size());
+	}
+	
+	@Test
+	public void testFindByPath(){
+		List<FolderHistory> histories = dao.findByPath("/Default/pippo", null, null, null);
+		Assert.assertEquals(2, histories.size());
+
+		histories = dao.findByPath("/Default/pippo", DateBean.dateFromCompactString("20061228"),null, null);
+		Assert.assertEquals(1, histories.size());
+		
+		histories = dao.findByPath("/Default/pippo", DateBean.dateFromCompactString("20061228"),Arrays.asList(new String[]{"data test 03","data test 04"}), null);
+		Assert.assertEquals(1, histories.size());
+		
+		histories = dao.findByPath("/Default/pippo", DateBean.dateFromCompactString("20061228"),Arrays.asList(new String[]{"data test 043"}), null);
+		Assert.assertEquals(0, histories.size());
+		
+		histories = dao.findByPath("/xxxx", null, null, null);
 		Assert.assertEquals(0, histories.size());
 	}
 }
