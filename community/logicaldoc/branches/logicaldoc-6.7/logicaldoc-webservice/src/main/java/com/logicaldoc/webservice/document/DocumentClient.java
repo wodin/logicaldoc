@@ -149,4 +149,9 @@ public class DocumentClient extends AbstractClient<DocumentService> implements D
 	public WSHistory[] getHistory(String sid, long docId) throws Exception {
 		return client.getHistory(sid, docId);
 	}
+
+	@Override
+	public WSDocument[] listDocuments(String sid, long folderId, String fileName) throws Exception {
+		return client.listDocuments(sid, folderId, fileName);
+	}
 }
