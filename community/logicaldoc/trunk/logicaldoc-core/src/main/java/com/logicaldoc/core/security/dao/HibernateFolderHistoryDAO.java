@@ -1,6 +1,8 @@
 package com.logicaldoc.core.security.dao;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -79,6 +81,28 @@ public class HibernateFolderHistoryDAO extends HibernatePersistentObjectDAO<Fold
 			return super.store(entity);
 		else
 			return true;
+	}
+
+	@Override
+	public List<FolderHistory> findByPath(String path, Date olderDate, Collection<String> events, Integer max) {
+		StringBuffer query = new StringBuffer("_entity.path like '" + path + "%'");
+		List<Object> params = new ArrayList<Object>();
+		if (olderDate != null) {
+			query.append(" and _entity.date >= ? ");
+			params.add(olderDate);
+		}
+		if (events != null && !events.isEmpty()) {
+			StringBuffer eventsStr = new StringBuffer("(");
+			for (String event : events) {
+				if (eventsStr.length() > 1)
+					eventsStr.append(",");
+				eventsStr.append("'" + event + "'");
+			}
+			eventsStr.append(")");
+			query.append(" and _entity.event in " + eventsStr);
+		}
+
+		return findByWhere(query.toString(), params.toArray(new Object[0]), "order by _entity.date desc", max);
 	}
 
 	@Override
