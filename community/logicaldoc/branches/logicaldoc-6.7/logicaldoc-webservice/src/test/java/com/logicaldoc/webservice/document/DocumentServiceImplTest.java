@@ -227,14 +227,28 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 	}
 
 	@Test
-	public void testList() throws Exception {
-		WSDocument[] docs = docServiceImpl.list("", 103);
+	public void testListDocuments() throws Exception {
+		WSDocument[] docs = docServiceImpl.listDocuments("", 103,null);
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(2, docs.length);
 		List<WSDocument> docsList = Arrays.asList(docs);
 		Assert.assertEquals(1, docsList.get(0).getId());
 		Assert.assertEquals(2, docsList.get(1).getId());
-
+		
+		docs = docServiceImpl.listDocuments("", 103,"plo");
+		Assert.assertNotNull(docs);
+		Assert.assertEquals(0, docs.length);
+		
+		docs = docServiceImpl.listDocuments("", 103,"*ut*");
+		Assert.assertNotNull(docs);
+		Assert.assertEquals(1, docs.length);
+		Assert.assertEquals("pluto", docs[0].getFileName());
+		
+		docs = docServiceImpl.listDocuments("", 103,"pippo");
+		Assert.assertNotNull(docs);
+		Assert.assertEquals(1, docs.length);
+		Assert.assertEquals("pippo", docs[0].getFileName());
+		
 		docs = docServiceImpl.list("", 99);
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(0, docs.length);
