@@ -1,5 +1,7 @@
 package com.logicaldoc.core.document.dao;
 
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import com.logicaldoc.core.PersistentObjectDAO;
@@ -36,6 +38,17 @@ public interface HistoryDAO extends PersistentObjectDAO<History> {
 	 */
 	public List<History> findByFolderId(long folderId);
 
+	/**
+	 * This method finds all histories inside a given path (the exact path and sub-paths are inspected)
+	 * 
+	 * @param path The path prefix to use
+	 * @param oldestDate The older date for the retrieved histories
+	 * @events events Optional list of event codes to be used as filter
+	 * @param max Optional maximum number of records
+	 * @return
+	 */
+	public List<History> findByPath(String path, Date oldestDate, Collection<String> events, Integer max);
+	
 	/**
 	 * This method selects all histories not notified yet.
 	 * 
