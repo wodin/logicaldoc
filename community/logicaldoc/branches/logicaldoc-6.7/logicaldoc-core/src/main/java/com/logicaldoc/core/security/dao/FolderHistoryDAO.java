@@ -1,5 +1,7 @@
 package com.logicaldoc.core.security.dao;
 
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import com.logicaldoc.core.PersistentObjectDAO;
@@ -48,6 +50,18 @@ public interface FolderHistoryDAO extends PersistentObjectDAO<FolderHistory> {
 	public List<FolderHistory> findByUserIdAndEvent(long userId, String event);
 
 	/**
+	 * This method finds all histories inside a given path (the exact path and
+	 * sub-paths are inspected)
+	 * 
+	 * @param path The path prefix to use
+	 * @param oldestDate The older date for the retrieved histories
+	 * @events events Optional list of event codes to be used as filter
+	 * @param max Optional maximum number of records
+	 * @return
+	 */
+	public List<FolderHistory> findByPath(String path, Date oldestDate, Collection<String> events, Integer max);
+
+	/**
 	 * This method deletes all the user history entries oldest than the given
 	 * days from now. If <code>ttl</code> is 0 or -1, the cancellation is not
 	 * made.
@@ -56,7 +70,7 @@ public interface FolderHistoryDAO extends PersistentObjectDAO<FolderHistory> {
 	 *        considered old
 	 */
 	public void cleanOldHistories(int ttl);
-	
+
 	/**
 	 * Checks if the histories recording is enabled
 	 */
