@@ -45,6 +45,8 @@ public class WSHistory implements Comparable<WSHistory> {
 
 	private String path = null;
 
+	private String pathOld = null;
+
 	private String sessionId = "";
 
 	private String filename = null;
@@ -158,10 +160,18 @@ public class WSHistory implements Comparable<WSHistory> {
 			wsHist.setUserId(history.getUserId());
 			wsHist.setUserName(history.getUserName());
 			wsHist.setVersion(history.getVersion());
-			if (history instanceof FolderHistory)
+
+			if (history instanceof FolderHistory) {
 				wsHist.setType(FOLDER);
-			else
+				if (StringUtils.isNotEmpty(wsHist.getTitleOld()))
+					wsHist.setPathOld(wsHist.getPath().substring(0, wsHist.getPath().lastIndexOf('/')) + "/"
+							+ wsHist.getTitleOld());
+			} else {
 				wsHist.setType(DOCUMENT);
+				if (StringUtils.isNotEmpty(wsHist.getFilenameOld()))
+					wsHist.setPathOld(wsHist.getPath() + "/" + wsHist.getFilenameOld());
+			}
+
 		} catch (Throwable e) {
 
 		}
@@ -205,6 +215,13 @@ public class WSHistory implements Comparable<WSHistory> {
 			return getPath() + "/" + getFilename();
 	}
 
+	public String getFullPathOld() {
+		if (StringUtils.isEmpty(getFilenameOld()) || getPathOld().endsWith(getFilenameOld()))
+			return getPathOld();
+		else
+			return getPathOld() + "/" + getFilenameOld();
+	}
+
 	@Override
 	public int compareTo(WSHistory other) {
 		Date date1 = AbstractService.convertStringToDate(getDate());
@@ -226,5 +243,13 @@ public class WSHistory implements Comparable<WSHistory> {
 
 	public void setFilenameOld(String filenameOld) {
 		this.filenameOld = filenameOld;
+	}
+
+	public String getPathOld() {
+		return pathOld;
+	}
+
+	public void setPathOld(String pathOld) {
+		this.pathOld = pathOld;
 	}
 }
