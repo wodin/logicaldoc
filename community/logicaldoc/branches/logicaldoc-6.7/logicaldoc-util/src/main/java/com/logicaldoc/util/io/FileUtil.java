@@ -15,6 +15,8 @@ import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
@@ -324,6 +326,35 @@ public class FileUtil {
 	 * <code>excludes</code>
 	 * 
 	 * @param filename The filename to consider
+	 * @param includes list of includes expressions (eg. *.doc,*dummy*)
+	 * @param excludes list of excludeses expressions (eg. *.doc,*dummy*)
+	 * @return true only if the passed filename matches the includes and not the
+	 *         excludes
+	 */
+	public static boolean matches(String filename, String[] includes, String[] excludes) {
+		// First of all check if the filename must be excluded
+		if (excludes != null)
+			for (String s : excludes)
+				if (SelectorUtils.match(s, filename, false))
+					return false;
+
+		// Then check if the filename must can be included
+		if (includes != null)
+			for (String s : includes)
+				if (SelectorUtils.match(s, filename, false))
+					return true;
+
+		if (includes == null || includes.length == 0)
+			return true;
+		else
+			return false;
+	}
+
+	/**
+	 * Check if a given filename matches the <code>includes</code> and not the
+	 * <code>excludes</code>
+	 * 
+	 * @param filename The filename to consider
 	 * @param includes comma-separated list of includes expressions (eg.
 	 *        *.doc,*dummy*)
 	 * @param excludes comma-separated list of excludeses expressions (eg.
@@ -332,31 +363,24 @@ public class FileUtil {
 	 *         excludes
 	 */
 	public static boolean matches(String filename, String includes, String excludes) {
+		List<String> inc = new ArrayList<String>();
+		List<String> exc = new ArrayList<String>();
+
 		StringTokenizer st;
 
-		// First of all check if the filename must be excluded
 		if (StringUtils.isNotEmpty(excludes)) {
 			st = new StringTokenizer(excludes, ",", false);
-			while (st.hasMoreTokens()) {
-				String tk = st.nextToken();
-				if (SelectorUtils.match(tk, filename, false))
-					return false;
-			}
+			while (st.hasMoreTokens())
+				exc.add(st.nextToken().trim());
 		}
 
-		// Then check if the filename must can be included
 		if (StringUtils.isNotEmpty(includes)) {
 			st = new StringTokenizer(includes, ",", false);
-			while (st.hasMoreTokens()) {
-				String tk = st.nextToken();
-				if (SelectorUtils.match(tk, filename, false)) {
-					return true;
-				}
-			}
-		} else
-			return true;
+			while (st.hasMoreTokens())
+				inc.add(st.nextToken().trim());
+		}
 
-		return false;
+		return matches(filename, inc.toArray(new String[0]), exc.toArray(new String[0]));
 	}
 
 	public static void writeUTF8(String content, File file, boolean append) {
