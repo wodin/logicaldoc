@@ -18,10 +18,12 @@
 		<property name="comment" type="string" column="ld_comment" length="4000" />
 		<property name="version" type="string" column="ld_version" length="10" />
 		<property name="title" type="string" column="ld_title" length="255" />
+        <property name="titleOld" type="string" column="ld_title_old" length="255"/>
 		<property name="path" type="string" column="ld_path" length="4000" />
         <property name="notified" type="int" column="ld_notified" not-null="true" />
         <property name="sessionId" type="string" column="ld_sessionid" length="255" />
         <property name="new" type="int" column="ld_new" />
         <property name="filename" type="string" column="ld_filename" length="255"/>
+        <property name="filenameOld" type="string" column="ld_filename_old" length="255"/>
 	</class>
 </hibernate-mapping>

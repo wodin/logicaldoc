@@ -304,13 +304,15 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			// To avoid a 'org.hibernate.StaleObjectStateException', we
 			// must retrieve the folder from database.
 			Folder folder = dao.findById(folderId);
-			folder.setName(name.trim());
+			
 			// Add a folder history entry
 			FolderHistory history = new FolderHistory();
+			history.setTitleOld(folder.getName());
 			history.setUser(SessionUtil.getSessionUser(sid));
 			history.setEvent(FolderEvent.RENAMED.toString());
 			history.setSessionId(sid);
 
+			folder.setName(name.trim());
 			dao.store(folder, history);
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
