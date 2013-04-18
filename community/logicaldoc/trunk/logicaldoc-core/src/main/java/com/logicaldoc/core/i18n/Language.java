@@ -33,7 +33,7 @@ public class Language {
 
 	private String analyzerClass;
 
-	private static final Version LUCENE_VERSION = Version.LUCENE_35;
+	private static final Version LUCENE_VERSION = Version.LUCENE_36;
 
 	public Language(Locale locale) {
 		this.locale = locale;
