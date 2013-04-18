@@ -102,7 +102,7 @@ public class HibernateFolderHistoryDAO extends HibernatePersistentObjectDAO<Fold
 			query.append(" and _entity.event in " + eventsStr);
 		}
 
-		return findByWhere(query.toString(), params.toArray(new Object[0]), "order by _entity.date desc", max);
+		return findByWhere(query.toString(), params.toArray(new Object[0]), "order by _entity.date asc", max);
 	}
 
 	@Override
