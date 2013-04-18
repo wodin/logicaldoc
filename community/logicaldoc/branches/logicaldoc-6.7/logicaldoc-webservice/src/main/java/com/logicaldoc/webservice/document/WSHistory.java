@@ -1,6 +1,11 @@
 package com.logicaldoc.webservice.document;
 
+import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
+
 import com.logicaldoc.core.document.AbstractHistory;
+import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.webservice.AbstractService;
 
 /**
@@ -9,7 +14,15 @@ import com.logicaldoc.webservice.AbstractService;
  * @author Marco Meschieri - Logical Objects
  * @since 6.5
  */
-public class WSHistory {
+public class WSHistory implements Comparable<WSHistory> {
+	public final static String FOLDER = "folder";
+
+	public final static String DOCUMENT = "document";
+
+	private String type = DOCUMENT;
+
+	private long id = 0;
+
 	protected Long docId;
 
 	private long folderId;
@@ -126,6 +139,7 @@ public class WSHistory {
 		WSHistory wsHist = new WSHistory();
 
 		try {
+			wsHist.setId(history.getId());
 			wsHist.setDocId(history.getDocId());
 			wsHist.setDate(AbstractService.convertDateToString(history.getDate()));
 			wsHist.setComment(history.getEvent());
@@ -138,6 +152,10 @@ public class WSHistory {
 			wsHist.setUserId(history.getUserId());
 			wsHist.setUserName(history.getUserName());
 			wsHist.setVersion(history.getVersion());
+			if (history instanceof FolderHistory)
+				wsHist.setType(FOLDER);
+			else
+				wsHist.setType(DOCUMENT);
 		} catch (Throwable e) {
 
 		}
@@ -150,5 +168,41 @@ public class WSHistory {
 
 	public void setDate(String date) {
 		this.date = date;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	@Override
+	public String toString() {
+		return "[" + getDate() + "] " + getPath() + (getFilename() != null ? "/" + getFilename() : "") + " - "
+				+ getEvent();
+	}
+
+	public String getFullPath() {
+		if (StringUtils.isEmpty(getFilename()) || getPath().endsWith(getFilename()))
+			return getPath();
+		else
+			return getPath() + "/" + getFilename();
+	}
+
+	@Override
+	public int compareTo(WSHistory other) {
+		Date date1 = AbstractService.convertStringToDate(getDate());
+		Date date2 = AbstractService.convertStringToDate(other.getDate());
+		return date1.compareTo(date2);
 	}
 }
