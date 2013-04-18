@@ -205,12 +205,14 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		if (folders.size() > 0 && folders.get(0).getId() != folder.getId()) {
 			throw new Exception("duplicate folder name " + name);
 		} else {
-			folder.setName(name);
 			// Add a folder history entry
 			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(user);
 			transaction.setEvent(FolderEvent.RENAMED.toString());
 			transaction.setSessionId(sid);
+			transaction.setTitleOld(folder.getName());
+
+			folder.setName(name);
 			folderDao.store(folder, transaction);
 		}
 	}
