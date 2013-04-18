@@ -415,9 +415,9 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 				continue;
 			}
 
-			if (!FileUtil.matches(doc.getFileName(), fileName, null))
+			if (!FileUtil.matches(doc.getFileName(), new String[] { fileName }, null))
 				continue;
-			
+
 			docDao.initialize(doc);
 			wsDocs.add(WSDocument.fromDocument(doc));
 		}
