@@ -334,6 +334,8 @@ public class DocumentManagerImpl implements DocumentManager {
 				History renameTransaction = null;
 				if (!doc.getTitle().equals(docVO.getTitle()) && docVO.getTitle() != null) {
 					renameTransaction = (History) transaction.clone();
+					renameTransaction.setFilenameOld(doc.getFileName());
+					renameTransaction.setTitleOld(doc.getTitle());
 					renameTransaction.setEvent(DocumentEvent.RENAMED.toString());
 				}
 

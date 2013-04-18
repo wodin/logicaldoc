@@ -39,6 +39,8 @@ public class WSHistory implements Comparable<WSHistory> {
 
 	private String title = null;
 
+	private String titleOld = null;
+
 	private String version = null;
 
 	private String path = null;
@@ -46,6 +48,8 @@ public class WSHistory implements Comparable<WSHistory> {
 	private String sessionId = "";
 
 	private String filename = null;
+
+	private String filenameOld = null;
 
 	public Long getDocId() {
 		return docId;
@@ -144,11 +148,13 @@ public class WSHistory implements Comparable<WSHistory> {
 			wsHist.setDate(AbstractService.convertDateToString(history.getDate()));
 			wsHist.setComment(history.getEvent());
 			wsHist.setFilename(history.getFilename());
+			wsHist.setFilenameOld(history.getFilenameOld());
 			wsHist.setEvent(history.getEvent());
 			wsHist.setFolderId(history.getFolderId());
 			wsHist.setPath(history.getPath());
 			wsHist.setSessionId(history.getSessionId());
 			wsHist.setTitle(history.getTitle());
+			wsHist.setTitleOld(history.getTitleOld());
 			wsHist.setUserId(history.getUserId());
 			wsHist.setUserName(history.getUserName());
 			wsHist.setVersion(history.getVersion());
@@ -204,5 +210,21 @@ public class WSHistory implements Comparable<WSHistory> {
 		Date date1 = AbstractService.convertStringToDate(getDate());
 		Date date2 = AbstractService.convertStringToDate(other.getDate());
 		return date1.compareTo(date2);
+	}
+
+	public String getTitleOld() {
+		return titleOld;
+	}
+
+	public void setTitleOld(String titleOld) {
+		this.titleOld = titleOld;
+	}
+
+	public String getFilenameOld() {
+		return filenameOld;
+	}
+
+	public void setFilenameOld(String filenameOld) {
+		this.filenameOld = filenameOld;
 	}
 }

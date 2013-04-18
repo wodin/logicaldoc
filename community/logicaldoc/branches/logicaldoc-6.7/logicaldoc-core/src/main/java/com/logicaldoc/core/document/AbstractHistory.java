@@ -27,6 +27,8 @@ public class AbstractHistory extends PersistentObject {
 	private String comment = "";
 
 	private String title = null;
+	
+	private String titleOld = null;
 
 	private String version = null;
 
@@ -39,6 +41,8 @@ public class AbstractHistory extends PersistentObject {
 	private int _new = 1;
 
 	private String filename = null;
+
+	private String filenameOld = null;
 
 	// Not persistent
 	private User user;
@@ -193,5 +197,21 @@ public class AbstractHistory extends PersistentObject {
 
 	public void setFilename(String filename) {
 		this.filename = filename;
+	}
+
+	public String getTitleOld() {
+		return titleOld;
+	}
+
+	public void setTitleOld(String titleOld) {
+		this.titleOld = titleOld;
+	}
+
+	public String getFilenameOld() {
+		return filenameOld;
+	}
+
+	public void setFilenameOld(String filenameOld) {
+		this.filenameOld = filenameOld;
 	}
 }
