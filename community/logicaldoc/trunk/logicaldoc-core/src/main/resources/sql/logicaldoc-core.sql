@@ -17,8 +17,8 @@ create table ld_group (ld_id bigint not null, ld_lastmodified timestamp not null
 create table ld_group_ext (ld_groupid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_groupid, ld_name));
 create table ld_history (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint, 
                          ld_folderid bigint not null, ld_userid bigint, ld_date timestamp, ld_username varchar(255), ld_event varchar(255), 
-                         ld_comment varchar(4000), ld_version varchar(10), ld_title varchar(255), ld_title_old varchar(255), ld_path varchar(4000), ld_notified int not null, 
-                         ld_sessionid varchar(255), ld_new int, ld_filename varchar(255), ld_filename_old varchar(255), primary key (ld_id));
+                         ld_comment varchar(4000), ld_version varchar(10), ld_title varchar(255), ld_titleold varchar(255), ld_path varchar(4000), ld_notified int not null, 
+                         ld_sessionid varchar(255), ld_new int, ld_filename varchar(255), ld_filenameold varchar(255), primary key (ld_id));
 create table ld_tag (ld_docid bigint, ld_tag varchar(255));
 create table ld_link (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_type varchar(255) not null, ld_docid1 bigint, ld_docid2 bigint, primary key (ld_id));
 create table ld_menu (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_text varchar(255), ld_parentid bigint not null, ld_securityref bigint, ld_icon varchar(255), ld_type int not null, ld_description varchar(4000), primary key (ld_id));
@@ -58,9 +58,9 @@ create table ld_folder(ld_id bigint not null, ld_lastmodified timestamp not null
 create table ld_folder_ext (ld_folderid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_folderid, ld_name));
 create table ld_folder_history (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint, 
                                 ld_folderid bigint not null, ld_userid bigint, ld_date timestamp, ld_username varchar(255), 
-                                ld_event varchar(255), ld_comment varchar(4000), ld_version varchar(10), ld_title varchar(255), ld_title_old varchar(255), 
+                                ld_event varchar(255), ld_comment varchar(4000), ld_version varchar(10), ld_title varchar(255), ld_titleold varchar(255), 
                                 ld_path varchar(4000), ld_notified int not null, ld_sessionid varchar(255), ld_new int, ld_filename varchar(255), 
-                                ld_filename_old varchar(255), primary key (ld_id));
+                                ld_filenameold varchar(255), primary key (ld_id));
 create table ld_foldergroup (ld_folderid bigint not null, ld_groupid bigint not null, ld_write int not null, 
                              ld_add int not null, ld_security int not null, ld_immutable int not null, ld_delete int not null, 
                              ld_rename int not null, ld_import int not null, ld_export int not null, ld_sign int not null, 

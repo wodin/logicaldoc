@@ -121,11 +121,14 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 		history.setFolderId(5);
 		history.setDate(DateBean.dateFromCompactString("20061220"));
 		history.setUserName("sebastian");
+		history.setFilenameOld("file.old");
 		history.setUserId(3);
 		history.setEvent("test History store");
 
 		Assert.assertTrue(dao.store(history));
-
+		history = dao.findById(history.getId());
+		Assert.assertEquals("file.old", history.getFilenameOld());
+		
 		History folderHistory = new History();
 		folderHistory.setFolderId(5);
 		folderHistory.setDate(DateBean.dateFromCompactString("20061220"));
@@ -206,18 +209,20 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 		Assert.assertNotNull(histories);
 		Assert.assertEquals(0, histories.size());
 	}
-	
+
 	@Test
-	public void testFindByPath(){
+	public void testFindByPath() {
 		List<History> histories = dao.findByPath("/Default/pippo", null, null, null);
 		Assert.assertEquals(2, histories.size());
 
-		histories = dao.findByPath("/Default/pippo", DateBean.dateFromCompactString("20061221"),Arrays.asList(new String[]{"data test 01","data test 02"}), null);
+		histories = dao.findByPath("/Default/pippo", DateBean.dateFromCompactString("20061221"),
+				Arrays.asList(new String[] { "data test 01", "data test 02" }), null);
 		Assert.assertEquals(1, histories.size());
-		
-		histories = dao.findByPath("/Default/pippo", DateBean.dateFromCompactString("20061221"),Arrays.asList(new String[]{"data test 01"}), null);
+
+		histories = dao.findByPath("/Default/pippo", DateBean.dateFromCompactString("20061221"),
+				Arrays.asList(new String[] { "data test 01" }), null);
 		Assert.assertEquals(0, histories.size());
-		
+
 		histories = dao.findByPath("/xxxx", null, null, null);
 		Assert.assertEquals(0, histories.size());
 	}
