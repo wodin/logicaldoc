@@ -635,25 +635,4 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		documentManager.reindex(docId);
 	}
-
-	@Override
-	public WSHistory[] getHistory(String sid, long docId) throws Exception {
-		User user = validateSession(sid);
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc = docDao.findById(docId);
-		if (doc == null)
-			throw new Exception("unexisting document " + docId);
-
-		checkReadEnable(user, doc.getFolder().getId());
-		checkPublished(user, doc);
-
-		HistoryDAO hDao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
-		List<History> histories = hDao.findByDocId(docId);
-		WSHistory[] wsHistories = new WSHistory[histories.size()];
-		for (int i = 0; i < histories.size(); i++) {
-			wsHistories[i] = WSHistory.fromHistory(histories.get(i));
-		}
-
-		return wsHistories;
-	}
 }

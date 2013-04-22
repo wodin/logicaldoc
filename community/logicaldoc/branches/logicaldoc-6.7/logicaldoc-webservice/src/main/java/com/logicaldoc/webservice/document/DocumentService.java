@@ -250,19 +250,7 @@ public interface DocumentService {
 	@WebResult(name = "document")
 	public WSDocument[] getRecentDocuments(@WebParam(name = "sid") String sid,
 			@WebParam(name = "maxHits") Integer maxHits) throws Exception;
-
-	/**
-	 * Gets the history of a given document
-	 * 
-	 * @param sid Session identifier
-	 * @param docId The document id
-	 * @return Array of history records
-	 * @throws Exception
-	 */
-	@WebResult(name = "history")
-	public WSHistory[] getHistory(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId)
-			throws Exception;
-
+	
 	/**
 	 * Sends a set of documents as mail attachments
 	 * 
