@@ -19,15 +19,17 @@ public class History extends AbstractHistory {
 		history.setEvent(getEvent());
 		history.setComment(getComment());
 		history.setTitle(getTitle());
+		history.setTitleOld(getTitleOld());
 		history.setVersion(getVersion());
 		history.setPath(getPath());
 		history.setNotified(getNotified());
 		history.setSessionId(getSessionId());
 		history.setNew(getNew());
 		history.setFilename(getFilename());
+		history.setFilenameOld(getFilenameOld());
 		history.setUserId(getUserId());
 		history.setUserName(getUserName());
-
+		
 		return history;
 	}
 }
