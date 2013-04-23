@@ -865,6 +865,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			folder.setDeleted(1);
 			transaction.setEvent(FolderEvent.DELETED.toString());
 			transaction.setFolderId(folderId);
+			transaction.setPath(computePathExtended(folderId));
 			store(folder, transaction);
 		} catch (Throwable e) {
 			if (log.isErrorEnabled())
