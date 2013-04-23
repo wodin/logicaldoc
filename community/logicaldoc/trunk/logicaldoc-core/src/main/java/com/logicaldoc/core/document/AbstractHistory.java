@@ -27,12 +27,14 @@ public class AbstractHistory extends PersistentObject {
 	private String comment = "";
 
 	private String title = null;
-	
+
 	private String titleOld = null;
 
 	private String version = null;
 
 	private String path = null;
+
+	private String pathOld = null;
 
 	private int notified = 0;
 
@@ -213,5 +215,13 @@ public class AbstractHistory extends PersistentObject {
 
 	public void setFilenameOld(String filenameOld) {
 		this.filenameOld = filenameOld;
+	}
+
+	public String getPathOld() {
+		return pathOld;
+	}
+
+	public void setPathOld(String pathOld) {
+		this.pathOld = pathOld;
 	}
 }
