@@ -8,7 +8,7 @@ import com.logicaldoc.core.document.AbstractHistory;
  * @author Marco Meschieri - Logical Objects
  * @since 6.4
  */
-public class FolderHistory extends AbstractHistory {	
+public class FolderHistory extends AbstractHistory {
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {
@@ -23,6 +23,7 @@ public class FolderHistory extends AbstractHistory {
 		history.setTitleOld(getTitleOld());
 		history.setVersion(getVersion());
 		history.setPath(getPath());
+		history.setPathOld(getPathOld());
 		history.setNotified(getNotified());
 		history.setSessionId(getSessionId());
 		history.setNew(getNew());
