@@ -22,6 +22,7 @@ public class History extends AbstractHistory {
 		history.setTitleOld(getTitleOld());
 		history.setVersion(getVersion());
 		history.setPath(getPath());
+		history.setPathOld(getPathOld());
 		history.setNotified(getNotified());
 		history.setSessionId(getSessionId());
 		history.setNew(getNew());
@@ -29,7 +30,7 @@ public class History extends AbstractHistory {
 		history.setFilenameOld(getFilenameOld());
 		history.setUserId(getUserId());
 		history.setUserName(getUserName());
-		
+
 		return history;
 	}
 }

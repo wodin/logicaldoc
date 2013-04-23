@@ -78,7 +78,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				if (folder.getId() == 0 && transaction.getEvent() == null)
 					transaction.setEvent(FolderEvent.CREATED.toString());
 			}
-			
+
 			getHibernateTemplate().saveOrUpdate(folder);
 			saveFolderHistory(folder, transaction);
 		} catch (Exception e) {
@@ -1070,9 +1070,12 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		assert (transaction.getUser() != null);
 
 		if (isInPath(source.getId(), target.getId()))
-			throw new IllegalArgumentException("Cannot move a dolder inside the same path");
+			throw new IllegalArgumentException("Cannot move a folder inside the same path");
 
-		// initialize(source);
+		initialize(source);
+		
+		String pathOld = computePathExtended(source.getId());
+		transaction.setPathOld(pathOld);
 
 		// Change the parent folder
 		source.setParentId(target.getId());
