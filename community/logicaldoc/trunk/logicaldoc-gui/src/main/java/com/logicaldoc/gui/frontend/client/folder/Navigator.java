@@ -754,22 +754,21 @@ public class Navigator extends TreeGrid implements FolderObserver {
 					public void execute(final String value) {
 						if (value == null || "".equals(value.trim()))
 							return;
+						final long folderId = Long.parseLong(selectedNode.getAttributeAsString("folderId"));
+						service.rename(Session.get().getSid(), folderId, value.trim(), new AsyncCallback<Void>() {
 
-						service.rename(Session.get().getSid(),
-								Long.parseLong(selectedNode.getAttributeAsString("folderId")), value.trim(),
-								new AsyncCallback<Void>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
 
-									@Override
-									public void onFailure(Throwable caught) {
-										Log.serverError(caught);
-									}
-
-									@Override
-									public void onSuccess(Void v) {
-										selectedNode.setAttribute("name", value);
-										refreshRow(getRecordIndex(selectedNode));
-									}
-								});
+							@Override
+							public void onSuccess(Void v) {
+								selectedNode.setAttribute("name", value);
+								refreshRow(getRecordIndex(selectedNode));
+								selectFolder(folderId);
+							}
+						});
 					}
 				});
 	}
