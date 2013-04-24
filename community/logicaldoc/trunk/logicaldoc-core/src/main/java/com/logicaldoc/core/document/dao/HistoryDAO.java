@@ -39,15 +39,15 @@ public interface HistoryDAO extends PersistentObjectDAO<History> {
 	public List<History> findByFolderId(long folderId);
 
 	/**
-	 * This method finds all histories inside a given path (the exact path and sub-paths are inspected)
+	 * This method finds all histories about a path (you can use expression)
 	 * 
-	 * @param path The path prefix to use
+	 * @param pathExpression The path expression (like /Default/acme%)
 	 * @param oldestDate The older date for the retrieved histories
 	 * @events events Optional list of event codes to be used as filter
 	 * @param max Optional maximum number of records
 	 * @return
 	 */
-	public List<History> findByPath(String path, Date oldestDate, Collection<String> events, Integer max);
+	public List<History> findByPath(String pathExpression, Date oldestDate, Collection<String> events, Integer max);
 	
 	/**
 	 * This method selects all histories not notified yet.

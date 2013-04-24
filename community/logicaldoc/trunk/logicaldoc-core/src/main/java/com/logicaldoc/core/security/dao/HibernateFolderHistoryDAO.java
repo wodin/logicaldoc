@@ -84,8 +84,8 @@ public class HibernateFolderHistoryDAO extends HibernatePersistentObjectDAO<Fold
 	}
 
 	@Override
-	public List<FolderHistory> findByPath(String path, Date olderDate, Collection<String> events, Integer max) {
-		StringBuffer query = new StringBuffer("_entity.path like '" + path + "%'");
+	public List<FolderHistory> findByPath(String pathExpression, Date olderDate, Collection<String> events, Integer max) {
+		StringBuffer query = new StringBuffer("(_entity.path like '" + pathExpression + "' or _entity.pathOld like '"+ pathExpression + "') ");
 		List<Object> params = new ArrayList<Object>();
 		if (olderDate != null) {
 			query.append(" and _entity.date >= ? ");
