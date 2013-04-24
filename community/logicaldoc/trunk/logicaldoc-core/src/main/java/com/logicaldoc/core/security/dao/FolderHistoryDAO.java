@@ -50,16 +50,15 @@ public interface FolderHistoryDAO extends PersistentObjectDAO<FolderHistory> {
 	public List<FolderHistory> findByUserIdAndEvent(long userId, String event);
 
 	/**
-	 * This method finds all histories inside a given path (the exact path and
-	 * sub-paths are inspected)
+	 * This method finds all histories about a path (you can use expression)
 	 * 
-	 * @param path The path prefix to use
+	 * @param pathExpression The path expression (like /Default/acme%)
 	 * @param oldestDate The older date for the retrieved histories
 	 * @events events Optional list of event codes to be used as filter
 	 * @param max Optional maximum number of records
 	 * @return
 	 */
-	public List<FolderHistory> findByPath(String path, Date oldestDate, Collection<String> events, Integer max);
+	public List<FolderHistory> findByPath(String pathExpression, Date oldestDate, Collection<String> events, Integer max);
 
 	/**
 	 * This method deletes all the user history entries oldest than the given

@@ -111,8 +111,8 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 	}
 
 	@Override
-	public List<History> findByPath(String path, Date olderDate, Collection<String> events, Integer max) {
-		StringBuffer query = new StringBuffer("_entity.path like '" + path + "%'");
+	public List<History> findByPath(String pathExpression, Date olderDate, Collection<String> events, Integer max) {
+		StringBuffer query = new StringBuffer("(_entity.path like '" + pathExpression + "' or _entity.pathOld like '"+ pathExpression + "') ");
 		List<Object> params = new ArrayList<Object>();
 		if (olderDate != null) {
 			query.append(" and _entity.date >= ? ");
