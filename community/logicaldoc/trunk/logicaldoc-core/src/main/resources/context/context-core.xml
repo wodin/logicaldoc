@@ -338,6 +338,7 @@
             <bean class="com.logicaldoc.core.document.DocumentManagerImpl">
                 <property name="config" ref="ContextProperties" />
                 <property name="documentDAO" ref="DocumentDAO" />
+                <property name="folderDAO" ref="FolderDAO" />
                 <property name="versionDAO" ref="VersionDAO" />
                 <property name="userDAO" ref="UserDAO" />
                 <property name="documentTemplateDAO" ref="DocumentTemplateDAO" />

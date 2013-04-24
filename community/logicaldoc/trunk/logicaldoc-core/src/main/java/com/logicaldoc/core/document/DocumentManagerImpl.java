@@ -29,6 +29,7 @@ import com.logicaldoc.core.parser.Parser;
 import com.logicaldoc.core.parser.ParserFactory;
 import com.logicaldoc.core.searchengine.SearchEngine;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
@@ -47,6 +48,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	protected static Logger log = LoggerFactory.getLogger(DocumentManagerImpl.class);
 
 	private DocumentDAO documentDAO;
+
+	private FolderDAO folderDAO;
 
 	private DocumentTemplateDAO documentTemplateDAO;
 
@@ -446,6 +449,9 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		if (doc.getImmutable() == 0 || ((doc.getImmutable() == 1 && transaction.getUser().isInGroup("admin")))) {
 			documentDAO.initialize(doc);
+			transaction.setPathOld(folderDAO.computePathExtended(doc.getFolder().getId()));
+			transaction.setFilenameOld(doc.getFileName());
+			transaction.setTitleOld(doc.getTitle());
 			doc.setFolder(folder);
 			setUniqueTitleAndFilename(doc);
 
@@ -848,5 +854,9 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
+	}
+
+	public void setFolderDAO(FolderDAO folderDAO) {
+		this.folderDAO = folderDAO;
 	}
 }
