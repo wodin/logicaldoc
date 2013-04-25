@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -194,7 +195,14 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 	}
 
 	@Override
-	public SystemInfo getInfo(String sid) throws Exception {
-		return SystemInfo.get();
+	public WSSystemInfo getInfo() throws Exception {
+		SystemInfo inf= SystemInfo.get();
+		WSSystemInfo info = new WSSystemInfo();
+		BeanUtils.copyProperties(info, inf);
+		
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+		info.setDate(df.format(inf.getDate()));
+	
+		return info;
 	}
 }

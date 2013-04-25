@@ -1,20 +1,8 @@
-package com.logicaldoc.core;
+package com.logicaldoc.webservice.system;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import com.logicaldoc.core.SystemInfo;
 
-import org.java.plugin.registry.Extension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.ContextProperties;
-import com.logicaldoc.util.plugin.PluginRegistry;
-
-public class SystemInfo {
-	protected static Logger log = LoggerFactory.getLogger(SystemInfo.class);
+public class WSSystemInfo {
 
 	protected static final long serialVersionUID = 1L;
 
@@ -22,9 +10,9 @@ public class SystemInfo {
 
 	protected String product = "LogicalDOC";
 
-	protected String release = "6.6";
+	protected String release = "6.8";
 
-	protected String year = "2012";
+	protected String year = "2013";
 
 	protected String help = "http://help.logicaldoc.com";
 
@@ -54,7 +42,7 @@ public class SystemInfo {
 
 	protected String[] features;
 
-	protected Date date = new Date();
+	protected String date = null;
 
 	public String getProductName() {
 		return productName;
@@ -192,73 +180,6 @@ public class SystemInfo {
 		this.runLevel = runLevel;
 	}
 
-	public static SystemInfo get() {
-		SystemInfo info = new SystemInfo();
-
-		/*
-		 * Collect product identification
-		 */
-		try {
-			// Acquire the 'SystemInfo' extensions of the core plugin
-			PluginRegistry registry = PluginRegistry.getInstance();
-			Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "SystemInfo");
-
-			if (!exts.isEmpty()) {
-				String className = exts.iterator().next().getParameter("class").valueAsString();
-				try {
-					@SuppressWarnings("rawtypes")
-					Class clazz = Class.forName(className);
-					// Try to instantiate the info
-					Object tmp = clazz.newInstance();
-					if (!(tmp instanceof SystemInfo))
-						throw new Exception("The specified info " + className
-								+ " doesn't implement SystemInfo interface");
-
-					info = (SystemInfo) tmp;
-				} catch (Throwable e) {
-					log.error(e.getMessage(), e);
-				}
-			}
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
-		}
-
-		/*
-		 * Collect installed features
-		 */
-		if (info.getFeatures() == null || info.getFeatures().length == 0)
-			try {
-				List<String> features = new ArrayList<String>();
-				PluginRegistry registry = PluginRegistry.getInstance();
-				Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "Feature");
-				for (Extension extension : exts) {
-					// Retrieve the task name
-					String name = extension.getParameter("name").valueAsString();
-					if (!features.contains(name))
-						features.add(name);
-				}
-				info.setFeatures(features.toArray(new String[0]));
-			} catch (Throwable e) {
-				log.error(e.getMessage());
-			}
-
-		/*
-		 * Read some informations from the context
-		 */
-		try {
-			// Read some informations from the context
-			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-			info.setRelease(config.getProperty("product.release"));
-			info.setYear(config.getProperty("product.year"));
-			info.setRunLevel(config.getProperty("runlevel"));
-			info.setInstallationId(config.getProperty("id"));
-		} catch (Throwable e) {
-			log.error(e.getMessage());
-		}
-
-		return info;
-	}
-
 	public String[] getFeatures() {
 		return features;
 	}
@@ -267,11 +188,11 @@ public class SystemInfo {
 		this.features = features;
 	}
 
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 }
