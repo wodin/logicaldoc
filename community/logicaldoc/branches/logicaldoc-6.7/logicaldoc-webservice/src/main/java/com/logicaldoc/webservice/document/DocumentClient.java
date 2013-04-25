@@ -85,8 +85,9 @@ public class DocumentClient extends AbstractClient<DocumentService> implements D
 	}
 
 	@Override
+	@Deprecated
 	public WSDocument[] list(String sid, long folderId) throws Exception {
-		return client.list(sid, folderId);
+		return client.listDocuments(sid, folderId, null);
 	}
 
 	@Override
