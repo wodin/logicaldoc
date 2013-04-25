@@ -4,7 +4,6 @@ import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 
-import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.webservice.WSParameter;
 
 /**
@@ -19,12 +18,11 @@ public interface SystemService {
 	/**
 	 * Retrieves the Installation informations.
 	 * 
-	 * @param sid not used
 	 * @return The value object containing the installation informations.
 	 * @throws Exception
 	 */
 	@WebResult(name = "info")
-	public SystemInfo getInfo(@WebParam(name = "sid") String sid) throws Exception;
+	public WSSystemInfo getInfo() throws Exception;
 
 	/**
 	 * Retrieves the system statistics.
