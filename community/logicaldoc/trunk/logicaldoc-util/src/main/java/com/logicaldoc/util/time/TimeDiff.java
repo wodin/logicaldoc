@@ -59,7 +59,7 @@ public class TimeDiff {
 		long t1 = cal.getTimeInMillis();
 		cal.setTime(d2);
 
-		long diff = Math.abs(cal.getTimeInMillis() - t1);
+		long diff = cal.getTimeInMillis() - t1;
 		final int ONE_DAY = 1000 * 60 * 60 * 24;
 		final int ONE_HOUR = ONE_DAY / 24;
 		final int ONE_MINUTE = ONE_HOUR / 60;
