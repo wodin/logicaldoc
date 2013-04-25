@@ -161,6 +161,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 		 */
 		GUIInfo info = new GUIInfo();
 		SystemInfo inf = SystemInfo.get();
+		info.setDate(inf.getDate());
 		info.setBugs(inf.getBugs());
 		info.setFeatures(inf.getFeatures());
 		info.setForum(inf.getForum());

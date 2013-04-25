@@ -2,7 +2,6 @@ package com.logicaldoc.webservice.system;
 
 import java.io.IOException;
 
-import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.webservice.AbstractClient;
 import com.logicaldoc.webservice.WSParameter;
 
@@ -29,7 +28,7 @@ public class SystemClient extends AbstractClient<SystemService> implements Syste
 	}
 
 	@Override
-	public SystemInfo getInfo(String sid) throws Exception {
-		return client.getInfo(sid);
+	public WSSystemInfo getInfo() throws Exception {
+		return client.getInfo();
 	}
 }
