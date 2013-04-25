@@ -221,7 +221,6 @@ public interface DocumentService {
 	 * 
 	 * @throws Exception
 	 */
-	@Deprecated
 	@WebResult(name = "document")
 	public WSDocument[] list(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
 			throws Exception;
@@ -251,7 +250,7 @@ public interface DocumentService {
 	@WebResult(name = "document")
 	public WSDocument[] getRecentDocuments(@WebParam(name = "sid") String sid,
 			@WebParam(name = "maxHits") Integer maxHits) throws Exception;
-	
+
 	/**
 	 * Sends a set of documents as mail attachments
 	 * 

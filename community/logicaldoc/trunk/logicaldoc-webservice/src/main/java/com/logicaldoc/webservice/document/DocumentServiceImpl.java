@@ -415,7 +415,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 				continue;
 			}
 
-			if (!FileUtil.matches(doc.getFileName(), new String[] { fileName }, null))
+			if (fileName != null && !FileUtil.matches(doc.getFileName(), new String[] { fileName }, null))
 				continue;
 
 			docDao.initialize(doc);
