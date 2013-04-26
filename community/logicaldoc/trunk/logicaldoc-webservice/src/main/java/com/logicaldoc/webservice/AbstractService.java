@@ -66,7 +66,7 @@ public class AbstractService {
 			return user;
 		}
 
-		if (!"true".equals(getSettings().get("webservice.enabled")))
+		if (!isWebserviceEnabled())
 			throw new Exception("WebServices are disabled");
 
 		if (!SessionManager.getInstance().isValid(sid)) {
@@ -172,5 +172,9 @@ public class AbstractService {
 
 	protected ContextProperties getSettings() {
 		return (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+	}
+
+	protected boolean isWebserviceEnabled() {
+		return "true".equals(getSettings().get("webservice.enabled"));
 	}
 }
