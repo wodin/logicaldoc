@@ -67,14 +67,15 @@ public class FoldersDataServlet extends HttpServlet {
 			query.append(" order by ld_name");
 
 			SqlRowSet rs = dao.queryForRowSet(query.toString(), new Long[] { parent }, null);
-			while (rs.next()) {
-				writer.print("<folder>");
-				writer.print("<folderId>" + rs.getLong(1) + "</folderId>");
-				writer.print("<parent>" + rs.getLong(2) + "</parent>");
-				writer.print("<name><![CDATA[" + rs.getString(3) + "]]></name>");
-				writer.print("<type>" + rs.getInt(4) + "</type>");
-				writer.print("</folder>");
-			}
+			if (rs != null)
+				while (rs.next()) {
+					writer.print("<folder>");
+					writer.print("<folderId>" + rs.getLong(1) + "</folderId>");
+					writer.print("<parent>" + rs.getLong(2) + "</parent>");
+					writer.print("<name><![CDATA[" + rs.getString(3) + "]]></name>");
+					writer.print("<type>" + rs.getInt(4) + "</type>");
+					writer.print("</folder>");
+				}
 
 			writer.write("</list>");
 		} catch (Throwable e) {

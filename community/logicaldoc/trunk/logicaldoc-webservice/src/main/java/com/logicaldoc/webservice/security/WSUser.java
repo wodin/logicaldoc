@@ -30,8 +30,6 @@ public class WSUser {
 
 	public static final long USERID_ADMIN = 1;
 
-	private static final long serialVersionUID = 8093874904302301982L;
-
 	private long id;
 
 	private String userName = "";
