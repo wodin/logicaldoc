@@ -25,4 +25,14 @@ public class AuthClient extends AbstractClient<AuthService> implements AuthServi
 	public void logout(String sid) {
 		client.logout(sid);
 	}
+
+	@Override
+	public boolean valid(String sid) {
+		return client.valid(sid);
+	}
+
+	@Override
+	public void renew(String sid) {
+		client.renew(sid);
+	}
 }
