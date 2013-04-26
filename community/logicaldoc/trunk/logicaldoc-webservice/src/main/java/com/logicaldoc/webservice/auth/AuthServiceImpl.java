@@ -43,4 +43,19 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
 	public void logout(String sid) {
 		SessionManager.getInstance().kill(sid);
 	}
+
+	@Override
+	public boolean valid(String sid) {
+		if (!isWebserviceEnabled())
+			return false;
+		return SessionManager.getInstance().isValid(sid);
+	}
+
+	@Override
+	public void renew(String sid) {
+		if (!isWebserviceEnabled())
+			return;
+		if (SessionManager.getInstance().isValid(sid))
+			SessionManager.getInstance().renew(sid);
+	}
 }

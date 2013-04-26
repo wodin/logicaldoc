@@ -27,4 +27,14 @@ public interface AuthService {
 	 * @param sid The session identifier
 	 */
 	public void logout(@WebParam(name = "sid") String sid);
+
+	/**
+	 * Checks if a SID is valid
+	 */
+	public boolean valid(@WebParam(name = "sid") String sid);
+
+	/**
+	 * Renews a session
+	 */
+	public void renew(@WebParam(name = "sid") String sid);
 }
