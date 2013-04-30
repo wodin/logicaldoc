@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>58</version>
+  <version>62</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -24,8 +24,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.7</source>
+          <target>1.7</target>
           <encoding>iso-8859-1</encoding>
         </configuration>
       </plugin>
@@ -86,8 +86,8 @@
     <spring.version>3.0.7.RELEASE</spring.version>
     <hibernate.version>3.6.9.Final</hibernate.version>
     <ehcache.version>2.5.1</ehcache.version>
-    <lucene.version>3.6.0</lucene.version>
-    <solr.version>3.6.0</solr.version>
+    <lucene.version>3.6.2</lucene.version>
+    <solr.version>3.6.2</solr.version>
     <gwt.version>2.5.0</gwt.version>
     <smartgwt.version>3.1</smartgwt.version>
     <cxf.version>2.5.3</cxf.version>
@@ -109,7 +109,7 @@
       <dependency>
         <groupId>javax.mail</groupId>
         <artifactId>mail</artifactId>
-        <version>1.4.1</version>
+        <version>1.5.0</version>
         <type>jar</type>
       </dependency>
       <dependency>
@@ -644,6 +644,11 @@
         <url>http://www.ibiblio.org/maven2</url>
       </repository>
       <repository>
+        <id>ibiblio-mirror</id>
+        <name>Ibiblio Mirror Repository</name>
+        <url>http://mirrors.ibiblio.org/maven2</url>
+      </repository>
+      <repository>
         <id>maven2-repository.dev.java.net</id>
         <name>Java.net Repository for Maven</name>
         <url>http://download.java.net/maven/2/</url>
@@ -677,8 +682,8 @@
         <url>http://gwt-image-loader.googlecode.com/svn/repo</url>
       </repository>
       <repository>
-        <id>ice-repo</id>
-        <url>http://anonsvn.icefaces.org/repo/maven2/releases</url>
+         <id>google-api-services</id>
+         <url>http://google-api-client-libraries.appspot.com/mavenrepo</url>
       </repository>
       <repository>
         <id>sourceforge</id>
