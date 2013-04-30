@@ -261,7 +261,7 @@ public class CalendarEventDialog extends Window {
 				if (filename == null)
 					filename = selection.getAttribute("title") + "." + selection.getAttribute("type");
 
-				PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, true);
+				PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, false);
 				iv.show();
 			}
 		});
