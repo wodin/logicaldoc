@@ -80,6 +80,12 @@ public class CalendarReport extends VLayout {
 		// To
 		DateItem toDate = ItemFactory.newDateItem("toDate", "till");
 
+		// Expire From
+		DateItem expireFrom = ItemFactory.newDateItem("expireFrom", "expiresfrom");
+
+		// Expire To
+		DateItem expireTo = ItemFactory.newDateItem("expireTo", "till");
+
 		SelectItem frequencySelector = ItemFactory.newFrequencySelector("frequency", "frequency");
 
 		TextItem title = ItemFactory.newTextItem("title", "title", null);
@@ -105,7 +111,8 @@ public class CalendarReport extends VLayout {
 			}
 		});
 
-		form.setItems(fromDate, toDate, title, frequencySelector, statusSelector, displayMax, searchButton);
+		form.setItems(fromDate, toDate, expireFrom, expireTo, title, frequencySelector, statusSelector, displayMax,
+				searchButton);
 
 		formsLayout.addMember(form);
 		formsLayout.setMembersMargin(80);
@@ -268,6 +275,12 @@ public class CalendarReport extends VLayout {
 			Date toValue = null;
 			if (values.get("toDate") != null)
 				toValue = (Date) values.get("toDate");
+			Date expireFrom = null;
+			if (values.get("expireFrom") != null)
+				expireFrom = (Date) values.get("expireFrom");
+			Date expireTo = null;
+			if (values.get("expireTo") != null)
+				expireTo = (Date) values.get("expireTo");
 
 			Integer frequencyValue = null;
 			if (values.get("frequency") != null)
@@ -291,8 +304,8 @@ public class CalendarReport extends VLayout {
 
 			}
 
-			service.find(Session.get().getSid(), fromValue, toValue, frequencyValue, titleValue, statusValue,
-					maxRecords, new AsyncCallback<GUICalendarEvent[]>() {
+			service.find(Session.get().getSid(), fromValue, toValue, expireFrom, expireTo, frequencyValue, titleValue,
+					statusValue, maxRecords, new AsyncCallback<GUICalendarEvent[]>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
