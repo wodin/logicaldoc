@@ -55,7 +55,7 @@ public class FolderServiceImplTest extends AbstractWebServiceTestCase {
 		Folder parentFolder = folderDao.findById(1200);
 		Assert.assertNotNull(parentFolder);
 
-		folderServiceImpl.move("", folderToMove.getId(), parentFolder.getId());
+		folderServiceImpl.move("", folderToMove.getId(), 1200L);
 		folderToMove = folderDao.findById(1203);
 		Assert.assertEquals(1200, folderToMove.getParentId());
 	}
