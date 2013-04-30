@@ -1073,7 +1073,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			throw new IllegalArgumentException("Cannot move a folder inside the same path");
 
 		initialize(source);
-		
+
 		String pathOld = computePathExtended(source.getId());
 		transaction.setPathOld(pathOld);
 
@@ -1198,8 +1198,11 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			fg.getWrite();
 		}
 
-		for (String attribute : folder.getAttributes().keySet()) {
-			folder.getAttributes().get(attribute).getValue();
+		try {
+			for (String attribute : folder.getAttributes().keySet()) {
+				folder.getAttributes().get(attribute).getValue();
+			}
+		} catch (Throwable t) {
 		}
 	}
 
