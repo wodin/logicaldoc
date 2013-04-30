@@ -194,16 +194,16 @@ public class HibernateFolderHistoryDAOTest extends AbstractCoreTCase {
 	
 	@Test
 	public void testFindByPath(){
-		List<FolderHistory> histories = dao.findByPath("/Default/pippo", null, null, null);
+		List<FolderHistory> histories = dao.findByPath("/Default/pippo%", null, null, null);
 		Assert.assertEquals(2, histories.size());
 
-		histories = dao.findByPath("/Default/pippo", DateBean.dateFromCompactString("20061228"),null, null);
+		histories = dao.findByPath("/Default/pippo%", DateBean.dateFromCompactString("20061228"),null, null);
 		Assert.assertEquals(1, histories.size());
 		
-		histories = dao.findByPath("/Default/pippo", DateBean.dateFromCompactString("20061228"),Arrays.asList(new String[]{"data test 03","data test 04"}), null);
+		histories = dao.findByPath("/Default/pippo%", DateBean.dateFromCompactString("20061228"),Arrays.asList(new String[]{"data test 03","data test 04"}), null);
 		Assert.assertEquals(1, histories.size());
 		
-		histories = dao.findByPath("/Default/pippo", DateBean.dateFromCompactString("20061228"),Arrays.asList(new String[]{"data test 043"}), null);
+		histories = dao.findByPath("/Default/pippo%", DateBean.dateFromCompactString("20061228"),Arrays.asList(new String[]{"data test 043"}), null);
 		Assert.assertEquals(0, histories.size());
 		
 		histories = dao.findByPath("/xxxx", null, null, null);
