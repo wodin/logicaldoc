@@ -176,6 +176,7 @@ public class PDFParser extends AbstractParser {
 					stripper.setEndPage(i);
 					stripper.setPageSeparator("\n");
 					stripper.setPageEnd("\n");
+					stripper.setForceParsing( true );
 					stripper.setAddMoreFormatting(false);
 					stripper.writeText(pdfDocument, writer);
 					writer.flush();
