@@ -3,6 +3,13 @@
 <!DOCTYPE beans SYSTEM "spring-beans-2.0.dtd">
 <beans default-autowire="no" default-dependency-check="none"
     default-lazy-init="false">
+    
+    <!-- System Load Monitor -->
+    <bean id="SystemLoadMonitor" abstract="false" autowire="default" class="${load}"
+        dependency-check="default" lazy-init="default" init-method="start">
+        <property name="config" ref="ContextProperties" />
+    </bean>
+    
     <!-- Storer -->
     <bean id="Storer" abstract="false" autowire="default" class="${store}"
         dependency-check="default" lazy-init="default">
@@ -381,6 +388,7 @@
         <property name="sender" ref="EMailSender" />
         <property name="userDao" ref="UserDAO" />
         <property name="lockManager" ref="LockManager" />
+        <property name="systemLoadMonitor" ref="SystemLoadMonitor" />
     </bean>
     <bean id="IndexOptimizerJob"
         class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -400,6 +408,7 @@
         <property name="sender" ref="EMailSender" />
         <property name="userDao" ref="UserDAO" />
         <property name="lockManager" ref="LockManager" />
+        <property name="systemLoadMonitor" ref="SystemLoadMonitor" />
     </bean>
     <bean id="TagCloudGeneratorJob"
         class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -420,6 +429,7 @@
         <property name="sender" ref="EMailSender" />
         <property name="userDao" ref="UserDAO" />
         <property name="lockManager" ref="LockManager" />
+        <property name="systemLoadMonitor" ref="SystemLoadMonitor" />
     </bean>
     <bean id="IndexerTaskJob"
         class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -442,6 +452,7 @@
         <property name="userDao" ref="UserDAO" />
         <property name="storer" ref="Storer" />
         <property name="lockManager" ref="LockManager" />
+        <property name="systemLoadMonitor" ref="SystemLoadMonitor" />
     </bean>
     <bean id="StatsCollectorJob"
         class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -459,6 +470,7 @@
         <property name="config" ref="ContextProperties" />
         <property name="userDao" ref="UserDAO" />
         <property name="lockManager" ref="LockManager" />
+        <property name="systemLoadMonitor" ref="SystemLoadMonitor" />
     </bean>
     <bean id="ProductNewsJob"
         class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -477,6 +489,7 @@
         <property name="sender" ref="EMailSender" />
         <property name="userDao" ref="UserDAO" />
         <property name="lockManager" ref="LockManager" />
+        <property name="systemLoadMonitor" ref="SystemLoadMonitor" />
     </bean>
     <bean id="DigestProcessorJob"
         class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">

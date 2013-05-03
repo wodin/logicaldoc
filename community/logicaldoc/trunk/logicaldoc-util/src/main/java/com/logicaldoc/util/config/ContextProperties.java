@@ -126,6 +126,10 @@ public class ContextProperties extends OrderedProperties {
 		return Integer.parseInt(getProperty(property, "0"));
 	}
 
+	public int getInt(String property, int defaultValue) {
+		return Integer.parseInt(getProperty(property, Integer.toString(defaultValue)));
+	}
+	
 	/**
 	 * Gets the property value replacing all variable references
 	 */
