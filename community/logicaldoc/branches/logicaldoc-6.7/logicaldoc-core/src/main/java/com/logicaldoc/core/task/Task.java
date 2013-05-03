@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.UUID;
@@ -27,6 +28,7 @@ import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.lock.LockManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.core.system.SystemLoadMonitor;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
@@ -78,6 +80,8 @@ public abstract class Task implements Runnable {
 
 	protected LockManager lockManager;
 
+	protected SystemLoadMonitor systemLoadMonitor;
+
 	public Task(String name) {
 		this.name = name;
 	}
@@ -102,13 +106,37 @@ public abstract class Task implements Runnable {
 	}
 
 	/**
-	 * Increments the progress by one and performs a GC
+	 * Increments the progress by one and detects system overload.
 	 */
 	protected void next() {
 		setProgress(progress + 1);
 
 		// Reset the timeout
 		lockManager.get(getName(), transactionId);
+
+		if (systemLoadMonitor != null) {
+			boolean overload = false;
+			
+			Random random = new Random();
+			while (systemLoadMonitor.isAverageCpuOverLoaded()) {
+				if(overload==false){
+					overload=true;
+					log.info("Execution paused because of system overload");
+				}
+				try {
+					lockManager.get(getName(), transactionId);
+				} catch (Throwable e) {
+				}
+				try {
+					Thread.sleep((1 + random.nextInt(20)) * 1000);
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if(overload)
+				log.info("Execution resumed after system overload");
+		}
 	}
 
 	protected void setProgress(long progress) {
@@ -162,7 +190,7 @@ public abstract class Task implements Runnable {
 			log.error("The task is stopped");
 			lastRunError = t;
 		} finally {
-			//In any case release the lock
+			// In any case release the lock
 			try {
 				lockManager.release(getName(), transactionId);
 			} catch (Throwable t) {
@@ -388,5 +416,9 @@ public abstract class Task implements Runnable {
 
 	public void setLockManager(LockManager lockManager) {
 		this.lockManager = lockManager;
+	}
+
+	public void setSystemLoadMonitor(SystemLoadMonitor systemLoadMonitor) {
+		this.systemLoadMonitor = systemLoadMonitor;
 	}
 }
