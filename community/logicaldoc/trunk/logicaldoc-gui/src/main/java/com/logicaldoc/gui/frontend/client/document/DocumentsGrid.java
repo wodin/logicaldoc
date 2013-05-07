@@ -210,6 +210,11 @@ public class DocumentsGrid extends ListGrid {
 		setAutoFetchData(true);
 		setFilterOnKeypress(true);
 		setWrapCells(false);
+		
+		ListGridField template = new ListGridField("template", I18N.message("template"), 150);
+		template.setAlign(Alignment.LEFT);
+		template.setHidden(true);
+		template.setCanFilter(true);
 
 		List<ListGridField> fields = new ArrayList<ListGridField>();
 
@@ -245,6 +250,7 @@ public class DocumentsGrid extends ListGrid {
 			fields.add(wfStatus);
 			fields.add(startPublishing);
 			fields.add(stopPublishing);
+			fields.add(template);
 		} else {
 			/*
 			 * We are searching
@@ -302,6 +308,7 @@ public class DocumentsGrid extends ListGrid {
 			fields.add(wfStatus);
 			fields.add(startPublishing);
 			fields.add(stopPublishing);
+			fields.add(template);
 		}
 
 		String[] extNames = Session.get().getInfo().getConfig("search.extattr").split(",");

@@ -650,7 +650,7 @@ public class ItemFactory {
 		map.put("0", "");
 		map.put("1", I18N.message("daily"));
 		map.put("7", I18N.message("weekly"));
-		map.put("15 ", I18N.message("biweekly"));
+		map.put("15", I18N.message("biweekly"));
 		map.put("30", I18N.message("monthly"));
 		map.put("180", I18N.message("sixmonthly"));
 		map.put("365", I18N.message("yearly"));
