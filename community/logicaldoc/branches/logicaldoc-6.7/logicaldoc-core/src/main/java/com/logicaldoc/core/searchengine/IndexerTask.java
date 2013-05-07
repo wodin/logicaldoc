@@ -90,7 +90,7 @@ public class IndexerTask extends Task {
 			// First of all find documents to be indexed and not already
 			// involved into a transaction
 			List<Long> ids = documentDao.findIdsByWhere("_entity.docRef is null and _entity.indexed = "
-					+ AbstractDocument.INDEX_TO_INDEX + " and _entity.transactionId is null", null, max);
+					+ AbstractDocument.INDEX_TO_INDEX + " and _entity.transactionId is null", "order by _entity.date asc", max);
 			size = ids.size();
 			log.info("Found a total of " + size + " documents to be indexed");
 
