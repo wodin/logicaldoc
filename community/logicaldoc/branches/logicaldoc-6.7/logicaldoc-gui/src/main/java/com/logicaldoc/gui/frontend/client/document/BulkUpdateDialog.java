@@ -13,14 +13,15 @@ import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClickEvent;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -36,15 +37,14 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class BulkUpdateDialog extends Window {
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	private VLayout layout = new VLayout();
-
 	private BulkUpdatePanel bulkPanel;
 
 	private String encoding;
 
 	private boolean zip = false;
 
-	public BulkUpdateDialog(final long[] ids, GUIDocument metadata) {
+	public BulkUpdateDialog(final long[] ids, final GUIDocument metadata, final boolean checkin,
+			final boolean majorVersion) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
 		addCloseClickHandler(new CloseClickHandler() {
@@ -54,9 +54,9 @@ public class BulkUpdateDialog extends Window {
 			}
 		});
 
-		setTitle(I18N.message("bulkupdate"));
-		setWidth(650);
-		setHeight(350);
+		setTitle(checkin ? I18N.message("checkin") : I18N.message("bulkupdate"));
+		setWidth(800);
+		setHeight(300);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -64,10 +64,8 @@ public class BulkUpdateDialog extends Window {
 
 		bulkPanel = new BulkUpdatePanel(metadata);
 		bulkPanel.setWidth100();
-		bulkPanel.setHeight("84%");
+		bulkPanel.setHeight("*");
 		bulkPanel.setShowResizeBar(false);
-
-		HLayout savePanel = new HLayout();
 
 		HTMLPane spacer = new HTMLPane();
 		spacer.setContents("<div>&nbsp;</div>");
@@ -75,26 +73,44 @@ public class BulkUpdateDialog extends Window {
 		spacer.setOverflow(Overflow.HIDDEN);
 
 		TextItem versionComment = ItemFactory.newTextItem("versionComment", "versioncomment", null);
-		versionComment.setWidth(300);
+		versionComment.setWidth(400);
 
 		final DynamicForm saveForm = new DynamicForm();
 		saveForm.setMargin(3);
 		saveForm.setTitleOrientation(TitleOrientation.LEFT);
 		saveForm.setNumCols(1);
-		saveForm.setHeight("16%");
 		saveForm.setShowResizeBar(false);
 		saveForm.setItems(versionComment);
 
-		Button saveButton = new Button(I18N.message("save"));
+		Button saveButton = new Button(checkin ? I18N.message("checkin") : I18N.message("save"));
 		saveButton.setAutoFit(true);
-		saveButton.setMargin(2);
+		saveButton.setLayoutAlign(VerticalAlignment.CENTER);
 		saveButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (!bulkPanel.validate())
 					return;
 
-				if (ids != null && ids.length > 0)
+				if (checkin) {
+					documentService.checkin(Session.get().getSid(), metadata, majorVersion,
+							new AsyncCallback<GUIDocument>() {
+
+								@Override
+								public void onFailure(Throwable error) {
+									Log.serverError(error);
+								}
+
+								@Override
+								public void onSuccess(GUIDocument doc) {
+									DocumentsPanel.get().onDocumentSaved(doc);
+									DocumentsPanel.get().getDocumentsGrid().markSelectedAsCheckedIn();
+									Session.get().getUser()
+											.setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() - 1);
+									DocumentsPanel.get().selectDocument(doc.getId(), false);
+									destroy();
+								}
+							});
+				} else if (ids != null && ids.length > 0)
 					LD.ask(I18N.message("bulkupdate"), I18N.message("bulkwarning"), new BooleanCallback() {
 						@Override
 						public void execute(Boolean value) {
@@ -102,17 +118,16 @@ public class BulkUpdateDialog extends Window {
 								bulkPanel.getDocument().setComment(saveForm.getValueAsString("versionComment"));
 								documentService.bulkUpdate(Session.get().getSid(), ids, bulkPanel.getDocument(),
 										new AsyncCallback<Void>() {
+											@Override
+											public void onFailure(Throwable error) {
+												Log.serverError(error);
+											}
 
 											@Override
 											public void onSuccess(Void arg0) {
 												Log.info(I18N.message("bulkapplied"), null);
 												DocumentsPanel.get().refresh();
 												destroy();
-											}
-
-											@Override
-											public void onFailure(Throwable error) {
-												Log.serverError(error);
 											}
 										});
 							}
@@ -170,21 +185,25 @@ public class BulkUpdateDialog extends Window {
 			}
 		});
 
+		HLayout savePanel = new HLayout();
 		savePanel.addMember(saveButton);
-		savePanel.addMember(saveForm);
+		if (!checkin)
+			savePanel.addMember(saveForm);
 		savePanel.addMember(spacer);
-		savePanel.setHeight("16%");
-		savePanel.setMembersMargin(10);
 		savePanel.setWidth100();
+		savePanel.setHeight(30);
+		savePanel.setMargin(2);
+		savePanel.setMembersMargin(10);
 
-		layout.setMembersMargin(10);
-		layout.setTop(25);
-		layout.setMargin(3);
-		layout.setWidth100();
-		layout.setHeight("99%");
-		layout.setMembers(bulkPanel, savePanel);
+		VLayout content = new VLayout();
+		content.setTop(10);
+		content.setWidth100();
+		content.setHeight100();
+		content.setMembersMargin(3);
 
-		addChild(layout);
+		content.setMembers(bulkPanel, savePanel);
+
+		addItem(content);
 	}
 
 	public String getEncoding() {

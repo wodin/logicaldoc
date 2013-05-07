@@ -285,8 +285,6 @@ public class DocumentContextMenu extends Menu {
 									}
 									Session.get().getUser()
 											.setLockedDocs(Session.get().getUser().getLockedDocs() + ids.length);
-									GUIDocument doc = grid.getSelectedDocument();
-									Session.get().setCurrentDocument(doc);
 								}
 							});
 					}
@@ -323,9 +321,6 @@ public class DocumentContextMenu extends Menu {
 							grid.refreshRow(grid.getRecordIndex(record));
 						}
 						Session.get().getUser().setLockedDocs(Session.get().getUser().getLockedDocs() - ids.length);
-						GUIDocument doc = grid.getSelectedDocument();
-						if (doc != null)
-							Session.get().setCurrentDocument(doc);
 					}
 				});
 			}
@@ -335,7 +330,7 @@ public class DocumentContextMenu extends Menu {
 		checkout.setTitle(I18N.message("checkout"));
 		checkout.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				GUIDocument record = grid.getSelectedDocument();
+				final GUIDocument record = grid.getSelectedDocument();
 				documentService.checkout(Session.get().getSid(), record.getId(), new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
@@ -344,13 +339,12 @@ public class DocumentContextMenu extends Menu {
 
 					@Override
 					public void onSuccess(Void result) {
-						GUIDocument doc = grid.markSelectedAsCheckedOut();
-						Session.get().setCurrentDocument(doc);
+						grid.markSelectedAsCheckedOut();
 						Session.get().getUser().setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() + 1);
 						Log.info(I18N.message("documentcheckedout"), null);
 
 						WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
-								+ "&docId=" + id);
+								+ "&docId=" + record.getId());
 					}
 				});
 			}
@@ -364,9 +358,20 @@ public class DocumentContextMenu extends Menu {
 				if (selection == null)
 					return;
 				long id = Long.parseLong(selection.getAttribute("id"));
-				String filename = selection.getAttributeAsString("filename");
-				DocumentCheckin checkin = new DocumentCheckin(id, filename, grid);
-				checkin.show();
+				final String filename = selection.getAttributeAsString("filename");
+				documentService.getById(Session.get().getSid(), id, new AsyncCallback<GUIDocument>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUIDocument document) {
+						DocumentCheckin checkin = new DocumentCheckin(document, filename, grid);
+						checkin.show();
+					}
+				});
 			}
 		});
 

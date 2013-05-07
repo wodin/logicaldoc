@@ -210,10 +210,11 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 	}
 
 	@Override
-	public void checkin(String sid, long docId, String comment, boolean major) {
+	public GUIDocument checkin(String sid, GUIDocument metadata, boolean major) {
 		System.out.println("** checkin");
 		// per recuperare il nomre della cartella
 		System.out.println("** servlet session:" + getThreadLocalRequest().getSession().getId());
+		return metadata;
 	}
 
 	@Override

@@ -246,7 +246,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public void checkin(String sid, long docId, String comment, boolean major) throws InvalidSessionException {
+	public GUIDocument checkin(String sid, GUIDocument document, boolean major) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
@@ -265,26 +265,28 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				transaction.setSessionId(sid);
 				transaction.setEvent(DocumentEvent.CHECKEDIN.toString());
 				transaction.setUser(SessionUtil.getSessionUser(sid));
-				transaction.setComment(comment);
+				transaction.setComment(document.getComment());
 
 				DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-				Document doc = dao.findById(docId);
+				Document doc = dao.findById(document.getId());
 				if (doc.getDocRef() != null)
-					docId = doc.getDocRef().longValue();
+					doc = dao.findById(doc.getDocRef().longValue());
 
 				// checkin the document; throws an exception if
 				// something goes wrong
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()
 						.getBean(DocumentManager.class);
-				documentManager.checkin(docId, new FileInputStream(file), fileName, major, transaction);
-
+				documentManager.checkin(doc.getId(), new FileInputStream(file), fileName, major, toDocument(document),
+						transaction);
+				return getById(sid, doc.getId());
 			} catch (Throwable t) {
 				log.error(t.getMessage(), t);
 				throw new RuntimeException(t.getMessage(), t);
 			} finally {
 				UploadServlet.cleanReceivedFiles(getThreadLocalRequest().getSession());
 			}
-		}
+		} else
+			return null;
 	}
 
 	@Override
