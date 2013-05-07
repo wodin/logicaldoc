@@ -4,16 +4,9 @@ import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
 import gwtupload.client.MultiUploader;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.log.EventPanel;
-import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.frontend.client.services.DocumentService;
-import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.util.SC;
@@ -41,18 +34,13 @@ public class DocumentCheckin extends Window {
 
 	private ValuesManager vm;
 
-	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
-
-	private long docId;
+	private GUIDocument document;
 
 	private String fileName;
 
-	private DocumentsGrid documentsGrid;
-
-	public DocumentCheckin(long docId, String filename, DocumentsGrid documentsGrid) {
-		this.docId = docId;
+	public DocumentCheckin(GUIDocument document, String filename, DocumentsGrid documentsGrid) {
+		this.document = document;
 		this.fileName = filename;
-		this.documentsGrid = documentsGrid;
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("checkin"));
 		setWidth(370);
@@ -148,35 +136,11 @@ public class DocumentCheckin extends Window {
 		if (!vm.validate())
 			return;
 
-		documentService.checkin(Session.get().getSid(), docId, vm.getValueAsString("comment"),
-				"true".equals(vm.getValueAsString("majorversion")), new AsyncCallback<Void>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-						destroy();
-					}
-
-					@Override
-					public void onSuccess(Void result) {
-						EventPanel.get().cleanLabel();
-						documentService.getById(Session.get().getSid(), docId, new AsyncCallback<GUIDocument>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(GUIDocument document) {
-								DocumentsPanel.get().onDocumentSaved(document);
-								documentsGrid.markSelectedAsCheckedIn();
-								Session.get().getUser()
-										.setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() - 1);
-								DocumentsPanel.get().selectDocument(document.getId(), false);
-								destroy();
-							}
-						});
-					}
-				});
+		document.setComment(vm.getValueAsString("comment"));
+		BulkUpdateDialog bulk = new BulkUpdateDialog(new long[] { document.getId() }, document, true, "true".equals(vm
+				.getValueAsString("majorversion")));
+		bulk.show();
+		destroy();
 	}
 
 	public String getLanguage() {

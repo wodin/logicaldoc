@@ -82,7 +82,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void checkin(long docId, File file, String filename, boolean release, History transaction) throws Exception {
+	public void checkin(long docId, File file, String filename, boolean release, Document docVO, History transaction)
+			throws Exception {
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 		assert (transaction.getComment() != null);
@@ -90,9 +91,14 @@ public class DocumentManagerImpl implements DocumentManager {
 		// identify the document and folder
 		Document document = documentDAO.findById(docId);
 		document.setComment(transaction.getComment());
-
+		
 		if (document.getImmutable() == 0) {
 			documentDAO.initialize(document);
+			/*
+			 * Now apply the metadata, if any
+			 */
+			if (docVO != null)
+				document.copyAttributes(docVO);
 
 			Map<String, Object> dictionary = new HashMap<String, Object>();
 
@@ -125,6 +131,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setFileSize(file.length());
 			document.setExtResId(null);
 
+			
 			// Create new version (a new version number is created)
 			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
 					Version.EVENT_CHECKIN, release);
@@ -150,7 +157,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void checkin(long docId, InputStream content, String filename, boolean release, History transaction)
+	public void checkin(long docId, InputStream content, String filename, boolean release, Document docVO, History transaction)
 			throws Exception {
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
@@ -160,7 +167,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		File tmp = File.createTempFile("checkin", "");
 		try {
 			FileUtil.writeFile(content, tmp.getPath());
-			checkin(docId, tmp, filename, release, transaction);
+			checkin(docId, tmp, filename, release, docVO, transaction);
 		} finally {
 			FileUtils.deleteQuietly(tmp);
 		}

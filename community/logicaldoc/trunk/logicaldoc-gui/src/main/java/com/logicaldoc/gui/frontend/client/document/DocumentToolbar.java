@@ -384,7 +384,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				BulkUpdateDialog dialog = new BulkUpdateDialog(ids, null);
+				BulkUpdateDialog dialog = new BulkUpdateDialog(ids, null, false, false);
 				dialog.show();
 			}
 		});
