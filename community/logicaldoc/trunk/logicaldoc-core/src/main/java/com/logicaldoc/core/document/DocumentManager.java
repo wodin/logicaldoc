@@ -22,11 +22,13 @@ public interface DocumentManager {
 	 * @param filename new filename (can also be the old one)
 	 * @param release True if this is a new release(eg: 2.0) rather than a
 	 *        subversion(eg: 1.1)
+	 * @param docVO The value object containing document's metadata applied
+	 *        during the checkin (optional)
 	 * @param transaction entry to log the event, set the user and comment
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	public void checkin(long docId, InputStream fileInputStream, String filename, boolean release, History transaction)
-			throws Exception;
+	public void checkin(long docId, InputStream fileInputStream, String filename, boolean release, Document docVO,
+			History transaction) throws Exception;
 
 	/**
 	 * Checks in the given document
@@ -36,10 +38,13 @@ public interface DocumentManager {
 	 * @param filename new filename (can also be the old one)
 	 * @param release True if this is a new release(eg: 2.0) rather than a
 	 *        subversion(eg: 1.1)
+	 * @param docVO The value object containing document's metadata applied
+	 *        during the checkin (optional)
 	 * @param transaction entry to log the event, set the user and comment
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	void checkin(long docId, File file, String filename, boolean release, History transaction) throws Exception;
+	void checkin(long docId, File file, String filename, boolean release, Document docVO, History transaction)
+			throws Exception;
 
 	/**
 	 * Checks out the given document

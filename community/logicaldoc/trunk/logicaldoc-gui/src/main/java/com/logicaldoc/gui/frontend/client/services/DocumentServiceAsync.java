@@ -36,7 +36,7 @@ public interface DocumentServiceAsync {
 
 	void checkout(String sid, long id, AsyncCallback<Void> callback);
 
-	void checkin(String sid, long docId, String comment, boolean major, AsyncCallback<Void> callback);
+	void checkin(String sid, GUIDocument document, boolean major, AsyncCallback<GUIDocument> callback);
 
 	void linkDocuments(String sid, long[] inDocIds, long[] outDocIds, AsyncCallback<Void> callback);
 

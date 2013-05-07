@@ -119,7 +119,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 				// something goes wrong
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()
 						.getBean(DocumentManager.class);
-				documentManager.checkin(document.getId(), stream, filename, release, transaction);
+				documentManager.checkin(document.getId(), stream, filename, release, null, transaction);
 
 				/* create positive log message */
 				log.info("Document " + docId + " checked in");

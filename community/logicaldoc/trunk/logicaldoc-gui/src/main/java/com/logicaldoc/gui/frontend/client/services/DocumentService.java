@@ -123,11 +123,12 @@ public interface DocumentService extends RemoteService {
 	 * Checks-in a new document version
 	 * 
 	 * @param sid The session identifier
-	 * @param docId The document to update
-	 * @param commnet The operation comment
+	 * @param document The document to update
 	 * @param major True if this is a major version
+	 * 
+	 * @returns The updated document
 	 */
-	public void checkin(String sid, long docId, String comment, boolean major) throws InvalidSessionException;
+	public GUIDocument checkin(String sid, GUIDocument document, boolean major) throws InvalidSessionException;
 
 	/**
 	 * Restores a given document
@@ -194,7 +195,7 @@ public interface DocumentService extends RemoteService {
 	 * Updates a document note on the given document
 	 */
 	public void updateNote(String sid, long docId, long noteId, String message) throws InvalidSessionException;
-	
+
 	/**
 	 * Deletes a selection of document notes
 	 */
