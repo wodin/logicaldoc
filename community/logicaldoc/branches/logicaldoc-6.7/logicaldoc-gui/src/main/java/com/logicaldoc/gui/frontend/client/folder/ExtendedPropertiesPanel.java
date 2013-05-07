@@ -38,6 +38,7 @@ import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.layout.HLayout;
 
 /**
  * Shows document's standard properties and read-only data
@@ -62,7 +63,6 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 
 	public ExtendedPropertiesPanel(GUIFolder folder, ChangedHandler changedHandler) {
 		super(folder, changedHandler);
-		setWidth100();
 		setHeight100();
 		setMembersMargin(20);
 		update = folder.hasPermission(Constants.PERMISSION_RENAME);
@@ -81,7 +81,6 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 		form1 = new DynamicForm();
 		form1.setValuesManager(vm);
 		form1.setTitleOrientation(TitleOrientation.TOP);
-		form1.setWidth("1%");
 		List<FormItem> items = new ArrayList<FormItem>();
 
 		final SelectItem templateItem = ItemFactory.newTemplateSelector(false, null);

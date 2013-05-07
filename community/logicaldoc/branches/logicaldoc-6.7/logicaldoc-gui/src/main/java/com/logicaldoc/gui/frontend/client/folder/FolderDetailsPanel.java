@@ -148,7 +148,6 @@ public class FolderDetailsPanel extends VLayout {
 
 		Tab extendedPropertiesTab  = new Tab(I18N.message("propertiesext"));
 		extendedPropertiesTabPanel = new HLayout();
-		extendedPropertiesTabPanel.setWidth100();
 		extendedPropertiesTabPanel.setHeight100();
 		extendedPropertiesTab.setPane(extendedPropertiesTabPanel);
 		tabSet.addTab(extendedPropertiesTab);

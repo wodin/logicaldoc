@@ -225,7 +225,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 
 		Assert.assertEquals(Document.DOC_CHECKED_OUT, doc.getStatus());
 
-		documentManager.checkin(1L, file, "pippo", true, transaction);
+		documentManager.checkin(1L, file, "pippo", true, null, transaction);
 
 		doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
@@ -234,6 +234,16 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		Assert.assertEquals(AbstractDocument.INDEX_TO_INDEX, doc.getIndexed());
 		Assert.assertEquals(0, doc.getSigned());
 		Assert.assertEquals(Document.DOC_UNLOCKED, doc.getStatus());
+		
+		documentManager.checkout(1L, transaction);
+		doc = docDao.findById(1);
+		docDao.initialize(doc);
+		Assert.assertEquals(Document.DOC_CHECKED_OUT, doc.getStatus());
+		
+		doc.setCoverage("xyz");
+		documentManager.checkin(1L, file, "pippa", true, doc, transaction);
+		doc = docDao.findById(1);
+		Assert.assertEquals("xyz", doc.getCoverage());
 	}
 
 	@Test

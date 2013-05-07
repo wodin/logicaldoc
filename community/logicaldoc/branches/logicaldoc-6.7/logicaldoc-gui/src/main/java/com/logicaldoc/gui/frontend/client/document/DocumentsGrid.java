@@ -436,6 +436,7 @@ public class DocumentsGrid extends ListGrid {
 			selectedRecord.setAttribute("created", document.getCreation());
 			selectedRecord.setAttribute("rating", "rating" + document.getRating());
 			selectedRecord.setAttribute("extResId", document.getExtResId());
+			selectedRecord.setAttribute("template", document.getTemplate());
 			refreshRow(getRecordIndex(selectedRecord));
 		}
 	}
@@ -483,6 +484,7 @@ public class DocumentsGrid extends ListGrid {
 			document.setExtResId(record.getAttributeAsString("extResId"));
 			document.setTitle(record.getAttribute("title"));
 			document.setFileName(record.getAttribute("filename"));
+			document.setTemplate(record.getAttribute("template"));
 			document.setImmutable("blank".equals(record.getAttributeAsString("immutable")) ? 0 : 1);
 			document.setStatus(Integer.parseInt(record.getAttributeAsString("status")));
 		}

@@ -80,11 +80,16 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		form1 = new DynamicForm();
 		form1.setValuesManager(vm);
 		form1.setTitleOrientation(TitleOrientation.TOP);
+		form1.setNumCols(3);
 		List<FormItem> items = new ArrayList<FormItem>();
 
 		TextItem sourceItem = ItemFactory.newTextItem("source", "source", document.getSource());
 		sourceItem.addChangedHandler(changedHandler);
 		sourceItem.setDisabled(!update);
+
+		TextItem customId = ItemFactory.newTextItem("customid", "customid", document.getCustomId());
+		customId.addChangedHandler(changedHandler);
+		customId.setDisabled(!update);
 
 		TextItem sourceId = ItemFactory.newTextItem("sourceid", "sourceid", document.getSourceId());
 		sourceId.addChangedHandler(changedHandler);
@@ -154,6 +159,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 
 		items.add(sourceItem);
 		items.add(sourceId);
+		items.add(customId);
 		items.add(recipientItem);
 		items.add(objectItem);
 		items.add(typeItem);
@@ -284,6 +290,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		if (!vm.hasErrors()) {
 			document.setSource((String) values.get("source"));
 			document.setSourceId((String) values.get("sourceid"));
+			document.setCustomId((String) values.get("customId"));
 			document.setSourceDate((Date) values.get("date"));
 			document.setSourceAuthor((String) values.get("author"));
 			document.setSourceType((String) values.get("type"));
