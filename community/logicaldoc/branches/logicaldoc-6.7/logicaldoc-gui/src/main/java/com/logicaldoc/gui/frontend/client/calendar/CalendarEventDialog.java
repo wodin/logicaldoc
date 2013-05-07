@@ -81,8 +81,8 @@ public class CalendarEventDialog extends Window {
 			setTitle(I18N.message("editevent") + " - " + calEvent.getTitle());
 		else
 			setTitle(I18N.message("newevent"));
-		setWidth(490);
-		setHeight(440);
+		setWidth(510);
+		setHeight(450);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -307,6 +307,15 @@ public class CalendarEventDialog extends Window {
 		title.setLength(255);
 		title.setCanEdit(!readOnly);
 
+		TextItem type = ItemFactory.newTextItem("type", "type", event.getType());
+		type.setRequired(false);
+		type.setEndRow(true);
+		type.setColSpan(5);
+		type.setWidth("100%");
+		type.setTitleOrientation(TitleOrientation.LEFT);
+		type.setLength(255);
+		type.setCanEdit(!readOnly);
+
 		DateItem startDate = ItemFactory.newDateItem("startDate", "begin");
 		startDate.setRequired(true);
 		startDate.setTitleOrientation(TitleOrientation.LEFT);
@@ -412,10 +421,10 @@ public class CalendarEventDialog extends Window {
 		description.setColSpan(5);
 		description.setCanEdit(!readOnly);
 
-		detailsForm.setFields(title, ItemFactory.newRowSpacer(), startDate, startTime, expirationDate, expirationTime,
-				ItemFactory.newRowSpacer(), frequency, deadline, ItemFactory.newRowSpacer(), remindTimeNumber,
-				remindTimeUnit, ItemFactory.newRowSpacer(), status, completionDate, ItemFactory.newRowSpacer(),
-				description);
+		detailsForm.setFields(title, type, ItemFactory.newRowSpacer(), startDate, startTime, expirationDate,
+				expirationTime, ItemFactory.newRowSpacer(), frequency, deadline, ItemFactory.newRowSpacer(),
+				remindTimeNumber, remindTimeUnit, ItemFactory.newRowSpacer(), status, completionDate,
+				ItemFactory.newRowSpacer(), description);
 		details.setPane(detailsForm);
 		return details;
 	}
@@ -426,12 +435,13 @@ public class CalendarEventDialog extends Window {
 	private void onSave() {
 		if (vm.validate()) {
 			calendarEvent.setTitle(vm.getValueAsString("title"));
+			calendarEvent.setType(vm.getValueAsString("type"));
 			calendarEvent.setDescription(vm.getValueAsString("description"));
 			calendarEvent.setRemindTime(Integer.parseInt(vm.getValueAsString("remindTime")));
 			calendarEvent.setRemindUnit(vm.getValueAsString("remindUnit"));
 
 			if (vm.getValue("frequency") != null)
-				calendarEvent.setFrequency(Integer.parseInt(vm.getValueAsString("frequency")));
+				calendarEvent.setFrequency(Integer.parseInt(vm.getValueAsString("frequency").trim()));
 
 			DateTimeFormat dfDate = DateTimeFormat.getFormat("yyyy-MM-dd");
 			DateTimeFormat dfTime = DateTimeFormat.getFormat("HH:mm");

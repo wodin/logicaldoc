@@ -29,6 +29,8 @@ public class GUICalendarEvent implements Serializable {
 	private Long parentId = null;
 
 	private String title = "";
+	
+	private String type = "";
 
 	private String description = "";
 
@@ -221,5 +223,13 @@ public class GUICalendarEvent implements Serializable {
 
 	public void setDeadline(Date deadline) {
 		this.deadline = deadline;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }

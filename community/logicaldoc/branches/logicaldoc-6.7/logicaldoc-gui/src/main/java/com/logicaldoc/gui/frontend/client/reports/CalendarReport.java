@@ -90,6 +90,8 @@ public class CalendarReport extends VLayout {
 
 		TextItem title = ItemFactory.newTextItem("title", "title", null);
 
+		TextItem type = ItemFactory.newTextItem("type", "type", null);
+
 		SelectItem statusSelector = ItemFactory.newEventStatusSelector("status", "status");
 
 		// Max results
@@ -111,8 +113,8 @@ public class CalendarReport extends VLayout {
 			}
 		});
 
-		form.setItems(fromDate, toDate, expireFrom, expireTo, title, frequencySelector, statusSelector, displayMax,
-				searchButton);
+		form.setItems(fromDate, toDate, expireFrom, expireTo, title, type, frequencySelector, statusSelector,
+				displayMax, searchButton);
 
 		formsLayout.addMember(form);
 		formsLayout.setMembersMargin(80);
@@ -127,6 +129,10 @@ public class CalendarReport extends VLayout {
 		ListGridField titleCol = new ListGridField("title", I18N.message("title"));
 		titleCol.setWidth("*");
 		titleCol.setCanFilter(true);
+
+		ListGridField typeCol = new ListGridField("type", I18N.message("type"));
+		typeCol.setWidth(100);
+		typeCol.setCanFilter(true);
 
 		ListGridField date = new ListGridField("date", I18N.message("date"), 110);
 		date.setType(ListGridFieldType.DATE);
@@ -207,7 +213,7 @@ public class CalendarReport extends VLayout {
 		list.setCanFreezeFields(true);
 		list.setFilterOnKeypress(true);
 		list.setAutoFetchData(true);
-		list.setFields(date, expiration, titleCol, status, frequency, participants, description);
+		list.setFields(date, expiration, titleCol, typeCol, status, frequency, participants, description);
 		list.setDetailField("description");
 		list.setCanExpandRecords(true);
 		list.setExpansionMode(ExpansionMode.DETAIL_FIELD);
@@ -292,6 +298,8 @@ public class CalendarReport extends VLayout {
 
 			String titleValue = values.get("title") != null ? values.get("title").toString() : null;
 
+			String typeValue = values.get("type") != null ? values.get("type").toString() : null;
+
 			int maxRecords = 0;
 			try {
 				if (values.get("displayMax") != null) {
@@ -305,7 +313,7 @@ public class CalendarReport extends VLayout {
 			}
 
 			service.find(Session.get().getSid(), fromValue, toValue, expireFrom, expireTo, frequencyValue, titleValue,
-					statusValue, maxRecords, new AsyncCallback<GUICalendarEvent[]>() {
+					typeValue, statusValue, maxRecords, new AsyncCallback<GUICalendarEvent[]>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
@@ -320,6 +328,7 @@ public class CalendarReport extends VLayout {
 									ListGridRecord record = new ListGridRecord();
 									record.setAttribute("date", result[i].getStartDate());
 									record.setAttribute("title", result[i].getTitle());
+									record.setAttribute("type", result[i].getType());
 									record.setAttribute("frequency", result[i].getFrequency());
 									record.setAttribute("status", result[i].getStatus());
 									record.setAttribute("description", result[i].getDescription());
