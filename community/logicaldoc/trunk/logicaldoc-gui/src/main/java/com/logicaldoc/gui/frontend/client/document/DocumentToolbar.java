@@ -302,6 +302,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					docs[i] = new GUIDocument();
 					docs[i].setId(Long.parseLong(selection[i].getAttribute("id")));
 					docs[i].setTitle(selection[i].getAttribute("title"));
+					docs[i].setTemplate(selection[i].getAttribute("template"));
 					docs[i].setFileName(selection[i].getAttribute("filename"));
 					docs[i].setIcon(selection[i].getAttribute("icon"));
 					docs[i].setVersion(selection[i].getAttribute("version"));
@@ -320,6 +321,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				calEvent.addParticipant(user);
 				calEvent.setDocuments(docs);
 				calEvent.setTitle(docs[0].getTitle());
+				calEvent.setType(docs[0].getTemplate());
 				CalendarEventDialog eventDialog = new CalendarEventDialog(calEvent);
 				eventDialog.show();
 			}
