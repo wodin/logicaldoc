@@ -58,6 +58,8 @@ public class DocumentsDS extends DataSource {
 		DataSourceImageField locked = new DataSourceImageField("locked");
 		DataSourceTextField lockUserId = new DataSourceTextField("lockUserId");
 		DataSourceTextField filename = new DataSourceTextField("filename");
+		DataSourceTextField template = new DataSourceTextField("template");
+		template.setHidden(true);
 		DataSourceTextField fileVersion = new DataSourceTextField("fileVersion");
 		DataSourceIntegerField status = new DataSourceIntegerField("status");
 		lockUserId.setHidden(true);
@@ -107,6 +109,7 @@ public class DocumentsDS extends DataSource {
 		fields.add(startPublishing);
 		fields.add(stopPublishing);
 		fields.add(extResId);
+		fields.add(template);
 		
 		String[] extNames = Session.get().getInfo().getConfig("search.extattr").split(",");
 		for (String name : extNames) {

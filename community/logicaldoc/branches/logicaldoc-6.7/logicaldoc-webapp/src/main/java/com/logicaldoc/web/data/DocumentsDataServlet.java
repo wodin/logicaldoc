@@ -205,7 +205,7 @@ public class DocumentsDataServlet extends HttpServlet {
 						"select A.id, A.customId, A.docRef, A.type, A.title, A.version, A.lastModified, A.date, A.publisher,"
 								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status,"
 								+ " A.signed, A.type, A.sourceDate, A.sourceAuthor, A.rating, A.fileVersion, A.comment, A.workflowStatus,"
-								+ " A.startPublishing, A.stopPublishing, A.published, A.extResId "
+								+ " A.startPublishing, A.stopPublishing, A.published, A.extResId, A.template.name "
 								+ " from Document A ");
 				query.append(" where A.deleted = 0 ");
 				if (folderId != null)
@@ -324,6 +324,9 @@ public class DocumentsDataServlet extends HttpServlet {
 					if (cols[28] != null)
 						writer.print("<extResId><![CDATA[" + cols[28] + "]]></extResId>");
 
+					if (cols[29] != null)
+						writer.print("<template><![CDATA[" + cols[29] + "]]></template>");
+
 					if (!extValues.isEmpty())
 						for (String name : attrs) {
 							String val = extValues.get(cols[0] + "-" + name);
@@ -417,6 +420,9 @@ public class DocumentsDataServlet extends HttpServlet {
 
 					if (doc.getExtResId() != null)
 						writer.print("<extResId><![CDATA[" + doc.getExtResId() + "]]></extResId>");
+
+					if (doc.getTemplate() != null)
+						writer.print("<template><![CDATA[" + doc.getTemplate().getName() + "]]></template>");
 
 					if (!extValues.isEmpty())
 						for (String name : attrs) {

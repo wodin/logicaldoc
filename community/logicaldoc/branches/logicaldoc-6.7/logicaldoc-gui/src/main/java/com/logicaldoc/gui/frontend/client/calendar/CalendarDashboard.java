@@ -90,8 +90,9 @@ public class CalendarDashboard extends VLayout {
 				LD.ask(I18N.message("delevent"), I18N.message("deleventconfirm"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
-						if (value) {
-							if (event.getEvent().getAttribute("parentId") != null) {
+						if (value.booleanValue()) {
+							if ((event.getEvent().getAttribute("parentId") != null && !"".equals(event.getEvent()
+									.getAttribute("parentId").trim()))) {
 								LD.ask(I18N.message("delevent"), I18N.message("douwantdeletealloccurrences"),
 										new BooleanCallback() {
 											@Override
