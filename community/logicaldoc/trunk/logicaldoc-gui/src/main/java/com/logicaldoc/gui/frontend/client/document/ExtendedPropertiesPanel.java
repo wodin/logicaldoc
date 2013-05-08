@@ -290,7 +290,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		if (!vm.hasErrors()) {
 			document.setSource((String) values.get("source"));
 			document.setSourceId((String) values.get("sourceid"));
-			document.setCustomId((String) values.get("customId"));
+			document.setCustomId((String) values.get("customid"));
 			document.setSourceDate((Date) values.get("date"));
 			document.setSourceAuthor((String) values.get("author"));
 			document.setSourceType((String) values.get("type"));

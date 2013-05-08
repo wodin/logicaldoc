@@ -19,6 +19,7 @@ public class Document extends AbstractDocument {
 	}
 
 	public void copyAttributes(Document docVO) {
+		setCustomId(docVO.getCustomId());
 		setImmutable(docVO.getImmutable());
 		setTitle(docVO.getTitle());
 		setVersion(docVO.getVersion());
@@ -66,6 +67,7 @@ public class Document extends AbstractDocument {
 		cloned.copyAttributes((Document) this);
 		if (getIndexed() != INDEX_INDEXED)
 			cloned.setIndexed(getIndexed());
+		cloned.setCustomId(null);
 		return cloned;
 	}
 
