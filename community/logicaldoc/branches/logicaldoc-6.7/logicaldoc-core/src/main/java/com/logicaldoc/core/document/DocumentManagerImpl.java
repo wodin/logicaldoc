@@ -91,7 +91,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		// identify the document and folder
 		Document document = documentDAO.findById(docId);
 		document.setComment(transaction.getComment());
-		
+
 		if (document.getImmutable() == 0) {
 			documentDAO.initialize(document);
 			/*
@@ -131,7 +131,6 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setFileSize(file.length());
 			document.setExtResId(null);
 
-			
 			// Create new version (a new version number is created)
 			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
 					Version.EVENT_CHECKIN, release);
@@ -157,8 +156,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void checkin(long docId, InputStream content, String filename, boolean release, Document docVO, History transaction)
-			throws Exception {
+	public void checkin(long docId, InputStream content, String filename, boolean release, Document docVO,
+			History transaction) throws Exception {
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 		assert (transaction.getComment() != null);
@@ -865,5 +864,44 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	public void setFolderDAO(FolderDAO folderDAO) {
 		this.folderDAO = folderDAO;
+	}
+
+	@Override
+	public void deleteVersion(long versionId) throws Exception {
+		Version version = versionDAO.findById(versionId);
+		assert (version != null);
+
+		Document document = documentDAO.findById(version.getDocId());
+		assert (document != null);
+
+		/*
+		 * Security check to avoid to delete the current version
+		 */
+		String currentVersion = document.getVersion();
+		if (currentVersion.equals(version.getVersion()))
+			return;
+
+		// Iterate over the versions to check if the file is referenced by other
+		// versions
+		List<Version> versions = versionDAO.findByDocId(version.getDocId());
+		boolean referenced = false;
+		for (Version v : versions)
+			if (v.getId() != versionId && version.getFileVersion().equals(v.getFileVersion())) {
+				referenced = true;
+				break;
+			}
+
+		// If no more referenced, can delete the document's resources
+		if (!referenced) {
+			List<String> resources = storer.listResources(version.getDocId(), version.getFileVersion());
+			for (String resource : resources)
+				try {
+					storer.delete(version.getDocId(), resource);
+				} catch (Throwable t) {
+					log.warn("Unable to delete resource " + resource + " od document " + version.getDocId());
+				}
+		}
+
+		versionDAO.delete(versionId);
 	}
 }

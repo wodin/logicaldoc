@@ -134,7 +134,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		title.addChangedHandler(changedHandler);
 		title.setRequired(true);
 		title.setWidth(200);
-		title.setDisabled(!update || !document.getFolder().isRename());
+		title.setDisabled(!updateEnabled || !document.getFolder().isRename());
 
 		StaticTextItem wfStatus = ItemFactory.newStaticTextItem("wfStatus", "workflowstatus",
 				document.getWorkflowStatus());
@@ -204,7 +204,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		SelectItem language = ItemFactory.newLanguageSelector("language", false, false);
 		language.addChangedHandler(changedHandler);
-		language.setDisabled(!update);
+		language.setDisabled(!updateEnabled);
 		language.setValue(document.getLanguage());
 		items.add(language);
 
@@ -236,7 +236,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 				}
 			});
 			tagItem.setHintStyle("hint");
-			tagItem.setDisabled(!update);
+			tagItem.setDisabled(!updateEnabled);
 
 			if ("preset".equals(mode))
 				tagItem.addChangedHandler(new ChangedHandler() {
@@ -269,7 +269,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 			int i = 0;
 			for (String str : document.getTags()) {
 				final StaticTextItem tgItem = ItemFactory.newStaticTextItem("tag" + i++, "tag", str);
-				if (update)
+				if (updateEnabled)
 					tgItem.setIcons(icon);
 				tgItem.addIconClickHandler(new IconClickHandler() {
 					public void onIconClick(IconClickEvent event) {
@@ -282,7 +282,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 						tgItem.setIcons(ItemFactory.newItemIcon("blank.gif"));
 					}
 				});
-				tgItem.setDisabled(!update);
+				tgItem.setDisabled(!updateEnabled);
 				items.add(tgItem);
 			}
 		}
