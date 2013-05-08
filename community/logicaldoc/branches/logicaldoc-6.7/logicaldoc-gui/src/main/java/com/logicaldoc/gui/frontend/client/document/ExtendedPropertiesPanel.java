@@ -85,20 +85,20 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 
 		TextItem sourceItem = ItemFactory.newTextItem("source", "source", document.getSource());
 		sourceItem.addChangedHandler(changedHandler);
-		sourceItem.setDisabled(!update);
+		sourceItem.setDisabled(!updateEnabled);
 
 		TextItem customId = ItemFactory.newTextItem("customid", "customid", document.getCustomId());
 		customId.addChangedHandler(changedHandler);
-		customId.setDisabled(!update);
+		customId.setDisabled(!updateEnabled);
 
 		TextItem sourceId = ItemFactory.newTextItem("sourceid", "sourceid", document.getSourceId());
 		sourceId.addChangedHandler(changedHandler);
-		sourceId.setDisabled(!update);
+		sourceId.setDisabled(!updateEnabled);
 
 		final DateItem sourceDate = ItemFactory.newDateItem("date", "date");
 		sourceDate.setValue(document.getSourceDate());
 		sourceDate.addChangedHandler(changedHandler);
-		sourceDate.setDisabled(!update);
+		sourceDate.setDisabled(!updateEnabled);
 		sourceDate.setUseMask(false);
 		sourceDate.setShowPickerIcon(true);
 		sourceDate.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
@@ -118,28 +118,28 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 
 		TextItem authorItem = ItemFactory.newTextItem("author", "author", document.getSourceAuthor());
 		authorItem.addChangedHandler(changedHandler);
-		authorItem.setDisabled(!update);
+		authorItem.setDisabled(!updateEnabled);
 
 		TextItem typeItem = ItemFactory.newTextItem("type", "type", document.getSourceType());
 		typeItem.addChangedHandler(changedHandler);
-		typeItem.setDisabled(!update);
+		typeItem.setDisabled(!updateEnabled);
 
 		TextItem recipientItem = ItemFactory.newTextItem("recipient", "recipient", document.getRecipient());
 		recipientItem.addChangedHandler(changedHandler);
-		recipientItem.setDisabled(!update);
+		recipientItem.setDisabled(!updateEnabled);
 
 		TextItem objectItem = ItemFactory.newTextItem("object", "object", document.getObject());
 		objectItem.addChangedHandler(changedHandler);
-		objectItem.setDisabled(!update);
+		objectItem.setDisabled(!updateEnabled);
 
 		TextItem coverageItem = ItemFactory.newTextItem("coverage", "coverage", document.getCoverage());
 		coverageItem.addChangedHandler(changedHandler);
-		coverageItem.setDisabled(!update);
+		coverageItem.setDisabled(!updateEnabled);
 
 		final SelectItem templateItem = ItemFactory.newTemplateSelector(false, null);
 		templateItem.addChangedHandler(changedHandler);
 		templateItem.setMultiple(false);
-		templateItem.setDisabled(!update || document.getFolder().getTemplateLocked() == 1);
+		templateItem.setDisabled(!updateEnabled || document.getFolder().getTemplateLocked() == 1);
 		if (document.getTemplateId() != null)
 			templateItem.setValue(document.getTemplateId().toString());
 
@@ -216,7 +216,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						if (document.getValue(att.getName()) != null)
 							item.setValue((String) document.getValue(att.getName()));
 						item.addChangedHandler(changedHandler);
-						item.setDisabled(!update);
+						item.setDisabled(!updateEnabled);
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
 						IntegerItem item = ItemFactory.newIntegerItemForExtendedAttribute(att.getName(),
@@ -225,7 +225,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 							item.setValue((Long) document.getValue(att.getName()));
 						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
-						item.setDisabled(!update);
+						item.setDisabled(!updateEnabled);
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
 						SelectItem item = ItemFactory.newBooleanSelectorForExtendedAttribute(att.getName(),
@@ -234,7 +234,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 							item.setValue(((Boolean) document.getValue(att.getName())).booleanValue() ? "1" : "0");
 						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
-						item.setDisabled(!update);
+						item.setDisabled(!updateEnabled);
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
 						FloatItem item = ItemFactory.newFloatItemForExtendedAttribute(att.getName(), att.getLabel(),
@@ -243,7 +243,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 							item.setValue((Double) document.getValue(att.getName()));
 						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
-						item.setDisabled(!update);
+						item.setDisabled(!updateEnabled);
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
 						final DateItem item = ItemFactory.newDateItemForExtendedAttribute(att.getName(), att.getLabel());
@@ -264,7 +264,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 								}
 							}
 						});
-						item.setDisabled(!update);
+						item.setDisabled(!updateEnabled);
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
 						SelectItem item = ItemFactory.newUserSelectorForExtendedAttribute(att.getName(),
@@ -274,7 +274,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 							item.setValue((document.getValue(att.getName()).toString()));
 						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
-						item.setDisabled(!update);
+						item.setDisabled(!updateEnabled);
 						items.add(item);
 					}
 				}

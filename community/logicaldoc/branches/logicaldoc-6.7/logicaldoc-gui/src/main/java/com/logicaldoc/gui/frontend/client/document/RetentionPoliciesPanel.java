@@ -59,7 +59,7 @@ public class RetentionPoliciesPanel extends DocumentDetailTab {
 		final DateItem startPublishing = ItemFactory.newDateItem("startpublishing", "startpublishing");
 		startPublishing.setValue(document.getStartPublishing());
 		startPublishing.addChangedHandler(changedHandler);
-		startPublishing.setDisabled(!update);
+		startPublishing.setDisabled(!updateEnabled);
 		startPublishing.setRequired(document.getPublished() != -1);
 		startPublishing.setUseMask(false);
 		startPublishing.setShowPickerIcon(true);
@@ -83,7 +83,7 @@ public class RetentionPoliciesPanel extends DocumentDetailTab {
 		final DateItem stopPublishing = ItemFactory.newDateItem("stoppublishing", "stoppublishing");
 		stopPublishing.setValue(document.getStopPublishing());
 		stopPublishing.addChangedHandler(changedHandler);
-		stopPublishing.setDisabled(!update);
+		stopPublishing.setDisabled(!updateEnabled);
 		stopPublishing.setRequired(false);
 		stopPublishing.setUseMask(false);
 		stopPublishing.setShowPickerIcon(true);

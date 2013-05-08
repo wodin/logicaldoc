@@ -200,5 +200,13 @@ public interface DocumentManager {
 	 */
 	public Document createShortcut(Document doc, Folder folder, History transaction) throws Exception;
 
+	/**
+	 * Deletes a specific version.
+	 * 
+	 * @param versionId The version to delete
+	 * @throws Exception
+	 */
+	public void deleteVersion(long versionId) throws Exception;
+	
 	public void setStorer(Storer storer);
 }

@@ -1,6 +1,5 @@
 package com.logicaldoc.core.document.dao;
 
-//import java.util.Collections;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,8 +14,6 @@ import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.io.FileUtil;
-
-//import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * Hibernate implementation of <code>DocumentDAO</code>
