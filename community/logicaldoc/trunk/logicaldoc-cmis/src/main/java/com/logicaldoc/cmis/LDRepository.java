@@ -508,7 +508,7 @@ public class LDRepository {
 
 		Folder folder = null;
 		try {
-			folder = folderDao.create(parent, name, transaction);
+			folder = folderDao.create(parent, name, true, transaction);
 		} catch (Throwable e) {
 			throw new CmisStorageException("Could not create document: " + e.getMessage(), e);
 		}
@@ -818,7 +818,7 @@ public class LDRepository {
 		transaction.setComment(checkinComment);
 
 		try {
-			documentManager.checkin(doc.getId(), contentStream.getStream(), doc.getFileName(), major, transaction);
+			documentManager.checkin(doc.getId(), contentStream.getStream(), doc.getFileName(), major, null, transaction);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw new CmisStorageException("Checkin failed!");
