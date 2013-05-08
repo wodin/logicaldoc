@@ -272,7 +272,7 @@ public class ResourceServiceImpl implements ResourceService {
 			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(user);
 			transaction.setSessionId(sid);
-			Folder createdFolder = folderDAO.create(parentFolder, name, transaction);
+			Folder createdFolder = folderDAO.create(parentFolder, name, true, transaction);
 			return this.marshallFolder(createdFolder, parentResource.getRequestedPerson(), session);
 		}
 
@@ -338,7 +338,7 @@ public class ResourceServiceImpl implements ResourceService {
 			transaction.setComment("");
 
 			documentManager.checkin(Long.parseLong(resource.getID()), context.getInputStream(), resource.getName(),
-					false, transaction);
+					false, null, transaction);
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (DavException de) {
