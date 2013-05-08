@@ -77,7 +77,6 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.DELETE, 1202, 3));
 		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.RENAME, 1202, 3));
 
-
 		GUIFolder folder = service.getFolder(session.getSid(), 6, false);
 
 		service.applyRights(session.getSid(), folder, true);
@@ -109,9 +108,9 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 	@Test
 	public void testMoveFolder_Simple() throws Exception {
 		Folder docsFolder = folderDao.findById(Folder.ROOTID);
-		Folder folderA = folderDao.create(docsFolder, "folderA", null);
-		Folder folderB = folderDao.create(docsFolder, "folderB", null);
-		Folder folderC = folderDao.create(folderB, "folderC", null);
+		Folder folderA = folderDao.create(docsFolder, "folderA", true, null);
+		Folder folderB = folderDao.create(docsFolder, "folderB", true, null);
+		Folder folderC = folderDao.create(folderB, "folderC", true, null);
 
 		service.move(session.getSid(), folderC.getId(), folderA.getId());
 
@@ -128,11 +127,11 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 	@Test
 	public void testMoveFolder_Up() throws Exception {
 		Folder docsFolder = folderDao.findById(Folder.ROOTID);
-		Folder folderA = folderDao.create(docsFolder, "folderA", null);
-		Folder folderB = folderDao.create(docsFolder, "folderB", null);
-		Folder folderC = folderDao.create(folderB, "folderC", null);
-		folderDao.create(folderC, "folderD", null);
-		folderDao.create(folderC, "folderE", null);
+		Folder folderA = folderDao.create(docsFolder, "folderA", true, null);
+		Folder folderB = folderDao.create(docsFolder, "folderB", true, null);
+		Folder folderC = folderDao.create(folderB, "folderC", true, null);
+		folderDao.create(folderC, "folderD", true, null);
+		folderDao.create(folderC, "folderE", true, null);
 
 		service.move(session.getSid(), folderC.getId(), folderA.getId());
 
@@ -147,11 +146,11 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 	@Test
 	public void testMoveFolder_Down() throws Exception {
 		Folder docsFolder = folderDao.findById(Folder.ROOTID);
-		Folder folderB = folderDao.create(docsFolder, "folderB", null);
-		Folder folderC = folderDao.create(folderB, "folderC", null);
-		Folder folderD = folderDao.create(folderC, "folderD", null);
-		Folder folderE = folderDao.create(folderC, "folderE", null);
-		folderDao.create(folderE, "folderF", null);
+		Folder folderB = folderDao.create(docsFolder, "folderB", true, null);
+		Folder folderC = folderDao.create(folderB, "folderC", true, null);
+		Folder folderD = folderDao.create(folderC, "folderD", true, null);
+		Folder folderE = folderDao.create(folderC, "folderE", true, null);
+		folderDao.create(folderE, "folderF", true, null);
 
 		service.move(session.getSid(), folderE.getId(), folderD.getId());
 

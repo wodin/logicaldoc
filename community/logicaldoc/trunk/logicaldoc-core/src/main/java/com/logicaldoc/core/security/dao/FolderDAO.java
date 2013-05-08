@@ -221,10 +221,11 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * 
 	 * @param parent The parent folder
 	 * @param name The folder name
+	 * @param inheritSecurity If true the new folder will 'point' to the parent for the security policies.
 	 * @transaction optional transaction entry to log the event
 	 * @return The newly created folder
 	 */
-	public Folder create(Folder parent, String name, FolderHistory transaction);
+	public Folder create(Folder parent, String name, boolean inheritSecurity, FolderHistory transaction);
 
 	/**
 	 * Creates the folder for the specified path. All unexisting nodes specified
@@ -232,11 +233,12 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * 
 	 * @param parent The parent folder
 	 * @param path The folder path(for example /dog/cat/mouse)
+	 * @param inheritSecurity If true the new folders will 'point' to the parent for the security policies.
 	 * @transaction optional transaction entry to log the event
 	 * 
 	 * @return The created folder
 	 */
-	public Folder createPath(Folder parent, String path, FolderHistory transaction);
+	public Folder createPath(Folder parent, String path, boolean inheritSecurity, FolderHistory transaction);
 
 	/**
 	 * Dynamically computes the path extended for the specified folder. The path

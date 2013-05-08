@@ -29,4 +29,6 @@ public interface FolderServiceAsync {
 	void applyTemplate(String sid, long folderId, long templateId, AsyncCallback<Void> callback);
 
 	void applyMetadata(String sid, long parentId, AsyncCallback<Void> callback);
+
+	void create(String sid, long parentId, String name, boolean inheritSecurity, AsyncCallback<GUIFolder> callback);
 }
