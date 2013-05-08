@@ -1,7 +1,6 @@
 package com.logicaldoc.core.security.dao;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -57,14 +56,14 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testCreatePath() throws Exception {
 		Folder docsFolder = dao.findById(6);
-		Folder folder = dao.createPath(docsFolder, "/pippo/pluto/paperino", null);
+		Folder folder = dao.createPath(docsFolder, "/pippo/pluto/paperino", true, null);
 		Assert.assertEquals("paperino", folder.getName());
 		folder = dao.findById(folder.getParentId());
 		Assert.assertEquals("pluto", folder.getName());
 		folder = dao.findById(folder.getParentId());
 		Assert.assertEquals("pippo", folder.getName());
 
-		folder = dao.createPath(docsFolder, "/pippo/pluto/paperino", null);
+		folder = dao.createPath(docsFolder, "/pippo/pluto/paperino", true, null);
 		Assert.assertEquals("paperino", folder.getName());
 		folder = dao.findById(folder.getParentId());
 		Assert.assertEquals("pluto", folder.getName());
@@ -104,9 +103,9 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testMoveFolder_Simple() throws Exception {
 		Folder docsFolder = dao.findById(Folder.DEFAULTWORKSPACE);
-		Folder folderA = dao.create(docsFolder, "folderA", null);
-		Folder folderB = dao.create(docsFolder, "folderB", null);
-		Folder folderC = dao.create(folderB, "folderC", null);
+		Folder folderA = dao.create(docsFolder, "folderA", true, null);
+		Folder folderB = dao.create(docsFolder, "folderB", true, null);
+		Folder folderC = dao.create(folderB, "folderC", true, null);
 
 		User user = userDao.findByUserName("admin");
 
@@ -130,11 +129,11 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testMoveFolder_Up() throws Exception {
 		Folder docsFolder = dao.findById(6);
-		Folder folderA = dao.create(docsFolder, "folderA", null);
-		Folder folderB = dao.create(docsFolder, "folderB", null);
-		Folder folderC = dao.create(folderB, "folderC", null);
-		dao.create(folderC, "folderD", null);
-		dao.create(folderC, "folderE", null);
+		Folder folderA = dao.create(docsFolder, "folderA", true, null);
+		Folder folderB = dao.create(docsFolder, "folderB", true, null);
+		Folder folderC = dao.create(folderB, "folderC", true, null);
+		dao.create(folderC, "folderD", true, null);
+		dao.create(folderC, "folderE", true, null);
 
 		User user = userDao.findByUserName("admin");
 
@@ -156,11 +155,11 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testMoveFolder_UpWithDocuments() throws Exception {
 		Folder docsFolder = dao.findById(6);
-		Folder folderA = dao.create(docsFolder, "folderA", null);
-		Folder folderB = dao.create(docsFolder, "folderB", null);
-		Folder folderC = dao.create(folderB, "folderC", null);
-		Folder folderD = dao.create(folderC, "folderD", null);
-		dao.create(folderC, "folderE", null);
+		Folder folderA = dao.create(docsFolder, "folderA", true, null);
+		Folder folderB = dao.create(docsFolder, "folderB", true, null);
+		Folder folderC = dao.create(folderB, "folderC", true, null);
+		Folder folderD = dao.create(folderC, "folderD", true, null);
+		dao.create(folderC, "folderE", true, null);
 
 		Document doc = docDao.findById(1);
 		docDao.initialize(doc);
@@ -209,11 +208,11 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testMoveFolder_Down() throws Exception {
 		Folder docsFolder = dao.findById(6);
-		Folder folderB = dao.create(docsFolder, "folderB", null);
-		Folder folderC = dao.create(folderB, "folderC", null);
-		Folder folderD = dao.create(folderC, "folderD", null);
-		Folder folderE = dao.create(folderC, "folderE", null);
-		dao.create(folderE, "folderF", null);
+		Folder folderB = dao.create(docsFolder, "folderB", true, null);
+		Folder folderC = dao.create(folderB, "folderC", true, null);
+		Folder folderD = dao.create(folderC, "folderD", true, null);
+		Folder folderE = dao.create(folderC, "folderE", true, null);
+		dao.create(folderE, "folderF", true, null);
 
 		User user = userDao.findByUserName("admin");
 
@@ -322,7 +321,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	public void testCreate() {
 		Folder parent = dao.findById(1202L);
 
-		Folder folder = dao.create(parent, "xxxx", null);
+		Folder folder = dao.create(parent, "xxxx", true, null);
 		Assert.assertNotNull(folder);
 
 		folder = dao.findById(folder.getId());
@@ -666,7 +665,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testFindFolderIdInTree() {
 		Collection<Long> ids = dao.findFolderIdInTree(1200L, false);
-		System.out.println("ids="+ids);
+		System.out.println("ids=" + ids);
 		Assert.assertEquals(3, ids.size());
 		Assert.assertTrue(ids.contains(1202L));
 		Assert.assertTrue(ids.contains(1201L));

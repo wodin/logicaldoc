@@ -968,15 +968,35 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public Folder create(Folder parent, String name, FolderHistory transaction) {
+	public Folder create(Folder parent, String name, boolean inheritSecurity, FolderHistory transaction) {
 		Folder folder = new Folder();
 		folder.setName(name);
 		folder.setParentId(parent.getId());
 
-		if (parent.getSecurityRef() != null)
-			folder.setSecurityRef(parent.getSecurityRef());
-		else
-			folder.setSecurityRef(parent.getId());
+		if (inheritSecurity) {
+			if (parent.getSecurityRef() != null)
+				folder.setSecurityRef(parent.getSecurityRef());
+			else
+				folder.setSecurityRef(parent.getId());
+		} else if (transaction != null && transaction.getUserId() != 0) {
+			// At least the current user must be able to operate on the new
+			// folder
+			User user = userDAO.findById(transaction.getUserId());
+			userDAO.initialize(user);
+			if (!user.isInGroup("admin")) {
+				Group userGroup = user.getUserGroup();
+				FolderGroup fg = new FolderGroup(userGroup.getId());
+				fg.setAdd(1);
+				fg.setDelete(1);
+				fg.setDownload(1);
+				fg.setPermissions(1);
+				fg.setRead(1);
+				fg.setSecurity(1);
+				fg.setRename(1);
+				fg.setWrite(1);
+				folder.addFolderGroup(fg);
+			}
+		}
 
 		setUniqueName(folder);
 		if (transaction != null)
@@ -1005,7 +1025,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public Folder createPath(Folder parent, String path, FolderHistory transaction) {
+	public Folder createPath(Folder parent, String path, boolean inheritSecurity, FolderHistory transaction) {
 		StringTokenizer st = new StringTokenizer(path, "/", false);
 
 		initialize(parent);
@@ -1017,7 +1037,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			Folder dir = null;
 			if (childs.isEmpty())
 				try {
-					dir = create(folder, name, transaction != null ? (FolderHistory) transaction.clone() : null);
+					dir = create(folder, name, inheritSecurity,
+							transaction != null ? (FolderHistory) transaction.clone() : null);
 				} catch (CloneNotSupportedException e) {
 				}
 			else {

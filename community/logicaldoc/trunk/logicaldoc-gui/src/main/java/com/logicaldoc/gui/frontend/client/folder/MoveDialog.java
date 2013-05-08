@@ -13,10 +13,10 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tree.TreeGrid;
 
 /**
- * This is the form used to save and update the current search
+ * This is the form used to move a folder into another path
  * 
  * @author Marco Meschieri - Logical Objects
- * @since 6.0
+ * @since 6.5
  */
 public class MoveDialog extends Dialog {
 	public MoveDialog() {

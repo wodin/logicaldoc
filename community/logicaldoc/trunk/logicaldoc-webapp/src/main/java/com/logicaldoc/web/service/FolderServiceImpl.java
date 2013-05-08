@@ -122,7 +122,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			Folder folder = dao.findById(folderId);
 			if (folder == null)
 				return null;
-			
+
 			dao.initialize(folder);
 
 			GUIFolder f = new GUIFolder();
@@ -304,7 +304,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			// To avoid a 'org.hibernate.StaleObjectStateException', we
 			// must retrieve the folder from database.
 			Folder folder = dao.findById(folderId);
-			
+
 			// Add a folder history entry
 			FolderHistory history = new FolderHistory();
 			history.setTitleOld(folder.getName());
@@ -323,7 +323,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	@Override
 	public GUIFolder save(String sid, GUIFolder folder) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
-		
+
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		try {
 			Folder f;
@@ -333,28 +333,23 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			transaction.setUser(SessionUtil.getSessionUser(sid));
 			transaction.setSessionId(sid);
 
-			if (folder.getId() != 0) {
-				f = folderDao.findById(folder.getId());
-				folderDao.initialize(f);
-				f.setDescription(folder.getDescription());
-				f.setType(folder.getType());
-				f.setTemplateLocked(folder.getTemplateLocked());
-				if (f.getName().trim().equals(folderName)) {
-					f.setName(folderName.trim());
-					transaction.setEvent(FolderEvent.CHANGED.toString());
-				} else {
-					f.setName(folderName.trim());
-					transaction.setEvent(FolderEvent.RENAMED.toString());
-				}
+			f = folderDao.findById(folder.getId());
+			if (f == null)
+				throw new Exception("Unexisting folder " + folder.getId());
 
-				updateExtendedAttributes(f, folder);
+			folderDao.initialize(f);
+			f.setDescription(folder.getDescription());
+			f.setType(folder.getType());
+			f.setTemplateLocked(folder.getTemplateLocked());
+			if (f.getName().trim().equals(folderName)) {
+				f.setName(folderName.trim());
+				transaction.setEvent(FolderEvent.CHANGED.toString());
 			} else {
-				transaction.setEvent(FolderEvent.CREATED.toString());
-
-				f = folderDao.create(folderDao.findById(folder.getParentId()), folderName, transaction);
-				f.setDescription(folder.getDescription());
-				f.setType(folder.getType());
+				f.setName(folderName.trim());
+				transaction.setEvent(FolderEvent.RENAMED.toString());
 			}
+
+			updateExtendedAttributes(f, folder);
 
 			folderDao.store(f, transaction);
 
@@ -366,6 +361,28 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		}
 
 		return getFolder(sid, folder.getId());
+	}
+
+	@Override
+	public GUIFolder create(String sid, long parentId, String name, boolean inheritSecurity)
+			throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		try {
+			String folderName = name.replace("/", "");
+
+			FolderHistory transaction = new FolderHistory();
+			transaction.setUser(SessionUtil.getSessionUser(sid));
+			transaction.setSessionId(sid);
+			transaction.setEvent(FolderEvent.CREATED.toString());
+
+			Folder f = folderDao.create(folderDao.findById(parentId), folderName, inheritSecurity, transaction);
+			return getFolder(sid, f.getId());
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
 	}
 
 	private boolean saveRules(String sid, Folder folder, long userId, GUIRight[] rights) throws Exception {
@@ -446,7 +463,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					fg.setDownload(1);
 				else
 					fg.setDownload(0);
-				
+
 				if (isAdmin || right.isCalendar())
 					fg.setCalendar(1);
 				else
@@ -645,7 +662,8 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 						// attributes keys that remains on the form
 						// value manager
 						if (attr.getValue().toString().trim().isEmpty() && templateType != 0) {
-							if (templateType == ExtendedAttribute.TYPE_INT || templateType == ExtendedAttribute.TYPE_BOOLEAN) {
+							if (templateType == ExtendedAttribute.TYPE_INT
+									|| templateType == ExtendedAttribute.TYPE_BOOLEAN) {
 								extAttr.setIntValue(null);
 							} else if (templateType == ExtendedAttribute.TYPE_DOUBLE) {
 								extAttr.setDoubleValue(null);
@@ -670,7 +688,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 							else
 								extAttr.setIntValue(null);
 						} else if (templateType == ExtendedAttribute.TYPE_BOOLEAN) {
-							if (attr.getBooleanValue()!= null)
+							if (attr.getBooleanValue() != null)
 								extAttr.setValue(attr.getBooleanValue());
 							else
 								extAttr.setBooleanValue(null);

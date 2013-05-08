@@ -320,7 +320,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 	/**
 	 * Prepares the context menu.
 	 */
-	private Menu prepateContextMenu(GUIFolder folder) {
+	private Menu prepateContextMenu(final GUIFolder folder) {
 		final TreeNode selectedNode = (TreeNode) getSelectedRecord();
 		final long id = Long.parseLong(selectedNode.getAttribute("folderId"));
 		final String name = selectedNode.getAttribute("name");
@@ -381,7 +381,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 		create.setTitle(I18N.message("newfolder"));
 		create.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				onCreate();
+				onCreate(folder.getId());
 			}
 		});
 
@@ -708,42 +708,9 @@ public class Navigator extends TreeGrid implements FolderObserver {
 		selectFolder(Long.parseLong(selectedNode.getAttributeAsString("folderId")));
 	}
 
-	private void onCreate() {
-		LD.askforValue(I18N.message("newfolder"), I18N.message("newfoldername"), I18N.message("newfolder"), "200px",
-				new ValueCallback() {
-					@Override
-					public void execute(String value) {
-						if (value == null || "".equals(value.trim()))
-							return;
-
-						TreeNode selectedNode = (TreeNode) getSelectedRecord();
-						final GUIFolder data = new GUIFolder();
-						data.setName(value.trim());
-						data.setParentId(Long.parseLong(selectedNode.getAttributeAsString("folderId")));
-						data.setDescription("");
-
-						service.save(Session.get().getSid(), data, new AsyncCallback<GUIFolder>() {
-
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(GUIFolder newFolder) {
-								TreeNode selectedNode = (TreeNode) getSelectedRecord();
-								TreeNode newNode = new TreeNode(newFolder.getName());
-								newNode.setAttribute("name", newFolder.getName());
-								newNode.setAttribute("folderId", Long.toString(newFolder.getId()));
-
-								if (!getTree().isOpen(selectedNode)) {
-									getTree().openFolder(selectedNode);
-								}
-								getTree().add(newNode, selectedNode);
-							}
-						});
-					}
-				});
+	private void onCreate(long folderId) {
+		CreateDialog dialog=new CreateDialog(folderId);
+		dialog.show();
 	}
 
 	private void onRename() {
