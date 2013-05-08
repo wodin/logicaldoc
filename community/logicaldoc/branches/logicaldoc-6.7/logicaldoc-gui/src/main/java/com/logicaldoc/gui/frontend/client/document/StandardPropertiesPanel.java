@@ -175,6 +175,9 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		List<FormItem> items = new ArrayList<FormItem>();
 
+		StaticTextItem customId = ItemFactory.newStaticTextItem("customId", "customid", document.getCustomId());
+		items.add(customId);
+		
 		FormItemIcon ratingIcon = ItemFactory.newItemIcon("rating" + document.getRating() + ".png");
 		StaticTextItem vote = ItemFactory.newStaticTextItem("vote", "vote", "");
 		vote.setIcons(ratingIcon);
@@ -198,12 +201,6 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 			}
 		});
 		items.add(vote);
-
-		TextItem customId = ItemFactory.newTextItem("customId", "customid", document.getCustomId());
-		customId.addChangedHandler(changedHandler);
-		customId.setRequired(true);
-		customId.setDisabled(!update);
-		items.add(customId);
 
 		SelectItem language = ItemFactory.newLanguageSelector("language", false, false);
 		language.addChangedHandler(changedHandler);
@@ -298,7 +295,6 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		Map<String, Object> values = (Map<String, Object>) vm.getValues();
 		vm.validate();
 		if (!vm.hasErrors()) {
-			document.setCustomId((String) values.get("customId"));
 			document.setTitle((String) values.get("title"));
 			document.setLanguage((String) values.get("language"));
 		}

@@ -205,8 +205,8 @@ public class DocumentsDataServlet extends HttpServlet {
 						"select A.id, A.customId, A.docRef, A.type, A.title, A.version, A.lastModified, A.date, A.publisher,"
 								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status,"
 								+ " A.signed, A.type, A.sourceDate, A.sourceAuthor, A.rating, A.fileVersion, A.comment, A.workflowStatus,"
-								+ " A.startPublishing, A.stopPublishing, A.published, A.extResId, A.template.name "
-								+ " from Document A ");
+								+ " A.startPublishing, A.stopPublishing, A.published, A.extResId, B.name "
+								+ " from Document as A left outer join A.template as B ");
 				query.append(" where A.deleted = 0 ");
 				if (folderId != null)
 					query.append(" and A.folder.id=" + folderId);
