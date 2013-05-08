@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
@@ -24,6 +25,8 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 
 	private DocumentDAO docDao;
 
+	private VersionDAO verDao;
+
 	private UserDAO userDao;
 
 	private FolderDAO folderDao;
@@ -35,6 +38,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 	public void setUp() throws Exception {
 		super.setUp();
 		docDao = (DocumentDAO) context.getBean("DocumentDAO");
+		verDao = (VersionDAO) context.getBean("VersionDAO");
 		userDao = (UserDAO) context.getBean("UserDAO");
 		folderDao = (FolderDAO) context.getBean("FolderDAO");
 
@@ -234,12 +238,12 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		Assert.assertEquals(AbstractDocument.INDEX_TO_INDEX, doc.getIndexed());
 		Assert.assertEquals(0, doc.getSigned());
 		Assert.assertEquals(Document.DOC_UNLOCKED, doc.getStatus());
-		
+
 		documentManager.checkout(1L, transaction);
 		doc = docDao.findById(1);
 		docDao.initialize(doc);
 		Assert.assertEquals(Document.DOC_CHECKED_OUT, doc.getStatus());
-		
+
 		doc.setCoverage("xyz");
 		documentManager.checkin(1L, file, "pippa", true, doc, transaction);
 		doc = docDao.findById(1);
@@ -259,5 +263,16 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		Assert.assertEquals(AbstractDocument.INDEX_TO_INDEX, doc.getIndexed());
 		documentManager.changeIndexingStatus(doc, AbstractDocument.INDEX_SKIP);
 		Assert.assertEquals(AbstractDocument.INDEX_SKIP, doc.getIndexed());
+	}
+
+	@Test
+	public void testDeleteVersion() throws Exception {
+		Assert.assertNotNull(verDao.findById(11L));
+		documentManager.deleteVersion(11L);
+		Assert.assertNull(verDao.findById(11L));
+
+		Assert.assertNotNull(verDao.findById(13L));
+		documentManager.deleteVersion(13L);
+		Assert.assertNull(verDao.findById(13L));
 	}
 }

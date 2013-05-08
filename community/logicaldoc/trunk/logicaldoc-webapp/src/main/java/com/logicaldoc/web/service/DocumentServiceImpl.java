@@ -1438,4 +1438,16 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			log.error(e.getMessage(), e);
 		}
 	}
+
+	@Override
+	public void deleteVersions(String sid, long[] ids) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+		try {
+			DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+			for (long id : ids)
+				manager.deleteVersion(id);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+		}
+	}
 }

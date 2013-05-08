@@ -69,4 +69,6 @@ public interface DocumentServiceAsync {
 	void addDocuments(String sid, String encoding, boolean importZip, GUIDocument metadata, AsyncCallback<Void> callback);
 
 	void updateNote(String sid, long docId, long noteId, String message, AsyncCallback<Void> callback);
+
+	void deleteVersions(String sid, long[] ids, AsyncCallback<Void> callback);
 }

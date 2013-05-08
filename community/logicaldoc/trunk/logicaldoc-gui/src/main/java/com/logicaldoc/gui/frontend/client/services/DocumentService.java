@@ -64,6 +64,11 @@ public interface DocumentService extends RemoteService {
 	public void deleteLinks(String sid, long[] ids) throws InvalidSessionException;
 
 	/**
+	 * Deletes a selection of versions
+	 */
+	public void deleteVersions(String sid, long[] ids) throws InvalidSessionException;
+
+	/**
 	 * Links a set of documents
 	 */
 	public void linkDocuments(String sid, long[] inDocIds, long[] outDocIds) throws InvalidSessionException;

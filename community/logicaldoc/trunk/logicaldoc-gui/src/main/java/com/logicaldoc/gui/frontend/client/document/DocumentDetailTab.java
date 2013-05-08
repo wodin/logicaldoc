@@ -17,7 +17,7 @@ public abstract class DocumentDetailTab extends HLayout {
 
 	protected ChangedHandler changedHandler;
 
-	protected boolean update = false;
+	protected boolean updateEnabled = false;
 
 	/**
 	 * 
@@ -31,9 +31,9 @@ public abstract class DocumentDetailTab extends HLayout {
 		this.changedHandler = changedHandler;
 
 		if (Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN))
-			update = true;
+			updateEnabled = true;
 		else
-			update = (document.getImmutable() == 0 && document.getStatus() == Constants.DOC_UNLOCKED && document
+			updateEnabled = (document.getImmutable() == 0 && document.getStatus() == Constants.DOC_UNLOCKED && document
 					.getFolder().isWrite());
 	}
 
