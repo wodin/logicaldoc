@@ -19,6 +19,7 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -213,12 +214,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					 * Prepare the Master document used to create the new one
 					 */
 					Document doc = toDocument(metadata);
-					doc.setFileName(filename);
-					if (filename.lastIndexOf(".") > 0)
-						doc.setTitle(filename.substring(0, filename.lastIndexOf(".")));
-					else
-						doc.setTitle(filename);
 					doc.setCreation(new Date());
+
+					doc.setFileName(filename);
+					doc.setTitle(FilenameUtils.getBaseName(filename));
 
 					// Create the new
 					doc = documentManager.create(file, doc, transaction);
@@ -836,6 +835,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			if (document.getId() != 0) {
 				doc = docDao.findById(document.getId());
 				docDao.initialize(doc);
+
 				doc.setCustomId(document.getCustomId());
 				doc.setComment(document.getComment());
 				try {
@@ -876,10 +876,11 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	 */
 	protected Document toDocument(GUIDocument document) {
 		Document docVO = new Document();
-		docVO.setTitle(document.getTitle());
 		if (document.getTags() != null && document.getTags().length > 0)
 			docVO.setTags(new HashSet<String>(Arrays.asList(document.getTags())));
 
+		docVO.setTitle(document.getTitle());
+		docVO.setCustomId(document.getCustomId());
 		docVO.setSourceType(document.getSourceType());
 		docVO.setFileName(document.getFileName());
 		docVO.setVersion(document.getVersion());
