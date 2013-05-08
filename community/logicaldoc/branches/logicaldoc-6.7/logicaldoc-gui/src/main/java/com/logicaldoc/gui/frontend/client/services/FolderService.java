@@ -24,6 +24,17 @@ public interface FolderService extends RemoteService {
 	public GUIFolder save(String sid, GUIFolder folder) throws InvalidSessionException;
 
 	/**
+	 * Creates a new folder
+	 * 
+	 * @param parentId Id of the parent folder
+	 * @param name Name of the folder to create
+	 * @param inheritSecurity True if the new folder has to inherit the security
+	 *        policies from the parent
+	 * @return The saved folder
+	 */
+	public GUIFolder create(String sid, long parentId, String name, boolean inheritSecurity) throws InvalidSessionException;
+
+	/**
 	 * Renames the given folder
 	 */
 	public void rename(String sid, long folderId, String name) throws InvalidSessionException;

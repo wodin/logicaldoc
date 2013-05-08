@@ -47,7 +47,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		transaction.setUser(user);
 		transaction.setSessionId(sid);
 
-		Folder f = folderDao.create(parentFolder, folder.getName(), transaction);
+		Folder f = folderDao.create(parentFolder, folder.getName(), true, transaction);
 		f.setDescription(folder.getDescription());
 		f.setType(folder.getType());
 		folder.updateExtendedAttributes(f);
@@ -441,7 +441,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			}
 		}
 
-		Folder folder = folderDao.createPath(parent, path, transaction);
+		Folder folder = folderDao.createPath(parent, path, true, transaction);
 
 		return WSFolder.fromFolder(folder);
 	}
