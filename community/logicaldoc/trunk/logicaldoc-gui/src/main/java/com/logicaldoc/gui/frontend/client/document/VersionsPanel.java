@@ -16,7 +16,6 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -41,8 +40,6 @@ public class VersionsPanel extends DocumentDetailTab {
 	private VersionsDS dataSource;
 
 	private ListGrid listGrid;
-
-	private Menu contextMenu;
 
 	public VersionsPanel(final GUIDocument document) {
 		super(document, null);
@@ -73,8 +70,6 @@ public class VersionsPanel extends DocumentDetailTab {
 		listGrid.setFields(user, event, type, fileVersion, version, date, comment);
 		addMember(listGrid);
 
-		setupContextMenu();
-
 		listGrid.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
@@ -90,7 +85,7 @@ public class VersionsPanel extends DocumentDetailTab {
 		listGrid.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				contextMenu.showContextMenu();
+				setupContextMenu().showContextMenu();
 				event.cancel();
 			}
 		});
@@ -119,19 +114,14 @@ public class VersionsPanel extends DocumentDetailTab {
 	/**
 	 * Prepares the context menu.
 	 */
-	private void setupContextMenu() {
-		contextMenu = new Menu();
+	private Menu setupContextMenu() {
+		final ListGridRecord[] selection = listGrid.getSelectedRecords();
+
+		Menu contextMenu = new Menu();
 		MenuItem compare = new MenuItem();
 		compare.setTitle(I18N.message("compare"));
 		compare.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				// Detect the two selected records
-				ListGridRecord[] selection = listGrid.getSelectedRecords();
-				if (selection == null || selection.length != 2) {
-					SC.warn(I18N.message("select2versions"));
-					return;
-				}
-
 				documentService.getVersionsById(Session.get().getSid(),
 						Long.parseLong(selection[0].getAttribute("id")),
 						Long.parseLong(selection[1].getAttribute("id")), new AsyncCallback<GUIVersion[]>() {
@@ -153,11 +143,6 @@ public class VersionsPanel extends DocumentDetailTab {
 		download.setTitle(I18N.message("download"));
 		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				// Detect the two selected records
-				ListGridRecord[] selection = listGrid.getSelectedRecords();
-				if (selection == null || selection.length < 1) {
-					return;
-				}
 				onDownload(document, selection[0]);
 			}
 		});
@@ -167,16 +152,47 @@ public class VersionsPanel extends DocumentDetailTab {
 		preview.setTitle(I18N.message("preview"));
 		preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				// Detect the two selected records
-				ListGridRecord[] selection = listGrid.getSelectedRecords();
-				if (selection == null || selection.length < 1) {
-					return;
-				}
 				onPreview(document, selection[0]);
 			}
 		});
 
-		contextMenu.setItems(preview, download, compare);
+		MenuItem delete = new MenuItem();
+		delete.setTitle(I18N.message("ddelete"));
+		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				long[] ids = new long[selection.length];
+				int i = 0;
+				for (ListGridRecord record : selection)
+					ids[i++] = Long.parseLong(record.getAttribute("id"));
+
+				documentService.deleteVersions(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						listGrid.removeSelectedData();
+					}
+				});
+			}
+		});
+
+		compare.setEnabled(selection != null && selection.length == 2);
+		delete.setEnabled(updateEnabled && selection != null && selection.length > 0
+				&& !document.getVersion().equals(selection[0].getAttribute("version")));
+
+		if (selection == null || selection.length < 1) {
+			preview.setEnabled(false);
+			download.setEnabled(false);
+			delete.setEnabled(false);
+			compare.setEnabled(false);
+		}
+
+		contextMenu.setItems(preview, download, compare, delete);
+
+		return contextMenu;
 	}
 
 	@Override

@@ -299,4 +299,9 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 	@Override
 	public void updateNote(String sid, long docId, long noteId, String message) throws InvalidSessionException {
 	}
+
+	@Override
+	public void deleteVersions(String sid, long[] ids) throws InvalidSessionException {
+
+	}
 }
