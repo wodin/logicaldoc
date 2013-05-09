@@ -12,12 +12,14 @@ public class GUISearchEngine implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String languages = "en, it, de, fr, es";
+	private String languages = "standard, en, it, de, fr, es";
 
 	private long entries;
 
 	private boolean locked;
 
+	private boolean subwords;
+	
 	private String includePatters;
 
 	private String excludePatters = "*.exe,*.bin,*.iso";
@@ -100,5 +102,13 @@ public class GUISearchEngine implements Serializable {
 
 	public void setDir(String dir) {
 		this.dir = dir;
+	}
+
+	public boolean isSubwords() {
+		return subwords;
+	}
+
+	public void setSubwords(boolean subwords) {
+		this.subwords = subwords;
 	}
 }

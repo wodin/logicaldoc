@@ -33,6 +33,7 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
+import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.validator.LengthRangeValidator;
@@ -461,6 +462,9 @@ public class SearchIndexingPanel extends VLayout {
 		repository.setValue(this.searchEngine.getDir());
 		repository.setWidth(250);
 
+		RadioGroupItem subwords = ItemFactory.newBooleanSelector("subwords", "analizesubwords");
+		subwords.setValue(this.searchEngine.isSubwords() ? "yes" : "no");
+
 		HLayout buttons = new HLayout();
 
 		IButton save = new IButton();
@@ -474,6 +478,10 @@ public class SearchIndexingPanel extends VLayout {
 					SearchIndexingPanel.this.searchEngine.setIncludePatters((String) values.get("includePatters"));
 					SearchIndexingPanel.this.searchEngine.setExcludePatters((String) values.get("excludePatters"));
 					SearchIndexingPanel.this.searchEngine.setDir((String) values.get("repository"));
+					
+					Log.info(""+values.get("subwords"), null);
+					SearchIndexingPanel.this.searchEngine.setSubwords("yes".equals(values.get("subwords")));
+
 					String btch = vm.getValueAsString("batch");
 					if (btch == null || "".equals(btch.trim()))
 						SearchIndexingPanel.this.searchEngine.setBatch(0);
@@ -609,7 +617,8 @@ public class SearchIndexingPanel extends VLayout {
 			}
 		});
 
-		searchEngineForm.setItems(entries, status, repository, includePatters, excludePatters, batch, timeout, maxText);
+		searchEngineForm.setItems(entries, status, repository, includePatters, excludePatters, batch, timeout, maxText,
+				subwords);
 		buttons.setMembers(save, unlock, rescheduleAll, check);
 		buttons.setMembersMargin(5);
 		searchEngineTabPanel.setMembers(searchEngineForm, buttons);

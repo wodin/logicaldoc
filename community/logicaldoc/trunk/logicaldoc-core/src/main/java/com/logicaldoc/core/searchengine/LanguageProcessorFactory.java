@@ -6,7 +6,7 @@ import org.apache.solr.update.processor.UpdateRequestProcessor;
 import org.apache.solr.update.processor.UpdateRequestProcessorFactory;
 
 /**
- * Basic fatory needed to instanciate the LanguageProcessor
+ * Basic factory needed to instantiate the LanguageProcessor
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.5

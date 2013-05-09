@@ -55,6 +55,10 @@
     <parameter id="position" value="1" />
   </extension>
 
+  <extension plugin-id="logicaldoc-core" point-id="Language" id="standardLanguage">
+    <parameter id="locale" value="standard" />
+    <parameter id="analyzer" value="org.apache.lucene.analysis.standard.StandardAnalyzer" />
+  </extension>
   <extension plugin-id="logicaldoc-core" point-id="Language" id="enLanguage">
     <parameter id="locale" value="en" />
     <parameter id="analyzer" value="-" />
