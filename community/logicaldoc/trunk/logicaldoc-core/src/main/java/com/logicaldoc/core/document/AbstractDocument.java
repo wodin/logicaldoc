@@ -705,7 +705,7 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 		Date now = new Date();
 		if (published != 1)
 			return false;
-		else if (now.before(startPublishing))
+		else if (startPublishing != null && now.before(startPublishing))
 			return false;
 		else if (stopPublishing == null)
 			return true;

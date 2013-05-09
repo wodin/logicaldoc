@@ -17,6 +17,6 @@ public class SystemInfoTest extends AbstractCoreTCase {
 	public void testGet() throws UnsupportedEncodingException {
 		SystemInfo info = SystemInfo.get();
 		Assert.assertEquals("LogicalDOC", info.getProduct());
-		Assert.assertEquals("LogicalDOC Community", info.getProductName());		
+		Assert.assertEquals("LogicalDOC Community", info.getProductName());
 	}
 }
