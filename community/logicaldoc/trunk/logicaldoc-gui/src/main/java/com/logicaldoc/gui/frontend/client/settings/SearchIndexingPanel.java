@@ -478,8 +478,7 @@ public class SearchIndexingPanel extends VLayout {
 					SearchIndexingPanel.this.searchEngine.setIncludePatters((String) values.get("includePatters"));
 					SearchIndexingPanel.this.searchEngine.setExcludePatters((String) values.get("excludePatters"));
 					SearchIndexingPanel.this.searchEngine.setDir((String) values.get("repository"));
-					
-					Log.info(""+values.get("subwords"), null);
+
 					SearchIndexingPanel.this.searchEngine.setSubwords("yes".equals(values.get("subwords")));
 
 					String btch = vm.getValueAsString("batch");
