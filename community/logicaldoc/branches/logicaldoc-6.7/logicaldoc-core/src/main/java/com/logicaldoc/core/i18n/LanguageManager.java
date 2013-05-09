@@ -1,7 +1,9 @@
 package com.logicaldoc.core.i18n;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -76,7 +78,10 @@ public class LanguageManager {
 	}
 
 	public Collection<Language> getLanguages() {
-		return languages.values();
+		List<Language> langs = new ArrayList<Language>();
+		langs.addAll(languages.values());
+		Collections.sort(langs);
+		return langs;
 	}
 
 	public Collection<Language> getActiveLanguages() {

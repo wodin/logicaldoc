@@ -46,6 +46,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			searchEngine.setExcludePatters(conf.getProperty("index.excludes"));
 			searchEngine.setIncludePatters(conf.getProperty("index.includes"));
 			searchEngine.setDir(conf.getProperty("index.dir"));
+			searchEngine.setSubwords("true".equals(conf.getProperty("index.subwords")));
 
 			if (StringUtils.isNotEmpty(conf.getProperty("index.batch")))
 				searchEngine.setBatch(new Integer(conf.getProperty("index.batch")));
@@ -145,6 +146,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			conf.setProperty("index.maxtext", Integer.toString(searchEngine.getMaxText()));
 			conf.setProperty("parser.timeout", Integer.toString(searchEngine.getParsingTimeout()));
 			conf.setProperty("index.dir", searchEngine.getDir());
+			conf.setProperty("index.subwords", searchEngine.isSubwords() ? "true" : "false");
 
 			conf.write();
 		} catch (Exception t) {

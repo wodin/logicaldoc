@@ -82,8 +82,7 @@ public class FulltextSearchTest extends AbstractCoreTCase {
 		engine.addHit(
 				document,
 				"This is another test documents just for test insertion.Solr is an enterprise-ready, Lucene-based search server that supports faceted ... This is useful for retrieving and highlighting the documents contents for display but is not .... hl, When hl=true , highlight snippets in the query response.");
-	
-	
+
 		document = new Document();
 		document.setId(2L);
 		document.setTitle("Document test 2");
@@ -94,29 +93,58 @@ public class FulltextSearchTest extends AbstractCoreTCase {
 		fold.setName("test");
 		document.setFolder(fold);
 		engine.addHit(document, "Another document");
+
+		document = new Document();
+		document.setId(3L);
+		document.setTitle("Document test 3");
+		document.setTemplateId(0L);
+		document.setLanguage("standard");
+		document.setDate(new Date());
+		document.setFolder(fold);
+		engine.addHit(document,
+				"Lorem ipsum dolor sit amet, consectetur 5568299afbX0 ZKBKCHZZ80A CH8900761016116097873 adipisicing elit");
+
 	}
 
 	@Test
 	public void testSearch() throws Exception {
-		Assert.assertEquals(3, engine.getCount());
+		 Assert.assertEquals(4, engine.getCount());
 		
-		FulltextSearchOptions opt = new FulltextSearchOptions();
-		opt.setLanguage("en");
-		opt.setExpression("document");
-		opt.setFields(new String[] { "content", "title" });
-		opt.setExpressionLanguage("en");
-		opt.setType(SearchOptions.TYPE_FULLTEXT);
-		opt.setUserId(1);
-
-		Search search = new FulltextSearch();
-		search.setOptions(opt);
-
-		List<Hit> hits = search.search();
-		Assert.assertEquals(2, hits.size());
+		 FulltextSearchOptions opt = new FulltextSearchOptions();
+		 opt.setLanguage("en");
+		 opt.setExpression("document");
+		 opt.setFields(new String[] { "content", "title" });
+		 opt.setExpressionLanguage("en");
+		 opt.setType(SearchOptions.TYPE_FULLTEXT);
+		 opt.setUserId(1);
 		
-		opt.setMaxHits(1);
-		hits = search.search();
-		Assert.assertEquals(1, hits.size());
-		Assert.assertTrue(search.isMoreHitsPresent());
+		 Search search = new FulltextSearch();
+		 search.setOptions(opt);
+		
+		 List<Hit> hits = search.search();
+		 Assert.assertEquals(2, hits.size());
+		
+		 opt.setMaxHits(1);
+		 hits = search.search();
+		 Assert.assertEquals(1, hits.size());
+		 Assert.assertTrue(search.isMoreHitsPresent());
+		
+		
+		 opt = new FulltextSearchOptions();
+		 opt.setLanguage("standard");
+		 opt.setExpression("CH8900761016116097873");
+		 opt.setFields(new String[] { "content", "title" });
+		 opt.setExpressionLanguage("standard");
+		 opt.setType(SearchOptions.TYPE_FULLTEXT);
+		 opt.setUserId(1);
+		
+		 search = new FulltextSearch();
+		 search.setOptions(opt);
+		
+		 hits = search.search();
+		 Assert.assertEquals(1, hits.size());
+		 Assert.assertEquals(3L, hits.get(0).getId());
+		 Assert.assertEquals("standard", hits.get(0).getLanguage());
 	}
+
 }
