@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  * @author Alessandro Gasparini - Logical Objects
  * @since 3.0.3
  */
-public class Language {
+public class Language implements Comparable<Language> {
 
 	protected static Logger log = LoggerFactory.getLogger(Language.class);
 
@@ -176,5 +176,15 @@ public class Language {
 	@Override
 	public int hashCode() {
 		return toString().hashCode();
+	}
+
+	@Override
+	public int compareTo(Language o) {
+		if ("standard".equals(toString()))
+			return -1;
+		else if ("standard".equals(o.toString()))
+			return 1;
+		else
+			return toString().compareToIgnoreCase(o.toString());
 	}
 }

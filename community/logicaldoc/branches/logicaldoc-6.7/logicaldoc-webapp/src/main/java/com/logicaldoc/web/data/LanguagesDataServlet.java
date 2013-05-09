@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +64,7 @@ public class LanguagesDataServlet extends HttpServlet {
 
 					writer.print("<lang>");
 					writer.print("<code><![CDATA[" + loc + "]]></code>");
-					writer.print("<name><![CDATA[" + lc.getDisplayName(LocaleUtil.toLocale(locale)) + "]]></name>");
+					writer.print("<name><![CDATA[" + StringUtils.capitalize(lc.getDisplayName(LocaleUtil.toLocale(locale))) + "]]></name>");
 					if ("enabled".equals(pbean.getProperty("lang." + loc + ".gui")))
 						writer.print("<eenabled>0</eenabled>");
 					else
@@ -77,7 +78,7 @@ public class LanguagesDataServlet extends HttpServlet {
 				for (Language language : languages) {
 					writer.print("<lang>");
 					writer.print("<code><![CDATA[" + language.toString() + "]]></code>");
-					writer.print("<name><![CDATA[" + language.getLocale().getDisplayName(LocaleUtil.toLocale(locale))
+					writer.print("<name><![CDATA[" + StringUtils.capitalize(language.getLocale().getDisplayName(LocaleUtil.toLocale(locale)))
 							+ "]]></name>");
 					if (activeLanguages.contains(language))
 						writer.print("<eenabled>0</eenabled>");

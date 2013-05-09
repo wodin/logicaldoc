@@ -40,9 +40,7 @@ import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
  * it is recommended that this filter be used after a tokenizer that does not do
  * this (such as WhitespaceTokenizer).
  * 
- * @version $Id: WordDelimiterFilter.java 950711 2010-06-02 18:35:10Z rmuir $
  */
-
 final class WordDelimiterFilter extends TokenFilter {
 
 	public static final int LOWER = 0x01;
