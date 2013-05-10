@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import org.apache.commons.lang.StringUtils;
 
 import com.ibm.icu.text.SimpleDateFormat;
+import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
@@ -152,8 +153,8 @@ public class FulltextSearch extends Search {
 		richQuery.append(" A.date, A.publisher, A.creation, A.creator, A.fileSize, A.immutable, ");
 		richQuery.append(" A.indexed, A.lockUserId, A.fileName, A.status, A.signed, A.type, A.sourceDate, ");
 		richQuery.append(" A.sourceAuthor, A.rating, A.fileVersion, A.comment, A.workflowStatus, A.startPublishing, ");
-		richQuery.append(" A.stopPublishing, A.published, A.folder.name, A.folder.id ");
-		richQuery.append(" from Document A where A.deleted = 0 and A.id in ");
+		richQuery.append(" A.stopPublishing, A.published, A.folder.name, A.folder.id , B.id, B.name ");
+		richQuery.append(" from Document as A left outer join A.template as B where A.deleted = 0 and A.id in ");
 		richQuery.append(hitsIdsStr);
 
 		Object[] values = null;
@@ -205,6 +206,14 @@ public class FulltextSearch extends Search {
 			hit.setPublished((Integer) cols[27]);
 			hit.getFolder().setName((String) cols[28]);
 			hit.getFolder().setId((Long) cols[29]);
+
+			if (cols[30] != null) {
+				DocumentTemplate t = new DocumentTemplate();
+				t.setId((Long) cols[30]);
+				t.setName((String) cols[31]);
+				hit.setTemplate(t);
+				hit.setTemplateId(t.getId());
+			}
 
 			hit.setPublished(hit.isPublishing() ? 1 : 0);
 		}

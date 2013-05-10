@@ -69,7 +69,7 @@ public class SecurityPanel extends FolderDetailTab {
 
 		ListGridField read = new ListGridField("read", I18N.message("read"), 60);
 		read.setType(ListGridFieldType.BOOLEAN);
-		read.setCanEdit(false);
+		read.setCanEdit(true);
 
 		ListGridField download = new ListGridField("download", I18N.message("download"), 60);
 		download.setType(ListGridFieldType.BOOLEAN);
@@ -122,7 +122,7 @@ public class SecurityPanel extends FolderDetailTab {
 		ListGridField calendar = new ListGridField("calendar", I18N.message("calendar"), 60);
 		calendar.setType(ListGridFieldType.BOOLEAN);
 		calendar.setCanEdit(true);
-		
+
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setCanFreezeFields(true);
@@ -271,10 +271,12 @@ public class SecurityPanel extends FolderDetailTab {
 	 */
 	public GUIRight[] getRights() {
 		ListGridRecord[] records = list.getRecords();
-		GUIRight[] tmp = new GUIRight[records.length];
+		List<GUIRight> tmp = new ArrayList<GUIRight>();
 
-		int i = 0;
 		for (ListGridRecord record : records) {
+			if (!record.getAttributeAsBoolean("read"))
+				continue;
+
 			GUIRight right = new GUIRight();
 
 			right.setName(record.getAttributeAsString("entity"));
@@ -292,12 +294,11 @@ public class SecurityPanel extends FolderDetailTab {
 			right.setArchive(record.getAttributeAsBoolean("archive"));
 			right.setDownload(record.getAttributeAsBoolean("download"));
 			right.setCalendar(record.getAttributeAsBoolean("calendar"));
-			
-			tmp[i] = right;
-			i++;
+
+			tmp.add(right);
 		}
 
-		return tmp;
+		return tmp.toArray(new GUIRight[0]);
 	}
 
 	@Override
@@ -317,23 +318,27 @@ public class SecurityPanel extends FolderDetailTab {
 		deleteItem.setTitle(I18N.message("ddelete"));
 		deleteItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord[] selection = list.getSelectedRecords();
-				if (selection == null || selection.length == 0)
-					return;
-
-				LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
-					@Override
-					public void execute(Boolean value) {
-						if (value) {
-							list.removeSelectedData();
-						}
-					}
-				});
+				onDeleteItem();
 			}
 		});
 
 		contextMenu.setItems(deleteItem);
 		return contextMenu;
+	}
+
+	private void onDeleteItem() {
+		ListGridRecord[] selection = list.getSelectedRecords();
+		if (selection == null || selection.length == 0)
+			return;
+
+		LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+			@Override
+			public void execute(Boolean value) {
+				if (value) {
+					list.removeSelectedData();
+				}
+			}
+		});
 	}
 
 	public void onSave(boolean recursive) {
@@ -354,6 +359,12 @@ public class SecurityPanel extends FolderDetailTab {
 					Log.info(I18N.message("appliedrights"), null);
 				else
 					Log.info(I18N.message("appliedrightsonsubfolders"), null);
+
+				ListGridRecord[] records = list.getRecords();
+				for (ListGridRecord rec : records) {
+					if (!rec.getAttributeAsBoolean("read"))
+						list.removeData(rec);
+				}
 			}
 		});
 
