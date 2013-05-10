@@ -120,7 +120,9 @@ public class Search {
 						record.setAttribute("folder", hit.getFolder().getName());
 						record.setAttribute("docRef", hit.getDocRef());
 						record.setAttribute("rating", "rating" + hit.getRating());
-
+						record.setAttribute("template", hit.getTemplate());
+						
+						
 						if (hit.getIndexed() == Constants.INDEX_INDEXED)
 							record.setAttribute("indexed", "indexed");
 						else if (hit.getIndexed() == Constants.INDEX_SKIP)
