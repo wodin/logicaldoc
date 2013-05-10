@@ -708,8 +708,10 @@ public class Navigator extends TreeGrid implements FolderObserver {
 		selectFolder(Long.parseLong(selectedNode.getAttributeAsString("folderId")));
 	}
 
-	private void onCreate(long folderId) {
-		CreateDialog dialog=new CreateDialog(folderId);
+	private void onCreate(long parentId) {
+		GUIFolder folder = new GUIFolder();
+		folder.setParentId(parentId);
+		CreateDialog dialog = new CreateDialog(folder);
 		dialog.show();
 	}
 
@@ -741,38 +743,10 @@ public class Navigator extends TreeGrid implements FolderObserver {
 	}
 
 	private void onCreateWorkspace() {
-		LD.askforValue(I18N.message("newworkspace"), I18N.message("newworkspacename"), I18N.message("newworkspace"),
-				"200px", new ValueCallback() {
-					@Override
-					public void execute(String value) {
-						if (value == null || "".equals(value.trim()))
-							return;
-
-						final GUIFolder data = new GUIFolder();
-						data.setName(value.trim());
-						data.setParentId(Constants.DOCUMENTS_FOLDERID);
-						data.setDescription("");
-						data.setType(1);
-
-						service.save(Session.get().getSid(), data, new AsyncCallback<GUIFolder>() {
-
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(GUIFolder newFolder) {
-								TreeNode newNode = new TreeNode(newFolder.getName());
-								newNode.setAttribute("name", newFolder.getName());
-								newNode.setAttribute("folderId", Long.toString(newFolder.getId()));
-								newNode.setAttribute("type", Long.toString(newFolder.getType()));
-
-								getTree().add(newNode, getTree().getRoot());
-							}
-						});
-					}
-				});
+		GUIFolder folder = new GUIFolder();
+		folder.setType(1);
+		CreateDialog dialog = new CreateDialog(folder);
+		dialog.show();
 	}
 
 	private void onPaste() {
