@@ -168,7 +168,8 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 
 	/**
 	 * Returns a List of folders being a parent of the given folder. The list is
-	 * ordered starting from the root of folders. The list doesn't include the given folder.
+	 * ordered starting from the root of folders. The list doesn't include the
+	 * given folder.
 	 * 
 	 * @param id
 	 */
@@ -221,11 +222,13 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * 
 	 * @param parent The parent folder
 	 * @param name The folder name
-	 * @param inheritSecurity If true the new folder will 'point' to the parent for the security policies.
+	 * @param type The folder type
+	 * @param inheritSecurity If true the new folder will 'point' to the parent
+	 *        for the security policies.
 	 * @transaction optional transaction entry to log the event
 	 * @return The newly created folder
 	 */
-	public Folder create(Folder parent, String name, boolean inheritSecurity, FolderHistory transaction);
+	public Folder create(Folder parent, String name, int type, boolean inheritSecurity, FolderHistory transaction);
 
 	/**
 	 * Creates the folder for the specified path. All unexisting nodes specified
@@ -233,7 +236,8 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * 
 	 * @param parent The parent folder
 	 * @param path The folder path(for example /dog/cat/mouse)
-	 * @param inheritSecurity If true the new folders will 'point' to the parent for the security policies.
+	 * @param inheritSecurity If true the new folders will 'point' to the parent
+	 *        for the security policies.
 	 * @transaction optional transaction entry to log the event
 	 * 
 	 * @return The created folder

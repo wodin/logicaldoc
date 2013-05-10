@@ -968,9 +968,10 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public Folder create(Folder parent, String name, boolean inheritSecurity, FolderHistory transaction) {
+	public Folder create(Folder parent, String name, int type, boolean inheritSecurity, FolderHistory transaction) {
 		Folder folder = new Folder();
 		folder.setName(name);
+		folder.setType(type);
 		folder.setParentId(parent.getId());
 
 		if (inheritSecurity) {
@@ -1037,7 +1038,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			Folder dir = null;
 			if (childs.isEmpty())
 				try {
-					dir = create(folder, name, inheritSecurity,
+					dir = create(folder, name, Folder.TYPE_DEFAULT, inheritSecurity,
 							transaction != null ? (FolderHistory) transaction.clone() : null);
 				} catch (CloneNotSupportedException e) {
 				}
