@@ -364,20 +364,26 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	@Override
-	public GUIFolder create(String sid, long parentId, String name, boolean inheritSecurity)
-			throws InvalidSessionException {
+	public GUIFolder create(String sid, GUIFolder newFolder, boolean inheritSecurity) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		try {
-			String folderName = name.replace("/", "");
+			String folderName = newFolder.getName().replace("/", "");
 
 			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(SessionUtil.getSessionUser(sid));
 			transaction.setSessionId(sid);
 			transaction.setEvent(FolderEvent.CREATED.toString());
 
-			Folder f = folderDao.create(folderDao.findById(parentId), folderName, inheritSecurity, transaction);
+			Folder f = null;
+			if (newFolder.getType() == Folder.TYPE_DEFAULT)
+				f = folderDao.create(folderDao.findById(newFolder.getParentId()), folderName, newFolder.getType(),
+						inheritSecurity, transaction);
+			else
+				f = folderDao.create(folderDao.findById(Folder.ROOTID), folderName, newFolder.getType(),
+						inheritSecurity, transaction);
+
 			return getFolder(sid, f.getId());
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);

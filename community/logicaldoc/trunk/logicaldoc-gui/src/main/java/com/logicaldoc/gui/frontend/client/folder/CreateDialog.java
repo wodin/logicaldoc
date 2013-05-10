@@ -10,7 +10,6 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
-import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.Dialog;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
@@ -32,11 +31,11 @@ public class CreateDialog extends Dialog {
 
 	private DynamicForm form;
 
-	public CreateDialog(final long parentId) {
+	public CreateDialog(final GUIFolder folder) {
 		super();
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		setTitle(I18N.message("newfolder"));
+		setTitle(folder.getType() == 0 ? I18N.message("newfolder") : I18N.message("newworkspace"));
 		setWidth(350);
 		setHeight(130);
 		setCanDragResize(true);
@@ -53,10 +52,11 @@ public class CreateDialog extends Dialog {
 		inheritSecurity.setName("inheritSecurity");
 		inheritSecurity.setTitle(I18N.message("inheritparentsec"));
 
-		TextItem name = ItemFactory.newTextItem("name", "name", I18N.message("newfolder"));
+		TextItem name = ItemFactory.newTextItem("name", "name", folder.getType() == 0 ? I18N.message("newfolder")
+				: I18N.message("newworkspace"));
 		name.setWidth(250);
 		name.setRequired(true);
-		
+
 		SubmitItem create = new SubmitItem();
 		create.setTitle(I18N.message("create"));
 		create.setAutoFit(true);
@@ -64,7 +64,8 @@ public class CreateDialog extends Dialog {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (form.validate()) {
-					service.create(Session.get().getSid(), parentId, form.getValueAsString("name").trim(),
+					folder.setName(form.getValueAsString("name").trim());
+					service.create(Session.get().getSid(), folder,
 							"true".equals(form.getValueAsString("inheritSecurity")), new AsyncCallback<GUIFolder>() {
 
 								@Override
@@ -74,18 +75,24 @@ public class CreateDialog extends Dialog {
 
 								@Override
 								public void onSuccess(GUIFolder newFolder) {
-									TreeNode selectedNode = (TreeNode) Navigator.get().getSelectedRecord();
 									TreeNode newNode = new TreeNode(newFolder.getName());
 									newNode.setAttribute("name", newFolder.getName());
 									newNode.setAttribute("folderId", Long.toString(newFolder.getId()));
+									newNode.setAttribute("type", Long.toString(newFolder.getType()));
 
-									if (!Navigator.get().getTree().isOpen(selectedNode))
-										Navigator.get().getTree().openFolder(selectedNode);
-									Navigator.get().getTree().add(newNode, selectedNode);
+									if (newFolder.getType() == 0) {
+										TreeNode selectedNode = (TreeNode) Navigator.get().getSelectedRecord();
+										if (!Navigator.get().getTree().isOpen(selectedNode))
+											Navigator.get().getTree().openFolder(selectedNode);
+										Navigator.get().getTree().add(newNode, selectedNode);
+									} else {
+										Navigator.get().getTree().add(newNode, Navigator.get().getTree().getRoot());
+									}
+									
 									destroy();
 								}
 							});
-				}				
+				}
 			}
 		});
 
