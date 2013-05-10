@@ -92,8 +92,7 @@ public class MockFolderServiceImpl extends RemoteServiceServlet implements Folde
 	}
 
 	@Override
-	public GUIFolder create(String sid, long parentId, String name, boolean inheritSecurity)
-			throws InvalidSessionException {
+	public GUIFolder create(String sid, GUIFolder newFolder, boolean inheritSecurity) throws InvalidSessionException {
 		return null;
 	}
 }
