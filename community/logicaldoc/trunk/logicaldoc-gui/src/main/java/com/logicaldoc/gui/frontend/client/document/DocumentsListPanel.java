@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
@@ -16,11 +15,8 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
-import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
-import com.smartgwt.client.widgets.events.DrawEvent;
-import com.smartgwt.client.widgets.events.DrawHandler;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
@@ -115,17 +111,6 @@ public class DocumentsListPanel extends VLayout {
 					DocumentsListPanel.this.hiliteDocument(hiliteDoc);
 			}
 		});
-
-		final String previouslySavedState = (String) Offline.get(Constants.COOKIE_DOCSLIST);
-		if (previouslySavedState != null) {
-			grid.addDrawHandler(new DrawHandler() {
-				@Override
-				public void onDraw(DrawEvent event) {
-					// restore any previously saved view state for this grid
-					grid.setViewState(previouslySavedState);
-				}
-			});
-		}
 	}
 
 	@Override

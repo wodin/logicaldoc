@@ -38,7 +38,7 @@ public class AccountStandardProperties extends AccountDetailsTab {
 
 		targetSelector = new FolderSelector("target", true);
 		targetSelector.setTitle(I18N.message("target"));
-		targetSelector.setWidth(200);
+		targetSelector.setWidth(250);
 
 		if (account.getTarget() != null)
 			targetSelector.setFolder(account.getTarget());
@@ -73,10 +73,12 @@ public class AccountStandardProperties extends AccountDetailsTab {
 
 		TextItem username = ItemFactory.newTextItem("username", "username", account.getUserName());
 		username.addChangedHandler(changedHandler);
+		username.setWidth(180);
 
 		TextItem password = ItemFactory.newPasswordItem("password", "password", account.getPassword());
 		password.addChangedHandler(changedHandler);
-
+		password.setWidth(180);
+		
 		SelectItem language = ItemFactory.newLanguageSelector("language", false, false);
 		language.addChangedHandler(changedHandler);
 		language.setRequired(true);
@@ -84,9 +86,11 @@ public class AccountStandardProperties extends AccountDetailsTab {
 
 		TextItem server = ItemFactory.newTextItem("server", "server", account.getHost());
 		server.setRequired(true);
+		server.setWidth(180);
 		server.addChangedHandler(changedHandler);
 
 		IntegerItem port = ItemFactory.newIntegerItem("port", "port", account.getPort());
+		port.setWidth(80);
 		port.addChangedHandler(changedHandler);
 
 		RadioGroupItem ssl = ItemFactory.newBooleanSelector("ssl", "ssl");
