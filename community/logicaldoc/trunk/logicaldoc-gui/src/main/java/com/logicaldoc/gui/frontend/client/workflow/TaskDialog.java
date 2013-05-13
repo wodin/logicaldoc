@@ -108,23 +108,13 @@ public class TaskDialog extends Window {
 			escalationForm.setNumCols(4);
 			escalationForm.setColWidths("35", "35", "50", "130");
 			escalationForm.setValuesManager(vm);
-			SpinnerItem duedateTimeItem = new SpinnerItem("duedateNumber");
-			duedateTimeItem.setTitle(I18N.message("duedate"));
+			SpinnerItem duedateTimeItem = ItemFactory.newSpinnerItem("duedateNumber", "duedate", this.state.getDueDateNumber());
 			duedateTimeItem.setDefaultValue(0);
-			duedateTimeItem.setMin(0);
-			duedateTimeItem.setStep(1);
-			duedateTimeItem.setWidth(50);
-			duedateTimeItem.setValue(this.state.getDueDateNumber());
 			SelectItem duedateTime = ItemFactory.newDueTimeSelector("duedateTime", "");
 			duedateTime.setValue(this.state.getDueDateUnit());
 
-			SpinnerItem remindTimeItem = new SpinnerItem("remindtimeNumber");
-			remindTimeItem.setTitle(I18N.message("remindtime"));
+			SpinnerItem remindTimeItem =ItemFactory.newSpinnerItem("remindtimeNumber", "remindtime", this.state.getReminderNumber());
 			remindTimeItem.setDefaultValue(0);
-			remindTimeItem.setMin(0);
-			remindTimeItem.setStep(1);
-			remindTimeItem.setWidth(50);
-			remindTimeItem.setValue(this.state.getReminderNumber());
 			SelectItem remindTime = ItemFactory.newDueTimeSelector("remindTime", "");
 			remindTime.setValue(this.state.getReminderUnit());
 			if (Session.get().isDemo()) {

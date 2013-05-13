@@ -37,6 +37,7 @@ import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.RowSpacerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.SpinnerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -208,6 +209,7 @@ public class ItemFactory {
 		else
 			item.setValidators(new EmailValidator());
 		item.setHintStyle("hint");
+		item.setWidth(180);
 		return item;
 	}
 
@@ -341,6 +343,19 @@ public class ItemFactory {
 		return select;
 	}
 
+	public static SpinnerItem newSpinnerItem(String name, String title, Integer value) {
+		SpinnerItem spinner = new SpinnerItem(name);
+		spinner.setTitle(I18N.message(title));
+		spinner.setMin(0);
+		spinner.setStep(1);
+		spinner.setWidth(50);
+		if (value != null)
+			spinner.setValue(value.intValue());
+		else
+			spinner.setValue((Integer)null);
+		return spinner;
+	}
+
 	public static Img newImgIcon(String name) {
 		Img img = newImg(name);
 		img.setWidth("16px");
@@ -360,7 +375,7 @@ public class ItemFactory {
 		else if (name.equals("logo_head.png"))
 			img = new Img(info.getLogoHeadSrc());
 		else if (name.equals("logo_oem.png"))
-		    img = new Img(info.getLogoOemSrc());
+			img = new Img(info.getLogoOemSrc());
 		else if (name.equals("logo_head_oem.png"))
 			img = new Img(info.getLogoHeadOemSrc());
 		else if (name.equals("banner.gif"))

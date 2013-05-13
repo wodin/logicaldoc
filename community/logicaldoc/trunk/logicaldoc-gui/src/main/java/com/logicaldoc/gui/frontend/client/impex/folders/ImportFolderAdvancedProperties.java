@@ -14,6 +14,7 @@ import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.SpinnerItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
@@ -50,17 +51,18 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 			formsContainer.removeChild(form);
 
 		form = new DynamicForm();
-		form.setNumCols(2);
+		form.setNumCols(3);
 		form.setTitleOrientation(TitleOrientation.TOP);
 
-		SelectItem depth = ItemFactory.newSelectItem("depth", null);
+		SpinnerItem depth = ItemFactory.newSpinnerItem("depth", "depth", share.getDepth());
+		depth.setRequired(true);
+		depth.setWidth(60);
 		depth.addChangedHandler(changedHandler);
-		depth.setValueMap("5", "10", "15");
-		depth.setValue(Integer.toString(share.getDepth()));
 
 		IntegerItem size = ItemFactory.newIntegerItem("sizemax", "sizemax", share.getMaxSize());
 		size.addChangedHandler(changedHandler);
 		size.setHint("KB");
+		size.setWidth(100);
 
 		TextItem include = ItemFactory.newTextItem("include", "include", share.getIncludes());
 		include.addChangedHandler(changedHandler);
@@ -121,7 +123,7 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 		updatePolicy.setValueMap(map);
 		updatePolicy.setValue(Integer.toString(share.getUpdatePolicy()));
 
-		form.setItems(depth, size, include, exclude, startDate, template, tags, updatePolicy, importEmpty, delImport);
+		form.setItems(depth, size, startDate, include, exclude, template, tags, updatePolicy, importEmpty, delImport);
 
 		formsContainer.addMember(form);
 
