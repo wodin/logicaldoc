@@ -22,12 +22,10 @@ import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.common.client.util.RequestInfo;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
-import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.folder.Navigator;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.search.TagsForm;
 import com.logicaldoc.gui.frontend.client.security.LoginPanel;
-import com.logicaldoc.gui.frontend.client.services.DocumentService;
-import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -98,8 +96,10 @@ public class Frontend implements EntryPoint {
 
 		mainPanel = MainPanel.get();
 
-		setUploadTrigger(this);
-		setSearchTag(this);
+		declareReloadTrigger(this);
+		declareSearchTag(this);
+		declareGetCurrentFolderId(this);
+		declareCheckPermission(this);
 
 		infoService.getInfo(I18N.getLocale(), new AsyncCallback<GUIInfo>() {
 			@Override
@@ -124,7 +124,7 @@ public class Frontend implements EntryPoint {
 				try {
 					savedSid = Offline.get(Constants.COOKIE_SID).toString();
 				} catch (Throwable t) {
-					
+
 				}
 
 				loginPanel = new LoginPanel(info);
@@ -146,10 +146,10 @@ public class Frontend implements EntryPoint {
 							} else {
 								MainPanel.get();
 								loginPanel.onLoggedIn(session);
-								
+
 								// Remove the loading frame
 								RootPanel.getBodyElement().removeChild(RootPanel.get("loadingWrapper").getElement());
-								setUploadTrigger(Frontend.this);
+								declareReloadTrigger(Frontend.this);
 							}
 						}
 					});
@@ -171,7 +171,7 @@ public class Frontend implements EntryPoint {
 
 		// Remove the loading frame
 		RootPanel.getBodyElement().removeChild(RootPanel.get("loadingWrapper").getElement());
-		setUploadTrigger(Frontend.this);
+		declareReloadTrigger(Frontend.this);
 
 		showLogin();
 	}
@@ -199,23 +199,18 @@ public class Frontend implements EntryPoint {
 	/**
 	 * Triggers the load of the last uploaded files
 	 */
-	public void triggerUpload() {
-		DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
-		documentService.addDocuments(Session.get().getSid(), I18N.getLocale(),
-				Session.get().getCurrentFolder().getId(), "UTF-8", false, null, new AsyncCallback<Void>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(Void result) {
-						DocumentsPanel.get().refresh();
-					}
-				});
+	public void triggerReload() {
+		Navigator.get().reload();
 	}
 
+	public String getCurrentFolderId() {
+		return Long.toString(Session.get().getCurrentFolder().getId());
+	}
+
+	public String checkPermission(String permission) {
+		return Boolean.toString(Session.get().getCurrentFolder().hasPermission(permission));
+	}
+	
 	public void searchTag(String tag) {
 		TagsForm.searchTag(tag, false);
 	}
@@ -225,11 +220,30 @@ public class Frontend implements EntryPoint {
 	}
 
 	/**
-	 * Declares the javascript function used to trigger the upload.
+	 * Declares the javascript function used to check a permission in the current folder.
 	 */
-	public static native void setUploadTrigger(Frontend frontend) /*-{
-		$wnd.triggerUpload = function() {
-			frontend.@com.logicaldoc.gui.frontend.client.Frontend::triggerUpload()();
+	public static native void declareCheckPermission(Frontend frontend) /*-{
+		$wnd.checkPermission = function(permission) {
+			return frontend.@com.logicaldoc.gui.frontend.client.Frontend::checkPermission(Ljava/lang/String;)(permission);
+		};
+	}-*/;
+	
+	/**
+	 * Declares the javascript function used to retrieve the current folder ID.
+	 */
+	public static native void declareGetCurrentFolderId(Frontend frontend) /*-{
+		$wnd.getCurrentFolderId = function() {
+			return frontend.@com.logicaldoc.gui.frontend.client.Frontend::getCurrentFolderId()();
+		};
+	}-*/;
+
+	/**
+	 * Declares the javascript function used to trigger the reload of the
+	 * current folder.
+	 */
+	public static native void declareReloadTrigger(Frontend frontend) /*-{
+		$wnd.triggerReload = function() {
+			frontend.@com.logicaldoc.gui.frontend.client.Frontend::triggerReload()();
 		};
 	}-*/;
 
@@ -237,7 +251,7 @@ public class Frontend implements EntryPoint {
 	 * Declares the javascript function used to trigger the search for a
 	 * specific tag.
 	 */
-	public static native void setSearchTag(Frontend frontend) /*-{
+	public static native void declareSearchTag(Frontend frontend) /*-{
 		$wnd.searchTag = function(tag) {
 			frontend.@com.logicaldoc.gui.frontend.client.Frontend::searchTag(Ljava/lang/String;)(tag);
 		};

@@ -9,19 +9,18 @@ import java.util.Set;
  * <ul>
  * <li>READ: ability to read the folder and its documents</li>
  * <li>WRITE: ability to insert and delete folder's documents</li>
- * <li>ADD_CHILD: ability to add child elements</li>
- * <li>MANAGE_SECURITY: ability to change security rules</li>
- * <li>MANAGE_IMMUTABILITY: ability to mark a document as immutable</li>
+ * <li>ADD: ability to add child elements</li>
+ * <li>SECURITY: ability to change security rules</li>
+ * <li>IMMUTABILE: ability to mark a document as immutable</li>
  * <li>DELETE: ability to delete the entity</li>
  * <li>RENAME: ability to rename the entity</li>
- * <li>BULK_IMPORT: ability to import documents</li>
- * <li>BULK_EXPORT: ability to export documents</li>
+ * <li>IMPORT: ability to import documents</li>
+ * <li>EXPORT: ability to export documents</li>
  * <li>SIGN: ability to digitally sign documents</li>
  * <li>ARCHIVE: ability to archive documents</li>
  * <li>WORKFLOW: ability to handle workflow</li>
  * <li>CALENDAR: ability to handle calendar events</li>
  * </ul>
- * 
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 4.0
