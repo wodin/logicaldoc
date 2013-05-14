@@ -413,7 +413,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 		reload.setTitle(I18N.message("reload"));
 		reload.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				onReload();
+				reload();
 			}
 		});
 
@@ -702,7 +702,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 		folder.setPathExtended(getPath(folder.getId()));
 	}
 
-	private void onReload() {
+	public void reload() {
 		TreeNode selectedNode = (TreeNode) getSelectedRecord();
 		getTree().reloadChildren(selectedNode);
 		selectFolder(Long.parseLong(selectedNode.getAttributeAsString("folderId")));
