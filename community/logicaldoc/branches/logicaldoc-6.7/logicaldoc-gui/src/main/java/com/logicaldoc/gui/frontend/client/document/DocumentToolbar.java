@@ -395,7 +395,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		if (Offline.get(Constants.COOKIE_DOCSLIST_MAX) != null
 				&& !Offline.get(Constants.COOKIE_DOCSLIST_MAX).equals(""))
 			mx = (String) Offline.get(Constants.COOKIE_DOCSLIST_MAX);
-		max.setDefaultValue(Integer.parseInt(mx));
+		max.setValue(Integer.parseInt(mx));
 		max.setWidth(40);
 
 		bulkUpdate.setIcon(ItemFactory.newImgIcon("application_form_edit.png")
@@ -483,6 +483,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (max.validate()) {
+					Offline.put(Constants.COOKIE_DOCSLIST_MAX, max.getValueAsString());
 					DocumentsPanel.get().refresh((Integer) max.getValue());
 				}
 			}
@@ -498,25 +499,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			@Override
 			public void onClick(ClickEvent event) {
 				DocumentsPanel.get().toggleFilters();
-			}
-		});
-
-		addSeparator();
-		ToolStripButton saveGrid = new ToolStripButton();
-		saveGrid.setIcon(ItemFactory.newImgIcon("table_save.png").getSrc());
-		saveGrid.setTooltip(I18N.message("savegrid"));
-		saveGrid.setAutoFit(true);
-		addButton(saveGrid);
-		saveGrid.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				DocumentsPanel.get().saveGrid();
-				try {
-					int m = Integer.parseInt(max.getValue().toString());
-					Offline.put(Constants.COOKIE_DOCSLIST_MAX,
-							Integer.toString(m));
-				} catch (Throwable t) {
-
-				}
 			}
 		});
 
