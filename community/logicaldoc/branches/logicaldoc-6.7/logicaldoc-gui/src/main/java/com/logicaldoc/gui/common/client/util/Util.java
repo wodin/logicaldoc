@@ -406,8 +406,11 @@ public class Util {
 		String tmp = "<applet name=\"DropApplet\" archive=\""
 				+ Util.contextPath()
 				+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.upload.DropApplet\" width=\"1\" height=\"1\" mayscript>";
-		tmp += "<param name=\"uploadUrl\" value=\"" + Util.contextPath() + "servlet.gupld?new_session=true&sid="
-				+ Session.get().getSid() + "\" />";
+		tmp += "<param name=\"baseUrl\" value=\"" + Util.contextPath() + "\" />";
+		tmp += "<param name=\"sid\" value=\"" + Session.get().getSid() + "\" />";
+		tmp += "<param name=\"language\" value=\"" + I18N.getDefaultLocaleForDoc() + "\" />";
+		tmp += "<param name=\"sizeMax\" value=\"" + Long.parseLong(Session.get().getInfo().getConfig("upload.maxsize"))
+				* 1024 * 1024 + "\" />";
 		tmp += "</applet>";
 		dropSpotApplet.getElement().setInnerHTML(tmp);
 	}

@@ -4,7 +4,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.DocumentObserver;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.FolderObserver;
@@ -25,14 +24,11 @@ import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.ExpansionMode;
-import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
-import com.smartgwt.client.widgets.events.DrawEvent;
-import com.smartgwt.client.widgets.events.DrawHandler;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -174,17 +170,6 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			}
 		});
 
-		final String previouslySavedState = (String) Offline.get(Constants.COOKIE_HITSLIST);
-		if (previouslySavedState != null) {
-			grid.addDrawHandler(new DrawHandler() {
-				@Override
-				public void onDraw(DrawEvent event) {
-					// restore any previously saved view state for this grid
-					grid.setViewState(previouslySavedState);
-				}
-			});
-		}
-
 		// Prepare the toolbar with some buttons
 		setupToolbar(options.getType());
 
@@ -269,7 +254,6 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			max.setShowTitle(false);
 			max.setDefaultValue(40);
 			max.setWidth(40);
-
 			max.setValue(Search.get().getOptions().getMaxHits());
 
 			ToolStripButton repeat = new ToolStripButton();
@@ -287,20 +271,6 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 				}
 			});
 		}
-
-		ToolStripButton saveGrid = new ToolStripButton();
-		saveGrid.setIcon(ItemFactory.newImgIcon("table_save.png").getSrc());
-		saveGrid.setTooltip(I18N.message("savegrid"));
-		saveGrid.setAutoFit(true);
-		saveGrid.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				String viewState = grid.getViewState();
-				Offline.put(Constants.COOKIE_HITSLIST, viewState);
-				Log.info(I18N.message("settingssaved"), null);
-			}
-		});
-		toolStrip.addSeparator();
-		toolStrip.addButton(saveGrid);
 
 		ToolStripButton print = new ToolStripButton();
 		print.setIcon(ItemFactory.newImgIcon("printer.png").getSrc());

@@ -293,14 +293,6 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		}
 	}
 
-	public void saveGrid() {
-		if (listingPanel instanceof DocumentsListPanel) {
-			String viewState = ((DocumentsListPanel) listingPanel).getGrid().getViewState();
-			Offline.put(Constants.COOKIE_DOCSLIST, viewState);
-			Log.info(I18N.message("settingssaved"), null);
-		}
-	}
-
 	public void printPreview() {
 		if (listingPanel instanceof DocumentsListPanel) {
 			Canvas.printComponents(new Object[] { ((DocumentsListPanel) listingPanel).getGrid() });

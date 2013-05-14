@@ -24,13 +24,18 @@ import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.events.DrawEvent;
+import com.smartgwt.client.widgets.events.DrawHandler;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellClickHandler;
+import com.smartgwt.client.widgets.grid.events.ViewStateChangedEvent;
+import com.smartgwt.client.widgets.grid.events.ViewStateChangedHandler;
 
 /**
  * Grid used to show a documents list during navigation or searches.
@@ -44,7 +49,7 @@ public class DocumentsGrid extends ListGrid {
 
 	private SignServiceAsync signService = (SignServiceAsync) GWT.create(SignService.class);
 
-	public DocumentsGrid(DataSource ds) {
+	public DocumentsGrid(final DataSource ds) {
 		ListGridField id = new ListGridField("id");
 		id.setHidden(true);
 
@@ -210,7 +215,7 @@ public class DocumentsGrid extends ListGrid {
 		setAutoFetchData(true);
 		setFilterOnKeypress(true);
 		setWrapCells(false);
-		
+
 		ListGridField template = new ListGridField("template", I18N.message("template"), 150);
 		template.setAlign(Alignment.LEFT);
 		template.setHidden(true);
@@ -389,6 +394,34 @@ public class DocumentsGrid extends ListGrid {
 			}
 		});
 
+		/*
+		 * Save the layout of the grid at every change
+		 */
+		addViewStateChangedHandler(new ViewStateChangedHandler() {
+			@Override
+			public void onViewStateChanged(ViewStateChangedEvent event) {
+				if (ds != null)
+					Offline.put(Constants.COOKIE_DOCSLIST, getViewState());
+				else
+					Offline.put(Constants.COOKIE_HITSLIST, getViewState());
+			}
+		});
+
+		/*
+		 * Restore any previously saved view state for this grid
+		 */
+		addDrawHandler(new DrawHandler() {
+			@Override
+			public void onDraw(DrawEvent event) {
+				String previouslySavedState = null;
+				if (ds != null)
+					previouslySavedState = (String) Offline.get(Constants.COOKIE_DOCSLIST);
+				else
+					previouslySavedState = (String) Offline.get(Constants.COOKIE_HITSLIST);
+				if (previouslySavedState != null)
+					setViewState(previouslySavedState);
+			}
+		});
 	}
 
 	@Override
@@ -416,14 +449,14 @@ public class DocumentsGrid extends ListGrid {
 			else if (document.getIndexed() == 1)
 				selectedRecord.setAttribute("indexed", "indexed");
 
-			if(document.getStatus()==2)
+			if (document.getStatus() == 2)
 				selectedRecord.setAttribute("locked", "lock");
-			else if(document.getStatus()==1)
+			else if (document.getStatus() == 1)
 				selectedRecord.setAttribute("locked", "page_edit");
 			else
 				selectedRecord.setAttribute("locked", "blank");
 			selectedRecord.setAttribute("status", document.getStatus());
-			
+
 			selectedRecord.setAttribute("title", document.getTitle());
 			selectedRecord.setAttribute("customId", document.getCustomId());
 			selectedRecord.setAttribute("version", document.getVersion());

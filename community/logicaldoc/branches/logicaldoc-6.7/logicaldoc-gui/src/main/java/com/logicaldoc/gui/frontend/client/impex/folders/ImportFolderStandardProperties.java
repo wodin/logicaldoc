@@ -35,7 +35,7 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 		setMembers(formsContainer);
 		targetSelector = new FolderSelector("target", false);
 		targetSelector.setRequired(true);
-		targetSelector.setWidth(200);
+		targetSelector.setWidth(250);
 		targetSelector.setTitle(I18N.message("target"));
 		if (share.getTarget() != null)
 			targetSelector.setFolder(share.getTarget());
@@ -64,6 +64,7 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 
 		TextItem path = ItemFactory.newTextItem("path", "path", share.getPath());
 		path.addChangedHandler(changedHandler);
+		path.setWidth(250);
 		path.setRequired(true);
 
 		TextItem domain = ItemFactory.newTextItem("domain", "domain", share.getDomain());
