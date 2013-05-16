@@ -196,9 +196,12 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 		}
 
 		version.setAttributes(new HashMap<String, ExtendedAttribute>());
-		if (document.getAttributes() != null) {
-			for (String name : document.getAttributeNames()) {
-				version.getAttributes().put(name, document.getAttributes().get(name));
+		if (document.getAttributes() != null ) {
+			try {
+				for (String name : document.getAttributeNames()) {
+					version.getAttributes().put(name, document.getAttributes().get(name));
+				}
+			} catch (Throwable t) {
 			}
 		}
 

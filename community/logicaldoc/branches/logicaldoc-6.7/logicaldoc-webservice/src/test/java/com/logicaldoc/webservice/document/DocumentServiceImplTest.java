@@ -17,6 +17,7 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.webservice.AbstractWebServiceTestCase;
+import com.logicaldoc.webservice.folder.WSFolder;
 
 /**
  * Test case for <code>DocumentServiceImpl</code>
@@ -85,7 +86,7 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		docDao.initialize(doc);
 		doc.setIndexed(0);
 		docDao.store(doc);
-		docServiceImpl.move("", doc.getId(), newFolder.getId()); 
+		docServiceImpl.move("", doc.getId(), newFolder.getId());
 		// NOTA: attenzione errore optimistic lock
 		Assert.assertSame(1L, doc.getId());
 		docDao.initialize(doc);
@@ -107,14 +108,12 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 
 	@Test
 	public void testCreate() throws Exception {
-		Document newDoc = docDao.findById(2);
-		Assert.assertNotNull(newDoc);
-		docDao.initialize(newDoc);
-
-		WSDocument wsDoc = WSDocument.fromDocument(newDoc);
-		Assert.assertEquals(2, wsDoc.getId());
-		wsDoc.setId(51);
+		WSDocument wsDoc = new WSDocument();
+		wsDoc.setId(0L);
+		wsDoc.setFolderId(4L);
 		wsDoc.setTitle("document test");
+		wsDoc.setFileName("document test.txt");
+		wsDoc.setCoverage("coverage");
 		wsDoc.setCustomId("yyyyyyyy");
 		File file = new File("pom.xml");
 		wsDoc.setComment("comment");
@@ -125,9 +124,7 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		docDao.initialize(doc);
 
 		Assert.assertEquals("document test", doc.getTitle());
-		Assert.assertEquals("sourceauthor2", doc.getSourceAuthor());
-		Assert.assertEquals("sourcetype2", doc.getSourceType());
-		Assert.assertEquals("coverage2", doc.getCoverage());
+		Assert.assertEquals("coverage", doc.getCoverage());
 	}
 
 	@Test
@@ -155,8 +152,8 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 	public void testDelete() throws Exception {
 		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
-		docServiceImpl.delete("", doc.getId());	
-		doc = docDao.findById(1);	
+		docServiceImpl.delete("", doc.getId());
+		doc = docDao.findById(1);
 		Assert.assertNull(doc);
 	}
 
@@ -173,7 +170,7 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		Assert.assertEquals("sourcetype1", doc.getSourceType());
 		Assert.assertEquals("coverage1", doc.getCoverage());
 	}
-	
+
 	@Test
 	public void testRenameFile() throws Exception {
 		Document doc = docDao.findById(1);
@@ -228,35 +225,35 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 
 	@Test
 	public void testListDocuments() throws Exception {
-		WSDocument[] docs = docServiceImpl.listDocuments("", 103,null);
+		WSDocument[] docs = docServiceImpl.listDocuments("", 103, null);
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(2, docs.length);
 		List<WSDocument> docsList = Arrays.asList(docs);
 		Assert.assertEquals(1, docsList.get(0).getId());
 		Assert.assertEquals(2, docsList.get(1).getId());
-		
-		docs = docServiceImpl.listDocuments("", 103,"plo");
+
+		docs = docServiceImpl.listDocuments("", 103, "plo");
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(0, docs.length);
-		
-		docs = docServiceImpl.listDocuments("", 103,"*ut*");
+
+		docs = docServiceImpl.listDocuments("", 103, "*ut*");
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(1, docs.length);
 		Assert.assertEquals("pluto", docs[0].getFileName());
-		
-		docs = docServiceImpl.listDocuments("", 103,"pippo");
+
+		docs = docServiceImpl.listDocuments("", 103, "pippo");
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(1, docs.length);
 		Assert.assertEquals("pippo", docs[0].getFileName());
-		
+
 		docs = docServiceImpl.list("", 99);
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(0, docs.length);
 	}
-	
+
 	@Test
 	public void testGetDocuments() throws Exception {
-		WSDocument[] docs = docServiceImpl.getDocuments("", new Long[]{1L,2L,3L});
+		WSDocument[] docs = docServiceImpl.getDocuments("", new Long[] { 1L, 2L, 3L });
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(2, docs.length);
 	}
