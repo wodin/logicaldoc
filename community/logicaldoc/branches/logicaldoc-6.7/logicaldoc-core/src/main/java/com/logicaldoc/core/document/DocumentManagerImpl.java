@@ -544,6 +544,8 @@ public class DocumentManagerImpl implements DocumentManager {
 					}
 				}
 			}
+			
+			docVO.setId(0L);
 
 			// Create the record
 			documentDAO.store(docVO, transaction);
