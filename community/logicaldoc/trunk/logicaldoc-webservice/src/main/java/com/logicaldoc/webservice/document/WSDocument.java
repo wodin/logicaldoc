@@ -216,27 +216,30 @@ public class WSDocument {
 
 			// Populate extended attributes
 			WSAttribute[] attributes = new WSAttribute[0];
-			if (document.getAttributes() != null && document.getAttributes().size() > 0) {
-				attributes = new WSAttribute[document.getAttributeNames().size()];
-				int i = 0;
-				for (String name : document.getAttributeNames()) {
-					ExtendedAttribute attr = document.getExtendedAttribute(name);
-									
-					WSAttribute attribute = new WSAttribute();
-					attribute.setName(name);
-					attribute.setMandatory(attr.getMandatory());
-					attribute.setPosition(attr.getPosition());
-					attribute.setType(attr.getType());
-					attribute.setValue(attr.getValue());
-					
-					if (attr.getType() == ExtendedAttribute.TYPE_USER) {
-						attribute.setIntValue(attr.getIntValue());
-						attribute.setStringValue(attr.getStringValue());
+			try {
+				if (document.getAttributes() != null && document.getAttributes().size() > 0) {
+					attributes = new WSAttribute[document.getAttributeNames().size()];
+					int i = 0;
+					for (String name : document.getAttributeNames()) {
+						ExtendedAttribute attr = document.getExtendedAttribute(name);
+
+						WSAttribute attribute = new WSAttribute();
+						attribute.setName(name);
+						attribute.setMandatory(attr.getMandatory());
+						attribute.setPosition(attr.getPosition());
+						attribute.setType(attr.getType());
+						attribute.setValue(attr.getValue());
+
+						if (attr.getType() == ExtendedAttribute.TYPE_USER) {
+							attribute.setIntValue(attr.getIntValue());
+							attribute.setStringValue(attr.getStringValue());
+						}
+
+						attribute.setType(attr.getType());
+						attributes[i++] = attribute;
 					}
-					
-					attribute.setType(attr.getType());
-					attributes[i++] = attribute;
 				}
+			} catch (Throwable t) {
 			}
 			wsDoc.setExtendedAttributes(attributes);
 
@@ -305,9 +308,10 @@ public class WSDocument {
 						extAttribute.setIntValue(extendedAttributes[i].getIntValue());
 						extAttribute.setStringValue(extendedAttributes[i].getStringValue());
 						extAttribute.setDoubleValue(extendedAttributes[i].getDoubleValue());
-						extAttribute.setDateValue(AbstractService.convertStringToDate(extendedAttributes[i].getDateValue()));
+						extAttribute.setDateValue(AbstractService.convertStringToDate(extendedAttributes[i]
+								.getDateValue()));
 						extAttribute.setType(extendedAttributes[i].getType());
-						
+
 						attributes.put(extendedAttributes[i].getName(), extAttribute);
 					}
 				}

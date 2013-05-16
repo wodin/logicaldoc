@@ -47,25 +47,9 @@
       <ref bean="DataSource" />
     </property>
 
-     <property name="mappingResources">
-      <list>
-        <value>/mappings/User.hbm.xml</value>
-        <value>/mappings/Menu.hbm.xml</value>
-        <value>/mappings/Group.hbm.xml</value>
-        <value>/mappings/UserDoc.hbm.xml</value>
-        <value>/mappings/DownloadTicket.hbm.xml</value>
-        <value>/mappings/History.hbm.xml</value>
-        <value>/mappings/FolderHistory.hbm.xml</value>
-        <value>/mappings/Document.hbm.xml</value>
-        <value>/mappings/DocumentNote.hbm.xml</value>
-        <value>/mappings/DocumentLink.hbm.xml</value>
-        <value>/mappings/Folder.hbm.xml</value>
-        <value>/mappings/DocumentTemplate.hbm.xml</value>
-        <value>/mappings/SystemMessage.hbm.xml</value>
-        <value>/mappings/Version.hbm.xml</value>
-        <value>/mappings/Generic.hbm.xml</value>
-      </list>
-    </property>
+		<property name="mappingLocations">
+			<value>classpath*:mappings/*.hbm.xml</value>
+		</property>
 
     <property name="hibernateProperties">
       <props>
