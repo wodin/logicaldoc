@@ -157,9 +157,9 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 			}
 		});
 
-		items.add(sourceItem);
-		items.add(sourceId);
 		items.add(customId);
+		items.add(sourceItem);
+		items.add(sourceId);		
 		items.add(recipientItem);
 		items.add(objectItem);
 		items.add(typeItem);
