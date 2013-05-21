@@ -177,7 +177,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		StaticTextItem customId = ItemFactory.newStaticTextItem("customId", "customid", document.getCustomId());
 		items.add(customId);
-		
+
 		FormItemIcon ratingIcon = ItemFactory.newItemIcon("rating" + document.getRating() + ".png");
 		StaticTextItem vote = ItemFactory.newStaticTextItem("vote", "vote", "");
 		vote.setIcons(ratingIcon);
@@ -236,7 +236,6 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 				}
 			});
 			tagItem.setHintStyle("hint");
-			tagItem.setDisabled(!updateEnabled);
 
 			if ("preset".equals(mode))
 				tagItem.addChangedHandler(new ChangedHandler() {
@@ -264,7 +263,10 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 					}
 				}
 			});
-			items.add(tagItem);
+
+			if (updateEnabled)
+				items.add(tagItem);
+			
 			FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
 			int i = 0;
 			for (String str : document.getTags()) {
