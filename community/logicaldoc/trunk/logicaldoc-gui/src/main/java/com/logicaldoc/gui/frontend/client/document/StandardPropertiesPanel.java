@@ -182,25 +182,27 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		StaticTextItem vote = ItemFactory.newStaticTextItem("vote", "vote", "");
 		vote.setIcons(ratingIcon);
 		vote.setIconWidth(88);
-		vote.addIconClickHandler(new IconClickHandler() {
-			public void onIconClick(IconClickEvent event) {
-				documentService.getRating(Session.get().getSid(), document.getId(), new AsyncCallback<GUIRating>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(GUIRating rating) {
-						if (rating != null) {
-							RatingDialog dialog = new RatingDialog(document.getRating(), rating, observer);
-							dialog.show();
+		if (updateEnabled)
+			vote.addIconClickHandler(new IconClickHandler() {
+				public void onIconClick(IconClickEvent event) {
+					documentService.getRating(Session.get().getSid(), document.getId(), new AsyncCallback<GUIRating>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
 						}
-					}
-				});
-			}
-		});
+
+						@Override
+						public void onSuccess(GUIRating rating) {
+							if (rating != null) {
+								RatingDialog dialog = new RatingDialog(document.getRating(), rating, observer);
+								dialog.show();
+							}
+						}
+					});
+				}
+			});
 		items.add(vote);
+		vote.setDisabled(!updateEnabled);
 
 		SelectItem language = ItemFactory.newLanguageSelector("language", false, false);
 		language.addChangedHandler(changedHandler);
@@ -266,7 +268,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 			if (updateEnabled)
 				items.add(tagItem);
-			
+
 			FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
 			int i = 0;
 			for (String str : document.getTags()) {
