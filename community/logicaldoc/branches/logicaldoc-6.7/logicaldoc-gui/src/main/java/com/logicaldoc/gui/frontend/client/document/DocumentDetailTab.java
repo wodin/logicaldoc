@@ -51,4 +51,12 @@ public abstract class DocumentDetailTab extends HLayout {
 	protected void onTabSelected(){
 		
 	}
+
+	public boolean isUpdateEnabled() {
+		return updateEnabled;
+	}
+
+	public void setUpdateEnabled(boolean updateEnabled) {
+		this.updateEnabled = updateEnabled;
+	}
 }
