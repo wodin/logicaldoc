@@ -84,6 +84,7 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 		SelectItem language = ItemFactory.newLanguageSelector("language", true, false);
 		if (document.getLanguage() != null)
 			language = ItemFactory.newLanguageSelector("language", false, false);
+		language.setDisabled(!updateEnabled);
 
 		language.setValue(document.getLanguage());
 		items.add(language);
@@ -127,15 +128,15 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 					}
 				}
 			});
-			
+
 			if ("preset".equals(mode))
 				tagItem.addChangedHandler(new ChangedHandler() {
 					@Override
 					public void onChanged(ChangedEvent event) {
 						// In the preset mode at each selection immediately add
 						// the tag
-						Log.info("*"+tagItem.getValue(), null);
-						if (tagItem.getValue()!=null) {
+						Log.info("*" + tagItem.getValue(), null);
+						if (tagItem.getValue() != null) {
 							document.addTag(tagItem.getValue().toString().trim());
 							tagItem.clearValue();
 							refresh();
@@ -143,19 +144,23 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 					}
 				});
 
-			items.add(tagItem);
+			if (updateEnabled)
+				items.add(tagItem);
 			FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
 			int i = 0;
 			if (document.getTags() != null)
 				for (String str : document.getTags()) {
 					final StaticTextItem tgItem = ItemFactory.newStaticTextItem("tag" + i++, "tag", str);
-					tgItem.setIcons(icon);
-					tgItem.addIconClickHandler(new IconClickHandler() {
-						public void onIconClick(IconClickEvent event) {
-							document.removeTag((String) tgItem.getValue());
-							refresh();
-						}
-					});
+					if (updateEnabled) {
+						tgItem.setIcons(icon);
+						tgItem.addIconClickHandler(new IconClickHandler() {
+							public void onIconClick(IconClickEvent event) {
+								document.removeTag((String) tgItem.getValue());
+								refresh();
+							}
+						});
+					}
+					tgItem.setDisabled(!updateEnabled);
 					items.add(tgItem);
 				}
 		}
