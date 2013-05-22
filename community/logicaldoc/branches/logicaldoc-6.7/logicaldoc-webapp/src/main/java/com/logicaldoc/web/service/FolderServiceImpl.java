@@ -57,7 +57,9 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 		try {
 			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-			saveRules(sid, fdao.findById(folder.getId()), session.getUserId(), folder.getRights());
+			Folder f = fdao.findById(folder.getId());
+			fdao.initialize(f);
+			saveRules(sid, f, session.getUserId(), folder.getRights());
 			if (subtree) {
 				/*
 				 * Just apply the current security settings to the whole subtree
@@ -398,7 +400,6 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		try {
 			folder.setSecurityRef(null);
 			folder.getFolderGroups().clear();
-			fdao.store(folder);
 			sqlerrors = false;
 			Set<FolderGroup> grps = new HashSet<FolderGroup>();
 			for (GUIRight right : rights) {
@@ -477,10 +478,6 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			}
 
 			folder.setFolderGroups(grps);
-			boolean stored = fdao.store(folder);
-			if (!stored) {
-				sqlerrors = true;
-			}
 
 			// Add a folder history entry
 			FolderHistory history = new FolderHistory();

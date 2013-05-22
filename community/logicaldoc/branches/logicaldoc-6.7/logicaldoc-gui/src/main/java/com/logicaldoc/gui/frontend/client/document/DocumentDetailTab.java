@@ -30,7 +30,8 @@ public abstract class DocumentDetailTab extends HLayout {
 		this.document = document;
 		this.changedHandler = changedHandler;
 
-		if (Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN))
+		if (Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN) && document.getImmutable() == 0
+				&& document.getStatus() == Constants.DOC_UNLOCKED)
 			updateEnabled = true;
 		else
 			updateEnabled = (document.getImmutable() == 0 && document.getStatus() == Constants.DOC_UNLOCKED && document
@@ -44,12 +45,12 @@ public abstract class DocumentDetailTab extends HLayout {
 	public ChangedHandler getChangedHandler() {
 		return changedHandler;
 	}
-	
+
 	/**
 	 * Place here special logic that will be invoked when the user opens the tab
 	 */
-	protected void onTabSelected(){
-		
+	protected void onTabSelected() {
+
 	}
 
 	public boolean isUpdateEnabled() {
