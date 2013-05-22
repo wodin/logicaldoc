@@ -62,7 +62,7 @@ public class LockManager {
 	public void release(String lockName, String transactionId) {
 		if (lockName == null || transactionId == null)
 			return;
-		
+
 		Generic lock = genericDao.findByAlternateKey(LOCK, lockName, null);
 		if (lock != null && transactionId.equals(lock.getString1())) {
 			lock.setDate1(null);
@@ -74,32 +74,33 @@ public class LockManager {
 	protected boolean getInternal(String lockName, String transactionId) {
 		Date today = new Date();
 		Generic lock = genericDao.findByAlternateKey(LOCK, lockName, null);
-		if (lock == null) {
-			log.debug("Lock " + lockName + " not found");
-			lock = new Generic(LOCK, lockName);
-			lock.setString1(transactionId);
-			lock.setDate1(today);
+		try {
+			if (lock == null) {
+				log.debug("Lock " + lockName + " not found");
+				lock = new Generic(LOCK, lockName);
+				lock.setString1(transactionId);
+				lock.setDate1(today);
+			}
+
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.add(Calendar.SECOND, -config.getInt("lock.ttl"));
+			Date ldDate = cal.getTime();
+
+			if (lock.getDate1() == null || lock.getDate1().before(ldDate)) {
+				log.info("Lock " + lockName + " expired");
+				lock.setDate1(today);
+				lock.setString1(transactionId);
+			}
+
+			if (lock.getString1() == null || transactionId.equals(lock.getString1())) {
+				lock.setDate1(today);
+				lock.setString1(transactionId);
+				return true;
+			} else
+				return false;
+		} finally {
 			genericDao.store(lock);
 		}
-
-		GregorianCalendar cal = new GregorianCalendar();
-		cal.add(Calendar.SECOND, -config.getInt("lock.ttl"));
-		Date ldDate = cal.getTime();
-
-		if (lock.getDate1() == null || lock.getDate1().before(ldDate)) {
-			log.info("Lock " + lockName + " expired");
-			lock.setDate1(today);
-			lock.setString1(transactionId);
-			genericDao.store(lock);
-		}
-
-		if (lock.getString1() == null || transactionId.equals(lock.getString1())) {
-			lock.setDate1(today);
-			lock.setString1(transactionId);
-			genericDao.store(lock);
-			return true;
-		} else
-			return false;
 	}
 
 	public void setGenericDao(GenericDAO genericDao) {
