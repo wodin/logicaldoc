@@ -1,8 +1,10 @@
 package com.logicaldoc.gui.common.client.i18n;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIValuePair;
@@ -21,6 +23,10 @@ public class I18N {
 	private static GUIValuePair[] guiLanguages;
 
 	private static HashMap<String, String> bundle = new HashMap<String, String>();
+
+	private static DateTimeFormat dateFormatShort = null;
+
+	private static DateTimeFormat dateFormat = null;
 
 	public static String message(String key) {
 		if (bundle.containsKey(key))
@@ -128,6 +134,12 @@ public class I18N {
 		setLanguages(info.getSupportedLanguages());
 		setGuiLanguages(info.getSupportedGUILanguages());
 		initBundle(info.getBundle());
+
+		/*
+		 * Prepare the date formatters
+		 */
+		dateFormatShort = DateTimeFormat.getFormat(message("format_dateshort"));
+		dateFormat = DateTimeFormat.getFormat(message("format_date"));
 	}
 
 	public static void init(GUISession session) {
@@ -141,5 +153,17 @@ public class I18N {
 
 	public static void setGuiLanguages(GUIValuePair[] guiLanguages) {
 		I18N.guiLanguages = guiLanguages;
+	}
+
+	public static String formatDateShort(Date date) {
+		if (date == null)
+			return null;
+		return dateFormatShort.format(new Date(date.getTime()));
+	}
+
+	public static String formatDate(Date date) {
+		if (date == null)
+			return null;
+		return dateFormat.format(new Date(date.getTime()));
 	}
 }

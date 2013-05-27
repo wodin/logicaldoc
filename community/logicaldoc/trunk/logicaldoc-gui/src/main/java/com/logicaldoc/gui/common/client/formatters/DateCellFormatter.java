@@ -2,7 +2,6 @@ package com.logicaldoc.gui.common.client.formatters;
 
 import java.util.Date;
 
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -14,21 +13,17 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
  * @since 6.0
  */
 public class DateCellFormatter implements CellFormatter {
-	private String format = "";
+	private boolean shortFormat = false;
 
 	@Override
 	public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
-		if (value == null)
-			return null;
-		DateTimeFormat formatter = DateTimeFormat.getFormat(format);
-
-		return formatter.format((Date) value);
+		if (shortFormat)
+			return I18N.formatDateShort((Date) value);
+		else
+			return I18N.formatDate((Date) value);
 	}
 
 	public DateCellFormatter(boolean shortFormat) {
-		if (shortFormat)
-			format = I18N.message("format_dateshort");
-		else
-			format = I18N.message("format_date");
+		this.shortFormat = shortFormat;
 	}
 }

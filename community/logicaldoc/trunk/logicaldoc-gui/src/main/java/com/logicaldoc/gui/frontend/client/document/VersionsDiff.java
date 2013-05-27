@@ -38,9 +38,8 @@ public class VersionsDiff extends Window {
 
 		// Prepare the records, each one is related to a version's attribute
 		ArrayList<DiffRecord> records = new ArrayList<DiffRecord>();
-		DateTimeFormat formatter = DateTimeFormat.getFormat(I18N.message("format_date"));
-		records.add(new DiffRecord(I18N.message("versiondate"), formatter.format(version1.getVersionDate()), formatter
-				.format(version2.getVersionDate())));
+		records.add(new DiffRecord(I18N.message("versiondate"), I18N.formatDate(version1.getVersionDate()), I18N
+				.formatDate(version2.getVersionDate())));
 		records.add(new DiffRecord(I18N.message("fileversion"), version1.getFileVersion(), version2.getFileVersion()));
 		records.add(new DiffRecord(I18N.message("username"), version1.getUsername(), version2.getUsername()));
 		records.add(new DiffRecord(I18N.message("comment"), version1.getComment(), version2.getComment()));
@@ -48,11 +47,11 @@ public class VersionsDiff extends Window {
 		records.add(new DiffRecord(I18N.message("sourceid"), version1.getSourceId(), version2.getSourceId()));
 		records.add(new DiffRecord(I18N.message("title"), version1.getTitle(), version2.getTitle()));
 		records.add(new DiffRecord(I18N.message("language"), version1.getLanguage(), version2.getLanguage()));
-		records.add(new DiffRecord(I18N.message("createdon"), formatter.format(version1.getCreation()), formatter
-				.format(version2.getCreation())));
+		records.add(new DiffRecord(I18N.message("createdon"), I18N.formatDate(version1.getCreation()), I18N
+				.formatDate(version2.getCreation())));
 		records.add(new DiffRecord(I18N.message("creator"), version1.getCreator(), version2.getCreator()));
-		records.add(new DiffRecord(I18N.message("publishedon"), formatter.format(version1.getDate()), formatter
-				.format(version2.getDate())));
+		records.add(new DiffRecord(I18N.message("publishedon"), I18N.formatDate(version1.getDate()), I18N
+				.formatDate(version2.getDate())));
 		records.add(new DiffRecord(I18N.message("publisher"), version1.getPublisher(), version2.getPublisher()));
 		records.add(new DiffRecord(I18N.message("source"), version1.getSource(), version2.getSource()));
 		records.add(new DiffRecord(I18N.message("type"), version1.getSourceType(), version2.getSourceType()));
@@ -71,13 +70,13 @@ public class VersionsDiff extends Window {
 		records.add(new DiffRecord(I18N.message("published"), version1.getPublished() == 1 ? I18N.message("yes") : I18N
 				.message("no"), version2.getPublished() == 1 ? I18N.message("yes") : I18N.message("no")));
 
-		records.add(new DiffRecord(I18N.message("startpublishing"), version1.getStartPublishing() != null ? formatter
-				.format(version1.getStartPublishing()) : null, version2.getStartPublishing() != null ? formatter
-				.format(version2.getStartPublishing()) : null));
+		records.add(new DiffRecord(I18N.message("startpublishing"), version1.getStartPublishing() != null ? I18N
+				.formatDate(version1.getStartPublishing()) : null, version2.getStartPublishing() != null ? I18N
+				.formatDate(version2.getStartPublishing()) : null));
 
-		records.add(new DiffRecord(I18N.message("stoppublishing"), version1.getStopPublishing() != null ? formatter
-				.format(version1.getStopPublishing()) : null, version2.getStopPublishing() != null ? formatter
-				.format(version2.getStopPublishing()) : null));
+		records.add(new DiffRecord(I18N.message("stoppublishing"), version1.getStopPublishing() != null ? I18N
+				.formatDate(version1.getStopPublishing()) : null, version2.getStopPublishing() != null ? I18N
+				.formatDate(version2.getStopPublishing()) : null));
 
 		records.add(new DiffRecord(I18N.message("template"), version1.getTemplate(), version2.getTemplate()));
 		printExtendedAttributes(records, version1, version2);
@@ -119,7 +118,8 @@ public class VersionsDiff extends Window {
 			GUIExtendedAttribute att = version1.getExtendedAttribute(name);
 			String val1 = "";
 			if (att != null)
-				if ((att.getType() == GUIExtendedAttribute.TYPE_STRING || att.getType() == GUIExtendedAttribute.TYPE_USER) && att.getStringValue() != null) {
+				if ((att.getType() == GUIExtendedAttribute.TYPE_STRING || att.getType() == GUIExtendedAttribute.TYPE_USER)
+						&& att.getStringValue() != null) {
 					val1 = att.getStringValue();
 				} else if (att.getType() == GUIExtendedAttribute.TYPE_INT && att.getValue() != null) {
 					val1 = Long.toString(att.getIntValue());
@@ -132,7 +132,8 @@ public class VersionsDiff extends Window {
 			att = version2.getExtendedAttribute(name);
 			String val2 = "";
 			if (att != null)
-				if ((att.getType() == GUIExtendedAttribute.TYPE_STRING || att.getType() == GUIExtendedAttribute.TYPE_USER) && att.getStringValue() != null) {
+				if ((att.getType() == GUIExtendedAttribute.TYPE_STRING || att.getType() == GUIExtendedAttribute.TYPE_USER)
+						&& att.getStringValue() != null) {
 					val2 = att.getStringValue();
 				} else if (att.getType() == GUIExtendedAttribute.TYPE_INT && att.getValue() != null) {
 					val2 = Long.toString(att.getIntValue());
