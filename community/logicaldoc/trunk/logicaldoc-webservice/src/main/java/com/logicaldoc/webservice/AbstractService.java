@@ -140,7 +140,7 @@ public class AbstractService {
 	}
 
 	public static String convertDateToString(Date date) {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 		try {
 			return df.format(date);
 		} catch (Exception e) {
@@ -157,7 +157,7 @@ public class AbstractService {
 		if (StringUtils.isEmpty(date))
 			return null;
 
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 		try {
 			return df.parse(date);
 		} catch (ParseException e) {

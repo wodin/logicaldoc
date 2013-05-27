@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.DocumentObserver;
@@ -116,14 +115,13 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		StaticTextItem id = ItemFactory.newStaticTextItem("id", "id", Long.toString(document.getId()));
 
-		DateTimeFormat formatter = DateTimeFormat.getFormat(I18N.message("format_date"));
 		StaticTextItem creation = ItemFactory.newStaticTextItem("creation", "createdon",
-				formatter.format((Date) document.getCreation()));
+				I18N.formatDate((Date) document.getCreation()));
 
 		StaticTextItem creator = ItemFactory.newStaticTextItem("creator", "creator", document.getCreator());
 
 		StaticTextItem published = ItemFactory.newStaticTextItem("date", "publishedon",
-				formatter.format((Date) document.getDate()));
+				I18N.formatDate((Date) document.getDate()));
 
 		StaticTextItem size = ItemFactory.newStaticTextItem("size", "size", Util.formatSizeW7(document.getFileSize())
 				+ " (" + Util.formatSizeBytes(document.getFileSize()) + ")");

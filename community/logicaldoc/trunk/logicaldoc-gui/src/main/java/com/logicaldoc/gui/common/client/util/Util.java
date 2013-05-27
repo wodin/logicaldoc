@@ -468,7 +468,6 @@ public class Util {
 			}
 		}
 
-		DateTimeFormat formatter = DateTimeFormat.getFormat(I18N.message("format_dateshort"));
 		for (int i = 0; i < records.length; i++) {
 			Record record = records[i];
 
@@ -484,7 +483,7 @@ public class Util {
 
 					stringBuilder.append("\"");
 					if (listGridField.getType().equals(ListGridFieldType.DATE)) {
-						stringBuilder.append(formatter.format(record.getAttributeAsDate(listGridField.getName())));
+						stringBuilder.append(I18N.formatDateShort(record.getAttributeAsDate(listGridField.getName())));
 					} else {
 						stringBuilder.append(record.getAttribute(listGridField.getName()));
 					}

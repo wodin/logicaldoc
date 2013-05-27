@@ -104,9 +104,7 @@ public class WorkflowDetailsDialog extends Window {
 	private StaticTextItem taskEndDate = null;
 
 	private StaticTextItem endDate = null;
-
-	private DateTimeFormat formatter = DateTimeFormat.getFormat(I18N.message("format_date"));
-
+	
 	public WorkflowDetailsDialog(WorkflowDashboard dashboard, GUIWorkflow wfl) {
 		this.workflow = wfl;
 		this.workflowDashboard = dashboard;
@@ -205,11 +203,11 @@ public class WorkflowDetailsDialog extends Window {
 
 		StaticTextItem startDate = ItemFactory.newStaticTextItem("startdate", "startdate", null);
 		if (workflow.getStartDate() != null)
-			startDate.setValue(formatter.format((Date) workflow.getStartDate()));
+			startDate.setValue(I18N.formatDate((Date) workflow.getStartDate()));
 
 		endDate = ItemFactory.newStaticTextItem("enddate", "enddate", null);
 		if (workflow.getEndDate() != null)
-			endDate.setValue(formatter.format((Date) workflow.getEndDate()));
+			endDate.setValue(I18N.formatDate((Date) workflow.getEndDate()));
 
 		workflowForm.setItems(workflowTitle, workflowName, workflowDescription, startDate, endDate);
 		sxLayout.addMember(workflowForm);
@@ -246,7 +244,7 @@ public class WorkflowDetailsDialog extends Window {
 
 		taskStartDate = ItemFactory.newStaticTextItem("taskStartDate", "startdate", null);
 		if (workflow.getSelectedTask().getStartDate() != null)
-			taskStartDate.setValue(formatter.format((Date) workflow.getSelectedTask().getStartDate()));
+			taskStartDate.setValue(I18N.formatDate((Date) workflow.getSelectedTask().getStartDate()));
 
 		StaticTextItem taskDueDate = ItemFactory.newStaticTextItem("taskDueDate", "duedate", null);
 		if (workflow.getSelectedTask().getDueDate() != null
@@ -262,7 +260,7 @@ public class WorkflowDetailsDialog extends Window {
 
 		taskEndDate = ItemFactory.newStaticTextItem("taskEndDate", "enddate", null);
 		if (workflow.getSelectedTask().getEndDate() != null)
-			taskEndDate.setValue(formatter.format((Date) workflow.getSelectedTask().getEndDate()));
+			taskEndDate.setValue(I18N.formatDate((Date) workflow.getSelectedTask().getEndDate()));
 
 		TextAreaItem taskComment = ItemFactory.newTextAreaItem("taskComment", I18N.message("comment"), workflow
 				.getSelectedTask().getComment());
@@ -472,7 +470,7 @@ public class WorkflowDetailsDialog extends Window {
 										if (result != null) {
 											workflow = result;
 											reload(workflow);
-											taskStartDate.setValue(formatter.format((Date) workflow.getSelectedTask()
+											taskStartDate.setValue(I18N.formatDate((Date) workflow.getSelectedTask()
 													.getStartDate()));
 										}
 									}
@@ -762,10 +760,10 @@ public class WorkflowDetailsDialog extends Window {
 													if (result != null) {
 														workflow = result;
 														reload(workflow);
-														taskEndDate.setValue(formatter.format((Date) workflow
+														taskEndDate.setValue(I18N.formatDate((Date) workflow
 																.getSelectedTask().getEndDate()));
 														if (workflow.getEndDate() != null)
-															endDate.setValue(formatter.format((Date) workflow
+															endDate.setValue(I18N.formatDate((Date) workflow
 																	.getEndDate()));
 													}
 												}
