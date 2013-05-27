@@ -83,10 +83,8 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		// Get file to upload inputStream
 		InputStream stream = content.getInputStream();
 
-		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-
+		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);		
 		doc = documentManager.create(stream, doc, transaction);
-
 		return WSDocument.fromDocument(doc);
 	}
 
