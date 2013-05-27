@@ -352,6 +352,12 @@ public class WSDocument {
 		if (StringUtils.isNotEmpty(date))
 			newdate = AbstractService.convertStringToDate(date);
 		doc.setDate(newdate);
+		
+		Date creationDate = null;
+		if (StringUtils.isNotEmpty(creation))
+			creationDate = AbstractService.convertStringToDate(creation);
+		doc.setCreation(creationDate);
+		
 		doc.setPublisher(publisher);
 		doc.setPublisherId(publisherId);
 		doc.setCreator(creator);
