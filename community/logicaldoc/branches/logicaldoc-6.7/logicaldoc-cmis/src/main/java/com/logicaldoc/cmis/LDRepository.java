@@ -818,7 +818,8 @@ public class LDRepository {
 		transaction.setComment(checkinComment);
 
 		try {
-			documentManager.checkin(doc.getId(), contentStream.getStream(), doc.getFileName(), major, null, transaction);
+			documentManager
+					.checkin(doc.getId(), contentStream.getStream(), doc.getFileName(), major, null, transaction);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw new CmisStorageException("Checkin failed!");
@@ -921,6 +922,7 @@ public class LDRepository {
 			Boolean includeAllowableActions, Boolean includePathSegment, BigInteger maxItems, BigInteger skipCount,
 			ObjectInfoHandler objectInfos) {
 		debug("getChildren");
+
 		validatePermission(folderId, context, null);
 
 		// split filter
@@ -955,8 +957,11 @@ public class LDRepository {
 		result.setHasMoreItems(false);
 		int count = 0;
 
+		User user = userDao.findByUserName(context.getUsername());
+		long userId = user.getId();
+
 		// iterate through children folders
-		for (Folder child : folderDao.findChildren(folder.getId(), null)) {
+		for (Folder child : folderDao.findChildren(folder.getId(), userId)) {
 			count++;
 
 			if (skip > 0) {
@@ -2079,9 +2084,13 @@ public class LDRepository {
 
 	private void validatePermission(String objectId, CallContext context, Permission permission)
 			throws CmisPermissionDeniedException {
-		if (!checkPermission(objectId != null ? getObject(objectId) : null, context, permission))
-			throw new CmisPermissionDeniedException("Permission " + (permission != null ? permission.getName() : "")
-					+ " not granted on " + objectId);
+		if (!checkPermission(objectId != null ? getObject(objectId) : null, context, permission)) {
+			CmisPermissionDeniedException exception = new CmisPermissionDeniedException("Permission "
+					+ (permission != null ? permission.getName() : "") + " not granted on " + objectId);
+			if (log.isDebugEnabled())
+				log.error(exception.getMessage(), exception);
+			throw exception;
+		}
 	}
 
 	private void debug(String msg) {
