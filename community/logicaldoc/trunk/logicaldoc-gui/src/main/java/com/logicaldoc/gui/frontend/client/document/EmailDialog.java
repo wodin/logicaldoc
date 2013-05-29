@@ -101,8 +101,6 @@ public class EmailDialog extends Window {
 				vm.validate();
 				if (!vm.hasErrors()) {
 					GUIEmail mail = new GUIEmail();
-					Log.info("+"+vm.getValueAsString("recipients")+" "+vm.getValue("recipients"), null);
-					Log.info("*"+recipients.getValueAsString(), null);
 					mail.setRecipients(recipients.getValueAsString());
 					mail.setCc(vm.getValueAsString("cc"));
 					mail.setSubject(vm.getValueAsString("subject"));
