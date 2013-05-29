@@ -74,7 +74,7 @@ public class EmailDialog extends Window {
 		final TextItem cc = ItemFactory.newEmailItem("cc", "cc", true);
 		cc.setWidth(250);
 
-		TextItem subject = ItemFactory.newTextItem("subject", "subject", docTitle);
+		final TextItem subject = ItemFactory.newTextItem("subject", "subject", docTitle);
 		subject.setRequired(true);
 		subject.setWidth(250);
 
@@ -103,8 +103,8 @@ public class EmailDialog extends Window {
 					GUIEmail mail = new GUIEmail();
 					mail.setRecipients(recipients.getValueAsString());
 					mail.setCc(cc.getValueAsString());
-					mail.setSubject(vm.getValueAsString("subject"));
-					mail.setMessage(vm.getValueAsString("message"));
+					mail.setSubject(subject.getValueAsString());
+					mail.setMessage(message.getValue().toString());
 					mail.setSendAsTicket("true".equals(vm.getValueAsString("sendticket")));
 					mail.setZipCompression("true".equals(vm.getValueAsString("zip")));
 					mail.setDocIds(EmailDialog.this.docIds);
