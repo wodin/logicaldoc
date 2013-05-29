@@ -11,11 +11,13 @@ import com.logicaldoc.gui.common.client.data.VersionsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
+import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -160,27 +162,34 @@ public class VersionsPanel extends DocumentDetailTab {
 		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				long[] ids = new long[selection.length];
-				int i = 0;
-				for (ListGridRecord record : selection)
-					ids[i++] = Long.parseLong(record.getAttribute("id"));
-
-				documentService.deleteVersions(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+				LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+					public void execute(Boolean value) {
+						if (value) {
+							long[] ids = new long[selection.length];
+							int i = 0;
+							for (ListGridRecord record : selection)
+								ids[i++] = Long.parseLong(record.getAttribute("id"));
 
-					@Override
-					public void onSuccess(Void result) {
-						listGrid.removeSelectedData();
+							documentService.deleteVersions(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(Void result) {
+									listGrid.removeSelectedData();
+								}
+							});
+						}
 					}
 				});
 			}
 		});
 
 		compare.setEnabled(selection != null && selection.length == 2);
-		delete.setEnabled(updateEnabled && selection != null && selection.length > 0
+		delete.setEnabled(deleteEnabled && selection != null && selection.length > 0
 				&& !document.getVersion().equals(selection[0].getAttribute("version")));
 
 		if (selection == null || selection.length < 1) {
