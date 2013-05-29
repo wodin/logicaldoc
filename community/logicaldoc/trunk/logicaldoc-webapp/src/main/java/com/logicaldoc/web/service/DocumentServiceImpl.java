@@ -1080,7 +1080,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				}
 
 				mail.setMessageText("<html>" + message + "</html>");
-
 			} else {
 				if (email.isZipCompression()) {
 					/*

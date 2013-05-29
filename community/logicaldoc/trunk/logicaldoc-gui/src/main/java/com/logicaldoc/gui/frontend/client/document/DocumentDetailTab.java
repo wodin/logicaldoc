@@ -18,6 +18,8 @@ public abstract class DocumentDetailTab extends HLayout {
 	protected ChangedHandler changedHandler;
 
 	protected boolean updateEnabled = false;
+	
+	protected boolean deleteEnabled = false;
 
 	/**
 	 * 
@@ -31,11 +33,16 @@ public abstract class DocumentDetailTab extends HLayout {
 		this.changedHandler = changedHandler;
 
 		if (Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN) && document.getImmutable() == 0
-				&& document.getStatus() == Constants.DOC_UNLOCKED)
+				&& document.getStatus() == Constants.DOC_UNLOCKED){
 			updateEnabled = true;
-		else
+			deleteEnabled = true;
+		}else{
 			updateEnabled = (document.getImmutable() == 0 && document.getStatus() == Constants.DOC_UNLOCKED && document
 					.getFolder().isWrite());
+			deleteEnabled = (document.getImmutable() == 0 && document.getStatus() == Constants.DOC_UNLOCKED && document
+					.getFolder().isDelete());
+		}
+		
 	}
 
 	public GUIDocument getDocument() {

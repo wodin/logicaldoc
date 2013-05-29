@@ -77,6 +77,10 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 		return hasPermission(Constants.PERMISSION_DOWNLOAD);
 	}
 
+	public boolean isDelete() {
+		return hasPermission(Constants.PERMISSION_DELETE);
+	}
+	
 	public boolean isRename() {
 		return hasPermission(Constants.PERMISSION_RENAME);
 	}
