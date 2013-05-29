@@ -102,7 +102,7 @@ public class EmailDialog extends Window {
 				if (!vm.hasErrors()) {
 					GUIEmail mail = new GUIEmail();
 					mail.setRecipients(recipients.getValueAsString());
-					mail.setCc(vm.getValueAsString("cc"));
+					mail.setCc(cc.getValueAsString());
 					mail.setSubject(vm.getValueAsString("subject"));
 					mail.setMessage(vm.getValueAsString("message"));
 					mail.setSendAsTicket("true".equals(vm.getValueAsString("sendticket")));
