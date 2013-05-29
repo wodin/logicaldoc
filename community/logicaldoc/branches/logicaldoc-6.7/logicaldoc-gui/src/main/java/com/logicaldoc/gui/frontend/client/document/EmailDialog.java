@@ -67,11 +67,11 @@ public class EmailDialog extends Window {
 		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setNumCols(1);
 
-		TextItem recipients = ItemFactory.newEmailItem("recipients", "recipients", true);
+		final TextItem recipients = ItemFactory.newEmailItem("recipients", "recipients", true);
 		recipients.setWidth(250);
 		recipients.setRequired(true);
 
-		TextItem cc = ItemFactory.newEmailItem("cc", "cc", true);
+		final TextItem cc = ItemFactory.newEmailItem("cc", "cc", true);
 		cc.setWidth(250);
 
 		TextItem subject = ItemFactory.newTextItem("subject", "subject", docTitle);
@@ -101,7 +101,9 @@ public class EmailDialog extends Window {
 				vm.validate();
 				if (!vm.hasErrors()) {
 					GUIEmail mail = new GUIEmail();
-					mail.setRecipients(vm.getValueAsString("recipients"));
+					Log.info("+"+vm.getValueAsString("recipients")+" "+vm.getValue("recipients"), null);
+					Log.info("*"+recipients.getValueAsString(), null);
+					mail.setRecipients(recipients.getValueAsString());
 					mail.setCc(vm.getValueAsString("cc"));
 					mail.setSubject(vm.getValueAsString("subject"));
 					mail.setMessage(vm.getValueAsString("message"));
