@@ -3,7 +3,7 @@
 
 create table ld_bookmark (ld_id number(19,0) not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_userid number(19,0) not null, ld_docid number(19,0) not null, ld_title varchar(255) not null, ld_description varchar(4000), ld_position int not null, ld_filetype varchar(40), ld_type int not null, primary key (ld_id));
 create table ld_document (ld_id number(19,0) not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_immutable int not null,
-                          ld_customid varchar(255), ld_title varchar(255), ld_version varchar(10), ld_fileversion varchar(10), ld_date timestamp, 
+                          ld_customid varchar(200), ld_title varchar(255), ld_version varchar(10), ld_fileversion varchar(10), ld_date timestamp, 
                           ld_creation timestamp not null, ld_publisher varchar(255), ld_publisherid number(19,0) not null, ld_creator varchar(255),
                           ld_creatorid number(19,0) not null, ld_status int, ld_type varchar(255), ld_lockuserid number(19,0), ld_source varchar(4000),
                           ld_sourceauthor varchar(255), ld_sourcedate timestamp null, ld_sourceid varchar(1000), ld_sourcetype varchar(255),
@@ -46,7 +46,7 @@ create table ld_user (ld_id number(19,0) not null, ld_lastmodified timestamp not
 create table ld_user_history (ld_id number(19,0) not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_userid number(19,0), ld_date timestamp, ld_username varchar(255), ld_event varchar(255), ld_comment varchar(4000), ld_notified int not null, ld_sessionid varchar(255), ld_new int, ld_filename varchar(255), primary key (ld_id));
 create table ld_userdoc (ld_id number(19,0) not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid number(19,0) not null, ld_userid number(19,0) not null, ld_date timestamp, primary key (ld_id));
 create table ld_usergroup (ld_groupid number(19,0) not null, ld_userid number(19,0) not null, primary key (ld_groupid, ld_userid));
-create table ld_version (ld_id number(19,0) not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_immutable int not null, ld_customid varchar(255),
+create table ld_version (ld_id number(19,0) not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_immutable int not null, ld_customid varchar(200),
                          ld_title varchar(255), ld_version varchar(10), ld_fileversion varchar(10), ld_date timestamp, ld_creation timestamp, ld_publisher varchar(255),
                          ld_publisherid number(19,0) not null,  ld_creator varchar(255), ld_creatorid number(19,0) not null, ld_status int, ld_type varchar(255),
                          ld_lockuserid number(19,0), ld_source varchar(4000), ld_sourceauthor varchar(255), ld_sourcedate timestamp null, ld_sourceid varchar(1000),
