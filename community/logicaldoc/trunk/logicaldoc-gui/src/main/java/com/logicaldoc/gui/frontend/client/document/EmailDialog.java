@@ -105,8 +105,8 @@ public class EmailDialog extends Window {
 					mail.setCc(cc.getValueAsString());
 					mail.setSubject(subject.getValueAsString());
 					mail.setMessage(message.getValue().toString());
-					mail.setSendAsTicket("true".equals(vm.getValueAsString("sendticket")));
-					mail.setZipCompression("true".equals(vm.getValueAsString("zip")));
+					mail.setSendAsTicket("true".equals(ticket.getValue().toString()));
+					mail.setZipCompression("true".equals(zip.getValue().toString()));
 					mail.setDocIds(EmailDialog.this.docIds);
 
 					documentService.sendAsEmail(Session.get().getSid(), mail, new AsyncCallback<String>() {
