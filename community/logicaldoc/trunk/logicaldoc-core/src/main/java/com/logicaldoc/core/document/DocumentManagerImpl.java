@@ -339,6 +339,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		assert (doc != null);
 		assert (docVO != null);
 		try {
+			documentDAO.initialize(doc);
 			if (doc.getImmutable() == 0 || ((doc.getImmutable() == 1 && transaction.getUser().isInGroup("admin")))) {
 				History renameTransaction = null;
 				if (!doc.getTitle().equals(docVO.getTitle()) && docVO.getTitle() != null) {
@@ -346,6 +347,14 @@ public class DocumentManagerImpl implements DocumentManager {
 					renameTransaction.setFilenameOld(doc.getFileName());
 					renameTransaction.setTitleOld(doc.getTitle());
 					renameTransaction.setEvent(DocumentEvent.RENAMED.toString());
+				}
+
+				// Check CustomId uniqueness
+				if (docVO.getCustomId() != null) {
+					Document test = documentDAO.findByCustomId(docVO.getCustomId());
+					if (test != null && test.getId() != doc.getId())
+						throw new Exception("Duplicated CustomID");
+					doc.setCustomId(docVO.getCustomId());
 				}
 
 				if (StringUtils.isNotEmpty(docVO.getFileName()))
@@ -380,7 +389,6 @@ public class DocumentManagerImpl implements DocumentManager {
 				setUniqueTitleAndFilename(doc);
 
 				doc.clearTags();
-				documentDAO.store(doc);
 				doc.setTags(docVO.getTags());
 
 				DocumentTemplate template = docVO.getTemplate();
@@ -420,12 +428,13 @@ public class DocumentManagerImpl implements DocumentManager {
 						Version.EVENT_CHANGED, false);
 
 				// Modify document history entry
-				documentDAO.store(doc, transaction);
+				doc.setVersion(version.getVersion());
 				if (renameTransaction != null) {
 					renameTransaction.setUser(transaction.getUser());
 					documentDAO.store(doc, renameTransaction);
+				} else {
+					documentDAO.store(doc, transaction);
 				}
-
 				versionDAO.store(version);
 
 				// Check if there are some shortcuts associated to the indexing
@@ -544,7 +553,7 @@ public class DocumentManagerImpl implements DocumentManager {
 					}
 				}
 			}
-			
+
 			docVO.setId(0L);
 
 			// Create the record
