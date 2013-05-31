@@ -277,12 +277,11 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						.getBean(DocumentManager.class);
 				documentManager.checkin(doc.getId(), new FileInputStream(file), fileName, major, toDocument(document),
 						transaction);
+				UploadServlet.cleanReceivedFiles(getThreadLocalRequest().getSession());
 				return getById(sid, doc.getId());
 			} catch (Throwable t) {
 				log.error(t.getMessage(), t);
 				throw new RuntimeException(t.getMessage(), t);
-			} finally {
-				UploadServlet.cleanReceivedFiles(getThreadLocalRequest().getSession());
 			}
 		} else
 			return null;
@@ -865,10 +864,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 			return document;
 		} catch (Throwable e) {
-			e.printStackTrace();
-			log.warn(e.getMessage(), e);
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e.getMessage(), e);
 		}
-		return null;
 	}
 
 	/**
