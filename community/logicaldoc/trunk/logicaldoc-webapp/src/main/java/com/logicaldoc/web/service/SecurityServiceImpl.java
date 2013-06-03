@@ -567,19 +567,14 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			if ("admin".equals(user.getUserName()) && !user.isMemberOf("admin")) {
 				manager.assignUserToGroup(usr, adminGroup);
 			}
-			userDao.store(usr);
-			stored = userDao.store(usr);
-			if (!stored)
-				throw new Exception("User not stored");
-			else {
-				// Notify the user by email
-				if (createNew && user.isNotifyCredentials())
-					try {
-						notifyAccount(usr, decodedPassword, info);
-					} catch (Throwable e) {
-						log.warn(e.getMessage(), e);
-					}
-			}
+
+			// Notify the user by email
+			if (createNew && user.isNotifyCredentials())
+				try {
+					notifyAccount(usr, decodedPassword, info);
+				} catch (Throwable e) {
+					log.warn(e.getMessage(), e);
+				}
 
 			return user;
 		} catch (Throwable e) {
