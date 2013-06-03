@@ -245,7 +245,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public GUIDocument checkin(String sid, GUIDocument document, boolean major) throws InvalidSessionException {
+	public GUIDocument checkin(String sid, GUIDocument document, boolean major) throws Exception {
 		SessionUtil.validateSession(sid);
 
 		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
@@ -281,7 +281,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				return getById(sid, doc.getId());
 			} catch (Throwable t) {
 				log.error(t.getMessage(), t);
-				throw new RuntimeException(t.getMessage(), t);
+				if (t instanceof Exception)
+					throw t;
+				else
+					throw new RuntimeException(t.getMessage(), t);
 			}
 		} else
 			return null;
@@ -825,7 +828,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public GUIDocument save(String sid, GUIDocument document) throws InvalidSessionException {
+	public GUIDocument save(String sid, GUIDocument document) throws Exception {
 		SessionUtil.validateSession(sid);
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
@@ -865,7 +868,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			return document;
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
-			throw new RuntimeException(e.getMessage(), e);
+			if (e instanceof Exception)
+				throw e;
+			else
+				throw new RuntimeException(e.getMessage(), e);
 		}
 	}
 
