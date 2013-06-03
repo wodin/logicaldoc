@@ -96,7 +96,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.initialize(document);
 
 			// Check CustomId uniqueness
-			if (docVO.getCustomId() != null) {
+			if (docVO != null && docVO.getCustomId() != null) {
 				int count = documentDAO.queryForInt("select count(*) from ld_document where ld_customid='"
 						+ SqlUtil.doubleQuotes(docVO.getCustomId()) + "' and not ld_id=" + docId);
 				if (count >= 1)
@@ -360,7 +360,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				}
 
 				// Check CustomId uniqueness
-				if (docVO.getCustomId() != null) {
+				if (docVO != null && docVO.getCustomId() != null) {
 					int count = documentDAO.queryForInt("select count(*) from ld_document where ld_customid='"
 							+ SqlUtil.doubleQuotes(docVO.getCustomId()) + "' and not ld_id=" + doc.getId());
 					if (count >= 1)
@@ -537,10 +537,28 @@ public class DocumentManagerImpl implements DocumentManager {
 			if (docVO.getCreation() == null)
 				docVO.setCreation(docVO.getDate());
 
-			docVO.setPublisher(transaction.getUserName());
-			docVO.setPublisherId(transaction.getUserId());
-			docVO.setCreator(transaction.getUserName());
-			docVO.setCreatorId(transaction.getUserId());
+			
+			if (StringUtils.isNotEmpty(docVO.getPublisher()))
+				docVO.setPublisher(docVO.getPublisher());
+			else
+				docVO.setPublisher(transaction.getUserName());
+
+			if (docVO.getPublisherId() != 0L)
+				docVO.setPublisherId(docVO.getPublisherId());
+			else
+				docVO.setPublisherId(transaction.getUserId());
+
+			if (StringUtils.isNotEmpty(docVO.getCreator()))
+				docVO.setCreator(docVO.getCreator());
+			else
+				docVO.setCreator(transaction.getUserName());
+
+			if (docVO.getCreatorId() != 0L)
+				docVO.setCreatorId(docVO.getCreatorId());
+			else
+				docVO.setCreatorId(transaction.getUserId());
+
+			
 			docVO.setStatus(Document.DOC_UNLOCKED);
 			docVO.setType(type);
 			docVO.setVersion(config.getProperty("document.startversion"));
