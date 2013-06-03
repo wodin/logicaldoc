@@ -75,18 +75,21 @@ import com.logicaldoc.web.util.SessionUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class SecurityServiceImpl extends RemoteServiceServlet implements SecurityService {
+public class SecurityServiceImpl extends RemoteServiceServlet implements
+		SecurityService {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Logger log = LoggerFactory.getLogger(SecurityServiceImpl.class);
+	private static Logger log = LoggerFactory
+			.getLogger(SecurityServiceImpl.class);
 
 	@Override
 	public GUISession login(String username, String password, String locale) {
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		UserDAO userDao = (UserDAO) Context.getInstance()
+				.getBean(UserDAO.class);
 
-		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
-				AuthenticationChain.class);
+		AuthenticationChain authenticationChain = (AuthenticationChain) Context
+				.getInstance().getBean(AuthenticationChain.class);
 
 		GUISession session = new GUISession();
 		GUIUser guiUser = new GUIUser();
@@ -94,14 +97,17 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		try {
 			String[] remoteAddress = new String[] { null, null };
 			if (getThreadLocalRequest() != null) {
-				remoteAddress = new String[] { getThreadLocalRequest().getRemoteAddr(),
+				remoteAddress = new String[] {
+						getThreadLocalRequest().getRemoteAddr(),
 						getThreadLocalRequest().getRemoteHost() };
 			}
 
-			if (authenticationChain.authenticate(username, password, remoteAddress)) {
+			if (authenticationChain.authenticate(username, password,
+					remoteAddress)) {
 				User user = userDao.findByUserName(username);
 				userDao.initialize(user);
-				session = internalLogin(AuthenticationChain.getSessionId(), user, locale);
+				session = internalLogin(AuthenticationChain.getSessionId(),
+						user, locale);
 				guiUser = session.getUser();
 			} else if (userDao.isPasswordExpired(username)) {
 				User user = userDao.findByUserName(username);
@@ -120,8 +126,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			}
 
 			if (guiUser != null) {
-				ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-				guiUser.setPasswordMinLenght(Integer.parseInt(config.getProperty("password.size")));
+				ContextProperties config = (ContextProperties) Context
+						.getInstance().getBean(ContextProperties.class);
+				guiUser.setPasswordMinLenght(Integer.parseInt(config
+						.getProperty("password.size")));
 			}
 			return session;
 		} catch (Throwable e) {
@@ -139,8 +147,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		GUISession session = new GUISession();
 		session.setSid(sid);
 
-		DocumentDAO documentDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		SystemMessageDAO messageDao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
+		DocumentDAO documentDao = (DocumentDAO) Context.getInstance().getBean(
+				DocumentDAO.class);
+		SystemMessageDAO messageDao = (SystemMessageDAO) Context.getInstance()
+				.getBean(SystemMessageDAO.class);
 
 		guiUser.setFirstName(user.getFirstName());
 		guiUser.setName(user.getName());
@@ -170,10 +180,12 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		guiUser.setUserName(user.getUserName());
 		guiUser.setPasswordExpired(false);
 
-		guiUser.setLockedDocs(documentDao.findByLockUserAndStatus(user.getId(), AbstractDocument.DOC_LOCKED).size());
-		guiUser.setCheckedOutDocs(documentDao.findByLockUserAndStatus(user.getId(), AbstractDocument.DOC_CHECKED_OUT)
-				.size());
-		guiUser.setUnreadMessages(messageDao.getCount(user.getUserName(), SystemMessage.TYPE_SYSTEM, 0));
+		guiUser.setLockedDocs(documentDao.findByLockUserAndStatus(user.getId(),
+				AbstractDocument.DOC_LOCKED).size());
+		guiUser.setCheckedOutDocs(documentDao.findByLockUserAndStatus(
+				user.getId(), AbstractDocument.DOC_CHECKED_OUT).size());
+		guiUser.setUnreadMessages(messageDao.getCount(user.getUserName(),
+				SystemMessage.TYPE_SYSTEM, 0));
 
 		guiUser.setQuota(user.getQuota());
 		guiUser.setQuotaCount(user.getQuotaCount());
@@ -197,7 +209,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		/*
 		 * Prepare an incoming message, if any
 		 */
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = (ContextProperties) Context.getInstance()
+				.getBean(ContextProperties.class);
 		String incomingMessage = config.getProperty("gui.welcome");
 		if (StringUtils.isNotEmpty(incomingMessage)) {
 			Map<String, String> map = new HashMap<String, String>();
@@ -206,9 +219,11 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		}
 
 		// In case of news overwrite the incoming message
-		if (guiUser.isMemberOf(Constants.GROUP_ADMIN) && info.isEnabled("Feature_27")) {
+		if (guiUser.isMemberOf(Constants.GROUP_ADMIN)
+				&& info.isEnabled("Feature_27")) {
 			// Check if there are incoming messages not already read
-			FeedMessageDAO feedMessageDao = (FeedMessageDAO) Context.getInstance().getBean(FeedMessageDAO.class);
+			FeedMessageDAO feedMessageDao = (FeedMessageDAO) Context
+					.getInstance().getBean(FeedMessageDAO.class);
 			if (feedMessageDao.checkNotRead())
 				incomingMessage = I18N.message("productnewsmessage", locale);
 		}
@@ -221,12 +236,14 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		userSession.getDictionary().put(SessionUtil.LOCALE, user.getLocale());
 		userSession.getDictionary().put(SessionUtil.USER, user);
 
-		guiUser.setPasswordMinLenght(Integer.parseInt(config.getProperty("password.size")));
+		guiUser.setPasswordMinLenght(Integer.parseInt(config
+				.getProperty("password.size")));
 
 		/*
 		 * Prepare the external command
 		 */
-		if (info.isEnabled("Feature_31") && "true".equals(config.getProperty("extcall.enabled"))) {
+		if (info.isEnabled("Feature_31")
+				&& "true".equals(config.getProperty("extcall.enabled"))) {
 			GUIExternalCall externalCall = new GUIExternalCall();
 			externalCall.setName(config.getProperty("extcall.name"));
 			externalCall.setBaseUrl(config.getProperty("extcall.baseurl"));
@@ -243,7 +260,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	public GUISession login(String sid) {
 		try {
 			UserSession userSession = SessionUtil.validateSession(sid);
-			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			UserDAO userDao = (UserDAO) Context.getInstance().getBean(
+					UserDAO.class);
 			User user = userDao.findById(userSession.getUserId());
 			userDao.initialize(user);
 			GUISession session = internalLogin(sid, user, null);
@@ -261,7 +279,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			if (session == null)
 				return;
 
-			FileUtils.forceDelete(UserUtil.getUserResource(session.getUserId(), "temp"));
+			FileUtils.forceDelete(UserUtil.getUserResource(session.getUserId(),
+					"temp"));
 			log.info("User " + session.getUserName() + " logged out.");
 			kill(sid);
 		} catch (Throwable e) {
@@ -270,16 +289,20 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public int changePassword(long userId, String oldPassword, String newPassword, boolean notify) {
+	public int changePassword(long userId, String oldPassword,
+			String newPassword, boolean notify) {
 
 		try {
-			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			UserDAO userDao = (UserDAO) Context.getInstance().getBean(
+					UserDAO.class);
 			User user = userDao.findById(userId);
 			if (user == null)
 				throw new Exception("User " + userId + " not found");
 			userDao.initialize(user);
 
-			if (oldPassword != null && !CryptUtil.cryptString(oldPassword).equals(user.getPassword())) {
+			if (oldPassword != null
+					&& !CryptUtil.cryptString(oldPassword).equals(
+							user.getPassword())) {
 				return 1;
 			}
 
@@ -316,28 +339,38 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public void addUserToGroup(String sid, long groupId, long userId) throws InvalidSessionException {
+	public void addUserToGroup(String sid, long groupId, long userId)
+			throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
-		manager.assignUserToGroup(userDao.findById(userId), groupDao.findById(groupId));
+		SecurityManager manager = (SecurityManager) Context.getInstance()
+				.getBean(SecurityManager.class);
+		UserDAO userDao = (UserDAO) Context.getInstance()
+				.getBean(UserDAO.class);
+		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(
+				GroupDAO.class);
+		manager.assignUserToGroup(userDao.findById(userId),
+				groupDao.findById(groupId));
 	}
 
 	@Override
-	public void deleteGroup(String sid, long groupId) throws InvalidSessionException {
+	public void deleteGroup(String sid, long groupId)
+			throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
-		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
-		SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
+		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(
+				GroupDAO.class);
+		SecurityManager manager = (SecurityManager) Context.getInstance()
+				.getBean(SecurityManager.class);
 		manager.removeAllUsersFromGroup(groupDao.findById(groupId));
 		groupDao.delete(groupId);
 	}
 
 	@Override
-	public void deleteUser(String sid, long userId) throws InvalidSessionException {
+	public void deleteUser(String sid, long userId)
+			throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		UserDAO userDao = (UserDAO) Context.getInstance()
+				.getBean(UserDAO.class);
 
 		// Create the user history event
 		UserHistory transaction = new UserHistory();
@@ -350,9 +383,11 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUIGroup getGroup(String sid, long groupId) throws InvalidSessionException {
+	public GUIGroup getGroup(String sid, long groupId)
+			throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
-		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(
+				GroupDAO.class);
 		Group group = groupDao.findById(groupId);
 
 		if (group != null) {
@@ -367,10 +402,12 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUIUser getUser(String sid, long userId) throws InvalidSessionException {
+	public GUIUser getUser(String sid, long userId)
+			throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 		try {
-			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			UserDAO userDao = (UserDAO) Context.getInstance().getBean(
+					UserDAO.class);
 			User user = userDao.findById(userId);
 			if (user != null) {
 				userDao.initialize(user);
@@ -413,8 +450,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				usr.setQuota(user.getQuota());
 				usr.setQuotaCount(user.getQuotaCount());
 
-				ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-				usr.setPasswordMinLenght(Integer.parseInt(config.getProperty("password.size")));
+				ContextProperties config = (ContextProperties) Context
+						.getInstance().getBean(ContextProperties.class);
+				usr.setPasswordMinLenght(Integer.parseInt(config
+						.getProperty("password.size")));
 
 				loadDashlets(usr);
 
@@ -430,25 +469,32 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	 * Retrieves the dashlets configuration
 	 */
 	protected void loadDashlets(GUIUser usr) {
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		UserDAO userDao = (UserDAO) Context.getInstance()
+				.getBean(UserDAO.class);
 		List<GUIDashlet> dashlets = new ArrayList<GUIDashlet>();
-		Map<String, Generic> map = userDao.findUserSettings(usr.getId(), "dashlet");
+		Map<String, Generic> map = userDao.findUserSettings(usr.getId(),
+				"dashlet");
 		for (Generic generic : map.values()) {
-			dashlets.add(new GUIDashlet(generic.getInteger1().intValue(), generic.getInteger2().intValue(), generic
-					.getInteger3().intValue(), generic.getString1() != null ? Integer.parseInt(generic.getString1())
-					: 0));
+			dashlets.add(new GUIDashlet(generic.getInteger1().intValue(),
+					generic.getInteger2().intValue(), generic.getInteger3()
+							.intValue(), generic.getString1() != null ? Integer
+							.parseInt(generic.getString1()) : 0));
 		}
 
 		usr.setDashlets(dashlets.toArray(new GUIDashlet[0]));
 	}
 
 	@Override
-	public void removeFromGroup(String sid, long groupId, long[] userIds) throws InvalidSessionException {
+	public void removeFromGroup(String sid, long groupId, long[] userIds)
+			throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+		SecurityManager manager = (SecurityManager) Context.getInstance()
+				.getBean(SecurityManager.class);
+		UserDAO userDao = (UserDAO) Context.getInstance()
+				.getBean(UserDAO.class);
+		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(
+				GroupDAO.class);
 		Group group = groupDao.findById(groupId);
 		for (long id : userIds) {
 			User user = userDao.findById(id);
@@ -457,10 +503,12 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUIGroup saveGroup(String sid, GUIGroup group) throws InvalidSessionException {
+	public GUIGroup saveGroup(String sid, GUIGroup group)
+			throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(
+				GroupDAO.class);
 		Group grp;
 		if (group.getId() != 0) {
 			grp = groupDao.findById(group.getId());
@@ -468,7 +516,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 			grp.setName(group.getName());
 			grp.setDescription(group.getDescription());
-			if (group.getInheritGroupId() == null || group.getInheritGroupId().longValue() == 0) {
+			if (group.getInheritGroupId() == null
+					|| group.getInheritGroupId().longValue() == 0) {
 				groupDao.store(grp);
 			} else {
 				groupDao.insert(grp, group.getInheritGroupId().longValue());
@@ -480,8 +529,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			grp.setDescription(group.getDescription());
 			groupDao.store(grp);
 
-			if (group.getInheritGroupId() != null && group.getInheritGroupId().longValue() != 0)
-				groupDao.inheritACLs(grp.getId(), group.getInheritGroupId().longValue());
+			if (group.getInheritGroupId() != null
+					&& group.getInheritGroupId().longValue() != 0)
+				groupDao.inheritACLs(grp.getId(), group.getInheritGroupId()
+						.longValue());
 		}
 
 		group.setId(grp.getId());
@@ -490,10 +541,12 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUIUser saveUser(String sid, GUIUser user, GUIInfo info) throws InvalidSessionException {
+	public GUIUser saveUser(String sid, GUIUser user, GUIInfo info)
+			throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		UserDAO userDao = (UserDAO) Context.getInstance()
+				.getBean(UserDAO.class);
 		boolean createNew = false;
 		String decodedPassword = "";
 
@@ -531,8 +584,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 			if (createNew) {
 				// Generate an initial password
-				ContextProperties pbean = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-				decodedPassword = new PasswordGenerator().generate(pbean.getInt("password.size"));
+				ContextProperties pbean = (ContextProperties) Context
+						.getInstance().getBean(ContextProperties.class);
+				decodedPassword = new PasswordGenerator().generate(pbean
+						.getInt("password.size"));
 				usr.setDecodedPassword(decodedPassword);
 
 				if (user.isPasswordExpired()) {
@@ -551,8 +606,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				throw new Exception("User not stored");
 			user.setId(usr.getId());
 
-			SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
-			GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+			SecurityManager manager = (SecurityManager) Context.getInstance()
+					.getBean(SecurityManager.class);
+			GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(
+					GroupDAO.class);
 			manager.removeUserFromAllGroups(usr);
 			long[] ids = new long[user.getGroups().length];
 			for (int i = 0; i < user.getGroups().length; i++) {
@@ -567,19 +624,14 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			if ("admin".equals(user.getUserName()) && !user.isMemberOf("admin")) {
 				manager.assignUserToGroup(usr, adminGroup);
 			}
-			userDao.store(usr);
-			stored = userDao.store(usr);
-			if (!stored)
-				throw new Exception("User not stored");
-			else {
-				// Notify the user by email
-				if (createNew && user.isNotifyCredentials())
-					try {
-						notifyAccount(usr, decodedPassword, info);
-					} catch (Throwable e) {
-						log.warn(e.getMessage(), e);
-					}
-			}
+
+			// Notify the user by email
+			if (createNew && user.isNotifyCredentials())
+				try {
+					notifyAccount(usr, decodedPassword, info);
+				} catch (Throwable e) {
+					log.warn(e.getMessage(), e);
+				}
 
 			return user;
 		} catch (Throwable e) {
@@ -591,11 +643,14 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	/**
 	 * Notify the user with it's new account
 	 * 
-	 * @param user The created user
-	 * @param password The decoded password
+	 * @param user
+	 *            The created user
+	 * @param password
+	 *            The decoded password
 	 * @throws Exception
 	 */
-	private void notifyAccount(User user, String password, GUIInfo info) throws Exception {
+	private void notifyAccount(User user, String password, GUIInfo info)
+			throws Exception {
 		EMail email;
 		email = new EMail();
 		Recipient recipient = new Recipient();
@@ -614,24 +669,31 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		 */
 		Map<String, String> args = new HashMap<String, String>();
 		HttpServletRequest request = this.getThreadLocalRequest();
-		String address = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-				+ request.getContextPath();
+		String address = request.getScheme() + "://" + request.getServerName()
+				+ ":" + request.getServerPort() + request.getContextPath();
 		args.put("_url", address);
 		args.put("_product", SystemInfo.get().getProduct());
 		args.put(
 				"_message",
-				I18N.message("emailnotifyaccount", locale, new Object[] { user.getFirstName() + " " + user.getName(),
-						"", user.getUserName(), password, address }));
+				I18N.message(
+						"emailnotifyaccount",
+						locale,
+						new Object[] {
+								user.getFirstName() + " " + user.getName(), "",
+								user.getUserName(), password, address }));
 
-		EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
+		EMailSender sender = (EMailSender) Context.getInstance().getBean(
+				EMailSender.class);
 		sender.send(email, "psw.rec1", args);
 	}
 
 	@Override
-	public GUIUser saveProfile(String sid, GUIUser user) throws InvalidSessionException {
+	public GUIUser saveProfile(String sid, GUIUser user)
+			throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		UserDAO userDao = (UserDAO) Context.getInstance()
+				.getBean(UserDAO.class);
 
 		try {
 			User usr = userDao.findById(user.getId());
@@ -674,45 +736,60 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUISecuritySettings loadSettings(String sid) throws InvalidSessionException {
+	public GUISecuritySettings loadSettings(String sid)
+			throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		GUISecuritySettings securitySettings = new GUISecuritySettings();
 		try {
-			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-			ContextProperties pbean = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			UserDAO userDao = (UserDAO) Context.getInstance().getBean(
+					UserDAO.class);
+			ContextProperties pbean = (ContextProperties) Context.getInstance()
+					.getBean(ContextProperties.class);
 
-			securitySettings.setPwdExpiration(Integer.parseInt(pbean.getProperty("password.ttl")));
-			securitySettings.setPwdSize(Integer.parseInt(pbean.getProperty("password.size")));
+			securitySettings.setPwdExpiration(Integer.parseInt(pbean
+					.getProperty("password.ttl")));
+			securitySettings.setPwdSize(Integer.parseInt(pbean
+					.getProperty("password.size")));
 			if (StringUtils.isNotEmpty(pbean.getProperty("gui.savelogin")))
-				securitySettings.setSaveLogin("true".equals(pbean.getProperty("gui.savelogin")));
+				securitySettings.setSaveLogin("true".equals(pbean
+						.getProperty("gui.savelogin")));
 
-			StringTokenizer st = new StringTokenizer(pbean.getProperty("audit.user"), ",", false);
+			StringTokenizer st = new StringTokenizer(
+					pbean.getProperty("audit.user"), ",", false);
 			while (st.hasMoreTokens()) {
 				String username = st.nextToken();
 				User user = userDao.findByUserName(username);
 				if (user != null)
-					securitySettings.addNotifiedUser(getUser(sid, user.getId()));
+					securitySettings
+							.addNotifiedUser(getUser(sid, user.getId()));
 			}
 
 			log.info("Security settings data loaded successfully.");
 		} catch (Exception e) {
-			log.error("Exception loading Security settings data: " + e.getMessage(), e);
+			log.error(
+					"Exception loading Security settings data: "
+							+ e.getMessage(), e);
 		}
 
 		return securitySettings;
 	}
 
 	@Override
-	public void saveSettings(String sid, GUISecuritySettings settings) throws InvalidSessionException {
+	public void saveSettings(String sid, GUISecuritySettings settings)
+			throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		try {
-			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			ContextProperties conf = (ContextProperties) Context.getInstance()
+					.getBean(ContextProperties.class);
 
-			conf.setProperty("password.ttl", Integer.toString(settings.getPwdExpiration()));
-			conf.setProperty("password.size", Integer.toString(settings.getPwdSize()));
-			conf.setProperty("gui.savelogin", Boolean.toString(settings.isSaveLogin()));
+			conf.setProperty("password.ttl",
+					Integer.toString(settings.getPwdExpiration()));
+			conf.setProperty("password.size",
+					Integer.toString(settings.getPwdSize()));
+			conf.setProperty("gui.savelogin",
+					Boolean.toString(settings.isSaveLogin()));
 
 			String users = "";
 			for (GUIUser user : settings.getNotifiedUsers()) {
@@ -724,11 +801,14 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 			log.info("Security settings data written successfully.");
 		} catch (Exception e) {
-			log.error("Exception writing Security settings data: " + e.getMessage(), e);
+			log.error(
+					"Exception writing Security settings data: "
+							+ e.getMessage(), e);
 		}
 	}
 
-	private boolean saveRules(String sid, Menu menu, long userId, GUIRight[] rights) throws Exception {
+	private boolean saveRules(String sid, Menu menu, long userId,
+			GUIRight[] rights) throws Exception {
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
 		boolean sqlerrors = false;
@@ -762,12 +842,15 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public void applyRights(String sid, GUIMenu menu) throws InvalidSessionException {
+	public void applyRights(String sid, GUIMenu menu)
+			throws InvalidSessionException {
 		UserSession session = SessionUtil.validateSession(sid);
 
 		try {
-			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-			saveRules(sid, mdao.findById(menu.getId()), session.getUserId(), menu.getRights());
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
+					MenuDAO.class);
+			saveRules(sid, mdao.findById(menu.getId()), session.getUserId(),
+					menu.getRights());
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
@@ -775,10 +858,12 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUIMenu getMenu(String sid, long menuId) throws InvalidSessionException {
+	public GUIMenu getMenu(String sid, long menuId)
+			throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 		try {
-			MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			MenuDAO dao = (MenuDAO) Context.getInstance()
+					.getBean(MenuDAO.class);
 			Menu menu = dao.findById(menuId);
 			if (menu == null)
 				return null;
@@ -805,8 +890,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public void resetPassword(String username, String emailAddress, String productName) throws Exception {
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+	public void resetPassword(String username, String emailAddress,
+			String productName) throws Exception {
+		UserDAO userDao = (UserDAO) Context.getInstance()
+				.getBean(UserDAO.class);
 		User user = userDao.findByUserName(username);
 
 		EMail email;
@@ -814,7 +901,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			if (user == null)
 				throw new Exception("User " + username + " not found");
 			else if (!user.getEmail().trim().equals(emailAddress.trim()))
-				throw new Exception("User with email " + emailAddress + " not found");
+				throw new Exception("User with email " + emailAddress
+						+ " not found");
 
 			email = new EMail();
 			Recipient recipient = new Recipient();
@@ -836,7 +924,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			ticket.setExpired(cal.getTime());
 
 			// Store the ticket
-			DownloadTicketDAO ticketDao = (DownloadTicketDAO) Context.getInstance().getBean(DownloadTicketDAO.class);
+			DownloadTicketDAO ticketDao = (DownloadTicketDAO) Context
+					.getInstance().getBean(DownloadTicketDAO.class);
 			ticketDao.store(ticket);
 
 			// Try to clean the DB from old tickets
@@ -846,13 +935,16 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 			email.setLocale(locale);
 			email.setSentDate(new Date());
-			email.setSubject(productName + " " + I18N.message("passwordrequest", locale));
+			email.setSubject(productName + " "
+					+ I18N.message("passwordrequest", locale));
 			email.setUserName(user.getUserName());
 
 			HttpServletRequest request = this.getThreadLocalRequest();
-			String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			String urlPrefix = request.getScheme() + "://"
+					+ request.getServerName() + ":" + request.getServerPort()
 					+ request.getContextPath();
-			String address = urlPrefix + "/pswrecovery?ticketId=" + ticketid + "&userId=" + user.getId();
+			String address = urlPrefix + "/pswrecovery?ticketId=" + ticketid
+					+ "&userId=" + user.getId();
 
 			/*
 			 * Prepare the template
@@ -861,7 +953,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			args.put("_product", productName);
 			args.put("_url", address);
 
-			EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
+			EMailSender sender = (EMailSender) Context.getInstance().getBean(
+					EMailSender.class);
 			sender.send(email, "psw.rec2", args);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
@@ -869,35 +962,41 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUIUser[] searchUsers(String sid, String username, String groupId) throws InvalidSessionException {
+	public GUIUser[] searchUsers(String sid, String username, String groupId)
+			throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		try {
-			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			UserDAO userDao = (UserDAO) Context.getInstance().getBean(
+					UserDAO.class);
 
 			StringBuffer query = new StringBuffer(
 					"select A.ld_id, A.ld_username, A.ld_name, A.ld_firstname from ld_user A ");
 			if (StringUtils.isNotEmpty(groupId))
 				query.append(", ld_usergroup B");
-			query.append(" where A.ld_deleted=0 and A.ld_type=" + User.TYPE_DEFAULT);
+			query.append(" where A.ld_deleted=0 and A.ld_type="
+					+ User.TYPE_DEFAULT);
 			if (StringUtils.isNotEmpty(username))
 				query.append(" and A.ld_username like '%" + username + "%'");
 			if (StringUtils.isNotEmpty(groupId))
-				query.append(" and A.ld_id=B.ld_userid and B.ld_groupid=" + groupId);
+				query.append(" and A.ld_id=B.ld_userid and B.ld_groupid="
+						+ groupId);
 
 			@SuppressWarnings("unchecked")
-			List<GUIUser> users = (List<GUIUser>) userDao.query(query.toString(), null, new RowMapper<GUIUser>() {
+			List<GUIUser> users = (List<GUIUser>) userDao.query(
+					query.toString(), null, new RowMapper<GUIUser>() {
 
-				@Override
-				public GUIUser mapRow(ResultSet rs, int row) throws SQLException {
-					GUIUser user = new GUIUser();
-					user.setId(rs.getLong(1));
-					user.setUserName(rs.getString(2));
-					user.setName(rs.getString(3));
-					user.setFirstName(rs.getString(4));
-					return user;
-				}
-			}, null);
+						@Override
+						public GUIUser mapRow(ResultSet rs, int row)
+								throws SQLException {
+							GUIUser user = new GUIUser();
+							user.setId(rs.getLong(1));
+							user.setUserName(rs.getString(2));
+							user.setName(rs.getString(3));
+							user.setFirstName(rs.getString(4));
+							return user;
+						}
+					}, null);
 
 			return users.toArray(new GUIUser[0]);
 		} catch (Throwable e) {
