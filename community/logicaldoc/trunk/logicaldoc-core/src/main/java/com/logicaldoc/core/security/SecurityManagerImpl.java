@@ -92,25 +92,30 @@ public class SecurityManagerImpl implements SecurityManager {
 	 *      com.logicaldoc.core.security.Group)
 	 */
 	public void removeUsersFromGroup(Collection<User> users, Group group) {
-		groupDAO.initialize(group);
-		Set<User> oldUsers = group.getUsers();
-		for (User user : users) {
-			if (oldUsers.contains(user) && !group.getName().equals(user.getUserGroupName())) {
-				user.getGroups().remove(group);
+		try {
+			groupDAO.initialize(group);
+			Set<User> oldUsers = group.getUsers();
+			for (User user : users) {
+				if (oldUsers.contains(user)
+						&& !group.getName().equals(user.getUserGroupName())) {
+					user.getGroups().remove(group);
+				}
 			}
+
+			Set<User> newUsers = new HashSet<User>();
+			for (User user : oldUsers) {
+				if (!users.contains(user))
+					newUsers.add(user);
+			}
+			group.setUsers(newUsers);
+
+			groupDAO.store(group);
+
+			if (log.isDebugEnabled())
+				log.debug("Removed users " + users + " from group " + group);
+		} catch (Throwable t) {
+			log.warn(t.getMessage(), t);
 		}
-
-		Set<User> newUsers = new HashSet<User>();
-		for (User user : oldUsers) {
-			if (!users.contains(user))
-				newUsers.add(user);
-		}
-		group.setUsers(newUsers);
-
-		groupDAO.store(group);
-
-		if (log.isDebugEnabled())
-			log.debug("Removed users " + users + " from group " + group);
 	}
 
 	/**
