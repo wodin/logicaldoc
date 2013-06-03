@@ -123,7 +123,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 				log.info("Document " + docId + " checked in");
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
-				throw new Exception(e);
+				throw e;
 			}
 		} else {
 			throw new Exception("document not checked in");

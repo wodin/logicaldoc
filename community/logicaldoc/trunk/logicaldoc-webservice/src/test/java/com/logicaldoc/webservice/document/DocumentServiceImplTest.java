@@ -17,7 +17,6 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.webservice.AbstractWebServiceTestCase;
-import com.logicaldoc.webservice.folder.WSFolder;
 
 /**
  * Test case for <code>DocumentServiceImpl</code>
@@ -131,15 +130,14 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 	public void testCheckin() throws Exception {
 		docServiceImpl.checkout("", 1);
 
-		Document doc = docDao.findById(1);
+		Document doc = docDao.findById(1L);
 		Assert.assertNotNull(doc);
-		docDao.initialize(doc);
 		Assert.assertEquals(Document.DOC_CHECKED_OUT, doc.getStatus());
 
 		File file = new File("pom.xml");
-		docServiceImpl.checkin("", 1, "comment", "pom.xml", true, new DataHandler(new FileDataSource(file)));
+		docServiceImpl.checkin("", 1L, "comment", "pom.xml", true, new DataHandler(new FileDataSource(file)));
 
-		doc = docDao.findById(1);
+		doc = docDao.findById(1L);
 		Assert.assertNotNull(doc);
 		docDao.initialize(doc);
 
@@ -150,10 +148,10 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 
 	@Test
 	public void testDelete() throws Exception {
-		Document doc = docDao.findById(1);
+		Document doc = docDao.findById(1L);
 		Assert.assertNotNull(doc);
-		docServiceImpl.delete("", doc.getId());
-		doc = docDao.findById(1);
+		docServiceImpl.delete("", 1L);
+		doc = docDao.findById(1L);
 		Assert.assertNull(doc);
 	}
 
