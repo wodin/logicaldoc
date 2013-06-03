@@ -14,7 +14,8 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @author Alessandro Gasparini - Logical Objects
  * @since 3.0
  */
-public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> implements GroupDAO {
+public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group>
+		implements GroupDAO {
 
 	private MenuDAO menuDAO;
 
@@ -36,6 +37,7 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 
 		try {
 			Group group = findById(groupId);
+			getHibernateTemplate().refresh(group);
 			if (group != null) {
 				group.setName(group.getName() + "." + group.getId());
 				group.setDeleted(1);
@@ -91,7 +93,9 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 	 */
 	public Group findByName(String name) {
 		Group group = null;
-		Collection<Group> coll = findByWhere("_entity.name = '" + SqlUtil.doubleQuotes(name) + "'", null, null);
+		Collection<Group> coll = findByWhere(
+				"_entity.name = '" + SqlUtil.doubleQuotes(name) + "'", null,
+				null);
 		if (coll.size() > 0) {
 			group = coll.iterator().next();
 			if (group.getDeleted() == 1)
@@ -114,7 +118,8 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 			Group parent = findById(parentGroupId);
 			if (parent != null)
 				for (String parentAttribute : parent.getAttributeNames()) {
-					group.setValue(parentAttribute, parent.getValue(parentAttribute));
+					group.setValue(parentAttribute,
+							parent.getValue(parentAttribute));
 				}
 
 			getHibernateTemplate().saveOrUpdate(group);
@@ -148,10 +153,14 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 			jdbcUpdate(sql);
 
 			if (parentGroupId != Group.GROUPID_ADMIN) {
-				log.debug("Replicate all ACLs from group " + parentGroupId + " to group " + groupId);
+				log.debug("Replicate all ACLs from group " + parentGroupId
+						+ " to group " + groupId);
 
-				sql = "insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) " + "select B.ld_menuid," + groupId
-						+ ", B.ld_write from ld_menugroup B where B.ld_groupid= " + parentGroupId;
+				sql = "insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) "
+						+ "select B.ld_menuid,"
+						+ groupId
+						+ ", B.ld_write from ld_menugroup B where B.ld_groupid= "
+						+ parentGroupId;
 				log.debug("Replicate all ACLs from group " + parentGroupId);
 				jdbcUpdate(sql);
 
@@ -165,8 +174,8 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 				// The admin group can access everithing
 				log.debug("Replicate all admin ACLs to group " + groupId);
 
-				sql = "insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) select B.ld_id," + groupId
-						+ ",1 from ld_menu B where B.ld_deleted=0";
+				sql = "insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) select B.ld_id,"
+						+ groupId + ",1 from ld_menu B where B.ld_deleted=0";
 				jdbcUpdate(sql);
 
 				sql = "insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar) "
@@ -186,7 +195,8 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 	 * @see com.logicaldoc.core.security.dao.GroupDAO#findByLikeName(java.lang.String)
 	 */
 	public Collection<Group> findByLikeName(String name) {
-		return findByWhere("lower(_entity.name) like ?", new Object[] { name.toLowerCase() }, null, null);
+		return findByWhere("lower(_entity.name) like ?",
+				new Object[] { name.toLowerCase() }, null, null);
 	}
 
 	@Override
@@ -197,7 +207,8 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 
 	@Override
 	public void initialize(Group group) {
-		getHibernateTemplate().refresh(group);
+		if (group != null && group.getDeleted() == 0)
+			getHibernateTemplate().refresh(group);
 
 		for (String attribute : group.getAttributes().keySet()) {
 			attribute.getBytes();
