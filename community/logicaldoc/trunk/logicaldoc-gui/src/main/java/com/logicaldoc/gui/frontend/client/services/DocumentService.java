@@ -30,7 +30,7 @@ public interface DocumentService extends RemoteService {
 	 * @param document The document to save
 	 * @return The saved document
 	 */
-	public GUIDocument save(String sid, GUIDocument document) throws InvalidSessionException;
+	public GUIDocument save(String sid, GUIDocument document) throws Exception;
 
 	/**
 	 * Retrieves all attributes of the specified template
@@ -133,7 +133,7 @@ public interface DocumentService extends RemoteService {
 	 * 
 	 * @returns The updated document
 	 */
-	public GUIDocument checkin(String sid, GUIDocument document, boolean major) throws InvalidSessionException;
+	public GUIDocument checkin(String sid, GUIDocument document, boolean major) throws Exception;
 
 	/**
 	 * Restores a given document

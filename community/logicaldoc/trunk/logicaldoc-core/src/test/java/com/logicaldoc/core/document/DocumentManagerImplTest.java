@@ -65,6 +65,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		transaction.setNotified(0);
 		transaction.setComment("pippo_reason");
 
+		newDoc.setCustomId("xxxxxxxxx");
 		documentManager.update(doc, newDoc, transaction);
 
 		Assert.assertEquals("testDocname2(1)", doc.getTitle());

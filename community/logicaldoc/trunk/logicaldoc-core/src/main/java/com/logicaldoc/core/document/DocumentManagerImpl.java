@@ -94,6 +94,16 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		if (document.getImmutable() == 0) {
 			documentDAO.initialize(document);
+
+			// Check CustomId uniqueness
+			if (docVO.getCustomId() != null) {
+				int count = documentDAO.queryForInt("select count(*) from ld_document where ld_customid='"
+						+ SqlUtil.doubleQuotes(docVO.getCustomId()) + "' and not ld_id=" + docId);
+				if (count >= 1)
+					throw new DuplicateDocumentExeption(docVO.getCustomId());
+				document.setCustomId(docVO.getCustomId());
+			}
+
 			/*
 			 * Now apply the metadata, if any
 			 */
@@ -351,9 +361,10 @@ public class DocumentManagerImpl implements DocumentManager {
 
 				// Check CustomId uniqueness
 				if (docVO.getCustomId() != null) {
-					Document test = documentDAO.findByCustomId(docVO.getCustomId());
-					if (test != null && test.getId() != doc.getId())
-						throw new Exception("Duplicated CustomID");
+					int count = documentDAO.queryForInt("select count(*) from ld_document where ld_customid='"
+							+ SqlUtil.doubleQuotes(docVO.getCustomId()) + "' and not ld_id=" + doc.getId());
+					if (count >= 1)
+						throw new DuplicateDocumentExeption(docVO.getCustomId());
 					doc.setCustomId(docVO.getCustomId());
 				}
 
