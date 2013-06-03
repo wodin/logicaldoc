@@ -90,7 +90,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		template.setValue("a1", "v1");
 		template.setValue("a2", 23L);
 		Assert.assertTrue(templateDao.store(template));
-	
+
 		GUIExtendedAttribute[] extAttr = service.getAttributes(session.getSid(), template.getId());
 		Assert.assertEquals(GUIExtendedAttribute.TYPE_STRING, extAttr[0].getType());
 		Assert.assertEquals("a1", extAttr[0].getName());
@@ -118,7 +118,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testSave() throws InvalidSessionException {
+	public void testSave() throws Exception {
 		GUIDocument doc = service.getById(session.getSid(), 1);
 
 		doc = service.save(session.getSid(), doc);
@@ -218,7 +218,6 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		Assert.assertNotNull(notes);
 		Assert.assertEquals(3, notes.size());
 	}
-
 
 	@Test
 	public void testLock() throws InvalidSessionException {
