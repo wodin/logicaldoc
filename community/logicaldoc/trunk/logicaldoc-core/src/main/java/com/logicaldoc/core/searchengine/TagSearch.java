@@ -49,7 +49,7 @@ public class TagSearch extends Search {
 		query.append(" A.ld_date, A.ld_publisher, A.ld_creation, A.ld_creator, A.ld_filesize, A.ld_immutable, ");
 		query.append(" A.ld_indexed, A.ld_lockuserid, A.ld_filename, A.ld_status, A.ld_signed, A.ld_type, A.ld_sourcedate, ");
 		query.append(" A.ld_sourceauthor, A.ld_rating, A.ld_fileversion, A.ld_comment, A.ld_workflowstatus, A.ld_startpublishing, ");
-		query.append(" A.ld_stoppublishing, A.ld_published, B.ld_name, A.ld_folderid, A.ld_templateid, C.ld_name ");
+		query.append(" A.ld_stoppublishing, A.ld_published, A.ld_source, A.ld_sourceid, A.ld_recipient, A.ld_object, B.ld_name, A.ld_folderid, A.ld_templateid, C.ld_name ");
 		query.append(" from ld_document as A ");
 		query.append(" join ld_folder as B on A.ld_folderid=B.ld_id ");
 		query.append(" left outer join ld_template as C on A.ld_templateid=C.ld_id ");
@@ -61,7 +61,7 @@ public class TagSearch extends Search {
 		query.append(" REF.ld_date, REF.ld_publisher, REF.ld_creation, REF.ld_creator, REF.ld_filesize, REF.ld_immutable, ");
 		query.append(" REF.ld_indexed, REF.ld_lockuserid, REF.ld_filename, REF.ld_status, REF.ld_signed, REF.ld_type, REF.ld_sourcedate, ");
 		query.append(" REF.ld_sourceauthor, REF.ld_rating, REF.ld_fileversion, REF.ld_comment, REF.ld_workflowstatus, A.ld_startpublishing, ");
-		query.append(" A.ld_stoppublishing, A.ld_published, B.ld_name, A.ld_folderid, REF.ld_templateid, C.ld_name");
+		query.append(" A.ld_stoppublishing, A.ld_published, REF.ld_source, REF.ld_sourceid, REF.ld_recipient, REF.ld_object, B.ld_name, A.ld_folderid, REF.ld_templateid, C.ld_name ");
 		query.append(" from ld_document A ");
 		query.append(" join ld_folder as B on A.ld_folderid=B.ld_id ");
 		query.append(" join ld_document as REF on A.ld_docref=REF.ld_id ");
@@ -148,15 +148,21 @@ public class TagSearch extends Search {
 			hit.setStartPublishing(rs.getTimestamp(26));
 			hit.setStopPublishing(rs.getTimestamp(27));
 			hit.setPublished(rs.getInt(28));
+			hit.setSource(rs.getString(29));
+			hit.setSourceId(rs.getString(30));
+			hit.setRecipient(rs.getString(31));
+			hit.setObject(rs.getString(32));
+			
+			
 			Folder folder = new Folder();
-			folder.setId(rs.getLong(30));
-			folder.setName(rs.getString(29));
+			folder.setId(rs.getLong(34));
+			folder.setName(rs.getString(33));
 			hit.setFolder(folder);
 			
-			if (rs.getLong(31) != 0L) {
+			if (rs.getLong(35) != 0L) {
 				DocumentTemplate t = new DocumentTemplate();
-				t.setId(rs.getLong(31));
-				t.setName(rs.getString(32));
+				t.setId(rs.getLong(35));
+				t.setName(rs.getString(36));
 				hit.setTemplate(t);
 				hit.setTemplateId(t.getId());
 			}
