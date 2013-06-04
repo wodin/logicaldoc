@@ -185,7 +185,23 @@ public class DocumentsGrid extends ListGrid {
 		ListGridField comment = new ListGridField("comment", I18N.message("comment"), 300);
 		comment.setHidden(true);
 		comment.setCanFilter(true);
-
+		
+		ListGridField source = new ListGridField("source", I18N.message("source"), 100);
+		source.setHidden(true);
+		source.setCanFilter(true);
+		
+		ListGridField sourceId = new ListGridField("sourceId", I18N.message("sourceid"), 100);
+		sourceId.setHidden(true);
+		sourceId.setCanFilter(true);
+		
+		ListGridField recipient = new ListGridField("recipient", I18N.message("recipient"), 100);
+		recipient.setHidden(true);
+		recipient.setCanFilter(true);
+		
+		ListGridField object = new ListGridField("object", I18N.message("object"), 100);
+		object.setHidden(true);
+		object.setCanFilter(true);
+		
 		ListGridField wfStatus = new ListGridField("workflowStatus", I18N.message("workflowstatus"), 100);
 		wfStatus.setHidden(true);
 		wfStatus.setCanFilter(true);
@@ -247,9 +263,13 @@ public class DocumentsGrid extends ListGrid {
 			fields.add(published);
 			fields.add(creator);
 			fields.add(created);
+			fields.add(source);
+			fields.add(sourceId);
 			fields.add(sourceDate);
 			fields.add(sourceAuthor);
 			fields.add(customId);
+			fields.add(recipient);
+			fields.add(object);
 			fields.add(rating);
 			fields.add(comment);
 			fields.add(wfStatus);
@@ -304,9 +324,13 @@ public class DocumentsGrid extends ListGrid {
 			fields.add(published);
 			fields.add(creator);
 			fields.add(created);
+			fields.add(source);
+			fields.add(sourceId);
 			fields.add(sourceDate);
 			fields.add(sourceAuthor);
 			fields.add(customId);
+			fields.add(recipient);
+			fields.add(object);
 			fields.add(folder);
 			fields.add(rating);
 			fields.add(comment);
