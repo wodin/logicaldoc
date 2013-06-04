@@ -153,7 +153,7 @@ public class FulltextSearch extends Search {
 		richQuery.append(" A.date, A.publisher, A.creation, A.creator, A.fileSize, A.immutable, ");
 		richQuery.append(" A.indexed, A.lockUserId, A.fileName, A.status, A.signed, A.type, A.sourceDate, ");
 		richQuery.append(" A.sourceAuthor, A.rating, A.fileVersion, A.comment, A.workflowStatus, A.startPublishing, ");
-		richQuery.append(" A.stopPublishing, A.published, A.folder.name, A.folder.id , B.id, B.name ");
+		richQuery.append(" A.stopPublishing, A.published, A.folder.name, A.folder.id, A.source, A.sourceId, A.recipient, A.object, B.id, B.name ");
 		richQuery.append(" from Document as A left outer join A.template as B where A.deleted = 0 and A.id in ");
 		richQuery.append(hitsIdsStr);
 
@@ -206,8 +206,12 @@ public class FulltextSearch extends Search {
 			hit.setPublished((Integer) cols[27]);
 			hit.getFolder().setName((String) cols[28]);
 			hit.getFolder().setId((Long) cols[29]);
-
-			if (cols[30] != null) {
+			hit.setSource((String) cols[30]);
+			hit.setSourceId((String) cols[31]);
+			hit.setRecipient((String) cols[32]);
+			hit.setObject((String) cols[33]);
+			
+			if (cols[34] != null) {
 				DocumentTemplate t = new DocumentTemplate();
 				t.setId((Long) cols[30]);
 				t.setName((String) cols[31]);
