@@ -205,7 +205,7 @@ public class DocumentsDataServlet extends HttpServlet {
 						"select A.id, A.customId, A.docRef, A.type, A.title, A.version, A.lastModified, A.date, A.publisher,"
 								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status,"
 								+ " A.signed, A.type, A.sourceDate, A.sourceAuthor, A.rating, A.fileVersion, A.comment, A.workflowStatus,"
-								+ " A.startPublishing, A.stopPublishing, A.published, A.extResId, B.name "
+								+ " A.startPublishing, A.stopPublishing, A.published, A.extResId, A.source, A.sourceId, A.recipient, A.object, B.name "
 								+ " from Document as A left outer join A.template as B ");
 				query.append(" where A.deleted = 0 ");
 				if (folderId != null)
@@ -325,7 +325,19 @@ public class DocumentsDataServlet extends HttpServlet {
 						writer.print("<extResId><![CDATA[" + cols[28] + "]]></extResId>");
 
 					if (cols[29] != null)
-						writer.print("<template><![CDATA[" + cols[29] + "]]></template>");
+						writer.print("<source><![CDATA[" + cols[29] + "]]></source>");
+
+					if (cols[30] != null)
+						writer.print("<sourceId><![CDATA[" + cols[30] + "]]></sourceId>");
+
+					if (cols[31] != null)
+						writer.print("<recipient><![CDATA[" + cols[31] + "]]></recipient>");
+
+					if (cols[32] != null)
+						writer.print("<object><![CDATA[" + cols[32] + "]]></object>");
+					
+					if (cols[33] != null)
+						writer.print("<template><![CDATA[" + cols[33] + "]]></template>");
 
 					if (!extValues.isEmpty())
 						for (String name : attrs) {
@@ -421,6 +433,18 @@ public class DocumentsDataServlet extends HttpServlet {
 					if (doc.getExtResId() != null)
 						writer.print("<extResId><![CDATA[" + doc.getExtResId() + "]]></extResId>");
 
+					if (doc.getSource() != null)
+						writer.print("<source><![CDATA[" + doc.getSource() + "]]></source>");
+
+					if (doc.getSourceId() != null)
+						writer.print("<sourceId><![CDATA[" + doc.getSourceId() + "]]></sourceId>");
+
+					if (doc.getRecipient() != null)
+						writer.print("<recipient><![CDATA[" + doc.getRecipient() + "]]></recipient>");
+
+					if (doc.getObject() != null)
+						writer.print("<object><![CDATA[" + doc.getObject() + "]]></object>");
+					
 					if (doc.getTemplate() != null)
 						writer.print("<template><![CDATA[" + doc.getTemplate().getName() + "]]></template>");
 
