@@ -45,7 +45,8 @@ import com.logicaldoc.util.sql.SqlUtil;
  */
 public class DocumentManagerImpl implements DocumentManager {
 
-	protected static Logger log = LoggerFactory.getLogger(DocumentManagerImpl.class);
+	protected static Logger log = LoggerFactory
+			.getLogger(DocumentManagerImpl.class);
 
 	private DocumentDAO documentDAO;
 
@@ -82,7 +83,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void checkin(long docId, File file, String filename, boolean release, Document docVO, History transaction)
+	public void checkin(long docId, File file, String filename,
+			boolean release, Document docVO, History transaction)
 			throws Exception {
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
@@ -94,16 +96,6 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		if (document.getImmutable() == 0) {
 			documentDAO.initialize(document);
-
-			// Check CustomId uniqueness
-			if (docVO != null && docVO.getCustomId() != null) {
-				int count = documentDAO.queryForInt("select count(*) from ld_document where ld_customid='"
-						+ SqlUtil.doubleQuotes(docVO.getCustomId()) + "' and not ld_id=" + docId);
-				if (count >= 1)
-					throw new DuplicateDocumentExeption(docVO.getCustomId());
-				document.setCustomId(docVO.getCustomId());
-			}
-
 			/*
 			 * Now apply the metadata, if any
 			 */
@@ -142,8 +134,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setExtResId(null);
 
 			// Create new version (a new version number is created)
-			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
-					Version.EVENT_CHECKIN, release);
+			Version version = Version.create(document, transaction.getUser(),
+					transaction.getComment(), Version.EVENT_CHECKIN, release);
 
 			if (documentDAO.store(document, transaction) == false)
 				throw new Exception();
@@ -166,8 +158,9 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void checkin(long docId, InputStream content, String filename, boolean release, Document docVO,
-			History transaction) throws Exception {
+	public void checkin(long docId, InputStream content, String filename,
+			boolean release, Document docVO, History transaction)
+			throws Exception {
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 		assert (transaction.getComment() != null);
@@ -188,7 +181,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void lock(long docId, int status, History transaction) throws Exception {
+	public void lock(long docId, int status, History transaction)
+			throws Exception {
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 
@@ -219,7 +213,8 @@ public class DocumentManagerImpl implements DocumentManager {
 		}
 
 		// stores it
-		long stored = storer.store(is, doc.getId(), storer.getResourceName(doc, null, null));
+		long stored = storer.store(is, doc.getId(),
+				storer.getResourceName(doc, null, null));
 		if (stored < 0)
 			throw new IOException("Unable to store the document");
 
@@ -261,7 +256,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	/**
 	 * Retrieves the document's content as a string
 	 * 
-	 * @param doc The document representation
+	 * @param doc
+	 *            The document representation
 	 * @return The document's content
 	 */
 	private String parseDocument(Document doc) {
@@ -276,8 +272,9 @@ public class DocumentManagerImpl implements DocumentManager {
 		// Parses the file where it is already stored
 		Locale locale = doc.getLocale();
 		String resource = storer.getResourceName(doc, null, null);
-		Parser parser = ParserFactory.getParser(storer.getStream(doc.getId(), resource), doc.getFileName(), locale,
-				null);
+		Parser parser = ParserFactory.getParser(
+				storer.getStream(doc.getId(), resource), doc.getFileName(),
+				locale, null);
 
 		// and gets some fields
 		if (parser != null) {
@@ -323,18 +320,20 @@ public class DocumentManagerImpl implements DocumentManager {
 		indexer.addHit(doc, content);
 
 		// For additional security update the DB directly
-		documentDAO.jdbcUpdate("update ld_document set ld_indexed=" + AbstractDocument.INDEX_INDEXED + " where ld_id="
-				+ docId);
+		documentDAO.jdbcUpdate("update ld_document set ld_indexed="
+				+ AbstractDocument.INDEX_INDEXED + " where ld_id=" + docId);
 		doc = documentDAO.findById(docId);
 
 		for (Long shortcutId : shortcutIds) {
 			try {
 				Document shortcutDoc = documentDAO.findById(shortcutId);
-				indexer.addHit(shortcutDoc, storer.getStream(doc.getId(), resource));
+				indexer.addHit(shortcutDoc,
+						storer.getStream(doc.getId(), resource));
 
 				// For additional security update the DB directly
-				documentDAO.jdbcUpdate("update ld_document set ld_indexed=" + AbstractDocument.INDEX_INDEXED
-						+ " where ld_id=" + shortcutId);
+				documentDAO.jdbcUpdate("update ld_document set ld_indexed="
+						+ AbstractDocument.INDEX_INDEXED + " where ld_id="
+						+ shortcutId);
 				shortcutDoc = documentDAO.findById(shortcutId);
 			} catch (Throwable t) {
 
@@ -343,28 +342,33 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void update(Document doc, Document docVO, History transaction) throws Exception {
+	public void update(Document doc, Document docVO, History transaction)
+			throws Exception {
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 		assert (doc != null);
 		assert (docVO != null);
 		try {
 			documentDAO.initialize(doc);
-			if (doc.getImmutable() == 0 || ((doc.getImmutable() == 1 && transaction.getUser().isInGroup("admin")))) {
+			if (doc.getImmutable() == 0
+					|| ((doc.getImmutable() == 1 && transaction.getUser()
+							.isInGroup("admin")))) {
 				History renameTransaction = null;
-				if (!doc.getTitle().equals(docVO.getTitle()) && docVO.getTitle() != null) {
+				if (!doc.getTitle().equals(docVO.getTitle())
+						&& docVO.getTitle() != null) {
 					renameTransaction = (History) transaction.clone();
 					renameTransaction.setFilenameOld(doc.getFileName());
 					renameTransaction.setTitleOld(doc.getTitle());
-					renameTransaction.setEvent(DocumentEvent.RENAMED.toString());
+					renameTransaction
+							.setEvent(DocumentEvent.RENAMED.toString());
 				}
 
 				// Check CustomId uniqueness
-				if (docVO != null && docVO.getCustomId() != null) {
-					int count = documentDAO.queryForInt("select count(*) from ld_document where ld_customid='"
-							+ SqlUtil.doubleQuotes(docVO.getCustomId()) + "' and not ld_id=" + doc.getId());
-					if (count >= 1)
-						throw new DuplicateDocumentExeption(docVO.getCustomId());
+				if (docVO.getCustomId() != null) {
+					Document test = documentDAO.findByCustomId(docVO
+							.getCustomId());
+					if (test != null && test.getId() != doc.getId())
+						throw new Exception("Duplicated CustomID");
 					doc.setCustomId(docVO.getCustomId());
 				}
 
@@ -404,7 +408,8 @@ public class DocumentManagerImpl implements DocumentManager {
 
 				DocumentTemplate template = docVO.getTemplate();
 				if (template == null && docVO.getTemplateId() != null)
-					template = documentTemplateDAO.findById(docVO.getTemplateId());
+					template = documentTemplateDAO.findById(docVO
+							.getTemplateId());
 
 				// Change the template and attributes
 				if (template != null) {
@@ -414,19 +419,30 @@ public class DocumentManagerImpl implements DocumentManager {
 						doc.getAttributes().clear();
 						for (String attrName : docVO.getAttributes().keySet()) {
 							if (template.getAttributes().get(attrName) != null) {
-								ExtendedAttribute templateExtAttribute = template.getAttributes().get(attrName);
-								ExtendedAttribute docExtendedAttribute = docVO.getAttributes().get(attrName);
-								docExtendedAttribute.setMandatory(templateExtAttribute.getMandatory());
-								docExtendedAttribute.setLabel(templateExtAttribute.getLabel());
-								if (templateExtAttribute.getType() == docExtendedAttribute.getType()) {
-									doc.getAttributes().put(attrName, docExtendedAttribute);
+								ExtendedAttribute templateExtAttribute = template
+										.getAttributes().get(attrName);
+								ExtendedAttribute docExtendedAttribute = docVO
+										.getAttributes().get(attrName);
+								docExtendedAttribute
+										.setMandatory(templateExtAttribute
+												.getMandatory());
+								docExtendedAttribute
+										.setLabel(templateExtAttribute
+												.getLabel());
+								if (templateExtAttribute.getType() == docExtendedAttribute
+										.getType()) {
+									doc.getAttributes().put(attrName,
+											docExtendedAttribute);
 								} else {
-									throw new Exception("The given type value is not correct for attribute: "
-											+ attrName);
+									throw new Exception(
+											"The given type value is not correct for attribute: "
+													+ attrName);
 								}
 							} else {
-								throw new Exception("The attribute name '" + attrName
-										+ "' is not correct for template '" + template.getName() + "'.");
+								throw new Exception("The attribute name '"
+										+ attrName
+										+ "' is not correct for template '"
+										+ template.getName() + "'.");
 							}
 						}
 					}
@@ -435,8 +451,8 @@ public class DocumentManagerImpl implements DocumentManager {
 				}
 
 				// create a new version
-				Version version = Version.create(doc, transaction.getUser(), transaction.getComment(),
-						Version.EVENT_CHANGED, false);
+				Version version = Version.create(doc, transaction.getUser(),
+						transaction.getComment(), Version.EVENT_CHANGED, false);
 
 				// Modify document history entry
 				doc.setVersion(version.getVersion());
@@ -450,7 +466,8 @@ public class DocumentManagerImpl implements DocumentManager {
 
 				// Check if there are some shortcuts associated to the indexing
 				// document. They must be re-indexed.
-				List<Long> shortcutIds = documentDAO.findShortcutIds(doc.getId());
+				List<Long> shortcutIds = documentDAO.findShortcutIds(doc
+						.getId());
 				for (Long shortcutId : shortcutIds) {
 					Document shortcutDoc = documentDAO.findById(shortcutId);
 					shortcutDoc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
@@ -466,16 +483,20 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void moveToFolder(Document doc, Folder folder, History transaction) throws Exception {
+	public void moveToFolder(Document doc, Folder folder, History transaction)
+			throws Exception {
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 
 		if (folder.equals(doc.getFolder()))
 			return;
 
-		if (doc.getImmutable() == 0 || ((doc.getImmutable() == 1 && transaction.getUser().isInGroup("admin")))) {
+		if (doc.getImmutable() == 0
+				|| ((doc.getImmutable() == 1 && transaction.getUser()
+						.isInGroup("admin")))) {
 			documentDAO.initialize(doc);
-			transaction.setPathOld(folderDAO.computePathExtended(doc.getFolder().getId()));
+			transaction.setPathOld(folderDAO.computePathExtended(doc
+					.getFolder().getId()));
 			transaction.setFilenameOld(doc.getFileName());
 			transaction.setTitleOld(doc.getTitle());
 			doc.setFolder(folder);
@@ -487,8 +508,9 @@ public class DocumentManagerImpl implements DocumentManager {
 				indexer.deleteHit(doc.getId());
 
 				// The same thing should be done on each shortcut
-				documentDAO.jdbcUpdate("update ld_document set ld_indexed=" + AbstractDocument.INDEX_TO_INDEX
-						+ " where ld_docref=" + doc.getId());
+				documentDAO.jdbcUpdate("update ld_document set ld_indexed="
+						+ AbstractDocument.INDEX_TO_INDEX + " where ld_docref="
+						+ doc.getId());
 			}
 
 			// To avoid 'optimistic locking failed' exceptions.
@@ -500,8 +522,8 @@ public class DocumentManagerImpl implements DocumentManager {
 				transaction.setEvent(DocumentEvent.MOVED.toString());
 			documentDAO.store(doc, transaction);
 
-			Version version = Version.create(doc, transaction.getUser(), transaction.getComment(), Version.EVENT_MOVED,
-					false);
+			Version version = Version.create(doc, transaction.getUser(),
+					transaction.getComment(), Version.EVENT_MOVED, false);
 			versionDAO.store(version);
 		} else {
 			throw new Exception("Document is immutable");
@@ -509,18 +531,21 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public Document create(File file, Document docVO, History transaction) throws Exception {
+	public Document create(File file, Document docVO, History transaction)
+			throws Exception {
 		assert (transaction != null);
 		assert (docVO != null);
 		assert (file != null);
 
+		boolean documentSaved = false;
 		try {
 			String fallbackTitle = docVO.getFileName();
 			String type = "unknown";
 			int lastDotIndex = docVO.getFileName().lastIndexOf(".");
 			if (lastDotIndex > 0) {
 				fallbackTitle = docVO.getFileName().substring(0, lastDotIndex);
-				type = docVO.getFileName().substring(lastDotIndex + 1).toLowerCase();
+				type = docVO.getFileName().substring(lastDotIndex + 1)
+						.toLowerCase();
 			}
 
 			if (StringUtils.isEmpty(docVO.getTitle()))
@@ -537,7 +562,6 @@ public class DocumentManagerImpl implements DocumentManager {
 			if (docVO.getCreation() == null)
 				docVO.setCreation(docVO.getDate());
 
-			
 			if (StringUtils.isNotEmpty(docVO.getPublisher()))
 				docVO.setPublisher(docVO.getPublisher());
 			else
@@ -558,7 +582,6 @@ public class DocumentManagerImpl implements DocumentManager {
 			else
 				docVO.setCreatorId(transaction.getUserId());
 
-			
 			docVO.setStatus(Document.DOC_UNLOCKED);
 			docVO.setType(type);
 			docVO.setVersion(config.getProperty("document.startversion"));
@@ -566,18 +589,24 @@ public class DocumentManagerImpl implements DocumentManager {
 			docVO.setFileSize(file.length());
 
 			if (docVO.getTemplate() == null && docVO.getTemplateId() != null)
-				docVO.setTemplate(documentTemplateDAO.findById(docVO.getTemplateId()));
+				docVO.setTemplate(documentTemplateDAO.findById(docVO
+						.getTemplateId()));
 
 			/* Set template and extended attributes */
 			if (docVO.getTemplate() != null) {
 				for (String attrName : docVO.getAttributeNames()) {
 					if (docVO.getTemplate().getAttributes().get(attrName) != null) {
-						ExtendedAttribute templateExtAttribute = docVO.getTemplate().getAttributes().get(attrName);
-						ExtendedAttribute docExtendedAttribute = docVO.getExtendedAttribute(attrName);
-						if (templateExtAttribute.getType() == docExtendedAttribute.getType()) {
-							docVO.getAttributes().put(attrName, docExtendedAttribute);
+						ExtendedAttribute templateExtAttribute = docVO
+								.getTemplate().getAttributes().get(attrName);
+						ExtendedAttribute docExtendedAttribute = docVO
+								.getExtendedAttribute(attrName);
+						if (templateExtAttribute.getType() == docExtendedAttribute
+								.getType()) {
+							docVO.getAttributes().put(attrName,
+									docExtendedAttribute);
 						} else {
-							throw new Exception("The given type value is not correct.");
+							throw new Exception(
+									"The given type value is not correct.");
 						}
 					}
 				}
@@ -586,22 +615,26 @@ public class DocumentManagerImpl implements DocumentManager {
 			docVO.setId(0L);
 
 			// Create the record
-			documentDAO.store(docVO, transaction);
+			documentSaved = documentDAO.store(docVO, transaction);
 
-			/* store the document into filesystem */
-			try {
-				store(docVO, file);
-			} catch (Exception e) {
-				documentDAO.delete(docVO.getId());
-			}
+			if (documentSaved) {
+				/* store the document into filesystem */
+				try {
+					store(docVO, file);
+				} catch (Exception e) {
+					documentDAO.delete(docVO.getId());
+				}
 
-			// Store the initial version (default 1.0)
-			Version vers = Version.create(docVO, userDAO.findById(transaction.getUserId()), transaction.getComment(),
-					Version.EVENT_STORED, true);
-			versionDAO.store(vers);
+				// Store the initial version (default 1.0)
+				Version vers = Version.create(docVO,
+						userDAO.findById(transaction.getUserId()),
+						transaction.getComment(), Version.EVENT_STORED, true);
+				versionDAO.store(vers);
 
-			log.debug("Stored version " + vers.getVersion());
-			return docVO;
+				log.debug("Stored version " + vers.getVersion());
+				return docVO;
+			} else
+				throw new Exception("Document not stored in the database");
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 			throw new Exception(e);
@@ -609,7 +642,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public Document create(InputStream content, Document docVO, History transaction) throws Exception {
+	public Document create(InputStream content, Document docVO,
+			History transaction) throws Exception {
 		assert (transaction != null);
 		assert (docVO != null);
 		assert (content != null);
@@ -632,12 +666,14 @@ public class DocumentManagerImpl implements DocumentManager {
 		String originalFileName = doc.getFileName();
 
 		if (doc.getFileName().indexOf(".") != -1) {
-			originalFileName = doc.getFileName().substring(0, doc.getFileName().lastIndexOf("."));
+			originalFileName = doc.getFileName().substring(0,
+					doc.getFileName().lastIndexOf("."));
 		}
 
 		String ext = "";
 		if (doc.getFileName().indexOf(".") != -1) {
-			ext = doc.getFileName().substring(doc.getFileName().lastIndexOf("."));
+			ext = doc.getFileName().substring(
+					doc.getFileName().lastIndexOf("."));
 		}
 
 		/*
@@ -679,7 +715,8 @@ public class DocumentManagerImpl implements DocumentManager {
 		}
 	}
 
-	public Document copyToFolder(Document doc, Folder folder, History transaction) throws Exception {
+	public Document copyToFolder(Document doc, Folder folder,
+			History transaction) throws Exception {
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 
@@ -738,25 +775,30 @@ public class DocumentManagerImpl implements DocumentManager {
 			transaction.setEvent(DocumentEvent.IMMUTABLE.toString());
 			documentDAO.makeImmutable(docId, transaction);
 
-			log.debug("The document " + docId + " has been marked as immutable ");
+			log.debug("The document " + docId
+					+ " has been marked as immutable ");
 		} else {
 			throw new Exception("Document is immutable");
 		}
 	}
 
 	@Override
-	public void rename(Document doc, String newName, boolean title, History transaction) throws Exception {
+	public void rename(Document doc, String newName, boolean title,
+			History transaction) throws Exception {
 		assert (doc != null);
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 
 		Document document = doc;
 		if (doc.getDocRef() != null) {
-			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(
+					DocumentDAO.class);
 			document = docDao.findById(doc.getDocRef());
 		}
 
-		if (document.getImmutable() == 0 || ((doc.getImmutable() == 1 && transaction.getUser().isInGroup("admin")))) {
+		if (document.getImmutable() == 0
+				|| ((doc.getImmutable() == 1 && transaction.getUser()
+						.isInGroup("admin")))) {
 			documentDAO.initialize(document);
 			if (title) {
 				document.setTitle(newName);
@@ -777,13 +819,14 @@ public class DocumentManagerImpl implements DocumentManager {
 			transaction.setEvent(DocumentEvent.RENAMED.toString());
 			documentDAO.store(document, transaction);
 
-			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
-					Version.EVENT_RENAMED, false);
+			Version version = Version.create(document, transaction.getUser(),
+					transaction.getComment(), Version.EVENT_RENAMED, false);
 			versionDAO.store(version);
 
 			// Check if there are some shortcuts associated to the indexing
 			// document. They must be re-indexed.
-			List<Long> shortcutIds = documentDAO.findShortcutIds(document.getId());
+			List<Long> shortcutIds = documentDAO.findShortcutIds(document
+					.getId());
 			for (Long shortcutId : shortcutIds) {
 				Document shortcutDoc = documentDAO.findById(shortcutId);
 				documentDAO.initialize(shortcutDoc);
@@ -798,7 +841,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public Document createShortcut(Document doc, Folder folder, History transaction) throws Exception {
+	public Document createShortcut(Document doc, Folder folder,
+			History transaction) throws Exception {
 		assert (doc != null);
 		assert (folder != null);
 		assert (transaction != null);
@@ -818,7 +862,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			int lastDotIndex = doc.getFileName().lastIndexOf(".");
 			if (lastDotIndex > 0) {
 				fallbackTitle = doc.getFileName().substring(0, lastDotIndex);
-				type = doc.getFileName().substring(lastDotIndex + 1).toLowerCase();
+				type = doc.getFileName().substring(lastDotIndex + 1)
+						.toLowerCase();
 			}
 
 			if (StringUtils.isNotEmpty(doc.getTitle())) {
@@ -885,14 +930,17 @@ public class DocumentManagerImpl implements DocumentManager {
 	public void changeIndexingStatus(Document doc, int status) {
 		assert (status != AbstractDocument.INDEX_INDEXED);
 
-		if (status == AbstractDocument.INDEX_SKIP && doc.getIndexed() == AbstractDocument.INDEX_SKIP)
+		if (status == AbstractDocument.INDEX_SKIP
+				&& doc.getIndexed() == AbstractDocument.INDEX_SKIP)
 			return;
 		if (status == AbstractDocument.INDEX_TO_INDEX
-				&& (doc.getIndexed() == AbstractDocument.INDEX_TO_INDEX || doc.getIndexed() == AbstractDocument.INDEX_INDEXED))
+				&& (doc.getIndexed() == AbstractDocument.INDEX_TO_INDEX || doc
+						.getIndexed() == AbstractDocument.INDEX_INDEXED))
 			return;
 
 		documentDAO.initialize(doc);
-		if (status == AbstractDocument.INDEX_SKIP && doc.getIndexed() == AbstractDocument.INDEX_INDEXED)
+		if (status == AbstractDocument.INDEX_SKIP
+				&& doc.getIndexed() == AbstractDocument.INDEX_INDEXED)
 			deleteFromIndex(doc);
 		doc.setIndexed(status);
 		documentDAO.store(doc);
@@ -926,19 +974,22 @@ public class DocumentManagerImpl implements DocumentManager {
 		List<Version> versions = versionDAO.findByDocId(version.getDocId());
 		boolean referenced = false;
 		for (Version v : versions)
-			if (v.getId() != versionId && version.getFileVersion().equals(v.getFileVersion())) {
+			if (v.getId() != versionId
+					&& version.getFileVersion().equals(v.getFileVersion())) {
 				referenced = true;
 				break;
 			}
 
 		// If no more referenced, can delete the document's resources
 		if (!referenced) {
-			List<String> resources = storer.listResources(version.getDocId(), version.getFileVersion());
+			List<String> resources = storer.listResources(version.getDocId(),
+					version.getFileVersion());
 			for (String resource : resources)
 				try {
 					storer.delete(version.getDocId(), resource);
 				} catch (Throwable t) {
-					log.warn("Unable to delete resource " + resource + " od document " + version.getDocId());
+					log.warn("Unable to delete resource " + resource
+							+ " od document " + version.getDocId());
 				}
 		}
 
