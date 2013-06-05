@@ -122,7 +122,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.equals("userno") || name.startsWith("search.") || name.startsWith("swftools.")
 					|| name.contains("password") || name.startsWith("audit.user") || name.startsWith("openoffice.path")
 					|| name.startsWith("tag.") || name.startsWith("jdbc.") || name.startsWith("cluster")
-					|| name.startsWith("ip.")|| name.startsWith("extcall."))
+					|| name.startsWith("ip.") || name.startsWith("extcall."))
 				continue;
 
 			sortedSet.add(key.toString());
@@ -165,6 +165,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			for (int i = 0; i < settings.length; i++) {
+				if (settings[i] == null || StringUtils.isEmpty(settings[i].getName()))
+					continue;
 				conf.setProperty(settings[i].getName(), settings[i].getValue() != null ? settings[i].getValue() : "");
 			}
 

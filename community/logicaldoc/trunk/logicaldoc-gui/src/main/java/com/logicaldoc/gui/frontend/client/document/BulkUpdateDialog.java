@@ -62,10 +62,19 @@ public class BulkUpdateDialog extends Window {
 		setShowModalMask(true);
 		centerInPage();
 
+		/*
+		 * Since the document is locked, temprarily alter the status to have the
+		 * editing enabled.
+		 */
+		int originalStatus = metadata.getStatus();
+		if (checkin)
+			metadata.setStatus(0);
 		bulkPanel = new BulkUpdatePanel(metadata);
 		bulkPanel.setWidth100();
 		bulkPanel.setHeight("*");
 		bulkPanel.setShowResizeBar(false);
+		if (checkin)
+			metadata.setStatus(originalStatus);
 
 		HTMLPane spacer = new HTMLPane();
 		spacer.setContents("<div>&nbsp;</div>");
