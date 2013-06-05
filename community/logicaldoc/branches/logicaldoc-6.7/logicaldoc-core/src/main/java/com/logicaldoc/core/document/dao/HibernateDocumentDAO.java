@@ -222,7 +222,7 @@ public class HibernateDocumentDAO extends
 		return store(doc, null);
 	}
 
-	public boolean store(final Document doc, final History transaction) {
+	public boolean store(Document doc, final History transaction) {
 		boolean result = true;
 		try {
 			// Truncate publishing dates
@@ -312,10 +312,13 @@ public class HibernateDocumentDAO extends
 
 			// Save the document
 			getHibernateTemplate().saveOrUpdate(doc);
-			getHibernateTemplate().flush();
-			if (doc.getDeleted() == 0)
+			try {
+				getHibernateTemplate().flush();
+			} catch (Throwable t) {
+			}
+			if (doc.getDeleted() == 0 && doc.getId()!=0L)
 				getHibernateTemplate().refresh(doc);
-
+			
 			log.debug("Invoke listeners after store");
 			for (DocumentListener listener : listenerManager.getListeners()) {
 				listener.afterStore(doc, transaction, dictionary);
@@ -327,7 +330,10 @@ public class HibernateDocumentDAO extends
 			if (!"bulkload".equals(config.getProperty("runlevel"))) {
 				// Perhaps some listeners may have modified the document
 				getHibernateTemplate().saveOrUpdate(doc);
-				getHibernateTemplate().flush();
+				try {
+					getHibernateTemplate().flush();
+				} catch (Throwable t) {
+				}
 
 				saveDocumentHistory(doc, transaction);
 			}
