@@ -219,7 +219,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					doc.setFileName(filename);
 					doc.setTitle(FilenameUtils.getBaseName(filename));
 
-					// Create the new
+					// Create the new document
 					doc = documentManager.create(file, doc, transaction);
 				}
 			}
