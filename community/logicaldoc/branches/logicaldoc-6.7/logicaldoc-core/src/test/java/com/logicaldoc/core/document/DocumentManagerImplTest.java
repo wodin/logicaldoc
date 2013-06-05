@@ -64,6 +64,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		transaction.setUserId(1);
 		transaction.setNotified(0);
 		transaction.setComment("pippo_reason");
+		newDoc.setCustomId("xxxxxxxx");
 
 		documentManager.update(doc, newDoc, transaction);
 
@@ -165,6 +166,8 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
 		docDao.initialize(doc);
+		doc=(Document)doc.clone();
+		doc.setId(0);
 		History transaction = new History();
 		transaction.setFolderId(103);
 		transaction.setUser(user);
@@ -172,7 +175,8 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		transaction.setUserId(1);
 		transaction.setNotified(0);
 		transaction.setComment("pippo_reason");
-
+		doc.setCustomId("xxxxxxxxxx");
+		
 		Document newDoc = documentManager.create(new FileInputStream("pom.xml"), doc, transaction);
 
 		newDoc = docDao.findById(newDoc.getId());

@@ -537,6 +537,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		assert (docVO != null);
 		assert (file != null);
 
+		boolean documentSaved = false;
 		try {
 			String fallbackTitle = docVO.getFileName();
 			String type = "unknown";
@@ -614,23 +615,26 @@ public class DocumentManagerImpl implements DocumentManager {
 			docVO.setId(0L);
 
 			// Create the record
-			documentDAO.store(docVO, transaction);
+			documentSaved = documentDAO.store(docVO, transaction);
 
-			/* store the document into filesystem */
-			try {
-				store(docVO, file);
-			} catch (Exception e) {
-				documentDAO.delete(docVO.getId());
-			}
+			if (documentSaved) {
+				/* store the document into filesystem */
+				try {
+					store(docVO, file);
+				} catch (Exception e) {
+					documentDAO.delete(docVO.getId());
+				}
 
-			// Store the initial version (default 1.0)
-			Version vers = Version.create(docVO,
-					userDAO.findById(transaction.getUserId()),
-					transaction.getComment(), Version.EVENT_STORED, true);
-			versionDAO.store(vers);
+				// Store the initial version (default 1.0)
+				Version vers = Version.create(docVO,
+						userDAO.findById(transaction.getUserId()),
+						transaction.getComment(), Version.EVENT_STORED, true);
+				versionDAO.store(vers);
 
-			log.debug("Stored version " + vers.getVersion());
-			return docVO;
+				log.debug("Stored version " + vers.getVersion());
+				return docVO;
+			} else
+				throw new Exception("Document not stored in the database");
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 			throw new Exception(e);
