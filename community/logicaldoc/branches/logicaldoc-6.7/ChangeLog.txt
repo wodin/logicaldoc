@@ -10,6 +10,14 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC 6.7.1 (2013-06-10; logicaldoc-6.7.1)
+===============
+306 - Metadata editing at checkin time - Improvement - Core
+303 - Croatian language localization - New Feature - Core
+307 - Ability to delete specific versions - New Feature - Core
+308 - Option to inherit security policies from parent when creating a new folder - New Feature - Core
+311 - MySQL 5.6 compliance - Bug - Core 
+
 LogicalDOC 6.7 (2013-04-10; logicaldoc-6.7)
 ===============
 271 -	Decouple core API from WebServices API - Task -	Core
