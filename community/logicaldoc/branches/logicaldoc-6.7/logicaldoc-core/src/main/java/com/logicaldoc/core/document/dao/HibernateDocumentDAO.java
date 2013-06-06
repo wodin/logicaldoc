@@ -47,8 +47,7 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
-public class HibernateDocumentDAO extends
-		HibernatePersistentObjectDAO<Document> implements DocumentDAO {
+public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document> implements DocumentDAO {
 	private HistoryDAO historyDAO;
 
 	private VersionDAO versionDAO;
@@ -103,12 +102,9 @@ public class HibernateDocumentDAO extends
 		assert (transaction.getUser() != null);
 		boolean result = true;
 		try {
-			Document doc = (Document) getHibernateTemplate().get(
-					Document.class, docId);
-			if (doc != null
-					&& doc.getImmutable() == 0
-					|| (doc != null && doc.getImmutable() == 1 && transaction
-							.getUser().isInGroup("admin"))) {
+			Document doc = (Document) getHibernateTemplate().get(Document.class, docId);
+			if (doc != null && doc.getImmutable() == 0
+					|| (doc != null && doc.getImmutable() == 1 && transaction.getUser().isInGroup("admin"))) {
 				// Remove versions
 				for (Version version : versionDAO.findByDocId(docId)) {
 					version.setDeleted(1);
@@ -168,8 +164,7 @@ public class HibernateDocumentDAO extends
 	 */
 	@Deprecated
 	public List<Document> findLockedByUserId(long userId) {
-		return findByWhere("_entity.lockUserId = " + userId
-				+ " and not(_entity.status=" + Document.DOC_UNLOCKED + ")",
+		return findByWhere("_entity.lockUserId = " + userId + " and not(_entity.status=" + Document.DOC_UNLOCKED + ")",
 				null, null);
 	}
 
@@ -184,26 +179,24 @@ public class HibernateDocumentDAO extends
 		if (status != null)
 			sb.append(" and ld_status=" + status);
 
-		return (List<Document>) query(sb.toString(), null,
-				new RowMapper<Document>() {
+		return (List<Document>) query(sb.toString(), null, new RowMapper<Document>() {
 
-					@Override
-					public Document mapRow(ResultSet rs, int col)
-							throws SQLException {
-						Document doc = new Document();
-						doc.setId(rs.getLong(1));
-						Folder folder = new Folder();
-						folder.setId(rs.getLong(2));
-						doc.setFolder(folder);
-						doc.setVersion(rs.getString(3));
-						doc.setFileVersion(rs.getString(4));
-						doc.setLastModified(rs.getDate(5));
-						doc.setFileName(rs.getString(6));
-						doc.setTitle(rs.getString(7));
-						return doc;
-					}
+			@Override
+			public Document mapRow(ResultSet rs, int col) throws SQLException {
+				Document doc = new Document();
+				doc.setId(rs.getLong(1));
+				Folder folder = new Folder();
+				folder.setId(rs.getLong(2));
+				doc.setFolder(folder);
+				doc.setVersion(rs.getString(3));
+				doc.setFileVersion(rs.getString(4));
+				doc.setLastModified(rs.getDate(5));
+				doc.setFileName(rs.getString(6));
+				doc.setTitle(rs.getString(7));
+				return doc;
+			}
 
-				}, null);
+		}, null);
 	}
 
 	/**
@@ -211,10 +204,8 @@ public class HibernateDocumentDAO extends
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Long> findDocIdByTag(String tag) {
-		StringBuilder query = new StringBuilder(
-				"select distinct(ld_docid) from ld_tag where ");
-		query.append("lower(ld_tag)='"
-				+ SqlUtil.doubleQuotes(tag).toLowerCase() + "'");
+		StringBuilder query = new StringBuilder("select distinct(ld_docid) from ld_tag where ");
+		query.append("lower(ld_tag)='" + SqlUtil.doubleQuotes(tag).toLowerCase() + "'");
 		return (List<Long>) queryForList(query.toString(), Long.class);
 	}
 
@@ -227,18 +218,14 @@ public class HibernateDocumentDAO extends
 		try {
 			// Truncate publishing dates
 			if (doc.getStartPublishing() != null)
-				doc.setStartPublishing(DateUtils.truncate(
-						doc.getStartPublishing(), Calendar.DATE));
+				doc.setStartPublishing(DateUtils.truncate(doc.getStartPublishing(), Calendar.DATE));
 			if (doc.getStopPublishing() != null)
-				doc.setStopPublishing(DateUtils.truncate(
-						doc.getStopPublishing(), Calendar.DATE));
+				doc.setStopPublishing(DateUtils.truncate(doc.getStopPublishing(), Calendar.DATE));
 
 			// Check if the document must be barcoded
 			if (!FileUtil.matches(doc.getFileName(),
-					config.getProperty("barcode.includes") == null ? ""
-							: config.getProperty("barcode.includes"), config
-							.getProperty("barcode.excludes") == null ? ""
-							: config.getProperty("barcode.excludes")))
+					config.getProperty("barcode.includes") == null ? "" : config.getProperty("barcode.includes"),
+					config.getProperty("barcode.excludes") == null ? "" : config.getProperty("barcode.excludes")))
 				doc.setBarcoded(Document.BARCODE_SKIP);
 
 			Set<String> src = doc.getTags();
@@ -262,36 +249,33 @@ public class HibernateDocumentDAO extends
 			 */
 			if (doc.getFolder().getTemplate() != null) {
 				folderDAO.initialize(doc.getFolder());
-				if (doc.getTemplate() == null
-						|| doc.getTemplate().equals(
-								doc.getFolder().getTemplate())) {
+				if (doc.getTemplate() == null || doc.getTemplate().equals(doc.getFolder().getTemplate())) {
 					doc.setTemplate(doc.getFolder().getTemplate());
-					for (String name : doc.getFolder().getAttributeNames()) {
-						ExtendedAttribute fAtt = doc.getFolder()
-								.getExtendedAttribute(name);
-						if (fAtt.getValue() == null
-								|| StringUtils.isEmpty(fAtt.getValue()
-										.toString()))
-							continue;
-						ExtendedAttribute dAtt = doc.getExtendedAttribute(name);
-						if (dAtt == null) {
-							dAtt = new ExtendedAttribute();
-							dAtt.setType(fAtt.getType());
-							dAtt.setEditor(fAtt.getEditor());
-							dAtt.setLabel(fAtt.getLabel());
-							dAtt.setMandatory(fAtt.getMandatory());
-							dAtt.setPosition(fAtt.getPosition());
-							doc.getAttributes().put(name, dAtt);
-						}
+					try {
+						for (String name : doc.getFolder().getAttributeNames()) {
+							ExtendedAttribute fAtt = doc.getFolder().getExtendedAttribute(name);
+							if (fAtt.getValue() == null || StringUtils.isEmpty(fAtt.getValue().toString()))
+								continue;
+							ExtendedAttribute dAtt = doc.getExtendedAttribute(name);
+							if (dAtt == null) {
+								dAtt = new ExtendedAttribute();
+								dAtt.setType(fAtt.getType());
+								dAtt.setEditor(fAtt.getEditor());
+								dAtt.setLabel(fAtt.getLabel());
+								dAtt.setMandatory(fAtt.getMandatory());
+								dAtt.setPosition(fAtt.getPosition());
+								doc.getAttributes().put(name, dAtt);
+							}
 
-						if (dAtt.getValue() == null
-								|| StringUtils.isEmpty(dAtt.getValue()
-										.toString())) {
-							dAtt.setStringValue(fAtt.getStringValue());
-							dAtt.setDateValue(fAtt.getDateValue());
-							dAtt.setDoubleValue(fAtt.getDoubleValue());
-							dAtt.setIntValue(fAtt.getIntValue());
+							if (dAtt.getValue() == null || StringUtils.isEmpty(dAtt.getValue().toString())) {
+								dAtt.setStringValue(fAtt.getStringValue());
+								dAtt.setDateValue(fAtt.getDateValue());
+								dAtt.setDoubleValue(fAtt.getDoubleValue());
+								dAtt.setIntValue(fAtt.getIntValue());
+							}
 						}
+					} catch (Throwable t) {
+						//From times to times during check-in a lazy-loading exception is thrown
 					}
 				}
 			}
@@ -316,9 +300,9 @@ public class HibernateDocumentDAO extends
 				getHibernateTemplate().flush();
 			} catch (Throwable t) {
 			}
-			if (doc.getDeleted() == 0 && doc.getId()!=0L)
+			if (doc.getDeleted() == 0 && doc.getId() != 0L)
 				getHibernateTemplate().refresh(doc);
-			
+
 			log.debug("Invoke listeners after store");
 			for (DocumentListener listener : listenerManager.getListeners()) {
 				listener.afterStore(doc, transaction, dictionary);
@@ -348,8 +332,7 @@ public class HibernateDocumentDAO extends
 
 	@Override
 	public void updateDigest(Document doc) {
-		String resource = storer.getResourceName(doc, doc.getFileVersion(),
-				null);
+		String resource = storer.getResourceName(doc, doc.getFileVersion(), null);
 		if (storer.exists(doc.getId(), resource)) {
 			InputStream in = null;
 			try {
@@ -363,13 +346,11 @@ public class HibernateDocumentDAO extends
 					}
 			}
 
-			jdbcUpdate(
-					"update ld_document set ld_lastmodified=?, ld_digest=?  where ld_id=?",
-					new Date(), doc.getDigest(), doc.getId());
+			jdbcUpdate("update ld_document set ld_lastmodified=?, ld_digest=?  where ld_id=?", new Date(),
+					doc.getDigest(), doc.getId());
 
 			// Update the versions also
-			jdbcUpdate(
-					"update ld_version set ld_digest=?  where ld_documentid=? and ld_fileversion=?",
+			jdbcUpdate("update ld_version set ld_digest=?  where ld_documentid=? and ld_fileversion=?",
 					doc.getDigest(), doc.getId(), doc.getFileVersion());
 		}
 	}
@@ -379,21 +360,17 @@ public class HibernateDocumentDAO extends
 		List<Document> coll = new ArrayList<Document>();
 
 		try {
-			StringBuilder query = new StringBuilder(
-					"SELECT _history.docId from History _history");
-			query.append(" WHERE _history.userId = " + Long.toString(userId)
-					+ " ");
+			StringBuilder query = new StringBuilder("SELECT _history.docId from History _history");
+			query.append(" WHERE _history.userId = " + Long.toString(userId) + " ");
 			query.append(" ORDER BY _history.date DESC");
 
-			List<Long> results = (List<Long>) getHibernateTemplate().find(
-					query.toString());
+			List<Long> results = (List<Long>) getHibernateTemplate().find(query.toString());
 			for (Long docid : results) {
 				if (coll.size() >= maxElements)
 					break;
 				if (docid != null) {
 					Document document = findById(docid);
-					if (folderDAO.isReadEnable(document.getFolder().getId(),
-							userId))
+					if (folderDAO.isReadEnable(document.getFolder().getId(), userId))
 						coll.add(document);
 				}
 			}
@@ -414,8 +391,7 @@ public class HibernateDocumentDAO extends
 			StringBuilder query = new StringBuilder("SELECT COUNT(tag), tag");
 			query.append(" FROM Document _entity JOIN _entity.tags tag ");
 			if (StringUtils.isNotEmpty(firstLetter))
-				query.append(" where lower(tag) like '"
-						+ firstLetter.toLowerCase() + "%'");
+				query.append(" where lower(tag) like '" + firstLetter.toLowerCase() + "%'");
 			query.append(" GROUP BY tag");
 
 			List ssss = getHibernateTemplate().find(query.toString());
@@ -438,11 +414,9 @@ public class HibernateDocumentDAO extends
 	@Override
 	public List<String> findAllTags(String firstLetter) {
 		try {
-			StringBuilder sb = new StringBuilder(
-					"select distinct(ld_tag) from ld_tag ");
+			StringBuilder sb = new StringBuilder("select distinct(ld_tag) from ld_tag ");
 			if (StringUtils.isNotEmpty(firstLetter))
-				sb.append(" where lower(ld_tag) like '"
-						+ firstLetter.toLowerCase() + "%'");
+				sb.append(" where lower(ld_tag) like '" + firstLetter.toLowerCase() + "%'");
 
 			return (List<String>) queryForList(sb.toString(), String.class);
 		} catch (Exception e) {
@@ -453,8 +427,7 @@ public class HibernateDocumentDAO extends
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Document> findByUserIdAndTag(long userId, String tag,
-			Integer max) {
+	public List<Document> findByUserIdAndTag(long userId, String tag, Integer max) {
 
 		List<Document> coll = new ArrayList<Document>();
 
@@ -469,12 +442,10 @@ public class HibernateDocumentDAO extends
 				first = false;
 			}
 
-			StringBuffer query = new StringBuffer(
-					"select A from Document A where A.id in (");
+			StringBuffer query = new StringBuffer("select A from Document A where A.id in (");
 			query.append(buf);
 			query.append(")");
-			coll = (List<Document>) getHibernateTemplate(max).find(
-					query.toString());
+			coll = (List<Document>) getHibernateTemplate(max).find(query.toString());
 		}
 		return coll;
 	}
@@ -497,19 +468,15 @@ public class HibernateDocumentDAO extends
 				/*
 				 * Search for all accessible folders
 				 */
-				Collection<Long> precoll = folderDAO.findFolderIdByUserId(
-						userId, null, true);
-				String precollString = precoll.toString().replace('[', '(')
-						.replace(']', ')');
+				Collection<Long> precoll = folderDAO.findFolderIdByUserId(userId, null, true);
+				String precollString = precoll.toString().replace('[', '(').replace(']', ')');
 
 				query.append("select distinct(C.ld_id) from ld_document C, ld_tag D "
 						+ " where C.ld_id=D.ld_docid AND C.ld_deleted=0 AND C.ld_folderid in ");
 				query.append(precollString);
-				query.append(" AND D.ld_tag='"
-						+ SqlUtil.doubleQuotes(tag.toLowerCase()) + "' ");
+				query.append(" AND D.ld_tag='" + SqlUtil.doubleQuotes(tag.toLowerCase()) + "' ");
 
-				List<Long> docIds = (List<Long>) queryForList(query.toString(),
-						Long.class);
+				List<Long> docIds = (List<Long>) queryForList(query.toString(), Long.class);
 				ids.addAll(docIds);
 			}
 		} catch (Exception e) {
@@ -526,13 +493,11 @@ public class HibernateDocumentDAO extends
 		List<Document> coll = new ArrayList<Document>();
 
 		try {
-			StringBuffer query = new StringBuffer(
-					"select _userdoc.id.docId from UserDoc _userdoc");
+			StringBuffer query = new StringBuffer("select _userdoc.id.docId from UserDoc _userdoc");
 			query.append(" where _userdoc.id.userId = ?");
 			query.append(" order by _userdoc.date desc");
 
-			List<Long> results = (List<Long>) getHibernateTemplate().find(
-					query.toString(), userId);
+			List<Long> results = (List<Long>) getHibernateTemplate().find(query.toString(), userId);
 			ArrayList<Long> tmpal = new ArrayList<Long>(results);
 			List<Long> docIds = tmpal;
 
@@ -555,8 +520,7 @@ public class HibernateDocumentDAO extends
 			query.append(")");
 
 			// execute the query
-			List<Document> unorderdColl = (List<Document>) getHibernateTemplate()
-					.find(query.toString());
+			List<Document> unorderdColl = (List<Document>) getHibernateTemplate().find(query.toString());
 
 			// put all elements in a map
 			HashMap<Long, Document> hm = new HashMap<Long, Document>();
@@ -581,26 +545,22 @@ public class HibernateDocumentDAO extends
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Long> findDocIdByFolder(long folderId, Integer max) {
-		String sql = "select ld_id from ld_document where ld_deleted=0 and ld_folderid = "
-				+ folderId;
+		String sql = "select ld_id from ld_document where ld_deleted=0 and ld_folderid = " + folderId;
 		return (List<Long>) queryForList(sql, null, Long.class, max);
 	}
 
 	@Override
 	public List<Document> findByFolder(long folderId, Integer max) {
-		return findByWhere("_entity.folder.id = " + Long.toString(folderId),
-				null, max);
+		return findByWhere("_entity.folder.id = " + Long.toString(folderId), null, max);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Document> findLinkedDocuments(long docId, String linkType,
-			Integer direction) {
+	public List<Document> findLinkedDocuments(long docId, String linkType, Integer direction) {
 		List<Document> coll = new ArrayList<Document>();
 		StringBuffer query = null;
 		try {
-			query = new StringBuffer(
-					"select distinct(_entity) from Document _entity, DocumentLink _link where ");
+			query = new StringBuffer("select distinct(_entity) from Document _entity, DocumentLink _link where ");
 			if (direction == null) {
 				query.append(" ((_link.document1 = _entity and _link.document1.id = ? )"
 						+ "or (_link.document2 = _entity and _link.document2.id = ? )) ");
@@ -615,11 +575,9 @@ public class HibernateDocumentDAO extends
 			}
 
 			if (direction == null)
-				coll = (List<Document>) getHibernateTemplate().find(
-						query.toString(), new Object[] { docId, docId });
+				coll = (List<Document>) getHibernateTemplate().find(query.toString(), new Object[] { docId, docId });
 			else
-				coll = (List<Document>) getHibernateTemplate().find(
-						query.toString(), new Object[] { docId });
+				coll = (List<Document>) getHibernateTemplate().find(query.toString(), new Object[] { docId });
 
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -630,10 +588,8 @@ public class HibernateDocumentDAO extends
 	}
 
 	@Override
-	public List<Document> findByFileNameAndParentFolderId(Long folderId,
-			String fileName, Long excludeId, Integer max) {
-		String query = "lower(_entity.fileName) like '"
-				+ SqlUtil.doubleQuotes(fileName.toLowerCase()) + "'";
+	public List<Document> findByFileNameAndParentFolderId(Long folderId, String fileName, Long excludeId, Integer max) {
+		String query = "lower(_entity.fileName) like '" + SqlUtil.doubleQuotes(fileName.toLowerCase()) + "'";
 		if (folderId != null) {
 			query += " and _entity.folder.id = " + folderId;
 		}
@@ -644,10 +600,8 @@ public class HibernateDocumentDAO extends
 	}
 
 	@Override
-	public List<Document> findByTitleAndParentFolderId(long folderId,
-			String title, Long excludeId) {
-		String query = "_entity.folder.id = " + folderId
-				+ " and lower(_entity.title) like '"
+	public List<Document> findByTitleAndParentFolderId(long folderId, String title, Long excludeId) {
+		String query = "_entity.folder.id = " + folderId + " and lower(_entity.title) like '"
 				+ SqlUtil.doubleQuotes(title.toLowerCase()) + "'";
 		if (excludeId != null)
 			query += " and not(_entity.id = " + excludeId + ")";
@@ -682,8 +636,7 @@ public class HibernateDocumentDAO extends
 			String query = "select ld_id, ld_customid, ld_lastModified, ld_title from ld_document where ld_deleted=1 order by ld_lastmodified desc";
 
 			RowMapper docMapper = new BeanPropertyRowMapper() {
-				public Object mapRow(ResultSet rs, int rowNum)
-						throws SQLException {
+				public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 					Document doc = new Document();
 					doc.setId(rs.getLong(1));
@@ -695,8 +648,7 @@ public class HibernateDocumentDAO extends
 				}
 			};
 
-			coll = (List<Document>) query(query, new Object[] {}, docMapper,
-					null);
+			coll = (List<Document>) query(query, new Object[] {}, docMapper, null);
 
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -725,15 +677,14 @@ public class HibernateDocumentDAO extends
 
 	@Override
 	public List<Document> findByIndexed(int indexed) {
-		return findByWhere("_entity.docRef is null and _entity.indexed="
-				+ indexed, "order by _entity.lastModified asc", null);
+		return findByWhere("_entity.docRef is null and _entity.indexed=" + indexed,
+				"order by _entity.lastModified asc", null);
 	}
 
 	@Override
 	public void restore(long docId, long folderId) {
-		bulkUpdate("set ld_deleted=0, ld_folderid=" + folderId
-				+ ", ld_lastmodified=CURRENT_TIMESTAMP where ld_id=" + docId,
-				null);
+		bulkUpdate("set ld_deleted=0, ld_folderid=" + folderId + ", ld_lastmodified=CURRENT_TIMESTAMP where ld_id="
+				+ docId, null);
 	}
 
 	@Override
@@ -741,8 +692,7 @@ public class HibernateDocumentDAO extends
 		Document doc = null;
 		if (customId != null)
 			try {
-				String query = "_entity.customId = '"
-						+ SqlUtil.doubleQuotes(customId) + "'";
+				String query = "_entity.customId = '" + SqlUtil.doubleQuotes(customId) + "'";
 				List<Document> coll = findByWhere(query, null, null);
 				if (!coll.isEmpty()) {
 					doc = coll.get(0);
@@ -796,16 +746,14 @@ public class HibernateDocumentDAO extends
 	}
 
 	private void saveDocumentHistory(Document doc, History transaction) {
-		if (transaction == null || !historyDAO.isEnabled()
-				|| "bulkload".equals(config.getProperty("runlevel")))
+		if (transaction == null || !historyDAO.isEnabled() || "bulkload".equals(config.getProperty("runlevel")))
 			return;
 		transaction.setDocId(doc.getId());
 		transaction.setFolderId(doc.getFolder().getId());
 		transaction.setTitle(doc.getTitle());
 		transaction.setVersion(doc.getVersion());
 		transaction.setFilename(doc.getFileName());
-		transaction.setPath(folderDAO.computePathExtended(doc.getFolder()
-				.getId()));
+		transaction.setPath(folderDAO.computePathExtended(doc.getFolder().getId()));
 		transaction.setNotified(0);
 
 		historyDAO.store(transaction);
@@ -813,15 +761,13 @@ public class HibernateDocumentDAO extends
 
 	@Override
 	public long countByIndexed(int indexed) {
-		String query = "select count(*) from ld_document where ld_deleted=0 and ld_indexed = "
-				+ indexed;
+		String query = "select count(*) from ld_document where ld_deleted=0 and ld_indexed = " + indexed;
 		return queryForLong(query);
 	}
 
 	@Override
 	public List<Long> findShortcutIds(long docId) {
-		return findIdsByWhere("_entity.docRef = " + Long.toString(docId), null,
-				null);
+		return findIdsByWhere("_entity.docRef = " + Long.toString(docId), null, null);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -833,8 +779,7 @@ public class HibernateDocumentDAO extends
 					+ userId + " order by ld_lastmodified desc";
 
 			RowMapper docMapper = new BeanPropertyRowMapper() {
-				public Object mapRow(ResultSet rs, int rowNum)
-						throws SQLException {
+				public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 					Document doc = new Document();
 					doc.setId(rs.getLong(1));
 					doc.setTitle(rs.getString(2));
@@ -880,16 +825,15 @@ public class HibernateDocumentDAO extends
 			sb.append(ids[i]);
 		}
 
-		docs = findByWhere("_entity.id in(" + sb.toString() + ")", null, null,
-				max);
+		docs = findByWhere("_entity.id in(" + sb.toString() + ")", null, null, max);
 		return docs;
 	}
 
 	@Override
 	public boolean deleteOrphaned(long deleteUserId) {
 		try {
-			String dbms = config.getProperty("jdbc.dbms") != null ? config
-					.getProperty("jdbc.dbms").toLowerCase() : "mysql";
+			String dbms = config.getProperty("jdbc.dbms") != null ? config.getProperty("jdbc.dbms").toLowerCase()
+					: "mysql";
 
 			String concat = "CONCAT(ld_id,CONCAT('.',ld_customid))";
 			if (dbms.contains("postgre"))
@@ -897,9 +841,7 @@ public class HibernateDocumentDAO extends
 			if (dbms.contains("mssql"))
 				concat = "CAST(ld_id AS varchar) + '.' + ld_customid";
 
-			jdbcUpdate("update ld_document set ld_deleted=1,ld_customid="
-					+ concat
-					+ ", ld_deleteuserid="
+			jdbcUpdate("update ld_document set ld_deleted=1,ld_customid=" + concat + ", ld_deleteuserid="
 					+ deleteUserId
 					+ " where ld_deleted=0 and ld_folderid in (select ld_id from ld_folder where ld_deleted = 1)");
 		} catch (Exception e) {
@@ -914,12 +856,10 @@ public class HibernateDocumentDAO extends
 	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<Long> findPublishedIds(Collection<Long> folderIds) {
-		StringBuffer query = new StringBuffer(
-				"select ld_id from ld_document where ld_deleted=0 ");
+		StringBuffer query = new StringBuffer("select ld_id from ld_document where ld_deleted=0 ");
 		if (folderIds != null && !folderIds.isEmpty()) {
 			query.append(" and ld_folderid in (");
-			query.append(folderIds.toString().replace('[', ' ')
-					.replace(']', ' '));
+			query.append(folderIds.toString().replace('[', ' ').replace(']', ' '));
 			query.append(" ) ");
 		}
 		query.append(" and ld_published = 1 ");
@@ -928,8 +868,8 @@ public class HibernateDocumentDAO extends
 
 		Date now = new Date();
 
-		Collection<Long> buf = (Collection<Long>) queryForList(
-				query.toString(), new Object[] { now, now }, Long.class, null);
+		Collection<Long> buf = (Collection<Long>) queryForList(query.toString(), new Object[] { now, now }, Long.class,
+				null);
 		Set<Long> ids = new HashSet<Long>();
 		for (Long id : buf) {
 			if (!ids.contains(id))
