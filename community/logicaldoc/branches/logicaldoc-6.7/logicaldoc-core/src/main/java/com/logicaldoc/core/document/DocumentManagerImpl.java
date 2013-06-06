@@ -96,7 +96,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.initialize(document);
 
 			// Check CustomId uniqueness
-			if (docVO.getCustomId() != null) {
+			if (docVO != null && docVO.getCustomId() != null) {
 				Document test = documentDAO.findByCustomId(docVO.getCustomId());
 				if (test != null && test.getId() != docId)
 					throw new Exception("Duplicated CustomID");
@@ -139,10 +139,13 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setFileSize(file.length());
 			document.setExtResId(null);
 
+			documentDAO.initialize(document);
+			
 			// Create new version (a new version number is created)
 			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
 					Version.EVENT_CHECKIN, release);
 
+			document.setStatus(Document.DOC_UNLOCKED);
 			if (documentDAO.store(document, transaction) == false)
 				throw new Exception("Errors saving document " + document.getId());
 
