@@ -17,7 +17,6 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.webservice.AbstractWebServiceTestCase;
-import com.logicaldoc.webservice.folder.WSFolder;
 
 /**
  * Test case for <code>DocumentServiceImpl</code>
@@ -198,6 +197,18 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		Assert.assertEquals(103, wsDoc.getFolderId().longValue());
 	}
 
+	@Test
+	public void testGetDocumentByCustomId() throws Exception {
+		Document doc = docDao.findByCustomId("a");
+		Assert.assertNotNull(doc);
+
+		WSDocument wsDoc = docServiceImpl.getDocument("", 1);
+
+		Assert.assertEquals(1, wsDoc.getId());
+		Assert.assertEquals("testDocname", wsDoc.getTitle());
+		Assert.assertEquals(103, wsDoc.getFolderId().longValue());
+	}
+	
 	@Test
 	public void testIsReadable() throws Exception {
 		Assert.assertTrue(docServiceImpl.isReadable("", 1));
