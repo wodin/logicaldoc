@@ -968,11 +968,22 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public Folder create(Folder parent, String name, int type, boolean inheritSecurity, FolderHistory transaction) {
+	public Folder create(Folder parent, Folder folderVO, boolean inheritSecurity, FolderHistory transaction) {
 		Folder folder = new Folder();
-		folder.setName(name);
-		folder.setType(type);
+		folder.setName(folderVO.getName());
+		folder.setType(folderVO.getType());
+		folder.setDescription(folderVO.getDescription());
+
+		if (folderVO.getCreation() != null)
+			folder.setCreation(folderVO.getCreation());
+		if (folderVO.getCreatorId() != null)
+			folder.setCreatorId(folderVO.getCreatorId());
+		if (folderVO.getCreator() != null)
+			folder.setCreator(folderVO.getCreator());
 		folder.setParentId(parent.getId());
+		if (folderVO.getAttributes() != null && !folderVO.getAttributes().isEmpty())
+			for (String name : folderVO.getAttributes().keySet())
+				folder.getAttributes().put(name, folderVO.getAttributes().get(name));
 
 		if (inheritSecurity) {
 			if (parent.getSecurityRef() != null)
@@ -1038,7 +1049,10 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			Folder dir = null;
 			if (childs.isEmpty())
 				try {
-					dir = create(folder, name, Folder.TYPE_DEFAULT, inheritSecurity,
+					Folder folderVO = new Folder();
+					folderVO.setName(name);
+					folderVO.setType(Folder.TYPE_DEFAULT);
+					dir = create(folder, folderVO, inheritSecurity,
 							transaction != null ? (FolderHistory) transaction.clone() : null);
 				} catch (CloneNotSupportedException e) {
 				}
