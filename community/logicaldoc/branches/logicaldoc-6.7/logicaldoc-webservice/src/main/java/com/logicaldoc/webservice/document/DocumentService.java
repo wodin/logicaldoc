@@ -100,6 +100,18 @@ public interface DocumentService {
 	@WebResult(name = "document")
 	public WSDocument getDocument(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId)
 			throws Exception;
+	
+	/**
+	 * Gets document metadata of an existing document with the given custom identifier.
+	 * 
+	 * @param sid Session identifier
+	 * @param customId The custom id
+	 * @return A value object containing the document's metadata.
+	 * @throws Exception
+	 */
+	@WebResult(name = "document")
+	public WSDocument getDocumentByCustomId(@WebParam(name = "sid") String sid, @WebParam(name = "customId") String customId)
+			throws Exception;	
 
 	/**
 	 * Gets document metadata of a collection of existing documents with the
