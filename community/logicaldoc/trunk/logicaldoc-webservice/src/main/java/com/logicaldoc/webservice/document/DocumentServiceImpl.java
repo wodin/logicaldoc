@@ -83,7 +83,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		// Get file to upload inputStream
 		InputStream stream = content.getInputStream();
 
-		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);		
+		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		doc = documentManager.create(stream, doc, transaction);
 		return WSDocument.fromDocument(doc);
 	}
@@ -123,7 +123,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 				log.info("Document " + docId + " checked in");
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
-				throw e;
+				throw new Exception(e);
 			}
 		} else {
 			throw new Exception("document not checked in");
@@ -232,6 +232,20 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
+		if (doc == null)
+			return null;
+		checkReadEnable(user, doc.getFolder().getId());
+		checkPublished(user, doc);
+
+		docDao.initialize(doc);
+		return WSDocument.fromDocument(doc);
+	}
+
+	@Override
+	public WSDocument getDocumentByCustomId(String sid, String customId) throws Exception {
+		User user = validateSession(sid);
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Document doc = docDao.findByCustomId(customId);
 		if (doc == null)
 			return null;
 		checkReadEnable(user, doc.getFolder().getId());

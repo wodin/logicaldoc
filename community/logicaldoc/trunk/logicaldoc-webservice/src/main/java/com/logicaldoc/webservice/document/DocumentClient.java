@@ -49,6 +49,11 @@ public class DocumentClient extends AbstractClient<DocumentService> implements D
 	}
 
 	@Override
+	public WSDocument getDocumentByCustomId(String sid, String customId) throws Exception {
+		return client.getDocumentByCustomId(sid, customId);
+	}
+
+	@Override
 	public boolean isReadable(String sid, long docId) throws Exception {
 		return client.isReadable(sid, docId);
 	}
