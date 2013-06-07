@@ -378,13 +378,16 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			transaction.setSessionId(sid);
 			transaction.setEvent(FolderEvent.CREATED.toString());
 
+			Folder folderVO = new Folder();
+			folderVO.setName(folderName);
+			folderVO.setType(newFolder.getType());
+
 			Folder f = null;
 			if (newFolder.getType() == Folder.TYPE_DEFAULT)
-				f = folderDao.create(folderDao.findById(newFolder.getParentId()), folderName, newFolder.getType(),
-						inheritSecurity, transaction);
+				f = folderDao.create(folderDao.findById(newFolder.getParentId()), folderVO, inheritSecurity,
+						transaction);
 			else
-				f = folderDao.create(folderDao.findById(Folder.ROOTID), folderName, newFolder.getType(),
-						inheritSecurity, transaction);
+				f = folderDao.create(folderDao.findById(Folder.ROOTID), folderVO, inheritSecurity, transaction);
 
 			return getFolder(sid, f.getId());
 		} catch (Throwable t) {

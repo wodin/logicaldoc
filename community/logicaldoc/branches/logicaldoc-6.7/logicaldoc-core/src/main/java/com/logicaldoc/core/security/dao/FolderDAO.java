@@ -221,14 +221,13 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * Creates a new folder in the parent Folder
 	 * 
 	 * @param parent The parent folder
-	 * @param name The folder name
-	 * @param type The folder type
+	 * @param folderVO The folder's metadata
 	 * @param inheritSecurity If true the new folder will 'point' to the parent
 	 *        for the security policies.
 	 * @transaction optional transaction entry to log the event
 	 * @return The newly created folder
 	 */
-	public Folder create(Folder parent, String name, int type, boolean inheritSecurity, FolderHistory transaction);
+	public Folder create(Folder parent, Folder folderVO, boolean inheritSecurity, FolderHistory transaction);
 
 	/**
 	 * Creates the folder for the specified path. All unexisting nodes specified
