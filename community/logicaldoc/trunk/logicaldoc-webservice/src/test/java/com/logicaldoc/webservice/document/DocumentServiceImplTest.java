@@ -130,14 +130,15 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 	public void testCheckin() throws Exception {
 		docServiceImpl.checkout("", 1);
 
-		Document doc = docDao.findById(1L);
+		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
+		docDao.initialize(doc);
 		Assert.assertEquals(Document.DOC_CHECKED_OUT, doc.getStatus());
 
 		File file = new File("pom.xml");
-		docServiceImpl.checkin("", 1L, "comment", "pom.xml", true, new DataHandler(new FileDataSource(file)));
+		docServiceImpl.checkin("", 1, "comment", "pom.xml", true, new DataHandler(new FileDataSource(file)));
 
-		doc = docDao.findById(1L);
+		doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
 		docDao.initialize(doc);
 
@@ -148,10 +149,10 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 
 	@Test
 	public void testDelete() throws Exception {
-		Document doc = docDao.findById(1L);
+		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
-		docServiceImpl.delete("", 1L);
-		doc = docDao.findById(1L);
+		docServiceImpl.delete("", doc.getId());
+		doc = docDao.findById(1);
 		Assert.assertNull(doc);
 	}
 
@@ -196,6 +197,18 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		Assert.assertEquals(103, wsDoc.getFolderId().longValue());
 	}
 
+	@Test
+	public void testGetDocumentByCustomId() throws Exception {
+		Document doc = docDao.findByCustomId("a");
+		Assert.assertNotNull(doc);
+
+		WSDocument wsDoc = docServiceImpl.getDocument("", 1);
+
+		Assert.assertEquals(1, wsDoc.getId());
+		Assert.assertEquals("testDocname", wsDoc.getTitle());
+		Assert.assertEquals(103, wsDoc.getFolderId().longValue());
+	}
+	
 	@Test
 	public void testIsReadable() throws Exception {
 		Assert.assertTrue(docServiceImpl.isReadable("", 1));
