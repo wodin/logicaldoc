@@ -123,28 +123,26 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.store(document);
 			document = documentDAO.findById(document.getId());
 			Folder folder = document.getFolder();
-
+			documentDAO.initialize(document);
+			
 			// create some strings containing paths
 			document.setFileName(filename);
+			document.setType(FilenameUtils.getExtension(filename));
 
 			// set other properties of the document
 			document.setDate(new Date());
 			document.setPublisher(transaction.getUserName());
 			document.setPublisherId(transaction.getUserId());
 			document.setStatus(Document.DOC_UNLOCKED);
-			document.setType(document.getFileExtension());
 			document.setLockUserId(null);
 			document.setFolder(folder);
 			document.setDigest(null);
 			document.setFileSize(file.length());
 			document.setExtResId(null);
-
-			documentDAO.initialize(document);
 			
 			// Create new version (a new version number is created)
 			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
 					Version.EVENT_CHECKIN, release);
-
 			document.setStatus(Document.DOC_UNLOCKED);
 			if (documentDAO.store(document, transaction) == false)
 				throw new Exception("Errors saving document " + document.getId());
