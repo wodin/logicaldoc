@@ -181,6 +181,21 @@
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
+            <id>clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <delete dir="war/common" quiet="true" />
+                <delete dir="war/frontend" quiet="true" />
+                <delete dir="war/setup" quiet="true" />
+                <delete dir="war/WEB-INF/deploy" quiet="true" />
+              </tasks>
+            </configuration>
+          </execution>
+          <execution>
             <id>package</id>
             <phase>package</phase>
             <goals>
