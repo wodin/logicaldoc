@@ -294,8 +294,7 @@ public class ResourceServiceImpl implements ResourceService {
 			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(user);
 			transaction.setSessionId(sid);
-			Folder createdFolder = folderDAO.create(parentFolder, name,
-					Folder.TYPE_DEFAULT, true, transaction);
+			Folder createdFolder = folderDAO.create(parentFolder, new Folder(name), true, transaction);
 			return this.marshallFolder(createdFolder,
 					parentResource.getRequestedPerson(), session);
 		}
