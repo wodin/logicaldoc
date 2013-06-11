@@ -508,7 +508,7 @@ public class LDRepository {
 
 		Folder folder = null;
 		try {
-			folder = folderDao.create(parent, name, Folder.TYPE_DEFAULT, true, transaction);
+			folder = folderDao.create(parent, new Folder(name), true, transaction);
 		} catch (Throwable e) {
 			throw new CmisStorageException("Could not create document: " + e.getMessage(), e);
 		}
