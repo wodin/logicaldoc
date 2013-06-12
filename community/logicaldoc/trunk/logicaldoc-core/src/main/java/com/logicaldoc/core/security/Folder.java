@@ -59,6 +59,10 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 	 */
 	private int templateLocked = 0;
 
+	public Folder(String name) {
+		this.name = name;
+	}
+
 	public Folder() {
 	}
 
