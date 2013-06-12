@@ -119,7 +119,7 @@ public class UserSession implements Comparable<UserSession> {
 		}
 
 		// Add a user history entry
-		userHistoryDAO.createUserHistory(userDAO.findById(userId), UserHistory.EVENT_USER_LOGIN, comment, id);
+		userHistoryDAO.createUserHistory(user, UserHistory.EVENT_USER_LOGIN, comment, id);
 	}
 
 	public String getUserName() {

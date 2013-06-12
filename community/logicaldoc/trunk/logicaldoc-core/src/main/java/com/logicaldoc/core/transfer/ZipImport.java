@@ -116,7 +116,9 @@ public class ZipImport {
 
 		if (file.isDirectory()) {
 			// creates a logicaldoc folder
-			Folder folder = dao.create(parent, folderName, Folder.TYPE_DEFAULT, true, transaction);
+			Folder folderVO = new Folder();
+			folderVO.setName(folderName);
+			Folder folder = dao.create(parent, folderVO, true, transaction);
 
 			File[] files = file.listFiles();
 

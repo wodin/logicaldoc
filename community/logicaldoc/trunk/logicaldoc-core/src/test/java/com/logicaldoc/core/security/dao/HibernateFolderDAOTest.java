@@ -103,9 +103,13 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testMoveFolder_Simple() throws Exception {
 		Folder docsFolder = dao.findById(Folder.DEFAULTWORKSPACE);
-		Folder folderA = dao.create(docsFolder, "folderA", Folder.TYPE_DEFAULT, true, null);
-		Folder folderB = dao.create(docsFolder, "folderB", Folder.TYPE_DEFAULT, true, null);
-		Folder folderC = dao.create(folderB, "folderC", Folder.TYPE_DEFAULT, true, null);
+		Folder folderVO = new Folder();
+		folderVO.setName("folderA");
+		Folder folderA = dao.create(docsFolder, folderVO, true, null);
+		folderVO.setName("folderB");
+		Folder folderB = dao.create(docsFolder, folderVO, true, null);
+		folderVO.setName("folderC");
+		Folder folderC = dao.create(folderB, folderVO, true, null);
 
 		User user = userDao.findByUserName("admin");
 
@@ -129,11 +133,17 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testMoveFolder_Up() throws Exception {
 		Folder docsFolder = dao.findById(6);
-		Folder folderA = dao.create(docsFolder, "folderA", Folder.TYPE_DEFAULT, true, null);
-		Folder folderB = dao.create(docsFolder, "folderB", Folder.TYPE_DEFAULT, true, null);
-		Folder folderC = dao.create(folderB, "folderC", Folder.TYPE_DEFAULT, true, null);
-		dao.create(folderC, "folderD", Folder.TYPE_DEFAULT, true, null);
-		dao.create(folderC, "folderE", Folder.TYPE_DEFAULT, true, null);
+		Folder folderVO = new Folder();
+		folderVO.setName("folderA");
+		Folder folderA = dao.create(docsFolder, folderVO, true, null);
+		folderVO.setName("folderB");
+		Folder folderB = dao.create(docsFolder, folderVO, true, null);
+		folderVO.setName("folderC");
+		Folder folderC = dao.create(folderB, folderVO, true, null);
+		folderVO.setName("folderD");
+		dao.create(folderC, folderVO, true, null);
+		folderVO.setName("folderE");
+		dao.create(folderC, folderVO, true, null);
 
 		User user = userDao.findByUserName("admin");
 
@@ -155,11 +165,17 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testMoveFolder_UpWithDocuments() throws Exception {
 		Folder docsFolder = dao.findById(6);
-		Folder folderA = dao.create(docsFolder, "folderA", Folder.TYPE_DEFAULT, true, null);
-		Folder folderB = dao.create(docsFolder, "folderB", Folder.TYPE_DEFAULT, true, null);
-		Folder folderC = dao.create(folderB, "folderC", Folder.TYPE_DEFAULT, true, null);
-		Folder folderD = dao.create(folderC, "folderD", Folder.TYPE_DEFAULT, true, null);
-		dao.create(folderC, "folderE", Folder.TYPE_DEFAULT, true, null);
+		Folder folderVO = new Folder();
+		folderVO.setName("folderA");
+		Folder folderA = dao.create(docsFolder, folderVO, true, null);
+		folderVO.setName("folderB");
+		Folder folderB = dao.create(docsFolder, folderVO, true, null);
+		folderVO.setName("folderC");
+		Folder folderC = dao.create(folderB, folderVO, true, null);
+		folderVO.setName("folderD");
+		Folder folderD = dao.create(folderC, folderVO, true, null);
+		folderVO.setName("folderE");
+		dao.create(folderC, folderVO, true, null);
 
 		Document doc = docDao.findById(1);
 		docDao.initialize(doc);
@@ -208,11 +224,17 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testMoveFolder_Down() throws Exception {
 		Folder docsFolder = dao.findById(6);
-		Folder folderB = dao.create(docsFolder, "folderB", Folder.TYPE_DEFAULT, true, null);
-		Folder folderC = dao.create(folderB, "folderC", Folder.TYPE_DEFAULT, true, null);
-		Folder folderD = dao.create(folderC, "folderD", Folder.TYPE_DEFAULT, true, null);
-		Folder folderE = dao.create(folderC, "folderE", Folder.TYPE_DEFAULT, true, null);
-		dao.create(folderE, "folderF", Folder.TYPE_DEFAULT, true, null);
+		Folder folderVO = new Folder();
+		folderVO.setName("folderB");
+		Folder folderB = dao.create(docsFolder, folderVO, true, null);
+		folderVO.setName("folderC");
+		Folder folderC = dao.create(folderB, folderVO, true, null);
+		folderVO.setName("folderD");
+		Folder folderD = dao.create(folderC, folderVO, true, null);
+		folderVO.setName("folderE");
+		Folder folderE = dao.create(folderC, folderVO, true, null);
+		folderVO.setName("folderF");
+		dao.create(folderE, folderVO, true, null);
 
 		User user = userDao.findByUserName("admin");
 
@@ -321,7 +343,9 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	public void testCreate() {
 		Folder parent = dao.findById(1202L);
 
-		Folder folder = dao.create(parent, "xxxx", Folder.TYPE_DEFAULT, true, null);
+		Folder folderVO = new Folder();
+		folderVO.setName("xxxx");
+		Folder folder = dao.create(parent, folderVO, true, null);
 		Assert.assertNotNull(folder);
 
 		folder = dao.findById(folder.getId());
