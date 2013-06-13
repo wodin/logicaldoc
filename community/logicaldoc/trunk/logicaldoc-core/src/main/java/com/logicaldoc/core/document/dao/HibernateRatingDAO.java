@@ -18,6 +18,7 @@ import com.logicaldoc.core.document.Rating;
  * @author Matteo Caruso - Logical Objects
  * @since 6.1
  */
+@SuppressWarnings("unchecked")
 public class HibernateRatingDAO extends HibernatePersistentObjectDAO<Rating> implements RatingDAO {
 
 	public HibernateRatingDAO() {
@@ -25,7 +26,7 @@ public class HibernateRatingDAO extends HibernatePersistentObjectDAO<Rating> imp
 		super.log = LoggerFactory.getLogger(HibernateRatingDAO.class);
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	@Override
 	public Rating findVotesByDocId(long docId) {
 		List<Rating> coll = new ArrayList<Rating>();
@@ -36,6 +37,7 @@ public class HibernateRatingDAO extends HibernatePersistentObjectDAO<Rating> imp
 			 */
 			String query = "select count(*), SUM(ld_vote) from ld_rating where ld_deleted=0 and ld_docid = " + docId;
 
+			@SuppressWarnings("rawtypes")
 			RowMapper ratingMapper = new BeanPropertyRowMapper() {
 				public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 

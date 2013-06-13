@@ -39,58 +39,57 @@
     </property>
   </bean>
 
-  <!-- Hibernate SessionFactory -->
-  <bean id="SessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" abstract="false"
-    lazy-init="default" autowire="default" dependency-check="default">
-    <property name="dataSource">
-      <ref bean="DataSource" />
-    </property>
+	<!-- Hibernate SessionFactory -->
+	<bean id="SessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="dataSource">
+			<ref bean="DataSource" />
+		</property>
 
-    <property name="mappingLocations">
+		<property name="mappingLocations">
 			<value>classpath*:mappings/*.hbm.xml</value>
-	</property>
+		</property>
 
-    <property name="hibernateProperties">
-      <props>
-        <prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
-        <prop key="hibernate.cache.use_second_level_cache">true</prop>
-        <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
-      </props>
-    </property>
-  </bean>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.HSQLDialect
+				</prop>
+				<prop key="hibernate.cache.use_second_level_cache">
+					true
+				</prop>
+                <prop key="hibernate.cache.region.factory_class">
+                    org.hibernate.cache.ehcache.EhCacheRegionFactory
+                </prop>
+			</props>
+		</property>
+	</bean>
 
 
-  <!--Transaction management-->
-  <bean id="TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager" abstract="false"
-    lazy-init="default" autowire="default" dependency-check="default">
-    <property name="sessionFactory">
-      <ref bean="SessionFactory" />
-    </property>
-  </bean>
+	<!--Transaction management-->
+	<bean id="TransactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="sessionFactory" ref="SessionFactory" />
+	</bean>
 
-  <!--Transactional proxy-->
-  <bean id="ApplicationBaseTransactionProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-    lazy-init="true" abstract="false" autowire="default" dependency-check="default">
-    <property name="transactionManager">
-      <ref bean="TransactionManager" />
-    </property>
-    <property name="transactionAttributes">
-      <props>
-        <prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
-        <prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
-        <prop key="load*">PROPAGATION_REQUIRED,readOnly</prop>
-        <prop key="has*">PROPAGATION_REQUIRED,readOnly</prop>
-        <prop key="initialize">PROPAGATION_REQUIRED,readOnly</prop>
-        <prop key="exists">PROPAGATION_REQUIRED,readOnly</prop>
-        <prop key="store*">PROPAGATION_REQUIRED</prop>
-        <prop key="insert*">PROPAGATION_REQUIRED</prop>
-        <prop key="update*">PROPAGATION_REQUIRED</prop>
-        <prop key="delete*">PROPAGATION_REQUIRED</prop>
-        <prop key="remove*">PROPAGATION_REQUIRED</prop>
-        <prop key="assign*">PROPAGATION_REQUIRED</prop>
-      </props>
-    </property>
-  </bean>
+	<!--Transactional proxy-->
+	<bean id="ApplicationBaseTransactionProxy"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		lazy-init="true" abstract="false" autowire="default"
+		dependency-check="default">
+		<property name="transactionManager">
+			<ref bean="TransactionManager" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
   
   <bean id="AuthenticationChain" class="com.logicaldoc.core.security.authentication.AuthenticationChain" />
 </beans>

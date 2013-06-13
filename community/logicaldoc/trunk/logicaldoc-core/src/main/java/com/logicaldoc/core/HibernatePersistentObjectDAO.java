@@ -1,5 +1,7 @@
 package com.logicaldoc.core;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -7,13 +9,14 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
@@ -24,11 +27,16 @@ import com.logicaldoc.util.config.ContextProperties;
  * @author Marco Meschieri - Logical Objects
  * @since 4.0
  */
-public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> extends HibernateDaoSupport implements
-		PersistentObjectDAO<T> {
+public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> implements PersistentObjectDAO<T> {
 	protected Logger log = LoggerFactory.getLogger(HibernatePersistentObjectDAO.class);
 
 	protected Class<T> entityClass;
+
+	protected SessionFactory sessionFactory;
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	protected HibernatePersistentObjectDAO(Class<T> entityClass) {
 		super();
@@ -58,11 +66,12 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		return findIdsByWhere("", "", null);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public T findById(long id) {
 		T entity = null;
 		try {
-			entity = (T) getHibernateTemplate().get(entityClass, id);
+			entity = (T) sessionFactory.getCurrentSession().get(entityClass, id);
 			if (entity != null && entity.getDeleted() == 1)
 				return null;
 		} catch (Throwable e) {
@@ -86,8 +95,22 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 					+ (StringUtils.isNotEmpty(where) ? " and (" + where + ") " : " ")
 					+ (StringUtils.isNotEmpty(order) ? order : " ");
 			log.debug("Execute query: " + query);
+			Query queryObject = prepareQuery(query, values, max);
+			coll = (List<T>) queryObject.list();
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+		return coll;
+	}
 
-			coll = (List<T>) getHibernateTemplate(max).find(query, values);
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List findByQuery(String query, Object[] values, Integer max) {
+		List<Object> coll = new ArrayList<Object>();
+		try {
+			log.debug("Execute query: " + query);
+			Query queryObject = prepareQuery(query, values, max);
+			coll = (List<Object>) queryObject.list();
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -110,20 +133,8 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 					+ (StringUtils.isNotEmpty(where) ? " and (" + where + ") " : " ")
 					+ (StringUtils.isNotEmpty(order) ? order : " ");
 			log.debug("Execute query: " + query);
-			coll = (List<Long>) getHibernateTemplate(max).find(query, values);
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-		}
-		return coll;
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Object> findByQuery(String query, Object[] values, Integer max) {
-		List<Object> coll = new ArrayList<Object>();
-		try {
-			log.debug("Execute query: " + query);
-			coll = (List<Object>) getHibernateTemplate(max).find(query, values != null ? values : new Object[0]);
+			Query queryObject = prepareQuery(query, values, max);
+			coll = (List<Long>) queryObject.list();
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -135,7 +146,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		boolean result = true;
 		try {
 			// Save the entity
-			getHibernateTemplate().saveOrUpdate(entity);
+			sessionFactory.getCurrentSession().saveOrUpdate(entity);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -144,14 +155,73 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		return result;
 	}
 
+	protected void saveOrUpdate(Object entity) {
+		sessionFactory.getCurrentSession().saveOrUpdate(entity);
+	}
+
+	protected void flush() {
+		try {
+			sessionFactory.getCurrentSession().flush();
+		} catch (Throwable t) {
+
+		}
+	}
+
+	protected void refresh(Object entity) {
+		try {
+			sessionFactory.getCurrentSession().refresh(entity);
+		} catch (Throwable t) {
+
+		}
+	}
+
+	protected Object merge(Object entity) {
+		try {
+			return sessionFactory.getCurrentSession().merge(entity);
+		} catch (Throwable t) {
+			return null;
+		}
+	}
+
+	protected void evict(Object entity) {
+		sessionFactory.getCurrentSession().evict(entity);
+	}
+
+	/**
+	 * Utility method useful for preparing an Hibernate query
+	 * 
+	 * @param expression The expression for the query
+	 * @param values The parameters values to be used (optional, if the query is
+	 *        parametric)
+	 * @param max Optional maximum number of wanted results
+	 * 
+	 * @return The Hibernate query
+	 */
+	protected Query prepareQuery(String expression, Object[] values, Integer max) {
+		Query queryObject = sessionFactory.getCurrentSession().createQuery(expression);
+		if (values != null) {
+			for (int i = 0; i < values.length; i++) {
+				queryObject.setParameter(i, values[i]);
+			}
+		}
+		if (max != null && max > 0)
+			queryObject.setMaxResults(max);
+		return queryObject;
+	}
+
 	/**
 	 * Doesn't do anything by default
 	 */
+	@Override
 	public void initialize(T entity) {
 		// By default do nothing
 	}
 
-	@SuppressWarnings("rawtypes")
+	protected Session getCurrentSession() {
+		return sessionFactory.getCurrentSession();
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List query(String sql, Object[] args, RowMapper rowMapper, Integer maxRows) {
 		List list = new ArrayList();
@@ -174,7 +244,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		return list;
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List queryForList(String sql, Object[] args, Class elementType, Integer maxRows) {
 
@@ -228,6 +298,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		return new Long(mytmplong).intValue();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public long queryForLong(String sql) {
 		try {
@@ -266,27 +337,16 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 				ids.append(",");
 			ids.append(Long.toString(t.getId()));
 		}
-		getHibernateTemplate().bulkUpdate(
+
+		Query queryObject = sessionFactory.getCurrentSession().createQuery(
 				"update " + entityClass.getCanonicalName() + " set deleted=1 where id in(" + ids.toString() + ")");
+		queryObject.executeUpdate();
 	}
 
 	@Override
 	public int bulkUpdate(String expression, Object[] values) {
-		return getHibernateTemplate().bulkUpdate("update " + entityClass.getCanonicalName() + " " + expression, values);
-	}
-
-	/**
-	 * Useful method that creates a template for returnig a maximum number of
-	 * results. If the max results is <1 than the default template is returned.
-	 * 
-	 * @param maxResults The maximum results number
-	 */
-	protected HibernateTemplate getHibernateTemplate(Integer maxResults) {
-		if (maxResults == null || maxResults < 1)
-			return getHibernateTemplate();
-		HibernateTemplate template = new HibernateTemplate(getSessionFactory());
-		template.setMaxResults(maxResults);
-		return template;
+		Query queryObject = prepareQuery("update " + entityClass.getCanonicalName() + " " + expression, values, null);
+		return queryObject.executeUpdate();
 	}
 
 	@Override
@@ -300,6 +360,11 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 				log.error(e.getMessage(), e);
 		}
 		return 0;
+	}
+
+	protected Connection getConnection() throws SQLException {
+		DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+		return dataSource.getConnection();
 	}
 
 	@Override
@@ -322,5 +387,9 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 
 	protected boolean isSqlServer() {
 		return "mssql".equals(getDbms());
+	}
+
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
 	}
 }

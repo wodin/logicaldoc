@@ -16,6 +16,7 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 4.0
  */
+@SuppressWarnings("unchecked")
 public class HibernateGenericDAO extends HibernatePersistentObjectDAO<Generic> implements GenericDAO {
 	public HibernateGenericDAO() {
 		super(Generic.class);
@@ -31,7 +32,7 @@ public class HibernateGenericDAO extends HibernatePersistentObjectDAO<Generic> i
 				generic.setType(generic.getType() + "." + generic.getId());
 				generic.setSubtype(generic.getSubtype() + "." + generic.getId());
 				generic.setDeleted(1);
-				getHibernateTemplate().saveOrUpdate(generic);
+				saveOrUpdate(generic);
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -71,7 +72,7 @@ public class HibernateGenericDAO extends HibernatePersistentObjectDAO<Generic> i
 
 	@Override
 	public void initialize(Generic generic) {
-		getHibernateTemplate().refresh(generic);
+		refresh(generic);
 		for (String attribute : generic.getAttributes().keySet()) {
 			if (generic.getValue(attribute) != null)
 				generic.getValue(attribute).toString();

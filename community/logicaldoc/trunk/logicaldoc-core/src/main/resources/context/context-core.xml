@@ -47,9 +47,7 @@
             <bean abstract="false" autowire="default"
                 class="com.logicaldoc.core.security.dao.HibernateMenuDAO"
                 dependency-check="default" lazy-init="default">
-                <property name="sessionFactory">
-                    <ref bean="SessionFactory" />
-                </property>
+                <property name="sessionFactory" ref="SessionFactory" />
                 <property name="userDAO">
                     <ref bean="UserDAO" />
                 </property>
@@ -90,9 +88,7 @@
             <bean abstract="false" autowire="default"
                 class="com.logicaldoc.core.security.dao.HibernateUserDocDAO"
                 dependency-check="default" lazy-init="default">
-                <property name="sessionFactory">
-                    <ref bean="SessionFactory" />
-                </property>
+                <property name="sessionFactory" ref="SessionFactory" />
             </bean>
         </property>
     </bean>
@@ -102,9 +98,7 @@
             <bean abstract="false" autowire="default"
                 class="com.logicaldoc.core.security.dao.HibernateGroupDAO"
                 dependency-check="default" lazy-init="default">
-                <property name="sessionFactory">
-                    <ref bean="SessionFactory" />
-                </property>
+                <property name="sessionFactory" ref="SessionFactory" />
                 <property name="menuDAO">
                     <ref bean="MenuDAO" />
                 </property>
@@ -117,9 +111,7 @@
             <bean abstract="false" autowire="default"
                 class="com.logicaldoc.core.document.dao.HibernateDownloadTicketDAO"
                 dependency-check="default" lazy-init="default">
-                <property name="sessionFactory">
-                    <ref bean="SessionFactory" />
-                </property>
+                <property name="sessionFactory" ref="SessionFactory" />
                 <property name="contextProperties" ref="ContextProperties" />
             </bean>
         </property>
@@ -141,9 +133,7 @@
             <bean abstract="false" autowire="default"
                 class="com.logicaldoc.core.document.dao.HibernateVersionDAO"
                 dependency-check="default" lazy-init="default">
-                <property name="sessionFactory">
-                    <ref bean="SessionFactory" />
-                </property>
+                <property name="sessionFactory" ref="SessionFactory" />
                 <property name="storer" ref="Storer" />
             </bean>
         </property>
@@ -154,9 +144,7 @@
             <bean abstract="false" autowire="default"
                 class="com.logicaldoc.core.document.dao.HibernateDocumentDAO"
                 dependency-check="default" lazy-init="default">
-                <property name="sessionFactory">
-                    <ref bean="SessionFactory" />
-                </property>
+                <property name="sessionFactory" ref="SessionFactory" />
                 <property name="noteDAO">
                     <ref bean="DocumentNoteDAO" />
                 </property>
@@ -192,9 +180,7 @@
             <bean abstract="false" autowire="default"
                 class="com.logicaldoc.core.document.dao.HibernateDocumentTemplateDAO"
                 dependency-check="default" lazy-init="default">
-                <property name="sessionFactory">
-                    <ref bean="SessionFactory" />
-                </property>
+                <property name="sessionFactory" ref="SessionFactory" />
             </bean>
         </property>
     </bean>
@@ -204,9 +190,7 @@
             <bean abstract="false" autowire="default"
                 class="com.logicaldoc.core.communication.HibernateSystemMessageDAO"
                 dependency-check="default" lazy-init="default">
-                <property name="sessionFactory">
-                    <ref bean="SessionFactory" />
-                </property>
+                <property name="sessionFactory" ref="SessionFactory" />
             </bean>
         </property>
     </bean>
@@ -216,9 +200,7 @@
             <bean abstract="false" autowire="default"
                 class="com.logicaldoc.core.communication.HibernateMessageTemplateDAO"
                 dependency-check="default" lazy-init="default">
-                <property name="sessionFactory">
-                    <ref bean="SessionFactory" />
-                </property>
+                <property name="sessionFactory" ref="SessionFactory" />
             </bean>
         </property>
     </bean>
@@ -228,9 +210,7 @@
             <bean abstract="false" autowire="default"
                 class="com.logicaldoc.core.document.dao.HibernateDocumentLinkDAO"
                 dependency-check="default" lazy-init="default">
-                <property name="sessionFactory">
-                    <ref bean="SessionFactory" />
-                </property>
+                <property name="sessionFactory" ref="SessionFactory" />
             </bean>
         </property>
     </bean>
@@ -240,9 +220,7 @@
             <bean abstract="false" autowire="default"
                 class="com.logicaldoc.core.generic.dao.HibernateGenericDAO"
                 dependency-check="default" lazy-init="default">
-                <property name="sessionFactory">
-                    <ref bean="SessionFactory" />
-                </property>
+                <property name="sessionFactory" ref="SessionFactory" />
             </bean>
         </property>
     </bean>
@@ -252,9 +230,7 @@
             <bean abstract="false" autowire="default"
                 class="com.logicaldoc.core.sequence.HibernateSequenceDAO"
                 dependency-check="default" lazy-init="default">
-                <property name="sessionFactory">
-                    <ref bean="SessionFactory" />
-                </property>
+                <property name="sessionFactory" ref="SessionFactory" />
                 <property name="genericDao">
                     <ref bean="GenericDAO" />
                 </property>
@@ -278,9 +254,7 @@
             <bean abstract="false" autowire="default"
                 class="com.logicaldoc.core.document.dao.HibernateBookmarkDAO"
                 dependency-check="default" lazy-init="default">
-                <property name="sessionFactory">
-                    <ref bean="SessionFactory" />
-                </property>
+                <property name="sessionFactory" ref="SessionFactory" />
             </bean>
         </property>
     </bean>
@@ -290,9 +264,7 @@
             <bean abstract="false" autowire="default"
                 class="com.logicaldoc.core.rss.dao.HibernateFeedMessageDAO"
                 dependency-check="default" lazy-init="default">
-                <property name="sessionFactory">
-                    <ref bean="SessionFactory" />
-                </property>
+                <property name="sessionFactory" ref="SessionFactory" />
             </bean>
         </property>
     </bean>
@@ -302,9 +274,7 @@
             <bean abstract="false" autowire="default"
                 class="com.logicaldoc.core.document.dao.HibernateRatingDAO"
                 dependency-check="default" lazy-init="default">
-                <property name="sessionFactory">
-                    <ref bean="SessionFactory" />
-                </property>
+                <property name="sessionFactory" ref="SessionFactory" />
             </bean>
         </property>
     </bean>
@@ -314,9 +284,7 @@
             <bean abstract="false" autowire="default"
                 class="com.logicaldoc.core.document.dao.HibernateDocumentNoteDAO"
                 dependency-check="default" lazy-init="default">
-                <property name="sessionFactory">
-                    <ref bean="SessionFactory" />
-                </property>
+                <property name="sessionFactory" ref="SessionFactory" />
             </bean>
         </property>
     </bean>

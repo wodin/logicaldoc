@@ -28,6 +28,7 @@ import com.logicaldoc.util.io.CryptUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
+@SuppressWarnings("unchecked")
 public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> implements UserDAO {
 
 	private UserDocDAO userDocDAO;
@@ -108,7 +109,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 				listener.beforeStore(user, transaction, dictionary);
 			}
 
-			getHibernateTemplate().saveOrUpdate(user);
+			saveOrUpdate(user);
 
 			GroupDAO groupDAO = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 
@@ -253,13 +254,13 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 		boolean result = true;
 
 		try {
-			User user = (User) getHibernateTemplate().get(User.class, userId);
+			User user = (User) findById(userId);
 			Group userGroup = user.getUserGroup();
 			if (user != null) {
 				userDocDAO.deleteByUserId(userId);
 				user.setDeleted(1);
 				user.setUserName(user.getUserName() + "." + user.getId());
-				getHibernateTemplate().saveOrUpdate(user);
+				saveOrUpdate(user);
 			}
 
 			// Delete the user's group
@@ -317,7 +318,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 		if (user == null)
 			return;
 
-		getHibernateTemplate().refresh(user);
+		refresh(user);
 
 		for (Group group : user.getGroups()) {
 			group.getName();

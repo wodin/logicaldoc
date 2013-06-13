@@ -15,6 +15,7 @@ import com.logicaldoc.core.security.UserDoc;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
+@SuppressWarnings("unchecked")
 public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> implements UserDocDAO {
 	public HibernateUserDocDAO() {
 		super(UserDoc.class);
@@ -33,7 +34,7 @@ public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> i
 					new Object[] { docId, userId }, null, null);
 			for (UserDoc userDoc : coll) {
 				userDoc.setDeleted(1);
-				getHibernateTemplate().saveOrUpdate(userDoc);
+				saveOrUpdate(userDoc);
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -44,11 +45,7 @@ public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> i
 		return result;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.UserDocDAO#exists(int,
-	 *      java.lang.String)
-	 */
-	@SuppressWarnings("unchecked")
+	@Override
 	public boolean exists(long docId, long userId) {
 		boolean result = false;
 
@@ -64,9 +61,7 @@ public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> i
 		return result;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.UserDocDAO#findByMinDate(long)
-	 */
+	@Override
 	public UserDoc findByMinDate(long userId) {
 		UserDoc userdoc = null;
 		Collection<UserDoc> coll = findByUserId(userId);
@@ -104,9 +99,9 @@ public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> i
 			if ((count >= 5) && !exists) {
 				UserDoc temp = findByMinDate(userdoc.getUserId());
 				delete(temp.getDocId(), temp.getUserId());
-				getHibernateTemplate().flush();
-				getHibernateTemplate().evict(temp);
-				getHibernateTemplate().evict(temp.getId());
+				flush();
+				evict(temp);
+				evict(temp.getId());
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -114,7 +109,7 @@ public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> i
 		}
 
 		try {
-			getHibernateTemplate().saveOrUpdate(userdoc);
+			saveOrUpdate(userdoc);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -135,7 +130,7 @@ public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> i
 			Collection<UserDoc> coll = findByDocId(docId);
 			for (UserDoc userDoc : coll) {
 				userDoc.setDeleted(1);
-				getHibernateTemplate().saveOrUpdate(userDoc);
+				saveOrUpdate(userDoc);
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -149,7 +144,6 @@ public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> i
 	/**
 	 * @see com.logicaldoc.core.security.dao.UserDocDAO#findByDocId(long)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<UserDoc> findByDocId(long docId) {
 		return findByWhere("_entity.docId = ?", new Object[] { docId }, "order by _entity.date desc", null);
 	}
@@ -162,7 +156,7 @@ public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> i
 			Collection<UserDoc> coll = findByUserId(userId);
 			for (UserDoc userDoc : coll) {
 				userDoc.setDeleted(1);
-				getHibernateTemplate().saveOrUpdate(userDoc);
+				saveOrUpdate(userDoc);
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())

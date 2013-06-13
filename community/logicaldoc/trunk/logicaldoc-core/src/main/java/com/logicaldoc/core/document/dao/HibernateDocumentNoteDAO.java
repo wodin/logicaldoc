@@ -13,6 +13,7 @@ import com.logicaldoc.core.document.DocumentNote;
  * @author Matteo Caruso - Logical Objects
  * @since 6.2
  */
+@SuppressWarnings("unchecked")
 public class HibernateDocumentNoteDAO extends HibernatePersistentObjectDAO<DocumentNote> implements DocumentNoteDAO {
 
 	public HibernateDocumentNoteDAO() {

@@ -14,6 +14,7 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
+@SuppressWarnings("unchecked")
 public class HibernateDocumentTemplateDAO extends HibernatePersistentObjectDAO<DocumentTemplate> implements
 		DocumentTemplateDAO {
 	public HibernateDocumentTemplateDAO() {
@@ -43,15 +44,14 @@ public class HibernateDocumentTemplateDAO extends HibernatePersistentObjectDAO<D
 		boolean result = true;
 
 		try {
-			DocumentTemplate template = (DocumentTemplate) getHibernateTemplate().get(DocumentTemplate.class, id);
+			DocumentTemplate template = (DocumentTemplate) findById(id);
 			if (template != null) {
 				template.setDeleted(1);
 				template.setName(template.getName() + "." + template.getId());
-				getHibernateTemplate().saveOrUpdate(template);
+				saveOrUpdate(template);
 			}
 		} catch (Throwable e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
+			log.error(e.getMessage(), e);
 			result = false;
 		}
 

@@ -21,6 +21,7 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 6.4
  */
+@SuppressWarnings("unchecked")
 public class HibernateFolderHistoryDAO extends HibernatePersistentObjectDAO<FolderHistory> implements FolderHistoryDAO {
 
 	private ContextProperties config;

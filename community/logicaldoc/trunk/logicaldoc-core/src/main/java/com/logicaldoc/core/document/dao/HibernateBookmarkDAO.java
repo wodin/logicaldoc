@@ -13,6 +13,7 @@ import com.logicaldoc.core.document.Bookmark;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
+@SuppressWarnings("unchecked")
 public class HibernateBookmarkDAO extends HibernatePersistentObjectDAO<Bookmark> implements BookmarkDAO {
 
 	public HibernateBookmarkDAO() {

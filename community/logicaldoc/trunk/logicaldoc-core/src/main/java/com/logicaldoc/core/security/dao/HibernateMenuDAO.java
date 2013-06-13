@@ -23,6 +23,7 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
+@SuppressWarnings("unchecked")
 public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> implements MenuDAO {
 
 	private UserDAO userDAO;
@@ -48,9 +49,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			if (menu.getSecurityRef() != null)
 				menu.getMenuGroups().clear();
 
-			getHibernateTemplate().saveOrUpdate(menu);
-		} catch (Exception e) {
-			e.printStackTrace();
+			saveOrUpdate(menu);
+		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 			result = false;
 		}
@@ -59,7 +59,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	}
 
 	@Override
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings("rawtypes")
 	public List<Menu> findByUserId(long userId) {
 		List<Menu> coll = new ArrayList<Menu>();
 
@@ -89,7 +89,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 					first = false;
 				}
 				query.append(")");
-				coll = (List<Menu>) getHibernateTemplate().find(query.toString());
+				coll = (List<Menu>) findByQuery(query.toString(), null, null);
 
 				// Now collect all menues that references the policies of the
 				// previously found menues
@@ -103,7 +103,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 					first = false;
 				}
 				query.append(")");
-				tmp = (List<Menu>) getHibernateTemplate().find(query.toString());
+				tmp = (List<Menu>) findByQuery(query.toString(), null, null);
 
 				for (Menu menu : tmp) {
 					if (!coll.contains(menu))
@@ -117,18 +117,12 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return coll;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByUserId(long, long)
-	 */
+	@Override
 	public List<Menu> findByUserId(long userId, long parentId) {
 		return findByUserId(userId, parentId, null);
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByUserId(userId, long,
-	 *      type)
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings("rawtypes")
 	public List<Menu> findByUserId(long userId, long parentId, Integer type) {
 		List<Menu> coll = new ArrayList<Menu>();
 
@@ -140,8 +134,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				return findByWhere("_entity.id!=_entity.parentId and _entity.parentId=" + parentId
 						+ (type == null ? "" : (" and _entity.type=" + type)), " order by  _entity.text ", null);
 			/*
-			 * Search for all those menues that defines its own security
-			 * policies
+			 * Search for all those menus that defines its own security policies
 			 */
 			StringBuffer query1 = new StringBuffer();
 			Set<Group> precoll = user.getGroups();
@@ -165,7 +158,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			if (type != null)
 				query1.append(" and _entity.type = " + type.toString());
 
-			coll = (List<Menu>) getHibernateTemplate().find(query1.toString(), parentId);
+			coll = (List<Menu>) findByQuery(query1.toString(), new Object[] { parentId }, null);
 
 			/*
 			 * Now search for all other menues that references accessible menues
@@ -188,7 +181,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			}
 			query2.append("))");
 
-			List<Menu> coll2 = (List<Menu>) getHibernateTemplate().find(query2.toString(), new Long[] { parentId });
+			List<Menu> coll2 = (List<Menu>) findByQuery(query2.toString(), new Long[] { parentId }, null);
 			for (Menu menu : coll2) {
 				if (!coll.contains(menu))
 					coll.add(menu);
@@ -212,7 +205,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				max);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List<Menu> findChildren(long parentId, long userId) {
 		List<Menu> coll = new ArrayList<Menu>();
@@ -244,7 +237,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			query1.append(") and _entity.parentId=" + parentId);
 			query1.append(" and not(_entity.id=" + parentId + ")");
 
-			coll = (List<Menu>) getHibernateTemplate().find(query1.toString(), null);
+			coll = (List<Menu>) findByQuery(query1.toString(), null, null);
 
 			/*
 			 * Now search for all other menues that references accessible menues
@@ -268,7 +261,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			query2.append("))");
 			query2.append(" and not(_entity.id=" + parentId + ")");
 
-			List<Menu> coll2 = (List<Menu>) getHibernateTemplate().find(query2.toString(), new Long[] { parentId });
+			List<Menu> coll2 = (List<Menu>) findByQuery(query2.toString(), new Long[] { parentId }, null);
 			for (Menu menu : coll2) {
 				if (!coll.contains(menu))
 					coll.add(menu);
@@ -304,7 +297,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	}
 
 	@Override
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings("rawtypes")
 	public boolean isWriteEnable(long menuId, long userId) {
 		boolean result = true;
 		try {
@@ -339,8 +332,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			}
 			query.append(") and _entity.id=?");
 
-			List<MenuGroup> coll = (List<MenuGroup>) getHibernateTemplate().find(query.toString(),
-					new Object[] { new Long(id) });
+			List<MenuGroup> coll = (List<MenuGroup>) findByQuery(query.toString(), new Object[] { new Long(id) }, null);
 			result = coll.size() > 0;
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -352,7 +344,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	}
 
 	@Override
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings("rawtypes")
 	public boolean isReadEnable(long menuId, long userId) {
 		boolean result = true;
 		try {
@@ -387,8 +379,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			}
 			query.append(") and _entity.id=?");
 
-			List<MenuGroup> coll = (List<MenuGroup>) getHibernateTemplate().find(query.toString(),
-					new Object[] { new Long(id) });
+			List<MenuGroup> coll = (List<MenuGroup>) findByQuery(query.toString(), new Object[] { new Long(id) }, null);
 			result = coll.size() > 0;
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -441,29 +432,26 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return true;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByGroupId(long)
-	 */
-	@SuppressWarnings("unchecked")
+	@Override
 	public List<Menu> findByGroupId(long groupId) {
 		List<Menu> coll = new ArrayList<Menu>();
 
-		// The administrators can see all menues
+		// The administrators can see all menus
 		if (groupId == Group.GROUPID_ADMIN)
 			return findAll();
 
 		try {
 			/*
-			 * Search for menues that define its own security policies
+			 * Search for menus that define its own security policies
 			 */
 			StringBuffer query = new StringBuffer("select distinct(_entity) from Menu _entity  ");
 			query.append(" left join _entity.menuGroups as _group ");
 			query.append(" where _entity.deleted=0 and _group.groupId =" + groupId);
 
-			coll = (List<Menu>) getHibernateTemplate().find(query.toString(), null);
+			coll = (List<Menu>) findByQuery(query.toString(), null, null);
 
 			/*
-			 * Now search for all other menues that references the previous ones
+			 * Now search for all other menus that references the previous ones
 			 */
 			if (!coll.isEmpty()) {
 				StringBuffer query2 = new StringBuffer("select _entity from Menu _entity where _entity.deleted=0 ");
@@ -476,7 +464,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 					first = false;
 				}
 				query2.append(")");
-				List<Menu> coll2 = (List<Menu>) getHibernateTemplate().find(query2.toString(), null);
+				List<Menu> coll2 = (List<Menu>) findByQuery(query2.toString(), null, null);
 				for (Menu menu : coll2) {
 					if (!coll.contains(menu))
 						coll.add(menu);
@@ -489,13 +477,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return coll;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findIdByUserId(long, long,
-	 *      java.lang.Integer) <b>NOTE:</b> This implementation performs direct
-	 *      JDBC query, this is required in order to obtain acceptable
-	 *      performances during searches.
-	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings("rawtypes")
 	public List<Long> findIdByUserId(long userId, long parentId, Integer type) {
 		List<Long> ids = new ArrayList<Long>();
 		try {
@@ -605,7 +587,6 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return coll;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void restore(long menuId, boolean parents) {
 		bulkUpdate("set ld_deleted=0 where ld_id=" + menuId, null);
@@ -621,7 +602,6 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Long> findMenuIdByUserIdAndPermission(long userId, Permission permission) {
 		List<Long> ids = new ArrayList<Long>();
@@ -695,7 +675,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	public boolean delete(long menuId) {
 		boolean result = true;
 		try {
-			Menu menu = (Menu) getHibernateTemplate().get(Menu.class, menuId);
+			Menu menu = (Menu) findById(menuId);
 			menu.setDeleted(1);
 			store(menu);
 		} catch (Throwable e) {
@@ -735,7 +715,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return result;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List<Long> findIdByUserId(long userId, long parentId) {
 		List<Long> ids = new ArrayList<Long>();
