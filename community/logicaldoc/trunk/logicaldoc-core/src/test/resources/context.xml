@@ -46,7 +46,7 @@
 
 	<!-- Hibernate SessionFactory -->
 	<bean id="SessionFactory"
-		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
 		<property name="dataSource">
@@ -65,9 +65,9 @@
 				<prop key="hibernate.cache.use_second_level_cache">
 					true
 				</prop>
-				<prop key="hibernate.cache.provider_class">
-					org.hibernate.cache.EhCacheProvider
-				</prop>
+                <prop key="hibernate.cache.region.factory_class">
+                    org.hibernate.cache.ehcache.EhCacheRegionFactory
+                </prop>
 			</props>
 		</property>
 	</bean>
@@ -75,12 +75,10 @@
 
 	<!--Transaction management-->
 	<bean id="TransactionManager"
-		class="org.springframework.orm.hibernate3.HibernateTransactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
-		<property name="sessionFactory">
-			<ref bean="SessionFactory" />
-		</property>
+		<property name="sessionFactory" ref="SessionFactory" />
 	</bean>
 
 	<!--Transactional proxy-->

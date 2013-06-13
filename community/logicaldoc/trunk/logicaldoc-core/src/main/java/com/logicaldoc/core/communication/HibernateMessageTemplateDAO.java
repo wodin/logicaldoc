@@ -13,6 +13,7 @@ import com.logicaldoc.core.HibernatePersistentObjectDAO;
  * @author Marco Meschieri - Logical Objects
  * @since 6.5
  */
+@SuppressWarnings("unchecked")
 public class HibernateMessageTemplateDAO extends HibernatePersistentObjectDAO<MessageTemplate> implements
 		MessageTemplateDAO {
 
@@ -46,11 +47,11 @@ public class HibernateMessageTemplateDAO extends HibernatePersistentObjectDAO<Me
 
 	@Override
 	public boolean delete(long id) {
-		MessageTemplate template = (MessageTemplate) getHibernateTemplate().get(MessageTemplate.class, id);
+		MessageTemplate template = (MessageTemplate) findById(id);
 		if (template != null) {
 			template.setDeleted(1);
 			template.setName(template.getName() + "." + template.getId());
-			getHibernateTemplate().saveOrUpdate(template);
+			saveOrUpdate(template);
 		}
 		return true;
 	}

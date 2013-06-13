@@ -47,14 +47,15 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		transaction.setUser(user);
 		transaction.setSessionId(sid);
 
-		Folder f = folderDao.create(parentFolder, folder.getName(), folder.getType(), true, transaction);
-		f.setDescription(folder.getDescription());
-		f.setType(folder.getType());
-		folder.updateExtendedAttributes(f);
-		boolean stored = folderDao.store(f);
+		Folder folderVO = new Folder();
+		folderVO.setName(folder.getName());
+		folderVO.setDescription(folder.getDescription());
+		folderVO.setType(folder.getType());
+		folder.updateExtendedAttributes(folderVO);
+		Folder f = folderDao.create(parentFolder, folderVO, true, transaction);
 
-		if (!stored) {
-			log.error("Folder " + f.getName() + " not created");
+		if (f == null) {
+			log.error("Folder " + folderVO.getName() + " not created");
 			throw new Exception("error");
 		} else {
 			log.info("Created folder " + f.getName());

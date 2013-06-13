@@ -14,6 +14,7 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @author Alessandro Gasparini - Logical Objects
  * @since 3.0
  */
+@SuppressWarnings("unchecked")
 public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group>
 		implements GroupDAO {
 
@@ -37,11 +38,11 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group>
 
 		try {
 			Group group = findById(groupId);
-			getHibernateTemplate().refresh(group);
+			refresh(group);
 			if (group != null) {
 				group.setName(group.getName() + "." + group.getId());
 				group.setDeleted(1);
-				getHibernateTemplate().saveOrUpdate(group);
+				saveOrUpdate(group);
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -122,8 +123,8 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group>
 							parent.getValue(parentAttribute));
 				}
 
-			getHibernateTemplate().saveOrUpdate(group);
-			getHibernateTemplate().flush();
+			saveOrUpdate(group);
+			flush();
 
 			if (parentGroupId != 0) {
 				// Inherit ACLs from the parent group
@@ -208,7 +209,7 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group>
 	@Override
 	public void initialize(Group group) {
 		if (group != null && group.getDeleted() == 0)
-			getHibernateTemplate().refresh(group);
+			refresh(group);
 
 		for (String attribute : group.getAttributes().keySet()) {
 			attribute.getBytes();

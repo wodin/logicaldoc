@@ -108,9 +108,9 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 	@Test
 	public void testMoveFolder_Simple() throws Exception {
 		Folder docsFolder = folderDao.findById(Folder.ROOTID);
-		Folder folderA = folderDao.create(docsFolder, "folderA", Folder.TYPE_DEFAULT, true, null);
-		Folder folderB = folderDao.create(docsFolder, "folderB", Folder.TYPE_DEFAULT, true, null);
-		Folder folderC = folderDao.create(folderB, "folderC", Folder.TYPE_DEFAULT, true, null);
+		Folder folderA = folderDao.create(docsFolder, new Folder("folderA"), true, null);
+		Folder folderB = folderDao.create(docsFolder, new Folder("folderB"), true, null);
+		Folder folderC = folderDao.create(folderB, new Folder("folderC"), true, null);
 
 		service.move(session.getSid(), folderC.getId(), folderA.getId());
 
@@ -127,11 +127,11 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 	@Test
 	public void testMoveFolder_Up() throws Exception {
 		Folder docsFolder = folderDao.findById(Folder.ROOTID);
-		Folder folderA = folderDao.create(docsFolder, "folderA", Folder.TYPE_DEFAULT, true, null);
-		Folder folderB = folderDao.create(docsFolder, "folderB", Folder.TYPE_DEFAULT, true, null);
-		Folder folderC = folderDao.create(folderB, "folderC", Folder.TYPE_DEFAULT, true, null);
-		folderDao.create(folderC, "folderD", Folder.TYPE_DEFAULT, true, null);
-		folderDao.create(folderC, "folderE", Folder.TYPE_DEFAULT, true, null);
+		Folder folderA = folderDao.create(docsFolder, new Folder("folderA"), true, null);
+		Folder folderB = folderDao.create(docsFolder, new Folder("folderB"), true, null);
+		Folder folderC = folderDao.create(folderB, new Folder("folderC"), true, null);
+		folderDao.create(folderC, new Folder("folderD"), true, null);
+		folderDao.create(folderC, new Folder("folderE"), true, null);
 
 		service.move(session.getSid(), folderC.getId(), folderA.getId());
 
@@ -146,11 +146,11 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 	@Test
 	public void testMoveFolder_Down() throws Exception {
 		Folder docsFolder = folderDao.findById(Folder.ROOTID);
-		Folder folderB = folderDao.create(docsFolder, "folderB", Folder.TYPE_DEFAULT, true, null);
-		Folder folderC = folderDao.create(folderB, "folderC", Folder.TYPE_DEFAULT, true, null);
-		Folder folderD = folderDao.create(folderC, "folderD", Folder.TYPE_DEFAULT, true, null);
-		Folder folderE = folderDao.create(folderC, "folderE", Folder.TYPE_DEFAULT, true, null);
-		folderDao.create(folderE, "folderF", Folder.TYPE_DEFAULT, true, null);
+		Folder folderB = folderDao.create(docsFolder, new Folder("folderB"), true, null);
+		Folder folderC = folderDao.create(folderB, new Folder("folderC"), true, null);
+		Folder folderD = folderDao.create(folderC, new Folder("folderD"), true, null);
+		Folder folderE = folderDao.create(folderC, new Folder("folderE"), true, null);
+		folderDao.create(folderE, new Folder("folderF"), true, null);
 
 		service.move(session.getSid(), folderE.getId(), folderD.getId());
 

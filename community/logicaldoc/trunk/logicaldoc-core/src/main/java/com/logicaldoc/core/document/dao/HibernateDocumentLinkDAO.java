@@ -14,6 +14,7 @@ import com.logicaldoc.core.document.DocumentLink;
  * @author Matteo Caruso - Logical Objects
  * @since 4.0
  */
+@SuppressWarnings("unchecked")
 public class HibernateDocumentLinkDAO extends HibernatePersistentObjectDAO<DocumentLink> implements DocumentLinkDAO {
 	public HibernateDocumentLinkDAO() {
 		super(DocumentLink.class);
@@ -64,7 +65,7 @@ public class HibernateDocumentLinkDAO extends HibernatePersistentObjectDAO<Docum
 	public boolean delete(long id) {
 		DocumentLink link = findById(id);
 		if (link != null)
-			getHibernateTemplate().delete(link);
+			getCurrentSession().delete(link);
 		return true;
 	}
 }

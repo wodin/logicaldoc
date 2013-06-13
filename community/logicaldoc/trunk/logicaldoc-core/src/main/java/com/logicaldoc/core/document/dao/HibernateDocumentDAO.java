@@ -47,6 +47,7 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
+@SuppressWarnings("unchecked")
 public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document> implements DocumentDAO {
 	private HistoryDAO historyDAO;
 
@@ -102,25 +103,25 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		assert (transaction.getUser() != null);
 		boolean result = true;
 		try {
-			Document doc = (Document) getHibernateTemplate().get(Document.class, docId);
+			Document doc = (Document) findById(docId);
 			if (doc != null && doc.getImmutable() == 0
 					|| (doc != null && doc.getImmutable() == 1 && transaction.getUser().isInGroup("admin"))) {
 				// Remove versions
 				for (Version version : versionDAO.findByDocId(docId)) {
 					version.setDeleted(1);
-					getHibernateTemplate().saveOrUpdate(version);
+					saveOrUpdate(version);
 				}
 
 				// Remove notes
 				for (DocumentNote note : noteDAO.findByDocId(docId)) {
 					note.setDeleted(1);
-					getHibernateTemplate().saveOrUpdate(note);
+					saveOrUpdate(note);
 				}
 
 				// Remove links
 				for (DocumentLink link : linkDAO.findByDocId(docId)) {
 					link.setDeleted(1);
-					getHibernateTemplate().saveOrUpdate(link);
+					saveOrUpdate(link);
 				}
 
 				userDocDAO.deleteByDocId(docId);
@@ -168,7 +169,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				null, null);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findByLockUserAndStatus(Long userId, Integer status) {
 		StringBuffer sb = new StringBuffer(
@@ -199,10 +199,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		}, null);
 	}
 
-	/**
-	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findDocIdByTag(java.lang.String)
-	 */
-	@SuppressWarnings("unchecked")
+	@Override
 	public List<Long> findDocIdByTag(String tag) {
 		StringBuilder query = new StringBuilder("select distinct(ld_docid) from ld_tag where ");
 		query.append("lower(ld_tag)='" + SqlUtil.doubleQuotes(tag).toLowerCase() + "'");
@@ -275,7 +272,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 							}
 						}
 					} catch (Throwable t) {
-						//From times to times during check-in a lazy-loading exception is thrown
+						// From times to times during check-in a lazy-loading
+						// exception is thrown
 					}
 				}
 			}
@@ -295,13 +293,13 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			}
 
 			// Save the document
-			getHibernateTemplate().saveOrUpdate(doc);
+			saveOrUpdate(doc);
 			try {
-				getHibernateTemplate().flush();
+				flush();
 			} catch (Throwable t) {
 			}
 			if (doc.getDeleted() == 0 && doc.getId() != 0L)
-				getHibernateTemplate().refresh(doc);
+				refresh(doc);
 
 			log.debug("Invoke listeners after store");
 			for (DocumentListener listener : listenerManager.getListeners()) {
@@ -313,9 +311,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 			if (!"bulkload".equals(config.getProperty("runlevel"))) {
 				// Perhaps some listeners may have modified the document
-				getHibernateTemplate().saveOrUpdate(doc);
+				saveOrUpdate(doc);
 				try {
-					getHibernateTemplate().flush();
+					flush();
 				} catch (Throwable t) {
 				}
 
@@ -355,7 +353,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Document> findLastModifiedByUserId(long userId, int maxElements) {
 		List<Document> coll = new ArrayList<Document>();
 
@@ -364,7 +361,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			query.append(" WHERE _history.userId = " + Long.toString(userId) + " ");
 			query.append(" ORDER BY _history.date DESC");
 
-			List<Long> results = (List<Long>) getHibernateTemplate().find(query.toString());
+			List<Long> results = (List<Long>) findByQuery(query.toString(), null, null);
 			for (Long docid : results) {
 				if (coll.size() >= maxElements)
 					break;
@@ -394,7 +391,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				query.append(" where lower(tag) like '" + firstLetter.toLowerCase() + "%'");
 			query.append(" GROUP BY tag");
 
-			List ssss = getHibernateTemplate().find(query.toString());
+			List ssss = findByQuery(query.toString(), null, null);
 			for (Iterator iter = ssss.iterator(); iter.hasNext();) {
 				Object[] element = (Object[]) iter.next();
 				if (element != null && element.length > 1) {
@@ -410,7 +407,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> findAllTags(String firstLetter) {
 		try {
@@ -425,7 +421,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return new ArrayList<String>();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findByUserIdAndTag(long userId, String tag, Integer max) {
 
@@ -445,12 +440,11 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			StringBuffer query = new StringBuffer("select A from Document A where A.id in (");
 			query.append(buf);
 			query.append(")");
-			coll = (List<Document>) getHibernateTemplate(max).find(query.toString());
+			coll = (List<Document>) findByQuery(query.toString(), null, max);
 		}
 		return coll;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Long> findDocIdByUserIdAndTag(long userId, String tag) {
 		List<Long> ids = new ArrayList<Long>();
@@ -487,7 +481,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return ids;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findLastDownloadsByUserId(long userId, int maxResults) {
 		List<Document> coll = new ArrayList<Document>();
@@ -497,7 +490,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			query.append(" where _userdoc.id.userId = ?");
 			query.append(" order by _userdoc.date desc");
 
-			List<Long> results = (List<Long>) getHibernateTemplate().find(query.toString(), userId);
+			List<Long> results = (List<Long>) findByQuery(query.toString(), new Object[] { userId }, null);
 			ArrayList<Long> tmpal = new ArrayList<Long>(results);
 			List<Long> docIds = tmpal;
 
@@ -520,7 +513,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			query.append(")");
 
 			// execute the query
-			List<Document> unorderdColl = (List<Document>) getHibernateTemplate().find(query.toString());
+			List<Document> unorderdColl = (List<Document>) findByQuery(query.toString(), null, null);
 
 			// put all elements in a map
 			HashMap<Long, Document> hm = new HashMap<Long, Document>();
@@ -542,7 +535,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return coll;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Long> findDocIdByFolder(long folderId, Integer max) {
 		String sql = "select ld_id from ld_document where ld_deleted=0 and ld_folderid = " + folderId;
@@ -554,7 +546,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return findByWhere("_entity.folder.id = " + Long.toString(folderId), null, max);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findLinkedDocuments(long docId, String linkType, Integer direction) {
 		List<Document> coll = new ArrayList<Document>();
@@ -575,13 +566,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			}
 
 			if (direction == null)
-				coll = (List<Document>) getHibernateTemplate().find(query.toString(), new Object[] { docId, docId });
+				coll = (List<Document>) findByQuery(query.toString(), new Object[] { docId, docId }, null);
 			else
-				coll = (List<Document>) getHibernateTemplate().find(query.toString(), new Object[] { docId });
+				coll = (List<Document>) findByQuery(query.toString(), new Object[] { docId }, null);
 
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				logger.error(e.getMessage(), e);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 		}
 
 		return coll;
@@ -611,7 +601,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public void initialize(Document doc) {
-		getHibernateTemplate().refresh(doc);
+		refresh(doc);
 
 		for (String attribute : doc.getAttributes().keySet()) {
 			attribute.getBytes();
@@ -621,20 +611,19 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Long> findDeletedDocIds() {
 		String query = "select ld_id from ld_document where ld_deleted=1 order by ld_lastmodified desc";
 		return (List<Long>) queryForList(query, Long.class);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findDeletedDocs() {
 		List<Document> coll = new ArrayList<Document>();
 		try {
 			String query = "select ld_id, ld_customid, ld_lastModified, ld_title from ld_document where ld_deleted=1 order by ld_lastmodified desc";
 
+			@SuppressWarnings("rawtypes")
 			RowMapper docMapper = new BeanPropertyRowMapper() {
 				public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 
@@ -770,7 +759,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return findIdsByWhere("_entity.docRef = " + Long.toString(docId), null, null);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findDeleted(long userId, Integer maxHits) {
 		List<Document> results = new ArrayList<Document>();
@@ -778,6 +766,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			String query = "select ld_id, ld_title, ld_lastmodified, ld_filename, ld_customid, ld_folderid from ld_document where ld_deleted=1 and ld_deleteuserid = "
 					+ userId + " order by ld_lastmodified desc";
 
+			@SuppressWarnings("rawtypes")
 			RowMapper docMapper = new BeanPropertyRowMapper() {
 				public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 					Document doc = new Document();
@@ -853,7 +842,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return true;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<Long> findPublishedIds(Collection<Long> folderIds) {
 		StringBuffer query = new StringBuffer("select ld_id from ld_document where ld_deleted=0 ");
@@ -882,6 +870,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public void cleanExpiredTransactions() {
 		jdbcUpdate(
 				"update ld_document set ld_transactionid=null where not (ld_transactionid is null) and not exists(select B.ld_id from ld_generic B where B.ld_type='lock' and B.ld_string1=ld_transactionid)",
-				null);
+				new Object[0]);
 	}
 }

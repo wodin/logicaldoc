@@ -16,6 +16,7 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @author Matteo Caruso - Logical Objects
  * @since 6.1
  */
+@SuppressWarnings("unchecked")
 public class HibernateFeedMessageDAO extends HibernatePersistentObjectDAO<FeedMessage> implements FeedMessageDAO {
 	public HibernateFeedMessageDAO() {
 		super(FeedMessage.class);
@@ -45,24 +46,22 @@ public class HibernateFeedMessageDAO extends HibernatePersistentObjectDAO<FeedMe
 		return queryForInt(query) > 0;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void deleteOld() {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.YEAR, -1);
 		log.debug("delete all feed message before " + cal.getTime());
 		try {
-			Collection<FeedMessage> coll = (Collection<FeedMessage>) getHibernateTemplate().find(
+			Collection<FeedMessage> coll = (Collection<FeedMessage>) findByQuery(
 					"from FeedMessage _feedmessage where _feedmessage.deleted=0 and _feedmessage.pubDate < ?",
-					cal.getTime());
+					new Object[] { cal.getTime() }, null);
 			for (FeedMessage feedMessage : coll) {
-				getHibernateTemplate().initialize(feedMessage);
+				initialize(feedMessage);
 				feedMessage.setDeleted(1);
-				getHibernateTemplate().saveOrUpdate(feedMessage);
+				saveOrUpdate(feedMessage);
 			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				logger.error(e.getMessage(), e);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 		}
 	}
 }

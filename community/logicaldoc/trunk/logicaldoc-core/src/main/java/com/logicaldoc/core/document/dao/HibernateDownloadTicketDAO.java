@@ -16,6 +16,7 @@ import com.logicaldoc.util.config.ContextProperties;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
+@SuppressWarnings("unchecked")
 public class HibernateDownloadTicketDAO extends HibernatePersistentObjectDAO<DownloadTicket> implements
 		DownloadTicketDAO {
 
@@ -49,54 +50,45 @@ public class HibernateDownloadTicketDAO extends HibernatePersistentObjectDAO<Dow
 			DownloadTicket ticket = findByTicketId(ticketid);
 			if (ticket != null) {
 				ticket.setDeleted(1);
-				getHibernateTemplate().saveOrUpdate(ticket);
+				saveOrUpdate(ticket);
 			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				logger.error(e.getMessage(), e);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 		}
 
 		return result;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.document.dao.DownloadTicketDAO#findByTicketId(java.lang.String)
-	 */
-	@SuppressWarnings("unchecked")
+	@Override
 	public DownloadTicket findByTicketId(String ticketid) {
 		try {
-			Collection<DownloadTicket> coll = (Collection<DownloadTicket>) getHibernateTemplate().find(
-					"from DownloadTicket _ticket where _ticket.ticketId = ?", new Object[] { ticketid });
+			Collection<DownloadTicket> coll = (Collection<DownloadTicket>) findByQuery(
+					"from DownloadTicket _ticket where _ticket.ticketId = ?", new Object[] { ticketid }, null);
 			DownloadTicket ticket = null;
 			if (!coll.isEmpty()) {
 				ticket = coll.iterator().next();
 				if (ticket.getDeleted() == 0)
 					return ticket;
 			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				logger.error(e.getMessage(), e);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 		}
 		return null;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.document.dao.DownloadTicketDAO#deleteByDocId(long)
-	 */
-	@SuppressWarnings("unchecked")
+	@Override
 	public boolean deleteByDocId(long docId) {
 		boolean result = true;
 
 		try {
-			Collection<DownloadTicket> coll = (Collection<DownloadTicket>) getHibernateTemplate().find(
-					"from DownloadTicket _ticket where _ticket.docId = ?", new Object[] { new Long(docId) });
+			Collection<DownloadTicket> coll = (Collection<DownloadTicket>) findByQuery(
+					"from DownloadTicket _ticket where _ticket.docId = ?", new Object[] { new Long(docId) }, null);
 			for (DownloadTicket downloadTicket : coll) {
 				downloadTicket.setDeleted(1);
-				getHibernateTemplate().saveOrUpdate(downloadTicket);
+				saveOrUpdate(downloadTicket);
 			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				logger.error(e.getMessage(), e);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 			result = false;
 		}
 
@@ -112,22 +104,21 @@ public class HibernateDownloadTicketDAO extends HibernatePersistentObjectDAO<Dow
 		deleteOlder(cal.getTime());
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean deleteOlder(Date date) {
 		log.debug("delete all tickets before " + date);
 		boolean result = true;
 		try {
-			Collection<DownloadTicket> coll = (Collection<DownloadTicket>) getHibernateTemplate().find(
-					"from DownloadTicket _ticket where _ticket.deleted=0 and _ticket.lastModified < ?", date);
+			Collection<DownloadTicket> coll = (Collection<DownloadTicket>) findByQuery(
+					"from DownloadTicket _ticket where _ticket.deleted=0 and _ticket.lastModified < ?",
+					new Object[] { date }, null);
 			for (DownloadTicket downloadTicket : coll) {
-				getHibernateTemplate().initialize(downloadTicket);
+				initialize(downloadTicket);
 				downloadTicket.setDeleted(1);
-				getHibernateTemplate().saveOrUpdate(downloadTicket);
+				saveOrUpdate(downloadTicket);
 			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				logger.error(e.getMessage(), e);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 			result = false;
 		}
 		return result;

@@ -36,6 +36,7 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
+@SuppressWarnings("unchecked")
 public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> implements FolderDAO {
 
 	private UserDAO userDAO;
@@ -79,7 +80,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 					transaction.setEvent(FolderEvent.CREATED.toString());
 			}
 
-			getHibernateTemplate().saveOrUpdate(folder);
+			saveOrUpdate(folder);
 			saveFolderHistory(folder, transaction);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -90,7 +91,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings("rawtypes")
 	public List<Folder> findByUserId(long userId) {
 		List<Folder> coll = new ArrayList<Folder>();
 
@@ -121,15 +122,14 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 					first = false;
 				}
 				query.append(")");
-				coll = (List<Folder>) getHibernateTemplate().find(query.toString());
+				coll = (List<Folder>) find(query.toString());
 
 				if (coll.isEmpty()) {
 					return coll;
 				} else {
 
 					// Now collect all folders that references the policies of
-					// the
-					// previously found folders
+					// the previously found folders
 					List<Folder> tmp = new ArrayList<Folder>();
 					query = new StringBuffer("select _folder from Folder _folder  where _folder.securityRef in (");
 					first = true;
@@ -140,7 +140,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 						first = false;
 					}
 					query.append(")");
-					tmp = (List<Folder>) getHibernateTemplate().find(query.toString());
+					tmp = (List<Folder>) find(query.toString());
 
 					for (Folder folder : tmp) {
 						if (!coll.contains(folder))
@@ -156,7 +156,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings("rawtypes")
 	public List<Folder> findByUserId(long userId, long parentId) {
 		List<Folder> coll = new ArrayList<Folder>();
 
@@ -168,7 +168,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				return findByWhere("_entity.id!=_entity.parentId and _entity.parentId=" + parentId,
 						" order by _entity.name ", null);
 			/*
-			 * Search for all those folderes that defines its own security
+			 * Search for all those folders that defines its own security
 			 * policies
 			 */
 			StringBuffer query1 = new StringBuffer();
@@ -191,7 +191,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			}
 			query1.append(") and _entity.parentId = ? and _entity.id!=_entity.parentId");
 
-			coll = (List<Folder>) getHibernateTemplate().find(query1.toString(), parentId);
+			coll = (List<Folder>) findByQuery(query1.toString(), new Object[] { parentId }, null);
 
 			/*
 			 * Now search for all other folders that references accessible
@@ -215,7 +215,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			}
 			query2.append("))");
 
-			List<Folder> coll2 = (List<Folder>) getHibernateTemplate().find(query2.toString(), new Long[] { parentId });
+			List<Folder> coll2 = (List<Folder>) findByQuery(query2.toString(), new Long[] { parentId }, null);
 			for (Folder folder : coll2) {
 				if (!coll.contains(folder))
 					coll.add(folder);
@@ -239,7 +239,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				"order by _entity.name", max);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List<Folder> findChildren(long parentId, long userId) {
 		List<Folder> coll = new ArrayList<Folder>();
@@ -271,7 +271,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			query1.append(") and _entity.parentId=" + parentId);
 			query1.append(" and not(_entity.id=" + parentId + ")");
 
-			coll = (List<Folder>) getHibernateTemplate().find(query1.toString(), null);
+			coll = (List<Folder>) findByQuery(query1.toString(), null, null);
 
 			/*
 			 * Now search for all other folders that references accessible
@@ -296,7 +296,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			query2.append("))");
 			query2.append(" and not(_entity.id=" + parentId + ")");
 
-			List<Folder> coll2 = (List<Folder>) getHibernateTemplate().find(query2.toString(), new Long[] { parentId });
+			List<Folder> coll2 = (List<Folder>) findByQuery(query2.toString(), new Long[] { parentId }, null);
 			for (Folder folder : coll2) {
 				if (!coll.contains(folder))
 					coll.add(folder);
@@ -335,7 +335,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings("rawtypes")
 	public boolean isReadEnable(long folderId, long userId) {
 		boolean result = true;
 		try {
@@ -371,8 +371,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			}
 			query.append(") and _entity.id=?");
 
-			List<FolderGroup> coll = (List<FolderGroup>) getHibernateTemplate().find(query.toString(),
-					new Object[] { new Long(id) });
+			List<FolderGroup> coll = (List<FolderGroup>) findByQuery(query.toString(), new Object[] { new Long(id) },
+					null);
 			result = coll.size() > 0;
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -406,26 +406,25 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<Folder> findByGroupId(long groupId) {
 		List<Folder> coll = new ArrayList<Folder>();
 
-		// The administrators can see all folderes
+		// The administrators can see all folders
 		if (groupId == Group.GROUPID_ADMIN)
 			return findAll();
 
 		try {
 			/*
-			 * Search for folderes that define its own security policies
+			 * Search for folders that define its own security policies
 			 */
 			StringBuffer query = new StringBuffer("select distinct(_entity) from Folder _entity  ");
 			query.append(" left join _entity.folderGroups as _group ");
 			query.append(" where _entity.deleted=0 and _group.groupId =" + groupId);
 
-			coll = (List<Folder>) getHibernateTemplate().find(query.toString(), null);
+			coll = (List<Folder>) findByQuery(query.toString(), null, null);
 
 			/*
-			 * Now search for all other folderes that references the previous
+			 * Now search for all other folders that references the previous
 			 * ones
 			 */
 			if (!coll.isEmpty()) {
@@ -439,7 +438,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 					first = false;
 				}
 				query2.append(")");
-				List<Folder> coll2 = (List<Folder>) getHibernateTemplate().find(query2.toString(), null);
+				List<Folder> coll2 = (List<Folder>) findByQuery(query2.toString(), null, null);
 				for (Folder folder : coll2) {
 					if (!coll.contains(folder))
 						coll.add(folder);
@@ -453,7 +452,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings("rawtypes")
 	public List<Long> findIdByUserId(long userId, long parentId) {
 		List<Long> ids = new ArrayList<Long>();
 		try {
@@ -628,7 +627,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public void restore(long folderId, boolean parents) {
 		bulkUpdate("set ld_deleted=0 where ld_id=" + folderId, null);
 
@@ -643,7 +641,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public Set<Permission> getEnabledPermissions(long folderId, long userId) {
 		Set<Permission> permissions = new HashSet<Permission>();
@@ -694,7 +691,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			ResultSet rs = null;
 
 			try {
-				con = getSession().connection();
+				con = getConnection();
 				stmt = con.createStatement();
 				rs = stmt.executeQuery(query.toString());
 				while (rs.next()) {
@@ -744,7 +741,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		return permissions;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<Long> findFolderIdByUserIdAndPermission(long userId, Permission permission, Long parentId,
 			boolean tree) {
@@ -861,7 +857,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 		boolean result = true;
 		try {
-			Folder folder = (Folder) getHibernateTemplate().get(Folder.class, folderId);
+			Folder folder = (Folder) findById(folderId);
 			folder.setDeleted(1);
 			transaction.setEvent(FolderEvent.DELETED.toString());
 			transaction.setFolderId(folderId);
@@ -954,7 +950,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				}
 
 				store(folder, tr);
-				getHibernateTemplate().flush();
+				flush();
 
 				if (!applyMetadataToTree(folder.getId(), transaction))
 					return false;
@@ -1088,7 +1084,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		int counter = 1;
 		String folderName = folder.getName();
 
-		@SuppressWarnings("unchecked")
 		List<String> collisions = (List<String>) queryForList(
 				"select lower(ld_name) from ld_folder where ld_deleted=0 and ld_parentid=" + folder.getParentId()
 						+ " and lower(ld_name) like'" + SqlUtil.doubleQuotes(folderName.toLowerCase()) + "%'",
@@ -1146,7 +1141,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		 * Check if in the folders to be deleted there is at least one immutable
 		 * document
 		 */
-		@SuppressWarnings("unchecked")
 		List<Long> ids = (List<Long>) queryForList("select A.ld_folderid from ld_document A "
 				+ " where A.ld_deleted=0 and A.ld_immutable=1 and A.ld_folderid in " + treeIdsString, Long.class);
 		if (ids != null && !ids.isEmpty()) {
@@ -1178,7 +1172,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		return notDeletableFolders;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Set<Long> findFolderIdInTree(long rootId, boolean includeDeleted) {
 		Set<Long> ids = new HashSet<Long>();
@@ -1228,7 +1221,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public void initialize(Folder folder) {
-		getHibernateTemplate().refresh(folder);
+		refresh(folder);
 
 		for (FolderGroup fg : folder.getFolderGroups()) {
 			fg.getWrite();

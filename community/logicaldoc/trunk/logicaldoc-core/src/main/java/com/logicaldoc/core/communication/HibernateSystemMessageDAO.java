@@ -20,6 +20,7 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
+@SuppressWarnings("unchecked")
 public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<SystemMessage> implements SystemMessageDAO {
 	public class SystemMessageMapper implements RowMapper<SystemMessage> {
 
@@ -54,7 +55,6 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	 * @see com.logicaldoc.core.communication.SystemMessageDAO#findByRecipient(java.lang.String,
 	 *      int)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<SystemMessage> findByRecipient(String recipient, int type, Integer read) {
 		String sql = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_type = "
@@ -114,9 +114,8 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 					out.add(sm);
 				}
 			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				logger.error(e.getMessage(), e);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 		}
 
 		return out;
@@ -130,7 +129,6 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<SystemMessage> findByMode(String mode) {
 		String sql = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_id IN (select ld_messageid from ld_recipient where ld_mode = '"
@@ -140,7 +138,6 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 		return messages;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<SystemMessage> findByType(int type) {
 		String sql = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
@@ -153,7 +150,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 
 	@Override
 	public void initialize(SystemMessage message) {
-		getHibernateTemplate().refresh(message);
+		refresh(message);
 
 		for (Recipient recipient : message.getRecipients()) {
 			recipient.getName();
@@ -161,7 +158,6 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<SystemMessage> findMessagesToBeSent(int type, int maxTrial) {
 		String sql = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_status <> "

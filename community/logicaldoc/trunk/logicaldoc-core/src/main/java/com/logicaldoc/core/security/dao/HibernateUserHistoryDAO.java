@@ -12,6 +12,8 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserHistory;
 import com.logicaldoc.util.config.ContextProperties;
 
+
+@SuppressWarnings("unchecked")
 public class HibernateUserHistoryDAO extends HibernatePersistentObjectDAO<UserHistory> implements UserHistoryDAO {
 
 	private ContextProperties config;

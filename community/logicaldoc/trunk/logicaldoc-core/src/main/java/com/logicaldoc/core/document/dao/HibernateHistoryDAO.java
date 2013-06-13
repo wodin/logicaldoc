@@ -21,6 +21,7 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @author Alessandro Gasparini - Logical Objects
  * @since 3.0
  */
+@SuppressWarnings("unchecked")
 public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> implements HistoryDAO {
 
 	private ContextProperties config;

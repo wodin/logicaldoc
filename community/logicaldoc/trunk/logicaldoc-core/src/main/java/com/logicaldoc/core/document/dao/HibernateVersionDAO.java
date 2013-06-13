@@ -21,6 +21,7 @@ import com.logicaldoc.util.io.FileUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
+@SuppressWarnings("unchecked")
 public class HibernateVersionDAO extends HibernatePersistentObjectDAO<Version> implements VersionDAO {
 
 	private Storer storer;
@@ -47,7 +48,7 @@ public class HibernateVersionDAO extends HibernatePersistentObjectDAO<Version> i
 
 	@Override
 	public void initialize(Version version) {
-		getHibernateTemplate().refresh(version);
+		refresh(version);
 
 		for (String attribute : version.getAttributes().keySet()) {
 			attribute.getBytes();
@@ -127,7 +128,7 @@ public class HibernateVersionDAO extends HibernatePersistentObjectDAO<Version> i
 					} catch (Throwable t) {
 					}
 			}
-			getHibernateTemplate().saveOrUpdate(version);
+			saveOrUpdate(version);
 		}
 	}
 
