@@ -692,7 +692,7 @@
       <repository>
         <id>Alfresco Maven Repository</id>
         <url>https://maven.alfresco.com/nexus/content/groups/public/</url>
-      <repository>
+      </repository>
     </repositories>
     <distributionManagement>
       <repository>
