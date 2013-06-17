@@ -119,6 +119,11 @@ public class Search {
 						record.setAttribute("folderId", hit.getFolder().getId());
 						record.setAttribute("folder", hit.getFolder().getName());
 						record.setAttribute("docRef", hit.getDocRef());
+						record.setAttribute("source", hit.getSource());
+						record.setAttribute("sourceId", hit.getSourceId());
+						record.setAttribute("recipient", hit.getRecipient());
+						record.setAttribute("object", hit.getObject());
+						record.setAttribute("coverage", hit.getCoverage());
 						record.setAttribute("rating", "rating" + hit.getRating());
 						record.setAttribute("template", hit.getTemplate());
 						
