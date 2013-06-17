@@ -124,7 +124,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			document = documentDAO.findById(document.getId());
 			Folder folder = document.getFolder();
 			documentDAO.initialize(document);
-			
+
 			// create some strings containing paths
 			document.setFileName(filename);
 			document.setType(FilenameUtils.getExtension(filename));
@@ -139,7 +139,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setDigest(null);
 			document.setFileSize(file.length());
 			document.setExtResId(null);
-			
+
 			// Create new version (a new version number is created)
 			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
 					Version.EVENT_CHECKIN, release);
@@ -686,9 +686,6 @@ public class DocumentManagerImpl implements DocumentManager {
 		// initialize the document
 		documentDAO.initialize(doc);
 
-		// To avoid 'optimistic locking failed' exceptions
-		doc.setLastModified(new Date());
-
 		if (doc.getDocRef() != null) {
 			return createShortcut(doc, folder, transaction);
 		}
@@ -699,6 +696,9 @@ public class DocumentManagerImpl implements DocumentManager {
 			Document cloned = (Document) doc.clone();
 			cloned.setId(0);
 			cloned.setFolder(folder);
+			cloned.setLastModified(null);
+			if (cloned.getIndexed() == Document.INDEX_INDEXED)
+				cloned.setIndexed(Document.INDEX_TO_INDEX);
 			return create(is, cloned, transaction);
 		} finally {
 			is.close();
