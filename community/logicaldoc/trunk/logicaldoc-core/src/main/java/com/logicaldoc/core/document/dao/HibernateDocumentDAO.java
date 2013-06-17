@@ -312,11 +312,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			if (!"bulkload".equals(config.getProperty("runlevel"))) {
 				// Perhaps some listeners may have modified the document
 				saveOrUpdate(doc);
-				try {
-					flush();
-				} catch (Throwable t) {
-				}
-
 				saveDocumentHistory(doc, transaction);
 			}
 		} catch (Throwable e) {
