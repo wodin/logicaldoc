@@ -95,6 +95,7 @@ public class DocumentsDS extends DataSource {
 		DataSourceTextField sourceId = new DataSourceTextField("sourceId");
 		DataSourceTextField recipient = new DataSourceTextField("recipient");
 		DataSourceTextField object = new DataSourceTextField("object");
+		DataSourceTextField coverage = new DataSourceTextField("coverage");
 
 		List<DataSourceField> fields = new ArrayList<DataSourceField>();
 		fields.add(id);
@@ -131,6 +132,7 @@ public class DocumentsDS extends DataSource {
 		fields.add(sourceId);
 		fields.add(recipient);
 		fields.add(object);
+		fields.add(coverage);
 		fields.add(template);
 
 		String[] extNames = Session.get().getInfo().getConfig("search.extattr")
