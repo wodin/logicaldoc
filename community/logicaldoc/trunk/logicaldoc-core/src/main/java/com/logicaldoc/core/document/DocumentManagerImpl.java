@@ -701,7 +701,8 @@ public class DocumentManagerImpl implements DocumentManager {
 				cloned.setIndexed(Document.INDEX_TO_INDEX);
 			return create(is, cloned, transaction);
 		} finally {
-			is.close();
+			if (is != null)
+				is.close();
 			is = null;
 		}
 	}
