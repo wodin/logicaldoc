@@ -202,6 +202,10 @@ public class DocumentsGrid extends ListGrid {
 		object.setHidden(true);
 		object.setCanFilter(true);
 		
+		ListGridField coverage = new ListGridField("coverage", I18N.message("coverage"), 100);
+		coverage.setHidden(true);
+		coverage.setCanFilter(true);
+		
 		ListGridField wfStatus = new ListGridField("workflowStatus", I18N.message("workflowstatus"), 100);
 		wfStatus.setHidden(true);
 		wfStatus.setCanFilter(true);
@@ -270,6 +274,7 @@ public class DocumentsGrid extends ListGrid {
 			fields.add(customId);
 			fields.add(recipient);
 			fields.add(object);
+			fields.add(coverage);
 			fields.add(rating);
 			fields.add(comment);
 			fields.add(wfStatus);
@@ -331,6 +336,7 @@ public class DocumentsGrid extends ListGrid {
 			fields.add(customId);
 			fields.add(recipient);
 			fields.add(object);
+			fields.add(coverage);
 			fields.add(folder);
 			fields.add(rating);
 			fields.add(comment);

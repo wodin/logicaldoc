@@ -123,6 +123,7 @@ public class Search {
 						record.setAttribute("sourceId", hit.getSourceId());
 						record.setAttribute("recipient", hit.getRecipient());
 						record.setAttribute("object", hit.getObject());
+						record.setAttribute("coverage", hit.getCoverage());
 						record.setAttribute("rating", "rating" + hit.getRating());
 						record.setAttribute("template", hit.getTemplate());
 						
