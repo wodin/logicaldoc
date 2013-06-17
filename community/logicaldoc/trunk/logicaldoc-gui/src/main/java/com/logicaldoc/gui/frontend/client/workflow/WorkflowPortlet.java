@@ -162,20 +162,19 @@ public class WorkflowPortlet extends Portlet {
 							// Extract the workflow instance ID
 							String id = selection.getAttributeAsString("id");
 							id = id.substring(0, id.lastIndexOf('@'));
-							service.deleteInstance(Session.get().getSid(), Long.parseLong(id),
-									new AsyncCallback<Void>() {
-										@Override
-										public void onFailure(Throwable caught) {
-											Log.serverError(caught);
-										}
+							service.deleteInstance(Session.get().getSid(), id, new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
 
-										@Override
-										public void onSuccess(Void result) {
-											list.deselectAllRecords();
-											list.removeSelectedData();
-											workflowDashboard.refresh();
-										}
-									});
+								@Override
+								public void onSuccess(Void result) {
+									list.deselectAllRecords();
+									list.removeSelectedData();
+									workflowDashboard.refresh();
+								}
+							});
 						}
 					}
 				});

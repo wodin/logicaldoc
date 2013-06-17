@@ -149,7 +149,7 @@ public class WorkflowToolstrip extends ToolStrip {
 			}
 		});
 		addButton(save);
-		
+
 		deploy = new ToolStripButton(I18N.message("deploy"));
 		deploy.addClickHandler(new ClickHandler() {
 			@Override
@@ -222,7 +222,7 @@ public class WorkflowToolstrip extends ToolStrip {
 			}
 		});
 		addButton(deploy);
-		
+
 		delete = new ToolStripButton(I18N.message("ddelete"));
 		delete.addClickHandler(new ClickHandler() {
 			@Override
@@ -265,7 +265,7 @@ public class WorkflowToolstrip extends ToolStrip {
 							return;
 						// Set the new name in the designer, then
 						// request a save
-						currentWorkflow.setId(0);
+						currentWorkflow.setId(null);
 						currentWorkflow.setName(value.trim());
 						WorkflowToolstrip.this.designer.getAccordion().setWorkflowName(value.trim());
 						save();
@@ -285,7 +285,7 @@ public class WorkflowToolstrip extends ToolStrip {
 			}
 		});
 		addButton(_import);
-		
+
 		export = new ToolStripButton(I18N.message("eexport"));
 		export.addClickHandler(new ClickHandler() {
 			@Override
@@ -296,8 +296,6 @@ public class WorkflowToolstrip extends ToolStrip {
 		});
 		addButton(export);
 		addSeparator();
-
-
 
 		close = new ToolStripButton(I18N.message("close"));
 		close.addClickHandler(new ClickHandler() {
@@ -325,12 +323,12 @@ public class WorkflowToolstrip extends ToolStrip {
 
 	public void update() {
 		GUIWorkflow wf = currentWorkflow;
-		export.setDisabled(wf == null || wf.getId() == 0);
+		export.setDisabled(wf == null || wf.getId() == null || "0".equals(wf.getId()));
 		_import.setDisabled(wf == null);
 		save.setDisabled(currentWorkflow == null);
-		clone.setDisabled(currentWorkflow == null || wf.getId() == 0);
-		deploy.setDisabled(currentWorkflow == null || wf.getId() == 0);
-		delete.setDisabled(currentWorkflow == null || wf.getId() == 0);
+		clone.setDisabled(currentWorkflow == null || wf.getId() == null || "0".equals(wf.getId()));
+		deploy.setDisabled(currentWorkflow == null || wf.getId() == null || "0".equals(wf.getId()));
+		delete.setDisabled(currentWorkflow == null || wf.getId() == null || "0".equals(wf.getId()));
 		close.setDisabled(currentWorkflow == null);
 		workflowSelect.setOptionDataSource(new WorkflowsDS(false, false));
 		if (currentWorkflow != null && !currentWorkflow.getName().trim().isEmpty())
@@ -342,7 +340,7 @@ public class WorkflowToolstrip extends ToolStrip {
 
 	private void save() {
 		try {
-			if(!designer.saveModel())
+			if (!designer.saveModel())
 				return;
 		} catch (Throwable t) {
 		}
@@ -360,7 +358,7 @@ public class WorkflowToolstrip extends ToolStrip {
 				if (result == null) {
 					SC.warn(I18N.message("workflowalreadyexist"));
 				} else {
-					if (currentWorkflow.getId() == 0) {
+					if (currentWorkflow.getId() == null || "0".equals(currentWorkflow.getId())) {
 						currentWorkflow = result;
 						designer.redraw(currentWorkflow);
 					} else

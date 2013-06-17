@@ -23,7 +23,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	@Override
 	public GUIWorkflow get(String sid, String workflowName) throws InvalidSessionException {
 		GUIWorkflow workflow = new GUIWorkflow();
-		workflow.setId(1);
+		workflow.setId("1");
 		workflow.setName(workflowName);
 		workflow.setDescription("Workflow di test");
 		workflow.setStartStateId("1");
@@ -151,7 +151,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		GUIWorkflow[] workflows = new GUIWorkflow[3];
 
 		GUIWorkflow workflow = new GUIWorkflow();
-		workflow.setId(1);
+		workflow.setId("1");
 		workflow.setName("Workflow_test");
 		workflow.setDescription("Workflow di test");
 		GUIUser user = new GUIUser();
@@ -165,7 +165,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		workflows[0] = workflow;
 
 		workflow = new GUIWorkflow();
-		workflow.setId(2);
+		workflow.setId("2");
 		workflow.setName("Workflow_New");
 		workflow.setDescription("Workflow new");
 		user = new GUIUser();
@@ -179,7 +179,7 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 		workflows[1] = workflow;
 
 		workflow = new GUIWorkflow();
-		workflow.setId(3);
+		workflow.setId("3");
 		workflow.setName("Workflow_Logical");
 		workflow.setDescription("Workflow di logical");
 		user = new GUIUser();
@@ -263,13 +263,12 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	}
 
 	@Override
-	public void deleteInstance(String sid, long id) throws InvalidSessionException {
+	public void deleteInstance(String sid, String id) throws InvalidSessionException {
 
 	}
 
 	@Override
 	public void applyTriggersToTree(String sid, long rootId) throws InvalidSessionException {
-		// TODO Auto-generated method stub
 		
 	}
 }
