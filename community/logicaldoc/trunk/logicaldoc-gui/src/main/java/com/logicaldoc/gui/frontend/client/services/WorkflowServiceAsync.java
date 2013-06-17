@@ -5,8 +5,6 @@ import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 
 public interface WorkflowServiceAsync {
 
-	void deleteInstance(String sid, long id, AsyncCallback<Void> callback);
-
 	void delete(String sid, String name, AsyncCallback<Void> callback);
 
 	void get(String sid, String workflowName, AsyncCallback<GUIWorkflow> callback);
@@ -50,5 +48,7 @@ public interface WorkflowServiceAsync {
 	void importSchema(String sid, AsyncCallback<GUIWorkflow> callback);
 
 	void applyTriggersToTree(String sid, long rootId, AsyncCallback<Void> callback);
+
+	void deleteInstance(String sid, String id, AsyncCallback<Void> callback);
 
 }

@@ -174,7 +174,7 @@ public class WorkflowHistoryDialog extends Window {
 		instancesList.setBorder("1px solid #E1E1E1");
 		instancesList.sort("startdate", SortDirection.DESCENDING);
 		if (selectedWorkflow != null) {
-			instancesDataSource = new WorkflowHistoriesDS(selectedWorkflow.getId(), null);
+			instancesDataSource = new WorkflowHistoriesDS(Long.parseLong(selectedWorkflow.getId()), null);
 			instancesList.setDataSource(instancesDataSource);
 		}
 
@@ -226,7 +226,8 @@ public class WorkflowHistoryDialog extends Window {
 		historiesList.sort("date", SortDirection.ASCENDING);
 		historiesList.setBorder("1px solid #E1E1E1");
 		if (selectedWorkflowInstance != null) {
-			historiesDataSource = new WorkflowHistoriesDS(selectedWorkflow.getId(), selectedWorkflowInstance);
+			historiesDataSource = new WorkflowHistoriesDS(Long.parseLong(selectedWorkflow.getId()),
+					selectedWorkflowInstance);
 			historiesList.setDataSource(historiesDataSource);
 		}
 
@@ -261,7 +262,7 @@ public class WorkflowHistoryDialog extends Window {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.deleteInstance(Session.get().getSid(), selection.getAttributeAsLong("id"),
+							service.deleteInstance(Session.get().getSid(), selection.getAttributeAsString("id"),
 									new AsyncCallback<Void>() {
 										@Override
 										public void onFailure(Throwable caught) {
