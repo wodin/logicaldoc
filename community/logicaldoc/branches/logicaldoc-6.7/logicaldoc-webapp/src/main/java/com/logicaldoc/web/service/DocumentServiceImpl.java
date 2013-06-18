@@ -239,10 +239,11 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements
 
 					// Create the new document
 					doc = documentManager.create(file, doc, transaction);
-					UploadServlet.cleanReceivedFiles(getThreadLocalRequest()
-							.getSession());
 				}
 			}
+			
+			UploadServlet.cleanReceivedFiles(getThreadLocalRequest()
+					.getSession());
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
