@@ -234,6 +234,7 @@ public interface DocumentService {
 	 * @throws Exception
 	 */
 	@WebResult(name = "document")
+	@Deprecated
 	public WSDocument[] list(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
 			throws Exception;
 
