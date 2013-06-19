@@ -2,15 +2,19 @@ package com.logicaldoc.util.io;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -73,7 +77,7 @@ public class FileUtil {
 
 		try {
 			bos = new BufferedOutputStream(new FileOutputStream(filepath));
-			bos.write(text.getBytes());
+			bos.write(text.getBytes("UTF-8"));
 		} catch (Exception e) {
 			logError(e.getLocalizedMessage());
 		} finally {
@@ -415,5 +419,57 @@ public class FileUtil {
 				}
 		}
 		return null;
+	}
+
+	public static void replaceInFile(String sourcePath, String token, String newValue) throws Exception {
+		boolean windows = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
+
+		try {
+			File tmp = new File(sourcePath + ".tmp");
+			File file = new File(sourcePath);
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String line = "", oldtext = "";
+			while ((line = reader.readLine()) != null) {
+				oldtext += line.replaceAll(token, newValue.replaceAll("\\\\", "\\\\\\\\"));
+				if (windows && !sourcePath.endsWith(".sh"))
+					oldtext += "\r";
+				oldtext += "\n";
+			}
+			reader.close();
+
+			// To replace a line in a file
+			String newtext = oldtext.replaceAll(token, newValue.replaceAll("\\\\", "\\\\\\\\"));
+
+			FileWriter writer = new FileWriter(tmp);
+			writer.write(newtext);
+			writer.close();
+
+			file.delete();
+			tmp.renameTo(file);
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
+
+	public static void copyFile(File sourceFile, File destFile) throws IOException {
+		if (!destFile.exists()) {
+			destFile.createNewFile();
+		}
+
+		FileChannel source = null;
+		FileChannel destination = null;
+
+		try {
+			source = new FileInputStream(sourceFile).getChannel();
+			destination = new FileOutputStream(destFile).getChannel();
+			destination.transferFrom(source, 0, source.size());
+		} finally {
+			if (source != null) {
+				source.close();
+			}
+			if (destination != null) {
+				destination.close();
+			}
+		}
 	}
 }
