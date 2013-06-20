@@ -49,7 +49,7 @@ public class TagSearch extends Search {
 		query.append(" A.ld_date, A.ld_publisher, A.ld_creation, A.ld_creator, A.ld_filesize, A.ld_immutable, ");
 		query.append(" A.ld_indexed, A.ld_lockuserid, A.ld_filename, A.ld_status, A.ld_signed, A.ld_type, A.ld_sourcedate, ");
 		query.append(" A.ld_sourceauthor, A.ld_rating, A.ld_fileversion, A.ld_comment, A.ld_workflowstatus, A.ld_startpublishing, ");
-		query.append(" A.ld_stoppublishing, A.ld_published, A.ld_source, A.ld_sourceid, A.ld_recipient, A.ld_object, B.ld_name, A.ld_folderid, A.ld_templateid, C.ld_name ");
+		query.append(" A.ld_stoppublishing, A.ld_published, A.ld_source, A.ld_sourceid, A.ld_recipient, A.ld_object, A.ld_coverage, B.ld_name, A.ld_folderid, A.ld_templateid, C.ld_name ");
 		query.append(" from ld_document as A ");
 		query.append(" join ld_folder as B on A.ld_folderid=B.ld_id ");
 		query.append(" left outer join ld_template as C on A.ld_templateid=C.ld_id ");
