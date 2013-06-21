@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.FolderSearchOptions;
@@ -26,6 +27,7 @@ import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUICriterion;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIResult;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
@@ -89,6 +91,27 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 				GUIDocument h = DocumentServiceImpl.fromDocument(hit, null);
 				h.setScore(hit.getScore());
 				h.setSummary(hit.getSummary());
+
+				/*
+				 * Apply the extended attributes. The template object in search
+				 * hits may have not been fully compiled so the
+				 * DocumentServiceImpl.fromDocument doesn't do the job
+				 */
+				List<GUIExtendedAttribute> extList = new ArrayList<GUIExtendedAttribute>();
+				for (String name : hit.getAttributeNames()) {
+					ExtendedAttribute e = hit.getAttributes().get(name);
+					GUIExtendedAttribute ext = new GUIExtendedAttribute();
+					ext.setName(name);
+					ext.setDateValue(e.getDateValue());
+					ext.setStringValue(e.getStringValue());
+					ext.setIntValue(e.getIntValue());
+					ext.setDoubleValue(e.getDoubleValue());
+					ext.setBooleanValue(e.getBooleanValue());
+					ext.setType(e.getType());
+					extList.add(ext);
+				}
+				h.setAttributes(extList.toArray(new GUIExtendedAttribute[0]));
+
 
 				// Check if the document is not an alias to visualize the
 				// correct icon: if the document is an alias the FULL-TEXT

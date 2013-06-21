@@ -35,11 +35,11 @@ public class FulltextSearch extends Search {
 			this.hitsMap = hitsMap;
 		}
 
-		public Hit mapRow(ResultSet rs, int rowNum) throws SQLException {			
+		public Hit mapRow(ResultSet rs, int rowNum) throws SQLException {
 			Hit hit = hitsMap.get(rs.getLong(1));
-			if(hit==null)
+			if (hit == null)
 				hit = hitsMap.get(rs.getLong(3));
-			if(hit==null)
+			if (hit == null)
 				return null;
 			hit.setId(rs.getLong(1));
 			hit.setCustomId(rs.getString(2));
@@ -268,8 +268,6 @@ public class FulltextSearch extends Search {
 		richQuery.append("  and A.ld_docref in ");
 		richQuery.append(hitsIdsStr);
 
-		log.info("executing query=" + richQuery.toString());
-
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		dao.query(richQuery.toString(), null, new HitMapper(hitsMap), options.getMaxHits());
 
@@ -281,9 +279,9 @@ public class FulltextSearch extends Search {
 		Map<String, String> suggestions = (Map<String, String>) results.getSuggestions();
 		if (!results.getSuggestions().isEmpty()) {
 			suggestion = options.getExpression();
-			for (String token : results.getSuggestions().keySet()) {
+			for (String token : results.getSuggestions().keySet())
 				suggestion = suggestion.replaceFirst(token, suggestions.get(token));
-			}
 		}
 	}
+
 }
