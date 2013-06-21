@@ -156,9 +156,9 @@ public class WSDocument {
 
 	private int published = 1;
 
-	private Date startPublishing = new Date();
+	private String startPublishing;
 
-	private Date stopPublishing;
+	private String stopPublishing;
 
 	public static WSDocument fromDocument(AbstractDocument document) {
 		WSDocument wsDoc = new WSDocument();
@@ -213,6 +213,14 @@ public class WSDocument {
 			if (document.getCreation() != null)
 				date = AbstractService.convertDateToString(document.getCreation());
 			wsDoc.setCreation(date);
+			date = null;
+			if (document.getStartPublishing() != null)
+				date = AbstractService.convertDateToString(document.getStartPublishing());
+			wsDoc.setStartPublishing(date);
+			date = null;
+			if (document.getStopPublishing() != null)
+				date = AbstractService.convertDateToString(document.getStopPublishing());
+			wsDoc.setStopPublishing(date);
 
 			// Populate extended attributes
 			WSAttribute[] attributes = new WSAttribute[0];
@@ -352,12 +360,12 @@ public class WSDocument {
 		if (StringUtils.isNotEmpty(date))
 			newdate = AbstractService.convertStringToDate(date);
 		doc.setDate(newdate);
-		
+
 		Date creationDate = null;
 		if (StringUtils.isNotEmpty(creation))
 			creationDate = AbstractService.convertStringToDate(creation);
 		doc.setCreation(creationDate);
-		
+
 		doc.setPublisher(publisher);
 		doc.setPublisherId(publisherId);
 		doc.setCreator(creator);
@@ -371,8 +379,10 @@ public class WSDocument {
 		if (rating != null)
 			doc.setRating(rating);
 		doc.setPublished(published);
-		doc.setStartPublishing(startPublishing);
-		doc.setStopPublishing(stopPublishing);
+		if (StringUtils.isNotEmpty(startPublishing))
+			doc.setStartPublishing(AbstractService.convertStringToDate(startPublishing));
+		if (StringUtils.isNotEmpty(stopPublishing))
+			doc.setStopPublishing(AbstractService.convertStringToDate(stopPublishing));
 
 		return doc;
 	}
@@ -767,19 +777,19 @@ public class WSDocument {
 		this.published = published;
 	}
 
-	public Date getStartPublishing() {
+	public String getStartPublishing() {
 		return startPublishing;
 	}
 
-	public void setStartPublishing(Date startPublishing) {
+	public void setStartPublishing(String startPublishing) {
 		this.startPublishing = startPublishing;
 	}
 
-	public Date getStopPublishing() {
+	public String getStopPublishing() {
 		return stopPublishing;
 	}
 
-	public void setStopPublishing(Date stopPublishing) {
+	public void setStopPublishing(String stopPublishing) {
 		this.stopPublishing = stopPublishing;
 	}
 }
