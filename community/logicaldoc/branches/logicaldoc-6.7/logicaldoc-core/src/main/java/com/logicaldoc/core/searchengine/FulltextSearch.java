@@ -1,18 +1,20 @@
 package com.logicaldoc.core.searchengine;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.jdbc.core.RowMapper;
 
 import com.ibm.icu.text.SimpleDateFormat;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
 
@@ -23,6 +25,72 @@ import com.logicaldoc.util.Context;
  * @since 5.2
  */
 public class FulltextSearch extends Search {
+
+	public class HitMapper implements RowMapper<Hit> {
+
+		private Map<Long, Hit> hitsMap;
+
+		public HitMapper(Map<Long, Hit> hitsMap) {
+			super();
+			this.hitsMap = hitsMap;
+		}
+
+		public Hit mapRow(ResultSet rs, int rowNum) throws SQLException {			
+			Hit hit = hitsMap.get(rs.getLong(1));
+			if(hit==null)
+				hit = hitsMap.get(rs.getLong(3));
+			if(hit==null)
+				return null;
+			hit.setId(rs.getLong(1));
+			hit.setCustomId(rs.getString(2));
+			hit.setDocRef(rs.getLong(3));
+			hit.setType(rs.getString(4));
+			hit.setTitle(rs.getString(5));
+			hit.setVersion(rs.getString(6));
+			hit.setLastModified(rs.getTimestamp(7));
+			hit.setDate(rs.getTimestamp(8));
+			hit.setPublisher(rs.getString(9));
+			hit.setCreation(rs.getTimestamp(10));
+			hit.setCreator(rs.getString(11));
+			hit.setFileSize(rs.getLong(12));
+			hit.setImmutable(rs.getInt(13));
+			hit.setIndexed(rs.getInt(14));
+			hit.setLockUserId(rs.getLong(15));
+			hit.setFileName(rs.getString(16));
+			hit.setStatus(rs.getInt(17));
+			hit.setSigned(rs.getInt(18));
+			hit.setType(rs.getString(19));
+			hit.setSourceDate(rs.getTimestamp(20));
+			hit.setSourceAuthor(rs.getString(21));
+			hit.setRating(rs.getInt(22));
+			hit.setFileVersion(rs.getString(23));
+			hit.setComment(rs.getString(24));
+			hit.setWorkflowStatus(rs.getString(25));
+			hit.setStartPublishing(rs.getTimestamp(26));
+			hit.setStopPublishing(rs.getTimestamp(27));
+			hit.setPublished(rs.getInt(28));
+			hit.setSource(rs.getString(29));
+			hit.setSourceId(rs.getString(30));
+			hit.setRecipient(rs.getString(31));
+			hit.setObject(rs.getString(32));
+			hit.setCoverage(rs.getString(33));
+
+			Folder folder = new Folder();
+			folder.setId(rs.getLong(35));
+			folder.setName(rs.getString(34));
+			hit.setFolder(folder);
+
+			if (rs.getLong(37) != 0L) {
+				DocumentTemplate t = new DocumentTemplate();
+				t.setId(rs.getLong(37));
+				t.setName(rs.getString(38));
+				hit.setTemplate(t);
+				hit.setTemplateId(t.getId());
+			}
+
+			return hit;
+		}
+	};
 
 	protected FulltextSearch() {
 	}
@@ -148,80 +216,62 @@ public class FulltextSearch extends Search {
 		log.debug("DB search");
 
 		String hitsIdsStr = hitsMap.keySet().toString().replace('[', '(').replace(']', ')');
+
 		StringBuffer richQuery = new StringBuffer();
-		richQuery.append(" select A.id, A.customId, A.docRef, A.type, A.title, A.version, A.lastModified, ");
-		richQuery.append(" A.date, A.publisher, A.creation, A.creator, A.fileSize, A.immutable, ");
-		richQuery.append(" A.indexed, A.lockUserId, A.fileName, A.status, A.signed, A.type, A.sourceDate, ");
-		richQuery.append(" A.sourceAuthor, A.rating, A.fileVersion, A.comment, A.workflowStatus, A.startPublishing, ");
-		richQuery.append(" A.stopPublishing, A.published, A.folder.name, A.folder.id, A.source, A.sourceId, A.recipient, A.object, A.coverage, B.id, B.name ");
-		richQuery.append(" from Document as A left outer join A.template as B where A.deleted = 0 and A.id in ");
+		// Find real documents
+		richQuery = new StringBuffer(
+				"select A.ld_id, A.ld_customid, A.ld_docref, A.ld_type, A.ld_title, A.ld_version, A.ld_lastmodified, ");
+		richQuery.append(" A.ld_date, A.ld_publisher, A.ld_creation, A.ld_creator, A.ld_filesize, A.ld_immutable, ");
+		richQuery
+				.append(" A.ld_indexed, A.ld_lockuserid, A.ld_filename, A.ld_status, A.ld_signed, A.ld_type, A.ld_sourcedate, ");
+		richQuery
+				.append(" A.ld_sourceauthor, A.ld_rating, A.ld_fileversion, A.ld_comment, A.ld_workflowstatus, A.ld_startpublishing, ");
+		richQuery
+				.append(" A.ld_stoppublishing, A.ld_published, A.ld_source, A.ld_sourceid, A.ld_recipient, A.ld_object, A.ld_coverage, FOLD.ld_name, A.ld_folderid, A.ld_tgs AS tags, A.ld_templateid, C.ld_name ");
+		richQuery.append(" from ld_document A ");
+		richQuery.append(" join ld_folder as FOLD on A.ld_folderid=FOLD.ld_id ");
+		richQuery.append(" left outer join ld_template as C on A.ld_templateid=C.ld_id ");
+		richQuery.append(" where A.ld_deleted=0 and A.ld_folderid=FOLD.ld_id  ");
+		// For normal users we have to exclude not published documents
+		if (searchUser != null && !searchUser.isInGroup("admin") && !searchUser.isInGroup("publisher")) {
+			richQuery.append(" and A.ld_published = 1 ");
+			richQuery.append(" and A.ld_startpublishing <= CURRENT_TIMESTAMP ");
+			richQuery.append(" and ( A.ld_stoppublishing is null or A.ld_stoppublishing > CURRENT_TIMESTAMP )");
+		}
+		richQuery.append("  and A.ld_docref is null ");
+		richQuery.append("  and A.ld_id in ");
 		richQuery.append(hitsIdsStr);
 
-		Object[] values = null;
-		if (!searchUser.isInGroup("admin") && !searchUser.isInGroup("publisher")) {
-			/*
-			 * Normal users don't see unpublished contents
-			 */
-			richQuery.append(" and A.published = 1 ");
-			richQuery.append(" and A.startPublishing <= ? ");
-			richQuery.append(" and ( A.stopPublishing is null or A.stopPublishing > ? )");
-
-			Date now = new Date();
-			values = new Object[] { now, now };
+		// Append all aliases
+		richQuery
+				.append(" UNION select A.ld_id, REF.ld_customid, A.ld_docref, REF.ld_type, REF.ld_title, REF.ld_version, REF.ld_lastmodified, ");
+		richQuery
+				.append(" REF.ld_date, REF.ld_publisher, REF.ld_creation, REF.ld_creator, REF.ld_filesize, REF.ld_immutable, ");
+		richQuery
+				.append(" REF.ld_indexed, REF.ld_lockuserid, REF.ld_filename, REF.ld_status, REF.ld_signed, REF.ld_type, REF.ld_sourcedate, ");
+		richQuery
+				.append(" REF.ld_sourceauthor, REF.ld_rating, REF.ld_fileversion, A.ld_comment, REF.ld_workflowstatus, REF.ld_startpublishing, ");
+		richQuery
+				.append(" A.ld_stoppublishing, A.ld_published, REF.ld_source, REF.ld_sourceid, REF.ld_recipient, REF.ld_object, REF.ld_coverage, FOLD.ld_name, A.ld_folderid, A.ld_tgs AS tags, REF.ld_templateid, C.ld_name ");
+		richQuery.append(" from ld_document A  ");
+		richQuery.append(" join ld_folder as FOLD on A.ld_folderid=FOLD.ld_id ");
+		richQuery.append(" join ld_document as REF on A.ld_docref=REF.ld_id ");
+		richQuery.append(" left outer join ld_template as C on REF.ld_templateid=C.ld_id ");
+		richQuery.append(" where A.ld_deleted=0 and A.ld_folderid=FOLD.ld_id ");
+		// For normal users we have to exclude not published documents
+		if (searchUser != null && !searchUser.isInGroup("admin") && !searchUser.isInGroup("publisher")) {
+			richQuery.append(" and REF.ld_published = 1 ");
+			richQuery.append(" and REF.ld_startpublishing <= CURRENT_TIMESTAMP ");
+			richQuery.append(" and ( REF.ld_stoppublishing is null or REF.ld_stoppublishing > CURRENT_TIMESTAMP )");
 		}
+		richQuery.append("  and A.ld_docref is not null and REF.ld_deleted=0 and A.ld_docref = REF.ld_id ");
+		richQuery.append("  and A.ld_docref in ");
+		richQuery.append(hitsIdsStr);
 
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		log.info("executing query=" + richQuery.toString());
 
-		List<Object> records = (List<Object>) docDao.findByQuery(richQuery.toString(), values, null);
-		for (Object rec : records) {
-			Object[] cols = (Object[]) rec;
-
-			Hit hit = hitsMap.get((Long) cols[0]);
-			hit.setCustomId((String) cols[1]);
-			hit.setDocRef((Long) cols[2]);
-			hit.setType((String) cols[3]);
-			hit.setTitle((String) cols[4]);
-			hit.setVersion((String) cols[5]);
-			hit.setLastModified((Date) cols[6]);
-			hit.setDate((Date) cols[7]);
-			hit.setPublisher((String) cols[8]);
-			hit.setCreation((Date) cols[9]);
-			hit.setCreator((String) cols[10]);
-			hit.setFileSize((Long) cols[11]);
-			hit.setImmutable((Integer) cols[12]);
-			hit.setIndexed((Integer) cols[13]);
-			hit.setLockUserId((Long) cols[14]);
-			hit.setFileName((String) cols[15]);
-			hit.setStatus((Integer) cols[16]);
-			hit.setSigned((Integer) cols[17]);
-			hit.setType((String) cols[18]);
-			hit.setSourceDate((Date) cols[19]);
-			hit.setSourceAuthor((String) cols[20]);
-			hit.setRating((Integer) cols[21]);
-			hit.setFileVersion((String) cols[22]);
-			hit.setComment((String) cols[23]);
-			hit.setWorkflowStatus((String) cols[24]);
-			hit.setStartPublishing((Date) cols[25]);
-			hit.setStopPublishing((Date) cols[26]);
-			hit.setPublished((Integer) cols[27]);
-			hit.getFolder().setName((String) cols[28]);
-			hit.getFolder().setId((Long) cols[29]);
-			hit.setSource((String) cols[30]);
-			hit.setSourceId((String) cols[31]);
-			hit.setRecipient((String) cols[32]);
-			hit.setObject((String) cols[33]);
-			hit.setCoverage((String) cols[34]);
-			
-			if (cols[35] != null) {
-				DocumentTemplate t = new DocumentTemplate();
-				t.setId((Long) cols[35]);
-				t.setName((String) cols[36]);
-				hit.setTemplate(t);
-				hit.setTemplateId(t.getId());
-			}
-
-			hit.setPublished(hit.isPublishing() ? 1 : 0);
-		}
+		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		dao.query(richQuery.toString(), null, new HitMapper(hitsMap), options.getMaxHits());
 
 		log.debug("End of DB search");
 
