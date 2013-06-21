@@ -145,44 +145,54 @@ public abstract class Search {
 		if (StringUtils.isNotEmpty(extattrs) && !hits.isEmpty()) {
 			// the names of the extended attributes to show
 			List<String> attrs = Arrays.asList(extattrs.trim().split(","));
+			StringBuffer idsString = new StringBuffer("(");
+			for (Hit hit : hits) {
+				if (idsString.length() > 1)
+					idsString.append(",");
+				idsString.append(hit.getId());
+			}
+			idsString.append(")");
 
 			log.debug("Start searching for extended attributes: " + attrs);
 
-			// populate a map of id-Hit
-			final Map<Long, Hit> map = new HashMap<Long, Hit>();
-			for (Hit h : hits) {
-				map.put(h.getId(), h);
-			}
+			// Search for extended attributes, key is docId-name
+			final Map<String, ExtendedAttribute> extAtt = new HashMap<String, ExtendedAttribute>();
 
 			DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 			StringBuffer query = new StringBuffer(
 					"select ld_docid, ld_name, ld_type, ld_stringvalue, ld_intvalue, ld_doublevalue, ld_datevalue ");
 			query.append(" from ld_document_ext where ld_docid in ");
-			query.append(map.keySet().toString().replace('[', '(').replace(']', ')'));
+			query.append(idsString);
 			query.append(" and ld_name in ");
-			query.append(attrs.toString().replaceAll("\\[", "('").replaceAll("\\]", "')").replaceAll(",", "','").replaceAll(" ", ""));
-
+			query.append(attrs.toString().replaceAll("\\[", "('").replaceAll("\\]", "')").replaceAll(",", "','")
+					.replaceAll(" ", ""));
 			ddao.query(query.toString(), null, new RowMapper<Long>() {
 				@Override
 				public Long mapRow(ResultSet rs, int row) throws SQLException {
 					Long docId = rs.getLong(1);
 					String name = rs.getString(2);
 
-					Hit hit = map.get(docId);
-					if (hit == null)
-						return null;
-
 					ExtendedAttribute ext = new ExtendedAttribute();
-					ext.setType(rs.getInt(3));
 					ext.setStringValue(rs.getString(4));
 					ext.setIntValue(rs.getLong(5));
 					ext.setDoubleValue(rs.getDouble(6));
 					ext.setDateValue(rs.getDate(7));
-					hit.getAttributes().put(name, ext);
-
+					ext.setType(rs.getInt(3));
+					extAtt.put(docId + "-" + name, ext);
 					return null;
 				}
 			}, null);
+
+			for (Hit h : hits) {
+				for (String name : attrs) {
+					ExtendedAttribute att = extAtt.get(h.getId() + "-" + name);
+					if (att == null)
+						att = extAtt.get(h.getDocRef() + "-" + name);
+					if (att != null){
+						h.getAttributes().put(name, att);
+					}
+				}
+			}
 
 			log.debug("End searching for extended attributes");
 		}
