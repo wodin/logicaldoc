@@ -201,8 +201,8 @@ public class FulltextSearch extends Search {
 
 			// When user can see document with folderId then put it into
 			// result-collection.
-			if ((accessibleFolderIds.isEmpty() && searchUser.isInGroup("admin"))
-					|| accessibleFolderIds.contains(hit.getFolder().getId())) {
+			if (searchUser.isInGroup("admin")
+					|| (accessibleFolderIds != null && accessibleFolderIds.contains(hit.getFolder().getId()))) {
 				hits.add(hit);
 				hitsMap.put(hit.getId(), hit);
 			}
