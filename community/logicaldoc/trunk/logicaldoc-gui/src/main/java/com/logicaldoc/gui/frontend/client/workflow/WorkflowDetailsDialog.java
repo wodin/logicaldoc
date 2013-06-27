@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUITransition;
@@ -39,7 +38,6 @@ import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.SubmitItem;
-import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
@@ -78,7 +76,7 @@ public class WorkflowDetailsDialog extends Window {
 	private ValuesManager vm = new ValuesManager();
 
 	private HLayout mainPanel = null;
-	
+
 	private HLayout form = null;
 
 	private VLayout sxLayout = null;
@@ -92,7 +90,7 @@ public class WorkflowDetailsDialog extends Window {
 	private TabSet tabs = new TabSet();
 
 	private VLayout buttonsPanel = null;
-	
+
 	private Tab docsTab = null;
 
 	private Tab workflowTab = null;
@@ -101,11 +99,11 @@ public class WorkflowDetailsDialog extends Window {
 
 	private StaticTextItem taskStartDate = null;
 
+	private StaticTextItem taskDueDate = null;
+
 	private StaticTextItem taskEndDate = null;
 
-	private StaticTextItem endDate = null;
-	
-	public WorkflowDetailsDialog(WorkflowDashboard dashboard, GUIWorkflow wfl) {
+	public WorkflowDetailsDialog(final WorkflowDashboard dashboard, GUIWorkflow wfl) {
 		this.workflow = wfl;
 		this.workflowDashboard = dashboard;
 
@@ -130,23 +128,22 @@ public class WorkflowDetailsDialog extends Window {
 		tabs = new TabSet();
 		tabs.setWidth100();
 		tabs.setHeight100();
-		
+
 		workflowTab = new Tab(I18N.message("workflow"));
 		tabs.addTab(workflowTab, 0);
 		docsTab = new Tab(I18N.message("appendeddocuments"));
 		tabs.addTab(docsTab, 1);
 		tabs.setSelectedTab(0);
 
-		buttonsPanel=new VLayout(10);
-		
-		mainPanel=new HLayout(10);
+		buttonsPanel = new VLayout(10);
+
+		mainPanel = new HLayout(10);
 		mainPanel.setTop(30);
 		mainPanel.setLeft(5);
 		mainPanel.setWidth(540);
-		mainPanel.setHeight(400);
+		mainPanel.setHeight(370);
 		mainPanel.setMembers(tabs, buttonsPanel);
-		
-		
+
 		addChild(mainPanel);
 
 		form = new HLayout(25);
@@ -199,13 +196,12 @@ public class WorkflowDetailsDialog extends Window {
 
 		StaticTextItem workflowDescription = ItemFactory.newStaticTextItem("workflowDescription",
 				I18N.message("description"), workflow.getDescription());
-		workflowDescription.setShouldSaveValue(false);
 
 		StaticTextItem startDate = ItemFactory.newStaticTextItem("startdate", "startdate", null);
 		if (workflow.getStartDate() != null)
 			startDate.setValue(I18N.formatDate((Date) workflow.getStartDate()));
 
-		endDate = ItemFactory.newStaticTextItem("enddate", "enddate", null);
+		StaticTextItem endDate = ItemFactory.newStaticTextItem("enddate", "enddate", null);
 		if (workflow.getEndDate() != null)
 			endDate.setValue(I18N.formatDate((Date) workflow.getEndDate()));
 
@@ -219,16 +215,13 @@ public class WorkflowDetailsDialog extends Window {
 
 		StaticTextItem taskTitle = ItemFactory
 				.newStaticTextItem("taskTitle", "", "<b>" + I18N.message("task") + "</b>");
-		taskTitle.setShouldSaveValue(false);
 		taskTitle.setWrapTitle(false);
 
 		StaticTextItem taskId = ItemFactory.newStaticTextItem("taskId", I18N.message("id"), workflow.getSelectedTask()
 				.getId());
-		taskId.setShouldSaveValue(false);
 
 		StaticTextItem taskName = ItemFactory.newStaticTextItem("taskName", I18N.message("name"), workflow
 				.getSelectedTask().getName());
-		taskName.setShouldSaveValue(false);
 
 		StaticTextItem taskDescription = ItemFactory.newStaticTextItem("taskDescription", I18N.message("description"),
 				workflow.getSelectedTask().getDescription());
@@ -240,33 +233,21 @@ public class WorkflowDetailsDialog extends Window {
 		else if (workflow.getSelectedTask().getPooledActors() != null
 				&& !workflow.getSelectedTask().getPooledActors().trim().isEmpty())
 			taskAssignee.setValue(workflow.getSelectedTask().getPooledActors());
-		taskAssignee.setShouldSaveValue(false);
 
 		taskStartDate = ItemFactory.newStaticTextItem("taskStartDate", "startdate", null);
 		if (workflow.getSelectedTask().getStartDate() != null)
 			taskStartDate.setValue(I18N.formatDate((Date) workflow.getSelectedTask().getStartDate()));
 
-		StaticTextItem taskDueDate = ItemFactory.newStaticTextItem("taskDueDate", "duedate", null);
-		if (workflow.getSelectedTask().getDueDate() != null
-				&& !workflow.getSelectedTask().getDueDate().trim().isEmpty()) {
-			String dueDate = workflow.getSelectedTask().getDueDate();
-			String[] elements = dueDate.split(" ");
-			// This code is mandatory to use the correct key label
-			elements[1] = elements[1] + "s";
-			if (elements[1].startsWith("d"))
-				elements[1] = "d" + elements[1];
-			taskDueDate.setValue(elements[0] + " " + I18N.message(elements[1]));
-		}
+		taskDueDate = ItemFactory.newStaticTextItem("taskDueDate", "duedate", null);
+		if (workflow.getSelectedTask().getDueDate() != null)
+			taskDueDate.setValue(I18N.formatDate((Date) workflow.getSelectedTask().getDueDate()));
 
 		taskEndDate = ItemFactory.newStaticTextItem("taskEndDate", "enddate", null);
 		if (workflow.getSelectedTask().getEndDate() != null)
 			taskEndDate.setValue(I18N.formatDate((Date) workflow.getSelectedTask().getEndDate()));
 
-		TextAreaItem taskComment = ItemFactory.newTextAreaItem("taskComment", I18N.message("comment"), workflow
-				.getSelectedTask().getComment());
-
 		taskForm.setItems(taskTitle, taskId, taskName, taskDescription, taskAssignee, taskStartDate, taskDueDate,
-				taskEndDate, taskComment);
+				taskEndDate);
 
 		sxLayout.addMember(taskForm);
 
@@ -433,208 +414,18 @@ public class WorkflowDetailsDialog extends Window {
 			}
 		});
 
-		Button startButton = new Button(I18N.message("workflowtaskstart"));
-		startButton.setAutoFit(true);
-		startButton.setMargin(2);
-		startButton.setVisible((workflow.getSelectedTask().getStartDate() == null));
-		startButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-			@Override
-			@SuppressWarnings("unchecked")
-			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				final Map<String, Object> values = (Map<String, Object>) vm.getValues();
-
-				String comment = "";
-				if (values.get("taskComment") != null) {
-					comment = (String) values.get("taskComment");
-				}
-
-				service.startTask(Session.get().getSid(), workflow.getSelectedTask().getId(), comment,
-						new AsyncCallback<Void>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(Void result) {
-								service.getWorkflowDetailsByTask(Session.get().getSid(), workflow.getSelectedTask()
-										.getId(), new AsyncCallback<GUIWorkflow>() {
-
-									@Override
-									public void onFailure(Throwable caught) {
-										Log.serverError(caught);
-									}
-
-									@Override
-									public void onSuccess(GUIWorkflow result) {
-										if (result != null) {
-											workflow = result;
-											reload(workflow);
-											taskStartDate.setValue(I18N.formatDate((Date) workflow.getSelectedTask()
-													.getStartDate()));
-										}
-									}
-								});
-							}
-						});
-			}
-		});
-
-		Button suspendButton = new Button(I18N.message("workflowtasksuspend"));
-		suspendButton.setAutoFit(true);
-		suspendButton.setMargin(2);
-		suspendButton.setVisible(workflow.getSelectedTask().getTaskState().equals("started"));
-		suspendButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-			@Override
-			@SuppressWarnings("unchecked")
-			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				final Map<String, Object> values = (Map<String, Object>) vm.getValues();
-
-				String comment = "";
-				if (values.get("taskComment") != null) {
-					comment = (String) values.get("taskComment");
-				}
-
-				service.suspendTask(Session.get().getSid(), workflow.getSelectedTask().getId(), comment,
-						new AsyncCallback<Void>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(Void result) {
-								service.getWorkflowDetailsByTask(Session.get().getSid(), workflow.getSelectedTask()
-										.getId(), new AsyncCallback<GUIWorkflow>() {
-
-									@Override
-									public void onFailure(Throwable caught) {
-										Log.serverError(caught);
-									}
-
-									@Override
-									public void onSuccess(GUIWorkflow result) {
-										if (result != null) {
-											workflow = result;
-											reload(workflow);
-
-										}
-									}
-								});
-							}
-						});
-			}
-		});
-
-		Button resumeButton = new Button(I18N.message("workflowtaskresume"));
-		resumeButton.setAutoFit(true);
-		resumeButton.setMargin(2);
-		resumeButton.setVisible(workflow.getSelectedTask().getTaskState().equals("suspended"));
-		resumeButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-			@Override
-			@SuppressWarnings("unchecked")
-			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				final Map<String, Object> values = (Map<String, Object>) vm.getValues();
-
-				String comment = "";
-				if (values.get("taskComment") != null) {
-					comment = (String) values.get("taskComment");
-				}
-
-				service.resumeTask(Session.get().getSid(), workflow.getSelectedTask().getId(), comment,
-						new AsyncCallback<Void>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(Void result) {
-								service.getWorkflowDetailsByTask(Session.get().getSid(), workflow.getSelectedTask()
-										.getId(), new AsyncCallback<GUIWorkflow>() {
-
-									@Override
-									public void onFailure(Throwable caught) {
-										Log.serverError(caught);
-									}
-
-									@Override
-									public void onSuccess(GUIWorkflow result) {
-										if (result != null) {
-											workflow = result;
-											reload(workflow);
-
-										}
-									}
-								});
-							}
-						});
-			}
-		});
-
-		Button saveTaskStateButton = new Button(I18N.message("save"));
-		saveTaskStateButton.setAutoFit(true);
-		saveTaskStateButton.setMargin(2);
-		saveTaskStateButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-			@Override
-			@SuppressWarnings("unchecked")
-			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				final Map<String, Object> values = (Map<String, Object>) vm.getValues();
-
-				String comment = "";
-				if (values.get("taskComment") != null) {
-					comment = (String) values.get("taskComment");
-				}
-
-				service.saveTaskState(Session.get().getSid(), workflow.getSelectedTask().getId(), comment,
-						new AsyncCallback<Void>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(Void result) {
-								service.getWorkflowDetailsByTask(Session.get().getSid(), workflow.getSelectedTask()
-										.getId(), new AsyncCallback<GUIWorkflow>() {
-
-									@Override
-									public void onFailure(Throwable caught) {
-										Log.serverError(caught);
-									}
-
-									@Override
-									public void onSuccess(GUIWorkflow result) {
-										if (result != null) {
-											workflow = result;
-											reload(workflow);
-
-										}
-									}
-								});
-							}
-						});
-			}
-		});
-
 		Button takeButton = new Button(I18N.message("workflowtasktake"));
 		takeButton.setAutoFit(true);
 		takeButton.setMargin(2);
-		takeButton.setVisible(!workflow.getSelectedTask().getPooledActors().isEmpty()
-				&& workflow.getSelectedTask().getOwner().trim().isEmpty());
+		takeButton.setVisible(!(workflow.getSelectedTask().getPooledActors() == null || workflow.getSelectedTask()
+				.getPooledActors().isEmpty())
+				&& (workflow.getSelectedTask().getOwner() == null || workflow.getSelectedTask().getOwner().trim()
+						.isEmpty()));
 		takeButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
-			@SuppressWarnings("unchecked")
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				final Map<String, Object> values = (Map<String, Object>) vm.getValues();
-
-				String comment = "";
-				if (values.get("taskComment") != null) {
-					comment = (String) values.get("taskComment");
-				}
-
 				service.takeTaskOwnerShip(Session.get().getSid(), workflow.getSelectedTask().getId(),
-						Long.toString(Session.get().getUser().getId()), comment, new AsyncCallback<Void>() {
+						Long.toString(Session.get().getUser().getId()), new AsyncCallback<Void>() {
 							@Override
 							public void onFailure(Throwable caught) {
 								Log.serverError(caught);
@@ -652,11 +443,10 @@ public class WorkflowDetailsDialog extends Window {
 
 									@Override
 									public void onSuccess(GUIWorkflow result) {
-										if (result != null) {
-											workflow = result;
-											reload(workflow);
-
-										}
+										workflow = result;
+										result.getSelectedTask().setOwner(Session.get().getUser().getUserName());
+										reload(workflow);
+										WorkflowDetailsDialog.this.workflowDashboard.refresh();
 									}
 								});
 							}
@@ -667,20 +457,15 @@ public class WorkflowDetailsDialog extends Window {
 		Button turnBackButton = new Button(I18N.message("workflowtaskturnback"));
 		turnBackButton.setAutoFit(true);
 		turnBackButton.setMargin(2);
-		turnBackButton.setVisible(!workflow.getSelectedTask().getPooledActors().isEmpty()
-				&& !workflow.getSelectedTask().getOwner().trim().isEmpty());
+		turnBackButton.setVisible(!(workflow.getSelectedTask().getPooledActors() == null || workflow.getSelectedTask()
+				.getPooledActors().isEmpty())
+				&& !(workflow.getSelectedTask().getOwner() == null || workflow.getSelectedTask().getOwner().trim()
+						.isEmpty()));
 		turnBackButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
-			@SuppressWarnings("unchecked")
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				final Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
-				String comment = "";
-				if (values.get("taskComment") != null) {
-					comment = (String) values.get("taskComment");
-				}
-
-				service.turnBackTaskToPool(Session.get().getSid(), workflow.getSelectedTask().getId(), comment,
+				service.turnBackTaskToPool(Session.get().getSid(), workflow.getSelectedTask().getId(),
 						new AsyncCallback<Void>() {
 							@Override
 							public void onFailure(Throwable caught) {
@@ -699,11 +484,8 @@ public class WorkflowDetailsDialog extends Window {
 
 									@Override
 									public void onSuccess(GUIWorkflow result) {
-										if (result != null) {
-											workflow = result;
-											reload(workflow);
-
-										}
+										destroy();
+										WorkflowDetailsDialog.this.workflowDashboard.refresh();
 									}
 								});
 							}
@@ -713,67 +495,41 @@ public class WorkflowDetailsDialog extends Window {
 
 		if (workflow.getSelectedTask().getEndDate() == null) {
 			buttonsPanel.addMember(reassignButton);
-			buttonsPanel.addMember(startButton);
-			buttonsPanel.addMember(suspendButton);
-			buttonsPanel.addMember(resumeButton);
-			buttonsPanel.addMember(saveTaskStateButton);
 			buttonsPanel.addMember(takeButton);
 			buttonsPanel.addMember(turnBackButton);
 
-			if (workflow.getSelectedTask().getTaskState().equals("started")) {
+			if (workflow.getSelectedTask().getTaskState().equals("started")
+					&& workflow.getSelectedTask().getOwner() != null) {
 				// Add Transitions buttons
 				Button transitionButton = null;
-				for (GUITransition transition : workflow.getSelectedTask().getTransitions()) {
-					final String transitionName = transition.getText();
-					transitionButton = new Button(transition.getText());
-					transitionButton.setAutoFit(true);
-					transitionButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-						@Override
-						@SuppressWarnings("unchecked")
-						public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-							final Map<String, Object> values = (Map<String, Object>) vm.getValues();
+				if (workflow.getSelectedTask().getTransitions() != null)
+					for (GUITransition transition : workflow.getSelectedTask().getTransitions()) {
+						final String transitionName = transition.getText();
+						if (transitionName == null || transitionName.trim().isEmpty())
+							continue;
+						transitionButton = new Button(transition.getText());
+						transitionButton.setAutoFit(true);
+						transitionButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+							@Override
+							public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
 
-							String comment = "";
-							if (values.get("taskComment") != null) {
-								comment = (String) values.get("taskComment");
+								service.endTask(Session.get().getSid(), getWorkflow().getSelectedTask().getId(),
+										transitionName, new AsyncCallback<Void>() {
+											@Override
+											public void onFailure(Throwable caught) {
+												Log.serverError(caught);
+											}
+
+											@Override
+											public void onSuccess(Void result) {
+												WorkflowDetailsDialog.this.workflowDashboard.refresh();
+												destroy();
+											}
+										});
 							}
-
-							service.endTask(Session.get().getSid(), getWorkflow().getSelectedTask().getId(),
-									transitionName, comment, new AsyncCallback<Void>() {
-										@Override
-										public void onFailure(Throwable caught) {
-											Log.serverError(caught);
-										}
-
-										@Override
-										public void onSuccess(Void result) {
-											service.getWorkflowDetailsByTask(Session.get().getSid(), workflow
-													.getSelectedTask().getId(), new AsyncCallback<GUIWorkflow>() {
-
-												@Override
-												public void onFailure(Throwable caught) {
-													Log.serverError(caught);
-												}
-
-												@Override
-												public void onSuccess(GUIWorkflow result) {
-													if (result != null) {
-														workflow = result;
-														reload(workflow);
-														taskEndDate.setValue(I18N.formatDate((Date) workflow
-																.getSelectedTask().getEndDate()));
-														if (workflow.getEndDate() != null)
-															endDate.setValue(I18N.formatDate((Date) workflow
-																	.getEndDate()));
-													}
-												}
-											});
-										}
-									});
-						}
-					});
-					buttonsPanel.addMember(transitionButton);
-				}
+						});
+						buttonsPanel.addMember(transitionButton);
+					}
 			}
 		} else {
 			DynamicForm taskEndedForm = new DynamicForm();
@@ -790,7 +546,7 @@ public class WorkflowDetailsDialog extends Window {
 		}
 
 		form.addMember(sxLayout);
-		//form.addMember(dxLayout);
+		// form.addMember(dxLayout);
 
 		workflowTab.setPane(form);
 		docsTab.setPane(appendedDocsPanel);

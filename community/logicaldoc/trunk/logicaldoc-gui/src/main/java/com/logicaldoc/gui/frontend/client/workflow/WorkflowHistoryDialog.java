@@ -174,7 +174,7 @@ public class WorkflowHistoryDialog extends Window {
 		instancesList.setBorder("1px solid #E1E1E1");
 		instancesList.sort("startdate", SortDirection.DESCENDING);
 		if (selectedWorkflow != null) {
-			instancesDataSource = new WorkflowHistoriesDS(Long.parseLong(selectedWorkflow.getId()), null);
+			instancesDataSource = new WorkflowHistoriesDS(null, Long.parseLong(selectedWorkflow.getId()));
 			instancesList.setDataSource(instancesDataSource);
 		}
 
@@ -226,8 +226,7 @@ public class WorkflowHistoryDialog extends Window {
 		historiesList.sort("date", SortDirection.ASCENDING);
 		historiesList.setBorder("1px solid #E1E1E1");
 		if (selectedWorkflowInstance != null) {
-			historiesDataSource = new WorkflowHistoriesDS(Long.parseLong(selectedWorkflow.getId()),
-					selectedWorkflowInstance);
+			historiesDataSource = new WorkflowHistoriesDS(selectedWorkflowInstance, Long.parseLong(selectedWorkflow.getId()));
 			historiesList.setDataSource(historiesDataSource);
 		}
 

@@ -27,19 +27,11 @@ public interface WorkflowServiceAsync {
 
 	void saveTaskAssignment(String sid, String taskId, String userId, AsyncCallback<Void> callback);
 
-	void startTask(String sid, String taskId, String comment, AsyncCallback<Void> callback);
+	void endTask(String sid, String taskId, String transitionName, AsyncCallback<Void> callback);
 
-	void resumeTask(String sid, String taskId, String comment, AsyncCallback<Void> callback);
+	void takeTaskOwnerShip(String sid, String taskId, String userId, AsyncCallback<Void> callback);
 
-	void suspendTask(String sid, String taskId, String comment, AsyncCallback<Void> callback);
-
-	void saveTaskState(String sid, String taskId, String comment, AsyncCallback<Void> callback);
-
-	void endTask(String sid, String taskId, String transitionName, String comment, AsyncCallback<Void> callback);
-
-	void takeTaskOwnerShip(String sid, String taskId, String userId, String comment, AsyncCallback<Void> callback);
-
-	void turnBackTaskToPool(String sid, String taskId, String comment, AsyncCallback<Void> callback);
+	void turnBackTaskToPool(String sid, String taskId, AsyncCallback<Void> callback);
 
 	void countActiveUserTasks(String sid, String username, AsyncCallback<Integer> callback);
 

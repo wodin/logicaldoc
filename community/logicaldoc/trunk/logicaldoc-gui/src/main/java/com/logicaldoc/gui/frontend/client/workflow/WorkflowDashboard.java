@@ -35,8 +35,6 @@ public class WorkflowDashboard extends VLayout {
 
 	private Portlet canOwnTasks = null;
 
-	private Portlet suspendedTasks = null;
-
 	private Portlet adminTasks = null;
 
 	private Portlet supervisorTasks = null;
@@ -93,11 +91,9 @@ public class WorkflowDashboard extends VLayout {
 		portalLayout.addPortlet(assignedTasks, 0, 0);
 		canOwnTasks = new WorkflowPortlet(this, TASKS_I_CAN_OWN);
 		portalLayout.addPortlet(canOwnTasks, 0, 1);
-		suspendedTasks = new WorkflowPortlet(this, TASKS_SUSPENDED);
-		portalLayout.addPortlet(suspendedTasks, 1, 0);
 		if (Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN)) {
 			adminTasks = new WorkflowPortlet(this, TASKS_ADMIN);
-			portalLayout.addPortlet(adminTasks, 1, 1);
+			portalLayout.addPortlet(adminTasks, 1, 0);
 		} else {
 			supervisorTasks = new WorkflowPortlet(this, TASKS_SUPERVISOR);
 			portalLayout.addPortlet(supervisorTasks, 1, 1);

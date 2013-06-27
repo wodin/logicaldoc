@@ -54,11 +54,9 @@ public class GUIWFState implements Serializable {
 
 	private Date endDate;
 
-	private String dueDate;
+	private Date dueDate;
 
 	private String taskState;
-
-	private String comment;
 
 	private int top = 0;
 
@@ -193,28 +191,12 @@ public class GUIWFState implements Serializable {
 		this.endDate = endDate;
 	}
 
-	public String getDueDate() {
-		return dueDate;
-	}
-
-	public void setDueDate(String dueDate) {
-		this.dueDate = dueDate;
-	}
-
 	public String getTaskState() {
 		return taskState;
 	}
 
 	public void setTaskState(String taskState) {
 		this.taskState = taskState;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
 	}
 
 	public String getPooledActors() {
@@ -247,5 +229,13 @@ public class GUIWFState implements Serializable {
 
 	public void setInitial(boolean initial) {
 		this.initial = initial;
+	}
+
+	public Date getDueDate() {
+		return dueDate;
+	}
+
+	public void setDueDate(Date dueDate) {
+		this.dueDate = dueDate;
 	}
 }

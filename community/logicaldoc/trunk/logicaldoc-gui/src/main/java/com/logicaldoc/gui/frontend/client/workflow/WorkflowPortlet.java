@@ -75,6 +75,7 @@ public class WorkflowPortlet extends Portlet {
 
 		ListGridField workflow = new ListGridField("workflow", I18N.message("workflow"), 100);
 		ListGridField id = new ListGridField("id", I18N.message("id"), 70);
+		ListGridField processId = new ListGridField("processId", I18N.message("processid"), 70);
 		ListGridField name = new ListGridField("name", I18N.message("name"), 100);
 		ListGridField pooledAssignees = new ListGridField("pooledassignees", I18N.message("pooledassignees"), 150);
 
@@ -91,9 +92,9 @@ public class WorkflowPortlet extends Portlet {
 		list.setDataSource(dataSource);
 		if (type == WorkflowDashboard.TASKS_I_CAN_OWN || type == WorkflowDashboard.TASKS_ADMIN
 				|| type == WorkflowDashboard.TASKS_SUPERVISOR)
-			list.setFields(workflow, id, name, pooledAssignees);
+			list.setFields(workflow, name, id, processId, pooledAssignees);
 		else
-			list.setFields(workflow, id, name);
+			list.setFields(workflow, id, processId, name);
 
 		list.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override
@@ -159,10 +160,9 @@ public class WorkflowPortlet extends Portlet {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							// Extract the workflow instance ID
-							String id = selection.getAttributeAsString("id");
-							id = id.substring(0, id.lastIndexOf('@'));
-							service.deleteInstance(Session.get().getSid(), id, new AsyncCallback<Void>() {
+							// Extract the process instance ID
+							String processId = selection.getAttributeAsString("processId");
+							service.deleteInstance(Session.get().getSid(), processId, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);

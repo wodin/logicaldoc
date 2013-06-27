@@ -7,7 +7,7 @@ import com.smartgwt.client.data.fields.DataSourceDateTimeField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
 public class WorkflowHistoriesDS extends DataSource {
-	public WorkflowHistoriesDS(Long workflowId, Long workflowTemplateId) {
+	public WorkflowHistoriesDS(Long instanceId, Long workflowTemplateId) {
 		setTitleField("name");
 		setRecordXPath("/list/workflowhistory");
 		DataSourceTextField id = new DataSourceTextField("id");
@@ -26,7 +26,7 @@ public class WorkflowHistoriesDS extends DataSource {
 		DataSourceTextField sessionId = new DataSourceTextField("sessionid");
 		setFields(id, name, startDate, endDate, documents, event, date, user, comment, document, sessionId);
 		setDataURL("data/workflowhistories.xml?sid=" + Session.get().getSid()
-				+ (workflowId != null ? "&workflowId=" + workflowId : "")
+				+ (instanceId != null ? "&instanceId=" + instanceId : "")
 				+ (workflowTemplateId != null ? "&workflowTemplateId=" + workflowTemplateId : "") + "&locale="
 				+ I18N.getLocale());
 		setClientOnly(true);
