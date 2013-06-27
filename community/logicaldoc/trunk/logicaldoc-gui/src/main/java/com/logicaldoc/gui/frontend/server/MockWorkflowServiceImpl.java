@@ -219,33 +219,15 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	}
 
 	@Override
-	public void startTask(String sid, String taskId, String comment) throws InvalidSessionException {
+	public void takeTaskOwnerShip(String sid, String taskId, String userId) throws InvalidSessionException {
 	}
 
 	@Override
-	public void suspendTask(String sid, String taskId, String comment) throws InvalidSessionException {
+	public void turnBackTaskToPool(String sid, String taskId) throws InvalidSessionException {
 	}
 
 	@Override
-	public void resumeTask(String sid, String taskId, String comment) throws InvalidSessionException {
-	}
-
-	@Override
-	public void saveTaskState(String sid, String taskId, String comment) throws InvalidSessionException {
-	}
-
-	@Override
-	public void takeTaskOwnerShip(String sid, String taskId, String userId, String comment)
-			throws InvalidSessionException {
-	}
-
-	@Override
-	public void turnBackTaskToPool(String sid, String taskId, String comment) throws InvalidSessionException {
-	}
-
-	@Override
-	public void endTask(String sid, String taskId, String transitionName, String comment)
-			throws InvalidSessionException {
+	public void endTask(String sid, String taskId, String transitionName) throws InvalidSessionException {
 	}
 
 	@Override
@@ -269,6 +251,6 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 
 	@Override
 	public void applyTriggersToTree(String sid, long rootId) throws InvalidSessionException {
-		
+
 	}
 }

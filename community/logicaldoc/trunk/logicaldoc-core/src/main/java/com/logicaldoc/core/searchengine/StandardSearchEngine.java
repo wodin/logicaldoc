@@ -7,9 +7,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
@@ -120,7 +118,7 @@ public class StandardSearchEngine implements SearchEngine {
 				// Skip all non-string attributes
 				if ((ext.getType() == ExtendedAttribute.TYPE_STRING || ext.getType() == ExtendedAttribute.TYPE_USER)
 						&& StringUtils.isNotEmpty(ext.getStringValue())) {
-					
+
 					// Prefix all extended attributes with 'ext_' in order to
 					// avoid collisions with standard fields
 					doc.addField("ext_" + attribute, ext.getStringValue());
@@ -284,16 +282,8 @@ public class StandardSearchEngine implements SearchEngine {
 	 */
 	@Override
 	public synchronized void deleteHits(Collection<Long> ids) {
-		try {
-			List<String> list = new ArrayList<String>();
-			for (Long i : ids) {
-				list.add(Long.toString(i));
-			}
-			server.deleteById(list);
-			server.commit();
-		} catch (Throwable e) {
-			log.debug("Unable to delete some hits " + ids, e);
-		}
+		for (Long id : ids)
+			deleteHit(id);
 	}
 
 	/*

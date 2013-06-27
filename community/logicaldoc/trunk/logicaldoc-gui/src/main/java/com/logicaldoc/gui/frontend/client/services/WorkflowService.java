@@ -25,7 +25,7 @@ public interface WorkflowService extends RemoteService {
 	 * Deletes a given workflow instance
 	 */
 	public void deleteInstance(String sid, String id) throws InvalidSessionException;
-	
+
 	/**
 	 * Imports a new workflow schema.
 	 */
@@ -50,7 +50,7 @@ public interface WorkflowService extends RemoteService {
 	 * Deletes a workflow trigger
 	 */
 	public void deleteTrigger(String sid, long id) throws InvalidSessionException;
-	
+
 	/**
 	 * Applies the triggers on a root folder to all the subtree
 	 */
@@ -81,41 +81,19 @@ public interface WorkflowService extends RemoteService {
 	public void saveTaskAssignment(String sid, String taskId, String userId) throws InvalidSessionException;
 
 	/**
-	 * Starts a workflow task.
-	 */
-	public void startTask(String sid, String taskId, String comment) throws InvalidSessionException;
-
-	/**
-	 * Suspends a workflow task.
-	 */
-	public void suspendTask(String sid, String taskId, String comment) throws InvalidSessionException;
-
-	/**
-	 * Resumes a workflow task.
-	 */
-	public void resumeTask(String sid, String taskId, String comment) throws InvalidSessionException;
-
-	/**
-	 * Saves a workflow task state.
-	 */
-	public void saveTaskState(String sid, String taskId, String comment) throws InvalidSessionException;
-
-	/**
 	 * The given user take the ownership of the task.
 	 */
-	public void takeTaskOwnerShip(String sid, String taskId, String userId, String comment)
-			throws InvalidSessionException;
+	public void takeTaskOwnerShip(String sid, String taskId, String userId) throws InvalidSessionException;
 
 	/**
 	 * The task is reassigned to the pooled users.
 	 */
-	public void turnBackTaskToPool(String sid, String taskId, String comment) throws InvalidSessionException;
+	public void turnBackTaskToPool(String sid, String taskId) throws InvalidSessionException;
 
 	/**
 	 * Ends a task invoking the transition.
 	 */
-	public void endTask(String sid, String taskId, String transitionName, String comment)
-			throws InvalidSessionException;
+	public void endTask(String sid, String taskId, String transitionName) throws InvalidSessionException;
 
 	/**
 	 * Counts all the tasks assigned to the given user.

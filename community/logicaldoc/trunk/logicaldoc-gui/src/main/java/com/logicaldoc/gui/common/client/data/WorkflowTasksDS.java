@@ -11,10 +11,11 @@ public class WorkflowTasksDS extends DataSource {
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
 		id.setRequired(true);
+		DataSourceTextField processId = new DataSourceTextField("processId");
 		DataSourceTextField name = new DataSourceTextField("name");
 		DataSourceTextField workflow = new DataSourceTextField("workflow");
 		DataSourceTextField pooledassignees = new DataSourceTextField("pooledassignees");
-		setFields(id, name, workflow, pooledassignees);
+		setFields(id, processId, name, workflow, pooledassignees);
 		setDataURL("data/workflowtasks.xml?sid=" + Session.get().getSid() + (type != null ? "&type=" + type : "")
 				+ (taskId != null ? "&taskId=" + taskId : ""));
 		setClientOnly(true);
