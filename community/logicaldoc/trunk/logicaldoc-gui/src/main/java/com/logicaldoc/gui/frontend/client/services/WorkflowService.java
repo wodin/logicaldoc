@@ -76,14 +76,9 @@ public interface WorkflowService extends RemoteService {
 	public GUIWorkflow getWorkflowDetailsByTask(String sid, String taskId) throws InvalidSessionException;
 
 	/**
-	 * Save the new assignment on the selected task.
-	 */
-	public void saveTaskAssignment(String sid, String taskId, String userId) throws InvalidSessionException;
-
-	/**
 	 * The given user take the ownership of the task.
 	 */
-	public void takeTaskOwnerShip(String sid, String taskId, String userId) throws InvalidSessionException;
+	public GUIWorkflow claimTask(String sid, String taskId, String userId) throws InvalidSessionException;
 
 	/**
 	 * The task is reassigned to the pooled users.
@@ -104,5 +99,5 @@ public interface WorkflowService extends RemoteService {
 	 * Appends to the workflow of the given taskId the documents with the given
 	 * doc ids.
 	 */
-	public void appendDocuments(String sid, String taskId, long[] docIds) throws InvalidSessionException;
+	public void appendDocuments(String sid, String taskId, Long[] docIds) throws InvalidSessionException;
 }

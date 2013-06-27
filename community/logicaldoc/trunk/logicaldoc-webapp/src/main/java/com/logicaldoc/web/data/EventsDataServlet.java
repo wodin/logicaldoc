@@ -80,10 +80,8 @@ public class EventsDataServlet extends HttpServlet {
 
 			if (workflow) {
 				String[] events = new String[] { "event.workflow.start", "event.workflow.end",
-						"event.workflow.task.start", "event.workflow.task.start", "event.workflow.task.end",
-						"event.workflow.task.end", "event.workflow.task.suspended", "event.workflow.task.suspended",
-						"event.workflow.task.resumed", "event.workflow.task.resumed", "event.workflow.task.reassigned",
-						"event.workflow.task.reassigned", "event.workflow.docappended" };
+						"event.workflow.task.start", "event.workflow.task.end", "event.workflow.task.assigned",
+						"event.workflow.docappended" };
 				for (String event : events) {
 					writer.print("<event>");
 					writer.print("<code>" + event + "</code>");

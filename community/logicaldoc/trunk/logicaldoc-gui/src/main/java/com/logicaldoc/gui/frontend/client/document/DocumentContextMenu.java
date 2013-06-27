@@ -520,7 +520,7 @@ public class DocumentContextMenu extends Menu {
 				if (selection == null || selection.length == 0)
 					return;
 
-				final long[] ids = new long[selection.length];
+				final Long[] ids = new Long[selection.length];
 				for (int j = 0; j < selection.length; j++) {
 					ids[j] = Long.parseLong(selection[j].getAttribute("id"));
 				}

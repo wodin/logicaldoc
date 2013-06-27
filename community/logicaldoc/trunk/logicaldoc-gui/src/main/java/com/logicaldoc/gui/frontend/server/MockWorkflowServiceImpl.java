@@ -215,11 +215,8 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	}
 
 	@Override
-	public void saveTaskAssignment(String sid, String taskId, String userId) throws InvalidSessionException {
-	}
-
-	@Override
-	public void takeTaskOwnerShip(String sid, String taskId, String userId) throws InvalidSessionException {
+	public GUIWorkflow claimTask(String sid, String taskId, String userId) throws InvalidSessionException {
+		return new GUIWorkflow();
 	}
 
 	@Override
@@ -236,10 +233,6 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 	}
 
 	@Override
-	public void appendDocuments(String sid, String taskId, long[] docIds) throws InvalidSessionException {
-	}
-
-	@Override
 	public GUIWorkflow importSchema(String sid) throws InvalidSessionException {
 		return new GUIWorkflow();
 	}
@@ -251,6 +244,11 @@ public class MockWorkflowServiceImpl extends RemoteServiceServlet implements Wor
 
 	@Override
 	public void applyTriggersToTree(String sid, long rootId) throws InvalidSessionException {
+
+	}
+
+	@Override
+	public void appendDocuments(String sid, String taskId, Long[] docIds) throws InvalidSessionException {
 
 	}
 }

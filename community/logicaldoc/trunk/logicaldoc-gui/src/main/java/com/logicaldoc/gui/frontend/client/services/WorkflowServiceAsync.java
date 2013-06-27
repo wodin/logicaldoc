@@ -25,17 +25,15 @@ public interface WorkflowServiceAsync {
 
 	void getWorkflowDetailsByTask(String sid, String taskId, AsyncCallback<GUIWorkflow> callback);
 
-	void saveTaskAssignment(String sid, String taskId, String userId, AsyncCallback<Void> callback);
-
 	void endTask(String sid, String taskId, String transitionName, AsyncCallback<Void> callback);
 
-	void takeTaskOwnerShip(String sid, String taskId, String userId, AsyncCallback<Void> callback);
+	void claimTask(String sid, String taskId, String userId, AsyncCallback<GUIWorkflow> callback);
 
 	void turnBackTaskToPool(String sid, String taskId, AsyncCallback<Void> callback);
 
 	void countActiveUserTasks(String sid, String username, AsyncCallback<Integer> callback);
 
-	void appendDocuments(String sid, String taskId, long[] docIds, AsyncCallback<Void> callback);
+	void appendDocuments(String sid, String taskId, Long[] docIds, AsyncCallback<Void> callback);
 
 	void importSchema(String sid, AsyncCallback<GUIWorkflow> callback);
 
