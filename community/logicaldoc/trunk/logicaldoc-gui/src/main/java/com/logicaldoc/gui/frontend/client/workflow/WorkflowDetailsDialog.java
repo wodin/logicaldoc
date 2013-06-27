@@ -373,8 +373,8 @@ public class WorkflowDetailsDialog extends Window {
 						}
 
 						if (vm.validate()) {
-							service.saveTaskAssignment(Session.get().getSid(), workflow.getSelectedTask().getId(),
-									values.get("user").toString(), new AsyncCallback<Void>() {
+							service.claimTask(Session.get().getSid(), workflow.getSelectedTask().getId(),
+									values.get("user").toString(), new AsyncCallback<GUIWorkflow>() {
 
 										@Override
 										public void onFailure(Throwable caught) {
@@ -382,25 +382,12 @@ public class WorkflowDetailsDialog extends Window {
 										}
 
 										@Override
-										public void onSuccess(Void ret) {
-											service.getWorkflowDetailsByTask(Session.get().getSid(), workflow
-													.getSelectedTask().getId(), new AsyncCallback<GUIWorkflow>() {
-
-												@Override
-												public void onFailure(Throwable caught) {
-													Log.serverError(caught);
-												}
-
-												@Override
-												public void onSuccess(GUIWorkflow result) {
-													if (result != null) {
-														window.destroy();
-														workflow = result;
-														reload(workflow);
-
-													}
-												}
-											});
+										public void onSuccess(GUIWorkflow result) {
+											if (result != null) {
+												window.destroy();
+												workflow = result;
+												reload(workflow);
+											}
 										}
 									});
 						}
@@ -424,31 +411,19 @@ public class WorkflowDetailsDialog extends Window {
 		takeButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				service.takeTaskOwnerShip(Session.get().getSid(), workflow.getSelectedTask().getId(),
-						Long.toString(Session.get().getUser().getId()), new AsyncCallback<Void>() {
+				service.claimTask(Session.get().getSid(), workflow.getSelectedTask().getId(),
+						Long.toString(Session.get().getUser().getId()), new AsyncCallback<GUIWorkflow>() {
 							@Override
 							public void onFailure(Throwable caught) {
 								Log.serverError(caught);
 							}
 
 							@Override
-							public void onSuccess(Void result) {
-								service.getWorkflowDetailsByTask(Session.get().getSid(), workflow.getSelectedTask()
-										.getId(), new AsyncCallback<GUIWorkflow>() {
-
-									@Override
-									public void onFailure(Throwable caught) {
-										Log.serverError(caught);
-									}
-
-									@Override
-									public void onSuccess(GUIWorkflow result) {
-										workflow = result;
-										result.getSelectedTask().setOwner(Session.get().getUser().getUserName());
-										reload(workflow);
-										WorkflowDetailsDialog.this.workflowDashboard.refresh();
-									}
-								});
+							public void onSuccess(GUIWorkflow result) {
+								workflow = result;
+								result.getSelectedTask().setOwner(Session.get().getUser().getUserName());
+								reload(workflow);
+								WorkflowDetailsDialog.this.workflowDashboard.refresh();
 							}
 						});
 			}
