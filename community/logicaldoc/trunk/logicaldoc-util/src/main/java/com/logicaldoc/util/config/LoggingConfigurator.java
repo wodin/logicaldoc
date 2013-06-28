@@ -35,7 +35,7 @@ public class LoggingConfigurator {
 	/**
 	 * This method selects all file appenders.
 	 */
-	public Collection getLoggingFiles() {
+	public Collection<String> getLoggingFiles() {
 		Collection<String> result = new ArrayList<String>();
 		List list = xml.getAllChild("appender");
 		Iterator iter = list.iterator();
@@ -218,11 +218,11 @@ public class LoggingConfigurator {
 
 		while (iter.hasNext()) {
 			Element elem = (Element) iter.next();
-			List childs = elem.getChildren("param");
-			Iterator children = childs.iterator();
+			List<Element> childs = elem.getChildren("param");
+			Iterator<Element> children = childs.iterator();
 
 			while (children.hasNext()) {
-				Element child = (Element) children.next();
+				Element child = children.next();
 
 				if (child.getAttributeValue("name").equals("File")) {
 					String file = child.getAttributeValue("value");
