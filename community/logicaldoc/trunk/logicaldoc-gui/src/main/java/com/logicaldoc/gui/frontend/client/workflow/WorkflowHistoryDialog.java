@@ -100,7 +100,7 @@ public class WorkflowHistoryDialog extends Window {
 		workflow.setValueField("id");
 		workflow.setDisplayField("name");
 		workflow.setPickListFields(name);
-		workflow.setOptionDataSource(new WorkflowsDS(false, true));
+		workflow.setOptionDataSource(new WorkflowsDS(false, true, false));
 		if (selectedWorkflow != null)
 			workflow.setValue(selectedWorkflow.getName());
 
@@ -226,7 +226,8 @@ public class WorkflowHistoryDialog extends Window {
 		historiesList.sort("date", SortDirection.ASCENDING);
 		historiesList.setBorder("1px solid #E1E1E1");
 		if (selectedWorkflowInstance != null) {
-			historiesDataSource = new WorkflowHistoriesDS(selectedWorkflowInstance, Long.parseLong(selectedWorkflow.getId()));
+			historiesDataSource = new WorkflowHistoriesDS(selectedWorkflowInstance, Long.parseLong(selectedWorkflow
+					.getId()));
 			historiesList.setDataSource(historiesDataSource);
 		}
 

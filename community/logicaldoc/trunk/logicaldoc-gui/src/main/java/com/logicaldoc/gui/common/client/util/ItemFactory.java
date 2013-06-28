@@ -352,7 +352,7 @@ public class ItemFactory {
 		if (value != null)
 			spinner.setValue(value.intValue());
 		else
-			spinner.setValue((Integer)null);
+			spinner.setValue((Integer) null);
 		return spinner;
 	}
 
@@ -791,7 +791,7 @@ public class ItemFactory {
 		item.setPickListFields(name, description);
 		item.setDisplayField("name");
 		item.setValueField("id");
-		item.setOptionDataSource(new WorkflowsDS(false, false));
+		item.setOptionDataSource(new WorkflowsDS(false, false, true));
 		if (!Feature.enabled(Feature.WORKFLOW))
 			item.setDisabled(true);
 		item.setHintStyle("hint");
