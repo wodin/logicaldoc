@@ -41,4 +41,8 @@ public interface WorkflowServiceAsync {
 
 	void deleteInstance(String sid, String id, AsyncCallback<Void> callback);
 
+	void reassignTask(String sid, String taskId, String userId, AsyncCallback<GUIWorkflow> callback);
+
+	void undeploy(String sid, String workflowName, AsyncCallback<Void> callback);
+
 }

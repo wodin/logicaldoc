@@ -42,6 +42,11 @@ public interface WorkflowService extends RemoteService {
 	public void deploy(String sid, GUIWorkflow workflow) throws InvalidSessionException;
 
 	/**
+	 * Undeploys a given workflow
+	 */
+	public void undeploy(String sid, String workflowName) throws InvalidSessionException;
+
+	/**
 	 * Lists all the workflows on the database
 	 */
 	public GUIWorkflow[] list(String sid) throws InvalidSessionException;
@@ -76,9 +81,15 @@ public interface WorkflowService extends RemoteService {
 	public GUIWorkflow getWorkflowDetailsByTask(String sid, String taskId) throws InvalidSessionException;
 
 	/**
-	 * The given user take the ownership of the task.
+	 * The given user take the ownership of the task. If the task is already
+	 * claimed you cannot claim again.
 	 */
 	public GUIWorkflow claimTask(String sid, String taskId, String userId) throws InvalidSessionException;
+
+	/**
+	 * The task is assigned to another user
+	 */
+	public GUIWorkflow reassignTask(String sid, String taskId, String userId) throws InvalidSessionException;
 
 	/**
 	 * The task is reassigned to the pooled users.

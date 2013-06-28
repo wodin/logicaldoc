@@ -56,6 +56,8 @@ public class WorkflowToolstrip extends ToolStrip {
 
 	private ToolStripButton deploy = null;
 
+	private ToolStripButton undeploy = null;
+
 	private ToolStripButton delete = null;
 
 	private ToolStripButton close = null;
@@ -223,6 +225,31 @@ public class WorkflowToolstrip extends ToolStrip {
 		});
 		addButton(deploy);
 
+		undeploy = new ToolStripButton(I18N.message("undeploy"));
+		undeploy.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				WorkflowToolstrip.this.designer.saveModel();
+				currentWorkflow = WorkflowToolstrip.this.designer.getWorkflow();
+				if (currentWorkflow == null || currentWorkflow.getName() == null)
+					return;
+
+				workflowService.undeploy(Session.get().getSid(), currentWorkflow.getName(), new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						SC.say(I18N.message("workflowundeployed", currentWorkflow.getName()));
+						update();
+					}
+				});
+			}
+		});
+		addButton(undeploy);
+
 		delete = new ToolStripButton(I18N.message("ddelete"));
 		delete.addClickHandler(new ClickHandler() {
 			@Override
@@ -328,9 +355,10 @@ public class WorkflowToolstrip extends ToolStrip {
 		save.setDisabled(currentWorkflow == null);
 		clone.setDisabled(currentWorkflow == null || wf.getId() == null || "0".equals(wf.getId()));
 		deploy.setDisabled(currentWorkflow == null || wf.getId() == null || "0".equals(wf.getId()));
+		undeploy.setDisabled(currentWorkflow == null || wf.getId() == null || "0".equals(wf.getId()));
 		delete.setDisabled(currentWorkflow == null || wf.getId() == null || "0".equals(wf.getId()));
 		close.setDisabled(currentWorkflow == null);
-		workflowSelect.setOptionDataSource(new WorkflowsDS(false, false));
+		workflowSelect.setOptionDataSource(new WorkflowsDS(false, false, false));
 		if (currentWorkflow != null && !currentWorkflow.getName().trim().isEmpty())
 			workflowSelect.setValue(currentWorkflow.getName());
 		else

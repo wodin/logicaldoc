@@ -1,7 +1,6 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
 import java.util.Date;
-import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -34,16 +33,11 @@ import com.smartgwt.client.widgets.events.CloseClickEvent;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.SubmitItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -327,8 +321,8 @@ public class WorkflowDetailsDialog extends Window {
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
 				final Window window = new Window();
 				window.setTitle(I18N.message("workflowtaskreassign"));
-				window.setWidth(350);
-				window.setHeight(200);
+				window.setWidth(250);
+				window.setHeight(100);
 				window.setCanDragResize(true);
 				window.setIsModal(true);
 				window.setShowModalMask(true);
@@ -341,56 +335,34 @@ public class WorkflowDetailsDialog extends Window {
 				user = ItemFactory.newUserSelector("user", I18N.message("user"), null);
 				user.setShowTitle(true);
 				user.setDisplayField("username");
-				user.addChangedHandler(new ChangedHandler() {
-					@Override
-					public void onChanged(ChangedEvent event) {
-						try {
-							setUser(user.getSelectedRecord().getAttribute("id"));
-						} catch (Throwable t) {
-						}
-					}
-				});
-
-				FormItemIcon icon = new FormItemIcon();
-				icon.setSrc("[SKIN]/actions/remove.png");
-				user.addIconClickHandler(new IconClickHandler() {
-					public void onIconClick(IconClickEvent event) {
-						user.setValue("");
-					}
-				});
-				user.setIcons(icon);
 
 				SubmitItem saveButton = new SubmitItem("save", I18N.message("save"));
 				saveButton.setAlign(Alignment.LEFT);
 				saveButton.addClickHandler(new ClickHandler() {
+
 					@Override
-					@SuppressWarnings("unchecked")
 					public void onClick(ClickEvent event) {
-						Map<String, Object> values = (Map<String, Object>) vm.getValues();
-
-						if ((values.get("user") == null) || values.get("user").toString().trim().isEmpty()) {
+						if (user.getSelectedRecord() == null)
 							return;
-						}
+						setUser(user.getSelectedRecord().getAttribute("id"));
 
-						if (vm.validate()) {
-							service.claimTask(Session.get().getSid(), workflow.getSelectedTask().getId(),
-									values.get("user").toString(), new AsyncCallback<GUIWorkflow>() {
+						service.claimTask(Session.get().getSid(), workflow.getSelectedTask().getId(), user
+								.getSelectedRecord().getAttribute("id"), new AsyncCallback<GUIWorkflow>() {
 
-										@Override
-										public void onFailure(Throwable caught) {
-											Log.serverError(caught);
-										}
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
 
-										@Override
-										public void onSuccess(GUIWorkflow result) {
-											if (result != null) {
-												window.destroy();
-												workflow = result;
-												reload(workflow);
-											}
-										}
-									});
-						}
+							@Override
+							public void onSuccess(GUIWorkflow result) {
+								if (result != null) {
+									window.destroy();
+									workflow = result;
+									reload(workflow);
+								}
+							}
+						});
 					}
 				});
 
