@@ -45,6 +45,7 @@ public class LogPanel extends VLayout {
 		hStack.addMember(refresh);
 
 		IButton download = new IButton(I18N.message("downloadlogs"));
+		download.setAutoFit(true);
 		download.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				try {
