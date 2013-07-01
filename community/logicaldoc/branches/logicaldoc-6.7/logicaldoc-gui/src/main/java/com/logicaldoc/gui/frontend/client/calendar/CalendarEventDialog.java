@@ -348,7 +348,7 @@ public class CalendarEventDialog extends Window {
 		if (event.getExpirationDate() != null)
 			expirationTime.setValue(df.format(event.getExpirationDate()));
 
-		final DateItem deadline = ItemFactory.newDateItem("deadline", "until");
+		final DateItem deadline = ItemFactory.newDateItem("deadline", "enddate");
 		deadline.setRequired(false);
 		deadline.setShowTitle(true);
 		deadline.setTitleOrientation(TitleOrientation.LEFT);
