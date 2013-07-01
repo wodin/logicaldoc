@@ -80,11 +80,11 @@ public class CalendarReport extends VLayout {
 		// To
 		DateItem toDate = ItemFactory.newDateItem("toDate", "till");
 
-		// Expire From
-		DateItem expireFrom = ItemFactory.newDateItem("expireFrom", "expiresfrom");
+		// End date From
+		DateItem deadLineFrom = ItemFactory.newDateItem("endFrom", "endsfrom");
 
-		// Expire To
-		DateItem expireTo = ItemFactory.newDateItem("expireTo", "till");
+		// End date To
+		DateItem deadLineTo = ItemFactory.newDateItem("endTo", "till");
 
 		SelectItem frequencySelector = ItemFactory.newFrequencySelector("frequency", "frequency");
 
@@ -113,7 +113,7 @@ public class CalendarReport extends VLayout {
 			}
 		});
 
-		form.setItems(fromDate, toDate, expireFrom, expireTo, title, type, frequencySelector, statusSelector,
+		form.setItems(fromDate, toDate, deadLineFrom, deadLineTo, title, type, frequencySelector, statusSelector,
 				displayMax, searchButton);
 
 		formsLayout.addMember(form);
@@ -140,11 +140,11 @@ public class CalendarReport extends VLayout {
 		date.setAlign(Alignment.CENTER);
 		date.setCanFilter(false);
 
-		ListGridField expiration = new ListGridField("expiration", I18N.message("expiration"), 110);
-		expiration.setType(ListGridFieldType.DATE);
-		expiration.setCellFormatter(new DateCellFormatter(false));
-		expiration.setAlign(Alignment.CENTER);
-		expiration.setCanFilter(false);
+		ListGridField endDate = new ListGridField("endDate", I18N.message("enddate"), 110);
+		endDate.setType(ListGridFieldType.DATE);
+		endDate.setCellFormatter(new DateCellFormatter(false));
+		endDate.setAlign(Alignment.CENTER);
+		endDate.setCanFilter(false);
 
 		ListGridField frequency = new ListGridField("frequency", I18N.message("frequency"), 90);
 		frequency.setType(ListGridFieldType.INTEGER);
@@ -213,7 +213,7 @@ public class CalendarReport extends VLayout {
 		list.setCanFreezeFields(true);
 		list.setFilterOnKeypress(true);
 		list.setAutoFetchData(true);
-		list.setFields(date, expiration, titleCol, typeCol, status, frequency, participants, description);
+		list.setFields(date, endDate, titleCol, typeCol, status, frequency, participants, description);
 		list.setDetailField("description");
 		list.setCanExpandRecords(true);
 		list.setExpansionMode(ExpansionMode.DETAIL_FIELD);
@@ -281,12 +281,12 @@ public class CalendarReport extends VLayout {
 			Date toValue = null;
 			if (values.get("toDate") != null)
 				toValue = (Date) values.get("toDate");
-			Date expireFrom = null;
-			if (values.get("expireFrom") != null)
-				expireFrom = (Date) values.get("expireFrom");
-			Date expireTo = null;
-			if (values.get("expireTo") != null)
-				expireTo = (Date) values.get("expireTo");
+			Date endDateFrom = null;
+			if (values.get("endFrom") != null)
+				endDateFrom = (Date) values.get("endFrom");
+			Date endDateTo = null;
+			if (values.get("endTo") != null)
+				endDateTo = (Date) values.get("endTo");
 
 			Integer frequencyValue = null;
 			if (values.get("frequency") != null)
@@ -312,7 +312,7 @@ public class CalendarReport extends VLayout {
 
 			}
 
-			service.find(Session.get().getSid(), fromValue, toValue, expireFrom, expireTo, frequencyValue, titleValue,
+			service.find(Session.get().getSid(), fromValue, toValue, endDateFrom, endDateTo, frequencyValue, titleValue,
 					typeValue, statusValue, maxRecords, new AsyncCallback<GUICalendarEvent[]>() {
 
 						@Override
@@ -332,7 +332,7 @@ public class CalendarReport extends VLayout {
 									record.setAttribute("frequency", result[i].getFrequency());
 									record.setAttribute("status", result[i].getStatus());
 									record.setAttribute("description", result[i].getDescription());
-									record.setAttribute("expiration", result[i].getExpirationDate());
+									record.setAttribute("endDate", result[i].getDeadline());
 
 									StringBuffer participants = new StringBuffer();
 									GUIUser[] users = result[i].getParticipants();
