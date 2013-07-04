@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
@@ -64,6 +65,11 @@ public class AuthenticationChain implements AuthenticationProvider {
 	public boolean validate(String username, String password) {
 		if (providers == null || providers.isEmpty())
 			init();
+
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		if ("true".equals(config.getProperty("anonymous.enabled"))
+				&& username.equals(config.getProperty("anonymous.user")))
+			return true;
 
 		boolean loggedIn = false;
 		for (AuthenticationProvider cmp : providers) {
