@@ -18,6 +18,10 @@ public class GUISecuritySettings implements Serializable {
 
 	private boolean saveLogin = false;
 
+	private boolean enableAnonymousLogin = false;
+
+	private GUIUser anonymousUser = null;
+
 	private GUIUser[] notifiedUsers = new GUIUser[0];
 
 	public GUIUser[] getNotifiedUsers() {
@@ -83,4 +87,21 @@ public class GUISecuritySettings implements Serializable {
 	public void setSaveLogin(boolean saveLogin) {
 		this.saveLogin = saveLogin;
 	}
+
+	public GUIUser getAnonymousUser() {
+		return anonymousUser;
+	}
+
+	public void setAnonymousUser(GUIUser anonymousUser) {
+		this.anonymousUser = anonymousUser;
+	}
+
+	public boolean isEnableAnonymousLogin() {
+		return enableAnonymousLogin;
+	}
+
+	public void setEnableAnonymousLogin(boolean enableAnonymousLogin) {
+		this.enableAnonymousLogin = enableAnonymousLogin;
+	}
+
 }

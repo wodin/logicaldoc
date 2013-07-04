@@ -17,6 +17,7 @@ import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -56,6 +57,8 @@ public class SecuritySettingsPanel extends VLayout {
 	private VLayout notificationsPane = new VLayout();
 
 	private DynamicForm notificationsForm;
+
+	private DynamicForm anonymousForm;
 
 	private FiltersPanel filtersPanel = new FiltersPanel();
 
@@ -106,15 +109,16 @@ public class SecuritySettingsPanel extends VLayout {
 		pwdForm.setFields(pwdSize, pwdExp, savelogin);
 		password.setPane(pwdForm);
 
+		Tab anonymous = prepareAnonymousTab(settings);
+
 		notifications.setTitle(I18N.message("notifications"));
 		notifications.setPane(notificationsPane);
-
 		refreshNotifications();
 
 		if (Feature.visible(Feature.IP_FILTERS))
-			tabs.setTabs(password, notifications, menues, filters);
+			tabs.setTabs(password, anonymous, filters, menues, notifications);
 		else
-			tabs.setTabs(password, notifications, menues);
+			tabs.setTabs(password, anonymous, menues, notifications);
 
 		IButton save = new IButton();
 		save.setTitle(I18N.message("save"));
@@ -130,6 +134,14 @@ public class SecuritySettingsPanel extends VLayout {
 					SecuritySettingsPanel.this.settings.setPwdSize((Integer) values.get("pwdSize"));
 					SecuritySettingsPanel.this.settings.setSaveLogin(values.get("savelogin").equals("yes") ? true
 							: false);
+					SecuritySettingsPanel.this.settings.setEnableAnonymousLogin(values.get("enableanonymous").equals(
+							"yes") ? true : false);
+					if (!SecuritySettingsPanel.this.settings.isEnableAnonymousLogin())
+						SecuritySettingsPanel.this.settings.setAnonymousUser(null);
+					else if (SecuritySettingsPanel.this.settings.getAnonymousUser() == null) {
+						SC.warn(I18N.message("selectanonymoususer"));
+						return;
+					}
 
 					service.saveSettings(Session.get().getSid(), SecuritySettingsPanel.this.settings,
 							new AsyncCallback<Void>() {
@@ -155,6 +167,43 @@ public class SecuritySettingsPanel extends VLayout {
 		});
 
 		setMembers(tabs, save);
+	}
+
+	private Tab prepareAnonymousTab(GUISecuritySettings settings) {
+		Tab anonymous = new Tab(I18N.message("anonymous"));
+
+		anonymousForm = new DynamicForm();
+		anonymousForm.setValuesManager(vm);
+		anonymousForm.setTitleOrientation(TitleOrientation.TOP);
+		anonymousForm.setNumCols(1);
+		final RadioGroupItem enableAnonymous = ItemFactory.newBooleanSelector("enableanonymous",
+				I18N.message("enableanonymous"));
+		enableAnonymous.setValue(settings.isSaveLogin() ? "yes" : "no");
+		enableAnonymous.setWrapTitle(false);
+		enableAnonymous.setRequired(true);
+
+		final SelectItem user = ItemFactory.newUserSelector("anonymousUser", "user", null);
+		user.setHint(I18N.message("anonymoususerhint"));
+		user.setHintStyle("hint");
+		user.addChangedHandler(new ChangedHandler() {
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if (user.getSelectedRecord() == null) {
+					SecuritySettingsPanel.this.settings.setAnonymousUser(null);
+				} else {
+					GUIUser u = new GUIUser();
+					u.setId(Long.parseLong(user.getSelectedRecord().getAttribute("id")));
+					u.setUserName(user.getSelectedRecord().getAttribute("username"));
+					SecuritySettingsPanel.this.settings.setAnonymousUser(u);
+				}
+			}
+		});
+		if (SecuritySettingsPanel.this.settings.getAnonymousUser() != null)
+			user.setValue(Long.toString(SecuritySettingsPanel.this.settings.getAnonymousUser().getId()));
+
+		anonymousForm.setItems(enableAnonymous, user);
+		anonymous.setPane(anonymousForm);
+		return anonymous;
 	}
 
 	private void refreshNotifications() {
