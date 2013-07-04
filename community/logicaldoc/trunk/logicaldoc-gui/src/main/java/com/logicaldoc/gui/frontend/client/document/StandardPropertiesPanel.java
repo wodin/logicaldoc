@@ -21,7 +21,6 @@ import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
@@ -60,8 +59,6 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 	private HLayout formsContainer = new HLayout();
 
 	private ValuesManager vm = new ValuesManager();
-
-	private Canvas path;
 
 	protected DocumentObserver observer;
 

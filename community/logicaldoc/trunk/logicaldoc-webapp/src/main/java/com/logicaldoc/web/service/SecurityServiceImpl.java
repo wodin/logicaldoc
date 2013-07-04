@@ -695,6 +695,14 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 					securitySettings.addNotifiedUser(getUser(sid, user.getId()));
 			}
 
+			if (StringUtils.isNotEmpty(pbean.getProperty("anonymous.enabled")))
+				securitySettings.setEnableAnonymousLogin("true".equals(pbean.getProperty("anonymous.enabled")));
+			if (StringUtils.isNotEmpty(pbean.getProperty("anonymous.user"))) {
+				User user = userDao.findByUserName(pbean.getProperty("anonymous.user"));
+				if (user != null)
+					securitySettings.setAnonymousUser(getUser(sid, user.getId()));
+			}
+
 			log.info("Security settings data loaded successfully.");
 		} catch (Exception e) {
 			log.error("Exception loading Security settings data: " + e.getMessage(), e);
@@ -720,6 +728,11 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			}
 
 			conf.setProperty("audit.user", users.trim());
+
+			conf.setProperty("anonymous.enabled", Boolean.toString(settings.isEnableAnonymousLogin()));
+			if (settings.getAnonymousUser() != null)
+				conf.setProperty("anonymous.user", settings.getAnonymousUser().getUserName());
+
 			conf.write();
 
 			log.info("Security settings data written successfully.");

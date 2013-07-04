@@ -77,12 +77,12 @@ public class Frontend implements EntryPoint {
 		instance = this;
 
 		// Setup the language for localization
-		RequestInfo loc = WindowUtils.getRequestInfo();
+		final RequestInfo request = WindowUtils.getRequestInfo();
 
 		// Tries to capture locale parameter
-		String lang;
-		if (loc.getParameter(Constants.LOCALE) != null && !loc.getParameter(Constants.LOCALE).equals("")) {
-			lang = loc.getParameter(Constants.LOCALE);
+		final String lang;
+		if (request.getParameter(Constants.LOCALE) != null && !request.getParameter(Constants.LOCALE).equals("")) {
+			lang = request.getParameter(Constants.LOCALE);
 		} else {
 			// First we initialize language values
 			lang = Util.getBrowserLanguage();
@@ -127,10 +127,40 @@ public class Frontend implements EntryPoint {
 
 				}
 
-				loginPanel = new LoginPanel(info);
+				final boolean anonymousLogin = request.getParameter(Constants.ANONYMOUS) != null
+						&& "true".equals(info.getConfig("anonymous.enabled"));
 
+				loginPanel = new LoginPanel(info);
 				if (savedSid == null || "".equals(savedSid)) {
-					Frontend.this.showInitialLogin();
+					if (anonymousLogin) {
+						/*
+						 * Simulate a login with the anonymous user
+						 */
+						securityService.login(info.getConfig("anonymous.user"), "", lang,
+								new AsyncCallback<GUISession>() {
+
+									@Override
+									public void onFailure(Throwable caught) {
+										Frontend.this.showInitialLogin();
+									}
+
+									@Override
+									public void onSuccess(GUISession session) {
+										if (session == null || !session.isLoggedIn()) {
+											Frontend.this.showInitialLogin();
+										} else {
+											MainPanel.get();
+											loginPanel.onLoggedIn(session);
+
+											// Remove the loading frame
+											RootPanel.getBodyElement().removeChild(
+													RootPanel.get("loadingWrapper").getElement());
+											declareReloadTrigger(Frontend.this);
+										}
+									}
+								});
+					} else
+						Frontend.this.showInitialLogin();
 				} else {
 					securityService.login(savedSid, new AsyncCallback<GUISession>() {
 
@@ -210,7 +240,7 @@ public class Frontend implements EntryPoint {
 	public String checkPermission(String permission) {
 		return Boolean.toString(Session.get().getCurrentFolder().hasPermission(permission));
 	}
-	
+
 	public void searchTag(String tag) {
 		TagsForm.searchTag(tag, false);
 	}
@@ -220,14 +250,15 @@ public class Frontend implements EntryPoint {
 	}
 
 	/**
-	 * Declares the javascript function used to check a permission in the current folder.
+	 * Declares the javascript function used to check a permission in the
+	 * current folder.
 	 */
 	public static native void declareCheckPermission(Frontend frontend) /*-{
 		$wnd.checkPermission = function(permission) {
 			return frontend.@com.logicaldoc.gui.frontend.client.Frontend::checkPermission(Ljava/lang/String;)(permission);
 		};
 	}-*/;
-	
+
 	/**
 	 * Declares the javascript function used to retrieve the current folder ID.
 	 */
