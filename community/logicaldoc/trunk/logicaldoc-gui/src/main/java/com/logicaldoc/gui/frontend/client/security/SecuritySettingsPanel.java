@@ -181,6 +181,9 @@ public class SecuritySettingsPanel extends VLayout {
 		enableAnonymous.setValue(settings.isSaveLogin() ? "yes" : "no");
 		enableAnonymous.setWrapTitle(false);
 		enableAnonymous.setRequired(true);
+		
+		StaticTextItem url = ItemFactory.newStaticTextItem("anonUrl", I18N.message("url"), GWT.getHostPageBaseURL()
+				+ "?anonymous=login");
 
 		final SelectItem user = ItemFactory.newUserSelector("anonymousUser", "user", null);
 		user.setHint(I18N.message("anonymoususerhint"));
@@ -201,7 +204,7 @@ public class SecuritySettingsPanel extends VLayout {
 		if (SecuritySettingsPanel.this.settings.getAnonymousUser() != null)
 			user.setValue(Long.toString(SecuritySettingsPanel.this.settings.getAnonymousUser().getId()));
 
-		anonymousForm.setItems(enableAnonymous, user);
+		anonymousForm.setItems(enableAnonymous, user, url);
 		anonymous.setPane(anonymousForm);
 		return anonymous;
 	}
