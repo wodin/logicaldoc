@@ -2,6 +2,7 @@ package com.logicaldoc.core.security.dao;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +17,8 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
@@ -627,17 +630,18 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public void restore(long folderId, boolean parents) {
-		bulkUpdate("set ld_deleted=0 where ld_id=" + folderId, null);
+	public void restore(long folderId, long parentId) {
+		bulkUpdate("set ld_deleted=0, ld_parentid=" + parentId + ", ld_lastmodified=CURRENT_TIMESTAMP where ld_id="
+				+ folderId, null);
 
-		// Restore parents
-		if (parents) {
-			String query = "select ld_parentid from ld_folder where ld_id =" + folderId;
-			List<Long> folders = (List<Long>) super.queryForList(query, Long.class);
-			for (Long id : folders) {
-				if (id.longValue() != folderId)
-					restore(id, parents);
-			}
+		// Restore all the children
+		Set<Long> treeIds = findFolderIdInTree(folderId, true);
+		if (!treeIds.isEmpty()) {
+			String idsStr = treeIds.toString().replace('[', '(').replace(']', ')');
+			bulkUpdate("set ld_deleted=0, ld_lastmodified=CURRENT_TIMESTAMP where ld_deleted=1 and ld_id in " + idsStr,
+					null);
+			jdbcUpdate("update ld_document set ld_deleted=0, ld_lastmodified=CURRENT_TIMESTAMP where ld_deleted=1 and ld_folderid in "
+					+ idsStr);
 		}
 	}
 
@@ -855,10 +859,13 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		if (folderId == Folder.ROOTID)
 			throw new RuntimeException("Not allowed to delete the Root folder");
 
+		assert (transaction.getUser() != null);
+
 		boolean result = true;
 		try {
 			Folder folder = (Folder) findById(folderId);
 			folder.setDeleted(1);
+			folder.setDeleteUserId(transaction.getUserId());
 			transaction.setEvent(FolderEvent.DELETED.toString());
 			transaction.setFolderId(folderId);
 			transaction.setPath(computePathExtended(folderId));
@@ -1241,5 +1248,31 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	public void setLockManager(LockManager lockManager) {
 		this.lockManager = lockManager;
+	}
+
+	@Override
+	public List<Folder> findDeleted(long userId, Integer maxHits) {
+		List<Folder> results = new ArrayList<Folder>();
+		try {
+			String query = "select ld_id, ld_name, ld_lastmodified from ld_folder where ld_deleted=1 and ld_deleteuserid = "
+					+ userId + " order by ld_lastmodified desc";
+
+			@SuppressWarnings("rawtypes")
+			RowMapper mapper = new BeanPropertyRowMapper() {
+				public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+					Folder fld = new Folder();
+					fld.setId(rs.getLong(1));
+					fld.setName(rs.getString(2));
+					fld.setLastModified(rs.getDate(3));
+					return fld;
+				}
+			};
+
+			results = (List<Folder>) query(query, null, mapper, maxHits);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
+
+		return results;
 	}
 }

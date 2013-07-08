@@ -8,8 +8,11 @@ import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.frontend.client.folder.Navigator;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.FolderService;
+import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
@@ -30,7 +33,9 @@ import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
  * @since 6.0
  */
 public class TrashPanel extends VLayout {
-	private DocumentServiceAsync service = (DocumentServiceAsync) GWT.create(DocumentService.class);
+	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+
+	private FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
 
 	private ListGrid list;
 
@@ -77,6 +82,7 @@ public class TrashPanel extends VLayout {
 		ListGridField customId = new ListGridField("customId", I18N.message("customid"), 110);
 		customId.setType(ListGridFieldType.TEXT);
 		customId.setCanFilter(true);
+		customId.setHidden(true);
 
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
@@ -100,8 +106,8 @@ public class TrashPanel extends VLayout {
 			});
 	}
 
-	private void restore(final long docId) {
-		service.restore(Session.get().getSid(), docId, Session.get().getCurrentFolder().getId(),
+	private void restoreDocument(final long id) {
+		documentService.restore(Session.get().getSid(), id, Session.get().getCurrentFolder().getId(),
 				new AsyncCallback<Void>() {
 
 					@Override
@@ -113,10 +119,31 @@ public class TrashPanel extends VLayout {
 					public void onSuccess(Void ret) {
 						list.removeSelectedData();
 						Log.info(I18N.message("documentrestored"),
-								I18N.message("documentrestoreddetail", Long.toString(docId)));
+								I18N.message("documentrestoreddetail", Long.toString(id)));
 
 						// Force a refresh
 						Session.get().setCurrentFolder(Session.get().getCurrentFolder());
+					}
+				});
+	}
+
+	private void restoreFolder(final long id) {
+		folderService.restore(Session.get().getSid(), id, Session.get().getCurrentFolder().getId(),
+				new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void ret) {
+						list.removeSelectedData();
+						Log.info(I18N.message("folderrestored"),
+								I18N.message("folderrestoreddetail", Long.toString(id)));
+
+						// Force a reload
+						Navigator.get().reload();
 					}
 				});
 	}
@@ -129,7 +156,10 @@ public class TrashPanel extends VLayout {
 		execute.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord record = list.getSelectedRecord();
-				restore(Long.parseLong(record.getAttribute("id")));
+				if ("document".equals(record.getAttribute("type")))
+					restoreDocument(Long.parseLong(record.getAttribute("id")));
+				else
+					restoreFolder(Long.parseLong(record.getAttribute("id")));
 			}
 		});
 

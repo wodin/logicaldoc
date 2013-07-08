@@ -18,6 +18,7 @@
     <property name="creator" type="string" column="ld_creator" length="255" />
 	<property name="creatorId" type="long" column="ld_creatorid" />
 	<property name="templateLocked" type="int" column="ld_templocked" not-null="true" />
+    <property name="deleteUserId" type="long" column="ld_deleteuserid" />
 		
     <set name="folderGroups" table="ld_foldergroup" cascade="all">
       <key column="ld_folderid" />

@@ -71,6 +71,12 @@ public interface FolderService extends RemoteService {
 	public void delete(String sid, long folderId) throws InvalidSessionException;
 
 	/**
+	 * Restores a given folder
+	 */
+	public void restore(String sid, long folderId, long parentId) throws InvalidSessionException;
+
+	
+	/**
 	 * Moves a folder under a target folder
 	 */
 	public void move(String sid, long folderId, long targetId) throws InvalidSessionException;

@@ -59,6 +59,8 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 	 */
 	private int templateLocked = 0;
 
+	private Long deleteUserId;
+
 	public Folder(String name) {
 		this.name = name;
 	}
@@ -216,6 +218,14 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 
 	public void setTemplateLocked(int templateLocked) {
 		this.templateLocked = templateLocked;
+	}
+
+	public Long getDeleteUserId() {
+		return deleteUserId;
+	}
+
+	public void setDeleteUserId(Long deleteUserId) {
+		this.deleteUserId = deleteUserId;
 	}
 
 }
