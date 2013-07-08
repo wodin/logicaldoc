@@ -17,7 +17,9 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
@@ -42,29 +44,44 @@ public class GarbageDataServlet extends HttpServlet {
 
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
-			
+
 			// Headers required by Internet Explorer
 			response.setHeader("Pragma", "public");
 			response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 			response.setHeader("Expires", "0");
 
-			DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			DocumentDAO documentDAO = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			FolderDAO folderDAO = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
-			for (Document doc : dao.findDeleted(session.getUserId(), 100)) {
-				writer.print("<document>");
+			for (Document doc : documentDAO.findDeleted(session.getUserId(), 100)) {
+				writer.print("<entry>");
 				writer.print("<id>" + doc.getId() + "</id>");
 				writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getFileExtension()))
 						+ "</icon>");
 				writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
+				writer.print("<fileName><![CDATA[" + doc.getFileName() + "]]></fileName>");
 				writer.print("<customId><![CDATA[" + doc.getCustomId() + "]]></customId>");
 				writer.print("<lastModified>" + df.format(doc.getLastModified()) + "</lastModified>");
 				writer.print("<folderId>" + doc.getFolder().getId() + "</folderId>");
-				writer.print("</document>");
+				writer.print("<type>document</type>");
+				writer.print("</entry>");
 			}
+			
+			for (Folder fld : folderDAO.findDeleted(session.getUserId(), 100)) {
+				writer.print("<entry>");
+				writer.print("<id>" + fld.getId() + "</id>");
+				writer.print("<icon>folder_closed</icon>");
+				writer.print("<title><![CDATA[" + fld.getName() + "]]></title>");
+				writer.print("<lastModified>" + df.format(fld.getLastModified()) + "</lastModified>");
+				writer.print("<folderId>" + fld.getParentId() + "</folderId>");
+				writer.print("<type>folder</type>");
+				writer.print("</entry>");
+			}	
 			writer.write("</list>");
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);

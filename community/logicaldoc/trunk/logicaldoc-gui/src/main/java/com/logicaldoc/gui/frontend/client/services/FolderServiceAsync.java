@@ -31,4 +31,6 @@ public interface FolderServiceAsync {
 	void applyMetadata(String sid, long parentId, AsyncCallback<Void> callback);
 
 	void create(String sid, GUIFolder folder, boolean inheritSecurity, AsyncCallback<GUIFolder> callback);
+
+	void restore(String sid, long folerId, long parentId, AsyncCallback<Void> callback);
 }

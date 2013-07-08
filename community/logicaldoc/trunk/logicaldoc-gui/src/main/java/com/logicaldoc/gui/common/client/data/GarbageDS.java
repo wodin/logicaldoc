@@ -15,7 +15,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 public class GarbageDS extends DataSource {
 	public GarbageDS() {
 		setTitleField("title");
-		setRecordXPath("/list/document");
+		setRecordXPath("/list/entry");
 		DataSourceTextField title = new DataSourceTextField("title");
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
@@ -25,8 +25,10 @@ public class GarbageDS extends DataSource {
 		DataSourceTextField customId = new DataSourceTextField("customId");
 		DataSourceDateTimeField lastModified = new DataSourceDateTimeField("lastModified");
 		DataSourceTextField folderId = new DataSourceTextField("folderId");
-
-		setFields(id, title, customId, icon, lastModified, folderId);
+		DataSourceTextField type = new DataSourceTextField("type");
+		DataSourceTextField fileName = new DataSourceTextField("fileName");
+		
+		setFields(id, title, fileName, customId, icon, lastModified, folderId, type);
 		setClientOnly(true);
 		setDataURL("data/garbage.xml?sid=" + Session.get().getSid());
 	}

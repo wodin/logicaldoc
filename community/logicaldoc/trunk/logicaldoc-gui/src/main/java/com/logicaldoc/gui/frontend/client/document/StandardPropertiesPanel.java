@@ -214,6 +214,9 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 				tagItem.setOptionDataSource(new TagsDS(mode));
 			} else {
 				tagItem = new ComboBoxItem("tag");
+
+				((ComboBoxItem) tagItem).setFetchDelay(2000);
+				
 				((ComboBoxItem) tagItem).setPickListWidth(250);
 				((ComboBoxItem) tagItem).setHideEmptyPickList(true);
 				((ComboBoxItem) tagItem).setOptionDataSource(new TagsDS(null));

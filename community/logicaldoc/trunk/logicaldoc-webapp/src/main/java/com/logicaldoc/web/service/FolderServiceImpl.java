@@ -780,4 +780,12 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			return null;
 		}
 	}
+
+	@Override
+	public void restore(String sid, long folderId, long parentId) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		dao.restore(folderId, parentId);
+	}
 }

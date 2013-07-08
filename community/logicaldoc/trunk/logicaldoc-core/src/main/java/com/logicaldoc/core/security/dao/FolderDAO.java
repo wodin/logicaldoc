@@ -178,10 +178,10 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	/**
 	 * Restores a previously deleted folder
 	 * 
-	 * @param id The folder identifier
-	 * @param parents true if parents must be restored also
+	 * @param folderId The folder identifier
+	 * @param parentId The parent folder to restore in
 	 */
-	public void restore(long id, boolean parents);
+	public void restore(long folderId, long parentId);
 
 	/**
 	 * Finds that folder that lies under a specific parent (given by the id) an
@@ -314,6 +314,15 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * @return List of folders that contains the given name into their text.
 	 */
 	public List<Folder> find(String name);
+
+	/**
+	 * Finds all deleted folders of a specific user.
+	 * 
+	 * @param userId The user that performed the deletion
+	 * @param maxHits Optional defines the max number of returned hits
+	 * @return The folders list ordered by descending lastModified
+	 */
+	public List<Folder> findDeleted(long userId, Integer maxHits);
 
 	/**
 	 * Checks if a folder with the given folderId is parent of the folder with
