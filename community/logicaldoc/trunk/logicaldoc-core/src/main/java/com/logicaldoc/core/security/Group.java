@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.logicaldoc.core.ExtensibleObject;
+import com.logicaldoc.core.PersistentObject;
 
 /**
  * This class represents groups. <br />
@@ -19,14 +19,14 @@ import com.logicaldoc.core.ExtensibleObject;
  * @author Marco Meschieri
  * @version 1.0
  */
-public class Group extends ExtensibleObject implements Serializable {
+public class Group extends PersistentObject implements Serializable {
 
 	private static final long serialVersionUID = 2L;
 
 	public static final long GROUPID_ADMIN = 1;
 
 	public static final long GROUPID_PUBLISHER = -10000;
-	
+
 	public static int TYPE_DEFAULT = 0;
 
 	public static int TYPE_USER = 1;

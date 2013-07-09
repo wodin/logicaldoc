@@ -14,7 +14,6 @@ create table ld_document_ext (ld_docid bigint not null, ld_mandatory int not nul
 create table ld_generic (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_type varchar(255) not null, ld_subtype varchar(255) not null, ld_qualifier bigint null, ld_string1 varchar(4000), ld_string2 varchar(4000), ld_string3 varchar(4000), ld_integer1 bigint null, ld_integer2 bigint null, ld_integer3 bigint null, ld_double1 float, ld_double2 float, ld_date1 timestamp null, ld_date2 timestamp null, primary key (ld_id));
 create table ld_generic_ext (ld_genid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_genid, ld_name));
 create table ld_group (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_name varchar(255) not null, ld_description varchar(255), ld_type int not null, primary key (ld_id));
-create table ld_group_ext (ld_groupid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_groupid, ld_name));
 create table ld_history (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint, 
                          ld_folderid bigint not null, ld_userid bigint, ld_date timestamp, ld_username varchar(255), ld_event varchar(255), 
                          ld_comment varchar(4000), ld_version varchar(10), ld_title varchar(255), ld_titleold varchar(255), ld_path varchar(4000), 
@@ -85,7 +84,6 @@ alter table ld_document add constraint FK75ED9C0276C86307 foreign key (ld_templa
 alter table ld_document add constraint FK75ED9C027C565C60 foreign key (ld_folderid) references ld_folder(ld_id);
 alter table ld_document_ext add constraint FK4E0884647C693DFD foreign key (ld_docid) references ld_document(ld_id);
 alter table ld_generic_ext add constraint FK913AF772CF8376C7 foreign key (ld_genid) references ld_generic(ld_id);
-alter table ld_group_ext add constraint FKB728EA5A76F11EA1 foreign key (ld_groupid) references ld_group(ld_id);
 alter table ld_tag add constraint FK55BBDA227C693DFD foreign key (ld_docid) references ld_document(ld_id);
 alter table ld_link add constraint FK1330661CADD6217 foreign key (ld_docid2) references ld_document(ld_id);
 alter table ld_link add constraint FK1330661CADD6216 foreign key (ld_docid1) references ld_document(ld_id);
@@ -294,7 +292,6 @@ insert into hibernate_unique_key(tablename, next_hi) values ('ld_document', 100)
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_bookmark', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_generic', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_group', 100);
-insert into hibernate_unique_key(tablename, next_hi) values ('ld_group_ext', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_history', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_link', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_menu', 5000);

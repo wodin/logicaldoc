@@ -16,20 +16,5 @@
       <key column="ld_groupid" />
       <many-to-many column="ld_userid" class="com.logicaldoc.core.security.User" where="ld_deleted=0"/>
     </set>
-    <map name="attributes" table="ld_group_ext" lazy="false" cascade="all" order-by="ld_position asc">
-      <key column="ld_groupid" />
-      <map-key type="string" column="ld_name" length="255" />
-      <composite-element class="com.logicaldoc.core.ExtendedAttribute">
-      	<property name="label" type="string" column="ld_label" length="255"/>
-        <property name="mandatory" type="int" column="ld_mandatory" not-null="true" />
-        <property name="type" type="int" column="ld_type" not-null="true" />
-        <property name="editor" type="int" column="ld_editor" not-null="true"/>
-        <property name="position" type="int" column="ld_position" not-null="true"/>
-        <property name="stringValue" type="string" column="ld_stringvalue" length="4000" />
-        <property name="intValue" type="long" column="ld_intvalue" />
-        <property name="doubleValue" type="double" column="ld_doublevalue" />
-        <property name="dateValue" type="timestamp" column="ld_datevalue" />
-      </composite-element>
-    </map>
   </class>
 </hibernate-mapping>
