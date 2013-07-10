@@ -55,8 +55,6 @@ public class TagsPortlet extends Portlet {
 
 		addChild(container);
 
-		addChild(container);
-
 		container.addMember(new TagsForm(false, false));
 	}
 

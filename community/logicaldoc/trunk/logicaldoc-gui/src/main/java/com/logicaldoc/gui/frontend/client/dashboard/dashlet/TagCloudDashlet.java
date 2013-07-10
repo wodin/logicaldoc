@@ -1,17 +1,11 @@
 package com.logicaldoc.gui.frontend.client.dashboard.dashlet;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.beans.GUITag;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.dashboard.TagCloud;
-import com.logicaldoc.gui.frontend.client.services.TagService;
-import com.logicaldoc.gui.frontend.client.services.TagServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.DragAppearance;
 import com.smartgwt.client.types.HeaderControls;
@@ -30,8 +24,6 @@ import com.smartgwt.client.widgets.layout.HLayout;
  * @since 6.6
  */
 public class TagCloudDashlet extends Dashlet {
-	private TagServiceAsync service = (TagServiceAsync) GWT.create(TagService.class);
-
 	private HLayout container = null;
 
 	public TagCloudDashlet(int id) {
@@ -93,24 +85,10 @@ public class TagCloudDashlet extends Dashlet {
 
 		addChild(container);
 
-		service.getTagCloud(new AsyncCallback<GUITag[]>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				Log.serverError(caught);
-			}
-
-			@Override
-			public void onSuccess(GUITag[] cloud) {
-				TagCloud tc = new TagCloud();
-				tc.setWidth(getWidth() - 20);
-				tc.setHeight(getHeight() - 20);
-				tc.setMaxNumberOfWords(cloud.length);
-				for (GUITag tag : cloud) {
-					tag.setLink("javascript:searchTag(\"" + tag.getTag() + "\")");
-					tc.addWord(tag);
-				}
-				container.addMember(tc);
-			}
-		});
+		TagCloud tc = new TagCloud();
+		tc.setWidth(getWidth() - 20);
+		tc.setHeight(getHeight() - 20);
+		container.addMember(tc);
+		tc.refresh();
 	}
 }
