@@ -23,7 +23,7 @@ import org.springframework.jdbc.core.RowMapper;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.generic.Generic;
-import com.logicaldoc.core.generic.dao.GenericDAO;
+import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.rss.FeedMessage;
 import com.logicaldoc.core.rss.dao.FeedMessageDAO;
 import com.logicaldoc.core.security.User;

@@ -1,4 +1,4 @@
-package com.logicaldoc.core.generic.dao;
+package com.logicaldoc.core.generic;
 
 import java.util.Collection;
 import java.util.List;
@@ -7,7 +7,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
-import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.util.sql.SqlUtil;
 
 /**

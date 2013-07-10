@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.generic.Generic;
-import com.logicaldoc.core.generic.dao.GenericDAO;
+import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserHistory;

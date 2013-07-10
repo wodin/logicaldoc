@@ -76,6 +76,11 @@ create table ld_messagetemplate (ld_id bigint not null, ld_lastmodified timestam
                                  ld_deleted int not null, ld_name varchar(255) not null, ld_language varchar(10) not null,
                                  ld_description varchar(1000), ld_body varchar(4000),
                                  ld_subject varchar(1000), primary key (ld_id));
+create table ld_contact (ld_id bigint not null, ld_lastmodified timestamp not null, 
+                         ld_deleted int not null, ld_userid bigint null,
+                         ld_firstname varchar(255), ld_lastname varchar(255), ld_email varchar(512),
+                         ld_company varchar(255), ld_address varchar(512), ld_phone varchar(255),
+                         ld_mobile varchar(255), primary key (ld_id));                                 
 
 create table hibernate_unique_key (tablename varchar(40) NOT NULL, next_hi bigint NOT NULL);
 

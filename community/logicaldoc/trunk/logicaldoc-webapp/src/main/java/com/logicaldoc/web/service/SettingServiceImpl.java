@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.generic.Generic;
-import com.logicaldoc.core.generic.dao.GenericDAO;
+import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.InvalidSessionException;

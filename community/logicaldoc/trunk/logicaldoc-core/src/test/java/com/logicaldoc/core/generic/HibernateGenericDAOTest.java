@@ -1,4 +1,4 @@
-package com.logicaldoc.core.generic.dao;
+package com.logicaldoc.core.generic;
 
 import java.util.List;
 
@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.generic.Generic;
+import com.logicaldoc.core.generic.GenericDAO;
 
 /**
  * Test case for <code>HibernateGenericDAO</code>

@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.core.generic.Generic;
-import com.logicaldoc.core.generic.dao.GenericDAO;
+import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.stats.StatsCollector;

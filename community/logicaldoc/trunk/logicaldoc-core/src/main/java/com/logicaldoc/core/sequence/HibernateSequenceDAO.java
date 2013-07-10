@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import com.logicaldoc.core.generic.Generic;
-import com.logicaldoc.core.generic.dao.GenericDAO;
+import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.util.sql.SqlUtil;
 
 /**

@@ -364,3 +364,11 @@ insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_
 values(102, '2012-04-18 00:00:00',0,'test1','it', 'corpo $username $xxx','soggetto $xxx');
 insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_body, ld_subject)
 values(103, '2012-04-18 00:00:00',1,'test5','it', 'corpo $username $xxx','soggetto $xxx');
+
+
+insert into ld_contact(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_firstname, ld_email)
+values(1, CURRENT_TIMESTAMP, 0, null, 'Marco', 'marco@acme.com');
+insert into ld_contact(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_firstname, ld_email)
+values(2, CURRENT_TIMESTAMP, 0, 1, 'Marco', 'marco@acme.com');
+insert into ld_contact(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_firstname, ld_email)
+values(3, CURRENT_TIMESTAMP, 0, 1, 'Alessandro', 'alessandro@acme.com');

@@ -1,0 +1,38 @@
+package com.logicaldoc.core.contact;
+
+import java.util.List;
+
+import junit.framework.Assert;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import com.logicaldoc.core.AbstractCoreTCase;
+
+/**
+ * Test case for <code>HibernateContactDAO</code>
+ * 
+ * @author Marco Meschieri - Logical Objects
+ * @since 6.8
+ */
+public class HibernateContactDAOTest extends AbstractCoreTCase {
+
+	// Instance under test
+	private ContactDAO dao;
+
+	@Before
+	public void setUp() throws Exception {
+		super.setUp();
+		// Retrieve the instance under test from spring context. Make sure that
+		// it is an HibernateContactDAO
+		dao = (ContactDAO) context.getBean("ContactDAO");
+	}
+
+	@Test
+	public void testFindByTypeAndSubtype() {
+		List<Contact> contacts = dao.findByUser(null);
+		Assert.assertEquals(1, contacts.size());
+		contacts = dao.findByUser(1L);
+		Assert.assertEquals(2, contacts.size());
+	}
+}
