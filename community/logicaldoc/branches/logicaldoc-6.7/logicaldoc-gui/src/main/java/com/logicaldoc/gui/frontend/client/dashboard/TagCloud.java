@@ -1,10 +1,8 @@
 package com.logicaldoc.gui.frontend.client.dashboard;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.logicaldoc.gui.common.client.beans.GUITag;
 import com.smartgwt.client.widgets.HTMLFlow;
+import com.smartgwt.client.widgets.events.VisibilityChangedEvent;
+import com.smartgwt.client.widgets.events.VisibilityChangedHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
@@ -15,55 +13,16 @@ import com.smartgwt.client.widgets.layout.VLayout;
  */
 public class TagCloud extends VLayout {
 
-	private List<GUITag> tags;
-
-	private int maxNumberOfTags;// the number of tags shown in the cloud.
-
 	private HTMLFlow container = null;
 
 	public TagCloud() {
-		tags = new ArrayList<GUITag>();
-	}
+		addVisibilityChangedHandler(new VisibilityChangedHandler() {
 
-	/**
-	 * Set the whole list of tags given in parameter to be the current tags
-	 * list.
-	 * 
-	 * @param tags
-	 */
-	public void setTags(List<GUITag> tags) {
-		if (this.tags == null)
-			this.tags = new ArrayList<GUITag>();
-		this.tags.clear();
-		if (tags != null)
-			this.tags.addAll(tags);
-	}
-
-	/**
-	 * Retrieve the list of tags in the cloud.
-	 * 
-	 * @return
-	 */
-	public List<GUITag> getTags() {
-		return tags;
-	}
-
-	/**
-	 * Add a word to the tagcloud list.
-	 * 
-	 * @param word
-	 */
-	public void addWord(GUITag word) {
-		boolean exist = false;
-		for (GUITag t : tags) {
-			if (t.getTag().equalsIgnoreCase(word.getTag())) {
-				t.setCount(t.getCount() + 1);
-				exist = true;
+			@Override
+			public void onVisibilityChanged(VisibilityChangedEvent event) {
+				refresh();
 			}
-		}
-		if (!exist)
-			tags.add(word);
-		refresh();
+		});
 	}
 
 	/**
@@ -72,26 +31,24 @@ public class TagCloud extends VLayout {
 	 */
 	public void refresh() {
 
-		if (container != null)
+		if (container != null) {
 			removeMember(container);
+			container = null;
+		}
 
-		container = new HTMLFlow() {
+		if (isVisible()) {
+			container = new HTMLFlow() {
 
-			@Override
-			public String getInnerHTML() {
-				return "<iframe src='tagcloud/cloud.jsp' style='border: 0px solid white; width:100%; height:"+TagCloud.this.getHeight()+";' height='"+TagCloud.this.getHeight()+"' scrolling='no'>";
-			}
+				@Override
+				public String getInnerHTML() {
+					return "<iframe src='tagcloud/cloud.jsp' style='border: 0px solid white; width:100%; height:"
+							+ TagCloud.this.getHeight() + ";' height='" + TagCloud.this.getHeight()
+							+ "' scrolling='no'>";
+				}
 
-		};
+			};
+			addMember(container);
+		}
 
-		addMember(container);
-	}
-
-	public int getMaxNumberOfWords() {
-		return maxNumberOfTags;
-	}
-
-	public void setMaxNumberOfWords(int numberOfWords) {
-		this.maxNumberOfTags = numberOfWords;
 	}
 }
