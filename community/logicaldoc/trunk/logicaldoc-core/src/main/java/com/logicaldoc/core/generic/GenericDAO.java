@@ -1,9 +1,8 @@
-package com.logicaldoc.core.generic.dao;
+package com.logicaldoc.core.generic;
 
 import java.util.List;
 
 import com.logicaldoc.core.PersistentObjectDAO;
-import com.logicaldoc.core.generic.Generic;
 
 /**
  * Instances of this class is a DAO-service for Generic business entities.
@@ -28,10 +27,10 @@ public interface GenericDAO extends PersistentObjectDAO<Generic>{
 	 * and each parameter can be null.
 	 * 
 	 * @param type The type(you can use like jollies and can be null)
-	 * @param subtype The subtype(you can use like jollies and can be null)
+	 * @param subtype The sub-type(you can use like jollies and can be null)
 	 * @param subtype The qualifier (optional)
 	 * 
-	 * @return The collection of fount Generics
+	 * @return The collection of found Generics
 	 */
 	public List<Generic> findByTypeAndSubtype(String type, String subtype, Long qualifier);
 }

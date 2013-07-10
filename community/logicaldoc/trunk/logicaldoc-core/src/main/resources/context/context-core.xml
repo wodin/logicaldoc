@@ -218,7 +218,7 @@
         dependency-check="default" lazy-init="default" parent="ApplicationBaseTransactionProxy">
         <property name="target">
             <bean abstract="false" autowire="default"
-                class="com.logicaldoc.core.generic.dao.HibernateGenericDAO"
+                class="com.logicaldoc.core.generic.HibernateGenericDAO"
                 dependency-check="default" lazy-init="default">
                 <property name="sessionFactory" ref="SessionFactory" />
             </bean>
@@ -288,6 +288,17 @@
             </bean>
         </property>
     </bean>
+    <bean id="ContactDAO" abstract="false" autowire="default"
+        dependency-check="default" lazy-init="default" parent="ApplicationBaseTransactionProxy">
+        <property name="target">
+            <bean abstract="false" autowire="default"
+                class="com.logicaldoc.core.contact.HibernateContactDAO"
+                dependency-check="default" lazy-init="default">
+                <property name="sessionFactory" ref="SessionFactory" />
+            </bean>
+        </property>
+    </bean>
+    
     <!-- Managers -->
     <bean id="SecurityManager" abstract="false" autowire="default"
         dependency-check="default" lazy-init="default" parent="ApplicationBaseTransactionProxy">
