@@ -98,7 +98,7 @@ public class DashboardPanel extends VLayout {
 	public Tab getCalendarTab() {
 		return calendarTab;
 	}
-	
+
 	public Tab getMessagesTab() {
 		return messagesTab;
 	}

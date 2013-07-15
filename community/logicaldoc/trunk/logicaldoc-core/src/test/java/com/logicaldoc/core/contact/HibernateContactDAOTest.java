@@ -30,9 +30,13 @@ public class HibernateContactDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindByTypeAndSubtype() {
-		List<Contact> contacts = dao.findByUser(null);
+		List<Contact> contacts = dao.findByUser(null, null);
 		Assert.assertEquals(1, contacts.size());
-		contacts = dao.findByUser(1L);
+		contacts = dao.findByUser(1L, null);
 		Assert.assertEquals(2, contacts.size());
+		contacts = dao.findByUser(1L, "alessandro@acme.com");
+		Assert.assertEquals(1, contacts.size());
+		contacts = dao.findByUser(1L, "xxx");
+		Assert.assertEquals(0, contacts.size());
 	}
 }

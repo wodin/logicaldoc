@@ -3,6 +3,7 @@ package com.logicaldoc.web.service;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
@@ -371,6 +373,32 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 			}
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public boolean testEmail(String sid, String email) throws InvalidSessionException {
+		SessionUtil.validateSession(sid);
+
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
+
+		try {
+			EMail mail;
+			mail = new EMail();
+			mail.setAccountId(-1);
+			mail.setAuthor(config.getProperty("smtp.sender"));
+			mail.setAuthorAddress(config.getProperty("smtp.sender"));
+			mail.parseRecipients(email);
+			mail.setFolder("outbox");
+			mail.setSentDate(new Date());
+			mail.setSubject("test");
+			mail.setMessageText("test");
+			sender.send(mail);
+			return true;
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+			return false;
 		}
 	}
 }

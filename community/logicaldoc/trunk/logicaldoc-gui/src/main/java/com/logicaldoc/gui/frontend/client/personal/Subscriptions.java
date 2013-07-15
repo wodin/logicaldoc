@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.menu;
+package com.logicaldoc.gui.frontend.client.personal;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;

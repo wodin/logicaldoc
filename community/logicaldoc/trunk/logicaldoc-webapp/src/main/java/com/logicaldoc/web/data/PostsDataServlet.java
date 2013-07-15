@@ -62,7 +62,6 @@ public class PostsDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
-			int i = 0;
 			for (DocumentNote post : posts) {
 				writer.print("<post>");
 				writer.print("<id>" + post.getId() + "</id>");
@@ -72,7 +71,6 @@ public class PostsDataServlet extends HttpServlet {
 				writer.print("<message><![CDATA[" + post.getMessage() + "]]></message>");
 				writer.print("<docId>" + post.getDocId() + "</docId>");
 				writer.print("</post>");
-				i++;
 			}
 			writer.write("</list>");
 		} catch (Throwable e) {

@@ -12,8 +12,6 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class EmailAccountsDS extends DataSource {
-	private static EmailAccountsDS instance;
-	
 	public EmailAccountsDS(boolean withEmpty) {
 		setTitleField("email");
 		setRecordXPath("/list/account");

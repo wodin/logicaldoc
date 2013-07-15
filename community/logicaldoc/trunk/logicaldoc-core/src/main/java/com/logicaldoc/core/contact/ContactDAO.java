@@ -16,8 +16,9 @@ public interface ContactDAO extends PersistentObjectDAO<Contact> {
 	 * Finds the contacts of the specified user.
 	 * 
 	 * @param userId The ID of the user or null
+	 * @param email Optional email specification,
 	 * 
 	 * @return The collection of found Contacts
 	 */
-	public List<Contact> findByUser(Long userId);
+	public List<Contact> findByUser(Long userId, String email);
 }

@@ -12,36 +12,36 @@ import com.logicaldoc.gui.common.client.beans.GUIUser;
  * @since 6.0
  */
 public class Menu {
-	public static final int LAST_CHANGES = -2;
+	public static final long LAST_CHANGES = -2;
 
-	public static final int ADMINISTRATION = 2;
+	public static final long ADMINISTRATION = 2;
 
-	public static final int DOCUMENTS = 1500;
+	public static final long DOCUMENTS = 1500;
 
-	public static final int SEARCH = 1510;
+	public static final long SEARCH = 1510;
 
-	public static final int DASHBOARD = 1520;
+	public static final long DASHBOARD = 1520;
 
-	public static final int SECURITY = 9;
+	public static final long CONTACTS = 1530;
 
-	public static final int CLIENTS = 3;
+	public static final long SECURITY = 9;
 
-	public static final int SETTINGS = 7;
+	public static final long CLIENTS = 3;
 
-	public static final int IMPEX = 8;
+	public static final long SETTINGS = 7;
 
-	public static final int CUSTOM_ID = 17;
+	public static final long IMPEX = 8;
 
-	public static final int METADATA = 25;
+	public static final long CUSTOM_ID = 17;
 
-	public static final int WORKFLOW = 23;
+	public static final long METADATA = 25;
+
+	public static final long WORKFLOW = 23;
 
 	public static final long BARCODES = 30;
 
 	public static final long REPORTS = 16;
 
-	public static final long AOS = -20;
-	
 	public static final long OFFICE = -1090;
 
 	public static final long CLUSTERING = -1110;
@@ -49,7 +49,7 @@ public class Menu {
 	public static final long SUBSCRIPTIONS = -1120;
 
 	public static final long CALENDAR_REPORT = -2060;
-	
+
 	public static final long GDOCS = -2080;
 
 	private static Set<Long> menues = new HashSet<Long>();
