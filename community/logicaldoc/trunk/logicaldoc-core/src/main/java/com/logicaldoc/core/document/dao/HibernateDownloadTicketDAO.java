@@ -63,7 +63,7 @@ public class HibernateDownloadTicketDAO extends HibernatePersistentObjectDAO<Dow
 	public DownloadTicket findByTicketId(String ticketid) {
 		try {
 			Collection<DownloadTicket> coll = (Collection<DownloadTicket>) findByQuery(
-					"from DownloadTicket _ticket where _ticket.ticketId = ?", new Object[] { ticketid }, null);
+					"from DownloadTicket _ticket where _ticket.ticketId = ?1", new Object[] { ticketid }, null);
 			DownloadTicket ticket = null;
 			if (!coll.isEmpty()) {
 				ticket = coll.iterator().next();
@@ -82,7 +82,7 @@ public class HibernateDownloadTicketDAO extends HibernatePersistentObjectDAO<Dow
 
 		try {
 			Collection<DownloadTicket> coll = (Collection<DownloadTicket>) findByQuery(
-					"from DownloadTicket _ticket where _ticket.docId = ?", new Object[] { new Long(docId) }, null);
+					"from DownloadTicket _ticket where _ticket.docId = ?1", new Object[] { new Long(docId) }, null);
 			for (DownloadTicket downloadTicket : coll) {
 				downloadTicket.setDeleted(1);
 				saveOrUpdate(downloadTicket);
@@ -110,7 +110,7 @@ public class HibernateDownloadTicketDAO extends HibernatePersistentObjectDAO<Dow
 		boolean result = true;
 		try {
 			Collection<DownloadTicket> coll = (Collection<DownloadTicket>) findByQuery(
-					"from DownloadTicket _ticket where _ticket.deleted=0 and _ticket.lastModified < ?",
+					"from DownloadTicket _ticket where _ticket.deleted=0 and _ticket.lastModified < ?1",
 					new Object[] { date }, null);
 			for (DownloadTicket downloadTicket : coll) {
 				initialize(downloadTicket);

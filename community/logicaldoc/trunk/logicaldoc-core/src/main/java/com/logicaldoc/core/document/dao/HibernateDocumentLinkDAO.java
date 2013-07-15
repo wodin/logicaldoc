@@ -35,8 +35,8 @@ public class HibernateDocumentLinkDAO extends HibernatePersistentObjectDAO<Docum
 	 */
 	@Override
 	public List<DocumentLink> findByDocId(long docId, String type) {
-		StringBuffer query = new StringBuffer("(_entity.document1.id = ? ");
-		query.append("or _entity.document2.id = ?) ");
+		StringBuffer query = new StringBuffer("(_entity.document1.id = ?1 ");
+		query.append("or _entity.document2.id = ?2) ");
 		if (StringUtils.isNotEmpty(type)) {
 			query.append("and _entity.type = '");
 			query.append(type);
@@ -50,7 +50,7 @@ public class HibernateDocumentLinkDAO extends HibernatePersistentObjectDAO<Docum
 		if (type == null)
 			return null;
 		DocumentLink link = null;
-		StringBuffer query = new StringBuffer("_entity.document1.id = ? and _entity.document2.id = ? ");
+		StringBuffer query = new StringBuffer("_entity.document1.id = ?1 and _entity.document2.id = ?2 ");
 		query.append("and _entity.type = '");
 		query.append(type);
 		query.append("'");

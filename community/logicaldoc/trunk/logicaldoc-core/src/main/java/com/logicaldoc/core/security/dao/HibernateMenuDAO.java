@@ -154,7 +154,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				query1.append(Long.toString(ug.getId()));
 				first = false;
 			}
-			query1.append(") and _entity.parentId = ? and _entity.id!=_entity.parentId");
+			query1.append(") and _entity.parentId = ?1 and _entity.id!=_entity.parentId");
 			if (type != null)
 				query1.append(" and _entity.type = " + type.toString());
 
@@ -164,7 +164,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			 * Now search for all other menues that references accessible menues
 			 */
 			StringBuffer query2 = new StringBuffer(
-					"select _entity from Menu _entity where _entity.deleted=0 and _entity.parentId=? ");
+					"select _entity from Menu _entity where _entity.deleted=0 and _entity.parentId=?1 ");
 			query2.append(" and _entity.securityRef in (");
 			query2.append("    select distinct(B.id) from Menu B ");
 			query2.append(" left join B.menuGroups as _group");
@@ -201,7 +201,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 	@Override
 	public List<Menu> findChildren(long parentId, Integer max) {
-		return findByWhere("_entity.parentId = ? and _entity.id!=_entity.parentId", new Object[] { parentId }, null,
+		return findByWhere("_entity.parentId = ?1 and _entity.id!=_entity.parentId", new Object[] { parentId }, null,
 				max);
 	}
 
@@ -243,7 +243,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			 * Now search for all other menues that references accessible menues
 			 */
 			StringBuffer query2 = new StringBuffer(
-					"select _entity from Menu _entity where _entity.deleted=0 and _entity.parentId=? ");
+					"select _entity from Menu _entity where _entity.deleted=0 and _entity.parentId=?1 ");
 			query2.append(" and _entity.securityRef in (");
 			query2.append("    select distinct(B.id) from Menu B ");
 			query2.append(" left join B.menuGroups as _group");
@@ -330,7 +330,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				query.append(Long.toString(ug.getId()));
 				first = false;
 			}
-			query.append(") and _entity.id=?");
+			query.append(") and _entity.id=?1");
 
 			List<MenuGroup> coll = (List<MenuGroup>) findByQuery(query.toString(), new Object[] { new Long(id) }, null);
 			result = coll.size() > 0;
@@ -377,7 +377,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				query.append(Long.toString(ug.getId()));
 				first = false;
 			}
-			query.append(") and _entity.id=?");
+			query.append(") and _entity.id=?1");
 
 			List<MenuGroup> coll = (List<MenuGroup>) findByQuery(query.toString(), new Object[] { new Long(id) }, null);
 			result = coll.size() > 0;

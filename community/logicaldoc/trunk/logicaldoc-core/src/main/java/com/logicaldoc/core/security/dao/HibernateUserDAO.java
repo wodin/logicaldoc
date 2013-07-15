@@ -58,7 +58,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	 * @see com.logicaldoc.core.security.dao.UserDAO#findByName(java.lang.String)
 	 */
 	public List<User> findByName(String name) {
-		return findByWhere("lower(_entity.name) like ?", new Object[] { name.toLowerCase() }, null, null);
+		return findByWhere("lower(_entity.name) like ?1", new Object[] { name.toLowerCase() }, null, null);
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	 */
 	public User findByUserName(String username) {
 		User user = null;
-		List<User> coll = findByWhere("_entity.userName = ?", new Object[] { username }, null, null);
+		List<User> coll = findByWhere("_entity.userName = ?1", new Object[] { username }, null, null);
 		if (coll.size() > 0) {
 			user = coll.iterator().next();
 		}
@@ -77,7 +77,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	 * @see com.logicaldoc.core.security.dao.UserDAO#findByUserName(java.lang.String)
 	 */
 	public List<User> findByLikeUserName(String username) {
-		return findByWhere("_entity.userName like ?", new Object[] { username }, null, null);
+		return findByWhere("_entity.userName like ?1", new Object[] { username }, null, null);
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	 *      java.lang.String)
 	 */
 	public List<User> findByUserNameAndName(String username, String name) {
-		return findByWhere("lower(_entity.name) like ? and _entity.userName like ?", new Object[] { name.toLowerCase(),
+		return findByWhere("lower(_entity.name) like ?1 and _entity.userName like ?2", new Object[] { name.toLowerCase(),
 				username }, null, null);
 	}
 

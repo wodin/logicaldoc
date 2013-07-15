@@ -30,7 +30,7 @@ public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> i
 		boolean result = true;
 
 		try {
-			List<UserDoc> coll = findByWhere("_entity.docId = ? and _entity.userId = ?",
+			List<UserDoc> coll = findByWhere("_entity.docId = ?1 and _entity.userId = ?2",
 					new Object[] { docId, userId }, null, null);
 			for (UserDoc userDoc : coll) {
 				userDoc.setDeleted(1);
@@ -50,7 +50,7 @@ public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> i
 		boolean result = false;
 
 		try {
-			List<UserDoc> coll = findByWhere("_entity.docId = ? and _entity.userId = ?",
+			List<UserDoc> coll = findByWhere("_entity.docId = ?1 and _entity.userId = ?2",
 					new Object[] { docId, userId }, null, null);
 			return coll != null && coll.size() > 0;
 		} catch (Exception e) {
@@ -76,7 +76,7 @@ public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> i
 
 	@Override
 	public List<UserDoc> findByUserId(long userId) {
-		return findByWhere("_entity.userId = ?", new Object[] { userId }, "order by _entity.date desc", null);
+		return findByWhere("_entity.userId = ?1", new Object[] { userId }, "order by _entity.date desc", null);
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> i
 	 * @see com.logicaldoc.core.security.dao.UserDocDAO#findByDocId(long)
 	 */
 	public List<UserDoc> findByDocId(long docId) {
-		return findByWhere("_entity.docId = ?", new Object[] { docId }, "order by _entity.date desc", null);
+		return findByWhere("_entity.docId = ?1", new Object[] { docId }, "order by _entity.date desc", null);
 	}
 
 	@Override

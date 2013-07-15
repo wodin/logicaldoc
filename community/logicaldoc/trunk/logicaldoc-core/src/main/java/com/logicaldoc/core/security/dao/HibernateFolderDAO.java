@@ -192,7 +192,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				query1.append(Long.toString(ug.getId()));
 				first = false;
 			}
-			query1.append(") and _entity.parentId = ? and _entity.id!=_entity.parentId");
+			query1.append(") and _entity.parentId = ?1 and _entity.id!=_entity.parentId");
 
 			coll = (List<Folder>) findByQuery(query1.toString(), new Object[] { parentId }, null);
 
@@ -201,7 +201,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			 * folders
 			 */
 			StringBuffer query2 = new StringBuffer(
-					"select _entity from Folder _entity where _entity.deleted=0 and _entity.parentId=? ");
+					"select _entity from Folder _entity where _entity.deleted=0 and _entity.parentId=?1 ");
 			query2.append(" and _entity.securityRef in (");
 			query2.append("    select distinct(B.id) from Folder B ");
 			query2.append(" left join B.folderGroups as _group");
@@ -238,7 +238,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public List<Folder> findChildren(long parentId, Integer max) {
-		return findByWhere("_entity.parentId = ? and _entity.id!=_entity.parentId", new Object[] { parentId },
+		return findByWhere("_entity.parentId = ?1 and _entity.id!=_entity.parentId", new Object[] { parentId },
 				"order by _entity.name", max);
 	}
 
@@ -281,7 +281,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			 * folders
 			 */
 			StringBuffer query2 = new StringBuffer(
-					"select _entity from Folder _entity where _entity.deleted=0 and _entity.parentId=? ");
+					"select _entity from Folder _entity where _entity.deleted=0 and _entity.parentId=?1 ");
 			query2.append(" and _entity.securityRef in (");
 			query2.append("    select distinct(B.id) from Folder B ");
 			query2.append(" left join B.folderGroups as _group");
@@ -372,7 +372,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				query.append(Long.toString(ug.getId()));
 				first = false;
 			}
-			query.append(") and _entity.id=?");
+			query.append(") and _entity.id=?1");
 
 			List<FolderGroup> coll = (List<FolderGroup>) findByQuery(query.toString(), new Object[] { new Long(id) },
 					null);

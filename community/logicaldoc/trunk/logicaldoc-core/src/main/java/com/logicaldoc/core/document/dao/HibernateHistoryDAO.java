@@ -35,7 +35,7 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 	 * @see com.logicaldoc.core.document.dao.HistoryDAO#findByDocId(long)
 	 */
 	public List<History> findByDocId(long docId) {
-		return findByWhere("_entity.docId =" + docId, null, "order by _entity.date asc", null);
+		return findByWhere("_entity.docId =" + docId, "order by _entity.date asc", null);
 	}
 
 	/**
@@ -49,12 +49,12 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 	 * @see com.logicaldoc.core.document.dao.HistoryDAO#findByFolderId(long)
 	 */
 	public List<History> findByFolderId(long folderId) {
-		return findByWhere("_entity.folderId =" + folderId, null, "order by _entity.date asc", null);
+		return findByWhere("_entity.folderId =" + folderId, "order by _entity.date asc", null);
 	}
 
 	@Override
 	public List<History> findNotNotified(Integer max) {
-		return findByWhere("_entity.notified = 0", null, "order by _entity.date asc", max);
+		return findByWhere("_entity.notified = 0", "order by _entity.date asc", max);
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 		if (event != null && StringUtils.isNotEmpty(event))
 			query += " and lower(_entity.event) like '" + SqlUtil.doubleQuotes(event.toLowerCase()) + "'";
 
-		return findByWhere(query, null, "order by _entity.date asc", null);
+		return findByWhere(query, "order by _entity.date asc", null);
 	}
 
 	@Override
@@ -113,10 +113,11 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 
 	@Override
 	public List<History> findByPath(String pathExpression, Date olderDate, Collection<String> events, Integer max) {
-		StringBuffer query = new StringBuffer("(_entity.path like '" + pathExpression + "' or _entity.pathOld like '"+ pathExpression + "') ");
+		StringBuffer query = new StringBuffer("(_entity.path like '" + pathExpression + "' or _entity.pathOld like '"
+				+ pathExpression + "') ");
 		List<Object> params = new ArrayList<Object>();
 		if (olderDate != null) {
-			query.append(" and _entity.date >= ? ");
+			query.append(" and _entity.date >= ?1 ");
 			params.add(olderDate);
 		}
 		if (events != null && !events.isEmpty()) {
