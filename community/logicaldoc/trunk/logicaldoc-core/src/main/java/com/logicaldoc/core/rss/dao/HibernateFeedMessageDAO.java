@@ -53,7 +53,7 @@ public class HibernateFeedMessageDAO extends HibernatePersistentObjectDAO<FeedMe
 		log.debug("delete all feed message before " + cal.getTime());
 		try {
 			Collection<FeedMessage> coll = (Collection<FeedMessage>) findByQuery(
-					"from FeedMessage _feedmessage where _feedmessage.deleted=0 and _feedmessage.pubDate < ?",
+					"from FeedMessage _feedmessage where _feedmessage.deleted=0 and _feedmessage.pubDate < ?1",
 					new Object[] { cal.getTime() }, null);
 			for (FeedMessage feedMessage : coll) {
 				initialize(feedMessage);

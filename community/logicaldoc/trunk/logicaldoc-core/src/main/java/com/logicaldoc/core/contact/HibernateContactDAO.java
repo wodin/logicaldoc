@@ -34,11 +34,11 @@ public class HibernateContactDAO extends HibernatePersistentObjectDAO<Contact> i
 		if (userId == null)
 			sb.append(" _entity.userId is null ");
 		else
-			sb.append(" _entity.userId=? ");
+			sb.append(" _entity.userId = ?1 ");
 		if (email != null)
-			sb.append(" and _entity.email=? ");
+			sb.append(" and _entity.email = ?2 ");
 		
-		return findByWhere(sb.toString(), params.toArray(new Object[0]),
+		return findByWhere(sb.toString(), params.isEmpty() ? null : params.toArray(new Object[0]),
 				"order by _entity.firstName, _entity.lastName", null);
 	}
 }

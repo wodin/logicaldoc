@@ -66,7 +66,7 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * Finds all entities by the given expression. Use _entity alias to
 	 * reference attributes in the where expression.
 	 * 
-	 * @param where The where clause expression
+	 * @param where The where clause expression (for positional parameters, please use JPA-style: ?1, ?2 ...)
 	 * @param values Parameters used in the where expression
 	 * @param order The order clause expression
 	 * @param max Maximum results number (optional)
@@ -77,7 +77,7 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	/**
 	 * Find everything you want from the DB using the ORM query language
 	 * 
-	 * @param query The query to execute
+	 * @param query The query to execute (for positional parameters, please use JPA-style: ?1, ?2 ...)
 	 * @param values Array of paramaters
 	 * @param max Maximum results number (optional)
 	 * @return Query result
@@ -88,7 +88,7 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * Finds all entities ids by the given expression. Use _entity alias to
 	 * reference attributes in the where expression.
 	 * 
-	 * @param where The where clause expression
+	 * @param where The where clause expression 
 	 * @param order The order clause expression
 	 * @param max Maximum results number (optional)
 	 * @return The list of marching entities ids
@@ -99,7 +99,7 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * Finds all entities ids by the given expression. Use _entity alias to
 	 * reference attributes in the where expression.
 	 * 
-	 * @param where The where clause expression
+	 * @param where The where clause expression (for positional parameters, please use JPA-style: ?1, ?2 ...)
 	 * @param values Parameters used in the where expression
 	 * @param order The order clause expression
 	 * @param max Maximum results number (optional)

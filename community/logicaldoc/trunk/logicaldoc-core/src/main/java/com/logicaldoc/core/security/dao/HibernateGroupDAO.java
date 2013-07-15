@@ -182,7 +182,7 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 	 * @see com.logicaldoc.core.security.dao.GroupDAO#findByLikeName(java.lang.String)
 	 */
 	public Collection<Group> findByLikeName(String name) {
-		return findByWhere("lower(_entity.name) like ?", new Object[] { name.toLowerCase() }, null, null);
+		return findByWhere("lower(_entity.name) like ?1", new Object[] { name.toLowerCase() }, null, null);
 	}
 
 	@Override

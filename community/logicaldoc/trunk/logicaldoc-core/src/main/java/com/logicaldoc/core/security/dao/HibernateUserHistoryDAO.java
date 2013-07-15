@@ -27,7 +27,7 @@ public class HibernateUserHistoryDAO extends HibernatePersistentObjectDAO<UserHi
 	 * @see com.logicaldoc.core.security.dao.UserHistoryDAO#findByUserId(long)
 	 */
 	public List<UserHistory> findByUserId(long userId) {
-		return findByWhere("_entity.userId =" + userId, null, "order by _entity.date asc", null);
+		return findByWhere("_entity.userId =" + userId, "order by _entity.date asc", null);
 	}
 
 	/**

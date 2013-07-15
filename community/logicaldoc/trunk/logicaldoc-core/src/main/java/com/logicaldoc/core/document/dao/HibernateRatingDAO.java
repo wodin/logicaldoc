@@ -67,6 +67,6 @@ public class HibernateRatingDAO extends HibernatePersistentObjectDAO<Rating> imp
 
 	@Override
 	public boolean findByDocIdAndUserId(long docId, long userId) {
-		return findByWhere("_entity.docId =" + docId + " and _entity.userId =" + userId, null, null, null).size() > 0;
+		return findByWhere("_entity.docId =" + docId + " and _entity.userId =" + userId, null, null).size() > 0;
 	}
 }

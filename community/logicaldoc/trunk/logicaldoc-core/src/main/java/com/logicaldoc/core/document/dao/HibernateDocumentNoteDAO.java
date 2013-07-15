@@ -23,11 +23,11 @@ public class HibernateDocumentNoteDAO extends HibernatePersistentObjectDAO<Docum
 
 	@Override
 	public List<DocumentNote> findByDocId(long docId) {
-		return findByWhere("_entity.docId =" + docId, null, null, null);
+		return findByWhere("_entity.docId =" + docId, null, null);
 	}
 
 	@Override
 	public List<DocumentNote> findByUserId(long userId) {
-		return findByWhere("_entity.userId =" + userId, null, "order by _entity.date desc", null);
+		return findByWhere("_entity.userId =" + userId, "order by _entity.date desc", null);
 	}
 }

@@ -83,7 +83,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 
 	@Override
 	public List<T> findByWhere(String where, String order, Integer max) {
-		return findByWhere(where, new Object[0], order, max);
+		return findByWhere(where, null, order, max);
 	}
 
 	@Override
@@ -199,11 +199,10 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 	 */
 	protected Query prepareQuery(String expression, Object[] values, Integer max) {
 		Query queryObject = sessionFactory.getCurrentSession().createQuery(expression);
-		if (values != null) {
-			for (int i = 0; i < values.length; i++) {
-				queryObject.setParameter(i, values[i]);
-			}
-		}
+		if (values != null)
+			for (int i = 0; i < values.length; i++)
+				queryObject.setParameter(Integer.toString(i + 1), values[i]);
+
 		if (max != null && max > 0)
 			queryObject.setMaxResults(max);
 		return queryObject;

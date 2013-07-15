@@ -482,7 +482,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 		try {
 			StringBuffer query = new StringBuffer("select _userdoc.id.docId from UserDoc _userdoc");
-			query.append(" where _userdoc.id.userId = ?");
+			query.append(" where _userdoc.id.userId = ?1 ");
 			query.append(" order by _userdoc.date desc");
 
 			List<Long> results = (List<Long>) findByQuery(query.toString(), new Object[] { userId }, null);
@@ -548,22 +548,19 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		try {
 			query = new StringBuffer("select distinct(_entity) from Document _entity, DocumentLink _link where ");
 			if (direction == null) {
-				query.append(" ((_link.document1 = _entity and _link.document1.id = ? )"
-						+ "or (_link.document2 = _entity and _link.document2.id = ? )) ");
+				query.append(" ((_link.document1 = _entity and _link.document1.id = ?1 )"
+						+ "or (_link.document2 = _entity and _link.document2.id = ?1 )) ");
 			} else if (direction.intValue() == 1)
-				query.append(" _link.document1 = _entity and _link.document1.id = ? ");
+				query.append(" _link.document1 = _entity and _link.document1.id = ?1 ");
 			else if (direction.intValue() == 2)
-				query.append(" _link.document2 = _entity and _link.document2.id = ? ");
+				query.append(" _link.document2 = _entity and _link.document2.id = ?1 ");
 			if (StringUtils.isNotEmpty(linkType)) {
 				query.append(" and _link.type = '");
 				query.append(linkType);
 				query.append("'");
 			}
 
-			if (direction == null)
-				coll = (List<Document>) findByQuery(query.toString(), new Object[] { docId, docId }, null);
-			else
-				coll = (List<Document>) findByQuery(query.toString(), new Object[] { docId }, null);
+			coll = (List<Document>) findByQuery(query.toString(), new Object[] { docId }, null);
 
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
@@ -809,7 +806,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			sb.append(ids[i]);
 		}
 
-		docs = findByWhere("_entity.id in(" + sb.toString() + ")", null, null, max);
+		docs = findByWhere("_entity.id in(" + sb.toString() + ")", null, max);
 		return docs;
 	}
 
