@@ -48,6 +48,15 @@ public interface SettingService extends RemoteService {
 	public GUIEmailSettings loadEmailSettings(String sid) throws InvalidSessionException;
 
 	/**
+	 * Tests the SMTP connection
+	 * 
+	 * @param sid The session identifier
+	 * @param email email address to test(it will receive a test message)
+	 * @return True only if the email was sent
+	 */
+	public boolean testEmail(String sid, String email) throws InvalidSessionException;
+
+	/**
 	 * Load the repositories paths.
 	 * 
 	 * <ol>

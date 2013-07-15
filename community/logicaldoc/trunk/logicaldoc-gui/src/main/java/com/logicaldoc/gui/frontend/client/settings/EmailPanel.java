@@ -10,9 +10,12 @@ import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.SC;
+import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
@@ -104,9 +107,11 @@ public class EmailPanel extends VLayout {
 
 		ButtonItem save = new ButtonItem("save", I18N.message("save"));
 		save.setStartRow(true);
+		save.setEndRow(false);
 		save.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 			@Override
 			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+				@SuppressWarnings("unchecked")
 				Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				if (vm.validate()) {
@@ -140,7 +145,37 @@ public class EmailPanel extends VLayout {
 			}
 		});
 
-		emailForm.setItems(smtpServer, port, username, password, connSecurity, secureAuth, senderEmail, save);
+		ButtonItem test = new ButtonItem("test", I18N.message("testconnection"));
+		test.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+			@Override
+			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+				if (vm.validate()) {
+					LD.askforValue(I18N.message("email"), I18N.message("email"),
+							(String) vm.getValueAsString("senderEmail"), "200", new ValueCallback() {
+
+								@Override
+								public void execute(String value) {
+									service.testEmail(Session.get().getSid(), value, new AsyncCallback<Boolean>() {
+										@Override
+										public void onFailure(Throwable caught) {
+											Log.serverError(caught);
+										}
+
+										@Override
+										public void onSuccess(Boolean result) {
+											if (result.booleanValue())
+												SC.say(I18N.message("connectionestablished"));
+											else
+												SC.warn(I18N.message("connectionfailed"));
+										}
+									});
+								}
+							});
+				}
+			}
+		});
+
+		emailForm.setItems(smtpServer, port, username, password, connSecurity, secureAuth, senderEmail, save, test);
 		email.setPane(emailForm);
 		tabs.setTabs(email, templates);
 		setMembers(tabs);

@@ -196,6 +196,10 @@ insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
 values     (1520,CURRENT_TIMESTAMP,0,'dashboard',5,'menu.png',1);
 
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type)
+values     (1530,CURRENT_TIMESTAMP,0,'contacts',5,'menu.png',1);
+
 
 insert into ld_group
 values     (1,CURRENT_TIMESTAMP,0,'admin','Group of admins',0);
@@ -252,6 +256,11 @@ insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1520,2,0);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1520,3,0);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1520,4,0);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1520,-10000,0);
+
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1530,2,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1530,3,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1530,4,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1530,-10000,0);
 
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_creation,ld_templocked)
 values (5,CURRENT_TIMESTAMP,0,'/',5,1,CURRENT_TIMESTAMP,0);

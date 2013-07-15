@@ -34,4 +34,6 @@ public interface SettingServiceAsync {
 	void loadSettings(String sid, AsyncCallback<GUIParameter[]> callback);
 
 	void saveDashlets(String sid, GUIDashlet[] dashlets, AsyncCallback<Void> callback);
+
+	void testEmail(String sid, String email, AsyncCallback<Boolean> callback);
 }

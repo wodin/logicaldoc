@@ -32,8 +32,10 @@ import com.logicaldoc.gui.frontend.client.gdocs.GDocsImport;
 import com.logicaldoc.gui.frontend.client.gdocs.GDocsSettings;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.personal.ChangePassword;
+import com.logicaldoc.gui.frontend.client.personal.Contacts;
 import com.logicaldoc.gui.frontend.client.personal.MySignature;
 import com.logicaldoc.gui.frontend.client.personal.Profile;
+import com.logicaldoc.gui.frontend.client.personal.Subscriptions;
 import com.logicaldoc.gui.frontend.client.search.SearchPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
@@ -462,6 +464,15 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		});
 		changePswd.setEnabled(!(Session.get().isDemo() && Session.get().getUser().getId() == 1));
 
+		MenuItem contacts = new MenuItem(I18N.message("contacts"));
+		contacts.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				Contacts contacts = new Contacts();
+				contacts.show();
+			}
+		});
+
 		MenuItem mySignature = new MenuItem(I18N.message("mysignature"));
 		mySignature.addClickHandler(new ClickHandler() {
 			@Override
@@ -547,10 +558,11 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		items.add(profile);
 		items.add(changePswd);
 
+		if (com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.CONTACTS))
+			items.add(contacts);
+
 		if (Feature.enabled(Feature.DIGITAL_SIGN))
 			items.add(mySignature);
-		else
-			menu.setItems(profile, changePswd, removeCookies);
 
 		if (Feature.enabled(Feature.AUDIT)
 				&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.SUBSCRIPTIONS))
@@ -630,7 +642,8 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 					tmp += "<param name=\"baseUrl\" value=\"" + Util.contextPath() + "\" />";
 					tmp += "<param name=\"sid\" value=\"" + Session.get().getSid() + "\" />";
 					tmp += "<param name=\"language\" value=\"" + I18N.getDefaultLocaleForDoc() + "\" />";
-					tmp += "<param name=\"sizeMax\" value=\"" + Long.parseLong(Session.get().getInfo().getConfig("upload.maxsize"));
+					tmp += "<param name=\"sizeMax\" value=\""
+							+ Long.parseLong(Session.get().getInfo().getConfig("upload.maxsize"));
 					tmp += "</applet></div>";
 					dropArea.setContents(tmp);
 				}

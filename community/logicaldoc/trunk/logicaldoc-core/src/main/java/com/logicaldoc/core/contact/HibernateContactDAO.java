@@ -1,5 +1,6 @@
 package com.logicaldoc.core.contact;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.LoggerFactory;
@@ -22,12 +23,22 @@ public class HibernateContactDAO extends HibernatePersistentObjectDAO<Contact> i
 	}
 
 	@Override
-	public List<Contact> findByUser(Long userId) {
+	public List<Contact> findByUser(Long userId, String email) {
+		List<Object> params = new ArrayList<Object>();
 		if (userId != null)
-			return findByWhere(" _entity.userId=? ", new Object[] { userId },
-					"order by _entity.firstName, _entity.lastName", null);
+			params.add(userId);
+		if (email != null)
+			params.add(email);
+
+		StringBuffer sb = new StringBuffer("");
+		if (userId == null)
+			sb.append(" _entity.userId is null ");
 		else
-			return findByWhere(" _entity.userId is null ", new Object[0],
-					"order by _entity.firstName, _entity.lastName", null);
+			sb.append(" _entity.userId=? ");
+		if (email != null)
+			sb.append(" and _entity.email=? ");
+		
+		return findByWhere(sb.toString(), params.toArray(new Object[0]),
+				"order by _entity.firstName, _entity.lastName", null);
 	}
 }

@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
+import com.logicaldoc.gui.common.client.data.ContactsDS;
 import com.logicaldoc.gui.common.client.data.EventsDS;
 import com.logicaldoc.gui.common.client.data.FolderTemplatesDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
@@ -27,6 +28,7 @@ import com.smartgwt.client.widgets.HeaderControl.HeaderIcon;
 import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.FloatItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
@@ -100,6 +102,19 @@ public class ItemFactory {
 		final SelectItem item = new UserSelector("_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER), title,
 				groupIdOrName);
 		return item;
+	}
+
+	public static SelectItem newRecipientTypeSelector(String name) {
+		SelectItem selector = new SelectItem();
+		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
+		opts.put("to", I18N.message("to"));
+		opts.put("cc", I18N.message("cc"));
+		selector.setValueMap(opts);
+		selector.setName(filterItemName(name));
+		selector.setShowTitle(false);
+		selector.setValue("to");
+		selector.setRequired(true);
+		return selector;
 	}
 
 	public static SelectItem newDateOperator(String name, String title) {
@@ -211,6 +226,27 @@ public class ItemFactory {
 		item.setHintStyle("hint");
 		item.setWidth(180);
 		return item;
+	}
+
+	public static ComboBoxItem newEmailSelector(String name, String title) {
+		ComboBoxItem selector = new ComboBoxItem(filterItemName(name));
+		selector.setTitle(I18N.message(title));
+		selector.setWrapTitle(false);
+		selector.setValueField("email");
+		selector.setDisplayField("email");
+		selector.setPickListWidth(350);
+		selector.setFetchDelay(2000);
+		selector.setHideEmptyPickList(true);
+		ListGridField email = new ListGridField("email", I18N.message("email"));
+		email.setWidth("*");
+		ListGridField firstName = new ListGridField("firstName", I18N.message("firstname"));
+		firstName.setWidth(90);
+		ListGridField lastName = new ListGridField("lastName", I18N.message("lastname"));
+		lastName.setWidth(90);
+		selector.setPickListFields(email, firstName, lastName);
+		selector.setOptionDataSource(new ContactsDS());
+		selector.setHintStyle("hint");
+		return selector;
 	}
 
 	public static SelectItem newGroupSelector(String name, String title) {

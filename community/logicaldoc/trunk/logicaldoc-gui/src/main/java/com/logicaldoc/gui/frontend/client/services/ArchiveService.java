@@ -9,7 +9,7 @@ import com.logicaldoc.gui.common.client.beans.GUIVersion;
 
 /**
  * The client side stub for the Archive Service. This service allows r/w
- * operations on documents.
+ * operations on archives.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0

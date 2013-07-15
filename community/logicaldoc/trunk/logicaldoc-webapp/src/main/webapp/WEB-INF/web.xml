@@ -154,6 +154,11 @@
 		<servlet-class>com.logicaldoc.gui.frontend.server.MockWorkflowServiceImpl</servlet-class>
 	</servlet>
 
+    <servlet>
+      <servlet-name>ContactService</servlet-name>
+      <servlet-class>com.logicaldoc.web.service.ContactServiceImpl</servlet-class>
+    </servlet>
+
 	<servlet>
 		<servlet-name>TagsData</servlet-name>
 		<servlet-class>com.logicaldoc.web.data.TagsDataServlet</servlet-class>
@@ -314,10 +319,10 @@
 		<servlet-class>com.logicaldoc.web.LogDownload</servlet-class>
 	</servlet>
 
-	<servlet>
-		<servlet-name>MockServlet</servlet-name>
-		<servlet-class>com.logicaldoc.gui.common.server.MockServlet</servlet-class>
-	</servlet>
+    <servlet>
+        <servlet-name>ContactsData</servlet-name>
+        <servlet-class>com.logicaldoc.web.data.ContactsDataServlet</servlet-class>
+    </servlet>
 
 	<servlet-mapping>
 		<servlet-name>UploadServlet</servlet-name>
@@ -401,6 +406,11 @@
 	<servlet-mapping>
 		<servlet-name>WorkflowService</servlet-name>
 		<url-pattern>/frontend/workflow</url-pattern>
+	</servlet-mapping>
+    
+	<servlet-mapping>
+		<servlet-name>ContactService</servlet-name>
+		<url-pattern>/frontend/contact</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -528,6 +538,11 @@
 		<url-pattern>/data/documentnotes.xml</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>ContactsData</servlet-name>
+        <url-pattern>/data/contacts.xml</url-pattern>
+    </servlet-mapping>
+    
 	<servlet-mapping>
 		<servlet-name>Preview</servlet-name>
 		<url-pattern>/preview</url-pattern>
