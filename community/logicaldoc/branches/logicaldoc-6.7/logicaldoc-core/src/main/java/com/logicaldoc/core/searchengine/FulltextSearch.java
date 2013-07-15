@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -39,8 +40,9 @@ public class FulltextSearch extends Search {
 			Hit hit = hitsMap.get(rs.getLong(1));
 			if (hit == null)
 				hit = hitsMap.get(rs.getLong(3));
-			if (hit == null)
+			if (hit == null) {
 				return null;
+			}
 			hit.setId(rs.getLong(1));
 			hit.setCustomId(rs.getString(2));
 			hit.setDocRef(rs.getLong(3));
@@ -201,9 +203,8 @@ public class FulltextSearch extends Search {
 
 			// When user can see document with folderId then put it into
 			// result-collection.
-			if ((accessibleFolderIds.isEmpty() && searchUser.isInGroup("admin"))
-					|| accessibleFolderIds.contains(hit.getFolder().getId())) {
-				hits.add(hit);
+			if (searchUser.isInGroup("admin")
+					|| (accessibleFolderIds != null && accessibleFolderIds.contains(hit.getFolder().getId()))) {
 				hitsMap.put(hit.getId(), hit);
 			}
 		}
@@ -271,7 +272,13 @@ public class FulltextSearch extends Search {
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		dao.query(richQuery.toString(), null, new HitMapper(hitsMap), options.getMaxHits());
 
-		log.debug("End of DB search");
+		// Populate the hits list discarding unexisting documents
+		Iterator<Hit> iter = hitsMap.values().iterator();
+		while (iter.hasNext()) {
+			Hit hit = iter.next();
+			if (!StringUtils.isEmpty(hit.getTitle()) && !StringUtils.isEmpty(hit.getFileName()))
+				hits.add(hit);
+		}
 
 		/*
 		 * Check for suggestions
@@ -283,5 +290,4 @@ public class FulltextSearch extends Search {
 				suggestion = suggestion.replaceFirst(token, suggestions.get(token));
 		}
 	}
-
 }
