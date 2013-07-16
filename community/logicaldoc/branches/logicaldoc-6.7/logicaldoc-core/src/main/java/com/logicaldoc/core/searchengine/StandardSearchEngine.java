@@ -433,6 +433,7 @@ public class StandardSearchEngine implements SearchEngine {
 	public void dropIndexes() {
 		try {
 			server.deleteByQuery("*:*");
+			server.optimize();
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
