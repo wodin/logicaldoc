@@ -466,6 +466,34 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 	}
 
 	@Override
+	public WSDocument[] getAliases(String sid, long docId) throws Exception {
+		User user = validateSession(sid);
+		Collection<Long> folderIds = null;
+		if (!user.isInGroup("admin")) {
+			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			folderIds = fdao.findFolderIdByUserId(user.getId(), null, true);
+		}
+
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		List<Document> docs = new ArrayList<Document>();
+		if (user.isInGroup("admin"))
+			docs = docDao.findByWhere("_entity.docRef=" + docId, null, null);
+		else {
+			String idsStr = folderIds.toString().replace('[', '(').replace(']', ')');
+			docs = docDao.findByWhere("_entity.docRef=" + docId + " and _entity.id in " + idsStr, null, null);
+		}
+
+		List<WSDocument> wsDocs = new ArrayList<WSDocument>();
+		for (int i = 0; i < docs.size(); i++) {
+			docDao.initialize(docs.get(i));
+			if (user.isInGroup("admin") || folderIds.contains(docs.get(i).getFolder().getId()))
+				wsDocs.add(WSDocument.fromDocument(docs.get(i)));
+		}
+
+		return wsDocs.toArray(new WSDocument[0]);
+	}
+
+	@Override
 	public WSDocument[] getVersions(String sid, long docId) throws Exception {
 		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
