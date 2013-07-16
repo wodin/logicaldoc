@@ -10,7 +10,6 @@ import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Locale;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.index.CheckIndex;
 import org.apache.lucene.index.CheckIndex.Status;
@@ -410,9 +409,7 @@ public class StandardSearchEngine implements SearchEngine {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see com.logicaldoc.core.searchengine.SearchEngine#getCount()
 	 */
 	@Override
@@ -429,19 +426,14 @@ public class StandardSearchEngine implements SearchEngine {
 		return 0;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see com.logicaldoc.core.searchengine.SearchEngine#dropIndexes()
 	 */
 	@Override
 	public void dropIndexes() {
 		try {
-			close();
-			FileUtils.deleteDirectory(getIndexDataFolder());
-			FileUtils.deleteDirectory(getSpellcheckerDataFolder());
-			init();
-		} catch (IOException e) {
+			server.deleteByQuery("*:*");
+		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
 	}
@@ -467,20 +459,18 @@ public class StandardSearchEngine implements SearchEngine {
 		return new File(indexdir, "spellchecker");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see com.logicaldoc.core.searchengine.SearchEngine#init()
 	 */
 	@Override
 	public void init() {
 		try {
-			File home = new File(config.getPropertyWithSubstitutions("index.dir"));
-			File solr_xml = new File(home, "solr.xml");
+			File indexHome = new File(config.getPropertyWithSubstitutions("index.dir"));
+			File solr_xml = new File(indexHome, "solr.xml");
 
-			if (!home.exists()) {
-				home.mkdirs();
-				home.mkdir();
+			if (!indexHome.exists()) {
+				indexHome.mkdirs();
+				indexHome.mkdir();
 			}
 			if (!solr_xml.exists()) {
 				FileUtil.copyResource("/index/solr.xml", solr_xml);
@@ -509,7 +499,7 @@ public class StandardSearchEngine implements SearchEngine {
 				FileUtil.copyResource("/index/conf/protwords.txt", protwords_txt);
 			}
 
-			CoreContainer container = new CoreContainer(home.getPath(), solr_xml);
+			CoreContainer container = new CoreContainer(indexHome.getPath(), solr_xml);
 			server = new EmbeddedSolrServer(container, "logicaldoc");
 			unlock();
 		} catch (Exception e) {
