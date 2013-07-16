@@ -131,8 +131,8 @@ public class Frontend implements EntryPoint {
 						&& "true".equals(info.getConfig("anonymous.enabled"));
 
 				loginPanel = new LoginPanel(info);
-				if (savedSid == null || "".equals(savedSid)) {
-					if (anonymousLogin) {
+				if (savedSid == null || "".equals(savedSid.trim())) {
+					if (anonymousLogin) {						
 						/*
 						 * Simulate a login with the anonymous user
 						 */
