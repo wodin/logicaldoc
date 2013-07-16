@@ -155,4 +155,9 @@ public class DocumentClient extends AbstractClient<DocumentService> implements D
 	public WSDocument[] listDocuments(String sid, long folderId, String fileName) throws Exception {
 		return client.listDocuments(sid, folderId, fileName);
 	}
+
+	@Override
+	public WSDocument[] getAliases(String sid, long docId) throws Exception {
+		return client.getAliases(sid, docId);
+	}
 }
