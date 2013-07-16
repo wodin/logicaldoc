@@ -7,12 +7,9 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.index.CheckIndex;
 import org.apache.lucene.index.CheckIndex.Status;
@@ -120,7 +117,7 @@ public class StandardSearchEngine implements SearchEngine {
 				// Skip all non-string attributes
 				if ((ext.getType() == ExtendedAttribute.TYPE_STRING || ext.getType() == ExtendedAttribute.TYPE_USER)
 						&& StringUtils.isNotEmpty(ext.getStringValue())) {
-					
+
 					// Prefix all extended attributes with 'ext_' in order to
 					// avoid collisions with standard fields
 					doc.addField("ext_" + attribute, ext.getStringValue());
@@ -284,16 +281,8 @@ public class StandardSearchEngine implements SearchEngine {
 	 */
 	@Override
 	public synchronized void deleteHits(Collection<Long> ids) {
-		try {
-			List<String> list = new ArrayList<String>();
-			for (Long i : ids) {
-				list.add(Long.toString(i));
-			}
-			server.deleteById(list);
-			server.commit();
-		} catch (Throwable e) {
-			log.debug("Unable to delete some hits " + ids, e);
-		}
+		for (Long id : ids)
+			deleteHit(id);
 	}
 
 	/*
@@ -420,9 +409,7 @@ public class StandardSearchEngine implements SearchEngine {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see com.logicaldoc.core.searchengine.SearchEngine#getCount()
 	 */
 	@Override
@@ -439,19 +426,14 @@ public class StandardSearchEngine implements SearchEngine {
 		return 0;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see com.logicaldoc.core.searchengine.SearchEngine#dropIndexes()
 	 */
 	@Override
 	public void dropIndexes() {
 		try {
-			close();
-			FileUtils.deleteDirectory(getIndexDataFolder());
-			FileUtils.deleteDirectory(getSpellcheckerDataFolder());
-			init();
-		} catch (IOException e) {
+			server.deleteByQuery("*:*");
+		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
 	}
@@ -477,20 +459,18 @@ public class StandardSearchEngine implements SearchEngine {
 		return new File(indexdir, "spellchecker");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see com.logicaldoc.core.searchengine.SearchEngine#init()
 	 */
 	@Override
 	public void init() {
 		try {
-			File home = new File(config.getPropertyWithSubstitutions("index.dir"));
-			File solr_xml = new File(home, "solr.xml");
+			File indexHome = new File(config.getPropertyWithSubstitutions("index.dir"));
+			File solr_xml = new File(indexHome, "solr.xml");
 
-			if (!home.exists()) {
-				home.mkdirs();
-				home.mkdir();
+			if (!indexHome.exists()) {
+				indexHome.mkdirs();
+				indexHome.mkdir();
 			}
 			if (!solr_xml.exists()) {
 				FileUtil.copyResource("/index/solr.xml", solr_xml);
@@ -519,7 +499,7 @@ public class StandardSearchEngine implements SearchEngine {
 				FileUtil.copyResource("/index/conf/protwords.txt", protwords_txt);
 			}
 
-			CoreContainer container = new CoreContainer(home.getPath(), solr_xml);
+			CoreContainer container = new CoreContainer(indexHome.getPath(), solr_xml);
 			server = new EmbeddedSolrServer(container, "logicaldoc");
 			unlock();
 		} catch (Exception e) {
