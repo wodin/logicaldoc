@@ -268,4 +268,15 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(2, docs.length);
 	}
+	
+	@Test
+	public void testGetAliases() throws Exception {
+		WSDocument[] docs = docServiceImpl.getAliases("", 1L);
+		Assert.assertNotNull(docs);
+		Assert.assertEquals(1, docs.length);
+		
+		docs = docServiceImpl.getAliases("", 2L);
+		Assert.assertNotNull(docs);
+		Assert.assertEquals(0, docs.length);
+	}
 }
