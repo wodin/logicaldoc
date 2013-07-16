@@ -178,7 +178,7 @@ public class SecuritySettingsPanel extends VLayout {
 		anonymousForm.setNumCols(1);
 		final RadioGroupItem enableAnonymous = ItemFactory.newBooleanSelector("enableanonymous",
 				I18N.message("enableanonymous"));
-		enableAnonymous.setValue(settings.isSaveLogin() ? "yes" : "no");
+		enableAnonymous.setValue(settings.isEnableAnonymousLogin() ? "yes" : "no");
 		enableAnonymous.setWrapTitle(false);
 		enableAnonymous.setRequired(true);
 		
