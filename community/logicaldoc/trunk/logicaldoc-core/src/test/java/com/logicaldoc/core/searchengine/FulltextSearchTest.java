@@ -63,7 +63,8 @@ public class FulltextSearchTest extends AbstractCoreTCase {
 		Document document = new Document();
 		document.setId(1L);
 		document.setTitle("Document test 1");
-		document.setLanguage("it");
+		document.setFileName("test.doc");
+		document.setLanguage("en");
 		document.setDate(new Date());
 		Folder fold = new Folder();
 		fold.setId(Folder.DEFAULTWORKSPACE);
@@ -72,9 +73,11 @@ public class FulltextSearchTest extends AbstractCoreTCase {
 
 		engine.addHit(document, "Questo è un documento di prova. Per fortuna che esistono i test. document");
 
+		//Adding unexisting document 111
 		document = new Document();
 		document.setId(111L);
 		document.setTitle("Document test 111");
+		document.setFileName("test.doc");
 		document.setTemplateId(0L);
 		document.setLanguage("en");
 		document.setDate(new Date());
@@ -86,6 +89,7 @@ public class FulltextSearchTest extends AbstractCoreTCase {
 		document = new Document();
 		document.setId(2L);
 		document.setTitle("Document test 2");
+		document.setFileName("test.doc");
 		document.setLanguage("en");
 		document.setDate(new Date());
 		fold = new Folder();
@@ -97,6 +101,7 @@ public class FulltextSearchTest extends AbstractCoreTCase {
 		document = new Document();
 		document.setId(3L);
 		document.setTitle("Document test 3");
+		document.setFileName("test.doc");
 		document.setTemplateId(0L);
 		document.setLanguage("standard");
 		document.setDate(new Date());
@@ -112,7 +117,7 @@ public class FulltextSearchTest extends AbstractCoreTCase {
 		
 		 FulltextSearchOptions opt = new FulltextSearchOptions();
 		 opt.setLanguage("en");
-		 opt.setExpression("document");
+		 opt.setExpression("documento");
 		 opt.setFields(new String[] { "content", "title" });
 		 opt.setExpressionLanguage("en");
 		 opt.setType(SearchOptions.TYPE_FULLTEXT);
@@ -122,12 +127,12 @@ public class FulltextSearchTest extends AbstractCoreTCase {
 		 search.setOptions(opt);
 		
 		 List<Hit> hits = search.search();
-		 Assert.assertEquals(2, hits.size());
+		 Assert.assertEquals(1, hits.size());
 		
 		 opt.setMaxHits(1);
 		 hits = search.search();
 		 Assert.assertEquals(1, hits.size());
-		 Assert.assertTrue(search.isMoreHitsPresent());
+		 Assert.assertFalse(search.isMoreHitsPresent());
 		
 		
 		 opt = new FulltextSearchOptions();

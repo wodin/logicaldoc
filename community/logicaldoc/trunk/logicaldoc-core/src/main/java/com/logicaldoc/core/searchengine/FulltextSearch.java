@@ -43,6 +43,7 @@ public class FulltextSearch extends Search {
 			if (hit == null) {
 				return null;
 			}
+
 			hit.setId(rs.getLong(1));
 			hit.setCustomId(rs.getString(2));
 			hit.setDocRef(rs.getLong(3));
@@ -268,7 +269,7 @@ public class FulltextSearch extends Search {
 		richQuery.append("  and A.ld_docref is not null and REF.ld_deleted=0 and A.ld_docref = REF.ld_id ");
 		richQuery.append("  and A.ld_docref in ");
 		richQuery.append(hitsIdsStr);
-
+		
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		dao.query(richQuery.toString(), null, new HitMapper(hitsMap), options.getMaxHits());
 
