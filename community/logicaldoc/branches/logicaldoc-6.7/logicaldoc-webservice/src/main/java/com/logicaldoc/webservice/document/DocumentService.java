@@ -119,6 +119,7 @@ public interface DocumentService {
 	 * 
 	 * @param sid Session identifier
 	 * @param docIds The documents ids
+	 * 
 	 * @return A value object containing the document's metadata.
 	 * @throws Exception
 	 */
@@ -126,6 +127,19 @@ public interface DocumentService {
 	public WSDocument[] getDocuments(@WebParam(name = "sid") String sid, @WebParam(name = "docIds") Long[] docIds)
 			throws Exception;
 
+	/**
+	 * Gets the aliases t the given document
+	 * 
+	 * @param sid Session identifier
+	 * @param docId The master document ID
+	 * @return Arrays of aliases
+	 * @throws Exception
+	 */
+	@WebResult(name = "aliases")
+	public WSDocument[] getAliases(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId)
+			throws Exception;
+
+	
 	/**
 	 * Updates an existing document with the value object containing the
 	 * document's metadata.
