@@ -214,6 +214,8 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 
 	/**
 	 * Executes a bulk update as specified by the given expression
+	 * @expression The update expression. (for positional parameters, please use JPA-style: ?1, ?2 ...)
+	 * @values Optional array of parameters values
 	 * 
 	 * @return the number of modified records
 	 */
