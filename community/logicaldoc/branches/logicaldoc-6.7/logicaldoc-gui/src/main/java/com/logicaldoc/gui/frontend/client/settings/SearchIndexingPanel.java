@@ -15,6 +15,7 @@ import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
@@ -27,6 +28,7 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -561,34 +563,47 @@ public class SearchIndexingPanel extends VLayout {
 			}
 		});
 
-		IButton rescheduleAll = new IButton();
+		final IButton rescheduleAll = new IButton();
 		rescheduleAll.setAutoFit(true);
 		rescheduleAll.setTitle(I18N.message("rescheduleall"));
 		rescheduleAll.addClickHandler(new ClickHandler() {
+
 			public void onClick(ClickEvent event) {
-				service.rescheduleAll(Session.get().getSid(), new AsyncCallback<Void>() {
-
+				LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+					public void execute(Boolean value) {
+						if (value) {
+							ContactingServer.get().show();
+							rescheduleAll.setDisabled(true);
+							service.rescheduleAll(Session.get().getSid(), new AsyncCallback<Void>() {
 
-					@Override
-					public void onSuccess(Void ret) {
-						Log.info(I18N.message("docsreindex"), null);
-						service.getInfo(Session.get().getSid(), new AsyncCallback<GUISearchEngine>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									ContactingServer.get().hide();
+									rescheduleAll.setDisabled(false);
+									Log.serverError(caught);
+								}
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+								@Override
+								public void onSuccess(Void ret) {
+									Log.info(I18N.message("docsreindex"), null);
+									rescheduleAll.setDisabled(false);
+									ContactingServer.get().hide();
 
-							@Override
-							public void onSuccess(GUISearchEngine searchEngine) {
-								AdminPanel.get().setContent(new SearchIndexingPanel(searchEngine));
-							}
+									service.getInfo(Session.get().getSid(), new AsyncCallback<GUISearchEngine>() {
+										@Override
+										public void onFailure(Throwable caught) {
+											Log.serverError(caught);
+										}
 
-						});
+										@Override
+										public void onSuccess(GUISearchEngine searchEngine) {
+											AdminPanel.get().setContent(new SearchIndexingPanel(searchEngine));
+										}
+									});
+								}
+							});
+						}
 					}
 				});
 			}
@@ -633,7 +648,7 @@ public class SearchIndexingPanel extends VLayout {
 	}
 
 	private void showIndexQueueMenu() {
-		final ListGridRecord[] selection = docsList.getSelection();
+		final ListGridRecord[] selection = docsList.getSelectedRecords();
 
 		Menu contextMenu = new Menu();
 		MenuItem markUnindexable = new MenuItem();
