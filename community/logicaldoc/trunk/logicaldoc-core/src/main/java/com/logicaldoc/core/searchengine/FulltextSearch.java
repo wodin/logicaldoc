@@ -38,15 +38,22 @@ public class FulltextSearch extends Search {
 
 		public Hit mapRow(ResultSet rs, int rowNum) throws SQLException {
 			Hit hit = hitsMap.get(rs.getLong(1));
-			if (hit == null)
-				hit = hitsMap.get(rs.getLong(3));
 			if (hit == null) {
-				return null;
+				// This is an alias
+				hit = new Hit();
+				hitsMap.put(rs.getLong(1), hit);
 			}
 
 			hit.setId(rs.getLong(1));
 			hit.setCustomId(rs.getString(2));
-			hit.setDocRef(rs.getLong(3));
+			if (rs.getLong(3) != 0L) {
+				hit.setDocRef(rs.getLong(3));
+				Hit master = hitsMap.get(rs.getLong(3));
+				if (master != null) {
+					hit.setContent(master.getContent());
+					hit.setSummary(master.getSummary());
+				}
+			}
 			hit.setType(rs.getString(4));
 			hit.setTitle(rs.getString(5));
 			hit.setVersion(rs.getString(6));
@@ -269,7 +276,7 @@ public class FulltextSearch extends Search {
 		richQuery.append("  and A.ld_docref is not null and REF.ld_deleted=0 and A.ld_docref = REF.ld_id ");
 		richQuery.append("  and A.ld_docref in ");
 		richQuery.append(hitsIdsStr);
-		
+
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		dao.query(richQuery.toString(), null, new HitMapper(hitsMap), options.getMaxHits());
 
@@ -277,7 +284,10 @@ public class FulltextSearch extends Search {
 		Iterator<Hit> iter = hitsMap.values().iterator();
 		while (iter.hasNext()) {
 			Hit hit = iter.next();
-			if (!StringUtils.isEmpty(hit.getTitle()) && !StringUtils.isEmpty(hit.getFileName()))
+			if (StringUtils.isEmpty(hit.getTitle()) || StringUtils.isEmpty(hit.getFileName()))
+				continue;
+			if (searchUser.isInGroup("admin")
+					|| (accessibleFolderIds != null && accessibleFolderIds.contains(hit.getFolder().getId())))
 				hits.add(hit);
 		}
 
