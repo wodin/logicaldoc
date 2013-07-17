@@ -132,33 +132,11 @@ public class Frontend implements EntryPoint {
 
 				loginPanel = new LoginPanel(info);
 				if (savedSid == null || "".equals(savedSid.trim())) {
-					if (anonymousLogin) {						
+					if (anonymousLogin) {
 						/*
 						 * Simulate a login with the anonymous user
 						 */
-						securityService.login(info.getConfig("anonymous.user"), "", lang,
-								new AsyncCallback<GUISession>() {
-
-									@Override
-									public void onFailure(Throwable caught) {
-										Frontend.this.showInitialLogin();
-									}
-
-									@Override
-									public void onSuccess(GUISession session) {
-										if (session == null || !session.isLoggedIn()) {
-											Frontend.this.showInitialLogin();
-										} else {
-											MainPanel.get();
-											loginPanel.onLoggedIn(session);
-
-											// Remove the loading frame
-											RootPanel.getBodyElement().removeChild(
-													RootPanel.get("loadingWrapper").getElement());
-											declareReloadTrigger(Frontend.this);
-										}
-									}
-								});
+						anonymousLogin(lang, info);
 					} else
 						Frontend.this.showInitialLogin();
 				} else {
@@ -172,7 +150,13 @@ public class Frontend implements EntryPoint {
 						@Override
 						public void onSuccess(GUISession session) {
 							if (session == null || !session.isLoggedIn()) {
-								Frontend.this.showInitialLogin();
+								if (anonymousLogin) {
+									/*
+									 * Simulate a login with the anonymous user
+									 */
+									anonymousLogin(lang, info);
+								} else
+									Frontend.this.showInitialLogin();
 							} else {
 								MainPanel.get();
 								loginPanel.onLoggedIn(session);
@@ -184,6 +168,32 @@ public class Frontend implements EntryPoint {
 						}
 					});
 				}
+			}
+
+			private void anonymousLogin(final String lang, final GUIInfo info) {
+				securityService.login(info.getConfig("anonymous.user"), "", lang,
+						new AsyncCallback<GUISession>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Frontend.this.showInitialLogin();
+							}
+
+							@Override
+							public void onSuccess(GUISession session) {
+								if (session == null || !session.isLoggedIn()) {
+									Frontend.this.showInitialLogin();
+								} else {
+									MainPanel.get();
+									loginPanel.onLoggedIn(session);
+
+									// Remove the loading frame
+									RootPanel.getBodyElement().removeChild(
+											RootPanel.get("loadingWrapper").getElement());
+									declareReloadTrigger(Frontend.this);
+								}
+							}
+						});
 			}
 		});
 	}
