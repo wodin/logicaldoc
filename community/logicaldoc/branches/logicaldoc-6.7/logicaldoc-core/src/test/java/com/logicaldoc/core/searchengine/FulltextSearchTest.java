@@ -127,7 +127,7 @@ public class FulltextSearchTest extends AbstractCoreTCase {
 		 search.setOptions(opt);
 		
 		 List<Hit> hits = search.search();
-		 Assert.assertEquals(1, hits.size());
+		 Assert.assertEquals(2, hits.size());
 		
 		 opt.setMaxHits(1);
 		 hits = search.search();

@@ -283,6 +283,8 @@ public class FulltextSearch extends Search {
 		// Populate the hits list discarding unexisting documents
 		Iterator<Hit> iter = hitsMap.values().iterator();
 		while (iter.hasNext()) {
+			if (options.getMaxHits() > 0 && hits.size() >= options.getMaxHits())
+				break;
 			Hit hit = iter.next();
 			if (StringUtils.isEmpty(hit.getTitle()) || StringUtils.isEmpty(hit.getFileName()))
 				continue;
