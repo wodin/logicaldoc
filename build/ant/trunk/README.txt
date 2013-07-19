@@ -11,7 +11,7 @@
                     LogicalDOC Community Edition
 
 
-You need JDK 1.6, Maven 2.2.x, Ant 1.7 to build this sources
+You need JDK 1.7, Maven 3.0.3, Ant 1.7 to build this sources
 
 0) Open a command shell to the folder where you unzipped the archive
 
@@ -23,12 +23,6 @@ You need JDK 1.6, Maven 2.2.x, Ant 1.7 to build this sources
    
    on the subfolder: community/logicaldoc/logicaldoc-web/target
    you should find the .war archive containing the web application
-
-3) go into folder: community/modules/logicaldoc-workflow
-   launch the command: mvn -Dmaven.test.skip=true install
-   
-  on the subfolder: community/modules/logicaldoc-workflow/target
-   you should find the .zip archive containing the workflow plugin
    
 
 For more instructions regarding maven installation or better workspace organization
