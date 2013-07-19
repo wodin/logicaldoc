@@ -127,7 +127,7 @@ public interface DocumentService {
 			throws Exception;
 
 	/**
-	 * Gets the aliases t the given document
+	 * Gets the aliases of the given document
 	 * 
 	 * @param sid Session identifier
 	 * @param docId The master document ID
