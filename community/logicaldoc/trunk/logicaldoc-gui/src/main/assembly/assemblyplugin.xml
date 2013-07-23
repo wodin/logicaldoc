@@ -18,4 +18,12 @@
 			<outputDirectory>/</outputDirectory>
 		</fileSet>
 	</fileSets>
+    <dependencySets>
+        <dependencySet>
+            <includes>
+                <include>com.smartgwt:smartgwt</include>
+            </includes>
+            <outputDirectory>WEB-INF/lib</outputDirectory>
+        </dependencySet>
+    </dependencySets>
 </assembly>
