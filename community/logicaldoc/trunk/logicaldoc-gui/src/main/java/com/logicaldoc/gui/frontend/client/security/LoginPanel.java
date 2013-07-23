@@ -22,8 +22,8 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.HTMLFlow;
-import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -66,39 +66,36 @@ public class LoginPanel extends VLayout {
 		setDefaultLayoutAlign(Alignment.CENTER);
 		setWidth100();
 		setHeight100();
+		setMembersMargin(0);
 
-		// Panel for horizontal centering
-		HLayout hPanel = new HLayout();
-		hPanel.setDefaultLayoutAlign(Alignment.LEFT);
-		hPanel.setDefaultLayoutAlign(VerticalAlignment.CENTER);
-		hPanel.setWidth(400);
-		hPanel.setHeight100();
+		addMember(prepareLogoPanel(info));
 
-		// Panel for vertical centering
-		VLayout content = new VLayout();
-		content.setDefaultLayoutAlign(VerticalAlignment.CENTER);
-		content.setWidth100();
-		content.setHeight(250);
-		hPanel.addMember(content);
+		VLayout mainPanel = new VLayout();
+		mainPanel.setWidth100();
+		mainPanel.setHeight100();
+		mainPanel.setStyleName("loginMain");
 
-		addMember(hPanel);
-
-		// Prepare the form header that contains the product name and version
-		HTMLFlow header = new HTMLFlow(info.getProductName() + " " + info.getRelease());
-		header.setStyleName("loginHeader");
-		header.setHeight("12px");
-
-		// Prepare the form footer that contains copyright and website link
-		String htmlString = "\u00A9 " + info.getYear() + " " + info.getVendor();
+		String productInfoHtml = "<b>" + info.getProductName() + " " + info.getRelease() + "</b>";
 		if (info.getUrl() != null && !"-".equals(info.getUrl()))
-			htmlString += "  &#160; &#8226; &#160; <a href='" + info.getUrl() + "'>" + info.getUrl() + "</a>";
-		HTMLFlow footer = new HTMLFlow(htmlString);
-		footer.setStyleName("loginFooter");
+			productInfoHtml = "<a href='" + info.getUrl() + "'>" + productInfoHtml + "</a>";
+		if (info.getLicensee() != null && !"".equals(info.getLicensee().trim()))
+			productInfoHtml += "&nbsp;&nbsp;" + I18N.message("licensedto") + " " + info.getLicensee();
+		HTMLFlow productInfo = new HTMLFlow(productInfoHtml);
+		productInfo.setStyleName("loginProductInfo");
+		productInfo.setHeight(13);
+		productInfo.setMargin(5);
+
+		// Panel containing the login form
+		VLayout formLayout = new VLayout();
+		formLayout.setLayoutAlign(VerticalAlignment.TOP);
+		formLayout.setLayoutAlign(Alignment.CENTER);
+		formLayout.setWidth(300);
 
 		VStack messages = new VStack();
 		if (info.getMessages().length > 0) {
 			for (GUIMessage message : info.getMessages()) {
 				MessageLabel label = new MessageLabel(message);
+				label.setStyleName("loginMemesage");
 				messages.addMember(label);
 			}
 		}
@@ -118,6 +115,9 @@ public class LoginPanel extends VLayout {
 		username.setTitle(I18N.message("username"));
 		username.setRequired(true);
 		username.setWrapTitle(false);
+		username.setWidth(200);
+		username.setTitleStyle("loginFormTitle");
+		username.setTextBoxStyle("loginTextItem");
 		username.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
@@ -129,6 +129,9 @@ public class LoginPanel extends VLayout {
 		password = ItemFactory.newPasswordItem("password", "password", null);
 		password.setRequired(true);
 		password.setWrapTitle(false);
+		password.setWidth(200);
+		password.setTitleStyle("loginFormTitle");
+		password.setTextBoxStyle("loginTextItem");
 		password.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
@@ -140,6 +143,7 @@ public class LoginPanel extends VLayout {
 		savelogin.setTitle(I18N.message("savelogin"));
 		savelogin.setRequired(false);
 		savelogin.setWrapTitle(false);
+		savelogin.setTextBoxStyle("saveLogin");
 		savelogin.setValue("true".equals(Offline.get(Constants.COOKIE_SAVELOGIN)));
 
 		// If the case, initialize the credentials from client's cookies
@@ -155,66 +159,53 @@ public class LoginPanel extends VLayout {
 			language = ItemFactory.newLanguageSelector("language", false, true);
 			language.setDefaultValue(I18N.getSupportedGuiLanguages(false).keySet().iterator().next());
 		}
+		language.setTitleStyle("loginFormTitle");
+		language.setTextBoxStyle("loginSelectItemText");
+		language.setWidth(205);
 
 		if ("true".equals(info.getConfig("gui.savelogin")))
 			form.setFields(username, password, language, savelogin);
 		else
 			form.setFields(username, password, language);
 
-		IButton loginButton = new IButton(I18N.message("login"));
+		Button loginButton = new Button(I18N.message("login"));
+		loginButton.setBaseStyle("loginButton");
+		loginButton.setLayoutAlign(Alignment.RIGHT);
 		loginButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				onLogin();
 			}
 		});
 
-		// Prepare the logo images to be shown inside the login form
-		Img logoImage = ItemFactory.newBrandImg("logo.png", info);
-		logoImage.setHeight(40);
-		logoImage.setWidth(205);
-		Img logoOemImage = ItemFactory.newBrandImg("logo_oem.png", info);
-		logoOemImage.setHeight(40);
-		logoOemImage.setWidth(205);
+		addMember(mainPanel);
 
-		HLayout logos = new HLayout();
-		logos.setMembersMargin(10);
-		logos.setMembers(logoImage, logoOemImage);
+		Img spacer20 = ItemFactory.newImg("blank.png");
+		spacer20.setWidth100();
+		spacer20.setHeight(20);
+		formLayout.setMembers(spacer20, form, loginButton, prepareForgotPassword(info), spacer20, messages);
 
-		Layout inner = new VLayout();
-		inner.setShowEdges(true);
-		inner.addMember(logos);
-		Layout separator = new VLayout();
-		separator.setHeight(8);
-		inner.addMember(separator);
-		inner.addMember(form);
-		inner.addMember(separator);
-		Layout bottom = new HLayout(60);
-		bottom.setAlign(Alignment.LEFT);
-		bottom.addMember(loginButton);
-		retrievePwd(info, bottom);
-		inner.addMember(bottom);
-		inner.setPadding(5);
+		String copyrightHtml = "\u00A9 " + info.getYear() + " " + info.getVendor();
+		if (info.getUrl() != null && !"-".equals(info.getUrl()))
+			copyrightHtml = "<a href='" + info.getUrl() + "'>" + copyrightHtml + "</a>";
+		HTMLFlow copyright = new HTMLFlow(copyrightHtml);
+		copyright.setStyleName("loginCopyright");
+		copyright.setLayoutAlign(VerticalAlignment.BOTTOM);
+		copyright.setMargin(10);
 
-		Layout outer = new VStack();
-		outer.addMember(header);
-		outer.addMember(inner);
-		outer.addMember(footer);
-		outer.addMember(messages);
-		outer.setPadding(2);
+		mainPanel.setMembers(productInfo, formLayout, copyright);
 
-		content.addMember(outer);
 		form.focusInItem(username);
 		form.setAutoFocus(true);
 		form.focus();
 	}
 
-	protected void retrievePwd(GUIInfo info, Layout bottom) {
+	protected MessageLabel prepareForgotPassword(GUIInfo info) {
 		GUIMessage forgotPwd = new GUIMessage();
 		forgotPwd.setMessage(I18N.message("forgotpassword"));
 		MessageLabel forgotMessage = new MessageLabel(forgotPwd);
 		forgotMessage.setAlign(Alignment.RIGHT);
 		forgotMessage.setIcon(null);
-		forgotMessage.setStyleName("forgotpwd");
+		forgotMessage.setStyleName("loginForgotpwd");
 		final String productName = info.getProductName();
 		forgotMessage.addClickHandler(new ClickHandler() {
 
@@ -223,7 +214,7 @@ public class LoginPanel extends VLayout {
 				onForgottenPwd(productName);
 			}
 		});
-		bottom.addMember(forgotMessage);
+		return forgotMessage;
 	}
 
 	protected void onLogin() {
@@ -284,5 +275,42 @@ public class LoginPanel extends VLayout {
 		GUIUser user = session.getUser();
 		if (user.getQuotaCount() >= user.getQuota() && user.getQuota() >= 0)
 			Log.warn(I18N.message("quotadocsexceeded"), null);
+	}
+
+	private Layout prepareLogoPanel(GUIInfo info) {
+		VLayout layout = new VLayout();
+		layout.setWidth100();
+		layout.setHeight(85);
+
+		HLayout logos = new HLayout();
+		logos.setWidth100();
+		logos.setHeight(82);
+		logos.setStyleName("loginTop");
+
+		// Prepare the logo image to be shown inside the banner
+		Img logoImage = ItemFactory.newBrandImg("logo.png", info);
+		logoImage.setWidth(215);
+		logoImage.setHeight(55);
+		logoImage.setMargin(10);
+
+		Img separator = ItemFactory.newImg("blank.png");
+		separator.setWidth100();
+
+		// Prepare the OEM logo image to be shown inside the banner
+		Img logoOemImage = ItemFactory.newBrandImg("logo_oem.png", info);
+		logoOemImage.setWidth(215);
+		logoOemImage.setHeight(55);
+		logoOemImage.setMargin(10);
+
+		// Prepare a small separator
+		HLayout sep = new HLayout();
+		sep.setWidth100();
+		sep.setHeight(3);
+		sep.setStyleName("loginSep");
+
+		logos.setMembers(logoImage, separator, logoOemImage);
+		layout.setMembers(logos, sep);
+
+		return layout;
 	}
 }

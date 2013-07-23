@@ -69,7 +69,7 @@ public class WindowUtils {
 
 	public static void setTitle(GUIInfo info, String prefix) {
 		String buf = info.getProductName() + " " + info.getRelease()
-				+ (info.getLicensee() != null ? " - " + I18N.message("licensedto") + ": " + info.getLicensee() : "");
+				+ (info.getLicensee() != null ? " - " + I18N.message("licensedto") + " " + info.getLicensee() : "");
 		if (prefix != null) {
 			buf = prefix + " - " + buf;
 		}
