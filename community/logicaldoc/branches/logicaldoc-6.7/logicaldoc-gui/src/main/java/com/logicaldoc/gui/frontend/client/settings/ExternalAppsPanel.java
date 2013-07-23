@@ -65,6 +65,10 @@ public class ExternalAppsPanel extends VLayout {
 
 	private GUIParameter swftoolsPath = null;
 
+	private CheckboxItem extCallParamUser;
+
+	private CheckboxItem extCallParamTitle;
+
 	public ExternalAppsPanel(GUIParameter[] settings) {
 		setWidth100();
 		setHeight100();
@@ -256,36 +260,37 @@ public class ExternalAppsPanel extends VLayout {
 					params[8] = ExternalAppsPanel.this.cmisSettings;
 
 					// External Call
-					if (Feature.enabled(Feature.EXTERNAL_CALL)) {
-						GUIExternalCall extCall = new GUIExternalCall();
-						extCall.setName(values.get("extCallName") == null ? "" : values.get("extCallName").toString());
-						extCall.setBaseUrl(values.get("extCallBaseUrl") == null ? "" : values.get("extCallBaseUrl")
-								.toString());
-						extCall.setSuffix(values.get("extCallSuffix") == null ? "" : values.get("extCallSuffix")
-								.toString());
-						extCall.setTargetWindow(values.get("extCallWindow") == null ? "" : values.get("extCallWindow")
-								.toString());
-						if ("yes".equals(values.get("extCallEnabled")))
-							Session.get().getSession().setExternalCall(extCall);
-						else
-							Session.get().getSession().setExternalCall(null);
+					GUIExternalCall extCall = new GUIExternalCall();
+					extCall.setName(values.get("extCallName") == null ? "" : values.get("extCallName").toString());
+					extCall.setBaseUrl(values.get("extCallBaseUrl") == null ? "" : values.get("extCallBaseUrl")
+							.toString());
+					extCall.setSuffix(values.get("extCallSuffix") == null ? "" : values.get("extCallSuffix").toString());
+					extCall.setTargetWindow(values.get("extCallWindow") == null ? "" : values.get("extCallWindow")
+							.toString());
+					if ("yes".equals(values.get("extCallEnabled")))
+						Session.get().getSession().setExternalCall(extCall);
+					else
+						Session.get().getSession().setExternalCall(null);
 
-						params[9] = new GUIParameter("extcall.enabled",
-								"yes".equals(values.get("extCallEnabled")) ? "true" : "false");
-						params[10] = new GUIParameter("extcall.name", extCall.getName());
-						params[11] = new GUIParameter("extcall.baseurl", extCall.getBaseUrl());
-						params[12] = new GUIParameter("extcall.suffix", extCall.getSuffix());
-						params[13] = new GUIParameter("extcall.window", extCall.getTargetWindow());
-						ArrayList<String> buf = new ArrayList<String>();
-						if ("true".equals(values.get("extCallParamUser").toString()))
-							buf.add("user");
-						if ("true".equals(values.get("extCallParamTitle").toString()))
-							buf.add("title");
-						String paramsStr = buf.toString().substring(1, buf.toString().length() - 1);
-						extCall.setParametersStr(paramsStr);
-						params[14] = new GUIParameter("extcall.params", buf.isEmpty() ? "" : paramsStr);
-					}
-					
+					params[9] = new GUIParameter("extcall.enabled", "yes".equals(values.get("extCallEnabled")) ? "true"
+							: "false");
+					params[10] = new GUIParameter("extcall.name", extCall.getName());
+					params[11] = new GUIParameter("extcall.baseurl", extCall.getBaseUrl());
+					params[12] = new GUIParameter("extcall.suffix", extCall.getSuffix());
+					params[13] = new GUIParameter("extcall.window", extCall.getTargetWindow());
+
+					ArrayList<String> buf = new ArrayList<String>();
+					if (extCallParamUser.getValueAsBoolean() != null
+							&& extCallParamUser.getValueAsBoolean().booleanValue())
+						buf.add("user");
+					if (extCallParamTitle.getValueAsBoolean() != null
+							&& extCallParamTitle.getValueAsBoolean().booleanValue())
+						buf.add("title");
+					String paramsStr = buf.toString().substring(1, buf.toString().length() - 1);
+
+					extCall.setParametersStr(paramsStr);
+					params[14] = new GUIParameter("extcall.params", buf.isEmpty() ? "" : paramsStr);
+
 					service.saveSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
 						@Override
 						public void onFailure(Throwable caught) {
@@ -355,8 +360,8 @@ public class ExternalAppsPanel extends VLayout {
 		parametersForm.setNumCols(4);
 		extCallForm.setPadding(2);
 		parametersForm.setValuesManager(vm);
-		CheckboxItem extCallParamUser = ItemFactory.newCheckbox("extCallParamUser", "user");
-		CheckboxItem extCallParamTitle = ItemFactory.newCheckbox("extCallParamTitle", "title");
+		extCallParamUser = ItemFactory.newCheckbox("extCallParamUser", "user");
+		extCallParamTitle = ItemFactory.newCheckbox("extCallParamTitle", "title");
 		parametersForm.setItems(extCallParamUser, extCallParamTitle);
 
 		pane.setMembers(extCallForm, parametersForm);
