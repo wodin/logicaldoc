@@ -23,12 +23,9 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
-import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.validator.RequiredIfFunction;
-import com.smartgwt.client.widgets.form.validator.RequiredIfValidator;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
@@ -260,36 +257,40 @@ public class ExternalAppsPanel extends VLayout {
 					params[8] = ExternalAppsPanel.this.cmisSettings;
 
 					// External Call
-					GUIExternalCall extCall = new GUIExternalCall();
-					extCall.setName(values.get("extCallName") == null ? "" : values.get("extCallName").toString());
-					extCall.setBaseUrl(values.get("extCallBaseUrl") == null ? "" : values.get("extCallBaseUrl")
-							.toString());
-					extCall.setSuffix(values.get("extCallSuffix") == null ? "" : values.get("extCallSuffix").toString());
-					extCall.setTargetWindow(values.get("extCallWindow") == null ? "" : values.get("extCallWindow")
-							.toString());
-					if ("yes".equals(values.get("extCallEnabled")))
-						Session.get().getSession().setExternalCall(extCall);
-					else
-						Session.get().getSession().setExternalCall(null);
+					try {
+						GUIExternalCall extCall = new GUIExternalCall();
+						extCall.setName(values.get("extCallName") == null ? "" : values.get("extCallName").toString());
+						extCall.setBaseUrl(values.get("extCallBaseUrl") == null ? "" : values.get("extCallBaseUrl")
+								.toString());
+						extCall.setSuffix(values.get("extCallSuffix") == null ? "" : values.get("extCallSuffix")
+								.toString());
+						extCall.setTargetWindow(values.get("extCallWindow") == null ? "" : values.get("extCallWindow")
+								.toString());
+						if ("yes".equals(values.get("extCallEnabled")))
+							Session.get().getSession().setExternalCall(extCall);
+						else
+							Session.get().getSession().setExternalCall(null);
 
-					params[9] = new GUIParameter("extcall.enabled", "yes".equals(values.get("extCallEnabled")) ? "true"
-							: "false");
-					params[10] = new GUIParameter("extcall.name", extCall.getName());
-					params[11] = new GUIParameter("extcall.baseurl", extCall.getBaseUrl());
-					params[12] = new GUIParameter("extcall.suffix", extCall.getSuffix());
-					params[13] = new GUIParameter("extcall.window", extCall.getTargetWindow());
+						params[9] = new GUIParameter("extcall.enabled",
+								"yes".equals(values.get("extCallEnabled")) ? "true" : "false");
+						params[10] = new GUIParameter("extcall.name", extCall.getName());
+						params[11] = new GUIParameter("extcall.baseurl", extCall.getBaseUrl());
+						params[12] = new GUIParameter("extcall.suffix", extCall.getSuffix());
+						params[13] = new GUIParameter("extcall.window", extCall.getTargetWindow());
 
-					ArrayList<String> buf = new ArrayList<String>();
-					if (extCallParamUser.getValueAsBoolean() != null
-							&& extCallParamUser.getValueAsBoolean().booleanValue())
-						buf.add("user");
-					if (extCallParamTitle.getValueAsBoolean() != null
-							&& extCallParamTitle.getValueAsBoolean().booleanValue())
-						buf.add("title");
-					String paramsStr = buf.toString().substring(1, buf.toString().length() - 1);
+						ArrayList<String> buf = new ArrayList<String>();
+						if (extCallParamUser.getValueAsBoolean() != null
+								&& extCallParamUser.getValueAsBoolean().booleanValue())
+							buf.add("user");
+						if (extCallParamTitle.getValueAsBoolean() != null
+								&& extCallParamTitle.getValueAsBoolean().booleanValue())
+							buf.add("title");
+						String paramsStr = buf.toString().substring(1, buf.toString().length() - 1);
 
-					extCall.setParametersStr(paramsStr);
-					params[14] = new GUIParameter("extcall.params", buf.isEmpty() ? "" : paramsStr);
+						extCall.setParametersStr(paramsStr);
+						params[14] = new GUIParameter("extcall.params", buf.isEmpty() ? "" : paramsStr);
+					} catch (Throwable t) {
+					}
 
 					service.saveSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
 						@Override
@@ -335,16 +336,8 @@ public class ExternalAppsPanel extends VLayout {
 		extCallEnabled.setRedrawOnChange(true);
 		extCallEnabled.setValue("no");
 
-		RequiredIfValidator extCallEnabledValidator = new RequiredIfValidator();
-		extCallEnabledValidator.setExpression(new RequiredIfFunction() {
-			public boolean execute(FormItem formItem, Object value) {
-				return "yes".equals(extCallEnabled.getValueAsString().toLowerCase());
-			}
-		});
 		TextItem extCallName = ItemFactory.newTextItem("extCallName", I18N.message("name"), null);
-		extCallName.setValidators(extCallEnabledValidator);
 		TextItem extCallBaseUrl = ItemFactory.newTextItem("extCallBaseUrl", I18N.message("baseurl"), null);
-		extCallBaseUrl.setValidators(extCallEnabledValidator);
 		extCallBaseUrl.setWidth(300);
 		TextItem extCallSuffix = ItemFactory.newTextItem("extCallSuffix", I18N.message("suffix"), null);
 		extCallSuffix.setWidth(300);
