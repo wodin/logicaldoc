@@ -441,7 +441,7 @@
 								<delete dir="target/war/META-INF" />
 								
 								<delete>
-									<fileset dir="target/war/WEB-INF/lib" includes="gwt-user*,smartgwt*,logicaldoc-webapp*" />
+									<fileset dir="target/war/WEB-INF/lib" includes="gwt-user*,smartgwt-skin*,logicaldoc-webapp*" />
 								</delete>
                                 
 								<copy file="src/main/resources/context.properties"
