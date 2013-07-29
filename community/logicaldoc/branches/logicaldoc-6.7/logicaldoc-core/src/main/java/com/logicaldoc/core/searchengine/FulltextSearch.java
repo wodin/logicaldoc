@@ -133,10 +133,6 @@ public class FulltextSearch extends Search {
 		if (opt.getTemplate() != null)
 			filters.add(Fields.TEMPLATE_ID + ":" + opt.getTemplate());
 
-		boolean searchInSingleFolder = (opt.getFolderId() != null && !opt.isSearchInSubPath());
-		if (searchInSingleFolder)
-			filters.add(Fields.FOLDER_ID + ":" + opt.getFolderId());
-
 		if (StringUtils.isNotEmpty(opt.getLanguage()))
 			filters.add(Fields.LANGUAGE + ":" + opt.getLanguage());
 
@@ -172,10 +168,10 @@ public class FulltextSearch extends Search {
 		 * Launch the search
 		 */
 		log.debug("Full-text seach: " + query);
-		Hits results = engine.search(query.toString(), filters.toArray(new String[0]), opt.getExpressionLanguage(),
+		Hits results = engine.search(query.toString(), null, opt.getExpressionLanguage(),
 				null);
 		log.debug("End of Full-text search");
-
+		
 		/*
 		 * We have to see what folders the user can access. But we need to
 		 * perform this check only if the search is not restricted to one folder
@@ -183,6 +179,7 @@ public class FulltextSearch extends Search {
 		 */
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Collection<Long> accessibleFolderIds = new TreeSet<Long>();
+		boolean searchInSingleFolder = (opt.getFolderId() != null && !opt.isSearchInSubPath());
 		if (!searchInSingleFolder) {
 			log.debug("Folders search");
 			accessibleFolderIds = fdao.findFolderIdByUserId(opt.getUserId(), opt.getFolderId(), true);
@@ -192,17 +189,13 @@ public class FulltextSearch extends Search {
 				&& fdao.isReadEnable(opt.getFolderId().longValue(), opt.getUserId()))
 			accessibleFolderIds.add(opt.getFolderId());
 
+		
+		
 		// Save here the binding between ID and Hit
 		Map<Long, Hit> hitsMap = new HashMap<Long, Hit>();
 		while (results != null && results.hasNext()) {
-			if (hits.size() == opt.getMaxHits()) {
-				// The maximum number of hits was reached for a quick query
-				moreHitsPresent = true;
-				break;
-			}
-
 			Hit hit = results.next();
-
+	
 			// Skip a document if not in the filter set
 			if (opt.getFilterIds() != null && !opt.getFilterIds().isEmpty()) {
 				if (!opt.getFilterIds().contains(hit.getId()))
@@ -211,10 +204,10 @@ public class FulltextSearch extends Search {
 
 			// When user can see document with folderId then put it into
 			// result-collection.
-			if (searchUser.isInGroup("admin")
-					|| (accessibleFolderIds != null && accessibleFolderIds.contains(hit.getFolder().getId()))) {
+//			if ((searchUser.isInGroup("admin") && opt.getFolderId() == null)
+//					|| (accessibleFolderIds != null && accessibleFolderIds.contains(hit.getFolder().getId()))) {
 				hitsMap.put(hit.getId(), hit);
-			}
+//			}
 		}
 
 		if (hitsMap.isEmpty())
@@ -283,12 +276,15 @@ public class FulltextSearch extends Search {
 		// Populate the hits list discarding unexisting documents
 		Iterator<Hit> iter = hitsMap.values().iterator();
 		while (iter.hasNext()) {
-			if (options.getMaxHits() > 0 && hits.size() >= options.getMaxHits())
+			if (options.getMaxHits() > 0 && hits.size() >= options.getMaxHits()){
+				// The maximum number of hits was reached
+				moreHitsPresent = true;
 				break;
+			}
 			Hit hit = iter.next();
 			if (StringUtils.isEmpty(hit.getTitle()) || StringUtils.isEmpty(hit.getFileName()))
 				continue;
-			if (searchUser.isInGroup("admin")
+			if ((searchUser.isInGroup("admin") && opt.getFolderId() == null)
 					|| (accessibleFolderIds != null && accessibleFolderIds.contains(hit.getFolder().getId())))
 				hits.add(hit);
 		}
