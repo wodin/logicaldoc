@@ -347,7 +347,7 @@
 					<descriptors>
 						<descriptor>
 							src/main/assembly/assemblyapi.xml
-            </descriptor>
+                        </descriptor>
 					</descriptors>
 				</configuration>
 				<executions>
