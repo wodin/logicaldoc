@@ -1106,13 +1106,16 @@ public class LDRepository {
 		opt.setUserId(user.getId());
 		opt.setExpressionLanguage(user.getLanguage());
 
+		System.out.println("CMIS query: " + statement);
+		log.info("CMIS query: " + statement);
+
 		// As expression we will use the WHERE clause as is
 		String expr = statement.substring(statement.toLowerCase().lastIndexOf("where") + 5);
 
 		/**
 		 * Try to detect if the request comes from LogicalDOC Mobile
 		 */
-		// Pattern 1)    XXXXXXXXXXX
+		// Pattern 1)
 		// statement.toString() ->
 		// SELECT
 		// cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType
@@ -1124,25 +1127,27 @@ public class LDRepository {
 		// cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType
 		// FROM cmis:document WHERE CONTAINS('flexspaces')
 
+		boolean searchByFileName = true;
 		if (statement.indexOf("SELECT cmis:objectId,cmis:name,cmis:lastModifiedBy") != -1) {
+			log.info("CMIS: detected LogicalDOC Mobile query");
+			System.out.println("CMIS: detected LogicalDOC Mobile query");
 			String pattern = "%.*%";
-			if (statement.toLowerCase().contains("contains"))
+			if (statement.toLowerCase().contains("contains")) {
 				pattern = "\'.*\'";
+				searchByFileName = false;
+			}
 			expr = findExprInQuery(statement, pattern);
 		}
+		log.info("CMIS expr: " + expr);
+		System.out.println("CMIS expr: " + expr);
 
-		opt.setExpression(expr);
-
-		// Execute the search
-		Search search = Search.get(opt);
-		List<Hit> hits = search.search();
-
-		// Populate CMIS data structure
+		// Empty list of ObjectData
 		List<ObjectData> list = new ArrayList<ObjectData>();
-		for (Hit hit : hits) {
-			ObjectData result = null;
-			Set<String> filter = null;
-
+		boolean hasMoreItems = false;
+		
+		// Create the filter
+		Set<String> filter = null;
+		try {
 			// Parse the select list and compile a filter
 			String query = statement.toString();
 			if (query.toLowerCase().startsWith("select")) {
@@ -1158,22 +1163,90 @@ public class LDRepository {
 						filter.add(st.nextToken());
 				}
 			}
+		} catch (Exception e1) {
+			log.error("CMIS Exception creating filter", e1);
+			System.err.println(e1);
+		}
 
-			// filtro i risultati
-			result = compileObjectType(null, hit, filter, false, false, null);
+		// Performs Full-text search
+		if (!searchByFileName) {			
+			System.out.println("Perform full-text search");
+			opt.setExpression(expr);
 
-			list.add(result);
+			// Execute the search
+			Search search = Search.get(opt);
+			List<Hit> hits = search.search();
+			System.out.println("hits.size(): " +hits.size());
+
+			// Populate CMIS data structure
+			try {
+				// Iterate through the list of results
+				for (Hit hit : hits) {
+					// filtro i risultati (lasciando solo le colonne richieste)
+					ObjectData result = compileObjectType(null, hit, filter, false, false, null);
+
+					list.add(result);
+				}
+			} catch (Exception e) {
+				log.error("CMIS Exception populating data structure", e);
+				System.err.println(e);
+			}
+			//hasMoreItems = search.getEstimatedHitsNumber() > list.size();
+			hasMoreItems = search.getEstimatedHitsNumber() > max; // THIS Seems more correct
+		} else {
+			System.out.println("Perform search by File-name");
+			// Remove all the '*' from start and end
+			if (StringUtils.isNotEmpty(expr)) {
+				expr = StringUtils.removeStart(expr, "*");
+				expr = StringUtils.removeEnd(expr, "*");
+			}
+			String filename = "%" + expr +"%";
+			System.out.println("filename: " +filename);
+			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			List<Document> docs = docDao.findByFileNameAndParentFolderId(null, filename, null, max);
+			System.out.println("docs: " + docs);
+			System.out.println("docs.size(): " + docs.size());
+			
+			for (int i = 0; i < docs.size(); i++) {
+                // Check permissions on the documents found
+				try {
+					checkReadEnable(user, docs.get(i).getFolder().getId());
+					checkPublished(user, docs.get(i));
+				} catch (Exception e) {
+					continue;
+				}				
+				docDao.initialize(docs.get(i));								
+
+				// filtro i risultati (lasciando solo le colonne richieste)
+				ObjectData result = compileObjectType(null, docs.get(i), filter, false, false, null);
+
+				list.add(result);				
+			}			
 		}
 
 		ObjectListImpl objList = new ObjectListImpl();
 		objList.setObjects(list);
 		objList.setNumItems(BigInteger.valueOf(list.size()));
-		objList.setHasMoreItems(search.getEstimatedHitsNumber() > list.size());
+		objList.setHasMoreItems(hasMoreItems);
 
 		return objList;
 	}
 
 	// --- helper methods ---
+
+	private void checkPublished(User user, Document doc) throws Exception {
+		if (!user.isInGroup("admin") && !user.isInGroup("publisher") && !doc.isPublishing())
+			throw new FileNotFoundException("Document not published");
+	}	
+
+	private void checkReadEnable(User user, long folderId) throws Exception {
+		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		if (!dao.isReadEnable(folderId, user.getId())) {
+			String message = "User " + user.getUserName() + " doesn't have read permission on folder " + folderId;
+			log.error(message);
+			throw new Exception(message);
+		}
+	}	
 
 	private String findExprInQuery(String statement, String patternText) {
 		Pattern pattern = Pattern.compile(patternText);
