@@ -1112,7 +1112,7 @@ public class LDRepository {
 		/**
 		 * Try to detect if the request comes from LogicalDOC Mobile
 		 */
-		// Pattern 1)
+		// Pattern 1)    XXXXXXXXXXX
 		// statement.toString() ->
 		// SELECT
 		// cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType
