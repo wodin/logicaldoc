@@ -1211,7 +1211,7 @@ public class LDRepository {
                 // Check permissions on the documents found
 				try {
 					checkReadEnable(user, docs.get(i).getFolder().getId());
-					checkPublished(user, docs.get(i));
+					checkPublished(user, docs.get(i));   // TODO: Check also the web-service method
 				} catch (Exception e) {
 					continue;
 				}				
@@ -1234,10 +1234,19 @@ public class LDRepository {
 
 	// --- helper methods ---
 
-	private void checkPublished(User user, Document doc) throws Exception {
+	private void checkPublishedOLD(User user, Document doc) throws Exception {
 		if (!user.isInGroup("admin") && !user.isInGroup("publisher") && !doc.isPublishing())
 			throw new FileNotFoundException("Document not published");
 	}	
+  
+  // TODO: check this method versus the omonimous in SerchServiceImpl (web-services)
+	private void checkPublished(User user, Document doc) throws Exception {
+    if (!doc.isPublishing() && (user.isInGroup("admin") || user.isInGroup("publisher")))
+      return;
+    
+		if (!doc.isPublishing())
+			throw new FileNotFoundException("Document not published");
+	}	  
 
 	private void checkReadEnable(User user, long folderId) throws Exception {
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
