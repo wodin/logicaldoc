@@ -16,8 +16,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.data.Ace;
@@ -1098,47 +1096,50 @@ public class LDRepository {
 		if (maxItems != null)
 			max = maxItems;
 
-		// Prepare the search options
-		FulltextSearchOptions opt = new FulltextSearchOptions();
-		opt.setMaxHits(max);
-
-		User user = getSessionUser();
-		opt.setUserId(user.getId());
-		opt.setExpressionLanguage(user.getLanguage());
-
 		System.out.println("CMIS query: " + statement);
-		log.info("CMIS query: " + statement);
 
 		// As expression we will use the WHERE clause as is
-		String expr = statement.substring(statement.toLowerCase().lastIndexOf("where") + 5);
+		String expr = StringUtils.removeStartIgnoreCase(statement, "where");
 
 		/**
 		 * Try to detect if the request comes from LogicalDOC Mobile
 		 */
-		// Pattern 1)
+		// Pattern 1) [search by filename]
 		// statement.toString() ->
 		// SELECT
 		// cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType
 		// FROM cmis:document WHERE cmis:name LIKE '%flexspaces%'
 		//
-		// Pattern 2)
+		// Pattern 2) [full-text search]
 		// statement.toString() ->
 		// SELECT
 		// cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType
 		// FROM cmis:document WHERE CONTAINS('flexspaces')
 
 		boolean searchByFileName = true;
+		Long parentFolderID = null;
+		
 		if (statement.indexOf("SELECT cmis:objectId,cmis:name,cmis:lastModifiedBy") != -1) {
-			log.info("CMIS: detected LogicalDOC Mobile query");
+			
 			System.out.println("CMIS: detected LogicalDOC Mobile query");
-			String pattern = "%.*%";
+			
+			expr = StringUtils.substringBetween(statement, "'%", "%'");
+			
+			// TEST FOR full-text search
 			if (statement.toLowerCase().contains("contains")) {
-				pattern = "\'.*\'";
 				searchByFileName = false;
+				expr = StringUtils.substringBetween(statement, "('", "')");
 			}
-			expr = findExprInQuery(statement, pattern);
+			
+			// Search in Tree
+			if (statement.toLowerCase().contains("in_tree")) {
+				// AND IN_TREE('fld.6488067')
+				String folderId = StringUtils.substringBetween(statement, "('fld.", "')");
+				System.out.println("folderId: " +folderId);
+				parentFolderID = Long.parseLong(folderId);
+			}			
 		}
-		log.info("CMIS expr: " + expr);
+		
 		System.out.println("CMIS expr: " + expr);
 
 		// Empty list of ObjectData
@@ -1171,12 +1172,26 @@ public class LDRepository {
 		// Performs Full-text search
 		if (!searchByFileName) {			
 			System.out.println("Perform full-text search");
+			
+			// Prepare the search options
+			FulltextSearchOptions opt = new FulltextSearchOptions();
+			opt.setMaxHits(max);
+			
+			User user = getSessionUser();
+			opt.setUserId(user.getId());
+			opt.setExpressionLanguage(user.getLanguage());
+			
+			// Check to search in Tree
+			if (parentFolderID != null) {
+				opt.setFolderId(parentFolderID);
+				opt.setSearchInSubPath(true);
+			}
+			
 			opt.setExpression(expr);
 
 			// Execute the search
 			Search search = Search.get(opt);
 			List<Hit> hits = search.search();
-			System.out.println("hits.size(): " +hits.size());
 
 			// Populate CMIS data structure
 			try {
@@ -1195,23 +1210,23 @@ public class LDRepository {
 			hasMoreItems = search.getEstimatedHitsNumber() > max; // THIS Seems more correct
 		} else {
 			System.out.println("Perform search by File-name");
+			
+			User user = getSessionUser();
+			
 			// Remove all the '*' from start and end
-			if (StringUtils.isNotEmpty(expr)) {
-				expr = StringUtils.removeStart(expr, "*");
-				expr = StringUtils.removeEnd(expr, "*");
-			}
+			expr = StringUtils.strip(expr, "*");
+			
 			String filename = "%" + expr +"%";
 			System.out.println("filename: " +filename);
+			
 			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 			List<Document> docs = docDao.findByFileNameAndParentFolderId(null, filename, null, max);
-			System.out.println("docs: " + docs);
-			System.out.println("docs.size(): " + docs.size());
 			
 			for (int i = 0; i < docs.size(); i++) {
                 // Check permissions on the documents found
 				try {
 					checkReadEnable(user, docs.get(i).getFolder().getId());
-					checkPublished(user, docs.get(i));   // TODO: Check also the web-service method
+					checkPublished(user, docs.get(i));
 				} catch (Exception e) {
 					continue;
 				}				
@@ -1234,19 +1249,10 @@ public class LDRepository {
 
 	// --- helper methods ---
 
-	private void checkPublishedOLD(User user, Document doc) throws Exception {
+	private void checkPublished(User user, Document doc) throws Exception {
 		if (!user.isInGroup("admin") && !user.isInGroup("publisher") && !doc.isPublishing())
 			throw new Exception("Document not published");
 	}	
-  
-	// TODO: check this method versus the omonimous in SerchServiceImpl (web-services)
-	private void checkPublished(User user, Document doc) throws Exception {
-		if (!doc.isPublishing()	&& (user.isInGroup("admin") || user.isInGroup("publisher")))
-			return;
-
-		if (!doc.isPublishing())
-			throw new Exception("Document not published");
-	}  
 
 	private void checkReadEnable(User user, long folderId) throws Exception {
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
@@ -1256,15 +1262,6 @@ public class LDRepository {
 			throw new Exception(message);
 		}
 	}	
-
-	private String findExprInQuery(String statement, String patternText) {
-		Pattern pattern = Pattern.compile(patternText);
-		Matcher matcher = pattern.matcher(statement);
-		matcher.find();
-		String match = matcher.group();
-		// remove the first and last char: they are % or '
-		return match.substring(1, match.length() - 1);
-	}
 
 	/**
 	 * Removes a folder and its content.
