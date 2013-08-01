@@ -16,8 +16,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.data.Ace;
@@ -1098,51 +1096,61 @@ public class LDRepository {
 		if (maxItems != null)
 			max = maxItems;
 
-		// Prepare the search options
-		FulltextSearchOptions opt = new FulltextSearchOptions();
-		opt.setMaxHits(max);
-
-		User user = getSessionUser();
-		opt.setUserId(user.getId());
-		opt.setExpressionLanguage(user.getLanguage());
+		System.out.println("CMIS query: " + statement);
 
 		// As expression we will use the WHERE clause as is
-		String expr = statement.substring(statement.toLowerCase().lastIndexOf("where") + 5);
+		String expr = StringUtils.removeStartIgnoreCase(statement, "where");
 
 		/**
 		 * Try to detect if the request comes from LogicalDOC Mobile
 		 */
-		// Pattern 1)
+		// Pattern 1) [search by filename]
 		// statement.toString() ->
 		// SELECT
 		// cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType
 		// FROM cmis:document WHERE cmis:name LIKE '%flexspaces%'
 		//
-		// Pattern 2)
+		// Pattern 2) [full-text search]
 		// statement.toString() ->
 		// SELECT
 		// cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType
 		// FROM cmis:document WHERE CONTAINS('flexspaces')
 
+		boolean searchByFileName = true;
+		Long parentFolderID = null;
+		
 		if (statement.indexOf("SELECT cmis:objectId,cmis:name,cmis:lastModifiedBy") != -1) {
-			String pattern = "%.*%";
-			if (statement.toLowerCase().contains("contains"))
-				pattern = "\'.*\'";
-			expr = findExprInQuery(statement, pattern);
+			
+			System.out.println("CMIS: detected LogicalDOC Mobile query");
+			
+			expr = StringUtils.substringBetween(statement, "'%", "%'");
+			
+			// TEST FOR full-text search
+			if (statement.toLowerCase().contains("contains")) {
+				searchByFileName = false;
+				expr = StringUtils.substringBetween(statement, "('", "')");
+			}
+			
+			// Search in Tree
+			if (statement.toLowerCase().contains("in_tree")) {
+				// AND IN_TREE('fld.6488067')
+				String folderId = StringUtils.substringBetween(statement, "('fld.", "')");
+				System.out.println("folderId: " +folderId);
+				parentFolderID = Long.parseLong(folderId);
+				
+				// TODO: implement search by filename in Tree
+			}			
 		}
+		
+		System.out.println("CMIS expr: " + expr);
 
-		opt.setExpression(expr);
-
-		// Execute the search
-		Search search = Search.get(opt);
-		List<Hit> hits = search.search();
-
-		// Populate CMIS data structure
+		// Empty list of ObjectData
 		List<ObjectData> list = new ArrayList<ObjectData>();
-		for (Hit hit : hits) {
-			ObjectData result = null;
-			Set<String> filter = null;
-
+		boolean hasMoreItems = false;
+		
+		// Create the filter
+		Set<String> filter = null;
+		try {
 			// Parse the select list and compile a filter
 			String query = statement.toString();
 			if (query.toLowerCase().startsWith("select")) {
@@ -1158,31 +1166,104 @@ public class LDRepository {
 						filter.add(st.nextToken());
 				}
 			}
+		} catch (Exception e1) {
+			log.error("CMIS Exception creating filter", e1);
+			System.err.println(e1);
+		}
 
-			// filtro i risultati
-			result = compileObjectType(null, hit, filter, false, false, null);
+		// Performs Full-text search
+		if (!searchByFileName) {			
+			System.out.println("Perform full-text search");
+			
+			// Prepare the search options
+			FulltextSearchOptions opt = new FulltextSearchOptions();
+			opt.setMaxHits(max);
+			
+			User user = getSessionUser();
+			opt.setUserId(user.getId());
+			opt.setExpressionLanguage(user.getLanguage());
+			
+			// Check to search in Tree
+			if (parentFolderID != null) {
+				opt.setFolderId(parentFolderID);
+				opt.setSearchInSubPath(true);
+			}
+			
+			opt.setExpression(expr);
 
-			list.add(result);
+			// Execute the search
+			Search search = Search.get(opt);
+			List<Hit> hits = search.search();
+
+			// Populate CMIS data structure
+			try {
+				// Iterate through the list of results
+				for (Hit hit : hits) {
+					// filtro i risultati (lasciando solo le colonne richieste)
+					ObjectData result = compileObjectType(null, hit, filter, false, false, null);
+
+					list.add(result);
+				}
+			} catch (Exception e) {
+				log.error("CMIS Exception populating data structure", e);
+				System.err.println(e);
+			}
+			//hasMoreItems = search.getEstimatedHitsNumber() > list.size();
+			hasMoreItems = search.getEstimatedHitsNumber() > max; // THIS Seems more correct
+		} else {
+			System.out.println("Perform search by File-name");
+			
+			User user = getSessionUser();
+			
+			// Remove all the '*' from start and end
+			expr = StringUtils.strip(expr, "*");
+			
+			String filename = "%" + expr +"%";
+			System.out.println("filename: " +filename);
+			
+			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			List<Document> docs = docDao.findByFileNameAndParentFolderId(null, filename, null, max);
+			
+			for (int i = 0; i < docs.size(); i++) {
+                // Check permissions on the documents found
+				try {
+					checkReadEnable(user, docs.get(i).getFolder().getId());
+					checkPublished(user, docs.get(i));
+				} catch (Exception e) {
+					continue;
+				}				
+				docDao.initialize(docs.get(i));								
+
+				// filtro i risultati (lasciando solo le colonne richieste)
+				ObjectData result = compileObjectType(null, docs.get(i), filter, false, false, null);
+
+				list.add(result);				
+			}			
 		}
 
 		ObjectListImpl objList = new ObjectListImpl();
 		objList.setObjects(list);
 		objList.setNumItems(BigInteger.valueOf(list.size()));
-		objList.setHasMoreItems(search.getEstimatedHitsNumber() > list.size());
+		objList.setHasMoreItems(hasMoreItems);
 
 		return objList;
 	}
 
 	// --- helper methods ---
 
-	private String findExprInQuery(String statement, String patternText) {
-		Pattern pattern = Pattern.compile(patternText);
-		Matcher matcher = pattern.matcher(statement);
-		matcher.find();
-		String match = matcher.group();
-		// remove the first and last char: they are % or '
-		return match.substring(1, match.length() - 1);
-	}
+	private void checkPublished(User user, Document doc) throws Exception {
+		if (!user.isInGroup("admin") && !user.isInGroup("publisher") && !doc.isPublishing())
+			throw new Exception("Document not published");
+	}	
+
+	private void checkReadEnable(User user, long folderId) throws Exception {
+		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		if (!dao.isReadEnable(folderId, user.getId())) {
+			String message = "User " + user.getUserName() + " doesn't have read permission on folder " + folderId;
+			log.error(message);
+			throw new Exception(message);
+		}
+	}	
 
 	/**
 	 * Removes a folder and its content.
