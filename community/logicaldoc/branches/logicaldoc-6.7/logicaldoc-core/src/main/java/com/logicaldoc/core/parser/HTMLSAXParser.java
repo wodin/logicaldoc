@@ -35,6 +35,7 @@ public class HTMLSAXParser extends AbstractSAXParser {
     public void characters(XMLString xmlString, Augmentations augmentations)
             throws XNIException {
         super.characters(xmlString, augmentations);
+        buffer.append(" ");
         buffer.append(xmlString.toString());
     }
 
