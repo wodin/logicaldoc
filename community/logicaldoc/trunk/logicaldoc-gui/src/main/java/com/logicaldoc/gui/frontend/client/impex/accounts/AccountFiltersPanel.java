@@ -103,6 +103,7 @@ public class AccountFiltersPanel extends AccountDetailsTab {
 		LinkedHashMap<String, String> map2 = new LinkedHashMap<String, String>();
 		map2.put("0", I18N.message("contains"));
 		map2.put("1", I18N.message("notcontains"));
+		map2.put("2", I18N.message("matches"));
 		conditionSelect.setValueMap(map2);
 		condition.setEditorType(conditionSelect);
 		conditionSelect.addChangedHandler(changedHandler);
