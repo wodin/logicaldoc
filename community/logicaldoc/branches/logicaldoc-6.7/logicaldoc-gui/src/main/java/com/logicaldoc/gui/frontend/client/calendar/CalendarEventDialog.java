@@ -302,7 +302,7 @@ public class CalendarEventDialog extends Window {
 		title.setRequired(true);
 		title.setEndRow(true);
 		title.setColSpan(5);
-		title.setWidth("100%");
+		title.setWidth(350);
 		title.setTitleOrientation(TitleOrientation.LEFT);
 		title.setLength(255);
 		title.setCanEdit(!readOnly);
@@ -311,7 +311,7 @@ public class CalendarEventDialog extends Window {
 		type.setRequired(false);
 		type.setEndRow(true);
 		type.setColSpan(5);
-		type.setWidth("100%");
+		type.setWidth(350);
 		type.setTitleOrientation(TitleOrientation.LEFT);
 		type.setLength(255);
 		type.setCanEdit(!readOnly);
