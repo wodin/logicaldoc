@@ -66,7 +66,9 @@ public class DocumentsUploader extends Window {
 		// Create a new uploader panel and attach it to the window
 		multiUploader = new MultiUploader();
 
+		multiUploader.addOnStartUploadHandler(onStartUploaderHandler);
 		multiUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
+
 		multiUploader.setStyleName("upload");
 		multiUploader.setHeight("100%");
 		multiUploader.setWidth("100%");
@@ -98,8 +100,8 @@ public class DocumentsUploader extends Window {
 		});
 
 		addChild(layout);
-		
-		//Celanup the upload folder and finalize the GUI setup
+
+		// Celanup the upload folder and finalize the GUI setup
 		documentService.cleanUploadedFileFolder(Session.get().getSid(), new AsyncCallback<Void>() {
 
 			@Override
@@ -112,7 +114,7 @@ public class DocumentsUploader extends Window {
 				reloadForm();
 			}
 		});
-		
+
 	}
 
 	private void reloadForm() {
@@ -129,8 +131,8 @@ public class DocumentsUploader extends Window {
 		zipItem.setName("zip");
 		zipItem.setTitle(I18N.message("importfromzip"));
 		zipItem.setValue(!zipImport);
-		
-		if(!Session.get().getCurrentFolder().hasPermission(Constants.PERMISSION_EXPORT)){
+
+		if (!Session.get().getCurrentFolder().hasPermission(Constants.PERMISSION_EXPORT)) {
 			zipItem.setDisabled(true);
 			zipItem.setValue(false);
 		}
@@ -165,9 +167,15 @@ public class DocumentsUploader extends Window {
 
 	private IUploader.OnFinishUploaderHandler onFinishUploaderHandler = new IUploader.OnFinishUploaderHandler() {
 		public void onFinish(IUploader uploader) {
-			if (uploader.getStatus() == Status.SUCCESS) {
+			if (uploader.getStatus() == Status.SUCCESS || multiUploader.getSuccessUploads() > 0) {
 				sendButton.setDisabled(false);
 			}
+		}
+	};
+
+	private IUploader.OnStartUploaderHandler onStartUploaderHandler = new IUploader.OnStartUploaderHandler() {
+		public void onStart(IUploader uploader) {
+			sendButton.setDisabled(true);
 		}
 	};
 
@@ -179,7 +187,7 @@ public class DocumentsUploader extends Window {
 		if (!vm.validate())
 			return;
 
-		GUIFolder folder=Session.get().getCurrentFolder();
+		GUIFolder folder = Session.get().getCurrentFolder();
 		GUIDocument metadata = new GUIDocument();
 		metadata.setFolder(Session.get().getCurrentFolder());
 		metadata.setLanguage(I18N.getDefaultLocaleForDoc());
