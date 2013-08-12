@@ -50,7 +50,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		try {
 			List<WSGroup> groups = new ArrayList<WSGroup>();
 			GroupDAO dao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
-			for (Group grp : dao.findAll()) {				
+			for (Group grp : dao.findAll()) {
 				if (grp.getType() == Group.TYPE_DEFAULT) {
 					dao.initialize(grp);
 					groups.add(WSGroup.fromGroup(grp));
@@ -104,21 +104,17 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 			else if (StringUtils.isEmpty(usr.getFirstName()))
 				throw new Exception("Missing mandatory value 'FirstName'");
 
+			if (!dao.store(usr))
+				throw new Exception("Unable to store the user");
+
 			if (user.getGroupIds() != null && user.getGroupIds().length > 0) {
-				// This store is mandatory to avoid errors assigning groups to a
-				// not already stored user.
-				if (user.getId() == 0)
-					dao.store(usr);
 
 				SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
 				manager.removeUserFromAllGroups(usr);
 				manager.assignUserToGroups(usr, user.getGroupIds());
 			}
 
-			if (dao.store(usr)) {
-				return usr.getId();
-			} else
-				throw new Exception("Unable to store the user");
+			return usr.getId();
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new Exception(t.getMessage());
