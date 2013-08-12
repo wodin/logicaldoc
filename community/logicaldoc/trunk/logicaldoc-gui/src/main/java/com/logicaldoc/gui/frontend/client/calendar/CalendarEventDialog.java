@@ -447,20 +447,22 @@ public class CalendarEventDialog extends Window {
 			DateTimeFormat dfDate = DateTimeFormat.getFormat("yyyy-MM-dd");
 			DateTimeFormat dfTime = DateTimeFormat.getFormat("HH:mm");
 			DateTimeFormat df = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm");
-
+			
 			String str = dfDate.format((Date) vm.getValue("startDate"));
 			if (vm.getValue("startTime") != null)
 				try {
-					str = str + " " + dfTime.format((Date) vm.getValue("startTime"));
+					str = str + " " + vm.getValue("startTime").toString();
 				} catch (Throwable t) {
+					SC.warn(t.getMessage());
 				}
 			calendarEvent.setStartDate(df.parse(str));
 
+			
 			if (vm.getValue("expirationDate") != null) {
 				str = dfDate.format((Date) vm.getValue("expirationDate"));
 				if (vm.getValue("expirationTime") != null)
 					try {
-						str = str + " " + dfTime.format((Date) vm.getValue("expirationTime"));
+						str = str + " " + vm.getValue("expirationTime").toString();
 					} catch (Throwable t) {
 					}
 				calendarEvent.setExpirationDate(df.parse(str));
@@ -476,6 +478,7 @@ public class CalendarEventDialog extends Window {
 				calendarEvent.setCompletionDate((Date) vm.getValue("completionDate"));
 			else
 				calendarEvent.setCompletionDate(null);
+			
 			calendarEvent.setStatus(Integer.parseInt(vm.getValue("status").toString()));
 			if (calendarEvent.getCompletionDate() != null
 					&& calendarEvent.getCompletionDate().before(calendarEvent.getStartDate())) {
@@ -486,7 +489,7 @@ public class CalendarEventDialog extends Window {
 				calendarEvent.setDeadline((Date) vm.getValue("deadline"));
 			else
 				calendarEvent.setDeadline(null);
-
+			
 			service.saveEvent(Session.get().getSid(), calendarEvent, new AsyncCallback<Void>() {
 				@Override
 				public void onFailure(Throwable caught) {
