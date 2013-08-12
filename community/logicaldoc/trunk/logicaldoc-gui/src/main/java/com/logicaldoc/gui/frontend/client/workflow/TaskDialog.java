@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -108,12 +109,14 @@ public class TaskDialog extends Window {
 			escalationForm.setNumCols(4);
 			escalationForm.setColWidths("35", "35", "50", "130");
 			escalationForm.setValuesManager(vm);
-			SpinnerItem duedateTimeItem = ItemFactory.newSpinnerItem("duedateNumber", "duedate", this.state.getDueDateNumber());
+			SpinnerItem duedateTimeItem = ItemFactory.newSpinnerItem("duedateNumber", "duedate",
+					this.state.getDueDateNumber());
 			duedateTimeItem.setDefaultValue(0);
 			SelectItem duedateTime = ItemFactory.newDueTimeSelector("duedateTime", "");
 			duedateTime.setValue(this.state.getDueDateUnit());
 
-			SpinnerItem remindTimeItem =ItemFactory.newSpinnerItem("remindtimeNumber", "remindtime", this.state.getReminderNumber());
+			SpinnerItem remindTimeItem = ItemFactory.newSpinnerItem("remindtimeNumber", "remindtime",
+					this.state.getReminderNumber());
 			remindTimeItem.setDefaultValue(0);
 			SelectItem remindTime = ItemFactory.newDueTimeSelector("remindTime", "");
 			remindTime.setValue(this.state.getReminderUnit());
@@ -169,8 +172,7 @@ public class TaskDialog extends Window {
 					}
 
 					if (participants.get(selectedRecord.getAttribute("username")) == null)
-						refreshParticipants(selectedRecord.getAttribute("username"),
-								selectedRecord.getAttribute("label"), 1);
+						addParticipant(selectedRecord.getAttribute("username"), selectedRecord.getAttribute("label"));
 					user.clearValue();
 				}
 			}
@@ -195,8 +197,7 @@ public class TaskDialog extends Window {
 					}
 
 					if (participants.get("g." + selectedRecord.getAttribute("name")) == null)
-						refreshParticipants("g." + selectedRecord.getAttribute("name"),
-								selectedRecord.getAttribute("name"), 1);
+						addParticipant("g." + selectedRecord.getAttribute("name"), selectedRecord.getAttribute("name"));
 					user.clearValue();
 				}
 			}
@@ -222,7 +223,7 @@ public class TaskDialog extends Window {
 				}
 
 				if (participants.get("att." + val) == null)
-					refreshParticipants("att." + val, val, 1);
+					addParticipant("att." + val, val);
 				attr.clearValue();
 			}
 		});
@@ -253,16 +254,14 @@ public class TaskDialog extends Window {
 						part.getValue().startsWith(prefix) ? part.getValue() : prefix + part.getValue());
 			}
 
-		refreshParticipants(null, null, 0);
+		addParticipant(null, null);
 	}
 
 	/**
 	 * Refresh the task's users participants list. If <code>operation</code> is
-	 * 0, no operation is made to the list. If <code>operation</code> is 1, the
-	 * username will be added to the list. If <code>operation</code> is 2, the
-	 * username will be removed from the list.
+	 * 0, no operation is made to the list.
 	 */
-	private void refreshParticipants(String entityCode, String entityLabel, int operation) {
+	private void addParticipant(String entityCode, String entityLabel) {
 		if (participantsForm != null)
 			participantsLayout.removeMember(participantsForm);
 		if (removeParticipant != null)
@@ -276,27 +275,26 @@ public class TaskDialog extends Window {
 		participantsForm.setTitleOrientation(TitleOrientation.TOP);
 		participantsForm.setNumCols(1);
 		participantsForm.setValuesManager(vm);
-		participantsList = new SelectItem();
-		participantsList.setTitle("<b>" + I18N.message("participants") + "</b>");
-		participantsList.setShowTitle(false);
-		participantsList.setMultiple(true);
-		participantsList.setMultipleAppearance(MultipleAppearance.GRID);
-		participantsList.setWidth(200);
-		participantsList.setHeight(70);
-		participantsList.setEndRow(true);
 
-		if (entityCode != null && (operation == 1)) {
+		if (entityCode != null) {
 			String prefix = I18N.message("user");
 			if (entityCode.startsWith("g."))
 				prefix = I18N.message("group");
 			else if (entityCode.startsWith("att."))
 				prefix = I18N.message("attribute");
 			prefix += ": ";
-			participants.put(entityCode, entityLabel.startsWith(prefix) ? entityLabel : prefix + entityLabel);
-		} else if (entityCode != null && (operation == 2)) {
-			participants.remove(entityCode);
+
+			participants.put(entityCode.trim(), entityLabel.startsWith(prefix) ? entityLabel : prefix + entityLabel);
 		}
 
+		participantsList = new SelectItem();
+		participantsList.setTitle("<b>" + I18N.message("participants") + "</b>");
+		participantsList.setShowTitle(false);
+		participantsList.setMultipleAppearance(MultipleAppearance.GRID);
+		participantsList.setMultiple(true);
+		participantsList.setWidth(200);
+		participantsList.setHeight(70);
+		participantsList.setEndRow(true);
 		participantsList.setValueMap(participants);
 		participantsForm.setItems(participantsList);
 
@@ -305,9 +303,12 @@ public class TaskDialog extends Window {
 		removeParticipant.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				if (participantsList.getValue() != null)
-					refreshParticipants(participantsList.getValue().toString(),
-							participantsList.getDisplayValue(participantsList.getValue().toString()), 2);
+				@SuppressWarnings("unchecked")
+				List<String> selection = (List<String>) participantsList.getValue();
+				for (String key : selection) {
+					participants.remove(key);
+					participantsList.setValueMap(participants);
+				}
 			}
 		});
 
