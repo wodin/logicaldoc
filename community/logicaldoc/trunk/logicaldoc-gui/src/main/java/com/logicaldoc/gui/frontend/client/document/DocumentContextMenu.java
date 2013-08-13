@@ -640,7 +640,6 @@ public class DocumentContextMenu extends Menu {
 			links.setEnabled(false);
 			markIndexable.setEnabled(false);
 			markUnindexable.setEnabled(false);
-			checkout.setEnabled(false);
 		}
 
 		if (selection.length != 1
@@ -658,8 +657,7 @@ public class DocumentContextMenu extends Menu {
 
 		unlockItem.setEnabled(enableUnlock);
 		lock.setEnabled(enableLock);
-		if (checkout.getEnabled())
-			checkout.setEnabled(enableLock);
+		checkout.setEnabled(enableLock);
 		immutable.setEnabled(enableImmutable);
 		delete.setEnabled(enableDelete);
 
