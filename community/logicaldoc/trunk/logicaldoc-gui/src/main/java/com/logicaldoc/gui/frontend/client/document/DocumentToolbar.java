@@ -1,5 +1,8 @@
 package com.logicaldoc.gui.frontend.client.document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -58,6 +61,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	protected ToolStripButton scan = new ToolStripButton();
 
 	protected ToolStripButton bulkUpdate = new ToolStripButton();
+
+	protected ToolStripButton bulkCheckout = new ToolStripButton();
 
 	protected ToolStripButton archive = new ToolStripButton();
 
@@ -389,6 +394,24 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
+		bulkCheckout.setIcon(ItemFactory.newImgIcon("page_edit.png").getSrc());
+		bulkCheckout.setTooltip(I18N.message("bulkcheckout"));
+		bulkCheckout.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
+				ListGridRecord[] selection = list.getSelectedRecords();
+				if (selection == null || selection.length == 0)
+					return;
+				List<Long> ids = new ArrayList<Long>();
+				for (ListGridRecord rec : selection) {
+					ids.add(rec.getAttributeAsLong("id"));
+				}
+				BulkCheckinDialog dialog = new BulkCheckinDialog(ids);
+				dialog.show();
+			}
+		});
+
 		if (Feature.visible(Feature.AUDIT)) {
 			addSeparator();
 			addButton(subscribe);
@@ -415,12 +438,22 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		}
 
-		if (Feature.visible(Feature.BULK_UPDATE)) {
+		if (Feature.visible(Feature.BULK_UPDATE) || Feature.visible(Feature.BULK_CHECKOUT))
 			addSeparator();
+
+		if (Feature.visible(Feature.BULK_UPDATE)) {
 			addButton(bulkUpdate);
 			if (!Feature.enabled(Feature.BULK_UPDATE)) {
 				bulkUpdate.setDisabled(true);
 				bulkUpdate.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+
+		if (Feature.visible(Feature.BULK_CHECKOUT)) {
+			addButton(bulkCheckout);
+			if (!Feature.enabled(Feature.BULK_CHECKOUT)) {
+				bulkCheckout.setDisabled(true);
+				bulkCheckout.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
 
@@ -522,7 +555,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					pdf.setTooltip(I18N.message("exportpdf"));
 				subscribe.setDisabled(!Feature.enabled(Feature.AUDIT));
 				bulkUpdate.setDisabled(!Feature.enabled(Feature.BULK_UPDATE));
-
+				bulkCheckout.setDisabled(!Feature.enabled(Feature.BULK_CHECKOUT));
 				addCalendarEvent.setDisabled(!Feature.enabled(Feature.CALENDAR));
 			} else {
 				download.setDisabled(true);
@@ -534,6 +567,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				addToWorkflow.setDisabled(true);
 				addCalendarEvent.setDisabled(true);
 				bulkUpdate.setDisabled(true);
+				bulkCheckout.setDisabled(true);
 			}
 
 			if (folder != null) {
@@ -556,6 +590,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				startWorkflow.setDisabled(true);
 				addToWorkflow.setDisabled(true);
 				bulkUpdate.setDisabled(true);
+				bulkCheckout.setDisabled(true);
 				dropSpot.setDisabled(true);
 				addCalendarEvent.setDisabled(true);
 			}

@@ -71,6 +71,8 @@ public class Feature {
 	
 	public static final int EXTERNAL_CALL = 31;
 	
+	public static final int BULK_CHECKOUT = 32;
+	
 	public static final int SHOW_LICENSEE = 40;
 
 	public static final int SHOW_USERS_WARNING = 41;
