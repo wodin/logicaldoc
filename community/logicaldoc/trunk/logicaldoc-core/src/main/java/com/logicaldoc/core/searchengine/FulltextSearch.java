@@ -202,12 +202,7 @@ public class FulltextSearch extends Search {
 					continue;
 			}
 
-			// When user can see document with folderId then put it into
-			// result-collection.
-//			if ((searchUser.isInGroup("admin") && opt.getFolderId() == null)
-//					|| (accessibleFolderIds != null && accessibleFolderIds.contains(hit.getFolder().getId()))) {
-				hitsMap.put(hit.getId(), hit);
-//			}
+			hitsMap.put(hit.getId(), hit);
 		}
 
 		if (hitsMap.isEmpty())
