@@ -132,7 +132,7 @@ public class DocumentsUploader extends Window {
 		zipItem.setTitle(I18N.message("importfromzip"));
 		zipItem.setValue(!zipImport);
 
-		if (!Session.get().getCurrentFolder().hasPermission(Constants.PERMISSION_EXPORT)) {
+		if (!Session.get().getCurrentFolder().hasPermission(Constants.PERMISSION_IMPORT)) {
 			zipItem.setDisabled(true);
 			zipItem.setValue(false);
 		}
