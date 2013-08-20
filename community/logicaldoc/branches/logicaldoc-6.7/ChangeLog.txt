@@ -14,6 +14,7 @@ LogicalDOC 6.7.3 (2013-08-30; logicaldoc-6.7.3)
 ================
 328 - Folder specification not used when searching for aliases - Bug - Core
 329 - Feedback for uploading files for LogicalDOC - Improvement - User Interface
+331 - Allow input of '-' char in tag widget - Bug - User Interfac
 
 LogicalDOC 6.7.2 (2013-07-19; logicaldoc-6.7.2)
 ================
