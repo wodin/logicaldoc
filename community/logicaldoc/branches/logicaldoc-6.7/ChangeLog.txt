@@ -10,6 +10,11 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC 6.7.3 (2013-08-30; logicaldoc-6.7.3)
+================
+328 - Folder specification not used when searching for aliases - Bug - Core
+329 - Feedback for uploading files for LogicalDOC - Improvement - User Interface
+
 LogicalDOC 6.7.2 (2013-07-19; logicaldoc-6.7.2)
 ================
 313 - Blank metadata for aliases during search - Bug - Core
