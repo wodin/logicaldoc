@@ -251,6 +251,7 @@ public class AccountFiltersPanel extends AccountDetailsTab {
 					public void execute(Boolean value) {
 						if (value) {
 							list.removeSelectedData();
+							changedHandler.onChanged(null);
 						}
 					}
 				});
