@@ -20,7 +20,8 @@ import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 
 public class Util {
-	public static String[] OFFICE_EXTS = new String[] { ".doc", ".xls", ".ppt", ".docx", ".xlsx", ".pptx" };
+	public static String[] OFFICE_EXTS = new String[] { ".doc", ".xls", ".ppt", ".docx", ".xlsx", ".pptx", ".rtf",
+			".odt", ".ods", ".odp" };
 
 	public static String[] IMAGE_EXTS = new String[] { ".gif", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".png" };
 
@@ -133,9 +134,9 @@ public class Util {
 	public static String fullPreviewUrl(String sid, long docId, String fileVersion) {
 		String url = "{" + GWT.getHostPageBaseURL() + "preview?sid=" + Session.get().getSid() + "%26docId=" + docId
 				+ "%26suffix=preview-[*,0].swf";
+		url += "," + Session.get().getInfo().getConfig("gui.preview.pages") + "}";
 		if (fileVersion != null)
 			url += "%26fileVersion=" + fileVersion;
-		url += "," + Session.get().getInfo().getConfig("gui.preview.pages") + "}";
 		return url;
 	}
 
