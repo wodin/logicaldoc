@@ -34,6 +34,8 @@ public class DetectDuplicates {
 			String strLine;
 			// Read File Line By Line
 			while ((strLine = br.readLine()) != null) {
+				if (strLine.indexOf('=') < 0)
+					continue;
 				String key = strLine.substring(0, strLine.indexOf('='));
 				key = key.trim();
 				if (map.containsKey(key)) {
@@ -47,12 +49,16 @@ public class DetectDuplicates {
 		} catch (Exception e) {// Catch exception if any
 			System.err.println("Error: " + e.getMessage());
 		}
-		
+
 		System.out.println("Inspected a total of " + map.keySet().size() + " keys");
 		System.out.println("Found duplicates: ");
-		for (String key : map.keySet()) {
-			if (map.get(key).intValue() > 1)
-				System.out.println(key + "(" + map.get(key)+" times)");
+		try {
+			for (String key : map.keySet()) {
+				if (map.get(key).intValue() > 1)
+					System.out.println(key + "(" + map.get(key) + " times)");
+			}
+		} catch (Exception t) {
+			t.printStackTrace();
 		}
 	}
 }
