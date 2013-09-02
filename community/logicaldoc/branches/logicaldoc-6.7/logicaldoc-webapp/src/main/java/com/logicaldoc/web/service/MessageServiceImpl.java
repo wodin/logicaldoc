@@ -99,32 +99,38 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 	@Override
 	public void save(String sid, GUIMessage message) throws InvalidSessionException {
 		UserSession session = SessionUtil.validateSession(sid);
-		Context context = Context.getInstance();
-		SystemMessageDAO dao = (SystemMessageDAO) context.getBean(SystemMessageDAO.class);
 
-		SystemMessage m = new SystemMessage();
-		m.setAuthor(session.getUserName());
-		m.setSentDate(new Date());
-		m.setStatus(SystemMessage.STATUS_NEW);
-		m.setType(SystemMessage.TYPE_SYSTEM);
-		m.setLastNotified(new Date());
-		m.setMessageText(message.getMessage());
-		m.setSubject(message.getSubject());
-		Recipient recipient = new Recipient();
-		recipient.setName(message.getRecipient());
-		recipient.setAddress(message.getRecipient());
-		recipient.setType(Recipient.TYPE_SYSTEM);
-		recipient.setMode("message");
-		Set<Recipient> recipients = new HashSet<Recipient>();
-		recipients.add(recipient);
-		m.setRecipients(recipients);
-		m.setDateScope(message.getValidity());
-		m.setPrio(message.getPriority());
-		if (message.isConfirmation())
-			m.setConfirmation(1);
-		else
-			m.setConfirmation(0);
-		dao.store(m);
+		try {
+			Context context = Context.getInstance();
+			SystemMessageDAO dao = (SystemMessageDAO) context.getBean(SystemMessageDAO.class);
+
+			SystemMessage m = new SystemMessage();
+			m.setAuthor(session.getUserName());
+			m.setSentDate(new Date());
+			m.setStatus(SystemMessage.STATUS_NEW);
+			m.setType(SystemMessage.TYPE_SYSTEM);
+			m.setLastNotified(new Date());
+			m.setMessageText(message.getMessage());
+			m.setSubject(message.getSubject());
+			Recipient recipient = new Recipient();
+			recipient.setName(message.getRecipient());
+			recipient.setAddress(message.getRecipient());
+			recipient.setType(Recipient.TYPE_SYSTEM);
+			recipient.setMode("message");
+			Set<Recipient> recipients = new HashSet<Recipient>();
+			recipients.add(recipient);
+			m.setRecipients(recipients);
+			m.setDateScope(message.getValidity());
+			m.setPrio(message.getPriority());
+			if (message.isConfirmation())
+				m.setConfirmation(1);
+			else
+				m.setConfirmation(0);
+			dao.store(m);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
 	}
 
 	@Override
