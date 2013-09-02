@@ -13,8 +13,8 @@ import com.logicaldoc.gui.frontend.client.services.MessageServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.Window;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClickEvent;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
@@ -23,8 +23,6 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
@@ -75,15 +73,6 @@ public class MessageDialog extends Window {
 		recipient = ItemFactory.newUserSelector("recipient", " ", null);
 		recipient.setShowTitle(false);
 		recipient.setDisplayField("username");
-		recipient.addChangedHandler(new ChangedHandler() {
-			@Override
-			public void onChanged(ChangedEvent event) {
-				try {
-					setRecipient(recipient.getSelectedRecord().getAttribute("username"));
-				} catch (Throwable t) {
-				}
-			}
-		});
 
 		TextItem subject = ItemFactory.newTextItem("subject", "subject", "");
 		subject.setRequired(true);
@@ -115,15 +104,14 @@ public class MessageDialog extends Window {
 				form.validate();
 				if (!form.hasErrors()) {
 					GUIMessage message = new GUIMessage();
-					message.setRecipient(form.getValueAsString("recipient"));
+					message.setRecipient(recipient.getSelectedRecord().getAttribute("username"));
 					message.setSubject(form.getValueAsString("subject"));
 					message.setMessage(form.getValueAsString("message"));
 					message.setConfirmation("true".equals(form.getValueAsString("confirmation")));
 					if (form.getValueAsString("validity") != null)
 						message.setValidity(Integer.parseInt(form.getValueAsString("validity")));
-
 					message.setPriority(Integer.parseInt(form.getValue("priority").toString()));
-
+					
 					service.save(Session.get().getSid(), message, new AsyncCallback<Void>() {
 
 						@Override
