@@ -38,7 +38,6 @@ import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.layout.HLayout;
 
 /**
  * Shows document's standard properties and read-only data
@@ -187,6 +186,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 							item.setValue((String) folder.getValue(att.getName()));
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!update);
+						item.setRequired(false);
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
 						IntegerItem item = ItemFactory.newIntegerItemForExtendedAttribute(att.getName(),
@@ -195,14 +195,16 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 							item.setValue((Long) folder.getValue(att.getName()));
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!update);
+						item.setRequired(false);
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
 						SelectItem item = ItemFactory.newBooleanSelectorForExtendedAttribute(att.getName(),
-								att.getLabel(), !att.isMandatory());
+								att.getLabel(), true);
 						if (folder.getValue(att.getName()) != null)
 							item.setValue(((Boolean) folder.getValue(att.getName())).booleanValue() ? "1" : "0");
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!update);
+						item.setRequired(false);
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
 						FloatItem item = ItemFactory.newFloatItemForExtendedAttribute(att.getName(), att.getLabel(),
@@ -211,6 +213,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 							item.setValue((Double) folder.getValue(att.getName()));
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!update);
+						item.setRequired(false);
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
 						final DateItem item = ItemFactory.newDateItemForExtendedAttribute(att.getName(), att.getLabel());
@@ -231,6 +234,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 							}
 						});
 						item.setDisabled(!update);
+						item.setRequired(false);
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
 						SelectItem item = ItemFactory.newUserSelectorForExtendedAttribute(att.getName(),
@@ -240,6 +244,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 							item.setValue((folder.getValue(att.getName()).toString()));
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!update);
+						item.setRequired(false);
 						items.add(item);
 					}
 				}
