@@ -56,7 +56,9 @@ public class CreateDialog extends Dialog {
 				: I18N.message("newworkspace"));
 		name.setWidth(250);
 		name.setRequired(true);
-
+		
+		final boolean inheritOptionEnabled="true".equals(Session.get().getInfo().getConfig("gui.security.inheritoption"));
+		
 		SubmitItem create = new SubmitItem();
 		create.setTitle(I18N.message("create"));
 		create.setAutoFit(true);
@@ -66,7 +68,7 @@ public class CreateDialog extends Dialog {
 				if (form.validate()) {
 					folder.setName(form.getValueAsString("name").trim());
 					service.create(Session.get().getSid(), folder,
-							"true".equals(form.getValueAsString("inheritSecurity")), new AsyncCallback<GUIFolder>() {
+							!inheritOptionEnabled || "true".equals(form.getValueAsString("inheritSecurity")), new AsyncCallback<GUIFolder>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
@@ -88,7 +90,7 @@ public class CreateDialog extends Dialog {
 									} else {
 										Navigator.get().getTree().add(newNode, Navigator.get().getTree().getRoot());
 									}
-									
+
 									destroy();
 								}
 							});
@@ -96,8 +98,11 @@ public class CreateDialog extends Dialog {
 			}
 		});
 
-		form.setItems(name, inheritSecurity, create);
-
+		if (inheritOptionEnabled)
+			form.setItems(name, inheritSecurity, create);
+		else
+			form.setItems(name, create);
+		
 		VLayout content = new VLayout();
 		content.setTop(10);
 		content.setWidth100();
