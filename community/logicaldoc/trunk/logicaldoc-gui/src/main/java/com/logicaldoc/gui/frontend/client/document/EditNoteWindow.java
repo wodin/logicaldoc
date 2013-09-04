@@ -30,7 +30,7 @@ public class EditNoteWindow extends Window {
 
 	private NotesPanel notesPanel;
 
-	private ButtonItem sendItem;
+	private ButtonItem saveItem;
 	
 	public EditNoteWindow(final long docId, final Long noteId, final NotesPanel notesPanel, String text) {
 		super();
@@ -44,7 +44,7 @@ public class EditNoteWindow extends Window {
 		});
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		setTitle(I18N.message("sendpost"));
+		setTitle(I18N.message("addnote"));
 		setWidth(700);
 		setHeight(300);
 		setCanDragResize(true);
@@ -68,10 +68,10 @@ public class EditNoteWindow extends Window {
 		noteForm.setID("noteform");
 		noteForm.setMargin(5);
 
-		sendItem = new ButtonItem();
-		sendItem.setTitle(I18N.message("send"));
-		sendItem.setAutoFit(true);
-		sendItem.addClickHandler(new ClickHandler() {
+		saveItem = new ButtonItem();
+		saveItem.setTitle(I18N.message("save"));
+		saveItem.setAutoFit(true);
+		saveItem.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (!message.getValue().trim().isEmpty()) {
 				   if(noteId==null){
@@ -110,7 +110,7 @@ public class EditNoteWindow extends Window {
 				}
 			}
 		});
-		noteForm.setFields(sendItem);
+		noteForm.setFields(saveItem);
 		addItem(noteForm);
 	}
 }
