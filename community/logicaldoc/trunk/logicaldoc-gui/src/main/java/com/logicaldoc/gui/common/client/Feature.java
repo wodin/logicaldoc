@@ -129,6 +129,8 @@ public class Feature {
 	
 	public static final int CALENDAR = 74;
 	
+	public static final int CIFS = 75;
+	
 	private static Set<String> features = new HashSet<String>();
 
 	static public void init(GUIInfo info) {
