@@ -153,7 +153,7 @@ public class WorkflowTriggersPanel extends VLayout {
 
 							String templateSelectedId = "";
 							if (templates.getValue() != null) {
-								templateSelectedId = templates.getValue().toString();
+								templateSelectedId = templates.getValueAsString();
 							}
 
 							service.saveTrigger(Session.get().getSid(), Long.toString(getFolder().getId()),
