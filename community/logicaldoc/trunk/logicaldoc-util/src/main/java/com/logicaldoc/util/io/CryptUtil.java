@@ -44,7 +44,7 @@ public class CryptUtil {
 	 * @param original the original string to be encrypted.
 	 * @return the returned hash as bytes.
 	 */
-	public static String ctyptStringMD4(String original) {
+	public static String cryptStringMD4(String original) {
 		String copy = "";
 		String pwd = original;
 		if (pwd == null) {
