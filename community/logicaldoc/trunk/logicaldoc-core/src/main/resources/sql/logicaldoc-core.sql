@@ -32,7 +32,7 @@ create table ld_template (ld_id bigint not null, ld_lastmodified timestamp not n
 create table ld_template_ext (ld_templateid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_templateid, ld_name));
 create table ld_ticket (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_ticketid varchar(255) not null, ld_docid bigint not null, ld_userid bigint not null, ld_type int not null, ld_creation timestamp not null, ld_expired timestamp, ld_count int not null, primary key (ld_id));
 create table ld_user (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_enabled int not null, 
-                      ld_username varchar(255) not null, ld_password varchar(255), ld_name varchar(255), ld_firstname varchar(255), 
+                      ld_username varchar(255) not null, ld_password varchar(255), ld_passwordmd4 varchar(255), ld_name varchar(255), ld_firstname varchar(255), 
                       ld_street varchar(255), ld_postalcode varchar(255), ld_city varchar(255), ld_country varchar(255), 
                       ld_state varchar(255), ld_language varchar(10), ld_email varchar(255), ld_telephone varchar(255), 
                       ld_telephone2 varchar(255), ld_type int not null, ld_passwordchanged timestamp, ld_passwordexpires int not null,
