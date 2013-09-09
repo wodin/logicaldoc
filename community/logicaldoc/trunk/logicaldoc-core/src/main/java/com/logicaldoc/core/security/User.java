@@ -40,6 +40,8 @@ public class User extends PersistentObject implements Serializable {
 
 	private String password = "";
 
+	private String passwordmd4 = "";
+
 	private String name = "";
 
 	private String firstName = "";
@@ -77,7 +79,7 @@ public class User extends PersistentObject implements Serializable {
 
 	// If the password expires or not
 	private int passwordExpires = 0;
-	
+
 	// If the password already expired
 	private int passwordExpired = 0;
 
@@ -211,6 +213,7 @@ public class User extends PersistentObject implements Serializable {
 	public void setDecodedPassword(String pwd) {
 		if (org.apache.commons.lang.StringUtils.isNotEmpty(pwd)) {
 			password = CryptUtil.cryptString(pwd);
+			passwordmd4 = CryptUtil.cryptStringMD4(pwd);
 		}
 	}
 
@@ -450,5 +453,13 @@ public class User extends PersistentObject implements Serializable {
 
 	public void setPasswordExpired(int passwordExpired) {
 		this.passwordExpired = passwordExpired;
+	}
+
+	public String getPasswordmd4() {
+		return passwordmd4;
+	}
+
+	public void setPasswordmd4(String passwordmd4) {
+		this.passwordmd4 = passwordmd4;
 	}
 }

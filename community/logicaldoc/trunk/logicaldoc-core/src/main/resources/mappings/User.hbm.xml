@@ -12,6 +12,7 @@
 		<property name="enabled" type="int" column="ld_enabled" not-null="true" />
 		<property name="userName" type="string" column="ld_username" length="255" not-null="true" />
 		<property name="password" type="string" column="ld_password" length="255" />
+        <property name="passwordmd4" type="string" column="ld_passwordmd4" length="255" />
 		<property name="passwordChanged" type="timestamp" column="ld_passwordchanged"  />
 		<property name="passwordExpires" type="int" column="ld_passwordexpires" not-null="true"/>
 		<property name="passwordExpired" type="int" column="ld_passwordexpired" not-null="true"/>
