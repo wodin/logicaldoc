@@ -213,7 +213,7 @@ public class User extends PersistentObject implements Serializable {
 	public void setDecodedPassword(String pwd) {
 		if (org.apache.commons.lang.StringUtils.isNotEmpty(pwd)) {
 			password = CryptUtil.cryptString(pwd);
-			passwordmd4 = CryptUtil.cryptStringMD4(pwd);
+			passwordmd4 = CryptUtil.cryptString(CryptUtil.cryptStringMD4(pwd));
 		}
 	}
 
@@ -277,6 +277,7 @@ public class User extends PersistentObject implements Serializable {
 	public void reset() {
 		userName = "";
 		password = "";
+		passwordmd4 = "";
 		name = "";
 		firstName = "";
 		street = "";

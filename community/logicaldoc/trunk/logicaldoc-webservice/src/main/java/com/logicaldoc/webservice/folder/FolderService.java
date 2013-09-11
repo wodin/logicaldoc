@@ -126,6 +126,19 @@ public interface FolderService {
 			throws Exception;
 
 	/**
+	 * Test if the current user has a specific permission.
+	 * 
+	 * @param sid Session identifier
+	 * @param folderId The folder id
+	 * @param permission The permission representation
+	 * @return True if the identifier denotes a granted permission, otherwise
+	 *         false.
+	 * @throws Exception
+	 */
+	public boolean isGranted(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId, @WebParam(name = "permission") int permission)
+			throws Exception;
+	
+	/**
 	 * Lists all direct folders of a parent folder.<br>
 	 * Attention: readable only sub-folders are returned.
 	 * 

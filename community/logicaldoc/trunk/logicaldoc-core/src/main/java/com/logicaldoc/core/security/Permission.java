@@ -26,9 +26,9 @@ import java.util.Set;
  * @since 4.0
  */
 public enum Permission {
-	READ("read"), DOWNLOAD("download"), WRITE("write"), ADD("add"), SECURITY("security"), IMMUTABLE(
-			"immutable"), DELETE("delete"), RENAME("rename"), IMPORT("import"), EXPORT(
-			"export"), SIGN("sign"), ARCHIVE("archive"), WORKFLOW("workflow"), CALENDAR("calendar");
+	READ("read"), DOWNLOAD("download"), WRITE("write"), ADD("add"), SECURITY("security"), IMMUTABLE("immutable"), DELETE(
+			"delete"), RENAME("rename"), IMPORT("import"), EXPORT("export"), SIGN("sign"), ARCHIVE("archive"), WORKFLOW(
+			"workflow"), CALENDAR("calendar");
 
 	private final String name;
 
@@ -78,6 +78,14 @@ public enum Permission {
 		return (permission & mask) != 0;
 	}
 
+	public static Permission valueOf(int mask) {
+		for (Permission permission : all()) {
+			if (permission.match(mask))
+				return permission;
+		}
+		return null;
+	}
+
 	public static Set<Permission> all() {
 		Set<Permission> permissions = new HashSet<Permission>();
 		permissions.add(READ);
@@ -101,4 +109,5 @@ public enum Permission {
 	public String toString() {
 		return name;
 	}
+
 }

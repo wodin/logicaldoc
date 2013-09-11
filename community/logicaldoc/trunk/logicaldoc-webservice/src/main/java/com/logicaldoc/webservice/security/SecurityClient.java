@@ -57,6 +57,11 @@ public class SecurityClient extends AbstractClient<SecurityService> implements S
 	}
 
 	@Override
+	public WSUser getUserByUsername(String sid, String username) throws Exception {
+		return client.getUserByUsername(sid, username);
+	}
+	
+	@Override
 	public WSGroup getGroup(String sid, long groupId) throws Exception {
 		return client.getGroup(sid, groupId);
 	}

@@ -104,6 +104,17 @@ public interface SecurityService {
 	public WSUser getUser(@WebParam(name = "sid") String sid, @WebParam(name = "userId") long userId) throws Exception;
 
 	/**
+	 * Gets user metadata of an existing user with the given username.
+	 * 
+	 * @param sid Session identifier
+	 * @param username The user name
+	 * @return A value object containing the user's metadata.
+	 * @throws Exception
+	 */
+	@WebResult(name = "user")
+	public WSUser getUserByUsername(@WebParam(name = "sid") String sid, @WebParam(name = "username") String username) throws Exception;
+	
+	/**
 	 * Gets group metadata of an existing group with the given identifier.
 	 * 
 	 * @param sid Session identifier
