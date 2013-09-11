@@ -129,7 +129,7 @@ public class Feature {
 	
 	public static final int CALENDAR = 74;
 	
-	public static final int CIFS = 75;
+	public static final int CONNECTOR = 75;
 	
 	private static Set<String> features = new HashSet<String>();
 
