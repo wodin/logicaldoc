@@ -236,7 +236,17 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		} catch (Exception e) {
 			return false;
 		}
+		return true;
+	}
 
+	@Override
+	public boolean isGranted(String sid, long folderId, int permission) throws Exception {
+		User user = validateSession(sid);
+		try {
+			checkPermission(Permission.valueOf(permission), user, folderId);
+		} catch (Exception e) {
+			return false;
+		}
 		return true;
 	}
 

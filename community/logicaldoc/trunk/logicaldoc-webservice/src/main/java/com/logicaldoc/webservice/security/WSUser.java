@@ -36,6 +36,8 @@ public class WSUser {
 
 	private String password = "";
 
+	private String passwordmd4 = "";
+
 	private String name = "";
 
 	private String firstName = "";
@@ -75,7 +77,7 @@ public class WSUser {
 	private long quota = -1;
 
 	private long quotaCount = 0;
-	
+
 	private String lastModified;
 
 	public long getId() {
@@ -372,6 +374,7 @@ public class WSUser {
 			wsUser.setType(user.getType());
 			wsUser.setSource(user.getSource());
 			wsUser.setPassword(user.getPassword());
+			wsUser.setPasswordmd4(user.getPasswordmd4());
 			wsUser.setPasswordChanged(AbstractService.convertDateToString(user.getPasswordChanged()));
 			wsUser.setLastModified(AbstractService.convertDateToString(user.getLastModified()));
 
@@ -391,5 +394,13 @@ public class WSUser {
 		}
 
 		return wsUser;
+	}
+
+	public String getPasswordmd4() {
+		return passwordmd4;
+	}
+
+	public void setPasswordmd4(String passwordmd4) {
+		this.passwordmd4 = passwordmd4;
 	}
 }

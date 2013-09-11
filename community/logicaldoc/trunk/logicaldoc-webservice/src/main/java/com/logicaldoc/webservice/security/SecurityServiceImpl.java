@@ -262,6 +262,19 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	}
 
 	@Override
+	public WSUser getUserByUsername(String sid, String username) throws Exception {
+		checkAdministrator(sid);
+
+		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		User user = userDao.findByUserName(username);
+		if (user == null)
+			return null;
+
+		userDao.initialize(user);
+		return WSUser.fromUser(user);
+	}
+
+	@Override
 	public WSGroup getGroup(String sid, long groupId) throws Exception {
 		checkAdministrator(sid);
 

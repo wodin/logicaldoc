@@ -116,4 +116,9 @@ public class FolderClient extends AbstractClient<FolderService> implements Folde
 	public WSFolder findByPath(String sid, String path) throws Exception {
 		return client.findByPath(sid, path);
 	}
+
+	@Override
+	public boolean isGranted(String sid, long folderId, int permission) throws Exception {
+		return client.isGranted(sid, folderId, permission);
+	}
 }
