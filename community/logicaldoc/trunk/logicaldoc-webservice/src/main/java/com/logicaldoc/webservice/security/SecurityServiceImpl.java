@@ -15,7 +15,7 @@ import com.logicaldoc.core.security.UserHistory;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.io.CryptUtil;
+import com.logicaldoc.util.crypt.CryptUtil;
 import com.logicaldoc.webservice.AbstractService;
 
 /**
@@ -251,27 +251,38 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	@Override
 	public WSUser getUser(String sid, long userId) throws Exception {
 		checkAdministrator(sid);
+		try {
+			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			User user = userDao.findById(userId);
+			if (user == null)
+				return null;
 
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = userDao.findById(userId);
-		if (user == null)
+			userDao.initialize(user);
+			return WSUser.fromUser(user);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 			return null;
-
-		userDao.initialize(user);
-		return WSUser.fromUser(user);
+		}
 	}
 
 	@Override
 	public WSUser getUserByUsername(String sid, String username) throws Exception {
+		System.out.println("username="+username);
 		checkAdministrator(sid);
+		
+		try {
+			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			User user = userDao.findByUserName(username);
+			
+			if (user == null)
+				return null;
 
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = userDao.findByUserName(username);
-		if (user == null)
+			userDao.initialize(user);
+			return WSUser.fromUser(user);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 			return null;
-
-		userDao.initialize(user);
-		return WSUser.fromUser(user);
+		}
 	}
 
 	@Override
