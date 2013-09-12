@@ -558,7 +558,8 @@ public class Navigator extends TreeGrid implements FolderObserver {
 
 		if (Feature.visible(Feature.FOLDER_TEMPLATE)) {
 			contextMenu.addItem(applyTemplate);
-			applyTemplate.setEnabled(Feature.enabled(Feature.FOLDER_TEMPLATE));
+			if (!Feature.enabled(Feature.FOLDER_TEMPLATE) || !folder.hasPermission(Constants.PERMISSION_ADD))
+				applyTemplate.setEnabled(false);
 		}
 
 		if (Feature.visible(Feature.ARCHIVES)) {
