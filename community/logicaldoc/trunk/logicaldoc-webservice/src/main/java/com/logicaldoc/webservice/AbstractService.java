@@ -69,8 +69,8 @@ public class AbstractService {
 		if (!isWebserviceEnabled())
 			throw new Exception("WebServices are disabled");
 
-		if (!SessionManager.getInstance().isValid(sid)) {
-			throw new Exception("Invalid session");
+		if (sid == null || !SessionManager.getInstance().isValid(sid)) {
+			throw new Exception("Invalid session " + sid);
 		} else {
 			SessionManager.getInstance().renew(sid);
 		}
