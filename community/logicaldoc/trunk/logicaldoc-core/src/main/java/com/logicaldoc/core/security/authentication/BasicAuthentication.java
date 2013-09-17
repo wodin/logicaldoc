@@ -11,7 +11,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
  */
 public class BasicAuthentication implements AuthenticationProvider {
 
-	private UserDAO userDAO;
+	protected UserDAO userDAO;
 
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;

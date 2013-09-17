@@ -76,7 +76,7 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
-import com.logicaldoc.util.io.CryptUtil;
+import com.logicaldoc.util.crypt.CryptUtil;
 import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.web.UploadServlet;
 import com.logicaldoc.web.util.SessionUtil;

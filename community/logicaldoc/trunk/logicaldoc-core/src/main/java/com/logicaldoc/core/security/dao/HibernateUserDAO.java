@@ -20,7 +20,7 @@ import com.logicaldoc.core.security.UserHistory;
 import com.logicaldoc.core.security.UserListener;
 import com.logicaldoc.core.security.UserListenerManager;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.io.CryptUtil;
+import com.logicaldoc.util.crypt.CryptUtil;
 
 /**
  * Hibernate implementation of <code>UserDAO</code>
@@ -85,8 +85,8 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	 *      java.lang.String)
 	 */
 	public List<User> findByUserNameAndName(String username, String name) {
-		return findByWhere("lower(_entity.name) like ?1 and _entity.userName like ?2", new Object[] { name.toLowerCase(),
-				username }, null, null);
+		return findByWhere("lower(_entity.name) like ?1 and _entity.userName like ?2",
+				new Object[] { name.toLowerCase(), username }, null, null);
 	}
 
 	/**
@@ -168,26 +168,49 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	 */
 	public boolean validateUser(String username, String password) {
 		boolean result = true;
+
 		try {
 			User user = findByUserName(username);
+			if (!validateUser(user))
+				return false;
+
 			// Check the password match
-			if ((user == null) || !user.getPassword().equals(CryptUtil.cryptString(password))
-					|| user.getType() != User.TYPE_DEFAULT) {
+			if (!user.getPassword().equals(CryptUtil.cryptString(password)))
 				result = false;
-			}
-
-			// Check if the user is enabled
-			if (user != null && user.getEnabled() == 0)
-				return false;
-
-			if (isPasswordExpired(username))
-				return false;
 		} catch (Throwable e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 			result = false;
 		}
 		return result;
+	}
+
+	@Override
+	public boolean validateUser(String username) {
+		boolean result = true;
+		try {
+			result = validateUser(findByUserName(username));
+		} catch (Throwable e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+			result = false;
+		}
+		return result;
+	}
+
+	private boolean validateUser(User user) {
+		// Check the password match
+		if ((user == null) || user.getType() != User.TYPE_DEFAULT)
+			return false;
+
+		// Check if the user is enabled
+		if (user != null && user.getEnabled() == 0)
+			return false;
+
+		if (isPasswordExpired(user.getUserName()))
+			return false;
+
+		return true;
 	}
 
 	public int getPasswordTtl() {
