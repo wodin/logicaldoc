@@ -15,7 +15,7 @@ import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.SecurityManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserHistory;
-import com.logicaldoc.util.io.CryptUtil;
+import com.logicaldoc.util.crypt.CryptUtil;
 
 /**
  * Test case for <code>HibernateUserDAO</code>
@@ -105,7 +105,7 @@ public class HibernateUserDAOTest extends AbstractCoreTCase {
 		// Try with unexisting username
 		user = dao.findByUserName("xxxx");
 		Assert.assertNull(user);
-		
+
 		user = dao.findByUserName("Admin");
 		Assert.assertNull(user);
 	}

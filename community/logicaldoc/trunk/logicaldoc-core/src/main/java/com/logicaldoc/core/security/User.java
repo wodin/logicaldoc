@@ -9,7 +9,7 @@ import java.util.Set;
 
 import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.util.LocaleUtil;
-import com.logicaldoc.util.io.CryptUtil;
+import com.logicaldoc.util.crypt.CryptUtil;
 
 /**
  * This class represents a user. A user can be member of any number of groups,
@@ -101,6 +101,8 @@ public class User extends PersistentObject implements Serializable {
 	private String ipWhiteList;
 
 	private String ipBlackList;
+
+	private String decodedPassword;
 
 	public User() {
 	}
@@ -212,8 +214,8 @@ public class User extends PersistentObject implements Serializable {
 	 */
 	public void setDecodedPassword(String pwd) {
 		if (org.apache.commons.lang.StringUtils.isNotEmpty(pwd)) {
+			decodedPassword = pwd;
 			password = CryptUtil.cryptString(pwd);
-			passwordmd4 = CryptUtil.cryptString(CryptUtil.cryptStringMD4(pwd));
 		}
 	}
 
@@ -462,5 +464,9 @@ public class User extends PersistentObject implements Serializable {
 
 	public void setPasswordmd4(String passwordmd4) {
 		this.passwordmd4 = passwordmd4;
+	}
+
+	public String getDecodedPassword() {
+		return decodedPassword;
 	}
 }

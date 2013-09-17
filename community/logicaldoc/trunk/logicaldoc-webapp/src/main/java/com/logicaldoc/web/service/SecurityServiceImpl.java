@@ -64,7 +64,7 @@ import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
-import com.logicaldoc.util.io.CryptUtil;
+import com.logicaldoc.util.crypt.CryptUtil;
 import com.logicaldoc.util.security.PasswordGenerator;
 import com.logicaldoc.web.SessionFilter;
 import com.logicaldoc.web.util.SessionUtil;
