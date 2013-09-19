@@ -1,5 +1,6 @@
 package com.logicaldoc.webservice.folder;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -22,7 +23,9 @@ import com.logicaldoc.webservice.WSAttribute;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-public class WSFolder {
+public class WSFolder implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	protected static Logger log = LoggerFactory.getLogger(WSFolder.class);
 
@@ -126,7 +129,8 @@ public class WSFolder {
 						extAttribute.setIntValue(extendedAttributes[i].getIntValue());
 						extAttribute.setStringValue(extendedAttributes[i].getStringValue());
 						extAttribute.setDoubleValue(extendedAttributes[i].getDoubleValue());
-						extAttribute.setDateValue(AbstractService.convertStringToDate(extendedAttributes[i].getDateValue()));
+						extAttribute.setDateValue(AbstractService.convertStringToDate(extendedAttributes[i]
+								.getDateValue()));
 						extAttribute.setType(extendedAttributes[i].getType());
 						folder.getAttributes().put(extendedAttributes[i].getName(), extAttribute);
 					}

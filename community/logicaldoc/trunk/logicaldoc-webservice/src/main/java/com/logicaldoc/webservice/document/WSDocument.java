@@ -1,5 +1,6 @@
 package com.logicaldoc.webservice.document;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,7 +33,9 @@ import com.logicaldoc.webservice.WSAttribute;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-public class WSDocument {
+public class WSDocument implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	protected static Logger log = LoggerFactory.getLogger(WSDocument.class);
 

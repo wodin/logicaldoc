@@ -1,5 +1,6 @@
 package com.logicaldoc.webservice;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -13,7 +14,9 @@ import com.logicaldoc.webservice.security.WSUser;
  * @author Matteo Caruso - Logical Objects
  * @since 4.0
  */
-public class WSAttribute {
+public class WSAttribute implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	public static final int TYPE_STRING = 0;
 
