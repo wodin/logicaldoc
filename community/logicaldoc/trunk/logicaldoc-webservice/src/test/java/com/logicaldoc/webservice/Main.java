@@ -3,6 +3,8 @@ package com.logicaldoc.webservice;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
+
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
 import com.logicaldoc.webservice.document.WSDocument;
@@ -13,8 +15,8 @@ import com.logicaldoc.webservice.system.SystemClient;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-//		String base = "http://localhost:9080/logicaldoc/services";
-		String base = "http://50.63.66.136:9080/services";
+		String base = "http://localhost:9080/logicaldoc/services";
+		//String base = "http://50.63.66.136:9080/services";
 		AuthClient auth = new AuthClient(base + "/Auth");
 		DocumentClient documentClient = new DocumentClient(base + "/Document");
 		FolderClient folderClient = new FolderClient(base + "/Folder", 1, false, 50);
@@ -23,7 +25,7 @@ public class Main {
 		SecurityClient securityClient = new SecurityClient(base + "/Security");
 
 		// Open a session
-		String sid = auth.login("admin", "12345678");
+		String sid = auth.login("marco", "paf75pe");
 		System.out.println("Server date: "+systemClient.getInfo().getDate());
 		System.out.println("Sid: " + sid);		
 
@@ -189,17 +191,17 @@ public class Main {
 			// }
 
 			
-			WSDocument[] documents = searchClient.findByFilename(sid, "pizzo.ods");
-			System.out.println("---- " + documents.length);
-
-			List<WSDocument> docsList = Arrays.asList(documents);
-			for (WSDocument doc : docsList) {
-				System.out.println("title: " + doc.getTitle());
-				System.out.println("custom id: " + doc.getCustomId());
-				System.out.println("version: " + doc.getVersion());
-				System.out.println("date: " + doc.getDate());
-				System.out.println("++++++++++++++++++++++++++++++++");
-			}
+//			WSDocument[] documents = searchClient.findByFilename(sid, "pizzo.ods");
+//			System.out.println("---- " + documents.length);
+//
+//			List<WSDocument> docsList = Arrays.asList(documents);
+//			for (WSDocument doc : docsList) {
+//				System.out.println("title: " + doc.getTitle());
+//				System.out.println("custom id: " + doc.getCustomId());
+//				System.out.println("version: " + doc.getVersion());
+//				System.out.println("date: " + doc.getDate());
+//				System.out.println("++++++++++++++++++++++++++++++++");
+//			}
 			//
 			// documents = searchClient.findByFilename(sid, "marketing.txt");
 			// System.out.println("---- " + documents.length);
@@ -448,6 +450,12 @@ public class Main {
 			// + (att.getType() == WSAttribute.TYPE_USER ? " " +
 			// att.getStringValue() : ""));
 			// }
+			
+			
+			WSDocument[] docs= documentClient.listDocuments(sid, 60L, "E8CC77DF.tmp");
+			for (WSDocument wsDocument : docs) {
+				System.out.println(wsDocument.getFileName());
+			}
 		} finally {
 			auth.logout(sid);
 		}
