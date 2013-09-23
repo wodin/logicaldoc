@@ -168,7 +168,8 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				ref = dao.findById(folder.getSecurityRef());
 
 			int i = 0;
-			GUIRight[] rights = new GUIRight[ref.getFolderGroups().size()];
+			GUIRight[] rights = new GUIRight[(ref != null && ref.getFolderGroups() != null) ? ref.getFolderGroups()
+					.size() : 0];
 			if (ref != null && ref.getFolderGroups() != null)
 				for (FolderGroup fg : ref.getFolderGroups()) {
 					GUIRight right = new GUIRight();
