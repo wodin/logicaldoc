@@ -902,8 +902,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			 * Apply the securityRef
 			 */
 			records = jdbcUpdate(
-					"update ld_folder A set A.ld_securityref = ?, A.ld_lastmodified = ? where not A.ld_id = ? "
-							+ " and A.ld_id in " + treeIdsString, securityRef, new Date(), rootId);
+					"update ld_folder set ld_securityref = ?, ld_lastmodified = ? where not ld_id = ? "
+							+ " and ld_id in " + treeIdsString, securityRef, new Date(), rootId);
 
 			log.warn("Applied rights to " + records + " folders in tree " + rootId);
 
