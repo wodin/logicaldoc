@@ -16,6 +16,7 @@ import junit.framework.Assert;
 
 import org.apache.commons.io.FileUtils;
 import org.hsqldb.cmdline.SqlFile;
+import org.hsqldb.cmdline.SqlTool.SqlToolException;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.context.ApplicationContext;
@@ -48,10 +49,8 @@ public abstract class AbstractWebServiceTestCase {
 	public void setUp() throws Exception {
 		userHome = System.getProperty("user.home");
 		System.setProperty("user.home", tempDir.getPath());
-
-		context = new ClassPathXmlApplicationContext(new String[] { "/context.xml" });
-
 		createTestDirs();
+		context = new ClassPathXmlApplicationContext(new String[] { "/context.xml" });
 		createTestDatabase();
 	}
 
@@ -104,8 +103,11 @@ public abstract class AbstractWebServiceTestCase {
 	@After
 	public void tearDown() throws Exception {
 		destroyDatabase();
-		((AbstractApplicationContext) context).close();
+		try {
+			((AbstractApplicationContext) context).close();
+		} catch (Throwable t) {
 
+		}
 		// Restore user home system property
 		System.setProperty("user.home", userHome);
 	}
@@ -141,14 +143,14 @@ public abstract class AbstractWebServiceTestCase {
 			con = ds.getConnection();
 
 			// Load schema
-			SqlFile sqlFile = new SqlFile(coreSchemaFile, "Cp1252", false);			
+			SqlFile sqlFile = new SqlFile(coreSchemaFile, "Cp1252", false);
 			sqlFile.setConnection(con);
-			sqlFile.execute();			
+			sqlFile.execute();
 
 			// Load data
 			sqlFile = new SqlFile(dataFile, "Cp1252", false);
 			sqlFile.setConnection(con);
-			sqlFile.execute();			
+			sqlFile.execute();
 
 			// Test the connection
 			ResultSet rs = con.createStatement().executeQuery("select * from ld_menu where ld_id=2");
