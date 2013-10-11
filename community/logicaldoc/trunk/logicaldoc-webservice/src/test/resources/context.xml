@@ -5,13 +5,14 @@
   <import resource="classpath*:context/context-webservice.xml" />
 
   <!-- This post processor ensures placeholders substitutions -->
-  <bean id="PropertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
-    lazy-init="false" abstract="false">
-    <property name="locations">
-      <list>
-        <value>classpath*:context.properties</value>
-      </list>
-    </property>
+  <bean id="PropertyPlaceholderConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" lazy-init="false" abstract="false"
+		autowire="default" dependency-check="default">
+		<property name="locations">
+			<list>
+				<value>classpath*:context.properties</value>
+			</list>
+		</property>
   </bean>
 
   <bean id="ContextProperties" class="com.logicaldoc.util.config.ContextProperties">
