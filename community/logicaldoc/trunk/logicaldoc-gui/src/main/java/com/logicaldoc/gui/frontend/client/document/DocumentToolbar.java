@@ -87,14 +87,15 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	public DocumentToolbar() {
 		GUIFolder folder = Session.get().getCurrentFolder();
 		boolean downloadEnabled = folder != null && folder.isDownload();
+		boolean writeEnabled = folder != null && folder.isWrite();
 
-		prepareButtons(downloadEnabled);
+		prepareButtons(downloadEnabled, writeEnabled);
 
 		update(null);
 		Session.get().addFolderObserver(this);
 	}
 
-	protected void prepareButtons(boolean downloadEnabled) {
+	protected void prepareButtons(boolean downloadEnabled, boolean writeEnabled) {
 		download.setTooltip(I18N.message("download"));
 		download.setIcon(ItemFactory.newImgIcon("download.png").getSrc());
 		download.addClickHandler(new ClickHandler() {
@@ -347,9 +348,9 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		if (Feature.visible(Feature.OFFICE)) {
 			addButton(office);
-			
+
 			if (!Feature.enabled(Feature.OFFICE) || (document != null && !Util.isOfficeFile(document.getFileName()))
-					|| !downloadEnabled)
+					|| !downloadEnabled || !writeEnabled)
 				office.setDisabled(true);
 			else
 				office.setDisabled(false);
@@ -579,6 +580,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 			if (document != null) {
 				download.setDisabled(!downloadEnabled);
+				office.setDisabled(!downloadEnabled);
 				rss.setDisabled(!Feature.enabled(Feature.RSS) || !downloadEnabled);
 				pdf.setDisabled(!Feature.enabled(Feature.PDF) || !downloadEnabled);
 				if (!pdf.isDisabled())
@@ -587,7 +589,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				bulkUpdate.setDisabled(!Feature.enabled(Feature.BULK_UPDATE));
 				bulkCheckout.setDisabled(!Feature.enabled(Feature.BULK_CHECKOUT));
 				addCalendarEvent.setDisabled(!Feature.enabled(Feature.CALENDAR));
-				
+
 				boolean isOfficeFile = false;
 				if (document.getFileName() != null)
 					isOfficeFile = Util.isOfficeFile(document.getFileName());
@@ -615,10 +617,12 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				addCalendarEvent.setDisabled(true);
 				bulkUpdate.setDisabled(true);
 				bulkCheckout.setDisabled(true);
+				office.setDisabled(true);
 			}
 
 			if (folder != null) {
 				add.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));
+				office.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));
 				dropSpot.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE)
 						|| !Feature.enabled(Feature.DROP_SPOT));
 				scan.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE) || !Feature.enabled(Feature.SCAN));
@@ -632,6 +636,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 						|| !Feature.enabled(Feature.CALENDAR));
 			} else {
 				add.setDisabled(true);
+				office.setDisabled(true);
 				scan.setDisabled(true);
 				archive.setDisabled(true);
 				startWorkflow.setDisabled(true);
