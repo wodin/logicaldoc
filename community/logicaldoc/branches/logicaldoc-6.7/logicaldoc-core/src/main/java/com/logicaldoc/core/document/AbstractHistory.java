@@ -181,8 +181,10 @@ public class AbstractHistory extends PersistentObject {
 	 */
 	public void setUser(User user) {
 		this.user = user;
-		setUserId(user.getId());
-		setUserName(user.getFullName());
+		if (user != null) {
+			setUserId(user.getId());
+			setUserName(user.getFullName());
+		}
 	}
 
 	public int getNew() {
