@@ -687,6 +687,11 @@ public class DocumentContextMenu extends Menu {
 			enableSign = false;
 		}
 
+		if(!folder.isWrite()){
+			checkin.setEnabled(false);
+			checkout.setEnabled(false);
+		}
+		
 		final GUIExternalCall extCall = Session.get().getSession().getExternalCall();
 		if (Feature.enabled(Feature.EXTERNAL_CALL) && extCall != null) {
 			externalCall.setTitle(extCall.getName());
