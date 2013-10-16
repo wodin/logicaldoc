@@ -10,6 +10,14 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC 6.8 (2013-11-01; logicaldoc-6.8)
+================
+319 - Email contacts address book - New Feature - Core
+318 - Restore of deleted folders - New Feature - Core
+327 - Folder specification not used when searching for aliases - Bug - Core
+334 - Error sending internal message - Bug - User Interface
+337 - Support DB instance definition at installation time when using SQL Server - Improvement - Setup 
+
 LogicalDOC 6.7.3 (2013-08-30; logicaldoc-6.7.3)
 ================
 328 - Folder specification not used when searching for aliases - Bug - Core
