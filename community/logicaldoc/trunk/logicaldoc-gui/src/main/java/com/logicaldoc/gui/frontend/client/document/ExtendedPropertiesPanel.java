@@ -18,7 +18,6 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
-import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -101,7 +100,6 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		sourceDate.setDisabled(!updateEnabled);
 		sourceDate.setUseMask(false);
 		sourceDate.setShowPickerIcon(true);
-		sourceDate.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
 		sourceDate.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
@@ -159,7 +157,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 
 		items.add(customId);
 		items.add(sourceItem);
-		items.add(sourceId);		
+		items.add(sourceId);
 		items.add(recipientItem);
 		items.add(objectItem);
 		items.add(typeItem);

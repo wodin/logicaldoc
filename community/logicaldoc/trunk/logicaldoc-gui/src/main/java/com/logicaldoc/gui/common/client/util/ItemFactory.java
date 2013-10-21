@@ -72,9 +72,14 @@ public class ItemFactory {
 		date.setUseTextField(true);
 		date.setUseMask(true);
 		date.setShowPickerIcon(true);
-		date.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
 		date.setHintStyle("hint");
 		date.setWidth(90);
+		
+		if (I18N.message("format_dateshort").startsWith("MM/dd"))
+			date.setDateFormatter(DateDisplayFormat.TOUSSHORTDATE);
+		else
+			date.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
+		
 		return date;
 	}
 
@@ -93,8 +98,13 @@ public class ItemFactory {
 		date.setShowPickerIcon(true);
 		date.setWidth(90);
 		date.setName(itemName);
-		date.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
 		date.setHintStyle("hint");
+		
+		if (I18N.message("format_dateshort").startsWith("MM/dd"))
+			date.setDateFormatter(DateDisplayFormat.TOUSSHORTDATE);
+		else
+			date.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
+		
 		return date;
 	}
 
