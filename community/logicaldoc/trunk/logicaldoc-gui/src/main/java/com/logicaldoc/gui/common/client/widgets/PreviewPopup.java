@@ -8,8 +8,10 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.smartgwt.client.types.ContentsType;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.widgets.HTMLFlow;
+import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.CloseClickEvent;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
@@ -30,6 +32,8 @@ public class PreviewPopup extends Window {
 	private HTMLFlow media = null;
 
 	private HTMLFlow cad = null;
+
+	private HTMLFlow htmlPanel = null;
 
 	private VLayout layout = null;
 
@@ -77,6 +81,9 @@ public class PreviewPopup extends Window {
 
 		if (Util.isMediaFile(filename.toLowerCase())) {
 			reloadMedia();
+		} else if (filename.toLowerCase().endsWith(".html") || filename.toLowerCase().endsWith(".htm")
+				|| filename.toLowerCase().endsWith(".xhtml")) {
+			reloadHTML();
 		} else if (filename.toLowerCase().endsWith(".dxf")) {
 			reloadCAD();
 		} else {
@@ -97,6 +104,9 @@ public class PreviewPopup extends Window {
 				if (html != null) {
 					layout.removeMember(html);
 					reloadPreview(language);
+				} else if (htmlPanel != null) {
+					layout.removeMember(htmlPanel);
+					reloadHTML();
 				} else if (media != null) {
 					layout.removeMember(media);
 					reloadMedia();
@@ -138,11 +148,7 @@ public class PreviewPopup extends Window {
 	 * Reloads a CAD preview.
 	 */
 	private void reloadCAD() {
-		cad = new HTMLFlow();
-		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id;
-		if (fileVersion != null)
-			url += "%26fileVersion=" + fileVersion;
-
+		String url = Util.downloadURL(id, fileVersion, true);
 		String tmp = "<applet name=\"CAD Applet\" archive=\"" + Util.contextPath()
 				+ "applet/dxf-applet.jar\"  code=\"de.caff.dxf.applet.DxfApplet\" width=\"" + (getWidth() - 26)
 				+ "\" height=\"" + (getHeight() - 40) + "\">";
@@ -152,8 +158,23 @@ public class PreviewPopup extends Window {
 		tmp += "<param name=\"locale\" value=\"" + I18N.getLocale() + "\" /";
 		tmp += "</applet>";
 
+		HTMLFlow cad = new HTMLFlow();
 		cad.setContents(tmp);
 		layout.addMember(cad);
+	}
+
+	/**
+	 * Reloads a preview for HTML documents.
+	 */
+	private void reloadHTML() {
+		htmlPanel = new HTMLPane();
+		htmlPanel.setShowEdges(false);
+		htmlPanel.setContentsURL(Util.downloadURL(id, fileVersion, false));
+		htmlPanel.setContentsType(ContentsType.FRAGMENT);
+
+		layout.setWidth100();
+		layout.setHeight(getHeight() - 30);
+		layout.addMember(htmlPanel);
 	}
 
 	/**
