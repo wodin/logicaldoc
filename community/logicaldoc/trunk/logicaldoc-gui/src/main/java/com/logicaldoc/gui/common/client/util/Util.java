@@ -45,6 +45,15 @@ public class Util {
 				+ "px' height='" + height + "px'" + (style != null ? " style='" + style + "'" : "") + " />";
 	}
 
+	public static String downloadURL(long docId, String fileVersion, boolean open) {
+		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + docId;
+		if (fileVersion != null)
+			url += "&fileVersion=" + fileVersion;
+		if (open)
+			url += "&open=true";
+		return url;
+	}
+
 	/**
 	 * Generates Flash code
 	 */
