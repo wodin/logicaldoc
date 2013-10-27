@@ -379,7 +379,7 @@ public class DocumentDetailsPanel extends VLayout {
 			if (versionsTabPanel.contains(versionsPanel))
 				versionsTabPanel.removeMember(versionsPanel);
 		}
-		versionsPanel = new VersionsPanel(document);
+		versionsPanel = new VersionsPanel(document, observer);
 		versionsTabPanel.addMember(versionsPanel);
 
 		/*

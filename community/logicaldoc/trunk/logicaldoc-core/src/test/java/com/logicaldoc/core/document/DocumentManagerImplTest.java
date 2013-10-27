@@ -166,7 +166,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
 		docDao.initialize(doc);
-		doc=(Document)doc.clone();
+		doc = (Document) doc.clone();
 		doc.setId(0);
 		History transaction = new History();
 		transaction.setFolderId(103);
@@ -176,7 +176,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		transaction.setNotified(0);
 		transaction.setComment("pippo_reason");
 		doc.setCustomId("xxxxxxxxxx");
-		
+
 		Document newDoc = documentManager.create(new FileInputStream("pom.xml"), doc, transaction);
 
 		newDoc = docDao.findById(newDoc.getId());
@@ -272,11 +272,11 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 	@Test
 	public void testDeleteVersion() throws Exception {
 		Assert.assertNotNull(verDao.findById(11L));
-		documentManager.deleteVersion(11L);
+		documentManager.deleteVersion(11L, null);
 		Assert.assertNull(verDao.findById(11L));
 
 		Assert.assertNotNull(verDao.findById(13L));
-		documentManager.deleteVersion(13L);
+		documentManager.deleteVersion(13L, null);
 		Assert.assertNull(verDao.findById(13L));
 	}
 }

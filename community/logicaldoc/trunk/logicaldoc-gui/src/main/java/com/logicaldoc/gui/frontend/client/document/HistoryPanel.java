@@ -28,7 +28,7 @@ public class HistoryPanel extends DocumentDetailTab {
 	private ListGrid listGrid;
 
 	public HistoryPanel(final GUIDocument document) {
-		super(document, null);
+		super(document, null, null);
 		ListGridField id = new ListGridField("id");
 		id.setHidden(true);
 

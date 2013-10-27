@@ -63,7 +63,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 	protected DocumentObserver observer;
 
 	public StandardPropertiesPanel(final GUIDocument document, ChangedHandler changedHandler, DocumentObserver observer) {
-		super(document, changedHandler);
+		super(document, changedHandler, null);
 		this.observer = observer;
 		setWidth100();
 		setHeight100();

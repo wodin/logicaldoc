@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.document;
 
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.DocumentObserver;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -17,8 +18,10 @@ public abstract class DocumentDetailTab extends HLayout {
 
 	protected ChangedHandler changedHandler;
 
+	protected DocumentObserver observer;
+
 	protected boolean updateEnabled = false;
-	
+
 	protected boolean deleteEnabled = false;
 
 	/**
@@ -27,22 +30,23 @@ public abstract class DocumentDetailTab extends HLayout {
 	 * @param changedHandler The handler to be invoked in case of changes in the
 	 *        document
 	 */
-	public DocumentDetailTab(GUIDocument document, ChangedHandler changedHandler) {
+	public DocumentDetailTab(GUIDocument document, ChangedHandler changedHandler, DocumentObserver observer) {
 		super();
 		this.document = document;
 		this.changedHandler = changedHandler;
+		this.observer = observer;
 
 		if (Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN) && document.getImmutable() == 0
-				&& document.getStatus() == Constants.DOC_UNLOCKED){
+				&& document.getStatus() == Constants.DOC_UNLOCKED) {
 			updateEnabled = true;
 			deleteEnabled = true;
-		}else{
+		} else {
 			updateEnabled = (document.getImmutable() == 0 && document.getStatus() == Constants.DOC_UNLOCKED && document
 					.getFolder().isWrite());
 			deleteEnabled = (document.getImmutable() == 0 && document.getStatus() == Constants.DOC_UNLOCKED && document
 					.getFolder().isDelete());
 		}
-		
+
 	}
 
 	public GUIDocument getDocument() {
@@ -66,5 +70,9 @@ public abstract class DocumentDetailTab extends HLayout {
 
 	public void setUpdateEnabled(boolean updateEnabled) {
 		this.updateEnabled = updateEnabled;
+	}
+
+	public DocumentObserver getObserver() {
+		return observer;
 	}
 }

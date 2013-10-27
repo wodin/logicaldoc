@@ -49,7 +49,7 @@ public class LinksPanel extends DocumentDetailTab {
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	public LinksPanel(final GUIDocument document) {
-		super(document, null);
+		super(document, null, null);
 
 		ListGridField type = new ListGridField("type", I18N.message("type"), 100);
 		type.setCanEdit(true);

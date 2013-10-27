@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.document;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.DocumentObserver;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
@@ -41,10 +42,10 @@ public class VersionsPanel extends DocumentDetailTab {
 
 	private VersionsDS dataSource;
 
-	private ListGrid listGrid;
+	private ListGrid listGrid; 
 
-	public VersionsPanel(final GUIDocument document) {
-		super(document, null);
+	public VersionsPanel(final GUIDocument document, DocumentObserver observer) {
+		super(document, null, observer);
 		ListGridField id = new ListGridField("id");
 		id.setHidden(true);
 
@@ -171,17 +172,24 @@ public class VersionsPanel extends DocumentDetailTab {
 							for (ListGridRecord record : selection)
 								ids[i++] = Long.parseLong(record.getAttribute("id"));
 
-							documentService.deleteVersions(Session.get().getSid(), ids, new AsyncCallback<Void>() {
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+							documentService.deleteVersions(Session.get().getSid(), ids,
+									new AsyncCallback<GUIDocument>() {
+										@Override
+										public void onFailure(Throwable caught) {
+											Log.serverError(caught);
+										}
 
-								@Override
-								public void onSuccess(Void result) {
-									listGrid.removeSelectedData();
-								}
-							});
+										@Override
+										public void onSuccess(GUIDocument result) {
+											if (result != null) {
+												document.setVersion(result.getVersion());
+												document.setFileVersion(result.getFileVersion());
+												observer.onDocumentSaved(result);
+												observer.onDocumentSelected(result);
+												listGrid.removeSelectedData();
+											}
+										}
+									});
 						}
 					}
 				});
