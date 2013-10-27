@@ -189,8 +189,7 @@ public class VersionsPanel extends DocumentDetailTab {
 		});
 
 		compare.setEnabled(selection != null && selection.length == 2);
-		delete.setEnabled(deleteEnabled && selection != null && selection.length > 0
-				&& !document.getVersion().equals(selection[0].getAttribute("version")));
+		delete.setEnabled(deleteEnabled && selection != null && selection.length > 0);
 
 		if (selection == null || selection.length < 1) {
 			preview.setEnabled(false);
