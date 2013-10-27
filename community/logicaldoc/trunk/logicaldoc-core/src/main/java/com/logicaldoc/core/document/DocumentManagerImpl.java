@@ -124,7 +124,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			document = documentDAO.findById(document.getId());
 			Folder folder = document.getFolder();
 			documentDAO.initialize(document);
-			
+
 			// create some strings containing paths
 			document.setFileName(filename);
 			document.setType(FilenameUtils.getExtension(filename));
@@ -139,7 +139,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setDigest(null);
 			document.setFileSize(file.length());
 			document.setExtResId(null);
-			
+
 			// Create new version (a new version number is created)
 			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
 					Version.EVENT_CHECKIN, release);
@@ -915,13 +915,6 @@ public class DocumentManagerImpl implements DocumentManager {
 		Document document = documentDAO.findById(version.getDocId());
 		assert (document != null);
 
-		/*
-		 * Security check to avoid to delete the current version
-		 */
-		String currentVersion = document.getVersion();
-		if (currentVersion.equals(version.getVersion()))
-			return;
-
 		// Iterate over the versions to check if the file is referenced by other
 		// versions
 		List<Version> versions = versionDAO.findByDocId(version.getDocId());
@@ -944,5 +937,23 @@ public class DocumentManagerImpl implements DocumentManager {
 		}
 
 		versionDAO.delete(versionId);
+
+		/*
+		 * Downgrade the document version in case the deleted version is the
+		 * actual one
+		 */
+		String currentVersion = document.getVersion();
+		if (currentVersion.equals(version.getVersion())) {
+			documentDAO.initialize(document);
+			List<Version> vers = versionDAO.findByDocId(version.getDocId());
+			document.setVersion(vers.get(0).getVersion());
+			document.setFileVersion(vers.get(0).getFileVersion());
+
+			History transaction = new History();
+			transaction.setEvent(DocumentEvent.CHANGED.toString());
+			transaction.setComment("Version downgrade");
+
+			documentDAO.store(document, transaction);
+		}
 	}
 }
