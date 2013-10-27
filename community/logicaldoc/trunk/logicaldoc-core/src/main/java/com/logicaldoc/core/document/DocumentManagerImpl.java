@@ -908,52 +908,63 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void deleteVersion(long versionId) throws Exception {
-		Version version = versionDAO.findById(versionId);
-		assert (version != null);
+	public Version deleteVersion(long versionId, History transaction) throws Exception {
+		Version versionToDelete = versionDAO.findById(versionId);
+		assert (versionToDelete != null);
 
-		Document document = documentDAO.findById(version.getDocId());
+		Document document = documentDAO.findById(versionToDelete.getDocId());
 		assert (document != null);
+
+		List<Version> versions = versionDAO.findByDocId(versionToDelete.getDocId());
+
+		// Exit if there is only one version
+		if (versions.size() == 1)
+			return versions.get(0);
 
 		// Iterate over the versions to check if the file is referenced by other
 		// versions
-		List<Version> versions = versionDAO.findByDocId(version.getDocId());
 		boolean referenced = false;
 		for (Version v : versions)
-			if (v.getId() != versionId && version.getFileVersion().equals(v.getFileVersion())) {
+			if (v.getId() != versionId && versionToDelete.getFileVersion().equals(v.getFileVersion())) {
 				referenced = true;
 				break;
 			}
 
 		// If no more referenced, can delete the document's resources
 		if (!referenced) {
-			List<String> resources = storer.listResources(version.getDocId(), version.getFileVersion());
+			List<String> resources = storer.listResources(versionToDelete.getDocId(), versionToDelete.getFileVersion());
 			for (String resource : resources)
 				try {
-					storer.delete(version.getDocId(), resource);
+					storer.delete(versionToDelete.getDocId(), resource);
 				} catch (Throwable t) {
-					log.warn("Unable to delete resource " + resource + " od document " + version.getDocId());
+					log.warn("Unable to delete resource " + resource + " od document " + versionToDelete.getDocId());
 				}
 		}
 
 		versionDAO.delete(versionId);
+
+		versions = versionDAO.findByDocId(versionToDelete.getDocId());
+		Version lastVersion = versions.get(0);
 
 		/*
 		 * Downgrade the document version in case the deleted version is the
 		 * actual one
 		 */
 		String currentVersion = document.getVersion();
-		if (currentVersion.equals(version.getVersion())) {
+		if (currentVersion.equals(versionToDelete.getVersion())) {
 			documentDAO.initialize(document);
-			List<Version> vers = versionDAO.findByDocId(version.getDocId());
-			document.setVersion(vers.get(0).getVersion());
-			document.setFileVersion(vers.get(0).getFileVersion());
+			document.setVersion(lastVersion.getVersion());
+			document.setFileVersion(lastVersion.getFileVersion());
 
-			History transaction = new History();
-			transaction.setEvent(DocumentEvent.CHANGED.toString());
-			transaction.setComment("Version downgrade");
+			if (transaction != null) {
+				transaction.setEvent(DocumentEvent.CHANGED.toString());
+				transaction.setComment("Version changed to " + document.getVersion() + " (" + document.getFileVersion()
+						+ ")");
+			}
 
 			documentDAO.store(document, transaction);
 		}
+
+		return lastVersion;
 	}
 }

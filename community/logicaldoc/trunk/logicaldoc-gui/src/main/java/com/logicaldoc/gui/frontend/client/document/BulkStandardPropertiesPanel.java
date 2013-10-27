@@ -46,7 +46,7 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 	private ValuesManager vm = new ValuesManager();
 
 	public BulkStandardPropertiesPanel(GUIDocument document) {
-		super(document, null);
+		super(document, null, null);
 		setWidth100();
 		setHeight100();
 		container.setWidth100();

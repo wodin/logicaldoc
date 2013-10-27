@@ -27,7 +27,7 @@ public class RetentionPoliciesPanel extends DocumentDetailTab {
 	private ValuesManager vm = new ValuesManager();
 
 	public RetentionPoliciesPanel(GUIDocument document, ChangedHandler changedHandler) {
-		super(document, changedHandler);
+		super(document, changedHandler, null);
 		setWidth100();
 		setHeight100();
 		setMembersMargin(20);

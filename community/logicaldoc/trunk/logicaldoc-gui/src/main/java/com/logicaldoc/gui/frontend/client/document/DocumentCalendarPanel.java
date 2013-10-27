@@ -27,7 +27,7 @@ public class DocumentCalendarPanel extends DocumentDetailTab {
 	protected Calendar calendar = null;
 
 	public DocumentCalendarPanel(final GUIDocument document) {
-		super(document, null);
+		super(document, null, null);
 		setMembersMargin(1);
 	}
 

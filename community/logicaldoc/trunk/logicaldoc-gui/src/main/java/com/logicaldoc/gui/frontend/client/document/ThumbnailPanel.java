@@ -14,7 +14,7 @@ public class ThumbnailPanel extends DocumentDetailTab {
 	ImageViewer viewer = null;
 
 	public ThumbnailPanel(final GUIDocument document) {
-		super(document, null);
+		super(document, null, null);
 		setMembersMargin(1);
 	}
 

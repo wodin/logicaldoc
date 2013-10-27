@@ -52,7 +52,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 	private GUIExtendedAttribute[] currentExtAttributes = null;
 
 	public ExtendedPropertiesPanel(GUIDocument document, ChangedHandler changedHandler) {
-		super(document, changedHandler);
+		super(document, changedHandler, null);
 		setWidth100();
 		setHeight100();
 		setMembersMargin(20);
@@ -150,7 +150,6 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 				} else {
 					document.setAttributes(new GUIExtendedAttribute[0]);
 					prepareExtendedAttributes(null);
-
 				}
 			}
 		});

@@ -56,7 +56,7 @@ public class NotesPanel extends DocumentDetailTab {
 	private VLayout container = new VLayout();
 
 	public NotesPanel(final GUIDocument document) {
-		super(document, null);
+		super(document, null, null);
 		addMember(container);
 		container.setMembersMargin(2);
 

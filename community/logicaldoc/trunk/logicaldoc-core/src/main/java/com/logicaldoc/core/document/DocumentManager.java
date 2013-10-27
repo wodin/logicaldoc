@@ -204,9 +204,12 @@ public interface DocumentManager {
 	 * Deletes a specific version.
 	 * 
 	 * @param versionId The version to delete
+	 * @param transaction entry to log the event (set the user)
+	 * 
+	 * @return the latest version
 	 * @throws Exception
 	 */
-	public void deleteVersion(long versionId) throws Exception;
+	public Version deleteVersion(long versionId, History transition) throws Exception;
 	
 	public void setStorer(Storer storer);
 }
