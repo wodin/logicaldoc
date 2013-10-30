@@ -45,6 +45,8 @@ import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
+import com.logicaldoc.gui.frontend.client.webcontent.WebcontentCreate;
+import com.logicaldoc.gui.frontend.client.webcontent.WebcontentEditor;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.Offline;
@@ -193,6 +195,76 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		ToolStripMenuButton menuButton = new ToolStripMenuButton(I18N.message("file"), menu);
 		menuButton.setWidth(100);
 		return menuButton;
+	}
+
+	private MenuItem getWebContentMenuItem(GUIFolder folder, final GUIDocument document) {
+		Menu menu = new Menu();
+		menu.setShowShadow(true);
+		menu.setShadowDepth(3);
+
+		final MenuItem edit = new MenuItem(I18N.message("editdoc"));
+		edit.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				if (document == null)
+					return;
+
+				final DocumentsGrid grid;
+				if (MainPanel.get().isOnSearchTab())
+					grid = SearchPanel.get().getDocumentsGrid();
+				else
+					grid = DocumentsPanel.get().getDocumentsGrid();
+
+				if (document.getStatus() == 0) {
+					// Need to checkout first
+					documentService.checkout(Session.get().getSid(), document.getId(), new AsyncCallback<Void>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
+
+						@Override
+						public void onSuccess(Void result) {
+							grid.markSelectedAsCheckedOut();
+							Session.get().getUser().setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() + 1);
+							Log.info(I18N.message("documentcheckedout"), null);
+
+							WebcontentEditor popup = new WebcontentEditor(document, grid);
+							popup.show();
+						}
+					});
+				} else {
+					SC.warn(I18N.message("event.locked"));
+				}
+			}
+		});
+
+		final MenuItem create = new MenuItem(I18N.message("createdoc"));
+		create.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				final DocumentsGrid grid;
+				if (MainPanel.get().isOnSearchTab())
+					grid = SearchPanel.get().getDocumentsGrid();
+				else
+					grid = DocumentsPanel.get().getDocumentsGrid();
+
+				WebcontentCreate wcCreate = new WebcontentCreate(grid);
+				wcCreate.show();
+			}
+		});
+
+		menu.setItems(edit, create);
+		edit.setEnabled(document != null && document.getImmutable() == 0 && folder != null && folder.isDownload()
+				&& folder.isWrite() && Util.isWebContentFile(document.getFileName())
+				&& Feature.enabled(Feature.WEBCONTENT));
+		create.setEnabled(folder != null && folder.isDownload() && folder.isWrite()
+				&& Feature.enabled(Feature.WEBCONTENT) && MainPanel.get().isOnDocumentsTab());
+
+		MenuItem webcontentItems = new MenuItem(I18N.message("webcontent"));
+		webcontentItems.setSubmenu(menu);
+
+		return webcontentItems;
 	}
 
 	private MenuItem getGDocsMenuItem(GUIFolder folder, final GUIDocument document) {
@@ -414,6 +486,9 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 			if (Feature.enabled(Feature.OFFICE)
 					&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.OFFICE))
 				menu.addItem(getOfficeMenuItem(document));
+			if (Feature.enabled(Feature.WEBCONTENT)
+					&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.WEBCONTENT))
+				menu.addItem(getWebContentMenuItem(folder, document));
 		}
 
 		if (Session.get().getUser().isMemberOf("admin")) {

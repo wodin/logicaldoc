@@ -51,6 +51,8 @@ public class Menu {
 	public static final long CALENDAR_REPORT = -2060;
 
 	public static final long GDOCS = -2080;
+	
+	public static final long WEBCONTENT = -2100;
 
 	private static Set<Long> menues = new HashSet<Long>();
 

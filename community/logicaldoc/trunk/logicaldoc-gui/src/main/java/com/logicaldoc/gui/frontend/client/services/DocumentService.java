@@ -210,4 +210,9 @@ public interface DocumentService extends RemoteService {
 	 * Applies to a selection of documents all the given data.
 	 */
 	public void bulkUpdate(String sid, long[] ids, GUIDocument vo) throws InvalidSessionException;
+
+	/**
+	 * Creates a new empty document
+	 */
+	public GUIDocument createEmpty(String sid, GUIDocument vo) throws InvalidSessionException;
 }

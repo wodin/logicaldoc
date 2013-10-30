@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -253,8 +254,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
 		File file = uploadedFilesMap.values().iterator().next();
 		if (file != null) {
-			// check that we have a valid file for storing as new
-			// version
+			// check that we have a valid file for storing as new version
 			Map<String, String> uploadedFileNames = UploadServlet.getReceivedFileNames(getThreadLocalRequest(), sid);
 			String fileName = uploadedFileNames.values().iterator().next();
 
@@ -1464,6 +1464,39 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				Version version = manager.deleteVersion(id, transaction);
 				return getById(sid, version.getDocId());
 			}
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+		}
+		return null;
+	}
+
+	@Override
+	public GUIDocument createEmpty(String sid, GUIDocument vo) throws InvalidSessionException {
+		UserSession session = SessionUtil.validateSession(sid);
+		try {
+			User user = SessionUtil.getSessionUser(session.getId());
+			DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+
+			if (!fdao.isWriteEnable(vo.getFolder().getId(), session.getUserId())) {
+				throw new RuntimeException("The user doesn't have the write permission on the current folder");
+			}
+
+			Document doc = toDocument(vo);
+			doc.setId(0L);
+
+			History transaction = new History();
+			transaction.setUser(user);
+			Document document = documentManager.create(IOUtils.toInputStream(""), doc, transaction);
+
+			// If tha VO is in checkout, perform a checkout also
+			if (vo.getStatus() == Document.DOC_CHECKED_OUT) {
+				transaction = new History();
+				transaction.setUser(user);
+				documentManager.checkout(document.getId(), transaction);
+			}
+
+			return fromDocument(document, vo.getFolder());
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}

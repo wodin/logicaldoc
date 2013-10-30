@@ -687,14 +687,14 @@ public class ItemFactory {
 		return item;
 	}
 
-	public static SelectItem newTemplateSelector(boolean multipleSelection, Long templateId) {
+	public static SelectItem newTemplateSelector(boolean allowEmpty, Long templateId) {
 		SelectItem templateItem = new SelectItem("template", I18N.message("template"));
 		templateItem.setDisplayField("name");
 		templateItem.setValueField("id");
 		templateItem.setPickListWidth(250);
-		templateItem.setMultiple(true);
+		templateItem.setMultiple(false);
 		templateItem.setMultipleAppearance(MultipleAppearance.PICKLIST);
-		if (!multipleSelection)
+		if (!allowEmpty)
 			templateItem.setOptionDataSource(new TemplatesDS(true, templateId, null, false));
 		else
 			templateItem.setOptionDataSource(new TemplatesDS(false, templateId, null, false));

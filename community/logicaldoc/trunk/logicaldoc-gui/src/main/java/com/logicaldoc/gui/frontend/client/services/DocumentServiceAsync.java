@@ -71,4 +71,6 @@ public interface DocumentServiceAsync {
 	void updateNote(String sid, long docId, long noteId, String message, AsyncCallback<Void> callback);
 
 	void deleteVersions(String sid, long[] ids, AsyncCallback<GUIDocument> callback);
+
+	void createEmpty(String sid, GUIDocument vo, AsyncCallback<GUIDocument> callback);
 }
