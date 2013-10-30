@@ -28,6 +28,8 @@ public class Util {
 	public static String[] MEDIA_EXTS = new String[] { ".mp3", ".mp4", ".wav", ".avi", ".mpg", ".wmv", ".wma", ".asf",
 			".mov", ".rm", ".flv", ".aac", ".vlc", ".ogg", ".webm", ".swf", ".mpeg", ".swf" };
 
+	public static String[] WEBCONTENT_EXTS = new String[] { ".html", ".htm", ".xhtml" };
+
 	/**
 	 * Generates HTML image code with style.
 	 * 
@@ -51,6 +53,12 @@ public class Util {
 			url += "&fileVersion=" + fileVersion;
 		if (open)
 			url += "&open=true";
+		return url;
+	}
+
+	public static String webEditorUrl(long docId, String fileName, int height) {
+		String url = contextPath() + "ckeditor/index.jsp?sid=" + Session.get().getSid() + "&docId=" + docId
+				+ "&fileName=" + fileName + "&height=" + height;
 		return url;
 	}
 
@@ -211,6 +219,15 @@ public class Util {
 	public static boolean isImageFile(String fileName) {
 		String tmp = fileName.toLowerCase();
 		for (String ext : IMAGE_EXTS) {
+			if (tmp.endsWith(ext))
+				return true;
+		}
+		return false;
+	}
+
+	public static boolean isWebContentFile(String fileName) {
+		String tmp = fileName.toLowerCase();
+		for (String ext : WEBCONTENT_EXTS) {
 			if (tmp.endsWith(ext))
 				return true;
 		}
