@@ -67,21 +67,22 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	@Override
 	public void delete(String sid, long folderId) throws Exception {
 		User user = validateSession(sid);
-
 		if (folderId == Folder.ROOTID || folderId == Folder.DEFAULTWORKSPACE)
 			throw new Exception("Cannot delete root folder or Default workspace");
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Folder folder = folderDao.findById(folderId);
 		checkPermission(Permission.DELETE, user, folderId);
-		// Add a folder history entry
-		FolderHistory transaction = new FolderHistory();
-		transaction.setUser(user);
-		transaction.setEvent(FolderEvent.DELETED.toString());
-		transaction.setSessionId(sid);
-		List<Folder> notDeletedFolder = folderDao.deleteTree(folder, transaction);
-		if (notDeletedFolder.contains(folder)) {
-			throw new Exception("User " + user.getUserName() + " cannot delete folder " + folderId);
+
+		try {
+			// Add a folder history entry
+			FolderHistory transaction = new FolderHistory();
+			transaction.setUser(user);
+			transaction.setEvent(FolderEvent.DELETED.toString());
+			transaction.setSessionId(sid);
+			folderDao.deleteTree(folderId, transaction);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
 	}
 
