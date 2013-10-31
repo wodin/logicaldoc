@@ -73,8 +73,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Folder folder = folderDao.findById(folderId);
-		Folder parentFolder = folderDao.findById(folder.getParentId());
-		checkPermission(Permission.DELETE, user, parentFolder.getParentId());
+		checkPermission(Permission.DELETE, user, folderId);
 		// Add a folder history entry
 		FolderHistory transaction = new FolderHistory();
 		transaction.setUser(user);
