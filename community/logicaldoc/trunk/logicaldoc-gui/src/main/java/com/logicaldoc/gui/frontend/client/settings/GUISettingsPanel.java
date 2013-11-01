@@ -135,23 +135,23 @@ public class GUISettingsPanel extends VLayout {
 			if (p.getName().equals("gui.savelogin"))
 				savelogin.setValue(p.getValue().equals("true") ? "yes" : "no");
 			if (p.getName().equals("gui.preview.pages"))
-				previewPages.setValue(Integer.parseInt(p.getValue()));
+				previewPages.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().equals("gui.preview.size"))
-				previewSize.setValue(Integer.parseInt(p.getValue()));
+				previewSize.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().equals("gui.preview.zoom"))
-				previewZoom.setValue(Integer.parseInt(p.getValue()));
+				previewZoom.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().equals("gui.thumbnail.size"))
-				thumbSize.setValue(Integer.parseInt(p.getValue()));
+				thumbSize.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().equals("gui.thumbnail.quality"))
-				thumbQuality.setValue(Integer.parseInt(p.getValue()));
+				thumbQuality.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().equals("gui.doubleclick"))
 				ondoubleclick.setValue(p.getValue());
 			if (p.getName().equals("gui.document.tab"))
 				doctab.setValue(p.getValue());
 			if (p.getName().equals("upload.maxsize"))
-				uploadmax.setValue(Integer.parseInt(p.getValue()));
+				uploadmax.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().equals("search.hits"))
-				searchhits.setValue(Integer.parseInt(p.getValue()));
+				searchhits.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().equals("search.extattr"))
 				extattr.setValue(p.getValue());
 		}
