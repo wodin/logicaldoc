@@ -33,9 +33,9 @@ public class ScanDialog extends Window {
 		String tmp = "<applet name=\"ScanApplet\" archive=\""
 				+ Util.contextPath()
 				+ "applet/logicaldoc-scan.jar\"  code=\"com.logicaldoc.scan.applet.ScanApplet\" width=\"600\" height=\"400\">";
-		tmp += "<param name=\"lang\" value=\"" + I18N.getLocale() + "\" />";
-		tmp += "<param name=\"uploadUrl\" value=\"" + Util.contextPath() + "servlet.gupld?new_session=true&sid="
-				+ Session.get().getSid() + "\" />";
+		tmp += "<param name=\"baseUrl\" value=\"" + Util.contextPath() + "\" />";
+		tmp += "<param name=\"sid\" value=\"" + Session.get().getSid() + "\" />";
+		tmp += "<param name=\"language\" value=\"" + I18N.getDefaultLocaleForDoc() + "\" />";
 		tmp += "</applet>";
 
 		applet.setContents(tmp);
