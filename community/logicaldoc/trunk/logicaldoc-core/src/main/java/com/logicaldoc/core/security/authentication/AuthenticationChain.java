@@ -81,10 +81,7 @@ public class AuthenticationChain implements AuthenticationProvider {
 			// BasicAuthentication)
 			if (cmp.validateOnUser(username)) {
 				loggedIn = cmp.authenticate(username, password);
-				break;
 			}
-
-			loggedIn = cmp.authenticate(username, password);
 
 			if (loggedIn)
 				break;

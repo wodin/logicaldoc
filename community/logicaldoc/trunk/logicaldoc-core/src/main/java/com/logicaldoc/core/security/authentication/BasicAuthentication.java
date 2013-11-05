@@ -19,10 +19,7 @@ public class BasicAuthentication implements AuthenticationProvider {
 
 	@Override
 	public boolean validateOnUser(String user) {
-		if (user.equals("admin"))
-			return true;
-		else
-			return false;
+		return true;
 	}
 
 	@Override
