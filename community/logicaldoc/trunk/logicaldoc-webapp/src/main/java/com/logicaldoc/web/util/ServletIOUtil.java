@@ -142,6 +142,7 @@ public class ServletIOUtil {
 	 * @param docId Id of the document
 	 * @param fileVersion name of the file version; if null the latest version
 	 *        will be returned
+	 * @param suffix of the linked document's resource
 	 * @throws ServletException
 	 */
 	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, String sid,
