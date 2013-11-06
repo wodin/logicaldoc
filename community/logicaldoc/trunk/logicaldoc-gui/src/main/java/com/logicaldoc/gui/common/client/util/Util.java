@@ -58,7 +58,7 @@ public class Util {
 
 	public static String webEditorUrl(long docId, String fileName, int height) {
 		String url = contextPath() + "ckeditor/index.jsp?sid=" + Session.get().getSid() + "&docId=" + docId
-				+ "&fileName=" + fileName + "&height=" + height;
+				+"&lang="+I18N.getLocale()+ "&fileName=" + fileName + "&height=" + height;
 		return url;
 	}
 
