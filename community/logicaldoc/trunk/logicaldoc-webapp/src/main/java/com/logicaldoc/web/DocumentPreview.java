@@ -22,6 +22,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -283,6 +284,8 @@ public class DocumentPreview extends HttpServlet {
 			fos.flush();
 			fos.close();
 
+			boolean isWin = SystemUtils.IS_OS_WINDOWS;
+
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			String command = conf.getProperty(SWFTOOLSPATH);
 			if (extension.equalsIgnoreCase("pdf"))
@@ -294,8 +297,9 @@ public class DocumentPreview extends HttpServlet {
 			else if (extension.equalsIgnoreCase("bmp") || extension.equalsIgnoreCase("gif")) {
 				// In this case we have to convert to temporary jpg first
 				File jpegTmp = File.createTempFile("preview", ".jpg");
-				String jpegCommand = "\"" + new File(conf.getProperty(CONVERT)).getPath() + "\" \"" + tmp.getPath()
-						+ "\" \"" + jpegTmp.getPath() + "\"";
+				String jpegCommand = (isWin ? "\"" : "") + new File(conf.getProperty(CONVERT)).getPath()
+						+ (isWin ? "\"" : "") + " " + (isWin ? "\"" : "") + tmp.getPath() + (isWin ? "\"" : "") + " "
+						+ (isWin ? "\"" : "") + jpegTmp.getPath() + (isWin ? "\"" : "");
 				Exec.exec(jpegCommand, null, null, 10);
 
 				FileUtils.deleteQuietly(tmp);
@@ -306,8 +310,9 @@ public class DocumentPreview extends HttpServlet {
 				// In this case we have to convert to temporary pdf first to
 				// collect all the pages into a single file
 				File pdfTmp = File.createTempFile("preview", ".pdf");
-				String pdfCommand = "\"" + new File(conf.getProperty(CONVERT)).getPath() + "\" \"" + tmp.getPath()
-						+ "\" \"" + pdfTmp.getPath() + "\"";
+				String pdfCommand = (isWin ? "\"" : "") + new File(conf.getProperty(CONVERT)).getPath()
+						+ (isWin ? "\"" : "") + " " + (isWin ? "\"" : "") + tmp.getPath() + (isWin ? "\"" : "") + " "
+						+ (isWin ? "\"" : "") + pdfTmp.getPath() + (isWin ? "\"" : "");
 				Exec.exec(pdfCommand, null, null, 10);
 
 				tmp = pdfTmp;
@@ -393,14 +398,14 @@ public class DocumentPreview extends HttpServlet {
 			Arrays.sort(pages, new Comparator<File>() {
 				@Override
 				public int compare(File f1, File f2) {
-					String name1=f1.getName();
-					String name2=f2.getName();
-					Integer n1=new Integer(name1.substring(5));
-					Integer n2=new Integer(name2.substring(5));
+					String name1 = f1.getName();
+					String name2 = f2.getName();
+					Integer n1 = new Integer(name1.substring(5));
+					Integer n2 = new Integer(name2.substring(5));
 					return n1.compareTo(n2);
 				}
 			});
-	
+
 			return pages;
 		} else
 			return new File[0];
