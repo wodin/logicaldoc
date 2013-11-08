@@ -160,7 +160,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	@Override
 	public List<SystemMessage> findMessagesToBeSent(int type, int maxTrial) {
 		String sql = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
-				+ " from ld_systemmessage where ld_deleted = 0 and ld_status <> "
+				+ " from ld_systemmessage where ld_deleted = 0 and not ld_status = "
 				+ SystemMessage.STATUS_DELIVERED
 				+ " and ld_type = " + type;
 		if (maxTrial > 0)
