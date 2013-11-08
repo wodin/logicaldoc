@@ -3,6 +3,7 @@ package com.logicaldoc.web.util;
 import java.util.Locale;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import com.logicaldoc.core.security.SessionManager;
@@ -23,11 +24,20 @@ public class SessionUtil {
 
 	public static final String USER = "user";
 
-	private static final long serialVersionUID = 1L;
-
 	public static UserSession validateSession(HttpServletRequest request) throws ServletException {
 		try {
-			return validateSession((String) request.getParameter("sid"));
+			String sid = (String) request.getParameter("sid");
+			if (sid == null) {
+				// Check if the sid is in the cookies
+				Cookie[] cookies = request.getCookies();
+				if (cookies != null)
+					for (Cookie cookie : cookies) {
+						if ("ldoc-sid".equals(cookie.getName()))
+							sid = cookie.getValue();
+					}
+			}
+
+			return validateSession(sid);
 		} catch (InvalidSessionException e) {
 			throw new ServletException(e);
 		}

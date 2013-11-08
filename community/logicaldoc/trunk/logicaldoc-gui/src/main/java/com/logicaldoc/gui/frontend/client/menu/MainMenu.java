@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
@@ -613,6 +614,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 				}
 				try {
 					Offline.remove(Constants.COOKIE_SID);
+					Cookies.removeCookie(Constants.COOKIE_SID);
 				} catch (Throwable t) {
 
 				}

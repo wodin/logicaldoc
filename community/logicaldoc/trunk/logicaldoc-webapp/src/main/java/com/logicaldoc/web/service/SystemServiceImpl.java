@@ -658,7 +658,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			conf.setProperty("lang." + language + ".gui", active ? "enabled" : "disabled");
 			conf.write();
-		} catch (IOException t) {
+		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
 		}
@@ -667,28 +667,36 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	@Override
 	public void maskFeedMsgAsRead(String sid, long[] ids) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
-
-		Context context = Context.getInstance();
-		FeedMessageDAO dao = (FeedMessageDAO) context.getBean(FeedMessageDAO.class);
-		for (long id : ids) {
-			FeedMessage message = dao.findById(id);
-			dao.initialize(message);
-			message.setRead(1);
-			dao.store(message);
+		try {
+			Context context = Context.getInstance();
+			FeedMessageDAO dao = (FeedMessageDAO) context.getBean(FeedMessageDAO.class);
+			for (long id : ids) {
+				FeedMessage message = dao.findById(id);
+				dao.initialize(message);
+				message.setRead(1);
+				dao.store(message);
+			}
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
 	}
 
 	@Override
 	public void maskFeedMsgAsNotRead(String sid, long[] ids) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
-
-		Context context = Context.getInstance();
-		FeedMessageDAO dao = (FeedMessageDAO) context.getBean(FeedMessageDAO.class);
-		for (long id : ids) {
-			FeedMessage message = dao.findById(id);
-			dao.initialize(message);
-			message.setRead(0);
-			dao.store(message);
+		try {
+			Context context = Context.getInstance();
+			FeedMessageDAO dao = (FeedMessageDAO) context.getBean(FeedMessageDAO.class);
+			for (long id : ids) {
+				FeedMessage message = dao.findById(id);
+				dao.initialize(message);
+				message.setRead(0);
+				dao.store(message);
+			}
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
 	}
 
@@ -696,10 +704,15 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	public void deleteFeedMessages(String sid, long[] ids) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		Context context = Context.getInstance();
-		FeedMessageDAO dao = (FeedMessageDAO) context.getBean(FeedMessageDAO.class);
-		for (long id : ids) {
-			dao.delete(id);
+		try {
+			Context context = Context.getInstance();
+			FeedMessageDAO dao = (FeedMessageDAO) context.getBean(FeedMessageDAO.class);
+			for (long id : ids) {
+				dao.delete(id);
+			}
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
 	}
 
