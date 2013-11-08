@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
@@ -271,7 +272,9 @@ public class LoginPanel extends VLayout {
 
 		// In any case save the SID in the browser
 		Offline.put(Constants.COOKIE_SID, session.getSid());
-
+		Cookies.setCookie(Constants.COOKIE_SID, session.getSid());
+		
+		
 		GUIUser user = session.getUser();
 		if (user.getQuotaCount() >= user.getQuota() && user.getQuota() >= 0)
 			Log.warn(I18N.message("quotadocsexceeded"), null);
