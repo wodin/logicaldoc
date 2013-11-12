@@ -76,7 +76,7 @@ public class GUISettingsPanel extends VLayout {
 			tabs.setTabs(parameters);
 
 		TextItem welcome = ItemFactory.newTextItem("welcome", I18N.message("welcomemessage"), null);
-		welcome.setWidth(250);
+		welcome.setWidth(400);
 
 		RadioGroupItem dropspot = ItemFactory.newBooleanSelector("dropspot", "dropspot");
 		dropspot.setValueMap("default", "embedded");
@@ -113,6 +113,7 @@ public class GUISettingsPanel extends VLayout {
 		TextItem searchhits = ItemFactory.newIntegerItem("searchhits", I18N.message("searchhits"), null);
 		searchhits.setRequired(true);
 		searchhits.setWrapTitle(false);
+		searchhits.setWidth(400);
 
 		RadioGroupItem ondoubleclick = ItemFactory.newBooleanSelector("ondoubleclick", "ondoubleclick");
 		ondoubleclick.setValueMap("download", "preview");
@@ -122,10 +123,14 @@ public class GUISettingsPanel extends VLayout {
 
 		TextItem extattr = ItemFactory.newTextItem("extattr", I18N.message("extendedattrs"), null);
 		extattr.setHint(I18N.message("separatedcomma"));
-		extattr.setWidth(150);
+		extattr.setWidth(400);
+		
+		TextItem webcontentfolders = ItemFactory.newTextItem("webcontentfolders", I18N.message("webcontentfolders"), null);
+		webcontentfolders.setHint(I18N.message("commaseplistofids"));
+		webcontentfolders.setWidth(400);
 		
 		parametersForm.setItems(welcome, dropspot, previewPages, previewSize, previewZoom, thumbSize, thumbQuality,
-				uploadmax, ondoubleclick, doctab, searchhits, extattr, savelogin);
+				uploadmax, ondoubleclick, doctab, searchhits, extattr, webcontentfolders, savelogin);
 
 		for (GUIParameter p : settings) {
 			if (p.getName().equals("gui.welcome"))
@@ -154,6 +159,8 @@ public class GUISettingsPanel extends VLayout {
 				searchhits.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().equals("search.extattr"))
 				extattr.setValue(p.getValue());
+			if (p.getName().equals("gui.webcontent.folders"))
+				webcontentfolders.setValue(p.getValue());
 		}
 
 		IButton save = new IButton();
@@ -179,6 +186,7 @@ public class GUISettingsPanel extends VLayout {
 					params.add(new GUIParameter("upload.maxsize", values.get("uploadmax").toString()));
 					params.add(new GUIParameter("search.hits", values.get("searchhits").toString()));
 					params.add(new GUIParameter("search.extattr", values.get("extattr").toString()));
+					params.add(new GUIParameter("gui.webcontent.folders", values.get("webcontentfolders").toString()));
 
 					// Update the current session parameters.
 					for (GUIParameter p : params) {
