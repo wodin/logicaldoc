@@ -19,6 +19,10 @@
 		<param-value>0</param-value>
 	</context-param>
 
+    <session-config>
+      <session-timeout>30</session-timeout>
+    </session-config>
+    
 	<filter>
 		<filter-name>UrlRewriteFilter</filter-name>
 		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
