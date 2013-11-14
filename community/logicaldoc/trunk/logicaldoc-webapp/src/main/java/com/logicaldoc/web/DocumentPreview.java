@@ -302,7 +302,7 @@ public class DocumentPreview extends HttpServlet {
 						+ (isWin ? "\"" : "") + jpegTmp.getPath() + (isWin ? "\"" : "");
 				Exec.exec(jpegCommand, null, null, 10);
 
-				FileUtils.deleteQuietly(tmp);
+				strongDelete(tmp);
 				tmp = jpegTmp;
 
 				command += File.separatorChar + "jpeg2swf";
@@ -315,6 +315,7 @@ public class DocumentPreview extends HttpServlet {
 						+ (isWin ? "\"" : "") + pdfTmp.getPath() + (isWin ? "\"" : "");
 				Exec.exec(pdfCommand, null, null, 10);
 
+				strongDelete(tmp);
 				tmp = pdfTmp;
 				command += File.separatorChar + "pdf2swf";
 			}
@@ -379,12 +380,13 @@ public class DocumentPreview extends HttpServlet {
 			}
 
 		} catch (Throwable e) {
-			FileUtils.deleteQuietly(root);
+			strongDelete(root);
 			log.error("Error in document to SWF conversion", e);
 		} finally {
 			IOUtils.closeQuietly(is);
 			IOUtils.closeQuietly(fos);
-			FileUtils.deleteQuietly(tmp);
+
+			strongDelete(tmp);
 		}
 
 		if (root.exists()) {
@@ -409,5 +411,18 @@ public class DocumentPreview extends HttpServlet {
 			return pages;
 		} else
 			return new File[0];
+	}
+
+	private void strongDelete(File file) {
+		// Make sure the temp file is deleted
+		for (int i = 0; i < 20; i++) {
+			FileUtils.deleteQuietly(file);
+			if (!file.exists())
+				break;
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+			}
+		}
 	}
 }
