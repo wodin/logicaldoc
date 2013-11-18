@@ -259,21 +259,31 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 							if (value == null)
 								return;
 
-							String tag = value.trim().replaceAll(",", "");
-							if (!"".equals(tag)) {
-								// Put the new tag in the options
-								Record record = new Record();
-								record.setAttribute("word", tag);
-								ds.addData(record);
+							String input = value.trim().replaceAll(",", "");
+							if (!"".equals(input)) {
+								// Get the user's inputed tags, he may have
+								// wrote more than one tag
+								List<String> tags = new ArrayList<String>();
+								String token = input.trim().replace(',', ' ');
+								if (!"".equals(token)) {
+									tags.add(token);
 
-								// Add the new tag
+									// Put the new tag in the options
+									Record record = new Record();
+									record.setAttribute("word", token);
+									ds.addData(record);
+								}
+
+								if (tags.isEmpty())
+									return;
+
+								// Add the old tags to the new ones
 								String[] oldVal = tagItem.getValues();
-								String[] newVal = new String[tagItem.getValues().length + 1];
 								for (int i = 0; i < oldVal.length; i++)
-									newVal[i] = oldVal[i];
-								newVal[oldVal.length] = value;
-								tagItem.setValues((Object[]) newVal);
+									if (!tags.contains(oldVal[i]))
+										tags.add(oldVal[i]);
 
+								tagItem.setValues((Object[]) tags.toArray(new String[0]));
 								changedHandler.onChanged(null);
 							}
 						}
