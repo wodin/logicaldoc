@@ -7,7 +7,6 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.DocumentObserver;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
@@ -17,27 +16,32 @@ import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.Record;
+import com.smartgwt.client.types.MultiComboBoxLayoutStyle;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.LinkItem;
+import com.smartgwt.client.widgets.form.fields.MultiComboBoxItem;
+import com.smartgwt.client.widgets.form.fields.PickerIcon;
+import com.smartgwt.client.widgets.form.fields.PickerIcon.Picker;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
-import com.smartgwt.client.widgets.form.fields.events.FocusEvent;
-import com.smartgwt.client.widgets.form.fields.events.FocusHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
-import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -61,6 +65,10 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 	private ValuesManager vm = new ValuesManager();
 
 	protected DocumentObserver observer;
+
+	protected MultiComboBoxItem tagItem = null;
+
+	protected boolean tagsInitialized = false;
 
 	public StandardPropertiesPanel(final GUIDocument document, ChangedHandler changedHandler, DocumentObserver observer) {
 		super(document, changedHandler, null);
@@ -160,6 +168,8 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 	}
 
 	private void prepareRightForm() {
+		tagsInitialized = false;
+
 		if (formsContainer.contains(form2)) {
 			formsContainer.removeMember(form2);
 			form2.destroy();
@@ -208,84 +218,80 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		if (Feature.enabled(Feature.TAGS)) {
 			String mode = Session.get().getInfo().getConfig("tag.mode");
 
-			final FormItem tagItem;
-			if ("preset".equals(mode)) {
-				tagItem = new SelectItem("tag");
-				tagItem.setOptionDataSource(new TagsDS(mode));
-			} else {
-				tagItem = new ComboBoxItem("tag");
+			final DataSource ds = new TagsDS(null);
 
-				((ComboBoxItem) tagItem).setFetchDelay(2000);
-				((ComboBoxItem) tagItem).setPickListWidth(250);
-				((ComboBoxItem) tagItem).setHideEmptyPickList(true);
-				((ComboBoxItem) tagItem).setOptionDataSource(new TagsDS(null));
-				tagItem.setHint(I18N.message("pressentertoaddtag"));
-			}
-
+			tagItem = new MultiComboBoxItem("tag", I18N.message("tag"));
+			tagItem.setLayoutStyle(MultiComboBoxLayoutStyle.FLOW);
+			tagItem.setWidth(200);
+			tagItem.setMultiple(true);
+			tagItem.setOptionDataSource(ds);
 			tagItem.setValueField("word");
-			tagItem.setTitle(I18N.message("tag"));
-			tagItem.addFocusHandler(new FocusHandler() {
+			tagItem.setDisplayField("word");
+
+			tagItem.setValues((Object[]) document.getTags());
+			tagItem.setDisabled(!updateEnabled);
+			tagItem.addChangedHandler(new ChangedHandler() {
+
 				@Override
-				public void onFocus(FocusEvent event) {
-					if (event.getItem().getValue() != null) {
-						String value = event.getItem().getValue() + "";
-						event.getItem().clearValue();
-						event.getItem().setValue(value);
+				public void onChanged(ChangedEvent event) {
+					/*
+					 * At initialization time this method is invoked several
+					 * times until when it contains all the tags of the document
+					 */
+					if (tagsInitialized)
+						changedHandler.onChanged(null);
+					else {
+						if ((tagItem.getValues().length == 0 && document.getTags() == null)
+								|| tagItem.getValues().length == document.getTags().length)
+							// The item contains all the tags of the document,
+							// so consider it as initialized
+							tagsInitialized = true;
 					}
+
 				}
 			});
-			tagItem.setHintStyle("hint");
 
-			if ("preset".equals(mode))
-				tagItem.addChangedHandler(new ChangedHandler() {
-					@Override
-					public void onChanged(ChangedEvent event) {
-						// In the preset mode at each selection immediately add
-						// the tag
-						if (event.getItem().getSelectedRecord() != null) {
-							document.addTag(event.getItem().getSelectedRecord().getAttribute("word"));
-							tagItem.clearValue();
-							changedHandler.onChanged(null);
-							refresh();
+			PickerIcon addPicker = new PickerIcon(new Picker("[SKIN]/actions/add.png"), new FormItemClickHandler() {
+				public void onFormItemClick(FormItemIconClickEvent event) {
+					LD.askforValue(I18N.message("newtag"), I18N.message("tag"), "", "200", new ValueCallback() {
+						@Override
+						public void execute(String value) {
+							if (value == null)
+								return;
+
+							String tag = value.trim().replaceAll(",", "");
+							if (!"".equals(tag)) {
+								// Put the new tag in the options
+								Record record = new Record();
+								record.setAttribute("word", tag);
+								ds.addData(record);
+
+								// Add the new tag
+								String[] oldVal = tagItem.getValues();
+								String[] newVal = new String[tagItem.getValues().length + 1];
+								for (int i = 0; i < oldVal.length; i++)
+									newVal[i] = oldVal[i];
+								newVal[oldVal.length] = value;
+								tagItem.setValues((Object[]) newVal);
+
+								changedHandler.onChanged(null);
+							}
 						}
-					}
-				});
-
-			tagItem.addKeyPressHandler(new KeyPressHandler() {
-				@Override
-				public void onKeyPress(KeyPressEvent event) {
-					if (Constants.KEY_ENTER.equals(event.getKeyName().toLowerCase())) {
-						document.addTag(tagItem.getValue().toString().trim());
-						tagItem.clearValue();
-						changedHandler.onChanged(null);
-						refresh();
-					}
+					});
 				}
 			});
+			addPicker.setWidth(16);
+			addPicker.setHeight(16);
+			addPicker.setPrompt(I18N.message("newtag"));
 
-			if (updateEnabled)
-				items.add(tagItem);
+			if ("free".equals(mode))
+				tagItem.setIcons(addPicker);
 
-			FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
-			int i = 0;
-			for (String str : document.getTags()) {
-				final StaticTextItem tgItem = ItemFactory.newStaticTextItem("tag" + i++, "tag", str);
-				if (updateEnabled)
-					tgItem.setIcons(icon);
-				tgItem.addIconClickHandler(new IconClickHandler() {
-					public void onIconClick(IconClickEvent event) {
-						document.removeTag((String) tgItem.getValue());
-						changedHandler.onChanged(null);
+			tagItem.setDisabled(!updateEnabled);
+			items.add(tagItem);
+			if (document.getTags() == null || document.getTags().length == 0)
+				tagsInitialized = true;
 
-						// Mark the item as deleted
-						tgItem.setTextBoxStyle("deletedItem");
-						tgItem.setTitleStyle("deletedItem");
-						tgItem.setIcons(ItemFactory.newItemIcon("blank.gif"));
-					}
-				});
-				tgItem.setDisabled(!updateEnabled);
-				items.add(tgItem);
-			}
 		}
 
 		form2.setItems(items.toArray(new FormItem[0]));
@@ -298,6 +304,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		if (!vm.hasErrors()) {
 			document.setTitle((String) values.get("title"));
 			document.setLanguage((String) values.get("language"));
+			document.setTags(tagItem.getValues());
 		}
 		return !vm.hasErrors();
 	}
