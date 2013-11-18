@@ -68,7 +68,7 @@ public class Accordion extends SectionStack {
 		wfForm.setTitleOrientation(TitleOrientation.TOP);
 		wfForm.setNumCols(1);
 		wfForm.setValuesManager(vm);
-		workflowName = ItemFactory.newTextItem("workflowName", "workflowname", null);
+		workflowName = ItemFactory.newSimpleTextItem("workflowName", "workflowname", null);
 		workflowName.setRequired(true);
 		if (this.workflow != null) {
 			workflowName.setValue(this.workflow.getName());
