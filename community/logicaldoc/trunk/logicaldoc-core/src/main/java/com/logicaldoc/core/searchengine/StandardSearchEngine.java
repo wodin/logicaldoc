@@ -16,6 +16,7 @@ import org.apache.lucene.index.CheckIndex.Status;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -24,6 +25,7 @@ import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.update.SolrIndexWriter;
+import org.hibernate.criterion.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -340,10 +342,12 @@ public class StandardSearchEngine implements SearchEngine {
 	protected SolrQuery prepareSearchQuery(String expression, String[] filters, String expressionLanguage, Integer rows) {
 		SolrQuery query = new SolrQuery();
 		query.setQuery(expression);
+		query.setSortField("score", ORDER.desc);
 		if (rows != null)
 			query.setRows(rows);
 		if (filters != null)
 			query.addFilterQuery(filters);
+		
 		query.set("exprLang", expressionLanguage);
 		return query;
 	}
