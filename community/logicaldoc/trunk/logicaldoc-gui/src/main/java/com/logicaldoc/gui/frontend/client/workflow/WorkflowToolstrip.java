@@ -318,7 +318,7 @@ public class WorkflowToolstrip extends ToolStrip {
 			@Override
 			public void onClick(ClickEvent event) {
 				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
-						+ "&pluginId=logicaldoc-workflow&resourcePath=templates/" + currentWorkflow.getId() + ".jbpm");
+						+ "&pluginId=logicaldoc-workflow&resourcePath=templates/" + currentWorkflow.getId() + ".ldpm");
 			}
 		});
 		addButton(export);
