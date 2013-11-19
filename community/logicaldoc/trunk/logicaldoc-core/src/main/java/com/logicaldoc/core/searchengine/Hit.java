@@ -8,7 +8,7 @@ import com.logicaldoc.core.document.Document;
  * @author Marco Meschieri - Logical Objects
  * @since 5.2
  */
-public class Hit extends Document {
+public class Hit extends Document implements Comparable<Hit> {
 
 	private int score;
 
@@ -38,5 +38,17 @@ public class Hit extends Document {
 
 	public void setSummary(String summary) {
 		this.summary = summary;
+	}
+
+	@Override
+	public int compareTo(Hit other) {
+		if (other == null)
+			return -1;
+		if (other.score == this.score)
+			return this.getTitle().compareToIgnoreCase(other.getTitle());
+		else if (this.score < other.score)
+			return 1;
+		else
+			return -1;
 	}
 }
