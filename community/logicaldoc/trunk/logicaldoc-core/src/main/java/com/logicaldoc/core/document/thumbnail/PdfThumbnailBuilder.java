@@ -7,12 +7,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
+import com.logicaldoc.util.io.FileUtil;
 
 /**
  * This builder generates the thumbnail for a Pdf document.
@@ -24,17 +24,17 @@ public class PdfThumbnailBuilder extends ImageThumbnailBuilder {
 	protected static Logger log = LoggerFactory.getLogger(PdfThumbnailBuilder.class);
 
 	@Override
-	public synchronized void build(File src, String srcFileName, int size, File dest, int compression)
+	public synchronized void buildThumbnail(File src, String srcFileName, File dest, int size, int compression)
 			throws IOException {
 
 		File tmp = File.createTempFile("rendertmb", "thumb.jpg");
 		try {
 			renderPage(src, tmp, 1);
-			super.build(tmp, srcFileName, size, dest, compression);
+			super.buildThumbnail(tmp, srcFileName, dest, size, compression);
 		} catch (Throwable e) {
 			throw new IOException("Thumbnail building " + e.getMessage(), e);
 		} finally {
-			FileUtils.deleteQuietly(tmp);
+			FileUtil.strongDelete(tmp);
 		}
 	}
 

@@ -1,16 +1,9 @@
 package com.logicaldoc.web;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,11 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,9 +23,7 @@ import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.Exec;
 import com.logicaldoc.util.MimeType;
-import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
@@ -59,13 +46,6 @@ public class DocumentPreview extends HttpServlet {
 	private static final long serialVersionUID = -6956612970433309888L;
 
 	protected static Logger log = LoggerFactory.getLogger(DocumentPreview.class);
-
-	protected static String SWFTOOLSPATH = "swftools.path";
-
-	protected static String CONVERT = "command.convert";
-
-	/** For these extensions we are able to directly convert to SWF */
-	protected String SWF_DIRECT_CONVERSION_EXTS = "gif, png, pdf, jpeg, jpg, tif, tiff, bmp";
 
 	/**
 	 * Constructor of the object.
@@ -151,11 +131,11 @@ public class DocumentPreview extends HttpServlet {
 	 */
 	protected void createPreviewResource(Document doc, String fileVersion, String resource) {
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
-		String thumbResource = storer.getResourceName(doc, fileVersion, "thumb.jpg");
+		ThumbnailManager thumbManager = (ThumbnailManager) Context.getInstance().getBean(ThumbnailManager.class);
 
 		// In any case try to produce the thumbnail
+		String thumbResource = storer.getResourceName(doc, fileVersion, "thumb.jpg");
 		if (!storer.exists(doc.getId(), thumbResource)) {
-			ThumbnailManager thumbManager = (ThumbnailManager) Context.getInstance().getBean(ThumbnailManager.class);
 			try {
 				thumbManager.createTumbnail(doc, fileVersion);
 				log.debug("Created thumbnail " + resource);
@@ -171,49 +151,11 @@ public class DocumentPreview extends HttpServlet {
 		 * We need to produce the SWF conversion
 		 */
 		if (!storer.exists(doc.getId(), resource) && resource.endsWith("preview-1.swf")) {
-			InputStream is = null;
-			File pagesRoot = null;
-			File[] pages = null;
-
 			try {
-				pagesRoot = File.createTempFile("preview", "");
-				pagesRoot.delete();
-				pagesRoot.mkdir();
-
-				String docExtension = FilenameUtils.getExtension(doc.getFileName()).toLowerCase();
-				if (SWF_DIRECT_CONVERSION_EXTS.contains(docExtension)) {
-					// Perform a direct conversion using the document's file
-					is = storer.getStream(doc.getId(), storer.getResourceName(doc, fileVersion, null));
-					pages = document2swf(is, docExtension, pagesRoot);
-				} else {
-					// Retrieve the previously computed thumbnail
-					is = storer.getStream(doc.getId(), thumbResource);
-
-					// Convert the thumbnail to SWF
-					pages = document2swf(is, "jpg", pagesRoot);
-				}
-
-				String resourceBase = resource.substring(0, resource.lastIndexOf('-'));
-
-				if (pages.length > 0) {
-					for (int i = 0; i < pages.length; i++) {
-						storer.store(pages[i], doc.getId(), resourceBase + "-" + (i + 1) + ".swf");
-						log.debug("Stored page " + pages[i].getName());
-					}
-				}
-
+				thumbManager.createPreview(doc, fileVersion);
 				log.debug("Created preview " + resource);
-			} catch (Throwable e) {
-				log.error(e.getMessage(), e);
-			} finally {
-				if (pagesRoot != null)
-					FileUtils.deleteQuietly(pagesRoot);
-				if (is != null)
-					try {
-						is.close();
-					} catch (IOException e) {
-
-					}
+			} catch (Throwable t) {
+				log.error(t.getMessage(), t);
 			}
 		}
 	}
@@ -267,162 +209,6 @@ public class DocumentPreview extends HttpServlet {
 			os.flush();
 			os.close();
 			is.close();
-		}
-	}
-
-	/**
-	 * Convert a generic document(image or PDF) to SWF (for document preview
-	 * feature). The page files are ordered.
-	 */
-	protected File[] document2swf(InputStream is, String extension, File root) throws IOException {
-		File tmp = File.createTempFile("preview", "." + extension.toLowerCase());
-		FileOutputStream fos = null;
-
-		try {
-			fos = new FileOutputStream(tmp);
-			IOUtils.copy(is, fos);
-			fos.flush();
-			fos.close();
-
-			boolean isWin = SystemUtils.IS_OS_WINDOWS;
-
-			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-			String command = conf.getProperty(SWFTOOLSPATH);
-			if (extension.equalsIgnoreCase("pdf"))
-				command += File.separatorChar + "pdf2swf";
-			else if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg"))
-				command += File.separatorChar + "jpeg2swf";
-			else if (extension.equalsIgnoreCase("png"))
-				command += File.separatorChar + "png2swf";
-			else if (extension.equalsIgnoreCase("bmp") || extension.equalsIgnoreCase("gif")) {
-				// In this case we have to convert to temporary jpg first
-				File jpegTmp = File.createTempFile("preview", ".jpg");
-				String jpegCommand = (isWin ? "\"" : "") + new File(conf.getProperty(CONVERT)).getPath()
-						+ (isWin ? "\"" : "") + " " + (isWin ? "\"" : "") + tmp.getPath() + (isWin ? "\"" : "") + " "
-						+ (isWin ? "\"" : "") + jpegTmp.getPath() + (isWin ? "\"" : "");
-				Exec.exec(jpegCommand, null, null, 10);
-
-				strongDelete(tmp);
-				tmp = jpegTmp;
-
-				command += File.separatorChar + "jpeg2swf";
-			} else if (extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("tif")) {
-				// In this case we have to convert to temporary pdf first to
-				// collect all the pages into a single file
-				File pdfTmp = File.createTempFile("preview", ".pdf");
-				String pdfCommand = (isWin ? "\"" : "") + new File(conf.getProperty(CONVERT)).getPath()
-						+ (isWin ? "\"" : "") + " " + (isWin ? "\"" : "") + tmp.getPath() + (isWin ? "\"" : "") + " "
-						+ (isWin ? "\"" : "") + pdfTmp.getPath() + (isWin ? "\"" : "");
-				Exec.exec(pdfCommand, null, null, 10);
-
-				strongDelete(tmp);
-				tmp = pdfTmp;
-				command += File.separatorChar + "pdf2swf";
-			}
-
-			command = new File(command).getPath();
-			List<String> commandLine = new ArrayList<String>();
-			commandLine.add(command);
-
-			if (extension.equalsIgnoreCase("pdf") || extension.equalsIgnoreCase("tiff")
-					|| extension.equalsIgnoreCase("tif")) {
-				int pages = -1;
-				try {
-					pages = conf.getInt("gui.preview.pages");
-				} catch (Throwable t) {
-
-				}
-
-				commandLine.add("-T 9");
-				if (pages > 0)
-					commandLine.add("-p 1-" + pages);
-				commandLine.add("-f");
-				commandLine.add("-t");
-				commandLine.add("-G");
-				commandLine.add("-s storeallcharacters");
-			} else if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg")
-					|| extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("bmp")
-					|| extension.equalsIgnoreCase("gif")) {
-				commandLine.add("-T 9");
-			}
-
-			if (command.contains("pdf2swf")) {
-				/*
-				 * Save the preview as multiple SWFs, this will allow for
-				 * handling huge documents composed by several pages.
-				 */
-				commandLine.add(tmp.getPath());
-				commandLine.add(root.getAbsolutePath() + File.separator + "page-%");
-			} else {
-				commandLine.add("-o " + root.getAbsolutePath() + File.separator + "page-1");
-				commandLine.add(tmp.getPath());
-			}
-
-			log.debug("Executing command: " + commandLine.toString());
-
-			int timeout = 20;
-			try {
-				timeout = Integer.parseInt(conf.getProperty("gui.preview.timeout"));
-			} catch (Throwable t) {
-			}
-
-			if (command.contains("pdf2swf"))
-				Exec.exec(commandLine, null, null, timeout);
-			else {
-				// Seems that commands like jpeg2swf need to be executed as a
-				// single line command
-				StringBuffer sb = new StringBuffer();
-				for (String cmd : commandLine) {
-					sb.append(cmd);
-					sb.append(" ");
-				}
-				Exec.exec(sb.toString(), null, null, timeout);
-			}
-
-		} catch (Throwable e) {
-			strongDelete(root);
-			log.error("Error in document to SWF conversion", e);
-		} finally {
-			IOUtils.closeQuietly(is);
-			IOUtils.closeQuietly(fos);
-
-			strongDelete(tmp);
-		}
-
-		if (root.exists()) {
-			File[] pages = root.listFiles(new FilenameFilter() {
-				@Override
-				public boolean accept(File dir, String name) {
-					return name.startsWith("page-");
-				}
-			});
-
-			Arrays.sort(pages, new Comparator<File>() {
-				@Override
-				public int compare(File f1, File f2) {
-					String name1 = f1.getName();
-					String name2 = f2.getName();
-					Integer n1 = new Integer(name1.substring(5));
-					Integer n2 = new Integer(name2.substring(5));
-					return n1.compareTo(n2);
-				}
-			});
-
-			return pages;
-		} else
-			return new File[0];
-	}
-
-	private void strongDelete(File file) {
-		// Make sure the temp file is deleted
-		for (int i = 0; i < 20; i++) {
-			FileUtils.deleteQuietly(file);
-			if (!file.exists())
-				break;
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-			}
 		}
 	}
 }
