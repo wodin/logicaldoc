@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -469,6 +470,22 @@ public class FileUtil {
 			}
 			if (destination != null) {
 				destination.close();
+			}
+		}
+	}
+	
+	public static void strongDelete(File file) {
+		if(file==null)
+			return;
+		
+		// Make sure the temp file is deleted
+		for (int i = 0; i < 20; i++) {
+			FileUtils.deleteQuietly(file);
+			if (!file.exists())
+				break;
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
 			}
 		}
 	}

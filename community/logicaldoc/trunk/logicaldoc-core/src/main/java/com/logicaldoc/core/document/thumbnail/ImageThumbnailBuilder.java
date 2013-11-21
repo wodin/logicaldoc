@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.Exec;
@@ -17,12 +19,12 @@ import com.logicaldoc.util.config.ContextProperties;
  * @author Marco Meschieri - Logical Objects
  * @since 4.5
  */
-public class ImageThumbnailBuilder implements ThumbnailBuilder {
-
-	protected static String CONVERT = "command.convert";
+public class ImageThumbnailBuilder extends AbstractThumbnailBuilder {
+	protected static Logger log = LoggerFactory.getLogger(AbstractThumbnailBuilder.class);
 
 	@Override
-	public synchronized void build(File src, String srcFileName, int size, File dest, int quality) throws IOException {
+	public synchronized void buildThumbnail(File src, String srcFileName, File dest, int size, int quality)
+			throws IOException {
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			String commandLine = conf.getProperty(CONVERT) + " -compress JPEG -quality " + Integer.toString(quality)
