@@ -100,7 +100,7 @@ public class ServletIOUtil {
 		// it seems everything is fine, so we can now start writing to the
 		// response object
 		response.setContentType(mimetype);
-		setContentDisposition(request, response, filename);
+		setContentDisposition(request, response, filename, true);
 
 		// Headers required by Internet Explorer
 		response.setHeader("Pragma", "public");
@@ -195,7 +195,7 @@ public class ServletIOUtil {
 		// it seems everything is fine, so we can now start writing to the
 		// response object
 		response.setContentType(mimetype);
-		setContentDisposition(request, response, filename);
+		setContentDisposition(request, response, filename, true);
 
 		// Add this header for compatibility with internal .NET browsers
 		response.setHeader("Content-Length", Long.toString(size));
@@ -261,7 +261,7 @@ public class ServletIOUtil {
 		// it seems everything is fine, so we can now start writing to the
 		// response object
 		response.setContentType(mimetype);
-		setContentDisposition(request, response, filename);
+		setContentDisposition(request, response, filename, true);
 
 		// Add this header for compatibility with internal .NET browsers
 		response.setHeader("Content-Length", Long.toString(file.length()));
@@ -298,13 +298,14 @@ public class ServletIOUtil {
 	/**
 	 * Sets the correct Content-Disposition header into the response
 	 */
-	public static void setContentDisposition(HttpServletRequest request, HttpServletResponse response, String filename)
-			throws UnsupportedEncodingException {
+	public static void setContentDisposition(HttpServletRequest request, HttpServletResponse response, String filename,
+			boolean asAttachment) throws UnsupportedEncodingException {
 		// Encode the filename
 		String userAgent = request.getHeader("User-Agent").toLowerCase();
 
 		String encodedFileName = null;
-		if (userAgent.contains("msie") || userAgent.contains("opera")) {
+		if (userAgent.contains("msie") || userAgent.contains("opera")
+				|| (userAgent.contains("trident") && userAgent.contains("windows"))) {
 			encodedFileName = URLEncoder.encode(filename, "UTF-8");
 			encodedFileName = encodedFileName.replace("+", "%20");
 		} else if (userAgent.contains("safari") && !userAgent.contains("chrome")) {
@@ -314,7 +315,11 @@ public class ServletIOUtil {
 			encodedFileName = "=?UTF-8?B?" + new String(Base64.encodeBase64(filename.getBytes("UTF-8")), "UTF-8")
 					+ "?=";
 		}
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedFileName + "\"");
+		response.setHeader("Content-Disposition", (asAttachment ? "attachment" : "inline") + "; filename=\""
+				+ encodedFileName + "\"");
+
+		System.out.println("Content-Disposition=" + (asAttachment ? "attachment" : "inline") + "; filename=\""
+				+ encodedFileName + "\"");
 
 		// Headers required by Internet Explorer
 		response.setHeader("Pragma", "public");
@@ -355,7 +360,7 @@ public class ServletIOUtil {
 		// response object
 		response.setContentType(mimetype);
 
-		setContentDisposition(request, response, doc.getFileName() + ".txt");
+		setContentDisposition(request, response, doc.getFileName() + ".txt", true);
 
 		// Headers required by Internet Explorer
 		response.setHeader("Pragma", "public");

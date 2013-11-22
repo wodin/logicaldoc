@@ -177,12 +177,7 @@ public class DownloadServlet extends HttpServlet {
 		response.setHeader("Pragma", "public");
 		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 		response.setHeader("Expires", "0");
-
-		if (request.getParameter("open") == null) {
-			response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
-		} else {
-			response.setHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
-		}
+		ServletIOUtil.setContentDisposition(request, response, filename, request.getParameter("open") == null);
 
 		if (StringUtils.isEmpty(fileVersion)) {
 			if (version != null)
