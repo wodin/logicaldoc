@@ -29,8 +29,10 @@ public class GUICalendarEvent implements Serializable {
 	private Long parentId = null;
 
 	private String title = "";
-	
+
 	private String type = "";
+
+	private String subType = "";
 
 	private String description = "";
 
@@ -130,7 +132,17 @@ public class GUICalendarEvent implements Serializable {
 		this.frequency = frequency;
 	}
 
+	public GUIUser getParticipant(long id) {
+		for (int i = 0; i < participants.length; i++) {
+			if (participants[i].getId() == id)
+				return participants[i];
+		}
+		return null;
+	}
+
 	public void addParticipant(GUIUser newPart) {
+		if (getParticipant(newPart.getId()) != null)
+			return;
 		GUIUser[] newParts = new GUIUser[participants.length + 1];
 		for (int i = 0; i < participants.length; i++) {
 			newParts[i] = participants[i];
@@ -148,6 +160,25 @@ public class GUICalendarEvent implements Serializable {
 			newParts[j++] = participants[i];
 		}
 		participants = newParts;
+	}
+
+	public GUIDocument getDocument(long id) {
+		for (int i = 0; i < documents.length; i++) {
+			if (documents[i].getId() == id)
+				return documents[i];
+		}
+		return null;
+	}
+
+	public void addDocument(GUIDocument newDoc) {
+		if (getDocument(newDoc.getId()) != null)
+			return;
+		GUIDocument[] newDocs = new GUIDocument[documents.length + 1];
+		for (int i = 0; i < documents.length; i++) {
+			newDocs[i] = documents[i];
+		}
+		newDocs[documents.length] = newDoc;
+		documents = newDocs;
 	}
 
 	public void removeDocument(long docId) {
@@ -231,5 +262,13 @@ public class GUICalendarEvent implements Serializable {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getSubType() {
+		return subType;
+	}
+
+	public void setSubType(String subType) {
+		this.subType = subType;
 	}
 }

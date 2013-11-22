@@ -771,9 +771,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 					@Override
 					public void onSuccess(Void result) {
 						DocumentsPanel.get().onFolderSelected(Session.get().getCurrentFolder());
-
 						Clipboard.getInstance().clear();
-						Log.debug("Paste operation completed.");
 					}
 				});
 	}

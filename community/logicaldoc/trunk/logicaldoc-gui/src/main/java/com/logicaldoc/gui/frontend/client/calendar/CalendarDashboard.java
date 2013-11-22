@@ -18,9 +18,7 @@ import com.smartgwt.client.types.TimeDisplayFormat;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.calendar.Calendar;
 import com.smartgwt.client.widgets.calendar.events.CalendarEventClick;
-import com.smartgwt.client.widgets.calendar.events.CalendarEventRemoveClick;
 import com.smartgwt.client.widgets.calendar.events.EventClickHandler;
-import com.smartgwt.client.widgets.calendar.events.EventRemoveClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
@@ -49,7 +47,6 @@ public class CalendarDashboard extends VLayout {
 		refresh();
 	}
 
-	@SuppressWarnings("deprecation")
 	private void initGUI() {
 		calendar = new Calendar();
 		calendar.setDataSource(new CalendarEventsDS(null));
@@ -75,64 +72,8 @@ public class CalendarDashboard extends VLayout {
 		calendar.setCanDragScroll(false);
 		calendar.setCanEditLane(false);
 		calendar.setCanEditEvents(false);
+		calendar.setCanRemoveEvents(false);
 		calendar.setChosenDate(new Date());
-
-		calendar.addEventRemoveClickHandler(new EventRemoveClickHandler() {
-			@Override
-			public void onEventRemoveClick(final CalendarEventRemoveClick event) {
-				event.cancel();
-				long creatorId = Long.parseLong(event.getEvent().getAttribute("creatorId"));
-				GUIUser currentUser = Session.get().getUser();
-				if (currentUser.getId() != creatorId && !currentUser.isMemberOf("admin")) {
-					return;
-				}
-
-				LD.ask(I18N.message("delevent"), I18N.message("deleventconfirm"), new BooleanCallback() {
-					@Override
-					public void execute(Boolean value) {
-						if (value.booleanValue()) {
-							if ((event.getEvent().getAttribute("parentId") != null && !"".equals(event.getEvent()
-									.getAttribute("parentId").trim()))) {
-								LD.ask(I18N.message("delevent"), I18N.message("douwantdeletealloccurrences"),
-										new BooleanCallback() {
-											@Override
-											public void execute(Boolean value) {
-												Long id = value ? Long.parseLong(event.getEvent().getAttribute(
-														"parentId")) : Long.parseLong(event.getEvent().getAttribute(
-														"eventId"));
-												service.deleteEvent(Session.get().getSid(), id,
-														new AsyncCallback<Void>() {
-															@Override
-															public void onFailure(Throwable caught) {
-																Log.serverError(caught);
-															}
-
-															@Override
-															public void onSuccess(Void arg) {
-																refresh();
-															}
-														});
-											}
-										});
-							} else
-								service.deleteEvent(Session.get().getSid(),
-										Long.parseLong(event.getEvent().getAttribute("eventId")),
-										new AsyncCallback<Void>() {
-											@Override
-											public void onFailure(Throwable caught) {
-												Log.serverError(caught);
-											}
-
-											@Override
-											public void onSuccess(Void arg) {
-												refresh();
-											}
-										});
-						}
-					}
-				});
-			}
-		});
 
 		calendar.addEventClickHandler(new EventClickHandler() {
 

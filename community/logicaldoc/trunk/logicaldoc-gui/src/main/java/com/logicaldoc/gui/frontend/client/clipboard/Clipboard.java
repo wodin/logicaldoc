@@ -25,7 +25,7 @@ public class Clipboard extends HashSet<GUIDocument> {
 	private Set<ClipboardObserver> observers = new HashSet<ClipboardObserver>();
 
 	private String lastAction = COPY;
-
+	
 	public String getLastAction() {
 		return lastAction;
 	}

@@ -8,13 +8,16 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUICalendarEvent;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
+import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.services.CalendarService;
 import com.logicaldoc.gui.frontend.client.services.CalendarServiceAsync;
@@ -24,6 +27,7 @@ import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
@@ -44,6 +48,7 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
+import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
@@ -89,13 +94,15 @@ public class CalendarEventDialog extends Window {
 		centerInPage();
 		setPadding(5);
 
-		Tab detailsTab = prepareDetailsTab(calEvent);
-		Tab participantsTab = prepareParticipants(calEvent);
-		Tab documentsTab = prepareDocuments(calEvent);
+		Tab detailsTab = prepareDetailsTab();
+		Tab participantsTab = prepareParticipants();
+		Tab documentsTab = prepareDocuments();
 
 		tabs.setTabs(detailsTab, participantsTab, documentsTab);
 		tabs.setHeight100();
 		addItem(tabs);
+
+		HLayout buttonsPanel = new HLayout();
 
 		IButton save = new IButton();
 		save.setMargin(3);
@@ -106,11 +113,27 @@ public class CalendarEventDialog extends Window {
 				onSave();
 			}
 		});
+
+		IButton delete = new IButton();
+		delete.setMargin(3);
+		delete.setHeight(30);
+		delete.setTitle(I18N.message("ddelete"));
+		delete.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				onDelete();
+			}
+		});
+
+		if (calendarEvent.getId() != 0)
+			buttonsPanel.setMembers(save, delete);
+		else
+			buttonsPanel.setMembers(save);
+
 		if (!readOnly)
-			addItem(save);
+			addItem(buttonsPanel);
 	}
 
-	private Tab prepareParticipants(GUICalendarEvent event) {
+	private Tab prepareParticipants() {
 		ListGridField id = new ListGridField("id");
 		id.setHidden(true);
 		ListGridField name = new ListGridField("name", I18N.message("name"));
@@ -123,12 +146,12 @@ public class CalendarEventDialog extends Window {
 		list.setWidth100();
 		list.setFields(id, username, name);
 
-		ListGridRecord[] records = new ListGridRecord[event.getParticipants().length];
-		for (int i = 0; i < event.getParticipants().length; i++) {
+		ListGridRecord[] records = new ListGridRecord[calendarEvent.getParticipants().length];
+		for (int i = 0; i < calendarEvent.getParticipants().length; i++) {
 			records[i] = new ListGridRecord();
-			records[i].setAttribute("id", event.getParticipants()[i].getId());
-			records[i].setAttribute("name", event.getParticipants()[i].getFullName());
-			records[i].setAttribute("username", event.getParticipants()[i].getUserName());
+			records[i].setAttribute("id", calendarEvent.getParticipants()[i].getId());
+			records[i].setAttribute("name", calendarEvent.getParticipants()[i].getFullName());
+			records[i].setAttribute("username", calendarEvent.getParticipants()[i].getUserName());
 		}
 		list.setRecords(records);
 
@@ -205,7 +228,7 @@ public class CalendarEventDialog extends Window {
 		return participantsTab;
 	}
 
-	private Tab prepareDocuments(GUICalendarEvent event) {
+	private Tab prepareDocuments() {
 		ListGridField title = new ListGridField("title", I18N.message("name"));
 		title.setWidth("90%");
 		title.setCanEdit(!readOnly);
@@ -234,24 +257,13 @@ public class CalendarEventDialog extends Window {
 		list.setCanSelectAll(false);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setFields(icon, title, lastModified);
-		ListGridRecord[] records = new ListGridRecord[event.getParticipants().length];
-		for (int i = 0; i < event.getDocuments().length; i++) {
-			records[i] = new ListGridRecord();
-			records[i].setAttribute("id", event.getDocuments()[i].getId());
-			records[i].setAttribute("title", event.getDocuments()[i].getTitle());
-			records[i].setAttribute("icon", event.getDocuments()[i].getIcon());
-			records[i].setAttribute("version", event.getDocuments()[i].getVersion());
-			records[i].setAttribute("fileVersion", event.getDocuments()[i].getFileVersion());
-			records[i].setAttribute("fileName", event.getDocuments()[i].getFileName());
-			records[i].setAttribute("lastModified", event.getDocuments()[i].getLastModified());
-		}
-		list.setRecords(records);
+		refreshDocumentsGrid(list);
 
 		MenuItem preview = new MenuItem();
 		preview.setTitle(I18N.message("preview"));
 		preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				// Detect the two selected records
+				// Detect the selected record
 				ListGridRecord selection = list.getSelectedRecord();
 
 				long id = Long.parseLong(selection.getAttribute("id"));
@@ -265,8 +277,26 @@ public class CalendarEventDialog extends Window {
 				iv.show();
 			}
 		});
+		MenuItem delete = new MenuItem();
+		delete.setTitle(I18N.message("ddelete"));
+		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				// Detect selected records
+				ListGridRecord[] selection = list.getSelectedRecords();
+				if (selection != null && selection.length > 0) {
+					for (ListGridRecord record : selection) {
+						calendarEvent.removeDocument(Long.parseLong(record.getAttribute("id")));
+					}
+					refreshDocumentsGrid(list);
+				}
+			}
+		});
+
 		Menu contextMenu = new Menu();
-		contextMenu.setItems(preview);
+		if (!readOnly)
+			contextMenu.setItems(preview, delete);
+		else
+			contextMenu.setItems(preview);
 		list.setContextMenu(contextMenu);
 
 		list.addCellDoubleClickHandler(new CellDoubleClickHandler() {
@@ -279,17 +309,61 @@ public class CalendarEventDialog extends Window {
 			}
 		});
 
+		IButton addDocuments = new IButton();
+		addDocuments.setTitle(I18N.message("adddocuments"));
+		addDocuments.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				Clipboard clipboard = Clipboard.getInstance();
+				if (clipboard.isEmpty()) {
+					SC.warn(I18N.message("nodocsinclipboard"));
+					return;
+				}
+
+				for (GUIDocument doc : clipboard) {
+					calendarEvent.addDocument(doc);
+				}
+				Clipboard.getInstance().clear();
+				refreshDocumentsGrid(list);
+			}
+		});
+
 		Tab documentsTab = new Tab();
 		documentsTab.setTitle(I18N.message("documents"));
 		VLayout layout = new VLayout();
 		layout.setWidth100();
 		layout.setHeight100();
-		layout.setMembers(list);
+		layout.setAlign(Alignment.CENTER);
+		layout.setMembersMargin(3);
+
+		HLayout buttons = new HLayout();
+		buttons.setAlign(Alignment.RIGHT);
+		buttons.setMembers(addDocuments);
+
+		if (!readOnly)
+			layout.setMembers(list, buttons);
+		else
+			layout.setMembers(list);
+
 		documentsTab.setPane(layout);
 		return documentsTab;
 	}
 
-	private Tab prepareDetailsTab(GUICalendarEvent event) {
+	private void refreshDocumentsGrid(final ListGrid list) {
+		ListGridRecord[] records = new ListGridRecord[calendarEvent.getDocuments().length];
+		for (int i = 0; i < calendarEvent.getDocuments().length; i++) {
+			records[i] = new ListGridRecord();
+			records[i].setAttribute("id", calendarEvent.getDocuments()[i].getId());
+			records[i].setAttribute("title", calendarEvent.getDocuments()[i].getTitle());
+			records[i].setAttribute("icon", calendarEvent.getDocuments()[i].getIcon());
+			records[i].setAttribute("version", calendarEvent.getDocuments()[i].getVersion());
+			records[i].setAttribute("fileVersion", calendarEvent.getDocuments()[i].getFileVersion());
+			records[i].setAttribute("fileName", calendarEvent.getDocuments()[i].getFileName());
+			records[i].setAttribute("lastModified", calendarEvent.getDocuments()[i].getLastModified());
+		}
+		list.setRecords(records);
+	}
+
+	private Tab prepareDetailsTab() {
 		Tab details = new Tab();
 		details.setTitle(I18N.message("details"));
 
@@ -298,7 +372,7 @@ public class CalendarEventDialog extends Window {
 		detailsForm.setNumCols(6);
 		detailsForm.setValuesManager(vm);
 
-		TextItem title = ItemFactory.newTextItem("title", "title", event.getTitle());
+		TextItem title = ItemFactory.newTextItem("title", "title", calendarEvent.getTitle());
 		title.setRequired(true);
 		title.setEndRow(true);
 		title.setColSpan(5);
@@ -307,7 +381,7 @@ public class CalendarEventDialog extends Window {
 		title.setLength(255);
 		title.setCanEdit(!readOnly);
 
-		TextItem type = ItemFactory.newTextItem("type", "type", event.getType());
+		TextItem type = ItemFactory.newTextItem("type", "type", calendarEvent.getType());
 		type.setRequired(false);
 		type.setEndRow(true);
 		type.setColSpan(5);
@@ -316,15 +390,24 @@ public class CalendarEventDialog extends Window {
 		type.setLength(255);
 		type.setCanEdit(!readOnly);
 
+		TextItem subType = ItemFactory.newTextItem("subType", "subtype", calendarEvent.getSubType());
+		subType.setRequired(false);
+		subType.setEndRow(true);
+		subType.setColSpan(5);
+		subType.setWidth(350);
+		subType.setTitleOrientation(TitleOrientation.LEFT);
+		subType.setLength(255);
+		subType.setCanEdit(!readOnly);
+
 		DateItem startDate = ItemFactory.newDateItem("startDate", "begin");
 		startDate.setRequired(true);
 		startDate.setTitleOrientation(TitleOrientation.LEFT);
 		startDate.setWrapTitle(false);
-		startDate.setValue(event.getStartDate());
+		startDate.setValue(calendarEvent.getStartDate());
 		startDate.setCanEdit(!readOnly);
 		TimeItem startTime = ItemFactory.newTimeItem("startTime", "   ");
 		DateTimeFormat df = DateTimeFormat.getFormat("HH:mm");
-		startTime.setValue(df.format(event.getStartDate()));
+		startTime.setValue(df.format(calendarEvent.getStartDate()));
 		startTime.setRequired(true);
 		startTime.setShowTitle(false);
 		startTime.setTitleOrientation(TitleOrientation.LEFT);
@@ -337,28 +420,28 @@ public class CalendarEventDialog extends Window {
 		expirationDate.setTitleOrientation(TitleOrientation.LEFT);
 		expirationDate.setWrapTitle(false);
 		expirationDate.setCanEdit(!readOnly);
-		if (event.getExpirationDate() != null)
-			expirationDate.setValue(event.getExpirationDate());
+		if (calendarEvent.getExpirationDate() != null)
+			expirationDate.setValue(calendarEvent.getExpirationDate());
 		TimeItem expirationTime = ItemFactory.newTimeItem("expirationTime", "   ");
 		expirationTime.setTitleOrientation(TitleOrientation.LEFT);
 		expirationTime.setShowTitle(false);
 		expirationTime.setEndRow(true);
 		expirationTime.setCanEdit(!readOnly);
 		expirationTime.setTitleColSpan(1);
-		if (event.getExpirationDate() != null)
-			expirationTime.setValue(df.format(event.getExpirationDate()));
+		if (calendarEvent.getExpirationDate() != null)
+			expirationTime.setValue(df.format(calendarEvent.getExpirationDate()));
 
 		final DateItem deadline = ItemFactory.newDateItem("deadline", "enddate");
 		deadline.setRequired(false);
 		deadline.setShowTitle(true);
 		deadline.setTitleOrientation(TitleOrientation.LEFT);
 		deadline.setCanEdit(!readOnly);
-		if (event.getDeadline() != null)
-			deadline.setValue(event.getDeadline());
+		if (calendarEvent.getDeadline() != null)
+			deadline.setValue(calendarEvent.getDeadline());
 
 		final SelectItem frequency = ItemFactory.newFrequencySelector("frequency", "frequency");
 		frequency.setTitleOrientation(TitleOrientation.LEFT);
-		frequency.setValue(Integer.toString(event.getFrequency()));
+		frequency.setValue(Integer.toString(calendarEvent.getFrequency()));
 		frequency.setCanEdit(!readOnly);
 		frequency.addChangedHandler(new ChangedHandler() {
 
@@ -377,7 +460,7 @@ public class CalendarEventDialog extends Window {
 		remindTimeNumber.setMin(0);
 		remindTimeNumber.setStep(1);
 		remindTimeNumber.setWidth(50);
-		remindTimeNumber.setValue(event.getRemindTime());
+		remindTimeNumber.setValue(calendarEvent.getRemindTime());
 		remindTimeNumber.setCanEdit(!readOnly);
 		SelectItem remindTimeUnit = ItemFactory.newDueTimeSelector("remindUnit", "");
 		remindTimeUnit.setShowTitle(false);
@@ -386,7 +469,7 @@ public class CalendarEventDialog extends Window {
 		map.put("hour", I18N.message("hours"));
 		map.put("day", I18N.message("ddays"));
 		remindTimeUnit.setValueMap(map);
-		remindTimeUnit.setValue(event.getRemindUnit());
+		remindTimeUnit.setValue(calendarEvent.getRemindUnit());
 		remindTimeUnit.setColSpan(3);
 		remindTimeUnit.setAlign(Alignment.LEFT);
 		remindTimeUnit.setCanEdit(!readOnly);
@@ -396,13 +479,13 @@ public class CalendarEventDialog extends Window {
 		completionDate.setShowTitle(false);
 		completionDate.setTitleOrientation(TitleOrientation.LEFT);
 		completionDate.setCanEdit(!readOnly);
-		completionDate.setDisabled(event.getStatus() != GUICalendarEvent.STATUS_COMPLETED);
-		if (event.getCompletionDate() != null)
-			completionDate.setValue(event.getCompletionDate());
+		completionDate.setDisabled(calendarEvent.getStatus() != GUICalendarEvent.STATUS_COMPLETED);
+		if (calendarEvent.getCompletionDate() != null)
+			completionDate.setValue(calendarEvent.getCompletionDate());
 
 		SelectItem status = ItemFactory.newEventStatusSelector("status", "status");
 		status.setTitleOrientation(TitleOrientation.LEFT);
-		status.setValue(Integer.toString(event.getStatus()));
+		status.setValue(Integer.toString(calendarEvent.getStatus()));
 		status.setCanEdit(!readOnly);
 		status.addChangedHandler(new ChangedHandler() {
 
@@ -416,13 +499,14 @@ public class CalendarEventDialog extends Window {
 			}
 		});
 
-		TextAreaItem description = ItemFactory.newTextAreaItem("description", "description", event.getDescription());
+		TextAreaItem description = ItemFactory.newTextAreaItem("description", "description",
+				calendarEvent.getDescription());
 		description.setWidth("*");
 		description.setHeight("95%");
 		description.setColSpan(5);
 		description.setCanEdit(!readOnly);
 
-		detailsForm.setFields(title, type, ItemFactory.newRowSpacer(), startDate, startTime, expirationDate,
+		detailsForm.setFields(title, type, subType, ItemFactory.newRowSpacer(), startDate, startTime, expirationDate,
 				expirationTime, ItemFactory.newRowSpacer(), frequency, deadline, ItemFactory.newRowSpacer(),
 				remindTimeNumber, remindTimeUnit, ItemFactory.newRowSpacer(), status, completionDate,
 				ItemFactory.newRowSpacer(), description);
@@ -435,8 +519,15 @@ public class CalendarEventDialog extends Window {
 	 */
 	private void onSave() {
 		if (vm.validate()) {
+			if(calendarEvent.getDocuments()==null || calendarEvent.getDocuments().length==0){
+				SC.warn("nodocsincalevent");
+				return;
+			}
+			
+			
 			calendarEvent.setTitle(vm.getValueAsString("title"));
 			calendarEvent.setType(vm.getValueAsString("type"));
+			calendarEvent.setSubType(vm.getValueAsString("subType"));
 			calendarEvent.setDescription(vm.getValueAsString("description"));
 			calendarEvent.setRemindTime(Integer.parseInt(vm.getValueAsString("remindTime")));
 			calendarEvent.setRemindUnit(vm.getValueAsString("remindUnit"));
@@ -447,25 +538,24 @@ public class CalendarEventDialog extends Window {
 			DateTimeFormat dfDate = DateTimeFormat.getFormat("yyyy-MM-dd");
 			DateTimeFormat dfTime = DateTimeFormat.getFormat("HH:mm");
 			DateTimeFormat df = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm");
-			
+
 			String str = dfDate.format((Date) vm.getValue("startDate"));
 			if (vm.getValue("startTime") != null)
 				try {
-					str = str + " " + vm.getValue("startTime").toString();
+					calendarEvent.setStartDate(df.parse(str + " " + vm.getValue("startTime").toString()));
 				} catch (Throwable t) {
-					SC.warn(t.getMessage());
+					calendarEvent.setStartDate(df.parse(str + " " + dfTime.format((Date) vm.getValue("startTime"))));
 				}
-			calendarEvent.setStartDate(df.parse(str));
 
-			
 			if (vm.getValue("expirationDate") != null) {
 				str = dfDate.format((Date) vm.getValue("expirationDate"));
 				if (vm.getValue("expirationTime") != null)
 					try {
-						str = str + " " + vm.getValue("expirationTime").toString();
+						calendarEvent.setExpirationDate(df.parse(str + " " + vm.getValue("expirationTime").toString()));
 					} catch (Throwable t) {
+						calendarEvent.setExpirationDate(df.parse(str + " "
+								+ dfTime.format((Date) vm.getValue("expirationTime"))));
 					}
-				calendarEvent.setExpirationDate(df.parse(str));
 			}
 
 			if (calendarEvent.getExpirationDate() != null
@@ -478,7 +568,7 @@ public class CalendarEventDialog extends Window {
 				calendarEvent.setCompletionDate((Date) vm.getValue("completionDate"));
 			else
 				calendarEvent.setCompletionDate(null);
-			
+
 			calendarEvent.setStatus(Integer.parseInt(vm.getValue("status").toString()));
 			if (calendarEvent.getCompletionDate() != null
 					&& calendarEvent.getCompletionDate().before(calendarEvent.getStartDate())) {
@@ -489,7 +579,7 @@ public class CalendarEventDialog extends Window {
 				calendarEvent.setDeadline((Date) vm.getValue("deadline"));
 			else
 				calendarEvent.setDeadline(null);
-			
+
 			service.saveEvent(Session.get().getSid(), calendarEvent, new AsyncCallback<Void>() {
 				@Override
 				public void onFailure(Throwable caught) {
@@ -503,5 +593,55 @@ public class CalendarEventDialog extends Window {
 				}
 			});
 		}
+	}
+
+	/**
+	 * Delete button handler
+	 */
+	private void onDelete() {
+		GUIUser currentUser = Session.get().getUser();
+		if (currentUser.getId() != calendarEvent.getCreatorId() && !currentUser.isMemberOf("admin")) {
+			return;
+		}
+
+		LD.ask(I18N.message("delevent"), I18N.message("deleventconfirm"), new BooleanCallback() {
+			@Override
+			public void execute(Boolean value) {
+				if (value.booleanValue()) {
+					if (calendarEvent.getParentId() != null) {
+						LD.ask(I18N.message("delevent"), I18N.message("douwantdeletealloccurrences"),
+								new BooleanCallback() {
+									@Override
+									public void execute(Boolean value) {
+										Long id = value ? calendarEvent.getParentId() : calendarEvent.getId();
+										service.deleteEvent(Session.get().getSid(), id, new AsyncCallback<Void>() {
+											@Override
+											public void onFailure(Throwable caught) {
+												Log.serverError(caught);
+											}
+
+											@Override
+											public void onSuccess(Void arg) {
+												destroy();
+											}
+										});
+									}
+								});
+					} else
+						service.deleteEvent(Session.get().getSid(), calendarEvent.getId(), new AsyncCallback<Void>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(Void arg) {
+								destroy();
+								CalendarDashboard.get().refresh();
+							}
+						});
+				}
+			}
+		});
 	}
 }

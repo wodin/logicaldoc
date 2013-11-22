@@ -166,4 +166,12 @@ public class I18N {
 			return null;
 		return dateFormat.format(new Date(date.getTime()));
 	}
+
+	public static DateTimeFormat getDateFormatShort() {
+		return dateFormatShort;
+	}
+
+	public static DateTimeFormat getDateFormat() {
+		return dateFormat;
+	}
 }
