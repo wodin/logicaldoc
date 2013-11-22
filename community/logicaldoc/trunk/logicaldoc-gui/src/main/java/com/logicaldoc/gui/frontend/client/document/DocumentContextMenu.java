@@ -90,6 +90,10 @@ public class DocumentContextMenu extends Menu {
 					document.setId(Long.parseLong(id));
 					document.setTitle(selection[i].getAttribute("title"));
 					document.setIcon(selection[i].getAttribute("icon"));
+					document.setLastModified(selection[i].getAttributeAsDate("lastModified"));
+					document.setVersion(selection[i].getAttribute("version"));
+					document.setFileVersion(selection[i].getAttribute("fileVersion"));
+					document.setFileName(selection[i].getAttribute("fileName"));
 					Clipboard.getInstance().add(document);
 					Clipboard.getInstance().setLastAction(Clipboard.CUT);
 				}
@@ -113,6 +117,10 @@ public class DocumentContextMenu extends Menu {
 					document.setId(Long.parseLong(id));
 					document.setTitle(selection[i].getAttribute("title"));
 					document.setIcon(selection[i].getAttribute("icon"));
+					document.setLastModified(selection[i].getAttributeAsDate("lastModified"));
+					document.setVersion(selection[i].getAttribute("version"));
+					document.setFileVersion(selection[i].getAttribute("fileVersion"));
+					document.setFileName(selection[i].getAttribute("fileName"));
 					Clipboard.getInstance().add(document);
 					Clipboard.getInstance().setLastAction(Clipboard.COPY);
 				}
