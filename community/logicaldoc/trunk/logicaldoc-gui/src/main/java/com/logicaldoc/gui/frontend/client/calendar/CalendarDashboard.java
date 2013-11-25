@@ -35,6 +35,8 @@ public class CalendarDashboard extends VLayout {
 
 	private static CalendarDashboard instance;
 
+	private Date choosenDate = null;
+
 	public static CalendarDashboard get() {
 		if (instance == null)
 			instance = new CalendarDashboard();
@@ -73,7 +75,10 @@ public class CalendarDashboard extends VLayout {
 		calendar.setCanEditLane(false);
 		calendar.setCanEditEvents(false);
 		calendar.setCanRemoveEvents(false);
-		calendar.setChosenDate(new Date());
+		if (choosenDate != null)
+			calendar.setChosenDate(choosenDate);
+		else
+			calendar.setChosenDate(new Date());
 
 		calendar.addEventClickHandler(new EventClickHandler() {
 
@@ -132,8 +137,10 @@ public class CalendarDashboard extends VLayout {
 	}
 
 	public void refresh() {
-		if (calendar != null)
+		if (calendar != null) {
 			removeMember(calendar);
+			choosenDate = calendar.getChosenDate();
+		}
 		initGUI();
 	}
 }

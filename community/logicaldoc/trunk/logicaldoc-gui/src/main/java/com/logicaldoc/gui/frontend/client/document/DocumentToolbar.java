@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.FolderObserver;
@@ -14,21 +13,16 @@ import com.logicaldoc.gui.common.client.beans.GUICalendarEvent;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
-import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.calendar.CalendarEventDialog;
 import com.logicaldoc.gui.frontend.client.folder.SubscriptionDialog;
-import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.AuditService;
 import com.logicaldoc.gui.frontend.client.services.AuditServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
-import com.logicaldoc.gui.frontend.client.workflow.WorkflowDashboard;
-import com.logicaldoc.gui.frontend.client.workflow.WorkflowDetailsDialog;
 import com.smartgwt.client.types.SelectionType;
 import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -67,8 +61,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	protected ToolStripButton archive = new ToolStripButton();
 
 	protected ToolStripButton startWorkflow = new ToolStripButton();
-
-	protected ToolStripButton addToWorkflow = new ToolStripButton();
 
 	protected ToolStripButton addCalendarEvent = new ToolStripButton();
 
@@ -242,56 +234,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 				WorkflowDialog workflowDialog = new WorkflowDialog(ids);
 				workflowDialog.show();
-			}
-		});
-
-		addToWorkflow.setIcon(ItemFactory.newImgIcon("cog_add.png").getSrc());
-		addToWorkflow.setTooltip(I18N.message("addtoworkflow"));
-		addToWorkflow.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
-				ListGridRecord[] selection = list.getSelectedRecords();
-				if (selection == null || selection.length == 0)
-					return;
-
-				final Long[] ids = new Long[selection.length];
-				for (int i = 0; i < selection.length; i++) {
-					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
-				}
-
-				workflowService.appendDocuments(Session.get().getSid(), Session.get().getCurrentWorkflow()
-						.getSelectedTask().getId(), ids, new AsyncCallback<Void>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(Void ret) {
-						MainPanel.get().selectWorkflowTab();
-						workflowService.getWorkflowDetailsByTask(Session.get().getSid(), Session.get()
-								.getCurrentWorkflow().getSelectedTask().getId(), new AsyncCallback<GUIWorkflow>() {
-
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(GUIWorkflow result) {
-								if (result != null) {
-									WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(
-											WorkflowDashboard.get(), result);
-									workflowDetailsDialog.getTabs().setSelectedTab(1);
-									workflowDetailsDialog.show();
-									Session.get().setCurrentWorkflow(null);
-								}
-							}
-						});
-					}
-				});
 			}
 		});
 
@@ -491,12 +433,9 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		if (Feature.visible(Feature.WORKFLOW)) {
 			addSeparator();
 			addButton(startWorkflow);
-			addButton(addToWorkflow);
 			if (!Feature.enabled(Feature.WORKFLOW)) {
 				startWorkflow.setDisabled(true);
 				startWorkflow.setTooltip(I18N.message("featuredisabled"));
-				addToWorkflow.setDisabled(true);
-				addToWorkflow.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
 
@@ -613,7 +552,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				subscribe.setDisabled(true);
 				archive.setDisabled(true);
 				startWorkflow.setDisabled(true);
-				addToWorkflow.setDisabled(true);
 				addCalendarEvent.setDisabled(true);
 				bulkUpdate.setDisabled(true);
 				bulkCheckout.setDisabled(true);
@@ -630,8 +568,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 						|| !Feature.enabled(Feature.ARCHIVES));
 				startWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)
 						|| !Feature.enabled(Feature.WORKFLOW));
-				addToWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)
-						|| !Feature.enabled(Feature.WORKFLOW) || Session.get().getCurrentWorkflow() == null);
 				addCalendarEvent.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_CALENDAR)
 						|| !Feature.enabled(Feature.CALENDAR));
 			} else {
@@ -640,7 +576,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				scan.setDisabled(true);
 				archive.setDisabled(true);
 				startWorkflow.setDisabled(true);
-				addToWorkflow.setDisabled(true);
 				bulkUpdate.setDisabled(true);
 				bulkCheckout.setDisabled(true);
 				dropSpot.setDisabled(true);

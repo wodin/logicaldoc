@@ -71,7 +71,6 @@ public class CalendarEventDialog extends Window {
 	private GUICalendarEvent calendarEvent;
 
 	private TabSet tabs = new TabSet();
-
 	private DynamicForm detailsForm = new DynamicForm();
 
 	private boolean readOnly = false;
