@@ -5,6 +5,7 @@ import java.util.Date;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUITransition;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.data.DocumentsDS;
@@ -14,8 +15,8 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
+import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
-import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.data.Record;
@@ -24,7 +25,6 @@ import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Canvas;
@@ -152,7 +152,7 @@ public class WorkflowDetailsDialog extends Window {
 		reload(wfl);
 	}
 
-	private void reload(GUIWorkflow wfl) {
+	private void reload(final GUIWorkflow wfl) {
 		this.workflow = wfl;
 
 		Canvas[] members = sxLayout.getMembers();
@@ -287,30 +287,55 @@ public class WorkflowDetailsDialog extends Window {
 
 		appendedDocs.setContextMenu(setupContextMenu());
 
-		Button appendDocsButton = new Button(I18N.message("appenddocuments"));
-		appendDocsButton.setAutoFit(true);
-		appendDocsButton.setVisible(workflow.getSelectedTask().getTaskState().equals("started"));
-		appendDocsButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+		Button addDocuments = new Button(I18N.message("adddocuments"));
+		addDocuments.setAutoFit(true);
+		addDocuments.setVisible(workflow.getSelectedTask().getTaskState().equals("started"));
+		addDocuments.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				destroy();
-				SC.confirm(I18N.message("confirmation"), I18N.message("addtoworkflowinfo"), new BooleanCallback() {
-					@Override
-					public void execute(Boolean value) {
-						if (value) {
-							Session.get().setCurrentWorkflow(workflow);
-							MainPanel.get().selectDocumentsTab();
-							DocumentsPanel.get().refresh();
-							Log.info(I18N.message("addtoworkflowinfo"), null);
-						}
-					}
-				});
+				Clipboard clipboard = Clipboard.getInstance();
+				if (clipboard.isEmpty()) {
+					SC.warn(I18N.message("nodocsinclipboard"));
+					return;
+				}
+
+				Long[] ids = new Long[clipboard.size()];
+				int i = 0;
+				for (GUIDocument doc : clipboard)
+					ids[i++] = doc.getId();
+
+				service.appendDocuments(Session.get().getSid(), workflow.getSelectedTask().getId(), ids,
+						new AsyncCallback<Void>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(Void ret) {
+								service.getWorkflowDetailsByTask(Session.get().getSid(), workflow.getSelectedTask().getId(),
+										new AsyncCallback<GUIWorkflow>() {
+
+											@Override
+											public void onFailure(Throwable caught) {
+												Log.serverError(caught);
+											}
+
+											@Override
+											public void onSuccess(GUIWorkflow result) {
+												appendedDocs.setDataSource(new DocumentsDS(result.getAppendedDocIds()));
+											}
+										});
+							}
+						});
+
 			}
 		});
 
 		appendedDocsPanel.addMember(appendedDocs);
 		if (workflow.getSelectedTask().getEndDate() == null) {
-			appendedDocsPanel.addMember(appendDocsButton);
+			appendedDocsPanel.addMember(addDocuments);
 		}
 
 		Button reassignButton = new Button(I18N.message("workflowtaskreassign"));

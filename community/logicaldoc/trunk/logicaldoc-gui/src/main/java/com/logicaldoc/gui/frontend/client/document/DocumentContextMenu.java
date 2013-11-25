@@ -11,22 +11,18 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIExternalCall;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
-import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
-import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
 import com.logicaldoc.gui.frontend.client.services.SearchServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
-import com.logicaldoc.gui.frontend.client.workflow.WorkflowDashboard;
-import com.logicaldoc.gui.frontend.client.workflow.WorkflowDetailsDialog;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
@@ -519,55 +515,6 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
-		MenuItem addToWorkflow = new MenuItem(I18N.message("addtoworkflow"));
-		addToWorkflow.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
-				ListGridRecord[] selection = list.getSelectedRecords();
-				if (selection == null || selection.length == 0)
-					return;
-
-				final Long[] ids = new Long[selection.length];
-				for (int j = 0; j < selection.length; j++) {
-					ids[j] = Long.parseLong(selection[j].getAttribute("id"));
-				}
-
-				workflowService.appendDocuments(Session.get().getSid(), Session.get().getCurrentWorkflow()
-						.getSelectedTask().getId(), ids, new AsyncCallback<Void>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(Void ret) {
-						MainPanel.get().selectWorkflowTab();
-						workflowService.getWorkflowDetailsByTask(Session.get().getSid(), Session.get()
-								.getCurrentWorkflow().getSelectedTask().getId(), new AsyncCallback<GUIWorkflow>() {
-
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(GUIWorkflow result) {
-								if (result != null) {
-									WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(
-											WorkflowDashboard.get(), result);
-									workflowDetailsDialog.getTabs().setSelectedTab(1);
-									workflowDetailsDialog.show();
-									Session.get().setCurrentWorkflow(null);
-								}
-							}
-						});
-					}
-				});
-			}
-		});
-
 		MenuItem preview = new MenuItem();
 		preview.setTitle(I18N.message("preview"));
 		preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
@@ -694,12 +641,11 @@ public class DocumentContextMenu extends Menu {
 			cut.setEnabled(false);
 			enableSign = false;
 		}
-		
-		if(!folder.isWrite()){
+
+		if (!folder.isWrite()) {
 			checkin.setEnabled(false);
 			checkout.setEnabled(false);
 		}
-		
 
 		final GUIExternalCall extCall = Session.get().getSession().getExternalCall();
 		if (Feature.enabled(Feature.EXTERNAL_CALL) && extCall != null) {
@@ -739,18 +685,15 @@ public class DocumentContextMenu extends Menu {
 			if (!folder.hasPermission(Constants.PERMISSION_ARCHIVE) || !Feature.enabled(Feature.ARCHIVES))
 				archive.setEnabled(false);
 			else
-				archive.setEnabled(enableSign);
+				archive.setEnabled(true);
 		}
 
 		if (Feature.visible(Feature.WORKFLOW)) {
 			moreMenu.addItem(startWorkflow);
-			moreMenu.addItem(addToWorkflow);
 			if (!folder.hasPermission(Constants.PERMISSION_WORKFLOW) || !Feature.enabled(Feature.WORKFLOW)) {
 				startWorkflow.setEnabled(false);
-				addToWorkflow.setEnabled(false);
 			} else {
-				startWorkflow.setEnabled(enableSign);
-				addToWorkflow.setEnabled(enableSign && Session.get().getCurrentWorkflow() != null);
+				startWorkflow.setEnabled(true);
 			}
 		}
 
