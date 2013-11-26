@@ -5,6 +5,11 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Enumeration;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -39,8 +44,40 @@ public class ApplicationInitializer implements ServletContextListener, HttpSessi
 	/**
 	 * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
 	 */
+	@SuppressWarnings("deprecation")
 	public void contextDestroyed(ServletContextEvent sce) {
 		Log4jConfigurer.shutdownLogging();
+		System.out.println("Logging shutdown");
+
+		try {
+			ContextProperties config = new ContextProperties();
+			Enumeration<Driver> drivers = DriverManager.getDrivers();
+			Driver d = null;
+			while (drivers.hasMoreElements()) {
+				d = drivers.nextElement();
+				if (d.getClass().getName().equals(config.getProperty("jdbc.driver"))) {
+					try {
+						DriverManager.deregisterDriver(d);
+						log.warn(String.format("Driver %s deregistered", d));
+					} catch (SQLException ex) {
+						log.warn(String.format("Error deregistering driver %s", d), ex);
+					}
+					break;
+				}
+			}
+		} catch (IOException e) {
+			log.warn(e.getMessage(), e);
+		}
+
+		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+		Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
+		for (Thread t : threadArray) {
+			if (!t.equals(Thread.currentThread()))
+				synchronized (t) {
+					t.stop(); // don't complain, it works
+				}
+		}
+
 	}
 
 	/**
