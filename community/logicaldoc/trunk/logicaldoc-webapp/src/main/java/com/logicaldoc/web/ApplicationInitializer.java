@@ -47,8 +47,7 @@ public class ApplicationInitializer implements ServletContextListener, HttpSessi
 	@SuppressWarnings("deprecation")
 	public void contextDestroyed(ServletContextEvent sce) {
 		Log4jConfigurer.shutdownLogging();
-		System.out.println("Logging shutdown");
-
+	
 		try {
 			ContextProperties config = new ContextProperties();
 			Enumeration<Driver> drivers = DriverManager.getDrivers();
