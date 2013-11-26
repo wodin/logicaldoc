@@ -113,6 +113,7 @@
 	<!-- Scheduler -->
 	<bean id="Scheduler"
 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="waitForJobsToCompleteOnShutdown" value="true" />  
 		<property name="triggers">
 			<list>
 				<ref bean="GarbageCollectorTrigger" />
