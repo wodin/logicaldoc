@@ -164,12 +164,12 @@ public class FulltextSearch extends Search {
 		if (opt.getCreationTo() != null) {
 			filters.add(Fields.CREATION + ":[* TO " + df.format(opt.getCreationTo()) + "T00:00:00Z]");
 		}
-
+		
 		/*
 		 * Launch the search
 		 */
 		log.debug("Full-text seach: " + query);
-		Hits results = engine.search(query.toString(), null, opt.getExpressionLanguage(),
+		Hits results = engine.search(query.toString(), filters.toArray(new String[0]), opt.getExpressionLanguage(),
 				null);
 		log.debug("End of Full-text search");
 		
