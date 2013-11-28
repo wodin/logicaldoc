@@ -33,9 +33,9 @@ public interface SystemServiceAsync {
 
 	void deleteFeedMessages(String sid, long[] ids, AsyncCallback<Void> callback);
 
-	void maskFeedMsgAsNotRead(String sid, long[] ids, AsyncCallback<Void> callback);
+	void markFeedMsgAsNotRead(String sid, long[] ids, AsyncCallback<Void> callback);
 
-	void maskFeedMsgAsRead(String sid, long[] ids, AsyncCallback<Void> callback);
+	void markFeedMsgAsRead(String sid, long[] ids, AsyncCallback<Void> callback);
 
 	void getPlugins(String sid, AsyncCallback<GUIValuePair[]> callback);
 }

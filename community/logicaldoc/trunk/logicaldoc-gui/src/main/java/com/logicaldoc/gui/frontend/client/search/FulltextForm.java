@@ -196,14 +196,14 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 		options.setType(GUISearchOptions.TYPE_FULLTEXT);
 		options.setExpression(vm.getValueAsString("expression"));
-		if (NO_LANGUAGE.equals(vm.getValueAsString("language"))) {
+		if (NO_LANGUAGE.equals(vm.getValueAsString("language")) || vm.getValue("language") == null) {
 			options.setLanguage(null);
 			options.setExpressionLanguage(I18N.getLocale());
 		} else {
 			options.setLanguage(vm.getValueAsString("language"));
 			options.setExpressionLanguage(options.getLanguage());
 		}
-
+				
 		Long size = vm.getValueAsString("size") != null ? new Long(vm.getValueAsString("size")) : null;
 		if (size != null && !NOLIMIT.equals(vm.getValueAsString("sizeOperator"))) {
 			if (LESSTHAN.equals(vm.getValueAsString("sizeOperator")))
@@ -279,6 +279,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		} else
 			options.setFilterIds(null);
 
+		options.setType(0);
 		Search.get().setOptions(options);
 		Search.get().search();
 	}

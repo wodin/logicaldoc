@@ -37,6 +37,8 @@ public class ProductNews extends Task {
 	private long saved = 0;
 
 	private long errors = 0;
+	
+	private long size = 0;
 
 	public ProductNews() {
 		super(NAME);
@@ -56,9 +58,7 @@ public class ProductNews extends Task {
 	@Override
 	protected void runTask() throws Exception {
 		log.info("Start retrieving news");
-		errors = 0;
-		saved = 0;
-		size = 0;
+
 		try {
 
 			// Clean the DB from feed messages older that 1 year.
@@ -68,42 +68,55 @@ public class ProductNews extends Task {
 			String url = config.getProperty("news.url");
 			if (StringUtils.isEmpty(url))
 				url = "http://www.logicaldoc.com/news/rss.html";
-			else if ("-".equals(url))
-				return;
-
-			FeedParser parser = new FeedParser(url);
-			Feed feed = parser.readFeed();
-			// First of all feed messages to be saved
-			size = feed.getMessages().size();
-
-			log.info("Found a total of " + size + " feed messages to be saved");
-
-			for (FeedMessage message : feed.getMessages()) {
-				try {
-					log.debug("Parsing message " + message.getTitle());
-					if (feedMessageDao.findByGuid(message.getGuid()) == null) {
-						// The parsing message is not already saved into the
-						// database, so we save it.
-						feedMessageDao.store(message);
-						saved++;
-					}
-					log.debug("Parsed message " + message.getTitle());
-				} catch (Throwable e) {
-					log.error(e.getMessage(), e);
-					errors++;
-				} finally {
-					next();
-				}
-				if (interruptRequested)
-					return;
+			if (!"-".equals(url)) {
+				parseFeed(url);
 			}
-			if (saved > 0) {
-				createMessages();
+			
+			if (interruptRequested)
+				return;
+			
+			url = config.getProperty("news.version.url");
+			if (StringUtils.isEmpty(url))
+				url = "http://www.logicaldoc.com/version/rss.html";
+			if (!"-".equals(url)) {
+				parseFeed(url);
 			}
 		} finally {
 			log.info("Retrieving news finished");
 			log.info("Retrieved news: " + saved);
 			log.info("Errors: " + errors);
+		}
+	}
+
+	private void parseFeed(String url) {
+		FeedParser parser = new FeedParser(url);
+		Feed feed = parser.readFeed();
+		// First of all feed messages to be saved
+		size = feed.getMessages().size();
+
+		log.info("Found a total of " + size + " feed messages to be saved");
+
+		for (FeedMessage message : feed.getMessages()) {
+			try {
+				log.debug("Parsing message " + message.getTitle());
+				if (feedMessageDao.findByGuid(message.getGuid()) == null) {
+					// The parsing message is not already saved into the
+					// database, so we save it.
+					feedMessageDao.store(message);
+					saved++;
+				}
+				log.debug("Parsed message " + message.getTitle());
+			} catch (Throwable e) {
+				log.error(e.getMessage(), e);
+				errors++;
+			} finally {
+				next();
+			}
+			if (interruptRequested)
+				return;
+		}
+		if (saved > 0) {
+			createMessages();
 		}
 	}
 
@@ -136,7 +149,7 @@ public class ProductNews extends Task {
 					recipient.setType(Recipient.TYPE_SYSTEM);
 					recipient.setMode(Recipient.MODE_EMAIL_TO);
 					recipient.setRead(1);
-					
+
 					// Add the recipient to the recipients list according to the
 					// user Locale
 					if (recipientsLocalesMap.containsKey(user.getLocale())) {

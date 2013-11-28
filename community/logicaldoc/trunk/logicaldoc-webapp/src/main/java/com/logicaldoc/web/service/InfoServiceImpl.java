@@ -17,6 +17,8 @@ import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.core.communication.SystemMessageDAO;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
+import com.logicaldoc.core.rss.FeedMessage;
+import com.logicaldoc.core.rss.dao.FeedMessageDAO;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.SystemQuota;
 import com.logicaldoc.core.security.UserSession;
@@ -29,6 +31,7 @@ import com.logicaldoc.gui.common.client.services.InfoService;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
+import com.logicaldoc.util.SoftwareVersion;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.web.ApplicationInitializer;
 
@@ -140,6 +143,13 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 				}
 			}
 
+			String newVersion = detectNewVersion();
+			if (newVersion != null) {
+				GUIMessage m = new GUIMessage();
+				m.setMessage(I18N.message("newversionaval", withLocale, newVersion));
+				messages.add(m);
+			}
+
 			info.setMessages(messages.toArray(new GUIMessage[0]));
 
 			return info;
@@ -147,6 +157,23 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
 		}
+	}
+
+	public String detectNewVersion() {
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		SoftwareVersion actualVersion = new SoftwareVersion(config.getProperty("product.release"));
+
+		FeedMessageDAO feedMessageDao = (FeedMessageDAO) Context.getInstance().getBean(FeedMessageDAO.class);
+		List<FeedMessage> messages = feedMessageDao.findByTitle("LogicalDOC v%");
+		for (FeedMessage message : messages) {
+			if (message.getDeleted() == 0 && message.getRead() == 0) {
+				SoftwareVersion otherVersion = new SoftwareVersion(message.getTitle()
+						.substring("LogicalDOC v".length()));
+				if (otherVersion.compareTo(actualVersion) > 0)
+					return otherVersion.get();
+			}
+		}
+		return null;
 	}
 
 	/**

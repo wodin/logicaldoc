@@ -72,7 +72,7 @@ public class ProductNewsPanel extends VLayout {
 					ids[i] = Long.parseLong(records[i].getAttribute("id"));
 				}
 
-				service.maskFeedMsgAsRead(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+				service.markFeedMsgAsRead(Session.get().getSid(), ids, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -102,7 +102,7 @@ public class ProductNewsPanel extends VLayout {
 					ids[i] = Long.parseLong(records[i].getAttribute("id"));
 				}
 
-				service.maskFeedMsgAsNotRead(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+				service.markFeedMsgAsNotRead(Session.get().getSid(), ids, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -219,7 +219,7 @@ public class ProductNewsPanel extends VLayout {
 		maskAsRead.setTitle(I18N.message("maskasread"));
 		maskAsRead.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.maskFeedMsgAsRead(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+				service.markFeedMsgAsRead(Session.get().getSid(), ids, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -240,7 +240,7 @@ public class ProductNewsPanel extends VLayout {
 		maskAsNotRead.setTitle(I18N.message("maskasnotread"));
 		maskAsNotRead.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.maskFeedMsgAsNotRead(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+				service.markFeedMsgAsNotRead(Session.get().getSid(), ids, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
