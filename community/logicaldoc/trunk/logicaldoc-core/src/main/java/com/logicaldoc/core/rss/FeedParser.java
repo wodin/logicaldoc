@@ -49,7 +49,7 @@ public class FeedParser {
 			if (feedUrl != null && StringUtils.isNotEmpty(feedUrl))
 				this.url = new URL(feedUrl);
 			else
-				this.url = new URL("http://www.logicaldoc.com/company/news.feed?type=rss");
+				this.url = new URL("http://www.logicaldoc.com/news/rss.html");
 		} catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		}

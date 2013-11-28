@@ -665,7 +665,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public void maskFeedMsgAsRead(String sid, long[] ids) throws InvalidSessionException {
+	public void markFeedMsgAsRead(String sid, long[] ids) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 		try {
 			Context context = Context.getInstance();
@@ -683,7 +683,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public void maskFeedMsgAsNotRead(String sid, long[] ids) throws InvalidSessionException {
+	public void markFeedMsgAsNotRead(String sid, long[] ids) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 		try {
 			Context context = Context.getInstance();
@@ -696,7 +696,6 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			}
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
 		}
 	}
 
@@ -712,7 +711,6 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			}
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
 		}
 	}
 

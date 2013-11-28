@@ -55,6 +55,15 @@ public class HibernateFeedMessageDAOTest extends AbstractCoreTCase {
 	}
 
 	@Test
+	public void testFindByTitle() {
+		List<FeedMessage> messages = dao.findByTitle("eed");
+		Assert.assertEquals(0, messages.size());
+
+		messages = dao.findByTitle("%eed%");
+		Assert.assertEquals(3, messages.size());
+	}
+	
+	@Test
 	public void testCheckNotRead() {
 		Assert.assertTrue(dao.checkNotRead());
 		Assert.assertTrue(dao.delete(3));

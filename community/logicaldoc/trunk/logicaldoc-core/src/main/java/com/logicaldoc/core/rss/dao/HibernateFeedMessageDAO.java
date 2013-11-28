@@ -64,4 +64,10 @@ public class HibernateFeedMessageDAO extends HibernatePersistentObjectDAO<FeedMe
 			log.error(e.getMessage(), e);
 		}
 	}
+
+	@Override
+	public List<FeedMessage> findByTitle(String title) {
+		List<FeedMessage> coll = findByWhere("_entity.title like '" + SqlUtil.doubleQuotes(title) + "'", null, null);
+		return coll;
+	}
 }

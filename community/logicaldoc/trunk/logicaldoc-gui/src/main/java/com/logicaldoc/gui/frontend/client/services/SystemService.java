@@ -119,12 +119,12 @@ public interface SystemService extends RemoteService {
 	/**
 	 * Marks as read a list of Feed Messages
 	 */
-	public void maskFeedMsgAsRead(String sid, long[] ids) throws InvalidSessionException;
+	public void markFeedMsgAsRead(String sid, long[] ids) throws InvalidSessionException;
 
 	/**
 	 * Marks as not read a list of Feed Messages
 	 */
-	public void maskFeedMsgAsNotRead(String sid, long[] ids) throws InvalidSessionException;
+	public void markFeedMsgAsNotRead(String sid, long[] ids) throws InvalidSessionException;
 
 	/**
 	 * Deletes a list of Feed Messages
