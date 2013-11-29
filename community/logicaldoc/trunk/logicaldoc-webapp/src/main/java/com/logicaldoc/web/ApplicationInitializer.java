@@ -47,7 +47,7 @@ public class ApplicationInitializer implements ServletContextListener, HttpSessi
 	@SuppressWarnings("deprecation")
 	public void contextDestroyed(ServletContextEvent sce) {
 		Log4jConfigurer.shutdownLogging();
-	
+
 		try {
 			ContextProperties config = new ContextProperties();
 			Enumeration<Driver> drivers = DriverManager.getDrivers();
@@ -70,11 +70,17 @@ public class ApplicationInitializer implements ServletContextListener, HttpSessi
 
 		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
 		Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
+
 		for (Thread t : threadArray) {
-			if (!t.equals(Thread.currentThread()))
-				synchronized (t) {
-					t.stop(); // don't complain, it works
-				}
+			synchronized (t) {
+				if (t.getName().startsWith("Scheduler_") || t.getName().startsWith("Abandoned connection cleanup")
+						|| t.getName().contains("webdav") || t.getName().startsWith("Thread-"))
+					try {
+						t.stop(); // don't complain, it works
+					} catch (Throwable e) {
+
+					}
+			}
 		}
 
 	}

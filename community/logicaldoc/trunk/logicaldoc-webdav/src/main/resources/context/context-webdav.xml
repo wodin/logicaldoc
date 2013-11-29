@@ -29,7 +29,7 @@
 		<property name="IOManager" ref="IOManager" />
 	</bean>
 
-	<bean id="DavCacheManager" class="net.sf.ehcache.CacheManager">
+	<bean id="DavCacheManager" class="net.sf.ehcache.CacheManager" destroy-method="shutdown">
 		<constructor-arg index="0" type="java.net.URL"
 			value="classpath:dav-ehcache.xml" />
 	</bean>
