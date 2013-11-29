@@ -10,6 +10,11 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC 6.8.1 (2013-12-02; logicaldoc-6.8.1)
+================                                                     
+371 - Tag flow widget to define document's tags - Improvement - User Interface
+373 - Tomcat Application fails to stop - Bug - Core
+
 LogicalDOC 6.8 (2013-11-01; logicaldoc-6.8)
 ================
 319 - Email contacts address book - New Feature - Core
