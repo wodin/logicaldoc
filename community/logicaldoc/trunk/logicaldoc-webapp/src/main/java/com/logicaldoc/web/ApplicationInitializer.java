@@ -73,8 +73,8 @@ public class ApplicationInitializer implements ServletContextListener, HttpSessi
 
 		for (Thread t : threadArray) {
 			synchronized (t) {
-				if (t.getName().startsWith("Scheduler_") || t.getName().startsWith("Abandoned connection cleanup")
-						|| t.getName().contains("webdav") || t.getName().startsWith("Thread-"))
+				if ((t.getName().startsWith("Scheduler_") || t.getName().startsWith("Abandoned connection cleanup") || t
+						.getName().contains("webdav")) && !Thread.currentThread().equals(t))
 					try {
 						t.stop(); // don't complain, it works
 					} catch (Throwable e) {
