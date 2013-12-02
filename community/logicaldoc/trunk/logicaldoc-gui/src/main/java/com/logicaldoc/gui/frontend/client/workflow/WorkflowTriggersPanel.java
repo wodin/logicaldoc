@@ -97,7 +97,7 @@ public class WorkflowTriggersPanel extends VLayout {
 				final Window window = new Window();
 				window.setTitle(I18N.message("workflowtriggertext"));
 				window.setWidth(380);
-				window.setHeight(290);
+				window.setHeight(160);
 				window.setCanDragResize(true);
 				window.setIsModal(true);
 				window.setShowModalMask(true);
@@ -129,8 +129,7 @@ public class WorkflowTriggersPanel extends VLayout {
 				templates.setWrapTitle(false);
 				templates.setColSpan(2);
 				templates.setEndRow(true);
-				templates.setWidth(250);
-				templates.setHeight(150);
+				templates.setWidth(200);
 				templates.setMultipleAppearance(MultipleAppearance.GRID);
 				templateForm.setItems(templates);
 
