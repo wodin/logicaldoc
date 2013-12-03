@@ -185,7 +185,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 
 		try {
 			for (Language lang : LanguageManager.getInstance().getActiveLanguages()) {
-				langs.add(lang.getLanguage());
+				langs.add(lang.getLocale().toString());
 			}
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
