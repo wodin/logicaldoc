@@ -92,6 +92,8 @@ public class CalendarReport extends VLayout {
 
 		TextItem type = ItemFactory.newTextItem("type", "type", null);
 
+		TextItem subtype = ItemFactory.newTextItem("subtype", "subtype", null);
+
 		SelectItem statusSelector = ItemFactory.newEventStatusSelector("status", "status");
 
 		// Max results
@@ -113,7 +115,7 @@ public class CalendarReport extends VLayout {
 			}
 		});
 
-		form.setItems(fromDate, toDate, deadLineFrom, deadLineTo, title, type, frequencySelector, statusSelector,
+		form.setItems(fromDate, toDate, deadLineFrom, deadLineTo, title, statusSelector, type, subtype, frequencySelector,
 				displayMax, searchButton);
 
 		formsLayout.addMember(form);
@@ -133,6 +135,10 @@ public class CalendarReport extends VLayout {
 		ListGridField typeCol = new ListGridField("type", I18N.message("type"));
 		typeCol.setWidth(100);
 		typeCol.setCanFilter(true);
+
+		ListGridField subtypeCol = new ListGridField("subtype", I18N.message("subtype"));
+		subtypeCol.setWidth(100);
+		subtypeCol.setCanFilter(true);
 
 		ListGridField date = new ListGridField("date", I18N.message("date"), 110);
 		date.setType(ListGridFieldType.DATE);
@@ -213,7 +219,7 @@ public class CalendarReport extends VLayout {
 		list.setCanFreezeFields(true);
 		list.setFilterOnKeypress(true);
 		list.setAutoFetchData(true);
-		list.setFields(date, endDate, titleCol, typeCol, status, frequency, participants, description);
+		list.setFields(date, endDate, titleCol, typeCol, subtypeCol, status, frequency, participants, description);
 		list.setDetailField("description");
 		list.setCanExpandRecords(true);
 		list.setExpansionMode(ExpansionMode.DETAIL_FIELD);
@@ -300,6 +306,8 @@ public class CalendarReport extends VLayout {
 
 			String typeValue = values.get("type") != null ? values.get("type").toString() : null;
 
+			String subtypeValue = values.get("subtype") != null ? values.get("subtype").toString() : null;
+
 			int maxRecords = 0;
 			try {
 				if (values.get("displayMax") != null) {
@@ -312,8 +320,9 @@ public class CalendarReport extends VLayout {
 
 			}
 
-			service.find(Session.get().getSid(), fromValue, toValue, endDateFrom, endDateTo, frequencyValue, titleValue,
-					typeValue, statusValue, maxRecords, new AsyncCallback<GUICalendarEvent[]>() {
+			service.find(Session.get().getSid(), fromValue, toValue, endDateFrom, endDateTo, frequencyValue,
+					titleValue, typeValue, subtypeValue, statusValue, maxRecords,
+					new AsyncCallback<GUICalendarEvent[]>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
@@ -329,6 +338,7 @@ public class CalendarReport extends VLayout {
 									record.setAttribute("date", result[i].getStartDate());
 									record.setAttribute("title", result[i].getTitle());
 									record.setAttribute("type", result[i].getType());
+									record.setAttribute("subtype", result[i].getSubType());
 									record.setAttribute("frequency", result[i].getFrequency());
 									record.setAttribute("status", result[i].getStatus());
 									record.setAttribute("description", result[i].getDescription());
