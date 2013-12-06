@@ -15,6 +15,7 @@ import com.logicaldoc.gui.frontend.client.services.CalendarService;
 import com.logicaldoc.gui.frontend.client.services.CalendarServiceAsync;
 import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.TimeDisplayFormat;
+import com.smartgwt.client.types.ViewName;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.calendar.Calendar;
 import com.smartgwt.client.widgets.calendar.events.CalendarEventClick;
@@ -36,6 +37,8 @@ public class CalendarDashboard extends VLayout {
 	private static CalendarDashboard instance;
 
 	private Date choosenDate = null;
+
+	private ViewName choosenView = null;
 
 	public static CalendarDashboard get() {
 		if (instance == null)
@@ -79,6 +82,8 @@ public class CalendarDashboard extends VLayout {
 			calendar.setChosenDate(choosenDate);
 		else
 			calendar.setChosenDate(new Date());
+		if (choosenView != null)
+			calendar.setCurrentViewName(choosenView);
 
 		calendar.addEventClickHandler(new EventClickHandler() {
 
@@ -140,6 +145,7 @@ public class CalendarDashboard extends VLayout {
 		if (calendar != null) {
 			removeMember(calendar);
 			choosenDate = calendar.getChosenDate();
+			choosenView = calendar.getCurrentViewName();
 		}
 		initGUI();
 	}
