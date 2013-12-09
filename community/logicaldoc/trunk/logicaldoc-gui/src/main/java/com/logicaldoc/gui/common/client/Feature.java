@@ -133,6 +133,8 @@ public class Feature {
 	
 	public static final int CONNECTOR = 75;
 	
+	public static final int BACKUP = 76;
+	
 	private static Set<String> features = new HashSet<String>();
 
 	static public void init(GUIInfo info) {
