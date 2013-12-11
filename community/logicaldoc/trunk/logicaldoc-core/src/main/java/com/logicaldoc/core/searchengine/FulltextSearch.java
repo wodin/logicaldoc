@@ -267,12 +267,14 @@ public class FulltextSearch extends Search {
 		richQuery.append(hitsIdsStr);
 
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		dao.query(richQuery.toString(), null, new HitMapper(hitsMap), options.getMaxHits());
+		dao.query(richQuery.toString(), null, new HitMapper(hitsMap), null);
 
 		// Populate the hits list discarding unexisting documents
 		Iterator<Hit> iter = hitsMap.values().iterator();
+		
 		while (iter.hasNext()) {
 			if (options.getMaxHits() > 0 && hits.size() >= options.getMaxHits()){
+				
 				// The maximum number of hits was reached
 				moreHitsPresent = true;
 				break;
