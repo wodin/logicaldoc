@@ -125,12 +125,12 @@ public class SystemLoadMonitor {
 
 					int cpuLoadMax = config.getInt("system.cpuload.max", 50);
 					if (averageOld[0] <= cpuLoadMax && averageCpuLoad[0] > cpuLoadMax) {
-						log.warn("The system is oveloaded (" + averageCpuLoad[0] + "%)");
+						log.warn("The system is overloaded (" + averageCpuLoad[0] + "%)");
 						for (SystemLoadListener listener : listeners) {
 							listener.onOverload(averageCpuLoad[0], averageCpuLoad[1]);
 						}
 					} else if (averageOld[0] > cpuLoadMax && averageCpuLoad[0] <= cpuLoadMax) {
-						log.warn("The system is undeloaded (" + averageCpuLoad[0] + "%)");
+						log.warn("The system is underloaded (" + averageCpuLoad[0] + "%)");
 						for (SystemLoadListener listener : listeners) {
 							listener.onUnderload(averageCpuLoad[0], averageCpuLoad[1]);
 						}
