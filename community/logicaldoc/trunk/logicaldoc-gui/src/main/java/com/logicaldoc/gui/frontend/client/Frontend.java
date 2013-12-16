@@ -201,6 +201,7 @@ public class Frontend implements EntryPoint {
 	// Switch to the login panel
 	public void showLogin() {
 		mainPanel.hide();
+		loginPanel.initGUI();
 		loginPanel.show();
 		entered = false;
 	}

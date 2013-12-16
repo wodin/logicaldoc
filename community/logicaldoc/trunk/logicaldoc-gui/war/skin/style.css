@@ -169,191 +169,228 @@
 }
 
 
-/* Login styles */
-.loginTop {
-    background-color:white;
+
+/* LOGIN STYLES */
+.login-body {
+	background-image: url(./images/poza5.png);
+	background-repeat: no-repeat;
+	background-position: center top;
+	background-color: #004d95;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
-.loginSep {
-    background-color:#a9b3ba;
-}
-
-.loginMain {
-     background-color:#1b7ec3;
-}
-
-.loginProductInfo {
+.login-product-info {
 	font-family: Arial, Bitstream Vera Sans, sans-serif;
-	font-size: 13px;
-	color: white;
-  margin-left: 10px;
+	font-size: 15px;
+	color: white; 
+  margin-left: 34px;
 }
 
-.loginProductInfo a, .loginProductInfo a:link {
+.login-product-info a, .login-product-info a:link {
   text-decoration: none;
   color: white;
 }
 
-.loginButton, .loginButtonOver, .loginButtonFocused, .loginButtonFocusedOver, .loginButtonDown, .loginButtonFocusedDown, .loginButtonSelected, .loginButtonSelectedFocused, .loginButtonSelectedDown, .loginButtonSelectedFocusedDown, .loginButtonSelectedOver, .loginButtonSelectedFocusedOver, .loginButtonDisabled, .loginButtonSelectedDisabled
-{
-  background-color: #ff8824;
-  background-repeat: repeat-x;
-  background-size: 100% auto;
-  border-top-width: 1px;
-  border-right-width-value: 1px;
-  border-bottom-width: 1px;
-  border-left-width-value: 1px;
-  border-top-style: solid;
-  border-right-style-value: solid;
-  border-bottom-style: solid;
-  border-left-style-value: solid;
-  border-top-color: #fc8827;
-  border-right-color-value: #fc8827;
-  border-bottom-color: #fc8827;
-  border-left-color-value: #fc8827;
-  border-image-source: none;
-  border-image-slice: 100% 100% 100% 100%;
-  border-image-width: 1 1 1 1;
-  border-image-outset: 0 0 0 0;
-  border-image-repeat: stretch stretch;
-  color:white;
+.login-label {
+	color: #3f4e63;
+	font-size: 24px;
+	font-weight: bold;
+	margin-bottom: 0px;
+}
+
+.login-input, .login-inputHint, .login-inputFocused {
+  height: 34px;
+	border: 1px solid #fe9e3b;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	margin-top: 12px;
+	font-size: 18px;
+  color: #756e68;
+}
+
+.login-lang, .login-langFocused, .login-langHint {
+  /*width: 283px;*/
+	height: 36px;
+	font-size: 15px;
+	font-weight: bold;
+	color: #fff;
+	background: url(./images/drop.png) no-repeat;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px 3px;
+  margin-top: 18px;
+}
+
+.login-lang-text, .login-lang-textFocused, .login-lang-textHint {
+  height: 36px;
+	font-size: 15px;
+	font-weight: bold;
+	color: #fff;
+	margin-left: 12px;
+  margin-top: 8px;
+}
+
+td.login-lang-picker > span > img.comboBoxItemPicker, td.login-lang-pickerFocused > span > img.comboBoxItemPicker  {
+  background: url(./images/langpick.png) no-repeat;
+}
+
+td.login-lang-picker > span > img.comboBoxItemPickerOver, td.login-lang-pickerFocused > span > img.comboBoxItemPickerOver   {
+  background: url(./images/langpick_h.png) no-repeat;
+}
+
+.login-signin, .login-signinOver, .login-signinDown{
+ 	width: 283px;
+	height: 43px;
+	background: url(./images/button.png) no-repeat;
+	border: none;
+	margin-top: 35px;
+	font-size: 22px;
+	color: #ffffff;
+}
+
+#login-signin-reflection {
+  opacity: 0.1;
+	position: absolute;
+	background: transparent;
+	top: 68px;
+  text-decoration: none;
+  text-align: center; 
+  margin-left: auto ;
+  margin-right: auto ;
+  width: 283px;
+	font-size: 24px;
   font-family: Arial,Verdana,sans-serif;
-  font-weight: bold;
-  font-size: 15px;
-  padding-top: 10px;
-  padding-right: 6px;
-  padding-bottom: 10px;
-  padding-left: 6px;
+	color: white;  
+  -webkit-transform: scaleY(-1);
+  -moz-transform: scaleY(-1);   
+  -o-transform: scaleY(-1);
+  -ms-transform: scaleY(-1);
+  transform: scaleY(-1);  
 }
 
-
-.loginButtonOver, .loginButtonFocusedOver, .loginButtonSelectedFocused, .loginButtonSelectedFocusedOver
-{
-  background-color: #fea458;
-  background-repeat: repeat-x;
-  background-size: 100% auto;
-  border-top-width: 1px;
-  border-right-width-value: 1px;
-  border-bottom-width: 1px;
-  border-left-width-value: 1px;
-  border-top-style: solid;
-  border-right-style-value: solid;
-  border-bottom-style: solid;
-  border-left-style-value: solid;
-  border-top-color: #fea458;
-  border-right-color-value: #fea458;
-  border-bottom-color: #fea458;
-  border-left-color-value: #fea458;
-  border-image-source: none;
-  border-image-slice: 100% 100% 100% 100%;
-  border-image-width: 1 1 1 1;
-  border-image-outset: 0 0 0 0;
-  border-image-repeat: stretch stretch;
+.login-remember, .login-remember > img{
+	border: none;
+	font-size: 12px;
+	color: #3f4e63;
+  margin-left: 0px;
 }
 
-.loginFormTitle, .loginFormTitleFocused, .loginFormTitleDisabled
-{
-  color: white;
+#login-remember-reflection {
+  opacity: 0.4;
+	position: absolute;
+	background: transparent;
+	top: 36px;
+	left: 22px;
+  width: 100px;
+	font-size: 12px;
   font-family: Arial,Verdana,sans-serif;
-  font-size: 15px;
+  color: #264199;  
+  -webkit-transform: scaleY(-1);
+  -moz-transform: scaleY(-1);   
+  -o-transform: scaleY(-1);
+  -ms-transform: scaleY(-1);
+  transform: scaleY(-1);  
 }
 
-.loginFormTitle, .loginFormTitleFocused
-{
-  color: white;
+.login-forgot {
+  border: none;
+	font-size: 12px;
+	color: #3f4e63;
+  margin-top: 5px;
+  margin-left: 5px;
+  overflow: hidden;
+  width: 150px;
+  text-align: right;
 }
 
-.loginTextItem, .loginTextItemFocused, .loginTextItemDisabled, .loginTextItemDisabledHint, .loginTextItemError, .loginTextItemHint
-{
-  background-color: white;
-  background-image: none;
-  background-repeat: repeat;
-  background-attachment: scroll;
-  background-position: 0% 0%;
-  background-clip: border-box;
-  background-origin: padding-box;
-  background-size: auto auto;
-  border-top-width: 1px;
-  border-right-width-value: 1px;
-  border-bottom-width: 1px;
-  border-left-width-value: 1px;
-  border-top-style: solid;
-  border-right-style-value: solid;
-  border-bottom-style: solid;
-  border-left-style-value: solid;
-  border-top-color: #ababab;
-  border-right-color-value: #ababab;
-  border-bottom-color: #ababab;
-  border-left-color-value: #ababab;
-  border-image-source: none;
-  border-image-slice: 100% 100% 100% 100%;
-  border-image-width: 1 1 1 1;
-  border-image-outset: 0 0 0 0;
-  border-image-repeat: stretch stretch;
-  color: black;
-  padding-top: 4px;
-  padding-right: 2px;
-  padding-bottom: 4px;
-  padding-left: 2px;
-  text-overflow: ellipsis;
-  font-family: Arial,Verdana,sans-serif;
-  font-size: 15px;
-}
-
-.loginTextItemFocused
-{
-  color: black;
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-  border-bottom-color: #c0d8ec;
-  border-left-width-value: 1px;
-  border-left-style-value: solid;
-  border-left-color-value: #b8cfef;
-  border-right-width-value: 1px;
-  border-right-style-value: solid;
-  border-right-color-value: #b3c6db;
-  border-top-width: 1px;
-  border-top-style: solid;
-  border-top-color: #587aad;
-}
-
-.loginSelectItemText, .loginSelectItemTextError, .loginSelectItemTextFocused, .loginSelectItemTextDisabled
-{
-  padding-left: 5px;
-  margin-left: 2px;
-  margin-top: 1px;
-  margin-botom: 1px;
-  font-family: Arial,Verdana,sans-serif;
-  font-size: 15px;
-  background-color: white;
-}
-
-.saveLogin
-{
-  color: white;
-  font-family: Arial,Verdana,sans-serif;
-  font-size: 13px;
-}
-
-.loginForgotpwd {
+.login-forgot  > a {
+	color: #3f4e63;
+  font-size: 12px;
 	text-decoration: none;
-	color: white;
-  font-size: 13px;
+  white-space: nowrap;
 }
 
-.loginMemesage {
+.login-forgot a:hover {
+  text-decoration: underline;
+}
+         
+         
+.login-reflections {
+  width: 400px;
+  height: 100px;
+  overflow: hidden;
+}
+
+#login-forgot-reflection {
+  opacity: 0.4;
+	position: absolute;
+	background: transparent;
+	top: 36px;
+  right: 0px;
+  text-decoration: none;
+  width: 150px;
+	font-size: 12px;
+  font-family: Arial,Verdana,sans-serif;
+	color: #264199;  
+  white-space: nowrap;
+  text-align: right;
+  float: right;
+  -webkit-transform: scaleY(-1);
+  -moz-transform: scaleY(-1);   
+  -o-transform: scaleY(-1);
+  -ms-transform: scaleY(-1);
+  transform: scaleY(-1);  
+}
+
+#login-forgot-reflection-underline {
+  opacity: 0.4;
+	position: absolute;
+	background: transparent;
+	top: 36px;
+	right: 1px;
+  text-decoration: underline;
+  width: 150px;
+	font-size: 12px;
+  font-family: Arial,Verdana,sans-serif;
+	color: #264199;  
+  white-space: nowrap;
+  text-align: right;
+  -webkit-transform: scaleY(-1);
+  -moz-transform: scaleY(-1);   
+  -o-transform: scaleY(-1);
+  -ms-transform: scaleY(-1);
+  transform: scaleY(-1);  
+}
+
+#login-checked-reflection {
+	width: 12px;
+	height: 12px;
+	background: url(./images/refcheck-checked.png) no-repeat;
+	margin-left: 6px;
+  margin-top: 36px;
+}
+
+#login-unchecked-reflection {
+	width: 12px;
+	height: 12px;
+	background: url(./images/refcheck-unchecked.png) no-repeat;
+  margin-left: 6px;
+  margin-top: 36px;
+}
+
+.login-body * td.formTitle, .login-body * td.formTitle nobr {
+  display: none;
+}
+
+.login-copyright{
   color: white;
   font-family: Arial,Verdana,sans-serif;
   font-size: 13px;
+  white-space: nowrap;
 }
 
-.loginCopyright{
-  color: white;
-  font-family: Arial,Verdana,sans-serif;
-  font-size: 13px;
-}
-
-.loginCopyright a, .loginCopyright a:link {
+.login-copyright a, .login-copyright a:link {
   text-decoration: none;
   color: white;
 }
