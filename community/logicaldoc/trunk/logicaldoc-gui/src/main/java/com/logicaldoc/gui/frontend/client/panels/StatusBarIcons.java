@@ -89,7 +89,7 @@ public class StatusBarIcons extends HLayout implements ClipboardObserver, UserOb
 		workflowImage.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				MainPanel.get().selectCalendarTab();
+				MainPanel.get().selectWorkflowTab();
 			}
 		});
 		workflowImage.setCursor(Cursor.HAND);
