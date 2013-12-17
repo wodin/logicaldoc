@@ -367,21 +367,6 @@ public class LoginPanel extends VLayout {
 			messages.add(demoRunLevel);
 		}
 
-		GUIMessage testMessage = new GUIMessage();
-		testMessage.setMessage("Messaggio di prova numero 1");
-		testMessage.setPriority(GUIMessage.PRIO_WARN);
-		messages.add(new MessageLabel(testMessage));
-
-		testMessage = new GUIMessage();
-		testMessage.setMessage("Messaggio di prova numero 2");
-		testMessage.setPriority(GUIMessage.PRIO_INFO);
-		messages.add(new MessageLabel(testMessage));
-
-		testMessage = new GUIMessage();
-		testMessage.setMessage("Messaggio di prova numero 3");
-		testMessage.setPriority(GUIMessage.PRIO_WARN);
-		messages.add(new MessageLabel(testMessage));
-
 		if (!messages.isEmpty()) {
 			VStack messagesPanel = new VStack();
 			messagesPanel.setMembers(messages.toArray(new MessageLabel[0]));
