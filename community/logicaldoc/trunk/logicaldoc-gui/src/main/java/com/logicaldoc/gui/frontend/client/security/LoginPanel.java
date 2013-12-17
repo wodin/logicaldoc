@@ -44,6 +44,7 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.SpacerItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -199,7 +200,10 @@ public class LoginPanel extends VLayout {
 		language.setPickerIconHeight(36);
 		language.setPickerIconWidth(50);
 
-		form.setFields(username, password, language);
+		SpacerItem spacerItem=new SpacerItem();
+		spacerItem.setHeight(12);
+		
+		form.setFields(username, spacerItem, password, language);
 
 		Button signIn = new Button(I18N.message("signin"));
 		signIn.setBaseStyle("login-signin");
@@ -229,8 +233,8 @@ public class LoginPanel extends VLayout {
 			}
 		});
 
-		HTMLFlow forgot = new HTMLFlow("<div class='login-forgot'><a href='#'>" + I18N.message("forgotpassword")
-				+ "</a></div>");
+		HTMLFlow forgot = new HTMLFlow("<div class='login-forgot'><a href=\"javascript:showForgotDialog('"
+				+ info.getProductName() + "')\">" + I18N.message("forgotpassword") + "</a></div>");
 		forgot.setAlign(Alignment.RIGHT);
 		forgot.setWidth(140);
 		forgot.setHoverDelay(0);
@@ -334,15 +338,12 @@ public class LoginPanel extends VLayout {
 			}
 		}
 
-		String forgotString = I18N.message("forgotpassword");
-		forgotString = forgotString.length() <= 16 ? forgotString : forgotString.substring(0, 16);
-
 		reflections = new HTMLFlow("<div id='"
 				+ (rememberMe.getValueAsBoolean() ? "login-checked-reflection" : "login-unchecked-reflection")
 				+ "'></div>" + "<div id='login-remember-reflection'>" + I18N.message("rememberme") + "</div>"
 				+ "<div id='" + (underline ? "login-forgot-reflection-underline" : "login-forgot-reflection") + "'>"
-				+ forgotString + "</div></div>" + "<div id='login-signin-reflection'>" + I18N.message("signin")
-				+ "</div>");
+				+ I18N.message("forgotpassword") + "</div><div id='login-signin-reflection'>" + I18N.message("signin")
+				+ "</div></div>");
 		reflections.setStyleName("login-reflections");
 		reflections.setMargin(0);
 		reflections.setWidth100();
@@ -423,7 +424,7 @@ public class LoginPanel extends VLayout {
 				});
 	}
 
-	private void onForgottenPwd(String productName) {
+	public static void onForgottenPwd(String productName) {
 		PasswordReset pwdReset = new PasswordReset(productName);
 		pwdReset.show();
 	}
@@ -457,4 +458,5 @@ public class LoginPanel extends VLayout {
 		if (user.getQuotaCount() >= user.getQuota() && user.getQuota() >= 0)
 			Log.warn(I18N.message("quotadocsexceeded"), null);
 	}
+
 }

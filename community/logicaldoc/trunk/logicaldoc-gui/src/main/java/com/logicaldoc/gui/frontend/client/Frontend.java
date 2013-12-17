@@ -100,6 +100,7 @@ public class Frontend implements EntryPoint {
 		declareSearchTag(this);
 		declareGetCurrentFolderId(this);
 		declareCheckPermission(this);
+		declareShowForgotDialog(this);
 
 		infoService.getInfo(I18N.getLocale(), new AsyncCallback<GUIInfo>() {
 			@Override
@@ -259,6 +260,10 @@ public class Frontend implements EntryPoint {
 	public void addTagInCloud(String tag, String weight, String link) {
 		TagsForm.searchTag(tag, false);
 	}
+	
+	public void showForgotDialog(String productName) {
+		LoginPanel.onForgottenPwd(productName);
+	}
 
 	/**
 	 * Declares the javascript function used to check a permission in the
@@ -296,6 +301,15 @@ public class Frontend implements EntryPoint {
 	public static native void declareSearchTag(Frontend frontend) /*-{
 		$wnd.searchTag = function(tag) {
 			frontend.@com.logicaldoc.gui.frontend.client.Frontend::searchTag(Ljava/lang/String;)(tag);
+		};
+	}-*/;
+	
+	/**
+	 * Declares the javascript function used to display the forgot password popup
+	 */
+	public static native void declareShowForgotDialog(Frontend frontend) /*-{
+		$wnd.showForgotDialog = function(productName) {
+			return frontend.@com.logicaldoc.gui.frontend.client.Frontend::showForgotDialog(Ljava/lang/String;)(productName);
 		};
 	}-*/;
 }

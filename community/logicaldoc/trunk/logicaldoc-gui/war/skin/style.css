@@ -199,18 +199,16 @@
 }
 
 .login-input, .login-inputHint, .login-inputFocused {
-  height: 34px;
+  height: 32px;
 	border: 1px solid #fe9e3b;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
-	margin-top: 12px;
 	font-size: 18px;
   color: #756e68;
 }
 
 .login-lang, .login-langFocused, .login-langHint {
-  /*width: 283px;*/
 	height: 36px;
 	font-size: 15px;
 	font-weight: bold;
@@ -224,18 +222,20 @@
 
 .login-lang-text, .login-lang-textFocused, .login-lang-textHint {
   height: 36px;
-	font-size: 15px;
-	font-weight: bold;
-	color: #fff;
-	margin-left: 12px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #fff;
+  margin-left: 10px;
   margin-top: 8px;
 }
 
-td.login-lang-picker > span > img.comboBoxItemPicker, td.login-lang-pickerFocused > span > img.comboBoxItemPicker  {
+td.login-lang-picker span img.comboBoxItemPicker, td.login-lang-pickerFocused span img.comboBoxItemPicker,
+td.login-lang-picker a img.comboBoxItemPicker, td.login-lang-pickerFocused a img.comboBoxItemPicker {
   background: url(./images/langpick.png) no-repeat;
 }
 
-td.login-lang-picker > span > img.comboBoxItemPickerOver, td.login-lang-pickerFocused > span > img.comboBoxItemPickerOver   {
+td.login-lang-picker span img.comboBoxItemPickerOver, td.login-lang-pickerFocused span img.comboBoxItemPickerOver,
+td.login-lang-picker a img.comboBoxItemPickerOver, td.login-lang-pickerFocused a img.comboBoxItemPickerOver {
   background: url(./images/langpick_h.png) no-repeat;
 }
 
@@ -244,21 +244,18 @@ td.login-lang-picker > span > img.comboBoxItemPickerOver, td.login-lang-pickerFo
 	height: 43px;
 	background: url(./images/button.png) no-repeat;
 	border: none;
-	margin-top: 35px;
 	font-size: 22px;
 	color: #ffffff;
 }
 
 #login-signin-reflection {
   opacity: 0.1;
-	position: absolute;
 	background: transparent;
-	top: 68px;
   text-decoration: none;
   text-align: center; 
-  margin-left: auto ;
-  margin-right: auto ;
-  width: 283px;
+  margin-left: 10px;
+  margin-top: 24px;
+  width: 280px;
 	font-size: 24px;
   font-family: Arial,Verdana,sans-serif;
 	color: white;  
@@ -266,7 +263,7 @@ td.login-lang-picker > span > img.comboBoxItemPickerOver, td.login-lang-pickerFo
   -moz-transform: scaleY(-1);   
   -o-transform: scaleY(-1);
   -ms-transform: scaleY(-1);
-  transform: scaleY(-1);  
+  transform: scaleY(-1);
 }
 
 .login-remember, .login-remember > img{
@@ -274,13 +271,14 @@ td.login-lang-picker > span > img.comboBoxItemPickerOver, td.login-lang-pickerFo
 	font-size: 12px;
 	color: #3f4e63;
   margin-left: 0px;
+  white-space: nowrap;
 }
 
 #login-remember-reflection {
   opacity: 0.4;
 	position: absolute;
 	background: transparent;
-	top: 36px;
+	top: 30px;
 	left: 22px;
   width: 100px;
 	font-size: 12px;
@@ -290,7 +288,8 @@ td.login-lang-picker > span > img.comboBoxItemPickerOver, td.login-lang-pickerFo
   -moz-transform: scaleY(-1);   
   -o-transform: scaleY(-1);
   -ms-transform: scaleY(-1);
-  transform: scaleY(-1);  
+  transform: scaleY(-1);
+  white-space: nowrap;  
 }
 
 .login-forgot {
@@ -304,7 +303,7 @@ td.login-lang-picker > span > img.comboBoxItemPickerOver, td.login-lang-pickerFo
   text-align: right;
 }
 
-.login-forgot  > a {
+.login-forgot  a {
 	color: #3f4e63;
   font-size: 12px;
 	text-decoration: none;
@@ -326,7 +325,7 @@ td.login-lang-picker > span > img.comboBoxItemPickerOver, td.login-lang-pickerFo
   opacity: 0.4;
 	position: absolute;
 	background: transparent;
-	top: 36px;
+	top: 30px;
   right: 0px;
   text-decoration: none;
   width: 150px;
@@ -347,7 +346,7 @@ td.login-lang-picker > span > img.comboBoxItemPickerOver, td.login-lang-pickerFo
   opacity: 0.4;
 	position: absolute;
 	background: transparent;
-	top: 36px;
+	top: 30px;
 	right: 1px;
   text-decoration: underline;
   width: 150px;
@@ -368,7 +367,7 @@ td.login-lang-picker > span > img.comboBoxItemPickerOver, td.login-lang-pickerFo
 	height: 12px;
 	background: url(./images/refcheck-checked.png) no-repeat;
 	margin-left: 6px;
-  margin-top: 36px;
+  margin-top: 30px;
 }
 
 #login-unchecked-reflection {
@@ -376,7 +375,7 @@ td.login-lang-picker > span > img.comboBoxItemPickerOver, td.login-lang-pickerFo
 	height: 12px;
 	background: url(./images/refcheck-unchecked.png) no-repeat;
   margin-left: 6px;
-  margin-top: 36px;
+  margin-top: 30px;
 }
 
 .login-body * td.formTitle, .login-body * td.formTitle nobr {
