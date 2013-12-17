@@ -17,8 +17,7 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 public class MessageLabel extends Label {
 
 	public MessageLabel(final GUIMessage message) {
-		super(message.getMessage()
-				+ (message.getUrl() != null ? " (<b>" + I18N.message("clickhere").toLowerCase() + "</b>)" : ""));
+		super("<span style='text-decoration: underline'>"+message.getMessage()+"</span>");
 		setHeight(25);
 		setWrap(false);
 		if (message.getPriority() == GUIMessage.PRIO_INFO)
