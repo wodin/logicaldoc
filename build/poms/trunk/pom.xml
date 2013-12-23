@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>67</version>
+  <version>68</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -403,7 +403,7 @@
         <dependency>
           <groupId>net.sf.ehcache</groupId>
           <artifactId>ehcache-jgroupsreplication</artifactId>
-          <version>1.6-LD</version>
+          <version>1.7</version>
         </dependency>
         <dependency>
           <groupId>org.apache.lucene</groupId>
@@ -630,7 +630,7 @@
           <dependency>
             <groupId>org.jgroups</groupId>
             <artifactId>jgroups</artifactId>
-            <version>3.0.8.Final</version>
+            <version>3.4.1.Final</version>
           </dependency>
           <dependency>
             <groupId>bouncycastle</groupId>
