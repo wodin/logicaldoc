@@ -24,7 +24,8 @@ public enum DocumentEvent {
 	WORKFLOWSTATUS("event.workflowstatus"),
 	SHORTCUT_STORED("event.shortcut.stored"),
 	SHORTCUT_MOVED("event.shortcut.moved"),
-	SHORTCUT_DELETED("event.shortcut.deleted");
+	SHORTCUT_DELETED("event.shortcut.deleted"),
+	VIEWED("event.viewed");
 
     private String event;
 
