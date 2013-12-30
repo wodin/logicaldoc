@@ -128,7 +128,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 		Assert.assertTrue(dao.store(history));
 		history = dao.findById(history.getId());
 		Assert.assertEquals("file.old", history.getFilenameOld());
-		
+
 		History folderHistory = new History();
 		folderHistory.setFolderId(5);
 		folderHistory.setDate(DateBean.dateFromCompactString("20061220"));
@@ -192,20 +192,20 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void testFindByUserIdAndEvent() {
-		Collection histories = dao.findByUserIdAndEvent(1, "data test 01");
+		Collection histories = dao.findByUserIdAndEvent(1, "data test 01", null);
 		Assert.assertNotNull(histories);
 		Assert.assertEquals(1, histories.size());
 
-		histories = dao.findByUserIdAndEvent(1, "data test 02");
+		histories = dao.findByUserIdAndEvent(1, "data test 02", null);
 		Assert.assertNotNull(histories);
 		Assert.assertEquals(1, histories.size());
 
-		histories = dao.findByUserIdAndEvent(2, "data test 02");
+		histories = dao.findByUserIdAndEvent(2, "data test 02", null);
 		Assert.assertNotNull(histories);
 		Assert.assertEquals(0, histories.size());
 
 		// Try with unexisting user
-		histories = dao.findByUserIdAndEvent(99, "data test 02");
+		histories = dao.findByUserIdAndEvent(99, "data test 02", null);
 		Assert.assertNotNull(histories);
 		Assert.assertEquals(0, histories.size());
 	}

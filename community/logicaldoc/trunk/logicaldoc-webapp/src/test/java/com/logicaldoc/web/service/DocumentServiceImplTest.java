@@ -301,14 +301,14 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testMarkHistoryAsRead() throws InvalidSessionException {
-		List<History> histories = historyDao.findByUserIdAndEvent(1, "data test 01");
+		List<History> histories = historyDao.findByUserIdAndEvent(1, "data test 01", null);
 		Assert.assertEquals(2, histories.size());
 		Assert.assertEquals(1, histories.get(0).getNew());
 		Assert.assertEquals(1, histories.get(1).getNew());
 
 		service.markHistoryAsRead(session.getSid(), "data test 01");
 
-		histories = historyDao.findByUserIdAndEvent(1, "data test 01");
+		histories = historyDao.findByUserIdAndEvent(1, "data test 01", null);
 		Assert.assertEquals(2, histories.size());
 		Assert.assertEquals(0, histories.get(0).getNew());
 		Assert.assertEquals(0, histories.get(1).getNew());

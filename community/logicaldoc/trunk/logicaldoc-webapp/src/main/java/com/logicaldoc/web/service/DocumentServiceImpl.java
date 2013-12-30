@@ -779,7 +779,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		SessionUtil.validateSession(sid);
 
 		HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
-		for (History history : dao.findByUserIdAndEvent(SessionUtil.getSessionUser(sid).getId(), event)) {
+		for (History history : dao.findByUserIdAndEvent(SessionUtil.getSessionUser(sid).getId(), event, null)) {
 			dao.initialize(history);
 			history.setNew(0);
 			dao.store(history);

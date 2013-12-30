@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -24,6 +25,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 
+import com.ibm.icu.util.Calendar;
+import com.ibm.icu.util.GregorianCalendar;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.History;
@@ -188,17 +191,20 @@ public class ServletIOUtil {
 			resource = storer.getResourceName(doc, fileVersion, suffix);
 			filename = filename + "." + FilenameUtils.getExtension(suffix);
 		}
-		long size = storer.size(doc.getId(), resource);
 
-		// get the mimetype
-		String mimetype = MimeType.getByFilename(filename);
-		// it seems everything is fine, so we can now start writing to the
-		// response object
-		response.setContentType(mimetype);
-		setContentDisposition(request, response, filename, true);
+		if (StringUtils.isEmpty(suffix) || (!suffix.equals("preview-1.swf") && !suffix.equals("preview.swf"))) {
+			long size = storer.size(doc.getId(), resource);
 
-		// Add this header for compatibility with internal .NET browsers
-		response.setHeader("Content-Length", Long.toString(size));
+			// get the mimetype
+			String mimetype = MimeType.getByFilename(filename);
+			// it seems everything is fine, so we can now start writing to the
+			// response object
+			response.setContentType(mimetype);
+			setContentDisposition(request, response, filename, true);
+
+			// Add this header for compatibility with internal .NET browsers
+			response.setHeader("Content-Length", Long.toString(size));
+		}
 
 		InputStream is = null;
 		OutputStream os = null;
@@ -219,25 +225,45 @@ public class ServletIOUtil {
 			is.close();
 		}
 
-		if (user != null && StringUtils.isEmpty(suffix)) {
+		if (user != null
+				&& (StringUtils.isEmpty(suffix) || suffix.equals("preview-1.swf") || suffix.equals("preview.swf"))) {
+			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+
 			// Add an history entry to track the download of the document
 			History history = new History();
 			history.setDocId(doc.getId());
 			history.setTitle(doc.getTitle());
 			history.setVersion(doc.getVersion());
-
-			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-			history.setPath(fdao.computePathExtended(doc.getFolder().getId()));
-			history.setEvent(DocumentEvent.DOWNLOADED.toString());
 			history.setFilename(doc.getFileName());
 			history.setFolderId(doc.getFolder().getId());
 			history.setUser(user);
 			if (session != null)
 				history.setSessionId(session.getId());
-			else
+			else {
 				history.setSessionId(sid);
-			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
-			hdao.store(history);
+			}
+
+			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			history.setPath(fdao.computePathExtended(doc.getFolder().getId()));
+			if (suffix.endsWith(".swf")) {
+				history.setEvent(DocumentEvent.VIEWED.toString());
+				/*
+				 * Avoid to save frequent views of this document in the same
+				 * session. So we will not save if there is another view in the
+				 * same session in the same minute.
+				 */
+				List<History> oldPreviews = hdao.findByUserIdAndEvent(user.getId(), DocumentEvent.VIEWED.toString(),
+						session.getId());
+				Calendar cal = new GregorianCalendar();
+				cal.add(Calendar.MINUTE, -1);
+				Date oldestDate = cal.getTime();
+				if (oldPreviews.isEmpty() || oldestDate.after(oldPreviews.get(oldPreviews.size() - 1).getDate())) {
+					hdao.store(history);
+				}
+			} else {
+				history.setEvent(DocumentEvent.DOWNLOADED.toString());
+				hdao.store(history);
+			}
 		}
 	}
 
@@ -316,9 +342,6 @@ public class ServletIOUtil {
 					+ "?=";
 		}
 		response.setHeader("Content-Disposition", (asAttachment ? "attachment" : "inline") + "; filename=\""
-				+ encodedFileName + "\"");
-
-		System.out.println("Content-Disposition=" + (asAttachment ? "attachment" : "inline") + "; filename=\""
 				+ encodedFileName + "\"");
 
 		// Headers required by Internet Explorer

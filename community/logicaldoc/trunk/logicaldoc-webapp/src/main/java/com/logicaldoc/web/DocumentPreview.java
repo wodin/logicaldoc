@@ -3,7 +3,6 @@ package com.logicaldoc.web;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -23,7 +22,7 @@ import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.MimeType;
+import com.logicaldoc.web.util.ServletIOUtil;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
@@ -115,7 +114,8 @@ public class DocumentPreview extends HttpServlet {
 			}
 
 			// 3) return the the thumbnail/preview resource
-			downloadDocument(request, response, stream, storer.getResourceName(doc, fileVersion, suffix));
+			ServletIOUtil.downloadDocument(request, response, session.getId(), docId, fileVersion,
+					storer.getResourceName(doc, fileVersion, suffix), suffix, user);
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			new IOException(t.getMessage());
@@ -179,36 +179,6 @@ public class DocumentPreview extends HttpServlet {
 			rd.forward(request, response);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * Sends the specified document to the response object; the client will
-	 * receive it as a download
-	 * 
-	 * @param request the current request
-	 * @param response the document is written to this object
-	 */
-	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, InputStream is,
-			String filename) throws FileNotFoundException, IOException {
-
-		// get the mimetype
-		String mimetype = MimeType.getByFilename(filename);
-		// it seems everything is fine, so we can now start writing to the
-		// response object
-		response.setContentType(mimetype);
-
-		OutputStream os = response.getOutputStream();
-
-		int letter = 0;
-		try {
-			while ((letter = is.read()) != -1) {
-				os.write(letter);
-			}
-		} finally {
-			os.flush();
-			os.close();
-			is.close();
 		}
 	}
 }

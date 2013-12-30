@@ -48,7 +48,7 @@ public interface HistoryDAO extends PersistentObjectDAO<History> {
 	 * @return
 	 */
 	public List<History> findByPath(String pathExpression, Date oldestDate, Collection<String> events, Integer max);
-	
+
 	/**
 	 * This method selects all histories not notified yet.
 	 * 
@@ -72,10 +72,11 @@ public interface HistoryDAO extends PersistentObjectDAO<History> {
 	 * given event.
 	 * 
 	 * @param userId The user identifier
-	 * @param event The history event
+	 * @param sessionId The session identifier (optional)
+	 * @param event The string represtation of history event (optional) 
 	 * @return list of histories ordered by date
 	 */
-	public List<History> findByUserIdAndEvent(long userId, String event);
+	public List<History> findByUserIdAndEvent(long userId, String event, String sessionId);
 
 	/**
 	 * Checks if the histories recording is enabled

@@ -42,7 +42,7 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 	 * @see com.logicaldoc.core.document.dao.HistoryDAO#findByUserId(long)
 	 */
 	public List<History> findByUserId(long userId) {
-		return findByUserIdAndEvent(userId, null);
+		return findByUserIdAndEvent(userId, null, null);
 	}
 
 	/**
@@ -85,11 +85,12 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 	}
 
 	@Override
-	public List<History> findByUserIdAndEvent(long userId, String event) {
+	public List<History> findByUserIdAndEvent(long userId, String event, String sessionId) {
 		String query = "_entity.userId =" + userId;
 		if (event != null && StringUtils.isNotEmpty(event))
 			query += " and lower(_entity.event) like '" + SqlUtil.doubleQuotes(event.toLowerCase()) + "'";
-
+		if (sessionId != null && StringUtils.isNotEmpty(sessionId))
+			query += " and _entity.sessionId = '" + sessionId + "'";
 		return findByWhere(query, "order by _entity.date asc", null);
 	}
 
