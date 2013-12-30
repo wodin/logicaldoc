@@ -27,6 +27,7 @@ import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.LinkItem;
@@ -217,9 +218,13 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		if (Feature.enabled(Feature.TAGS)) {
 			String mode = Session.get().getInfo().getConfig("tag.mode");
-
-			final DataSource ds = new TagsDS(null);
-
+			final DataSource ds;
+			if ("preset".equals(mode)) {
+				ds = new TagsDS(mode);
+			} else {
+				ds = new TagsDS(null);
+			}
+			
 			tagItem = new MultiComboBoxItem("tag", I18N.message("tag"));
 			tagItem.setLayoutStyle(MultiComboBoxLayoutStyle.FLOW);
 			tagItem.setWidth(200);
