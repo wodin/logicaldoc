@@ -60,8 +60,14 @@ public class TagsDataServlet extends HttpServlet {
 				for (Generic generic : buf) {
 					tgs.put(generic.getSubtype(), 0);
 				}
-			} else
+			} else if (org.apache.commons.lang.StringUtils.isNotEmpty(firstLetter)) {
 				tgs = (HashMap<String, Integer>) docDao.findTags(firstLetter);
+			} else {
+				List<String> buf = docDao.findAllTags(null);
+				for (String tag : buf) {
+					tgs.put(tag, 0);
+				}
+			}
 
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
