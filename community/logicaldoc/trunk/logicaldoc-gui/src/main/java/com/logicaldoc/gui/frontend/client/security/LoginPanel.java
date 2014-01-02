@@ -98,18 +98,12 @@ public class LoginPanel extends VLayout {
 	}
 
 	public void initGUI() {
+		
 		// Prepare the logo to show on the top
 		Img logoTop = ItemFactory.newBrandImg(info.isLogoOemCustomized() ? "logo_head.png" : "logo_oem.png", info);
 		logoTop.setWidth(205);
 		logoTop.setHeight(40);
-
-		// Prepare the logo to show in the login form
-		Img logoLogin = ItemFactory.newBrandImg(!info.isLogoOemCustomized() ? "logo.png" : "logo_oem.png", info);
-		logoLogin.setWidth(205);
-		logoLogin.setHeight(40);
-		logoLogin.setAlign(Alignment.CENTER);
-		logoLogin.setLayoutAlign(Alignment.CENTER);
-
+		
 		/*
 		 * This panel stays on top of the page
 		 */
@@ -117,7 +111,14 @@ public class LoginPanel extends VLayout {
 		top.setMargin(10);
 		top.setHeight(100);
 		top.setMembersMargin(10);
-		top.setMembers(logoTop);
+		top.setMembers(logoTop);		
+
+		// Prepare the logo to show in the login form
+		Img logoLogin = ItemFactory.newBrandImg(!info.isLogoOemCustomized() ? "logo.png" : "logo_oem.png", info);
+		logoLogin.setWidth(205);
+		logoLogin.setHeight(40);
+		logoLogin.setAlign(Alignment.CENTER);
+		logoLogin.setLayoutAlign(Alignment.CENTER);
 
 		/*
 		 * Panel containing product name and version
@@ -137,12 +138,21 @@ public class LoginPanel extends VLayout {
 		HLayout spacer10 = new HLayout();
 		spacer10.setHeight(10);
 		spacer10.setWidth(10);
-
+		
+		HLayout spacer30 = new HLayout();
+		spacer30.setHeight(30);
+		spacer30.setWidth(30);
+		
+		HLayout ieSpacer15 = new HLayout();
+		ieSpacer15.setHeight(15);
+		ieSpacer15.setWidth(15);
+		ieSpacer15.setStyleName("ie-special-spacer");
+		
 		Label loginLabel = new Label(I18N.message("login"));
 		loginLabel.setStyleName("login-label");
-		loginLabel.setHeight(35);
+		loginLabel.setHeight(38);
 		loginLabel.setWidth(270);
-
+		
 		// Prepare the Form and all its fields
 		final DynamicForm form = new DynamicForm();
 		form.setAlign(Alignment.CENTER);
@@ -157,7 +167,7 @@ public class LoginPanel extends VLayout {
 		username.setHint(I18N.message("username").toLowerCase());
 		username.setShowHintInField(true);
 		username.setWrapTitle(false);
-		username.setHeight(45);
+		username.setHeight(34);
 		username.setWidth(280);
 		username.setAlign(Alignment.CENTER);
 		username.setTextBoxStyle("login-input");
@@ -171,7 +181,7 @@ public class LoginPanel extends VLayout {
 
 		password = ItemFactory.newPasswordItem("password", "password", null);
 		password.setShowTitle(false);
-		password.setHeight(45);
+		password.setHeight(34);
 		password.setWidth(280);
 		password.setTextBoxStyle("login-input");
 		password.setAlign(Alignment.CENTER);
@@ -200,7 +210,7 @@ public class LoginPanel extends VLayout {
 		language.setPickerIconHeight(36);
 		language.setPickerIconWidth(50);
 
-		SpacerItem spacerItem=new SpacerItem();
+		SpacerItem spacerItem = new SpacerItem();
 		spacerItem.setHeight(12);
 		
 		form.setFields(username, spacerItem, password, language);
@@ -239,21 +249,21 @@ public class LoginPanel extends VLayout {
 		forgot.setWidth(140);
 		forgot.setHoverDelay(0);
 		forgot.addClickHandler(new ClickHandler() {
-
+			
 			@Override
 			public void onClick(ClickEvent event) {
 				onForgottenPwd(info.getProductName());
 			}
 		});
 		forgot.addMouseOverHandler(new MouseOverHandler() {
-
+			
 			@Override
 			public void onMouseOver(MouseOverEvent event) {
 				updateReflections(true);
 			}
 		});
 		forgot.addMouseOutHandler(new MouseOutHandler() {
-
+			
 			@Override
 			public void onMouseOut(MouseOutEvent event) {
 				updateReflections(false);
@@ -271,9 +281,10 @@ public class LoginPanel extends VLayout {
 
 		// This panel contains the Forgot password link
 		HLayout footer = new HLayout();
-		footer.setWidth(283);
+		footer.setWidth100();
 		footer.setMargin(0);
 		footer.setMembersMargin(0);
+		footer.setAlign(VerticalAlignment.CENTER);
 		footer.setMembers(footerForm1, forgot);
 
 		// If the case, initialize the credentials from client's cookies
@@ -287,12 +298,14 @@ public class LoginPanel extends VLayout {
 		formLayout.setLayoutAlign(Alignment.CENTER);
 		formLayout.setAlign(VerticalAlignment.TOP);
 		formLayout.setWidth(298);
-		formLayout.setHeight(420);
+		formLayout.setHeight(480);
 		formLayout.setMembersMargin(0);
-		formLayout.setMembers(productInfo, spacer15, spacer10, logoLogin, spacer15, spacer15, loginLabel, form,
-				spacer15, spacer15, signIn, spacer10, footer);
+		//formLayout.setBorder("1px solid red");
+		formLayout.setMembers(productInfo, spacer15, spacer10, logoLogin, spacer30, loginLabel, form,
+				spacer30, signIn, spacer10, footer, ieSpacer15);				
 		updateReflections(false);
 
+		// Main Panel (covers 100% of the screen)
 		VLayout mainPanel = new VLayout();
 		mainPanel.setWidth100();
 		mainPanel.setHeight100();
@@ -334,7 +347,6 @@ public class LoginPanel extends VLayout {
 			try {
 				formLayout.removeMember(reflections);
 			} catch (Throwable t) {
-
 			}
 		}
 
@@ -345,8 +357,9 @@ public class LoginPanel extends VLayout {
 				+ I18N.message("forgotpassword") + "</div><div id='login-signin-reflection'>" + I18N.message("signin")
 				+ "</div></div>");
 		reflections.setStyleName("login-reflections");
-		reflections.setMargin(0);
 		reflections.setWidth100();
+		reflections.setHeight(150);
+		reflections.setMargin(0);
 		formLayout.addMember(reflections);
 	}
 
@@ -390,7 +403,6 @@ public class LoginPanel extends VLayout {
 			messagesWindow.setMinWidth(250);
 			messagesWindow.setTop(180);
 			messagesWindow.setLeft(5);
-			// messagesWindow.setOpacity(90);
 			messagesWindow.addChild(messagesPanel);
 			messagesWindow.show();
 		}

@@ -195,17 +195,18 @@
 	color: #3f4e63;
 	font-size: 24px;
 	font-weight: bold;
-	margin-bottom: 0px;
+  padding-left: 9px;
 }
 
 .login-input, .login-inputHint, .login-inputFocused {
-  height: 32px;
+  height: 34px;
 	border: 1px solid #fe9e3b;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	font-size: 18px;
   color: #756e68;
+  padding-left: 8px;
 }
 
 .login-lang, .login-langFocused, .login-langHint {
@@ -251,12 +252,12 @@ td.login-lang-picker a img.comboBoxItemPickerOver, td.login-lang-pickerFocused a
 #login-signin-reflection {
   opacity: 0.1;
 	background: transparent;
-  text-decoration: none;
-  text-align: center; 
-  margin-left: 10px;
+  text-align: center;
+  /* margin-left: 10px; */
   margin-top: 24px;
-  width: 280px;
-	font-size: 24px;
+  /* width: 280px; */
+  width: 100%;
+	font-size: 24px;  
   font-family: Arial,Verdana,sans-serif;
 	color: white;  
   -webkit-transform: scaleY(-1);
@@ -266,7 +267,7 @@ td.login-lang-picker a img.comboBoxItemPickerOver, td.login-lang-pickerFocused a
   transform: scaleY(-1);
 }
 
-.login-remember, .login-remember > img{
+.login-remember, .login-remember > img {
 	border: none;
 	font-size: 12px;
 	color: #3f4e63;
@@ -293,13 +294,12 @@ td.login-lang-picker a img.comboBoxItemPickerOver, td.login-lang-pickerFocused a
 }
 
 .login-forgot {
-  border: none;
 	font-size: 12px;
 	color: #3f4e63;
   margin-top: 5px;
-  margin-left: 5px;
-  overflow: hidden;
+  margin-left: 5px;  
   width: 150px;
+  overflow: hidden;
   text-align: right;
 }
 
@@ -313,12 +313,15 @@ td.login-lang-picker a img.comboBoxItemPickerOver, td.login-lang-pickerFocused a
 .login-forgot a:hover {
   text-decoration: underline;
 }
-         
+
+.ie-special-spacer {  
+  margin-top: 20px;
+  /* IE8 and below */
+  margin-top: 23px\9
+}         
          
 .login-reflections {
-  width: 400px;
-  height: 100px;
-  overflow: hidden;
+  overflow: hidden; 
 }
 
 #login-forgot-reflection {
@@ -329,6 +332,7 @@ td.login-lang-picker a img.comboBoxItemPickerOver, td.login-lang-pickerFocused a
   right: 0px;
   text-decoration: none;
   width: 150px;
+  overflow: hidden;
 	font-size: 12px;
   font-family: Arial,Verdana,sans-serif;
 	color: #264199;  
@@ -347,14 +351,16 @@ td.login-lang-picker a img.comboBoxItemPickerOver, td.login-lang-pickerFocused a
 	position: absolute;
 	background: transparent;
 	top: 30px;
-	right: 1px;
+	right: 0px;
   text-decoration: underline;
   width: 150px;
+  overflow: hidden;
 	font-size: 12px;
   font-family: Arial,Verdana,sans-serif;
 	color: #264199;  
   white-space: nowrap;
   text-align: right;
+  float: right;
   -webkit-transform: scaleY(-1);
   -moz-transform: scaleY(-1);   
   -o-transform: scaleY(-1);
