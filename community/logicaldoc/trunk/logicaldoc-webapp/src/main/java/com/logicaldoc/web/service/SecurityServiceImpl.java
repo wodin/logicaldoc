@@ -746,9 +746,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 		boolean sqlerrors = false;
 		try {
+			mdao.initialize(menu);
 			menu.setSecurityRef(null);
 			menu.getMenuGroups().clear();
-			mdao.store(menu);
+			
 			sqlerrors = false;
 			Set<MenuGroup> grps = new HashSet<MenuGroup>();
 			for (GUIRight right : rights) {
@@ -765,8 +766,6 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			if (!stored) {
 				sqlerrors = true;
 			}
-
-			mdao.store(menu);
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
