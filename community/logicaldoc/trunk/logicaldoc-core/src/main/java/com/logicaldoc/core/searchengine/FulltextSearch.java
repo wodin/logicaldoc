@@ -196,7 +196,7 @@ public class FulltextSearch extends Search {
 		Map<Long, Hit> hitsMap = new HashMap<Long, Hit>();
 		while (results != null && results.hasNext()) {
 			Hit hit = results.next();
-	
+			
 			// Skip a document if not in the filter set
 			if (opt.getFilterIds() != null && !opt.getFilterIds().isEmpty()) {
 				if (!opt.getFilterIds().contains(hit.getId()))
@@ -287,7 +287,7 @@ public class FulltextSearch extends Search {
 				hits.add(hit);
 		}
 
-		//Now sort by score asc
+		//Now sort by score desc
 		Collections.sort(hits);
 		
 		/*
