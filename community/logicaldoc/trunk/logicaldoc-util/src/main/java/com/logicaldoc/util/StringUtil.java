@@ -142,12 +142,6 @@ public class StringUtil {
 	}
 
 	public static String removeNonUtf8Chars(String src) throws CharacterCodingException {
-//		CharsetDecoder utf8Decoder = Charset.forName("UTF-8").newDecoder();
-//		utf8Decoder.onMalformedInput(CodingErrorAction.REPLACE);
-//		utf8Decoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
-//		ByteBuffer bytes = ByteBuffer.wrap(src.getBytes(Charset.forName("UTF-8")));
-//		CharBuffer parsed = utf8Decoder.decode(bytes);
-//		return parsed.toString();
 		return src.replace('\uFFFF', ' ').replace('\uD835', ' ');
 	}
 }
