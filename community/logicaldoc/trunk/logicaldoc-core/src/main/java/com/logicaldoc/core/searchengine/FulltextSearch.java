@@ -274,12 +274,12 @@ public class FulltextSearch extends Search {
 		
 		while (iter.hasNext()) {
 			if (options.getMaxHits() > 0 && hits.size() >= options.getMaxHits()){
-				
 				// The maximum number of hits was reached
 				moreHitsPresent = true;
 				break;
 			}
 			Hit hit = iter.next();
+
 			if (StringUtils.isEmpty(hit.getTitle()) || StringUtils.isEmpty(hit.getFileName()))
 				continue;
 			if ((searchUser.isInGroup("admin") && opt.getFolderId() == null)

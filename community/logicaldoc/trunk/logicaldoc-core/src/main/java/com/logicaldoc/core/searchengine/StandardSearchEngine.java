@@ -25,7 +25,6 @@ import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.update.SolrIndexWriter;
-import org.hibernate.criterion.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +33,7 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.parser.Parser;
 import com.logicaldoc.core.parser.ParserFactory;
+import com.logicaldoc.util.StringUtil;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.io.FileUtil;
 
@@ -101,10 +101,11 @@ public class StandardSearchEngine implements SearchEngine {
 			}
 		}
 
-		if (maxText > 0 && content.length() > maxText)
-			doc.addField(Fields.CONTENT.getName(), StringUtils.substring(content, 0, maxText));
+		String utf8Content=StringUtil.removeNonUtf8Chars(content);
+		if (maxText > 0 && utf8Content.length() > maxText)
+			doc.addField(Fields.CONTENT.getName(), StringUtils.substring(utf8Content, 0, maxText));
 		else
-			doc.addField(Fields.CONTENT.getName(), content);
+			doc.addField(Fields.CONTENT.getName(), utf8Content);
 
 		if (document.getFolder() != null) {
 			doc.addField(Fields.FOLDER_ID.getName(), document.getFolder().getId());

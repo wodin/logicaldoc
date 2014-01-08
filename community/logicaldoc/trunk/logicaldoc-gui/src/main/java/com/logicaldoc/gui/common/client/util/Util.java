@@ -57,8 +57,8 @@ public class Util {
 	}
 
 	public static String webEditorUrl(long docId, String fileName, int height) {
-		String url = contextPath() + "ckeditor/index.jsp?sid=" + Session.get().getSid() + "&docId=" + docId
-				+"&lang="+I18N.getLocale()+ "&fileName=" + fileName + "&height=" + height;
+		String url = contextPath() + "ckeditor/index.jsp?sid=" + Session.get().getSid() + "&docId=" + docId + "&lang="
+				+ I18N.getLocale() + "&fileName=" + fileName + "&height=" + height;
 		return url;
 	}
 
@@ -437,6 +437,7 @@ public class Util {
 		tmp += "<param name=\"language\" value=\"" + I18N.getDefaultLocaleForDoc() + "\" />";
 		tmp += "<param name=\"sizeMax\" value=\"" + Long.parseLong(Session.get().getInfo().getConfig("upload.maxsize"))
 				* 1024 * 1024 + "\" />";
+		tmp += "<param name=\"disallow\" value=\"" + Session.get().getInfo().getConfig("upload.disallow")+ "\" />";
 		tmp += "</applet>";
 		dropSpotApplet.getElement().setInnerHTML(tmp);
 	}
@@ -550,5 +551,32 @@ public class Util {
 		} catch (RequestException e) {
 			GWT.log("error", e);
 		}
+	}
+
+	/**
+	 * Checks if the passed filename can be uploaded or not on the basis of what
+	 * configured in 'upload.disallow'.
+	 */
+	public static boolean isAllowedForUpload(String filename) {
+		Session session = Session.get();
+		if (session == null)
+			return true;
+		String disallow = session.getInfo().getConfig("upload.disallow");
+		if (disallow == null || disallow.trim().isEmpty())
+			return true;
+
+		// Extract and normalize the extensions
+		String[] disallowedExtensions = disallow.split(",");
+		for (int i = 0; i < disallowedExtensions.length; i++) {
+			disallowedExtensions[i] = disallowedExtensions[i].toLowerCase().trim();
+			if (!disallowedExtensions[i].startsWith("."))
+				disallowedExtensions[i] = "." + disallowedExtensions[i];
+		}
+
+		for (int i = 0; i < disallowedExtensions.length; i++)
+			if (filename.toLowerCase().endsWith(disallowedExtensions[i]))
+				return false;
+
+		return true;
 	}
 }
