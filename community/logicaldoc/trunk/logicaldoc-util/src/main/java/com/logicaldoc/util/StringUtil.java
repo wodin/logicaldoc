@@ -10,6 +10,12 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CodingErrorAction;
 import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
@@ -133,5 +139,15 @@ public class StringUtil {
 			}
 		}
 		return result;
+	}
+
+	public static String removeNonUtf8Chars(String src) throws CharacterCodingException {
+//		CharsetDecoder utf8Decoder = Charset.forName("UTF-8").newDecoder();
+//		utf8Decoder.onMalformedInput(CodingErrorAction.REPLACE);
+//		utf8Decoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
+//		ByteBuffer bytes = ByteBuffer.wrap(src.getBytes(Charset.forName("UTF-8")));
+//		CharBuffer parsed = utf8Decoder.decode(bytes);
+//		return parsed.toString();
+		return src.replace('\uFFFF', ' ').replace('\uD835', ' ');
 	}
 }

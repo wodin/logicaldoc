@@ -110,6 +110,11 @@ public class GUISettingsPanel extends VLayout {
 		uploadmax.setRequired(true);
 		uploadmax.setWrapTitle(false);
 
+		TextItem disallow = ItemFactory.newTextItem("disallow", I18N.message("disallowedext"), null);
+		disallow.setHint(I18N.message("separatedcomma"));
+		disallow.setRequired(false);
+		disallow.setWrapTitle(false);
+		
 		TextItem searchhits = ItemFactory.newIntegerItem("searchhits", I18N.message("searchhits"), null);
 		searchhits.setRequired(true);
 		searchhits.setWrapTitle(false);
@@ -130,7 +135,7 @@ public class GUISettingsPanel extends VLayout {
 		webcontentfolders.setWidth(400);
 		
 		parametersForm.setItems(welcome, dropspot, previewPages, previewSize, previewZoom, thumbSize, thumbQuality,
-				uploadmax, ondoubleclick, doctab, searchhits, extattr, webcontentfolders, savelogin);
+				uploadmax, disallow, ondoubleclick, doctab, searchhits, extattr, webcontentfolders, savelogin);
 
 		for (GUIParameter p : settings) {
 			if (p.getName().equals("gui.welcome"))
@@ -155,6 +160,8 @@ public class GUISettingsPanel extends VLayout {
 				doctab.setValue(p.getValue());
 			if (p.getName().equals("upload.maxsize"))
 				uploadmax.setValue(Integer.parseInt(p.getValue().trim()));
+			if (p.getName().equals("upload.disallow") && p.getValue()!=null)
+				disallow.setValue(p.getValue().trim());
 			if (p.getName().equals("search.hits"))
 				searchhits.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().equals("search.extattr"))
@@ -184,6 +191,7 @@ public class GUISettingsPanel extends VLayout {
 					params.add(new GUIParameter("gui.doubleclick", values.get("ondoubleclick").toString()));
 					params.add(new GUIParameter("gui.document.tab", values.get("doctab").toString()));
 					params.add(new GUIParameter("upload.maxsize", values.get("uploadmax").toString()));
+					params.add(new GUIParameter("upload.disallow", values.get("disallow").toString()));
 					params.add(new GUIParameter("search.hits", values.get("searchhits").toString()));
 					params.add(new GUIParameter("search.extattr", values.get("extattr").toString()));
 					params.add(new GUIParameter("gui.webcontent.folders", values.get("webcontentfolders").toString()));

@@ -89,10 +89,12 @@ public class UploadServlet extends UploadAction {
 
 			for (FileItem item : sessionFiles) {
 				if (false == item.isFormField()) {
+					if (!isAllowedForUpload(item.getName()))
+						throw new UploadActionException("Invalid file name " + item.getName());
+					
 					OutputStream os = null;
 					try {
 						File file = new File(uploadFolder, item.getFieldName());
-						log.debug("Received file " + item.getName());
 
 						os = new FileOutputStream(file);
 						copyFromInputStreamToOutputStream(item.getInputStream(), os);
@@ -112,19 +114,64 @@ public class UploadServlet extends UploadAction {
 							} catch (IOException e) {
 								log(e.getMessage());
 							}
-
 						}
 					}
 				}
 			}
-
 			removeSessionFileItems(request);
+		} catch (UploadActionException e) {
+			removeSessionFileItems(request);
+			throw e;
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
-
 		}
 		return null;
 	}
+
+	// /**
+	// * The post method is used to receive the file and save it in the user
+	// * session. It returns a very XML page that the client receives in an
+	// * iframe.
+	// *
+	// * The content of this xml document has a tag error in the case of error
+	// in
+	// * the upload process or the string OK in the case of success.
+	// *
+	// */
+	// @Override
+	// protected void doPost(HttpServletRequest request, HttpServletResponse
+	// response) throws IOException,
+	// ServletException {
+	// perThreadRequest.set(request);
+	// String error;
+	// try {
+	// error = parsePostRequest(request, response);
+	// finish(request);
+	// Map<String, String> stat = new HashMap<String, String>();
+	// if (error != null && error.length() > 0) {
+	// stat.put(TAG_ERROR, error);
+	// } else {
+	// getFileItemsSummary(request, stat);
+	// }
+	// renderXmlResponse(request, response, statusToString(stat), true);
+	// } catch (UploadCanceledException e) {
+	// renderXmlResponse(request, response, XML_CANCELED_TRUE, true);
+	// } catch (UploadTimeoutException e) {
+	// renderXmlResponse(request, response, XML_ERROR_TIMEOUT, true);
+	// } catch (UploadSizeLimitException e) {
+	// renderXmlResponse(request, response, "<" + TAG_ERROR + ">" +
+	// e.getMessage() + "</" + TAG_ERROR + ">", true);
+	// } catch (Exception e) {
+	// logger.error("UPLOAD-SERVLET (" + request.getSession().getId() +
+	// ") Exception -> " + e.getMessage() + "\n"
+	// + stackTraceToString(e));
+	// error = e.getMessage();
+	// renderXmlResponse(request, response, "<" + TAG_ERROR + ">" + error + "</"
+	// + TAG_ERROR + ">", true);
+	// } finally {
+	// perThreadRequest.set(null);
+	// }
+	// }
 
 	/**
 	 * Remove a file when the user sends a delete request
@@ -213,12 +260,159 @@ public class UploadServlet extends UploadAction {
 
 	@Override
 	public void checkRequest(HttpServletRequest request) {
+		// Load the correct max size specification
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		int max = Integer.parseInt(config.getProperty("upload.maxsize")) * 1024 * 1024;
 		if (max > 0) {
 			super.maxSize = Integer.parseInt(config.getProperty("upload.maxsize")) * 1024 * 1024;
 			super.checkRequest(request);
 		}
+	}
+
+	// @SuppressWarnings("unchecked")
+	// @Override
+	// protected String parsePostRequest(HttpServletRequest request,
+	// HttpServletResponse response) {
+	// try {
+	// String delay = request.getParameter(UConsts.PARAM_DELAY);
+	// uploadDelay = Integer.parseInt(delay);
+	// } catch (Exception e) {
+	// }
+	//
+	// HttpSession session = request.getSession();
+	//
+	// logger.debug("UPLOAD-SERVLET (" + session.getId() +
+	// ") new upload request received.");
+	//
+	// AbstractUploadListener listener = getCurrentListener(request);
+	// if (listener != null) {
+	// if (listener.isFrozen() || listener.isCanceled() || listener.getPercent()
+	// >= 100) {
+	// removeCurrentListener(request);
+	// } else {
+	// String error = getMessage("busy");
+	// logger.error("UPLOAD-SERVLET (" + session.getId() + ") " + error);
+	// return error;
+	// }
+	// }
+	// // Create a file upload progress listener, and put it in the user
+	// // session,
+	// // so the browser can use ajax to query status of the upload process
+	// listener = createNewListener(request);
+	//
+	// List<FileItem> uploadedItems;
+	// try {
+	//
+	// // Call to a method which the user can override
+	// checkRequest(request);
+	//
+	// // Create the factory used for uploading files,
+	// FileItemFactory factory = getFileItemFactory(request.getContentLength());
+	// ServletFileUpload uploader = new ServletFileUpload(factory);
+	// uploader.setSizeMax(maxSize);
+	// uploader.setProgressListener(listener);
+	//
+	// // Receive the files
+	// logger.debug("UPLOAD-SERVLET (" + session.getId() +
+	// ") parsing HTTP POST request ");
+	// uploadedItems = uploader.parseRequest(request);
+	// session.removeAttribute(SESSION_LAST_FILES);
+	// logger.debug("UPLOAD-SERVLET (" + session.getId() + ") parsed request, "
+	// + uploadedItems.size()
+	// + " items received.");
+	//
+	// // Received files are put in session
+	// List<FileItem> sessionFiles = getSessionFileItems(request);
+	// if (sessionFiles == null) {
+	// sessionFiles = new ArrayList<FileItem>();
+	// }
+	//
+	// String error = "";
+	//
+	// // Add only the allowed file names
+	// if (uploadedItems.size() > 0) {
+	// String msg = "";
+	//
+	// for (FileItem fileItem : uploadedItems) {
+	// if (isAllowedForUpload(fileItem.getName())) {
+	// sessionFiles.add(fileItem);
+	// msg += fileItem.getFieldName() + " => " + fileItem.getName() + "(" +
+	// fileItem.getSize()
+	// + " bytes),";
+	// } else {
+	// error += "Invalid file name " + fileItem.getName() + " ";
+	// }
+	// }
+	//
+	// logger.debug("UPLOAD-SERVLET (" + session.getId() +
+	// ") puting items in session: " + msg);
+	// session.setAttribute(SESSION_FILES, sessionFiles);
+	// session.setAttribute(SESSION_LAST_FILES, uploadedItems);
+	// } else {
+	// logger.error("UPLOAD-SERVLET (" + session.getId() +
+	// ") error NO DATA received ");
+	// error += getMessage("no_data");
+	// }
+	//
+	// return error.length() > 0 ? error : null;
+	//
+	// // So much silly questions in the list about this issue.
+	// } catch (LinkageError e) {
+	// logger.error("UPLOAD-SERVLET (" + request.getSession().getId() +
+	// ") Exception: " + e.getMessage() + "\n"
+	// + stackTraceToString(e));
+	// RuntimeException ex = new UploadActionException(getMessage("restricted",
+	// e.getMessage()), e);
+	// listener.setException(ex);
+	// throw ex;
+	// } catch (SizeLimitExceededException e) {
+	// RuntimeException ex = new UploadSizeLimitException(e.getPermittedSize(),
+	// e.getActualSize());
+	// listener.setException(ex);
+	// throw ex;
+	// } catch (UploadSizeLimitException e) {
+	// listener.setException(e);
+	// throw e;
+	// } catch (UploadCanceledException e) {
+	// listener.setException(e);
+	// throw e;
+	// } catch (UploadTimeoutException e) {
+	// listener.setException(e);
+	// throw e;
+	// } catch (Throwable e) {
+	// logger.error("UPLOAD-SERVLET (" + request.getSession().getId() +
+	// ") Unexpected Exception -> "
+	// + e.getMessage() + "\n" + stackTraceToString(e));
+	// RuntimeException ex = new UploadException(e);
+	// listener.setException(ex);
+	// throw ex;
+	// }
+	// }
+
+	/**
+	 * Checks if the passed filename can be uploaded or not on the basis of what
+	 * configured in 'upload.disallow'.
+	 */
+	public static boolean isAllowedForUpload(String filename) {
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		String disallow = config.getProperty("upload.disallow");
+
+		if (disallow == null || disallow.trim().isEmpty())
+			return true;
+
+		// Extract and normalize the extensions
+		String[] disallowedExtensions = disallow.split(",");
+		for (int i = 0; i < disallowedExtensions.length; i++) {
+			disallowedExtensions[i] = disallowedExtensions[i].toLowerCase().trim();
+			if (!disallowedExtensions[i].startsWith("."))
+				disallowedExtensions[i] = "." + disallowedExtensions[i];
+		}
+
+		for (int i = 0; i < disallowedExtensions.length; i++)
+			if (filename.toLowerCase().endsWith(disallowedExtensions[i]))
+				return false;
+
+		return true;
 	}
 
 	public static void cleanReceivedFiles(String sid) {
