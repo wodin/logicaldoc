@@ -39,6 +39,11 @@ import org.apache.chemistry.opencmis.commons.server.CallContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.ExtendedAttribute;
+import com.logicaldoc.core.document.DocumentTemplate;
+import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
+import com.logicaldoc.util.Context;
+
 /**
  * Type Manager.
  */
@@ -50,7 +55,7 @@ public class TypeManager {
 	public static final String RELATIONSHIP_TYPE_ID = BaseTypeId.CMIS_RELATIONSHIP.value();
 
 	public static final String POLICY_TYPE_ID = BaseTypeId.CMIS_POLICY.value();
-	
+
 	public static final String WORKSPACE_TYPE_ID = "Workspace";
 
 	private static final String NAMESPACE = "http://logicaldoc.com/cmis";
@@ -97,6 +102,10 @@ public class TypeManager {
 
 	public static final String PROP_TYPE = "ldoc:type";
 
+	public static final String PROP_TEMPLATE = "ldoc:template";
+
+	public static final String PROP_EXT = "ldoc:ext_";
+
 	public TypeManager() {
 		setup();
 	}
@@ -129,8 +138,7 @@ public class TypeManager {
 		addFolderPropertyDefinitions(folderType);
 
 		addTypeInteral(folderType);
-		
-		
+
 		// Workspace type
 		FolderTypeDefinitionImpl workspaceType = new FolderTypeDefinitionImpl();
 		workspaceType.setBaseTypeId(BaseTypeId.CMIS_FOLDER);
@@ -151,9 +159,7 @@ public class TypeManager {
 		addBasePropertyDefinitions(workspaceType);
 		addFolderPropertyDefinitions(workspaceType);
 
-		addTypeInteral(workspaceType);		
-		
-		
+		addTypeInteral(workspaceType);
 
 		// document type
 		DocumentTypeDefinitionImpl documentType = new DocumentTypeDefinitionImpl();
@@ -263,7 +269,6 @@ public class TypeManager {
 		type.addPropertyDefinition(createPropDef(PropertyIds.PATH, "Path", "Path", PropertyType.STRING,
 				Cardinality.SINGLE, Updatability.READONLY, false, false));
 
-
 		/*
 		 * Properties of the LogicalDOC folder
 		 */
@@ -321,8 +326,12 @@ public class TypeManager {
 				"Content Stream Id", PropertyType.ID, Cardinality.SINGLE, Updatability.READONLY, false, false));
 
 		/*
-		 * Properties of the LogicalDOC document
+		 * Properties of all LogicalDOC documents
 		 */
+		type.addPropertyDefinition(createPropDef(PROP_FILEVERSION, "File Version", "File Version", PropertyType.STRING,
+				Cardinality.SINGLE, Updatability.READONLY, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_VERSION, "Version", "Version", PropertyType.STRING,
+				Cardinality.SINGLE, Updatability.READONLY, false, false));
 		type.addPropertyDefinition(createPropDef(PROP_LANGUAGE, "Language", "Language", PropertyType.STRING,
 				Cardinality.SINGLE, Updatability.READWRITE, false, false));
 		type.addPropertyDefinition(createPropDef(PROP_SOURCE, "Source", "Source", PropertyType.STRING,
@@ -353,10 +362,23 @@ public class TypeManager {
 				Updatability.READWRITE, false, false));
 		type.addPropertyDefinition(createPropDef(PROP_TITLE, "Title", "Title", PropertyType.STRING, Cardinality.SINGLE,
 				Updatability.READWRITE, false, false));
-		type.addPropertyDefinition(createPropDef(PROP_FILEVERSION, "File Version", "File Version", PropertyType.STRING,
-				Cardinality.SINGLE, Updatability.READONLY, false, false));
-		type.addPropertyDefinition(createPropDef(PROP_VERSION, "Version", "Version", PropertyType.STRING,
-				Cardinality.SINGLE, Updatability.READONLY, false, false));
+		type.addPropertyDefinition(createPropDef(PROP_TEMPLATE, "Template", "Template", PropertyType.STRING,
+				Cardinality.SINGLE, Updatability.READWRITE, false, false));
+
+		/*
+		 * Extended properties
+		 */
+		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
+		List<DocumentTemplate> templates = dao.findAll();
+		for (DocumentTemplate template : templates) {
+			dao.initialize(template);
+			Map<String, ExtendedAttribute> attributes = template.getAttributes();
+			for (String name : attributes.keySet()) {
+				type.addPropertyDefinition(createPropDef(PROP_EXT + name, name, name, PropertyType.STRING,
+						Cardinality.SINGLE, Updatability.READWRITE, false, false));
+			}
+
+		}
 	}
 
 	/**

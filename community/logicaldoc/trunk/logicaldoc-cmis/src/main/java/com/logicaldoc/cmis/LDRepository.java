@@ -4,6 +4,9 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -95,14 +98,17 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentManager;
+import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
@@ -171,6 +177,8 @@ public class LDRepository {
 
 	private DocumentDAO documentDao;
 
+	private DocumentTemplateDAO templateDao;
+
 	private VersionDAO versionDao;
 
 	private DocumentManager documentManager;
@@ -194,6 +202,7 @@ public class LDRepository {
 		folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		documentDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		templateDao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 		versionDao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
 
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
@@ -433,30 +442,16 @@ public class LDRepository {
 			throw new CmisObjectNotFoundException("Parent is not a folder!");
 		}
 
-		History transaction = new History();
-		transaction.setUser(getSessionUser());
-		transaction.setSessionId(sid);
-
 		Document document = new Document();
+		updateDocumentMetadata(document, properties, true);
 		document.setTitle(name);
 		document.setFileName(fileName);
 		document.setFolder(getFolder(folderId));
 		document.setLanguage(user.getLanguage());
 
-		String tagsString = getStringProperty(properties, TypeManager.PROP_TAGS);
-		if (StringUtils.isNotEmpty(tagsString)) {
-			Set<String> sss = new HashSet<String>();
-			StringTokenizer st = new StringTokenizer(tagsString, ",", false);
-			while (st.hasMoreTokens()) {
-				String tg = st.nextToken();
-				if (StringUtils.isEmpty(tg)) {
-				} else {
-					sss.add(tg);
-				}
-			}
-
-			document.setTags(sss);
-		}
+		History transaction = new History();
+		transaction.setUser(getSessionUser());
+		transaction.setSessionId(sid);
 
 		try {
 			document = documentManager.create(new BufferedInputStream(contentStream.getStream(), BUFFER_SIZE),
@@ -1118,36 +1113,36 @@ public class LDRepository {
 
 		boolean searchByFileName = true;
 		Long parentFolderID = null;
-		
+
 		if (statement.indexOf("SELECT cmis:objectId,cmis:name,cmis:lastModifiedBy") != -1) {
-			
+
 			System.out.println("CMIS: detected LogicalDOC Mobile query");
-			
+
 			expr = StringUtils.substringBetween(statement, "'%", "%'");
-			
+
 			// TEST FOR full-text search
 			if (statement.toLowerCase().contains("contains")) {
 				searchByFileName = false;
 				expr = StringUtils.substringBetween(statement, "('", "')");
 			}
-			
+
 			// Search in Tree
 			if (statement.toLowerCase().contains("in_tree")) {
 				// AND IN_TREE('fld.6488067')
 				String folderId = StringUtils.substringBetween(statement, "('fld.", "')");
-				System.out.println("folderId: " +folderId);
+				System.out.println("folderId: " + folderId);
 				parentFolderID = Long.parseLong(folderId);
-				
+
 				// TODO: implement search by filename in Tree
-			}			
+			}
 		}
-		
+
 		System.out.println("CMIS expr: " + expr);
 
 		// Empty list of ObjectData
 		List<ObjectData> list = new ArrayList<ObjectData>();
 		boolean hasMoreItems = false;
-		
+
 		// Create the filter
 		Set<String> filter = null;
 		try {
@@ -1172,23 +1167,23 @@ public class LDRepository {
 		}
 
 		// Performs Full-text search
-		if (!searchByFileName) {			
+		if (!searchByFileName) {
 			System.out.println("Perform full-text search");
-			
+
 			// Prepare the search options
 			FulltextSearchOptions opt = new FulltextSearchOptions();
 			opt.setMaxHits(max);
-			
+
 			User user = getSessionUser();
 			opt.setUserId(user.getId());
 			opt.setExpressionLanguage(user.getLanguage());
-			
+
 			// Check to search in Tree
 			if (parentFolderID != null) {
 				opt.setFolderId(parentFolderID);
 				opt.setSearchInSubPath(true);
 			}
-			
+
 			opt.setExpression(expr);
 
 			// Execute the search
@@ -1208,37 +1203,39 @@ public class LDRepository {
 				log.error("CMIS Exception populating data structure", e);
 				System.err.println(e);
 			}
-			//hasMoreItems = search.getEstimatedHitsNumber() > list.size();
-			hasMoreItems = search.getEstimatedHitsNumber() > max; // THIS Seems more correct
+			// hasMoreItems = search.getEstimatedHitsNumber() > list.size();
+			hasMoreItems = search.getEstimatedHitsNumber() > max; // THIS Seems
+																	// more
+																	// correct
 		} else {
 			System.out.println("Perform search by File-name");
-			
+
 			User user = getSessionUser();
-			
+
 			// Remove all the '*' from start and end
 			expr = StringUtils.strip(expr, "*");
-			
-			String filename = "%" + expr +"%";
-			System.out.println("filename: " +filename);
-			
+
+			String filename = "%" + expr + "%";
+			System.out.println("filename: " + filename);
+
 			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 			List<Document> docs = docDao.findByFileNameAndParentFolderId(null, filename, null, max);
-			
+
 			for (int i = 0; i < docs.size(); i++) {
-                // Check permissions on the documents found
+				// Check permissions on the documents found
 				try {
 					checkReadEnable(user, docs.get(i).getFolder().getId());
 					checkPublished(user, docs.get(i));
 				} catch (Exception e) {
 					continue;
-				}				
-				docDao.initialize(docs.get(i));								
+				}
+				docDao.initialize(docs.get(i));
 
 				// filtro i risultati (lasciando solo le colonne richieste)
 				ObjectData result = compileObjectType(null, docs.get(i), filter, false, false, null);
 
-				list.add(result);				
-			}			
+				list.add(result);
+			}
 		}
 
 		ObjectListImpl objList = new ObjectListImpl();
@@ -1254,7 +1251,7 @@ public class LDRepository {
 	private void checkPublished(User user, Document doc) throws Exception {
 		if (!user.isInGroup("admin") && !user.isInGroup("publisher") && !doc.isPublishing())
 			throw new Exception("Document not published");
-	}	
+	}
 
 	private void checkReadEnable(User user, long folderId) throws Exception {
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
@@ -1263,7 +1260,7 @@ public class LDRepository {
 			log.error(message);
 			throw new Exception(message);
 		}
-	}	
+	}
 
 	/**
 	 * Removes a folder and its content.
@@ -1564,11 +1561,57 @@ public class LDRepository {
 						doc.getRating() != null ? doc.getRating() : 0);
 				addPropertyString(result, typeId, filter, TypeManager.PROP_FILEVERSION, doc.getFileVersion());
 				addPropertyString(result, typeId, filter, TypeManager.PROP_VERSION, doc.getVersion());
+
 				try {
 					addPropertyString(result, typeId, filter, TypeManager.PROP_TAGS, doc.getTgs());
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 				}
+
+				DocumentTemplate template = doc.getTemplate();
+				if (doc instanceof Version && ((Version) doc).getTemplateName() != null)
+					template = templateDao.findByName(((Version) doc).getTemplateName());
+
+				if (template != null) {
+					DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+					addPropertyString(result, typeId, filter, TypeManager.PROP_TEMPLATE, template.getName());
+
+					if (doc instanceof Document)
+						documentDao.initialize((Document) doc);
+					else
+						versionDao.initialize((Version) doc);
+
+					// Now load the extended properties
+					// dao.initialize(template);
+					Map<String, ExtendedAttribute> attributes = doc.getAttributes();
+					for (String attrName : attributes.keySet()) {
+						ExtendedAttribute attribute = attributes.get(attrName);
+						String stringValue = null;
+						if (attribute.getValue() != null)
+							switch (attribute.getType()) {
+							case ExtendedAttribute.TYPE_BOOLEAN:
+								stringValue = Long.toString(attribute.getIntValue());
+								break;
+							case ExtendedAttribute.TYPE_DATE:
+								stringValue = df.format(attribute.getDateValue());
+								break;
+							case ExtendedAttribute.TYPE_DOUBLE:
+								stringValue = attribute.getDateValue() != null ? attribute.getDoubleValue().toString()
+										: null;
+								break;
+							case ExtendedAttribute.TYPE_INT:
+								stringValue = Long.toString(attribute.getIntValue());
+								break;
+							case ExtendedAttribute.TYPE_USER:
+								stringValue = Long.toString(attribute.getIntValue());
+								break;
+							default:
+								stringValue = attribute.getValue().toString();
+							}
+						addPropertyString(result, typeId, filter, TypeManager.PROP_EXT + attrName, stringValue);
+					}
+				} else
+					addPropertyString(result, typeId, filter, TypeManager.PROP_TEMPLATE, null);
 			}
 
 			if (filter != null) {
@@ -1608,6 +1651,169 @@ public class LDRepository {
 	}
 
 	/**
+	 * Alters the documents metadata by getting the informations from the
+	 * properties
+	 * 
+	 * @param doc The document to update
+	 * @param properties The properties to use
+	 * @param create True if we are updating metadata for creating a new element
+	 */
+	private void updateDocumentMetadata(AbstractDocument doc, Properties properties, boolean create) {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+		// get the property definitions
+		TypeDefinition type = types.getType(TypeManager.DOCUMENT_TYPE_ID);
+
+		// update properties
+		for (PropertyData<?> p : properties.getProperties().values()) {
+			PropertyDefinition<?> propType = type.getPropertyDefinitions().get(p.getId());
+
+			// do we know that property?
+			if (propType == null) {
+				throw new CmisConstraintException("Property '" + p.getId() + "' is unknown!");
+			}
+
+			// can it be set?
+			if ((propType.getUpdatability() == Updatability.READONLY)) {
+				throw new CmisConstraintException("Property '" + p.getId() + "' is readonly!");
+			}
+
+			if (propType.getUpdatability() == Updatability.ONCREATE && !create) {
+				throw new CmisConstraintException("Property '" + p.getId() + "' can only be set on create!");
+			}
+
+			if ((p.getId().equals(PropertyIds.CONTENT_STREAM_FILE_NAME) || p.getId().equals(PropertyIds.NAME))
+					&& StringUtils.isNotEmpty((String) p.getFirstValue()))
+				doc.setFileName((String) p.getFirstValue());
+			else if (p.getId().equals(TypeManager.PROP_TITLE) && StringUtils.isNotEmpty((String) p.getFirstValue()))
+				doc.setTitle((String) p.getFirstValue());
+			else if (p.getId().equals(TypeManager.PROP_COVERAGE))
+				doc.setCoverage((String) p.getFirstValue());
+			else if (p.getId().equals(TypeManager.PROP_CUSTOMID))
+				doc.setCustomId((String) p.getFirstValue());
+			else if (p.getId().equals(TypeManager.PROP_LANGUAGE)) {
+				LanguageManager langMan = LanguageManager.getInstance();
+				Language lang = langMan.getLanguage(LocaleUtil.toLocale((String) p.getFirstValue()));
+				if (lang != null)
+					doc.setCustomId((String) p.getFirstValue());
+			} else if (p.getId().equals(TypeManager.PROP_OBJECT))
+				doc.setObject((String) p.getFirstValue());
+			else if (p.getId().equals(TypeManager.PROP_RECIPIENT))
+				doc.setRecipient((String) p.getFirstValue());
+			else if (p.getId().equals(TypeManager.PROP_SOURCE))
+				doc.setSource((String) p.getFirstValue());
+			else if (p.getId().equals(TypeManager.PROP_SOURCE_AUTHOR))
+				doc.setSourceAuthor((String) p.getFirstValue());
+			else if (p.getId().equals(TypeManager.PROP_SOURCE_ID))
+				doc.setSourceId((String) p.getFirstValue());
+			else if (p.getId().equals(TypeManager.PROP_SOURCE_DATE)) {
+				if (p.getFirstValue() == null)
+					doc.setSourceDate(null);
+				else if (p.getFirstValue() instanceof Date)
+					doc.setSourceDate((Date) p.getFirstValue());
+				else if (p.getFirstValue() instanceof GregorianCalendar)
+					doc.setSourceDate(((GregorianCalendar) p.getFirstValue()).getTime());
+			} else if (p.getId().equals(TypeManager.PROP_SOURCE_TYPE))
+				doc.setSourceType((String) p.getFirstValue());
+			else if (p.getId().equals(TypeManager.PROP_TAGS)) {
+				doc.getTags().clear();
+				doc.setTgs((String) p.getFirstValue());
+				if (doc.getTgs() != null) {
+					StringTokenizer st = new StringTokenizer(doc.getTgs(), ",", false);
+					while (st.hasMoreTokens()) {
+						String tg = st.nextToken();
+						if (StringUtils.isNotEmpty(tg))
+							doc.addTag(tg);
+					}
+				}
+			} else if (p.getId().equals(TypeManager.PROP_TEMPLATE)) {
+				if (p.getFirstValue() == null) {
+					doc.setTemplate(null);
+					if (doc instanceof Document)
+						((Document) doc).setTemplate(null);
+					else
+						((Version) doc).setTemplateName(null);
+				} else {
+					DocumentTemplate template = templateDao.findByName((String) p.getFirstValue());
+					if (template == null) {
+						doc.setTemplate(null);
+						if (doc instanceof Document)
+							((Document) doc).setTemplate(null);
+						else
+							((Version) doc).setTemplateName(null);
+					} else {
+						doc.setTemplate(template);
+						if (doc instanceof Document)
+							((Document) doc).setTemplateId(template.getId());
+						else
+							((Version) doc).setTemplateName(template.getName());
+					}
+				}
+			} else if (p.getId().startsWith(TypeManager.PROP_EXT)) {
+				/*
+				 * This is an extended attribute, so try to load the document
+				 * template first
+				 */
+				DocumentTemplate template = null;
+				PropertyData<?> tp = properties.getProperties().get(TypeManager.PROP_TEMPLATE);
+				if (tp != null)
+					template = templateDao.findByName((String) tp.getFirstValue());
+
+				if (template != null) {
+					templateDao.initialize(template);
+
+					String attributeName = p.getId().substring(TypeManager.PROP_EXT.length());
+					String stringValue = (String) p.getFirstValue();
+
+					ExtendedAttribute attribute = template.getExtendedAttribute(attributeName);
+
+					switch (attribute.getType()) {
+					case ExtendedAttribute.TYPE_BOOLEAN:
+						if (StringUtils.isNotEmpty(stringValue))
+							doc.setValue(attributeName,
+									new Boolean("1".equals(stringValue) || "true".equals(stringValue)));
+						else
+							doc.setValue(attributeName, (Boolean) null);
+						break;
+					case ExtendedAttribute.TYPE_DATE:
+						if (StringUtils.isNotEmpty(stringValue))
+							try {
+								doc.setValue(attributeName, df.parse(stringValue));
+							} catch (ParseException e) {
+								log.error("Invalid date " + stringValue);
+								doc.setValue(attributeName, (Date) null);
+							}
+						else
+							doc.setValue(attributeName, (Date) null);
+						break;
+					case ExtendedAttribute.TYPE_DOUBLE:
+						if (StringUtils.isNotEmpty(stringValue))
+							doc.setValue(attributeName, Double.parseDouble(stringValue));
+						else
+							doc.setValue(attributeName, (Double) null);
+						break;
+					case ExtendedAttribute.TYPE_INT:
+						if (StringUtils.isNotEmpty(stringValue))
+							doc.setValue(attributeName, Long.parseLong(stringValue));
+						else
+							doc.setValue(attributeName, (Long) null);
+						break;
+					case ExtendedAttribute.TYPE_USER:
+						if (StringUtils.isNotEmpty(stringValue)) {
+							doc.setValue(attributeName, userDao.findById(Long.parseLong(stringValue)));
+						} else
+							doc.setValue(attributeName, (User) null);
+						break;
+					case ExtendedAttribute.TYPE_STRING:
+						doc.setValue(attributeName, stringValue);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * Checks and updates a property set and write to database.
 	 */
 	private Properties update(PersistentObject object, Properties oldProperties, Properties properties) {
@@ -1639,9 +1845,7 @@ public class LDRepository {
 			result.addProperty(prop);
 		}
 
-		Document doc = object instanceof Document ? (Document) object : null;
-		Folder folder = object instanceof Folder ? (Folder) object : null;
-
+		// now put the new properties
 		// update properties
 		for (PropertyData<?> prop : properties.getProperties().values()) {
 			PropertyDefinition<?> propType = type.getPropertyDefinitions().get(prop.getId());
@@ -1666,54 +1870,19 @@ public class LDRepository {
 			} else {
 				result.addProperty(prop);
 			}
+		}
 
-			PropertyData<?> p = result.getProperties().get(prop.getId());
+		Document doc = object instanceof Document ? (Document) object : null;
+		Folder folder = object instanceof Folder ? (Folder) object : null;
 
-			if (object instanceof Document) {
-				if ((p.getId().equals(PropertyIds.CONTENT_STREAM_FILE_NAME) || p.getId().equals(PropertyIds.NAME))
-						&& StringUtils.isNotEmpty((String) p.getFirstValue()))
-					doc.setFileName((String) p.getFirstValue());
-				else if (p.getId().equals(TypeManager.PROP_TITLE) && StringUtils.isNotEmpty((String) p.getFirstValue()))
-					doc.setCoverage((String) p.getFirstValue());
-				else if (p.getId().equals(TypeManager.PROP_COVERAGE))
-					doc.setCoverage((String) p.getFirstValue());
-				else if (p.getId().equals(TypeManager.PROP_CUSTOMID))
-					doc.setCustomId((String) p.getFirstValue());
-				else if (p.getId().equals(TypeManager.PROP_LANGUAGE)) {
-					LanguageManager langMan = LanguageManager.getInstance();
-					Language lang = langMan.getLanguage(LocaleUtil.toLocale((String) p.getFirstValue()));
-					if (lang != null)
-						doc.setCustomId((String) p.getFirstValue());
-				} else if (p.getId().equals(TypeManager.PROP_OBJECT))
-					doc.setObject((String) p.getFirstValue());
-				else if (p.getId().equals(TypeManager.PROP_RECIPIENT))
-					doc.setRecipient((String) p.getFirstValue());
-				else if (p.getId().equals(TypeManager.PROP_SOURCE))
-					doc.setSource((String) p.getFirstValue());
-				else if (p.getId().equals(TypeManager.PROP_SOURCE_AUTHOR))
-					doc.setSourceAuthor((String) p.getFirstValue());
-				else if (p.getId().equals(TypeManager.PROP_SOURCE_ID))
-					doc.setSourceId((String) p.getFirstValue());
-				else if (p.getId().equals(TypeManager.PROP_SOURCE_DATE)) {
-					if (p.getFirstValue() == null)
-						doc.setSourceDate(null);
-					else if (p.getFirstValue() instanceof Date)
-						doc.setSourceDate((Date) p.getFirstValue());
-					else if (p.getFirstValue() instanceof GregorianCalendar)
-						doc.setSourceDate(((GregorianCalendar) p.getFirstValue()).getTime());
-				} else if (p.getId().equals(TypeManager.PROP_SOURCE_TYPE))
-					doc.setSourceType((String) p.getFirstValue());
-				else if (p.getId().equals(TypeManager.PROP_TAGS)) {
-					doc.getTags().clear();
-					doc.setTgs((String) p.getFirstValue());
-					StringTokenizer st = new StringTokenizer(doc.getTgs(), ",", false);
-					while (st.hasMoreTokens()) {
-						String tg = st.nextToken();
-						if (StringUtils.isNotEmpty(tg))
-							doc.addTag(tg);
-					}
-				}
-			} else {
+		if (object instanceof Document) {
+			documentDao.initialize(doc);
+			updateDocumentMetadata(doc, result, false);
+		} else {
+			// update properties
+			for (PropertyData<?> prop : properties.getProperties().values()) {
+				PropertyData<?> p = result.getProperties().get(prop.getId());
+
 				if ((p.getId().equals(PropertyIds.CONTENT_STREAM_FILE_NAME) || p.getId().equals(PropertyIds.NAME))
 						&& StringUtils.isNotEmpty((String) p.getFirstValue()))
 					folder.setName((String) p.getFirstValue());
@@ -2228,5 +2397,9 @@ public class LDRepository {
 			folderDao.initialize(f);
 			return f;
 		}
+	}
+
+	public void setTemplateDao(DocumentTemplateDAO templateDao) {
+		this.templateDao = templateDao;
 	}
 }
