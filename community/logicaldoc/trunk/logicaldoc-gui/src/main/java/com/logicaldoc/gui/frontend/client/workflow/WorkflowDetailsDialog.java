@@ -125,9 +125,6 @@ public class WorkflowDetailsDialog extends Window {
 
 		workflowTab = new Tab(I18N.message("workflow"));
 		tabs.addTab(workflowTab, 0);
-		docsTab = new Tab(I18N.message("appendeddocuments"));
-		tabs.addTab(docsTab, 1);
-		tabs.setSelectedTab(0);
 
 		buttonsPanel = new VLayout(10);
 
@@ -244,99 +241,6 @@ public class WorkflowDetailsDialog extends Window {
 				taskEndDate);
 
 		sxLayout.addMember(taskForm);
-
-		// Appended documents section
-		ListGridField docTitle = new ListGridField("title", I18N.message("name"));
-		docTitle.setWidth("*");
-		ListGridField docLastModified = new ListGridField("lastModified", I18N.message("lastmodified"), 150);
-		docLastModified.setAlign(Alignment.CENTER);
-		docLastModified.setType(ListGridFieldType.DATE);
-		docLastModified.setCellFormatter(new DateCellFormatter(false));
-		docLastModified.setCanFilter(false);
-		ListGridField icon = new ListGridField("icon", " ", 24);
-		icon.setType(ListGridFieldType.IMAGE);
-		icon.setCanSort(false);
-		icon.setAlign(Alignment.CENTER);
-		icon.setShowDefaultContextMenu(false);
-		icon.setImageURLPrefix(Util.imagePrefix());
-		icon.setImageURLSuffix(".png");
-		icon.setCanFilter(false);
-
-		appendedDocs = new ListGrid();
-		appendedDocs.setEmptyMessage(I18N.message("notitemstoshow"));
-		appendedDocs.setWidth100();
-		appendedDocs.setHeight100();
-		appendedDocs.setCanFreezeFields(true);
-		appendedDocs.setAutoFetchData(true);
-		appendedDocs.setShowHeader(true);
-		appendedDocs.setCanSelectAll(false);
-		appendedDocs.setSelectionType(SelectionStyle.SINGLE);
-		appendedDocs.setBorder("1px solid #E1E1E1");
-		appendedDocs.setDataSource(new DocumentsDS(workflow.getAppendedDocIds()));
-		appendedDocs.setFields(icon, docTitle, docLastModified);
-
-		appendedDocs.addCellDoubleClickHandler(new CellDoubleClickHandler() {
-			@Override
-			public void onCellDoubleClick(CellDoubleClickEvent event) {
-				destroy();
-				Record record = event.getRecord();
-				DocumentsPanel.get().openInFolder(Long.parseLong(record.getAttributeAsString("folderId")),
-						Long.parseLong(record.getAttributeAsString("id")));
-			}
-		});
-
-		appendedDocs.setContextMenu(setupContextMenu());
-
-		Button addDocuments = new Button(I18N.message("adddocuments"));
-		addDocuments.setAutoFit(true);
-		addDocuments.setVisible(workflow.getSelectedTask().getTaskState().equals("started"));
-		addDocuments.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-			@Override
-			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				Clipboard clipboard = Clipboard.getInstance();
-				if (clipboard.isEmpty()) {
-					SC.warn(I18N.message("nodocsinclipboard"));
-					return;
-				}
-
-				Long[] ids = new Long[clipboard.size()];
-				int i = 0;
-				for (GUIDocument doc : clipboard)
-					ids[i++] = doc.getId();
-
-				service.appendDocuments(Session.get().getSid(), workflow.getSelectedTask().getId(), ids,
-						new AsyncCallback<Void>() {
-
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(Void ret) {
-								service.getWorkflowDetailsByTask(Session.get().getSid(), workflow.getSelectedTask().getId(),
-										new AsyncCallback<GUIWorkflow>() {
-
-											@Override
-											public void onFailure(Throwable caught) {
-												Log.serverError(caught);
-											}
-
-											@Override
-											public void onSuccess(GUIWorkflow result) {
-												appendedDocs.setDataSource(new DocumentsDS(result.getAppendedDocIds()));
-											}
-										});
-							}
-						});
-
-			}
-		});
-
-		appendedDocsPanel.addMember(appendedDocs);
-		if (workflow.getSelectedTask().getEndDate() == null) {
-			appendedDocsPanel.addMember(addDocuments);
-		}
 
 		Button reassignButton = new Button(I18N.message("workflowtaskreassign"));
 		reassignButton.setAutoFit(true);
@@ -518,10 +422,116 @@ public class WorkflowDetailsDialog extends Window {
 		}
 
 		form.addMember(sxLayout);
-		// form.addMember(dxLayout);
 
 		workflowTab.setPane(form);
+
+		refreshAppendedDocsTab();
+	}
+
+	private void refreshAppendedDocsTab() {
+		if (docsTab != null)
+			tabs.removeTab(docsTab);
+		docsTab = new Tab(I18N.message("appendeddocuments"));
+		tabs.addTab(docsTab, 1);
+		prepareAppendedDocsPanel();
 		docsTab.setPane(appendedDocsPanel);
+	}
+
+	private void prepareAppendedDocsPanel() {
+		ListGridField docTitle = new ListGridField("title", I18N.message("name"));
+		docTitle.setWidth("*");
+		ListGridField docLastModified = new ListGridField("lastModified", I18N.message("lastmodified"), 150);
+		docLastModified.setAlign(Alignment.CENTER);
+		docLastModified.setType(ListGridFieldType.DATE);
+		docLastModified.setCellFormatter(new DateCellFormatter(false));
+		docLastModified.setCanFilter(false);
+		ListGridField icon = new ListGridField("icon", " ", 24);
+		icon.setType(ListGridFieldType.IMAGE);
+		icon.setCanSort(false);
+		icon.setAlign(Alignment.CENTER);
+		icon.setShowDefaultContextMenu(false);
+		icon.setImageURLPrefix(Util.imagePrefix());
+		icon.setImageURLSuffix(".png");
+		icon.setCanFilter(false);
+
+		appendedDocs = new ListGrid();
+		appendedDocs.setEmptyMessage(I18N.message("notitemstoshow"));
+		appendedDocs.setWidth100();
+		appendedDocs.setHeight100();
+		appendedDocs.setCanFreezeFields(true);
+		appendedDocs.setAutoFetchData(true);
+		appendedDocs.setShowHeader(true);
+		appendedDocs.setCanSelectAll(false);
+		appendedDocs.setSelectionType(SelectionStyle.SINGLE);
+		appendedDocs.setBorder("1px solid #E1E1E1");
+		appendedDocs.setDataSource(new DocumentsDS(workflow.getAppendedDocIds()));
+		appendedDocs.setFields(icon, docTitle, docLastModified);
+
+		appendedDocs.addCellDoubleClickHandler(new CellDoubleClickHandler() {
+			@Override
+			public void onCellDoubleClick(CellDoubleClickEvent event) {
+				destroy();
+				Record record = event.getRecord();
+				DocumentsPanel.get().openInFolder(Long.parseLong(record.getAttributeAsString("folderId")),
+						Long.parseLong(record.getAttributeAsString("id")));
+			}
+		});
+
+		appendedDocs.setContextMenu(setupContextMenu());
+		appendedDocsPanel.addMember(appendedDocs);
+
+		Button addDocuments = new Button(I18N.message("adddocuments"));
+		addDocuments.setAutoFit(true);
+		addDocuments.setVisible(workflow.getSelectedTask().getTaskState().equals("started"));
+		addDocuments.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+			@Override
+			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+				Clipboard clipboard = Clipboard.getInstance();
+				if (clipboard.isEmpty()) {
+					SC.warn(I18N.message("nodocsinclipboard"));
+					return;
+				}
+
+				Long[] ids = new Long[clipboard.size()];
+				int i = 0;
+				for (GUIDocument doc : clipboard)
+					ids[i++] = doc.getId();
+
+				service.appendDocuments(Session.get().getSid(), workflow.getSelectedTask().getId(), ids,
+						new AsyncCallback<Void>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(Void ret) {
+								service.getWorkflowDetailsByTask(Session.get().getSid(), workflow.getSelectedTask()
+										.getId(), new AsyncCallback<GUIWorkflow>() {
+
+									@Override
+									public void onFailure(Throwable caught) {
+										Log.serverError(caught);
+									}
+
+									@Override
+									public void onSuccess(GUIWorkflow result) {
+										WorkflowDetailsDialog.this.workflow.setAppendedDocIds(result
+												.getAppendedDocIds());
+										refreshAppendedDocsTab();
+										tabs.selectTab(1);
+										Clipboard.getInstance().clear();
+									}
+								});
+							}
+						});
+			}
+		});
+
+		if (workflow.getSelectedTask().getEndDate() == null) {
+			appendedDocsPanel.addMember(addDocuments);
+		}
 	}
 
 	public GUIWorkflow getWorkflow() {
