@@ -20,14 +20,17 @@ import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.smartgwt.client.data.DSCallback;
+import com.smartgwt.client.data.DSRequest;
+import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
+import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.types.MultiComboBoxLayoutStyle;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.LinkItem;
@@ -224,7 +227,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 			} else {
 				ds = new TagsDS(null);
 			}
-			
+
 			tagItem = new MultiComboBoxItem("tag", I18N.message("tag"));
 			tagItem.setLayoutStyle(MultiComboBoxLayoutStyle.FLOW);
 			tagItem.setWidth(200);
@@ -232,6 +235,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 			tagItem.setOptionDataSource(ds);
 			tagItem.setValueField("word");
 			tagItem.setDisplayField("word");
+			tagItem.setAutoFetchData(true);
 
 			tagItem.setValues((Object[]) document.getTags());
 			tagItem.setDisabled(!updateEnabled);
@@ -264,23 +268,18 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 							if (value == null)
 								return;
 
-							String input = value.trim().replaceAll(",", "");
+							// Get the user's inputed tags
+							String input = value.trim().replace(',', ' ');
 							if (!"".equals(input)) {
-								// Get the user's inputed tags, he may have
-								// wrote more than one tag
 								List<String> tags = new ArrayList<String>();
-								String token = input.trim().replace(',', ' ');
-								if (!"".equals(token)) {
-									tags.add(token);
 
-									// Put the new tag in the options
-									Record record = new Record();
-									record.setAttribute("word", token);
-									ds.addData(record);
-								}
+								tags.add(input);
 
-								if (tags.isEmpty())
-									return;
+								// Put the new tag in the options
+								Record record = new Record();
+								record.setAttribute("index", input);
+								record.setAttribute("word", input);
+								ds.addData(record);
 
 								// Add the old tags to the new ones
 								String[] oldVal = tagItem.getValues();

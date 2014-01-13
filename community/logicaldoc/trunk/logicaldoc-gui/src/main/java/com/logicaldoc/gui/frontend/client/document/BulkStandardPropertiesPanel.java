@@ -11,6 +11,9 @@ import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
+import com.smartgwt.client.data.DSCallback;
+import com.smartgwt.client.data.DSRequest;
+import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.MultiComboBoxLayoutStyle;
@@ -49,7 +52,7 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 	private ValuesManager vm = new ValuesManager();
 
 	protected boolean tagsInitialized = false;
-	
+
 	private MultiComboBoxItem tagItem;
 
 	public BulkStandardPropertiesPanel(GUIDocument document) {
@@ -113,6 +116,7 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 			tagItem.setValueField("word");
 			tagItem.setDisplayField("word");
 			tagItem.setValues((Object[]) document.getTags());
+			tagItem.setAutoFetchData(true);
 			tagItem.setDisabled(!updateEnabled);
 			tagItem.addChangedHandler(new ChangedHandler() {
 
@@ -142,24 +146,19 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 						public void execute(String value) {
 							if (value == null)
 								return;
-
-							String input = value.trim().replaceAll(",", "");
+							
+							// Get the user's inputed tags
+							String input = value.trim().replace(',', ' ');
 							if (!"".equals(input)) {
-								// Get the user's inputed tags, he may have
-								// wrote more than one tag
 								List<String> tags = new ArrayList<String>();
-								String token = input.trim().replace(',', ' ');
-								if (!"".equals(token)) {
-									tags.add(token);
 
-									// Put the new tag in the options
-									Record record = new Record();
-									record.setAttribute("word", token);
-									ds.addData(record);
-								}
+								tags.add(input);
 
-								if (tags.isEmpty())
-									return;
+								// Put the new tag in the options
+								Record record = new Record();
+								record.setAttribute("index", input);
+								record.setAttribute("word", input);
+								ds.addData(record);
 
 								// Add the old tags to the new ones
 								String[] oldVal = tagItem.getValues();
@@ -168,7 +167,6 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 										tags.add(oldVal[i]);
 
 								tagItem.setValues((Object[]) tags.toArray(new String[0]));
-								changedHandler.onChanged(null);
 							}
 						}
 					});
@@ -182,7 +180,7 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 				tagItem.setIcons(addPicker);
 			if (updateEnabled)
 				items.add(tagItem);
-			
+
 			FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
 			int i = 0;
 			if (document.getTags() != null)
