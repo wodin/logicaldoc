@@ -18,6 +18,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.calendar.CalendarEventDialog;
+import com.logicaldoc.gui.frontend.client.folder.Navigator;
 import com.logicaldoc.gui.frontend.client.folder.SubscriptionDialog;
 import com.logicaldoc.gui.frontend.client.services.AuditService;
 import com.logicaldoc.gui.frontend.client.services.AuditServiceAsync;
@@ -40,6 +41,8 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  * @since 6.0
  */
 public class DocumentToolbar extends ToolStrip implements FolderObserver {
+	protected ToolStripButton refresh = new ToolStripButton();
+
 	protected ToolStripButton download = new ToolStripButton();
 
 	protected ToolStripButton rss = new ToolStripButton();
@@ -88,6 +91,18 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	}
 
 	protected void prepareButtons(boolean downloadEnabled, boolean writeEnabled) {
+		refresh.setTooltip(I18N.message("refresh"));
+		refresh.setIcon(ItemFactory.newImgIcon("arrow_refresh_small.png").getSrc());
+		refresh.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Navigator.get().reload();
+			}
+		});
+		refresh.setDisabled(Session.get().getCurrentFolder() == null);
+		addButton(refresh);
+		addSeparator();
+
 		download.setTooltip(I18N.message("download"));
 		download.setIcon(ItemFactory.newImgIcon("download.png").getSrc());
 		download.addClickHandler(new ClickHandler() {
@@ -535,7 +550,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				else if (document.getType() != null)
 					isOfficeFile = Util.isOfficeFileType(document.getType());
 
-				office.setDisabled(!Feature.enabled(Feature.OFFICE) || !isOfficeFile || !downloadEnabled);
+				office.setDisabled(!Feature.enabled(Feature.OFFICE) || !isOfficeFile || !downloadEnabled
+						|| (folder != null && !folder.hasPermission(Constants.PERMISSION_WRITE)));
 				if (document.getStatus() != Constants.DOC_UNLOCKED
 						&& !Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN)) {
 					if (document.getLockUserId() != null
@@ -543,8 +559,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 						office.setDisabled(true);
 				}
 
-				if (!office.isDisabled())
-					office.setTooltip(I18N.message("editwithoffice"));
+				office.setTooltip(I18N.message("editwithoffice"));
 			} else {
 				download.setDisabled(true);
 				rss.setDisabled(true);
@@ -559,8 +574,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 
 			if (folder != null) {
+				refresh.setDisabled(false);
 				add.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));
-				office.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));
 				dropSpot.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE)
 						|| !Feature.enabled(Feature.DROP_SPOT));
 				scan.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE) || !Feature.enabled(Feature.SCAN));
@@ -571,6 +586,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				addCalendarEvent.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_CALENDAR)
 						|| !Feature.enabled(Feature.CALENDAR));
 			} else {
+				refresh.setDisabled(true);
 				add.setDisabled(true);
 				office.setDisabled(true);
 				scan.setDisabled(true);
