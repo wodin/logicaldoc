@@ -82,5 +82,4 @@ public class SystemMessage extends Message {
 	public void setTrials(int trials) {
 		this.trials = trials;
 	}
-
 }

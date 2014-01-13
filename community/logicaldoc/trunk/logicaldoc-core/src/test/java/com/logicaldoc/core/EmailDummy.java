@@ -22,7 +22,7 @@ public class EmailDummy {
 
 		EMail eml = new EMail();
 		eml.setSubject("HTML test");
-		eml.setHtml(true);
+		eml.setHtml(1);
 		Set<Recipient> recipients = new HashSet<Recipient>();
 
 		eml.getImages().add("file:///C:/Users/Marco/Pictures/email_header2.jpg");

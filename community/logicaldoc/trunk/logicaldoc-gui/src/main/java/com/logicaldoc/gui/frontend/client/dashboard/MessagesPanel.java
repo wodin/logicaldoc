@@ -14,15 +14,14 @@ import com.logicaldoc.gui.frontend.client.services.MessageService;
 import com.logicaldoc.gui.frontend.client.services.MessageServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.ContentsType;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.SortDirection;
-import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -53,7 +52,7 @@ public class MessagesPanel extends VLayout {
 
 	private Layout listing;
 
-	private DynamicForm messagePreview = new DynamicForm();
+	private HTMLPane body;
 
 	public MessagesPanel() {
 		setWidth100();
@@ -69,8 +68,13 @@ public class MessagesPanel extends VLayout {
 			grid.destroy();
 		}
 
+		if (body != null) {
+			removeMember(body);
+			body.destroy();
+		}
+
 		listing = new VLayout();
-		listing.setHeight("90%");
+		listing.setHeight("75%");
 		listing.setShowResizeBar(true);
 
 		ListGridField id = new ListGridField("id", 50);
@@ -123,8 +127,6 @@ public class MessagesPanel extends VLayout {
 		grid.setFields(id, priority, subject, from, sent);
 		grid.sort("sent", SortDirection.DESCENDING);
 
-		listing.addMember(grid);
-
 		// Count the total unread messages
 		grid.addDataArrivedHandler(new DataArrivedHandler() {
 			@Override
@@ -157,7 +159,7 @@ public class MessagesPanel extends VLayout {
 								public void onSuccess(GUIMessage message) {
 									record.setAttribute("read", "true");
 									grid.refreshRow(grid.getRecordIndex(record));
-									messagePreview.setValue("message", record.getAttributeAsString("text"));
+									body.setContents(grid.getSelectedRecord().getAttributeAsString("text"));
 								}
 							});
 			}
@@ -198,24 +200,10 @@ public class MessagesPanel extends VLayout {
 
 		listing.setMembers(toolStrip, grid);
 
-		messagePreview = new DynamicForm();
-		messagePreview.setID("emailform");
-		messagePreview.setWidth100();
-		messagePreview.setHeight100();
-		messagePreview.setMargin(5);
-		messagePreview.setTitleOrientation(TitleOrientation.TOP);
-		messagePreview.setNumCols(1);
-
-		TextAreaItem message = new TextAreaItem();
-		message.setCanEdit(false);
-		message.setName("message");
-		message.setShowTitle(false);
-		message.setValue("");
-		message.setWidth("100%");
-		message.setHeight("100%");
-		messagePreview.setFields(message);
-
-		setMembers(listing, messagePreview);
+		body = new HTMLPane();
+		body.setContentsType(ContentsType.PAGE);
+		body.setShowEdges(true);
+		setMembers(listing, body);
 	}
 
 	private void showContextMenu() {

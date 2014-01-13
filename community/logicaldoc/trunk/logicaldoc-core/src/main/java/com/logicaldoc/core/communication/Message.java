@@ -36,6 +36,8 @@ public abstract class Message extends PersistentObject {
 	// The locale in which the message is written
 	protected Locale locale;
 
+	protected int html = 0;
+
 	public String getMessageText() {
 		return messageText;
 	}
@@ -106,5 +108,13 @@ public abstract class Message extends PersistentObject {
 
 	public void setLocale(Locale locale) {
 		this.locale = locale;
+	}
+
+	public int getHtml() {
+		return html;
+	}
+
+	public void setHtml(int html) {
+		this.html = html;
 	}
 }

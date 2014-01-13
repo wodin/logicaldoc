@@ -164,15 +164,7 @@ public class FulltextSearch extends Search {
 		if (opt.getCreationTo() != null) {
 			filters.add(Fields.CREATION + ":[* TO " + df.format(opt.getCreationTo()) + "T00:00:00Z]");
 		}
-		
-		/*
-		 * Launch the search
-		 */
-		log.debug("Full-text seach: " + query);
-		Hits results = engine.search(query.toString(), filters.toArray(new String[0]), opt.getExpressionLanguage(),
-				null);
-		log.debug("End of Full-text search");
-		
+
 		/*
 		 * We have to see what folders the user can access. But we need to
 		 * perform this check only if the search is not restricted to one folder
@@ -189,14 +181,29 @@ public class FulltextSearch extends Search {
 		if (opt.getFolderId() != null && !accessibleFolderIds.contains(opt.getFolderId())
 				&& fdao.isReadEnable(opt.getFolderId().longValue(), opt.getUserId()))
 			accessibleFolderIds.add(opt.getFolderId());
+		
+		if (!accessibleFolderIds.isEmpty() && opt.getFolderId() != null){
+			String accessibleFolderIdsStr=accessibleFolderIds.toString();
+			accessibleFolderIdsStr=accessibleFolderIdsStr.substring(1,accessibleFolderIdsStr.length()-1);
+			filters.add(Fields.FOLDER_ID + ":" + accessibleFolderIdsStr);
+		}
+		
+		
+		/*
+		 * Launch the search
+		 */
+		log.debug("Full-text seach: " + query);
+		Hits results = engine.search(query.toString(), filters.toArray(new String[0]), opt.getExpressionLanguage(),
+				null);
+		log.debug("End of Full-text search");
 
-		
-		
+		log.error("Fulltext hits count: " + results.getCount());
+
 		// Save here the binding between ID and Hit
 		Map<Long, Hit> hitsMap = new HashMap<Long, Hit>();
 		while (results != null && results.hasNext()) {
 			Hit hit = results.next();
-			
+
 			// Skip a document if not in the filter set
 			if (opt.getFilterIds() != null && !opt.getFilterIds().isEmpty()) {
 				if (!opt.getFilterIds().contains(hit.getId()))
@@ -233,7 +240,7 @@ public class FulltextSearch extends Search {
 		// For normal users we have to exclude not published documents
 		if (searchUser != null && !searchUser.isInGroup("admin") && !searchUser.isInGroup("publisher")) {
 			richQuery.append(" and A.ld_published = 1 ");
-			richQuery.append(" and A.ld_startpublishing <= CURRENT_TIMESTAMP ");
+			richQuery.append(" and A.ld_startpbliushing <= CURRENT_TIMESTAMP ");
 			richQuery.append(" and ( A.ld_stoppublishing is null or A.ld_stoppublishing > CURRENT_TIMESTAMP )");
 		}
 		richQuery.append("  and A.ld_docref is null ");
@@ -266,14 +273,16 @@ public class FulltextSearch extends Search {
 		richQuery.append("  and A.ld_docref in ");
 		richQuery.append(hitsIdsStr);
 
+		log.debug("Execute query\n" + richQuery.toString());
+
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		dao.query(richQuery.toString(), null, new HitMapper(hitsMap), null);
 
 		// Populate the hits list discarding unexisting documents
 		Iterator<Hit> iter = hitsMap.values().iterator();
-		
+
 		while (iter.hasNext()) {
-			if (options.getMaxHits() > 0 && hits.size() >= options.getMaxHits()){
+			if (options.getMaxHits() > 0 && hits.size() >= options.getMaxHits()) {
 				// The maximum number of hits was reached
 				moreHitsPresent = true;
 				break;
@@ -287,9 +296,9 @@ public class FulltextSearch extends Search {
 				hits.add(hit);
 		}
 
-		//Now sort by score desc
+		// Now sort by score desc
 		Collections.sort(hits);
-		
+
 		/*
 		 * Check for suggestions
 		 */

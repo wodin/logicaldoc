@@ -1022,7 +1022,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		EMail mail;
 		try {
 			mail = new EMail();
-			mail.setHtml(true);
+			mail.setHtml(1);
 
 			mail.setAccountId(-1);
 			mail.setAuthor(user.getUserName());
