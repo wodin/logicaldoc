@@ -181,14 +181,17 @@ public class FulltextSearch extends Search {
 		if (opt.getFolderId() != null && !accessibleFolderIds.contains(opt.getFolderId())
 				&& fdao.isReadEnable(opt.getFolderId().longValue(), opt.getUserId()))
 			accessibleFolderIds.add(opt.getFolderId());
-		
-		if (!accessibleFolderIds.isEmpty() && opt.getFolderId() != null){
-			String accessibleFolderIdsStr=accessibleFolderIds.toString();
-			accessibleFolderIdsStr=accessibleFolderIdsStr.substring(1,accessibleFolderIdsStr.length()-1);
+
+		if (!accessibleFolderIds.isEmpty() && opt.getFolderId() != null) {
+			String accessibleFolderIdsStr = accessibleFolderIds.toString();
+			accessibleFolderIdsStr = accessibleFolderIdsStr.substring(1, accessibleFolderIdsStr.length() - 1);
 			filters.add(Fields.FOLDER_ID + ":" + accessibleFolderIdsStr);
 		}
-		
-		
+
+		for (String f : filters) {
+			System.out.println("* "+f);
+		}
+
 		/*
 		 * Launch the search
 		 */
@@ -196,8 +199,7 @@ public class FulltextSearch extends Search {
 		Hits results = engine.search(query.toString(), filters.toArray(new String[0]), opt.getExpressionLanguage(),
 				null);
 		log.debug("End of Full-text search");
-
-		log.error("Fulltext hits count: " + results.getCount());
+		log.debug("Fulltext hits count: " + results.getCount());
 
 		// Save here the binding between ID and Hit
 		Map<Long, Hit> hitsMap = new HashMap<Long, Hit>();
@@ -212,7 +214,7 @@ public class FulltextSearch extends Search {
 
 			hitsMap.put(hit.getId(), hit);
 		}
-
+		
 		if (hitsMap.isEmpty())
 			return;
 
@@ -240,7 +242,7 @@ public class FulltextSearch extends Search {
 		// For normal users we have to exclude not published documents
 		if (searchUser != null && !searchUser.isInGroup("admin") && !searchUser.isInGroup("publisher")) {
 			richQuery.append(" and A.ld_published = 1 ");
-			richQuery.append(" and A.ld_startpbliushing <= CURRENT_TIMESTAMP ");
+			richQuery.append(" and A.ld_startpublishing <= CURRENT_TIMESTAMP ");
 			richQuery.append(" and ( A.ld_stoppublishing is null or A.ld_stoppublishing > CURRENT_TIMESTAMP )");
 		}
 		richQuery.append("  and A.ld_docref is null ");
