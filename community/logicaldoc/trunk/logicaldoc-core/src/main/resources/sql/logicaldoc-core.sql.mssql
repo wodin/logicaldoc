@@ -30,7 +30,8 @@ create table ld_recipient (ld_messageid bigint not null, ld_name varchar(255) no
 create table ld_systemmessage (ld_id bigint not null, ld_lastmodified datetime not null, ld_deleted int not null, 
                                ld_author varchar(255), ld_messagetext varchar(2000), ld_subject varchar(255), 
                                ld_sentdate datetime not null, ld_datescope int, ld_prio int, ld_confirmation int, 
-                               ld_lastnotified datetime, ld_status int not null, ld_trials int, ld_type int not null, primary key (ld_id));
+                               ld_lastnotified datetime, ld_status int not null, ld_trials int, 
+                               ld_type int not null, , ld_html int not null, primary key (ld_id));
 create table ld_template (ld_id bigint not null, ld_lastmodified datetime not null, ld_deleted int not null, ld_name varchar(255) not null, ld_description varchar(2000), ld_readonly int not null, ld_type int not null, ld_category int not null, ld_signrequired int not null, ld_retentiondays int null, primary key (ld_id));
 create table ld_template_ext (ld_templateid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue datetime null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_templateid, ld_name));
 create table ld_ticket (ld_id bigint not null, ld_lastmodified datetime not null, ld_deleted int not null, ld_ticketid varchar(255) not null, ld_docid bigint not null, ld_userid bigint not null, ld_type int not null, ld_creation datetime not null, ld_expired datetime, ld_count int not null, primary key (ld_id));
@@ -288,21 +289,22 @@ values (4,-10000,1,1,0,0,1,1,0,0,0,0,0,1,1);
 
 insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_subject, ld_body)
 values(1, CURRENT_TIMESTAMP,0,'task.report','en', '$_task',
-' $_task \n
-$startedon: $_started \n
-$finishedon: $_ended \n
------------------------------------ \n
-#if( $_error ) \n
-$error: $_error \n
------------------------------------ \n
-#end \n
+'$_task<br/>
+$startedon: <b>$_started</b><br/>
+$finishedon: <b>$_ended</b><br/>
+<hr/>
+#if( $_error )
+$error: <b>$_error</b>
+<hr />
+#end
 $_report');
 
 insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_subject, ld_body)
 values(2, CURRENT_TIMESTAMP,0,'psw.rec1','en', '$_product - $emailnotifyaccountobject', '$_message');
 insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_subject, ld_body)
 values(3, CURRENT_TIMESTAMP,0,'psw.rec2','en', '$_product - $passwordrequest',
-'$_product - $passwordrequest \n $clickhere: $_url');
+'$_product - $passwordrequest<br/>
+$clickhere: <a href="$_url">$_url</a>');
 
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_document', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_bookmark', 100);

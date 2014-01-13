@@ -20,6 +20,7 @@
         <property name="status" type="int" column="ld_status" not-null="true" />
         <property name="trials" type="int" column="ld_trials" />
         <property name="type" type="int" column="ld_type" not-null="true" />
+        <property name="html" type="int" column="ld_html" not-null="true" />
         <set name="recipients" table="ld_recipient" cascade="all">
             <key column="ld_messageid" />
             <composite-element class="com.logicaldoc.core.communication.Recipient">

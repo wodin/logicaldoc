@@ -41,8 +41,6 @@ public class EMail extends Message {
 	 */
 	private Set<String> images = new HashSet<String>();
 
-	private boolean html = false;
-
 	private int attachmentsCount = 0;
 
 	public EMail() {
@@ -131,7 +129,7 @@ public class EMail extends Message {
 	}
 
 	public int getAttachmentsCount() {
-		if(attachments.isEmpty())
+		if (attachments.isEmpty())
 			return attachmentsCount;
 		else
 			return attachments.size();
@@ -183,11 +181,7 @@ public class EMail extends Message {
 	}
 
 	public boolean isHtml() {
-		return html;
-	}
-
-	public void setHtml(boolean html) {
-		this.html = html;
+		return html == 1;
 	}
 
 	public Set<String> getImages() {
