@@ -245,9 +245,9 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		op.setTopOperator(searchOptions.getTopOperator());
 		op.setFolder(searchOptions.getFolderId());
 		op.setSearchInSubPath(searchOptions.isSearchInSubPath());
+		op.setTemplate(searchOptions.getTemplate());
 
 		if (searchOptions.getType() == SearchOptions.TYPE_FULLTEXT) {
-			op.setTemplate(((FulltextSearchOptions) searchOptions).getTemplate());
 			op.setDateFrom(((FulltextSearchOptions) searchOptions).getDateFrom());
 			op.setDateTo(((FulltextSearchOptions) searchOptions).getDateTo());
 			op.setSourceDateFrom(((FulltextSearchOptions) searchOptions).getSourceDateFrom());
@@ -300,9 +300,9 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		searchOptions.setRetrieveAliases(options.getRetrieveAliases());
 		searchOptions.setFolderId(options.getFolder());
 		searchOptions.setSearchInSubPath(options.isSearchInSubPath());
+		searchOptions.setTemplate(options.getTemplate());
 
 		if (options.getType() == SearchOptions.TYPE_FULLTEXT) {
-			((FulltextSearchOptions) searchOptions).setTemplate(options.getTemplate());
 			((FulltextSearchOptions) searchOptions).setDateFrom(options.getDateFrom());
 			((FulltextSearchOptions) searchOptions).setDateTo(options.getDateTo());
 			((FulltextSearchOptions) searchOptions).setSourceDateFrom(options.getSourceDateFrom());
