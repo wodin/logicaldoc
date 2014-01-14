@@ -39,18 +39,8 @@ public class FulltextSearchOptions extends SearchOptions {
 
 	private Date creationTo = null;
 
-	private Long template = null;
-
 	public FulltextSearchOptions() {
 		super(SearchOptions.TYPE_FULLTEXT);
-	}
-
-	public Long getTemplate() {
-		return template;
-	}
-
-	public void setTemplate(Long template) {
-		this.template = template;
 	}
 
 	public String getFormat() {

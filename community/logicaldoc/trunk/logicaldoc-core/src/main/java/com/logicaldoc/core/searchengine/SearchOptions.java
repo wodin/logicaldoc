@@ -39,15 +39,15 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 
 	protected String description = "";
 
-	private Object[] parameters = null;
+	protected Object[] parameters = null;
 
-	private long userId = -1;
+	protected long userId = -1;
 
-	private String topOperator;
+	protected String topOperator;
 
-	private boolean caseSensitive = true;
+	protected boolean caseSensitive = true;
 
-	private int retrieveAliases = 0;
+	protected int retrieveAliases = 0;
 
 	/**
 	 * Optional set of document ids. If specified only documents inside this set
@@ -55,10 +55,20 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 	 */
 	protected Set<Long> filterIds = new HashSet<Long>();
 
-	private Long folderId = null;
+	protected Long folderId = null;
 
-	private boolean searchInSubPath = false;
+	protected boolean searchInSubPath = false;
 
+	protected Long template = null;
+	
+	public Long getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(Long template) {
+		this.template = template;
+	}
+	
 	public Object[] getParameters() {
 		return parameters;
 	}

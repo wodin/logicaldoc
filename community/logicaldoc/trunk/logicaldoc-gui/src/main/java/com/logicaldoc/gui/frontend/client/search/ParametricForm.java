@@ -332,14 +332,6 @@ public class ParametricForm extends VLayout {
 			list.add(criterion);
 		}
 
-		if (values.containsKey("template") && !((String) values.get("template")).trim().isEmpty()) {
-			GUICriterion criterion = new GUICriterion();
-			criterion.setField("template");
-			criterion.setOperator("equals");
-			criterion.setLongValue(new Long((String) values.get("template")));
-			list.add(criterion);
-		}
-
 		if (options.getFolder() != null) {
 			GUICriterion criterion = new GUICriterion();
 			criterion.setField("folder");
