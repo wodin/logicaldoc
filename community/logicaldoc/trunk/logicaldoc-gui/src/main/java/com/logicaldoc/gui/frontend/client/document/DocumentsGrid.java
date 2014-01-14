@@ -81,6 +81,7 @@ public class DocumentsGrid extends ListGrid {
 		lastModified.setType(ListGridFieldType.DATE);
 		lastModified.setCellFormatter(new DateCellFormatter(false));
 		lastModified.setCanFilter(false);
+		lastModified.setHidden(true);
 
 		ListGridField publisher = new ListGridField("publisher", I18N.message("publisher"), 90);
 		publisher.setAlign(Alignment.CENTER);
