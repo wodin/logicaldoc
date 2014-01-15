@@ -25,6 +25,7 @@ import org.apache.chemistry.opencmis.commons.data.Ace;
 import org.apache.chemistry.opencmis.commons.data.Acl;
 import org.apache.chemistry.opencmis.commons.data.AllowableActions;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.apache.chemistry.opencmis.commons.data.ExtensionsData;
 import org.apache.chemistry.opencmis.commons.data.FailedToDeleteData;
 import org.apache.chemistry.opencmis.commons.data.ObjectData;
 import org.apache.chemistry.opencmis.commons.data.ObjectInFolderData;
@@ -51,6 +52,7 @@ import org.apache.chemistry.opencmis.commons.enums.CapabilityContentStreamUpdate
 import org.apache.chemistry.opencmis.commons.enums.CapabilityJoin;
 import org.apache.chemistry.opencmis.commons.enums.CapabilityQuery;
 import org.apache.chemistry.opencmis.commons.enums.CapabilityRenditions;
+import org.apache.chemistry.opencmis.commons.enums.IncludeRelationships;
 import org.apache.chemistry.opencmis.commons.enums.SupportedPermissions;
 import org.apache.chemistry.opencmis.commons.enums.Updatability;
 import org.apache.chemistry.opencmis.commons.enums.VersioningState;
@@ -847,6 +849,40 @@ public class LDRepository {
 	}
 
 	/**
+	 * CMIS getObjectByPath.
+	 */
+	public ObjectData getObjectByPath(CallContext context, String path, String filter, Boolean includeAllowableActions,
+			IncludeRelationships includeRelationships, String renditionFilter, Boolean includePolicyIds,
+			Boolean includeAcl, ExtensionsData extension) {
+		debug("getObjectByPath " + path);
+
+		String fullPath = path;
+		if (fullPath.endsWith("/"))
+			fullPath = fullPath.substring(0, fullPath.length() - 1);
+
+		// Try to check if the path is a folder
+		Folder folder = folderDao.findByPath(fullPath);
+
+		if (folder != null) {
+			return getObject(context, ID_PREFIX_FLD + Long.toString(folder.getId()), null, filter,
+					includeAllowableActions, includeAcl, null);
+		} else {
+			// Not a folder, probably a file
+			String parentPath = fullPath.substring(0, fullPath.lastIndexOf('/'));
+			folder = folderDao.findByPath(parentPath);
+			if (folder == null)
+				return null;
+			String fileName = fullPath.substring(fullPath.lastIndexOf('/') + 1);
+
+			List<Document> docs = documentDao.findByFileNameAndParentFolderId(folder.getId(), fileName, null, null);
+			if (docs == null || docs.isEmpty())
+				return null;
+			return getObject(context, ID_PREFIX_DOC + Long.toString(docs.get(0).getId()), null, filter,
+					includeAllowableActions, includeAcl, null);
+		}
+	}
+
+	/**
 	 * CMIS getAllowableActions.
 	 */
 	public AllowableActions getAllowableActions(CallContext context, String objectId) {
@@ -1091,8 +1127,6 @@ public class LDRepository {
 		if (maxItems != null)
 			max = maxItems;
 
-		System.out.println("CMIS query: " + statement);
-
 		// As expression we will use the WHERE clause as is
 		String expr = StringUtils.removeStartIgnoreCase(statement, "where");
 
@@ -1116,8 +1150,6 @@ public class LDRepository {
 
 		if (statement.indexOf("SELECT cmis:objectId,cmis:name,cmis:lastModifiedBy") != -1) {
 
-			System.out.println("CMIS: detected LogicalDOC Mobile query");
-
 			expr = StringUtils.substringBetween(statement, "'%", "%'");
 
 			// TEST FOR full-text search
@@ -1130,14 +1162,11 @@ public class LDRepository {
 			if (statement.toLowerCase().contains("in_tree")) {
 				// AND IN_TREE('fld.6488067')
 				String folderId = StringUtils.substringBetween(statement, "('fld.", "')");
-				System.out.println("folderId: " + folderId);
 				parentFolderID = Long.parseLong(folderId);
 
 				// TODO: implement search by filename in Tree
 			}
 		}
-
-		System.out.println("CMIS expr: " + expr);
 
 		// Empty list of ObjectData
 		List<ObjectData> list = new ArrayList<ObjectData>();
@@ -1168,8 +1197,6 @@ public class LDRepository {
 
 		// Performs Full-text search
 		if (!searchByFileName) {
-			System.out.println("Perform full-text search");
-
 			// Prepare the search options
 			FulltextSearchOptions opt = new FulltextSearchOptions();
 			opt.setMaxHits(max);
@@ -1208,15 +1235,12 @@ public class LDRepository {
 																	// more
 																	// correct
 		} else {
-			System.out.println("Perform search by File-name");
-
 			User user = getSessionUser();
 
 			// Remove all the '*' from start and end
 			expr = StringUtils.strip(expr, "*");
 
 			String filename = "%" + expr + "%";
-			System.out.println("filename: " + filename);
 
 			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 			List<Document> docs = docDao.findByFileNameAndParentFolderId(null, filename, null, max);
