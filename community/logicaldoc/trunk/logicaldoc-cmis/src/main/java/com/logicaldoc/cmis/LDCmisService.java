@@ -59,18 +59,13 @@ public class LDCmisService extends AbstractCmisService {
 	/**
 	 * Constructor.
 	 */
-	public LDCmisService(CallContext context, String sessionId) {	
+	public LDCmisService(CallContext context, String sessionId) {
 		this.context = context;
 		this.sessionId = sessionId;
 
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Folder root = fdao.findById(Folder.ROOTID);
 		repositories.put(Long.toString(Folder.ROOTID), new LDRepository(root, sessionId));
-		
-//		List<Folder> workspaces = fdao.findWorkspaces();
-//		for (Folder workspace : workspaces) {
-//			repositories.put(Long.toString(workspace.getId()), new LDRepository(workspace, sessionId));
-//		}
 	}
 
 	public CallContext getCallContext() {
@@ -332,5 +327,15 @@ public class LDCmisService extends AbstractCmisService {
 			throw new CmisPermissionDeniedException("Repository " + getCallContext().getRepositoryId() + " not found !");
 
 		return repo;
+	}
+
+	@Override
+	public ObjectData getObjectByPath(String repositoryId, String path, String filter, Boolean includeAllowableActions,
+			IncludeRelationships includeRelationships, String renditionFilter, Boolean includePolicyIds,
+			Boolean includeAcl, ExtensionsData extension) {
+		validateSession();
+		return getRepository().getObjectByPath(getCallContext(), path, filter, includeAllowableActions,
+				includeRelationships, renditionFilter, includePolicyIds, includeAcl, extension);
+
 	}
 }
