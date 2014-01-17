@@ -10,6 +10,16 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC 6.8.2 (2014-01-27; logicaldoc-6.8.2)
+===============================================                    
+382 - Register the preview visualization as an event in the history - Improvement - Core
+388 - Redesigned login page - Improvement - User Interface
+396 - Disallow the upload of specific file extensions - Improvement - User Interface
+398 - Handle template and extended attributes through CMIS interface - Bug - CMIS
+399 - HTML support for message templates - Improvement - Core
+345 - Reload Button on Documents Browsing Bar - Wish - User Interface
+401 - Implementation of CMIS method getObjectByPath - New Feature - CMIS
+
 LogicalDOC 6.8.1 (2013-12-02; logicaldoc-6.8.1)
 ================                                                     
 371 - Tag flow widget to define document's tags - Improvement - User Interface
