@@ -327,7 +327,7 @@ public abstract class Task implements Runnable {
 			args.put("_started", df.format(scheduling.getPreviousFireTime()));
 			args.put("_ended", df.format(new Date()));
 			args.put("_error", (lastRunError != null ? lastRunError.getMessage() : null));
-			args.put("_report", prepareReport(recipient.getLocale()));
+			args.put("_report", prepareReport(recipient.getLocale()).replaceAll("\\\\n", "<br />"));
 
 			// Send the email
 			try {
