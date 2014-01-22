@@ -135,6 +135,8 @@ public class Feature {
 	
 	public static final int BACKUP = 76;
 	
+	public static final int KOFAX = 77;
+	
 	private static Set<String> features = new HashSet<String>();
 
 	static public void init(GUIInfo info) {
