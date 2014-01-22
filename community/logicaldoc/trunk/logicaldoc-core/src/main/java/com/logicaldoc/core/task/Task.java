@@ -308,6 +308,7 @@ public abstract class Task implements Runnable {
 				continue;
 
 			EMail email = new EMail();
+			email.setHtml(1);
 			email.setLocale(recipient.getLocale());
 
 			// Prepare the mail recipient
