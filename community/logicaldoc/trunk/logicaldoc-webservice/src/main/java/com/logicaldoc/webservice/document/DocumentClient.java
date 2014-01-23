@@ -6,6 +6,8 @@ import java.io.IOException;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.logicaldoc.webservice.AbstractClient;
 
 /**
@@ -30,6 +32,8 @@ public class DocumentClient extends AbstractClient<DocumentService> implements D
 	}
 
 	public WSDocument create(String sid, WSDocument document, File content) throws Exception {
+		if (StringUtils.isEmpty(document.getFileName()))
+			document.setFileName(content.getName());
 		return create(sid, document, new DataHandler(new FileDataSource(content)));
 	}
 
