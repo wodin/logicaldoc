@@ -183,12 +183,9 @@ public class FulltextSearch extends Search {
 			accessibleFolderIds.add(opt.getFolderId());
 
 		if (!accessibleFolderIds.isEmpty() && opt.getFolderId() != null) {
-			String accessibleFolderIdsStr = accessibleFolderIds.toString();
-			accessibleFolderIdsStr = accessibleFolderIdsStr.substring(1, accessibleFolderIdsStr.length() - 1);
-			
-			StringBuffer folderFilter=new StringBuffer();
+			StringBuffer folderFilter = new StringBuffer();
 			for (Long id : accessibleFolderIds) {
-				if(folderFilter.length()>0)
+				if (folderFilter.length() > 0)
 					folderFilter.append(" or ");
 				folderFilter.append(Fields.FOLDER_ID + ":" + id);
 			}
@@ -217,7 +214,7 @@ public class FulltextSearch extends Search {
 
 			hitsMap.put(hit.getId(), hit);
 		}
-		
+
 		if (hitsMap.isEmpty())
 			return;
 
