@@ -71,7 +71,8 @@ public class ContextProperties extends OrderedProperties {
 	public ContextProperties(File doc) throws IOException {
 		try {
 			docPath = doc.getPath();
-			load(new FileInputStream(docPath));
+			if (doc.exists())
+				load(new FileInputStream(docPath));
 		} catch (IOException e) {
 			log.error("Unable to read from " + docPath, e);
 			throw e;
@@ -129,7 +130,7 @@ public class ContextProperties extends OrderedProperties {
 	public int getInt(String property, int defaultValue) {
 		return Integer.parseInt(getProperty(property, Integer.toString(defaultValue)));
 	}
-	
+
 	/**
 	 * Gets the property value replacing all variable references
 	 */
