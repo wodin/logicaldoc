@@ -112,15 +112,16 @@ public abstract class Task implements Runnable {
 		setProgress(progress + 1);
 
 		// Reset the timeout
-		lockManager.get(getName(), transactionId);
+		if (lockManager != null)
+			lockManager.get(getName(), transactionId);
 
 		if (systemLoadMonitor != null) {
 			boolean overload = false;
-			
+
 			Random random = new Random();
 			while (systemLoadMonitor.isAverageCpuOverLoaded()) {
-				if(overload==false){
-					overload=true;
+				if (overload == false) {
+					overload = true;
 					log.info("Execution paused because of system overload");
 				}
 				try {
@@ -133,8 +134,8 @@ public abstract class Task implements Runnable {
 					e.printStackTrace();
 				}
 			}
-			
-			if(overload)
+
+			if (overload)
 				log.info("Execution resumed after system overload");
 		}
 	}
