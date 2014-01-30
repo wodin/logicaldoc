@@ -323,6 +323,7 @@ public class StandardSearchEngine implements SearchEngine {
 	 */
 	@Override
 	public Hits search(String expression, String[] filters, String expressionLanguage, Integer rows) {
+		//This configures the analyzer to use to to parse the expression of the content field
 		WordDelimiterAnalyzer.lang.set(expressionLanguage);
 		Hits hits = null;
 		SolrQuery query = prepareSearchQuery(expression, filters, expressionLanguage, rows);
