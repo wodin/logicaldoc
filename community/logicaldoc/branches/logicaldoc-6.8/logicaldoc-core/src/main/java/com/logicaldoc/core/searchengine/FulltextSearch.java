@@ -124,7 +124,7 @@ public class FulltextSearch extends Search {
 		for (String field : opt.getFields()) {
 			if (query.length() > 0)
 				query.append(" OR ");
-			query.append("(" + field + ":" + opt.getExpression() + ")");
+			query.append(field + ":(" + opt.getExpression() + ")");
 		}
 
 		/*
