@@ -107,10 +107,12 @@ public class ContextProperties extends OrderedProperties {
 
 		// Backup the file first
 		File src = new File(docPath);
-		File backup = new File(src.getParentFile(), src.getName() + ".back");
-		FileUtils.copyFile(src, backup);
-		log.debug("Backup saved in " + backup.getPath());
-
+		if (src.exists()) {
+			File backup = new File(src.getParentFile(), src.getName() + ".back");
+			FileUtils.copyFile(src, backup);
+			log.debug("Backup saved in " + backup.getPath());
+		}
+		
 		store(new FileOutputStream(docPath), "");
 		try {
 			store(new FileOutputStream(docPath), "");
