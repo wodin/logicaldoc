@@ -74,7 +74,8 @@ public class OrderedProperties extends Properties {
 		StringBuffer buf = new StringBuffer();
 
 		for (int i = 0; i < orig.length(); i++) {
-			if (orig.charAt(i) == '\\') {
+			//Escape only if it is not the sequence '\\u'
+			if (orig.charAt(i) == '\\' && ((i < orig.length()-1) && orig.charAt(i+1) != 'u')) {
 				buf.append("\\\\");
 			} else {
 				buf.append(orig.charAt(i));
