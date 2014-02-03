@@ -548,7 +548,7 @@ public class DocumentContextMenu extends Menu {
 
 		if (selection != null && selection.length == 1) {
 			ListGridRecord record = selection[0];
-			if ("blank".equals(record.getAttribute("locked")) && "blank".equals(record.getAttribute("immutable"))) {
+			if ("blank".equals(record.getAttribute("locked")) && "blank".equals(record.getAttribute("immutable")) && folder.isWrite()) {
 				enableLock = true;
 			}
 			if (!"blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable"))) {
