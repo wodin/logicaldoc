@@ -15,16 +15,13 @@
 				<exclude name="WEB-INF/classes/**" />
 			</fileset>
 		</copy>
-		<copy todir="${logicaldoc.webroot}/WEB-INF/classes">
-			<fileset dir="src/main/resources">
-				<include name="**" />
-				<exclude name="**/context.xml" />
-				<exclude name="**/context.properties" />
-			</fileset>
-		</copy>
 		<copy todir="${logicaldoc.webroot}/WEB-INF/classes" verbose="true">
 			<fileset dir="target/classes">
 				<include name="**" />
+				<exclude name="context.xml" />
+                <exclude name="log.xml" />
+				<exclude name="ehcache.xml" />
+                <exclude name="context.properties" />
 				<exclude name="**/gui/**"/>
 			</fileset>
 		</copy>

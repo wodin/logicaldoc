@@ -498,7 +498,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testRestore() {
 		Assert.assertNull(dao.findById(4));
-		dao.restore(4, 5);
+		dao.restore(4, 5, null);
 		Assert.assertNotNull(dao.findById(4));
 		Assert.assertEquals(5L, dao.findById(4).getFolder().getId());
 	}

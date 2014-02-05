@@ -663,9 +663,16 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	@Override
-	public void restore(long docId, long folderId) {
+	public void restore(long docId, long folderId, final History transaction) {
 		bulkUpdate("set ld_deleted=0, ld_folderid=" + folderId + ", ld_lastmodified=CURRENT_TIMESTAMP where ld_id="
 				+ docId, null);
+
+		Document doc = findById(docId);
+		if (doc != null && transaction != null) {
+			transaction.setDocId(docId);
+			transaction.setEvent(DocumentEvent.RESTORED.toString());
+			saveDocumentHistory(doc, transaction);
+		}
 	}
 
 	@Override

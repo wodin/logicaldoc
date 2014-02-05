@@ -787,6 +787,11 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		SessionUtil.validateSession(sid);
 
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		dao.restore(folderId, parentId);
+
+		FolderHistory transaction = new FolderHistory();
+		transaction.setSessionId(sid);
+		transaction.setUser(SessionUtil.getSessionUser(sid));
+
+		dao.restore(folderId, parentId, transaction);
 	}
 }

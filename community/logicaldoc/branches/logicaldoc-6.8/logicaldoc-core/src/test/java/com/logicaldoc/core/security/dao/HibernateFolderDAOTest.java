@@ -392,13 +392,13 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testFindDeleted() {
 		// Try with a folder id
-		List<Folder> folders=dao.findDeleted(3, 100);
+		List<Folder> folders = dao.findDeleted(3, 100);
 		Assert.assertEquals(2, folders.size());
-		
-		folders=dao.findDeleted(99, 100);
+
+		folders = dao.findDeleted(99, 100);
 		Assert.assertEquals(0, folders.size());
 	}
-	
+
 	@Test
 	public void testFindByName() {
 		// Try with existing text
@@ -562,7 +562,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Folder folder = dao.findById(1204);
 		Assert.assertNull(folder);
 
-		dao.restore(1204, 5L);
+		dao.restore(1204, 5L, null);
 		folder = dao.findById(1204);
 		Assert.assertNotNull(folder);
 	}

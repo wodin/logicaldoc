@@ -630,9 +630,15 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public void restore(long folderId, long parentId) {
+	public void restore(long folderId, long parentId, FolderHistory transaction) {
 		bulkUpdate("set ld_deleted=0, ld_parentid=" + parentId + ", ld_lastmodified=CURRENT_TIMESTAMP where ld_id="
 				+ folderId, null);
+
+		Folder fld = findById(folderId);
+		if (fld != null && transaction != null) {
+			transaction.setEvent(FolderEvent.RESTORED.toString());
+			saveFolderHistory(fld, transaction);
+		}
 
 		// Restore all the children
 		Set<Long> treeIds = findFolderIdInTree(folderId, true);
@@ -904,9 +910,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			/*
 			 * Apply the securityRef
 			 */
-			records = jdbcUpdate(
-					"update ld_folder set ld_securityref = ?, ld_lastmodified = ? where not ld_id = ? "
-							+ " and ld_id in " + treeIdsString, securityRef, new Date(), rootId);
+			records = jdbcUpdate("update ld_folder set ld_securityref = ?, ld_lastmodified = ? where not ld_id = ? "
+					+ " and ld_id in " + treeIdsString, securityRef, new Date(), rootId);
 
 			log.warn("Applied rights to " + records + " folders in tree " + rootId);
 
