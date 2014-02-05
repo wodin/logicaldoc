@@ -139,6 +139,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			throw new Exception("The document is immutable");
 
 		checkWriteEnable(user, doc.getFolder().getId());
+		checkDownloadEnable(user, doc.getFolder().getId());
 		checkPublished(user, doc);
 
 		// Create the document history event
