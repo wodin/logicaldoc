@@ -229,8 +229,9 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * 
 	 * @param docId Id of the document to be restored
 	 * @param folderId Id of the folder the document will be restored into
+	 * @param transaction entry to log the event
 	 */
-	public void restore(long docId, long folderId);
+	public void restore(long docId, long folderId, History transaction);
 
 	/**
 	 * Marks the document, with the given docId, as immutable. Unlocks the
