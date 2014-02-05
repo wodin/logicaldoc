@@ -180,8 +180,9 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * 
 	 * @param folderId The folder identifier
 	 * @param parentId The parent folder to restore in
+	 * @param transaction Current session informations
 	 */
-	public void restore(long folderId, long parentId);
+	public void restore(long folderId, long parentId, FolderHistory transaction);
 
 	/**
 	 * Finds that folder that lies under a specific parent (given by the id) an
