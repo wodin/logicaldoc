@@ -111,6 +111,7 @@ import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
+import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
@@ -769,6 +770,13 @@ public class LDRepository {
 		if (!(object instanceof Document)) {
 			throw new CmisObjectNotFoundException("Object is not a Document!");
 		}
+		
+		Document doc = (Document) object;
+		
+		if (doc.getStatus() == Document.DOC_CHECKED_OUT
+				&& ((getSessionUser().getId() != doc.getLockUserId()) && (!getSessionUser().isInGroup("admin")))) {
+			throw new CmisPermissionDeniedException("You can't change the checkout status on this object!");
+		}		
 
 		// Create the document history event
 		History transaction = new History();
@@ -778,7 +786,6 @@ public class LDRepository {
 		transaction.setUser(getSessionUser());
 
 		try {
-			Document doc = (Document) object;
 			documentDao.initialize(doc);
 			doc.setStatus(Document.DOC_UNLOCKED);
 			documentDao.store(doc, transaction);
@@ -800,11 +807,13 @@ public class LDRepository {
 		if (!(object instanceof Document)) {
 			throw new CmisObjectNotFoundException("Object is not a Document!");
 		}
+		
 		Document doc = (Document) object;
-
+		
 		if (doc.getStatus() == Document.DOC_CHECKED_OUT
-				&& (getSessionUser().getId() == doc.getLockUserId() || getSessionUser().isInGroup("admin")))
-			throw new CmisPermissionDeniedException("You cannod do a checkin on this object!");
+				&& ((getSessionUser().getId() != doc.getLockUserId()) && (!getSessionUser().isInGroup("admin")))) {
+			throw new CmisPermissionDeniedException("You can't do a checkin on this object!");
+		}
 
 		History transaction = new History();
 		transaction.setSessionId(sid);
@@ -906,18 +915,18 @@ public class LDRepository {
 	public ContentStream getContentStream(CallContext context, String objectId, BigInteger offset, BigInteger length) {
 		debug("getContentStream");
 
-		validatePermission(objectId, context, null);
+		validatePermission(objectId, context, Permission.DOWNLOAD);
 
 		if ((offset != null) || (length != null)) {
 			throw new CmisInvalidArgumentException("Offset and Length are not supported!");
 		}
 
 		AbstractDocument doc = getDocument(objectId);
-
+       
 		if (doc.getFileSize() == 0) {
 			throw new CmisConstraintException("Document has no content!");
-		}
-
+		}		
+		
 		InputStream stream = null;
 		try {
 			Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
@@ -933,6 +942,27 @@ public class LDRepository {
 			log.error(e.getMessage(), e);
 			throw new CmisObjectNotFoundException(e.getMessage(), e);
 		}
+		
+		// Create the document history event
+		History transaction = new History();
+		transaction.setSessionId(sid);
+		transaction.setEvent(DocumentEvent.DOWNLOADED.toString());
+		transaction.setComment("");
+		transaction.setUser(getSessionUser());
+		transaction.setDocId(doc.getId());
+		transaction.setFolderId(doc.getFolder().getId());
+		transaction.setTitle(doc.getTitle());
+		transaction.setVersion(doc.getVersion());
+		transaction.setFilename(doc.getFileName());		
+		transaction.setPath(folderDao.computePathExtended(doc.getFolder().getId()));
+		transaction.setNotified(0);		
+
+		try {
+			HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+			historyDAO.store(transaction);
+		} catch (Throwable t) {
+			log.warn(t.getMessage(), t);
+		}		
 
 		// compile data
 		ContentStreamImpl result = new ContentStreamImpl();
