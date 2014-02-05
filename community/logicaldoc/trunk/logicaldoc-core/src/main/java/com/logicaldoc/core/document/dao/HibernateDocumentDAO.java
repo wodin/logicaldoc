@@ -668,7 +668,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				+ docId, null);
 
 		Document doc = findById(docId);
-		if (doc != null) {
+		if (doc != null && transaction != null) {
 			transaction.setDocId(docId);
 			transaction.setEvent(DocumentEvent.RESTORED.toString());
 			saveDocumentHistory(doc, transaction);

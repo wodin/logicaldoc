@@ -22,7 +22,6 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
-import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.lock.LockManager;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderEvent;
@@ -636,7 +635,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				+ folderId, null);
 
 		Folder fld = findById(folderId);
-		if (fld != null) {
+		if (fld != null && transaction != null ) {
 			transaction.setEvent(FolderEvent.RESTORED.toString());
 			saveFolderHistory(fld, transaction);
 		}
