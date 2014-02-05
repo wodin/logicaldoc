@@ -350,9 +350,13 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void restore(String sid, long docId, long folderId) throws Exception {
-		validateSession(sid);
+		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		docDao.restore(docId, folderId);
+
+		History transaction = new History();
+		transaction.setUser(user);
+		transaction.setSessionId(sid);
+		docDao.restore(docId, folderId, transaction);
 	}
 
 	@Override
