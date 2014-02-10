@@ -181,7 +181,6 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 			e.printStackTrace();
 		}
 
-		version.setId(0);
 		version.setDeleted(0);
 		version.setLastModified(null);
 		version.setComment(comment);
@@ -229,7 +228,7 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 		}
 
 		version.setExtResId(document.getExtResId());
-
+		version.setId(0);
 		return version;
 	}
 
