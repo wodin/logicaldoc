@@ -491,15 +491,16 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			// To avoid 'optimistic locking failed' exceptions.
 			// Perhaps no more needed with Hibernate 3.6.9
-			// doc.setLastModified(new Date());
+			//doc.setLastModified(new Date());
 
 			// Modify document history entry
 			if (transaction.getEvent().trim().isEmpty())
 				transaction.setEvent(DocumentEvent.MOVED.toString());
-			documentDAO.store(doc, transaction);
 
 			Version version = Version.create(doc, transaction.getUser(), transaction.getComment(), Version.EVENT_MOVED,
 					false);
+			version.setId(0);
+			documentDAO.store(doc, transaction);
 			versionDAO.store(version);
 		} else {
 			throw new Exception("Document is immutable");
@@ -944,6 +945,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		versionDAO.delete(versionId);
 
 		versions = versionDAO.findByDocId(versionToDelete.getDocId());
+
 		Version lastVersion = versions.get(0);
 
 		/*
