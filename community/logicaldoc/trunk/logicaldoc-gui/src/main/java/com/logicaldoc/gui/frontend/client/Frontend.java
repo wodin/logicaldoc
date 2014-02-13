@@ -124,6 +124,8 @@ public class Frontend implements EntryPoint {
 				String savedSid = null;
 				try {
 					savedSid = Offline.get(Constants.COOKIE_SID).toString();
+					if(savedSid==null)
+						savedSid=Cookies.getCookie(Constants.COOKIE_SID);
 				} catch (Throwable t) {
 
 				}
