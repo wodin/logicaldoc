@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.data.Ace;
@@ -365,6 +367,32 @@ public class LDRepository {
 		return types.getTypesDescendants(context, typeId, depth, includePropertyDefinitions);
 	}
 
+	public String createDocumentFromSource(CallContext context, String sourceId, String folderId) {
+		debug("createDocumentFromSource");
+		validatePermission(folderId, context, Permission.WRITE);
+
+		Folder target = getFolder(folderId);
+		if (target == null)
+			throw new CmisObjectNotFoundException("Folder '" + folderId + "' is unknown!");
+
+		Document doc = (Document) getDocument(sourceId);
+		if (doc == null)
+			throw new CmisObjectNotFoundException("Document '" + sourceId + "' is unknown!");
+
+		History transaction = new History();
+		transaction.setSessionId(sid);
+		transaction.setEvent(DocumentEvent.STORED.toString());
+		transaction.setUser(getSessionUser());
+		transaction.setComment("");
+
+		try {
+			Document newDoc = documentManager.copyToFolder(doc, target, transaction);
+			return getId(newDoc);
+		} catch (Throwable e) {
+			throw new CmisStorageException("Could not create document: " + e.getMessage(), e);
+		}
+	}
+
 	/**
 	 * Create dispatch for AtomPub.
 	 */
@@ -408,7 +436,7 @@ public class LDRepository {
 		}
 
 		// check versioning state
-		if (VersioningState.NONE != versioningState) {
+		if (versioningState != null && VersioningState.NONE != versioningState) {
 			throw new CmisConstraintException("Versioning not supported!");
 		}
 
@@ -770,13 +798,13 @@ public class LDRepository {
 		if (!(object instanceof Document)) {
 			throw new CmisObjectNotFoundException("Object is not a Document!");
 		}
-		
+
 		Document doc = (Document) object;
-		
+
 		if (doc.getStatus() == Document.DOC_CHECKED_OUT
 				&& ((getSessionUser().getId() != doc.getLockUserId()) && (!getSessionUser().isInGroup("admin")))) {
 			throw new CmisPermissionDeniedException("You can't change the checkout status on this object!");
-		}		
+		}
 
 		// Create the document history event
 		History transaction = new History();
@@ -807,9 +835,9 @@ public class LDRepository {
 		if (!(object instanceof Document)) {
 			throw new CmisObjectNotFoundException("Object is not a Document!");
 		}
-		
+
 		Document doc = (Document) object;
-		
+
 		if (doc.getStatus() == Document.DOC_CHECKED_OUT
 				&& ((getSessionUser().getId() != doc.getLockUserId()) && (!getSessionUser().isInGroup("admin")))) {
 			throw new CmisPermissionDeniedException("You can't do a checkin on this object!");
@@ -922,11 +950,11 @@ public class LDRepository {
 		}
 
 		AbstractDocument doc = getDocument(objectId);
-       
+
 		if (doc.getFileSize() == 0) {
 			throw new CmisConstraintException("Document has no content!");
-		}		
-		
+		}
+
 		InputStream stream = null;
 		try {
 			Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
@@ -942,7 +970,7 @@ public class LDRepository {
 			log.error(e.getMessage(), e);
 			throw new CmisObjectNotFoundException(e.getMessage(), e);
 		}
-		
+
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
@@ -953,16 +981,16 @@ public class LDRepository {
 		transaction.setFolderId(doc.getFolder().getId());
 		transaction.setTitle(doc.getTitle());
 		transaction.setVersion(doc.getVersion());
-		transaction.setFilename(doc.getFileName());		
+		transaction.setFilename(doc.getFileName());
 		transaction.setPath(folderDao.computePathExtended(doc.getFolder().getId()));
-		transaction.setNotified(0);		
+		transaction.setNotified(0);
 
 		try {
 			HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 			historyDAO.store(transaction);
 		} catch (Throwable t) {
 			log.warn(t.getMessage(), t);
-		}		
+		}
 
 		// compile data
 		ContentStreamImpl result = new ContentStreamImpl();
@@ -1159,7 +1187,10 @@ public class LDRepository {
 
 		// As expression we will use the WHERE clause as is
 		String expr = StringUtils.removeStartIgnoreCase(statement, "where");
-
+		String where = expr;
+		if (where.toLowerCase().contains("where"))
+			where = where.substring(where.toLowerCase().indexOf("where") + 6).trim();
+		
 		/**
 		 * Try to detect if the request comes from LogicalDOC Mobile
 		 */
@@ -1169,33 +1200,25 @@ public class LDRepository {
 		// cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType
 		// FROM cmis:document WHERE cmis:name LIKE '%flexspaces%'
 		//
-		// Pattern 2) [full-text search]
+		// Pattern 2) [full-text search standard]
 		// statement.toString() ->
 		// SELECT
 		// cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType
 		// FROM cmis:document WHERE CONTAINS('flexspaces')
+		//
+		// Pattern 3) [full-text search on a specific attribute]
+		// statement.toString() ->
+		// SELECT
+		// cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType
+		// FROM cmis:document WHERE ldoc:sourceId = '12345'
 
-		boolean searchByFileName = true;
+		boolean fileNameSearch = where.toLowerCase().contains("cmis:name");
 		Long parentFolderID = null;
 
-		if (statement.indexOf("SELECT cmis:objectId,cmis:name,cmis:lastModifiedBy") != -1) {
-
-			expr = StringUtils.substringBetween(statement, "'%", "%'");
-
-			// TEST FOR full-text search
-			if (statement.toLowerCase().contains("contains")) {
-				searchByFileName = false;
-				expr = StringUtils.substringBetween(statement, "('", "')");
-			}
-
-			// Search in Tree
-			if (statement.toLowerCase().contains("in_tree")) {
-				// AND IN_TREE('fld.6488067')
-				String folderId = StringUtils.substringBetween(statement, "('fld.", "')");
-				parentFolderID = Long.parseLong(folderId);
-
-				// TODO: implement search by filename in Tree
-			}
+		// Search in Tree
+		if (statement.toLowerCase().contains("in_tree")) {
+			String folderId = StringUtils.substringBetween(statement, "('fld.", "')");
+			parentFolderID = Long.parseLong(folderId);
 		}
 
 		// Empty list of ObjectData
@@ -1226,7 +1249,13 @@ public class LDRepository {
 		}
 
 		// Performs Full-text search
-		if (!searchByFileName) {
+		if (!fileNameSearch) {
+			expr = StringUtils.substringBetween(statement, "'%", "%'");
+			if (StringUtils.isEmpty(expr))
+				expr = StringUtils.substringBetween(statement, "('", "')");
+			if (StringUtils.isEmpty(expr))
+				expr = StringUtils.substringBetween(statement, "'", "'");
+
 			// Prepare the search options
 			FulltextSearchOptions opt = new FulltextSearchOptions();
 			opt.setMaxHits(max);
@@ -1242,6 +1271,21 @@ public class LDRepository {
 			}
 
 			opt.setExpression(expr);
+			
+			// Not detect if the search must be applied to specific fields
+			if (where.contains("cmis:") || where.contains("ldoc:")) {
+				List<String> fields = new ArrayList<String>();
+				Pattern p = Pattern.compile("[(cmis),(ldoc)]+:\\w+");
+				Matcher m = p.matcher(where);
+				while (m.find()) {
+					String field = m.group();
+					if (field.startsWith("ldoc:"))
+						field = field.substring("ldoc:".length());
+					fields.add(field);
+				}
+
+				opt.setFields(fields.toArray(new String[0]));
+			}
 
 			// Execute the search
 			Search search = Search.get(opt);
@@ -1253,7 +1297,6 @@ public class LDRepository {
 				for (Hit hit : hits) {
 					// filtro i risultati (lasciando solo le colonne richieste)
 					ObjectData result = compileObjectType(null, hit, filter, false, false, null);
-
 					list.add(result);
 				}
 			} catch (Exception e) {
@@ -1264,7 +1307,7 @@ public class LDRepository {
 			hasMoreItems = search.getEstimatedHitsNumber() > max; // THIS Seems
 																	// more
 																	// correct
-		} else {
+		} else if (fileNameSearch) {
 			User user = getSessionUser();
 
 			// Remove all the '*' from start and end

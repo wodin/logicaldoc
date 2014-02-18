@@ -5,14 +5,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
-import org.apache.chemistry.opencmis.client.api.ObjectId;
+import org.apache.chemistry.opencmis.client.api.ItemIterable;
+import org.apache.chemistry.opencmis.client.api.QueryResult;
 import org.apache.chemistry.opencmis.client.api.Session;
 import org.apache.chemistry.opencmis.client.api.SessionFactory;
 import org.apache.chemistry.opencmis.client.runtime.SessionFactoryImpl;
@@ -23,7 +28,6 @@ import org.apache.chemistry.opencmis.commons.enums.BaseTypeId;
 import org.apache.chemistry.opencmis.commons.enums.BindingType;
 import org.apache.chemistry.opencmis.commons.enums.UnfileObject;
 import org.apache.chemistry.opencmis.commons.enums.VersioningState;
-import org.apache.chemistry.opencmis.commons.exceptions.CmisBaseException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -39,17 +43,17 @@ public class SampleClient {
 	// org.apache.chemistry.opencmis.binding.compression=true
 	// org.apache.chemistry.opencmis.binding.cookies=true
 
-	private static final String CONNECTION_URL = "http://localhost:8080/service/cmis";
+	private static final String CONNECTION_URL = "http://localhost:9080/service/cmis";
 
-	private static final String TEST_FOLDER_NAME = "/Default/testcmis";
+	private static final String TEST_FOLDER_NAME = "/Default/Freelin/ölard";
 
 	private static final String TEST_DOCUMENT_NAME_1 = "business plan 2014.docx";
 
 	public static void main(String[] args) throws IOException {
-		
-//		Folder root = connect();
-//		root.getName();
-		
+
+		Folder root = connect();
+		root.getName();
+
 		// cleanup(root, TEST_FOLDER_NAME);
 		// Folder newFolder = createFolder(root, TEST_FOLDER_NAME);
 		// createDocument(newFolder, TEST_DOCUMENT_NAME_1);
@@ -59,87 +63,99 @@ public class SampleClient {
 		// DeleteDocument(newFolder, "/" + TEST_DOCUMENT_NAME_2);
 		// System.out.println("+++ List Folder +++");
 		// listFolder(0, newFolder);
+
+		CmisObject object = session.getObjectByPath(TEST_FOLDER_NAME);
+		System.out.println(object.getId() + " " + object.getName());
+		//
+		// object = session.getObjectByPath(TEST_FOLDER_NAME + "/" +
+		// TEST_DOCUMENT_NAME_1);
+		// System.out.println(object.getId() + " " +
+		// object.getProperty(TypeManager.PROP_TITLE).getValues().get(0));
+
+		// checkoutCheckin();
 		
-//		CmisObject object = session.getObjectByPath(TEST_FOLDER_NAME);
-//		System.out.println(object.getId() + " " + object.getName());
-//		
-//		object = session.getObjectByPath(TEST_FOLDER_NAME + "/" + TEST_DOCUMENT_NAME_1);
-//		System.out.println(object.getId() + " " + object.getProperty(TypeManager.PROP_TITLE).getValues().get(0));
-		
-		checkoutCheckin();
+		ItemIterable<QueryResult> result = session
+				.query("SELECT cmis:objectId,cmis:name,ldoc:tags FROM cmis:document WHERE ldoc:tags = '12345'",
+						true);
+		for (QueryResult r : result) {
+			System.out.println("result: "+r.getPropertyById("ldoc:tags"));
+		}
 	}
-	
-	
+
 	private static void checkoutCheckin() throws IOException {
-		
-		//Folder root = connect("admin", "admin");
-		//Folder root = connect("manager", "12345678"); // user solely in group author
-		Folder root = connect("dotNET2WSClient", "12345678"); // user in groups author and admin
+
+		// Folder root = connect("admin", "admin");
+		// Folder root = connect("manager", "12345678"); // user solely in group
+		// author
+		Folder root = connect("dotNET2WSClient", "12345678"); // user in groups
+																// author and
+																// admin
 		root.getName();
 
 		CmisObject object = session.getObjectByPath(TEST_FOLDER_NAME);
 		System.out.println(object.getId() + " " + object.getName());
-		
+
 		object = session.getObjectByPath(TEST_FOLDER_NAME + "/" + TEST_DOCUMENT_NAME_1);
 		System.out.println(object.getId() + " " + object.getProperty(TypeManager.PROP_TITLE).getValues().get(0));
-		
-		Document pwc = (Document) object;
-//		ObjectId oid = pwc.checkOut();
-//		System.out.println("oid: "  +oid);
-//		System.out.println("oid.getId(): "  +oid.getId());
-		
-		 // default values if the document has no content
-		String filename = "business plan 2014.docx";
-	    String mimetype = "text/plain; charset=UTF-8";
-	    String content = "";
-		
-		// get the orginal content
-	    ContentStream contentStream = pwc.getContentStream();
-	    if (contentStream != null) {
-	        filename = contentStream.getFileName();
-	        mimetype = contentStream.getMimeType();
-	        System.out.println("mimetype: " +mimetype);
-	        //content = getContentAsString(contentStream);
-	    }
-		
-//	    String updatedContents = content + "\nLine added in new version";
-//
-//	    byte[] buf = updatedContents.getBytes("UTF-8");
-//	    
-//	    ByteArrayInputStream input = new ByteArrayInputStream(buf);
-	    
-	    
-	    File myFile = new File("C:/Users/alle/Desktop/business plan 2014.docx");
-	    	    
-	    FileInputStream fis = new FileInputStream(myFile);
-	    
-	    byte[] buf = IOUtils.toByteArray(fis);
-	    ByteArrayInputStream input = new ByteArrayInputStream(buf);
 
-	    contentStream = session.getObjectFactory().createContentStream(filename, buf.length, mimetype, input);
-	    
-	    boolean major = false;
-	    Map<String,?> properties = null;
-		
-	    // Check in the pwc
-	    try {
-	    	if (true)
-	    		throw new RuntimeException("fghfgh");
-	    	// I can do the checkout only if I own the checkout or if I'm in admin group
-	        pwc.checkIn(major, properties, contentStream, "minor version");
-	        System.out.println("checkin completed!");
-	    } catch (RuntimeException e) {
-	        e.printStackTrace();
-	        System.out.println("checkin failed, trying to cancel the checkout");
-	        try {
-				pwc.cancelCheckOut(); // this can also generate a permission exception
+		Document pwc = (Document) object;
+		// ObjectId oid = pwc.checkOut();
+		// System.out.println("oid: " +oid);
+		// System.out.println("oid.getId(): " +oid.getId());
+
+		// default values if the document has no content
+		String filename = "business plan 2014.docx";
+		String mimetype = "text/plain; charset=UTF-8";
+		String content = "";
+
+		// get the orginal content
+		ContentStream contentStream = pwc.getContentStream();
+		if (contentStream != null) {
+			filename = contentStream.getFileName();
+			mimetype = contentStream.getMimeType();
+			System.out.println("mimetype: " + mimetype);
+			// content = getContentAsString(contentStream);
+		}
+
+		// String updatedContents = content + "\nLine added in new version";
+		//
+		// byte[] buf = updatedContents.getBytes("UTF-8");
+		//
+		// ByteArrayInputStream input = new ByteArrayInputStream(buf);
+
+		File myFile = new File("C:/Users/alle/Desktop/business plan 2014.docx");
+
+		FileInputStream fis = new FileInputStream(myFile);
+
+		byte[] buf = IOUtils.toByteArray(fis);
+		ByteArrayInputStream input = new ByteArrayInputStream(buf);
+
+		contentStream = session.getObjectFactory().createContentStream(filename, buf.length, mimetype, input);
+
+		boolean major = false;
+		Map<String, ?> properties = null;
+
+		// Check in the pwc
+		try {
+			if (true)
+				throw new RuntimeException("fghfgh");
+			// I can do the checkout only if I own the checkout or if I'm in
+			// admin group
+			pwc.checkIn(major, properties, contentStream, "minor version");
+			System.out.println("checkin completed!");
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			System.out.println("checkin failed, trying to cancel the checkout");
+			try {
+				pwc.cancelCheckOut(); // this can also generate a permission
+										// exception
 				System.out.println("checkout status canceled");
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-	    }
-	}	
+		}
+	}
 
 	/**
 	 * Clean up test folder before executing test
@@ -181,7 +197,7 @@ public class SampleClient {
 	 * @param target
 	 * @param delDocName
 	 */
-	private static void DeleteDocument(Folder target, String delDocName) {
+	private static void deleteDocument(Folder target, String delDocName) {
 		try {
 			CmisObject object = session.getObjectByPath(target.getPath() + delDocName);
 			Document delDoc = (Document) object;
@@ -238,7 +254,7 @@ public class SampleClient {
 	private static Folder connect() {
 		return connect("admin", "12345678");
 	}
-	
+
 	/**
 	 * Connect to logicaldoc repository
 	 * 
@@ -255,5 +271,5 @@ public class SampleClient {
 
 		session = sessionFactory.createSession(parameter);
 		return session.getRootFolder();
-	}	
+	}
 }
