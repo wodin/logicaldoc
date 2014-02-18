@@ -419,6 +419,9 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		folders = dao.findByName("xxxxx");
 		Assert.assertNotNull(folders);
 		Assert.assertTrue(folders.isEmpty());
+
+		// Try with umlauts
+		Assert.assertNotNull(dao.findByName(dao.findById(Folder.DEFAULTWORKSPACE), "ölard", false));
 	}
 
 	@Test
@@ -447,7 +450,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	public void testFindByParentId() {
 		List<Folder> folders = dao.findByParentId(Folder.ROOTID);
 		Assert.assertNotNull(folders);
-		Assert.assertEquals(7, folders.size());
+		Assert.assertEquals(8, folders.size());
 
 		// Try with unexisting parent
 		folders = dao.findByParentId(999);
@@ -462,6 +465,11 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertTrue(dao.isWriteEnable(1200, 3));
 		Assert.assertTrue(dao.isWriteEnable(Folder.ROOTID, 3));
 		Assert.assertFalse(dao.isWriteEnable(Folder.ROOTID, 999));
+	}
+	
+	@Test
+	public void testFindByPath() {
+		Assert.assertNotNull(dao.findByPath("/Default/ölard"));
 	}
 
 	@Test
@@ -542,7 +550,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testFindByGroupId() {
 		Collection<Folder> folders = dao.findByGroupId(1);
-		Assert.assertEquals(8, folders.size());
+		Assert.assertEquals(9, folders.size());
 		folders = dao.findByGroupId(10);
 		Assert.assertEquals(0, folders.size());
 		folders = dao.findByGroupId(2);
@@ -707,7 +715,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 		ids.clear();
 		ids = dao.findFolderIdInTree(5L, false);
-		Assert.assertEquals(8, ids.size());
+		Assert.assertEquals(9, ids.size());
 		Assert.assertTrue(ids.contains(1200L));
 		Assert.assertTrue(ids.contains(6L));
 		Assert.assertTrue(ids.contains(3000L));
@@ -716,5 +724,11 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		ids = dao.findFolderIdInTree(1200L, false);
 		Assert.assertEquals(3, ids.size());
 		Assert.assertTrue(ids.contains(1201L));
+	}
+
+	@Test
+	public void testFindbyPath() {
+		Folder folder = dao.findByPath("/Default/ölard");
+		Assert.assertNotNull(folder);
 	}
 }
