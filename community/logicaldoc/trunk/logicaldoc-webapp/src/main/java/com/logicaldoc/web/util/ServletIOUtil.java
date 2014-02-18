@@ -192,7 +192,7 @@ public class ServletIOUtil {
 			filename = filename + "." + FilenameUtils.getExtension(suffix);
 		}
 
-		if (StringUtils.isEmpty(suffix) || (!suffix.equals("preview-1.swf") && !suffix.equals("preview.swf"))) {
+		if (StringUtils.isEmpty(suffix) || (!suffix.contains("preview"))) {
 			long size = storer.size(doc.getId(), resource);
 
 			// get the mimetype
