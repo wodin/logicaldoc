@@ -498,6 +498,11 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public void paste(String sid, long[] docIds, long folderId, String action) throws InvalidSessionException {
+		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+
+		if (!fdao.isWriteEnable(folderId, SessionUtil.getSessionUser(sid).getId()))
+			throw new RuntimeException("Cannot write in folder " + folderId);
+
 		if (action.equals(Clipboard.CUT))
 			cut(sid, docIds, folderId);
 		else if (action.equals(Clipboard.COPY))
