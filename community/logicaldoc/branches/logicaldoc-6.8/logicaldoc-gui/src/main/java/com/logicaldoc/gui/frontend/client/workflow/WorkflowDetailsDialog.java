@@ -275,7 +275,7 @@ public class WorkflowDetailsDialog extends Window {
 							return;
 						setUser(user.getSelectedRecord().getAttribute("id"));
 
-						service.claimTask(Session.get().getSid(), workflow.getSelectedTask().getId(), user
+						service.reassignTask(Session.get().getSid(), workflow.getSelectedTask().getId(), user
 								.getSelectedRecord().getAttribute("id"), new AsyncCallback<GUIWorkflow>() {
 
 							@Override
