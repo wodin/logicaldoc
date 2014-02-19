@@ -553,11 +553,11 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		transaction.setNotified(0);
 		transaction.setFolderId(folder.getId());
 		transaction.setTitle(folder.getId() != Folder.ROOTID ? folder.getName() : "/");
-		String deletedFolderPathExtended = null;
-		if (StringUtils.isEmpty(transaction.getPath()))
-			transaction.setPath(computePathExtended(folder.getId()));
-		else
-			deletedFolderPathExtended = transaction.getPath();
+		String pathExtended = transaction.getPath();
+		if (StringUtils.isEmpty(pathExtended))
+			pathExtended=computePathExtended(folder.getId());
+
+		transaction.setPath(pathExtended);
 		transaction.setComment("");
 
 		historyDAO.store(transaction);
@@ -572,13 +572,13 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			if (parent != null) {
 				FolderHistory parentHistory = new FolderHistory();
 				parentHistory.setFolderId(parent.getId());
-				parentHistory.setTitle(parent.getId() != Folder.ROOTID ? parent.getName() : "/");
-				if (deletedFolderPathExtended != null)
-					parentHistory.setPath(deletedFolderPathExtended);
-				else
-					parentHistory.setPath(computePathExtended(folder.getId()));
-
+				parentHistory.setTitle(folder.getName());
+				parentHistory.setPath(pathExtended);
 				parentHistory.setUser(transaction.getUser());
+				parentHistory.setComment("");
+				parentHistory.setSessionId(transaction.getSessionId());
+				parentHistory.setComment(transaction.getComment());
+				
 				if (transaction.getEvent().equals(FolderEvent.CREATED.toString())
 						|| transaction.getEvent().equals(FolderEvent.MOVED.toString())) {
 					parentHistory.setEvent(FolderEvent.SUBFOLDER_CREATED.toString());
@@ -590,11 +590,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 					parentHistory.setEvent(FolderEvent.SUBFOLDER_DELETED.toString());
 				} else if (transaction.getEvent().equals(FolderEvent.CHANGED.toString())) {
 					parentHistory.setEvent(FolderEvent.SUBFOLDER_CHANGED.toString());
+				} else if (transaction.getEvent().equals(FolderEvent.RESTORED.toString())) {
+					parentHistory.setEvent(FolderEvent.SUBFOLDER_RESTORED.toString());
 				}
-
-				parentHistory.setComment("");
-				parentHistory.setSessionId(transaction.getSessionId());
-				parentHistory.setComment(transaction.getComment());
 
 				historyDAO.store(parentHistory);
 			}
@@ -635,7 +633,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				+ folderId, null);
 
 		Folder fld = findById(folderId);
-		if (fld != null && transaction != null) {
+		if (fld != null && transaction != null ) {
 			transaction.setEvent(FolderEvent.RESTORED.toString());
 			saveFolderHistory(fld, transaction);
 		}
@@ -869,12 +867,14 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 		boolean result = true;
 		try {
+			transaction.setPath(computePathExtended(folderId));
+			transaction.setEvent(FolderEvent.DELETED.toString());
+			transaction.setFolderId(folderId);
+			
 			Folder folder = (Folder) findById(folderId);
 			folder.setDeleted(1);
 			folder.setDeleteUserId(transaction.getUserId());
-			transaction.setEvent(FolderEvent.DELETED.toString());
-			transaction.setFolderId(folderId);
-			transaction.setPath(computePathExtended(folderId));
+			
 			store(folder, transaction);
 		} catch (Throwable e) {
 			if (log.isErrorEnabled())

@@ -19,7 +19,8 @@ public enum FolderEvent {
 	SUBFOLDER_PERMISSION("event.folder.subfolder.permission"),
 	SUBFOLDER_DELETED("event.folder.subfolder.deleted"),
 	SUBFOLDER_CHANGED("event.folder.subfolder.changed"),
-	RESTORED("event.folder.restored");
+	RESTORED("event.folder.restored"),
+	SUBFOLDER_RESTORED("event.folder.subfolder.restored");
 	
     private String event;
 
