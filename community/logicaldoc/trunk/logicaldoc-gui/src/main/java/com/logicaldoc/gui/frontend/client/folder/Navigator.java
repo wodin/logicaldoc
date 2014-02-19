@@ -187,6 +187,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 														@Override
 														public void onFailure(Throwable caught) {
 															Log.serverError(caught);
+															Log.warn(I18N.message("operationnotallowed"), null);
 														}
 
 														@Override
