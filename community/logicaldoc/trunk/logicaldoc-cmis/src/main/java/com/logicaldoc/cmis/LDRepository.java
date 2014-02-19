@@ -1190,7 +1190,7 @@ public class LDRepository {
 		String where = expr;
 		if (where.toLowerCase().contains("where"))
 			where = where.substring(where.toLowerCase().indexOf("where") + 6).trim();
-		
+
 		/**
 		 * Try to detect if the request comes from LogicalDOC Mobile
 		 */
@@ -1213,6 +1213,7 @@ public class LDRepository {
 		// FROM cmis:document WHERE ldoc:sourceId = '12345'
 
 		boolean fileNameSearch = where.toLowerCase().contains("cmis:name");
+
 		Long parentFolderID = null;
 
 		// Search in Tree
@@ -1271,7 +1272,7 @@ public class LDRepository {
 			}
 
 			opt.setExpression(expr);
-			
+
 			// Not detect if the search must be applied to specific fields
 			if (where.contains("cmis:") || where.contains("ldoc:")) {
 				List<String> fields = new ArrayList<String>();
@@ -1307,9 +1308,10 @@ public class LDRepository {
 			hasMoreItems = search.getEstimatedHitsNumber() > max; // THIS Seems
 																	// more
 																	// correct
-		} else if (fileNameSearch) {
+		} else {
 			User user = getSessionUser();
 
+			expr = StringUtils.substringBetween(statement, "'%", "%'");
 			// Remove all the '*' from start and end
 			expr = StringUtils.strip(expr, "*");
 
