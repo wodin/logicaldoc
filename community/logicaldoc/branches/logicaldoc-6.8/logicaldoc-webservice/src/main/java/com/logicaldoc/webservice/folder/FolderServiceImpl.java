@@ -426,7 +426,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		transaction.setSessionId(sid);
 
 		if (path.startsWith("/"))
-			path.substring(1);
+			path = path.substring(1);
 
 		/*
 		 * Cannot write in the root so if the parent is the root, we have to
