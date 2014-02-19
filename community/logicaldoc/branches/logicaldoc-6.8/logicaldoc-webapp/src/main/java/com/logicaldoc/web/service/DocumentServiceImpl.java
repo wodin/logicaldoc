@@ -1279,11 +1279,16 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	@Override
 	public void updateLink(String sid, long id, String type) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
-
-		DocumentLinkDAO dao = (DocumentLinkDAO) Context.getInstance().getBean(DocumentLinkDAO.class);
-		DocumentLink link = dao.findById(id);
-		link.setType(type);
-		dao.store(link);
+		try {
+			DocumentLinkDAO dao = (DocumentLinkDAO) Context.getInstance().getBean(DocumentLinkDAO.class);
+			DocumentLink link = dao.findById(id);
+			dao.initialize(link);
+			link.setType(type);
+			dao.store(link);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
 	}
 
 	@Override
