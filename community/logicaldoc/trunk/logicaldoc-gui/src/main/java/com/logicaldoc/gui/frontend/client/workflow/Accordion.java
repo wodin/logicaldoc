@@ -105,14 +105,6 @@ public class Accordion extends SectionStack {
 				}
 			}
 		});
-
-//		FormItemIcon icon = new FormItemIcon();
-//		icon.setSrc("[SKIN]/actions/remove.png");
-//		supervisor.addIconClickHandler(new IconClickHandler() {
-//			public void onIconClick(IconClickEvent event) {
-//				supervisor.setValue("");
-//			}
-//		});
 		
 		PickerIcon icon = new PickerIcon(PickerIcon.CLEAR, new FormItemClickHandler() {
 			public void onFormItemClick(FormItemIconClickEvent event) {
