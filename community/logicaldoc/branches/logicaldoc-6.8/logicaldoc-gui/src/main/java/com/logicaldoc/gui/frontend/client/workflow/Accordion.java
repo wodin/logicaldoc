@@ -9,15 +9,15 @@ import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.FormItemIcon;
+import com.smartgwt.client.widgets.form.fields.PickerIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
-import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -105,11 +105,9 @@ public class Accordion extends SectionStack {
 				}
 			}
 		});
-
-		FormItemIcon icon = new FormItemIcon();
-		icon.setSrc("[SKIN]/actions/remove.png");
-		supervisor.addIconClickHandler(new IconClickHandler() {
-			public void onIconClick(IconClickEvent event) {
+		
+		PickerIcon icon = new PickerIcon(PickerIcon.CLEAR, new FormItemClickHandler() {
+			public void onFormItemClick(FormItemIconClickEvent event) {
 				supervisor.setValue("");
 			}
 		});
