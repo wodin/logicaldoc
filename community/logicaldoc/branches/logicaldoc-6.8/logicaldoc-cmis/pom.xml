@@ -17,34 +17,39 @@
         <dependency>
             <groupId>org.apache.chemistry.opencmis</groupId>
             <artifactId>chemistry-opencmis-commons-api</artifactId>
-            <version>0.7.0</version>
+            <version>0.10.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.chemistry.opencmis</groupId>
             <artifactId>chemistry-opencmis-commons-impl</artifactId>
-            <version>0.7.0</version>
+            <version>0.10.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.chemistry.opencmis</groupId>
             <artifactId>chemistry-opencmis-server-support</artifactId>
-            <version>0.7.0</version>
+            <version>0.10.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.chemistry.opencmis</groupId>
             <artifactId>chemistry-opencmis-server-bindings</artifactId>
-            <version>0.7.0</version>
-            <classifier>classes</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.chemistry.opencmis</groupId>
-            <artifactId>chemistry-opencmis-client-impl</artifactId>
-            <version>0.7.0</version>
-            <scope>test</scope>
+            <version>0.10.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.chemistry.opencmis</groupId>
             <artifactId>chemistry-opencmis-client-bindings</artifactId>
-            <version>0.7.0</version>
+            <version>0.10.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.chemistry.opencmis</groupId>
+            <artifactId>chemistry-opencmis-client-api</artifactId>
+            <version>0.10.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.chemistry.opencmis</groupId>
+            <artifactId>chemistry-opencmis-client-impl</artifactId>
+            <version>0.10.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>

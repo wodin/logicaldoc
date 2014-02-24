@@ -338,4 +338,13 @@ public class LDCmisService extends AbstractCmisService {
 				includeRelationships, renditionFilter, includePolicyIds, includeAcl, extension);
 
 	}
+
+	@Override
+	public String createDocumentFromSource(String repositoryId, String sourceId, Properties properties,
+			String folderId, VersioningState versioningState, List<String> policies, Acl addAces, Acl removeAces,
+			ExtensionsData extension) {
+		System.out.println("+++ createDocumentFromSource");
+		validateSession();
+		return getRepository().createDocumentFromSource(getCallContext(), sourceId, folderId);
+	}
 }
