@@ -9,10 +9,10 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.sql.SqlUtil;
 
 /**
  * Search specialization for Folder searches.
@@ -30,7 +30,7 @@ public class FolderSearch extends Search {
 	public void internalSearch() throws Exception {
 		prepareExpression();
 
-		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		FolderSearchOptions fso = (FolderSearchOptions) getOptions();
 
 		List<Object> params = new ArrayList<Object>();
@@ -60,15 +60,16 @@ public class FolderSearch extends Search {
 
 		FolderSearchOptions fso = (FolderSearchOptions) getOptions();
 
+		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		if (StringUtils.isNotEmpty(fso.getFolderName())) {
-			query.append(" and ld_name like '%");
-			query.append(fso.getFolderName().trim());
+			query.append(" and " + (dao.getDbms().endsWith("hsqldb") ? "lcase" : "lower") + "(ld_name) like '%");
+			query.append(SqlUtil.doubleQuotes(fso.getFolderName().trim().toLowerCase()));
 			query.append("%' ");
 		}
 
 		if (StringUtils.isNotEmpty(fso.getFolderDescription())) {
-			query.append(" and ld_description like '%");
-			query.append(fso.getFolderDescription().trim());
+			query.append(" and " + (dao.getDbms().endsWith("hsqldb") ? "lcase" : "lower") + "(ld_description) like '%");
+			query.append(SqlUtil.doubleQuotes(fso.getDescription().trim().toLowerCase()));
 			query.append("%' ");
 		}
 
