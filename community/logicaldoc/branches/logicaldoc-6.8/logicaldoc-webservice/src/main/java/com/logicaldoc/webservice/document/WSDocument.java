@@ -2,7 +2,6 @@ package com.logicaldoc.webservice.document;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -759,7 +758,11 @@ public class WSDocument implements Serializable {
 	}
 
 	public void addExtendedAttribute(WSAttribute att) {
-		List<WSAttribute> buf = (List<WSAttribute>) Arrays.asList(getExtendedAttributes());
+		if (extendedAttributes == null)
+			extendedAttributes = new WSAttribute[0];
+		List<WSAttribute> buf = new ArrayList<WSAttribute>();
+		for (WSAttribute tmp : extendedAttributes)
+			buf.add(tmp);
 		buf.add(att);
 		setExtendedAttributes(buf.toArray(new WSAttribute[0]));
 	}
