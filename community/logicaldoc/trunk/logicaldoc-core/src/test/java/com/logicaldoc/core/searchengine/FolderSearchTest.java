@@ -65,22 +65,25 @@ public class FolderSearchTest extends AbstractCoreTCase {
 		Assert.assertEquals(1200, results.get(0).getFolder().getId());
 
 		opt.setCreationFrom(new Date());
-		search.search();
+		results = search.search();
 		Assert.assertEquals(0, results.size());
 
 		opt.setCreationFrom(null);
 		opt.setCreationTo(new Date());
-		search.search();
+		results = search.search();
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(1201, results.get(0).getId());
 		Assert.assertEquals(1200, results.get(0).getFolder().getId());
 
 		opt.setFolderDescription("cocco");
-		search.search();
+		opt.setFolderName(null);
+		search.setOptions(opt);
+		results = search.search();
+		System.out.println(results.toString());
 		Assert.assertEquals(0, results.size());
 
 		opt.setFolderDescription("est");
-		search.search();
+		results = search.search();
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(1201, results.get(0).getId());
 		Assert.assertEquals(1200, results.get(0).getFolder().getId());
