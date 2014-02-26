@@ -9,6 +9,12 @@
                       http://www.logicaldoc.com                    
 
                      LogicalDOC Community Edition
+                     
+LogicalDOC 6.8.3 (2014-03-03; logicaldoc-6.8.3)
+===============================================
+407 - Ability to move documents into folders without write access - Bug - Core
+411 - Preview shows the first page only - Bug - User Interface
+413 - Folder Search should be case insentive - Improvement - User Interface
 
 LogicalDOC 6.8.2 (2014-01-27; logicaldoc-6.8.2)
 ===============================================                    
