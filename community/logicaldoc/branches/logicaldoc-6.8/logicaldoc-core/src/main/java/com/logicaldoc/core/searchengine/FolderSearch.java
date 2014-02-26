@@ -69,7 +69,7 @@ public class FolderSearch extends Search {
 
 		if (StringUtils.isNotEmpty(fso.getFolderDescription())) {
 			query.append(" and " + (dao.getDbms().endsWith("hsqldb") ? "lcase" : "lower") + "(ld_description) like '%");
-			query.append(SqlUtil.doubleQuotes(fso.getDescription().trim().toLowerCase()));
+			query.append(SqlUtil.doubleQuotes(fso.getFolderDescription().trim().toLowerCase()));
 			query.append("%' ");
 		}
 
