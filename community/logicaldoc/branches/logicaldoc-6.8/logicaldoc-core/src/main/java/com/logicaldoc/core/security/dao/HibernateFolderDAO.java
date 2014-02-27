@@ -578,6 +578,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				parentHistory.setComment("");
 				parentHistory.setSessionId(transaction.getSessionId());
 				parentHistory.setComment(transaction.getComment());
+				parentHistory.setPathOld(transaction.getPathOld());
+				parentHistory.setTitleOld(transaction.getTitleOld());
+				parentHistory.setFilenameOld(transaction.getFilenameOld());
 				
 				if (transaction.getEvent().equals(FolderEvent.CREATED.toString())
 						|| transaction.getEvent().equals(FolderEvent.MOVED.toString())) {
