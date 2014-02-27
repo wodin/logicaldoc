@@ -311,6 +311,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			// Add a folder history entry
 			FolderHistory history = new FolderHistory();
 			history.setTitleOld(folder.getName());
+			history.setPathOld(dao.computePathExtended(folderId));
 			history.setUser(SessionUtil.getSessionUser(sid));
 			history.setEvent(FolderEvent.RENAMED.toString());
 			history.setSessionId(sid);

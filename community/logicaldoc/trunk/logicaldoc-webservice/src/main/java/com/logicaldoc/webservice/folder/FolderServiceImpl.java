@@ -212,6 +212,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			transaction.setEvent(FolderEvent.RENAMED.toString());
 			transaction.setSessionId(sid);
 			transaction.setTitleOld(folder.getName());
+			transaction.setPathOld(folderDao.computePathExtended(folderId));
 
 			folder.setName(name);
 			folderDao.store(folder, transaction);
