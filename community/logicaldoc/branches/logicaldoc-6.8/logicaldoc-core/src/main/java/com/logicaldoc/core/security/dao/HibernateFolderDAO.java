@@ -1120,6 +1120,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 		initialize(source);
 
+		
+		long oldParent=source.getParentId();
 		String pathOld = computePathExtended(source.getId());
 		transaction.setPathOld(pathOld);
 
@@ -1131,8 +1133,23 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 		// Modify folder history entry
 		transaction.setEvent(FolderEvent.MOVED.toString());
-
+		
 		store(source, transaction);
+		
+		/*
+		 * Now save the event in the parent folder
+		 */
+		FolderHistory hist=new FolderHistory();
+		hist.setFolderId(oldParent);
+		hist.setEvent(FolderEvent.SUBFOLDER_MOVED.toString());
+		hist.setSessionId(transaction.getSessionId());
+		hist.setUserId(transaction.getUserId());
+		hist.setUserName(transaction.getUserName());
+		hist.setTitle(source.getName());
+		hist.setPath(transaction.getPath());
+		hist.setPathOld(transaction.getPathOld());
+		
+		historyDAO.store(hist);
 	}
 
 	@Override
