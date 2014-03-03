@@ -93,7 +93,7 @@
 
 	<target name="po2prop" depends="init-all">
 		<echo>Produce the properties bak</echo>
-		<mkdir dir="target/po" />
+		<mkdir dir="target/properies" />
 		
 		<for list="${bundles}" param="bundle">
 			<sequential>
