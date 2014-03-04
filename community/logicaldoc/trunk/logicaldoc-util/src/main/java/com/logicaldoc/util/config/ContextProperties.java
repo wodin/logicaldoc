@@ -32,7 +32,11 @@ public class ContextProperties extends OrderedProperties {
 		try {
 			load(ContextProperties.class.getClassLoader().getResource("/context.properties"));
 		} catch (Throwable t) {
-			load(ContextProperties.class.getClassLoader().getResource("context.properties"));
+			try {
+				load(ContextProperties.class.getClassLoader().getResource("context.properties"));
+			} catch (Throwable q) {
+
+			}
 		}
 	}
 
@@ -112,7 +116,7 @@ public class ContextProperties extends OrderedProperties {
 			FileUtils.copyFile(src, backup);
 			log.debug("Backup saved in " + backup.getPath());
 		}
-		
+
 		store(new FileOutputStream(docPath), "");
 		try {
 			store(new FileOutputStream(docPath), "");
