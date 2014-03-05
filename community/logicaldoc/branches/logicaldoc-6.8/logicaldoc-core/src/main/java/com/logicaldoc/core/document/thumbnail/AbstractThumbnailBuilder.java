@@ -16,8 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.Exec;
 import com.logicaldoc.util.config.ContextProperties;
+import com.logicaldoc.util.exec.Exec;
 import com.logicaldoc.util.io.FileUtil;
 
 /**
