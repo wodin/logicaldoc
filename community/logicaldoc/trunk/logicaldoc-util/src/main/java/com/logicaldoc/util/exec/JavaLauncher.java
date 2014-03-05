@@ -1,4 +1,4 @@
-package com.logicaldoc.util;
+package com.logicaldoc.util.exec;
 
 import java.io.BufferedReader;
 import java.io.File;
