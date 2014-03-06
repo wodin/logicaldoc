@@ -978,12 +978,18 @@ public class LDRepository {
 		transaction.setComment("");
 		transaction.setUser(getSessionUser());
 		transaction.setDocId(doc.getId());
-		transaction.setFolderId(doc.getFolder().getId());
 		transaction.setTitle(doc.getTitle());
 		transaction.setVersion(doc.getVersion());
 		transaction.setFilename(doc.getFileName());
-		transaction.setPath(folderDao.computePathExtended(doc.getFolder().getId()));
 		transaction.setNotified(0);
+		
+		if (doc instanceof Document) {
+			transaction.setFolderId(doc.getFolder().getId());
+			transaction.setPath(folderDao.computePathExtended(doc.getFolder().getId()));
+		} else {
+			transaction.setFolderId(((Version) doc).getFolderId());
+			transaction.setPath(folderDao.computePathExtended(((Version) doc).getFolderId()));
+		}
 
 		try {
 			HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
