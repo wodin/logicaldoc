@@ -5,13 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
@@ -36,20 +32,13 @@ public class SampleClient {
 
 	private static Session session;
 
-	// org.apache.chemistry.opencmis.binding.spi.type=atompub
-	// org.apache.chemistry.opencmis.binding.atompub.url=http://localhost:9080/logicaldoc/service/cmis
-	// org.apache.chemistry.opencmis.user=admin
-	// org.apache.chemistry.opencmis.password=12345678
-	// org.apache.chemistry.opencmis.binding.compression=true
-	// org.apache.chemistry.opencmis.binding.cookies=true
-
 	private static final String CONNECTION_URL = "http://localhost:9080/service/cmis";
 
-	private static final String TEST_FOLDER_NAME = "/Default/Freelin/ölard";
+	private static final String TEST_FOLDER_PATH = "/Default/index";
 
-	private static final String TEST_DOCUMENT_NAME_1 = "business plan 2014.docx";
+	private static final String TEST_DOCUMENT_NAME_1 = "test.txt";
 
-	public static void main(String[] args) throws IOException {
+	public static void main1(String[] args) throws IOException {
 
 		Folder root = connect();
 		root.getName();
@@ -64,7 +53,7 @@ public class SampleClient {
 		// System.out.println("+++ List Folder +++");
 		// listFolder(0, newFolder);
 
-		CmisObject object = session.getObjectByPath(TEST_FOLDER_NAME);
+		CmisObject object = session.getObjectByPath(TEST_FOLDER_PATH);
 		System.out.println(object.getId() + " " + object.getName());
 		//
 		// object = session.getObjectByPath(TEST_FOLDER_NAME + "/" +
@@ -73,13 +62,22 @@ public class SampleClient {
 		// object.getProperty(TypeManager.PROP_TITLE).getValues().get(0));
 
 		// checkoutCheckin();
-		
-		ItemIterable<QueryResult> result = session
-				.query("SELECT cmis:objectId,cmis:name,ldoc:tags FROM cmis:document WHERE ldoc:tags = '12345'",
-						true);
+
+		ItemIterable<QueryResult> result = session.query(
+				"SELECT cmis:objectId,cmis:name,ldoc:tags FROM cmis:document WHERE ldoc:tags = '12345'", true);
 		for (QueryResult r : result) {
-			System.out.println("result: "+r.getPropertyById("ldoc:tags"));
+			System.out.println("result: " + r.getPropertyById("ldoc:tags"));
 		}
+	}
+
+	public static void main(String[] args) throws IOException {
+
+		Folder root = connect();
+		root.getName();
+
+		//cleanup(root, TEST_FOLDER_NAME);
+		Folder newFolder = (Folder)session.getObjectByPath("/Default/pippo");
+		createDocument(newFolder, TEST_DOCUMENT_NAME_1);
 	}
 
 	private static void checkoutCheckin() throws IOException {
@@ -92,10 +90,10 @@ public class SampleClient {
 																// admin
 		root.getName();
 
-		CmisObject object = session.getObjectByPath(TEST_FOLDER_NAME);
+		CmisObject object = session.getObjectByPath(TEST_FOLDER_PATH);
 		System.out.println(object.getId() + " " + object.getName());
 
-		object = session.getObjectByPath(TEST_FOLDER_NAME + "/" + TEST_DOCUMENT_NAME_1);
+		object = session.getObjectByPath(TEST_FOLDER_PATH + "/" + TEST_DOCUMENT_NAME_1);
 		System.out.println(object.getId() + " " + object.getProperty(TypeManager.PROP_TITLE).getValues().get(0));
 
 		Document pwc = (Document) object;
@@ -217,6 +215,7 @@ public class SampleClient {
 		Map<String, String> props = new HashMap<String, String>();
 		props.put(PropertyIds.OBJECT_TYPE_ID, "cmis:document");
 		props.put(PropertyIds.NAME, newDocName);
+		props.put(TypeManager.PROP_TAGS, "tag1,tag2,tag3");
 		System.out.println("This is a test document: " + newDocName);
 		String content = "aegif Mind Share Leader Generating New Paradigms by aegif corporation.";
 		byte[] buf = null;
@@ -228,7 +227,7 @@ public class SampleClient {
 		ByteArrayInputStream input = new ByteArrayInputStream(buf);
 		ContentStream contentStream = session.getObjectFactory().createContentStream(newDocName, buf.length,
 				"text/plain; charset=UTF-8", input);
-		target.createDocument(props, contentStream, VersioningState.MAJOR);
+		target.createDocument(props, contentStream, VersioningState.NONE);
 	}
 
 	/**
