@@ -32,11 +32,12 @@ public class SampleClient {
 
 	private static Session session;
 
-	private static final String CONNECTION_URL = "http://localhost:9080/service/cmis";
+//	private static final String CONNECTION_URL = "http://localhost:9080/service/cmis";
+	private static final String CONNECTION_URL = "http://192.168.2.5:8080/service/cmis";
 
 	private static final String TEST_FOLDER_PATH = "/Default/index";
 
-	private static final String TEST_DOCUMENT_NAME_1 = "test.txt";
+	private static final String TEST_DOCUMENT_NAME_1 = "test5.txt";
 
 	public static void main1(String[] args) throws IOException {
 
@@ -76,7 +77,7 @@ public class SampleClient {
 		root.getName();
 
 		//cleanup(root, TEST_FOLDER_NAME);
-		Folder newFolder = (Folder)session.getObjectByPath("/Default/pippo");
+		Folder newFolder = (Folder)session.getObjectByPath("/Default");
 		createDocument(newFolder, TEST_DOCUMENT_NAME_1);
 	}
 
@@ -251,7 +252,7 @@ public class SampleClient {
 	 * @return root folder object
 	 */
 	private static Folder connect() {
-		return connect("admin", "12345678");
+		return connect("admin", "admin");
 	}
 
 	/**
