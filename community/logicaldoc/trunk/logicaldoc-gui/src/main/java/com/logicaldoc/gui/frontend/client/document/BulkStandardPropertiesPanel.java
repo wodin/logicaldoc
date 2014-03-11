@@ -180,24 +180,6 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 				tagItem.setIcons(addPicker);
 			if (updateEnabled)
 				items.add(tagItem);
-
-			FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
-			int i = 0;
-			if (document.getTags() != null)
-				for (String str : document.getTags()) {
-					final StaticTextItem tgItem = ItemFactory.newStaticTextItem("tag" + i++, "tag", str);
-					if (updateEnabled) {
-						tgItem.setIcons(icon);
-						tgItem.addIconClickHandler(new IconClickHandler() {
-							public void onIconClick(IconClickEvent event) {
-								document.removeTag((String) tgItem.getValue());
-								refresh();
-							}
-						});
-					}
-					tgItem.setDisabled(!updateEnabled);
-					items.add(tgItem);
-				}
 		}
 
 		form.setItems(items.toArray(new FormItem[0]));
