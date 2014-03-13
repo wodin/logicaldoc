@@ -2,9 +2,6 @@ package com.logicaldoc.web;
 
 import gwtupload.server.UploadAction;
 import gwtupload.server.exceptions.UploadActionException;
-import gwtupload.server.exceptions.UploadCanceledException;
-import gwtupload.server.exceptions.UploadSizeLimitException;
-import gwtupload.server.exceptions.UploadTimeoutException;
 import gwtupload.shared.UConsts;
 
 import java.io.File;
@@ -59,7 +56,7 @@ public class UploadServlet extends UploadAction {
 	public String executeAction(HttpServletRequest request, List<FileItem> sessionFiles) throws UploadActionException {
 		try {
 			setUploadMax();
-			
+
 			HttpSession session = SessionFilter.getServletSession(request.getParameter("sid"));
 
 			if (session == null)
@@ -187,7 +184,7 @@ public class UploadServlet extends UploadAction {
 	@Override
 	public void getUploadedFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		setUploadMax();
-		
+
 		String fieldName = request.getParameter(UConsts.PARAM_SHOW);
 
 		HttpSession session = SessionFilter.getServletSession(request.getParameter("sid"));
@@ -237,11 +234,11 @@ public class UploadServlet extends UploadAction {
 		return (Map<String, String>) session.getAttribute(RECEIVEDFILENAMES);
 	}
 
-	protected void setUploadMax(){
+	protected void setUploadMax() {
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		super.maxSize = Integer.parseInt(config.getProperty("upload.maxsize")) * 1024 * 1024;
 	}
-	
+
 	@Override
 	public void checkRequest(HttpServletRequest request) {
 		// Load the correct max size specification
