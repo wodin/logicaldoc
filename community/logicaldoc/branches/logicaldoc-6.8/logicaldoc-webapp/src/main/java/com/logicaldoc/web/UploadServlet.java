@@ -15,6 +15,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -54,6 +55,8 @@ public class UploadServlet extends UploadAction {
 	@Override
 	public String executeAction(HttpServletRequest request, List<FileItem> sessionFiles) throws UploadActionException {
 		try {
+			setUploadMax();
+
 			HttpSession session = SessionFilter.getServletSession(request.getParameter("sid"));
 
 			if (session == null)
@@ -91,7 +94,7 @@ public class UploadServlet extends UploadAction {
 				if (false == item.isFormField()) {
 					if (!isAllowedForUpload(item.getName()))
 						throw new UploadActionException("Invalid file name " + item.getName());
-					
+
 					OutputStream os = null;
 					try {
 						File file = new File(uploadFolder, item.getFieldName());
@@ -128,50 +131,21 @@ public class UploadServlet extends UploadAction {
 		return null;
 	}
 
-	// /**
-	// * The post method is used to receive the file and save it in the user
-	// * session. It returns a very XML page that the client receives in an
-	// * iframe.
-	// *
-	// * The content of this xml document has a tag error in the case of error
-	// in
-	// * the upload process or the string OK in the case of success.
-	// *
-	// */
-	// @Override
-	// protected void doPost(HttpServletRequest request, HttpServletResponse
-	// response) throws IOException,
-	// ServletException {
-	// perThreadRequest.set(request);
-	// String error;
-	// try {
-	// error = parsePostRequest(request, response);
-	// finish(request);
-	// Map<String, String> stat = new HashMap<String, String>();
-	// if (error != null && error.length() > 0) {
-	// stat.put(TAG_ERROR, error);
-	// } else {
-	// getFileItemsSummary(request, stat);
-	// }
-	// renderXmlResponse(request, response, statusToString(stat), true);
-	// } catch (UploadCanceledException e) {
-	// renderXmlResponse(request, response, XML_CANCELED_TRUE, true);
-	// } catch (UploadTimeoutException e) {
-	// renderXmlResponse(request, response, XML_ERROR_TIMEOUT, true);
-	// } catch (UploadSizeLimitException e) {
-	// renderXmlResponse(request, response, "<" + TAG_ERROR + ">" +
-	// e.getMessage() + "</" + TAG_ERROR + ">", true);
-	// } catch (Exception e) {
-	// logger.error("UPLOAD-SERVLET (" + request.getSession().getId() +
-	// ") Exception -> " + e.getMessage() + "\n"
-	// + stackTraceToString(e));
-	// error = e.getMessage();
-	// renderXmlResponse(request, response, "<" + TAG_ERROR + ">" + error + "</"
-	// + TAG_ERROR + ">", true);
-	// } finally {
-	// perThreadRequest.set(null);
-	// }
-	// }
+	/**
+	 * The post method is used to receive the file and save it in the user
+	 * session. It returns a very XML page that the client receives in an
+	 * iframe.
+	 * 
+	 * The content of this xml document has a tag error in the case of error in
+	 * the upload process or the string OK in the case of success.
+	 * 
+	 */
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException,
+			ServletException {
+		setUploadMax();
+		super.doPost(request, response);
+	}
 
 	/**
 	 * Remove a file when the user sends a delete request
@@ -209,6 +183,8 @@ public class UploadServlet extends UploadAction {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void getUploadedFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		setUploadMax();
+
 		String fieldName = request.getParameter(UConsts.PARAM_SHOW);
 
 		HttpSession session = SessionFilter.getServletSession(request.getParameter("sid"));
@@ -256,6 +232,11 @@ public class UploadServlet extends UploadAction {
 			session = request.getSession();
 
 		return (Map<String, String>) session.getAttribute(RECEIVEDFILENAMES);
+	}
+
+	protected void setUploadMax() {
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		super.maxSize = Integer.parseInt(config.getProperty("upload.maxsize")) * 1024 * 1024;
 	}
 
 	@Override
