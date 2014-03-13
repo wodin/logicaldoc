@@ -96,7 +96,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		refresh.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				Navigator.get().reload();
+				if (Session.get().getCurrentFolder() != null)
+					Navigator.get().selectFolder(Session.get().getCurrentFolder().getId());
 			}
 		});
 		refresh.setDisabled(Session.get().getCurrentFolder() == null);
