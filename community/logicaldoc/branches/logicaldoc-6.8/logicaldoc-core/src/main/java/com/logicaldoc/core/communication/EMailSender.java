@@ -8,7 +8,9 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.URLDataSource;
 import javax.mail.Address;
+import javax.mail.Authenticator;
 import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -139,6 +141,7 @@ public class EMailSender {
 			// The 'smtps' protocol must be used
 			props.put("mail.transport.protocol", "smtps");
 			props.put("mail.smtps.host", host);
+			props.put("mail.smtps.port", port);
 			if (connectionSecurity == SECURITY_TLS_IF_AVAILABLE)
 				props.put("mail.smtps.starttls.enable", "true");
 			if (connectionSecurity == SECURITY_TLS)
@@ -151,6 +154,7 @@ public class EMailSender {
 		} else {
 			props.put("mail.transport.protocol", "smtp");
 			props.put("mail.smtp.host", host);
+			props.put("mail.smtp.port", port);
 			if (connectionSecurity == SECURITY_TLS_IF_AVAILABLE)
 				props.put("mail.smtp.starttls.enable", "true");
 			if (connectionSecurity == SECURITY_TLS)
@@ -162,7 +166,17 @@ public class EMailSender {
 			}
 		}
 
-		Session sess = Session.getDefaultInstance(props);
+		Session sess = null;
+
+		if (!StringUtils.isEmpty(username))
+			sess = Session.getDefaultInstance(props, new Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(username, password);
+				}
+			});
+		else
+			sess = Session.getDefaultInstance(props);
+
 		MimeMessage message = new MimeMessage(sess);
 
 		// The FROM field must to be the one configured for the SMTP connection.
