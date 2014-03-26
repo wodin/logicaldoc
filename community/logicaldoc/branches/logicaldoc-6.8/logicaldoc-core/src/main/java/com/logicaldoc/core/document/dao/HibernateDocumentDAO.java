@@ -733,7 +733,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		this.storer = storer;
 	}
 
-	private void saveDocumentHistory(Document doc, History transaction) {
+	@Override
+	public void saveDocumentHistory(Document doc, History transaction) {
 		if (transaction == null || !historyDAO.isEnabled() || "bulkload".equals(config.getProperty("runlevel")))
 			return;
 		transaction.setDocId(doc.getId());

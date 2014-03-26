@@ -318,4 +318,9 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * to null.
 	 */
 	public void cleanExpiredTransactions();
+	
+	/**
+	 * Saves a document's history
+	 */
+	public void saveDocumentHistory(Document doc, History transaction);
 }
