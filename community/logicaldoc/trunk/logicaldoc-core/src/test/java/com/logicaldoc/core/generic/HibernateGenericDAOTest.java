@@ -8,8 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTCase;
-import com.logicaldoc.core.generic.Generic;
-import com.logicaldoc.core.generic.GenericDAO;
+import com.logicaldoc.core.security.Tenant;
 
 /**
  * Test case for <code>HibernateGenericDAO</code>
@@ -39,10 +38,10 @@ public class HibernateGenericDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindByAlternateKey() {
-		Generic generic = dao.findByAlternateKey("a", "a1", null);
+		Generic generic = dao.findByAlternateKey("a", "a1", null, Tenant.DEFAULT_ID);
 		Assert.assertNotNull(generic);
 		Assert.assertEquals(new Long(0), generic.getInteger1());
-		generic = dao.findByAlternateKey("a", "xxx", null);
+		generic = dao.findByAlternateKey("a", "xxx", null, 99L);
 		Assert.assertNull(generic);
 	}
 
@@ -55,8 +54,12 @@ public class HibernateGenericDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindByTypeAndSubtype() {
-		List<Generic> generics = dao.findByTypeAndSubtype("a", "a%", null);
+		List<Generic> generics = dao.findByTypeAndSubtype("a", "a%", null, null);
 		Assert.assertEquals(2, generics.size());
+		generics = dao.findByTypeAndSubtype("a", "a%", null, Tenant.DEFAULT_ID);
+		Assert.assertEquals(2, generics.size());
+		generics = dao.findByTypeAndSubtype("a", "a%", null, 99L);
+		Assert.assertEquals(0, generics.size());
 	}
 
 	@Test

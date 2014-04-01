@@ -28,12 +28,12 @@ public class HibernateDocumentTemplateDAO extends HibernatePersistentObjectDAO<D
 	}
 
 	@Override
-	public DocumentTemplate findByName(String name) {
+	public DocumentTemplate findByName(String name, long tenantId) {
 		DocumentTemplate template = null;
-		List<DocumentTemplate> coll = findByWhere("_entity.name = '" + SqlUtil.doubleQuotes(name) + "'", null, null);
-		if (coll.size() > 0) {
+		List<DocumentTemplate> coll = findByWhere("_entity.name = '" + SqlUtil.doubleQuotes(name)
+				+ "' and _entity.tenantId=" + tenantId, null, null);
+		if (coll.size() > 0)
 			template = coll.iterator().next();
-		}
 		if (template != null && template.getDeleted() == 1)
 			template = null;
 		return template;
@@ -64,7 +64,8 @@ public class HibernateDocumentTemplateDAO extends HibernatePersistentObjectDAO<D
 	}
 
 	@Override
-	public List<DocumentTemplate> findByType(int type) {
-		return findByWhere("_entity.type =" + type, "order by _entity.category asc", null);
+	public List<DocumentTemplate> findByType(int type, long tenantId) {
+		return findByWhere("_entity.type =" + type + " and _entity.tenantId=" + tenantId,
+				"order by _entity.category asc", null);
 	}
 }

@@ -40,14 +40,14 @@ public class SecurityManagerImplTest extends AbstractCoreTCase {
 		ArrayList<User> users = new ArrayList<User>();
 		users.add(userDAO.findByUserName("test"));
 		users.add(userDAO.findByUserName("admin"));
-		Group group = groupDAO.findByName("author");
+		Group group = groupDAO.findByName("author", 1);
 		manager.assignUsersToGroup(users, group);
 		User user = userDAO.findByUserName("test");
 		Assert.assertTrue(user.getGroups().contains(group));
 		user = userDAO.findByUserName("admin");
 		Assert.assertTrue(user.getGroups().contains(group));
 
-		group = groupDAO.findByName("guest");
+		group = groupDAO.findByName("guest", 1);
 		manager.assignUsersToGroup(users, group);
 		user = userDAO.findByUserName("test");
 		Assert.assertTrue(user.getGroups().contains(group));
@@ -60,14 +60,14 @@ public class SecurityManagerImplTest extends AbstractCoreTCase {
 		ArrayList<User> users = new ArrayList<User>();
 		users.add(userDAO.findByUserName("test"));
 		users.add(userDAO.findByUserName("admin"));
-		Group group = groupDAO.findByName("author");
+		Group group = groupDAO.findByName("author", 1);
 		manager.removeUsersFromGroup(users, group);
 		User user = userDAO.findByUserName("test");
 		Assert.assertFalse(user.getGroups().contains(group));
 		user = userDAO.findByUserName("admin");
 		Assert.assertFalse(user.getGroups().contains(group));
 
-		group = groupDAO.findByName("guest");
+		group = groupDAO.findByName("guest", 1);
 		manager.removeUsersFromGroup(users, group);
 		user = userDAO.findByUserName("test");
 		Assert.assertFalse(user.getGroups().contains(group));
@@ -78,7 +78,7 @@ public class SecurityManagerImplTest extends AbstractCoreTCase {
 	@Test
 	public void testRemoveAllUsersFromGroup() {
 		// create a new group which extends author
-		Group authorGroup = groupDAO.findByName("author");
+		Group authorGroup = groupDAO.findByName("author", 1);
 
 		Group editorGroup = new Group();
 		editorGroup.setName("editors");
@@ -132,7 +132,7 @@ public class SecurityManagerImplTest extends AbstractCoreTCase {
 	public void testGetAllowedGroups() {
 		Set<Group> groups = manager.getAllowedGroups(9);
 		Assert.assertNotNull(groups);
-		Assert.assertTrue(groups.contains(groupDAO.findByName("admin")));
+		Assert.assertTrue(groups.contains(groupDAO.findByName("admin", 1)));
 	}
 
 	@Test

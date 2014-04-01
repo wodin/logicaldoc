@@ -34,11 +34,12 @@ public class HibernateSequenceDAO extends HibernateDaoSupport implements Sequenc
 	}
 
 	@Override
-	public synchronized void reset(String sequence, long value) {
+	public synchronized void reset(String sequence, long tenantId, long value) {
 		synchronized (SequenceDAO.class) {
-			Generic generic = genericDao.findByAlternateKey(TYPE, sequence, null);
+			Generic generic = genericDao.findByAlternateKey(TYPE, sequence, null, tenantId);
 			if (generic == null) {
 				generic = new Generic(TYPE, sequence);
+				generic.setTenantId(tenantId);
 				generic.setInteger1(value);
 			}
 			generic.setInteger1(value);
@@ -47,11 +48,12 @@ public class HibernateSequenceDAO extends HibernateDaoSupport implements Sequenc
 	}
 
 	@Override
-	public synchronized long next(String sequence) {
+	public synchronized long next(String sequence, long tenantId) {
 		synchronized (SequenceDAO.class) {
-			Generic generic = genericDao.findByAlternateKey(TYPE, sequence, null);
+			Generic generic = genericDao.findByAlternateKey(TYPE, sequence, null, tenantId);
 			if (generic == null) {
 				generic = new Generic(TYPE, sequence);
+				generic.setTenantId(tenantId);
 				generic.setInteger1(0L);
 			}
 			generic.setInteger1(generic.getInteger1().longValue() + 1);
@@ -61,8 +63,8 @@ public class HibernateSequenceDAO extends HibernateDaoSupport implements Sequenc
 	}
 
 	@Override
-	public long getCurrentValue(String sequence) {
-		Generic generic = genericDao.findByAlternateKey(TYPE, sequence, null);
+	public long getCurrentValue(String sequence, long tenantId) {
+		Generic generic = genericDao.findByAlternateKey(TYPE, sequence, null, tenantId);
 		if (generic == null)
 			return 0L;
 		else
@@ -70,8 +72,8 @@ public class HibernateSequenceDAO extends HibernateDaoSupport implements Sequenc
 	}
 
 	@Override
-	public List<Generic> findByName(String name) {
-		String query = " 1=1 ";
+	public List<Generic> findByName(String name, long tenantId) {
+		String query = " _entity.tenantId=" + tenantId;
 		query += " and _entity.type like '" + SqlUtil.doubleQuotes(TYPE) + "' ";
 		query += " and _entity.subtype like '" + SqlUtil.doubleQuotes(name) + "%' ";
 		return genericDao.findByWhere(query, null, null);

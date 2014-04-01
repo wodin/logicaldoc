@@ -246,7 +246,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 	public WSDocument getDocumentByCustomId(String sid, String customId) throws Exception {
 		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc = docDao.findByCustomId(customId);
+		Document doc = docDao.findByCustomId(customId, user.getTenantId());
 		if (doc == null)
 			return null;
 		checkReadEnable(user, doc.getFolder().getId());

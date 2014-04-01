@@ -552,10 +552,11 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 		transaction.setNotified(0);
 		transaction.setFolderId(folder.getId());
+		transaction.setTenantId(folder.getTenantId());
 		transaction.setTitle(folder.getId() != Folder.ROOTID ? folder.getName() : "/");
 		String pathExtended = transaction.getPath();
 		if (StringUtils.isEmpty(pathExtended))
-			pathExtended=computePathExtended(folder.getId());
+			pathExtended = computePathExtended(folder.getId());
 
 		transaction.setPath(pathExtended);
 		transaction.setComment("");
@@ -581,7 +582,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				parentHistory.setPathOld(transaction.getPathOld());
 				parentHistory.setTitleOld(transaction.getTitleOld());
 				parentHistory.setFilenameOld(transaction.getFilenameOld());
-				
+
 				if (transaction.getEvent().equals(FolderEvent.CREATED.toString())
 						|| transaction.getEvent().equals(FolderEvent.MOVED.toString())) {
 					parentHistory.setEvent(FolderEvent.SUBFOLDER_CREATED.toString());
@@ -636,7 +637,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				+ folderId, null);
 
 		Folder fld = findById(folderId);
-		if (fld != null && transaction != null ) {
+		if (fld != null && transaction != null) {
 			transaction.setEvent(FolderEvent.RESTORED.toString());
 			saveFolderHistory(fld, transaction);
 		}
@@ -873,11 +874,11 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			transaction.setPath(computePathExtended(folderId));
 			transaction.setEvent(FolderEvent.DELETED.toString());
 			transaction.setFolderId(folderId);
-			
+
 			Folder folder = (Folder) findById(folderId);
 			folder.setDeleted(1);
 			folder.setDeleteUserId(transaction.getUserId());
-			
+
 			store(folder, transaction);
 		} catch (Throwable e) {
 			if (log.isErrorEnabled())
@@ -1120,8 +1121,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 		initialize(source);
 
-		
-		long oldParent=source.getParentId();
+		long oldParent = source.getParentId();
 		String pathOld = computePathExtended(source.getId());
 		transaction.setPathOld(pathOld);
 
@@ -1133,13 +1133,13 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 		// Modify folder history entry
 		transaction.setEvent(FolderEvent.MOVED.toString());
-		
+
 		store(source, transaction);
-		
+
 		/*
 		 * Now save the event in the parent folder
 		 */
-		FolderHistory hist=new FolderHistory();
+		FolderHistory hist = new FolderHistory();
 		hist.setFolderId(oldParent);
 		hist.setEvent(FolderEvent.SUBFOLDER_MOVED.toString());
 		hist.setSessionId(transaction.getSessionId());
@@ -1148,7 +1148,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		hist.setTitle(source.getName());
 		hist.setPath(transaction.getPath());
 		hist.setPathOld(transaction.getPathOld());
-		
+
 		historyDAO.store(hist);
 	}
 

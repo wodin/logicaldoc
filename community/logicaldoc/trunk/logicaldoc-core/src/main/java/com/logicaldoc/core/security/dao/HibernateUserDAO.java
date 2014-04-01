@@ -114,7 +114,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 			GroupDAO groupDAO = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 
 			String userGroupName = "_user_" + Long.toString(user.getId());
-			Group grp = groupDAO.findByName(userGroupName);
+			Group grp = groupDAO.findByName(userGroupName, user.getTenantId());
 			if (grp == null) {
 				grp = new Group();
 				grp.setName(userGroupName);
@@ -350,7 +350,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 	@Override
 	public Map<String, Generic> findUserSettings(long userId, String namePrefix) {
-		List<Generic> generics = genericDAO.findByTypeAndSubtype("usersetting", namePrefix + "%", userId);
+		List<Generic> generics = genericDAO.findByTypeAndSubtype("usersetting", namePrefix + "%", userId, null);
 		Map<String, Generic> map = new HashMap<String, Generic>();
 		for (Generic generic : generics) {
 			map.put(generic.getSubtype(), generic);

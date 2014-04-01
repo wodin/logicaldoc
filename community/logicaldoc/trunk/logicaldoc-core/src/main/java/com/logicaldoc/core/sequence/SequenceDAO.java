@@ -19,25 +19,30 @@ public interface SequenceDAO {
 	 * Returns the next value of the sequence
 	 * 
 	 * @param sequence The sequence name
+	 * @param tenantId ID of the owning tenant
+	 * 
 	 * @return The next value
 	 */
-	public long next(String sequence);
+	public long next(String sequence, long tenantId);
 
 	/**
 	 * Initializes the sequence value
 	 * 
 	 * @param sequence The sequence name
+	 * @param value The value
+	 * @param tenantId ID of the owning tenant
+	 * 
 	 * @param value The initial value
 	 */
-	public void reset(String sequence, long value);
+	public void reset(String sequence, long tenantId, long value);
 
 	/**
 	 * Finds all sequences whose name starts with the passed name
 	 */
-	public List<Generic> findByName(String name);
+	public List<Generic> findByName(String name, long tenantId);
 
 	/**
 	 * Gets the current value
 	 */
-	long getCurrentValue(String sequence);
+	long getCurrentValue(String sequence, long tenantId);
 }

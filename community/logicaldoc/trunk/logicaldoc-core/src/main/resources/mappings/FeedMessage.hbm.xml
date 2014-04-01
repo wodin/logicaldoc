@@ -12,6 +12,7 @@
 		<timestamp name="lastModified" column="ld_lastmodified" />
 		<property name="deleted" type="int" column="ld_deleted"
 			not-null="true" />
+        <property name="tenantId" type="long" column="ld_tenantid" not-null="true" />        
 		<property name="read" type="int" column="ld_read"
 			not-null="true" />
 		<property name="guid" type="string" column="ld_guid" />

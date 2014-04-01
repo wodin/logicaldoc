@@ -18,6 +18,7 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.SystemQuota;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.store.Storer;
@@ -342,7 +343,7 @@ public class StatsCollector extends Task {
 	 * Convenience method for saving statistical data in the DB as Generics
 	 */
 	private void saveStatistic(String parameter, Object val) {
-		Generic gen = genericDAO.findByAlternateKey(STAT, parameter, null);
+		Generic gen = genericDAO.findByAlternateKey(STAT, parameter, null, Tenant.DEFAULT_ID);
 		if (gen == null) {
 			gen = new Generic();
 			gen.setType(STAT);

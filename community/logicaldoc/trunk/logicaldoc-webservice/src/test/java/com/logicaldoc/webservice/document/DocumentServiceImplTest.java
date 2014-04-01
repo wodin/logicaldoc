@@ -15,6 +15,7 @@ import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.webservice.AbstractWebServiceTestCase;
 
@@ -199,7 +200,7 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 
 	@Test
 	public void testGetDocumentByCustomId() throws Exception {
-		Document doc = docDao.findByCustomId("a");
+		Document doc = docDao.findByCustomId("a", Tenant.DEFAULT_ID);
 		Assert.assertNotNull(doc);
 
 		WSDocument wsDoc = docServiceImpl.getDocument("", 1);
@@ -208,7 +209,7 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		Assert.assertEquals("testDocname", wsDoc.getTitle());
 		Assert.assertEquals(103, wsDoc.getFolderId().longValue());
 	}
-	
+
 	@Test
 	public void testIsReadable() throws Exception {
 		Assert.assertTrue(docServiceImpl.isReadable("", 1));
@@ -268,13 +269,13 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(2, docs.length);
 	}
-	
+
 	@Test
 	public void testGetAliases() throws Exception {
 		WSDocument[] docs = docServiceImpl.getAliases("", 1L);
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(1, docs.length);
-		
+
 		docs = docServiceImpl.getAliases("", 2L);
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(0, docs.length);

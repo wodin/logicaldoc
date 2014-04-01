@@ -10,6 +10,7 @@
 		<timestamp name="lastModified" column="ld_lastmodified" />
 		<property name="deleted" type="int" column="ld_deleted" not-null="true" />
 		<property name="userId" type="long" column="ld_userid" />
+        <property name="tenantId" type="long" column="ld_tenantid" not-null="true" />
         <property name="firstName" type="string" column="ld_firstname" length="255" />
 		<property name="lastName" type="string" column="ld_lastname" length="255" />
         <property name="company" type="string" column="ld_company" length="255" />

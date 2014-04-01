@@ -97,7 +97,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			// Check CustomId uniqueness
 			if (docVO != null && docVO.getCustomId() != null) {
-				Document test = documentDAO.findByCustomId(docVO.getCustomId());
+				Document test = documentDAO.findByCustomId(docVO.getCustomId(), document.getTenantId());
 				if (test != null && test.getId() != docId)
 					throw new Exception("Duplicated CustomID");
 			}
@@ -360,7 +360,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 				// Check CustomId uniqueness
 				if (docVO.getCustomId() != null) {
-					Document test = documentDAO.findByCustomId(docVO.getCustomId());
+					Document test = documentDAO.findByCustomId(docVO.getCustomId(), docVO.getTenantId());
 					if (test != null && test.getId() != doc.getId())
 						throw new Exception("Duplicated CustomID");
 					doc.setCustomId(docVO.getCustomId());
@@ -491,7 +491,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			// To avoid 'optimistic locking failed' exceptions.
 			// Perhaps no more needed with Hibernate 3.6.9
-			//doc.setLastModified(new Date());
+			// doc.setLastModified(new Date());
 
 			// Modify document history entry
 			if (transaction.getEvent().trim().isEmpty())

@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.common.client.data;
 
+import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -25,7 +26,8 @@ public class TemplatesDS extends DataSource {
 		setFields(id, name, documents, readonly, type, category, signRequired);
 		setDataURL("data/templates.xml?withempty=" + withEmpty + "&count=" + count
 				+ (folderId != null ? "&folderId=" + folderId : "")
-				+ (templateType != null ? "&templateType=" + templateType : ""));
+				+ (templateType != null ? "&templateType=" + templateType : "")
+				+ (Session.get() != null ? "&sid=" + Session.get().getSid() : ""));
 		setClientOnly(true);
 	}
 }

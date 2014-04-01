@@ -24,6 +24,7 @@ import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.lock.LockManager;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 
@@ -94,7 +95,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindByCustomId() {
-		Document doc = dao.findByCustomId("a");
+		Document doc = dao.findByCustomId("a", Tenant.DEFAULT_ID);
 		Assert.assertNotNull(doc);
 		dao.initialize(doc);
 		Assert.assertEquals(1, doc.getId());
@@ -103,7 +104,11 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(6, doc.getFolder().getId());
 
 		// Try with unexisting document
-		doc = dao.findByCustomId("xx");
+		doc = dao.findByCustomId("xx", Tenant.DEFAULT_ID);
+		Assert.assertNull(doc);
+
+		// Try with unexisting tenant
+		doc = dao.findByCustomId("a", 99L);
 		Assert.assertNull(doc);
 	}
 

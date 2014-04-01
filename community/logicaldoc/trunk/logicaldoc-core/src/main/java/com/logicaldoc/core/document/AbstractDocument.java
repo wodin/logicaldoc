@@ -435,6 +435,7 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 
 	public void setFolder(Folder folder) {
 		this.folder = folder;
+		this.setTenantId(folder.getTenantId());
 	}
 
 	public void addTag(String word) {

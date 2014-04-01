@@ -163,7 +163,7 @@ public class SecurityManagerImpl implements SecurityManager {
 			groups.add(groupDAO.findById(groupIds[i]));
 
 		// Always add the user's group
-		Group userGroup = groupDAO.findByName(user.getUserGroupName());
+		Group userGroup = groupDAO.findByName(user.getUserGroupName(), user.getTenantId());
 		if (userGroup != null && !groups.contains(userGroup))
 			groups.add(userGroup);
 		assignUserToGroups(user, groups);

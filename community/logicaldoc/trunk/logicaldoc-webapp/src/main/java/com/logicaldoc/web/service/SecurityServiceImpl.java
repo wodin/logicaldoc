@@ -496,7 +496,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 	@Override
 	public GUIUser saveUser(String sid, GUIUser user, GUIInfo info) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		boolean createNew = false;
@@ -565,7 +565,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			}
 			manager.assignUserToGroups(usr, ids);
 
-			Group adminGroup = groupDao.findByName("admin");
+			Group adminGroup = groupDao.findByName("admin", session.getTenantId());
 			groupDao.initialize(adminGroup);
 
 			// The admin user must be always member of admin group
@@ -749,7 +749,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			mdao.initialize(menu);
 			menu.setSecurityRef(null);
 			menu.getMenuGroups().clear();
-			
+
 			sqlerrors = false;
 			Set<MenuGroup> grps = new HashSet<MenuGroup>();
 			for (GUIRight right : rights) {
