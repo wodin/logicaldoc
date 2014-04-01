@@ -9,6 +9,7 @@
         </id>
         <timestamp name="lastModified" column="ld_lastmodified" />
         <property name="deleted" type="int" column="ld_deleted" not-null="true" />
+        <property name="tenantId" type="long" column="ld_tenantid" not-null="true" />
 		<property name="userId" type="long" column="ld_userid" />
 		<property name="date" type="timestamp" column="ld_date" />
 		<property name="userName" type="string" column="ld_username" length="255" />

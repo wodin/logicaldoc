@@ -12,6 +12,7 @@ public class History extends AbstractHistory {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		History history = new History();
+		history.setTenantId(getTenantId());
 		history.setDate(getDate());
 		history.setDocId(getDocId());
 		history.setFolderId(getFolderId());

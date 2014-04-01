@@ -12,6 +12,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
+import com.logicaldoc.gui.frontend.client.tenant.TenantsPanel;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.Button;
@@ -57,6 +58,18 @@ public class SystemMenu extends VLayout {
 			}
 		}
 
+		Button tenants = new Button(I18N.message("tenants"));
+		tenants.setWidth100();
+		tenants.setHeight(25);
+
+		if (Feature.visible(Feature.MULTI_TENANT) && "admin".equals(Session.get().getUser().getUserName())) {
+			addMember(tenants);
+			if (!Feature.enabled(Feature.MULTI_TENANT)) {
+				tenants.setDisabled(true);
+				tenants.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+
 		Button productNews = new Button(I18N.message("task.name.ProductNews"));
 		productNews.setWidth100();
 		productNews.setHeight(25);
@@ -96,7 +109,8 @@ public class SystemMenu extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				service.loadSettingsByNames(Session.get().getSid(), new String[] { "cluster.enabled", "cluster.name",
-						"cluster.node.host", "cluster.node.port", "cluster.node.context", "cluster.port", "cluster.multicastip", "cluster.nodeId" }, new AsyncCallback<GUIParameter[]>() {
+						"cluster.node.host", "cluster.node.port", "cluster.node.context", "cluster.port",
+						"cluster.multicastip", "cluster.nodeId" }, new AsyncCallback<GUIParameter[]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -108,6 +122,13 @@ public class SystemMenu extends VLayout {
 						AdminPanel.get().setContent(new ClusteringPanel(settings));
 					}
 				});
+			}
+		});
+
+		tenants.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new TenantsPanel());
 			}
 		});
 	}

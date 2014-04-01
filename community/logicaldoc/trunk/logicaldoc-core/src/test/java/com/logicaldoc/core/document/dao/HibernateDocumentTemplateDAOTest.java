@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.DocumentTemplate;
+import com.logicaldoc.core.security.Tenant;
 
 /**
  * Test case for <code>HibernateDocumentTemplateDAO</code>
@@ -58,12 +59,15 @@ public class HibernateDocumentTemplateDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindByName() {
-		DocumentTemplate template = dao.findByName("test1");
+		DocumentTemplate template = dao.findByName("test1", Tenant.DEFAULT_ID);
 		Assert.assertNotNull(template);
 		Assert.assertEquals(1, template.getId());
 		Assert.assertEquals("test1", template.getName());
 
-		template = dao.findByName("xxx");
+		template = dao.findByName("xxx", Tenant.DEFAULT_ID);
+		Assert.assertNull(template);
+		
+		template = dao.findByName("test1", 99L);
 		Assert.assertNull(template);
 	}
 

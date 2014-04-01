@@ -138,6 +138,8 @@ public class Feature {
 	public static final int KOFAX = 77;
 	
 	public static final int SYNC = 78;
+	
+	public static final int MULTI_TENANT = 79;
 
 	private static Set<String> features = new HashSet<String>();
 

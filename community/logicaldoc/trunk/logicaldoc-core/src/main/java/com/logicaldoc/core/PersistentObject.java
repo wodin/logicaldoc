@@ -10,6 +10,8 @@ import java.util.Date;
  */
 public abstract class PersistentObject {
 	private long id = 0;
+	
+	private long tenantId = 1L;
 
 	private int deleted = 0;
 
@@ -61,5 +63,13 @@ public abstract class PersistentObject {
 
 	public String toString() {
 		return Long.toString(getId());
+	}
+
+	public long getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(long tenantId) {
+		this.tenantId = tenantId;
 	}
 }

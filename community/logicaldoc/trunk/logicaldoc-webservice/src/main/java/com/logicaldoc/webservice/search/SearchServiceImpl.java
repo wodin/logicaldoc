@@ -130,8 +130,10 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 
 	@Override
 	public WSTagCloud[] getTagCloud(String sid) throws Exception {
+		User user = validateSession(sid);
+
 		GenericDAO genericDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
-		Generic generic = genericDao.findByAlternateKey("tagcloud", "-", null);
+		Generic generic = genericDao.findByAlternateKey("tagcloud", "-", null, user.getTenantId());
 		if (generic == null)
 			return null;
 

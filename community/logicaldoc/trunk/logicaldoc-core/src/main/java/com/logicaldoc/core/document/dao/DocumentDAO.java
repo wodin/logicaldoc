@@ -20,9 +20,11 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * This method finds a document by the custom ID.
 	 * 
 	 * @param customId custom ID of the document.
+	 * @param tenantId ID of the contained tenant.
+	 * 
 	 * @return Document with given ID.
 	 */
-	public Document findByCustomId(String customId);
+	public Document findByCustomId(String customId, long tenantId);
 
 	/**
 	 * Finds all documents for an user.
@@ -318,4 +320,10 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * to null.
 	 */
 	public void cleanExpiredTransactions();
+	
+	
+	/**
+	 * Saves a document's history
+	 */
+	public void saveDocumentHistory(Document doc, History transaction);
 }

@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
@@ -38,7 +39,7 @@ public class UsersDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			SessionUtil.validateSession(request);
+			UserSession session = SessionUtil.validateSession(request);
 
 			String groupIdOrName = request.getParameter("groupId");
 
@@ -61,7 +62,7 @@ public class UsersDataServlet extends HttpServlet {
 				} catch (Throwable t) {
 				}
 				if (group == null)
-					group = groupDao.findByName(groupIdOrName);
+					group = groupDao.findByName(groupIdOrName, session.getTenantId());
 				groupDao.initialize(group);
 
 				/*

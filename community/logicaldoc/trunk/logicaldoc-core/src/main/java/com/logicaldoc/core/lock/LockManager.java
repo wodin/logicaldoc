@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.util.config.ContextProperties;
 
 /**
@@ -63,7 +64,7 @@ public class LockManager {
 		if (lockName == null || transactionId == null)
 			return;
 
-		Generic lock = genericDao.findByAlternateKey(LOCK, lockName, null);
+		Generic lock = genericDao.findByAlternateKey(LOCK, lockName, null, Tenant.DEFAULT_ID);
 		if (lock != null && transactionId.equals(lock.getString1())) {
 			lock.setDate1(null);
 			lock.setString1(null);
@@ -73,7 +74,7 @@ public class LockManager {
 
 	protected boolean getInternal(String lockName, String transactionId) {
 		Date today = new Date();
-		Generic lock = genericDao.findByAlternateKey(LOCK, lockName, null);
+		Generic lock = genericDao.findByAlternateKey(LOCK, lockName, null, Tenant.DEFAULT_ID);
 		try {
 			if (lock == null) {
 				log.debug("Lock " + lockName + " not found");

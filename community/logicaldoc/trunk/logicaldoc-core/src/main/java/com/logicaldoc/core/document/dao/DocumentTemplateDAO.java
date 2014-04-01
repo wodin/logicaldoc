@@ -13,12 +13,14 @@ import com.logicaldoc.core.document.DocumentTemplate;
  */
 public interface DocumentTemplateDAO extends PersistentObjectDAO<DocumentTemplate> {
 	/**
-	 * This method finds a template by name.
+	 * This method finds a template by name
 	 * 
-	 * @param name Name of the template.
-	 * @return DocumentTemplate with given name.
+	 * @param name Name of the template
+	 * @param tenantId ID of the owning tenant
+	 * 
+	 * @return DocumentTemplate with given name
 	 */
-	public DocumentTemplate findByName(String name);
+	public DocumentTemplate findByName(String name, long tenantId);
 
 	/**
 	 * Counts the total number of documents using this template
@@ -29,10 +31,12 @@ public interface DocumentTemplateDAO extends PersistentObjectDAO<DocumentTemplat
 	public int countDocs(long id);
 
 	/**
-	 * This method finds a template by type.
+	 * This method finds a template by type
 	 * 
-	 * @param type Type of the template.
-	 * @return DocumentTemplate with given type.
+	 * @param type Type of the template
+	 * @param tenantId ID of the owning tenant
+	 * 
+	 * @return DocumentTemplate with given type
 	 */
-	public List<DocumentTemplate> findByType(int type);
+	public List<DocumentTemplate> findByType(int type, long tenantId);
 }

@@ -9,6 +9,7 @@
 		</id>
 		<timestamp name="lastModified" column="ld_lastmodified" />
 		<property name="deleted" type="int" column="ld_deleted" not-null="true" />
+        <property name="tenantId" type="long" column="ld_tenantid" not-null="true" />
 		<property name="immutable" type="int" column="ld_immutable" not-null="true" />
 		<property name="customId" type="string" column="ld_customid" length="700" />
 		<property name="comment" type="string" column="ld_comment" length="1000" />

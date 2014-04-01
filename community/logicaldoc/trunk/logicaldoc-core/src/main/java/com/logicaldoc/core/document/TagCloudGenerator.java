@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.task.Task;
 import com.logicaldoc.util.config.ContextProperties;
 
@@ -65,7 +66,7 @@ public class TagCloudGenerator extends Task {
 		log.info("Start tag clouds generation");
 
 		// Obtain the proper generic that will store TagClouds
-		Generic generic = genericDao.findByAlternateKey(TYPE_TAGCLOUD, SUBTYPE_TAGCLOUD, null);
+		Generic generic = genericDao.findByAlternateKey(TYPE_TAGCLOUD, SUBTYPE_TAGCLOUD, null, Tenant.DEFAULT_ID);
 		if (generic == null) {
 			generic = new Generic(TYPE_TAGCLOUD, SUBTYPE_TAGCLOUD);
 			genericDao.store(generic);

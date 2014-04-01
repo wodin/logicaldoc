@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.GroupDAO;
@@ -91,13 +92,13 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 	public void testAddUserToGroup() throws InvalidSessionException {
 		User test = userDAO.findByUserName("test");
 		Assert.assertNotNull(test);
-		Group group = groupDAO.findByName("author");
+		Group group = groupDAO.findByName("author", Tenant.DEFAULT_ID);
 		Assert.assertNotNull(group);
 		service.addUserToGroup(session.getSid(), group.getId(), test.getId());
 		User user = userDAO.findByUserName("test");
 		Assert.assertTrue(user.getGroups().contains(group));
 
-		group = groupDAO.findByName("guest");
+		group = groupDAO.findByName("guest", Tenant.DEFAULT_ID);
 		Assert.assertNotNull(group);
 		service.addUserToGroup(session.getSid(), group.getId(), test.getId());
 		user = userDAO.findByUserName("test");
@@ -130,14 +131,14 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 		long[] users = new long[2];
 		users[0] = 5;
 		users[1] = 1;
-		Group group = groupDAO.findByName("author");
+		Group group = groupDAO.findByName("author", Tenant.DEFAULT_ID);
 		service.removeFromGroup(session.getSid(), group.getId(), users);
 		User user = userDAO.findByUserName("test");
 		Assert.assertFalse(user.getGroups().contains(group));
 		user = userDAO.findByUserName("admin");
 		Assert.assertFalse(user.getGroups().contains(group));
 
-		group = groupDAO.findByName("guest");
+		group = groupDAO.findByName("guest", Tenant.DEFAULT_ID);
 		service.removeFromGroup(session.getSid(), group.getId(), users);
 		user = userDAO.findByUserName("test");
 		Assert.assertFalse(user.getGroups().contains(group));

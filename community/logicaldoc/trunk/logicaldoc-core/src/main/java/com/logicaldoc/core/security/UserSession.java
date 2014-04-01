@@ -35,6 +35,8 @@ public class UserSession implements Comparable<UserSession> {
 
 	private long userId;
 
+	private long tenantId;
+
 	private int status = STATUS_OPEN;
 
 	private Object externalSession = null;
@@ -104,6 +106,7 @@ public class UserSession implements Comparable<UserSession> {
 		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.getInstance().getBean(UserHistoryDAO.class);
 		User user = userDAO.findByUserName(userName);
 		this.userId = user.getId();
+		this.tenantId = user.getTenantId();
 
 		/*
 		 * Store in the history comment the remote host and IP
@@ -196,5 +199,13 @@ public class UserSession implements Comparable<UserSession> {
 
 	public void setUserId(long userId) {
 		this.userId = userId;
+	}
+
+	public long getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(long tenantId) {
+		this.tenantId = tenantId;
 	}
 }

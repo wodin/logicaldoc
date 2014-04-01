@@ -8,6 +8,7 @@ import org.junit.Test;
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
+import com.logicaldoc.core.security.Tenant;
 
 /**
  * Test case for <code>LockManager</code>
@@ -41,9 +42,9 @@ public class LockManagerTest extends AbstractCoreTCase {
 		Assert.assertTrue(manager.get("test", "t2"));
 		manager.release("test", "t2");
 
-		Generic lock = dao.findByAlternateKey("lock", "test", null);
+		Generic lock = dao.findByAlternateKey("lock", "test", null, Tenant.DEFAULT_ID);
 		Assert.assertNotNull(lock);
 		Assert.assertNull(lock.getString1());
-		Assert.assertNull(lock.getDate1());	
+		Assert.assertNull(lock.getDate1());
 	}
 }

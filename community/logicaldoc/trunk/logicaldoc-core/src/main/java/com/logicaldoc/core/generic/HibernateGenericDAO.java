@@ -42,10 +42,11 @@ public class HibernateGenericDAO extends HibernatePersistentObjectDAO<Generic> i
 	}
 
 	@Override
-	public Generic findByAlternateKey(String type, String subtype, Long qualifier) {
+	public Generic findByAlternateKey(String type, String subtype, Long qualifier, long tenantId) {
 		Generic generic = null;
 		StringBuffer sb = new StringBuffer(" _entity.type = '" + SqlUtil.doubleQuotes(type) + "' and _entity.subtype='"
 				+ SqlUtil.doubleQuotes(subtype) + "' ");
+		sb.append(" and _entity.tenantId=" + tenantId);
 		if (qualifier != null)
 			sb.append(" and _entity.qualifier=" + qualifier);
 		else
@@ -58,14 +59,16 @@ public class HibernateGenericDAO extends HibernatePersistentObjectDAO<Generic> i
 	}
 
 	@Override
-	public List<Generic> findByTypeAndSubtype(String type, String subtype, Long qualifier) {
+	public List<Generic> findByTypeAndSubtype(String type, String subtype, Long qualifier, Long tenantId) {
 		String query = " 1=1 ";
 		if (StringUtils.isNotEmpty(type))
 			query += " and _entity.type like '" + SqlUtil.doubleQuotes(type) + "' ";
 		if (StringUtils.isNotEmpty(subtype))
 			query += " and _entity.subtype like '" + SqlUtil.doubleQuotes(subtype) + "' ";
 		if (qualifier != null)
-			query += " and _entity.qualifier =" + qualifier;
+			query += " and _entity.qualifier = " + qualifier;
+		if (tenantId != null)
+			query += " and _entity.tenantId = " + tenantId;
 		return findByWhere(query, null, null);
 	}
 

@@ -52,14 +52,11 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 		return result;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.GroupDAO#exists(java.lang.String)
-	 */
-	public boolean exists(String groupname) {
+	public boolean exists(String groupname, long tenantId) {
 		boolean result = false;
 
 		try {
-			Group group = findByName(groupname);
+			Group group = findByName(groupname, tenantId);
 			result = (group != null);
 		} catch (Exception e) {
 			if (log.isWarnEnabled())
@@ -69,16 +66,15 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 		return result;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.GroupDAO#findAllGroupNames()
-	 */
-	public Collection<String> findAllGroupNames() {
+	@Override
+	public Collection<String> findAllGroupNames(long tenantId) {
 		Collection<String> coll = new ArrayList<String>();
 
 		try {
 			Collection<Group> coll2 = findAll();
 			for (Group group : coll2) {
-				coll.add(group.getName());
+				if (group.getTenantId() == tenantId)
+					coll.add(group.getName());
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -91,9 +87,11 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 	/**
 	 * @see com.logicaldoc.core.security.dao.GroupDAO#findByName(java.lang.String)
 	 */
-	public Group findByName(String name) {
+	public Group findByName(String name, long tenantId) {
 		Group group = null;
-		Collection<Group> coll = findByWhere("_entity.name = '" + SqlUtil.doubleQuotes(name) + "'", null, null);
+		Collection<Group> coll = findByWhere(
+				"_entity.name.tenantId=" + tenantId + " and _entity.name = '" + SqlUtil.doubleQuotes(name) + "'", null,
+				null);
 		if (coll.size() > 0) {
 			group = coll.iterator().next();
 			if (group.getDeleted() == 1)
@@ -178,11 +176,10 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 		}
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.GroupDAO#findByLikeName(java.lang.String)
-	 */
-	public Collection<Group> findByLikeName(String name) {
-		return findByWhere("lower(_entity.name) like ?1", new Object[] { name.toLowerCase() }, null, null);
+	@Override
+	public Collection<Group> findByLikeName(String name, long tenantId) {
+		return findByWhere("lower(_entity.name) like ?1 and _entity.tenantId = ?2", new Object[] { name.toLowerCase(),
+				tenantId }, null, null);
 	}
 
 	@Override

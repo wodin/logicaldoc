@@ -48,9 +48,7 @@
                 class="com.logicaldoc.core.security.dao.HibernateMenuDAO"
                 dependency-check="default" lazy-init="default">
                 <property name="sessionFactory" ref="SessionFactory" />
-                <property name="userDAO">
-                    <ref bean="UserDAO" />
-                </property>
+                <property name="userDAO" ref="UserDAO" />
             </bean>
         </property>
     </bean>
@@ -99,9 +97,7 @@
                 class="com.logicaldoc.core.security.dao.HibernateGroupDAO"
                 dependency-check="default" lazy-init="default">
                 <property name="sessionFactory" ref="SessionFactory" />
-                <property name="menuDAO">
-                    <ref bean="MenuDAO" />
-                </property>
+                <property name="menuDAO" ref="MenuDAO" />
             </bean>
         </property>
     </bean>
@@ -145,12 +141,8 @@
                 class="com.logicaldoc.core.document.dao.HibernateDocumentDAO"
                 dependency-check="default" lazy-init="default">
                 <property name="sessionFactory" ref="SessionFactory" />
-                <property name="noteDAO">
-                    <ref bean="DocumentNoteDAO" />
-                </property>
-                <property name="historyDAO">
-                    <ref bean="HistoryDAO" />
-                </property>
+                <property name="noteDAO" ref="DocumentNoteDAO" />
+                <property name="historyDAO" ref="HistoryDAO" />
                 <property name="versionDAO">
                     <ref bean="VersionDAO" />
                 </property>
@@ -231,9 +223,7 @@
                 class="com.logicaldoc.core.sequence.HibernateSequenceDAO"
                 dependency-check="default" lazy-init="default">
                 <property name="sessionFactory" ref="SessionFactory" />
-                <property name="genericDao">
-                    <ref bean="GenericDAO" />
-                </property>
+                <property name="genericDao" ref="GenericDAO" />
             </bean>
         </property>
     </bean>
@@ -293,6 +283,16 @@
         <property name="target">
             <bean abstract="false" autowire="default"
                 class="com.logicaldoc.core.contact.HibernateContactDAO"
+                dependency-check="default" lazy-init="default">
+                <property name="sessionFactory" ref="SessionFactory" />
+            </bean>
+        </property>
+    </bean>
+    <bean id="TenantDAO" abstract="false" autowire="default"
+        dependency-check="default" lazy-init="default" parent="ApplicationBaseTransactionProxy">
+        <property name="target">
+            <bean abstract="false" autowire="default"
+                class="com.logicaldoc.core.security.dao.HibernateTenantDAO"
                 dependency-check="default" lazy-init="default">
                 <property name="sessionFactory" ref="SessionFactory" />
             </bean>

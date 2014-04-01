@@ -676,11 +676,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	@Override
-	public Document findByCustomId(String customId) {
+	public Document findByCustomId(String customId, long tenantId) {
 		Document doc = null;
 		if (customId != null)
 			try {
-				String query = "_entity.customId = '" + SqlUtil.doubleQuotes(customId) + "'";
+				String query = "_entity.customId = '" + SqlUtil.doubleQuotes(customId) + "' "
+						+ " and _entity.tenantId=" + tenantId;
 				List<Document> coll = findByWhere(query, null, null);
 				if (!coll.isEmpty()) {
 					doc = coll.get(0);
@@ -733,9 +734,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		this.storer = storer;
 	}
 
-	private void saveDocumentHistory(Document doc, History transaction) {
+	@Override
+	public void saveDocumentHistory(Document doc, History transaction) {
 		if (transaction == null || !historyDAO.isEnabled() || "bulkload".equals(config.getProperty("runlevel")))
 			return;
+
+		transaction.setTenantId(doc.getTenantId());
 		transaction.setDocId(doc.getId());
 		transaction.setFolderId(doc.getFolder().getId());
 		transaction.setTitle(doc.getTitle());
@@ -762,7 +766,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public List<Document> findDeleted(long userId, Integer maxHits) {
 		List<Document> results = new ArrayList<Document>();
 		try {
-			String query = "select ld_id, ld_title, ld_lastmodified, ld_filename, ld_customid, ld_folderid from ld_document where ld_deleted=1 and ld_deleteuserid = "
+			String query = "select ld_id, ld_title, ld_lastmodified, ld_filename, ld_customid, ld_folderid, ld_tenantid from ld_document where ld_deleted=1 and ld_deleteuserid = "
 					+ userId + " order by ld_lastmodified desc";
 
 			@SuppressWarnings("rawtypes")
@@ -774,6 +778,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					doc.setLastModified(rs.getDate(3));
 					doc.setFileName(rs.getString(4));
 					doc.setCustomId(rs.getString(5));
+					doc.setTenantId(rs.getLong(6));
 
 					Folder folder = new Folder();
 					folder.setId(rs.getLong(6));

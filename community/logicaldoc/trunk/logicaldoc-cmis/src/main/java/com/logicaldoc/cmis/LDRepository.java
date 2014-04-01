@@ -982,7 +982,7 @@ public class LDRepository {
 		transaction.setVersion(doc.getVersion());
 		transaction.setFilename(doc.getFileName());
 		transaction.setNotified(0);
-		
+
 		if (doc instanceof Document) {
 			transaction.setFolderId(doc.getFolder().getId());
 			transaction.setPath(folderDao.computePathExtended(doc.getFolder().getId()));
@@ -1675,7 +1675,7 @@ public class LDRepository {
 
 				DocumentTemplate template = doc.getTemplate();
 				if (doc instanceof Version && ((Version) doc).getTemplateName() != null)
-					template = templateDao.findByName(((Version) doc).getTemplateName());
+					template = templateDao.findByName(((Version) doc).getTemplateName(), doc.getTenantId());
 
 				if (template != null) {
 					DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -1839,7 +1839,7 @@ public class LDRepository {
 					else
 						((Version) doc).setTemplateName(null);
 				} else {
-					DocumentTemplate template = templateDao.findByName((String) p.getFirstValue());
+					DocumentTemplate template = templateDao.findByName((String) p.getFirstValue(), doc.getTenantId());
 					if (template == null) {
 						doc.setTemplate(null);
 						if (doc instanceof Document)
@@ -1862,7 +1862,7 @@ public class LDRepository {
 				DocumentTemplate template = null;
 				PropertyData<?> tp = properties.getProperties().get(TypeManager.PROP_TEMPLATE);
 				if (tp != null)
-					template = templateDao.findByName((String) tp.getFirstValue());
+					template = templateDao.findByName((String) tp.getFirstValue(), doc.getTenantId());
 
 				if (template != null) {
 					templateDao.initialize(template);

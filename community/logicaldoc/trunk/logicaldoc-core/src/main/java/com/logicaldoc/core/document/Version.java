@@ -181,6 +181,7 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 			e.printStackTrace();
 		}
 
+		version.setTenantId(document.getTenantId());
 		version.setDeleted(0);
 		version.setLastModified(null);
 		version.setComment(comment);

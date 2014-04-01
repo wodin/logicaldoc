@@ -13,6 +13,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.document.TagCloud;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUITag;
@@ -39,7 +40,7 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService {
 			ArrayList<GUITag> ret = new ArrayList<GUITag>();
 			List<TagCloud> list = new ArrayList<TagCloud>();
 			GenericDAO gendao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
-			Generic generic = gendao.findByAlternateKey("tagcloud", "-", null);
+			Generic generic = gendao.findByAlternateKey("tagcloud", "-", null, Tenant.DEFAULT_ID);
 			if (generic == null)
 				return new GUITag[0];
 			else

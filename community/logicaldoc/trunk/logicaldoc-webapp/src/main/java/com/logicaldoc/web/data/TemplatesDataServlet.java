@@ -18,8 +18,10 @@ import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.web.util.SessionUtil;
 
 /**
  * This servlet is responsible for document templates data.
@@ -37,6 +39,8 @@ public class TemplatesDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
+			UserSession session = SessionUtil.validateSession(request);
+
 			String folderId = request.getParameter("folderId");
 			boolean count = "true".equals(request.getParameter("count"));
 
@@ -48,7 +52,8 @@ public class TemplatesDataServlet extends HttpServlet {
 			if (StringUtils.isNotEmpty(folderId)) {
 				GenericDAO genericDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
 				// Get all the 'wf-trigger' generics on this folder
-				List<Generic> triggerGenerics = genericDao.findByTypeAndSubtype("wf-trigger", folderId + "-%", null);
+				List<Generic> triggerGenerics = genericDao.findByTypeAndSubtype("wf-trigger", folderId + "-%", null,
+						null);
 				// Retrieve all the ids of the templates associated to a
 				// workflow
 				// already associated on the given folder
@@ -82,7 +87,7 @@ public class TemplatesDataServlet extends HttpServlet {
 			DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 			List<DocumentTemplate> templates = null;
 			if (type != null)
-				templates = dao.findByType(type);
+				templates = dao.findByType(type, session.getTenantId());
 			else
 				templates = dao.findAll();
 

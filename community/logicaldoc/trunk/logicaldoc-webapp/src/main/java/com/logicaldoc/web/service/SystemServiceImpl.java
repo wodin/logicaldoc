@@ -26,6 +26,7 @@ import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.rss.FeedMessage;
 import com.logicaldoc.core.rss.dao.FeedMessageDAO;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.stats.StatsCollector;
@@ -119,7 +120,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			/*
 			 * Repository statistics
 			 */
-			Generic gen = genDao.findByAlternateKey(StatsCollector.STAT, "docdir", null);
+			Generic gen = genDao.findByAlternateKey(StatsCollector.STAT, "docdir", null, Tenant.DEFAULT_ID);
 			GUIParameter docDirSize = new GUIParameter();
 			docDirSize.setName("documents");
 			if (gen != null)
@@ -128,7 +129,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				docDirSize.setValue("0");
 			parameters[0][0] = docDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "userdir", null);
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "userdir", null, Tenant.DEFAULT_ID);
 			GUIParameter userDirSize = new GUIParameter();
 			userDirSize.setName("users");
 			if (gen != null)
@@ -137,7 +138,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				userDirSize.setValue("0");
 			parameters[0][1] = userDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "indexdir", null);
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "indexdir", null, Tenant.DEFAULT_ID);
 			GUIParameter indexDirSize = new GUIParameter();
 			indexDirSize.setName("fulltextindex");
 			if (gen != null)
@@ -147,7 +148,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 			parameters[0][2] = indexDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "importdir", null);
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "importdir", null, Tenant.DEFAULT_ID);
 			GUIParameter importDirSize = new GUIParameter();
 			importDirSize.setName("iimport");
 			if (gen != null)
@@ -156,7 +157,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				importDirSize.setValue("0");
 			parameters[0][3] = importDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "exportdir", null);
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "exportdir", null, Tenant.DEFAULT_ID);
 			GUIParameter exportDirSize = new GUIParameter();
 			exportDirSize.setName("eexport");
 			if (gen != null)
@@ -165,7 +166,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				exportDirSize.setValue("0");
 			parameters[0][4] = exportDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "plugindir", null);
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "plugindir", null, Tenant.DEFAULT_ID);
 			GUIParameter pluginsDirSize = new GUIParameter();
 			pluginsDirSize.setName("plugins");
 			if (gen != null)
@@ -174,7 +175,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				pluginsDirSize.setValue("0");
 			parameters[0][5] = pluginsDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "dbdir", null);
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "dbdir", null, Tenant.DEFAULT_ID);
 			GUIParameter dbDirSize = new GUIParameter();
 			dbDirSize.setName("database");
 			if (gen != null)
@@ -184,7 +185,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 			parameters[0][6] = dbDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "logdir", null);
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "logdir", null, Tenant.DEFAULT_ID);
 			GUIParameter logsDirSize = new GUIParameter();
 			logsDirSize.setName("logs");
 			if (gen != null)
@@ -197,19 +198,19 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			/*
 			 * Document statistics
 			 */
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "notindexeddocs", null);
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "notindexeddocs", null, Tenant.DEFAULT_ID);
 			GUIParameter notIndexed = new GUIParameter();
 			notIndexed.setName("notindexed");
 			notIndexed.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[1][0] = notIndexed;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "indexeddocs", null);
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "indexeddocs", null, Tenant.DEFAULT_ID);
 			GUIParameter indexed = new GUIParameter();
 			indexed.setName("indexed");
 			indexed.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[1][1] = indexed;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "deleteddocs", null);
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "deleteddocs", null, Tenant.DEFAULT_ID);
 			GUIParameter deletedDocs = new GUIParameter();
 			deletedDocs.setName("docstrash");
 			deletedDocs.setLabel("trash");
@@ -219,19 +220,19 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			/*
 			 * Folders statistics
 			 */
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "withdocs", null);
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "withdocs", null, Tenant.DEFAULT_ID);
 			GUIParameter notEmptyFolders = new GUIParameter();
 			notEmptyFolders.setName("withdocs");
 			notEmptyFolders.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[2][0] = notEmptyFolders;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "empty", null);
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "empty", null, Tenant.DEFAULT_ID);
 			GUIParameter emptyFolders = new GUIParameter();
 			emptyFolders.setName("empty");
 			emptyFolders.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[2][1] = emptyFolders;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "deletedfolders", null);
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "deletedfolders", null, Tenant.DEFAULT_ID);
 			GUIParameter deletedFolders = new GUIParameter();
 			deletedFolders.setName("folderstrash");
 			deletedFolders.setLabel("trash");
@@ -241,7 +242,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			/*
 			 * Last run
 			 */
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "lastrun", null);
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "lastrun", null, Tenant.DEFAULT_ID);
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = gen != null ? df.parse(gen.getString1()) : null;
 			GUIParameter lastrun = new GUIParameter();

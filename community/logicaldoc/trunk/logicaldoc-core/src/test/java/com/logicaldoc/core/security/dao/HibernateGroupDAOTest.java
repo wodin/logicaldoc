@@ -51,12 +51,16 @@ public class HibernateGroupDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindByName() {
-		Group group = dao.findByName("admin");
+		Group group = dao.findByName("admin", 1);
 		Assert.assertNotNull(group);
 		Assert.assertEquals("admin", group.getName());
 
 		// Try with unexisting name
-		group = dao.findByName("xxxx");
+		group = dao.findByName("xxxx", 1);
+		Assert.assertNull(group);
+
+		// Try with unexisting tenant
+		group = dao.findByName("admin", 99);
 		Assert.assertNull(group);
 	}
 
@@ -73,7 +77,7 @@ public class HibernateGroupDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindAllGroupNames() {
-		Collection<String> groupNames = dao.findAllGroupNames();
+		Collection<String> groupNames = dao.findAllGroupNames(1);
 		Assert.assertNotNull(groupNames);
 		Assert.assertFalse(groupNames.isEmpty());
 		Assert.assertTrue(groupNames.contains("admin"));
@@ -82,40 +86,40 @@ public class HibernateGroupDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testStore() {
-		Assert.assertNull(dao.findByName("LogicalObjects"));
+		Assert.assertNull(dao.findByName("LogicalObjects", 1));
 
 		Group group = new Group();
 		group.setName("LogicalObjects");
 		group.setDescription("Test group for store method");
 
 		boolean result = dao.store(group);
-		Assert.assertNotNull(dao.findByName("LogicalObjects"));
+		Assert.assertNotNull(dao.findByName("LogicalObjects", 1));
 		Assert.assertTrue(result);
 
-		Group group2 = dao.findByName("LogicalObjects");
+		Group group2 = dao.findByName("LogicalObjects", 1);
 		Assert.assertEquals(group, group2);
 	}
 
 	@Test
 	public void testInsert() {
-		Assert.assertNull(dao.findByName("parentNone"));
+		Assert.assertNull(dao.findByName("parentNone", 1));
 
 		Group group = new Group();
 		group.setName("parentNone");
 		group.setDescription("Test group for insert method parent = none");
 
 		Assert.assertTrue(dao.insert(group, 90));
-		Assert.assertNotNull(dao.findByName("parentNone"));
+		Assert.assertNotNull(dao.findByName("parentNone", 1));
 
 		// Test with parentGroup Not Empty
-		Assert.assertNull(dao.findByName("parentNotEmpty"));
+		Assert.assertNull(dao.findByName("parentNotEmpty", 1));
 
 		group = new Group();
 		group.setName("parentNotEmpty");
 		group.setDescription("Test group for insertX method parentGroup Not Empty");
 
 		Assert.assertTrue(dao.insert(group, 90));
-		Assert.assertNotNull(dao.findByName("parentNotEmpty"));
+		Assert.assertNotNull(dao.findByName("parentNotEmpty", 1));
 	}
 
 	@Test
@@ -131,7 +135,7 @@ public class HibernateGroupDAOTest extends AbstractCoreTCase {
 		System.out.println(manager.getAllowedGroups(5));
 		Assert.assertTrue(manager.getAllowedGroups(5).contains(group));
 		Assert.assertFalse(manager.getAllowedGroups(9).contains(group));
-		
+
 		dao.inheritACLs(group.getId(), 1);
 		System.out.println(manager.getAllowedGroups(9));
 		Assert.assertTrue(manager.getAllowedGroups(9).contains(group));

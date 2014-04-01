@@ -30,22 +30,26 @@ public interface GroupDAO extends PersistentObjectDAO<Group> {
 	 * Finds a group by name.
 	 * 
 	 * @param name name of wanted group.
+	 * @param tenantId ID of the owning tenant
+	 * 
 	 * @return Wanted group or null.
 	 */
-	public Group findByName(String name);
+	public Group findByName(String name, long tenantId);
 
 	/**
 	 * This method selects all groupnames.
 	 */
-	public Collection<String> findAllGroupNames();
+	public Collection<String> findAllGroupNames(long tenantId);
 
 	/**
 	 * This method finds a Group by name.
 	 * 
 	 * @param name The name of wanted Group.
+	 * @param tenantId ID of the owning tenant
+	 * 
 	 * @return Collection of selected groups.
 	 */
-	public Collection<Group> findByLikeName(String name);
+	public Collection<Group> findByLikeName(String name, long tenantId);
 
 	/**
 	 * Counts the total number of groups
