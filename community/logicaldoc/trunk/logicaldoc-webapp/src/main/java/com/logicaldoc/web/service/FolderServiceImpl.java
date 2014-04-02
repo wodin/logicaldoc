@@ -220,7 +220,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				int j = 0;
 				while (st.hasMoreTokens()) {
 					String text = st.nextToken();
-					list = dao.findByName(parent, text, true);
+					list = dao.findByName(parent, text, null, true);
 					if (list.isEmpty())
 						return null;
 

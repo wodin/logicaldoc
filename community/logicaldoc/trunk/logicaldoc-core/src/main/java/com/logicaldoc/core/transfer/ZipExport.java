@@ -21,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.FolderEvent;
+import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
@@ -54,14 +56,14 @@ public class ZipExport {
 	/**
 	 * Exports the specified folder content
 	 * 
-	 * @param folderId Identifier of the folder
-	 * @param userId Current user
+	 * @param transaction Transaction with all informations about the export
+	 * 
 	 * @return The Stream of the zip archive
 	 */
-	public ByteArrayOutputStream process(long folderId, long userId) {
+	public ByteArrayOutputStream process(FolderHistory transaction) {
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Folder folder = folderDao.findById(folderId);
-		this.userId = userId;
+		Folder folder = folderDao.findById(transaction.getFolderId());
+		this.userId = transaction.getUserId();
 		this.startFolderId = folder.getId();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		zos = new ZipArchiveOutputStream(bos);
@@ -81,6 +83,13 @@ public class ZipExport {
 			}
 
 		}
+
+		/*
+		 * Record the export event
+		 */
+		transaction.setEvent(FolderEvent.EXPORTED.toString());
+		folderDao.saveFolderHistory(folder, transaction);
+
 		return bos;
 	}
 

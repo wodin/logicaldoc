@@ -192,6 +192,7 @@ public class TenantDetailsPanel extends VLayout {
 					saveButton.setDisabled(false);
 					savePanel.setVisible(false);
 					if (tenant != null) {
+						TenantDetailsPanel.this.tenant = tenant;
 						TenantDetailsPanel.this.tenantsPanel.updateRecord(tenant);
 						TenantDetailsPanel.this.tenantsPanel.showTenantDetails(tenant);
 					}

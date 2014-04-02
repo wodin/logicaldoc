@@ -20,20 +20,24 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	/**
 	 * Finds all folders by folder name
 	 * 
-	 * @param name
+	 * @param name name of the folder
+	 * @param tenantId Specification of the owning tenant (optional).
+	 * 
 	 * @return List of folders with given folder name.
 	 */
-	public List<Folder> findByName(String name);
+	public List<Folder> findByName(String name, Long tenantId);
 
 	/**
 	 * Finds all folders by folder text, contained in the parent folder.
 	 * 
 	 * @param parent The parent folder(optional)
 	 * @param name The folder name to search for
+	 * @param tenantId Specification of the owning tenant (optional). If not
+	 *        specified the tenant of parent is used instead
 	 * @param caseSensitive
 	 * @return List of folders with given name
 	 */
-	public List<Folder> findByName(Folder parent, String name, boolean caseSensitive);
+	public List<Folder> findByName(Folder parent, String name, Long tenantId, boolean caseSensitive);
 
 	/**
 	 * Finds authorized folders for a user
@@ -364,4 +368,9 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 */
 	public void initialize(Folder folder);
 
+	/**
+	 * Utility method that logs into the DB the transaction that involved the
+	 * passed folder. The transaction must be provided with userId and userName.
+	 */
+	public void saveFolderHistory(Folder folder, FolderHistory transaction);
 }

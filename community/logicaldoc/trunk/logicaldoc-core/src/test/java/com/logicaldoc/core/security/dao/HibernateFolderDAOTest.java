@@ -402,26 +402,26 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testFindByName() {
 		// Try with existing text
-		List<Folder> folders = dao.findByName("%folder%");
+		List<Folder> folders = dao.findByName("%folder%", null);
 		Assert.assertNotNull(folders);
 		Assert.assertEquals(2, folders.size());
 
-		folders = (List<Folder>) dao.findByName(null, "test", true);
+		folders = (List<Folder>) dao.findByName(null, "test", null, true);
 		Assert.assertNotNull(folders);
 		Assert.assertEquals(1, folders.size());
 
 		Folder parent = dao.findById(Folder.ROOTID);
-		folders = (List<Folder>) dao.findByName(parent, "test", true);
+		folders = (List<Folder>) dao.findByName(parent, "test", null, true);
 		Assert.assertNotNull(folders);
 		Assert.assertEquals(1, folders.size());
 
 		// Try with unexisting text
-		folders = dao.findByName("xxxxx");
+		folders = dao.findByName("xxxxx", null);
 		Assert.assertNotNull(folders);
 		Assert.assertTrue(folders.isEmpty());
 
 		// Try with umlauts
-		Assert.assertNotNull(dao.findByName(dao.findById(Folder.DEFAULTWORKSPACE), "ölard", false));
+		Assert.assertNotNull(dao.findByName(dao.findById(Folder.DEFAULTWORKSPACE), "ölard", null, false));
 	}
 
 	@Test
@@ -466,7 +466,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertTrue(dao.isWriteEnable(Folder.ROOTID, 3));
 		Assert.assertFalse(dao.isWriteEnable(Folder.ROOTID, 999));
 	}
-	
+
 	@Test
 	public void testFindByPath() {
 		Assert.assertNotNull(dao.findByPath("/Default/ölard"));
