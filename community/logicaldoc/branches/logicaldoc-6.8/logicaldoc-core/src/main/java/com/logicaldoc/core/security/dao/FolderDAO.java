@@ -364,4 +364,9 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 */
 	public void initialize(Folder folder);
 
+	/**
+	 * Utility method that logs into the DB the transaction that involved the
+	 * passed folder. The transaction must be provided with userId and userName.
+	 */
+	public void saveFolderHistory(Folder folder, FolderHistory transaction);
 }
