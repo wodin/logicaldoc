@@ -114,11 +114,6 @@ public class Tenant extends PersistentObject implements Serializable {
 		this.type = type;
 	}
 
-	@Override
-	public String toString() {
-		return name;
-	}
-
 	public String getPostalCode() {
 		return postalCode;
 	}
@@ -127,4 +122,8 @@ public class Tenant extends PersistentObject implements Serializable {
 		this.postalCode = postalCode;
 	}
 
+	@Override
+	public String toString() {
+		return displayName != null ? displayName : name;
+	}
 }

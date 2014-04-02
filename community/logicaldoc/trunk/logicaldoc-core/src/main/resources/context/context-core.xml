@@ -3,19 +3,16 @@
 <!DOCTYPE beans SYSTEM "spring-beans-2.0.dtd">
 <beans default-autowire="no" default-dependency-check="none"
     default-lazy-init="false">
-    
     <!-- System Load Monitor -->
     <bean id="SystemLoadMonitor" abstract="false" autowire="default" class="${load}"
         dependency-check="default" lazy-init="default" init-method="start">
         <property name="config" ref="ContextProperties" />
     </bean>
-    
     <!-- Storer -->
     <bean id="Storer" abstract="false" autowire="default" class="${store}"
         dependency-check="default" lazy-init="default">
         <property name="config" ref="ContextProperties" />
     </bean>
-    
     <!-- SearchEngine -->
     <bean id="SearchEngine" abstract="false" autowire="default" class="${searchengine}"
         dependency-check="default" destroy-method="close" init-method="init"
@@ -23,7 +20,6 @@
         <property name="config" ref="ContextProperties" />
         <property name="documentDao" ref="DocumentDAO" />
     </bean>
-    
     <!-- DAOs -->
     <bean id="UserDAO" abstract="false" autowire="default"
         dependency-check="default" lazy-init="default" parent="ApplicationBaseTransactionProxy">
@@ -40,7 +36,6 @@
             </bean>
         </property>
     </bean>
-    
     <bean id="MenuDAO" abstract="false" autowire="default"
         dependency-check="default" lazy-init="default" parent="ApplicationBaseTransactionProxy">
         <property name="target">
@@ -52,7 +47,6 @@
             </bean>
         </property>
     </bean>
-    
     <bean id="FolderHistoryDAO" abstract="false" autowire="default"
         dependency-check="default" lazy-init="default" parent="ApplicationBaseTransactionProxy">
         <property name="target">
@@ -64,7 +58,6 @@
             </bean>
         </property>
     </bean>
-    
     <bean id="FolderDAO" abstract="false" autowire="default"
         dependency-check="default" lazy-init="default" parent="ApplicationBaseTransactionProxy">
         <property name="target">
@@ -79,7 +72,6 @@
             </bean>
         </property>
     </bean>
-    
     <bean id="UserDocDAO" abstract="false" autowire="default"
         dependency-check="default" lazy-init="default" parent="ApplicationBaseTransactionProxy">
         <property name="target">
@@ -295,10 +287,12 @@
                 class="com.logicaldoc.core.security.dao.HibernateTenantDAO"
                 dependency-check="default" lazy-init="default">
                 <property name="sessionFactory" ref="SessionFactory" />
+                <property name="userDao" ref="UserDAO" />
+                <property name="groupDao" ref="GroupDAO" />
+                <property name="folderDao" ref="FolderDAO" />
             </bean>
         </property>
     </bean>
-    
     <!-- Managers -->
     <bean id="SecurityManager" abstract="false" autowire="default"
         dependency-check="default" lazy-init="default" parent="ApplicationBaseTransactionProxy">

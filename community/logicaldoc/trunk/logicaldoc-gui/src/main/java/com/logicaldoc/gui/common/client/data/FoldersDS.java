@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.data.DataSource;
@@ -42,7 +41,7 @@ public class FoldersDS extends DataSource {
 		DataSourceTextField parentId = new DataSourceTextField("parent", "Parent ID");
 		parentId.setRequired(true);
 		parentId.setForeignKey(dsId + ".folderId");
-		parentId.setRootValue("" + Constants.DOCUMENTS_FOLDERID);
+		parentId.setRootValue("/");
 
 		setFields(name, folderId, parentId, type);
 

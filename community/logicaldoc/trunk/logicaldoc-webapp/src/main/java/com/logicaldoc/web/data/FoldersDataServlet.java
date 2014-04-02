@@ -3,6 +3,7 @@ package com.logicaldoc.web.data;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
@@ -38,7 +40,19 @@ public class FoldersDataServlet extends HttpServlet {
 		try {
 			UserSession session = SessionUtil.validateSession(request);
 
-			long parent = Long.parseLong(request.getParameter("parent"));
+			long tenantId = session.getTenantId();
+
+			long parent = Folder.ROOTID;
+
+			if ("/".equals(request.getParameter("parent"))) {
+				FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+				
+				List<Folder> folders = folderDao.findByName("/", tenantId);
+				if (folders.isEmpty())
+					throw new Exception("Unable to locate the root folder for tenant " + tenantId);
+				parent = folders.get(0).getId();
+			} else
+				parent = Long.parseLong(request.getParameter("parent"));
 
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
@@ -58,7 +72,7 @@ public class FoldersDataServlet extends HttpServlet {
 			writer.write("<list>");
 
 			StringBuffer query = new StringBuffer(
-					"select ld_id, ld_parentid, ld_name, ld_type from ld_folder where ld_deleted=0 and not ld_id=ld_parentid and ld_parentid = ? ");
+					"select ld_id, ld_parentid, ld_name, ld_type from ld_folder where ld_deleted=0 and not ld_id=ld_parentid and ld_parentid = ? and ld_tenantid = ? ");
 			if (!user.isInGroup("admin")) {
 				Collection<Long> accessibleIds = dao.findFolderIdByUserId(session.getUserId(), parent, false);
 				String idsStr = accessibleIds.toString().replace('[', '(').replace(']', ')');
@@ -66,7 +80,7 @@ public class FoldersDataServlet extends HttpServlet {
 			}
 			query.append(" order by ld_name");
 
-			SqlRowSet rs = dao.queryForRowSet(query.toString(), new Long[] { parent }, null);
+			SqlRowSet rs = dao.queryForRowSet(query.toString(), new Long[] { parent, tenantId }, null);
 			if (rs != null)
 				while (rs.next()) {
 					writer.print("<folder>");

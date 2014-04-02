@@ -506,20 +506,26 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public List<Folder> findByName(String name) {
-		return findByName(null, name, true);
+	public List<Folder> findByName(String name, Long tenantId) {
+		return findByName(null, name, tenantId, true);
 	}
 
 	@Override
-	public List<Folder> findByName(Folder parent, String name, boolean caseSensitive) {
+	public List<Folder> findByName(Folder parent, String name, Long tenantId, boolean caseSensitive) {
 		StringBuffer query = null;
 		if (caseSensitive)
 			query = new StringBuffer("_entity.name like '" + SqlUtil.doubleQuotes(name) + "' ");
 		else
 			query = new StringBuffer("lower(_entity.name) like '" + SqlUtil.doubleQuotes(name.toLowerCase()) + "' ");
 
-		if (parent != null)
+		if (parent != null) {
 			query.append(" AND _entity.parentId = " + parent.getId());
+			if (tenantId == null)
+				query.append(" AND _entity.tenantId = " + parent.getTenantId());
+		}
+
+		if (tenantId != null)
+			query.append(" AND _entity.tenantId = " + tenantId);
 		return findByWhere(query.toString(), null, null);
 	}
 
@@ -546,7 +552,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	 * @param folder
 	 * @param transaction
 	 */
-	private void saveFolderHistory(Folder folder, FolderHistory transaction) {
+	@Override
+	public void saveFolderHistory(Folder folder, FolderHistory transaction) {
 		if (transaction == null || !historyDAO.isEnabled() || "bulkload".equals(config.getProperty("runlevel")))
 			return;
 
@@ -985,6 +992,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		folder.setName(folderVO.getName());
 		folder.setType(folderVO.getType());
 		folder.setDescription(folderVO.getDescription());
+		folder.setTenantId(parent.getTenantId());
 
 		if (folderVO.getCreation() != null)
 			folder.setCreation(folderVO.getCreation());
@@ -1057,7 +1065,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		Folder folder = parent;
 		while (st.hasMoreTokens()) {
 			String name = st.nextToken();
-			List<Folder> childs = findByName(folder, name, true);
+			List<Folder> childs = findByName(folder, name, parent.getTenantId(), true);
 			Folder dir = null;
 			if (childs.isEmpty())
 				try {
@@ -1085,7 +1093,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			String token = st.nextToken();
 			if (StringUtils.isEmpty(token))
 				continue;
-			List<Folder> list = findByName(folder, token, true);
+			List<Folder> list = findByName(folder, token, null, true);
 			if (list.isEmpty()) {
 				folder = null;
 				break;
@@ -1227,7 +1235,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public List<Folder> find(String name) {
-		return findByName(null, "%" + name + "%", false);
+		return findByName(null, "%" + name + "%", null, false);
 	}
 
 	@Override
