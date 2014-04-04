@@ -121,11 +121,13 @@ public class Frontend implements EntryPoint {
 				Feature.init(info);
 				Session.get().setInfo(info);
 
+				WindowUtils.setFavicon(info);
+
 				String savedSid = null;
 				try {
 					savedSid = Offline.get(Constants.COOKIE_SID).toString();
-					if(savedSid==null)
-						savedSid=Cookies.getCookie(Constants.COOKIE_SID);
+					if (savedSid == null)
+						savedSid = Cookies.getCookie(Constants.COOKIE_SID);
 				} catch (Throwable t) {
 
 				}
@@ -174,29 +176,27 @@ public class Frontend implements EntryPoint {
 			}
 
 			private void anonymousLogin(final String lang, final GUIInfo info) {
-				securityService.login(info.getConfig("anonymous.user"), "", lang,
-						new AsyncCallback<GUISession>() {
+				securityService.login(info.getConfig("anonymous.user"), "", lang, new AsyncCallback<GUISession>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Frontend.this.showInitialLogin();
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						Frontend.this.showInitialLogin();
+					}
 
-							@Override
-							public void onSuccess(GUISession session) {
-								if (session == null || !session.isLoggedIn()) {
-									Frontend.this.showInitialLogin();
-								} else {
-									MainPanel.get();
-									loginPanel.onLoggedIn(session);
+					@Override
+					public void onSuccess(GUISession session) {
+						if (session == null || !session.isLoggedIn()) {
+							Frontend.this.showInitialLogin();
+						} else {
+							MainPanel.get();
+							loginPanel.onLoggedIn(session);
 
-									// Remove the loading frame
-									RootPanel.getBodyElement().removeChild(
-											RootPanel.get("loadingWrapper").getElement());
-									declareReloadTrigger(Frontend.this);
-								}
-							}
-						});
+							// Remove the loading frame
+							RootPanel.getBodyElement().removeChild(RootPanel.get("loadingWrapper").getElement());
+							declareReloadTrigger(Frontend.this);
+						}
+					}
+				});
 			}
 		});
 	}
@@ -262,7 +262,7 @@ public class Frontend implements EntryPoint {
 	public void addTagInCloud(String tag, String weight, String link) {
 		TagsForm.searchTag(tag, false);
 	}
-	
+
 	public void showForgotDialog(String productName) {
 		LoginPanel.onForgottenPwd(productName);
 	}
@@ -305,9 +305,10 @@ public class Frontend implements EntryPoint {
 			frontend.@com.logicaldoc.gui.frontend.client.Frontend::searchTag(Ljava/lang/String;)(tag);
 		};
 	}-*/;
-	
+
 	/**
-	 * Declares the javascript function used to display the forgot password popup
+	 * Declares the javascript function used to display the forgot password
+	 * popup
 	 */
 	public static native void declareShowForgotDialog(Frontend frontend) /*-{
 		$wnd.showForgotDialog = function(productName) {
