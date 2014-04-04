@@ -1,5 +1,7 @@
 package com.logicaldoc.gui.common.client.util;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 
@@ -74,6 +76,24 @@ public class WindowUtils {
 			buf = prefix + " - " + buf;
 		}
 		WindowUtils.setTitle(buf);
+	}
+	
+	public static void setFavicon(GUIInfo info){
+		try {
+			Element link=DOM.getElementById("favicon");
+			Element parent=DOM.getParent(link);
+			DOM.removeChild(parent, link);
+			
+			link=DOM.createElement("link");
+			link.setId("favicon");
+			link.setAttribute("rel", "shortcut icon");
+			link.setAttribute("type", "image/png");
+			link.setAttribute("href", info.getFaviconSrc());
+			
+			DOM.appendChild(parent, link);
+		} catch (Throwable t) {
+
+		}
 	}
 
 	public static native void openUrl(String url)/*-{
