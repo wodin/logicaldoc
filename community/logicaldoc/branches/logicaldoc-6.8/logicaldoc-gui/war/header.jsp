@@ -108,7 +108,7 @@ body {
 </style>
 
 <link REL="STYLESHEET" HREF="./skin/style.css" TYPE="text/css" />
-<link rel="shortcut icon" type="image/x-icon" href='./skin/brand/favicon.ico' />
+<link id="favicon" rel="shortcut icon" type="image/png" href='' />
 <script type="text/javascript">		
 	// Determine what skin file to load
   var currentSkin = "Enterprise";

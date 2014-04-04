@@ -120,6 +120,8 @@ public class Frontend implements EntryPoint {
 
 				Feature.init(info);
 				Session.get().setInfo(info);
+				
+				WindowUtils.setFavicon(info);
 
 				String savedSid = null;
 				try {
