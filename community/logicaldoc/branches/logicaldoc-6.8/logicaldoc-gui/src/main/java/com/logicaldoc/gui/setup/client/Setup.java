@@ -124,12 +124,6 @@ public class Setup implements EntryPoint {
 			@Override
 			public void onSuccess(GUIInfo info) {
 				I18N.init(info);
-
-				WindowUtils.setTitle(info.getProductName()
-						+ " "
-						+ info.getRelease()
-						+ (info.getLicensee() != null ? " - " + I18N.message("licensedto") + ": " + info.getLicensee()
-								: ""));
 				initGUI(info);
 			}
 		});
@@ -137,6 +131,10 @@ public class Setup implements EntryPoint {
 	}
 
 	private void initGUI(final GUIInfo info) {
+		WindowUtils.setTitle(info.getProductName() + " " + info.getRelease()
+				+ (info.getLicensee() != null ? " - " + I18N.message("licensedto") + ": " + info.getLicensee() : ""));
+		WindowUtils.setFavicon(info);
+
 		// Prepare a value manager that will include all forms spanned in each
 		// tab
 		vm = new ValuesManager();
