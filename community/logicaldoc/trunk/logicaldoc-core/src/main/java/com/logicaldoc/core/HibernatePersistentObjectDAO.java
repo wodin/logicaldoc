@@ -62,8 +62,16 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 		return findByWhere("", "", null);
 	}
 
+	public List<T> findAll(long tenantId) {
+		return findByWhere(" _entity.tenantId=" + tenantId, "", null);
+	}
+
 	public List<Long> findAllIds() {
 		return findIdsByWhere("", "", null);
+	}
+
+	public List<Long> findAllIds(long tenantId) {
+		return findIdsByWhere(" _entity.tenantId=" + tenantId, "", null);
 	}
 
 	@SuppressWarnings("unchecked")

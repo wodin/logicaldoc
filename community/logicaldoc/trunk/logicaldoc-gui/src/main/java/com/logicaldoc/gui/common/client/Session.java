@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUISession;
+import com.logicaldoc.gui.common.client.beans.GUITenant;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -29,6 +30,8 @@ public class Session {
 
 	private InfoServiceAsync service = (InfoServiceAsync) GWT.create(InfoService.class);
 
+	private GUITenant tenant;
+	
 	private GUIInfo info;
 
 	private GUISession session;
@@ -182,5 +185,13 @@ public class Session {
 
 	public GUIDocument getCurrentDocument() {
 		return currentDocument;
+	}
+
+	public GUITenant getTenant() {
+		return tenant;
+	}
+
+	public void setTenant(GUITenant tenant) {
+		this.tenant = tenant;
 	}
 }

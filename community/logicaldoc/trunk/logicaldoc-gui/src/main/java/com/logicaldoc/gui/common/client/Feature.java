@@ -22,6 +22,8 @@ public class Feature {
 	public static final int ARCHIVES = 4;
 
 	public static final int TAGS = 5;
+	
+	public static final int BRANDING = 6;
 
 	public static final int DIGITAL_SIGN = 7;
 

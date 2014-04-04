@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.tenant;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUITenant;
 import com.logicaldoc.gui.common.client.data.TenantsDS;
@@ -179,8 +180,8 @@ public class TenantsPanel extends VLayout {
 	 * Updates the selected record with new data
 	 */
 	public void updateRecord(GUITenant tenant) {
-		Log.info("Update record "+tenant.getName(), null);
-		
+		Log.info("Update record " + tenant.getName(), null);
+
 		ListGridRecord record = list.getSelectedRecord();
 		if (record == null)
 			record = new ListGridRecord();
@@ -246,7 +247,7 @@ public class TenantsPanel extends VLayout {
 			}
 		});
 
-		if (id == GUITenant.DEFAULT_ID)
+		if (id == Constants.TENANT_DEFAULTID)
 			delete.setEnabled(false);
 
 		contextMenu.setItems(delete);

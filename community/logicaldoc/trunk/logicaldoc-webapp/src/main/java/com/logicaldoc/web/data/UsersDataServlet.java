@@ -100,8 +100,9 @@ public class UsersDataServlet extends HttpServlet {
 				UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 				String query = "select A.ld_id, A.ld_username, A.ld_enabled, A.ld_name, A.ld_firstname, A.ld_email, A.ld_telephone, "
 						+ "A.ld_telephone2, A.ld_signatureid, A.ld_signatureinfo, B.ld_id "
-						+ "from ld_user A, ld_group B where A.ld_deleted = 0 and A.ld_type = 0 and B.ld_type=1 "
-						+ "and B.ld_id in(select ld_groupid from ld_usergroup where ld_userid=A.ld_id)";
+						+ "from ld_user A, ld_group B where A.ld_deleted = 0 and A.ld_type = 0 and B.ld_type=1 and A.ld_tenantid="
+						+ session.getTenantId()
+						+ " and B.ld_id in(select ld_groupid from ld_usergroup where ld_userid=A.ld_id)";
 
 				@SuppressWarnings("unchecked")
 				List<User> records = (List<User>) userDao.query(query, null, new RowMapper<User>() {

@@ -18,10 +18,12 @@ public class GUISession implements Serializable {
 
 	private String sid;
 
+	private GUITenant tenant;
+
 	private GUIInfo info;
-	
+
 	private GUIExternalCall externalCall;
-	
+
 	private String incomingMessage;
 
 	public GUIUser getUser() {
@@ -70,5 +72,13 @@ public class GUISession implements Serializable {
 
 	public void setExternalCall(GUIExternalCall externalCall) {
 		this.externalCall = externalCall;
+	}
+
+	public GUITenant getTenant() {
+		return tenant;
+	}
+
+	public void setTenant(GUITenant tenant) {
+		this.tenant = tenant;
 	}
 }
