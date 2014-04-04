@@ -23,6 +23,10 @@ public final class Constants {
 
 	public static final long WORKSPACE_DEFAULTID = 4;
 	
+	public static final long TENANT_DEFAULTID = 1L;
+
+	public static final String TENANT_DEFAULTNAME = "default";
+	
 	public final static String TIME_MINUTE = "minute";
 
 	public final static String TIME_HOUR = "hour";

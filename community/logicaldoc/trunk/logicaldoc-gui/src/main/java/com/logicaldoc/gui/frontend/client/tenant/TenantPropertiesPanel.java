@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.tenant;
 
 import java.util.Map;
 
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.beans.GUITenant;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -76,7 +77,7 @@ public class TenantPropertiesPanel extends HLayout {
 		TextItem name = ItemFactory.newSimpleTextItem("name", "name", tenant.getName());
 		name.setRequired(true);
 		name.setSelectOnFocus(true);
-		name.setDisabled(readonly || (tenant.getId() != 0 && GUITenant.DEFAULT_NAME.equals(tenant.getName())));
+		name.setDisabled(readonly || (tenant.getId() != 0 && Constants.TENANT_DEFAULTNAME.equals(tenant.getName())));
 		if (!readonly)
 			name.addChangedHandler(changedHandler);
 

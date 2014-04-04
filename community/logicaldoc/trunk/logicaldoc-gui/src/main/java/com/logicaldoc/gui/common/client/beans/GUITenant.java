@@ -14,10 +14,6 @@ public class GUITenant implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final long DEFAULT_ID = 1L;
-
-	public static final String DEFAULT_NAME = "default";
-
 	private long id = 0;
 
 	private long tenantId = 0;
@@ -142,5 +138,4 @@ public class GUITenant implements Serializable {
 	public void setTenantId(long tenantId) {
 		this.tenantId = tenantId;
 	}
-
 }

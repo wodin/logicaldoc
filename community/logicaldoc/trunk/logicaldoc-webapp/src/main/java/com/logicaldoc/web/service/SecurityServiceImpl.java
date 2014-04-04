@@ -41,12 +41,14 @@ import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.core.security.SecurityManager;
 import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserHistory;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.gui.common.client.Constants;
@@ -59,6 +61,7 @@ import com.logicaldoc.gui.common.client.beans.GUIMenu;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
+import com.logicaldoc.gui.common.client.beans.GUITenant;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.i18n.I18N;
@@ -112,6 +115,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				guiUser.setFirstName(user.getFirstName());
 				session.setUser(guiUser);
 				session.setLoggedIn(false);
+				session.setTenant(getTenant(user.getTenantId()));
 				log.info("User " + username + " password expired");
 			} else {
 				guiUser = null;
@@ -123,11 +127,32 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 				guiUser.setPasswordMinLenght(Integer.parseInt(config.getProperty("password.size")));
 			}
+
 			return session;
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 			throw new RuntimeException(e.getMessage(), e);
 		}
+	}
+
+	public static GUITenant getTenant(long tenantId) {
+		TenantDAO dao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+		GUITenant ten = new GUITenant();
+		Tenant tenant = dao.findById(tenantId);
+		if (tenant == null)
+			return null;
+		ten.setId(tenant.getId());
+		ten.setTenantId(tenant.getTenantId());
+		ten.setCity(tenant.getCity());
+		ten.setCountry(tenant.getCountry());
+		ten.setDisplayName(tenant.getDisplayName());
+		ten.setEmail(tenant.getEmail());
+		ten.setName(tenant.getName());
+		ten.setPostalCode(tenant.getPostalCode());
+		ten.setState(tenant.getState());
+		ten.setStreet(tenant.getStreet());
+		ten.setTelephone(tenant.getTelephone());
+		return ten;
 	}
 
 	/**
@@ -138,6 +163,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		GUIUser guiUser = new GUIUser();
 		GUISession session = new GUISession();
 		session.setSid(sid);
+
+		session.setTenant(getTenant(user.getId()));
 
 		DocumentDAO documentDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		SystemMessageDAO messageDao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);

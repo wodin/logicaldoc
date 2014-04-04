@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.i18n.I18N;
@@ -36,7 +37,7 @@ public class GroupsDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			SessionUtil.validateSession(request);
+			UserSession session = SessionUtil.validateSession(request);
 
 			String locale = request.getParameter("locale");
 			String excludeUserId = request.getParameter("excludeUserId");
@@ -61,7 +62,7 @@ public class GroupsDataServlet extends HttpServlet {
 				/*
 				 * Iterate over records composing the response XML document
 				 */
-				for (Group group : dao.findAll()) {
+				for (Group group : dao.findAll(session.getTenantId())) {
 					if (group.getDeleted() == 1 || user.getGroups().contains(group)
 							|| group.getType() != Group.TYPE_DEFAULT)
 						continue;
@@ -77,7 +78,7 @@ public class GroupsDataServlet extends HttpServlet {
 			} else {
 				StringBuffer query = new StringBuffer("select A.id, A.name, A.description "
 						+ "from com.logicaldoc.core.security.Group A where A.deleted = 0 and A.type = "
-						+ Group.TYPE_DEFAULT);
+						+ Group.TYPE_DEFAULT + " and A.tenantId=" + session.getTenantId());
 
 				List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, null);
 
