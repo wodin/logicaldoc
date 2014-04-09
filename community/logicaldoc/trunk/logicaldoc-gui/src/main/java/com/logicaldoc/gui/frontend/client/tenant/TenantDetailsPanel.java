@@ -14,6 +14,7 @@ import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.types.VerticalAlignment;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.Img;
@@ -180,6 +181,8 @@ public class TenantDetailsPanel extends VLayout {
 		if (validate()) {
 			saveButton.setDisabled(true);
 
+			final boolean newTenant = TenantDetailsPanel.this.tenant.getId() == 0L;
+
 			service.save(Session.get().getSid(), tenant, new AsyncCallback<GUITenant>() {
 				@Override
 				public void onFailure(Throwable caught) {
@@ -195,6 +198,11 @@ public class TenantDetailsPanel extends VLayout {
 						TenantDetailsPanel.this.tenant = tenant;
 						TenantDetailsPanel.this.tenantsPanel.updateRecord(tenant);
 						TenantDetailsPanel.this.tenantsPanel.showTenantDetails(tenant);
+
+						if (newTenant) {
+							SC.say(I18N.message("newtenantresume",
+									new String[] { tenant.getName(), "admin" + tenant.getName(), "admin" }));
+						}
 					}
 				}
 			});

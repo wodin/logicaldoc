@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.metadata;
 
+import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.search.TagsForm;
@@ -38,7 +39,7 @@ public class TagsPanel extends HLayout {
 		Tab preset = new Tab();
 		preset.setTitle(I18N.message("tagspreset"));
 		for (GUIParameter p : parameters) {
-			if ("tag.mode".equals(p.getName())) {
+			if ((Session.get().getTenantName() + ".tag.mode").equals(p.getName())) {
 				preset.setPane(new TagsPreset(p.getValue()));
 				break;
 			}

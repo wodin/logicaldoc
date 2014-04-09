@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.dashboard;
 
+import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.events.VisibilityChangedEvent;
 import com.smartgwt.client.widgets.events.VisibilityChangedHandler;
@@ -41,9 +42,9 @@ public class TagCloud extends VLayout {
 
 				@Override
 				public String getInnerHTML() {
-					return "<iframe src='tagcloud/cloud.jsp' style='border: 0px solid white; width:100%; height:"
-							+ TagCloud.this.getHeight() + ";' height='" + TagCloud.this.getHeight()
-							+ "' scrolling='no'>";
+					return "<iframe src='tagcloud/cloud.jsp?sid=" + Session.get().getSid()
+							+ "' style='border: 0px solid white; width:100%; height:" + TagCloud.this.getHeight()
+							+ ";' height='" + TagCloud.this.getHeight() + "' scrolling='no'>";
 				}
 
 			};

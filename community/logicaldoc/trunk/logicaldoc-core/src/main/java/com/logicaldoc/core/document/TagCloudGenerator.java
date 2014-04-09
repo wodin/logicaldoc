@@ -13,6 +13,7 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.Tenant;
+import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.task.Task;
 import com.logicaldoc.util.config.ContextProperties;
 
@@ -37,6 +38,8 @@ public class TagCloudGenerator extends Task {
 	private DocumentDAO documentDao;
 
 	private GenericDAO genericDao;
+
+	private TenantDAO tenantDao;
 
 	public TagCloudGenerator() {
 		super(NAME);
@@ -65,21 +68,27 @@ public class TagCloudGenerator extends Task {
 	protected void runTask() throws Exception {
 		log.info("Start tag clouds generation");
 
-		// Obtain the proper generic that will store TagClouds
-		Generic generic = genericDao.findByAlternateKey(TYPE_TAGCLOUD, SUBTYPE_TAGCLOUD, null, Tenant.DEFAULT_ID);
-		if (generic == null) {
-			generic = new Generic(TYPE_TAGCLOUD, SUBTYPE_TAGCLOUD);
+		List<Tenant> tenants = tenantDao.findAll();
+
+		for (Tenant tenant : tenants) {
+			log.info("Generating tag vloud for tenant " + tenant);
+
+			// Obtain the proper generic that will store TagClouds
+			Generic generic = genericDao.findByAlternateKey(TYPE_TAGCLOUD, SUBTYPE_TAGCLOUD, null, tenant.getId());
+			if (generic == null) {
+				generic = new Generic(TYPE_TAGCLOUD, SUBTYPE_TAGCLOUD);
+				genericDao.store(generic);
+			}
+			genericDao.initialize(generic);
+			generic.getAttributes().clear();
+
+			// Iterate over tag clouds and serialize them as extended attributes
+			List<TagCloud> tags = getTagClouds(tenant.getId());
+			for (TagCloud tagCloud : tags) {
+				generic.setValue(tagCloud.getTag(), tagCloud.getCount() + "|" + tagCloud.getScale());
+			}
 			genericDao.store(generic);
 		}
-		genericDao.initialize(generic);
-		generic.getAttributes().clear();
-
-		// Iterate over tag clouds and serialize them as extended attributes
-		List<TagCloud> tags = getTagClouds();
-		for (TagCloud tagCloud : tags) {
-			generic.setValue(tagCloud.getTag(), tagCloud.getCount() + "|" + tagCloud.getScale());
-		}
-		genericDao.store(generic);
 
 		log.info("End tag clouds generation");
 	}
@@ -87,10 +96,10 @@ public class TagCloudGenerator extends Task {
 	/**
 	 * Computes the list of tag clouds
 	 */
-	public List<TagCloud> getTagClouds() {
+	public List<TagCloud> getTagClouds(long tenantId) {
 		List<TagCloud> tags = new ArrayList<TagCloud>();
 
-		HashMap<String, Integer> tgs = (HashMap<String, Integer>) documentDao.findTags(null);
+		HashMap<String, Integer> tgs = (HashMap<String, Integer>) documentDao.findTags(null, tenantId);
 		if (tgs.isEmpty())
 			return tags;
 
@@ -135,5 +144,9 @@ public class TagCloudGenerator extends Task {
 		public int compare(TagCloud tc0, TagCloud tc1) {
 			return new Integer(tc0.getCount()).compareTo(tc1.getCount());
 		}
+	}
+
+	public void setTenantDao(TenantDAO tenantDao) {
+		this.tenantDao = tenantDao;
 	}
 }

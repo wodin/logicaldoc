@@ -247,10 +247,22 @@ public class TenantsPanel extends VLayout {
 			}
 		});
 
-		if (id == Constants.TENANT_DEFAULTID)
-			delete.setEnabled(false);
+		MenuItem password = new MenuItem();
+		password.setTitle(I18N.message("changepassword"));
+		password.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				SetAdminPassword dialog = new SetAdminPassword(record.getAttributeAsString("name"));
+				dialog.show();
+			}
+		});
+		password.setEnabled(!Session.get().isDemo());
 
-		contextMenu.setItems(delete);
+		if (id == Constants.TENANT_DEFAULTID) {
+			delete.setEnabled(false);
+			password.setEnabled(false);
+		}
+
+		contextMenu.setItems(password, delete);
 		contextMenu.showContextMenu();
 	}
 }

@@ -7,7 +7,6 @@ import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.logicaldoc.gui.common.client.Config;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
@@ -89,6 +88,14 @@ public class Frontend implements EntryPoint {
 		}
 		I18N.setLocale(lang);
 
+		// Tries to capture tenant parameter
+		final String tenant;
+		if (request.getParameter(Constants.TENANT) != null && !request.getParameter(Constants.TENANT).equals("")) {
+			tenant = request.getParameter(Constants.TENANT);
+		} else {
+			tenant = Constants.TENANT_DEFAULTNAME;
+		}
+
 		// Get grid of scrollbars, and clear out the window's built-in margin,
 		// because we want to take advantage of the entire client area.
 		Window.enableScrolling(false);
@@ -102,7 +109,7 @@ public class Frontend implements EntryPoint {
 		declareCheckPermission(this);
 		declareShowForgotDialog(this);
 
-		infoService.getInfo(I18N.getLocale(), new AsyncCallback<GUIInfo>() {
+		infoService.getInfo(I18N.getLocale(), tenant, new AsyncCallback<GUIInfo>() {
 			@Override
 			public void onFailure(Throwable error) {
 				SC.warn(error.getMessage());
@@ -113,7 +120,6 @@ public class Frontend implements EntryPoint {
 				// Store the release information
 				Cookies.setCookie(Constants.COOKIE_VERSION, info.getRelease());
 
-				Config.init(info);
 				I18N.init(info);
 
 				WindowUtils.setTitle(info, null);

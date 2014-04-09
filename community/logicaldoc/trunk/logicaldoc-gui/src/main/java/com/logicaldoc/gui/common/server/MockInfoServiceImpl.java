@@ -24,7 +24,7 @@ public class MockInfoServiceImpl extends RemoteServiceServlet implements InfoSer
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public GUIInfo getInfo(String locale) {
+	public GUIInfo getInfo(String locale, String tenant) {
 		/*
 		 * The product version must be taken from context.properties.
 		 */

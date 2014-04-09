@@ -37,6 +37,8 @@ public class GUITenant implements Serializable {
 	private String telephone;
 
 	private int type = 0;
+	
+	private String adminUsername="admin";
 
 	public String getName() {
 		return name;
@@ -137,5 +139,13 @@ public class GUITenant implements Serializable {
 
 	public void setTenantId(long tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	public String getAdminUsername() {
+		return adminUsername;
+	}
+
+	public void setAdminUsername(String adminUsername) {
+		this.adminUsername = adminUsername;
 	}
 }

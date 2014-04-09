@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserHistoryDAO;
 import com.logicaldoc.util.Context;
@@ -36,6 +37,8 @@ public class UserSession implements Comparable<UserSession> {
 	private long userId;
 
 	private long tenantId;
+
+	private String tenantName;
 
 	private int status = STATUS_OPEN;
 
@@ -101,12 +104,18 @@ public class UserSession implements Comparable<UserSession> {
 		this.userName = userName;
 		this.userObject = userObject;
 
-		// Set the userid
+		// Set the user's id
 		UserDAO userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.getInstance().getBean(UserHistoryDAO.class);
 		User user = userDAO.findByUserName(userName);
 		this.userId = user.getId();
+
+		// Set the tenant's id and name
 		this.tenantId = user.getTenantId();
+		TenantDAO tenantDAO = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+		Tenant tenant = tenantDAO.findById(this.tenantId);
+		if (tenant != null)
+			tenantName = tenant.getName();
 
 		/*
 		 * Store in the history comment the remote host and IP
@@ -207,5 +216,13 @@ public class UserSession implements Comparable<UserSession> {
 
 	public void setTenantId(long tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	public String getTenantName() {
+		return tenantName;
+	}
+
+	public void setTenantName(String tenantName) {
+		this.tenantName = tenantName;
 	}
 }

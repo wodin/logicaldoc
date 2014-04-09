@@ -47,7 +47,7 @@
     <%
 
         TagServiceImpl service=new TagServiceImpl();
-        GUITag[] tags=service.getTagCloud();
+        GUITag[] tags=service.getTagCloud(request.getParameter("sid"));
         for(int i=0; i<tags.length; i++){
     %>
          <li><a href="javascript:parent.searchTag('<%=tags[i].getTag()%>');" alt='<%=""+(tags[i].getScale()*4)%>'><%=tags[i].getTag()%></a></li>

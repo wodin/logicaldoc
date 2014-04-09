@@ -57,8 +57,8 @@ public class TagsPreset extends VLayout {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				settingService.saveSettings(Session.get().getSid(), new GUIParameter[] { new GUIParameter("tag.mode",
-						mode.getValueAsString()) }, new AsyncCallback<Void>() {
+				settingService.saveSettings(Session.get().getSid(), new GUIParameter[] { new GUIParameter(Session.get()
+						.getTenantName() + ".tag.mode", mode.getValueAsString()) }, new AsyncCallback<Void>() {
 					@Override
 					public void onSuccess(Void arg) {
 						Log.info(I18N.message("settingssaved"), null);

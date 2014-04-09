@@ -18,7 +18,7 @@ public interface TagService extends RemoteService {
 	/**
 	 * Loads the tag cloud from the server
 	 */
-	public GUITag[] getTagCloud();
+	public GUITag[] getTagCloud(String sid) throws InvalidSessionException;
 
 	/**
 	 * Deletes an existing tag

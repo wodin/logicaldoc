@@ -160,15 +160,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return findIdsByWhere(query.toString(), null, null);
 	}
 
-	/**
-	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findLockedByUserId(java.lang.String)
-	 */
-	@Deprecated
-	public List<Document> findLockedByUserId(long userId) {
-		return findByWhere("_entity.lockUserId = " + userId + " and not(_entity.status=" + Document.DOC_UNLOCKED + ")",
-				null, null);
-	}
-
 	@Override
 	public List<Document> findByLockUserAndStatus(Long userId, Integer status) {
 		StringBuffer sb = new StringBuffer(
@@ -376,14 +367,16 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Map<String, Integer> findTags(String firstLetter) {
+	public Map<String, Integer> findTags(String firstLetter, Long tenantId) {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 
 		try {
 			StringBuilder query = new StringBuilder("SELECT COUNT(tag), tag");
 			query.append(" FROM Document _entity JOIN _entity.tags tag ");
 			if (StringUtils.isNotEmpty(firstLetter))
-				query.append(" where lower(tag) like '" + firstLetter.toLowerCase() + "%'");
+				query.append(" where lower(tag) like '" + firstLetter.toLowerCase() + "%' ");
+			if (tenantId != null)
+				query.append(" and _entity.tenantId=" + tenantId);
 			query.append(" GROUP BY tag");
 
 			List ssss = findByQuery(query.toString(), null, null);
@@ -403,11 +396,21 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	@Override
-	public List<String> findAllTags(String firstLetter) {
+	public List<String> findAllTags(String firstLetter, Long tenantId) {
 		try {
-			StringBuilder sb = new StringBuilder("select distinct(ld_tag) from ld_tag ");
-			if (StringUtils.isNotEmpty(firstLetter))
-				sb.append(" where lower(ld_tag) like '" + firstLetter.toLowerCase() + "%'");
+			StringBuilder sb = new StringBuilder("select distinct(A.ld_tag) ");
+			if (tenantId != null) {
+				sb.append(" from ld_tag as A join ld_document as B on A.ld_docid=B.ld_id ");
+				sb.append(" where B.ld_tenantid=" + tenantId);
+			} else {
+				sb.append(" from ld_tag as A where ");
+			}
+			if (StringUtils.isNotEmpty(firstLetter)) {
+				if (tenantId != null)
+					sb.append(" and lower(A.ld_tag) like '" + firstLetter.toLowerCase() + "%'");
+				else
+					sb.append(" lower(A.ld_tag) like '" + firstLetter.toLowerCase() + "%'");
+			}
 
 			return (List<String>) queryForList(sb.toString(), String.class);
 		} catch (Exception e) {

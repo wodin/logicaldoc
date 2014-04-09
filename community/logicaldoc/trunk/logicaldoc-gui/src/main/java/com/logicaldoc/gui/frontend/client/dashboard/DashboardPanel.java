@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.dashboard;
 
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.calendar.CalendarDashboard;
 import com.logicaldoc.gui.frontend.client.workflow.WorkflowDashboard;
@@ -39,7 +40,7 @@ public class DashboardPanel extends VLayout {
 		tagsTab = new Tab(I18N.message("tags"));
 		tagsTab.setID("tags");
 		tagsTab.setPane(new TagsDashboard());
-
+		
 		messagesTab = new Tab(I18N.message("messages"));
 		messagesTab.setID("messages");
 		messagesTab.setPane(new MessagesPanel());

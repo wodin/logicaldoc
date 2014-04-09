@@ -1,24 +1,36 @@
 package com.logicaldoc.core.security.dao;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
+import com.logicaldoc.core.generic.Generic;
+import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.sql.SqlUtil;
 
 @SuppressWarnings("unchecked")
 public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> implements TenantDAO {
+
+	private ContextProperties conf;
 
 	private FolderDAO folderDao;
 
 	private GroupDAO groupDao;
 
 	private UserDAO userDao;
+
+	private GenericDAO genericDao;
 
 	protected HibernateTenantDAO() {
 		super(Tenant.class);
@@ -28,8 +40,10 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 	public boolean delete(long tenantId) {
 		boolean result = true;
 
+		String tenantName = null;
 		try {
 			Tenant tenant = findById(tenantId);
+			tenantName = tenant.getName();
 			refresh(tenant);
 			if (tenant != null) {
 				tenant.setName(tenant.getName() + "." + tenant.getId());
@@ -40,6 +54,27 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 			result = false;
+		}
+
+		/*
+		 * Now remove all the tenant configuration properties
+		 */
+		if (tenantName != null) {
+			List<String> toBeRemoved = new ArrayList<String>();
+			for (Object key : conf.keySet()) {
+				if (key.toString().startsWith(tenantName))
+					toBeRemoved.add(key.toString());
+			}
+			if (!toBeRemoved.isEmpty()) {
+				for (String name : toBeRemoved) {
+					conf.remove(name);
+				}
+				try {
+					conf.write();
+				} catch (IOException e) {
+					log.warn("Unable to remove configuration settings", e);
+				}
+			}
 		}
 
 		return result;
@@ -54,6 +89,7 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 			if (tenant.getDeleted() == 1)
 				tenant = null;
 		}
+
 		return tenant;
 	}
 
@@ -107,7 +143,9 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 			user.setDecodedPassword("admin");
 			user.setTenantId(tenant.getId());
 			user.setName(tenant.toString());
+			user.setFirstName("Administrator");
 			user.setEmail(tenant.getEmail());
+			user.setLanguage("en");
 			stored = userDao.store(user);
 			if (!stored)
 				return stored;
@@ -116,6 +154,34 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 
 			userDao.jdbcUpdate("insert into ld_usergroup(ld_groupid,ld_userid) values (?,?)",
 					new Object[] { group.getId(), user.getId() });
+
+			/*
+			 * Now some minor records
+			 */
+			Generic generic = new Generic("customid-scheme", "default", null, tenant.getId());
+			generic.setString1("<id>");
+			genericDao.store(generic);
+
+			/*
+			 * Now replicate the configuration properties of the default tenant
+			 */
+			Map<String, String> newProps = new HashMap<String, String>();
+			for (Object key : conf.keySet()) {
+				String name = key.toString();
+				if (name.startsWith(Tenant.DEFAULT_NAME + ".")) {
+					String val = conf.getProperty(name);
+					newProps.put(tenant.getName() + "." + name.substring(name.indexOf('.')), val);
+				}
+			}
+			if (!newProps.isEmpty()) {
+				for (String name : newProps.keySet())
+					conf.setProperty(name, newProps.get(name));
+				try {
+					conf.write();
+				} catch (IOException e) {
+					log.warn("Unable update the configuration settings", e);
+				}
+			}
 		}
 
 		return stored;
@@ -127,5 +193,21 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 
 	public void setUserDao(UserDAO userDao) {
 		this.userDao = userDao;
+	}
+
+	@Override
+	public User findAdminUser(String tenantName) {
+		if ("default".equals(tenantName))
+			return userDao.findByUserName("admin");
+		else
+			return userDao.findByUserName("admin" + StringUtils.capitalize(tenantName));
+	}
+
+	public void setConf(ContextProperties conf) {
+		this.conf = conf;
+	}
+
+	public void setGenericDao(GenericDAO genericDao) {
+		this.genericDao = genericDao;
 	}
 }

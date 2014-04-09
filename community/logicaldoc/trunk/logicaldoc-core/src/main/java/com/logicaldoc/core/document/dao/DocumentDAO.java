@@ -50,14 +50,6 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 */
 	public List<Document> findByFolder(long folderId, Integer max);
 
-	/**
-	 * Finds all documents locked by a user.
-	 * 
-	 * @param userId Id of the user.
-	 * @return Collection of all Documents locked by the specified user.
-	 */
-	@Deprecated
-	public List<Document> findLockedByUserId(long userId);
 
 	/**
 	 * Finds all document of the specified status and locked by the specified
@@ -103,15 +95,17 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	/**
 	 * This method selects all tags and counts the occurrences.
 	 */
-	public Map<String, Integer> findTags(String firstLetter);
+	public Map<String, Integer> findTags(String firstLetter, Long tenantId);
 
 	/**
 	 * Searches for all tags,
 	 * 
 	 * @param firstLetter Optional first letter hint
+	 * @param tenantId ID of the tenant to search in
+	 * 
 	 * @return The list of all tags in the system
 	 */
-	public List<String> findAllTags(String firstLetter);
+	public List<String> findAllTags(String firstLetter, Long tenantId);
 
 	/**
 	 * Finds authorized documents for a user having a specified tag.

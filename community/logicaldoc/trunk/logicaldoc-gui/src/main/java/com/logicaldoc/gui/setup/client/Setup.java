@@ -115,7 +115,7 @@ public class Setup implements EntryPoint {
 		Window.enableScrolling(false);
 		Window.setMargin("0px");
 
-		infoService.getInfo(I18N.getLocale(), new AsyncCallback<GUIInfo>() {
+		infoService.getInfo(I18N.getLocale(), Constants.TENANT_DEFAULTNAME, new AsyncCallback<GUIInfo>() {
 			@Override
 			public void onFailure(Throwable error) {
 				SC.warn(error.getMessage());
@@ -131,13 +131,10 @@ public class Setup implements EntryPoint {
 	}
 
 	private void initGUI(final GUIInfo info) {
-		WindowUtils.setTitle(info.getProductName()
-				+ " "
-				+ info.getRelease()
-				+ (info.getLicensee() != null ? " - " + I18N.message("licensedto") + ": " + info.getLicensee()
-						: ""));
+		WindowUtils.setTitle(info.getProductName() + " " + info.getRelease()
+				+ (info.getLicensee() != null ? " - " + I18N.message("licensedto") + ": " + info.getLicensee() : ""));
 		WindowUtils.setFavicon(info);
-		
+
 		// Prepare a value manager that will include all forms spanned in each
 		// tab
 		vm = new ValuesManager();

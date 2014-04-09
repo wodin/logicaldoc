@@ -16,7 +16,7 @@ public interface InfoService extends RemoteService {
 	/**
 	 * Retrieves the system informations
 	 */
-	public GUIInfo getInfo(String locale);
-	
+	public GUIInfo getInfo(String locale, String tenant);
+
 	public GUIParameter[] getSessionInfo(String sid);
 }
