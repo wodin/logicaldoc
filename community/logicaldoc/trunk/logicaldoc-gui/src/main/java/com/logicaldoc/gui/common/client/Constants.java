@@ -106,6 +106,8 @@ public final class Constants {
 
 	public static final String LOCALE = "locale";
 	
+	public static final String TENANT = "tenant";
+	
 	public static final String ANONYMOUS = "anonymous";
 
 	public static final String BLANK_PLACEHOLDER = "___";

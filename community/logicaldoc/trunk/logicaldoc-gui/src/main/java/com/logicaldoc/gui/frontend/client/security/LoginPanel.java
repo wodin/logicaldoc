@@ -300,7 +300,6 @@ public class LoginPanel extends VLayout {
 		formLayout.setWidth(298);
 		formLayout.setHeight(480);
 		formLayout.setMembersMargin(0);
-		//formLayout.setBorder("1px solid red");
 		formLayout.setMembers(productInfo, spacer15, spacer10, logoLogin, spacer30, loginLabel, form,
 				spacer30, signIn, spacer10, footer, ieSpacer15);				
 		updateReflections(false);

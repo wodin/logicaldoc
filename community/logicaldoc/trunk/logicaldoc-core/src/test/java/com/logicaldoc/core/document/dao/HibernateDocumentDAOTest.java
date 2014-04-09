@@ -345,19 +345,27 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindTags() {
-		Collection<String> tags = dao.findTags("a").keySet();
+		Collection<String> tags = dao.findTags("a", 1L).keySet();
 		Assert.assertNotNull(tags);
 		Assert.assertEquals(2, tags.size());
 		Assert.assertTrue(tags.contains("abc"));
+		tags = dao.findTags("a", null).keySet();
+		Assert.assertNotNull(tags);
+		Assert.assertEquals(2, tags.size());
+		Assert.assertTrue(tags.contains("abc"));
+
+		tags = dao.findTags("a", 99L).keySet();
+		Assert.assertNotNull(tags);
+		Assert.assertEquals(0, tags.size());
 	}
 
 	@Test
 	public void testFindAllTags() {
-		Collection<String> tags = dao.findAllTags("a");
+		Collection<String> tags = dao.findAllTags("a", 1L);
 		Assert.assertNotNull(tags);
 		Assert.assertEquals(2, tags.size());
 		Assert.assertTrue(tags.contains("abc"));
-		tags = dao.findAllTags(null);
+		tags = dao.findAllTags(null, 1L);
 		Assert.assertNotNull(tags);
 		Assert.assertEquals(5, tags.size());
 		Assert.assertTrue(tags.contains("abc"));
@@ -517,13 +525,6 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		transaction.setNotified(0);
 		dao.makeImmutable(2, transaction);
 		Assert.assertEquals(1, dao.findById(2).getImmutable());
-	}
-
-	@Test
-	public void testFindLockedByUserId() {
-		Assert.assertEquals(2, dao.findLockedByUserId(3).size());
-		Assert.assertEquals(0, dao.findLockedByUserId(1).size());
-		Assert.assertEquals(0, dao.findLockedByUserId(987541).size());
 	}
 
 	@Test

@@ -21,11 +21,14 @@ import com.logicaldoc.core.rss.FeedMessage;
 import com.logicaldoc.core.rss.dao.FeedMessageDAO;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.SystemQuota;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
+import com.logicaldoc.gui.common.client.beans.GUITenant;
 import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.common.client.services.InfoService;
 import com.logicaldoc.i18n.I18N;
@@ -48,13 +51,14 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public GUIInfo getInfo(String locale) {
+	public GUIInfo getInfo(String locale, String tenantName) {
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 		GUIInfo info = null;
 		try {
 			info = getInfo();
 			info.setBundle(getBundle(locale));
+			info.setTenant(getTenant(tenantName));
 
 			Locale withLocale = LocaleUtil.toLocale(locale);
 			ArrayList<GUIValuePair> supportedLanguages = new ArrayList<GUIValuePair>();
@@ -209,6 +213,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 		info.setYear(inf.getYear());
 		info.setSessionHeartbeat(Integer.parseInt(config.getProperty("session.heartbeat")));
 		info.setRunLevel(config.getProperty("runlevel"));
+		info.setTenant(getTenant(Tenant.DEFAULT_ID));
 
 		try {
 			ArrayList<GUIValuePair> values = new ArrayList<GUIValuePair>();
@@ -269,5 +274,35 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
 		}
+	}
+
+	public static GUITenant getTenant(String tenantName) {
+		TenantDAO dao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+		Tenant tenant = dao.findByName(tenantName);
+		return fromTenant(tenant);
+	}
+
+	public static GUITenant getTenant(long tenantId) {
+		TenantDAO dao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+		Tenant tenant = dao.findById(tenantId);
+		return fromTenant(tenant);
+	}
+	
+	protected static GUITenant fromTenant(Tenant tenant) {
+		if (tenant == null)
+			return null;
+		GUITenant ten = new GUITenant();
+		ten.setId(tenant.getId());
+		ten.setTenantId(tenant.getTenantId());
+		ten.setCity(tenant.getCity());
+		ten.setCountry(tenant.getCountry());
+		ten.setDisplayName(tenant.getDisplayName());
+		ten.setEmail(tenant.getEmail());
+		ten.setName(tenant.getName());
+		ten.setPostalCode(tenant.getPostalCode());
+		ten.setState(tenant.getState());
+		ten.setStreet(tenant.getStreet());
+		ten.setTelephone(tenant.getTelephone());
+		return ten;
 	}
 }

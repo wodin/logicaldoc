@@ -60,6 +60,14 @@ public class Generic extends ExtensibleObject implements Comparable<Generic> {
 		this.qualifier = qualifier;
 	}
 
+	public Generic(String type, String subtype, Long qualifier, long tenantId) {
+		super();
+		this.type = type;
+		this.subtype = subtype;
+		this.qualifier = qualifier;
+		setTenantId(tenantId);
+	}
+
 	public String getType() {
 		return type;
 	}

@@ -20,12 +20,8 @@ import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
-import com.smartgwt.client.data.DSCallback;
-import com.smartgwt.client.data.DSRequest;
-import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
-import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.types.MultiComboBoxLayoutStyle;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.ValueCallback;
@@ -220,7 +216,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		items.add(language);
 
 		if (Feature.enabled(Feature.TAGS)) {
-			String mode = Session.get().getInfo().getConfig("tag.mode");
+			String mode = Session.get().getConfig("tag.mode");
 			final DataSource ds;
 			if ("preset".equals(mode)) {
 				ds = new TagsDS(mode);

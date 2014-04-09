@@ -93,7 +93,7 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 		items.add(language);
 
 		if (Feature.enabled(Feature.TAGS)) {
-			String mode = Session.get().getInfo().getConfig("tag.mode");
+			String mode = Session.get().getConfig("tag.mode");
 			final DataSource ds;
 			if ("preset".equals(mode)) {
 				ds = new TagsDS(mode);

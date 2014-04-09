@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.UserHistory;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.UserHistoryDAO;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;

@@ -7,7 +7,7 @@ import com.logicaldoc.gui.common.client.beans.GUITag;
 public interface TagServiceAsync {
 	void delete(String sid, String tag, AsyncCallback<Void> callback);
 
-	void getTagCloud(AsyncCallback<GUITag[]> callback);
+	void getTagCloud(String sid, AsyncCallback<GUITag[]> callback);
 
 	void rename(String sid, String tag, String newTag, AsyncCallback<Void> callback);
 

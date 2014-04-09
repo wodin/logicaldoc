@@ -13,7 +13,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.document.TagCloud;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
-import com.logicaldoc.core.security.Tenant;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUITag;
@@ -35,12 +35,13 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService {
 	protected static Logger log = LoggerFactory.getLogger(TagServiceImpl.class);
 
 	@Override
-	public GUITag[] getTagCloud() {
+	public GUITag[] getTagCloud(String sid) throws InvalidSessionException {
+		UserSession session = SessionUtil.validateSession(sid);
 		try {
 			ArrayList<GUITag> ret = new ArrayList<GUITag>();
 			List<TagCloud> list = new ArrayList<TagCloud>();
 			GenericDAO gendao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
-			Generic generic = gendao.findByAlternateKey("tagcloud", "-", null, Tenant.DEFAULT_ID);
+			Generic generic = gendao.findByAlternateKey("tagcloud", "-", null, session.getTenantId());
 			if (generic == null)
 				return new GUITag[0];
 			else
@@ -101,14 +102,14 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService {
 
 	@Override
 	public GUIParameter[] getSettings(String sid) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 		List<GUIParameter> params = new ArrayList<GUIParameter>();
 		for (Object name : conf.keySet()) {
-			if (name.toString().startsWith("tag."))
-				if (name.equals("tag.mode"))
+			if (name.toString().startsWith(session.getTenantName() + ".tag."))
+				if (name.equals(session.getTenantName() + ".tag.mode"))
 					params.add(new GUIParameter(name.toString(), "free"));
 				else
 					params.add(new GUIParameter(name.toString(), conf.getProperty(name.toString())));

@@ -191,32 +191,30 @@ public class TagsForm extends VLayout {
 			rename.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 
 				public void onClick(MenuItemClickEvent event) {
-					LD.askforValue(I18N.message("rename"), I18N.message("newtag"), "", "200",
-							new ValueCallback() {
-								@Override
-								public void execute(final String value) {
-									if (value == null || "".equals(value.trim()))
-										return;
+					LD.askforValue(I18N.message("rename"), I18N.message("newtag"), "", "200", new ValueCallback() {
+						@Override
+						public void execute(final String value) {
+							if (value == null || "".equals(value.trim()))
+								return;
 
-									ListGridRecord selection = tags.getSelectedRecord();
-									tagService.rename(Session.get().getSid(), selection.getAttribute("word"), value,
-											new AsyncCallback<Void>() {
-												@Override
-												public void onFailure(Throwable caught) {
-													Log.serverError(caught);
-												}
+							ListGridRecord selection = tags.getSelectedRecord();
+							tagService.rename(Session.get().getSid(), selection.getAttribute("word"), value,
+									new AsyncCallback<Void>() {
+										@Override
+										public void onFailure(Throwable caught) {
+											Log.serverError(caught);
+										}
 
-												@Override
-												public void onSuccess(Void arg) {
-													Log.info(I18N.message("procinexecution"),
-															I18N.message("taginexecution"));
-													ListGridRecord selection = tags.getSelectedRecord();
-													selection.setAttribute("word", value);
-													onLetterSelect(value.substring(0, 1));
-												}
-											});
-								}
-							});
+										@Override
+										public void onSuccess(Void arg) {
+											Log.info(I18N.message("procinexecution"), I18N.message("taginexecution"));
+											ListGridRecord selection = tags.getSelectedRecord();
+											selection.setAttribute("word", value);
+											onLetterSelect(value.substring(0, 1));
+										}
+									});
+						}
+					});
 				}
 			});
 			contextMenu.addItem(rename);

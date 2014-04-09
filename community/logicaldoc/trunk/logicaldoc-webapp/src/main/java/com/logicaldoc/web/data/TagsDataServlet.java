@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
 
@@ -37,7 +38,7 @@ public class TagsDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			SessionUtil.validateSession(request);
+			UserSession session = SessionUtil.validateSession(request);
 
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
@@ -56,14 +57,14 @@ public class TagsDataServlet extends HttpServlet {
 			if ("preset".equals(firstLetter)) {
 				// We have to return the preset only
 				GenericDAO gDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
-				List<Generic> buf = gDao.findByTypeAndSubtype("tag", null, null, null);
+				List<Generic> buf = gDao.findByTypeAndSubtype("tag", null, null, session.getTenantId());
 				for (Generic generic : buf) {
 					tgs.put(generic.getSubtype(), 0);
 				}
 			} else if (org.apache.commons.lang.StringUtils.isNotEmpty(firstLetter)) {
-				tgs = (HashMap<String, Integer>) docDao.findTags(firstLetter);
+				tgs = (HashMap<String, Integer>) docDao.findTags(firstLetter, session.getTenantId());
 			} else {
-				List<String> buf = docDao.findAllTags(null);
+				List<String> buf = docDao.findAllTags(null, session.getTenantId());
 				for (String tag : buf) {
 					tgs.put(tag, 0);
 				}

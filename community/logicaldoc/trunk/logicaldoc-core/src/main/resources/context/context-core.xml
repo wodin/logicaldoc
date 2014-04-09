@@ -287,6 +287,8 @@
                 class="com.logicaldoc.core.security.dao.HibernateTenantDAO"
                 dependency-check="default" lazy-init="default">
                 <property name="sessionFactory" ref="SessionFactory" />
+                <property name="conf" ref="ContextProperties" />
+                <property name="genericDao" ref="GenericDAO" />
                 <property name="userDao" ref="UserDAO" />
                 <property name="groupDao" ref="GroupDAO" />
                 <property name="folderDao" ref="FolderDAO" />

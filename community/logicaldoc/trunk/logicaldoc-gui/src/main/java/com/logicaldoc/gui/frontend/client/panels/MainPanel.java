@@ -141,7 +141,7 @@ public class MainPanel extends VLayout implements SessionObserver {
 			dashboardTab.setPane(DashboardPanel.get());
 			tabSet.addTab(dashboardTab);
 		}
-
+		
 		if (Menu.enabled(Menu.DOCUMENTS)) {
 			documentsTab.setPane(DocumentsPanel.get());
 			tabSet.addTab(documentsTab);

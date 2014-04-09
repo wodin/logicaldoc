@@ -84,6 +84,7 @@ public class TagSearch extends Search {
 	 */
 	private void appendWhereClause(boolean searchShortcut, StringBuffer query) {
 		query.append(" where A.ld_deleted=0 and A.ld_folderid=B.ld_id ");
+		query.append(" and A.ld_tenantid = "+searchUser.getTenantId());
 
 		// Ids string to be used in the query
 		String ids = null;

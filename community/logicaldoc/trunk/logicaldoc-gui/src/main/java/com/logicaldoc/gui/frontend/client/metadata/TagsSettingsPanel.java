@@ -62,16 +62,16 @@ public class TagsSettingsPanel extends VLayout {
 		addMember(parametersForm);
 
 		for (GUIParameter p : settings) {
-			if (p.getName().equals("tag.mode"))
+			if (p.getName().endsWith("tag.mode"))
 				mode.setValue(p.getValue());
-			if (p.getName().equals("tag.maxsize"))
+			if (p.getName().endsWith("tag.maxsize"))
 				maxsize.setValue(p.getValue());
-			if (p.getName().equals("tag.minsize"))
+			if (p.getName().endsWith("tag.minsize"))
 				minsize.setValue(p.getValue());
-			if (p.getName().equals("tag.vocabulary"))
+			if (p.getName().endsWith("tag.vocabulary"))
 				vocabulary.setValue(p.getValue());
 		}
-
+		
 		IButton save = new IButton();
 		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
@@ -81,10 +81,10 @@ public class TagsSettingsPanel extends VLayout {
 
 				if (vm.validate()) {
 					List<GUIParameter> params = new ArrayList<GUIParameter>();
-					params.add(new GUIParameter("tag.mode", values.get("mode").toString()));
-					params.add(new GUIParameter("tag.maxsize", values.get("maxsize").toString()));
-					params.add(new GUIParameter("tag.minsize", values.get("minsize").toString()));
-					params.add(new GUIParameter("tag.vocabulary", values.get("vocabulary").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName()+".tag.mode", values.get("mode").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName()+".tag.maxsize", values.get("maxsize").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName()+".tag.minsize", values.get("minsize").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName()+".tag.vocabulary", values.get("vocabulary").toString()));
 
 					settingService.saveSettings(Session.get().getSid(), params.toArray(new GUIParameter[0]),
 							new AsyncCallback<Void>() {
