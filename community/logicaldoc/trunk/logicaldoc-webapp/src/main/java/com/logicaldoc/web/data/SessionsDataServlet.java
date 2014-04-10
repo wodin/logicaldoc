@@ -13,10 +13,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.i18n.I18N;
 
@@ -47,13 +49,27 @@ public class SessionsDataServlet extends HttpServlet {
 
 			String locale = request.getParameter("locale");
 
+			/*
+			 * Try to check tenant filter for those users trying to list the sessions from another tenant
+			 */
+			String tenant = null;
+			String sid = request.getParameter("sid");
+			if (StringUtils.isNotEmpty(sid)) {
+				UserSession session = SessionManager.getInstance().get(sid);
+				if (!Tenant.DEFAULT_NAME.equals(session.getTenantName()))
+					tenant = session.getTenantName();
+			}
+			
 			PrintWriter writer = response.getWriter();
 			writer.print("<list>");
 
 			for (UserSession session : sessions) {
-				//Just to update the session status
-				SessionManager.getInstance().get(session.getId());
+				if(tenant!=null && !tenant.equals(session.getTenantName()))
+						continue;
 				
+				// Just to update the session status
+				SessionManager.getInstance().get(session.getId());
+
 				writer.print("<session>");
 				writer.print("<sid><![CDATA[" + session.getId() + "]]></sid>");
 				writer.print("<status>" + session.getStatus() + "</status>");
@@ -64,6 +80,7 @@ public class SessionsDataServlet extends HttpServlet {
 				else if (session.getStatus() == UserSession.STATUS_EXPIRED)
 					writer.print("<statusLabel>" + I18N.message("expired", locale) + "</statusLabel>");
 				writer.print("<username><![CDATA[" + session.getUserName() + "]]></username>");
+				writer.print("<tenant><![CDATA[" + session.getTenantName() + "]]></tenant>");
 				writer.print("<created>" + df.format((Date) session.getCreation()) + "</created>");
 				writer.print("<renew>" + df.format((Date) session.getLastRenew()) + "</renew>");
 				writer.print("</session>");

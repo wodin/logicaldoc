@@ -73,6 +73,9 @@ public class SessionsPanel extends VLayout {
 		ListGridField username = new ListGridField("username", I18N.message("username"), 80);
 		username.setCanFilter(true);
 
+		ListGridField tenant = new ListGridField("tenant", I18N.message("tenant"), 80);
+		tenant.setCanFilter(true);
+		
 		ListGridField created = new ListGridField("created", I18N.message("createdon"), 110);
 		created.setAlign(Alignment.CENTER);
 		created.setType(ListGridFieldType.DATE);
@@ -117,7 +120,7 @@ public class SessionsPanel extends VLayout {
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setDataSource(new SessionsDS());
 		list.invalidateCache();
-		list.setFields(sid, statusLabel, username, created, renew);
+		list.setFields(sid, statusLabel, username, tenant, created, renew);
 
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override

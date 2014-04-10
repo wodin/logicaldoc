@@ -14,7 +14,8 @@ public enum Fields {
 	ID("id"), TITLE("title"), FOLDER_ID("folderId"), CONTENT("content"), TAGS("tags"), TEMPLATE_ID("templateId"), FOLDER_NAME(
 			"folderName"), CREATION("creation"), DATE("date"), SOURCE_DATE("sourceDate"), COVERAGE("coverage"), SOURCE_AUTHOR(
 			"sourceAuthor"), SOURCE_TYPE("sourceType"), SOURCE("source"), RECIPIENT("recipient"), SOURCE_ID("sourceId"), SIZE(
-			"size"), CUSTOM_ID("customId"), DOC_REF("docRef"), COMMENT("comment"), LANGUAGE("language");
+			"size"), CUSTOM_ID("customId"), DOC_REF("docRef"), COMMENT("comment"), LANGUAGE("language"), TENANT_ID(
+			"tenantId");
 
 	private final String name;
 
@@ -47,6 +48,7 @@ public enum Fields {
 		fields.add(DOC_REF);
 		fields.add(COMMENT);
 		fields.add(LANGUAGE);
+		fields.add(TENANT_ID);
 		return fields;
 	}
 

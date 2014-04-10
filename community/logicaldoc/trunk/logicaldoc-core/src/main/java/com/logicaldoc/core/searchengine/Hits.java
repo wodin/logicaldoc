@@ -10,6 +10,7 @@ import org.apache.solr.client.solrj.response.SpellCheckResponse.Suggestion;
 import org.apache.solr.common.SolrDocument;
 
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.Tenant;
 
 /**
  * Iterator on the collection of hits, plus some statistical informations about
@@ -83,6 +84,10 @@ public class Hits implements Iterator<Hit> {
 	public static Hit toHit(SolrDocument sdoc) {
 		Hit hit = new Hit();
 		hit.setId(Long.parseLong((String) sdoc.get(Fields.ID.getName())));
+		if (sdoc.get(Fields.TENANT_ID.getName()) != null){
+			hit.setTenantId((Long)sdoc.getFieldValue(Fields.TENANT_ID.getName()));
+		}else
+			hit.setTenantId(Tenant.DEFAULT_ID);
 
 		if (sdoc.getFieldValue("score") != null) {
 			Float score = (Float) sdoc.getFieldValue("score");
@@ -98,7 +103,7 @@ public class Hits implements Iterator<Hit> {
 		if (sdoc.getFieldValue(Fields.LANGUAGE.getName()) != null) {
 			hit.setLanguage(sdoc.getFieldValue(Fields.LANGUAGE.getName()).toString());
 		}
-		
+
 		return hit;
 	}
 
