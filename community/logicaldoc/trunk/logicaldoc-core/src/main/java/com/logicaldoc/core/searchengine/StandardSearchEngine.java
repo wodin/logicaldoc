@@ -76,6 +76,7 @@ public class StandardSearchEngine implements SearchEngine {
 		SolrInputDocument doc = new SolrInputDocument();
 
 		doc.addField(Fields.ID.getName(), Long.toString(document.getId()));
+		doc.addField(Fields.TENANT_ID.getName(), Long.toString(document.getTenantId()));
 		doc.addField(Fields.LANGUAGE.getName(), document.getLanguage());
 		doc.addField(Fields.TITLE.getName(), document.getTitle());
 		doc.addField(Fields.SIZE.getName(), document.getFileSize());
@@ -158,6 +159,7 @@ public class StandardSearchEngine implements SearchEngine {
 			documentDao.initialize(doc);
 			doc = (com.logicaldoc.core.document.Document) doc.clone();
 			doc.setId(document.getId());
+			doc.setTenantId(document.getTenantId());
 			doc.setDocRef(document.getDocRef());
 		}
 

@@ -176,9 +176,11 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 
 									Session.get().close();
 									String base = GWT.getHostPageBaseURL();
-									Util.redirect(base
+									String url = base
 											+ (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/"
-													+ GWT.getModuleName() + ".jsp"));
+													+ GWT.getModuleName() + ".jsp");
+									url += "?locale=" + I18N.getLocale() + "&tenant=" + Session.get().getTenantName();
+									Util.redirect(url);
 								}
 							});
 						}
@@ -188,7 +190,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		});
 
 		if (Feature.enabled(Feature.DROP_SPOT)
-				&& !"embedded".equals(Session.get().getInfo().getConfig("gui.dropspot.mode"))
+				&& !"embedded".equals(Session.get().getConfig("gui.dropspot.mode"))
 				&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.DOCUMENTS))
 			menu.setItems(dropSpotItem, exitItem);
 		else
@@ -721,7 +723,8 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 					tmp += "<param name=\"language\" value=\"" + I18N.getDefaultLocaleForDoc() + "\" />";
 					tmp += "<param name=\"sizeMax\" value=\""
 							+ Long.parseLong(Session.get().getInfo().getConfig("upload.maxsize"));
-					tmp += "<param name=\"disallow\" value=\"" + Session.get().getInfo().getConfig("upload.disallow")+ "\" />";
+					tmp += "<param name=\"disallow\" value=\"" + Session.get().getInfo().getConfig("upload.disallow")
+							+ "\" />";
 					tmp += "</applet></div>";
 					dropArea.setContents(tmp);
 				}

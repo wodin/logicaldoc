@@ -18,6 +18,7 @@ import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.dao.FolderDAO;
+import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.util.Context;
 
 /**
@@ -99,6 +100,7 @@ public class FulltextSearch extends Search {
 				hit.setTemplateId(t.getId());
 			}
 
+			hit.setTenantId(rs.getLong(39));
 			return hit;
 		}
 	};
@@ -131,6 +133,11 @@ public class FulltextSearch extends Search {
 		 * Prepare the filters
 		 */
 		ArrayList<String> filters = new ArrayList<String>();
+
+		TenantDAO tdao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+		if (searchUser != null && tdao.count() > 1)
+			filters.add(Fields.TENANT_ID + ":" + searchUser.getTenantId());
+
 		if (opt.getTemplate() != null)
 			filters.add(Fields.TEMPLATE_ID + ":" + opt.getTemplate());
 
@@ -234,11 +241,12 @@ public class FulltextSearch extends Search {
 		richQuery
 				.append(" A.ld_sourceauthor, A.ld_rating, A.ld_fileversion, A.ld_comment, A.ld_workflowstatus, A.ld_startpublishing, ");
 		richQuery
-				.append(" A.ld_stoppublishing, A.ld_published, A.ld_source, A.ld_sourceid, A.ld_recipient, A.ld_object, A.ld_coverage, FOLD.ld_name, A.ld_folderid, A.ld_tgs AS tags, A.ld_templateid, C.ld_name ");
+				.append(" A.ld_stoppublishing, A.ld_published, A.ld_source, A.ld_sourceid, A.ld_recipient, A.ld_object, A.ld_coverage, FOLD.ld_name, A.ld_folderid, A.ld_tgs AS tags, A.ld_templateid, C.ld_name, A.ld_tenantid ");
 		richQuery.append(" from ld_document A ");
 		richQuery.append(" join ld_folder as FOLD on A.ld_folderid=FOLD.ld_id ");
 		richQuery.append(" left outer join ld_template as C on A.ld_templateid=C.ld_id ");
 		richQuery.append(" where A.ld_deleted=0 and A.ld_folderid=FOLD.ld_id  ");
+		richQuery.append(" and A.ld_tenantid = " + searchUser.getTenantId());
 		// For normal users we have to exclude not published documents
 		if (searchUser != null && !searchUser.isInGroup("admin") && !searchUser.isInGroup("publisher")) {
 			richQuery.append(" and A.ld_published = 1 ");
@@ -259,12 +267,13 @@ public class FulltextSearch extends Search {
 		richQuery
 				.append(" REF.ld_sourceauthor, REF.ld_rating, REF.ld_fileversion, A.ld_comment, REF.ld_workflowstatus, REF.ld_startpublishing, ");
 		richQuery
-				.append(" A.ld_stoppublishing, A.ld_published, REF.ld_source, REF.ld_sourceid, REF.ld_recipient, REF.ld_object, REF.ld_coverage, FOLD.ld_name, A.ld_folderid, A.ld_tgs AS tags, REF.ld_templateid, C.ld_name ");
+				.append(" A.ld_stoppublishing, A.ld_published, REF.ld_source, REF.ld_sourceid, REF.ld_recipient, REF.ld_object, REF.ld_coverage, FOLD.ld_name, A.ld_folderid, A.ld_tgs AS tags, REF.ld_templateid, C.ld_name, A.ld_tenantid ");
 		richQuery.append(" from ld_document A  ");
 		richQuery.append(" join ld_folder as FOLD on A.ld_folderid=FOLD.ld_id ");
 		richQuery.append(" join ld_document as REF on A.ld_docref=REF.ld_id ");
 		richQuery.append(" left outer join ld_template as C on REF.ld_templateid=C.ld_id ");
 		richQuery.append(" where A.ld_deleted=0 and A.ld_folderid=FOLD.ld_id ");
+		richQuery.append(" and A.ld_tenantid = " + searchUser.getTenantId());
 		// For normal users we have to exclude not published documents
 		if (searchUser != null && !searchUser.isInGroup("admin") && !searchUser.isInGroup("publisher")) {
 			richQuery.append(" and REF.ld_published = 1 ");

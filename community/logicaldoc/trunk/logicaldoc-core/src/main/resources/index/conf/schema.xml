@@ -69,7 +69,8 @@
 
 
  <fields>
-   <field name="id" type="string" indexed="true" stored="true" required="true" /> 
+   <field name="id" type="string" indexed="true" stored="true" required="true" />
+   <field name="tenantId" type="long" indexed="true" stored="true" required="true" default="1"/>
    <field name="title" type="text_general" indexed="true" stored="false" required="true" />
    <field name="language" type="string" indexed="true" stored="true" required="true" default="en" />
    <field name="templateId" type="long" indexed="true" stored="false" required="false" />
