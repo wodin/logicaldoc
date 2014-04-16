@@ -40,7 +40,7 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 		userDAO = (UserDAO) context.getBean("UserDAO");
 		groupDAO = (GroupDAO) context.getBean("GroupDAO");
 
-		session = service.login("admin", "admin", null);
+		session = service.login("admin", "admin", null, null);
 		Assert.assertNotNull(session);
 		Assert.assertNotNull(SessionManager.getInstance().get(session.getSid()));
 	}
@@ -65,9 +65,9 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 		SessionManager.getInstance().get(session.getSid()).setClosed();
 		Assert.assertEquals(sessions - 1, SessionManager.getInstance().countOpened());
 
-		session = service.login("admin", "password", null);
+		session = service.login("admin", "password", null, null);
 		Assert.assertFalse(session.isLoggedIn());
-		session = service.login("unexisting", "admin", null);
+		session = service.login("unexisting", "admin", null, null);
 		Assert.assertFalse(session.isLoggedIn());
 	}
 
@@ -226,12 +226,6 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 		GUISecuritySettings securitySettings = new GUISecuritySettings();
 		securitySettings.setPwdExpiration(30);
 		securitySettings.setPwdSize(6);
-
-		GUIUser user1 = service.getUser(session.getSid(), 1);
-		securitySettings.addNotifiedUser(user1);
-		GUIUser user2 = service.getUser(session.getSid(), 3);
-		securitySettings.addNotifiedUser(user2);
-
 		service.saveSettings(session.getSid(), securitySettings);
 	}
 }

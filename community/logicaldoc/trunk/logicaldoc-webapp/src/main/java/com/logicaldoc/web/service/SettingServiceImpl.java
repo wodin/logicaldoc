@@ -114,16 +114,16 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					continue;
 			} else if (name.startsWith("product") || name.startsWith("skin") || name.startsWith("conf")
 					|| name.startsWith("ldap") || name.startsWith("schedule") || name.startsWith("smtp")
-					|| name.startsWith("password") || name.startsWith("ad") || name.startsWith("webservice")
+					|| name.contains("password") || name.startsWith("ad") || name.startsWith("webservice")
 					|| name.startsWith("webdav") || name.startsWith("cmis") || name.startsWith("runlevel")
 					|| name.startsWith("stat") || name.startsWith("index") || name.equals("id")
 					|| name.startsWith("lang") || name.startsWith("reg.") || name.startsWith("ocr.")
 					|| name.startsWith("barcode.") || name.startsWith("task.") || name.startsWith("quota")
 					|| name.startsWith("store") || name.startsWith("flexpaperviewer") || name.startsWith("omnipage.")
-					|| name.startsWith("command.") || name.startsWith("gui.") || name.startsWith("upload.")
-					|| name.equals("userno") || name.startsWith("search.") || name.startsWith("swftools.")
-					|| name.contains("password") || name.startsWith("audit.user") || name.startsWith("openoffice.path")
-					|| name.startsWith("tag.") || name.startsWith("jdbc.") || name.startsWith("cluster")
+					|| name.startsWith("command.") || name.contains(".gui.") || name.contains(".upload.")
+					|| name.equals("userno") || name.contains(".search.") || name.startsWith("swftools.")
+					|| name.contains("password") || name.startsWith("openoffice.path")
+					|| name.contains("tag.") || name.startsWith("jdbc.") || name.startsWith("cluster")
 					|| name.startsWith("ip.") || name.startsWith("extcall."))
 				continue;
 
@@ -329,19 +329,22 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public GUIParameter[] loadGUISettings(String sid) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 		List<GUIParameter> params = new ArrayList<GUIParameter>();
 		for (Object name : conf.keySet()) {
-			if (name.toString().startsWith("gui."))
+			if (name.toString().startsWith(session.getTenantName() + ".gui"))
 				params.add(new GUIParameter(name.toString(), conf.getProperty(name.toString())));
 		}
 		params.add(new GUIParameter("upload.maxsize", conf.getProperty("upload.maxsize")));
-		params.add(new GUIParameter("upload.disallow", conf.getProperty("upload.disallow")));
-		params.add(new GUIParameter("search.hits", conf.getProperty("search.hits")));
-		params.add(new GUIParameter("search.extattr", conf.getProperty("search.extattr")));
+		params.add(new GUIParameter(session.getTenantName() + ".upload.disallow", conf.getProperty(session
+				.getTenantName() + ".upload.disallow")));
+		params.add(new GUIParameter(session.getTenantName() + ".search.hits", conf.getProperty(session.getTenantName()
+				+ ".search.hits")));
+		params.add(new GUIParameter(session.getTenantName() + ".search.extattr", conf.getProperty(session
+				.getTenantName() + ".search.extattr")));
 
 		return params.toArray(new GUIParameter[0]);
 	}

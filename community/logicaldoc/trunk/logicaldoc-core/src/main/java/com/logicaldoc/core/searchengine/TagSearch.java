@@ -50,9 +50,9 @@ public class TagSearch extends Search {
 		query.append(" A.ld_indexed, A.ld_lockuserid, A.ld_filename, A.ld_status, A.ld_signed, A.ld_type, A.ld_sourcedate, ");
 		query.append(" A.ld_sourceauthor, A.ld_rating, A.ld_fileversion, A.ld_comment, A.ld_workflowstatus, A.ld_startpublishing, ");
 		query.append(" A.ld_stoppublishing, A.ld_published, A.ld_source, A.ld_sourceid, A.ld_recipient, A.ld_object, A.ld_coverage, B.ld_name, A.ld_folderid, A.ld_templateid, C.ld_name, A.ld_tenantid ");
-		query.append(" from ld_document as A ");
-		query.append(" join ld_folder as B on A.ld_folderid=B.ld_id ");
-		query.append(" left outer join ld_template as C on A.ld_templateid=C.ld_id ");
+		query.append(" from ld_document A ");
+		query.append(" join ld_folder B on A.ld_folderid=B.ld_id ");
+		query.append(" left outer join ld_template C on A.ld_templateid=C.ld_id ");
 
 		appendWhereClause(false, query);
 
@@ -63,9 +63,9 @@ public class TagSearch extends Search {
 		query.append(" REF.ld_sourceauthor, REF.ld_rating, REF.ld_fileversion, REF.ld_comment, REF.ld_workflowstatus, A.ld_startpublishing, ");
 		query.append(" A.ld_stoppublishing, A.ld_published, REF.ld_source, REF.ld_sourceid, REF.ld_recipient, REF.ld_object, REF.ld_coverage, B.ld_name, A.ld_folderid, REF.ld_templateid, C.ld_name, A.ld_tenantid ");
 		query.append(" from ld_document A ");
-		query.append(" join ld_folder as B on A.ld_folderid=B.ld_id ");
-		query.append(" join ld_document as REF on A.ld_docref=REF.ld_id ");
-		query.append(" left outer join ld_template as C on REF.ld_templateid=C.ld_id ");
+		query.append(" join ld_folder B on A.ld_folderid=B.ld_id ");
+		query.append(" join ld_document REF on A.ld_docref=REF.ld_id ");
+		query.append(" left outer join ld_template C on REF.ld_templateid=C.ld_id ");
 
 		appendWhereClause(true, query);
 

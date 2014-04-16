@@ -16,16 +16,7 @@ import com.logicaldoc.gui.common.client.beans.GUIUser;
  */
 @RemoteServiceRelativePath("security")
 public interface SecurityService extends RemoteService {
-	/**
-	 * Logs-in a user
-	 * 
-	 * @param username
-	 * @param password
-	 * @param locale
-	 * 
-	 * @return The newly created session
-	 */
-	public GUISession login(String username, String password, String locale);
+	public GUISession login(String username, String password, String locale, String tenant);
 
 	/**
 	 * Logs-in a user by an existing session ID (session reuse)

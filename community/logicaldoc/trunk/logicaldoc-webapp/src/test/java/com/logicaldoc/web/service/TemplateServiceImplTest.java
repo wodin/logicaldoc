@@ -29,7 +29,7 @@ public class TemplateServiceImplTest extends AbstractWebappTCase {
 		templateDao = (DocumentTemplateDAO) context.getBean("DocumentTemplateDAO");
 
 		SecurityServiceImpl securityService = new SecurityServiceImpl();
-		session = securityService.login("admin", "admin", null);
+		session = securityService.login("admin", "admin", null, null);
 		Assert.assertNotNull(session);
 		Assert.assertNotNull(SessionManager.getInstance().get(session.getSid()));
 	}

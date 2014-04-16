@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -41,12 +40,14 @@ import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.core.security.SecurityManager;
 import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserHistory;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.gui.common.client.Constants;
@@ -59,6 +60,7 @@ import com.logicaldoc.gui.common.client.beans.GUIMenu;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
+import com.logicaldoc.gui.common.client.beans.GUITenant;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.i18n.I18N;
@@ -82,7 +84,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	private static Logger log = LoggerFactory.getLogger(SecurityServiceImpl.class);
 
 	@Override
-	public GUISession login(String username, String password, String locale) {
+	public GUISession login(String username, String password, String locale, String tenant) {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 
 		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
@@ -111,24 +113,65 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				guiUser.setName(user.getName());
 				guiUser.setFirstName(user.getFirstName());
 				session.setUser(guiUser);
+				GUIInfo info = new GUIInfo();
+				info.setTenant(getTenant(user.getTenantId()));
+				session.setInfo(info);
 				session.setLoggedIn(false);
 				log.info("User " + username + " password expired");
 			} else {
 				guiUser = null;
+				GUIInfo info = new GUIInfo();
+				if (tenant == null)
+					info.setTenant(getTenant(Tenant.DEFAULT_NAME));
+				else
+					info.setTenant(getTenant(tenant));
+				session.setInfo(info);
 				session.setLoggedIn(false);
 				log.warn("User " + username + " is not valid");
 			}
 
 			if (guiUser != null) {
 				ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-				guiUser.setPasswordMinLenght(Integer.parseInt(config.getProperty("password.size")));
+				guiUser.setPasswordMinLenght(Integer.parseInt(config.getProperty(session.getInfo().getTenant()
+						.getName()
+						+ ".password.size")));
 			}
-			
+
 			return session;
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 			throw new RuntimeException(e.getMessage(), e);
 		}
+	}
+
+	public static GUITenant getTenant(long tenantId) {
+		TenantDAO dao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+		Tenant tenant = dao.findById(tenantId);
+		return fromTenant(tenant);
+	}
+
+	public static GUITenant fromTenant(Tenant tenant) {
+		if (tenant == null)
+			return null;
+		GUITenant ten = new GUITenant();
+		ten.setId(tenant.getId());
+		ten.setTenantId(tenant.getTenantId());
+		ten.setCity(tenant.getCity());
+		ten.setCountry(tenant.getCountry());
+		ten.setDisplayName(tenant.getDisplayName());
+		ten.setEmail(tenant.getEmail());
+		ten.setName(tenant.getName());
+		ten.setPostalCode(tenant.getPostalCode());
+		ten.setState(tenant.getState());
+		ten.setStreet(tenant.getStreet());
+		ten.setTelephone(tenant.getTelephone());
+		return ten;
+	}
+
+	public static GUITenant getTenant(String tenantName) {
+		TenantDAO dao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+		Tenant tenant = dao.findByName(tenantName);
+		return fromTenant(tenant);
 	}
 
 	/**
@@ -201,7 +244,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		 * Prepare an incoming message, if any
 		 */
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		String incomingMessage = config.getProperty("gui.welcome");
+		String incomingMessage = config.getProperty(userSession.getTenantName() + ".gui.welcome");
 		if (StringUtils.isNotEmpty(incomingMessage)) {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("user", user.getFullName());
@@ -223,7 +266,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		userSession.getDictionary().put(SessionUtil.LOCALE, user.getLocale());
 		userSession.getDictionary().put(SessionUtil.USER, user);
 
-		guiUser.setPasswordMinLenght(Integer.parseInt(config.getProperty("password.size")));
+		guiUser.setPasswordMinLenght(Integer.parseInt(config.getProperty(userSession.getTenantName() + ".password.size")));
 
 		/*
 		 * Prepare the external command
@@ -378,6 +421,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		SessionUtil.validateSession(sid);
 		try {
 			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			TenantDAO tenantDao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
 			User user = userDao.findById(userId);
 			if (user != null) {
 				userDao.initialize(user);
@@ -420,8 +464,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				usr.setQuota(user.getQuota());
 				usr.setQuotaCount(user.getQuotaCount());
 
+				Tenant tenant = tenantDao.findById(user.getTenantId());
+
 				ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-				usr.setPasswordMinLenght(Integer.parseInt(config.getProperty("password.size")));
+				usr.setPasswordMinLenght(Integer.parseInt(config.getProperty(tenant.getName() + ".password.size")));
 
 				loadDashlets(usr);
 
@@ -465,7 +511,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 	@Override
 	public GUIGroup saveGroup(String sid, GUIGroup group) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session=SessionUtil.validateSession(sid);
 
 		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 		Group grp;
@@ -482,7 +528,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			}
 		} else {
 			grp = new Group();
-
+			grp.setTenantId(session.getTenantId());
 			grp.setName(group.getName());
 			grp.setDescription(group.getDescription());
 			groupDao.store(grp);
@@ -492,7 +538,6 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		}
 
 		group.setId(grp.getId());
-
 		return group;
 	}
 
@@ -514,6 +559,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				createNew = true;
 			}
 
+			usr.setTenantId(session.getTenantId());
 			usr.setCity(user.getCity());
 			usr.setCountry(user.getCountry());
 			usr.setEmail(user.getEmail());
@@ -537,6 +583,13 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setQuota(user.getQuota());
 
 			if (createNew) {
+				User existingUser=userDao.findByUserName(user.getUserName());
+				if(existingUser!=null){
+					log.warn("Tried to create duplicate username "+user.getUserName());
+					user.setWelcomeScreen(-99);
+					return user;
+				}
+				
 				// Generate an initial password
 				ContextProperties pbean = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 				decodedPassword = new PasswordGenerator().generate(pbean.getInt("password.size"));
@@ -677,7 +730,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 	@Override
 	public GUISecuritySettings loadSettings(String sid) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		GUISecuritySettings securitySettings = new GUISecuritySettings();
 		try {
@@ -685,22 +738,17 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			ContextProperties pbean = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 			securitySettings.setPwdExpiration(Integer.parseInt(pbean.getProperty("password.ttl")));
-			securitySettings.setPwdSize(Integer.parseInt(pbean.getProperty("password.size")));
-			if (StringUtils.isNotEmpty(pbean.getProperty("gui.savelogin")))
-				securitySettings.setSaveLogin("true".equals(pbean.getProperty("gui.savelogin")));
+			securitySettings
+					.setPwdSize(Integer.parseInt(pbean.getProperty(session.getTenantName() + ".password.size")));
+			if (StringUtils.isNotEmpty(pbean.getProperty(session.getTenantName() + ".gui.savelogin")))
+				securitySettings.setSaveLogin("true".equals(pbean.getProperty(session.getTenantName()
+						+ ".gui.savelogin")));
 
-			StringTokenizer st = new StringTokenizer(pbean.getProperty("audit.user"), ",", false);
-			while (st.hasMoreTokens()) {
-				String username = st.nextToken();
-				User user = userDao.findByUserName(username);
-				if (user != null)
-					securitySettings.addNotifiedUser(getUser(sid, user.getId()));
-			}
-
-			if (StringUtils.isNotEmpty(pbean.getProperty("anonymous.enabled")))
-				securitySettings.setEnableAnonymousLogin("true".equals(pbean.getProperty("anonymous.enabled")));
-			if (StringUtils.isNotEmpty(pbean.getProperty("anonymous.user"))) {
-				User user = userDao.findByUserName(pbean.getProperty("anonymous.user"));
+			if (StringUtils.isNotEmpty(pbean.getProperty(session.getTenantName() + ".anonymous.enabled")))
+				securitySettings.setEnableAnonymousLogin("true".equals(pbean.getProperty(session.getTenantName()
+						+ ".anonymous.enabled")));
+			if (StringUtils.isNotEmpty(pbean.getProperty(session.getTenantName() + ".anonymous.user"))) {
+				User user = userDao.findByUserName(pbean.getProperty(session.getTenantName() + ".anonymous.user"));
 				if (user != null)
 					securitySettings.setAnonymousUser(getUser(sid, user.getId()));
 			}
@@ -715,25 +763,19 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 	@Override
 	public void saveSettings(String sid, GUISecuritySettings settings) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 			conf.setProperty("password.ttl", Integer.toString(settings.getPwdExpiration()));
-			conf.setProperty("password.size", Integer.toString(settings.getPwdSize()));
-			conf.setProperty("gui.savelogin", Boolean.toString(settings.isSaveLogin()));
+			conf.setProperty(session.getTenantName() + ".password.size", Integer.toString(settings.getPwdSize()));
+			conf.setProperty(session.getTenantName() + ".gui.savelogin", Boolean.toString(settings.isSaveLogin()));
 
-			String users = "";
-			for (GUIUser user : settings.getNotifiedUsers()) {
-				users = users + user.getUserName() + ", ";
-			}
-
-			conf.setProperty("audit.user", users.trim());
-
-			conf.setProperty("anonymous.enabled", Boolean.toString(settings.isEnableAnonymousLogin()));
+			conf.setProperty(session.getTenantName() + ".anonymous.enabled",
+					Boolean.toString(settings.isEnableAnonymousLogin()));
 			if (settings.getAnonymousUser() != null)
-				conf.setProperty("anonymous.user", settings.getAnonymousUser().getUserName());
+				conf.setProperty(session.getTenantName() + ".anonymous.user", settings.getAnonymousUser().getUserName());
 
 			conf.write();
 

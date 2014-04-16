@@ -39,7 +39,9 @@ public interface LdapService extends RemoteService {
 	 * 
 	 * @param sid The session identifier
 	 * @param usernames The list of usernames to import
+	 * @param tenantId Tenant the users need to be imported in
+	 * 
 	 * @return Number of imports, updates, errors.
 	 */
-	public GUIValuePair[] importUsers(String sid, String[] usernames) throws InvalidSessionException;
+	public GUIValuePair[] importUsers(String sid, String[] usernames, long tenantId) throws InvalidSessionException;
 }

@@ -14,6 +14,7 @@ import com.logicaldoc.gui.common.client.data.EventsDS;
 import com.logicaldoc.gui.common.client.data.FolderTemplatesDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
+import com.logicaldoc.gui.common.client.data.TenantsDS;
 import com.logicaldoc.gui.common.client.data.UsersDS;
 import com.logicaldoc.gui.common.client.data.WorkflowsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -74,12 +75,12 @@ public class ItemFactory {
 		date.setShowPickerIcon(true);
 		date.setHintStyle("hint");
 		date.setWidth(90);
-		
+
 		if (I18N.message("format_dateshort").startsWith("MM/dd"))
 			date.setDateFormatter(DateDisplayFormat.TOUSSHORTDATE);
 		else
 			date.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
-		
+
 		return date;
 	}
 
@@ -99,12 +100,12 @@ public class ItemFactory {
 		date.setWidth(90);
 		date.setName(itemName);
 		date.setHintStyle("hint");
-		
+
 		if (I18N.message("format_dateshort").startsWith("MM/dd"))
 			date.setDateFormatter(DateDisplayFormat.TOUSSHORTDATE);
 		else
 			date.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
-		
+
 		return date;
 	}
 
@@ -289,6 +290,23 @@ public class ItemFactory {
 		user.setOptionDataSource(new UsersDS(groupIdOrName));
 		user.setHintStyle("hint");
 		return user;
+	}
+
+	public static SelectItem newTenantSelector() {
+		SelectItem tenant = new SelectItem("tenant");
+		tenant.setTitle(I18N.message("tenant"));
+		tenant.setWrapTitle(false);
+		ListGridField id = new ListGridField("id", I18N.message("id"));
+		id.setHidden(true);
+		ListGridField _name = new ListGridField("name", I18N.message("name"));
+		ListGridField displayName = new ListGridField("displayName", I18N.message("displayname"));
+		tenant.setValueField("id");
+		tenant.setDisplayField("name");
+		tenant.setPickListWidth(300);
+		tenant.setPickListFields(id, _name, displayName);
+		tenant.setHintStyle("hint");
+		tenant.setOptionDataSource(new TenantsDS());
+		return tenant;
 	}
 
 	public static RadioGroupItem newBooleanSelector(String name, String title) {

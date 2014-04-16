@@ -98,12 +98,12 @@ public class LoginPanel extends VLayout {
 	}
 
 	public void initGUI() {
-		
+
 		// Prepare the logo to show on the top
 		Img logoTop = ItemFactory.newBrandImg(info.isLogoOemCustomized() ? "logo_head.png" : "logo_oem.png", info);
 		logoTop.setWidth(205);
 		logoTop.setHeight(40);
-		
+
 		/*
 		 * This panel stays on top of the page
 		 */
@@ -111,7 +111,7 @@ public class LoginPanel extends VLayout {
 		top.setMargin(10);
 		top.setHeight(100);
 		top.setMembersMargin(10);
-		top.setMembers(logoTop);		
+		top.setMembers(logoTop);
 
 		// Prepare the logo to show in the login form
 		Img logoLogin = ItemFactory.newBrandImg(!info.isLogoOemCustomized() ? "logo.png" : "logo_oem.png", info);
@@ -138,21 +138,21 @@ public class LoginPanel extends VLayout {
 		HLayout spacer10 = new HLayout();
 		spacer10.setHeight(10);
 		spacer10.setWidth(10);
-		
+
 		HLayout spacer30 = new HLayout();
 		spacer30.setHeight(30);
 		spacer30.setWidth(30);
-		
+
 		HLayout ieSpacer15 = new HLayout();
 		ieSpacer15.setHeight(15);
 		ieSpacer15.setWidth(15);
 		ieSpacer15.setStyleName("ie-special-spacer");
-		
+
 		Label loginLabel = new Label(I18N.message("login"));
 		loginLabel.setStyleName("login-label");
 		loginLabel.setHeight(38);
 		loginLabel.setWidth(270);
-		
+
 		// Prepare the Form and all its fields
 		final DynamicForm form = new DynamicForm();
 		form.setAlign(Alignment.CENTER);
@@ -212,7 +212,7 @@ public class LoginPanel extends VLayout {
 
 		SpacerItem spacerItem = new SpacerItem();
 		spacerItem.setHeight(12);
-		
+
 		form.setFields(username, spacerItem, password, language);
 
 		Button signIn = new Button(I18N.message("signin"));
@@ -249,21 +249,21 @@ public class LoginPanel extends VLayout {
 		forgot.setWidth(140);
 		forgot.setHoverDelay(0);
 		forgot.addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
 				onForgottenPwd(info.getProductName());
 			}
 		});
 		forgot.addMouseOverHandler(new MouseOverHandler() {
-			
+
 			@Override
 			public void onMouseOver(MouseOverEvent event) {
 				updateReflections(true);
 			}
 		});
 		forgot.addMouseOutHandler(new MouseOutHandler() {
-			
+
 			@Override
 			public void onMouseOut(MouseOutEvent event) {
 				updateReflections(false);
@@ -300,8 +300,8 @@ public class LoginPanel extends VLayout {
 		formLayout.setWidth(298);
 		formLayout.setHeight(480);
 		formLayout.setMembersMargin(0);
-		formLayout.setMembers(productInfo, spacer15, spacer10, logoLogin, spacer30, loginLabel, form,
-				spacer30, signIn, spacer10, footer, ieSpacer15);				
+		formLayout.setMembers(productInfo, spacer15, spacer10, logoLogin, spacer30, loginLabel, form, spacer30, signIn,
+				spacer10, footer, ieSpacer15);
 		updateReflections(false);
 
 		// Main Panel (covers 100% of the screen)
@@ -414,7 +414,7 @@ public class LoginPanel extends VLayout {
 			loggingIn = true;
 
 		securityService.login((String) username.getValue(), (String) password.getValue(), (String) language.getValue(),
-				new AsyncCallback<GUISession>() {
+				Util.detectTenant(), new AsyncCallback<GUISession>() {
 					public void onFailure(Throwable caught) {
 						loggingIn = false;
 						Log.serverError(caught);
@@ -427,7 +427,8 @@ public class LoginPanel extends VLayout {
 						if (session.isLoggedIn()) {
 							onLoggedIn(session);
 						} else if (session.getUser() != null && session.getUser().isPasswordExpired()) {
-							new ChangePassword(session.getUser(), "needtochangepassword").show();
+							ChangePassword change = new ChangePassword(session.getUser(), "needtochangepassword");
+							change.show();
 						} else {
 							SC.warn(I18N.message("accesdenied"));
 						}
@@ -451,7 +452,7 @@ public class LoginPanel extends VLayout {
 		}
 
 		// If the case, save the credentials into client cookies
-		if ("true".equals(Session.get().getInfo().getConfig("gui.savelogin"))) {
+		if ("true".equals(Session.get().getConfig("gui.savelogin"))) {
 			Offline.put(Constants.COOKIE_SAVELOGIN, (String) rememberMe.getValueAsBoolean().toString());
 			Offline.put(Constants.COOKIE_USER, rememberMe.getValueAsBoolean() ? (String) username.getValue() : "");
 			Offline.put(Constants.COOKIE_PASSWORD, rememberMe.getValueAsBoolean() ? (String) password.getValue() : "");

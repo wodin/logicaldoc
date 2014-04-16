@@ -241,10 +241,10 @@ public class FulltextSearch extends Search {
 		richQuery
 				.append(" A.ld_sourceauthor, A.ld_rating, A.ld_fileversion, A.ld_comment, A.ld_workflowstatus, A.ld_startpublishing, ");
 		richQuery
-				.append(" A.ld_stoppublishing, A.ld_published, A.ld_source, A.ld_sourceid, A.ld_recipient, A.ld_object, A.ld_coverage, FOLD.ld_name, A.ld_folderid, A.ld_tgs AS tags, A.ld_templateid, C.ld_name, A.ld_tenantid ");
+				.append(" A.ld_stoppublishing, A.ld_published, A.ld_source, A.ld_sourceid, A.ld_recipient, A.ld_object, A.ld_coverage, FOLD.ld_name, A.ld_folderid, A.ld_tgs tags, A.ld_templateid, C.ld_name, A.ld_tenantid ");
 		richQuery.append(" from ld_document A ");
-		richQuery.append(" join ld_folder as FOLD on A.ld_folderid=FOLD.ld_id ");
-		richQuery.append(" left outer join ld_template as C on A.ld_templateid=C.ld_id ");
+		richQuery.append(" join ld_folder FOLD on A.ld_folderid=FOLD.ld_id ");
+		richQuery.append(" left outer join ld_template C on A.ld_templateid=C.ld_id ");
 		richQuery.append(" where A.ld_deleted=0 and A.ld_folderid=FOLD.ld_id  ");
 		richQuery.append(" and A.ld_tenantid = " + searchUser.getTenantId());
 		// For normal users we have to exclude not published documents
@@ -267,11 +267,11 @@ public class FulltextSearch extends Search {
 		richQuery
 				.append(" REF.ld_sourceauthor, REF.ld_rating, REF.ld_fileversion, A.ld_comment, REF.ld_workflowstatus, REF.ld_startpublishing, ");
 		richQuery
-				.append(" A.ld_stoppublishing, A.ld_published, REF.ld_source, REF.ld_sourceid, REF.ld_recipient, REF.ld_object, REF.ld_coverage, FOLD.ld_name, A.ld_folderid, A.ld_tgs AS tags, REF.ld_templateid, C.ld_name, A.ld_tenantid ");
+				.append(" A.ld_stoppublishing, A.ld_published, REF.ld_source, REF.ld_sourceid, REF.ld_recipient, REF.ld_object, REF.ld_coverage, FOLD.ld_name, A.ld_folderid, A.ld_tgs tags, REF.ld_templateid, C.ld_name, A.ld_tenantid ");
 		richQuery.append(" from ld_document A  ");
-		richQuery.append(" join ld_folder as FOLD on A.ld_folderid=FOLD.ld_id ");
-		richQuery.append(" join ld_document as REF on A.ld_docref=REF.ld_id ");
-		richQuery.append(" left outer join ld_template as C on REF.ld_templateid=C.ld_id ");
+		richQuery.append(" join ld_folder FOLD on A.ld_folderid=FOLD.ld_id ");
+		richQuery.append(" join ld_document REF on A.ld_docref=REF.ld_id ");
+		richQuery.append(" left outer join ld_template C on REF.ld_templateid=C.ld_id ");
 		richQuery.append(" where A.ld_deleted=0 and A.ld_folderid=FOLD.ld_id ");
 		richQuery.append(" and A.ld_tenantid = " + searchUser.getTenantId());
 		// For normal users we have to exclude not published documents

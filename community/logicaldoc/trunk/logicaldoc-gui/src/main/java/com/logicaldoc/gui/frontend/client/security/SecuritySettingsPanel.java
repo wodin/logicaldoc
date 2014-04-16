@@ -1,7 +1,5 @@
 package com.logicaldoc.gui.frontend.client.security;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -23,16 +21,12 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.FormItem;
-import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
-import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
@@ -51,12 +45,6 @@ public class SecuritySettingsPanel extends VLayout {
 	private TabSet tabs = new TabSet();
 
 	private GUISecuritySettings settings;
-
-	private Tab notifications = new Tab();
-
-	private VLayout notificationsPane = new VLayout();
-
-	private DynamicForm notificationsForm;
 
 	private DynamicForm anonymousForm;
 
@@ -99,6 +87,7 @@ public class SecuritySettingsPanel extends VLayout {
 		pwdExp.setValue(settings.getPwdExpiration());
 		pwdExp.setWrapTitle(false);
 		pwdExp.setRequired(true);
+		pwdExp.setDisabled(!Session.get().isDefaultTenant());
 
 		final RadioGroupItem savelogin = ItemFactory.newBooleanSelector("savelogin", I18N.message("savelogin"));
 		savelogin.setHint(I18N.message("saveloginhint"));
@@ -111,14 +100,10 @@ public class SecuritySettingsPanel extends VLayout {
 
 		Tab anonymous = prepareAnonymousTab(settings);
 
-		notifications.setTitle(I18N.message("notifications"));
-		notifications.setPane(notificationsPane);
-		refreshNotifications();
-
-		if (Feature.visible(Feature.IP_FILTERS))
-			tabs.setTabs(password, anonymous, filters, menues, notifications);
+		if (Feature.visible(Feature.IP_FILTERS) && Session.get().isDefaultTenant())
+			tabs.setTabs(password, anonymous, filters, menues);
 		else
-			tabs.setTabs(password, anonymous, menues, notifications);
+			tabs.setTabs(password, anonymous, menues);
 
 		IButton save = new IButton();
 		save.setTitle(I18N.message("save"));
@@ -181,9 +166,9 @@ public class SecuritySettingsPanel extends VLayout {
 		enableAnonymous.setValue(settings.isEnableAnonymousLogin() ? "yes" : "no");
 		enableAnonymous.setWrapTitle(false);
 		enableAnonymous.setRequired(true);
-		
+
 		StaticTextItem url = ItemFactory.newStaticTextItem("anonUrl", I18N.message("url"), GWT.getHostPageBaseURL()
-				+ "?anonymous=login");
+				+ "?anonymous=login&tenant=" + Session.get().getTenantName());
 
 		final SelectItem user = ItemFactory.newUserSelector("anonymousUser", "user", null);
 		user.setHint(I18N.message("anonymoususerhint"));
@@ -207,56 +192,5 @@ public class SecuritySettingsPanel extends VLayout {
 		anonymousForm.setItems(enableAnonymous, user, url);
 		anonymous.setPane(anonymousForm);
 		return anonymous;
-	}
-
-	private void refreshNotifications() {
-		if (notificationsForm != null && notificationsPane.contains(notificationsForm)) {
-			notificationsPane.removeMember(notificationsForm);
-			notificationsForm.destroy();
-		}
-
-		notificationsForm = new DynamicForm();
-		notificationsForm.setColWidths(1, "*");
-		notificationsForm.setMargin(3);
-
-		final SelectItem user = ItemFactory.newUserSelector("notificationUsers", "user", null);
-		List<FormItem> items = new ArrayList<FormItem>();
-		user.setHint(I18N.message("usernotification"));
-		user.setHintStyle("hint");
-		user.addChangedHandler(new ChangedHandler() {
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if (user.getSelectedRecord() == null)
-					return;
-				GUIUser u = new GUIUser();
-				u.setId(Long.parseLong(user.getSelectedRecord().getAttribute("id")));
-				u.setUserName(user.getSelectedRecord().getAttribute("username"));
-				settings.addNotifiedUser(u);
-				user.clearValue();
-				refreshNotifications();
-			}
-
-		});
-		items.add(user);
-
-		FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
-		int i = 0;
-
-		for (GUIUser u : settings.getNotifiedUsers()) {
-			final StaticTextItem usrItem = ItemFactory.newStaticTextItem("usr" + i++, "user", null);
-			usrItem.setValue(u.getUserName());
-			usrItem.setIcons(icon);
-			usrItem.addIconClickHandler(new IconClickHandler() {
-				public void onIconClick(IconClickEvent event) {
-					settings.removeNotifiedUser((String) usrItem.getValue());
-					refreshNotifications();
-				}
-			});
-			items.add(usrItem);
-		}
-
-		notificationsForm.setItems(items.toArray(new FormItem[0]));
-
-		notificationsPane.setMembers(notificationsForm);
 	}
 }

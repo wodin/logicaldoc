@@ -119,7 +119,7 @@ public abstract class FolderSearchForm extends VLayout {
 		GUISearchOptions options = new GUISearchOptions();
 		options.setType(GUISearchOptions.TYPE_FOLDERS);
 
-		String hits = Session.get().getInfo().getConfig("search.hits");
+		String hits = Session.get().getConfig("search.hits");
 		if (hits != null)
 			options.setMaxHits(Integer.parseInt(hits));
 

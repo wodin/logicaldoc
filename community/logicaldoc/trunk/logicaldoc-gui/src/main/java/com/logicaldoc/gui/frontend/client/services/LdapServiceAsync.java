@@ -15,5 +15,5 @@ public interface LdapServiceAsync {
 
 	void listUsers(String sid, String login, AsyncCallback<GUIUser[]> callback);
 
-	void importUsers(String sid, String[] dns, AsyncCallback<GUIValuePair[]> callback);
+	void importUsers(String sid, String[] usernames, long tenantId, AsyncCallback<GUIValuePair[]> callback);
 }

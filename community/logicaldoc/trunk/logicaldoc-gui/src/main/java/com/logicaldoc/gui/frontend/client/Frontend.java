@@ -89,12 +89,7 @@ public class Frontend implements EntryPoint {
 		I18N.setLocale(lang);
 
 		// Tries to capture tenant parameter
-		final String tenant;
-		if (request.getParameter(Constants.TENANT) != null && !request.getParameter(Constants.TENANT).equals("")) {
-			tenant = request.getParameter(Constants.TENANT);
-		} else {
-			tenant = Constants.TENANT_DEFAULTNAME;
-		}
+		final String tenant = Util.detectTenant();
 
 		// Get grid of scrollbars, and clear out the window's built-in margin,
 		// because we want to take advantage of the entire client area.
@@ -182,27 +177,29 @@ public class Frontend implements EntryPoint {
 			}
 
 			private void anonymousLogin(final String lang, final GUIInfo info) {
-				securityService.login(info.getConfig("anonymous.user"), "", lang, new AsyncCallback<GUISession>() {
+				securityService.login(info.getConfig("anonymous.user"), "", lang, tenant,
+						new AsyncCallback<GUISession>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Frontend.this.showInitialLogin();
-					}
+							@Override
+							public void onFailure(Throwable caught) {
+								Frontend.this.showInitialLogin();
+							}
 
-					@Override
-					public void onSuccess(GUISession session) {
-						if (session == null || !session.isLoggedIn()) {
-							Frontend.this.showInitialLogin();
-						} else {
-							MainPanel.get();
-							loginPanel.onLoggedIn(session);
+							@Override
+							public void onSuccess(GUISession session) {
+								if (session == null || !session.isLoggedIn()) {
+									Frontend.this.showInitialLogin();
+								} else {
+									MainPanel.get();
+									loginPanel.onLoggedIn(session);
 
-							// Remove the loading frame
-							RootPanel.getBodyElement().removeChild(RootPanel.get("loadingWrapper").getElement());
-							declareReloadTrigger(Frontend.this);
-						}
-					}
-				});
+									// Remove the loading frame
+									RootPanel.getBodyElement()
+											.removeChild(RootPanel.get("loadingWrapper").getElement());
+									declareReloadTrigger(Frontend.this);
+								}
+							}
+						});
 			}
 		});
 	}

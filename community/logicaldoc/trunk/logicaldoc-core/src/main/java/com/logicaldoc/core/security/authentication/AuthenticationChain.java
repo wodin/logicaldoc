@@ -11,6 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.core.security.Tenant;
+import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.TenantDAO;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.plugin.PluginRegistry;
@@ -66,11 +70,26 @@ public class AuthenticationChain implements AuthenticationProvider {
 		if (providers == null || providers.isEmpty())
 			init();
 
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		if ("true".equals(config.getProperty("anonymous.enabled"))
-				&& username.equals(config.getProperty("anonymous.user")))
-			return true;
+		/*
+		 * Check the anonymous login
+		 */
+		{
+			String tenant = Tenant.DEFAULT_NAME;
+			UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			User user = udao.findByUserName(username);
+			if (user != null) {
+				TenantDAO tdao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+				Tenant t = tdao.findById(user.getTenantId());
+				if (t != null)
+					tenant = t.getName();
+			}
 
+			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			if ("true".equals(config.getProperty(tenant + ".anonymous.enabled"))
+					&& username.equals(config.getProperty(tenant + ".anonymous.user")))
+				return true;
+		}
+		
 		boolean loggedIn = false;
 		for (AuthenticationProvider cmp : providers) {
 			if (!cmp.isEnabled())

@@ -108,13 +108,14 @@ public class FiltersPanel extends VLayout {
 	}
 
 	public void save() {
-		String whitelist=vm.getValueAsString("whitelist");
-		String blacklist=vm.getValueAsString("blacklist");
-		
-		
+		String whitelist = vm.getValueAsString("whitelist");
+		String blacklist = vm.getValueAsString("blacklist");
+
 		GUIParameter[] params = new GUIParameter[2];
-		params[0] = new GUIParameter("ip.whitelist", whitelist!=null ? whitelist.replace('\n', ',').replaceAll(" ", "") : null);
-		params[1] = new GUIParameter("ip.blacklist", blacklist!=null ? blacklist.replace('\n', ',').replaceAll(" ", "") : null);
+		params[0] = new GUIParameter("ip.whitelist", whitelist != null ? whitelist.replace('\n', ',').replaceAll(" ",
+				"") : null);
+		params[1] = new GUIParameter("ip.blacklist", blacklist != null ? blacklist.replace('\n', ',').replaceAll(" ",
+				"") : null);
 
 		settingsService.saveSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
 			@Override
@@ -130,10 +131,10 @@ public class FiltersPanel extends VLayout {
 	}
 
 	boolean validate() {
-		String whitelist=vm.getValueAsString("whitelist");
-		String blacklist=vm.getValueAsString("blacklist");
-		user.setIpWhitelist(whitelist!=null ? whitelist.replace('\n', ',').replaceAll(" ", "") : null);
-		user.setIpBlacklist(blacklist!=null ? blacklist.replace('\n', ',').replaceAll(" ", "") : null);
+		String whitelist = vm.getValueAsString("whitelist");
+		String blacklist = vm.getValueAsString("blacklist");
+		user.setIpWhitelist(whitelist != null ? whitelist.replace('\n', ',').replaceAll(" ", "") : null);
+		user.setIpBlacklist(blacklist != null ? blacklist.replace('\n', ',').replaceAll(" ", "") : null);
 		return true;
 	}
 }
