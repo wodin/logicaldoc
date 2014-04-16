@@ -191,7 +191,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 		GUISearchOptions options = new GUISearchOptions();
 
-		String hits = Session.get().getInfo().getConfig("search.hits");
+		String hits = Session.get().getConfig("search.hits");
 		if (hits != null)
 			options.setMaxHits(Integer.parseInt(hits));
 

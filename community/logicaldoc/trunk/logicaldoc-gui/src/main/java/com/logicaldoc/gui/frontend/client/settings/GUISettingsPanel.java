@@ -138,35 +138,35 @@ public class GUISettingsPanel extends VLayout {
 				uploadmax, disallow, ondoubleclick, doctab, searchhits, extattr, webcontentfolders, savelogin);
 
 		for (GUIParameter p : settings) {
-			if (p.getName().equals("gui.welcome"))
+			if (p.getName().endsWith("gui.welcome"))
 				welcome.setValue(p.getValue());
-			if (p.getName().equals("gui.dropspot.mode"))
+			if (p.getName().endsWith("gui.dropspot.mode"))
 				dropspot.setValue(p.getValue());
-			if (p.getName().equals("gui.savelogin"))
+			if (p.getName().endsWith("gui.savelogin"))
 				savelogin.setValue(p.getValue().equals("true") ? "yes" : "no");
-			if (p.getName().equals("gui.preview.pages"))
+			if (p.getName().endsWith("gui.preview.pages"))
 				previewPages.setValue(Integer.parseInt(p.getValue().trim()));
-			if (p.getName().equals("gui.preview.size"))
+			if (p.getName().endsWith("gui.preview.size"))
 				previewSize.setValue(Integer.parseInt(p.getValue().trim()));
-			if (p.getName().equals("gui.preview.zoom"))
+			if (p.getName().endsWith("gui.preview.zoom"))
 				previewZoom.setValue(Integer.parseInt(p.getValue().trim()));
-			if (p.getName().equals("gui.thumbnail.size"))
+			if (p.getName().endsWith("gui.thumbnail.size"))
 				thumbSize.setValue(Integer.parseInt(p.getValue().trim()));
-			if (p.getName().equals("gui.thumbnail.quality"))
+			if (p.getName().endsWith("gui.thumbnail.quality"))
 				thumbQuality.setValue(Integer.parseInt(p.getValue().trim()));
-			if (p.getName().equals("gui.doubleclick"))
+			if (p.getName().endsWith("gui.doubleclick"))
 				ondoubleclick.setValue(p.getValue());
-			if (p.getName().equals("gui.document.tab"))
+			if (p.getName().endsWith("gui.document.tab"))
 				doctab.setValue(p.getValue());
-			if (p.getName().equals("upload.maxsize"))
+			if (p.getName().endsWith("upload.maxsize"))
 				uploadmax.setValue(Integer.parseInt(p.getValue().trim()));
-			if (p.getName().equals("upload.disallow") && p.getValue()!=null)
+			if (p.getName().endsWith("upload.disallow") && p.getValue()!=null)
 				disallow.setValue(p.getValue().trim());
-			if (p.getName().equals("search.hits"))
+			if (p.getName().endsWith("search.hits"))
 				searchhits.setValue(Integer.parseInt(p.getValue().trim()));
-			if (p.getName().equals("search.extattr"))
+			if (p.getName().endsWith("search.extattr"))
 				extattr.setValue(p.getValue());
-			if (p.getName().equals("gui.webcontent.folders"))
+			if (p.getName().endsWith("gui.webcontent.folders"))
 				webcontentfolders.setValue(p.getValue());
 		}
 
@@ -179,22 +179,22 @@ public class GUISettingsPanel extends VLayout {
 
 				if (vm.validate()) {
 					List<GUIParameter> params = new ArrayList<GUIParameter>();
-					params.add(new GUIParameter("gui.welcome", (String) values.get("welcome")));
-					params.add(new GUIParameter("gui.dropspot.mode", (String) values.get("dropspot")));
-					params.add(new GUIParameter("gui.savelogin", "yes".equals(values.get("savelogin")) ? "true"
+					params.add(new GUIParameter(Session.get().getTenantName()+".gui.welcome", (String) values.get("welcome")));
+					params.add(new GUIParameter(Session.get().getTenantName()+".gui.dropspot.mode", (String) values.get("dropspot")));
+					params.add(new GUIParameter(Session.get().getTenantName()+".gui.savelogin", "yes".equals(values.get("savelogin")) ? "true"
 							: "false"));
-					params.add(new GUIParameter("gui.preview.pages", values.get("previewpages").toString()));
-					params.add(new GUIParameter("gui.preview.size", values.get("previewsize").toString()));
-					params.add(new GUIParameter("gui.preview.zoom", values.get("previewzoom").toString()));
-					params.add(new GUIParameter("gui.thumbnail.size", values.get("thumbsize").toString()));
-					params.add(new GUIParameter("gui.thumbnail.quality", values.get("thumbquality").toString()));
-					params.add(new GUIParameter("gui.doubleclick", values.get("ondoubleclick").toString()));
-					params.add(new GUIParameter("gui.document.tab", values.get("doctab").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName()+".gui.preview.pages", values.get("previewpages").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName()+".gui.preview.size", values.get("previewsize").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName()+".gui.preview.zoom", values.get("previewzoom").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName()+".gui.thumbnail.size", values.get("thumbsize").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName()+".gui.thumbnail.quality", values.get("thumbquality").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName()+".gui.doubleclick", values.get("ondoubleclick").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName()+".gui.document.tab", values.get("doctab").toString()));
 					params.add(new GUIParameter("upload.maxsize", values.get("uploadmax").toString()));
-					params.add(new GUIParameter("upload.disallow", values.get("disallow").toString()));
-					params.add(new GUIParameter("search.hits", values.get("searchhits").toString()));
-					params.add(new GUIParameter("search.extattr", values.get("extattr").toString()));
-					params.add(new GUIParameter("gui.webcontent.folders", values.get("webcontentfolders").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName()+".upload.disallow", values.get("disallow").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName()+".search.hits", values.get("searchhits").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName()+".search.extattr", values.get("extattr").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName()+".gui.webcontent.folders", values.get("webcontentfolders").toString()));
 
 					// Update the current session parameters.
 					for (GUIParameter p : params) {

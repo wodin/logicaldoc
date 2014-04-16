@@ -189,6 +189,10 @@ public class Session {
 		return info.getTenant().getName();
 	}
 
+	public boolean isDefaultTenant() {
+		return info.getTenant().getId() == Constants.TENANT_DEFAULTID;
+	}
+
 	public String getConfig(String name) {
 		return info.getConfig(name);
 	}

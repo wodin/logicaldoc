@@ -8,7 +8,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
-import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -18,7 +17,6 @@ import com.logicaldoc.gui.frontend.client.services.LdapServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
@@ -58,6 +56,8 @@ public class LdapBrowser extends VLayout {
 	private ListGrid users;
 
 	private InfoPanel infoPanel;
+	
+	private ButtonItem searchButton; 
 
 	public LdapBrowser() {
 		setWidth100();
@@ -71,7 +71,7 @@ public class LdapBrowser extends VLayout {
 		// Username
 		TextItem username = ItemFactory.newTextItem("username", "username", null);
 
-		ButtonItem searchButton = new ButtonItem();
+		searchButton = new ButtonItem();
 		searchButton.setTitle(I18N.message("search"));
 		searchButton.setAutoFit(true);
 		searchButton.setEndRow(true);
@@ -158,15 +158,18 @@ public class LdapBrowser extends VLayout {
 			else
 				username = "*" + username + "*";
 
+			searchButton.setDisabled(true);
 			service.listUsers(Session.get().getSid(), username, new AsyncCallback<GUIUser[]>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
+					searchButton.setDisabled(false);
 					Log.serverError(caught);
 				}
 
 				@Override
 				public void onSuccess(GUIUser[] result) {
+					searchButton.setDisabled(false);
 					if (result != null && result.length > 0) {
 						ListGridRecord[] records = new ListGridRecord[result.length];
 						for (int i = 0; i < result.length; i++) {
@@ -200,24 +203,9 @@ public class LdapBrowser extends VLayout {
 		_import.setTitle(I18N.message("iimport"));
 		_import.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.importUsers(Session.get().getSid(), usernames, new AsyncCallback<GUIValuePair[]>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(GUIValuePair[] report) {
-						users.deselectAllRecords();
-						String message = I18N.message("importreport",
-								new String[] { report[0].getValue(), report[1].getValue(), report[2].getValue() });
-						if ("0".equals(report[2].getValue()))
-							Log.info(I18N.message("importcompleted"), message);
-						else
-							Log.error(I18N.message("importerrors"), message, null);
-						SC.warn(message);
-					}
-				});
+				LdapImportDialog dialog = new LdapImportDialog(usernames);
+				dialog.show();
+				users.deselectAllRecords();
 			}
 		});
 

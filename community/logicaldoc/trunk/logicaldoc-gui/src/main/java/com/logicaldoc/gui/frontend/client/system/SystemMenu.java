@@ -52,7 +52,7 @@ public class SystemMenu extends VLayout {
 		clustering.setHeight(25);
 
 		if (Feature.visible(Feature.CLUSTERING) && Menu.enabled(Menu.CLUSTERING)
-				&& Session.get().getInfo().getTenant().getId() == Constants.TENANT_DEFAULTID) {
+				&& Session.get().isDefaultTenant()) {
 			addMember(clustering);
 			if (!Feature.enabled(Feature.CLUSTERING)) {
 				clustering.setDisabled(true);
@@ -82,6 +82,16 @@ public class SystemMenu extends VLayout {
 				productNews.setDisabled(true);
 				productNews.setTooltip(I18N.message("featuredisabled"));
 			}
+		}
+
+		if (Session.get().isDemo()) {
+			clustering.setDisabled(true);
+			tenants.setDisabled(true);
+		}
+
+		if (!Session.get().isDefaultTenant()) {
+			clustering.setVisible(false);
+			tenants.setVisible(false);
 		}
 
 		addInformations();

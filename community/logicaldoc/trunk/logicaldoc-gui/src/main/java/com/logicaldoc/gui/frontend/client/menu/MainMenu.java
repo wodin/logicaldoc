@@ -723,7 +723,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 					tmp += "<param name=\"language\" value=\"" + I18N.getDefaultLocaleForDoc() + "\" />";
 					tmp += "<param name=\"sizeMax\" value=\""
 							+ Long.parseLong(Session.get().getInfo().getConfig("upload.maxsize"));
-					tmp += "<param name=\"disallow\" value=\"" + Session.get().getInfo().getConfig("upload.disallow")
+					tmp += "<param name=\"disallow\" value=\"" + Session.get().getConfig("upload.disallow")
 							+ "\" />";
 					tmp += "</applet></div>";
 					dropArea.setContents(tmp);

@@ -138,10 +138,14 @@ public class TaskDetailPanel extends VLayout {
 		logTabPanel.setHeight100();
 		logTab.setPane(logTabPanel);
 
-		if (Feature.visible(Feature.TASK_REPORT_NOTIFICATION))
-			tabSet.setTabs(schedulingTab, notificationTab, logTab);
-		else
-			tabSet.setTabs(schedulingTab, logTab);
+		if (Session.get().isDefaultTenant()) {
+			if (Feature.visible(Feature.TASK_REPORT_NOTIFICATION))
+				tabSet.setTabs(schedulingTab, notificationTab, logTab);
+			else
+				tabSet.setTabs(schedulingTab, logTab);
+		} else {
+			tabSet.setTabs(logTab);
+		}
 
 		addMember(tabSet);
 	}

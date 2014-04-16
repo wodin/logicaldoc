@@ -14,6 +14,7 @@ import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Group;
+import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.util.config.ContextProperties;
@@ -133,6 +134,7 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 
 			Group group = new Group();
 			group.setName("admin");
+			group.setName("Group of administrators");
 			group.setTenantId(tenant.getId());
 			stored = groupDao.store(group);
 			if (!stored)
@@ -154,6 +156,24 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 
 			userDao.jdbcUpdate("insert into ld_usergroup(ld_groupid,ld_userid) values (?,?)",
 					new Object[] { group.getId(), user.getId() });
+
+			/*
+			 * Add a guests group
+			 */
+			Group guest = new Group();
+			guest.setName("guest");
+			guest.setDescription("Group of guests");
+			groupDao.store(group);
+
+			long[] menuIds = new long[] { Menu.DOCUMENTS, 5L, 1510L, 1520L, 1530L };
+			for (long id : menuIds)
+				userDao.jdbcUpdate("insert into ld_menugroup(ld_groupid,ld_userid) values (?,?)",
+						new Object[] { group.getId(), id });
+			long[] folderIds = new long[] { folder.getId(), folder.getParentId() };
+			for (long id : folderIds)
+				userDao.jdbcUpdate(
+						"insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar) values (?,?,0,0,0,0,0,0,0,0,0,0,0,0,0)",
+						new Object[] { id, group.getId() });
 
 			/*
 			 * Now some minor records

@@ -10,6 +10,7 @@ import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -437,7 +438,7 @@ public class Util {
 		tmp += "<param name=\"language\" value=\"" + I18N.getDefaultLocaleForDoc() + "\" />";
 		tmp += "<param name=\"sizeMax\" value=\"" + Long.parseLong(Session.get().getInfo().getConfig("upload.maxsize"))
 				* 1024 * 1024 + "\" />";
-		tmp += "<param name=\"disallow\" value=\"" + Session.get().getInfo().getConfig("upload.disallow")+ "\" />";
+		tmp += "<param name=\"disallow\" value=\"" + Session.get().getInfo().getConfig("upload.disallow") + "\" />";
 		tmp += "</applet>";
 		dropSpotApplet.getElement().setInnerHTML(tmp);
 	}
@@ -561,7 +562,7 @@ public class Util {
 		Session session = Session.get();
 		if (session == null)
 			return true;
-		String disallow = session.getInfo().getConfig("upload.disallow");
+		String disallow = session.getConfig("upload.disallow");
 		if (disallow == null || disallow.trim().isEmpty())
 			return true;
 
@@ -578,5 +579,18 @@ public class Util {
 				return false;
 
 		return true;
+	}
+
+	/**
+	 * Detect tenant specification from the request
+	 */
+	public static String detectTenant() {
+		RequestInfo request = WindowUtils.getRequestInfo();
+		// Tries to capture tenant parameter
+		String tenant = Constants.TENANT_DEFAULTNAME;
+		if (request.getParameter(Constants.TENANT) != null && !request.getParameter(Constants.TENANT).equals("")) {
+			tenant = request.getParameter(Constants.TENANT);
+		}
+		return tenant;
 	}
 }

@@ -26,6 +26,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.core.security.Tenant;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 
@@ -90,9 +93,15 @@ public class UploadServlet extends UploadAction {
 			uploadFolder.mkdirs();
 			uploadFolder.mkdir();
 
+			String tenant = Tenant.DEFAULT_NAME;
+			if (request.getParameter("sid") != null) {
+				UserSession userSession = SessionManager.getInstance().get(request.getParameter("sid"));
+				tenant = userSession.getTenantName();
+			}
+
 			for (FileItem item : sessionFiles) {
 				if (false == item.isFormField()) {
-					if (!isAllowedForUpload(item.getName()))
+					if (!isAllowedForUpload(item.getName(), tenant))
 						throw new UploadActionException("Invalid file name " + item.getName());
 
 					OutputStream os = null;
@@ -254,9 +263,9 @@ public class UploadServlet extends UploadAction {
 	 * Checks if the passed filename can be uploaded or not on the basis of what
 	 * configured in 'upload.disallow'.
 	 */
-	public static boolean isAllowedForUpload(String filename) {
+	public static boolean isAllowedForUpload(String filename, String tenant) {
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		String disallow = config.getProperty("upload.disallow");
+		String disallow = config.getProperty(tenant + ".upload.disallow");
 
 		if (disallow == null || disallow.trim().isEmpty())
 			return true;

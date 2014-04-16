@@ -49,7 +49,7 @@ public class SecurityMenu extends VLayout {
 		extAuth.setWidth100();
 		extAuth.setHeight(25);
 
-		if (Feature.visible(Feature.LDAP)) {
+		if (Feature.visible(Feature.LDAP) && Session.get().isDefaultTenant()) {
 			setMembers(users, groups, security, extAuth);
 			if (!Feature.enabled(Feature.LDAP)) {
 				extAuth.setDisabled(true);

@@ -18,7 +18,9 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
@@ -120,11 +122,11 @@ public abstract class Search {
 
 		UserDAO uDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		searchUser = uDao.findById(options.getUserId());
-		uDao.initialize(searchUser);
 		if (searchUser == null) {
 			log.warn("Unexisting user");
 			return hits;
 		} else {
+			uDao.initialize(searchUser);
 			log.info("Search User: " + searchUser.getUserName());
 		}
 
@@ -140,7 +142,10 @@ public abstract class Search {
 		}
 
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		String extattrs = config.getProperty("search.extattr");
+		TenantDAO tdao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+		Tenant tenant = tdao.findById(searchUser.getTenantId());
+
+		String extattrs = config.getProperty(tenant.getName() + ".search.extattr");
 
 		if (StringUtils.isNotEmpty(extattrs) && !hits.isEmpty()) {
 			// the names of the extended attributes to show
@@ -188,7 +193,7 @@ public abstract class Search {
 					ExtendedAttribute att = extAtt.get(h.getId() + "-" + name);
 					if (att == null)
 						att = extAtt.get(h.getDocRef() + "-" + name);
-					if (att != null){
+					if (att != null) {
 						h.getAttributes().put(name, att);
 					}
 				}
