@@ -1,6 +1,9 @@
 package com.logicaldoc.gui.frontend.client.folder;
 
+import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.Feature;
+import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -73,13 +76,24 @@ public class PropertiesPanel extends FolderDetailTab {
 		pathItem.addChangedHandler(changedHandler);
 		pathItem.setWidth(400);
 
+		LinkItem barcode = ItemFactory.newLinkItem("barcode", I18N.message("generatebarcode"));
+		barcode.setTarget("_blank");
+		barcode.setTitle(I18N.message("barcode"));
+		barcode.setValue(GWT.getHostPageBaseURL() + "barcode?sid=" + Session.get().getSid() + "&code=" + folder.getId()
+				+ "&width=400&height=150");
+
 		StaticTextItem documents = ItemFactory.newStaticTextItem("documents", "documents",
 				"" + folder.getDocumentCount());
 		StaticTextItem subfolders = ItemFactory
 				.newStaticTextItem("folders", "folders", "" + folder.getSubfolderCount());
 
-		if (folder.getId() == Constants.WORKSPACE_DEFAULTID)
-			form.setItems(idItem, pathItem, creation, creator, documents, subfolders);
+		if (folder.getId() == Constants.WORKSPACE_DEFAULTID) {
+			if (Feature.enabled(Feature.BARCODES))
+				form.setItems(idItem, pathItem, creation, creator, documents, subfolders, barcode);
+			else
+				form.setItems(idItem, pathItem, creation, creator, documents, subfolders);
+		} else if (Feature.enabled(Feature.BARCODES))
+			form.setItems(idItem, pathItem, name, description, creation, creator, documents, subfolders, barcode);
 		else
 			form.setItems(idItem, pathItem, name, description, creation, creator, documents, subfolders);
 		addMember(form);

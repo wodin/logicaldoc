@@ -273,10 +273,38 @@ public class ServletIOUtil {
 	 * 
 	 * @param request the current request
 	 * @param response the file is written to this object
+	 * @param file file to serve
+	 * @param fileName client file name
+	 * 
+	 * @throws FileNotFoundException
+	 * @throws IOException
 	 * @throws ServletException
 	 */
 	public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file, String fileName)
 			throws FileNotFoundException, IOException, ServletException {
+		downloadFile(request, response, file, fileName, true);
+	}
+
+	/**
+	 * Sends the specified file to the response object; the client will receive
+	 * it as a download
+	 * 
+	 * Sends the specified file to the response object; the client will receive
+	 * it as a download
+	 * 
+	 * @param request the current request
+	 * @param response the file is written to this object
+	 * @param file file to serve
+	 * @param fileName client file name
+	 * @param asAttachment true if the content-disposition must use the
+	 *        attachment statement
+	 * 
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file,
+			String fileName, boolean asAttachment) throws FileNotFoundException, IOException, ServletException {
 
 		String filename = fileName;
 		if (filename == null)
@@ -287,7 +315,7 @@ public class ServletIOUtil {
 		// it seems everything is fine, so we can now start writing to the
 		// response object
 		response.setContentType(mimetype);
-		setContentDisposition(request, response, filename, true);
+		setContentDisposition(request, response, filename, asAttachment);
 
 		// Add this header for compatibility with internal .NET browsers
 		response.setHeader("Content-Length", Long.toString(file.length()));
