@@ -90,7 +90,7 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 	public Group findByName(String name, long tenantId) {
 		Group group = null;
 		Collection<Group> coll = findByWhere(
-				"_entity.name.tenantId=" + tenantId + " and _entity.name = '" + SqlUtil.doubleQuotes(name) + "'", null,
+				"_entity.tenantId=" + tenantId + " and _entity.name = '" + SqlUtil.doubleQuotes(name) + "'", null,
 				null);
 		if (coll.size() > 0) {
 			group = coll.iterator().next();

@@ -9,7 +9,10 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
+import com.logicaldoc.core.document.DocumentTemplate;
+import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.Folder;
@@ -32,6 +35,8 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 	private UserDAO userDao;
 
 	private GenericDAO genericDao;
+
+	private DocumentTemplateDAO templateDao;
 
 	protected HibernateTenantDAO() {
 		super(Tenant.class);
@@ -134,7 +139,7 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 
 			Group group = new Group();
 			group.setName("admin");
-			group.setName("Group of administrators");
+			group.setDescription("Group of administrators");
 			group.setTenantId(tenant.getId());
 			stored = groupDao.store(group);
 			if (!stored)
@@ -156,18 +161,21 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 
 			userDao.jdbcUpdate("insert into ld_usergroup(ld_groupid,ld_userid) values (?,?)",
 					new Object[] { group.getId(), user.getId() });
-
+			
 			/*
 			 * Add a guests group
 			 */
 			Group guest = new Group();
 			guest.setName("guest");
 			guest.setDescription("Group of guests");
+			guest.setTenantId(tenant.getId());
 			groupDao.store(group);
+			if (!stored)
+				return stored;
 
 			long[] menuIds = new long[] { Menu.DOCUMENTS, 5L, 1510L, 1520L, 1530L };
 			for (long id : menuIds)
-				userDao.jdbcUpdate("insert into ld_menugroup(ld_groupid,ld_userid) values (?,?)",
+				userDao.jdbcUpdate("insert into ld_menugroup(ld_groupid,ld_menuid, ld_write) values (?,?,0)",
 						new Object[] { group.getId(), id });
 			long[] folderIds = new long[] { folder.getId(), folder.getParentId() };
 			for (long id : folderIds)
@@ -175,6 +183,33 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 						"insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar) values (?,?,0,0,0,0,0,0,0,0,0,0,0,0,0)",
 						new Object[] { id, group.getId() });
 
+			/*
+			 * Replicate the email template
+			 */
+			DocumentTemplate emailTemplate = templateDao.findByName("email", Tenant.DEFAULT_ID);
+			if (emailTemplate != null) {
+				DocumentTemplate newEmailTemplate = new DocumentTemplate();
+				newEmailTemplate.setName(emailTemplate.getName());
+				newEmailTemplate.setDescription(emailTemplate.getDescription());
+				newEmailTemplate.setCategory(emailTemplate.getCategory());
+				newEmailTemplate.setReadonly(emailTemplate.getReadonly());
+				newEmailTemplate.setRetentionDays(emailTemplate.getRetentionDays());
+				newEmailTemplate.setSignRequired(emailTemplate.getSignRequired());
+				newEmailTemplate.setTenantId(tenant.getId());
+				newEmailTemplate.setType(emailTemplate.getType());
+
+				Map<String, ExtendedAttribute> attrs = emailTemplate.getAttributes();
+				for (String name : attrs.keySet()) {
+					ExtendedAttribute att = attrs.get(name);
+					try {
+						newEmailTemplate.getAttributes().put(name, (ExtendedAttribute) att.clone());
+					} catch (CloneNotSupportedException e) {
+					}
+				}
+				templateDao.store(newEmailTemplate);
+			}
+			flush();
+			
 			/*
 			 * Now some minor records
 			 */
@@ -229,5 +264,9 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 
 	public void setGenericDao(GenericDAO genericDao) {
 		this.genericDao = genericDao;
+	}
+
+	public void setTemplateDao(DocumentTemplateDAO templateDao) {
+		this.templateDao = templateDao;
 	}
 }

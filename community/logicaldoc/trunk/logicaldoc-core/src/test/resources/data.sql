@@ -379,3 +379,9 @@ insert into ld_contact(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_firstna
 values(2, CURRENT_TIMESTAMP, 0, 1, 'Marco', 'marco@acme.com',1);
 insert into ld_contact(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_firstname, ld_email,ld_tenantid)
 values(3, CURRENT_TIMESTAMP, 0, 1, 'Alessandro', 'alessandro@acme.com',1);
+
+insert into ld_template
+			(ld_id, ld_lastmodified, ld_deleted, ld_name, ld_description, ld_readonly, ld_type, ld_category, ld_signrequired, ld_tenantid)
+values (100,CURRENT_TIMESTAMP,0,'email','email',0,0,0,0,1);
+insert into ld_template_ext(ld_templateid, ld_mandatory, ld_type, ld_position, ld_stringvalue, ld_name, ld_label, ld_editor)
+values (100,0,0,0,'','sendername', 'Sender Name', 0);

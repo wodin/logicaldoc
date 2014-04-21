@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.AbstractCoreTCase;
+import com.logicaldoc.core.document.DocumentTemplate;
+import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.util.Context;
@@ -34,6 +36,8 @@ public class HibernateTenantDAOTest extends AbstractCoreTCase {
 
 	private FolderDAO folderDao;
 
+	private DocumentTemplateDAO templateDao;
+
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
@@ -44,6 +48,7 @@ public class HibernateTenantDAOTest extends AbstractCoreTCase {
 		folderDao = (FolderDAO) context.getBean("FolderDAO");
 		userDao = (UserDAO) context.getBean("UserDAO");
 		groupDao = (GroupDAO) context.getBean("GroupDAO");
+		templateDao = (DocumentTemplateDAO) context.getBean("DocumentTemplateDAO");
 	}
 
 	@Test
@@ -74,11 +79,15 @@ public class HibernateTenantDAOTest extends AbstractCoreTCase {
 		Tenant tenant = new Tenant();
 		tenant.setName("test2");
 		Assert.assertTrue(dao.store(tenant));
-		
-		ContextProperties conf=(ContextProperties)Context.getInstance().getBean(ContextProperties.class);
+
+		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		Assert.assertEquals(conf.getProperty("default.tag.mode"), conf.getProperty("test2.tag.mode"));
-		
-		
+
+		DocumentTemplate template = templateDao.findByName("email", tenant.getId());
+		Assert.assertNotNull(template);
+		templateDao.initialize(template);
+		Assert.assertEquals(1, template.getAttributeNames().size());
+
 		List<Folder> folders = folderDao.findByName("/", tenant.getId());
 		Assert.assertEquals(1, folders.size());
 
