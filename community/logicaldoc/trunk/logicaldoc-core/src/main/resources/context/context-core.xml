@@ -292,6 +292,7 @@
                 <property name="userDao" ref="UserDAO" />
                 <property name="groupDao" ref="GroupDAO" />
                 <property name="folderDao" ref="FolderDAO" />
+                <property name="templateDao" ref="DocumentTemplateDAO" />
             </bean>
         </property>
     </bean>
