@@ -77,7 +77,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			info.setSupportedGUILanguages(supportedLanguages.toArray(new GUIValuePair[0]));
 
 			LanguageManager manager = LanguageManager.getInstance();
-			Collection<Language> languages = manager.getActiveLanguages();
+			Collection<Language> languages = manager.getActiveLanguages(tenantName);
 			supportedLanguages.clear();
 			for (Language language : languages) {
 				Locale lc = language.getLocale();

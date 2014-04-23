@@ -19,6 +19,7 @@ public class Document extends AbstractDocument {
 	}
 
 	public void copyAttributes(Document docVO) {
+		setTenantId(docVO.getTenantId());
 		setCustomId(docVO.getCustomId());
 		setImmutable(docVO.getImmutable());
 		setTitle(docVO.getTitle());
