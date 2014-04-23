@@ -219,6 +219,13 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			if (doc.getStopPublishing() != null)
 				doc.setStopPublishing(DateUtils.truncate(doc.getStopPublishing(), Calendar.DATE));
 
+			// Check if the document must be indexed
+			if (!FileUtil.matches(doc.getFileName(),
+					config.getProperty("index.includes") == null ? "" : config.getProperty("index.includes"),
+					config.getProperty("index.excludes") == null ? "" : config.getProperty("index.excludes")))
+				doc.setIndexed(Document.INDEX_SKIP);
+
+			
 			// Check if the document must be barcoded
 			if (!FileUtil.matches(doc.getFileName(),
 					config.getProperty("barcode.includes") == null ? "" : config.getProperty("barcode.includes"),
