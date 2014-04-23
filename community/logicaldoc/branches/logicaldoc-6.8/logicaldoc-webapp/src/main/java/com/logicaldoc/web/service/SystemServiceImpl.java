@@ -482,7 +482,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			if (userName != null && StringUtils.isNotEmpty(userName))
 				query.append(" and lower(A.ld_username) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");
 			if (historySid != null && StringUtils.isNotEmpty(historySid))
-				query.append(" and A.ld_sessionid=" + historySid);
+				query.append(" and A.ld_sessionid='" + historySid+"' ");
 			if (from != null) {
 				query.append(" and A.ld_date > '" + new Timestamp(from.getTime()) + "'");
 			}
@@ -504,11 +504,11 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			}
 
 			// Search in the folder history
-			query.append("union select B.ld_username, B.ld_event, B.ld_date, null, null, null, B.ld_sessionid from ld_folder_history B where 1=1 ");
+			query.append(" union select B.ld_username, B.ld_event, B.ld_date, null, null, null, B.ld_sessionid from ld_folder_history B where 1=1 ");
 			if (userName != null && StringUtils.isNotEmpty(userName))
 				query.append(" and lower(B.ld_username) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");
 			if (historySid != null && StringUtils.isNotEmpty(historySid))
-				query.append(" and B.ld_sessionid=" + historySid);
+				query.append(" and B.ld_sessionid='" + historySid+"' ");
 			if (from != null) {
 				query.append(" and B.ld_date > '" + new Timestamp(from.getTime()) + "'");
 			}
@@ -530,11 +530,11 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			}
 
 			// Search in the user history
-			query.append("union select C.ld_username, C.ld_event, C.ld_date, null, null, null, C.ld_sessionid from ld_user_history C where 1=1 ");
+			query.append(" union select C.ld_username, C.ld_event, C.ld_date, null, null, null, C.ld_sessionid from ld_user_history C where 1=1 ");
 			if (userName != null && StringUtils.isNotEmpty(userName))
 				query.append(" and lower(C.ld_username) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");
 			if (historySid != null && StringUtils.isNotEmpty(historySid))
-				query.append(" and C.ld_sessionid=" + historySid);
+				query.append(" and C.ld_sessionid='" + historySid+"' ");
 			if (from != null) {
 				query.append(" and C.ld_date > '" + new Timestamp(from.getTime()) + "'");
 			}
@@ -556,11 +556,11 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			}
 
 			// Search in the workflow history
-			query.append("union select D.ld_username, D.ld_event, D.ld_date, null, null, null, D.ld_sessionid from ld_workflowhistory D where 1=1 ");
+			query.append(" union select D.ld_username, D.ld_event, D.ld_date, null, null, null, D.ld_sessionid from ld_workflowhistory D where 1=1 ");
 			if (userName != null && StringUtils.isNotEmpty(userName))
 				query.append(" and lower(D.ld_username) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");
 			if (historySid != null && StringUtils.isNotEmpty(historySid))
-				query.append(" and D.ld_sessionid=" + historySid);
+				query.append(" and D.ld_sessionid='" + historySid+"' ");
 			if (from != null) {
 				query.append(" and D.ld_date > '" + new Timestamp(from.getTime()) + "'");
 			}
