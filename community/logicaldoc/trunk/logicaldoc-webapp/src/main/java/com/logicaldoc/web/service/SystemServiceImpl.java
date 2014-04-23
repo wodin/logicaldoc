@@ -28,6 +28,7 @@ import com.logicaldoc.core.rss.FeedMessage;
 import com.logicaldoc.core.rss.dao.FeedMessageDAO;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.stats.StatsCollector;
 import com.logicaldoc.core.task.Task;
@@ -471,7 +472,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	@Override
 	public GUIHistory[] search(String sid, String userName, Date from, Date till, int maxResult, String historySid,
 			String[] event) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 		List<GUIHistory> histories = new ArrayList<GUIHistory>();
@@ -479,11 +480,12 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 			// Search in the document/folder history
 			StringBuffer query = new StringBuffer(
-					"select A.ld_username, A.ld_event, A.ld_date, A.ld_title, A.ld_folderid, A.ld_path, A.ld_sessionid from ld_history A where 1=1 ");
+					"select A.ld_username, A.ld_event, A.ld_date, A.ld_title, A.ld_folderid, A.ld_path, A.ld_sessionid from ld_history A where A.ld_tenantid = "
+							+ session.getTenantId());
 			if (userName != null && StringUtils.isNotEmpty(userName))
 				query.append(" and lower(A.ld_username) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");
 			if (historySid != null && StringUtils.isNotEmpty(historySid))
-				query.append(" and A.ld_sessionid=" + historySid);
+				query.append(" and A.ld_sessionid='" + historySid + "' ");
 			if (from != null) {
 				query.append(" and A.ld_date > '" + new Timestamp(from.getTime()) + "'");
 			}
@@ -505,11 +507,12 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			}
 
 			// Search in the folder history
-			query.append("union select B.ld_username, B.ld_event, B.ld_date, null, null, null, B.ld_sessionid from ld_folder_history B where 1=1 ");
+			query.append(" union select B.ld_username, B.ld_event, B.ld_date, null, null, null, B.ld_sessionid from ld_folder_history B where B.ld_tenantid = "
+					+ session.getTenantId());
 			if (userName != null && StringUtils.isNotEmpty(userName))
 				query.append(" and lower(B.ld_username) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");
 			if (historySid != null && StringUtils.isNotEmpty(historySid))
-				query.append(" and B.ld_sessionid=" + historySid);
+				query.append(" and B.ld_sessionid='" + historySid + "' ");
 			if (from != null) {
 				query.append(" and B.ld_date > '" + new Timestamp(from.getTime()) + "'");
 			}
@@ -531,11 +534,12 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			}
 
 			// Search in the user history
-			query.append("union select C.ld_username, C.ld_event, C.ld_date, null, null, null, C.ld_sessionid from ld_user_history C where 1=1 ");
+			query.append(" union select C.ld_username, C.ld_event, C.ld_date, null, null, null, C.ld_sessionid from ld_user_history C where C.ld_tenantid = "
+					+ session.getTenantId());
 			if (userName != null && StringUtils.isNotEmpty(userName))
 				query.append(" and lower(C.ld_username) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");
 			if (historySid != null && StringUtils.isNotEmpty(historySid))
-				query.append(" and C.ld_sessionid=" + historySid);
+				query.append(" and C.ld_sessionid='" + historySid + "' ");
 			if (from != null) {
 				query.append(" and C.ld_date > '" + new Timestamp(from.getTime()) + "'");
 			}
@@ -557,11 +561,12 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			}
 
 			// Search in the workflow history
-			query.append("union select D.ld_username, D.ld_event, D.ld_date, null, null, null, D.ld_sessionid from ld_workflowhistory D where 1=1 ");
+			query.append(" union select D.ld_username, D.ld_event, D.ld_date, null, null, null, D.ld_sessionid from ld_workflowhistory D where D.ld_tenantid = "
+					+ session.getTenantId());
 			if (userName != null && StringUtils.isNotEmpty(userName))
 				query.append(" and lower(D.ld_username) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");
 			if (historySid != null && StringUtils.isNotEmpty(historySid))
-				query.append(" and D.ld_sessionid=" + historySid);
+				query.append(" and D.ld_sessionid='" + historySid + "' ");
 			if (from != null) {
 				query.append(" and D.ld_date > '" + new Timestamp(from.getTime()) + "'");
 			}
