@@ -102,7 +102,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testMoveFolder_Simple() throws Exception {
-		Folder docsFolder = dao.findById(Folder.DEFAULTWORKSPACE);
+		Folder docsFolder = dao.findById(Folder.DEFAULTWORKSPACEID);
 		Folder folderVO = new Folder();
 		folderVO.setName("folderA");
 		Folder folderA = dao.create(docsFolder, folderVO, true, null);
@@ -262,7 +262,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFind2() {
-		List<Folder> folders = dao.find("folder");
+		List<Folder> folders = dao.find("folder", 1L);
 		Assert.assertNotNull(folders);
 		Assert.assertEquals(2, folders.size());
 		Folder folder = dao.findById(6);
@@ -270,7 +270,9 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertTrue(folders.contains(folder));
 		Assert.assertTrue(folders.contains(folder2));
 
-		folders = dao.find("folder.adminxx");
+		folders = dao.find("folder.adminxx", 1L);
+		Assert.assertEquals(0, folders.size());
+		folders = dao.find("folder", 99L);
 		Assert.assertEquals(0, folders.size());
 	}
 
@@ -421,7 +423,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertTrue(folders.isEmpty());
 
 		// Try with umlauts
-		Assert.assertNotNull(dao.findByName(dao.findById(Folder.DEFAULTWORKSPACE), "ölard", null, false));
+		Assert.assertNotNull(dao.findByName(dao.findById(Folder.DEFAULTWORKSPACEID), "ölard", null, false));
 	}
 
 	@Test
@@ -698,10 +700,14 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindWorkspaces() {
-		List<Folder> dirs = dao.findWorkspaces();
+		List<Folder> dirs = dao.findWorkspaces(1L);
 		Assert.assertNotNull(dirs);
 		Assert.assertEquals(2, dirs.size());
 		Assert.assertEquals("Default", dirs.get(0).getName());
+		
+		dirs = dao.findWorkspaces(99L);
+		Assert.assertNotNull(dirs);
+		Assert.assertEquals(0, dirs.size());
 	}
 
 	@Test
@@ -730,5 +736,16 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	public void testFindbyPath() {
 		Folder folder = dao.findByPath("/Default/ölard");
 		Assert.assertNotNull(folder);
+	}
+	
+	@Test
+	public void testFindDefaultWorkspace() {
+		Folder folder = dao.findDefaultWorkspace(1L);
+		Assert.assertNotNull(folder);
+		Assert.assertEquals(Folder.DEFAULTWORKSPACENAME, folder.getName());
+		Assert.assertEquals(Folder.DEFAULTWORKSPACEID, folder.getId());
+		
+		folder = dao.findDefaultWorkspace(99L);
+		Assert.assertNull(folder);
 	}
 }

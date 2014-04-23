@@ -113,7 +113,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 		User user = validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		List<Folder> folders = folderDao.find(name);
+		List<Folder> folders = folderDao.find(name, user.getTenantId());
 		WSFolder[] wsFolders = new WSFolder[folders.size()];
 		for (int i = 0; i < folders.size(); i++) {
 			try {

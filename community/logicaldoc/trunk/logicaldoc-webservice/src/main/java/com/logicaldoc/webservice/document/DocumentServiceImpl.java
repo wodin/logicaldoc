@@ -61,10 +61,13 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Folder folder = fdao.findById(document.getFolderId());
+
+		long rootId = fdao.findRoot(user.getTenantId()).getId();
+
 		if (folder == null) {
 			log.error("Folder " + document.getFolderId() + " not found");
 			throw new Exception("error - folder not found");
-		} else if (folder.getId() == Folder.ROOTID) {
+		} else if (folder.getId() == rootId) {
 			log.error("Cannot add documents in the root");
 			throw new Exception("Cannot add documents in the root");
 		}
@@ -291,12 +294,16 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void move(String sid, long docId, long folderId) throws Exception {
-		if (folderId == Folder.ROOTID) {
+		User user = validateSession(sid);
+
+		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		long rootId = fdao.findRoot(user.getTenantId()).getId();
+
+		if (folderId == rootId) {
 			log.error("Cannot move documents in the root");
 			throw new Exception("Cannot move documents in the root");
 		}
 
-		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
 		checkPermission(Permission.DELETE, user, doc.getFolder().getId());
@@ -612,12 +619,16 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public WSDocument createAlias(String sid, long docId, long folderId) throws Exception {
-		if (folderId == Folder.ROOTID) {
+		User user = validateSession(sid);
+
+		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		long rootId = fdao.findRoot(user.getTenantId()).getId();
+
+		if (folderId == rootId) {
 			log.error("Cannot create alias in the root");
 			throw new Exception("Cannot create alias in the root");
 		}
 
-		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document originalDoc = docDao.findById(docId);
 		checkDownloadEnable(user, originalDoc.getFolder().getId());

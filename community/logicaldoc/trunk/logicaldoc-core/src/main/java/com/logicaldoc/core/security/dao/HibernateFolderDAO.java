@@ -29,7 +29,9 @@ import com.logicaldoc.core.security.FolderGroup;
 import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Permission;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.sql.SqlUtil;
 
@@ -125,7 +127,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 					first = false;
 				}
 				query.append(")");
-				coll = (List<Folder>) find(query.toString());
+				coll = (List<Folder>) find(query.toString(), user.getTenantId());
 
 				if (coll.isEmpty()) {
 					return coll;
@@ -143,7 +145,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 						first = false;
 					}
 					query.append(")");
-					tmp = (List<Folder>) find(query.toString());
+					tmp = (List<Folder>) find(query.toString(), user.getTenantId());
 
 					for (Folder folder : tmp) {
 						if (!coll.contains(folder))
@@ -534,11 +536,14 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		Folder folder = findById(folderId);
 		if (folder == null)
 			return null;
-		String path = folderId != Folder.ROOTID ? folder.getName() : "";
-		while (folder != null && folder.getId() != folder.getParentId() && folder.getId() != Folder.ROOTID) {
+
+		long rootId = findRoot(folder.getTenantId()).getId();
+
+		String path = folderId != rootId ? folder.getName() : "";
+		while (folder != null && folder.getId() != folder.getParentId() && folder.getId() != rootId) {
 			folder = findById(folder.getParentId());
 			if (folder != null)
-				path = (folder.getId() != Folder.ROOTID ? folder.getName() : "") + "/" + path;
+				path = (folder.getId() != rootId ? folder.getName() : "") + "/" + path;
 		}
 		if (!path.startsWith("/"))
 			path = "/" + path;
@@ -557,10 +562,12 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		if (transaction == null || !historyDAO.isEnabled() || "bulkload".equals(config.getProperty("runlevel")))
 			return;
 
+		long rootId = findRoot(folder.getTenantId()).getId();
+
 		transaction.setNotified(0);
 		transaction.setFolderId(folder.getId());
 		transaction.setTenantId(folder.getTenantId());
-		transaction.setTitle(folder.getId() != Folder.ROOTID ? folder.getName() : "/");
+		transaction.setTitle(folder.getId() != rootId ? folder.getName() : "/");
 		String pathExtended = transaction.getPath();
 		if (StringUtils.isEmpty(pathExtended))
 			pathExtended = computePathExtended(folder.getId());
@@ -573,7 +580,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		// Check if is necessary to add a new history entry for the parent
 		// folder. This operation is not recursive, because we want to notify
 		// only the parent folder.
-		if (folder.getId() != folder.getParentId() && folder.getId() != Folder.ROOTID) {
+		if (folder.getId() != folder.getParentId() && folder.getId() != rootId) {
 			Folder parent = findById(folder.getParentId());
 			// The parent folder can be 'null' when the user wants to delete a
 			// folder with sub-folders under it (method 'deleteAll()').
@@ -619,9 +626,10 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	@Override
 	public List<Folder> findParents(long folderId) {
 		Folder folder = findById(folderId);
+		long rootId = findRoot(folder.getTenantId()).getId();
 		List<Folder> coll = new ArrayList<Folder>();
 		try {
-			while (folder.getId() != Folder.ROOTID && folder.getId() != folder.getParentId()) {
+			while (folder.getId() != rootId && folder.getId() != folder.getParentId()) {
 				folder = findById(folder.getParentId());
 				if (folder != null)
 					coll.add(0, folder);
@@ -871,7 +879,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public boolean delete(long folderId, FolderHistory transaction) {
-		if (folderId == Folder.ROOTID)
+		Folder folder = findById(folderId);
+		long rootId = findRoot(folder.getTenantId()).getId();
+		if (folderId == rootId)
 			throw new RuntimeException("Not allowed to delete the Root folder");
 
 		assert (transaction.getUser() != null);
@@ -881,8 +891,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			transaction.setPath(computePathExtended(folderId));
 			transaction.setEvent(FolderEvent.DELETED.toString());
 			transaction.setFolderId(folderId);
+			transaction.setTenantId(folder.getTenantId());
 
-			Folder folder = (Folder) findById(folderId);
 			folder.setDeleted(1);
 			folder.setDeleteUserId(transaction.getUserId());
 
@@ -956,6 +966,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		try {
 			initialize(parent);
 			transaction.setEvent(FolderEvent.CHANGED.toString());
+			transaction.setTenantId(parent.getTenantId());
 
 			// Iterate over all children setting the template and field values
 			List<Folder> children = findChildren(id, null);
@@ -1088,7 +1099,25 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	@Override
 	public Folder findByPath(String pathExtended) {
 		StringTokenizer st = new StringTokenizer(pathExtended, "/", false);
-		Folder folder = findById(Folder.ROOTID);
+
+		/*
+		 * The first element in the path may indicate a tenant
+		 */
+		TenantDAO tenantDAO = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+		Set<String> tenants = tenantDAO.findAllNames();
+		long rootId = Tenant.DEFAULT_ID;
+		if (st.hasMoreTokens()) {
+			String name = st.nextToken();
+			if (tenants.contains(name))
+				rootId = findRoot(tenantDAO.findByName(name).getId()).getId();
+			else
+				st = new StringTokenizer(pathExtended, "/", false);
+		}
+
+		/*
+		 * Now go on searching for folders
+		 */
+		Folder folder = findById(rootId);
 		while (st.hasMoreTokens()) {
 			String token = st.nextToken();
 			if (StringUtils.isEmpty(token))
@@ -1234,8 +1263,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public List<Folder> find(String name) {
-		return findByName(null, "%" + name + "%", null, false);
+	public List<Folder> find(String name, Long tenantId) {
+		return findByName(null, "%" + name + "%", tenantId, false);
 	}
 
 	@Override
@@ -1254,9 +1283,13 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public List<Folder> findWorkspaces() {
-		return findByWhere(" (not _entity.id=" + Folder.ROOTID + ") and _entity.parentId=" + Folder.ROOTID
-				+ " and _entity.type=" + Folder.TYPE_WORKSPACE, "order by lower(_entity.name)", null);
+	public List<Folder> findWorkspaces(long tenantId) {
+		Folder root=findRoot(tenantId);
+		if(root==null)
+			return new ArrayList<Folder>();
+		long rootId = root.getId();
+		return findByWhere(" (not _entity.id=" + rootId + ") and _entity.parentId=" + rootId + " and _entity.type="
+				+ Folder.TYPE_WORKSPACE + " and _entity.tenantId=" + tenantId, "order by lower(_entity.name)", null);
 	}
 
 	@Override
@@ -1307,5 +1340,30 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		}
 
 		return results;
+	}
+
+	@Override
+	public Folder findRoot(long tenantId) {
+		List<Folder> folders = findByName("/", tenantId);
+		if (!folders.isEmpty())
+			return folders.get(0);
+		return null;
+	}
+
+	@Override
+	public Folder findDefaultWorkspace(long tenantId) {
+		Folder root = findRoot(tenantId);
+		if (root == null)
+			return null;
+
+		List<Folder> workspaces = findByWhere(
+				"_entity.parentId = " + root.getId() + " and _entity.name = '"
+						+ SqlUtil.doubleQuotes(Folder.DEFAULTWORKSPACENAME) + "' and _entity.tenantId=" + tenantId
+						+ " and _entity.type=" + Folder.TYPE_WORKSPACE, null, null);
+
+		if (workspaces.isEmpty())
+			return null;
+		else
+			return workspaces.get(0);
 	}
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
@@ -364,5 +365,13 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 	public void setGenericDAO(GenericDAO genericDAO) {
 		this.genericDAO = genericDAO;
+	}
+	
+	@Override
+	public User findAdminUser(String tenantName) {
+		if ("default".equals(tenantName))
+			return findByUserName("admin");
+		else
+			return findByUserName("admin" + StringUtils.capitalize(tenantName));
 	}
 }

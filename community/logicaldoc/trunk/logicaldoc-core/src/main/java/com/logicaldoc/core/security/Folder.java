@@ -23,7 +23,9 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 
 	public static final long ROOTID = 5;
 
-	public static final long DEFAULTWORKSPACE = 4;
+	public static final long DEFAULTWORKSPACEID = 4;
+	
+	public static final String DEFAULTWORKSPACENAME = "Default";
 
 	public static final int TYPE_DEFAULT = 0;
 
@@ -33,7 +35,7 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 
 	private String name = "";
 
-	private long parentId = DEFAULTWORKSPACE;
+	private long parentId = DEFAULTWORKSPACEID;
 
 	private Long securityRef;
 

@@ -67,7 +67,7 @@ public class FulltextSearchTest extends AbstractCoreTCase {
 		document.setLanguage("en");
 		document.setDate(new Date());
 		Folder fold = new Folder();
-		fold.setId(Folder.DEFAULTWORKSPACE);
+		fold.setId(Folder.DEFAULTWORKSPACEID);
 		fold.setName("test");
 		document.setFolder(fold);
 
@@ -93,7 +93,7 @@ public class FulltextSearchTest extends AbstractCoreTCase {
 		document.setLanguage("en");
 		document.setDate(new Date());
 		fold = new Folder();
-		fold.setId(Folder.DEFAULTWORKSPACE);
+		fold.setId(Folder.DEFAULTWORKSPACEID);
 		fold.setName("test");
 		document.setFolder(fold);
 		engine.addHit(document, "Another document");

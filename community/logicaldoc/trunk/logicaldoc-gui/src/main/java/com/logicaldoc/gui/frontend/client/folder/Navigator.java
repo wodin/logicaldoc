@@ -522,9 +522,13 @@ public class Navigator extends TreeGrid implements FolderObserver {
 			exportZip.setEnabled(false);
 		}
 
-		if (id == Constants.WORKSPACE_DEFAULTID || !parent.hasPermission(Constants.PERMISSION_DELETE)) {
+		// Avoid alterations of the Default workspace
+		if (folder.isDefaultWorkspace() || !parent.hasPermission(Constants.PERMISSION_DELETE)) {
 			delete.setEnabled(false);
 			move.setEnabled(false);
+		}
+		if (folder.isDefaultWorkspace()) {
+			rename.setEnabled(false);
 		}
 
 		if (!folder.hasPermission(Constants.PERMISSION_WRITE) || Clipboard.getInstance().isEmpty()) {
@@ -537,7 +541,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 
 		if (Session.get().getUser().isMemberOf("admin") && folder.getType() == 1
 				&& Feature.visible(Feature.MULTI_WORKSPACE)) {
-			delete.setEnabled(folder.getId() != Constants.WORKSPACE_DEFAULTID);
+			delete.setEnabled(!folder.isDefaultWorkspace());
 			move.setEnabled(false);
 			createWorkspace.setEnabled(Feature.enabled(Feature.MULTI_WORKSPACE));
 			contextMenu.setItems(reload, search, create, createWorkspace, delete, addBookmark, paste, pasteAsAlias,

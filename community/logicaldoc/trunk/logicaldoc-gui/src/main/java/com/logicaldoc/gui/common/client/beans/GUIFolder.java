@@ -49,6 +49,10 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 
 	}
 
+	public boolean isDefaultWorkspace() {
+		return name.equals(Constants.WORKSPACE_DEFAULTNAME) && type == 1;
+	}
+
 	public GUIFolder(long id) {
 		this.id = id;
 	}
@@ -80,7 +84,7 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 	public boolean isDelete() {
 		return hasPermission(Constants.PERMISSION_DELETE);
 	}
-	
+
 	public boolean isRename() {
 		return hasPermission(Constants.PERMISSION_RENAME);
 	}

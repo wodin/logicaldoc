@@ -1,8 +1,9 @@
 package com.logicaldoc.core.security.dao;
 
+import java.util.Set;
+
 import com.logicaldoc.core.PersistentObjectDAO;
 import com.logicaldoc.core.security.Tenant;
-import com.logicaldoc.core.security.User;
 
 public interface TenantDAO extends PersistentObjectDAO<Tenant> {
 
@@ -16,16 +17,12 @@ public interface TenantDAO extends PersistentObjectDAO<Tenant> {
 	public Tenant findByName(String name);
 
 	/**
+	 * Retrieves all the tenant names
+	 */
+	public Set<String> findAllNames();
+
+	/**
 	 * Counts the total number of tenants
 	 */
 	public int count();
-	
-	/**
-	 * Retrieve the administrator for the given tenant. The general rule is that the administrator's username is:
-	 * <ol>
-	 *   <li>admin if the tenant is default</li>
-	 *   <li>admin<b>Tenantname</b> in all other cases</li>
-	 * </ol>
-	 */
-	public User findAdminUser(String tenantName);
 }

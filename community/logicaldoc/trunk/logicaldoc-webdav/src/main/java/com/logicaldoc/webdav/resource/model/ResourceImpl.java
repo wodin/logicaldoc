@@ -270,7 +270,9 @@ public class ResourceImpl implements Resource {
 		Folder folder = fdao.findById(fid);
 		isWorkspace = folder.getType() == Folder.TYPE_WORKSPACE;
 
-		if (fid == Folder.ROOTID) {
+		long rootId=fdao.findRoot(folder.getTenantId()).getId();
+		
+		if (fid == rootId) {
 			writeEnabled = false;
 			deleteEnabled = false;
 			renameEnabled = false;

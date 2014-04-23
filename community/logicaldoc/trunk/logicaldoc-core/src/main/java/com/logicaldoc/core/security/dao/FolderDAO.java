@@ -40,6 +40,16 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	public List<Folder> findByName(Folder parent, String name, Long tenantId, boolean caseSensitive);
 
 	/**
+	 * Retrieves the root folder of the given tenant
+	 */
+	public Folder findRoot(long tenantId);
+
+	/**
+	 * Retrieves the Default workspace of the given tenant
+	 */
+	public Folder findDefaultWorkspace(long tenantId);
+
+	/**
 	 * Finds authorized folders for a user
 	 * 
 	 * @param userId ID of the user
@@ -316,9 +326,11 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * name into their text.
 	 * 
 	 * @param name The name to be found
+	 * @param tenantId The tenant to search in
+	 * 
 	 * @return List of folders that contains the given name into their text.
 	 */
-	public List<Folder> find(String name);
+	public List<Folder> find(String name, Long tenantId);
 
 	/**
 	 * Finds all deleted folders of a specific user.
@@ -359,7 +371,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * Retrieves all the workspaces in the system, that are the first-level
 	 * folders of type 1.
 	 */
-	public List<Folder> findWorkspaces();
+	public List<Folder> findWorkspaces(long tanantId);
 
 	/**
 	 * Initializes lazy loaded collections
