@@ -41,7 +41,7 @@ public class HibernateDocumentTemplateDAOTest extends AbstractCoreTCase {
 	public void testFindAll() {
 		Collection<DocumentTemplate> templates = dao.findAll();
 		Assert.assertNotNull(templates);
-		Assert.assertEquals(2, templates.size());
+		Assert.assertEquals(3, templates.size());
 	}
 
 	@Test

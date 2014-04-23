@@ -67,10 +67,11 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	@Override
 	public void delete(String sid, long folderId) throws Exception {
 		User user = validateSession(sid);
-		if (folderId == Folder.ROOTID || folderId == Folder.DEFAULTWORKSPACE)
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		long rootId = folderDao.findRoot(user.getTenantId()).getTenantId();
+		if (folderId == rootId || folderId == rootId)
 			throw new Exception("Cannot delete root folder or Default workspace");
 
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		checkPermission(Permission.DELETE, user, folderId);
 
 		try {
@@ -141,13 +142,14 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 
 	@Override
 	public void move(String sid, long folderId, long parentId) throws Exception {
-		if (parentId == Folder.ROOTID) {
+		User user = validateSession(sid);
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+
+		if (parentId == folderDao.findRoot(user.getTenantId()).getId()) {
 			log.error("Cannot move folders in the root");
 			throw new Exception("Cannot move folders in the root");
 		}
 
-		User user = validateSession(sid);
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Folder destParentFolder = folderDao.findById(parentId);
 		Folder folderToMove = folderDao.findById(folderId);
 
@@ -184,16 +186,16 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	@Override
 	public void rename(String sid, long folderId, String name) throws Exception {
 		User user = validateSession(sid);
-
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		if (!folderDao.isPermissionEnabled(Permission.RENAME, folderId, user.getId())) {
 			throw new Exception("user does't have rename permission");
 		}
 
-		if (folderId == Folder.ROOTID)
+		long rootId = folderDao.findRoot(user.getTenantId()).getId();
+		if (folderId == rootId)
 			throw new Exception("cannot rename the root folder");
 
-		if (folderId == Folder.DEFAULTWORKSPACE)
+		if (folderId == rootId)
 			throw new Exception("cannot rename the Default workspace");
 
 		Folder folder = folderDao.findById(folderId);
@@ -221,12 +223,16 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 
 	@Override
 	public WSFolder getRootFolder(String sid) throws Exception {
-		return getFolder(sid, Folder.ROOTID);
+		User user = validateSession(sid);
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		return getFolder(sid, folderDao.findRoot(user.getTenantId()).getId());
 	}
 
 	@Override
 	public WSFolder getDefaultWorkspace(String sid) throws Exception {
-		return getFolder(sid, Folder.DEFAULTWORKSPACE);
+		User user = validateSession(sid);
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		return getFolder(sid, folderDao.findDefaultWorkspace(user.getTenantId()).getId());
 	}
 
 	@Override
@@ -259,11 +265,12 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 
 		List<WSFolder> path = new ArrayList<WSFolder>();
 
-		if (folderId == Folder.ROOTID)
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		long rootId = folderDao.findRoot(user.getTenantId()).getId();
+		if (folderId == rootId)
 			path.add(getRootFolder(sid));
 		else {
 			// Iterate on the parents and populate the path
-			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			List<Folder> folders = folderDao.findParents(folderId);
 			for (Folder folder : folders) {
 				folderDao.initialize(folder);
@@ -386,7 +393,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			throw new Exception("user does't have rename permission");
 		}
 
-		if (folderId == Folder.ROOTID)
+		if (folderId == folderDao.findRoot(user.getTenantId()).getId())
 			throw new Exception("cannot update the root folder");
 
 		Folder fld = folderDao.findById(folderId);
@@ -425,6 +432,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		transaction.setUser(user);
 		transaction.setEvent(FolderEvent.CREATED.toString());
 		transaction.setSessionId(sid);
+		transaction.setTenantId(user.getTenantId());
 
 		if (path.startsWith("/"))
 			path = path.substring(1);
@@ -434,7 +442,8 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		 * guarantee that the first element in the path is a workspace. If not
 		 * the Default one will be used.
 		 */
-		if (parentId == Folder.ROOTID) {
+		long rootId = folderDao.findRoot(user.getTenantId()).getTenantId();
+		if (parentId == rootId) {
 			Folder workspace = null;
 
 			/*
@@ -449,7 +458,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 
 			if (workspace == null) {
 				log.debug("Path " + path + " will be created in the Default workspace");
-				parent = folderDao.findById(Folder.DEFAULTWORKSPACE);
+				parent = folderDao.findById(rootId);
 			}
 		}
 
@@ -463,7 +472,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		User user = validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		List<Folder> folders = folderDao.findByUserId(user.getId(), Folder.ROOTID);
+		List<Folder> folders = folderDao.findByUserId(user.getId(), folderDao.findRoot(user.getTenantId()).getId());
 		List<WSFolder> wsFolders = new ArrayList<WSFolder>();
 		for (Folder folder : folders) {
 			if (folder.getType() == Folder.TYPE_WORKSPACE) {

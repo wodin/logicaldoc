@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -161,7 +163,7 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 
 			userDao.jdbcUpdate("insert into ld_usergroup(ld_groupid,ld_userid) values (?,?)",
 					new Object[] { group.getId(), user.getId() });
-			
+
 			/*
 			 * Add a guests group
 			 */
@@ -209,7 +211,7 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 				templateDao.store(newEmailTemplate);
 			}
 			flush();
-			
+
 			/*
 			 * Now some minor records
 			 */
@@ -250,14 +252,6 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 		this.userDao = userDao;
 	}
 
-	@Override
-	public User findAdminUser(String tenantName) {
-		if ("default".equals(tenantName))
-			return userDao.findByUserName("admin");
-		else
-			return userDao.findByUserName("admin" + StringUtils.capitalize(tenantName));
-	}
-
 	public void setConf(ContextProperties conf) {
 		this.conf = conf;
 	}
@@ -268,5 +262,15 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 
 	public void setTemplateDao(DocumentTemplateDAO templateDao) {
 		this.templateDao = templateDao;
+	}
+
+	@Override
+	public Set<String> findAllNames() {
+		Set<String> names = new HashSet<String>();
+		List<Tenant> tenants = findAll();
+		for (Tenant tenant : tenants) {
+			names.add(tenant.getName());
+		}
+		return names;
 	}
 }

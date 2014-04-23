@@ -71,7 +71,7 @@ public interface UserDAO extends PersistentObjectDAO<User> {
 	 * @return True if User is valid.
 	 */
 	public boolean validateUser(String username);
-	
+
 	/**
 	 * Is password expired.
 	 * 
@@ -112,4 +112,14 @@ public interface UserDAO extends PersistentObjectDAO<User> {
 	 * @return The map setting_name-generic
 	 */
 	public Map<String, Generic> findUserSettings(long userId, String namePrefix);
+
+	/**
+	 * Retrieve the administrator for the given tenant. The general rule is that
+	 * the administrator's username is:
+	 * <ol>
+	 * <li>admin if the tenant is default</li>
+	 * <li>admin<b>Tenantname</b> in all other cases</li>
+	 * </ol>
+	 */
+	public User findAdminUser(String tenantName);
 }

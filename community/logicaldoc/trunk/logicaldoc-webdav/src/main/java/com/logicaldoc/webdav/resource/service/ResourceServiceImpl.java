@@ -23,6 +23,7 @@ import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderEvent;
 import com.logicaldoc.core.security.FolderHistory;
+import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
@@ -155,6 +156,10 @@ public class ResourceServiceImpl implements ResourceService {
 	public Resource getResource(String requestPath, DavSession session) throws DavException {
 		log.debug("Find DAV resource: " + requestPath);
 
+		String sid = null;
+		if (session != null)
+			sid = (String) session.getObject("sid");
+
 		long userId = 0;
 		String currentStablePath = "";
 		String name = "";
@@ -180,7 +185,8 @@ public class ResourceServiceImpl implements ResourceService {
 			Folder folder = null;
 
 			if (path.equals("/") && name.equals("")) {
-				folder = folderDAO.findById(Folder.ROOTID);
+				folder = folderDAO.findRoot(sid != null ? SessionManager.getInstance().get(sid).getTenantId()
+						: Folder.ROOTID);
 			} else
 				folder = folderDAO.findByPath(path + "/" + name);
 
@@ -218,6 +224,10 @@ public class ResourceServiceImpl implements ResourceService {
 	public Resource getParentResource(String resourcePath, long userId, DavSession session) {
 		log.debug("Find parent DAV resource: " + resourcePath);
 
+		String sid = null;
+		if (session != null)
+			sid = (String) session.getObject("sid");
+
 		resourcePath = resourcePath.replaceFirst("/store", "").replaceFirst("/vstore", "");
 		if (!resourcePath.startsWith("/"))
 			resourcePath = "/" + resourcePath;
@@ -237,7 +247,8 @@ public class ResourceServiceImpl implements ResourceService {
 
 		Folder folder = null;
 		if ("/".equals(resourcePath.trim()) && "".equals(name))
-			folder = folderDAO.findById(Folder.ROOTID);
+			folder = folderDAO.findRoot(sid != null ? SessionManager.getInstance().get(sid).getTenantId()
+					: Folder.ROOTID);
 		else
 			folder = folderDAO.findByPath(resourcePath + "/" + name);
 
@@ -257,7 +268,9 @@ public class ResourceServiceImpl implements ResourceService {
 		if (session != null)
 			sid = (String) session.getObject("sid");
 
-		if (parentFolder.getId() == Folder.ROOTID)
+		long rootId = folderDAO.findRoot(parentFolder.getTenantId()).getId();
+
+		if (parentFolder.getId() == rootId)
 			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Cannot write in the root.");
 
 		if (isCollection) {
@@ -559,11 +572,14 @@ public class ResourceServiceImpl implements ResourceService {
 
 	public void copyResource(Resource destinationResource, Resource resource, DavSession session) throws DavException {
 		String sid = (String) session.getObject("sid");
+		User user = userDAO.findById(resource.getRequestedPerson());
+
+		long rootId = folderDAO.findRoot(user.getTenantId()).getId();
 
 		/*
 		 * Cannot write in the root
 		 */
-		if (destinationResource.isFolder() && Long.parseLong(destinationResource.getID()) == Folder.ROOTID)
+		if (destinationResource.isFolder() && Long.parseLong(destinationResource.getID()) == rootId)
 			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Cannot write in the root");
 
 		if (resource.isFolder() == true) {
@@ -576,8 +592,6 @@ public class ResourceServiceImpl implements ResourceService {
 
 				Document document = documentDAO.findById(Long.parseLong(resource.getID()));
 				Folder folder = folderDAO.findById(Long.parseLong(destinationResource.getID()));
-
-				User user = userDAO.findById(resource.getRequestedPerson());
 
 				if (document.getImmutable() == 1 && !user.isInGroup("admin"))
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "The document is immutable");

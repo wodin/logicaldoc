@@ -203,6 +203,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public GUIFolder getFolder(String sid, long folderId, boolean computePath) throws InvalidSessionException {
+		UserSession session = SessionUtil.validateSession(sid);
 		try {
 			FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 
@@ -215,7 +216,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				StringTokenizer st = new StringTokenizer(pathExtended, "/", false);
 				int elements = st.countTokens();
 				GUIFolder[] path = new GUIFolder[elements];
-				Folder parent = dao.findById(Folder.ROOTID);
+				Folder parent = dao.findRoot(session.getTenantId());
 				List<Folder> list = new ArrayList<Folder>();
 				int j = 0;
 				while (st.hasMoreTokens()) {
@@ -326,7 +327,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public GUIFolder save(String sid, GUIFolder folder) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		try {
@@ -335,6 +336,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(SessionUtil.getSessionUser(sid));
+			transaction.setTenantId(session.getTenantId());
 			transaction.setSessionId(sid);
 
 			f = folderDao.findById(folder.getId());
@@ -369,7 +371,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public GUIFolder create(String sid, GUIFolder newFolder, boolean inheritSecurity) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		try {
@@ -378,18 +380,21 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(SessionUtil.getSessionUser(sid));
 			transaction.setSessionId(sid);
+			transaction.setTenantId(session.getTenantId());
 			transaction.setEvent(FolderEvent.CREATED.toString());
 
 			Folder folderVO = new Folder();
 			folderVO.setName(folderName);
 			folderVO.setType(newFolder.getType());
+			folderVO.setTenantId(session.getTenantId());
 
 			Folder f = null;
 			if (newFolder.getType() == Folder.TYPE_DEFAULT)
 				f = folderDao.create(folderDao.findById(newFolder.getParentId()), folderVO, inheritSecurity,
 						transaction);
 			else
-				f = folderDao.create(folderDao.findById(Folder.ROOTID), folderVO, inheritSecurity, transaction);
+				f = folderDao.create(folderDao.findByName("/", session.getTenantId()).get(0), folderVO,
+						inheritSecurity, transaction);
 
 			return getFolder(sid, f.getId());
 		} catch (Throwable t) {

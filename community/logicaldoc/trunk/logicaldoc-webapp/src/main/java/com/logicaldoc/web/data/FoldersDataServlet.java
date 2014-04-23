@@ -3,7 +3,6 @@ package com.logicaldoc.web.data;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -39,18 +38,16 @@ public class FoldersDataServlet extends HttpServlet {
 			IOException {
 		try {
 			UserSession session = SessionUtil.validateSession(request);
-
 			long tenantId = session.getTenantId();
 
+			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			long parent = Folder.ROOTID;
 
 			if ("/".equals(request.getParameter("parent"))) {
-				FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-				
-				List<Folder> folders = folderDao.findByName("/", tenantId);
-				if (folders.isEmpty())
+				Folder root = folderDao.findRoot(tenantId);
+				if (root == null)
 					throw new Exception("Unable to locate the root folder for tenant " + tenantId);
-				parent = folders.get(0).getId();
+				parent = root.getId();
 			} else
 				parent = Long.parseLong(request.getParameter("parent"));
 

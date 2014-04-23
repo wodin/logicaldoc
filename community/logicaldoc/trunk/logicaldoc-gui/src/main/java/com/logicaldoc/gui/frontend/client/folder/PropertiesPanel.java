@@ -87,7 +87,7 @@ public class PropertiesPanel extends FolderDetailTab {
 		StaticTextItem subfolders = ItemFactory
 				.newStaticTextItem("folders", "folders", "" + folder.getSubfolderCount());
 
-		if (folder.getId() == Constants.WORKSPACE_DEFAULTID) {
+		if (folder.isDefaultWorkspace()) {
 			if (Feature.enabled(Feature.BARCODES))
 				form.setItems(idItem, pathItem, creation, creator, documents, subfolders, barcode);
 			else
@@ -100,7 +100,7 @@ public class PropertiesPanel extends FolderDetailTab {
 	}
 
 	boolean validate() {
-		if (folder.getId() != Constants.DOCUMENTS_FOLDERID && folder.getId() != Constants.WORKSPACE_DEFAULTID) {
+		if (!folder.isDefaultWorkspace()) {
 			vm.validate();
 			folder.setName(vm.getValueAsString("name").replaceAll("/", ""));
 			folder.setDescription(vm.getValueAsString("description"));

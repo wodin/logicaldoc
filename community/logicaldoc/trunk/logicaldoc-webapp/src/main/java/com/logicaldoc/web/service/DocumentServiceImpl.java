@@ -142,7 +142,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	@Override
 	public void addDocuments(String sid, String encoding, boolean importZip, final GUIDocument metadata)
 			throws InvalidSessionException {
-		UserSession userSession = SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
 		log.debug("Uploading " + uploadedFilesMap.size() + " files");
@@ -157,7 +157,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			throw new RuntimeException("No file uploaded");
 
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		if (!fdao.isWriteEnable(metadata.getFolder().getId(), userSession.getUserId())) {
+		if (!fdao.isWriteEnable(metadata.getFolder().getId(), session.getUserId())) {
 			throw new RuntimeException("The user doesn't have the write permission on the current folder");
 		}
 
@@ -202,7 +202,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				} else {
 					try {
 						// Check if the user can upload another document.
-						SystemQuota.checkUserQuota(userSession.getUserId(), file.length());
+						SystemQuota.checkUserQuota(session.getUserId(), file.length());
 					} catch (Exception e) {
 						return;
 					}
@@ -237,7 +237,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	@Override
 	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip,
 			final Long templateId) throws InvalidSessionException {
-		if (folderId == Folder.ROOTID)
+		UserSession session=SessionUtil.validateSession(sid);
+		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		if (folderId == fdao.findRoot(session.getTenantId()).getId())
 			throw new RuntimeException("Cannot add documents in the root");
 
 		GUIDocument metadata = new GUIDocument();

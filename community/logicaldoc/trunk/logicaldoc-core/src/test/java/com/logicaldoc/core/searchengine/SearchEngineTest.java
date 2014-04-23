@@ -42,7 +42,7 @@ public class SearchEngineTest extends AbstractCoreTCase {
 		document.setLanguage("it");
 		document.setDate(new Date());
 		Folder fold = new Folder();
-		fold.setId(Folder.DEFAULTWORKSPACE);
+		fold.setId(Folder.DEFAULTWORKSPACEID);
 		fold.setName("test");
 		document.setFolder(fold);
 

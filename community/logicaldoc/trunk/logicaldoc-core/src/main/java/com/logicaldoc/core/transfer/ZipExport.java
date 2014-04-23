@@ -50,7 +50,7 @@ public class ZipExport {
 		zos = null;
 		userId = -1;
 		allLevel = false;
-		startFolderId = Folder.DEFAULTWORKSPACE;
+		startFolderId = Folder.DEFAULTWORKSPACEID;
 	}
 
 	/**
@@ -227,9 +227,12 @@ public class ZipExport {
 	 * @return The full path
 	 */
 	private String getZipEntryPath(Folder folder) {
-		if (folder.getId() == Folder.ROOTID)
-			return "";
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+
+		long rootId = folderDao.findRoot(folder.getTenantId()).getId();
+		if (folder.getId() == rootId)
+			return "";
+
 		List<Folder> folders = folderDao.findParents(folder.getId());
 		folders.add(folder);
 		Collections.reverse(folders);

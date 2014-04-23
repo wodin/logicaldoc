@@ -19,9 +19,9 @@ public final class Constants {
 	// Sessions the context key of the sessions map
 	public static final String SESSIONS = "sessions";
 
-	public static final long DOCUMENTS_FOLDERID = 5;
+	public static final long DOCUMENTS_FOLDERID = 5L;
 
-	public static final long WORKSPACE_DEFAULTID = 4;
+	public static final String WORKSPACE_DEFAULTNAME = "Default";
 	
 	public static final long TENANT_DEFAULTID = 1L;
 
