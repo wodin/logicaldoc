@@ -275,12 +275,14 @@ public class BarcodesEnginePanel extends VLayout {
 		form.setValuesManager(vm);
 
 		// Include Patters
-		TextItem includePatters = ItemFactory.newTextItem("includePatters", "includepatters", this.engine.getIncludePatters());
+		TextItem includePatters = ItemFactory.newTextItem("includePatters", "includepatters",
+				this.engine.getIncludePatters());
 		includePatters.setHint(I18N.message("separatedcomma"));
 		includePatters.setHintStyle("hint");
 
 		// Exclude Patters
-		TextItem excludePatters = ItemFactory.newTextItem("excludePatters", "excludepatters", this.engine.getExcludePatters());
+		TextItem excludePatters = ItemFactory.newTextItem("excludePatters", "excludepatters",
+				this.engine.getExcludePatters());
 		excludePatters.setHint(I18N.message("separatedcomma"));
 		excludePatters.setHintStyle("hint");
 
@@ -355,7 +357,10 @@ public class BarcodesEnginePanel extends VLayout {
 			}
 		});
 
-		form.setItems(includePatters, excludePatters, batch, resolutionThreshold);
+		if (Session.get().isDefaultTenant())
+			form.setItems(includePatters, excludePatters, batch, resolutionThreshold);
+		else
+			form.setItems(includePatters, excludePatters);
 		buttons.setMembers(save, rescheduleAll);
 		buttons.setMembersMargin(5);
 		engineTabPabel.setMembers(form, buttons);

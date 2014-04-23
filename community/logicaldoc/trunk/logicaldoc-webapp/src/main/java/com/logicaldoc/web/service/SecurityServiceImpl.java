@@ -511,7 +511,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 	@Override
 	public GUIGroup saveGroup(String sid, GUIGroup group) throws InvalidSessionException {
-		UserSession session=SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 		Group grp;
@@ -583,13 +583,13 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setQuota(user.getQuota());
 
 			if (createNew) {
-				User existingUser=userDao.findByUserName(user.getUserName());
-				if(existingUser!=null){
-					log.warn("Tried to create duplicate username "+user.getUserName());
+				User existingUser = userDao.findByUserName(user.getUserName());
+				if (existingUser != null) {
+					log.warn("Tried to create duplicate username " + user.getUserName());
 					user.setWelcomeScreen(-99);
 					return user;
 				}
-				
+
 				// Generate an initial password
 				ContextProperties pbean = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 				decodedPassword = new PasswordGenerator().generate(pbean.getInt("password.size"));
@@ -768,10 +768,11 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
-			conf.setProperty("password.ttl", Integer.toString(settings.getPwdExpiration()));
+			if (session.getTenantId() == Tenant.DEFAULT_ID)
+				conf.setProperty("password.ttl", Integer.toString(settings.getPwdExpiration()));
+
 			conf.setProperty(session.getTenantName() + ".password.size", Integer.toString(settings.getPwdSize()));
 			conf.setProperty(session.getTenantName() + ".gui.savelogin", Boolean.toString(settings.isSaveLogin()));
-
 			conf.setProperty(session.getTenantName() + ".anonymous.enabled",
 					Boolean.toString(settings.isEnableAnonymousLogin()));
 			if (settings.getAnonymousUser() != null)

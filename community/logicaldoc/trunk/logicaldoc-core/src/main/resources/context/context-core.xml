@@ -135,9 +135,8 @@
                 <property name="sessionFactory" ref="SessionFactory" />
                 <property name="noteDAO" ref="DocumentNoteDAO" />
                 <property name="historyDAO" ref="HistoryDAO" />
-                <property name="versionDAO">
-                    <ref bean="VersionDAO" />
-                </property>
+                <property name="versionDAO" ref="VersionDAO" />
+                <property name="tenantDAO" ref="TenantDAO" />
                 <property name="folderDAO">
                     <ref bean="FolderDAO" />
                 </property>

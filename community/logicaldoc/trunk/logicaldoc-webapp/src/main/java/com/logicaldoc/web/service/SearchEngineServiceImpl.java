@@ -13,6 +13,8 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.parser.ParserFactory;
 import com.logicaldoc.core.searchengine.SearchEngine;
+import com.logicaldoc.core.security.Tenant;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineService;
@@ -34,7 +36,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 
 	@Override
 	public GUISearchEngine getInfo(String sid) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 		try {
 			GUISearchEngine searchEngine = new GUISearchEngine();
 
@@ -43,8 +45,8 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			searchEngine.setEntries(indexer.getCount());
 
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-			searchEngine.setExcludePatters(conf.getProperty("index.excludes"));
-			searchEngine.setIncludePatters(conf.getProperty("index.includes"));
+			searchEngine.setExcludePatters(conf.getProperty(session.getTenantName() + ".index.excludes"));
+			searchEngine.setIncludePatters(conf.getProperty(session.getTenantName() + ".index.includes"));
 			searchEngine.setDir(conf.getProperty("index.dir"));
 			searchEngine.setSubwords("true".equals(conf.getProperty("index.subwords")));
 
@@ -66,7 +68,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			// Populate the list of supported languages
 			searchEngine.setLanguages("");
 			LanguageManager lm = LanguageManager.getInstance();
-			List<String> langs = lm.getLanguagesAsString();
+			List<String> langs = lm.getLanguagesAsString(session.getTenantName());
 			for (String lang : langs) {
 				searchEngine.setLanguages(searchEngine.getLanguages() + "," + lang);
 			}
@@ -81,21 +83,24 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	}
 
 	@Override
-	public void rescheduleAll(String sid) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
-		try {
-			SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
-			indexer.dropIndexes();
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			throw new RuntimeException(e.getMessage(), e);
-		}
+	public void rescheduleAll(String sid, final boolean dropIndex) throws InvalidSessionException {
+		final UserSession session = SessionUtil.validateSession(sid);
+
+		if (dropIndex)
+			try {
+				SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
+				indexer.dropIndexes();
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+				throw new RuntimeException(e.getMessage(), e);
+			}
 
 		Runnable task = new Runnable() {
 			public void run() {
 				try {
 					DocumentDAO documentDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-					documentDao.bulkUpdate("set ld_indexed=0 where ld_indexed=1", null);
+					documentDao.bulkUpdate("set ld_indexed=0 where ld_indexed=1 "
+							+ (!dropIndex ? " and ld_tenantid=" + session.getTenantId() : ""), null);
 				} catch (Exception t) {
 					log.error(t.getMessage(), t);
 					throw new RuntimeException(t.getMessage(), t);
@@ -135,18 +140,21 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 
 	@Override
 	public void save(String sid, GUISearchEngine searchEngine) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-			conf.setProperty("index.excludes",
+			conf.setProperty(session.getTenantName() + ".index.excludes",
 					searchEngine.getExcludePatters() != null ? searchEngine.getExcludePatters() : "");
-			conf.setProperty("index.includes",
+			conf.setProperty(session.getTenantName() + ".index.includes",
 					searchEngine.getIncludePatters() != null ? searchEngine.getIncludePatters() : "");
-			conf.setProperty("index.batch", Integer.toString(searchEngine.getBatch()));
-			conf.setProperty("index.maxtext", Integer.toString(searchEngine.getMaxText()));
-			conf.setProperty("parser.timeout", Integer.toString(searchEngine.getParsingTimeout()));
-			conf.setProperty("index.dir", searchEngine.getDir());
-			conf.setProperty("index.subwords", searchEngine.isSubwords() ? "true" : "false");
+
+			if (session.getTenantId() == Tenant.DEFAULT_ID) {
+				conf.setProperty("index.batch", Integer.toString(searchEngine.getBatch()));
+				conf.setProperty("index.maxtext", Integer.toString(searchEngine.getMaxText()));
+				conf.setProperty("parser.timeout", Integer.toString(searchEngine.getParsingTimeout()));
+				conf.setProperty("index.dir", searchEngine.getDir());
+				conf.setProperty("index.subwords", searchEngine.isSubwords() ? "true" : "false");
+			}
 
 			conf.write();
 		} catch (Exception t) {
@@ -157,10 +165,10 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 
 	@Override
 	public void setLanguageStatus(String sid, String language, boolean active) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-			conf.setProperty("lang." + language, active ? "enabled" : "disabled");
+			conf.setProperty(session.getTenantName() + ".lang." + language, active ? "enabled" : "disabled");
 			conf.write();
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);

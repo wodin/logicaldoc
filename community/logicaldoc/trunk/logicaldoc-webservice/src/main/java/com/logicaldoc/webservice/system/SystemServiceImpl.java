@@ -181,11 +181,11 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 	}
 
 	@Override
-	public String[] getLanguages() throws Exception {
+	public String[] getLanguages(String tenant) throws Exception {
 		List<String> langs = new ArrayList<String>();
 
 		try {
-			for (Language lang : LanguageManager.getInstance().getActiveLanguages()) {
+			for (Language lang : LanguageManager.getInstance().getActiveLanguages(tenant)) {
 				langs.add(lang.getLocale().toString());
 			}
 		} catch (Throwable e) {

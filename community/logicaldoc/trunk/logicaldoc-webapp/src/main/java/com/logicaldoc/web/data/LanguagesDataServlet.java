@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
@@ -39,12 +40,11 @@ public class LanguagesDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			SessionUtil.validateSession(request);
+			UserSession session = SessionUtil.validateSession(request);
 
 			String locale = request.getParameter("locale");
 			boolean gui = Boolean.parseBoolean(request.getParameter("gui"));
 
-			
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
 
@@ -64,8 +64,9 @@ public class LanguagesDataServlet extends HttpServlet {
 
 					writer.print("<lang>");
 					writer.print("<code><![CDATA[" + loc + "]]></code>");
-					writer.print("<name><![CDATA[" + StringUtils.capitalize(lc.getDisplayName(LocaleUtil.toLocale(locale))) + "]]></name>");
-					if ("enabled".equals(pbean.getProperty("lang." + loc + ".gui")))
+					writer.print("<name><![CDATA["
+							+ StringUtils.capitalize(lc.getDisplayName(LocaleUtil.toLocale(locale))) + "]]></name>");
+					if ("enabled".equals(pbean.getProperty(session.getTenantName()+".lang." + loc + ".gui")))
 						writer.print("<eenabled>0</eenabled>");
 					else
 						writer.print("<eenabled>2</eenabled>");
@@ -73,12 +74,13 @@ public class LanguagesDataServlet extends HttpServlet {
 				}
 			} else {
 				Collection<Language> languages = LanguageManager.getInstance().getLanguages();
-				Collection<Language> activeLanguages = LanguageManager.getInstance().getActiveLanguages();
+				Collection<Language> activeLanguages = LanguageManager.getInstance().getActiveLanguages(session.getTenantName());
 
 				for (Language language : languages) {
 					writer.print("<lang>");
 					writer.print("<code><![CDATA[" + language.toString() + "]]></code>");
-					writer.print("<name><![CDATA[" + StringUtils.capitalize(language.getLocale().getDisplayName(LocaleUtil.toLocale(locale)))
+					writer.print("<name><![CDATA["
+							+ StringUtils.capitalize(language.getLocale().getDisplayName(LocaleUtil.toLocale(locale)))
 							+ "]]></name>");
 					if (activeLanguages.contains(language))
 						writer.print("<eenabled>0</eenabled>");

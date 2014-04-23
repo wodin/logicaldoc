@@ -31,7 +31,7 @@ public interface SearchEngineService extends RemoteService {
 	/**
 	 * Reschedule all entries for indexing.
 	 */
-	public void rescheduleAll(String sid) throws InvalidSessionException;
+	public void rescheduleAll(String sid, boolean dropIndex) throws InvalidSessionException;
 
 	/**
 	 * Saves search engine settings

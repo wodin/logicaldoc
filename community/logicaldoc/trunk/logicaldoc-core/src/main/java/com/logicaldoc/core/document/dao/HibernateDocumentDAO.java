@@ -32,8 +32,10 @@ import com.logicaldoc.core.document.DocumentNote;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
+import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.core.store.Storer;
@@ -52,6 +54,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	private HistoryDAO historyDAO;
 
 	private VersionDAO versionDAO;
+
+	private TenantDAO tenantDAO;
 
 	private DocumentNoteDAO noteDAO;
 
@@ -204,16 +208,31 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public boolean store(Document doc, final History transaction) {
 		boolean result = true;
 		try {
+			transaction.setTenantId(doc.getTenantId());
+			Tenant tenant = tenantDAO.findById(doc.getTenantId());
+
 			// Truncate publishing dates
 			if (doc.getStartPublishing() != null)
 				doc.setStartPublishing(DateUtils.truncate(doc.getStartPublishing(), Calendar.DATE));
 			if (doc.getStopPublishing() != null)
 				doc.setStopPublishing(DateUtils.truncate(doc.getStopPublishing(), Calendar.DATE));
 
+			// Check if the document must be indexed
+			if (!FileUtil.matches(
+					doc.getFileName(),
+					config.getProperty(tenant.getName() + ".index.includes") == null ? "" : config.getProperty(tenant
+							.getName() + ".index.includes"),
+					config.getProperty(tenant.getName() + ".index.excludes") == null ? "" : config.getProperty(tenant
+							.getName() + ".index.excludes")))
+				doc.setIndexed(Document.INDEX_SKIP);
+
 			// Check if the document must be barcoded
-			if (!FileUtil.matches(doc.getFileName(),
-					config.getProperty("barcode.includes") == null ? "" : config.getProperty("barcode.includes"),
-					config.getProperty("barcode.excludes") == null ? "" : config.getProperty("barcode.excludes")))
+			if (!FileUtil.matches(
+					doc.getFileName(),
+					config.getProperty(tenant.getName() + ".barcode.includes") == null ? "" : config.getProperty(tenant
+							.getName() + ".barcode.includes"),
+					config.getProperty(tenant.getName() + ".barcode.excludes") == null ? "" : config.getProperty(tenant
+							.getName() + ".barcode.excludes")))
 				doc.setBarcoded(Document.BARCODE_SKIP);
 
 			Set<String> src = doc.getTags();
@@ -878,5 +897,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		jdbcUpdate(
 				"update ld_document set ld_transactionid=null where not (ld_transactionid is null) and not exists(select B.ld_id from ld_generic B where B.ld_type='lock' and B.ld_string1=ld_transactionid)",
 				new Object[0]);
+	}
+
+	public void setTenantDAO(TenantDAO tenantDAO) {
+		this.tenantDAO = tenantDAO;
 	}
 }

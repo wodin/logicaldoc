@@ -83,14 +83,14 @@ public class LanguageManager {
 		return langs;
 	}
 
-	public Collection<Language> getActiveLanguages() {
+	public Collection<Language> getActiveLanguages(String tenantName) {
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		if (config == null)
 			return getLanguages();
 
 		Collection<Language> actives = new ArrayList<Language>();
 		for (Language l : getLanguages()) {
-			if ("enabled".equals(config.getProperty("lang." + l)))
+			if ("enabled".equals(config.getProperty(tenantName + ".lang." + l)))
 				actives.add(l);
 		}
 		return actives;
@@ -111,9 +111,9 @@ public class LanguageManager {
 		languages.put(locale, lang);
 	}
 
-	public List<String> getLanguagesAsString() {
+	public List<String> getLanguagesAsString(String tenantName) {
 		List<String> languages2 = new ArrayList<String>();
-		for (Language lang : getActiveLanguages()) {
+		for (Language lang : getActiveLanguages(tenantName)) {
 			languages2.add(lang.getLocale().toString());
 		}
 		return languages2;

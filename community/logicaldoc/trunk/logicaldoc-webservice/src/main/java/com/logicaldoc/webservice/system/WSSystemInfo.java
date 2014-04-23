@@ -1,6 +1,5 @@
 package com.logicaldoc.webservice.system;
 
-import com.logicaldoc.core.SystemInfo;
 
 public class WSSystemInfo {
 

@@ -569,13 +569,13 @@ public class SearchIndexingPanel extends VLayout {
 		rescheduleAll.addClickHandler(new ClickHandler() {
 
 			public void onClick(ClickEvent event) {
-				LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+				LD.ask(I18N.message("question"), I18N.message("confirmreindex"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
 							ContactingServer.get().show();
 							rescheduleAll.setDisabled(true);
-							service.rescheduleAll(Session.get().getSid(), new AsyncCallback<Void>() {
+							service.rescheduleAll(Session.get().getSid(), false, new AsyncCallback<Void>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
@@ -588,6 +588,52 @@ public class SearchIndexingPanel extends VLayout {
 								public void onSuccess(Void ret) {
 									Log.info(I18N.message("docsreindex"), null);
 									rescheduleAll.setDisabled(false);
+									ContactingServer.get().hide();
+
+									service.getInfo(Session.get().getSid(), new AsyncCallback<GUISearchEngine>() {
+										@Override
+										public void onFailure(Throwable caught) {
+											Log.serverError(caught);
+										}
+
+										@Override
+										public void onSuccess(GUISearchEngine searchEngine) {
+											AdminPanel.get().setContent(new SearchIndexingPanel(searchEngine));
+										}
+									});
+								}
+							});
+						}
+					}
+				});
+			}
+		});
+		
+		final IButton dropIndex = new IButton();
+		dropIndex.setAutoFit(true);
+		dropIndex.setTitle(I18N.message("dropindex"));
+		dropIndex.addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				LD.ask(I18N.message("question"), I18N.message("confirmdropindex"), new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							ContactingServer.get().show();
+							rescheduleAll.setDisabled(true);
+							service.rescheduleAll(Session.get().getSid(), true, new AsyncCallback<Void>() {
+
+								@Override
+								public void onFailure(Throwable caught) {
+									ContactingServer.get().hide();
+									dropIndex.setDisabled(false);
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(Void ret) {
+									Log.info(I18N.message("docsreindex"), null);
+									dropIndex.setDisabled(false);
 									ContactingServer.get().hide();
 
 									service.getInfo(Session.get().getSid(), new AsyncCallback<GUISearchEngine>() {
@@ -631,9 +677,22 @@ public class SearchIndexingPanel extends VLayout {
 			}
 		});
 
-		searchEngineForm.setItems(entries, status, repository, includePatters, excludePatters, batch, timeout, maxText,
-				subwords);
-		buttons.setMembers(save, unlock, rescheduleAll, check);
+		
+		
+		if (Session.get().isDefaultTenant()) {
+			buttons.setMembers(save, unlock, rescheduleAll, dropIndex, check);
+		} else {
+			repository.setVisible(false);
+			batch.setVisible(false);
+			timeout.setVisible(false);
+			maxText.setVisible(false);
+			subwords.setVisible(false);
+			buttons.setMembers(save, rescheduleAll);
+		}
+		
+		searchEngineForm.setItems(entries, status, repository, includePatters, excludePatters, batch, timeout,
+				maxText, subwords);
+
 		buttons.setMembersMargin(5);
 		searchEngineTabPanel.setMembers(searchEngineForm, buttons);
 		searchEngineTabPanel.setMembersMargin(15);
