@@ -102,4 +102,17 @@ public class MessageTemplate extends PersistentObject {
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		MessageTemplate newTemplate = new MessageTemplate();
+		newTemplate.setBody(getBody());
+		newTemplate.setDescription(getDescription());
+		newTemplate.setLanguage(getLanguage());
+		newTemplate.setName(getName());
+		newTemplate.setSubject(getSubject());
+		newTemplate.setTenantId(getTenantId());
+		return newTemplate;
+	}
+
 }

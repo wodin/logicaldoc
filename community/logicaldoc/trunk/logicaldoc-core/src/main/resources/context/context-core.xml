@@ -292,6 +292,7 @@
                 <property name="groupDao" ref="GroupDAO" />
                 <property name="folderDao" ref="FolderDAO" />
                 <property name="templateDao" ref="DocumentTemplateDAO" />
+                <property name="messageTemplateDao" ref="MessageTemplateDAO" />
             </bean>
         </property>
     </bean>

@@ -65,7 +65,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 
 			List<String> installedLocales = I18N.getLocales();
 			for (String loc : installedLocales) {
-				if ("enabled".equals(config.getProperty("lang." + loc + ".gui"))) {
+				if ("enabled".equals(config.getProperty(tenantName + ".lang." + loc + ".gui"))) {
 					Locale lc = LocaleUtil.toLocale(loc);
 					GUIValuePair l = new GUIValuePair();
 					l.setCode(loc);
@@ -287,7 +287,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 		Tenant tenant = dao.findById(tenantId);
 		return fromTenant(tenant);
 	}
-	
+
 	protected static GUITenant fromTenant(Tenant tenant) {
 		if (tenant == null)
 			return null;

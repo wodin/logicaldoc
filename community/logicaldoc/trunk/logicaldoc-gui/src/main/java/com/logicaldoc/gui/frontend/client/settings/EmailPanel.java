@@ -177,7 +177,11 @@ public class EmailPanel extends VLayout {
 
 		emailForm.setItems(smtpServer, port, username, password, connSecurity, secureAuth, senderEmail, save, test);
 		email.setPane(emailForm);
-		tabs.setTabs(email, templates);
+
+		if (Session.get().isDefaultTenant())
+			tabs.setTabs(email, templates);
+		else
+			tabs.setTabs(templates);
 		setMembers(tabs);
 	}
 }

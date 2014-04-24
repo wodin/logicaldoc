@@ -38,10 +38,10 @@ public interface SystemService {
 	 * Retrieves the languages enabled in the server.
 	 * 
 	 * @return Array of active languages (en, it, es ....)
-	 * @param tenant Tenant name (optional)
+	 * @param tenantOrSid Tenant name or session identifier (optional)
 	 * 
 	 * @throws Exception
 	 */
 	@WebResult(name = "languages")
-	public String[] getLanguages(@WebParam(name = "tenant") String tenant) throws Exception;
+	public String[] getLanguages(@WebParam(name = "tenantOrSid") String tenantOrSid) throws Exception;
 }

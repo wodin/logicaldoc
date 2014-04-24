@@ -32,11 +32,11 @@ public class HibernateMessageTemplateDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindByLanguage() {
-		Collection<MessageTemplate> coll = dao.findByLanguage("en");
+		Collection<MessageTemplate> coll = dao.findByLanguage("en", 1L);
 		Assert.assertEquals(5, coll.size());
-		coll = dao.findByLanguage("it");
+		coll = dao.findByLanguage("it", 1L);
 		Assert.assertEquals(1, coll.size());
-		coll = dao.findByLanguage("de");
+		coll = dao.findByLanguage("de", 1L);
 		Assert.assertEquals(0, coll.size());
 	}
 
@@ -45,24 +45,24 @@ public class HibernateMessageTemplateDAOTest extends AbstractCoreTCase {
 		Map<String, String> cntx = new HashMap<String, String>();
 		cntx.put("xxx", "label");
 
-		MessageTemplate tmp = dao.findByNameAndLanguage("test1", "en");
+		MessageTemplate tmp = dao.findByNameAndLanguage("test1", "en", 1L);
 		Assert.assertNotNull(tmp);
 		Assert.assertEquals("test1", tmp.getName());
 		Assert.assertEquals("body Username label", tmp.getFormattedBody(cntx));
 		Assert.assertEquals("subject label", tmp.getFormattedSubject(cntx));
 
-		tmp = dao.findByNameAndLanguage("test1", "de");
+		tmp = dao.findByNameAndLanguage("test1", "de", 1L);
 		Assert.assertNotNull(tmp);
 		Assert.assertEquals("test1", tmp.getName());
 		Assert.assertEquals("en", tmp.getLanguage());
 
-		tmp = dao.findByNameAndLanguage("test1", "it");
+		tmp = dao.findByNameAndLanguage("test1", "it", 1L);
 		Assert.assertNotNull(tmp);
 		Assert.assertEquals("test1", tmp.getName());
 		Assert.assertEquals("corpo Username label", tmp.getFormattedBody(cntx));
 		Assert.assertEquals("soggetto label", tmp.getFormattedSubject(cntx));
 
-		tmp = dao.findByNameAndLanguage("xxxxxx", "en");
+		tmp = dao.findByNameAndLanguage("xxxxxx", "en", 1L);
 		Assert.assertNull(tmp);
 	}
 }

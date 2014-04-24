@@ -659,10 +659,10 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 	@Override
 	public void setGUILanguageStatus(String sid, String language, boolean active) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-			conf.setProperty("lang." + language + ".gui", active ? "enabled" : "disabled");
+			conf.setProperty(session.getTenantName() + ".lang." + language + ".gui", active ? "enabled" : "disabled");
 			conf.write();
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);

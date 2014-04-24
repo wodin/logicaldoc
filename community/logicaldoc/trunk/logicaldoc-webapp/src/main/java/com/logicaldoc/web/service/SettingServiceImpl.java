@@ -103,6 +103,10 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	public GUIParameter[] loadSettings(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
+		// TenantDAO dao = (TenantDAO)
+		// Context.getInstance().getBean(TenantDAO.class);
+		// Set<String> tenants = dao.findAllNames();
+
 		TreeSet<String> sortedSet = new TreeSet<String>();
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		for (Object key : conf.keySet()) {
@@ -116,15 +120,15 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.startsWith("ldap") || name.startsWith("schedule") || name.startsWith("smtp")
 					|| name.contains("password") || name.startsWith("ad") || name.startsWith("webservice")
 					|| name.startsWith("webdav") || name.startsWith("cmis") || name.startsWith("runlevel")
-					|| name.startsWith("stat") || name.startsWith("index") || name.equals("id")
-					|| name.startsWith("lang") || name.startsWith("reg.") || name.startsWith("ocr.")
-					|| name.startsWith("barcode.") || name.startsWith("task.") || name.startsWith("quota")
+					|| name.startsWith("stat") || name.contains("index") || name.equals("id")
+					|| name.contains(".lang.") || name.startsWith("reg.") || name.startsWith("ocr.")
+					|| name.contains("barcode") || name.startsWith("task.") || name.startsWith("quota")
 					|| name.startsWith("store") || name.startsWith("flexpaperviewer") || name.startsWith("omnipage.")
 					|| name.startsWith("command.") || name.contains(".gui.") || name.contains(".upload.")
 					|| name.equals("userno") || name.contains(".search.") || name.startsWith("swftools.")
-					|| name.contains("password") || name.startsWith("openoffice.path")
-					|| name.contains("tag.") || name.startsWith("jdbc.") || name.startsWith("cluster")
-					|| name.startsWith("ip.") || name.startsWith("extcall."))
+					|| name.contains("password") || name.startsWith("openoffice.path") || name.contains("tag.")
+					|| name.startsWith("jdbc.") || name.startsWith("cluster") || name.startsWith("ip.")
+					|| name.contains(".extcall.") || name.contains("anonymous") || name.startsWith("hibernate."))
 				continue;
 
 			sortedSet.add(key.toString());
@@ -143,7 +147,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public GUIParameter[] loadClientSettings(String sid) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		List<GUIParameter> params = new ArrayList<GUIParameter>();
@@ -151,7 +155,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 			if (key.toString().equals("webservice.enabled") || key.toString().startsWith("webdav")
 					|| key.toString().startsWith("cmis") || key.toString().startsWith("command.")
 					|| key.toString().startsWith("openoffice") || key.toString().startsWith("swftools.")
-					|| key.toString().startsWith("extcall.")) {
+					|| key.toString().startsWith(session.getTenantName() + ".extcall.")) {
 				GUIParameter p = new GUIParameter(key.toString(), conf.getProperty(key.toString()));
 				params.add(p);
 			}

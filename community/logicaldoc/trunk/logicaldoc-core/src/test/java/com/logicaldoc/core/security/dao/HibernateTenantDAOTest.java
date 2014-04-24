@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.AbstractCoreTCase;
+import com.logicaldoc.core.communication.MessageTemplate;
+import com.logicaldoc.core.communication.MessageTemplateDAO;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.security.Folder;
@@ -38,6 +40,8 @@ public class HibernateTenantDAOTest extends AbstractCoreTCase {
 
 	private DocumentTemplateDAO templateDao;
 
+	private MessageTemplateDAO messageTemplateDao;
+
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
@@ -49,6 +53,7 @@ public class HibernateTenantDAOTest extends AbstractCoreTCase {
 		userDao = (UserDAO) context.getBean("UserDAO");
 		groupDao = (GroupDAO) context.getBean("GroupDAO");
 		templateDao = (DocumentTemplateDAO) context.getBean("DocumentTemplateDAO");
+		messageTemplateDao = (MessageTemplateDAO) context.getBean("MessageTemplateDAO");
 	}
 
 	@Test
@@ -87,6 +92,10 @@ public class HibernateTenantDAOTest extends AbstractCoreTCase {
 		Assert.assertNotNull(template);
 		templateDao.initialize(template);
 		Assert.assertEquals(1, template.getAttributeNames().size());
+
+		MessageTemplate templ = messageTemplateDao.findByNameAndLanguage("task.report", "en", tenant.getId());
+		Assert.assertNotNull(templ);
+		Assert.assertEquals("$_task",templ.getSubject());
 
 		List<Folder> folders = folderDao.findByName("/", tenant.getId());
 		Assert.assertEquals(1, folders.size());
