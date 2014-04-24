@@ -112,7 +112,8 @@ public class EMailSender {
 	 * @throws Exception
 	 */
 	public void send(EMail email, String templateName, Map<String, String> args) throws Exception {
-		MessageTemplate template = templateDao.findByNameAndLanguage(templateName, email.getLocale().toString());
+		MessageTemplate template = templateDao.findByNameAndLanguage(templateName, email.getLocale().toString(),
+				email.getTenantId());
 		if (template == null) {
 			log.error("Template " + templateName + " was not found");
 			return;

@@ -192,24 +192,25 @@ public class ExternalAppsPanel extends VLayout {
 		extAppForm.setItems(convertCommand, ghostCommand, tesseractCommand, swftools, openOffice);
 		extApps.setPane(extAppForm);
 
-		tabs.addTab(extApps);
+		if (Session.get().isDefaultTenant())
+			tabs.addTab(extApps);
 
 		// External Call
 		Tab extCall = prepareExternalCall(settings);
 
-		if (Feature.visible(Feature.WEBSERVICE)) {
+		if (Feature.visible(Feature.WEBSERVICE) && Session.get().isDefaultTenant()) {
 			tabs.addTab(webService);
 			if (!Feature.enabled(Feature.WEBSERVICE))
 				webService.setPane(new FeatureDisabled());
 		}
 
-		if (Feature.visible(Feature.CMIS)) {
+		if (Feature.visible(Feature.CMIS) && Session.get().isDefaultTenant()) {
 			tabs.addTab(cmis);
 			if (!Feature.enabled(Feature.CMIS))
 				cmis.setPane(new FeatureDisabled());
 		}
 
-		if (Feature.visible(Feature.WEBDAV)) {
+		if (Feature.visible(Feature.WEBDAV) && Session.get().isDefaultTenant()) {
 			tabs.addTab(webDav);
 			if (!Feature.enabled(Feature.WEBDAV))
 				webDav.setPane(new FeatureDisabled());
@@ -229,21 +230,23 @@ public class ExternalAppsPanel extends VLayout {
 				Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				if (vm.validate()) {
-					ExternalAppsPanel.this.wsSettings
-							.setValue(values.get("wsEnabled").equals("yes") ? "true" : "false");
+					if (Session.get().isDefaultTenant()) {
+						ExternalAppsPanel.this.wsSettings.setValue(values.get("wsEnabled").equals("yes") ? "true"
+								: "false");
 
-					ExternalAppsPanel.this.cmisSettings.setValue(values.get("cmisEnabled").equals("yes") ? "true"
-							: "false");
+						ExternalAppsPanel.this.cmisSettings.setValue(values.get("cmisEnabled").equals("yes") ? "true"
+								: "false");
 
-					ExternalAppsPanel.this.wdSettings
-							.setValue(values.get("wdEnabled").equals("yes") ? "true" : "false");
+						ExternalAppsPanel.this.wdSettings.setValue(values.get("wdEnabled").equals("yes") ? "true"
+								: "false");
 
-					ExternalAppsPanel.this.wdCache.setValue(values.get("wdCache").equals("yes") ? "true" : "false");
-					ExternalAppsPanel.this.convert.setValue(values.get("convertCommand").toString());
-					ExternalAppsPanel.this.ghost.setValue(values.get("ghostCommand").toString());
-					ExternalAppsPanel.this.tesseract.setValue(values.get("tesseractCommand").toString());
-					ExternalAppsPanel.this.swftoolsPath.setValue(values.get("swftools").toString());
-					ExternalAppsPanel.this.openofficePath.setValue(values.get("openOffice").toString());
+						ExternalAppsPanel.this.wdCache.setValue(values.get("wdCache").equals("yes") ? "true" : "false");
+						ExternalAppsPanel.this.convert.setValue(values.get("convertCommand").toString());
+						ExternalAppsPanel.this.ghost.setValue(values.get("ghostCommand").toString());
+						ExternalAppsPanel.this.tesseract.setValue(values.get("tesseractCommand").toString());
+						ExternalAppsPanel.this.swftoolsPath.setValue(values.get("swftools").toString());
+						ExternalAppsPanel.this.openofficePath.setValue(values.get("openOffice").toString());
+					}
 
 					GUIParameter[] params = new GUIParameter[15];
 					params[0] = ExternalAppsPanel.this.wsSettings;
@@ -271,12 +274,13 @@ public class ExternalAppsPanel extends VLayout {
 						else
 							Session.get().getSession().setExternalCall(null);
 
-						params[9] = new GUIParameter("extcall.enabled",
-								"yes".equals(values.get("extCallEnabled")) ? "true" : "false");
-						params[10] = new GUIParameter("extcall.name", extCall.getName());
-						params[11] = new GUIParameter("extcall.baseurl", extCall.getBaseUrl());
-						params[12] = new GUIParameter("extcall.suffix", extCall.getSuffix());
-						params[13] = new GUIParameter("extcall.window", extCall.getTargetWindow());
+						String tenant = Session.get().getTenantName();
+						params[9] = new GUIParameter(tenant + ".extcall.enabled", "yes".equals(values
+								.get("extCallEnabled")) ? "true" : "false");
+						params[10] = new GUIParameter(tenant + ".extcall.name", extCall.getName());
+						params[11] = new GUIParameter(tenant + ".extcall.baseurl", extCall.getBaseUrl());
+						params[12] = new GUIParameter(tenant + ".extcall.suffix", extCall.getSuffix());
+						params[13] = new GUIParameter(tenant + ".extcall.window", extCall.getTargetWindow());
 
 						ArrayList<String> buf = new ArrayList<String>();
 						if (extCallParamUser.getValueAsBoolean() != null
@@ -288,7 +292,7 @@ public class ExternalAppsPanel extends VLayout {
 						String paramsStr = buf.toString().substring(1, buf.toString().length() - 1);
 
 						extCall.setParametersStr(paramsStr);
-						params[14] = new GUIParameter("extcall.params", buf.isEmpty() ? "" : paramsStr);
+						params[14] = new GUIParameter(tenant + ".extcall.params", buf.isEmpty() ? "" : paramsStr);
 					} catch (Throwable t) {
 					}
 
@@ -360,18 +364,19 @@ public class ExternalAppsPanel extends VLayout {
 		pane.setMembers(extCallForm, parametersForm);
 		extCall.setPane(pane);
 
+		String tenant = Session.get().getTenantName();
 		for (GUIParameter s : settings) {
-			if ("extcall.enabled".equals(s.getName()))
+			if ((tenant + ".extcall.enabled").equals(s.getName()))
 				extCallEnabled.setValue("true".equals(s.getValue()) ? "yes" : "no");
-			else if ("extcall.name".equals(s.getName()))
+			else if ((tenant + ".extcall.name").equals(s.getName()))
 				extCallName.setValue(s.getValue());
-			else if ("extcall.baseurl".equals(s.getName()))
+			else if ((tenant + ".extcall.baseurl").equals(s.getName()))
 				extCallBaseUrl.setValue(s.getValue());
-			else if ("extcall.suffix".equals(s.getName()))
+			else if ((tenant + ".extcall.suffix").equals(s.getName()))
 				extCallSuffix.setValue(s.getValue());
-			else if ("extcall.window".equals(s.getName()))
+			else if ((tenant + ".extcall.window").equals(s.getName()))
 				extCallWindow.setValue(s.getValue());
-			else if ("extcall.params".equals(s.getName())) {
+			else if ((tenant + ".extcall.params").equals(s.getName())) {
 				String[] tokens = s.getValue().split(",");
 				for (String param : tokens) {
 					if ("user".equals(param.trim()))

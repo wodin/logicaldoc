@@ -15,6 +15,8 @@ import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
+import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.stats.StatsCollector;
 import com.logicaldoc.util.Context;
@@ -181,11 +183,18 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 	}
 
 	@Override
-	public String[] getLanguages(String tenant) throws Exception {
+	public String[] getLanguages(String tenantOrSid) throws Exception {
 		List<String> langs = new ArrayList<String>();
 
+		String t = Tenant.DEFAULT_NAME;
+		if(tenantOrSid!=null)
+		if (SessionManager.getInstance().get(tenantOrSid) != null)
+			t = SessionManager.getInstance().get(tenantOrSid).getTenantName();
+		else
+			t = tenantOrSid;
+
 		try {
-			for (Language lang : LanguageManager.getInstance().getActiveLanguages(tenant)) {
+			for (Language lang : LanguageManager.getInstance().getActiveLanguages(t)) {
 				langs.add(lang.getLocale().toString());
 			}
 		} catch (Throwable e) {

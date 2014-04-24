@@ -44,12 +44,13 @@ public class SettingsMenu extends VLayout {
 		Button folders = new Button(I18N.message("repositories"));
 		folders.setWidth100();
 		folders.setHeight(25);
-		addMember(folders);
+		if (Session.get().isDefaultTenant())
+			addMember(folders);
 
 		Button quota = new Button(I18N.message("docsquota"));
 		quota.setWidth100();
 		quota.setHeight(25);
-		if (Feature.visible(Feature.QUOTAS)) {
+		if (Feature.visible(Feature.QUOTAS) && Session.get().isDefaultTenant()) {
 			addMember(quota);
 			if (!Feature.enabled(Feature.QUOTAS)) {
 				quota.setDisabled(true);
@@ -65,7 +66,7 @@ public class SettingsMenu extends VLayout {
 		Button ocr = new Button(I18N.message("ocr"));
 		ocr.setWidth100();
 		ocr.setHeight(25);
-		if (Feature.visible(Feature.OCR)) {
+		if (Feature.visible(Feature.OCR) && Session.get().isDefaultTenant()) {
 			addMember(ocr);
 			if (!Feature.enabled(Feature.OCR)) {
 				ocr.setDisabled(true);
@@ -117,7 +118,9 @@ public class SettingsMenu extends VLayout {
 		});
 
 		addMember(smtp);
-		addMember(parameters);
+
+		if (Session.get().isDefaultTenant())
+			addMember(parameters);
 
 		searchAndIndexing.addClickHandler(new ClickHandler() {
 			@Override

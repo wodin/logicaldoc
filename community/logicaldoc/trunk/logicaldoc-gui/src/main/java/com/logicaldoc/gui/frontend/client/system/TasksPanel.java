@@ -224,7 +224,7 @@ public class TasksPanel extends VLayout {
 								p.setPercentDone(guiTask.getCompletionPercentage());
 							}
 							p.redraw();
-							
+
 							for (ListGridRecord record : list.getRecords()) {
 								if (record.getAttribute("name").equals(guiTask.getName())
 										&& guiTask.getStatus() != GUITask.STATUS_IDLE) {
@@ -241,7 +241,7 @@ public class TasksPanel extends VLayout {
 								}
 							}
 						}
-//						list.redraw();
+						// list.redraw();
 					}
 				});
 			}
@@ -358,6 +358,9 @@ public class TasksPanel extends VLayout {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
 				event.cancel();
+				if (!Session.get().isDefaultTenant())
+					return;
+
 				final ListGridRecord record = list.getSelectedRecord();
 				if (record != null)
 					service.getTaskByName(Session.get().getSid(), record.getAttribute("name"), I18N.getLocale(),

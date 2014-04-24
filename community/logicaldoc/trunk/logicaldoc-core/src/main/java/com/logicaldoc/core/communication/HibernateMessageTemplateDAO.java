@@ -23,22 +23,24 @@ public class HibernateMessageTemplateDAO extends HibernatePersistentObjectDAO<Me
 	}
 
 	@Override
-	public List<MessageTemplate> findByLanguage(String language) {
-		return findByWhere(" _entity.language='" + language + "'", "order by _entity.name", null);
+	public List<MessageTemplate> findByLanguage(String language, long tenantId) {
+		return findByWhere(" _entity.language='" + language + "' and _entity.tenantId=" + tenantId,
+				"order by _entity.name", null);
 	}
 
 	@Override
-	public MessageTemplate findByNameAndLanguage(String name, String language) {
+	public MessageTemplate findByNameAndLanguage(String name, String language, long tenantId) {
 		String lang = language;
 		if (StringUtils.isEmpty(lang))
 			lang = "en";
 
-		List<MessageTemplate> buf = findByWhere(" _entity.language='" + language + "' and _entity.name='" + name + "'",
-				null, null);
+		List<MessageTemplate> buf = findByWhere(" _entity.language='" + lang + "' and _entity.name='" + name
+				+ "' and _entity.tenantId=" + tenantId, null, null);
 		if (buf != null && !buf.isEmpty())
 			return buf.get(0);
 
-		buf = findByWhere(" _entity.language='en' and _entity.name='" + name + "'", null, null);
+		buf = findByWhere(" _entity.language='en' and _entity.name='" + name + "' and _entity.tenantId=" + tenantId,
+				null, null);
 		if (buf != null && !buf.isEmpty())
 			return buf.get(0);
 

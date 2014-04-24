@@ -105,6 +105,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 			SystemMessageDAO dao = (SystemMessageDAO) context.getBean(SystemMessageDAO.class);
 
 			SystemMessage m = new SystemMessage();
+			m.setTenantId(session.getTenantId());
 			m.setAuthor(session.getUserName());
 			m.setSentDate(new Date());
 			m.setStatus(SystemMessage.STATUS_NEW);
@@ -135,7 +136,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 
 	@Override
 	public GUIMessageTemplate[] loadTemplates(String sid, String language) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 		Context context = Context.getInstance();
 
 		try {
@@ -143,10 +144,10 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 
 			List<GUIMessageTemplate> buf = new ArrayList<GUIMessageTemplate>();
 
-			List<MessageTemplate> standardTemplates = dao.findByLanguage("en");
+			List<MessageTemplate> standardTemplates = dao.findByLanguage("en", session.getTenantId());
 			Map<String, MessageTemplate> templates = new HashMap<String, MessageTemplate>();
 
-			List<MessageTemplate> tmp = dao.findByLanguage(language);
+			List<MessageTemplate> tmp = dao.findByLanguage(language, session.getTenantId());
 			for (MessageTemplate m : tmp) {
 				templates.put(m.getName(), m);
 			}
@@ -174,16 +175,17 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 
 	@Override
 	public void saveTemplates(String sid, GUIMessageTemplate[] templates) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		try {
 			Context context = Context.getInstance();
 			MessageTemplateDAO dao = (MessageTemplateDAO) context.getBean(MessageTemplateDAO.class);
 
 			for (GUIMessageTemplate t : templates) {
-				MessageTemplate template = dao.findByNameAndLanguage(t.getName(), t.getLanguage());
+				MessageTemplate template = dao.findByNameAndLanguage(t.getName(), t.getLanguage(), session.getTenantId());
 				if (template == null || !template.getLanguage().equals(t.getLanguage()))
 					template = new MessageTemplate();
+				template.setTenantId(session.getTenantId());
 				template.setName(t.getName());
 				template.setLanguage(t.getLanguage());
 				template.setSubject(t.getSubject());

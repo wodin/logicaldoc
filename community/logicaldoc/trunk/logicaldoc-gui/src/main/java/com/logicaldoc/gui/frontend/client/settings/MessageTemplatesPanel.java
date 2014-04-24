@@ -135,7 +135,7 @@ public class MessageTemplatesPanel extends VLayout {
 		ListGridField body = new ListGridField("body", I18N.message("body"));
 		body.setWidth("*");
 		body.setRequired(false);
-		body.setEditorType(new TextAreaItem());
+		body.setEditorType(TextAreaItem.class);
 
 		templatesGrid = new ListGrid();
 		templatesGrid.setEmptyMessage(I18N.message("notitemstoshow"));
@@ -187,7 +187,7 @@ public class MessageTemplatesPanel extends VLayout {
 				ListGridRecord[] records = templatesGrid.getSelectedRecords();
 				long[] ids = new long[records.length];
 				for (int i = 0; i < records.length; i++) {
-					//Avoid deletion of default templates
+					// Avoid deletion of default templates
 					if (!"en".equals(records[i].getAttributeAsString("language")))
 						ids[i] = Long.parseLong(records[i].getAttributeAsString("id"));
 				}

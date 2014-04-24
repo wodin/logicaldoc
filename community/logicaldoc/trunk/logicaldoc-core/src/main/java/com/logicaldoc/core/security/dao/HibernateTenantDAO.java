@@ -13,6 +13,8 @@ import org.apache.commons.lang.StringUtils;
 
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
+import com.logicaldoc.core.communication.MessageTemplate;
+import com.logicaldoc.core.communication.MessageTemplateDAO;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.generic.Generic;
@@ -39,6 +41,8 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 	private GenericDAO genericDao;
 
 	private DocumentTemplateDAO templateDao;
+
+	private MessageTemplateDAO messageTemplateDao;
 
 	protected HibernateTenantDAO() {
 		super(Tenant.class);
@@ -186,7 +190,7 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 						new Object[] { id, group.getId() });
 
 			/*
-			 * Replicate the email template
+			 * Replicate the email document template
 			 */
 			DocumentTemplate emailTemplate = templateDao.findByName("email", Tenant.DEFAULT_ID);
 			if (emailTemplate != null) {
@@ -210,6 +214,21 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 				}
 				templateDao.store(newEmailTemplate);
 			}
+
+			/*
+			 * Replicate all email templaes
+			 */
+			List<MessageTemplate> templates = messageTemplateDao.findAll(Tenant.DEFAULT_ID);
+			for (MessageTemplate template : templates) {
+				try {
+					MessageTemplate newTemplate = (MessageTemplate) template.clone();
+					newTemplate.setTenantId(tenant.getId());
+					messageTemplateDao.store(newTemplate);
+				} catch (CloneNotSupportedException e) {
+					log.error(e.getMessage());
+				}
+			}
+
 			flush();
 
 			/*
@@ -272,5 +291,9 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 			names.add(tenant.getName());
 		}
 		return names;
+	}
+
+	public void setMessageTemplateDao(MessageTemplateDAO messageTemplateDao) {
+		this.messageTemplateDao = messageTemplateDao;
 	}
 }

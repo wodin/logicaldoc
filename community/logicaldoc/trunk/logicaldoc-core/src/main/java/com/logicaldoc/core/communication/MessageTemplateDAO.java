@@ -13,9 +13,9 @@ import com.logicaldoc.core.PersistentObjectDAO;
 public interface MessageTemplateDAO extends PersistentObjectDAO<MessageTemplate> {
 
 	/**
-	 * Finds the templates by given type and language.
+	 * Finds the templates by given language.
 	 */
-	public List<MessageTemplate> findByLanguage(String language);
+	public List<MessageTemplate> findByLanguage(String language, long tenantId);
 
 	/**
 	 * Finds the template by the alternate key. If the template is not found for
@@ -23,8 +23,9 @@ public interface MessageTemplateDAO extends PersistentObjectDAO<MessageTemplate>
 	 * 
 	 * @param name Name of the template
 	 * @param language The language, if null 'en' will be used instead
+	 * @param tenantId The tenant
 	 * 
 	 * @return The found template or the 'en' if none was found.
 	 */
-	public MessageTemplate findByNameAndLanguage(String name, String language);
+	public MessageTemplate findByNameAndLanguage(String name, String language, long tenantId);
 }
