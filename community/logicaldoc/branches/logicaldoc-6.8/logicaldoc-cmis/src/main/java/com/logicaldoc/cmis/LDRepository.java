@@ -1164,8 +1164,8 @@ public class LDRepository {
 		}
 
 		Folder parent;
-		if (object instanceof Document)
-			parent = ((Document) object).getFolder();
+		if (object instanceof AbstractDocument)
+			parent = ((AbstractDocument) object).getFolder();
 		else
 			parent = folderDao.findById(((Folder) object).getParentId());
 
