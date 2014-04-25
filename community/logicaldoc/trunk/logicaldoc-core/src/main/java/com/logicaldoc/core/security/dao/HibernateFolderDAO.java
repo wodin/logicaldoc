@@ -29,9 +29,7 @@ import com.logicaldoc.core.security.FolderGroup;
 import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Permission;
-import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.sql.SqlUtil;
 
@@ -1097,32 +1095,14 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public Folder findByPath(String pathExtended) {
+	public Folder findByPath(String pathExtended, long tenantId) {
 		StringTokenizer st = new StringTokenizer(pathExtended, "/", false);
-
-		/*
-		 * The first element in the path may indicate a tenant
-		 */
-		TenantDAO tenantDAO = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
-		Set<String> tenants = tenantDAO.findAllNames();
-		long rootId = Tenant.DEFAULT_ID;
-		if (st.hasMoreTokens()) {
-			String name = st.nextToken();
-			if (tenants.contains(name))
-				rootId = findRoot(tenantDAO.findByName(name).getId()).getId();
-			else
-				st = new StringTokenizer(pathExtended, "/", false);
-		}
-
-		/*
-		 * Now go on searching for folders
-		 */
-		Folder folder = findById(rootId);
+		Folder folder = findRoot(tenantId);
 		while (st.hasMoreTokens()) {
 			String token = st.nextToken();
 			if (StringUtils.isEmpty(token))
 				continue;
-			List<Folder> list = findByName(folder, token, null, true);
+			List<Folder> list = findByName(folder, token, tenantId, true);
 			if (list.isEmpty()) {
 				folder = null;
 				break;
@@ -1284,8 +1264,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public List<Folder> findWorkspaces(long tenantId) {
-		Folder root=findRoot(tenantId);
-		if(root==null)
+		Folder root = findRoot(tenantId);
+		if (root == null)
 			return new ArrayList<Folder>();
 		long rootId = root.getId();
 		return findByWhere(" (not _entity.id=" + rootId + ") and _entity.parentId=" + rootId + " and _entity.type="

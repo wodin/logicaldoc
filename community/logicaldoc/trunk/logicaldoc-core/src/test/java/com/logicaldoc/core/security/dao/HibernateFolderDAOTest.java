@@ -73,17 +73,17 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFind() {
-		Folder folder = dao.findByPath("/test");
+		Folder folder = dao.findByPath("/test", 1L);
 		Assert.assertNotNull(folder);
 		Assert.assertEquals("test", folder.getName());
 		Assert.assertEquals(1200, folder.getId());
 
-		folder = dao.findByPath("/test/ABC/xyz");
+		folder = dao.findByPath("/test/ABC/xyz", 1L);
 		Assert.assertNotNull(folder);
 		Assert.assertEquals("xyz", folder.getName());
 		Assert.assertEquals(1202, folder.getId());
 
-		folder = dao.findByPath("/test/ABC/qqq");
+		folder = dao.findByPath("/test/ABC/qqq", 1L);
 		Assert.assertNull(folder);
 	}
 
@@ -471,7 +471,8 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindByPath() {
-		Assert.assertNotNull(dao.findByPath("/Default/ölard"));
+		Assert.assertNotNull(dao.findByPath("/Default/ölard", 1L));
+		Assert.assertNull(dao.findByPath("/Default/ölard", 99L));
 	}
 
 	@Test
@@ -704,7 +705,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertNotNull(dirs);
 		Assert.assertEquals(2, dirs.size());
 		Assert.assertEquals("Default", dirs.get(0).getName());
-		
+
 		dirs = dao.findWorkspaces(99L);
 		Assert.assertNotNull(dirs);
 		Assert.assertEquals(0, dirs.size());
@@ -734,17 +735,17 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindbyPath() {
-		Folder folder = dao.findByPath("/Default/ölard");
+		Folder folder = dao.findByPath("/Default/ölard", 1L);
 		Assert.assertNotNull(folder);
 	}
-	
+
 	@Test
 	public void testFindDefaultWorkspace() {
 		Folder folder = dao.findDefaultWorkspace(1L);
 		Assert.assertNotNull(folder);
 		Assert.assertEquals(Folder.DEFAULTWORKSPACENAME, folder.getName());
 		Assert.assertEquals(Folder.DEFAULTWORKSPACEID, folder.getId());
-		
+
 		folder = dao.findDefaultWorkspace(99L);
 		Assert.assertNull(folder);
 	}

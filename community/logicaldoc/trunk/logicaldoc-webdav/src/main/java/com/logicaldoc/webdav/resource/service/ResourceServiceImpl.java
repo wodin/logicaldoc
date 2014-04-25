@@ -23,7 +23,6 @@ import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderEvent;
 import com.logicaldoc.core.security.FolderHistory;
-import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
@@ -185,10 +184,9 @@ public class ResourceServiceImpl implements ResourceService {
 			Folder folder = null;
 
 			if (path.equals("/") && name.equals("")) {
-				folder = folderDAO.findRoot(sid != null ? SessionManager.getInstance().get(sid).getTenantId()
-						: Folder.ROOTID);
+				folder = folderDAO.findRoot(session.getTenantId());
 			} else
-				folder = folderDAO.findByPath(path + "/" + name);
+				folder = folderDAO.findByPath(path + "/" + name, session.getTenantId());
 
 			// if this resource request is a folder
 			if (folder != null)
@@ -199,7 +197,7 @@ public class ResourceServiceImpl implements ResourceService {
 		Resource parentFolder = this.getParentResource(currentStablePath, userId, session);
 
 		Collection<Document> docs = documentDAO.findByFileNameAndParentFolderId(Long.parseLong(parentFolder.getID()),
-				name, null, null);
+				name, null, session.getTenantId(), null);
 
 		if (docs.isEmpty())
 			return null;
@@ -247,10 +245,9 @@ public class ResourceServiceImpl implements ResourceService {
 
 		Folder folder = null;
 		if ("/".equals(resourcePath.trim()) && "".equals(name))
-			folder = folderDAO.findRoot(sid != null ? SessionManager.getInstance().get(sid).getTenantId()
-					: Folder.ROOTID);
+			folder = folderDAO.findRoot(session.getTenantId());
 		else
-			folder = folderDAO.findByPath(resourcePath + "/" + name);
+			folder = folderDAO.findByPath(resourcePath + "/" + name, session.getTenantId());
 
 		return marshallFolder(folder, userId, session);
 	}
@@ -285,7 +282,10 @@ public class ResourceServiceImpl implements ResourceService {
 			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(user);
 			transaction.setSessionId(sid);
-			Folder createdFolder = folderDAO.create(parentFolder, new Folder(name), true, transaction);
+
+			Folder newFolder = new Folder(name);
+			newFolder.setTenantId(session.getTenantId());
+			Folder createdFolder = folderDAO.create(parentFolder, newFolder, true, transaction);
 			return this.marshallFolder(createdFolder, parentResource.getRequestedPerson(), session);
 		}
 
@@ -311,6 +311,7 @@ public class ResourceServiceImpl implements ResourceService {
 				doc.setFileName(name);
 				doc.setFolder(parentFolder);
 				doc.setLocale(user.getLocale());
+				doc.setTenantId(session.getTenantId());
 
 				documentManager.create(is, doc, transaction);
 			} catch (Exception e) {
@@ -363,7 +364,8 @@ public class ResourceServiceImpl implements ResourceService {
 
 	public Resource getChildByName(Resource parentResource, String name) {
 		Folder parentFolder = folderDAO.findById(Long.parseLong(parentResource.getID()));
-		Collection<Document> docs = documentDAO.findByFileNameAndParentFolderId(parentFolder.getId(), name, null, null);
+		Collection<Document> docs = documentDAO.findByFileNameAndParentFolderId(parentFolder.getId(), name, null,
+				parentFolder.getTenantId(), null);
 		User user = userDAO.findById(parentResource.getRequestedPerson());
 		userDAO.initialize(user);
 		if (!docs.isEmpty()) {
@@ -737,7 +739,6 @@ public class ResourceServiceImpl implements ResourceService {
 			documentManager.unlock(Long.parseLong(resource.getID()), transaction);
 
 			resource.setIsCheckedOut(false);
-
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw new RuntimeException(e);

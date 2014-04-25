@@ -24,7 +24,6 @@ import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.core.task.Task;
 import com.logicaldoc.core.util.UserUtil;
-import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
@@ -73,7 +72,7 @@ public class StatsCollector extends Task {
 		String release = config.getProperty("product.release");
 		log.debug("Collected identification data");
 
-		EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
+		EMailSender sender = new EMailSender(Tenant.DEFAULT_NAME);
 		String email = sender.getSender();
 		log.debug("Collected contact data");
 

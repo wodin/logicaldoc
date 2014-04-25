@@ -74,14 +74,14 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		fdao.initialize(folder);
 
 		Document doc = document.toDocument();
+		doc.setTenantId(user.getTenantId());
 
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
 		transaction.setEvent(DocumentEvent.STORED.toString());
 		transaction.setComment(document.getComment());
-		transaction.setUserId(user.getId());
-		transaction.setUserName(user.getFullName());
+		transaction.setUser(user);
 
 		// Get file to upload inputStream
 		InputStream stream = content.getInputStream();
@@ -538,7 +538,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		EMail mail;
 		try {
 			mail = new EMail();
-
+			mail.setTenantId(user.getTenantId());
 			mail.setAccountId(-1);
 			mail.setAuthor(user.getUserName());
 			mail.setAuthorAddress(user.getEmail());
@@ -573,7 +573,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			}
 
 			// Send the message
-			EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
+			EMailSender sender = new EMailSender(user.getTenantId());
 			sender.send(mail);
 
 			for (Document doc : docs) {

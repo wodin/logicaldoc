@@ -273,7 +273,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * @param pathExtended
 	 * @return
 	 */
-	public Folder findByPath(String pathExtended);
+	public Folder findByPath(String pathExtended, long tenantId);
 
 	/**
 	 * Move a folder into another folder

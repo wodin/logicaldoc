@@ -28,6 +28,11 @@ public class HibernateDocumentTemplateDAO extends HibernatePersistentObjectDAO<D
 	}
 
 	@Override
+	public List<DocumentTemplate> findAll(long tenantId) {
+		return findByWhere(" _entity.tenantId=" + tenantId, "order by _entity.name", null);
+	}
+
+	@Override
 	public DocumentTemplate findByName(String name, long tenantId) {
 		DocumentTemplate template = null;
 		List<DocumentTemplate> coll = findByWhere("_entity.name = '" + SqlUtil.doubleQuotes(name)

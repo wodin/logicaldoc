@@ -30,11 +30,12 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	@Override
 	public WSUser[] listUsers(String sid) throws Exception {
 		checkAdministrator(sid);
+		User user = validateSession(sid);
 
 		try {
 			List<WSUser> users = new ArrayList<WSUser>();
 			UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-			for (User usr : dao.findAll())
+			for (User usr : dao.findAll(user.getTenantId()))
 				if (usr.getType() == User.TYPE_DEFAULT)
 					users.add(WSUser.fromUser(usr));
 			return users.toArray(new WSUser[0]);
@@ -47,10 +48,12 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	@Override
 	public WSGroup[] listGroups(String sid) throws Exception {
 		checkAdministrator(sid);
+		User user=validateSession(sid);
+		
 		try {
 			List<WSGroup> groups = new ArrayList<WSGroup>();
 			GroupDAO dao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
-			for (Group grp : dao.findAll()) {
+			for (Group grp : dao.findAll(user.getTenantId())) {
 				if (grp.getType() == Group.TYPE_DEFAULT) {
 					dao.initialize(grp);
 					groups.add(WSGroup.fromGroup(grp));
@@ -66,10 +69,13 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	@Override
 	public long storeUser(String sid, WSUser user) throws Exception {
 		checkAdministrator(sid);
-
+		User sessionUser=validateSession(sid);
+		
 		try {
 			UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 			User usr = user.toUser();
+			usr.setTenantId(sessionUser.getTenantId());
+			
 			if (user.getId() != 0) {
 				usr = dao.findById(user.getId());
 				if (usr.getType() != User.TYPE_DEFAULT) {

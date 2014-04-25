@@ -208,7 +208,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public boolean store(Document doc, final History transaction) {
 		boolean result = true;
 		try {
-			transaction.setTenantId(doc.getTenantId());
+			if(transaction!=null)
+				transaction.setTenantId(doc.getTenantId());
 			Tenant tenant = tenantDAO.findById(doc.getTenantId());
 
 			// Truncate publishing dates
@@ -592,8 +593,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	@Override
-	public List<Document> findByFileNameAndParentFolderId(Long folderId, String fileName, Long excludeId, Integer max) {
+	public List<Document> findByFileNameAndParentFolderId(Long folderId, String fileName, Long excludeId,
+			Long tenantId, Integer max) {
 		String query = "lower(_entity.fileName) like '" + SqlUtil.doubleQuotes(fileName.toLowerCase()) + "'";
+		if (tenantId != null) {
+			query += " and _entity.tenantId = " + tenantId;
+		}
 		if (folderId != null) {
 			query += " and _entity.folder.id = " + folderId;
 		}

@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
+import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
@@ -155,14 +156,17 @@ public class EmailPanel extends VLayout {
 
 								@Override
 								public void execute(String value) {
+									ContactingServer.get().show();
 									service.testEmail(Session.get().getSid(), value, new AsyncCallback<Boolean>() {
 										@Override
 										public void onFailure(Throwable caught) {
 											Log.serverError(caught);
+											ContactingServer.get().hide();
 										}
 
 										@Override
 										public void onSuccess(Boolean result) {
+											ContactingServer.get().hide();
 											if (result.booleanValue())
 												SC.say(I18N.message("connectionestablished"));
 											else
@@ -178,10 +182,7 @@ public class EmailPanel extends VLayout {
 		emailForm.setItems(smtpServer, port, username, password, connSecurity, secureAuth, senderEmail, save, test);
 		email.setPane(emailForm);
 
-		if (Session.get().isDefaultTenant())
-			tabs.setTabs(email, templates);
-		else
-			tabs.setTabs(templates);
+		tabs.setTabs(email, templates);
 		setMembers(tabs);
 	}
 }

@@ -115,7 +115,10 @@ public class ExternalAppsPanel extends VLayout {
 		wsEnabled.setRequired(true);
 		wsEnabled.setValue(wsSettings.getValue().equals("true") ? "yes" : "no");
 
-		webServiceForm.setItems(url, wsEnabled);
+		if (Session.get().isDefaultTenant())
+			webServiceForm.setItems(url, wsEnabled);
+		else
+			webServiceForm.setItems(url);
 		webService.setPane(webServiceForm);
 
 		Tab cmis = new Tab();
@@ -138,7 +141,10 @@ public class ExternalAppsPanel extends VLayout {
 		cmisEnabled.setRequired(true);
 		cmisEnabled.setValue(cmisSettings.getValue().equals("true") ? "yes" : "no");
 
-		cmisForm.setItems(cmisUrl, cmisEnabled);
+		if (Session.get().isDefaultTenant())
+			cmisForm.setItems(cmisUrl, cmisEnabled);
+		else
+			cmisForm.setItems(cmisUrl);
 		cmis.setPane(cmisForm);
 
 		Tab webDav = new Tab();
@@ -168,7 +174,10 @@ public class ExternalAppsPanel extends VLayout {
 		cache.setWrapTitle(false);
 		cache.setValue(wdCache.getValue().equals("true") ? "yes" : "no");
 
+		if (Session.get().isDefaultTenant())
 		webDavForm.setItems(wdUrl, wdEnabled, cache);
+		else
+			webDavForm.setItems(wdUrl);
 		webDav.setPane(webDavForm);
 
 		Tab extApps = new Tab();
@@ -198,19 +207,19 @@ public class ExternalAppsPanel extends VLayout {
 		// External Call
 		Tab extCall = prepareExternalCall(settings);
 
-		if (Feature.visible(Feature.WEBSERVICE) && Session.get().isDefaultTenant()) {
+		if (Feature.visible(Feature.WEBSERVICE)) {
 			tabs.addTab(webService);
 			if (!Feature.enabled(Feature.WEBSERVICE))
 				webService.setPane(new FeatureDisabled());
 		}
 
-		if (Feature.visible(Feature.CMIS) && Session.get().isDefaultTenant()) {
+		if (Feature.visible(Feature.CMIS)) {
 			tabs.addTab(cmis);
 			if (!Feature.enabled(Feature.CMIS))
 				cmis.setPane(new FeatureDisabled());
 		}
 
-		if (Feature.visible(Feature.WEBDAV) && Session.get().isDefaultTenant()) {
+		if (Feature.visible(Feature.WEBDAV)) {
 			tabs.addTab(webDav);
 			if (!Feature.enabled(Feature.WEBDAV))
 				webDav.setPane(new FeatureDisabled());

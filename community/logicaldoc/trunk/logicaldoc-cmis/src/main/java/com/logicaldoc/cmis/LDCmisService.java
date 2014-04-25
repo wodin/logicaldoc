@@ -32,6 +32,8 @@ import org.apache.chemistry.opencmis.commons.server.CallContext;
 import org.apache.chemistry.opencmis.commons.server.ObjectInfo;
 import org.apache.chemistry.opencmis.commons.spi.Holder;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.SessionManager;
@@ -46,6 +48,8 @@ import com.logicaldoc.util.Context;
  * @since 6.5.1
  */
 public class LDCmisService extends AbstractCmisService {
+
+	private static final Logger log = LoggerFactory.getLogger(LDCmisService.class);
 
 	/**
 	 * Key is the repository Id
@@ -63,9 +67,14 @@ public class LDCmisService extends AbstractCmisService {
 		this.context = context;
 		this.sessionId = sessionId;
 
-		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Folder root = fdao.findById(Folder.ROOTID);
-		repositories.put(Long.toString(Folder.ROOTID), new LDRepository(root, sessionId));
+		try {
+			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			UserSession session=SessionManager.getInstance().get(sessionId);
+			Folder root = fdao.findRoot(session.getTenantId());
+			repositories.put(Long.toString(root.getId()), new LDRepository(root, sessionId));
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+		}
 	}
 
 	public CallContext getCallContext() {

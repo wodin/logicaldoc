@@ -2,7 +2,6 @@ package com.logicaldoc.gui.common.client.widgets;
 
 import com.google.gwt.user.client.Window;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
-import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;

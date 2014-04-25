@@ -115,8 +115,9 @@ public class DocumentManagerImpl implements DocumentManager {
 				listener.beforeCheckin(document, transaction, dictionary);
 			}
 
-			document.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 			document.setSigned(0);
+			if (document.getIndexed() != AbstractDocument.INDEX_SKIP)
+				document.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 			if (document.getBarcoded() != AbstractDocument.BARCODE_SKIP)
 				document.setBarcoded(AbstractDocument.BARCODE_TO_PROCESS);
 
