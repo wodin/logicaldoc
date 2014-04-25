@@ -27,6 +27,10 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.core.security.dao.TenantDAO;
+import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
+
 /**
  * SMTP E-Mail sender service
  * 
@@ -58,7 +62,26 @@ public class EMailSender {
 
 	private int connectionSecurity = SECURITY_NONE;
 
-	private MessageTemplateDAO templateDao;
+	public EMailSender(long tenant) {
+		TenantDAO tenantDao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+		loadSettings(tenantDao.findById(tenant).getName());
+	}
+
+	public EMailSender(String tenant) {
+		loadSettings(tenant);
+	}
+
+	private void loadSettings(String tenant) {
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+
+		host = config.getProperty(tenant + ".smtp.host");
+		port = config.getInt(tenant + ".smtp.port");
+		username = config.getProperty(tenant + ".smtp.username");
+		password = config.getProperty(tenant + ".smtp.password");
+		sender = config.getProperty(tenant + ".smtp.sender");
+		authEncripted = "true".equals(config.getProperty(tenant + ".smtp.authEncripted"));
+		connectionSecurity = config.getInt(tenant + ".smtp.connectionSecurity");
+	}
 
 	public EMailSender() {
 	}
@@ -112,6 +135,7 @@ public class EMailSender {
 	 * @throws Exception
 	 */
 	public void send(EMail email, String templateName, Map<String, String> args) throws Exception {
+		MessageTemplateDAO templateDao = (MessageTemplateDAO) Context.getInstance().getBean(MessageTemplateDAO.class);
 		MessageTemplate template = templateDao.findByNameAndLanguage(templateName, email.getLocale().toString(),
 				email.getTenantId());
 		if (template == null) {
@@ -275,13 +299,5 @@ public class EMailSender {
 
 	public void setConnectionSecurity(int connectionSecurity) {
 		this.connectionSecurity = connectionSecurity;
-	}
-
-	public void setTemplateDao(MessageTemplateDAO templateDao) {
-		this.templateDao = templateDao;
-	}
-
-	public MessageTemplateDAO getTemplateDao() {
-		return templateDao;
 	}
 }

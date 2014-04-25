@@ -23,8 +23,8 @@ public class SystemClient extends AbstractClient<SystemService> implements Syste
 	}
 
 	@Override
-	public String[] getLanguages(String tenant) throws Exception {
-		return client.getLanguages(tenant);
+	public String[] getLanguages(String tenantOrSid) throws Exception {
+		return client.getLanguages(tenantOrSid);
 	}
 
 	@Override

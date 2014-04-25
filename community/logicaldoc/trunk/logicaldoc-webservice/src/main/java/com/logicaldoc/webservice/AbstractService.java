@@ -57,7 +57,8 @@ public class AbstractService {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		if (!validateSession) {
 			User user = new User();
-			user.setId(1);
+			user.setId(1L);
+			user.setTenantId(1L);
 			user.setName("admin");
 			Set<Group> groups = new HashSet<Group>();
 			GroupDAO grpDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);

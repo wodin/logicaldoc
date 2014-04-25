@@ -264,7 +264,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 					} else if (loc.getParameter("docId") != null) {
 						DocumentsPanel.get().openInFolder(Long.parseLong(loc.getParameter("docId")));
 					} else {
-						TreeNode rootNode = getTree().find("folderId", Long.toString(Constants.DOCUMENTS_FOLDERID));
+						TreeNode rootNode = getTree().getRoot();
 						TreeNode[] children = getTree().getChildren(rootNode);
 						if (children != null && children.length > 0) {
 							getTree().openFolder(children[0]);

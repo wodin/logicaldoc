@@ -35,7 +35,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 
 	@Override
 	public WSParameter[] getStatistics(String sid) throws Exception {
-		User user = validateSession(sid);
+		validateSession(sid);
 
 		GenericDAO genDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
 
@@ -44,7 +44,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 			/*
 			 * Repository statistics
 			 */
-			Generic gen = genDao.findByAlternateKey(StatsCollector.STAT, "docdir", null, user.getTenantId());
+			Generic gen = genDao.findByAlternateKey(StatsCollector.STAT, "docdir", null, Tenant.DEFAULT_ID);
 			WSParameter docDirSize = new WSParameter();
 			docDirSize.setName("repo_docs");
 			if (gen != null)
@@ -53,7 +53,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 				docDirSize.setValue("0");
 			parameters[0] = docDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "userdir", null, user.getTenantId());
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "userdir", null, Tenant.DEFAULT_ID);
 			WSParameter userDirSize = new WSParameter();
 			userDirSize.setName("repo_users");
 			if (gen != null)
@@ -62,7 +62,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 				userDirSize.setValue("0");
 			parameters[1] = userDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "indexdir", null, user.getTenantId());
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "indexdir", null, Tenant.DEFAULT_ID);
 			WSParameter indexDirSize = new WSParameter();
 			indexDirSize.setName("repo_fulltextindex");
 			if (gen != null)
@@ -72,7 +72,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 
 			parameters[2] = indexDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "importdir", null, user.getTenantId());
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "importdir", null, Tenant.DEFAULT_ID);
 			WSParameter importDirSize = new WSParameter();
 			importDirSize.setName("repo_import");
 			if (gen != null)
@@ -81,7 +81,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 				importDirSize.setValue("0");
 			parameters[3] = importDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "exportdir", null, user.getTenantId());
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "exportdir", null, Tenant.DEFAULT_ID);
 			WSParameter exportDirSize = new WSParameter();
 			exportDirSize.setName("repo_export");
 			if (gen != null)
@@ -90,7 +90,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 				exportDirSize.setValue("0");
 			parameters[4] = exportDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "plugindir", null, user.getTenantId());
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "plugindir", null, Tenant.DEFAULT_ID);
 			WSParameter pluginsDirSize = new WSParameter();
 			pluginsDirSize.setName("repo_plugins");
 			if (gen != null)
@@ -99,7 +99,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 				pluginsDirSize.setValue("0");
 			parameters[5] = pluginsDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "dbdir", null, user.getTenantId());
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "dbdir", null, Tenant.DEFAULT_ID);
 			WSParameter dbDirSize = new WSParameter();
 			dbDirSize.setName("repo_database");
 			if (gen != null)
@@ -109,7 +109,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 
 			parameters[6] = dbDirSize;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "logdir", null, user.getTenantId());
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "logdir", null, Tenant.DEFAULT_ID);
 			WSParameter logsDirSize = new WSParameter();
 			logsDirSize.setName("repo_logs");
 			if (gen != null)
@@ -122,19 +122,19 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 			/*
 			 * Document statistics
 			 */
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "notindexeddocs", null, user.getTenantId());
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "notindexeddocs", null, Tenant.DEFAULT_ID);
 			WSParameter notIndexed = new WSParameter();
 			notIndexed.setName("docs_notindexed");
 			notIndexed.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[8] = notIndexed;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "indexeddocs", null, user.getTenantId());
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "indexeddocs", null, Tenant.DEFAULT_ID);
 			WSParameter indexed = new WSParameter();
 			indexed.setName("docs_indexed");
 			indexed.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[9] = indexed;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "deleteddocs", null, user.getTenantId());
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "deleteddocs", null, Tenant.DEFAULT_ID);
 			WSParameter deletedDocs = new WSParameter();
 			deletedDocs.setName("docs_trash");
 			deletedDocs.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
@@ -143,19 +143,19 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 			/*
 			 * Folders statistics
 			 */
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "withdocs", null, user.getTenantId());
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "withdocs", null, Tenant.DEFAULT_ID);
 			WSParameter notEmptyFolders = new WSParameter();
 			notEmptyFolders.setName("folder_withdocs");
 			notEmptyFolders.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[11] = notEmptyFolders;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "empty", null, user.getTenantId());
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "empty", null, Tenant.DEFAULT_ID);
 			WSParameter emptyFolders = new WSParameter();
 			emptyFolders.setName("folder_empty");
 			emptyFolders.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[12] = emptyFolders;
 
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "deletedfolders", null, user.getTenantId());
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "deletedfolders", null, Tenant.DEFAULT_ID);
 			WSParameter deletedFolders = new WSParameter();
 			deletedFolders.setName("folder_trash");
 			deletedFolders.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
@@ -164,7 +164,7 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 			/*
 			 * Last run
 			 */
-			gen = genDao.findByAlternateKey(StatsCollector.STAT, "lastrun", null, user.getTenantId());
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "lastrun", null, Tenant.DEFAULT_ID);
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = gen != null ? df.parse(gen.getString1()) : null;
 			WSParameter lastrun = new WSParameter();
@@ -187,11 +187,11 @@ public class SystemServiceImpl extends AbstractService implements SystemService 
 		List<String> langs = new ArrayList<String>();
 
 		String t = Tenant.DEFAULT_NAME;
-		if(tenantOrSid!=null)
-		if (SessionManager.getInstance().get(tenantOrSid) != null)
-			t = SessionManager.getInstance().get(tenantOrSid).getTenantName();
-		else
-			t = tenantOrSid;
+		if (tenantOrSid != null)
+			if (SessionManager.getInstance().get(tenantOrSid) != null)
+				t = SessionManager.getInstance().get(tenantOrSid).getTenantName();
+			else
+				t = tenantOrSid;
 
 		try {
 			for (Language lang : LanguageManager.getInstance().getActiveLanguages(t)) {

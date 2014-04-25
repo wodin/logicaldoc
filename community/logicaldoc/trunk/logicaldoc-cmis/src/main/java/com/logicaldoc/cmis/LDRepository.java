@@ -223,7 +223,9 @@ public class LDRepository {
 		repositoryInfo = new RepositoryInfoImpl();
 
 		repositoryInfo.setId(id);
-		if (root.getId() == Folder.ROOTID) {
+
+		long rootId = folderDao.findRoot(SessionManager.getInstance().get(sid).getTenantId()).getId();
+		if (root.getId() == rootId) {
 			repositoryInfo.setName("Main Repository");
 			repositoryInfo.setDescription("Main Repository");
 		} else {
@@ -475,13 +477,14 @@ public class LDRepository {
 
 		Document document = new Document();
 		updateDocumentMetadata(document, properties, true);
+		document.setTenantId(user.getTenantId());
 		document.setTitle(name);
 		document.setFileName(fileName);
 		document.setFolder(getFolder(folderId));
 		document.setLanguage(user.getLanguage());
 
 		History transaction = new History();
-		transaction.setUser(getSessionUser());
+		transaction.setUser(user);
 		transaction.setSessionId(sid);
 
 		try {
@@ -532,7 +535,9 @@ public class LDRepository {
 
 		Folder folder = null;
 		try {
-			folder = folderDao.create(parent, new Folder(name), true, transaction);
+			Folder newFolder = new Folder(name);
+			newFolder.setTenantId(getSessionUser().getTenantId());
+			folder = folderDao.create(parent, newFolder, true, transaction);
 		} catch (Throwable e) {
 			throw new CmisStorageException("Could not create document: " + e.getMessage(), e);
 		}
@@ -898,7 +903,7 @@ public class LDRepository {
 			fullPath = fullPath.substring(0, fullPath.length() - 1);
 
 		// Try to check if the path is a folder
-		Folder folder = folderDao.findByPath(fullPath);
+		Folder folder = folderDao.findByPath(fullPath, getSessionUser().getTenantId());
 
 		if (folder != null) {
 			return getObject(context, ID_PREFIX_FLD + Long.toString(folder.getId()), null, filter,
@@ -906,12 +911,13 @@ public class LDRepository {
 		} else {
 			// Not a folder, probably a file
 			String parentPath = fullPath.substring(0, fullPath.lastIndexOf('/'));
-			folder = folderDao.findByPath(parentPath);
+			folder = folderDao.findByPath(parentPath, getSessionUser().getTenantId());
 			if (folder == null)
 				return null;
 			String fileName = fullPath.substring(fullPath.lastIndexOf('/') + 1);
 
-			List<Document> docs = documentDao.findByFileNameAndParentFolderId(folder.getId(), fileName, null, null);
+			List<Document> docs = documentDao.findByFileNameAndParentFolderId(folder.getId(), fileName, null,
+					getSessionUser().getId(), null);
 			if (docs == null || docs.isEmpty())
 				return null;
 			return getObject(context, ID_PREFIX_DOC + Long.toString(docs.get(0).getId()), null, filter,
@@ -1164,8 +1170,8 @@ public class LDRepository {
 		}
 
 		Folder parent;
-		if (object instanceof Document)
-			parent = ((Document) object).getFolder();
+		if (object instanceof AbstractDocument)
+			parent = ((AbstractDocument) object).getFolder();
 		else
 			parent = folderDao.findById(((Folder) object).getParentId());
 
@@ -1324,7 +1330,8 @@ public class LDRepository {
 			String filename = "%" + expr + "%";
 
 			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-			List<Document> docs = docDao.findByFileNameAndParentFolderId(null, filename, null, max);
+			List<Document> docs = docDao.findByFileNameAndParentFolderId(null, filename, null,
+					getSessionUser().getId(), max);
 
 			for (int i = 0; i < docs.size(); i++) {
 				// Check permissions on the documents found

@@ -18,6 +18,7 @@ import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
@@ -43,21 +44,24 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public GUIEmailSettings loadEmailSettings(String sid) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		GUIEmailSettings emailSettings = new GUIEmailSettings();
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
-			emailSettings.setSmtpServer(conf.getProperty("smtp.host"));
-			emailSettings.setPort(Integer.parseInt(conf.getProperty("smtp.port")));
-			emailSettings.setUsername(!conf.getProperty("smtp.username").trim().isEmpty() ? conf
-					.getProperty("smtp.username") : "");
-			emailSettings.setPwd(!conf.getProperty("smtp.password").trim().isEmpty() ? conf
-					.getProperty("smtp.password") : "");
-			emailSettings.setConnSecurity(conf.getProperty("smtp.connectionSecurity"));
-			emailSettings.setSecureAuth("true".equals(conf.getProperty("smtp.authEncripted")) ? true : false);
-			emailSettings.setSenderEmail(conf.getProperty("smtp.sender"));
+			emailSettings.setSmtpServer(conf.getProperty(session.getTenantName() + ".smtp.host"));
+			emailSettings.setPort(Integer.parseInt(conf.getProperty(session.getTenantName() + ".smtp.port")));
+			emailSettings
+					.setUsername(!conf.getProperty(session.getTenantName() + ".smtp.username").trim().isEmpty() ? conf
+							.getProperty(session.getTenantName() + ".smtp.username") : "");
+			emailSettings.setPwd(!conf.getProperty(session.getTenantName() + ".smtp.password").trim().isEmpty() ? conf
+					.getProperty(session.getTenantName() + ".smtp.password") : "");
+			emailSettings.setConnSecurity(conf.getProperty(session.getTenantName() + ".smtp.connectionSecurity"));
+			emailSettings
+					.setSecureAuth("true".equals(conf.getProperty(session.getTenantName() + ".smtp.authEncripted")) ? true
+							: false);
+			emailSettings.setSenderEmail(conf.getProperty(session.getTenantName() + ".smtp.sender"));
 
 			log.info("Email settings data loaded successfully.");
 		} catch (Exception e) {
@@ -69,29 +73,34 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public void saveEmailSettings(String sid, GUIEmailSettings settings) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
-			conf.setProperty("smtp.host", settings.getSmtpServer());
-			conf.setProperty("smtp.port", Integer.toString(settings.getPort()));
-			conf.setProperty("smtp.username", !settings.getUsername().trim().isEmpty() ? settings.getUsername() : "");
-			conf.setProperty("smtp.password", !settings.getPwd().trim().isEmpty() ? settings.getPwd() : "");
-			conf.setProperty("smtp.connectionSecurity", settings.getConnSecurity());
-			conf.setProperty("smtp.authEncripted", settings.isSecureAuth() ? "true" : "false");
-			conf.setProperty("smtp.sender", settings.getSenderEmail());
+			conf.setProperty(session.getTenantName() + ".smtp.host", settings.getSmtpServer());
+			conf.setProperty(session.getTenantName() + ".smtp.port", Integer.toString(settings.getPort()));
+			conf.setProperty(session.getTenantName() + ".smtp.username",
+					!settings.getUsername().trim().isEmpty() ? settings.getUsername() : "");
+			conf.setProperty(session.getTenantName() + ".smtp.password",
+					!settings.getPwd().trim().isEmpty() ? settings.getPwd() : "");
+			conf.setProperty(session.getTenantName() + ".smtp.connectionSecurity", settings.getConnSecurity());
+			conf.setProperty(session.getTenantName() + ".smtp.authEncripted", settings.isSecureAuth() ? "true"
+					: "false");
+			conf.setProperty(session.getTenantName() + ".smtp.sender", settings.getSenderEmail());
 
 			conf.write();
 
 			EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
-			sender.setHost(conf.getProperty("smtp.host"));
-			sender.setPort(Integer.parseInt(conf.getProperty("smtp.port")));
-			sender.setUsername(conf.getProperty("smtp.username"));
-			sender.setPassword(conf.getProperty("smtp.password"));
-			sender.setSender(conf.getProperty("smtp.sender"));
-			sender.setAuthEncripted("true".equals(conf.getProperty("smtp.authEncripted")) ? true : false);
-			sender.setConnectionSecurity(Integer.parseInt(conf.getProperty("smtp.connectionSecurity")));
+			sender.setHost(conf.getProperty(Tenant.DEFAULT_NAME + ".smtp.host"));
+			sender.setPort(Integer.parseInt(conf.getProperty(Tenant.DEFAULT_NAME + ".smtp.port")));
+			sender.setUsername(conf.getProperty(Tenant.DEFAULT_NAME + ".smtp.username"));
+			sender.setPassword(conf.getProperty(Tenant.DEFAULT_NAME + ".smtp.password"));
+			sender.setSender(conf.getProperty(Tenant.DEFAULT_NAME + ".smtp.sender"));
+			sender.setAuthEncripted("true".equals(conf.getProperty(Tenant.DEFAULT_NAME + ".smtp.authEncripted")) ? true
+					: false);
+			sender.setConnectionSecurity(Integer.parseInt(conf.getProperty(Tenant.DEFAULT_NAME
+					+ ".smtp.connectionSecurity")));
 
 			log.info("Email settings data written successfully.");
 		} catch (Exception e) {
@@ -117,7 +126,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 				if ("true".equals(conf.getProperty(name + ".hidden")))
 					continue;
 			} else if (name.startsWith("product") || name.startsWith("skin") || name.startsWith("conf")
-					|| name.startsWith("ldap") || name.startsWith("schedule") || name.startsWith("smtp")
+					|| name.startsWith("ldap") || name.startsWith("schedule") || name.contains(".smtp.")
 					|| name.contains("password") || name.startsWith("ad") || name.startsWith("webservice")
 					|| name.startsWith("webdav") || name.startsWith("cmis") || name.startsWith("runlevel")
 					|| name.startsWith("stat") || name.contains("index") || name.equals("id")
@@ -386,17 +395,17 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public boolean testEmail(String sid, String email) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
+		EMailSender sender = new EMailSender(session.getTenantName());
 
 		try {
 			EMail mail;
 			mail = new EMail();
 			mail.setAccountId(-1);
-			mail.setAuthor(config.getProperty("smtp.sender"));
-			mail.setAuthorAddress(config.getProperty("smtp.sender"));
+			mail.setAuthor(config.getProperty(session.getTenantName()+".smtp.sender"));
+			mail.setAuthorAddress(config.getProperty(session.getTenantName()+".smtp.sender"));
 			mail.parseRecipients(email);
 			mail.setFolder("outbox");
 			mail.setSentDate(new Date());

@@ -678,7 +678,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				I18N.message("emailnotifyaccount", locale, new Object[] { user.getFirstName() + " " + user.getName(),
 						"", user.getUserName(), password, address }));
 
-		EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
+		EMailSender sender = new EMailSender(user.getTenantId());
 		sender.send(email, "psw.rec1", args);
 	}
 
@@ -874,6 +874,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				throw new Exception("User with email " + emailAddress + " not found");
 
 			email = new EMail();
+			email.setTenantId(user.getTenantId());
 			Recipient recipient = new Recipient();
 			recipient.setAddress(user.getEmail());
 			recipient.setRead(1);
@@ -887,6 +888,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			ticket.setTicketId(ticketid);
 			ticket.setDocId(0L);
 			ticket.setUserId(user.getId());
+			ticket.setTenantId(user.getTenantId());
 			ticket.setType(DownloadTicket.PSW_RECOVERY);
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.MINUTE, +5);
@@ -918,7 +920,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			args.put("_product", productName);
 			args.put("_url", address);
 
-			EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
+			EMailSender sender = new EMailSender(user.getTenantId());
 			sender.send(email, "psw.rec2", args);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);

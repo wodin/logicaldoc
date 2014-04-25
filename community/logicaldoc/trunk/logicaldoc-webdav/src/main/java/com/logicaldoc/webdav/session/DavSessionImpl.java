@@ -9,23 +9,24 @@ import com.logicaldoc.webdav.AuthenticationUtil.Credentials;
  * {@link org.apache.jackrabbit.webdav.simple.DavSessionImpl}
  * 
  * @author Sebastian Wenzky
- * 
  */
-public class DavSessionImpl implements DavSession{
+public class DavSessionImpl implements DavSession {
 
-	private HashMap<String,Object> map = new HashMap<String, Object>();
-	
+	private HashMap<String, Object> map = new HashMap<String, Object>();
+
 	private Credentials credentials;
-	
+
+	private long tenantId;
+
 	/**
 	 * @see DavSession#setCredentials(Credentials)
 	 */
 	@Override
 	public void setCredentials(Credentials credentials) {
 		this.credentials = credentials;
-		
+
 	}
-	
+
 	/**
 	 * @see DavSession#getCredentials()
 	 */
@@ -56,21 +57,29 @@ public class DavSessionImpl implements DavSession{
 
 	@Override
 	public void addReference(Object arg0) {
-		throw new UnsupportedOperationException();	
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public String[] getLockTokens() {
-		return new String[]{};
+		return new String[] {};
 	}
 
 	@Override
 	public void removeLockToken(String arg0) {
-		throw new UnsupportedOperationException();	
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void removeReference(Object arg0) {
-		throw new UnsupportedOperationException();	
+		throw new UnsupportedOperationException();
+	}
+
+	public long getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(long tenantId) {
+		this.tenantId = tenantId;
 	}
 }

@@ -48,6 +48,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		transaction.setSessionId(sid);
 
 		Folder folderVO = new Folder();
+		folderVO.setTenantId(user.getTenantId());
 		folderVO.setName(folder.getName());
 		folderVO.setDescription(folder.getDescription());
 		folderVO.setType(folder.getType());
@@ -103,7 +104,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		User user = validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Folder folder = folderDao.findByPath(path);
+		Folder folder = folderDao.findByPath(path, user.getTenantId());
 		if (folder == null)
 			return null;
 

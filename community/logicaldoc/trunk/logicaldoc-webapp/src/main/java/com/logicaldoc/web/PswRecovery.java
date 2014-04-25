@@ -23,6 +23,7 @@ import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.document.DownloadTicket;
 import com.logicaldoc.core.document.dao.DownloadTicketDAO;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.i18n.I18N;
@@ -63,6 +64,9 @@ public class PswRecovery extends HttpServlet {
 		HttpSession session = request.getSession();
 		String ticketId = request.getParameter("ticketId");
 		String userId = request.getParameter("userId");
+		String tenant = request.getParameter("tenant");
+		if (tenant == null)
+			tenant = Tenant.DEFAULT_NAME;
 
 		if (StringUtils.isEmpty(ticketId)) {
 			ticketId = (String) request.getAttribute("ticketId");
@@ -126,7 +130,7 @@ public class PswRecovery extends HttpServlet {
 										user.getFirstName() + " " + user.getName(), "", user.getUserName(), password,
 										address }));
 
-						EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
+						EMailSender sender = new EMailSender(tenant);
 						sender.send(email, "psw.rec1", args);
 
 						response.getWriter().println("A message was sent to " + user.getEmail());

@@ -61,10 +61,6 @@ public class SearchServiceImplTest extends AbstractWebServiceTestCase {
 		documents = searchServiceImpl.findByFilename("", "pluto");
 		Assert.assertNotNull(documents);
 		Assert.assertEquals(2, documents.length);
-
-		docsList = Arrays.asList(documents);
-		Assert.assertEquals(1, docsList.get(0).getId());
-		Assert.assertEquals(2, docsList.get(1).getId());
 	}
 
 	@Test

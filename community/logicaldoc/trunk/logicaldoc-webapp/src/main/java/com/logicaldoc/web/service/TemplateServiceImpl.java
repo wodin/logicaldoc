@@ -15,6 +15,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
@@ -44,7 +45,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 
 	@Override
 	public GUITemplate save(String sid, GUITemplate template) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 		try {
@@ -54,6 +55,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 				dao.initialize(templ);
 			} else {
 				templ = new DocumentTemplate();
+				
 				if (template.getType() == GUITemplate.TYPE_AOS) {
 					// Retrieve the attributes of the template with the same
 					// category. This template was already created at the
@@ -96,6 +98,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 				}
 			}
 
+			templ.setTenantId(session.getTenantId());
 			templ.setName(template.getName());
 			templ.setDescription(template.getDescription());
 			templ.setRetentionDays(template.getRetentionDays());
@@ -206,7 +209,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 						} else
 							list.add(buf.trim());
 						att.setStringValue(buf);
-					}					
+					}
 					att.setOptions(list.toArray(new String[0]));
 				}
 				attributes[i] = att;

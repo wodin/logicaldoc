@@ -96,7 +96,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 	@Override
 	public void addBookmarks(String sid, long[] ids, int type) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		BookmarkDAO bookmarkDao = (BookmarkDAO) Context.getInstance().getBean(BookmarkDAO.class);
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
@@ -112,6 +112,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					alreadyAdded++;
 				} else {
 					bookmark = new Bookmark();
+					bookmark.setTenantId(session.getTenantId());
 					bookmark.setType(type);
 					bookmark.setTargetId(id);
 					bookmark.setUserId(SessionUtil.getSessionUser(sid).getId());
@@ -142,7 +143,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	@Override
 	public void addDocuments(String sid, String encoding, boolean importZip, final GUIDocument metadata)
 			throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+		final UserSession session = SessionUtil.validateSession(sid);
 
 		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
 		log.debug("Uploading " + uploadedFilesMap.size() + " files");
@@ -185,6 +186,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 							 * new one
 							 */
 							Document doc = toDocument(metadata);
+							doc.setTenantId(session.getTenantId());
 							doc.setCreation(new Date());
 
 							InMemoryZipImport importer = new InMemoryZipImport(doc);
@@ -218,6 +220,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					 * Prepare the Master document used to create the new one
 					 */
 					Document doc = toDocument(metadata);
+					doc.setTenantId(session.getTenantId());
 					doc.setCreation(new Date());
 
 					doc.setFileName(filename);
@@ -237,7 +240,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	@Override
 	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip,
 			final Long templateId) throws InvalidSessionException {
-		UserSession session=SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		if (folderId == fdao.findRoot(session.getTenantId()).getId())
 			throw new RuntimeException("Cannot add documents in the root");
@@ -695,7 +698,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 	@Override
 	public void linkDocuments(String sid, long[] inDocIds, long[] outDocIds) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		DocumentLinkDAO linkDao = (DocumentLinkDAO) Context.getInstance().getBean(DocumentLinkDAO.class);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
@@ -707,6 +710,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						if (link == null) {
 							// The link doesn't exist and must be created
 							link = new DocumentLink();
+							link.setTenantId(session.getTenantId());
 							link.setDocument1(docDao.findById(inDocIds[i]));
 							link.setDocument2(docDao.findById(outDocIds[j]));
 							link.setType("default");
@@ -835,7 +839,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 	@Override
 	public GUIDocument save(String sid, GUIDocument document) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = null;
@@ -849,6 +853,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				try {
 					Document docVO = toDocument(document);
 					docVO.setBarcoded(doc.getBarcoded());
+					docVO.setTenantId(session.getTenantId());
 
 					// Create the document history event
 					History transaction = new History();
@@ -1030,6 +1035,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		try {
 			mail = new EMail();
 			mail.setHtml(1);
+			mail.setTenantId(session.getTenantId());
 
 			mail.setAccountId(-1);
 			mail.setAuthor(user.getUserName());
@@ -1121,7 +1127,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				mail.setMessageText(message);
 
 				// Send the message
-				EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
+				EMailSender sender = new EMailSender(session.getTenantName());
 				sender.send(mail);
 
 				if (zipFile != null)
@@ -1335,12 +1341,13 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 	@Override
 	public int saveRating(String sid, GUIRating rating) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		RatingDAO ratingDao = (RatingDAO) Context.getInstance().getBean(RatingDAO.class);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		try {
 			Rating rat = new Rating();
+			rat.setTenantId(session.getTenantId());
 			rat.setDocId(rating.getDocId());
 			rat.setUserId(rating.getUserId());
 			rat.setVote(rating.getVote());
@@ -1364,10 +1371,11 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 	@Override
 	public long addNote(String sid, long docId, String message) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		try {
 			DocumentNote note = new DocumentNote();
+			note.setTenantId(session.getTenantId());
 			note.setDocId(docId);
 			note.setUserId(SessionUtil.getSessionUser(sid).getId());
 			note.setUsername(SessionUtil.getSessionUser(sid).getFullName());

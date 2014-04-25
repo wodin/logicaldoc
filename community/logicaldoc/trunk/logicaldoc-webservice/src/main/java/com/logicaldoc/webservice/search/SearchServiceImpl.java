@@ -38,7 +38,6 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 		User user = validateSession(sid);
 
 		SearchOptions options = opt.toSearchOptions();
-
 		options.setUserId(user.getId());
 
 		WSSearchResult searchResult = new WSSearchResult();
@@ -70,9 +69,9 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 	@Override
 	public WSDocument[] findByFilename(String sid, String filename) throws Exception {
 		User user = validateSession(sid);
-
+		
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		List<Document> docs = docDao.findByFileNameAndParentFolderId(null, filename, null, null);
+		List<Document> docs = docDao.findByFileNameAndParentFolderId(null, filename, null, user.getTenantId(), null);
 		WSDocument[] wsDocs = new WSDocument[docs.size()];
 		for (int i = 0; i < docs.size(); i++) {
 			try {
@@ -91,7 +90,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 	@Override
 	public WSDocument[] findByTag(String sid, String tag) throws Exception {
 		User user = validateSession(sid);
-
+		
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		List<Document> docs = docDao.findByUserIdAndTag(user.getId(), tag, null);
 		WSDocument[] wsDocs = new WSDocument[docs.size()];

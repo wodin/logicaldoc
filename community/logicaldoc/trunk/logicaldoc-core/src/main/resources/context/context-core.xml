@@ -347,14 +347,13 @@
     <bean id="EMailSender" abstract="false" autowire="default"
         class="com.logicaldoc.core.communication.EMailSender" dependency-check="default"
         lazy-init="default">
-        <property name="host" value="${smtp.host}" />
-        <property name="port" value="${smtp.port}" />
-        <property name="username" value="${smtp.username}" />
-        <property name="password" value="${smtp.password}" />
-        <property name="sender" value="${smtp.sender}" />
-        <property name="authEncripted" value="${smtp.authEncripted}" />
-        <property name="connectionSecurity" value="${smtp.connectionSecurity}" />
-        <property name="templateDao" ref="MessageTemplateDAO" />
+        <property name="host" value="${default.smtp.host}" />
+        <property name="port" value="${default.smtp.port}" />
+        <property name="username" value="${default.smtp.username}" />
+        <property name="password" value="${default.smtp.password}" />
+        <property name="sender" value="${default.smtp.sender}" />
+        <property name="authEncripted" value="${default.smtp.authEncripted}" />
+        <property name="connectionSecurity" value="${default.smtp.connectionSecurity}" />
     </bean>
     <!-- Tasks -->
     <bean id="IndexOptimizer" class="com.logicaldoc.core.searchengine.IndexOptimizer">
