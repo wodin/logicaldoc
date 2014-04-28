@@ -25,6 +25,7 @@ import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.parser.PDFParser;
 import com.logicaldoc.core.parser.Parser;
 import com.logicaldoc.core.parser.ParserFactory;
+import com.logicaldoc.core.security.Tenant;
 
 public class PDFParserTest extends AbstractCoreTCase{
 
@@ -72,7 +73,7 @@ public class PDFParserTest extends AbstractCoreTCase{
 		File file = new File(inputFile);
 		String filename = file.getPath();
 
-		Parser parser = ParserFactory.getParser(filename);
+		Parser parser = ParserFactory.getParser(filename, Tenant.DEFAULT_NAME);
 		PDFParser pdfp = (PDFParser) parser;
 		// pdfp.parse(file);
 		//
@@ -97,7 +98,7 @@ public class PDFParserTest extends AbstractCoreTCase{
 		file = new File(inputFile);
 		filename = file.getPath();
 
-		parser = ParserFactory.getParser(filename);
+		parser = ParserFactory.getParser(filename, Tenant.DEFAULT_NAME);
 		pdfp = (PDFParser) parser;
 		pdfp.parse(file);
 		Assert.assertTrue(pdfp.getContent().contains("adequate"));
@@ -110,7 +111,7 @@ public class PDFParserTest extends AbstractCoreTCase{
 		String filename = file.getPath();
 
 		for (int i = 0; i < 300; i++) {
-			Parser parser = ParserFactory.getParser(filename);
+			Parser parser = ParserFactory.getParser(filename, Tenant.DEFAULT_NAME);
 			PDFParser pdfp = (PDFParser) parser;
 			pdfp.parse(file);
 			
@@ -128,9 +129,9 @@ public class PDFParserTest extends AbstractCoreTCase{
 		for (int i = 0; i < 10; i++) {
 			Parser parser = null;
 			if (i % 2 == 0)
-				parser = ParserFactory.getParser(filename1);
+				parser = ParserFactory.getParser(filename1, Tenant.DEFAULT_NAME);
 			else
-				parser = ParserFactory.getParser(filename2);
+				parser = ParserFactory.getParser(filename2, Tenant.DEFAULT_NAME);
 
 			PDFParser pdfp = (PDFParser) parser;
 			if (i % 2 == 0) {
@@ -156,7 +157,7 @@ public class PDFParserTest extends AbstractCoreTCase{
 		File file = new File(inputFile);
 		String filename = file.getPath();
 
-		Parser parser = ParserFactory.getParser(filename);
+		Parser parser = ParserFactory.getParser(filename, Tenant.DEFAULT_NAME);
 		PDFParser pdfp = (PDFParser) parser;
 		pdfp.parse(file);
 
@@ -210,7 +211,7 @@ public class PDFParserTest extends AbstractCoreTCase{
 		File file = new File(inputFile);
 		String filename = file.getPath();
 
-		Parser parser = ParserFactory.getParser(filename);
+		Parser parser = ParserFactory.getParser(filename, Tenant.DEFAULT_NAME);
 		PDFParser pdfp = (PDFParser) parser;
 		pdfp.parse(file);
 
@@ -233,23 +234,17 @@ public class PDFParserTest extends AbstractCoreTCase{
 		File file = new File(inputFile);
 		String filename = file.getPath();
 
-		Parser parser = ParserFactory.getParser(filename);
+		Parser parser = ParserFactory.getParser(filename, Tenant.DEFAULT_NAME);
 		PDFParser pdfp = (PDFParser) parser;
 		pdfp.parse(file);
 
 		String content = pdfp.getContent();
-//		assertNotNull(content);
-//		System.out.println(content);
-//		assertTrue(StringUtils.isNotEmpty(content));
-//
-//		System.err.println("content.length(): " + content.length());
-//		assertEquals(1853, content.length());
-//		
+
 		inputFile = "src/test/resources/fillablePDF1.pdf";
 		file = new File(inputFile);
 		filename = file.getPath();
 
-		parser = ParserFactory.getParser(filename);
+		parser = ParserFactory.getParser(filename, Tenant.DEFAULT_NAME);
 		pdfp = (PDFParser) parser;
 		pdfp.parse(file);
 		

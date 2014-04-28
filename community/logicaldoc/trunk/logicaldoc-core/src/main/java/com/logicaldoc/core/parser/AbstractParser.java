@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 
@@ -35,6 +36,8 @@ public abstract class AbstractParser implements Parser {
 	protected Locale locale;
 
 	protected String encoding;
+
+	protected String tenant = Tenant.DEFAULT_NAME;
 
 	@Override
 	public String getAuthor() {
@@ -173,4 +176,14 @@ public abstract class AbstractParser implements Parser {
 	 * Invoked by the parse method
 	 */
 	abstract protected void internalParse(InputStream is) throws Exception;
+
+	@Override
+	public String getTenant() {
+		return tenant;
+	}
+
+	@Override
+	public void setTenant(String tenant) {
+		this.tenant = tenant;
+	}
 }

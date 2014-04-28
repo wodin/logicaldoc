@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.system;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Menu;
 import com.logicaldoc.gui.common.client.Session;
@@ -51,8 +50,7 @@ public class SystemMenu extends VLayout {
 		clustering.setWidth100();
 		clustering.setHeight(25);
 
-		if (Feature.visible(Feature.CLUSTERING) && Menu.enabled(Menu.CLUSTERING)
-				&& Session.get().isDefaultTenant()) {
+		if (Feature.visible(Feature.CLUSTERING) && Menu.enabled(Menu.CLUSTERING) && Session.get().isDefaultTenant()) {
 			addMember(clustering);
 			if (!Feature.enabled(Feature.CLUSTERING)) {
 				clustering.setDisabled(true);

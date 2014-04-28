@@ -146,7 +146,7 @@ public class StandardSearchEngine implements SearchEngine {
 		Locale locale = doc.getLocale();
 		if (locale == null)
 			locale = Locale.ENGLISH;
-		Parser parser = ParserFactory.getParser(content, doc.getFileName(), locale, null);
+		Parser parser = ParserFactory.getParser(content, doc.getFileName(), locale, null, doc.getTenantId());
 		if (parser == null) {
 			return;
 		}

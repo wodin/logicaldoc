@@ -21,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.parser.wordperfect.WordPerfectParser;
+import com.logicaldoc.core.security.Tenant;
+import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.plugin.PluginRegistry;
@@ -127,8 +129,8 @@ public class ParserFactory {
 		initAliases();
 	}
 
-	public static Parser getParser(File file, String filename, Locale locale, String encoding) {
-		Parser parser = detectParser(file, null, filename, locale, encoding);
+	public static Parser getParser(File file, String filename, Locale locale, String encoding, long tenantId) {
+		Parser parser = detectParser(file, null, filename, locale, encoding, tenantId);
 		parser.parse(file);
 		return parser;
 	}
@@ -144,7 +146,8 @@ public class ParserFactory {
 	 * @param encoding
 	 * @return
 	 */
-	protected static Parser detectParser(File file, InputStream is, String filename, Locale locale, String encoding) {
+	protected static Parser detectParser(File file, InputStream is, String filename, Locale locale, String encoding,
+			long tenantId) {
 		if (parsers.isEmpty())
 			init();
 
@@ -205,12 +208,19 @@ public class ParserFactory {
 		parser.setFilename(filename);
 		parser.setLocale(locale);
 		parser.setEncoding(encoding);
+
+		if (tenantId != Tenant.DEFAULT_ID) {
+			TenantDAO dao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+			Tenant tenant = dao.findById(tenantId);
+			parser.setTenant(tenant.getName());
+		}
+
 		return parser;
 	}
 
-	public static Parser getParser(InputStream is, String filename, Locale locale, String encoding) {
+	public static Parser getParser(InputStream is, String filename, Locale locale, String encoding, long tenantId) {
 		try {
-			Parser parser = detectParser(null, is, filename, locale, encoding);
+			Parser parser = detectParser(null, is, filename, locale, encoding, tenantId);
 			parser.parse(is);
 			return parser;
 		} finally {
@@ -223,7 +233,7 @@ public class ParserFactory {
 		}
 	}
 
-	public static Parser getParser(String filename) {
+	public static Parser getParser(String filename, String tenantName) {
 		if (parsers.isEmpty())
 			init();
 
@@ -243,6 +253,10 @@ public class ParserFactory {
 			parser = new DummyParser();
 		}
 		parser.setFilename(filename);
+
+		if (tenantName != null && !tenantName.equals(Tenant.DEFAULT_NAME))
+			parser.setTenant(tenantName);
+
 		return parser;
 	}
 

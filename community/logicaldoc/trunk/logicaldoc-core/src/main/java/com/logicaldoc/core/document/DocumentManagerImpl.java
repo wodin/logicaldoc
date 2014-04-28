@@ -277,7 +277,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		Locale locale = doc.getLocale();
 		String resource = storer.getResourceName(doc, null, null);
 		Parser parser = ParserFactory.getParser(storer.getStream(doc.getId(), resource), doc.getFileName(), locale,
-				null);
+				null, doc.getTenantId());
 
 		// and gets some fields
 		if (parser != null) {
