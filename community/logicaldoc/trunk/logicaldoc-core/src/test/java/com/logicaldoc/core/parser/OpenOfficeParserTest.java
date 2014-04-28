@@ -16,6 +16,7 @@ import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.parser.OpenOfficeParser;
 import com.logicaldoc.core.parser.Parser;
 import com.logicaldoc.core.parser.ParserFactory;
+import com.logicaldoc.core.security.Tenant;
 
 public class OpenOfficeParserTest extends AbstractCoreTCase {
 
@@ -59,7 +60,7 @@ public class OpenOfficeParserTest extends AbstractCoreTCase {
 		String filename = file.getPath();
 
 		for (int i = 0; i < 10; i++) {
-			Parser parser = ParserFactory.getParser(filename);
+			Parser parser = ParserFactory.getParser(filename, Tenant.DEFAULT_NAME);
 			OpenOfficeParser p = (OpenOfficeParser) parser;
 			p.parse(file);
 

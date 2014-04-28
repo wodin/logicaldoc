@@ -66,7 +66,7 @@ public class SettingsMenu extends VLayout {
 		Button ocr = new Button(I18N.message("ocr"));
 		ocr.setWidth100();
 		ocr.setHeight(25);
-		if (Feature.visible(Feature.OCR) && Session.get().isDefaultTenant()) {
+		if (Feature.visible(Feature.OCR)) {
 			addMember(ocr);
 			if (!Feature.enabled(Feature.OCR)) {
 				ocr.setDisabled(true);

@@ -131,13 +131,14 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.startsWith("webdav") || name.startsWith("cmis") || name.startsWith("runlevel")
 					|| name.startsWith("stat") || name.contains("index") || name.equals("id")
 					|| name.contains(".lang.") || name.startsWith("reg.") || name.startsWith("ocr.")
-					|| name.contains("barcode") || name.startsWith("task.") || name.startsWith("quota")
-					|| name.startsWith("store") || name.startsWith("flexpaperviewer") || name.startsWith("omnipage.")
-					|| name.startsWith("command.") || name.contains(".gui.") || name.contains(".upload.")
-					|| name.equals("userno") || name.contains(".search.") || name.startsWith("swftools.")
-					|| name.contains("password") || name.startsWith("openoffice.path") || name.contains("tag.")
-					|| name.startsWith("jdbc.") || name.startsWith("cluster") || name.startsWith("ip.")
-					|| name.contains(".extcall.") || name.contains("anonymous") || name.startsWith("hibernate."))
+					|| name.contains(".ocr.") || name.contains("barcode") || name.startsWith("task.")
+					|| name.startsWith("quota") || name.startsWith("store") || name.startsWith("flexpaperviewer")
+					|| name.startsWith("omnipage.") || name.startsWith("command.") || name.contains(".gui.")
+					|| name.contains(".upload.") || name.equals("userno") || name.contains(".search.")
+					|| name.startsWith("swftools.") || name.contains("password") || name.startsWith("openoffice.path")
+					|| name.contains("tag.") || name.startsWith("jdbc.") || name.startsWith("cluster")
+					|| name.startsWith("ip.") || name.contains(".extcall.") || name.contains("anonymous")
+					|| name.startsWith("hibernate."))
 				continue;
 
 			sortedSet.add(key.toString());
@@ -267,16 +268,20 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public GUIParameter[] loadOcrSettings(String sid) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 		GUIParameter[] params = new GUIParameter[13];
 		params[0] = new GUIParameter("ocr.enabled", conf.getProperty("ocr.enabled"));
-		params[1] = new GUIParameter("ocr.resolution.threshold", conf.getProperty("ocr.resolution.threshold"));
-		params[2] = new GUIParameter("ocr.text.threshold", conf.getProperty("ocr.text.threshold"));
-		params[3] = new GUIParameter("ocr.includes", conf.getProperty("ocr.includes"));
-		params[4] = new GUIParameter("ocr.excludes", conf.getProperty("ocr.excludes"));
+		params[1] = new GUIParameter(session.getTenantName() + ".ocr.resolution.threshold", conf.getProperty(session
+				.getTenantName() + ".ocr.resolution.threshold"));
+		params[2] = new GUIParameter(session.getTenantName() + ".ocr.text.threshold", conf.getProperty(session
+				.getTenantName() + ".ocr.text.threshold"));
+		params[3] = new GUIParameter(session.getTenantName() + ".ocr.includes", conf.getProperty(session
+				.getTenantName() + ".ocr.includes"));
+		params[4] = new GUIParameter(session.getTenantName() + ".ocr.excludes", conf.getProperty(session
+				.getTenantName() + ".ocr.excludes"));
 		params[5] = new GUIParameter("ocr.timeout", conf.getProperty("ocr.timeout"));
 		params[6] = new GUIParameter("ocr.engine", conf.getProperty("ocr.engine"));
 		params[7] = new GUIParameter("command.tesseract", conf.getProperty("command.tesseract"));
@@ -404,8 +409,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 			EMail mail;
 			mail = new EMail();
 			mail.setAccountId(-1);
-			mail.setAuthor(config.getProperty(session.getTenantName()+".smtp.sender"));
-			mail.setAuthorAddress(config.getProperty(session.getTenantName()+".smtp.sender"));
+			mail.setAuthor(config.getProperty(session.getTenantName() + ".smtp.sender"));
+			mail.setAuthorAddress(config.getProperty(session.getTenantName() + ".smtp.sender"));
 			mail.parseRecipients(email);
 			mail.setFolder("outbox");
 			mail.setSentDate(new Date());

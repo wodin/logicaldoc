@@ -12,6 +12,7 @@ import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.parser.Parser;
 import com.logicaldoc.core.parser.ParserFactory;
 import com.logicaldoc.core.parser.TXTParser;
+import com.logicaldoc.core.security.Tenant;
 
 public class TXTParserTest extends AbstractCoreTCase{
 
@@ -21,7 +22,7 @@ public class TXTParserTest extends AbstractCoreTCase{
 		String inputFile = "src/test/resources/AnalyzeFileTest_enc.txt";
 		File file = new File(inputFile);
 		String filename = file.getPath();
-		Parser parser = ParserFactory.getParser(filename);
+		Parser parser = ParserFactory.getParser(filename, Tenant.DEFAULT_NAME);
 		TXTParser p = (TXTParser) parser;
 		p.parse(file);
 		Assert.assertTrue(p.getContent().contains("scalpo"));

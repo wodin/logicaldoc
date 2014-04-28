@@ -41,6 +41,13 @@ public interface Parser {
 	public String getEncoding();
 
 	public void setEncoding(String encoding);
+	
+	/**
+	 * The tenant name
+	 */
+	public String getTenant();
+
+	public void setTenant(String tenant);
 
 	/**
 	 * Same as the other method that accept an input stream, use this when you
