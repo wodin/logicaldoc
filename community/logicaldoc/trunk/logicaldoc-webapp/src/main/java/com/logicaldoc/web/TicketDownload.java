@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +28,7 @@ import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
+import com.logicaldoc.web.util.ServletIOUtil;
 
 public class TicketDownload extends HttpServlet {
 	/**
@@ -78,9 +76,9 @@ public class TicketDownload extends HttpServlet {
 
 			if ((ticket != null) && (ticket.getDocId() != 0)) {
 				Document doc = docDao.findById(ticket.getDocId());
-				if(doc.getDocRef()!=null)
-					doc=docDao.findById(doc.getDocRef());
-				
+				if (doc.getDocRef() != null)
+					doc = docDao.findById(doc.getDocRef());
+
 				if (!doc.isPublishing())
 					throw new IOException("Document not published");
 
@@ -138,7 +136,7 @@ public class TicketDownload extends HttpServlet {
 			// it seems everything is fine, so we can now start writing to the
 			// response object
 			response.setContentType(mimetype);
-			setContentDisposition(request, response, filename);
+			ServletIOUtil.setContentDisposition(request, response, filename, true);
 
 			// Headers required by Internet Explorer
 			response.setHeader("Pragma", "public");
@@ -176,23 +174,5 @@ public class TicketDownload extends HttpServlet {
 			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 			hdao.store(history);
 		}
-	}
-
-	/**
-	 * Sets the correct Content-Disposition header into the response
-	 */
-	private static void setContentDisposition(HttpServletRequest request, HttpServletResponse response, String filename)
-			throws UnsupportedEncodingException {
-		// Encode the filename
-		String userAgent = request.getHeader("User-Agent");
-		String encodedFileName = null;
-		if (userAgent.contains("MSIE") || userAgent.contains("Opera") || userAgent.contains("Safari")) {
-			encodedFileName = URLEncoder.encode(filename, "UTF-8");
-			encodedFileName = encodedFileName.replace("+", "%20");
-		} else {
-			encodedFileName = "=?UTF-8?B?" + new String(Base64.encodeBase64(filename.getBytes("UTF-8")), "UTF-8")
-					+ "?=";
-		}
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedFileName + "\"");
 	}
 }
