@@ -10,6 +10,13 @@
 
                      LogicalDOC Community Edition
                      
+LogicalDOC 6.8.4 (2014-05-05; logicaldoc-6.8.4)
+===============================================                
+416 - GUI localized in Vietnamese - Improvement - User Interface
+417 - The "zip export" event is recorded - New Feature - Core
+426 - Ticket Download, file names encoded IE 11 - Improvement - Core
+425 - FolderId Barcode Generator - New Feature - Core   
+                     
 LogicalDOC 6.8.3 (2014-03-03; logicaldoc-6.8.3)
 ===============================================
 407 - Ability to move documents into folders without write access - Bug - Core
