@@ -2,7 +2,7 @@ package com.logicaldoc.webservice.folder;
 
 import java.io.IOException;
 
-import com.logicaldoc.webservice.AbstractClient;
+import com.logicaldoc.webservice.SoapClient;
 import com.logicaldoc.webservice.auth.Right;
 
 /**
@@ -11,7 +11,7 @@ import com.logicaldoc.webservice.auth.Right;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-public class FolderClient extends AbstractClient<FolderService> implements FolderService {
+public class FolderClient extends SoapClient<FolderService> implements FolderService {
 
 	public FolderClient(String endpoint, int gzipThreshold, boolean log, int timeout) throws IOException {
 		super(endpoint, FolderService.class, gzipThreshold, log, timeout);

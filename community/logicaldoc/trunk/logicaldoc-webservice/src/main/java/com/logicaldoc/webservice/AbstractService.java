@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.cxf.jaxrs.ext.MessageContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +46,9 @@ public class AbstractService {
 	@Resource
 	protected WebServiceContext context;
 
+	@Resource
+	protected MessageContext messageContext;
+	
 	/**
 	 * Utility method that validates the session and retrieve the associated
 	 * user
@@ -177,5 +181,21 @@ public class AbstractService {
 
 	protected boolean isWebserviceEnabled() {
 		return "true".equals(getSettings().get("webservice.enabled"));
+	}
+
+	public WebServiceContext getContext() {
+		return context;
+	}
+
+	public void setContext(WebServiceContext context) {
+		this.context = context;
+	}
+
+	public MessageContext getMessageContext() {
+		return messageContext;
+	}
+
+	public void setMessageContext(MessageContext messageContext) {
+		this.messageContext = messageContext;
 	}
 }

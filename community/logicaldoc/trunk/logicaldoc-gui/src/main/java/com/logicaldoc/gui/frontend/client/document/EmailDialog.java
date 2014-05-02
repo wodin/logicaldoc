@@ -33,6 +33,7 @@ import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
+import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -146,7 +147,7 @@ public class EmailDialog extends Window {
 					}
 
 					sendItem.disable();
-					
+
 					mail.setRecipients(to.toString().substring(1, to.toString().length() - 1));
 					mail.setCc(cc.toString().substring(1, cc.toString().length() - 1));
 
@@ -250,6 +251,18 @@ public class EmailDialog extends Window {
 			@Override
 			public void onEditorExit(EditorExitEvent event) {
 				addEmptyRow();
+			}
+		});
+		
+		recipientsGrid.setCellFormatter(new CellFormatter() {
+			@Override
+			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
+				if(value==null)
+					return null;
+				if(colNum==0)
+					return I18N.message(value.toString());
+				else
+					return value.toString();
 			}
 		});
 

@@ -2,7 +2,7 @@ package com.logicaldoc.webservice.security;
 
 import java.io.IOException;
 
-import com.logicaldoc.webservice.AbstractClient;
+import com.logicaldoc.webservice.SoapClient;
 
 /**
  * Security Web Service client.
@@ -10,7 +10,7 @@ import com.logicaldoc.webservice.AbstractClient;
  * @author Matteo Caruso - Logical Objects
  * @since 6.1
  */
-public class SecurityClient extends AbstractClient<SecurityService> implements SecurityService {
+public class SecurityClient extends SoapClient<SecurityService> implements SecurityService {
 
 	public SecurityClient(String endpoint) throws IOException {
 		super(endpoint, SecurityService.class, -1, true, -1);

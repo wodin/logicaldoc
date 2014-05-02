@@ -1,4 +1,4 @@
--- timestamp -> datetime
+-- datetime -> datetime
 -- add column -> add
 
 create table ld_bookmark (ld_id bigint not null, ld_lastmodified datetime not null, ld_deleted int not null, ld_tenantid bigint not null, ld_userid bigint not null, ld_docid bigint not null, ld_title varchar(255) not null, ld_description varchar(4000), ld_position int not null, ld_filetype varchar(40), ld_type int not null, primary key (ld_id));
@@ -89,7 +89,9 @@ create table ld_tenant (ld_id bigint not null, ld_lastmodified datetime not null
                         ld_deleted int not null, ld_tenantid bigint not null, ld_name varchar(255),
                         ld_displayname varchar(4000), ld_street varchar(255), ld_postalcode varchar(255),
                         ld_city varchar(255), ld_country varchar(255), ld_state varchar(255),
-                        ld_email varchar(255), ld_telephone varchar(255), ld_type int not null); 
+                        ld_email varchar(255), ld_telephone varchar(255),
+                        ld_maxusers int, ld_maxsessions int, ld_maxrepodocs bigint,
+                        ld_maxreposize bigint, ld_type int not null, primary key (ld_id));  
 
 create table hibernate_unique_key (tablename varchar(40) NOT NULL, next_hi bigint NOT NULL);
 
@@ -144,6 +146,7 @@ create index LD_HIST_EVENT on ld_history (ld_event);
 create index LD_FHIST_FID on ld_folder_history (ld_folderid);
 create index LD_FHIST_NOT on ld_folder_history (ld_notified);
 create index LD_TAG_TAG on ld_tag (ld_tag);
+
 
 insert into ld_tenant(ld_id,ld_lastmodified,ld_deleted,ld_tenantid,ld_name,ld_displayname,ld_type)
 values     (1,CURRENT_TIMESTAMP,0,1,'default','Acme Inc.',0);

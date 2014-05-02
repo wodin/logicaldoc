@@ -39,7 +39,11 @@ public class TenantDetailsPanel extends VLayout {
 
 	private Layout propertiesTabPanel;
 
+	private Layout quotaTabPanel;
+
 	private TenantPropertiesPanel propertiesPanel;
+
+	private TenantQuotaPanel quotaPanel;
 
 	private HLayout savePanel;
 
@@ -126,6 +130,13 @@ public class TenantDetailsPanel extends VLayout {
 		propertiesTab.setPane(propertiesTabPanel);
 		tabSet.addTab(propertiesTab);
 
+		Tab quotaTab = new Tab(I18N.message("quota"));
+		quotaTabPanel = new HLayout();
+		quotaTabPanel.setWidth100();
+		quotaTabPanel.setHeight100();
+		quotaTab.setPane(quotaTabPanel);
+		tabSet.addTab(quotaTab);
+
 		addMember(tabSet);
 	}
 
@@ -134,12 +145,21 @@ public class TenantDetailsPanel extends VLayout {
 			savePanel.setVisible(false);
 
 		/*
-		 * Prepare the standard properties tab
+		 * Prepare the properties tab
 		 */
 		if (propertiesPanel != null) {
 			propertiesPanel.destroy();
 			if (propertiesTabPanel.contains(propertiesPanel))
 				propertiesTabPanel.removeMember(propertiesPanel);
+		}
+
+		/*
+		 * Prepare the quota tab
+		 */
+		if (quotaPanel != null) {
+			quotaPanel.destroy();
+			if (quotaTabPanel.contains(quotaPanel))
+				quotaTabPanel.removeMember(quotaPanel);
 		}
 
 		ChangedHandler changeHandler = new ChangedHandler() {
@@ -151,6 +171,8 @@ public class TenantDetailsPanel extends VLayout {
 
 		propertiesPanel = new TenantPropertiesPanel(this.tenant, changeHandler);
 		propertiesTabPanel.addMember(propertiesPanel);
+		quotaPanel = new TenantQuotaPanel(this.tenant, changeHandler);
+		quotaTabPanel.addMember(quotaPanel);
 
 		tabSet.selectTab(0);
 	}
@@ -169,12 +191,17 @@ public class TenantDetailsPanel extends VLayout {
 	}
 
 	private boolean validate() {
-		boolean stdValid = propertiesPanel.validate();
-
-		if (!stdValid)
+		if (!propertiesPanel.validate()) {
 			tabSet.selectTab(0);
+			return false;
+		}
 
-		return stdValid;
+		if (!quotaPanel.validate()) {
+			tabSet.selectTab(1);
+			return false;
+		}
+
+		return true;
 	}
 
 	public void onSave() {

@@ -22,7 +22,7 @@ import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
 
 /**
  * <p>
- * EasySSLProtocolSocketFactory can be used to creats SSL {@link Socket}s that
+ * EasySSLProtocolSocketFactory can be used to create SSL {@link Socket}s that
  * accept self-signed certificates.
  * </p>
  * <p>
@@ -61,16 +61,7 @@ import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
  * </pre>
  * 
  * </p>
- * 
- * @author <a href="mailto:oleg -at- ural.ru">Oleg Kalnichevski</a>
- * 
- *         <p>
- *         DISCLAIMER: HttpClient developers DO NOT actively support this
- *         component. The component is provided as a reference material, which
- *         may be inappropriate for use without additional customization.
- *         </p>
  */
-
 public class EasySSLProtocolSocketFactory implements ProtocolSocketFactory {
 
 	private SSLContext sslcontext = null;

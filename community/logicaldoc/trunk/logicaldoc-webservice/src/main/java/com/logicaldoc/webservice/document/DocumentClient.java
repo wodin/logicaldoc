@@ -8,7 +8,7 @@ import javax.activation.FileDataSource;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.logicaldoc.webservice.AbstractClient;
+import com.logicaldoc.webservice.SoapClient;
 
 /**
  * Document Web Service client.
@@ -16,7 +16,7 @@ import com.logicaldoc.webservice.AbstractClient;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-public class DocumentClient extends AbstractClient<DocumentService> implements DocumentService {
+public class DocumentClient extends SoapClient<DocumentService> implements DocumentService {
 
 	public DocumentClient(String endpoint, int gzipThreshold, boolean log, int timeout) throws IOException {
 		super(endpoint, DocumentService.class, gzipThreshold, log, timeout);

@@ -165,6 +165,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		ten.setState(tenant.getState());
 		ten.setStreet(tenant.getStreet());
 		ten.setTelephone(tenant.getTelephone());
+		ten.setMaxRepoDocs(tenant.getMaxRepoDocs());
+		ten.setMaxRepoSize(tenant.getMaxRepoSize());
+		ten.setMaxSessions(tenant.getMaxSessions());
+		ten.setMaxUsers(tenant.getMaxUsers());
 		return ten;
 	}
 

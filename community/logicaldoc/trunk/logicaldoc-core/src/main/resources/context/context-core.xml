@@ -422,10 +422,10 @@
         <property name="folderDAO" ref="FolderDAO" />
         <property name="genericDAO" ref="GenericDAO" />
         <property name="groupDAO" ref="GroupDAO" />
+        <property name="tenantDAO" ref="TenantDAO" />
         <property name="config" ref="ContextProperties" />
         <property name="sender" ref="EMailSender" />
         <property name="userDao" ref="UserDAO" />
-        <property name="storer" ref="Storer" />
         <property name="lockManager" ref="LockManager" />
         <property name="systemLoadMonitor" ref="SystemLoadMonitor" />
     </bean>

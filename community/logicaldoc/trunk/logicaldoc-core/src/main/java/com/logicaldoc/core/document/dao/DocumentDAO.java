@@ -204,9 +204,10 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	/**
 	 * Counts the number of documents
 	 * 
+	 * @param tenantId The tenant to search in
 	 * @param computeDeleted If true, even deleted documents are considered
 	 */
-	public long count(boolean computeDeleted);
+	public long count(Long tenantId, boolean computeDeleted);
 
 	/**
 	 * Finds all documents by the indexed state. Order by ascending lastModifed

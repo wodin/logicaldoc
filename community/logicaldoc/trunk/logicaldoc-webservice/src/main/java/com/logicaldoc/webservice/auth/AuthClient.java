@@ -2,15 +2,15 @@ package com.logicaldoc.webservice.auth;
 
 import java.io.IOException;
 
-import com.logicaldoc.webservice.AbstractClient;
+import com.logicaldoc.webservice.SoapClient;
 
 /**
- * Auth Web Service client.
+ * Auth Web Service client (SOAP).
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-public class AuthClient extends AbstractClient<AuthService> implements AuthService {
+public class AuthClient extends SoapClient<AuthService> implements AuthService {
 
 	public AuthClient(String endpoint) throws IOException {
 		super(endpoint, AuthService.class, -1, true, -1);

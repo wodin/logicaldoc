@@ -13,9 +13,9 @@ import com.logicaldoc.webservice.search.SearchClient;
 import com.logicaldoc.webservice.security.SecurityClient;
 import com.logicaldoc.webservice.system.SystemClient;
 
-public class Main {
+public class SoapWorgkbench {
 	public static void main(String[] args) throws Exception {
-		String base = "http://localhost:9080/logicaldoc/services";
+		String base = "http://localhost:9080/services";
 		//String base = "http://50.63.66.136:9080/services";
 		AuthClient auth = new AuthClient(base + "/Auth");
 		DocumentClient documentClient = new DocumentClient(base + "/Document");
@@ -25,7 +25,7 @@ public class Main {
 		SecurityClient securityClient = new SecurityClient(base + "/Security");
 
 		// Open a session
-		String sid = auth.login("marco", "paf75pe");
+		String sid = auth.login("admin", "12345678");
 		System.out.println("Server date: "+systemClient.getInfo().getDate());
 		System.out.println("Sid: " + sid);		
 
@@ -453,9 +453,10 @@ public class Main {
 			
 			
 			WSDocument[] docs= documentClient.listDocuments(sid, 60L, "E8CC77DF.tmp");
-			for (WSDocument wsDocument : docs) {
-				System.out.println(wsDocument.getFileName());
-			}
+			if(docs!=null)
+				for (WSDocument wsDocument : docs) {
+					System.out.println(wsDocument.getFileName());
+				}
 		} finally {
 			auth.logout(sid);
 		}

@@ -14,22 +14,29 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.webservice.AbstractService;
 
 /**
- * Auth Web Service Implementation
+ * Auth Web Service Implementation (SOAP)
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
 @WebService(endpointInterface = "com.logicaldoc.webservice.auth.AuthService", serviceName = "AuthService")
 public class AuthServiceImpl extends AbstractService implements AuthService {
-
 	protected static Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
 
 	@Override
 	public String login(String username, String password) throws Exception {
 		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
 				AuthenticationChain.class);
-		MessageContext ctx = context.getMessageContext();
-		HttpServletRequest request = (HttpServletRequest) ctx.get(AbstractHTTPDestination.HTTP_REQUEST);
+
+		HttpServletRequest request = null;
+		if (context != null) {
+			MessageContext ctx = context.getMessageContext();
+			if (ctx != null)
+				request = (HttpServletRequest) ctx.get(AbstractHTTPDestination.HTTP_REQUEST);
+		}
+
+		if (request == null)
+			request = messageContext.getHttpServletRequest();
 
 		if (authenticationChain.authenticate(username, password,
 				new String[] { request.getRemoteAddr(), request.getRemoteHost() }))

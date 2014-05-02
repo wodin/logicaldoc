@@ -572,6 +572,27 @@ public class ItemFactory {
 	 * @param title The item title (mandatory)
 	 * @param value The item value (optional)
 	 */
+	public static IntegerItem newLongItem(String name, String title, Long value) {
+		IntegerItem item = new IntegerItem();
+		item.setName(filterItemName(name));
+		item.setTitle(I18N.message(title));
+		if (value != null)
+			item.setValue(value);
+		item.setRequiredMessage(I18N.message("fieldrequired"));
+		item.setHintStyle("hint");
+		IsIntegerValidator iv = new IsIntegerValidator();
+		iv.setErrorMessage(I18N.message("wholenumber"));
+		item.setValidators(iv);
+		return item;
+	}
+	
+	/**
+	 * Creates a new IntegerItem.
+	 * 
+	 * @param name The item name (mandatory)
+	 * @param title The item title (mandatory)
+	 * @param value The item value (optional)
+	 */
 	public static IntegerItem newIntegerItem(String name, String title, Integer value) {
 		IntegerItem item = new IntegerItem();
 		item.setName(filterItemName(name));

@@ -37,8 +37,19 @@ public class GUITenant implements Serializable {
 	private String telephone;
 
 	private int type = 0;
-	
-	private String adminUsername="admin";
+
+	private String adminUsername = "admin";
+
+	private Integer maxUsers;
+
+	private Integer maxSessions;
+
+	private Long maxRepoDocs;
+
+	/**
+	 * Maximum repository size expressed in MB
+	 */
+	private Long maxRepoSize;
 
 	public String getName() {
 		return name;
@@ -147,5 +158,37 @@ public class GUITenant implements Serializable {
 
 	public void setAdminUsername(String adminUsername) {
 		this.adminUsername = adminUsername;
+	}
+
+	public Integer getMaxUsers() {
+		return maxUsers;
+	}
+
+	public void setMaxUsers(Integer maxUsers) {
+		this.maxUsers = maxUsers;
+	}
+
+	public Integer getMaxSessions() {
+		return maxSessions;
+	}
+
+	public void setMaxSessions(Integer maxSessions) {
+		this.maxSessions = maxSessions;
+	}
+
+	public Long getMaxRepoDocs() {
+		return maxRepoDocs;
+	}
+
+	public void setMaxRepoDocs(Long maxRepoDocs) {
+		this.maxRepoDocs = maxRepoDocs;
+	}
+
+	public Long getMaxRepoSize() {
+		return maxRepoSize;
+	}
+
+	public void setMaxRepoSize(Long maxRepoSize) {
+		this.maxRepoSize = maxRepoSize;
 	}
 }

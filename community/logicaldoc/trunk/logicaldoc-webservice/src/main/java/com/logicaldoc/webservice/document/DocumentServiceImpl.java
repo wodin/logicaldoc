@@ -45,7 +45,7 @@ import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.webservice.AbstractService;
 
 /**
- * Document Web Service Implementation
+ * Document Web Service Implementation (SOAP)
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 5.2

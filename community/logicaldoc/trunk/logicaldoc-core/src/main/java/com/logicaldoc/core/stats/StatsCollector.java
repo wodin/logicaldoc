@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
@@ -21,7 +22,7 @@ import com.logicaldoc.core.security.SystemQuota;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
-import com.logicaldoc.core.store.Storer;
+import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.task.Task;
 import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.util.config.ContextProperties;
@@ -46,9 +47,9 @@ public class StatsCollector extends Task {
 
 	private GenericDAO genericDAO;
 
-	private ContextProperties config;
+	private TenantDAO tenantDAO;
 
-	private Storer storer;
+	private ContextProperties config;
 
 	private static String userno = "community";
 
@@ -113,35 +114,35 @@ public class StatsCollector extends Task {
 		long docdir = documentDAO
 				.queryForLong("select sum(ld_filesize) from ld_version where ld_version = ld_fileversion");
 		SystemQuota.setTotalSize(docdir);
-		saveStatistic("docdir", Long.toString(docdir));
+		saveStatistic("docdir", Long.toString(docdir), Tenant.SYSTEM_ID);
 
 		long userdir = 0;
 		File userDir = UserUtil.getUsersDir();
 		userdir = FileUtils.sizeOfDirectory(userDir);
-		saveStatistic("userdir", Long.toString(userdir));
+		saveStatistic("userdir", Long.toString(userdir), Tenant.SYSTEM_ID);
 
 		long indexdir = 0;
 		File indexDir = new File(config.getPropertyWithSubstitutions("index.dir"));
 		if (indexDir.exists())
 			indexdir = FileUtils.sizeOfDirectory(indexDir);
-		saveStatistic("indexdir", Long.toString(indexdir));
+		saveStatistic("indexdir", Long.toString(indexdir), Tenant.SYSTEM_ID);
 
 		long importdir = 0;
 		File importDir = new File(config.getPropertyWithSubstitutions("conf.importdir"));
 		if (importDir.exists())
 			importdir = FileUtils.sizeOfDirectory(importDir);
-		saveStatistic("importdir", Long.toString(importdir));
+		saveStatistic("importdir", Long.toString(importdir), Tenant.SYSTEM_ID);
 
 		long exportdir = 0;
 		File exportDir = new File(config.getPropertyWithSubstitutions("conf.exportdir"));
 		if (exportDir.exists())
 			exportdir = FileUtils.sizeOfDirectory(exportDir);
-		saveStatistic("exportdir", Long.toString(exportdir));
+		saveStatistic("exportdir", Long.toString(exportdir), Tenant.SYSTEM_ID);
 
 		long plugindir = 0;
 		File pluginsDir = PluginRegistry.getPluginsDir();
 		plugindir = FileUtils.sizeOfDirectory(pluginsDir);
-		saveStatistic("plugindir", Long.toString(plugindir));
+		saveStatistic("plugindir", Long.toString(plugindir), Tenant.SYSTEM_ID);
 
 		long dbdir = 0;
 
@@ -168,68 +169,68 @@ public class StatsCollector extends Task {
 			if (dbDir.exists())
 				dbdir = FileUtils.sizeOfDirectory(dbDir);
 		}
-
-		saveStatistic("dbdir", Long.toString(dbdir));
+		saveStatistic("dbdir", Long.toString(dbdir), Tenant.SYSTEM_ID);
 
 		long logdir = 0;
 		File logsDir = new File(config.getPropertyWithSubstitutions("conf.logdir"));
 		if (logsDir.exists())
 			logdir = FileUtils.sizeOfDirectory(logsDir);
-		saveStatistic("logdir", Long.toString(logdir));
+		saveStatistic("logdir", Long.toString(logdir), Tenant.SYSTEM_ID);
 
 		log.debug("Saved repository statistics");
 
 		/*
 		 * Collect documents statistics
 		 */
-		int notindexeddocs = documentDAO
-				.queryForInt("SELECT COUNT(A.ld_id) FROM ld_document A where A.ld_indexed = 0 and A.ld_deleted = 0 ");
-		saveStatistic("notindexeddocs", notindexeddocs);
-		int indexeddocs = documentDAO
-				.queryForInt("SELECT COUNT(A.ld_id) FROM ld_document A where A.ld_indexed = 1 and A.ld_deleted = 0 ");
-		saveStatistic("indexeddocs", indexeddocs);
-		int deleteddocs = documentDAO.queryForInt("SELECT COUNT(A.ld_id) FROM ld_document A where A.ld_deleted = 1 ");
-		saveStatistic("deleteddocs", deleteddocs);
-		int totaldocs = (int) documentDAO.count(false) + deleteddocs;
-		saveStatistic("totaldocs", documentDAO.count(true));
+		long[] docStats = extractDocStats(Tenant.SYSTEM_ID);
+		saveStatistic("notindexeddocs", docStats[0], Tenant.SYSTEM_ID);
+		saveStatistic("indexeddocs", docStats[1], Tenant.SYSTEM_ID);
+		saveStatistic("deleteddocs", docStats[2], Tenant.SYSTEM_ID);
+		saveStatistic("totaldocs", docStats[3], Tenant.SYSTEM_ID);
+		long totaldocs = docStats[3];
+
+		List<Tenant> tenants = tenantDAO.findAll();
+		if (tenants.size() > 1)
+			for (Tenant tenant : tenants)
+				extractDocStats(tenant.getId());
 
 		log.debug("Saved documents statistics");
 
 		/*
 		 * Collect folders statistics
 		 */
-		int withdocs = folderDAO
-				.queryForInt("SELECT COUNT(A.ld_id) FROM ld_folder A where A.ld_deleted = 0 and A.ld_id in (select B.ld_folderid FROM ld_document B where B.ld_deleted = 0)");
-		saveStatistic("withdocs", withdocs);
-		int empty = folderDAO
-				.queryForInt("SELECT COUNT(A.ld_id) FROM ld_folder A where A.ld_deleted = 0 and A.ld_id not in (select B.ld_folderid FROM ld_document B where B.ld_deleted = 0)");
-		saveStatistic("empty", empty);
-		int deletedfolders = folderDAO.queryForInt("SELECT COUNT(A.ld_id) FROM ld_folder A where A.ld_deleted = 1 ");
-		saveStatistic("deletedfolders", deletedfolders);
+		long[] fldStats = extractFldStats(Tenant.SYSTEM_ID);
+		long withdocs = fldStats[0];
+		long empty = fldStats[1];
+		long deletedfolders = fldStats[2];
+
+		if (tenants.size() > 1)
+			for (Tenant tenant : tenants)
+				extractFldStats(tenant.getId());
 
 		log.debug("Saved folder statistics");
 
 		/*
 		 * Collect sizing statistics
 		 */
-		int tags = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_tag");
-		int versions = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_version");
-		int histories = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_history");
-		int user_histories = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_user_history");
+		long tags = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_tag");
+		long versions = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_version");
+		long histories = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_history");
+		long user_histories = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_user_history");
 
 		/*
 		 * Collect features statistics
 		 */
-		int bookmarks = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_bookmark");
-		int notes = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_note");
-		int links = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_link");
-		int aliases = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_document WHERE ld_docref IS NOT NULL");
+		long bookmarks = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_bookmark");
+		long notes = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_note");
+		long links = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_link");
+		long aliases = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_document WHERE ld_docref IS NOT NULL");
 
-		int workflow_histories = -1;
+		long workflow_histories = -1;
 		try {
 			try {
 				Class.forName("com.logicaldoc.workflow.WorkflowHistory");
-				workflow_histories = folderDAO.queryForInt("SELECT COUNT(*) FROM ld_workflowhistory");
+				workflow_histories = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_workflowhistory");
 			} catch (ClassNotFoundException exception) {
 
 			}
@@ -241,7 +242,7 @@ public class StatsCollector extends Task {
 		 */
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String lastrun = df.format(new Date());
-		saveStatistic("lastrun", lastrun);
+		saveStatistic("lastrun", lastrun, Tenant.SYSTEM_ID);
 
 		log.info("Statistics collected");
 
@@ -274,18 +275,18 @@ public class StatsCollector extends Task {
 			post.setParameter("users", Integer.toString(users));
 			post.setParameter("groups", Integer.toString(groups));
 			post.setParameter("docs", Long.toString(totaldocs));
-			post.setParameter("folders", Integer.toString(withdocs + empty + deletedfolders));
-			post.setParameter("tags", Integer.toString(tags));
-			post.setParameter("versions", Integer.toString(versions));
-			post.setParameter("histories", Integer.toString(histories));
-			post.setParameter("user_histories", Integer.toString(user_histories));
+			post.setParameter("folders", Long.toString(withdocs + empty + deletedfolders));
+			post.setParameter("tags", Long.toString(tags));
+			post.setParameter("versions", Long.toString(versions));
+			post.setParameter("histories", Long.toString(histories));
+			post.setParameter("user_histories", Long.toString(user_histories));
 
 			// Features usage
-			post.setParameter("bookmarks", Integer.toString(bookmarks));
-			post.setParameter("notes", Integer.toString(notes));
-			post.setParameter("links", Integer.toString(links));
-			post.setParameter("aliases", Integer.toString(aliases));
-			post.setParameter("workflow_histories", Integer.toString(workflow_histories));
+			post.setParameter("bookmarks", Long.toString(bookmarks));
+			post.setParameter("notes", Long.toString(notes));
+			post.setParameter("links", Long.toString(links));
+			post.setParameter("aliases", Long.toString(aliases));
+			post.setParameter("workflow_histories", Long.toString(workflow_histories));
 
 			// Quotas
 			post.setParameter("docdir", Long.toString(docdir));
@@ -339,13 +340,84 @@ public class StatsCollector extends Task {
 	}
 
 	/**
+	 * Retrieves the document stats of a specific tenant and saves the results
+	 * in the database
+	 * 
+	 * @param tenantId The tenant Id if the system tenant is used the whole
+	 *        stats are computed
+	 * @return Ordered list of stats<br/>
+	 *         <ol>
+	 *         <li>notindexeddocs</li>
+	 *         <li>indexeddocs</li>
+	 *         <li>deleteddocs</li>
+	 *         <li>totaldocs</li>
+	 *         </ol>
+	 */
+	private long[] extractDocStats(long tenantId) {
+		long[] stats = new long[4];
+		stats[0] = documentDAO
+				.queryForLong("SELECT COUNT(A.ld_id) FROM ld_document A where A.ld_indexed = 0 and A.ld_deleted = 0 "
+						+ (tenantId != Tenant.SYSTEM_ID ? " and A.ld_tenantid=" + tenantId : ""));
+		stats[1] = documentDAO
+				.queryForLong("SELECT COUNT(A.ld_id) FROM ld_document A where A.ld_indexed = 1 and A.ld_deleted = 0 "
+						+ (tenantId != Tenant.SYSTEM_ID ? " and A.ld_tenantid=" + tenantId : ""));
+		stats[2] = documentDAO.queryForLong("SELECT COUNT(A.ld_id) FROM ld_document A where A.ld_deleted = 1 "
+				+ (tenantId != Tenant.SYSTEM_ID ? " and A.ld_tenantid=" + tenantId : ""));
+		if (tenantId != Tenant.SYSTEM_ID)
+			stats[3] = documentDAO.count(tenantId, true);
+		else
+			stats[3] = documentDAO.count(null, true);
+
+		saveStatistic("notindexeddocs", stats[0], tenantId);
+		saveStatistic("indexeddocs", stats[1], tenantId);
+		saveStatistic("deleteddocs", stats[2], tenantId);
+		saveStatistic("totaldocs", stats[3], tenantId);
+
+		return stats;
+	}
+
+	/**
+	 * Retrieves the folder stats of a specific tenant and saves the results in
+	 * the database
+	 * 
+	 * @param tenantId The tenant Id if the system tenant is used the whole
+	 *        stats are computed
+	 * @return Ordered list of stats<br/>
+	 *         <ol>
+	 *         <li>withdocs</li>
+	 *         <li>empty</li>
+	 *         <li>deletedfolders</li>
+	 *         </ol>
+	 */
+	private long[] extractFldStats(long tenantId) {
+		long[] stats = new long[4];
+		stats[0] = folderDAO
+				.queryForLong("SELECT COUNT(A.ld_id) FROM ld_folder A where A.ld_deleted = 0 and A.ld_id in (select B.ld_folderid FROM ld_document B where B.ld_deleted = 0) "
+						+ (tenantId != Tenant.SYSTEM_ID ? " and A.ld_tenantid=" + tenantId : ""));
+
+		stats[1] = folderDAO
+				.queryForLong("SELECT COUNT(A.ld_id) FROM ld_folder A where A.ld_deleted = 0 and A.ld_id not in (select B.ld_folderid FROM ld_document B where B.ld_deleted = 0) "
+						+ (tenantId != Tenant.SYSTEM_ID ? " and A.ld_tenantid=" + tenantId : ""));
+
+		stats[2] = folderDAO.queryForLong("SELECT COUNT(A.ld_id) FROM ld_folder A where A.ld_deleted = 1 "
+				+ (tenantId != Tenant.SYSTEM_ID ? " and A.ld_tenantid=" + tenantId : ""));
+
+		saveStatistic("withdocs", stats[0], tenantId);
+		saveStatistic("empty", stats[1], tenantId);
+		saveStatistic("deletedfolders", stats[2], tenantId);
+
+		return stats;
+	}
+
+	/**
 	 * Convenience method for saving statistical data in the DB as Generics
 	 */
-	private void saveStatistic(String parameter, Object val) {
-		Generic gen = genericDAO.findByAlternateKey(STAT, parameter, null, Tenant.DEFAULT_ID);
+	private void saveStatistic(String parameter, Object val, long tenantId) {
+		Generic gen = genericDAO.findByAlternateKey(STAT, parameter, null, tenantId);
 		if (gen == null) {
 			gen = new Generic();
 			gen.setType(STAT);
+			gen.setTenantId(tenantId);
 			gen.setSubtype(parameter);
 		} else
 			genericDAO.initialize(gen);
@@ -421,7 +493,7 @@ public class StatsCollector extends Task {
 		StatsCollector.productName = productName;
 	}
 
-	public void setStorer(Storer storer) {
-		this.storer = storer;
+	public void setTenantDAO(TenantDAO tenantDAO) {
+		this.tenantDAO = tenantDAO;
 	}
 }
