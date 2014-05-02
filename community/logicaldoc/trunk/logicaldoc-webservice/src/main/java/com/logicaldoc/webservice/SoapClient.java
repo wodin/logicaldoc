@@ -15,12 +15,12 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import com.logicaldoc.util.io.EasySSLProtocolSocketFactory;
 
 /**
- * Parent for all clients
+ * Parent for all SOAP clients
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.5.1
  */
-public abstract class AbstractClient<T> {
+public abstract class SoapClient<T> {
 
 	protected T client;
 
@@ -36,15 +36,14 @@ public abstract class AbstractClient<T> {
 	 * @param log True if you want the requests to be logged
 	 * @param timeout Timeout for the SOAP requests (in seconds, default 60)
 	 */
-	public AbstractClient(String endpoint, Class<T> serviceClass, int gzipThreshold, boolean log, int timeout) {
+	public SoapClient(String endpoint, Class<T> serviceClass, int gzipThreshold, boolean log, int timeout) {
 		this.endpoint = endpoint;
 		initClient(serviceClass, gzipThreshold, log);
-		
+
 		if (endpoint.toLowerCase().startsWith("https"))
 			configureSSL();
 
-		if (timeout > 0)
-			configureTimeout(timeout);
+		configureTimeout(timeout);
 	}
 
 	/**
@@ -54,7 +53,7 @@ public abstract class AbstractClient<T> {
 	@SuppressWarnings("unchecked")
 	protected void initClient(Class<T> serviceClass, int gzipThreshold, boolean log) {
 		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
-
+		
 		if (log) {
 			factory.getInInterceptors().add(new LoggingInInterceptor());
 			factory.getOutInterceptors().add(new LoggingOutInterceptor());
@@ -87,6 +86,9 @@ public abstract class AbstractClient<T> {
 	 * Configures the timeout (in seconds)
 	 */
 	protected void configureTimeout(int timeout) {
+		if (timeout <= 0)
+			return;
+
 		HTTPClientPolicy policy = new HTTPClientPolicy();
 		policy.setConnectionTimeout(timeout * 1000);
 		policy.setReceiveTimeout(timeout * 1000);

@@ -86,7 +86,9 @@ create table ld_tenant (ld_id bigint not null, ld_lastmodified timestamp not nul
                         ld_deleted int not null, ld_tenantid bigint not null, ld_name varchar(255),
                         ld_displayname varchar(4000), ld_street varchar(255), ld_postalcode varchar(255),
                         ld_city varchar(255), ld_country varchar(255), ld_state varchar(255),
-                        ld_email varchar(255), ld_telephone varchar(255), ld_type int not null); 
+                        ld_email varchar(255), ld_telephone varchar(255),
+                        ld_maxusers int, ld_maxsessions int, ld_maxrepodocs bigint,
+                        ld_maxreposize bigint, ld_type int not null, primary key (ld_id));   
 
 create table hibernate_unique_key (tablename varchar(40) NOT NULL, next_hi bigint NOT NULL);
 

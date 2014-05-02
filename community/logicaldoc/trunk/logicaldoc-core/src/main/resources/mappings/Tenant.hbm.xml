@@ -20,5 +20,9 @@
 		<property name="email" type="string" column="ld_email" length="255" />
 		<property name="telephone" type="string" column="ld_telephone" length="255" />
 		<property name="type" type="int" column="ld_type" not-null="true" />
+        <property name="maxUsers" type="int" column="ld_maxusers" not-null="false" />
+        <property name="maxSessions" type="int" column="ld_maxsessions" not-null="false" />
+        <property name="maxRepoDocs" type="long" column="ld_maxrepodocs" not-null="false" />
+        <property name="maxRepoSize" type="long" column="ld_maxreposize" not-null="false" />
 	</class>
 </hibernate-mapping>

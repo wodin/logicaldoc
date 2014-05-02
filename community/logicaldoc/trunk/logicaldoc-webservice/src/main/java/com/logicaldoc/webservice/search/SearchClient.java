@@ -3,7 +3,7 @@ package com.logicaldoc.webservice.search;
 import java.io.IOException;
 
 import com.logicaldoc.core.document.TagCloud;
-import com.logicaldoc.webservice.AbstractClient;
+import com.logicaldoc.webservice.SoapClient;
 import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.WSFolder;
 
@@ -13,7 +13,7 @@ import com.logicaldoc.webservice.folder.WSFolder;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-public class SearchClient extends AbstractClient<SearchService> implements SearchService {
+public class SearchClient extends SoapClient<SearchService> implements SearchService {
 
 	public SearchClient(String endpoint, int gzipThreshold, boolean log, int timeout) throws IOException {
 		super(endpoint, SearchService.class, gzipThreshold, log, timeout);

@@ -16,6 +16,8 @@ public class Tenant extends PersistentObject implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	public static final long SYSTEM_ID = -1L;
+	
 	public static final long DEFAULT_ID = 1L;
 
 	public static final String DEFAULT_NAME = "default";
@@ -41,6 +43,17 @@ public class Tenant extends PersistentObject implements Serializable {
 	private String telephone;
 
 	private int type = DEFAULT_TYPE;
+
+	private Integer maxUsers;
+
+	private Integer maxSessions;
+
+	private Long maxRepoDocs;
+
+	/**
+	 * Maximum repository size expressed in MB
+	 */
+	private Long maxRepoSize;
 
 	public String getName() {
 		return name;
@@ -125,5 +138,37 @@ public class Tenant extends PersistentObject implements Serializable {
 	@Override
 	public String toString() {
 		return displayName != null ? displayName : name;
+	}
+
+	public Integer getMaxUsers() {
+		return maxUsers;
+	}
+
+	public void setMaxUsers(Integer maxUsers) {
+		this.maxUsers = maxUsers;
+	}
+
+	public Integer getMaxSessions() {
+		return maxSessions;
+	}
+
+	public void setMaxSessions(Integer maxSessions) {
+		this.maxSessions = maxSessions;
+	}
+
+	public Long getMaxRepoDocs() {
+		return maxRepoDocs;
+	}
+
+	public void setMaxRepoDocs(Long maxRepoDocs) {
+		this.maxRepoDocs = maxRepoDocs;
+	}
+
+	public Long getMaxRepoSize() {
+		return maxRepoSize;
+	}
+
+	public void setMaxRepoSize(Long maxRepoSize) {
+		this.maxRepoSize = maxRepoSize;
 	}
 }

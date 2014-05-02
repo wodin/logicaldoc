@@ -2,7 +2,7 @@ package com.logicaldoc.webservice.system;
 
 import java.io.IOException;
 
-import com.logicaldoc.webservice.AbstractClient;
+import com.logicaldoc.webservice.SoapClient;
 import com.logicaldoc.webservice.WSParameter;
 
 /**
@@ -11,7 +11,7 @@ import com.logicaldoc.webservice.WSParameter;
  * @author Matteo Caruso - Logical Objects
  * @since 6.1
  */
-public class SystemClient extends AbstractClient<SystemService> implements SystemService {
+public class SystemClient extends SoapClient<SystemService> implements SystemService {
 
 	public SystemClient(String endpoint) throws IOException {
 		super(endpoint, SystemService.class, -1, true, -1);
