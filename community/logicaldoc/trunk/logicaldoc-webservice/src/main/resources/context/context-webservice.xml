@@ -95,9 +95,20 @@
     <!-- ############################## -->
     <!-- ###### JAX-RS (RESTful) ###### -->
     <!-- ############################## -->
+    <bean id="JacksonJsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+    
     <jaxrs:server id="rest-auth" address="/rest/auth">
         <jaxrs:serviceBeans>
            <bean class="com.logicaldoc.webservice.rest.auth.AuthServiceImpl" />
         </jaxrs:serviceBeans>
+    </jaxrs:server>
+    
+    <jaxrs:server id="commentservice" address="/mobile/comments">
+        <jaxrs:serviceBeans>
+            <bean class="com.logicaldoc.webservice.mobile.CommentService"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <ref bean="JacksonJsonProvider"/>
+        </jaxrs:providers>        
     </jaxrs:server>
 </beans>
