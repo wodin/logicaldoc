@@ -121,11 +121,11 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			/*
 			 * Repository statistics
 			 */
-			Generic gen = genDao.findByAlternateKey(StatsCollector.STAT, "docdir", null, Tenant.SYSTEM_ID);
+			Generic gen = genDao.findByAlternateKey(StatsCollector.STAT, "docdir", null, session.getTenantId());
 			GUIParameter docDirSize = new GUIParameter();
 			docDirSize.setName("documents");
 			if (gen != null)
-				docDirSize.setValue(gen.getString1());
+				docDirSize.setValue(Long.toString(gen.getInteger1()));
 			else
 				docDirSize.setValue("0");
 			parameters[0][0] = docDirSize;
@@ -134,7 +134,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			GUIParameter userDirSize = new GUIParameter();
 			userDirSize.setName("users");
 			if (gen != null)
-				userDirSize.setValue(gen.getString1());
+				userDirSize.setValue(Long.toString(gen.getInteger1()));
 			else
 				userDirSize.setValue("0");
 			parameters[0][1] = userDirSize;
@@ -143,7 +143,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			GUIParameter indexDirSize = new GUIParameter();
 			indexDirSize.setName("fulltextindex");
 			if (gen != null)
-				indexDirSize.setValue(gen.getString1());
+				indexDirSize.setValue(Long.toString(gen.getInteger1()));
 			else
 				indexDirSize.setValue("0");
 
@@ -153,7 +153,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			GUIParameter importDirSize = new GUIParameter();
 			importDirSize.setName("iimport");
 			if (gen != null)
-				importDirSize.setValue(gen.getString1());
+				importDirSize.setValue(Long.toString(gen.getInteger1()));
 			else
 				importDirSize.setValue("0");
 			parameters[0][3] = importDirSize;
@@ -162,7 +162,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			GUIParameter exportDirSize = new GUIParameter();
 			exportDirSize.setName("eexport");
 			if (gen != null)
-				exportDirSize.setValue(gen.getString1());
+				exportDirSize.setValue(Long.toString(gen.getInteger1()));
 			else
 				exportDirSize.setValue("0");
 			parameters[0][4] = exportDirSize;
@@ -171,7 +171,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			GUIParameter pluginsDirSize = new GUIParameter();
 			pluginsDirSize.setName("plugins");
 			if (gen != null)
-				pluginsDirSize.setValue(gen.getString1());
+				pluginsDirSize.setValue(Long.toString(gen.getInteger1()));
 			else
 				pluginsDirSize.setValue("0");
 			parameters[0][5] = pluginsDirSize;
@@ -180,7 +180,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			GUIParameter dbDirSize = new GUIParameter();
 			dbDirSize.setName("database");
 			if (gen != null)
-				dbDirSize.setValue(gen.getString1());
+				dbDirSize.setValue(Long.toString(gen.getInteger1()));
 			else
 				dbDirSize.setValue("0");
 
@@ -190,7 +190,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			GUIParameter logsDirSize = new GUIParameter();
 			logsDirSize.setName("logs");
 			if (gen != null)
-				logsDirSize.setValue(gen.getString1());
+				logsDirSize.setValue(Long.toString(gen.getInteger1()));
 			else
 				logsDirSize.setValue("0");
 
@@ -244,8 +244,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			 * Last run
 			 */
 			gen = genDao.findByAlternateKey(StatsCollector.STAT, "lastrun", null, Tenant.SYSTEM_ID);
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date date = gen != null ? df.parse(gen.getString1()) : null;
+			Date date = gen != null ? gen.getDate1() : null;
 			GUIParameter lastrun = new GUIParameter();
 			lastrun.setName("lastrun");
 			if (date != null) {

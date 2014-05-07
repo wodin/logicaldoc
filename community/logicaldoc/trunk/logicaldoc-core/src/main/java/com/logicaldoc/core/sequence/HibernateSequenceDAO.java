@@ -40,26 +40,33 @@ public class HibernateSequenceDAO extends HibernateDaoSupport implements Sequenc
 			if (generic == null) {
 				generic = new Generic(TYPE, sequence);
 				generic.setTenantId(tenantId);
-				generic.setInteger1(value);
-			}
+			} else
+				genericDao.initialize(generic);
 			generic.setInteger1(value);
 			genericDao.store(generic);
 		}
 	}
 
 	@Override
-	public synchronized long next(String sequence, long tenantId) {
+	public synchronized long next(String sequence, long tenantId, long increment) {
 		synchronized (SequenceDAO.class) {
 			Generic generic = genericDao.findByAlternateKey(TYPE, sequence, null, tenantId);
 			if (generic == null) {
 				generic = new Generic(TYPE, sequence);
 				generic.setTenantId(tenantId);
 				generic.setInteger1(0L);
-			}
-			generic.setInteger1(generic.getInteger1().longValue() + 1);
+			} else
+				genericDao.initialize(generic);
+			generic.setInteger1(generic.getInteger1() != null ? generic.getInteger1().longValue() + increment
+					: increment);
 			genericDao.store(generic);
 			return generic.getInteger1();
 		}
+	}
+
+	@Override
+	public synchronized long next(String sequence, long tenantId) {
+		return this.next(sequence, tenantId, 1L);
 	}
 
 	@Override

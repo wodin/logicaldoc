@@ -83,19 +83,9 @@ public interface SettingService extends RemoteService {
 	public GUIParameter[] loadOcrSettings(String sid) throws InvalidSessionException;
 
 	/**
-	 * Load the system quota setting
-	 */
-	public GUIParameter[] loadQuotaSettings(String sid) throws InvalidSessionException;
-
-	/**
 	 * Load the GUI settings
 	 */
 	public GUIParameter[] loadGUISettings(String sid) throws InvalidSessionException;
-
-	/**
-	 * Saves system quota setting
-	 */
-	public void saveQuotaSettings(String sid, GUIParameter[] quotaSettings) throws InvalidSessionException;
 
 	/**
 	 * Retrieves the size of all saved storages.

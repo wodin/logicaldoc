@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.system;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.rednels.ofcgwt.client.ChartWidget;
@@ -50,10 +51,13 @@ public class PieStats extends HLayout {
 			}
 			repository.addMember(createPie(I18N.message("repository"), params));
 		} catch (Throwable t) {
-
 		}
-		repository.addMember(prepareLegend(parameters[0], STATS_REPOSITORY));
-		addMember(repository);
+
+		try {
+			repository.addMember(prepareLegend(parameters[0], STATS_REPOSITORY));
+			addMember(repository);
+		} catch (Throwable t) {
+		}
 
 		VLayout documents = new VLayout();
 		try {
@@ -61,8 +65,13 @@ public class PieStats extends HLayout {
 		} catch (Throwable t) {
 
 		}
-		documents.addMember(prepareLegend(parameters[1], STATS_DOCUMENTS));
-		addMember(documents);
+
+		try {
+			documents.addMember(prepareLegend(parameters[1], STATS_DOCUMENTS));
+			addMember(documents);
+		} catch (Throwable t) {
+
+		}
 
 		VLayout folders = new VLayout();
 		try {
@@ -70,8 +79,13 @@ public class PieStats extends HLayout {
 		} catch (Throwable t) {
 
 		}
-		folders.addMember(prepareLegend(parameters[2], STATS_FOLDERS));
-		addMember(folders);
+
+		try {
+			folders.addMember(prepareLegend(parameters[2], STATS_FOLDERS));
+			addMember(folders);
+		} catch (Throwable t) {
+
+		}
 	}
 
 	private ChartWidget createPie(String title, GUIParameter[] parameters) {
@@ -123,7 +137,7 @@ public class PieStats extends HLayout {
 	}
 
 	private DynamicForm prepareLegend(GUIParameter[] parameters, int type) {
-		NumberFormat fmt = NumberFormat.getFormat("###");
+		NumberFormat fmt = NumberFormat.getFormat("########");
 
 		// Calculate the total value
 		double count = 0;
@@ -131,7 +145,11 @@ public class PieStats extends HLayout {
 			if (parameter == null)
 				break;
 
-			count += fmt.parse(parameter.getValue());
+			try {
+				count += fmt.parse(parameter.getValue());
+			} catch (Throwable t) {
+				Log.info("error in " + parameter + " " + parameter.getValue(), null);
+			}
 		}
 
 		DynamicForm systemForm = new DynamicForm();
@@ -154,10 +172,10 @@ public class PieStats extends HLayout {
 				break;
 
 			StaticTextItem item = ItemFactory.newStaticTextItem(parameter.getName(), parameter.toString(), null);
-			if (type == STATS_REPOSITORY)
+			if (type == STATS_REPOSITORY) {
 				item.setValue(Util.formatSize(fmt.parse(parameter.getValue())) + " ( "
 						+ Util.formatPercentage((fmt.parse(parameter.getValue()) * 100 / count), 2) + " )");
-			else if (type == STATS_DOCUMENTS)
+			} else if (type == STATS_DOCUMENTS)
 				item.setValue(parameter.getValue() + " " + I18N.message("documents").toLowerCase() + " " + "( "
 						+ Util.formatPercentage((fmt.parse(parameter.getValue()) * 100 / count), 2) + " )");
 			else if (type == STATS_FOLDERS)

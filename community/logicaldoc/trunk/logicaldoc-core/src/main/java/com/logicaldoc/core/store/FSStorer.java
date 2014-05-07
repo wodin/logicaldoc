@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.security.SystemQuota;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.StringUtil;
 import com.logicaldoc.util.config.ContextProperties;
@@ -94,17 +93,10 @@ public class FSStorer implements Storer {
 	public long store(InputStream stream, long docId, String resource) {
 		File file = null;
 		try {
-			SystemQuota.checkOverQuota();
-
 			File dir = getContainer(docId);
 			FileUtils.forceMkdir(dir);
 			file = new File(new StringBuilder(dir.getPath()).append("/").append(resource).toString());
 			FileUtil.writeFile(stream, file.getPath());
-
-			// Performs increment and check of the system quota, then increments
-			// the user quota count
-			SystemQuota.increment(file.length());
-			SystemQuota.incrementUserQuota(docId, file.length());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return -1;

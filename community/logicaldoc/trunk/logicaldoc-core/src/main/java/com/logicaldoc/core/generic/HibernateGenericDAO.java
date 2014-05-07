@@ -32,6 +32,7 @@ public class HibernateGenericDAO extends HibernatePersistentObjectDAO<Generic> i
 				generic.setSubtype(generic.getSubtype() + "." + generic.getId());
 				generic.setDeleted(1);
 				saveOrUpdate(generic);
+				flush();
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -79,5 +80,12 @@ public class HibernateGenericDAO extends HibernatePersistentObjectDAO<Generic> i
 			if (generic.getValue(attribute) != null)
 				generic.getValue(attribute).toString();
 		}
+	}
+
+	@Override
+	public boolean store(Generic entity) {
+		boolean stored = super.store(entity);
+		flush();
+		return stored;
 	}
 }

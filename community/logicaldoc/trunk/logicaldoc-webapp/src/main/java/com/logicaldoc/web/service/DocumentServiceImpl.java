@@ -56,7 +56,6 @@ import com.logicaldoc.core.document.dao.RatingDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.document.thumbnail.ThumbnailManager;
 import com.logicaldoc.core.security.Folder;
-import com.logicaldoc.core.security.SystemQuota;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
@@ -202,13 +201,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					// And launch it
 					zipImporter.start();
 				} else {
-					try {
-						// Check if the user can upload another document.
-						SystemQuota.checkUserQuota(session.getUserId(), file.length());
-					} catch (Exception e) {
-						return;
-					}
-
 					// Create the document history event
 					History transaction = new History();
 					transaction.setSessionId(sid);

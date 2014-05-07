@@ -417,7 +417,7 @@
         <property name="jobDetail" ref="IndexerTaskJob" />
         <property name="config" ref="ContextProperties" />
     </bean>
-    <bean id="StatsCollector" class="com.logicaldoc.core.stats.StatsCollector">
+    <bean id="StatsCollector" class="${stat}">
         <property name="documentDAO" ref="DocumentDAO" />
         <property name="folderDAO" ref="FolderDAO" />
         <property name="genericDAO" ref="GenericDAO" />
