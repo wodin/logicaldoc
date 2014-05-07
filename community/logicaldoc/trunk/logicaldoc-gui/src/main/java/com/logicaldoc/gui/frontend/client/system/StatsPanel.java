@@ -39,9 +39,9 @@ public class StatsPanel extends VLayout {
 						+ parameters[3][0].getValue() + "</b>");
 				lastUpdateLabel.setHeight(30);
 				lastUpdateLabel.setAlign(Alignment.RIGHT);
-
+				
 				PieStats charts = new PieStats(parameters);
-
+				
 				setMembers(lastUpdateLabel, charts);
 			}
 		});

@@ -47,6 +47,8 @@ public class HibernateSequenceDAOTest extends AbstractCoreTCase {
 		for (int i = 1; i <= 20; i++) {
 			Assert.assertEquals(i, dao.next("test2", Tenant.DEFAULT_ID));
 		}
+		Assert.assertEquals(25L, dao.next("test2", Tenant.DEFAULT_ID, 5L));
+		Assert.assertEquals(23L, dao.next("test2", Tenant.DEFAULT_ID, -2L));
 	}
 
 	@Test

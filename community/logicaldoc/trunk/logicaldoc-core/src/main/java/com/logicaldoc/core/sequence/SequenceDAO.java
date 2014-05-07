@@ -26,6 +26,17 @@ public interface SequenceDAO {
 	public long next(String sequence, long tenantId);
 
 	/**
+	 * Returns the next value of the sequence by incrementing by the given increment
+	 * 
+	 * @param sequence The sequence name
+	 * @param tenantId ID of the owning tenant
+	 * @param increment ID of the owning tenant
+	 * 
+	 * @return The next value
+	 */
+	public long next(String sequence, long tenantId, long increment);
+	
+	/**
 	 * Initializes the sequence value
 	 * 
 	 * @param sequence The sequence name

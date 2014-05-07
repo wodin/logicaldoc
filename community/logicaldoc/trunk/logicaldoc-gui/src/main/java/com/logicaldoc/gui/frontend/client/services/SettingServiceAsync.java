@@ -21,10 +21,6 @@ public interface SettingServiceAsync {
 
 	void loadOcrSettings(String sid, AsyncCallback<GUIParameter[]> callback);
 
-	void loadQuotaSettings(String sid, AsyncCallback<GUIParameter[]> callback);
-
-	void saveQuotaSettings(String sid, GUIParameter[] quotaSettings, AsyncCallback<Void> callback);
-
 	void computeStoragesSize(String sid, AsyncCallback<GUIParameter[]> callback);
 
 	void loadGUISettings(String sid, AsyncCallback<GUIParameter[]> callback);

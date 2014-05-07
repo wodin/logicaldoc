@@ -295,36 +295,6 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public GUIParameter[] loadQuotaSettings(String sid) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
-
-		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-
-		GUIParameter[] params = new GUIParameter[2];
-		params[0] = new GUIParameter("quota.docs",
-				StringUtils.isNotEmpty(conf.getProperty("quota.docs")) ? conf.getProperty("quota.docs") : "");
-		params[1] = new GUIParameter("quota.threshold",
-				StringUtils.isNotEmpty(conf.getProperty("quota.threshold")) ? conf.getProperty("quota.threshold") : "");
-
-		return params;
-	}
-
-	@Override
-	public void saveQuotaSettings(String sid, GUIParameter[] quotaSettings) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
-
-		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		try {
-			for (GUIParameter f : quotaSettings) {
-				conf.setProperty(f.getName(), f.getValue());
-			}
-			conf.write();
-		} catch (IOException e) {
-			log.error(e.getMessage(), e);
-		}
-	}
-
-	@Override
 	public GUIParameter[] computeStoragesSize(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 

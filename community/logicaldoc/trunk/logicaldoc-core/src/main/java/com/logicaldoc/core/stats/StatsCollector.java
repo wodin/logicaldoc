@@ -2,8 +2,6 @@ package com.logicaldoc.core.stats;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +16,6 @@ import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
-import com.logicaldoc.core.security.SystemQuota;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
@@ -45,11 +42,11 @@ public class StatsCollector extends Task {
 
 	private GroupDAO groupDAO;
 
-	private GenericDAO genericDAO;
+	protected GenericDAO genericDAO;
 
-	private TenantDAO tenantDAO;
+	protected TenantDAO tenantDAO;
 
-	private ContextProperties config;
+	protected ContextProperties config;
 
 	private static String userno = "community";
 
@@ -107,42 +104,33 @@ public class StatsCollector extends Task {
 		int groups = groupDAO.count();
 		log.debug("Collected users data");
 
-		/*
-		 * Compute repository statistics. The docs total size is computed on DB
-		 * so it is just an estimation of the effective size.
-		 */
-		long docdir = documentDAO
-				.queryForLong("select sum(ld_filesize) from ld_version where ld_version = ld_fileversion");
-		SystemQuota.setTotalSize(docdir);
-		saveStatistic("docdir", Long.toString(docdir), Tenant.SYSTEM_ID);
-
 		long userdir = 0;
 		File userDir = UserUtil.getUsersDir();
 		userdir = FileUtils.sizeOfDirectory(userDir);
-		saveStatistic("userdir", Long.toString(userdir), Tenant.SYSTEM_ID);
+		saveStatistic("userdir", userdir, Tenant.SYSTEM_ID);
 
 		long indexdir = 0;
 		File indexDir = new File(config.getPropertyWithSubstitutions("index.dir"));
 		if (indexDir.exists())
 			indexdir = FileUtils.sizeOfDirectory(indexDir);
-		saveStatistic("indexdir", Long.toString(indexdir), Tenant.SYSTEM_ID);
+		saveStatistic("indexdir", indexdir, Tenant.SYSTEM_ID);
 
 		long importdir = 0;
 		File importDir = new File(config.getPropertyWithSubstitutions("conf.importdir"));
 		if (importDir.exists())
 			importdir = FileUtils.sizeOfDirectory(importDir);
-		saveStatistic("importdir", Long.toString(importdir), Tenant.SYSTEM_ID);
+		saveStatistic("importdir", importdir, Tenant.SYSTEM_ID);
 
 		long exportdir = 0;
 		File exportDir = new File(config.getPropertyWithSubstitutions("conf.exportdir"));
 		if (exportDir.exists())
 			exportdir = FileUtils.sizeOfDirectory(exportDir);
-		saveStatistic("exportdir", Long.toString(exportdir), Tenant.SYSTEM_ID);
+		saveStatistic("exportdir", exportdir, Tenant.SYSTEM_ID);
 
 		long plugindir = 0;
 		File pluginsDir = PluginRegistry.getPluginsDir();
 		plugindir = FileUtils.sizeOfDirectory(pluginsDir);
-		saveStatistic("plugindir", Long.toString(plugindir), Tenant.SYSTEM_ID);
+		saveStatistic("plugindir", plugindir, Tenant.SYSTEM_ID);
 
 		long dbdir = 0;
 
@@ -169,13 +157,13 @@ public class StatsCollector extends Task {
 			if (dbDir.exists())
 				dbdir = FileUtils.sizeOfDirectory(dbDir);
 		}
-		saveStatistic("dbdir", Long.toString(dbdir), Tenant.SYSTEM_ID);
+		saveStatistic("dbdir", dbdir, Tenant.SYSTEM_ID);
 
 		long logdir = 0;
 		File logsDir = new File(config.getPropertyWithSubstitutions("conf.logdir"));
 		if (logsDir.exists())
 			logdir = FileUtils.sizeOfDirectory(logsDir);
-		saveStatistic("logdir", Long.toString(logdir), Tenant.SYSTEM_ID);
+		saveStatistic("logdir", logdir, Tenant.SYSTEM_ID);
 
 		log.debug("Saved repository statistics");
 
@@ -183,16 +171,12 @@ public class StatsCollector extends Task {
 		 * Collect documents statistics
 		 */
 		long[] docStats = extractDocStats(Tenant.SYSTEM_ID);
-		saveStatistic("notindexeddocs", docStats[0], Tenant.SYSTEM_ID);
-		saveStatistic("indexeddocs", docStats[1], Tenant.SYSTEM_ID);
-		saveStatistic("deleteddocs", docStats[2], Tenant.SYSTEM_ID);
-		saveStatistic("totaldocs", docStats[3], Tenant.SYSTEM_ID);
 		long totaldocs = docStats[3];
+		long docdir = docStats[4];
 
 		List<Tenant> tenants = tenantDAO.findAll();
-		if (tenants.size() > 1)
-			for (Tenant tenant : tenants)
-				extractDocStats(tenant.getId());
+		for (Tenant tenant : tenants)
+			extractDocStats(tenant.getId());
 
 		log.debug("Saved documents statistics");
 
@@ -240,9 +224,7 @@ public class StatsCollector extends Task {
 		/*
 		 * Save the last update time
 		 */
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String lastrun = df.format(new Date());
-		saveStatistic("lastrun", lastrun, Tenant.SYSTEM_ID);
+		saveStatistic("lastrun", new Date(), Tenant.SYSTEM_ID);
 
 		log.info("Statistics collected");
 
@@ -351,10 +333,11 @@ public class StatsCollector extends Task {
 	 *         <li>indexeddocs</li>
 	 *         <li>deleteddocs</li>
 	 *         <li>totaldocs</li>
+	 *         <li>docdir (total size of the whole repository)</li>
 	 *         </ol>
 	 */
 	private long[] extractDocStats(long tenantId) {
-		long[] stats = new long[4];
+		long[] stats = new long[5];
 		stats[0] = documentDAO
 				.queryForLong("SELECT COUNT(A.ld_id) FROM ld_document A where A.ld_indexed = 0 and A.ld_deleted = 0 "
 						+ (tenantId != Tenant.SYSTEM_ID ? " and A.ld_tenantid=" + tenantId : ""));
@@ -367,11 +350,15 @@ public class StatsCollector extends Task {
 			stats[3] = documentDAO.count(tenantId, true);
 		else
 			stats[3] = documentDAO.count(null, true);
+		stats[4] = documentDAO
+				.queryForLong("SELECT SUM(A.ld_filesize) from ld_version A where A.ld_version = A.ld_fileversion "
+						+ (tenantId != Tenant.SYSTEM_ID ? " and A.ld_tenantid=" + tenantId : ""));
 
 		saveStatistic("notindexeddocs", stats[0], tenantId);
 		saveStatistic("indexeddocs", stats[1], tenantId);
 		saveStatistic("deleteddocs", stats[2], tenantId);
 		saveStatistic("totaldocs", stats[3], tenantId);
+		saveStatistic("docdir", stats[4], tenantId);
 
 		return stats;
 	}
@@ -412,7 +399,7 @@ public class StatsCollector extends Task {
 	/**
 	 * Convenience method for saving statistical data in the DB as Generics
 	 */
-	private void saveStatistic(String parameter, Object val, long tenantId) {
+	protected void saveStatistic(String parameter, Object val, long tenantId) {
 		Generic gen = genericDAO.findByAlternateKey(STAT, parameter, null, tenantId);
 		if (gen == null) {
 			gen = new Generic();
@@ -422,12 +409,15 @@ public class StatsCollector extends Task {
 		} else
 			genericDAO.initialize(gen);
 
-		if (val instanceof String)
+		if (val instanceof Date)
+			gen.setDate1((Date) val);
+		else if (val instanceof String)
 			gen.setString1((String) val);
 		else if (val instanceof Long)
 			gen.setInteger1((Long) val);
 		else
 			gen.setInteger1(((Integer) val).longValue());
+
 		genericDAO.store(gen);
 	}
 

@@ -47,17 +47,6 @@ public class SettingsMenu extends VLayout {
 		if (Session.get().isDefaultTenant())
 			addMember(folders);
 
-		Button quota = new Button(I18N.message("docsquota"));
-		quota.setWidth100();
-		quota.setHeight(25);
-		if (Feature.visible(Feature.QUOTAS) && Session.get().isDefaultTenant()) {
-			addMember(quota);
-			if (!Feature.enabled(Feature.QUOTAS)) {
-				quota.setDisabled(true);
-				quota.setTooltip(I18N.message("featuredisabled"));
-			}
-		}
-
 		Button guiSettings = new Button(I18N.message("guisettings"));
 		guiSettings.setWidth100();
 		guiSettings.setHeight(25);
@@ -231,24 +220,6 @@ public class SettingsMenu extends VLayout {
 					@Override
 					public void onSuccess(GUIParameter[][] repos) {
 						AdminPanel.get().setContent(new RepositoriesPanel(repos));
-					}
-				});
-			}
-		});
-
-		quota.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				settingService.loadQuotaSettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(GUIParameter[] settings) {
-						AdminPanel.get().setContent(new SystemQuotaPanel(settings));
 					}
 				});
 			}

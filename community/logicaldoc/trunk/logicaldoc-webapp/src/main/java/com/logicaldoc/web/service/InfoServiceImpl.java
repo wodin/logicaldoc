@@ -20,7 +20,6 @@ import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.rss.FeedMessage;
 import com.logicaldoc.core.rss.dao.FeedMessageDAO;
 import com.logicaldoc.core.security.SessionManager;
-import com.logicaldoc.core.security.SystemQuota;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.TenantDAO;
@@ -125,25 +124,6 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 						m.setMessage(I18N.message("databasenotconnected", locale));
 						messages.add(m);
 					}
-				}
-			}
-
-			if (info.isDatabaseConnected()) {
-				// Checks if the system quota or the quota threshold is
-				// exceeded.
-				boolean quotaExcedeed = false;
-				try {
-					SystemQuota.checkOverQuota();
-				} catch (Throwable e) {
-					quotaExcedeed = true;
-					GUIMessage m = new GUIMessage();
-					m.setMessage(I18N.message("quotaexceeded", locale));
-					messages.add(m);
-				}
-				if (SystemQuota.checkOverThreshold() && !quotaExcedeed) {
-					GUIMessage m = new GUIMessage();
-					m.setMessage(I18N.message("quotathresholdexceeded", locale));
-					messages.add(m);
 				}
 			}
 
