@@ -26,6 +26,7 @@ import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.data.Ace;
 import org.apache.chemistry.opencmis.commons.data.Acl;
 import org.apache.chemistry.opencmis.commons.data.AllowableActions;
+import org.apache.chemistry.opencmis.commons.data.CmisExtensionElement;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.chemistry.opencmis.commons.data.ExtensionsData;
 import org.apache.chemistry.opencmis.commons.data.FailedToDeleteData;
@@ -72,6 +73,7 @@ import org.apache.chemistry.opencmis.commons.impl.dataobjects.AccessControlListI
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.AccessControlPrincipalDataImpl;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.AclCapabilitiesDataImpl;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.AllowableActionsImpl;
+import org.apache.chemistry.opencmis.commons.impl.dataobjects.CmisExtensionElementImpl;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.ContentStreamImpl;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.FailedToDeleteDataImpl;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.ObjectDataImpl;
@@ -300,6 +302,34 @@ public class LDRepository {
 		aclCapability.setPermissionMappingData(map);
 
 		repositoryInfo.setAclCapabilities(aclCapability);
+
+		// ADD LogicalDOC specific extensions sid (session-ID) element
+		setupExtensions(repositoryInfo);
+	}
+
+	/**
+	 * Adds LogicalDOC specific extensions. Here we put the current SID.
+	 * 
+	 * @param repoInfo The repository info to process
+	 */
+	private void setupExtensions(RepositoryInfoImpl repoInfo) {
+
+		// Important: use this namespace for the extensions that must be
+		// different from the CMIS
+		// namespaces
+		String ns = "http://www.logicaldoc.com";
+
+		// create a list for the first level of our extension
+		List<CmisExtensionElement> extElements = new ArrayList<CmisExtensionElement>();
+
+		// add two leafs to the extension
+		extElements.add(new CmisExtensionElementImpl(ns, "sid", null, this.sid));
+
+		// set the extension list
+		List<CmisExtensionElement> extensions = new ArrayList<CmisExtensionElement>();
+		extensions.add(new CmisExtensionElementImpl(ns, "LogicaldocExtension", null, extElements));
+
+		repoInfo.setExtensions(extensions);
 	}
 
 	private static PermissionDefinition createPermission(String permission, String description) {

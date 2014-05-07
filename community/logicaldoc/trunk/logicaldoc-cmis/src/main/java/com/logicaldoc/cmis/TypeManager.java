@@ -58,7 +58,7 @@ public class TypeManager {
 
 	public static final String WORKSPACE_TYPE_ID = "Workspace";
 
-	private static final String NAMESPACE = "http://logicaldoc.com/cmis";
+	public static final String NAMESPACE = "http://logicaldoc.com/cmis";
 
 	private static final Logger log = LoggerFactory.getLogger(TypeManager.class);
 
