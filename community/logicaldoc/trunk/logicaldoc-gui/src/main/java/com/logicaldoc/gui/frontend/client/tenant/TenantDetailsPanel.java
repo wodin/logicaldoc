@@ -224,8 +224,8 @@ public class TenantDetailsPanel extends VLayout {
 					if (tenant != null) {
 						TenantDetailsPanel.this.tenant = tenant;
 						TenantDetailsPanel.this.tenantsPanel.updateRecord(tenant);
-						TenantDetailsPanel.this.tenantsPanel.showTenantDetails(tenant);
-
+						TenantDetailsPanel.this.tenantsPanel.loadTenant(tenant.getId());
+						
 						if (newTenant) {
 							SC.say(I18N.message("newtenantresume",
 									new String[] { tenant.getName(), "admin" + tenant.getName(), "admin" }));

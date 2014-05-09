@@ -366,7 +366,7 @@ public class LoginPanel extends VLayout {
 		List<MessageLabel> messages = new ArrayList<MessageLabel>();
 		if (info.getMessages().length > 0) {
 			for (GUIMessage message : info.getMessages()) {
-				MessageLabel label = new MessageLabel(message);
+				MessageLabel label = new MessageLabel(message, info.getTenant().getId() == 1L);
 				label.setStyleName("loginMemesage");
 				messages.add(label);
 			}
@@ -376,7 +376,7 @@ public class LoginPanel extends VLayout {
 			GUIMessage demoRunLevelMessage = new GUIMessage();
 			demoRunLevelMessage.setMessage(I18N.message("demomode"));
 			demoRunLevelMessage.setPriority(GUIMessage.PRIO_WARN);
-			MessageLabel demoRunLevel = new MessageLabel(demoRunLevelMessage);
+			MessageLabel demoRunLevel = new MessageLabel(demoRunLevelMessage, info.getTenant().getId() == 1L);
 			messages.add(demoRunLevel);
 		}
 

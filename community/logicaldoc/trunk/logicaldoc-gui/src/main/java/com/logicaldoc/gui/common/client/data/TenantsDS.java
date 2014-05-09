@@ -2,6 +2,9 @@ package com.logicaldoc.gui.common.client.data;
 
 import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.fields.DataSourceBooleanField;
+import com.smartgwt.client.data.fields.DataSourceDateTimeField;
+import com.smartgwt.client.data.fields.DataSourceImageField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
 /**
@@ -20,6 +23,8 @@ public class TenantsDS extends DataSource {
 
 		DataSourceTextField name = new DataSourceTextField("name");
 		DataSourceTextField displayName = new DataSourceTextField("displayName");
+		DataSourceImageField enabledIcon = new DataSourceImageField("enabledIcon");
+		DataSourceBooleanField enabled = new DataSourceBooleanField("eenabled");
 		DataSourceTextField email = new DataSourceTextField("email");
 		DataSourceTextField city = new DataSourceTextField("city");
 		DataSourceTextField country = new DataSourceTextField("country");
@@ -27,8 +32,10 @@ public class TenantsDS extends DataSource {
 		DataSourceTextField postalCode = new DataSourceTextField("postalCode");
 		DataSourceTextField state = new DataSourceTextField("state");
 		DataSourceTextField address = new DataSourceTextField("address");
+		DataSourceDateTimeField expire = new DataSourceDateTimeField("expire");
 
-		setFields(id, name, displayName, email, city, country, telephone, postalCode, state, address);
+		setFields(id, name, enabledIcon, enabled, expire, displayName, email, city, country, telephone, postalCode,
+				state, address);
 		setDataURL("data/tenants.xml?sid=" + Session.get().getSid());
 		setClientOnly(true);
 	}

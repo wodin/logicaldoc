@@ -6,6 +6,7 @@ import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUITenant;
 import com.logicaldoc.gui.common.client.data.TenantsDS;
+import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
@@ -94,14 +95,20 @@ public class TenantsPanel extends VLayout {
 		ListGridField address = new ListGridField("address", I18N.message("address"), 150);
 		address.setCanFilter(true);
 
-		ListGridField enabled = new ListGridField("eenabled", " ", 24);
+		ListGridField enabled = new ListGridField("enabledIcon", " ", 24);
 		enabled.setType(ListGridFieldType.IMAGE);
 		enabled.setCanSort(false);
 		enabled.setAlign(Alignment.CENTER);
 		enabled.setShowDefaultContextMenu(false);
 		enabled.setImageURLPrefix(Util.imagePrefix());
-		enabled.setImageURLSuffix(".gif");
+		enabled.setImageURLSuffix(".png");
 		enabled.setCanFilter(false);
+
+		ListGridField expire = new ListGridField("expire", I18N.message("expireson"), 110);
+		expire.setAlign(Alignment.CENTER);
+		expire.setType(ListGridFieldType.DATE);
+		expire.setCellFormatter(new DateCellFormatter(false));
+		expire.setCanFilter(false);
 
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
@@ -113,7 +120,7 @@ public class TenantsPanel extends VLayout {
 		list.setFilterOnKeypress(true);
 		list.setShowFilterEditor(true);
 		list.setDataSource(new TenantsDS());
-		list.setFields(id, name, displayName, email, telephone, country, city, address);
+		list.setFields(id, enabled, name, displayName, expire, email, telephone, country, city, address);
 
 		listing.addMember(infoPanel);
 		listing.addMember(list);
@@ -152,19 +159,7 @@ public class TenantsPanel extends VLayout {
 			public void onSelectionChanged(SelectionEvent event) {
 				Record record = list.getSelectedRecord();
 				if (record != null)
-					service.load(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
-							new AsyncCallback<GUITenant>() {
-
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
-
-								@Override
-								public void onSuccess(GUITenant tenant) {
-									showTenantDetails(tenant);
-								}
-							});
+					loadTenant(Long.parseLong(record.getAttributeAsString("id")));
 			}
 		});
 
@@ -172,6 +167,21 @@ public class TenantsPanel extends VLayout {
 			@Override
 			public void onDataArrived(DataArrivedEvent event) {
 				infoPanel.setMessage(I18N.message("showtenants", Integer.toString(list.getTotalRows())));
+			}
+		});
+	}
+
+	public void loadTenant(long tenantId) {
+		service.load(Session.get().getSid(), tenantId, new AsyncCallback<GUITenant>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
+
+			@Override
+			public void onSuccess(GUITenant tenant) {
+				showTenantDetails(tenant);
 			}
 		});
 	}
@@ -195,6 +205,14 @@ public class TenantsPanel extends VLayout {
 		record.setAttribute("city", tenant.getCity());
 		record.setAttribute("postalCode", tenant.getPostalCode());
 		record.setAttribute("state", tenant.getState());
+		record.setAttribute("expire", tenant.getExpire());
+		if (tenant.isEnabled()) {
+			list.getSelectedRecord().setAttribute("enabledIcon", "bullet_green");
+			list.getSelectedRecord().setAttribute("eenabled", false);
+		} else {
+			list.getSelectedRecord().setAttribute("enabledIcon", "bullet_red");
+			list.getSelectedRecord().setAttribute("eenabled", false);
+		}
 
 		if (record.getAttributeAsString("id") != null) {
 			list.refreshRow(list.getRecordIndex(record));
@@ -265,4 +283,5 @@ public class TenantsPanel extends VLayout {
 		contextMenu.setItems(password, delete);
 		contextMenu.showContextMenu();
 	}
+
 }

@@ -207,7 +207,7 @@ public class HibernateUserDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testCount() {
-		Assert.assertEquals(5, dao.count());
+		Assert.assertEquals(5, dao.count(null));
 	}
 
 	public void isPasswordExpired() {

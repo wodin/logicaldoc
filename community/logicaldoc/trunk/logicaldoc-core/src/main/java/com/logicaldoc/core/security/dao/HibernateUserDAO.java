@@ -272,8 +272,9 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	}
 
 	@Override
-	public int count() {
-		String query = "select count(*) from ld_user where ld_type=0 and not(ld_deleted=1)";
+	public int count(Long tenantId) {
+		String query = "select count(*) from ld_user where ld_type=0 and not(ld_deleted=1) "
+				+ (tenantId != null ? " and ld_tenantid=" + tenantId : "");
 		return queryForInt(query);
 	}
 
@@ -366,7 +367,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	public void setGenericDAO(GenericDAO genericDAO) {
 		this.genericDAO = genericDAO;
 	}
-	
+
 	@Override
 	public User findAdminUser(String tenantName) {
 		if ("default".equals(tenantName))

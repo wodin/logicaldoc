@@ -20,7 +20,7 @@ public interface UserDAO extends PersistentObjectDAO<User> {
 	/**
 	 * Counts the total number of users
 	 */
-	public int count();
+	public int count(Long tenantId);
 
 	/**
 	 * This method finds an User by its username.

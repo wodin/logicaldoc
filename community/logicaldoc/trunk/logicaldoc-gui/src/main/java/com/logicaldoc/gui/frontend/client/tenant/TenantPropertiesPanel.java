@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.tenant;
 
+import java.util.Date;
 import java.util.Map;
 
 import com.logicaldoc.gui.common.client.Constants;
@@ -11,6 +12,8 @@ import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -74,6 +77,9 @@ public class TenantPropertiesPanel extends HLayout {
 
 		layout.addMember(form, 1);
 
+		CheckboxItem enabled = new CheckboxItem("eenabled", I18N.message("enabled"));
+		enabled.setValue(tenant.isEnabled());
+
 		TextItem name = ItemFactory.newSimpleTextItem("name", "name", tenant.getName());
 		name.setRequired(true);
 		name.setSelectOnFocus(true);
@@ -117,13 +123,27 @@ public class TenantPropertiesPanel extends HLayout {
 		if (!readonly)
 			phone.addChangedHandler(changedHandler);
 
+		DateItem expire = ItemFactory.newDateItem("expire", "expireson");
+		expire.setValue(tenant.getExpire());
+		expire.setDisabled(readonly);
+		if (!readonly)
+			expire.addChangedHandler(changedHandler);
+
 		TextItem email = ItemFactory.newEmailItem("email", "email", false);
 		email.setDisabled(readonly);
 		email.setValue(tenant.getEmail());
 		if (!readonly)
 			email.addChangedHandler(changedHandler);
 
-		form.setItems(name, displayName, email, address, postalcode, city, country, state, phone);
+		if (readonly || "default".equals(tenant.getName())) {
+			enabled.setDisabled(true);
+			expire.setDisabled(true);
+		} else {
+			enabled.addChangedHandler(changedHandler);
+			expire.addChangedHandler(changedHandler);
+		}
+
+		form.setItems(name, enabled, expire, displayName, email, address, postalcode, city, country, state, phone);
 		addMember(layout);
 	}
 
@@ -143,6 +163,8 @@ public class TenantPropertiesPanel extends HLayout {
 			tenant.setPostalCode((String) values.get("postalcode"));
 			tenant.setTelephone((String) values.get("phone"));
 			tenant.setEmail((String) values.get("email"));
+			tenant.setEnabled(new Boolean(values.get("eenabled").toString()));
+			tenant.setExpire((Date) values.get("expire"));
 		}
 
 		return !vm.hasErrors();

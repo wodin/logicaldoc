@@ -1,5 +1,5 @@
-insert into ld_tenant(ld_id,ld_lastmodified,ld_deleted,ld_tenantid,ld_name,ld_displayname,ld_type)
-values     (2,CURRENT_TIMESTAMP,0,2,'tenant2','Tenant 2',0);
+insert into ld_tenant(ld_id,ld_lastmodified,ld_deleted,ld_tenantid,ld_name,ld_displayname,ld_type,ld_enabled)
+values     (2,CURRENT_TIMESTAMP,0,2,'tenant2','Tenant 2',0,1);
 
 
 insert into ld_user
