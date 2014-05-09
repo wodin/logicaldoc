@@ -82,7 +82,7 @@ public class CommentService extends AbstractService {
 	private boolean isWriteEnabled(User user, long folderId) {
 		try {
 			FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-			if (dao.isPermissionEnabled(Permission.READ, folderId, user.getId())) {
+			if (dao.isPermissionEnabled(Permission.WRITE, folderId, user.getId())) {
 				return true;
 			}
 		} catch (Exception e) {
