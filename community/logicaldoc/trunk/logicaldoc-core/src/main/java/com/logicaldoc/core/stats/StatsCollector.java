@@ -100,7 +100,7 @@ public class StatsCollector extends Task {
 		/*
 		 * Collect users data
 		 */
-		int users = userDao.count();
+		int users = userDao.count(null);
 		int groups = groupDAO.count();
 		log.debug("Collected users data");
 

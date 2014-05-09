@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.common.client.beans;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * This class represents a Tenant, that is a branch of the organization or an
@@ -50,6 +51,10 @@ public class GUITenant implements Serializable {
 	 * Maximum repository size expressed in MB
 	 */
 	private Long maxRepoSize;
+
+	private boolean enabled = true;
+
+	private Date expire;
 
 	public String getName() {
 		return name;
@@ -190,5 +195,29 @@ public class GUITenant implements Serializable {
 
 	public void setMaxRepoSize(Long maxRepoSize) {
 		this.maxRepoSize = maxRepoSize;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public Date getExpire() {
+		return expire;
+	}
+
+	public void setExpire(Date expire) {
+		this.expire = expire;
+	}
+
+	public boolean isAvailable() {
+		if (!enabled)
+			return false;
+		if (expire != null && expire.before(new Date()))
+			return false;
+		return true;
 	}
 }

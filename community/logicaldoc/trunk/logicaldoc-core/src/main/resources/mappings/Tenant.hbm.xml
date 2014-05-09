@@ -12,6 +12,8 @@
         <property name="tenantId" type="long" column="ld_tenantid" not-null="true" />
 		<property name="name" type="string" column="ld_name" length="255" not-null="true" />
         <property name="displayName" type="string" column="ld_displayname" length="4000" />
+        <property name="enabled" type="int" column="ld_enabled" not-null="true" />
+        <property name="expire" type="timestamp" column="ld_expire" />
 		<property name="street" type="string" column="ld_street" length="255" />
 		<property name="postalCode" type="string" column="ld_postalcode" length="255" />
 		<property name="city" type="string" column="ld_city" length="255" />

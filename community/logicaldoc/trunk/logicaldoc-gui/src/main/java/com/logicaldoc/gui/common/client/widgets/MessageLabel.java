@@ -16,21 +16,26 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 public class MessageLabel extends Label {
 
 	public MessageLabel(final GUIMessage message) {
-		super("<span style='text-decoration: underline'>"+message.getMessage()+"</span>");
+		this(message, true);
+	}
+
+	public MessageLabel(final GUIMessage message, boolean showLinks) {
+		super("<span style='text-decoration: underline'>" + message.getMessage() + "</span>");
 		setHeight(25);
 		setWrap(false);
 		if (message.getPriority() == GUIMessage.PRIO_INFO)
 			setIcon("[SKIN]/Dialog/notify.png");
 		else if (message.getPriority() == GUIMessage.PRIO_WARN)
 			setIcon("[SKIN]/Dialog/warn.png");
-		if (message.getUrl() != null) {
-			setCursor(Cursor.HAND);
-			addClickHandler(new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					Window.open(message.getUrl(), "_self", "");
-				}
-			});
-		}
+		if (showLinks)
+			if (message.getUrl() != null) {
+				setCursor(Cursor.HAND);
+				addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						Window.open(message.getUrl(), "_self", "");
+					}
+				});
+			}
 	}
 }

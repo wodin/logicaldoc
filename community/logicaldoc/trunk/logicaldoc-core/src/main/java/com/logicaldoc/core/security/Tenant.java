@@ -1,6 +1,7 @@
 package com.logicaldoc.core.security;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.logicaldoc.core.PersistentObject;
 
@@ -17,7 +18,7 @@ public class Tenant extends PersistentObject implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final long SYSTEM_ID = -1L;
-	
+
 	public static final long DEFAULT_ID = 1L;
 
 	public static final String DEFAULT_NAME = "default";
@@ -49,6 +50,10 @@ public class Tenant extends PersistentObject implements Serializable {
 	private Integer maxSessions;
 
 	private Long maxRepoDocs;
+
+	private int enabled = 1;
+
+	private Date expire;
 
 	/**
 	 * Maximum repository size expressed in MB
@@ -170,5 +175,32 @@ public class Tenant extends PersistentObject implements Serializable {
 
 	public void setMaxRepoSize(Long maxRepoSize) {
 		this.maxRepoSize = maxRepoSize;
+	}
+
+	public int getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(int enabled) {
+		this.enabled = enabled;
+	}
+
+	/**
+	 * Check if the tenant is enabled and not expired
+	 */
+	public boolean isAvailable() {
+		if (enabled == 0)
+			return false;
+		if (expire != null && expire.before(new Date()))
+			return false;
+		return true;
+	}
+
+	public Date getExpire() {
+		return expire;
+	}
+
+	public void setExpire(Date expire) {
+		this.expire = expire;
 	}
 }

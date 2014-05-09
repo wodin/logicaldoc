@@ -136,6 +136,18 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	}
 
 	/**
+	 * Counts the number of opened sessions per tenant
+	 */
+	public int countOpened(long tenantId) {
+		int count = 0;
+		for (UserSession session : getSessions()) {
+			if (!isExpired(session) && session.getTenantId() == tenantId)
+				count++;
+		}
+		return count;
+	}
+
+	/**
 	 * Returns the list of sessions ordered by ascending status and creation
 	 * date.
 	 */
@@ -146,11 +158,25 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	}
 
 	/**
+	 * Returns the list of sessions of the specified tenant ordered by ascending
+	 * status and creation date.
+	 */
+	public List<UserSession> getSessions(long tenantId) {
+		List<UserSession> sessions = new ArrayList<UserSession>(values());
+		List<UserSession> tenantSessions = new ArrayList<UserSession>();
+		for (UserSession session : sessions)
+			if (session.getTenantId() == tenantId)
+				tenantSessions.add(session);
+		Collections.sort(tenantSessions);
+		return tenantSessions;
+	}
+
+	/**
 	 * Returns the list of sessions for the specified user object
 	 */
 	public List<UserSession> getSessionsByUserObject(Object userObject) {
 		List<UserSession> sessions = new ArrayList<UserSession>();
-		if(userObject==null)
+		if (userObject == null)
 			return sessions;
 		for (UserSession userSession : values()) {
 			if (userObject.equals(userSession.getUserObject()))
