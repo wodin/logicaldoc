@@ -10,12 +10,14 @@ import java.util.Date;
  */
 public abstract class PersistentObject {
 	private long id = 0;
-	
+
 	private long tenantId = 1L;
 
 	private int deleted = 0;
 
-	private Date lastModified;
+	private Date lastModified = new Date();
+
+	private long recordVersion = 0L;
 
 	/**
 	 * Unique identifier in the data store
@@ -71,5 +73,13 @@ public abstract class PersistentObject {
 
 	public void setTenantId(long tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	public long getRecordVersion() {
+		return recordVersion;
+	}
+
+	public void setRecordVersion(long recordVersion) {
+		this.recordVersion = recordVersion;
 	}
 }
