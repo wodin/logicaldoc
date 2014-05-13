@@ -151,8 +151,7 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 		GUIGroup group = service.getGroup(session.getSid(), 10);
 		Assert.assertNotNull(group);
 		Assert.assertEquals("testGroup", group.getName());
-		Assert.assertEquals("Group for tests", group.getDescription());
-
+		
 		// Try with unexisting id
 		group = service.getGroup(session.getSid(), 999);
 		Assert.assertNull(group);
@@ -183,7 +182,6 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 		group = service.saveGroup(session.getSid(), group);
 		Assert.assertNotNull(group);
 		Assert.assertEquals("testGroup", group.getName());
-		Assert.assertEquals("Group for tests", group.getDescription());
 	}
 
 	@Test

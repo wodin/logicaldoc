@@ -62,9 +62,7 @@ public class HibernateVersionDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testStore() {
 		Version version = new Version();
-		version.setId(3);
 		version.setDeleted(0);
-		version.setLastModified(null);
 		version.setComment("pippo");
 		version.setUserId(1);
 		version.setUsername("matteo");

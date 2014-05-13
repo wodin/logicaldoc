@@ -1,5 +1,7 @@
 package com.logicaldoc.core.document;
 
+import javax.persistence.Entity;
+
 import com.logicaldoc.core.PersistentObject;
 
 /**

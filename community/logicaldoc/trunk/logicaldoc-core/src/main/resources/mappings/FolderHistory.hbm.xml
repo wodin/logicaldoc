@@ -7,7 +7,8 @@
         <id name="id" type="long" column="ld_id" unsaved-value="0">
             <generator class="hilo" />
         </id>
-        <timestamp name="lastModified" column="ld_lastmodified" />
+        <version name="recordVersion" column="ld_recordversion"  type="long" />   
+        <property name="lastModified" type="timestamp" column="ld_lastmodified" />
         <property name="deleted" type="int" column="ld_deleted" not-null="true" />
         <property name="tenantId" type="long" column="ld_tenantid" not-null="true" />
 		<property name="docId" type="long" column="ld_docid"/>

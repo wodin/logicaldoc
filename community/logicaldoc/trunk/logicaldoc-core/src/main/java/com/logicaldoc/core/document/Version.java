@@ -183,7 +183,7 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 
 		version.setTenantId(document.getTenantId());
 		version.setDeleted(0);
-		version.setLastModified(null);
+		version.setRecordVersion(0);
 		version.setComment(comment);
 		document.setComment(comment);
 		version.setEvent(event);
@@ -196,7 +196,7 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 		}
 
 		version.setAttributes(new HashMap<String, ExtendedAttribute>());
-		if (document.getAttributes() != null ) {
+		if (document.getAttributes() != null) {
 			try {
 				for (String name : document.getAttributeNames()) {
 					version.getAttributes().put(name, document.getAttributes().get(name));

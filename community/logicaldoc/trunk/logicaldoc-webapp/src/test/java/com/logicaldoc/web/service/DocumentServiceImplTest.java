@@ -121,10 +121,12 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 	public void testSave() throws Exception {
 		GUIDocument doc = service.getById(session.getSid(), 1);
 
+		doc.setCoverage("xxxx");
 		doc = service.save(session.getSid(), doc);
 		Assert.assertNotNull(doc);
 		Assert.assertEquals("testDocname", doc.getTitle());
 		Assert.assertEquals("myself", doc.getPublisher());
+		Assert.assertEquals("xxxx", doc.getCoverage());
 
 		doc = service.getById(session.getSid(), 3);
 		Assert.assertEquals("testDocname3", doc.getTitle());
