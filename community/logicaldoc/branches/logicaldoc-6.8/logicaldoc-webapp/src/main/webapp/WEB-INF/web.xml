@@ -153,11 +153,6 @@
 		<servlet-class>com.logicaldoc.web.service.MessageServiceImpl</servlet-class>
 	</servlet>
 
-	<servlet>
-		<servlet-name>WorkflowService</servlet-name>
-		<servlet-class>com.logicaldoc.gui.frontend.server.MockWorkflowServiceImpl</servlet-class>
-	</servlet>
-
     <servlet>
       <servlet-name>ContactService</servlet-name>
       <servlet-class>com.logicaldoc.web.service.ContactServiceImpl</servlet-class>
@@ -407,11 +402,6 @@
 		<url-pattern>/frontend/message</url-pattern>
 	</servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>WorkflowService</servlet-name>
-		<url-pattern>/frontend/workflow</url-pattern>
-	</servlet-mapping>
-    
 	<servlet-mapping>
 		<servlet-name>ContactService</servlet-name>
 		<url-pattern>/frontend/contact</url-pattern>
