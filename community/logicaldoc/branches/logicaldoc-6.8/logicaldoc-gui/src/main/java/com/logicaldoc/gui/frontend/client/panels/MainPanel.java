@@ -8,6 +8,7 @@ import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Menu;
 import com.logicaldoc.gui.common.client.PanelObserver;
 import com.logicaldoc.gui.common.client.Session;
@@ -136,7 +137,7 @@ public class MainPanel extends VLayout implements SessionObserver {
 		long welcomeScreen = Menu.DASHBOARD;
 		if (user.getWelcomeScreen() != null)
 			welcomeScreen = user.getWelcomeScreen().intValue();
-		
+
 		if (Menu.enabled(Menu.DASHBOARD)) {
 			dashboardTab.setPane(DashboardPanel.get());
 			tabSet.addTab(dashboardTab);
@@ -173,34 +174,36 @@ public class MainPanel extends VLayout implements SessionObserver {
 				tabSet.selectTab(dashboardTab);
 		}
 
-		WorkflowServiceAsync service = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
-		service.countActiveUserTasks(Session.get().getSid(), user.getUserName(), new AsyncCallback<Integer>() {
+		if (Feature.enabled(Feature.WORKFLOW)) {
+			WorkflowServiceAsync service = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
+			service.countActiveUserTasks(Session.get().getSid(), user.getUserName(), new AsyncCallback<Integer>() {
 
-			@Override
-			public void onFailure(Throwable caught) {
-				if (Session.get().isDevel())
-					Log.serverError(caught);
-			}
+				@Override
+				public void onFailure(Throwable caught) {
+					if (Session.get().isDevel())
+						Log.serverError(caught);
+				}
 
-			@Override
-			public void onSuccess(Integer result) {
-				user.setActiveTasks(result);
-			}
-		});
+				@Override
+				public void onSuccess(Integer result) {
+					user.setActiveTasks(result);
+				}
+			});
 
-		service.countActiveUserTasks(Session.get().getSid(), user.getUserName(), new AsyncCallback<Integer>() {
+			service.countActiveUserTasks(Session.get().getSid(), user.getUserName(), new AsyncCallback<Integer>() {
 
-			@Override
-			public void onFailure(Throwable caught) {
-				if (Session.get().isDevel())
-					Log.serverError(caught);
-			}
+				@Override
+				public void onFailure(Throwable caught) {
+					if (Session.get().isDevel())
+						Log.serverError(caught);
+				}
 
-			@Override
-			public void onSuccess(Integer result) {
-				user.setUpcomingEvents(result);
-			}
-		});
+				@Override
+				public void onSuccess(Integer result) {
+					user.setUpcomingEvents(result);
+				}
+			});
+		}
 	}
 
 	public void selectSearchTab() {
