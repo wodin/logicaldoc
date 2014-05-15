@@ -16,11 +16,13 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
+import com.logicaldoc.gui.common.client.beans.GUITenant;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
@@ -46,6 +48,8 @@ import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.TenantService;
+import com.logicaldoc.gui.frontend.client.services.TenantServiceAsync;
 import com.logicaldoc.gui.frontend.client.webcontent.WebcontentCreate;
 import com.logicaldoc.gui.frontend.client.webcontent.WebcontentEditor;
 import com.smartgwt.client.types.Alignment;
@@ -54,6 +58,9 @@ import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
@@ -78,6 +85,8 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	protected GDocsServiceAsync gdocsService = (GDocsServiceAsync) GWT.create(GDocsService.class);
+
+	protected TenantServiceAsync tenantService = (TenantServiceAsync) GWT.create(TenantService.class);
 
 	private boolean quickSearch = true;
 
@@ -126,9 +135,38 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 
 		Label userInfo = new Label(I18N.message("loggedin") + " <b>" + Session.get().getUser().getUserName() + "</b>");
 		userInfo.setWrap(false);
-
 		addMember(userInfo);
 		addSeparator();
+
+		if (Feature.enabled(Feature.MULTI_TENANT) && Session.get().getUser().isMemberOf("admin")) {
+			SelectItem tenantSelector = ItemFactory.newTenantSelector();
+			tenantSelector.setValue(Long.toString(Session.get().getInfo().getTenant().getId()));
+			tenantSelector.addChangedHandler(new ChangedHandler() {
+
+				@Override
+				public void onChanged(ChangedEvent event) {
+					long tenantId = Long.parseLong(event.getValue().toString());
+					if (tenantId != Session.get().getInfo().getTenant().getId())
+						tenantService.changeSessionTenant(Session.get().getSid(), tenantId,
+								new AsyncCallback<GUITenant>() {
+
+									@Override
+									public void onSuccess(GUITenant tenant) {
+										Session.get().getInfo().setTenant(tenant);
+										Util.redirectToRoot();
+									}
+
+									@Override
+									public void onFailure(Throwable caught) {
+										Log.serverError(caught);
+									}
+								});
+				}
+			});
+
+			addFormItem(tenantSelector);
+			addSeparator();
+		}
 
 		if (quickSearch)
 			addFormItem(new SearchBox());
@@ -175,12 +213,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 									}
 
 									Session.get().close();
-									String base = GWT.getHostPageBaseURL();
-									String url = base
-											+ (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/"
-													+ GWT.getModuleName() + ".jsp");
-									url += "?locale=" + I18N.getLocale() + "&tenant=" + Session.get().getTenantName();
-									Util.redirect(url);
+									Util.redirectToRoot();
 								}
 							});
 						}
@@ -189,8 +222,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 			}
 		});
 
-		if (Feature.enabled(Feature.DROP_SPOT)
-				&& !"embedded".equals(Session.get().getConfig("gui.dropspot.mode"))
+		if (Feature.enabled(Feature.DROP_SPOT) && !"embedded".equals(Session.get().getConfig("gui.dropspot.mode"))
 				&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.DOCUMENTS))
 			menu.setItems(dropSpotItem, exitItem);
 		else
@@ -723,8 +755,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 					tmp += "<param name=\"language\" value=\"" + I18N.getDefaultLocaleForDoc() + "\" />";
 					tmp += "<param name=\"sizeMax\" value=\""
 							+ Long.parseLong(Session.get().getInfo().getConfig("upload.maxsize"));
-					tmp += "<param name=\"disallow\" value=\"" + Session.get().getConfig("upload.disallow")
-							+ "\" />";
+					tmp += "<param name=\"disallow\" value=\"" + Session.get().getConfig("upload.disallow") + "\" />";
 					tmp += "</applet></div>";
 					dropArea.setContents(tmp);
 				}

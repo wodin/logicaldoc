@@ -593,4 +593,13 @@ public class Util {
 		}
 		return tenant;
 	}
+	
+	public static void redirectToRoot() {
+		String base = GWT.getHostPageBaseURL();
+		String url = base
+				+ (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/"
+						+ GWT.getModuleName() + ".jsp");
+		url += "?locale=" + I18N.getLocale() + "&tenant=" + Session.get().getTenantName();
+		Util.redirect(url);
+	}
 }
