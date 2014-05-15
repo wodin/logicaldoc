@@ -11,4 +11,6 @@ public interface TenantServiceAsync {
 	void load(String sid, long tenantId, AsyncCallback<GUITenant> callback);
 
 	void changeAdminPassword(String sid, String password, String tenantName, AsyncCallback<Void> callback);
+
+	void changeSessionTenant(String sid, long tenantId, AsyncCallback<GUITenant> callback);
 }

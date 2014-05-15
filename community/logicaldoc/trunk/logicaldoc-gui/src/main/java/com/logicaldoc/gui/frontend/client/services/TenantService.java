@@ -33,4 +33,9 @@ public interface TenantService extends RemoteService {
 	 * Changes the password of the administrator of the given tenant
 	 */
 	public void changeAdminPassword(String sid, String password, String tenantName) throws InvalidSessionException;
+	
+	/**
+	 * Change session tenant
+	 */
+	public GUITenant changeSessionTenant(String sid, long tenantId) throws InvalidSessionException;
 }
