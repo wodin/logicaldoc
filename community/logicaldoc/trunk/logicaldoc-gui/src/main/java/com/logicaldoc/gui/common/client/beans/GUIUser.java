@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.UserObserver;
 
 /**
@@ -81,6 +82,8 @@ public class GUIUser implements Serializable {
 	private int subscriptions = 0;
 
 	private int upcomingEvents = 0;
+
+	private long tenantId = Constants.TENANT_DEFAULTID;
 
 	private Long[] menues = new Long[0];
 
@@ -485,5 +488,13 @@ public class GUIUser implements Serializable {
 	@Override
 	public String toString() {
 		return (getFirstName() != null ? getFirstName() : "") + " " + (getName() != null ? getName() : "");
+	}
+
+	public long getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(long tenantId) {
+		this.tenantId = tenantId;
 	}
 }

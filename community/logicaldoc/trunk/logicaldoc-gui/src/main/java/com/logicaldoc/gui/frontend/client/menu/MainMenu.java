@@ -138,7 +138,8 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		addMember(userInfo);
 		addSeparator();
 
-		if (Feature.enabled(Feature.MULTI_TENANT) && Session.get().getUser().isMemberOf("admin")) {
+		if (Feature.enabled(Feature.MULTI_TENANT) && Session.get().getUser().isMemberOf("admin")
+				&& Session.get().getUser().getTenantId() == Constants.TENANT_DEFAULTID) {
 			SelectItem tenantSelector = ItemFactory.newTenantSelector();
 			tenantSelector.setValue(Long.toString(Session.get().getInfo().getTenant().getId()));
 			tenantSelector.addChangedHandler(new ChangedHandler() {
