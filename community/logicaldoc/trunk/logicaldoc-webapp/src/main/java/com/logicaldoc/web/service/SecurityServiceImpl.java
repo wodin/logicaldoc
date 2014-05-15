@@ -197,6 +197,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		guiUser.setFirstName(user.getFirstName());
 		guiUser.setName(user.getName());
 		guiUser.setId(user.getId());
+		guiUser.setTenantId(user.getTenantId());
 		if (StringUtils.isEmpty(locale)) {
 			guiUser.setLanguage(user.getLanguage());
 		} else {
@@ -434,6 +435,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 				GUIUser usr = new GUIUser();
 				usr.setId(userId);
+				usr.setTenantId(user.getTenantId());
 				usr.setAddress(user.getStreet());
 				usr.setCell(user.getTelephone2());
 				usr.setPhone(user.getTelephone());
