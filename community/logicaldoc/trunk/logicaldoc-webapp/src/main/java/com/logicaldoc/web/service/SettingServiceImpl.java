@@ -386,7 +386,10 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 			mail.setSentDate(new Date());
 			mail.setSubject("test");
 			mail.setMessageText("test");
+			
+			log.info("Sending test email to " + email);
 			sender.send(mail);
+			log.info("Test email sent");
 			return true;
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);

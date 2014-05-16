@@ -193,14 +193,25 @@ public class EMailSender {
 
 		Session sess = null;
 
-		if (!StringUtils.isEmpty(username))
-			sess = Session.getDefaultInstance(props, new Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(username, password);
-				}
-			});
-		else
-			sess = Session.getDefaultInstance(props);
+		try {
+			if (!StringUtils.isEmpty(username))
+				sess = Session.getDefaultInstance(props, new Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(username, password);
+					}
+				});
+			else
+				sess = Session.getDefaultInstance(props);
+		} catch (SecurityException e) {
+			if (!StringUtils.isEmpty(username))
+				sess = Session.getInstance(props, new Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(username, password);
+					}
+				});
+			else
+				sess = Session.getInstance(props);
+		}
 
 		MimeMessage message = new MimeMessage(sess);
 
