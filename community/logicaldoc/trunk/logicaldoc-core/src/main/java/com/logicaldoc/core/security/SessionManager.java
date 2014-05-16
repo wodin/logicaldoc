@@ -104,8 +104,8 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 		int timeout = 30;
 		try {
 			ContextProperties config = new ContextProperties();
-			if (config.getInt("session.timeout") > 0)
-				timeout = config.getInt("session.timeout");
+			if (config.getInt(session.getTenantName() + ".session.timeout") > 0)
+				timeout = config.getInt(session.getTenantName() + ".session.timeout");
 		} catch (IOException e) {
 		}
 		Date now = new Date();
