@@ -138,7 +138,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.startsWith("swftools.") || name.contains("password") || name.startsWith("openoffice.path")
 					|| name.contains("tag.") || name.startsWith("jdbc.") || name.startsWith("cluster")
 					|| name.startsWith("ip.") || name.contains(".extcall.") || name.contains("anonymous")
-					|| name.startsWith("hibernate."))
+					|| name.startsWith("hibernate.") || name.contains(".session."))
 				continue;
 
 			sortedSet.add(key.toString());
@@ -333,6 +333,10 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 				+ ".search.hits")));
 		params.add(new GUIParameter(session.getTenantName() + ".search.extattr", conf.getProperty(session
 				.getTenantName() + ".search.extattr")));
+		params.add(new GUIParameter(session.getTenantName() + ".session.timeout", conf.getProperty(session
+				.getTenantName() + ".session.timeout")));
+		params.add(new GUIParameter(session.getTenantName() + ".session.heartbeat", conf.getProperty(session
+				.getTenantName() + ".session.heartbeat")));
 
 		return params.toArray(new GUIParameter[0]);
 	}
@@ -386,7 +390,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 			mail.setSentDate(new Date());
 			mail.setSubject("test");
 			mail.setMessageText("test");
-			
+
 			log.info("Sending test email to " + email);
 			sender.send(mail);
 			log.info("Test email sent");

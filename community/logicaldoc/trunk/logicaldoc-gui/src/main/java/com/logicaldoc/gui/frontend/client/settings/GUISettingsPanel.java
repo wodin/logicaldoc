@@ -134,8 +134,18 @@ public class GUISettingsPanel extends VLayout {
 		webcontentfolders.setHint(I18N.message("commaseplistofids"));
 		webcontentfolders.setWidth(400);
 		
+		TextItem sessiontimeout = ItemFactory.newIntegerItem("sessiontimeout", I18N.message("sessiontimeout"), null);
+		sessiontimeout.setHint(I18N.message("minutes"));
+		sessiontimeout.setRequired(true);
+		sessiontimeout.setWrapTitle(false);
+		
+		TextItem sessionheartbeat = ItemFactory.newIntegerItem("sessionheartbeat", I18N.message("sessionheartbeat"), null);
+		sessionheartbeat.setHint(I18N.message("seconds"));
+		sessionheartbeat.setRequired(true);
+		sessionheartbeat.setWrapTitle(false);
+		
 		parametersForm.setItems(welcome, dropspot, previewPages, previewSize, previewZoom, thumbSize, thumbQuality,
-				uploadmax, disallow, ondoubleclick, doctab, searchhits, extattr, webcontentfolders, savelogin);
+				uploadmax, disallow, ondoubleclick, doctab, searchhits, extattr, webcontentfolders, savelogin, sessiontimeout, sessionheartbeat);
 
 		for (GUIParameter p : settings) {
 			if (p.getName().endsWith("gui.welcome"))
@@ -168,6 +178,10 @@ public class GUISettingsPanel extends VLayout {
 				extattr.setValue(p.getValue());
 			if (p.getName().endsWith("gui.webcontent.folders"))
 				webcontentfolders.setValue(p.getValue());
+			if (p.getName().endsWith("session.timeout"))
+				sessiontimeout.setValue(p.getValue());
+			if (p.getName().endsWith("session.heartbeat"))
+				sessionheartbeat.setValue(p.getValue());
 		}
 
 		IButton save = new IButton();
@@ -195,6 +209,8 @@ public class GUISettingsPanel extends VLayout {
 					params.add(new GUIParameter(Session.get().getTenantName()+".search.hits", values.get("searchhits").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName()+".search.extattr", values.get("extattr").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName()+".gui.webcontent.folders", values.get("webcontentfolders").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName()+".session.timeout", values.get("sessiontimeout").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName()+".session.heartbeat", values.get("sessionheartbeat").toString()));
 
 					// Update the current session parameters.
 					for (GUIParameter p : params) {

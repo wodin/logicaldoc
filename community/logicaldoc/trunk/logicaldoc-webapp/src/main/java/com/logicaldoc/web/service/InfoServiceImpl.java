@@ -26,6 +26,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
+import com.logicaldoc.gui.common.client.beans.GUITenant;
 import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.common.client.services.InfoService;
 import com.logicaldoc.i18n.I18N;
@@ -53,9 +54,8 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 
 		GUIInfo info = null;
 		try {
-			info = getInfo();
+			info = getInfo(tenantName);
 			info.setBundle(getBundle(locale));
-			info.setTenant(SecurityServiceImpl.getTenant(tenantName));
 
 			Locale withLocale = LocaleUtil.toLocale(locale);
 			ArrayList<GUIValuePair> supportedLanguages = new ArrayList<GUIValuePair>();
@@ -162,7 +162,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 	 * Retrieves the informations but not localization issues like messages and
 	 * installed languages.
 	 */
-	public static GUIInfo getInfo() {
+	public static GUIInfo getInfo(String tenantName) {
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 		/*
@@ -189,9 +189,14 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 		info.setVendorCity(inf.getVendorCity());
 		info.setVendorCountry(inf.getVendorCountry());
 		info.setYear(inf.getYear());
-		info.setSessionHeartbeat(Integer.parseInt(config.getProperty("session.heartbeat")));
 		info.setRunLevel(config.getProperty("runlevel"));
-		info.setTenant(SecurityServiceImpl.getTenant(Tenant.DEFAULT_ID));
+
+		String tname = tenantName;
+		if (tname != null)
+			tname = Tenant.DEFAULT_NAME;
+		GUITenant tenant = SecurityServiceImpl.getTenant(tname);
+		info.setTenant(tenant);
+		info.setSessionHeartbeat(Integer.parseInt(config.getProperty(tname + ".session.heartbeat")));
 
 		try {
 			ArrayList<GUIValuePair> values = new ArrayList<GUIValuePair>();

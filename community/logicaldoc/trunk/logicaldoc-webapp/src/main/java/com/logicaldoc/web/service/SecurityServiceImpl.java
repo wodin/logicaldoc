@@ -355,7 +355,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 			if (notify)
 				try {
-					notifyAccount(user, newPassword, InfoServiceImpl.getInfo());
+					notifyAccount(user, newPassword, InfoServiceImpl.getInfo(null));
 				} catch (Exception e) {
 					log.warn(e.getMessage(), e);
 					return 2;
