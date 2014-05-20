@@ -65,7 +65,7 @@ create table ld_user (ld_id bigint not null, ld_lastmodified timestamp not null,
                       ld_street varchar(255), ld_postalcode varchar(255), ld_city varchar(255), ld_country varchar(255), 
                       ld_state varchar(255), ld_language varchar(10), ld_email varchar(255), ld_telephone varchar(255), 
                       ld_telephone2 varchar(255), ld_type int not null, ld_passwordchanged timestamp, ld_passwordexpires int not null,
-                      ld_source int not null, ld_quota bigint not null, ld_quotacount bigint not null, ld_signatureid varchar(255), 
+                      ld_source int not null, ld_quota bigint not null, ld_signatureid varchar(255), 
                       ld_signatureinfo varchar(255), ld_welcomescreen int null, ld_ipwhitelist varchar(4000), 
                       ld_ipblacklist varchar(4000), ld_passwordexpired int not null,  primary key (ld_id));
 create table ld_user_history (ld_id bigint not null, ld_lastmodified timestamp not null, ld_recordversion bigint not null,
@@ -73,9 +73,6 @@ create table ld_user_history (ld_id bigint not null, ld_lastmodified timestamp n
                               ld_date timestamp, ld_username varchar(255), ld_event varchar(255), 
                               ld_comment varchar(4000), ld_notified int not null, ld_sessionid varchar(255), 
                               ld_new int, ld_filename varchar(255), primary key (ld_id));
-create table ld_userdoc (ld_id bigint not null, ld_lastmodified timestamp not null, ld_recordversion bigint not null,
-                         ld_deleted int not null, ld_tenantid bigint not null, ld_docid bigint not null, 
-                         ld_userid bigint not null, ld_date timestamp, primary key (ld_id));
 create table ld_usergroup (ld_groupid bigint not null, ld_userid bigint not null, primary key (ld_groupid, ld_userid));
 create table ld_version (ld_id bigint not null, ld_lastmodified timestamp not null, ld_recordversion bigint not null,
                          ld_deleted int not null, ld_tenantid bigint not null, ld_immutable int not null, ld_customid varchar(200),
@@ -133,9 +130,12 @@ create table ld_tenant (ld_id bigint not null, ld_lastmodified timestamp not nul
                         ld_email varchar(255), ld_telephone varchar(255),
                         ld_maxusers int, ld_maxsessions int, ld_maxrepodocs bigint,
                         ld_maxreposize bigint, ld_type int not null, primary key (ld_id));   
+create table ld_sequence (ld_id bigint not null, ld_lastmodified timestamp not null, ld_recordversion bigint not null,
+                          ld_deleted int not null, ld_tenantid bigint not null, ld_name varchar(255) not null,
+                          ld_objectid bigint, ld_lastreset timestamp null, ld_value bigint not null,
+                          primary key (ld_id));
 
 create table hibernate_unique_key (tablename varchar(40) NOT NULL, next_hi bigint NOT NULL);
-
 
 alter table ld_document add constraint FK75ED9C0276C86307 foreign key (ld_templateid) references ld_template(ld_id);
 alter table ld_document add constraint FK75ED9C027C565C60 foreign key (ld_folderid) references ld_folder(ld_id);
@@ -154,8 +154,6 @@ alter table ld_recipient add constraint FK406A04126621DEBE foreign key (ld_messa
 
 alter table ld_ticket add constraint FK_TICKET_USER foreign key (ld_userid) references ld_user(ld_id) on delete cascade;
 alter table ld_menugroup add constraint FK_MENUGROUP_GROUP foreign key (ld_groupid) references ld_group(ld_id) on delete cascade;
-alter table ld_userdoc add constraint FK_USERDOC_DOC foreign key (ld_docid) references ld_document(ld_id) on delete cascade;
-alter table ld_userdoc add constraint FK_USERDOC_USER foreign key (ld_userid) references ld_user(ld_id);
 alter table ld_menu add constraint FK_MENU_PARENT foreign key (ld_parentid) references ld_menu(ld_id);
 alter table ld_folder add constraint FK_FOLDER_PARENT foreign key (ld_parentid) references ld_folder(ld_id);
 alter table ld_folder add constraint FK_FOLDER_TEMPLATE foreign key (ld_templateid) references ld_template(ld_id);
@@ -174,6 +172,7 @@ create unique index  AK_VERSION on ld_version (ld_documentid, ld_version);
 create unique index  AK_RATING on ld_rating (ld_docid, ld_userid);
 create unique index  AK_MSGTEMPL on ld_messagetemplate (ld_name, ld_language, ld_tenantid);
 create unique index  AK_TENANT on ld_tenant (ld_name);
+create unique index  AK_SEQUENCE on ld_sequence (ld_name, ld_objectid, ld_tenantid);
 
 
 --Prepare some indexes
@@ -279,8 +278,8 @@ values     (-10000,CURRENT_TIMESTAMP,0,1,'publisher','Group of publishers',0,1);
 
 
 insert into ld_user
-           (ld_id,ld_lastmodified,ld_deleted,ld_enabled,ld_username,ld_password,ld_passwordmd4,ld_name,ld_firstname,ld_street,ld_postalcode,ld_city,ld_country,ld_language,ld_email,ld_telephone,ld_telephone2,ld_type,ld_passwordchanged,ld_passwordexpires,ld_source,ld_quota,ld_quotacount,ld_welcomescreen,ld_passwordexpired,ld_tenantid,ld_recordversion)
-values     (1,CURRENT_TIMESTAMP,0,1,'admin','d033e22ae348aeb566fc214aec3585c4da997','U8FeEPvxYRhKNCBsLa0K+1rD1tTtR6yctJIwxje2QMwEOlEQx9HuiA==','Admin','Admin','','','','','en','admin@admin.net','','',0,null,0,0,-1,0,1520,0,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_enabled,ld_username,ld_password,ld_passwordmd4,ld_name,ld_firstname,ld_street,ld_postalcode,ld_city,ld_country,ld_language,ld_email,ld_telephone,ld_telephone2,ld_type,ld_passwordchanged,ld_passwordexpires,ld_source,ld_quota,ld_welcomescreen,ld_passwordexpired,ld_tenantid,ld_recordversion)
+values     (1,CURRENT_TIMESTAMP,0,1,'admin','d033e22ae348aeb566fc214aec3585c4da997','U8FeEPvxYRhKNCBsLa0K+1rD1tTtR6yctJIwxje2QMwEOlEQx9HuiA==','Admin','Admin','','','','','en','admin@admin.net','','',0,null,0,0,-1,1520,0,1,1);
 insert into ld_group
            (ld_id,ld_lastmodified,ld_deleted,ld_tenantid,ld_name,ld_type,ld_recordversion)
 values     (-1,CURRENT_TIMESTAMP,0,1,'_user_1',1,1);
@@ -377,7 +376,6 @@ insert into hibernate_unique_key(tablename, next_hi) values ('ld_template', 100)
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_ticket', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_user', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_user_history', 100);
-insert into hibernate_unique_key(tablename, next_hi) values ('ld_userdoc', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_version', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_folder', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_folder_history', 100);
@@ -386,3 +384,4 @@ insert into hibernate_unique_key(tablename, next_hi) values ('ld_rating', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_note', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_messagetemplate', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_tenant', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_sequence', 100);

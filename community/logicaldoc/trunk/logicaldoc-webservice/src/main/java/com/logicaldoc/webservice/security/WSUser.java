@@ -326,7 +326,6 @@ public class WSUser {
 			user.setEnabled(getEnabled());
 			user.setPasswordExpires(getPasswordExpires());
 			user.setQuota(getQuota());
-			user.setQuotaCount(getQuotaCount());
 			user.setType(getType());
 			user.setSource(getSource());
 			user.setPassword(getPassword());
@@ -370,7 +369,6 @@ public class WSUser {
 			wsUser.setEnabled(user.getEnabled());
 			wsUser.setPasswordExpires(user.getPasswordExpires());
 			wsUser.setQuota(user.getQuota());
-			wsUser.setQuotaCount(user.getQuotaCount());
 			wsUser.setType(user.getType());
 			wsUser.setSource(user.getSource());
 			wsUser.setPassword(user.getPassword());

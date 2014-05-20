@@ -213,7 +213,6 @@ PRIMARY KEY(co_messageid,co_address),
 FOREIGN KEY(co_messageid) REFERENCES co_email(co_messageid)
 );
 
-CREATE TABLE co_userdoc (co_menuid INTEGER NOT NULL,co_username VARCHAR(30) NOT NULL,co_timestamp VARCHAR(100) NOT NULL,PRIMARY KEY(co_menuid,co_username),FOREIGN KEY(co_username) REFERENCES co_users(co_username),FOREIGN KEY(co_menuid) REFERENCES co_menus(co_menuid));
 
 CREATE TABLE co_usergroup (
 co_username VARCHAR(30)  NOT NULL,

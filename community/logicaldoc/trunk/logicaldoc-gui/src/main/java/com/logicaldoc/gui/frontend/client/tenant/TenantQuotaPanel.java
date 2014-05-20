@@ -4,9 +4,11 @@ import java.util.Map;
 
 import com.logicaldoc.gui.common.client.beans.GUITenant;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -62,28 +64,37 @@ public class TenantQuotaPanel extends HLayout {
 
 		layout.addMember(form, 1);
 
-		TextItem users = ItemFactory.newIntegerItem("users", "users", tenant.getMaxUsers());
-		users.setDisabled(readonly);
+		TextItem usersQuota = ItemFactory.newIntegerItem("usersquota", "usersquota", tenant.getMaxUsers());
+		usersQuota.setDisabled(readonly);
 		if (!readonly)
-			users.addChangedHandler(changedHandler);
+			usersQuota.addChangedHandler(changedHandler);
 
-		TextItem sessions = ItemFactory.newIntegerItem("sessions", "sessions", tenant.getMaxSessions());
-		sessions.setDisabled(readonly);
+		TextItem sessionsQuota = ItemFactory.newIntegerItem("sessionsquota", "sessionsquota", tenant.getMaxSessions());
+		sessionsQuota.setDisabled(readonly);
 		if (!readonly)
-			sessions.addChangedHandler(changedHandler);
+			sessionsQuota.addChangedHandler(changedHandler);
 
-		TextItem documents = ItemFactory.newLongItem("documents", "documents", tenant.getMaxRepoDocs());
-		documents.setDisabled(readonly);
+		TextItem documentsQuota = ItemFactory.newLongItem("documentsquota", "documentsquota", tenant.getMaxRepoDocs());
+		documentsQuota.setDisabled(readonly);
 		if (!readonly)
-			documents.addChangedHandler(changedHandler);
+			documentsQuota.addChangedHandler(changedHandler);
 
-		TextItem size = ItemFactory.newLongItem("size", "size", tenant.getMaxRepoSize());
-		size.setHint("MB");
-		size.setDisabled(readonly);
+		TextItem sizeQuota = ItemFactory.newLongItem("size", "sizequota", tenant.getMaxRepoSize());
+		sizeQuota.setHint("MB");
+		sizeQuota.setWidth(120);
+		sizeQuota.setDisabled(readonly);
 		if (!readonly)
-			size.addChangedHandler(changedHandler);
+			sizeQuota.addChangedHandler(changedHandler);
 
-		form.setItems(users, sessions, documents, size);
+		StaticTextItem size = ItemFactory.newStaticTextItem("ssize", "size", Util.formatSizeW7(tenant.getSize()));
+
+		StaticTextItem documents = ItemFactory.newStaticTextItem("documents", "documents",
+				Util.formatLong(tenant.getDocuments()));
+		StaticTextItem sessions = ItemFactory.newStaticTextItem("sessions", "sessions",
+				Util.formatLong(tenant.getSessions()));
+		StaticTextItem users = ItemFactory.newStaticTextItem("users", "users", Util.formatLong(tenant.getUsers()));
+
+		form.setItems(usersQuota, users, sessionsQuota, sessions, documentsQuota, documents, sizeQuota, size);
 		addMember(layout);
 	}
 

@@ -3,7 +3,6 @@ package com.logicaldoc.core.document.dao;
 import java.util.List;
 
 import com.logicaldoc.core.PersistentObjectDAO;
-import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
 
 /**
@@ -15,7 +14,7 @@ import com.logicaldoc.core.document.Version;
 public interface VersionDAO extends PersistentObjectDAO<Version> {
 	/**
 	 * This method finds a version by the document's ID an the version code.
-	 * 
+	 * <
 	 * @param docId ID of the document
 	 * @param version the version code
 	 * @return the found version

@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.SC;
@@ -16,6 +17,7 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
@@ -69,9 +71,11 @@ public class Profile extends Window {
 		TextItem cell = ItemFactory.newTextItem("cell", "cell", user.getCell());
 		SelectItem welcomeScreen = ItemFactory.newWelcomeScreenSelector("welcomescreen", user.getWelcomeScreen());
 
-		TextItem quota = ItemFactory.newTextItem("quota", "quota", Long.toString(user.getQuota()));
-		quota.setHint("MB");
-		quota.setDisabled(true);
+		StaticTextItem quota = ItemFactory.newStaticTextItem("quota", "maxquota",
+				Util.formatSizeW7(user.getQuota()));
+
+		StaticTextItem quotaCount = ItemFactory.newStaticTextItem("quotaCount", "quota",
+				Util.formatSizeW7(user.getQuotaCount()));
 
 		ButtonItem apply = new ButtonItem();
 		apply.setTitle(I18N.message("apply"));
@@ -126,7 +130,7 @@ public class Profile extends Window {
 		});
 
 		form.setFields(firstName, lastName, email, language, address, postalCode, city, country, state, phone, cell,
-				welcomeScreen, quota, apply);
+				welcomeScreen, quotaCount, quota, apply);
 
 		addItem(form);
 	}

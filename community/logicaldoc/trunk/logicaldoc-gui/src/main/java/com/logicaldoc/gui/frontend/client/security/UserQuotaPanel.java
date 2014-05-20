@@ -2,13 +2,14 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import java.util.Map;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
+import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 
@@ -53,21 +54,17 @@ public class UserQuotaPanel extends HLayout {
 
 		IntegerItem quota = ItemFactory.newIntegerItem("quota", "quota", null);
 		quota.setRequired(true);
+		quota.setWidth(120);
 		quota.setValue(user.getQuota() >= 0 ? user.getQuota() / (1024 * 1024) : -1);
 		quota.setHint("MB");
 		if (!readonly)
 			quota.addChangedHandler(changedHandler);
-		quota.setDisabled(Session.get().isDemo());
-		
-		IntegerItem quotaCount = ItemFactory.newIntegerItem("quotaCount", "quotacount", null);
-		quotaCount.setRequired(false);
-		quotaCount.setDisabled(true);
-		quotaCount.setValue(user.getQuotaCount() / (1024 * 1024));
-		quotaCount.setHint("MB");
+
+		StaticTextItem quotaCount = ItemFactory.newStaticTextItem("quotaCount", "quotacount",
+				Util.formatSizeW7(user.getQuotaCount()));
 
 		form1.setItems(quota, quotaCount);
 		addMember(form1);
-
 	}
 
 	@SuppressWarnings("unchecked")

@@ -155,8 +155,7 @@ public class CustomIdPanel extends VLayout {
 		id.setWidth(60);
 		id.setCanEdit(false);
 		id.setHidden(true);
-		
-		
+
 		ListGridField frequency = new ListGridField("frequency", I18N.message("frequency"));
 		frequency.setWidth(80);
 		frequency.setCanEdit(false);
@@ -217,6 +216,14 @@ public class CustomIdPanel extends VLayout {
 						});
 			}
 		});
+
+		sequences.addCellContextClickHandler(new CellContextClickHandler() {
+			@Override
+			public void onCellContextClick(CellContextClickEvent event) {
+				showSequencesContextMenu();
+				event.cancel();
+			}
+		});
 	}
 
 	private void showCustomIdContextMenu() {
@@ -255,6 +262,42 @@ public class CustomIdPanel extends VLayout {
 		});
 
 		contextMenu.setItems(clean);
+		contextMenu.showContextMenu();
+	}
+
+	private void showSequencesContextMenu() {
+		Menu contextMenu = new Menu();
+
+		final ListGridRecord record = sequences.getSelectedRecord();
+		final long id = Long.parseLong(record.getAttributeAsString("id"));
+
+		MenuItem delete = new MenuItem();
+		delete.setTitle(I18N.message("ddelete"));
+		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							service.deleteSequence(Session.get().getSid(), id, new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(Void result) {
+									sequences.removeSelectedData();
+									sequences.deselectAllRecords();
+								}
+							});
+						}
+					}
+				});
+			}
+		});
+
+		contextMenu.setItems(delete);
 		contextMenu.showContextMenu();
 	}
 }

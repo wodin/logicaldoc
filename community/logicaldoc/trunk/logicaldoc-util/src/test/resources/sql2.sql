@@ -39,13 +39,6 @@ VALUES ('author','author');
 INSERT INTO co_usergroup (co_username,co_groupname) 
 VALUES ('test','guest');
 
-INSERT INTO co_userdoc (co_menuid,co_username,co_timestamp) 
-VALUES (1,'admin','2006-12-17');
-INSERT INTO co_userdoc (co_menuid,co_username,co_timestamp) 
-VALUES (2,'admin','2006-12-22');
-INSERT INTO co_userdoc (co_menuid,co_username,co_timestamp) 
-VALUES (103,'admin','2006-12-22');
-
 INSERT INTO co_groups VALUES('testGroup','Group for tests');
 
 INSERT INTO co_ticket VALUES('1',1,'admin');

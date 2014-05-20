@@ -49,6 +49,7 @@ import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.core.sequence.SequenceDAO;
 import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
@@ -171,6 +172,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		ten.setMaxUsers(tenant.getMaxUsers());
 		ten.setEnabled(tenant.getEnabled() == 1);
 		ten.setExpire(tenant.getExpire());
+
 		return ten;
 	}
 
@@ -193,6 +195,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 		DocumentDAO documentDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		SystemMessageDAO messageDao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
+		SequenceDAO seqDao = (SequenceDAO) Context.getInstance().getBean(SequenceDAO.class);
 
 		guiUser.setFirstName(user.getFirstName());
 		guiUser.setName(user.getName());
@@ -229,7 +232,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		guiUser.setUnreadMessages(messageDao.getCount(user.getUserName(), SystemMessage.TYPE_SYSTEM, 0));
 
 		guiUser.setQuota(user.getQuota());
-		guiUser.setQuotaCount(user.getQuotaCount());
+		guiUser.setQuotaCount(seqDao.getCurrentValue("userquota", user.getId(), user.getTenantId()));
 		guiUser.setWelcomeScreen(user.getWelcomeScreen());
 
 		if (StringUtils.isNotEmpty(user.getSignatureId()))
@@ -429,6 +432,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		try {
 			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 			TenantDAO tenantDao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+			SequenceDAO seqDao = (SequenceDAO) Context.getInstance().getBean(SequenceDAO.class);
+
 			User user = userDao.findById(userId);
 			if (user != null) {
 				userDao.initialize(user);
@@ -470,7 +475,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				usr.setGroups(grps);
 
 				usr.setQuota(user.getQuota());
-				usr.setQuotaCount(user.getQuotaCount());
+
+				usr.setQuotaCount(seqDao.getCurrentValue("userquota", user.getId(), user.getTenantId()));
 
 				Tenant tenant = tenantDao.findById(user.getTenantId());
 

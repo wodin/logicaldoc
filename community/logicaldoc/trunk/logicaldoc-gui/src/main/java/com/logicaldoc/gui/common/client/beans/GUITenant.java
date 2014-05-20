@@ -56,6 +56,14 @@ public class GUITenant implements Serializable {
 
 	private Date expire;
 
+	private long users;
+
+	private long documents;
+
+	private long size;
+
+	private long sessions;
+
 	public String getName() {
 		return name;
 	}
@@ -220,4 +228,37 @@ public class GUITenant implements Serializable {
 			return false;
 		return true;
 	}
+
+	public long getUsers() {
+		return users;
+	}
+
+	public void setUsers(long users) {
+		this.users = users;
+	}
+
+	public long getDocuments() {
+		return documents;
+	}
+
+	public void setDocuments(long documents) {
+		this.documents = documents;
+	}
+
+	public long getSize() {
+		return size;
+	}
+
+	public void setSize(long size) {
+		this.size = size;
+	}
+
+	public long getSessions() {
+		return sessions;
+	}
+
+	public void setSessions(long sessions) {
+		this.sessions = sessions;
+	}
+
 }

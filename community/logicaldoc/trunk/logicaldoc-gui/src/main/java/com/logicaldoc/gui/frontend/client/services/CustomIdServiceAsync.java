@@ -18,4 +18,6 @@ public interface CustomIdServiceAsync {
 
 	void loadSequences(String sid, AsyncCallback<GUISequence[]> callback);
 
+	void deleteSequence(String sid, long sequenceId, AsyncCallback<Void> callback);
+
 }

@@ -560,6 +560,7 @@ public class ItemFactory {
 			item.setValue(value);
 		else
 			item.setValue("");
+		item.setWrap(false);
 		item.setWrapTitle(false);
 		item.setHintStyle("hint");
 		return item;

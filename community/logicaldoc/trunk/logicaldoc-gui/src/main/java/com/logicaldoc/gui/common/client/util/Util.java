@@ -279,6 +279,14 @@ public class Util {
 		return str;
 	}-*/;
 
+	public static String formatLong(long number) {
+		String str;
+		NumberFormat fmt = NumberFormat.getFormat("#,###");
+		str = fmt.format(number);
+		str = str.replace(',', I18N.groupingSepator());
+		return str;
+	}
+
 	/**
 	 * Format file size in KB.
 	 * 
@@ -306,13 +314,21 @@ public class Util {
 	 * @return The formated file size.
 	 */
 	public static String formatSizeW7(double size) {
+		if (size < 0)
+			return "";
+
+		double KB = 1024;
+		double MB = 1024 * KB;
+		double GB = 1024 * MB;
+		double TB = 1024 * GB;
+
 		String str;
 		if (size < 1) {
 			str = "0 bytes";
-		} else if (size < 1024) {
+		} else if (size < KB) {
 			str = size + " bytes";
-		} else if (size < 1048576) {
-			double tmp = size / 1024;
+		} else if (size < MB) {
+			double tmp = size / KB;
 			if (tmp < 10) {
 				NumberFormat fmt = NumberFormat.getFormat("###.##");
 				str = fmt.format(tmp) + " KB";
@@ -324,8 +340,8 @@ public class Util {
 				str = fmt.format(tmp) + " KB";
 			}
 			str = str.replace('.', I18N.decimalSepator());
-		} else {
-			double tmp = size / 1048576;
+		} else if (size < GB) {
+			double tmp = size / MB;	
 			if (tmp < 10) {
 				NumberFormat fmt = NumberFormat.getFormat("###.##");
 				str = fmt.format(tmp) + " MB";
@@ -335,6 +351,32 @@ public class Util {
 			} else {
 				NumberFormat fmt = NumberFormat.getFormat("###");
 				str = fmt.format(tmp) + " MB";
+			}
+			str = str.replace('.', I18N.decimalSepator());
+		} else if (size < TB) {
+			double tmp = size / GB;
+			if (tmp < 10) {
+				NumberFormat fmt = NumberFormat.getFormat("###.##");
+				str = fmt.format(tmp) + " GB";
+			} else if (tmp < 100) {
+				NumberFormat fmt = NumberFormat.getFormat("###.#");
+				str = fmt.format(tmp) + " GB";
+			} else {
+				NumberFormat fmt = NumberFormat.getFormat("###");
+				str = fmt.format(tmp) + " GB";
+			}
+			str = str.replace('.', I18N.decimalSepator());
+		} else {
+			double tmp = size / TB;
+			if (tmp < 10) {
+				NumberFormat fmt = NumberFormat.getFormat("###.##");
+				str = fmt.format(tmp) + " TB";
+			} else if (tmp < 100) {
+				NumberFormat fmt = NumberFormat.getFormat("###.#");
+				str = fmt.format(tmp) + " TB";
+			} else {
+				NumberFormat fmt = NumberFormat.getFormat("###");
+				str = fmt.format(tmp) + " TB";
 			}
 			str = str.replace('.', I18N.decimalSepator());
 		}
@@ -593,12 +635,10 @@ public class Util {
 		}
 		return tenant;
 	}
-	
+
 	public static void redirectToRoot() {
 		String base = GWT.getHostPageBaseURL();
-		String url = base
-				+ (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/"
-						+ GWT.getModuleName() + ".jsp");
+		String url = base + (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/" + GWT.getModuleName() + ".jsp");
 		url += "?locale=" + I18N.getLocale() + "&tenant=" + Session.get().getTenantName();
 		Util.redirect(url);
 	}

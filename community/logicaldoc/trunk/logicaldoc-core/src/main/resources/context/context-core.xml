@@ -29,7 +29,6 @@
                 dependency-check="default" lazy-init="default">
                 <property name="passwordTtl" value="${password.ttl}" />
                 <property name="sessionFactory" ref="SessionFactory" />
-                <property name="userDocDAO" ref="UserDocDAO" />
                 <property name="userHistoryDAO" ref="UserHistoryDAO" />
                 <property name="genericDAO" ref="GenericDAO" />
                 <property name="userListenerManager" ref="UserListenerManager" />
@@ -69,16 +68,6 @@
                 <property name="historyDAO" ref="FolderHistoryDAO" />
                 <property name="config" ref="ContextProperties" />
                 <property name="lockManager" ref="LockManager" />
-            </bean>
-        </property>
-    </bean>
-    <bean id="UserDocDAO" abstract="false" autowire="default"
-        dependency-check="default" lazy-init="default" parent="ApplicationBaseTransactionProxy">
-        <property name="target">
-            <bean abstract="false" autowire="default"
-                class="com.logicaldoc.core.security.dao.HibernateUserDocDAO"
-                dependency-check="default" lazy-init="default">
-                <property name="sessionFactory" ref="SessionFactory" />
             </bean>
         </property>
     </bean>
@@ -137,14 +126,9 @@
                 <property name="historyDAO" ref="HistoryDAO" />
                 <property name="versionDAO" ref="VersionDAO" />
                 <property name="tenantDAO" ref="TenantDAO" />
-                <property name="folderDAO">
-                    <ref bean="FolderDAO" />
-                </property>
+                <property name="folderDAO" ref="FolderDAO" />
                 <property name="userDAO">
                     <ref bean="UserDAO" />
-                </property>
-                <property name="userDocDAO">
-                    <ref bean="UserDocDAO" />
                 </property>
                 <property name="linkDAO">
                     <ref bean="DocumentLinkDAO" />
@@ -214,7 +198,6 @@
                 class="com.logicaldoc.core.sequence.HibernateSequenceDAO"
                 dependency-check="default" lazy-init="default">
                 <property name="sessionFactory" ref="SessionFactory" />
-                <property name="genericDao" ref="GenericDAO" />
             </bean>
         </property>
     </bean>

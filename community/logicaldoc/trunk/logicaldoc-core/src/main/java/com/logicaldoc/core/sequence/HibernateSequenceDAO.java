@@ -1,13 +1,11 @@
 package com.logicaldoc.core.sequence;
 
+import java.util.Date;
 import java.util.List;
 
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-import com.logicaldoc.core.generic.Generic;
-import com.logicaldoc.core.generic.GenericDAO;
+import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.util.sql.SqlUtil;
 
 /**
@@ -18,71 +16,77 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 4.0
  */
-public class HibernateSequenceDAO extends HibernateDaoSupport implements SequenceDAO {
-	public final String TYPE = "sequence";
+@SuppressWarnings("unchecked")
+public class HibernateSequenceDAO extends HibernatePersistentObjectDAO<Sequence> implements SequenceDAO {
 
-	protected static Logger log = LoggerFactory.getLogger(HibernateSequenceDAO.class);
-
-	private GenericDAO genericDao;
-
-	public GenericDAO getGenericDao() {
-		return genericDao;
-	}
-
-	public void setGenericDao(GenericDAO genericDao) {
-		this.genericDao = genericDao;
+	private HibernateSequenceDAO() {
+		super(Sequence.class);
+		super.log = LoggerFactory.getLogger(HibernateSequenceDAO.class);
 	}
 
 	@Override
-	public synchronized void reset(String sequence, long tenantId, long value) {
+	public synchronized void reset(String sequence, Long objectId, long tenantId, long value) {
 		synchronized (SequenceDAO.class) {
-			Generic generic = genericDao.findByAlternateKey(TYPE, sequence, null, tenantId);
-			if (generic == null) {
-				generic = new Generic(TYPE, sequence);
-				generic.setTenantId(tenantId);
-			} else
-				genericDao.initialize(generic);
-			generic.setInteger1(value);
-			genericDao.store(generic);
+			Sequence seq = findByAlternateKey(sequence, objectId, tenantId);
+			if (seq == null) {
+				seq = new Sequence();
+				seq.setName(sequence);
+				seq.setObjectId(objectId);
+				seq.setTenantId(tenantId);
+			}
+			seq.setLastReset(new Date());
+			seq.setValue(value);
+			store(seq);
 		}
 	}
 
 	@Override
-	public synchronized long next(String sequence, long tenantId, long increment) {
+	public synchronized long next(String sequence, Long objectId, long tenantId, long increment) {
 		synchronized (SequenceDAO.class) {
-			Generic generic = genericDao.findByAlternateKey(TYPE, sequence, null, tenantId);
-			if (generic == null) {
-				generic = new Generic(TYPE, sequence);
-				generic.setTenantId(tenantId);
-				generic.setInteger1(0L);
-			} else
-				genericDao.initialize(generic);
-			generic.setInteger1(generic.getInteger1() != null ? generic.getInteger1().longValue() + increment
-					: increment);
-			genericDao.store(generic);
-			return generic.getInteger1();
+			Sequence seq = findByAlternateKey(sequence, objectId, tenantId);
+			if (seq == null) {
+				seq = new Sequence();
+				seq.setName(sequence);
+				seq.setObjectId(objectId);
+				seq.setTenantId(tenantId);
+			}
+			seq.setValue(seq.getValue() + increment);
+			store(seq);
+			return seq.getValue();
 		}
 	}
 
 	@Override
-	public synchronized long next(String sequence, long tenantId) {
-		return this.next(sequence, tenantId, 1L);
+	public synchronized long next(String sequence, Long objectId, long tenantId) {
+		return this.next(sequence, objectId, tenantId, 1L);
 	}
 
 	@Override
-	public long getCurrentValue(String sequence, long tenantId) {
-		Generic generic = genericDao.findByAlternateKey(TYPE, sequence, null, tenantId);
-		if (generic == null)
+	public long getCurrentValue(String sequence, Long objectId, long tenantId) {
+		Sequence seq = findByAlternateKey(sequence, objectId, tenantId);
+		if (seq == null)
 			return 0L;
 		else
-			return generic.getInteger1();
+			return seq.getValue();
 	}
 
 	@Override
-	public List<Generic> findByName(String name, long tenantId) {
+	public List<Sequence> findByName(String name, long tenantId) {
 		String query = " _entity.tenantId=" + tenantId;
-		query += " and _entity.type like '" + SqlUtil.doubleQuotes(TYPE) + "' ";
-		query += " and _entity.subtype like '" + SqlUtil.doubleQuotes(name) + "%' ";
-		return genericDao.findByWhere(query, null, null);
+		query += " and _entity.name like '" + SqlUtil.doubleQuotes(name) + "%' ";
+		return findByWhere(query, null, null);
+	}
+
+	@Override
+	public Sequence findByAlternateKey(String name, Long objectId, long tenantId) {
+		String query = " _entity.tenantId=" + tenantId;
+		query += " and _entity.name = '" + SqlUtil.doubleQuotes(name) + "' ";
+		if (objectId != null)
+			query += " and _entity.objectId = " + objectId;
+		List<Sequence> sequences = findByWhere(query, null, null);
+		if (sequences.isEmpty())
+			return null;
+		else
+			return sequences.get(0);
 	}
 }
