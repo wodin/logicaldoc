@@ -92,9 +92,15 @@
     <smartgwt.version>4.0</smartgwt.version>
     <cxf.version>2.7.11</cxf.version>
     <slf4j.version>1.7.7</slf4j.version>
+    <ant.version>1.8.2</ant.version>
   </properties>
   <dependencyManagement>
     <dependencies>
+      <dependency>
+         <groupId>org.apache.ant</groupId>
+         <artifactId>ant</artifactId>
+         <version>${ant.version}</version>
+      </dependency>
       <dependency>
         <groupId>javax.activation</groupId>
         <artifactId>activation</artifactId>
