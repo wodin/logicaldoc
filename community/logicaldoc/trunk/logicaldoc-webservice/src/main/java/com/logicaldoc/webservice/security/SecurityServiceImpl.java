@@ -96,7 +96,6 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 				usr.setEnabled(user.getEnabled());
 				usr.setPasswordExpires(user.getPasswordExpires());
 				usr.setQuota(user.getQuota());
-				usr.setQuotaCount(user.getQuotaCount());
 				usr.setType(user.getType());
 				usr.setSource(user.getSource());
 			}

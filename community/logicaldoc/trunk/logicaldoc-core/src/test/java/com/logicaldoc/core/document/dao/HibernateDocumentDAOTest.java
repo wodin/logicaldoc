@@ -166,7 +166,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 	public void testFindLastModifiedByUserId() {
 		Collection<Document> coll = dao.findLastModifiedByUserId(1, 10);
 		Assert.assertNotNull(coll);
-		Assert.assertEquals(2, coll.size());
+		Assert.assertEquals(4, coll.size());
 
 		coll = dao.findLastModifiedByUserId(3, 10);
 		Assert.assertNotNull(coll);
@@ -218,7 +218,6 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		out.flush();
 		out.close();
 		Assert.assertTrue(docFile.exists());
-		System.out.println("Saved file " + docFile.getPath());
 
 		dao.store(doc);
 
@@ -226,7 +225,6 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		fids.add(Folder.ROOTID);
 
 		Collection<Long> ids = dao.findPublishedIds(fids);
-		System.out.println("*ids=" + ids);
 		Assert.assertTrue(ids.contains(doc.getId()));
 
 		doc.setPublished(0);
@@ -415,7 +413,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindLastDownloadsByUserId() {
-		Collection<Document> documents = dao.findLastDownloadsByUserId(1, 10);
+		Collection<Document> documents = dao.findLastDownloadsByUserId(1, 5);
 		Assert.assertNotNull(documents);
 		Assert.assertEquals(2, documents.size());
 	}

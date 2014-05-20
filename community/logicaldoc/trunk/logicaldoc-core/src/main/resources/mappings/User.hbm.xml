@@ -32,7 +32,6 @@
 		<property name="type" type="int" column="ld_type" not-null="true"/>
         <property name="source" type="int" column="ld_source" not-null="true" />
         <property name="quota" type="long" column="ld_quota" not-null="true" />
-    	<property name="quotaCount" type="long" column="ld_quotacount" not-null="true" />
     	<property name="signatureId" type="string" column="ld_signatureid" length="255" />
 		<property name="signatureInfo" type="string" column="ld_signatureinfo" length="255" />
 		<property name="welcomeScreen" type="int" column="ld_welcomescreen" not-null="false" />

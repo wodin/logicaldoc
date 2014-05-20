@@ -32,8 +32,6 @@ import com.logicaldoc.util.crypt.CryptUtil;
 @SuppressWarnings("unchecked")
 public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> implements UserDAO {
 
-	private UserDocDAO userDocDAO;
-
 	private GenericDAO genericDAO;
 
 	private UserHistoryDAO userHistoryDAO;
@@ -285,13 +283,13 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 		try {
 			User user = (User) findById(userId);
 			Group userGroup = user.getUserGroup();
+
 			if (user != null) {
-				userDocDAO.deleteByUserId(userId);
 				user.setDeleted(1);
 				user.setUserName(user.getUserName() + "." + user.getId());
 				saveOrUpdate(user);
 			}
-
+			
 			// Delete the user's group
 			if (userGroup != null) {
 				GroupDAO groupDAO = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
@@ -324,14 +322,6 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 	public void setUserHistoryDAO(UserHistoryDAO userHistoryDAO) {
 		this.userHistoryDAO = userHistoryDAO;
-	}
-
-	public UserDocDAO getUserDocDAO() {
-		return userDocDAO;
-	}
-
-	public void setUserDocDAO(UserDocDAO userDocDAO) {
-		this.userDocDAO = userDocDAO;
 	}
 
 	public void setUserListenerManager(UserListenerManager userListenerManager) {

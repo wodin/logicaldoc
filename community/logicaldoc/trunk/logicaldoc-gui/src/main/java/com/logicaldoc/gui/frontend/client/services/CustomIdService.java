@@ -41,4 +41,10 @@ public interface CustomIdService extends RemoteService {
 	 * Loads the list of sequences
 	 */
 	public GUISequence[] loadSequences(String sid) throws InvalidSessionException;
+	
+	
+	/**
+	 * Deletes the given sequence
+	 */
+	public void deleteSequence(String sid, long sequenceId) throws InvalidSessionException;
 }

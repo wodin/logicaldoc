@@ -39,7 +39,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 	public void testDelete() {
 		Collection<History> histories = (Collection<History>) dao.findByUserId(1);
 		Assert.assertNotNull(histories);
-		Assert.assertEquals(2, histories.size());
+		Assert.assertEquals(4, histories.size());
 
 		for (History history : histories) {
 			boolean result = dao.delete(history.getId());
@@ -56,7 +56,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 	public void testFindByDocId() {
 		Collection histories = dao.findByDocId(1);
 		Assert.assertNotNull(histories);
-		Assert.assertEquals(1, histories.size());
+		Assert.assertEquals(3, histories.size());
 
 		// Try with unexisting docId
 		histories = dao.findByDocId(99);
@@ -69,7 +69,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 	public void testFindByUserId() {
 		Collection histories = dao.findByUserId(1);
 		Assert.assertNotNull(histories);
-		Assert.assertEquals(2, histories.size());
+		Assert.assertEquals(4, histories.size());
 
 		// Try with unexisting user
 		histories = dao.findByUserId(99);
@@ -111,7 +111,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 
 		Collection histories = dao.findByDocId(1);
 		Assert.assertNotNull(histories);
-		Assert.assertEquals(2, histories.size());
+		Assert.assertEquals(4, histories.size());
 	}
 
 	@Test
@@ -166,7 +166,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 	public void testFindNotNotified() {
 		Collection histories = dao.findNotNotified(null);
 		Assert.assertNotNull(histories);
-		Assert.assertEquals(2, histories.size());
+		Assert.assertEquals(4, histories.size());
 
 		History history = dao.findById(1);
 		dao.initialize(history);
@@ -175,7 +175,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 
 		histories = dao.findNotNotified(null);
 		Assert.assertNotNull(histories);
-		Assert.assertEquals(1, histories.size());
+		Assert.assertEquals(3, histories.size());
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -213,7 +213,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testFindByPath() {
 		List<History> histories = dao.findByPath("/Default/pippo%", null, null, null);
-		Assert.assertEquals(2, histories.size());
+		Assert.assertEquals(4, histories.size());
 
 		histories = dao.findByPath("/Default/pippo%", DateBean.dateFromCompactString("20061221"),
 				Arrays.asList(new String[] { "data test 01", "data test 02" }), null);

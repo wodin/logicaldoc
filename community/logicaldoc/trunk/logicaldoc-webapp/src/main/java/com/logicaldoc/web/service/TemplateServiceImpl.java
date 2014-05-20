@@ -16,6 +16,7 @@ import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.sequence.SequenceDAO;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
@@ -55,7 +56,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 				dao.initialize(templ);
 			} else {
 				templ = new DocumentTemplate();
-				
+
 				if (template.getType() == GUITemplate.TYPE_AOS) {
 					// Retrieve the attributes of the template with the same
 					// category. This template was already created at the

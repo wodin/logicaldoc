@@ -37,7 +37,6 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
-import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.io.FileUtil;
@@ -63,8 +62,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	private UserDAO userDAO;
 
-	private UserDocDAO userDocDAO;
-
 	private DocumentLinkDAO linkDAO;
 
 	private DocumentListenerManager listenerManager;
@@ -80,10 +77,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	public void setListenerManager(DocumentListenerManager listenerManager) {
 		this.listenerManager = listenerManager;
-	}
-
-	public void setUserDocDAO(UserDocDAO userDocDAO) {
-		this.userDocDAO = userDocDAO;
 	}
 
 	public void setVersionDAO(VersionDAO versionDAO) {
@@ -127,8 +120,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					link.setDeleted(1);
 					saveOrUpdate(link);
 				}
-
-				userDocDAO.deleteByDocId(docId);
 
 				doc.setDeleted(1);
 				doc.setDeleteUserId(transaction.getUserId());
@@ -208,7 +199,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public boolean store(Document doc, final History transaction) {
 		boolean result = true;
 		try {
-			if(transaction!=null)
+			if (transaction != null)
 				transaction.setTenantId(doc.getTenantId());
 			Tenant tenant = tenantDAO.findById(doc.getTenantId());
 
@@ -504,14 +495,17 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		List<Document> coll = new ArrayList<Document>();
 
 		try {
-			StringBuffer query = new StringBuffer("select _userdoc.id.docId from UserDoc _userdoc");
-			query.append(" where _userdoc.id.userId = ?1 ");
-			query.append(" order by _userdoc.date desc");
+			StringBuffer query = new StringBuffer("select docId from History ");
+			query.append(" where userId = " + userId);
+			query.append(" and event = '" + DocumentEvent.DOWNLOADED + "' ");
+			query.append(" order by date desc");
 
-			List<Long> results = (List<Long>) findByQuery(query.toString(), new Object[] { userId }, null);
+			List<Long> results = (List<Long>) findByQuery(query.toString(), null, null);
 			ArrayList<Long> tmpal = new ArrayList<Long>(results);
 			List<Long> docIds = tmpal;
 
+			System.out.println("results "+results);
+			
 			if (docIds.isEmpty())
 				return coll;
 
@@ -679,8 +673,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		String query = "select count(*) from ld_document where 1=1 ";
 		if (!computeDeleted)
 			query += " and ld_deleted = 0 ";
-		if(tenantId!=null)
-			query += " and ld_tenantid = "+tenantId;
+		if (tenantId != null)
+			query += " and ld_tenantid = " + tenantId;
 		return queryForLong(query);
 	}
 

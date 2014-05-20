@@ -34,11 +34,9 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.searchengine.SearchEngine;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.UserDoc;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
-import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.util.Context;
@@ -52,21 +50,6 @@ import com.logicaldoc.util.plugin.PluginRegistry;
  * @author Sebastian Stein
  */
 public class ServletIOUtil {
-	/**
-	 * Adds the given document to the recent files entry of the user
-	 * 
-	 * @param userId the id of the user accessing the file
-	 * @param docId id of the document the user accessed
-	 */
-	public static void addToRecentFiles(long userId, long docId) {
-		UserDoc userdoc = new UserDoc();
-		userdoc.setDocId(docId);
-		userdoc.setUserId(userId);
-
-		UserDocDAO uddao = (UserDocDAO) Context.getInstance().getBean(UserDocDAO.class);
-		uddao.store(userdoc);
-	}
-
 	/**
 	 * Downloads a plugin resource
 	 * 
