@@ -87,6 +87,7 @@ public class TenantQuotaPanel extends HLayout {
 			sizeQuota.addChangedHandler(changedHandler);
 
 		StaticTextItem size = ItemFactory.newStaticTextItem("ssize", "size", Util.formatSizeW7(tenant.getSize()));
+		size.setWrap(false);
 
 		StaticTextItem documents = ItemFactory.newStaticTextItem("documents", "documents",
 				Util.formatLong(tenant.getDocuments()));

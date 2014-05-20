@@ -73,9 +73,11 @@ public class Profile extends Window {
 
 		StaticTextItem quota = ItemFactory.newStaticTextItem("quota", "maxquota",
 				Util.formatSizeW7(user.getQuota()));
+		quota.setWrap(false);
 
 		StaticTextItem quotaCount = ItemFactory.newStaticTextItem("quotaCount", "quota",
 				Util.formatSizeW7(user.getQuotaCount()));
+		quotaCount.setWrap(false);
 
 		ButtonItem apply = new ButtonItem();
 		apply.setTitle(I18N.message("apply"));

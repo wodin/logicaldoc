@@ -135,7 +135,7 @@ public class MessageTemplatesPanel extends VLayout {
 		ListGridField body = new ListGridField("body", I18N.message("body"));
 		body.setWidth("*");
 		body.setRequired(false);
-		body.setEditorType(TextAreaItem.class);
+		body.setEditorType(new TextAreaItem());
 
 		templatesGrid = new ListGrid();
 		templatesGrid.setEmptyMessage(I18N.message("notitemstoshow"));
