@@ -62,6 +62,7 @@ public class UserQuotaPanel extends HLayout {
 
 		StaticTextItem quotaCount = ItemFactory.newStaticTextItem("quotaCount", "quotacount",
 				Util.formatSizeW7(user.getQuotaCount()));
+		quotaCount.setWrap(false);
 
 		form1.setItems(quota, quotaCount);
 		addMember(form1);
