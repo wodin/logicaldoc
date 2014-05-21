@@ -127,7 +127,7 @@
 									dir="target/${project.artifactId}-${project.version}-plugin.zip" />
 								<delete>
 									<fileset dir="target/plugin/WEB-INF/lib"
-										includes="junit*,jax*,stax*,activation*,*logicaldoc*,*spring*,commons*,*velocity*,*geronimo*,*aopalliance*,*saaj*,ant*,hibernate*,ehcache*" />
+										includes="junit*,jax*,wood*,stax*,activation*,*logicaldoc*,*spring*,commons*,*velocity*,*geronimo*,*aopalliance*,*saaj*,ant*,hibernate*,ehcache*" />
 								</delete>
 
 								<copy

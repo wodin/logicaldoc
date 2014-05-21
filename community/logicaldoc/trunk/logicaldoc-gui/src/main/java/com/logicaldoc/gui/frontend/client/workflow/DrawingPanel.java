@@ -39,7 +39,7 @@ public class DrawingPanel extends VStack {
 		this.workflowDesigner = designer;
 
 		controller = new DiagramController(2000, 2000);
-		controller.showGrid(true);
+		controller.showGrid(false);
 		addMember(controller.getView());
 
 		addScrolledHandler(new ScrolledHandler() {

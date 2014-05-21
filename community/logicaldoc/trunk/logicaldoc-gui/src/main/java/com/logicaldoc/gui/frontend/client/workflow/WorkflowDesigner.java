@@ -45,8 +45,6 @@ public class WorkflowDesigner extends VStack {
 
 	private VLayout drawingPanelLayout = new VLayout();
 
-	private Accordion accordion = null;
-
 	private GUIWorkflow workflow = null;
 
 	private DrawingPanel drawingPanel = null;
@@ -57,20 +55,14 @@ public class WorkflowDesigner extends VStack {
 		this.workflow = workflow;
 
 		setMembersMargin(3);
-		
-		if (this.workflow != null) {
-			accordion = new Accordion();
-			accordion.redraw(workflow);
-			layout.addMember(accordion);
-		}
 
 		drawingPanelLayout.setWidth100();
 		drawingPanelLayout.setHeight100();
 		workflowToolstrip = new WorkflowToolstrip(this);
-		
+
 		drawingPanelLayout.addMember(workflowToolstrip);
 		drawingPanelLayout.addMember(new PrimitivesToolstrip(this));
-		
+
 		drawingPanel = new DrawingPanel(this);
 		drawingPanelLayout.addMember(drawingPanel);
 
@@ -91,8 +83,6 @@ public class WorkflowDesigner extends VStack {
 
 	public void redraw(GUIWorkflow workflow) {
 		this.workflow = workflow;
-		if (accordion != null)
-			accordion.redraw(workflow);
 		drawingPanel.redraw();
 	}
 
@@ -103,10 +93,6 @@ public class WorkflowDesigner extends VStack {
 				widget.update();
 		}
 		getDrawingPanel().redraw();
-	}
-
-	public Accordion getAccordion() {
-		return accordion;
 	}
 
 	public void onAddState(int type) {
@@ -143,7 +129,7 @@ public class WorkflowDesigner extends VStack {
 		} catch (Throwable t) {
 		}
 	}
-	
+
 	public DrawingPanel getDrawingPanel() {
 		return drawingPanel;
 	}
@@ -203,16 +189,6 @@ public class WorkflowDesigner extends VStack {
 			}
 			srcWidget.getWfState().setTransitions(transitions.toArray(new GUITransition[0]));
 		}
-
-		final Map<String, Object> values = getAccordion().getValues();
-		if (values == null || ((String) values.get("workflowName")).trim().isEmpty())
-			return false;
-
-		workflow.setName((String) values.get("workflowName"));
-		if (values.get("workflowDescr") != null)
-			workflow.setDescription((String) values.get("workflowDescr"));
-		if (values.get("supervisor") != null)
-			workflow.setSupervisor((String) values.get("supervisor"));
 
 		return true;
 	}
