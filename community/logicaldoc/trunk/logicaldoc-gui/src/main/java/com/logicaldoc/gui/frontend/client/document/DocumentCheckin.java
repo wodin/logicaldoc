@@ -115,7 +115,7 @@ public class DocumentCheckin extends Window {
 			}
 
 			// This check is done because IE8 works differently from Firefox
-			String uploadedFilename = uploader.getFileName();
+			String uploadedFilename = uploader.getServerInfo().getFileName();
 			if (uploadedFilename.lastIndexOf('/') != -1)
 				uploadedFilename = uploadedFilename.substring(uploadedFilename.lastIndexOf('/') + 1);
 			if (uploadedFilename.lastIndexOf('\\') != -1)

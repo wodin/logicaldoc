@@ -106,7 +106,7 @@ public class DiagramController implements HasNewFunctionHandlers, HasTieLinkHand
 
 	private HandlerManager handlerManager;
 
-	private boolean showGrid;
+	private boolean showGrid=false;
 
 	private ContextMenu canvasMenu;
 

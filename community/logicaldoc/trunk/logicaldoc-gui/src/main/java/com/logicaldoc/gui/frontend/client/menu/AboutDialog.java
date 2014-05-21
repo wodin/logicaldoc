@@ -102,16 +102,6 @@ public class AboutDialog extends Window {
 		vspacer2.setPixelSize(100, 10);
 		vspacer2.setOverflow(Overflow.HIDDEN);
 
-		Button button = new Button("OK");
-		button.setAutoFit(true);
-		button.setMinWidth(50);
-		button.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				destroy();
-			}
-		});
-
 		VStack content = new VStack();
 		content.setWidth("100%");
 		content.setMembersMargin(5);
@@ -121,7 +111,7 @@ public class AboutDialog extends Window {
 		content.setDefaultLayoutAlign(Alignment.CENTER);
 		content.setBackgroundColor("#ffffff");
 		content.setMembers(vspacer1, logoImage, productName, version, copyright, trademark, sitelink, maillink,
-				vspacer2, button);
+				vspacer2);
 
 		addChild(content);
 	}

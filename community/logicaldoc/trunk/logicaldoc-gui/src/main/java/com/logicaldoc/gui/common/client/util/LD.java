@@ -35,7 +35,7 @@ public class LD {
 		dialog.setIsModal(true);
 		dialog.setShowModalMask(true);
 		dialog.setShowHeader(true);
-		dialog.setWidth(450);
+		dialog.setWidth(400);
 		dialog.setHeight(120);
 		dialog.setAlign(Alignment.CENTER);
 		dialog.setAlign(VerticalAlignment.CENTER);
@@ -67,9 +67,11 @@ public class LD {
 		yes.setWidth(70);
 		yes.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				if (callback != null)
+				if (callback != null) {
+					dialog.close();
 					callback.execute(true);
-				dialog.destroy();
+					dialog.destroy();
+				}
 			}
 		});
 
@@ -77,9 +79,11 @@ public class LD {
 		no.setWidth(70);
 		no.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				if (callback != null)
+				if (callback != null) {
+					dialog.close();
 					callback.execute(false);
-				dialog.destroy();
+					dialog.destroy();
+				}
 			}
 		});
 
@@ -151,10 +155,12 @@ public class LD {
 		item.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
-				if (event.getKeyName() != null && "enter".equals(event.getKeyName().toLowerCase())) {
-					if (callback != null)
+				if (form.validate() && event.getKeyName() != null && "enter".equals(event.getKeyName().toLowerCase())) {
+					if (callback != null) {
+						dialog.close();
 						callback.execute(form.getValue("value").toString());
-					dialog.destroy();
+						dialog.destroy();
+					}
 				}
 			}
 		});
@@ -165,9 +171,11 @@ public class LD {
 		ok.setWidth(70);
 		ok.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				if (callback != null)
+				if (form.validate() && callback != null) {
+					dialog.close();
 					callback.execute(form.getValue("value").toString());
-				dialog.destroy();
+					dialog.destroy();
+				}
 			}
 		});
 
@@ -175,9 +183,11 @@ public class LD {
 		cancel.setWidth(70);
 		cancel.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				if (callback != null)
+				if (callback != null) {
+					dialog.close();
 					callback.execute(null);
-				dialog.destroy();
+					dialog.destroy();
+				}
 			}
 		});
 

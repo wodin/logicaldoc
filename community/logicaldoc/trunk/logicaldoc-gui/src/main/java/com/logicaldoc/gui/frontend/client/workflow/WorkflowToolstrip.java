@@ -1,7 +1,5 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
-import java.util.Map;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
@@ -11,6 +9,7 @@ import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.data.WorkflowsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
@@ -23,6 +22,7 @@ import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -62,6 +62,8 @@ public class WorkflowToolstrip extends ToolStrip {
 
 	private ToolStripButton close = null;
 
+	private ToolStripButton settings = null;
+
 	private SelectItem workflowSelect = null;
 
 	public WorkflowToolstrip(final WorkflowDesigner designer) {
@@ -72,20 +74,7 @@ public class WorkflowToolstrip extends ToolStrip {
 
 		setWidth100();
 
-		ToolStripButton newTemplate = new ToolStripButton(I18N.message("newwftemplate"));
-		newTemplate.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				currentWorkflow = new GUIWorkflow();
-				AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
-				update();
-			}
-		});
-		addButton(newTemplate);
-		addSeparator();
-
-		workflowSelect = new SelectItem("workflow", " ");
-		workflowSelect.setShowTitle(false);
+		workflowSelect = new SelectItem("workflow", I18N.message("template"));
 		workflowSelect.setWidth(200);
 		ListGridField name = new ListGridField("name");
 		workflowSelect.setValueField("name");
@@ -143,11 +132,21 @@ public class WorkflowToolstrip extends ToolStrip {
 		});
 		addButton(load);
 
+		settings = new ToolStripButton(I18N.message("settings"));
+		settings.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				WorkflowSettings settings = new WorkflowSettings(designer.getWorkflow());
+				settings.show();
+			}
+		});
+		addButton(settings);
+
 		save = new ToolStripButton(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				save();
+				onSave();
 			}
 		});
 		addButton(save);
@@ -158,10 +157,6 @@ public class WorkflowToolstrip extends ToolStrip {
 			public void onClick(ClickEvent event) {
 				WorkflowToolstrip.this.designer.saveModel();
 				currentWorkflow = WorkflowToolstrip.this.designer.getWorkflow();
-
-				final Map<String, Object> values = WorkflowToolstrip.this.designer.getAccordion().getValues();
-				if (values == null || ((String) values.get("workflowName")).trim().isEmpty())
-					return;
 
 				boolean taskFound = false;
 				if (currentWorkflow.getStates() != null && currentWorkflow.getStates().length > 0)
@@ -294,8 +289,7 @@ public class WorkflowToolstrip extends ToolStrip {
 						// request a save
 						currentWorkflow.setId(null);
 						currentWorkflow.setName(value.trim());
-						WorkflowToolstrip.this.designer.getAccordion().setWorkflowName(value.trim());
-						save();
+						onSave();
 					}
 				});
 			}
@@ -339,6 +333,31 @@ public class WorkflowToolstrip extends ToolStrip {
 		});
 		addButton(close);
 
+		ToolStripButton newTemplate = new ToolStripButton(I18N.message("newtemplate"));
+		newTemplate.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				FormItem workflowName = ItemFactory.newSimpleTextItem("workflowName", "workflowname", null);
+				workflowName.setRequired(true);
+
+				LD.askforValue(I18N.message("newwftemplate"), I18N.message("workflowname"), null, "200", workflowName,
+						new ValueCallback() {
+
+							@Override
+							public void execute(String value) {
+								if (value != null && !"".equals(value.trim())) {
+									currentWorkflow = new GUIWorkflow();
+									currentWorkflow.setName(value);
+									AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
+									update();
+								}
+							}
+						});
+			}
+		});
+		addSeparator();
+		addButton(newTemplate);
+
 		addFill();
 
 		update();
@@ -352,11 +371,14 @@ public class WorkflowToolstrip extends ToolStrip {
 		GUIWorkflow wf = currentWorkflow;
 		export.setDisabled(wf == null || wf.getId() == null || "0".equals(wf.getId()));
 		_import.setDisabled(wf == null);
-		save.setDisabled(currentWorkflow == null);
+		save.setDisabled(currentWorkflow == null || currentWorkflow.getName() == null
+				|| "".equals(currentWorkflow.getName().trim()));
 		clone.setDisabled(currentWorkflow == null || wf.getId() == null || "0".equals(wf.getId()));
 		deploy.setDisabled(currentWorkflow == null || wf.getId() == null || "0".equals(wf.getId()));
 		undeploy.setDisabled(currentWorkflow == null || wf.getId() == null || "0".equals(wf.getId()));
 		delete.setDisabled(currentWorkflow == null || wf.getId() == null || "0".equals(wf.getId()));
+		settings.setDisabled(currentWorkflow == null || wf.getId() == null || "0".equals(wf.getId()));
+
 		close.setDisabled(currentWorkflow == null);
 		workflowSelect.setOptionDataSource(new WorkflowsDS(false, false, false));
 		if (currentWorkflow != null && !currentWorkflow.getName().trim().isEmpty())
@@ -366,7 +388,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		workflowSelect.redraw();
 	}
 
-	private void save() {
+	private void onSave() {
 		try {
 			if (!designer.saveModel())
 				return;
