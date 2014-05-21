@@ -94,7 +94,7 @@ public class LinksPanel extends DocumentDetailTab {
 			listGrid.addEditCompleteHandler(new EditCompleteHandler() {
 				@Override
 				public void onEditComplete(EditCompleteEvent event) {
-					long id = Long.parseLong(event.getOldRecord().getAttribute("id"));
+					long id = Long.parseLong(event.getOldValues().getAttribute("id"));
 					String type = (String) event.getNewValues().get("type");
 					documentService.updateLink(Session.get().getSid(), id, type, new AsyncCallback<Void>() {
 

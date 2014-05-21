@@ -137,13 +137,13 @@ public class Navigator extends TreeGrid implements FolderObserver {
 													});
 										}
 
-										TreeNode node = getTree().find("folderId", source);
+										TreeNode node = getTree().find("folderId", (Object) new Long(source));
 										if (node != null) {
 											node = getTree().getParent(node);
 											if (node != null)
 												getTree().reloadChildren(node);
 										}
-										node = getTree().find("folderId", target);
+										node = getTree().find("folderId", (Object) new Long(target));
 										if (node != null) {
 											getTree().reloadChildren(node);
 										}
@@ -199,7 +199,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 													});
 										}
 
-										TreeNode node = getTree().find("folderId", folderId);
+										TreeNode node = getTree().find("folderId", (Object) new Long(folderId));
 										if (node != null) {
 											getTree().reloadChildren(node);
 										}
