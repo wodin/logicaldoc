@@ -15,7 +15,7 @@ public class AuthClient extends SoapClient<AuthService> implements AuthService {
 	public AuthClient(String endpoint) throws IOException {
 		super(endpoint, AuthService.class, -1, true, -1);
 	}
-
+	
 	@Override
 	public String login(String username, String password) throws Exception {
 		return client.login(username, password);

@@ -280,6 +280,7 @@ public class WSSearchOptions implements Comparable<WSSearchOptions> {
 		wopt.setSearchInSubPath(opt.isSearchInSubPath() ? 1 : 0);
 		wopt.setMaxHits(opt.getMaxHits());
 		wopt.setRetrieveAliases(opt.getRetrieveAliases());
+		wopt.setTemplate(opt.getTemplate());
 		wopt.setCaseSensitive(opt.isCaseSensitive() ? 1 : 0);
 		if (opt.getFilterIds() != null && opt.getFilterIds() != null)
 			wopt.setFilterIds(opt.getFilterIds().toArray(new Long[0]));
@@ -327,6 +328,7 @@ public class WSSearchOptions implements Comparable<WSSearchOptions> {
 			so.setRetrieveAliases(retrieveAliases);
 			so.setSearchInSubPath(searchInSubPath == 1);
 			so.setTopOperator(topOperator);
+			so.setTemplate(getTemplate());
 
 			((FulltextSearchOptions) so).setCreationFrom(AbstractService.convertStringToDate(creationFrom));
 			((FulltextSearchOptions) so).setCreationTo(AbstractService.convertStringToDate(creationTo));
