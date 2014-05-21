@@ -1,5 +1,8 @@
 package com.logicaldoc.webservice;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.net.ssl.TrustManager;
 
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
@@ -52,8 +55,10 @@ public abstract class SoapClient<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	protected void initClient(Class<T> serviceClass, int gzipThreshold, boolean log) {
+		//Needed to get rig of CXF exception "Cannot create a secure XMLInputFactory"
+		System.setProperty("org.apache.cxf.stax.allowInsecureParser", "true");
+
 		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
-		
 		if (log) {
 			factory.getInInterceptors().add(new LoggingInInterceptor());
 			factory.getOutInterceptors().add(new LoggingOutInterceptor());

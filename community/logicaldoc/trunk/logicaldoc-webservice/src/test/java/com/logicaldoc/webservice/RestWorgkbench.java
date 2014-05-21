@@ -4,7 +4,7 @@ import com.logicaldoc.webservice.rest.auth.AuthClient;
 
 public class RestWorgkbench {
 	public static void main(String[] args) throws Exception {
-		String base = "https://localhost:9443/services/rest";
+		String base = "http://localhost:9080/services/rest";
 		AuthClient auth = new AuthClient(base + "/auth");
 
 		// Open a session
