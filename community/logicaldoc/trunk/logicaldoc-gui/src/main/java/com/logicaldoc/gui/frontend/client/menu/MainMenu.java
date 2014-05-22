@@ -58,9 +58,7 @@ import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -141,10 +139,9 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		addSeparator();
 
 		if (Feature.enabled(Feature.MULTI_TENANT)) {
-			FormItem tenantItem;
 			if (Session.get().getUser().isMemberOf("admin")
 					&& Session.get().getUser().getTenantId() == Constants.TENANT_DEFAULTID) {
-				tenantItem = ItemFactory.newTenantSelector();
+				SelectItem tenantItem = ItemFactory.newTenantSelector();
 				tenantItem.setValue(Long.toString(Session.get().getInfo().getTenant().getId()));
 				tenantItem.addChangedHandler(new ChangedHandler() {
 
@@ -168,13 +165,14 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 									});
 					}
 				});
+				addFormItem(tenantItem);
 			} else {
-				tenantItem = ItemFactory.newStaticTextItem("tenant", I18N.message("tenant"), Session.get().getInfo()
-						.getTenant().getDisplayName());
-				((StaticTextItem)tenantItem).setWrap(false);
+				Label tenantInfo = new Label(Session.get().getInfo().getTenant().getDisplayName());
+				tenantInfo.setWrap(false);
+				tenantInfo.setAutoWidth();
+				addMember(tenantInfo);
 			}
 
-			addFormItem(tenantItem);
 			addSeparator();
 		}
 
