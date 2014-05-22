@@ -15,7 +15,9 @@
 		</property>
 	</bean>
 
-	<bean id="ContextProperties" class="${registry}" />
+	<bean id="ContextProperties" class="${registry}">
+        <property name="maxBackups" value="10" />
+    </bean>
 
 	<bean id="Context" class="com.logicaldoc.util.Context" abstract="false"
 		lazy-init="default" autowire="default" dependency-check="default" />
