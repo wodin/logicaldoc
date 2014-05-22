@@ -209,7 +209,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 		GUIInfo info = new InfoServiceImpl().getInfo(guiUser.getLanguage(), userSession.getTenantName());
 		session.setInfo(info);
-
+		
 		guiUser.setName(user.getName());
 
 		GUIGroup[] groups = new GUIGroup[user.getGroups().size()];

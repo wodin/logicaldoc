@@ -192,7 +192,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 		info.setRunLevel(config.getProperty("runlevel"));
 
 		String tname = tenantName;
-		if (tname != null)
+		if (tname == null)
 			tname = Tenant.DEFAULT_NAME;
 		GUITenant tenant = SecurityServiceImpl.getTenant(tname);
 		info.setTenant(tenant);

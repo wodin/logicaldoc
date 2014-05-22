@@ -301,7 +301,7 @@ public class ItemFactory {
 		ListGridField _name = new ListGridField("name", I18N.message("name"));
 		ListGridField displayName = new ListGridField("displayName", I18N.message("displayname"));
 		tenant.setValueField("id");
-		tenant.setDisplayField("name");
+		tenant.setDisplayField("displayName");
 		tenant.setPickListWidth(300);
 		tenant.setPickListFields(id, _name, displayName);
 		tenant.setHintStyle("hint");
