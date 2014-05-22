@@ -58,7 +58,9 @@ import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -138,34 +140,41 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		addMember(userInfo);
 		addSeparator();
 
-		if (Feature.enabled(Feature.MULTI_TENANT) && Session.get().getUser().isMemberOf("admin")
-				&& Session.get().getUser().getTenantId() == Constants.TENANT_DEFAULTID) {
-			SelectItem tenantSelector = ItemFactory.newTenantSelector();
-			tenantSelector.setValue(Long.toString(Session.get().getInfo().getTenant().getId()));
-			tenantSelector.addChangedHandler(new ChangedHandler() {
+		if (Feature.enabled(Feature.MULTI_TENANT)) {
+			FormItem tenantItem;
+			if (Session.get().getUser().isMemberOf("admin")
+					&& Session.get().getUser().getTenantId() == Constants.TENANT_DEFAULTID) {
+				tenantItem = ItemFactory.newTenantSelector();
+				tenantItem.setValue(Long.toString(Session.get().getInfo().getTenant().getId()));
+				tenantItem.addChangedHandler(new ChangedHandler() {
 
-				@Override
-				public void onChanged(ChangedEvent event) {
-					long tenantId = Long.parseLong(event.getValue().toString());
-					if (tenantId != Session.get().getInfo().getTenant().getId())
-						tenantService.changeSessionTenant(Session.get().getSid(), tenantId,
-								new AsyncCallback<GUITenant>() {
+					@Override
+					public void onChanged(ChangedEvent event) {
+						long tenantId = Long.parseLong(event.getValue().toString());
+						if (tenantId != Session.get().getInfo().getTenant().getId())
+							tenantService.changeSessionTenant(Session.get().getSid(), tenantId,
+									new AsyncCallback<GUITenant>() {
 
-									@Override
-									public void onSuccess(GUITenant tenant) {
-										Session.get().getInfo().setTenant(tenant);
-										Util.redirectToRoot();
-									}
+										@Override
+										public void onSuccess(GUITenant tenant) {
+											Session.get().getInfo().setTenant(tenant);
+											Util.redirectToRoot();
+										}
 
-									@Override
-									public void onFailure(Throwable caught) {
-										Log.serverError(caught);
-									}
-								});
-				}
-			});
+										@Override
+										public void onFailure(Throwable caught) {
+											Log.serverError(caught);
+										}
+									});
+					}
+				});
+			} else {
+				tenantItem = ItemFactory.newStaticTextItem("tenant", I18N.message("tenant"), Session.get().getInfo()
+						.getTenant().getDisplayName());
+				((StaticTextItem)tenantItem).setWrap(false);
+			}
 
-			addFormItem(tenantSelector);
+			addFormItem(tenantItem);
 			addSeparator();
 		}
 
