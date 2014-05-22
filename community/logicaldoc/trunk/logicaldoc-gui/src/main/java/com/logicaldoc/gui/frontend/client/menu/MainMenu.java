@@ -61,7 +61,6 @@ import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.ClickHandler;
@@ -142,6 +141,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 			if (Session.get().getUser().isMemberOf("admin")
 					&& Session.get().getUser().getTenantId() == Constants.TENANT_DEFAULTID) {
 				SelectItem tenantItem = ItemFactory.newTenantSelector();
+				tenantItem.setShowTitle(false);
 				tenantItem.setValue(Long.toString(Session.get().getInfo().getTenant().getId()));
 				tenantItem.addChangedHandler(new ChangedHandler() {
 
@@ -358,7 +358,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 										return;
 									}
 									document.setExtResId(resourceId);
-									grid.getSelectedRecord().setAttribute("extResId", resourceId);
+									grid.updateExtResId(resourceId);
 									GDocsEditor popup = new GDocsEditor(document, grid);
 									popup.show();
 								}
@@ -396,10 +396,8 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		exportDocs.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord[] records = DocumentsPanel.get().getDocumentsGrid().getSelectedRecords();
-				long[] ids = new long[records.length];
-				for (int i = 0; i < records.length; i++)
-					ids[i] = Long.parseLong(records[i].getAttributeAsString("id"));
+				DocumentsGrid grid = DocumentsPanel.get().getDocumentsGrid();
+				long[] ids = grid.getSelectedIds();
 
 				ContactingServer.get().show();
 				gdocsService.exportDocuments(Session.get().getSid(), ids, new AsyncCallback<String[]>() {

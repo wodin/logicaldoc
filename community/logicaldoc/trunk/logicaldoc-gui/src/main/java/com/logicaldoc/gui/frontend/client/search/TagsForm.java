@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -271,11 +272,11 @@ public class TagsForm extends VLayout {
 		options.setExpression(word);
 
 		if (searchInHits) {
-			ListGridRecord[] records = Search.get().getLastResult();
+			GUIDocument[] records = Search.get().getLastResult();
 			Long[] ids = new Long[records.length];
 			int i = 0;
-			for (ListGridRecord rec : records) {
-				ids[i] = new Long(rec.getAttribute("id"));
+			for (GUIDocument rec : records) {
+				ids[i] = rec.getId();
 				i++;
 			}
 			options.setFilterIds(ids);

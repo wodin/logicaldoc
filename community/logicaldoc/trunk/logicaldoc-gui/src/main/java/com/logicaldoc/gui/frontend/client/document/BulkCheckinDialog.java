@@ -1,7 +1,5 @@
 package com.logicaldoc.gui.frontend.client.document;
 
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
@@ -28,7 +26,7 @@ public class BulkCheckinDialog extends Window {
 
 	protected DocumentServiceAsync service = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	public BulkCheckinDialog(final List<Long> docIds) {
+	public BulkCheckinDialog(final long[] docIds) {
 		VLayout layout = new VLayout();
 		layout.setTop(23);
 		layout.setLeft(5);
@@ -62,10 +60,7 @@ public class BulkCheckinDialog extends Window {
 
 			@Override
 			public void onCloseClick(CloseClickEvent event) {
-				final long[] idsArray = new long[docIds.size()];
-				for (int i = 0; i < idsArray.length; i++)
-					idsArray[0] = docIds.get(0);
-				service.unlock(Session.get().getSid(), idsArray, new AsyncCallback<Void>() {
+				service.unlock(Session.get().getSid(), docIds, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable t) {
 						//Log.serverError(t);

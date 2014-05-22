@@ -13,8 +13,7 @@ import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
-import com.smartgwt.client.data.Record;
-import com.smartgwt.client.data.RecordList;
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
@@ -45,29 +44,26 @@ public class DocumentsListPanel extends VLayout {
 
 	public DocumentsListPanel(GUIFolder folder, final Long hiliteDoc, Integer max) {
 		dataSource = new DocumentsDS(folder.getId(), null, max, null, null);
-		grid = new DocumentsGrid(dataSource);
-
-		if (folder.isDownload()) {
-			grid.setCanDrag(true);
-			grid.setCanDragRecordsOut(true);
-		}
-
+		grid = new DocumentsListGrid(dataSource);
+		grid.setCanDrag(folder.isDownload());
+		
 		// Prepare a panel containing a title and the documents list
 		infoPanel = new InfoPanel("");
-
 		addMember(infoPanel);
-		addMember(grid);
-
-		grid.addDoubleClickHandler(new DoubleClickHandler() {
+		addMember((Canvas) grid);
+		
+		grid.registerDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
-				long id = Long.parseLong(grid.getSelectedRecord().getAttribute("id"));
-				String filename = grid.getSelectedRecord().getAttribute("filename");
-				String version = grid.getSelectedRecord().getAttribute("version");
+				GUIDocument doc = grid.getSelectedDocument();
+				long id = doc.getId();
+				String title = doc.getTitle();
+				String type = doc.getType();
+				String filename = doc.getFileName();
+				String version = doc.getVersion();
 
 				if (filename == null)
-					filename = grid.getSelectedRecord().getAttribute("title") + "."
-							+ grid.getSelectedRecord().getAttribute("type");
+					filename = title + "." + type;
 
 				if (Session.get().getCurrentFolder().isDownload()
 						&& "download".equals(Session.get().getInfo().getConfig("gui.doubleclick")))
@@ -87,26 +83,26 @@ public class DocumentsListPanel extends VLayout {
 			}
 		});
 
-		grid.addSelectionChangedHandler(new SelectionChangedHandler() {
+		grid.registerSelectionChangedHandler(new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChanged(SelectionEvent event) {
 				onRecordSelected();
 			}
 		});
 
-		grid.addCellContextClickHandler(new CellContextClickHandler() {
+		grid.registerCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				Menu contextMenu = new DocumentContextMenu(Session.get().getCurrentFolder(), grid);
+				Menu contextMenu = new DocumentContextMenu(Session.get().getCurrentFolder(), (DocumentsListGrid) grid);
 				contextMenu.showContextMenu();
 				event.cancel();
 			}
 		});
 
-		grid.addDataArrivedHandler(new DataArrivedHandler() {
+		grid.registerDataArrivedHandler(new DataArrivedHandler() {
 			@Override
 			public void onDataArrived(DataArrivedEvent event) {
-				infoPanel.setMessage(I18N.message("showndocuments", Integer.toString(grid.getTotalRows())));
+				infoPanel.setMessage(I18N.message("showndocuments", Integer.toString(grid.getCount())));
 				if (hiliteDoc != null)
 					DocumentsListPanel.this.hiliteDocument(hiliteDoc);
 			}
@@ -121,12 +117,7 @@ public class DocumentsListPanel extends VLayout {
 	}
 
 	public void hiliteDocument(long docId) {
-		grid.deselectAllRecords();
-		RecordList rlist = grid.getDataAsRecordList();
-		Record record = rlist.find("id", Long.toString(docId));
-		if (record != null) {
-			grid.selectSingleRecord(record);
-		}
+		grid.selectDocument(docId);
 	}
 
 	public DocumentsGrid getGrid() {
@@ -134,15 +125,15 @@ public class DocumentsListPanel extends VLayout {
 	}
 
 	public void toggleFilters() {
-		grid.setShowFilterEditor(!filters);
+		grid.showFilters(!filters);
 		filters = !filters;
 	}
 
 	protected void onRecordSelected() {
 		// Avoid server load in case of multiple selections
-		if (grid.getSelectedRecords() != null && grid.getSelectedRecords().length > 1)
+		if (grid.getSelectedCount() != 1)
 			return;
-
+		
 		documentService.getById(Session.get().getSid(), grid.getSelectedDocument().getId(),
 				new AsyncCallback<GUIDocument>() {
 					@Override

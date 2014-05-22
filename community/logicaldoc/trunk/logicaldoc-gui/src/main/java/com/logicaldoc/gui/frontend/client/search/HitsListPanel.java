@@ -19,11 +19,11 @@ import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.document.DocumentContextMenu;
 import com.logicaldoc.gui.frontend.client.document.DocumentsGrid;
+import com.logicaldoc.gui.frontend.client.document.DocumentsListGrid;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
-import com.smartgwt.client.types.ExpansionMode;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -32,7 +32,6 @@ import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
@@ -67,7 +66,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 	protected void initialize() {
 		if (grid != null) {
-			removeMember(grid);
+			removeMember((Canvas) grid);
 		}
 
 		if (toolStrip != null) {
@@ -79,31 +78,24 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		ListGridField id = new ListGridField("id", 60);
 		id.setHidden(true);
 
-		grid = new DocumentsGrid(null);
+		grid = new DocumentsListGrid(null);
 
-		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT) {
-			grid.setCanExpandRecords(true);
-			grid.setExpansionMode(ExpansionMode.DETAIL_FIELD);
-			grid.setDetailField("summary");
-		}
-		grid.setShowRecordComponents(true);
-		grid.setShowRecordComponentsByCell(true);
+		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT)
+			grid.setCanExpandRows(true);
 
-		grid.addSelectionChangedHandler(new SelectionChangedHandler() {
+		grid.registerSelectionChangedHandler(new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChanged(SelectionEvent event) {
 				onHitSelected();
 			}
 		});
 
-		grid.addCellContextClickHandler(new CellContextClickHandler() {
+		grid.registerCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				final String type = grid.getSelectedRecord().getAttributeAsString("type");
-				long id = Long.parseLong(grid.getSelectedRecord().getAttributeAsString("folderId"));
-				if ("folder".equals(type)) {
-					id = Long.parseLong(grid.getSelectedRecord().getAttributeAsString("id"));
-				}
+				GUIDocument doc = grid.getSelectedDocument();
+				final String type = doc.getType();
+				long id = doc.getFolder().getId();
 
 				if ("document".equals(type) && Session.get().getCurrentDocument() != null
 						&& Session.get().getCurrentDocument().getId() == id) {
@@ -131,14 +123,13 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			}
 		});
 
-		grid.addDoubleClickHandler(new DoubleClickHandler() {
+		grid.registerDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				if (Search.get().getOptions().getType() != GUISearchOptions.TYPE_FOLDERS) {
-					final long id = Long.parseLong(grid.getSelectedRecord().getAttribute("id"));
+					final GUIDocument doc = grid.getSelectedDocument();
 
-					folderService.getFolder(Session.get().getSid(),
-							Long.parseLong(grid.getSelectedRecord().getAttributeAsString("folderId")), false,
+					folderService.getFolder(Session.get().getSid(), doc.getFolder().getId(), false,
 							new AsyncCallback<GUIFolder>() {
 
 								@Override
@@ -151,16 +142,15 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 									if (folder.isDownload()
 											&& "download".equals(Session.get().getInfo().getConfig("gui.doubleclick")))
 										Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
-												+ "&docId=" + id + "&open=true", "_blank", "");
+												+ "&docId=" + doc.getId() + "&open=true", "_blank", "");
 									else {
-										String filename = grid.getSelectedRecord().getAttribute("filename");
-										String version = grid.getSelectedRecord().getAttribute("version");
+										String filename = doc.getFileName();
+										String version = doc.getVersion();
 
 										if (filename == null)
-											filename = grid.getSelectedRecord().getAttribute("title") + "."
-													+ grid.getSelectedRecord().getAttribute("type");
-										PreviewPopup iv = new PreviewPopup(id, version, filename, folder != null
-												&& folder.isDownload());
+											filename = doc.getTitle() + "." + doc.getType();
+										PreviewPopup iv = new PreviewPopup(doc.getId(), version, filename,
+												folder != null && folder.isDownload());
 										iv.show();
 									}
 								}
@@ -193,10 +183,10 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 		infoPanel.setMessage(stats);
 
-		ListGridRecord[] result = Search.get().getLastResult();
-		grid.setRecords(result);
+		GUIDocument[] result = Search.get().getLastResult();
+		grid.setDocuments(result);
 
-		addMember(grid);
+		addMember((Canvas) grid);
 	}
 
 	/**
@@ -294,7 +284,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			export.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					Util.exportCSV(grid, false);
+					Util.exportCSV((ListGrid) grid, false);
 				}
 			});
 			if (!Feature.enabled(Feature.EXPORT_CSV)) {
@@ -347,12 +337,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	}
 
 	protected void expandVisibleRows() {
-		Integer[] rows = grid.getVisibleRows();
-		if (rows[0] == -1 || rows[1] == -1)
-			return;
-		for (int i = rows[0]; i < rows[1]; i++) {
-			grid.expandRecord(grid.getRecord(i));
-		}
+		grid.expandVisibleRows();
 	}
 
 	@Override
@@ -367,7 +352,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	@Override
 	public void onDocumentSaved(GUIDocument document) {
 		SearchPanel.get().onSelectedDocumentHit(document.getId());
-		grid.updateSelectedRecord(document);
+		grid.updateSelectedDocument(document);
 	}
 
 	@Override
@@ -375,30 +360,28 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	}
 
 	protected void onHitSelected() {
-		// Avoid server load in case of multiple selections
-		if (grid.getSelectedRecords() != null && grid.getSelectedRecords().length > 1)
+		if (grid.getSelectedCount() != 1)
 			return;
 
-		if (grid.getSelectedRecord() != null) {
-			if ("folder".equals(grid.getSelectedRecord().getAttribute("type")))
-				SearchPanel.get().onSelectedFolderHit(Long.parseLong(grid.getSelectedRecord().getAttribute("id")));
-			else
-				SearchPanel.get().onSelectedDocumentHit(Long.parseLong(grid.getSelectedRecord().getAttribute("id")));
-		}
+		GUIDocument doc = grid.getSelectedDocument();
+
+		if ("folder".equals(doc.getType()))
+			SearchPanel.get().onSelectedFolderHit(doc.getId());
+		else
+			SearchPanel.get().onSelectedDocumentHit(doc.getId());
 	}
 
 	protected Menu prepareContextMenu(GUIFolder folder, final boolean document) {
 		Menu contextMenu = new Menu();
 		if (document)
-			contextMenu = new DocumentContextMenu(folder, grid);
+			contextMenu = new DocumentContextMenu(folder, (DocumentsListGrid) grid);
 		if (com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.DOCUMENTS)) {
 			MenuItem openInFolder = new MenuItem();
 			openInFolder.setTitle(I18N.message("openinfolder"));
 			openInFolder.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 				public void onClick(MenuItemClickEvent event) {
-					ListGridRecord record = grid.getSelectedRecord();
-					DocumentsPanel.get().openInFolder(Long.parseLong(record.getAttributeAsString("folderId")),
-							document ? Long.parseLong(record.getAttributeAsString("id")) : null);
+					GUIDocument doc = grid.getSelectedDocument();
+					DocumentsPanel.get().openInFolder(doc.getFolder().getId(), document ? doc.getId() : null);
 				}
 			});
 			contextMenu.addItem(openInFolder);
@@ -406,7 +389,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		return contextMenu;
 	}
 
-	public ListGrid getList() {
+	public DocumentsGrid getList() {
 		return grid;
 	}
 
@@ -417,11 +400,12 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 	@Override
 	public void onFolderSaved(GUIFolder folder) {
-		ListGridRecord selectedRecord = grid.getSelectedRecord();
-		if (selectedRecord != null) {
-			selectedRecord.setAttribute("title", folder.getName());
-			selectedRecord.setAttribute("comment", folder.getDescription());
-			grid.refreshRow(grid.getRecordIndex(selectedRecord));
+		GUIDocument doc = grid.getSelectedDocument();
+		if (doc != null) {
+			doc.setTitle(folder.getName());
+			doc.getFolder().setName(folder.getName());
+			doc.getFolder().setDescription(folder.getDescription());
+			grid.updateSelectedDocument(doc);
 		}
 	}
 

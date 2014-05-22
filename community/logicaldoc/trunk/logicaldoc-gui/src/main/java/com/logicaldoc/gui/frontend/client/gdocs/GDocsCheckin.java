@@ -93,7 +93,7 @@ public class GDocsCheckin extends Window {
 						ContactingServer.get().hide();
 						destroy();
 						parentDialog.destroy();
-						grid.updateSelectedRecord(result);
+						grid.updateSelectedDocument(result);
 						Session.get().setCurrentDocument(result);
 					}
 				});

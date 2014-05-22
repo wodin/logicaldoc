@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.document.DocumentDetailsPanel;
 import com.logicaldoc.gui.frontend.client.document.DocumentsGrid;
+import com.logicaldoc.gui.frontend.client.document.DocumentsListGrid;
 import com.logicaldoc.gui.frontend.client.folder.FolderDetailsPanel;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -20,7 +21,6 @@ import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -52,7 +52,7 @@ public class SearchPanel extends HLayout implements SearchObserver, DocumentObse
 	private SearchPanel() {
 		setWidth100();
 
-		// Prepare the collapsible menu
+		// Prepare the collapsable menu
 		SearchMenu leftMenu = SearchMenu.get();
 		leftMenu.setWidth(350);
 		leftMenu.setShowResizeBar(true);
@@ -149,13 +149,13 @@ public class SearchPanel extends HLayout implements SearchObserver, DocumentObse
 			SearchMenu.get().setWidth(350);
 	}
 
-	public ListGrid getGrid() {
+	public DocumentsGrid getGrid() {
 		return ((HitsListPanel) listingPanel).getList();
 	}
 
 	public DocumentsGrid getDocumentsGrid() {
-		ListGrid grid = getGrid();
-		if (grid instanceof DocumentsGrid)
+		DocumentsGrid grid = getGrid();
+		if (grid instanceof DocumentsListGrid)
 			return (DocumentsGrid) grid;
 		else
 			return null;

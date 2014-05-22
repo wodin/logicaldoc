@@ -129,7 +129,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 
 	public void onDocumentSaved(GUIDocument document) {
 		if (listingPanel != null && listingPanel instanceof DocumentsListPanel)
-			((DocumentsListPanel) listingPanel).getGrid().updateSelectedRecord(document);
+			((DocumentsListPanel) listingPanel).getGrid().updateSelectedDocument(document);
 	}
 
 	@Override
@@ -218,7 +218,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 				}
 
 				if (clearSelection)
-					((DocumentsListPanel) listingPanel).getGrid().deselectAllRecords();
+					((DocumentsListPanel) listingPanel).getGrid().deselectAll();
 			}
 		});
 	}
@@ -300,9 +300,9 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	}
 
 	public void export() {
-		if (listingPanel instanceof DocumentsListPanel) {
-			Util.exportCSV(((DocumentsListPanel) listingPanel).getGrid(), false);
-		}
+		if (listingPanel instanceof DocumentsListPanel)
+			if (((DocumentsListPanel) listingPanel).getGrid() instanceof DocumentsListGrid)
+				Util.exportCSV((DocumentsListGrid) ((DocumentsListPanel) listingPanel).getGrid(), false);
 	}
 
 	public GUIDocument getSelectedDocument() {
