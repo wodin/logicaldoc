@@ -1,8 +1,5 @@
 package com.logicaldoc.gui.frontend.client.document;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.logicaldoc.gui.common.client.Constants;
@@ -29,8 +26,6 @@ import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
-import com.smartgwt.client.widgets.grid.ListGrid;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
@@ -109,21 +104,19 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		download.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
-				ListGridRecord[] selection = list.getSelectedRecords();
-				if (selection == null || selection.length == 0)
+				DocumentsGrid grid = DocumentsPanel.get().getDocumentsGrid();
+				if (grid.getSelectedCount() == 0)
 					return;
 
+				long[] selection = grid.getSelectedIds();
 				if (selection.length == 1) {
-					String id = list.getSelectedRecord().getAttribute("id");
 					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-							+ id);
+							+ Long.toString(selection[0]));
 				} else {
 					String url = GWT.getHostPageBaseURL() + "zip-export?sid=" + Session.get().getSid() + "&folderId="
 							+ Session.get().getCurrentFolder().getId();
-					for (ListGridRecord record : selection) {
-						url += "&docId=" + record.getAttributeAsString("id");
-					}
+					for (long id : selection)
+						url += "&docId=" + Long.toString(id);
 					WindowUtils.openUrl(url);
 				}
 			}
@@ -145,20 +138,19 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		pdf.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
-				ListGridRecord[] selection = list.getSelectedRecords();
-				if (selection == null || selection.length == 0)
+				DocumentsGrid grid = DocumentsPanel.get().getDocumentsGrid();
+				if (grid.getSelectedCount() == 0)
 					return;
 
+				long[] selection = grid.getSelectedIds();
 				if (selection.length == 1) {
 					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid()
 							+ "&docId=" + document.getId() + "&version=" + document.getVersion());
 				} else {
 					String url = GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid();
 					url += "&docId=";
-					for (ListGridRecord record : selection) {
-						url += record.getAttributeAsString("id") + "|";
-					}
+					for (long id : selection)
+						url += Long.toString(id) + "|";
 					WindowUtils.openUrl(url);
 				}
 			}
@@ -181,16 +173,11 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		subscribe.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
-				ListGridRecord[] selection = list.getSelectedRecords();
-				if (selection == null || selection.length == 0)
+				DocumentsGrid grid = DocumentsPanel.get().getDocumentsGrid();
+				if (grid.getSelectedCount() == 0)
 					return;
-				final long[] ids = new long[selection.length];
-				for (int i = 0; i < selection.length; i++) {
-					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
-				}
 
-				SubscriptionDialog dialog = new SubscriptionDialog(null, ids);
+				SubscriptionDialog dialog = new SubscriptionDialog(null, grid.getSelectedIds());
 				dialog.show();
 			}
 		});
@@ -219,16 +206,11 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		archive.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
-				ListGridRecord[] selection = list.getSelectedRecords();
-				if (selection == null || selection.length == 0)
+				DocumentsGrid grid = DocumentsPanel.get().getDocumentsGrid();
+				if (grid.getSelectedCount() == 0)
 					return;
-				final long[] ids = new long[selection.length];
-				for (int i = 0; i < selection.length; i++) {
-					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
-				}
 
-				SendToArchiveDialog archiveDialog = new SendToArchiveDialog(ids, true);
+				SendToArchiveDialog archiveDialog = new SendToArchiveDialog(grid.getSelectedIds(), true);
 				archiveDialog.show();
 			}
 		});
@@ -238,17 +220,11 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		startWorkflow.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
-				ListGridRecord[] selection = list.getSelectedRecords();
-				if (selection == null || selection.length == 0)
+				DocumentsGrid grid = DocumentsPanel.get().getDocumentsGrid();
+				if (grid.getSelectedCount() == 0)
 					return;
 
-				final long[] ids = new long[selection.length];
-				for (int i = 0; i < selection.length; i++) {
-					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
-				}
-
-				WorkflowDialog workflowDialog = new WorkflowDialog(ids);
+				WorkflowDialog workflowDialog = new WorkflowDialog(grid.getSelectedIds());
 				workflowDialog.show();
 			}
 		});
@@ -258,23 +234,11 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		addCalendarEvent.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
-				ListGridRecord[] selection = list.getSelectedRecords();
-				if (selection == null || selection.length == 0)
+				DocumentsGrid grid = DocumentsPanel.get().getDocumentsGrid();
+				if (grid.getSelectedCount() == 0)
 					return;
 
-				final GUIDocument[] docs = new GUIDocument[selection.length];
-				for (int i = 0; i < selection.length; i++) {
-					docs[i] = new GUIDocument();
-					docs[i].setId(Long.parseLong(selection[i].getAttribute("id")));
-					docs[i].setTitle(selection[i].getAttribute("title"));
-					docs[i].setTemplate(selection[i].getAttribute("template"));
-					docs[i].setFileName(selection[i].getAttribute("filename"));
-					docs[i].setIcon(selection[i].getAttribute("icon"));
-					docs[i].setVersion(selection[i].getAttribute("version"));
-					docs[i].setFileVersion(selection[i].getAttribute("fileVersion"));
-					docs[i].setLastModified(selection[i].getAttributeAsDate("lastModified"));
-				}
+				GUIDocument[] docs = grid.getSelectedDocuments();
 
 				GUICalendarEvent calEvent = new GUICalendarEvent();
 				calEvent.setCreator(Session.get().getUser().getFullName());
@@ -369,16 +333,11 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		bulkUpdate.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
-				ListGridRecord[] selection = list.getSelectedRecords();
-				if (selection == null || selection.length == 0)
+				DocumentsGrid grid = DocumentsPanel.get().getDocumentsGrid();
+				if (grid.getSelectedCount() == 0)
 					return;
-				final long[] ids = new long[selection.length];
-				for (int i = 0; i < selection.length; i++) {
-					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
-				}
 
-				BulkUpdateDialog dialog = new BulkUpdateDialog(ids, null, false, false);
+				BulkUpdateDialog dialog = new BulkUpdateDialog(grid.getSelectedIds(), null, false, false);
 				dialog.show();
 			}
 		});
@@ -388,15 +347,11 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		bulkCheckout.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
-				ListGridRecord[] selection = list.getSelectedRecords();
-				if (selection == null || selection.length == 0)
+				DocumentsGrid grid = DocumentsPanel.get().getDocumentsGrid();
+				if (grid.getSelectedCount() == 0)
 					return;
-				List<Long> ids = new ArrayList<Long>();
-				for (ListGridRecord rec : selection) {
-					ids.add(rec.getAttributeAsLong("id"));
-				}
-				BulkCheckinDialog dialog = new BulkCheckinDialog(ids);
+
+				BulkCheckinDialog dialog = new BulkCheckinDialog(grid.getSelectedIds());
 				dialog.show();
 			}
 		});

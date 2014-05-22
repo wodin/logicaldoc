@@ -10,6 +10,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -269,11 +270,11 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		options.setSearchInSubPath(new Boolean(vm.getValueAsString("subfolders")).booleanValue());
 
 		if (new Boolean(vm.getValueAsString(SEARCHINHITS)).booleanValue()) {
-			ListGridRecord[] records = Search.get().getLastResult();
-			Long[] ids = new Long[records.length];
+			GUIDocument[] docs = Search.get().getLastResult();
+			Long[] ids = new Long[docs.length];
 			int i = 0;
-			for (ListGridRecord rec : records) {
-				ids[i] = new Long(rec.getAttribute("id"));
+			for (GUIDocument doc : docs) {
+				ids[i] = doc.getId();
 				i++;
 			}
 			options.setFilterIds(ids);

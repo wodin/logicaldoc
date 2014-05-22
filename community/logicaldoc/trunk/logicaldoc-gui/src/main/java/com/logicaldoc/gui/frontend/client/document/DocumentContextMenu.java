@@ -46,7 +46,7 @@ public class DocumentContextMenu extends Menu {
 
 	protected WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
 
-	public DocumentContextMenu(final GUIFolder folder, final DocumentsGrid grid) {
+	public DocumentContextMenu(final GUIFolder folder, final DocumentsListGrid grid) {
 		final ListGridRecord[] selection = grid.getSelectedRecords();
 
 		MenuItem download = new MenuItem();
@@ -482,7 +482,7 @@ public class DocumentContextMenu extends Menu {
 		archive.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
+				ListGrid list = (ListGrid)DocumentsPanel.get().getDocumentsGrid();
 				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;
@@ -500,7 +500,7 @@ public class DocumentContextMenu extends Menu {
 		startWorkflow.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				ListGrid list = DocumentsPanel.get().getDocumentsGrid();
+				ListGrid list = (ListGrid)DocumentsPanel.get().getDocumentsGrid();
 				ListGridRecord[] selection = list.getSelectedRecords();
 				if (selection == null || selection.length == 0)
 					return;

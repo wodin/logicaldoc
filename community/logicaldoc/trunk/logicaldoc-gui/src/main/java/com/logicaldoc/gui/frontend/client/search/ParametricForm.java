@@ -13,6 +13,7 @@ import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUICriterion;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -38,7 +39,6 @@ import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -345,11 +345,11 @@ public class ParametricForm extends VLayout {
 		options.setCriteria(list.toArray(new GUICriterion[0]));
 
 		if (new Boolean(vm.getValueAsString(SEARCHINHITS)).booleanValue()) {
-			ListGridRecord[] records = Search.get().getLastResult();
+			GUIDocument[] records = Search.get().getLastResult();
 			Long[] ids = new Long[records.length];
 			int i = 0;
-			for (ListGridRecord rec : records) {
-				ids[i] = new Long(rec.getAttribute("id"));
+			for (GUIDocument rec : records) {
+				ids[i] = rec.getId();
 				i++;
 			}
 			options.setFilterIds(ids);

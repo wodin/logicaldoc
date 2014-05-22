@@ -6,6 +6,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.DocumentObserver;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIRating;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -28,7 +29,6 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class RatingDialog extends Window {
@@ -137,28 +137,14 @@ public class RatingDialog extends Window {
 
 									if (RatingDialog.this.observer == null
 											|| RatingDialog.this.observer instanceof DocumentsPanel) {
-										ListGridRecord selectedRecord = DocumentsPanel.get().getDocumentsGrid()
-												.getSelectedRecord();
-										selectedRecord.setAttribute("rating", "rating" + rating);
-										DocumentsPanel
-												.get()
-												.getDocumentsGrid()
-												.refreshRow(
-														DocumentsPanel.get().getDocumentsGrid().getRecordIndex(selectedRecord));
+										DocumentsPanel.get().getDocumentsGrid().updateRating(rating);
 										DocumentsPanel.get().selectDocument(
-												Long.parseLong(selectedRecord.getAttribute("id")), false);
-									}
-
-									else if (RatingDialog.this.observer instanceof HitsListPanel) {
-										ListGridRecord selectedRecord = SearchPanel.get().getGrid().getSelectedRecord();
-										selectedRecord.setAttribute("rating", "rating" + rating);
-										SearchPanel
-												.get()
-												.getGrid()
-												.refreshRow(
-														DocumentsPanel.get().getDocumentsGrid().getRecordIndex(selectedRecord));
-										SearchPanel.get().onSelectedDocumentHit(
-												Long.parseLong(selectedRecord.getAttribute("id")));
+												DocumentsPanel.get().getDocumentsGrid().getSelectedDocument().getId(),
+												false);
+									} else if (RatingDialog.this.observer instanceof HitsListPanel) {
+										GUIDocument doc = SearchPanel.get().getGrid().getSelectedDocument();
+										SearchPanel.get().getGrid().updateRating(rating);
+										SearchPanel.get().onSelectedDocumentHit(doc.getId());
 									}
 
 									Log.info(I18N.message("votesaved"), null);
