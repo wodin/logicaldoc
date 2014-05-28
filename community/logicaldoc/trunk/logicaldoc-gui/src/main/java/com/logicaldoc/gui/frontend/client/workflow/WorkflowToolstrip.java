@@ -66,11 +66,14 @@ public class WorkflowToolstrip extends ToolStrip {
 
 	private SelectItem workflowSelect = null;
 
-	public WorkflowToolstrip(final WorkflowDesigner designer) {
+	private PrimitivesToolstrip primitives;
+
+	public WorkflowToolstrip(final WorkflowDesigner designer, PrimitivesToolstrip primitives) {
 		super();
 
 		this.designer = designer;
 		this.currentWorkflow = designer.getWorkflow();
+		this.primitives = primitives;
 
 		setWidth100();
 
@@ -386,6 +389,8 @@ public class WorkflowToolstrip extends ToolStrip {
 		else
 			workflowSelect.setValue(I18N.message("workflowselect") + "...");
 		workflowSelect.redraw();
+		
+		primitives.update();
 	}
 
 	private void onSave() {

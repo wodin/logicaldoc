@@ -172,14 +172,14 @@ public class Util {
 		return url;
 	}
 
-	public static String thumbnailImg(String sid, long docId, String fileVersion, Integer width, Integer height) {
+	public static String thumbnailImgageHTML(String sid, long docId, String fileVersion, Integer width, Integer height) {
 		String style = "";
 		if (width != null)
 			style += "width:" + width + "px; ";
 		if (height != null)
-			style += "height:" + height + "pc; ";
+			style += "height:" + height + "px; ";
 
-		String img = "<img src='" + thumbnailUrl(sid, docId, fileVersion) + "' style='" + style + "; ' />";
+		String img = "<img src='" + thumbnailUrl(sid, docId, fileVersion) + "' style='" + style + "' />";
 		return img;
 	}
 
