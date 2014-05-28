@@ -9,7 +9,7 @@
   </parent>
 	<groupId>com.logicaldoc</groupId>
 	<artifactId>logicaldoc</artifactId>
-	<version>6.9.0</version>
+	<version>7.0.0</version>
 	<packaging>pom</packaging>
 	<name>logicaldoc</name>
 	<description>
@@ -123,6 +123,7 @@
 		<module>logicaldoc-webservice</module>
 		<module>logicaldoc-webdav</module>
     <module>logicaldoc-cmis</module>
+    <module>logicaldoc-dropbox</module>
 		<module>logicaldoc-i18n</module>
     <module>logicaldoc-gui</module>
     <module>logicaldoc-webapp</module>
