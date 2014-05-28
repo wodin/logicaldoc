@@ -15,6 +15,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.calendar.CalendarEventDialog;
+import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.folder.Navigator;
 import com.logicaldoc.gui.frontend.client.folder.SubscriptionDialog;
 import com.logicaldoc.gui.frontend.client.services.AuditService;
@@ -67,6 +68,10 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	protected ToolStripButton export = new ToolStripButton();
 
 	protected ToolStripButton office = new ToolStripButton();
+
+	protected ToolStripButton list = new ToolStripButton();
+
+	protected ToolStripButton gallery = new ToolStripButton();
 
 	protected GUIDocument document;
 
@@ -257,6 +262,42 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
+		list.setTooltip(I18N.message("list"));
+		list.setIcon(ItemFactory.newImgIcon("application_view_list.png").getSrc());
+		list.setActionType(SelectionType.RADIO);
+		list.setRadioGroup("mode");
+		list.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Offline.put(Constants.COOKIE_DOCSLIST_MODE, DocumentsGrid.MODE_LIST);
+				DocumentsPanel.get().refresh(null, DocumentsGrid.MODE_LIST);
+			}
+		});
+		list.setDisabled(Session.get().getCurrentFolder() == null);
+
+		gallery.setTooltip(I18N.message("gallery"));
+		gallery.setIcon(ItemFactory.newImgIcon("application_view_tile.png").getSrc());
+		gallery.setActionType(SelectionType.RADIO);
+		gallery.setRadioGroup("mode");
+		gallery.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (Session.get().getCurrentFolder() != null)
+					Offline.put(Constants.COOKIE_DOCSLIST_MODE, DocumentsGrid.MODE_GALLERY);
+				DocumentsPanel.get().refresh(null, DocumentsGrid.MODE_GALLERY);
+			}
+		});
+		gallery.setDisabled(Session.get().getCurrentFolder() == null);
+
+		int mode = DocumentsGrid.MODE_LIST;
+		if (Offline.get(Constants.COOKIE_DOCSLIST_MODE) != null
+				&& !Offline.get(Constants.COOKIE_DOCSLIST_MODE).equals(""))
+			mode = Integer.parseInt((String) Offline.get(Constants.COOKIE_DOCSLIST_MODE));
+		if (mode == DocumentsGrid.MODE_LIST)
+			list.setSelected(true);
+		else
+			gallery.setSelected(true);
+
 		setHeight(27);
 		addButton(download);
 
@@ -429,7 +470,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			public void onClick(ClickEvent event) {
 				if (max.validate()) {
 					Offline.put(Constants.COOKIE_DOCSLIST_MAX, max.getValueAsString());
-					DocumentsPanel.get().refresh((Integer) max.getValue());
+					DocumentsPanel.get().refresh((Integer) max.getValue(), null);
 				}
 			}
 		});
@@ -476,6 +517,10 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				export.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
+
+		addSeparator();
+		addButton(list);
+		addButton(gallery);
 	}
 
 	/**
@@ -541,6 +586,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 						|| !Feature.enabled(Feature.WORKFLOW));
 				addCalendarEvent.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_CALENDAR)
 						|| !Feature.enabled(Feature.CALENDAR));
+				list.setDisabled(false);
+				gallery.setDisabled(false);
 			} else {
 				refresh.setDisabled(true);
 				add.setDisabled(true);
@@ -552,6 +599,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				bulkCheckout.setDisabled(true);
 				dropSpot.setDisabled(true);
 				addCalendarEvent.setDisabled(true);
+				list.setDisabled(false);
+				gallery.setDisabled(false);
 			}
 		} catch (Throwable t) {
 

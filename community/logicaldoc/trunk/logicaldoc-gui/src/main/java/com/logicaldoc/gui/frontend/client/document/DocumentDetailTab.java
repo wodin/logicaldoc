@@ -64,14 +64,6 @@ public abstract class DocumentDetailTab extends HLayout {
 
 	}
 
-	public boolean isUpdateEnabled() {
-		return updateEnabled;
-	}
-
-	public void setUpdateEnabled(boolean updateEnabled) {
-		this.updateEnabled = updateEnabled;
-	}
-
 	public DocumentObserver getObserver() {
 		return observer;
 	}

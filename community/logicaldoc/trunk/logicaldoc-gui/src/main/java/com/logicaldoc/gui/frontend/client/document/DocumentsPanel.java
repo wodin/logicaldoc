@@ -11,6 +11,8 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
+import com.logicaldoc.gui.frontend.client.document.grid.DocumentsListGrid;
 import com.logicaldoc.gui.frontend.client.folder.FolderDetailsPanel;
 import com.logicaldoc.gui.frontend.client.folder.Navigator;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
@@ -64,6 +66,8 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	protected Long hiliteDocId = null;
 
 	protected Integer max;
+
+	protected int mode = DocumentsGrid.MODE_LIST;
 
 	protected DocumentsPanel() {
 		// Register to folders events
@@ -123,13 +127,19 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 					&& !Offline.get(Constants.COOKIE_DOCSLIST_MAX).equals(""))
 				mx = (String) Offline.get(Constants.COOKIE_DOCSLIST_MAX);
 			instance.setMax(Integer.parseInt(mx));
+
+			int mode = DocumentsGrid.MODE_LIST;
+			if (Offline.get(Constants.COOKIE_DOCSLIST_MODE) != null
+					&& !Offline.get(Constants.COOKIE_DOCSLIST_MODE).equals(""))
+				mode = Integer.parseInt((String) Offline.get(Constants.COOKIE_DOCSLIST_MODE));
+			instance.setMode(mode);
 		}
 		return instance;
 	}
 
 	public void onDocumentSaved(GUIDocument document) {
 		if (listingPanel != null && listingPanel instanceof DocumentsListPanel)
-			((DocumentsListPanel) listingPanel).getGrid().updateSelectedDocument(document);
+			((DocumentsListPanel) listingPanel).getGrid().updateDocument(document);
 	}
 
 	@Override
@@ -239,7 +249,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 
 			@Override
 			public void onSuccess(GUIFolder folder) {
-				updateListingPanel(folder, hiliteDocId, max);
+				updateListingPanel(folder, hiliteDocId, max, mode);
 			}
 		});
 	}
@@ -251,24 +261,27 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	}
 
 	public void refresh() {
-		refresh(null);
+		refresh(null, null);
 	}
 
-	public void refresh(Integer max) {
+	public void refresh(Integer max, Integer mode) {
 		if (max != null && max > 0)
 			this.max = max;
 
-		updateListingPanel(folder, hiliteDocId, this.max);
+		if (mode != null)
+			this.mode = mode;
+
+		updateListingPanel(folder, hiliteDocId, this.max, this.mode);
 
 		showFolderDetails();
 
 		hiliteDocId = null;
 	}
 
-	protected void updateListingPanel(GUIFolder folder, Long hiliteDocId, Integer max) {
+	protected void updateListingPanel(GUIFolder folder, Long hiliteDocId, Integer max, int mode) {
 		listing.removeMember(listingPanel);
 		listingPanel.destroy();
-		listingPanel = new DocumentsListPanel(folder, hiliteDocId, max);
+		listingPanel = new DocumentsListPanel(folder, hiliteDocId, max, mode);
 		listing.addMember(listingPanel);
 		listing.redraw();
 	}
@@ -327,5 +340,13 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 
 	public void setMax(Integer max) {
 		this.max = max;
+	}
+
+	public int getMode() {
+		return mode;
+	}
+
+	public void setMode(int mode) {
+		this.mode = mode;
 	}
 }

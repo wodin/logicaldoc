@@ -38,14 +38,21 @@ public class Util {
 	 * @param alt the image alt
 	 * @return the resultant HTML
 	 */
-	public static String imageHTML(String imageName, String alt) {
-		return "<img border=\"0\" align=\"absmidle\" alt=\"" + alt + "\" title=\"" + alt + "\" src='"
-				+ Util.imageUrl(imageName) + "' />";
+	public static String imageHTML(String imageName, String alt, String style) {
+		return "<img border=\"0\" align=\"absmidle\" alt=\"" + alt + "\" title=\"" + alt + "\""
+				+ (style != null ? "style='" + style + "'" : "") + " src='" + Util.imageUrl(imageName) + "' />";
 	}
 
-	public static String imageHTML(String imageName, int width, int height, String style) {
-		return "<img border='0' alt='' title='' src='" + Util.imageUrl(imageName) + "' width='" + width
-				+ "px' height='" + height + "px'" + (style != null ? " style='" + style + "'" : "") + " />";
+	public static String imageHTML(String imageName, Integer width, Integer height, String style) {
+		String html = "<img border='0' alt='' title='' src='" + Util.imageUrl(imageName) + "' ";
+		if (width != null)
+			html += " width='" + width + "px' ";
+		if (height != null)
+			html += " height='" + height + "px' ";
+		if (style != null)
+			html += " style='" + style + "' ";
+		html += " />";
+		return html;
 	}
 
 	public static String downloadURL(long docId, String fileVersion, boolean open) {
@@ -158,6 +165,24 @@ public class Util {
 		return url;
 	}
 
+	public static String thumbnailUrl(String sid, long docId, String fileVersion) {
+		String url = GWT.getHostPageBaseURL() + "preview?sid=" + Session.get().getSid() + "&docId=" + docId;
+		if (fileVersion != null)
+			url += "&fileVersion=" + fileVersion;
+		return url;
+	}
+
+	public static String thumbnailImg(String sid, long docId, String fileVersion, Integer width, Integer height) {
+		String style = "";
+		if (width != null)
+			style += "width:" + width + "px; ";
+		if (height != null)
+			style += "height:" + height + "pc; ";
+
+		String img = "<img src='" + thumbnailUrl(sid, docId, fileVersion) + "' style='" + style + "; ' />";
+		return img;
+	}
+
 	public static String imageUrl(String imageName) {
 		return imagePrefix() + imageName;
 	}
@@ -190,13 +215,13 @@ public class Util {
 	}
 
 	/**
-	 * Generates HTML image code with style.
+	 * Generates HTML image code.
 	 * 
 	 * @param imageName the image name
 	 * @return the resultant HTML
 	 */
 	public static String imageHTML(String imageName) {
-		return imageHTML(imageName, "");
+		return imageHTML(imageName, "", null);
 	}
 
 	public static boolean isPreviewable(String fileName) {
@@ -341,7 +366,7 @@ public class Util {
 			}
 			str = str.replace('.', I18N.decimalSepator());
 		} else if (size < GB) {
-			double tmp = size / MB;	
+			double tmp = size / MB;
 			if (tmp < 10) {
 				NumberFormat fmt = NumberFormat.getFormat("###.##");
 				str = fmt.format(tmp) + " MB";

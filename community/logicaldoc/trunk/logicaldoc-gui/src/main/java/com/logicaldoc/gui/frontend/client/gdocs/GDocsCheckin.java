@@ -8,7 +8,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
-import com.logicaldoc.gui.frontend.client.document.DocumentsGrid;
+import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.services.GDocsService;
 import com.logicaldoc.gui.frontend.client.services.GDocsServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -93,7 +93,7 @@ public class GDocsCheckin extends Window {
 						ContactingServer.get().hide();
 						destroy();
 						parentDialog.destroy();
-						grid.updateSelectedDocument(result);
+						grid.updateDocument(result);
 						Session.get().setCurrentDocument(result);
 					}
 				});

@@ -11,6 +11,10 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
+import com.logicaldoc.gui.frontend.client.document.grid.ContextMenu;
+import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
+import com.logicaldoc.gui.frontend.client.document.grid.DocumentsListGrid;
+import com.logicaldoc.gui.frontend.client.document.grid.DocumentsTileGrid;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.widgets.Canvas;
@@ -26,7 +30,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 
 /**
- * This panel shows a list of documents in a tabular way.
+ * This panel shows a selection of documents.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
@@ -42,16 +46,23 @@ public class DocumentsListPanel extends VLayout {
 
 	private boolean filters;
 
-	public DocumentsListPanel(GUIFolder folder, final Long hiliteDoc, Integer max) {
+	protected int visualizationMode = DocumentsGrid.MODE_LIST;
+
+	public DocumentsListPanel(GUIFolder folder, final Long hiliteDoc, Integer max, int mode) {
 		dataSource = new DocumentsDS(folder.getId(), null, max, null, null);
-		grid = new DocumentsListGrid(dataSource);
+
+		if (mode == DocumentsGrid.MODE_LIST)
+			grid = new DocumentsListGrid(dataSource);
+		else if (mode == DocumentsGrid.MODE_GALLERY)
+			grid = new DocumentsTileGrid(dataSource);
+
 		grid.setCanDrag(folder.isDownload());
-		
+
 		// Prepare a panel containing a title and the documents list
 		infoPanel = new InfoPanel("");
 		addMember(infoPanel);
 		addMember((Canvas) grid);
-		
+
 		grid.registerDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
@@ -86,16 +97,17 @@ public class DocumentsListPanel extends VLayout {
 		grid.registerSelectionChangedHandler(new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChanged(SelectionEvent event) {
-				onRecordSelected();
+				onDocumentSelected();
 			}
 		});
 
 		grid.registerCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				Menu contextMenu = new DocumentContextMenu(Session.get().getCurrentFolder(), (DocumentsListGrid) grid);
+				Menu contextMenu = new ContextMenu(Session.get().getCurrentFolder(), grid);
 				contextMenu.showContextMenu();
-				event.cancel();
+				if (event != null)
+					event.cancel();
 			}
 		});
 
@@ -129,11 +141,11 @@ public class DocumentsListPanel extends VLayout {
 		filters = !filters;
 	}
 
-	protected void onRecordSelected() {
+	protected void onDocumentSelected() {
 		// Avoid server load in case of multiple selections
 		if (grid.getSelectedCount() != 1)
 			return;
-		
+
 		documentService.getById(Session.get().getSid(), grid.getSelectedDocument().getId(),
 				new AsyncCallback<GUIDocument>() {
 					@Override

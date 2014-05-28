@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.document;
+package com.logicaldoc.gui.frontend.client.document.grid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,6 @@ import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
-import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIRating;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
@@ -17,6 +16,8 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
+import com.logicaldoc.gui.frontend.client.document.RatingDialog;
+import com.logicaldoc.gui.frontend.client.document.SignVerifyDialog;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SignService;
@@ -250,6 +251,22 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		template.setHidden(true);
 		template.setCanFilter(true);
 
+		ListGridField thumbnail = new ListGridField("thumbnail", I18N.message("thumbnail"), 200);
+		thumbnail.setHidden(true);
+		thumbnail.setCanFilter(false);
+		thumbnail.setCellFormatter(new CellFormatter() {
+
+			@Override
+			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
+				try {
+					return Util.thumbnailImg(Session.get().getSid(), Long.parseLong(record.getAttribute("id")), null,
+							200, null);
+				} catch (Throwable e) {
+					return "";
+				}
+			}
+		});
+
 		List<ListGridField> fields = new ArrayList<ListGridField>();
 
 		if (ds != null) {
@@ -290,6 +307,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 			fields.add(startPublishing);
 			fields.add(stopPublishing);
 			fields.add(template);
+			fields.add(thumbnail);
 		} else {
 			/*
 			 * We are searching
@@ -355,6 +373,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 			fields.add(startPublishing);
 			fields.add(stopPublishing);
 			fields.add(template);
+			fields.add(thumbnail);
 		}
 
 		String[] extNames = Session.get().getInfo().getConfig("search.extattr").split(",");
@@ -466,6 +485,11 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 	}
 
 	@Override
+	public void deselectAll() {
+		deselectAllRecords();
+	}
+
+	@Override
 	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
 		if (getFieldName(colNum).equals("title")) {
 			if ("stop".equals(record.getAttribute("immutable"))
@@ -480,42 +504,18 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 	}
 
 	@Override
-	public void updateSelectedDocument(GUIDocument document) {
-		ListGridRecord selectedRecord = getSelectedRecord();
-		if (selectedRecord != null) {
-			if ("folder".equals(selectedRecord.getAttribute("type"))) {
-				selectedRecord.setAttribute("title", document.getFolder().getName());
-				selectedRecord.setAttribute("comment", document.getFolder().getDescription());
-			} else {
-				if (document.getIndexed() == 0)
-					selectedRecord.setAttribute("indexed", "blank");
-				else if (document.getIndexed() == 1)
-					selectedRecord.setAttribute("indexed", "indexed");
+	public void updateDocument(GUIDocument document) {
+		Record record = null;
 
-				if (document.getStatus() == 2)
-					selectedRecord.setAttribute("locked", "lock");
-				else if (document.getStatus() == 1)
-					selectedRecord.setAttribute("locked", "page_edit");
-				else
-					selectedRecord.setAttribute("locked", "blank");
-				selectedRecord.setAttribute("status", document.getStatus());
+		// Find the record the corresponds to the given document
+		Record[] records = getRecords();
+		for (Record rec : records)
+			if (Long.parseLong(rec.getAttribute("id")) == document.getId())
+				record = rec;
 
-				selectedRecord.setAttribute("title", document.getTitle());
-				selectedRecord.setAttribute("customId", document.getCustomId());
-				selectedRecord.setAttribute("version", document.getVersion());
-				selectedRecord.setAttribute("fileVersion", document.getFileVersion());
-				selectedRecord.setAttribute("size", document.getFileSize());
-				selectedRecord.setAttribute("lastModified", document.getLastModified());
-				selectedRecord.setAttribute("publisher", document.getPublisher());
-				selectedRecord.setAttribute("published", document.getDate());
-				selectedRecord.setAttribute("creator", document.getCreator());
-				selectedRecord.setAttribute("created", document.getCreation());
-				selectedRecord.setAttribute("rating", "rating" + document.getRating());
-				selectedRecord.setAttribute("extResId", document.getExtResId());
-				selectedRecord.setAttribute("template", document.getTemplate());
-			}
-
-			refreshRow(getRecordIndex(selectedRecord));
+		if(record!=null){
+			GridUtil.updateRecord(document, record);
+			refreshRow(getRecordIndex(record));
 		}
 	}
 
@@ -547,119 +547,12 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 
 	@Override
 	public GUIDocument getSelectedDocument() {
-		return toDocument(getSelectedRecord());
+		return GridUtil.toDocument(getSelectedRecord());
 	}
 
 	@Override
 	public GUIDocument[] getSelectedDocuments() {
-		ListGridRecord[] selection = getSelectedRecords();
-		ArrayList<GUIDocument> docs = new ArrayList<GUIDocument>();
-		if (selection != null)
-			for (ListGridRecord record : selection)
-				docs.add(toDocument(record));
-		return docs.toArray(new GUIDocument[0]);
-	}
-
-	protected GUIDocument toDocument(ListGridRecord record) {
-		GUIDocument document = null;
-		if (record != null) {
-			document = new GUIDocument();
-			document.setId(Long.parseLong(record.getAttribute("id")));
-			document.setExtResId(record.getAttributeAsString("extResId"));
-			document.setTitle(record.getAttribute("title"));
-			document.setType(record.getAttribute("type"));
-			document.setFileName(record.getAttribute("filename"));
-			document.setTemplate(record.getAttribute("template"));
-			document.setVersion(record.getAttribute("version"));
-			document.setFileVersion(record.getAttribute("fileVersion"));
-			document.setImmutable("blank".equals(record.getAttributeAsString("immutable")) ? 0 : 1);
-			
-			if (record.getAttributeAsString("status") != null)
-				document.setStatus(Integer.parseInt(record.getAttributeAsString("status")));
-			document.setIcon(record.getAttribute("icon"));
-			if (record.getAttributeAsDate("lastModified") != null)
-				document.setLastModified(record.getAttributeAsDate("lastModified"));
-			
-			GUIFolder folder = new GUIFolder();
-			if ("folder".equals(document.getType())) {
-				folder.setId(Long.parseLong(record.getAttributeAsString("id")));
-			} else if(record.getAttributeAsString("folderId")!=null)
-				folder.setId(Long.parseLong(record.getAttributeAsString("folderId")));
-			else
-				folder.setId(Session.get().getCurrentFolder().getId());
-			folder.setName(record.getAttribute("title"));
-			folder.setDescription(record.getAttribute("comment"));
-
-			document.setFolder(folder);
-		}
-		return document;
-	}
-
-	protected ListGridRecord fromDocument(GUIDocument doc) {
-		ListGridRecord record = new ListGridRecord();
-		record.setAttribute("id", doc.getId());
-		record.setAttribute("title", doc.getTitle());
-		record.setAttribute("size", doc.getFileSize());
-		record.setAttribute("icon", doc.getIcon());
-		record.setAttribute("version", doc.getVersion());
-		record.setAttribute("lastModified", doc.getLastModified());
-		record.setAttribute("published", doc.getDate());
-		record.setAttribute("publisher", doc.getPublisher());
-		record.setAttribute("creator", doc.getCreator());
-		record.setAttribute("created", doc.getCreation());
-		record.setAttribute("sourceDate", doc.getSourceDate());
-		record.setAttribute("sourceAuthor", doc.getSourceAuthor());
-		record.setAttribute("customId", doc.getCustomId());
-		record.setAttribute("type", doc.getType());
-		record.setAttribute("immutable", doc.getImmutable() == 1 ? "stop" : "blank");
-		record.setAttribute("signed", doc.getSigned() == 1 ? "rosette" : "blank");
-		record.setAttribute("filename", doc.getFileName());
-		record.setAttribute("fileVersion", doc.getFileVersion());
-		record.setAttribute("fileVersion", doc.getFileVersion());
-		record.setAttribute("comment", doc.getComment());
-		record.setAttribute("workflowStatus", doc.getWorkflowStatus());
-		record.setAttribute("startPublishing", doc.getStartPublishing());
-		record.setAttribute("stopPublishing", doc.getStopPublishing());
-		record.setAttribute("publishedStatus", doc.getPublished() == 1 ? "yes" : "no");
-		record.setAttribute("score", doc.getScore());
-		record.setAttribute("summary", doc.getSummary());
-		record.setAttribute("lockUserId", doc.getLockUserId());
-		record.setAttribute("folderId", doc.getFolder().getId());
-		record.setAttribute("folder", doc.getFolder().getName());
-		record.setAttribute("docRef", doc.getDocRef());
-		record.setAttribute("source", doc.getSource());
-		record.setAttribute("sourceId", doc.getSourceId());
-		record.setAttribute("recipient", doc.getRecipient());
-		record.setAttribute("object", doc.getObject());
-		record.setAttribute("coverage", doc.getCoverage());
-		record.setAttribute("rating", "rating" + doc.getRating());
-		record.setAttribute("template", doc.getTemplate());
-
-		if (doc.getIndexed() == Constants.INDEX_INDEXED)
-			record.setAttribute("indexed", "indexed");
-		else if (doc.getIndexed() == Constants.INDEX_SKIP)
-			record.setAttribute("indexed", "unindexable");
-		else
-			record.setAttribute("indexed", "blank");
-
-		if (doc.getStatus() == Constants.DOC_LOCKED)
-			record.setAttribute("locked", "stop");
-		else if (doc.getStatus() == Constants.DOC_CHECKED_OUT)
-			record.setAttribute("locked", "page_edit");
-		else
-			record.setAttribute("locked", "blank");
-
-		String[] extNames = Session.get().getInfo().getConfig("search.extattr").split(",");
-		for (String name : extNames) {
-			record.setAttribute("ext_" + name, doc.getValue(name));
-		}
-
-		return record;
-	}
-
-	@Override
-	public void deselectAll() {
-		deselectAllRecords();
+		return GridUtil.toDocuments(getSelectedRecords());
 	}
 
 	@Override
@@ -730,11 +623,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 
 	@Override
 	public long[] getSelectedIds() {
-		GUIDocument[] records = getSelectedDocuments();
-		long[] ids = new long[records.length];
-		for (int i = 0; i < records.length; i++)
-			ids[i] = records[i].getId();
-		return ids;
+		return GridUtil.getIds(getSelectedRecords());
 	}
 
 	@Override
@@ -747,7 +636,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 	}
 
 	@Override
-	public void setCanExpandRows(boolean canExpand) {
+	public void setCanExpandRows() {
 		setCanExpandRecords(true);
 		setExpansionMode(ExpansionMode.DETAIL_FIELD);
 		setDetailField("summary");
@@ -762,7 +651,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		records = new ListGridRecord[documents.length];
 		for (int i = 0; i < documents.length; i++) {
 			GUIDocument doc = documents[i];
-			ListGridRecord record = fromDocument(doc);
+			ListGridRecord record = GridUtil.fromDocument(doc);
 			records[i] = record;
 		}
 
@@ -780,5 +669,10 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 			ids[j] = Long.parseLong(records[j].getAttributeAsString("id"));
 
 		return ids;
+	}
+
+	@Override
+	public void removeSelectedDocuments() {
+		removeSelectedData();
 	}
 }
