@@ -51,8 +51,8 @@ public class SignDialog extends Window {
 
 	private String version = "";
 
-	public SignDialog(String id, String filename, String versionToBeSigned) {
-		docId = Long.parseLong(id);
+	public SignDialog(long id, String filename, String versionToBeSigned) {
+		docId = id;
 		if (versionToBeSigned != null)
 			this.version = versionToBeSigned;
 

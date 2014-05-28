@@ -95,7 +95,7 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 	private int score;
 
 	private String extResId;
-	
+
 	public long getId() {
 		return id;
 	}

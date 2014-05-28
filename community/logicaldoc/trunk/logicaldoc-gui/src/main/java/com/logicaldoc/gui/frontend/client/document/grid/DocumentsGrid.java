@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.document;
+package com.logicaldoc.gui.frontend.client.document.grid;
 
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
@@ -7,7 +7,7 @@ import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 
 /**
- * Shows a view on a list of documents
+ * Shows a view on a collecion of documents
  * 
  * @author Marco Meschieri - Logical Objects
  * 
@@ -15,10 +15,14 @@ import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
  */
 public interface DocumentsGrid {
 
+	public final static int MODE_LIST = 0;
+
+	public final static int MODE_GALLERY = 1;
+
 	/**
-	 * Updates the currently selected item
+	 * Updates the visualization of the proper document element
 	 */
-	public void updateSelectedDocument(GUIDocument document);
+	public void updateDocument(GUIDocument document);
 
 	/**
 	 * Forces the records in the grid
@@ -57,16 +61,15 @@ public interface DocumentsGrid {
 	 */
 	public long[] getIds();
 
-	
 	/**
 	 * Deselect all documents
 	 */
 	public void deselectAll();
 
 	/**
-	 * Enabled / disables the records expansion
+	 * Enabled the records expansion
 	 */
-	public void setCanExpandRows(boolean canExpand);
+	public void setCanExpandRows();
 
 	/**
 	 * Counts the total number of elements
@@ -99,10 +102,15 @@ public interface DocumentsGrid {
 	public void selectDocument(long docId);
 
 	/**
+	 * Removed the selected documents from visualization
+	 */
+	public void removeSelectedDocuments();
+
+	/**
 	 * Expands all visible rows
 	 */
 	public void expandVisibleRows();
-
+	
 	/**
 	 * Tells if the grid must support the drag
 	 */

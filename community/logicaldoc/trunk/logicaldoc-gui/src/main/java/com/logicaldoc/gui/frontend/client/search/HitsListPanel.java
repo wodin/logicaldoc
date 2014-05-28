@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.DocumentObserver;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.FolderObserver;
@@ -17,13 +18,16 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
-import com.logicaldoc.gui.frontend.client.document.DocumentContextMenu;
-import com.logicaldoc.gui.frontend.client.document.DocumentsGrid;
-import com.logicaldoc.gui.frontend.client.document.DocumentsListGrid;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.document.grid.ContextMenu;
+import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
+import com.logicaldoc.gui.frontend.client.document.grid.DocumentsListGrid;
+import com.logicaldoc.gui.frontend.client.document.grid.DocumentsTileGrid;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
+import com.smartgwt.client.types.SelectionType;
+import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -59,29 +63,36 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 	private FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
 
+	private int mode = DocumentsGrid.MODE_LIST;;
+
 	public HitsListPanel() {
-		initialize();
+		if (Offline.get(Constants.COOKIE_HITSLIST_MODE) != null)
+			mode = Integer.parseInt(Offline.get(Constants.COOKIE_HITSLIST_MODE).toString());
+		initialize(mode);
 		Search.get().addObserver(this);
 	}
 
-	protected void initialize() {
-		if (grid != null) {
-			removeMember((Canvas) grid);
-		}
+	protected void initialize(int mode) {
+		this.mode = mode;
 
-		if (toolStrip != null) {
+		if (grid != null)
+			removeMember((Canvas) grid);
+
+		if (toolStrip != null)
 			toolStrip.clear();
-		}
 
 		GUISearchOptions options = Search.get().getOptions();
 
 		ListGridField id = new ListGridField("id", 60);
 		id.setHidden(true);
 
-		grid = new DocumentsListGrid(null);
+		if (mode == DocumentsGrid.MODE_LIST)
+			grid = new DocumentsListGrid(null);
+		else if (mode == DocumentsGrid.MODE_GALLERY)
+			grid = new DocumentsTileGrid(null);
 
 		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT)
-			grid.setCanExpandRows(true);
+			grid.setCanExpandRows();
 
 		grid.registerSelectionChangedHandler(new SelectionChangedHandler() {
 			@Override
@@ -97,7 +108,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 				final String type = doc.getType();
 				long id = doc.getFolder().getId();
 
-				if ("document".equals(type) && Session.get().getCurrentDocument() != null
+				if (!"folder".equals(type) && Session.get().getCurrentDocument() != null
 						&& Session.get().getCurrentDocument().getId() == id) {
 					Menu contextMenu = prepareContextMenu(Session.get().getCurrentDocument().getFolder(), true);
 					contextMenu.showContextMenu();
@@ -161,7 +172,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		});
 
 		// Prepare the toolbar with some buttons
-		setupToolbar(options.getType());
+		prepareToolbar(options.getType());
 
 		if (infoPanel == null) {
 			infoPanel = new InfoPanel(" ");
@@ -192,7 +203,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	/**
 	 * Prepares the toolbar containing the search report and a set of buttons
 	 */
-	protected void setupToolbar(int optionsType) {
+	protected void prepareToolbar(int optionsType) {
 		if (toolStrip == null)
 			toolStrip = new ToolStrip();
 		else {
@@ -317,6 +328,42 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		toolStrip.addSeparator();
 		toolStrip.addButton(toggle);
 
+		final ToolStripButton list = new ToolStripButton();
+		list.setTooltip(I18N.message("list"));
+		list.setIcon(ItemFactory.newImgIcon("application_view_list.png").getSrc());
+		list.setActionType(SelectionType.RADIO);
+		list.setRadioGroup("mode");
+		list.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Offline.put(Constants.COOKIE_HITSLIST_MODE, DocumentsGrid.MODE_LIST);
+				initialize(DocumentsGrid.MODE_LIST);
+			}
+		});
+
+		final ToolStripButton gallery = new ToolStripButton();
+		gallery.setTooltip(I18N.message("gallery"));
+		gallery.setIcon(ItemFactory.newImgIcon("application_view_tile.png").getSrc());
+		gallery.setActionType(SelectionType.RADIO);
+		gallery.setRadioGroup("mode");
+		gallery.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (Session.get().getCurrentFolder() != null)
+					Offline.put(Constants.COOKIE_HITSLIST_MODE, DocumentsGrid.MODE_GALLERY);
+				initialize(DocumentsGrid.MODE_GALLERY);
+			}
+		});
+
+		if (mode == DocumentsGrid.MODE_LIST)
+			list.setSelected(true);
+		else
+			gallery.setSelected(true);
+
+		toolStrip.addSeparator();
+		toolStrip.addButton(list);
+		toolStrip.addButton(gallery);
+
 		toolStrip.addFill();
 
 		if (Search.get().getSuggestion() != null) {
@@ -342,7 +389,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 	@Override
 	public void onSearchArrived() {
-		initialize();
+		initialize(mode);
 		MainPanel.get().selectSearchTab();
 		if (Search.get().isHasMore()) {
 			Log.warn(I18N.message("possiblemorehits"), I18N.message("possiblemorehitsdetail"));
@@ -352,7 +399,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	@Override
 	public void onDocumentSaved(GUIDocument document) {
 		SearchPanel.get().onSelectedDocumentHit(document.getId());
-		grid.updateSelectedDocument(document);
+		grid.updateDocument(document);
 	}
 
 	@Override
@@ -374,7 +421,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	protected Menu prepareContextMenu(GUIFolder folder, final boolean document) {
 		Menu contextMenu = new Menu();
 		if (document)
-			contextMenu = new DocumentContextMenu(folder, (DocumentsListGrid) grid);
+			contextMenu = new ContextMenu(folder, grid);
 		if (com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.DOCUMENTS)) {
 			MenuItem openInFolder = new MenuItem();
 			openInFolder.setTitle(I18N.message("openinfolder"));
@@ -405,7 +452,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			doc.setTitle(folder.getName());
 			doc.getFolder().setName(folder.getName());
 			doc.getFolder().setDescription(folder.getDescription());
-			grid.updateSelectedDocument(doc);
+			grid.updateDocument(doc);
 		}
 	}
 

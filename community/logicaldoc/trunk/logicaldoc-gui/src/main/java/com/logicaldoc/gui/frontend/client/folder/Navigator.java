@@ -19,9 +19,10 @@ import com.logicaldoc.gui.common.client.util.RequestInfo;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
-import com.logicaldoc.gui.frontend.client.document.DocumentsListGrid;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.document.SendToArchiveDialog;
+import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
+import com.logicaldoc.gui.frontend.client.document.grid.DocumentsListGrid;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.search.Search;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -37,7 +38,6 @@ import com.smartgwt.client.widgets.events.DragStartEvent;
 import com.smartgwt.client.widgets.events.DragStartHandler;
 import com.smartgwt.client.widgets.events.DropEvent;
 import com.smartgwt.client.widgets.events.DropHandler;
-import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellClickEvent;
@@ -102,7 +102,6 @@ public class Navigator extends TreeGrid implements FolderObserver {
 		addDropHandler(new DropHandler() {
 			public void onDrop(final DropEvent event) {
 				try {
-					ListGrid list = null;
 					if (EventHandler.getDragTarget() instanceof Navigator) {
 						// Workspaces cannot be moved
 						if ("1".equals(getDragData()[0].getAttributeAsString("type"))) {
@@ -149,22 +148,20 @@ public class Navigator extends TreeGrid implements FolderObserver {
 										}
 									}
 								});
-					} else if (EventHandler.getDragTarget() instanceof DocumentsListGrid) {
+					} else if (EventHandler.getDragTarget() instanceof DocumentsGrid) {
 						/*
 						 * In this case we are moving a document
 						 */
-						list = (ListGrid) EventHandler.getDragTarget();
-
-						final ListGridRecord[] selection = list.getSelectedRecords();
+						DocumentsGrid grid = (DocumentsGrid) EventHandler.getDragTarget();
+						final GUIDocument[] selection = grid.getSelectedDocuments();
 						if (selection == null || selection.length == 0)
 							return;
 						final long[] ids = new long[selection.length];
-						for (int i = 0; i < selection.length; i++) {
-							if (selection[i].getAttribute("aliasId") != null)
-								ids[i] = Long.parseLong(selection[i].getAttribute("aliasId"));
+						for (int i = 0; i < selection.length; i++)
+							if (selection[i].getDocRef() != null)
+								ids[i] = selection[i].getDocRef();
 							else
-								ids[i] = Long.parseLong(selection[i].getAttribute("id"));
-						}
+								ids[i] = selection[i].getId();
 
 						final TreeNode selectedNode = getDropFolder();
 						final long folderId = Long.parseLong(selectedNode.getAttribute("folderId"));
@@ -172,8 +169,8 @@ public class Navigator extends TreeGrid implements FolderObserver {
 						if (Session.get().getCurrentFolder().getId() == folderId)
 							return;
 
-						final String sourceName = selection.length == 1 ? selection[0].getAttribute("title")
-								: (selection.length + " " + I18N.message("documents").toLowerCase());
+						final String sourceName = selection.length == 1 ? selection[0].getTitle() : (selection.length
+								+ " " + I18N.message("documents").toLowerCase());
 						final String targetName = selectedNode.getAttributeAsString("name");
 
 						LD.ask(I18N.message("move"), I18N.message("moveask", new String[] { sourceName, targetName }),
