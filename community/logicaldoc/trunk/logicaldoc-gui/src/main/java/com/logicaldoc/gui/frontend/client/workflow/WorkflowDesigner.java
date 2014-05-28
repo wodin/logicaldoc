@@ -58,10 +58,12 @@ public class WorkflowDesigner extends VStack {
 
 		drawingPanelLayout.setWidth100();
 		drawingPanelLayout.setHeight100();
-		workflowToolstrip = new WorkflowToolstrip(this);
+
+		PrimitivesToolstrip primitives = new PrimitivesToolstrip(this);
+		workflowToolstrip = new WorkflowToolstrip(this, primitives);
 
 		drawingPanelLayout.addMember(workflowToolstrip);
-		drawingPanelLayout.addMember(new PrimitivesToolstrip(this));
+		drawingPanelLayout.addMember(primitives);
 
 		drawingPanel = new DrawingPanel(this);
 		drawingPanelLayout.addMember(drawingPanel);

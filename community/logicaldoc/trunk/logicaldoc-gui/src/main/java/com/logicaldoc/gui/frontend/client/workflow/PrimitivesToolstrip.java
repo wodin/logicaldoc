@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.workflow;
 
 import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
+import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
@@ -26,13 +27,21 @@ public class PrimitivesToolstrip extends ToolStrip {
 
 	private WorkflowDesigner workflowDesigner = null;
 
+	private ToolStripButton newTask;
+
+	private ToolStripButton newEndState;
+
+	private ToolStripButton newFork;
+
+	private ToolStripButton newJoin;
+
 	public PrimitivesToolstrip(WorkflowDesigner designer) {
 		super();
 
 		this.workflowDesigner = designer;
 		setWidth100();
 
-		ToolStripButton newTask = new ToolStripButton(I18N.message("addtask"));
+		newTask = new ToolStripButton(I18N.message("addtask"));
 		newTask.setIcon(Util.imageUrl("task.png"));
 		newTask.setDisabled(workflowDesigner.getWorkflow() == null);
 		newTask.addClickHandler(new ClickHandler() {
@@ -44,7 +53,7 @@ public class PrimitivesToolstrip extends ToolStrip {
 		addButton(newTask);
 		addSeparator();
 
-		ToolStripButton newEndState = new ToolStripButton(I18N.message("addendstate"));
+		newEndState = new ToolStripButton(I18N.message("addendstate"));
 		newEndState.setIcon(Util.imageUrl("endState.png"));
 		newEndState.setDisabled(workflowDesigner.getWorkflow() == null);
 		newEndState.addClickHandler(new ClickHandler() {
@@ -56,7 +65,7 @@ public class PrimitivesToolstrip extends ToolStrip {
 		addButton(newEndState);
 		addSeparator();
 
-		ToolStripButton newFork = new ToolStripButton(I18N.message("addfork"));
+		newFork = new ToolStripButton(I18N.message("addfork"));
 		newFork.setIcon(Util.imageUrl("fork.png"));
 		newFork.setDisabled(workflowDesigner.getWorkflow() == null);
 		newFork.addClickHandler(new ClickHandler() {
@@ -68,7 +77,7 @@ public class PrimitivesToolstrip extends ToolStrip {
 		addButton(newFork);
 		addSeparator();
 
-		ToolStripButton newJoin = new ToolStripButton(I18N.message("addjoin"));
+		newJoin = new ToolStripButton(I18N.message("addjoin"));
 		newJoin.setIcon(Util.imageUrl("join.png"));
 		newJoin.setDisabled(workflowDesigner.getWorkflow() == null);
 		newJoin.addClickHandler(new ClickHandler() {
@@ -80,9 +89,19 @@ public class PrimitivesToolstrip extends ToolStrip {
 		addButton(newJoin);
 
 		addFill();
+
+		update();
 	}
 
 	public WorkflowDesigner getDesigner() {
 		return workflowDesigner;
+	}
+
+	public void update() {
+		GUIWorkflow wf = workflowDesigner.getWorkflow();
+		newTask.setDisabled(wf == null || wf.getName().isEmpty());
+		newEndState.setDisabled(wf == null || wf.getName().isEmpty());
+		newFork.setDisabled(wf == null || wf.getName().isEmpty());
+		newJoin.setDisabled(wf == null || wf.getName().isEmpty());
 	}
 }

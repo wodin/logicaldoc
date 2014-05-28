@@ -259,7 +259,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 			@Override
 			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
 				try {
-					return Util.thumbnailImg(Session.get().getSid(), Long.parseLong(record.getAttribute("id")), null,
+					return Util.thumbnailImgageHTML(Session.get().getSid(), Long.parseLong(record.getAttribute("id")), null,
 							200, null);
 				} catch (Throwable e) {
 					return "";

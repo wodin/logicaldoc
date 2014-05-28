@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.document.grid;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
@@ -48,7 +49,7 @@ public class DocumentsTileGrid extends TileGrid implements DocumentsGrid {
 					if("folder".equals(record.getAttribute("type")))
 						return Util.imageHTML("folder_tile.png", null, 200, null);
 					else
-						return Util.thumbnailImg(Session.get().getSid(), Long.parseLong(record.getAttribute("id")), null,
+						return Util.thumbnailImgageHTML(Session.get().getSid(), Long.parseLong(record.getAttribute("id")), null,
 							null, 200);
 				} catch (Throwable e) {
 					return "";
@@ -57,25 +58,25 @@ public class DocumentsTileGrid extends TileGrid implements DocumentsGrid {
 		});
 
 		DetailViewerField filename = new DetailViewerField("title");
-		filename.setAttribute("margin-top", "5px");
 		filename.setDetailFormatter(new DetailFormatter() {
 
 			@Override
 			public String format(Object value, Record record, DetailViewerField field) {
 				try {
-					String details = "<table style='margin-top:2px' align='center' border='0' cellspacing='0'>";
-					// The title row
-					details += "<tr><td>" + Util.imageHTML(record.getAttribute("icon") + ".png") + "</td><td>" + value
-							+ "</td></tr></table>";
-					details += "<table align='center' border='0' cellspacing='0'>";
-					// The status row
-					details += "<tr><td>" + Util.imageHTML(record.getAttribute("indexed") + ".png") + "</td><td>";
-					details += "<td>" + Util.imageHTML(record.getAttribute("locked") + ".png") + "</td>";
-					details += "<td>" + Util.imageHTML(record.getAttribute("immutable") + ".png") + "</td>";
-					details += "<td>" + Util.imageHTML(record.getAttribute("signed") + ".png") + "</td>";
-					details += "</tr></table>";
+					String html = "<table style='margin-top:2px' align='center' border='0' cellspacing='0'>";
 
-					return details;
+					// The title row
+					html += "<tr><td>" + Util.imageHTML(record.getAttribute("icon") + ".png") + "</td><td>" + value
+							+ "</td></tr></table>";
+					html += "<table align='center' border='0' cellspacing='0'>";
+					// The status row
+					html += "<tr><td>" + Util.imageHTML(record.getAttribute("indexed") + ".png") + "</td><td>";
+					html += "<td>" + Util.imageHTML(record.getAttribute("locked") + ".png") + "</td>";
+					html += "<td>" + Util.imageHTML(record.getAttribute("immutable") + ".png") + "</td>";
+					html += "<td>" + Util.imageHTML(record.getAttribute("signed") + ".png") + "</td>";
+					html += "</tr></table>";
+
+					return html;
 				} catch (Throwable e) {
 					return "";
 				}
