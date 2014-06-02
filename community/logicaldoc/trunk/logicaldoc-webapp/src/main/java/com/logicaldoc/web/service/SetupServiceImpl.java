@@ -38,6 +38,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 
 	@Override
 	public void setup(SetupInfo data) {
+		data.setRepositoryFolder(data.getRepositoryFolder().replaceAll("\\\\", "/"));
 		File repoFolder = new File(data.getRepositoryFolder());
 		log.warn("Initialize system using repository " + repoFolder);
 		try {
