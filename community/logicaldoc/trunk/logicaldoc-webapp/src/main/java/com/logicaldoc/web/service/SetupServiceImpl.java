@@ -152,19 +152,19 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 
 		// build phisically the working directory
 		// and change settings config
-		String docDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/docs/");
+		String docDir = FilenameUtils.separatorsToUnix(repoFolder.getPath() + "/docs/");
 		FileUtils.forceMkdir(new File(docDir));
-		String indexDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/index/");
+		String indexDir = FilenameUtils.separatorsToUnix(repoFolder.getPath() + "/index/");
 		FileUtils.forceMkdir(new File(indexDir));
-		String userDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/users/");
+		String userDir = FilenameUtils.separatorsToUnix(repoFolder.getPath() + "/users/");
 		FileUtils.forceMkdir(new File(userDir));
-		String pluginDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/plugins/");
+		String pluginDir = FilenameUtils.separatorsToUnix(repoFolder.getPath() + "/plugins/");
 		FileUtils.forceMkdir(new File(pluginDir));
-		String importDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/impex/in/");
+		String importDir = FilenameUtils.separatorsToUnix(repoFolder.getPath() + "/impex/in/");
 		FileUtils.forceMkdir(new File(importDir));
-		String exportDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/impex/out/");
+		String exportDir = FilenameUtils.separatorsToUnix(repoFolder.getPath() + "/impex/out/");
 		FileUtils.forceMkdir(new File(exportDir));
-		String logDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/logs/");
+		String logDir = FilenameUtils.separatorsToUnix(repoFolder.getPath() + "/logs/");
 		FileUtils.forceMkdir(new File(logDir));
 		String dbDirectory = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/db/");
 
