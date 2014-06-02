@@ -3,7 +3,6 @@
 <plugin id="logicaldoc-dropbox" version="7.0.0" class="com.logicaldoc.dropbox.DropboxPlugin">
 	<requires>
 		<import plugin-id="logicaldoc-core" />
-		<import plugin-id="logicaldoc-enterprise-core" />
 	</requires>
 
 	<extension plugin-id="logicaldoc-core" point-id="DbInit" id="gdocsDbInit">
