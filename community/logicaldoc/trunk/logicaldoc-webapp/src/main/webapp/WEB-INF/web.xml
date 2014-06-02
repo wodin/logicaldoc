@@ -163,6 +163,11 @@
       <servlet-name>ContactService</servlet-name>
       <servlet-class>com.logicaldoc.web.service.ContactServiceImpl</servlet-class>
     </servlet>
+    
+    <servlet>
+      <servlet-name>DropboxService</servlet-name>
+      <servlet-class>com.logicaldoc.dropbox.DropboxServiceImpl</servlet-class>
+    </servlet>
 
 	<servlet>
 		<servlet-name>TagsData</servlet-name>
@@ -254,6 +259,11 @@
 		<servlet-class>com.logicaldoc.gui.common.server.MockSavedSearchesDataServlet</servlet-class>
 	</servlet>
 
+    <servlet>
+        <servlet-name>DropboxData</servlet-name>
+        <servlet-class>com.logicaldoc.dropbox.DropboxDataServlet</servlet-class>
+    </servlet>    
+    
 	<servlet>
 		<servlet-name>Preview</servlet-name>
 		<servlet-class>com.logicaldoc.web.DocumentPreview</servlet-class>
@@ -413,6 +423,11 @@
 		<url-pattern>/frontend/contact</url-pattern>
 	</servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>DropboxService</servlet-name>
+        <url-pattern>/frontend/dropbox</url-pattern>
+    </servlet-mapping>
+    
 	<servlet-mapping>
 		<servlet-name>TagsData</servlet-name>
 		<url-pattern>/data/tags.xml</url-pattern>
@@ -542,6 +557,11 @@
         <servlet-name>ContactsData</servlet-name>
         <url-pattern>/data/contacts.xml</url-pattern>
     </servlet-mapping>
+    
+	<servlet-mapping>
+		<servlet-name>DropboxData</servlet-name>
+		<url-pattern>/data/dropbox.xml</url-pattern>
+	</servlet-mapping>
     
 	<servlet-mapping>
 		<servlet-name>Preview</servlet-name>

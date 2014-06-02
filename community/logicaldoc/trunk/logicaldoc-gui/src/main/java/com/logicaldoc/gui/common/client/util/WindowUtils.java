@@ -102,7 +102,19 @@ public class WindowUtils {
 		$wnd.location = url;
 	}-*/;
 	
-	public static native void openUrl(String url, String window)/*-{
-	    $wnd.open(url, window); 
+	public static native void openUrl(String url, String window, String specs)/*-{
+	    $wnd.open(url, window, specs); 
+	}-*/;
+	
+	public static native void focus()/*-{
+		$wnd.focus();
+	}-*/;
+	
+	public static native String left()/*-{
+	 return $wnd.screenX;
+	}-*/;
+	
+	public static native String top()/*-{
+	 return $wnd.screenY;
 	}-*/;
 }

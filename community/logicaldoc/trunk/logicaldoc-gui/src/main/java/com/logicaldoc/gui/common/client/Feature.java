@@ -22,7 +22,7 @@ public class Feature {
 	public static final int ARCHIVES = 4;
 
 	public static final int TAGS = 5;
-	
+
 	public static final int BRANDING = 6;
 
 	public static final int DIGITAL_SIGN = 7;
@@ -62,33 +62,33 @@ public class Feature {
 	public static final int INDEX_LANGUAGES = 25;
 
 	public static final int TASK_REPORT_NOTIFICATION = 26;
-	
+
 	public static final int PRODUCT_NEWS = 27;
-	
+
 	public static final int BULK_UPDATE = 28;
-	
+
 	public static final int CMIS = 29;
-	
+
 	public static final int MOBILE_APPS = 30;
-	
+
 	public static final int EXTERNAL_CALL = 31;
-	
+
 	public static final int BULK_CHECKOUT = 32;
-	
+
 	public static final int WEBCONTENT = 33;
-	
+
 	public static final int SHOW_LICENSEE = 40;
 
 	public static final int SHOW_USERS_WARNING = 41;
 
 	public static final int FOLDER_TEMPLATE = 42;
-	
+
 	public static final int GDOCS = 43;
-	
+
 	public static final int SHOW_DISABLED = 50;
 
 	public static final int PREVIEW = 51;
-	
+
 	public static final int MULTI_STORAGE = 52;
 
 	public static final int BOOKMARKS = 53;
@@ -112,36 +112,38 @@ public class Feature {
 	public static final int DROP_SPOT = 63;
 
 	public static final int BARCODES = 64;
-	
+
 	public static final int QUOTAS = 65;
-	
+
 	public static final int DUPLICATES_DISCOVERY = 66;
-	
+
 	public static final int COMPRESSED_REPO = 67;
-	
+
 	public static final int ADVANCED_OCR = 68;
-	
+
 	public static final int EXPORT_CSV = 69;
-	
+
 	public static final int RETENTION_POLICIES = 70;
-	
+
 	public static final int MULTI_WORKSPACE = 71;
-	
+
 	public static final int CLUSTERING = 72;
-	
+
 	public static final int IP_FILTERS = 73;
-	
+
 	public static final int CALENDAR = 74;
-	
+
 	public static final int CONNECTOR = 75;
-	
+
 	public static final int BACKUP = 76;
-	
+
 	public static final int KOFAX = 77;
-	
+
 	public static final int SYNC = 78;
-	
+
 	public static final int MULTI_TENANT = 79;
+
+	public static final int DROPBOX = 80;
 
 	private static Set<String> features = new HashSet<String>();
 

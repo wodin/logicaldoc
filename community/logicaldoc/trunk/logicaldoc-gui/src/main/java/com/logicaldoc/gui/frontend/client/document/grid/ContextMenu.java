@@ -624,7 +624,7 @@ public class ContextMenu extends Menu {
 					}
 
 					WindowUtils.openUrl(extCall.getUrl(true, ids.toArray(new Long[0]), titles.toArray(new String[0])),
-							extCall.getTargetWindow() != null ? extCall.getTargetWindow() : "_blank");
+							extCall.getTargetWindow() != null ? extCall.getTargetWindow() : "_blank", null);
 				}
 			});
 			setItems(download, preview, cut, copy, delete, bookmark, sendMail, links, checkout, checkin, lock,

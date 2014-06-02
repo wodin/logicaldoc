@@ -479,7 +479,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 			// Search in the document/folder history
 			StringBuffer query = new StringBuffer(
-					"select A.ld_username, A.ld_event, A.ld_date, A.ld_title, A.ld_folderid, A.ld_path, A.ld_sessionid from ld_history A where A.ld_tenantid = "
+					"select A.ld_username, A.ld_event, A.ld_date, A.ld_title, A.ld_folderid, A.ld_path, A.ld_sessionid, A.ld_docid, A.ld_userid from ld_history A where A.ld_tenantid = "
 							+ session.getTenantId());
 			if (userName != null && StringUtils.isNotEmpty(userName))
 				query.append(" and lower(A.ld_username) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");
@@ -506,7 +506,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			}
 
 			// Search in the folder history
-			query.append(" union select B.ld_username, B.ld_event, B.ld_date, null, null, null, B.ld_sessionid from ld_folder_history B where B.ld_tenantid = "
+			query.append(" union select B.ld_username, B.ld_event, B.ld_date, null, B.ld_folderid, null, B.ld_sessionid, B.ld_docid, B.ld_userid from ld_folder_history B where B.ld_tenantid = "
 					+ session.getTenantId());
 			if (userName != null && StringUtils.isNotEmpty(userName))
 				query.append(" and lower(B.ld_username) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");
@@ -533,7 +533,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			}
 
 			// Search in the user history
-			query.append(" union select C.ld_username, C.ld_event, C.ld_date, null, null, null, C.ld_sessionid from ld_user_history C where C.ld_tenantid = "
+			query.append(" union select C.ld_username, C.ld_event, C.ld_date, null, null, null, C.ld_sessionid, null, C.ld_userid from ld_user_history C where C.ld_tenantid = "
 					+ session.getTenantId());
 			if (userName != null && StringUtils.isNotEmpty(userName))
 				query.append(" and lower(C.ld_username) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");
@@ -560,7 +560,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			}
 
 			// Search in the workflow history
-			query.append(" union select D.ld_username, D.ld_event, D.ld_date, null, null, null, D.ld_sessionid from ld_workflowhistory D where D.ld_tenantid = "
+			query.append(" union select D.ld_username, D.ld_event, D.ld_date, null, null, null, D.ld_sessionid, D.ld_docid, D.ld_userid from ld_workflowhistory D where D.ld_tenantid = "
 					+ session.getTenantId());
 			if (userName != null && StringUtils.isNotEmpty(userName))
 				query.append(" and lower(D.ld_username) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");
@@ -604,6 +604,9 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 					history.setFolderId(rs.getLong(5));
 					history.setPath(rs.getString(6));
 					history.setSessionId(rs.getString(7));
+					history.setDocId(rs.getLong(8));
+					history.setUserId(rs.getLong(9));
+
 					return history;
 				}
 

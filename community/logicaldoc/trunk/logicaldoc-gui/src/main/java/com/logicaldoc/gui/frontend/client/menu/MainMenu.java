@@ -29,6 +29,8 @@ import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
+import com.logicaldoc.gui.frontend.client.dropbox.DropboxAuthorizationWizard;
+import com.logicaldoc.gui.frontend.client.dropbox.DropboxDialog;
 import com.logicaldoc.gui.frontend.client.gdocs.GDocsCreate;
 import com.logicaldoc.gui.frontend.client.gdocs.GDocsEditor;
 import com.logicaldoc.gui.frontend.client.gdocs.GDocsImport;
@@ -42,6 +44,8 @@ import com.logicaldoc.gui.frontend.client.personal.Subscriptions;
 import com.logicaldoc.gui.frontend.client.search.SearchPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.DropboxService;
+import com.logicaldoc.gui.frontend.client.services.DropboxServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.GDocsService;
 import com.logicaldoc.gui.frontend.client.services.GDocsServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
@@ -84,6 +88,8 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	protected GDocsServiceAsync gdocsService = (GDocsServiceAsync) GWT.create(GDocsService.class);
+
+	protected DropboxServiceAsync dboxService = (DropboxServiceAsync) GWT.create(DropboxService.class);
 
 	protected TenantServiceAsync tenantService = (TenantServiceAsync) GWT.create(TenantService.class);
 
@@ -310,6 +316,95 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		return webcontentItems;
 	}
 
+	private MenuItem getDropboxMenuItem(GUIFolder folder, final GUIDocument document) {
+		Menu menu = new Menu();
+		menu.setShowShadow(true);
+		menu.setShadowDepth(3);
+
+		final MenuItem exportTo = new MenuItem(I18N.message("exporttodropbox"));
+		exportTo.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				dboxService.isConnected(Session.get().getSid(), new AsyncCallback<Boolean>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Boolean connected) {
+						if (!connected)
+							dboxService.startAuthorization(Session.get().getSid(), new AsyncCallback<String>() {
+
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(String authorizationUrl) {
+									DropboxAuthorizationWizard wizard = new DropboxAuthorizationWizard(authorizationUrl);
+									wizard.show();
+								}
+							});
+						else {
+							DropboxDialog dialog = new DropboxDialog(true);
+							dialog.show();
+						}
+					}
+				});
+			}
+		});
+
+		final MenuItem importFrom = new MenuItem(I18N.message("importfromdropbox"));
+		importFrom.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				dboxService.isConnected(Session.get().getSid(), new AsyncCallback<Boolean>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Boolean connected) {
+						if (!connected)
+							dboxService.startAuthorization(Session.get().getSid(), new AsyncCallback<String>() {
+
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(String authorizationUrl) {
+									DropboxAuthorizationWizard wizard = new DropboxAuthorizationWizard(authorizationUrl);
+									wizard.show();
+								}
+							});
+						else {
+							DropboxDialog dialog = new DropboxDialog(false);
+							dialog.show();
+						}
+					}
+				});
+			}
+		});
+
+		menu.setItems(exportTo, importFrom);
+
+		exportTo.setEnabled(folder != null && folder.isDownload() && Feature.enabled(Feature.DROPBOX));
+		importFrom.setEnabled(folder != null && folder.isWrite() && Feature.enabled(Feature.DROPBOX)
+				&& MainPanel.get().isOnDocumentsTab());
+
+		MenuItem dropboxItem = new MenuItem(I18N.message("dropbox"));
+		dropboxItem.setSubmenu(menu);
+
+		return dropboxItem;
+	}
+
 	private MenuItem getGDocsMenuItem(GUIFolder folder, final GUIDocument document) {
 		Menu menu = new Menu();
 		menu.setShowShadow(true);
@@ -521,6 +616,9 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		});
 
 		if (document != null || folder != null) {
+			if (Feature.enabled(Feature.DROPBOX)
+					&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.DROPBOX))
+				menu.addItem(getDropboxMenuItem(folder, document));
 			if (Feature.enabled(Feature.GDOCS)
 					&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.GDOCS))
 				menu.addItem(getGDocsMenuItem(folder, document));
