@@ -22,7 +22,6 @@ import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.document.SendToArchiveDialog;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
-import com.logicaldoc.gui.frontend.client.document.grid.DocumentsListGrid;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.search.Search;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -502,7 +501,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 			externalCall.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 				public void onClick(MenuItemClickEvent event) {
 					WindowUtils.openUrl(extCall.getUrl(false, new Long[] { id }, new String[] { name }),
-							extCall.getTargetWindow() != null ? extCall.getTargetWindow() : "_blank");
+							extCall.getTargetWindow() != null ? extCall.getTargetWindow() : "_blank", null);
 				}
 			});
 		}

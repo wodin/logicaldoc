@@ -437,7 +437,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		StaticTextItem id = ItemFactory.newStaticTextItem("id", "id", Long.toString(template.getId()));
 		id.setDisabled(true);
 
-		TextItem name = ItemFactory.newTextItem("name", I18N.message("name"), template.getName());
+		TextItem name = ItemFactory.newSimpleTextItem("name", I18N.message("name"), template.getName());
 		name.setRequired(true);
 		name.setDisabled(readonly);
 		if (!readonly)

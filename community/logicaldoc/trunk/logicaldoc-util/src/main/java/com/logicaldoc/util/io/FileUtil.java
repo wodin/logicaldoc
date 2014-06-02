@@ -93,6 +93,11 @@ public class FileUtil {
 		}
 	}
 
+	public static String readFile(String filePath) throws IOException {
+		FileInputStream fisTargetFile = new FileInputStream(new File(filePath));
+		return IOUtils.toString(fisTargetFile, "UTF-8");
+	}
+
 	public static void appendFile(String text, String filepath) {
 		OutputStream bos = null;
 
@@ -473,11 +478,11 @@ public class FileUtil {
 			}
 		}
 	}
-	
+
 	public static void strongDelete(File file) {
-		if(file==null)
+		if (file == null)
 			return;
-		
+
 		// Make sure the temp file is deleted
 		for (int i = 0; i < 20; i++) {
 			FileUtils.deleteQuietly(file);

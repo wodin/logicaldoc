@@ -198,11 +198,23 @@ public class LastChangesPanel extends VLayout {
 		sid.setCanFilter(true);
 		sid.setAlign(Alignment.CENTER);
 
+		ListGridField docId = new ListGridField("docId", I18N.message("documentid"), 100);
+		docId.setCanFilter(true);
+		docId.setHidden(true);
+
+		ListGridField folderId = new ListGridField("folderId", I18N.message("folderid"), 100);
+		folderId.setCanFilter(true);
+		folderId.setHidden(true);
+		
+		ListGridField userId = new ListGridField("userId", I18N.message("userid"), 100);
+		userId.setCanFilter(true);
+		userId.setHidden(true);
+		
 		histories = new ListGrid();
 		histories.setEmptyMessage(I18N.message("notitemstoshow"));
 		histories.setWidth100();
 		histories.setHeight100();
-		histories.setFields(eventField, date, userField, name, folder, sid);
+		histories.setFields(eventField, date, userField, name, folder, sid, docId, folderId, userId);
 		histories.setSelectionType(SelectionStyle.SINGLE);
 		histories.setShowRecordComponents(true);
 		histories.setShowRecordComponentsByCell(true);
@@ -301,6 +313,9 @@ public class LastChangesPanel extends VLayout {
 									record.setAttribute("name", result[i].getTitle());
 									record.setAttribute("folder", result[i].getPath());
 									record.setAttribute("sid", result[i].getSessionId());
+									record.setAttribute("docId", result[i].getDocId());
+									record.setAttribute("folderId", result[i].getFolderId());
+									record.setAttribute("userId", result[i].getUserId());
 									records[i] = record;
 								}
 								histories.setData(records);
