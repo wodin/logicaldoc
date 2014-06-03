@@ -56,7 +56,7 @@ public class DropboxAuthorizationWizard extends Window {
 
 		setTitle(I18N.message("authorizelogicaldoc", Session.get().getInfo().getProduct()));
 		setWidth100();
-		setHeight(150);
+		setHeight(180);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -90,9 +90,8 @@ public class DropboxAuthorizationWizard extends Window {
 		addItem(layout);
 
 		// Invoke the Dropbox authorization web page
-		String prefs = "top=" + (Integer.parseInt(WindowUtils.top()) + 270) + ", left=" + WindowUtils.left()
-				+ ", width=" + com.google.gwt.user.client.Window.getClientWidth() + ", height="
-				+ (com.google.gwt.user.client.Window.getClientHeight() - 270)
+		String prefs = "top=" + (Integer.parseInt(WindowUtils.top()) + 350) + ", left=" + WindowUtils.left()
+				+ ", width=" + com.google.gwt.user.client.Window.getClientWidth() + ", height=450"
 				+ ", toolbar=no, scrollbars=yes, resizable=yes";
 		WindowUtils.openUrl(authorizationUrl, "_blank", prefs);
 		WindowUtils.focus();
