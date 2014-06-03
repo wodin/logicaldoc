@@ -97,6 +97,10 @@ public class Dropbox {
 	}
 
 	public List<DbxEntry> list(String path) throws DbxException {
+		if(path.endsWith("/"))
+			path.substring(0, path.length() - 1);
+		if(!path.startsWith("/"))
+			path="/"+path;
 		List<DbxEntry> list = new ArrayList<DbxEntry>();
 		DbxEntry.WithChildren listing = client.getMetadataWithChildren(path);
 		list = listing.children;

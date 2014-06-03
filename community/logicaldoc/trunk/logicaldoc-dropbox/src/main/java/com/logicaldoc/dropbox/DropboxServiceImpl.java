@@ -276,7 +276,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 
 						String folderPath = file.path.substring(rootPath.length());
 						folderPath = FilenameUtils.getPath(file.path);
-						folderPath=folderPath.replaceAll("\\\\", "/");
+						folderPath = folderPath.replaceAll("\\\\", "/");
 
 						Folder folder = fdao.createPath(root, folderPath, true, transaction);
 
@@ -303,8 +303,8 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 			temp = File.createTempFile("dboxsownload", ".tmp");
 			dbox.downloadFile(src.path, temp);
 
-			List<Document> docs = ddao
-					.findByFileNameAndParentFolderId(root.getId(), src.name, null, root.getId(), null);
+			List<Document> docs = ddao.findByFileNameAndParentFolderId(root.getId(), src.name, null,
+					root.getTenantId(), null);
 			if (docs.size() == 1) {
 				/*
 				 * Checkout and checkin an existing document
@@ -327,6 +327,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 				history.setUser(user);
 				history.setSessionId(sid);
 				history.setPath(pathExtended);
+				history.setComment("Updated from Dropbox");
 
 				manager.checkin(doc.getId(), temp, doc.getFileName(), false, null, history);
 			} else {
