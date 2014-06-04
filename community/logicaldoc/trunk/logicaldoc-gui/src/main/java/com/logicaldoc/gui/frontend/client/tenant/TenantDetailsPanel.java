@@ -222,14 +222,14 @@ public class TenantDetailsPanel extends VLayout {
 					saveButton.setDisabled(false);
 					savePanel.setVisible(false);
 					if (tenant != null) {
+						if (newTenant) {
+							SC.say(I18N.message("newtenantresume",
+									new String[] { tenant.getName(), tenant.getAdminUsername(), "admin" }));
+						}
+
 						TenantDetailsPanel.this.tenant = tenant;
 						TenantDetailsPanel.this.tenantsPanel.updateRecord(tenant);
 						TenantDetailsPanel.this.tenantsPanel.loadTenant(tenant.getId());
-						
-						if (newTenant) {
-							SC.say(I18N.message("newtenantresume",
-									new String[] { tenant.getName(), "admin" + tenant.getName(), "admin" }));
-						}
 					}
 				}
 			});

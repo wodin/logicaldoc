@@ -190,8 +190,6 @@ public class TenantsPanel extends VLayout {
 	 * Updates the selected record with new data
 	 */
 	public void updateRecord(GUITenant tenant) {
-		Log.info("Update record " + tenant.getName(), null);
-
 		ListGridRecord record = list.getSelectedRecord();
 		if (record == null)
 			record = new ListGridRecord();
@@ -206,12 +204,13 @@ public class TenantsPanel extends VLayout {
 		record.setAttribute("postalCode", tenant.getPostalCode());
 		record.setAttribute("state", tenant.getState());
 		record.setAttribute("expire", tenant.getExpire());
+		
 		if (tenant.isEnabled()) {
-			list.getSelectedRecord().setAttribute("enabledIcon", "bullet_green");
-			list.getSelectedRecord().setAttribute("eenabled", false);
+			record.setAttribute("enabledIcon", "bullet_green");
+			record.setAttribute("eenabled", false);
 		} else {
-			list.getSelectedRecord().setAttribute("enabledIcon", "bullet_red");
-			list.getSelectedRecord().setAttribute("eenabled", false);
+			record.setAttribute("enabledIcon", "bullet_red");
+			record.setAttribute("eenabled", false);
 		}
 
 		if (record.getAttributeAsString("id") != null) {
