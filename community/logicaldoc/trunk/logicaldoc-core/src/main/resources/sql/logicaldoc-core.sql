@@ -124,7 +124,7 @@ create table ld_contact (ld_id bigint not null, ld_lastmodified timestamp not nu
                          ld_mobile varchar(255), primary key (ld_id));                                 
 create table ld_tenant (ld_id bigint not null, ld_lastmodified timestamp not null, ld_recordversion bigint not null, 
                         ld_deleted int not null, ld_tenantid bigint not null, ld_name varchar(255),
-                        ld_displayname varchar(4000), ld_enabled int not null, ld_expire timestamp, 
+                        ld_displayname varchar(4000), ld_enabled int not null, ld_expire timestamp null, 
                         ld_street varchar(255), ld_postalcode varchar(255),
                         ld_city varchar(255), ld_country varchar(255), ld_state varchar(255),
                         ld_email varchar(255), ld_telephone varchar(255),
@@ -188,8 +188,8 @@ create index LD_FHIST_NOT on ld_folder_history (ld_notified);
 create index LD_TAG_TAG on ld_tag (ld_tag);
 
 
-insert into ld_tenant(ld_id,ld_lastmodified,ld_deleted,ld_tenantid,ld_name,ld_displayname,ld_type,ld_enabled,ld_recordversion)
-values     (1,CURRENT_TIMESTAMP,0,1,'default','Acme Inc.',0,1,1);
+insert into ld_tenant(ld_id,ld_lastmodified,ld_deleted,ld_tenantid,ld_name,ld_displayname,ld_type,ld_enabled,ld_expire,ld_recordversion)
+values     (1,CURRENT_TIMESTAMP,0,1,'default','Acme Inc.',0,1,null,1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion)
