@@ -135,6 +135,30 @@ public class WorkflowToolstrip extends ToolStrip {
 		});
 		addButton(load);
 
+		ToolStripButton newTemplate = new ToolStripButton(I18N.message("new"));
+		newTemplate.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				FormItem workflowName = ItemFactory.newSimpleTextItem("workflowName", "workflowname", null);
+				workflowName.setRequired(true);
+
+				LD.askforValue(I18N.message("newwftemplate"), I18N.message("workflowname"), null, "200", workflowName,
+						new ValueCallback() {
+
+							@Override
+							public void execute(String value) {
+								if (value != null && !"".equals(value.trim())) {
+									currentWorkflow = new GUIWorkflow();
+									currentWorkflow.setName(value);
+									AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
+									update();
+								}
+							}
+						});
+			}
+		});
+		addButton(newTemplate);
+		
 		settings = new ToolStripButton(I18N.message("settings"));
 		settings.addClickHandler(new ClickHandler() {
 			@Override
@@ -335,31 +359,6 @@ public class WorkflowToolstrip extends ToolStrip {
 			}
 		});
 		addButton(close);
-
-		ToolStripButton newTemplate = new ToolStripButton(I18N.message("newtemplate"));
-		newTemplate.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				FormItem workflowName = ItemFactory.newSimpleTextItem("workflowName", "workflowname", null);
-				workflowName.setRequired(true);
-
-				LD.askforValue(I18N.message("newwftemplate"), I18N.message("workflowname"), null, "200", workflowName,
-						new ValueCallback() {
-
-							@Override
-							public void execute(String value) {
-								if (value != null && !"".equals(value.trim())) {
-									currentWorkflow = new GUIWorkflow();
-									currentWorkflow.setName(value);
-									AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
-									update();
-								}
-							}
-						});
-			}
-		});
-		addSeparator();
-		addButton(newTemplate);
 
 		addFill();
 
