@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import com.dropbox.core.DbxEntry;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.util.IconSelector;
-import com.logicaldoc.web.util.SessionUtil;
 
 /**
  * This servlet is responsible for retrieving Dropbox entries.
