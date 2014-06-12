@@ -34,7 +34,6 @@ import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.frontend.client.services.DropboxService;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.SessionUtil;
 
 /**
  * Implementation of the DropboxService
