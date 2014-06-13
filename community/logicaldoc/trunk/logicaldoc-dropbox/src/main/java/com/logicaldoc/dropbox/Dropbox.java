@@ -97,12 +97,14 @@ public class Dropbox {
 	}
 
 	public List<DbxEntry> list(String path) throws DbxException {
-		if(path.endsWith("/"))
-			path.substring(0, path.length() - 1);
-		if(!path.startsWith("/"))
-			path="/"+path;
+		String normalizedPath = path;
+		if (normalizedPath.endsWith("/"))
+			normalizedPath.substring(0, path.length() - 1);
+		if (!normalizedPath.startsWith("/"))
+			normalizedPath = "/" + normalizedPath;
+
 		List<DbxEntry> list = new ArrayList<DbxEntry>();
-		DbxEntry.WithChildren listing = client.getMetadataWithChildren(path);
+		DbxEntry.WithChildren listing = client.getMetadataWithChildren(normalizedPath);
 		list = listing.children;
 		return list;
 	}
@@ -113,10 +115,10 @@ public class Dropbox {
 
 	public List<DbxEntry> listFilesInTree(String basePath) throws DbxException {
 		List<DbxEntry> files = new ArrayList<DbxEntry>();
-		if(basePath.endsWith("/"))
+		if (basePath.endsWith("/"))
 			basePath.substring(0, basePath.length() - 1);
-		if(!basePath.startsWith("/"))
-			basePath="/"+basePath;
+		if (!basePath.startsWith("/"))
+			basePath = "/" + basePath;
 		treeList(basePath, files);
 		return files;
 	}
