@@ -48,7 +48,8 @@ public class TenantQuotaPanel extends HLayout {
 	public void refresh() {
 		boolean readonly = (changedHandler == null);
 		vm.clearValues();
-		vm.clearErrors(false);
+		vm.clearErrors(true);
+		vm = new ValuesManager();
 
 		if (form != null)
 			form.destroy();
@@ -79,7 +80,7 @@ public class TenantQuotaPanel extends HLayout {
 		if (!readonly)
 			documentsQuota.addChangedHandler(changedHandler);
 
-		TextItem sizeQuota = ItemFactory.newLongItem("size", "sizequota", tenant.getMaxRepoSize());
+		TextItem sizeQuota = ItemFactory.newLongItem("sizequota", "sizequota", tenant.getMaxRepoSize());
 		sizeQuota.setHint("MB");
 		sizeQuota.setWidth(120);
 		sizeQuota.setDisabled(readonly);
@@ -104,25 +105,25 @@ public class TenantQuotaPanel extends HLayout {
 		Map<String, Object> values = (Map<String, Object>) vm.getValues();
 		vm.validate();
 		if (!vm.hasErrors()) {
-			if (values.get("documents") == null)
+			if (values.get("documentsquota") == null)
 				tenant.setMaxRepoDocs(null);
 			else
-				tenant.setMaxRepoDocs(new Long(values.get("documents").toString()));
+				tenant.setMaxRepoDocs(new Long(values.get("documentsquota").toString()));
 
-			if (values.get("size") == null)
+			if (values.get("sizequota") == null)
 				tenant.setMaxRepoSize(null);
 			else
-				tenant.setMaxRepoSize(new Long(values.get("size").toString()));
+				tenant.setMaxRepoSize(new Long(values.get("sizequota").toString()));
 
-			if (values.get("users") == null)
+			if (values.get("usersquota") == null)
 				tenant.setMaxUsers(null);
 			else
-				tenant.setMaxUsers(new Integer(values.get("users").toString()));
+				tenant.setMaxUsers(new Integer(values.get("usersquota").toString()));
 
-			if (values.get("sessions") == null)
+			if (values.get("sessionsquota") == null)
 				tenant.setMaxSessions(null);
 			else
-				tenant.setMaxSessions(new Integer(values.get("sessions").toString()));
+				tenant.setMaxSessions(new Integer(values.get("sessionsquota").toString()));
 		}
 
 		return !vm.hasErrors();
