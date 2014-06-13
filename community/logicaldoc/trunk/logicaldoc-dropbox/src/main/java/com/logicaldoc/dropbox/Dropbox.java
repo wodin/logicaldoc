@@ -99,7 +99,7 @@ public class Dropbox {
 	public List<DbxEntry> list(String path) throws DbxException {
 		String normalizedPath = path;
 		if (normalizedPath.endsWith("/"))
-			normalizedPath.substring(0, path.length() - 1);
+			normalizedPath = normalizedPath.substring(0, path.length() - 1);
 		if (!normalizedPath.startsWith("/"))
 			normalizedPath = "/" + normalizedPath;
 
