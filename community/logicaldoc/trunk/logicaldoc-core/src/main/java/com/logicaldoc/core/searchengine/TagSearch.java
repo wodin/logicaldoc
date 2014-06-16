@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.RowMapper;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.util.Context;
 
 /**
@@ -83,8 +84,14 @@ public class TagSearch extends Search {
 	 * @param query
 	 */
 	private void appendWhereClause(boolean searchShortcut, StringBuffer query) {
+		long tenantId = Tenant.DEFAULT_ID;
+		if (options.getTenantId() != null)
+			tenantId = options.getTenantId().longValue();
+		else if (searchUser != null)
+			tenantId = searchUser.getTenantId();
+
 		query.append(" where A.ld_deleted=0 and A.ld_folderid=B.ld_id ");
-		query.append(" and A.ld_tenantid = " + searchUser.getTenantId());
+		query.append(" and A.ld_tenantid = " + tenantId);
 
 		// Ids string to be used in the query
 		String ids = null;

@@ -60,7 +60,9 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 	protected boolean searchInSubPath = false;
 
 	protected Long template = null;
-	
+
+	protected Long tenantId = null;
+
 	public Long getTemplate() {
 		return template;
 	}
@@ -68,7 +70,7 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 	public void setTemplate(Long template) {
 		this.template = template;
 	}
-	
+
 	public Object[] getParameters() {
 		return parameters;
 	}
@@ -213,5 +215,13 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 
 	public void setSearchInSubPath(boolean searchInSubPath) {
 		this.searchInSubPath = searchInSubPath;
+	}
+
+	public Long getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(Long tenantId) {
+		this.tenantId = tenantId;
 	}
 }
