@@ -10,7 +10,7 @@
 
                      LogicalDOC Community Edition
 
-LogicalDOC 7.0 (2014-06-20; logicaldoc-7.0)
+LogicalDOC 7.0 (2014-06-23; logicaldoc-7.0)
 ===============================================                
 428 - Documents gallery - New Feature - User Interface  
 429 - Dropbox integration - New Feature - Core 
