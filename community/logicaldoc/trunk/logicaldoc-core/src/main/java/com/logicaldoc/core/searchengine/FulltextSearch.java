@@ -17,6 +17,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.util.Context;
@@ -135,8 +136,14 @@ public class FulltextSearch extends Search {
 		ArrayList<String> filters = new ArrayList<String>();
 
 		TenantDAO tdao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+		long tenantId = Tenant.DEFAULT_ID;
+		if (opt.getTenantId() != null)
+			tenantId = opt.getTenantId().longValue();
+		else if (searchUser != null)
+			tenantId = searchUser.getTenantId();
+
 		if (searchUser != null && tdao.count() > 1)
-			filters.add(Fields.TENANT_ID + ":" + searchUser.getTenantId());
+			filters.add(Fields.TENANT_ID + ":" + tenantId);
 
 		if (opt.getTemplate() != null)
 			filters.add(Fields.TEMPLATE_ID + ":" + opt.getTemplate());
@@ -246,7 +253,7 @@ public class FulltextSearch extends Search {
 		richQuery.append(" join ld_folder FOLD on A.ld_folderid=FOLD.ld_id ");
 		richQuery.append(" left outer join ld_template C on A.ld_templateid=C.ld_id ");
 		richQuery.append(" where A.ld_deleted=0 and A.ld_folderid=FOLD.ld_id  ");
-		richQuery.append(" and A.ld_tenantid = " + searchUser.getTenantId());
+		richQuery.append(" and A.ld_tenantid = " + tenantId);
 		// For normal users we have to exclude not published documents
 		if (searchUser != null && !searchUser.isInGroup("admin") && !searchUser.isInGroup("publisher")) {
 			richQuery.append(" and A.ld_published = 1 ");
@@ -273,7 +280,7 @@ public class FulltextSearch extends Search {
 		richQuery.append(" join ld_document REF on A.ld_docref=REF.ld_id ");
 		richQuery.append(" left outer join ld_template C on REF.ld_templateid=C.ld_id ");
 		richQuery.append(" where A.ld_deleted=0 and A.ld_folderid=FOLD.ld_id ");
-		richQuery.append(" and A.ld_tenantid = " + searchUser.getTenantId());
+		richQuery.append(" and A.ld_tenantid = " + tenantId);
 		// For normal users we have to exclude not published documents
 		if (searchUser != null && !searchUser.isInGroup("admin") && !searchUser.isInGroup("publisher")) {
 			richQuery.append(" and REF.ld_published = 1 ");

@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.sql.SqlUtil;
@@ -57,6 +58,14 @@ public class FolderSearch extends Search {
 		StringBuffer query = new StringBuffer(
 				"select A.ld_id, A.ld_parentid, A.ld_name, A.ld_description, A.ld_creation, A.ld_lastmodified from ld_folder A ");
 		query.append(" where A.ld_deleted=0 and A.ld_type=0 ");
+
+		long tenantId = Tenant.DEFAULT_ID;
+		if (options.getTenantId() != null)
+			tenantId = options.getTenantId().longValue();
+		else if (searchUser != null)
+			tenantId = searchUser.getTenantId();
+
+		query.append(" and A.ld_tenantid= " + tenantId + " ");
 
 		FolderSearchOptions fso = (FolderSearchOptions) getOptions();
 

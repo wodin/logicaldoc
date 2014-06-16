@@ -54,6 +54,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		GUIResult result = new GUIResult();
 		try {
 			SearchOptions searchOptions = toSearchOptions(options);
+			searchOptions.setTenantId(session.getTenantId());
 
 			if (searchOptions instanceof FulltextSearchOptions) {
 				Locale exprLoc = LocaleUtil.toLocale(options.getExpressionLanguage());
@@ -111,7 +112,6 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 					extList.add(ext);
 				}
 				h.setAttributes(extList.toArray(new GUIExtendedAttribute[0]));
-
 
 				// Check if the document is not an alias to visualize the
 				// correct icon: if the document is an alias the FULL-TEXT
