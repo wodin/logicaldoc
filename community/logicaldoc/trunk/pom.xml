@@ -128,8 +128,5 @@
     <module>logicaldoc-gui</module>
     <module>logicaldoc-webapp</module>
     <module>logicaldoc-benchmark</module>
-    <!--
-		<module>logicaldoc-testbench</module>
-		-->
 	</modules>
 </project>
