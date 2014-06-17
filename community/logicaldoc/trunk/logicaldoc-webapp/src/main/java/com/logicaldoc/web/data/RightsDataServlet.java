@@ -18,6 +18,7 @@ import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
@@ -41,7 +42,7 @@ public class RightsDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			SessionUtil.validateSession(request);
+			UserSession session = SessionUtil.validateSession(request);
 
 			Long folderId = null;
 			if (StringUtils.isNotEmpty(request.getParameter("folderId")))
@@ -64,7 +65,7 @@ public class RightsDataServlet extends HttpServlet {
 			if (folderId != null)
 				folderRights(response, folderId, locale);
 			else
-				menuRights(response, menuId, locale);
+				menuRights(response, menuId, locale, session.getTenantId());
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 			if (e instanceof ServletException)
@@ -133,7 +134,7 @@ public class RightsDataServlet extends HttpServlet {
 		writer.write("</list>");
 	}
 
-	private void menuRights(HttpServletResponse response, Long menuId, String locale) throws IOException {
+	private void menuRights(HttpServletResponse response, Long menuId, String locale, long tenantId) throws IOException {
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 		Menu menu = menuDao.findById(menuId);
@@ -145,7 +146,7 @@ public class RightsDataServlet extends HttpServlet {
 		/*
 		 * Iterate over records composing the response XML document
 		 */
-		for (Group group : groupDao.findAll()) {
+		for (Group group : groupDao.findAll(tenantId)) {
 			groupDao.initialize(group);
 			if (group.getType() == Group.TYPE_DEFAULT
 					|| ((group.getType() != Group.TYPE_DEFAULT) && (group.getUsers().isEmpty() || group.getUsers()
