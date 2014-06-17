@@ -209,7 +209,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 		GUIInfo info = new InfoServiceImpl().getInfo(guiUser.getLanguage(), userSession.getTenantName());
 		session.setInfo(info);
-		
+
 		guiUser.setName(user.getName());
 
 		GUIGroup[] groups = new GUIGroup[user.getGroups().size()];
@@ -801,17 +801,31 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	private boolean saveRules(String sid, Menu menu, long userId, GUIRight[] rights) throws Exception {
+		UserSession session = SessionUtil.validateSession(sid);
+
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 
 		boolean sqlerrors = false;
 		try {
 			mdao.initialize(menu);
 			menu.setSecurityRef(null);
+
+			// Remove all current tenant rights
+			Set<MenuGroup> grps = new HashSet<MenuGroup>();
+			for (MenuGroup mg : menu.getMenuGroups()) {
+				Group group = gdao.findById(mg.getGroupId());
+				if (group != null && group.getTenantId() != session.getTenantId())
+					grps.add(mg);
+			}
 			menu.getMenuGroups().clear();
 
 			sqlerrors = false;
-			Set<MenuGroup> grps = new HashSet<MenuGroup>();
 			for (GUIRight right : rights) {
+				Group group = gdao.findById(right.getEntityId());
+				if (group == null || group.getTenantId() != session.getTenantId())
+					continue;
+
 				MenuGroup fg = null;
 				if (right.isRead()) {
 					fg = new MenuGroup();
@@ -847,8 +861,9 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 	@Override
 	public GUIMenu getMenu(String sid, long menuId) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 		try {
+			GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 			MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 			Menu menu = dao.findById(menuId);
 			if (menu == null)
@@ -860,6 +875,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			int i = 0;
 			GUIRight[] rights = new GUIRight[menu.getMenuGroups().size()];
 			for (MenuGroup fg : menu.getMenuGroups()) {
+				Group group = gdao.findById(fg.getGroupId());
+				if (group == null || group.getTenantId() != session.getTenantId())
+					continue;
+
 				GUIRight right = new GUIRight();
 				right.setEntityId(fg.getGroupId());
 				rights[i] = right;
