@@ -42,6 +42,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 			message.setType(rs.getInt(13));
 			message.setId(rs.getLong(14));
 			message.setHtml(rs.getInt(15));
+			message.setTenantId(rs.getLong(16));
 
 			return message;
 		}
@@ -57,7 +58,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	 *      int)
 	 */
 	public List<SystemMessage> findByRecipient(String recipient, int type, Integer read) {
-		String sql = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id, ld_html "
+		String sql = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id, ld_html, ld_tenantid "
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_type = "
 				+ type
 				+ " and ld_id IN (select Q.ld_messageid from ld_recipient Q where Q.ld_name = '"
@@ -68,6 +69,8 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 					+ "' and R.ld_read=1 and R.ld_messageid=ld_id)";
 		sql = sql + " order by ld_sentdate desc";
 
+		System.out.println(sql);
+		
 		List<SystemMessage> messages = (List<SystemMessage>) query(sql, null, new SystemMessageMapper(), null);
 		return messages;
 	}
@@ -131,7 +134,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 
 	@Override
 	public List<SystemMessage> findByMode(String mode) {
-		String sql = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id, ld_html "
+		String sql = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id, ld_html, ld_tenantid "
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_id IN (select ld_messageid from ld_recipient where ld_mode = '"
 				+ SqlUtil.doubleQuotes(mode) + "') order by ld_sentdate desc";
 
@@ -141,7 +144,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 
 	@Override
 	public List<SystemMessage> findByType(int type) {
-		String sql = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id, ld_html"
+		String sql = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id, ld_html, ld_tenantid "
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_id IN (select ld_messageid from ld_recipient where ld_type = "
 				+ type + ") order by ld_sentdate desc";
 
@@ -160,7 +163,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 
 	@Override
 	public List<SystemMessage> findMessagesToBeSent(int type, int maxTrial) {
-		String sql = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id, ld_html"
+		String sql = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id, ld_html, ld_tenantid "
 				+ " from ld_systemmessage where ld_deleted = 0 and not ld_status = "
 				+ SystemMessage.STATUS_DELIVERED
 				+ " and ld_type = " + type;
