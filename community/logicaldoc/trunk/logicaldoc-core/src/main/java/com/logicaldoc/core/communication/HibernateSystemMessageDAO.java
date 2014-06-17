@@ -68,8 +68,6 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 					+ "  (select count(*) from ld_recipient R where R.ld_name = '" + SqlUtil.doubleQuotes(recipient)
 					+ "' and R.ld_read=1 and R.ld_messageid=ld_id)";
 		sql = sql + " order by ld_sentdate desc";
-
-		System.out.println(sql);
 		
 		List<SystemMessage> messages = (List<SystemMessage>) query(sql, null, new SystemMessageMapper(), null);
 		return messages;
