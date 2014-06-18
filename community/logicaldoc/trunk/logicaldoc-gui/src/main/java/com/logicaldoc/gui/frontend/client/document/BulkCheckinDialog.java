@@ -40,13 +40,20 @@ public class BulkCheckinDialog extends Window {
 		setShowModalMask(true);
 		centerInPage();
 
+		String docIdsStr = "";
+		for (long id : docIds) {
+			if (!docIdsStr.isEmpty())
+				docIdsStr += ",";
+			docIdsStr += id;
+		}
+
 		String tmp = "<applet name=\"CheckinApplet\" archive=\""
 				+ Util.contextPath()
 				+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.checkin.CheckinApplet\" width=\"400\" height=\"290\">";
 		tmp += "<param name=\"language\" value=\"" + I18N.getLocale() + "\" />";
 		tmp += "<param name=\"sid\" value=\"" + Session.get().getSid() + "\" />";
 		tmp += "<param name=\"baseUrl\" value=\"" + Util.contextPath() + "\" />";
-		tmp += "<param name=\"documents\" value=\"" + docIds.toString().substring(1).replaceAll("]", "") + "\" />";
+		tmp += "<param name=\"documents\" value=\"" + docIdsStr + "\" />";
 		tmp += "</applet>";
 
 		applet.setContents(tmp);
@@ -63,7 +70,7 @@ public class BulkCheckinDialog extends Window {
 				service.unlock(Session.get().getSid(), docIds, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable t) {
-						//Log.serverError(t);
+						// Log.serverError(t);
 						destroy();
 						Navigator.get().reload();
 					}
