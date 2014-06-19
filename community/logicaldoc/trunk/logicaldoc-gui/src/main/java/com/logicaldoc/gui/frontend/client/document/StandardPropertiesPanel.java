@@ -36,7 +36,6 @@ import com.smartgwt.client.widgets.form.fields.PickerIcon.Picker;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
@@ -235,26 +234,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 			tagItem.setValues((Object[]) document.getTags());
 			tagItem.setDisabled(!updateEnabled);
-			tagItem.addChangedHandler(new ChangedHandler() {
-
-				@Override
-				public void onChanged(ChangedEvent event) {
-					/*
-					 * At initialization time this method is invoked several
-					 * times until when it contains all the tags of the document
-					 */
-					if (tagsInitialized)
-						changedHandler.onChanged(null);
-					else {
-						if ((tagItem.getValues().length == 0 && document.getTags() == null)
-								|| tagItem.getValues().length == document.getTags().length)
-							// The item contains all the tags of the document,
-							// so consider it as initialized
-							tagsInitialized = true;
-					}
-
-				}
-			});
+			tagItem.addChangedHandler(changedHandler);
 
 			PickerIcon addPicker = new PickerIcon(new Picker("[SKIN]/actions/add.png"), new FormItemClickHandler() {
 				public void onFormItemClick(FormItemIconClickEvent event) {
