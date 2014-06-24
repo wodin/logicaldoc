@@ -281,13 +281,14 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		/*
 		 * Prepare the external command
 		 */
-		if (info.isEnabled("Feature_31") && "true".equals(config.getProperty("extcall.enabled"))) {
+		String tenant = userSession.getTenantName();
+		if (info.isEnabled("Feature_31") && "true".equals(config.getProperty(tenant+".extcall.enabled"))) {
 			GUIExternalCall externalCall = new GUIExternalCall();
-			externalCall.setName(config.getProperty("extcall.name"));
-			externalCall.setBaseUrl(config.getProperty("extcall.baseurl"));
-			externalCall.setSuffix(config.getProperty("extcall.suffix"));
-			externalCall.setTargetWindow(config.getProperty("extcall.window"));
-			externalCall.setParametersStr(config.getProperty("extcall.params"));
+			externalCall.setName(config.getProperty(tenant+".extcall.name"));
+			externalCall.setBaseUrl(config.getProperty(tenant+".extcall.baseurl"));
+			externalCall.setSuffix(config.getProperty(tenant+".extcall.suffix"));
+			externalCall.setTargetWindow(config.getProperty(tenant+".extcall.window"));
+			externalCall.setParametersStr(config.getProperty(tenant+".extcall.params"));
 			session.setExternalCall(externalCall);
 		}
 
