@@ -111,7 +111,7 @@ body {
 <link id="favicon" rel="shortcut icon" type="image/png" href='' />
 <script type="text/javascript">		
 	// Determine what skin file to load
-  var currentSkin = "Enterprise";
+  var currentSkin = "Simplicity";
   var isomorphicDir = "<%=MODULE%>/sc/";
 </script>
 </head>
