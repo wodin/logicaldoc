@@ -13,10 +13,8 @@ public class Dummy {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		String src="guide � (but, yeah, it’s okay to share it with ‘em).";
-		System.out.println(StringUtil.removeNonUtf8Chars(src));
-		
-		ContextProperties test=new ContextProperties(new File("context.properties"));
+
+		ContextProperties test=new ContextProperties(new File("C:\\Users\\marco\\workspace-logicaldoc\\community\\logicaldoc\\logicaldoc-util\\context.properties"));
 		System.out.println(test.getProperty("conf.dbdir"));
 		test.setProperty("test", "C:\\pollo\\collo\\ciccio");
 		
