@@ -31,6 +31,8 @@ import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.events.DrawEvent;
 import com.smartgwt.client.widgets.events.DrawHandler;
@@ -259,8 +261,8 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 			@Override
 			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
 				try {
-					return Util.thumbnailImgageHTML(Session.get().getSid(), Long.parseLong(record.getAttribute("id")), null,
-							200, null);
+					return Util.thumbnailImgageHTML(Session.get().getSid(), Long.parseLong(record.getAttribute("id")),
+							null, 200, null);
 				} catch (Throwable e) {
 					return "";
 				}
@@ -513,7 +515,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 			if (Long.parseLong(rec.getAttribute("id")) == document.getId())
 				record = rec;
 
-		if(record!=null){
+		if (record != null) {
 			GridUtil.updateRecord(document, record);
 			refreshRow(getRecordIndex(record));
 		}
@@ -640,6 +642,14 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		setCanExpandRecords(true);
 		setExpansionMode(ExpansionMode.DETAIL_FIELD);
 		setDetailField("summary");
+
+	}
+
+	@Override
+	protected Canvas getExpansionComponent(final ListGridRecord record) {
+		return new HTMLFlow("<div class='details'>"
+				+ (record.getAttributeAsString("summary") != null ? record.getAttributeAsString("summary") : "")
+				+ "</div>");
 	}
 
 	@Override

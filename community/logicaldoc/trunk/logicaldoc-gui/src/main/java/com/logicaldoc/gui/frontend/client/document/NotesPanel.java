@@ -21,6 +21,7 @@ import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -80,7 +81,15 @@ public class NotesPanel extends DocumentDetailTab {
 		date.setCanFilter(false);
 		date.setWidth("*");
 
-		listGrid = new ListGrid();
+		listGrid = new ListGrid() {
+			@Override
+			protected Canvas getExpansionComponent(final ListGridRecord record) {
+				return new HTMLFlow(
+						"<div class='details'>"
+								+ (record.getAttributeAsString("message") != null ? record
+										.getAttributeAsString("message") : "") + "</div>");
+			}
+		};
 		listGrid.setEmptyMessage(I18N.message("notitemstoshow"));
 		listGrid.setCanFreezeFields(true);
 		listGrid.setAutoFetchData(true);
@@ -155,7 +164,7 @@ public class NotesPanel extends DocumentDetailTab {
 			}
 		});
 
-		//Expand all notes after arrived
+		// Expand all notes after arrived
 		listGrid.addDataArrivedHandler(new DataArrivedHandler() {
 			@Override
 			public void onDataArrived(DataArrivedEvent event) {
