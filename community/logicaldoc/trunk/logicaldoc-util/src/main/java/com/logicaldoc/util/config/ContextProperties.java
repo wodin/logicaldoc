@@ -45,7 +45,7 @@ public class ContextProperties extends OrderedProperties {
 			try {
 				load(ContextProperties.class.getClassLoader().getResource("context.properties"));
 			} catch (Throwable q) {
-
+				throw new IOException(q.getMessage(), q);
 			}
 		}
 	}
@@ -153,7 +153,7 @@ public class ContextProperties extends OrderedProperties {
 		// Check if there is a free slot between 1 and maxBackups
 		for (int i = 1; i <= maxBackups; i++) {
 			File test = new File(parent + "/" + src.getName() + "." + i);
-			if (!test.exists()){
+			if (!test.exists()) {
 				backup = test;
 				break;
 			}
