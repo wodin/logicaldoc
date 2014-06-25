@@ -399,3 +399,13 @@ td.login-lang-picker a img.comboBoxItemPickerOver, td.login-lang-pickerFocused a
   text-decoration: none;
   color: white;
 }
+
+.details{
+  font-family: Verdana,Bitstream Vera Sans,sans-serif;
+  font-size: 11px;
+  color: black;
+  background-color: #F6F6F2;
+  border: 1px solid black;
+  padding: 5px;
+  opacity: 0.9;
+}
