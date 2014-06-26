@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.security.Tenant;
+import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.io.FileUtil;
@@ -30,6 +32,8 @@ public class ThumbnailManager {
 	protected static Logger log = LoggerFactory.getLogger(ThumbnailManager.class);
 
 	private Storer storer;
+
+	private TenantDAO tenantDao;
 
 	// Key is the extension, value is the associated builder
 	private Map<String, ThumbnailBuilder> builders = new HashMap<String, ThumbnailBuilder>();
@@ -47,10 +51,18 @@ public class ThumbnailManager {
 		if (builder == null)
 			log.warn("No builder found for document " + document.getId());
 
+		String tenantName = "default";
+		try {
+			Tenant tenant = tenantDao.findById(document.getTenantId());
+			tenantName = tenant.getName();
+		} catch (Throwable t) {
+			log.error(t.getMessage());
+		}
+
 		int size = 150;
 		try {
 			ContextProperties conf = new ContextProperties();
-			size = Integer.parseInt(conf.getProperty("gui.thumbnail.size"));
+			size = Integer.parseInt(conf.getProperty(tenantName + ".gui.thumbnail.size"));
 		} catch (Throwable t) {
 			log.error(t.getMessage());
 		}
@@ -58,7 +70,7 @@ public class ThumbnailManager {
 		int quality = 100;
 		try {
 			ContextProperties conf = new ContextProperties();
-			int buf = Integer.parseInt(conf.getProperty("gui.thumbnail.quality"));
+			int buf = Integer.parseInt(conf.getProperty(tenantName + ".gui.thumbnail.quality"));
 			if (buf < 1)
 				buf = 1;
 			if (buf > 100)
@@ -241,5 +253,9 @@ public class ThumbnailManager {
 
 	public void setStorer(Storer storer) {
 		this.storer = storer;
+	}
+
+	public void setTenantDao(TenantDAO tenantDao) {
+		this.tenantDao = tenantDao;
 	}
 }

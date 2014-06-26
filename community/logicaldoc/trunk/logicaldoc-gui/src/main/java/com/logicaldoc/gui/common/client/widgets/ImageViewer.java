@@ -33,8 +33,6 @@ public class ImageViewer extends VLayout {
 
 	private int baseSize = 600;
 
-	private int maxSize = 600;
-
 	private String url;
 
 	private GUIDocument document;
@@ -45,6 +43,7 @@ public class ImageViewer extends VLayout {
 	 * @param url the image URL
 	 */
 	public ImageViewer(GUIDocument document) {
+		this.baseSize = Integer.parseInt(Session.get().getConfig("gui.thumbnail.size"));
 		this.document = document;
 		this.url = Util.contextPath() + "/preview?docId=" + document.getId() + "&sid=" + Session.get().getSid();
 
@@ -154,7 +153,7 @@ public class ImageViewer extends VLayout {
 			int originalHeight = ImageViewer.this.image.getOriginalHeight();
 
 			int maxSize = Math.max(originalWidth, originalHeight);
-			ImageViewer.this.maxSize = maxSize;
+			ImageViewer.this.baseSize = maxSize;
 			refreshImageEffectiveSize();
 		} catch (Throwable t) {
 
@@ -182,7 +181,7 @@ public class ImageViewer extends VLayout {
 		if (contains(imageContainer))
 			removeMember(imageContainer);
 
-		image = new FitImage(url, maxSize, maxSize);
+		image = new FitImage(url, baseSize, baseSize);
 
 		imageContainer = new VLayout();
 		imageContainer.setMargin(0);
