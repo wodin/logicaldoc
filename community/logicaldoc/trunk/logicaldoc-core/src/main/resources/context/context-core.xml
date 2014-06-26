@@ -321,6 +321,7 @@
     <bean id="UserListenerManager" class="com.logicaldoc.core.security.UserListenerManager" />
     <bean id="ThumbnailManager" class="com.logicaldoc.core.document.thumbnail.ThumbnailManager">
         <property name="storer" ref="Storer" />
+        <property name="tenantDao" ref="TenantDAO" />
     </bean>
     <bean id="LockManager" class="com.logicaldoc.core.lock.LockManager">
         <property name="config" ref="ContextProperties" />
