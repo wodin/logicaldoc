@@ -32,8 +32,8 @@ public class SampleClient {
 
 	private static Session session;
 
-//	private static final String CONNECTION_URL = "http://localhost:9080/service/cmis";
-	private static final String CONNECTION_URL = "http://192.168.2.5:8080/service/cmis";
+	private static final String CONNECTION_URL = "http://localhost:9080/service/cmis";
+//	private static final String CONNECTION_URL = "http://192.168.2.5:8080/service/cmis";
 
 	private static final String TEST_FOLDER_PATH = "/Default/index";
 
@@ -77,8 +77,11 @@ public class SampleClient {
 		root.getName();
 
 		//cleanup(root, TEST_FOLDER_NAME);
-		Folder newFolder = (Folder)session.getObjectByPath("/Default");
-		createDocument(newFolder, TEST_DOCUMENT_NAME_1);
+//		Folder newFolder = (Folder)session.getObjectByPath("/Default");
+//		createDocument(newFolder, TEST_DOCUMENT_NAME_1);
+		
+		session.getObjectByPath("/Default/collo/pollo/pippo.pdf");
+		
 	}
 
 	private static void checkoutCheckin() throws IOException {
@@ -252,7 +255,7 @@ public class SampleClient {
 	 * @return root folder object
 	 */
 	private static Folder connect() {
-		return connect("admin", "admin");
+		return connect("admin", "12345678");
 	}
 
 	/**

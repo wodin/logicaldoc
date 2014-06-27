@@ -908,6 +908,8 @@ public class LDRepository {
 		}
 
 		PersistentObject obj = getObject(objectId);
+		if (obj == null)
+			throw new CmisObjectNotFoundException("Object ID " + objectId + " not found");
 
 		// set defaults if values not set
 		boolean iaa = (includeAllowableActions == null ? false : includeAllowableActions.booleanValue());
@@ -935,24 +937,35 @@ public class LDRepository {
 		// Try to check if the path is a folder
 		Folder folder = folderDao.findByPath(fullPath, getSessionUser().getTenantId());
 
+		ObjectData out = null;
+
 		if (folder != null) {
-			return getObject(context, ID_PREFIX_FLD + Long.toString(folder.getId()), null, filter,
+			out = getObject(context, ID_PREFIX_FLD + Long.toString(folder.getId()), null, filter,
 					includeAllowableActions, includeAcl, null);
 		} else {
 			// Not a folder, probably a file
 			String parentPath = fullPath.substring(0, fullPath.lastIndexOf('/'));
 			folder = folderDao.findByPath(parentPath, getSessionUser().getTenantId());
 			if (folder == null)
-				return null;
-			String fileName = fullPath.substring(fullPath.lastIndexOf('/') + 1);
+				out = null;
 
-			List<Document> docs = documentDao.findByFileNameAndParentFolderId(folder.getId(), fileName, null,
-					getSessionUser().getId(), null);
-			if (docs == null || docs.isEmpty())
-				return null;
-			return getObject(context, ID_PREFIX_DOC + Long.toString(docs.get(0).getId()), null, filter,
-					includeAllowableActions, includeAcl, null);
+			if (folder != null) {
+				String fileName = fullPath.substring(fullPath.lastIndexOf('/') + 1);
+
+				List<Document> docs = documentDao.findByFileNameAndParentFolderId(folder.getId(), fileName, null,
+						getSessionUser().getId(), null);
+				if (docs == null || docs.isEmpty())
+					out = null;
+				else
+					out = getObject(context, ID_PREFIX_DOC + Long.toString(docs.get(0).getId()), null, filter,
+							includeAllowableActions, includeAcl, null);
+			}
 		}
+
+		if (out == null)
+			throw new CmisObjectNotFoundException("Path " + path + " not found");
+		else
+			return out;
 	}
 
 	/**
@@ -2518,27 +2531,30 @@ public class LDRepository {
 	 * Retrieves the instance by the given objectId
 	 */
 	private PersistentObject getObject(String objectId) {
+		PersistentObject out = null;
 		if (objectId.startsWith(ID_PREFIX_DOC)) {
 			Long id = Long.parseLong(objectId.substring(4));
 			Document doc = documentDao.findById(id);
 			documentDao.initialize(doc);
-			return doc;
+			out = doc;
 		} else if (objectId.startsWith(ID_PREFIX_FLD)) {
 			Long id = Long.parseLong(objectId.substring(4));
 			Folder f = folderDao.findById(id);
 			folderDao.initialize(f);
-			return f;
+			out = f;
 		} else if (objectId.startsWith(ID_PREFIX_VER)) {
 			Long id = Long.parseLong(objectId.substring(4));
 			Version v = versionDao.findById(id);
 			versionDao.initialize(v);
-			return v;
+			out = v;
 		} else {
 			Long id = Long.parseLong(objectId);
 			Folder f = folderDao.findById(id);
 			folderDao.initialize(f);
-			return f;
+			out = f;
 		}
+
+		return out;
 	}
 
 	public void setTemplateDao(DocumentTemplateDAO templateDao) {
