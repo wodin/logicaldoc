@@ -175,7 +175,7 @@ public class ServletIOUtil {
 			filename = filename + "." + FilenameUtils.getExtension(suffix);
 		}
 
-		if (StringUtils.isEmpty(suffix) || (!suffix.contains("preview"))) {
+		if (StringUtils.isEmpty(suffix) || !suffix.contains("preview")) {
 			long size = storer.size(doc.getId(), resource);
 
 			// get the mimetype
@@ -209,7 +209,7 @@ public class ServletIOUtil {
 		}
 
 		if (user != null
-				&& (StringUtils.isEmpty(suffix) || suffix.equals("preview-1.swf") || suffix.equals("preview.swf"))) {
+				&& (StringUtils.isEmpty(suffix) || suffix.equals("preview.swf") || suffix.equals("conversion.pdf"))) {
 			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 
 			// Add an history entry to track the download of the document
@@ -228,7 +228,7 @@ public class ServletIOUtil {
 
 			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			history.setPath(fdao.computePathExtended(doc.getFolder().getId()));
-			if (suffix.endsWith(".swf")) {
+			if (suffix.endsWith(".swf") || suffix.endsWith(".pdf")) {
 				history.setEvent(DocumentEvent.VIEWED.toString());
 				/*
 				 * Avoid to save frequent views of this document in the same

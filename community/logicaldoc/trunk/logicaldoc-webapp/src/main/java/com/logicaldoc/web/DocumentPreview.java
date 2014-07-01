@@ -15,7 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.document.thumbnail.ThumbnailManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
@@ -42,6 +44,8 @@ public class DocumentPreview extends HttpServlet {
 
 	private static final String FILE_VERSION = "fileVersion";
 
+	private static final String VERSION = "version";
+
 	private static final long serialVersionUID = -6956612970433309888L;
 
 	protected static Logger log = LoggerFactory.getLogger(DocumentPreview.class);
@@ -66,6 +70,7 @@ public class DocumentPreview extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String id = request.getParameter(DOC_ID);
 		String fileVersion = request.getParameter(FILE_VERSION);
+		String version = request.getParameter(VERSION);
 		String suffix = request.getParameter(SUFFIX);
 
 		InputStream stream = null;
@@ -82,8 +87,16 @@ public class DocumentPreview extends HttpServlet {
 				doc = docDao.findById(doc.getDocRef());
 				docId = doc.getId();
 			}
+
 			if (StringUtils.isEmpty(fileVersion))
 				fileVersion = doc.getFileVersion();
+
+			if (version != null) {
+				VersionDAO vDao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
+				Version ver = vDao.findByVersion(docId, version);
+				if (ver != null)
+					fileVersion = ver.getFileVersion();
+			}
 
 			UserSession session = SessionUtil.validateSession(request.getParameter("sid"));
 			UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -103,13 +116,8 @@ public class DocumentPreview extends HttpServlet {
 			stream = storer.getStream(docId, resource);
 
 			if (stream == null) {
-				if (resource.contains("preview") && !resource.endsWith("preview-1.swf")) {
-					log.debug("Empty page");
-					forwardEmptyPage(request, response, suffix);
-				} else {
-					log.debug("Preview resource not available");
-					forwardPreviewNotAvailable(request, response, suffix);
-				}
+				log.debug("Preview resource not available");
+				forwardPreviewNotAvailable(request, response, suffix);
 				return;
 			}
 
@@ -150,7 +158,7 @@ public class DocumentPreview extends HttpServlet {
 		/*
 		 * We need to produce the SWF conversion
 		 */
-		if (!storer.exists(doc.getId(), resource) && resource.endsWith("preview-1.swf")) {
+		if (!storer.exists(doc.getId(), resource) && resource.endsWith("preview.swf")) {
 			try {
 				thumbManager.createPreview(doc, fileVersion);
 				log.debug("Created preview " + resource);
@@ -167,15 +175,6 @@ public class DocumentPreview extends HttpServlet {
 			if ("thumb.jpg".equals(suffix))
 				rd = request.getRequestDispatcher("/skin/images/preview_na.gif");
 
-			rd.forward(request, response);
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
-		}
-	}
-
-	protected void forwardEmptyPage(HttpServletRequest request, HttpServletResponse response, String suffix) {
-		try {
-			RequestDispatcher rd = request.getRequestDispatcher("/flash/end.swf");
 			rd.forward(request, response);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);

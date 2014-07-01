@@ -489,14 +489,14 @@ public class ContextMenu extends Menu {
 				GUIDocument selection = grid.getSelectedDocument();
 				long id = selection.getId();
 				String filename = selection.getFileName();
-				String fileVersion = selection.getFileVersion();
+				String version = selection.getVersion();
 
 				// In the search hitlist we don't have the filename
 				if (filename == null)
 					filename = selection.getTitle() + "." + selection.getType();
 
 				GUIFolder folder = Session.get().getCurrentFolder();
-				PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, folder != null && folder.isDownload());
+				PreviewPopup iv = new PreviewPopup(id, version, filename, folder != null && folder.isDownload());
 				iv.show();
 			}
 		});

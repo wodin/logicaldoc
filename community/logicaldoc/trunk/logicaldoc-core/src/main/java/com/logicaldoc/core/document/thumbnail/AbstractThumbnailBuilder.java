@@ -2,11 +2,8 @@ package com.logicaldoc.core.document.thumbnail;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
@@ -25,7 +22,7 @@ import com.logicaldoc.util.io.FileUtil;
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.8.1
- *
+ * 
  */
 public abstract class AbstractThumbnailBuilder implements ThumbnailBuilder {
 	protected static Logger log = LoggerFactory.getLogger(AbstractThumbnailBuilder.class);
@@ -36,24 +33,25 @@ public abstract class AbstractThumbnailBuilder implements ThumbnailBuilder {
 
 	/** For these extensions we are able to directly convert to SWF */
 	protected String SWF_DIRECT_CONVERSION_EXTS = "gif, png, pdf, jpeg, jpg, tif, tiff, bmp";
-	
+
 	@Override
-	public File[] buildPreview(File src, String srcFileName, File dest) throws IOException {
-		File[] pages = null;
+	public File buildPreview(String tenant, File src, String srcFileName, File dest) throws IOException {
 		String docExtension = FilenameUtils.getExtension(srcFileName).toLowerCase();
 		if (SWF_DIRECT_CONVERSION_EXTS.contains(docExtension))
-			pages = document2swf(src, docExtension, dest);
-		return pages;
+			return document2swf(tenant, src, docExtension, dest);
+		else
+			return null;
 	}
 
 	/**
 	 * Convert a generic document(image or PDF) to SWF (for document preview
-	 * feature). The page files are ordered.
+	 * feature).
 	 */
-	protected File[] document2swf(File src, String extension, File root) throws IOException {
+	protected File document2swf(String tenant, File src, String extension, File root) throws IOException {
 		FileOutputStream fos = null;
+		File out = null;
 		File tmp = src;
-		File tmp2=null;
+		File tmp2 = null;
 		try {
 			boolean isWin = SystemUtils.IS_OS_WINDOWS;
 
@@ -74,7 +72,7 @@ public abstract class AbstractThumbnailBuilder implements ThumbnailBuilder {
 				Exec.exec(jpegCommand, null, null, 10);
 
 				tmp = tmp2;
-
+				out = tmp;
 				command += File.separatorChar + "jpeg2swf";
 			} else if (extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("tif")) {
 				// In this case we have to convert to temporary pdf first to
@@ -86,6 +84,7 @@ public abstract class AbstractThumbnailBuilder implements ThumbnailBuilder {
 				Exec.exec(pdfCommand, null, null, 10);
 
 				tmp = tmp2;
+				out = tmp;
 				command += File.separatorChar + "pdf2swf";
 			}
 
@@ -97,7 +96,7 @@ public abstract class AbstractThumbnailBuilder implements ThumbnailBuilder {
 					|| extension.equalsIgnoreCase("tif")) {
 				int pages = -1;
 				try {
-					pages = conf.getInt("gui.preview.pages");
+					pages = conf.getInt(tenant + ".gui.preview.pages");
 				} catch (Throwable t) {
 
 				}
@@ -105,7 +104,6 @@ public abstract class AbstractThumbnailBuilder implements ThumbnailBuilder {
 				commandLine.add("-T 9");
 				if (pages > 0)
 					commandLine.add("-p 1-" + pages);
-				commandLine.add("-f");
 				commandLine.add("-t");
 				commandLine.add("-G");
 				commandLine.add("-s storeallcharacters");
@@ -115,29 +113,22 @@ public abstract class AbstractThumbnailBuilder implements ThumbnailBuilder {
 				commandLine.add("-T 9");
 			}
 
-			if (command.contains("pdf2swf")) {
-				/*
-				 * Save the preview as multiple SWFs, this will allow for
-				 * handling huge documents composed by several pages.
-				 */
-				commandLine.add(tmp.getPath());
-				commandLine.add(root.getAbsolutePath() + File.separator + "page-%");
-			} else {
-				commandLine.add("-o " + root.getAbsolutePath() + File.separator + "page-1");
-				commandLine.add(tmp.getPath());
-			}
+			out = new File(root.getAbsolutePath() + "/preview.swf");
+
+			commandLine.add(tmp.getPath());
+			commandLine.add(out.getPath());
 
 			log.debug("Executing command: " + commandLine.toString());
 
-			int timeout = 20;
+			int timeout = 40;
 			try {
-				timeout = Integer.parseInt(conf.getProperty("gui.preview.timeout"));
+				timeout = Integer.parseInt(conf.getProperty(tenant + ".gui.preview.timeout"));
 			} catch (Throwable t) {
 			}
 
-			if (command.contains("pdf2swf"))
+			if (command.contains("pdf2swf")) {
 				Exec.exec(commandLine, null, null, timeout);
-			else {
+			} else {
 				// Seems that commands like jpeg2swf need to be executed as a
 				// single line command
 				StringBuffer sb = new StringBuffer();
@@ -154,28 +145,7 @@ public abstract class AbstractThumbnailBuilder implements ThumbnailBuilder {
 			IOUtils.closeQuietly(fos);
 			FileUtil.strongDelete(tmp2);
 		}
-		
-		if (root.exists()) {
-			File[] pages = root.listFiles(new FilenameFilter() {
-				@Override
-				public boolean accept(File dir, String name) {
-					return name.startsWith("page-");
-				}
-			});
 
-			Arrays.sort(pages, new Comparator<File>() {
-				@Override
-				public int compare(File f1, File f2) {
-					String name1 = f1.getName();
-					String name2 = f2.getName();
-					Integer n1 = new Integer(name1.substring(5));
-					Integer n2 = new Integer(name2.substring(5));
-					return n1.compareTo(n2);
-				}
-			});
-
-			return pages;
-		} else
-			return new File[0];
+		return out;
 	}
 }

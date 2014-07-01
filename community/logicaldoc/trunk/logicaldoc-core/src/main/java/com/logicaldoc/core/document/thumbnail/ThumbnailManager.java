@@ -51,13 +51,7 @@ public class ThumbnailManager {
 		if (builder == null)
 			log.warn("No builder found for document " + document.getId());
 
-		String tenantName = "default";
-		try {
-			Tenant tenant = tenantDao.findById(document.getTenantId());
-			tenantName = tenant.getName();
-		} catch (Throwable t) {
-			log.error(t.getMessage());
-		}
+		String tenantName = getTenantName(document);
 
 		int size = 150;
 		try {
@@ -88,7 +82,7 @@ public class ThumbnailManager {
 			src = writeToFile(document, fileVersion);
 
 			// Perform the elaboration
-			builder.buildThumbnail(src, document.getFileName(), dest, size, quality);
+			builder.buildThumbnail(tenantName, src, document.getFileName(), dest, size, quality);
 
 			// Put the resource
 			String resource = storer.getResourceName(document.getId(), getSuitableFileVersion(document, fileVersion),
@@ -101,6 +95,17 @@ public class ThumbnailManager {
 			FileUtil.strongDelete(src);
 			FileUtil.strongDelete(dest);
 		}
+	}
+
+	protected String getTenantName(Document document) {
+		String tenantName = "default";
+		try {
+			Tenant tenant = tenantDao.findById(document.getTenantId());
+			tenantName = tenant.getName();
+		} catch (Throwable t) {
+			log.error(t.getMessage());
+		}
+		return tenantName;
 	}
 
 	/**
@@ -148,6 +153,8 @@ public class ThumbnailManager {
 		if (builder == null)
 			log.warn("No builder found for document " + document.getId());
 
+		String tenantName = getTenantName(document);
+
 		/*
 		 * We need to produce the SWF conversion
 		 */
@@ -155,7 +162,7 @@ public class ThumbnailManager {
 		// Prepare I/O resources
 		File src = null;
 		File pagesRoot = null;
-		File[] pages = null;
+		File previewFile = null;
 
 		try {
 			pagesRoot = File.createTempFile("preview", "");
@@ -164,16 +171,12 @@ public class ThumbnailManager {
 
 			src = writeToFile(document, fileVersion);
 
-			pages = builder.buildPreview(src, document.getFileName(), pagesRoot);
+			previewFile = builder.buildPreview(tenantName, src, document.getFileName(), pagesRoot);
 
 			String fileVer = getSuitableFileVersion(document, fileVersion);
-			if (pages != null && pages.length > 0) {
-				for (int i = 0; i < pages.length; i++) {
-					String resource = storer.getResourceName(document.getId(), fileVer, "preview-" + (i + 1) + ".swf");
-					storer.store(pages[i], document.getId(), resource);
-					log.debug("Stored preview page " + pages[i].getName());
-				}
-			}
+			String resource = storer.getResourceName(document.getId(), fileVer, "preview.swf");
+			storer.store(previewFile, document.getId(), resource);
+			log.debug("Stored preview for " + document.getFileName());
 		} catch (Throwable e) {
 			log.warn("Error creating preview for document: " + document.getId() + " " + document.getTitle(), e);
 		} finally {

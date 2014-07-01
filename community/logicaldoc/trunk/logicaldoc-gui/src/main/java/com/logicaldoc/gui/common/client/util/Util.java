@@ -94,7 +94,7 @@ public class Util {
 	/**
 	 * Generates Flash code for Preview
 	 */
-	public static String flashPreview(String flashName, int width, int height, int zoom, String flashvars,
+	public static String flashPreview(int width, int height, int zoom, String flashvars,
 			boolean printEnabled, String language) {
 
 		String key = Session.get().getInfo().getConfig("flexpaperviewer.key");
@@ -107,7 +107,7 @@ public class Util {
 		}
 
 		String vars = flashvars + "&Scale=" + (zoom > 0 ? fzoom.toString() : "1.0")
-				+ "&FitPageOnLoad=false&FitWidthOnLoad=" + (zoom <= 0 ? "true" : "false") + "&PrintEnabled="
+				+ "&FitPageOnLoad="+(zoom <= 0 ? "true" : "false")+"&FitWidthOnLoad=false&PrintEnabled="
 				+ printEnabled + "&ProgressiveLoading=true" + "&ViewModeToolsVisible=true" + "&ZoomToolsVisible=true"
 				+ "&NavToolsVisible=true" + "&CursorToolsVisible=true" + "&SearchToolsVisible=true";
 
@@ -115,17 +115,17 @@ public class Util {
 			vars += "&key=" + key;
 		}
 
-		String tmp = "<div align=\"center\">";
+		String tmp = "<div align='center' style='top:10px'>";
 		tmp += "<object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" id=\"FlexPaperViewer\" width=\"" + width
 				+ "\" height=\"" + height
 				+ "\" codebase=\"http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab\">\n";
 		tmp += " <param name=\"allowScriptAccess\" value=\"always\" />\n";
 		tmp += " <param name=\"allowFullScreen\" value=\"true\" />\n";
-		tmp += " <param name=\"movie\" value=\"" + Util.flashUrl(flashName) + "\" />\n";
+		tmp += " <param name=\"movie\" value=\"" + Util.flashUrl("flexpaperviewer.swf") + "\" />\n";
 		tmp += " <param name=\"quality\" value=\"high\" />\n";
 		tmp += " <param name=\"bgcolor\" value=\"#ffffff\" />\n";
 		tmp += " <param name=\"flashvars\" value=\"" + vars + "\" />\n";
-		tmp += " 	<embed type=\"application/x-shockwave-flash\" src=\"" + Util.flashUrl(flashName) + "\" height=\""
+		tmp += " 	<embed type=\"application/x-shockwave-flash\" src=\"" + Util.flashUrl("flexpaperviewer.swf") + "\" height=\""
 				+ height + "\" width=\"" + width + "\" name=\"FlexPaperViewer\""
 				+ " bgcolor=\"#ffffff\" quality=\"high\" allowFullScreen=\"true\" flashvars=\"" + vars + "\">\n";
 		tmp += "</embed>\n";
@@ -157,9 +157,8 @@ public class Util {
 	}
 
 	public static String fullPreviewUrl(String sid, long docId, String fileVersion) {
-		String url = "{" + GWT.getHostPageBaseURL() + "preview?sid=" + Session.get().getSid() + "%26docId=" + docId
-				+ "%26suffix=preview-[*,0].swf";
-		url += "," + Session.get().getInfo().getConfig("gui.preview.pages") + "}";
+		String url = GWT.getHostPageBaseURL() + "preview?sid=" + Session.get().getSid() + "%26docId=" + docId
+				+ "%26suffix=preview.swf";
 		if (fileVersion != null)
 			url += "%26fileVersion=" + fileVersion;
 		return url;

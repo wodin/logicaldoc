@@ -15,6 +15,7 @@ public interface ThumbnailBuilder {
 	/**
 	 * Produce the thumbnail
 	 * 
+	 * @param tenant The tenant name
 	 * @param src The source file
 	 * @param srcFileName The original file name
 	 * @param size The thumbnail size
@@ -22,15 +23,17 @@ public interface ThumbnailBuilder {
 	 * @param quality Compression quality(0..100, 100 is maximum quality)
 	 * @throws IOException
 	 */
-	public void buildThumbnail(File src, String srcFileName, File dest, int size, int quality) throws IOException;
-	
+	public void buildThumbnail(String tenant, File src, String srcFileName, File dest, int size, int quality)
+			throws IOException;
+
 	/**
 	 * Produce the full preview
 	 * 
+	 * @param tenant The tenant name
 	 * @param src The source file
 	 * @param srcFileName The original file name
 	 * @param dest The destination root folder
 	 * @throws IOException
 	 */
-	public File[] buildPreview(File src, String srcFileName, File dest) throws IOException;
+	public File buildPreview(String tenant, File src, String srcFileName, File dest) throws IOException;
 }

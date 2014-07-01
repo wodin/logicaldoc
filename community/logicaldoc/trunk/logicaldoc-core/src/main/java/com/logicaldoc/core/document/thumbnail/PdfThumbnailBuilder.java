@@ -24,13 +24,13 @@ public class PdfThumbnailBuilder extends ImageThumbnailBuilder {
 	protected static Logger log = LoggerFactory.getLogger(PdfThumbnailBuilder.class);
 
 	@Override
-	public synchronized void buildThumbnail(File src, String srcFileName, File dest, int size, int compression)
-			throws IOException {
+	public synchronized void buildThumbnail(String tenant, File src, String srcFileName, File dest, int size,
+			int compression) throws IOException {
 
 		File tmp = File.createTempFile("rendertmb", "thumb.jpg");
 		try {
 			renderPage(src, tmp, 1);
-			super.buildThumbnail(tmp, srcFileName, dest, size, compression);
+			super.buildThumbnail(tenant, tmp, srcFileName, dest, size, compression);
 		} catch (Throwable e) {
 			throw new IOException("Thumbnail building " + e.getMessage(), e);
 		} finally {
