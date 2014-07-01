@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -41,13 +42,13 @@ public class PreviewPopup extends Window {
 
 	private String fileName;
 
-	private String fileVersion;
+	private String version;
 
 	private boolean printEnabled = false;
 
 	private String language;
 
-	public PreviewPopup(long docId, String fileVersion, String filename, boolean printEnabled) {
+	public PreviewPopup(long docId, String version, String filename, boolean printEnabled) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("preview"));
 
@@ -70,7 +71,7 @@ public class PreviewPopup extends Window {
 
 		this.id = docId;
 		this.fileName = filename;
-		this.fileVersion = fileVersion;
+		this.version = version;
 		this.printEnabled = printEnabled;
 
 		layout = new VLayout(5);
@@ -136,8 +137,8 @@ public class PreviewPopup extends Window {
 		media = new HTMLFlow();
 		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "%26docId=" + id
 				+ "%26filename=" + fileName;
-		if (fileVersion != null)
-			url += "%26fileVersion=" + fileVersion;
+		if (version != null)
+			url += "%26version=" + version;
 		String tmp = Util.flashPreviewAudioVideo("player.swf", url, mediaProvider, (getWidth() - 26),
 				(getHeight() - 40));
 		media.setContents(tmp);
@@ -148,7 +149,7 @@ public class PreviewPopup extends Window {
 	 * Reloads a CAD preview.
 	 */
 	private void reloadCAD() {
-		String url = Util.downloadURL(id, fileVersion, true);
+		String url = Util.downloadURL(id, version, true);
 		String tmp = "<applet name=\"CAD Applet\" archive=\"" + Util.contextPath()
 				+ "applet/dxf-applet.jar\"  code=\"de.caff.dxf.applet.DxfApplet\" width=\"" + (getWidth() - 26)
 				+ "\" height=\"" + (getHeight() - 40) + "\">";
@@ -169,7 +170,7 @@ public class PreviewPopup extends Window {
 	private void reloadHTML() {
 		htmlPanel = new HTMLPane();
 		htmlPanel.setShowEdges(false);
-		htmlPanel.setContentsURL(Util.downloadURL(id, fileVersion, false));
+		htmlPanel.setContentsURL(Util.downloadURL(id, version, false));
 		htmlPanel.setContentsType(ContentsType.FRAGMENT);
 
 		layout.setWidth100();
@@ -181,24 +182,23 @@ public class PreviewPopup extends Window {
 	 * Reloads a preview.
 	 */
 	private void reloadPreview(String language) {
-		int previewPages = 1;
-		try {
-			previewPages = Integer.parseInt(Session.get().getInfo().getConfig("gui.preview.pages"));
-			if (previewPages < 1)
-				previewPages = 1;
-		} catch (Throwable t) {
+		html = new HTMLFlow();
+		String contents = "";
 
+		if (Feature.enabled(Feature.PREVIEW)) {
+			contents = "<iframe src='" + Util.contextPath() + "/prev" + (printEnabled ? "" : "_ro") + "/index.jsp?sid="
+					+ Session.get().getSid() + "&docId=" + id + (version != null ? "&version" + version : "")
+					+ "&lang=" + getPreviewLanguage(language) + "&print=" + printEnabled + "&zoom=" + getZoom()
+					+ "&key=" + Session.get().getInfo().getConfig("flexpaperviewer.key")
+					+ "' style='border:0px solid white; width:" + (getWidth() - 15) + "px; height:"
+					+ (getHeight() - 45) + "px; overflow:hidden;'  scrolling='no' seamless='seamless'></iframe>";
+		} else {
+			String url = Util.fullPreviewUrl(Session.get().getSid(), id, version);
+			contents = Util.flashPreview((getWidth() - 15), (getHeight() - 40), getZoom(), "SwfFile=" + url,
+					printEnabled, getPreviewLanguage(language));
 		}
 
-		html = new HTMLFlow();
-		String url = Util.fullPreviewUrl(Session.get().getSid(), id, fileVersion);
-
-		String flash = "flexpaperviewer.swf";
-		if (!printEnabled)
-			flash = "flexpaperviewer_ro.swf";
-		String tmp = Util.flashPreview(flash, (getWidth() - 26), (getHeight() - 40), getZoom(), "SwfFile=" + url,
-				printEnabled, getPreviewLanguage(language));
-		html.setContents(tmp);
+		html.setContents(contents);
 		layout.addMember(html);
 	}
 

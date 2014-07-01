@@ -561,12 +561,12 @@ public class WorkflowDetailsDialog extends Window {
 
 				long id = Long.parseLong(selection.getAttribute("id"));
 				String filename = selection.getAttribute("filename");
-				String fileVersion = selection.getAttribute("fileVersion");
+				String version = selection.getAttribute("version");
 
 				if (filename == null)
 					filename = selection.getAttribute("title") + "." + selection.getAttribute("type");
 
-				PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, true);
+				PreviewPopup iv = new PreviewPopup(id, version, filename, true);
 				iv.show();
 			}
 		});

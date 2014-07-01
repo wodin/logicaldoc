@@ -42,7 +42,7 @@ public class VersionsPanel extends DocumentDetailTab {
 
 	private VersionsDS dataSource;
 
-	private ListGrid listGrid; 
+	private ListGrid listGrid;
 
 	public VersionsPanel(final GUIDocument document, DocumentObserver observer) {
 		super(document, null, observer);
@@ -104,13 +104,13 @@ public class VersionsPanel extends DocumentDetailTab {
 	protected void onPreview(final GUIDocument document, ListGridRecord record) {
 		long id = document.getId();
 		String filename = document.getFileName();
-		String fileVersion = record.getAttribute("fileVersion");
+		String version = record.getAttribute("version");
 
 		if (filename == null)
 			filename = record.getAttribute("title") + "." + record.getAttribute("type");
 
 		GUIFolder folder = document.getFolder();
-		PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, folder != null && folder.isDownload());
+		PreviewPopup iv = new PreviewPopup(id, version, filename, folder != null && folder.isDownload());
 		iv.show();
 	}
 
