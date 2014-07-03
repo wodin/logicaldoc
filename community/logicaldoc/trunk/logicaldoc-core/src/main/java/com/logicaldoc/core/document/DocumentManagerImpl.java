@@ -264,7 +264,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	 * @param doc The document representation
 	 * @return The document's content
 	 */
-	private String parseDocument(Document doc) {
+	@Override
+	public String parseDocument(Document doc, String fileVersion) {
 		String content = null;
 
 		// Check if the document is a shortcut
@@ -275,7 +276,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		// Parses the file where it is already stored
 		Locale locale = doc.getLocale();
-		String resource = storer.getResourceName(doc, null, null);
+		String resource = storer.getResourceName(doc, fileVersion, null);
 		Parser parser = ParserFactory.getParser(storer.getStream(doc.getId(), resource), doc.getFileName(), locale,
 				null, doc.getTenantId());
 
@@ -301,7 +302,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		log.debug("Reindexing document " + docId + " - " + doc.getTitle());
 
 		// Extract the content from the file. This may take very long time.
-		String content = parseDocument(doc);
+		String content = parseDocument(doc, null);
 
 		// Check if there are some shortcuts associated to the indexing
 		// document. They must be re-indexed.

@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.DocumentObserver;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
@@ -121,9 +122,9 @@ public class VersionsPanel extends DocumentDetailTab {
 		final ListGridRecord[] selection = listGrid.getSelectedRecords();
 
 		Menu contextMenu = new Menu();
-		MenuItem compare = new MenuItem();
-		compare.setTitle(I18N.message("compare"));
-		compare.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem compareMetadata = new MenuItem();
+		compareMetadata.setTitle(I18N.message("comparemetadata"));
+		compareMetadata.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				documentService.getVersionsById(Session.get().getSid(),
 						Long.parseLong(selection[0].getAttribute("id")),
@@ -135,12 +136,35 @@ public class VersionsPanel extends DocumentDetailTab {
 
 							@Override
 							public void onSuccess(GUIVersion[] result) {
-								VersionsDiff diffWinfow = new VersionsDiff(result[0], result[1]);
+								MetadataDiff diffWinfow = new MetadataDiff(result[0], result[1]);
 								diffWinfow.show();
 							}
 						});
 			}
 		});
+
+		MenuItem compareContent = new MenuItem();
+		compareContent.setTitle(I18N.message("comparecontent"));
+		compareContent.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				documentService.getVersionsById(Session.get().getSid(),
+						Long.parseLong(selection[0].getAttribute("id")),
+						Long.parseLong(selection[1].getAttribute("id")), new AsyncCallback<GUIVersion[]>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUIVersion[] result) {
+								ContentDiff diffWinfow = new ContentDiff(result[0].getDocId(), result[0]
+										.getFileVersion(), result[1].getFileVersion());
+								diffWinfow.show();
+							}
+						});
+			}
+		});
+		compareContent.setEnabled(Feature.enabled(Feature.CONTENT_DIFF));
 
 		MenuItem download = new MenuItem();
 		download.setTitle(I18N.message("download"));
@@ -196,17 +220,20 @@ public class VersionsPanel extends DocumentDetailTab {
 			}
 		});
 
-		compare.setEnabled(selection != null && selection.length == 2);
+		compareMetadata.setEnabled(selection != null && selection.length == 2);
 		delete.setEnabled(deleteEnabled && selection != null && selection.length > 0);
 
 		if (selection == null || selection.length < 1) {
 			preview.setEnabled(false);
 			download.setEnabled(false);
 			delete.setEnabled(false);
-			compare.setEnabled(false);
+			compareMetadata.setEnabled(false);
 		}
 
-		contextMenu.setItems(preview, download, compare, delete);
+		if (Feature.visible(Feature.CONTENT_DIFF))
+			contextMenu.setItems(preview, download, compareMetadata, compareContent, delete);
+		else
+			contextMenu.setItems(preview, download, compareMetadata, delete);
 
 		return contextMenu;
 	}

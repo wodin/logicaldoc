@@ -575,6 +575,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			GUIVersion version1 = null;
 			if (docVersion != null) {
 				version1 = new GUIVersion();
+				version1.setDocId(docVersion.getDocId());
 				version1.setUsername(docVersion.getUsername());
 				version1.setComment(docVersion.getComment());
 				version1.setId(id1);
@@ -624,6 +625,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			GUIVersion version2 = null;
 			if (docVersion != null) {
 				version2 = new GUIVersion();
+				version2.setDocId(docVersion.getDocId());
 				version2.setUsername(docVersion.getUsername());
 				version2.setComment(docVersion.getComment());
 				version2.setId(id1);

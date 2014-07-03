@@ -38,6 +38,8 @@ public class OpenOfficeParser extends AbstractParser {
 
 		private boolean appendChar;
 
+		private boolean appendNewline;
+
 		public OpenOfficeContentHandler() {
 			content = new StringBuffer();
 			appendChar = false;
@@ -50,22 +52,32 @@ public class OpenOfficeParser extends AbstractParser {
 			return content.toString();
 		}
 
+		@Override
 		public void startElement(String namespaceURI, String localName, String rawName, Attributes atts)
 				throws SAXException {
-			if (rawName.startsWith("text:")) {
+			if (rawName.startsWith("text:"))
 				appendChar = true;
-			}
+			if (rawName.startsWith("text:p") || rawName.startsWith("text:index-title")
+					|| rawName.startsWith("text:title") || rawName.startsWith("text:list-item"))
+				appendNewline = true;
 		}
 
+		@Override
 		public void characters(char[] ch, int start, int length) throws SAXException {
+			if (appendNewline) {
+				content.append("\n");
+				appendNewline = false;
+			}
+
 			if (appendChar) {
-				content.append(ch, start, length).append(" ");
+				content.append(ch, start, length);
 			}
 		}
 
 		public void endElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName)
 				throws SAXException {
 			appendChar = false;
+			appendNewline = false;
 		}
 	}
 
