@@ -76,6 +76,8 @@ public class Feature {
 	public static final int BULK_CHECKOUT = 32;
 
 	public static final int WEBCONTENT = 33;
+	
+	public static final int CONTENT_DIFF = 34;
 
 	public static final int SHOW_LICENSEE = 40;
 

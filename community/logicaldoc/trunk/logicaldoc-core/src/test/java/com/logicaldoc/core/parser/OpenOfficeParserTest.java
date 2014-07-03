@@ -65,10 +65,13 @@ public class OpenOfficeParserTest extends AbstractCoreTCase {
 			p.parse(file);
 
 			String content = p.getContent();
+			
+			System.out.println(content);
+			
 			assertNotNull(content);
 			assertTrue(StringUtils.isNotEmpty(content));
 
-			assertEquals(70125, content.length());
+			assertEquals(69386, content.length());
 		}
 	}
 }

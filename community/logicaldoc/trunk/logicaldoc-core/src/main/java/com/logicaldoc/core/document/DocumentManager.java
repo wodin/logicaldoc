@@ -210,6 +210,14 @@ public interface DocumentManager {
 	 * @throws Exception
 	 */
 	public Version deleteVersion(long versionId, History transition) throws Exception;
-	
+
+	/**
+	 * Retrieves the document's content as a string
+	 * 
+	 * @param doc The document representation
+	 * @return The document's content
+	 */
+	public String parseDocument(Document doc, String fileVersion);
+
 	public void setStorer(Storer storer);
 }

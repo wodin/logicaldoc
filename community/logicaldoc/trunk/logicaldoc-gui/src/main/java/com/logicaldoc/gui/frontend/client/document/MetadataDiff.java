@@ -6,30 +6,34 @@ import java.util.List;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.HeaderControls;
+import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 /**
- * Show differences between two versions
+ * Show differences between two versions at metadata level
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class VersionsDiff extends Window {
+public class MetadataDiff extends Window {
 
-	public VersionsDiff(GUIVersion version1, GUIVersion version2) {
+	public MetadataDiff(final GUIVersion version1, final GUIVersion version2) {
 		super();
 
 		setTitle(I18N.message("compare") + " " + version1.getVersion() + " - " + version2.getVersion());
-		setWidth(400);
-		setHeight(300);
+		setWidth(450);
+		setHeight(350);
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.MAXIMIZE_BUTTON, HeaderControls.MINIMIZE_BUTTON,
 				HeaderControls.CLOSE_BUTTON);
 		setCanDragReposition(true);
@@ -95,6 +99,22 @@ public class VersionsDiff extends Window {
 		listGrid.setData(records.toArray(new ListGridRecord[0]));
 		listGrid.setFields(name, val1, val2);
 		addItem(listGrid);
+
+		IButton compareContent = new IButton(I18N.message("comparecontent"));
+		compareContent.setWidth100();
+		compareContent.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				ContentDiff diff = new ContentDiff(version1.getDocId(), version1.getFileVersion(), version2
+						.getFileVersion());
+				diff.show();
+			}
+		});
+		if (Feature.visible(Feature.CONTENT_DIFF)) {
+			addItem(compareContent);
+			compareContent.setDisabled(!Feature.enabled(Feature.CONTENT_DIFF));
+		}
 	}
 
 	private void printExtendedAttributes(ArrayList<DiffRecord> records, GUIVersion version1, GUIVersion version2) {

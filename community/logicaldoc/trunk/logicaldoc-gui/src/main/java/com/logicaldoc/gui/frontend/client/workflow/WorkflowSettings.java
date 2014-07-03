@@ -69,7 +69,7 @@ public class WorkflowSettings extends Window {
 
 		supervisor = ItemFactory.newUserSelector("supervisor", "supervisor", null);
 		supervisor.setValue(workflow.getSupervisor());
-		supervisor.setShowTitle(false);
+		supervisor.setWrapTitle(false);
 		supervisor.setDisplayField("username");
 
 		PickerIcon icon = new PickerIcon(PickerIcon.CLEAR, new FormItemClickHandler() {
