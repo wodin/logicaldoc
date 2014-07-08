@@ -47,7 +47,7 @@ public class ApplicationInitializer implements ServletContextListener, HttpSessi
 	@SuppressWarnings("deprecation")
 	public void contextDestroyed(ServletContextEvent sce) {
 		Log4jConfigurer.shutdownLogging();
-
+		
 		try {
 			ContextProperties config = new ContextProperties();
 			Enumeration<Driver> drivers = DriverManager.getDrivers();
@@ -68,6 +68,7 @@ public class ApplicationInitializer implements ServletContextListener, HttpSessi
 			log.warn(e.getMessage(), e);
 		}
 
+		
 		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
 		Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
 
@@ -83,7 +84,6 @@ public class ApplicationInitializer implements ServletContextListener, HttpSessi
 					}
 			}
 		}
-
 	}
 
 	/**

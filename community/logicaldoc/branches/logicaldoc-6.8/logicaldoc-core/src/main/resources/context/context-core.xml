@@ -334,9 +334,7 @@
             </bean>
         </property>
     </bean>
-    <bean id="TaskManager" class="com.logicaldoc.core.task.TaskManager"
-        destroy-method="stop">
-    </bean>
+    <bean id="TaskManager" class="com.logicaldoc.core.task.TaskManager" />
     <bean id="DocumentListenerManager" class="com.logicaldoc.core.document.DocumentListenerManager" />
     <bean id="UserListenerManager" class="com.logicaldoc.core.security.UserListenerManager" />
     <bean id="ThumbnailManager" class="com.logicaldoc.core.document.thumbnail.ThumbnailManager">
