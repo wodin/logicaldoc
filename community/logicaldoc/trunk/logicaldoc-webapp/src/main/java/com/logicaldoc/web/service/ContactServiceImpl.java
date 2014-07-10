@@ -1,15 +1,26 @@
 package com.logicaldoc.web.service;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.contact.Contact;
 import com.logicaldoc.core.contact.ContactDAO;
+import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIContact;
 import com.logicaldoc.gui.frontend.client.services.ContactService;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.csv.CSVFileReader;
+import com.logicaldoc.web.UploadServlet;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
@@ -89,5 +100,105 @@ public class ContactServiceImpl extends RemoteServiceServlet implements ContactS
 		c.setPhone(con.getPhone());
 		c.setMobile(con.getMobile());
 		return c;
+	}
+
+	@Override
+	public GUIContact[] importContacts(String sid, boolean preview, String separator, String delimiter,
+			boolean skipFirstRow, int firstName, int lastName, int email, int company, int phone, int mobile,
+			int address) throws InvalidSessionException {
+		final UserSession session = SessionUtil.validateSession(sid);
+
+		User user = SessionUtil.getSessionUser(sid);
+
+		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
+
+		ContactDAO dao = (ContactDAO) Context.getInstance().getBean(ContactDAO.class);
+
+		List<GUIContact> contacts = new ArrayList<GUIContact>();
+
+		try {
+			File file = null;
+			for (String fileId : uploadedFilesMap.keySet())
+				if (fileId.startsWith("LDOC_CNT")) {
+					file = uploadedFilesMap.get(fileId);
+					break;
+				}
+
+			if (file != null) {
+				CSVFileReader reader = new CSVFileReader(file.getAbsolutePath(), separator.charAt(0),
+						delimiter.charAt(0));
+				if (skipFirstRow)
+					reader.readFields();
+
+				Vector<String> fields = reader.readFields();
+				long i = 1;
+				while (fields != null) {
+					String emailStr = fields.get(email - 1);
+					
+					//Skip rows without an email
+					if (StringUtils.isEmpty(emailStr)) {
+						fields = reader.readFields();
+						continue;
+					}
+
+					Contact contact = null;
+					List<Contact> cont = dao.findByUser(session.getUserId(), emailStr);
+					if (!cont.isEmpty())
+						contact = cont.get(0);
+					if (contact == null) {
+						contact = new Contact();
+						contact.setUserId(session.getUserId());
+						contact.setTenantId(user.getTenantId());
+					}
+
+					contact.setEmail(emailStr);
+
+					try {
+						contact.setFirstName(fields.get(firstName - 1));
+					} catch (Throwable e) {
+					}
+					try {
+						contact.setLastName(fields.get(lastName - 1));
+					} catch (Throwable e) {
+					}
+					try {
+						contact.setEmail(fields.get(email - 1));
+					} catch (Throwable e) {
+					}
+					try {
+						contact.setAddress(fields.get(address - 1));
+					} catch (Throwable e) {
+					}
+					try {
+						contact.setCompany(fields.get(company - 1));
+					} catch (Throwable e) {
+					}
+					try {
+						contact.setMobile(fields.get(mobile - 1));
+					} catch (Throwable e) {
+					}
+					try {
+						contact.setPhone(fields.get(phone - 1));
+					} catch (Throwable e) {
+					}
+
+					if (StringUtils.isEmpty(contact.getEmail()))
+						continue;
+
+					GUIContact guiContact = fromContact(contact);
+					guiContact.setId(i++);
+					contacts.add(guiContact);
+
+					if (!preview)
+						dao.store(contact);
+
+					fields = reader.readFields();
+				}
+			}
+		} catch (Throwable e) {
+			log.error("Unable to parse contacs in CSV file", e);
+		}
+
+		return contacts.toArray(new GUIContact[0]);
 	}
 }

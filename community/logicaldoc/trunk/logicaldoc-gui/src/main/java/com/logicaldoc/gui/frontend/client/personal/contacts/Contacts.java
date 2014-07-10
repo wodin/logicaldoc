@@ -1,16 +1,19 @@
-package com.logicaldoc.gui.frontend.client.personal;
+package com.logicaldoc.gui.frontend.client.personal.contacts;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIContact;
 import com.logicaldoc.gui.common.client.data.ContactsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.ContactService;
 import com.logicaldoc.gui.frontend.client.services.ContactServiceAsync;
-import com.smartgwt.client.types.Alignment;
+import com.logicaldoc.gui.frontend.client.services.DocumentService;
+import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.SortDirection;
@@ -19,14 +22,13 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
+import com.smartgwt.client.widgets.events.ResizedEvent;
+import com.smartgwt.client.widgets.events.ResizedHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
-import com.smartgwt.client.widgets.layout.Layout;
-import com.smartgwt.client.widgets.layout.VLayout;
-import com.smartgwt.client.widgets.layout.VStack;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
@@ -42,11 +44,19 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 public class Contacts extends com.smartgwt.client.widgets.Window {
 	private ContactServiceAsync service = (ContactServiceAsync) GWT.create(ContactService.class);
 
+	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+
 	private ListGrid list;
 
-	private Layout listing = new VLayout();
+	private static Contacts instance = null;
 
-	public Contacts() {
+	public static Contacts get() {
+		if (instance == null)
+			instance = new Contacts();
+		return instance;
+	}
+
+	private Contacts() {
 		super();
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
@@ -59,12 +69,6 @@ public class Contacts extends com.smartgwt.client.widgets.Window {
 		centerInPage();
 		setMembersMargin(5);
 		setAutoSize(true);
-
-		// Initialize the listing panel as placeholder
-		listing.setAlign(Alignment.CENTER);
-		listing.setHeight100();
-		listing.setWidth100();
-		refresh();
 
 		ToolStrip toolStrip = new ToolStrip();
 		toolStrip.setHeight(20);
@@ -91,28 +95,55 @@ public class Contacts extends com.smartgwt.client.widgets.Window {
 				details.show();
 			}
 		});
-		toolStrip.addFill();
 
-		VStack content = new VStack();
-		content.setWidth100();
-		content.setHeight100();
-		content.setMembersMargin(5);
-		content.setTop(20);
-		content.setMargin(4);
-		content.setAlign(Alignment.CENTER);
-		content.setDefaultLayoutAlign(Alignment.CENTER);
-		content.setBackgroundColor("#ffffff");
-		content.setMembers(toolStrip, listing);
+		ToolStripButton importCsv = new ToolStripButton();
+		importCsv.setTitle(I18N.message("importfromcsv"));
+		toolStrip.addButton(importCsv);
+		importCsv.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				documentService.cleanUploadedFileFolder(Session.get().getSid(), new AsyncCallback<Void>() {
 
-		addChild(content);
-	}
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-	public void refresh() {
-		if (list != null) {
-			listing.removeMember(list);
-			list.destroy();
+					@Override
+					public void onSuccess(Void arg0) {
+						ContactsUploader uploader = new ContactsUploader();
+						uploader.show();
+					}
+				});
+			}
+		});
+
+		ToolStripButton export = new ToolStripButton();
+		export.setTitle(I18N.message("export"));
+		export.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Util.exportCSV(list, true);
+			}
+		});
+		if (Feature.visible(Feature.EXPORT_CSV)) {
+			toolStrip.addButton(export);
+			if (!Feature.enabled(Feature.EXPORT_CSV)) {
+				export.setDisabled(true);
+				export.setTooltip(I18N.message("featuredisabled"));
+			}
 		}
 
+		toolStrip.addFill();
+		addItem(toolStrip);
+
+		prepareGrid();
+		addItem(list);
+		
+		list.fetchData();
+	}
+
+	private void prepareGrid() {
 		ListGridField id = new ListGridField("id", 50);
 		id.setHidden(true);
 
@@ -132,20 +163,36 @@ public class Contacts extends com.smartgwt.client.widgets.Window {
 		company.setCanFilter(true);
 		company.setWidth(110);
 
+		ListGridField phone = new ListGridField("phone", I18N.message("phone"));
+		phone.setCanFilter(true);
+		phone.setWidth(100);
+		phone.setHidden(true);
+
+		ListGridField mobile = new ListGridField("mobile", I18N.message("cell"));
+		mobile.setCanFilter(true);
+		mobile.setWidth(100);
+		mobile.setHidden(true);
+
+		ListGridField address = new ListGridField("address", I18N.message("address"));
+		address.setCanFilter(true);
+		address.setWidth(150);
+		address.setHidden(true);
+
 		list = new ListGrid();
+		list.setWidth100();
+		list.setHeight(getHeight());
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
 		list.setAutoFetchData(true);
+		list.setAutoDraw(true);
 		list.setSelectionType(SelectionStyle.MULTIPLE);
 		list.setFilterOnKeypress(true);
 		list.setShowFilterEditor(true);
 		list.setDataSource(new ContactsDS());
-		list.setFields(id, email, firstName, lastName, company);
+		list.setFields(id, email, firstName, lastName, company, phone, mobile, address);
 		list.sort("email", SortDirection.ASCENDING);
-
-		listing.addMember(list);
 
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
@@ -161,8 +208,26 @@ public class Contacts extends com.smartgwt.client.widgets.Window {
 				onEdit();
 			}
 		});
+		
+		addResizedHandler(new ResizedHandler() {
+			
+			@Override
+			public void onResized(ResizedEvent event) {
+				list.setHeight(getHeight()-68);
+			}
+		});
 	}
 
+	
+	
+	public void refresh() {
+		list.setDataSource(new ContactsDS());
+		list.setHeight100();
+		list.fetchData();
+	}
+
+	
+	
 	private void showContextMenu() {
 		Menu contextMenu = new Menu();
 
