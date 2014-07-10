@@ -37,10 +37,10 @@ import com.logicaldoc.gui.frontend.client.gdocs.GDocsImport;
 import com.logicaldoc.gui.frontend.client.gdocs.GDocsSettings;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.personal.ChangePassword;
-import com.logicaldoc.gui.frontend.client.personal.Contacts;
 import com.logicaldoc.gui.frontend.client.personal.MySignature;
 import com.logicaldoc.gui.frontend.client.personal.Profile;
 import com.logicaldoc.gui.frontend.client.personal.Subscriptions;
+import com.logicaldoc.gui.frontend.client.personal.contacts.Contacts;
 import com.logicaldoc.gui.frontend.client.search.SearchPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
@@ -682,8 +682,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		contacts.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				Contacts contacts = new Contacts();
-				contacts.show();
+				Contacts.get().show();
 			}
 		});
 

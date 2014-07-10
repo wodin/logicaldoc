@@ -29,4 +29,10 @@ public interface ContactService extends RemoteService {
 	 */
 	public GUIContact load(String sid, long id) throws InvalidSessionException;
 
+	/**
+	 * Reads the contacts that are about to beimported
+	 */
+	public GUIContact[] importContacts(String sid, boolean preview, String separator, String delimiter,
+			boolean skipFirstRow, int firstName, int lastName, int email, int company, int phone, int mobile,
+			int address) throws InvalidSessionException;
 }

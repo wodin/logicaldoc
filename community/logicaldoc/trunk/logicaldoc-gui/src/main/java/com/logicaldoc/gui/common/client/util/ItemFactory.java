@@ -309,17 +309,22 @@ public class ItemFactory {
 		return tenant;
 	}
 
-	public static RadioGroupItem newBooleanSelector(String name, String title) {
+	public static RadioGroupItem newRadioGroup(String name, String title) {
 		RadioGroupItem radioGroupItem = new RadioGroupItem();
 		radioGroupItem.setName(filterItemName(name));
 		radioGroupItem.setVertical(false);
+		radioGroupItem.setTitle(I18N.message(title));
+		radioGroupItem.setWidth(80);
+		radioGroupItem.setHintStyle("hint");
+		return radioGroupItem;
+	}
+
+	public static RadioGroupItem newBooleanSelector(String name, String title) {
+		RadioGroupItem radioGroupItem = newRadioGroup(name, title);
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("yes", I18N.message("yes"));
 		map.put("no", I18N.message("no"));
 		radioGroupItem.setValueMap(map);
-		radioGroupItem.setTitle(I18N.message(title));
-		radioGroupItem.setWidth(80);
-		radioGroupItem.setHintStyle("hint");
 		return radioGroupItem;
 	}
 
@@ -585,7 +590,7 @@ public class ItemFactory {
 		item.setValidators(iv);
 		return item;
 	}
-	
+
 	/**
 	 * Creates a new IntegerItem.
 	 * 

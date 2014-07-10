@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.personal;
+package com.logicaldoc.gui.frontend.client.personal.contacts;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
