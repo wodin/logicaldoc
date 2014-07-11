@@ -394,7 +394,7 @@ public class Setup implements EntryPoint {
 					data.setRegWebsite(vm.getValueAsString(REG_WEBSITE));
 
 					if (I18N.message(EMBEDDED).equals(data.getDbType())) {
-						data.setDbEngine("Hsqldb");
+						data.setDbEngine("hsqldb");
 						data.setDbDriver("org.hsqldb.jdbcDriver");
 						data.setDbUrl(("jdbc:hsqldb:" + data.getRepositoryFolder() + "/db/db").replaceAll("//", "/"));
 						data.setDbUsername("sa");

@@ -25,6 +25,7 @@ import org.springframework.util.Log4jConfigurer;
 
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.config.LoggingConfigurator;
+import com.logicaldoc.util.dbinit.DBInit;
 import com.logicaldoc.util.io.ZipUtil;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
@@ -46,7 +47,23 @@ public class ApplicationInitializer implements ServletContextListener, HttpSessi
 	 */
 	@SuppressWarnings("deprecation")
 	public void contextDestroyed(ServletContextEvent sce) {
-		Log4jConfigurer.shutdownLogging();
+		log.warn("Shutting down application");
+
+		try {
+			ContextProperties config = new ContextProperties();
+			if (config.getProperty("jdbc.url").contains("jdbc:hsqldb")) {
+				DBInit dbInit = new DBInit();
+				dbInit.setDriver(config.getProperty("jdbc.driver"));
+				dbInit.setUrl(config.getProperty("jdbc.url"));
+				dbInit.setUsername(config.getProperty("jdbc.username"));
+				dbInit.setPassword(config.getProperty("jdbc.password"));
+
+				dbInit.executeSql("shutdown compact");
+				log.warn("Embedded database stopped");
+			}
+		} catch (IOException e) {
+			log.warn(e.getMessage(), e);
+		}
 
 		try {
 			ContextProperties config = new ContextProperties();
@@ -54,14 +71,11 @@ public class ApplicationInitializer implements ServletContextListener, HttpSessi
 			Driver d = null;
 			while (drivers.hasMoreElements()) {
 				d = drivers.nextElement();
-				if (d.getClass().getName().equals(config.getProperty("jdbc.driver"))) {
-					try {
-						DriverManager.deregisterDriver(d);
-						log.warn(String.format("Driver %s deregistered", d));
-					} catch (SQLException ex) {
-						log.warn(String.format("Error deregistering driver %s", d), ex);
-					}
-					break;
+				try {
+					DriverManager.deregisterDriver(d);
+					log.warn(String.format("Driver %s unregistered", d.getClass().getName()));
+				} catch (SQLException ex) {
+					log.warn(String.format("Error unregistering driver %s", d), ex);
 				}
 			}
 		} catch (IOException e) {
@@ -73,17 +87,18 @@ public class ApplicationInitializer implements ServletContextListener, HttpSessi
 
 		for (Thread t : threadArray) {
 			synchronized (t) {
-				if ((t.getName().startsWith("Scheduler_") || t.getName().startsWith("Abandoned connection cleanup")
-						|| t.getName().contains("webdav") || t.getName().startsWith("Thread-"))
-						&& !Thread.currentThread().equals(t))
+				if ((t.getName().startsWith("Abandoned connection cleanup") || t.getName().contains("webdav"))
+						&& !Thread.currentThread().equals(t) && !t.isInterrupted())
 					try {
 						t.stop(); // don't complain, it works
+						log.warn("Killed thread " + t.getName());
 					} catch (Throwable e) {
-
+						log.warn("Error killing " + t.getName());
 					}
 			}
 		}
 
+		log.warn("Application stopped");
 	}
 
 	/**
