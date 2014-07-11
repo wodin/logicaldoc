@@ -38,7 +38,9 @@ public class AuthenticationChain implements AuthenticationProvider {
 	};
 
 	public static String getSessionId() {
-		return (String) sessionId.get();
+		String sid = (String) sessionId.get();
+		sessionId.remove();
+		return sid;
 	}
 
 	@Override
@@ -89,7 +91,7 @@ public class AuthenticationChain implements AuthenticationProvider {
 					&& username.equals(config.getProperty(tenant + ".anonymous.user")))
 				return true;
 		}
-		
+
 		boolean loggedIn = false;
 		for (AuthenticationProvider cmp : providers) {
 			if (!cmp.isEnabled())
