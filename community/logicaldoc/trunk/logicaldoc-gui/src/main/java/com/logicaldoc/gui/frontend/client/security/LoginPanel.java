@@ -396,13 +396,13 @@ public class LoginPanel extends VLayout {
 			messagesWindow.setIsModal(false);
 			messagesWindow.setMargin(5);
 			messagesWindow.setWidth(Math.max(
-					Math.round((float) com.google.gwt.user.client.Window.getClientWidth() / 3.8F), 250));
+					Math.round((float) com.google.gwt.user.client.Window.getClientWidth() / 3.7F), 250));
 			messagesWindow.setHeight(200);
 			messagesWindow.setMinHeight(200);
-			messagesWindow.setMinWidth(250);
+			messagesWindow.setMinWidth(270);
 			messagesWindow.setTop(180);
 			messagesWindow.setLeft(5);
-			messagesWindow.addChild(messagesPanel);
+			messagesWindow.addItem(messagesPanel);
 			messagesWindow.show();
 		}
 	}
