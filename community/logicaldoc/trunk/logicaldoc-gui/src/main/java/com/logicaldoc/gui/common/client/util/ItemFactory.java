@@ -74,7 +74,7 @@ public class ItemFactory {
 		date.setUseMask(true);
 		date.setShowPickerIcon(true);
 		date.setHintStyle("hint");
-		date.setWidth(90);
+		date.setWidth(110);
 
 		if (I18N.message("format_dateshort").startsWith("MM/dd"))
 			date.setDateFormatter(DateDisplayFormat.TOUSSHORTDATE);
@@ -97,7 +97,7 @@ public class ItemFactory {
 		date.setUseTextField(true);
 		date.setUseMask(false);
 		date.setShowPickerIcon(true);
-		date.setWidth(90);
+		date.setWidth(110);
 		date.setName(itemName);
 		date.setHintStyle("hint");
 
