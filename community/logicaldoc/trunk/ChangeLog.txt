@@ -10,6 +10,13 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC 7.0.1 (2014-07-21; logicaldoc-7.0.1)
+===============================================                
+392 - Import contacts from csv file - Improvement - Core
+434 - Thumbnail always generated at 150px - Bug - Core
+432 - Simplified look&feel - Improvement - Core
+433 - Erroneus stats calculation after database cleaning - Bug - Core   
+
 LogicalDOC 7.0 (2014-06-23; logicaldoc-7.0)
 ===============================================                
 428 - Documents gallery - New Feature - User Interface  
