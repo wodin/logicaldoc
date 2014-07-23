@@ -89,7 +89,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 		if (dropIndex)
 			try {
 				SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
-				indexer.dropIndexes();
+				indexer.dropIndex();
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				throw new RuntimeException(e.getMessage(), e);
