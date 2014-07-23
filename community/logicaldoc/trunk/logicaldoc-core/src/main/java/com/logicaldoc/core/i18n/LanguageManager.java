@@ -53,7 +53,7 @@ public class LanguageManager {
 			log.error(e.getMessage());
 		}
 
-		for (Extension ext : extensions) {
+		for (Extension ext : extensions) {			
 			String language = ext.getParameter("locale").valueAsString();
 			String analyzer = ext.getParameter("analyzer").valueAsString();
 			log.debug("analyzer = " + analyzer);
@@ -62,6 +62,11 @@ public class LanguageManager {
 				Language lang = new Language(locale);
 				if (StringUtils.isNotEmpty(analyzer) && !"-".equals(analyzer))
 					lang.setAnalyzerClass(analyzer);
+				else {
+					// Try one of the standard analyzers
+					lang.setAnalyzerClass("org.apache.lucene.analysis." + lang.getLanguage() + "."
+							+ lang.getLocale().getDisplayName(Locale.ENGLISH) + "Analyzer");
+				}
 				languages.put(locale, lang);
 				log.info("Added new Language: " + language);
 			} catch (Throwable e) {
