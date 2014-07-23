@@ -14,9 +14,9 @@ import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.security.Folder;
 
-public class SearchEngineTest extends AbstractCoreTCase {
+public class StandardSearchEngineTest extends AbstractCoreTCase {
 
-	protected static Logger log = LoggerFactory.getLogger(SearchEngineTest.class);
+	protected static Logger log = LoggerFactory.getLogger(StandardSearchEngineTest.class);
 
 	protected SearchEngine engine;
 
@@ -29,9 +29,9 @@ public class SearchEngineTest extends AbstractCoreTCase {
 
 	@After
 	public void tearDown() throws Exception {
-		super.tearDown();
 		engine.unlock();
 		engine.close();
+		super.tearDown();
 	}
 
 	@Test
@@ -132,7 +132,7 @@ public class SearchEngineTest extends AbstractCoreTCase {
 	@Test
 	public void testDropIndex() throws Exception {
 		testAddHit();
-		engine.dropIndexes();
+		engine.dropIndex();
 		Hit hit = engine.getHit(1L);
 		Assert.assertNull(hit);
 	}
