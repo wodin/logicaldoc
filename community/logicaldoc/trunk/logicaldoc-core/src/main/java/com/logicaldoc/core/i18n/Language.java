@@ -10,10 +10,12 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
-import org.apache.lucene.util.Version;
+import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tartarus.snowball.SnowballProgram;
+
+import com.logicaldoc.core.searchengine.StandardSearchEngine;
 
 /**
  * Instances of this class represent a language supported by the LogicalDOC DMS
@@ -33,7 +35,7 @@ public class Language implements Comparable<Language> {
 
 	private String analyzerClass;
 
-	private static final Version LUCENE_VERSION = Version.LUCENE_36;
+	private SnowballProgram stemmer;
 
 	public Language(Locale locale) {
 		this.locale = locale;
@@ -110,9 +112,7 @@ public class Language implements Comparable<Language> {
 
 	@SuppressWarnings("unchecked")
 	public Analyzer getAnalyzer() {
-
-		if (analyzer == null && !StringUtils.isEmpty(getAnalyzerClass())) {
-
+		if (analyzer == null && !StringUtils.isEmpty(analyzerClass)) {
 			// Try to instantiate the specified analyzer (Using default
 			// constructor)
 			Class aClass = null;
@@ -128,7 +128,7 @@ public class Language implements Comparable<Language> {
 					Constructor constructor = aClass.getConstructor(new Class[] { org.apache.lucene.util.Version.class,
 							java.util.Set.class });
 					if (constructor != null)
-						analyzer = (Analyzer) constructor.newInstance(LUCENE_VERSION, stopWords);
+						analyzer = (Analyzer) constructor.newInstance(StandardSearchEngine.VERSION, stopWords);
 				} catch (Throwable e) {
 					log.debug("constructor (Version matchVersion, Set<?> stopwords)  not found");
 				}
@@ -140,7 +140,7 @@ public class Language implements Comparable<Language> {
 					Constructor constructor = aClass
 							.getConstructor(new Class[] { org.apache.lucene.util.Version.class });
 					if (constructor != null)
-						analyzer = (Analyzer) constructor.newInstance(LUCENE_VERSION);
+						analyzer = (Analyzer) constructor.newInstance(StandardSearchEngine.VERSION);
 				} catch (Throwable t) {
 					log.debug("constructor (Version matchVersion) not found");
 				}
@@ -157,8 +157,8 @@ public class Language implements Comparable<Language> {
 		}
 
 		if (analyzer == null) {
-			analyzer = new SnowballAnalyzer(LUCENE_VERSION, getLocale().getDisplayName(Locale.ENGLISH), getStopWords());
-			log.debug("Using default snowball analyzer");
+			analyzer = new SimpleAnalyzer(StandardSearchEngine.VERSION);
+			log.debug("Using default simple analyzer");
 		}
 
 		return analyzer;
@@ -186,5 +186,23 @@ public class Language implements Comparable<Language> {
 			return 1;
 		else
 			return toString().compareToIgnoreCase(o.toString());
+	}
+
+	public SnowballProgram getStemmer() {
+		if (stemmer == null) {
+			String stemmerClass = "org.tartarus.snowball.ext." + getLocale().getDisplayName(Locale.ENGLISH) + "Stemmer";
+			
+			try {
+				Class clazz = Class.forName(stemmerClass);
+				if (clazz != null) {
+					Constructor constructor = clazz.getConstructor();
+					if (constructor != null)
+						stemmer = (SnowballProgram) constructor.newInstance();
+				}
+			} catch (Throwable t) {
+				
+			}
+		}
+		return stemmer;
 	}
 }
