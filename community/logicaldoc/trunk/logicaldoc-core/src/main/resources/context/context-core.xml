@@ -361,6 +361,7 @@
     <bean id="TagCloudGenerator" class="com.logicaldoc.core.document.TagCloudGenerator">
         <property name="documentDao" ref="DocumentDAO" />
         <property name="genericDao" ref="GenericDAO" />
+        <property name="tenantDao" ref="TenantDAO" />
         <property name="config" ref="ContextProperties" />
         <property name="sender" ref="EMailSender" />
         <property name="userDao" ref="UserDAO" />

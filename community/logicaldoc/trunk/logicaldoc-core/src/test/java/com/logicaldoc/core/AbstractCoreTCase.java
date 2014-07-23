@@ -63,8 +63,21 @@ public abstract class AbstractCoreTCase {
 		try {
 			if (tempDir.exists() && tempDir.isDirectory())
 				FileUtils.deleteDirectory(tempDir);
+			if (tempDir.exists() && tempDir.isDirectory())
+				FileUtils.deleteDirectory(tempDir);
+			if (tempDir.exists() && tempDir.isDirectory())
+				FileUtils.deleteDirectory(tempDir);
+			if (tempDir.exists() && tempDir.isDirectory())
+				FileUtils.deleteDirectory(tempDir);
+			if (tempDir.exists() && tempDir.isDirectory())
+				FileUtils.deleteDirectory(tempDir);
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
+
+		if (tempDir.exists())
+			throw new IOException("unable to delete folder " + tempDir.getPath());
+
 		tempDir.mkdirs();
 
 		dbSchemaFile = new File(tempDir, "logicaldoc-core.sql");
@@ -88,7 +101,6 @@ public abstract class AbstractCoreTCase {
 		destroyDatabase();
 		((AbstractApplicationContext) context).close();
 
-		
 		// Restore user home system property
 		System.setProperty("user.home", userHome);
 	}
