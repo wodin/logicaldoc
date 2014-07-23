@@ -268,7 +268,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-analyzers</artifactId>
+			<artifactId>lucene-analyzers-common</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
@@ -357,6 +357,9 @@
 									<exclude name="*solr*" />
 									<exclude name="velocity*" />
                                     <exclude name="xmlbeans*" />
+                                    <exclude name="noggit*" />
+                                    <exclude name="zookeeper*" />
+                                    <exclude name="*restlet*" />
 								</delete>
 
 								<copy

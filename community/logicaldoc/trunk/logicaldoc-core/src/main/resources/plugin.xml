@@ -89,15 +89,15 @@
   </extension>
   <extension plugin-id="logicaldoc-core" point-id="Language" id="svLanguage">
 	<parameter id="locale" value="sv" />
-	<parameter id="analyzer" value="org.apache.lucene.analysis.sv.SwedishAnalyzer" />
+	<parameter id="analyzer" value="-" />
   </extension>
   <extension plugin-id="logicaldoc-core" point-id="Language" id="elLanguage">
 	<parameter id="locale" value="el" />
-	<parameter id="analyzer" value="org.apache.lucene.analysis.el.GreekAnalyzer" />
+	<parameter id="analyzer" value="-" />
   </extension>
   <extension plugin-id="logicaldoc-core" point-id="Language" id="faLanguage">
 	<parameter id="locale" value="fa" />
-	<parameter id="analyzer" value="org.apache.lucene.analysis.fa.PersianAnalyzer" />
+	<parameter id="analyzer" value="-" />
   </extension>
   <extension plugin-id="logicaldoc-core" point-id="Language" id="huLanguage">
 	<parameter id="locale" value="hu" />
@@ -133,7 +133,7 @@
   </extension>
   <extension plugin-id="logicaldoc-core" point-id="Language" id="arLanguage">
 	<parameter id="locale" value="ar" />
-	<parameter id="analyzer" value="org.apache.lucene.analysis.ar.ArabicAnalyzer" />
+	<parameter id="analyzer" value="-" />
   </extension>
   <extension plugin-id="logicaldoc-core" point-id="Language" id="jaLanguage">
 	<parameter id="locale" value="ja" />
@@ -149,7 +149,7 @@
   </extension>
   <extension plugin-id="logicaldoc-core" point-id="Language" id="viLanguage">
 	<parameter id="locale" value="vi" />
-	<parameter id="analyzer" value="-" />
+	<parameter id="analyzer" value="org.apache.lucene.analysis.cjk.CJKAnalyzer" />
   </extension>
 
   <extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="jpgThumb">
