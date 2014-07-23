@@ -25,27 +25,27 @@
 </script>
 
 		<!--include the SC Core API-->
-		<script src="setup/sc/modules/ISC_Core.js?isc_version=7.1.js"></script>
+		<script src="frontend/sc/modules/ISC_Core.js?isc_version=7.1.js"></script>
 
 		<!--include SmartClient -->
 		<script type="text/javascript">
 	document.getElementById('loadingMsg').innerHTML = 'Loading UI Components...';
 </script>
-		<script src='setup/sc/modules/ISC_Foundation.js'></script>
-		<script src='setup/sc/modules/ISC_Containers.js'></script>
-		<script src='setup/sc/modules/ISC_Grids.js'></script>
-		<script src='setup/sc/modules/ISC_Forms.js'></script>
-		<script src='setup/sc/modules/ISC_RichTextEditor.js'></script>
-		<script src='setup/sc/modules/ISC_Calendar.js'></script>
+		<script src='frontend/sc/modules/ISC_Foundation.js'></script>
+		<script src='frontend/sc/modules/ISC_Containers.js'></script>
+		<script src='frontend/sc/modules/ISC_Grids.js'></script>
+		<script src='frontend/sc/modules/ISC_Forms.js'></script>
+		<script src='frontend/sc/modules/ISC_RichTextEditor.js'></script>
+		<script src='frontend/sc/modules/ISC_Calendar.js'></script>
 		<script type="text/javascript">
 	document.getElementById('loadingMsg').innerHTML = 'Loading Data API...';
 </script>
-		<script src='setup/sc/modules/ISC_DataBinding.js'></script>
+		<script src='frontend/sc/modules/ISC_DataBinding.js'></script>
 
 <!--load skin-->
 <script type="text/javascript">document.getElementById('loadingMsg').innerHTML = 'Loading skin...';</script>
 <script type="text/javascript">
-    document.write("<"+"script src=setup/sc/skins/" + currentSkin + "/load_skin.js?isc_version=7.1.js><"+"/script>");
+    document.write("<"+"script src=frontend/sc/skins/" + currentSkin + "/load_skin.js?isc_version=7.1.js><"+"/script>");
 </script>
 
 		<!--load localizations-->
@@ -53,6 +53,6 @@
 	document.getElementById('loadingMsg').innerHTML = 'Loading messages...';
 </script>
 		
+		<div id="DropSpot" style="width:0px; height:0px; z-index:-1000"></div>
+
 <%@ include file="footer.jsp" %>
-
-
