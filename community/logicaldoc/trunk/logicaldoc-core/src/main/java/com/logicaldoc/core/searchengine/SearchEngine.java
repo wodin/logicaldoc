@@ -3,6 +3,8 @@ package com.logicaldoc.core.searchengine;
 import java.io.InputStream;
 import java.util.Collection;
 
+import org.apache.lucene.util.Version;
+
 import com.logicaldoc.core.document.Document;
 
 /**
@@ -14,7 +16,7 @@ import com.logicaldoc.core.document.Document;
  * @since 6.5
  */
 public interface SearchEngine {
-
+	
 	/**
 	 * Adds a new Hit into the index
 	 * 
@@ -95,7 +97,7 @@ public interface SearchEngine {
 	/**
 	 * Drops the fulltext index
 	 */
-	public void dropIndexes();
+	public void dropIndex();
 
 	/**
 	 * To be called on the context startup, this method creates all indexes and

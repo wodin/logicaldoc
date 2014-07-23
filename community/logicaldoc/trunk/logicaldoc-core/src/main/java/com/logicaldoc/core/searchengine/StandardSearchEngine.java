@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Locale;
 
@@ -15,6 +14,7 @@ import org.apache.lucene.index.CheckIndex;
 import org.apache.lucene.index.CheckIndex.Status;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.NIOFSDirectory;
+import org.apache.lucene.util.Version;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -44,6 +44,8 @@ import com.logicaldoc.util.io.FileUtil;
  * @since 6.5
  */
 public class StandardSearchEngine implements SearchEngine {
+
+	public static Version VERSION = Version.LUCENE_4_9;
 
 	protected static Logger log = LoggerFactory.getLogger(StandardSearchEngine.class);
 
@@ -102,7 +104,7 @@ public class StandardSearchEngine implements SearchEngine {
 			}
 		}
 
-		String utf8Content=StringUtil.removeNonUtf8Chars(content);
+		String utf8Content = StringUtil.removeNonUtf8Chars(content);
 		if (maxText > 0 && utf8Content.length() > maxText)
 			doc.addField(Fields.CONTENT.getName(), StringUtils.substring(utf8Content, 0, maxText));
 		else
@@ -129,8 +131,13 @@ public class StandardSearchEngine implements SearchEngine {
 			}
 		}
 
-		server.add(doc);
-		server.commit();
+		try {
+			MultilanguageAnalyzer.lang.set(document.getLanguage());
+			server.add(doc);
+			server.commit();
+		} finally {
+			MultilanguageAnalyzer.lang.remove();
+		}
 	}
 
 	/*
@@ -310,8 +317,8 @@ public class StandardSearchEngine implements SearchEngine {
 			Hit hit = Hits.toHit(doc);
 			hit.setContent((String) doc.getFieldValue(Fields.CONTENT.getName()));
 			return hit;
-		} catch (SolrServerException e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable e) {
+			log.error(e.getMessage());
 		}
 		return null;
 	}
@@ -325,19 +332,25 @@ public class StandardSearchEngine implements SearchEngine {
 	 */
 	@Override
 	public Hits search(String expression, String[] filters, String expressionLanguage, Integer rows) {
-		//This configures the analyzer to use to to parse the expression of the content field
-		WordDelimiterAnalyzer.lang.set(expressionLanguage);
-		Hits hits = null;
-		SolrQuery query = prepareSearchQuery(expression, filters, expressionLanguage, rows);
-
 		try {
-			log.info("Execute search: " + expression);
-			QueryResponse rsp = server.query(query);
-			hits = new Hits(rsp);
-		} catch (SolrServerException e) {
-			log.error(e.getMessage(), e);
+			// This configures the analyzer to use to to parse the expression of
+			// the
+			// content field
+			MultilanguageAnalyzer.lang.set(expressionLanguage);
+			Hits hits = null;
+			SolrQuery query = prepareSearchQuery(expression, filters, expressionLanguage, rows);
+
+			try {
+				log.info("Execute search: " + expression);
+				QueryResponse rsp = server.query(query);
+				hits = new Hits(rsp);
+			} catch (SolrServerException e) {
+				log.error(e.getMessage(), e);
+			}
+			return hits;
+		} finally {
+			MultilanguageAnalyzer.lang.remove();
 		}
-		return hits;
 	}
 
 	/**
@@ -351,7 +364,7 @@ public class StandardSearchEngine implements SearchEngine {
 			query.setRows(rows);
 		if (filters != null)
 			query.addFilterQuery(filters);
-		
+
 		query.set("exprLang", expressionLanguage);
 		return query;
 	}
@@ -364,12 +377,11 @@ public class StandardSearchEngine implements SearchEngine {
 	@Override
 	public synchronized void close() {
 		log.warn("Closing the indexer");
-		Field field;
 		try {
-			field = EmbeddedSolrServer.class.getDeclaredField("coreContainer");
-			field.setAccessible(true);
-			CoreContainer container = (CoreContainer) field.get(server);
-			container.shutdown();
+			server.commit();
+			unlock();
+			server.getCoreContainer().shutdown();
+			server.shutdown();
 		} catch (Throwable e) {
 			log.warn(e.getMessage(), e);
 		}
@@ -384,13 +396,13 @@ public class StandardSearchEngine implements SearchEngine {
 	public synchronized void unlock() {
 		try {
 			Directory directory = getIndexDataDirectory();
-			if (SolrIndexWriter.isLocked(directory)) {
+			if (SolrIndexWriter.isLocked(directory))
 				SolrIndexWriter.unlock(directory);
-			}
 
-			directory = getSpellcheckerDataDirectory();
-			if (SolrIndexWriter.isLocked(directory)) {
-				SolrIndexWriter.unlock(directory);
+			try {
+				directory.deleteFile("write.lock");
+			} catch (Throwable t) {
+				log.warn(t.getMessage(), t);
 			}
 		} catch (Exception e) {
 			log.warn("unlock " + e.getMessage(), e);
@@ -408,9 +420,8 @@ public class StandardSearchEngine implements SearchEngine {
 
 		try {
 			Directory directory = getIndexDataDirectory();
-			if (SolrIndexWriter.isLocked(directory)) {
+			if (SolrIndexWriter.isLocked(directory))
 				result = true;
-			}
 		} catch (Exception e) {
 			log.warn("isLocked " + e.getMessage(), e);
 		}
@@ -435,10 +446,10 @@ public class StandardSearchEngine implements SearchEngine {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.searchengine.SearchEngine#dropIndexes()
+	 * @see com.logicaldoc.core.searchengine.SearchEngine#dropIndex()
 	 */
 	@Override
-	public void dropIndexes() {
+	public void dropIndex() {
 		try {
 			server.deleteByQuery("*:*");
 			server.optimize();
@@ -451,21 +462,11 @@ public class StandardSearchEngine implements SearchEngine {
 		return new NIOFSDirectory(getIndexDataFolder());
 	}
 
-	static Directory getSpellcheckerDataDirectory() throws IOException {
-		File indexdir = getSpellcheckerDataFolder();
-		return new NIOFSDirectory(indexdir);
-	}
-
 	static File getIndexDataFolder() throws IOException {
 		File indexdir = new File(config.getPropertyWithSubstitutions("index.dir"));
+		indexdir = new File(indexdir, "logicaldoc");
 		indexdir = new File(indexdir, "data");
 		return new File(indexdir, "index");
-	}
-
-	static File getSpellcheckerDataFolder() throws IOException {
-		File indexdir = new File(config.getPropertyWithSubstitutions("index.dir"));
-		indexdir = new File(indexdir, "data");
-		return new File(indexdir, "spellchecker");
 	}
 
 	/**
@@ -485,31 +486,42 @@ public class StandardSearchEngine implements SearchEngine {
 				FileUtil.copyResource("/index/solr.xml", solr_xml);
 			}
 
-			File conf = new File(config.getPropertyWithSubstitutions("index.dir"));
-			conf = new File(conf, "conf");
+			File ldoc = new File(config.getPropertyWithSubstitutions("index.dir"));
+			ldoc = new File(ldoc, "logicaldoc");
+			if (!ldoc.exists()) {
+				ldoc.mkdirs();
+				ldoc.mkdir();
+			}
+			File core_prop = new File(ldoc, "core.properties");
+			if (!core_prop.exists())
+				FileUtil.copyResource("/index/logicaldoc/core.properties", core_prop);
+
+			File conf = new File(ldoc, "conf");
 			if (!conf.exists()) {
 				conf.mkdirs();
 				conf.mkdir();
 			}
 			File solrconfig_xml = new File(conf, "solrconfig.xml");
 			if (!solrconfig_xml.exists()) {
-				FileUtil.copyResource("/index/conf/solrconfig.xml", solrconfig_xml);
+				FileUtil.copyResource("/index/logicaldoc/conf/solrconfig.xml", solrconfig_xml);
 			}
 			File schema_xml = new File(conf, "schema.xml");
 			if (!schema_xml.exists()) {
-				FileUtil.copyResource("/index/conf/schema.xml", schema_xml);
+				FileUtil.copyResource("/index/logicaldoc/conf/schema.xml", schema_xml);
 			}
 			File synonyms_txt = new File(conf, "synonyms.txt");
 			if (!synonyms_txt.exists()) {
-				FileUtil.copyResource("/index/conf/synonyms.txt", synonyms_txt);
+				FileUtil.copyResource("/index/logicaldoc/conf/synonyms.txt", synonyms_txt);
 			}
 			File protwords_txt = new File(conf, "protwords.txt");
 			if (!protwords_txt.exists()) {
-				FileUtil.copyResource("/index/conf/protwords.txt", protwords_txt);
+				FileUtil.copyResource("/index/logicaldoc/conf/protwords.txt", protwords_txt);
 			}
 
-			CoreContainer container = new CoreContainer(indexHome.getPath(), solr_xml);
+			CoreContainer container = new CoreContainer(indexHome.getPath());
 			server = new EmbeddedSolrServer(container, "logicaldoc");
+			container.load();
+
 			unlock();
 		} catch (Exception e) {
 			log.error("Unable to initialize the Full-text search engine", e);
