@@ -83,6 +83,7 @@ public class Hits implements Iterator<Hit> {
 
 	public static Hit toHit(SolrDocument sdoc) {
 		Hit hit = new Hit();
+		
 		hit.setId(Long.parseLong((String) sdoc.get(Fields.ID.getName())));
 		if (sdoc.get(Fields.TENANT_ID.getName()) != null){
 			hit.setTenantId((Long)sdoc.getFieldValue(Fields.TENANT_ID.getName()));

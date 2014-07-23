@@ -22,7 +22,7 @@ public class LanguageProcessor extends UpdateRequestProcessor {
 	@Override
 	public void processAdd(AddUpdateCommand cmd) throws IOException {
 		SolrInputDocument doc = cmd.getSolrInputDocument();
-		WordDelimiterAnalyzer.lang.set((String) doc.getFieldValue(Fields.LANGUAGE.getName()));
+		MultilanguageAnalyzer.lang.set((String) doc.getFieldValue(Fields.LANGUAGE.getName()));
 		super.processAdd(cmd);
 	}
 }
