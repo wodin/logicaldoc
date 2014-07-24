@@ -77,6 +77,7 @@ public class TagCloudGenerator extends Task {
 			Generic generic = genericDao.findByAlternateKey(TYPE_TAGCLOUD, SUBTYPE_TAGCLOUD, null, tenant.getId());
 			if (generic == null) {
 				generic = new Generic(TYPE_TAGCLOUD, SUBTYPE_TAGCLOUD);
+				generic.setTenantId(tenant.getId());
 				genericDao.store(generic);
 			}
 			genericDao.initialize(generic);
