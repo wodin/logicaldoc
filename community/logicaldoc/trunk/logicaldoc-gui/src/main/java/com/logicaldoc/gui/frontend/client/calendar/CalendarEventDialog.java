@@ -569,11 +569,7 @@ public class CalendarEventDialog extends Window {
 				calendarEvent.setCompletionDate(null);
 
 			calendarEvent.setStatus(Integer.parseInt(vm.getValue("status").toString()));
-			if (calendarEvent.getCompletionDate() != null
-					&& calendarEvent.getCompletionDate().before(calendarEvent.getStartDate())) {
-				SC.warn(I18N.message("compbeforestart"));
-				return;
-			}
+			
 			if (vm.getValue("deadline") != null)
 				calendarEvent.setDeadline((Date) vm.getValue("deadline"));
 			else
