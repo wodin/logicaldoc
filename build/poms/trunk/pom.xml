@@ -652,16 +652,20 @@
       </dependencyManagement>
       <repositories>
         <repository>
-          <id>central</id>
-          <name>Maven Central</name>
+          <id>central1</id>
+          <url>http://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
+          <id>centra2</id>
           <url>http://repo2.maven.org/maven2/</url>
         </repository>
+        
         <repository>
           <id>logicaldoc</id>
           <name>LogicalDOC Repository</name>
           <url>http://logicaldoc.sourceforge.net/maven</url>
         </repository>
-        
+    
         <repository>
           <id>ibiblio</id>
           <name>Ibiblio Repository</name>
