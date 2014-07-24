@@ -383,9 +383,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 		try {
 			StringBuilder query = new StringBuilder("SELECT COUNT(tag), tag");
-			query.append(" FROM Document _entity JOIN _entity.tags tag ");
+			query.append(" FROM Document _entity JOIN _entity.tags tag where 1=1 ");
 			if (StringUtils.isNotEmpty(firstLetter))
-				query.append(" where lower(tag) like '" + firstLetter.toLowerCase() + "%' ");
+				query.append(" and lower(tag) like '" + firstLetter.toLowerCase() + "%' ");
 			if (tenantId != null)
 				query.append(" and _entity.tenantId=" + tenantId);
 			query.append(" GROUP BY tag");
@@ -403,7 +403,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			log.error(e.getMessage(), e);
 		}
 		return map;
-
 	}
 
 	@Override
