@@ -112,10 +112,6 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	public GUIParameter[] loadSettings(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		// TenantDAO dao = (TenantDAO)
-		// Context.getInstance().getBean(TenantDAO.class);
-		// Set<String> tenants = dao.findAllNames();
-
 		TreeSet<String> sortedSet = new TreeSet<String>();
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		for (Object key : conf.keySet()) {
@@ -138,7 +134,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.startsWith("swftools.") || name.contains("password") || name.startsWith("openoffice.path")
 					|| name.contains("tag.") || name.startsWith("jdbc.") || name.startsWith("cluster")
 					|| name.startsWith("ip.") || name.contains(".extcall.") || name.contains("anonymous")
-					|| name.startsWith("hibernate.") || name.contains(".session."))
+					|| name.startsWith("hibernate.") || name.contains(".session.") || name.contains("acmecad."))
 				continue;
 
 			sortedSet.add(key.toString());
@@ -164,7 +160,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		for (Object key : conf.keySet()) {
 			if (key.toString().equals("webservice.enabled") || key.toString().startsWith("webdav")
 					|| key.toString().startsWith("cmis") || key.toString().startsWith("command.")
-					|| key.toString().startsWith("openoffice") || key.toString().startsWith("swftools.")
+					|| key.toString().startsWith("acmecad.command") || key.toString().startsWith("openoffice")
+					|| key.toString().startsWith("swftools.")
 					|| key.toString().startsWith(session.getTenantName() + ".extcall.")) {
 				GUIParameter p = new GUIParameter(key.toString(), conf.getProperty(key.toString()));
 				params.add(p);
