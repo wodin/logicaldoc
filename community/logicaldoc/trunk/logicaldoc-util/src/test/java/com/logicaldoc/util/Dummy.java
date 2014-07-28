@@ -2,7 +2,6 @@ package com.logicaldoc.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.CharacterCodingException;
 
 import com.logicaldoc.util.config.ContextProperties;
 

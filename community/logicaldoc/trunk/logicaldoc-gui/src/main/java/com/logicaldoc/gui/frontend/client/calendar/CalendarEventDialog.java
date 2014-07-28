@@ -86,7 +86,7 @@ public class CalendarEventDialog extends Window {
 		else
 			setTitle(I18N.message("newevent"));
 		setWidth(530);
-		setHeight(450);
+		setHeight(460);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
