@@ -109,7 +109,7 @@ public class Util {
 		String vars = flashvars + "&Scale=" + (zoom > 0 ? fzoom.toString() : "1.0")
 				+ "&FitPageOnLoad="+(zoom <= 0 ? "true" : "false")+"&FitWidthOnLoad=false&PrintEnabled="
 				+ printEnabled + "&ProgressiveLoading=true" + "&ViewModeToolsVisible=true" + "&ZoomToolsVisible=true"
-				+ "&NavToolsVisible=true" + "&CursorToolsVisible=true" + "&SearchToolsVisible=true";
+				+ "&NavToolsVisible=true&CursorToolsVisible=true&SearchToolsVisible=true&MaxZoomSize=20";
 
 		if (key != null) {
 			vars += "&key=" + key;
