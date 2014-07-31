@@ -8,8 +8,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
@@ -211,5 +215,51 @@ public class ContextProperties extends OrderedProperties {
 
 	public void setMaxBackups(int maxBackups) {
 		this.maxBackups = maxBackups;
+	}
+
+	public String getTenantProperty(String tenant, String property) {
+		String key = tenant + "." + property;
+		if (containsKey(key))
+			return getProperty(key);
+		else
+			return getProperty(property);
+	}
+
+	public Map<String, String> getTenantProperties(String tenant) {
+		Map<String, String> props = new HashMap<String, String>();
+		for (Object key : keySet()) {
+			String prop = key.toString();
+			if (prop.startsWith(tenant + "."))
+				props.put(prop.substring(tenant.length() + 1), getProperty(prop));
+		}
+		return props;
+	}
+
+	/**
+	 * Removes all the properties of a specific tenant
+	 */
+	public void removeTenantProperties(String tenant) {
+		if ("default".equals(tenant))
+			return;
+		List<String> toBeDeleted = new ArrayList<String>();
+		for (Object key : keySet()) {
+			String prop = key.toString();
+			if (prop.startsWith(tenant + "."))
+				toBeDeleted.add(prop);
+		}
+		for (String prop : toBeDeleted)
+			remove(prop);
+	}
+
+	/**
+	 * Replicates the settings of the default tenant to a new tenant.
+	 */
+	public void replicateTenantSettings(String tenant) {
+		Map<String, String> defaultProps = getTenantProperties("default");
+		for (String prop : defaultProps.keySet()) {
+			String tenantProp = tenant + "." + prop;
+			if (!containsKey(tenantProp))
+				setProperty(tenantProp, getProperty("default." + prop));
+		}
 	}
 }
