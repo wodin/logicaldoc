@@ -1,7 +1,9 @@
 package com.logicaldoc.core.security;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -47,6 +49,14 @@ public class UserSession implements Comparable<UserSession> {
 	private Object userObject = null;
 
 	private Map<String, Object> dictionary = new HashMap<String, Object>();
+
+	public final static String ERROR = "ERROR";
+
+	public final static String WARN = "WARN";
+
+	public final static String INFO = "INFO";
+
+	private List<Log> logs = new ArrayList<Log>();
 
 	public Map<String, Object> getDictionary() {
 		return dictionary;
@@ -224,5 +234,66 @@ public class UserSession implements Comparable<UserSession> {
 
 	public void setTenantName(String tenantName) {
 		this.tenantName = tenantName;
+	}
+
+	public void logError(String message) {
+		logs.add(0, new Log(ERROR, message));
+	}
+
+	public void logWarn(String message) {
+		logs.add(0, new Log(WARN, message));
+	}
+
+	public void logInfo(String message) {
+		logs.add(0, new Log(INFO, message));
+	}
+
+	public List<Log> getLogs() {
+		return logs;
+	}
+
+	public Log getLastError() {
+		if (logs == null || logs.isEmpty())
+			return null;
+
+		for (Log log : logs)
+			if (ERROR.equals(log.getLevel()))
+				return log;
+		return null;
+	}
+
+	public boolean isEmpty() {
+		return logs.isEmpty();
+	}
+
+	public class Log {
+		private Date date = new Date();
+
+		private String level;
+
+		private String message;
+
+		public Log(String level, String message) {
+			super();
+			this.level = level;
+			this.message = message;
+		}
+
+		@Override
+		public String toString() {
+			return message;
+		}
+
+		public String getLevel() {
+			return level;
+		}
+
+		public Date getDate() {
+			return date;
+		}
+
+		public String getMessage() {
+			return message;
+		}
 	}
 }

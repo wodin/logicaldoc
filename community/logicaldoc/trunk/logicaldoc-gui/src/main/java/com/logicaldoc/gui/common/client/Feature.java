@@ -146,6 +146,8 @@ public class Feature {
 	public static final int MULTI_TENANT = 79;
 
 	public static final int DROPBOX = 80;
+	
+	public static final int ANTIVIRUS = 81;
 
 	private static Set<String> features = new HashSet<String>();
 

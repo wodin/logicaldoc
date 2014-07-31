@@ -31,6 +31,8 @@ public class History extends AbstractHistory {
 		history.setFilenameOld(getFilenameOld());
 		history.setUserId(getUserId());
 		history.setUserName(getUserName());
+		history.setFile(getFile());
+		history.setTenant(getTenant());
 
 		return history;
 	}

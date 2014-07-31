@@ -10,7 +10,7 @@ import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.UserDAO;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.util.Context;
 
 /**
@@ -38,7 +38,7 @@ public class SessionUtil {
 			}
 
 			return validateSession(sid);
-		} catch (InvalidSessionException e) {
+		} catch (ServerException e) {
 			throw new ServletException(e);
 		}
 	}
@@ -48,26 +48,26 @@ public class SessionUtil {
 	 * 
 	 * @throws SecurityException
 	 */
-	public static UserSession validateSession(String sid) throws InvalidSessionException {
+	public static UserSession validateSession(String sid) throws ServerException {
 		UserSession session = SessionManager.getInstance().get(sid);
 		if (session == null)
-			throw new InvalidSessionException("Invalid Session");
+			throw new ServerException("Invalid Session");
 		if (session.getStatus() != UserSession.STATUS_OPEN)
-			throw new InvalidSessionException("Invalid or Expired Session");
+			throw new ServerException("Invalid or Expired Session");
 		session.renew();
 		return session;
 	}
 
-	public static Locale currentLocale(UserSession session) throws InvalidSessionException {
+	public static Locale currentLocale(UserSession session) throws ServerException {
 		return (Locale) session.getDictionary().get(LOCALE);
 	}
 
-	public static Locale currentLocale(String sid) throws InvalidSessionException {
+	public static Locale currentLocale(String sid) throws ServerException {
 		UserSession session = validateSession(sid);
 		return currentLocale(session);
 	}
 
-	public static User getSessionUser(String sid) throws InvalidSessionException {
+	public static User getSessionUser(String sid) throws ServerException {
 		UserSession session = validateSession(sid);
 		User user = (User) session.getDictionary().get(USER);
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);

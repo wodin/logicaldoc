@@ -8,7 +8,7 @@ import org.junit.Test;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.security.SessionManager;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.web.AbstractWebappTCase;
@@ -35,14 +35,14 @@ public class TemplateServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testDelete() throws InvalidSessionException {
+	public void testDelete() throws ServerException {
 		service.delete(session.getSid(), 1);
 		DocumentTemplate template = templateDao.findById(1);
 		Assert.assertNull(template);
 	}
 
 	@Test
-	public void testSave() throws InvalidSessionException {
+	public void testSave() throws ServerException {
 		GUITemplate template = service.getTemplate(session.getSid(), 1);
 		Assert.assertNotNull(template);
 		Assert.assertEquals("test1", template.getName());
@@ -63,7 +63,7 @@ public class TemplateServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testGetTemplate() throws InvalidSessionException {
+	public void testGetTemplate() throws ServerException {
 		GUITemplate template = service.getTemplate(session.getSid(), 2);
 		Assert.assertNotNull(template);
 		Assert.assertEquals("test2", template.getName());

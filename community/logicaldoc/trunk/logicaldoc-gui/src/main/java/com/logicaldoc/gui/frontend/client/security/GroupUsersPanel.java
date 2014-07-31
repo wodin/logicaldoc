@@ -171,7 +171,7 @@ public class GroupUsersPanel extends VLayout {
 	private void showContextMenu() {
 		Menu contextMenu = new Menu();
 
-		final ListGridRecord[] selection = list.getSelection();
+		final ListGridRecord[] selection = list.getSelectedRecords();
 
 		MenuItem remove = new MenuItem();
 		remove.setTitle(I18N.message("removefromgroup"));

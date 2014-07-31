@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.core.contact.Contact;
 import com.logicaldoc.core.contact.ContactDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * This servlet is responsible for contacts data.
@@ -32,7 +32,7 @@ public class ContactsDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			SessionUtil.validateSession(request);
+			ServiceUtil.validateSession(request);
 
 			String userId = request.getParameter("userId");
 

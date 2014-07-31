@@ -24,7 +24,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.config.LoggingConfigurator;
 import com.logicaldoc.util.config.OrderedProperties;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * This servlet grant access to log files
@@ -39,7 +39,7 @@ public class LogDownload extends HttpServlet {
 	protected static Logger log = LoggerFactory.getLogger(LogDownload.class);
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		SessionUtil.validateSession(request);
+		ServiceUtil.validateSession(request);
 
 		String appender = request.getParameter("appender");
 		File file = null;

@@ -2,7 +2,7 @@ package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 
 /**
@@ -21,14 +21,14 @@ public interface GDocsService extends RemoteService {
 	 * 
 	 * @returns The resourceId of the uploaded document
 	 */
-	public String upload(String sid, long docId) throws InvalidSessionException;
+	public String upload(String sid, long docId) throws ServerException;
 
 	/**
 	 * Deletes a document to Google Docs.
 	 * 
 	 * @param docId ID of the document to delete
 	 */
-	public void delete(String sid, String resourceId) throws InvalidSessionException;
+	public void delete(String sid, String resourceId) throws ServerException;
 
 	/**
 	 * Performs the check-in of a Google Docs's document into the LogicalDOC
@@ -41,7 +41,7 @@ public interface GDocsService extends RemoteService {
 	 * 
 	 * @return The checked-in document
 	 */
-	public GUIDocument checkin(String sid, long docId, String comment, boolean major) throws InvalidSessionException;
+	public GUIDocument checkin(String sid, long docId, String comment, boolean major) throws ServerException;
 
 	/**
 	 * Performs the creation of a new Google Docs's document.
@@ -52,7 +52,7 @@ public interface GDocsService extends RemoteService {
 	 * 
 	 * @returns The resource ID of the newly created document
 	 */
-	public String create(String sid, String title, String type) throws InvalidSessionException;
+	public String create(String sid, String title, String type) throws ServerException;
 
 	/**
 	 * Imports some Google documents into LogicalDOC
@@ -63,7 +63,7 @@ public interface GDocsService extends RemoteService {
 	 * @param format The type of the documents
 	 */
 	public void importDocuments(String sid, String[] resourceIds, long targetFolderId, String format)
-			throws InvalidSessionException;
+			throws ServerException;
 
 	/**
 	 * Exports a selection of documents from LogicalDOC into GoogleDocs
@@ -71,9 +71,9 @@ public interface GDocsService extends RemoteService {
 	 * @param sid The session identifier
 	 * @param ids The ids of the document to be exported
 	 * @return The list of the imported documents into Google Docs
-	 * @throws InvalidSessionException
+	 * @throws ServerException
 	 */
-	public String[] exportDocuments(String sid, long[] ids) throws InvalidSessionException;
+	public String[] exportDocuments(String sid, long[] ids) throws ServerException;
 
 	/**
 	 * Save the settings used by the Google Docs module
@@ -81,21 +81,21 @@ public interface GDocsService extends RemoteService {
 	 * @param sid
 	 * @param username
 	 * @param password
-	 * @throws InvalidSessionException
+	 * @throws ServerException
 	 */
-	public void saveSettings(String sid, String username, String password) throws InvalidSessionException;
+	public void saveSettings(String sid, String username, String password) throws ServerException;
 
 	/**
 	 * Retrieve the settings saved for connecting to Google Docs.
 	 */
-	public String[] loadSettings(String sid) throws InvalidSessionException;
+	public String[] loadSettings(String sid) throws ServerException;
 
 	/**
 	 * Search in documents into Google Docs
 	 * 
 	 * @param sid
 	 * @param expression
-	 * @throws InvalidSessionException
+	 * @throws ServerException
 	 */
-	public GUIDocument[] search(String sid, String expression) throws InvalidSessionException;
+	public GUIDocument[] search(String sid, String expression) throws ServerException;
 }

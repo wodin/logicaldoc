@@ -21,14 +21,14 @@ import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.UserDAO;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIDashlet;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * Implementation of the SettingService
@@ -43,8 +43,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	private static Logger log = LoggerFactory.getLogger(SettingServiceImpl.class);
 
 	@Override
-	public GUIEmailSettings loadEmailSettings(String sid) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public GUIEmailSettings loadEmailSettings(String sid) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		GUIEmailSettings emailSettings = new GUIEmailSettings();
 		try {
@@ -72,8 +72,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public void saveEmailSettings(String sid, GUIEmailSettings settings) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public void saveEmailSettings(String sid, GUIEmailSettings settings) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
@@ -109,8 +109,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public GUIParameter[] loadSettings(String sid) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public GUIParameter[] loadSettings(String sid) throws ServerException {
+		ServiceUtil.validateSession(sid);
 
 		TreeSet<String> sortedSet = new TreeSet<String>();
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
@@ -134,7 +134,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.startsWith("swftools.") || name.contains("password") || name.startsWith("openoffice.path")
 					|| name.contains("tag.") || name.startsWith("jdbc.") || name.startsWith("cluster")
 					|| name.startsWith("ip.") || name.contains(".extcall.") || name.contains("anonymous")
-					|| name.startsWith("hibernate.") || name.contains(".session.") || name.contains("acmecad."))
+					|| name.startsWith("hibernate.") || name.contains(".session.") || name.contains("acmecad.")
+					|| name.contains("antivirus."))
 				continue;
 
 			sortedSet.add(key.toString());
@@ -152,8 +153,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public GUIParameter[] loadClientSettings(String sid) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public GUIParameter[] loadClientSettings(String sid) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		List<GUIParameter> params = new ArrayList<GUIParameter>();
@@ -172,8 +173,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public void saveSettings(String sid, GUIParameter[] settings) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public void saveSettings(String sid, GUIParameter[] settings) throws ServerException {
+		ServiceUtil.validateSession(sid);
 
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
@@ -188,13 +189,12 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 			log.info("Parameters settings data written successfully.");
 		} catch (Exception e) {
 			log.error("Exception writing Parameters settings data: " + e.getMessage(), e);
-			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public GUIParameter[] loadSettingsByNames(String sid, String[] names) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public GUIParameter[] loadSettingsByNames(String sid, String[] names) throws ServerException {
+		ServiceUtil.validateSession(sid);
 
 		GUIParameter[] values = new GUIParameter[names.length];
 		try {
@@ -210,8 +210,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public GUIParameter[][] loadRepositories(String sid) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public GUIParameter[][] loadRepositories(String sid) throws ServerException {
+		ServiceUtil.validateSession(sid);
 
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
@@ -242,8 +242,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public void saveRepositories(String sid, GUIParameter[][] repos) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public void saveRepositories(String sid, GUIParameter[][] repos) throws ServerException {
+		ServiceUtil.validateSession(sid);
 
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		try {
@@ -264,8 +264,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public GUIParameter[] loadOcrSettings(String sid) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public GUIParameter[] loadOcrSettings(String sid) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
@@ -292,8 +292,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public GUIParameter[] computeStoragesSize(String sid) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public GUIParameter[] computeStoragesSize(String sid) throws ServerException {
+		ServiceUtil.validateSession(sid);
 
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		List<GUIParameter> storagesList = new ArrayList<GUIParameter>();
@@ -313,8 +313,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public GUIParameter[] loadGUISettings(String sid) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public GUIParameter[] loadGUISettings(String sid) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
@@ -339,8 +339,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public void saveDashlets(String sid, GUIDashlet[] dashlets) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public void saveDashlets(String sid, GUIDashlet[] dashlets) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 		GenericDAO gDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
 		UserDAO uDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 
@@ -370,8 +370,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public boolean testEmail(String sid, String email) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public boolean testEmail(String sid, String email) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		EMailSender sender = new EMailSender(session.getTenantName());

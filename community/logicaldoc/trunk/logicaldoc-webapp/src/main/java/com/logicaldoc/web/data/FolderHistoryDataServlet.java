@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 public class FolderHistoryDataServlet extends HttpServlet {
 
@@ -31,7 +31,7 @@ public class FolderHistoryDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			SessionUtil.validateSession(request);
+			ServiceUtil.validateSession(request);
 
 			String locale = request.getParameter("locale");
 

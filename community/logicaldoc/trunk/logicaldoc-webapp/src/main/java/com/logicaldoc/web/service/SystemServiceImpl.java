@@ -34,7 +34,7 @@ import com.logicaldoc.core.stats.StatsCollector;
 import com.logicaldoc.core.task.Task;
 import com.logicaldoc.core.task.TaskManager;
 import com.logicaldoc.core.task.TaskTrigger;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIScheduling;
@@ -47,7 +47,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.plugin.PluginRegistry;
 import com.logicaldoc.util.sql.SqlUtil;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * Implementation of the SystemService
@@ -64,8 +64,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	private static Logger log = LoggerFactory.getLogger(SystemServiceImpl.class);
 
 	@Override
-	public boolean disableTask(String sid, String taskName) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public boolean disableTask(String sid, String taskName) throws ServerException {
+		ServiceUtil.validateSession(sid);
 
 		TaskManager manager = (TaskManager) Context.getInstance().getBean(TaskManager.class);
 		try {
@@ -88,8 +88,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public boolean enableTask(String sid, String taskName) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public boolean enableTask(String sid, String taskName) throws ServerException {
+		ServiceUtil.validateSession(sid);
 
 		TaskManager manager = (TaskManager) Context.getInstance().getBean(TaskManager.class);
 		try {
@@ -112,8 +112,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public GUIParameter[][] getStatistics(String sid, String locale) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public GUIParameter[][] getStatistics(String sid, String locale) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 		GenericDAO genDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
 
 		GUIParameter[][] parameters = new GUIParameter[4][8];
@@ -262,8 +262,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public GUITask getTaskByName(String sid, String taskName, String locale) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public GUITask getTaskByName(String sid, String taskName, String locale) throws ServerException {
+		ServiceUtil.validateSession(sid);
 
 		TaskManager manager = (TaskManager) Context.getInstance().getBean(TaskManager.class);
 		try {
@@ -340,8 +340,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public GUITask[] loadTasks(String sid, String locale) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public GUITask[] loadTasks(String sid, String locale) throws ServerException {
+		ServiceUtil.validateSession(sid);
 
 		if (progress >= 100)
 			progress = -1;
@@ -403,8 +403,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public GUITask saveTask(String sid, GUITask task, String locale) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public GUITask saveTask(String sid, GUITask task, String locale) throws ServerException {
+		ServiceUtil.validateSession(sid);
 
 		TaskManager manager = (TaskManager) Context.getInstance().getBean(TaskManager.class);
 
@@ -470,8 +470,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	@SuppressWarnings("unchecked")
 	@Override
 	public GUIHistory[] search(String sid, String userName, Date from, Date till, int maxResult, String historySid,
-			String[] event) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+			String[] event) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 		List<GUIHistory> histories = new ArrayList<GUIHistory>();
@@ -660,21 +660,20 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public void setGUILanguageStatus(String sid, String language, boolean active) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public void setGUILanguageStatus(String sid, String language, boolean active) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			conf.setProperty(session.getTenantName() + ".lang." + language + ".gui", active ? "enabled" : "disabled");
 			conf.write();
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
-	public void markFeedMsgAsRead(String sid, long[] ids) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public void markFeedMsgAsRead(String sid, long[] ids) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 		try {
 			Context context = Context.getInstance();
 			FeedMessageDAO dao = (FeedMessageDAO) context.getBean(FeedMessageDAO.class);
@@ -685,14 +684,13 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				dao.store(message);
 			}
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
-	public void markFeedMsgAsNotRead(String sid, long[] ids) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public void markFeedMsgAsNotRead(String sid, long[] ids) throws ServerException {
+		ServiceUtil.validateSession(sid);
 		try {
 			Context context = Context.getInstance();
 			FeedMessageDAO dao = (FeedMessageDAO) context.getBean(FeedMessageDAO.class);
@@ -708,8 +706,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public void deleteFeedMessages(String sid, long[] ids) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public void deleteFeedMessages(String sid, long[] ids) throws ServerException {
+		ServiceUtil.validateSession(sid);
 
 		try {
 			Context context = Context.getInstance();
@@ -723,8 +721,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public GUIValuePair[] getPlugins(String sid) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public GUIValuePair[] getPlugins(String sid) throws ServerException {
+		ServiceUtil.validateSession(sid);
 
 		Collection<PluginDescriptor> descriptors = PluginRegistry.getInstance().getPlugins();
 		List<GUIValuePair> plugins = new ArrayList<GUIValuePair>();

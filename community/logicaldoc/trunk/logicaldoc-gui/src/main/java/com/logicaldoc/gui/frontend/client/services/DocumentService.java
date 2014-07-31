@@ -2,7 +2,7 @@ package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
@@ -22,7 +22,7 @@ public interface DocumentService extends RemoteService {
 	/**
 	 * Retrieves a specific document by its ID
 	 */
-	public GUIDocument getById(String sid, long docId) throws InvalidSessionException;
+	public GUIDocument getById(String sid, long docId) throws ServerException;
 
 	/**
 	 * Saves the document in the DB
@@ -35,19 +35,19 @@ public interface DocumentService extends RemoteService {
 	/**
 	 * Retrieves all attributes of the specified template
 	 */
-	public GUIExtendedAttribute[] getAttributes(String sid, long templateId) throws InvalidSessionException;
+	public GUIExtendedAttribute[] getAttributes(String sid, long templateId) throws ServerException;
 
 	/**
 	 * Retrieves two specific versions by its ID
 	 */
-	public GUIVersion[] getVersionsById(String sid, long id1, long id2) throws InvalidSessionException;
+	public GUIVersion[] getVersionsById(String sid, long id1, long id2) throws ServerException;
 
 	/**
 	 * Sends a document as email(attachment or download ticket)
 	 * 
 	 * @return "ok" otherwise an error code
 	 */
-	public String sendAsEmail(String sid, GUIEmail email) throws InvalidSessionException;
+	public String sendAsEmail(String sid, GUIEmail email) throws ServerException;
 
 	/**
 	 * Updates the links type
@@ -56,47 +56,47 @@ public interface DocumentService extends RemoteService {
 	 * @param id The link identifier
 	 * @param type The new type to be set
 	 */
-	public void updateLink(String sid, long id, String type) throws InvalidSessionException;
+	public void updateLink(String sid, long id, String type) throws ServerException;
 
 	/**
 	 * Deletes a selection of links
 	 */
-	public void deleteLinks(String sid, long[] ids) throws InvalidSessionException;
+	public void deleteLinks(String sid, long[] ids) throws ServerException;
 
 	/**
 	 * Deletes a selection of versions
 	 */
-	public GUIDocument deleteVersions(String sid, long[] ids) throws InvalidSessionException;
+	public GUIDocument deleteVersions(String sid, long[] ids) throws ServerException;
 
 	/**
 	 * Links a set of documents
 	 */
-	public void linkDocuments(String sid, long[] inDocIds, long[] outDocIds) throws InvalidSessionException;
+	public void linkDocuments(String sid, long[] inDocIds, long[] outDocIds) throws ServerException;
 
 	/**
 	 * Deletes a selection of documents
 	 */
-	public void delete(String sid, long[] ids) throws InvalidSessionException;
+	public void delete(String sid, long[] ids) throws ServerException;
 
 	/**
 	 * Makes immutable a set of documents
 	 */
-	public void makeImmutable(String sid, long[] docIds, String comment) throws InvalidSessionException;
+	public void makeImmutable(String sid, long[] docIds, String comment) throws ServerException;
 
 	/**
 	 * Unlocks a set of documents
 	 */
-	public void unlock(String sid, long[] docIds) throws InvalidSessionException;
+	public void unlock(String sid, long[] docIds) throws ServerException;
 
 	/**
 	 * Locks a set of documents
 	 */
-	public void lock(String sid, long[] docIds, String comment) throws InvalidSessionException;
+	public void lock(String sid, long[] docIds, String comment) throws ServerException;
 
 	/**
 	 * Checks out the document
 	 */
-	public void checkout(String sid, long docId) throws InvalidSessionException;
+	public void checkout(String sid, long docId) throws ServerException;
 
 	/**
 	 * Adds new documents previously uploaded
@@ -110,7 +110,7 @@ public interface DocumentService extends RemoteService {
 	 * @param templateId The documents template
 	 */
 	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip,
-			Long templateId) throws InvalidSessionException;
+			Long templateId) throws ServerException;
 
 	/**
 	 * Adds new documents previously uploaded, with metadata specification.
@@ -122,7 +122,7 @@ public interface DocumentService extends RemoteService {
 	 *        documents imported.
 	 */
 	public void addDocuments(String sid, String encoding, boolean importZip, GUIDocument metadata)
-			throws InvalidSessionException;
+			throws ServerException;
 
 	/**
 	 * Checks-in a new document version
@@ -138,22 +138,22 @@ public interface DocumentService extends RemoteService {
 	/**
 	 * Restores a given document
 	 */
-	public void restore(String sid, long docId, long folderId) throws InvalidSessionException;
+	public void restore(String sid, long docId, long folderId) throws ServerException;
 
 	/**
 	 * Adds new bookmarks
 	 */
-	public void addBookmarks(String sid, long[] targetIds, int type) throws InvalidSessionException;
+	public void addBookmarks(String sid, long[] targetIds, int type) throws ServerException;
 
 	/**
 	 * Deletes a set of bookmarks
 	 */
-	public void deleteBookmarks(String sid, long[] bookmarkIds) throws InvalidSessionException;
+	public void deleteBookmarks(String sid, long[] bookmarkIds) throws ServerException;
 
 	/**
 	 * Updates a single bookmark's data
 	 */
-	public void updateBookmark(String sid, GUIBookmark bookmark) throws InvalidSessionException;
+	public void updateBookmark(String sid, GUIBookmark bookmark) throws ServerException;
 
 	/**
 	 * Marks as read the histories related to the current user and the given
@@ -162,57 +162,57 @@ public interface DocumentService extends RemoteService {
 	 * @param sid The session identifier
 	 * @param event The history event to mark as read
 	 */
-	public void markHistoryAsRead(String sid, String event) throws InvalidSessionException;
+	public void markHistoryAsRead(String sid, String event) throws ServerException;
 
 	/**
 	 * Marks a set of documents as unindexable
 	 */
-	public void markUnindexable(String sid, long[] docIds) throws InvalidSessionException;
+	public void markUnindexable(String sid, long[] docIds) throws ServerException;
 
 	/**
 	 * Marks a set of documents as indexable
 	 */
-	public void markIndexable(String sid, long[] docIds) throws InvalidSessionException;
+	public void markIndexable(String sid, long[] docIds) throws ServerException;
 
 	/**
 	 * Cleans the uploaded files folder.
 	 */
-	public void cleanUploadedFileFolder(String sid) throws InvalidSessionException;
+	public void cleanUploadedFileFolder(String sid) throws ServerException;
 
 	/**
 	 * Retrieves the rating of the given document.
 	 */
-	public GUIRating getRating(String sid, long docId) throws InvalidSessionException;
+	public GUIRating getRating(String sid, long docId) throws ServerException;
 
 	/**
 	 * Save a rating vote on a document.
 	 * 
 	 * @return the new document rating value
 	 */
-	public int saveRating(String sid, GUIRating rating) throws InvalidSessionException;
+	public int saveRating(String sid, GUIRating rating) throws ServerException;
 
 	/**
 	 * Adds a new document note on the given document
 	 */
-	public long addNote(String sid, long docId, String message) throws InvalidSessionException;
+	public long addNote(String sid, long docId, String message) throws ServerException;
 
 	/**
 	 * Updates a document note on the given document
 	 */
-	public void updateNote(String sid, long docId, long noteId, String message) throws InvalidSessionException;
+	public void updateNote(String sid, long docId, long noteId, String message) throws ServerException;
 
 	/**
 	 * Deletes a selection of document notes
 	 */
-	public void deleteNotes(String sid, long[] ids) throws InvalidSessionException;
+	public void deleteNotes(String sid, long[] ids) throws ServerException;
 
 	/**
 	 * Applies to a selection of documents all the given data.
 	 */
-	public void bulkUpdate(String sid, long[] ids, GUIDocument vo) throws InvalidSessionException;
+	public void bulkUpdate(String sid, long[] ids, GUIDocument vo) throws ServerException;
 
 	/**
 	 * Creates a new empty document
 	 */
-	public GUIDocument createEmpty(String sid, GUIDocument vo) throws InvalidSessionException;
+	public GUIDocument createEmpty(String sid, GUIDocument vo) throws ServerException;
 }

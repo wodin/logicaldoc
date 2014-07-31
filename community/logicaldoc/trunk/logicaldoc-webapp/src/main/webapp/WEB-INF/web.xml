@@ -71,7 +71,7 @@
 
 	<!-- Application initializer -->
 	<listener>
-		<listener-class>com.logicaldoc.web.ApplicationInitializer</listener-class>
+		<listener-class>com.logicaldoc.web.ApplicationListener</listener-class>
 	</listener>
 	<!-- Loads the root application context of this web app at startup. Use 
 		WebApplicationContextUtils.getWebApplicationContext(servletContext) to access 

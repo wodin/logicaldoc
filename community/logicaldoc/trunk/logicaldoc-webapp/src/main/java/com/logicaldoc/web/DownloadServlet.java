@@ -28,7 +28,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.AuthenticationUtil;
 import com.logicaldoc.web.util.AuthenticationUtil.Credentials;
 import com.logicaldoc.web.util.ServletIOUtil;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * This servlet is responsible for document downloads. It searches for the
@@ -60,7 +60,7 @@ public class DownloadServlet extends HttpServlet {
 		String sid = null;
 
 		try {
-			session = SessionUtil.validateSession(request);
+			session = ServiceUtil.validateSession(request);
 		} catch (Exception e) {
 			/*
 			 * No current session, try to handle a basic authentication

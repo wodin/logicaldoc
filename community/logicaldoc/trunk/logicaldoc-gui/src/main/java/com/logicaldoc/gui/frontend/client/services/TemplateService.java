@@ -2,7 +2,7 @@ package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 
 /**
@@ -14,15 +14,15 @@ public interface TemplateService extends RemoteService {
 	/**
 	 * Deletes a given template
 	 */
-	public void delete(String sid, long templateId) throws InvalidSessionException;
+	public void delete(String sid, long templateId) throws ServerException;
 
 	/**
 	 * Creates or updates a template
 	 */
-	public GUITemplate save(String sid, GUITemplate template) throws InvalidSessionException;
+	public GUITemplate save(String sid, GUITemplate template) throws ServerException;
 
 	/**
 	 * Loads a given template from the database
 	 */
-	public GUITemplate getTemplate(String sid, long templateId) throws InvalidSessionException;
+	public GUITemplate getTemplate(String sid, long templateId) throws ServerException;
 }

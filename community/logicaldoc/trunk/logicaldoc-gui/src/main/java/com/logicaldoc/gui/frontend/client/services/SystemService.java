@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUITask;
@@ -33,7 +33,7 @@ public interface SystemService extends RemoteService {
 	 * @param sid The current user session
 	 * @param locale The current user locale
 	 */
-	public GUIParameter[][] getStatistics(String sid, String locale) throws InvalidSessionException;
+	public GUIParameter[][] getStatistics(String sid, String locale) throws ServerException;
 
 	/**
 	 * Performs a search over the last changes.
@@ -48,7 +48,7 @@ public interface SystemService extends RemoteService {
 	 * @return Result hits and statistics
 	 */
 	public GUIHistory[] search(String sid, String userName, Date from, Date till, int maxResult, String historySid,
-			String[] event) throws InvalidSessionException;
+			String[] event) throws ServerException;
 
 	/**
 	 * Retrieves all tasks.
@@ -56,7 +56,7 @@ public interface SystemService extends RemoteService {
 	 * @param sid The current user session
 	 * @param locale The current user locale
 	 */
-	public GUITask[] loadTasks(String sid, String locale) throws InvalidSessionException;
+	public GUITask[] loadTasks(String sid, String locale) throws ServerException;
 
 	/**
 	 * Starts the task execution.
@@ -81,7 +81,7 @@ public interface SystemService extends RemoteService {
 	 * @param taskName The task name
 	 * @param locale The current user locale
 	 */
-	public GUITask getTaskByName(String sid, String taskName, String locale) throws InvalidSessionException;
+	public GUITask getTaskByName(String sid, String taskName, String locale) throws ServerException;
 
 	/**
 	 * Enables the task.
@@ -90,7 +90,7 @@ public interface SystemService extends RemoteService {
 	 * @param taskName The task name
 	 * @return True, if the task is correctly enabled.
 	 */
-	public boolean enableTask(String sid, String taskName) throws InvalidSessionException;
+	public boolean enableTask(String sid, String taskName) throws ServerException;
 
 	/**
 	 * Disables the task.
@@ -99,7 +99,7 @@ public interface SystemService extends RemoteService {
 	 * @param taskName The task name
 	 * @return True, if the task is correctly disabled.
 	 */
-	public boolean disableTask(String sid, String taskName) throws InvalidSessionException;
+	public boolean disableTask(String sid, String taskName) throws ServerException;
 
 	/**
 	 * Saves the task.
@@ -109,32 +109,32 @@ public interface SystemService extends RemoteService {
 	 * @param locale The current user locale
 	 * @return True, if the task is correctly saved.
 	 */
-	public GUITask saveTask(String sid, GUITask task, String locale) throws InvalidSessionException;
+	public GUITask saveTask(String sid, GUITask task, String locale) throws ServerException;
 
 	/**
 	 * Changes the activation status of a language
 	 */
-	public void setGUILanguageStatus(String sid, String language, boolean active) throws InvalidSessionException;
+	public void setGUILanguageStatus(String sid, String language, boolean active) throws ServerException;
 
 	/**
 	 * Marks as read a list of Feed Messages
 	 */
-	public void markFeedMsgAsRead(String sid, long[] ids) throws InvalidSessionException;
+	public void markFeedMsgAsRead(String sid, long[] ids) throws ServerException;
 
 	/**
 	 * Marks as not read a list of Feed Messages
 	 */
-	public void markFeedMsgAsNotRead(String sid, long[] ids) throws InvalidSessionException;
+	public void markFeedMsgAsNotRead(String sid, long[] ids) throws ServerException;
 
 	/**
 	 * Deletes a list of Feed Messages
 	 */
-	public void deleteFeedMessages(String sid, long[] ids) throws InvalidSessionException;
+	public void deleteFeedMessages(String sid, long[] ids) throws ServerException;
 
 	/**
 	 * Retrieves all plugins.
 	 * 
 	 * @param sid The current user session
 	 */
-	public GUIValuePair[] getPlugins(String sid) throws InvalidSessionException;
+	public GUIValuePair[] getPlugins(String sid) throws ServerException;
 }

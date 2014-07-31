@@ -585,6 +585,8 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			docVO.setId(0L);
 
+			transaction.setFile(file.getAbsolutePath());
+			
 			// Create the record
 			documentSaved = documentDAO.store(docVO, transaction);
 

@@ -24,7 +24,7 @@ import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.util.UserUtil;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUICriterion;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
@@ -32,7 +32,7 @@ import com.logicaldoc.gui.common.client.beans.GUIResult;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
 import com.logicaldoc.util.LocaleUtil;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * Implementation of the SearchService
@@ -47,8 +47,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 	protected static Logger log = LoggerFactory.getLogger(SearchServiceImpl.class);
 
 	@Override
-	public GUIResult search(String sid, GUISearchOptions options) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public GUIResult search(String sid, GUISearchOptions options) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 		options.setUserId(session.getUserId());
 
 		GUIResult result = new GUIResult();
@@ -129,14 +129,13 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 
 			return result;
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			return (GUIResult) ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
-	public boolean save(String sid, GUISearchOptions options) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public boolean save(String sid, GUISearchOptions options) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
 			SearchOptions opt = toSearchOptions(options);
@@ -156,14 +155,13 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			log.debug("Saved query " + opt.getName());
 			return true;
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			return (Boolean) ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
-	public void delete(String sid, String[] names) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public void delete(String sid, String[] names) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
 			File dir = UserUtil.getUserResource(session.getUserId(), "queries");
@@ -177,14 +175,13 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 				}
 			}
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
-	public GUISearchOptions load(String sid, String name) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public GUISearchOptions load(String sid, String name) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
 			File dir = UserUtil.getUserResource(session.getUserId(), "queries");
@@ -197,8 +194,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			}
 			return toGUIOptions(opt);
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			return (GUISearchOptions) ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 

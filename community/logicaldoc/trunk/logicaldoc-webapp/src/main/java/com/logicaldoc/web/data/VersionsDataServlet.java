@@ -21,7 +21,7 @@ import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * This servlet is responsible for document versions data.
@@ -39,7 +39,7 @@ public class VersionsDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			SessionUtil.validateSession(request);
+			ServiceUtil.validateSession(request);
 
 			/*
 			 * Load some filters from the current request

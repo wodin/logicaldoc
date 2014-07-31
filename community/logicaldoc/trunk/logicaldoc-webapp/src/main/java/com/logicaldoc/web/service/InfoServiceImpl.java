@@ -34,7 +34,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.SoftwareVersion;
 import com.logicaldoc.util.config.ContextProperties;
-import com.logicaldoc.web.ApplicationInitializer;
+import com.logicaldoc.web.ApplicationListener;
 
 /**
  * Implementation of the InfoService
@@ -88,13 +88,13 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			List<GUIMessage> messages = new ArrayList<GUIMessage>();
 
 			// Check if the application needs to be restarted
-			if (ApplicationInitializer.needRestart) {
+			if (ApplicationListener.needRestart) {
 				GUIMessage restartReminder = new GUIMessage();
 				restartReminder.setMessage(getValue(info, "needrestart"));
 				messages.add(restartReminder);
 			}
 
-			if (!ApplicationInitializer.needRestart) {
+			if (!ApplicationListener.needRestart) {
 				// Checks if LogicalDOC has been initialized
 				String jdbcUrl = config.getProperty("jdbc.url");
 				if (jdbcUrl.startsWith("jdbc:hsqldb:mem:")) {

@@ -2,7 +2,7 @@ package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 
 /**
  * The client side stub for the Dropbox Service.
@@ -16,18 +16,18 @@ public interface DropboxService extends RemoteService {
 	 * Checks if the user has connected the LogicalDOC application to his
 	 * Dropbox account.
 	 */
-	public boolean isConnected(String sid) throws InvalidSessionException;
+	public boolean isConnected(String sid) throws ServerException;
 
 	/**
 	 * Starts the authorization process and returns the Dropbox authorization
 	 * page URL to be shown to the user.
 	 */
-	public String startAuthorization(String sid) throws InvalidSessionException;
+	public String startAuthorization(String sid) throws ServerException;
 
 	/**
 	 * Ends the authorization code and saves the access token in the database.
 	 */
-	public String finishAuthorization(String sid, String authorizationCode) throws InvalidSessionException;
+	public String finishAuthorization(String sid, String authorizationCode) throws ServerException;
 
 	/**
 	 * Exports documents and folders into Dropbox
@@ -38,11 +38,11 @@ public interface DropboxService extends RemoteService {
 	 *        docs will be imported as well
 	 * @param docIds Ids of the documents to be imported
 	 * @return
-	 * @throws InvalidSessionException
+	 * @throws ServerException
 	 */
 	public boolean exportDocuments(String sid, String targetPath, long[] folderIds, long[] docIds)
-			throws InvalidSessionException;
+			throws ServerException;
 	
 	public int importDocuments(String sid, long targetFolder, String[] paths)
-			throws InvalidSessionException;
+			throws ServerException;
 }

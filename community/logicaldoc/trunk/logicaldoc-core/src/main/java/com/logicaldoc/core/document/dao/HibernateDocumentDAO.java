@@ -32,8 +32,10 @@ import com.logicaldoc.core.document.DocumentNote;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
@@ -199,9 +201,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public boolean store(Document doc, final History transaction) {
 		boolean result = true;
 		try {
-			if (transaction != null)
-				transaction.setTenantId(doc.getTenantId());
 			Tenant tenant = tenantDAO.findById(doc.getTenantId());
+
+			if (transaction != null) {
+				transaction.setTenantId(doc.getTenantId());
+				transaction.setTenant(tenant.getName());
+			}
 
 			// Truncate publishing dates
 			if (doc.getStartPublishing() != null)
@@ -317,8 +322,11 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				saveDocumentHistory(doc, transaction);
 			}
 		} catch (Throwable e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
+			if (transaction != null && StringUtils.isNotEmpty(transaction.getSessionId())) {
+				UserSession session = SessionManager.getInstance().get(transaction.getSessionId());
+				session.logError(e.getMessage());
+			}
+			log.error(e.getMessage(), e);
 			result = false;
 		}
 
@@ -503,8 +511,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			ArrayList<Long> tmpal = new ArrayList<Long>(results);
 			List<Long> docIds = tmpal;
 
-			System.out.println("results "+results);
-			
+			System.out.println("results " + results);
+
 			if (docIds.isEmpty())
 				return coll;
 

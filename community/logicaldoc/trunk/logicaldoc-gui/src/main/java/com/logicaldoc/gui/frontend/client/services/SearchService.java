@@ -2,7 +2,7 @@ package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIResult;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 
@@ -22,7 +22,7 @@ public interface SearchService extends RemoteService {
 	 * @param options The search options
 	 * @return Result hits and statistics
 	 */
-	public GUIResult search(String sid, GUISearchOptions options) throws InvalidSessionException;
+	public GUIResult search(String sid, GUISearchOptions options) throws ServerException;
 
 	/**
 	 * Saves the search options in the user's working dir
@@ -31,7 +31,7 @@ public interface SearchService extends RemoteService {
 	 * @param options The search options
 	 * @return true if the operation was successful and there were no duplicates
 	 */
-	public boolean save(String sid, GUISearchOptions options) throws InvalidSessionException;
+	public boolean save(String sid, GUISearchOptions options) throws ServerException;
 
 	/**
 	 * Deletes a previously saved search
@@ -39,7 +39,7 @@ public interface SearchService extends RemoteService {
 	 * @param sid The current user session
 	 * @param names The saved search names
 	 */
-	public void delete(String sid, String[] names) throws InvalidSessionException;
+	public void delete(String sid, String[] names) throws ServerException;
 
 	/**
 	 * Loads a saved search
@@ -48,5 +48,5 @@ public interface SearchService extends RemoteService {
 	 * @param name The saved search name
 	 * @return
 	 */
-	public GUISearchOptions load(String sid, String name) throws InvalidSessionException;
+	public GUISearchOptions load(String sid, String name) throws ServerException;
 }

@@ -20,7 +20,7 @@ import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.transfer.ZipExport;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * This servlet is responsible of zip export
@@ -41,7 +41,7 @@ public class ExportZip extends HttpServlet {
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		UserSession session = SessionUtil.validateSession(request);
+		UserSession session = ServiceUtil.validateSession(request);
 
 		try {
 			Long userId = session.getUserId();

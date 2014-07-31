@@ -18,12 +18,12 @@ import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.core.communication.SystemMessageDAO;
 import com.logicaldoc.core.security.UserSession;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.logicaldoc.gui.common.client.beans.GUIMessageTemplate;
 import com.logicaldoc.gui.frontend.client.services.MessageService;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * Implementation of the MessageService
@@ -38,8 +38,8 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public void delete(String sid, long[] ids) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public void delete(String sid, long[] ids) throws ServerException {
+		ServiceUtil.validateSession(sid);
 		Context context = Context.getInstance();
 		SystemMessageDAO dao = (SystemMessageDAO) context.getBean(SystemMessageDAO.class);
 		for (long id : ids) {
@@ -48,8 +48,8 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 	}
 
 	@Override
-	public GUIMessage getMessage(String sid, long messageId, boolean markAsRead) throws InvalidSessionException {
-		UserSession user = SessionUtil.validateSession(sid);
+	public GUIMessage getMessage(String sid, long messageId, boolean markAsRead) throws ServerException {
+		UserSession user = ServiceUtil.validateSession(sid);
 
 		Context context = Context.getInstance();
 		SystemMessageDAO dao = (SystemMessageDAO) context.getBean(SystemMessageDAO.class);
@@ -97,8 +97,8 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 	}
 
 	@Override
-	public void save(String sid, GUIMessage message) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public void save(String sid, GUIMessage message) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
 			Context context = Context.getInstance();
@@ -129,14 +129,13 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 				m.setConfirmation(0);
 			dao.store(m);
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
-	public GUIMessageTemplate[] loadTemplates(String sid, String language) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public GUIMessageTemplate[] loadTemplates(String sid, String language) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 		Context context = Context.getInstance();
 
 		try {
@@ -168,21 +167,21 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 
 			return buf.toArray(new GUIMessageTemplate[0]);
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			return (GUIMessageTemplate[]) ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
-	public void saveTemplates(String sid, GUIMessageTemplate[] templates) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public void saveTemplates(String sid, GUIMessageTemplate[] templates) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
 			Context context = Context.getInstance();
 			MessageTemplateDAO dao = (MessageTemplateDAO) context.getBean(MessageTemplateDAO.class);
 
 			for (GUIMessageTemplate t : templates) {
-				MessageTemplate template = dao.findByNameAndLanguage(t.getName(), t.getLanguage(), session.getTenantId());
+				MessageTemplate template = dao.findByNameAndLanguage(t.getName(), t.getLanguage(),
+						session.getTenantId());
 				if (template == null || !template.getLanguage().equals(t.getLanguage()))
 					template = new MessageTemplate();
 				template.setTenantId(session.getTenantId());
@@ -193,14 +192,13 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 				dao.store(template);
 			}
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
-	public void deleteTemplates(String sid, long[] ids) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public void deleteTemplates(String sid, long[] ids) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
 			Context context = Context.getInstance();
@@ -213,8 +211,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 				}
 			}
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 }

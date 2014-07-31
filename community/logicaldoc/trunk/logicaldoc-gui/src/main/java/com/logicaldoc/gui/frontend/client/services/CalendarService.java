@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUICalendarEvent;
 
 /**
@@ -20,12 +20,12 @@ public interface CalendarService extends RemoteService {
 	/**
 	 * Saves an event
 	 */
-	public void saveEvent(String sid, GUICalendarEvent event) throws InvalidSessionException;
+	public void saveEvent(String sid, GUICalendarEvent event) throws ServerException;
 
 	/**
 	 * Gets an event
 	 */
-	public GUICalendarEvent getEvent(String sid, long eventId) throws InvalidSessionException;
+	public GUICalendarEvent getEvent(String sid, long eventId) throws ServerException;
 
 	/**
 	 * Searches for events.
@@ -44,13 +44,13 @@ public interface CalendarService extends RemoteService {
 	 * @return The list of events ordered by ascending date
 	 */
 	public GUICalendarEvent[] find(String sid, Date startDate, Date endDate, Date expireFrom, Date expireTo,
-			Integer frequency, String title, String type, String subtype, Integer status, Integer maxRecords) throws InvalidSessionException;
+			Integer frequency, String title, String type, String subtype, Integer status, Integer maxRecords) throws ServerException;
 
 	/**
 	 * Deletes an event. If the event is a master, in any case all the
 	 * occurrences will be deleted too.
 	 */
-	public void deleteEvent(String sid, long eventId) throws InvalidSessionException;
+	public void deleteEvent(String sid, long eventId) throws ServerException;
 
 	/**
 	 * Counts the number of events that start from now until a given date.
@@ -59,7 +59,7 @@ public interface CalendarService extends RemoteService {
 	 * @param end The and date
 	 * @return The number of found events
 	 * 
-	 * @throws InvalidSessionException
+	 * @throws ServerException
 	 */
-	public int countUserEvents(String sid, Date end) throws InvalidSessionException;
+	public int countUserEvents(String sid, Date end) throws ServerException;
 }

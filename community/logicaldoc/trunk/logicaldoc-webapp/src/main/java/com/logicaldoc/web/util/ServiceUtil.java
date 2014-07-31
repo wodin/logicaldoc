@@ -6,11 +6,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.UserSession.Log;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.util.Context;
 
 /**
@@ -19,7 +23,7 @@ import com.logicaldoc.util.Context;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class SessionUtil {
+public class ServiceUtil {
 	public static final String LOCALE = "locale";
 
 	public static final String USER = "user";
@@ -38,7 +42,7 @@ public class SessionUtil {
 			}
 
 			return validateSession(sid);
-		} catch (InvalidSessionException e) {
+		} catch (ServerException e) {
 			throw new ServletException(e);
 		}
 	}
@@ -46,7 +50,7 @@ public class SessionUtil {
 	/**
 	 * Throws a runtime exception id the given session is invalid
 	 * 
-	 * @throws SecurityException
+	 * @throws InvalidSessionException
 	 */
 	public static UserSession validateSession(String sid) throws InvalidSessionException {
 		UserSession session = SessionManager.getInstance().get(sid);
@@ -81,5 +85,18 @@ public class SessionUtil {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		userDao.initialize(user);
 		return user;
+	}
+
+	public static Object throwServerException(UserSession session, Logger logger, Throwable t) throws ServerException {
+		if (logger != null)
+			logger.error(t.getMessage(), t);
+
+		Log lastError = session.getLastError();
+		if (lastError != null) {
+			String message = lastError.getMessage();
+			session.getLogs().clear();
+			throw new ServerException(message);
+		} else
+			throw new ServerException(t.getMessage());
 	}
 }

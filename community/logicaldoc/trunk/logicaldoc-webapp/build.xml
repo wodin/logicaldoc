@@ -21,7 +21,7 @@
 				<exclude name="context.xml" />
                 <exclude name="log.xml" />
 				<exclude name="ehcache.xml" />
-                <exclude name="context.properties" />
+                <exclude name="context.prop*" />
 				<exclude name="**/gui/**"/>
 			</fileset>
 		</copy>

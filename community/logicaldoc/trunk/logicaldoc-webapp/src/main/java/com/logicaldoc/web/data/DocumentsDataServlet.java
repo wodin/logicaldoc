@@ -38,7 +38,7 @@ import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.config.ContextProperties;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * This servlet is responsible for documents data.
@@ -57,7 +57,7 @@ public class DocumentsDataServlet extends HttpServlet {
 			IOException {
 		try {
 			Context context = Context.getInstance();
-			UserSession session = SessionUtil.validateSession(request);
+			UserSession session = ServiceUtil.validateSession(request);
 			ContextProperties config = (ContextProperties) context.getBean(ContextProperties.class);
 			UserDAO udao = (UserDAO) context.getBean(UserDAO.class);
 			User user = udao.findById(session.getUserId());

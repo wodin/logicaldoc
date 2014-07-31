@@ -24,7 +24,7 @@ import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * This servlet is responsible for rights data.
@@ -42,7 +42,7 @@ public class RightsDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			UserSession session = SessionUtil.validateSession(request);
+			UserSession session = ServiceUtil.validateSession(request);
 
 			Long folderId = null;
 			if (StringUtils.isNotEmpty(request.getParameter("folderId")))

@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.logicaldoc.core.security.SessionManager;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIDashlet;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
@@ -32,7 +32,7 @@ public class SettingServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testSaveEmailSettings() throws InvalidSessionException {
+	public void testSaveEmailSettings() throws ServerException {
 		GUIEmailSettings emailSettings = new GUIEmailSettings();
 		emailSettings.setSmtpServer("smtp.logicalobjects.it");
 		emailSettings.setPort(8080);
@@ -46,7 +46,7 @@ public class SettingServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testSaveSettings() throws InvalidSessionException {
+	public void testSaveSettings() throws ServerException {
 		GUIParameter[] params = new GUIParameter[50];
 		for (int i = 0; i < params.length; i++) {
 			GUIParameter p = new GUIParameter("param" + i + "_name", "Value " + i);
@@ -57,7 +57,7 @@ public class SettingServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testSaveWSSettings() throws InvalidSessionException {
+	public void testSaveWSSettings() throws ServerException {
 		GUIParameter[] settings = new GUIParameter[2];
 
 		GUIParameter wsSettings = new GUIParameter();
@@ -75,7 +75,7 @@ public class SettingServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testSaveDashlets() throws InvalidSessionException {
+	public void testSaveDashlets() throws ServerException {
 		GUIDashlet[] dashlets = new GUIDashlet[] { new GUIDashlet(100, 0, 1, 0), new GUIDashlet(101, 0, 2, 0) };
 		service.saveDashlets(session.getSid(), dashlets);
 

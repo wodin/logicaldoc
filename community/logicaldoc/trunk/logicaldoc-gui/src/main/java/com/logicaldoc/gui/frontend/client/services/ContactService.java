@@ -2,7 +2,7 @@ package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIContact;
 
 /**
@@ -17,22 +17,22 @@ public interface ContactService extends RemoteService {
 	/**
 	 * Deletes a selection of contacts
 	 */
-	public void delete(String sid, long[] ids) throws InvalidSessionException;
+	public void delete(String sid, long[] ids) throws ServerException;
 
 	/**
 	 * Saves a contact in the database
 	 */
-	public void save(String sid, GUIContact contact) throws InvalidSessionException;
+	public void save(String sid, GUIContact contact) throws ServerException;
 
 	/**
 	 * Loads a contact from the database
 	 */
-	public GUIContact load(String sid, long id) throws InvalidSessionException;
+	public GUIContact load(String sid, long id) throws ServerException;
 
 	/**
 	 * Reads the contacts that are about to beimported
 	 */
 	public GUIContact[] importContacts(String sid, boolean preview, String separator, String delimiter,
 			boolean skipFirstRow, int firstName, int lastName, int email, int company, int phone, int mobile,
-			int address) throws InvalidSessionException;
+			int address) throws ServerException;
 }
