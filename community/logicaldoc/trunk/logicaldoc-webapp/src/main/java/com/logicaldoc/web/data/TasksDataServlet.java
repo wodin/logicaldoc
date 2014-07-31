@@ -19,7 +19,7 @@ import com.logicaldoc.core.task.TaskManager;
 import com.logicaldoc.core.task.TaskTrigger;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * This servlet is responsible for tasks data.
@@ -37,7 +37,7 @@ public class TasksDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			SessionUtil.validateSession(request);
+			ServiceUtil.validateSession(request);
 			String locale = request.getParameter("locale");
 
 			response.setContentType("text/xml");

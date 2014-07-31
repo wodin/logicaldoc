@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.core.document.DocumentNote;
 import com.logicaldoc.core.document.dao.DocumentNoteDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * This servlet is responsible for document posts data.
@@ -38,7 +38,7 @@ public class PostsDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			SessionUtil.validateSession(request);
+			ServiceUtil.validateSession(request);
 
 			Long userId = null;
 			if (request.getParameter("userId") != null)

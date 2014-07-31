@@ -11,7 +11,7 @@ import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.dao.FolderDAO;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.web.AbstractWebappTCase;
@@ -38,7 +38,7 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testSave() throws InvalidSessionException {
+	public void testSave() throws ServerException {
 		GUIFolder folder = service.getFolder(session.getSid(), 6, false);
 
 		folder = service.save(session.getSid(), folder);
@@ -55,7 +55,7 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testRename() throws InvalidSessionException {
+	public void testRename() throws ServerException {
 		Folder folder = folderDao.findById(6);
 		Assert.assertEquals("folder6", folder.getName());
 
@@ -66,7 +66,7 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testApplyRights() throws InvalidSessionException {
+	public void testApplyRights() throws ServerException {
 		Folder parentFolder = folderDao.findById(6);
 		Assert.assertNotNull(parentFolder);
 		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.DELETE, 1201, 3));
@@ -88,7 +88,7 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testGetFolder() throws InvalidSessionException {
+	public void testGetFolder() throws ServerException {
 		GUIFolder folder = service.getFolder(session.getSid(), 6, false);
 		Assert.assertNotNull(folder);
 		Assert.assertEquals("folder6", folder.getName());

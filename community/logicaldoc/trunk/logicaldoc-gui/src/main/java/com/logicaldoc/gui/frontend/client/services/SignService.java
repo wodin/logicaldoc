@@ -2,7 +2,7 @@ package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 
 /**
  * The client side stub for the Sign Service. This service gives all needed
@@ -22,10 +22,10 @@ public interface SignService extends RemoteService {
 	 * @param docId Id of signed document to verify (optional)
 	 * @param fileVersion The file version of the document to verify (optional)
 	 * @return Subjects names array.
-	 * @throws InvalidSessionException
+	 * @throws ServerException
 	 */
 	public String[] extractSubjectSignatures(String sid, long userId, Long docId, String fileVersion)
-			throws InvalidSessionException;
+			throws ServerException;
 
 	/**
 	 * Stores on the user folder the certificate file associated to the given
@@ -35,9 +35,9 @@ public interface SignService extends RemoteService {
 	 * @param userid Identifier of the user that is saving the signature
 	 * @param signerName The name of the certificate signer
 	 * @return 'ok' if no errors occurred, otherwise returns the error message.
-	 * @throws InvalidSessionException
+	 * @throws ServerException
 	 */
-	public String storeSignature(String sid, long userId, String signerName) throws InvalidSessionException;
+	public String storeSignature(String sid, long userId, String signerName) throws ServerException;
 
 	/**
 	 * Verifies the user signature file, checks if the uploaded file's digest
@@ -49,9 +49,9 @@ public interface SignService extends RemoteService {
 	 * @param version The version of the given document that must be sugned
 	 *        (optional)
 	 * @return 'ok' if no errors occurred, otherwise returns the error message.
-	 * @throws InvalidSessionException
+	 * @throws ServerException
 	 */
-	public String signDocument(String sid, long userId, long docId, String version) throws InvalidSessionException;
+	public String signDocument(String sid, long userId, long docId, String version) throws ServerException;
 
 	/**
 	 * Reset from the user folder the signature file associated to the given
@@ -60,7 +60,7 @@ public interface SignService extends RemoteService {
 	 * @param sid The session identifier
 	 * @param userid Identifier of the user for which will be reset the
 	 *        signature
-	 * @throws InvalidSessionException
+	 * @throws ServerException
 	 */
-	public boolean resetSignature(String sid, long userId) throws InvalidSessionException;
+	public boolean resetSignature(String sid, long userId) throws ServerException;
 }

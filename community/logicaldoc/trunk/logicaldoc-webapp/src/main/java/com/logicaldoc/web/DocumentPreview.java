@@ -25,7 +25,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.ServletIOUtil;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * This servlet is responsible for document preview. It searches for the
@@ -98,7 +98,7 @@ public class DocumentPreview extends HttpServlet {
 					fileVersion = ver.getFileVersion();
 			}
 
-			UserSession session = SessionUtil.validateSession(request.getParameter("sid"));
+			UserSession session = ServiceUtil.validateSession(request.getParameter("sid"));
 			UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 			User user = udao.findById(session.getUserId());
 

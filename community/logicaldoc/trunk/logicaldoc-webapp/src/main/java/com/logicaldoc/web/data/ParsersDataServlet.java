@@ -20,7 +20,7 @@ import com.logicaldoc.core.parser.ParserFactory;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 
 /**
@@ -39,7 +39,7 @@ public class ParsersDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			SessionUtil.validateSession(request);
+			ServiceUtil.validateSession(request);
 			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 			response.setContentType("text/xml");

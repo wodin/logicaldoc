@@ -15,7 +15,7 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
@@ -89,7 +89,7 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testAddUserToGroup() throws InvalidSessionException {
+	public void testAddUserToGroup() throws ServerException {
 		User test = userDAO.findByUserName("test");
 		Assert.assertNotNull(test);
 		Group group = groupDAO.findByName("author", Tenant.DEFAULT_ID);
@@ -106,7 +106,7 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testDeleteGroup() throws InvalidSessionException {
+	public void testDeleteGroup() throws ServerException {
 		Assert.assertNotNull(groupDAO.findById(10));
 		service.deleteGroup(session.getSid(), 10);
 		Assert.assertNull(groupDAO.findById(10));
@@ -118,7 +118,7 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testDeleteUser() throws InvalidSessionException {
+	public void testDeleteUser() throws ServerException {
 		User user = userDAO.findByUserName("author");
 		Assert.assertEquals(2, user.getGroups().size());
 		service.deleteUser(session.getSid(), user.getId());
@@ -127,7 +127,7 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testRemoveFromGroup() throws InvalidSessionException {
+	public void testRemoveFromGroup() throws ServerException {
 		long[] users = new long[2];
 		users[0] = 5;
 		users[1] = 1;
@@ -147,7 +147,7 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testGetGroup() throws InvalidSessionException {
+	public void testGetGroup() throws ServerException {
 		GUIGroup group = service.getGroup(session.getSid(), 10);
 		Assert.assertNotNull(group);
 		Assert.assertEquals("testGroup", group.getName());
@@ -158,7 +158,7 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testGetUser() throws InvalidSessionException {
+	public void testGetUser() throws ServerException {
 		GUIUser user = service.getUser(session.getSid(), 1);
 		Assert.assertNotNull(user);
 		Assert.assertEquals("admin", user.getUserName());
@@ -176,7 +176,7 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testSaveGroup() throws InvalidSessionException {
+	public void testSaveGroup() throws ServerException {
 		GUIGroup group = service.getGroup(session.getSid(), 10);
 
 		group = service.saveGroup(session.getSid(), group);
@@ -185,7 +185,7 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testSaveUser() throws InvalidSessionException {
+	public void testSaveUser() throws ServerException {
 		GUIUser user = service.getUser(session.getSid(), 1);
 
 		user = service.saveUser(session.getSid(), user, session.getInfo());
@@ -220,7 +220,7 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 	}
 
 	@Test
-	public void testSaveSettings() throws InvalidSessionException {
+	public void testSaveSettings() throws ServerException {
 		GUISecuritySettings securitySettings = new GUISecuritySettings();
 		securitySettings.setPwdExpiration(30);
 		securitySettings.setPwdSize(6);

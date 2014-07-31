@@ -1,5 +1,7 @@
 package com.logicaldoc.gui.frontend.client.document;
 
+import java.rmi.ServerError;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
@@ -8,6 +10,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
+import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
@@ -15,6 +18,7 @@ import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.Window;
@@ -103,16 +107,19 @@ public class BulkUpdateDialog extends Window {
 					return;
 
 				if (checkin) {
+					ContactingServer.get().show();
 					documentService.checkin(Session.get().getSid(), metadata, majorVersion,
 							new AsyncCallback<GUIDocument>() {
 
 								@Override
 								public void onFailure(Throwable error) {
+									ContactingServer.get().hide();
 									Log.serverError(error);
 								}
 
 								@Override
 								public void onSuccess(GUIDocument doc) {
+									ContactingServer.get().hide();
 									DocumentsPanel.get().onDocumentSaved(doc);
 									DocumentsPanel.get().getDocumentsGrid().markSelectedAsCheckedIn();
 									Session.get().getUser()
@@ -127,15 +134,18 @@ public class BulkUpdateDialog extends Window {
 						public void execute(Boolean value) {
 							if (value) {
 								bulkPanel.getDocument().setComment(saveForm.getValueAsString("versionComment"));
+								ContactingServer.get().show();
 								documentService.bulkUpdate(Session.get().getSid(), ids, bulkPanel.getDocument(),
 										new AsyncCallback<Void>() {
 											@Override
 											public void onFailure(Throwable error) {
+												ContactingServer.get().hide();
 												Log.serverError(error);
 											}
 
 											@Override
 											public void onSuccess(Void arg0) {
+												ContactingServer.get().hide();
 												Log.info(I18N.message("bulkapplied"), null);
 												DocumentsPanel.get().refresh();
 												destroy();
@@ -146,6 +156,7 @@ public class BulkUpdateDialog extends Window {
 					});
 				else {
 					bulkPanel.getDocument().setComment(saveForm.getValueAsString("versionComment"));
+					ContactingServer.get().show();
 					documentService.addDocuments(Session.get().getSid(), encoding, zip, bulkPanel.getDocument(),
 							new AsyncCallback<Void>() {
 
@@ -157,12 +168,14 @@ public class BulkUpdateDialog extends Window {
 
 												@Override
 												public void onFailure(Throwable caught) {
+													ContactingServer.get().hide();
 													Log.serverError(caught);
 													destroy();
 												}
 
 												@Override
 												public void onSuccess(Void result) {
+													ContactingServer.get().hide();
 													destroy();
 												}
 											});
@@ -170,6 +183,7 @@ public class BulkUpdateDialog extends Window {
 
 								@Override
 								public void onFailure(Throwable error) {
+									ContactingServer.get().hide();
 									Log.serverError(error);
 
 									// We have to refresh the documents list

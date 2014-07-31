@@ -16,13 +16,12 @@ import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.security.UserSession;
-import com.logicaldoc.core.sequence.SequenceDAO;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.frontend.client.services.TemplateService;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * Implementation of the TemplateService
@@ -37,16 +36,16 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 	private static Logger log = LoggerFactory.getLogger(TemplateServiceImpl.class);
 
 	@Override
-	public void delete(String sid, long templateId) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public void delete(String sid, long templateId) throws ServerException {
+		ServiceUtil.validateSession(sid);
 
 		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 		dao.delete(templateId);
 	}
 
 	@Override
-	public GUITemplate save(String sid, GUITemplate template) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public GUITemplate save(String sid, GUITemplate template) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 		try {
@@ -143,16 +142,15 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 
 			template.setId(templ.getId());
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			return (GUITemplate) ServiceUtil.throwServerException(session, log, t);
 		}
 
 		return template;
 	}
 
 	@Override
-	public GUITemplate getTemplate(String sid, long templateId) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public GUITemplate getTemplate(String sid, long templateId) throws ServerException {
+		ServiceUtil.validateSession(sid);
 
 		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 		try {

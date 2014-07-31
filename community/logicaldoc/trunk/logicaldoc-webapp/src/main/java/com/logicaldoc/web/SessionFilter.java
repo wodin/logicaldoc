@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 
 import com.logicaldoc.core.security.SessionManager;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * Check if the user session was expired or active. In addition a binding
@@ -44,7 +44,7 @@ public class SessionFilter implements Filter {
 			}
 		} else if (StringUtils.isNotEmpty(sid)) {
 			try {
-				SessionUtil.validateSession(sid);
+				ServiceUtil.validateSession(sid);
 
 				/*
 				 * If a servlet session exists, bind it to the LogicalDOC user

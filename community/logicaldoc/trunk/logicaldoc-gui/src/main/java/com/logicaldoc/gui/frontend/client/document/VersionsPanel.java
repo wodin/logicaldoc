@@ -164,7 +164,6 @@ public class VersionsPanel extends DocumentDetailTab {
 						});
 			}
 		});
-		compareContent.setEnabled(Feature.enabled(Feature.CONTENT_DIFF));
 
 		MenuItem download = new MenuItem();
 		download.setTitle(I18N.message("download"));
@@ -221,6 +220,8 @@ public class VersionsPanel extends DocumentDetailTab {
 		});
 
 		compareMetadata.setEnabled(selection != null && selection.length == 2);
+		compareContent
+				.setEnabled(Feature.enabled(Feature.CONTENT_DIFF) && (selection != null && selection.length == 2));
 		delete.setEnabled(deleteEnabled && selection != null && selection.length > 0);
 
 		if (selection == null || selection.length < 1) {
@@ -228,6 +229,7 @@ public class VersionsPanel extends DocumentDetailTab {
 			download.setEnabled(false);
 			delete.setEnabled(false);
 			compareMetadata.setEnabled(false);
+			compareContent.setEnabled(false);
 		}
 
 		if (Feature.visible(Feature.CONTENT_DIFF))

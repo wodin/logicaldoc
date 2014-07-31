@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.core.rss.FeedMessage;
 import com.logicaldoc.core.rss.dao.FeedMessageDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * This servlet is responsible for feed message data.
@@ -36,7 +36,7 @@ public class FeedMessageDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			SessionUtil.validateSession(request);
+			ServiceUtil.validateSession(request);
 
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");

@@ -60,8 +60,8 @@ public class OCRSettingsPanel extends VLayout {
 		enabled.setValue(settings[0].getValue().equals("true") ? "yes" : "no");
 		enabled.setDisabled(!Session.get().isDefaultTenant());
 
-		TextItem includes = ItemFactory.newTextItem("ocr_includes", I18N.message("include"), settings[3].getValue());
-		TextItem excludes = ItemFactory.newTextItem("ocr_excludes", I18N.message("exclude"), settings[4].getValue());
+		TextItem includes = ItemFactory.newTextItem("ocr_includes", "include", settings[3].getValue());
+		TextItem excludes = ItemFactory.newTextItem("ocr_excludes", "exclude", settings[4].getValue());
 
 		IntegerItem timeout = ItemFactory.newIntegerItem("ocr_timeout", I18N.message("timeout"),
 				Integer.parseInt(settings[5].getValue()));

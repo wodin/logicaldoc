@@ -31,7 +31,7 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.store.Storer;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.frontend.client.services.DropboxService;
 import com.logicaldoc.util.Context;
 
@@ -47,7 +47,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 	private static Logger log = LoggerFactory.getLogger(DropboxServiceImpl.class);
 
 	@Override
-	public boolean isConnected(String sid) throws InvalidSessionException {
+	public boolean isConnected(String sid) throws ServerException {
 		SessionUtil.validateSession(sid);
 
 		try {
@@ -64,7 +64,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 	}
 
 	@Override
-	public String startAuthorization(String sid) throws InvalidSessionException {
+	public String startAuthorization(String sid) throws ServerException {
 		SessionUtil.validateSession(sid);
 
 		try {
@@ -78,7 +78,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 	}
 
 	@Override
-	public String finishAuthorization(String sid, String authorizationCode) throws InvalidSessionException {
+	public String finishAuthorization(String sid, String authorizationCode) throws ServerException {
 		SessionUtil.validateSession(sid);
 
 		try {
@@ -125,7 +125,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 
 	@Override
 	public boolean exportDocuments(String sid, String targetPath, long[] folderIds, long[] docIds)
-			throws InvalidSessionException {
+			throws ServerException {
 		SessionUtil.validateSession(sid);
 
 		try {
@@ -232,7 +232,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 	}
 
 	@Override
-	public int importDocuments(String sid, long targetFolder, String[] paths) throws InvalidSessionException {
+	public int importDocuments(String sid, long targetFolder, String[] paths) throws ServerException {
 		UserSession session = SessionUtil.validateSession(sid);
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 

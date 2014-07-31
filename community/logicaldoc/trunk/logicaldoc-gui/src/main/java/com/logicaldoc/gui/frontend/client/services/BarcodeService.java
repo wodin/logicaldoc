@@ -2,7 +2,7 @@ package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIBarcodeEngine;
 import com.logicaldoc.gui.common.client.beans.GUIBarcodePattern;
 
@@ -17,31 +17,31 @@ public interface BarcodeService extends RemoteService {
 	/**
 	 * Loads a bean that contains all engine infos.
 	 */
-	public GUIBarcodeEngine getInfo(String sid) throws InvalidSessionException;
+	public GUIBarcodeEngine getInfo(String sid) throws ServerException;
 
 	/**
 	 * Saves the engine settings
 	 */
-	public void save(String sid, GUIBarcodeEngine engine) throws InvalidSessionException;
+	public void save(String sid, GUIBarcodeEngine engine) throws ServerException;
 
 	/**
 	 * Reschedule all documents for processing
 	 */
-	public void rescheduleAll(String sid) throws InvalidSessionException;
+	public void rescheduleAll(String sid) throws ServerException;
 
 	/**
 	 * Marks a set of documents as not processable.
 	 */
-	public void markUnprocessable(String sid, long[] ids) throws InvalidSessionException;
+	public void markUnprocessable(String sid, long[] ids) throws ServerException;
 
 	/**
 	 * Loads the patterns configured for a given template.
 	 */
-	public GUIBarcodePattern[] loadPatterns(String sid, Long templateId) throws InvalidSessionException;
+	public GUIBarcodePattern[] loadPatterns(String sid, Long templateId) throws ServerException;
 
 	/**
 	 * Saves the patterns for the given template ordered by position
 	 */
-	public void savePatterns(String sid, String[] patterns, Long templateId) throws InvalidSessionException;
+	public void savePatterns(String sid, String[] patterns, Long templateId) throws ServerException;
 
 }

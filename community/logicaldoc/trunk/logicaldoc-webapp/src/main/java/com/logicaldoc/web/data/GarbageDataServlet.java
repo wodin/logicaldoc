@@ -22,7 +22,7 @@ import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * This servlet is responsible for garbage data.
@@ -40,7 +40,7 @@ public class GarbageDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			UserSession session = SessionUtil.validateSession(request);
+			UserSession session = ServiceUtil.validateSession(request);
 
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");

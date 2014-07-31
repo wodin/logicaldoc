@@ -24,7 +24,7 @@ import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.ServletIOUtil;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * This servlet is responsible for document resource upload. It receives the
@@ -74,7 +74,7 @@ public class DocumentResourceUpload extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		UserSession session = SessionUtil.validateSession(request);
+		UserSession session = ServiceUtil.validateSession(request);
 
 		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 

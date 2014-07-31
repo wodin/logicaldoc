@@ -14,13 +14,13 @@ import com.logicaldoc.core.document.TagCloud;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.UserSession;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUITag;
 import com.logicaldoc.gui.frontend.client.services.TagService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * Implementation of the TagService
@@ -35,8 +35,8 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService {
 	protected static Logger log = LoggerFactory.getLogger(TagServiceImpl.class);
 
 	@Override
-	public GUITag[] getTagCloud(String sid) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public GUITag[] getTagCloud(String sid) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 		try {
 			ArrayList<GUITag> ret = new ArrayList<GUITag>();
 			List<TagCloud> list = new ArrayList<TagCloud>();
@@ -69,8 +69,7 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService {
 
 			return ret.toArray(new GUITag[0]);
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			return (GUITag[]) ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
@@ -91,18 +90,18 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService {
 	}
 
 	@Override
-	public void addTag(String sid, String tag) throws InvalidSessionException {
+	public void addTag(String sid, String tag) throws ServerException {
 
 	}
 
 	@Override
-	public void removeTag(String sid, String tag) throws InvalidSessionException {
+	public void removeTag(String sid, String tag) throws ServerException {
 
 	}
 
 	@Override
-	public GUIParameter[] getSettings(String sid) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public GUIParameter[] getSettings(String sid) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 

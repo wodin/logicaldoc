@@ -15,13 +15,13 @@ import com.logicaldoc.core.contact.Contact;
 import com.logicaldoc.core.contact.ContactDAO;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIContact;
 import com.logicaldoc.gui.frontend.client.services.ContactService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.csv.CSVFileReader;
 import com.logicaldoc.web.UploadServlet;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * Implementation of the ContactService
@@ -36,8 +36,8 @@ public class ContactServiceImpl extends RemoteServiceServlet implements ContactS
 	private static Logger log = LoggerFactory.getLogger(ContactServiceImpl.class);
 
 	@Override
-	public void delete(String sid, long[] ids) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public void delete(String sid, long[] ids) throws ServerException {
+		ServiceUtil.validateSession(sid);
 
 		try {
 			ContactDAO dao = (ContactDAO) Context.getInstance().getBean(ContactDAO.class);
@@ -50,8 +50,8 @@ public class ContactServiceImpl extends RemoteServiceServlet implements ContactS
 	}
 
 	@Override
-	public void save(String sid, GUIContact contact) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public void save(String sid, GUIContact contact) throws ServerException {
+		ServiceUtil.validateSession(sid);
 		try {
 			ContactDAO dao = (ContactDAO) Context.getInstance().getBean(ContactDAO.class);
 			Contact con = dao.findById(contact.getId());
@@ -72,16 +72,15 @@ public class ContactServiceImpl extends RemoteServiceServlet implements ContactS
 	}
 
 	@Override
-	public GUIContact load(String sid, long id) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public GUIContact load(String sid, long id) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
 			ContactDAO dao = (ContactDAO) Context.getInstance().getBean(ContactDAO.class);
 			Contact contact = dao.findById(id);
 			return fromContact(contact);
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			return (GUIContact)ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
@@ -105,10 +104,10 @@ public class ContactServiceImpl extends RemoteServiceServlet implements ContactS
 	@Override
 	public GUIContact[] importContacts(String sid, boolean preview, String separator, String delimiter,
 			boolean skipFirstRow, int firstName, int lastName, int email, int company, int phone, int mobile,
-			int address) throws InvalidSessionException {
-		final UserSession session = SessionUtil.validateSession(sid);
+			int address) throws ServerException {
+		final UserSession session = ServiceUtil.validateSession(sid);
 
-		User user = SessionUtil.getSessionUser(sid);
+		User user = ServiceUtil.getSessionUser(sid);
 
 		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
 

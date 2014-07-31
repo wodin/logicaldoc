@@ -46,6 +46,16 @@ public class AbstractHistory extends PersistentObject {
 
 	private String filenameOld = null;
 
+	/**
+	 * Used when storing a document
+	 */
+	private String file = null;
+
+	/**
+	 * Used as convenience to store the name of the tenant
+	 */
+	private String tenant = null;
+
 	// Not persistent
 	private User user;
 
@@ -226,5 +236,21 @@ public class AbstractHistory extends PersistentObject {
 
 	public void setPathOld(String pathOld) {
 		this.pathOld = pathOld;
+	}
+
+	public String getFile() {
+		return file;
+	}
+
+	public void setFile(String file) {
+		this.file = file;
+	}
+
+	public String getTenant() {
+		return tenant;
+	}
+
+	public void setTenant(String tenant) {
+		this.tenant = tenant;
 	}
 }

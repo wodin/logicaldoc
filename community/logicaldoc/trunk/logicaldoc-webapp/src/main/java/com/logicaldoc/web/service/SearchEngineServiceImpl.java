@@ -15,12 +15,12 @@ import com.logicaldoc.core.parser.ParserFactory;
 import com.logicaldoc.core.searchengine.SearchEngine;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.UserSession;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * Implementation of the SearchEngineService
@@ -35,8 +35,8 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	private static Logger log = LoggerFactory.getLogger(SearchEngineServiceImpl.class);
 
 	@Override
-	public GUISearchEngine getInfo(String sid) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public GUISearchEngine getInfo(String sid) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 		try {
 			GUISearchEngine searchEngine = new GUISearchEngine();
 
@@ -77,14 +77,13 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 
 			return searchEngine;
 		} catch (Exception t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			return (GUISearchEngine) ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
-	public void rescheduleAll(String sid, final boolean dropIndex) throws InvalidSessionException {
-		final UserSession session = SessionUtil.validateSession(sid);
+	public void rescheduleAll(String sid, final boolean dropIndex) throws ServerException {
+		final UserSession session = ServiceUtil.validateSession(sid);
 
 		if (dropIndex)
 			try {
@@ -115,32 +114,30 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	}
 
 	@Override
-	public void unlocks(String sid) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public void unlocks(String sid) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 		try {
 			SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
 			indexer.unlock();
 		} catch (Exception t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
-	public String check(String sid) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public String check(String sid) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 		try {
 			SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
 			return indexer.check();
 		} catch (Exception t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			return (String) ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
-	public void save(String sid, GUISearchEngine searchEngine) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public void save(String sid, GUISearchEngine searchEngine) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			conf.setProperty(session.getTenantName() + ".index.excludes",
@@ -158,27 +155,25 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 
 			conf.write();
 		} catch (Exception t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
-	public void setLanguageStatus(String sid, String language, boolean active) throws InvalidSessionException {
-		UserSession session = SessionUtil.validateSession(sid);
+	public void setLanguageStatus(String sid, String language, boolean active) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			conf.setProperty(session.getTenantName() + ".lang." + language, active ? "enabled" : "disabled");
 			conf.write();
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
-	public void setAliases(String sid, String extension, String aliases) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+	public void setAliases(String sid, String extension, String aliases) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
 			StringTokenizer st = new StringTokenizer(aliases, ",", false);
@@ -188,8 +183,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 
 			ParserFactory.setAliases(extension, buf.toArray(new String[0]));
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 }

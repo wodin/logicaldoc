@@ -38,7 +38,7 @@ import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
-import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
 import com.logicaldoc.util.plugin.PluginRegistry;
@@ -68,12 +68,12 @@ public class ServletIOUtil {
 
 		if (sid != null)
 			try {
-				SessionUtil.validateSession(sid);
-			} catch (InvalidSessionException e) {
+				ServiceUtil.validateSession(sid);
+			} catch (ServerException e) {
 				throw new ServletException(e.getMessage(), e);
 			}
 		else
-			SessionUtil.validateSession(request);
+			ServiceUtil.validateSession(request);
 
 		String filename = fileName;
 		if (filename == null)
@@ -138,12 +138,12 @@ public class ServletIOUtil {
 
 		if (sid != null)
 			try {
-				session = SessionUtil.validateSession(sid);
-			} catch (InvalidSessionException e) {
+				session = ServiceUtil.validateSession(sid);
+			} catch (ServerException e) {
 				throw new ServletException(e.getMessage(), e);
 			}
 		else
-			session = SessionUtil.validateSession(request);
+			session = ServiceUtil.validateSession(request);
 
 		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		if (user != null)

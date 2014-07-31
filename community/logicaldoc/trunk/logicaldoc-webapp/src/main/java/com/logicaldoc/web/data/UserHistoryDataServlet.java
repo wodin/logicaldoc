@@ -19,7 +19,7 @@ import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.UserHistoryDAO;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.SessionUtil;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * This servlet is responsible for user history data.
@@ -37,7 +37,7 @@ public class UserHistoryDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			SessionUtil.validateSession(request);
+			ServiceUtil.validateSession(request);
 
 			long userId = Long.parseLong(request.getParameter("id"));
 			String locale = request.getParameter("locale");

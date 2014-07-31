@@ -36,9 +36,9 @@ import com.logicaldoc.util.plugin.PluginRegistry;
  * @author Alessandro Gasparini - Logical Objects
  * @since 3.0
  */
-public class ApplicationInitializer implements ServletContextListener, HttpSessionListener {
+public class ApplicationListener implements ServletContextListener, HttpSessionListener {
 
-	private static Logger log = LoggerFactory.getLogger(ApplicationInitializer.class);
+	private static Logger log = LoggerFactory.getLogger(ApplicationListener.class);
 
 	public static boolean needRestart = false;
 
@@ -87,7 +87,8 @@ public class ApplicationInitializer implements ServletContextListener, HttpSessi
 
 		for (Thread t : threadArray) {
 			synchronized (t) {
-				if ((t.getName().startsWith("Abandoned connection cleanup") || t.getName().contains("webdav"))
+				if ((t.getName().startsWith("Abandoned connection cleanup") || t.getName().contains("webdav")
+						|| t.getName().startsWith("Scheduler_") || t.getName().startsWith("Thread-"))
 						&& !Thread.currentThread().equals(t) && !t.isInterrupted())
 					try {
 						t.stop(); // don't complain, it works
