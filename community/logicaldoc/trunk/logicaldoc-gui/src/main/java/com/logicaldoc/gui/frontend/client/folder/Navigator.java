@@ -523,6 +523,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 			delete.setEnabled(false);
 			move.setEnabled(false);
 		}
+
 		if (folder.isDefaultWorkspace()) {
 			rename.setEnabled(false);
 		}
@@ -539,9 +540,10 @@ public class Navigator extends TreeGrid implements FolderObserver {
 				&& Feature.visible(Feature.MULTI_WORKSPACE)) {
 			delete.setEnabled(!folder.isDefaultWorkspace());
 			move.setEnabled(false);
+			rename.setEnabled(!folder.isDefaultWorkspace());
 			createWorkspace.setEnabled(Feature.enabled(Feature.MULTI_WORKSPACE));
-			contextMenu.setItems(reload, search, create, createWorkspace, delete, addBookmark, paste, pasteAsAlias,
-					move, exportZip);
+			contextMenu.setItems(reload, search, create, rename, createWorkspace, delete, addBookmark, paste,
+					pasteAsAlias, move, exportZip);
 		} else {
 			contextMenu.setItems(reload, search, create, rename, delete, addBookmark, paste, pasteAsAlias, move,
 					exportZip);
