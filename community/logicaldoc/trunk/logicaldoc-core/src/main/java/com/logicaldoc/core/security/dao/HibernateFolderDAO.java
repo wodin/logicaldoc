@@ -1,5 +1,6 @@
 package com.logicaldoc.core.security.dao;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,6 +23,11 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
+import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentEvent;
+import com.logicaldoc.core.document.DocumentManager;
+import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.lock.LockManager;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderEvent;
@@ -30,6 +36,8 @@ import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.store.Storer;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.sql.SqlUtil;
 
@@ -48,7 +56,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	private ContextProperties config;
 
-	protected LockManager lockManager;
+	private LockManager lockManager;
+
+	private Storer storer;
 
 	protected HibernateFolderDAO() {
 		super(Folder.class);
@@ -1046,17 +1056,21 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		/*
 		 * Replicate the parent's metadata
 		 */
-		if (parent.getTemplate() != null) {
+		if (parent.getTemplate() != null && folderVO.getTemplate() == null) {
 			initialize(parent);
 			folder.setTemplate(parent.getTemplate());
-			for (String att : parent.getAttributeNames()) {
-				ExtendedAttribute ext = null;
-				try {
-					ext = (ExtendedAttribute) parent.getAttributes().get(att).clone();
-				} catch (CloneNotSupportedException e) {
+			try {
+				for (String att : parent.getAttributeNames()) {
+					ExtendedAttribute ext = null;
+					try {
+						ext = (ExtendedAttribute) parent.getAttributes().get(att).clone();
+					} catch (CloneNotSupportedException e) {
 
+					}
+					folder.getAttributes().put(att, ext);
 				}
-				folder.getAttributes().put(att, ext);
+			} catch (Throwable t) {
+				log.warn(t.getMessage());
 			}
 		}
 
@@ -1069,12 +1083,13 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	public Folder createPath(Folder parent, String path, boolean inheritSecurity, FolderHistory transaction) {
 		StringTokenizer st = new StringTokenizer(path, "/", false);
 
-		initialize(parent);
-
 		Folder folder = parent;
 		while (st.hasMoreTokens()) {
+			initialize(folder);
+
 			String name = st.nextToken();
-			List<Folder> childs = findByName(folder, name, parent.getTenantId(), true);
+
+			List<Folder> childs = findByName(folder, name, folder.getTenantId(), true);
 			Folder dir = null;
 			if (childs.isEmpty())
 				try {
@@ -1124,6 +1139,60 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		while (collisions.contains(folder.getName().toLowerCase())) {
 			folder.setName(folderName + "(" + (counter++) + ")");
 		}
+	}
+
+	@Override
+	public void copy(Folder source, Folder target, boolean foldersOnly, FolderHistory transaction) throws Exception {
+		assert (source != null);
+		assert (target != null);
+		assert (transaction != null);
+		assert (transaction.getUser() != null);
+
+		if (isInPath(source.getId(), target.getId()))
+			throw new IllegalArgumentException("Cannot copy a folder inside the same path");
+
+		// Create the same folder in the target
+		Folder newFolder = createPath(target, source.getName(), true, (FolderHistory) transaction.clone());
+
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentManager docMan = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+
+		// List source docs and create them in the new folder
+		if (!foldersOnly) {
+			List<Document> srcDocs = docDao.findByFolder(source.getId(), null);
+			for (Document srcDoc : srcDocs) {
+				docDao.initialize(srcDoc);
+				Document newDoc = (Document) srcDoc.clone();
+				newDoc.setId(0L);
+				newDoc.setCustomId(null);
+				newDoc.setVersion(null);
+				newDoc.setFileVersion(null);
+				newDoc.setFolder(newFolder);
+
+				History documentTransaction = new History();
+				documentTransaction.setSessionId(transaction.getSessionId());
+				documentTransaction.setUser(transaction.getUser());
+				documentTransaction.setUserId(transaction.getUserId());
+				documentTransaction.setUserName(transaction.getUserName());
+				documentTransaction.setComment(transaction.getComment());
+				documentTransaction.setEvent(DocumentEvent.STORED.toString());
+
+				String oldDocResource = storer.getResourceName(srcDoc, null, null);
+				InputStream is = null;
+				try {
+					is = storer.getStream(srcDoc.getId(), oldDocResource);
+					docMan.create(is, newDoc, documentTransaction);
+				} catch (Throwable t) {
+					log.error(t.getMessage(), t);
+					if (is != null)
+						is.close();
+				}
+			}
+		}
+
+		List<Folder> children = findChildren(source.getId(), transaction.getUser().getId());
+		for (Folder child : children)
+			copy(child, newFolder, foldersOnly, transaction);
 	}
 
 	@Override
@@ -1345,5 +1414,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			return null;
 		else
 			return workspaces.get(0);
+	}
+
+	public void setStorer(Storer storer) {
+		this.storer = storer;
 	}
 }

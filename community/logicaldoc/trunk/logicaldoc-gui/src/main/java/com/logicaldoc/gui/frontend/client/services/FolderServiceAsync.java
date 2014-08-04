@@ -33,4 +33,6 @@ public interface FolderServiceAsync {
 	void create(String sid, GUIFolder folder, boolean inheritSecurity, AsyncCallback<GUIFolder> callback);
 
 	void restore(String sid, long folerId, long parentId, AsyncCallback<Void> callback);
+
+	void copyFolder(String sid, long folderId, long targetId, boolean foldersOnly, AsyncCallback<Void> callback);
 }

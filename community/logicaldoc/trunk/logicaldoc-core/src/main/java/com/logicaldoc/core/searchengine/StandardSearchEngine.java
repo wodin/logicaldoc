@@ -402,10 +402,10 @@ public class StandardSearchEngine implements SearchEngine {
 			try {
 				directory.deleteFile("write.lock");
 			} catch (Throwable t) {
-				log.warn(t.getMessage(), t);
+				log.warn("Unable to delete the index lock, this may be normal");
 			}
-		} catch (Exception e) {
-			log.warn("unlock " + e.getMessage(), e);
+		} catch (Throwable e) {
+			log.warn("unlock " + e.getMessage());
 		}
 	}
 

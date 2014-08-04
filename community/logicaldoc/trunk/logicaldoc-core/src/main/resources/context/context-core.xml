@@ -68,6 +68,7 @@
                 <property name="historyDAO" ref="FolderHistoryDAO" />
                 <property name="config" ref="ContextProperties" />
                 <property name="lockManager" ref="LockManager" />
+                <property name="storer" ref="Storer" />
             </bean>
         </property>
     </bean>
@@ -127,17 +128,11 @@
                 <property name="versionDAO" ref="VersionDAO" />
                 <property name="tenantDAO" ref="TenantDAO" />
                 <property name="folderDAO" ref="FolderDAO" />
-                <property name="userDAO">
-                    <ref bean="UserDAO" />
-                </property>
-                <property name="linkDAO">
-                    <ref bean="DocumentLinkDAO" />
-                </property>
-                <property name="listenerManager">
-                    <ref bean="DocumentListenerManager" />
-                </property>
+                <property name="userDAO" ref="UserDAO" />
+                <property name="linkDAO" ref="DocumentLinkDAO" />
                 <property name="storer" ref="Storer" />
                 <property name="config" ref="ContextProperties" />
+                <property name="listenerManager" ref="DocumentListenerManager" />
             </bean>
         </property>
     </bean>

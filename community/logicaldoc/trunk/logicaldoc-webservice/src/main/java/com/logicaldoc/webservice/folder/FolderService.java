@@ -70,6 +70,20 @@ public interface FolderService {
 			@WebParam(name = "parentId") long parentId) throws Exception;
 
 	/**
+	 * Copies an existing folder with the given identifier.
+	 * 
+	 * @param sid Session identifier
+	 * @param folderId The folder id
+	 * @param targetId The folder id of the target folder
+	 * @param foldersOnly Only the folders will be copied and not the documents
+	 * 
+	 * @throws Exception
+	 */
+	public void copy(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId,
+			@WebParam(name = "targetId") long targetId, @WebParam(name = "foldersOnly") int foldersOnly)
+			throws Exception;
+
+	/**
 	 * Gets folder metadata of an existing folder with the given identifier.
 	 * 
 	 * @param sid Session identifier
@@ -135,9 +149,9 @@ public interface FolderService {
 	 *         false.
 	 * @throws Exception
 	 */
-	public boolean isGranted(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId, @WebParam(name = "permission") int permission)
-			throws Exception;
-	
+	public boolean isGranted(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId,
+			@WebParam(name = "permission") int permission) throws Exception;
+
 	/**
 	 * Lists all direct folders of a parent folder.<br>
 	 * Attention: readable only sub-folders are returned.
@@ -229,7 +243,8 @@ public interface FolderService {
 	 * @return The created folder
 	 */
 	@WebResult(name = "folder")
-	public WSFolder createPath(@WebParam(name = "sid")String sid, @WebParam(name = "parentId")long parentId, @WebParam(name = "path")String path) throws Exception;
+	public WSFolder createPath(@WebParam(name = "sid") String sid, @WebParam(name = "parentId") long parentId,
+			@WebParam(name = "path") String path) throws Exception;
 
 	/**
 	 * Finds the folder at the specified path

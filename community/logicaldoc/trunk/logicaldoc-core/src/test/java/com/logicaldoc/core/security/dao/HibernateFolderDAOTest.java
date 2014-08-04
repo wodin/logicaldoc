@@ -1,5 +1,6 @@
 package com.logicaldoc.core.security.dao;
 
+import java.io.FileInputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -12,13 +13,16 @@ import org.junit.Test;
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DocumentTemplate;
+import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderEvent;
 import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.Permission;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
 
 /**
@@ -36,6 +40,8 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 	private DocumentDAO docDao;
 
+	private DocumentManager docManager;
+
 	private FolderHistoryDAO historyDao;
 
 	private DocumentTemplateDAO templateDao;
@@ -51,6 +57,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		docDao = (DocumentDAO) context.getBean("DocumentDAO");
 		historyDao = (FolderHistoryDAO) context.getBean("FolderHistoryDAO");
 		templateDao = (DocumentTemplateDAO) context.getBean("DocumentTemplateDAO");
+		docManager = (DocumentManager) context.getBean("DocumentManager");
 	}
 
 	@Test
@@ -98,6 +105,70 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		history.setUser(user);
 		dao.deleteTree(1200L, history);
 		Assert.assertNull(dao.findById(1200));
+	}
+
+	@Test
+	public void testCopy() throws Exception {
+
+		/*
+		 * Create a tree and populate it
+		 */
+		Folder defaultWorkspace = dao.findById(Folder.DEFAULTWORKSPACEID);
+		Assert.assertNotNull(dao.createPath(defaultWorkspace, "pippo/pluto", true, null));
+
+		Folder source = dao.findByPath("/Default/pippo", Tenant.DEFAULT_ID);
+		Assert.assertNotNull(source);
+
+		User user = userDao.findByUserName("admin");
+
+		History transaction = new History();
+		transaction.setFolderId(103);
+		transaction.setUser(user);
+		transaction.setUserId(1);
+		transaction.setNotified(0);
+		transaction.setComment("pippo_reason");
+
+		Document doc = docDao.findById(1);
+		docDao.initialize(doc);
+		doc.setCustomId(null);
+		doc.setFolder(source);
+		Assert.assertNotNull(docManager.create(new FileInputStream("pom.xml"), doc, transaction));
+
+		doc = docDao.findById(1);
+		docDao.initialize(doc);
+		doc.setCustomId(null);
+		doc.setFolder(dao.findByPath("/Default/pippo/pluto", Tenant.DEFAULT_ID));
+		Assert.assertNotNull(docManager.create(new FileInputStream("pom.xml"), doc, transaction));
+
+		FolderHistory tr = new FolderHistory();
+		tr.setNotified(0);
+		tr.setComment("");
+		tr.setUser(user);
+
+		/*
+		 * Now create a target folder and copy there inside
+		 */
+		Folder target = dao.createPath(defaultWorkspace, "target", true, null);
+		Assert.assertNotNull(target);
+		target.setTemplate(templateDao.findByName("email", Tenant.DEFAULT_ID));
+		target.setValue("from", "test@acme.com");
+		dao.store(target);
+		target=dao.findById(target.getId());
+		dao.initialize(target);
+		Assert.assertEquals("email", target.getTemplate().getName());
+		Assert.assertEquals("test@acme.com", target.getValue("from"));
+		
+		
+		dao.copy(source, target, false, tr);
+
+		Folder folder = dao.findByPath("/Default/target/pippo/pluto", Tenant.DEFAULT_ID);
+		Assert.assertNotNull(folder);
+		dao.initialize(folder);
+		Assert.assertEquals("email", folder.getTemplate().getName());
+		Assert.assertEquals("test@acme.com", folder.getValue("from"));
+		
+		List<Document> docs = docDao.findByFolder(folder.getId(), null);
+		Assert.assertEquals(1, docs.size());
 	}
 
 	@Test

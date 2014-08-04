@@ -18,6 +18,7 @@ import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.RequestInfo;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
+import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.document.SendToArchiveDialog;
@@ -423,6 +424,15 @@ public class Navigator extends TreeGrid implements FolderObserver {
 			}
 		});
 
+		MenuItem copy = new MenuItem();
+		copy.setTitle(I18N.message("copy"));
+		copy.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				CopyDialog dialog = new CopyDialog();
+				dialog.show();
+			}
+		});
+
 		MenuItem paste = new MenuItem();
 		paste.setTitle(I18N.message("paste"));
 		paste.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
@@ -543,9 +553,9 @@ public class Navigator extends TreeGrid implements FolderObserver {
 			rename.setEnabled(!folder.isDefaultWorkspace());
 			createWorkspace.setEnabled(Feature.enabled(Feature.MULTI_WORKSPACE));
 			contextMenu.setItems(reload, search, create, rename, createWorkspace, delete, addBookmark, paste,
-					pasteAsAlias, move, exportZip);
+					pasteAsAlias, move, copy, exportZip);
 		} else {
-			contextMenu.setItems(reload, search, create, rename, delete, addBookmark, paste, pasteAsAlias, move,
+			contextMenu.setItems(reload, search, create, rename, delete, addBookmark, paste, pasteAsAlias, move, copy,
 					exportZip);
 		}
 
@@ -835,6 +845,36 @@ public class Navigator extends TreeGrid implements FolderObserver {
 						if (target != null) {
 							getTree().add(selected, target);
 						}
+					}
+				});
+	}
+
+	/**
+	 * Copies the currently selected folder to the new parent folder
+	 * 
+	 * @param targetFolderId The parent folder
+	 */
+	public void copyTo(long targetFolderId, boolean foldersOnly) {
+		final TreeNode selected = (TreeNode) getSelectedRecord();
+		final TreeNode target = getTree().findById(Long.toString(targetFolderId));
+
+		Log.debug("try to copy folder " + selected.getAttribute("folderId"));
+		
+		ContactingServer.get().show();
+		service.copyFolder(Session.get().getSid(), Long.parseLong(selected.getAttribute("folderId")), targetFolderId,
+				foldersOnly, new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						ContactingServer.get().hide();
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void ret) {
+						ContactingServer.get().hide();
+						if (target != null)
+							getTree().reloadChildren(target);
 					}
 				});
 	}
