@@ -92,11 +92,15 @@ public class ServiceUtil {
 			logger.error(t.getMessage(), t);
 
 		Log lastError = session.getLastError();
+		String message = "";
 		if (lastError != null) {
-			String message = lastError.getMessage();
+			message = lastError.getMessage();
 			session.getLogs().clear();
-			throw new ServerException(message);
-		} else
-			throw new ServerException(t.getMessage());
+		} else {
+			message = t.getMessage();
+		}
+
+		message = message.replaceAll("com.logicaldoc.", "");
+		throw new ServerException(message);
 	}
 }

@@ -174,7 +174,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		// Check add permission on destParentFolder
 		boolean addEnabled = folderDao.isPermissionEnabled(Permission.ADD, destParentFolder.getId(), user.getId());
 		if (!addEnabled)
-			throw new SecurityException("Add Rights not granted to this user");
+			throw new SecurityException("Add Rights not granted on the target folder");
 
 		// Add a folder history entry
 		FolderHistory transaction = new FolderHistory();
@@ -182,6 +182,42 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		transaction.setUser(user);
 
 		folderDao.move(folderToMove, destParentFolder, transaction);
+	}
+
+	@Override
+	public void copy(String sid, long folderId, long targetId, int foldersOnly) throws Exception {
+		User user = validateSession(sid);
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+
+		if (targetId == folderDao.findRoot(user.getTenantId()).getId()) {
+			log.error("Cannot move folders in the root");
+			throw new Exception("Cannot move folders in the root");
+		}
+
+		Folder destTargetFolder = folderDao.findById(targetId);
+		Folder folderToCopy = folderDao.findById(folderId);
+
+		// Check destParentId: Must be different from the current folder
+		// parentId
+		if (targetId == folderToCopy.getParentId())
+			throw new SecurityException("No Changes");
+
+		// Check destParentId: Must be different from the current folder Id
+		// A folder cannot be children of herself
+		if (targetId == folderToCopy.getId())
+			throw new SecurityException("Not Allowed");
+
+		// Check add permission on destParentFolder
+		boolean addEnabled = folderDao.isPermissionEnabled(Permission.ADD, destTargetFolder.getId(), user.getId());
+		if (!addEnabled)
+			throw new SecurityException("Add Child rights not granted on the target folder");
+
+		// Add a folder history entry
+		FolderHistory transaction = new FolderHistory();
+		transaction.setSessionId(sid);
+		transaction.setUser(user);
+
+		folderDao.copy(folderToCopy, destTargetFolder, 1 == foldersOnly, transaction);
 	}
 
 	@Override

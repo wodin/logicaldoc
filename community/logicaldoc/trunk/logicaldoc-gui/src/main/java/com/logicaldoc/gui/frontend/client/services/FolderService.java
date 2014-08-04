@@ -75,11 +75,15 @@ public interface FolderService extends RemoteService {
 	 */
 	public void restore(String sid, long folderId, long parentId) throws ServerException;
 
-	
 	/**
 	 * Moves a folder under a target folder
 	 */
 	public void move(String sid, long folderId, long targetId) throws ServerException;
+
+	/**
+	 * Copies a folder under a target folder
+	 */
+	public void copyFolder(String sid, long folderId, long targetId, boolean foldersOnly) throws ServerException;
 
 	/**
 	 * Pastes documents into the target folder.

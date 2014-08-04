@@ -57,8 +57,8 @@ public class LdapPanel extends VLayout {
 		setMembersMargin(5);
 		setMargin(20);
 
-		tabs.setWidth(500);
-		tabs.setHeight(390);
+		tabs.setWidth(620);
+		tabs.setHeight(400);
 
 		Tab ldapTab = new Tab();
 		ldapTab.setTitle(I18N.message("ldap"));
@@ -90,45 +90,56 @@ public class LdapPanel extends VLayout {
 		TextItem url = ItemFactory.newTextItem("url", "url", this.ldapSettings.getUrl());
 		url.setRequired(true);
 		url.setCellStyle("warn");
+		url.setWidth(300);
 
 		// Username
 		TextItem username = ItemFactory.newTextItem("username", "user", this.ldapSettings.getUsername());
 		username.setCellStyle("warn");
+		username.setWidth(300);
 
 		// Password
 		PasswordItem password = new PasswordItem("password", I18N.message("password"));
 		password.setName("password");
 		password.setValue(this.ldapSettings.getPwd());
 		password.setCellStyle("warn");
+		password.setWidth(300);
 
 		// Realm
 		TextItem realm = ItemFactory.newTextItem("realm", "realm", this.ldapSettings.getRealm());
-
+		realm.setWidth(300);
+		
 		// User identifier attr.
 		TextItem userIdentifierAttr = ItemFactory.newTextItem("useridentifierattr", "useridentifierattr",
 				this.ldapSettings.getUserIdentifierAttr());
+		userIdentifierAttr.setWidth(300);
 
 		// Group identifier attr.
 		TextItem grpIdentifierAttr = ItemFactory.newTextItem("grpidentifierattr", "grpidentifierattr",
 				this.ldapSettings.getGrpIdentifierAttr());
-
+		grpIdentifierAttr.setWidth(300);
+		
 		// Logon attr.
 		TextItem logonAttr = ItemFactory.newTextItem("logonattr", "logonattr", this.ldapSettings.getLogonAttr());
-
+		logonAttr.setWidth(300);
+		
 		// User class
 		TextItem userClass = ItemFactory.newTextItem("userclass", "userclass", this.ldapSettings.getUserClass());
-
+		userClass.setWidth(300);
+		
 		// Group class
 		TextItem groupClass = ItemFactory.newTextItem("grpclass", "grpclass", this.ldapSettings.getGrpClass());
-
+		groupClass.setWidth(300);
+		
 		// Users base node
 		TextItem usersBaseNode = ItemFactory.newTextItem("usersbasenode", "usersbasenode",
 				this.ldapSettings.getUsersBaseNode());
-
+		usersBaseNode.setWidth(300);
+		
 		// Groups base node
 		TextItem groupsBaseNode = ItemFactory.newTextItem("grpsbasenode", "grpsbasenode",
 				this.ldapSettings.getGrpsBaseNode());
-
+		groupsBaseNode.setWidth(300);
+		
 		// Page size
 		IntegerItem pageSize = ItemFactory.newIntegerItem("pagesize", "pagesize", this.ldapSettings.getPageSize());
 		pageSize.setRequired(true);

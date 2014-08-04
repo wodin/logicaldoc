@@ -285,6 +285,18 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 */
 	public void move(Folder source, Folder target, FolderHistory transaction) throws Exception;
 
+
+	/**
+	 * Folder a folder into another folder
+	 * 
+	 * @param source The folder to move
+	 * @param target The target folder
+	 * @param foldersOnly True if only the folders tree has to be copied
+	 * @param transaction entry to log the event (set the user)
+	 * @throws Exception
+	 */
+	public void copy(Folder source, Folder target, boolean foldersOnly, FolderHistory transaction) throws Exception;
+	
 	/**
 	 * Delete a folder and all its sub-folders that a user can delete. After
 	 * recovering of all sub-folders inside the folder, will be canceled all

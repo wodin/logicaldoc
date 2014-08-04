@@ -242,6 +242,50 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	@Override
+	public void copyFolder(String sid, long folderId, long targetId, boolean foldersOnly) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
+
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		try {
+			Folder folderToCopy = folderDao.findById(folderId);
+			// Check destParentId MUST BE <> 0 (initial value)
+			if (targetId == 0 || folderDao.isInPath(folderToCopy.getId(), targetId)) {
+				return;
+			}
+
+			folderDao.initialize(folderToCopy);
+
+			User user = ServiceUtil.getSessionUser(sid);
+
+			Folder destParentFolder = folderDao.findById(targetId);
+			// Check destParentId: Must be different from the current folder
+			// parentId
+			if (targetId == folderToCopy.getParentId())
+				throw new SecurityException("No Changes");
+
+			// Check destParentId: Must be different from the current folderId
+			// A folder cannot be children of herself
+			if (targetId == folderToCopy.getId())
+				throw new SecurityException("Not Allowed");
+
+			// Check addChild permission on destParentFolder
+			boolean addchildEnabled = folderDao.isPermissionEnabled(Permission.ADD, destParentFolder.getId(),
+					user.getId());
+			if (!addchildEnabled)
+				throw new SecurityException("Add Child right not granted to this user in the target folder");
+
+			// Add a folder history entry
+			FolderHistory transaction = new FolderHistory();
+			transaction.setSessionId(sid);
+			transaction.setUser(user);
+
+			folderDao.copy(folderToCopy, destParentFolder, foldersOnly, transaction);
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
+		}
+	}
+
+	@Override
 	public void move(String sid, long folderId, long targetId) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 
