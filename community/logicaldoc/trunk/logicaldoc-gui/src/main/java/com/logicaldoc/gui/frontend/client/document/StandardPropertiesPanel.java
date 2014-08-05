@@ -245,17 +245,24 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 								return;
 
 							// Get the user's inputed tags
-							String input = value.trim().replace(',', ' ');
+							String input = value.trim();
+
 							if (!"".equals(input)) {
+								String[] tokens = input.split("\\,");
+
 								List<String> tags = new ArrayList<String>();
 
-								tags.add(input);
+								for (String token : tokens) {
+									String t = token.trim();
+									tags.add(t);
+									
+									// Put the new tag in the options
+									Record record = new Record();
+									record.setAttribute("index", t);
+									record.setAttribute("word", t);
+									ds.addData(record);
+								}
 
-								// Put the new tag in the options
-								Record record = new Record();
-								record.setAttribute("index", input);
-								record.setAttribute("word", input);
-								ds.addData(record);
 
 								// Add the old tags to the new ones
 								String[] oldVal = tagItem.getValues();
