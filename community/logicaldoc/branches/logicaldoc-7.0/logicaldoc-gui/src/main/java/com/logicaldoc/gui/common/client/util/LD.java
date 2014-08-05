@@ -35,8 +35,8 @@ public class LD {
 		dialog.setIsModal(true);
 		dialog.setShowModalMask(true);
 		dialog.setShowHeader(true);
-		dialog.setWidth(350);
-		dialog.setHeight(120);
+		dialog.setWidth(400);
+		dialog.setHeight(180);
 		dialog.setAlign(Alignment.CENTER);
 		dialog.setAlign(VerticalAlignment.CENTER);
 
