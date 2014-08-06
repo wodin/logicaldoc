@@ -15,6 +15,7 @@ import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
@@ -68,8 +69,6 @@ public class StoragesPanel extends VLayout {
 
 	private LinkedHashMap<String, String> storagesMap = null;
 
-	private LinkedHashMap<String, String> sizesMap = null;
-
 	public StoragesPanel(GUIParameter[] params, ValuesManager valueManager) {
 		this.parameters = params;
 		this.vm = valueManager;
@@ -78,7 +77,6 @@ public class StoragesPanel extends VLayout {
 		setHeight100();
 		setMembersMargin(5);
 		setMargin(5);
-
 
 		for (GUIParameter param : this.parameters) {
 			if (param == null)
@@ -182,7 +180,7 @@ public class StoragesPanel extends VLayout {
 		for (GUIParameter p : params) {
 			if (p == null)
 				continue;
-			
+
 			if ("store.compress".equals(p.getName()))
 				compression.setValue(p.getValue());
 		}
@@ -228,47 +226,25 @@ public class StoragesPanel extends VLayout {
 	private void computeStoragesSize(GUIParameter[] repos, String selectedItemName) {
 		ContactingServer.get().show();
 
-		sizesMap = new LinkedHashMap<String, String>();
 		service.computeStoragesSize(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				ContactingServer.get().hide();
 				Log.serverError(caught);
 			}
 
 			@Override
 			public void onSuccess(GUIParameter[] params) {
-				if (storesForm != null) {
-					removeMember(storesForm);
-					storesForm.destroy();
-				}
+				ContactingServer.get().hide();
 
-				storesForm = new DynamicForm();
-				storesForm.setWidth(350);
-				storesForm.setColWidths(1, "*");
-				storesForm.setValuesManager(vm);
-				storesForm.setTitleOrientation(TitleOrientation.LEFT);
+				for (GUIParameter param : params) {
+					for (TextItem item : storeItems) {
+						String itemName = item.getName().replaceAll("_", ".").trim();
+						String paramName = param.getName().trim();
 
-				final List<TextItem> newStoreItems = new ArrayList<TextItem>();
-
-				for (TextItem item : storeItems) {
-					newStoreItems.add(item);
-				}
-
-				for (GUIParameter storageParam : params) {
-					sizesMap.put(storageParam.getName(), storageParam.getValue());
-					storeItems = new ArrayList<TextItem>();
-					for (TextItem textItem : newStoreItems) {
-						if (sizesMap != null && !sizesMap.isEmpty() && sizesMap.get(textItem.getName()) != null) {
-							textItem.setHint(sizesMap.get(textItem.getName()) + " MB");
-						}
-						storeItems.add(textItem);
+						if (itemName.equals(paramName))
+							item.setHint(Util.formatSizeW7(new Float(param.getValue())));
 					}
 				}
-				storesForm.setFields(storeItems.toArray(new FormItem[0]));
-				addMember(storesForm, 2);
-
-				ContactingServer.get().hide();
 			}
 		});
 	}
