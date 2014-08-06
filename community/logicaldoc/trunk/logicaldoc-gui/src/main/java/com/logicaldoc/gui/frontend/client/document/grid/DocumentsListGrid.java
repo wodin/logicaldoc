@@ -61,6 +61,11 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 	private SignServiceAsync signService = (SignServiceAsync) GWT.create(SignService.class);
 
 	public DocumentsListGrid(final DataSource ds) {
+		setEmptyMessage(I18N.message("notitemstoshow"));
+		setCanFreezeFields(true);
+		setAutoFetchData(true);
+		setFilterOnKeypress(true);
+		
 		ListGridField id = new ListGridField("id");
 		id.setHidden(true);
 
@@ -239,14 +244,6 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		ListGridField publishedStatus = new ListGridField("publishedStatus", I18N.message("published"), 50);
 		publishedStatus.setHidden(true);
 		publishedStatus.setCanFilter(true);
-
-		setEmptyMessage(I18N.message("notitemstoshow"));
-		setShowRecordComponents(true);
-		setShowRecordComponentsByCell(true);
-		setCanFreezeFields(true);
-		setAutoFetchData(true);
-		setFilterOnKeypress(true);
-		setWrapCells(false);
 
 		ListGridField template = new ListGridField("template", I18N.message("template"), 150);
 		template.setAlign(Alignment.LEFT);
