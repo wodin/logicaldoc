@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.logicaldoc.core.PersistentObjectDAO;
 import com.logicaldoc.core.document.DocumentNote;
+import com.logicaldoc.core.document.History;
 
 /**
  * DAO for <code>DocumentNote</code> handling.
@@ -13,6 +14,8 @@ import com.logicaldoc.core.document.DocumentNote;
  */
 public interface DocumentNoteDAO extends PersistentObjectDAO<DocumentNote> {
 
+	public boolean store(DocumentNote note, History transaction);
+	
 	/**
 	 * This method finds the list of document note regarding a document with the
 	 * given ID.
