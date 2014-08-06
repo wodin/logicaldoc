@@ -285,7 +285,6 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 */
 	public void move(Folder source, Folder target, FolderHistory transaction) throws Exception;
 
-
 	/**
 	 * Folder a folder into another folder
 	 * 
@@ -296,7 +295,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * @throws Exception
 	 */
 	public void copy(Folder source, Folder target, boolean foldersOnly, FolderHistory transaction) throws Exception;
-	
+
 	/**
 	 * Delete a folder and all its sub-folders that a user can delete. After
 	 * recovering of all sub-folders inside the folder, will be canceled all
@@ -368,6 +367,12 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * Propagates the security policies of a node to the whole subree
 	 */
 	public boolean applyRithtToTree(long rootId, FolderHistory transaction);
+
+	/**
+	 * Changes the securityRef of the given folder, all the other folders that
+	 * inherits from this one will be changed accordingly.
+	 */
+	public boolean updateSecurityRef(long folderId, long rightsFolderId, FolderHistory transaction);
 
 	/**
 	 * Propagates the template metadata a node to the whole subree

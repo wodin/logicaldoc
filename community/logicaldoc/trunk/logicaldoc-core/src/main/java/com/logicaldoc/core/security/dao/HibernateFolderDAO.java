@@ -935,7 +935,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		int records = 0;
 
 		try {
-
 			/*
 			 * Apply the securityRef
 			 */
@@ -954,7 +953,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 			if (getSessionFactory().getCache() != null)
 				getSessionFactory().getCache().evictEntityRegions();
-
 		} catch (Throwable e) {
 			result = false;
 			log.error(e.getMessage(), e);
@@ -1418,5 +1416,34 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	public void setStorer(Storer storer) {
 		this.storer = storer;
+	}
+
+	@Override
+	public boolean updateSecurityRef(long folderId, long rightsFolderId, FolderHistory transaction) {
+		boolean result = true;
+		try {
+			Folder f = findById(folderId);
+			initialize(f);
+
+			Folder rightsFolder = findById(rightsFolderId);
+			long securityRef = rightsFolderId;
+			if (rightsFolder.getSecurityRef() != null)
+				securityRef = rightsFolder.getSecurityRef();
+
+			if (transaction != null)
+				transaction.setEvent(FolderEvent.PERMISSION.toString());
+
+			f.setSecurityRef(securityRef);
+			if (!store(f, transaction))
+				return false;
+
+			// Now all the folders that are referencing this one must be updated
+			bulkUpdate("set securityRef=" + securityRef + " where securityRef=" + folderId, null);
+		} catch (Throwable e) {
+			result = false;
+			log.error(e.getMessage(), e);
+		}
+
+		return result;
 	}
 }

@@ -52,6 +52,30 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	private static Logger log = LoggerFactory.getLogger(FolderServiceImpl.class);
 
 	@Override
+	public GUIFolder inheritRights(String sid, long folderId, long rightsFolderId) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
+
+		try {
+			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+
+			/*
+			 * Just apply the current security settings to the whole subtree
+			 */
+			FolderHistory transaction = new FolderHistory();
+			transaction.setUser(ServiceUtil.getSessionUser(sid));
+			transaction.setSessionId(sid);
+
+			if (!fdao.updateSecurityRef(folderId, rightsFolderId, transaction))
+				throw new Exception("Error updating the database");
+
+			return getFolder(sid, folderId);
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
+		}
+		return null;
+	}
+
+	@Override
 	public void applyRights(String sid, GUIFolder folder, boolean subtree) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 
@@ -59,7 +83,10 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			Folder f = fdao.findById(folder.getId());
 			fdao.initialize(f);
-			saveRules(sid, f, session.getUserId(), folder.getRights());
+
+			if (f.getSecurityRef() == null)
+				saveRules(sid, f, session.getUserId(), folder.getRights());
+			
 			if (subtree) {
 				/*
 				 * Just apply the current security settings to the whole subtree
@@ -133,6 +160,13 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			f.setCreator(folder.getCreator());
 			f.setCreatorId(folder.getCreatorId());
 			f.setType(folder.getType());
+
+			if (folder.getSecurityRef() != null) {
+				GUIFolder secRef = new GUIFolder();
+				secRef.setId(folder.getSecurityRef());
+				secRef.setPathExtended(dao.computePathExtended(folder.getSecurityRef()));
+				f.setSecurityRef(secRef);
+			}
 
 			if (folder.getTemplate() != null) {
 				dao.initialize(folder);

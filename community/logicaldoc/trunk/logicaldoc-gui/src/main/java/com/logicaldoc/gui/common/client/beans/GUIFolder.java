@@ -29,6 +29,8 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 
 	private GUIFolder[] path = null;
 
+	private GUIFolder securityRef = null;
+
 	private String pathExtended;
 
 	private String creator;
@@ -214,5 +216,13 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 
 	public void setTemplateLocked(int templateLocked) {
 		this.templateLocked = templateLocked;
+	}
+
+	public GUIFolder getSecurityRef() {
+		return securityRef;
+	}
+
+	public void setSecurityRef(GUIFolder securityRef) {
+		this.securityRef = securityRef;
 	}
 }
