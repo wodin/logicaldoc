@@ -6,6 +6,7 @@ import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.smartgwt.client.util.SC;
 
 /**
@@ -30,6 +31,8 @@ public class Log {
 	 * @param caught The caught exception (if any)
 	 */
 	public static void serverError(String message, Throwable caught) {
+		ContactingServer.get().hide();
+		
 		// Hide download exceptions that normally are raised on double click.
 		if ("0".equals(message.trim()))
 			return;
