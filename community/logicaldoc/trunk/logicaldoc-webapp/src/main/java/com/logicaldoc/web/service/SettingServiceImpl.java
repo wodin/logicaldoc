@@ -300,10 +300,10 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		GUIParameter param = null;
 		for (Object key : conf.keySet()) {
 			String name = key.toString();
-			if (name.startsWith("store.") && !name.endsWith("write")) {
+			if (name.startsWith("store.") && name.endsWith(".dir")) {
 				File docDir = new File(conf.getProperty(name));
 				if (docDir.exists()) {
-					param = new GUIParameter(name, "" + (FileUtils.sizeOfDirectory(docDir) / (1024 * 1024)));
+					param = new GUIParameter(name, "" + FileUtils.sizeOfDirectory(docDir));
 					storagesList.add(param);
 				}
 			}
