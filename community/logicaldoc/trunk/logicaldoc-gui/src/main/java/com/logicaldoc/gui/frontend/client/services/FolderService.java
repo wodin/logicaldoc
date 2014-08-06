@@ -49,6 +49,17 @@ public interface FolderService extends RemoteService {
 	public void applyRights(String sid, GUIFolder folder, boolean subfolders) throws ServerException;
 
 	/**
+	 * Inherits the rights of another folder
+	 * 
+	 * @param sid The session ID
+	 * @param folderId The folder that has to be updated
+	 * @param rightsFolderId the folder that defines the rights
+	 * 
+	 * @return The updated Folder
+	 */
+	public GUIFolder inheritRights(String sid, long folderId, long rightsFolderId) throws ServerException;
+
+	/**
 	 * Applies all extendedAttributes to a sub-tree
 	 * 
 	 * @param sid The session ID

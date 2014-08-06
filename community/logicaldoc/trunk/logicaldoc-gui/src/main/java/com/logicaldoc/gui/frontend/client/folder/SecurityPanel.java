@@ -17,10 +17,17 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
+import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.types.ListGridFieldType;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.widgets.HTMLPane;
+import com.smartgwt.client.widgets.Img;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -54,11 +61,63 @@ public class SecurityPanel extends FolderDetailTab {
 
 	private VLayout container = new VLayout();
 
+	private HLayout inheritInfoPanel = new HLayout();
+
 	public SecurityPanel(final GUIFolder folder) {
 		super(folder, null);
 
 		container.setMembersMargin(3);
 		addMember(container);
+
+		refresh(folder);
+	}
+
+	void refresh(GUIFolder folder) {
+		super.folder = folder;
+
+		container.removeMembers(container.getMembers());
+
+		if (folder.getSecurityRef() != null) {
+			inheritInfoPanel = new HLayout();
+			inheritInfoPanel.setMembersMargin(5);
+			inheritInfoPanel.setStyleName("warn");
+			inheritInfoPanel.setWidth100();
+			inheritInfoPanel.setHeight(20);
+
+			Label label = new Label(I18N.message("rightsinheritedfrom"));
+			label.setWrap(false);
+
+			Label path = new Label("<b><span style='text-decoration: underline'>"
+					+ folder.getSecurityRef().getPathExtended() + "</span></b>");
+			path.setWrap(false);
+			path.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					Navigator.get().openFolder(SecurityPanel.super.folder.getSecurityRef().getId());
+				}
+			});
+
+			HTMLPane spacer = new HTMLPane();
+			spacer.setContents("<div>&nbsp;</div>");
+			spacer.setWidth("*");
+			spacer.setOverflow(Overflow.HIDDEN);
+
+			Img closeImage = ItemFactory.newImgIcon("delete.png");
+			closeImage.setHeight("16px");
+			closeImage.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					inheritInfoPanel.setVisible(false);
+				}
+			});
+			closeImage.setCursor(Cursor.HAND);
+			closeImage.setTooltip(I18N.message("close"));
+			closeImage.setLayoutAlign(Alignment.RIGHT);
+			closeImage.setLayoutAlign(VerticalAlignment.CENTER);
+
+			inheritInfoPanel.setMembers(label, path, spacer, closeImage);
+			container.addMember(inheritInfoPanel);
+		}
 
 		ListGridField entityId = new ListGridField("entityId", "entityId", 50);
 		entityId.setCanEdit(false);
@@ -195,6 +254,17 @@ public class SecurityPanel extends FolderDetailTab {
 			@Override
 			public void onClick(ClickEvent event) {
 				onSave(true);
+			}
+		});
+
+		Button inheritRights = new Button(I18N.message("inheritrights"));
+		inheritRights.setAutoFit(true);
+		buttons.addMember(inheritRights);
+		inheritRights.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				InheritRightsDialog dialog = new InheritRightsDialog(SecurityPanel.this);
+				dialog.show();
 			}
 		});
 

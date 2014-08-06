@@ -56,8 +56,8 @@ public class DocumentsUploader extends Window {
 	public DocumentsUploader() {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("adddocuments"));
-		setWidth(430);
-		setHeight(250);
+		setWidth(500);
+		setHeight(300);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);

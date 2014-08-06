@@ -716,6 +716,37 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	}
 
 	@Test
+	public void testUpdateSecurityRef() {
+		FolderHistory transaction = new FolderHistory();
+		User user = new User();
+		user.setId(4);
+		transaction.setUser(user);
+		transaction.setNotified(0);
+
+		// The root defines it's own policies
+		Folder folder = dao.findById(1200);
+		Assert.assertNull(folder.getSecurityRef());
+		Assert.assertTrue(dao.applyRithtToTree(1200, transaction));
+		folder = dao.findById(1201);
+		Assert.assertEquals(1200L, folder.getSecurityRef().longValue());
+		folder = dao.findById(1202);
+		Assert.assertEquals(1200L, folder.getSecurityRef().longValue());
+
+		// The root has its own policies
+		folder = dao.findById(1200);
+		
+		Assert.assertTrue(dao.updateSecurityRef(1200, 5L, transaction));
+		
+		folder = dao.findById(1200);
+		Assert.assertEquals(5L, folder.getSecurityRef().longValue());
+		folder = dao.findById(1201);
+		Assert.assertEquals(5L, folder.getSecurityRef().longValue());
+		folder = dao.findById(1202);
+		Assert.assertEquals(5L, folder.getSecurityRef().longValue());
+	}
+
+	
+	@Test
 	public void testMetadataToTree() {
 		FolderHistory transaction = new FolderHistory();
 		User user = new User();
