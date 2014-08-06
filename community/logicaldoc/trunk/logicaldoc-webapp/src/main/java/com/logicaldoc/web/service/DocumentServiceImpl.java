@@ -707,15 +707,14 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					}
 				}
 			} catch (Throwable t) {
-				log.error("Exception linking documents: " + t.getMessage(), t);
-				throw new RuntimeException(t.getMessage(), t);
+				ServiceUtil.throwServerException(session, log, t);
 			}
 		}
 	}
 
 	@Override
 	public void lock(String sid, long[] docIds, String comment) throws ServerException {
-		ServiceUtil.validateSession(sid);
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		// Unlock the document; throws an exception if something
 		// goes wrong
@@ -731,14 +730,13 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				documentManager.lock(id, Document.DOC_LOCKED, transaction);
 			}
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
 	public void makeImmutable(String sid, long[] docIds, String comment) throws ServerException {
-		ServiceUtil.validateSession(sid);
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
 			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
@@ -763,8 +761,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				}
 			}
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
@@ -782,7 +779,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 	@Override
 	public void markIndexable(String sid, long[] docIds) throws ServerException {
-		ServiceUtil.validateSession(sid);
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
 			DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
@@ -791,14 +788,13 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				manager.changeIndexingStatus(docDao.findById(id), AbstractDocument.INDEX_TO_INDEX);
 			}
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
 	public void markUnindexable(String sid, long[] docIds) throws ServerException {
-		ServiceUtil.validateSession(sid);
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
 			DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
@@ -807,8 +803,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				manager.changeIndexingStatus(docDao.findById(id), AbstractDocument.INDEX_SKIP);
 			}
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
@@ -865,9 +860,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				return null;
 
 			return document;
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
-			throw new RuntimeException(e.getMessage(), e);
+		} catch (Throwable t) {
+			return (GUIDocument) ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
@@ -1228,7 +1222,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 	@Override
 	public void unlock(String sid, long[] docIds) throws ServerException {
-		ServiceUtil.validateSession(sid);
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
 			// Create the document history event
@@ -1243,14 +1237,13 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				documentManager.unlock(id, transaction);
 			}
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
 	public void updateBookmark(String sid, GUIBookmark bookmark) throws ServerException {
-		ServiceUtil.validateSession(sid);
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		BookmarkDAO bookmarkDao = (BookmarkDAO) Context.getInstance().getBean(BookmarkDAO.class);
 		try {
@@ -1267,14 +1260,13 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			bookmarkDao.store(bk);
 			bookmark.setId(bk.getId());
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
 	public void updateLink(String sid, long id, String type) throws ServerException {
-		ServiceUtil.validateSession(sid);
+		UserSession session = ServiceUtil.validateSession(sid);
 		try {
 			DocumentLinkDAO dao = (DocumentLinkDAO) Context.getInstance().getBean(DocumentLinkDAO.class);
 			DocumentLink link = dao.findById(id);
@@ -1282,21 +1274,19 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			link.setType(type);
 			dao.store(link);
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
 	public void cleanUploadedFileFolder(String sid) throws ServerException {
 		ServiceUtil.validateSession(sid);
-
 		UploadServlet.cleanReceivedFiles(sid);
 	}
 
 	@Override
 	public GUIRating getRating(String sid, long docId) throws ServerException {
-		UserSession userSession = ServiceUtil.validateSession(sid);
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		RatingDAO ratingDao = (RatingDAO) Context.getInstance().getBean(RatingDAO.class);
 
@@ -1310,8 +1300,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				rating.setDocId(docId);
 				// We use the rating userId value to know in the GUI if the user
 				// has already vote this document.
-				if (ratingDao.findByDocIdAndUserId(docId, userSession.getUserId()))
-					rating.setUserId(userSession.getUserId());
+				if (ratingDao.findByDocIdAndUserId(docId, session.getUserId()))
+					rating.setUserId(session.getUserId());
 				rating.setCount(rat.getCount());
 				rating.setAverage(rat.getAverage());
 			} else {
@@ -1322,8 +1312,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 			return rating;
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			return (GUIRating) ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
@@ -1352,8 +1341,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 			return average;
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new RuntimeException(t.getMessage(), t);
+			return (Integer) ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
@@ -1362,32 +1350,35 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
+			User sessionUser = ServiceUtil.getSessionUser(sid);
+
 			DocumentNote note = new DocumentNote();
 			note.setTenantId(session.getTenantId());
 			note.setDocId(docId);
-			note.setUserId(ServiceUtil.getSessionUser(sid).getId());
-			note.setUsername(ServiceUtil.getSessionUser(sid).getFullName());
+			note.setUserId(sessionUser.getId());
+			note.setUsername(sessionUser.getFullName());
 			note.setDate(new Date());
 			note.setMessage(message);
 
+			History transaction = new History();
+			transaction.setSessionId(sid);
+			transaction.setUser(sessionUser);
+
 			DocumentNoteDAO dao = (DocumentNoteDAO) Context.getInstance().getBean(DocumentNoteDAO.class);
-			dao.store(note);
+			dao.store(note, transaction);
 
 			return note.getId();
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
-			return 0;
+		} catch (Throwable t) {
+			return (Integer) ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
 	public void deleteNotes(String sid, long[] ids) throws ServerException {
 		ServiceUtil.validateSession(sid);
-
 		DocumentNoteDAO dao = (DocumentNoteDAO) Context.getInstance().getBean(DocumentNoteDAO.class);
-		for (long id : ids) {
+		for (long id : ids)
 			dao.delete(id);
-		}
 	}
 
 	@Override
@@ -1432,7 +1423,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 				save(sid, buf);
 			} catch (Throwable e) {
-				e.printStackTrace();
 				log.error(e.getMessage(), e);
 			}
 		}
@@ -1455,8 +1445,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			note.setUsername(user.getFullName());
 			note.setMessage(message);
 			dao.store(note);
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
@@ -1472,8 +1462,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				Version version = manager.deleteVersion(id, transaction);
 				return getById(sid, version.getDocId());
 			}
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
 		}
 		return null;
 	}
@@ -1497,7 +1487,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			transaction.setUser(user);
 			Document document = documentManager.create(IOUtils.toInputStream(""), doc, transaction);
 
-			// If tha VO is in checkout, perform a checkout also
+			// If that VO is in checkout, perform a checkout also
 			if (vo.getStatus() == Document.DOC_CHECKED_OUT) {
 				transaction = new History();
 				transaction.setUser(user);
@@ -1505,8 +1495,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			}
 
 			return fromDocument(document, vo.getFolder());
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
 		}
 		return null;
 	}
