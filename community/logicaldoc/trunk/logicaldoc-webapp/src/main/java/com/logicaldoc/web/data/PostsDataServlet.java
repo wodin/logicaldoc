@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.TimeZone;
 
 import javax.servlet.ServletException;
@@ -16,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 
-import com.logicaldoc.core.document.DocumentNote;
 import com.logicaldoc.core.document.dao.DocumentNoteDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.ServiceUtil;
@@ -52,26 +50,30 @@ public class PostsDataServlet extends HttpServlet {
 			response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 			response.setHeader("Expires", "0");
 
-			DocumentNoteDAO dao = (DocumentNoteDAO) Context.getInstance().getBean(DocumentNoteDAO.class);
-			List<DocumentNote> posts = new ArrayList<DocumentNote>();
-			posts = dao.findByUserId(userId);
-
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
-			for (DocumentNote post : posts) {
+			DocumentNoteDAO dao = (DocumentNoteDAO) Context.getInstance().getBean(DocumentNoteDAO.class);
+			SqlRowSet set = dao
+					.queryForRowSet(
+							"select A.ld_id,A.ld_message,A.ld_username,A.ld_date,A.ld_docid,B.ld_title from ld_note A, ld_document B where A.ld_deleted=0 and B.ld_deleted=0 and A.ld_docid=B.ld_id and A.ld_userid ="
+									+ userId + " order by A.ld_date desc", null, 100);
+
+			while (set.next()) {
 				writer.print("<post>");
-				writer.print("<id>" + post.getId() + "</id>");
-				writer.print("<title><![CDATA[" + StringUtils.abbreviate(post.getMessage(), 100) + "]]></title>");
-				writer.print("<user><![CDATA[" + post.getUsername() + "]]></user>");
-				writer.print("<date>" + df.format(post.getDate()) + "</date>");
-				writer.print("<message><![CDATA[" + post.getMessage() + "]]></message>");
-				writer.print("<docId>" + post.getDocId() + "</docId>");
+				writer.print("<id>" + set.getLong(1) + "</id>");
+				writer.print("<title><![CDATA[" + StringUtils.abbreviate(set.getString(2), 100) + "]]></title>");
+				writer.print("<user><![CDATA[" + set.getString(3) + "]]></user>");
+				writer.print("<date>" + df.format(set.getDate(4)) + "</date>");
+				writer.print("<message><![CDATA[" + set.getString(2) + "]]></message>");
+				writer.print("<docId>" + set.getLong(5) + "</docId>");
+				writer.print("<docTitle><![CDATA[" + set.getString(6) + "]]></docTitle>");
 				writer.print("</post>");
 			}
+
 			writer.write("</list>");
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
