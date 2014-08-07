@@ -467,10 +467,11 @@ public class LDRepository {
 			throw new CmisInvalidArgumentException("Properties must be set!");
 		}
 
-		// check versioning state
-		if (versioningState != null && VersioningState.NONE != versioningState) {
-			throw new CmisConstraintException("Versioning not supported!");
-		}
+		// // check versioning state
+		// if (versioningState != null && VersioningState.NONE !=
+		// versioningState) {
+		// throw new CmisConstraintException("Versioning not supported!");
+		// }
 
 		// check type
 		String typeId = getTypeId(properties);
@@ -793,7 +794,7 @@ public class LDRepository {
 
 	public void checkOut(Holder<String> objectId, Holder<Boolean> contentCopied) {
 		validatePermission(objectId.getValue(), null, Permission.WRITE);
-
+		
 		// get the document
 		PersistentObject object = getObject(objectId.getValue());
 		if (object == null) {
