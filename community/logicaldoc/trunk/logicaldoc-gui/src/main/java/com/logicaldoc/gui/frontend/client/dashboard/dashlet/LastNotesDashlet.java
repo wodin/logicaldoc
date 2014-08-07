@@ -60,7 +60,9 @@ public class LastNotesDashlet extends Dashlet {
 		date.setType(ListGridFieldType.DATE);
 		date.setCellFormatter(new DateCellFormatter(true));
 		date.setCanFilter(false);
-		ListGridField title = new ListGridField("title", I18N.message("title"));
+		ListGridField title = new ListGridField("title", I18N.message("note"));
+		ListGridField docTitle = new ListGridField("docTitle", I18N.message("title"));
+		docTitle.setAutoFitWidth(true);
 
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
@@ -73,7 +75,7 @@ public class LastNotesDashlet extends Dashlet {
 		list.setBorder("0px");
 		dataSource = new PostsDS(userId);
 		list.setDataSource(dataSource);
-		list.setFields(date, title);
+		list.setFields(date, docTitle, title);
 
 		list.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override

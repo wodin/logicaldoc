@@ -22,8 +22,9 @@ public class PostsDS extends DataSource {
 		DataSourceTextField message = new DataSourceTextField("message");
 		DataSourceDateTimeField date = new DataSourceDateTimeField("date");
 		DataSourceTextField documentId = new DataSourceTextField("docId");
-
-		setFields(id, user, message, date, documentId);
+		DataSourceTextField docTitle = new DataSourceTextField("docTitle");
+		
+		setFields(id, user, message, date, documentId, docTitle);
 		setClientOnly(true);
 
 		setDataURL("data/posts.xml?sid=" + Session.get().getSid() + "&" + "userId=" + userId);
