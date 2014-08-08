@@ -202,6 +202,26 @@ public interface DocumentService {
 			throws Exception;
 
 	/**
+	 * Checks in an existing document with the given identifier to create a new
+	 * version.
+	 * 
+	 * @param sid Session identifier
+	 * @param docId The document id (optional)
+	 * @param folderId The folder id (optional)
+	 * @param release True if this is a new release(eg: 2.0) rather than a
+	 *        subversion(eg: 1.1)
+	 * @param filename The document file name
+	 * @param content The document's binary content
+	 * @return The created/updated document's ID
+	 * @throws Exception
+	 */
+	@WebResult(name = "docId")
+	public long upload(@WebParam(name = "sid") String sid, @WebParam(name = "docId") Long docId,
+			@WebParam(name = "folderId") Long folderId, @WebParam(name = "release") boolean release, 
+			 @WebParam(name = "filename") String filename, @WebParam(name = "content") DataHandler content)
+					throws Exception;
+	
+	/**
 	 * Test if a document identifier is valid.
 	 * 
 	 * @param sid Session identifier

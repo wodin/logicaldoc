@@ -164,4 +164,11 @@ public class DocumentClient extends SoapClient<DocumentService> implements Docum
 	public WSDocument[] getAliases(String sid, long docId) throws Exception {
 		return client.getAliases(sid, docId);
 	}
+
+	@Override
+	public long upload(String sid, Long docId, Long folderId, boolean release, String filename, DataHandler content)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
