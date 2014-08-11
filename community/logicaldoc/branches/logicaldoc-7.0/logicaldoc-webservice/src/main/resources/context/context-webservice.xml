@@ -102,6 +102,12 @@
            <bean class="com.logicaldoc.webservice.rest.auth.AuthServiceImpl" />
         </jaxrs:serviceBeans>
     </jaxrs:server>
+
+    <jaxrs:server id="rest-document" address="/rest/document">
+        <jaxrs:serviceBeans>
+           <bean class="com.logicaldoc.webservice.rest.document.DocumentServiceImpl" />
+        </jaxrs:serviceBeans>
+    </jaxrs:server>
     
     <jaxrs:server id="commentservice" address="/mobile/comments">
         <jaxrs:serviceBeans>
