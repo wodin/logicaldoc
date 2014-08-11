@@ -402,21 +402,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					att.setMandatory(extAttr.getMandatory() == 1);
 					att.setEditor(extAttr.getEditor());
 					att.setStringValue(extAttr.getStringValue());
-
-					// If the case, populate the options
-					if (att.getEditor() == ExtendedAttribute.EDITOR_LISTBOX) {
-						String buf = (String) extAttr.getStringValue();
-						List<String> list = new ArrayList<String>();
-						StringTokenizer st = new StringTokenizer(buf, ",");
-						while (st.hasMoreElements()) {
-							String val = (String) st.nextElement();
-							if (!list.contains(val))
-								list.add(val);
-						}
-						att.setOptions(list.toArray(new String[0]));
-					} else {
-						att.setOptions(new String[] { extAttr.getStringValue() });
-					}
+					
+					att.setOptions(new String[] { extAttr.getStringValue() });
 
 					if (doc != null) {
 						if (doc.getValue(attrName) != null)

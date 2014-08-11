@@ -13,8 +13,10 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.ExtendedAttribute;
+import com.logicaldoc.core.ExtendedAttributeOption;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
+import com.logicaldoc.core.document.dao.ExtendedAttributeOptionDAO;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
@@ -41,6 +43,56 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 
 		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 		dao.delete(templateId);
+	}
+
+	@Override
+	public void saveOptions(String sid, long templateId, String attribute, String[] values) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
+
+		ExtendedAttributeOptionDAO dao = (ExtendedAttributeOptionDAO) Context.getInstance().getBean(
+				ExtendedAttributeOptionDAO.class);
+		try {
+			Map<String, ExtendedAttributeOption> optionsMap = new HashMap<String, ExtendedAttributeOption>();
+			List<ExtendedAttributeOption> options = dao.findByTemplateAndAttribute(templateId, attribute);
+			for (ExtendedAttributeOption option : options)
+				optionsMap.put(option.getValue(), option);
+
+			for (int i = 0; i < values.length; i++) {
+				String value = values[i];
+				ExtendedAttributeOption option = optionsMap.get(value);
+				if (option == null) {
+					option = new ExtendedAttributeOption(templateId, attribute, value);
+				} else {
+					if (value.equals(option.getValue()) && option.getPosition() == i)
+						continue;
+					option.setValue(value);
+				}
+
+				option.setPosition(i);
+				dao.store(option);
+			}
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
+		}
+	}
+
+	@Override
+	public void deleteOptions(String sid, long templateId, String attribute, String[] values) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
+
+		ExtendedAttributeOptionDAO dao = (ExtendedAttributeOptionDAO) Context.getInstance().getBean(
+				ExtendedAttributeOptionDAO.class);
+		try {
+			List<ExtendedAttributeOption> options = dao.findByTemplateAndAttribute(templateId, attribute);
+			for (ExtendedAttributeOption option : options)
+				for (String value : values)
+					if (value.equals(option.getValue())) {
+						dao.delete(option.getId());
+						break;
+					}
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
+		}
 	}
 
 	@Override

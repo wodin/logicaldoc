@@ -182,8 +182,6 @@ public class Contacts extends com.smartgwt.client.widgets.Window {
 		list.setWidth100();
 		list.setHeight(getHeight());
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
-		list.setShowRecordComponents(true);
-		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
 		list.setAutoFetchData(true);
 		list.setAutoDraw(true);
@@ -222,7 +220,6 @@ public class Contacts extends com.smartgwt.client.widgets.Window {
 	
 	public void refresh() {
 		list.setDataSource(new ContactsDS());
-		list.setHeight100();
 		list.fetchData();
 	}
 
