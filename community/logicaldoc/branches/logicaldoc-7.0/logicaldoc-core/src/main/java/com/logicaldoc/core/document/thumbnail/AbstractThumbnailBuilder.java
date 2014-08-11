@@ -115,8 +115,15 @@ public abstract class AbstractThumbnailBuilder implements ThumbnailBuilder {
 
 			out = new File(root.getAbsolutePath() + "/preview.swf");
 
-			commandLine.add(tmp.getPath());
-			commandLine.add(out.getPath());
+			if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg")
+					|| extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("bmp")
+					|| extension.equalsIgnoreCase("gif")) {
+				commandLine.add("-o "+out.getPath());
+				commandLine.add(tmp.getPath());
+			}else{
+				commandLine.add(tmp.getPath());
+				commandLine.add(out.getPath());
+			}
 
 			log.debug("Executing command: " + commandLine.toString());
 
