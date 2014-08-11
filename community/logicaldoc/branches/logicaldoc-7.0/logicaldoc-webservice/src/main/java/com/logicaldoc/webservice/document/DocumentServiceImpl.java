@@ -18,6 +18,7 @@ import javax.mail.util.ByteArrayDataSource;
 import net.sf.jmimemagic.Magic;
 import net.sf.jmimemagic.MagicMatch;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -690,5 +691,24 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		}
 
 		return wsDocs.toArray(new WSDocument[0]);
+	}
+	
+	@Override
+	public long upload(String sid, Long docId, Long folderId, boolean release, String filename, DataHandler content)
+			throws Exception {
+		validateSession(sid);
+
+		if (docId != null) {
+			checkout(sid, docId);
+			checkin(sid, docId, "", filename, release, content);
+			return docId;
+		} else {
+			WSDocument doc = new WSDocument();
+			doc.setFileName(filename);
+			doc.setTitle(FilenameUtils.getBaseName(filename));
+			doc.setFolderId(folderId);
+			return create(sid, doc, content).getId();
+		}
+
 	}
 }
