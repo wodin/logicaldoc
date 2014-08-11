@@ -136,6 +136,16 @@
             </bean>
         </property>
     </bean>
+    <bean id="ExtendedAttributeOptionDAO" abstract="false" autowire="default"
+        dependency-check="default" lazy-init="default" parent="ApplicationBaseTransactionProxy">
+        <property name="target">
+            <bean abstract="false" autowire="default"
+                class="com.logicaldoc.core.document.dao.HibernateExtendedAttributeOptionDAO"
+                dependency-check="default" lazy-init="default">
+                <property name="sessionFactory" ref="SessionFactory" />
+            </bean>
+        </property>
+    </bean>
     <bean id="DocumentTemplateDAO" abstract="false" autowire="default"
         dependency-check="default" lazy-init="default" parent="ApplicationBaseTransactionProxy">
         <property name="target">
@@ -143,6 +153,7 @@
                 class="com.logicaldoc.core.document.dao.HibernateDocumentTemplateDAO"
                 dependency-check="default" lazy-init="default">
                 <property name="sessionFactory" ref="SessionFactory" />
+                <property name="optionsDao" ref="ExtendedAttributeOptionDAO" />
             </bean>
         </property>
     </bean>

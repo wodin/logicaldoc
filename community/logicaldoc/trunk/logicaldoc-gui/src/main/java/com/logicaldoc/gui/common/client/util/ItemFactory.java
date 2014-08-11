@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
 import com.logicaldoc.gui.common.client.data.ContactsDS;
 import com.logicaldoc.gui.common.client.data.EventsDS;
+import com.logicaldoc.gui.common.client.data.ExtendedAttributeOptionsDS;
 import com.logicaldoc.gui.common.client.data.FolderTemplatesDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
@@ -493,25 +494,21 @@ public class ItemFactory {
 
 	/**
 	 * Creates a new TextItem for the Extended Attributes.
-	 * 
-	 * @param name The item name (mandatory)
-	 * @param value The item value (optional)
 	 */
-	public static FormItem newStringItemForExtendedAttribute(GUIExtendedAttribute att) {
+	public static FormItem newStringItemForExtendedAttribute(Long templateId, GUIExtendedAttribute att) {
 		// We cannot use spaces in items name
 		String itemName = "_" + att.getName().replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		FormItem item = new TextItem();
+
 		if (att.getEditor() == GUIExtendedAttribute.EDITOR_LISTBOX) {
 			item = new SelectItem();
-			SelectItem select = (SelectItem) item;
-			LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-			if (!att.isMandatory())
-				map.put("", "");
-			if (att.getOptions() != null)
-				for (String a : att.getOptions()) {
-					map.put(a, a);
-				}
-			select.setValueMap(map);
+			item.setOptionDataSource(new ExtendedAttributeOptionsDS(templateId, att.getName(), !att.isMandatory()));
+
+			ListGridField value = new ListGridField("value", I18N.message("value"));
+			((SelectItem) item).setPickListWidth(200);
+			((SelectItem) item).setPickListFields(value);
+			((SelectItem) item).setValueField("value");
+			((SelectItem) item).setDisplayField("value");
 		}
 
 		item.setName(itemName);

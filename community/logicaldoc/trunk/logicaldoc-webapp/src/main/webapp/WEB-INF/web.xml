@@ -264,6 +264,11 @@
         <servlet-class>com.logicaldoc.dropbox.DropboxDataServlet</servlet-class>
     </servlet>    
     
+    <servlet>
+        <servlet-name>ExtendedAttributeOptionsData</servlet-name>
+        <servlet-class>com.logicaldoc.web.data.ExtendedAttributeOptionsDataServlet</servlet-class>
+    </servlet>
+    
 	<servlet>
 		<servlet-name>Preview</servlet-name>
 		<servlet-class>com.logicaldoc.web.DocumentPreview</servlet-class>
@@ -562,6 +567,11 @@
 		<servlet-name>DropboxData</servlet-name>
 		<url-pattern>/data/dropbox.xml</url-pattern>
 	</servlet-mapping>
+
+	<servlet-mapping>
+        <servlet-name>ExtendedAttributeOptionsDat</servlet-name>
+        <url-pattern>/data/extoptions.xml</url-pattern>
+    </servlet-mapping>
     
 	<servlet-mapping>
 		<servlet-name>Preview</servlet-name>

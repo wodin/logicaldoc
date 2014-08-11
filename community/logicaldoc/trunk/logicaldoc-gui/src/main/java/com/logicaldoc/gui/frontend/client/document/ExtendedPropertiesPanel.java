@@ -181,7 +181,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 	/*
 	 * Prepare the second form for the extended attributes
 	 */
-	private void prepareExtendedAttributes(Long templateId) {
+	private void prepareExtendedAttributes(final Long templateId) {
 		if (form2 != null)
 			form2.destroy();
 		if (contains(form2))
@@ -209,7 +209,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 				List<FormItem> items = new ArrayList<FormItem>();
 				for (GUIExtendedAttribute att : result) {
 					if (att.getType() == GUIExtendedAttribute.TYPE_STRING) {
-						FormItem item = ItemFactory.newStringItemForExtendedAttribute(att);
+						FormItem item = ItemFactory.newStringItemForExtendedAttribute(templateId, att);
 						if (document.getValue(att.getName()) != null)
 							item.setValue((String) document.getValue(att.getName()));
 						item.addChangedHandler(changedHandler);

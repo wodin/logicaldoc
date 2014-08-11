@@ -17,6 +17,9 @@ import com.logicaldoc.util.sql.SqlUtil;
 @SuppressWarnings("unchecked")
 public class HibernateDocumentTemplateDAO extends HibernatePersistentObjectDAO<DocumentTemplate> implements
 		DocumentTemplateDAO {
+
+	private ExtendedAttributeOptionDAO optionsDao;
+
 	public HibernateDocumentTemplateDAO() {
 		super(DocumentTemplate.class);
 		super.log = LoggerFactory.getLogger(HibernateDocumentTemplateDAO.class);
@@ -55,6 +58,8 @@ public class HibernateDocumentTemplateDAO extends HibernatePersistentObjectDAO<D
 				template.setName(template.getName() + "." + template.getId());
 				saveOrUpdate(template);
 			}
+
+			optionsDao.deleteByTemplateIdAndAttribute(id, null);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 			result = false;
@@ -73,4 +78,9 @@ public class HibernateDocumentTemplateDAO extends HibernatePersistentObjectDAO<D
 		return findByWhere("_entity.type =" + type + " and _entity.tenantId=" + tenantId,
 				"order by _entity.category asc", null);
 	}
+
+	public void setOptionsDao(ExtendedAttributeOptionDAO optionsDao) {
+		this.optionsDao = optionsDao;
+	}
+
 }

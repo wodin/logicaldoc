@@ -23,6 +23,7 @@ import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.TransferImgButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -30,6 +31,7 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.fields.LinkItem;
 import com.smartgwt.client.widgets.form.fields.PickerIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
@@ -85,7 +87,9 @@ public class TemplatePropertiesPanel extends HLayout {
 
 	private SelectItem editor;
 
-	private TextItem values;
+	private TextItem group;
+
+	private LinkItem options;
 
 	public TemplatePropertiesPanel() {
 
@@ -288,7 +292,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		if (contains(form2))
 			removeChild(form2);
 		form2 = new DynamicForm();
-		form2.setNumCols(2);
+		form2.setNumCols(1);
 
 		// Attribute Name
 		final TextItem attributeName = ItemFactory.newSimpleTextItem("attributeName", "attributename", null);
@@ -300,7 +304,7 @@ public class TemplatePropertiesPanel extends HLayout {
 				form2.getField("mandatory").setDisabled(false);
 				form2.getField("type").setDisabled(false);
 				form2.getField("editor").setDisabled(false);
-				form2.getField("values").setDisabled(true);
+				form2.getField("group").setDisabled(true);
 				refreshFieldForm();
 			}
 		});
@@ -325,6 +329,7 @@ public class TemplatePropertiesPanel extends HLayout {
 
 		// Editor
 		editor = new SelectItem("editor", I18N.message("inputmode"));
+		editor.setEndRow(true);
 		LinkedHashMap<String, String> editors = new LinkedHashMap<String, String>();
 		editors.put("" + GUIExtendedAttribute.EDITOR_DEFAULT, I18N.message("free"));
 		editors.put("" + GUIExtendedAttribute.EDITOR_LISTBOX, I18N.message("preset"));
@@ -360,9 +365,27 @@ public class TemplatePropertiesPanel extends HLayout {
 		});
 
 		// Values (for preset editor)
-		values = ItemFactory.newTextItem("values", "values", null);
-		values.setHint(I18N.message("separatedcomma"));
-		values.setDisabled(template.isReadonly());
+		group = ItemFactory.newTextItem("group", "group", null);
+		group.setHint(I18N.message("groupname"));
+		group.setDisabled(template.isReadonly());
+		group.setStartRow(true);
+
+		// Options (for preset editor)
+		options = ItemFactory.newLinkItem("options", I18N.message("options"));
+		options.setLinkTitle(I18N.message("attributeoptions"));
+		options.setStartRow(true);
+		options.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+			@Override
+			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+				if (template.getId() == 0L) {
+					SC.say("savetemplatefirst");
+				} else {
+					ExtendedAttributeOptions options = new ExtendedAttributeOptions(template.getId(), attributeName
+							.getValueAsString(), template.isReadonly());
+					options.show();
+				}
+			}
+		});
 
 		ButtonItem addUpdate = new ButtonItem();
 		addUpdate.setTitle(I18N.message("addupdate"));
@@ -381,9 +404,9 @@ public class TemplatePropertiesPanel extends HLayout {
 						att.setMandatory((Boolean) mandatory.getValue());
 						att.setType(Integer.parseInt((String) type.getValue()));
 						att.setEditor(Integer.parseInt((String) editor.getValue()));
-						if (att.getType() == GUIExtendedAttribute.TYPE_USER
-								|| (att.getType() == GUIExtendedAttribute.TYPE_STRING && att.getEditor() == GUIExtendedAttribute.EDITOR_LISTBOX))
-							att.setStringValue(values.getValueAsString());
+
+						if (att.getType() == GUIExtendedAttribute.TYPE_USER)
+							att.setStringValue(group.getValueAsString());
 
 						if (form2.validate()) {
 							changedHandler.onChanged(null);
@@ -399,9 +422,8 @@ public class TemplatePropertiesPanel extends HLayout {
 							att.setType(Integer.parseInt(type.getValueAsString()));
 							att.setEditor(Integer.parseInt((String) editor.getValueAsString()));
 
-							if (att.getType() == GUIExtendedAttribute.TYPE_USER
-									|| (att.getType() == GUIExtendedAttribute.TYPE_STRING && att.getEditor() == GUIExtendedAttribute.EDITOR_LISTBOX))
-								att.setStringValue(values.getValueAsString());
+							if (att.getType() == GUIExtendedAttribute.TYPE_USER)
+								att.setStringValue(group.getValueAsString());
 							else
 								att.setStringValue(null);
 
@@ -416,9 +438,9 @@ public class TemplatePropertiesPanel extends HLayout {
 		});
 
 		if (!template.isReadonly())
-			form2.setItems(attributeName, label, mandatory, type, editor, values, addUpdate);
+			form2.setItems(attributeName, label, mandatory, type, editor, group, options, addUpdate);
 		else
-			form2.setItems(attributeName, label, mandatory, type, editor, values);
+			form2.setItems(attributeName, label, mandatory, type, editor, group, options);
 
 		attributesLayout.setMembers(form2);
 		attributesLayout.setMembersMargin(15);
@@ -571,7 +593,7 @@ public class TemplatePropertiesPanel extends HLayout {
 			form2.setValue("mandatory", extAttr.isMandatory());
 			form2.setValue("type", extAttr.getType());
 			form2.setValue("editor", extAttr.getEditor());
-			form2.setValue("values", extAttr.getStringValue());
+			form2.setValue("group", extAttr.getStringValue());
 			updatingAttributeName = selectedAttributeName;
 			refreshFieldForm();
 		}
@@ -579,27 +601,23 @@ public class TemplatePropertiesPanel extends HLayout {
 
 	public void refreshFieldForm() {
 		if (type.getValueAsString().equals("" + GUIExtendedAttribute.TYPE_STRING)) {
-			editor.setDisabled(false);
-			values.setTitle(I18N.message("values"));
-			values.setHint(I18N.message("separatedcomma"));
+			editor.setVisible(true);
+			group.setVisible(false);
 
 			if (editor.getValueAsString().equals("" + GUIExtendedAttribute.EDITOR_LISTBOX)) {
-				values.setDisabled(false);
-			} else{
-				values.setDisabled(true);
-				values.setValue("");
+				options.setVisible(true);
+			} else {
+				options.setVisible(false);
 			}
 		} else if (type.getValueAsString().equals("" + GUIExtendedAttribute.TYPE_USER)) {
-			editor.setDisabled(true);
-			values.setDisabled(false);
-			values.setTitle(I18N.message("group"));
-			values.setHint(I18N.message("groupname"));
+			editor.setVisible(false);
+			group.setVisible(true);
+			options.setVisible(false);
 		} else {
-			editor.setDisabled(true);
-			values.setDisabled(true);
-			values.setValue("");
-			values.setTitle(" ");
-			values.setHint(" ");
+			editor.setVisible(false);
+			group.setVisible(false);
+			options.setVisible(false);
+			group.setValue("");
 		}
 
 		form2.markForRedraw();

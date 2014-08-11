@@ -25,4 +25,16 @@ public interface TemplateService extends RemoteService {
 	 * Loads a given template from the database
 	 */
 	public GUITemplate getTemplate(String sid, long templateId) throws ServerException;
+
+
+	/**
+	 * Saves the list of all possible options
+	 */
+	public void saveOptions(String sid, long templateId, String attribute, String[] values) throws ServerException;
+	
+	/**
+	 * Delete a selection of options
+	 */
+	public void deleteOptions(String sid, long templateId, String attribute, String[] values) throws ServerException;
+
 }

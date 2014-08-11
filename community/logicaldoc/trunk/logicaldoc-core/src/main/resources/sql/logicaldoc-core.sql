@@ -134,6 +134,11 @@ create table ld_sequence (ld_id bigint not null, ld_lastmodified timestamp not n
                           ld_deleted int not null, ld_tenantid bigint not null, ld_name varchar(255) not null,
                           ld_objectid bigint, ld_lastreset timestamp null, ld_value bigint not null,
                           primary key (ld_id));
+create table ld_extoption (ld_id bigint not null, ld_lastmodified timestamp not null, ld_recordversion bigint not null,
+                          ld_deleted int not null, ld_tenantid bigint not null, ld_templateid bigint not null,
+                          ld_attribute varchar(255) not null, ld_value varchar(255) not null, 
+                          ld_label varchar(1000), ld_position int not null,
+                          primary key (ld_id));
 
 create table hibernate_unique_key (tablename varchar(40) NOT NULL, next_hi bigint NOT NULL);
 
@@ -173,6 +178,7 @@ create unique index  AK_RATING on ld_rating (ld_docid, ld_userid);
 create unique index  AK_MSGTEMPL on ld_messagetemplate (ld_name, ld_language, ld_tenantid);
 create unique index  AK_TENANT on ld_tenant (ld_name);
 create unique index  AK_SEQUENCE on ld_sequence (ld_name, ld_objectid, ld_tenantid);
+create unique index  AK_EXTOPTION on ld_extoption (ld_templateid, ld_attribute, ld_value);
 
 
 --Prepare some indexes
@@ -385,3 +391,4 @@ insert into hibernate_unique_key(tablename, next_hi) values ('ld_note', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_messagetemplate', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_tenant', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_sequence', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_extoption', 100);

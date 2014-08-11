@@ -392,3 +392,17 @@ insert into ld_sequence(ld_id, ld_lastmodified, ld_deleted, ld_tenantid,ld_recor
 values(1, '2010-04-23 00:00:00',0,1,1,'customid-year_seq',5);
 insert into ld_sequence(ld_id, ld_lastmodified, ld_deleted, ld_tenantid,ld_recordversion,ld_name,ld_value)
 values(2, '2010-04-23 00:00:00',0,1,1,'customid-month_seq',3);
+
+
+insert into ld_extoption
+			(ld_id, ld_lastmodified, ld_recordversion, ld_deleted, ld_tenantid, ld_templateid, ld_attribute, ld_value, ld_label, ld_position)
+values(1, '2014-08-07 00:00:00',1,0,1,1,'att1','value1','value1 label',1);
+insert into ld_extoption
+			(ld_id, ld_lastmodified, ld_recordversion, ld_deleted, ld_tenantid, ld_templateid, ld_attribute,ld_value, ld_label, ld_position)
+values(2, '2014-08-07 00:00:00',1,0,1,1,'att1','value2','value2 label',2);
+insert into ld_extoption
+			(ld_id, ld_lastmodified, ld_recordversion, ld_deleted, ld_tenantid, ld_templateid, ld_attribute,ld_value, ld_label, ld_position)
+values(3, '2014-08-07 00:00:00',1,0,1,1,'att2','value3','value3 label',3);
+insert into ld_extoption
+			(ld_id, ld_lastmodified, ld_recordversion, ld_deleted, ld_tenantid, ld_templateid, ld_attribute,ld_value, ld_label, ld_position)
+values(4, '2014-08-07 00:00:00',1,0,1,2,'att1','value4','value4 label',1);			
