@@ -77,6 +77,37 @@ public class DocumentServiceImpl extends com.logicaldoc.webservice.document.Docu
 		return Response.ok("file checked-in").build();
 	}
 
+	@POST
+	@Path("/upload")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public Response upload(MultipartBody multipartBody) throws Exception {
+		String sid = null;
+		Long docId = null;
+		Long folderId = null;
+		boolean release = false;
+		String filename = null;
+
+		List<Attachment> attachments = multipartBody.getAllAttachments();
+		for (Attachment attachment : attachments) {
+			Map<String, String> params = attachment.getContentDisposition().getParameters();
+			if ("sid".equals(params.get("name"))) {
+				sid = getContentAsString(attachment.getDataHandler());
+			} else if ("docId".equals(params.get("name"))) {
+				docId = Long.parseLong(getContentAsString(attachment.getDataHandler()));
+			} else if ("folderId".equals(params.get("name"))) {
+				folderId = Long.parseLong(getContentAsString(attachment.getDataHandler()));
+			} else if ("release".equals(params.get("name"))) {
+				release = Boolean.parseBoolean(getContentAsString(attachment.getDataHandler()));
+			} else if ("filename".equals(params.get("name"))) {
+				filename = getContentAsString(attachment.getDataHandler());
+			}
+		}
+
+		long documentId = super.upload(sid, docId, folderId, release, filename, attachments.get(0).getDataHandler());
+		return Response.ok("" + documentId).build();
+	}
+
 	private String getContentAsString(DataHandler handler) throws IOException {
 		if (handler == null)
 			return null;
