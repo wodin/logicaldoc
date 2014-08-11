@@ -18,10 +18,17 @@ public class RestWorgkbench {
 			System.out.println("Session is valid");
 
 		try {
-			File file=new File("C:/tmp/logo.gif");
-			
-			doc.checkout(sid, 673284114L);
-			doc.checkin(sid, 673284114L, "rest checkin", "phototest.gif", true, file);
+			File file = new File("C:/tmp/logo.gif");
+
+			long docId = doc.upload(sid, null, 4L, true, "testrest.gif", file);
+			System.out.println("Crearted document " + docId);
+
+			docId = doc.upload(sid, docId, null, true, "testrest.gif", file);
+			System.out.println("Updated document " + docId);
+
+			// doc.checkout(sid, 673284114L);
+			// doc.checkin(sid, 673284114L, "rest checkin", "phototest.gif",
+			// true, file);
 		} finally {
 			auth.logout(sid);
 		}

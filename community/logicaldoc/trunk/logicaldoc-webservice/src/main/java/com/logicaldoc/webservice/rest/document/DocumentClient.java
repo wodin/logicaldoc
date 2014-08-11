@@ -1,6 +1,8 @@
 package com.logicaldoc.webservice.rest.document;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.activation.DataHandler;
 
@@ -119,7 +121,7 @@ public class DocumentClient extends RestClient implements DocumentService {
 		try {
 			post.setParameter("sid", sid);
 			post.setParameter("docId", Long.toString(docId));
-			
+
 			try {
 				client.executeMethod(post);
 			} catch (Throwable e) {
@@ -139,8 +141,7 @@ public class DocumentClient extends RestClient implements DocumentService {
 	@Override
 	public long upload(String sid, Long docId, Long folderId, boolean release, String filename, DataHandler content)
 			throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -195,7 +196,6 @@ public class DocumentClient extends RestClient implements DocumentService {
 	@Override
 	public void reindex(String sid, long docId) throws Exception {
 		// TODO Auto-generated method stub
-
 	}
 
 	public void checkin(String sid, long docId, String comment, String filename, boolean release, File file)
@@ -224,4 +224,37 @@ public class DocumentClient extends RestClient implements DocumentService {
 			throw new Exception("Invalid checkin");
 	}
 
+	public long upload(String sid, Long docId, Long folderId, boolean release, String filename, File file)
+			throws Exception {
+		String output = null;
+		String url = endpoint + "/upload";
+
+		PostMethod post = preparePostMethod(url);
+		try {
+			List<Part> parts = new ArrayList<Part>();
+			parts.add(new FilePart("filedata", filename, file, null, null));
+			parts.add(new StringPart("sid", sid));
+			if (docId != null)
+				parts.add(new StringPart("docId", "" + docId));
+			if (folderId != null)
+				parts.add(new StringPart("folderId", "" + folderId));
+			parts.add(new StringPart("filename", filename));
+			parts.add(new StringPart("release", "" + release));
+
+			post.setRequestEntity(new MultipartRequestEntity(parts.toArray(new Part[0]), post.getParams()));
+			int statusCode = client.executeMethod(post);
+
+			if (statusCode == HttpStatus.SC_OK)
+				output = post.getResponseBodyAsString();
+			else
+				throw new Exception("Server Error");
+		} finally {
+			post.releaseConnection();
+		}
+
+		if (StringUtils.isEmpty(output))
+			throw new Exception("Invalid checkin");
+		else
+			return Long.parseLong(output);
+	}
 }

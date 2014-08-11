@@ -696,7 +696,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 	@Override
 	public long upload(String sid, Long docId, Long folderId, boolean release, String filename, DataHandler content)
 			throws Exception {
-		User user = validateSession(sid);
+		validateSession(sid);
 
 		if (docId != null) {
 			checkout(sid, docId);

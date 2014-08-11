@@ -11,7 +11,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Folder;
@@ -128,6 +127,21 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 	}
 
 	@Test
+	public void testUpload() throws Exception {
+		File file = new File("pom.xml");
+		long docId = docServiceImpl.upload("xxxx", null, 4L, true, "document test.txt", new DataHandler(
+				new FileDataSource(file)));
+
+		Assert.assertTrue(docId > 0L);
+		
+		long docId2 = docServiceImpl.upload("xxxx", docId, null, true, "document test.txt", new DataHandler(
+				new FileDataSource(file)));
+	
+		Assert.assertEquals(docId, docId2);
+		Assert.assertEquals("2.0", docDao.findById(docId2).getVersion());
+	}
+
+	@Test
 	public void testCheckin() throws Exception {
 		docServiceImpl.checkout("", 1);
 
@@ -143,7 +157,8 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		Assert.assertNotNull(doc);
 		docDao.initialize(doc);
 
-//		Assert.assertEquals(AbstractDocument.INDEX_TO_INDEX, doc.getIndexed());
+		// Assert.assertEquals(AbstractDocument.INDEX_TO_INDEX,
+		// doc.getIndexed());
 		Assert.assertEquals(0, doc.getSigned());
 		Assert.assertEquals(Document.DOC_UNLOCKED, doc.getStatus());
 	}
