@@ -17,6 +17,7 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.CloseClickEvent;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
@@ -24,11 +25,8 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
-import com.smartgwt.client.widgets.form.fields.SubmitItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
-import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
@@ -39,7 +37,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  */
 public class DocumentsUploader extends Window {
 
-	private SubmitItem sendButton;
+	private IButton sendButton;
 
 	private MultiUploader multiUploader;
 
@@ -57,7 +55,7 @@ public class DocumentsUploader extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("adddocuments"));
 		setWidth(500);
-		setHeight(300);
+		setHeight(280);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -70,16 +68,29 @@ public class DocumentsUploader extends Window {
 		multiUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
 
 		multiUploader.setStyleName("upload");
-		multiUploader.setHeight("100%");
 		multiUploader.setWidth("100%");
 		multiUploader.setFileInputPrefix("LDOC");
 		multiUploader.reset();
 
-		layout.addMember(multiUploader, 1);
-		layout.setMembersMargin(10);
-		layout.setMargin(25);
+		sendButton = new IButton(I18N.message("send"));
+		sendButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
+			@Override
+			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+				onSend();
+			}
+		});
+
+		prepareForm();
+
+		layout.setMembersMargin(5);
+		layout.setMargin(15);
 		layout.setHeight(250);
 		layout.setWidth100();
+
+		layout.addMember(form);
+		layout.addMember(multiUploader);
+		layout.addMember(sendButton);
 
 		addCloseClickHandler(new CloseClickHandler() {
 			@Override
@@ -99,35 +110,15 @@ public class DocumentsUploader extends Window {
 			}
 		});
 
-		addChild(layout);
-
-		// Celanup the upload folder and finalize the GUI setup
-		documentService.cleanUploadedFileFolder(Session.get().getSid(), new AsyncCallback<Void>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				Log.serverError(caught);
-			}
-
-			@Override
-			public void onSuccess(Void result) {
-				reloadForm();
-			}
-		});
-
+		addItem(layout);
 	}
 
-	private void reloadForm() {
-		if (form != null) {
-			layout.removeChild(form);
-		}
-
+	private void prepareForm() {
 		form = new DynamicForm();
 		vm = new ValuesManager();
 		form.setValuesManager(vm);
-		form.setHeight(90);
 
-		CheckboxItem zipItem = new CheckboxItem();
+		final CheckboxItem zipItem = new CheckboxItem();
 		zipItem.setName("zip");
 		zipItem.setTitle(I18N.message("importfromzip"));
 		zipItem.setValue(!zipImport);
@@ -146,23 +137,11 @@ public class DocumentsUploader extends Window {
 		zipItem.addChangeHandler(new ChangeHandler() {
 			public void onChange(ChangeEvent event) {
 				zipImport = !zipImport;
-				reloadForm();
+				zipItem.setDisabled(!zipImport);
 			}
 		});
 
-		sendButton = new SubmitItem();
-		sendButton.setTitle(I18N.message("send"));
-		sendButton.setEndRow(true);
-		sendButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				onSend();
-			}
-		});
-
-		form.setItems(zipItem, encodingItem, sendButton);
-
-		layout.addMember(form, 0);
+		form.setItems(zipItem, encodingItem);
 	}
 
 	private IUploader.OnFinishUploaderHandler onFinishUploaderHandler = new IUploader.OnFinishUploaderHandler() {
