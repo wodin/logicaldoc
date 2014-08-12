@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -138,8 +137,22 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public void addDocuments(String sid, String encoding, boolean importZip, final GUIDocument metadata)
-			throws ServerException {
+	public void indexDocuments(String sid, Long[] docIds) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
+		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		for (Long id : docIds) {
+			if (id != null)
+				try {
+					documentManager.reindex(id);
+				} catch (Exception e) {
+					ServiceUtil.throwServerException(session, log, e);
+				}
+		}
+	}
+
+	@Override
+	public void addDocuments(String sid, String encoding, boolean importZip, boolean immediateIndexing,
+			final GUIDocument metadata) throws ServerException {
 		final UserSession session = ServiceUtil.validateSession(sid);
 
 		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
@@ -158,6 +171,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		if (!fdao.isWriteEnable(metadata.getFolder().getId(), session.getUserId()))
 			ServiceUtil.throwServerException(session, log, new Exception(
 					"The user doesn't have the write permission on the current folder"));
+
+		List<Long> docsToIndex = new ArrayList<Long>();
 
 		try {
 			for (String fileId : uploadedFilesMap.keySet()) {
@@ -218,9 +233,15 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 					// Create the new document
 					doc = documentManager.create(file, doc, transaction);
+					
+					if (immediateIndexing && doc.getIndexed() == Document.INDEX_TO_INDEX)
+						docsToIndex.add(doc.getId());
 				}
 			}
 			UploadServlet.cleanReceivedFiles(getThreadLocalRequest().getSession());
+
+			if (!docsToIndex.isEmpty())
+				indexDocuments(sid, docsToIndex.toArray(new Long[0]));
 		} catch (Throwable t) {
 			ServiceUtil.throwServerException(session, log, t);
 		}
@@ -228,7 +249,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 	@Override
 	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip,
-			final Long templateId) throws ServerException {
+			boolean immediateIndexing, final Long templateId) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		if (folderId == fdao.findRoot(session.getTenantId()).getId())
@@ -238,7 +259,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		metadata.setLanguage(language);
 		metadata.setFolder(new GUIFolder(folderId));
 		metadata.setTemplateId(templateId);
-		addDocuments(sid, encoding, importZip, metadata);
+		addDocuments(sid, encoding, importZip, immediateIndexing, metadata);
 	}
 
 	@Override
@@ -402,7 +423,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					att.setMandatory(extAttr.getMandatory() == 1);
 					att.setEditor(extAttr.getEditor());
 					att.setStringValue(extAttr.getStringValue());
-					
+
 					att.setOptions(new String[] { extAttr.getStringValue() });
 
 					if (doc != null) {
