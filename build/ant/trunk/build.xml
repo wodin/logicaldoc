@@ -14,24 +14,7 @@
     <typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant">
       <classpath refid="ext.classpath" />
     </typedef>
-    <path id="hibernate.classpath">
-      <fileset dir="${logicaldoc.hibernate.home}">
-        <include name="**/*.jar" />
-      </fileset>
-      <fileset dir="${logicaldoc.devroot}/build/ant/lib">
-        <include name="*.jar"/>
-      </fileset>
-      <pathelement path="target/classes" />
-    </path>
     <echo>${logicaldoc.devroot}</echo>
-    <trycatch  property="error" reference="exception">
-      <try>
-        <taskdef name="schemaexport" classname="org.hibernate.tool.hbm2ddl.SchemaExportTask" classpathref="hibernate.classpath" />
-      </try>
-      <catch>
-        <echo>${error}</echo>
-      </catch>
-    </trycatch>
   </target>
   <target name="init-all" depends="task-definitions">
     <trycatch property="error" reference="exception">
@@ -69,6 +52,7 @@
         <exclude name="**/null/**" />
         <exclude name="**/war/WEB-INF/classes/**" />
         <exclude name="**/war/WEB-INF/lib/**" />
+        <exclude name="**/war/WEB-INF/deploy/**" />
         <exclude name="**/war/frontend/**" />
         <exclude name="**/war/common/**" />
         <exclude name="**/war/setup/**" />
