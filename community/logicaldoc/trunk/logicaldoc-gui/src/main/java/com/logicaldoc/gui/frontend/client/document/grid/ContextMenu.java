@@ -15,6 +15,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
+import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentCheckin;
@@ -435,6 +436,37 @@ public class ContextMenu extends Menu {
 			}
 		});
 
+		MenuItem indexSelection = new MenuItem();
+		indexSelection.setTitle(I18N.message("index"));
+		indexSelection.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				if (selection == null || selection.length == 0)
+					return;
+
+				Long[] ids = new Long[selectionIds.length];
+				for (int i = 0; i < selectionIds.length; i++)
+					ids[i] = selectionIds[i];
+
+				ContactingServer.get().show();
+				documentService.indexDocuments(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						ContactingServer.get().hide();
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						ContactingServer.get().hide();
+						for (GUIDocument record : selection) {
+							record.setIndexed(1);
+							grid.updateDocument(record);
+						}
+					}
+				});
+			}
+		});
+
 		MenuItem sign = new MenuItem();
 		sign.setTitle(I18N.message("sign"));
 		sign.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
@@ -563,6 +595,7 @@ public class ContextMenu extends Menu {
 			links.setEnabled(false);
 			markIndexable.setEnabled(false);
 			markUnindexable.setEnabled(false);
+			indexSelection.setEnabled(false);
 		}
 
 		if (selection.length != 1 || Constants.DOC_CHECKED_OUT != selection[0].getStatus())
@@ -584,6 +617,7 @@ public class ContextMenu extends Menu {
 		for (GUIDocument record : selection)
 			if (record.getIndexed() == 1 && record.getImmutable() == 0) {
 				markIndexable.setEnabled(false);
+				indexSelection.setEnabled(false);
 				break;
 			}
 
@@ -634,7 +668,7 @@ public class ContextMenu extends Menu {
 					unlockItem, more);
 
 		Menu moreMenu = new Menu();
-		moreMenu.setItems(immutable, markIndexable, markUnindexable);
+		moreMenu.setItems(indexSelection, markIndexable, markUnindexable, immutable);
 
 		if (enableSign && Feature.visible(Feature.DIGITAL_SIGN)) {
 			moreMenu.addItem(sign);

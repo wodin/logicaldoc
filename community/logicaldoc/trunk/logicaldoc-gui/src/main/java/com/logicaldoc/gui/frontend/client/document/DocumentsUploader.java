@@ -4,6 +4,7 @@ import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
 import gwtupload.client.MultiUploader;
 
+import com.gargoylesoftware.htmlunit.ImmediateRefreshHandler;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
@@ -123,6 +124,11 @@ public class DocumentsUploader extends Window {
 		zipItem.setTitle(I18N.message("importfromzip"));
 		zipItem.setValue(!zipImport);
 
+		final CheckboxItem immediateIndexing = new CheckboxItem();
+		immediateIndexing.setName("immediateIndexing");
+		immediateIndexing.setTitle(I18N.message("immediateindexing"));
+		immediateIndexing.setValue(false);
+
 		if (!Session.get().getCurrentFolder().hasPermission(Constants.PERMISSION_IMPORT)) {
 			zipItem.setDisabled(true);
 			zipItem.setValue(false);
@@ -141,7 +147,7 @@ public class DocumentsUploader extends Window {
 			}
 		});
 
-		form.setItems(zipItem, encodingItem);
+		form.setItems(zipItem, encodingItem, immediateIndexing);
 	}
 
 	private IUploader.OnFinishUploaderHandler onFinishUploaderHandler = new IUploader.OnFinishUploaderHandler() {
@@ -177,6 +183,8 @@ public class DocumentsUploader extends Window {
 		BulkUpdateDialog bulk = new BulkUpdateDialog(null, metadata, false, false);
 		bulk.setZip(getImportZip());
 		bulk.setEncoding(getEncoding());
+		bulk.setImmediateIndexing(getImmediateIndexing());
+		
 		bulk.show();
 		destroy();
 	}
@@ -187,5 +195,9 @@ public class DocumentsUploader extends Window {
 
 	public boolean getImportZip() {
 		return "true".equals(vm.getValueAsString("zip"));
+	}
+	
+	public boolean getImmediateIndexing() {
+		return "true".equals(vm.getValueAsString("immediateIndexing"));
 	}
 }
