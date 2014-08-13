@@ -21,15 +21,14 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @author Marco Meschieri - Logical Objects
  * @since 6.8
  */
-public class BulkCheckinDialog extends Window {
+public class BulkCheckoutDialog extends Window {
 	private HTMLFlow applet = new HTMLFlow();
 
 	protected DocumentServiceAsync service = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	public BulkCheckinDialog(final long[] docIds) {
+	public BulkCheckoutDialog(final long[] docIds) {
 		VLayout layout = new VLayout();
-		layout.setTop(23);
-		layout.setLeft(5);
+		layout.setMargin(2);
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("bulkcheckout"));
@@ -49,7 +48,8 @@ public class BulkCheckinDialog extends Window {
 
 		String tmp = "<applet name=\"CheckinApplet\" archive=\""
 				+ Util.contextPath()
-				+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.checkin.CheckinApplet\" width=\"400\" height=\"290\">";
+				+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.checkin.CheckinApplet\" width=\""
+				+ (getWidth() - 10) + "\" height=\"" + (getHeight() - 35) + "\">";
 		tmp += "<param name=\"language\" value=\"" + I18N.getLocale() + "\" />";
 		tmp += "<param name=\"sid\" value=\"" + Session.get().getSid() + "\" />";
 		tmp += "<param name=\"baseUrl\" value=\"" + Util.contextPath() + "\" />";
@@ -57,11 +57,11 @@ public class BulkCheckinDialog extends Window {
 		tmp += "</applet>";
 
 		applet.setContents(tmp);
-		applet.setWidth("400px");
-		applet.setHeight("290px");
+		applet.setWidth(getWidth() - 10);
+		applet.setHeight(getHeight() - 35);
 
 		layout.addMember(applet);
-		addChild(layout);
+		addItem(layout);
 
 		addCloseClickHandler(new CloseClickHandler() {
 

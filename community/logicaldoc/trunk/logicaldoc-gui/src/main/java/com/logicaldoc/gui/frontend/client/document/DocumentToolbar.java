@@ -392,7 +392,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				if (grid.getSelectedCount() == 0)
 					return;
 
-				BulkCheckinDialog dialog = new BulkCheckinDialog(grid.getSelectedIds());
+				BulkCheckoutDialog dialog = new BulkCheckoutDialog(grid.getSelectedIds());
 				dialog.show();
 			}
 		});
