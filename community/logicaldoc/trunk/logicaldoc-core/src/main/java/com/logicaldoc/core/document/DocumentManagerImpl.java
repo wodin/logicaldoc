@@ -193,6 +193,12 @@ public class DocumentManagerImpl implements DocumentManager {
 		assert (transaction.getUser() != null);
 
 		Document document = documentDAO.findById(docId);
+
+		if (document.getStatus() == status && document.getLockUserId() == transaction.getUserId()) {
+			log.debug("Document " + docId + " already locked by user " + transaction.getUserName());
+			return;
+		}
+
 		if (document.getStatus() != Document.DOC_UNLOCKED)
 			throw new Exception("Document is locked");
 
@@ -586,7 +592,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			docVO.setId(0L);
 
 			transaction.setFile(file.getAbsolutePath());
-			
+
 			// Create the record
 			documentSaved = documentDAO.store(docVO, transaction);
 
