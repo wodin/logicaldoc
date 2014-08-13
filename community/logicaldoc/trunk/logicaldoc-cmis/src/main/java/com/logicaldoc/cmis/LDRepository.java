@@ -374,7 +374,7 @@ public class LDRepository {
 	 */
 	public TypeDefinitionList getTypesChildren(CallContext context, String typeId, boolean includePropertyDefinitions,
 			BigInteger maxItems, BigInteger skipCount) {
-		debug("getTypesChildren");
+		debug("getTypesChildren " + typeId);
 		validatePermission(context.getRepositoryId(), context, null);
 		return types.getTypesChildren(context, typeId, includePropertyDefinitions, maxItems, skipCount);
 	}
@@ -383,10 +383,14 @@ public class LDRepository {
 	 * CMIS getTypeDefinition.
 	 */
 	public TypeDefinition getTypeDefinition(CallContext context, String typeId) {
-		debug("getTypeDefinition");
+		debug("getTypeDefinition " + typeId);
 		validatePermission(context.getRepositoryId(), context, null);
 
-		return types.getTypeDefinition(context, typeId);
+		try {
+			return types.getTypeDefinition(context, typeId);
+		} catch (Throwable t) {
+			return (TypeDefinition) catchError(t);
+		}
 	}
 
 	/**
@@ -403,25 +407,26 @@ public class LDRepository {
 		debug("createDocumentFromSource");
 		validatePermission(folderId, context, Permission.WRITE);
 
-		Folder target = getFolder(folderId);
-		if (target == null)
-			throw new CmisObjectNotFoundException("Folder '" + folderId + "' is unknown!");
-
-		Document doc = (Document) getDocument(sourceId);
-		if (doc == null)
-			throw new CmisObjectNotFoundException("Document '" + sourceId + "' is unknown!");
-
-		History transaction = new History();
-		transaction.setSessionId(sid);
-		transaction.setEvent(DocumentEvent.STORED.toString());
-		transaction.setUser(getSessionUser());
-		transaction.setComment("");
-
 		try {
+			Folder target = getFolder(folderId);
+			if (target == null)
+				throw new CmisObjectNotFoundException("Folder '" + folderId + "' is unknown!");
+
+			Document doc = (Document) getDocument(sourceId);
+			if (doc == null)
+				throw new CmisObjectNotFoundException("Document '" + sourceId + "' is unknown!");
+
+			History transaction = new History();
+			transaction.setSessionId(sid);
+			transaction.setEvent(DocumentEvent.STORED.toString());
+			transaction.setUser(getSessionUser());
+			transaction.setComment("");
+
 			Document newDoc = documentManager.copyToFolder(doc, target, transaction);
 			return getId(newDoc);
-		} catch (Throwable e) {
-			throw new CmisStorageException("Could not create document: " + e.getMessage(), e);
+
+		} catch (Throwable t) {
+			return (String) catchError(t);
 		}
 	}
 
@@ -430,7 +435,7 @@ public class LDRepository {
 	 */
 	public ObjectData create(CallContext context, Properties properties, String folderId, ContentStream contentStream,
 			VersioningState versioningState, ObjectInfoHandler objectInfos) {
-		debug("create");
+		debug("create " + folderId);
 		validatePermission(folderId, context, Permission.WRITE);
 
 		String typeId = getTypeId(properties);
@@ -458,122 +463,124 @@ public class LDRepository {
 	public String createDocument(CallContext context, Properties properties, String folderId,
 			ContentStream contentStream, VersioningState versioningState) {
 
-		debug("createDocument");
+		debug("createDocument " + folderId);
 
 		validatePermission(folderId, context, Permission.WRITE);
 
-		// check properties
-		if ((properties == null) || (properties.getProperties() == null)) {
-			throw new CmisInvalidArgumentException("Properties must be set!");
-		}
-
-		// // check versioning state
-		// if (versioningState != null && VersioningState.NONE !=
-		// versioningState) {
-		// throw new CmisConstraintException("Versioning not supported!");
-		// }
-
-		// check type
-		String typeId = getTypeId(properties);
-		TypeDefinition type = types.getType(typeId);
-		if (type == null) {
-			throw new CmisObjectNotFoundException("Type '" + typeId + "' is unknown!");
-		}
-
-		User user = getSessionUser();
-
-		// check the name
-		String name = getStringProperty(properties, PropertyIds.NAME);
-		if (name == null) {
-			throw new CmisNameConstraintViolationException("Name is not valid!");
-		}
-
-		String fileName = getStringProperty(properties, PropertyIds.CONTENT_STREAM_FILE_NAME);
-		if (fileName == null)
-			fileName = getStringProperty(properties, "Filename");
-		if (fileName == null) {
-			fileName = name;
-			if (name.lastIndexOf('.') > 0)
-				name = fileName.substring(0, name.lastIndexOf('.'));
-		}
-		if (!isValidName(fileName)) {
-			throw new CmisNameConstraintViolationException("File name is not valid!");
-		}
-
-		// get parent Folder
-		Folder parent = getFolder(folderId);
-		if (parent == null) {
-			throw new CmisObjectNotFoundException("Parent is not a folder!");
-		}
-
-		Document document = new Document();
-		updateDocumentMetadata(document, properties, true);
-		document.setTenantId(user.getTenantId());
-		document.setTitle(name);
-		document.setFileName(fileName);
-		document.setFolder(getFolder(folderId));
-		document.setLanguage(user.getLanguage());
-
-		History transaction = new History();
-		transaction.setUser(user);
-		transaction.setSessionId(sid);
-
 		try {
+
+			// check properties
+			if ((properties == null) || (properties.getProperties() == null)) {
+				throw new CmisInvalidArgumentException("Properties must be set!");
+			}
+
+			// // check versioning state
+			// if (versioningState != null && VersioningState.NONE !=
+			// versioningState) {
+			// throw new CmisConstraintException("Versioning not supported!");
+			// }
+
+			// check type
+			String typeId = getTypeId(properties);
+			TypeDefinition type = types.getType(typeId);
+			if (type == null) {
+				throw new CmisObjectNotFoundException("Type '" + typeId + "' is unknown!");
+			}
+
+			User user = getSessionUser();
+
+			// check the name
+			String name = getStringProperty(properties, PropertyIds.NAME);
+			if (name == null) {
+				throw new CmisNameConstraintViolationException("Name is not valid!");
+			}
+
+			String fileName = getStringProperty(properties, PropertyIds.CONTENT_STREAM_FILE_NAME);
+			if (fileName == null)
+				fileName = getStringProperty(properties, "Filename");
+			if (fileName == null) {
+				fileName = name;
+				if (name.lastIndexOf('.') > 0)
+					name = fileName.substring(0, name.lastIndexOf('.'));
+			}
+			if (!isValidName(fileName)) {
+				throw new CmisNameConstraintViolationException("File name is not valid!");
+			}
+
+			// get parent Folder
+			Folder parent = getFolder(folderId);
+			if (parent == null) {
+				throw new CmisObjectNotFoundException("Parent is not a folder!");
+			}
+
+			Document document = new Document();
+			updateDocumentMetadata(document, properties, true);
+			document.setTenantId(user.getTenantId());
+			document.setTitle(name);
+			document.setFileName(fileName);
+			document.setFolder(getFolder(folderId));
+			document.setLanguage(user.getLanguage());
+
+			History transaction = new History();
+			transaction.setUser(user);
+			transaction.setSessionId(sid);
+
 			document = documentManager.create(new BufferedInputStream(contentStream.getStream(), BUFFER_SIZE),
 					document, transaction);
-		} catch (Throwable e) {
-			throw new CmisStorageException("Could not create document: " + e.getMessage(), e);
-		}
 
-		return getId(document);
+			return getId(document);
+		} catch (Throwable t) {
+			return (String) catchError(t);
+		}
 	}
 
 	/**
 	 * CMIS createFolder.
 	 */
 	public String createFolder(CallContext context, Properties properties, String folderId) {
-		debug("createFolder");
+		debug("createFolder " + folderId);
 
 		validatePermission(folderId, context, Permission.WRITE);
 
-		// check properties
-		if ((properties == null) || (properties.getProperties() == null)) {
-			throw new CmisInvalidArgumentException("Properties must be set!");
-		}
-
-		// check type
-		String typeId = getTypeId(properties);
-		TypeDefinition type = types.getType(typeId);
-		if (type == null) {
-			throw new CmisObjectNotFoundException("Type '" + typeId + "' is unknown!");
-		}
-
-		// check the name
-		String name = getStringProperty(properties, PropertyIds.NAME);
-		if (!isValidName(name)) {
-			throw new CmisNameConstraintViolationException("Name is not valid.");
-		}
-
-		// get parent File
-		Folder parent = getFolder(folderId);
-		if (parent == null) {
-			throw new CmisObjectNotFoundException("Parent is not a folder!");
-		}
-
-		FolderHistory transaction = new FolderHistory();
-		transaction.setUser(getSessionUser());
-		transaction.setSessionId(sid);
-
-		Folder folder = null;
 		try {
+
+			// check properties
+			if ((properties == null) || (properties.getProperties() == null)) {
+				throw new CmisInvalidArgumentException("Properties must be set!");
+			}
+
+			// check type
+			String typeId = getTypeId(properties);
+			TypeDefinition type = types.getType(typeId);
+			if (type == null) {
+				throw new CmisObjectNotFoundException("Type '" + typeId + "' is unknown!");
+			}
+
+			// check the name
+			String name = getStringProperty(properties, PropertyIds.NAME);
+			if (!isValidName(name)) {
+				throw new CmisNameConstraintViolationException("Name is not valid.");
+			}
+
+			// get parent File
+			Folder parent = getFolder(folderId);
+			if (parent == null) {
+				throw new CmisObjectNotFoundException("Parent is not a folder!");
+			}
+
+			FolderHistory transaction = new FolderHistory();
+			transaction.setUser(getSessionUser());
+			transaction.setSessionId(sid);
+
+			Folder folder = null;
 			Folder newFolder = new Folder(name);
 			newFolder.setTenantId(getSessionUser().getTenantId());
 			folder = folderDao.create(parent, newFolder, true, transaction);
-		} catch (Throwable e) {
-			throw new CmisStorageException("Could not create document: " + e.getMessage(), e);
-		}
 
-		return getId(folder);
+			return getId(folder);
+		} catch (Throwable t) {
+			return (String) catchError(t);
+		}
 	}
 
 	/**
@@ -581,51 +588,54 @@ public class LDRepository {
 	 */
 	public ObjectData moveObject(CallContext context, Holder<String> objectId, String targetFolderId,
 			ObjectInfoHandler objectInfos) {
-		debug("moveObject");
+		debug("moveObject " + objectId + " into " + targetFolderId);
 
-		if (objectId == null) {
-			throw new CmisInvalidArgumentException("Id is not valid!");
-		}
+		try {
+			if (objectId == null)
+				throw new CmisInvalidArgumentException("Id is not valid!");
 
-		validatePermission(targetFolderId, context, Permission.WRITE);
-		validatePermission(objectId.getValue(), context, Permission.DOWNLOAD);
+			validatePermission(targetFolderId, context, Permission.WRITE);
+			validatePermission(objectId.getValue(), context, Permission.DOWNLOAD);
 
-		Folder target = getFolder(targetFolderId);
-		if (target == null) {
-			throw new CmisInvalidArgumentException("Target folder " + targetFolderId + " not found!");
-		}
-
-		Object object = getObject(objectId.getValue());
-		if (object == null) {
-			throw new CmisInvalidArgumentException("Source object " + objectId.getValue() + " not found!");
-		}
-
-		if (object instanceof Document) {
-			History transaction = new History();
-			transaction.setUser(getSessionUser());
-			transaction.setSessionId(sid);
-			try {
-				documentManager.moveToFolder((Document) object, target, transaction);
-			} catch (Throwable e) {
-				throw new CmisStorageException("Error moving the document!", e);
+			Folder target = getFolder(targetFolderId);
+			if (target == null) {
+				throw new CmisInvalidArgumentException("Target folder " + targetFolderId + " not found!");
 			}
 
-			AbstractDocument doc = getDocument(objectId.getValue());
-			return compileObjectType(context, doc, null, false, false, objectInfos);
-		} else {
-			FolderHistory transaction = new FolderHistory();
-			transaction.setUser(getSessionUser());
-			transaction.setSessionId(sid);
-			transaction.setEvent(FolderEvent.MOVED.toString());
-
-			try {
-				folderDao.move((Folder) object, target, transaction);
-			} catch (Throwable e) {
-				throw new CmisStorageException("Error moving the document!", e);
+			Object object = getObject(objectId.getValue());
+			if (object == null) {
+				throw new CmisInvalidArgumentException("Source object " + objectId.getValue() + " not found!");
 			}
 
-			Folder folder = getFolder(objectId.getValue());
-			return compileObjectType(context, folder, null, false, false, objectInfos);
+			if (object instanceof Document) {
+				History transaction = new History();
+				transaction.setUser(getSessionUser());
+				transaction.setSessionId(sid);
+				try {
+					documentManager.moveToFolder((Document) object, target, transaction);
+				} catch (Throwable e) {
+					throw new CmisStorageException("Error moving the document!", e);
+				}
+
+				AbstractDocument doc = getDocument(objectId.getValue());
+				return compileObjectType(context, doc, null, false, false, objectInfos);
+			} else {
+				FolderHistory transaction = new FolderHistory();
+				transaction.setUser(getSessionUser());
+				transaction.setSessionId(sid);
+				transaction.setEvent(FolderEvent.MOVED.toString());
+
+				try {
+					folderDao.move((Folder) object, target, transaction);
+				} catch (Throwable e) {
+					throw new CmisStorageException("Error moving the document!", e);
+				}
+
+				Folder folder = getFolder(objectId.getValue());
+				return compileObjectType(context, folder, null, false, false, objectInfos);
+			}
+		} catch (Throwable t) {
+			return (ObjectData) catchError(t);
 		}
 	}
 
@@ -662,9 +672,8 @@ public class LDRepository {
 	public void deleteObjectOrCancelCheckOut(CallContext context, String objectId) {
 		// get the file or folder
 		PersistentObject object = getObject(objectId);
-		if (object == null) {
+		if (object == null)
 			throw new CmisObjectNotFoundException("Object not found!");
-		}
 
 		if (object instanceof Document) {
 			Document doc = (Document) object;
@@ -680,35 +689,39 @@ public class LDRepository {
 	 * CMIS deleteObject.
 	 */
 	public void deleteObject(CallContext context, String objectId) {
-		debug("deleteObject");
+		debug("deleteObject " + objectId);
 		validatePermission(objectId, context, Permission.WRITE);
 
-		// get the file or folder
-		PersistentObject object = getObject(objectId);
-		if (object == null) {
-			throw new CmisObjectNotFoundException("Object not found!");
-		}
-
-		if (object instanceof Folder) {
-			Folder folder = (Folder) object;
-			List<Document> docs = documentDao.findByFolder(folder.getId(), 2);
-			List<Folder> folders = folderDao.findByParentId(folder.getId());
-
-			// check if it is a folder and if it is empty
-			if (!docs.isEmpty() || !folders.isEmpty()) {
-				throw new CmisConstraintException("Folder is not empty!");
+		try {
+			// get the file or folder
+			PersistentObject object = getObject(objectId);
+			if (object == null) {
+				throw new CmisObjectNotFoundException("Object not found!");
 			}
-		}
 
-		if (!delete(object))
-			throw new CmisStorageException("Deletion failed!");
+			if (object instanceof Folder) {
+				Folder folder = (Folder) object;
+				List<Document> docs = documentDao.findByFolder(folder.getId(), 2);
+				List<Folder> folders = folderDao.findByParentId(folder.getId());
+
+				// check if it is a folder and if it is empty
+				if (!docs.isEmpty() || !folders.isEmpty()) {
+					throw new CmisConstraintException("Folder is not empty!");
+				}
+			}
+
+			if (!delete(object))
+				throw new CmisStorageException("Deletion failed!");
+		} catch (Throwable t) {
+			catchError(t);
+		}
 	}
 
 	/**
 	 * CMIS deleteTree.
 	 */
 	public FailedToDeleteData deleteTree(CallContext context, String folderId, Boolean continueOnFailure) {
-		debug("deleteTree");
+		debug("deleteTree " + folderId);
 		validatePermission(folderId, context, Permission.WRITE);
 
 		boolean cof = (continueOnFailure == null ? false : continueOnFailure.booleanValue());
@@ -758,139 +771,142 @@ public class LDRepository {
 	 */
 	public ObjectData updateProperties(CallContext context, Holder<String> objectId, Properties properties,
 			ObjectInfoHandler objectInfos) {
-
-		debug("updateProperties");
-		if (objectId == null) {
-			throw new CmisInvalidArgumentException("Id is not valid!");
-		}
-
+		debug("updateProperties " + objectId);
 		validatePermission(objectId.getValue(), context, Permission.WRITE);
 
-		// get the document or folder
-		PersistentObject object = getObject(objectId.getValue());
+		try {
+			if (objectId == null)
+				throw new CmisInvalidArgumentException("Id is not valid!");
 
-		// get old properties
-		Properties oldProperties = compileProperties(object, null, new ObjectInfoImpl());
-		update(object, oldProperties, properties);
+			// get the document or folder
+			PersistentObject object = getObject(objectId.getValue());
 
-		return compileObjectType(context, object, null, false, false, objectInfos);
+			// get old properties
+			Properties oldProperties = compileProperties(object, null, new ObjectInfoImpl());
+			update(object, oldProperties, properties);
+
+			return compileObjectType(context, object, null, false, false, objectInfos);
+		} catch (Throwable t) {
+			return (ObjectData) catchError(t);
+		}
 	}
 
 	public ObjectInfo getObjectInfo(String objectId, ObjectInfoHandler handler) {
+		debug("getObjectInfo " + objectId);
 		validatePermission(objectId, null, null);
 
-		// check id
-		if ((objectId == null)) {
-			throw new CmisInvalidArgumentException("Object Id must be set.");
-		}
+		try {
+			// check id
+			if ((objectId == null)) {
+				throw new CmisInvalidArgumentException("Object Id must be set.");
+			}
 
-		ObjectInfoImpl info = new ObjectInfoImpl();
-		PersistentObject object = getObject(objectId);
-		compileProperties(object, null, info);
-		ObjectData data = compileObjectType(null, object, null, true, true, handler);
-		info.setObject(data);
-		return info;
+			ObjectInfoImpl info = new ObjectInfoImpl();
+			PersistentObject object = getObject(objectId);
+			compileProperties(object, null, info);
+			ObjectData data = compileObjectType(null, object, null, true, true, handler);
+			info.setObject(data);
+			return info;
+		} catch (Throwable t) {
+			return (ObjectInfo) catchError(t);
+		}
 	}
 
 	public void checkOut(Holder<String> objectId, Holder<Boolean> contentCopied) {
+		debug("checkOut " + objectId.getValue());
 		validatePermission(objectId.getValue(), null, Permission.WRITE);
-		
-		// get the document
-		PersistentObject object = getObject(objectId.getValue());
-		if (object == null) {
-			throw new CmisObjectNotFoundException("Object not found!");
-		}
-		if (!(object instanceof Document)) {
-			throw new CmisObjectNotFoundException("Object is not a Document!");
-		}
-
-		// Create the document history event
-		History transaction = new History();
-		transaction.setSessionId(sid);
-		transaction.setEvent(DocumentEvent.CHECKEDOUT.toString());
-		transaction.setComment("");
-		transaction.setUser(getSessionUser());
 
 		try {
+			// get the document
+			PersistentObject object = getObject(objectId.getValue());
+			if (object == null) {
+				throw new CmisObjectNotFoundException("Object not found!");
+			}
+			if (!(object instanceof Document)) {
+				throw new CmisObjectNotFoundException("Object is not a Document!");
+			}
+
+			// Create the document history event
+			History transaction = new History();
+			transaction.setSessionId(sid);
+			transaction.setEvent(DocumentEvent.CHECKEDOUT.toString());
+			transaction.setComment("");
+			transaction.setUser(getSessionUser());
+
 			documentManager.checkout(object.getId(), transaction);
 			objectId.setValue(getId(object));
-			if (contentCopied != null) {
+			if (contentCopied != null)
 				contentCopied.setValue(Boolean.TRUE);
-			}
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new CmisStorageException("Checkout failed!");
+			catchError(t);
 		}
 	}
 
 	public void cancelCheckOut(String objectId) {
+		debug("cancelCheckOut " + objectId);
 		validatePermission(objectId, null, Permission.WRITE);
 
-		// get the document
-		PersistentObject object = getObject(objectId);
-		if (object == null) {
-			throw new CmisObjectNotFoundException("Object not found!");
-		}
-		if (!(object instanceof Document)) {
-			throw new CmisObjectNotFoundException("Object is not a Document!");
-		}
-
-		Document doc = (Document) object;
-
-		if (doc.getStatus() == Document.DOC_CHECKED_OUT
-				&& ((getSessionUser().getId() != doc.getLockUserId()) && (!getSessionUser().isInGroup("admin")))) {
-			throw new CmisPermissionDeniedException("You can't change the checkout status on this object!");
-		}
-
-		// Create the document history event
-		History transaction = new History();
-		transaction.setSessionId(sid);
-		transaction.setEvent(DocumentEvent.UNLOCKED.toString());
-		transaction.setComment("");
-		transaction.setUser(getSessionUser());
-
 		try {
+			// get the document
+			PersistentObject object = getObject(objectId);
+			if (object == null) {
+				throw new CmisObjectNotFoundException("Object not found!");
+			}
+			if (!(object instanceof Document)) {
+				throw new CmisObjectNotFoundException("Object is not a Document!");
+			}
+
+			Document doc = (Document) object;
+
+			if (doc.getStatus() == Document.DOC_CHECKED_OUT
+					&& ((getSessionUser().getId() != doc.getLockUserId()) && (!getSessionUser().isInGroup("admin"))))
+				throw new CmisPermissionDeniedException("You can't change the checkout status on this object!");
+
+			// Create the document history event
+			History transaction = new History();
+			transaction.setSessionId(sid);
+			transaction.setEvent(DocumentEvent.UNLOCKED.toString());
+			transaction.setComment("");
+			transaction.setUser(getSessionUser());
+
 			documentDao.initialize(doc);
 			doc.setStatus(Document.DOC_UNLOCKED);
 			documentDao.store(doc, transaction);
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
-			throw new CmisStorageException("Checkout failed!");
+			catchError(t);
 		}
 	}
 
-	public void checkIn(Holder<String> objectId, Boolean major, Properties properties, ContentStream contentStream,
-			String checkinComment) {
+	public void checkIn(Holder<String> objectId, Boolean major, ContentStream contentStream, String checkinComment) {
+		debug("checkin " + objectId);
 		validatePermission(objectId.getValue(), null, Permission.WRITE);
-		PersistentObject object = getObject(objectId.getValue());
-
-		if (object == null) {
-			throw new CmisObjectNotFoundException("Object not found!");
-		}
-
-		if (!(object instanceof Document)) {
-			throw new CmisObjectNotFoundException("Object is not a Document!");
-		}
-
-		Document doc = (Document) object;
-
-		if (doc.getStatus() == Document.DOC_CHECKED_OUT
-				&& ((getSessionUser().getId() != doc.getLockUserId()) && (!getSessionUser().isInGroup("admin")))) {
-			throw new CmisPermissionDeniedException("You can't do a checkin on this object!");
-		}
-
-		History transaction = new History();
-		transaction.setSessionId(sid);
-		transaction.setEvent(DocumentEvent.CHECKEDIN.toString());
-		transaction.setUser(getSessionUser());
-		transaction.setComment(checkinComment);
 
 		try {
+			PersistentObject object = getObject(objectId.getValue());
+
+			if (object == null)
+				throw new CmisObjectNotFoundException("Object not found!");
+
+			if (!(object instanceof Document))
+				throw new CmisObjectNotFoundException("Object is not a Document!");
+
+			Document doc = (Document) object;
+
+			if (doc.getStatus() == Document.DOC_CHECKED_OUT
+					&& ((getSessionUser().getId() != doc.getLockUserId()) && (!getSessionUser().isInGroup("admin")))) {
+				throw new CmisPermissionDeniedException("You can't do a checkin on this object!");
+			}
+
+			History transaction = new History();
+			transaction.setSessionId(sid);
+			transaction.setEvent(DocumentEvent.CHECKEDIN.toString());
+			transaction.setUser(getSessionUser());
+			transaction.setComment(checkinComment);
+
 			documentManager
 					.checkin(doc.getId(), contentStream.getStream(), doc.getFileName(), major, null, transaction);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			throw new CmisStorageException("Checkin failed!");
+		} catch (Throwable t) {
+			catchError(t);
 		}
 	}
 
@@ -899,28 +915,33 @@ public class LDRepository {
 	 */
 	public ObjectData getObject(CallContext context, String objectId, String versionServicesId, String filter,
 			Boolean includeAllowableActions, Boolean includeAcl, ObjectInfoHandler objectInfos) {
-		debug("getObject");
+		debug("getObject " + objectId);
 		validatePermission(objectId, context, null);
 
-		if (objectId == null) {
-			// this works only because there are no versions in a file system
-			// and the object id and version series id are the same
-			objectId = versionServicesId;
+		try {
+			if (objectId == null) {
+				// this works only because there are no versions in a file
+				// system
+				// and the object id and version series id are the same
+				objectId = versionServicesId;
+			}
+
+			PersistentObject obj = getObject(objectId);
+			if (obj == null)
+				throw new CmisObjectNotFoundException("Object ID " + objectId + " not found");
+
+			// set defaults if values not set
+			boolean iaa = (includeAllowableActions == null ? false : includeAllowableActions.booleanValue());
+			boolean iacl = (includeAcl == null ? false : includeAcl.booleanValue());
+
+			// split filter
+			Set<String> filterCollection = splitFilter(filter);
+
+			// gather properties
+			return compileObjectType(context, obj, filterCollection, iaa, iacl, objectInfos);
+		} catch (Throwable t) {
+			return (ObjectData) catchError(t);
 		}
-
-		PersistentObject obj = getObject(objectId);
-		if (obj == null)
-			throw new CmisObjectNotFoundException("Object ID " + objectId + " not found");
-
-		// set defaults if values not set
-		boolean iaa = (includeAllowableActions == null ? false : includeAllowableActions.booleanValue());
-		boolean iacl = (includeAcl == null ? false : includeAcl.booleanValue());
-
-		// split filter
-		Set<String> filterCollection = splitFilter(filter);
-
-		// gather properties
-		return compileObjectType(context, obj, filterCollection, iaa, iacl, objectInfos);
 	}
 
 	/**
@@ -931,42 +952,47 @@ public class LDRepository {
 			Boolean includeAcl, ExtensionsData extension) {
 		debug("getObjectByPath " + path);
 
-		String fullPath = path;
-		if (fullPath.endsWith("/"))
-			fullPath = fullPath.substring(0, fullPath.length() - 1);
+		try {
+			String fullPath = path;
+			if (fullPath.endsWith("/"))
+				fullPath = fullPath.substring(0, fullPath.length() - 1);
+			else if (fullPath.endsWith("/."))
+				fullPath = fullPath.substring(0, fullPath.length() - 2);
 
-		// Try to check if the path is a folder
-		Folder folder = folderDao.findByPath(fullPath, getSessionUser().getTenantId());
+			debug("using normalized path " + fullPath);
 
-		ObjectData out = null;
+			// Try to check if the path is a folder
+			Folder folder = folderDao.findByPath(fullPath, getSessionUser().getTenantId());
 
-		if (folder != null) {
-			out = getObject(context, ID_PREFIX_FLD + Long.toString(folder.getId()), null, filter,
-					includeAllowableActions, includeAcl, null);
-		} else {
-			// Not a folder, probably a file
-			String parentPath = fullPath.substring(0, fullPath.lastIndexOf('/'));
-			folder = folderDao.findByPath(parentPath, getSessionUser().getTenantId());
-			if (folder == null)
-				out = null;
+			ObjectData out = null;
 
 			if (folder != null) {
-				String fileName = fullPath.substring(fullPath.lastIndexOf('/') + 1);
-
-				List<Document> docs = documentDao.findByFileNameAndParentFolderId(folder.getId(), fileName, null,
-						getSessionUser().getId(), null);
-				if (docs == null || docs.isEmpty())
+				out = getObject(context, ID_PREFIX_FLD + Long.toString(folder.getId()), null, filter,
+						includeAllowableActions, includeAcl, null);
+			} else {
+				// Not a folder, probably a file
+				String parentPath = fullPath.substring(0, fullPath.lastIndexOf('/'));
+				folder = folderDao.findByPath(parentPath, getSessionUser().getTenantId());
+				if (folder == null)
 					out = null;
-				else
-					out = getObject(context, ID_PREFIX_DOC + Long.toString(docs.get(0).getId()), null, filter,
-							includeAllowableActions, includeAcl, null);
-			}
-		}
 
-		if (out == null)
-			throw new CmisObjectNotFoundException("Path " + path + " not found");
-		else
+				if (folder != null) {
+					String fileName = fullPath.substring(fullPath.lastIndexOf('/') + 1);
+
+					List<Document> docs = documentDao.findByFileNameAndParentFolderId(folder.getId(), fileName, null,
+							getSessionUser().getId(), null);
+					if (docs == null || docs.isEmpty())
+						out = null;
+					else
+						out = getObject(context, ID_PREFIX_DOC + Long.toString(docs.get(0).getId()), null, filter,
+								includeAllowableActions, includeAcl, null);
+				}
+			}
+
 			return out;
+		} catch (Throwable t) {
+			return (ObjectData) catchError(t);
+		}
 	}
 
 	/**
@@ -991,22 +1017,17 @@ public class LDRepository {
 	 * CMIS getContentStream.
 	 */
 	public ContentStream getContentStream(CallContext context, String objectId, BigInteger offset, BigInteger length) {
-		debug("getContentStream");
+		debug("getContentStream " + objectId + " offset:" + offset + " length:" + length);
 
 		validatePermission(objectId, context, Permission.DOWNLOAD);
 
-		if ((offset != null) || (length != null)) {
-			throw new CmisInvalidArgumentException("Offset and Length are not supported!");
-		}
-
-		AbstractDocument doc = getDocument(objectId);
-
-		if (doc.getFileSize() == 0) {
-			throw new CmisConstraintException("Document has no content!");
-		}
-
-		InputStream stream = null;
 		try {
+			if ((offset != null) || (length != null))
+				throw new CmisInvalidArgumentException("Offset and Length are not supported!");
+
+			AbstractDocument doc = getDocument(objectId);
+
+			InputStream stream = null;
 			Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 			InputStream is = null;
 			if (doc instanceof Document) {
@@ -1016,46 +1037,74 @@ public class LDRepository {
 				is = storer.getStream(v.getDocId(), storer.getResourceName(v.getDocId(), v.getFileVersion(), null));
 			}
 			stream = new BufferedInputStream(is, BUFFER_SIZE);
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
-			throw new CmisObjectNotFoundException(e.getMessage(), e);
-		}
 
-		// Create the document history event
-		History transaction = new History();
-		transaction.setSessionId(sid);
-		transaction.setEvent(DocumentEvent.DOWNLOADED.toString());
-		transaction.setComment("");
-		transaction.setUser(getSessionUser());
-		transaction.setDocId(doc.getId());
-		transaction.setTitle(doc.getTitle());
-		transaction.setVersion(doc.getVersion());
-		transaction.setFilename(doc.getFileName());
-		transaction.setNotified(0);
+			// Create the document history event
+			History transaction = new History();
+			transaction.setSessionId(sid);
+			transaction.setEvent(DocumentEvent.DOWNLOADED.toString());
+			transaction.setComment("");
+			transaction.setUser(getSessionUser());
+			transaction.setDocId(doc.getId());
+			transaction.setTitle(doc.getTitle());
+			transaction.setVersion(doc.getVersion());
+			transaction.setFilename(doc.getFileName());
+			transaction.setNotified(0);
 
-		if (doc instanceof Document) {
-			transaction.setFolderId(doc.getFolder().getId());
-			transaction.setPath(folderDao.computePathExtended(doc.getFolder().getId()));
-		} else {
-			transaction.setFolderId(((Version) doc).getFolderId());
-			transaction.setPath(folderDao.computePathExtended(((Version) doc).getFolderId()));
-		}
+			if (doc instanceof Document) {
+				transaction.setFolderId(doc.getFolder().getId());
+				transaction.setPath(folderDao.computePathExtended(doc.getFolder().getId()));
+			} else {
+				transaction.setFolderId(((Version) doc).getFolderId());
+				transaction.setPath(folderDao.computePathExtended(((Version) doc).getFolderId()));
+			}
 
-		try {
-			HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
-			historyDAO.store(transaction);
+			try {
+				HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+				historyDAO.store(transaction);
+			} catch (Throwable t) {
+				log.warn(t.getMessage(), t);
+			}
+
+			// compile data
+			ContentStreamImpl result = new ContentStreamImpl();
+			result.setFileName(doc.getFileName());
+			result.setMimeType(MimeTypes.getMIMEType(doc.getFileName()));
+			result.setLength(BigInteger.valueOf(doc.getFileSize()));
+			result.setStream(stream);
+
+			return result;
 		} catch (Throwable t) {
-			log.warn(t.getMessage(), t);
+			return (ContentStream) catchError(t);
 		}
+	}
 
-		// compile data
-		ContentStreamImpl result = new ContentStreamImpl();
-		result.setFileName(doc.getFileName());
-		result.setLength(BigInteger.valueOf(doc.getFileSize()));
-		result.setMimeType(MimeTypes.getMIMEType(doc.getFileName()));
-		result.setStream(stream);
+	// private byte[] getBytes(InputStream is) throws IOException {
+	//
+	// int len;
+	// int size = 1024;
+	// byte[] buf;
+	//
+	// if (is instanceof ByteArrayInputStream) {
+	// size = is.available();
+	// buf = new byte[size];
+	// len = is.read(buf, 0, size);
+	// } else {
+	// ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	// buf = new byte[size];
+	// while ((len = is.read(buf, 0, size)) != -1)
+	// bos.write(buf, 0, len);
+	// buf = bos.toByteArray();
+	// }
+	// return buf;
+	// }
 
-		return result;
+	private Object catchError(Throwable t) {
+		t.printStackTrace();
+		log.error(t.getMessage(), t);
+		if (t instanceof CmisBaseException)
+			throw (CmisBaseException) t;
+		else
+			throw new CmisStorageException("CMIS Error!", t);
 	}
 
 	/**
@@ -1068,92 +1117,96 @@ public class LDRepository {
 
 		validatePermission(folderId, context, null);
 
-		// split filter
-		Set<String> filterCollection = splitFilter(filter);
+		try {
+			// split filter
+			Set<String> filterCollection = splitFilter(filter);
 
-		// set defaults if values not set
-		boolean iaa = (includeAllowableActions == null ? false : includeAllowableActions.booleanValue());
-		boolean ips = (includePathSegment == null ? false : includePathSegment.booleanValue());
+			// set defaults if values not set
+			boolean iaa = (includeAllowableActions == null ? false : includeAllowableActions.booleanValue());
+			boolean ips = (includePathSegment == null ? false : includePathSegment.booleanValue());
 
-		// skip and max
-		int skip = (skipCount == null ? 0 : skipCount.intValue());
-		if (skip < 0) {
-			skip = 0;
+			// skip and max
+			int skip = (skipCount == null ? 0 : skipCount.intValue());
+			if (skip < 0) {
+				skip = 0;
+			}
+
+			int max = (maxItems == null ? Integer.MAX_VALUE : maxItems.intValue());
+			if (max < 0) {
+				max = Integer.MAX_VALUE;
+			}
+
+			// get the folder
+			Folder folder = getFolder(folderId);
+
+			// set object info of the the folder
+			if (context.isObjectInfoRequired()) {
+				compileObjectType(context, folder, null, false, false, objectInfos);
+			}
+
+			// prepare result
+			ObjectInFolderListImpl result = new ObjectInFolderListImpl();
+			result.setObjects(new ArrayList<ObjectInFolderData>());
+			result.setHasMoreItems(false);
+			int count = 0;
+
+			User user = userDao.findByUserName(context.getUsername());
+			long userId = user.getId();
+
+			// iterate through children folders
+			for (Folder child : folderDao.findChildren(folder.getId(), userId)) {
+				count++;
+
+				if (skip > 0) {
+					skip--;
+					continue;
+				}
+
+				if (result.getObjects().size() >= max) {
+					result.setHasMoreItems(true);
+					continue;
+				}
+
+				// build and add child object
+				ObjectInFolderDataImpl objectInFolder = new ObjectInFolderDataImpl();
+				objectInFolder.setObject(compileObjectType(context, child, filterCollection, iaa, false, objectInfos));
+				if (ips) {
+					objectInFolder.setPathSegment(child.getName());
+				}
+
+				result.getObjects().add(objectInFolder);
+			}
+
+			// iterate through children documents
+			for (Document child : documentDao.findByFolder(folder.getId(), null)) {
+				count++;
+
+				if (skip > 0) {
+					skip--;
+					continue;
+				}
+
+				if (result.getObjects().size() >= max) {
+					result.setHasMoreItems(true);
+					continue;
+				}
+
+				// build and add child object
+				ObjectInFolderDataImpl objectInFolder = new ObjectInFolderDataImpl();
+				objectInFolder.setObject(compileObjectType(context, child, filterCollection, iaa, false, objectInfos));
+				if (ips) {
+					objectInFolder.setPathSegment(child.getFileName());
+				}
+
+				result.getObjects().add(objectInFolder);
+			}
+
+			result.setNumItems(BigInteger.valueOf(count));
+
+			return result;
+		} catch (Throwable t) {
+			return (ObjectInFolderList) catchError(t);
 		}
-
-		int max = (maxItems == null ? Integer.MAX_VALUE : maxItems.intValue());
-		if (max < 0) {
-			max = Integer.MAX_VALUE;
-		}
-
-		// get the folder
-		Folder folder = getFolder(folderId);
-
-		// set object info of the the folder
-		if (context.isObjectInfoRequired()) {
-			compileObjectType(context, folder, null, false, false, objectInfos);
-		}
-
-		// prepare result
-		ObjectInFolderListImpl result = new ObjectInFolderListImpl();
-		result.setObjects(new ArrayList<ObjectInFolderData>());
-		result.setHasMoreItems(false);
-		int count = 0;
-
-		User user = userDao.findByUserName(context.getUsername());
-		long userId = user.getId();
-
-		// iterate through children folders
-		for (Folder child : folderDao.findChildren(folder.getId(), userId)) {
-			count++;
-
-			if (skip > 0) {
-				skip--;
-				continue;
-			}
-
-			if (result.getObjects().size() >= max) {
-				result.setHasMoreItems(true);
-				continue;
-			}
-
-			// build and add child object
-			ObjectInFolderDataImpl objectInFolder = new ObjectInFolderDataImpl();
-			objectInFolder.setObject(compileObjectType(context, child, filterCollection, iaa, false, objectInfos));
-			if (ips) {
-				objectInFolder.setPathSegment(child.getName());
-			}
-
-			result.getObjects().add(objectInFolder);
-		}
-
-		// iterate through children documents
-		for (Document child : documentDao.findByFolder(folder.getId(), null)) {
-			count++;
-
-			if (skip > 0) {
-				skip--;
-				continue;
-			}
-
-			if (result.getObjects().size() >= max) {
-				result.setHasMoreItems(true);
-				continue;
-			}
-
-			// build and add child object
-			ObjectInFolderDataImpl objectInFolder = new ObjectInFolderDataImpl();
-			objectInFolder.setObject(compileObjectType(context, child, filterCollection, iaa, false, objectInfos));
-			if (ips) {
-				objectInFolder.setPathSegment(child.getFileName());
-			}
-
-			result.getObjects().add(objectInFolder);
-		}
-
-		result.setNumItems(BigInteger.valueOf(count));
-
-		return result;
 	}
 
 	private Folder getFolder(String folderId) {
@@ -1188,51 +1241,56 @@ public class LDRepository {
 	/**
 	 * CMIS getObjectParents.
 	 */
+	@SuppressWarnings("unchecked")
 	public List<ObjectParentData> getObjectParents(CallContext context, String objectId, String filter,
 			Boolean includeAllowableActions, Boolean includeRelativePathSegment, ObjectInfoHandler objectInfos) {
-		debug("getObjectParents");
+		debug("getObjectParents " + objectId + " " + filter);
 		validatePermission(objectId, context, null);
 
-		// split filter
-		Set<String> filterCollection = splitFilter(filter);
+		try {
+			// split filter
+			Set<String> filterCollection = splitFilter(filter);
 
-		// set defaults if values not set
-		boolean iaa = (includeAllowableActions == null ? false : includeAllowableActions.booleanValue());
-		boolean irps = (includeRelativePathSegment == null ? false : includeRelativePathSegment.booleanValue());
+			// set defaults if values not set
+			boolean iaa = (includeAllowableActions == null ? false : includeAllowableActions.booleanValue());
+			boolean irps = (includeRelativePathSegment == null ? false : includeRelativePathSegment.booleanValue());
 
-		// get the file or folder
-		PersistentObject object = getObject(objectId);
+			// get the file or folder
+			PersistentObject object = getObject(objectId);
 
-		// don't climb above the root folder
-		if (root.equals(object)) {
-			return Collections.emptyList();
-		}
+			// don't climb above the root folder
+			if (root.equals(object)) {
+				return Collections.emptyList();
+			}
 
-		// set object info of the the object
-		if (context.isObjectInfoRequired()) {
-			compileObjectType(context, object, null, false, false, objectInfos);
-		}
+			// set object info of the the object
+			if (context.isObjectInfoRequired()) {
+				compileObjectType(context, object, null, false, false, objectInfos);
+			}
 
-		Folder parent;
-		if (object instanceof AbstractDocument)
-			parent = ((AbstractDocument) object).getFolder();
-		else
-			parent = folderDao.findById(((Folder) object).getParentId());
-
-		// get parent folder
-		ObjectData obj = compileObjectType(context, parent, filterCollection, iaa, false, objectInfos);
-
-		ObjectParentDataImpl result = new ObjectParentDataImpl();
-		result.setObject(obj);
-		if (irps) {
-			if (object instanceof Document)
-				result.setRelativePathSegment(((Document) object).getFileName());
+			Folder parent;
+			if (object instanceof AbstractDocument)
+				parent = ((AbstractDocument) object).getFolder();
 			else
-				result.setRelativePathSegment(((Folder) object).getName());
+				parent = folderDao.findById(((Folder) object).getParentId());
 
+			// get parent folder
+			ObjectData obj = compileObjectType(context, parent, filterCollection, iaa, false, objectInfos);
+
+			ObjectParentDataImpl result = new ObjectParentDataImpl();
+			result.setObject(obj);
+			if (irps) {
+				if (object instanceof Document)
+					result.setRelativePathSegment(((Document) object).getFileName());
+				else
+					result.setRelativePathSegment(((Folder) object).getName());
+
+			}
+
+			return Collections.singletonList((ObjectParentData) result);
+		} catch (Throwable t) {
+			return (List<ObjectParentData>) catchError(t);
 		}
-
-		return Collections.singletonList((ObjectParentData) result);
 	}
 
 	public ObjectList query(String statement, Integer maxItems) {
