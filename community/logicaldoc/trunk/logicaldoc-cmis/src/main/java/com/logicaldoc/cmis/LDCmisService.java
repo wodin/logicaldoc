@@ -25,6 +25,7 @@ import org.apache.chemistry.opencmis.commons.definitions.TypeDefinitionList;
 import org.apache.chemistry.opencmis.commons.enums.IncludeRelationships;
 import org.apache.chemistry.opencmis.commons.enums.UnfileObject;
 import org.apache.chemistry.opencmis.commons.enums.VersioningState;
+import org.apache.chemistry.opencmis.commons.exceptions.CmisBaseException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisPermissionDeniedException;
 import org.apache.chemistry.opencmis.commons.impl.server.AbstractCmisService;
@@ -69,7 +70,7 @@ public class LDCmisService extends AbstractCmisService {
 
 		try {
 			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-			UserSession session=SessionManager.getInstance().get(sessionId);
+			UserSession session = SessionManager.getInstance().get(sessionId);
 			Folder root = fdao.findRoot(session.getTenantId());
 			repositories.put(Long.toString(root.getId()), new LDRepository(root, sessionId));
 		} catch (Throwable t) {
@@ -289,7 +290,7 @@ public class LDCmisService extends AbstractCmisService {
 			ContentStream contentStream, String checkinComment, List<String> policies, Acl addAces, Acl removeAces,
 			ExtensionsData extension) {
 		validateSession();
-		getRepository().checkIn(objectId, major, properties, contentStream, checkinComment);
+		getRepository().checkIn(objectId, major, contentStream, checkinComment);
 	}
 
 	@Override
@@ -307,13 +308,21 @@ public class LDCmisService extends AbstractCmisService {
 		if (getSessionId() == null)
 			return null;
 
-		UserSession session = SessionManager.getInstance().get(getSessionId());
-		if (session == null)
-			throw new CmisPermissionDeniedException("Invalid session!");
-		if (session.getStatus() != UserSession.STATUS_OPEN)
-			throw new CmisPermissionDeniedException("Invalid or Expired Session");
-		session.renew();
-		return session;
+		try {
+			UserSession session = SessionManager.getInstance().get(getSessionId());
+			if (session == null)
+				throw new CmisPermissionDeniedException("Unexisting session " + getSessionId());
+			if (session.getStatus() != UserSession.STATUS_OPEN)
+				throw new CmisPermissionDeniedException("Invalid or Expired Session " + getSessionId());
+			session.renew();
+			return session;
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			if (t instanceof CmisBaseException)
+				throw (CmisBaseException) t;
+			else
+				throw new CmisPermissionDeniedException("Invalid session!");
+		}
 	}
 
 	public LDRepository getRepository() {
@@ -354,5 +363,14 @@ public class LDCmisService extends AbstractCmisService {
 			ExtensionsData extension) {
 		validateSession();
 		return getRepository().createDocumentFromSource(getCallContext(), sourceId, folderId);
+	}
+
+	@Override
+	public void setContentStream(String repositoryId, Holder<String> objectId, Boolean overwriteFlag,
+			Holder<String> changeToken, ContentStream contentStream, ExtensionsData extension) {
+		validateSession();
+		checkOut(repositoryId, objectId, extension, new Holder(false));
+		checkIn(repositoryId, objectId, false, null, contentStream, "", null, null, null, extension);
+		checkOut(repositoryId, objectId, extension, new Holder(false));
 	}
 }

@@ -36,8 +36,9 @@ public class CmisServlet extends CmisAtomPubServlet {
 			if (request.getHeader("Authorization") == null) {
 				response.setHeader("WWW-Authenticate", "Basic realm=\"CMIS\"");
 				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization Required");
-			} else
+			} else {
 				super.service(request, response);
+			}
 		} else
 			response.sendError(HttpServletResponse.SC_MOVED_TEMPORARILY);
 	}
