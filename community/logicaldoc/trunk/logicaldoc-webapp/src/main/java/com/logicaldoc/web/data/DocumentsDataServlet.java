@@ -139,7 +139,7 @@ public class DocumentsDataServlet extends HttpServlet {
 				/*
 				 * Retrieve the names of the extended attributes to show
 				 */
-				String extattrs = config.getProperty("search.extattr");
+				String extattrs = config.getProperty(session.getTenantName() + ".search.extattr");
 
 				/*
 				 * Contains the extended attributes of the documents inside the
