@@ -4,7 +4,6 @@ import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
 import gwtupload.client.MultiUploader;
 
-import com.gargoylesoftware.htmlunit.ImmediateRefreshHandler;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
