@@ -233,7 +233,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 					// Create the new document
 					doc = documentManager.create(file, doc, transaction);
-					
+
 					if (immediateIndexing && doc.getIndexed() == Document.INDEX_TO_INDEX)
 						docsToIndex.add(doc.getId());
 				}
@@ -832,11 +832,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	public GUIDocument save(String sid, GUIDocument document) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc = null;
 		try {
+			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 			if (document.getId() != 0) {
-				doc = docDao.findById(document.getId());
+				Document doc = docDao.findById(document.getId());
 				docDao.initialize(doc);
 
 				doc.setCustomId(document.getCustomId());
@@ -857,17 +856,13 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 							DocumentManager.class);
 					documentManager.update(doc, docVO, transaction);
 
-					document.setId(doc.getId());
-					document.setLastModified(new Date());
-					document.setVersion(doc.getVersion());
+					return getById(sid, doc.getId());
 				} catch (Throwable t) {
 					log.error(t.getMessage(), t);
 					throw new RuntimeException(t.getMessage(), t);
 				}
 			} else
 				return null;
-
-			return document;
 		} catch (Throwable t) {
 			return (GUIDocument) ServiceUtil.throwServerException(session, log, t);
 		}

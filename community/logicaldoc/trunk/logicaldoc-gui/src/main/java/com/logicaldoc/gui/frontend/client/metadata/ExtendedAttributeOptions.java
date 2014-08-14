@@ -101,7 +101,7 @@ public class ExtendedAttributeOptions extends com.smartgwt.client.widgets.Window
 				});
 			}
 		});
-		add.setDisabled(!readOnly);
+		add.setDisabled(readOnly);
 
 		ToolStripButton save = new ToolStripButton();
 		save.setTitle(I18N.message("save"));
@@ -112,7 +112,7 @@ public class ExtendedAttributeOptions extends com.smartgwt.client.widgets.Window
 				onSave();
 			}
 		});
-		add.setDisabled(!readOnly);
+		save.setDisabled(readOnly);
 
 		toolStrip.addFill();
 		addItem(toolStrip);
@@ -187,7 +187,7 @@ public class ExtendedAttributeOptions extends com.smartgwt.client.widgets.Window
 
 			@Override
 			public void onSuccess(Void arg0) {
-				Log.info(I18N.message("optionssaved"), null);
+				SC.say(I18N.message("optionssaved"));
 			}
 		});
 	}
