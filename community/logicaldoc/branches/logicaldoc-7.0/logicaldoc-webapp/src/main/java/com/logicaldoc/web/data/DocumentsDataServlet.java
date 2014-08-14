@@ -50,15 +50,17 @@ public class DocumentsDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Logger log = LoggerFactory.getLogger(DocumentsDataServlet.class);
+	private static Logger log = LoggerFactory
+			.getLogger(DocumentsDataServlet.class);
 
 	@Override
-	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-			IOException {
+	protected void service(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		try {
 			Context context = Context.getInstance();
 			UserSession session = SessionUtil.validateSession(request);
-			ContextProperties config = (ContextProperties) context.getBean(ContextProperties.class);
+			ContextProperties config = (ContextProperties) context
+					.getBean(ContextProperties.class);
 			UserDAO udao = (UserDAO) context.getBean(UserDAO.class);
 			User user = udao.findById(session.getUserId());
 			udao.initialize(user);
@@ -72,7 +74,8 @@ public class DocumentsDataServlet extends HttpServlet {
 
 			// Headers required by Internet Explorer
 			response.setHeader("Pragma", "public");
-			response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
+			response.setHeader("Cache-Control",
+					"must-revalidate, post-check=0,pre-check=0");
 			response.setHeader("Expires", "0");
 
 			DocumentDAO dao = (DocumentDAO) context.getBean(DocumentDAO.class);
@@ -88,21 +91,30 @@ public class DocumentsDataServlet extends HttpServlet {
 
 			if (StringUtils.isNotEmpty(request.getParameter("status"))) {
 				int status = Integer.parseInt(request.getParameter("status"));
-				List<Document> docs = dao.findByLockUserAndStatus(session.getUserId(), status);
+				List<Document> docs = dao.findByLockUserAndStatus(
+						session.getUserId(), status);
 				int i = 0;
 				for (Document doc : docs) {
 					if (i == max)
 						break;
 					writer.print("<document>");
 					writer.print("<id>" + doc.getId() + "</id>");
-					writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getFileExtension()))
+					writer.print("<icon>"
+							+ FilenameUtils.getBaseName(IconSelector
+									.selectIcon(doc.getFileExtension()))
 							+ "</icon>");
-					writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
-					writer.print("<lastModified>" + df.format(doc.getLastModified()) + "</lastModified>");
-					writer.print("<folderId>" + doc.getFolder().getId() + "</folderId>");
+					writer.print("<title><![CDATA[" + doc.getTitle()
+							+ "]]></title>");
+					writer.print("<lastModified>"
+							+ df.format(doc.getLastModified())
+							+ "</lastModified>");
+					writer.print("<folderId>" + doc.getFolder().getId()
+							+ "</folderId>");
 					writer.print("<version>" + doc.getVersion() + "</version>");
-					writer.print("<filename><![CDATA[" + doc.getFileName() + "]]></filename>");
-					writer.print("<fileVersion>" + doc.getFileVersion() + "</fileVersion>");
+					writer.print("<filename><![CDATA[" + doc.getFileName()
+							+ "]]></filename>");
+					writer.print("<fileVersion>" + doc.getFileVersion()
+							+ "</fileVersion>");
 					writer.print("</document>");
 					i++;
 				}
@@ -114,14 +126,22 @@ public class DocumentsDataServlet extends HttpServlet {
 						continue;
 					writer.print("<document>");
 					writer.print("<id>" + doc.getId() + "</id>");
-					writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getFileExtension()))
+					writer.print("<icon>"
+							+ FilenameUtils.getBaseName(IconSelector
+									.selectIcon(doc.getFileExtension()))
 							+ "</icon>");
-					writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
-					writer.print("<lastModified>" + df.format(doc.getLastModified()) + "</lastModified>");
-					writer.print("<folderId>" + doc.getFolder().getId() + "</folderId>");
+					writer.print("<title><![CDATA[" + doc.getTitle()
+							+ "]]></title>");
+					writer.print("<lastModified>"
+							+ df.format(doc.getLastModified())
+							+ "</lastModified>");
+					writer.print("<folderId>" + doc.getFolder().getId()
+							+ "</folderId>");
 					writer.print("<version>" + doc.getVersion() + "</version>");
-					writer.print("<filename><![CDATA[" + doc.getFileName() + "]]></filename>");
-					writer.print("<fileVersion>" + doc.getFileVersion() + "</fileVersion>");
+					writer.print("<filename><![CDATA[" + doc.getFileName()
+							+ "]]></filename>");
+					writer.print("<fileVersion>" + doc.getFileVersion()
+							+ "</fileVersion>");
 					writer.print("</document>");
 				}
 			} else {
@@ -139,7 +159,8 @@ public class DocumentsDataServlet extends HttpServlet {
 				/*
 				 * Retrieve the names of the extended attributes to show
 				 */
-				String extattrs = config.getProperty("search.extattr");
+				String extattrs = config.getProperty(session.getTenantName()
+						+ ".search.extattr");
 
 				/*
 				 * Contains the extended attributes of the documents inside the
@@ -152,7 +173,8 @@ public class DocumentsDataServlet extends HttpServlet {
 				if (StringUtils.isNotEmpty(extattrs)) {
 					log.debug("Search for extended attributes " + extattrs);
 
-					StringTokenizer st = new StringTokenizer(extattrs.trim(), ",;");
+					StringTokenizer st = new StringTokenizer(extattrs.trim(),
+							",;");
 					while (st.hasMoreElements())
 						attrs.add(st.nextToken().trim());
 
@@ -161,17 +183,21 @@ public class DocumentsDataServlet extends HttpServlet {
 					query.append(" from ld_document_ext where ld_docid in (");
 					query.append("select D.ld_id from ld_document D where D.ld_deleted=0 ");
 					if (folderId != null)
-						query.append(" and D.ld_folderid=" + Long.toString(folderId));
+						query.append(" and D.ld_folderid="
+								+ Long.toString(folderId));
 					query.append(") and ld_name in ");
-					query.append(attrs.toString().replaceAll("\\[", "('").replaceAll("\\]", "')")
-							.replaceAll(",", "','").replaceAll(" ", ""));
+					query.append(attrs.toString().replaceAll("\\[", "('")
+							.replaceAll("\\]", "')").replaceAll(",", "','")
+							.replaceAll(" ", ""));
 
 					final Locale l = LocaleUtil.toLocale(locale);
-					final SimpleDateFormat edf = new SimpleDateFormat(I18N.message("format_dateshort", l));
+					final SimpleDateFormat edf = new SimpleDateFormat(
+							I18N.message("format_dateshort", l));
 
 					dao.query(query.toString(), null, new RowMapper<Long>() {
 						@Override
-						public Long mapRow(ResultSet rs, int row) throws SQLException {
+						public Long mapRow(ResultSet rs, int row)
+								throws SQLException {
 							Long docId = rs.getLong(1);
 							String name = rs.getString(2);
 							int type = rs.getInt(3);
@@ -183,14 +209,21 @@ public class DocumentsDataServlet extends HttpServlet {
 							} else if (type == ExtendedAttribute.TYPE_INT) {
 								extValues.put(key, Long.toString(rs.getLong(5)));
 							} else if (type == ExtendedAttribute.TYPE_DOUBLE) {
-								extValues.put(key, Double.toString(rs.getDouble(6)));
+								extValues.put(key,
+										Double.toString(rs.getDouble(6)));
 							} else if (type == ExtendedAttribute.TYPE_DATE) {
-								extValues.put(key, rs.getDate(7) != null ? edf.format(rs.getDate(7)) : "");
+								extValues.put(
+										key,
+										rs.getDate(7) != null ? edf.format(rs
+												.getDate(7)) : "");
 							} else if (type == ExtendedAttribute.TYPE_USER) {
 								extValues.put(key, rs.getString(4));
 							} else if (type == ExtendedAttribute.TYPE_BOOLEAN) {
-								extValues.put(key,
-										rs.getLong(5) == 1L ? I18N.message("true", l) : I18N.message("false", l));
+								extValues.put(
+										key,
+										rs.getLong(5) == 1L ? I18N.message(
+												"true", l) : I18N.message(
+												"false", l));
 							}
 
 							return null;
@@ -211,13 +244,16 @@ public class DocumentsDataServlet extends HttpServlet {
 				if (folderId != null)
 					query.append(" and A.folder.id=" + folderId);
 				if (StringUtils.isNotEmpty(request.getParameter("indexed")))
-					query.append(" and A.indexed=" + request.getParameter("indexed"));
+					query.append(" and A.indexed="
+							+ request.getParameter("indexed"));
 
 				if (filename != null)
-					query.append(" and lower(A.fileName) like '%" + filename.toLowerCase() + "%' ");
+					query.append(" and lower(A.fileName) like '%"
+							+ filename.toLowerCase() + "%' ");
 				query.append(" order by A.lastModified desc");
 
-				List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, max);
+				List<Object> records = (List<Object>) dao.findByQuery(
+						query.toString(), null, max);
 
 				List<Long> docRefIds = new ArrayList<Long>();
 				/*
@@ -226,9 +262,11 @@ public class DocumentsDataServlet extends HttpServlet {
 				for (Object record : records) {
 					Object[] cols = (Object[]) record;
 
-					boolean published = isPublished((Integer) cols[27], (Date) cols[25], (Date) cols[26]);
+					boolean published = isPublished((Integer) cols[27],
+							(Date) cols[25], (Date) cols[26]);
 
-					if (!published && !user.isInGroup("admin") && !user.isInGroup("publisher")) {
+					if (!published && !user.isInGroup("admin")
+							&& !user.isInGroup("publisher")) {
 						continue;
 					}
 
@@ -244,24 +282,33 @@ public class DocumentsDataServlet extends HttpServlet {
 					writer.print("<document>");
 					writer.print("<id>" + cols[0] + "</id>");
 					if (cols[1] != null)
-						writer.print("<customId><![CDATA[" + cols[1] + "]]></customId>");
+						writer.print("<customId><![CDATA[" + cols[1]
+								+ "]]></customId>");
 					else
 						writer.print("<customId> </customId>");
-					writer.print("<docref>" + (cols[2] != null ? cols[2] : "") + "</docref>");
+					writer.print("<docref>" + (cols[2] != null ? cols[2] : "")
+							+ "</docref>");
 					if (cols[2] != null)
 						writer.print("<icon>alias</icon>");
 					else {
-						writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon((String) cols[3]))
+						writer.print("<icon>"
+								+ FilenameUtils.getBaseName(IconSelector
+										.selectIcon((String) cols[3]))
 								+ "</icon>");
 					}
 
 					writer.print("<title><![CDATA[" + cols[4] + "]]></title>");
 					writer.print("<version>" + cols[5] + "</version>");
-					writer.print("<lastModified>" + df.format(cols[6]) + "</lastModified>");
-					writer.print("<published>" + df.format(cols[7]) + "</published>");
-					writer.print("<publisher><![CDATA[" + cols[8] + "]]></publisher>");
-					writer.print("<created>" + df.format(cols[9]) + "</created>");
-					writer.print("<creator><![CDATA[" + cols[10] + "]]></creator>");
+					writer.print("<lastModified>" + df.format(cols[6])
+							+ "</lastModified>");
+					writer.print("<published>" + df.format(cols[7])
+							+ "</published>");
+					writer.print("<publisher><![CDATA[" + cols[8]
+							+ "]]></publisher>");
+					writer.print("<created>" + df.format(cols[9])
+							+ "</created>");
+					writer.print("<creator><![CDATA[" + cols[10]
+							+ "]]></creator>");
 					writer.print("<size>" + cols[11] + "</size>");
 					if (Integer.parseInt(cols[12].toString()) == 0)
 						writer.print("<immutable>blank</immutable>");
@@ -280,8 +327,10 @@ public class DocumentsDataServlet extends HttpServlet {
 					else
 						writer.print("<locked>blank</locked>");
 					if (cols[14] != null)
-						writer.print("<lockUserId>" + cols[14] + "</lockUserId>");
-					writer.print("<filename><![CDATA[" + cols[15] + "]]></filename>");
+						writer.print("<lockUserId>" + cols[14]
+								+ "</lockUserId>");
+					writer.print("<filename><![CDATA[" + cols[15]
+							+ "]]></filename>");
 					writer.print("<status>" + cols[16] + "</status>");
 
 					if (Integer.parseInt(cols[17].toString()) == 0)
@@ -292,61 +341,78 @@ public class DocumentsDataServlet extends HttpServlet {
 					writer.print("<type>" + cols[18] + "</type>");
 
 					if (cols[19] != null)
-						writer.print("<sourceDate>" + (cols[19] != null ? df.format(cols[19]) : "") + "</sourceDate>");
+						writer.print("<sourceDate>"
+								+ (cols[19] != null ? df.format(cols[19]) : "")
+								+ "</sourceDate>");
 
 					if (cols[20] != null)
-						writer.print("<sourceAuthor><![CDATA[" + cols[20] + "]]></sourceAuthor>");
+						writer.print("<sourceAuthor><![CDATA[" + cols[20]
+								+ "]]></sourceAuthor>");
 
 					if (cols[21] == null)
 						writer.print("<rating>rating0</rating>");
 					else
 						writer.print("<rating>rating" + cols[21] + "</rating>");
 
-					writer.print("<fileVersion><![CDATA[" + cols[22] + "]]></fileVersion>");
+					writer.print("<fileVersion><![CDATA[" + cols[22]
+							+ "]]></fileVersion>");
 
 					if (cols[23] == null)
 						writer.print("<comment></comment>");
 					else
-						writer.print("<comment><![CDATA[" + cols[23] + "]]></comment>");
+						writer.print("<comment><![CDATA[" + cols[23]
+								+ "]]></comment>");
 
 					if (cols[24] == null)
 						writer.print("<workflowStatus></workflowStatus>");
 					else
-						writer.print("<workflowStatus><![CDATA[" + cols[24] + "]]></workflowStatus>");
+						writer.print("<workflowStatus><![CDATA[" + cols[24]
+								+ "]]></workflowStatus>");
 
-					writer.print("<startPublishing>" + df.format(cols[25]) + "</startPublishing>");
+					writer.print("<startPublishing>" + df.format(cols[25])
+							+ "</startPublishing>");
 					if (cols[26] != null)
-						writer.print("<stopPublishing>" + df.format(cols[26]) + "</stopPublishing>");
+						writer.print("<stopPublishing>" + df.format(cols[26])
+								+ "</stopPublishing>");
 					else
 						writer.print("<stopPublishing></stopPublishing>");
-					writer.print("<publishedStatus>" + (published ? "yes" : "no") + "</publishedStatus>");
+					writer.print("<publishedStatus>"
+							+ (published ? "yes" : "no") + "</publishedStatus>");
 
 					if (cols[28] != null)
-						writer.print("<extResId><![CDATA[" + cols[28] + "]]></extResId>");
+						writer.print("<extResId><![CDATA[" + cols[28]
+								+ "]]></extResId>");
 
 					if (cols[29] != null)
-						writer.print("<source><![CDATA[" + cols[29] + "]]></source>");
+						writer.print("<source><![CDATA[" + cols[29]
+								+ "]]></source>");
 
 					if (cols[30] != null)
-						writer.print("<sourceId><![CDATA[" + cols[30] + "]]></sourceId>");
+						writer.print("<sourceId><![CDATA[" + cols[30]
+								+ "]]></sourceId>");
 
 					if (cols[31] != null)
-						writer.print("<recipient><![CDATA[" + cols[31] + "]]></recipient>");
+						writer.print("<recipient><![CDATA[" + cols[31]
+								+ "]]></recipient>");
 
 					if (cols[32] != null)
-						writer.print("<object><![CDATA[" + cols[32] + "]]></object>");
+						writer.print("<object><![CDATA[" + cols[32]
+								+ "]]></object>");
 
 					if (cols[33] != null)
-						writer.print("<coverage><![CDATA[" + cols[33] + "]]></coverage>");
+						writer.print("<coverage><![CDATA[" + cols[33]
+								+ "]]></coverage>");
 
 					if (cols[34] != null)
-						writer.print("<template><![CDATA[" + cols[34] + "]]></template>");
+						writer.print("<template><![CDATA[" + cols[34]
+								+ "]]></template>");
 
 					if (!extValues.isEmpty())
 						for (String name : attrs) {
 							String val = extValues.get(cols[0] + "-" + name);
 							if (val != null)
-								writer.print("<ext_" + name + "><![CDATA[" + val + "]]></ext_" + name + ">");
+								writer.print("<ext_" + name + "><![CDATA["
+										+ val + "]]></ext_" + name + ">");
 						}
 
 					writer.print("</document>");
@@ -360,28 +426,37 @@ public class DocumentsDataServlet extends HttpServlet {
 					if (doc == null)
 						continue;
 
-					boolean published = isPublished(doc.getPublished(), doc.getStartPublishing(),
-							doc.getStopPublishing());
+					boolean published = isPublished(doc.getPublished(),
+							doc.getStartPublishing(), doc.getStopPublishing());
 
-					if (!published && !user.isInGroup("admin") && !user.isInGroup("publisher")) {
+					if (!published && !user.isInGroup("admin")
+							&& !user.isInGroup("publisher")) {
 						continue;
 					}
 
 					writer.print("<document>");
 					writer.print("<id>" + id + "</id>");
 					if (doc.getCustomId() != null)
-						writer.print("<customId><![CDATA[" + doc.getCustomId() + "]]></customId>");
+						writer.print("<customId><![CDATA[" + doc.getCustomId()
+								+ "]]></customId>");
 					else
 						writer.print("<customId> </customId>");
 					writer.print("<docref>" + doc.getId() + "</docref>");
 					writer.print("<icon>alias</icon>");
-					writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
+					writer.print("<title><![CDATA[" + doc.getTitle()
+							+ "]]></title>");
 					writer.print("<version>" + doc.getVersion() + "</version>");
-					writer.print("<lastModified>" + df.format(doc.getLastModified()) + "</lastModified>");
-					writer.print("<published>" + df.format(doc.getDate()) + "</published>");
-					writer.print("<publisher><![CDATA[" + doc.getPublisher() + "]]></publisher>");
-					writer.print("<created>" + df.format(doc.getCreation()) + "</created>");
-					writer.print("<creator><![CDATA[" + doc.getCreator() + "]]></creator>");
+					writer.print("<lastModified>"
+							+ df.format(doc.getLastModified())
+							+ "</lastModified>");
+					writer.print("<published>" + df.format(doc.getDate())
+							+ "</published>");
+					writer.print("<publisher><![CDATA[" + doc.getPublisher()
+							+ "]]></publisher>");
+					writer.print("<created>" + df.format(doc.getCreation())
+							+ "</created>");
+					writer.print("<creator><![CDATA[" + doc.getCreator()
+							+ "]]></creator>");
 					writer.print("<size>" + doc.getFileSize() + "</size>");
 					if (doc.getImmutable() == 0)
 						writer.print("<immutable>blank</immutable>");
@@ -400,8 +475,10 @@ public class DocumentsDataServlet extends HttpServlet {
 					else
 						writer.print("<locked>blank</locked>");
 					if (doc.getLockUserId() != null)
-						writer.print("<lockUserId>" + doc.getLockUserId() + "</lockUserId>");
-					writer.print("<filename><![CDATA[" + doc.getFileName() + "]]></filename>");
+						writer.print("<lockUserId>" + doc.getLockUserId()
+								+ "</lockUserId>");
+					writer.print("<filename><![CDATA[" + doc.getFileName()
+							+ "]]></filename>");
 					writer.print("<status>" + doc.getStatus() + "</status>");
 					if (doc.getSigned() == 0)
 						writer.print("<signed>blank</signed>");
@@ -410,55 +487,77 @@ public class DocumentsDataServlet extends HttpServlet {
 
 					writer.print("<aliasId>" + id + "</aliasId>");
 
-					writer.print("<sourceDate>" + (doc.getSourceDate() != null ? df.format(doc.getSourceDate()) : "")
-							+ "</sourceDate>");
+					writer.print("<sourceDate>"
+							+ (doc.getSourceDate() != null ? df.format(doc
+									.getSourceDate()) : "") + "</sourceDate>");
 					if (doc.getRating() == null)
 						writer.print("<rating>rating0</rating>");
 					else
-						writer.print("<rating>rating" + doc.getRating() + "</rating>");
-					writer.print("<fileVersion><![CDATA[" + doc.getFileVersion() + "]]></fileVersion>");
+						writer.print("<rating>rating" + doc.getRating()
+								+ "</rating>");
+					writer.print("<fileVersion><![CDATA["
+							+ doc.getFileVersion() + "]]></fileVersion>");
 					if (doc.getComment() == null)
 						writer.print("<comment></comment>");
 					else
-						writer.print("<comment><![CDATA[" + doc.getComment() + "]]></comment>");
+						writer.print("<comment><![CDATA[" + doc.getComment()
+								+ "]]></comment>");
 					if (doc.getWorkflowStatus() == null)
 						writer.print("<workflowStatus></workflowStatus>");
 					else
-						writer.print("<workflowStatus><![CDATA[" + doc.getWorkflowStatus() + "]]></workflowStatus>");
+						writer.print("<workflowStatus><![CDATA["
+								+ doc.getWorkflowStatus()
+								+ "]]></workflowStatus>");
 
-					writer.print("<startPublishing>" + df.format(doc.getStartPublishing()) + "</startPublishing>");
+					writer.print("<startPublishing>"
+							+ df.format(doc.getStartPublishing())
+							+ "</startPublishing>");
 					if (doc.getStopPublishing() != null)
-						writer.print("<stopPublishing>" + df.format(doc.getStopPublishing()) + "</stopPublishing>");
+						writer.print("<stopPublishing>"
+								+ df.format(doc.getStopPublishing())
+								+ "</stopPublishing>");
 					else
 						writer.print("<stopPublishing></stopPublishing>");
-					writer.print("<publishedStatus>" + (doc.isPublishing() ? "yes" : "no") + "</publishedStatus>");
+					writer.print("<publishedStatus>"
+							+ (doc.isPublishing() ? "yes" : "no")
+							+ "</publishedStatus>");
 
 					if (doc.getExtResId() != null)
-						writer.print("<extResId><![CDATA[" + doc.getExtResId() + "]]></extResId>");
+						writer.print("<extResId><![CDATA[" + doc.getExtResId()
+								+ "]]></extResId>");
 
 					if (doc.getSource() != null)
-						writer.print("<source><![CDATA[" + doc.getSource() + "]]></source>");
+						writer.print("<source><![CDATA[" + doc.getSource()
+								+ "]]></source>");
 
 					if (doc.getSourceId() != null)
-						writer.print("<sourceId><![CDATA[" + doc.getSourceId() + "]]></sourceId>");
+						writer.print("<sourceId><![CDATA[" + doc.getSourceId()
+								+ "]]></sourceId>");
 
 					if (doc.getRecipient() != null)
-						writer.print("<recipient><![CDATA[" + doc.getRecipient() + "]]></recipient>");
+						writer.print("<recipient><![CDATA["
+								+ doc.getRecipient() + "]]></recipient>");
 
 					if (doc.getObject() != null)
-						writer.print("<object><![CDATA[" + doc.getObject() + "]]></object>");
+						writer.print("<object><![CDATA[" + doc.getObject()
+								+ "]]></object>");
 
 					if (doc.getCoverage() != null)
-						writer.print("<coverage><![CDATA[" + doc.getCoverage() + "]]></coverage>");
+						writer.print("<coverage><![CDATA[" + doc.getCoverage()
+								+ "]]></coverage>");
 
 					if (doc.getTemplate() != null)
-						writer.print("<template><![CDATA[" + doc.getTemplate().getName() + "]]></template>");
+						writer.print("<template><![CDATA["
+								+ doc.getTemplate().getName()
+								+ "]]></template>");
 
 					if (!extValues.isEmpty())
 						for (String name : attrs) {
-							String val = extValues.get(doc.getId() + "-" + name);
+							String val = extValues
+									.get(doc.getId() + "-" + name);
 							if (val != null)
-								writer.print("<ext_" + name + "><![CDATA[" + val + "]]></ext_" + name + ">");
+								writer.print("<ext_" + name + "><![CDATA["
+										+ val + "]]></ext_" + name + ">");
 						}
 
 					writer.print("</document>");
@@ -476,7 +575,8 @@ public class DocumentsDataServlet extends HttpServlet {
 		}
 	}
 
-	protected static boolean isPublished(int published, Date startPublishing, Date stopPublishing) {
+	protected static boolean isPublished(int published, Date startPublishing,
+			Date stopPublishing) {
 		Date now = new Date();
 		if (published != 1)
 			return false;
