@@ -10,6 +10,18 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC 7.1 (2014-08-25; logicaldoc-7.1)
+===============================================  
+157 - Option to copy folders - Improvement - User Interface
+222 - Lookup table for extended attribute options - Improvement - Core
+286 - Notify users on adding note - Improvement - Core 	
+340 - Display the folder from which security policies are inherited - Improvement - User Interface
+364 - Adding more tags at once - Improvement - User Interface
+414 - Inherit Rights button to inherit rights from another folder - Improvement - User Interface
+441 - More details in the Notes dashlet - Improvement - User Interface
+450 - LibreOffice CMIS compliance - Improvement - CMIS
+438 - TagCloud computation - Bug - Core
+
 LogicalDOC 7.0.1 (2014-07-21; logicaldoc-7.0.1)
 ===============================================                
 392 - Import contacts from csv file - Improvement - Core
