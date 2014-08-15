@@ -255,14 +255,13 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 								for (String token : tokens) {
 									String t = token.trim();
 									tags.add(t);
-									
+
 									// Put the new tag in the options
 									Record record = new Record();
 									record.setAttribute("index", t);
 									record.setAttribute("word", t);
 									ds.addData(record);
 								}
-
 
 								// Add the old tags to the new ones
 								String[] oldVal = tagItem.getValues();
@@ -281,7 +280,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 			addPicker.setHeight(16);
 			addPicker.setPrompt(I18N.message("newtag"));
 
-			if ("free".equals(mode))
+			if ("free".equals(mode) && updateEnabled)
 				tagItem.setIcons(addPicker);
 
 			tagItem.setDisabled(!updateEnabled);
