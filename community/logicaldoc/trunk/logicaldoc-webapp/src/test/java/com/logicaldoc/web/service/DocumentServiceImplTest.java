@@ -130,11 +130,11 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 
 		doc = service.getById(session.getSid(), 3);
 		Assert.assertEquals("testDocname3", doc.getTitle());
-
+		Assert.assertEquals("pippo", doc.getFileName());
+		
 		doc = service.save(session.getSid(), doc);
 		Assert.assertNotNull(doc);
 		Assert.assertEquals("testDocname3", doc.getTitle());
-		Assert.assertEquals("pippo", doc.getFileName());
 	}
 
 	@Test
