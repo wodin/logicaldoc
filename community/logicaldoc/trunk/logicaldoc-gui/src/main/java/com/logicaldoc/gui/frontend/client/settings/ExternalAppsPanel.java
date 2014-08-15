@@ -201,7 +201,7 @@ public class ExternalAppsPanel extends VLayout {
 		openOffice.setWidth(400);
 		TextItem swftools = ItemFactory.newTextItem("swftools", "SWFTools path", swftoolsPath.getValue());
 		swftools.setWidth(400);
-		TextItem acmecadCommand = ItemFactory.newTextItem("acmecadCommand", "AcmeCAD", acmecad.getValue());
+		TextItem acmecadCommand = ItemFactory.newTextItem("acmecadCommand", "AcmeCADConverter", acmecad.getValue());
 		acmecadCommand.setWidth(400);
 		
 		extAppForm.setItems(convertCommand, ghostCommand, tesseractCommand, swftools, openOffice, acmecadCommand);
