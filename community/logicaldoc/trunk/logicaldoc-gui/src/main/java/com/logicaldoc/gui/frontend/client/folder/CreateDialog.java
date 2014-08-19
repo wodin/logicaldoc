@@ -37,7 +37,7 @@ public class CreateDialog extends Dialog {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(folder.getType() == 0 ? I18N.message("newfolder") : I18N.message("newworkspace"));
 		setWidth(400);
-		setHeight(180);
+		setHeight(150);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);

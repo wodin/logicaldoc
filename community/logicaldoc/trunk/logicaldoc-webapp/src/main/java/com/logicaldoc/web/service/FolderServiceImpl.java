@@ -78,7 +78,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	@Override
 	public void applyRights(String sid, GUIFolder folder, boolean subtree) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
-
+		
 		try {
 			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			Folder f = fdao.findById(folder.getId());
