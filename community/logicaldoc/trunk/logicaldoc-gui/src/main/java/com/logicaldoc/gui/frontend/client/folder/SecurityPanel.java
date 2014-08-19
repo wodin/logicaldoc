@@ -351,19 +351,19 @@ public class SecurityPanel extends FolderDetailTab {
 
 			right.setName(record.getAttributeAsString("entity"));
 			right.setEntityId(Long.parseLong(record.getAttribute("entityId")));
-			right.setWrite(record.getAttributeAsBoolean("write"));
-			right.setDelete(record.getAttributeAsBoolean("delete"));
-			right.setAdd(record.getAttributeAsBoolean("add"));
-			right.setWorkflow(record.getAttributeAsBoolean("workflow"));
-			right.setSign(record.getAttributeAsBoolean("sign"));
-			right.setImport(record.getAttributeAsBoolean("import"));
-			right.setExport(record.getAttributeAsBoolean("export"));
-			right.setImmutable(record.getAttributeAsBoolean("immutable"));
-			right.setRename(record.getAttributeAsBoolean("rename"));
-			right.setSecurity(record.getAttributeAsBoolean("security"));
-			right.setArchive(record.getAttributeAsBoolean("archive"));
-			right.setDownload(record.getAttributeAsBoolean("download"));
-			right.setCalendar(record.getAttributeAsBoolean("calendar"));
+			right.setWrite("true".equals(record.getAttributeAsString("write")));
+			right.setDelete("true".equals(record.getAttributeAsString("delete")));
+			right.setAdd("true".equals(record.getAttributeAsString("add")));
+			right.setWorkflow("true".equals(record.getAttributeAsString("workflow")));
+			right.setSign("true".equals(record.getAttributeAsString("sign")));
+			right.setImport("true".equals(record.getAttributeAsString("import")));
+			right.setExport("true".equals(record.getAttributeAsString("export")));
+			right.setImmutable("true".equals(record.getAttributeAsString("immutable")));
+			right.setRename("true".equals(record.getAttributeAsString("rename")));
+			right.setSecurity("true".equals(record.getAttributeAsString("security")));
+			right.setArchive("true".equals(record.getAttributeAsString("archive")));
+			right.setDownload("true".equals(record.getAttributeAsString("download")));
+			right.setCalendar("true".equals(record.getAttributeAsString("calendar")));
 
 			tmp.add(right);
 		}
@@ -411,10 +411,10 @@ public class SecurityPanel extends FolderDetailTab {
 		});
 	}
 
-	public void onSave(boolean recursive) {
+	public void onSave(final boolean recursive) {
+
 		// Apply all rights
 		folder.setRights(this.getRights());
-		final boolean onSubFolders = recursive;
 
 		folderService.applyRights(Session.get().getSid(), folder, recursive, new AsyncCallback<Void>() {
 
@@ -425,7 +425,7 @@ public class SecurityPanel extends FolderDetailTab {
 
 			@Override
 			public void onSuccess(Void result) {
-				if (!onSubFolders)
+				if (!recursive)
 					Log.info(I18N.message("appliedrights"), null);
 				else
 					Log.info(I18N.message("appliedrightsonsubfolders"), null);
