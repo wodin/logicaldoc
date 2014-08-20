@@ -137,6 +137,11 @@ create table ld_sequence (ld_id number(19,0) not null, ld_lastmodified timestamp
                           ld_deleted int not null, ld_tenantid number(19,0) not null, ld_name varchar(255) not null,
                           ld_objectid number(19,0), ld_lastreset timestamp null, ld_value number(19,0) not null,
                           primary key (ld_id));
+create table ld_extoption (ld_id number(19,0) not null, ld_lastmodified timestamp not null, ld_recordversion number(19,0) not null,
+                          ld_deleted int not null, ld_tenantid number(19,0) not null, ld_templateid number(19,0) not null,
+                          ld_attribute varchar(255) not null, ld_value varchar(255) not null, 
+                          ld_label varchar(1000), ld_position int not null,
+                          primary key (ld_id));
 
 create table hibernate_unique_key (tablename varchar(40) NOT NULL, next_hi number(19,0) NOT NULL);
 
@@ -176,6 +181,7 @@ create unique index  AK_RATING on ld_rating (ld_docid, ld_userid);
 create unique index  AK_MSGTEMPL on ld_messagetemplate (ld_name, ld_language, ld_tenantid);
 create unique index  AK_TENANT on ld_tenant (ld_name);
 create unique index  AK_SEQUENCE on ld_sequence (ld_name, ld_objectid, ld_tenantid);
+create unique index  AK_EXTOPTION on ld_extoption (ld_templateid, ld_attribute, ld_value);
 
 
 --Prepare some indexes
@@ -283,7 +289,6 @@ values     (-10000,CURRENT_TIMESTAMP,0,1,'publisher','Group of publishers',0,1);
 insert into ld_user
            (ld_id,ld_lastmodified,ld_deleted,ld_enabled,ld_username,ld_password,ld_passwordmd4,ld_name,ld_firstname,ld_street,ld_postalcode,ld_city,ld_country,ld_language,ld_email,ld_telephone,ld_telephone2,ld_type,ld_passwordchanged,ld_passwordexpires,ld_source,ld_quota,ld_welcomescreen,ld_passwordexpired,ld_tenantid,ld_recordversion)
 values     (1,CURRENT_TIMESTAMP,0,1,'admin','d033e22ae348aeb566fc214aec3585c4da997','U8FeEPvxYRhKNCBsLa0K+1rD1tTtR6yctJIwxje2QMwEOlEQx9HuiA==','Admin','Admin','','','','','en','admin@admin.net','','',0,null,0,0,-1,1520,0,1,1);
-
 insert into ld_group
            (ld_id,ld_lastmodified,ld_deleted,ld_tenantid,ld_name,ld_type,ld_recordversion)
 values     (-1,CURRENT_TIMESTAMP,0,1,'_user_1',1,1);
@@ -389,3 +394,4 @@ insert into hibernate_unique_key(tablename, next_hi) values ('ld_note', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_messagetemplate', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_tenant', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_sequence', 100);
+insert into hibernate_unique_key(tablename, next_hi) values ('ld_extoption', 100);
