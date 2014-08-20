@@ -71,7 +71,7 @@ public class TagCloudGenerator extends Task {
 		List<Tenant> tenants = tenantDao.findAll();
 
 		for (Tenant tenant : tenants) {
-			log.info("Generating tag vloud for tenant " + tenant);
+			log.info("Generating tag cloud for tenant " + tenant);
 
 			// Obtain the proper generic that will store TagClouds
 			Generic generic = genericDao.findByAlternateKey(TYPE_TAGCLOUD, SUBTYPE_TAGCLOUD, null, tenant.getId());
