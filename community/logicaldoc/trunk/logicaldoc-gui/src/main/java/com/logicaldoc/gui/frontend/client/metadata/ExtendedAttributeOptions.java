@@ -92,8 +92,10 @@ public class ExtendedAttributeOptions extends com.smartgwt.client.widgets.Window
 
 					@Override
 					public void execute(String value) {
+						if(value==null)
+							return;
 						Record rec = new ListGridRecord();
-						rec.setAttribute("value", value);
+						rec.setAttribute("value", value.trim());
 						rec.setAttribute("templateId", Long.toString(templateId));
 						rec.setAttribute("attribute", attribute);
 						list.addData(rec);
