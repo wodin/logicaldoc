@@ -97,6 +97,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			if (!ApplicationListener.needRestart) {
 				// Checks if LogicalDOC has been initialized
 				String jdbcUrl = config.getProperty("jdbc.url");
+
 				if (jdbcUrl.startsWith("jdbc:hsqldb:mem:")) {
 					GUIMessage setupReminder = new GUIMessage();
 					setupReminder.setMessage(getValue(info, "setup.reminder"));
@@ -142,18 +143,22 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 	}
 
 	public String detectNewVersion() {
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		SoftwareVersion actualVersion = new SoftwareVersion(config.getProperty("product.release"));
+		try {
+			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			SoftwareVersion actualVersion = new SoftwareVersion(config.getProperty("product.release"));
 
-		FeedMessageDAO feedMessageDao = (FeedMessageDAO) Context.getInstance().getBean(FeedMessageDAO.class);
-		List<FeedMessage> messages = feedMessageDao.findByTitle("LogicalDOC v%");
-		for (FeedMessage message : messages) {
-			if (message.getDeleted() == 0 && message.getRead() == 0) {
-				SoftwareVersion otherVersion = new SoftwareVersion(message.getTitle()
-						.substring("LogicalDOC v".length()));
-				if (otherVersion.compareTo(actualVersion) > 0)
-					return otherVersion.get();
+			FeedMessageDAO feedMessageDao = (FeedMessageDAO) Context.getInstance().getBean(FeedMessageDAO.class);
+			List<FeedMessage> messages = feedMessageDao.findByTitle("LogicalDOC v%");
+			for (FeedMessage message : messages) {
+				if (message.getDeleted() == 0 && message.getRead() == 0) {
+					SoftwareVersion otherVersion = new SoftwareVersion(message.getTitle().substring(
+							"LogicalDOC v".length()));
+					if (otherVersion.compareTo(actualVersion) > 0)
+						return otherVersion.get();
+				}
 			}
+		} catch (Throwable t) {
+			log.warn(t.getMessage());
 		}
 		return null;
 	}
@@ -194,7 +199,22 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 		String tname = tenantName;
 		if (tname == null)
 			tname = Tenant.DEFAULT_NAME;
-		GUITenant tenant = SecurityServiceImpl.getTenant(tname);
+
+		GUITenant tenant = null;
+		try {
+			tenant = SecurityServiceImpl.getTenant(tname);
+		} catch (Throwable t) {
+			// Before setup we may have exception here
+			log.warn(t.getMessage());
+		}
+
+		// If no tenant was found, go with the default one
+		if (tenant == null) {
+			tenant = new GUITenant();
+			tenant.setName(Tenant.DEFAULT_NAME);
+			tenant.setId(Tenant.DEFAULT_ID);
+		}
+
 		info.setTenant(tenant);
 		info.setSessionHeartbeat(Integer.parseInt(config.getProperty(tname + ".session.heartbeat")));
 

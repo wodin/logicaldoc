@@ -122,10 +122,18 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			} else {
 				guiUser = null;
 				GUIInfo info = new GUIInfo();
-				if (tenant == null)
-					info.setTenant(getTenant(Tenant.DEFAULT_NAME));
-				else
-					info.setTenant(getTenant(tenant));
+				try {
+					if (tenant == null)
+						info.setTenant(getTenant(Tenant.DEFAULT_NAME));
+					else
+						info.setTenant(getTenant(tenant));
+				} catch (Throwable t) {
+					log.warn(t.getMessage());
+					GUITenant ten = new GUITenant();
+					ten.setId(Tenant.DEFAULT_ID);
+					ten.setName(Tenant.DEFAULT_NAME);
+					info.setTenant(ten);
+				}
 				session.setInfo(info);
 				session.setLoggedIn(false);
 				log.warn("User " + username + " is not valid");
@@ -383,8 +391,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 	@Override
 	public void deleteGroup(String sid, long groupId) throws ServerException {
-		UserSession session= ServiceUtil.validateSession(sid);
-		
+		UserSession session = ServiceUtil.validateSession(sid);
+
 		try {
 			GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 			SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
