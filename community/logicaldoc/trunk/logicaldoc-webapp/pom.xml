@@ -12,6 +12,11 @@
     <name>logicaldoc-webapp</name>
     <packaging>war</packaging>
     <dependencies>
+         <dependency>
+	       <groupId>com.google.guava</groupId>
+	       <artifactId>guava</artifactId>
+	       <version>14.0.1</version>
+        </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
