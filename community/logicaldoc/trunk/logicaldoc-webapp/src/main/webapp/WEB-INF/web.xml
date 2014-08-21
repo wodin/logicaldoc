@@ -569,7 +569,7 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
-        <servlet-name>ExtendedAttributeOptionsDat</servlet-name>
+        <servlet-name>ExtendedAttributeOptionsData</servlet-name>
         <url-pattern>/data/extoptions.xml</url-pattern>
     </servlet-mapping>
     
