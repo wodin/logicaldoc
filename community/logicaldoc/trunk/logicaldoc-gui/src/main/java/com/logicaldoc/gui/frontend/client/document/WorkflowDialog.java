@@ -34,7 +34,7 @@ public class WorkflowDialog extends Window {
 
 	public WorkflowDialog(final long[] ids) {
 		VLayout layout = new VLayout();
-		layout.setMargin(25);
+		layout.setMargin(10);
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
@@ -65,7 +65,7 @@ public class WorkflowDialog extends Window {
 		});
 
 		form.setFields(workflow, start);
-		addChild(layout);
+		addItem(layout);
 	}
 
 	public void onStart(long[] ids) {
