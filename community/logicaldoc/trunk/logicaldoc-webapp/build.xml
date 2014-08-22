@@ -13,6 +13,7 @@
 				<exclude name="**/.*" />
 				<exclude name="WEB-INF/lib/**" />
 				<exclude name="WEB-INF/classes/**" />
+                <exclude name="WEB-INF/web.xml" />
 			</fileset>
 		</copy>
 		<copy todir="${logicaldoc.webroot}/WEB-INF/classes" verbose="true">
@@ -22,6 +23,8 @@
                 <exclude name="log.xml" />
 				<exclude name="ehcache.xml" />
                 <exclude name="context.prop*" />
+                <exclude name="*.dtd" />
+                <exclude name="*.xsd" />
 				<exclude name="**/gui/**"/>
 			</fileset>
 		</copy>

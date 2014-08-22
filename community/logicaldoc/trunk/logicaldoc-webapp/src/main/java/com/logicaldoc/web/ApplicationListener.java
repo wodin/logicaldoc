@@ -87,8 +87,12 @@ public class ApplicationListener implements ServletContextListener, HttpSessionL
 //
 //		for (Thread t : threadArray) {
 //			synchronized (t) {
-//				if ((t.getName().startsWith("Abandoned connection cleanup") || t.getName().contains("webdav")
-//						|| t.getName().startsWith("Scheduler_") || t.getName().startsWith("Thread-"))
+//				// if ((t.getName().startsWith("Abandoned connection cleanup")
+//				// || t.getName().contains("webdav")
+//				// || t.getName().startsWith("Scheduler_") ||
+//				// t.getName().startsWith("Thread-"))
+//				// && !Thread.currentThread().equals(t) && !t.isInterrupted())
+//				if ((t.getName().toLowerCase().contains("abandoned connection") || t.getName().startsWith("Scheduler_"))
 //						&& !Thread.currentThread().equals(t) && !t.isInterrupted())
 //					try {
 //						t.stop(); // don't complain, it works
