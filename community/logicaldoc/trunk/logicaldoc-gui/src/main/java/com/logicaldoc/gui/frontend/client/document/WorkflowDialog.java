@@ -34,12 +34,12 @@ public class WorkflowDialog extends Window {
 
 	public WorkflowDialog(final long[] ids) {
 		VLayout layout = new VLayout();
-		layout.setMargin(10);
+		layout.setMargin(5);
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
 		setTitle(I18N.message("startworkflow"));
-		setWidth(380);
+		setWidth(400);
 		setHeight(100);
 		setCanDragResize(true);
 		setIsModal(true);
