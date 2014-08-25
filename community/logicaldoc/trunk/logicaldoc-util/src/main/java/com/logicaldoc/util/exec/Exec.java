@@ -9,6 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,23 +96,25 @@ public class Exec {
 	 */
 	public static int exec(final String commandLine, String[] env, File dir, int timeout) throws IOException {
 		int exit = 0;
-		Runtime runtime = Runtime.getRuntime();
-		final Process process = runtime.exec(commandLine, env, dir);
 
-		Timer t = null;
+		final Process process = Runtime.getRuntime().exec(commandLine, env, dir);
+
 		if (timeout > 0) {
-			t = new Timer(true);
-			t.schedule(new TimerTask() {
-
-				@Override
-				public void run() {
-					log.warn("Timeout command " + commandLine);
-					process.destroy();
-				}
-			}, timeout * 1000); // it will kill the process after timeout
-								// seconds
-								// (if it's
-								// not finished yet).
+			ExecutorService service = Executors.newSingleThreadExecutor();
+			try {
+				Callable<Integer> call = new CallableProcess(process);
+				Future<Integer> future = service.submit(call);
+				exit = future.get(timeout, TimeUnit.SECONDS);
+			} catch (TimeoutException e) {
+				process.destroy();
+				String message = "Timeout command " + commandLine;
+				log.warn(message);
+			} catch (Exception e) {
+				log.warn("Command failed to execute - " + commandLine);
+				exit = 1;
+			} finally {
+				service.shutdown();
+			}
 		}
 
 		StreamEater errEater = new StreamEater("err", process.getErrorStream());
@@ -160,6 +168,18 @@ public class Exec {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	static class CallableProcess implements Callable {
+		private Process p;
+
+		public CallableProcess(Process process) {
+			p = process;
+		}
+
+		public Integer call() throws Exception {
+			return p.waitFor();
 		}
 	}
 }
