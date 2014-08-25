@@ -75,7 +75,7 @@ public interface FolderService {
 	 * @param sid Session identifier
 	 * @param folderId The folder id
 	 * @param targetId The folder id of the target folder
-	 * @param foldersOnly Only the folders will be copied and not the documents
+	 * @param foldersOnly If 1, only the folders will be copied and not the documents
 	 * 
 	 * @throws Exception
 	 */
