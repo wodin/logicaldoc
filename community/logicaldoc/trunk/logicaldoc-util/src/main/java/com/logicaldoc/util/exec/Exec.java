@@ -6,9 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,36 +35,27 @@ public class Exec {
 	/**
 	 * Execute the command by using the process builder
 	 */
-	public static int exec(final List<String> command, Map<String, String> env, File dir, int timeout)
-			throws IOException {
+	public static int exec(final List<String> commandLine, String[] env, File dir, int timeout) throws IOException {
 		int exit = 0;
-		ProcessBuilder builder = new ProcessBuilder(command);
-		builder.redirectErrorStream(true);
 
-		if (env != null) {
-			for (String name : env.keySet()) {
-				builder.environment().put(name, env.get(name).toString());
-			}
-		}
-		if (dir != null)
-			builder.directory(dir);
+		final Process process = Runtime.getRuntime().exec(commandLine.toArray(new String[0]), env, dir);
 
-		final Process process = builder.start();
-
-		Timer t = null;
 		if (timeout > 0) {
-			t = new Timer(true);
-			t.schedule(new TimerTask() {
-
-				@Override
-				public void run() {
-					log.warn("Timeout command " + command.get(0));
-					process.destroy();
-				}
-			}, timeout * 1000); // it will kill the process after timeout
-								// seconds
-								// (if it's
-								// not finished yet).
+			ExecutorService service = Executors.newSingleThreadExecutor();
+			try {
+				Callable<Integer> call = new CallableProcess(process);
+				Future<Integer> future = service.submit(call);
+				exit = future.get(timeout, TimeUnit.SECONDS);
+			} catch (TimeoutException e) {
+				process.destroy();
+				String message = "Timeout command " + commandLine;
+				log.warn(message);
+			} catch (Exception e) {
+				log.warn("Command failed to execute - " + commandLine);
+				exit = 1;
+			} finally {
+				service.shutdown();
+			}
 		}
 
 		StreamEater errEater = new StreamEater("err", process.getErrorStream());
@@ -85,8 +73,6 @@ public class Exec {
 		} catch (InterruptedException e) {
 
 		}
-		if (t != null)
-			t.cancel();
 
 		return exit;
 	}
@@ -171,7 +157,7 @@ public class Exec {
 		}
 	}
 
-	static class CallableProcess implements Callable {
+	static class CallableProcess implements Callable<Integer> {
 		private Process p;
 
 		public CallableProcess(Process process) {
