@@ -135,7 +135,7 @@ public class UploadServlet extends UploadAction {
 			removeSessionFileItems(request);
 			throw e;
 		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
+			log.error(t.getMessage());
 		}
 		return null;
 	}
