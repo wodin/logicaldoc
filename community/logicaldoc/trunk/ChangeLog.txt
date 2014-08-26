@@ -10,7 +10,7 @@
 
                      LogicalDOC Community Edition
 
-LogicalDOC 7.1 (2014-08-25; logicaldoc-7.1)
+LogicalDOC 7.1 (2014-09-01; logicaldoc-7.1)
 ===============================================  
 157 - Option to copy folders - Improvement - User Interface
 222 - Lookup table for extended attribute options - Improvement - Core
