@@ -78,7 +78,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	@Override
 	public void applyRights(String sid, GUIFolder folder, boolean subtree) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
-		
+
 		try {
 			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			Folder f = fdao.findById(folder.getId());
@@ -86,7 +86,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 			if (f.getSecurityRef() == null)
 				saveRules(sid, f, session.getUserId(), folder.getRights());
-			
+
 			if (subtree) {
 				/*
 				 * Just apply the current security settings to the whole subtree
@@ -833,11 +833,13 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				if (att.getEditor() == ExtendedAttribute.EDITOR_LISTBOX) {
 					String buf = (String) extAttr.getStringValue();
 					List<String> list = new ArrayList<String>();
-					StringTokenizer st = new StringTokenizer(buf, ",");
-					while (st.hasMoreElements()) {
-						String val = (String) st.nextElement();
-						if (!list.contains(val))
-							list.add(val);
+					if (buf != null) {
+						StringTokenizer st = new StringTokenizer(buf, ",");
+						while (st.hasMoreElements()) {
+							String val = (String) st.nextElement();
+							if (!list.contains(val))
+								list.add(val);
+						}
 					}
 					att.setOptions(list.toArray(new String[0]));
 				}
