@@ -7,6 +7,7 @@ import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.services.LdapService;
 import com.logicaldoc.gui.frontend.client.services.LdapServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
@@ -35,7 +36,7 @@ public class LdapImportDialog extends Window {
 
 	public LdapImportDialog(final String[] usernames) {
 		VLayout layout = new VLayout();
-		layout.setMargin(25);
+		layout.setMargin(2);
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
@@ -65,14 +66,17 @@ public class LdapImportDialog extends Window {
 					return;
 				long tnt = Long.parseLong(tenant.getSelectedRecord().getAttributeAsString("id"));
 
+				ContactingServer.get().show();
 				service.importUsers(Session.get().getSid(), usernames, tnt, new AsyncCallback<GUIValuePair[]>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
+						ContactingServer.get().hide();
 					}
 
 					@Override
 					public void onSuccess(GUIValuePair[] report) {
+						ContactingServer.get().hide();
 						String message = I18N.message("importreport",
 								new String[] { report[0].getValue(), report[1].getValue(), report[2].getValue() });
 						if ("0".equals(report[2].getValue()))
@@ -87,6 +91,6 @@ public class LdapImportDialog extends Window {
 		});
 
 		form.setFields(tenant, start);
-		addChild(layout);
+		addItem(layout);
 	}
 }

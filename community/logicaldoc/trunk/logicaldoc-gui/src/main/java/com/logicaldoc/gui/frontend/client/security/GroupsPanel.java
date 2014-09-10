@@ -81,8 +81,6 @@ public class GroupsPanel extends VLayout {
 
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
-		list.setShowRecordComponents(true);
-		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
 		list.setAutoFetchData(true);
 		list.setSelectionType(SelectionStyle.SINGLE);
