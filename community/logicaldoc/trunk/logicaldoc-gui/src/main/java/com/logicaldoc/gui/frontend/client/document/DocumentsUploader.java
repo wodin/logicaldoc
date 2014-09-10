@@ -49,8 +49,6 @@ public class DocumentsUploader extends Window {
 
 	private DynamicForm form;
 
-	private VLayout layout = new VLayout();
-
 	public DocumentsUploader() {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("adddocuments"));
@@ -83,10 +81,9 @@ public class DocumentsUploader extends Window {
 
 		prepareForm();
 
+		VLayout layout = new VLayout();
 		layout.setMembersMargin(5);
-		layout.setMargin(15);
-		layout.setHeight(250);
-		layout.setWidth100();
+		layout.setMargin(2);
 
 		layout.addMember(form);
 		layout.addMember(multiUploader);

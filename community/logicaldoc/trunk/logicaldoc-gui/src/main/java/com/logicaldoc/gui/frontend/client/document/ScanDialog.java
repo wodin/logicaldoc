@@ -15,8 +15,6 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.0
  */
 public class ScanDialog extends Window {
-	private HTMLFlow applet = new HTMLFlow();
-
 	public ScanDialog() {
 		VLayout layout = new VLayout();
 		layout.setMargin(2);
@@ -38,6 +36,7 @@ public class ScanDialog extends Window {
 		tmp += "<param name=\"language\" value=\"" + I18N.getDefaultLocaleForDoc() + "\" />";
 		tmp += "</applet>";
 
+		HTMLFlow applet = new HTMLFlow();
 		applet.setContents(tmp);
 		applet.setWidth(getWidth() - 10);
 		applet.setHeight(getHeight() - 35);

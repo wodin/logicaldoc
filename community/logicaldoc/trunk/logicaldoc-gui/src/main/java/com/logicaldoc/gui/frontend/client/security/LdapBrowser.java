@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.frontend.client.services.LdapService;
 import com.logicaldoc.gui.frontend.client.services.LdapServiceAsync;
@@ -56,8 +57,8 @@ public class LdapBrowser extends VLayout {
 	private ListGrid users;
 
 	private InfoPanel infoPanel;
-	
-	private ButtonItem searchButton; 
+
+	private ButtonItem searchButton;
 
 	public LdapBrowser() {
 		setWidth100();
@@ -159,17 +160,21 @@ public class LdapBrowser extends VLayout {
 				username = "*" + username + "*";
 
 			searchButton.setDisabled(true);
+
+			ContactingServer.get().show();
 			service.listUsers(Session.get().getSid(), username, new AsyncCallback<GUIUser[]>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
 					searchButton.setDisabled(false);
+					ContactingServer.get().hide();
 					Log.serverError(caught);
 				}
 
 				@Override
 				public void onSuccess(GUIUser[] result) {
 					searchButton.setDisabled(false);
+					ContactingServer.get().hide();
 					if (result != null && result.length > 0) {
 						ListGridRecord[] records = new ListGridRecord[result.length];
 						for (int i = 0; i < result.length; i++) {
