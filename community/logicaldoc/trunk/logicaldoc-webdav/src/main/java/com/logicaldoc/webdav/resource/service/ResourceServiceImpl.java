@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderEvent;
 import com.logicaldoc.core.security.FolderHistory;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
@@ -155,10 +157,6 @@ public class ResourceServiceImpl implements ResourceService {
 	public Resource getResource(String requestPath, DavSession session) throws DavException {
 		log.debug("Find DAV resource: " + requestPath);
 
-		String sid = null;
-		if (session != null)
-			sid = (String) session.getObject("sid");
-
 		long userId = 0;
 		String currentStablePath = "";
 		String name = "";
@@ -222,9 +220,13 @@ public class ResourceServiceImpl implements ResourceService {
 	public Resource getParentResource(String resourcePath, long userId, DavSession session) {
 		log.debug("Find parent DAV resource: " + resourcePath);
 
-		String sid = null;
-		if (session != null)
-			sid = (String) session.getObject("sid");
+		long tenantId = Tenant.DEFAULT_ID;
+		if (session != null) {
+			tenantId = session.getTenantId();
+		} else {
+			User user = userDAO.findById(userId);
+			tenantId = user.getTenantId();
+		}
 
 		resourcePath = resourcePath.replaceFirst("/store", "").replaceFirst("/vstore", "");
 		if (!resourcePath.startsWith("/"))
@@ -245,11 +247,12 @@ public class ResourceServiceImpl implements ResourceService {
 
 		Folder folder = null;
 		if ("/".equals(resourcePath.trim()) && "".equals(name))
-			folder = folderDAO.findRoot(session.getTenantId());
+			folder = folderDAO.findRoot(tenantId);
 		else
-			folder = folderDAO.findByPath(resourcePath + "/" + name, session.getTenantId());
+			folder = folderDAO.findByPath(resourcePath + "/" + name, tenantId);
 
 		return marshallFolder(folder, userId, session);
+
 	}
 
 	@Override
@@ -429,7 +432,13 @@ public class ResourceServiceImpl implements ResourceService {
 				documentManager.rename(document, source.getName(), false, transaction);
 			} catch (Exception e) {
 				log.warn(e.getMessage(), e);
-				throw new RuntimeException(e);
+			}
+
+			// we are doing a title rename
+			try {
+				documentManager.rename(document, FilenameUtils.getBaseName(source.getName()), true, transaction);
+			} catch (Exception e) {
+				log.warn(e.getMessage(), e);
 			}
 		} else {
 			// moving the document to another folder

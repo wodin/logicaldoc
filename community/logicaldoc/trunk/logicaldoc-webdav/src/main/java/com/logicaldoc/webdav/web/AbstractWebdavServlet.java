@@ -610,6 +610,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 
 		log.debug("doMove");
 		WebdavRequest webdavRequest = new WebdavRequestImpl(request, getLocatorFactory());
+		webdavRequest.setDavSession(request.getDavSession());
 		DavSession session = (com.logicaldoc.webdav.session.DavSession) webdavRequest.getDavSession();
 		try {
 			DavResource destResource = null;
