@@ -803,7 +803,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				documentDAO.store(shortcutDoc);
 			}
 
-			log.debug("Document filename renamed: " + document.getId());
+			log.debug("Document renamed: " + document.getId());
 		} else {
 			throw new Exception("Document is immutable");
 		}
