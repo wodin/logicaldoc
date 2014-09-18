@@ -52,8 +52,8 @@ public class DocumentsUploader extends Window {
 	public DocumentsUploader() {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("adddocuments"));
-		setWidth(500);
-		setHeight(280);
+		setWidth(460);
+		setHeight(270);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -61,12 +61,10 @@ public class DocumentsUploader extends Window {
 
 		// Create a new uploader panel and attach it to the window
 		multiUploader = new MultiUploader();
-
 		multiUploader.addOnStartUploadHandler(onStartUploaderHandler);
 		multiUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
-
 		multiUploader.setStyleName("upload");
-		multiUploader.setWidth("100%");
+		multiUploader.setWidth("400px");
 		multiUploader.setFileInputPrefix("LDOC");
 		multiUploader.reset();
 
