@@ -65,12 +65,10 @@ public class Subscriptions extends com.smartgwt.client.widgets.Window {
 		setTitle(I18N.message("subscriptions"));
 		setWidth(400);
 		setHeight(350);
+		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
-		setCanDragResize(true);
 		centerInPage();
-		setMembersMargin(5);
-		setAutoSize(true);
 
 		// Initialize the listing panel as placeholder
 		listing.setAlign(Alignment.CENTER);
@@ -94,18 +92,13 @@ public class Subscriptions extends com.smartgwt.client.widgets.Window {
 		});
 		toolStrip.addFill();
 
-		VStack content = new VStack();
-		content.setWidth100();
-		content.setHeight100();
-		content.setMembersMargin(5);
-		content.setTop(20);
-		content.setMargin(4);
-		content.setAlign(Alignment.CENTER);
-		content.setDefaultLayoutAlign(Alignment.CENTER);
-		content.setBackgroundColor("#ffffff");
-		content.setMembers(toolStrip, listing);
+		VLayout layout = new VLayout();
+		layout.setMembersMargin(5);
+		layout.setMargin(2);
+		layout.addMember(toolStrip);
+		layout.addMember(listing);
 
-		addChild(content);
+		addItem(layout);
 	}
 
 	private void initListGrid() {
