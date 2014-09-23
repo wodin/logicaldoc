@@ -723,7 +723,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			folder.setTemplateLocked(f.getTemplateLocked());
 			folder.getAttributes().clear();
 
-			if (f.getAttributes().length > 0) {
+			if (f.getAttributes()!=null && f.getAttributes().length > 0) {
 				for (GUIExtendedAttribute attr : f.getAttributes()) {
 					ExtendedAttribute templateAttribute = template.getAttributes().get(attr.getName());
 					// This control is necessary because, changing
