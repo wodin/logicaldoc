@@ -41,8 +41,6 @@ public class MySignature extends Window {
 
 	private ValuesManager vm = new ValuesManager();
 
-	private VLayout layout = new VLayout();
-
 	private SelectItem certificates = null;
 
 	private GUIUser currentUser;
@@ -60,14 +58,12 @@ public class MySignature extends Window {
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("mysignature"));
-		setWidth(370);
-		setHeight(250);
+		setWidth(400);
+		setHeight(230);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
-
-		HLayout signatureLayout = new HLayout(20);
 
 		DynamicForm signatureForm = new DynamicForm();
 		signatureForm.setValuesManager(vm);
@@ -104,18 +100,18 @@ public class MySignature extends Window {
 		reset.setVisible(administration);
 		resetForm.setItems(reset);
 
+		HLayout signatureLayout = new HLayout(20);
 		signatureLayout.setMembers(signatureForm, saveForm, resetForm);
-		layout.addMember(signatureLayout, 0);
 
 		hint = new HTMLFlow(I18N.message("mysignaturehint"));
-		hint.setWidth(290);
-		layout.addMember(hint, 1);
+		hint.setWidth100();
 
 		// Create a new uploader panel and attach it to the window
 		uploader = new MultiUploader();
 		uploader.setMaximumFiles(1);
 		uploader.setStyleName("upload");
 		uploader.setFileInputPrefix("LDOC");
+		uploader.setWidth("350px");
 		uploader.setHeight("40px");
 		uploader.reset();
 
@@ -123,8 +119,6 @@ public class MySignature extends Window {
 		// finishes
 		uploader.addOnFinishUploadHandler(onFinishUploaderHandler);
 		uploader.addOnCancelUploadHandler(onCancelUploaderHandler);
-
-		layout.addMember(uploader, 2);
 
 		// Set initial signature value
 		String signatureId = user.getSignatureId();
@@ -146,11 +140,13 @@ public class MySignature extends Window {
 			save.setVisible(true);
 		}
 
-		layout.setMembersMargin(10);
-		layout.setTop(25);
-		layout.setMargin(5);
+		VLayout layout = new VLayout();
+		layout.setMargin(2);
+		layout.addMember(signatureLayout);
+		layout.addMember(hint);
+		layout.addMember(uploader);
 
-		addChild(layout);
+		addItem(layout);
 	}
 
 	// Load the image in the document and in the case of success attach it to
@@ -234,7 +230,6 @@ public class MySignature extends Window {
 
 			@Override
 			public void onSuccess(Boolean result) {
-				// TODO Reload form to visualize the uploader
 				Log.info(I18N.message("signaturereset"), null);
 				certificates.clearValue();
 				LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
