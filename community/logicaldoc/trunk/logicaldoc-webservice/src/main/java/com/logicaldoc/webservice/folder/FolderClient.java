@@ -27,6 +27,11 @@ public class FolderClient extends SoapClient<FolderService> implements FolderSer
 	}
 
 	@Override
+	public long createFolder(String sid, long parentId, String name) throws Exception {
+		return client.createFolder(sid, parentId, name);
+	}
+
+	@Override
 	public void delete(String sid, long folderId) throws Exception {
 		client.delete(sid, folderId);
 	}
@@ -50,7 +55,7 @@ public class FolderClient extends SoapClient<FolderService> implements FolderSer
 	public void copy(String sid, long folderId, long parentId, int foldersOnly) throws Exception {
 		client.copy(sid, folderId, parentId, foldersOnly);
 	}
-	
+
 	@Override
 	public void rename(String sid, long folderId, String name) throws Exception {
 		client.rename(sid, folderId, name);

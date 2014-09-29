@@ -109,6 +109,12 @@
         </jaxrs:serviceBeans>
     </jaxrs:server>
     
+    <jaxrs:server id="rest-folder" address="/rest/folder">
+        <jaxrs:serviceBeans>
+           <bean class="com.logicaldoc.webservice.rest.folder.FolderServiceImpl" />
+        </jaxrs:serviceBeans>
+    </jaxrs:server>
+    
     <jaxrs:server id="commentservice" address="/mobile/comments">
         <jaxrs:serviceBeans>
             <bean class="com.logicaldoc.webservice.mobile.CommentService"/>
