@@ -29,6 +29,19 @@ public interface FolderService {
 			throws Exception;
 
 	/**
+	 * Create a new folder.
+	 * 
+	 * @param sid Session identifier
+	 * @param parentId The parent's ID
+	 * @param name The new folder's name
+	 * @return The newly created folder ID
+	 * @throws Exception
+	 */
+	@WebResult(name = "folderId")
+	public long createFolder(@WebParam(name = "sid") String sid, @WebParam(name = "parentId") long parentId,
+			@WebParam(name = "name") String name) throws Exception;
+
+	/**
 	 * Deletes an existing folder with the given identifier.
 	 * 
 	 * @param sid Session identifier
@@ -75,7 +88,8 @@ public interface FolderService {
 	 * @param sid Session identifier
 	 * @param folderId The folder id
 	 * @param targetId The folder id of the target folder
-	 * @param foldersOnly If 1, only the folders will be copied and not the documents
+	 * @param foldersOnly If 1, only the folders will be copied and not the
+	 *        documents
 	 * 
 	 * @throws Exception
 	 */

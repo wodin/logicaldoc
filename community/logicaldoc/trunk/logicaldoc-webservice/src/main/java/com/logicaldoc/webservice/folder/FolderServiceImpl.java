@@ -36,33 +36,47 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	public WSFolder create(String sid, WSFolder folder) throws Exception {
 		User user = validateSession(sid);
 
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Folder parentFolder = folderDao.findById(folder.getParentId());
-		if (parentFolder == null)
-			throw new Exception("A parent folder with id " + folder.getParentId() + " was not found.");
-		checkPermission(Permission.ADD, user, folder.getParentId());
+		try {
+			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			Folder parentFolder = folderDao.findById(folder.getParentId());
+			if (parentFolder == null)
+				throw new Exception("A parent folder with id " + folder.getParentId() + " was not found.");
+			checkPermission(Permission.ADD, user, folder.getParentId());
 
-		// Add a folder history entry
-		FolderHistory transaction = new FolderHistory();
-		transaction.setUser(user);
-		transaction.setSessionId(sid);
+			// Add a folder history entry
+			FolderHistory transaction = new FolderHistory();
+			transaction.setUser(user);
+			transaction.setSessionId(sid);
 
-		Folder folderVO = new Folder();
-		folderVO.setTenantId(user.getTenantId());
-		folderVO.setName(folder.getName());
-		folderVO.setDescription(folder.getDescription());
-		folderVO.setType(folder.getType());
-		folder.updateExtendedAttributes(folderVO);
-		Folder f = folderDao.create(parentFolder, folderVO, true, transaction);
+			Folder folderVO = new Folder();
+			folderVO.setTenantId(user.getTenantId());
+			folderVO.setName(folder.getName());
+			folderVO.setDescription(folder.getDescription());
+			folderVO.setType(folder.getType());
+			folder.updateExtendedAttributes(folderVO);
+			Folder f = folderDao.create(parentFolder, folderVO, true, transaction);
 
-		if (f == null) {
-			log.error("Folder " + folderVO.getName() + " not created");
-			throw new Exception("error");
-		} else {
-			log.info("Created folder " + f.getName());
+			if (f == null) {
+				log.error("Folder " + folderVO.getName() + " not created");
+				throw new Exception("error");
+			}
+
+			WSFolder createdFolder = WSFolder.fromFolder(f);
+			log.info("Created folder " + createdFolder.getName());
+			return createdFolder;
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
+	}
 
-		return WSFolder.fromFolder(f);
+	@Override
+	public long createFolder(String sid, long parentId, String name) throws Exception {
+		WSFolder folder = new WSFolder();
+		folder.setParentId(parentId);
+		folder.setName(name);
+		folder.setType(Folder.TYPE_DEFAULT);
+		return this.create(sid, folder).getId();
 	}
 
 	@Override
