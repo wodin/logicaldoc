@@ -81,15 +81,20 @@ public abstract class RestClient {
 	}
 
 	protected PostMethod preparePostMethod(String url) {
+		PostMethod request = null;
+
 		if (url.toLowerCase().startsWith("https"))
 			try {
 				URL _url = new URL(url);
-				return new PostMethod(_url.getPath());
+				request = new PostMethod(_url.getPath());
 			} catch (MalformedURLException e) {
 				log.error("Malformed URL " + url);
-				return null;
+				request = null;
 			}
 		else
-			return new PostMethod(url);
+			request = new PostMethod(url);
+		if (request != null)
+			request.setRequestHeader("User-Agent", "LogicalDOC");
+		return request;
 	}
 }
