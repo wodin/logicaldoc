@@ -168,7 +168,6 @@ public class DocumentClient extends SoapClient<DocumentService> implements Docum
 	@Override
 	public long upload(String sid, Long docId, Long folderId, boolean release, String filename, DataHandler content)
 			throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		return client.upload(sid, docId, folderId, release, filename, content);
 	}
 }
