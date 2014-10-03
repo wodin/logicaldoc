@@ -77,8 +77,9 @@ public class WorkflowToolstrip extends ToolStrip {
 
 		setWidth100();
 
-		workflowSelect = new SelectItem("workflow", I18N.message("template"));
+		workflowSelect = new SelectItem("workflow", I18N.message("workflow"));
 		workflowSelect.setWidth(200);
+		workflowSelect.setWrapTitle(false);
 		ListGridField name = new ListGridField("name");
 		workflowSelect.setValueField("name");
 		workflowSelect.setDisplayField("name");

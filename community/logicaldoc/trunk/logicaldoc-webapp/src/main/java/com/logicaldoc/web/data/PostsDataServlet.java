@@ -42,6 +42,10 @@ public class PostsDataServlet extends HttpServlet {
 			if (request.getParameter("userId") != null)
 				userId = Long.parseLong(request.getParameter("userId"));
 
+			Long docId = null;
+			if (request.getParameter("docId") != null)
+				docId = Long.parseLong(request.getParameter("docId"));
+
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
 
@@ -56,11 +60,16 @@ public class PostsDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
+			StringBuffer query = new StringBuffer(
+					"select A.ld_id,A.ld_message,A.ld_username,A.ld_date,A.ld_docid,B.ld_title,A.ld_userid from ld_note A, ld_document B where A.ld_deleted=0 and B.ld_deleted=0 and A.ld_docid=B.ld_id ");
+			if (userId != null)
+				query.append(" and A.ld_userid =" + userId);
+			if (docId != null)
+				query.append(" and A.ld_docid =" + docId);
+			query.append(" order by A.ld_date desc ");
+
 			DocumentNoteDAO dao = (DocumentNoteDAO) Context.getInstance().getBean(DocumentNoteDAO.class);
-			SqlRowSet set = dao
-					.queryForRowSet(
-							"select A.ld_id,A.ld_message,A.ld_username,A.ld_date,A.ld_docid,B.ld_title from ld_note A, ld_document B where A.ld_deleted=0 and B.ld_deleted=0 and A.ld_docid=B.ld_id and A.ld_userid ="
-									+ userId + " order by A.ld_date desc", null, 100);
+			SqlRowSet set = dao.queryForRowSet(query.toString(), null, 200);
 
 			while (set.next()) {
 				writer.print("<post>");
@@ -71,6 +80,7 @@ public class PostsDataServlet extends HttpServlet {
 				writer.print("<message><![CDATA[" + set.getString(2) + "]]></message>");
 				writer.print("<docId>" + set.getLong(5) + "</docId>");
 				writer.print("<docTitle><![CDATA[" + set.getString(6) + "]]></docTitle>");
+				writer.print("<userId><![CDATA[" + set.getString(7) + "]]></userId>");
 				writer.print("</post>");
 			}
 

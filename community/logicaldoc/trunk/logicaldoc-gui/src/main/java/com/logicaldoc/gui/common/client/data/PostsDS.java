@@ -6,27 +6,32 @@ import com.smartgwt.client.data.fields.DataSourceDateTimeField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
 /**
- * Data source to handle documents grid lists. It is based on Xml parsing
+ * Data source to retrieve notes put by users. It is based on Xml parsing
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
 public class PostsDS extends DataSource {
-	public PostsDS(Long userId) {
+	public PostsDS(Long userIdentifier, Long documentIdentifier) {
 		setRecordXPath("/list/post");
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
 		id.setHidden(true);
 		id.setRequired(true);
+		DataSourceTextField userId = new DataSourceTextField("userId");
+		userId.setHidden(true);
+		DataSourceTextField docId = new DataSourceTextField("docId");
+		docId.setHidden(true);
 		DataSourceTextField user = new DataSourceTextField("user");
 		DataSourceTextField message = new DataSourceTextField("message");
 		DataSourceDateTimeField date = new DataSourceDateTimeField("date");
-		DataSourceTextField documentId = new DataSourceTextField("docId");
 		DataSourceTextField docTitle = new DataSourceTextField("docTitle");
-		
-		setFields(id, user, message, date, documentId, docTitle);
+
+		setFields(id, userId, user, message, date, docId, docTitle);
 		setClientOnly(true);
 
-		setDataURL("data/posts.xml?sid=" + Session.get().getSid() + "&" + "userId=" + userId);
+		setDataURL("data/posts.xml?sid=" + Session.get().getSid()
+				+ (userIdentifier != null ? "&" + "userId=" + userIdentifier : "")
+				+ (documentIdentifier != null ? "&" + "docId=" + documentIdentifier : ""));
 	}
 }

@@ -4,10 +4,9 @@ import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
-import com.logicaldoc.gui.common.client.data.DocumentNotesDS;
+import com.logicaldoc.gui.common.client.data.PostsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -73,7 +72,10 @@ public class NotesPanel extends DocumentDetailTab {
 		ListGridField id = new ListGridField("id", I18N.message("id"), 50);
 		id.setHidden(true);
 
-		ListGridField username = new ListGridField("username", I18N.message("author"), 200);
+		ListGridField userId = new ListGridField("userId", "userid", 50);
+		userId.setHidden(true);
+
+		ListGridField user = new ListGridField("user", I18N.message("author"), 200);
 		ListGridField date = new ListGridField("date", I18N.message("date"));
 		date.setAlign(Alignment.LEFT);
 		date.setType(ListGridFieldType.DATE);
@@ -93,9 +95,9 @@ public class NotesPanel extends DocumentDetailTab {
 		listGrid.setEmptyMessage(I18N.message("notitemstoshow"));
 		listGrid.setCanFreezeFields(true);
 		listGrid.setAutoFetchData(true);
-		dataSource = new DocumentNotesDS(document.getId());
+		dataSource = new PostsDS(null, document.getId());
 		listGrid.setDataSource(dataSource);
-		listGrid.setFields(id, username, date);
+		listGrid.setFields(id, userId, user, date);
 		listGrid.setWidth100();
 		listGrid.setCanExpandRecords(true);
 		listGrid.setExpansionMode(ExpansionMode.DETAIL_FIELD);
@@ -154,8 +156,15 @@ public class NotesPanel extends DocumentDetailTab {
 
 				ListGridRecord[] selection = listGrid.getSelectedRecords();
 
-				delete.setEnabled(document.getFolder().hasPermission(Constants.PERMISSION_DELETE));
-				edit.setEnabled(document.getFolder().isWrite() && selection.length == 1);
+				if (Session.get().getUser().isMemberOf("admin")) {
+					delete.setEnabled(selection.length > 0);
+					edit.setEnabled(selection.length == 1);
+				} else {
+					long userId = Long.parseLong(selection[0].getAttribute("userId"));
+					delete.setEnabled(selection.length == 1 && userId == Session.get().getUser().getId());
+					edit.setEnabled(selection.length == 1 && userId == Session.get().getUser().getId());
+				}
+
 				print.setEnabled(selection.length == 1);
 
 				contextMenu.setItems(edit, print, delete);

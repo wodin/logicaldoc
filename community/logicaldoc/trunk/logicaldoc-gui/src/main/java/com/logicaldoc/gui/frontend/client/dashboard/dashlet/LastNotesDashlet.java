@@ -73,7 +73,7 @@ public class LastNotesDashlet extends Dashlet {
 		list.setSelectionType(SelectionStyle.NONE);
 		list.setHeight100();
 		list.setBorder("0px");
-		dataSource = new PostsDS(userId);
+		dataSource = new PostsDS(userId, null);
 		list.setDataSource(dataSource);
 		list.setFields(date, docTitle, title);
 
