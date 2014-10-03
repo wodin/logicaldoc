@@ -114,7 +114,7 @@ public class GUISettingsPanel extends VLayout {
 		disallow.setHint(I18N.message("separatedcomma"));
 		disallow.setRequired(false);
 		disallow.setWrapTitle(false);
-		
+
 		TextItem searchhits = ItemFactory.newIntegerItem("searchhits", I18N.message("searchhits"), null);
 		searchhits.setRequired(true);
 		searchhits.setWrapTitle(false);
@@ -124,28 +124,31 @@ public class GUISettingsPanel extends VLayout {
 		ondoubleclick.setValueMap("download", "preview");
 
 		RadioGroupItem doctab = ItemFactory.newBooleanSelector("doctab", "doctab");
-		doctab.setValueMap("properties", "thumbnail");
+		doctab.setValueMap("properties", "thumbnail", "preview");
 
 		TextItem extattr = ItemFactory.newTextItem("extattr", I18N.message("extendedattrs"), null);
 		extattr.setHint(I18N.message("separatedcomma"));
 		extattr.setWidth(400);
-		
-		TextItem webcontentfolders = ItemFactory.newTextItem("webcontentfolders", I18N.message("webcontentfolders"), null);
+
+		TextItem webcontentfolders = ItemFactory.newTextItem("webcontentfolders", I18N.message("webcontentfolders"),
+				null);
 		webcontentfolders.setHint(I18N.message("commaseplistofids"));
 		webcontentfolders.setWidth(400);
-		
+
 		TextItem sessiontimeout = ItemFactory.newIntegerItem("sessiontimeout", I18N.message("sessiontimeout"), null);
 		sessiontimeout.setHint(I18N.message("minutes"));
 		sessiontimeout.setRequired(true);
 		sessiontimeout.setWrapTitle(false);
-		
-		TextItem sessionheartbeat = ItemFactory.newIntegerItem("sessionheartbeat", I18N.message("sessionheartbeat"), null);
+
+		TextItem sessionheartbeat = ItemFactory.newIntegerItem("sessionheartbeat", I18N.message("sessionheartbeat"),
+				null);
 		sessionheartbeat.setHint(I18N.message("seconds"));
 		sessionheartbeat.setRequired(true);
 		sessionheartbeat.setWrapTitle(false);
-		
+
 		parametersForm.setItems(welcome, dropspot, previewPages, previewSize, previewZoom, thumbSize, thumbQuality,
-				uploadmax, disallow, ondoubleclick, doctab, searchhits, extattr, webcontentfolders, savelogin, sessiontimeout, sessionheartbeat);
+				uploadmax, disallow, ondoubleclick, doctab, searchhits, extattr, webcontentfolders, savelogin,
+				sessiontimeout, sessionheartbeat);
 
 		for (GUIParameter p : settings) {
 			if (p.getName().endsWith("gui.welcome"))
@@ -170,7 +173,7 @@ public class GUISettingsPanel extends VLayout {
 				doctab.setValue(p.getValue());
 			if (p.getName().endsWith("upload.maxsize"))
 				uploadmax.setValue(Integer.parseInt(p.getValue().trim()));
-			if (p.getName().endsWith("upload.disallow") && p.getValue()!=null)
+			if (p.getName().endsWith("upload.disallow") && p.getValue() != null)
 				disallow.setValue(p.getValue().trim());
 			if (p.getName().endsWith("search.hits"))
 				searchhits.setValue(Integer.parseInt(p.getValue().trim()));
@@ -193,24 +196,39 @@ public class GUISettingsPanel extends VLayout {
 
 				if (vm.validate()) {
 					List<GUIParameter> params = new ArrayList<GUIParameter>();
-					params.add(new GUIParameter(Session.get().getTenantName()+".gui.welcome", (String) values.get("welcome")));
-					params.add(new GUIParameter(Session.get().getTenantName()+".gui.dropspot.mode", (String) values.get("dropspot")));
-					params.add(new GUIParameter(Session.get().getTenantName()+".gui.savelogin", "yes".equals(values.get("savelogin")) ? "true"
-							: "false"));
-					params.add(new GUIParameter(Session.get().getTenantName()+".gui.preview.pages", values.get("previewpages").toString()));
-					params.add(new GUIParameter(Session.get().getTenantName()+".gui.preview.size", values.get("previewsize").toString()));
-					params.add(new GUIParameter(Session.get().getTenantName()+".gui.preview.zoom", values.get("previewzoom").toString()));
-					params.add(new GUIParameter(Session.get().getTenantName()+".gui.thumbnail.size", values.get("thumbsize").toString()));
-					params.add(new GUIParameter(Session.get().getTenantName()+".gui.thumbnail.quality", values.get("thumbquality").toString()));
-					params.add(new GUIParameter(Session.get().getTenantName()+".gui.doubleclick", values.get("ondoubleclick").toString()));
-					params.add(new GUIParameter(Session.get().getTenantName()+".gui.document.tab", values.get("doctab").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.welcome", (String) values
+							.get("welcome")));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.dropspot.mode", (String) values
+							.get("dropspot")));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.savelogin", "yes".equals(values
+							.get("savelogin")) ? "true" : "false"));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.preview.pages", values.get(
+							"previewpages").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.preview.size", values.get(
+							"previewsize").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.preview.zoom", values.get(
+							"previewzoom").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.thumbnail.size", values.get(
+							"thumbsize").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.thumbnail.quality", values.get(
+							"thumbquality").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.doubleclick", values.get(
+							"ondoubleclick").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.document.tab", values.get(
+							"doctab").toString()));
 					params.add(new GUIParameter("upload.maxsize", values.get("uploadmax").toString()));
-					params.add(new GUIParameter(Session.get().getTenantName()+".upload.disallow", values.get("disallow").toString()));
-					params.add(new GUIParameter(Session.get().getTenantName()+".search.hits", values.get("searchhits").toString()));
-					params.add(new GUIParameter(Session.get().getTenantName()+".search.extattr", values.get("extattr").toString()));
-					params.add(new GUIParameter(Session.get().getTenantName()+".gui.webcontent.folders", values.get("webcontentfolders").toString()));
-					params.add(new GUIParameter(Session.get().getTenantName()+".session.timeout", values.get("sessiontimeout").toString()));
-					params.add(new GUIParameter(Session.get().getTenantName()+".session.heartbeat", values.get("sessionheartbeat").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".upload.disallow", values.get(
+							"disallow").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".search.hits", values
+							.get("searchhits").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".search.extattr", values
+							.get("extattr").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.webcontent.folders", values.get(
+							"webcontentfolders").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".session.timeout", values.get(
+							"sessiontimeout").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".session.heartbeat", values.get(
+							"sessionheartbeat").toString()));
 
 					// Update the current session parameters.
 					for (GUIParameter p : params) {
