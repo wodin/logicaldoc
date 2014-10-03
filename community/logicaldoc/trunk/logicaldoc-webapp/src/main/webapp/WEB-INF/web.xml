@@ -328,11 +328,6 @@
 		<servlet-name>DuplicatesData</servlet-name>
 		<servlet-class>com.logicaldoc.gui.common.server.MockDuplicatesDataServlet</servlet-class>
 	</servlet>
-	
-	<servlet>
-		<servlet-name>DocumentNotesData</servlet-name>
-		<servlet-class>com.logicaldoc.web.data.DocumentNotesDataServlet</servlet-class>
-	</servlet>
 
 	<servlet>
 		<servlet-name>Log</servlet-name>
@@ -552,11 +547,6 @@
 		<servlet-name>DuplicatesData</servlet-name>
 		<url-pattern>/data/duplicates.xml</url-pattern>
 	</servlet-mapping>
-	
-	<servlet-mapping>
-		<servlet-name>DocumentNotesData</servlet-name>
-		<url-pattern>/data/documentnotes.xml</url-pattern>
-    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>ContactsData</servlet-name>
