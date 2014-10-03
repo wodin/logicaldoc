@@ -116,16 +116,6 @@ public class ImageViewer extends VLayout {
 			}
 		});
 
-		ToolStripButton preview = new ToolStripButton();
-		preview.setTitle(I18N.message("preview"));
-		toolBar.addButton(preview);
-		preview.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				onPreview();
-			}
-		});
-
 		toolBar.addFill();
 	}
 

@@ -60,6 +60,8 @@ public class DocumentDetailsPanel extends VLayout {
 
 	protected Layout thumbnailTabPanel;
 
+	protected Layout previewTabPanel;
+
 	protected Layout retentionPoliciesTabPanel;
 
 	protected Layout calendarTabPanel;
@@ -77,6 +79,8 @@ public class DocumentDetailsPanel extends VLayout {
 	protected NotesPanel notesPanel;
 
 	protected ThumbnailPanel thumbnailPanel;
+
+	protected PreviewPanel previewPanel;
 
 	protected DocumentCalendarPanel calendarPanel;
 
@@ -103,6 +107,8 @@ public class DocumentDetailsPanel extends VLayout {
 	protected Tab versionsTab;
 
 	protected Tab historyTab;
+
+	protected Tab previewTab;
 
 	protected Tab thumbnailTab;
 
@@ -177,6 +183,8 @@ public class DocumentDetailsPanel extends VLayout {
 
 		if ("thumbnail".equals(Session.get().getInfo().getConfig("gui.document.tab")))
 			tabSet.selectTab(thumbnailTab);
+		if ("preview".equals(Session.get().getInfo().getConfig("gui.document.tab")))
+			tabSet.selectTab(previewTab);
 	}
 
 	protected void prepareTabs() {
@@ -222,6 +230,12 @@ public class DocumentDetailsPanel extends VLayout {
 		thumbnailTabPanel.setHeight100();
 		thumbnailTab.setPane(thumbnailTabPanel);
 
+		previewTab = new Tab(I18N.message("preview"));
+		previewTabPanel = new HLayout();
+		previewTabPanel.setWidth100();
+		previewTabPanel.setHeight100();
+		previewTab.setPane(previewTabPanel);
+
 		retentionPoliciesTab = new Tab(I18N.message("publishing"));
 		retentionPoliciesTabPanel = new HLayout();
 		retentionPoliciesTabPanel.setWidth100();
@@ -258,14 +272,27 @@ public class DocumentDetailsPanel extends VLayout {
 			}
 		});
 
-		if (Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN)
-				|| Session.get().getUser().isMemberOf(Constants.GROUP_PUBLISHER))
-			if (Feature.visible(Feature.RETENTION_POLICIES))
-				tabSet.addTab(retentionPoliciesTab);
-		retentionPoliciesTab.addTabSelectedHandler(new TabSelectedHandler() {
+		tabSet.addTab(versionsTab);
+		versionsTab.addTabSelectedHandler(new TabSelectedHandler() {
 			@Override
 			public void onTabSelected(TabSelectedEvent event) {
-				retentionPoliciesPanel.onTabSelected();
+				versionsPanel.onTabSelected();
+			}
+		});
+
+		tabSet.addTab(previewTab);
+		previewTab.addTabSelectedHandler(new TabSelectedHandler() {
+			@Override
+			public void onTabSelected(TabSelectedEvent event) {
+				previewPanel.onTabSelected();
+			}
+		});
+
+		tabSet.addTab(thumbnailTab);
+		thumbnailTab.addTabSelectedHandler(new TabSelectedHandler() {
+			@Override
+			public void onTabSelected(TabSelectedEvent event) {
+				thumbnailPanel.onTabSelected();
 			}
 		});
 
@@ -274,6 +301,14 @@ public class DocumentDetailsPanel extends VLayout {
 			@Override
 			public void onTabSelected(TabSelectedEvent event) {
 				linksPanel.onTabSelected();
+			}
+		});
+
+		tabSet.addTab(historyTab);
+		historyTab.addTabSelectedHandler(new TabSelectedHandler() {
+			@Override
+			public void onTabSelected(TabSelectedEvent event) {
+				historyPanel.onTabSelected();
 			}
 		});
 
@@ -287,19 +322,14 @@ public class DocumentDetailsPanel extends VLayout {
 			});
 		}
 
-		tabSet.addTab(versionsTab);
-		versionsTab.addTabSelectedHandler(new TabSelectedHandler() {
+		if (Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN)
+				|| Session.get().getUser().isMemberOf(Constants.GROUP_PUBLISHER))
+			if (Feature.visible(Feature.RETENTION_POLICIES))
+				tabSet.addTab(retentionPoliciesTab);
+		retentionPoliciesTab.addTabSelectedHandler(new TabSelectedHandler() {
 			@Override
 			public void onTabSelected(TabSelectedEvent event) {
-				versionsPanel.onTabSelected();
-			}
-		});
-
-		tabSet.addTab(historyTab);
-		historyTab.addTabSelectedHandler(new TabSelectedHandler() {
-			@Override
-			public void onTabSelected(TabSelectedEvent event) {
-				historyPanel.onTabSelected();
+				retentionPoliciesPanel.onTabSelected();
 			}
 		});
 
@@ -313,13 +343,6 @@ public class DocumentDetailsPanel extends VLayout {
 			});
 		}
 
-		tabSet.addTab(thumbnailTab);
-		thumbnailTab.addTabSelectedHandler(new TabSelectedHandler() {
-			@Override
-			public void onTabSelected(TabSelectedEvent event) {
-				thumbnailPanel.onTabSelected();
-			}
-		});
 		addMember(tabSet);
 	}
 
@@ -425,6 +448,17 @@ public class DocumentDetailsPanel extends VLayout {
 		}
 		thumbnailPanel = new ThumbnailPanel(document);
 		thumbnailTabPanel.addMember(thumbnailPanel);
+
+		/*
+		 * Prepare the preview tab
+		 */
+		if (previewPanel != null) {
+			previewPanel.destroy();
+			if (previewTabPanel.contains(previewPanel))
+				previewTabPanel.removeMember(previewPanel);
+		}
+		previewPanel = new PreviewPanel(document);
+		previewTabPanel.addMember(previewPanel);
 
 		/*
 		 * Prepare the calendar tab
