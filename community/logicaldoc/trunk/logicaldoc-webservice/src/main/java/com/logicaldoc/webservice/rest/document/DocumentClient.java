@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.webservice.auth.AuthServiceImpl;
 import com.logicaldoc.webservice.document.DocumentService;
 import com.logicaldoc.webservice.document.WSDocument;
+import com.logicaldoc.webservice.document.WSLink;
 import com.logicaldoc.webservice.rest.RestClient;
 
 public class DocumentClient extends RestClient implements DocumentService {
@@ -256,5 +257,22 @@ public class DocumentClient extends RestClient implements DocumentService {
 			throw new Exception("Invalid checkin");
 		else
 			return Long.parseLong(output);
+	}
+
+	@Override
+	public WSLink link(String sid, long doc1, long doc2, String type) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public WSLink[] getLinks(String sid, long docId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteLink(String sid, long id) throws Exception {
+		// TODO Auto-generated method stub
 	}
 }
