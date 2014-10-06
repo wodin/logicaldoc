@@ -29,10 +29,12 @@ import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentEvent;
+import com.logicaldoc.core.document.DocumentLink;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.Folder;
@@ -710,5 +712,75 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			return create(sid, doc, content).getId();
 		}
 
+	}
+
+	@Override
+	public WSLink link(String sid, long doc1, long doc2, String type) throws Exception {
+		User user = validateSession(sid);
+
+		DocumentLinkDAO linkDao = (DocumentLinkDAO) Context.getInstance().getBean(DocumentLinkDAO.class);
+		DocumentLink link = linkDao.findByDocIdsAndType(doc1, doc2, type);
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+
+		Document document1 = docDao.findById(doc1);
+		if (document1 == null)
+			throw new Exception("Document with ID " + doc1 + " not found");
+		Document document2 = docDao.findById(doc2);
+		if (document2 == null)
+			throw new Exception("Document with ID " + doc2 + " not found");
+
+		checkWriteEnable(user, document2.getFolder().getId());
+
+		if (link == null) {
+			// The link doesn't exist and must be created
+			link = new DocumentLink();
+			link.setTenantId(document1.getTenantId());
+			link.setDocument1(document1);
+			link.setDocument2(document2);
+			link.setType(type);
+			linkDao.store(link);
+
+			WSLink lnk = new WSLink();
+			lnk.setId(link.getId());
+			lnk.setDoc1(doc1);
+			lnk.setDoc2(doc2);
+			lnk.setType(type);
+			return lnk;
+		} else {
+			throw new Exception("Documents already linked");
+		}
+	}
+
+	@Override
+	public WSLink[] getLinks(String sid, long docId) throws Exception {
+		User user = validateSession(sid);
+
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentLinkDAO linkDao = (DocumentLinkDAO) Context.getInstance().getBean(DocumentLinkDAO.class);
+
+		Document document = docDao.findById(docId);
+		if (document == null)
+			throw new Exception("Document with ID " + docId + " not found");
+
+		checkReadEnable(user, document.getFolder().getId());
+		List<DocumentLink> links = linkDao.findByDocId(docId);
+		List<WSLink> lnks = new ArrayList<WSLink>();
+		for (DocumentLink link : links) {
+			WSLink lnk = new WSLink();
+			lnk.setId(link.getId());
+			lnk.setDoc1(link.getDocument1().getId());
+			lnk.setDoc2(link.getDocument2().getId());
+			lnk.setType(link.getType());
+			lnks.add(lnk);
+		}
+
+		return lnks.toArray(new WSLink[0]);
+	}
+
+	@Override
+	public void deleteLink(String sid, long id) throws Exception {
+		validateSession(sid);
+		DocumentLinkDAO linkDao = (DocumentLinkDAO) Context.getInstance().getBean(DocumentLinkDAO.class);
+		linkDao.delete(id);
 	}
 }

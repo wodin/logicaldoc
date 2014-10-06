@@ -100,9 +100,10 @@ public interface DocumentService {
 	@WebResult(name = "document")
 	public WSDocument getDocument(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId)
 			throws Exception;
-	
+
 	/**
-	 * Gets document metadata of an existing document with the given custom identifier.
+	 * Gets document metadata of an existing document with the given custom
+	 * identifier.
 	 * 
 	 * @param sid Session identifier
 	 * @param customId The custom id
@@ -110,8 +111,8 @@ public interface DocumentService {
 	 * @throws Exception
 	 */
 	@WebResult(name = "document")
-	public WSDocument getDocumentByCustomId(@WebParam(name = "sid") String sid, @WebParam(name = "customId") String customId)
-			throws Exception;	
+	public WSDocument getDocumentByCustomId(@WebParam(name = "sid") String sid,
+			@WebParam(name = "customId") String customId) throws Exception;
 
 	/**
 	 * Gets document metadata of a collection of existing documents with the
@@ -137,7 +138,7 @@ public interface DocumentService {
 	@WebResult(name = "aliases")
 	public WSDocument[] getAliases(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId)
 			throws Exception;
-	
+
 	/**
 	 * Updates an existing document with the value object containing the
 	 * document's metadata.
@@ -217,10 +218,10 @@ public interface DocumentService {
 	 */
 	@WebResult(name = "docId")
 	public long upload(@WebParam(name = "sid") String sid, @WebParam(name = "docId") Long docId,
-			@WebParam(name = "folderId") Long folderId, @WebParam(name = "release") boolean release, 
-			 @WebParam(name = "filename") String filename, @WebParam(name = "content") DataHandler content)
-					throws Exception;
-	
+			@WebParam(name = "folderId") Long folderId, @WebParam(name = "release") boolean release,
+			@WebParam(name = "filename") String filename, @WebParam(name = "content") DataHandler content)
+			throws Exception;
+
 	/**
 	 * Test if a document identifier is valid.
 	 * 
@@ -322,6 +323,43 @@ public interface DocumentService {
 	@WebResult(name = "document")
 	public WSDocument createAlias(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
 			@WebParam(name = "folderId") long folderId) throws Exception;
+
+	/**
+	 * Creates a new link between two documents.
+	 * 
+	 * @param sid Session identifier
+	 * @param doc1 ID of document 1
+	 * @param doc2 ID of document 2
+	 * @param type The link type(it can be empty)
+	 * 
+	 * @return the new link
+	 * @throws Exception
+	 */
+	@WebResult(name = "link")
+	public WSLink link(@WebParam(name = "sid") String sid, @WebParam(name = "doc1") long doc1,
+			@WebParam(name = "doc2") long doc2, @WebParam(name = "type") String type) throws Exception;
+
+	/**
+	 * Gets all the links of a specific document
+	 * 
+	 * @param sid Session identifier
+	 * @param docId ID of the document
+	 * 
+	 * @return The new links of the document
+	 * @throws Exception
+	 */
+	@WebResult(name = "link")
+	public WSLink[] getLinks(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId) throws Exception;
+
+	/**
+	 * Remove an existing link
+	 * 
+	 * @param sid Session identifier
+	 * @param id ID of the link
+	 * 
+	 * @throws Exception
+	 */
+	public void deleteLink(@WebParam(name = "sid") String sid, @WebParam(name = "id") long id) throws Exception;
 
 	/**
 	 * Reindexes(or indexes) a document

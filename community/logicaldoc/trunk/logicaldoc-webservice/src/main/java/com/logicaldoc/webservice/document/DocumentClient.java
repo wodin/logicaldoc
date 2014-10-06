@@ -170,4 +170,19 @@ public class DocumentClient extends SoapClient<DocumentService> implements Docum
 			throws Exception {
 		return client.upload(sid, docId, folderId, release, filename, content);
 	}
+
+	@Override
+	public WSLink link(String sid, long doc1, long doc2, String type) throws Exception {
+		return client.link(sid, doc1, doc2, type);
+	}
+
+	@Override
+	public WSLink[] getLinks(String sid, long docId) throws Exception {
+		return client.getLinks(sid, docId);
+	}
+
+	@Override
+	public void deleteLink(String sid, long id) throws Exception {
+		client.deleteLink(sid, id);
+	}
 }
