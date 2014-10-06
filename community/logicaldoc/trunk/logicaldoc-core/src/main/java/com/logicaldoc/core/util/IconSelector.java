@@ -40,6 +40,13 @@ public class IconSelector {
 			icon = "zip.png";
 		else if (ext.equals("p7m") || ext.equals("m7m"))
 			icon = "p7m.png";
+		else if (ext.equals("dwg") || ext.equals("dxf") || ext.equals("dwt"))
+			icon = "dwg.png";
+		else if (ext.equals("avi") || ext.equals("mpg") || ext.equals("mp4") || ext.equals("mov") || ext.equals("divx")
+				|| ext.equals("wmv"))
+			icon = "film.png";
+		else if (ext.equals("mp3") || ext.equals("wav") || ext.equals("wma") || ext.equals("cda") || ext.equals("wave"))
+			icon = "music.png";
 		else
 			icon = "generic.png";
 
