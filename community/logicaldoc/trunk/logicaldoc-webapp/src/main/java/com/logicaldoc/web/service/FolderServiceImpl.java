@@ -84,9 +84,6 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			Folder f = fdao.findById(folder.getId());
 			fdao.initialize(f);
 
-			if (f.getSecurityRef() == null)
-				saveRules(sid, f, session.getUserId(), folder.getRights());
-
 			if (subtree) {
 				/*
 				 * Just apply the current security settings to the whole subtree
@@ -97,6 +94,8 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				history.setSessionId(sid);
 
 				fdao.applyRithtToTree(folder.getId(), history);
+			}else{
+				saveRules(sid, f, session.getUserId(), folder.getRights());
 			}
 		} catch (Throwable t) {
 			ServiceUtil.throwServerException(session, log, t);
