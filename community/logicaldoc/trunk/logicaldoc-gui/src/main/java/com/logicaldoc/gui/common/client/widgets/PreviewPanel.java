@@ -8,8 +8,10 @@ import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.ContentsType;
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.events.ResizedEvent;
@@ -25,7 +27,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class PreviewPanel extends VLayout {
 	private HTMLFlow html = null;
 
-	private HTMLFlow media = null;
+	private Canvas media = null;
 
 	private HTMLFlow htmlPanel = null;
 
@@ -39,17 +41,28 @@ public class PreviewPanel extends VLayout {
 
 	private String language;
 
-	public PreviewPanel(GUIDocument document) {
-		this(document.getId(), document.getVersion(), document.getFileName(), false);
+	private int zoom = 0;
+
+	public PreviewPanel(GUIDocument document, Integer zoom) {
+		this(document.getId(), document.getVersion(), document.getFileName(), false, zoom);
 	}
 
-	public PreviewPanel(long docId, String version, String filename, boolean printEnabled) {
+	public PreviewPanel(long docId, String version, String filename, boolean printEnabled, Integer zoom) {
 		this.id = docId;
 		this.fileName = filename;
 		this.version = version;
 		this.printEnabled = printEnabled;
 
 		retrieveUserInfo();
+
+		if (zoom == null)
+			try {
+				this.zoom = new Integer(Session.get().getInfo().getConfig("gui.preview.zoom"));
+			} catch (Throwable t) {
+				this.zoom = 100;
+			}
+		else
+			this.zoom = zoom;
 
 		if (Util.isMediaFile(filename.toLowerCase())) {
 			reloadMedia();
@@ -88,24 +101,23 @@ public class PreviewPanel extends VLayout {
 	 * Reloads a media preview.
 	 */
 	private void reloadMedia() {
-		String mediaProvider = "";
-		String f = fileName.toLowerCase();
+		media = new HTMLFlow();
+		String contents = "";
 
-		if (f.endsWith(".mp3") || f.endsWith(".wav") || f.endsWith(".wma")) {
-			mediaProvider = "sound";
-		} else {
-			mediaProvider = "video";
+		try {
+			String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "%26docId=" + id
+					+ "%26filename=" + fileName;
+			if (version != null)
+				url += "%26version=" + version;
+
+			contents = Util.flashMediaPlayer(url, getWidth() != null ? getWidth() - 4 : 100,
+					getHeight() != null ? getHeight() - 4 : 100);
+		} catch (Throwable t) {
+			Log.info(t.getMessage(), null);
 		}
 
-		media = new HTMLFlow();
-		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "%26docId=" + id
-				+ "%26filename=" + fileName;
-		if (version != null)
-			url += "%26version=" + version;
-		String tmp = Util.flashPreviewAudioVideo("player.swf", url, mediaProvider, (getWidth() - 26),
-				(getHeight() - 40));
-		media.setContents(tmp);
-		addMember(media);
+		html.setContents(contents);
+		addMember(html);
 	}
 
 	/**
@@ -131,28 +143,17 @@ public class PreviewPanel extends VLayout {
 
 		try {
 			if (Feature.enabled(Feature.PREVIEW)) {
-				// contents = "<iframe src='" + Util.contextPath() + "/prev" +
-				// (printEnabled ? "" : "_ro")
-				// + "/index.jsp?sid=" + Session.get().getSid() + "&docId=" + id
-				// + (version != null ? "&version" + version : "") + "&lang=" +
-				// getPreviewLanguage(language)
-				// + "&print=" + printEnabled + "&zoom=" + getZoom() + "&key="
-				// + Session.get().getInfo().getConfig("flexpaperviewer.key")
-				// + "' style='border:0px solid white; width:" + (getWidth() -
-				// 15) + "px; height:"
-				// + (getHeight() - 45) +
-				// "px; overflow:hidden;'  scrolling='no' seamless='seamless'></iframe>";
 				contents = "<iframe src='" + Util.contextPath() + "/prev" + (printEnabled ? "" : "_ro")
 						+ "/index.jsp?sid=" + Session.get().getSid() + "&docId=" + id
 						+ (version != null ? "&version" + version : "") + "&lang=" + getPreviewLanguage(language)
-						+ "&print=" + printEnabled + "&zoom=" + getZoom() + "&key="
+						+ "&print=" + printEnabled + "&zoom=" + zoom + "&key="
 						+ Session.get().getInfo().getConfig("flexpaperviewer.key")
 						+ "' style='border:0px solid white; width:" + (getWidth() - 1) + "px; height:"
 						+ (getHeight() - 1) + "px; overflow:hidden;'  scrolling='no' seamless='seamless'></iframe>";
 			} else {
 				String url = Util.fullPreviewUrl(Session.get().getSid(), id, version);
-				contents = Util.flashPreview((getWidth() - 15), (getHeight() - 40), getZoom(), "SwfFile=" + url,
-						printEnabled, getPreviewLanguage(language));
+				contents = Util.flashPreview(getWidth() - 4, getHeight() - 4, zoom, "SwfFile=" + url, printEnabled,
+						getPreviewLanguage(language));
 			}
 		} catch (Throwable t) {
 		}
@@ -176,14 +177,6 @@ public class PreviewPanel extends VLayout {
 	 */
 	public static String getPreviewLanguage(String language) {
 		return getPreviewLanguageMap().get(language) != null ? getPreviewLanguageMap().get(language) : "en_US";
-	}
-
-	public static int getZoom() {
-		try {
-			return Integer.parseInt(Session.get().getInfo().getConfig("gui.preview.zoom"));
-		} catch (Throwable t) {
-			return 100;
-		}
 	}
 
 	/**
