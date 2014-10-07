@@ -54,10 +54,9 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.bramosystems.oss.player</groupId>
-      <artifactId>bst-player-api</artifactId>
-      <version>1.2</version>
-      <scope>provided</scope>
+      <groupId>gdurelle.tagcloud</groupId>
+      <artifactId>tagcloud</artifactId>
+      <version>0.4</version>
     </dependency>
     <dependency>
       <groupId>com.orange.links</groupId>

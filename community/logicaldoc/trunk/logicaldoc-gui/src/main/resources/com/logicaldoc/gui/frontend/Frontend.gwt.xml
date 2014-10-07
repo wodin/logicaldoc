@@ -4,12 +4,13 @@
   <inherits name="com.logicaldoc.gui.common.Common" />
   
   <inherits name="com.rednels.ofcgwt.OFCGWT" />
-  <inherits name="com.bramosystems.oss.player.core.Core" />
-  
   <inherits name='com.orange.links.Links' />
   <inherits name='com.google.gwt.widgetideas.GWTCanvas'/>
   <inherits name='com.google.gwt.widgetideas.WidgetIdeas' />   
   <inherits name='com.google.gwt.libideas.LibIdeas' /> 
+  
+  <inherits name="gdurelle.tagcloud.TagCloud"/>
+  <stylesheet src="tags.css" />
   
   <entry-point class="com.logicaldoc.gui.frontend.client.Frontend" />
 </module>

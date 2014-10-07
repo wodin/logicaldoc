@@ -6,8 +6,6 @@ import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.CloseClickEvent;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.ResizedEvent;
-import com.smartgwt.client.widgets.events.ResizedHandler;
 
 /**
  * This popup window is used to show the document preview.
@@ -19,7 +17,7 @@ public class PreviewPopup extends Window {
 
 	private PreviewPanel previewPanel = null;
 
-	public PreviewPopup(long docId, String version, String filename, boolean printEnabled) {
+	public PreviewPopup(long docId, String fileVersion, String filename, boolean printEnabled) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("preview"));
 
@@ -40,7 +38,7 @@ public class PreviewPopup extends Window {
 		centerInPage();
 		setMargin(2);
 
-		previewPanel = new PreviewPanel(docId, version, filename, printEnabled);
+		previewPanel = new PreviewPanel(docId, fileVersion, filename, printEnabled, null);
 		previewPanel.setWidth100();
 		previewPanel.setHeight100();
 
@@ -51,13 +49,6 @@ public class PreviewPopup extends Window {
 				destroy();
 			}
 		});
-
-//		addResizedHandler(new ResizedHandler() {
-//			@Override
-//			public void onResized(ResizedEvent event) {
-//				previewPanel.redraw();
-//			}
-//		});
 
 		addItem(previewPanel);
 	}

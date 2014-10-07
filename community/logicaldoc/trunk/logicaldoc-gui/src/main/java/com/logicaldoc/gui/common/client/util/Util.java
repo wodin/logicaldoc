@@ -74,7 +74,7 @@ public class Util {
 	 * Generates Flash code
 	 */
 	public static String flashHTML(String flashName, int width, int height, String flashvars) {
-		String tmp = "<div align=\"center\"><object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" width=\""
+		String tmp = "<div align=\"center\"><object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\"  width=\""
 				+ width + "\" height=\"" + height + "\" align=\"middle\">\n";
 		tmp += " <param name=\"allowScriptAccess\" value=\"always\" />\n";
 		tmp += " <param name=\"allowFullScreen\" value=\"false\" />\n";
@@ -94,11 +94,9 @@ public class Util {
 	/**
 	 * Generates Flash code for Preview
 	 */
-	public static String flashPreview(int width, int height, int zoom, String flashvars,
-			boolean printEnabled, String language) {
-
+	public static String flashPreview(int width, int height, int zoom, String flashvars, boolean printEnabled,
+			String language) {
 		String key = Session.get().getInfo().getConfig("flexpaperviewer.key");
-
 		Float fzoom = new Float(1.0F);
 		try {
 			fzoom = new Float(((float) zoom) / 100);
@@ -106,16 +104,15 @@ public class Util {
 
 		}
 
-		String vars = flashvars + "&Scale=" + (zoom > 0 ? fzoom.toString() : "1.0")
-				+ "&FitPageOnLoad="+(zoom <= 0 ? "true" : "false")+"&FitWidthOnLoad=false&PrintEnabled="
-				+ printEnabled + "&ProgressiveLoading=true" + "&ViewModeToolsVisible=true" + "&ZoomToolsVisible=true"
+		String vars = flashvars + "&Scale=" + (zoom > 0 ? fzoom.toString() : "1.0") + "&FitPageOnLoad="
+				+ (zoom <= 0 ? "true" : "false") + "&FitWidthOnLoad=false&PrintEnabled=" + printEnabled
+				+ "&ProgressiveLoading=true" + "&ViewModeToolsVisible=true" + "&ZoomToolsVisible=true"
 				+ "&NavToolsVisible=true&CursorToolsVisible=true&SearchToolsVisible=true&MaxZoomSize=20";
 
 		if (key != null) {
 			vars += "&key=" + key;
 		}
-
-		String tmp = "<div align='center' style='top:10px'>";
+		String tmp = "<div align='center' style='overflow:hidden;' >";
 		tmp += "<object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" id=\"FlexPaperViewer\" width=\"" + width
 				+ "\" height=\"" + height
 				+ "\" codebase=\"http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab\">\n";
@@ -125,8 +122,8 @@ public class Util {
 		tmp += " <param name=\"quality\" value=\"high\" />\n";
 		tmp += " <param name=\"bgcolor\" value=\"#ffffff\" />\n";
 		tmp += " <param name=\"flashvars\" value=\"" + vars + "\" />\n";
-		tmp += " 	<embed type=\"application/x-shockwave-flash\" src=\"" + Util.flashUrl("flexpaperviewer.swf") + "\" height=\""
-				+ height + "\" width=\"" + width + "\" name=\"FlexPaperViewer\""
+		tmp += " 	<embed type=\"application/x-shockwave-flash\" src=\"" + Util.flashUrl("flexpaperviewer.swf")
+				+ "\" height=\"" + height + "\" width=\"" + width + "\" name=\"FlexPaperViewer\""
 				+ " bgcolor=\"#ffffff\" quality=\"high\" allowFullScreen=\"true\" flashvars=\"" + vars + "\">\n";
 		tmp += "</embed>\n";
 		tmp += "</object></div>\n";
@@ -137,22 +134,28 @@ public class Util {
 	/**
 	 * Generates Flash code for Audio and Video Preview
 	 */
-	public static String flashPreviewAudioVideo(String flashName, String mediaUrl, String mediaProvider, int width,
-			int height) {
-		String vars = "file=" + mediaUrl + "&provider=" + mediaProvider + "&autostart=true";
+	public static String flashMediaPlayer(String mediaUrl, int width, int height) {
 
-		String tmp = "<div align=\"center\"><object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0\" width=\""
+		Log.info("+++1", null);
+
+		String vars = "mediaURL=" + mediaUrl + "&autostart=false&allowScriptAccess=always&allowFullScreen=true";
+
+		Log.info("+++2", null);
+
+		String tmp = "<div align=\"center\" style='overflow:hidden; border:1px dolid green;'><object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\"  width=\""
 				+ width + "\" height=\"" + height + "\" align=\"middle\">\n";
 		tmp += " <param name=\"allowScriptAccess\" value=\"always\" />\n";
 		tmp += " <param name=\"allowFullScreen\" value=\"true\" />\n";
-		tmp += " <param name=\"movie\" value=\"" + Util.flashUrl(flashName) + "\" />\n";
+		tmp += " <param name=\"movie\" value=\"" + Util.flashUrl("player.swf") + "\" />\n";
 		tmp += " <param name=\"quality\" value=\"high\" />\n";
 		tmp += " <param name=\"bgcolor\" value=\"#ffffff\" />\n";
 		tmp += " <param name=\"flashvars\" value=\"" + vars + "\" />";
-		tmp += "	<embed type=\"application/x-shockwave-flash\" src=\"" + Util.flashUrl(flashName) + "\" height=\""
+		tmp += "	<embed type=\"application/x-shockwave-flash\" src=\"" + Util.flashUrl("player.swf") + "\" height=\""
 				+ height + "\" width=\"" + width + "\""
 				+ " bgcolor=\"#ffffff\" quality=\"high\" allowFullScreen=\"true\" flashvars=\"" + vars + "\">\n";
 		tmp += "</object></div>\n";
+
+		Log.info("+++3", null);
 		return tmp;
 	}
 

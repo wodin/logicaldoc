@@ -435,6 +435,8 @@ public class SecurityPanel extends FolderDetailTab {
 					if (!rec.getAttributeAsBoolean("read"))
 						list.removeData(rec);
 				}
+				folder.setSecurityRef(null);
+				refresh(folder);
 			}
 		});
 
