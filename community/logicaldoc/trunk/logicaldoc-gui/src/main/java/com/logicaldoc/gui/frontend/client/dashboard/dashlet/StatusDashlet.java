@@ -33,7 +33,8 @@ public class StatusDashlet extends Dashlet {
 
 		int max = 10;
 		int status = 0;
-		String icn = "blank.gif";
+		String icn = "page_white.png";
+		setTitle(I18N.message(eventCode+"docs"));
 		if (eventCode.equals(Constants.EVENT_CHECKEDOUT)) {
 			icn = "page_edit.png";
 			status = Constants.DOC_CHECKED_OUT;
@@ -41,6 +42,7 @@ public class StatusDashlet extends Dashlet {
 			icn = "page_white_lock.png";
 			status = Constants.DOC_LOCKED;
 		}
+
 		HeaderIcon portletIcon = ItemFactory.newHeaderIcon(icn);
 		HeaderControl hcicon = new HeaderControl(portletIcon);
 		hcicon.setSize(16);
