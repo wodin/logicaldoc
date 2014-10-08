@@ -128,7 +128,7 @@ public class DocumentsUploader extends Window {
 			zipItem.setValue(false);
 		}
 
-		SelectItem encodingItem = ItemFactory.newEncodingSelector("encoding");
+		final SelectItem encodingItem = ItemFactory.newEncodingSelector("encoding");
 		encodingItem.setDisabled(zipImport);
 
 		SelectItem template = ItemFactory.newTemplateSelector(false, null);
@@ -137,7 +137,7 @@ public class DocumentsUploader extends Window {
 		zipItem.addChangeHandler(new ChangeHandler() {
 			public void onChange(ChangeEvent event) {
 				zipImport = !zipImport;
-				zipItem.setDisabled(!zipImport);
+				encodingItem.setDisabled(zipImport);
 			}
 		});
 
