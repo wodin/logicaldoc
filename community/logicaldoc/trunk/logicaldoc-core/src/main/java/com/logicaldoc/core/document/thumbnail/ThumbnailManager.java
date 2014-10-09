@@ -18,6 +18,7 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.store.Storer;
+import com.logicaldoc.util.MimeType;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.util.plugin.PluginRegistry;
@@ -127,14 +128,13 @@ public class ThumbnailManager {
 		if (builder == null) {
 			log.warn("No registered thumbnail for extension " + document.getFileExtension().toLowerCase());
 			try {
-				String resource = storer.getResourceName(document, null, null);
-				MagicMatch match = Magic.getMagicMatch(storer.getBytes(document.getId(), resource), true);
-				if ("text/plain".equals(match.getMimeType())) {
+				String mime = MimeType.getByFilename(document.getFileName());
+				if ("text/plain".equals(mime)) {
 					log.warn("Try to convert as plain text");
 					builder = getBuilders().get("txt");
 				}
 			} catch (Exception e) {
-				log.error(e.getMessage(), e);
+				log.error(e.getMessage());
 			}
 		}
 

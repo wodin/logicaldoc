@@ -107,7 +107,7 @@ public interface Storer {
 	public void writeTo(long docId, String resource, File out);
 
 	/**
-	 * Obtains the document's content for the specified version
+	 * Obtains the document's content for the specified resource
 	 * 
 	 * @param docId The document's identifier
 	 * @param resource Name of the resource
@@ -117,7 +117,19 @@ public interface Storer {
 	public InputStream getStream(long docId, String resource);
 
 	/**
-	 * Obtains the document's raw bytes for the specified version
+	 * Obtains the document's content for the specified resource
+	 * 
+	 * @param docId The document's identifier
+	 * @param resource Name of the resource
+	 * @param start Index of the starting byte
+	 * @param length Total packet length
+	 * 
+	 * @return The document file's content
+	 */
+	public InputStream getStream(long docId, String resource, long start, long length);
+	
+	/**
+	 * Obtains the document's raw bytes for the specified resource
 	 * 
 	 * @param docId The document's identifier
 	 * @param resource Name of the resource
@@ -125,6 +137,18 @@ public interface Storer {
 	 * @return The document file's bytes
 	 */
 	public byte[] getBytes(long docId, String resource);
+
+	/**
+	 * Obtains the document's raw bytes for the specified resource
+	 * 
+	 * @param docId The document's identifier
+	 * @param resource Name of the resource
+	 * @param start Index of the starting byte
+	 * @param length Total packet length
+	 * 
+	 * @return The document file's bytes
+	 */
+	public byte[] getBytes(long docId, String resource, long start, long length);
 
 	/**
 	 * Computes the total size of the documents repository(in bytes)

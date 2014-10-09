@@ -27,8 +27,8 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.AuthenticationUtil;
 import com.logicaldoc.web.util.AuthenticationUtil.Credentials;
-import com.logicaldoc.web.util.ServletIOUtil;
 import com.logicaldoc.web.util.ServiceUtil;
+import com.logicaldoc.web.util.ServletIOUtil;
 
 /**
  * This servlet is responsible for document downloads. It searches for the
@@ -173,11 +173,7 @@ public class DownloadServlet extends HttpServlet {
 		else
 			filename = doc.getFileName();
 
-		response.setHeader("Content-Length", Long.toString(doc.getFileSize()));
-		response.setHeader("Pragma", "public");
-		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
-		response.setHeader("Expires", "0");
-		ServletIOUtil.setContentDisposition(request, response, filename, request.getParameter("open") == null);
+		ServletIOUtil.setContentDisposition(request, response, filename);
 
 		if (StringUtils.isEmpty(fileVersion)) {
 			if (version != null)

@@ -136,7 +136,7 @@ public class TicketDownload extends HttpServlet {
 			// it seems everything is fine, so we can now start writing to the
 			// response object
 			response.setContentType(mimetype);
-			ServletIOUtil.setContentDisposition(request, response, filename, true);
+			ServletIOUtil.setContentDisposition(request, response, filename);
 
 			// Headers required by Internet Explorer
 			response.setHeader("Pragma", "public");
