@@ -10,10 +10,14 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,6 +27,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.ibm.icu.util.Calendar;
@@ -41,6 +46,8 @@ import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
+import com.logicaldoc.util.config.ContextProperties;
+import com.logicaldoc.util.io.IOUtil;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
@@ -50,6 +57,12 @@ import com.logicaldoc.util.plugin.PluginRegistry;
  * @author Sebastian Stein
  */
 public class ServletIOUtil {
+	private static final int DEFAULT_BUFFER_SIZE = 10240; // ..bytes = 10KB.
+
+	private static final long DEFAULT_EXPIRE_TIME = 604800L;
+
+	private static final String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
+
 	/**
 	 * Downloads a plugin resource
 	 * 
@@ -86,12 +99,7 @@ public class ServletIOUtil {
 		// it seems everything is fine, so we can now start writing to the
 		// response object
 		response.setContentType(mimetype);
-		setContentDisposition(request, response, filename, true);
-
-		// Headers required by Internet Explorer
-		response.setHeader("Pragma", "public");
-		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
-		response.setHeader("Expires", "0");
+		setContentDisposition(request, response, filename);
 
 		// Add this header for compatibility with internal .NET browsers
 		response.setHeader("Content-Length", Long.toString(file.length()));
@@ -134,8 +142,11 @@ public class ServletIOUtil {
 	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, String sid,
 			long docId, String fileVersion, String fileName, String suffix, User user) throws FileNotFoundException,
 			IOException, ServletException {
-		UserSession session = null;
+		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
+		UserSession session = null;
 		if (sid != null)
 			try {
 				session = ServiceUtil.validateSession(sid);
@@ -145,11 +156,9 @@ public class ServletIOUtil {
 		else
 			session = ServiceUtil.validateSession(request);
 
-		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		if (user != null)
 			udao.initialize(user);
 
-		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = dao.findById(docId);
 
 		if (doc != null && user != null && !user.isInGroup("admin") && !user.isInGroup("publisher")
@@ -175,37 +184,173 @@ public class ServletIOUtil {
 			filename = filename + "." + FilenameUtils.getExtension(suffix);
 		}
 
-		if (StringUtils.isEmpty(suffix) || !suffix.contains("preview")) {
-			long size = storer.size(doc.getId(), resource);
+		long length = storer.size(doc.getId(), resource);
+		String contentType = MimeType.getByFilename(filename);
+		long lastModified = doc.getDate().getTime();
+		String eTag = doc.getId() + "_" + doc.getVersion() + "_" + lastModified;
+		long expires = System.currentTimeMillis() + DEFAULT_EXPIRE_TIME;
+		boolean acceptsGzip = false;
+		String acceptEncoding = request.getHeader("Accept-Encoding");
+		acceptsGzip = acceptEncoding != null && accepts(acceptEncoding, "gzip");
+		acceptsGzip = acceptsGzip && "true".equals(config.getProperty("download.gzip"));
 
-			// get the mimetype
-			String mimetype = MimeType.getByFilename(filename);
-			// it seems everything is fine, so we can now start writing to the
-			// response object
-			response.setContentType(mimetype);
-			setContentDisposition(request, response, filename, true);
+		if (StringUtils.isEmpty(suffix) || !suffix.contains("preview")) {
+			response.setContentType(contentType);
+			setContentDisposition(request, response, filename);
 
 			// Add this header for compatibility with internal .NET browsers
-			response.setHeader("Content-Length", Long.toString(size));
+			response.setHeader("Content-Length", Long.toString(length));
 		}
 
-		InputStream is = null;
-		OutputStream os = null;
+		// Prepare some variables. The full Range represents the complete file.
+		Range full = new Range(0, length - 1, length);
+		List<Range> ranges = new ArrayList<Range>();
+
+		// Validate and process Range and If-Range headers.
+		String range = request.getHeader("Range");
+		if (range != null) {
+
+			// Range header should match format "bytes=n-n,n-n,n-n...". If not,
+			// then return 416.
+			if (!range.matches("^bytes=\\d*-\\d*(,\\d*-\\d*)*$")) {
+				response.setHeader("Content-Range", "bytes */" + length); // Required
+																			// in
+																			// 416.
+				response.sendError(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
+				return;
+			}
+
+			// If-Range header should either match ETag or be greater then
+			// LastModified. If not,
+			// then return full file.
+			String ifRange = request.getHeader("If-Range");
+			if (ifRange != null && !ifRange.equals(eTag)) {
+				try {
+					long ifRangeTime = request.getDateHeader("If-Range"); // Throws
+																			// IAE
+																			// if
+																			// invalid.
+					if (ifRangeTime != -1 && ifRangeTime + 1000 < lastModified) {
+						ranges.add(full);
+					}
+				} catch (IllegalArgumentException ignore) {
+					ranges.add(full);
+				}
+			}
+
+			// If any valid If-Range header, then process each part of byte
+			// range.
+			if (ranges.isEmpty()) {
+				for (String part : range.substring(6).split(",")) {
+					// Assuming a file with length of 100, the following
+					// examples returns bytes at:
+					// 50-80 (50 to 80), 40- (40 to length=100), -20
+					// (length-20=80 to length=100).
+					long start = sublong(part, 0, part.indexOf("-"));
+					long end = sublong(part, part.indexOf("-") + 1, part.length());
+
+					if (start == -1) {
+						start = length - end;
+						end = length - 1;
+					} else if (end == -1 || end > length - 1) {
+						end = length - 1;
+					}
+
+					// Check if Range is syntactically valid. If not, then
+					// return 416.
+					if (start > end) {
+						response.setHeader("Content-Range", "bytes */" + length); // Required
+																					// in
+																					// 416.
+						response.sendError(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
+						return;
+					}
+
+					// Add range.
+					ranges.add(new Range(start, end, length));
+				}
+			}
+		}
+
+		response.setBufferSize(DEFAULT_BUFFER_SIZE);
+		response.setHeader("Accept-Ranges", "bytes");
+		response.setHeader("ETag", eTag);
+		response.setDateHeader("Last-Modified", lastModified);
+		response.setDateHeader("Expires", expires);
+
+		// Send requested file (part(s)) to client
+		// ------------------------------------------------
+
+		// Prepare streams.
+		OutputStream output = null;
 
 		try {
-			is = storer.getStream(doc.getId(), resource);
-			os = response.getOutputStream();
+			// Open streams.
+			output = response.getOutputStream();
 
-			int letter = 0;
+			if (ranges.isEmpty() || ranges.get(0) == full) {
 
-			byte[] buffer = new byte[128 * 1024];
-			while ((letter = is.read(buffer)) != -1) {
-				os.write(buffer, 0, letter);
+				// Return full file.
+				Range r = full;
+				response.setHeader("Content-Range", "bytes " + r.start + "-" + r.end + "/" + r.total);
+
+				if (acceptsGzip) {
+					// The browser accepts GZIP, so GZIP the content.
+					response.setHeader("Content-Encoding", "gzip");
+					output = new GZIPOutputStream(output, DEFAULT_BUFFER_SIZE);
+				} else {
+					// Content length is not directly predictable in case of
+					// GZIP.
+					// So only add it if there is no means of GZIP, else browser
+					// will hang.
+					response.setHeader("Content-Length", String.valueOf(r.length));
+				}
+
+				// Copy full range
+				InputStream is = storer.getStream(docId, resource);
+				try {
+					IOUtil.write(is, output);
+				} finally {
+					IOUtil.close(is);
+				}
+			} else if (ranges.size() == 1) {
+				// Return single part of file.
+				Range r = ranges.get(0);
+				response.setHeader("Content-Range", "bytes " + r.start + "-" + r.end + "/" + r.total);
+				response.setHeader("Content-Length", String.valueOf(r.length));
+				response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
+
+				// Copy single part range.
+				IOUtils.write(storer.getBytes(docId, resource, r.start, r.length), output);
+			} else {
+				// Return multiple parts of file.
+				response.setContentType("multipart/byteranges; boundary=" + MULTIPART_BOUNDARY);
+				response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
+
+				// Cast back to ServletOutputStream to get the easy println
+				// methods.
+				ServletOutputStream sos = (ServletOutputStream) output;
+
+				// Copy multi part range.
+				for (Range r : ranges) {
+					// Add multipart boundary and header fields for every
+					// range.
+					sos.println();
+					sos.println("--" + MULTIPART_BOUNDARY);
+					sos.println("Content-Type: " + contentType);
+					sos.println("Content-Range: bytes " + r.start + "-" + r.end + "/" + r.total);
+
+					// Copy single part range of multi part range.
+					IOUtils.write(storer.getBytes(docId, resource, r.start, r.length), sos);
+
+					// End with multipart boundary.
+					sos.println();
+					sos.println("--" + MULTIPART_BOUNDARY + "--");
+				}
 			}
 		} finally {
-			os.flush();
-			os.close();
-			is.close();
+			// Gently close streams.
+			IOUtil.close(output);
 		}
 
 		if (user != null
@@ -254,6 +399,9 @@ public class ServletIOUtil {
 	 * Sends the specified file to the response object; the client will receive
 	 * it as a download
 	 * 
+	 * Sends the specified file to the response object; the client will receive
+	 * it as a download
+	 * 
 	 * @param request the current request
 	 * @param response the file is written to this object
 	 * @param file file to serve
@@ -265,29 +413,6 @@ public class ServletIOUtil {
 	 */
 	public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file, String fileName)
 			throws FileNotFoundException, IOException, ServletException {
-		downloadFile(request, response, file, fileName, true);
-	}
-
-	/**
-	 * Sends the specified file to the response object; the client will receive
-	 * it as a download
-	 * 
-	 * Sends the specified file to the response object; the client will receive
-	 * it as a download
-	 * 
-	 * @param request the current request
-	 * @param response the file is written to this object
-	 * @param file file to serve
-	 * @param fileName client file name
-	 * @param asAttachment true if the content-disposition must use the
-	 *        attachment statement
-	 * 
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 * @throws ServletException
-	 */
-	public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file,
-			String fileName, boolean asAttachment) throws FileNotFoundException, IOException, ServletException {
 
 		String filename = fileName;
 		if (filename == null)
@@ -298,7 +423,7 @@ public class ServletIOUtil {
 		// it seems everything is fine, so we can now start writing to the
 		// response object
 		response.setContentType(mimetype);
-		setContentDisposition(request, response, filename, asAttachment);
+		setContentDisposition(request, response, filename);
 
 		// Add this header for compatibility with internal .NET browsers
 		response.setHeader("Content-Length", Long.toString(file.length()));
@@ -335,8 +460,8 @@ public class ServletIOUtil {
 	/**
 	 * Sets the correct Content-Disposition header into the response
 	 */
-	public static void setContentDisposition(HttpServletRequest request, HttpServletResponse response, String filename,
-			boolean asAttachment) throws UnsupportedEncodingException {
+	public static void setContentDisposition(HttpServletRequest request, HttpServletResponse response, String filename)
+			throws UnsupportedEncodingException {
 		// Encode the filename
 		String userAgent = request.getHeader("User-Agent").toLowerCase();
 
@@ -346,12 +471,14 @@ public class ServletIOUtil {
 			encodedFileName = URLEncoder.encode(filename, "UTF-8");
 			encodedFileName = encodedFileName.replace("+", "%20");
 		} else if (userAgent.contains("safari") && !userAgent.contains("chrome")) {
-			// Chrome User-Agent contains "safari"
+			// Safari User-Agent contains "chrome"
 			encodedFileName = filename;
 		} else {
 			encodedFileName = "=?UTF-8?B?" + new String(Base64.encodeBase64(filename.getBytes("UTF-8")), "UTF-8")
 					+ "?=";
 		}
+
+		boolean asAttachment = request.getParameter("open") == null;
 		response.setHeader("Content-Disposition", (asAttachment ? "attachment" : "inline") + "; filename=\""
 				+ encodedFileName + "\"");
 
@@ -394,12 +521,7 @@ public class ServletIOUtil {
 		// response object
 		response.setContentType(mimetype);
 
-		setContentDisposition(request, response, doc.getFileName() + ".txt", true);
-
-		// Headers required by Internet Explorer
-		response.setHeader("Pragma", "public");
-		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
-		response.setHeader("Expires", "0");
+		setContentDisposition(request, response, doc.getFileName() + ".txt");
 
 		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		udao.initialize(user);
@@ -489,6 +611,65 @@ public class ServletIOUtil {
 					FileUtils.forceDelete(savedFile);
 				}
 			}
+		}
+	}
+
+	/**
+	 * Returns true if the given accept header accepts the given value.
+	 * 
+	 * @param acceptHeader The accept header.
+	 * @param toAccept The value to be accepted.
+	 * @return True if the given accept header accepts the given value.
+	 */
+	private static boolean accepts(String acceptHeader, String toAccept) {
+		String[] acceptValues = acceptHeader.split("\\s*(,|;)\\s*");
+		Arrays.sort(acceptValues);
+		return Arrays.binarySearch(acceptValues, toAccept) > -1
+				|| Arrays.binarySearch(acceptValues, toAccept.replaceAll("/.*$", "/*")) > -1
+				|| Arrays.binarySearch(acceptValues, "*/*") > -1;
+	}
+
+	/**
+	 * Returns a substring of the given string value from the given begin index
+	 * to the given end index as a long. If the substring is empty, then -1 will
+	 * be returned
+	 * 
+	 * @param value The string value to return a substring as long for.
+	 * @param beginIndex The begin index of the substring to be returned as
+	 *        long.
+	 * @param endIndex The end index of the substring to be returned as long.
+	 * @return A substring of the given string value as long or -1 if substring
+	 *         is empty.
+	 */
+	private static long sublong(String value, int beginIndex, int endIndex) {
+		String substring = value.substring(beginIndex, endIndex);
+		return (substring.length() > 0) ? Long.parseLong(substring) : -1;
+	}
+
+	/**
+	 * This class represents a byte range.
+	 */
+	protected static class Range {
+		long start;
+
+		long end;
+
+		long length;
+
+		long total;
+
+		/**
+		 * Construct a byte range.
+		 * 
+		 * @param start Start of the byte range.
+		 * @param end End of the byte range.
+		 * @param total Total length of the byte source.
+		 */
+		public Range(long start, long end, long total) {
+			this.start = start;
+			this.end = end;
+			this.length = end - start + 1;
+			this.total = total;
 		}
 	}
 }

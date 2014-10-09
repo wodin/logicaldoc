@@ -45,7 +45,8 @@ public class IconSelector {
 		else if (ext.equals("avi") || ext.equals("mpg") || ext.equals("mp4") || ext.equals("mov") || ext.equals("divx")
 				|| ext.equals("wmv") || ext.equals("flv"))
 			icon = "film.png";
-		else if (ext.equals("mp3") || ext.equals("wav") || ext.equals("wma") || ext.equals("cda") || ext.equals("wave"))
+		else if (ext.equals("mp3") || ext.equals("m4p") || ext.equals("wav") || ext.equals("wma") || ext.equals("cda")
+				|| ext.equals("wave"))
 			icon = "music.png";
 		else
 			icon = "generic.png";

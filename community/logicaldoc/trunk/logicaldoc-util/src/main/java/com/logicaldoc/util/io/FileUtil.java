@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
@@ -427,6 +429,64 @@ public class FileUtil {
 		return null;
 	}
 
+	public static byte[] toByteArray(File file, long start, long length) throws IOException {
+		RandomAccessFile input = null;
+		ByteArrayOutputStream output = null;
+
+		try {
+			// Open streams.
+			input = new RandomAccessFile(file, "r");
+			output = new ByteArrayOutputStream();
+			copy(input, output, start, length);
+			output.flush();
+			return output.toByteArray();
+		} finally {
+			try {
+				input.close();
+			} catch (Throwable e) {
+			}
+			try {
+				output.close();
+			} catch (Throwable e) {
+			}
+		}
+	}
+	
+	/**
+	 * Copy the given byte range of the given input to the given output.
+	 * 
+	 * @param input The input to copy the given range to the given output for.
+	 * @param output The output to copy the given range from the given input
+	 *        for.
+	 * @param start Start of the byte range.
+	 * @param length Length of the byte range.
+	 * @throws IOException If something fails at I/O level.
+	 */
+	public static void copy(RandomAccessFile input, OutputStream output, long start, long length) throws IOException {
+		byte[] buffer = new byte[BUFF_SIZE];
+		int read;
+
+		if (input.length() == length) {
+			// Write full range.
+			while ((read = input.read(buffer)) > 0) {
+				output.write(buffer, 0, read);
+			}
+		} else {
+			// Write partial range.
+			input.seek(start);
+			long toRead = length;
+
+			while ((read = input.read(buffer)) > 0) {
+				if ((toRead -= read) > 0) {
+					output.write(buffer, 0, read);
+				} else {
+					output.write(buffer, 0, (int) toRead + read);
+					break;
+				}
+			}
+		}
+	}
+	
 	public static void replaceInFile(String sourcePath, String token, String newValue) throws Exception {
 		boolean windows = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
 

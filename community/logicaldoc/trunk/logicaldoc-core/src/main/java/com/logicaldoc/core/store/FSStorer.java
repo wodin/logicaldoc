@@ -2,6 +2,7 @@ package com.logicaldoc.core.store;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -38,6 +39,9 @@ import com.logicaldoc.util.io.FileUtil;
  * @since 4.5
  */
 public class FSStorer implements Storer {
+
+	protected static final int DEFAULT_BUFFER_SIZE = 10240;
+
 	protected static Logger log = LoggerFactory.getLogger(FSStorer.class);
 
 	protected ContextProperties config;
@@ -113,7 +117,7 @@ public class FSStorer implements Storer {
 	public long store(File file, long docId, String resource) {
 		InputStream is = null;
 		try {
-			is = new BufferedInputStream(new FileInputStream(file), 2048);
+			is = new BufferedInputStream(new FileInputStream(file), DEFAULT_BUFFER_SIZE);
 		} catch (FileNotFoundException e) {
 			return -1;
 		}
@@ -167,11 +171,17 @@ public class FSStorer implements Storer {
 		File file = new File(container, resource);
 
 		try {
-			return new BufferedInputStream(new FileInputStream(file), 2048);
+			return new BufferedInputStream(new FileInputStream(file), DEFAULT_BUFFER_SIZE);
 		} catch (Throwable e) {
 			log.error(e.getMessage());
 			return null;
 		}
+	}
+
+	@Override
+	public InputStream getStream(long docId, String resource, long start, long length) {
+		byte[] bytes = getBytes(docId, resource, start, length);
+		return new BufferedInputStream(new ByteArrayInputStream(bytes));
 	}
 
 	@Override
@@ -202,6 +212,19 @@ public class FSStorer implements Storer {
 				}
 		}
 		return null;
+	}
+
+	@Override
+	public byte[] getBytes(long docId, String resource, long start, long length) {
+		File container = getContainer(docId);
+		File file = new File(container, resource);
+
+		try {
+			return FileUtil.toByteArray(file, start, length);
+		} catch (Throwable e) {
+			log.error(e.getMessage());
+			return null;
+		}
 	}
 
 	@Override
@@ -264,7 +287,7 @@ public class FSStorer implements Storer {
 		OutputStream os = null;
 		InputStream is = null;
 		try {
-			os = new BufferedOutputStream(new FileOutputStream(out, false), 2048);
+			os = new BufferedOutputStream(new FileOutputStream(out, false), DEFAULT_BUFFER_SIZE);
 			is = getStream(docId, resource);
 			FileUtil.writeFile(is, out.getPath());
 		} catch (Exception e) {

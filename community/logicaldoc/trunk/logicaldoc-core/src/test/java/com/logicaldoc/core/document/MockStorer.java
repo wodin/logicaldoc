@@ -94,4 +94,16 @@ public class MockStorer implements Storer {
 			return 12;
 		}
 	}
+
+	@Override
+	public byte[] getBytes(long docId, String resource, long start, long length) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public InputStream getStream(long docId, String resource, long start, long length) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
