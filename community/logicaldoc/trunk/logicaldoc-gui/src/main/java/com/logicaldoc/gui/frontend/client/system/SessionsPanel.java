@@ -134,7 +134,7 @@ public class SessionsPanel extends VLayout {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				LD.askforValue(I18N.message("sid"), I18N.message("sid"),
-						list.getSelectedRecord().getAttributeAsString("sid"), "250", new ValueCallback() {
+						list.getSelectedRecord().getAttributeAsString("sid"), "300", new ValueCallback() {
 							@Override
 							public void execute(final String value) {
 							}

@@ -11,7 +11,6 @@ import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.ContentsType;
-import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.events.ResizedEvent;
@@ -25,11 +24,11 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 7.1.1
  */
 public class PreviewPanel extends VLayout {
+	private HTMLFlow preview = null;
+
+	private HTMLFlow media = null;
+
 	private HTMLFlow html = null;
-
-	private Canvas media = null;
-
-	private HTMLFlow htmlPanel = null;
 
 	private long id;
 
@@ -85,11 +84,11 @@ public class PreviewPanel extends VLayout {
 	}
 
 	public void redraw() {
-		if (html != null) {
-			removeMember(html);
+		if (preview != null) {
+			removeMember(preview);
 			reloadPreview(language);
-		} else if (htmlPanel != null) {
-			removeMember(htmlPanel);
+		} else if (html != null) {
+			removeMember(html);
 			reloadHTML();
 		} else if (media != null) {
 			removeMember(media);
@@ -105,40 +104,42 @@ public class PreviewPanel extends VLayout {
 		String contents = "";
 
 		try {
-			String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "%26docId=" + id
-					+ "%26filename=" + fileName;
+			String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id;
 			if (version != null)
-				url += "%26version=" + version;
+				url += "&version=" + version;
 
-			contents = Util.flashMediaPlayer(url, getWidth() != null ? getWidth() - 4 : 100,
-					getHeight() != null ? getHeight() - 4 : 100);
+			if (Util.isAudioFile(fileName))
+				contents = Util.audioHTML(url);
+			else
+				contents = Util.videoHTML(url, getWidth() != null ? "" + (getWidth() - 2) : "",
+						getHeight() != null ? "" + (getHeight() - 1) : "");
 		} catch (Throwable t) {
 			Log.info(t.getMessage(), null);
 		}
 
-		html.setContents(contents);
-		addMember(html);
+		media.setContents(contents);
+		addMember(media);
 	}
 
 	/**
 	 * Reloads a preview for HTML documents.
 	 */
 	private void reloadHTML() {
-		htmlPanel = new HTMLPane();
-		htmlPanel.setShowEdges(false);
-		htmlPanel.setContentsURL(Util.downloadURL(id, version, false));
-		htmlPanel.setContentsType(ContentsType.FRAGMENT);
+		html = new HTMLPane();
+		html.setShowEdges(false);
+		html.setContentsURL(Util.downloadURL(id, version, false));
+		html.setContentsType(ContentsType.FRAGMENT);
 
 		setWidth100();
 		setHeight(getHeight() - 30);
-		addMember(htmlPanel);
+		addMember(html);
 	}
 
 	/**
 	 * Reloads a preview.
 	 */
 	private void reloadPreview(String language) {
-		html = new HTMLFlow();
+		preview = new HTMLFlow();
 		String contents = "";
 
 		try {
@@ -158,8 +159,8 @@ public class PreviewPanel extends VLayout {
 		} catch (Throwable t) {
 		}
 
-		html.setContents(contents);
-		addMember(html);
+		preview.setContents(contents);
+		addMember(preview);
 	}
 
 	/**

@@ -124,7 +124,7 @@ public class GUISettingsPanel extends VLayout {
 		ondoubleclick.setValueMap("download", "preview");
 
 		RadioGroupItem doctab = ItemFactory.newBooleanSelector("doctab", "doctab");
-		doctab.setValueMap("properties", "thumbnail", "preview");
+		doctab.setValueMap("properties", "preview");
 
 		TextItem extattr = ItemFactory.newTextItem("extattr", I18N.message("extendedattrs"), null);
 		extattr.setHint(I18N.message("separatedcomma"));

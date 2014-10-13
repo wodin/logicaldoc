@@ -58,8 +58,6 @@ public class DocumentDetailsPanel extends VLayout {
 
 	protected Layout notesTabPanel;
 
-	protected Layout thumbnailTabPanel;
-
 	protected Layout previewTabPanel;
 
 	protected Layout retentionPoliciesTabPanel;
@@ -77,8 +75,6 @@ public class DocumentDetailsPanel extends VLayout {
 	protected LinksPanel linksPanel;
 
 	protected NotesPanel notesPanel;
-
-	protected ThumbnailPanel thumbnailPanel;
 
 	protected PreviewPanel previewPanel;
 
@@ -109,8 +105,6 @@ public class DocumentDetailsPanel extends VLayout {
 	protected Tab historyTab;
 
 	protected Tab previewTab;
-
-	protected Tab thumbnailTab;
 
 	protected Tab retentionPoliciesTab;
 
@@ -181,8 +175,6 @@ public class DocumentDetailsPanel extends VLayout {
 		prepareTabs();
 		prepareTabset();
 
-		if ("thumbnail".equals(Session.get().getInfo().getConfig("gui.document.tab")))
-			tabSet.selectTab(thumbnailTab);
 		if ("preview".equals(Session.get().getInfo().getConfig("gui.document.tab")))
 			tabSet.selectTab(previewTab);
 	}
@@ -223,12 +215,6 @@ public class DocumentDetailsPanel extends VLayout {
 		historyTabPanel.setWidth100();
 		historyTabPanel.setHeight100();
 		historyTab.setPane(historyTabPanel);
-
-		thumbnailTab = new Tab(I18N.message("thumbnail"));
-		thumbnailTabPanel = new HLayout();
-		thumbnailTabPanel.setWidth100();
-		thumbnailTabPanel.setHeight100();
-		thumbnailTab.setPane(thumbnailTabPanel);
 
 		previewTab = new Tab(I18N.message("preview"));
 		previewTabPanel = new HLayout();
@@ -285,14 +271,6 @@ public class DocumentDetailsPanel extends VLayout {
 			@Override
 			public void onTabSelected(TabSelectedEvent event) {
 				previewPanel.onTabSelected();
-			}
-		});
-
-		tabSet.addTab(thumbnailTab);
-		thumbnailTab.addTabSelectedHandler(new TabSelectedHandler() {
-			@Override
-			public void onTabSelected(TabSelectedEvent event) {
-				thumbnailPanel.onTabSelected();
 			}
 		});
 
@@ -437,17 +415,6 @@ public class DocumentDetailsPanel extends VLayout {
 		}
 		notesPanel = new NotesPanel(document);
 		notesTabPanel.addMember(notesPanel);
-
-		/*
-		 * Prepare the thumbnail tab
-		 */
-		if (thumbnailPanel != null) {
-			thumbnailPanel.destroy();
-			if (thumbnailTabPanel.contains(thumbnailPanel))
-				thumbnailTabPanel.removeMember(thumbnailPanel);
-		}
-		thumbnailPanel = new ThumbnailPanel(document);
-		thumbnailTabPanel.addMember(thumbnailPanel);
 
 		/*
 		 * Prepare the preview tab
