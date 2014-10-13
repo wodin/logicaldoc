@@ -26,8 +26,10 @@ public class Util {
 
 	public static String[] IMAGE_EXTS = new String[] { ".gif", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".png" };
 
-	public static String[] MEDIA_EXTS = new String[] { ".mp3", ".mp4", ".wav", ".avi", ".mpg", ".wmv", ".wma", ".asf",
-			".mov", ".rm", ".flv", ".aac", ".vlc", ".ogg", ".webm", ".swf", ".mpeg", ".swf" };
+	public static String[] VIDEO_EXTS = new String[] { ".mp4", ".avi", ".mpg", ".wmv", ".wma", ".asf", ".mov", ".rm",
+			".flv", ".aac", ".vlc", ".ogg", ".webm", ".swf", ".mpeg", ".swf" };
+
+	public static String[] AUDIO_EXTS = new String[] { ".mp3", ".m4p", ".wav" };
 
 	public static String[] WEBCONTENT_EXTS = new String[] { ".html", ".htm", ".xhtml" };
 
@@ -132,30 +134,27 @@ public class Util {
 	}
 
 	/**
-	 * Generates Flash code for Audio and Video Preview
+	 * Generates HTML code for reproducing video files
 	 */
-	public static String flashMediaPlayer(String mediaUrl, int width, int height) {
+	public static String videoHTML(String mediaUrl, String width, String height) {
+		String tmp = "<video controls ";
+		if (width != null)
+			tmp += "width='" + width + "' ";
+		if (height != null)
+			tmp += "height='" + height + "' ";
+		tmp += ">";
+		tmp += "<source src='" + mediaUrl + "' />";
+		tmp += "</video>";
+		return tmp;
+	}
 
-		Log.info("+++1", null);
-
-		String vars = "mediaURL=" + mediaUrl + "&autostart=false&allowScriptAccess=always&allowFullScreen=true";
-
-		Log.info("+++2", null);
-
-		String tmp = "<div align=\"center\" style='overflow:hidden; border:1px dolid green;'><object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\"  width=\""
-				+ width + "\" height=\"" + height + "\" align=\"middle\">\n";
-		tmp += " <param name=\"allowScriptAccess\" value=\"always\" />\n";
-		tmp += " <param name=\"allowFullScreen\" value=\"true\" />\n";
-		tmp += " <param name=\"movie\" value=\"" + Util.flashUrl("player.swf") + "\" />\n";
-		tmp += " <param name=\"quality\" value=\"high\" />\n";
-		tmp += " <param name=\"bgcolor\" value=\"#ffffff\" />\n";
-		tmp += " <param name=\"flashvars\" value=\"" + vars + "\" />";
-		tmp += "	<embed type=\"application/x-shockwave-flash\" src=\"" + Util.flashUrl("player.swf") + "\" height=\""
-				+ height + "\" width=\"" + width + "\""
-				+ " bgcolor=\"#ffffff\" quality=\"high\" allowFullScreen=\"true\" flashvars=\"" + vars + "\">\n";
-		tmp += "</object></div>\n";
-
-		Log.info("+++3", null);
+	/**
+	 * Generates HTML code for reproducing audio files
+	 */
+	public static String audioHTML(String mediaUrl) {
+		String tmp = "<audio style='margin-top: 20px; vertical-align: middle; text-align: center' controls >";
+		tmp += "<source src='" + mediaUrl + "' />";
+		tmp += "</audio>";
 		return tmp;
 	}
 
@@ -264,7 +263,20 @@ public class Util {
 
 	public static boolean isMediaFile(String fileName) {
 		String tmp = fileName.toLowerCase();
-		for (String ext : MEDIA_EXTS) {
+		for (String ext : VIDEO_EXTS) {
+			if (tmp.endsWith(ext))
+				return true;
+		}
+		for (String ext : AUDIO_EXTS) {
+			if (tmp.endsWith(ext))
+				return true;
+		}
+		return false;
+	}
+
+	public static boolean isAudioFile(String fileName) {
+		String tmp = fileName.toLowerCase();
+		for (String ext : AUDIO_EXTS) {
 			if (tmp.endsWith(ext))
 				return true;
 		}

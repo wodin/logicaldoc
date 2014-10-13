@@ -45,6 +45,8 @@ public class Session {
 
 	private Timer timer;
 
+	private boolean showThumbnail = true;
+
 	public static Session get() {
 		if (instance == null)
 			instance = new Session();
@@ -195,5 +197,13 @@ public class Session {
 
 	public String getConfig(String name) {
 		return info.getConfig(name);
+	}
+
+	public boolean isShowThumbnail() {
+		return showThumbnail;
+	}
+
+	public void setShowThumbnail(boolean showThumbnail) {
+		this.showThumbnail = showThumbnail;
 	}
 }

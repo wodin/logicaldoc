@@ -1,5 +1,7 @@
 package com.logicaldoc.gui.frontend.client.folder;
 
+import java.util.Date;
+
 import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
@@ -24,6 +26,9 @@ import com.smartgwt.client.widgets.form.validator.DoesntContainValidator;
  * @since 6.0
  */
 public class PropertiesPanel extends FolderDetailTab {
+
+	private static final int DEFAULT_ITEM_WIDTH = 250;
+
 	private DynamicForm form = new DynamicForm();
 
 	private ValuesManager vm = new ValuesManager();
@@ -65,10 +70,15 @@ public class PropertiesPanel extends FolderDetailTab {
 		if (folder.hasPermission(Constants.PERMISSION_RENAME))
 			description.addChangedHandler(changedHandler);
 
-		StaticTextItem creation = ItemFactory.newStaticTextItem("creation", "createdon",
-				I18N.formatDate(folder.getCreation()));
-
-		StaticTextItem creator = ItemFactory.newStaticTextItem("creator", "creator", folder.getCreator());
+		StaticTextItem creation = ItemFactory.newStaticTextItem(
+				"creation",
+				"createdon",
+				Util.padLeft(
+						I18N.formatDate((Date) folder.getCreation()) + " " + I18N.message("by") + " "
+								+ folder.getCreator(), 40));
+		creation.setTooltip(I18N.formatDate((Date) folder.getCreation()) + " " + I18N.message("by") + " "
+				+ folder.getCreator());
+		creation.setWidth(DEFAULT_ITEM_WIDTH);
 
 		LinkItem pathItem = ItemFactory.newLinkItem("path", folder.getPathExtended());
 		pathItem.setTitle(I18N.message("path"));
@@ -89,13 +99,13 @@ public class PropertiesPanel extends FolderDetailTab {
 
 		if (folder.isDefaultWorkspace()) {
 			if (Feature.enabled(Feature.BARCODES))
-				form.setItems(idItem, pathItem, creation, creator, documents, subfolders, barcode);
+				form.setItems(idItem, pathItem, creation, documents, subfolders, barcode);
 			else
-				form.setItems(idItem, pathItem, creation, creator, documents, subfolders);
+				form.setItems(idItem, pathItem, creation, documents, subfolders);
 		} else if (Feature.enabled(Feature.BARCODES))
-			form.setItems(idItem, pathItem, name, description, creation, creator, documents, subfolders, barcode);
+			form.setItems(idItem, pathItem, name, description, creation, documents, subfolders, barcode);
 		else
-			form.setItems(idItem, pathItem, name, description, creation, creator, documents, subfolders);
+			form.setItems(idItem, pathItem, name, description, creation, documents, subfolders);
 		addMember(form);
 	}
 

@@ -10,22 +10,20 @@ import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.common.client.util.LD;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.MultiComboBoxLayoutStyle;
-import com.smartgwt.client.util.ValueCallback;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.MultiComboBoxItem;
-import com.smartgwt.client.widgets.form.fields.PickerIcon;
-import com.smartgwt.client.widgets.form.fields.PickerIcon.Picker;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -94,21 +92,16 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 
 		if (Feature.enabled(Feature.TAGS)) {
 			String mode = Session.get().getConfig("tag.mode");
-			final DataSource ds;
-			if ("preset".equals(mode)) {
-				ds = new TagsDS(mode);
-			} else {
-				ds = new TagsDS(null);
-			}
+			final DataSource ds = new TagsDS(null);
 
 			tagItem = new MultiComboBoxItem("tag", I18N.message("tag"));
+			tagItem.setPrompt(I18N.message("typeatag"));
 			tagItem.setLayoutStyle(MultiComboBoxLayoutStyle.FLOW);
 			tagItem.setWidth(200);
 			tagItem.setMultiple(true);
 			tagItem.setOptionDataSource(ds);
 			tagItem.setValueField("word");
 			tagItem.setDisplayField("word");
-			tagItem.setValues((Object[]) document.getTags());
 			tagItem.setAutoFetchData(true);
 			tagItem.setDisabled(!updateEnabled);
 			tagItem.addChangedHandler(new ChangedHandler() {
@@ -132,25 +125,37 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 				}
 			});
 
-			PickerIcon addPicker = new PickerIcon(new Picker("[SKIN]/actions/add.png"), new FormItemClickHandler() {
-				public void onFormItemClick(FormItemIconClickEvent event) {
-					LD.askforValue(I18N.message("newtag"), I18N.message("tag"), "", "200", new ValueCallback() {
-						@Override
-						public void execute(String value) {
-							if (value == null)
-								return;
+			final TextItem newTagItem = ItemFactory.newTextItem("newtag", "newtag", null);
+			newTagItem.setRequired(false);
+			newTagItem.addKeyPressHandler(new KeyPressHandler() {
+				@Override
+				public void onKeyPress(KeyPressEvent event) {
+					if (newTagItem.validate() && newTagItem.getValue() != null && event.getKeyName() != null
+							&& "enter".equals(event.getKeyName().toLowerCase())) {
+						String input = newTagItem.getValueAsString().trim();
+						newTagItem.clearValue();
 
-							// Get the user's inputed tags
-							String input = value.trim().replace(',', ' ');
-							if (!"".equals(input)) {
-								List<String> tags = new ArrayList<String>();
+						if (!"".equals(input)) {
+							String[] tokens = input.split("\\,");
 
-								tags.add(input);
+							int min = Integer.parseInt(Session.get().getConfig("tag.minsize"));
+							int max = Integer.parseInt(Session.get().getConfig("tag.maxsize"));
+							boolean containsInvalid = false;
+							List<String> tags = new ArrayList<String>();
+							for (String token : tokens) {
+								String t = token.trim();
+
+								if (t.length() < min || t.length() > max) {
+									containsInvalid = true;
+									continue;
+								}
+
+								tags.add(t);
 
 								// Put the new tag in the options
 								Record record = new Record();
-								record.setAttribute("index", input);
-								record.setAttribute("word", input);
+								record.setAttribute("index", t);
+								record.setAttribute("word", t);
 								ds.addData(record);
 
 								// Add the old tags to the new ones
@@ -159,20 +164,23 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 									if (!tags.contains(oldVal[i]))
 										tags.add(oldVal[i]);
 
+								// Update the tag item and trigger the change
 								tagItem.setValues((Object[]) tags.toArray(new String[0]));
+								changedHandler.onChanged(null);
 							}
+
+							if (containsInvalid)
+								SC.warn(I18N.message("sometagaddedbecauseinvalid"));
 						}
-					});
+					}
 				}
 			});
-			addPicker.setWidth(16);
-			addPicker.setHeight(16);
-			addPicker.setPrompt(I18N.message("newtag"));
 
-			if ("free".equals(mode))
-				tagItem.setIcons(addPicker);
-			if (updateEnabled)
+			if (updateEnabled) {
 				items.add(tagItem);
+				if ("free".equals(mode) && updateEnabled)
+					items.add(newTagItem);
+			}
 		}
 
 		form.setItems(items.toArray(new FormItem[0]));

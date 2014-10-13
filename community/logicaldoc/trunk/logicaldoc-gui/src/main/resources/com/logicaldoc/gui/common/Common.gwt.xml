@@ -10,7 +10,6 @@
     <inherits name="com.google.gwt.i18n.I18N" />
     <inherits name="com.smartgwt.SmartGwtNoScript" />
     <inherits name="com.smartgwt.tools.SmartGwtTools" />
-    <inherits name="com.reveregroup.gwt.imagepreloader.ImagePreloader" />
 
     <!-- Include GWTUpload library -->
     <inherits name="gwtupload.GWTUpload" />

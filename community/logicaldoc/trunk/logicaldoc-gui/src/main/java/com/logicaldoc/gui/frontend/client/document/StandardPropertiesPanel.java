@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Image;
 import com.logicaldoc.gui.common.client.DocumentObserver;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
@@ -16,32 +17,35 @@ import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.common.client.widgets.ImageLightbox;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.MultiComboBoxLayoutStyle;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.util.ValueCallback;
+import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.IconButton;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.LinkItem;
 import com.smartgwt.client.widgets.form.fields.MultiComboBoxItem;
-import com.smartgwt.client.widgets.form.fields.PickerIcon;
-import com.smartgwt.client.widgets.form.fields.PickerIcon.Picker;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
@@ -51,23 +55,25 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.0
  */
 public class StandardPropertiesPanel extends DocumentDetailTab {
+	private static final int DEFAULT_ITEM_WIDTH = 250;
+
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private DynamicForm form1 = new DynamicForm();
 
 	private DynamicForm form2 = new DynamicForm();
 
+	private Layout thumbnail = null;
+
 	private VLayout container = new VLayout();
 
-	private HLayout formsContainer = new HLayout();
+	private HLayout columns = new HLayout();
 
 	private ValuesManager vm = new ValuesManager();
 
 	protected DocumentObserver observer;
 
 	protected MultiComboBoxItem tagItem = null;
-
-	protected boolean tagsInitialized = false;
 
 	public StandardPropertiesPanel(final GUIDocument document, ChangedHandler changedHandler, DocumentObserver observer) {
 		super(document, changedHandler, null);
@@ -78,27 +84,10 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		container.setMembersMargin(5);
 		addMember(container);
 
-		DynamicForm path = new DynamicForm();
+		columns.setWidth100();
+		columns.setMembersMargin(10);
 
-		LinkItem pathItem = ItemFactory.newLinkItem("path", document.getPathExtended());
-		pathItem.setTitle(I18N.message("path"));
-		pathItem.setValue(Util.contextPath() + "?docId=" + document.getId());
-		pathItem.addChangedHandler(changedHandler);
-		pathItem.setWidth(400);
-
-		String downloadUrl = Util.contextPath() + "download?docId=" + document.getId();
-		LinkItem download = ItemFactory.newLinkItem("download", downloadUrl);
-		download.setTitle(I18N.message("download"));
-		download.setValue(downloadUrl);
-		download.addChangedHandler(changedHandler);
-		download.setWidth(400);
-
-		path.setItems(pathItem, download);
-
-		formsContainer.setWidth100();
-		formsContainer.setMembersMargin(10);
-
-		container.setMembers(path, formsContainer);
+		container.setMembers(columns);
 		refresh();
 	}
 
@@ -108,69 +97,162 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		if (form1 != null)
 			form1.destroy();
 
-		if (formsContainer.contains(form1))
-			formsContainer.removeMember(form1);
+		if (columns.contains(form1))
+			columns.removeMember(form1);
 
 		form1 = new DynamicForm();
 		form1.setNumCols(2);
 		form1.setValuesManager(vm);
 		form1.setTitleOrientation(TitleOrientation.LEFT);
-		form1.setWidth(300);
+		form1.setWidth(DEFAULT_ITEM_WIDTH);
 
 		StaticTextItem id = ItemFactory.newStaticTextItem("id", "id", Long.toString(document.getId()));
+		if (!Long.toString(document.getId()).equals(document.getCustomId())) {
+			id.setTooltip(Long.toString(document.getId()) + " (" + document.getCustomId() + ")");
+			id.setValue(Util.padLeft(Long.toString(document.getId()) + " (" + document.getCustomId() + ")", 35));
+		}
 
-		StaticTextItem creation = ItemFactory.newStaticTextItem("creation", "createdon",
-				I18N.formatDate((Date) document.getCreation()));
+		StaticTextItem creation = ItemFactory.newStaticTextItem(
+				"creation",
+				"createdon",
+				Util.padLeft(
+						I18N.formatDate((Date) document.getCreation()) + " " + I18N.message("by") + " "
+								+ document.getCreator(), 40));
+		creation.setTooltip(I18N.formatDate((Date) document.getCreation()) + " " + I18N.message("by") + " "
+				+ document.getCreator());
 
-		StaticTextItem creator = ItemFactory.newStaticTextItem("creator", "creator", document.getCreator());
-
-		StaticTextItem published = ItemFactory.newStaticTextItem("date", "publishedon",
-				I18N.formatDate((Date) document.getDate()));
+		StaticTextItem published = ItemFactory.newStaticTextItem(
+				"date",
+				"publishedon",
+				Util.padLeft(
+						I18N.formatDate((Date) document.getDate()) + " " + I18N.message("by") + " "
+								+ document.getPublisher(), 40));
+		published.setTooltip(I18N.formatDate((Date) document.getDate()) + " " + I18N.message("by") + " "
+				+ document.getPublisher());
 
 		StaticTextItem size = ItemFactory.newStaticTextItem("size", "size", Util.formatSizeW7(document.getFileSize())
 				+ " (" + Util.formatSizeBytes(document.getFileSize()) + ")");
 
-		StaticTextItem publisher = ItemFactory.newStaticTextItem("publisher", "publisher", document.getPublisher());
-
 		TextItem title = ItemFactory.newTextItem("title", "title", document.getTitle());
 		title.addChangedHandler(changedHandler);
 		title.setRequired(true);
-		title.setWidth(200);
+		title.setWidth(DEFAULT_ITEM_WIDTH);
 		title.setDisabled(!updateEnabled || !document.getFolder().isRename());
+
+		StaticTextItem filename = ItemFactory.newStaticTextItem("fileName", "file",
+				Util.padLeft(document.getFileName(), 39));
+		filename.setWrap(false);
+		filename.setWidth(DEFAULT_ITEM_WIDTH);
+		filename.setTooltip(document.getFileName());
 
 		StaticTextItem wfStatus = ItemFactory.newStaticTextItem("wfStatus", "workflowstatus",
 				document.getWorkflowStatus());
 
 		StaticTextItem version = ItemFactory.newStaticTextItem("version", "fileversion", document.getFileVersion()
 				+ " (" + document.getVersion() + ")");
-
+		version.setValue(version.getValue());
 		String comment = document.getComment();
-		if (comment != null && !"".equals(comment)) {
-			comment = Util.padLeft(comment, 35);
-			version.setValue(version.getValue() + " (" + comment + ")");
-		}
+		if (comment != null && !"".equals(comment))
+			version.setTooltip(comment);
 
-		StaticTextItem filename = ItemFactory.newStaticTextItem("fileName", "file", document.getFileName());
+		LinkItem folder = ItemFactory.newLinkItem("folder", Util.padLeft(document.getPathExtended(), 40));
+		folder.setTitle(I18N.message("folder"));
+		folder.setValue(Util.contextPath() + "?folderId=" + document.getFolder().getId());
+		folder.setTooltip(document.getPathExtended());
+		folder.setWrap(false);
+		folder.setWidth(DEFAULT_ITEM_WIDTH);
+
+		String downloadUrl = Util.contextPath() + "download?docId=" + document.getId();
+		LinkItem download = ItemFactory.newLinkItem("download", downloadUrl);
+		download.setTitle(I18N.message("download"));
+		download.setLinkTitle(I18N.message("download"));
+		download.setValue(downloadUrl);
 
 		if (Feature.enabled(Feature.WORKFLOW))
-			form1.setItems(id, title, wfStatus, version, filename, size, creation, published, creator, publisher);
+			form1.setItems(id, title, filename, folder, size, version, wfStatus, creation, published, download);
 		else
-			form1.setItems(id, title, version, filename, size, creation, published, creator, publisher);
+			form1.setItems(id, title, filename, folder, size, version, creation, published, download);
 
-		formsContainer.addMember(form1, 0);
+		columns.addMember(form1);
 
 		/*
 		 * Prepare the second form for the tags
 		 */
 		prepareRightForm();
-		formsContainer.addMember(form2, 1);
+
+		/*
+		 * Prepare the thumbnail
+		 */
+		if (document.getId() != 0L) {
+			prepareThumbnail();
+		}
+	}
+
+	private void prepareThumbnail() {
+		try {
+			if (thumbnail != null && columns.contains(thumbnail)) {
+				columns.removeMember(thumbnail);
+				thumbnail.destroy();
+			}
+
+			thumbnail = new HLayout();
+			thumbnail.setWidth(202);
+			thumbnail.setMembersMargin(0);
+
+			if (Session.get().isShowThumbnail()) {
+				String url = Util.contextPath() + "/preview?docId=" + document.getId() + "&sid="
+						+ Session.get().getSid();
+				Image image = new Image(url);
+				image.setWidth(200 + "px");
+				// image.setBorder("1px solid #898989;");
+				// image.setHeight((getHeight() - 10) + "px");
+				thumbnail.addClickHandler(new ClickHandler() {
+
+					@Override
+					public void onClick(ClickEvent event) {
+						ImageLightbox lightbox = new ImageLightbox(document);
+						lightbox.show();
+					}
+				});
+
+				IconButton icon = new IconButton("");
+				icon.setWidth(16);
+				icon.setHeight(16);
+				icon.setIcon("[SKIN]/headerIcons/close.gif");
+				icon.addClickHandler(new ClickHandler() {
+
+					@Override
+					public void onClick(ClickEvent event) {
+						Session.get().setShowThumbnail(false);
+						prepareThumbnail();
+					}
+				});
+
+				thumbnail.setWidth(219);
+				thumbnail.addMember(image);
+				thumbnail.addMember(icon);
+			} else {
+				IButton showThumbnail = new IButton(I18N.message("showthumbnail"));
+				showThumbnail.addClickHandler(new ClickHandler() {
+
+					@Override
+					public void onClick(ClickEvent event) {
+						Session.get().setShowThumbnail(true);
+						prepareThumbnail();
+					}
+				});
+				thumbnail.setMembers(showThumbnail);
+			}
+
+			columns.addMember(thumbnail);
+		} catch (Throwable t) {
+			Log.error(t.getMessage(), null, t);
+		}
 	}
 
 	private void prepareRightForm() {
-		tagsInitialized = false;
-
-		if (formsContainer.contains(form2)) {
-			formsContainer.removeMember(form2);
+		if (columns.contains(form2)) {
+			columns.removeMember(form2);
 			form2.destroy();
 		}
 
@@ -178,9 +260,6 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		form2.setValuesManager(vm);
 
 		List<FormItem> items = new ArrayList<FormItem>();
-
-		StaticTextItem customId = ItemFactory.newStaticTextItem("customId", "customid", document.getCustomId());
-		items.add(customId);
 
 		FormItemIcon ratingIcon = ItemFactory.newItemIcon("rating" + document.getRating() + ".png");
 		StaticTextItem vote = ItemFactory.newStaticTextItem("vote", "vote", "");
@@ -216,14 +295,10 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		if (Feature.enabled(Feature.TAGS)) {
 			String mode = Session.get().getConfig("tag.mode");
-			final DataSource ds;
-			if ("preset".equals(mode)) {
-				ds = new TagsDS(mode);
-			} else {
-				ds = new TagsDS(null);
-			}
+			final DataSource ds = new TagsDS(null);
 
 			tagItem = new MultiComboBoxItem("tag", I18N.message("tag"));
+			tagItem.setPrompt(I18N.message("typeatag"));
 			tagItem.setLayoutStyle(MultiComboBoxLayoutStyle.FLOW);
 			tagItem.setWidth(200);
 			tagItem.setMultiple(true);
@@ -231,37 +306,42 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 			tagItem.setValueField("word");
 			tagItem.setDisplayField("word");
 			tagItem.setAutoFetchData(true);
-
 			tagItem.setValues((Object[]) document.getTags());
 			tagItem.setDisabled(!updateEnabled);
 			tagItem.addChangedHandler(changedHandler);
 
-			PickerIcon addPicker = new PickerIcon(new Picker("[SKIN]/actions/add.png"), new FormItemClickHandler() {
-				public void onFormItemClick(FormItemIconClickEvent event) {
-					LD.askforValue(I18N.message("newtag"), I18N.message("tag"), "", "200", new ValueCallback() {
-						@Override
-						public void execute(String value) {
-							if (value == null)
-								return;
+			final TextItem newTagItem = ItemFactory.newTextItem("newtag", "newtag", null);
+			newTagItem.setRequired(false);
+			newTagItem.addKeyPressHandler(new KeyPressHandler() {
+				@Override
+				public void onKeyPress(KeyPressEvent event) {
+					if (newTagItem.validate() && newTagItem.getValue() != null && event.getKeyName() != null
+							&& "enter".equals(event.getKeyName().toLowerCase())) {
+						String input = newTagItem.getValueAsString().trim();
+						newTagItem.clearValue();
 
-							// Get the user's inputed tags
-							String input = value.trim();
+						if (!"".equals(input)) {
+							String[] tokens = input.split("\\,");
 
-							if (!"".equals(input)) {
-								String[] tokens = input.split("\\,");
+							int min = Integer.parseInt(Session.get().getConfig("tag.minsize"));
+							int max = Integer.parseInt(Session.get().getConfig("tag.maxsize"));
+							boolean containsInvalid = false;
+							List<String> tags = new ArrayList<String>();
+							for (String token : tokens) {
+								String t = token.trim();
 
-								List<String> tags = new ArrayList<String>();
-
-								for (String token : tokens) {
-									String t = token.trim();
-									tags.add(t);
-
-									// Put the new tag in the options
-									Record record = new Record();
-									record.setAttribute("index", t);
-									record.setAttribute("word", t);
-									ds.addData(record);
+								if (t.length() < min || t.length() > max) {
+									containsInvalid = true;
+									continue;
 								}
+
+								tags.add(t);
+
+								// Put the new tag in the options
+								Record record = new Record();
+								record.setAttribute("index", t);
+								record.setAttribute("word", t);
+								ds.addData(record);
 
 								// Add the old tags to the new ones
 								String[] oldVal = tagItem.getValues();
@@ -269,28 +349,25 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 									if (!tags.contains(oldVal[i]))
 										tags.add(oldVal[i]);
 
+								// Update the tag item and trigger the change
 								tagItem.setValues((Object[]) tags.toArray(new String[0]));
 								changedHandler.onChanged(null);
 							}
+
+							if (containsInvalid)
+								SC.warn(I18N.message("sometagaddedbecauseinvalid"));
 						}
-					});
+					}
 				}
 			});
-			addPicker.setWidth(16);
-			addPicker.setHeight(16);
-			addPicker.setPrompt(I18N.message("newtag"));
 
-			if ("free".equals(mode) && updateEnabled)
-				tagItem.setIcons(addPicker);
-
-			tagItem.setDisabled(!updateEnabled);
 			items.add(tagItem);
-			if (document.getTags() == null || document.getTags().length == 0)
-				tagsInitialized = true;
-
+			if ("free".equals(mode) && updateEnabled)
+				items.add(newTagItem);
 		}
 
 		form2.setItems(items.toArray(new FormItem[0]));
+		columns.addMember(form2);
 	}
 
 	@SuppressWarnings("unchecked")
