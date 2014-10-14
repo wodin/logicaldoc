@@ -153,12 +153,11 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		target.setTemplate(templateDao.findByName("email", Tenant.DEFAULT_ID));
 		target.setValue("from", "test@acme.com");
 		dao.store(target);
-		target=dao.findById(target.getId());
+		target = dao.findById(target.getId());
 		dao.initialize(target);
 		Assert.assertEquals("email", target.getTemplate().getName());
 		Assert.assertEquals("test@acme.com", target.getValue("from"));
-		
-		
+
 		dao.copy(source, target, false, tr);
 
 		Folder folder = dao.findByPath("/Default/target/pippo/pluto", Tenant.DEFAULT_ID);
@@ -166,7 +165,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		dao.initialize(folder);
 		Assert.assertEquals("email", folder.getTemplate().getName());
 		Assert.assertEquals("test@acme.com", folder.getValue("from"));
-		
+
 		List<Document> docs = docDao.findByFolder(folder.getId(), null);
 		Assert.assertEquals(1, docs.size());
 	}
@@ -440,6 +439,14 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertTrue(dao.delete(1201));
 		folder = dao.findById(1201);
 		Assert.assertNull(folder);
+
+		try {
+			dao.delete(Folder.DEFAULTWORKSPACEID);
+		} catch (Throwable t) {
+			System.out.println(t.getMessage());
+		}
+		folder = dao.findById(Folder.DEFAULTWORKSPACEID);
+		Assert.assertNotNull(Folder.DEFAULTWORKSPACEID);
 	}
 
 	@Test
@@ -734,9 +741,9 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 		// The root has its own policies
 		folder = dao.findById(1200);
-		
+
 		Assert.assertTrue(dao.updateSecurityRef(1200, 5L, transaction));
-		
+
 		folder = dao.findById(1200);
 		Assert.assertEquals(5L, folder.getSecurityRef().longValue());
 		folder = dao.findById(1201);
@@ -745,7 +752,6 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(5L, folder.getSecurityRef().longValue());
 	}
 
-	
 	@Test
 	public void testMetadataToTree() {
 		FolderHistory transaction = new FolderHistory();

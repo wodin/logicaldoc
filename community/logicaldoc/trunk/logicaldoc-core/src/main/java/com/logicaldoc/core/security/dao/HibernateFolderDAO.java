@@ -885,15 +885,27 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	}
 
-	@Override
-	public boolean delete(long folderId, FolderHistory transaction) {
+	private void checkIfCanDelete(long folderId) {
 		Folder folder = findById(folderId);
 		long rootId = findRoot(folder.getTenantId()).getId();
 		if (folderId == rootId)
-			throw new RuntimeException("Not allowed to delete the Root folder");
+			throw new RuntimeException("You cannot delete folder " + folder.getName() + " - " + folderId);
 
+		if (folder != null && folder.getName().equals("Default") && folder.getParentId() == rootId)
+			throw new RuntimeException("You cannot delete folder " + folder.getName() + " - " + folderId);
+	}
+
+	public boolean delete(long folderId) {
+		checkIfCanDelete(folderId);
+		return super.delete(folderId);
+	}
+
+	@Override
+	public boolean delete(long folderId, FolderHistory transaction) {
+		checkIfCanDelete(folderId);
 		assert (transaction.getUser() != null);
 
+		Folder folder = findById(folderId);
 		boolean result = true;
 		try {
 			transaction.setPath(computePathExtended(folderId));
