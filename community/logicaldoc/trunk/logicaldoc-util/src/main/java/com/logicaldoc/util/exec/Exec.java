@@ -26,14 +26,47 @@ public class Exec {
 	protected static Logger log = LoggerFactory.getLogger(Exec.class);
 
 	/**
-	 * Execute the command by using the process builder
+	 * Executes the command by using the process builder.
+	 * 
+	 * @commandLine The command line to process
+	 * @timeout The timeout in seconds
 	 */
-	public static int exec(List<String> command) throws IOException {
-		return exec(command, null, null, -1);
+	public static void exec2(List<String> commandLine, int timeout) throws IOException {
+		log.debug("Executing command: " + commandLine);
+		ProcessBuilder pb = new ProcessBuilder();
+		pb.redirectErrorStream(true);
+		pb.command(commandLine);
+
+		Process process = pb.start();
+
+		StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), log);
+		outputGobbler.start();
+
+		Worker worker = new Worker(process);
+		worker.start();
+		try {
+			worker.join(timeout * 1000);
+			if (worker.getExit() == null)
+				throw new TimeoutException();
+		} catch (TimeoutException e) {
+			log.error("Command timed out");
+		} catch (InterruptedException ex) {
+			worker.interrupt();
+			Thread.currentThread().interrupt();
+		} finally {
+			process.destroy();
+		}
+	}
+	
+	/**
+	 * Execute the command by using the Runtime.getRuntime().exec()
+	 */
+	public static int exec(List<String> commandLine) throws IOException {
+		return exec(commandLine, null, null, -1);
 	}
 
 	/**
-	 * Execute the command by using the process builder
+	 * Execute the command by using the Runtime.getRuntime().exec()
 	 */
 	public static int exec(final List<String> commandLine, String[] env, File dir, int timeout) throws IOException {
 		int exit = 0;
@@ -120,41 +153,6 @@ public class Exec {
 		}
 
 		return exit;
-	}
-
-	static class StreamEater implements Runnable {
-
-		private InputStream stream;
-
-		private String prefix;
-
-		public StreamEater(String prefix, InputStream stream) {
-			super();
-			this.prefix = prefix;
-			this.stream = stream;
-		}
-
-		public void run() {
-
-			try {
-
-				InputStreamReader isr = new InputStreamReader(stream);
-
-				BufferedReader br = new BufferedReader(isr);
-
-				String line = br.readLine();
-
-				while (line != null) {
-					System.out.println(prefix + ":" + line);
-					line = br.readLine();
-				}
-
-				br.close();
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	static class CallableProcess implements Callable<Integer> {
