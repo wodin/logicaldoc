@@ -77,9 +77,9 @@ public class MostUsedTagsPortlet extends Portlet {
 		container.setWidth100();
 		container.setHeight100();
 		container.setAlign(Alignment.CENTER);
-		container.setMargin(25);
+		container.setMargin(10);
 
-		addChild(container);
+		addItem(container);
 
 		service.getTagCloud(Session.get().getSid(), new AsyncCallback<GUITag[]>() {
 			@Override

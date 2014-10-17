@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.frontend.client.dashboard;
 
-import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.dashboard.dashlet.TagCloudDashlet;
 import com.smartgwt.client.widgets.events.ResizedEvent;
 import com.smartgwt.client.widgets.events.ResizedHandler;
