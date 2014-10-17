@@ -62,7 +62,7 @@ public class TagCloud extends VLayout {
 		gdurelle.tagcloud.client.tags.TagCloud tagCloud = new gdurelle.tagcloud.client.tags.TagCloud();
 
 		for (GUITag tag : tags) {
-			WordTag word = new WordTag(tag.getTag(), "javascript:searchTag('" + tag.getTag() + "');");
+			WordTag word = new WordTag(tag.getTag(), "javascript:searchTag(\"" + tag.getTag() + "\");");
 			word.setNumberOfOccurences(tag.getCount());
 			tagCloud.addWord(word);
 		}
