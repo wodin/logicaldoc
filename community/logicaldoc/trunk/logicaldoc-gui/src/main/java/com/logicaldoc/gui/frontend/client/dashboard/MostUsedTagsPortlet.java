@@ -60,7 +60,7 @@ public class MostUsedTagsPortlet extends Portlet {
 		});
 
 		if (container != null)
-			removeChild(container);
+			removeItem(container);
 
 		HeaderIcon portletIcon = ItemFactory.newHeaderIcon("tag_blue.png");
 		HeaderControl hcicon = new HeaderControl(portletIcon);
