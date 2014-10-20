@@ -29,7 +29,7 @@ public class Util {
 	public static String[] VIDEO_EXTS = new String[] { ".mp4", ".avi", ".mpg", ".wmv", ".wma", ".asf", ".mov", ".rm",
 			".flv", ".aac", ".vlc", ".ogg", ".webm", ".swf", ".mpeg", ".swf" };
 
-	public static String[] AUDIO_EXTS = new String[] { ".mp3", ".m4p", ".wav" };
+	public static String[] AUDIO_EXTS = new String[] { ".mp3", ".m4p", ".m4a", ".wav" };
 
 	public static String[] WEBCONTENT_EXTS = new String[] { ".html", ".htm", ".xhtml" };
 
