@@ -615,7 +615,13 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 				// Generate an initial password
 				ContextProperties pbean = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-				decodedPassword = new PasswordGenerator().generate(pbean.getInt("password.size"));
+				int minsize = 8;
+				try {
+					minsize = pbean.getInt(session.getTenantName() + ".password.size");
+				} catch (Throwable t) {
+
+				}
+				decodedPassword = new PasswordGenerator().generate(minsize);
 				usr.setDecodedPassword(decodedPassword);
 
 				if (user.isPasswordExpired()) {
