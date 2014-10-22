@@ -1,45 +1,147 @@
 package com.logicaldoc.util.crypt;
 
+import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.KeySpec;
 
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
+import javax.crypto.spec.DESedeKeySpec;
+
+import org.apache.commons.io.FileUtils;
 import org.bouncycastle.crypto.digests.MD4Digest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.logicaldoc.util.crypt.StringEncrypter.EncryptionException;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
+
+import com.logicaldoc.util.io.FileUtil;
 
 public class CryptUtil {
 	private static Logger log = LoggerFactory.getLogger(CryptUtil.class);
 
-	private String encryptionKey = "thekey";
+	public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
 
-	public CryptUtil(String encryptionKey) {
-		this.encryptionKey = encryptionKey;
+	public static final String DES_ENCRYPTION_SCHEME = "DES";
+
+	public static final String DEFAULT_ENCRYPTION_KEY = "This is a fairly long phrase used to encrypt";
+
+	private KeySpec keySpec;
+
+	private SecretKeyFactory keyFactory;
+
+	private Cipher cipher;
+
+	private static final String UNICODE_FORMAT = "UTF8";
+
+	public CryptUtil(String encryptionKey) throws EncryptionException {
+		this(DES_ENCRYPTION_SCHEME, encryptionKey);
 	}
 
-	public String encrypt(String str) {
-		String encryptionScheme = StringEncrypter.DESEDE_ENCRYPTION_SCHEME;
+	public CryptUtil(String encryptionScheme, String encryptionKey) throws EncryptionException {
+		if (encryptionKey == null)
+			throw new IllegalArgumentException("encryption key was null");
+		if (encryptionKey.trim().length() < 24)
+			throw new IllegalArgumentException("encryption key was less than 24 characters");
 		try {
-			StringEncrypter encrypter = new StringEncrypter(encryptionScheme, encryptionKey);
-			return encrypter.encrypt(str);
-		} catch (EncryptionException e) {
-			return null;
+			byte[] keyAsBytes = encryptionKey.getBytes(UNICODE_FORMAT);
+			if (encryptionScheme.equals(DESEDE_ENCRYPTION_SCHEME)) {
+				keySpec = new DESedeKeySpec(keyAsBytes);
+			} else if (encryptionScheme.equals(DES_ENCRYPTION_SCHEME)) {
+				keySpec = new DESKeySpec(keyAsBytes);
+			} else {
+				throw new IllegalArgumentException("Encryption scheme not supported: " + encryptionScheme);
+			}
+			keyFactory = SecretKeyFactory.getInstance(encryptionScheme);
+			cipher = Cipher.getInstance(encryptionScheme);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new EncryptionException(e);
 		}
 	}
 
-	public String decrypt(String str) {
-		String encryptionScheme = StringEncrypter.DESEDE_ENCRYPTION_SCHEME;
+	public void encrypt(File inputFile, File outputFile) throws EncryptionException {
+		if (inputFile == null || !inputFile.exists())
+			throw new IllegalArgumentException("Unencrypted file not found in " + inputFile.getPath());
 		try {
-			StringEncrypter encrypter = new StringEncrypter(encryptionScheme, encryptionKey);
-			return encrypter.decrypt(str);
-		} catch (EncryptionException e) {
-			return null;
+			SecretKey key = keyFactory.generateSecret(keySpec);
+			cipher.init(Cipher.ENCRYPT_MODE, key);
+			byte[] clearContent = FileUtils.readFileToByteArray(inputFile);
+			byte[] encryptedContent = cipher.doFinal(clearContent);
+			outputFile.mkdirs();
+			FileUtil.strongDelete(outputFile);
+			outputFile.createNewFile();
+			FileUtils.writeByteArrayToFile(outputFile, encryptedContent);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new EncryptionException(e);
 		}
+	}
+
+	public void decrypt(File inputFile, File outputFile) throws EncryptionException {
+		try {
+			if (inputFile == null || !inputFile.exists())
+				throw new IllegalArgumentException("Encrypted file not found in " + inputFile.getPath());
+			SecretKey key = keyFactory.generateSecret(keySpec);
+			cipher.init(Cipher.DECRYPT_MODE, key);
+			byte[] encryptedContent = FileUtils.readFileToByteArray(inputFile);
+			byte[] clearContent = cipher.doFinal(encryptedContent);
+			outputFile.mkdirs();
+			FileUtil.strongDelete(outputFile);
+			outputFile.createNewFile();
+			FileUtils.writeByteArrayToFile(outputFile, clearContent);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new EncryptionException(e);
+		}
+	}
+
+	public String encrypt(String unencryptedString) throws EncryptionException {
+		if (unencryptedString == null || unencryptedString.trim().length() == 0)
+			throw new IllegalArgumentException("unencrypted string was null or empty");
+		try {
+			SecretKey key = keyFactory.generateSecret(keySpec);
+			cipher.init(Cipher.ENCRYPT_MODE, key);
+			byte[] cleartext = unencryptedString.getBytes(UNICODE_FORMAT);
+			byte[] ciphertext = cipher.doFinal(cleartext);
+			BASE64Encoder base64encoder = new BASE64Encoder();
+			return base64encoder.encode(ciphertext);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new EncryptionException(e);
+		}
+	}
+
+	public String decrypt(String encryptedString) throws EncryptionException {
+		if (encryptedString == null || encryptedString.trim().length() <= 0)
+			throw new IllegalArgumentException("encrypted string was null or empty");
+		try {
+			SecretKey key = keyFactory.generateSecret(keySpec);
+			cipher.init(Cipher.DECRYPT_MODE, key);
+			BASE64Decoder base64decoder = new BASE64Decoder();
+			byte[] cleartext = base64decoder.decodeBuffer(encryptedString);
+			byte[] ciphertext = cipher.doFinal(cleartext);
+			return bytes2String(ciphertext);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new EncryptionException(e);
+		}
+	}
+
+	private static String bytes2String(byte[] bytes) {
+		StringBuffer stringBuffer = new StringBuffer();
+		for (int i = 0; i < bytes.length; i++) {
+			stringBuffer.append((char) bytes[i]);
+		}
+		return stringBuffer.toString();
 	}
 
 	/**
-	 * This method encodes a given string.
+	 * This method encodes a given string using the SHA algorythm
 	 * 
 	 * @param original String to encode.
 	 * @return Encoded string.
@@ -127,5 +229,13 @@ public class CryptUtil {
 			hex.append(HEXES.charAt((b & 0xF0) >> 4)).append(HEXES.charAt((b & 0x0F)));
 		}
 		return hex.toString();
+	}
+
+	public static class EncryptionException extends Exception {
+		private static final long serialVersionUID = 1L;
+
+		public EncryptionException(Throwable t) {
+			super(t);
+		}
 	}
 }
