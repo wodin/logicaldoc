@@ -13,15 +13,11 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
-import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
-import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.SubmitItem;
-import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
@@ -31,7 +27,6 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.3
  */
 public class WorkflowUploader extends Window {
-	private SubmitItem sendButton;
 
 	private MultiUploader uploader;
 
@@ -41,7 +36,7 @@ public class WorkflowUploader extends Window {
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	private DynamicForm form;
+	private IButton sendButton;
 
 	private VLayout layout = new VLayout();
 
@@ -51,58 +46,41 @@ public class WorkflowUploader extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		this.designer = designer;
 		setTitle(I18N.message("uploadworkflow"));
-		setWidth(380);
-		setHeight(120);
+		setWidth(420);
+		setHeight(140);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
 
-		reloadForm();
+		layout.setMembersMargin(2);
+		layout.setMargin(2);
 
 		// Create a new uploader panel and attach it to the window
 		uploader = new MultiUploader();
 		uploader.setMaximumFiles(1);
 		uploader.setStyleName("upload");
 		uploader.setFileInputPrefix("LDOC");
-		uploader.setHeight("40px");
+		uploader.setWidth("400px");
 		uploader.reset();
+		uploader.setHeight("40px");
 
 		// Add a finish handler which will load the image once the upload
 		// finishes
 		uploader.addOnFinishUploadHandler(onFinishUploaderHandler);
 
-		layout.addMember(uploader, 1);
-		layout.setMembersMargin(10);
-		layout.setMargin(20);
+		sendButton = new IButton(I18N.message("send"));
+		sendButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
-		addChild(layout);
-	}
-
-	private void reloadForm() {
-		if (form != null) {
-			layout.removeChild(form);
-		}
-
-		form = new DynamicForm();
-		vm = new ValuesManager();
-		form.setValuesManager(vm);
-		form.setHeight(90);
-
-		sendButton = new SubmitItem();
-		sendButton.setTitle(I18N.message("send"));
-		sendButton.setDisabled(true);
-		sendButton.setAlign(Alignment.RIGHT);
-		sendButton.addClickHandler(new ClickHandler() {
 			@Override
-			public void onClick(ClickEvent event) {
+			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
 				onSend();
 			}
 		});
 
-		form.setItems(sendButton);
-
-		layout.addMember(form, 1);
+		layout.addMember(uploader);
+		layout.addMember(sendButton);
+		addItem(layout);
 	}
 
 	// Load the image in the document and in the case of success attach it to
@@ -137,8 +115,8 @@ public class WorkflowUploader extends Window {
 					result.setName(designer.getWorkflow().getName());
 					designer.redraw(result);
 					designer.saveModel();
-					
-					//Cleanup the upload folder
+
+					// Cleanup the upload folder
 					documentService.cleanUploadedFileFolder(Session.get().getSid(), new AsyncCallback<Void>() {
 
 						@Override
