@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite
+        PUBLIC "-//tuckey.org//DTD UrlRewrite 3.0//EN"
+        "http://tuckey.org/res/dtds/urlrewrite3.0.dtd">
+
+<urlrewrite use-query-string="true">
+	<rule>
+		<from>/setup/$</from>
+		<to type="redirect">%{context-path}/setup.jsp</to>
+	</rule>
+	<rule>
+		<from>/license/$</from>
+		<to type="redirect">%{context-path}/license.jsp</to>
+	</rule>
+	<rule>
+		<from>/sessions/$</from>
+		<to type="redirect">%{context-path}/sessions.jsp</to>
+	</rule>
+	<rule>
+		<from>/basic/$</from>
+		<to type="redirect">%{context-path}/basic.jsp</to>
+	</rule>
+	<rule>
+		<from>/aos/$</from>
+		<to type="redirect">%{context-path}/aos.jsp</to>
+	</rule>
+</urlrewrite>
