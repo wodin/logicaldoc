@@ -1,0 +1,523 @@
+    __                _            __   ____  __      _           __
+   / /   ____  ____ _(_)________ _/ /  / __ \/ /_    (_)__  _____/ /______
+  / /   / __ \/ __ `/ / ___/ __ `/ /  / / / / __ \  / / _ \/ ___/ __/ ___/
+ / /___/ /_/ / /_/ / / /__/ /_/ / /  / /_/ / /_/ / / /  __/ /__/ /_(__  )
+/_____/\____/\__, /_/\___/\__,_/_/   \____/_.___/_/ /\___/\___/\__/____/
+            /____/                             /___/
+
+                    http://www.logicalobjects.com
+                      http://www.logicaldoc.com                    
+
+                     LogicalDOC Community Edition
+
+LogicalDOC 7.1.1 (2014-10-24; logicaldoc-7.1.1)
+==============================================================
+449 - Webservice method to create links between documents - New Feature - Core
+463 - Complete turkish localization - Improvement - User Interface
+464 - New preview tab in the document's detail panel - Improvement - User Interface
+466 - Show thumbnail in the properties tab - Improvement - User Interface
+457 - More file icons - Improvement - User Interface
+465 - Simpler TagCloud 2D - Improvement - User Interface
+
+LogicalDOC 7.1 (2014-09-01; logicaldoc-7.1)
+==============================================================  
+157 - Option to copy folders - Improvement - User Interface
+222 - Lookup table for extended attribute options - Improvement - Core
+286 - Notify users on adding note - Improvement - Core 	
+340 - Display the folder from which security policies are inherited - Improvement - User Interface
+364 - Adding more tags at once - Improvement - User Interface
+414 - Inherit Rights button to inherit rights from another folder - Improvement - User Interface
+441 - More details in the Notes dashlet - Improvement - User Interface
+450 - LibreOffice CMIS compliance - Improvement - CMIS
+438 - TagCloud computation - Bug - Core
+
+LogicalDOC 7.0.1 (2014-07-21; logicaldoc-7.0.1)
+==============================================================                
+392 - Import contacts from csv file - Improvement - Core
+434 - Thumbnail always generated at 150px - Bug - Core
+432 - Simplified look&feel - Improvement - Core
+433 - Erroneus stats calculation after database cleaning - Bug - Core   
+
+LogicalDOC 7.0 (2014-06-23; logicaldoc-7.0)
+==============================================================                
+428 - Documents gallery - New Feature - User Interface  
+429 - Dropbox integration - New Feature - Core 
+                     
+LogicalDOC 6.8.4 (2014-05-05; logicaldoc-6.8.4)
+==============================================================                
+416 - GUI localized in Vietnamese - Improvement - User Interface
+417 - The "zip export" event is recorded - New Feature - Core
+426 - Ticket Download, file names encoded IE 11 - Improvement - Core
+425 - FolderId Barcode Generator - New Feature - Core   
+                     
+LogicalDOC 6.8.3 (2014-03-03; logicaldoc-6.8.3)
+==============================================================
+407 - Ability to move documents into folders without write access - Bug - Core
+411 - Preview shows the first page only - Bug - User Interface
+413 - Folder Search should be case insentive - Improvement - User Interface
+
+LogicalDOC 6.8.2 (2014-01-27; logicaldoc-6.8.2)
+==============================================================                    
+382 - Register the preview visualization as an event in the history - Improvement - Core
+388 - Redesigned login page - Improvement - User Interface
+396 - Disallow the upload of specific file extensions - Improvement - User Interface
+398 - Handle template and extended attributes through CMIS interface - Bug - CMIS
+399 - HTML support for message templates - Improvement - Core
+345 - Reload Button on Documents Browsing Bar - Wish - User Interface
+401 - Implementation of CMIS method getObjectByPath - New Feature - CMIS
+
+LogicalDOC 6.8.1 (2013-12-02; logicaldoc-6.8.1)
+==============================================================                                                     
+371 - Tag flow widget to define document's tags - Improvement - User Interface
+373 - Tomcat Application fails to stop - Bug - Core
+
+LogicalDOC 6.8 (2013-11-01; logicaldoc-6.8)
+==============================================================
+319 - Email contacts address book - New Feature - Core
+318 - Restore of deleted folders - New Feature - Core
+327 - Folder specification not used when searching for aliases - Bug - Core
+334 - Error sending internal message - Bug - User Interface
+337 - Support DB instance definition at installation time when using SQL Server - Improvement - Setup
+341 -	Date formatting for English-UK and english-AU - Improvement - User Interface 
+342 - US date format support in date editing widget - Improvement - User Interface
+
+LogicalDOC 6.7.3 (2013-08-30; logicaldoc-6.7.3)
+==============================================================
+328 - Folder specification not used when searching for aliases - Bug - Core
+329 - Feedback for uploading files for LogicalDOC - Improvement - User Interface
+331 - Allow input of '-' char in tag widget - Bug - User Interfac
+
+LogicalDOC 6.7.2 (2013-07-19; logicaldoc-6.7.2)
+==============================================================
+313 - Blank metadata for aliases during search - Bug - Core
+312 - Error uploading multiple files 	car031 - Bug - Core
+315 - Anonymous login - New Feature - Core
+316 - Loss of typed characters during the insertion of tags - Bug - User Interface
+321 - Usable tag cloud on Chrome - Improvement - User Interface
+324 - WebService method getAliases - Improvement - Web Services
+314 - Log Download utility - New Feature - Core 
+
+LogicalDOC 6.7.1 (2013-06-10; logicaldoc-6.7.1)
+===============================================
+306 - Metadata editing at checkin time - Improvement - Core
+303 - Croatian language localization - New Feature - Core
+307 - Ability to delete specific versions - New Feature - Core
+308 - Option to inherit security policies from parent when creating a new folder - New Feature - Core
+311 - MySQL 5.6 compliance - Bug - Core 
+
+LogicalDOC 6.7 (2013-04-10; logicaldoc-6.7)
+===============================================
+271 -	Decouple core API from WebServices API - Task -	Core
+268 -	Decouple WebServices from the Core API - Task -	Web Services
+294 -	Search in folder broken for admin account - Bug - Core
+
+LogicalDOC 6.6.2 (2013-02-15; logicaldoc-6.6.2)
+===============================================              
+269 -	Fulltext search broken in WebService -	Bug -	Web Services
+281 -	Avoid inconsistencies between day-of-week and day-of-month -	Improvement -	Core
+
+LogicalDOC 6.6.1 (2013-01-10; logicaldoc-6.6.1)
+===============================================                   
+270 -	Print a selection of documents into a single PDF - New Feature - Core
+267 -	Upgrade to the latest User Interface technologies -	Improvement - User Interface
+274 -	New extended attribute type: Boolean - Improvement - Core
+269 -	Fulltext search broken - Bug -	Web Services
+273 -	Statistical Graphs not coming due to error - Bug - User Interface
+275 -	[Bulk update] add tag is not working - Bug - User Interface
+278 -	Wrong pages order in preview - Bug -	Core
+
+
+LogicalDOC 6.6 (2012-11-15; logicaldoc-6.6)
+===============================================
+255 -	Customizable User Dashboard -	New Feature -	User Interface
+257 -	User data type for extended attribute -	Improvement -	Core
+229 -	Upgrade POI to the latest version -	Task -	Core
+231 -	Upgrade GTW-upload to latest 0.6.4 -	Task -	User Interface
+260 -	Improved performance of massive folders deletions -	Improvement -	Core
+253 -	Configurable timeout for webservice clients -	Improvement -	Web Services
+264 - Support for sweden language - Improvement - Core  
+
+
+LogicalDOC 6.5.2 (2012-10-15; logicaldoc-6.5.2)
+===============================================
+237 -	Implementation of the CMIS 1.0 AtomPub protocol - New Feature - CMIS
+250 - Export to zip issue - Bug - Import / Export
+262 - Non-admin users have problems accessing to webdav - Bug - Core
+247 - Options 'case sensitive' and 'search for aliases' in parametric search - Bug - Core
+248 - Wrong error message when changing password - Bug - User Interface
+251 - Error creating a document into a folder with Metadata - Bug - Web Services
+254 - Asynchronous folder's deletion - Improvement - Core
+
+
+LogicalDOC 6.5.1 (2012-08-31; logicaldoc-6.5.1)
+===============================================
+230 - Web setup broken at the final step - Bug - Setup
+233 - Barcode processor exits with errors - Bug - Barcode
+235 - Connection through WebDAV shows empty folder - Bug - WebDAV
+242 - HTTPS support in DropSpot and ScanApplet - Improvement - Core
+232 - IndexOptimixer generates exceptions on the log - Bug - Search Engine
+239 - Extended attributes in documents grid - Improvement - User Interface
+240 - Restore of documents drag&drop - Improvement - User Interface
+
+
+LogicalDOC 6.5.0 (2012-08-01; logicaldoc-6.5)
+===============================================
+75  - Extended properties to display in search result - Improvement - User Interface
+224 - Subscriptions and Notifications support - New Feature - Android App
+188 - Black/White lists of IPs - New Feature - Core 	
+197 - Search suggestions - Improvement - Search Engine
+206 - Find a folder by path via WebServices - Improvement - Web Services
+209 - Webservices maximum hits limited to 1000 - Bug - Web Services
+211 - Templates for email messages - New Feature - Auditing
+212 - Upgrade CXF to the latest 2.5.x - Task - Web Services 	
+215 - replace commons logging with slf4j - Wish - Core
+227 - Upgrade MSSQL driver jTDS - Task - Core 	
+228 - Preview in Versions history - Improvement - User Interface
+
+
+LogicalDOC 6.4.2 (2012-06-25; logicaldoc-6.4.2)
+===============================================
+218 Configurable action on document's double click - Improvement - User Interface
+221 Option to select a folder with code completion - Improvement - User Interface
+220 Default document's detail tab - Improvement - User Interface
+
+
+LogicalDOC 6.4.1 (2012-05-11; logicaldoc-6.4.1)
+===============================================
+000 New GUI translations: Slovenian and Korean - Improvement -	User Interface 
+198 File Types in Version Pane - Improvement - User Interface
+205 Retrieve version file using webservices - Improvement - Web Services
+182 Change template's name - Improvement - User Interface
+202 Ability to add comment to document version via webservices - Improvement - Web Services
+207 Group policies not inherited - Bug - User Interface
+208 Quota computation is too slow - Bug - Core
+210 Print option available even if the user doesn't have download permission - Bug - User Interface
+
+
+LogicalDOC 6.4 (2012-03-26; logicaldoc-6.4)
+===============================================
+3	Ability to perform searches against folders - Improvement -	User Interface
+120	Configurable document preview (viewer size) - Improvement -	User Interface
+136	Sometimes the upload doesn't work (documents do not appear) - Bug -	User Interface
+141	Ability to specify base document template and metadata for each Folder - New Feature - Core
+144	Bookmarks on Folders - Improvement -	User Interface
+169	Permanent Download Link - New Feature -	Core
+189	HTML formatting when sending documents in emails - Improvement - Core
+194	Cannot set some folders in search - Bug - User Interface
+195	Configurable default page (per user) after login  - New Feature -	User Interface             
+145	Translation of the confirmation move messages - Wish -	User Interface
+Improved loading performance by 35% - Improvement -	Core
+All the translations of the GUI are enabled by default - Improvement -	User Interface
+Improved management of notes on documents - Improvement -	Core
+Download of document on Safari produces files with '%' character in place of space - Bug - User Interface  
+
+
+LogicalDOC 6.3.5 (2012-02-15; logicaldoc-6.3.5)
+===============================================   
+180 	Move folder name to beginning of tab/window title - Improvement - User Interface
+184 	Additional characters for usernames - Improvement - User Interface
+190 	Indicate effective search depth - Improvement - User Interface
+Fixed - Document upload folder not cleaned after checkin
+Fixed - Incorrect file Uploaded
+Fixed - Export to Zip does not generate a zip 
+
+
+LogicalDOC 6.3.4 (2012-01-27; logicaldoc-6.3.4)
+===============================================
+164 - Ability to download multiple files at once - Improvement - User Interface
+165 - Have tab/page title show folder selected - Improvement - User Interface
+168 - Tag entry issue - Bug - User Interface
+170 - Permanent Download Link - New Feature - Core
+174 - Unable to search for source type - Bug - Search
+166 - Settings changes should take immediate effect - Improvement - User Interface
+
+
+LogicalDOC 6.3.3 (2012-01-07; logicaldoc-6.3.3)
+===============================================
+138 - Tags are taken over too soon during type in - Bug - User Interface
+143 - Remember view in folder pane - Improvement - User Interface
+148 - Events timestamp not correctly shown in Last Changes - Bug - User Interface
+151 - Size of "Move" dialogue box - Improvement - User Interface
+153 - Exception when downloading an alias - Bug - Core
+161 -	Search in folder and sub-folders (more than one level) - Improvement - Search
+
+
+LogicalDOC 6.3.2 (2011-12-13; logicaldoc-6.3.2)
+===============
+123 -	Japanese support - Improvement - Core
+126 -	Unable to update user details - Bug - Core
+128 -	Optimized PDF conversion speed - Improvement - Generic
+129 -	Upgrade the component for the preview of documents - Task - User Interface
+131 -	Preview for TIFF and GIF images - Bug - Core
+132 -	Better thumbnail presentation - Improvement - User Interface
+133 - Improved preview for stored emails - Improvement - User Interface
+135 -	Confirmation prompt when moving items/folders -	Improvement -	User Interface
+
+
+LogicalDOC 6.3.1 (2011-11-23; logicaldoc-6.3.1)
+===============
+113 - Problem with permissions and alias properties invisible - Bug - Core
+114 - Sub-folder search difference between non-admin & admin account - Bug - Search
+119 - Preview not Working on Linux - Bug - Core
+116 - Automatic focus on New Folder dialog box - Improvement - User Interface
+124 - A user with only read privileges can delete tags on document - Bug - User Interface
+125 - Unable to build export archives - Bug - Import Export
+115 - Download item in versions context menu - Improvement - User Interface
+117 - Rename item in Document's context menu - Improvement - User Interface
+
+
+LogicalDOC 6.3 (2011-10-10; logicaldoc-6.3)
+===============
+87	- Recognize PDF vectorial barcodes - Improvement - Barcode
+102	- Export folder contents in .ZIP does not handle properly non latin chars	- Bug - Core
+82	- Professional OCR Engine	- Improvement - Core
+109	- Workflow status tracking	- Improvement - Core
+5	  - Searcheable version comment	- Improvement - Core
+90	- Parsing timeout - Improvement - Core
+71	- Folders tree template	- New Feature - Core
+99	- Direct link to folder and document - New Feature - Core
+103	- Compatibility with MS SQLServer	- Task - Core
+83	- Routing policy for e-mail content -	Improvement - Import/Export
+94	- Configurable import policy - Improvement - Import/Export
+4	  - Extending RSS Feed - Improvement - RSS
+88	- Visual workflow designer - Improvement - User Interface
+10	- Showing folder name in search results - Improvement - User Interface
+106	- Option to save credentials in browser	- Improvement - User Interface
+9	  - Printing search results	- Improvement - User Interface
+69	- Bulk Update	- New Feature - User Interface
+107	- CVS Export utility for documents lists -	New Feature - User Interface
+110 -	Edit metadata while adding new documents - Improvement - User Interface
+
+
+LogicalDOC 6.2.4 (2011-08-29; logicaldoc-6.2.4)
+===============
+- Fixed Internet Explorer 8 issues with applets
+- Optimized multiple selection of elements in document list
+- Fixed calculation of document size after checkin
+- Optimized display of document extended properties
+- Fixed GUI bug in document preview using Internet Explorer 8
+- Fixed sender field when sending e-mails
+- Improved OCR on PDF documents
+- Added Thumbnail tab in document details panel for FAST preview
+- Fixed GUI bug in the extended properties editor
+- Complete localization of labels in Chinese and Russian
+
+LogicalDOC CE 6.2 (2011-06-20; logicaldoc-6.2)
+===============
+55 - Notes on documents - New Feature - Core
+65 - Custom attributes presets - Improvement - Core
+1  - Dynamic configuration of extension - parser binding - Improvement - Core
+47 - Plugins control panel - Improvement - Core
+66 - Tags presets - Improvement - Core
+70 - Progressive Search - Improvement - Core
+40 - Configurable default  number of displayed hits - Improvement - Search
+49 - Improved the Tag input - Improvement - User Interface
+29 - Improved preview of multimedia files - Improvement - User Interface
+30 - Improved preview of pdf files - Improvement - User Interface
+44 - TagCloud 3D for arabic words - Improvement - User Interface
+67 - Unable to save exclusion rule on indexing preference - Bug - Core
+31 - Preview of large image documents difficult on IE 8.0 - Bug - User Interface
+
+
+LogicalDOC CE 6.1 (2011-04-06; logicaldoc-6.1)
+===============
+#12 	System and User quota
+#14 	Document rating
+#19 	Multiple documents sent by email
+#22 	PDF Parser don't extract the text in forms
+#24 	Metadata extraction from image files
+#35 	symbolic links
+#15 	Visible columnes should be saved
+#16 	Product News
+#18 	Ability to Move documents with Drag'n'Drop
+#25 	Unable to save when adding multiple tags
+#33 	RTL support
+
+
+LogicalDOC CE 6.0.2 (2011-03-04; logicaldoc-6.0.2)
+===============
+- 0000349: [User Interface] Searching problems on Author and CustomID fields
+- 0000348: [Web Services] Document listing order  
+- 0000326: [User Interface] Unable to delete an attribute from a Document Template
+- 0000343: [User Interface] Unable to perform checkin with different file-name
+- 0000339: [Web Services] Add isWriteable method in Folder WebService
+- 0000337: [User Interface] Exception accessing a document with pending template
+- 0000329: [User Interface] Empty folder when sourceAuthor contains the & character
+- 0000328: [Web Services] Add listChildren and getRootFolder methods
+
+
+LogicalDOC CE 6.0.1 (2011-01-28; logicaldoc-6.0.1)
+===============
+- 0000319: [User Interface] Show folder's elements number  
+- 0000313: [User Interface] Unable to show the context menu in folder if the folder name contains '/'   
+- 0000310: [Core] Unable to delete document links  
+- 0000309: [Core] High memory usage during PDF parsing  
+- 0000308: [User Interface] The download option on the document links panel is incorrect   
+- 0000307: [Core] Exception on server when forcing task stop 
+- 0000306: [User Interface] Use authentication flag not saved 
+- 0000315: [Web Services] Send as email from WebService   
+- 0000312: [User Interface] Statistics computation task never ends   
+- 0000318: [Core] Empty search when searching in sub-folders  
+- 0000311: [Setup] Script files without contents
+- 0000314: [Core] Database cleanup fails when there are documents with custom attributes
+
+
+LogicalDOC CE 6.0 (2011-01-12; logicaldoc-6.0)
+===============
+- New GUI redesign
+- Tags management
+- Improved utility scripts (build.xml)
+- Multiple documents uploading
+- Download security option
+- Statistics regarding Hard Disk usage, documents and folders
+- Security management over application menues
+- Renaming tags
+- Proxy configuration page
+- Session Heartbeat parameter
+- Tags (vocabulary) configuration
+- Using WebDAV cache configuration
+
+LogicalDOC CE 5.2.1 (2010-08-23; logicaldoc-5.2.1)
+===============
+0000189: [Core] Exception while reading from messages table while using oracle database
+Creation of documents in languages not covered by lucene snowball
+Localization of the program using variations of language such as Brazilian Portuguese
+BIG enhancements to the DAO (Data Access Object) Layer
+Performance improvements on the menu creation (during login)
+Fully tested with Oracle 10g
+
+
+LogicalDOC CE 5.2 (2010-07-20; logicaldoc-5.2)
+===============
+0000190: [Core]  error uploading the second file   - closed.
+0000182: [User Interface] click a date from pop windows of get below error - closed.
+0000186: [WebDAV] Webdav Issue - closed.
+0000179: [Generic] 5.2  - closed.
+0000172: [Workflow] Workflow missing something  - closed.
+
+- Workflow history
+- Updated POI to release 3.6
+- Bookmarks
+- Trash
+- Changed immutability policies
+- Allow alteration of indexing status
+- Refactored Document API
+- Refactored Store API
+- Includes and Excludes types on index
+- Improved history informations
+- Auth Web Service
+- Document Web Service
+- Fixed bug on GuiBean
+- Updated the checkin operation (boolean release: if true, the document version
+  is a new release; if false, the document version is a subversion)
+
+
+LogicalDOC CE 5.1.2 (2010-06-16; logicaldoc-5.1.2)
+===============
+0000188: Danish localization plugin 
+removed contextual menu on folders (on medium repositories can slow down significantly the system)
+removed move folder feature (on large repositories can lead to errors)
+
+
+LogicalDOC CE 5.1.1 (2010-04-28; logicaldoc-5.1.1)
+===============
+0000173: can no initializing spring root WebApplicationContext (Thanks to Napoleao for reporting)
+
+
+LogicalDOC CE 5.1 (2010-04-12; logicaldoc-5.1)
+===============
+Introduced the concept of 'document shortcut'
+Contextual menu on folders
+Added security connection management for SMTP
+Upgrade to Lucene 2.9.2
+Improved MAC OS X support
+Improved the import from ZIP for MAC OS X (system folder exclusion)
+Added version column in detailed view
+Added a config parameter to setup the maximum number of retained versions
+Ability to move folders
+Preview of TIFF documents (images)
+Improved the preview of PDF documents
+Updated translations for the basic languages (Thanks to the Translators on Launchpad)
+Solved some bugs on WebDAV (reading permission on folders)
+Ability to move folder via WebDAV
+
+
+LogicalDOC CE 5.0.1 (2010-01-17; logicaldoc-5.0.1)
+===============
+0000137: Could not resolve placeholder 'ldap.base' (Thanks to Sven Rajala for reporting)
+0000144: LDAP.Base placeholder issue (Thanks to Sven Rajala for the solution)
+
+
+LogicalDOC CE 5.0 (2009-12-19; logicaldoc-5.0)
+===============
+Upgrade to the latest ICEfaces version (JSF-Ajax)
+Workflow: Visual Business Process editor directly available from the web
+Workflow: Multiple task assignments
+Workflow: Support for activities start and stop
+New graphical layout more lighter and sleek
+Improvements in the ergonomics of the GUI
+History on document folders
+Document navigation through a folders tree
+Configurable first version number
+3D (Cumulus) Tag Cloud
+Fully tested with MySQL 5.1
+
+
+LogicalDOC CE 4.6 (2009-10-10; logicaldoc-4.6)
+===============
+Active Directory full compliance and easy configuration (Enterprise edition)
+New Datailed view of the search results (Enterprise edition)
+Improved parametric search (Enterprise edition)
+DATABASE CHANGES: This release is not compatible with the database of LogicalDOC 4.5!
+Improved French Localization (Thanks to Manuel Le Boette, Maxime Leboeuf and François Blondel)
+Support for CCs in email sending
+Extended attributes are now typed(Double, Integer, String, Date)
+Automatic notification when the zip import is completed
+Improvement in webservice methods
+Fixed stop-words reading problem with native characters
+WebDAV: creation of a new version when document update (Works on WebDrive)
+New configuration mode for scheduled Tasks
+Solved the problem of excessive memory allocation when Tasks too close
+Changes to web-service with new methods
+New Option in the GUI to disable the access via WebDAV or Web Services
+
+
+LogicalDOC CE 4.5 (2009-06-10; logicaldoc-4.5)
+===============
+Added LDAP integration
+User: added enabled property
+User: password expiration
+Document: Improved metadata informationj
+Document: Full versioning and diff system
+Document: Document first page preview
+Collaboration: Implemented duiscussion forum on document
+Browsing: Different view modes in browsing and search pages
+Added support for language variants
+Configurable entry page
+Multiple recipients for download tickets
+Fixed group deletion
+Fixed documents per page setting
+
+
+LogicalDOC CE 4.0 (2009-01-30; logicaldoc-4.0)
+===============
+WebDAV: full implementation
+File names: Handle all asian and arabic charsets
+Seup procecude: Fixed schema creation on external db
+Interface fixes
+Ability to define fields viewable and editable by group of users
+WebDAV: implemented rename on the Document's filename
+New WebDAV accessible interface (Thanks to Sebastian Wenzky)
+Heavily Refactored DB-schema
+New Templates on document with custom attributes
+Tested with 1M (1.000.000) loaded documents
+New Indexing deferred scheduled tasks
+New Tag-cloud generation deferred scheduled tasks
+Improved the versioning system (checkin page)
+New User editing interface
+New Group editing interface
+New Permission assigment on folder (previously we had permission by file)
+Improved Tag browsing
+New Permission management on menus
+New Support for eastern Europe charsets
+New Possibility to mark a document as immutable
