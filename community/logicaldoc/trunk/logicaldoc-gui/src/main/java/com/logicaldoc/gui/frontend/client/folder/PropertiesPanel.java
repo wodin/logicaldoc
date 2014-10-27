@@ -33,11 +33,14 @@ public class PropertiesPanel extends FolderDetailTab {
 
 	private ValuesManager vm = new ValuesManager();
 
+	private boolean update = false;
+	
 	public PropertiesPanel(GUIFolder folder, ChangedHandler changedHandler) {
 		super(folder, changedHandler);
 		setWidth100();
 		setHeight100();
 		setMembersMargin(20);
+		update = folder.hasPermission(Constants.PERMISSION_RENAME);
 		refresh();
 	}
 
@@ -97,6 +100,9 @@ public class PropertiesPanel extends FolderDetailTab {
 		StaticTextItem subfolders = ItemFactory
 				.newStaticTextItem("folders", "folders", "" + folder.getSubfolderCount());
 
+		name.setDisabled(!update);
+		description.setDisabled(!update);
+		
 		if (folder.isDefaultWorkspace()) {
 			if (Feature.enabled(Feature.BARCODES))
 				form.setItems(idItem, pathItem, creation, documents, subfolders, barcode);
