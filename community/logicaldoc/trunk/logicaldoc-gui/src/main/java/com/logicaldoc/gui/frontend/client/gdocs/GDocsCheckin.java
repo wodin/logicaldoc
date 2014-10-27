@@ -39,8 +39,8 @@ public class GDocsCheckin extends Window {
 	public GDocsCheckin(final GUIDocument document, final GDocsEditor parentDialog, final DocumentsGrid grid) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("checkin"));
-		setWidth(350);
-		setHeight(120);
+		setWidth(370);
+		setHeight(130);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);

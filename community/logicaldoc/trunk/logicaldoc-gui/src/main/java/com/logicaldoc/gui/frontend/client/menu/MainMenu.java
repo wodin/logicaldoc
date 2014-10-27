@@ -492,7 +492,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				DocumentsGrid grid = DocumentsPanel.get().getDocumentsGrid();
-				long[] ids = grid.getSelectedIds();
+				final long[] ids = grid.getSelectedIds();
 
 				ContactingServer.get().show();
 				gdocsService.exportDocuments(Session.get().getSid(), ids, new AsyncCallback<String[]>() {
@@ -505,6 +505,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 					@Override
 					public void onSuccess(String[] settings) {
 						ContactingServer.get().hide();
+						Log.info(I18N.message("gddocsexportok"), null);
 					}
 				});
 			}

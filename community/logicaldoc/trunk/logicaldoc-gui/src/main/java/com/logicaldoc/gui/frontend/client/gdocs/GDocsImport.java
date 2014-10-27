@@ -57,14 +57,12 @@ public class GDocsImport extends Window {
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
-		setMargin(2);
 		setWidth(600);
 		setHeight(350);
 		centerInPage();
 
-		layout = new VLayout(5);
-		layout.setTop(20);
-		layout.setMargin(5);
+		layout = new VLayout();
+		layout.setMargin(2);
 		layout.setWidth100();
 		layout.setHeight100();
 
@@ -198,6 +196,6 @@ public class GDocsImport extends Window {
 		toolStrip.addFill();
 
 		layout.setMembers(toolStrip, grid);
-		addChild(layout);
+		addItem(layout);
 	}
 }

@@ -42,7 +42,7 @@ public class GDocsCreate extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("createdoc"));
 		setWidth(300);
-		setHeight(100);
+		setHeight(120);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
