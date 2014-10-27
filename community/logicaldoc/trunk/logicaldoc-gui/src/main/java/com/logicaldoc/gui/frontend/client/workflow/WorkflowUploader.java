@@ -98,8 +98,6 @@ public class WorkflowUploader extends Window {
 			SC.warn(I18N.message("filerequired"));
 			return;
 		}
-		if (!vm.validate())
-			return;
 
 		workflowService.importSchema(Session.get().getSid(), new AsyncCallback<GUIWorkflow>() {
 
