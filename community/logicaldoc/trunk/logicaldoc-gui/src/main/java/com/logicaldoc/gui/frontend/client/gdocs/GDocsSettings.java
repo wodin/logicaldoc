@@ -36,7 +36,7 @@ public class GDocsSettings extends Window {
 	public GDocsSettings(String[] settings) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("googledocs"));
-		setWidth(320);
+		setWidth(340);
 		setHeight(120);
 		setCanDragResize(true);
 		setIsModal(true);
