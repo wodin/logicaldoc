@@ -109,7 +109,7 @@
 
 
   <query>
-    <maxBooleanClauses>1024</maxBooleanClauses>
+    <maxBooleanClauses>2048</maxBooleanClauses>
 
 
     <!-- Solr Internal Query Caches
@@ -357,6 +357,7 @@
 
   <requestHandler name="search" class="solr.SearchHandler" default="true">
      <lst name="defaults">
+        <str name="df">content</str>
         <str name="spellcheck.dictionary">default</str>
         <str name="spellcheck.onlyMorePopular">false</str>
         <str name="spellcheck.extendedResults">false</str>
