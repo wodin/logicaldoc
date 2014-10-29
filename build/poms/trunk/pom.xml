@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>71</version>
+  <version>72</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -629,19 +629,14 @@
             <version>3.4.4.Final</version>
           </dependency>
           <dependency>
-            <groupId>bouncycastle</groupId>
-            <artifactId>bcmail-jdk16</artifactId>
-            <version>146</version>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcmail-jdk15on</artifactId>
+            <version>1.51</version>
           </dependency>
           <dependency>
-            <groupId>bouncycastle</groupId>
-            <artifactId>bcprov-jdk16</artifactId>
-            <version>146</version>
-          </dependency>
-          <dependency>
-            <groupId>bouncycastle</groupId>
-            <artifactId>bctsp-jdk16</artifactId>
-            <version>146</version>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.51</version>
           </dependency>
         </dependencies>
       </dependencyManagement>
@@ -694,11 +689,6 @@
         <repository>
           <id>gwtchismes</id>
           <url>http://gwtchismes.googlecode.com/svn/mavenrepo/</url>
-        </repository>
-        <repository>
-          <id>bramosystems-releases</id>
-          <name>Bramosystems Release Repository</name>
-          <url>http://downloads.bramosystems.com/maven2/releases</url>
         </repository>
         <repository>
           <id>gwt-image-loader-repo</id>
