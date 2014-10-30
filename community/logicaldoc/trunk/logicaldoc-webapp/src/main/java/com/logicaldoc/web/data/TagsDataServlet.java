@@ -20,6 +20,7 @@ import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.web.util.ServiceUtil;
 
 /**
@@ -49,12 +50,14 @@ public class TagsDataServlet extends HttpServlet {
 			response.setHeader("Expires", "0");
 
 			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			String mode = config.getProperty(session.getTenantName() + ".tag.mode");
 
 			String firstLetter = request.getParameter("firstLetter");
 
 			HashMap<String, Integer> tgs = new HashMap<String, Integer>();
 
-			if ("preset".equals(firstLetter)) {
+			if ("preset".equals(mode)) {
 				// We have to return the preset only
 				GenericDAO gDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
 				List<Generic> buf = gDao.findByTypeAndSubtype("tag", null, null, session.getTenantId());
