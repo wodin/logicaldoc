@@ -206,9 +206,9 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 	public void testKill() {
 		SessionManager sm = SessionManager.getInstance();
 		sm.clear();
-		String session1 = sm.newSession("admin", null);
+		String session1 = sm.newSession("admin", null, null);
 		Assert.assertNotNull(session1);
-		String session2 = sm.newSession("admin", null);
+		String session2 = sm.newSession("admin", null, null);
 		Assert.assertNotNull(session2);
 		Assert.assertFalse(session1.equals(session2));
 		Assert.assertEquals(2, sm.getSessions().size());

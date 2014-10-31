@@ -95,9 +95,13 @@ public class FileUtil {
 		}
 	}
 
-	public static String readFile(String filePath) throws IOException {
-		FileInputStream fisTargetFile = new FileInputStream(new File(filePath));
+	public static String readFile(File file) throws IOException {
+		FileInputStream fisTargetFile = new FileInputStream(file);
 		return IOUtils.toString(fisTargetFile, "UTF-8");
+	}
+
+	public static String readFile(String filePath) throws IOException {
+		return readFile(new File(filePath));
 	}
 
 	public static void appendFile(String text, String filepath) {
@@ -181,6 +185,23 @@ public class FileUtil {
 			is = new BufferedInputStream(new FileInputStream(file), BUFF_SIZE);
 			return computeDigest(is);
 		} catch (FileNotFoundException e) {
+			log.error(e.getMessage());
+		}
+		return null;
+	}
+
+	/**
+	 * This method calculates the digest of a string using the algorithm SHA-1.
+	 * 
+	 * @param src The string for which will be computed the digest
+	 * @return digest
+	 */
+	public static String computeDigest(String src) {
+		InputStream is;
+		try {
+			is = IOUtils.toInputStream(src, "UTF-8");
+			return computeDigest(is);
+		} catch (IOException e) {
 			log.error(e.getMessage());
 		}
 		return null;
@@ -451,7 +472,7 @@ public class FileUtil {
 			}
 		}
 	}
-	
+
 	/**
 	 * Copy the given byte range of the given input to the given output.
 	 * 
@@ -486,7 +507,7 @@ public class FileUtil {
 			}
 		}
 	}
-	
+
 	public static void replaceInFile(String sourcePath, String token, String newValue) throws Exception {
 		boolean windows = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
 
@@ -540,7 +561,7 @@ public class FileUtil {
 	}
 
 	public static void strongDelete(File file) {
-		if (file == null)
+		if (file == null || !file.exists())
 			return;
 
 		// Make sure the temp file is deleted

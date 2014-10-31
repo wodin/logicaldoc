@@ -63,6 +63,7 @@ public class Registration extends Window {
 		regOrganization.setValue(reg[2]);
 
 		TextItem regWebsite = ItemFactory.newTextItem("reg_website", "website", null);
+		regWebsite.setWidth(180);
 		regWebsite.setWrapTitle(false);
 		regWebsite.setValue(reg[3]);
 

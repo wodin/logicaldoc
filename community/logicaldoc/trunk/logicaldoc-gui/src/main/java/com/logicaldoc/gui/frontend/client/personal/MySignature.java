@@ -13,6 +13,7 @@ import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.services.SignService;
 import com.logicaldoc.gui.frontend.client.services.SignServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
@@ -29,7 +30,7 @@ import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
- * This is the form used to load the user signature.
+ * This is the form used to load the user's certificate.
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 6.1
@@ -58,22 +59,20 @@ public class MySignature extends Window {
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("mysignature"));
-		setWidth(400);
-		setHeight(230);
+		setWidth(450);
+		setHeight(administration ? 100 : 240);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
 
-		DynamicForm signatureForm = new DynamicForm();
-		signatureForm.setValuesManager(vm);
+		DynamicForm form = new DynamicForm();
+		form.setValuesManager(vm);
 		certificates = ItemFactory.newSelectItem("certificates", I18N.message("signature"));
-		certificates.setWidth(150);
+		certificates.setWidth(180);
 		certificates.setRequired(true);
-		signatureForm.setItems(certificates);
+		form.setItems(certificates);
 
-		DynamicForm saveForm = new DynamicForm();
-		saveForm.setValuesManager(vm);
 		save = new ButtonItem();
 		save.setTitle(I18N.message("save"));
 		save.setAutoFit(true);
@@ -83,28 +82,28 @@ public class MySignature extends Window {
 				onSave();
 			}
 		});
-		save.setVisible(administration);
-		saveForm.setItems(save);
 
-		DynamicForm resetForm = new DynamicForm();
-		resetForm.setValuesManager(vm);
 		reset = new ButtonItem();
 		reset.setTitle(I18N.message("reset"));
 		reset.setAutoFit(true);
-		reset.setDisabled(true);
 		reset.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				onReset();
 			}
 		});
 		reset.setVisible(administration);
-		resetForm.setItems(reset);
+		reset.setDisabled(!administration);
 
-		HLayout signatureLayout = new HLayout(20);
-		signatureLayout.setMembers(signatureForm, saveForm, resetForm);
+		if (administration)
+			form.setItems(certificates, reset);
+		else
+			form.setItems(certificates, save, reset);
 
 		hint = new HTMLFlow(I18N.message("mysignaturehint"));
 		hint.setWidth100();
+
+		HLayout spacer = new HLayout();
+		spacer.setHeight(15);
 
 		// Create a new uploader panel and attach it to the window
 		uploader = new MultiUploader();
@@ -121,19 +120,17 @@ public class MySignature extends Window {
 		uploader.addOnCancelUploadHandler(onCancelUploaderHandler);
 
 		// Set initial signature value
-		String signatureId = user.getSignatureId();
-		String signatureInfo = user.getSignatureInfo();
-		if ((signatureId != null && !signatureId.trim().isEmpty())
-				&& (signatureInfo != null && !signatureInfo.trim().isEmpty())) {
+		String cert = user.getCertSubject();
+		if ((cert != null && !cert.trim().isEmpty()) && (cert != null && !cert.trim().isEmpty())) {
 			LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-			map.put(signatureInfo, signatureInfo);
+			map.put(cert, cert);
 			certificates.setValueMap(map);
-			certificates.setValue(signatureInfo);
+			certificates.setValue(cert);
 			hint.setVisible(false);
 			uploader.setVisible(false);
-			reset.setDisabled(false);
+			reset.setVisible(false);
+			save.setVisible(false);
 			if (!administration) {
-				setWidth(250);
 				setHeight(130);
 			}
 		} else {
@@ -142,9 +139,15 @@ public class MySignature extends Window {
 
 		VLayout layout = new VLayout();
 		layout.setMargin(2);
-		layout.addMember(signatureLayout);
-		layout.addMember(hint);
-		layout.addMember(uploader);
+		layout.addMember(form);
+
+		if (!administration) {
+			layout.addMember(spacer);
+			layout.addMember(hint);
+			layout.addMember(uploader);
+		}else{
+			reset.setVisible(true);
+		}
 
 		addItem(layout);
 	}
@@ -155,31 +158,30 @@ public class MySignature extends Window {
 		public void onFinish(IUploader uploader) {
 			if (uploader.getStatus() == Status.SUCCESS) {
 
-				signService.extractSubjectSignatures(Session.get().getSid(), currentUser.getId(), null, null,
-						new AsyncCallback<String[]>() {
+				signService.extractSubjectSignatures(Session.get().getSid(), null, null, new AsyncCallback<String[]>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-								destroy();
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(String[] result) {
-								if (result != null && result.length > 0) {
-									save.setDisabled(false);
-									certificates.clearValue();
-									LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-									for (String cert : result) {
-										map.put(cert, cert);
-									}
-									certificates.setValueMap(map);
-								} else {
-									SC.warn(I18N.message("mysignatureerrorcertificates"));
-									cancel();
-								}
+					@Override
+					public void onSuccess(String[] result) {
+						if (result != null && result.length > 0) {
+							save.setDisabled(false);
+							reset.setVisible(false);
+							certificates.clearValue();
+							LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+							for (String cert : result) {
+								map.put(cert, cert);
 							}
-						});
+							certificates.setValueMap(map);
+						} else {
+							SC.warn(I18N.message("mysignatureerrorcertificates"));
+							cancelUpload();
+						}
+					}
+				});
 			}
 		}
 	};
@@ -187,7 +189,7 @@ public class MySignature extends Window {
 	private IUploader.OnCancelUploaderHandler onCancelUploaderHandler = new IUploader.OnCancelUploaderHandler() {
 		@Override
 		public void onCancel(IUploader uploader) {
-			cancel();
+			cancelUpload();
 		}
 	};
 
@@ -199,18 +201,25 @@ public class MySignature extends Window {
 		if (!vm.validate())
 			return;
 
-		signService.storeSignature(Session.get().getSid(), currentUser.getId(), vm.getValueAsString("certificates"),
+		save.setDisabled(true);
+		ContactingServer.get().show();
+		signService.storeSignature(Session.get().getSid(), vm.getValueAsString("certificates"),
 				new AsyncCallback<String>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
+						save.setDisabled(false);
+						ContactingServer.get().hide();
 						Log.serverError(caught);
 						destroy();
 					}
 
 					@Override
 					public void onSuccess(String result) {
+						save.setDisabled(false);
+						ContactingServer.get().hide();
 						if (result == "ok") {
+							Session.get().getUser().setCertSubject(vm.getValueAsString("certificates"));
 							destroy();
 							Log.info(I18N.message("signaturesaved"), null);
 						} else {
@@ -235,7 +244,9 @@ public class MySignature extends Window {
 				LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 				map.put("", "");
 				certificates.setValueMap(map);
+				Session.get().getUser().setCertSubject(null);
 				reset.setDisabled(true);
+				reset.setVisible(false);
 				save.setDisabled(true);
 				hint.setVisible(true);
 				uploader.setVisible(true);
@@ -243,16 +254,15 @@ public class MySignature extends Window {
 		});
 	}
 
-	private void cancel() {
+	private void cancelUpload() {
 		save.setDisabled(true);
 		certificates.clearValue();
-		String signatureId = currentUser.getSignatureId();
-		String signatureInfo = currentUser.getSignatureInfo();
-		if (!signatureId.trim().isEmpty() && !signatureInfo.trim().isEmpty()) {
+		String cert = currentUser.getCertSubject();
+		if (!cert.trim().isEmpty() && !cert.trim().isEmpty()) {
 			LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-			map.put(signatureInfo, signatureInfo);
+			map.put(cert, cert);
 			certificates.setValueMap(map);
-			certificates.setValue(signatureInfo);
+			certificates.setValue(cert);
 		} else {
 			LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 			map.put("", "");

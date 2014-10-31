@@ -54,7 +54,7 @@ public class AuthenticationChain implements AuthenticationProvider {
 
 		if (loggedIn) {
 			// Create a new session and store if into the current thread
-			String session = SessionManager.getInstance().newSession(username, userObject);
+			String session = SessionManager.getInstance().newSession(username, password, userObject);
 			AuthenticationChain.sessionId.set(session);
 		}
 

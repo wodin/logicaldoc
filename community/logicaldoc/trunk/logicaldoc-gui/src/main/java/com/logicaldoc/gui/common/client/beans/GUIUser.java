@@ -91,10 +91,6 @@ public class GUIUser implements Serializable {
 
 	private long quotaCount = 0;
 
-	private String signatureId = "";
-
-	private String signatureInfo = "";
-
 	private Integer welcomeScreen = 1500;
 
 	private Set<UserObserver> observers = new HashSet<UserObserver>();
@@ -102,6 +98,10 @@ public class GUIUser implements Serializable {
 	private String ipWhitelist;
 
 	private String ipBlacklist;
+
+	private String certSubject;
+
+	private String keyDigest;
 
 	private GUIDashlet[] dashlets = new GUIDashlet[0];
 
@@ -410,22 +410,6 @@ public class GUIUser implements Serializable {
 		this.quotaCount = quotaCount;
 	}
 
-	public String getSignatureId() {
-		return signatureId;
-	}
-
-	public void setSignatureId(String signatureId) {
-		this.signatureId = signatureId;
-	}
-
-	public String getSignatureInfo() {
-		return signatureInfo;
-	}
-
-	public void setSignatureInfo(String signatureInfo) {
-		this.signatureInfo = signatureInfo;
-	}
-
 	public Integer getWelcomeScreen() {
 		return welcomeScreen;
 	}
@@ -496,5 +480,21 @@ public class GUIUser implements Serializable {
 
 	public void setTenantId(long tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	public String getCertSubject() {
+		return certSubject;
+	}
+
+	public void setCertSubject(String certSubject) {
+		this.certSubject = certSubject;
+	}
+
+	public String getKeyDigest() {
+		return keyDigest;
+	}
+
+	public void setKeyDigest(String keyDigest) {
+		this.keyDigest = keyDigest;
 	}
 }

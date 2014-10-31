@@ -45,8 +45,6 @@ public class CryptUtil {
 	public CryptUtil(String encryptionScheme, String encryptionKey) throws EncryptionException {
 		if (encryptionKey == null)
 			throw new IllegalArgumentException("encryption key was null");
-		if (encryptionKey.trim().length() < 24)
-			throw new IllegalArgumentException("encryption key was less than 24 characters");
 		try {
 			byte[] keyAsBytes = encryptionKey.getBytes(UNICODE_FORMAT);
 			if (encryptionScheme.equals(DESEDE_ENCRYPTION_SCHEME)) {

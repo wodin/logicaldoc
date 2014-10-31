@@ -20,26 +20,26 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class SignVerifyDialog extends Window {
+public class SignatureViewer extends Window {
 	private VLayout layout = new VLayout();
 
-	public SignVerifyDialog(String docId, String fileName, String[] signers) {
+	public SignatureViewer(String docId, String fileName, String[] signers) {
 		layout.setMargin(25);
 		layout.setMembersMargin(5);
 		layout.setTop(10);
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		setTitle(I18N.message("verification"));
+		setTitle(I18N.message("signature"));
 		setWidth(380);
-		setHeight(150);
+		setHeight(110);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
 
 		DynamicForm signatureForm = new DynamicForm();
-		SelectItem certificates = ItemFactory.newSelectItem("certificates", I18N.message("signers"));
-		certificates.setWidth(150);
+		SelectItem certificates = ItemFactory.newSelectItem("certificates", I18N.message("signer"));
+		certificates.setWidth(250);
 		certificates.setRequired(true);
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		if (signers != null)

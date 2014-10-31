@@ -65,12 +65,6 @@ public class GDocsEditor extends Window {
 		centerInPage();
 		setMargin(2);
 
-		layout = new VLayout(5);
-		layout.setTop(20);
-		layout.setMargin(5);
-		layout.setWidth100();
-		layout.setHeight100();
-
 		addCloseClickHandler(new CloseClickHandler() {
 			@Override
 			public void onCloseClick(CloseClickEvent event) {
@@ -106,7 +100,11 @@ public class GDocsEditor extends Window {
 			}
 		});
 
-		addChild(layout);
+		layout = new VLayout();
+		layout.setMargin(1);
+		layout.setWidth100();
+		layout.setHeight100();
+		addItem(layout);
 
 		reloadBody();
 	}
@@ -120,9 +118,10 @@ public class GDocsEditor extends Window {
 			url = "https://spreadsheets.google.com/ccc?key="
 					+ document.getExtResId().substring("spreadsheet:".length()) + "&hl="
 					+ Session.get().getUser().getLanguage();
-		else if(document.getExtResId().startsWith("presentation:"))
-			url = "https://docs.google.com/presentation/d/" + document.getExtResId().substring("presentation:".length())
-			+ "/edit?hl=" + Session.get().getUser().getLanguage();
+		else if (document.getExtResId().startsWith("presentation:"))
+			url = "https://docs.google.com/presentation/d/"
+					+ document.getExtResId().substring("presentation:".length()) + "/edit?hl="
+					+ Session.get().getUser().getLanguage();
 		else
 			url = "https://docs.google.com/document/d/" + document.getExtResId().substring("document:".length())
 					+ "/edit?hl=" + Session.get().getUser().getLanguage();

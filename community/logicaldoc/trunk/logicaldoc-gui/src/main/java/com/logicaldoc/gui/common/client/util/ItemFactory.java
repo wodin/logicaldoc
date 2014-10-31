@@ -878,6 +878,7 @@ public class ItemFactory {
 		item.setPickListFields(name, description);
 		item.setDisplayField("name");
 		item.setValueField("id");
+		item.setWrapTitle(false);
 		item.setOptionDataSource(new WorkflowsDS(false, false, true));
 		if (!Feature.enabled(Feature.WORKFLOW))
 			item.setDisabled(true);
@@ -957,8 +958,9 @@ public class ItemFactory {
 			mode.setTitle(I18N.message(title));
 		else
 			mode.setShowTitle(false);
+		mode.setWrapTitle(false);
 		mode.setDefaultValue("free");
-		mode.setWidth(100);
+		mode.setWidth(150);
 		mode.setHintStyle("hint");
 		return mode;
 	}

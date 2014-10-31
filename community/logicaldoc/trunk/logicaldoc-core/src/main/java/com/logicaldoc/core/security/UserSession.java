@@ -42,6 +42,9 @@ public class UserSession implements Comparable<UserSession> {
 
 	private String tenantName;
 
+	// The password given by the user at login time
+	private String password;
+
 	private int status = STATUS_OPEN;
 
 	private Object externalSession = null;
@@ -108,10 +111,11 @@ public class UserSession implements Comparable<UserSession> {
 		userHistoryDAO.createUserHistory(userDAO.findById(userId), UserHistory.EVENT_USER_LOGOUT, "", id);
 	}
 
-	UserSession(String userName, Object userObject) {
+	UserSession(String userName, String password, Object userObject) {
 		super();
 		this.id = UUID.randomUUID().toString();
 		this.userName = userName;
+		this.password = password;
 		this.userObject = userObject;
 
 		// Set the user's id
@@ -230,6 +234,10 @@ public class UserSession implements Comparable<UserSession> {
 
 	public String getTenantName() {
 		return tenantName;
+	}
+
+	public String getPassword() {
+		return password;
 	}
 
 	public void setTenantName(String tenantName) {
