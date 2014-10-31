@@ -32,8 +32,11 @@
 		<property name="type" type="int" column="ld_type" not-null="true"/>
         <property name="source" type="int" column="ld_source" not-null="true" />
         <property name="quota" type="long" column="ld_quota" not-null="true" />
-    	<property name="signatureId" type="string" column="ld_signatureid" length="255" />
-		<property name="signatureInfo" type="string" column="ld_signatureinfo" length="255" />
+    	<property name="cert" type="string" column="ld_cert" length="4000" />
+        <property name="certSubject" type="string" column="ld_certsubject" length="255" />
+        <property name="certDigest" type="string" column="ld_certdigest" length="255" />
+		<property name="key" type="string" column="ld_key" length="4000" />
+        <property name="keyDigest" type="string" column="ld_keydigest" length="255" />
 		<property name="welcomeScreen" type="int" column="ld_welcomescreen" not-null="false" />
 		<property name="ipWhiteList" type="string" column="ld_ipwhitelist" length="4000" not-null="false" />
 		<property name="ipBlackList" type="string" column="ld_ipblacklist" length="4000" not-null="false" />

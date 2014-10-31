@@ -22,12 +22,14 @@ import com.logicaldoc.gui.frontend.client.document.DocumentCheckin;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.document.EmailDialog;
 import com.logicaldoc.gui.frontend.client.document.SendToArchiveDialog;
-import com.logicaldoc.gui.frontend.client.document.SignDialog;
+import com.logicaldoc.gui.frontend.client.document.UploadSignedDocument;
 import com.logicaldoc.gui.frontend.client.document.WorkflowDialog;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
 import com.logicaldoc.gui.frontend.client.services.SearchServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.SignService;
+import com.logicaldoc.gui.frontend.client.services.SignServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.util.BooleanCallback;
@@ -52,6 +54,8 @@ public class ContextMenu extends Menu {
 	protected SearchServiceAsync searchService = (SearchServiceAsync) GWT.create(SearchService.class);
 
 	protected WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
+
+	private SignServiceAsync signService = (SignServiceAsync) GWT.create(SignService.class);
 
 	public ContextMenu(final GUIFolder folder, final DocumentsGrid grid) {
 		final GUIDocument[] selection = grid.getSelectedDocuments();
@@ -471,15 +475,43 @@ public class ContextMenu extends Menu {
 		sign.setTitle(I18N.message("sign"));
 		sign.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				GUIDocument selection = grid.getSelectedDocument();
-				if (selection == null)
+				if (Session.get().getUser().getCertSubject() == null) {
+					SC.warn(I18N.message("loadsignaturefirst"));
 					return;
+				}
 
-				long id = selection.getId();
-				String filename = selection.getFileName();
+				if (Session.get().getUser().getKeyDigest() == null) {
+					// The user must upload the signed .p7m version of the
+					// original file
+					GUIDocument selection = grid.getSelectedDocument();
+					if (selection == null)
+						return;
 
-				SignDialog dialog = new SignDialog(id, filename, null);
-				dialog.show();
+					long id = selection.getId();
+					String filename = selection.getFileName();
+
+					UploadSignedDocument dialog = new UploadSignedDocument(id, filename);
+					dialog.show();
+				} else {
+					ContactingServer.get().show();
+					signService.signDocuments(Session.get().getSid(), selectionIds, new AsyncCallback<String>() {
+
+						@Override
+						public void onFailure(Throwable caught) {
+							ContactingServer.get().hide();
+							Log.serverError(caught);
+						}
+
+						@Override
+						public void onSuccess(String result) {
+							ContactingServer.get().hide();
+							DocumentsPanel.get().refresh();
+
+							if (!"ok".equals(result))
+								SC.warn(I18N.message(result));
+						}
+					});
+				}
 			}
 		});
 
@@ -675,7 +707,7 @@ public class ContextMenu extends Menu {
 			if (!folder.hasPermission(Constants.PERMISSION_SIGN) || !Feature.enabled(Feature.DIGITAL_SIGN))
 				sign.setEnabled(false);
 			else
-				sign.setEnabled(enableSign && selection.length == 1);
+				sign.setEnabled(enableSign && selection.length > 0);
 		}
 
 		if (Feature.visible(Feature.ARCHIVES)) {

@@ -16,8 +16,9 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
+import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.document.RatingDialog;
-import com.logicaldoc.gui.frontend.client.document.SignVerifyDialog;
+import com.logicaldoc.gui.frontend.client.document.SignatureViewer;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SignService;
@@ -65,7 +66,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		setCanFreezeFields(true);
 		setAutoFetchData(true);
 		setFilterOnKeypress(true);
-		
+
 		ListGridField id = new ListGridField("id");
 		id.setHidden(true);
 
@@ -410,23 +411,26 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 							final String fileName = getSelectedRecord().getAttribute("filename") + ".p7m";
 							String fileVersion = getSelectedRecord().getAttribute("fileVersion");
 
-							signService.extractSubjectSignatures(Session.get().getSid(), Session.get().getUser()
-									.getId(), Long.parseLong(id), fileVersion, new AsyncCallback<String[]>() {
+							ContactingServer.get().show();
+							signService.extractSubjectSignatures(Session.get().getSid(), Long.parseLong(id),
+									fileVersion, new AsyncCallback<String[]>() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-									destroy();
-								}
+										@Override
+										public void onFailure(Throwable caught) {
+											ContactingServer.get().hide();
+											Log.serverError(caught);
+											destroy();
+										}
 
-								@Override
-								public void onSuccess(String[] result) {
-									SignVerifyDialog verify = new SignVerifyDialog(id, fileName, result);
-									verify.show();
-									if (result == null || result.length < 1)
-										SC.warn(I18N.message("verificationfailed"));
-								}
-							});
+										@Override
+										public void onSuccess(String[] result) {
+											ContactingServer.get().hide();
+											SignatureViewer viewer = new SignatureViewer(id, fileName, result);
+											viewer.show();
+											if (result == null || result.length < 1)
+												SC.warn(I18N.message("verificationfailed"));
+										}
+									});
 						}
 					}
 					event.cancel();

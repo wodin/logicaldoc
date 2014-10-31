@@ -68,6 +68,8 @@ public class ExternalAppsPanel extends VLayout {
 
 	private CheckboxItem extCallParamTitle;
 
+	private GUIParameter openssl = null;
+	
 	public ExternalAppsPanel(GUIParameter[] settings) {
 		setWidth100();
 		setHeight100();
@@ -91,6 +93,8 @@ public class ExternalAppsPanel extends VLayout {
 				ghost = parameter;
 			else if (parameter.getName().equals("command.tesseract"))
 				tesseract = parameter;
+			else if (parameter.getName().equals("command.openssl"))
+				openssl = parameter;			
 			else if (parameter.getName().equals("openoffice.path"))
 				openofficePath = parameter;
 			else if (parameter.getName().equals("swftools.path"))
@@ -203,8 +207,10 @@ public class ExternalAppsPanel extends VLayout {
 		swftools.setWidth(400);
 		TextItem acmecadCommand = ItemFactory.newTextItem("acmecadCommand", "AcmeCADConverter", acmecad.getValue());
 		acmecadCommand.setWidth(400);
+		TextItem opensslCommand = ItemFactory.newTextItem("opensslCommand", "OpenSSL", openssl.getValue());
+		opensslCommand.setWidth(400);
 		
-		extAppForm.setItems(convertCommand, ghostCommand, tesseractCommand, swftools, openOffice, acmecadCommand);
+		extAppForm.setItems(convertCommand, ghostCommand, tesseractCommand, swftools, openOffice, acmecadCommand, opensslCommand);
 		extApps.setPane(extAppForm);
 
 		if (Session.get().isDefaultTenant())
@@ -262,9 +268,10 @@ public class ExternalAppsPanel extends VLayout {
 						ExternalAppsPanel.this.swftoolsPath.setValue(values.get("swftools").toString());
 						ExternalAppsPanel.this.openofficePath.setValue(values.get("openOffice").toString());
 						ExternalAppsPanel.this.acmecad.setValue(values.get("acmecadCommand").toString());
+						ExternalAppsPanel.this.openssl.setValue(values.get("opensslCommand").toString());
 					}
 
-					GUIParameter[] params = new GUIParameter[16];
+					GUIParameter[] params = new GUIParameter[17];
 					params[0] = ExternalAppsPanel.this.wsSettings;
 					params[1] = ExternalAppsPanel.this.wdSettings;
 					params[2] = ExternalAppsPanel.this.wdCache;
@@ -274,8 +281,10 @@ public class ExternalAppsPanel extends VLayout {
 					params[6] = ExternalAppsPanel.this.tesseract;
 					params[7] = ExternalAppsPanel.this.openofficePath;
 					params[8] = ExternalAppsPanel.this.acmecad;
-					params[9] = ExternalAppsPanel.this.cmisSettings;
-
+					params[9] = ExternalAppsPanel.this.openssl;
+					
+					params[10] = ExternalAppsPanel.this.cmisSettings;
+					
 					// External Call
 					try {
 						GUIExternalCall extCall = new GUIExternalCall();
@@ -292,12 +301,12 @@ public class ExternalAppsPanel extends VLayout {
 							Session.get().getSession().setExternalCall(null);
 
 						String tenant = Session.get().getTenantName();
-						params[10] = new GUIParameter(tenant + ".extcall.enabled", "yes".equals(values
+						params[11] = new GUIParameter(tenant + ".extcall.enabled", "yes".equals(values
 								.get("extCallEnabled")) ? "true" : "false");
-						params[11] = new GUIParameter(tenant + ".extcall.name", extCall.getName());
-						params[12] = new GUIParameter(tenant + ".extcall.baseurl", extCall.getBaseUrl());
-						params[13] = new GUIParameter(tenant + ".extcall.suffix", extCall.getSuffix());
-						params[14] = new GUIParameter(tenant + ".extcall.window", extCall.getTargetWindow());
+						params[12] = new GUIParameter(tenant + ".extcall.name", extCall.getName());
+						params[13] = new GUIParameter(tenant + ".extcall.baseurl", extCall.getBaseUrl());
+						params[14] = new GUIParameter(tenant + ".extcall.suffix", extCall.getSuffix());
+						params[15] = new GUIParameter(tenant + ".extcall.window", extCall.getTargetWindow());
 
 						ArrayList<String> buf = new ArrayList<String>();
 						if (extCallParamUser.getValueAsBoolean() != null
@@ -309,7 +318,7 @@ public class ExternalAppsPanel extends VLayout {
 						String paramsStr = buf.toString().substring(1, buf.toString().length() - 1);
 
 						extCall.setParametersStr(paramsStr);
-						params[15] = new GUIParameter(tenant + ".extcall.params", buf.isEmpty() ? "" : paramsStr);
+						params[16] = new GUIParameter(tenant + ".extcall.params", buf.isEmpty() ? "" : paramsStr);
 					} catch (Throwable t) {
 					}
 

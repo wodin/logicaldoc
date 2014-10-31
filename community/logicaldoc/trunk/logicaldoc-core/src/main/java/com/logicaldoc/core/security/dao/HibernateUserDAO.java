@@ -108,6 +108,12 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 				listener.beforeStore(user, transaction, dictionary);
 			}
 
+			// Reset the private key in case the user changes the password
+			if (transaction != null && transaction.getEvent().equals(UserHistory.EVENT_USER_PASSWORDCHANGED)) {
+				user.setKey(null);
+				user.setKeyDigest(null);
+			}
+
 			saveOrUpdate(user);
 
 			GroupDAO groupDAO = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
@@ -289,7 +295,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 				user.setUserName(user.getUserName() + "." + user.getId());
 				saveOrUpdate(user);
 			}
-			
+
 			// Delete the user's group
 			if (userGroup != null) {
 				GroupDAO groupDAO = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);

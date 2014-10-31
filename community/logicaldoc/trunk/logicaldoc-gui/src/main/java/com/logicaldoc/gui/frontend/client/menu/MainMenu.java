@@ -37,6 +37,7 @@ import com.logicaldoc.gui.frontend.client.gdocs.GDocsImport;
 import com.logicaldoc.gui.frontend.client.gdocs.GDocsSettings;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.personal.ChangePassword;
+import com.logicaldoc.gui.frontend.client.personal.MyPrivateKey;
 import com.logicaldoc.gui.frontend.client.personal.MySignature;
 import com.logicaldoc.gui.frontend.client.personal.Profile;
 import com.logicaldoc.gui.frontend.client.personal.Subscriptions;
@@ -316,11 +317,66 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		return webcontentItems;
 	}
 
-	private MenuItem getDropboxMenuItem(GUIFolder folder, final GUIDocument document) {
+	private MenuItem getSignatureMenuItem() {
+		MenuItem mySignature = new MenuItem(I18N.message("mysignature"));
+		mySignature.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				securityService.getUser(Session.get().getSid(), Session.get().getUser().getId(),
+						new AsyncCallback<GUIUser>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUIUser user) {
+								MySignature mysign = new MySignature(user, false);
+								mysign.show();
+							}
+						});
+			}
+		});
+
+		MenuItem myPrivatekey = new MenuItem(I18N.message("myprivatekey"));
+		myPrivatekey.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				if (Session.get().getUser().getCertSubject() == null) {
+					SC.warn(I18N.message("loadsignaturefirst"));
+					return;
+				}
+
+				securityService.getUser(Session.get().getSid(), Session.get().getUser().getId(),
+						new AsyncCallback<GUIUser>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUIUser user) {
+								MyPrivateKey mykey = new MyPrivateKey(user);
+								mykey.show();
+							}
+						});
+			}
+		});
+
 		Menu menu = new Menu();
 		menu.setShowShadow(true);
 		menu.setShadowDepth(3);
+		menu.setItems(mySignature, myPrivatekey);
 
+		MenuItem signature = new MenuItem(I18N.message("signature"));
+		signature.setSubmenu(menu);
+
+		return signature;
+	}
+
+	private MenuItem getDropboxMenuItem(GUIFolder folder, final GUIDocument document) {
 		final MenuItem exportTo = new MenuItem(I18N.message("exporttodropbox"));
 		exportTo.addClickHandler(new ClickHandler() {
 			@Override
@@ -393,6 +449,9 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 			}
 		});
 
+		Menu menu = new Menu();
+		menu.setShowShadow(true);
+		menu.setShadowDepth(3);
 		menu.setItems(exportTo, importFrom);
 
 		exportTo.setEnabled(folder != null && folder.isDownload() && Feature.enabled(Feature.DROPBOX));
@@ -687,27 +746,6 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 			}
 		});
 
-		MenuItem mySignature = new MenuItem(I18N.message("mysignature"));
-		mySignature.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				securityService.getUser(Session.get().getSid(), Session.get().getUser().getId(),
-						new AsyncCallback<GUIUser>() {
-
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(GUIUser user) {
-								MySignature mysign = new MySignature(user, false);
-								mysign.show();
-							}
-						});
-			}
-		});
-
 		MenuItem removeCookies = new MenuItem(I18N.message("removecookies"));
 		removeCookies.addClickHandler(new ClickHandler() {
 			@Override
@@ -773,11 +811,11 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		items.add(profile);
 		items.add(changePswd);
 
+		if (Feature.enabled(Feature.DIGITAL_SIGN))
+			items.add(getSignatureMenuItem());
+
 		if (com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.CONTACTS))
 			items.add(contacts);
-
-		if (Feature.enabled(Feature.DIGITAL_SIGN))
-			items.add(mySignature);
 
 		if (Feature.enabled(Feature.AUDIT)
 				&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.SUBSCRIPTIONS))

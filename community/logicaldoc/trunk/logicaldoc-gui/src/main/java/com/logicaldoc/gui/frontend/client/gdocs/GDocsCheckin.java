@@ -39,14 +39,13 @@ public class GDocsCheckin extends Window {
 	public GDocsCheckin(final GUIDocument document, final GDocsEditor parentDialog, final DocumentsGrid grid) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("checkin"));
-		setWidth(370);
-		setHeight(130);
+		setWidth(400);
+		setHeight(140);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
-		setPadding(5);
-		setMembersMargin(3);
+		setMembersMargin(2);
 
 		DynamicForm form = new DynamicForm();
 		vm = new ValuesManager();
@@ -58,7 +57,7 @@ public class GDocsCheckin extends Window {
 
 		TextItem commentItem = ItemFactory.newTextItem("comment", "comment", null);
 		commentItem.setRequired(true);
-		commentItem.setWidth(230);
+		commentItem.setWidth(240);
 
 		checkin = new SubmitItem();
 		checkin.setTitle(I18N.message("checkin"));

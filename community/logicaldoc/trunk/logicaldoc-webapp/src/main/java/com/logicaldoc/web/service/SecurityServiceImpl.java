@@ -243,10 +243,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		guiUser.setQuotaCount(seqDao.getCurrentValue("userquota", user.getId(), user.getTenantId()));
 		guiUser.setWelcomeScreen(user.getWelcomeScreen());
 
-		if (StringUtils.isNotEmpty(user.getSignatureId()))
-			guiUser.setSignatureId(user.getSignatureId());
-		if (StringUtils.isNotEmpty(user.getSignatureInfo()))
-			guiUser.setSignatureInfo(user.getSignatureInfo());
+		if (StringUtils.isNotEmpty(user.getCertSubject()))
+			guiUser.setCertSubject(user.getCertSubject());
+		if (StringUtils.isNotEmpty(user.getKeyDigest()))
+			guiUser.setKeyDigest(user.getKeyDigest());
 
 		session.setSid(sid);
 		session.setUser(guiUser);
@@ -465,8 +465,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				usr.setUserName(user.getUserName());
 				usr.setPasswordExpires(user.getPasswordExpires() == 1);
 				usr.setPasswordExpired(user.getPasswordExpired() == 1);
-				usr.setSignatureId(user.getSignatureId());
-				usr.setSignatureInfo(user.getSignatureInfo());
+				usr.setCertSubject(user.getCertSubject());
+				usr.setKeyDigest(user.getKeyDigest());
 				usr.setWelcomeScreen(user.getWelcomeScreen());
 				usr.setIpWhitelist(user.getIpWhiteList());
 				usr.setIpBlacklist(user.getIpBlackList());
@@ -597,8 +597,6 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setUserName(user.getUserName());
 			usr.setEnabled(user.isEnabled() ? 1 : 0);
 			usr.setPasswordExpires(user.isPasswordExpires() ? 1 : 0);
-			usr.setSignatureId(user.getSignatureId());
-			usr.setSignatureInfo(user.getSignatureInfo());
 			usr.setWelcomeScreen(user.getWelcomeScreen());
 			usr.setIpWhiteList(user.getIpWhitelist());
 			usr.setIpBlackList(user.getIpBlacklist());
@@ -731,8 +729,6 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setState(user.getState());
 			usr.setTelephone(user.getPhone());
 			usr.setTelephone2(user.getCell());
-			usr.setSignatureId(user.getSignatureId());
-			usr.setSignatureInfo(user.getSignatureInfo());
 			usr.setWelcomeScreen(user.getWelcomeScreen());
 
 			userDao.store(usr);

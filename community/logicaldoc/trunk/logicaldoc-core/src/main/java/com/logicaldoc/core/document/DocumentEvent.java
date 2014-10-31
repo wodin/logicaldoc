@@ -27,7 +27,8 @@ public enum DocumentEvent {
 	SHORTCUT_DELETED("event.shortcut.deleted"),
 	VIEWED("event.viewed"),
 	RESTORED("event.restored"),
-	NEW_NOTE("event.newnote");;
+	NEW_NOTE("event.newnote"),
+	SIGNED("event.signed");
 
     private String event;
 

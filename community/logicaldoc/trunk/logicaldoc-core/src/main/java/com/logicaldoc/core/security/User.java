@@ -90,10 +90,6 @@ public class User extends PersistentObject implements Serializable {
 
 	private long quota = -1;
 
-	private String signatureId = "";
-
-	private String signatureInfo = "";
-
 	private Integer welcomeScreen = 1520;
 
 	private String ipWhiteList;
@@ -101,6 +97,16 @@ public class User extends PersistentObject implements Serializable {
 	private String ipBlackList;
 
 	private String decodedPassword;
+
+	private String cert;
+
+	private String certSubject;
+
+	private String certDigest;
+
+	private String key;
+
+	private String keyDigest;
 
 	public User() {
 	}
@@ -400,22 +406,6 @@ public class User extends PersistentObject implements Serializable {
 		this.quota = quota;
 	}
 
-	public String getSignatureId() {
-		return signatureId;
-	}
-
-	public void setSignatureId(String signatureId) {
-		this.signatureId = signatureId;
-	}
-
-	public String getSignatureInfo() {
-		return signatureInfo;
-	}
-
-	public void setSignatureInfo(String signatureInfo) {
-		this.signatureInfo = signatureInfo;
-	}
-
 	public Integer getWelcomeScreen() {
 		return welcomeScreen;
 	}
@@ -458,5 +448,45 @@ public class User extends PersistentObject implements Serializable {
 
 	public String getDecodedPassword() {
 		return decodedPassword;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public String getCertSubject() {
+		return certSubject;
+	}
+
+	public void setCertSubject(String certSubject) {
+		this.certSubject = certSubject;
+	}
+
+	public String getCert() {
+		return cert;
+	}
+
+	public void setCert(String cert) {
+		this.cert = cert;
+	}
+
+	public String getKeyDigest() {
+		return keyDigest;
+	}
+
+	public void setKeyDigest(String keyDigest) {
+		this.keyDigest = keyDigest;
+	}
+
+	public String getCertDigest() {
+		return certDigest;
+	}
+
+	public void setCertDigest(String certDigest) {
+		this.certDigest = certDigest;
 	}
 }

@@ -374,6 +374,7 @@ public class CalendarEventDialog extends Window {
 		TextItem title = ItemFactory.newTextItem("title", "title", calendarEvent.getTitle());
 		title.setRequired(true);
 		title.setEndRow(true);
+		title.setWrapTitle(false);
 		title.setColSpan(5);
 		title.setWidth(350);
 		title.setTitleOrientation(TitleOrientation.LEFT);
@@ -383,6 +384,7 @@ public class CalendarEventDialog extends Window {
 		TextItem type = ItemFactory.newTextItem("type", "type", calendarEvent.getType());
 		type.setRequired(false);
 		type.setEndRow(true);
+		type.setWrapTitle(false);
 		type.setColSpan(5);
 		type.setWidth(350);
 		type.setTitleOrientation(TitleOrientation.LEFT);
@@ -392,6 +394,7 @@ public class CalendarEventDialog extends Window {
 		TextItem subType = ItemFactory.newTextItem("subType", "subtype", calendarEvent.getSubType());
 		subType.setRequired(false);
 		subType.setEndRow(true);
+		subType.setWrapTitle(false);
 		subType.setColSpan(5);
 		subType.setWidth(350);
 		subType.setTitleOrientation(TitleOrientation.LEFT);
@@ -434,6 +437,7 @@ public class CalendarEventDialog extends Window {
 		deadline.setRequired(false);
 		deadline.setShowTitle(true);
 		deadline.setTitleOrientation(TitleOrientation.LEFT);
+		deadline.setWrapTitle(false);
 		deadline.setCanEdit(!readOnly);
 		if (calendarEvent.getDeadline() != null)
 			deadline.setValue(calendarEvent.getDeadline());
@@ -442,6 +446,7 @@ public class CalendarEventDialog extends Window {
 		frequency.setTitleOrientation(TitleOrientation.LEFT);
 		frequency.setValue(Integer.toString(calendarEvent.getFrequency()));
 		frequency.setCanEdit(!readOnly);
+		frequency.setWrapTitle(false);
 		frequency.addChangedHandler(new ChangedHandler() {
 
 			@Override
@@ -455,6 +460,7 @@ public class CalendarEventDialog extends Window {
 		SpinnerItem remindTimeNumber = new SpinnerItem("remindTime");
 		remindTimeNumber.setTitle(I18N.message("remindtime"));
 		remindTimeNumber.setTitleOrientation(TitleOrientation.LEFT);
+		remindTimeNumber.setWrapTitle(false);
 		remindTimeNumber.setDefaultValue(0);
 		remindTimeNumber.setMin(0);
 		remindTimeNumber.setStep(1);
@@ -463,6 +469,7 @@ public class CalendarEventDialog extends Window {
 		remindTimeNumber.setCanEdit(!readOnly);
 		SelectItem remindTimeUnit = ItemFactory.newDueTimeSelector("remindUnit", "");
 		remindTimeUnit.setShowTitle(false);
+		remindTimeUnit.setWrapTitle(false);
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("minute", I18N.message("minutes"));
 		map.put("hour", I18N.message("hours"));
@@ -472,7 +479,7 @@ public class CalendarEventDialog extends Window {
 		remindTimeUnit.setColSpan(3);
 		remindTimeUnit.setAlign(Alignment.LEFT);
 		remindTimeUnit.setCanEdit(!readOnly);
-
+		
 		final DateItem completionDate = ItemFactory.newDateItem("completionDate", "completedon");
 		completionDate.setRequired(false);
 		completionDate.setShowTitle(false);
@@ -484,6 +491,7 @@ public class CalendarEventDialog extends Window {
 
 		SelectItem status = ItemFactory.newEventStatusSelector("status", "status");
 		status.setTitleOrientation(TitleOrientation.LEFT);
+		status.setWrapTitle(false);
 		status.setValue(Integer.toString(calendarEvent.getStatus()));
 		status.setCanEdit(!readOnly);
 		status.addChangedHandler(new ChangedHandler() {

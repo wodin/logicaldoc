@@ -256,11 +256,11 @@ public class UsersPanel extends VLayout {
 		});
 		password.setEnabled(!Session.get().isDemo());
 
-		MenuItem signature = new MenuItem();
-		signature.setTitle(I18N.message("signature"));
+		MenuItem signature = new MenuItem(I18N.message("signature"));
 		signature.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			@Override
 			public void onClick(MenuItemClickEvent event) {
-				service.getUser(Session.get().getSid(), id, new AsyncCallback<GUIUser>() {
+				service.getUser(Session.get().getSid(), Session.get().getUser().getId(), new AsyncCallback<GUIUser>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

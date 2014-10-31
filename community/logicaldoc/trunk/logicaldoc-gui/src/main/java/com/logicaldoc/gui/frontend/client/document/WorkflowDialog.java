@@ -39,8 +39,8 @@ public class WorkflowDialog extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
 		setTitle(I18N.message("startworkflow"));
-		setWidth(400);
-		setHeight(100);
+		setWidth(420);
+		setHeight(110);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);

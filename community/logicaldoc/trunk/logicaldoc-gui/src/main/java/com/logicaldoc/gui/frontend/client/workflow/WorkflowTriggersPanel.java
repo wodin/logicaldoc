@@ -91,13 +91,14 @@ public class WorkflowTriggersPanel extends VLayout {
 		buttons.setMembersMargin(3);
 		buttons.setWidth100();
 		buttons.setHeight(15);
+		
 		addTrigger.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				final Window window = new Window();
 				window.setTitle(I18N.message("workflowtriggertext"));
-				window.setWidth(380);
-				window.setHeight(160);
+				window.setWidth(400);
+				window.setHeight(180);
 				window.setCanDragResize(true);
 				window.setIsModal(true);
 				window.setShowModalMask(true);

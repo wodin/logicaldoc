@@ -10,22 +10,21 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.widgets.ContactingServer;
+import com.logicaldoc.gui.frontend.client.services.DocumentService;
+import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SignService;
 import com.logicaldoc.gui.frontend.client.services.SignServiceAsync;
-import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClickEvent;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.LinkItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
-import com.smartgwt.client.widgets.form.fields.SubmitItem;
-import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
@@ -34,27 +33,21 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class SignDialog extends Window {
+public class UploadSignedDocument extends Window {
 	private SignServiceAsync signService = (SignServiceAsync) GWT.create(SignService.class);
 
-	private SubmitItem sendButton;
+	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+
+	private IButton sendButton;
 
 	private MultiUploader uploader;
-
-	private ValuesManager vm;
-
-	private DynamicForm form;
 
 	private VLayout layout = new VLayout();
 
 	private long docId;
 
-	private String version = "";
-
-	public SignDialog(long id, String filename, String versionToBeSigned) {
+	public UploadSignedDocument(long id, String filename) {
 		docId = id;
-		if (versionToBeSigned != null)
-			this.version = versionToBeSigned;
 
 		layout.setMargin(15);
 		layout.setMembersMargin(2);
@@ -71,7 +64,7 @@ public class SignDialog extends Window {
 
 		setTitle(I18N.message("signdocument"));
 		setWidth(550);
-		setHeight(230);
+		setHeight(180);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -93,18 +86,15 @@ public class SignDialog extends Window {
 		StaticTextItem uploadMessage = ItemFactory.newStaticTextItem(I18N.message(""),
 				I18N.message("signandupload", filename), null);
 		uploadMessage.setTitle("<b>(2)</b> " + uploadMessage.getTitle());
-		uploadMessage.setWidth(500);
 		uploadMessage.setWrapTitle(false);
 		messageForm.setItems(uploadMessage);
-		layout.addMember(messageForm, 1);
-
-		reloadForm();
 
 		// Create a new uploader panel and attach it to the window
 		uploader = new MultiUploader();
 		uploader.setMaximumFiles(1);
 		uploader.setStyleName("upload");
 		uploader.setFileInputPrefix("LDOC");
+		uploader.setWidth("380px");
 		uploader.setHeight("40px");
 		uploader.reset();
 
@@ -113,37 +103,22 @@ public class SignDialog extends Window {
 		uploader.addOnFinishUploadHandler(onFinishUploaderHandler);
 		uploader.addOnCancelUploadHandler(onCancelUploaderHandler);
 
-		layout.addMember(uploader, 2);
-		layout.setMembersMargin(10);
-		layout.setTop(25);
-		layout.setMargin(5);
-
-		addChild(layout);
-	}
-
-	private void reloadForm() {
-		if (form != null) {
-			layout.removeChild(form);
-		}
-
-		form = new DynamicForm();
-		vm = new ValuesManager();
-		form.setValuesManager(vm);
-
-		sendButton = new SubmitItem();
+		sendButton = new IButton();
 		sendButton.setTitle(I18N.message("send"));
 		sendButton.setDisabled(true);
-		sendButton.setAlign(Alignment.RIGHT);
-		sendButton.addClickHandler(new ClickHandler() {
+		sendButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
-			public void onClick(ClickEvent event) {
+			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
 				onSend();
 			}
 		});
 
-		form.setItems(sendButton);
+		layout.addMember(messageForm);
+		layout.addMember(uploader);
+		layout.addMember(sendButton);
+		layout.setMargin(2);
 
-		layout.addMember(form, 3);
+		addItem(layout);
 	}
 
 	// Load the image in the document and in the case of success attach it to
@@ -168,28 +143,31 @@ public class SignDialog extends Window {
 			SC.warn(I18N.message("filerequired"));
 			return;
 		}
-		if (!vm.validate())
-			return;
 
-		signService.signDocument(Session.get().getSid(), Session.get().getUser().getId(), docId, version,
-				new AsyncCallback<String>() {
+		sendButton.setDisabled(true);
+		ContactingServer.get().show();
+		signService.storeSignedDocument(Session.get().getSid(), docId, new AsyncCallback<String>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-						destroy();
-					}
+			@Override
+			public void onFailure(Throwable caught) {
+				ContactingServer.get().hide();
+				sendButton.setDisabled(false);
+				Log.serverError(caught);
+				destroy();
+			}
 
-					@Override
-					public void onSuccess(String result) {
-						if (result == "ok") {
-							onClose();
-							destroy();
-						} else {
-							SC.warn(I18N.message(result));
-						}
-					}
-				});
+			@Override
+			public void onSuccess(String result) {
+				ContactingServer.get().hide();
+				sendButton.setDisabled(false);
+				if ("ok".equals(result)) {
+					onClose();
+					destroy();
+				} else {
+					SC.warn(I18N.message(result));
+				}
+			}
+		});
 	}
 
 	private void cancel() {
@@ -198,5 +176,22 @@ public class SignDialog extends Window {
 
 	protected void onClose() {
 		DocumentsPanel.get().refresh();
+		addCloseClickHandler(new CloseClickHandler() {
+			@Override
+			public void onCloseClick(CloseClickEvent event) {
+				documentService.cleanUploadedFileFolder(Session.get().getSid(), new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						destroy();
+					}
+				});
+			}
+		});
 	}
 }
