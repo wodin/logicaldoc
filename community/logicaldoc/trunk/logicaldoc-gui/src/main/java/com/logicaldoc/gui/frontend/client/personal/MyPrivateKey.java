@@ -23,6 +23,7 @@ import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
+import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
@@ -30,37 +31,37 @@ import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
- * This is the form used to load the user's certificate.
+ * This is the form used to load the user's private key.
  * 
- * @author Matteo Caruso - Logical Objects
- * @since 6.1
+ * @author Marco Meschieri - Logical Objects
+ * @since 7.1.2
  */
-public class MySignature extends Window {
+public class MyPrivateKey extends Window {
 	private SignServiceAsync signService = (SignServiceAsync) GWT.create(SignService.class);
 
 	private MultiUploader uploader;
 
 	private ValuesManager vm = new ValuesManager();
 
-	private SelectItem certificates = null;
+	private SelectItem keys = null;
+
+	private FormItem password = null;
 
 	private GUIUser currentUser;
 
 	private ButtonItem save = null;
 
-	private ButtonItem reset = null;
-
 	private HTMLFlow hint = null;
 
-	public MySignature(GUIUser user, boolean administration) {
+	public MyPrivateKey(GUIUser user) {
 		super();
 
 		this.currentUser = user;
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		setTitle(I18N.message("mysignature"));
+		setTitle(I18N.message("myprivatekey"));
 		setWidth(450);
-		setHeight(administration ? 100 : 240);
+		setHeight(220);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -68,10 +69,11 @@ public class MySignature extends Window {
 
 		DynamicForm form = new DynamicForm();
 		form.setValuesManager(vm);
-		certificates = ItemFactory.newSelectItem("certificates", I18N.message("signature"));
-		certificates.setWidth(180);
-		certificates.setRequired(true);
-		form.setItems(certificates);
+		keys = ItemFactory.newSelectItem("keys", I18N.message("key"));
+		keys.setWidth(180);
+		keys.setRequired(true);
+		password = ItemFactory.newPasswordItem("keyPassword", I18N.message("password"), null);
+		password.setHint(I18N.message("keypassowrdhint"));
 
 		save = new ButtonItem();
 		save.setTitle(I18N.message("save"));
@@ -83,27 +85,13 @@ public class MySignature extends Window {
 			}
 		});
 
-		reset = new ButtonItem();
-		reset.setTitle(I18N.message("reset"));
-		reset.setAutoFit(true);
-		reset.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				onReset();
-			}
-		});
-		reset.setVisible(administration);
-		reset.setDisabled(!administration);
-
-		if (administration)
-			form.setItems(certificates, reset);
-		else
-			form.setItems(certificates, save, reset);
-
-		hint = new HTMLFlow(I18N.message("mysignaturehint"));
-		hint.setWidth100();
+		form.setItems(keys, password, save);
 
 		HLayout spacer = new HLayout();
 		spacer.setHeight(15);
+
+		hint = new HTMLFlow(I18N.message("myprivatekeyhint"));
+		hint.setWidth100();
 
 		// Create a new uploader panel and attach it to the window
 		uploader = new MultiUploader();
@@ -120,34 +108,28 @@ public class MySignature extends Window {
 		uploader.addOnCancelUploadHandler(onCancelUploaderHandler);
 
 		// Set initial signature value
-		String cert = user.getCertSubject();
-		if ((cert != null && !cert.trim().isEmpty()) && (cert != null && !cert.trim().isEmpty())) {
+		String key = user.getKeyDigest();
+		if ((key != null && !key.trim().isEmpty()) && (key != null && !key.trim().isEmpty())) {
 			LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-			map.put(cert, cert);
-			certificates.setValueMap(map);
-			certificates.setValue(cert);
+			map.put(key, key);
+			keys.setValueMap(map);
+			keys.setValue(key);
 			hint.setVisible(false);
 			uploader.setVisible(false);
-			reset.setVisible(false);
+			password.setVisible(false);
 			save.setVisible(false);
-			if (!administration) {
-				setHeight(130);
-			}
 		} else {
 			save.setVisible(true);
+			password.setVisible(true);
+			uploader.setVisible(true);
 		}
 
 		VLayout layout = new VLayout();
 		layout.setMargin(2);
 		layout.addMember(form);
-
-		if (!administration) {
-			layout.addMember(spacer);
-			layout.addMember(hint);
-			layout.addMember(uploader);
-		} else {
-			reset.setVisible(true);
-		}
+		layout.addMember(spacer);
+		layout.addMember(hint);
+		layout.addMember(uploader);
 
 		addItem(layout);
 	}
@@ -158,7 +140,7 @@ public class MySignature extends Window {
 		public void onFinish(IUploader uploader) {
 			if (uploader.getStatus() == Status.SUCCESS) {
 
-				signService.extractSubjectSignatures(Session.get().getSid(), null, null, new AsyncCallback<String[]>() {
+				signService.extractKeyDigest(Session.get().getSid(), new AsyncCallback<String>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -166,18 +148,17 @@ public class MySignature extends Window {
 					}
 
 					@Override
-					public void onSuccess(String[] result) {
-						if (result != null && result.length > 0) {
+					public void onSuccess(String result) {
+						if (result != null) {
 							save.setDisabled(false);
-							reset.setVisible(false);
-							certificates.clearValue();
+							save.setVisible(true);
+							password.setVisible(true);
+							keys.clearValue();
 							LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-							for (String cert : result) {
-								map.put(cert, cert);
-							}
-							certificates.setValueMap(map);
+							map.put(result, result);
+							keys.setValueMap(map);
 						} else {
-							SC.warn(I18N.message("mysignatureerrorcertificates"));
+							SC.warn(I18N.message("myprivatekeyerrorcertificates"));
 							cancelUpload();
 						}
 					}
@@ -203,33 +184,35 @@ public class MySignature extends Window {
 
 		save.setDisabled(true);
 		ContactingServer.get().show();
-		signService.storeSignature(Session.get().getSid(), new AsyncCallback<String>() {
+		signService.storePrivateKey(Session.get().getSid(), vm.getValueAsString("keyPassword"),
+				new AsyncCallback<String>() {
 
-			@Override
-			public void onFailure(Throwable caught) {
-				save.setDisabled(false);
-				ContactingServer.get().hide();
-				Log.serverError(caught);
-				destroy();
-			}
+					@Override
+					public void onFailure(Throwable caught) {
+						save.setDisabled(false);
+						ContactingServer.get().hide();
+						Log.serverError(caught);
+						cancelUpload();
+						destroy();
+					}
 
-			@Override
-			public void onSuccess(String result) {
-				save.setDisabled(false);
-				ContactingServer.get().hide();
-				if (result == "ok") {
-					Session.get().getUser().setCertSubject(vm.getValueAsString("certificates"));
-					destroy();
-					Log.info(I18N.message("signaturesaved"), null);
-				} else {
-					SC.warn(I18N.message(result));
-				}
-			}
-		});
+					@Override
+					public void onSuccess(String result) {
+						save.setDisabled(false);
+						ContactingServer.get().hide();
+						if (result == "ok") {
+							Session.get().getUser().setKeyDigest(vm.getValueAsString("keys"));
+							destroy();
+							Log.info(I18N.message("privatekeysaved"), null);
+						} else {
+							SC.warn(I18N.message(result));
+						}
+					}
+				});
 	}
 
 	public void onReset() {
-		signService.resetSignature(Session.get().getSid(), currentUser.getId(), new AsyncCallback<Boolean>() {
+		signService.resetPrivateKey(Session.get().getSid(), currentUser.getId(), new AsyncCallback<Boolean>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -238,15 +221,15 @@ public class MySignature extends Window {
 
 			@Override
 			public void onSuccess(Boolean result) {
-				Log.info(I18N.message("signaturereset"), null);
-				certificates.clearValue();
+				Log.info(I18N.message("privatekeyreset"), null);
+				keys.clearValue();
 				LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 				map.put("", "");
-				certificates.setValueMap(map);
-				Session.get().getUser().setCertSubject(null);
-				reset.setDisabled(true);
-				reset.setVisible(false);
+				keys.setValueMap(map);
 				save.setDisabled(true);
+				save.setVisible(true);
+				password.setVisible(true);
+				password.setValue((String) null);
 				hint.setVisible(true);
 				uploader.setVisible(true);
 				destroy();
@@ -256,18 +239,21 @@ public class MySignature extends Window {
 
 	private void cancelUpload() {
 		save.setDisabled(true);
-		certificates.clearValue();
-		String cert = currentUser.getCertSubject();
-		if (!cert.trim().isEmpty() && !cert.trim().isEmpty()) {
+		password.setVisible(false);
+		password.setValue((String) null);
+		keys.clearValue();
+		String key = currentUser.getKeyDigest();
+		uploader.reset();
+		if (!key.trim().isEmpty() && !key.trim().isEmpty()) {
 			LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-			map.put(cert, cert);
-			certificates.setValueMap(map);
-			certificates.setValue(cert);
+			map.put(key, key);
+			keys.setValueMap(map);
+			keys.setValue(key);
 		} else {
 			LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 			map.put("", "");
-			certificates.setValueMap(map);
-			certificates.clearValue();
+			keys.setValueMap(map);
+			keys.clearValue();
 		}
 
 	}

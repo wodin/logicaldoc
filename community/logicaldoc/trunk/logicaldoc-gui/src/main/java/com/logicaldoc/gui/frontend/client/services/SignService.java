@@ -29,11 +29,10 @@ public interface SignService extends RemoteService {
 	 * Stores the user's certificate file associated to the given signer name.
 	 * 
 	 * @param sid The session identifier
-	 * @param signerName The name of the certificate signer
 	 * @return 'ok' if no errors occurred, otherwise returns the error message.
 	 * @throws ServerException
 	 */
-	public String storeSignature(String sid, String signerName) throws ServerException;
+	public String storeSignature(String sid) throws ServerException;
 
 	/**
 	 * Signs the given documents
@@ -61,13 +60,12 @@ public interface SignService extends RemoteService {
 	 * 
 	 * @param sid The session identifier
 	 * @param userid Identifier of the user that is saving the signature
-	 * @param keyDigest Digest of the key to use
 	 * @param keyPassword The password to open the key (it the user uploads an
 	 *        encrypted private key)
 	 * @return 'ok' if no errors occurred, otherwise returns the error message.
 	 * @throws ServerException
 	 */
-	public String storePrivateKey(String sid, String keyDigest, String keyPassword) throws ServerException;
+	public String storePrivateKey(String sid, String keyPassword) throws ServerException;
 
 	/**
 	 * Drop the signature certificate associated to the given user. The private
