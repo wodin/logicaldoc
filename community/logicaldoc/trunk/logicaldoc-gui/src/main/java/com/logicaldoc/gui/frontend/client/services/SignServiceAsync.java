@@ -6,13 +6,13 @@ public interface SignServiceAsync {
 
 	void extractSubjectSignatures(String sid, Long docId, String fileVersion, AsyncCallback<String[]> callback);
 
-	void storeSignature(String sid, String signerName, AsyncCallback<String> callback);
+	void storeSignature(String sid, AsyncCallback<String> callback);
 
 	void resetSignature(String sid, long userId, AsyncCallback<Boolean> callback);
 
 	void resetPrivateKey(String sid, long userId, AsyncCallback<Boolean> callback);
 
-	void storePrivateKey(String sid, String keyDigest, String keyPassword, AsyncCallback<String> callback);
+	void storePrivateKey(String sid, String keyPassword, AsyncCallback<String> callback);
 
 	void extractKeyDigest(String sid, AsyncCallback<String> callback);
 
