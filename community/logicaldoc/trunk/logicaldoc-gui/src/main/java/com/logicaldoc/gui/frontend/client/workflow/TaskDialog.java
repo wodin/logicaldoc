@@ -75,7 +75,7 @@ public class TaskDialog extends Window {
 		setTitle(I18N.message("editworkflowstate", state.getType() == GUIWFState.TYPE_TASK ? I18N.message("task")
 				: I18N.message("endstate")));
 		setWidth(350);
-		setHeight(state.getType() == GUIWFState.TYPE_TASK ? 460 : 370);
+		setHeight(state.getType() == GUIWFState.TYPE_TASK ? 480 : 370);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -88,6 +88,7 @@ public class TaskDialog extends Window {
 		taskForm.setValuesManager(vm);
 		TextItem taskName = ItemFactory.newTextItem("taskName", "name", this.state.getName());
 		taskName.setRequired(true);
+		taskName.setWidth(250);
 		TextAreaItem taskDescr = ItemFactory.newTextAreaItem("taskDescr", "description", this.state.getDescription());
 		taskDescr.setWrapTitle(false);
 		taskForm.setFields(taskName, taskDescr);
