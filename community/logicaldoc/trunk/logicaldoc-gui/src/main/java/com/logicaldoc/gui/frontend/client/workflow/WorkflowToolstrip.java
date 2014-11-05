@@ -12,6 +12,7 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
+import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
@@ -231,14 +232,17 @@ public class WorkflowToolstrip extends ToolStrip {
 				else if (transitionErrorFound)
 					SC.warn(I18N.message("workflowtransitiontarget"));
 				else {
+					ContactingServer.get().show();
 					workflowService.deploy(Session.get().getSid(), currentWorkflow, new AsyncCallback<Void>() {
 						@Override
 						public void onFailure(Throwable caught) {
+							ContactingServer.get().hide();
 							Log.serverError(caught);
 						}
 
 						@Override
 						public void onSuccess(Void result) {
+							ContactingServer.get().hide();
 							SC.say(I18N.message("workflowdeployed", currentWorkflow.getName()));
 							update();
 						}
@@ -402,14 +406,17 @@ public class WorkflowToolstrip extends ToolStrip {
 
 		currentWorkflow = designer.getWorkflow();
 
+		ContactingServer.get().show();
 		workflowService.save(Session.get().getSid(), currentWorkflow, new AsyncCallback<GUIWorkflow>() {
 			@Override
 			public void onFailure(Throwable caught) {
+				ContactingServer.get().hide();
 				Log.serverError(caught);
 			}
 
 			@Override
 			public void onSuccess(GUIWorkflow result) {
+				ContactingServer.get().hide();
 				if (result == null) {
 					SC.warn(I18N.message("workflowalreadyexist"));
 				} else {
