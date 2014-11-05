@@ -22,8 +22,9 @@ public class IconSelector {
 		else if (ext.equals("doc") || ext.equals("docx") || ext.equals("odt") || ext.equals("rtf") || ext.equals("ott")
 				|| ext.equals("sxw") || ext.equals("wpd") || ext.equals("kwd") || ext.equals("dot"))
 			icon = "word.png";
-		else if (ext.equals("xls") || ext.equals("xlsx") || ext.equals("ods") || ext.equals("xlt") || ext.equals("ots")
-				|| ext.equals("sxc") || ext.equals("dbf") || ext.equals("ksp") || ext.equals("odb"))
+		else if (ext.equals("xls") || ext.equals("xlsm") || ext.equals("xlsx") || ext.equals("ods")
+				|| ext.equals("xlt") || ext.equals("ots") || ext.equals("sxc") || ext.equals("dbf")
+				|| ext.equals("ksp") || ext.equals("odb"))
 			icon = "excel.png";
 		else if (ext.equals("ppt") || ext.equals("pptx") || ext.equals("odp") || ext.equals("pps") || ext.equals("otp")
 				|| ext.equals("pot") || ext.equals("sxi") || ext.equals("kpr"))
