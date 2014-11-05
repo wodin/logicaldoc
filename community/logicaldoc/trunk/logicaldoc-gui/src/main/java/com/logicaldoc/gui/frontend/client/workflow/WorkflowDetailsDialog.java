@@ -1,6 +1,8 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -33,6 +35,8 @@ import com.smartgwt.client.widgets.events.CloseClickEvent;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.form.fields.ButtonItem;
+import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.SubmitItem;
@@ -52,7 +56,8 @@ import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
 /**
- * This popup window is used to visualize the details of a selected workflow.
+ * This popup window is used to visualize the details of a selected workflow
+ * task.
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
@@ -126,16 +131,13 @@ public class WorkflowDetailsDialog extends Window {
 		workflowTab = new Tab(I18N.message("workflow"));
 		tabs.addTab(workflowTab, 0);
 
-		buttonsPanel = new VLayout(10);
+		buttonsPanel = new VLayout();
 
-		mainPanel = new HLayout(10);
-		mainPanel.setTop(30);
-		mainPanel.setLeft(5);
-		mainPanel.setWidth(540);
-		mainPanel.setHeight(370);
+		mainPanel = new HLayout();
+		mainPanel.setMembersMargin(5);
 		mainPanel.setMembers(tabs, buttonsPanel);
 
-		addChild(mainPanel);
+		addItem(mainPanel);
 
 		form = new HLayout(25);
 		form.setMargin(20);
@@ -242,6 +244,9 @@ public class WorkflowDetailsDialog extends Window {
 
 		sxLayout.addMember(taskForm);
 
+		HLayout spacer=new HLayout();
+		spacer.setHeight(5);
+		
 		Button reassignButton = new Button(I18N.message("workflowtaskreassign"));
 		reassignButton.setAutoFit(true);
 		reassignButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
@@ -370,25 +375,31 @@ public class WorkflowDetailsDialog extends Window {
 		});
 
 		if (workflow.getSelectedTask().getEndDate() == null) {
+			buttonsPanel.addMember(spacer);
 			buttonsPanel.addMember(reassignButton);
 			buttonsPanel.addMember(takeButton);
 			buttonsPanel.addMember(turnBackButton);
 
 			if (workflow.getSelectedTask().getTaskState().equals("started")
 					&& workflow.getSelectedTask().getOwner() != null) {
+				DynamicForm transitionsForm = new DynamicForm();
+				transitionsForm.setWidth(150);
+				transitionsForm.setIsGroup(true);
+				transitionsForm.setGroupTitle(I18N.message("transitions"));
+
+				List<FormItem> items = new ArrayList<FormItem>();
 				// Add Transitions buttons
-				Button transitionButton = null;
 				if (workflow.getSelectedTask().getTransitions() != null)
 					for (GUITransition transition : workflow.getSelectedTask().getTransitions()) {
 						final String transitionName = transition.getText();
 						if (transitionName == null || transitionName.trim().isEmpty())
 							continue;
-						transitionButton = new Button(transition.getText());
+						ButtonItem transitionButton = new ButtonItem(transition.getText());
 						transitionButton.setAutoFit(true);
-						transitionButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-							@Override
-							public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+						transitionButton.addClickHandler(new ClickHandler() {
 
+							@Override
+							public void onClick(ClickEvent event) {
 								service.endTask(Session.get().getSid(), getWorkflow().getSelectedTask().getId(),
 										transitionName, new AsyncCallback<Void>() {
 											@Override
@@ -404,8 +415,10 @@ public class WorkflowDetailsDialog extends Window {
 										});
 							}
 						});
-						buttonsPanel.addMember(transitionButton);
+						items.add(transitionButton);
 					}
+				transitionsForm.setItems(items.toArray(new FormItem[0]));
+				buttonsPanel.addMember(transitionsForm);
 			}
 		} else {
 			DynamicForm taskEndedForm = new DynamicForm();
@@ -418,6 +431,8 @@ public class WorkflowDetailsDialog extends Window {
 			taskEndedTitle.setWrapTitle(false);
 
 			taskEndedForm.setItems(taskEndedTitle);
+			
+			buttonsPanel.addMember(spacer);
 			buttonsPanel.addMember(taskEndedForm);
 		}
 
