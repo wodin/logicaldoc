@@ -190,9 +190,13 @@ public class ServletIOUtil {
 		String eTag = doc.getId() + "_" + doc.getVersion() + "_" + lastModified;
 		long expires = System.currentTimeMillis() + DEFAULT_EXPIRE_TIME;
 		boolean acceptsGzip = false;
+
 		String acceptEncoding = request.getHeader("Accept-Encoding");
 		acceptsGzip = acceptEncoding != null && accepts(acceptEncoding, "gzip");
 		acceptsGzip = acceptsGzip && "true".equals(config.getProperty("download.gzip"));
+
+		// Don't compress if we have to serve a thumbnail
+		acceptsGzip = acceptsGzip && !"thumb.jpg".endsWith(suffix) && !"tile.jpg".endsWith(suffix);
 
 		if (StringUtils.isEmpty(suffix) || !suffix.contains("preview")) {
 			response.setContentType(contentType);

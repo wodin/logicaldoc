@@ -23,7 +23,9 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.MultiComboBoxLayoutStyle;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
@@ -63,7 +65,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 	private DynamicForm form2 = new DynamicForm();
 
-	private Layout thumbnail = null;
+	private Layout tile = null;
 
 	private VLayout container = new VLayout();
 
@@ -181,32 +183,28 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		prepareRightForm();
 
 		/*
-		 * Prepare the thumbnail
+		 * Prepare the tile
 		 */
 		if (document.getId() != 0L) {
-			prepareThumbnail();
+			prepareTile();
 		}
 	}
 
-	private void prepareThumbnail() {
+	private void prepareTile() {
 		try {
-			if (thumbnail != null && columns.contains(thumbnail)) {
-				columns.removeMember(thumbnail);
-				thumbnail.destroy();
+			if (tile != null && columns.contains(tile)) {
+				columns.removeMember(tile);
+				tile.destroy();
 			}
 
-			thumbnail = new HLayout();
-			thumbnail.setWidth(202);
-			thumbnail.setMembersMargin(0);
+			tile = new HLayout();
+			tile.setWidth(219);
+			tile.setMembersMargin(0);
+			tile.setAlign(Alignment.RIGHT);
+			tile.setOverflow(Overflow.HIDDEN);
 
 			if (Session.get().isShowThumbnail()) {
-				String url = Util.contextPath() + "/preview?docId=" + document.getId() + "&sid="
-						+ Session.get().getSid();
-				Image image = new Image(url);
-				image.setWidth(200 + "px");
-				// image.setBorder("1px solid #898989;");
-				// image.setHeight((getHeight() - 10) + "px");
-				thumbnail.addClickHandler(new ClickHandler() {
+				tile.addClickHandler(new ClickHandler() {
 
 					@Override
 					public void onClick(ClickEvent event) {
@@ -214,6 +212,9 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 						lightbox.show();
 					}
 				});
+
+				Image image = new Image(Util.tileUrl(Session.get().getSid(), document.getId(), null));
+				image.setHeight(Integer.parseInt(Session.get().getConfig("gui.tile.size")) + "px");
 
 				IconButton icon = new IconButton("");
 				icon.setWidth(16);
@@ -224,13 +225,12 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 					@Override
 					public void onClick(ClickEvent event) {
 						Session.get().setShowThumbnail(false);
-						prepareThumbnail();
+						prepareTile();
 					}
 				});
 
-				thumbnail.setWidth(219);
-				thumbnail.addMember(image);
-				thumbnail.addMember(icon);
+				tile.addMember(image);
+				tile.addMember(icon);
 			} else {
 				IButton showThumbnail = new IButton(I18N.message("showthumbnail"));
 				showThumbnail.addClickHandler(new ClickHandler() {
@@ -238,13 +238,13 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 					@Override
 					public void onClick(ClickEvent event) {
 						Session.get().setShowThumbnail(true);
-						prepareThumbnail();
+						prepareTile();
 					}
 				});
-				thumbnail.setMembers(showThumbnail);
+				tile.setMembers(showThumbnail);
 			}
 
-			columns.addMember(thumbnail);
+			columns.addMember(tile);
 		} catch (Throwable t) {
 			Log.error(t.getMessage(), null, t);
 		}

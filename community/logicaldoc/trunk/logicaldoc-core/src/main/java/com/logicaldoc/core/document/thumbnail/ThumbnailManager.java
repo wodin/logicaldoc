@@ -6,9 +6,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.jmimemagic.Magic;
-import net.sf.jmimemagic.MagicMatch;
-
 import org.apache.commons.io.FilenameUtils;
 import org.java.plugin.registry.Extension;
 import org.slf4j.Logger;
@@ -48,16 +45,34 @@ public class ThumbnailManager {
 	 * @throws IOException
 	 */
 	public void createTumbnail(Document document, String fileVersion) throws IOException {
+		createImage(document, fileVersion, "thumbnail", "thumb.jpg");
+	}
+
+	/**
+	 * Creates the tile for the specified document and file version. The
+	 * thumbnail is an image rendering of the first page only.
+	 * 
+	 * @param document The document to be treated
+	 * @param fileVersion The file version(optional)
+	 * @throws IOException
+	 */
+	public void createTile(Document document, String fileVersion) throws IOException {
+		createImage(document, fileVersion, "tile", "tile.jpg");
+	}
+
+	protected void createImage(Document document, String fileVersion, String type, String suffix) throws IOException {
 		ThumbnailBuilder builder = getBuilder(document);
-		if (builder == null)
+		if (builder == null) {
 			log.warn("No builder found for document " + document.getId());
+			return;
+		}
 
 		String tenantName = getTenantName(document);
 
 		int size = 150;
 		try {
 			ContextProperties conf = new ContextProperties();
-			size = Integer.parseInt(conf.getProperty(tenantName + ".gui.thumbnail.size"));
+			size = Integer.parseInt(conf.getProperty(tenantName + ".gui." + type + ".size"));
 		} catch (Throwable t) {
 			log.error(t.getMessage());
 		}
@@ -65,7 +80,7 @@ public class ThumbnailManager {
 		int quality = 100;
 		try {
 			ContextProperties conf = new ContextProperties();
-			int buf = Integer.parseInt(conf.getProperty(tenantName + ".gui.thumbnail.quality"));
+			int buf = Integer.parseInt(conf.getProperty(tenantName + ".gui." + type + ".quality"));
 			if (buf < 1)
 				buf = 1;
 			if (buf > 100)
@@ -77,20 +92,19 @@ public class ThumbnailManager {
 
 		// Prepare I/O files
 		File src = null;
-		File dest = File.createTempFile("dest", "thumb.jpg");
+		File dest = File.createTempFile("dest", suffix);
 
 		try {
 			src = writeToFile(document, fileVersion);
 
-			// Perform the elaboration
 			builder.buildThumbnail(tenantName, src, document.getFileName(), dest, size, quality);
 
 			// Put the resource
 			String resource = storer.getResourceName(document.getId(), getSuitableFileVersion(document, fileVersion),
-					"thumb.jpg");
+					suffix);
 			storer.store(dest, document.getId(), resource);
 		} catch (Throwable e) {
-			log.warn("Error creating thumbnail for document: " + document.getId() + " " + document.getTitle(), e);
+			log.warn("Error rendering image for document: " + document.getId() + " - " + document.getTitle(), e);
 		} finally {
 			// Delete temporary resources
 			FileUtil.strongDelete(src);
@@ -126,7 +140,7 @@ public class ThumbnailManager {
 		ThumbnailBuilder builder = getBuilders().get(document.getFileExtension().toLowerCase());
 
 		if (builder == null) {
-			log.warn("No registered thumbnail for extension " + document.getFileExtension().toLowerCase());
+			log.warn("No registered thumbnail builder for extension " + document.getFileExtension().toLowerCase());
 			try {
 				String mime = MimeType.getByFilename(document.getFileName());
 				if ("text/plain".equals(mime)) {
@@ -150,8 +164,10 @@ public class ThumbnailManager {
 	 */
 	public void createPreview(Document document, String fileVersion) throws IOException {
 		ThumbnailBuilder builder = getBuilder(document);
-		if (builder == null)
+		if (builder == null) {
 			log.warn("No builder found for document " + document.getId());
+			return;
+		}
 
 		String tenantName = getTenantName(document);
 
