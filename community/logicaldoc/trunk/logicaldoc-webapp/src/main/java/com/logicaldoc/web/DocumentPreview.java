@@ -24,8 +24,8 @@ import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.ServletIOUtil;
 import com.logicaldoc.web.util.ServiceUtil;
+import com.logicaldoc.web.util.ServletIOUtil;
 
 /**
  * This servlet is responsible for document preview. It searches for the
@@ -117,7 +117,7 @@ public class DocumentPreview extends HttpServlet {
 
 			if (stream == null) {
 				log.debug("Preview resource not available");
-				forwardPreviewNotAvailable(request, response, suffix);
+				forwardPreviewNotAvailable(request, response, suffix, session.getTenantName());
 				return;
 			}
 
@@ -152,7 +152,22 @@ public class DocumentPreview extends HttpServlet {
 			}
 		}
 
-		if (resource.endsWith(".jpg"))
+		if (resource.endsWith("thumb.jpg"))
+			return;
+
+		if (resource.endsWith("tile.jpg")) {
+			String tileResource = storer.getResourceName(doc, fileVersion, "tile.jpg");
+			if (!storer.exists(doc.getId(), tileResource)) {
+				try {
+					thumbManager.createTile(doc, fileVersion);
+					log.debug("Created tile " + resource);
+				} catch (Throwable t) {
+					log.error(t.getMessage(), t);
+				}
+			}
+		}
+
+		if (resource.endsWith("tile.jpg"))
 			return;
 
 		/*
@@ -168,13 +183,12 @@ public class DocumentPreview extends HttpServlet {
 		}
 	}
 
-	protected void forwardPreviewNotAvailable(HttpServletRequest request, HttpServletResponse response, String suffix) {
+	protected void forwardPreviewNotAvailable(HttpServletRequest request, HttpServletResponse response, String suffix,
+			String tenant) {
 		try {
 			RequestDispatcher rd = request.getRequestDispatcher("/flash/previewnotavailable.swf");
-
-			if ("thumb.jpg".equals(suffix))
+			if ("thumb.jpg".equals(suffix) || "tile.jpg".equals(suffix))
 				rd = request.getRequestDispatcher("/skin/images/preview_na.gif");
-
 			rd.forward(request, response);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);

@@ -105,6 +105,15 @@ public class GUISettingsPanel extends VLayout {
 		thumbQuality.setRequired(true);
 		thumbQuality.setWrapTitle(false);
 
+		TextItem tileSize = ItemFactory.newIntegerItem("tilesize", I18N.message("tilesize"), null);
+		tileSize.setHint("pixels");
+		tileSize.setRequired(true);
+
+		TextItem tileQuality = ItemFactory.newIntegerItem("tilequality", I18N.message("tilequality"), null);
+		tileQuality.setHint("%");
+		tileQuality.setRequired(true);
+		tileQuality.setWrapTitle(false);
+
 		TextItem uploadmax = ItemFactory.newIntegerItem("uploadmax", I18N.message("uploadmax"), null);
 		uploadmax.setHint("MB");
 		uploadmax.setRequired(true);
@@ -147,8 +156,8 @@ public class GUISettingsPanel extends VLayout {
 		sessionheartbeat.setWrapTitle(false);
 
 		parametersForm.setItems(welcome, dropspot, previewPages, previewSize, previewZoom, thumbSize, thumbQuality,
-				uploadmax, disallow, ondoubleclick, doctab, searchhits, extattr, webcontentfolders, savelogin,
-				sessiontimeout, sessionheartbeat);
+				tileSize, tileQuality, uploadmax, disallow, ondoubleclick, doctab, searchhits, extattr,
+				webcontentfolders, savelogin, sessiontimeout, sessionheartbeat);
 
 		for (GUIParameter p : settings) {
 			if (p.getName().endsWith("gui.welcome"))
@@ -167,6 +176,10 @@ public class GUISettingsPanel extends VLayout {
 				thumbSize.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().endsWith("gui.thumbnail.quality"))
 				thumbQuality.setValue(Integer.parseInt(p.getValue().trim()));
+			if (p.getName().endsWith("gui.tile.size"))
+				tileSize.setValue(Integer.parseInt(p.getValue().trim()));
+			if (p.getName().endsWith("gui.tile.quality"))
+				tileQuality.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().endsWith("gui.doubleclick"))
 				ondoubleclick.setValue(p.getValue());
 			if (p.getName().endsWith("gui.document.tab"))
@@ -212,6 +225,10 @@ public class GUISettingsPanel extends VLayout {
 							"thumbsize").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.thumbnail.quality", values.get(
 							"thumbquality").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.tile.size", values
+							.get("tilesize").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.tile.quality", values.get(
+							"tilequality").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.doubleclick", values.get(
 							"ondoubleclick").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.document.tab", values.get(
@@ -231,9 +248,8 @@ public class GUISettingsPanel extends VLayout {
 							"sessionheartbeat").toString()));
 
 					// Update the current session parameters.
-					for (GUIParameter p : params) {
+					for (GUIParameter p : params)
 						Session.get().getInfo().setConfig(p.getName(), p.getValue());
-					}
 
 					service.saveSettings(Session.get().getSid(), params.toArray(new GUIParameter[0]),
 							new AsyncCallback<Void>() {

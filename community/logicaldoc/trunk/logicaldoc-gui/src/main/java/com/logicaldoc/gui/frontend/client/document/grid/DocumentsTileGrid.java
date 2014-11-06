@@ -34,22 +34,25 @@ public class DocumentsTileGrid extends TileGrid implements DocumentsGrid {
 		setTileHeight(250);
 		setAutoFetchData(true);
 		setSelectionType(SelectionStyle.MULTIPLE);
-
+		setShowAllRecords(false);
+		setCanReorderTiles(false);
 		setWidth100();
-		// setCanReorderTiles(true);
-		setShowAllRecords(true);
 
 		DetailViewerField thumbnail = new DetailViewerField("thumbnail");
 		thumbnail.setDetailFormatter(new DetailFormatter() {
 
 			@Override
 			public String format(Object value, Record record, DetailViewerField field) {
+				int tileSize = 200;
+				if (Session.get().getConfig("gui.tile.size") != null)
+					tileSize = Integer.parseInt(Session.get().getConfig("gui.tile.size"));
+
 				try {
-					if("folder".equals(record.getAttribute("type")))
-						return Util.imageHTML("folder_tile.png", null, 200, null);
+					if ("folder".equals(record.getAttribute("type")))
+						return Util.imageHTML("folder_tile.png", null, tileSize, null);
 					else
-						return Util.thumbnailImgageHTML(Session.get().getSid(), Long.parseLong(record.getAttribute("id")), null,
-							null, 200);
+						return Util.tileImgageHTML(Session.get().getSid(), Long.parseLong(record.getAttribute("id")),
+								null, null, tileSize);
 				} catch (Throwable e) {
 					return "";
 				}

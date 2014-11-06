@@ -184,6 +184,21 @@ public class Util {
 		return img;
 	}
 
+	public static String tileUrl(String sid, long docId, String fileVersion) {
+		return thumbnailUrl(sid, docId, fileVersion) + "&suffix=tile.jpg";
+	}
+
+	public static String tileImgageHTML(String sid, long docId, String fileVersion, Integer width, Integer height) {
+		String style = "";
+		if (width != null)
+			style += "width:" + width + "px; ";
+		if (height != null)
+			style += "height:" + height + "px; ";
+
+		String img = "<img src='" + tileUrl(sid, docId, fileVersion) + "' style='" + style + "' />";
+		return img;
+	}
+
 	public static String imageUrl(String imageName) {
 		return imagePrefix() + imageName;
 	}
