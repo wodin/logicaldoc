@@ -21,6 +21,7 @@ import com.logicaldoc.core.security.UserHistory;
 import com.logicaldoc.core.security.UserListener;
 import com.logicaldoc.core.security.UserListenerManager;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.crypt.CryptUtil;
 
 /**
@@ -38,12 +39,15 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 	private UserListenerManager userListenerManager;
 
-	// Password time to live
-	private int passwordTtl = 90;
+	private ContextProperties config;
 
 	private HibernateUserDAO() {
 		super(User.class);
 		super.log = LoggerFactory.getLogger(HibernateUserDAO.class);
+	}
+
+	private boolean ignoreCaseLogin() {
+		return "true".equals(config.getProperty("login.ignorecase"));
 	}
 
 	/**
@@ -60,15 +64,22 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 		return findByWhere("lower(_entity.name) like ?1", new Object[] { name.toLowerCase() }, null, null);
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.UserDAO#findByUserName(java.lang.String)
-	 */
+	@Override
 	public User findByUserName(String username) {
 		User user = null;
 		List<User> coll = findByWhere("_entity.userName = ?1", new Object[] { username }, null, null);
-		if (coll.size() > 0) {
+		if (coll.size() > 0)
 			user = coll.iterator().next();
-		}
+		return user;
+	}
+
+	@Override
+	public User findByUserNameIgnoreCase(String username) {
+		User user = null;
+		List<User> coll = findByWhere("lower(_entity.userName) = ?1", new Object[] { username.toLowerCase() }, null,
+				null);
+		if (coll.size() > 0)
+			user = coll.iterator().next();
 		return user;
 	}
 
@@ -101,6 +112,10 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 		boolean newUser = user.getId() == 0;
 
 		try {
+			if (findByUserNameIgnoreCase(user.getUserName()) != null)
+				throw new Exception("Another user exists with the same username " + user.getUserName()
+						+ " (perhaps with different case");
+
 			Map<String, Object> dictionary = new HashMap<String, Object>();
 
 			log.debug("Invoke listeners before store");
@@ -179,7 +194,12 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 		boolean result = true;
 
 		try {
-			User user = findByUserName(username);
+			User user = null;
+			if (ignoreCaseLogin())
+				user = findByUserNameIgnoreCase(username);
+			else
+				user = findByUserName(username);
+
 			if (!validateUser(user))
 				return false;
 
@@ -198,7 +218,10 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	public boolean validateUser(String username) {
 		boolean result = true;
 		try {
-			result = validateUser(findByUserName(username));
+			if (ignoreCaseLogin())
+				result = validateUser(findByUserName(username));
+			else
+				result = validateUser(findByUserNameIgnoreCase(username));
 		} catch (Throwable e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -223,17 +246,16 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	}
 
 	public int getPasswordTtl() {
-		return passwordTtl;
-	}
-
-	public void setPasswordTtl(int passwordTtl) {
-		this.passwordTtl = passwordTtl;
+		int value = 90;
+		if (config.getProperty("password.ttl") != null)
+			value = config.getInt("password.ttl");
+		return value;
 	}
 
 	@Override
 	public boolean isPasswordExpired(String username) {
 		try {
-			User user = findByUserName(username);
+			User user = findByUserNameIgnoreCase(username);
 			if (user == null)
 				return false;
 
@@ -370,5 +392,9 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 			return findByUserName("admin");
 		else
 			return findByUserName("admin" + StringUtils.capitalize(tenantName));
+	}
+
+	public void setConfig(ContextProperties config) {
+		this.config = config;
 	}
 }

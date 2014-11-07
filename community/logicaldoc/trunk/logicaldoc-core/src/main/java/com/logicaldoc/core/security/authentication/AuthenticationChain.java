@@ -37,6 +37,11 @@ public class AuthenticationChain implements AuthenticationProvider {
 		}
 	};
 
+	protected boolean ignoreCaseLogin() {
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		return "true".equals(config.getProperty("login.ignorecase"));
+	}
+
 	public static String getSessionId() {
 		String sid = (String) sessionId.get();
 		sessionId.remove();
@@ -78,7 +83,13 @@ public class AuthenticationChain implements AuthenticationProvider {
 		{
 			String tenant = Tenant.DEFAULT_NAME;
 			UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-			User user = udao.findByUserName(username);
+			User user = null;
+
+			if (ignoreCaseLogin())
+				user = udao.findByUserNameIgnoreCase(username);
+			else
+				user = udao.findByUserName(username);
+
 			if (user != null) {
 				TenantDAO tdao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
 				Tenant t = tdao.findById(user.getTenantId());

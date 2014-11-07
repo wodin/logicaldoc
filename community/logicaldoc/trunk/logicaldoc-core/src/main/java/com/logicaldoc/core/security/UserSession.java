@@ -13,6 +13,7 @@ import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserHistoryDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * A single user session with it's unique identifier and the reference to the
@@ -121,8 +122,16 @@ public class UserSession implements Comparable<UserSession> {
 		// Set the user's id
 		UserDAO userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.getInstance().getBean(UserHistoryDAO.class);
-		User user = userDAO.findByUserName(userName);
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+
+		User user = null;
+		if ("true".equals(config.getProperty("login.ignorecase")))
+			user = userDAO.findByUserNameIgnoreCase(userName);
+		else
+			user = userDAO.findByUserName(userName);
+
 		this.userId = user.getId();
+		this.userName = user.getUserName();
 
 		// Set the tenant's id and name
 		this.tenantId = user.getTenantId();

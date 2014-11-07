@@ -95,7 +95,16 @@ public class SecuritySettingsPanel extends VLayout {
 		savelogin.setWrapTitle(false);
 		savelogin.setRequired(true);
 
-		pwdForm.setFields(pwdSize, pwdExp, savelogin);
+		final RadioGroupItem ignorelogincase = ItemFactory.newBooleanSelector("ignorelogincase",
+				I18N.message("ignorelogincase"));
+		ignorelogincase.setValue(settings.isIgnoreLoginCase() ? "yes" : "no");
+		ignorelogincase.setWrapTitle(false);
+		ignorelogincase.setRequired(true);
+
+		if (Session.get().isDefaultTenant())
+			pwdForm.setFields(pwdSize, pwdExp, savelogin, ignorelogincase);
+		else
+			pwdForm.setFields(pwdSize, pwdExp, savelogin);
 		password.setPane(pwdForm);
 
 		Tab anonymous = prepareAnonymousTab(settings);
@@ -127,6 +136,9 @@ public class SecuritySettingsPanel extends VLayout {
 						SC.warn(I18N.message("selectanonymoususer"));
 						return;
 					}
+					if (Session.get().isDefaultTenant())
+						SecuritySettingsPanel.this.settings.setIgnoreLoginCase(values.get("ignorelogincase").equals(
+								"yes") ? true : false);
 
 					service.saveSettings(Session.get().getSid(), SecuritySettingsPanel.this.settings,
 							new AsyncCallback<Void>() {

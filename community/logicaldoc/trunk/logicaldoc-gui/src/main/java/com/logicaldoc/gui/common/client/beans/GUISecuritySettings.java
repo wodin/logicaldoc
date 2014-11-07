@@ -17,6 +17,8 @@ public class GUISecuritySettings implements Serializable {
 	private int pwdExpiration;
 
 	private boolean saveLogin = false;
+	
+	private boolean ignoreLoginCase = false;
 
 	private boolean enableAnonymousLogin = false;
 
@@ -60,6 +62,14 @@ public class GUISecuritySettings implements Serializable {
 
 	public void setEnableAnonymousLogin(boolean enableAnonymousLogin) {
 		this.enableAnonymousLogin = enableAnonymousLogin;
+	}
+
+	public boolean isIgnoreLoginCase() {
+		return ignoreLoginCase;
+	}
+
+	public void setIgnoreLoginCase(boolean ignoreLoginCase) {
+		this.ignoreLoginCase = ignoreLoginCase;
 	}
 
 }

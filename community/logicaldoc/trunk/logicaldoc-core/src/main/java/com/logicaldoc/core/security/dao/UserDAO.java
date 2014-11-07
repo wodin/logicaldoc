@@ -23,12 +23,21 @@ public interface UserDAO extends PersistentObjectDAO<User> {
 	public int count(Long tenantId);
 
 	/**
-	 * This method finds an User by its username.
+	 * This method finds an User by its username. The search is case sensitive.
 	 * 
 	 * @param username username of wanted User.
 	 * @return Wanted User or null if user doesn't exist.
 	 */
 	public User findByUserName(String username);
+
+	/**
+	 * This method finds an User by its username. The search is case
+	 * insensitive.
+	 * 
+	 * @param username username of wanted User.
+	 * @return Wanted User or null if user doesn't exist.
+	 */
+	public User findByUserNameIgnoreCase(String username);
 
 	/**
 	 * This method finds an User by username.
@@ -79,10 +88,6 @@ public interface UserDAO extends PersistentObjectDAO<User> {
 	 * @return True if the password is expired
 	 */
 	public boolean isPasswordExpired(String username);
-
-	public int getPasswordTtl();
-
-	public void setPasswordTtl(int passwordTtl);
 
 	/**
 	 * This method deletes the user object and insert a new user history entry.

@@ -111,6 +111,24 @@ public class HibernateUserDAOTest extends AbstractCoreTCase {
 	}
 
 	@Test
+	public void testFindByUserNameIgnoreCase() {
+		User user = dao.findByUserNameIgnoreCase("admin");
+		Assert.assertNotNull(user);
+		Assert.assertEquals("admin", user.getUserName());
+		
+		// Try with unexisting username
+		user = dao.findByUserNameIgnoreCase("xxxx");
+		Assert.assertNull(user);
+
+		// Try with different case
+		user = dao.findByUserName("AdMiN");
+		Assert.assertNull(user);
+		user = dao.findByUserNameIgnoreCase("AdMiN");
+		Assert.assertNotNull(user);
+		Assert.assertEquals("admin", user.getUserName());
+	}
+	
+	@Test
 	public void testFindByLikeUserName() {
 		Collection<User> users = dao.findByLikeUserName("admin");
 		Assert.assertNotNull(users);

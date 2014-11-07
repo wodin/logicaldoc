@@ -27,7 +27,7 @@
             <bean abstract="false" autowire="default"
                 class="com.logicaldoc.core.security.dao.HibernateUserDAO"
                 dependency-check="default" lazy-init="default">
-                <property name="passwordTtl" value="${password.ttl}" />
+                <property name="config" ref="ContextProperties" />
                 <property name="sessionFactory" ref="SessionFactory" />
                 <property name="userHistoryDAO" ref="UserHistoryDAO" />
                 <property name="genericDAO" ref="GenericDAO" />
