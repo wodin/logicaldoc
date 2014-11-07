@@ -102,7 +102,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			}
 
 			if (authenticationChain.authenticate(username, password, remoteAddress)) {
-				User user = userDao.findByUserName(username);
+				User user = userDao.findByUserNameIgnoreCase(username);
 				userDao.initialize(user);
 				session = internalLogin(AuthenticationChain.getSessionId(), user, locale);
 				guiUser = session.getUser();
@@ -766,7 +766,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			if (StringUtils.isNotEmpty(pbean.getProperty(session.getTenantName() + ".gui.savelogin")))
 				securitySettings.setSaveLogin("true".equals(pbean.getProperty(session.getTenantName()
 						+ ".gui.savelogin")));
-
+			securitySettings.setIgnoreLoginCase("true".equals(pbean.getProperty("login.ignorecase")));
 			if (StringUtils.isNotEmpty(pbean.getProperty(session.getTenantName() + ".anonymous.enabled")))
 				securitySettings.setEnableAnonymousLogin("true".equals(pbean.getProperty(session.getTenantName()
 						+ ".anonymous.enabled")));
@@ -791,13 +791,16 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
-			if (session.getTenantId() == Tenant.DEFAULT_ID)
+			if (session.getTenantId() == Tenant.DEFAULT_ID) {
 				conf.setProperty("password.ttl", Integer.toString(settings.getPwdExpiration()));
+				conf.setProperty("login.ignorecase", Boolean.toString(settings.isIgnoreLoginCase()));
+			}
 
 			conf.setProperty(session.getTenantName() + ".password.size", Integer.toString(settings.getPwdSize()));
 			conf.setProperty(session.getTenantName() + ".gui.savelogin", Boolean.toString(settings.isSaveLogin()));
 			conf.setProperty(session.getTenantName() + ".anonymous.enabled",
 					Boolean.toString(settings.isEnableAnonymousLogin()));
+
 			if (settings.getAnonymousUser() != null)
 				conf.setProperty(session.getTenantName() + ".anonymous.user", settings.getAnonymousUser().getUserName());
 

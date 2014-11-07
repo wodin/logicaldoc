@@ -78,9 +78,6 @@ public class GUISettingsPanel extends VLayout {
 		TextItem welcome = ItemFactory.newTextItem("welcome", I18N.message("welcomemessage"), null);
 		welcome.setWidth(400);
 
-		RadioGroupItem dropspot = ItemFactory.newBooleanSelector("dropspot", "dropspot");
-		dropspot.setValueMap("default", "embedded");
-
 		RadioGroupItem savelogin = ItemFactory.newBooleanSelector("savelogin", I18N.message("savelogin"));
 		savelogin.setHint(I18N.message("saveloginhint"));
 		savelogin.setWrapTitle(false);
@@ -155,15 +152,13 @@ public class GUISettingsPanel extends VLayout {
 		sessionheartbeat.setRequired(true);
 		sessionheartbeat.setWrapTitle(false);
 
-		parametersForm.setItems(welcome, dropspot, previewPages, previewSize, previewZoom, thumbSize, thumbQuality,
-				tileSize, tileQuality, uploadmax, disallow, ondoubleclick, doctab, searchhits, extattr,
-				webcontentfolders, savelogin, sessiontimeout, sessionheartbeat);
+		parametersForm.setItems(welcome, previewPages, previewSize, previewZoom, thumbSize, thumbQuality, tileSize,
+				tileQuality, uploadmax, disallow, ondoubleclick, doctab, searchhits, extattr, webcontentfolders,
+				savelogin, sessiontimeout, sessionheartbeat);
 
 		for (GUIParameter p : settings) {
 			if (p.getName().endsWith("gui.welcome"))
 				welcome.setValue(p.getValue());
-			if (p.getName().endsWith("gui.dropspot.mode"))
-				dropspot.setValue(p.getValue());
 			if (p.getName().endsWith("gui.savelogin"))
 				savelogin.setValue(p.getValue().equals("true") ? "yes" : "no");
 			if (p.getName().endsWith("gui.preview.pages"))
@@ -211,8 +206,6 @@ public class GUISettingsPanel extends VLayout {
 					List<GUIParameter> params = new ArrayList<GUIParameter>();
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.welcome", (String) values
 							.get("welcome")));
-					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.dropspot.mode", (String) values
-							.get("dropspot")));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.savelogin", "yes".equals(values
 							.get("savelogin")) ? "true" : "false"));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.preview.pages", values.get(

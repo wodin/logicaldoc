@@ -135,7 +135,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.contains("tag.") || name.startsWith("jdbc.") || name.startsWith("cluster")
 					|| name.startsWith("ip.") || name.contains(".extcall.") || name.contains("anonymous")
 					|| name.startsWith("hibernate.") || name.contains(".session.") || name.contains("acmecad.")
-					|| name.contains("antivirus."))
+					|| name.contains("antivirus.") || name.startsWith("login."))
 				continue;
 
 			sortedSet.add(key.toString());
@@ -320,7 +320,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 		List<GUIParameter> params = new ArrayList<GUIParameter>();
 		for (Object name : conf.keySet()) {
-			if (name.toString().startsWith(session.getTenantName() + ".gui"))
+			if (name.toString().startsWith(session.getTenantName() + ".gui")
+					&& !name.toString().contains("dropspot.mode"))
 				params.add(new GUIParameter(name.toString(), conf.getProperty(name.toString())));
 		}
 		params.add(new GUIParameter("upload.maxsize", conf.getProperty("upload.maxsize")));
