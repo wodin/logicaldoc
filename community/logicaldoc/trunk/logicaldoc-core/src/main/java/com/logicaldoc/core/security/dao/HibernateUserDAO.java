@@ -112,9 +112,10 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 		boolean newUser = user.getId() == 0;
 
 		try {
-			if (findByUserNameIgnoreCase(user.getUserName()) != null)
-				throw new Exception("Another user exists with the same username " + user.getUserName()
-						+ " (perhaps with different case");
+			if (user.getId() == 0L)
+				if (findByUserNameIgnoreCase(user.getUserName()) != null)
+					throw new Exception("Another user exists with the same username " + user.getUserName()
+							+ " (perhaps with different case)");
 
 			Map<String, Object> dictionary = new HashMap<String, Object>();
 
