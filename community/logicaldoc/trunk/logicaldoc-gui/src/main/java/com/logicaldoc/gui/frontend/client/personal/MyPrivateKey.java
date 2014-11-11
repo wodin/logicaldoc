@@ -61,7 +61,7 @@ public class MyPrivateKey extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("myprivatekey"));
 		setWidth(450);
-		setHeight(220);
+		setHeight(230);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -154,6 +154,8 @@ public class MyPrivateKey extends Window {
 							save.setVisible(true);
 							password.setVisible(true);
 							keys.clearValue();
+							if (result.length() > 20)
+								result = result.substring(0, 20);
 							LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 							map.put(result, result);
 							keys.setValueMap(map);
