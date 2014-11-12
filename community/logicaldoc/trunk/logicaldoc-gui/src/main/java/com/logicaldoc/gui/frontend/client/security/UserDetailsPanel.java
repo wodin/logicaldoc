@@ -10,6 +10,7 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Cursor;
@@ -290,15 +291,18 @@ public class UserDetailsPanel extends VLayout {
 			final boolean createNew = user.getId() == 0;
 			saveButton.setDisabled(true);
 
+			ContactingServer.get().show();
 			service.saveUser(Session.get().getSid(), user, Session.get().getInfo(), new AsyncCallback<GUIUser>() {
 				@Override
 				public void onFailure(Throwable caught) {
+					ContactingServer.get().hide();
 					Log.serverError(caught);
 					saveButton.setDisabled(false);
 				}
 
 				@Override
 				public void onSuccess(GUIUser user) {
+					ContactingServer.get().hide();
 					saveButton.setDisabled(false);
 					if (createNew && user.getWelcomeScreen() == -99) {
 						Log.warn(I18N.message("usernamealreadyinuse"), I18N.message("usernamealreadyinuse"));
