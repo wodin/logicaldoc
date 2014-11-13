@@ -129,7 +129,7 @@ public class GDocsImport extends Window {
 
 		toolStrip.addFormItem(new SearchBox() {
 			@Override
-			protected void search() {
+			protected void onSearch() {
 				ContactingServer.get().show();
 				gdocsService.search(Session.get().getSid(), this.getValueAsString(),
 						new AsyncCallback<GUIDocument[]>() {

@@ -44,6 +44,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellClickHandler;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
+import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
 import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.ViewStateChangedEvent;
@@ -61,7 +62,9 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 
 	private SignServiceAsync signService = (SignServiceAsync) GWT.create(SignService.class);
 
-	public DocumentsListGrid(final DataSource ds) {
+	private Cursor cursor = null;
+
+	public DocumentsListGrid(final DataSource ds, final int totalRecords) {
 		setEmptyMessage(I18N.message("notitemstoshow"));
 		setCanFreezeFields(true);
 		setAutoFetchData(true);
@@ -485,6 +488,16 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 					setViewState(previouslySavedState);
 			}
 		});
+
+		addDataArrivedHandler(new DataArrivedHandler() {
+			@Override
+			public void onDataArrived(DataArrivedEvent event) {
+				if (cursor != null) {
+					cursor.setMessage(I18N.message("showndocuments", Integer.toString(getCount())));
+					cursor.setTotalRecords(totalRecords);
+				}
+			}
+		});
 	}
 
 	@Override
@@ -685,5 +698,10 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 	@Override
 	public void removeSelectedDocuments() {
 		removeSelectedData();
+	}
+
+	@Override
+	public void setCursor(Cursor cursor) {
+		this.cursor = cursor;
 	}
 }

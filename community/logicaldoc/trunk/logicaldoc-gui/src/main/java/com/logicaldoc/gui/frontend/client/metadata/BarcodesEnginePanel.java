@@ -251,7 +251,7 @@ public class BarcodesEnginePanel extends VLayout {
 		docsList.setSelectionType(SelectionStyle.MULTIPLE);
 		docsList.setShowFilterEditor(true);
 		docsList.setFilterOnKeypress(true);
-		dataSource = new DocumentsDS(null, null, maxValue, null, 0);
+		dataSource = new DocumentsDS(null, null, maxValue, 1, null, 0);
 		docsList.setDataSource(dataSource);
 		docsList.setFields(locked, immutable, icon, title, size, lastModified, version, publisher, published, creator,
 				created, customId, filename);

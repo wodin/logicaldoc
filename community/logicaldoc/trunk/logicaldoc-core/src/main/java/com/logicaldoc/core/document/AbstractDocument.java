@@ -157,6 +157,8 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	private String transactionId;
 
 	private String transactionAgent;
+	
+	private String templateName;
 
 	/*
 	 * Used for saving the external resource ID when editing online
@@ -738,5 +740,13 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 
 	public void setExtResId(String extResId) {
 		this.extResId = extResId;
+	}
+
+	public String getTemplateName() {
+		return templateName;
+	}
+
+	public void setTemplateName(String templateName) {
+		this.templateName = templateName;
 	}
 }

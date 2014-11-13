@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.document.grid;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
@@ -28,8 +29,9 @@ import com.smartgwt.client.widgets.viewer.DetailViewerField;
  * @since 7.0
  */
 public class DocumentsTileGrid extends TileGrid implements DocumentsGrid {
+	private Cursor cursor;
 
-	public DocumentsTileGrid(final DataSource ds) {
+	public DocumentsTileGrid(final DataSource ds, final int totalRecords) {
 		setTileWidth(200);
 		setTileHeight(250);
 		setAutoFetchData(true);
@@ -95,6 +97,17 @@ public class DocumentsTileGrid extends TileGrid implements DocumentsGrid {
 		} else {
 			setDataSource(ds);
 		}
+
+		addDataArrivedHandler(new com.smartgwt.client.widgets.tile.events.DataArrivedHandler() {
+
+			@Override
+			public void onDataArrived(DataArrivedEvent event) {
+				if (cursor != null) {
+					cursor.setMessage(I18N.message("showndocuments", Integer.toString(getCount())));
+					cursor.setTotalRecords(totalRecords);
+				}
+			}
+		});
 	}
 
 	@Override
@@ -288,5 +301,10 @@ public class DocumentsTileGrid extends TileGrid implements DocumentsGrid {
 	@Override
 	public void removeSelectedDocuments() {
 		removeSelectedData();
+	}
+
+	@Override
+	public void setCursor(Cursor cursor) {
+		this.cursor = cursor;
 	}
 }

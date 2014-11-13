@@ -25,20 +25,14 @@ public class DocumentsDS extends DataSource {
 	/**
 	 * Constructor.
 	 * 
-	 * @param folderId
-	 *            The folder to be listed (optional)
-	 * @param filename
-	 *            A filter on the file nale (optional)
-	 * @param max
-	 *            The maximum number of records (if not specified MAX_ROWS is
-	 *            used)
-	 * @param indexed
-	 *            The indexed flag
-	 * @param barcoded
-	 *            The barcoded flag
+	 * @param folderId The folder to be listed (optional)
+	 * @param filename A filter on the file nale (optional)
+	 * @param max The maximum number of records (if not specified MAX_ROWS is
+	 *        used)
+	 * @param indexed The indexed flag
+	 * @param barcoded The barcoded flag
 	 */
-	public DocumentsDS(Long folderId, String fileFilter, Integer max,
-			Integer indexed, Integer barcoded) {
+	public DocumentsDS(Long folderId, String fileFilter, Integer max, int page, Integer indexed, Integer barcoded) {
 		setTitleField("title");
 		setRecordXPath("/list/document");
 		DataSourceTextField title = new DataSourceTextField("title");
@@ -55,10 +49,8 @@ public class DocumentsDS extends DataSource {
 		DataSourceTextField publisher = new DataSourceTextField("publisher");
 		DataSourceTextField creator = new DataSourceTextField("creator");
 		DataSourceFloatField size = new DataSourceFloatField("size");
-		DataSourceDateTimeField lastModified = new DataSourceDateTimeField(
-				"lastModified");
-		DataSourceDateTimeField published = new DataSourceDateTimeField(
-				"published");
+		DataSourceDateTimeField lastModified = new DataSourceDateTimeField("lastModified");
+		DataSourceDateTimeField published = new DataSourceDateTimeField("published");
 		DataSourceDateTimeField created = new DataSourceDateTimeField("created");
 		DataSourceImageField immutable = new DataSourceImageField("immutable");
 		DataSourceImageField iindexed = new DataSourceImageField("indexed");
@@ -73,30 +65,24 @@ public class DocumentsDS extends DataSource {
 		lockUserId.setHidden(true);
 		DataSourceTextField aliasId = new DataSourceTextField("aliasId");
 		aliasId.setHidden(true);
-		DataSourceDateTimeField sourceDate = new DataSourceDateTimeField(
-				"sourceDate");
+		DataSourceDateTimeField sourceDate = new DataSourceDateTimeField("sourceDate");
 		sourceDate.setHidden(true);
-		DataSourceTextField sourceAuthor = new DataSourceTextField(
-				"sourceAuthor");
+		DataSourceTextField sourceAuthor = new DataSourceTextField("sourceAuthor");
 		sourceAuthor.setHidden(true);
 		DataSourceImageField rating = new DataSourceImageField("rating");
 		DataSourceTextField comment = new DataSourceTextField("comment");
-		DataSourceIntegerField wfStatus = new DataSourceIntegerField(
-				"workflowStatus");
-		DataSourceTextField publishedStatus = new DataSourceTextField(
-				"publishedStatus");
+		DataSourceIntegerField wfStatus = new DataSourceIntegerField("workflowStatus");
+		DataSourceTextField publishedStatus = new DataSourceTextField("publishedStatus");
 		publishedStatus.setHidden(true);
-		DataSourceDateTimeField startPublishing = new DataSourceDateTimeField(
-				"startPublishing");
-		DataSourceDateTimeField stopPublishing = new DataSourceDateTimeField(
-				"stopPublishing");
+		DataSourceDateTimeField startPublishing = new DataSourceDateTimeField("startPublishing");
+		DataSourceDateTimeField stopPublishing = new DataSourceDateTimeField("stopPublishing");
 		DataSourceTextField extResId = new DataSourceTextField("extResId");
 		DataSourceTextField source = new DataSourceTextField("source");
 		DataSourceTextField sourceId = new DataSourceTextField("sourceId");
 		DataSourceTextField recipient = new DataSourceTextField("recipient");
 		DataSourceTextField object = new DataSourceTextField("object");
 		DataSourceTextField coverage = new DataSourceTextField("coverage");
-		
+
 		List<DataSourceField> fields = new ArrayList<DataSourceField>();
 		fields.add(id);
 		fields.add(title);
@@ -134,12 +120,10 @@ public class DocumentsDS extends DataSource {
 		fields.add(object);
 		fields.add(coverage);
 		fields.add(template);
-		
-		String[] extNames = Session.get().getInfo().getConfig("search.extattr")
-				.split(",");
+
+		String[] extNames = Session.get().getInfo().getConfig("search.extattr").split(",");
 		for (String name : extNames) {
-			DataSourceTextField ext = new DataSourceTextField("ext_" + name,
-					name);
+			DataSourceTextField ext = new DataSourceTextField("ext_" + name, name);
 			ext.setHidden(true);
 			ext.setCanFilter(true);
 			fields.add(ext);
@@ -149,15 +133,13 @@ public class DocumentsDS extends DataSource {
 		setClientOnly(true);
 
 		if (barcoded == null)
-			setDataURL("data/documents.xml?sid=" + Session.get().getSid()
-					+ "&locale=" + Session.get().getUser().getLanguage()
-					+ "&folderId=" + (folderId != null ? folderId : "")
-					+ "&filename=" + (fileFilter != null ? fileFilter : "")
-					+ "&max=" + (max != null ? max : MAX) + "&indexed="
-					+ (indexed != null ? indexed.toString() : ""));
+			setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&locale="
+					+ Session.get().getUser().getLanguage() + "&folderId=" + (folderId != null ? folderId : "")
+					+ "&filename=" + (fileFilter != null ? fileFilter : "") + "&max=" + (max != null ? max : MAX)
+					+ "&indexed=" + (indexed != null ? indexed.toString() : "")+ "&page=" + page);
 		else
-			setDataURL("data/tobarcode.xml?sid=" + Session.get().getSid()
-					+ "&max=" + (max != null ? max : MAX));
+			setDataURL("data/tobarcode.xml?sid=" + Session.get().getSid() + "&max=" + (max != null ? max : MAX)
+					+ "&page=" + page);
 	}
 
 	public DocumentsDS(String docIds) {
@@ -171,16 +153,13 @@ public class DocumentsDS extends DataSource {
 
 		id.setPrimaryKey(true);
 		id.setRequired(true);
-		DataSourceDateTimeField lastModified = new DataSourceDateTimeField(
-				"lastModified");
+		DataSourceDateTimeField lastModified = new DataSourceDateTimeField("lastModified");
 		DataSourceImageField icon = new DataSourceImageField("icon");
 		DataSourceTextField folderId = new DataSourceTextField("folderId");
 
-		setFields(id, icon, title, lastModified, folderId, version,
-				fileVersion, filename);
+		setFields(id, icon, title, lastModified, folderId, version, fileVersion, filename);
 		setClientOnly(true);
-		setDataURL("data/documents.xml?sid=" + Session.get().getSid()
-				+ "&docIds=" + docIds);
+		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&docIds=" + docIds);
 	}
 
 	public DocumentsDS(int status, int max) {
@@ -190,18 +169,15 @@ public class DocumentsDS extends DataSource {
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
 		id.setRequired(true);
-		DataSourceDateTimeField lastModified = new DataSourceDateTimeField(
-				"lastModified");
+		DataSourceDateTimeField lastModified = new DataSourceDateTimeField("lastModified");
 		DataSourceImageField icon = new DataSourceImageField("icon");
 		DataSourceTextField folderId = new DataSourceTextField("folderId");
 		DataSourceTextField version = new DataSourceTextField("version");
 		DataSourceTextField filename = new DataSourceTextField("filename");
 		DataSourceTextField fileVersion = new DataSourceTextField("fileVersion");
 
-		setFields(id, icon, title, lastModified, folderId, version,
-				fileVersion, filename);
+		setFields(id, icon, title, lastModified, folderId, version, fileVersion, filename);
 		setClientOnly(true);
-		setDataURL("data/documents.xml?sid=" + Session.get().getSid()
-				+ "&status=" + status + "&max=" + max);
+		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&status=" + status + "&max=" + max);
 	}
 }

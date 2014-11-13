@@ -16,10 +16,10 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
-import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.document.grid.ContextMenu;
+import com.logicaldoc.gui.frontend.client.document.grid.Cursor;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsListGrid;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsTileGrid;
@@ -33,7 +33,8 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
-import com.smartgwt.client.widgets.form.fields.IntegerItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
@@ -59,7 +60,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 	protected ToolStrip toolStrip;
 
-	private InfoPanel infoPanel;
+	private Cursor cursor;
 
 	private FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
 
@@ -87,9 +88,9 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		id.setHidden(true);
 
 		if (mode == DocumentsGrid.MODE_LIST)
-			grid = new DocumentsListGrid(null);
+			grid = new DocumentsListGrid(null, Search.get().getLastResult().length);
 		else if (mode == DocumentsGrid.MODE_GALLERY)
-			grid = new DocumentsTileGrid(null);
+			grid = new DocumentsTileGrid(null, Search.get().getLastResult().length);
 
 		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT)
 			grid.setCanExpandRows();
@@ -174,12 +175,21 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		// Prepare the toolbar with some buttons
 		prepareToolbar(options.getType());
 
-		if (infoPanel == null) {
-			infoPanel = new InfoPanel(" ");
-			addMember(infoPanel);
-		}
+		if (cursor != null)
+			removeMember(cursor);
+		cursor = new Cursor();
+		cursor.setMaxDisplayedRecords(Search.get().getOptions().getMaxHits());
+		cursor.registerMaxChangedHandler(new ChangedHandler() {
 
-		infoPanel.setVisible(true);
+			@Override
+			public void onChanged(ChangedEvent event) {
+				GUISearchOptions opt = Search.get().getOptions();
+				opt.setMaxHits(cursor.getMaxDisplayedRecords());
+				Search.get().search();
+			}
+		});
+
+		addMember(cursor);
 
 		// Prepare a stack for 2 sections the Title with search time and the
 		// list of hits
@@ -192,7 +202,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		stats += " (<b>" + format.format((double) Search.get().getTime() / (double) 1000) + "</b> "
 				+ I18N.message("seconds").toLowerCase() + ")";
 
-		infoPanel.setMessage(stats);
+		cursor.setMessage(stats);
 
 		GUIDocument[] result = Search.get().getLastResult();
 		grid.setDocuments(result);
@@ -245,32 +255,6 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 				save.setDisabled(true);
 				save.setTooltip(I18N.message("featuredisabled"));
 			}
-		}
-
-		if (Search.get().isHasMore()) {
-			toolStrip.addSeparator();
-			final IntegerItem max = ItemFactory.newValidateIntegerItem("repeatNumber", "", null, 1, null);
-			max.setHint(I18N.message("hits"));
-			max.setHintStyle("hint");
-			max.setShowTitle(false);
-			max.setDefaultValue(40);
-			max.setWidth(40);
-			max.setValue(Search.get().getOptions().getMaxHits());
-
-			ToolStripButton repeat = new ToolStripButton();
-			repeat.setTitle(I18N.message("display"));
-			toolStrip.addButton(repeat);
-			toolStrip.addFormItem(max);
-			repeat.addClickHandler(new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					if (!max.validate())
-						return;
-					GUISearchOptions opt = Search.get().getOptions();
-					opt.setMaxHits((Integer) max.getValue());
-					Search.get().search();
-				}
-			});
 		}
 
 		ToolStripButton print = new ToolStripButton();

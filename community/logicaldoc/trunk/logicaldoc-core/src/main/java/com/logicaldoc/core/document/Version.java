@@ -43,8 +43,6 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 
 	private Long templateId;
 
-	private String templateName;
-
 	private String event;
 
 	private String creator;
@@ -147,14 +145,6 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 
 	public void setTemplateId(Long templateId) {
 		this.templateId = templateId;
-	}
-
-	public String getTemplateName() {
-		return templateName;
-	}
-
-	public void setTemplateName(String templateName) {
-		this.templateName = templateName;
 	}
 
 	/**

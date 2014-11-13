@@ -36,9 +36,17 @@ public class I18N {
 	}
 
 	public static String message(String key, String val) {
+		return message(key, val, null);
+	}
+
+	public static String message(String key, String val1, String val2) {
 		String tmp = message(key);
 		try {
-			tmp = tmp.replaceAll("\\{0\\}", val);
+			tmp = tmp.replaceAll("\\{0\\}", val1);
+		} catch (Throwable t) {
+		}
+		try {
+			tmp = tmp.replaceAll("\\{1\\}", val2);
 		} catch (Throwable t) {
 		}
 		return tmp;

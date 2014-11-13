@@ -26,7 +26,6 @@ import com.smartgwt.client.types.SelectionType;
 import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
@@ -270,7 +269,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			@Override
 			public void onClick(ClickEvent event) {
 				Offline.put(Constants.COOKIE_DOCSLIST_MODE, DocumentsGrid.MODE_LIST);
-				DocumentsPanel.get().refresh(null, DocumentsGrid.MODE_LIST);
+				DocumentsPanel.get().refresh(null, 1, DocumentsGrid.MODE_LIST);
 			}
 		});
 		list.setDisabled(Session.get().getCurrentFolder() == null);
@@ -284,7 +283,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			public void onClick(ClickEvent event) {
 				if (Session.get().getCurrentFolder() != null)
 					Offline.put(Constants.COOKIE_DOCSLIST_MODE, DocumentsGrid.MODE_GALLERY);
-				DocumentsPanel.get().refresh(null, DocumentsGrid.MODE_GALLERY);
+				DocumentsPanel.get().refresh(null, 1, DocumentsGrid.MODE_GALLERY);
 			}
 		});
 		gallery.setDisabled(Session.get().getCurrentFolder() == null);
@@ -356,18 +355,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 						+ Session.get().getSid() + "&docId=" + document.getId());
 			}
 		});
-
-		final IntegerItem max = ItemFactory.newValidateIntegerItem("max", "", null, 1, null);
-		max.setHint(I18N.message("elements"));
-		max.setHintStyle("hint");
-		max.setShowTitle(false);
-
-		String mx = "100";
-		if (Offline.get(Constants.COOKIE_DOCSLIST_MAX) != null
-				&& !Offline.get(Constants.COOKIE_DOCSLIST_MAX).equals(""))
-			mx = (String) Offline.get(Constants.COOKIE_DOCSLIST_MAX);
-		max.setValue(Integer.parseInt(mx));
-		max.setWidth(40);
 
 		bulkUpdate.setIcon(ItemFactory.newImgIcon("application_form_edit.png").getSrc());
 		bulkUpdate.setTooltip(I18N.message("bulkupdate"));
@@ -459,21 +446,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				addCalendarEvent.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
-
-		addSeparator();
-		ToolStripButton display = new ToolStripButton();
-		display.setTitle(I18N.message("display"));
-		addButton(display);
-		addFormItem(max);
-		display.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if (max.validate()) {
-					Offline.put(Constants.COOKIE_DOCSLIST_MAX, max.getValueAsString());
-					DocumentsPanel.get().refresh((Integer) max.getValue(), null);
-				}
-			}
-		});
 
 		addSeparator();
 		ToolStripButton filter = new ToolStripButton();

@@ -2,16 +2,16 @@ package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.DocumentsDS;
-import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
-import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.document.grid.ContextMenu;
+import com.logicaldoc.gui.frontend.client.document.grid.Cursor;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsListGrid;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsTileGrid;
@@ -20,6 +20,8 @@ import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
@@ -42,26 +44,41 @@ public class DocumentsListPanel extends VLayout {
 
 	private DocumentsGrid grid;
 
-	private InfoPanel infoPanel;
+	private Cursor cursor;
 
 	private boolean filters;
 
 	protected int visualizationMode = DocumentsGrid.MODE_LIST;
 
-	public DocumentsListPanel(GUIFolder folder, final Long hiliteDoc, Integer max, int mode) {
-		dataSource = new DocumentsDS(folder.getId(), null, max, null, null);
+	public DocumentsListPanel(GUIFolder folder, final Long hiliteDoc, Integer max, int page, int mode) {
+		dataSource = new DocumentsDS(folder.getId(), null, max, page, null, null);
 
 		if (mode == DocumentsGrid.MODE_LIST)
-			grid = new DocumentsListGrid(dataSource);
+			grid = new DocumentsListGrid(dataSource, folder.getDocumentCount());
 		else if (mode == DocumentsGrid.MODE_GALLERY)
-			grid = new DocumentsTileGrid(dataSource);
+			grid = new DocumentsTileGrid(dataSource, folder.getDocumentCount());
 
 		grid.setCanDrag(folder.isDownload());
 
 		// Prepare a panel containing a title and the documents list
-		infoPanel = new InfoPanel("");
-		addMember(infoPanel);
+		cursor = new Cursor(Constants.COOKIE_DOCSLIST_MAX, page, true);
+		cursor.registerMaxChangedHandler(new ChangedHandler() {
+			@Override
+			public void onChanged(ChangedEvent event) {
+				DocumentsPanel.get().refresh(cursor.getMaxDisplayedRecords(), cursor.getCurrentPage(), null);
+			}
+		});
+		cursor.registerPageChangedHandler(new ChangedHandler() {
+			@Override
+			public void onChanged(ChangedEvent event) {
+				DocumentsPanel.get().refresh(cursor.getMaxDisplayedRecords(), cursor.getCurrentPage(), null);
+			}
+		});
+
+		addMember(cursor);
 		addMember((Canvas) grid);
+
+		grid.setCursor(cursor);
 
 		grid.registerDoubleClickHandler(new DoubleClickHandler() {
 			@Override
@@ -114,7 +131,6 @@ public class DocumentsListPanel extends VLayout {
 		grid.registerDataArrivedHandler(new DataArrivedHandler() {
 			@Override
 			public void onDataArrived(DataArrivedEvent event) {
-				infoPanel.setMessage(I18N.message("showndocuments", Integer.toString(grid.getCount())));
 				if (hiliteDoc != null)
 					DocumentsListPanel.this.hiliteDocument(hiliteDoc);
 			}

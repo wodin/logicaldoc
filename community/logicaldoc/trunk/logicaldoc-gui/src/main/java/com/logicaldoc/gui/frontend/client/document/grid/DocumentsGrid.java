@@ -18,7 +18,7 @@ public interface DocumentsGrid {
 	public final static int MODE_LIST = 0;
 
 	public final static int MODE_GALLERY = 1;
-
+	
 	/**
 	 * Updates the visualization of the proper document element
 	 */
@@ -116,6 +116,11 @@ public interface DocumentsGrid {
 	 */
 	public void setCanDrag(boolean drag);
 
+	/**
+	 * Defines the cursor widget this grid will have to interact to
+	 */
+	public void setCursor(Cursor cursor);
+	
 	public void registerDoubleClickHandler(DoubleClickHandler handler);
 
 	public void registerSelectionChangedHandler(SelectionChangedHandler handler);
