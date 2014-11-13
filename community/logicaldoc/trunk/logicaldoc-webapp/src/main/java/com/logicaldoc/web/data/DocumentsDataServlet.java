@@ -83,16 +83,20 @@ public class DocumentsDataServlet extends HttpServlet {
 			if (StringUtils.isNotEmpty(request.getParameter("max")))
 				max = Integer.parseInt(request.getParameter("max"));
 
+			int page = 1;
+			if (StringUtils.isNotEmpty(request.getParameter("page")))
+				page = Integer.parseInt(request.getParameter("page"));
+
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
 			if (StringUtils.isNotEmpty(request.getParameter("status"))) {
 				int status = Integer.parseInt(request.getParameter("status"));
 				List<Document> docs = dao.findByLockUserAndStatus(session.getUserId(), status);
-				int i = 0;
-				for (Document doc : docs) {
-					if (i == max)
-						break;
+				int begin = (page - 1) * max;
+				int end = Math.min(begin + max - 1, docs.size() - 1);
+				for (int i = begin; i <= end; i++) {
+					Document doc = docs.get(i);
 					writer.print("<document>");
 					writer.print("<id>" + doc.getId() + "</id>");
 					writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getFileExtension()))
@@ -104,7 +108,6 @@ public class DocumentsDataServlet extends HttpServlet {
 					writer.print("<filename><![CDATA[" + doc.getFileName() + "]]></filename>");
 					writer.print("<fileVersion>" + doc.getFileVersion() + "</fileVersion>");
 					writer.print("</document>");
-					i++;
 				}
 			} else if (StringUtils.isNotEmpty(request.getParameter("docIds"))) {
 				String[] idsArray = request.getParameter("docIds").split(",");
@@ -217,164 +220,80 @@ public class DocumentsDataServlet extends HttpServlet {
 					query.append(" and lower(A.fileName) like '%" + filename.toLowerCase() + "%' ");
 				query.append(" order by A.lastModified desc");
 
-				List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, max);
+				List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, null);
+				List<Document> documents = new ArrayList<Document>();
 
-				List<Long> docRefIds = new ArrayList<Long>();
+				int begin = (page - 1) * max;
+				int end = Math.min(begin + max - 1, records.size() - 1);
+
 				/*
 				 * Iterate over records composing the response XML document
 				 */
-				for (Object record : records) {
-					Object[] cols = (Object[]) record;
+				for (int i = begin; i <= end; i++) {
+					Object[] cols = (Object[]) records.get(i);
 
-					boolean published = isPublished((Integer) cols[27], (Date) cols[25], (Date) cols[26]);
+					Document doc = new Document();
+					doc.setId((Long) cols[0]);
+					doc.setDocRef((Long) cols[2]);
 
-					if (!published && !user.isInGroup("admin") && !user.isInGroup("publisher")) {
-						continue;
-					}
+					// Replace with the real document if this is an alias
+					if (doc.getDocRef() != null && doc.getDocRef().longValue() != 0L) {
+						long aliasId = doc.getId();
+						long aliasDocRef = doc.getDocRef();
+						doc = dao.findById(aliasDocRef);
+						doc.setId(aliasId);
+						doc.setDocRef(aliasDocRef);
+					} else {
+						doc.setStartPublishing((Date) cols[25]);
+						doc.setStopPublishing((Date) cols[26]);
+						doc.setPublished((Integer) cols[27]);
 
-					if (cols[2] != null) {
-						if (cols[2].toString().equals("0")) {
-							cols[2] = null;
-						} else {
-							docRefIds.add((Long) cols[0]);
-							continue;
+						if (doc.isPublishing() || user.isInGroup("admin") || user.isInGroup("publisher")) {
+							doc.setCustomId((String) cols[1]);
+							doc.setTitle((String) cols[4]);
+							doc.setVersion((String) cols[5]);
+							doc.setLastModified((Date) cols[6]);
+							doc.setDate((Date) cols[7]);
+							doc.setPublisher((String) cols[8]);
+							doc.setCreation((Date) cols[9]);
+							doc.setCreator((String) cols[10]);
+							doc.setFileSize((Long) cols[11]);
+							doc.setImmutable((Integer) cols[12]);
+							doc.setIndexed((Integer) cols[13]);
+							doc.setLockUserId((Long) cols[14]);
+							doc.setFileName((String) cols[15]);
+							doc.setStatus((Integer) cols[16]);
+							doc.setSigned((Integer) cols[17]);
+							doc.setType((String) cols[18]);
+							doc.setSourceDate((Date) cols[19]);
+							doc.setSourceAuthor((String) cols[20]);
+							doc.setRating((Integer) cols[21]);
+							doc.setFileVersion((String) cols[22]);
+							doc.setComment((String) cols[23]);
+							doc.setWorkflowStatus((String) cols[24]);
+							doc.setExtResId((String) cols[28]);
+							doc.setSource((String) cols[29]);
+							doc.setSourceId((String) cols[30]);
+							doc.setRecipient((String) cols[31]);
+							doc.setObject((String) cols[32]);
+							doc.setCoverage((String) cols[33]);
+							doc.setTemplateName((String) cols[34]);
 						}
 					}
 
-					writer.print("<document>");
-					writer.print("<id>" + cols[0] + "</id>");
-					if (cols[1] != null)
-						writer.print("<customId><![CDATA[" + cols[1] + "]]></customId>");
-					else
-						writer.print("<customId> </customId>");
-					writer.print("<docref>" + (cols[2] != null ? cols[2] : "") + "</docref>");
-					if (cols[2] != null)
-						writer.print("<icon>alias</icon>");
-					else {
-						writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon((String) cols[3]))
-								+ "</icon>");
-					}
-
-					writer.print("<title><![CDATA[" + cols[4] + "]]></title>");
-					writer.print("<version>" + cols[5] + "</version>");
-					writer.print("<lastModified>" + df.format(cols[6]) + "</lastModified>");
-					writer.print("<published>" + df.format(cols[7]) + "</published>");
-					writer.print("<publisher><![CDATA[" + cols[8] + "]]></publisher>");
-					writer.print("<created>" + df.format(cols[9]) + "</created>");
-					writer.print("<creator><![CDATA[" + cols[10] + "]]></creator>");
-					writer.print("<size>" + cols[11] + "</size>");
-					if (Integer.parseInt(cols[12].toString()) == 0)
-						writer.print("<immutable>blank</immutable>");
-					else if (Integer.parseInt(cols[12].toString()) == 1)
-						writer.print("<immutable>stop</immutable>");
-					if (Integer.parseInt(cols[13].toString()) == Constants.INDEX_TO_INDEX)
-						writer.print("<indexed>blank</indexed>");
-					else if (Integer.parseInt(cols[13].toString()) == Constants.INDEX_INDEXED)
-						writer.print("<indexed>indexed</indexed>");
-					else if (Integer.parseInt(cols[13].toString()) == Constants.INDEX_SKIP)
-						writer.print("<indexed>unindexable</indexed>");
-					if (Integer.parseInt(cols[16].toString()) == Constants.DOC_LOCKED)
-						writer.print("<locked>lock</locked>");
-					else if (Integer.parseInt(cols[16].toString()) == Constants.DOC_CHECKED_OUT)
-						writer.print("<locked>page_edit</locked>");
-					else
-						writer.print("<locked>blank</locked>");
-					if (cols[14] != null)
-						writer.print("<lockUserId>" + cols[14] + "</lockUserId>");
-					writer.print("<filename><![CDATA[" + cols[15] + "]]></filename>");
-					writer.print("<status>" + cols[16] + "</status>");
-
-					if (Integer.parseInt(cols[17].toString()) == 0)
-						writer.print("<signed>blank</signed>");
-					else if (Integer.parseInt(cols[17].toString()) == 1)
-						writer.print("<signed>rosette</signed>");
-
-					writer.print("<type>" + cols[18] + "</type>");
-
-					if (cols[19] != null)
-						writer.print("<sourceDate>" + (cols[19] != null ? df.format(cols[19]) : "") + "</sourceDate>");
-
-					if (cols[20] != null)
-						writer.print("<sourceAuthor><![CDATA[" + cols[20] + "]]></sourceAuthor>");
-
-					if (cols[21] == null)
-						writer.print("<rating>rating0</rating>");
-					else
-						writer.print("<rating>rating" + cols[21] + "</rating>");
-
-					writer.print("<fileVersion><![CDATA[" + cols[22] + "]]></fileVersion>");
-
-					if (cols[23] == null)
-						writer.print("<comment></comment>");
-					else
-						writer.print("<comment><![CDATA[" + cols[23] + "]]></comment>");
-
-					if (cols[24] == null)
-						writer.print("<workflowStatus></workflowStatus>");
-					else
-						writer.print("<workflowStatus><![CDATA[" + cols[24] + "]]></workflowStatus>");
-
-					writer.print("<startPublishing>" + df.format(cols[25]) + "</startPublishing>");
-					if (cols[26] != null)
-						writer.print("<stopPublishing>" + df.format(cols[26]) + "</stopPublishing>");
-					else
-						writer.print("<stopPublishing></stopPublishing>");
-					writer.print("<publishedStatus>" + (published ? "yes" : "no") + "</publishedStatus>");
-
-					if (cols[28] != null)
-						writer.print("<extResId><![CDATA[" + cols[28] + "]]></extResId>");
-
-					if (cols[29] != null)
-						writer.print("<source><![CDATA[" + cols[29] + "]]></source>");
-
-					if (cols[30] != null)
-						writer.print("<sourceId><![CDATA[" + cols[30] + "]]></sourceId>");
-
-					if (cols[31] != null)
-						writer.print("<recipient><![CDATA[" + cols[31] + "]]></recipient>");
-
-					if (cols[32] != null)
-						writer.print("<object><![CDATA[" + cols[32] + "]]></object>");
-
-					if (cols[33] != null)
-						writer.print("<coverage><![CDATA[" + cols[33] + "]]></coverage>");
-
-					if (cols[34] != null)
-						writer.print("<template><![CDATA[" + cols[34] + "]]></template>");
-
-					if (!extValues.isEmpty())
-						for (String name : attrs) {
-							String val = extValues.get(cols[0] + "-" + name);
-							if (val != null)
-								writer.print("<ext_" + name + "><![CDATA[" + val + "]]></ext_" + name + ">");
-						}
-
-					writer.print("</document>");
+					if (doc.isPublishing() || user.isInGroup("admin") || user.isInGroup("publisher"))
+						documents.add(doc);
 				}
 
-				// For all alias document, we must retrieve the original
-				// documents infos
-				for (Long id : docRefIds) {
-					Document aliasDoc = dao.findById(id);
-					Document doc = dao.findById(aliasDoc.getDocRef());
-					if (doc == null)
-						continue;
-
-					boolean published = isPublished(doc.getPublished(), doc.getStartPublishing(),
-							doc.getStopPublishing());
-
-					if (!published && !user.isInGroup("admin") && !user.isInGroup("publisher")) {
-						continue;
-					}
-
+				for (Document doc : documents) {
 					writer.print("<document>");
-					writer.print("<id>" + id + "</id>");
-					if (doc.getCustomId() != null)
-						writer.print("<customId><![CDATA[" + doc.getCustomId() + "]]></customId>");
-					else
-						writer.print("<customId> </customId>");
-					writer.print("<docref>" + doc.getId() + "</docref>");
-					writer.print("<icon>alias</icon>");
+					writer.print("<id>" + doc.getId() + "</id>");
+					writer.print("<customId><![CDATA[" + (doc.getCustomId() != null ? doc.getCustomId() : "")
+							+ "]]></customId>");
+					writer.print("<docref>" + doc.getDocRef() != null  ? doc.getDocRef() : "" + "</docref>");
+					writer.print("<icon>"
+							+ (doc.getDocRef() != null ? "alias" : FilenameUtils.getBaseName(IconSelector
+									.selectIcon(doc.getType()))) + "</icon>");
 					writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
 					writer.print("<version>" + doc.getVersion() + "</version>");
 					writer.print("<lastModified>" + df.format(doc.getLastModified()) + "</lastModified>");
@@ -408,24 +327,17 @@ public class DocumentsDataServlet extends HttpServlet {
 					else if (doc.getSigned() == 1)
 						writer.print("<signed>rosette</signed>");
 
-					writer.print("<aliasId>" + id + "</aliasId>");
+					if (doc.getDocRef() != null)
+						writer.print("<aliasId>" + doc.getDocRef() + "</aliasId>");
 
 					writer.print("<sourceDate>" + (doc.getSourceDate() != null ? df.format(doc.getSourceDate()) : "")
 							+ "</sourceDate>");
-					if (doc.getRating() == null)
-						writer.print("<rating>rating0</rating>");
-					else
-						writer.print("<rating>rating" + doc.getRating() + "</rating>");
+					writer.print("<rating>rating" + (doc.getRating() != null ? doc.getRating() : "0") + "</rating>");
 					writer.print("<fileVersion><![CDATA[" + doc.getFileVersion() + "]]></fileVersion>");
-					if (doc.getComment() == null)
-						writer.print("<comment></comment>");
-					else
-						writer.print("<comment><![CDATA[" + doc.getComment() + "]]></comment>");
-					if (doc.getWorkflowStatus() == null)
-						writer.print("<workflowStatus></workflowStatus>");
-					else
-						writer.print("<workflowStatus><![CDATA[" + doc.getWorkflowStatus() + "]]></workflowStatus>");
-
+					writer.print("<comment><![CDATA[" + (doc.getComment() != null ? doc.getComment() : "")
+							+ "]]></comment>");
+					writer.print("<workflowStatus><![CDATA["
+							+ (doc.getWorkflowStatus() != null ? doc.getWorkflowStatus() : "") + "]]></workflowStatus>");
 					writer.print("<startPublishing>" + df.format(doc.getStartPublishing()) + "</startPublishing>");
 					if (doc.getStopPublishing() != null)
 						writer.print("<stopPublishing>" + df.format(doc.getStopPublishing()) + "</stopPublishing>");
@@ -460,7 +372,6 @@ public class DocumentsDataServlet extends HttpServlet {
 							if (val != null)
 								writer.print("<ext_" + name + "><![CDATA[" + val + "]]></ext_" + name + ">");
 						}
-
 					writer.print("</document>");
 				}
 			}
@@ -474,17 +385,5 @@ public class DocumentsDataServlet extends HttpServlet {
 			else
 				throw new ServletException(e.getMessage(), e);
 		}
-	}
-
-	protected static boolean isPublished(int published, Date startPublishing, Date stopPublishing) {
-		Date now = new Date();
-		if (published != 1)
-			return false;
-		else if (now.before(startPublishing))
-			return false;
-		else if (stopPublishing == null)
-			return true;
-		else
-			return now.before(stopPublishing);
 	}
 }

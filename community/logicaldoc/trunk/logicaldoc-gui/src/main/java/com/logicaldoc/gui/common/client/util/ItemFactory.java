@@ -674,6 +674,25 @@ public class ItemFactory {
 		return item;
 	}
 
+	/**
+	 * Creates a new SpinnerItem( with a range validator.
+	 * 
+	 */
+	public static SpinnerItem newSpinnerItem(String name, String title, Integer value, Integer min, Integer max) {
+		SpinnerItem spinner = new SpinnerItem(name);
+		spinner.setTitle(I18N.message(title));
+		spinner.setWrapTitle(false);
+		spinner.setDefaultValue(value);
+		if (min != null)
+			spinner.setMin(min);
+		if (max != null)
+			spinner.setMax(max);
+		spinner.setStep(1);
+		spinner.setWidth(55);
+		spinner.setHintStyle("hint");
+		return spinner;
+	}
+
 	public static LinkItem newLinkItem(String name, String title) {
 		LinkItem linkItem = new LinkItem(filterItemName(name));
 		if (!title.trim().isEmpty()) {

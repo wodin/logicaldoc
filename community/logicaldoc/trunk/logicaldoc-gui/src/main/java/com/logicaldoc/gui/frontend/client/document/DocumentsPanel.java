@@ -249,7 +249,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 
 			@Override
 			public void onSuccess(GUIFolder folder) {
-				updateListingPanel(folder, hiliteDocId, max, mode);
+				updateListingPanel(folder, hiliteDocId, max, 1, mode);
 			}
 		});
 	}
@@ -261,27 +261,27 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	}
 
 	public void refresh() {
-		refresh(null, null);
+		refresh(null, 1, null);
 	}
 
-	public void refresh(Integer max, Integer mode) {
+	public void refresh(Integer max, int page, Integer mode) {
 		if (max != null && max > 0)
 			this.max = max;
 
 		if (mode != null)
 			this.mode = mode;
 
-		updateListingPanel(folder, hiliteDocId, this.max, this.mode);
+		updateListingPanel(folder, hiliteDocId, this.max, page, this.mode);
 
 		showFolderDetails();
 
 		hiliteDocId = null;
 	}
 
-	protected void updateListingPanel(GUIFolder folder, Long hiliteDocId, Integer max, int mode) {
+	protected void updateListingPanel(GUIFolder folder, Long hiliteDocId, Integer max, int page, int mode) {
 		listing.removeMember(listingPanel);
 		listingPanel.destroy();
-		listingPanel = new DocumentsListPanel(folder, hiliteDocId, max, mode);
+		listingPanel = new DocumentsListPanel(folder, hiliteDocId, max, page, mode);
 		listing.addMember(listingPanel);
 		listing.redraw();
 	}

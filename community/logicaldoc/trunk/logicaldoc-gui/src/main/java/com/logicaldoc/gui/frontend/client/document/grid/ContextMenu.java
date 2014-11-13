@@ -576,7 +576,7 @@ public class ContextMenu extends Menu {
 		boolean enableImmutable = false;
 		boolean enableDelete = true;
 		boolean enableSign = selection != null && selection.length > 0;
-
+		
 		if (selection != null && selection.length == 1) {
 			GUIDocument record = selection[0];
 			if (record.getStatus() == Constants.DOC_UNLOCKED && record.getImmutable() == 0 && folder.isWrite()) {
@@ -588,6 +588,8 @@ public class ContextMenu extends Menu {
 						|| Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN))
 					enableUnlock = true;
 			}
+			
+			enableSign=enableSign && record.getSigned()==0;
 		}
 
 		for (GUIDocument record : selection)

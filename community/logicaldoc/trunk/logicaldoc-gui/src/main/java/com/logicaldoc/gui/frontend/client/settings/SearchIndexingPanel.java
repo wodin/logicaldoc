@@ -266,7 +266,7 @@ public class SearchIndexingPanel extends VLayout {
 		docsList.setSelectionType(SelectionStyle.MULTIPLE);
 		docsList.setShowFilterEditor(true);
 		docsList.setFilterOnKeypress(true);
-		dataSource = new DocumentsDS(null, null, maxValue, 0, null);
+		dataSource = new DocumentsDS(null, null, maxValue, 1, 0, null);
 		docsList.setDataSource(dataSource);
 		docsList.setFields(locked, immutable, icon, title, size, lastModified, version, publisher, published, creator,
 				created, customId, filename);

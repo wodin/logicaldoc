@@ -25,7 +25,7 @@ public class SearchBox extends TextItem {
 	public SearchBox() {
 		PickerIcon searchPicker = new PickerIcon(PickerIcon.SEARCH, new FormItemClickHandler() {
 			public void onFormItemClick(FormItemIconClickEvent event) {
-				search();
+				onSearch();
 			}
 		});
 
@@ -39,7 +39,7 @@ public class SearchBox extends TextItem {
 				if (event.getKeyName() == null)
 					return;
 				if (Constants.KEY_ENTER.equals(event.getKeyName().toLowerCase())) {
-					search();
+					onSearch();
 				}
 			}
 		});
@@ -53,7 +53,7 @@ public class SearchBox extends TextItem {
 		});
 	}
 
-	protected void search() {
+	protected void onSearch() {
 		GUISearchOptions options = Search.get().getOptions();
 		options.setType(GUISearchOptions.TYPE_FULLTEXT);
 		options.setExpression((String) getValue());
