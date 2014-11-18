@@ -7,6 +7,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -17,6 +18,7 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.types.ListGridFieldType;
+import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 
@@ -688,6 +690,34 @@ public class Util {
 			tenant = request.getParameter(Constants.TENANT);
 		}
 		return tenant;
+	}
+
+	/**
+	 * Detect SID specification from the request and then from the cookie
+	 */
+	public static String detectSid() {
+		String sid = null;
+
+		try {
+			RequestInfo request = WindowUtils.getRequestInfo();
+			sid = request.getParameter(Constants.SID);
+		} catch (Throwable t) {
+		}
+
+		try {
+			if (sid == null)
+				sid = Offline.get(Constants.COOKIE_SID).toString();
+		} catch (Throwable t) {
+		}
+
+		try {
+
+			if (sid == null)
+				sid = Cookies.getCookie(Constants.COOKIE_SID);
+		} catch (Throwable t) {
+		}
+
+		return sid;
 	}
 
 	public static void redirectToRoot() {
