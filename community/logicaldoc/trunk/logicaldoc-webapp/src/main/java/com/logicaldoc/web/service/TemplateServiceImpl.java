@@ -1,5 +1,9 @@
 package com.logicaldoc.web.service;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,6 +27,7 @@ import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.frontend.client.services.TemplateService;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.web.UploadServlet;
 import com.logicaldoc.web.util.ServiceUtil;
 
 /**
@@ -275,5 +280,45 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 		}
 
 		return null;
+	}
+
+	@Override
+	public String[] parseOptions(String sid, long templateId, String attribute) throws ServerException {
+		ServiceUtil.validateSession(sid);
+
+		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
+		List<String> options = new ArrayList<String>();
+
+		BufferedReader reader = null;
+		try {
+			File file = null;
+			for (String fileId : uploadedFilesMap.keySet())
+				if (fileId.startsWith("LDOC_OPT")) {
+					file = uploadedFilesMap.get(fileId);
+					break;
+				}
+
+			if (file != null) {
+				reader = new BufferedReader(new FileReader(file));
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					if (StringUtils.isNotEmpty(line) && StringUtils.isNotEmpty(line.trim()))
+						options.add(line.trim());
+				}
+			}
+		} catch (Throwable e) {
+			log.error("Unable to parse options in CSV file", e);
+		} finally {
+			if (reader != null)
+				try {
+					reader.close();
+				} catch (IOException e) {
+				}
+		}
+
+		String[] values = options.toArray(new String[0]);
+		if (values.length > 0)
+			saveOptions(sid, templateId, attribute, values);
+		return values;
 	}
 }

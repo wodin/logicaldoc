@@ -2,11 +2,16 @@ package com.logicaldoc.gui.frontend.client.metadata;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.ExtendedAttributeOptionsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
+import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.common.client.widgets.ContactingServer;
+import com.logicaldoc.gui.frontend.client.services.DocumentService;
+import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.TemplateService;
 import com.logicaldoc.gui.frontend.client.services.TemplateServiceAsync;
 import com.smartgwt.client.data.Record;
@@ -38,8 +43,10 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  * @author Marco Meschieri - Logical Objects
  * @since 7.1
  */
-public class ExtendedAttributeOptions extends com.smartgwt.client.widgets.Window {
-	private TemplateServiceAsync service = (TemplateServiceAsync) GWT.create(TemplateService.class);
+public class Options extends com.smartgwt.client.widgets.Window {
+	private TemplateServiceAsync templateService = (TemplateServiceAsync) GWT.create(TemplateService.class);
+
+	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private ListGrid list;
 
@@ -49,7 +56,7 @@ public class ExtendedAttributeOptions extends com.smartgwt.client.widgets.Window
 
 	private boolean readOnly = false;
 
-	public ExtendedAttributeOptions(final long templteId, final String attribute, final boolean readOnly) {
+	public Options(final long templteId, final String attribute, final boolean readOnly) {
 		super();
 
 		this.templateId = templteId;
@@ -92,7 +99,7 @@ public class ExtendedAttributeOptions extends com.smartgwt.client.widgets.Window
 
 					@Override
 					public void execute(String value) {
-						if(value==null)
+						if (value == null)
 							return;
 						Record rec = new ListGridRecord();
 						rec.setAttribute("value", value.trim());
@@ -115,6 +122,47 @@ public class ExtendedAttributeOptions extends com.smartgwt.client.widgets.Window
 			}
 		});
 		save.setDisabled(readOnly);
+
+		ToolStripButton importCsv = new ToolStripButton();
+		importCsv.setTitle(I18N.message("iimport"));
+		importCsv.setTooltip(I18N.message("importfromcsv"));
+		importCsv.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				documentService.cleanUploadedFileFolder(Session.get().getSid(), new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void arg0) {
+						OptionsUploader uploader = new OptionsUploader(Options.this);
+						uploader.show();
+					}
+				});
+			}
+		});
+
+		toolStrip.addSeparator();
+		toolStrip.addButton(importCsv);
+
+		ToolStripButton export = new ToolStripButton();
+		export.setTitle(I18N.message("export"));
+		export.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Util.exportCSV(list, false);
+			}
+		});
+		if (Feature.visible(Feature.EXPORT_CSV)) {
+			toolStrip.addButton(export);
+			if (!Feature.enabled(Feature.EXPORT_CSV)) {
+				export.setDisabled(true);
+				export.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
 
 		toolStrip.addFill();
 		addItem(toolStrip);
@@ -181,14 +229,17 @@ public class ExtendedAttributeOptions extends com.smartgwt.client.widgets.Window
 		for (Record record : records)
 			values[i++] = record.getAttributeAsString("value");
 
-		service.saveOptions(Session.get().getSid(), templateId, attribute, values, new AsyncCallback<Void>() {
+		ContactingServer.get().show();
+		templateService.saveOptions(Session.get().getSid(), templateId, attribute, values, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
+				ContactingServer.get().hide();
 				Log.serverError(caught);
 			}
 
 			@Override
 			public void onSuccess(Void arg0) {
+				ContactingServer.get().hide();
 				SC.say(I18N.message("optionssaved"));
 			}
 		});
@@ -205,7 +256,7 @@ public class ExtendedAttributeOptions extends com.smartgwt.client.widgets.Window
 		for (int i = 0; i < selection.length; i++)
 			values[i] = selection[i].getAttributeAsString("value");
 
-		service.deleteOptions(Session.get().getSid(), templateId, attribute, values, new AsyncCallback<Void>() {
+		templateService.deleteOptions(Session.get().getSid(), templateId, attribute, values, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);
@@ -244,5 +295,13 @@ public class ExtendedAttributeOptions extends com.smartgwt.client.widgets.Window
 
 		contextMenu.setItems(delete);
 		contextMenu.showContextMenu();
+	}
+
+	public String getAttribute() {
+		return attribute;
+	}
+
+	public long getTemplateId() {
+		return templateId;
 	}
 }

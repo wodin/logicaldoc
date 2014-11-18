@@ -11,7 +11,7 @@ public interface ContactServiceAsync {
 
 	void save(String sid, GUIContact contact, AsyncCallback<Void> callback);
 
-	void importContacts(String sid, boolean preview, String separator, String delimiter, boolean skipFirstRow,
+	void parseContacts(String sid, boolean preview, String separator, String delimiter, boolean skipFirstRow,
 			int firstName, int lastName, int email, int company, int phone, int mobile, int address,
 			AsyncCallback<GUIContact[]> callback);
 
