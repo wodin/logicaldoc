@@ -8,6 +8,7 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Image;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.DocumentObserver;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
@@ -159,21 +160,21 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		LinkItem folder = ItemFactory.newLinkItem("folder", Util.padLeft(document.getPathExtended(), 40));
 		folder.setTitle(I18N.message("folder"));
-		folder.setValue(Util.contextPath() + "?folderId=" + document.getFolder().getId());
+		folder.setValue(Util.contextPath() + "?" + Constants.FOLDER_ID + "=" + document.getFolder().getId());
 		folder.setTooltip(document.getPathExtended());
 		folder.setWrap(false);
 		folder.setWidth(DEFAULT_ITEM_WIDTH);
 
-		String downloadUrl = Util.contextPath() + "download?docId=" + document.getId();
-		LinkItem download = ItemFactory.newLinkItem("download", downloadUrl);
-		download.setTitle(I18N.message("download"));
-		download.setLinkTitle(I18N.message("download"));
-		download.setValue(downloadUrl);
+		String downloadUrl = Util.contextPath() + "download?" + Constants.DOC_ID + "=" + document.getId();
+		String documentUrl = Util.contextPath() + "?" + Constants.DOC_ID + "=" + document.getId();
+		String perma = "<a href='" + downloadUrl + "'>" + I18N.message("download") + "</a> | <a href='" + documentUrl
+				+ "'>" + I18N.message("details") + "</a>";
+		StaticTextItem permaLink = ItemFactory.newStaticTextItem("permalink", "permalink", perma);
 
 		if (Feature.enabled(Feature.WORKFLOW))
-			form1.setItems(id, title, filename, folder, size, version, wfStatus, creation, published, download);
+			form1.setItems(id, title, filename, folder, size, version, wfStatus, creation, published, permaLink);
 		else
-			form1.setItems(id, title, filename, folder, size, version, creation, published, download);
+			form1.setItems(id, title, filename, folder, size, version, creation, published, permaLink);
 
 		columns.addMember(form1);
 

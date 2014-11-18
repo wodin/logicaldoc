@@ -134,6 +134,12 @@ public final class Constants {
 	
 	public static final String COOKIE_SID = "ldoc-sid";
 	
+	public static final String SID = "sid";
+	
+	public static final String DOC_ID = "docId";
+	
+	public static final String FOLDER_ID = "folderId";
+	
 	public final static int DASHLET_CHECKOUT = 1;
 
 	public final static int DASHLET_CHECKIN = 2;

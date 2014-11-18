@@ -25,7 +25,6 @@ import com.logicaldoc.gui.frontend.client.folder.Navigator;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.search.TagsForm;
 import com.logicaldoc.gui.frontend.client.security.LoginPanel;
-import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -124,20 +123,13 @@ public class Frontend implements EntryPoint {
 
 				WindowUtils.setFavicon(info);
 
-				String savedSid = null;
-				try {
-					savedSid = Offline.get(Constants.COOKIE_SID).toString();
-					if (savedSid == null)
-						savedSid = Cookies.getCookie(Constants.COOKIE_SID);
-				} catch (Throwable t) {
-
-				}
+				String sid = Util.detectSid();
 
 				final boolean anonymousLogin = request.getParameter(Constants.ANONYMOUS) != null
 						&& "true".equals(info.getConfig("anonymous.enabled"));
 
 				loginPanel = new LoginPanel(info);
-				if (savedSid == null || "".equals(savedSid.trim())) {
+				if (sid == null || "".equals(sid.trim())) {
 					if (anonymousLogin) {
 						/*
 						 * Simulate a login with the anonymous user
@@ -146,7 +138,7 @@ public class Frontend implements EntryPoint {
 					} else
 						Frontend.this.showInitialLogin();
 				} else {
-					securityService.login(savedSid, new AsyncCallback<GUISession>() {
+					securityService.login(sid, new AsyncCallback<GUISession>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
