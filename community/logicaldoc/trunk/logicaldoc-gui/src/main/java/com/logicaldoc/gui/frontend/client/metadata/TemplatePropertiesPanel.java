@@ -380,7 +380,7 @@ public class TemplatePropertiesPanel extends HLayout {
 				if (template.getId() == 0L) {
 					SC.say("savetemplatefirst");
 				} else {
-					ExtendedAttributeOptions options = new ExtendedAttributeOptions(template.getId(), attributeName
+					Options options = new Options(template.getId(), attributeName
 							.getValueAsString(), template.isReadonly());
 					options.show();
 				}

@@ -13,7 +13,6 @@ import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.services.ContactService;
 import com.logicaldoc.gui.frontend.client.services.ContactServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
-import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -60,7 +59,7 @@ public class ContactsImportPreview extends com.smartgwt.client.widgets.Window {
 			public void onClick(ClickEvent event) {
 				ContactingServer.get().show();
 				try {
-					service.importContacts(Session.get().getSid(), false, settings.getSeparator(),
+					service.parseContacts(Session.get().getSid(), false, settings.getSeparator(),
 							settings.getTextDelimiter(), settings.isSkipFirstRow(), settings.getFirstNameIndex(),
 							settings.getLastNameIndex(), settings.getEmailIndex(), settings.getCompanyIndex(),
 							settings.getPhoneIndex(), settings.getMobileIndex(), settings.getAddressIndex(),

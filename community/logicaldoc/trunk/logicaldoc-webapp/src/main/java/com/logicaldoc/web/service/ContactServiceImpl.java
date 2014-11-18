@@ -102,7 +102,7 @@ public class ContactServiceImpl extends RemoteServiceServlet implements ContactS
 	}
 
 	@Override
-	public GUIContact[] importContacts(String sid, boolean preview, String separator, String delimiter,
+	public GUIContact[] parseContacts(String sid, boolean preview, String separator, String delimiter,
 			boolean skipFirstRow, int firstName, int lastName, int email, int company, int phone, int mobile,
 			int address) throws ServerException {
 		final UserSession session = ServiceUtil.validateSession(sid);

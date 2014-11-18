@@ -14,4 +14,6 @@ public interface TemplateServiceAsync {
 	void saveOptions(String sid, long templateId, String attribute, String[] values, AsyncCallback<Void> callback);
 
 	void deleteOptions(String sid, long templateId, String attribute, String[] values, AsyncCallback<Void> callback);
+
+	void parseOptions(String sid, long templateId, String attribute, AsyncCallback<String[]> callback);
 }

@@ -97,8 +97,8 @@ public class Contacts extends com.smartgwt.client.widgets.Window {
 		});
 
 		ToolStripButton importCsv = new ToolStripButton();
-		importCsv.setTitle(I18N.message("importfromcsv"));
-		toolStrip.addButton(importCsv);
+		importCsv.setTitle(I18N.message("iimport"));
+		importCsv.setTooltip(I18N.message("importfromcsv"));		
 		importCsv.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -118,6 +118,9 @@ public class Contacts extends com.smartgwt.client.widgets.Window {
 			}
 		});
 
+		toolStrip.addSeparator();
+		toolStrip.addButton(importCsv);
+		
 		ToolStripButton export = new ToolStripButton();
 		export.setTitle(I18N.message("export"));
 		export.addClickHandler(new ClickHandler() {

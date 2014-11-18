@@ -188,7 +188,7 @@ public class ContactsImportSettings extends Window {
 		if (form.validate()) {
 			ContactingServer.get().show();
 			try {
-				service.importContacts(Session.get().getSid(), true, getSeparator(), getTextDelimiter(),
+				service.parseContacts(Session.get().getSid(), true, getSeparator(), getTextDelimiter(),
 						isSkipFirstRow(), getFirstNameIndex(), getLastNameIndex(), getEmailIndex(), getCompanyIndex(),
 						getPhoneIndex(), getMobileIndex(), getAddressIndex(), new AsyncCallback<GUIContact[]>() {
 
