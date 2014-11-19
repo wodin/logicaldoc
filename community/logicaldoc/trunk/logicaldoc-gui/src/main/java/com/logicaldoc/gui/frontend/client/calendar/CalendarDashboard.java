@@ -63,7 +63,10 @@ public class CalendarDashboard extends VLayout {
 		calendar.setNextButtonHoverText(I18N.message("next"));
 		calendar.setCancelButtonTitle(I18N.message("cancel"));
 		calendar.setDatePickerHoverText(I18N.message("choosedate"));
-		calendar.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATETIME);
+		if (I18N.message("format_dateshort").startsWith("MM/dd"))
+			calendar.setDateFormatter(DateDisplayFormat.TOUSSHORTDATE);
+		else
+			calendar.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
 		calendar.setTimeFormatter(TimeDisplayFormat.TOSHORT24HOURTIME);
 		calendar.setScrollToWorkday(true);
 		calendar.setCanCreateEvents(false);
